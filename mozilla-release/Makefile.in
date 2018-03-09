@@ -210,7 +210,9 @@ binaries::
 endif
 
 recurse_artifact:
-	$(topsrcdir)/mach --log-no-times artifact install
+#	$(topsrcdir)/mach --log-no-times artifact install
+	$(topsrcdir)/mach --log-no-times artifact install https://repository.cliqz.com/dist/android/artifacts/$(GRE_MILESTONE)/target.apk
+	$(topsrcdir)/mach --log-no-times artifact install https://repository.cliqz.com/dist/android/artifacts/$(GRE_MILESTONE)/target.common.tests.zip
 
 ifdef MOZ_WIDGET_TOOLKIT
 ifdef ENABLE_TESTS
