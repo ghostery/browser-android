@@ -426,6 +426,9 @@ public class BrowserApp extends GeckoApp
 
     private boolean mHasResumed;
 
+    private final static String CLIQZ_SEARCH_EXT_ID = "search@cliqz.com";
+    private static String CLIQZ_SEARCH_EXT_UUID;
+
     @Override
     public View onCreateView(final View parent, final String name, final Context context, final AttributeSet attrs) {
         final View view;
@@ -859,7 +862,7 @@ public class BrowserApp extends GeckoApp
         doorhangerOverlay = findViewById(R.id.doorhanger_overlay);
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
-            "Search:Keyword",
+            "Search:Keyword","Addons:all",
             null);
 
         EventDispatcher.getInstance().registerUiThreadListener(this,
@@ -2284,6 +2287,15 @@ public class BrowserApp extends GeckoApp
                     contentProviderClient.release();
                 }
 
+                break;
+
+            case "Addons:all":
+                GeckoBundle[] data = message.getBundleArray("data");
+                for(GeckoBundle gb : data) {
+                    if(gb.getString("id").equals(BrowserApp.CLIQZ_SEARCH_EXT_ID)) {
+                        BrowserApp.CLIQZ_SEARCH_EXT_UUID = gb.getString("guid");
+                    }
+                }
                 break;
 
             default:
