@@ -243,10 +243,7 @@ const ALL_EXTERNAL_TYPES = new Set([
 
 // Whether add-on signing is required.
 function mustSign(aType) {
-  if (!SIGNED_TYPES.has(aType))
-    return false;
-
-  return AddonSettings.REQUIRE_SIGNING;
+  return false;
 }
 
 // Keep track of where we are in startup for telemetry
