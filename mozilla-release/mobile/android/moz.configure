@@ -131,6 +131,7 @@ def check_install_tracking(install_tracking,
         if not adjust_sdk_keyfile:
             # Using default if Adjust SDK keyfile is not specified
             # See https://issues.adblockplus.org/ticket/5920
+            # TODO: remove this after version 60
             adjust_sdk_keyfile = "$topsrcdir/mobile/android/base/adjust-sdk-sandbox.token"
 
 # Must come after the ../../toolkit/moz.configure.
