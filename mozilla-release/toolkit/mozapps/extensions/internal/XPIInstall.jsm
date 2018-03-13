@@ -186,10 +186,7 @@ const TEMP_INSTALL_ID_GEN_SESSION =
 
 // Whether add-on signing is required.
 function mustSign(aType) {
-  if (!SIGNED_TYPES.has(aType))
-    return false;
-
-  return AddonSettings.REQUIRE_SIGNING;
+  return false;
 }
 
 const MSG_JAR_FLUSH = "AddonJarFlush";
