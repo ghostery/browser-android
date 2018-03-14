@@ -2,62 +2,36 @@
 
 node('us-east-1 && ubuntu && docker && !gpu') {
 
+    def hash = ""
+    
     stage('Checkout') {
         checkout scm
+        hash = sh(returnStdout: true, script: """git log refs/remotes/origin/upstream-releases --format="%H" -n 1""").trim()
     }
     sh "`aws ecr get-login --region=us-east-1 --no-include-email`"
-    def dockerfileChecksum = sh(returnStdout: true, script: 'md5sum Dockerfile | cut -d" " -f1').trim()
-    def dockerTag = "${dockerfileChecksum}"
+    def dockerTag = "${hash}"
     def baseImageName = "browser-f/android:${dockerTag}"
-    stage('Build docker image') {
-        docker.withRegistry('https://141047255820.dkr.ecr.us-east-1.amazonaws.com'){
-                try {
-                    def image = docker.image(baseImageName)
-                    image.pull()
-                } catch (e) {
-                    print e
-                    def baseImage  = docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` .')
-                    baseImage.push dockerTag
-                }
+    docker.image("141047255820.dkr.ecr.us-east-1.amazonaws.com/${baseImageName}").inside {
+        try {
+            stage('Build APK') {
+                sh '''#!/bin/bash -l
+                    echo $SHELL
+                    cd mozilla-release
+                    mv mozconfig.txt mozconfig
+                    ./mach build
+                    ./mach package
+                '''
+            }
+            stage('Upload APK') {
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'mozilla-release/objdir-frontend-android/dist/*.apk'
+            }
         }
-    }
-
-    def args = "-u 0:0 -v ${pwd}/artifacts:/artifacts:rw"
-    docker.image("141047255820.dkr.ecr.us-east-1.amazonaws.com/${baseImageName}").inside(args) {
-        stage('Rust Setup') {
-            sh '''#!/bin/bash -l
-                curl https://sh.rustup.rs -sSf | sh -s -- -y -v
-            '''
-        }
-        stage('MozConfig'){
-            sh'''#!/bin/bash -l
-                set -x
-                set -e
-                export SHELL=/bin/bash
-                cd mozilla-release
-                rm -f mozconfig
-                echo "# Build Firefox for Android:
-                ac_add_options --enable-application=mobile/android
-                ac_add_options --target=i386-linux-android
-                # With the following Android SDK:
-                ac_add_options --with-android-sdk=\"/root/.mozbuild/android-sdk-linux\"
-                # Enable artifact building:
-                ac_add_options --enable-artifact-builds
-                # Write build artifacts to:
-                mk_add_options MOZ_OBJDIR=./objdir-frontend
-                " >> mozconfig
-            '''
-        }
-        stage('Compile APK') {
-            sh '''#!/bin/bash -l
-                export SHELL=/bin/bash
-                cd mozilla-release
-                ./mach build
-                ./mach package
-            '''
-        }
-        stage('Upload APK') {
-            archiveArtifacts allowEmptyArchive: true, artifacts: 'mozilla-release/objdir-frontend/dist/*.apk'
+        finally {
+            stage('Clean Up') {
+                sh '''#!/bin/bash -l
+                    rm -rf mozilla-release/objdir-frontend-android
+                '''
+            }
         }
     }
 }
