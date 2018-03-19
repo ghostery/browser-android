@@ -2,7 +2,7 @@
 ac_add_options --enable-application=mobile/android
 ac_add_options --target=i386-linux-android
 # With the following Android SDK:
-ac_add_options --with-android-sdk=/jenkins/.mozbuild/android-sdk-linux
+ac_add_options --with-android-sdk=/home/jenkins/.mozbuild/android-sdk-linux
 # Enable artifact building:
 ac_add_options --enable-artifact-builds
 # Write build artifacts to:
