@@ -548,6 +548,27 @@ var BrowserApp = {
       InitLater(() => SafeBrowsing.init(), window, "SafeBrowsing");
 
     }, {once: true});
+
+    var DB = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
+    AddonManager
+      .getAllAddons()
+      .then((addons) => {
+
+        var ret = addons.map((a) => {
+              return {
+                id: a.id,
+                guid: JSON.parse(DB)[a.id]
+              }
+            });
+
+        console.log(ret);
+
+        GlobalEventDispatcher.sendRequest({
+          //type: “Menu:AddBrowserAction”,
+          type: "Addons:all",
+          data: ret
+        });
+    });
   },
 
   get _startupStatus() {
