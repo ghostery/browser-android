@@ -1149,9 +1149,9 @@ class PackageFrontend(MachCommandBase):
         if conditions.is_hg(build_obj):
             hg = build_obj.substs['HG']
 
-        git = None
-        if conditions.is_git(build_obj):
-            git = build_obj.substs['GIT']
+        git = '/usr/local/bin/git'
+        if 'GIT' in os.environ:
+            git = os.environ['GIT']
 
         from mozbuild.artifacts import Artifacts
         artifacts = Artifacts(tree, self.substs, self.defines, job,
