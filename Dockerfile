@@ -32,13 +32,14 @@ RUN mkdir -p /home/jenkins/.mozbuild/proguard/lib && mkdir -p /home/jenkins/tmp 
     rm -rf /home/jenkins/tmp/*
 
 #Install Android SDK and the Required SDKs
+COPY mozilla-release/python/mozboot/mozboot/android-packages.txt /home/jenkins/
 RUN mkdir -p $ANDROID_HOME; \
     cd $ANDROID_HOME; \
     wget --output-document=sdktools.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-sdk/sdk-tools-linux-3859397.zip'; \
     unzip sdktools.zip; \
     rm -r sdktools.zip; \
     (while (true); do echo y; sleep 2; done) | \
-      tools/bin/sdkmanager  "build-tools;25.0.3" "platforms;android-23" "platform-tools" "tools" "extras;google;m2repository" "extras;android;m2repository" "extras;google;google_play_services" "emulator";
+      tools/bin/sdkmanager  --package_file=/home/jenkins/android-packages.txt;
 
 # Install Node.JS
 RUN cd /home/jenkins && \
