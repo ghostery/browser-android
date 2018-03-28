@@ -1,0 +1,48 @@
+#!/bin/env groovy
+
+node('us-east-1 && ubuntu && docker && !gpu') {
+
+    def hash = ""
+    
+    stage('Checkout') {
+        checkout scm
+        def delim = '"'
+        hash = sh(returnStdout: true, script: """curl https://api.github.com/repos/cliqz-oss/cliqz-android/branches/upstream-releases | grep -m 1 sha | cut -d '${delim}' -f 4""").trim()
+    }
+    def dockerTag = "${hash}"
+    def baseImageName = "browser-f/android:${dockerTag}"
+    docker.image("141047255820.dkr.ecr.us-east-1.amazonaws.com/${baseImageName}").inside {
+        try {
+            stage('Build APK') {
+                sh '''#!/bin/bash -l
+                    set -e
+                    set -x
+                    cd mozilla-release
+                    mv mozconfig-alpha.txt mozconfig
+                    ./mach build
+                    ./mach package
+                '''
+            }
+            stage('Sign and Upload') {
+                withCredentials([
+                    file(credentialsId: '263e59fb-e9de-4e51-962c-0237c6ee167b', variable: 'CERT_PATH'),
+                    string(credentialsId: '', variable: 'CERT_PASS'),
+                    file(credentialsId: '2939d2e1-dd9a-4097-adc2-430e3d67157a', variable: 'PLAY_STORE_CERT')]) {
+                    sh '''#!/bin/bash -l
+                        set -e
+                        set -x
+                        cd mozilla-release/mobile/android
+                        fastlane alpha
+                }    '''
+            }
+        }
+        finally {
+            stage('Clean Up') {
+                sh '''#!/bin/bash -l
+                    rm -f mozilla-release/mozconfig
+                    rm -rf mozilla-release/objdir-frontend-android
+                '''
+            }
+        }
+    }
+}
