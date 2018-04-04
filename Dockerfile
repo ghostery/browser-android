@@ -42,10 +42,8 @@ RUN dpkg --add-architecture i386 && \
         libtool \
         libyaml-dev \
         pkg-config \
+        python-virtualenv \
         sqlite3 \
-        wget \
-        xz-utils \
-        zip \
         zlib1g-dev && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
