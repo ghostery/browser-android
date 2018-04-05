@@ -20,14 +20,16 @@ import android.widget.FrameLayout;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.ActivityStreamTelemetry;
+import org.mozilla.gecko.activitystream.homepanel.model.Highlight;
+import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.activitystream.homepanel.model.TopStory;
+import org.mozilla.gecko.activitystream.homepanel.topnews.TopNewsLoader;
 import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPage;
+import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPagerAdapter;
 import org.mozilla.gecko.activitystream.homepanel.topstories.PocketStoriesLoader;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.fxa.FirefoxAccounts;
 import org.mozilla.gecko.home.HomePager;
-import org.mozilla.gecko.activitystream.homepanel.model.Highlight;
-import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPagerAdapter;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
 import java.util.Collections;
@@ -39,6 +41,7 @@ public class ActivityStreamPanel extends FrameLayout {
     private static final int LOADER_ID_HIGHLIGHTS = 0;
     private static final int LOADER_ID_TOPSITES = 1;
     private static final int LOADER_ID_POCKET = 2;
+    private static final int LOADER_ID_TOP_NEWS = 3;
 
     /**
      * Number of database entries to consider and rank for finding highlights.
@@ -60,7 +63,7 @@ public class ActivityStreamPanel extends FrameLayout {
     private int tileMargin;
     private final SharedPreferences sharedPreferences;
 
-    public ActivityStreamPanel(Context context, AttributeSet attrs) {
+        public ActivityStreamPanel(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         setBackgroundColor(ContextCompat.getColor(context, R.color.photon_browser_toolbar_bg));
@@ -119,12 +122,30 @@ public class ActivityStreamPanel extends FrameLayout {
             lm.initLoader(LOADER_ID_POCKET, null, new PocketStoriesCallbacks());
         }
 
+        lm.initLoader(LOADER_ID_TOP_NEWS, null, new TopNewsCallback());
+    }
+
+    private class TopNewsCallback implements LoaderManager.LoaderCallbacks<List<TopNews>> {
+        @Override
+        public Loader<List<TopNews>> onCreateLoader(int id, Bundle args) {
+            return new TopNewsLoader(getContext());
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<TopNews>> loader, List<TopNews> data) {
+            adapter.swapTopNews(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<TopNews>> loader) {
+            adapter.swapTopNews(Collections.<TopNews>emptyList());
+        }
     }
 
     public void unload() {
         adapter.swapHighlights(Collections.<Highlight>emptyList());
-
         adapter.swapTopSitesCursor(null);
+        adapter.swapTopNews(Collections.<TopNews>emptyList());
     }
 
     public void reload(final LoaderManager lm, final Context context, final SharedPreferences sharedPreferences) {
@@ -135,6 +156,7 @@ public class ActivityStreamPanel extends FrameLayout {
         // Destroy loaders so they don't restart loading when returning.
         lm.destroyLoader(LOADER_ID_HIGHLIGHTS);
         lm.destroyLoader(LOADER_ID_POCKET);
+        lm.destroyLoader(LOADER_ID_TOP_NEWS);
 
         load(lm);
     }
