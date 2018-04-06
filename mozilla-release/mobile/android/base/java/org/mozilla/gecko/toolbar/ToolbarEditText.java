@@ -7,12 +7,14 @@ package org.mozilla.gecko.toolbar;
 
 import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.CustomEditText;
+import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.InputMethods;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnCommitListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnDismissListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnFilterListener;
 import org.mozilla.gecko.toolbar.ToolbarEditLayout.OnSearchStateChangeListener;
 import org.mozilla.gecko.util.GamepadUtils;
+import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.StringUtils;
 
 import android.content.Context;
@@ -533,6 +535,14 @@ public class ToolbarEditText extends CustomEditText
             }
 
             final String text = getNonAutocompleteText(editable);
+
+            /* Cliqz start */
+            // Let's send the non-autocompleted text to the Cliqz search extension
+            final GeckoBundle bundle = new GeckoBundle();
+            bundle.putString("q", text);
+            EventDispatcher.getInstance().dispatch("Cliqz:Search", bundle);
+            /* Cliqz end */
+
             final int textLength = text.length();
             boolean doAutocomplete = mPrefs.shouldAutocomplete();
 

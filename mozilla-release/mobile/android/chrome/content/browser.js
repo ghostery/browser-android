@@ -6316,6 +6316,74 @@ var ExternalApps = {
   },
 };
 
+var Cliqz = {
+
+  init: function () {
+    this.oldQuery = "";
+    this.prevPanel = null;
+    // This may file due to delayed addon install that occur on Android
+    this._resolveAddonUUID().then(uuid => this._wireAddon(uuid));
+  },
+
+  _resolveAddonUUID: function() {
+    var promise = new Promise(resolve => {
+      const iterate = () => {
+        const json = Services.prefs
+          .getStringPref("extensions.webextensions.uuids", "{}");
+        const DB = JSON.parse(json);
+        const uuid = DB["search@cliqz.com"];
+        if (uuid) {
+          resolve(uuid);
+        } else {
+          setTimeout(iterate, 500);
+        }
+      };
+      iterate();
+    });
+    return promise;
+  },
+
+  _wireAddon: function(uuid) {
+    this.uuid = uuid;
+    this.url = "moz-extension://" + uuid + "/index.html";
+    this.Search = document.createElement("browser");
+    this.Search.setAttribute("type", "cliqz");
+    this.Search.setAttribute("messagemanagegroup", "browsers");
+    BrowserApp.deck.appendChild(this.Search);
+    this.Search.loadURI(this.url);
+    GlobalEventDispatcher.registerListener(this, [
+      "Cliqz:Search",
+      "Cliqz:HideSearch",
+      "Cliqz:ShowSearch"
+    ]);
+  },
+
+  onEvent: function dc_onEvent(event, data, callback) {
+    switch(event) {
+      case "Cliqz:ShowSearch":
+        this.prevPanel = BrowserApp.deck.selectedPanel;
+        BrowserApp.deck.selectedPanel = this.Search;
+        break;
+      case "Cliqz:HideSearch":
+        if (this.prevPanel) {
+          BrowserApp.deck.selectedPanel = this.prevPanel;
+        }
+        this.prevPanel = null;
+        break;
+      case "Cliqz:Search":
+        let q = data.q || "";
+        this.Search.contentWindow.postMessage({
+           type: "Cliqz:Search",
+           q: q,
+           oq: this.oldQuery
+        }, "*");
+        break;
+    }
+  }
+};
+
+Cliqz.init();
+
 var Distribution = {
   // File used to store campaign data
   _file: null,
