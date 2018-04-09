@@ -1,0 +1,57 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- history.xul, history-panel.xul, placesOverlay.xul -->
+
+<!ENTITY historyWindowTitle.label "Historia">
+<!ENTITY menuBar.tooltip "Pasek menu">
+<!ENTITY searchBar.tooltip "Pasek wyszukiwania">
+
+<!ENTITY search.placeholder "Szukaj w historii">
+<!ENTITY search.key "f">
+<!ENTITY view.label "Porządkuj">
+
+<!ENTITY view.columns.label "Wyświetl kolumny">
+<!ENTITY view.columns.accesskey "W">
+<!ENTITY view.sortBy.label "Sortuj według">
+<!ENTITY view.sortBy.accesskey "S">
+<!ENTITY view.groupBy.label "Grupuj według">
+<!ENTITY view.groupBy.accesskey "G">
+
+<!ENTITY view.unsorted.label "Nieposortowane">
+<!ENTITY view.unsorted.accesskey "o">
+<!ENTITY view.sortAscending.label "Porządek sortowania A > Z">
+<!ENTITY view.sortAscending.accesskey "P">
+<!ENTITY view.sortDescending.label "Porządek sortowania Z > A">
+<!ENTITY view.sortDescending.accesskey "Z">
+
+<!ENTITY view.groupNone.label "Niczego">
+<!ENTITY view.groupNone.accesskey "N">
+<!ENTITY view.groupDay.label "Dnia">
+<!ENTITY view.groupDay.accesskey "D">
+<!ENTITY view.groupSite.label "Witryna">
+<!ENTITY view.groupSite.accesskey "t">
+<!ENTITY view.groupDayAndSite.label "Dnia i witryny">
+<!ENTITY view.groupDayAndSite.accesskey "a">
+
+<!ENTITY cmd.open.label "Otwórz">
+<!ENTITY cmd.open.accesskey "O">
+<!ENTITY cmd.open_window.label "Otwórz odnośnik w nowym oknie">
+<!ENTITY cmd.open_window.accesskey "n">
+<!ENTITY cmd.open_tab.label "Otwórz odnośnik w nowej karcie">
+<!ENTITY cmd.open_tab.accesskey "w">
+
+<!ENTITY bookmarkLinkCmd.label "Dodaj zakładkę do odnośnika…">
+<!ENTITY bookmarkLinkCmd.accesskey "D">
+<!ENTITY bookmarkLinksCmd.label "Dodaj zakładkę do tych odnośników…">
+<!ENTITY bookmarkLinksCmd.accesskey "D">
+
+<!ENTITY col.title.label "Tytuł">
+<!ENTITY col.title.accesskey "T">
+<!ENTITY col.url.label "Adres">
+<!ENTITY col.url.accesskey "A">
+<!ENTITY col.lastvisit.label "Data ostatnich odwiedzin">
+<!ENTITY col.lastvisit.accesskey "z">
+<!ENTITY col.visitcount.label "Liczba wizyt">
+<!ENTITY col.visitcount.accesskey "L">

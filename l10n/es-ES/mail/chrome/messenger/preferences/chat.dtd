@@ -1,0 +1,52 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY generalTab.label "General">
+<!ENTITY startupAction.label "Al iniciar &brandShortName;:">
+<!ENTITY startupAction.accesskey "A">
+<!ENTITY startupOffline.label "Mantener mis cuentas de chat no conectadas">
+<!ENTITY startupConnectAuto.label "Conectar a mis cuentas automáticamente">
+<!ENTITY reportIdleAfter.label "Permitir a mis contactos saber que estoy inactivo tras">
+<!ENTITY reportIdleAfter.accesskey "P">
+<!ENTITY idleTime "minutos de inactividad">
+<!ENTITY andSetStatusToAway.label "y establecer mi estado en Ausente con este mensaje de estado:">
+<!ENTITY andSetStatusToAway.accesskey "b">
+<!ENTITY sendTyping.label "Enviar notificaciones de escritura en conversaciones">
+<!ENTITY sendTyping.accesskey "E">
+<!ENTITY chatNotifications.label "Cuando lleguen mensajes dirigidos a usted:">
+<!ENTITY desktopChatNotifications.label "Mostrar una notificación:">
+<!ENTITY desktopChatNotifications.accesskey "M">
+<!ENTITY completeNotification.label "con el nombre del remitente y una vista preliminar del mensaje">
+<!ENTITY buddyInfoOnly.label "con el nombre del remitente únicamente">
+<!ENTITY dummyNotification.label "sin ninguna información">
+<!ENTITY getAttention.label "Hacer parpadear el elemento de la barra de tareas">
+<!ENTITY getAttention.accesskey "H">
+<!ENTITY getAttentionMac.label "Animar icono del dock">
+<!ENTITY getAttentionMac.accesskey "d">
+<!ENTITY chatSound.accesskey "R">
+<!ENTITY chatSound.label "Reproducir un sonido">
+<!ENTITY play.label "Reproducir">
+<!ENTITY play.accesskey "c">
+<!ENTITY systemSound.label "Sonido predeterminado del sistema para nuevo correo">
+<!ENTITY systemSound.accesskey "S">
+<!ENTITY customsound.label "Usar el siguiente archivo de sonido">
+<!ENTITY customsound.accesskey "U">
+<!ENTITY browse.label "Examinar…">
+<!ENTITY browse.accesskey "x">
+<!ENTITY messageStyleTab.title "Estilos de mensajes">
+<!ENTITY messageStylePreview.label "Vista preliminar:">
+<!ENTITY messageStyleTheme.label "Tema:">
+<!ENTITY messageStyleTheme.accesskey "T">
+<!ENTITY messageStyleThunderbirdTheme.label "Thunderbird">
+<!ENTITY messageStyleBubblesTheme.label "Burbujas">
+<!ENTITY messageStyleDarkTheme.label "Oscuro">
+<!ENTITY messageStylePaperSheetsTheme.label "Hojas de papel">
+<!ENTITY messageStyleSimpleTheme.label "Simple">
+<!ENTITY messageStyleDefaultTheme.label "Predeterminado">
+<!ENTITY messageStyleVariant.label "Vaiante:">
+<!ENTITY messageStyleVariant.accesskey "V">
+<!ENTITY messageStyleShowHeader.label "Mostrar encabezado">
+<!ENTITY messageStyleShowHeader.accesskey "z">
+<!ENTITY messageStyleNoPreview.title "No está disponible la vista preliminar">
+<!ENTITY messageStyleNoPreview.description "Este tema no es válido o no está actualmente disponible (complemento desactivado, modo seguro…).">

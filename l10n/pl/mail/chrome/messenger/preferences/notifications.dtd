@@ -1,0 +1,18 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY notificationsDialog2.title "Dostosowywanie powiadomień o nowej poczcie">
+<!ENTITY window.width "30em">
+
+<!ENTITY alertCustomization.intro "Zaznacz pola, które mają być wyświetlane w oknach powiadomienia:">
+<!ENTITY previewText.label "Podgląd treści wiadomości">
+<!ENTITY previewText.accesskey "P">
+<!ENTITY subject.label "Temat">
+<!ENTITY subject.accesskey "T">
+<!ENTITY sender.label "Nadawca">
+<!ENTITY sender.accesskey "N">
+
+<!ENTITY totalOpenTimeBefore.label "Wyświetlaj powiadomienia przez">
+<!ENTITY totalOpenTimeBefore.accesskey "W">
+<!ENTITY totalOpenTimeEnd.label "s.">

@@ -1,0 +1,64 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  generalTab.label            "Général">
+
+<!ENTITY  startupAction.label         "Au démarrage de &brandShortName; :">
+<!ENTITY  startupAction.accesskey     "A">
+<!ENTITY  startupOffline.label        "Laisser mes comptes de messagerie instantanée déconnectés">
+<!ENTITY  startupConnectAuto.label    "Connecter mes comptes automatiquement">
+
+<!-- LOCALIZATION NOTE: reportIdleAfter.label is displayed first, then
+there's a field where the user can enter a number, and itemTime is
+displayed at the end of the line. The translations of the
+reportIdleAfter.label and idleTime parts don't have to mean the exact
+same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  reportIdleAfter.label         "Permettre à mes contacts de savoir que mon compte est inactif après">
+<!ENTITY  reportIdleAfter.accesskey     "P">
+<!ENTITY  idleTime                      "minutes d’inactivité">
+
+<!ENTITY  andSetStatusToAway.label      "et indiquer mon absence avec le message suivant :">
+<!ENTITY  andSetStatusToAway.accesskey  "e">
+
+<!ENTITY  sendTyping.label              "Envoyer les notifications de saisie dans mes conversations">
+<!ENTITY  sendTyping.accesskey          "v">
+
+<!ENTITY  chatNotifications.label             "À la réception d’un message qui vous est destiné :">
+<!ENTITY  desktopChatNotifications.label      "Afficher une notification :">
+<!ENTITY  desktopChatNotifications.accesskey  "c">
+<!ENTITY  completeNotification.label          "avec le nom de l’expéditeur et un aperçu du message">
+<!ENTITY  buddyInfoOnly.label                 "avec le nom de l’expéditeur uniquement">
+<!ENTITY  dummyNotification.label             "sans aucune information">
+<!ENTITY  getAttention.label                  "Faire clignoter l’élément dans la barre des tâches">
+<!ENTITY  getAttention.accesskey              "F">
+<!ENTITY  getAttentionMac.label               "Animer l’icône du dock">
+<!ENTITY  getAttentionMac.accesskey           "A">
+<!ENTITY  chatSound.accesskey                 "n">
+<!ENTITY  chatSound.label                     "Jouer un son">
+<!ENTITY  play.label                          "Jouer">
+<!ENTITY  play.accesskey                      "J">
+<!ENTITY  systemSound.label                   "Son système par défaut pour la réception d’un nouveau message">
+<!ENTITY  systemSound.accesskey               "S">
+<!ENTITY  customsound.label                   "Utiliser le fichier son suivant">
+<!ENTITY  customsound.accesskey               "U">
+<!ENTITY  browse.label                        "Parcourir…">
+<!ENTITY  browse.accesskey                    "r">
+
+<!ENTITY messageStyleTab.title             "Styles des messages">
+<!ENTITY messageStylePreview.label         "Aperçu :">
+<!ENTITY messageStyleTheme.label           "Thème :">
+<!ENTITY messageStyleTheme.accesskey       "T">
+<!ENTITY messageStyleThunderbirdTheme.label "Thunderbird">
+<!ENTITY messageStyleBubblesTheme.label    "Bulles">
+<!ENTITY messageStyleDarkTheme.label       "Sombre">
+<!ENTITY messageStylePaperSheetsTheme.label "Feuilles de papier">
+<!ENTITY messageStyleSimpleTheme.label     "Simple">
+<!ENTITY messageStyleDefaultTheme.label    "Thème par défaut">
+<!ENTITY messageStyleVariant.label         "Variante :">
+<!ENTITY messageStyleVariant.accesskey     "V">
+<!ENTITY messageStyleShowHeader.label      "Afficher l’en-tête">
+<!ENTITY messageStyleShowHeader.accesskey  "E">
+<!ENTITY messageStyleNoPreview.title       "Pas d’aperçu disponible">
+<!ENTITY messageStyleNoPreview.description "Ce thème n’est plus valide ou est indisponible (module désactivé, mode sans échec, …).">

@@ -1,0 +1,12 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY aboutDevices.title "Urządzenia">
+<!ENTITY aboutDevices.header "Twoje urządzenia">
+<!ENTITY aboutDevices.refresh "Odśwież">
+<!ENTITY aboutDevices.addDeviceHeader "Dodaj urządzenie">
+<!ENTITY aboutDevices.roku "Roku">
+<!ENTITY aboutDevices.chromecast "Chromecast">
+<!ENTITY aboutDevices.placeholder "Adres IP">
+<!ENTITY aboutDevices.connectManually "Połącz ręcznie">

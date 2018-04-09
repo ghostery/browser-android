@@ -1,0 +1,17 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title "Integrazione col sistema">
+<!ENTITY acceptIntegration.label "Imposta come predefinito">
+<!ENTITY cancelIntegration.label "Salta integrazione">
+<!ENTITY cancelIntegration2.label "Annulla">
+<!ENTITY defaultClient.intro "Utilizza &brandShortName; come programma predefinito per:">
+<!ENTITY email.label "E-Mail">
+<!ENTITY newsgroups.label "Gruppi di discussione">
+<!ENTITY feeds.label "Feed">
+<!ENTITY unsetDefault.tooltip "Non è possibile rendere &brandShortName; non predefinito dall'interno di &brandShortName; stesso. Se si desidera che un'altra applicazione sia la predefinita si deve utilizzare la voce 'Rendila predefinita' all'interno della stessa.">
+<!ENTITY checkOnStartup.label "Esegui sempre questo controllo all'avvio di &brandShortName;">
+<!ENTITY checkOnStartup.accesskey "A">
+<!ENTITY searchIntegration.label "Permetti a &searchIntegration.engineName; di cercare nei messaggi">
+<!ENTITY searchIntegration.accesskey "P">

@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title  "Интеграция с системой">
+<!ENTITY acceptIntegration.label  "Установить по умолчанию">
+<!ENTITY cancelIntegration.label  "Пропустить интеграцию">
+<!ENTITY cancelIntegration2.label  "Отмена">
+<!ENTITY defaultClient.intro  "Использовать &brandShortName; по умолчанию в качестве:">
+
+<!ENTITY email.label "Почтового клиента">
+<!ENTITY newsgroups.label "Клиента групп новостей">
+<!ENTITY feeds.label "Клиента лент новостей">
+
+<!ENTITY unsetDefault.tooltip "Невозможно отказаться от использования &brandShortName; в качестве клиента по умолчанию, находясь в самом &brandShortName;. Чтобы установить другое приложение в качестве клиента по умолчанию, вы должны использовать его функцию 'Установка по умолчанию'.">
+
+<!ENTITY checkOnStartup.label "Всегда производить эту проверку при запуске &brandShortName;">
+<!ENTITY checkOnStartup.accesskey "В">
+
+<!ENTITY searchIntegration.label "Разрешить &searchIntegration.engineName; производить поиск сообщений">
+<!ENTITY searchIntegration.accesskey "з">

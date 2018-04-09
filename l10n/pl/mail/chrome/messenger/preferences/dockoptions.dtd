@@ -1,0 +1,16 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dockOptionsDialog.title "Opcje ikony aplikacji">
+<!ENTITY window.macWidth "35em">
+
+<!ENTITY bounceSystemDockIcon.label "Animowanie ikony aplikacji, gdy przybędzie nowa wiadomość">
+<!ENTITY bounceSystemDockIcon.accesskey "A">
+<!ENTITY newMessagesCountDock.label "nowych wiadomości">
+<!ENTITY newMessagesCountDock.accesskey "h">
+<!ENTITY showAllUnreadMessagesCount.label "nieprzeczytanych wiadomości">
+<!ENTITY showAllUnreadMessagesCount.accesskey "n">
+<!ENTITY dockIconBadge.label "Plakietka ikony aplikacji">
+<!ENTITY dockIconShow.label "Plakietki zawierają liczbę:">
+<!ENTITY directNotificationSettings.label "Można wyłączyć plakietkę w panelu Powiadomienia Preferencji systemowych.">

@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Help Menu -->
+<!ENTITY helpMenu.label "Справка">
+<!ENTITY helpMenu.accesskey "С">
+<!-- LOCALIZATION NOTE some localizations of Windows use "?"
+                       for the help button in the menubar but Gnome does not.   -->
+<!ENTITY helpMenuWin.label "Справка">
+<!ENTITY helpMenuWin.accesskey "С">
+<!ENTITY helpTroubleshootingInfo.label     "Информация для решения проблем">
+<!ENTITY helpTroubleshootingInfo.accesskey "ф">
+<!ENTITY helpSafeMode.label     "Перезапустить с отключёнными дополнениями…">
+<!ENTITY helpSafeMode.accesskey "з">
+<!ENTITY releaseCmd2.label "Примечания к выпуску">
+<!ENTITY releaseCmd2.accesskey "в">
+<!ENTITY whatsNewCmd.label "Что нового">
+<!ENTITY whatsNewCmd.accesskey "н">
+<!ENTITY openHelp.label "Содержание">
+<!ENTITY openHelp.accesskey "С">
+<!ENTITY openHelp.commandkey "VK_F1">
+<!ENTITY openHelpMac.label "Справка &brandShortName;">
+<!ENTITY openHelpMac2.label "Справка &brandFullName;">
+<!ENTITY openHelpMac2.commandkey   "?">
+<!ENTITY openHelpMac2.modifiers    "accel">
+
+<!ENTITY aboutMenuCmd.label "О &brandShortName;">
+<!ENTITY aboutMenuCmd.accesskey "О">
+
+<!ENTITY aboutMenuCmd2.label "О &brandFullName;">
+<!ENTITY aboutMenuCmd2.accesskey "О">

@@ -1,0 +1,44 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY aboutTelemetry.pingDataSource "Origen de los datos de ping:">
+<!ENTITY aboutTelemetry.showCurrentPingData "Datos actuales de ping">
+<!ENTITY aboutTelemetry.showArchivedPingData "Datos archivados de ping">
+<!ENTITY aboutTelemetry.showSubsessionData "Mostrar datos de subsesión">
+<!ENTITY aboutTelemetry.choosePing "Elija ping:">
+<!ENTITY aboutTelemetry.archivePingType "Tipo de ping">
+<!ENTITY aboutTelemetry.archivePingHeader "Ping">
+<!ENTITY aboutTelemetry.optionGroupToday "Hoy">
+<!ENTITY aboutTelemetry.optionGroupYesterday "Ayer">
+<!ENTITY aboutTelemetry.optionGroupOlder "Más antiguo">
+<!ENTITY aboutTelemetry.payloadChoiceHeader "Contenido">
+<!ENTITY aboutTelemetry.previousPing "&lt;&lt;">
+<!ENTITY aboutTelemetry.nextPing "&gt;&gt;">
+<!ENTITY aboutTelemetry.pageTitle "Datos de Telemetry">
+<!ENTITY aboutTelemetry.moreInformations "¿Busca más información?">
+<!ENTITY aboutTelemetry.firefoxDataDoc "La <a>Documentación de datos de Firefox</a> contiene guías sobre cómo trabajar con nuestras herramientas de datos.">
+<!ENTITY aboutTelemetry.telemetryClientDoc "La <a>documentación del cliente Telemetry de Firefox</a> incluye definiciones de conceptos, documentación de la API y referencias de datos.">
+<!ENTITY aboutTelemetry.telemetryDashboard "Los <a>paneles de Telemetry</a> le permiten visualizar los datos que Mozilla recibe a través de Telemetry.">
+<!ENTITY aboutTelemetry.showInFirefoxJsonViewer "Abrir en el visor JSON">
+<!ENTITY aboutTelemetry.homeSection "Inicio">
+<!ENTITY aboutTelemetry.generalDataSection "Datos generales">
+<!ENTITY aboutTelemetry.environmentDataSection "Datos del entorno">
+<!ENTITY aboutTelemetry.sessionInfoSection "Información de sesión">
+<!ENTITY aboutTelemetry.scalarsSection "Escalares">
+<!ENTITY aboutTelemetry.keyedScalarsSection "Escalares con nombre">
+<!ENTITY aboutTelemetry.histogramsSection "Histogramas">
+<!ENTITY aboutTelemetry.keyedHistogramsSection "Histogramas con leyendas">
+<!ENTITY aboutTelemetry.eventsSection "Eventos">
+<!ENTITY aboutTelemetry.simpleMeasurementsSection "Medidas simples">
+<!ENTITY aboutTelemetry.telemetryLogSection "Registro de Telemetry">
+<!ENTITY aboutTelemetry.slowSqlSection "Sentencias SQL lentas">
+<!ENTITY aboutTelemetry.chromeHangsSection "El navegador se cuelga">
+<!ENTITY aboutTelemetry.addonDetailsSection "Detalles del complemento">
+<!ENTITY aboutTelemetry.capturedStacksSection "Pilas capturadas">
+<!ENTITY aboutTelemetry.lateWritesSection "Escrituras demoradas">
+<!ENTITY aboutTelemetry.rawPayloadSection "Contenido sin procesar">
+<!ENTITY aboutTelemetry.raw "JSON sin procesar">
+<!ENTITY aboutTelemetry.fullSqlWarning "NOTA: la depuración SQL lenta está activada. Pueden mostrarse cadenas completas de SQL debajo, pero no se enviarán a Telemetry.">
+<!ENTITY aboutTelemetry.fetchStackSymbols "Recuperar nombres de funciones para las pilas">
+<!ENTITY aboutTelemetry.hideStackSymbols "Mostrar datos de la pila sin procesarlos">

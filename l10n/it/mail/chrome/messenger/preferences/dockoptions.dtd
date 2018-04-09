@@ -1,0 +1,15 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dockOptionsDialog.title "Opzioni icona applicazione">
+<!ENTITY window.macWidth "48em">
+<!ENTITY bounceSystemDockIcon.label "Anima l'icona dell'app quando arriva un nuovo messaggio">
+<!ENTITY bounceSystemDockIcon.accesskey "i">
+<!ENTITY newMessagesCountDock.label "Contatore nuovi messaggi">
+<!ENTITY newMessagesCountDock.accesskey "n">
+<!ENTITY showAllUnreadMessagesCount.label "Contatore messaggi non letti">
+<!ENTITY showAllUnreadMessagesCount.accesskey "C">
+<!ENTITY dockIconBadge.label "Contrassegno nell'icona dell'applicazione">
+<!ENTITY dockIconShow.label "Contrassegna l'icona dell'applicazione con:">
+<!ENTITY directNotificationSettings.label "È possibile disattivare il contrassegno nella sezione Notifiche delle Preferenze di Sistema">

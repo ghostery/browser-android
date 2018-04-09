@@ -1,0 +1,17 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title "Integración con el sistema">
+<!ENTITY acceptIntegration.label "Definir como predet.">
+<!ENTITY cancelIntegration.label "Omitir integración">
+<!ENTITY cancelIntegration2.label "Cancelar">
+<!ENTITY defaultClient.intro "Usar &brandShortName; como cliente predeterminado para:">
+<!ENTITY email.label "Correo-e">
+<!ENTITY newsgroups.label "Grupos de noticias">
+<!ENTITY feeds.label "Canales">
+<!ENTITY unsetDefault.tooltip "No es posible eliminar &brandShortName; como cliente predeterminado desde el propio &brandShortName;. Para que otra aplicación sea la predeterminada debe usar su diálogo 'Establecer como predeterminada'.">
+<!ENTITY checkOnStartup.label "Hacer siempre esta comprobación al iniciar &brandShortName;">
+<!ENTITY checkOnStartup.accesskey "H">
+<!ENTITY searchIntegration.label "Permitir que &searchIntegration.engineName; busque en los mensajes">
+<!ENTITY searchIntegration.accesskey "P">

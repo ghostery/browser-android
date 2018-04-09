@@ -1,0 +1,40 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY messengerStartPage.label         "Page de démarrage de &brandShortName;">
+<!ENTITY enableStartPage.label            "Afficher la page de démarrage au lancement de &brandShortName;">
+<!ENTITY enableStartPage.accesskey        "A">
+<!ENTITY location.label                   "Adresse :">
+<!ENTITY location1.accesskey               "d">
+<!ENTITY useDefault.label                 "Réinitialiser">
+<!ENTITY useDefault.accesskey             "i">
+
+<!ENTITY changeDockIconOptions.label      "Modifier les préférences de l’icône de l’application">
+<!ENTITY dockOptions.label                "Options de l’icône de l’application…">
+<!ENTITY dockOptions.accesskey            "n">
+
+<!ENTITY newMessagesArrive.label          "Quand un nouveau message arrive :">
+<!ENTITY playSound.label                  "Jouer un son">
+<!ENTITY playSound1.accesskey             "J">
+<!ENTITY playSoundMac.label               "Jouer le fichier son suivant :">
+<!ENTITY playSoundMac.accesskey           "J">
+<!ENTITY showAnimatedAlert.label          "Afficher un avertissement">
+<!ENTITY showAnimatedAlert.accesskey      "f">
+<!ENTITY notificationAlertSettings2.label "Les alertes et le son par défaut peuvent être désactivés depuis le panneau Notifications dans les préférences système.">
+<!ENTITY customizeMailAlert.label         "Personnaliser…">
+<!ENTITY customizeMailAlert.accesskey     "P">
+
+<!ENTITY showTrayIcon.label               "Afficher une icône dans la barre de notification">
+<!ENTITY showTrayIcon.accesskey           "e">
+
+<!ENTITY play.label                       "Jouer le son">
+<!ENTITY play.accesskey                   "o">
+<!ENTITY systemsound.label                "Son système pour « nouveau message »">
+<!ENTITY systemsound.accesskey            "y">
+<!ENTITY customsound.label                "Utiliser le fichier son suivant :">
+<!ENTITY customsound.accesskey            "U">
+<!ENTITY browse.label                     "Parcourir…">
+<!ENTITY browse.accesskey                 "r">
+
+<!ENTITY defaultSearchEngine.label        "Moteur de recherche par défaut">

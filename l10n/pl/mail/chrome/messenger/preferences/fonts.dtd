@@ -1,0 +1,74 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY fontsAndEncodingsDialog.title "Czcionki i zestawy znaków">
+
+<!ENTITY language.label "Czcionki:">
+<!ENTITY language.accesskey "C">
+
+<!ENTITY size.label "Rozmiar:">
+<!ENTITY sizeProportional.accesskey "R">
+<!ENTITY sizeMonospace.accesskey "z">
+
+<!ENTITY proportional.label "Proporcjonalna:">
+<!ENTITY proportional.accesskey "a">
+
+<!ENTITY serif.label "Szeryfowa:">
+<!ENTITY serif.accesskey "S">
+<!ENTITY sans-serif.label "Bezszeryfowa:">
+<!ENTITY sans-serif.accesskey "B">
+<!ENTITY monospace.label "O stałej szerokości:">
+<!ENTITY monospace.accesskey "O">
+
+<!ENTITY font.langGroup.latin "Łacińskie">
+<!ENTITY font.langGroup.japanese "Japońskie">
+<!ENTITY font.langGroup.trad-chinese "Chińskie tradycyjne (Tajwan)">
+<!ENTITY font.langGroup.simpl-chinese "Chińskie uproszczone">
+<!ENTITY font.langGroup.trad-chinese-hk "Chińskie tradycyjne (Hongkong)">
+<!ENTITY font.langGroup.korean "Koreańskie">
+<!ENTITY font.langGroup.cyrillic "Cyrylica">
+<!ENTITY font.langGroup.el "Greckie">
+<!ENTITY font.langGroup.other "Inne systemy pisma">
+<!ENTITY font.langGroup.thai "Tajskie">
+<!ENTITY font.langGroup.hebrew "Hebrajskie">
+<!ENTITY font.langGroup.arabic "Arabskie">
+<!ENTITY font.langGroup.devanagari "Dewanagari">
+<!ENTITY font.langGroup.tamil "Tamilskie">
+<!ENTITY font.langGroup.armenian "Ormiańskie">
+<!ENTITY font.langGroup.bengali "Bengalskie">
+<!ENTITY font.langGroup.canadian "Ujednolicony sylabariusz kanadyjski">
+<!ENTITY font.langGroup.ethiopic "Etiopskie">
+<!ENTITY font.langGroup.georgian "Gruzińskie">
+<!ENTITY font.langGroup.gujarati "Gudżarati">
+<!ENTITY font.langGroup.gurmukhi "Gurmukhi">
+<!ENTITY font.langGroup.khmer "Khmerskie">
+<!ENTITY font.langGroup.malayalam "Malajalam">
+<!ENTITY font.langGroup.math "Matematyczne">
+<!ENTITY font.langGroup.odia "Orija">
+<!ENTITY font.langGroup.telugu "Telugu">
+<!ENTITY font.langGroup.kannada "Kannada">
+<!ENTITY font.langGroup.sinhala "Syngaleskie">
+<!ENTITY font.langGroup.tibetan "Tybetańskie">
+
+<!ENTITY minSize.label "Minimalny rozmiar czcionki:">
+<!ENTITY minSize.accesskey "M">
+<!ENTITY minSize.none "Brak">
+
+<!ENTITY useDefaultFontSerif.label "Szeryfowa">
+<!ENTITY useDefaultFontSansSerif.label "Bezszeryfowa">
+
+<!ENTITY fontControl.label "Zasady używania czcionek">
+<!ENTITY useFixedWidthForPlainText.label "Używaj czcionki o stałej szerokości dla wiadomości wysyłanych jako zwykły tekst">
+<!ENTITY fixedWidth.accesskey "U">
+<!ENTITY useDocumentFonts.label "Zezwalaj na używanie czcionek zadeklarowanych w wiadomościach">
+<!ENTITY useDocumentFonts.accesskey "Z">
+
+<!ENTITY languagesTitle2.label "Kodowanie tekstu">
+<!ENTITY composingDescription2.label "Ustawienia domyślnego kodowania tekstu wysyłanych i odbieranych wiadomości">
+<!ENTITY sendDefaultCharset.label "Poczta wychodząca:">
+<!ENTITY sendDefaultCharset.accesskey "w">
+<!ENTITY viewDefaultCharsetList.label "Poczta przychodząca:">
+<!ENTITY viewDefaultCharsetList.accesskey "t">
+<!ENTITY replyInDefaultCharset3.label "Używaj domyślnego kodowania tekstu w odpowiedziach zawsze, kiedy to możliwe">
+<!ENTITY replyInDefaultCharset3.accesskey "d">

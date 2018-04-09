@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title "Integracja z systemem operacyjnym">
+<!ENTITY acceptIntegration.label "Ustaw jako domyślny">
+<!ENTITY cancelIntegration.label "Pomiń integrację">
+<!ENTITY cancelIntegration2.label "Anuluj">
+<!ENTITY defaultClient.intro "&brandShortName; ma być domyślnym klientem:">
+
+<!ENTITY email.label "poczty">
+<!ENTITY newsgroups.label "grup dyskusyjnych">
+<!ENTITY feeds.label "źródeł aktualności">
+
+<!ENTITY unsetDefault.tooltip "Nie jest możliwe usunięcie programu &brandShortName; z roli domyślnego klienta z poziomu programu &brandShortName;. Aby uczynić inny program domyślnym klientem, należy skorzystać z jego możliwości integracji z systemem operacyjnym.">
+
+<!ENTITY checkOnStartup.label "Sprawdzaj te ustawienia zawsze podczas uruchamiania programu &brandShortName;">
+<!ENTITY checkOnStartup.accesskey "S">
+
+<!ENTITY searchIntegration.label "Zezwalaj programowi &searchIntegration.engineName; na wyszukiwanie wiadomości">
+<!ENTITY searchIntegration.accesskey "Z">

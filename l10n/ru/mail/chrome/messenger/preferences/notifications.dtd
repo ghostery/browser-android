@@ -1,0 +1,24 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY notificationsDialog2.title       "Настройка уведомлений о приходе почты">
+<!ENTITY window.width                     "40em">
+
+<!ENTITY alertCustomization.intro         "Укажите поля, показываемые в уведомлении о приходе почты:">
+<!ENTITY previewText.label                "Текст сообщения">
+<!ENTITY previewText.accesskey            "к">
+<!ENTITY subject.label                    "Тема">
+<!ENTITY subject.accesskey                "е">
+<!ENTITY sender.label                     "Отправитель">
+<!ENTITY sender.accesskey                 "п">
+
+<!-- LOCALIZATION NOTE: totalOpenTimeBefore.label is displayed first, then
+there's a field where the user can enter a number, and totalOpenTimeEnd.label
+is displayed at the end of the line. The translations of the
+totalOpenTimeBefore.label and totalOpenTimeEnd.label parts don't have to mean
+the exact same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  totalOpenTimeBefore.label       "Отображать уведомление о приходе почты в течение">
+<!ENTITY  totalOpenTimeBefore.accesskey   "о">
+<!ENTITY  totalOpenTimeEnd.label          "сек.">

@@ -1,0 +1,47 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  connectionsDialog.title       "Параметры соединения">
+<!ENTITY  window.width                  "49em">
+<!ENTITY  window.macWidth               "44em">
+
+<!ENTITY  proxyTitle.label              "Настройка прокси для доступа в Интернет">
+<!ENTITY  noProxyTypeRadio.label        "Без прокси">
+<!ENTITY  noProxyTypeRadio.accesskey    "е">
+<!ENTITY  systemTypeRadio.label         "Использовать системные настройки прокси">
+<!ENTITY  systemTypeRadio.accesskey     "с">
+<!ENTITY  WPADTypeRadio.label           "Автоматически определять настройки прокси для этой сети">
+<!ENTITY  WPADTypeRadio.accesskey       "в">
+<!ENTITY  manualTypeRadio.label         "Ручная настройка сервиса прокси:">
+<!ENTITY  manualTypeRadio.accesskey     "в">
+<!ENTITY  autoTypeRadio.label           "URL автоматической настройки сервиса прокси:">
+<!ENTITY  autoTypeRadio.accesskey       "а">
+<!ENTITY  reload.label                  "Обновить">
+<!ENTITY  reload.accesskey              "б">
+<!ENTITY  http.label                    "HTTP прокси:">
+<!ENTITY  http.accesskey                "T">
+<!ENTITY  ssl.label                     "SSL прокси:">
+<!ENTITY  ssl.accesskey                 "S">
+<!ENTITY  socks.label                   "Узел SOCKS:">
+<!ENTITY  socks.accesskey               "O">
+<!ENTITY  socks4.label                  "SOCKS 4">
+<!ENTITY  socks4.accesskey              "4">
+<!ENTITY  socks5.label                  "SOCKS 5">
+<!ENTITY  socks5.accesskey              "5">
+<!ENTITY  HTTPport.label                "Порт:">
+<!ENTITY  HTTPport.accesskey            "о">
+<!ENTITY  SSLport.label                 "Порт:">
+<!ENTITY  SSLport.accesskey             "р">
+<!ENTITY  SOCKSport.label               "Порт:">
+<!ENTITY  SOCKSport.accesskey           "т">
+<!ENTITY  noproxy.label                 "Не использовать прокси для:">
+<!ENTITY  noproxy.accesskey             "д">
+<!ENTITY  noproxyExplain.label          "Пример: .mozilla-russia.org, .net.nz, 192.168.1.0/24">
+<!ENTITY  shareproxy.label              "Использовать этот прокси-сервер для всех протоколов">
+<!ENTITY  shareproxy.accesskey          "е">
+<!ENTITY  autologinproxy.label          "Не запрашивать аутентификацию (если был сохранён пароль)">
+<!ENTITY  autologinproxy.accesskey      "ш">
+<!ENTITY  autologinproxy.tooltip        "Эта настройка аутентифицирует вас на прокси, не выполняя запросов, если вы сохранили свои учётные данные. Если аутентификация не удастся, вам будет выдан запрос.">
+<!ENTITY  socksRemoteDNS.label          "Отправлять DNS-запросы через прокси, используя SOCKS v5">
+<!ENTITY  socksRemoteDNS.accesskey      "я">

@@ -1,0 +1,48 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemJunk.label          "Анти-спам">
+<!ENTITY itemPhishing.label      "Мошеннические письма">
+<!ENTITY itemPasswords.label     "Пароли">
+<!ENTITY itemAntiVirus.label     "Работа с антивирусом">
+
+<!-- Junk Mail Controls -->
+<!ENTITY junkMail.intro "Здесь вы можете установить настройки анти-спам фильтра по умолчанию. Настройки анти-спам фильтра, специфичные для учётной записи, могут быть установлены в параметрах учётной записи.">
+<!ENTITY manualMark.label "Когда я помечаю сообщения как спам:">
+<!ENTITY manualMark.accesskey "с">
+<!ENTITY manualMarkModeMove.label "Перемещать их в папку «Спам» учётной записи">
+<!ENTITY manualMarkModeMove.accesskey "м">
+<!ENTITY manualMarkModeDelete.label "Удалять их">
+<!ENTITY manualMarkModeDelete.accesskey "д">
+<!ENTITY markAsReadOnSpam.label "Отмечать сообщения, определённые как спам, как прочитанные">
+<!ENTITY markAsReadOnSpam.accesskey "ч">
+<!ENTITY enableAdaptiveJunkLogging.label "Включить журнал работы адаптивного анти-спам фильтра">
+<!ENTITY enableAdaptiveJunkLogging.accesskey "ж">
+<!ENTITY openJunkLog.label "Показать журнал">
+<!ENTITY openJunkLog.accesskey "к">
+<!ENTITY resetTrainingData.label "Удалить данные обучения">
+<!ENTITY resetTrainingData.accesskey "б">
+
+<!-- Phishing Detector -->
+<!ENTITY phishingDetector1.intro  "&brandShortName; может анализировать сообщения для выявления подозрительных писем, рассылаемых мошенниками, проверяя их на наличие определённых приёмов и техник, используемых для ввода вас в заблуждение.">
+<!ENTITY enablePhishingDetector1.label    "Информировать, не является ли читаемое мною сообщение подозрительным письмом, рассылаемым мошенниками">
+<!ENTITY enablePhishingDetector1.accesskey  "ф">
+<!ENTITY useDownloadedList.label "Использовать загруженный список подозрительных сообщений, вероятно рассылаемых мошенниками">
+<!ENTITY useDownloadedList.accesskey "п">
+
+<!-- Passwords -->
+<!ENTITY savedPasswords.intro           "&brandShortName; может запоминать пароли для всех ваших учетных записей.">
+<!ENTITY useMasterPassword.label        "Использовать мастер-пароль">
+<!ENTITY useMasterPassword.accesskey    "о">
+<!ENTITY masterPassword.intro           "Мастер-пароль защищает все ваши пароли, но вам нужно будет вводить его один раз в сессию.">
+<!ENTITY changeMasterPassword.label     "Сменить мастер-пароль…">
+<!ENTITY changeMasterPassword.accesskey "е">
+<!ENTITY savedPasswords.label           "Сохранённые пароли…">
+<!ENTITY savedPasswords.accesskey       "х">
+
+<!-- Anti Virus -->
+<!ENTITY antiVirus.intro      "&brandShortName; может облегчить работу антивируса при проверке входящих сообщений на наличие вирусов перед тем, как сохранить их в почтовые папки.">
+<!ENTITY antiVirus.label      "Разрешить антивирусу помещать в карантин отдельные входящие сообщения">
+<!ENTITY antiVirus.accesskey  "в">
+

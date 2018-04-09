@@ -1,0 +1,28 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY editBookmarkOverlay.name.label "Nazwa:">
+<!ENTITY editBookmarkOverlay.name.accesskey "N">
+<!ENTITY editBookmarkOverlay.location.label "Adres:">
+<!ENTITY editBookmarkOverlay.location.accesskey "d">
+<!ENTITY editBookmarkOverlay.feedLocation.label "Adres kanału:">
+<!ENTITY editBookmarkOverlay.feedLocation.accesskey "A">
+<!ENTITY editBookmarkOverlay.siteLocation.label "Adres witryny:">
+<!ENTITY editBookmarkOverlay.siteLocation.accesskey "r">
+<!ENTITY editBookmarkOverlay.folder.label "Folder:">
+<!ENTITY editBookmarkOverlay.folder.accesskey "F">
+<!ENTITY editBookmarkOverlay.foldersExpanderDown.tooltip "Wyświetl wszystkie foldery zakładek">
+<!ENTITY editBookmarkOverlay.expanderUp.tooltip "Ukryj">
+<!ENTITY editBookmarkOverlay.tags.label "Etykiety:">
+<!ENTITY editBookmarkOverlay.tags.accesskey "E">
+<!ENTITY editBookmarkOverlay.tagsEmptyDesc.label "Rozdziel etykiety przecinkami">
+<!ENTITY editBookmarkOverlay.description.label "Opis:">
+<!ENTITY editBookmarkOverlay.description.accesskey "O">
+<!ENTITY editBookmarkOverlay.keyword.label "Słowo kluczowe:">
+<!ENTITY editBookmarkOverlay.keyword.accesskey "k">
+<!ENTITY editBookmarkOverlay.tagsExpanderDown.tooltip "Wyświetl wszystkie etykiety">
+<!ENTITY editBookmarkOverlay.choose.label "Wybierz…">
+<!ENTITY editBookmarkOverlay.newFolderButton.label "Nowy folder">
+<!ENTITY editBookmarkOverlay.newFolderButton.accesskey "w">
+<!ENTITY editBookmarkOverlay.newFolderButton.tooltip "Utwórz nowy folder">

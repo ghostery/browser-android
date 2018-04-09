@@ -1,0 +1,19 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.categories.new.title "Nuova categoria">
+<!ENTITY pref.categories.newButton.label "Nuova…">
+<!ENTITY pref.categories.newButton.accesskey "N">
+<!ENTITY pref.categories.edit.title "Modifica categoria">
+<!ENTITY pref.categories.editButton.label "Modifica…">
+<!ENTITY pref.categories.editButton.accesskey "M">
+<!ENTITY pref.categories.removeButton.label "Rimuovi">
+<!ENTITY pref.categories.removeButton.accesskey "R">
+<!ENTITY pref.categories.name.label "Nome">
+<!ENTITY pref.categories.color.label "Colore">
+<!ENTITY pref.categories.usecolor.label "Usa colore">
+<!ENTITY pref.categories.none.label "(nessuno)">
+<!ENTITY pref.categories.overwrite "Esiste già una categoria con questo nome. \n Sovrascriverla?">
+<!ENTITY pref.categories.overwrite.title "Attenzione: nome duplicato">
+<!ENTITY pref.categories.noBlankCategories "È necessario inserire un nome di categoria.">

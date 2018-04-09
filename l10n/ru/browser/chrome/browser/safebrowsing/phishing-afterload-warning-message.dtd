@@ -1,0 +1,65 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY safeb.palm.accept.label2 "Вернуться назад">
+<!ENTITY safeb.palm.seedetails.label "Узнать подробнее">
+
+<!-- Localization note (safeb.palm.notdeceptive.label) - Label of the Help menu
+  item. Either this or reportDeceptiveSiteMenu.label from report-phishing.dtd is
+  shown. -->
+<!ENTITY safeb.palm.notdeceptive.label "Это не поддельный сайт…">
+<!-- Localization note (safeb.palm.notdeceptive.accesskey) - Because
+  safeb.palm.notdeceptive.label and reportDeceptiveSiteMenu.title from
+  report-phishing.dtd are never shown at the same time, the same accesskey can
+  be used for them. -->
+<!ENTITY safeb.palm.notdeceptive.accesskey "е">
+
+<!-- Localization note (safeb.palm.advisory.desc) - Please don't translate <a id="advisory_provider"/> tag.  It will be replaced at runtime with advisory link-->
+<!ENTITY safeb.palm.advisory.desc2 "Информация получена от <a id='advisory_provider'/>.">
+
+
+<!ENTITY safeb.blocked.malwarePage.title2 "Посещение этого веб-сайта может причинить вред вашему компьютеру">
+<!ENTITY safeb.blocked.malwarePage.shortDesc2 "&brandShortName; заблокировал эту страницу, потому что она может попытаться установить вредоносные программы, которые могут украсть или удалить личную информацию на вашем компьютере.">
+
+<!-- Localization note (safeb.blocked.malwarePage.errorDesc.override, safeb.blocked.malwarePage.errorDesc.noOverride, safeb.blocked.malwarePage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
+
+<!ENTITY safeb.blocked.malwarePage.errorDesc.override "Есть информация, что на <span id='malware_sitename'/> <a id='error_desc_link'>размещены вредоносные программы</a>. Вы можете <a id='report_detection'>сообщить о неверности этой информации</a>, или <a id='ignore_warning_link'>проигнорировать риск</a> и перейти на этот небезопасный сайт.">
+
+<!ENTITY safeb.blocked.malwarePage.errorDesc.noOverride "Есть информация, что на <span id='malware_sitename'/> <a id='error_desc_link'>размещены вредоносные программы</a>. Вы можете <a id='report_detection'>сообщить о неверности этой информации</a>.">
+
+<!ENTITY safeb.blocked.malwarePage.learnMore "Узнайте больше о нежелательном веб-содержимом, в том числе о вирусах и других вредоносных программах, и о том, как защитить свой компьютер, на сайте <a id='learn_more_link'>StopBadware.org</a>. Узнайте больше о Защите от фишинга и вредоносных программ в &brandShortName; на сайте <a id='firefox_support'>support.mozilla.org</a>.">
+
+
+<!ENTITY safeb.blocked.unwantedPage.title2 "Этот сайт может содержать нежелательные программы">
+<!ENTITY safeb.blocked.unwantedPage.shortDesc2 "&brandShortName; заблокировал эту страницу, потому что она может попытаться обманом заставить вас установить программы, которые будут мешать вашей работе в браузере (например, менять стартовую страницу или показывать дополнительную рекламу на сайтах).">
+
+<!-- Localization note (safeb.blocked.unwantedPage.errorDesc.override, safeb.blocked.unwantedPage.errorDesc.noOverride, safeb.blocked.unwantedPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
+
+<!ENTITY safeb.blocked.unwantedPage.errorDesc.override "Есть информация, что на <span id='unwanted_sitename'/> <a id='error_desc_link'>размещены нежелательные программы</a>. Вы можете <a id='ignore_warning_link'>проигнорировать риск</a> и перейти на этот небезопасный сайт.">
+
+<!ENTITY safeb.blocked.unwantedPage.errorDesc.noOverride "Есть информация, что на <span id='unwanted_sitename'/> <a id='error_desc_link'>размещены нежелательные программы</a>.">
+
+<!ENTITY safeb.blocked.unwantedPage.learnMore "Узнайте больше о нежелательных программах на сайте <a id='learn_more_link'>Правила в отношении нежелательного ПО</a>. Узнайте больше о Защите от фишинга и вредоносных программ в &brandShortName; на сайте <a id='firefox_support'>support.mozilla.org</a>.">
+
+
+<!ENTITY safeb.blocked.phishingPage.title3 "Это поддельный сайт">
+<!ENTITY safeb.blocked.phishingPage.shortDesc3 "&brandShortName; заблокировал эту страницу, потому что она может попытаться обманом заставить вас произвести опасные действия, например установить программу или раскрыть личную информацию, такую как пароли или реквизиты банковских карт.">
+
+<!-- Localization note (safeb.blocked.phishingPage.errorDesc.override, safeb.blocked.phishingPage.errorDesc.noOverride, safeb.blocked.phishingPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
+<!ENTITY safeb.blocked.phishingPage.errorDesc.override "Есть информация, что <span id='phishing_sitename'/> является <a id='error_desc_link'>поддельным сайтом</a>. Вы можете <a id='report_detection'>сообщить о неверности этой информации</a>, или <a id='ignore_warning_link'>проигнорировать риск</a> и перейти на этот небезопасный сайт.">
+
+<!ENTITY safeb.blocked.phishingPage.errorDesc.noOverride "Есть информация, что <span id='phishing_sitename'/> является <a id='error_desc_link'>поддельным сайтом</a>. Вы можете <a id='report_detection'>сообщить о неверности этой информации</a>.">
+
+<!ENTITY safeb.blocked.phishingPage.learnMore "Узнайте больше о поддельных сайтах и фишинге на сайте <a id='learn_more_link'>www.antiphishing.org</a>. Узнайте больше о Защите от фишинга и вредоносных программ в &brandShortName; на сайте <a id='firefox_support'>support.mozilla.org</a>.">
+
+
+<!ENTITY safeb.blocked.harmfulPage.title "Этот сайт может содержать вредоносные программы">
+<!ENTITY safeb.blocked.harmfulPage.shortDesc2 "&brandShortName; заблокировал эту страницу, потому что она может попытаться установить опасные программы, которые украдут или удалят вашу информацию (например, фотографии, пароли, сообщения и реквизиты банковских карт).">
+
+<!-- Localization note (safeb.blocked.harmfulPage.errorDesc.override, safeb.blocked.harmfulPage.errorDesc.noOverride, safeb.blocked.harmfulPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
+<!ENTITY safeb.blocked.harmfulPage.errorDesc.override "Есть информация, что <span id='harmful_sitename'/> <a id='error_desc_link'>содержит потенциально нежелательное приложение</a>. Вы можете <a id='ignore_warning_link'>проигнорировать риск</a> и перейти на этот небезопасный сайт.">
+
+<!ENTITY safeb.blocked.harmfulPage.errorDesc.noOverride "Есть информация, что <span id='harmful_sitename'/> <a id='error_desc_link'>содержит потенциально нежелательное приложение</a>.">
+
+<!ENTITY safeb.blocked.harmfulPage.learnMore "Узнайте больше о Защите от фишинга и вредоносных программ в &brandShortName; на сайте <a id='firefox_support'>support.mozilla.org</a>.">

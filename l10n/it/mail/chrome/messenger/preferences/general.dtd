@@ -1,0 +1,40 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY messengerStartPage.label         "Pagina iniziale di &brandShortName;">
+<!ENTITY enableStartPage.label            "All'apertura di &brandShortName; mostra la pagina iniziale nell'area messaggi">
+<!ENTITY enableStartPage.accesskey        "d">
+<!ENTITY location.label                   "Posizione:">
+<!ENTITY location1.accesskey               "n">
+<!ENTITY useDefault.label                 "Ripristina predefinita">
+<!ENTITY useDefault.accesskey             "R">
+
+<!ENTITY changeDockIconOptions.label      "Modifica le preferenze per l'icona dell'app">
+<!ENTITY dockOptions.label                "Opzioni icona applicazione…">
+<!ENTITY dockOptions.accesskey            "n">
+
+<!ENTITY newMessagesArrive.label          "All'arrivo di un messaggio:">
+<!ENTITY playSound.label                  "Riproduci un suono">
+<!ENTITY playSound1.accesskey             "o">
+<!ENTITY playSoundMac.label               "Esegui questo file audio:">
+<!ENTITY playSoundMac.accesskey           "E">
+<!ENTITY showAnimatedAlert.label          "Mostra un avviso">
+<!ENTITY showAnimatedAlert.accesskey      "M">
+<!ENTITY notificationAlertSettings2.label "È possibile disattivare gli avvisi e il suono predefinito nella sezione Notifiche delle Preferenze di Sistema.">
+<!ENTITY customizeMailAlert.label         "Personalizza…">
+<!ENTITY customizeMailAlert.accesskey     "z">
+
+<!ENTITY showTrayIcon.label               "Mostra un'icona nell'area di notifica">
+<!ENTITY showTrayIcon.accesskey           "t">
+
+<!ENTITY play.label                       "Ascolta">
+<!ENTITY play.accesskey                   "A">
+<!ENTITY systemsound.label                "Suono predefinito di sistema per nuova posta">
+<!ENTITY systemsound.accesskey            "p">
+<!ENTITY customsound.label                "Utilizza questo file audio">
+<!ENTITY customsound.accesskey            "U">
+<!ENTITY browse.label                     "Sfoglia…">
+<!ENTITY browse.accesskey                 "S">
+
+<!ENTITY defaultSearchEngine.label        "Motore di ricerca predefinito">

@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.toolbars.title    "Barres d’outils">
+
+<!ENTITY composition.caption    "Afficher ces boutons dans la barre d’outils de composition :">
+
+<!ENTITY new.label              "Nouveau">
+<!ENTITY open.label             "Ouvrir">
+<!ENTITY save.label             "Enregistrer">
+<!ENTITY publish.label          "Publier">
+<!ENTITY preview.label          "Visualiser">
+<!ENTITY cut.label              "Couper">
+<!ENTITY copy.label             "Copier">
+<!ENTITY paste.label            "Coller">
+<!ENTITY print.label            "Imprimer">
+<!ENTITY find.label             "Rechercher">
+<!ENTITY image.label            "Image">
+<!ENTITY hline.label            "Ligne H.">
+<!ENTITY table.label            "Tableau">
+<!ENTITY link.label             "Lien">
+<!ENTITY anchor.label           "Ancre">
+
+<!ENTITY formatting.caption     "Afficher ces boutons dans la barre d’outils de formatage :">
+
+<!ENTITY smaller.label          "Plus petite">
+<!ENTITY larger.label           "Plus grande">
+<!ENTITY bold.label             "Gras">
+<!ENTITY bullets.label          "Liste à puces">
+<!ENTITY numbers.label          "Liste numérotée">
+<!ENTITY italic.label           "Italique">
+<!ENTITY outdent.label          "Désindenter">
+<!ENTITY indent.label           "Indenter">
+<!ENTITY underline.label        "Souligner">
+
+<!ENTITY absolutePosition.label "Positionnement absolu">
+<!ENTITY decreaseZIndex.label   "Arrière-plan">
+<!ENTITY increaseZIndex.label   "Avant-plan">

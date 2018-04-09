@@ -1,0 +1,18 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY aboutSupport.appBasicsAppBuildID "ID di build dell'applicazione">
+<!ENTITY aboutSupport.accountsTitle "Account di posta e news">
+<!ENTITY aboutSupport.showPrivateData.mainText "Includere nome account">
+<!ENTITY aboutSupport.showPrivateData.explanationText "(informazione che probabilmente consente di essere identificati)">
+<!ENTITY aboutSupport.accountsID "ID">
+<!ENTITY aboutSupport.accountsName "Nome">
+<!ENTITY aboutSupport.accountsIncomingServer "Server in entrata">
+<!ENTITY aboutSupport.accountsOutgoingServers "Server in uscita">
+<!ENTITY aboutSupport.accountsServerName "Nome">
+<!ENTITY aboutSupport.accountsConnSecurity "Sicurezza della connessione">
+<!ENTITY aboutSupport.accountsAuthMethod "Metodo di autenticazione">
+<!ENTITY aboutSupport.accountsDefault "Predefinito?">
+<!ENTITY aboutSupport.identityName "Identità">
+<!ENTITY aboutSupport.sendViaEmail.label "Manda via mail">

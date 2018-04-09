@@ -1,0 +1,64 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  generalTab.label            "Основные">
+
+<!ENTITY  startupAction.label         "При запуске &brandShortName;:">
+<!ENTITY  startupAction.accesskey     "а">
+<!ENTITY  startupOffline.label        "Не подключать учётные записи чата">
+<!ENTITY  startupConnectAuto.label    "Автоматически подключать учётные записи чата">
+
+<!-- LOCALIZATION NOTE: reportIdleAfter.label is displayed first, then
+there's a field where the user can enter a number, and itemTime is
+displayed at the end of the line. The translations of the
+reportIdleAfter.label and idleTime parts don't have to mean the exact
+same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  reportIdleAfter.label         "Уведомить контакты о моём бездействии через">
+<!ENTITY  reportIdleAfter.accesskey     "е">
+<!ENTITY  idleTime                      "минут неактивности">
+
+<!ENTITY  andSetStatusToAway.label      "и установить мой статус как «Отошёл» вместе с этим сообщением:">
+<!ENTITY  andSetStatusToAway.accesskey  "ш">
+
+<!ENTITY  sendTyping.label              "Отправлять уведомления о вводе в разговорах">
+<!ENTITY  sendTyping.accesskey          "я">
+
+<!ENTITY  chatNotifications.label             "Когда прибывают направленные вам сообщения:">
+<!ENTITY  desktopChatNotifications.label      "Отображать уведомление:">
+<!ENTITY  desktopChatNotifications.accesskey  "ж">
+<!ENTITY  completeNotification.label          "с именем отправителя и предпросмотром сообщения">
+<!ENTITY  buddyInfoOnly.label                 "только с именем отправителя">
+<!ENTITY  dummyNotification.label             "без какой-либо информации">
+<!ENTITY  getAttention.label                  "Мигать на панели задач">
+<!ENTITY  getAttention.accesskey              "и">
+<!ENTITY  getAttentionMac.label               "Анимировать иконку в доке">
+<!ENTITY  getAttentionMac.accesskey           "н">
+<!ENTITY  chatSound.accesskey                 "в">
+<!ENTITY  chatSound.label                     "Подавать звуковой сигнал">
+<!ENTITY  play.label                          "Воспроизвести">
+<!ENTITY  play.accesskey                      "п">
+<!ENTITY  systemSound.label                   "Системный звуковой сигнал о приходе почты">
+<!ENTITY  systemSound.accesskey               "м">
+<!ENTITY  customsound.label                   "Использовать следующий звуковой файл">
+<!ENTITY  customsound.accesskey               "о">
+<!ENTITY  browse.label                        "Обзор…">
+<!ENTITY  browse.accesskey                    "з">
+
+<!ENTITY messageStyleTab.title             "Стиль сообщений">
+<!ENTITY messageStylePreview.label         "Предпросмотр:">
+<!ENTITY messageStyleTheme.label           "Тема:">
+<!ENTITY messageStyleTheme.accesskey       "е">
+<!ENTITY messageStyleThunderbirdTheme.label "Thunderbird">
+<!ENTITY messageStyleBubblesTheme.label    "Пузырьки">
+<!ENTITY messageStyleDarkTheme.label       "Тёмная">
+<!ENTITY messageStylePaperSheetsTheme.label "Листы бумаги">
+<!ENTITY messageStyleSimpleTheme.label     "Простая">
+<!ENTITY messageStyleDefaultTheme.label    "Стандартная">
+<!ENTITY messageStyleVariant.label         "Вариант:">
+<!ENTITY messageStyleVariant.accesskey     "а">
+<!ENTITY messageStyleShowHeader.label      "Отображать заголовок">
+<!ENTITY messageStyleShowHeader.accesskey  "ж">
+<!ENTITY messageStyleNoPreview.title       "Предпросмотр недоступен">
+<!ENTITY messageStyleNoPreview.description "Эта тема повреждена или в настоящее время недоступна (отключено дополнение, включен безопасный режим…).">

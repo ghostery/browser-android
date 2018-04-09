@@ -1,0 +1,16 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY notificationsDialog2.title "Personalizzazione delle notifiche per nuova posta">
+<!ENTITY window.width "30em">
+<!ENTITY alertCustomization.intro "Scegliere quali campi mostrare nell'avviso:">
+<!ENTITY previewText.label "Testo anteprima messaggio">
+<!ENTITY previewText.accesskey "T">
+<!ENTITY subject.label "Oggetto">
+<!ENTITY subject.accesskey "O">
+<!ENTITY sender.label "Mittente">
+<!ENTITY sender.accesskey "e">
+<!ENTITY totalOpenTimeBefore.label "Mostra una notifica di nuova mail per ">
+<!ENTITY totalOpenTimeBefore.accesskey "M">
+<!ENTITY totalOpenTimeEnd.label "secondi">

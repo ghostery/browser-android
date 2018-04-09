@@ -1,0 +1,12 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY attachmentReminderDialog.title   "Mots-clés de rappel pour les pièces jointes">
+<!ENTITY attachKeywordText.label          "&brandShortName; vous avertira de l’absence de pièce jointe si vous êtes sur le point d’envoyer un courriel contenant l’un de ces mots-clés.">
+<!ENTITY newKeywordButton.label           "Nouveau…">
+<!ENTITY newKeywordButton.accesskey       "N">
+<!ENTITY editKeywordButton1.label         "Modifier…">
+<!ENTITY editKeywordButton1.accesskey     "M">
+<!ENTITY removeKeywordButton.label        "Supprimer">
+<!ENTITY removeKeywordButton.accesskey    "S">

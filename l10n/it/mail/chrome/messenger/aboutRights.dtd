@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY rights.locale-direction "ltr">
+<!ENTITY rights.title "I tuoi diritti">
+<!ENTITY rights.intro-header "I tuoi diritti">
+<!ENTITY rights.intro "&brandFullName; è un software libero e aperto, realizzato da una comunità di migliaia di persone provenienti da tutto il mondo. Ci sono alcuni aspetti che è utile conoscere:">
+<!ENTITY rights.intro-point1a "&brandShortName; è disponibile nei termini della ">
+<!ENTITY rights.intro-point1b "Mozilla Public License">
+<!ENTITY rights.intro-point1c ". Questo significa che è possibile utilizzare, copiare e distribuire &brandShortName; ad altre persone. Le modifiche al codice sorgente di &brandShortName; per adattarlo alle proprie esigenze sono benaccette. Inoltre, la Mozilla Public License garantisce il diritto di distribuire tali versioni modificate.">
+<!ENTITY rights.intro-point2a "Mozilla non garantisce all'Utente alcun diritto per quanto riguarda l'utilizzo dei marchi registrati o dei logo Mozilla e Firefox. Ulteriori informazioni su questo argomento sono disponibili ">
+<!ENTITY rights.intro-point2b "in questa pagina">
+<!ENTITY rights.intro-point2c ".">
+<!ENTITY rights.intro-point3a "L'informativa sulla privacy di &vendorShortName; è disponibile ">
+<!ENTITY rights.intro-point3b "in questa pagina">
+<!ENTITY rights.intro-point3c ".">
+<!ENTITY rights.intro-point3-unbranded "Qualsiasi informativa sulla privacy relativa a questo prodotto dovrà essere riportata in questa sezione.">
+<!ENTITY rights.intro-point4a "&brandShortName; offre alcuni servizi opzionali, come ad esempio il servizio di aggiornamento dei componenti aggiuntivi anche se non è possibile garantire l'accuratezza e l'affidabilità di tali servizi. Ulteriori dettagli, comprese indicazioni per disattivarli, sono disponibili ">
+<!ENTITY rights.intro-point4b "nei termini di utilizzo">
+<!ENTITY rights.intro-point4c ".">
+<!ENTITY rights.intro-point4a-unbranded "Se questo prodotto include dei servizi web, tutti i termini di utilizzo dei servizi dovranno essere collegati alla ">
+<!ENTITY rights.intro-point4b-unbranded "Web Site Services">
+<!ENTITY rights.intro-point4c-unbranded ".">
+<!ENTITY rights.webservices-header "Servizi web di &brandFullName;">
+<!ENTITY rights.webservices-a "&brandFullName; offre alcuni servizi opzionali (&quot;Servizi&quot;), come ad esempio l'aggiornamento dei componenti aggiuntivi, distribuiti con questa versione dell'eseguibile di &brandShortName; nei termini descritti di seguito. Se non si desidera utilizzare tali Servizi oppure i termini di utilizzo risultano inaccettabili, è possibile disattivare il servizio di aggiornamento dei componenti aggiuntivi selezionando le preferenze dell'applicazione, quindi la sezione ">
+<!ENTITY rights.webservices-b "Avanzate">
+<!ENTITY rights.webservices-c ", e in seguito il pannello ">
+<!ENTITY rights.webservices-d "Aggiornamenti">
+<!ENTITY rights.webservices-e " e deselezionare le opzioni &quot;Controlla automaticamente gli aggiornamenti di&quot;.">
+<!ENTITY rights.webservices-unbranded "Una panoramica dei servizi web inclusi nel prodotto, comprese le indicazioni per disattivarli (se applicabile), dovranno essere riportati in questa sezione.">
+<!ENTITY rights.webservices-term1-unbranded "Tutti i termini di utilizzo dei servizi relativi a questo prodotto dovranno essere riportati in questa sezione.">
+<!ENTITY rights.webservices-term1 "&vendorShortName; si riserva il diritto di modificare o interrompere il Servizio a propria discrezione.">
+<!ENTITY rights.webservices-term2 "L'utente è invitato a utilizzare i Servizi inclusi in questa versione di &brandShortName; ed è in possesso di tutti i diritti necessari per farlo. &vendorShortName; e i suoi licenziatari si riservano tutti gli altri diritti relativi ai Servizi. Questi termini di utilizzo non intendono in alcun modo limitare i diritti derivanti da licenze Open Source applicabili a &brandShortName; e alla versioni corrispondenti del codice sorgente di &brandShortName;.">
+<!ENTITY rights.webservices-term3 "I servizi sono distribuiti &quot;così come descritti&quot;. &vendorShortName;, i collaboratori, i licenziatari e i distributori non forniscono alcuna garanzia, implicita o esplicita, incluse, senza alcuna limitazione, garanzie sulla possibilità di vendere i Servizi o sull'adeguatezza alle esigenze dell'utilizzatore. L'utente si assume l'intero rischio scegliendo di utilizzare il servizio, sia per quanto riguarda l'adeguatezza delle funzioni, sia per la qualità e le prestazioni del servizio stesso. In alcune giurisdizioni non è possibile imporre esclusioni o limitazioni alle garanzie implicite, in tali casi questa dichiarazione di non responsabilità non sarà applicabile.">
+<!ENTITY rights.webservices-term4 "Escluse le eccezioni previste dalla legge, &vendorShortName;, i collaboratori, i licenziatari e i distributori non potranno essere considerati responsabili per qualsiasi danno indiretto, speciale, accidentale, consequenziale, punitivo o esemplare causato o legato in qualsiasi modo all'utilizzo di &brandShortName; e dei Servizi. La responsabilità complessiva nei termini indicati non potrà superare la somma di 500$ (cinquecento dollari). In alcune giurisdizioni non è possibile imporre esclusioni o limitazioni a determinati tipi di danno, in tali casi questa dichiarazione non sarà applicabile.">
+<!ENTITY rights.webservices-term5 "&vendorShortName; si riserva il diritto di aggiornare periodicamente, quando necessario, questi termini di utilizzo. Tali termini non possono essere modificati o eliminati senza l'autorizzazione scritta di &vendorShortName;.">
+<!ENTITY rights.webservices-term6 "Questi termini sono disciplinati dalle leggi dello stato della California, U.S.A., a esclusione delle disposizioni sul conflitto di leggi. Se una qualsiasi parte di questi termini verrà giudicata invalida o inefficace, la rimanente parte rimarrà valida ed efficace. In caso di incoerenza tra la versione tradotta dei presenti termini e la versione in lingua inglese, avrà priorità la versione in lingua inglese.">

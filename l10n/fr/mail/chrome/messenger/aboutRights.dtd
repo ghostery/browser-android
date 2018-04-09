@@ -1,0 +1,69 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!-- rights.locale-direction instead of the usual local.dir entity, so RTL can skip translating page. -->
+<!ENTITY rights.locale-direction "ltr">
+<!ENTITY rights.title            "À propos de vos droits">
+<!ENTITY rights.intro-header     "À propos de vos droits">
+<!ENTITY rights.intro "&brandFullName; est un logiciel libre et ouvert, réalisé par une communauté de milliers de contributeurs dans le monde. Voici ce que vous devriez savoir :">
+
+<!-- Note on pointa / pointb / pointc form:
+     These points each have an embedded link in the HTML, so each point is
+     split into chunks for text before the link, the link text, and the text
+     after the link. If a localized grammar doesn't need the before or after
+     chunk, it can be left blank.
+
+     Also note the leading/trailing whitespace in strings here, which is
+     deliberate for formatting around the embedded links. -->
+<!ENTITY rights.intro-point1a "&brandShortName; est disponible suivant les modalités de la ">
+<!ENTITY rights.intro-point1b "Mozilla Public License">
+<!ENTITY rights.intro-point1c " (Licence publique Mozilla). Ceci signifie que vous pouvez utiliser, copier et distribuer &brandShortName; à d’autres personnes. Vous pouvez également modifier le code source de &brandShortName; à votre gré pour répondre à vos besoins. La Licence publique Mozilla vous autorise aussi à distribuer vos versions modifiées.">
+
+<!ENTITY rights.intro-point2a "Mozilla ne vous cède aucun droit sur les marques déposées et logos Mozilla et Thunderbird. Vous pouvez consulter des ">
+<!ENTITY rights.intro-point2b "informations complémentaires">
+<!ENTITY rights.intro-point2c " sur ces marques déposées.">
+
+<!-- point 3 text for official branded builds -->
+<!ENTITY rights.intro-point3a "Vous pouvez également consulter la ">
+<!ENTITY rights.intro-point3b "politique de confidentialité">
+<!ENTITY rights.intro-point3c " sur les logiciels de &vendorShortName;.">
+
+<!-- point 3 text for unbranded builds -->
+<!ENTITY rights.intro-point3-unbranded "Toutes les politiques de confidentialité applicables à ce logiciel doivent être indiquées ici.">
+
+<!-- point 4 text for official branded builds -->
+<!ENTITY rights.intro-point4a "&brandShortName; met également à disposition des services facultatifs, comme le service de mise à jour des modules complémentaires&#x00A0;; cependant, nous ne pouvons pas garantir à 100&#37; qu’ils soient appropriés ou dénués d’erreur. Vous pouvez trouver plus de détails, y compris des informations sur la manière de désactiver les services, dans les ">
+<!ENTITY rights.intro-point4b "modalités d’utilisation">
+<!ENTITY rights.intro-point4c ".">
+
+<!-- point 4 text for unbranded builds -->
+<!ENTITY rights.intro-point4a-unbranded "Si ce logiciel intègre des services web, toutes les modalités d’utilisation applicables pour le ou les services doivent être liées à la section ">
+<!ENTITY rights.intro-point4b-unbranded "Services de sites web">
+<!ENTITY rights.intro-point4c-unbranded ".">
+
+<!ENTITY rights.webservices-header "Services de sites web de &brandFullName;">
+
+<!-- Note that this paragraph references a couple of entities from
+     preferences/security.dtd, so that we can refer to text the user sees in
+     the UI, without this page being forgotten every time those strings are
+     updated.  -->
+<!-- intro paragraph for branded builds -->
+<!ENTITY rights.webservices-a "&brandFullName; offre des services facultatifs («&#x00A0;Les Services&#x00A0;»), comme le service de mise à jour des modules complémentaires, qui sont mis à votre disposition dans cette version binaire de &brandShortName; comme décrit ci-dessous. Si vous ne voulez pas utiliser Les Services ou si vous trouvez que les modalités ci-dessous ne sont pas acceptables, vous pouvez désactiver le service de mise à jour des modules complémentaires en ouvrant les préférences de l’application et en sélectionnant la section ">
+<!ENTITY rights.webservices-b "Avancé">
+<!ENTITY rights.webservices-c ", puis l’onglet ">
+<!ENTITY rights.webservices-d "Mise à jour">
+<!ENTITY rights.webservices-e ", et en désactivant les options sous «&#x00A0;Rechercher automatiquement des mises à jour pour&#x00A0;».">
+
+<!-- intro paragraph for unbranded builds -->
+<!ENTITY rights.webservices-unbranded "Un aperçu des services de sites web intégrés dans le logiciel, accompagné des instructions sur la manière de les désactiver, le cas échéant, doit être indiqué ici.">
+
+<!-- point 1 text for unbranded builds -->
+<!ENTITY rights.webservices-term1-unbranded "Toutes les modalités d’utilisation applicables pour ce logiciel doivent être indiquées ici.">
+
+<!-- points 1-7 text for branded builds -->
+<!ENTITY rights.webservices-term1 "&vendorShortName; peut arrêter ou modifier Les Services à sa discrétion.">
+<!ENTITY rights.webservices-term2 "Vous pouvez utiliser ces Services avec la version de &brandShortName; qui les accompagne, et vous avez tous les droits nécessaires pour le faire. &vendorShortName; et ses concédants de licence se réservent tous les autres droits dans les Services. Les présentes modalités ne sont pas destinées à limiter les droits concédés par les licences de logiciels libres applicables à &brandShortName; et au code source des versions correspondantes de &brandShortName;.">
+<!ENTITY rights.webservices-term3 "Les Services sont fournis «&#x00A0;tels quels&#x00A0;». &vendorShortName;, ses contributeurs, concédants de licence et distributeurs, déclinent toutes garanties, expresses ou implicites, y compris mais sans s’y limiter, les garanties que les Services sont commercialisables et s’adaptent à vos besoins particuliers. Vous supportez intégralement les risques quant à la sélection des Services pour vos besoins et quant à la qualité et aux performances des Services. Certaines juridictions n’autorisent pas l’exclusion ou la limitation des garanties implicites, et donc cette clause de non-garantie peut ne pas s’appliquer pour vous.">
+<!ENTITY rights.webservices-term4 "Sauf si requis par la loi, &vendorShortName;, ses contributeurs, concédants de licence et distributeurs ne seront pas passibles de dommages indirects, particuliers, accessoires, de dommages et intérêts punitifs ou exemplaires résultant de l’utilisation ou par tout moyen relatif à l’utilisation de &brandShortName; et des Services. La responsabilité collective sous les présentes modalités n’excédera pas 500&#x00A0;$ (cinq cents dollars). Certaines juridictions n’autorisent pas l’exclusion ou la limitation de certains dommages, et donc ces exclusions et limitations peuvent ne pas s’appliquer pour vous.">
+<!ENTITY rights.webservices-term5 "&vendorShortName; peut mettre à jour les présentes modalités si nécessaire de temps à autre. Ces modalités ne peuvent pas être modifiées ou annulées sans l’accord écrit de &vendorShortName;.">
+<!ENTITY rights.webservices-term6 "Les présentes modalités sont régies par les lois de l’état de Californie, États-Unis d’Amérique, à l’exclusion de conflit avec des dispositions légales. Si une partie de ces modalités est invalidée ou ne peut pas être mise en application, les parties restantes demeureront pleinement applicables. Dans l’éventualité d’un conflit entre une version traduite de ces modalités et la version en langue anglaise, la version en langue anglaise fera foi.">

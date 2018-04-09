@@ -1,0 +1,30 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "Configuración sin conexión">
+<!ENTITY checkAutoDetect.label "Seguir automáticamente el estado de conexión detectado">
+<!ENTITY checkAutoDetect.accesskey "a">
+<!ENTITY titleStartUp "Estado manual al iniciar:">
+<!ENTITY radioRememberPrevState.label "Recordar el estado de conexión anterior">
+<!ENTITY radioRememberPrevState.accesskey "R">
+<!ENTITY radioAskState.label "Preguntarme el estado de conexión">
+<!ENTITY radioAskState.accesskey "d">
+<!ENTITY radioAlwaysOnlineState.label "Con conexión">
+<!ENTITY radioAlwaysOnlineState.accesskey "x">
+<!ENTITY radioAlwaysOffline.label "Sin conexión">
+<!ENTITY radioAlwaysOffline.accesskey "o">
+<!ENTITY textGoingOnline "¿Enviar mensajes pendientes al pasar a modo con conexión?">
+<!ENTITY radioAutoSend.label "Sí">
+<!ENTITY radioAutoSend.accesskey "S">
+<!ENTITY radioNotSend.label "No">
+<!ENTITY radioNotSend.accesskey "N">
+<!ENTITY radioAskUnsent.label "Preguntarme">
+<!ENTITY radioAskUnsent.accesskey "P">
+<!ENTITY textGoingOffline "¿Descargar mensajes para su uso desconectado al pasar a modo sin conexión?">
+<!ENTITY radioAutoDownload.label "Siempre">
+<!ENTITY radioAutoDownload.accesskey "m">
+<!ENTITY radioNotDownload.label "Nunca">
+<!ENTITY radioNotDownload.accesskey "c">
+<!ENTITY radioAskDownload.label "Preguntarme">
+<!ENTITY radioAskDownload.accesskey "e">

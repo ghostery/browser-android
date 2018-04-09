@@ -1,0 +1,29 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY helpMenu.label "Pomoc">
+<!ENTITY helpMenu.accesskey "c">
+<!ENTITY helpMenuWin.label "Pomoc">
+<!ENTITY helpMenuWin.accesskey "c">
+<!ENTITY helpTroubleshootingInfo.label "Informacje dla pomocy technicznej">
+<!ENTITY helpTroubleshootingInfo.accesskey "n">
+<!ENTITY helpSafeMode.label "Uruchom ponownie z wyłączonymi dodatkami…">
+<!ENTITY helpSafeMode.accesskey "U">
+<!ENTITY releaseCmd2.label "Informacje o wersji programu">
+<!ENTITY releaseCmd2.accesskey "I">
+<!ENTITY whatsNewCmd.label "Najważniejsze zmiany w tej wersji">
+<!ENTITY whatsNewCmd.accesskey "N">
+<!ENTITY openHelp.label "Pomoc Thunderbirda">
+<!ENTITY openHelp.accesskey "P">
+<!ENTITY openHelp.commandkey "VK_F1">
+<!ENTITY openHelpMac.label "Pomoc programu &brandShortName;">
+<!ENTITY openHelpMac2.label "Pomoc programu &brandFullName;">
+<!ENTITY openHelpMac2.commandkey "?">
+<!ENTITY openHelpMac2.modifiers "accel">
+
+<!ENTITY aboutMenuCmd.label "O programie &brandShortName;">
+<!ENTITY aboutMenuCmd.accesskey "O">
+
+<!ENTITY aboutMenuCmd2.label "O programie &brandFullName;">
+<!ENTITY aboutMenuCmd2.accesskey "O">

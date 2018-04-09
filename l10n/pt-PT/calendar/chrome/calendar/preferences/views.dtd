@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+
+<!ENTITY pref.calendar.view.allview.caption "Geral">
+<!ENTITY pref.calendar.view.dayandweekviews.caption "Visão de dia e de semana">
+<!ENTITY pref.calendar.view.multiweekview.caption "Visão multissemanal">
+<!ENTITY pref.calendar.view.workweek.caption "Dias úteis">
+
+<!ENTITY pref.weekstarts.label "Início da semana:">
+<!ENTITY pref.weekstarts.accesskey "I">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Mostrar número da semana nas vistas e mês em pequeno">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "e">
+<!ENTITY pref.daysoff.label "Incluir estes dias na semana de trabalho:">
+
+<!ENTITY pref.calendar.view.daystart.label "Dia começa a:">
+<!ENTITY pref.calendar.view.daystart.accesskey "D">
+<!ENTITY pref.calendar.view.dayend.label "Dia acaba às:">
+<!ENTITY pref.calendar.view.dayend.accesskey "i">
+<!ENTITY pref.calendar.view.visiblehours.label "Mostrar:">
+<!ENTITY pref.calendar.view.visiblehours.accesskey "o">
+<!ENTITY pref.calendar.view.visiblehoursend.label "horas de cada vez">
+
+<!ENTITY pref.numberofweeks.label "Número de semanas a mostrar (incluindo semanas anteriores):">
+<!ENTITY pref.numberofweeks.accesskey "e">
+<!ENTITY pref.numberofpreviousweeks.label "Semanas anteriores a mostrar:">
+<!ENTITY pref.numberofpreviousweeks.accesskey "m">
+<!ENTITY pref.numberofweeks.0 "nenhuma">
+<!ENTITY pref.numberofweeks.1 "1 semana">
+<!ENTITY pref.numberofweeks.2 "2 semanas">
+<!ENTITY pref.numberofweeks.3 "3 semanas">
+<!ENTITY pref.numberofweeks.4 "4 semanas">
+<!ENTITY pref.numberofweeks.5 "5 semanas">
+<!ENTITY pref.numberofweeks.6 "6 semanas">

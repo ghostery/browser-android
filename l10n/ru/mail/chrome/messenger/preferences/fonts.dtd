@@ -1,0 +1,80 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  fontsAndEncodingsDialog.title           "Шрифты и кодировки">
+
+<!ENTITY  language.label                          "Шрифты для набора символов:">
+<!ENTITY  language.accesskey                      "ф">
+
+<!ENTITY  size.label                              "Размер:">
+<!ENTITY  sizeProportional.accesskey              "з">
+<!ENTITY  sizeMonospace.accesskey                 "м">
+
+<!ENTITY  proportional.label                      "Пропорциональный:">
+<!ENTITY  proportional.accesskey                  "р">
+
+<!ENTITY  serif.label                             "С засечками:">
+<!ENTITY  serif.accesskey                         "а">
+<!ENTITY  sans-serif.label                        "Без засечек:">
+<!ENTITY  sans-serif.accesskey                    "з">
+<!ENTITY  monospace.label                         "Моноширинный:">
+<!ENTITY  monospace.accesskey                     "ш">
+
+<!-- LOCALIZATION NOTE (font.langGroup.latin) :
+     Translate "Latin" as the name of Latin (Roman) script, not as the name of the Latin language. -->
+<!ENTITY  font.langGroup.latin                    "Латиница">
+<!ENTITY  font.langGroup.japanese                 "Японский">
+<!ENTITY  font.langGroup.trad-chinese             "Традиционный китайский (Тайвань)">
+<!ENTITY  font.langGroup.simpl-chinese            "Упрощённый китайский">
+<!ENTITY  font.langGroup.trad-chinese-hk          "Традиционный китайский (Гонконг)">
+<!ENTITY  font.langGroup.korean                   "Корейский">
+<!ENTITY  font.langGroup.cyrillic                 "Кириллица">
+<!ENTITY  font.langGroup.el                       "Греческий">
+<!ENTITY  font.langGroup.other                    "Другие системы письменности">
+<!ENTITY  font.langGroup.thai                     "Тайский">
+<!ENTITY  font.langGroup.hebrew                   "Иврит">
+<!ENTITY  font.langGroup.arabic                   "Арабский">
+<!ENTITY  font.langGroup.devanagari               "Деванагари">
+<!ENTITY  font.langGroup.tamil                    "Тамильский">
+<!ENTITY  font.langGroup.armenian                 "Армянский">
+<!ENTITY  font.langGroup.bengali                  "Бенгальский">
+<!ENTITY  font.langGroup.canadian                 "Общеканадский слоговой">
+<!ENTITY  font.langGroup.ethiopic                 "Эфиопский">
+<!ENTITY  font.langGroup.georgian                 "Грузинский">
+<!ENTITY  font.langGroup.gujarati                 "Гуджарати">
+<!ENTITY  font.langGroup.gurmukhi                 "Гурмуки">
+<!ENTITY  font.langGroup.khmer                    "Кхмерский">
+<!ENTITY  font.langGroup.malayalam                "Малайялам">
+<!ENTITY  font.langGroup.math                     "Математика">
+<!ENTITY  font.langGroup.odia                     "Ория">
+<!ENTITY  font.langGroup.telugu                   "Телугу">
+<!ENTITY  font.langGroup.kannada                  "Каннада">
+<!ENTITY  font.langGroup.sinhala                  "Сингальский">
+<!ENTITY  font.langGroup.tibetan                  "Тибетский">
+<!-- Minimum font size -->
+<!ENTITY minSize.label                            "Наименьший размер шрифта:">
+<!ENTITY minSize.accesskey                        "е">
+<!ENTITY minSize.none                             "Нет">
+
+<!-- default font type -->
+<!ENTITY  useDefaultFontSerif.label               "С засечками">
+<!ENTITY  useDefaultFontSansSerif.label           "Без засечек">
+
+<!-- fonts in message -->
+<!ENTITY  fontControl.label                       "Управление шрифтами">
+<!ENTITY  useFixedWidthForPlainText.label         "Использовать моноширинный шрифт для простых текстовых сообщений">
+<!ENTITY  fixedWidth.accesskey                    "н">
+<!ENTITY  useDocumentFonts.label                  "Разрешить сообщениям использовать другие шрифты">
+<!ENTITY  useDocumentFonts.accesskey              "р">
+
+<!-- Language settings -->
+<!ENTITY sendDefaultCharset.label         "Исходящие сообщения:">
+<!ENTITY sendDefaultCharset.accesskey     "х">
+<!ENTITY languagesTitle2.label            "Кодировка текста">
+<!ENTITY composingDescription2.label      "Установить кодировку текста по умолчанию для входящих и исходящих сообщений">
+
+<!ENTITY viewDefaultCharsetList.label     "Входящие сообщения:">
+<!ENTITY viewDefaultCharsetList.accesskey  "о">
+<!ENTITY replyInDefaultCharset3.label     "По возможности использовать кодировку текста по умолчанию в ответах на сообщения">
+<!ENTITY replyInDefaultCharset3.accesskey "в">

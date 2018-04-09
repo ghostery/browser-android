@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "Параметры автономной работы">
+
+<!ENTITY checkAutoDetect.label "Автоматически выбирать обнаруженное состояние подключения">
+<!ENTITY checkAutoDetect.accesskey "м">
+<!ENTITY titleStartUp "Ручной выбор состояния при запуске:">
+<!ENTITY radioRememberPrevState.label "Использовать режим работы предыдущего сеанса">
+<!ENTITY radioRememberPrevState.accesskey "ы">
+<!ENTITY radioAskState.label "Запросить состояние подключения">
+<!ENTITY radioAskState.accesskey "о">
+<!ENTITY radioAlwaysOnlineState.label "Подключён к сети">
+<!ENTITY radioAlwaysOnlineState.accesskey "ю">
+<!ENTITY radioAlwaysOffline.label "Автономная работа">
+<!ENTITY radioAlwaysOffline.accesskey "в">
+
+<!ENTITY textGoingOnline "Отправить неотправленные сообщения при подключении?">
+<!ENTITY radioAutoSend.label "Да">
+<!ENTITY radioAutoSend.accesskey "Д">
+<!ENTITY radioNotSend.label "Нет">
+<!ENTITY radioNotSend.accesskey "т">
+<!ENTITY radioAskUnsent.label "Спрашивать">
+<!ENTITY radioAskUnsent.accesskey "п">
+<!ENTITY textGoingOffline "Загружать сообщения для использования в автономном режиме при отключении?">
+<!ENTITY radioAutoDownload.label "Да">
+<!ENTITY radioAutoDownload.accesskey "а">
+<!ENTITY radioNotDownload.label "Нет">
+<!ENTITY radioNotDownload.accesskey "е">
+<!ENTITY radioAskDownload.label "Спрашивать">
+<!ENTITY radioAskDownload.accesskey "ш">

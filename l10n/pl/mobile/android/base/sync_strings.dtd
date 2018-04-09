@@ -1,0 +1,78 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY syncBrand.fullName.label "Firefox Sync">
+<!ENTITY syncBrand.shortName.label "Sync">
+
+<!ENTITY sync.title.connect.label "Połącz z &syncBrand.shortName.label;">
+
+<!ENTITY sync.subtitle.connect.label "Aby aktywować nowe urządzenie, wybierz na nim opcję „Skonfiguruj &syncBrand.shortName.label;”.">
+<!ENTITY sync.subtitle.pair.label "Aby aktywować, na innym urządzeniu wybierz „Sparuj urządzenie”.">
+<!ENTITY sync.pin.default.label "…\n…\n…\n">
+<!ENTITY sync.link.nodevice.label "Nie mam przy sobie tego urządzenia…">
+
+<!ENTITY sync.configure.engines.title.passwords2 "Dane logowania">
+<!ENTITY sync.configure.engines.title.history "Historia">
+<!ENTITY sync.configure.engines.title.tabs "Karty">
+
+<!ENTITY sync.default.client.name "&formatS1; na urządzeniu &formatS2;">
+
+<!ENTITY bookmarks.folder.menu.label "Menu Zakładki">
+<!ENTITY bookmarks.folder.places.label "">
+<!ENTITY bookmarks.folder.tags.label "Etykiety">
+<!ENTITY bookmarks.folder.toolbar.label "Pasek zakładek">
+<!ENTITY bookmarks.folder.other.label "Pozostałe zakładki">
+<!ENTITY bookmarks.folder.desktop.label "Zakładki z komputera">
+<!ENTITY bookmarks.folder.mobile.label "Zakładki z telefonu">
+<!ENTITY bookmarks.folder.pinned.label "Przypięte">
+
+<!ENTITY fxaccount_back_to_browsing "Wróć do przeglądarki">
+
+<!ENTITY fxaccount_remove_account "Rozłącz…">
+
+<!ENTITY fxaccount_remove_account_dialog_title2 "Rozłączyć synchronizację?">
+<!ENTITY fxaccount_remove_account_dialog_message2 "Dane przeglądania pozostaną na tym urządzeniu, ale nie będą więcej synchronizowane z kontem Firefoksa.">
+<!ENTITY fxaccount_remove_account_toast2 "Rozłączono konto Firefoksa użytkownika &formatS;.">
+<!ENTITY fxaccount_remove_account_dialog_action_confirm "Rozłącz">
+
+<!ENTITY fxaccount_enable_debug_mode "Włącz debugowanie">
+
+<!ENTITY fxaccount_getting_started_welcome_to_sync "Witaj w usłudze &syncBrand.shortName.label;">
+<!ENTITY fxaccount_getting_started_description2 "Zaloguj się i synchronizuj karty, zakładki, dane logowania i więcej.">
+<!ENTITY fxaccount_getting_started_get_started "Zaloguj się">
+<!ENTITY fxaccount_getting_started_old_firefox "Korzystasz ze starej wersji usługi &syncBrand.shortName.label;?">
+
+<!ENTITY fxaccount_status_auth_server "Serwer konta">
+<!ENTITY fxaccount_status_sync_now "Synchronizuj">
+<!ENTITY fxaccount_status_syncing2 "Synchronizowanie…">
+<!ENTITY fxaccount_status_device_name "Nazwa urządzenia">
+<!ENTITY fxaccount_status_sync_server "Serwer synchronizacji">
+<!ENTITY fxaccount_status_needs_verification2 "Konto wymaga weryfikacji. Stuknij, aby wysłać nowy odnośnik weryfikujący.">
+<!ENTITY fxaccount_status_needs_credentials "Nie można się połączyć. Stuknij, aby się zalogować.">
+<!ENTITY fxaccount_status_needs_upgrade "&brandShortName; wymaga aktualizacji przed zalogowaniem.">
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled "&syncBrand.shortName.label; jest skonfigurowany, ale nie synchronizuje się automatycznie. Włącz automatyczną synchronizację danych w ustawieniach systemu Android.">
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 "&syncBrand.shortName.label; jest skonfigurowany, ale nie synchronizuje się automatycznie. Włącz automatyczną synchronizację danych w ustawieniach kont systemu Android.">
+<!ENTITY fxaccount_status_needs_finish_migrating "Stuknij, aby zalogować się do nowego konta Firefoksa.">
+<!ENTITY fxaccount_status_choose_what "Wybierz, co synchronizować">
+<!ENTITY fxaccount_status_bookmarks "Zakładki">
+<!ENTITY fxaccount_status_history "Historia">
+<!ENTITY fxaccount_status_passwords2 "Dane logowania">
+<!ENTITY fxaccount_status_tabs "Otwarte karty">
+<!ENTITY fxaccount_status_additional_settings "Dodatkowe ustawienia">
+<!ENTITY fxaccount_pref_sync_use_metered2 "Tylko przez Wi-Fi">
+<!ENTITY fxaccount_pref_sync_use_metered_summary2 "Uniemożliwia przeglądarce &brandShortName; synchronizowanie przez sieć komórkową lub taryfową">
+<!ENTITY fxaccount_status_legal "Podstawa prawna">
+<!ENTITY fxaccount_status_linktos2 "Warunki użytkowania">
+<!ENTITY fxaccount_status_linkprivacy2 "Polityka prywatności">
+ 
+<!ENTITY fxaccount_account_type_label "Firefox">
+
+<!ENTITY fxaccount_options_title "Opcje usługi &syncBrand.shortName.label;">
+<!ENTITY fxaccount_options_configure_title "Skonfiguruj usługę &syncBrand.shortName.label;">
+
+<!ENTITY fxaccount_sync_sign_in_error_notification_title2 "&syncBrand.shortName.label; nie może się połączyć">
+<!ENTITY fxaccount_sync_sign_in_error_notification_text2 "Stuknij, aby zalogować się jako &formatS;">
+
+<!ENTITY fxaccount_sync_finish_migrating_notification_title "Dokończyć aktualizację &syncBrand.shortName.label;?">
+<!ENTITY fxaccount_sync_finish_migrating_notification_text "Stuknij, aby zalogować się jako &formatS;">

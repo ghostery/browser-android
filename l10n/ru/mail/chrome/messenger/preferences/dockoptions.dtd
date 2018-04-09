@@ -1,0 +1,16 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dockOptionsDialog.title               "Наcтройки значка приложения">
+<!ENTITY window.macWidth                       "45em">
+
+<!ENTITY bounceSystemDockIcon.label            "Анимировать значок приложения при приходе нового сообщения">
+<!ENTITY bounceSystemDockIcon.accesskey        "н">
+<!ENTITY newMessagesCountDock.label            "Число новых сообщений">
+<!ENTITY newMessagesCountDock.accesskey        "о">
+<!ENTITY showAllUnreadMessagesCount.label      "Число непрочитанных сообщений">
+<!ENTITY showAllUnreadMessagesCount.accesskey  "и">
+<!ENTITY dockIconBadge.label                   "Наклейка значка приложения">
+<!ENTITY dockIconShow.label                    "Наклеивать на значок приложения:">
+<!ENTITY directNotificationSettings.label      "Вы можете отключить наклейку на панели Уведомления в Системных настройках.">

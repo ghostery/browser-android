@@ -1,0 +1,17 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY gdata-provider.label "Google Calendar">
+<!ENTITY gdata.privacy.default.label "Predeterminado de Google">
+<!ENTITY gdata.privacy.default.accesskey "D">
+<!ENTITY gdata.migration.title "Migrar calendarios de sólo lectura">
+<!ENTITY gdata.migration.description "El proveedor de Google Calendar ha detectado que tiene calendarios existentes que sólo pueden acceder a Google Calendar en modo de sólo lectura. Si le gustaría actualizar alguno de estos calendarios, selecciónelos a continuación">
+<!ENTITY gdata.migration.upgrade.label "Actualizar">
+<!ENTITY gdata.migration.upgrade.accesskey "U">
+<!ENTITY gdata.migration.showagain.label "Comprobar siempre ">
+<!ENTITY gdata.reminder.default "Recordatorio por omisión">
+<!ENTITY gdata.reminder.action.sms.label "Enviar un mensaje de texto">
+<!ENTITY gdata.wizard.session.description "Elija una sesión existente o escriba su dirección de correo electrónico para crear una nueva sesión. Sólo necesita una sesión por cuenta.">
+<!ENTITY gdata.wizard.calendars.description "Seleccione los calendarios y listas de tareas a las que le gustaría suscribirse.">
+<!ENTITY gdata.wizard.nextstep.description "Avance al siguiente paso para configurar sus calendarios.">

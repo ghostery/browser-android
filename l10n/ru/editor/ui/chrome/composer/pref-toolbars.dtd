@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.toolbars.title    "Панели инструментов">
+
+<!ENTITY composition.caption    "Показать следующие кнопки на панели компоновки:">
+
+<!ENTITY new.label              "Создать">
+<!ENTITY open.label             "Открыть">
+<!ENTITY save.label             "Сохранить">
+<!ENTITY publish.label          "Опубликовать">
+<!ENTITY preview.label          "Просмотр">
+<!ENTITY cut.label              "Вырезать">
+<!ENTITY copy.label             "Копировать">
+<!ENTITY paste.label            "Вставить">
+<!ENTITY print.label            "Печать">
+<!ENTITY find.label             "Найти">
+<!ENTITY image.label            "Изображение">
+<!ENTITY hline.label            "Разделитель">
+<!ENTITY table.label            "Таблица">
+<!ENTITY link.label             "Ссылка">
+<!ENTITY anchor.label           "Якорь">
+
+<!ENTITY formatting.caption     "Показать следующие кнопки на панели форматирования:">
+
+<!ENTITY smaller.label          "Меньше">
+<!ENTITY larger.label           "Больше">
+<!ENTITY bold.label             "Полужирный">
+<!ENTITY bullets.label          "Маркеры">
+<!ENTITY numbers.label          "Числа">
+<!ENTITY italic.label           "Курсив">
+<!ENTITY outdent.label          "Выровнять">
+<!ENTITY indent.label           "Отступ">
+<!ENTITY underline.label        "Подчеркивание">
+
+<!ENTITY absolutePosition.label "Абсолютное позиционирование">
+<!ENTITY decreaseZIndex.label   "Поместить на задний план">
+<!ENTITY increaseZIndex.label   "Поместить на передний план">

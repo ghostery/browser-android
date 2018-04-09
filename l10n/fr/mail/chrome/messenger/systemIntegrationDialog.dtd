@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title  "Intégration système">
+<!ENTITY acceptIntegration.label  "Définir par défaut">
+<!ENTITY cancelIntegration.label  "Ignorer l’intégration">
+<!ENTITY cancelIntegration2.label  "Annuler">
+<!ENTITY defaultClient.intro  "Utiliser &brandShortName; comme client par défaut pour :">
+
+<!ENTITY email.label "le courrier électronique">
+<!ENTITY newsgroups.label "les groupes de discussion">
+<!ENTITY feeds.label "les flux">
+
+<!ENTITY unsetDefault.tooltip "Il n’est pas possible de faire en sorte que &brandShortName; ne soit plus le client par défaut au sein de &brandShortName;. Pour définir une autre application comme client par défaut vous devez utiliser son dialogue « Définir par défaut ».">
+
+<!ENTITY checkOnStartup.label "Toujours effectuer cette vérification au démarrage de &brandShortName;.">
+<!ENTITY checkOnStartup.accesskey "T">
+
+<!ENTITY searchIntegration.label "Autoriser &searchIntegration.engineName; à rechercher dans les messages">
+<!ENTITY searchIntegration.accesskey "A">

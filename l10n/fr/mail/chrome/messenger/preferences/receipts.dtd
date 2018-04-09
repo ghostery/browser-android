@@ -1,0 +1,26 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title                  "Accusés de réception">
+<!ENTITY requestReceipt.label          "Lors de l’envoi d’un message, toujours demander un accusé de réception">
+<!ENTITY requestReceipt.accesskey      "v">
+<!ENTITY receiptArrive.label           "Lorsqu’un accusé de réception arrive :">
+<!ENTITY leaveIt.label                 "Le laisser dans le dossier « Courrier entrant »">
+<!ENTITY leaveIt.accesskey             "i">
+<!ENTITY moveToSent.label              "Le déplacer dans le dossier « Envoyés »">
+<!ENTITY moveToSent.accesskey          "e">
+<!ENTITY requestMDN.label              "Lors de la réception d’une demande d’accusé de réception :">
+<!ENTITY never.label                   "Ne jamais envoyer d’accusé de réception">
+<!ENTITY never.accesskey               "n">
+<!ENTITY returnSome.label              "Autoriser les accusés de réception pour certains messages">
+<!ENTITY returnSome.accesskey          "r">
+<!ENTITY notInToCc.label               "Si je ne suis ni le destinataire ni en copie du message :">
+<!ENTITY notInToCc.accesskey           "m">
+<!ENTITY outsideDomain.label           "Si l’expéditeur est hors de mon domaine :">
+<!ENTITY outsideDomain.accesskey       "h">
+<!ENTITY otherCases.label              "Dans tous les autres cas :">
+<!ENTITY otherCases.accesskey          "D">
+<!ENTITY askMe.label                   "Me demander">
+<!ENTITY alwaysSend.label              "Toujours envoyer">
+<!ENTITY neverSend.label               "Ne jamais envoyer">

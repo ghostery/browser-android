@@ -1,0 +1,34 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.toolbars.title "Paski narzędzi" >
+<!ENTITY composition.caption "Wyświetl poniższe przyciski na pasku narzędzi edycji:" >
+<!ENTITY new.label "Nowy" >
+<!ENTITY open.label "Otwórz" >
+<!ENTITY save.label "Zapisz" >
+<!ENTITY publish.label "Publikuj" >
+<!ENTITY preview.label "Podgląd" >
+<!ENTITY cut.label "Wytnij" >
+<!ENTITY copy.label "Kopiuj" >
+<!ENTITY paste.label "Wklej" >
+<!ENTITY print.label "Drukuj" >
+<!ENTITY find.label "Znajdź" >
+<!ENTITY image.label "Obraz">
+<!ENTITY hline.label "Linia pozioma" >
+<!ENTITY table.label "Tabela" >
+<!ENTITY link.label "Odnośnik" >
+<!ENTITY anchor.label "Kotwica" >
+<!ENTITY formatting.caption "Wyświetl poniższe przyciski na pasku narzędzi formatowania:" >
+<!ENTITY smaller.label "Pomniejsz czcionkę" >
+<!ENTITY larger.label "Powiększ czcionkę" >
+<!ENTITY bold.label "Pogrubienie" >
+<!ENTITY bullets.label "Wypunktowanie" >
+<!ENTITY numbers.label "Numerowanie" >
+<!ENTITY italic.label "Kursywa" >
+<!ENTITY outdent.label "Zmniejsz wcięcie" >
+<!ENTITY indent.label "Zwiększ wcięcie" >
+<!ENTITY underline.label "Podkreślenie" >
+<!ENTITY absolutePosition.label "Pozycjonowanie bezwzględne">
+<!ENTITY decreaseZIndex.label "Przenieś pod spód" >
+<!ENTITY increaseZIndex.label "Przenieś na wierzch" >

@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.alarmgoesoff.label "Sygnalizacja przypomnień">
+<!ENTITY pref.playasound "Odtwórz dźwięk:">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "O">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "Użyj domyślnego dźwięku">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "d">
+<!ENTITY pref.calendar.alarms.sound.browse.label "Przeglądaj…">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "g">
+<!ENTITY pref.calendar.alarms.sound.play.label "Odtwórz">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "w">
+<!ENTITY pref.showalarmbox "Wyświetl okno przypomnienia">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "k">
+<!ENTITY pref.missedalarms "Wyświetl pominięte przypomnienia">
+<!ENTITY pref.missedalarms2 "Wyświetl pominięte przypomnienia dla zapisywalnych kalendarzy">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "l">
+<!ENTITY pref.calendar.alarms.defaults.label "Domyślne ustawienia przypomnień">
+<!ENTITY pref.defalarm4events.label "Przypomnienia dla wydarzeń:">
+<!ENTITY pref.defalarm4events.accesskey "y">
+<!ENTITY pref.defalarm4todos.label "Przypomnienia dla zadań:">
+<!ENTITY pref.defalarm4todos.accesskey "a">
+<!ENTITY pref.alarm.on "włączone">
+<!ENTITY pref.alarm.off "wyłączone">
+<!ENTITY pref.defalarmlen4events.label "Czas przypomnienia przed wydarzeniem:">
+<!ENTITY pref.defalarmlen4events.accesskey "c">
+<!ENTITY pref.defalarmlen4todos.label "Czas przypomnienia przed zadaniem:">
+<!ENTITY pref.defalarmlen4todos.accesskey "z">
+
+<!ENTITY pref.defaultsnoozelength.label "Domyślny odstęp między przypomnieniami:">
+<!ENTITY pref.defaultsnoozelength.accesskey "m">

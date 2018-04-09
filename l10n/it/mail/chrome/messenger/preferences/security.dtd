@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemJunk.label "Indesiderata">
+<!ENTITY itemPhishing.label "Frodi via posta">
+<!ENTITY itemPasswords.label "Password">
+<!ENTITY itemAntiVirus.label "Antivirus">
+<!ENTITY junkMail.intro "Scegliere le impostazioni predefinite per la posta indesiderata. Le impostazioni di posta indesiderata specifiche possono essere configurate nelle Impostazioni account.">
+<!ENTITY manualMark.label "Quando i messaggi sono segnati come posta indesiderata:">
+<!ENTITY manualMark.accesskey "Q">
+<!ENTITY manualMarkModeMove.label "Spostali nella cartella &quot;Indesiderata&quot; dell'utente">
+<!ENTITY manualMarkModeMove.accesskey "o">
+<!ENTITY manualMarkModeDelete.label "Eliminali">
+<!ENTITY manualMarkModeDelete.accesskey "E">
+<!ENTITY markAsReadOnSpam.label "Segna come già letti tutti i messaggi riconosciuti come posta indesiderata">
+<!ENTITY markAsReadOnSpam.accesskey "M">
+<!ENTITY enableAdaptiveJunkLogging.label "Attiva registro attività del filtro incrementale per la posta indesiderata">
+<!ENTITY enableAdaptiveJunkLogging.accesskey "A">
+<!ENTITY openJunkLog.label "Mostra registro attività">
+<!ENTITY openJunkLog.accesskey "S">
+<!ENTITY resetTrainingData.label "Elimina i dati di autoistruzione">
+<!ENTITY resetTrainingData.accesskey "z">
+<!ENTITY phishingDetector1.intro "&brandShortName; è in grado di analizzare i messaggi alla ricerca di possibili tentativi di frode, individuando le tecniche più comuni per questo tipo di truffe.">
+<!ENTITY enablePhishingDetector1.label "Avvisa sempre se il messaggio che si sta leggendo è un possibile tentativo di frode">
+<!ENTITY enablePhishingDetector1.accesskey "e">
+<!ENTITY useDownloadedList.label "Utilizza un elenco scaricato di sospette truffe elettroniche">
+<!ENTITY useDownloadedList.accesskey "U">
+<!ENTITY savedPasswords.intro "&brandShortName; può memorizzare le password per tutti gli account.">
+<!ENTITY useMasterPassword.label "Utilizza una password principale">
+<!ENTITY useMasterPassword.accesskey "U">
+<!ENTITY masterPassword.intro "È possibile impostare una Password principale per proteggere tutte le altre password; sarà però obbligatorio digitarla una volta per sessione.">
+<!ENTITY changeMasterPassword.label "Cambia Password principale…">
+<!ENTITY changeMasterPassword.accesskey "C">
+<!ENTITY savedPasswords.label "Password salvate…">
+<!ENTITY savedPasswords.accesskey "P">
+<!ENTITY antiVirus.intro "&brandShortName; è in grado di semplificare il lavoro del software antivirus, permettendo l'analisi della posta in arrivo prima che venga salvata localmente.">
+<!ENTITY antiVirus.label "Consenti ai programmi antivirus di mettere in quarantena i singoli messaggi in arrivo.">
+<!ENTITY antiVirus.accesskey "n">

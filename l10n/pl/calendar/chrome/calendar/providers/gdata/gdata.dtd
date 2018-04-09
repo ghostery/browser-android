@@ -1,0 +1,22 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY gdata-provider.label "Kalendarz Google">
+
+<!ENTITY gdata.privacy.default.label "Domyślny">
+<!ENTITY gdata.privacy.default.accesskey "D">
+
+<!ENTITY gdata.migration.title "Uaktualnij kalendarze tylko do odczytu">
+<!ENTITY gdata.migration.description "Dostawca dla Kalendarza Google wykrył kalendarze, które działają jedynie w trybie tylko do odczytu. Aby uaktualnić któreś z nich, należy wybrać je z poniższej listy">
+<!ENTITY gdata.migration.upgrade.label "Uaktualnij">
+<!ENTITY gdata.migration.upgrade.accesskey "U">
+<!ENTITY gdata.migration.showagain.label "Zawsze sprawdzaj ">
+
+<!ENTITY gdata.reminder.default "Domyślne przypomnienie">
+<!ENTITY gdata.reminder.action.sms.label "Wyślij SMS">
+
+<!ENTITY gdata.wizard.session.description "Wybierz istniejącą sesję lub wprowadź adres e-mail, by utworzyć nową. Potrzebna jest tylko jedna sesja dla każdego konta.">
+<!ENTITY gdata.wizard.calendars.description "Wybierz kalendarze i listy zadań do subskrypcji.">
+
+<!ENTITY gdata.wizard.nextstep.description "Przejdź do następnego kroku, aby skonfigurować kalendarze.">
