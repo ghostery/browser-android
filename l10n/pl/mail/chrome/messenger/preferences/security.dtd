@@ -1,0 +1,47 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemJunk.label "Niechciana poczta">
+<!ENTITY itemPhishing.label "Fałszywe wiadomości">
+<!ENTITY itemPasswords.label "Hasła">
+<!ENTITY itemAntiVirus.label "Ochrona antywirusowa">
+
+<!-- Junk Mail Controls -->
+<!ENTITY junkMail.intro "W tym miejscu można zmienić domyślne ustawienia filtru niechcianej poczty. Aby zmienić ustawienia niechcianej poczty dotyczące konkretnego konta, należy przejść do Konfiguracji kont.">
+<!ENTITY manualMark.label "W przypadku ręcznego oznaczenia wiadomości jako niechcianej:">
+<!ENTITY manualMark.accesskey "W">
+<!ENTITY manualMarkModeMove.label "przenoś wiadomości do folderu „Niechciane”">
+<!ENTITY manualMarkModeMove.accesskey "p">
+<!ENTITY manualMarkModeDelete.label "usuwaj wiadomości">
+<!ENTITY manualMarkModeDelete.accesskey "u">
+<!ENTITY markAsReadOnSpam.label "Oznaczaj wiadomości uznane za niechciane jako przeczytane">
+<!ENTITY markAsReadOnSpam.accesskey "z">
+<!ENTITY enableAdaptiveJunkLogging.label "Włącz dziennik filtru niechcianej poczty">
+<!ENTITY enableAdaptiveJunkLogging.accesskey "d">
+<!ENTITY openJunkLog.label "Wyświetl dziennik">
+<!ENTITY openJunkLog.accesskey "k">
+<!ENTITY resetTrainingData.label "Zresetuj dane treningowe">
+<!ENTITY resetTrainingData.accesskey "r">
+
+<!-- Phishing Detector -->
+<!ENTITY phishingDetector1.intro "&brandShortName; może analizować treści wiadomości w poszukiwaniu typowych technik stosowanych przez oszustów.">
+<!ENTITY enablePhishingDetector1.label "Informuj, jeżeli wyświetlana wiadomość może być próbą oszustwa">
+<!ENTITY enablePhishingDetector1.accesskey "n">
+<!ENTITY useDownloadedList.label "Używaj listy podejrzanych wiadomości pobranej z Internetu">
+<!ENTITY useDownloadedList.accesskey "e">
+
+<!-- Passwords -->
+<!ENTITY savedPasswords.intro "&brandShortName; może zachować hasła dla wszystkich kont użytkownika.">
+<!ENTITY useMasterPassword.label "Używaj hasła głównego">
+<!ENTITY useMasterPassword.accesskey "U">
+<!ENTITY masterPassword.intro "Hasło główne chroni wszystkie hasła użytkownika ale musi być ono wprowadzane jednorazowo dla każdej sesji.">
+<!ENTITY changeMasterPassword.label "Zmień hasło główne…">
+<!ENTITY changeMasterPassword.accesskey "h">
+<!ENTITY savedPasswords.label "Zachowane hasła…">
+<!ENTITY savedPasswords.accesskey "Z">
+
+<!-- Anti Virus -->
+<!ENTITY antiVirus.intro "&brandShortName; może ułatwiać pracę programom antywirusowym poprzez umożliwienie im analizowania przychodzących wiadomości pocztowych, zanim zostaną one zapisane przez program.">
+<!ENTITY antiVirus.label "Zezwalaj programom antywirusowym na przenoszenie poszczególnych wiadomości do kwarantanny">
+<!ENTITY antiVirus.accesskey "Z">

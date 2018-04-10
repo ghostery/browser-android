@@ -1,0 +1,98 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label "Ogólne">
+<!ENTITY dataChoicesTab.label "Udostępniane dane">
+<!ENTITY itemUpdate.label "Aktualizacja">
+<!ENTITY itemNetworking.label "Sieć i miejsce na dysku">
+<!ENTITY itemCertificates.label "Certyfikaty">
+
+<!ENTITY enableGlodaSearch.label "Indeksowanie wiadomości i wyszukiwanie">
+<!ENTITY enableGlodaSearch.accesskey "n">
+<!ENTITY dateTimeFormatting.label "Format daty i czasu">
+<!ENTITY allowHWAccel.label "Korzystaj ze sprzętowego przyspieszania, jeśli jest dostępne">
+<!ENTITY allowHWAccel.accesskey "K">
+<!ENTITY storeType.label "Sposób przechowywania wiadomości:">
+<!ENTITY storeType.accesskey "S">
+<!ENTITY mboxStore2.label "plik na folder (mbox)">
+<!ENTITY maildirStore.label "plik na wiadomość (maildir)">
+<!ENTITY scrolling.label "Przewijanie">
+<!ENTITY useAutoScroll.label "Używaj automatycznego przewijania">
+<!ENTITY useAutoScroll.accesskey "U">
+<!ENTITY useSmoothScrolling.label "Używaj płynnego przewijania">
+<!ENTITY useSmoothScrolling.accesskey "a">
+<!ENTITY systemIntegration.label "Integracja z systemem operacyjnym">
+<!ENTITY alwaysCheckDefault.label "Przy uruchamianiu sprawdzaj, czy &brandShortName; jest domyślnym programem pocztowym">
+<!ENTITY alwaysCheckDefault.accesskey "P">
+<!ENTITY searchIntegration.label "Zezwalaj programowi &searchIntegration.engineName; na wyszukiwanie wiadomości">
+<!ENTITY searchIntegration.accesskey "Z">
+<!ENTITY checkDefaultsNow.label "Sprawdź teraz…">
+<!ENTITY checkDefaultsNow.accesskey "S">
+<!ENTITY configEditDesc.label "Konfiguracja zaawansowana">
+<!ENTITY configEdit.label "Edytor ustawień…">
+<!ENTITY configEdit.accesskey "E">
+<!ENTITY returnReceiptsInfo.label "Określ, w jaki sposób &brandShortName; ma traktować potwierdzenia doręczenia wiadomości">
+<!ENTITY showReturnReceipts.label "Opcje potwierdzeń…">
+<!ENTITY showReturnReceipts.accesskey "O">
+
+<!ENTITY telemetrySection.label "Telemetria">
+<!ENTITY telemetryDesc.label "Udostępnianie organizacji &vendorShortName; danych o wydajności, wykorzystaniu, modyfikacjach programu pocztowego oraz o sprzęcie, na którym działa, ułatwia ulepszanie programu &brandShortName;.">
+<!ENTITY enableTelemetry.label "Telemetria">
+<!ENTITY enableTelemetry.accesskey "T">
+<!ENTITY telemetryLearnMore.label "Więcej informacji">
+
+<!ENTITY crashReporterSection.label "Awarie">
+<!ENTITY crashReporterDesc.label "&brandShortName; może przesyłać zgłoszenia awarii, aby ułatwić organizacji &vendorShortName; poprawianie stabilności i bezpieczeństwa programu pocztowego.">
+<!ENTITY enableCrashReporter.label "Zgłaszanie awarii">
+<!ENTITY enableCrashReporter.accesskey "Z">
+<!ENTITY crashReporterLearnMore.label "Więcej informacji">
+
+<!ENTITY updateApp2.label "Aktualizacje programu &brandShortName;">
+<!ENTITY updateApp.version.pre "Wersja ">
+<!ENTITY updateApp.version.post "">
+<!ENTITY updateAuto.label "Instaluj aktualizacje automatycznie (zalecane: większe bezpieczeństwo)">
+<!ENTITY updateAuto.accesskey "I">
+<!ENTITY updateCheck.label "Sprawdzaj dostępność aktualizacji, ale wymagaj potwierdzenia ich instalacji">
+<!ENTITY updateCheck.accesskey "S">
+<!ENTITY updateManual.label "Nie sprawdzaj dostępności aktualizacji (niezalecane: zagrożenie bezpieczeństwa)">
+<!ENTITY updateManual.accesskey "N">
+<!ENTITY updateHistory.label "Wyświetl historię aktualizacji">
+<!ENTITY updateHistory.accesskey "W">
+<!ENTITY useService.label "Używaj usługi instalowania aktualizacji działającej w tle">
+<!ENTITY useService.accesskey "U">
+
+<!ENTITY showSettings.label "Ustawienia…">
+<!ENTITY showSettings.accesskey "U">
+<!ENTITY proxiesConfigure.label "Określ, w jaki sposób &brandShortName; ma się łączyć z Internetem">
+<!ENTITY connectionsInfo.caption "Połączenie">
+<!ENTITY offlineInfo.caption "Tryb offline">
+<!ENTITY offlineInfo.label "Ustawienia trybu offline">
+<!ENTITY showOffline.label "Tryb offline…">
+<!ENTITY showOffline.accesskey "T">
+
+<!ENTITY Diskspace "Miejsce na dysku">
+<!ENTITY offlineCompactFolders.label "Automatycznie porządkuj wszystkie foldery, gdy zaoszczędzi to w sumie ponad">
+<!ENTITY offlineCompactFolders.accesskey "A">
+<!ENTITY offlineCompactFoldersMB.label "MB">
+
+<!ENTITY useCacheBefore.label "Używaj maksymalnie">
+<!ENTITY useCacheBefore.accesskey "m">
+<!ENTITY useCacheAfter.label "MB miejsca dla pamięci podręcznej">
+<!ENTITY overrideSmartCacheSize.label "Używaj ręcznego zarządzania pamięcią podręczną">
+<!ENTITY overrideSmartCacheSize.accesskey "r">
+<!ENTITY clearCacheNow.label "Wyczyść teraz">
+<!ENTITY clearCacheNow.accesskey "W">
+
+<!ENTITY certSelection.description "Kiedy serwer żąda osobistego certyfikatu użytkownika:">
+<!ENTITY certs.auto "wybierz certyfikat automatycznie">
+<!ENTITY certs.auto.accesskey "c">
+<!ENTITY certs.ask "pytaj za każdym razem">
+<!ENTITY certs.ask.accesskey "t">
+<!ENTITY enableOCSP.label "Wyślij zapytanie do serwerów OCSP, aby potwierdzić aktualność certyfikatów">
+<!ENTITY enableOCSP.accesskey "e">
+
+<!ENTITY manageCertificates.label "Zarządzaj certyfikatami">
+<!ENTITY manageCertificates.accesskey "Z">
+<!ENTITY viewSecurityDevices.label "Urządzenia zabezpieczające">
+<!ENTITY viewSecurityDevices.accesskey "U">

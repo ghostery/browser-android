@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "Ustawienia trybu offline">
+
+<!ENTITY checkAutoDetect.label "Automatycznie wykrywanie stanu połączenia">
+<!ENTITY checkAutoDetect.accesskey "A">
+<!ENTITY titleStartUp "Podczas uruchamiania:">
+<!ENTITY radioRememberPrevState.label "powracaj do wcześniejszego stanu połączenia">
+<!ENTITY radioRememberPrevState.accesskey "w">
+<!ENTITY radioAskState.label "pytaj, czy łączyć">
+<!ENTITY radioAskState.accesskey "c">
+<!ENTITY radioAlwaysOnlineState.label "zawsze próbuj połączyć">
+<!ENTITY radioAlwaysOnlineState.accesskey "z">
+<!ENTITY radioAlwaysOffline.label "nie łącz">
+<!ENTITY radioAlwaysOffline.accesskey "n">
+
+<!ENTITY textGoingOnline "Czy wysyłać niewysłane wiadomości przy łączeniu?">
+<!ENTITY radioAutoSend.label "Tak">
+<!ENTITY radioAutoSend.accesskey "T">
+<!ENTITY radioNotSend.label "Nie">
+<!ENTITY radioNotSend.accesskey "N">
+<!ENTITY radioAskUnsent.label "Pytaj">
+<!ENTITY radioAskUnsent.accesskey "P">
+<!ENTITY textGoingOffline "Czy pobierać wiadomości do późniejszego wykorzystania przed rozłączeniem?">
+<!ENTITY radioAutoDownload.label "Tak">
+<!ENTITY radioAutoDownload.accesskey "k">
+<!ENTITY radioNotDownload.label "Nie">
+<!ENTITY radioNotDownload.accesskey "e">
+<!ENTITY radioAskDownload.label "Pytaj">
+<!ENTITY radioAskDownload.accesskey "j">

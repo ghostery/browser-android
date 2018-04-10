@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemJunk.label "Correo no deseado">
+<!ENTITY itemPhishing.label "Correo fraudulento">
+<!ENTITY itemPasswords.label "Contraseñas">
+<!ENTITY itemAntiVirus.label "Antivirus">
+<!ENTITY junkMail.intro "Establezca su configuración predeterminada para el correo no deseado. La configuración específica de cada cuenta puede realizarse en Configuración de las cuentas.">
+<!ENTITY manualMark.label "Cuando marco los mensajes como no deseados:">
+<!ENTITY manualMark.accesskey "C">
+<!ENTITY manualMarkModeMove.label "Moverlos a la carpeta &quot;Correo no deseado&quot; de la cuenta">
+<!ENTITY manualMarkModeMove.accesskey "o">
+<!ENTITY manualMarkModeDelete.label "Eliminarlos">
+<!ENTITY manualMarkModeDelete.accesskey "E">
+<!ENTITY markAsReadOnSpam.label "Marcar como leídos los mensajes calificados como no deseados">
+<!ENTITY markAsReadOnSpam.accesskey "M">
+<!ENTITY enableAdaptiveJunkLogging.label "Activar el registro del filtro adaptativo de correo basura">
+<!ENTITY enableAdaptiveJunkLogging.accesskey "A">
+<!ENTITY openJunkLog.label "Mostrar el registro">
+<!ENTITY openJunkLog.accesskey "s">
+<!ENTITY resetTrainingData.label "Reiniciar datos de entrenamiento">
+<!ENTITY resetTrainingData.accesskey "R">
+<!ENTITY phishingDetector1.intro "&brandShortName; puede analizar mensajes para identificar los que sean fraudulentos buscando técnicas comunes usadas para engañarle.">
+<!ENTITY enablePhishingDetector1.label "Decirme si el mensaje que estoy leyendo parece un mensaje fraudulento">
+<!ENTITY enablePhishingDetector1.accesskey "D">
+<!ENTITY useDownloadedList.label "Usar una lista descargada de mensajes considerados fraudulentos">
+<!ENTITY useDownloadedList.accesskey "U">
+<!ENTITY savedPasswords.intro "&brandShortName; puede recordar las contraseñas de todas sus cuentas.">
+<!ENTITY useMasterPassword.label "Usar una contraseña maestra">
+<!ENTITY useMasterPassword.accesskey "U">
+<!ENTITY masterPassword.intro "Una contraseña maestra protege todas sus contraseñas, pero debe introducirla una vez por sesión.">
+<!ENTITY changeMasterPassword.label "Cambiar contraseña maestra…">
+<!ENTITY changeMasterPassword.accesskey "C">
+<!ENTITY savedPasswords.label "Contraseñas guardadas…">
+<!ENTITY savedPasswords.accesskey "C">
+<!ENTITY antiVirus.intro "&brandShortName; puede hacer fácilmente que el software antivirus analice el correo entrante en busca de virus antes de que se guarde localmente.">
+<!ENTITY antiVirus.label "Permitir a los antivirus poner en cuarentena mensajes individuales">
+<!ENTITY antiVirus.accesskey "P">

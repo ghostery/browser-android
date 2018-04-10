@@ -1,0 +1,23 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY sanitizeDialog2.title "Cancella cronologia recente">
+<!ENTITY clearTimeDuration.label "Intervallo di tempo da cancellare: ">
+<!ENTITY clearTimeDuration.accesskey "T">
+<!ENTITY clearTimeDuration.lastHour "ultima ora">
+<!ENTITY clearTimeDuration.last2Hours "ultime due ore">
+<!ENTITY clearTimeDuration.last4Hours "ultime quattro ore">
+<!ENTITY clearTimeDuration.today "Oggi">
+<!ENTITY clearTimeDuration.everything "tutto">
+<!ENTITY clearTimeDuration.suffix "">
+<!ENTITY detailsProgressiveDisclosure.label "Dettagli">
+<!ENTITY detailsProgressiveDisclosure.accesskey "e">
+<!ENTITY itemHistory.label "Cronologia di navigazione">
+<!ENTITY itemHistory.accesskey "o">
+<!ENTITY itemCookies.label "Cookie">
+<!ENTITY itemCookies.accesskey "C">
+<!ENTITY itemCache.label "Cache">
+<!ENTITY itemCache.accesskey "A">
+<!ENTITY sanitizeEverythingUndoWarning "Questa azione non può essere annullata.">
+<!ENTITY dialog.width "33em">

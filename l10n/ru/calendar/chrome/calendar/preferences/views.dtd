@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.calendar.view.allview.caption "Основные настройки">
+<!ENTITY pref.calendar.view.dayandweekviews.caption "Обзоры дня и недели">
+<!ENTITY pref.calendar.view.multiweekview.caption "Обзор по неделям">
+<!ENTITY pref.calendar.view.workweek.caption "Рабочая неделя">
+
+<!ENTITY pref.weekstarts.label "Первый день недели:">
+<!ENTITY pref.weekstarts.accesskey "е">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Показывать номер недели в обзорах и минимесяце">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "о">
+<!ENTITY pref.daysoff.label "Включать эти дни в рабочую неделю:">
+
+<!ENTITY pref.calendar.view.daystart.label "День начинается в:">
+<!ENTITY pref.calendar.view.daystart.accesskey "а">
+<!ENTITY pref.calendar.view.dayend.label "День заканчивается в:">
+<!ENTITY pref.calendar.view.dayend.accesskey "и">
+<!ENTITY pref.calendar.view.visiblehours.label "Показывать:">
+<!ENTITY pref.calendar.view.visiblehours.accesskey "з">
+<!ENTITY pref.calendar.view.visiblehoursend.label "часов одновременно">
+
+<!ENTITY pref.numberofweeks.label "Количество недель в обзоре (включая предыдущие недели):">
+<!ENTITY pref.numberofweeks.accesskey "К">
+<!ENTITY pref.numberofpreviousweeks.label "Количество предыдущих недель в обзоре:">
+<!ENTITY pref.numberofpreviousweeks.accesskey "о">
+<!ENTITY pref.numberofweeks.0 "нет">
+<!ENTITY pref.numberofweeks.1 "1 неделя">
+<!ENTITY pref.numberofweeks.2 "2 недели">
+<!ENTITY pref.numberofweeks.3 "3 недели">
+<!ENTITY pref.numberofweeks.4 "4 недели">
+<!ENTITY pref.numberofweeks.5 "5 недель">
+<!ENTITY pref.numberofweeks.6 "6 недель">

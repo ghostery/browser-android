@@ -1,0 +1,22 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY wizard.title             "Criar novo calendário" >
+<!ENTITY wizard.label             "Criar um novo calendário" >
+<!ENTITY wizard.description       "Localize o seu calendário" >
+
+<!ENTITY initialpage.description    "O seu calendário pode ser guardado no seu computador ou num servidor para acesso remoto ou partilha." >
+<!ENTITY initialpage.computer.label  "No meu computador">
+<!ENTITY initialpage.network.label  "Na rede">
+
+<!ENTITY locationpage.description         "Disponibiliza as informações sobre o que é necessário para aceder ao calendário remoto" >
+<!ENTITY locationpage.login.description   "Opcional: introduza um nome de utilizador e uma palavra-passe" >
+<!ENTITY locationpage.username.label      "Nome de utilizador:" >
+<!ENTITY locationpage.password.label      "Palavra-passe:" >
+
+<!ENTITY custompage.shortdescription  "Personalize o seu calendário" >
+<!ENTITY custompage.longdescription   "Pode dar um nome e colorir os eventos deste calendário." >
+
+<!ENTITY finishpage.shortdescription  "Calendário criado" >
+<!ENTITY finishpage.longdescription   "O seu calendário foi criado." >

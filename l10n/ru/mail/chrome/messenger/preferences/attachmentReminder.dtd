@@ -1,0 +1,12 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY attachmentReminderDialog.title   "Ключевые слова для напоминания о вложении">
+<!ENTITY attachKeywordText.label          "&brandShortName; будет предупреждать вас о том, что вы забыли вложить файл, если вы попробуете отправить письмо, содержащее одно из этих ключевых слов.">
+<!ENTITY newKeywordButton.label           "Создать…">
+<!ENTITY newKeywordButton.accesskey       "о">
+<!ENTITY editKeywordButton1.label         "Изменить…">
+<!ENTITY editKeywordButton1.accesskey     "м">
+<!ENTITY removeKeywordButton.label        "Удалить">
+<!ENTITY removeKeywordButton.accesskey    "а">

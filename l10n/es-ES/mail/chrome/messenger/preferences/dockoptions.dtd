@@ -1,0 +1,15 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dockOptionsDialog.title "Opciones del icono de la aplicación">
+<!ENTITY window.macWidth "42em">
+<!ENTITY bounceSystemDockIcon.label "Animar el icono de la aplicación cuando llegue un mensaje nuevo">
+<!ENTITY bounceSystemDockIcon.accesskey "A">
+<!ENTITY newMessagesCountDock.label "Cuenta de mensajes nuevos">
+<!ENTITY newMessagesCountDock.accesskey "C">
+<!ENTITY showAllUnreadMessagesCount.label "Cuenta de mensajes no leídos">
+<!ENTITY showAllUnreadMessagesCount.accesskey "u">
+<!ENTITY dockIconBadge.label "Insignia del icono de la aplicación">
+<!ENTITY dockIconShow.label "Icono insignia de aplicación con:">
+<!ENTITY directNotificationSettings.label "Puede desactivar la insignia en el panel Notificaciones de las preferencias del sistema.">

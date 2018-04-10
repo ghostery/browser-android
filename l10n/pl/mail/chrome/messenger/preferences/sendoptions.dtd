@@ -1,0 +1,35 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title "Opcje wysyłania">
+<!ENTITY sendMail.title "Format wysyłanych wiadomości">
+<!ENTITY autoDowngrade.label "wysyłaj wiadomości w formacie tekstowym, jeśli to możliwe">
+<!ENTITY autoDowngrade.accesskey "w">
+<!ENTITY sendMaildesc.label "Jeżeli co najmniej jeden z adresatów wiadomości wysyłanej w formacie HTML nie znajduje się na liście osób mogących otrzymywać takie wiadomości, to:">
+<!ENTITY askMe.label "pytaj, jakiego formatu użyć przy wysyłaniu wiadomości">
+<!ENTITY askMe.accesskey "k">
+<!ENTITY convertPlain.label "przekształcaj wiadomości na format tekstowy">
+<!ENTITY convertPlain.accesskey "t">
+<!ENTITY sendHTML.label "wysyłaj wiadomości w formacie HTML">
+<!ENTITY sendHTML.accesskey "H">
+<!ENTITY sendBoth.label "wysyłaj wiadomości w obydwu formatach: HTML oraz tekstowym">
+<!ENTITY sendBoth.accesskey "e">
+<!ENTITY override.label "Uwaga: Proszę użyć Książki adresowej, aby ustalić preferowany przez poszczególnych adresatów format wiadomości.">
+<!ENTITY domaindesc.label "W przypadku wysyłania poczty do jednej z poniższych domen, &brandShortName; automatycznie wybierze właściwy format wiadomości.">
+<!ENTITY HTMLTab.label "Domeny – format HTML">
+<!ENTITY HTMLTab.accesskey "H">
+<!ENTITY PlainTextTab.label "Domeny – format tekstowy">
+<!ENTITY PlainTextTab.accesskey "t">
+<!ENTITY AddHtmlDomain.label "Dodaj…">
+<!ENTITY AddHtmlDomain.accesskey "a">
+<!ENTITY AddPlainText.label "Dodaj…">
+<!ENTITY AddPlainText.accesskey "D">
+<!ENTITY DeleteHtmlDomain.label "Usuń">
+<!ENTITY DeleteHtmlDomain.accesskey "U">
+<!ENTITY DeletePlainText.label "Usuń">
+<!ENTITY DeletePlainText.accesskey "s">
+<!ENTITY add.htmltitle "Dodaj domenę – HTML">
+<!ENTITY add.htmldomain "Nazwa domeny, której użytkownicy preferują otrzymywanie wiadomości w formacie HTML:">
+<!ENTITY add.plaintexttitle "Dodaj domenę – format tekstowy">
+<!ENTITY add.plaintextdomain "Nazwa domeny, której użytkownicy preferują otrzymywanie wiadomości w formacie tekstowym:">

@@ -1,0 +1,24 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.categories.new.title "Nouvelle catégorie">
+<!ENTITY pref.categories.newButton.label "Créer…">
+<!ENTITY pref.categories.newButton.accesskey "C">
+<!ENTITY pref.categories.edit.title "Modifier la catégorie">
+<!ENTITY pref.categories.editButton.label "Modifier…">
+<!ENTITY pref.categories.editButton.accesskey "M">
+<!ENTITY pref.categories.removeButton.label "Supprimer">
+<!ENTITY pref.categories.removeButton.accesskey "S">
+<!ENTITY pref.categories.name.label "Nom">
+<!ENTITY pref.categories.color.label "Couleur">
+<!ENTITY pref.categories.usecolor.label "Utiliser une couleur">
+<!ENTITY pref.categories.none.label "(aucune)">
+<!ENTITY pref.categories.overwrite "Une catégorie portant le même nom existe déjà. \n Voulez-vous la remplacer ?">
+<!ENTITY pref.categories.overwrite.title "Attention : nom en double">
+<!ENTITY pref.categories.noBlankCategories "Vous devez saisir un nom de catégorie.">

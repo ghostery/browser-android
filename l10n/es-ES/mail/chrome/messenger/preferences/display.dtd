@@ -1,0 +1,60 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemFormatting.label "Formato">
+<!ENTITY itemTags.label "Etiquetas">
+<!ENTITY itemAdvanced.label "Avanzadas">
+<!ENTITY style.label "Estilo:">
+<!ENTITY style.accesskey "E">
+<!ENTITY regularStyle.label "Normal">
+<!ENTITY bold.label "Negrita">
+<!ENTITY italic.label "Cursiva">
+<!ENTITY boldItalic.label "Negrita cursiva">
+<!ENTITY size.label "Tamaño:">
+<!ENTITY size.accesskey "a">
+<!ENTITY regularSize.label "Normal">
+<!ENTITY bigger.label "Mayor">
+<!ENTITY smaller.label "Menor">
+<!ENTITY quotedTextColor.label "Color:">
+<!ENTITY quotedTextColor.accesskey "o">
+<!ENTITY displayWidth.label "Mensajes de texto sin formato">
+<!ENTITY displayText.label "Al mostrar mensajes citados de texto sin formato:">
+<!ENTITY convertEmoticons.label "Mostrar emoticones como gráficos">
+<!ENTITY convertEmoticons.accesskey "M">
+<!ENTITY displayTagsText.label "Las etiquetas pueden usarse para categorizar y priorizar sus mensajes.">
+<!ENTITY newTagButton.label "Nuevo…">
+<!ENTITY newTagButton.accesskey "N">
+<!ENTITY editTagButton1.label "Editar…">
+<!ENTITY editTagButton1.accesskey "E">
+<!ENTITY removeTagButton.label "Eliminar">
+<!ENTITY removeTagButton.accesskey "r">
+<!ENTITY fontsAndColors1.label "Tipografías y colores">
+<!ENTITY defaultFont.label "Tipo de letra predeterminado:">
+<!ENTITY defaultFont.accesskey "i">
+<!ENTITY defaultSize.label "Tamaño:">
+<!ENTITY defaultSize.accesskey "T">
+<!ENTITY fontOptions.accesskey "v">
+<!ENTITY fontOptions.label "Avanzadas…">
+<!ENTITY colorButton.label "Colores…">
+<!ENTITY colorButton.accesskey "C">
+<!ENTITY reading.caption "Lectura">
+<!ENTITY display.caption "Visualización">
+<!ENTITY showCondensedAddresses.label "Mostrar sólo el atributo 'nombre mostrado' para las personas de mi libreta de direcciones">
+<!ENTITY showCondensedAddresses.accesskey "b">
+<!ENTITY autoMarkAsRead.label "Marcar automáticamente mensajes como leídos">
+<!ENTITY autoMarkAsRead.accesskey "A">
+<!ENTITY markAsReadNoDelay.label "Inmediatamente tras mostrarlo">
+<!ENTITY markAsReadNoDelay.accesskey "n">
+<!ENTITY markAsReadDelay.label "Tras mostrarlo durante">
+<!ENTITY markAsReadDelay.accesskey "d">
+<!ENTITY secondsLabel.label "segundos">
+<!ENTITY openMsgIn.label "Abrir mensajes en:">
+<!ENTITY openMsgInNewTab.label "Una pestaña nueva">
+<!ENTITY openMsgInNewTab.accesskey "U">
+<!ENTITY reuseExpRadio0.label "Una ventana mens. nueva">
+<!ENTITY reuseExpRadio0.accesskey "v">
+<!ENTITY reuseExpRadio1.label "Una ventana mens. existente">
+<!ENTITY reuseExpRadio1.accesskey "s">
+<!ENTITY closeMsgOnMoveOrDelete.label "Cerrar ventana/pestaña del mensaje al moverlo o eliminarlo">
+<!ENTITY closeMsgOnMoveOrDelete.accesskey "C">

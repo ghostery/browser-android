@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.alarmgoesoff.label "Quando un allarme si attiva:">
+<!ENTITY pref.playasound "Esegui un suono">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "E">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "Usa suono predefinito">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "U">
+<!ENTITY pref.calendar.alarms.sound.browse.label "Sfoglia…">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "S">
+<!ENTITY pref.calendar.alarms.sound.play.label "Suona">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "S">
+<!ENTITY pref.showalarmbox "Visualizza un messaggio di allarme">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "m">
+<!ENTITY pref.missedalarms "Visualizza allarmi persi">
+<!ENTITY pref.missedalarms2 "Visualizza promemoria mancati per i calendari scrivibili">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "V">
+<!ENTITY pref.calendar.alarms.defaults.label "Impostazioni predefinite allarmi">
+<!ENTITY pref.defalarm4events.label "Impostazione predefinita allarme per gli eventi:">
+<!ENTITY pref.defalarm4events.accesskey "z">
+<!ENTITY pref.defalarm4todos.label "Impostazione predefinita allarme per le attività:">
+<!ENTITY pref.defalarm4todos.accesskey "n">
+<!ENTITY pref.alarm.on "Attivo">
+<!ENTITY pref.alarm.off "Non attivo">
+<!ENTITY pref.defalarmlen4events.label "Tempo di attivazione allarme prima di un evento:">
+<!ENTITY pref.defalarmlen4events.accesskey "T">
+<!ENTITY pref.defalarmlen4todos.label "Tempo di attivazione allarme prima di un'attività:">
+<!ENTITY pref.defalarmlen4todos.accesskey "o">
+
+<!ENTITY pref.defaultsnoozelength.label "Lunghezza predefinita snooze:" >
+<!ENTITY pref.defaultsnoozelength.accesskey "s">

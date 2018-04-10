@@ -1,0 +1,31 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.alarmgoesoff.label "Cuando se activa un aviso:">
+<!ENTITY pref.playasound "Reproducir sonido">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "R">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "Usar sonido predeterminado">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "d">
+<!ENTITY pref.calendar.alarms.sound.browse.label "Examinar...">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "x">
+<!ENTITY pref.calendar.alarms.sound.play.label "Reproducir">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "e">
+<!ENTITY pref.showalarmbox "Mostrar la ventana de aviso">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "M">
+<!ENTITY pref.missedalarms "Mostrar avisos vencidos">
+<!ENTITY pref.missedalarms2 "Mostrar recordatorios ocultados en calendarios escribibles">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "o">
+<!ENTITY pref.calendar.alarms.defaults.label "Valores predeterminados para avisos">
+<!ENTITY pref.defalarm4events.label "Config. predet. de aviso para eventos:">
+<!ENTITY pref.defalarm4events.accesskey "C">
+<!ENTITY pref.defalarm4todos.label "Config. predet. de aviso para tareas:">
+<!ENTITY pref.defalarm4todos.accesskey "n">
+<!ENTITY pref.alarm.on "Encendido">
+<!ENTITY pref.alarm.off "Apagado">
+<!ENTITY pref.defalarmlen4events.label "Antelación predet. con la que un aviso aparece antes de un evento:">
+<!ENTITY pref.defalarmlen4events.accesskey "P">
+<!ENTITY pref.defalarmlen4todos.label "Antelación predet. con la que un aviso aparece antes de una tarea:">
+<!ENTITY pref.defalarmlen4todos.accesskey "v">
+<!ENTITY pref.defaultsnoozelength.label "Duración predeterminada del retardo:">
+<!ENTITY pref.defaultsnoozelength.accesskey "u">

@@ -1,0 +1,68 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label                   "Generale">
+<!ENTITY itemAutoComplete.label              "Indirizzi">
+<!ENTITY itemSpellCheck.label                "Ortografia">
+
+<!ENTITY dialogCompose.title                 "Composizione">
+
+<!ENTITY forwardMsg.label                     "Inoltra i messaggi:">
+<!ENTITY forwardMsg.accesskey                 "I">
+<!ENTITY inline.label                         "nel corpo del messaggio">
+<!ENTITY asAttachment.label                   "come allegati">
+<!ENTITY addExtension.label                   "Aggiungi l'estensione al nome del file">
+<!ENTITY addExtension.accesskey               "e">
+
+<!ENTITY htmlComposeHeader.label              "HTML">
+<!ENTITY font.label                           "Carattere:">
+<!ENTITY font.accesskey                       "c">
+<!ENTITY size.label                           "Dimensione:">
+<!ENTITY size.accesskey                       "s">
+<!ENTITY fontColor.label                      "Colore del testo:">
+<!ENTITY fontColor.accesskey                  "o">
+<!ENTITY bgColor.label                        "Colore di sfondo:">
+<!ENTITY bgColor.accesskey                    "l">
+<!ENTITY restoreHTMLDefaults.label            "Ripristina predefiniti">
+<!ENTITY restoreHTMLDefaults.accesskey        "R">
+<!ENTITY defaultToParagraph.label             "Usare il formato paragrafo come predefinito al posto del Corpo del Messaggio">
+<!ENTITY defaultToParagraph.accesskey         "P">
+
+<!ENTITY spellCheck.label                     "Controlla ortografia prima di inviare">
+<!ENTITY spellCheck.accesskey                 "C">
+<!ENTITY spellCheckInline.label               "Attiva il controllo ortografico durante la digitazione">
+<!ENTITY spellCheckInline1.accesskey          "A">
+<!ENTITY languagePopup.label                  "Lingua:">
+<!ENTITY languagePopup.accessKey              "L">
+<!ENTITY downloadDictionaries.label           "Scarica altri dizionari">
+
+<!ENTITY warnOnSendAccelKey.label             "Chiedi conferma quando si utilizza una scorciatoia da tastiera per inviare il messaggio">
+<!ENTITY warnOnSendAccelKey.accesskey         "h">
+<!ENTITY autoSave.label                       "Salvataggio automatico ogni">
+<!ENTITY autoSave.accesskey                   "v">
+<!ENTITY autoSaveEnd.label                    "minuti">
+
+<!ENTITY emailCollectionPicker.label           "Aggiungi automaticamente l'indirizzo della posta in uscita a:">
+<!ENTITY emailCollectionPicker.accesskey       "A">
+<!ENTITY addressingTitle.label                 "Completamento automatico indirizzi">
+<!ENTITY autocompleteText.label                "Durante la scrittura dell'indirizzo controlla le corrispondenze in:">
+<!ENTITY addressingEnable.label                "Rubriche locali">
+<!ENTITY addressingEnable.accesskey            "u">
+<!ENTITY directories.label                     "Rubrica remota:">
+<!ENTITY directories.accesskey                 "R">
+<!ENTITY directoriesNone.label                 "nessuna">
+<!ENTITY editDirectories.label                 "Modifica cartelle…">
+<!ENTITY editDirectories.accesskey             "M">
+<!ENTITY showAsDefault.label                   "Directory di avvio predefinita nella finestra rubrica:">
+<!ENTITY showAsDefault.accesskey               "S">
+<!ENTITY showAsDefaultLast.label               "Ultima directory selezionata">
+
+<!ENTITY sendOptionsDescription.label          "Configura la formattazione del testo:">
+<!ENTITY sendOptions.label                     "Opzioni di invio…">
+<!ENTITY sendOptions.accesskey                 "d">
+
+<!ENTITY attachmentReminder.label              "Controlla allegati mancanti">
+<!ENTITY attachmentReminder.accesskey          "m">
+<!ENTITY attachmentReminderOptions.label       "Parole chiave…">
+<!ENTITY attachmentReminderOptions.accesskey   "P">

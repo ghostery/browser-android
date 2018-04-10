@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Help Menu -->
+<!ENTITY helpMenu.label "Aiuto">
+<!ENTITY helpMenu.accesskey "u">
+<!-- LOCALIZATION NOTE some localizations of Windows use "?"
+                       for the help button in the menubar but Gnome does not.   -->
+<!ENTITY helpMenuWin.label "Aiuto">
+<!ENTITY helpMenuWin.accesskey "u">
+<!ENTITY helpTroubleshootingInfo.label     "Risoluzione dei problemi">
+<!ENTITY helpTroubleshootingInfo.accesskey "s">
+<!ENTITY helpSafeMode.label     "Riavvia disattivando i componenti aggiuntivi">
+<!ENTITY helpSafeMode.accesskey "R">
+<!ENTITY releaseCmd2.label "Note di versione">
+<!ENTITY releaseCmd2.accesskey "N">
+<!ENTITY whatsNewCmd.label "Novità">
+<!ENTITY whatsNewCmd.accesskey "o">
+<!ENTITY openHelp.label "Contenuti della Guida">
+<!ENTITY openHelp.accesskey "C">
+<!ENTITY openHelp.commandkey "VK_F1">
+<!ENTITY openHelpMac.label "Guida di &brandShortName;">
+<!ENTITY openHelpMac2.label "guida di &brandFullName;">
+<!ENTITY openHelpMac2.commandkey   "?">
+<!ENTITY openHelpMac2.modifiers    "accel">
+
+<!ENTITY aboutMenuCmd.label "Informazioni su &brandShortName;">
+<!ENTITY aboutMenuCmd.accesskey "I">
+
+<!ENTITY aboutMenuCmd2.label "Informazioni su &brandFullName;">
+<!ENTITY aboutMenuCmd2.accesskey "I">

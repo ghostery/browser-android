@@ -1,0 +1,115 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Don't localize these. They're here until they have
+     a better place to live. -->
+<!ENTITY syncBrand.fullName.label "Синхронизация Firefox">
+<!ENTITY syncBrand.shortName.label "Синхронизация">
+
+<!-- Main titles. -->
+<!ENTITY sync.title.connect.label 'Соединение с Синхронизацией'>
+
+<!-- J-PAKE Key Screen -->
+<!ENTITY sync.subtitle.connect.label 'Для активации вашего нового устройства выберите на устройстве «Настроить Синхронизацию».'>
+<!ENTITY sync.subtitle.pair.label 'Для активации выберите «Соединиться с устройством» на другом вашем устройстве.'>
+<!ENTITY sync.pin.default.label '...\n...\n...\n'>
+<!ENTITY sync.link.nodevice.label 'У меня нет с собой устройства…'>
+
+<!-- Configure Engines -->
+<!ENTITY sync.configure.engines.title.passwords2 'Логины'>
+<!ENTITY sync.configure.engines.title.history 'Историю'>
+<!ENTITY sync.configure.engines.title.tabs 'Вкладки'>
+
+<!-- Localization note (sync.default.client.name): Default string of the "Device
+     name" menu item upon setting up Firefox Sync.  The placeholder &formatS1
+     will be replaced by the name of the Firefox release channel and &formatS2
+     by the model name of the Android device. Examples look like "Aurora on
+     GT-I1950" and "Fennec on MI 2S". -->
+<!ENTITY sync.default.client.name '&formatS1; на &formatS2;'>
+
+<!-- Bookmark folder strings -->
+<!ENTITY bookmarks.folder.menu.label 'Меню закладок'>
+<!ENTITY bookmarks.folder.places.label ''>
+<!ENTITY bookmarks.folder.tags.label 'Метки'>
+<!ENTITY bookmarks.folder.toolbar.label 'Панель закладок'>
+<!ENTITY bookmarks.folder.other.label 'Другие закладки'>
+<!ENTITY bookmarks.folder.desktop.label 'Закладки десктопа'>
+<!ENTITY bookmarks.folder.mobile.label 'Мобильные закладки'>
+<!-- Pinned sites on about:home. This folder should never be shown to the user, but we have to give it a string name -->
+<!ENTITY bookmarks.folder.pinned.label 'Закреплённые'>
+
+<!-- Firefox Account strings. -->
+
+<!-- Localization note: these are shown in screens after the user has
+     created or signed in to an account, and take the user back to
+     Firefox. -->
+<!ENTITY fxaccount_back_to_browsing 'Вернуться к веб-сёрфингу'>
+
+<!ENTITY fxaccount_getting_started_welcome_to_sync 'Добро пожаловать в Синхронизацию'>
+<!ENTITY fxaccount_getting_started_description2 'Войдите для синхронизации ваших вкладок, закладок, логинов и многого другого.'>
+<!ENTITY fxaccount_getting_started_get_started 'Начать'>
+<!ENTITY fxaccount_getting_started_old_firefox 'Используете старую версию Синхронизации?'>
+
+<!ENTITY fxaccount_status_auth_server 'Сервер аккаунта'>
+<!ENTITY fxaccount_status_sync_now 'Синхронизировать'>
+<!ENTITY fxaccount_status_syncing2 'Синхронизация…'>
+<!ENTITY fxaccount_status_device_name 'Имя устройства'>
+<!ENTITY fxaccount_status_sync_server 'Сервер синхронизации'>
+<!ENTITY fxaccount_status_needs_verification2 'Ваш аккаунт должен быть подтверждён. Нажмите, чтобы снова отправить письмо для подтверждения.'>
+<!ENTITY fxaccount_status_needs_credentials 'Не удалось соединиться. Нажмите для входа.'>
+<!ENTITY fxaccount_status_needs_upgrade 'Чтобы войти, вам нужно обновить &brandShortName;.'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled 'Синхронизация настроена, но автоматически не запущена. Установите флажок «Автосинхронизация» в меню «Настройки &gt; Использование данных» Android.'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 'Синхронизация настроена, но автоматически не запущена. Установите флажок «Автосинхронизация данных» в меню «Настройки &gt; Аккаунты» Android.'>
+<!ENTITY fxaccount_status_needs_finish_migrating 'Нажмите, чтобы войти в новый Аккаунт Firefox.'>
+<!ENTITY fxaccount_status_choose_what 'Выберите, что синхронизировать'>
+<!ENTITY fxaccount_status_bookmarks 'Закладки'>
+<!ENTITY fxaccount_status_history 'История'>
+<!ENTITY fxaccount_status_passwords2 'Логины'>
+<!ENTITY fxaccount_status_tabs 'Открытые вкладки'>
+<!ENTITY fxaccount_status_additional_settings 'Дополнительные параметры'>
+<!ENTITY fxaccount_pref_sync_use_metered2 'Только через Wi-Fi'>
+<!-- Localization note: Only affects background syncing, user initiated
+     syncs will still be done regardless of the connection -->
+<!ENTITY fxaccount_pref_sync_use_metered_summary2 'Не разрешать &brandShortName; производить синхронизацию через сотовую сеть или лимитное подключение'>
+<!ENTITY fxaccount_status_legal 'Юридическая информация' >
+<!-- Localization note: when tapped, the following two strings link to
+     external web pages.  Compare fxaccount_policy_{linktos,linkprivacy}:
+     these strings are separated to accommodate languages that decline
+     the two uses differently. -->
+<!ENTITY fxaccount_status_linktos2 'Условия службы'>
+<!ENTITY fxaccount_status_linkprivacy2 'Уведомление о приватности'>
+<!ENTITY fxaccount_remove_account 'Отсоединить&ellipsis;'>
+
+<!ENTITY fxaccount_remove_account_dialog_title2 'Отсоединиться от Синхронизации?'>
+<!ENTITY fxaccount_remove_account_dialog_message2 'Ваши данные веб-сёрфинга останутся на этом устройстве, но оно больше не будет синхронироваться с вашим аккаунтом.'>
+<!-- Localization note: format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_remove_account_toast2 'Аккаунт Firefox &formatS; отсоединён.'>
+<!-- Localization note (fxaccount_remove_account_dialog_action_confirm): This is the label for the
+ confirm button in the dialog that shows up when disconnecting from sync. -->
+<!ENTITY fxaccount_remove_account_dialog_action_confirm 'Отсоединиться'>
+
+<!ENTITY fxaccount_enable_debug_mode 'Включить режим отладки'>
+
+<!-- Localization note: this is the name shown by the Android system
+     itself for a Firefox Account. Don't localize this. -->
+<!ENTITY fxaccount_account_type_label 'Firefox'>
+
+<!-- Localization note: these are shown by the Android system itself,
+     when the user navigates to the Android > Accounts > {Firefox
+     Account} Screen. The link takes the user to the Firefox Account
+     status activity, which lets them manage their Firefox
+     Account. -->
+<!ENTITY fxaccount_options_title 'Настройки Синхронизации'>
+<!ENTITY fxaccount_options_configure_title 'Настройка Синхронизации'>
+
+<!ENTITY fxaccount_sync_sign_in_error_notification_title2 'Нет соединения с сервером Синхронизации'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_sign_in_error_notification_text2 'Нажмите, чтобы войти как &formatS;'>
+
+<!ENTITY fxaccount_sync_finish_migrating_notification_title 'Завершить обновление &syncBrand.shortName.label;?'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_finish_migrating_notification_text 'Нажмите, чтобы войти как &formatS;'>

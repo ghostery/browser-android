@@ -1,0 +1,35 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title "Opciones de envío">
+<!ENTITY sendMail.title "Formato del texto">
+<!ENTITY autoDowngrade.label "Enviar mensajes como texto sin formato si es posible">
+<!ENTITY autoDowngrade.accesskey "v">
+<!ENTITY sendMaildesc.label "Al enviar mensajes en formato HTML y uno o más destinatario no estén en la lista para poder recibir HTML:">
+<!ENTITY askMe.label "Preguntarme qué hacer">
+<!ENTITY askMe.accesskey "p">
+<!ENTITY convertPlain.label "Convertir el mensaje a texto sin formato">
+<!ENTITY convertPlain.accesskey "C">
+<!ENTITY sendHTML.label "Enviar el mensaje en HTML de todos modos">
+<!ENTITY sendHTML.accesskey "S">
+<!ENTITY sendBoth.label "Enviar el mensaje en texto sin formato y en HTML">
+<!ENTITY sendBoth.accesskey "e">
+<!ENTITY override.label "Nota: use la libreta de direcciones para especificar los formatos preferidos de texto para los destinatarios.">
+<!ENTITY domaindesc.label "Al enviar un mensaje a una dirección con uno de los nombres de dominio listados debajo, &brandShortName; automáticamente envía el mensaje en el formato correcto.">
+<!ENTITY HTMLTab.label "Dominios HTML">
+<!ENTITY HTMLTab.accesskey "H">
+<!ENTITY PlainTextTab.label "Dominios de texto sin formato">
+<!ENTITY PlainTextTab.accesskey "f">
+<!ENTITY AddHtmlDomain.label "Añadir…">
+<!ENTITY AddHtmlDomain.accesskey "A">
+<!ENTITY AddPlainText.label "Añadir…">
+<!ENTITY AddPlainText.accesskey "A">
+<!ENTITY DeleteHtmlDomain.label "Eliminar">
+<!ENTITY DeleteHtmlDomain.accesskey "n">
+<!ENTITY DeletePlainText.label "Eliminar">
+<!ENTITY DeletePlainText.accesskey "n">
+<!ENTITY add.htmltitle "Añadir nombre de dominio HTML">
+<!ENTITY add.htmldomain "Nombre de dominio HTML:">
+<!ENTITY add.plaintexttitle "Añadir nombre de dominio de texto sin formato">
+<!ENTITY add.plaintextdomain "Nombre de dominio de texto sin formato:">

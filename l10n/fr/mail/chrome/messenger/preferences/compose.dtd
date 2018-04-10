@@ -1,0 +1,68 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label                   "Général">
+<!ENTITY itemAutoComplete.label              "Adressage">
+<!ENTITY itemSpellCheck.label                "Orthographe">
+
+<!ENTITY dialogCompose.title                 "Rédaction">
+
+<!ENTITY forwardMsg.label                     "Transférer les messages :">
+<!ENTITY forwardMsg.accesskey                 "T">
+<!ENTITY inline.label                         "intégrés">
+<!ENTITY asAttachment.label                   "en pièces jointes">
+<!ENTITY addExtension.label                   "ajouter une extension au nom de fichier">
+<!ENTITY addExtension.accesskey               "a">
+
+<!ENTITY htmlComposeHeader.label              "HTML">
+<!ENTITY font.label                           "Police :">
+<!ENTITY font.accesskey                       "P">
+<!ENTITY size.label                           "Taille :">
+<!ENTITY size.accesskey                       "e">
+<!ENTITY fontColor.label                      "Couleur du texte :">
+<!ENTITY fontColor.accesskey                  "C">
+<!ENTITY bgColor.label                        "Couleur de l’arrière-plan :">
+<!ENTITY bgColor.accesskey                    "u">
+<!ENTITY restoreHTMLDefaults.label            "Restaurer les paramètres initiaux">
+<!ENTITY restoreHTMLDefaults.accesskey        "R">
+<!ENTITY defaultToParagraph.label             "Utiliser le format paragraphe à la place du format texte principal par défaut">
+<!ENTITY defaultToParagraph.accesskey         "P">
+
+<!ENTITY spellCheck.label                     "Vérifier l’orthographe avant l’envoi">
+<!ENTITY spellCheck.accesskey                 "V">
+<!ENTITY spellCheckInline.label               "Activer la vérification pendant la saisie">
+<!ENTITY spellCheckInline1.accesskey          "A">
+<!ENTITY languagePopup.label                  "Langue :">
+<!ENTITY languagePopup.accessKey              "L">
+<!ENTITY downloadDictionaries.label           "Télécharger d’autres dictionnaires">
+
+<!ENTITY warnOnSendAccelKey.label             "Demander confirmation lors de l’utilisation d’un raccourci clavier pour envoyer un message">
+<!ENTITY warnOnSendAccelKey.accesskey         "D">
+<!ENTITY autoSave.label                       "Sauvegarde automatique toutes les">
+<!ENTITY autoSave.accesskey                   "S">
+<!ENTITY autoSaveEnd.label                    "minutes">
+
+<!ENTITY emailCollectionPicker.label           "Ajouter les adresses des messages sortants dans :">
+<!ENTITY emailCollectionPicker.accesskey       "A">
+<!ENTITY addressingTitle.label                 "Auto-complétion d’adresses">
+<!ENTITY autocompleteText.label                "Lors de la recherche d’adresses, chercher les correspondances dans :">
+<!ENTITY addressingEnable.label                "les carnets d’adresses locaux">
+<!ENTITY addressingEnable.accesskey            "C">
+<!ENTITY directories.label                     "un serveur d’annuaire :">
+<!ENTITY directories.accesskey                 "s">
+<!ENTITY directoriesNone.label                 "Aucun">
+<!ENTITY editDirectories.label                 "Modifier les annuaires…">
+<!ENTITY editDirectories.accesskey             "M">
+<!ENTITY showAsDefault.label                   "Annuaire par défaut à l’ouverture de la fenêtre du carnet d’adresses :">
+<!ENTITY showAsDefault.accesskey               "f">
+<!ENTITY showAsDefaultLast.label               "Dernier annuaire utilisé">
+
+<!ENTITY sendOptionsDescription.label          "Configuration du comportement pour l’envoi en format texte">
+<!ENTITY sendOptions.label                     "Options d’expédition…">
+<!ENTITY sendOptions.accesskey                 "O">
+
+<!ENTITY attachmentReminder.label              "Vérification de pièces jointes manquantes">
+<!ENTITY attachmentReminder.accesskey          "V">
+<!ENTITY attachmentReminderOptions.label       "Mots-clés">
+<!ENTITY attachmentReminderOptions.accesskey   "M">

@@ -1,0 +1,30 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "Impostazioni non in linea">
+<!ENTITY checkAutoDetect.label "Passa automaticamente alla modalità in linea">
+<!ENTITY checkAutoDetect.accesskey "S">
+<!ENTITY titleStartUp "Impostazione manuale all'avvio:">
+<!ENTITY radioRememberPrevState.label "Ricordarsi del precedente stato in linea">
+<!ENTITY radioRememberPrevState.accesskey "R">
+<!ENTITY radioAskState.label "Chiedi per passare alla modalità in linea">
+<!ENTITY radioAskState.accesskey "C">
+<!ENTITY radioAlwaysOnlineState.label "In linea">
+<!ENTITY radioAlwaysOnlineState.accesskey "l">
+<!ENTITY radioAlwaysOffline.label "Non in linea">
+<!ENTITY radioAlwaysOffline.accesskey "N">
+<!ENTITY textGoingOnline "Inviare i messaggi in attesa subito dopo essersi collegati?">
+<!ENTITY radioAutoSend.label "Si">
+<!ENTITY radioAutoSend.accesskey "S">
+<!ENTITY radioNotSend.label "No">
+<!ENTITY radioNotSend.accesskey "N">
+<!ENTITY radioAskUnsent.label "Chiedi">
+<!ENTITY radioAskUnsent.accesskey "c">
+<!ENTITY textGoingOffline "Scaricare i messaggi per l'utilizzo non in linea quando ci si scollega?">
+<!ENTITY radioAutoDownload.label "Si">
+<!ENTITY radioAutoDownload.accesskey "i">
+<!ENTITY radioNotDownload.label "No">
+<!ENTITY radioNotDownload.accesskey "o">
+<!ENTITY radioAskDownload.label "Chiedi">
+<!ENTITY radioAskDownload.accesskey "h">

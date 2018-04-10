@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  typeColumn.label            "Тип содержимого">
+<!ENTITY  typeColumn.accesskey        "о">
+
+<!ENTITY  actionColumn2.label         "Действие">
+<!ENTITY  actionColumn2.accesskey     "е">
+
+<!ENTITY  focusSearch1.key            "f">
+<!ENTITY  focusSearch2.key            "k">
+
+<!ENTITY  filter.placeholder          "Поиск">
+
+<!ENTITY saveTo.label                 "Путь для сохранения файлов">
+<!ENTITY saveTo.accesskey             "х">
+<!ENTITY alwaysAsk.label              "Всегда выдавать запрос на сохранение файлов">
+<!ENTITY alwaysAsk.accesskey          "п">
+<!ENTITY chooseFolderWin.label        "Обзор…">
+<!ENTITY chooseFolderWin.accesskey    "б">
+<!ENTITY chooseFolderMac.label        "Выбрать…">
+<!ENTITY chooseFolderMac.accesskey    "ы">
+
+<!ENTITY attachments.incoming.label   "Входящие">
+<!ENTITY attachments.outgoing.label   "Исходящие">
+
+<!ENTITY addCloudFileAccount1.label       "Добавить…">
+<!ENTITY addCloudFileAccount1.accesskey   "в">
+<!ENTITY addCloudFileAccount.description  "Добавить новую службу хранения Filelink">
+<!ENTITY removeCloudFileAccount.label     "Удалить">
+<!ENTITY removeCloudFileAccount.accesskey "д">
+<!ENTITY authRequired.description         "Для просмотра параметров этой службы хранения вам необходимо авторизоваться.">
+<!ENTITY authRequired.button.label        "Авторизоваться">
+<!ENTITY authRequired.button.accesskey    "и">
+
+<!ENTITY enableCloudFileAccountOffer.label "Предлагать службу хранения для файлов больше чем">
+<!ENTITY enableCloudFileAccountOffer.mb "МБ">

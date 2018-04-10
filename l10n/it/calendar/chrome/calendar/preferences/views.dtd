@@ -1,0 +1,31 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.calendar.view.allview.caption "Generale">
+<!ENTITY pref.calendar.view.dayandweekviews.caption "Viste giorno e settimana">
+<!ENTITY pref.calendar.view.multiweekview.caption "Vista multi-settimana">
+<!ENTITY pref.calendar.view.workweek.caption "Settimana lavorativa">
+<!ENTITY pref.weekstarts.label "Primo giorno della settimana:">
+<!ENTITY pref.weekstarts.accesskey "P">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Mostra il numero della settimana nelle viste e nel mini-mese">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "M">
+<!ENTITY pref.daysoff.label "Giorni lavorativi della settimana:">
+<!ENTITY pref.calendar.view.daystart.label "Il giorno inizia alle:">
+<!ENTITY pref.calendar.view.daystart.accesskey "z">
+<!ENTITY pref.calendar.view.dayend.label "Il giorno finisce alle:">
+<!ENTITY pref.calendar.view.dayend.accesskey "r">
+<!ENTITY pref.calendar.view.visiblehours.label "Mostra:">
+<!ENTITY pref.calendar.view.visiblehours.accesskey "o">
+<!ENTITY pref.calendar.view.visiblehoursend.label "ore alla volta">
+<!ENTITY pref.numberofweeks.label "Numero di settimane da visualizzare (incluse settimane precedenti):">
+<!ENTITY pref.numberofweeks.accesskey "N">
+<!ENTITY pref.numberofpreviousweeks.label "Numero di settimane precedenti:">
+<!ENTITY pref.numberofpreviousweeks.accesskey "u">
+<!ENTITY pref.numberofweeks.0 "Nessuna">
+<!ENTITY pref.numberofweeks.1 "1 settimana">
+<!ENTITY pref.numberofweeks.2 "2 settimane">
+<!ENTITY pref.numberofweeks.3 "3 settimane">
+<!ENTITY pref.numberofweeks.4 "4 settimane">
+<!ENTITY pref.numberofweeks.5 "5 settimane">
+<!ENTITY pref.numberofweeks.6 "6 settimane">

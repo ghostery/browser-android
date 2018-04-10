@@ -1,0 +1,22 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY gdata-provider.label "Календарь Google">
+
+<!ENTITY gdata.privacy.default.label "Google по умолчанию">
+<!ENTITY gdata.privacy.default.accesskey "у">
+
+<!ENTITY gdata.migration.title "Перенос календарей только для чтения">
+<!ENTITY gdata.migration.description "Провайдер для Календаря Google обнаружил, что у вас уже есть календари, которые доступны в режиме только для чтения. Если вы хотите обновить любой из этих календарей, выберите их ниже">
+<!ENTITY gdata.migration.upgrade.label "Обновить">
+<!ENTITY gdata.migration.upgrade.accesskey "О">
+<!ENTITY gdata.migration.showagain.label "Всегда проверять ">
+
+<!ENTITY gdata.reminder.default "Оповещение по умолчанию">
+<!ENTITY gdata.reminder.action.sms.label "Отправить текстовое сообщение">
+
+<!ENTITY gdata.wizard.session.description "Пожалуйста, выберите существующую сессию или введите свой адрес электронной почты для создания новой сессии. Вам нужен только одна сессия на учётную запись.">
+<!ENTITY gdata.wizard.calendars.description "Пожалуйста, выберите календари и списки задач, на которые вы хотели бы подписаться.">
+
+<!ENTITY gdata.wizard.nextstep.description "Пожалуйста, перейдите к следующему шагу, чтобы настроить свои календари.">

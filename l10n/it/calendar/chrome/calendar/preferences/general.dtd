@@ -1,0 +1,54 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.mainbox.label "Impostazioni generali" >
+<!ENTITY pref.dateformat.label "Formato testo data:" >
+<!ENTITY pref.dateformat.accesskey "F">
+<!ENTITY pref.dateformat.long "Lungo" >
+<!ENTITY pref.dateformat.short "Corto"  >
+
+<!ENTITY pref.timezones.caption "Fuso orario">
+<!ENTITY pref.timezones.label "Selezionare la città più vicina nel proprio fuso orario:">
+<!ENTITY pref.timezones.accesskey "S">
+
+<!ENTITY pref.defaults.label "Valori predefiniti per nuovi elementi">
+<!ENTITY pref.events.label "Eventi">
+<!ENTITY pref.tasks.label "Attività">
+
+<!ENTITY pref.default_event_length.label "Lunghezza predefinita:" >
+<!ENTITY pref.default_event_length.accesskey "L">
+
+<!ENTITY pref.default_task_none.label "Nessuna">
+<!ENTITY pref.default_task_start_of_day.label "Inizio giornata">
+<!ENTITY pref.default_task_end_of_day.label "Fine giornata">
+<!ENTITY pref.default_task_tomorrow.label "Domani">
+<!ENTITY pref.default_task_next_week.label "Prossima settimana">
+<!ENTITY pref.default_task_offset_current.label "Relativa alla data corrente">
+<!ENTITY pref.default_task_offset_start.label "Relativa all'inizio">
+<!ENTITY pref.default_task_offset_next_hour.label "Relativa alla prossima ora">
+
+<!ENTITY pref.calendar.todaypane.agenda.caption "Pannello Oggi">
+<!ENTITY pref.soondays.label "La sezione Presto mostra:">
+<!ENTITY pref.soondays.accesskey "P">
+
+<!-- LOCALIZATION NOTE (pref.soondays2.label):
+     "Upcoming" is the name of a section and the translation must match the
+     translation of that section name (calendar.upcoming.button.label). Also,
+     it should be upper case (as a proper name) if the target language permits.
+  -->
+<!ENTITY pref.soondays2.label "La sezione Presto mostra:">
+<!ENTITY pref.soondays2.accesskey "P">
+
+<!ENTITY pref.accessibility.label "Accessibilità" >
+<!ENTITY pref.systemcolors.label "Ottimizza i colori per l'accessibilità" >
+<!ENTITY pref.systemcolors.accesskey "O">
+
+<!ENTITY pref.eventsandtasks.label "Eventi e attività" >
+<!ENTITY pref.editInTab.label "Modifica eventi e attività in una scheda invece che in una finestra." >
+<!ENTITY pref.editInTab.accesskey "M">

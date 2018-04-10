@@ -1,0 +1,9 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY cloudfileMgmt.privacyPolicy "Zasady ochrony prywatności">
+<!ENTITY cloudfileMgmt.termsOfService "Warunki korzystania z serwisu">
+<!ENTITY cloudfileMgmt.usedSpace "Wykorzystana przestrzeń: ">
+<!ENTITY cloudfileMgmt.unusedSpace "Niewykorzystana przestrzeń: ">
+<!ENTITY cloudfileMgmt.upgradeOffer "Powiększ przestrzeń">

@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY time.hour.placeholder "--">
+<!ENTITY time.minute.placeholder "--">
+<!ENTITY time.second.placeholder "--">
+<!ENTITY time.millisecond.placeholder "--">
+<!ENTITY time.dayperiod.placeholder "--">
+<!ENTITY time.hour.label "Horas">
+<!ENTITY time.minute.label "Minutos">
+<!ENTITY time.second.label "Segundos">
+<!ENTITY time.millisecond.label "Milisegundos">
+<!ENTITY time.dayperiod.label "AM/PM">
+<!ENTITY date.year.placeholder "aaaa">
+<!ENTITY date.month.placeholder "mm">
+<!ENTITY date.day.placeholder "dd">
+<!ENTITY date.year.label "Año">
+<!ENTITY date.month.label "Mes">
+<!ENTITY date.day.label "Día">
+<!ENTITY datetime.reset.label "Limpiar">

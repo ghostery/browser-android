@@ -1,0 +1,72 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY autoconfigWizard2.title "Konfiguracja istniejącego konta e-mail">
+<!ENTITY name.label "Imię i nazwisko:">
+<!ENTITY name.accesskey "I">
+<!ENTITY name.placeholder "Imię Nazwisko">
+<!ENTITY name.text "Twoje imię i nazwisko lub pseudonim, tak jak będą wyświetlane innym">
+<!ENTITY email.label "Adres e-mail:">
+<!ENTITY email.accesskey "s">
+<!ENTITY email2.placeholder "e-mail@example.com">
+<!ENTITY email.text "Twój istniejący adres e-mail">
+<!ENTITY password.label "Hasło:">
+<!ENTITY password.accesskey "H">
+<!ENTITY password.placeholder "Hasło">
+<!ENTITY password.text "Opcjonalnie, zostanie użyte wyłącznie do sprawdzenia nazwy użytkownika">
+<!ENTITY rememberPassword.label "Zachowaj hasło">
+<!ENTITY rememberPassword.accesskey "Z">
+
+<!ENTITY imapLong.label "IMAP (zdalne foldery)">
+<!ENTITY pop3Long.label "POP3 (poczta lokalnie na komputerze)">
+<!ENTITY incoming.label "Serwer poczty przychodzącej:">
+<!ENTITY outgoing.label "Serwer poczty wychodzącej:">
+<!ENTITY username.label "Nazwa użytkownika:">
+<!ENTITY hostname.label "Adres serwera">
+<!ENTITY port.label "Port">
+<!ENTITY ssl.label "SSL">
+<!ENTITY auth.label "Uwierzytelnianie">
+<!ENTITY imap.label "IMAP">
+<!ENTITY pop3.label "POP3">
+<!ENTITY smtp.label "SMTP">
+<!ENTITY autodetect.label "Wykryj">
+<!ENTITY noEncryption.label "Bez szyfrowania">
+<!ENTITY starttls.label "STARTTLS">
+<!ENTITY sslTls.label "SSL/TLS">
+
+<!ENTITY advancedSetup.label "Utwórz konto i edytuj jego ustawienia…">
+<!ENTITY advancedSetup.accesskey "e">
+<!ENTITY cancel.label "Anuluj">
+<!ENTITY cancel.accesskey "A">
+<!ENTITY continue.label "Kontynuuj">
+<!ENTITY continue.accesskey "K">
+<!ENTITY stop.label "Zatrzymaj">
+<!ENTITY stop.accesskey "m">
+
+<!ENTITY half-manual-test.label "Wykryj ponownie">
+<!ENTITY half-manual-test.accesskey "W">
+<!ENTITY manual-edit.label "Konfiguracja zaawansowana">
+<!ENTITY manual-edit.accesskey "K">
+<!ENTITY open-provisioner.label "Nowy adres e-mail…">
+<!ENTITY open-provisioner.accesskey "N">
+
+<!ENTITY warning.label "Ostrzeżenie!">
+<!ENTITY incomingSettings.label "Ustawienia dla poczty przychodzącej:">
+<!ENTITY outgoingSettings.label "Ustawienia dla poczty wychodzącej:">
+<!ENTITY technicaldetails.label "Szczegóły">
+<!ENTITY confirmWarning.label "Rozumiem ryzyko.">
+<!ENTITY confirmWarning.accesskey "R">
+<!ENTITY doneAccount.label "Gotowe">
+<!ENTITY doneAccount.accesskey "G">
+<!ENTITY changeSettings.label "Zmień ustawienia">
+<!ENTITY changeSettings.accesskey "Z">
+
+<!ENTITY contactYourProvider.description "Program &brandShortName; użyje dostarczonej konfiguracji dla tego konta, jednakże administrator lub operator usługi pocztowej powinien zostać powiadomiony o tych nieprawidłowych połączeniach. Więcej informacji na ten temat można znaleźć w pomocy programu &brandShortName;.">
+
+<!ENTITY insecureServer.tooltip.title "Ostrzeżenie! Ten serwer nie zapewnia wysokiego poziomu bezpieczeństwa.">
+<!ENTITY insecureServer.tooltip.details "Kliknij, aby dowiedzieć się więcej">
+
+<!ENTITY insecureUnencrypted.description "Połączenie nie jest szyfrowane, hasła i wiadomości będą wysyłane czystym tekstem (w żaden sposób niezabezpieczone), co grozi ich przechwyceniem przez osoby trzecie. Konto zostanie skonfigurowane, jednakże operator usługi pocztowej powinien udostępnić możliwość łączenia się z serwerem w bezpieczny sposób.">
+<!ENTITY insecureSelfSigned.description "Ten serwer używa certyfikatu, któremu nie należy ufać, istnieje możliwość przechwycenia transmisji pomiędzy programem &brandShortName; a serwerem przez osoby trzecie. Konto zostanie skonfigurowane, jednakże operator usługi pocztowej powinien zostać powiadomiony o problemie w celu jego usunięcia.">
+<!ENTITY secureServer.description "Gratulacje! Ten serwer zapewnia wysoki poziom bezpieczeństwa.">

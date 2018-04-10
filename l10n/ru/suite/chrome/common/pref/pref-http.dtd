@@ -1,0 +1,26 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.http.title                     "Работа с HTTP">
+
+<!-- Network-->
+<!ENTITY prefDirect.label                    "Параметры прямых соединений">
+<!ENTITY prefProxy.label                     "Параметры прокси-соединений">
+<!ENTITY prefEnableHTTP10.label              "Использовать HTTP 1.0">
+<!ENTITY prefEnableHTTP10.accesskey          "а">
+<!ENTITY prefEnableHTTP10Proxy.accesskey     "л">
+<!ENTITY prefEnableHTTP11.label              "Использовать HTTP 1.1">
+<!ENTITY prefEnableHTTP11.accesskey          "с">
+<!ENTITY prefEnableHTTP11Proxy.accesskey     "з">
+<!ENTITY prefEnablePipelining.label          "Использовать конвейерную обработку данных">
+<!ENTITY prefEnablePipelining.accesskey      "к">
+<!ENTITY prefEnablePipeliningProxy.accesskey "в">
+<!ENTITY prefPara                            "С помощью этих параметров можно настроить HTTP-соединения так, чтобы увеличить их скорость и/или совместимость с серверами. Например, некоторые прокси-серверы требуют использования HTTP 1.0 (см. примечания к версии).">
+<!ENTITY prefPipeWarning                     "ПРЕДУПРЕЖДЕНИЕ: конвейерная обработка данных — экспериментальная функция, предназначенная для уменьшения времени загрузки страниц; некоторыми веб- и прокси-серверами поддерживается, к сожалению, не полностью.">
+<!ENTITY prefUseragent.label                 "Строка User Agent">
+<!ENTITY prefFirefoxCompat.label             "Сообщать о совместимости с Firefox">
+<!ENTITY prefFirefoxCompat.accesskey         "м">
+<!ENTITY prefLightningShow.label             "Сообщать об установленном Lightning">
+<!ENTITY prefLightningShow.accesskey         "о">
+<!ENTITY prefCompatWarning                   "ПРЕДУПРЕЖДЕНИЕ: отключение этих параметров может привести к некорректной работе веб-сайтов или служб.">

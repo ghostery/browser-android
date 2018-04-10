@@ -1,0 +1,35 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title "Opzioni di invio">
+<!ENTITY sendMail.title "Formato testo">
+<!ENTITY autoDowngrade.label "Se possibile invia i messaggi come testo semplice.">
+<!ENTITY autoDowngrade.accesskey "t">
+<!ENTITY sendMaildesc.label "Quando si inviano messaggi in HTML e uno o più destinatari non sono elencati come in grado di ricevere HTML:">
+<!ENTITY askMe.label "Chiedi che cosa fare">
+<!ENTITY askMe.accesskey "c">
+<!ENTITY convertPlain.label "Converti il messaggio in testo semplice">
+<!ENTITY convertPlain.accesskey "C">
+<!ENTITY sendHTML.label "Invia comunque il messaggio in HTML">
+<!ENTITY sendHTML.accesskey "S">
+<!ENTITY sendBoth.label "Invia il messaggio sia in testo semplice sia in HTML">
+<!ENTITY sendBoth.accesskey "e">
+<!ENTITY override.label "Nota: utilizza la rubrica per specificare il formato testo preferito per ogni singolo destinatario.">
+<!ENTITY domaindesc.label "Quando si invia un messaggio a un indirizzo appartenente ad uno dei domini presenti nel seguente elenco &brandShortName; invia automaticamente il messaggio nel formato corretto.">
+<!ENTITY HTMLTab.label "Domini HTML">
+<!ENTITY HTMLTab.accesskey "H">
+<!ENTITY PlainTextTab.label "Domini testo semplice">
+<!ENTITY PlainTextTab.accesskey "D">
+<!ENTITY AddHtmlDomain.label "Aggiungi…">
+<!ENTITY AddHtmlDomain.accesskey "A">
+<!ENTITY AddPlainText.label "Aggiungi…">
+<!ENTITY AddPlainText.accesskey "g">
+<!ENTITY DeleteHtmlDomain.label "Elimina">
+<!ENTITY DeleteHtmlDomain.accesskey "E">
+<!ENTITY DeletePlainText.label "Elimina">
+<!ENTITY DeletePlainText.accesskey "E">
+<!ENTITY add.htmltitle "Aggiungere un dominio HTML:">
+<!ENTITY add.htmldomain "Nome dominio HTML:">
+<!ENTITY add.plaintexttitle "Aggiungi un nome dominio testo semplice:">
+<!ENTITY add.plaintextdomain "Nome dominio testo semplice:">

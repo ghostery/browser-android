@@ -1,0 +1,48 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY historyWindowTitle.label "Historial">
+<!ENTITY menuBar.tooltip "Barra de menú">
+<!ENTITY searchBar.tooltip "Barra de búsqueda">
+<!ENTITY search.placeholder "Buscar en el historial">
+<!ENTITY search.key "b">
+<!ENTITY view.label "Ver">
+<!ENTITY view.columns.label "Mostrar columnas">
+<!ENTITY view.columns.accesskey "M">
+<!ENTITY view.sortBy.label "Ordenar por">
+<!ENTITY view.sortBy.accesskey "O">
+<!ENTITY view.groupBy.label "Agrupar por">
+<!ENTITY view.groupBy.accesskey "A">
+<!ENTITY view.unsorted.label "Sin ordenar">
+<!ENTITY view.unsorted.accesskey "i">
+<!ENTITY view.sortAscending.label "Ordenar A > Z">
+<!ENTITY view.sortAscending.accesskey "A">
+<!ENTITY view.sortDescending.label "Ordenar Z > A">
+<!ENTITY view.sortDescending.accesskey "Z">
+<!ENTITY view.groupNone.label "Nada">
+<!ENTITY view.groupNone.accesskey "N">
+<!ENTITY view.groupDay.label "Día">
+<!ENTITY view.groupDay.accesskey "D">
+<!ENTITY view.groupSite.label "Sitio web">
+<!ENTITY view.groupSite.accesskey "W">
+<!ENTITY view.groupDayAndSite.label "Día y sitio web">
+<!ENTITY view.groupDayAndSite.accesskey "s">
+<!ENTITY cmd.open.label "Abrir">
+<!ENTITY cmd.open.accesskey "A">
+<!ENTITY cmd.open_window.label "Abrir enlace en una ventana nueva">
+<!ENTITY cmd.open_window.accesskey "r">
+<!ENTITY cmd.open_tab.label "Abrir enlace en una pestaña nueva">
+<!ENTITY cmd.open_tab.accesskey "n">
+<!ENTITY bookmarkLinkCmd.label "Añadir este enlace a marcadores…">
+<!ENTITY bookmarkLinkCmd.accesskey "A">
+<!ENTITY bookmarkLinksCmd.label "Añadir estos enlaces a marcadores…">
+<!ENTITY bookmarkLinksCmd.accesskey "A">
+<!ENTITY col.title.label "Título">
+<!ENTITY col.title.accesskey "T">
+<!ENTITY col.url.label "Dirección">
+<!ENTITY col.url.accesskey "D">
+<!ENTITY col.lastvisit.label "Última visita">
+<!ENTITY col.lastvisit.accesskey "V">
+<!ENTITY col.visitcount.label "Número de visitas">
+<!ENTITY col.visitcount.accesskey "N">

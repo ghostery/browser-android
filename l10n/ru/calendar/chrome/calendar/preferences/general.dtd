@@ -1,0 +1,54 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.mainbox.label "Основные настройки" >
+<!ENTITY pref.dateformat.label "Формат даты:" >
+<!ENTITY pref.dateformat.accesskey "Ф">
+<!ENTITY pref.dateformat.long "Полный" >
+<!ENTITY pref.dateformat.short "Краткий"  >
+
+<!ENTITY pref.timezones.caption "Часовой пояс">
+<!ENTITY pref.timezones.label "Укажите ближайший город в вашем часовом поясе:">
+<!ENTITY pref.timezones.accesskey "к">
+
+<!ENTITY pref.defaults.label "Значения по умолчанию для новых">
+<!ENTITY pref.events.label "Событий">
+<!ENTITY pref.tasks.label "Задач">
+
+<!ENTITY pref.default_event_length.label "Продолжительность по умолчанию:" >
+<!ENTITY pref.default_event_length.accesskey "П">
+
+<!ENTITY pref.default_task_none.label "Нет">
+<!ENTITY pref.default_task_start_of_day.label "В начале дня">
+<!ENTITY pref.default_task_end_of_day.label "В конце дня">
+<!ENTITY pref.default_task_tomorrow.label "Завтра">
+<!ENTITY pref.default_task_next_week.label "На следующей неделе">
+<!ENTITY pref.default_task_offset_current.label "Относительно текущего времени">
+<!ENTITY pref.default_task_offset_start.label "Относительно начала">
+<!ENTITY pref.default_task_offset_next_hour.label "Относительно следующего часа">
+
+<!ENTITY pref.calendar.todaypane.agenda.caption "Мероприятия">
+<!ENTITY pref.soondays.label "В разделе предстоящих показано:">
+<!ENTITY pref.soondays.accesskey "е">
+
+<!-- LOCALIZATION NOTE (pref.soondays2.label):
+     "Upcoming" is the name of a section and the translation must match the
+     translation of that section name (calendar.upcoming.button.label). Also,
+     it should be upper case (as a proper name) if the target language permits.
+  -->
+<!ENTITY pref.soondays2.label "В разделе Предстоящих показано:">
+<!ENTITY pref.soondays2.accesskey "е">
+
+<!ENTITY pref.accessibility.label "Общедоступность" >
+<!ENTITY pref.systemcolors.label "Оптимизировать цвета для людей с ограниченными возможностями" >
+<!ENTITY pref.systemcolors.accesskey "п">
+
+<!ENTITY pref.eventsandtasks.label "События и задачи" >
+<!ENTITY pref.editInTab.label "Редактировать события и задачи во вкладке, а не в диалоговом окне." >
+<!ENTITY pref.editInTab.accesskey "а">

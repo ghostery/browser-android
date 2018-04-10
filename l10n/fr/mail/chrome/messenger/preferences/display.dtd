@@ -1,0 +1,73 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemFormatting.label             "Formatage">
+<!ENTITY itemTags.label                   "Étiquettes">
+<!ENTITY itemAdvanced.label               "Avancé">
+
+<!ENTITY style.label                      "Style :">
+<!ENTITY style.accesskey                  "S">
+<!ENTITY regularStyle.label               "Normal">
+<!ENTITY bold.label                       "Gras">
+<!ENTITY italic.label                     "Italique">
+<!ENTITY boldItalic.label                 "Gras italique">
+<!ENTITY size.label                       "Taille :">
+<!ENTITY size.accesskey                   "T">
+<!ENTITY regularSize.label                "Normale">
+<!ENTITY bigger.label                     "Plus grande">
+<!ENTITY smaller.label                    "Plus petite">
+<!ENTITY quotedTextColor.label            "Couleur :">
+<!ENTITY quotedTextColor.accesskey        "o">
+<!ENTITY displayWidth.label               "Messages en texte simple">
+<!ENTITY displayText.label                "Lors de l’affichage de citations en texte simple :">
+
+<!-- LOCALIZATION NOTE : (emoticonsAndStructs.label) 'Emoticons' are also known as 'Smileys', e.g. :-)   -->
+<!ENTITY convertEmoticons.label        "Afficher les émoticônes sous forme graphique">
+<!ENTITY convertEmoticons.accesskey    "f">
+
+<!-- labels -->
+<!ENTITY displayTagsText.label     "Les étiquettes peuvent être utilisées pour classer en catégories et donner un ordre de priorité à vos messages">
+<!ENTITY newTagButton.label        "Nouvelle…">
+<!ENTITY newTagButton.accesskey    "N">
+<!ENTITY editTagButton1.label      "Modifier…">
+<!ENTITY editTagButton1.accesskey  "M">
+<!ENTITY removeTagButton.label     "Supprimer">
+<!ENTITY removeTagButton.accesskey "S">
+
+<!-- Fonts and Colors -->
+<!ENTITY fontsAndColors1.label   "Polices et couleurs">
+<!ENTITY defaultFont.label       "Police par défaut :">
+<!ENTITY defaultFont.accesskey   "D">
+<!ENTITY defaultSize.label       "Taille :">
+<!ENTITY defaultSize.accesskey   "T">
+<!ENTITY fontOptions.accesskey   "A">
+<!ENTITY fontOptions.label       "Avancé…">
+<!ENTITY colorButton.label       "Couleurs…">
+<!ENTITY colorButton.accesskey   "C">
+
+<!-- Advanced -->
+<!ENTITY reading.caption                  "Lecture">
+<!ENTITY display.caption                  "Affichage">
+<!ENTITY showCondensedAddresses.label     "N’afficher que le nom pour les personnes se trouvant dans le carnet d’adresses">
+<!ENTITY showCondensedAddresses.accesskey "N">
+
+<!ENTITY autoMarkAsRead.label             "Marquer automatiquement les messages comme lus">
+<!ENTITY autoMarkAsRead.accesskey         "M">
+<!ENTITY markAsReadNoDelay.label          "Dès l’affichage">
+<!ENTITY markAsReadNoDelay.accesskey      "D">
+<!-- LOCALIZATION NOTE (markAsReadDelay.label): This will concatenate to
+     "After displaying for [___] seconds",
+     using (markAsReadDelay.label) and a number (secondsLabel.label). -->
+<!ENTITY markAsReadDelay.label            "Après un délai de">
+<!ENTITY markAsReadDelay.accesskey        "A">
+<!ENTITY secondsLabel.label               "secondes">
+<!ENTITY openMsgIn.label                  "Ouvrir les messages dans :">
+<!ENTITY openMsgInNewTab.label            "un nouvel onglet">
+<!ENTITY openMsgInNewTab.accesskey        "v">
+<!ENTITY reuseExpRadio0.label             "une nouvelle fenêtre">
+<!ENTITY reuseExpRadio0.accesskey         "U">
+<!ENTITY reuseExpRadio1.label             "une fenêtre existante">
+<!ENTITY reuseExpRadio1.accesskey         "e">
+<!ENTITY closeMsgOnMoveOrDelete.label     "Fermer la fenêtre ou l’onglet de message lors du déplacement ou de la suppression">
+<!ENTITY closeMsgOnMoveOrDelete.accesskey "F">

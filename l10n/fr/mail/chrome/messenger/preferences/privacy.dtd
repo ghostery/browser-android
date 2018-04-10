@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Mail Content -->
+<!ENTITY captionMailContent.label "Contenu des messages">
+
+<!ENTITY acceptRemoteContent.label "Autoriser le contenu distant dans les messages">
+<!ENTITY acceptRemoteContent.accesskey "u">
+<!ENTITY remoteContentExceptions.label "Exceptions…">
+<!ENTITY remoteContentExceptions.accesskey "x">
+<!ENTITY acceptRemoteContentInfo.label "En savoir plus sur les problématiques de vie privée liées au contenu distant">
+
+<!-- Web Content -->
+<!ENTITY captionWebContent.label "Contenu web">
+
+<!ENTITY keepHistory.label "Se souvenir des sites web et liens visités">
+<!ENTITY keepHistory.accesskey "S">
+<!ENTITY acceptCookies.label "Accepter les cookies">
+<!ENTITY acceptCookies.accesskey "A">
+<!ENTITY acceptThirdParty.pre.label "Accepter les cookies tiers :">
+<!ENTITY acceptThirdParty.pre.accesskey "c">
+<!ENTITY acceptThirdParty.always.label "toujours">
+<!ENTITY acceptThirdParty.never.label "jamais">
+<!ENTITY acceptThirdParty.visited.label "depuis les sites visités">
+<!ENTITY keepUntil.label "Les conserver jusqu’à :">
+<!ENTITY keepUntil.accesskey "L">
+<!ENTITY expire.label "leur expiration">
+<!ENTITY close.label "la fermeture de &brandShortName;">
+<!ENTITY askEachTime.label "me demander à chaque fois">
+<!ENTITY cookieExceptions.label "Exceptions…">
+<!ENTITY cookieExceptions.accesskey "p">
+<!ENTITY showCookies.label "Afficher les cookies…">
+<!ENTITY showCookies.accesskey "k">
+
+<!ENTITY dntTrackingNotOkay.label2 "Indiquer aux sites que je ne souhaite pas être pisté">
+<!ENTITY dntTrackingNotOkay.accesskey "d">
+<!ENTITY doNotTrackInfo.label "En savoir plus sur Ne pas me pister">

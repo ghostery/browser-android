@@ -1,0 +1,34 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.mainbox.label "Configuración general">
+<!ENTITY pref.dateformat.label "Formato de texto de fecha:">
+<!ENTITY pref.dateformat.accesskey "F">
+<!ENTITY pref.dateformat.long "Largo">
+<!ENTITY pref.dateformat.short "Corto">
+<!ENTITY pref.timezones.caption "Zona horaria">
+<!ENTITY pref.timezones.label "Seleccione la ciudad más cercana en su zona horaria:">
+<!ENTITY pref.timezones.accesskey "S">
+<!ENTITY pref.defaults.label "Valores predeterminados para nuevos elementos">
+<!ENTITY pref.events.label "Eventos">
+<!ENTITY pref.tasks.label "Tareas">
+<!ENTITY pref.default_event_length.label "Duración predeterminada:">
+<!ENTITY pref.default_event_length.accesskey "D">
+<!ENTITY pref.default_task_none.label "Ninguna">
+<!ENTITY pref.default_task_start_of_day.label "Comienzo del día">
+<!ENTITY pref.default_task_end_of_day.label "Final del día">
+<!ENTITY pref.default_task_tomorrow.label "Mañana">
+<!ENTITY pref.default_task_next_week.label "Semana siguiente">
+<!ENTITY pref.default_task_offset_current.label "Relativo a la hora actual">
+<!ENTITY pref.default_task_offset_start.label "Relativo al comienzo">
+<!ENTITY pref.default_task_offset_next_hour.label "Relativo a la hora siguiente">
+<!ENTITY pref.calendar.todaypane.agenda.caption "Panel Para hoy">
+<!ENTITY pref.soondays2.label "La sección Próximamente muestra:">
+<!ENTITY pref.soondays2.accesskey "P">
+<!ENTITY pref.accessibility.label "Accesibilidad">
+<!ENTITY pref.systemcolors.label "Optimizar colores para accesibilidad">
+<!ENTITY pref.systemcolors.accesskey "O">
+<!ENTITY pref.eventsandtasks.label "Eventos y tareas">
+<!ENTITY pref.editInTab.label "Editar eventos y tareas en una pestaña en lugar de en una ventana de diálogo.">
+<!ENTITY pref.editInTab.accesskey "t">

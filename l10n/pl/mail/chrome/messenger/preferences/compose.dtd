@@ -1,0 +1,68 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label "Ogólne">
+<!ENTITY itemAutoComplete.label "Adresowanie">
+<!ENTITY itemSpellCheck.label "Pisownia">
+
+<!ENTITY dialogCompose.title "Tworzenie">
+
+<!ENTITY forwardMsg.label "Przekazuj wiadomości:">
+<!ENTITY forwardMsg.accesskey "P">
+<!ENTITY inline.label "bezpośrednio">
+<!ENTITY asAttachment.label "jako załącznik">
+<!ENTITY addExtension.label "dodawaj rozszerzenia do nazw plików załączników">
+<!ENTITY addExtension.accesskey "d">
+
+<!ENTITY htmlComposeHeader.label "HTML">
+<!ENTITY font.label "Czcionka:">
+<!ENTITY font.accesskey "C">
+<!ENTITY size.label "Rozmiar:">
+<!ENTITY size.accesskey "R">
+<!ENTITY fontColor.label "Kolor tekstu:">
+<!ENTITY fontColor.accesskey "K">
+<!ENTITY bgColor.label "Kolor tła:">
+<!ENTITY bgColor.accesskey "t">
+<!ENTITY restoreHTMLDefaults.label "Przywróć domyślne">
+<!ENTITY restoreHTMLDefaults.accesskey "e">
+<!ENTITY defaultToParagraph.label "Domyślnie używaj formatu akapitu zamiast tekstu treści">
+<!ENTITY defaultToParagraph.accesskey "p">
+
+<!ENTITY spellCheck.label "Sprawdzaj pisownię przed wysłaniem wiadomości">
+<!ENTITY spellCheck.accesskey "a">
+<!ENTITY spellCheckInline.label "Sprawdzaj pisownię w trakcie tworzenia wiadomości">
+<!ENTITY spellCheckInline1.accesskey "w">
+<!ENTITY languagePopup.label "Słownik:">
+<!ENTITY languagePopup.accessKey "S">
+<!ENTITY downloadDictionaries.label "Pobierz więcej słowników">
+
+<!ENTITY warnOnSendAccelKey.label "Wymagaj potwierdzenia, gdy do wysłania wiadomości użyty został skrót klawiaturowy">
+<!ENTITY warnOnSendAccelKey.accesskey "W">
+<!ENTITY autoSave.label "Zapisuj stan wiadomości co">
+<!ENTITY autoSave.accesskey "Z">
+<!ENTITY autoSaveEnd.label "minut">
+
+<!ENTITY emailCollectionPicker.label "Zapisuj adresy e-mail z poczty wychodzącej w książce:">
+<!ENTITY emailCollectionPicker.accesskey "Z">
+<!ENTITY addressingTitle.label "Automatyczne uzupełnianie adresu">
+<!ENTITY autocompleteText.label "Podczas adresowania wiadomości wyszukuj pasujące pozycje:">
+<!ENTITY addressingEnable.label "w lokalnych książkach adresowych">
+<!ENTITY addressingEnable.accesskey "w">
+<!ENTITY directories.label "na serwerze usług katalogowych:">
+<!ENTITY directories.accesskey "n">
+<!ENTITY directoriesNone.label "brak">
+<!ENTITY editDirectories.label "Edytuj katalogi…">
+<!ENTITY editDirectories.accesskey "E">
+<!ENTITY showAsDefault.label "Domyślnie uruchamiany katalog w oknie książki adresowej:">
+<!ENTITY showAsDefault.accesskey "u">
+<!ENTITY showAsDefaultLast.label "Ostatnio używany katalog">
+
+<!ENTITY sendOptionsDescription.label "Ustawienia automatycznego formatowania wysyłanych wiadomości">
+<!ENTITY sendOptions.label "Opcje wysyłania…">
+<!ENTITY sendOptions.accesskey "O">
+
+<!ENTITY attachmentReminder.label "Sprawdzaj pod kątem brakujących załączników">
+<!ENTITY attachmentReminder.accesskey "S">
+<!ENTITY attachmentReminderOptions.label "Słowa kluczowe…">
+<!ENTITY attachmentReminderOptions.accesskey "a">

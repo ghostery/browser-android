@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY rights.locale-direction "ltr">
+<!ENTITY rights.title "Acerca de sus derechos">
+<!ENTITY rights.intro-header "Acerca de sus derechos">
+<!ENTITY rights.intro "&brandFullName; es software libre y de código abierto, realizado por una comunidad de miles de personas de todo el mundo. Hay algunas cosas que debe saber:">
+<!ENTITY rights.intro-point1a "&brandShortName; está disponible para usted bajo los términos de la ">
+<!ENTITY rights.intro-point1b "Licencia Pública de Mozilla">
+<!ENTITY rights.intro-point1c ". Esto significa que puede usar, copiar y distribuir &brandShortName; a otros. También es libre de modificar el código fuente de &brandShortName; como desee para adaptarlo a sus necesidades. La Licencia Pública Mozilla también le otorga el derecho a distribuir sus versiones modificadas.">
+<!ENTITY rights.intro-point2a "Mozilla no le confiere ningún derecho sobre los logos y marcas registradas de Mozilla y Thunderbird. Se puede encontrar información adicional sobre las marcas registradas ">
+<!ENTITY rights.intro-point2b "aquí">
+<!ENTITY rights.intro-point2c ".">
+<!ENTITY rights.intro-point3a "Las políticas de privacidad de los productos de &vendorShortName; se pueden encontrar ">
+<!ENTITY rights.intro-point3b "aquí">
+<!ENTITY rights.intro-point3c ".">
+<!ENTITY rights.intro-point3-unbranded "Cualquier política de privacidad aplicable a este producto debería incluirse aquí.">
+<!ENTITY rights.intro-point4a "&brandShortName; también ofrece servicios opcionales, tales como el servicio de actualizacion de complementos; sin embargo, no podemos garantizar que sean 100 &#037; precisos ni libres de errores. Pueden encontrarse más detalles, incluyendo información sobre cómo desactivar los servicios, en los ">
+<!ENTITY rights.intro-point4b "términos del servicio">
+<!ENTITY rights.intro-point4c ".">
+<!ENTITY rights.intro-point4a-unbranded "Si este producto incorpora servicios web, los términos aplicables a los servicios deberían enlazarse a la ">
+<!ENTITY rights.intro-point4b-unbranded "Servicios de sitios web">
+<!ENTITY rights.intro-point4c-unbranded " sección.">
+<!ENTITY rights.webservices-header "Servicios de sitios web de &brandFullName;">
+<!ENTITY rights.webservices-a "&brandFullName; ofrece servicios opcionales (&quot;servicios&quot;), tales como el servicio de actualización de complementos, que están disponibles para su uso con esta versión binaria de &brandShortName; tal y como se describe más abajo. Si no quiere usar los servicios o los términos siguientes no son aceptables, puede desactivar el servicio de actualización de complementos abriendo las preferencias de la aplicación, seleccionando la ">
+<!ENTITY rights.webservices-b "Avanzado">
+<!ENTITY rights.webservices-c " sección, seguida de la ">
+<!ENTITY rights.webservices-d "Actualizar">
+<!ENTITY rights.webservices-e " pestaña, y desmarcar las opciones para &quot;Comprobar actualizaciones automáticamente para&quot;.">
+<!ENTITY rights.webservices-unbranded "Aquí debería incluirse un resumen de los servicios de sitios web que incorpora el producto, junto con instrucciones sobre cómo desactivarlos, si es aplicable.">
+<!ENTITY rights.webservices-term1-unbranded "Cualesquiera términos de servicio aplicables a este producto deberían listarse aquí.">
+<!ENTITY rights.webservices-term1 "&vendorShortName; puede abandonar o cambiar los servicios a su discreción.">
+<!ENTITY rights.webservices-term2 "Es libre de usar estos servicios con la versión correspondiente de &brandShortName;, y tiene todos los derechos necesarios para hacerlo. &vendorShortName; y sus licenciatarios se reservan todos los demás derechos en los servicios. Estos términos no están orientados a limitar ningún derecho otorgado bajo las licencias de código abierto aplicables a &brandShortName; y a sus correspondientes versiones de código abierto de &brandShortName;.">
+<!ENTITY rights.webservices-term3 "Los servicios se proporcionan &quot;tal cual&quot;. &vendorShortName;, sus colaboradores, licenciatarios y distribuidores rechazan toda garantía, ya sea expresa o implícita, incluyendo sin limitarse, garantías de que el servicio es comercializable y que cumple con su necesidad particular. Usted asume todo el riesgo al seleccionar este servicio sobre su propósito así como sobre la calidad y rendimiento del servicio. Algunas jurisdicciones no permiten la exclusión o limitación de las garantías implícitas, así que esta denegación puede no aplicarse en su caso.">
+<!ENTITY rights.webservices-term4 "Excepto donde sea requerido por la ley, &vendorShortName;, sus colaboradores, licenciatarios y distribuidores no podrán ser responsables de ningún daño indirecto, especial, imprevisto, resultante, punitivo o ejemplar derivado de, o relacionado con, el uso de &brandShortName; y los servicios. La responsabilidad colectiva bajo estos términos no podrá exceder los US$500 (quinientos dólares americanos). Algunas jurisdicciones no permiten la exclusión o limitación de ciertos daños, así que esta exclusión y limitación puede no ser aplicables a usted.">
+<!ENTITY rights.webservices-term5 "&vendorShortName; puede actualizar estos términos según sea necesario de cuando en cuando. Estos términos no pueden modificarse o cancelarse sin el acuerdo por escrito de &vendorShortName;.">
+<!ENTITY rights.webservices-term6 "Estos términos están regidos por las leyes del estado de California, EE.UU., excluyendo sus conflictos con otras estipulaciones de la ley. Si cualquier parte de estos términos resulta ser inválida o inexigible, las porciones restantes continuarán teniendo pleno efecto. En el caso de haber un conflicto entre una versión traducida de estos términos y la versión en idioma Inglés, prevalecerá la versión en Inglés.">

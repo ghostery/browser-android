@@ -1,0 +1,73 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemFormatting.label             "Форматирование">
+<!ENTITY itemTags.label                   "Метки">
+<!ENTITY itemAdvanced.label               "Дополнительно">
+
+<!ENTITY style.label                      "Стиль:">
+<!ENTITY style.accesskey                  "л">
+<!ENTITY regularStyle.label               "Обычный">
+<!ENTITY bold.label                       "Полужирный">
+<!ENTITY italic.label                     "Курсив">
+<!ENTITY boldItalic.label                 "Полужирный курсив">
+<!ENTITY size.label                       "Размер:">
+<!ENTITY size.accesskey                   "з">
+<!ENTITY regularSize.label                "Обычный">
+<!ENTITY bigger.label                     "Больше">
+<!ENTITY smaller.label                    "Меньше">
+<!ENTITY quotedTextColor.label            "Цвет:">
+<!ENTITY quotedTextColor.accesskey        "в">
+<!ENTITY displayWidth.label               "Простые текстовые сообщения">
+<!ENTITY displayText.label                "При отображении цитат в простых текстовых сообщениях:">
+
+<!-- LOCALIZATION NOTE : (emoticonsAndStructs.label) 'Emoticons' are also known as 'Smileys', e.g. :-)   -->
+<!ENTITY convertEmoticons.label        "Отображать смайлики как графику">
+<!ENTITY convertEmoticons.accesskey    "б">
+
+<!-- labels -->
+<!ENTITY displayTagsText.label     "Метки могут быть использованы для классификации и изменения приоритета сообщений.">
+<!ENTITY newTagButton.label        "Создать…">
+<!ENTITY newTagButton.accesskey    "о">
+<!ENTITY editTagButton1.label      "Изменить…">
+<!ENTITY editTagButton1.accesskey  "е">
+<!ENTITY removeTagButton.label     "Удалить">
+<!ENTITY removeTagButton.accesskey "и">
+
+<!-- Fonts and Colors -->
+<!ENTITY fontsAndColors1.label   "Шрифты и цвета">
+<!ENTITY defaultFont.label       "Шрифт по умолчанию:">
+<!ENTITY defaultFont.accesskey   "и">
+<!ENTITY defaultSize.label       "Размер:">
+<!ENTITY defaultSize.accesskey   "м">
+<!ENTITY fontOptions.accesskey   "о">
+<!ENTITY fontOptions.label       "Дополнительно…">
+<!ENTITY colorButton.label       "Цвета…">
+<!ENTITY colorButton.accesskey   "а">
+
+<!-- Advanced -->
+<!ENTITY reading.caption                  "Чтение">
+<!ENTITY display.caption                  "Отображение">
+<!ENTITY showCondensedAddresses.label     "Показывать только имя для людей, находящихся в моей адресной книге">
+<!ENTITY showCondensedAddresses.accesskey "к">
+
+<!ENTITY autoMarkAsRead.label             "Автоматически отмечать сообщения как прочитанные">
+<!ENTITY autoMarkAsRead.accesskey         "в">
+<!ENTITY markAsReadNoDelay.label          "Немедленно при просмотре">
+<!ENTITY markAsReadNoDelay.accesskey      "м">
+<!-- LOCALIZATION NOTE (markAsReadDelay.label): This will concatenate to
+     "After displaying for [___] seconds",
+     using (markAsReadDelay.label) and a number (secondsLabel.label). -->
+<!ENTITY markAsReadDelay.label            "После просмотра в течение">
+<!ENTITY markAsReadDelay.accesskey        "т">
+<!ENTITY secondsLabel.label               "сек.">
+<!ENTITY openMsgIn.label                  "Открывать сообщения в:">
+<!ENTITY openMsgInNewTab.label            "новой вкладке">
+<!ENTITY openMsgInNewTab.accesskey        "к">
+<!ENTITY reuseExpRadio0.label             "новом окне">
+<!ENTITY reuseExpRadio0.accesskey         "о">
+<!ENTITY reuseExpRadio1.label             "уже существующем окне">
+<!ENTITY reuseExpRadio1.accesskey         "ж">
+<!ENTITY closeMsgOnMoveOrDelete.label     "Закрывать окно/вкладку сообщения при его перемещении или удалении">
+<!ENTITY closeMsgOnMoveOrDelete.accesskey "к">

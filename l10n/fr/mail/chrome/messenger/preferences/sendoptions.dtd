@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title                 "Options d’expédition">
+<!ENTITY sendMail.title               "Format de texte">
+<!ENTITY autoDowngrade.label          "Envoyer les messages au format texte lorsque cela est possible">
+<!ENTITY autoDowngrade.accesskey      "t">
+<!ENTITY sendMaildesc.label           "Lors de l’expédition d’un courrier en HTML à un destinataire ne figurant pas dans la liste de ceux pouvant recevoir du HTML :">
+<!ENTITY askMe.label                  "Me demander de choisir">
+<!ENTITY askMe.accesskey              "M">
+<!ENTITY convertPlain.label           "Convertir au format texte simple">
+<!ENTITY convertPlain.accesskey       "C">
+<!ENTITY sendHTML.label               "Envoyer au format HTML tout de même">
+<!ENTITY sendHTML.accesskey           "E">
+<!ENTITY sendBoth.label               "Envoyer aux formats texte et HTML">
+<!ENTITY sendBoth.accesskey           "n">
+<!ENTITY override.label               "Vous pouvez utiliser le carnet d’adresses pour préciser le format de texte préféré pour chaque destinataire.">
+
+<!ENTITY domaindesc.label             "Lors de l’envoi d’un message vers une adresse appartenant à un domaine listé ci-dessous, &brandShortName; envoie automatiquement le message dans le bon format.">
+<!ENTITY HTMLTab.label                "Domaines HTML">
+<!ENTITY HTMLTab.accesskey            "H">
+<!ENTITY PlainTextTab.label           "Domaines texte simple">
+<!ENTITY PlainTextTab.accesskey       "t">
+<!ENTITY AddHtmlDomain.label          "Ajouter…">
+<!ENTITY AddHtmlDomain.accesskey      "A">
+<!ENTITY AddPlainText.label           "Ajouter…">
+<!ENTITY AddPlainText.accesskey       "A">
+<!ENTITY DeleteHtmlDomain.label       "Retirer">
+<!ENTITY DeleteHtmlDomain.accesskey   "R">
+<!ENTITY DeletePlainText.label        "Retirer">
+<!ENTITY DeletePlainText.accesskey    "R">
+
+<!ENTITY add.htmltitle                "Ajouter un nom de domaine HTML">
+<!ENTITY add.htmldomain               "Nom de domaine HTML :">
+<!ENTITY add.plaintexttitle           "Ajouter un nom de domaine texte simple">
+<!ENTITY add.plaintextdomain          "Nom de domaine texte simple :">

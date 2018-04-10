@@ -1,0 +1,73 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY searchHeading.label "Cerca tra i messaggi in:">
+<!ENTITY searchHeading.accesskey "n">
+<!ENTITY searchSubfolders.label "Cerca nelle sottocartelle">
+<!ENTITY searchSubfolders.accesskey "o">
+<!ENTITY searchOnServer.label "Eseguire la ricerca sul server">
+<!ENTITY searchOnServer.accesskey "u">
+<!ENTITY resetButton.label "Pulisci">
+<!ENTITY resetButton.accesskey "P">
+<!ENTITY openButton.label "Apri">
+<!ENTITY openButton.accesskey "r">
+<!ENTITY deleteButton.label "Elimina">
+<!ENTITY deleteButton.accesskey "E">
+<!ENTITY searchDialogTitle.label "Ricerca messaggi">
+<!ENTITY results.label "Risultati">
+<!ENTITY moveButton.label "Sposta in">
+<!ENTITY moveButton.accesskey "i">
+<!ENTITY closeCmd.key "W">
+<!ENTITY openInFolder.label "Apri in una cartella">
+<!ENTITY openInFolder.accesskey "l">
+<!ENTITY saveAsVFButton.label "Salva come cartella di ricerca">
+<!ENTITY saveAsVFButton.accesskey "v">
+<!ENTITY abSearchHeading.label "Cerca in:">
+<!ENTITY abSearchHeading.accesskey "n">
+<!ENTITY propertiesButton.label "Proprietà">
+<!ENTITY propertiesButton.accesskey "r">
+<!ENTITY composeButton.label "Componi">
+<!ENTITY composeButton.accesskey "o">
+<!ENTITY deleteCardButton.label "Elimina">
+<!ENTITY deleteCardButton.accesskey "E">
+<!ENTITY abSearchDialogTitle.label "Ricerca avanzata rubrica">
+<!ENTITY threadColumn.label "Discussione">
+<!ENTITY fromColumn.label "Mittente">
+<!ENTITY recipientColumn.label "Destinatario">
+<!ENTITY correspondentColumn.label "Corrispondenti">
+<!ENTITY subjectColumn.label "Oggetto">
+<!ENTITY dateColumn.label "Data">
+<!ENTITY priorityColumn.label "Priorità">
+<!ENTITY tagsColumn.label "Etichette">
+<!ENTITY accountColumn.label "Account">
+<!ENTITY statusColumn.label "Stato">
+<!ENTITY sizeColumn.label "Dimensione">
+<!ENTITY junkStatusColumn.label "Stato di indesiderata">
+<!ENTITY unreadColumn.label "Non letto">
+<!ENTITY totalColumn.label "Totale">
+<!ENTITY readColumn.label "Letto">
+<!ENTITY receivedColumn.label "Ricevuto">
+<!ENTITY starredColumn.label "Speciale">
+<!ENTITY locationColumn.label "Posizione">
+<!ENTITY idColumn.label "Ordine di ricezione">
+<!ENTITY columnChooser2.tooltip "Selezionare le colonne da mostrare">
+<!ENTITY threadColumn2.tooltip "Mostra le discussioni">
+<!ENTITY fromColumn2.tooltip "Ordina per campo 'da'">
+<!ENTITY recipientColumn2.tooltip "Ordina per destinatario">
+<!ENTITY correspondentColumn2.tooltip "Ordina per corrispondenti">
+<!ENTITY subjectColumn2.tooltip "Ordina per oggetto">
+<!ENTITY dateColumn2.tooltip "Ordina per nome">
+<!ENTITY priorityColumn2.tooltip "Ordina per priorità">
+<!ENTITY tagsColumn2.tooltip "Ordina per etichette">
+<!ENTITY accountColumn2.tooltip "Ordina per account">
+<!ENTITY statusColumn2.tooltip "Ordina per nome">
+<!ENTITY sizeColumn2.tooltip "Ordina per nome">
+<!ENTITY junkStatusColumn2.tooltip "Ordina per indesiderato">
+<!ENTITY unreadColumn2.tooltip "Numero totale di messaggi non letti nella discussione">
+<!ENTITY totalColumn2.tooltip "Numero totale di messaggi nella discussione">
+<!ENTITY readColumn2.tooltip "Ordina per letto">
+<!ENTITY receivedColumn2.tooltip "Ordina per data di ricevimento">
+<!ENTITY starredColumn2.tooltip "Ordina per nome">
+<!ENTITY locationColumn2.tooltip "Indirizzo">
+<!ENTITY idColumn2.tooltip "Ordina per ordine di ricevimento">

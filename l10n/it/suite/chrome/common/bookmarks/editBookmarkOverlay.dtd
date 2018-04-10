@@ -1,0 +1,28 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY editBookmarkOverlay.name.label "Nome:">
+<!ENTITY editBookmarkOverlay.name.accesskey "o">
+<!ENTITY editBookmarkOverlay.location.label "Indirizzo:">
+<!ENTITY editBookmarkOverlay.location.accesskey "z">
+<!ENTITY editBookmarkOverlay.feedLocation.label "Indirizzo feed:">
+<!ENTITY editBookmarkOverlay.feedLocation.accesskey "r">
+<!ENTITY editBookmarkOverlay.siteLocation.label "Indirizzo:">
+<!ENTITY editBookmarkOverlay.siteLocation.accesskey "I">
+<!ENTITY editBookmarkOverlay.folder.label "Cartella:">
+<!ENTITY editBookmarkOverlay.folder.accesskey "C">
+<!ENTITY editBookmarkOverlay.foldersExpanderDown.tooltip "Mostra tutte le cartelle di segnalibri">
+<!ENTITY editBookmarkOverlay.expanderUp.tooltip "Nascondi">
+<!ENTITY editBookmarkOverlay.tags.label "Etichette:">
+<!ENTITY editBookmarkOverlay.tags.accesskey "E">
+<!ENTITY editBookmarkOverlay.tagsEmptyDesc.label "Separare più etichette con una virgola">
+<!ENTITY editBookmarkOverlay.description.label "Descrizione:">
+<!ENTITY editBookmarkOverlay.description.accesskey "D">
+<!ENTITY editBookmarkOverlay.keyword.label "Parole chiave">
+<!ENTITY editBookmarkOverlay.keyword.accesskey "h">
+<!ENTITY editBookmarkOverlay.tagsExpanderDown.tooltip "Mostra tutte le etichette">
+<!ENTITY editBookmarkOverlay.choose.label "Scegli…">
+<!ENTITY editBookmarkOverlay.newFolderButton.label "Nuova cartella">
+<!ENTITY editBookmarkOverlay.newFolderButton.accesskey "N">
+<!ENTITY editBookmarkOverlay.newFolderButton.tooltip "Crea nuova cartella">

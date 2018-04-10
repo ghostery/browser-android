@@ -1,0 +1,68 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label                   "Основные">
+<!ENTITY itemAutoComplete.label              "Адресация">
+<!ENTITY itemSpellCheck.label                "Орфография">
+
+<!ENTITY dialogCompose.title                 "Составление">
+
+<!ENTITY forwardMsg.label                     "Пересылать сообщения:">
+<!ENTITY forwardMsg.accesskey                 "с">
+<!ENTITY inline.label                         "Внутри сообщения">
+<!ENTITY asAttachment.label                   "Как вложение">
+<!ENTITY addExtension.label                   "добавлять расширение к имени файла">
+<!ENTITY addExtension.accesskey               "ф">
+
+<!ENTITY htmlComposeHeader.label              "HTML">
+<!ENTITY font.label                           "Шрифт:">
+<!ENTITY font.accesskey                       "р">
+<!ENTITY size.label                           "Размер:">
+<!ENTITY size.accesskey                       "е">
+<!ENTITY fontColor.label                      "Цвет текста:">
+<!ENTITY fontColor.accesskey                  "т">
+<!ENTITY bgColor.label                        "Цвет фона:">
+<!ENTITY bgColor.accesskey                    "в">
+<!ENTITY restoreHTMLDefaults.label            "Восстановить значения по умолчанию">
+<!ENTITY restoreHTMLDefaults.accesskey        "м">
+<!ENTITY defaultToParagraph.label             "Использовать формат Абзаца вместо Обычного текста по умолчанию">
+<!ENTITY defaultToParagraph.accesskey         "п">
+
+<!ENTITY spellCheck.label                     "Проверять орфографию перед отправкой сообщения">
+<!ENTITY spellCheck.accesskey                 "г">
+<!ENTITY spellCheckInline.label               "Проверять орфографию при наборе текста">
+<!ENTITY spellCheckInline1.accesskey          "н">
+<!ENTITY languagePopup.label                  "Язык:">
+<!ENTITY languagePopup.accessKey              "з">
+<!ENTITY downloadDictionaries.label           "Загрузить дополнительные словари">
+
+<!ENTITY warnOnSendAccelKey.label             "Запрашивать подтверждение при использовании клавиатурных сокращений для отправки сообщений">
+<!ENTITY warnOnSendAccelKey.accesskey         "п">
+<!ENTITY autoSave.label                       "Автоматически сохранять сообщение каждые">
+<!ENTITY autoSave.accesskey                   "х">
+<!ENTITY autoSaveEnd.label                    "минут">
+
+<!ENTITY emailCollectionPicker.label           "Автоматически добавлять адреса из исходящих писем в адресную книгу:">
+<!ENTITY emailCollectionPicker.accesskey       "в">
+<!ENTITY addressingTitle.label                 "Автодополнение адресов">
+<!ENTITY autocompleteText.label                "При вводе адреса искать подходящие почтовые адреса в:">
+<!ENTITY addressingEnable.label                "Локальных адресных книгах">
+<!ENTITY addressingEnable.accesskey            "к">
+<!ENTITY directories.label                     "Сервере каталогов:">
+<!ENTITY directories.accesskey                 "р">
+<!ENTITY directoriesNone.label                 "Нет">
+<!ENTITY editDirectories.label                 "Изменить каталоги…">
+<!ENTITY editDirectories.accesskey             "з">
+<!ENTITY showAsDefault.label                   "Каталог по умолчанию при открытии окна адресной книги:">
+<!ENTITY showAsDefault.accesskey               "ю">
+<!ENTITY showAsDefaultLast.label               "Последний использованный каталог">
+
+<!ENTITY sendOptionsDescription.label          "Текстовый формат:">
+<!ENTITY sendOptions.label                     "Параметры отправки…">
+<!ENTITY sendOptions.accesskey                 "т">
+
+<!ENTITY attachmentReminder.label              "Проверять на забытые вложения">
+<!ENTITY attachmentReminder.accesskey          "в">
+<!ENTITY attachmentReminderOptions.label       "Ключевые слова…">
+<!ENTITY attachmentReminderOptions.accesskey   "л">

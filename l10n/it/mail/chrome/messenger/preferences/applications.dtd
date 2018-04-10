@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  typeColumn.label            "Tipo di contenuto">
+<!ENTITY  typeColumn.accesskey        "T">
+
+<!ENTITY  actionColumn2.label         "Azione">
+<!ENTITY  actionColumn2.accesskey     "A">
+
+<!ENTITY  focusSearch1.key            "f">
+<!ENTITY  focusSearch2.key            "k">
+
+<!ENTITY  filter.placeholder          "Cerca">
+
+<!ENTITY saveTo.label                 "Salva i file in">
+<!ENTITY saveTo.accesskey             "S">
+<!ENTITY alwaysAsk.label              "Chiedi dove salvare ogni file">
+<!ENTITY alwaysAsk.accesskey          "C">
+<!ENTITY chooseFolderWin.label        "Sfoglia…">
+<!ENTITY chooseFolderWin.accesskey    "o">
+<!ENTITY chooseFolderMac.label        "Scegliere…">
+<!ENTITY chooseFolderMac.accesskey    "e">
+
+<!ENTITY attachments.incoming.label   "In arrivo">
+<!ENTITY attachments.outgoing.label   "In uscita">
+
+<!ENTITY addCloudFileAccount1.label       "Aggiungi…">
+<!ENTITY addCloudFileAccount1.accesskey   "A">
+<!ENTITY addCloudFileAccount.description  "Aggiungi un nuovo servizio di archiviazione Filelink">
+<!ENTITY removeCloudFileAccount.label     "Elimina">
+<!ENTITY removeCloudFileAccount.accesskey "E">
+<!ENTITY authRequired.description         "È indispensabile l'autorizzazione per visualizzare le impostazioni di questo servizio di archiviazione.">
+<!ENTITY authRequired.button.label        "Autorizza">
+<!ENTITY authRequired.button.accesskey    "U">
+
+<!ENTITY enableCloudFileAccountOffer.label "Offrire la condivisione per file più grandi di">
+<!ENTITY enableCloudFileAccountOffer.mb "MB">

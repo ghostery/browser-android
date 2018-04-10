@@ -1,0 +1,36 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY addressing.label "Composizione e indirizzi">
+<!ENTITY addressingGroupTitle.label "Indirizzi">
+<!ENTITY addressingText.label "Quando si cercano indirizzi:">
+<!ENTITY useGlobal.label "Utilizza le preferenze globali per i server LDAP per questo account">
+<!ENTITY useGlobal.accesskey "U">
+<!ENTITY editDirectories.label "Modifica cartelle…">
+<!ENTITY editDirectories.accesskey "M">
+<!ENTITY directories.label "Utilizza un diverso server LDAP:">
+<!ENTITY directories.accesskey "d">
+<!ENTITY directoriesNone.label "nessuno">
+<!ENTITY compositionGroupTitle.label "Composizione">
+<!ENTITY useHtml.label "Componi i messaggi in HTML">
+<!ENTITY useHtml.accesskey "C">
+<!ENTITY autoQuote.label "Inserisci automaticamente il messaggio originale nella risposta">
+<!ENTITY autoQuote.accesskey "i">
+<!ENTITY then.label "dopodiché ">
+<!ENTITY then.accesskey "o">
+<!ENTITY aboveQuote.label "inizia la risposta sopra il testo a cui si risponde">
+<!ENTITY belowQuote.label "inizia la risposta sotto il testo a cui si risponde">
+<!ENTITY selectAndQuote.label "seleziona il testo a cui si risponde">
+<!ENTITY place.label "e metti la firma">
+<!ENTITY place.accesskey "t">
+<!ENTITY belowText.label "sotto il testo a cui si risponde (raccomandato)">
+<!ENTITY aboveText.label "sotto la risposta (sopra il testo a cui si risponde)">
+<!ENTITY includeSigOnReply.label "Includi la firma nelle risposte">
+<!ENTITY includeSigOnReply.accesskey "s">
+<!ENTITY includeSigOnForward.label "Includi la firma nei messaggi inoltrati">
+<!ENTITY includeSigOnForward.accesskey "n">
+<!ENTITY globalComposingPrefs.label "Preferenze di composizione globale…">
+<!ENTITY globalComposingPrefs.accesskey "G">
+<!ENTITY globalAddressingPrefs.label "Preferenze di indirizzamento globale…">
+<!ENTITY globalAddressingPrefs.accesskey "P">

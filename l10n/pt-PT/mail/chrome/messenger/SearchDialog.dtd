@@ -1,0 +1,80 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!-- for SearchDialog.xul -->
+
+<!ENTITY searchHeading.label         "Procurar mensagens em:">
+<!ENTITY searchHeading.accesskey     "n">
+<!ENTITY searchSubfolders.label      "Procurar em subpastas">
+<!ENTITY searchSubfolders.accesskey  "e">
+<!ENTITY searchOnServer.label        "Executar pesquisa no servidor">
+<!ENTITY searchOnServer.accesskey    "u">
+<!ENTITY resetButton.label           "Limpar">
+<!ENTITY resetButton.accesskey       "L">
+<!ENTITY openButton.label            "Abrir">
+<!ENTITY openButton.accesskey        "A">
+<!ENTITY deleteButton.label          "Apagar">
+<!ENTITY deleteButton.accesskey      "A">
+<!ENTITY searchDialogTitle.label     "Pesquisar mensagens">
+<!ENTITY results.label               "Resultados">
+<!ENTITY moveButton.label            "Mover para">
+<!ENTITY moveButton.accesskey        "v">
+<!ENTITY closeCmd.key                "W"> 
+<!ENTITY openInFolder.label          "Abrir na pasta">
+<!ENTITY openInFolder.accesskey      "r">
+<!ENTITY saveAsVFButton.label        "Guardar como pasta de pesquisa">
+<!ENTITY saveAsVFButton.accesskey    "c">
+<!-- for ABSearchDialog.xul -->
+
+<!ENTITY abSearchHeading.label       "Procurar em:">
+<!ENTITY abSearchHeading.accesskey   "u">
+<!ENTITY propertiesButton.label      "Propriedades">
+<!ENTITY propertiesButton.accesskey  "P">
+<!ENTITY composeButton.label         "Escrever">
+<!ENTITY composeButton.accesskey     "s">
+<!ENTITY deleteCardButton.label      "Apagar">
+<!ENTITY deleteCardButton.accesskey  "A">
+<!ENTITY abSearchDialogTitle.label   "Pesquisa avançada no livro de endereços">
+<!-- Thread Pane -->
+
+<!ENTITY threadColumn.label "Tópico">
+<!ENTITY fromColumn.label "De">
+<!ENTITY recipientColumn.label "Destinatário">
+<!ENTITY correspondentColumn.label "Correspondentes">
+<!ENTITY subjectColumn.label "Assunto">
+<!ENTITY dateColumn.label "Data">
+<!ENTITY priorityColumn.label "Prioridade">
+<!ENTITY tagsColumn.label "Etiquetas">
+<!ENTITY accountColumn.label "Conta">
+<!ENTITY statusColumn.label "Estado">
+<!ENTITY sizeColumn.label "Tamanho">
+<!ENTITY junkStatusColumn.label "Estado de lixo eletrónico">
+<!ENTITY unreadColumn.label "Não lidas">
+<!ENTITY totalColumn.label "Total">
+<!ENTITY readColumn.label "Lidas">
+<!ENTITY receivedColumn.label "Recebidas">
+<!ENTITY starredColumn.label "Com estrela">
+<!ENTITY locationColumn.label "Localização">
+<!ENTITY idColumn.label "Ordem de receção">
+<!-- Thread Pane Tooltips -->
+
+<!ENTITY columnChooser2.tooltip "Selecione as colunas a mostrar">
+<!ENTITY threadColumn2.tooltip "Mostrar tópicos da mensagem">
+<!ENTITY fromColumn2.tooltip "Ordenar por remetente">
+<!ENTITY recipientColumn2.tooltip "Ordenar por destinatário">
+<!ENTITY correspondentColumn2.tooltip "Ordenar por correspondentes">
+<!ENTITY subjectColumn2.tooltip "Ordenar por assunto">
+<!ENTITY dateColumn2.tooltip "Ordenar por data">
+<!ENTITY priorityColumn2.tooltip "Ordenar por prioridade">
+<!ENTITY tagsColumn2.tooltip "Ordenar por etiquetas">
+<!ENTITY accountColumn2.tooltip "Ordenar por conta">
+<!ENTITY statusColumn2.tooltip "Ordenar por estado">
+<!ENTITY sizeColumn2.tooltip "Ordenar por tamanho">
+<!ENTITY junkStatusColumn2.tooltip "Ordenar por estado do lixo eletrónico">
+<!ENTITY unreadColumn2.tooltip "N.º de mensagens não lidas no tópico">
+<!ENTITY totalColumn2.tooltip "Número total de mensagens no tópico">
+<!ENTITY readColumn2.tooltip "Ordenar por lidas">
+<!ENTITY receivedColumn2.tooltip "Ordenar por data de receção">
+<!ENTITY starredColumn2.tooltip "Ordenar por estrela">
+<!ENTITY locationColumn2.tooltip "Ordenar por localização">
+<!ENTITY idColumn2.tooltip "Ordenar por ordem de receção">

@@ -1,0 +1,122 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label       "Generale">
+<!ENTITY dataChoicesTab.label    "Scelta dei dati">
+<!ENTITY itemUpdate.label        "Aggiornamenti">
+<!ENTITY itemNetworking.label    "Rete e spazio su disco">
+<!ENTITY itemCertificates.label  "Certificati">
+
+<!-- General Settings -->
+<!ENTITY enableGlodaSearch.label       "Attiva la ricerca globale e l'indicizzazione">
+<!ENTITY enableGlodaSearch.accesskey   "E">
+<!ENTITY dateTimeFormatting.label      "Formattazione data e ora">
+<!ENTITY allowHWAccel.label            "Utilizza l'accelerazione hardware quando disponibile">
+<!ENTITY allowHWAccel.accesskey        "h">
+<!ENTITY storeType.label               "Modalità di salvataggio dei messaggi per i nuovi account:">
+<!ENTITY storeType.accesskey           "T">
+<!ENTITY mboxStore2.label              "File per cartella (mbox)">
+<!ENTITY maildirStore.label            "Un file per ogni messaggio (maildir)">
+
+<!ENTITY scrolling.label               "Scrolling">
+<!ENTITY useAutoScroll.label           "Utilizza lo scorrimento automatico">
+<!ENTITY useAutoScroll.accesskey       "U">
+<!ENTITY useSmoothScrolling.label      "Utilizza lo scorrimento continuo">
+<!ENTITY useSmoothScrolling.accesskey  "m">
+
+<!ENTITY systemIntegration.label       "Integrazione col sistema">
+<!ENTITY alwaysCheckDefault.label      "Controlla sempre all'avvio se &brandShortName; è il programma di posta predefinito">
+<!ENTITY alwaysCheckDefault.accesskey  "A">
+<!ENTITY searchIntegration.label       "Permetti a &searchIntegration.engineName; di cercare nei messaggi">
+<!ENTITY searchIntegration.accesskey   "P">
+<!ENTITY checkDefaultsNow.label        "Controlla ora…">
+<!ENTITY checkDefaultsNow.accesskey    "O">
+<!ENTITY configEditDesc.label          "Impostazioni avanzate">
+<!ENTITY configEdit.label              "Editor di configurazione…">
+<!ENTITY configEdit.accesskey          "o">
+<!ENTITY returnReceiptsInfo.label      "Determina come &brandShortName; gestisce le ricevute di ritorno">
+<!ENTITY showReturnReceipts.label      "Ricevute di ritorno…">
+<!ENTITY showReturnReceipts.accesskey  "R">
+
+<!-- Data Choices -->
+<!ENTITY telemetrySection.label          "Telemetria">
+<!ENTITY telemetryDesc.label             "Condivide dati sulle prestazioni, sull'uso, sull'hardware e sulle personalizzazioni del programma di email con &vendorShortName; per aiutarci a migliorare &brandShortName; ">
+<!ENTITY enableTelemetry.label           "Attivare la telemetria">
+<!ENTITY enableTelemetry.accesskey       "T">
+<!ENTITY telemetryLearnMore.label        "Ulteriori informazioni">
+
+<!ENTITY crashReporterSection.label      "Crash Reporter">
+<!ENTITY crashReporterDesc.label         "&brandShortName; invia rapporti di crash per aiutare &vendorShortName; a farlo diventare più stabile e sicuro">
+<!ENTITY enableCrashReporter.label       "Attivare il Crash Reporter">
+<!ENTITY enableCrashReporter.accesskey   "C">
+<!ENTITY crashReporterLearnMore.label    "Ulteriori informazioni">
+
+<!-- Update -->
+<!-- LOCALIZATION NOTE (updateApp.label):
+  Strings from aboutDialog.dtd are displayed in this section of the preferences.
+  Please check for possible accesskey conflicts.
+-->
+<!ENTITY updateApp2.label                "Aggiornamenti di &brandShortName;">
+<!-- LOCALIZATION NOTE (updateApp.version.*): updateApp.version.pre is
+  followed by a version number, keep the trailing space or replace it with
+  a different character as needed. updateApp.version.post is displayed after
+  the version number, and is empty on purpose for English. You can use it
+  if required by your language.
+ -->
+<!ENTITY updateApp.version.pre           "Versione ">
+<!ENTITY updateApp.version.post          "">
+<!ENTITY updateAuto.label                "Installa automaticamente aggiornamenti (consigliato: maggiore sicurezza)">
+<!ENTITY updateAuto.accesskey            "n">
+<!ENTITY updateCheck.label               "Controlla aggiornamenti ma permetti all'utente di scegliere se installarli">
+<!ENTITY updateCheck.accesskey           "C">
+<!ENTITY updateManual.label              "Non cercare aggiornamenti (non consigliato: rischi per la sicurezza)">
+<!ENTITY updateManual.accesskey          "N">
+<!ENTITY updateHistory.label             "Mostra cronologia aggiornamenti">
+<!ENTITY updateHistory.accesskey         "S">
+
+<!ENTITY useService.label                "Utilizza un servizio di sistema per installare gli aggiornamenti">
+<!ENTITY useService.accesskey            "U">
+
+<!-- Networking and Disk Space -->
+<!ENTITY showSettings.label            "Impostazioni…">
+<!ENTITY showSettings.accesskey        "I">
+<!ENTITY proxiesConfigure.label        "Configura il modo in cui &brandShortName; si collega a Internet">
+<!ENTITY connectionsInfo.caption       "Connessione">
+<!ENTITY offlineInfo.caption           "Non in linea">
+<!ENTITY offlineInfo.label             "Configura le impostazioni 'non in linea'">
+<!ENTITY showOffline.label             "Non in linea…">
+<!ENTITY showOffline.accesskey         "N">
+
+<!ENTITY Diskspace                       "Spazio su disco">
+<!ENTITY offlineCompactFolders.label     "Compatta le cartelle se serve a risparmiare spazio">
+<!ENTITY offlineCompactFolders.accesskey "a">
+<!ENTITY offlineCompactFoldersMB.label   "Mb in totale">
+
+<!-- LOCALIZATION NOTE:
+  The entities useCacheBefore.label and useCacheAfter.label appear on a single
+  line in preferences as follows:
+
+  &useCacheBefore.label  [ textbox for cache size in MB ]   &useCacheAfter.label;
+-->
+<!ENTITY useCacheBefore.label            "Utilizza al massimo">
+<!ENTITY useCacheBefore.accesskey        "U">
+<!ENTITY useCacheAfter.label             "MB di spazio per la cache">
+<!ENTITY overrideSmartCacheSize.label    "Non utilizzare la gestione automatica della cache">
+<!ENTITY overrideSmartCacheSize.accesskey "N">
+<!ENTITY clearCacheNow.label             "Pulisci ora">
+<!ENTITY clearCacheNow.accesskey         "P">
+
+<!-- Certificates -->
+<!ENTITY certSelection.description       "Quando un sito web richiede il certificato personale:">
+<!ENTITY certs.auto                      "Selezionane uno automaticamente">
+<!ENTITY certs.auto.accesskey            "S">
+<!ENTITY certs.ask                       "Chiedere ogni volta">
+<!ENTITY certs.ask.accesskey             "C">
+<!ENTITY enableOCSP.label                "Interrogare i risponditori OCSP per confermare l'attuale validità dei certificati">
+<!ENTITY enableOCSP.accesskey            "e">
+
+<!ENTITY manageCertificates.label "Gestisci certificati">
+<!ENTITY manageCertificates.accesskey "G">
+<!ENTITY viewSecurityDevices.label "Dispositivi di sicurezza">
+<!ENTITY viewSecurityDevices.accesskey "D">

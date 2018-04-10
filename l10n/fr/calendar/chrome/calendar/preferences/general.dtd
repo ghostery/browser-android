@@ -1,0 +1,54 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.mainbox.label "Paramètres généraux" >
+<!ENTITY pref.dateformat.label "Format de la date :" >
+<!ENTITY pref.dateformat.accesskey "F">
+<!ENTITY pref.dateformat.long "Long " >
+<!ENTITY pref.dateformat.short "Court "  >
+
+<!ENTITY pref.timezones.caption "Fuseau horaire">
+<!ENTITY pref.timezones.label "Choisissez la ville la plus proche dans votre fuseau horaire :">
+<!ENTITY pref.timezones.accesskey "C">
+
+<!ENTITY pref.defaults.label "Valeurs par défaut pour les nouveaux éléments">
+<!ENTITY pref.events.label "Évènements">
+<!ENTITY pref.tasks.label "Tâches">
+
+<!ENTITY pref.default_event_length.label "Durée par défaut :" >
+<!ENTITY pref.default_event_length.accesskey "D">
+
+<!ENTITY pref.default_task_none.label "Aucune">
+<!ENTITY pref.default_task_start_of_day.label "Début de journée">
+<!ENTITY pref.default_task_end_of_day.label "Fin de journée">
+<!ENTITY pref.default_task_tomorrow.label "Demain">
+<!ENTITY pref.default_task_next_week.label "La semaine prochaine">
+<!ENTITY pref.default_task_offset_current.label "Par rapport à l’heure actuelle">
+<!ENTITY pref.default_task_offset_start.label "Par rapport au début">
+<!ENTITY pref.default_task_offset_next_hour.label "Par rapport à l’heure suivante">
+
+<!ENTITY pref.calendar.todaypane.agenda.caption "Panneau « Aujourd’hui »">
+<!ENTITY pref.soondays.label "La section « Prochainement » doit afficher une période de :">
+<!ENTITY pref.soondays.accesskey "P">
+
+<!-- LOCALIZATION NOTE (pref.soondays2.label):
+     "Upcoming" is the name of a section and the translation must match the
+     translation of that section name (calendar.upcoming.button.label). Also,
+     it should be upper case (as a proper name) if the target language permits.
+  -->
+<!ENTITY pref.soondays2.label "La section « Prochainement » doit afficher une période de :">
+<!ENTITY pref.soondays2.accesskey "P">
+
+<!ENTITY pref.accessibility.label "Accessibilité" >
+<!ENTITY pref.systemcolors.label "Optimiser les couleurs pour l’accessibilité" >
+<!ENTITY pref.systemcolors.accesskey "O">
+
+<!ENTITY pref.eventsandtasks.label "Évènements et tâches" >
+<!ENTITY pref.editInTab.label "Modifier les évènements et les tâches dans un onglet plutôt que dans une fenêtre de dialogue." >
+<!ENTITY pref.editInTab.accesskey "t">

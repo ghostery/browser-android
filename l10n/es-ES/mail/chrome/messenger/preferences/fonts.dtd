@@ -1,0 +1,65 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY fontsAndEncodingsDialog.title "Tipografía y codificación">
+<!ENTITY language.label "Tipos de letra para:">
+<!ENTITY language.accesskey "T">
+<!ENTITY size.label "Tamaño:">
+<!ENTITY sizeProportional.accesskey "ñ">
+<!ENTITY sizeMonospace.accesskey "a">
+<!ENTITY proportional.label "Proporcional:">
+<!ENTITY proportional.accesskey "P">
+<!ENTITY serif.label "Serif:">
+<!ENTITY serif.accesskey "S">
+<!ENTITY sans-serif.label "Sans-serif:">
+<!ENTITY sans-serif.accesskey "n">
+<!ENTITY monospace.label "Monoespacio:">
+<!ENTITY monospace.accesskey "M">
+<!ENTITY font.langGroup.latin "Latino">
+<!ENTITY font.langGroup.japanese "Japonés">
+<!ENTITY font.langGroup.trad-chinese "Chino tradicional (Taiwan)">
+<!ENTITY font.langGroup.simpl-chinese "Chino simplificado">
+<!ENTITY font.langGroup.trad-chinese-hk "Chino tradicional (Hong Kong)">
+<!ENTITY font.langGroup.korean "Coreano">
+<!ENTITY font.langGroup.cyrillic "Cirílico">
+<!ENTITY font.langGroup.el "Griego">
+<!ENTITY font.langGroup.other "Otros sistemas de escritura">
+<!ENTITY font.langGroup.thai "Tailandés">
+<!ENTITY font.langGroup.hebrew "Hebreo">
+<!ENTITY font.langGroup.arabic "Árabe">
+<!ENTITY font.langGroup.devanagari "Devanagari">
+<!ENTITY font.langGroup.tamil "Tamil">
+<!ENTITY font.langGroup.armenian "Armenio">
+<!ENTITY font.langGroup.bengali "Bengalí">
+<!ENTITY font.langGroup.canadian "Silabario canadiense unificado">
+<!ENTITY font.langGroup.ethiopic "Etíope">
+<!ENTITY font.langGroup.georgian "Georgiano">
+<!ENTITY font.langGroup.gujarati "Gujarati">
+<!ENTITY font.langGroup.gurmukhi "Gurmukhi">
+<!ENTITY font.langGroup.khmer "Khmer">
+<!ENTITY font.langGroup.malayalam "Malayalam">
+<!ENTITY font.langGroup.math "Matemáticas">
+<!ENTITY font.langGroup.odia "Odia">
+<!ENTITY font.langGroup.telugu "Telugu">
+<!ENTITY font.langGroup.kannada "Kannada">
+<!ENTITY font.langGroup.sinhala "Sinhala">
+<!ENTITY font.langGroup.tibetan "Tibetano">
+<!ENTITY minSize.label "Tamaño de letra mínimo:">
+<!ENTITY minSize.accesskey "d">
+<!ENTITY minSize.none "Ninguno">
+<!ENTITY useDefaultFontSerif.label "Serif">
+<!ENTITY useDefaultFontSansSerif.label "Sans Serif">
+<!ENTITY fontControl.label "Control de tipos de letra">
+<!ENTITY useFixedWidthForPlainText.label "Usar tipografía de ancho fijo para mensajes en texto sin formato">
+<!ENTITY fixedWidth.accesskey "f">
+<!ENTITY useDocumentFonts.label "Permitir a los mensajes usar otros tipos de letra">
+<!ENTITY useDocumentFonts.accesskey "o">
+<!ENTITY sendDefaultCharset.label "Correo saliente:">
+<!ENTITY sendDefaultCharset.accesskey "e">
+<!ENTITY languagesTitle2.label "Codificación de texto">
+<!ENTITY composingDescription2.label "Configurar la codificación de texto predeterminada para enviar y recibir mensajes">
+<!ENTITY viewDefaultCharsetList.label "Correo entrante:">
+<!ENTITY viewDefaultCharsetList.accesskey "C">
+<!ENTITY replyInDefaultCharset3.label "Cuando sea posible, usar la codificación de texto predeterminada en las respuestas">
+<!ENTITY replyInDefaultCharset3.accesskey "b">

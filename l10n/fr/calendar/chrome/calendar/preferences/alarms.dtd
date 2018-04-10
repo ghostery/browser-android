@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.alarmgoesoff.label "Quand survient une alarme :">
+<!ENTITY pref.playasound "Jouer un son">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "J">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "Utiliser le son par défaut">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "U">
+<!ENTITY pref.calendar.alarms.sound.browse.label "Parcourir…">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "P">
+<!ENTITY pref.calendar.alarms.sound.play.label "Lire">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "L">
+<!ENTITY pref.showalarmbox "Afficher une boîte d’alarme">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "b">
+<!ENTITY pref.missedalarms "Afficher les alarmes manquées">
+<!ENTITY pref.missedalarms2 "Afficher les rappels manqués pour les agendas modifiables">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "m">
+<!ENTITY pref.calendar.alarms.defaults.label "Paramètres d’alarme par défaut">
+<!ENTITY pref.defalarm4events.label "Paramètres d’alarme pour les évènements :">
+<!ENTITY pref.defalarm4events.accesskey "r">
+<!ENTITY pref.defalarm4todos.label "Paramètres d’alarme pour les tâches :">
+<!ENTITY pref.defalarm4todos.accesskey "e">
+<!ENTITY pref.alarm.on "Activée">
+<!ENTITY pref.alarm.off "Désactivée">
+<!ENTITY pref.defalarmlen4events.label "Temps de déclenchement d’une alarme avant un évènement :">
+<!ENTITY pref.defalarmlen4events.accesskey "T">
+<!ENTITY pref.defalarmlen4todos.label "Temps de déclenchement d’une alarme avant une tâche :">
+<!ENTITY pref.defalarmlen4todos.accesskey "s">
+
+<!ENTITY pref.defaultsnoozelength.label "Durée par défaut du report d’alarme :" >
+<!ENTITY pref.defaultsnoozelength.accesskey "D">

@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "Paramètres hors connexion">
+
+<!ENTITY checkAutoDetect.label "Toujours passer en mode en ligne lorsque cela est possible">
+<!ENTITY checkAutoDetect.accesskey "T">
+<!ENTITY titleStartUp "Au démarrage :">
+<!ENTITY radioRememberPrevState.label "Se souvenir de l’état précédent">
+<!ENTITY radioRememberPrevState.accesskey "S">
+<!ENTITY radioAskState.label "Demander à passer en mode en ligne">
+<!ENTITY radioAskState.accesskey "D">
+<!ENTITY radioAlwaysOnlineState.label "Passer en mode en ligne">
+<!ENTITY radioAlwaysOnlineState.accesskey "P">
+<!ENTITY radioAlwaysOffline.label "Passer en mode hors connexion">
+<!ENTITY radioAlwaysOffline.accesskey "a">
+
+<!ENTITY textGoingOnline "Envoyer les messages en attente lors du passage en mode en ligne ?">
+<!ENTITY radioAutoSend.label "Oui">
+<!ENTITY radioAutoSend.accesskey "u">
+<!ENTITY radioNotSend.label "Non">
+<!ENTITY radioNotSend.accesskey "N">
+<!ENTITY radioAskUnsent.label "Demander">
+<!ENTITY radioAskUnsent.accesskey "e">
+<!ENTITY textGoingOffline "À la déconnexion, télécharger les messages pour une utilisation hors connexion ?">
+<!ENTITY radioAutoDownload.label "Oui">
+<!ENTITY radioAutoDownload.accesskey "i">
+<!ENTITY radioNotDownload.label "Non">
+<!ENTITY radioNotDownload.accesskey "o">
+<!ENTITY radioAskDownload.label "Demander">
+<!ENTITY radioAskDownload.accesskey "m">
