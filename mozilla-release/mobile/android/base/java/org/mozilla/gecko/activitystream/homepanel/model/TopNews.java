@@ -7,7 +7,7 @@ import org.mozilla.gecko.activitystream.Utils;
 import org.mozilla.gecko.activitystream.homepanel.StreamRecyclerAdapter;
 
 /**
- * @author Moaz Rashad
+ *  Copyright © Cliqz 2018
  */
 
 public class TopNews implements WebpageRowModel{
@@ -111,7 +111,6 @@ public class TopNews implements WebpageRowModel{
 
     @Override
     public StreamRecyclerAdapter.RowItemType getRowItemType() {
-//        return StreamRecyclerAdapter.RowItemType.TOP_NEWS;
         return StreamRecyclerAdapter.RowItemType.TOP_NEWS;
     }
 

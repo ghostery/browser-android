@@ -17,15 +17,15 @@ import java.util.List;
 import static android.support.v4.content.ContextCompat.getDrawable;
 
 /**
- * @author Moaz Rashad
+ * Copyright © Cliqz 2018
  */
 
 public class TopNewsRow extends StreamViewHolder {
-    public static final int LAYOUT_ID = R.layout.activity_stream_main_news;
+    public static final int LAYOUT_ID = R.layout.activity_stream_main_topnews;
     private final Drawable expandNewsIcon, collapseNewsIcon;
-    TextView title;
-    RecyclerView newsRView;
-    TopNewsAdapter adapter;
+    private TextView title;
+    private RecyclerView newsRView;
+    private TopNewsAdapter adapter;
     private boolean isNewsExpanded = false;
 
     public TopNewsRow(final View itemView, HomePager.OnUrlOpenListener onUrlOpenListener) {
@@ -39,8 +39,8 @@ public class TopNewsRow extends StreamViewHolder {
         title.setCompoundDrawablesWithIntrinsicBounds(null, null,
                 expandNewsIcon, null);
 
-        newsRView = (RecyclerView) itemView.findViewById(R.id.news_rview);
-        adapter = new TopNewsAdapter(context,onUrlOpenListener);
+        newsRView = (RecyclerView) itemView.findViewById(R.id.news_recyclerview);
+        adapter = new TopNewsAdapter(context, onUrlOpenListener);
         newsRView.setAdapter(adapter);
         RecyclerViewClickSupport.addTo(newsRView).setOnItemClickListener(adapter);
 
@@ -53,13 +53,13 @@ public class TopNewsRow extends StreamViewHolder {
                     title.setCompoundDrawablesWithIntrinsicBounds(null, null,
                             collapseNewsIcon, null);
                     adapter.setNumShowedNews(newsCount);
-                    adapter.notifyItemRangeInserted(adapter.INIT_NUM_SHOWED_NEWS,newsCount-adapter
+                    adapter.notifyItemRangeInserted(adapter.INIT_NUM_SHOWED_NEWS, newsCount - adapter
                             .INIT_NUM_SHOWED_NEWS);
                 } else {
                     title.setCompoundDrawablesWithIntrinsicBounds(null, null,
                             expandNewsIcon, null);
                     adapter.setNumShowedNews(adapter.INIT_NUM_SHOWED_NEWS);
-                    adapter.notifyItemRangeRemoved(adapter.INIT_NUM_SHOWED_NEWS,newsCount-adapter.INIT_NUM_SHOWED_NEWS);
+                    adapter.notifyItemRangeRemoved(adapter.INIT_NUM_SHOWED_NEWS, newsCount - adapter.INIT_NUM_SHOWED_NEWS);
                 }
             }
         });

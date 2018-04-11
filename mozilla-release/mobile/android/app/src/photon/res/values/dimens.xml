@@ -260,6 +260,12 @@
     <!-- Preferences -->
     <dimen name="preference_panel_text_size">15dp</dimen>
 
+    <!-- Cliqz start -->
     <!-- news -->
-    <dimen name="freshtab_icons_size">50dp</dimen>
+    <dimen name="news_favicon_size">50dp</dimen>
+    <dimen name="news_title_padding">16dp</dimen>
+    <dimen name="new_card_padding_10">10dp</dimen>
+    <dimen name="new_card_padding_5">5dp</dimen>
+    <!-- Cliqz end -->
+
 </resources>

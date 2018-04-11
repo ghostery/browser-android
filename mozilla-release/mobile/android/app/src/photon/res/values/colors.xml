@@ -270,13 +270,13 @@
     <color name="pwa_confirm_btn_pressed">#1B73CC</color>
     <color name="pwa_confirm_btn_normal">#E60A84FF</color>
 
+    <!-- Cliqz start -->
     <!-- news -->
-    <color name="gray_medium">#cdcdcd</color>
-    <color name="fresh_tab_news_background_color">#CFFF</color>
-    <color name="secondary_color_settings">#9C9C9C</color>
-    <color name="secondary_color">#4d000000</color>
-    <color name="black">#000000</color>
-    <color name="primary_color">#00aef0</color>
-
+    <color name="news_bg_color_press">#cdcdcd</color>
+    <color name="news_bg_color">#CFFF</color>
+    <color name="news_url_text">#4d000000</color>
+    <color name="news_title_text">#000000</color>
+    <color name="news_local_span">#00aef0</color>
+    <!-- Cliqz end -->
 
 </resources>

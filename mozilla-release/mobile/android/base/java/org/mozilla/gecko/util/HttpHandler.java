@@ -15,7 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * @author Khaled Tantawy
+ * Copyright © Cliqz 2018
  */
 
 public class HttpHandler {

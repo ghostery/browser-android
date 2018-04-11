@@ -18,30 +18,31 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * @author Moaz Rashad
+ * Copyright © Cliqz 2018
  */
 
 public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements RecyclerViewClickSupport.OnItemClickListener {
 
-    private List<TopNews> topNews;
     public final int INIT_NUM_SHOWED_NEWS = 3;
-    private int numShowedNews = 0;
     private final Context context;
     private final HomePager.OnUrlOpenListener onUrlOpenListener;
-    public TopNewsAdapter(Context context,final HomePager.OnUrlOpenListener onUrlOpenListener) {
+    private List<TopNews> topNews;
+    private int numShowedNews = 0;
+
+    public TopNewsAdapter(Context context, final HomePager.OnUrlOpenListener onUrlOpenListener) {
         this.context = context;
         this.onUrlOpenListener = onUrlOpenListener;
         topNews = new ArrayList<>();
     }
 
-    public int getTopNewsCount(){
+    public int getTopNewsCount() {
         return topNews.size();
     }
 
-    public void setNumShowedNews(int numShowedNews){
+    public void setNumShowedNews(int numShowedNews) {
         this.numShowedNews = numShowedNews;
     }
-    
+
     @Override
     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
         final TopNews newsCard = topNews.get(position);
@@ -50,24 +51,24 @@ public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements
                 (HomePager.OnUrlOpenListener.Flags.class));
     }
 
-    public void clear(){
+    public void clear() {
         topNews.clear();
         notifyDataSetChanged();
     }
 
-    public void add(List<TopNews> data){
+    public void add(List<TopNews> data) {
         topNews.addAll(data);
         // if the news expanded => add new data to the expanded list so it will appear immediately
         // otherwise it will remain collapsed with 3 items or less.
-        if(numShowedNews <= INIT_NUM_SHOWED_NEWS){
-            numShowedNews = Math.min(INIT_NUM_SHOWED_NEWS,data.size());
-        }else{
+        if (numShowedNews <= INIT_NUM_SHOWED_NEWS) {
+            numShowedNews = Math.min(INIT_NUM_SHOWED_NEWS, data.size());
+        } else {
             numShowedNews = data.size();
         }
         notifyDataSetChanged();
     }
 
-    public void swap(List<TopNews> data){
+    public void swap(List<TopNews> data) {
         clear();
         add(data);
     }

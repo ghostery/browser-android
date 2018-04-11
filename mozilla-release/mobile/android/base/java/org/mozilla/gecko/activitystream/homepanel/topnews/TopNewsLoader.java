@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author Moaz Rashad
+ * Copyright © Cliqz 2018
  */
 
 public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
@@ -49,7 +49,7 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
         return parseResult(result);
     }
 
-    private List<TopNews> parseResult(JSONObject result){
+    private List<TopNews> parseResult(JSONObject result) {
         if (result == null) {
             return null;
         }

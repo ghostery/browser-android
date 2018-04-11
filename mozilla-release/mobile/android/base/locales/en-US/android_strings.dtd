@@ -833,6 +833,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- LOCALIZATION NOTE (activity_stream_topstories): &brandPocket is the brand of the company, Pocket, that is being used to provide suggestions for articles. -->
 <!ENTITY activity_stream_topstories "Recommended by &brandPocket;">
 <!ENTITY activity_stream_highlights "Highlights">
+
 <!-- LOCALIZATION NOTE (activity_stream_link_more1): Link-like text displayed to take user to a website with more content from Pocket. -->
 <!ENTITY activity_stream_link_more1 "MORE">
 
@@ -869,3 +870,8 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "Add to Home Screen">
 <!ENTITY pwa_continue_to_website "Continue to Website">
 <!ENTITY pwa_onboarding_sumo "You can easily add this website to your Home screen to have instant access and browse faster with an app-like experience.">
+
+<!-- Cliqz start -->
+<!-- News -->
+<!ENTITY activity_stream_top_news "News">
+<!-- Cliqz end -->

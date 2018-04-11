@@ -19,32 +19,30 @@ import org.mozilla.gecko.icons.IconCallback;
 import org.mozilla.gecko.icons.IconResponse;
 import org.mozilla.gecko.icons.Icons;
 import org.mozilla.gecko.util.URIUtils;
-import org.mozilla.gecko.util.ViewUtil;
 import org.mozilla.gecko.widget.FaviconView;
 
 import java.net.URI;
 import java.util.concurrent.Future;
 
-
 /**
- * @author Moaz Rashad
+ * Cliqz 2018
+ * This file is derived from @{@link org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesCard}.java
  */
 
-public class TopNewsCard extends RecyclerView.ViewHolder  implements IconCallback{
+public class TopNewsCard extends RecyclerView.ViewHolder implements IconCallback {
     private final FaviconView faviconView;
 
-    private final TextView titleView,urlView;
+    private final TextView titleView, urlView;
     private Future<IconResponse> ongoingIconLoad;
 
     private Context context;
+
     /* package-local */ TopNewsCard(final RelativeLayout card) {
         super(card);
         context = card.getContext();
         faviconView = (FaviconView) card.findViewById(R.id.favicon);
         titleView = (TextView) card.findViewById(R.id.title_view);
         urlView = (TextView) card.findViewById(R.id.url_view);
-
-        ViewUtil.enableTouchRipple(card);
     }
 
     void bind(final TopNews topNews) {
@@ -60,15 +58,13 @@ public class TopNewsCard extends RecyclerView.ViewHolder  implements IconCallbac
         } else {
             ongoingIconLoad = Icons.with(itemView.getContext())
                     .pageUrl(topNews.getUrl())
-                    .skipNetwork()
-                    .forActivityStream()
                     .build()
                     .execute(this);
         }
 
         titleView.setText(buildTitleSpannable(topNews));
         urlView.setText(URIUtils.getFormattedDomain(context, URI.create(topNews.getUrl()),
-                true,0));
+                true, 0));
     }
 
     private CharSequence buildTitleSpannable(TopNews piece) {
@@ -80,7 +76,7 @@ public class TopNewsCard extends RecyclerView.ViewHolder  implements IconCallbac
         }
         if (piece.isLocalNews() && localLabel != null && !localLabel.isEmpty()) {
             final @ColorInt int color =
-                    ContextCompat.getColor(context, R.color.primary_color);
+                    ContextCompat.getColor(context, R.color.news_local_span);
             appendLabel(builder, localLabel.toUpperCase(), color);
         }
         builder.append(piece.getTitle());
@@ -97,7 +93,7 @@ public class TopNewsCard extends RecyclerView.ViewHolder  implements IconCallbac
 
     @Override
     public void onIconResponse(IconResponse response) {
-        if(faviconView !=null) {
+        if (faviconView != null) {
             faviconView.updateImage(response);
         }
     }
