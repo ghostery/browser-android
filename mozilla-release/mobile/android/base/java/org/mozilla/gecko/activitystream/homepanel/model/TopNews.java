@@ -111,7 +111,8 @@ public class TopNews implements WebpageRowModel{
 
     @Override
     public StreamRecyclerAdapter.RowItemType getRowItemType() {
-        return StreamRecyclerAdapter.RowItemType.TOP_NEWS;
+//        return StreamRecyclerAdapter.RowItemType.TOP_NEWS;
+        return StreamRecyclerAdapter.RowItemType.NEWS;
     }
 
     @Override

@@ -259,4 +259,7 @@
 
     <!-- Preferences -->
     <dimen name="preference_panel_text_size">15dp</dimen>
+
+    <!-- news -->
+    <dimen name="freshtab_icons_size">50dp</dimen>
 </resources>

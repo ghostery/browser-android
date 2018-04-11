@@ -30,7 +30,7 @@ import org.mozilla.gecko.activitystream.homepanel.model.WebpageModel;
 import org.mozilla.gecko.activitystream.homepanel.model.WebpageRowModel;
 import org.mozilla.gecko.activitystream.homepanel.stream.HighlightsEmptyStateRow;
 import org.mozilla.gecko.activitystream.homepanel.stream.LearnMoreRow;
-import org.mozilla.gecko.activitystream.homepanel.stream.TopNewsRow;
+import org.mozilla.gecko.activitystream.homepanel.stream.NewsRow;
 import org.mozilla.gecko.activitystream.homepanel.stream.StreamTitleRow;
 import org.mozilla.gecko.activitystream.homepanel.stream.StreamViewHolder;
 import org.mozilla.gecko.activitystream.homepanel.stream.TopPanelRow;
@@ -56,12 +56,14 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
     private static final String LOGTAG = StringUtils.safeSubstring("Gecko" + StreamRecyclerAdapter.class.getSimpleName(), 0, 23);
 
     private Cursor topSitesCursor;
+    private List<TopNews> topNews;
     private List<RowModel> recyclerViewModel; // List of item types backing this RecyclerView.
     private List<TopStory> topStoriesQueue;
     // Content sections available on the Activity Stream page. These may be hidden if the sections are disabled.
     private final RowItemType[] ACTIVITY_STREAM_SECTIONS =
             { RowItemType.TOP_PANEL, RowItemType.TOP_STORIES_TITLE, RowItemType.HIGHLIGHTS_TITLE,
-                    RowItemType.LEARN_MORE_LINK, RowItemType.TOP_NEWS_TITLE,RowItemType.TOP_NEWS};
+                    RowItemType.LEARN_MORE_LINK,RowItemType.NEWS};
+//    RowItemType.TOP_NEWS_TITLE,RowItemType.TOP_NEWS};
     public static final int MAX_TOP_STORIES = 3;
     private static final String LINK_MORE_POCKET = "https://getpocket.com/explore/trending?src=ff_android&cdn=0";
 
@@ -78,8 +80,10 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         HIGHLIGHTS_EMPTY_STATE(-5),
         HIGHLIGHT_ITEM (-1), // There can be multiple Highlight Items so caller should handle as a special case.
         LEARN_MORE_LINK(-6),
-        TOP_NEWS_TITLE(-7),
-        TOP_NEWS(-8);
+        NEWS(-7);
+//        TOP_NEWS_TITLE(-8),
+//        TOP_NEWS(-9);
+
 
         public final int stableId;
 
@@ -148,13 +152,17 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
                     return true;
                 }
             });
-        } else if(type == RowItemType.TOP_NEWS_TITLE.getViewType()){
-            return new StreamTitleRow(inflater.inflate(StreamTitleRow.LAYOUT_ID, parent, false),
-                    R.string.activity_stream_top_news);
+        } else if(type == RowItemType.NEWS.getViewType()){
+            return new NewsRow(inflater.inflate(NewsRow.LAYOUT_ID, parent, false));
         }
-        else if(type == RowItemType.TOP_NEWS.getViewType()){
-            return new TopNewsRow(inflater.inflate(TopNewsRow.LAYOUT_ID, parent, false));
-        }else if (type == RowItemType.TOP_STORIES_TITLE.getViewType()) {
+//        else if(type == RowItemType.TOP_NEWS_TITLE.getViewType()){
+//            return new StreamTitleRow(inflater.inflate(StreamTitleRow.LAYOUT_ID, parent, false),
+//                    R.string.activity_stream_top_news);
+//        }
+//        else if(type == RowItemType.TOP_NEWS.getViewType()){
+//            return new TopNewsRow(inflater.inflate(TopNewsRow.LAYOUT_ID, parent, false));
+//        }
+        else if (type == RowItemType.TOP_STORIES_TITLE.getViewType()) {
             return new StreamTitleRow(inflater.inflate(StreamTitleRow.LAYOUT_ID, parent, false), R.string.activity_stream_topstories, R.string.activity_stream_link_more, LINK_MORE_POCKET, onUrlOpenListener);
         } else if (type == RowItemType.TOP_STORIES_ITEM.getViewType() ||
                 type == RowItemType.HIGHLIGHT_ITEM.getViewType()) {
@@ -205,19 +213,22 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         if (type == RowItemType.HIGHLIGHT_ITEM.getViewType()) {
             final Highlight highlight = (Highlight) recyclerViewModel.get(position);
             ((WebpageItemRow) holder).bind(highlight, position, tilesSize);
-        } else if (type == RowItemType.TOP_NEWS.getViewType()) {
-            try {
-                final TopNews topNews = (TopNews) recyclerViewModel.get(position);
-                ((TopNewsRow) holder).bind(topNews);
-            }catch (Exception e){
-
-            }
-        }
-        else if (type == RowItemType.TOP_PANEL.getViewType()) {
+//        } else if (type == RowItemType.TOP_NEWS.getViewType()) {
+//            try {
+//                final TopNews topNews = (TopNews) recyclerViewModel.get(position);
+//                ((TopNewsRow) holder).bind(topNews);
+//            }catch (Exception e){
+//
+//            }
+        } else if (type == RowItemType.TOP_PANEL.getViewType()) {
             ((TopPanelRow) holder).bind(topSitesCursor, tilesSize);
-        } else if (type == RowItemType.TOP_NEWS_TITLE.getViewType()) {
-            setViewVisible(true, holder.itemView);
-        } else if (type == RowItemType.TOP_STORIES_ITEM.getViewType()) {
+        } else if (type == RowItemType.NEWS.getViewType()) {
+            ((NewsRow) holder).bind(topNews);
+        }
+//        else if (type == RowItemType.TOP_NEWS_TITLE.getViewType()) {
+//            setViewVisible(true, holder.itemView);
+//        }
+        else if (type == RowItemType.TOP_STORIES_ITEM.getViewType()) {
             final TopStory story = (TopStory) recyclerViewModel.get(position);
             ((WebpageItemRow) holder).bind(story, position, tilesSize);
         } else if (type == RowItemType.HIGHLIGHTS_TITLE.getViewType()
@@ -422,16 +433,21 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
     }
 
     public void swapTopNews(List<TopNews> topNews){
-        final int insertionIndex = indexOfType(RowItemType.TOP_NEWS, recyclerViewModel);
-        int numTopNews = getNumOfTypeShown(RowItemType.TOP_NEWS);
-        while (numTopNews > 0) {
-            recyclerViewModel.remove(insertionIndex);
-            numTopNews--;
-        }
-        if (!topNews.isEmpty()) {
-            recyclerViewModel.addAll(insertionIndex, topNews);
-        }
+        this.topNews = topNews;
+        notifyDataSetChanged();
     }
+//    public void swapTopNews(List<TopNews> topNews){
+//        final int insertionIndex = indexOfType(RowItemType.TOP_NEWS, recyclerViewModel);
+//        int numTopNews = getNumOfTypeShown(RowItemType.TOP_NEWS);
+//        while (numTopNews > 0) {
+//            recyclerViewModel.remove(insertionIndex);
+//            numTopNews--;
+//        }
+//        if (!topNews.isEmpty()) {
+//            recyclerViewModel.addAll(insertionIndex, topNews);
+//        }
+//    }
+
     public void swapHighlights(List<Highlight> highlights) {
         final int insertionIndex = indexOfType(RowItemType.HIGHLIGHTS_TITLE, recyclerViewModel) + 1;
         if (getNumOfTypeShown(RowItemType.HIGHLIGHTS_EMPTY_STATE) > 0) {
