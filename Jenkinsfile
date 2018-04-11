@@ -18,7 +18,7 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                     set -e
                     set -x
                     cd mozilla-release
-                    mv ../mozconfig/cliqz.mozconfig mozconfig
+                    mv ../mozconfigs/cliqz.mozconfig mozconfig
                     ./mach build
                     ./mach package
                 '''
