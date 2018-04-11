@@ -276,6 +276,7 @@
     <color name="secondary_color_settings">#9C9C9C</color>
     <color name="secondary_color">#4d000000</color>
     <color name="black">#000000</color>
+    <color name="primary_color">#00aef0</color>
 
 
 </resources>
