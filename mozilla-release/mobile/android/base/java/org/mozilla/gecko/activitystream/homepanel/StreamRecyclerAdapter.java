@@ -215,6 +215,8 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
                     GeckoSharedPrefs.forProfile(context).getBoolean(ActivityStreamPanel.PREF_POCKET_ENABLED,
                     context.getResources().getBoolean(R.bool.pref_activitystream_pocket_enabled_default));
             setViewVisible(pocketEnabled, holder.itemView);
+        } else if(type == RowItemType.LEARN_MORE_LINK.getViewType()){
+            setViewVisible(false,holder.itemView);
         }
     }
 
