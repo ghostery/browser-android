@@ -548,27 +548,6 @@ var BrowserApp = {
       InitLater(() => SafeBrowsing.init(), window, "SafeBrowsing");
 
     }, {once: true});
-
-    var DB = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
-    AddonManager
-      .getAllAddons()
-      .then((addons) => {
-
-        var ret = addons.map((a) => {
-              return {
-                id: a.id,
-                guid: JSON.parse(DB)[a.id]
-              }
-            });
-
-        console.log(ret);
-
-        GlobalEventDispatcher.sendRequest({
-          //type: “Menu:AddBrowserAction”,
-          type: "Addons:all",
-          data: ret
-        });
-    });
   },
 
   get _startupStatus() {
@@ -6343,9 +6322,9 @@ var Cliqz = {
     this.url = "moz-extension://" + uuid + "/index.html";
     this.Search = document.createElement("browser");
     this.Search.setAttribute("type", "content");
-    this.Search.setAttribute("messagemanagegroup", "browsers");
+    this.Search.setAttribute("messagemanagergroup", "browsers");
     BrowserApp.deck.appendChild(this.Search);
-    this.Search.loadURI(this.url);
+    this.Search.loadURIWithFlags(this.url, 0, null, null, null);
     GlobalEventDispatcher.registerListener(this, [
       "Cliqz:Search",
       "Cliqz:HideSearch",
@@ -6368,6 +6347,10 @@ var Cliqz = {
       BrowserApp.deck.selectedPanel = this.prevPanel;
       this.prevPanel.contentWindow.location = msg.data.data;
       this.prevPanel = null;
+
+      GlobalEventDispatcher.sendRequest({
+        type: "Cliqz:openLink"
+      });
     }
   },
 

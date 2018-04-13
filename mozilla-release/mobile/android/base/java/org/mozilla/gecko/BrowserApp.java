@@ -862,7 +862,10 @@ public class BrowserApp extends GeckoApp
         doorhangerOverlay = findViewById(R.id.doorhanger_overlay);
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
-            "Search:Keyword","Addons:all",
+            "Search:Keyword",
+            // Cliqz start
+            "Cliqz:openLink",
+            // Cliqz end
             null);
 
         EventDispatcher.getInstance().registerUiThreadListener(this,
@@ -2288,16 +2291,18 @@ public class BrowserApp extends GeckoApp
                 }
 
                 break;
-
-            case "Addons:all":
-                GeckoBundle[] data = message.getBundleArray("data");
-                for(GeckoBundle gb : data) {
-                    if(gb.getString("id").equals(BrowserApp.CLIQZ_SEARCH_EXT_ID)) {
-                        BrowserApp.CLIQZ_SEARCH_EXT_UUID = gb.getString("guid");
+            // Cliqz start
+            case "Cliqz:openLink":
+                // for now we handle the actual opening in JS
+                // We are on the GeckoThread, so we post on the main thread
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBrowserToolbar.cancelEdit();
                     }
-                }
+                });
                 break;
-
+            // Cliqz end
             default:
                 super.handleMessage(event, message, callback);
                 break;
