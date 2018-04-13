@@ -6322,25 +6322,16 @@ var Cliqz = {
     this.oldQuery = "";
     this.prevPanel = null;
     // This may file due to delayed addon install that occur on Android
-    this._resolveAddonUUID().then(uuid => this._wireAddon(uuid));
-  },
-
-  _resolveAddonUUID: function() {
-    var promise = new Promise(resolve => {
-      const iterate = () => {
-        const json = Services.prefs
-          .getStringPref("extensions.webextensions.uuids", "{}");
-        const DB = JSON.parse(json);
-        const uuid = DB["search@cliqz.com"];
-        if (uuid) {
-          resolve(uuid);
+    AddonManager
+      .getAddonByID('search@cliqz.com')
+      .then((addon) => {
+        if(addon && addon.isActive) {
+          const uuids = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
+          Cliqz._wireAddon(JSON.parse(uuids)["search@cliqz.com"]);
         } else {
-          setTimeout(iterate, 500);
+          console.log("Cliqz init failure!");
         }
-      };
-      iterate();
-    });
-    return promise;
+      });
   },
 
   _wireAddon: function(uuid) {
