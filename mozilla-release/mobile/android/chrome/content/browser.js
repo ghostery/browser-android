@@ -6338,7 +6338,7 @@ var Cliqz = {
     this.uuid = uuid;
     this.url = "moz-extension://" + uuid + "/index.html";
     this.Search = document.createElement("browser");
-    this.Search.setAttribute("type", "cliqz");
+    this.Search.setAttribute("type", "content");
     this.Search.setAttribute("messagemanagegroup", "browsers");
     BrowserApp.deck.appendChild(this.Search);
     this.Search.loadURI(this.url);
@@ -6353,12 +6353,16 @@ var Cliqz = {
     switch(event) {
       case "Cliqz:ShowSearch":
         this.prevPanel = BrowserApp.deck.selectedPanel;
+        this.prevPanel.removeAttribute("primary");
+        this.Search.setAttribute("primary", "true");
         BrowserApp.deck.selectedPanel = this.Search;
         break;
       case "Cliqz:HideSearch":
         if (this.prevPanel) {
+          this.prevPanel.setAttribute("primary", "true");
           BrowserApp.deck.selectedPanel = this.prevPanel;
         }
+        this.Search.removeAttribute("primary");
         this.prevPanel = null;
         break;
       case "Cliqz:Search":
