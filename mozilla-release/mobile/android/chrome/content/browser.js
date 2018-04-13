@@ -6317,8 +6317,10 @@ var ExternalApps = {
 };
 
 var Cliqz = {
-
+  retry: 10,
   init: function () {
+    if(this.retry-- === 0) return;
+
     this.oldQuery = "";
     this.prevPanel = null;
     // This may file due to delayed addon install that occur on Android
@@ -6329,7 +6331,9 @@ var Cliqz = {
           const uuids = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
           Cliqz._wireAddon(JSON.parse(uuids)["search@cliqz.com"]);
         } else {
-          console.log("Cliqz init failure!");
+          // this should only happen on first install
+          console.log("Cliqz init failure! More tries:", this.retry);
+          setTimeout(Cliqz.init.bind(this), 300);
         }
       });
   },
@@ -6347,6 +6351,24 @@ var Cliqz = {
       "Cliqz:HideSearch",
       "Cliqz:ShowSearch"
     ]);
+    setTimeout(() => {
+      // TODO: find the best moment to attach
+      this.Search.contentWindow.addEventListener('message', this._extensionListener.bind(this));
+    }, 100);
+  },
+
+  _extensionListener: function(msg) {
+    console.log("Receiving message from extenension", msg.data.action, msg);
+    if(msg.data.action === 'openLink'){
+      if (!this.prevPanel) {
+        return;
+      }
+      this.Search.removeAttribute("primary");
+      this.prevPanel.setAttribute("primary", "true");
+      BrowserApp.deck.selectedPanel = this.prevPanel;
+      this.prevPanel.contentWindow.location = msg.data.data;
+      this.prevPanel = null;
+    }
   },
 
   onEvent: function dc_onEvent(event, data, callback) {
