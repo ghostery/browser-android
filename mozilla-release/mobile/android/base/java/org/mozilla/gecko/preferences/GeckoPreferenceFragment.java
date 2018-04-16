@@ -90,6 +90,16 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
 
         PreferenceScreen screen = getPreferenceScreen();
         setPreferenceScreen(screen);
+        /* Cliqz start */
+        // remove Home setting from General settings
+        if(res == R.xml.preferences_general || res == R.xml.preferences_general_tablet){
+            PreferenceScreen homePreferenceScreen = (PreferenceScreen) screen.findPreference("android" +
+                    ".not_a_preference.general_home");
+            if(homePreferenceScreen != null) {
+                screen.removePreference(homePreferenceScreen);
+            }
+        }
+        /* Cliqz end */
         mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);
         syncPreference = (SyncPreference) findPreference(GeckoPreferences.PREFS_SYNC);
     }
