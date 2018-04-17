@@ -642,4 +642,10 @@
   <string name="pwa_add_to_launcher_badge">&pwa_add_to_launcher_badge2;</string>
   <string name="pwa_onboarding_sumo">&pwa_onboarding_sumo;</string>
   <string name="pwa_continue_to_website">&pwa_continue_to_website;</string>
+
+  <!-- Cliqz start -->
+  <!-- News -->
+  <string name="activity_stream_top_news">&activity_stream_top_news;</string>
+  <!-- Cliqz end -->
+
 </resources>

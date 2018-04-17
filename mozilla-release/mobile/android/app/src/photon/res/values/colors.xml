@@ -270,6 +270,13 @@
     <color name="pwa_confirm_btn_pressed">#1B73CC</color>
     <color name="pwa_confirm_btn_normal">#E60A84FF</color>
 
-
+    <!-- Cliqz start -->
+    <!-- news -->
+    <color name="news_bg_color_press">#cdcdcd</color>
+    <color name="news_bg_color">#CFFF</color>
+    <color name="news_url_text">#4d000000</color>
+    <color name="news_title_text">#000000</color>
+    <color name="news_local_span">#00aef0</color>
+    <!-- Cliqz end -->
 
 </resources>

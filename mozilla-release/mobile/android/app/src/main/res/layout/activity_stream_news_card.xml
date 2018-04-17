@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/top_news_item_background_selector"
+    android:paddingBottom="@dimen/new_card_padding_10"
+    android:paddingEnd="@dimen/new_card_padding_5"
+    android:paddingStart="@dimen/new_card_padding_5"
+    android:paddingTop="@dimen/new_card_padding_10">
+
+    <org.mozilla.gecko.widget.FaviconView
+        android:id="@+id/favicon"
+        android:layout_width="@dimen/news_favicon_size"
+        android:layout_height="@dimen/news_favicon_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/new_card_padding_5"
+        android:layout_marginStart="@dimen/new_card_padding_5"
+        tools:background="@drawable/favicon_globe"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/url_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/favicon"
+        android:layout_toEndOf="@id/favicon"
+        android:layout_toRightOf="@id/favicon"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/new_card_padding_10"
+        android:paddingStart="@dimen/new_card_padding_10"
+        android:textColor="@color/news_url_text"
+        android:textSize="12sp"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/title_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/favicon"
+        android:layout_toEndOf="@id/favicon"
+        android:layout_toRightOf="@id/favicon"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingLeft="@dimen/new_card_padding_10"
+        android:paddingStart="@dimen/new_card_padding_10"
+        android:textColor="@color/news_title_text"
+        android:textSize="12sp"
+        tools:ignore="RtlSymmetry" />
+
+</RelativeLayout>

@@ -21,20 +21,22 @@ import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.activitystream.ActivityStreamTelemetry;
 import org.mozilla.gecko.activitystream.homepanel.menu.ActivityStreamContextMenu;
+import org.mozilla.gecko.activitystream.homepanel.model.Highlight;
 import org.mozilla.gecko.activitystream.homepanel.model.RowModel;
+import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.activitystream.homepanel.model.TopSite;
+import org.mozilla.gecko.activitystream.homepanel.model.TopStory;
 import org.mozilla.gecko.activitystream.homepanel.model.WebpageModel;
 import org.mozilla.gecko.activitystream.homepanel.model.WebpageRowModel;
 import org.mozilla.gecko.activitystream.homepanel.stream.HighlightsEmptyStateRow;
 import org.mozilla.gecko.activitystream.homepanel.stream.LearnMoreRow;
-import org.mozilla.gecko.activitystream.homepanel.stream.TopPanelRow;
-import org.mozilla.gecko.activitystream.homepanel.model.TopStory;
-import org.mozilla.gecko.activitystream.homepanel.topstories.PocketStoriesLoader;
-import org.mozilla.gecko.home.HomePager;
-import org.mozilla.gecko.activitystream.homepanel.model.Highlight;
-import org.mozilla.gecko.activitystream.homepanel.stream.WebpageItemRow;
 import org.mozilla.gecko.activitystream.homepanel.stream.StreamTitleRow;
 import org.mozilla.gecko.activitystream.homepanel.stream.StreamViewHolder;
+import org.mozilla.gecko.activitystream.homepanel.stream.TopNewsRow;
+import org.mozilla.gecko.activitystream.homepanel.stream.TopPanelRow;
+import org.mozilla.gecko.activitystream.homepanel.stream.WebpageItemRow;
+import org.mozilla.gecko.activitystream.homepanel.topstories.PocketStoriesLoader;
+import org.mozilla.gecko.home.HomePager;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
@@ -56,10 +58,14 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
     private Cursor topSitesCursor;
     private List<RowModel> recyclerViewModel; // List of item types backing this RecyclerView.
     private List<TopStory> topStoriesQueue;
-
+    /* Cliqz start */
+    // add TopNews Layout to be created and filled with topNews List
+    private List<TopNews> topNews;
     // Content sections available on the Activity Stream page. These may be hidden if the sections are disabled.
     private final RowItemType[] ACTIVITY_STREAM_SECTIONS =
-            { RowItemType.TOP_PANEL, RowItemType.TOP_STORIES_TITLE, RowItemType.HIGHLIGHTS_TITLE, RowItemType.LEARN_MORE_LINK };
+            {RowItemType.TOP_PANEL, RowItemType.TOP_STORIES_TITLE, RowItemType.HIGHLIGHTS_TITLE,
+                    RowItemType.LEARN_MORE_LINK, RowItemType.TOP_NEWS};
+    /* Cliqz end */
     public static final int MAX_TOP_STORIES = 3;
     private static final String LINK_MORE_POCKET = "https://getpocket.com/explore/trending?src=ff_android&cdn=0";
 
@@ -75,7 +81,11 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         HIGHLIGHTS_TITLE (-4),
         HIGHLIGHTS_EMPTY_STATE(-5),
         HIGHLIGHT_ITEM (-1), // There can be multiple Highlight Items so caller should handle as a special case.
-        LEARN_MORE_LINK(-6);
+        LEARN_MORE_LINK(-6),
+        /* Cliqz start */
+        // add news item type inside row types
+        TOP_NEWS(-7);
+         /* Cliqz end */
 
         public final int stableId;
 
@@ -110,6 +120,10 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
             recyclerViewModel.add(makeRowModelFromType(type));
         }
         topStoriesQueue = Collections.emptyList();
+        /* Cliqz start */
+        // create empty TopNews list at the beginning
+        topNews = Collections.emptyList();
+        /* Cliqz end */
     }
 
     void setOnUrlOpenListeners(HomePager.OnUrlOpenListener onUrlOpenListener, HomePager.OnUrlOpenInBackgroundListener onUrlOpenInBackgroundListener) {
@@ -144,7 +158,14 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
                     return true;
                 }
             });
-        } else if (type == RowItemType.TOP_STORIES_TITLE.getViewType()) {
+        }
+         /* Cliqz start */
+         // create TopNews Layout that contain recycler view of the news
+        else if(type == RowItemType.TOP_NEWS.getViewType()){
+            return new TopNewsRow(inflater.inflate(TopNewsRow.LAYOUT_ID, parent, false),onUrlOpenListener);
+        }
+        /* Cliqz end */
+        else if (type == RowItemType.TOP_STORIES_TITLE.getViewType()) {
             return new StreamTitleRow(inflater.inflate(StreamTitleRow.LAYOUT_ID, parent, false), R.string.activity_stream_topstories, R.string.activity_stream_link_more, LINK_MORE_POCKET, onUrlOpenListener);
         } else if (type == RowItemType.TOP_STORIES_ITEM.getViewType() ||
                 type == RowItemType.HIGHLIGHT_ITEM.getViewType()) {
@@ -216,6 +237,15 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
                     context.getResources().getBoolean(R.bool.pref_activitystream_pocket_enabled_default));
             setViewVisible(pocketEnabled, holder.itemView);
         }
+        /* Cliqz start */
+        // swap TopNews Layout recyclerView list with topNews list
+        // hide Learn more links, no way to hide it from the setting
+        else if (type == RowItemType.TOP_NEWS.getViewType()) {
+            ((TopNewsRow) holder).bind(topNews);
+        } else if(type == RowItemType.LEARN_MORE_LINK.getViewType()){
+            setViewVisible(false,holder.itemView);
+        }
+        /* Cliqz end */
     }
 
     /**
@@ -493,4 +523,12 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
             return recyclerViewModel.get(position).getRowItemType().stableId;
         }
     }
+
+    /* Cliqz start */
+    // swap topNews list with new ones after #TopNewsLoader finish and refresh the layout
+    public void swapTopNews(List<TopNews> topNews){
+        this.topNews = topNews;
+        notifyDataSetChanged();
+    }
+    /* Cliqz end */
 }
