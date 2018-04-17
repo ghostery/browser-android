@@ -653,5 +653,8 @@
   <string name="pref_enable_human_web">&pref_enable_human_web;</string>
   <string name="pref_category_human_web_summary">&pref_category_human_web_summary;</string>
   <string name="pref_human_web_url">https://cliqz.com/&formatS1;/whycliqz/human-web</string>
+
+  <!-- MyOffrz -->
+  <string name="my_offrz_title">&my_offrz_title;</string>	
   <!-- Cliqz end -->
 </resources>

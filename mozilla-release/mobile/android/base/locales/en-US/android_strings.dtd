@@ -880,4 +880,7 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_what_is_human_web "What is Human Web?">
 <!ENTITY pref_enable_human_web "Enable Human Web">
 <!ENTITY pref_category_human_web_summary "What, Enable">
+
+<!-- MyOffrz -->
+<!ENTITY my_offrz_title "MYOFFRZ">
 <!-- Cliqz end -->

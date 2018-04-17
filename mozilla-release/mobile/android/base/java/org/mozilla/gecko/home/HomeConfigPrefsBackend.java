@@ -5,11 +5,16 @@
 
 package org.mozilla.gecko.home;
 
-import static org.mozilla.gecko.home.HomeConfig.createBuiltinPanelConfig;
-
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Locale;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.support.annotation.CheckResult;
+import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,16 +27,11 @@ import org.mozilla.gecko.home.HomeConfig.PanelType;
 import org.mozilla.gecko.home.HomeConfig.State;
 import org.mozilla.gecko.util.HardwareUtils;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.support.annotation.CheckResult;
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Locale;
+
+import static org.mozilla.gecko.home.HomeConfig.createBuiltinPanelConfig;
 
 public class HomeConfigPrefsBackend implements HomeConfigBackend {
     private static final String LOGTAG = "GeckoHomeConfigBackend";
@@ -73,11 +73,12 @@ public class HomeConfigPrefsBackend implements HomeConfigBackend {
 
         panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.TOP_SITES,
                                                   EnumSet.of(PanelConfig.Flags.DEFAULT_PANEL)));
-
-        panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.BOOKMARKS));
+        /* Cliqz start */
+        // add Offrz panel, change panels order to be TopSites, history, MyOffrz, bookmarks
         panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.COMBINED_HISTORY));
-
-
+        panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.MY_OFFRZ));
+        panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.BOOKMARKS));
+        /* Cliqz end */
         return new State(panelConfigs, true);
     }
 
