@@ -3119,7 +3119,9 @@ public class BrowserApp extends GeckoApp
     private void hideWebContent() {
         // The view is set to INVISIBLE, rather than GONE, to avoid
         // the additional requestLayout() call.
-        mLayerView.setVisibility(View.INVISIBLE);
+        /* Cliqz start */
+        // mLayerView.setVisibility(View.INVISIBLE);
+        /* Cliqz end */
     }
 
     /**
@@ -3200,10 +3202,18 @@ public class BrowserApp extends GeckoApp
             return;
         }
 
-        mBrowserSearchContainer.setVisibility(View.VISIBLE);
+        /* Cliqz start */
+        // Never show the search container
+        // mBrowserSearchContainer.setVisibility(View.VISIBLE);
+
+        showCliqzSearch();
+        /* Cliqz end */
 
         // Prevent overdraw by hiding the underlying web content and HomePager View
-        hideWebContent();
+        /* Cliqz start */
+        // Do not hide the web content
+        // hideWebContent();
+        /* Cliqz end */
         mHomeScreenContainer.setVisibility(View.INVISIBLE);
 
         final FragmentManager fm = getSupportFragmentManager();
@@ -3258,8 +3268,12 @@ public class BrowserApp extends GeckoApp
         // reverse that.
         showHomePager(panelId, panelData);
 
-        mBrowserSearchContainer.setVisibility(View.INVISIBLE);
+        /* Cliqz start */
+        // The search container was never visible
+        // mBrowserSearchContainer.setVisibility(View.INVISIBLE);
 
+        hideCliqzSearch();
+        /* Cliqz end */
         getSupportFragmentManager().beginTransaction()
                 .hide(mBrowserSearch).commitAllowingStateLoss();
         mBrowserSearch.setUserVisibleHint(false);
@@ -4577,4 +4591,14 @@ public class BrowserApp extends GeckoApp
         final boolean isPrivate = mBrowserToolbar.isPrivateMode();
         WindowUtil.setStatusBarColor(BrowserApp.this, isPrivate);
     }
+
+    /* Cliqz start */
+    private void showCliqzSearch() {
+        EventDispatcher.getInstance().dispatch("Cliqz:ShowSearch", null);
+    }
+
+    private void hideCliqzSearch() {
+        EventDispatcher.getInstance().dispatch("Cliqz:HideSearch", null);
+    }
+    /* Cliqz end */
 }
