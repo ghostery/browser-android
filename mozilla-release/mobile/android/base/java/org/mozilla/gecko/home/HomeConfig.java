@@ -1606,7 +1606,8 @@ public final class HomeConfig {
         public void setOnReloadListener(OnReloadListener listener);
     }
 
-    // UUIDs used to create PanelConfigs for default built-in panels. These are
+    //
+    // used to create PanelConfigs for default built-in panels. These are
     // public because they can be used in "about:home?panel=UUID" query strings
     // to open specific panels without querying the active Home Panel
     // configuration. Because they don't consider the active configuration, it
@@ -1621,7 +1622,7 @@ public final class HomeConfig {
     private static final String DEPRECATED_READING_LIST_PANEL_ID = "20f4549a-64ad-4c32-93e4-1dcef792733b";
     /* Cliqz start */
     // add MyOffrz ID
-    private static final String MY_OFFRZ_PANEL_ID = "i dont know";
+    private static final String MY_OFFRZ_PANEL_ID = "4b3eded8-02ce-e304-9b54-6e5e21121633";
     /* Cliqz end */
 
     private final HomeConfigBackend mBackend;
