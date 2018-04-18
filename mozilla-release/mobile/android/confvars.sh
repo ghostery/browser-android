@@ -40,5 +40,10 @@ MOZ_USE_NATIVE_POPUP_WINDOWS=1
 
 MOZ_APP_ID={aa3c5121-dab2-40e2-81ca-7ea25febc110}
 
+# Cliqz start
 # Enable checking that add-ons are signed by the trusted root
 MOZ_ADDON_SIGNING=`[ "${CLIQZ_DEBUG}" = "1" ] && echo 0 || echo 1`
+
+# Enable debugging via USB by default
+MOZ_DEFAULT_USB_DEBUG=`[ "${CLIQZ_DEBUG}" = "1" ] && echo 1 || echo 0`
+# Cliqz end

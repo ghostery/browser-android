@@ -382,7 +382,13 @@ pref("dom.max_script_run_time", 20);
 // to communicate with a usb cable via adb forward.
 pref("devtools.debugger.unix-domain-socket", "/data/data/@ANDROID_PACKAGE_NAME@/firefox-debugger-socket");
 
+// Cliqz start
+#ifdef MOZ_DEFAULT_USB_DEBUG
+pref("devtools.remote.usb.enabled", true);
+#else
 pref("devtools.remote.usb.enabled", false);
+#endif
+// Cliqz end
 pref("devtools.remote.wifi.enabled", false);
 
 pref("font.size.inflation.minTwips", 0);
