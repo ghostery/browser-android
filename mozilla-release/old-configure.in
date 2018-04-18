@@ -4357,6 +4357,13 @@ if test "$MOZ_REQUIRE_SIGNING" = 1; then
   AC_DEFINE(MOZ_REQUIRE_SIGNING)
 fi
 
+dnl Cliqz start
+AC_SUBST(MOZ_DEFAULT_USB_DEBUG)
+if test "$MOZ_DEFAULT_USB_DEBUG" = 1; then
+  AC_DEFINE(MOZ_DEFAULT_USB_DEBUG)
+fi
+dnl Cliqz end
+
 dnl ========================================================
 dnl = Mac bundle name prefix
 dnl ========================================================
