@@ -19,6 +19,7 @@ android {
         minSdkVersion project.ext.minSdkVersion
         manifestPlaceholders = project.ext.manifestPlaceholders
 
+        versionCode 94
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
         testApplicationId 'org.mozilla.roboexample.test'
         testInstrumentationRunner 'org.mozilla.gecko.FennecInstrumentationTestRunner'
@@ -111,12 +112,36 @@ android {
     // Nightly channel) while under development.  A new "skin" flavour allows us to develop such
     // pieces in Gradle without changing the mainline configuration.
 
-    project.configureProductFlavors.delegate = it
-    project.configureProductFlavors()
-
-    flavorDimensions "audience", "geckoBinaries", "minApi", "skin"
-
     productFlavors {
+        // For API 21+ - with pre-dexing, this will be faster for local development.
+        local {
+            dimension "audience"
+            versionCode 1
+
+            // For pre-dexing, setting `minSdkVersion 21` allows the Android gradle plugin to
+            // pre-DEX each module and produce an APK that can be tested on
+            // Android Lollipop without time consuming DEX merging processes.
+            minSdkVersion 21
+            dexOptions {
+                preDexLibraries true
+            }
+        }
+        // For API < 21 - does not support pre-dexing because local development
+        // is slow in that case.
+        localOld {
+            dimension "audience"
+            versionCode 2
+        }
+
+        // Automation builds.  We use "official" rather than "automation" to drive these builds down
+        // the list of configurations that Android Studio offers, thereby making it _not_ the
+        // default.  This avoids a common issue with "omni.ja" not being packed into the default APK
+        // built and deployed by Android Studio.
+        official {
+             dimension "audience"
+             versionCode 3
+        }
+
         // Since Firefox 57, the mobile user interface has followed the Photon design.
         // Before Firefox 57, the user interface followed the Australis design.
         photon {
@@ -527,4 +552,16 @@ android.applicationVariants.all { variant ->
     }
     def buildType = "${variant.buildType.name.capitalize()}"
     tasks["compile${productFlavor}${buildType}UnitTestSources"].dependsOn(tasks["merge${productFlavor}${buildType}Assets"])
+}
+preBuild << {
+    android.applicationVariants.each { variant ->
+        def apiVersion = variant.productFlavors.get(0).versionCode
+        // set the composite code
+        def generatedVersionCode = android.defaultConfig.versionCode * 100 + apiVersion * 10
+        variant.mergedFlavor.versionCode = generatedVersionCode
+
+        variant.outputs.each { output ->
+            output.setVersionCodeOverride(generatedVersionCode)
+        }
+    }
 }
