@@ -260,7 +260,9 @@ public class ActivityStreamPanel extends FrameLayout {
 
         @Override
         public void onLoadFinished(Loader<List<TopNews>> loader, List<TopNews> data) {
-            adapter.swapTopNews(data);
+            if(data != null) {
+                adapter.swapTopNews(data);
+            }
         }
 
         @Override
