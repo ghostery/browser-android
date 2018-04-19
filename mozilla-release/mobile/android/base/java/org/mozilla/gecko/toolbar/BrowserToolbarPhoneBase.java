@@ -174,11 +174,13 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
     }
 
     protected int getUrlBarCurveTranslation() {
+        /* Cliqz start */
         if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            return 0 - tabsButton.getRight();
+            return 0 - ghostyButton.getRight();
         } else {
-            return getWidth() - tabsButton.getLeft();
+            return getWidth() - ghostyButton.getLeft();
         }
+        /* Cliqz end */
     }
 
     protected void updateTabCountAndAnimate(final int count) {

@@ -865,7 +865,9 @@
     <style name="UrlBar.Base.Entry" parent="UrlBar.Button"/>
     <style name="UrlBar.V15.Entry" parent="UrlBar.Base.Entry">
         <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_toLeftOf">@+id/tabs</item>
+        <!-- Cliqz start -->
+        <item name="android:layout_toLeftOf">@+id/ghosty</item>
+        <!-- Cliqz end -->
     </style>
 
     <style name="UrlBar.Edge" parent="UrlBar.V15.Edge"/>
@@ -895,6 +897,14 @@
         <item name="android:layout_alignRight">@id/tabs</item>
         <item name="android:layout_toLeftOf">@id/menu</item>
     </style>
+
+    <!-- Cliqz start -->
+    <style name="UrlBar.Ghosty" parent="UrlBar.V15.Ghosty"/>
+    <style name="UrlBar.Base.Ghosty" parent="UrlBar.ImageButton"/>
+    <style name="UrlBar.V15.Ghosty" parent="UrlBar.Base.Ghosty">
+        <item name="android:layout_toLeftOf">@id/tabs</item>
+    </style>
+    <!-- Cliqz end -->
 
     <style name="UrlBar.TabCounter.Text">
         <item name="android:fontFamily">sans-serif-medium</item>

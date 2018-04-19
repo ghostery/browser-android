@@ -16,7 +16,9 @@
 
     <style name="UrlBar.V17.Entry" parent="UrlBar.Base.Entry">
         <item name="android:layout_marginStart">5dp</item>
-        <item name="android:layout_toStartOf">@+id/tabs</item>
+        <!-- Cliqz start -->
+        <item name="android:layout_toStartOf">@+id/ghosty</item>
+        <!-- Cliqz end -->
     </style>
 
     <style name="UrlBar.Edge" parent="UrlBar.V17.Edge" />
