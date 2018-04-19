@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -8,19 +9,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/empty_offers_icon_iv"
-        android:layout_width="@dimen/overview_placeholder_icon_w"
-        android:layout_height="@dimen/overview_placeholder_icon_h"
+        android:layout_width="@dimen/myoffrz_icon_size"
+        android:layout_height="@dimen/myoffrz_icon_size"
         android:background="@drawable/oval_shape_white"
         android:scaleType="center"
-        android:tint="@color/accent_color"
-        app:srcCompat="@drawable/ic_offrz_black"/>
+        android:tint="@color/myoffrz_icon_tint"
+        app:srcCompat="@drawable/myoffrz_icon_black"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="@dimen/text_padding"
-        android:textColor="@color/secondary_color_settings"
-        android:textSize="@dimen/text_no_layout_size"
-        android:text="@string/no_offers_msg"/>
+        android:padding="@dimen/myoffrz_padding_10"
+        android:textColor="@color/myoffrz_bg_text"
+        android:textSize="@dimen/myoffrz_text_size"
+        android:text="@string/my_offrz_no_offers_msg"/>
 
 </LinearLayout>

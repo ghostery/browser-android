@@ -192,7 +192,9 @@ public class GeckoPreferences
     /* Cliqz start */
     // add human web link
     private static final String PREFS_HUMAN_WEB_LINK = NON_PREF_PREFIX + "human.web.link";
-    /* Cliqz end */
+    // add IS_MYOFFRZ_ONBOARDING_ENABLED
+    public static final String IS_MYOFFRZ_ONBOARDING_ENABLED = "myoffrz_onboarding_enabled";
+    /* Cliqz end*/
 
     private final Map<String, PrefHandler> HANDLERS;
     {

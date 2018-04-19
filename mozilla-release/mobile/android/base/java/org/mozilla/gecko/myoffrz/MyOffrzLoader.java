@@ -51,8 +51,7 @@ public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
 
     public JSONObject getCachedOffrz(File cachedOffrzFile){
         try {
-            final String jsonString = FileUtils.readTextFromFile(cachedOffrzFile);
-            final JSONObject firstOffrz = new JSONObject(jsonString);
+            final JSONObject firstOffrz = FileUtils.readJSONObjectFromFile(cachedOffrzFile);
             if (!expired(firstOffrz)) {
                 return firstOffrz;
             }
@@ -112,7 +111,7 @@ public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
             return null;
         }
         try {
-            FileUtils.writeTextToFile(cachedOffrzFile, firstOffrz.toString());
+            FileUtils.writeJSONObjectToFile(cachedOffrzFile, firstOffrz);
         } catch (IOException e) {
             Log.e(TAG, "Can't cache data to " + MYOFFRZ_CACHE_FILE);
         }

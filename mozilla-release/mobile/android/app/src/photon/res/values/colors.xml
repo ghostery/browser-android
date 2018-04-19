@@ -271,16 +271,24 @@
     <color name="pwa_confirm_btn_normal">#E60A84FF</color>
 
     <!-- Cliqz start -->
+    <!-- General -->
+    <color name="general_blue_color">#00aef0</color>
+
     <!-- news -->
     <color name="news_bg_color_press">#cdcdcd</color>
     <color name="news_bg_color">#CFFF</color>
     <color name="news_url_text">#4d000000</color>
     <color name="news_title_text">#000000</color>
-    <color name="news_local_span">#00aef0</color>
+    <color name="news_local_span">@color/general_blue_color</color>
 
     <!-- URL Bar -->
-    <color name="url_bar">#00aef0</color>
+    <color name="url_bar">@color/general_blue_color</color>
 
+    <!-- MyOffrz -->
+    <color name="myoffrz_icon_tint">@color/general_blue_color</color>
+    <color name="myoffrz_bg_text">#9C9C9C</color>
+    <color name="myoffrz_bg">#E7ECEE</color>
+    <color name="myoffrz_onboarding_bg">#b8dfee</color>
     <!-- Cliqz end -->
 
 </resources>

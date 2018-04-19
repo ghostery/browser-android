@@ -306,7 +306,9 @@ dependencies {
 
     /* Cliqz start */
     // add butter knife for view binding
-    compile 'com.jakewharton:butterknife:8.8.1'
+    compile ('com.jakewharton:butterknife:8.8.1') {
+        exclude module: 'support-compat'
+    }
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     /* Cliqz end */
 }

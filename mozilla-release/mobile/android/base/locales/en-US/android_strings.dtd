@@ -883,4 +883,10 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 
 <!-- MyOffrz -->
 <!ENTITY my_offrz_title "MYOFFRZ">
+<!ENTITY my_offrz_no_offers_msg "Here you\'ll find a new offer every week">
+<!ENTITY myoffrz_onboarding_description "Receive attractive discounts and bargains with MyOffrz">
+<!ENTITY myoffrz_order_now_label "Order Now!">
+<!ENTITY myoffrz_tap_code_to_copy_label "Tap code to copy">
+<!ENTITY myoffrz_terms_and_conditions_label "Terms">
+<!ENTITY myoffrz_message_code_copied "Code copied">
 <!-- Cliqz end -->

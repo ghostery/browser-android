@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/myoffrz_onboarding_bg">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/onboarding_feature_icon_iv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/myoffrz_padding_8"
+        android:layout_marginTop="@dimen/myoffrz_padding_8"
+        android:background="@drawable/oval_shape_white"
+        android:scaleType="center"
+        android:tint="@color/myoffrz_icon_tint"
+        app:srcCompat="@drawable/myoffrz_icon_black"/>
+
+    <TextView
+        android:id="@+id/onboarding_feature_description_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/onboarding_feature_icon_iv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/myoffrz_padding_8"
+        android:layout_marginEnd="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="@dimen/myoffrz_padding_8"
+        android:textAlignment="center"
+        tools:text="@string/myoffrz_onboarding_description" />
+
+    <ImageButton
+        android:id="@+id/onboarding_close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/myoffrz_padding_10"
+        android:layout_marginRight="@dimen/myoffrz_padding_10"
+        android:layout_marginTop="@dimen/myoffrz_padding_10"
+        android:background="@null"
+        android:tint="@color/myoffrz_icon_tint"
+        app:srcCompat="@drawable/ic_clear_black_24dp" />
+
+    <Button
+        android:id="@+id/learn_more_btn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/onboarding_feature_description_tv"
+        android:layout_centerHorizontal="true"
+        android:text="@string/learn_more"
+        android:textColor="@color/myoffrz_icon_tint" />
+
+</RelativeLayout>

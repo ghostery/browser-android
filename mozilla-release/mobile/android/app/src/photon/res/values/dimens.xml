@@ -261,11 +261,25 @@
     <dimen name="preference_panel_text_size">15dp</dimen>
 
     <!-- Cliqz start -->
+    <!-- General -->
+    <dimen name="icon_size">50dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+
     <!-- news -->
-    <dimen name="news_favicon_size">50dp</dimen>
+    <dimen name="news_favicon_size">@dimen/icon_size</dimen>
     <dimen name="news_title_padding">16dp</dimen>
-    <dimen name="new_card_padding_10">10dp</dimen>
-    <dimen name="new_card_padding_5">5dp</dimen>
+    <dimen name="new_card_padding_10">@dimen/padding_10</dimen>
+    <dimen name="new_card_padding_5">@dimen/padding_5</dimen>
+
+    <!-- MyOffrz -->
+    <dimen name="myoffrz_icon_size">@dimen/icon_size</dimen>
+    <dimen name="myoffrz_padding_10">@dimen/padding_10</dimen>
+    <dimen name="myoffrz_text_size">16sp</dimen>
+    <dimen name="myoffrz_padding_8">8dp</dimen>
+    <dimen name="myoffrz_padding_5">@dimen/padding_5</dimen>
+    <dimen name="myoffrz_padding_20">20dp</dimen>
+
     <!-- Cliqz end -->
 
 </resources>
