@@ -6296,87 +6296,136 @@ var ExternalApps = {
 };
 
 var Cliqz = {
-  retry: 10,
   init: function () {
-    if(this.retry-- === 0) return;
+    GlobalEventDispatcher.registerListener(this, [
+      "Search:Search",
+      "Search:Hide",
+      "Search:Show",
 
-    this.oldQuery = "";
-    this.prevPanel = null;
-    // This may file due to delayed addon install that occur on Android
-    AddonManager
-      .getAddonByID('search@cliqz.com')
-      .then((addon) => {
-        if(addon && addon.isActive) {
-          const uuids = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
-          Cliqz._wireAddon(JSON.parse(uuids)["search@cliqz.com"]);
-        } else {
-          // this should only happen on first install
-          console.log("Cliqz init failure! More tries:", this.retry);
-          setTimeout(Cliqz.init.bind(this), 300);
-        }
-      });
+      "Privacy:Show",
+      "Privacy:Hide",
+    ]);
   },
 
-  _wireAddon: function(uuid) {
-    this.uuid = uuid;
-    this.url = "moz-extension://" + uuid + "/index.html";
-    this.Search = document.createElement("browser");
-    this.Search.setAttribute("type", "content");
-    this.Search.setAttribute("messagemanagergroup", "browsers");
-    BrowserApp.deck.appendChild(this.Search);
-    this.Search.loadURIWithFlags(this.url, 0, null, null, null);
-    GlobalEventDispatcher.registerListener(this, [
-      "Cliqz:Search",
-      "Cliqz:HideSearch",
-      "Cliqz:ShowSearch"
-    ]);
-    setTimeout(() => {
-      // TODO: find the best moment to attach
-      this.Search.contentWindow.addEventListener('message', this._extensionListener.bind(this));
-    }, 100);
+  _createBrowserForExtension: function (id) {
+    const uuids = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
+    const uuid = JSON.parse(uuids)[id];
+    const browser = document.createElement("browser");
+
+    browser.setAttribute("type", "content");
+    browser.setAttribute("messagemanagergroup", "browsers");
+    browser.setAttribute("contentsource", id);
+    BrowserApp.deck.appendChild(browser);
+
+    return {
+      panel: browser,
+      load: function(path) {
+        browser.loadURIWithFlags("moz-extension://" + uuid + "/" + path, 0, null, null, null);
+      }
+    }
   },
 
   _extensionListener: function(msg) {
     console.log("Receiving message from extenension", msg.data.action, msg);
     if(msg.data.action === 'openLink'){
-      if (!this.prevPanel) {
-        return;
+      var success = this.hidePanel(this.Search.panel);
+      if (success) {
+        BrowserApp.deck.selectedPanel.loadURI(msg.data.data);
       }
-      this.Search.removeAttribute("primary");
-      this.prevPanel.setAttribute("primary", "true");
-      BrowserApp.deck.selectedPanel = this.prevPanel;
-      this.prevPanel.contentWindow.location = msg.data.data;
-      this.prevPanel = null;
-
+      // currently not used by the Java side
       GlobalEventDispatcher.sendRequest({
-        type: "Cliqz:openLink"
+        type: "NativeAction:OpenLink"
       });
     }
   },
 
-  onEvent: function dc_onEvent(event, data, callback) {
+  get Ghostery() {
+    if (!this._ghostery) {
+      this._ghostery = this._createBrowserForExtension('firefox@ghostery.com');
+      this._ghostery.loadTab = function(tab) {
+        this.load('app/templates/panel_android.html?tabId=' + tab)
+      }.bind(this._ghostery);
+    }
+
+    return this._ghostery;
+  },
+
+  get Search() {
+    if (!this._search) {
+      this._search = this._createBrowserForExtension('search@cliqz.com');
+      this._search.load('index.html');
+
+      setTimeout(() => {
+        // TODO: find a better moment to attach
+        this._search.panel.contentWindow.addEventListener('message', this._extensionListener.bind(this));
+      }, 100);
+    }
+
+    return this._search;
+  },
+
+  overlayPanel: function(panel) {
+    if (panel.hasAttribute('primary')) {
+      // already visible
+      return;
+    }
+
+    var currentPanel = BrowserApp.deck.selectedPanel;
+    if (currentPanel.hasAttribute('contentsource')) {
+      // current tab is already an overlay
+      // -> we simply hide it
+      currentPanel.removeAttribute("primary");
+    } else {
+      // we need to store the current active panel to be able
+      // to show it when the overlay panel will close
+      BrowserApp.deck.backPanel = currentPanel;
+      currentPanel.removeAttribute("primary");
+    }
+
+    // it must be primary in order to get the touch events
+    panel.setAttribute("primary", "true");
+    BrowserApp.deck.selectedPanel = panel;
+  },
+
+  hidePanel: function(panel) {
+    if (!BrowserApp.deck.backPanel ||
+        !panel.hasAttribute('primary')) {
+      // not visible already
+      return false;
+    }
+
+    panel.removeAttribute("primary");
+
+    BrowserApp.deck.backPanel.setAttribute("primary", "true");
+    BrowserApp.deck.selectedPanel = BrowserApp.deck.backPanel;
+    delete BrowserApp.deck.backPanel
+
+    return true;
+  },
+
+  onEvent: function(event, data, callback) {
     switch(event) {
-      case "Cliqz:ShowSearch":
-        this.prevPanel = BrowserApp.deck.selectedPanel;
-        this.prevPanel.removeAttribute("primary");
-        this.Search.setAttribute("primary", "true");
-        BrowserApp.deck.selectedPanel = this.Search;
+      case "Search:Show":
+        this.overlayPanel(this.Search.panel);
         break;
-      case "Cliqz:HideSearch":
-        if (this.prevPanel) {
-          this.prevPanel.setAttribute("primary", "true");
-          BrowserApp.deck.selectedPanel = this.prevPanel;
-        }
-        this.Search.removeAttribute("primary");
-        this.prevPanel = null;
+      case "Search:Hide":
+        this.hidePanel(this.Search.panel);
         break;
-      case "Cliqz:Search":
+      case "Search:Search":
         let q = data.q || "";
-        this.Search.contentWindow.postMessage({
+        this.Search.panel.contentWindow.postMessage({
            type: "Cliqz:Search",
            q: q,
            oq: this.oldQuery
         }, "*");
+        break;
+
+      case "Privacy:Show":
+        this.overlayPanel(this.Ghostery.panel);
+        this.Ghostery.loadTab(BrowserApp.selectedTab.id);
+        break;
+      case "Privacy:Hide":
+        this.hidePanel(this.Ghostery.panel);
         break;
     }
   }
