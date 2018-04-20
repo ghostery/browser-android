@@ -3277,7 +3277,7 @@ public class BrowserApp extends GeckoApp
         // The search container was never visible
         // mBrowserSearchContainer.setVisibility(View.INVISIBLE);
 
-        hideCliqzSearch();
+        hidePanelSearch();
         /* Cliqz end */
         getSupportFragmentManager().beginTransaction()
                 .hide(mBrowserSearch).commitAllowingStateLoss();
@@ -4599,11 +4599,12 @@ public class BrowserApp extends GeckoApp
 
     /* Cliqz start */
     private void showCliqzSearch() {
-        EventDispatcher.getInstance().dispatch("Cliqz:ShowSearch", null);
+        EventDispatcher.getInstance().dispatch("Search:Show", null);
     }
 
-    private void hideCliqzSearch() {
-        EventDispatcher.getInstance().dispatch("Cliqz:HideSearch", null);
+    private void hidePanelSearch() {
+        EventDispatcher.getInstance().dispatch("Search:Hide", null);
+        EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
     }
     /* Cliqz end */
 }

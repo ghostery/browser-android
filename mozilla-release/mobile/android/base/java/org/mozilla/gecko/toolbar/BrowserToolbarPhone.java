@@ -113,6 +113,11 @@ class BrowserToolbarPhone extends BrowserToolbarPhoneBase {
         animator.attach(urlBarTranslatingEdge,
                         PropertyAnimator.Property.TRANSLATION_X,
                         entryTranslation);
+        /* Cliqz start */
+        animator.attach(ghostyButton,
+                        PropertyAnimator.Property.TRANSLATION_X,
+                        curveTranslation);
+        /* Cliqz end */
         animator.attach(tabsButton,
                         PropertyAnimator.Property.TRANSLATION_X,
                         curveTranslation);

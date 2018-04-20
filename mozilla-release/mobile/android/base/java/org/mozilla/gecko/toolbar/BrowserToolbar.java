@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.Clipboard;
+import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
@@ -125,6 +126,10 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     protected boolean isSwitchingTabs;
     protected final ThemedImageButton tabsButton;
 
+    /* Cliqz start */
+    protected final Ghosty ghostyButton;
+    /* Cliqz end */
+
     private AnimatedProgressBar progressBar;
     protected final TabCounter tabsCounter;
     protected final View menuButton;
@@ -197,6 +202,10 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         tabsButton = (ThemedImageButton) findViewById(R.id.tabs);
         tabsCounter = (TabCounter) findViewById(R.id.tabs_counter);
         tabsCounter.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
+        /* Cliqz start */
+        ghostyButton = (Ghosty) findViewById(R.id.ghosty);
+        /* Cliqz end */
 
         menuButton = findViewById(R.id.menu);
 
@@ -345,6 +354,8 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 urlEditLayout.clearFocus();
 
                 toggleTabs();
+
+                hideOverlays(); // Cliqz
             }
         });
         tabsButton.setImageLevel(0);
@@ -355,6 +366,8 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 // Drop the soft keyboard.
                 urlEditLayout.clearFocus();
                 activity.openOptionsMenu();
+
+                hideOverlays(); // Cliqz
             }
         });
 
@@ -1006,4 +1019,11 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
             isBrowserSearchShown = isShown;
         }
     }
+
+    /* Cliqz start */
+    private void hideOverlays() {
+        EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
+        EventDispatcher.getInstance().dispatch("Search:Hide", null);
+    }
+    /* Cliqz end */
 }

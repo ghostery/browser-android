@@ -540,7 +540,7 @@ public class ToolbarEditText extends CustomEditText
             // Let's send the non-autocompleted text to the Cliqz search extension
             final GeckoBundle bundle = new GeckoBundle();
             bundle.putString("q", text);
-            EventDispatcher.getInstance().dispatch("Cliqz:Search", bundle);
+            EventDispatcher.getInstance().dispatch("Search:Search", bundle);
             /* Cliqz end */
 
             final int textLength = text.length();
