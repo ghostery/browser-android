@@ -189,6 +189,11 @@ public class GeckoPreferences
 
     private static final int REQUEST_CODE_TAB_QUEUE = 8;
 
+    /* Cliqz start */
+    // add human web link
+    private static final String PREFS_HUMAN_WEB_LINK = NON_PREF_PREFIX + "human.web.link";
+    /* Cliqz end */
+
     private final Map<String, PrefHandler> HANDLERS;
     {
         final HashMap<String, PrefHandler> tempHandlers = new HashMap<>(2);
@@ -814,6 +819,15 @@ public class GeckoPreferences
                         continue;
                     }
                 }
+                /* Cliqz start */
+                // Format the Human web link
+                else if (PREFS_HUMAN_WEB_LINK.equals(key)) {
+                    final String LOCALE = Locales.getLanguage(Locale.getDefault());
+
+                    final String url = getResources().getString(R.string.pref_human_web_url, LOCALE);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                /* Cliqz end */
 
                 // Some Preference UI elements are not actually preferences,
                 // but they require a key to work correctly. For example,

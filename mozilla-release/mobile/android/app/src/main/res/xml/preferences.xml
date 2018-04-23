@@ -82,4 +82,13 @@
                android:value="preferences_vendor"/>
     </PreferenceScreen>
 
+    <!-- Cliqz start -->
+    <PreferenceScreen android:title="@string/pref_category_human_web"
+        android:summary="@string/pref_category_human_web_summary"
+        android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
+        <extra android:name="resource"
+            android:value="preferences_human_web"/>
+    </PreferenceScreen>
+    <!-- Cliqz end -->
+
 </PreferenceScreen>
