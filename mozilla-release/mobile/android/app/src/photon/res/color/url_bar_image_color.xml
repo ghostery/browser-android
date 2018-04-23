@@ -7,6 +7,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
     <item android:color="@color/photon_toolbar_image_tint_private" android:state_enabled="false" gecko:state_private="true" />
     <item android:color="@color/photon_toolbar_image_tint_private" android:state_enabled="true" gecko:state_private="true" />
-    <item android:color="@color/photon_toolbar_image_tint" android:state_enabled="false" gecko:state_private="false" />
-    <item android:color="@color/photon_toolbar_image_tint" />
+    <!-- Cliqz start -->
+    <!-- change tint color of url icons {3 dot menu, close icon} -->
+    <item android:color="@color/photon_toolbar_image_tint_private" android:state_enabled="false" gecko:state_private="false" />
+    <item android:color="@color/photon_toolbar_image_tint_private" />
+    <!-- Cliqz end -->
 </selector>
