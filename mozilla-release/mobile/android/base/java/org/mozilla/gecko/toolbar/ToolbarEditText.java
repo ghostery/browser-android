@@ -113,6 +113,10 @@ public class ToolbarEditText extends CustomEditText
 
         if (gainFocus) {
             resetAutocompleteState();
+            /* Cliqz start */
+            // Let's possibly warm up the search extension
+            EventDispatcher.getInstance().dispatch("Search:Warmup", null);
+            /* Cliqz end */
             return;
         }
 
