@@ -6326,16 +6326,26 @@ var Cliqz = {
   },
 
   _extensionListener: function(msg) {
-    console.log("Receiving message from extenension", msg.data.action, msg);
-    if(msg.data.action === 'openLink'){
-      var success = this.hidePanel(this.Search.panel);
-      if (success) {
-        BrowserApp.deck.selectedPanel.loadURI(msg.data.data);
-      }
-      // currently not used by the Java side
-      GlobalEventDispatcher.sendRequest({
-        type: "NativeAction:OpenLink"
-      });
+    switch (msg.data.action) {
+      case 'openLink': 
+        var success = this.hidePanel(this.Search.panel);
+        if (success) {
+          BrowserApp.deck.selectedPanel.loadURI(msg.data.data);
+        }
+        // currently not used by the Java side
+        GlobalEventDispatcher.sendRequest({
+          type: "Cliqz:OpenLink"
+        });
+        break;
+      case 'autocomplete':
+        GlobalEventDispatcher.sendRequest({
+          type: "Cliqz:Autocomplete",
+          data: msg.data.data
+        });
+        break;
+      default:
+        console.log("Message not handled", msg);
+        break;
     }
   },
 

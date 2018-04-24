@@ -237,8 +237,12 @@ public class BrowserApp extends GeckoApp
     public static final String EXTRA_SKIP_STARTPANE = "skipstartpane";
     private static final String EOL_NOTIFIED = "eol_notified";
 
-    private BrowserSearch mBrowserSearch;
-    private View mBrowserSearchContainer;
+    /* Cliqz start */
+    // @Cliqzers: we are not using the Mozilla search fragment. We may have to restore it later when
+    // we will implement our native search.
+    // private BrowserSearch mBrowserSearch;
+    // private View mBrowserSearchContainer;
+    /* Cliqz end */
 
     public ViewGroup mBrowserChrome;
     public ViewFlipper mActionBarFlipper;
@@ -553,7 +557,9 @@ public class BrowserApp extends GeckoApp
 
     private void saveTabEditingState(final TabEditingState editingState) {
         mBrowserToolbar.saveTabEditingState(editingState);
-        editingState.setIsBrowserSearchShown(mBrowserSearch.getUserVisibleHint());
+        /* Cliqz start */
+        // editingState.setIsBrowserSearchShown(mBrowserSearch.getUserVisibleHint());
+        /* Cliqz end */
     }
 
     private void restoreTabEditingState(final TabEditingState editingState) {
@@ -847,12 +853,14 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
 
-        mBrowserSearchContainer = findViewById(R.id.search_container);
-        mBrowserSearch = (BrowserSearch) getSupportFragmentManager().findFragmentByTag(BROWSER_SEARCH_TAG);
-        if (mBrowserSearch == null) {
-            mBrowserSearch = BrowserSearch.newInstance();
-            mBrowserSearch.setUserVisibleHint(false);
-        }
+        /* Cliqz start */
+        // mBrowserSearchContainer = findViewById(R.id.search_container);
+        // mBrowserSearch = (BrowserSearch) getSupportFragmentManager().findFragmentByTag(BROWSER_SEARCH_TAG);
+        // if (mBrowserSearch == null) {
+        //     mBrowserSearch = BrowserSearch.newInstance();
+        //     mBrowserSearch.setUserVisibleHint(false);
+        // }
+        /* Cliqz end */
 
         setBrowserToolbarListeners();
 
@@ -863,9 +871,6 @@ public class BrowserApp extends GeckoApp
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
             "Search:Keyword",
-            // Cliqz start
-            "Cliqz:openLink",
-            // Cliqz end
             null);
 
         EventDispatcher.getInstance().registerUiThreadListener(this,
@@ -886,6 +891,9 @@ public class BrowserApp extends GeckoApp
             "Updater:Launch",
             "Sanitize:Finished",
             "Sanitize:OpenTabs",
+            /* Cliqz start */
+            "Cliqz:OpenLink",
+            /* Cliqz end */
             null);
 
         EventDispatcher.getInstance().registerBackgroundThreadListener(this,
@@ -1514,7 +1522,9 @@ public class BrowserApp extends GeckoApp
             if (!TextUtils.isEmpty(text)) {
                 enterEditingMode(text);
                 showBrowserSearch();
-                mBrowserSearch.filter(text, null);
+                /* Cliqz start */
+                // mBrowserSearch.filter(text, null);
+                /* Cliqz end */
                 Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, TelemetryContract.Method.CONTEXT_MENU, "paste");
             }
             return true;
@@ -1708,6 +1718,9 @@ public class BrowserApp extends GeckoApp
             "Updater:Launch",
             "Sanitize:Finished",
             "Sanitize:OpenTabs",
+            /* Cliqz start */
+            "Cliqz:OpenLink",
+            /* Cliqz end */
             null);
 
         EventDispatcher.getInstance().unregisterBackgroundThreadListener(this,
@@ -2291,10 +2304,11 @@ public class BrowserApp extends GeckoApp
                 }
 
                 break;
-            // Cliqz start
-            case "Cliqz:openLink":
+            /* Cliqz start */
+            case "Cliqz:OpenLink":
                 // for now we handle the actual opening in JS
                 // We are on the GeckoThread, so we post on the main thread
+                // mBrowserToolbar.
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -2302,7 +2316,7 @@ public class BrowserApp extends GeckoApp
                     }
                 });
                 break;
-            // Cliqz end
+            /* Cliqz end */
             default:
                 super.handleMessage(event, message, callback);
                 break;
@@ -2833,7 +2847,9 @@ public class BrowserApp extends GeckoApp
             hideBrowserSearch();
         } else {
             showBrowserSearch();
-            mBrowserSearch.filter(searchTerm, handler);
+            /* Cliqz start */
+            // mBrowserSearch.filter(searchTerm, handler);
+            /* Cliqz end */
         }
     }
 
@@ -3203,12 +3219,12 @@ public class BrowserApp extends GeckoApp
     }
 
     private void showBrowserSearch() {
-        if (mBrowserSearch.getUserVisibleHint()) {
-            return;
-        }
-
         /* Cliqz start */
-        // Never show the search container
+        // if (mBrowserSearch.getUserVisibleHint()) {
+        //     return;
+        // }
+
+        // @Cliqzers: Never show the search container
         // mBrowserSearchContainer.setVisibility(View.VISIBLE);
 
         showCliqzSearch();
@@ -3235,12 +3251,15 @@ public class BrowserApp extends GeckoApp
         // checking if fragment is already present
         if (f != null) {
             fm.beginTransaction().show(f).commitAllowingStateLoss();
-            mBrowserSearch.resetScrollState();
-        } else {
-            // add fragment if not already present
-            fm.beginTransaction().add(R.id.search_container, mBrowserSearch, BROWSER_SEARCH_TAG).commitAllowingStateLoss();
+            /* Cliqz start */
         }
-        mBrowserSearch.setUserVisibleHint(true);
+        //     mBrowserSearch.resetScrollState();
+        // } else {
+        //     // add fragment if not already present
+        //     fm.beginTransaction().add(R.id.search_container, mBrowserSearch, BROWSER_SEARCH_TAG).commitAllowingStateLoss();
+        // }
+        // mBrowserSearch.setUserVisibleHint(true);
+        /* Cliqz end */
 
         // We want to adjust the window size when the keyboard appears to bring the
         // SearchEngineBar above the keyboard. However, adjusting the window size
@@ -3254,9 +3273,11 @@ public class BrowserApp extends GeckoApp
     }
 
     private void hideBrowserSearch() {
-        if (!mBrowserSearch.getUserVisibleHint()) {
-            return;
-        }
+        /* Cliqz start */
+        // if (!mBrowserSearch.getUserVisibleHint()) {
+        //     return;
+        // }
+        /* Cliqz end */
 
         final Tab selectedTab = Tabs.getInstance().getSelectedTab();
         final String panelId;
@@ -3277,11 +3298,12 @@ public class BrowserApp extends GeckoApp
         // The search container was never visible
         // mBrowserSearchContainer.setVisibility(View.INVISIBLE);
 
+        // getSupportFragmentManager().beginTransaction()
+        //         .hide(mBrowserSearch).commitAllowingStateLoss();
+        // mBrowserSearch.setUserVisibleHint(false);
+
         hidePanelSearch();
         /* Cliqz end */
-        getSupportFragmentManager().beginTransaction()
-                .hide(mBrowserSearch).commitAllowingStateLoss();
-        mBrowserSearch.setUserVisibleHint(false);
 
         getWindow().setBackgroundDrawable(null);
     }
