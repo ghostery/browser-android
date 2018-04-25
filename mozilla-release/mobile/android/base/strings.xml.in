@@ -644,10 +644,14 @@
   <string name="pwa_continue_to_website">&pwa_continue_to_website;</string>
 
   <!-- Cliqz start -->
+  <!-- General -->
+  <string name="action_ok">&action_ok;</string>
+
   <!-- News -->
   <string name="activity_stream_top_news">&activity_stream_top_news;</string>
 
   <!-- Settings -->
+  <!-- Human Web -->
   <string name="pref_category_human_web">&pref_category_human_web;</string>
   <string name="pref_what_is_human_web">&pref_what_is_human_web;</string>
   <string name="pref_enable_human_web">&pref_enable_human_web;</string>
@@ -664,5 +668,14 @@
   <string name="myoffrz_message_code_copied">&myoffrz_message_code_copied;</string>
   <string name="myoffrz_activation_description">&myoffrz_activation_description;</string>
   <string name="myoffrz_activate">&myoffrz_activate;</string>
+
+  <!-- Block Ads -->
+  <string name="pref_category_block_ads">&pref_category_block_ads;</string>
+  <string name="pref_category_block_ads_summary">&pref_category_block_ads_summary;</string>
+  <string name="pref_block_ads">&pref_block_ads;</string>
+  <string name="pref_block_ads_fair">&pref_block_ads_fair;</string>
+  <string name="pref_block_ads_what_fair">&pref_block_ads_what_fair;</string>
+  <string name="pref_block_ads_data">&pref_block_ads_data;</string>
+  <string name="pref_block_ads_fair_description">&pref_block_ads_fair_description;</string>
   <!-- Cliqz end -->
 </resources>
