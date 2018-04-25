@@ -646,6 +646,12 @@
   <!-- Cliqz start -->
   <!-- News -->
   <string name="activity_stream_top_news">&activity_stream_top_news;</string>
-  <!-- Cliqz end -->
 
+  <!-- Settings -->
+  <string name="pref_category_human_web">&pref_category_human_web;</string>
+  <string name="pref_what_is_human_web">&pref_what_is_human_web;</string>
+  <string name="pref_enable_human_web">&pref_enable_human_web;</string>
+  <string name="pref_category_human_web_summary">&pref_category_human_web_summary;</string>
+  <string name="pref_human_web_url">https://cliqz.com/&formatS1;/whycliqz/human-web</string>
+  <!-- Cliqz end -->
 </resources>
