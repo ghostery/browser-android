@@ -1,0 +1,97 @@
+﻿Num;String;-
+0;constants=org.mozilla.gecko.BuildConfig;-
+1;packageName=org.mozilla.gecko;-
+2;# This Source Code Form is subject to the terms of the Mozilla Public;-
+3;# file, You can obtain one at http://mozilla.org/MPL/2.0/.;-
+4;<!-- This Source Code Form is subject to the terms of the Mozilla Public;-
+5;   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->;-
+6;# http://developer.mozilla.org/en/docs/Localization_and_Plurals;-
+7;<!-- These strings are used by Firefox's custom about:certerror page,;<!-- These strings are used by Cliqz's custom about:certerror page,
+8;notificationDisconnect.label=Your Firefox Sync account has been removed;-
+9;sync.update.client=#1 #2 is not compatible with the latest version of Firefox Sync. Please update to the latest version.;-
+10;sync.update.remote=#1 #2 is not compatible with older versions of Firefox Sync. Please update Firefox on your other computer(s).;-
+11;sync.update.title=Firefox Sync;-
+12;# These strings will appear in a dialog when Firefox detects that installed add-ons cannot be verified.;-
+13;# is requesting access (e.g., mozilla.org);-
+14;# See: http://developer.mozilla.org/en/docs/Localization_and_Plurals;-
+15;# is requesting access (e.g., www.mozilla.org);-
+16;# LOCALIZATION NOTE (getUserMedia.shareCamera.message, getUserMedia.shareMicrophone.message, getUserMedia.shareCameraAndMicrophone.message, getUserMedia.sharingCamera.message, getUserMedia.sharingMicrophone.message, getUserMedia.sharingCameraAndMicrophone.message): %S is the website origin (e.g. www.mozilla.org);# LOCALIZATION NOTE (getUserMedia.shareCamera.message, getUserMedia.shareMicrophone.message, getUserMedia.shareCameraAndMicrophone.message, getUserMedia.sharingCamera.message, getUserMedia.sharingMicrophone.message, getUserMedia.sharingCameraAndMicrophone.message): %S is the website origin (e.g. www.mozilla.org)
+17;"<!-- LOCALIZATION NOTE (aboutPage.logoTrademark): The message is explicitly about the word ""Firefox"" being trademarked, that's why we use it, instead of brandShortName. -->";-
+18;"<!ENTITY aboutPage.logoTrademark                ""Firefox and the Firefox logos are trademarks of the Mozilla Foundation."">";<!ENTITY aboutPage.logoTrademark                "">
+19;"<!ENTITY aboutAccounts.connected.title ""Firefox Accounts"">";-
+20;"<!ENTITY aboutAccounts.restrictedError.description ""You cannot manage Firefox Accounts from this profile."">";-
+21;addons.browseAll=Browse all Firefox Add-ons;-
+22;"<!ENTITY firstrun_urlbar_subtext2 ""A modern mobile browser from Mozilla, the non-profit committed to a free and open web."">";"<!ENTITY firstrun_urlbar_subtext2 ""Cliqz - A fast and private browser. Made in Germany"">"
+23;<!-- Localization note (firstrun_tabqueue_message): 'Tab queue' is a feature that allows users to queue up or save links from outside of Firefox (without switching apps) - these links will be loaded in Firefox the next time Firefox is opened. -->;-
+24;<!-- Localization note (firstrun_devices_title): This is a casual way of addressing the user, somewhat referring to their online identity (which would include other devices, Firefox usage, accounts, etc). -->;-
+25;     section in which the user picks the locale in which to display Firefox;-
+26;     Firefox will use the locale currently selected in Android's settings;-
+27;     in Android's intent chooser when sending a link to Firefox to bookmark,;-
+28;"<!ENTITY overlay_no_synced_devices ""No Firefox Account connected devices found"">";-
+29;     button for this string, they will use the built-in default Firefox homepage (about:home). -->;-
+30;"     default browser from user's preference, such as ""Open in Firefox"" -->";-
+31;"<!ENTITY pref_sync_default_title ""Firefox Account"">";-
+32;"<!ENTITY pref_default_browser_mozilla_support_tablet ""Visit Mozilla Support"">";"<!ENTITY pref_default_browser_mozilla_support_tablet ""Visit Cliqz Support"">"
+33;"<!ENTITY pref_about_firefox ""About &brandShortName;"">";-
+34;"     ""Last synced"" is one of the user's other Sync clients, typically Firefox on";-
+35;     desktop Firefox via WebIDE), so you just need to aim this device at the QR;-
+36;"<!ENTITY restrictable_feature_addons_installation_description ""Add features or functionality to Firefox. Note: Add-ons can disable certain restrictions."">";-
+37;"<!ENTITY bookmarks_about_browser ""Firefox: About your browser"">";"<!ENTITY bookmarks_about_browser ""Cliqz: About your browser"">"
+38;<!-- LOCALIZATION NOTE (bookmarks_addons): link title for https://addons.mozilla.org/en-US/mobile -->;-
+39;"<!ENTITY bookmarks_addons ""Firefox: Customize with add-ons"">";-
+40;<!-- LOCALIZATION NOTE (bookmarks_support): link title for https://support.mozilla.org/ -->;-
+41;"<!ENTITY bookmarks_support ""Firefox: Support"">";"<!ENTITY bookmarks_support ""Cliqz: Support"">"
+42;<!-- LOCALIZATION NOTE (bookmarks_restricted_support): link title for https://support.mozilla.org/kb/controlledaccess -->;-
+43;"<!ENTITY bookmarks_restricted_support2 ""Firefox Help and Support for restricted profiles on Android tablets"">";-
+44;"<!ENTITY bookmarks_restricted_webmaker ""Learn the Web: Mozilla Webmaker"">";-
+45;"<!ENTITY syncBrand.fullName.label ""Firefox Sync"">";-
+46;"     name"" menu item upon setting up Firefox Sync.  The placeholder &formatS1";-
+47;     will be replaced by the name of the Firefox release channel and &formatS2;-
+48;<!-- Firefox Account strings. -->;-
+49;     Firefox. -->;-
+50;"<!ENTITY fxaccount_getting_started_old_firefox 'Using an older version of &syncBrand.shortName.label;?'>";-
+51;<!ENTITY fxaccount_status_needs_finish_migrating 'Tap to sign in to your new Firefox Account.'>;-
+52;     with the Firefox Account's email address. -->;-
+53;"<!ENTITY fxaccount_remove_account_toast2 'Firefox Account &formatS; disconnected.'>";-
+54;     itself for a Firefox Account. Don't localize this. -->;-
+55;<!ENTITY fxaccount_account_type_label 'Firefox'>;-
+56;     when the user navigates to the Android > Accounts > {Firefox;-
+57;     Account} Screen. The link takes the user to the Firefox Account;-
+58;     status activity, which lets them manage their Firefox;-
+59;"<!ENTITY  brandFullName   ""Mozilla Nightly"">";-
+60;"<!ENTITY  vendorShortName ""Mozilla"">";-
+61;brandFullName=Mozilla Nightly;-
+62;"<!ENTITY  brandFullName   ""Mozilla Fennec"">";-
+63;brandFullName=Mozilla Fennec;-
+64;"<!ENTITY  brandShortName  ""Firefox Beta"">";-
+65;"<!ENTITY  brandFullName   ""Mozilla Firefox Beta"">";-
+66;brandShortName=Firefox Beta;-
+67;brandFullName=Mozilla Firefox Beta;-
+68;"<!ENTITY  brandShortName  ""Firefox"">";-
+69;"<!ENTITY  brandFullName   ""Mozilla Firefox"">";-
+70;brandShortName=Firefox;-
+71;brandFullName=Mozilla Firefox;-
+72;fileNotFound=Firefox can't find the file at %S.;fileNotFound=Cliqz can't find the file at %S.
+73;dnsNotFound2=Firefox can't find the server at %S.;dnsNotFound2=Cliqz can't find the server at %S.
+74;unknownProtocolFound=Firefox doesn't know how to open this address, because one of the following protocols (%S) isn't associated with any program or is not allowed in this context.;unknownProtocolFound=Cliqz doesn't know how to open this address, because one of the following protocols (%S) isn't associated with any program or is not allowed in this context.
+75;connectionFailure=Firefox can't establish a connection to the server at %S.;connectionFailure=Cliqz can't establish a connection to the server at %S.
+76;redirectLoop=Firefox has detected that the server is redirecting the request for this address in a way that will never complete.;redirectLoop=Cliqz has detected that the server is redirecting the request for this address in a way that will never complete.
+77;unknownSocketType=Firefox doesn't know how to communicate with the server.;unknownSocketType=Cliqz doesn't know how to communicate with the server.
+78;netOffline=Firefox is currently in offline mode and can't browse the Web.;netOffline=Cliqz is currently in offline mode and can't browse the Web.
+79;deniedPortAccess=This address uses a network port which is normally used for purposes other than Web browsing. Firefox has canceled the request for your protection.;deniedPortAccess=This address uses a network port which is normally used for purposes other than Web browsing. Cliqz has canceled the request for your protection.
+80;proxyResolveFailure=Firefox is configured to use a proxy server that can't be found.;proxyResolveFailure=Cliqz is configured to use a proxy server that can't be found.
+81;proxyConnectFailure=Firefox is configured to use a proxy server that is refusing connections.;proxyConnectFailure=Cliqz is configured to use a proxy server that is refusing connections.
+82;remoteXUL=This page uses an unsupported technology that is no longer available by default in Firefox.;remoteXUL=This page uses an unsupported technology that is no longer available by default in Cliqz.
+83;sslv3Used=Firefox cannot guarantee the safety of your data on %S because it uses SSLv3, a broken security protocol.;sslv3Used=Cliqz cannot guarantee the safety of your data on %S because it uses SSLv3, a broken security protocol.
+84;weakCryptoUsed=The owner of %S has configured their website improperly. To protect your information from being stolen, Firefox has not connected to this website.;weakCryptoUsed=The owner of %S has configured their website improperly. To protect your information from being stolen, Cliqz has not connected to this website.
+85;netError.xhtml) because it exposes functionality specific to firefox. -->;netError.xhtml) because it exposes functionality specific to Cliqz. -->
+86;# cause Firefox to re-read these prefs and inject any new handlers into the;-
+87;browser.suggestedsites.restricted.list.2=restricted_mozilla;?
+88;browser.suggestedsites.restricted_fxsupport.title=Firefox Help and Support for restricted profiles on Android tablets;?
+89;browser.suggestedsites.restricted_fxsupport.url=https://support.mozilla.org/kb/controlledaccess;?
+90;browser.suggestedsites.webmaker.title=Learn the Web: Mozilla Webmaker;?
+91;# LOCALIZATION NOTE: browser.suggestedsites.restricted_mozilla.url must be different from browser.suggestedsites.mozilla.url;-
+92;browser.suggestedsites.restricted_mozilla.title=The Mozilla Project;-
+93;browser.suggestedsites.restricted_mozilla.url=https://www.mozilla.org;-
+94;browser.suggestedsites.restricted_mozilla.bgcolor=#000000;-
+95;browser.suggestedsites.restricted_mozilla.trackingid=632;-

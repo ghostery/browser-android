@@ -1,0 +1,189 @@
+Num	String
+0	constants=org.mozilla.gecko.BuildConfig
+1	packageName=org.mozilla.gecko
+2	# This Source Code Form is subject to the terms of the Mozilla Public
+3	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+4	# This Source Code Form is subject to the terms of the Mozilla Public
+5	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+6	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+7	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+8	# This Source Code Form is subject to the terms of the Mozilla Public
+9	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+10	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+11	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+12	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+13	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+14	# This Source Code Form is subject to the terms of the Mozilla Public
+15	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+16	# http://developer.mozilla.org/en/docs/Localization_and_Plurals
+17	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+18	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+19	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+20	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+21	<!-- These strings are used by Firefox's custom about:certerror page,
+22	# This Source Code Form is subject to the terms of the Mozilla Public
+23	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+24	# This Source Code Form is subject to the terms of the Mozilla Public
+25	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+26	notificationDisconnect.label=Your Firefox Sync account has been removed
+27	sync.update.client=#1 #2 is not compatible with the latest version of Firefox Sync. Please update to the latest version.
+28	sync.update.remote=#1 #2 is not compatible with older versions of Firefox Sync. Please update Firefox on your other computer(s).
+29	sync.update.title=Firefox Sync
+30	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+31	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+32	# This Source Code Form is subject to the terms of the Mozilla Public
+33	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+34	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+35	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+36	# This Source Code Form is subject to the terms of the Mozilla Public
+37	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+38	# These strings will appear in a dialog when Firefox detects that installed add-ons cannot be verified.
+39	# is requesting access (e.g., mozilla.org)
+40	# See: http://developer.mozilla.org/en/docs/Localization_and_Plurals
+41	# is requesting access (e.g., www.mozilla.org)
+42	# See: http://developer.mozilla.org/en/docs/Localization_and_Plurals
+43	# See: http://developer.mozilla.org/en/docs/Localization_and_Plurals
+44	# LOCALIZATION NOTE (getUserMedia.shareCamera.message, getUserMedia.shareMicrophone.message, getUserMedia.shareCameraAndMicrophone.message, getUserMedia.sharingCamera.message, getUserMedia.sharingMicrophone.message, getUserMedia.sharingCameraAndMicrophone.message): %S is the website origin (e.g. www.mozilla.org)
+45	# This Source Code Form is subject to the terms of the Mozilla Public
+46	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+47	# This Source Code Form is subject to the terms of the Mozilla Public
+48	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+49	# This Source Code Form is subject to the terms of the Mozilla Public
+50	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+51	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+52	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+53	"<!-- LOCALIZATION NOTE (aboutPage.logoTrademark): The message is explicitly about the word ""Firefox"" being trademarked, that's why we use it, instead of brandShortName. -->"
+54	"<!ENTITY aboutPage.logoTrademark                ""Firefox and the Firefox logos are trademarks of the Mozilla Foundation."">"
+55	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+56	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+57	"<!ENTITY aboutAccounts.connected.title ""Firefox Accounts"">"
+58	"<!ENTITY aboutAccounts.restrictedError.description ""You cannot manage Firefox Accounts from this profile."">"
+59	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+60	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+61	# This Source Code Form is subject to the terms of the Mozilla Public
+62	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+63	addons.browseAll=Browse all Firefox Add-ons
+64	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+65	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+66	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+67	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+68	"<!ENTITY firstrun_urlbar_subtext2 ""A modern mobile browser from Mozilla, the non-profit committed to a free and open web."">"
+69	<!-- Localization note (firstrun_tabqueue_message): 'Tab queue' is a feature that allows users to queue up or save links from outside of Firefox (without switching apps) - these links will be loaded in Firefox the next time Firefox is opened. -->
+70	<!-- Localization note (firstrun_devices_title): This is a casual way of addressing the user, somewhat referring to their online identity (which would include other devices, Firefox usage, accounts, etc). -->
+71	     section in which the user picks the locale in which to display Firefox
+72	     Firefox will use the locale currently selected in Android's settings
+73	     in Android's intent chooser when sending a link to Firefox to bookmark,
+74	"<!ENTITY overlay_no_synced_devices ""No Firefox Account connected devices found"">"
+75	     button for this string, they will use the built-in default Firefox homepage (about:home). -->
+76	"     default browser from user's preference, such as ""Open in Firefox"" -->"
+77	"<!ENTITY pref_sync_default_title ""Firefox Account"">"
+78	"<!ENTITY pref_default_browser_mozilla_support_tablet ""Visit Mozilla Support"">"
+79	"<!ENTITY pref_about_firefox ""About &brandShortName;"">"
+80	"     ""Last synced"" is one of the user's other Sync clients, typically Firefox on"
+81	     desktop Firefox via WebIDE), so you just need to aim this device at the QR
+82	"<!ENTITY restrictable_feature_addons_installation_description ""Add features or functionality to Firefox. Note: Add-ons can disable certain restrictions."">"
+83	"<!ENTITY bookmarks_about_browser ""Firefox: About your browser"">"
+84	<!-- LOCALIZATION NOTE (bookmarks_addons): link title for https://addons.mozilla.org/en-US/mobile -->
+85	"<!ENTITY bookmarks_addons ""Firefox: Customize with add-ons"">"
+86	<!-- LOCALIZATION NOTE (bookmarks_support): link title for https://support.mozilla.org/ -->
+87	"<!ENTITY bookmarks_support ""Firefox: Support"">"
+88	<!-- LOCALIZATION NOTE (bookmarks_restricted_support): link title for https://support.mozilla.org/kb/controlledaccess -->
+89	"<!ENTITY bookmarks_restricted_support2 ""Firefox Help and Support for restricted profiles on Android tablets"">"
+90	"<!ENTITY bookmarks_restricted_webmaker ""Learn the Web: Mozilla Webmaker"">"
+91	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+92	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+93	"<!ENTITY syncBrand.fullName.label ""Firefox Sync"">"
+94	"     name"" menu item upon setting up Firefox Sync.  The placeholder &formatS1"
+95	     will be replaced by the name of the Firefox release channel and &formatS2
+96	<!-- Firefox Account strings. -->
+97	     Firefox. -->
+98	<!ENTITY fxaccount_getting_started_old_firefox 'Using an older version of &syncBrand.shortName.label;?'>
+99	<!ENTITY fxaccount_status_needs_finish_migrating 'Tap to sign in to your new Firefox Account.'>
+100	     with the Firefox Account's email address. -->
+101	<!ENTITY fxaccount_remove_account_toast2 'Firefox Account &formatS; disconnected.'>
+102	     itself for a Firefox Account. Don't localize this. -->
+103	<!ENTITY fxaccount_account_type_label 'Firefox'>
+104	     when the user navigates to the Android > Accounts > {Firefox
+105	     Account} Screen. The link takes the user to the Firefox Account
+106	     status activity, which lets them manage their Firefox
+107	     with the Firefox Account's email address. -->
+108	     with the Firefox Account's email address. -->
+109	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+110	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+111	"<!ENTITY  brandFullName   ""Mozilla Nightly"">"
+112	"<!ENTITY  vendorShortName ""Mozilla"">"
+113	# This Source Code Form is subject to the terms of the Mozilla Public
+114	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+115	brandFullName=Mozilla Nightly
+116	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+117	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+118	# This Source Code Form is subject to the terms of the Mozilla Public
+119	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+120	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+121	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+122	"<!ENTITY  brandFullName   ""Mozilla Fennec"">"
+123	"<!ENTITY  vendorShortName ""Mozilla"">"
+124	# This Source Code Form is subject to the terms of the Mozilla Public
+125	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+126	brandFullName=Mozilla Fennec
+127	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+128	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+129	"<!ENTITY  brandShortName  ""Firefox Beta"">"
+130	"<!ENTITY  brandFullName   ""Mozilla Firefox Beta"">"
+131	"<!ENTITY  vendorShortName ""Mozilla"">"
+132	# This Source Code Form is subject to the terms of the Mozilla Public
+133	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+134	brandShortName=Firefox Beta
+135	brandFullName=Mozilla Firefox Beta
+136	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+137	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+138	"<!ENTITY  brandShortName  ""Firefox"">"
+139	"<!ENTITY  brandFullName   ""Mozilla Firefox"">"
+140	"<!ENTITY  vendorShortName ""Mozilla"">"
+141	# This Source Code Form is subject to the terms of the Mozilla Public
+142	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+143	brandShortName=Firefox
+144	brandFullName=Mozilla Firefox
+145	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+146	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+147	"<!ENTITY  brandFullName   ""Mozilla Nightly"">"
+148	"<!ENTITY  vendorShortName ""Mozilla"">"
+149	# This Source Code Form is subject to the terms of the Mozilla Public
+150	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+151	brandFullName=Mozilla Nightly
+152	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+153	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+154	# This Source Code Form is subject to the terms of the Mozilla Public
+155	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+156	# This Source Code Form is subject to the terms of the Mozilla Public
+157	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+158	# This Source Code Form is subject to the terms of the Mozilla Public
+159	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+160	fileNotFound=Firefox can't find the file at %S.
+161	dnsNotFound2=Firefox can't find the server at %S.
+162	unknownProtocolFound=Firefox doesn't know how to open this address, because one of the following protocols (%S) isn't associated with any program or is not allowed in this context.
+163	connectionFailure=Firefox can't establish a connection to the server at %S.
+164	redirectLoop=Firefox has detected that the server is redirecting the request for this address in a way that will never complete.
+165	unknownSocketType=Firefox doesn't know how to communicate with the server.
+166	netOffline=Firefox is currently in offline mode and can't browse the Web.
+167	deniedPortAccess=This address uses a network port which is normally used for purposes other than Web browsing. Firefox has canceled the request for your protection.
+168	proxyResolveFailure=Firefox is configured to use a proxy server that can't be found.
+169	proxyConnectFailure=Firefox is configured to use a proxy server that is refusing connections.
+170	remoteXUL=This page uses an unsupported technology that is no longer available by default in Firefox.
+171	sslv3Used=Firefox cannot guarantee the safety of your data on %S because it uses SSLv3, a broken security protocol.
+172	weakCryptoUsed=The owner of %S has configured their website improperly. To protect your information from being stolen, Firefox has not connected to this website.
+173	<!-- This Source Code Form is subject to the terms of the Mozilla Public
+174	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+175	netError.xhtml) because it exposes functionality specific to firefox. -->
+176	# This Source Code Form is subject to the terms of the Mozilla Public
+177	# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+178	# cause Firefox to re-read these prefs and inject any new handlers into the
+179	browser.suggestedsites.restricted.list.2=restricted_mozilla
+180	browser.suggestedsites.restricted_fxsupport.title=Firefox Help and Support for restricted profiles on Android tablets
+181	browser.suggestedsites.restricted_fxsupport.url=https://support.mozilla.org/kb/controlledaccess
+182	browser.suggestedsites.webmaker.title=Learn the Web: Mozilla Webmaker
+183	# LOCALIZATION NOTE: browser.suggestedsites.restricted_mozilla.url must be different from browser.suggestedsites.mozilla.url
+184	browser.suggestedsites.restricted_mozilla.title=The Mozilla Project
+185	browser.suggestedsites.restricted_mozilla.url=https://www.mozilla.org
+186	browser.suggestedsites.restricted_mozilla.bgcolor=#000000
+187	browser.suggestedsites.restricted_mozilla.trackingid=632
