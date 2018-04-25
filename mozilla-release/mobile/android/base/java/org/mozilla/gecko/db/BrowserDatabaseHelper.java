@@ -5,47 +5,6 @@
 
 package org.mozilla.gecko.db;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.mozilla.apache.commons.codec.binary.Base32;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.mozilla.gecko.GeckoProfile;
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.annotation.RobocopTarget;
-import org.mozilla.gecko.background.common.PrefsBranch;
-import org.mozilla.gecko.db.BrowserContract.ActivityStreamBlocklist;
-import org.mozilla.gecko.db.BrowserContract.Bookmarks;
-import org.mozilla.gecko.db.BrowserContract.Combined;
-import org.mozilla.gecko.db.BrowserContract.Favicons;
-import org.mozilla.gecko.db.BrowserContract.RemoteDevices;
-import org.mozilla.gecko.db.BrowserContract.History;
-import org.mozilla.gecko.db.BrowserContract.Visits;
-import org.mozilla.gecko.db.BrowserContract.PageMetadata;
-import org.mozilla.gecko.db.BrowserContract.Numbers;
-import org.mozilla.gecko.db.BrowserContract.ReadingListItems;
-import org.mozilla.gecko.db.BrowserContract.SearchHistory;
-import org.mozilla.gecko.db.BrowserContract.Thumbnails;
-import org.mozilla.gecko.db.BrowserContract.UrlAnnotations;
-import org.mozilla.gecko.fxa.FirefoxAccounts;
-import org.mozilla.gecko.fxa.authenticator.AndroidFxAccount;
-import org.mozilla.gecko.reader.SavedReaderViewHelper;
-import org.mozilla.gecko.sync.NonObjectJSONException;
-import org.mozilla.gecko.sync.SynchronizerConfiguration;
-import org.mozilla.gecko.sync.Utils;
-import org.mozilla.gecko.sync.repositories.android.RepoUtils;
-import org.mozilla.gecko.util.FileUtils;
-
-import static org.mozilla.gecko.db.DBUtils.qualifyColumn;
-
 import android.accounts.Account;
 import android.content.ContentValues;
 import android.content.Context;
@@ -62,6 +21,49 @@ import android.os.Build;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.mozilla.apache.commons.codec.binary.Base32;
+import org.mozilla.gecko.GeckoProfile;
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.annotation.RobocopTarget;
+import org.mozilla.gecko.background.common.PrefsBranch;
+import org.mozilla.gecko.db.BrowserContract.ActivityStreamBlocklist;
+import org.mozilla.gecko.db.BrowserContract.Bookmarks;
+import org.mozilla.gecko.db.BrowserContract.Combined;
+import org.mozilla.gecko.db.BrowserContract.Favicons;
+import org.mozilla.gecko.db.BrowserContract.History;
+import org.mozilla.gecko.db.BrowserContract.Numbers;
+import org.mozilla.gecko.db.BrowserContract.PageMetadata;
+import org.mozilla.gecko.db.BrowserContract.ReadingListItems;
+import org.mozilla.gecko.db.BrowserContract.RemoteDevices;
+import org.mozilla.gecko.db.BrowserContract.SearchHistory;
+import org.mozilla.gecko.db.BrowserContract.Thumbnails;
+import org.mozilla.gecko.db.BrowserContract.UrlAnnotations;
+import org.mozilla.gecko.db.BrowserContract.Visits;
+import org.mozilla.gecko.fxa.FirefoxAccounts;
+import org.mozilla.gecko.fxa.authenticator.AndroidFxAccount;
+import org.mozilla.gecko.reader.SavedReaderViewHelper;
+import org.mozilla.gecko.sync.NonObjectJSONException;
+import org.mozilla.gecko.sync.SynchronizerConfiguration;
+import org.mozilla.gecko.sync.Utils;
+import org.mozilla.gecko.sync.repositories.android.RepoUtils;
+import org.mozilla.gecko.util.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import static org.mozilla.gecko.db.DBUtils.qualifyColumn;
+
 
 // public for robocop testing
 public class BrowserDatabaseHelper extends SQLiteOpenHelper {
@@ -71,6 +73,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
     // other patches that require a DB upgrade.
     public static final int DATABASE_VERSION = 39; // Bug 1364644
     public static final String DATABASE_NAME = "browser.db";
+    /*Cliqz start*/
+    public static final String GHOSTERY_DATABASE_NAME = "ghostery.db";
+    /*Cliqz end*/
 
     final protected Context mContext;
 
@@ -855,6 +860,17 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         debug("Creating browser.db: " + db.getPath());
 
+        /*Cliqz Start*/
+        final File file = new File(getGhosteryDatabasePath());
+        final boolean ghosteryDbExists = file.exists();
+        if(ghosteryDbExists) {
+            db.setTransactionSuccessful();
+            db.endTransaction();//need to end transaction to attach the db
+            db.execSQL("ATTACH DATABASE '" + getGhosteryDatabasePath() + "' AS ghostery;");
+            db.beginTransaction();//continue the previous flow of the transaction
+        }
+        /*Cliqz End*/
+
         for (Table table : BrowserProvider.sTables) {
             table.onCreate(db);
         }
@@ -895,6 +911,13 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
         createPageMetadataTable(db);
 
         createRemoteDevicesTable(db);
+
+        /* Cliqz Start*/
+        if (ghosteryDbExists) {
+            startGhosteryDataMigration(db);
+        }
+        /* Cliqz end*/
+
     }
 
     /**
@@ -2509,5 +2532,104 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
             bookmark.remove("folder");
         }
     }
+
+    /*cliqz start*/
+    private void startGhosteryDataMigration(SQLiteDatabase db) {
+        migrateHistory(db);
+        migrateBookmarks(db);
+    }
+
+    @VisibleForTesting
+    public String getGhosteryDatabasePath() {
+        return mContext.getDatabasePath(GHOSTERY_DATABASE_NAME).getPath();
+    }
+
+    private void migrateBookmarks(SQLiteDatabase db) {
+        final Cursor rowCursor = db.rawQuery("SELECT * FROM ghostery.bookmarks ORDER BY _id ASC", null);
+        final Cursor maxIdCurosr = db.rawQuery("SELECT MAX(_id) AS maxId FROM bookmarks", null);
+        final int urlColoumnIndex = rowCursor.getColumnIndex("url");
+        final int titleColoumnIndex = rowCursor.getColumnIndex("title");
+        final int parentIdColoumnIndex = rowCursor.getColumnIndex("bookmark_folder_id");
+        final int dateColoumnIndex = rowCursor.getColumnIndex("date");
+        int maxId = 0;
+        while(maxIdCurosr.moveToNext()) {
+            maxId = maxIdCurosr.getInt(0);
+        }
+        maxIdCurosr.close();
+        while(rowCursor.moveToNext()) {
+            final String url = rowCursor.getString(urlColoumnIndex);
+            final String title = rowCursor.getString(titleColoumnIndex);
+            final int parentId = rowCursor.getInt(parentIdColoumnIndex);
+            final long timeStamp = rowCursor.getLong(dateColoumnIndex);
+            final ContentValues contentValues = new ContentValues();
+            contentValues.put(Bookmarks.TITLE, title);
+            contentValues.put(Bookmarks.URL, url);
+            contentValues.put(Bookmarks.TYPE, url == null ? 0 : 1);
+            contentValues.put(Bookmarks.PARENT, parentId == -1 ? 1 : parentId + maxId);
+            contentValues.put(Bookmarks.POSITION, Long.MIN_VALUE);
+            contentValues.put(Bookmarks.DATE_CREATED, timeStamp);
+            contentValues.put(Bookmarks.DATE_MODIFIED, timeStamp);
+            contentValues.put(Bookmarks.GUID, Utils.generateGuid());
+            contentValues.put(Bookmarks.IS_DELETED, 0);
+            contentValues.put(Bookmarks.SYNC_VERSION, 0);
+            contentValues.put(Bookmarks.LOCAL_VERSION, 1);
+            db.insert(Bookmarks.TABLE_NAME, null, contentValues);
+        }
+        rowCursor.close();
+    }
+
+    private void migrateHistory(SQLiteDatabase db) {
+        final HashMap<GhosteryHistoryItem, ArrayList<Long> > historyItems = new HashMap<>();
+        final Cursor c = db.rawQuery("SELECT * FROM ghostery.history ORDER BY date ASC", null);
+        final int urlColoumnIndex = c.getColumnIndex("url");
+        final int titleColoumnIndex = c.getColumnIndex("title");
+        final int dateColoumnIndex = c.getColumnIndex("date");
+        while(c.moveToNext()) {
+            final String url = c.getString(urlColoumnIndex);
+            final String title = c.getString(titleColoumnIndex);
+            final long date = c.getLong(dateColoumnIndex);
+            final GhosteryHistoryItem ghosteryHistoryItem = new GhosteryHistoryItem(url, title);
+            if(historyItems.containsKey(ghosteryHistoryItem)) {
+                final ArrayList<Long> dateList = historyItems.get(ghosteryHistoryItem);
+                dateList.add(date);
+            } else {
+                final ArrayList<Long> dateList = new ArrayList<>();
+                dateList.add(date);
+                historyItems.put(ghosteryHistoryItem, dateList);
+            }
+        }
+        c.close();
+        for (Map.Entry<GhosteryHistoryItem, ArrayList<Long> > entry : historyItems.entrySet()) {
+            final GhosteryHistoryItem ghosteryHistoryItem = entry.getKey();
+            final ArrayList<Long> timeStamps = entry.getValue();
+            Collections.sort(timeStamps);
+            final String guid = Utils.generateGuid();
+            final long creationDate = timeStamps.get(0);
+            final long modifiedDate = timeStamps.get(timeStamps.size()-1);
+            final ContentValues historyValues = new ContentValues();
+            historyValues.put(History.TITLE, ghosteryHistoryItem.title);
+            historyValues.put(History.URL, ghosteryHistoryItem.url);
+            historyValues.put(History.VISITS, timeStamps.size());
+            historyValues.put(History.LOCAL_VISITS, timeStamps.size());
+            historyValues.put(History.REMOTE_VISITS, 0);
+            historyValues.put(History.DATE_LAST_VISITED, modifiedDate);
+            historyValues.put(History.LOCAL_DATE_LAST_VISITED, modifiedDate);
+            historyValues.put(History.REMOTE_DATE_LAST_VISITED, 0);
+            historyValues.put(History.DATE_CREATED, creationDate);
+            historyValues.put(History.DATE_MODIFIED, modifiedDate);
+            historyValues.put(History.GUID, guid);
+            historyValues.put(History.IS_DELETED, 0);
+            db.insert(History.TABLE_NAME, null, historyValues);
+            for(long timestamp : timeStamps) {
+                final ContentValues visitsValues = new ContentValues();
+                visitsValues.put(Visits.HISTORY_GUID, guid);
+                visitsValues.put(Visits.VISIT_TYPE, 1);
+                visitsValues.put(Visits.DATE_VISITED, timestamp*1000L);
+                visitsValues.put(Visits.IS_LOCAL, 1);
+                db.insert(Visits.TABLE_NAME, null, visitsValues);
+            }
+        }
+    }
+    /*cliqz end*/
 }
 

@@ -12,16 +12,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mozilla.gecko.background.testhelpers.TestRunner;
+import org.mozilla.gecko.db.BrowserContract.Bookmarks;
 import org.robolectric.RuntimeEnvironment;
 
-import org.mozilla.gecko.db.BrowserContract.Bookmarks;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 @RunWith(TestRunner.class)
@@ -307,5 +312,117 @@ public class BrowserDatabaseHelperTest {
         public TestSQLiteOpenHelper() {
             super(RuntimeEnvironment.application, "test-path.db");
         }
+
+        /* Cliqz Start*/
+        @Override
+        public String getGhosteryDatabasePath() {
+            try {
+                final InputStream inputStream = RuntimeEnvironment.application.getAssets().open("ghostery-test.db");
+                final File dataDir = new File(RuntimeEnvironment.application.getApplicationInfo().dataDir);
+                final File outFile = new File(dataDir, "ghostery-test.db");
+                final OutputStream outStream = new FileOutputStream(outFile);
+                int b;
+                while ((b = inputStream.read()) != -1) {
+                    outStream.write(b);
+                }
+                inputStream.close();
+                outStream.close();
+                return outFile.getPath();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        /* Cliqz End*/
     }
+
+    /* Cliqz Start*/
+    @Test
+    public void testGhosteryHistoryMigration() {
+        Cursor cursor;
+        final SQLiteDatabase db = helper.getReadableDatabase();
+
+        cursor = db.rawQuery("SELECT * FROM history", null);
+        assertEquals(3, cursor.getCount());
+
+        cursor = db.rawQuery("SELECT * FROM history WHERE url = ?",
+                new String[]{"https://m.facebook.com/?refsrc=https%3A%2F%2Fwww.facebook.com%2F&_rdr"});
+        assertEquals(1, cursor.getCount());
+        cursor.moveToFirst();
+        final String fbGuid = cursor.getString(cursor.getColumnIndex(BrowserContract.History.GUID));
+        final int visits = cursor.getInt(cursor.getColumnIndex(BrowserContract.History.VISITS));
+        assertEquals(2, visits);
+
+        cursor = db.rawQuery("SELECT * FROM visits", null);
+        assertEquals(4, cursor.getCount());
+
+        cursor = db.rawQuery("SELECT * FROM visits WHERE history_guid = ?", new String[]{fbGuid});
+        assertEquals(2, cursor.getCount());
+        cursor.close();
+    }
+
+    @Test
+    public void testGhosteryBookmarksMigration() {
+        Cursor cursor;
+        final SQLiteDatabase db = helper.getReadableDatabase();
+
+        cursor = db.rawQuery("SELECT * FROM bookmarks WHERE title = ?",
+                new String[]{"Programming Competition,Programming Contest,Online Computer Programming"});
+        assertEquals(1, cursor.getCount());
+        cursor.moveToFirst();
+        final int entryCodeChefParent = cursor.getInt(cursor.getColumnIndex(Bookmarks.PARENT));
+        final int entryCodeChefType = cursor.getInt(cursor.getColumnIndex(Bookmarks.TYPE));
+        assertEquals(1, entryCodeChefType);//type url
+        assertEquals(1, entryCodeChefParent);//location in root folder
+
+        cursor = db.rawQuery("SELECT * FROM bookmarks WHERE title = ?", new String[]{"rav"});
+        assertEquals(1, cursor.getCount());
+        cursor.moveToFirst();
+        final int entryRavParentId = cursor.getInt(cursor.getColumnIndex(Bookmarks.PARENT));
+        final int entryRavId = cursor.getInt(cursor.getColumnIndex("_id"));
+        final int entryRavType = cursor.getInt(cursor.getColumnIndex(Bookmarks.TYPE));
+        assertEquals(0, entryRavType); //type folder
+        assertEquals(1, entryRavParentId);//location in root folder
+
+        cursor = db.rawQuery("SELECT * FROM bookmarks WHERE title = ?",
+                new String[]{"Facebook - Log In or Sign Up"});
+        assertEquals(1, cursor.getCount());
+        cursor.moveToFirst();
+        final int entryFacebookParent = cursor.getInt(cursor.getColumnIndex(Bookmarks.PARENT));
+        final int entryFacebookType = cursor.getInt(cursor.getColumnIndex(Bookmarks.TYPE));
+        assertEquals(1, entryFacebookType);//type url
+        assertEquals(entryRavId, entryFacebookParent);//location in folder rav
+
+        cursor = db.rawQuery("SELECT * FROM bookmarks WHERE title = ?",
+                new String[]{"jit"});
+        assertEquals(1, cursor.getCount());
+        cursor.moveToFirst();
+        final int entryJitParentId = cursor.getInt(cursor.getColumnIndex(Bookmarks.PARENT));
+        final int entryJitId = cursor.getInt(cursor.getColumnIndex("_id"));
+        final int entryJitType = cursor.getInt(cursor.getColumnIndex(Bookmarks.TYPE));
+        assertEquals(0, entryJitType);//type folder
+        assertEquals(entryRavId, entryJitParentId);//location in folder rav
+
+        cursor = db.rawQuery("SELECT * FROM bookmarks WHERE title = ?",
+                new String[]{"inner jit"});
+        assertEquals(1, cursor.getCount());
+        cursor.moveToFirst();
+        final int entryInnerJitParentId = cursor.getInt(cursor.getColumnIndex(Bookmarks.PARENT));
+        final int entryInnerJitId = cursor.getInt(cursor.getColumnIndex("_id"));
+        final int entryInnerJitType = cursor.getInt(cursor.getColumnIndex(Bookmarks.TYPE));
+        assertEquals(0, entryInnerJitType);//type folder
+        assertEquals(entryJitId, entryInnerJitParentId);//location in folder jit
+
+        cursor = db.rawQuery("SELECT * FROM bookmarks WHERE title = ?",
+                new String[]{"Twitter"});
+        assertEquals(1, cursor.getCount());
+        cursor.moveToFirst();
+        final int entryTwitterParentId = cursor.getInt(cursor.getColumnIndex(Bookmarks.PARENT));
+        final int entryTwitterId = cursor.getInt(cursor.getColumnIndex("_id"));
+        final int entryTwitterType = cursor.getInt(cursor.getColumnIndex(Bookmarks.TYPE));
+        assertEquals(1, entryTwitterType);//type url
+        assertEquals(entryInnerJitId, entryTwitterParentId);//location in folder inner jit
+        cursor.close();
+    }
+    /* Cliqz End*/
 }
