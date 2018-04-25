@@ -194,7 +194,8 @@ be temporary, and you can try again later.</li>
 <!-- LOCALIZATION NOTE (securityOverride.warningContent) - Do not translate the
 contents of the <xul:button> tags.  The only language content is the label= field,
 which uses strings already defined above. The button is included here (instead of
-netError.xhtml) because it exposes functionality specific to Cliqz. -->
+netError.xhtml) because it exposes functionality specific to firefox. -->
+
 <!ENTITY securityOverride.warningContent "
 <p>You should not add an exception if you are using an internet connection that you do not trust completely or if you are not used to seeing a warning for this server.</p>
 
