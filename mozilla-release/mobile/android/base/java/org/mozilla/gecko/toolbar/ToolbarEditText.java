@@ -13,6 +13,8 @@ import org.mozilla.gecko.toolbar.BrowserToolbar.OnCommitListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnDismissListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnFilterListener;
 import org.mozilla.gecko.toolbar.ToolbarEditLayout.OnSearchStateChangeListener;
+import org.mozilla.gecko.util.BundleEventListener;
+import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GamepadUtils;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.StringUtils;
@@ -45,7 +47,7 @@ import android.widget.TextView;
 * It's meant to be owned by {@code ToolbarEditLayout}.
 */
 public class ToolbarEditText extends CustomEditText
-                             implements AutocompleteHandler {
+                             implements AutocompleteHandler, BundleEventListener {
 
     private static final String LOGTAG = "GeckoToolbarEditText";
     private static final NoCopySpan AUTOCOMPLETE_SPAN = new NoCopySpan.Concrete();
@@ -98,6 +100,11 @@ public class ToolbarEditText extends CustomEditText
         setOnKeyPreImeListener(new KeyPreImeListener());
         setOnSelectionChangedListener(new SelectionChangeListener());
         addTextChangedListener(new TextChangeListener());
+
+        /* Cliqz start */
+        EventDispatcher.getInstance().registerUiThreadListener(this,
+                "Cliqz:Autocomplete", null);
+        /* Cliqz end */
     }
 
     @Override
@@ -661,4 +668,25 @@ public class ToolbarEditText extends CustomEditText
             return false;
         }
     }
+
+    /* Cliqz start */
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventDispatcher.getInstance().unregisterUiThreadListener(this,
+                "Cliqz:Autocomplete", null);
+    }
+
+    @Override
+    public void handleMessage(String event, GeckoBundle message, EventCallback callback) {
+        switch (event) {
+            case "Cliqz:Autocomplete":
+                final String autoCompletion = message.getString("data");
+                onAutocomplete(autoCompletion);
+                break;
+            default:
+                break;
+        }
+    }
+    /* Cliqz end */
 }
