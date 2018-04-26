@@ -18,10 +18,8 @@ import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.icons.IconCallback;
 import org.mozilla.gecko.icons.IconResponse;
 import org.mozilla.gecko.icons.Icons;
-import org.mozilla.gecko.util.URIUtils;
 import org.mozilla.gecko.widget.FaviconView;
 
-import java.net.URI;
 import java.util.concurrent.Future;
 
 /**
@@ -63,8 +61,7 @@ public class TopNewsCard extends RecyclerView.ViewHolder implements IconCallback
         }
 
         titleView.setText(buildTitleSpannable(topNews));
-        urlView.setText(URIUtils.getFormattedDomain(context, URI.create(topNews.getUrl()),
-                true, 0));
+        urlView.setText(topNews.getDomain());
     }
 
     private CharSequence buildTitleSpannable(TopNews piece) {
