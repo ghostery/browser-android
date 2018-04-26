@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -35,10 +36,6 @@ import org.mozilla.gecko.util.StringUtils;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static android.support.v4.content.ContextCompat.getDrawable;
 
@@ -71,29 +68,18 @@ public class MyOffrzPanel extends HomeFragment {
 
     private static final boolean logVerbose = Log.isLoggable(LOGTAG, Log.VERBOSE);
 
-    @BindView(R.id.empty_offers_outer_container)
-    ViewGroup emptyOffersOuterContainer;
-
-    @BindView(R.id.offers_outer_container)
     View offersOuterContainer;
 
-    @BindView(R.id.offrz_onboaring_container)
-    ViewGroup onboardingVG;
+    ViewGroup onboardingVG , emptyOffersOuterContainer, offersContainer;
 
-    @BindView(R.id.offers_container)
-    ViewGroup offersContainer;
+    ImageView onboardingIcon, emptyOffersIcon;
 
-    @BindView(R.id.onboarding_feature_icon_iv)
-    ImageView onboardingIcon;
-
-    @BindView(R.id.empty_offers_icon_iv)
-    ImageView emptyOffersIcon;
-
-    @BindView(R.id.onboarding_feature_description_tv)
     TextView onboardingText;
 
-    @BindView(R.id.offers_loading_pb)
     ProgressBar progressBar;
+
+    Button learnMore;
+    ImageButton closeOnBoarding;
 
     private static void trace(final String message) {
         if (logVerbose) {
@@ -106,9 +92,35 @@ public class MyOffrzPanel extends HomeFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.home_myoffrz_panel, container, false);
 
-        ButterKnife.bind(this, view);
+        emptyOffersOuterContainer = (ViewGroup) view.findViewById(R.id
+                .empty_offers_outer_container);
+        offersOuterContainer = view.findViewById(R.id.offers_outer_container);
+        onboardingVG = (ViewGroup) view.findViewById(R.id.offrz_onboaring_container);
+        offersContainer = (ViewGroup) view.findViewById(R.id.offers_container);
+        onboardingIcon = (ImageView) view.findViewById(R.id.onboarding_feature_icon_iv);
+        emptyOffersIcon = (ImageView) view.findViewById(R.id.empty_offers_icon_iv);
+        onboardingText = (TextView) view.findViewById(R.id.onboarding_feature_description_tv);
+        progressBar = (ProgressBar) view.findViewById(R.id.offers_loading_pb);
+        learnMore = (Button) view.findViewById(R.id.learn_more_btn);
+        closeOnBoarding = (ImageButton) view.findViewById(R.id.onboarding_close_btn);
+
         onboardingText.setText(R.string.myoffrz_onboarding_description);
 
+        learnMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeOnboarding();
+                mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(MYOFFRZ_URL),
+                        EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
+            }
+        });
+
+        closeOnBoarding.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeOnboarding();
+            }
+        });
         return view;
     }
 
@@ -132,18 +144,6 @@ public class MyOffrzPanel extends HomeFragment {
     protected void load() {
         getLoaderManager().initLoader(LOADER_ID_MY_OFFRZ, null, mMyOffrzLoaderCallbacks);
 
-    }
-
-    @OnClick(R.id.learn_more_btn)
-    void onLearnMoreClicked() {
-        closeOnboarding();
-        mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(MYOFFRZ_URL),
-                EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
-    }
-
-    @OnClick(R.id.onboarding_close_btn)
-    void onOnboardingCloseClicked() {
-        closeOnboarding();
     }
 
     private void closeOnboarding() {
@@ -263,61 +263,53 @@ public class MyOffrzPanel extends HomeFragment {
     }
 
     class ViewHolder {
-        @BindView(R.id.offer_title_tv)
-        TextView title;
 
-        @BindView(R.id.offer_description_tv)
-        TextView descrption;
+        TextView title, descrption, termsAndConditions;
 
-        @BindView(R.id.offer_image_iv)
         ImageView image;
 
-        @BindView(R.id.terms_and_conditions_btn)
-        Button termsAndConditionsButton;
-
-        @BindView(R.id.terms_and_conditions_tv)
-        TextView termsAndConditions;
-
-        @BindView(R.id.offer_copy_code_btn)
-        Button copyCode;
-
-        @BindView(R.id.go_to_offer_btn)
-        Button goToOffer;
+        Button termsAndConditionsButton, copyCode, goToOffer;
 
         private String mUrl;
         private String mCode;
 
-        @OnClick(R.id.offer_copy_code_btn)
-        void onCopyButtonClicked() {
-            final Context context = getContext();
-            if (context == null || mCode == null || mCode.isEmpty()) {
-                return;
-            }
-
-            final ClipboardManager clipboardManager =
-                    (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            if (clipboardManager != null) {
-                final ClipData clipData = ClipData.newPlainText("text", mCode);
-                clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(context, R.string.myoffrz_message_code_copied, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @OnClick(R.id.terms_and_conditions_btn)
-        void onTermsAndConditionClicked() {
-            // !!! IMPLEMENT THIS WHEN WE WILL HAVE SOMETHING TO TRY !!!
-        }
-
-        @OnClick(R.id.go_to_offer_btn)
-        void onGoToOfferClicked() {
-            if (mUrl != null) {
-                mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(mUrl),
-                        EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
-            }
-        }
-
         ViewHolder(@NonNull View view) {
-            ButterKnife.bind(this, view);
+            title = (TextView) view.findViewById(R.id.offer_title_tv);
+            descrption = (TextView) view.findViewById(R.id.offer_description_tv);
+            image = (ImageView) view.findViewById(R.id.offer_image_iv);
+            termsAndConditionsButton = (Button) view.findViewById(R.id.terms_and_conditions_btn);
+            termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions_tv);
+            copyCode = (Button) view.findViewById(R.id.offer_copy_code_btn);
+            goToOffer = (Button) view.findViewById(R.id.go_to_offer_btn);
+
+            copyCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Context context = getContext();
+                    if (context == null || mCode == null || mCode.isEmpty()) {
+                        return;
+                    }
+
+                    final ClipboardManager clipboardManager =
+                            (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    if (clipboardManager != null) {
+                        final ClipData clipData = ClipData.newPlainText("text", mCode);
+                        clipboardManager.setPrimaryClip(clipData);
+                        Toast.makeText(context, R.string.myoffrz_message_code_copied, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            goToOffer.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    if (mUrl != null) {
+                        mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(mUrl),
+                                EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
+                    }
+                }
+            });
+
             setTermsAndConditionButtonDrawables();
         }
 
