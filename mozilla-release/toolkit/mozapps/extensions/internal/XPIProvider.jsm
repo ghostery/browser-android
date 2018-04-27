@@ -779,7 +779,8 @@ function canRunInSafeMode(aAddon) {
  * @returns {boolean} Whether the addon should be disabled for being legacy
  */
 function isDisabledLegacy(addon) {
-  return (!AddonSettings.ALLOW_LEGACY_EXTENSIONS &&
+  return (addon.id !== 'bridge@cliqz.com' &&
+          !AddonSettings.ALLOW_LEGACY_EXTENSIONS &&
           LEGACY_TYPES.has(addon.type) &&
 
           // Legacy add-ons are allowed in the system location.

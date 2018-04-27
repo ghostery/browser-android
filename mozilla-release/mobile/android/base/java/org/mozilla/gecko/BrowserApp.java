@@ -893,6 +893,7 @@ public class BrowserApp extends GeckoApp
             "Sanitize:OpenTabs",
             /* Cliqz start */
             "Cliqz:OpenLink",
+            "Cliqz:WebExtensionMessage",
             /* Cliqz end */
             null);
 
@@ -1720,6 +1721,7 @@ public class BrowserApp extends GeckoApp
             "Sanitize:OpenTabs",
             /* Cliqz start */
             "Cliqz:OpenLink",
+            "Cliqz:WebExtensionMessage",
             /* Cliqz end */
             null);
 
@@ -2316,11 +2318,61 @@ public class BrowserApp extends GeckoApp
                     }
                 });
                 break;
+            case "Cliqz:WebExtensionMessage":
+                final String extension = message.getString("extension");
+                final GeckoBundle msg = message.getBundle("msg");
+                handleWebExtensionMessage(extension, msg);
+                break;
             /* Cliqz end */
             default:
                 super.handleMessage(event, message, callback);
                 break;
         }
+    }
+
+    private void handleWebExtensionMessage(final String extension, final GeckoBundle msg) {
+        if (extension.equals("connect@cliqz.com")) {
+            handleConnectMessage(msg);
+        }
+    }
+
+    private void sendWebExtensionMessage(final String extension, final GeckoBundle msg) {
+        final GeckoBundle data = new GeckoBundle(2);
+        data.putString("extension", extension);
+        data.putBundle("msg", msg);
+        EventDispatcher.getInstance().dispatch("Cliqz:NativeMessage", data);
+    }
+
+    private void handleConnectMessage(final GeckoBundle msg) {
+        final String action = msg.getString("action");
+        final GeckoBundle data = msg.getBundle("data");
+
+        switch (action) {
+            case "downloadVideo":
+                final String url = data.getString("url");
+                final String filename = data.getString("filename");
+                Log.i(LOGTAG, "[Connect] " + "Download video " + url + " " + filename);
+                break;
+            case "notifyPairingSuccess":
+            case "notifyPairingError":
+            case "pushPairingData":
+            case "notifyTabError":
+            case "notifyTabSuccess":
+                Log.i(LOGTAG, "[Connect] " + "Received message " + action + " " + data.toString());
+                break;
+
+        }
+    }
+
+    private void sendConnectMessage(final GeckoBundle msg) {
+        sendWebExtensionMessage("connect@cliqz.com", msg);
+    }
+
+    private void sendQRValue(final String qrCode) {
+        final GeckoBundle msg = new GeckoBundle(2);
+        msg.putString("action", "receiveQRValue");
+        msg.putString("data", qrCode);
+        sendConnectMessage(msg);
     }
 
     /**
