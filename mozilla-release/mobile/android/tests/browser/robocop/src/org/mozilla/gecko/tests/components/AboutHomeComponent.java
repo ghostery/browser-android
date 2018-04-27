@@ -31,11 +31,15 @@ import com.robotium.solo.Solo;
 public class AboutHomeComponent extends BaseComponent {
     private static final String LOGTAG = AboutHomeComponent.class.getSimpleName();
 
+    /* Cliqz start*/
+    // add MyOffrz panel, and reorder the tabs
     private static final List<PanelType> PANEL_ORDERING = Arrays.asList(
             PanelType.TOP_SITES,
-            PanelType.BOOKMARKS,
-            PanelType.COMBINED_HISTORY
+            PanelType.COMBINED_HISTORY,
+            PanelType.MY_OFFRZ,
+            PanelType.BOOKMARKS
     );
+    /* Cliqz end*/
 
     // The percentage of the panel to swipe between 0 and 1. This value was set through
     // testing: 0.55f was tested on try and fails on armv6 devices.

@@ -889,4 +889,6 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY myoffrz_tap_code_to_copy_label "Tap code to copy">
 <!ENTITY myoffrz_terms_and_conditions_label "Terms">
 <!ENTITY myoffrz_message_code_copied "Code copied">
+<!ENTITY myoffrz_activation_description "Activate MyOffrz to receive attractive discounts and bargains.">
+<!ENTITY myoffrz_activate "Activate">
 <!-- Cliqz end -->

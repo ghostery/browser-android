@@ -662,5 +662,7 @@
   <string name="myoffrz_tap_code_to_copy_label">&myoffrz_tap_code_to_copy_label;</string>
   <string name="myoffrz_terms_and_conditions_label">&myoffrz_terms_and_conditions_label;</string>
   <string name="myoffrz_message_code_copied">&myoffrz_message_code_copied;</string>
+  <string name="myoffrz_activation_description">&myoffrz_activation_description;</string>
+  <string name="myoffrz_activate">&myoffrz_activate;</string>
   <!-- Cliqz end -->
 </resources>

@@ -273,6 +273,7 @@
     <!-- Cliqz start -->
     <!-- General -->
     <color name="general_blue_color">#00aef0</color>
+    <color name="general_dark_color">#424242</color>
 
     <!-- news -->
     <color name="news_bg_color_press">#cdcdcd</color>
@@ -289,6 +290,7 @@
     <color name="myoffrz_bg_text">#9C9C9C</color>
     <color name="myoffrz_bg">#E7ECEE</color>
     <color name="myoffrz_onboarding_bg">#b8dfee</color>
+    <color name="myoffrz_deactivated_layout">#40000000</color>
     <!-- Cliqz end -->
 
 </resources>

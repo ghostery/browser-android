@@ -27,7 +27,9 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.mozilla.gecko.BrowserLocaleManager;
 import org.mozilla.gecko.GeckoSharedPrefs;
+import org.mozilla.gecko.LocaleManager;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.myoffrz.MyOffrzLoader;
 import org.mozilla.gecko.preferences.GeckoPreferences;
@@ -36,6 +38,7 @@ import org.mozilla.gecko.util.StringUtils;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import static android.support.v4.content.ContextCompat.getDrawable;
 
@@ -68,17 +71,17 @@ public class MyOffrzPanel extends HomeFragment {
 
     private static final boolean logVerbose = Log.isLoggable(LOGTAG, Log.VERBOSE);
 
-    View offersOuterContainer;
+    View offersOuterContainer, myOffrzDeactivateView;
 
-    ViewGroup onboardingVG , emptyOffersOuterContainer, offersContainer;
+    ViewGroup onboardingVG , emptyOffersOuterContainer, offersContainer, activationVG;
 
     ImageView onboardingIcon, emptyOffersIcon;
 
-    TextView onboardingText;
+    TextView onboardingText, activationText, learnMoreActivation;
 
     ProgressBar progressBar;
 
-    Button learnMore;
+    Button learnMoreOnBoarding, activate;
     ImageButton closeOnBoarding;
 
     private static void trace(final String message) {
@@ -94,22 +97,36 @@ public class MyOffrzPanel extends HomeFragment {
 
         emptyOffersOuterContainer = (ViewGroup) view.findViewById(R.id
                 .empty_offers_outer_container);
-        offersOuterContainer = view.findViewById(R.id.offers_outer_container);
         onboardingVG = (ViewGroup) view.findViewById(R.id.offrz_onboaring_container);
         offersContainer = (ViewGroup) view.findViewById(R.id.offers_container);
+        activationVG = (ViewGroup) view.findViewById(R.id.offrz_activation_container);
+        offersOuterContainer = view.findViewById(R.id.offers_outer_container);
+        myOffrzDeactivateView = view.findViewById(R.id.myoffrz_deactivate_view);
         onboardingIcon = (ImageView) view.findViewById(R.id.onboarding_feature_icon_iv);
         emptyOffersIcon = (ImageView) view.findViewById(R.id.empty_offers_icon_iv);
         onboardingText = (TextView) view.findViewById(R.id.onboarding_feature_description_tv);
+        activationText = (TextView) view.findViewById(R.id.activation_feature_description_tv);
+        learnMoreActivation = (TextView) view.findViewById(R.id.learn_more_tv);
+        learnMoreOnBoarding = (Button) view.findViewById(R.id.learn_more_btn);
+        activate = (Button) view.findViewById(R.id.activate_btn);
         progressBar = (ProgressBar) view.findViewById(R.id.offers_loading_pb);
-        learnMore = (Button) view.findViewById(R.id.learn_more_btn);
         closeOnBoarding = (ImageButton) view.findViewById(R.id.onboarding_close_btn);
 
         onboardingText.setText(R.string.myoffrz_onboarding_description);
+        activationText.setText(R.string.myoffrz_activation_description);
 
-        learnMore.setOnClickListener(new View.OnClickListener() {
+        learnMoreOnBoarding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeOnboarding();
+                mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(MYOFFRZ_URL),
+                        EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
+            }
+        });
+
+        learnMoreActivation.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
                 mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(MYOFFRZ_URL),
                         EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
             }
@@ -119,6 +136,17 @@ public class MyOffrzPanel extends HomeFragment {
             @Override
             public void onClick(View v) {
                 closeOnboarding();
+            }
+        });
+
+        activate.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                setMyOffrzEnabled(true);
+                setMyOffrzOnboardingEnabled(false);
+                activationVG.setVisibility(View.GONE);
+                myOffrzDeactivateView.setVisibility(View.INVISIBLE);
+                enableClickActionsOnOffrz(true);
             }
         });
         return view;
@@ -133,10 +161,24 @@ public class MyOffrzPanel extends HomeFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (!isMyOffrzOnboardingEnabled()) {
-            onboardingVG.setVisibility(View.GONE);
-        } else {
+        if (!isMyOffrzEnable()) {
+            activationVG.setVisibility(View.VISIBLE);
+            myOffrzDeactivateView.setVisibility(View.VISIBLE);
+            myOffrzDeactivateView.bringToFront();
+            enableClickActionsOnOffrz(false);
+        } else if (isMyOffrzOnboardingEnabled()) {
             onboardingVG.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void enableClickActionsOnOffrz(boolean enable){
+        for(int i = 0 ; i < offersContainer.getChildCount();i++){
+            View curChild = offersContainer.getChildAt(i);
+            if (curChild.getId() == R.id.offer_card){
+                curChild.findViewById(R.id.terms_and_conditions_btn).setClickable(enable);
+                curChild.findViewById(R.id.go_to_offer_btn).setClickable(enable);
+                curChild.findViewById(R.id.offer_copy_code_btn).setClickable(enable);
+            }
         }
     }
 
@@ -234,6 +276,14 @@ public class MyOffrzPanel extends HomeFragment {
             }
 
             offersContainer.addView(offer);
+            if(!isMyOffrzEnable()) {
+                myOffrzDeactivateView.setVisibility(View.VISIBLE);
+                myOffrzDeactivateView.bringToFront();
+                holder.enableClickActions(false);
+            }else{
+                myOffrzDeactivateView.setVisibility(View.INVISIBLE);
+                holder.enableClickActions(true);
+            }
         }
 
         private JSONObject getTemplateData(final JSONObject data) {
@@ -333,6 +383,12 @@ public class MyOffrzPanel extends HomeFragment {
         public void setCode(String code) {
             this.mCode = code;
         }
+
+        public void enableClickActions(boolean enable){
+            goToOffer.setClickable(enable);
+            termsAndConditionsButton.setClickable(enable);
+            copyCode.setClickable(enable);
+        }
     }
 
     /* Cliqz start */
@@ -349,4 +405,26 @@ public class MyOffrzPanel extends HomeFragment {
         final SharedPreferences prefs = GeckoSharedPrefs.forApp(getActivity());
         return  prefs.getBoolean(GeckoPreferences.IS_MYOFFRZ_ONBOARDING_ENABLED,true);
     }
+
+    // add getter and setter for on/off MyOffrz
+    // This part is derived from @{@link TabQueuePanel}.java
+    public void setMyOffrzEnabled(boolean value) {
+        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getActivity());
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(GeckoPreferences.IS_MYOFFRZ_ENABLED, value).apply();
+    }
+
+    // This part is derived from @{@link TabQueueHelper}.java
+    public boolean isMyOffrzEnable(){
+        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getActivity());
+        return  prefs.getBoolean(GeckoPreferences.IS_MYOFFRZ_ENABLED,isMyOffrzSupportedForLang());
+    }
+
+    private boolean isMyOffrzSupportedForLang(){
+        final LocaleManager localeManager = BrowserLocaleManager.getInstance();
+        final Locale locale = localeManager.getDefaultSystemLocale();
+        return Locale.GERMAN.getLanguage().equals(locale.getLanguage());
+    }
+    /* Cliqz end */
+
 }
