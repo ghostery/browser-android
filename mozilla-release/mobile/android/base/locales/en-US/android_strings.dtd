@@ -904,4 +904,7 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_block_ads_what_fair "What is \'fair\'">
 <!ENTITY pref_block_ads_fair_description "The Cliqz Ad Blocker is in beta at the moment. The final version will provide the following options: Allow Fair Ads (default setting), Block All Ads, Allow All Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "Please note: Cliqz Browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.">
+
+<!-- Rate Cliqz -->
+<!ENTITY pref_category_rate_cliqz "Rate Cliqz Browser">
 <!-- Cliqz end -->
