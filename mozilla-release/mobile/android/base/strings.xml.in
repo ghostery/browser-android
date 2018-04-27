@@ -653,5 +653,16 @@
   <string name="pref_enable_human_web">&pref_enable_human_web;</string>
   <string name="pref_category_human_web_summary">&pref_category_human_web_summary;</string>
   <string name="pref_human_web_url">https://cliqz.com/&formatS1;/whycliqz/human-web</string>
+
+  <!-- MyOffrz -->
+  <string name="my_offrz_title">&my_offrz_title;</string>	
+  <string name="my_offrz_no_offers_msg">&my_offrz_no_offers_msg;</string>
+  <string name="myoffrz_onboarding_description">&myoffrz_onboarding_description;</string>
+  <string name="myoffrz_order_now_label">&myoffrz_order_now_label;</string>
+  <string name="myoffrz_tap_code_to_copy_label">&myoffrz_tap_code_to_copy_label;</string>
+  <string name="myoffrz_terms_and_conditions_label">&myoffrz_terms_and_conditions_label;</string>
+  <string name="myoffrz_message_code_copied">&myoffrz_message_code_copied;</string>
+  <string name="myoffrz_activation_description">&myoffrz_activation_description;</string>
+  <string name="myoffrz_activate">&myoffrz_activate;</string>
   <!-- Cliqz end -->
 </resources>

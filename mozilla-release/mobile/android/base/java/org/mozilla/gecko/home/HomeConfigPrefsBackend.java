@@ -73,10 +73,12 @@ public class HomeConfigPrefsBackend implements HomeConfigBackend {
 
         panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.TOP_SITES,
                                                   EnumSet.of(PanelConfig.Flags.DEFAULT_PANEL)));
-
-        panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.BOOKMARKS));
+        /* Cliqz start */
+        // add Offrz panel, change panels order to be TopSites, history, MyOffrz, bookmarks
         panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.COMBINED_HISTORY));
-
+        panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.MY_OFFRZ));
+        panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.BOOKMARKS));
+        /* Cliqz end */
 
         return new State(panelConfigs, true);
     }

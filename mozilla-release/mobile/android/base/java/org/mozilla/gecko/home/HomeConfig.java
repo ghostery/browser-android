@@ -50,7 +50,12 @@ public final class HomeConfig {
         DEPRECATED_REMOTE_TABS("remote_tabs", CombinedHistoryPanel.class),
         DEPRECATED_HISTORY("history", CombinedHistoryPanel.class),
         DEPRECATED_READING_LIST("reading_list", BookmarksPanel.class),
-        DEPRECATED_RECENT_TABS("recent_tabs", CombinedHistoryPanel.class);
+        DEPRECATED_RECENT_TABS("recent_tabs", CombinedHistoryPanel.class),
+
+        /* Cliqz start */
+        // add MyOffrz Panel type
+        MY_OFFRZ("my_offrz",MyOffrzPanel.class);
+        /* Cliqz end */
 
         private final String mId;
         private final Class<?> mPanelClass;
@@ -1614,6 +1619,10 @@ public final class HomeConfig {
     private static final String RECENT_TABS_PANEL_ID = "5c2601a5-eedc-4477-b297-ce4cef52adf8";
     private static final String REMOTE_TABS_PANEL_ID = "72429afd-8d8b-43d8-9189-14b779c563d0";
     private static final String DEPRECATED_READING_LIST_PANEL_ID = "20f4549a-64ad-4c32-93e4-1dcef792733b";
+    /* Cliqz start */
+    // add MyOffrz ID
+    private static final String MY_OFFRZ_PANEL_ID = "4b3eded8-02ce-e304-9b54-6e5e21121633";
+    /* Cliqz end */
 
     private final HomeConfigBackend mBackend;
 
@@ -1660,6 +1669,12 @@ public final class HomeConfig {
         case COMBINED_HISTORY:
             return R.string.home_history_title;
 
+        /* Cliqz start */
+        // return MyOffrz title in case of MyOffrz type
+        case MY_OFFRZ:
+            return R.string.my_offrz_title;
+        /* Cliqz end */
+
         default:
             throw new IllegalArgumentException("Only for built-in panel types: " + panelType);
         }
@@ -1688,6 +1703,12 @@ public final class HomeConfig {
 
         case DEPRECATED_RECENT_TABS:
             return RECENT_TABS_PANEL_ID;
+
+        /* Cliqz start */
+        // return MyOffrz Id in case of MyOffrz type
+        case MY_OFFRZ:
+            return  MY_OFFRZ_PANEL_ID;
+        /* Cliqz end */
 
         default:
             throw new IllegalArgumentException("Only for built-in panel types: " + panelType);
