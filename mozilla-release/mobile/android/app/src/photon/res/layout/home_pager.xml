@@ -5,19 +5,18 @@
 
 <!-- This file is used to include the home pager in gecko app
      layout based on screen size -->
-
+<!-- Cliqz Start -->
 <org.mozilla.gecko.home.HomePager xmlns:android="http://schemas.android.com/apk/res/android"
                                   xmlns:gecko="http://schemas.android.com/apk/res-auto"
                                   android:id="@+id/home_pager"
                                   android:layout_width="match_parent"
-                                  android:layout_height="match_parent"
-                                  android:background="@android:color/white">
+                                  android:layout_height="match_parent">
 
     <org.mozilla.gecko.home.TabMenuStrip
         android:layout_width="match_parent"
         android:layout_height="@dimen/tabs_strip_height"
         android:layout_gravity="top"
-        android:background="@color/about_page_header_grey"
+        android:background="@android:color/transparent"
         gecko:activeTextColor="@color/placeholder_grey"
         gecko:inactiveTextColor="@color/tab_text_color"
         gecko:strip="@drawable/home_tab_menu_strip"
@@ -25,3 +24,4 @@
         gecko:tabsMarginLeft="@dimen/tab_strip_content_start"/>
 
 </org.mozilla.gecko.home.HomePager>
+<!-- Cliqz End -->
