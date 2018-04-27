@@ -6411,14 +6411,14 @@ var Cliqz = {
         if (success) {
           BrowserApp.deck.selectedPanel.loadURI(msg.data.data);
         }
-        // currently not used by the Java side
+        // used by the java side to exit the edit mode
         GlobalEventDispatcher.sendRequest({
-          type: "Cliqz:OpenLink"
+          type: "Search:OpenLink"
         });
         break;
       case 'autocomplete':
         GlobalEventDispatcher.sendRequest({
-          type: "Cliqz:Autocomplete",
+          type: "Search:Autocomplete",
           data: msg.data.data
         });
         break;
@@ -6436,9 +6436,12 @@ var Cliqz = {
         console.log('Dispaching event from the privacy extension to native', msg);
         switch (msg.action) {
           case 'setIcon':
+            var count = Number.parseInt(msg.payload.text);
+            count = count ? count : 0;
             GlobalEventDispatcher.sendRequest({
               type: "Privacy:Count",
-              data: msg.payload
+              tabId: msg.payload.tabId,
+              count: count
             });
           break;
           case 'panelData':

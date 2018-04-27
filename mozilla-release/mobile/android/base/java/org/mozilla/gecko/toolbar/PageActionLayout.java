@@ -29,8 +29,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -205,14 +207,21 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
             @Override
             public void onBitmapFound(final Drawable d) {
                 if (mPageActionList.contains(pageAction)) {
-                    final Drawable icon;
+                    /* Cliqz start */
+                    // final Drawable icon;
+                    // if (useTint) {
+                    //     final ColorStateList colorStateList = ContextCompat.getColorStateList(
+                    //             getContext(), R.color.page_action_fg);
+                    //     icon = DrawableUtil.tintDrawableWithStateList(d, colorStateList);
+                    // } else {
+                    //     icon = d;
+                    // }
+                    final Drawable icon = d.mutate();
                     if (useTint) {
-                        final ColorStateList colorStateList = ContextCompat.getColorStateList(
-                                getContext(), R.color.page_action_fg);
-                        icon = DrawableUtil.tintDrawableWithStateList(d, colorStateList);
-                    } else {
-                        icon = d;
+                        DrawableCompat.setTint(icon, Color.WHITE);
                     }
+                    /* Cliqz end */
+
                     pageAction.setDrawable(icon);
                     refreshPageActionIcons();
                 }

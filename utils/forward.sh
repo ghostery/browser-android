@@ -14,4 +14,4 @@ then
     flavor=".${1}"
 fi
 
-adb forward tcp:6000 localfilesystem:/data/data/com.cliqz.browser${flavor}/firefox-debugger-socket
+$ABD forward tcp:6000 localfilesystem:/data/data/com.cliqz.browser${flavor}/firefox-debugger-socket

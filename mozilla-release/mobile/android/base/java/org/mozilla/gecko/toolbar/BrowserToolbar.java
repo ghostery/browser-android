@@ -1043,5 +1043,17 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
         EventDispatcher.getInstance().dispatch("Search:Hide", null);
     }
+
+    /**
+     * Update the tracker count for the current selected tab
+     *
+     * @param tabId the tabId of the tab for which we want to set the counter
+     * @param count the number we want to display below Ghosty
+     */
+    public void updateGhosty(int tabId, int count) {
+        if (tabId == Tabs.getInstance().getSelectedTab().getId()) {
+            ghostyButton.setTrackerCount(count);
+        }
+    }
     /* Cliqz end */
 }
