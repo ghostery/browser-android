@@ -89,6 +89,12 @@
         <extra android:name="resource"
             android:value="preferences_human_web"/>
     </PreferenceScreen>
+
+    <Preference
+        android:key="android.not_a_preference.rate.cliqz"
+        android:persistent="false"
+        android:title="@string/pref_category_rate_cliqz"
+        />
     <!-- Cliqz end -->
 
 </PreferenceScreen>

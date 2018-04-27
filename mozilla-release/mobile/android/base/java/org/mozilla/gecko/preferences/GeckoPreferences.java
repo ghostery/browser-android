@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -192,6 +193,7 @@ public class GeckoPreferences
     /* Cliqz start */
     // add human web link
     private static final String PREFS_HUMAN_WEB_LINK = NON_PREF_PREFIX + "human.web.link";
+    private static final String PREFS_rate_cliqz = NON_PREF_PREFIX + "rate.cliqz";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -826,6 +828,17 @@ public class GeckoPreferences
 
                     final String url = getResources().getString(R.string.pref_human_web_url, LOCALE);
                     ((LinkPreference) pref).setUrl(url);
+                }
+                // add navigate to playstore when click on rate cliqz browser
+                else if (PREFS_rate_cliqz.equals(key)){
+                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse
+                                    ("market://details?id=com.cliqz.browser")));
+                            return true;
+                        }
+                    });
                 }
                 /* Cliqz end */
 
