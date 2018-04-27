@@ -21,7 +21,6 @@ import java.net.URL;
 /**
  * Copyright © Cliqz 2018
  */
-
 public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
 
     public static final long SIX_HOURS_IN_S = 21600L;

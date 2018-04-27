@@ -46,7 +46,6 @@ import static android.support.v4.content.ContextCompat.getDrawable;
  * Cliqz 2018
  * This file is derived from @{@link TopSitesPanel}.java
  */
-
 public class MyOffrzPanel extends HomeFragment {
 
     private static final String LOGTAG = "GeckoMyOffrzPanel";
@@ -366,7 +365,7 @@ public class MyOffrzPanel extends HomeFragment {
         private void setTermsAndConditionButtonDrawables() {
             final Context context = getContext();
             final Drawable leftDrawable = getDrawable(context, R.drawable.ic_info_black).mutate();
-            final Drawable rightDrawable = getDrawable(context, R.drawable.ic_arrow_up).mutate();
+            final Drawable rightDrawable = getDrawable(context, R.drawable.arrow_up).mutate();
 
             final @ColorInt int color = ContextCompat.getColor(context, R.color.general_blue_color);
 
