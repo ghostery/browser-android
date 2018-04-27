@@ -1606,8 +1606,7 @@ public final class HomeConfig {
         public void setOnReloadListener(OnReloadListener listener);
     }
 
-    //
-    // used to create PanelConfigs for default built-in panels. These are
+    // UUIDs used to create PanelConfigs for default built-in panels. These are
     // public because they can be used in "about:home?panel=UUID" query strings
     // to open specific panels without querying the active Home Panel
     // configuration. Because they don't consider the active configuration, it
