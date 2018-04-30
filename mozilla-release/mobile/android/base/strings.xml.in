@@ -680,5 +680,8 @@
 	
   <!-- Rate Cliqz -->
   <string name="pref_category_rate_cliqz">&pref_category_rate_cliqz;</string>
+  
+  <!-- Imprint -->
+  <string name="pref_imprint">&pref_imprint;</string>
   <!-- Cliqz end -->
 </resources>
