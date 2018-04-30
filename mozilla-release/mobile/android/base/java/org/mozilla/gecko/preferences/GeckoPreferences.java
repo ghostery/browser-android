@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -36,8 +37,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +49,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.mozilla.gecko.AboutPages;
@@ -78,6 +82,8 @@ import org.mozilla.gecko.updater.UpdateService;
 import org.mozilla.gecko.updater.UpdateServiceHelper;
 import org.mozilla.gecko.util.BundleEventListener;
 import org.mozilla.gecko.util.ContextUtils;
+import org.mozilla.gecko.util.CustomLinkMovementMethod;
+import org.mozilla.gecko.util.CustomLinkMovementMethod.OnOpenLinkCallBack;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.HardwareUtils;
@@ -97,7 +103,11 @@ public class GeckoPreferences
     extends AppCompatPreferenceActivity
     implements BundleEventListener,
                OnPreferenceChangeListener,
-               OnSharedPreferenceChangeListener
+               OnSharedPreferenceChangeListener,
+               /* Cliqz start */
+               // add call back to listen for a clicked link on dialog.
+               OnOpenLinkCallBack
+               /* Cliqz end */
 {
     private static final String LOGTAG = "GeckoPreferences";
 
@@ -196,7 +206,15 @@ public class GeckoPreferences
     public static final String IS_MYOFFRZ_ONBOARDING_ENABLED = "myoffrz_onboarding_enabled";
     // add enable/disable my offer
     public static final String IS_MYOFFRZ_ENABLED = "myoffrz_enabled";
-    /* Cliqz end*/
+    // add Block Ads, Block Ads fair, what is fair and Block Ads data
+    private static final String PREFS_BLOCK_ADS = "cb_block_ads";
+    private static final String PREFS_BLOCK_ADS_FAIR = "cb_block_ads_fair";
+    private static final String PREFS_BLOCK_ADS_WHAT_FAIR = NON_PREF_PREFIX + "block.ads.what.fair";
+    private static final String PREFS_BLOCK_ADS_DATA = NON_PREF_PREFIX + "block.ads.data";
+    final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
+    // add rate cliqz browser to the settings menu
+    private static final String PREFS_rate_cliqz = NON_PREF_PREFIX + "rate.cliqz";
+    /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
     {
@@ -831,6 +849,27 @@ public class GeckoPreferences
                     final String url = getResources().getString(R.string.pref_human_web_url, LOCALE);
                     ((LinkPreference) pref).setUrl(url);
                 }
+                // open dialog describe what block ads fair means
+                else if(PREFS_BLOCK_ADS_WHAT_FAIR.equals(key)) {
+                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            showDialog(DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR);
+                            return true;
+                        }
+                    });
+                }
+                // add navigate to playstore when click on rate cliqz browser
+                else if (PREFS_rate_cliqz.equals(key)){
+                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse
+                                    ("market://details?id=com.cliqz.browser")));
+                            return true;
+                        }
+                    });
+                }
                 /* Cliqz end */
 
                 // Some Preference UI elements are not actually preferences,
@@ -1335,6 +1374,27 @@ public class GeckoPreferences
                         });
                         input.addTextChangedListener(new EmptyTextWatcher(input, dialog));
                 break;
+            /* Cliqz start */
+            // create dialog of what block ads fair means
+            case DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR:
+                final SpannableString dialogMessage = new SpannableString(getString(R.string.pref_block_ads_fair_description));
+                Linkify.addLinks(dialogMessage, Linkify.ALL);
+                builder.setTitle(R.string.pref_block_ads_what_fair)
+                        .setMessage(dialogMessage)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                dialog = builder.create();
+                dialog.show();
+                //To make the link clickable
+                ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod
+                        (CustomLinkMovementMethod.getInstance(this));
+                break;
+            /* Cliqz end */
             default:
                 return null;
         }
@@ -1438,4 +1498,13 @@ public class GeckoPreferences
         fragmentArgs.putString("resource", resource);
         intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_ARGUMENTS, fragmentArgs);
     }
+
+    /* Cliqz start */
+    // navigate to opened Tab after Link Clicked in dialog.
+    @Override
+    public void OnOpenLinkLoaded() {
+        setResult(RESULT_CODE_EXIT_SETTINGS);
+        finishChoosingTransition();
+    }
+    /* Cliqz end */
 }

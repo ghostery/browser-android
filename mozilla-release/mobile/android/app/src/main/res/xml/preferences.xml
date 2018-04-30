@@ -83,12 +83,28 @@
     </PreferenceScreen>
 
     <!-- Cliqz start -->
+    <!-- add human web setting -->
     <PreferenceScreen android:title="@string/pref_category_human_web"
         android:summary="@string/pref_category_human_web_summary"
         android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
         <extra android:name="resource"
             android:value="preferences_human_web"/>
     </PreferenceScreen>
+
+    <!-- add block ads setting -->
+    <PreferenceScreen android:title="@string/pref_category_block_ads"
+        android:summary="@string/pref_category_block_ads_summary"
+        android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
+        <extra android:name="resource"
+            android:value="preferences_block_ads"/>
+    </PreferenceScreen>
+
+    <!-- add rate cliqz browser setting -->
+    <Preference
+        android:key="android.not_a_preference.rate.cliqz"
+        android:persistent="false"
+        android:title="@string/pref_category_rate_cliqz"
+        />
     <!-- Cliqz end -->
 
 </PreferenceScreen>
