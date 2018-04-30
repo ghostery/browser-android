@@ -907,4 +907,7 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 
 <!-- Rate Cliqz -->
 <!ENTITY pref_category_rate_cliqz "Rate Cliqz Browser">
+
+<!-- Imprint -->
+<!ENTITY pref_imprint "Imprint">
 <!-- Cliqz end -->
