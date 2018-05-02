@@ -691,5 +691,9 @@
   <!-- Tips & tricks -->
   <string name="pref_tips_tricks">&pref_tips_tricks;</string>
   <string name="pref_tips_tricks_url">https://cliqz.com/en/tips-android</string>
+  
+  <!-- Report Website -->
+  <string name="pref_report_website_url">https://cliqz.com/report-url</string>
+  <string name="pref_report_website">&pref_report_website;</string>
   <!-- Cliqz end -->
 </resources>

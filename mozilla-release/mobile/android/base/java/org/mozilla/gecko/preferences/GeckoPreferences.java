@@ -221,6 +221,8 @@ public class GeckoPreferences
     private static final String PREFS_SUPPORT_CLIQZ = NON_PREF_PREFIX + "support.cliqz";
     // add Tips & tricks to the settings menu
     private static final String PREFS_TIPS_TRICKS = NON_PREF_PREFIX + "tips.tricks";
+    // add report browser to the settings menu
+    private static final String PREFS_REPORT_BROWSER = NON_PREF_PREFIX + "report.browser";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -885,6 +887,11 @@ public class GeckoPreferences
                 // Format tips & tricks url
                 else if (PREFS_TIPS_TRICKS.equals(key)) {
                     final String url = getResources().getString(R.string.pref_tips_tricks_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format the report website url
+                else if (PREFS_REPORT_BROWSER.equals(key)){
+                    final String url = getResources().getString(R.string.pref_report_website_url);
                     ((LinkPreference) pref).setUrl(url);
                 }
                 /* Cliqz end */
