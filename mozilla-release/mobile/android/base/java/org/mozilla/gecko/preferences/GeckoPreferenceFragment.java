@@ -38,6 +38,9 @@ import android.view.MenuInflater;
 
 import com.squareup.leakcanary.RefWatcher;
 
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREF_GENERAL_HOME;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREF_VENDOR_SCREEN;
+
 /* A simple implementation of PreferenceFragment for large screen devices
  * This will strip category headers (so that they aren't shown to the user twice)
  * as well as initializing Gecko prefs when a fragment is shown.
@@ -93,10 +96,17 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
         /* Cliqz start */
         // remove Home setting from General settings
         if(res == R.xml.preferences_general || res == R.xml.preferences_general_tablet){
-            PreferenceScreen homePreferenceScreen = (PreferenceScreen) screen.findPreference("android" +
-                    ".not_a_preference.general_home");
+            PreferenceScreen homePreferenceScreen = (PreferenceScreen) screen.findPreference
+                    (PREF_GENERAL_HOME);
             if(homePreferenceScreen != null) {
                 screen.removePreference(homePreferenceScreen);
+            }
+        }
+        // remove Mozilla Fennec (About, Feedback, FAQ)
+        else if(res == R.xml.preferences){
+            PreferenceScreen vendorPreferenceScreen = (PreferenceScreen) screen.findPreference(PREF_VENDOR_SCREEN);
+            if(vendorPreferenceScreen != null) {
+                screen.removePreference(vendorPreferenceScreen);
             }
         }
         /* Cliqz end */
