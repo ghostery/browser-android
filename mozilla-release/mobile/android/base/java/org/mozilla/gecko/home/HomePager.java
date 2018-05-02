@@ -5,11 +5,26 @@
 
 package org.mozilla.gecko.home;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
-import org.mozilla.gecko.AppConstants.Versions;
+import com.booking.rtlviewpager.RtlViewPager;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
@@ -18,24 +33,16 @@ import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.ViewHelper;
 import org.mozilla.gecko.home.HomeAdapter.OnAddPanelListener;
 import org.mozilla.gecko.home.HomeConfig.PanelConfig;
+import org.mozilla.gecko.util.AppBackgroundManager;
 import org.mozilla.gecko.util.ThreadUtils;
 
-import android.content.Context;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
-import com.booking.rtlviewpager.RtlViewPager;
-
-public class HomePager extends RtlViewPager implements HomeScreen {
+/* Cliqz start */
+public class HomePager extends RtlViewPager implements HomeScreen, Target {
+/* Cliqz end */
 
     @Override
     public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
@@ -60,7 +67,9 @@ public class HomePager extends RtlViewPager implements HomeScreen {
     private Bundle mRestoreData;
 
     // Cached original ViewPager background.
-    private final Drawable mOriginalBackground;
+    /* Cliqz Start */
+    //private final Drawable mOriginalBackground;
+    /* Cliqzz End */
 
     // Telemetry session for current panel.
     private TelemetryContract.Session mCurrentPanelSession;
@@ -174,10 +183,16 @@ public class HomePager extends RtlViewPager implements HomeScreen {
         //  attribute, but it is not working properly.
         setFocusableInTouchMode(true);
 
-        mOriginalBackground = getBackground();
+        /*Cliqz Start*/
+        //mOriginalBackground = getBackground();
+        /*Cliqz End*/
         addOnPageChangeListener(new PageChangeListener());
 
         mLoadState = LoadState.UNLOADED;
+        /*Cliqz Start*/
+        AppBackgroundManager.getInstance(context.getApplicationContext()).setViewBackground(this,
+                ContextCompat.getColor(context, R.color.url_bar));
+        /*Cliqz End*/
     }
 
     @Override
@@ -419,7 +434,11 @@ public class HomePager extends RtlViewPager implements HomeScreen {
         } else {
             mTabStrip.setVisibility(View.VISIBLE);
             // Restore original background.
-            setBackgroundDrawable(mOriginalBackground);
+            /*Cliqz Start*/
+            //setBackgroundDrawable(mOriginalBackground);
+            AppBackgroundManager.getInstance(getContext().getApplicationContext()).setViewBackground(this,
+                    ContextCompat.getColor(getContext(), R.color.url_bar));
+            /*Cliqz End*/
         }
 
         // Re-install the adapter with the final state
@@ -587,4 +606,21 @@ public class HomePager extends RtlViewPager implements HomeScreen {
             mCurrentPanelSessionSuffix = null;
         }
     }
+
+    /* Cliqz Start */
+    @Override
+    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+        setBackground(new BitmapDrawable(getContext().getResources(), bitmap));
+    }
+
+    @Override
+    public void onBitmapFailed(Drawable errorDrawable) {
+
+    }
+
+    @Override
+    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+    }
+    /* Cliqz End */
 }

@@ -69,7 +69,9 @@ public class ActivityStreamPanel extends FrameLayout {
     public ActivityStreamPanel(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setBackgroundColor(ContextCompat.getColor(context, R.color.photon_browser_toolbar_bg));
+        /*Cliqz Start*/
+        setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+        /*Cliqz End*/
 
         inflate(context, R.layout.as_content, this);
 
