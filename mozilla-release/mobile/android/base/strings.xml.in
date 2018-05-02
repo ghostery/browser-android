@@ -683,5 +683,9 @@
   
   <!-- Imprint -->
   <string name="pref_imprint">&pref_imprint;</string>
+
+  <!-- Support Cliqz -->
+  <string name="pref_support_cliqz_url">https://cliqz.com/en/support</string>
+  <string name="pref_support_cliqz">&pref_support_cliqz;</string>
   <!-- Cliqz end -->
 </resources>
