@@ -111,6 +111,12 @@
         android:title="@string/pref_imprint"
         android:persistent="false"
         url="https://cliqz.com/legal" />
+
+    <!-- add Report Website setting -->
+    <org.mozilla.gecko.preferences.LinkPreference
+        android:key="android.not_a_preference.report.browser"
+        android:title="@string/pref_report_website"
+        android:persistent="false" />
     <!-- Cliqz end -->
 
 </PreferenceScreen>

@@ -214,6 +214,8 @@ public class GeckoPreferences
     final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
     // add rate cliqz browser to the settings menu
     private static final String PREFS_rate_cliqz = NON_PREF_PREFIX + "rate.cliqz";
+    // add report browser to the settings menu
+    private static final String PREFS_REPORT_BROWSER = NON_PREF_PREFIX + "report.browser";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -869,6 +871,11 @@ public class GeckoPreferences
                             return true;
                         }
                     });
+                }
+                // Format the report website url
+                else if (PREFS_REPORT_BROWSER.equals(key)){
+                    final String url = getResources().getString(R.string.pref_report_website_url);
+                    ((LinkPreference) pref).setUrl(url);
                 }
                 /* Cliqz end */
 

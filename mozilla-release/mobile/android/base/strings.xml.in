@@ -683,5 +683,9 @@
   
   <!-- Imprint -->
   <string name="pref_imprint">&pref_imprint;</string>
+  
+  <!-- Report Website -->
+  <string name="pref_report_website_url">https://cliqz.com/report-url</string>
+  <string name="pref_report_website">&pref_report_website;</string>
   <!-- Cliqz end -->
 </resources>
