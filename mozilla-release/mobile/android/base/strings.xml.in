@@ -687,5 +687,9 @@
   <!-- Support Cliqz -->
   <string name="pref_support_cliqz_url">https://cliqz.com/en/support</string>
   <string name="pref_support_cliqz">&pref_support_cliqz;</string>
+
+  <!-- Tips & tricks -->
+  <string name="pref_tips_tricks">&pref_tips_tricks;</string>
+  <string name="pref_tips_tricks_url">https://cliqz.com/en/tips-android</string>
   <!-- Cliqz end -->
 </resources>

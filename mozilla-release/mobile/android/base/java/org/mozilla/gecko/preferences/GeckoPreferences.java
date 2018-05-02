@@ -219,6 +219,8 @@ public class GeckoPreferences
     public static final String PREF_VENDOR_SCREEN = NON_PREF_PREFIX + "vendor.screen";
     // add support cliqz to the settings menu
     private static final String PREFS_SUPPORT_CLIQZ = NON_PREF_PREFIX + "support.cliqz";
+    // add Tips & tricks to the settings menu
+    private static final String PREFS_TIPS_TRICKS = NON_PREF_PREFIX + "tips.tricks";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -878,6 +880,11 @@ public class GeckoPreferences
                 // Format the Human web link
                 else if(PREFS_SUPPORT_CLIQZ.equals(key)){
                     final String url = getResources().getString(R.string.pref_support_cliqz_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format tips & tricks url
+                else if (PREFS_TIPS_TRICKS.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_tips_tricks_url);
                     ((LinkPreference) pref).setUrl(url);
                 }
                 /* Cliqz end */

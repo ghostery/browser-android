@@ -118,6 +118,12 @@
         android:key="android.not_a_preference.support.cliqz"
         android:title="@string/pref_support_cliqz"
         android:persistent="false" />
+
+    <!-- add Tips & Tricks setting -->
+    <org.mozilla.gecko.preferences.LinkPreference
+        android:key="android.not_a_preference.tips.tricks"
+        android:title="@string/pref_tips_tricks"
+        android:persistent="false"/>
     <!-- Cliqz end -->
 
 </PreferenceScreen>
