@@ -910,4 +910,7 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 
 <!-- Imprint -->
 <!ENTITY pref_imprint "Imprint">
+
+<!-- Support Cliqz -->
+<!ENTITY pref_support_cliqz "FAQs &amp; Support">
 <!-- Cliqz end -->

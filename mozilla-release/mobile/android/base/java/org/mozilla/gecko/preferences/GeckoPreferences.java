@@ -214,6 +214,11 @@ public class GeckoPreferences
     final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
     // add rate cliqz browser to the settings menu
     private static final String PREFS_rate_cliqz = NON_PREF_PREFIX + "rate.cliqz";
+    // add keys for General Home , Vendor screen
+    public static final String PREF_GENERAL_HOME = NON_PREF_PREFIX + "general.home";
+    public static final String PREF_VENDOR_SCREEN = NON_PREF_PREFIX + "vendor.screen";
+    // add support cliqz to the settings menu
+    private static final String PREFS_SUPPORT_CLIQZ = NON_PREF_PREFIX + "support.cliqz";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -869,6 +874,11 @@ public class GeckoPreferences
                             return true;
                         }
                     });
+                }
+                // Format the Human web link
+                else if(PREFS_SUPPORT_CLIQZ.equals(key)){
+                    final String url = getResources().getString(R.string.pref_support_cliqz_url);
+                    ((LinkPreference) pref).setUrl(url);
                 }
                 /* Cliqz end */
 

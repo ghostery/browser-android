@@ -77,7 +77,8 @@
 
     <PreferenceScreen android:title="@string/pref_category_vendor"
                       android:summary="@string/pref_category_vendor_summary"
-                      android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
+                      android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment"
+                      android:key="android.not_a_preference.vendor.screen">
         <extra android:name="resource"
                android:value="preferences_vendor"/>
     </PreferenceScreen>
@@ -111,6 +112,12 @@
         android:title="@string/pref_imprint"
         android:persistent="false"
         url="https://cliqz.com/legal" />
+
+    <!-- FAQ Support -->
+    <org.mozilla.gecko.preferences.LinkPreference
+        android:key="android.not_a_preference.support.cliqz"
+        android:title="@string/pref_support_cliqz"
+        android:persistent="false" />
     <!-- Cliqz end -->
 
 </PreferenceScreen>
