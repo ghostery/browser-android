@@ -683,5 +683,9 @@
   
   <!-- Imprint -->
   <string name="pref_imprint">&pref_imprint;</string>
+
+  <!-- Tips & tricks -->
+  <string name="pref_tips_tricks">&pref_tips_tricks;</string>
+  <string name="pref_tips_tricks_url">https://cliqz.com/en/tips-android</string>
   <!-- Cliqz end -->
 </resources>

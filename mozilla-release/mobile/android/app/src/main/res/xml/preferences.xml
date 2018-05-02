@@ -111,6 +111,12 @@
         android:title="@string/pref_imprint"
         android:persistent="false"
         url="https://cliqz.com/legal" />
+
+    <!-- add Tips & Tricks setting -->
+    <org.mozilla.gecko.preferences.LinkPreference
+        android:key="android.not_a_preference.tips.tricks"
+        android:title="@string/pref_tips_tricks"
+        android:persistent="false"/>
     <!-- Cliqz end -->
 
 </PreferenceScreen>
