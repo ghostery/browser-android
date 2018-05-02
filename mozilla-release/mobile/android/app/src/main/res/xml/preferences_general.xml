@@ -9,7 +9,7 @@
                   xmlns:gecko="http://schemas.android.com/apk/res-auto"
                   android:enabled="false">
 
-    <PreferenceScreen android:key="android.not_a_preference.general_home"
+    <PreferenceScreen android:key="android.not_a_preference.general.home"
                       android:title="@string/pref_category_home"
                       android:summary="@string/pref_category_home_summary"
                       android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
