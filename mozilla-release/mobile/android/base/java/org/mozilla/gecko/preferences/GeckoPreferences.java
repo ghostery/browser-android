@@ -853,9 +853,7 @@ public class GeckoPreferences
                 /* Cliqz start */
                 // Format the Human web link
                 else if (PREFS_HUMAN_WEB_LINK.equals(key)) {
-                    final String LOCALE = Locales.getLanguage(Locale.getDefault());
-
-                    final String url = getResources().getString(R.string.pref_human_web_url, LOCALE);
+                    final String url = getResources().getString(R.string.pref_human_web_url);
                     ((LinkPreference) pref).setUrl(url);
                 }
                 // open dialog describe what block ads fair means
