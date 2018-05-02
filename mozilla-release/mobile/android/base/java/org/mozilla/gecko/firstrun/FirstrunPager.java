@@ -18,6 +18,7 @@ import android.animation.ObjectAnimator;
 
 import com.booking.rtlviewpager.RtlViewPager;
 
+import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.fxa.FirefoxAccounts;
@@ -144,7 +145,11 @@ public class FirstrunPager extends RtlViewPager {
             this.panels = panels;
             this.fragments = new Fragment[panels.size()];
             for (FirstrunPagerConfig.FirstrunPanelConfig panel : panels) {
-                mDecor.onAddPagerView(context.getString(panel.getTitleRes()));
+                /*Cliqz Start*/
+                //just a dummy icon for onboarding since view pager tab menu now supports icons instead of text
+                //as we are going to have a different onboaring this doesn't matter
+                mDecor.onAddPagerView(R.drawable.ic_history_white);
+                /*Cliqz End*/
             }
 
             if (panels.size() > 0) {

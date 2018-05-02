@@ -17,10 +17,9 @@
         android:layout_height="@dimen/tabs_strip_height"
         android:layout_gravity="top"
         android:background="@android:color/transparent"
-        gecko:activeTextColor="@color/placeholder_grey"
-        gecko:inactiveTextColor="@color/tab_text_color"
         gecko:strip="@drawable/home_tab_menu_strip"
-        gecko:stripColor="@color/tab_menu_strip_color"
+        gecko:stripColor="@android:color/white"
+        gecko:inactiveTextColor="@android:color/transparent"
         gecko:tabsMarginLeft="@dimen/tab_strip_content_start"/>
 
 </org.mozilla.gecko.home.HomePager>

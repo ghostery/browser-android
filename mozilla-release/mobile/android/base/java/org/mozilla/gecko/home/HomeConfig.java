@@ -5,6 +5,22 @@
 
 package org.mozilla.gecko.home;
 
+import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
+import android.text.TextUtils;
+import android.util.Pair;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.mozilla.gecko.EventDispatcher;
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.annotation.RobocopTarget;
+import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.ThreadUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -13,21 +29,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.mozilla.gecko.annotation.RobocopTarget;
-import org.mozilla.gecko.EventDispatcher;
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.util.GeckoBundle;
-import org.mozilla.gecko.util.ThreadUtils;
-
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.text.TextUtils;
-import android.util.Pair;
 
 public final class HomeConfig {
     public static final String PREF_KEY_BOOKMARKS_PANEL_ENABLED = "bookmarksPanelEnabled";
@@ -120,6 +121,9 @@ public final class HomeConfig {
         private final AuthConfig mAuthConfig;
         private final EnumSet<Flags> mFlags;
         private final int mPosition;
+        /*Cliqz Start*/
+        private final @DrawableRes int mIconId;
+        /*Cliqz End*/
 
         static final String JSON_KEY_TYPE = "type";
         static final String JSON_KEY_TITLE = "title";
@@ -146,7 +150,9 @@ public final class HomeConfig {
 
             mTitle = json.getString(JSON_KEY_TITLE);
             mId = json.getString(JSON_KEY_ID);
-
+            /*Cliqz Start*/
+            mIconId = getDrawableId(mId);
+            /*Cliqz End*/
             final String layoutTypeId = json.optString(JSON_KEY_LAYOUT, null);
             if (layoutTypeId != null) {
                 mLayoutType = LayoutType.fromId(layoutTypeId);
@@ -196,7 +202,9 @@ public final class HomeConfig {
             mTitle = in.readString();
             mId = in.readString();
             mLayoutType = (LayoutType) in.readParcelable(getClass().getClassLoader());
-
+            /*Cliqz Start*/
+            mIconId = getDrawableId(mId);
+            /*Cliqz End*/
             mViews = new ArrayList<ViewConfig>();
             in.readTypedList(mViews, ViewConfig.CREATOR);
 
@@ -213,7 +221,9 @@ public final class HomeConfig {
             mTitle = panelConfig.mTitle;
             mId = panelConfig.mId;
             mLayoutType = panelConfig.mLayoutType;
-
+            /*Cliqz Start*/
+            mIconId = getDrawableId(mId);
+            /*Cliqz End*/
             mViews = new ArrayList<ViewConfig>();
             List<ViewConfig> viewConfigs = panelConfig.mViews;
             if (viewConfigs != null) {
@@ -247,7 +257,9 @@ public final class HomeConfig {
             mAuthConfig = authConfig;
             mFlags = flags;
             mPosition = position;
-
+            /*Cliqz Start*/
+            mIconId = getDrawableId(mId);
+            /*Cliqz End*/
             validate();
         }
 
@@ -433,6 +445,28 @@ public final class HomeConfig {
                 return new PanelConfig[size];
             }
         };
+
+        /*Cliqz Start*/
+        private int getDrawableId(String panedId) {
+            switch (mId) {
+                case TOP_SITES_PANEL_ID:
+                    return R.drawable.ic_home_cliqz;
+                case HISTORY_PANEL_ID:
+                    return R.drawable.ic_history_white;
+                case MY_OFFRZ_PANEL_ID:
+                    return R.drawable.ic_offrz_white;
+                case BOOKMARKS_PANEL_ID:
+                    return R.drawable.ic_star_white;
+                default:
+                    return R.drawable.ic_history_white;
+            }
+        }
+
+        @DrawableRes
+        public int getIconId() {
+            return mIconId;
+        }
+        /*Cliqz End*/
     }
 
     public static enum LayoutType implements Parcelable {
