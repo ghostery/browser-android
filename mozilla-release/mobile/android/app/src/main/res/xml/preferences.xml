@@ -112,6 +112,12 @@
         android:title="@string/pref_imprint"
         android:persistent="false"
         url="https://cliqz.com/legal" />
+
+    <!-- FAQ Support -->
+    <org.mozilla.gecko.preferences.LinkPreference
+        android:key="android.not_a_preference.support.cliqz"
+        android:title="@string/pref_support_cliqz"
+        android:persistent="false" />
     <!-- Cliqz end -->
 
 </PreferenceScreen>
