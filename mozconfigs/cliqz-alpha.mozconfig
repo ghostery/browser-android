@@ -8,3 +8,5 @@ ac_add_options --with-android-sdk=/home/jenkins/.mozbuild/android-sdk-linux
 ac_add_options --enable-artifact-builds
 # Write build artifacts to:
 mk_add_options MOZ_OBJDIR=./objdir-frontend-android
+# Branding
+ac_add_options --with-branding=mobile/android/branding/cliqz-alpha
