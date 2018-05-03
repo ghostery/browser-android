@@ -8,21 +8,21 @@
 <!ENTITY trackingProtection3.description "Ochrona przed śledzeniem blokuje elementy, które zbierają informacje o przeglądaniu na wielu różnych stronach.">
 <!ENTITY trackingProtection3.radioGroupLabel "Chroń przed śledzeniem przez znane elementy śledzące:">
 <!ENTITY trackingProtectionAlways.label "Zawsze">
-<!ENTITY trackingProtectionAlways.accesskey "">
+<!ENTITY trackingProtectionAlways.accesskey "Z">
 <!ENTITY trackingProtectionPrivate.label "W oknach prywatnych">
-<!ENTITY trackingProtectionPrivate.accesskey "">
+<!ENTITY trackingProtectionPrivate.accesskey "o">
 <!ENTITY trackingProtectionNever.label "Nigdy">
-<!ENTITY trackingProtectionNever.accesskey "">
+<!ENTITY trackingProtectionNever.accesskey "N">
 <!ENTITY trackingProtectionLearnMore.label "Więcej informacji">
 <!ENTITY  trackingProtectionLearnMore2.label "Więcej informacji o ochronie przed śledzeniem i prywatności">
 <!ENTITY trackingProtectionExceptions.label "Wyjątki…">
-<!ENTITY trackingProtectionExceptions.accesskey "">
+<!ENTITY trackingProtectionExceptions.accesskey "W">
 
 <!ENTITY trackingProtectionPBM6.label "Ochrona przed śledzeniem przez znane elementy śledzące w oknach prywatnych.">
-<!ENTITY trackingProtectionPBM6.accesskey "">
+<!ENTITY trackingProtectionPBM6.accesskey "r">
 <!ENTITY trackingProtectionPBMLearnMore.label "Więcej informacji">
 <!ENTITY changeBlockList2.label "Zmień listę blokowanych…">
-<!ENTITY changeBlockList2.accesskey "">
+<!ENTITY changeBlockList2.accesskey "b">
 
 <!ENTITY doNotTrack.description "Informuj witryny o preferencjach względem śledzenia (wysyłanie nagłówka „Do Not Track”):">
 <!ENTITY doNotTrack.learnMore.label "Więcej informacji">
@@ -32,19 +32,19 @@
 <!ENTITY addressBar.label "Pasek adresu">
 <!ENTITY addressBar.suggest.label "Podpowiedzi w pasku adresu opieraj na:">
 <!ENTITY locbar.history2.label "historii przeglądania">
-<!ENTITY locbar.history2.accesskey "">
+<!ENTITY locbar.history2.accesskey "h">
 <!ENTITY locbar.bookmarks.label "zakładkach">
-<!ENTITY locbar.bookmarks.accesskey "">
+<!ENTITY locbar.bookmarks.accesskey "z">
 <!ENTITY locbar.openpage.label "otwartych kartach">
-<!ENTITY locbar.openpage.accesskey "">
+<!ENTITY locbar.openpage.accesskey "k">
 <!ENTITY locbar.searches.label "podpowiedziach wyszukiwania">
-<!ENTITY locbar.searches.accesskey "">
+<!ENTITY locbar.searches.accesskey "d">
 
 <!ENTITY suggestionSettings2.label "Zmień ustawienia podpowiedzi dostarczanych przez wyszukiwarki">
 
 <!ENTITY history.label "Historia">
 <!ENTITY historyHeader2.pre.label "Program &brandShortName;:">
-<!ENTITY historyHeader2.pre.accesskey "">
+<!ENTITY historyHeader2.pre.accesskey "m">
 <!ENTITY historyHeader.remember.label "będzie zachowywał historię">
 <!ENTITY historyHeader.dontremember.label "nie będzie zachowywał historii">
 <!ENTITY historyHeader.custom.label "będzie używał ustawień użytkownika">
@@ -53,22 +53,31 @@
 <!ENTITY permissions.label "Uprawnienia">
 
 <!ENTITY acceptCookies2.label "Akceptowanie ciasteczek">
-<!ENTITY acceptCookies2.accesskey "">
+<!ENTITY acceptCookies2.accesskey "A">
+<!ENTITY acceptCookies3.label "Akceptowanie ciasteczek i danych stron">
+<!ENTITY acceptCookies3.accesskey "k">
+<!ENTITY acceptCookies4.label "Akceptowanie ciasteczek i danych stron (zalecane)">
+<!ENTITY acceptCookies4.accesskey "c">
 <!ENTITY acceptThirdParty2.pre.label "Akceptowanie ciasteczek witryn zewnętrznych podmiotów:">
-<!ENTITY acceptThirdParty2.pre.accesskey "">
+<!ENTITY acceptThirdParty2.pre.accesskey "n">
+<!ENTITY blockCookies.label "Blokowanie ciasteczek i danych stron (może powodować problemy)">
+<!ENTITY blockCookies.accesskey "B">
+<!ENTITY acceptThirdParty3.pre.label "Akceptowanie ciasteczek i danych stron witryn zewnętrznych podmiotów:">
+<!ENTITY acceptThirdParty3.pre.accesskey "c">
 <!ENTITY acceptThirdParty.always.label "zawsze">
 <!ENTITY acceptThirdParty.never.label "nigdy">
 <!ENTITY acceptThirdParty.visited.label "z odwiedzonych">
 <!ENTITY keepUntil2.label "Przechowywanie ciasteczek:">
-<!ENTITY keepUntil2.accesskey "">
+<!ENTITY keepUntil2.accesskey "h">
 <!ENTITY expire.label "do ich wygaśnięcia">
 <!ENTITY close.label "do zamknięcia programu &brandShortName;">
 <!ENTITY cookieExceptions.label "Wyjątki…">
-<!ENTITY cookieExceptions.accesskey "">
+<!ENTITY cookieExceptions.accesskey "W">
 <!ENTITY showCookies.label "Wyświetl ciasteczka…">
-<!ENTITY showCookies.accesskey "">
+<!ENTITY showCookies.accesskey "c">
 
 <!ENTITY rememberDescription.label "&brandShortName; zachowa historię przeglądania, wyszukiwania, pobieranych plików i danych formularzy, zachowa także ciasteczka z odwiedzanych witryn.">
+<!ENTITY rememberDescription1.label "&brandShortName; zachowa historię przeglądania, wyszukiwania, pobieranych plików i danych formularzy.">
 <!ENTITY rememberActions.pre.label "">
 <!ENTITY rememberActions.clearHistory.label "Wyczyść ostatnią historię">
 <!ENTITY rememberActions.middle.label " lub ">
@@ -78,26 +87,28 @@
 <!ENTITY dontrememberActions.pre.label          "Można także ">
 <!ENTITY dontrememberActions.clearHistory.label "wyczyścić całą bieżącą historię">
 <!ENTITY dontrememberActions.post.label         ".">
+<!ENTITY clearHistoryButton.label "Wyczyść historię…">
+<!ENTITY clearHistoryButton.accesskey "W">
 
 <!ENTITY privateBrowsingPermanent2.label "Zawsze aktywny tryb przeglądania prywatnego">
-<!ENTITY privateBrowsingPermanent2.accesskey "">
+<!ENTITY privateBrowsingPermanent2.accesskey "t">
 <!ENTITY rememberHistory2.label "Historia przeglądania i pobierania plików">
-<!ENTITY rememberHistory2.accesskey "">
+<!ENTITY rememberHistory2.accesskey "s">
 <!ENTITY rememberSearchForm.label "Historia wyszukiwania i formularzy">
-<!ENTITY rememberSearchForm.accesskey "">
+<!ENTITY rememberSearchForm.accesskey "f">
 <!ENTITY clearOnClose.label "Czyszczenie historii podczas zamykania programu &brandShortName;">
-<!ENTITY clearOnClose.accesskey "">
+<!ENTITY clearOnClose.accesskey "z">
 <!ENTITY clearOnCloseSettings.label "Ustawienia…">
-<!ENTITY clearOnCloseSettings.accesskey "">
+<!ENTITY clearOnCloseSettings.accesskey "U">
 
 <!ENTITY browserContainersLearnMore.label "Więcej informacji">
 <!ENTITY browserContainersEnabled.label "Karty z kontekstem">
-<!ENTITY browserContainersEnabled.accesskey "">
+<!ENTITY browserContainersEnabled.accesskey "K">
 <!ENTITY browserContainersSettings.label "Dostosuj…">
-<!ENTITY browserContainersSettings.accesskey "">
+<!ENTITY browserContainersSettings.accesskey "D">
 
 <!ENTITY a11yPrivacy.checkbox.label "Blokowanie dostępu do przeglądarki usługom ułatwień dostępu.">
-<!ENTITY a11yPrivacy.checkbox.accesskey "">
+<!ENTITY a11yPrivacy.checkbox.accesskey "u">
 <!ENTITY a11yPrivacy.learnmore.label "Więcej informacji">
 
 <!ENTITY enableSafeBrowsingLearnMore.label "Więcej informacji">

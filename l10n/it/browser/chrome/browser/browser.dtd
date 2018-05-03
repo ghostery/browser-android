@@ -38,6 +38,7 @@
 <!ENTITY undoCloseTab.accesskey "s">
 <!ENTITY closeTab.label "Chiudi scheda">
 <!ENTITY closeTab.accesskey "C">
+<!ENTITY hiddenTabs.label "Schede nascoste">
 <!ENTITY listAllTabs.label "Elenco di tutte le schede">
 <!ENTITY tabCmd.label "Nuova scheda">
 <!ENTITY tabCmd.accesskey "h">
@@ -156,6 +157,7 @@
 <!ENTITY urlbar.webNotificationAnchor.tooltip "Decidi se ricevere notifiche da questo sito">
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip "Salvataggio dati nell’archivio permanente">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip "Il browser è attualmente controllato da remoto">
+<!ENTITY urlbar.webAuthnAnchor.tooltip "Apri pannello autenticazione web">
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip "Gestisci la condivisione di fotocamera e/o microfono con il sito">
 <!ENTITY urlbar.webRTCShareMicrophoneNotificationAnchor.tooltip "Gestisci la condivisione del microfono con il sito">
 <!ENTITY urlbar.webRTCShareScreenNotificationAnchor.tooltip "Gestisci la condivisione delle finestre o dello schermo con il sito">
@@ -172,6 +174,7 @@
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Il salvataggio dati nell’archivio permanente è bloccato per questo sito.">
 <!ENTITY urlbar.popupBlocked.tooltip "Sono state bloccate delle finestre pop-up per questo sito web.">
 <!ENTITY urlbar.canvasBlocked.tooltip "È stato bloccato l’accesso ai dati dei canvas per questo sito web.">
+<!ENTITY urlbar.flashPluginBlocked.tooltip "È stato bloccato l’utilizzo del plugin Adobe Flash per questo sito web.">
 <!ENTITY urlbar.midiBlocked.tooltip "È stato bloccato l’accesso alle funzioni MIDI per questo sito web.">
 <!ENTITY urlbar.openHistoryPopup.tooltip "Visualizza cronologia">
 <!ENTITY searchItem.title "Cerca">
@@ -210,6 +213,7 @@
 <!ENTITY webDeveloperMenu.accesskey "v">
 <!ENTITY inspectContextMenu.label "Analizza elemento">
 <!ENTITY inspectContextMenu.accesskey "l">
+<!ENTITY inspectA11YContextMenu.label "Analizza proprietà accessibilità">
 <!ENTITY fileMenu.label "File">
 <!ENTITY fileMenu.accesskey "F">
 <!ENTITY newUserContext.label "Nuova scheda contenitore">
@@ -278,7 +282,6 @@
 <!ENTITY appMenuRemoteTabs.showAll.label "Visualizza tutte">
 <!ENTITY appMenuRemoteTabs.showAll.tooltip "Visualizza tutte le schede da questo dispositivo">
 <!ENTITY appMenuRemoteTabs.tabsnotsyncing.label "Attiva la sincronizzazione delle schede per visualizzare le schede disponibili negli altri dispositivi.">
-<!ENTITY appMenuRemoteTabs.noclients.title "Nessuna scheda sincronizzata (per ora)">
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "Come fare per visualizzare in questa sezione le schede da altri dispositivi?">
 <!ENTITY appMenuRemoteTabs.openprefs.label "Preferenze Sync">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "Apri preferenze Sync">
@@ -564,7 +567,6 @@
 <!ENTITY syncTabsMenu3.label "Schede sincronizzate">
 <!ENTITY syncedTabs.sidebar.label "Schede sincronizzate">
 <!ENTITY syncedTabs.sidebar.noclients.label "Accedi a Firefox con altri dispositivi per visualizzarne le schede aperte.">
-<!ENTITY syncedTabs.sidebar.noclients.title "Nessuna scheda sincronizzata (per ora)">
 <!ENTITY syncedTabs.sidebar.noclients.subtitle "Come fare per visualizzare in questa sezione le schede da altri dispositivi?">
 <!ENTITY syncedTabs.sidebar.notsignedin.label "Accedi per visualizzare un elenco delle schede dagli altri dispositivi connessi.">
 <!ENTITY syncedTabs.sidebar.unverified.label "L’account non è ancora stato verificato.">
@@ -692,6 +694,14 @@
 <!ENTITY newTabControlled.keepButton.accesskey "M">
 <!ENTITY newTabControlled.restoreButton.label "Ripristina impostazioni">
 <!ENTITY newTabControlled.restoreButton.accesskey "R">
+<!ENTITY newTabControlled.disableButton.label "Disattiva estensione">
+<!ENTITY newTabControlled.disableButton.accesskey "D">
+<!ENTITY homepageControlled.message "Un’estensione ha modificato i contenuti visualizzati nella pagina iniziale. È possibile ripristinare queste impostazioni se si tratta di una modifica non voluta.">
+<!ENTITY homepageControlled.header.message "La pagina iniziale è cambiata.">
+<!ENTITY homepageControlled.keepButton.label "Mantieni modifiche">
+<!ENTITY homepageControlled.keepButton.accesskey "M">
+<!ENTITY homepageControlled.disableButton.label "Disattiva estensione">
+<!ENTITY homepageControlled.disableButton.accesskey "D">
 <!ENTITY pageActionButton.tooltip "Azioni per questa pagina">
 <!ENTITY pageAction.addToUrlbar.label "Aggiungi alla barra degli indirizzi">
 <!ENTITY pageAction.removeFromUrlbar.label "Rimuovi dalla barra degli indirizzi">
@@ -700,6 +710,7 @@
 <!ENTITY pageAction.manageExtension.label "Gestisci estensione…">
 <!ENTITY pageAction.sendTabToDevice.label "Invia scheda a dispositivo">
 <!ENTITY sendToDevice.syncNotReady.label "Sincronizzazione dispositivi…">
+<!ENTITY pageAction.shareUrl.label "Condividi">
 <!ENTITY libraryButton.tooltip "Visualizza cronologia, password salvate e altro ancora">
 <!ENTITY accessibilityIndicator.tooltip "Caratteristiche per l’accessibilità attive">
 <!ENTITY addonPostInstallMessage.label "Gestisci i componenti aggiuntivi facendo clic su <image class='addon-addon-icon'/> nel menu <image class='addon-toolbar-icon'/>.">

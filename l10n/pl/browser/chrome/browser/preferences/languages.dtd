@@ -6,13 +6,13 @@
 <!ENTITY languages.customize.Header                     "Języki">
 <!ENTITY languages.customize2.description "Niektóre strony WWW dostępne są w wielu wersjach językowych. Ustal listę kolejno preferowanych języków dla tego rodzaju stron.">
 <!ENTITY languages.customize.moveUp.label               "W górę">
-<!ENTITY languages.customize.moveUp.accesskey "">
+<!ENTITY languages.customize.moveUp.accesskey "g">
 <!ENTITY languages.customize.moveDown.label             "W dół">
-<!ENTITY languages.customize.moveDown.accesskey "">
+<!ENTITY languages.customize.moveDown.accesskey "d">
 <!ENTITY languages.customize.deleteButton.label         "Usuń">
-<!ENTITY languages.customize.deleteButton.accesskey "">
+<!ENTITY languages.customize.deleteButton.accesskey "U">
 <!ENTITY languages.customize.selectLanguage.label       "Wybierz język do dodania…">
 <!ENTITY languages.customize.addButton.label            "Dodaj">
-<!ENTITY languages.customize.addButton.accesskey "">
+<!ENTITY languages.customize.addButton.accesskey "o">
 
 <!ENTITY languages.customize.spoofEnglish "Żądanie angielskich wersji witryn, aby zwiększyć prywatność">

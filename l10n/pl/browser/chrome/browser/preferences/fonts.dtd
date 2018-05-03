@@ -5,21 +5,21 @@
 <!ENTITY fontsDialog.title "Czcionki">
 
 <!ENTITY fonts.label "Czcionki:">
-<!ENTITY fonts.accesskey "">
+<!ENTITY fonts.accesskey "C">
 
 <!ENTITY size2.label "Rozmiar:">
-<!ENTITY sizeProportional.accesskey "">
-<!ENTITY sizeMonospace.accesskey "">
+<!ENTITY sizeProportional.accesskey "R">
+<!ENTITY sizeMonospace.accesskey "z">
 
 <!ENTITY proportional2.label "Proporcjonalna:">
-<!ENTITY proportional2.accesskey "">
+<!ENTITY proportional2.accesskey "a">
 
 <!ENTITY serif2.label "Szeryfowa:">
-<!ENTITY serif2.accesskey "">
+<!ENTITY serif2.accesskey "S">
 <!ENTITY sans-serif2.label "Bezszeryfowa:">
-<!ENTITY sans-serif2.accesskey "">
+<!ENTITY sans-serif2.accesskey "B">
 <!ENTITY monospace2.label "O stałej szerokości:">
-<!ENTITY monospace2.accesskey "">
+<!ENTITY monospace2.accesskey "O">
 
 <!ENTITY font.langGroup.latin "Łacińskie">
 <!ENTITY font.langGroup.japanese "Japońskie">
@@ -52,18 +52,18 @@
 <!ENTITY font.langGroup.tibetan "Tybetańskie">
 
 <!ENTITY minSize2.label "Minimalny rozmiar czcionki:">
-<!ENTITY minSize2.accesskey "">
+<!ENTITY minSize2.accesskey "M">
 <!ENTITY minSize.none 		"Brak" >
 
 <!ENTITY  useDefaultFontSerif.label               "Szeryfowa">
 <!ENTITY  useDefaultFontSansSerif.label           "Bezszeryfowa">
 
 <!ENTITY allowPagesToUseOwn.label "Pozwalaj stronom stosować inne czcionki niż ustawione tutaj">
-<!ENTITY allowPagesToUseOwn.accesskey "">
+<!ENTITY allowPagesToUseOwn.accesskey "i">
 
 <!ENTITY languages.customize.Fallback2.grouplabel "Kodowanie tekstu dla przestarzałych treści">
 <!ENTITY languages.customize.Fallback3.label "Rezerwowe kodowanie tekstu:">
-<!ENTITY languages.customize.Fallback3.accesskey "">
+<!ENTITY languages.customize.Fallback3.accesskey "k">
 <!ENTITY languages.customize.Fallback2.desc "Kodowanie tekstu używane na stronach, które same go nie określają.">
 <!ENTITY languages.customize.Fallback.auto "Domyślne dla obecnej lokalizacji">
 <!ENTITY languages.customize.Fallback.arabic "Arabskie">

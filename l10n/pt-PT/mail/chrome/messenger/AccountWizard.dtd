@@ -115,7 +115,7 @@
 <!ENTITY serverNamePrefix.label "Nome do servidor de receção:">
 <!ENTITY smtpServerNamePrefix.label "Nome do servidor de envio (SMTP):">
 <!ENTITY newsServerNamePrefix.label "Nome do servidor de notícias (NNTP):">
-<!ENTITY downloadOnLogin.label "Transferir mensagens agora">
+<!ENTITY downloadOnLogin.label "Descarregar mensagens agora">
 <!ENTITY downloadOnLogin.accesskey "D">
 <!ENTITY deferStorageDesc.label "Desmarque a caixa de verificação para guardar o correio desta conta na sua própria pasta. Isto vai tornar a sua conta como uma conta principal. De outra maneira, fará parte da caixa de entrada nas pastas locais.">
 <!ENTITY deferStorage.label "Utilizar caixa de entrada global (guardar correio nas pastas locais)">

@@ -15,7 +15,7 @@
 <!ENTITY address2.accesskey           "d">
 <!ENTITY block.label                  "Bloquear">
 <!ENTITY block.accesskey              "B">
-<!ENTITY session.label                "Permitir nesta sessão">
+<!ENTITY session.label                "Permitir para a sessão">
 <!ENTITY session.accesskey            "e">
 <!ENTITY allow.label                  "Permitir">
 <!ENTITY allow.accesskey              "P">

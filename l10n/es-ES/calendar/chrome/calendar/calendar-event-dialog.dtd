@@ -327,6 +327,7 @@
 <!ENTITY event.timezone.custom.label "Más zonas horarias…">
 <!ENTITY read.only.general.label "General">
 <!ENTITY read.only.title.label "Título:">
+<!ENTITY read.only.calendar.label "Calendario:">
 <!ENTITY read.only.event.start.label "Fecha de inicio:">
 <!ENTITY read.only.task.start.label "Fecha de inicio:">
 <!ENTITY read.only.event.end.label "Fecha de finalización:">
@@ -345,3 +346,15 @@
 <!ENTITY read.only.attendees.label "Asistentes">
 <!ENTITY read.only.description.label "Descripción">
 <!ENTITY read.only.link.label "Enlace relacionado">
+<!ENTITY summary.dialog.saveclose.label "Guardar y cerrar">
+<!ENTITY summary.dialog.saveclose.tooltiptext "Guardar cambios y cerrar la ventana sin cambiar su estado de participación ni enviar respuesta">
+<!ENTITY summary.dialog.accept.label "Aceptar">
+<!ENTITY summary.dialog.accept.tooltiptext "Aceptar la invitación">
+<!ENTITY summary.dialog.tentative.label "Provisional">
+<!ENTITY summary.dialog.tentative.tooltiptext "Aceptar la invitación provisionalmente">
+<!ENTITY summary.dialog.decline.label "Rechazar">
+<!ENTITY summary.dialog.decline.tooltiptext "Declinar invitación">
+<!ENTITY summary.dialog.dontsend.label "No enviar respuesta">
+<!ENTITY summary.dialog.dontsend.tooltiptext "Cambiar su estado de participación sin enviar respuesta al organizador y cerrar la ventana">
+<!ENTITY summary.dialog.send.label "Enviar respuesta ahora">
+<!ENTITY summary.dialog.send.tooltiptext "Enviar respuesta al organizador y cerrar la ventana">

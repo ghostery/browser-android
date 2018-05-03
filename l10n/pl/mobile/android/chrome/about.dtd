@@ -3,9 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY aboutPage.title "O programie &brandShortName;">
 <!ENTITY aboutPage.warningVersion "&brandShortName; jest w wersji testowej i może być niestabilny.">
-<!ENTITY aboutPage.telemetryStart " Informacje na temat wydajności, użycia, sprzętu i dokonanych zmian są automatycznie wysyłane do organizacji ">
-<!ENTITY aboutPage.telemetryMozillaLink "&vendorShortName;">
-<!ENTITY aboutPage.telemetryEnd ", aby uczynić program &brandShortName; lepszym.">
 <!ENTITY aboutPage.checkForUpdates.link "Aktualizuj">
 <!ENTITY aboutPage.checkForUpdates.checking "Poszukiwanie aktualizacji…">
 <!ENTITY aboutPage.checkForUpdates.none "Brak aktualizacji">

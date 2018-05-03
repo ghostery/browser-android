@@ -124,6 +124,9 @@ because displayed names don't have the comma in between. -->
 <!ENTITY messengerCmd.label                             "Почта и группы новостей">
 <!ENTITY messengerCmd.accesskey                         "о">
 <!ENTITY messengerCmd.commandkey                        "1">
+<!ENTITY addressBookCmd.label                           "Адресная книга">
+<!ENTITY addressBookCmd.accesskey                       "н">
+<!ENTITY addressBookCmd.key                             "B">
 <!ENTITY searchAddressesCmd.label                       "Поиск адресов…">
 <!ENTITY searchAddressesCmd.accesskey                   "а">
 <!ENTITY importCmd.label                                "Импорт…">

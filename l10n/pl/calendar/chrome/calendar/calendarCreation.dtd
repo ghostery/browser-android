@@ -21,3 +21,29 @@ na serwerze, dzięki czemu można będzie go używać zdalnie lub współdzieli�
 
 <!ENTITY finishpage.shortdescription  "Utworzono kalendarz" >
 <!ENTITY finishpage.longdescription   "Kalendarz został utworzony." >
+
+<!ENTITY sourcetabs.other.label "Inne">
+
+<!ENTITY buttons.create.label "Utwórz kalendarz">
+<!ENTITY buttons.create.accesskey "U">
+
+<!ENTITY buttons.find.label "Znajdź kalendarze">
+<!ENTITY buttons.find.accesskey "Z">
+
+<!ENTITY buttons.back.label "Wstecz">
+<!ENTITY buttons.back.accesskey "W">
+
+<!ENTITY buttons.subscribe.label "Subskrybuj">
+<!ENTITY buttons.subscribe.accesskey "S">
+
+<!ENTITY calendartype.label "Typ kalendarza:">
+<!ENTITY location.label "Położenie:">
+<!ENTITY location.placeholder "Adres lub nazwa hosta serwera kalendarza">
+
+<!ENTITY network.nocredentials.label "To położenie nie wymaga danych logowania">
+<!ENTITY network.loading.description "Proszę czekać, kalendarze są wykrywane.">
+<!ENTITY network.notfound.description "Nie można odnaleźć kalendarzy w tym położeniu. Proszę sprawdzić ustawienia.">
+<!ENTITY network.authfail.description "Podane dane logowania nie zostały przyjęte. Proszę sprawdzić ustawienia.">
+
+<!ENTITY network.subscribe.single.description "Wybierz kalendarze do subskrypcji.">
+<!ENTITY network.subscribe.multiple.description "Dla tego położenia dostępnych jest wiele typów kalendarza. Wybierz typ, a następnie oznacz kalendarze do subskrypcji.">

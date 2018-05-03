@@ -124,6 +124,9 @@ because displayed names don't have the comma in between. -->
 <!ENTITY messengerCmd.label                             "Posta e gruppi di discussione">
 <!ENTITY messengerCmd.accesskey                         "g">
 <!ENTITY messengerCmd.commandkey                        "1">
+<!ENTITY addressBookCmd.label                           "Rubrica">
+<!ENTITY addressBookCmd.accesskey                       "R">
+<!ENTITY addressBookCmd.key                             "B">
 <!ENTITY searchAddressesCmd.label                       "Cerca indirizzi…">
 <!ENTITY searchAddressesCmd.accesskey                   "C">
 <!ENTITY importCmd.label                                "Importa…">

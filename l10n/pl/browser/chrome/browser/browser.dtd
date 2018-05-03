@@ -41,6 +41,7 @@
 <!ENTITY undoCloseTab.accesskey              "P">
 <!ENTITY closeTab.label                      "Zamknij kartę" >
 <!ENTITY closeTab.accesskey                  "a" >
+<!ENTITY hiddenTabs.label "Ukryte karty">
 
 <!ENTITY listAllTabs.label "Pokaż wszystkie karty">
 
@@ -83,6 +84,8 @@
 <!ENTITY pageInfoCmd.label "Informacje o stronie" >
 <!ENTITY pageInfoCmd.accesskey "m" >
 <!ENTITY pageInfoCmd.commandkey "i" >
+<!ENTITY ldbCmd.label "Debuger układu">
+<!ENTITY ldbCmd.accesskey "r">
 <!ENTITY mirrorTabCmd.label "Przekaż kartę">
 <!ENTITY mirrorTabCmd.accesskey "P">
 
@@ -96,6 +99,7 @@
 <!ENTITY showAllTabsCmd.label "Wyświetl wszystkie karty">
 <!ENTITY showAllTabsCmd.accesskey "W">
 <!ENTITY toggleReaderMode.key "R">
+<!ENTITY toggleReaderMode.win.keycode "VK_F9">
 
 <!ENTITY fxaSignIn.label "Zaloguj się do synchronizacji">
 <!ENTITY fxaSignedIn.tooltip "Otwórz ustawienia synchronizacji">
@@ -172,6 +176,7 @@
 <!ENTITY urlbar.webNotificationAnchor.tooltip "Określ, czy witryna ma prawo wyświetlać powiadomienia">
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip "Przechowywanie danych na komputerze">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip "Przeglądarka jest zdalnie zarządzana">
+<!ENTITY urlbar.webAuthnAnchor.tooltip "Otwórz panel Web Authentication">
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip "Zarządzaj udostępnianiem tej witrynie kamery i mikrofonu">
 <!ENTITY urlbar.webRTCShareMicrophoneNotificationAnchor.tooltip "Zarządzaj udostępnianiem mikrofonu tej witrynie">
 <!ENTITY urlbar.webRTCShareScreenNotificationAnchor.tooltip "Zarządzaj udostępnianiem tej witrynie okien i ekranu">
@@ -179,6 +184,7 @@
 <!ENTITY urlbar.translateNotificationAnchor.tooltip "Przetłumacz tę stronę">
 <!ENTITY urlbar.translatedNotificationAnchor.tooltip "Zarządzaj ustawieniami tłumaczenia">
 <!ENTITY urlbar.emeNotificationAnchor.tooltip "Zarządzaj ustawieniami DRM">
+<!ENTITY urlbar.midiNotificationAnchor.tooltip "Otwórz panel MIDI">
 <!ENTITY urlbar.cameraBlocked.tooltip "Udostępnianie kamery tej witrynie zostało zablokowane">
 <!ENTITY urlbar.microphoneBlocked.tooltip "Udostępnianie mikrofonu tej witrynie zostało zablokowane">
 <!ENTITY urlbar.screenBlocked.tooltip "Udostępnianie obrazu ekranu tej witrynie zostało zablokowane">
@@ -187,6 +193,8 @@
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Przechowywanie danych na komputerze przez witrynę zostało zablokowane">
 <!ENTITY urlbar.popupBlocked.tooltip "Wyskakujące okna na tej stronie są blokowane">
 <!ENTITY urlbar.canvasBlocked.tooltip "Odczytywanie danych canvas przez tę witrynę zostało zablokowane">
+<!ENTITY urlbar.flashPluginBlocked.tooltip "Wtyczka Adobe Flash została zablokowana na tej stronie">
+<!ENTITY urlbar.midiBlocked.tooltip "Dostęp do urządzeń MIDI tej witrynie został zablokowany">
 <!ENTITY urlbar.openHistoryPopup.tooltip "Wyświetl historię">
 
 <!ENTITY searchItem.title "Znajdź" >
@@ -315,6 +323,7 @@
 <!ENTITY appMenuRemoteTabs.noclients.title "Synchronizacja kart wyłączona">
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "Czy wyświetlić tutaj listę kart otwartych na innych urządzeniach?">
 <!ENTITY appMenuRemoteTabs.openprefs.label "Ustawienia synchronizacji">
+<!ENTITY appMenuRemoteTabs.opensyncprefs.label "Ustawienia synchronizacji">
 <!ENTITY appMenuRemoteTabs.notsignedin.label "Zaloguj się, aby wyświetlić tutaj listę kart z innych urządzeń.">
 <!ENTITY appMenuRemoteTabs.unverified.label "Konto musi zostać zweryfikowane.">
 <!ENTITY appMenuRemoteTabs.signin.label "Zaloguj się do synchronizacji">
@@ -349,6 +358,7 @@
 
 <!ENTITY openCmd.commandkey "l" >
 <!ENTITY urlbar.placeholder2          "Wprowadź adres lub szukaj">
+<!ENTITY urlbar.placeholder3 "Wprowadź adres lub wyszukiwany tekst">
 <!ENTITY urlbar.accesskey "d" >
 <!ENTITY urlbar.extension.label "Rozszerzenie:">
 <!ENTITY urlbar.switchToTab.label     "Przełącz na kartę:">
@@ -587,7 +597,7 @@
 <!ENTITY editBookmark.done.label                     "Gotowe">
 <!ENTITY editBookmark.removeBookmark.accessKey       "U">
 
-<!ENTITY identity.securityView.label "Bezpieczeństwo strony">
+<!ENTITY identity.securityView.label "Bezpieczeństwo">
 
 <!ENTITY identity.connectionSecure "Zabezpieczone połączenie">
 <!ENTITY identity.connectionNotSecure "Połączenie nie jest bezpieczne">
@@ -773,10 +783,13 @@
 
 <!ENTITY newTabControlled.message "Rozszerzenie zmieniło stronę nowej karty, ale można przywrócić poprzednią.">
 <!ENTITY newTabControlled.header.message "Strona nowej karty została zmieniona.">
+<!ENTITY newTabControlled.header.message2 "Strona nowej karty została zmieniona.">
 <!ENTITY newTabControlled.keepButton.label "Używaj nowej">
 <!ENTITY newTabControlled.keepButton.accesskey "n">
 <!ENTITY newTabControlled.restoreButton.label "Przywróć poprzednią">
 <!ENTITY newTabControlled.restoreButton.accesskey "P">
+<!ENTITY newTabControlled.disableButton.label "Wyłącz rozszerzenie">
+<!ENTITY newTabControlled.disableButton.accesskey "W">
 
 <!ENTITY pageActionButton.tooltip "Interakcje">
 <!ENTITY pageAction.addToUrlbar.label "Dodaj do paska adresu">
@@ -792,3 +805,5 @@
 <!ENTITY libraryButton.tooltip "Wyświetl historię, zapisane zakładki i jeszcze więcej">
 
 <!ENTITY accessibilityIndicator.tooltip "Aktywne usługi ułatwień dostępu">
+
+<!ENTITY addonPostInstallMessage.label "Zarządzaj dodatkami klikając <image class='addon-addon-icon'/> w menu <image class='addon-toolbar-icon'/>.">

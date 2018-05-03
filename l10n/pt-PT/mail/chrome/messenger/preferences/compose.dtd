@@ -35,7 +35,7 @@
 <!ENTITY spellCheckInline1.accesskey          "e">
 <!ENTITY languagePopup.label                  "Idioma:">
 <!ENTITY languagePopup.accessKey              "I">
-<!ENTITY downloadDictionaries.label           "Transferir mais dicionários">
+<!ENTITY downloadDictionaries.label           "Descarregar mais dicionários">
 
 <!ENTITY warnOnSendAccelKey.label             "Confirmação ao atalhos do teclado para enviar mensagem">
 <!ENTITY warnOnSendAccelKey.accesskey         "C">

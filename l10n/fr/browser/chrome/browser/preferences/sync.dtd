@@ -59,7 +59,7 @@ signedInLoginFailure.aftername.label): these two string are used respectively
 before and after the account email address. Localizers can use one of them, or
 both, to better adapt this sentence to their language.
 -->
-<!ENTITY signedInLoginFailure.beforename.label "Veuillez vous identifier pour vous reconnecter">
+<!ENTITY signedInLoginFailure.beforename.label "Veuillez vous identifier pour vous reconnecter via">
 <!ENTITY signedInLoginFailure.aftername.label "">
 
 <!ENTITY notSignedIn.label            "Votre compte n’est pas connecté.">
@@ -70,15 +70,13 @@ both, to better adapt this sentence to their language.
 <!ENTITY verifiedManage.accesskey     "G">
 <!ENTITY disconnect3.label            "Se déconnecter…">
 <!ENTITY disconnect3.accesskey        "d">
-<!ENTITY verify.label                "Vérifier l’adresse électronique">
-<!ENTITY verify.accesskey            "V">
-<!ENTITY forget.label                "Oublier cette adresse électronique">
-<!ENTITY forget.accesskey            "b">
-
 <!ENTITY resendVerification.label     "Renvoyer la vérification">
 <!ENTITY resendVerification.accesskey "f">
 <!ENTITY cancelSetup.label            "Annuler la configuration">
 <!ENTITY cancelSetup.accesskey        "n">
+
+<!ENTITY removeAccount.label          "Supprimer le compte">
+<!ENTITY removeAccount.accesskey      "t">
 
 <!ENTITY signedOut.caption            "Emportez votre Web partout avec vous">
 <!ENTITY signedOut.description        "Synchronisez marque-pages, historique, onglets, mots de passe, modules complémentaires et préférences entre tous vos appareils.">

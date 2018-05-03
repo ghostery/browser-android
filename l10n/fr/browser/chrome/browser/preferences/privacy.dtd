@@ -3,8 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY  trackingProtectionHeader2.label      "Protection contre le pistage">
-<!ENTITY  trackingProtection2.description      "Le pistage correspond à la collecte de vos données de navigation sur plusieurs sites web. Le pistage peut servir à établir un profil et afficher du contenu en rapport avec votre navigation et vos données personnelles.">
-<!ENTITY  trackingProtection2.radioGroupLabel  "Utiliser la protection contre le pistage pour bloquer les traqueurs connus">
 <!ENTITY  trackingProtection3.description      "La protection contre le pistage bloque les traqueurs en ligne qui collectent vos données de navigation depuis plusieurs sites web.">
 <!ENTITY  trackingProtection3.radioGroupLabel  "Utiliser la protection contre le pistage pour bloquer les traqueurs connus">
 <!ENTITY  trackingProtectionAlways.label       "Toujours">
@@ -13,7 +11,6 @@
 <!ENTITY  trackingProtectionPrivate.accesskey  "U">
 <!ENTITY  trackingProtectionNever.label        "Jamais">
 <!ENTITY  trackingProtectionNever.accesskey    "J">
-<!ENTITY  trackingProtectionLearnMore.label    "En savoir plus">
 <!ENTITY  trackingProtectionLearnMore2.label    "En savoir plus sur la protection contre le pistage et sur la protection de votre vie privée">
 <!ENTITY  trackingProtectionExceptions.label   "Exceptions…">
 <!ENTITY  trackingProtectionExceptions.accesskey "x">
@@ -24,11 +21,6 @@
 <!ENTITY trackingProtectionPBMLearnMore.label "En savoir plus">
 <!ENTITY changeBlockList2.label               "Modifier les listes de blocage…">
 <!ENTITY changeBlockList2.accesskey           "b">
-
-<!ENTITY  doNotTrack.description        "Envoyer aux sites web un signal « Ne pas me pister » indiquant que vous ne souhaitez pas être pisté">
-<!ENTITY  doNotTrack.learnMore.label    "En savoir plus">
-<!ENTITY  doNotTrack.default.label      "Seulement lorsque la protection contre le pistage est utilisée">
-<!ENTITY  doNotTrack.always.label       "Toujours">
 
 <!ENTITY  history.label                 "Historique">
 <!ENTITY  permissions.label             "Permissions">
@@ -52,8 +44,14 @@
 <!ENTITY  acceptThirdParty2.pre.label     "Accepter les cookies tiers">
 <!ENTITY  acceptThirdParty2.pre.accesskey "e">
 
+<!ENTITY  acceptCookies4.label          "Accepter les cookies et les données de sites (recommandé)">
+<!ENTITY  acceptCookies4.accesskey      "A">
 
+<!ENTITY  blockCookies.label            "Bloquer les cookies et les données de sites (peut empêcher certains sites de fonctionner)">
+<!ENTITY  blockCookies.accesskey        "B">
 
+<!ENTITY  acceptThirdParty3.pre.label     "Accepter les cookies tiers et les données de sites tiers">
+<!ENTITY  acceptThirdParty3.pre.accesskey "k">
 <!ENTITY  acceptThirdParty.always.label   "Toujours">
 <!ENTITY  acceptThirdParty.never.label    "Jamais">
 <!ENTITY  acceptThirdParty.visited.label  "Depuis les sites visités">
@@ -87,6 +85,8 @@
 <!ENTITY  rememberActions.middle.label        ", ou ">
 <!ENTITY  rememberActions.removeCookies.label "supprimer des cookies spécifiques">
 <!ENTITY  rememberActions.post.label          ".">
+
+<!ENTITY  rememberDescription1.label      "&brandShortName; conservera les données de navigation, les téléchargements, les formulaires et l’historique de recherche.">
 
 <!ENTITY  dontrememberDescription.label  "&brandShortName; utilisera les mêmes paramètres que pour la navigation privée et ne conservera aucun historique de votre navigation.">
 

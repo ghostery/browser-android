@@ -9,7 +9,6 @@
 <!ENTITY feedTitle.accesskey "T">
 <!ENTITY feedLocation.label "Adres URL:">
 <!ENTITY feedLocation.accesskey "A">
-<!ENTITY feedLocation.placeholder "Wprowadź poprawny adres URL kanału do dodania">
 <!ENTITY feedLocation2.placeholder "Wprowadź poprawny adres URL kanału">
 <!ENTITY locationValidate.label "Sprawdź poprawność">
 <!ENTITY validateText.label "Sprawdź poprawność i pobierz prawidłowy adres URL.">

@@ -23,6 +23,7 @@
 <!ENTITY aboutNetworking.sent "Wysłano">
 <!ENTITY aboutNetworking.received "Odebrano">
 <!ENTITY aboutNetworking.family "Protokół">
+<!ENTITY aboutNetworking.trr "TRR">
 <!ENTITY aboutNetworking.addresses "Adresy">
 <!ENTITY aboutNetworking.expires "Wygasa (w sekundach)">
 <!ENTITY aboutNetworking.messagesSent "Wysłano wiadomości">

@@ -44,7 +44,7 @@ available. -->
 <!ENTITY collectBrowserErrors.accesskey      "n">
 <!ENTITY collectBrowserErrorsLearnMore.label "Saber mais">
 
-<!ENTITY sendBackloggedCrashReports.label  "Permitir que o &brandShortName; envie relatórios de falha pendentes em seu nome">
+<!ENTITY sendBackloggedCrashReports.label  "Permitir ao &brandShortName; enviar relatórios de falha pendentes em seu nome">
 <!ENTITY sendBackloggedCrashReports.accesskey "f">
 <!ENTITY crashReporterLearnMore.label    "Saber mais">
 
@@ -53,8 +53,6 @@ available. -->
 <!ENTITY networkProxy.label              "Proxy de rede">
 
 <!ENTITY connectionDesc.label            "Configurar o modo de ligação do &brandShortName; à Internet">
-
-<!ENTITY connectionSettingsLearnMore.label "Saber mais">
 <!ENTITY connectionSettings.label        "Definições…">
 <!ENTITY connectionSettings.accesskey    "e">
 
@@ -69,6 +67,8 @@ available. -->
 <!ENTITY clearSiteData1.accesskey        "L">
 <!ENTITY siteDataSettings.label          "Definições…">
 <!ENTITY siteDataSettings.accesskey      "i">
+<!ENTITY siteDataSettings1.label         "Gerir dados…">
+<!ENTITY siteDataSettings1.accesskey     "G">
 <!ENTITY siteDataLearnMoreLink.label     "Saber mais">
 
 <!-- LOCALIZATION NOTE:

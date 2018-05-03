@@ -51,6 +51,7 @@
 <!ENTITY aboutSupport.appBasicsProfiles "Profili">
 <!ENTITY aboutSupport.appBasicsMultiProcessSupport "Finestre multiprocesso">
 <!ENTITY aboutSupport.appBasicsProcessCount "Processi contenuti web">
+<!ENTITY aboutSupport.enterprisePolicies "Criteri a livello aziendale">
 <!ENTITY aboutSupport.appBasicsKeyGoogle "Chiave Google">
 <!ENTITY aboutSupport.appBasicsKeyMozilla "Chiave per il servizio Mozilla Location">
 <!ENTITY aboutSupport.appBasicsSafeMode "Modalità provvisoria">

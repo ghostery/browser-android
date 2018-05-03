@@ -68,7 +68,7 @@
 <!ENTITY  crash_close_label "Fechar">
 <!ENTITY  crash_restart_label "Reiniciar o &brandShortName;">
 
-<!ENTITY url_bar_default_text2 "Pesquise ou digite um endereço">
+<!ENTITY url_bar_default_text2 "Pesquisar ou introduzir um endereço">
 
 <!ENTITY bookmark "Marcador">
 <!ENTITY bookmark_remove "Remover marcador">
@@ -282,6 +282,13 @@
 <!ENTITY pref_whats_new_notification "Novidades no &brandShortName;">
 <!ENTITY pref_whats_new_notification_summary "Saber acerca de novas funcionalidades depois de uma atualização">
 
+<!-- Localization note (pref_feature_tips_notification): Title of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification"-->
+<!ENTITY pref_feature_tips_notification "Dicas de produtos e funcionalidades">
+<!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification_summary"-->
+<!ENTITY pref_feature_tips_notification_summary "Saber mais acerca de utilizar o &brandShortName; e outros produtos &vendorShortName;">
+
 <!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
      for experimental features. -->
 <!ENTITY pref_category_experimental "Funcionalidades experimentais">
@@ -422,7 +429,6 @@
      crashReporterDesc.label). -->
 <!ENTITY datareporting_fhr_title "Relatório de estado do &brandShortName;">
 <!ENTITY datareporting_fhr_summary2 "Partilha dados com a &vendorShortName; sobre o estado do seu navegador e ajuda a compreender o desempenho do seu navegador">
-<!ENTITY datareporting_abouthr_title "Ver o meu relatório de estado">
 <!ENTITY datareporting_telemetry_title "Telemetria">
 <!ENTITY datareporting_telemetry_summary "Partilha dados de desempenho, utilização, hardware e personalização acerca do seu navegador com a &vendorShortName; para ajudar-nos a fazer o &brandShortName; melhor">
 <!ENTITY datareporting_crashreporter_summary "O &brandShortName; envia relatórios de falha para ajudar a &vendorShortName; a tornar o seu navegador mais estável e seguro">
@@ -589,14 +595,14 @@
 <!ENTITY home_history_back_to2 "Voltar ao histórico completo">
 <!ENTITY home_clear_history_button "Limpar histórico de navegação">
 <!ENTITY home_clear_history_confirm "Tem a certeza de que pretende apagar o histórico?">
-<!ENTITY home_bookmarks_empty "Os marcadores serão mostrados aqui.">
+<!ENTITY home_bookmarks_empty "Os marcadores que guardar aparecerão aqui.">
 <!ENTITY home_closed_tabs_title2 "Recentemente fechado">
-<!ENTITY home_last_tabs_empty "Os seus separadores recentes.">
+<!ENTITY home_last_tabs_empty "Os seus separadores recentes aparecerão aqui.">
 <!ENTITY home_restore_all "Restaurar tudo">
 <!ENTITY home_closed_tabs_number "&formatD; separadores">
 <!-- Localization note (home_closed_tabs_one): This is the singular version of home_closed_tabs_number, referring to the number of recently closed tabs available. -->
 <!ENTITY home_closed_tabs_one "1 separador">
-<!ENTITY home_most_recent_empty "Os sites mais visitados são mostrados aqui.">
+<!ENTITY home_most_recent_empty "Os websites que visitou recentemente aparecerão aqui.">
 <!-- Localization note (home_most_recent_emptyhint2): "Psst" is a sound that might be used to attract someone's attention unobtrusively, and intended to hint at Private Browsing to the user.
      The placeholders &formatS1; and &formatS2; are used to mark the location of text underlining. -->
 <!ENTITY home_most_recent_emptyhint2 "Psst: se utilizar um &formatS1;Novo separador privado&formatS2;, o seu histórico não será guardado.">

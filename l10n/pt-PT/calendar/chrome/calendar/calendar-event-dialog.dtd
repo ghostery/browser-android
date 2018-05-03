@@ -398,6 +398,7 @@
 <!-- Read-Only dialog -->
 <!ENTITY read.only.general.label         "Geral">
 <!ENTITY read.only.title.label           "Título:">
+<!ENTITY read.only.calendar.label        "Calendário:">
 <!ENTITY read.only.event.start.label     "Data de início:">
 <!ENTITY read.only.task.start.label      "Data de início:">
 <!ENTITY read.only.event.end.label       "Data de fim:">
@@ -416,3 +417,17 @@
 <!ENTITY read.only.attendees.label       "Participantes">
 <!ENTITY read.only.description.label     "Descrição">
 <!ENTITY read.only.link.label            "Ligação relacionada">
+
+<!-- Summary dialog -->
+<!ENTITY summary.dialog.saveclose.label         "Guardar e fechar">
+<!ENTITY summary.dialog.saveclose.tooltiptext   "Guardar alterações e fechar a janela sem alterar o estado de participação e enviar uma resposta">
+<!ENTITY summary.dialog.accept.label            "Aceitar">
+<!ENTITY summary.dialog.accept.tooltiptext      "Aceitar o convite">
+<!ENTITY summary.dialog.tentative.label         "Tentativa">
+<!ENTITY summary.dialog.tentative.tooltiptext   "Aceitar o convite provisoriamente">
+<!ENTITY summary.dialog.decline.label           "Recusar">
+<!ENTITY summary.dialog.decline.tooltiptext     "Recusar o convite">
+<!ENTITY summary.dialog.dontsend.label          "Não enviar uma resposta">
+<!ENTITY summary.dialog.dontsend.tooltiptext    "Alterar a sua participação sem enviar uma resposta para o organizador e fechar a janela">
+<!ENTITY summary.dialog.send.label              "Enviar uma resposta agora">
+<!ENTITY summary.dialog.send.tooltiptext        "Enviar uma resposta para o organizador  e fechar a janela">

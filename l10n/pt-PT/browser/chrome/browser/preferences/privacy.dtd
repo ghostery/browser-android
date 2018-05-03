@@ -3,8 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY  trackingProtectionHeader2.label      "Proteção contra monitorização">
-<!ENTITY  trackingProtection2.description      "A monitorização é a recolha dos seus dados de navegação através de múltiplos websites. A monitorização pode ser utilizada para construir um perfil e mostrar conteúdo baseado na sua navegação e informação pessoal.">
-<!ENTITY  trackingProtection2.radioGroupLabel  "Utilizar Proteção contra monitorização para bloquear trackers conhecidos">
 <!ENTITY  trackingProtection3.description      "A Proteção contra monitorização bloqueia trackers online que recolhem os seus dados de navegação através de múltiplos websites.">
 <!ENTITY  trackingProtection3.radioGroupLabel  "Utilizar Proteção contra monitorização para bloquear trackers conhecidos">
 <!ENTITY  trackingProtectionAlways.label       "Sempre">
@@ -13,7 +11,6 @@
 <!ENTITY  trackingProtectionPrivate.accesskey  "l">
 <!ENTITY  trackingProtectionNever.label        "Nunca">
 <!ENTITY  trackingProtectionNever.accesskey    "N">
-<!ENTITY  trackingProtectionLearnMore.label    "Saber mais">
 <!ENTITY  trackingProtectionLearnMore2.label    "Saber mais acerca da Proteção contra monitorização e a sua privacidade">
 <!ENTITY  trackingProtectionExceptions.label   "Exceções…">
 <!ENTITY  trackingProtectionExceptions.accesskey "x">
@@ -24,11 +21,6 @@
 <!ENTITY trackingProtectionPBMLearnMore.label "Saber mais">
 <!ENTITY changeBlockList2.label               "Alterar lista de bloqueio…">
 <!ENTITY changeBlockList2.accesskey           "A">
-
-<!ENTITY  doNotTrack.description        "Enviar um sinal “Do Not Track” significando que não deseja ser monitorizado(a)">
-<!ENTITY  doNotTrack.learnMore.label    "Saber mais">
-<!ENTITY  doNotTrack.default.label      "Apenas ao utilizar a Proteção contra monitorização">
-<!ENTITY  doNotTrack.always.label       "Sempre">
 
 <!ENTITY  history.label                 "Histórico">
 <!ENTITY  permissions.label             "Permissões">
@@ -52,8 +44,8 @@
 <!ENTITY  acceptThirdParty2.pre.label     "Aceitar cookies de terceiros">
 <!ENTITY  acceptThirdParty2.pre.accesskey "e">
 
-<!ENTITY  acceptCookies3.label          "Aceitar cookies e dados de sites de websites">
-<!ENTITY  acceptCookies3.accesskey      "A">
+<!ENTITY  acceptCookies4.label          "Aceitar cookies e dados de sites de websites (recomendado)">
+<!ENTITY  acceptCookies4.accesskey      "A">
 
 <!ENTITY  blockCookies.label            "Bloquear cookies e dados de sites (pode causar que os websites quebrem)">
 <!ENTITY  blockCookies.accesskey        "B">
@@ -94,6 +86,8 @@
 <!ENTITY  rememberActions.removeCookies.label "remover cookies individualmente">
 <!ENTITY  rememberActions.post.label          ".">
 
+<!ENTITY  rememberDescription1.label      "O &brandShortName; irá memorizar o seu histórico de navegação, transferências, formulários e pesquisa.">
+
 <!ENTITY  dontrememberDescription.label  "O &brandShortName; irá utilizar as mesmas definições da navegação privada e não irá memorizar qualquer histórico enquanto navega na Web.">
 
 <!-- LOCALIZATION NOTE (dontrememberActions.pre.label): include a trailing space as needed -->
@@ -126,7 +120,7 @@
 <!ENTITY  browserContainersSettings.label        "Definições…">
 <!ENTITY  browserContainersSettings.accesskey    "i">
 
-<!ENTITY  a11yPrivacy.checkbox.label     "Impedir serviços de acessibilidade de aceder ao seu navegador">
+<!ENTITY  a11yPrivacy.checkbox.label     "Impedir os serviços de acessibilidade de aceder ao seu navegador">
 <!ENTITY  a11yPrivacy.checkbox.accesskey "a">
 <!ENTITY  a11yPrivacy.learnmore.label    "Saber mais">
 <!ENTITY enableSafeBrowsingLearnMore.label "Saber mais">

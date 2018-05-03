@@ -4,9 +4,6 @@
 
 <!ENTITY aboutPage.title "Informazioni su &brandShortName;">
 <!ENTITY aboutPage.warningVersion "&brandShortName; è una versione sperimentale e potrebbe risultare instabile.">
-<!ENTITY aboutPage.telemetryStart " Dati relativi a prestazioni, hardware, utilizzo e personalizzazioni vengono inviati automaticamente a ">
-<!ENTITY aboutPage.telemetryMozillaLink "&vendorShortName;">
-<!ENTITY aboutPage.telemetryEnd " per contribuire al miglioramento di &brandShortName;.">
 <!ENTITY aboutPage.checkForUpdates.link "Controlla aggiornamenti »">
 <!ENTITY aboutPage.checkForUpdates.checking "Ricerca aggiornamenti…">
 <!ENTITY aboutPage.checkForUpdates.none "Nessun agg. disponibile">

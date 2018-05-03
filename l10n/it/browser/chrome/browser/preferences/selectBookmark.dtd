@@ -3,4 +3,4 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY selectBookmark.title "Imposta pagina iniziale">
-<!ENTITY selectBookmark.label "Scegliere un segnalibro affinché venga aperto come pagina iniziale. Se si sceglie un cartella, tutti i segnalibri in essa contenuti verranno aperti in più schede.">
+<!ENTITY selectBookmark.label "Scegliere un segnalibro da utilizzare come pagina iniziale. Se si sceglie un cartella, tutti i segnalibri in essa contenuti verranno aperti in più schede.">

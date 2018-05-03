@@ -8,7 +8,7 @@
 <!ENTITY window.description           "Effacer l’ensemble des cookies et des données de sites stockés par &brandShortName; peut vous déconnecter de certains sites web et supprimer du contenu web hors connexion. Effacer les données mises en cache n’affectera pas vos identifiants.">
 <!ENTITY windowClose.key              "w">
 
-<!ENTITY clearSiteData.label          "Cookies et données des sites">
+<!ENTITY clearSiteData.label          "Cookies et données de sites">
 <!ENTITY clearSiteData.accesskey      "C">
 <!ENTITY clearSiteData.description    "Vous pouvez être déconnecté des sites web si vous effacez ces données">
 

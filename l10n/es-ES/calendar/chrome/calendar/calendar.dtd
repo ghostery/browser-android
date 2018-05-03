@@ -147,7 +147,40 @@
 <!ENTITY calendar.context.attendance.menu.label "Asistencia">
 <!ENTITY calendar.context.attendance.menu.accesskey "s">
 <!ENTITY calendar.context.attendance.occurrence.label "Esta aparición">
-<!ENTITY calendar.context.attendance.all.label "Todas las apariciones">
+<!ENTITY calendar.context.attendance.all.label "Todas las repeticiones">
+<!ENTITY calendar.context.attendance.all2.label "Series completas">
+<!ENTITY calendar.context.attendance.send.label "Enviar una notificación ahora">
+<!ENTITY calendar.context.attendance.send.accesskey "v">
+<!ENTITY calendar.context.attendance.dontsend.label "No enviar una notificación">
+<!ENTITY calendar.context.attendance.dontsend.accesskey "N">
+<!ENTITY calendar.context.attendance.occ.accepted.accesskey "A">
+<!ENTITY calendar.context.attendance.occ.accepted.label "Aceptado">
+<!ENTITY calendar.context.attendance.occ.tentative.accesskey "A">
+<!ENTITY calendar.context.attendance.occ.tentative.label "Aceptado provisionalmente">
+<!ENTITY calendar.context.attendance.occ.declined.accesskey "c">
+<!ENTITY calendar.context.attendance.occ.declined.label "Declinado">
+<!ENTITY calendar.context.attendance.occ.delegated.accesskey "g">
+<!ENTITY calendar.context.attendance.occ.delegated.label "Delegado">
+<!ENTITY calendar.context.attendance.occ.needsaction.accesskey "n">
+<!ENTITY calendar.context.attendance.occ.needsaction.label "Aún necesita intervención">
+<!ENTITY calendar.context.attendance.occ.inprogress.accesskey "E">
+<!ENTITY calendar.context.attendance.occ.inprogress.label "En progreso">
+<!ENTITY calendar.context.attendance.occ.completed.accesskey "C">
+<!ENTITY calendar.context.attendance.occ.completed.label "Completada">
+<!ENTITY calendar.context.attendance.all.accepted.accesskey "e">
+<!ENTITY calendar.context.attendance.all.accepted.label "Aceptado">
+<!ENTITY calendar.context.attendance.all.tentative.accesskey "v">
+<!ENTITY calendar.context.attendance.all.tentative.label "Aceptado provisionalmente">
+<!ENTITY calendar.context.attendance.all.declined.accesskey "D">
+<!ENTITY calendar.context.attendance.all.declined.label "Declinado">
+<!ENTITY calendar.context.attendance.all.delegated.accesskey "l">
+<!ENTITY calendar.context.attendance.all.delegated.label "Delegado">
+<!ENTITY calendar.context.attendance.all.needsaction.accesskey "n">
+<!ENTITY calendar.context.attendance.all.needsaction.label "Aún necesita intervención">
+<!ENTITY calendar.context.attendance.all.inprogress.accesskey "p">
+<!ENTITY calendar.context.attendance.all.inprogress.label "En progreso">
+<!ENTITY calendar.context.attendance.all.completed.accesskey "m">
+<!ENTITY calendar.context.attendance.all.completed.label "Completada">
 <!ENTITY calendar.context.progress.label "Progreso">
 <!ENTITY calendar.context.progress.accesskey "P">
 <!ENTITY calendar.context.priority.label "Prioridad">

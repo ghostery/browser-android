@@ -4,7 +4,7 @@
 
 <!ENTITY     window.title                  "Definições - Dados de sites">
 
-<!ENTITY     window1.title                 "Definições - Cookies e dados de sites">
+<!ENTITY     window2.title                 "Gerir cookies e dados de sites">
 <!ENTITY     hostCol.label                 "Site">
 <!ENTITY     statusCol.label               "Estado">
 <!ENTITY     cookiesCol.label              "Cookies">
@@ -22,5 +22,5 @@
 <!ENTITY     removingSelected.description  "Remover dados de sites também irá remover cookies e conteúdo web offline relacionado. Isto poderá terminar sessão de websites. Tem a certeza de que pretende fazer as alterações?">
 <!ENTITY     siteTree2.label               "Os seguintes cookies de websites irão ser removidos">
 <!ENTITY     removingDialog1.title         "Remover cookies e dados de sites">
-<!ENTITY     removingSelected1.description "Remover cookies e dados de sites pode terminar sessões de websites. Tem a certeza de que deseja fazer as alterações?">
+<!ENTITY     removingSelected1.description "Remover cookies e dados de sites pode terminar sessões de websites. Tem a certeza de que pretende fazer as alterações?">
 <!ENTITY     siteTree3.label               "Os cookies e dados de sites para os seguintes websites serão removidos">

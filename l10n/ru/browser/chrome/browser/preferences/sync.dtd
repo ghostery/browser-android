@@ -70,15 +70,13 @@ both, to better adapt this sentence to their language.
 <!ENTITY verifiedManage.accesskey     "в">
 <!ENTITY disconnect3.label            "Отсоединить…">
 <!ENTITY disconnect3.accesskey        "н">
-<!ENTITY verify.label                "Подтвердить эл. почту">
-<!ENTITY verify.accesskey            "э">
-<!ENTITY forget.label                "Забыть об этой эл. почте">
-<!ENTITY forget.accesskey            "ы">
-
 <!ENTITY resendVerification.label     "Повторить отправку подтверждения">
 <!ENTITY resendVerification.accesskey "и">
 <!ENTITY cancelSetup.label            "Отменить настройку">
 <!ENTITY cancelSetup.accesskey        "м">
+
+<!ENTITY removeAccount.label          "Удалить аккаунт">
+<!ENTITY removeAccount.accesskey      "л">
 
 <!ENTITY signedOut.caption            "Возьмите свой Интернет с собой">
 <!ENTITY signedOut.description        "Синхронизируйте свои закладки, историю, вкладки, пароли, дополнения и настройки на всех ваших устройствах.">

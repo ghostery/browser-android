@@ -56,6 +56,12 @@
 <!ENTITY lightning.imipbar.btnUpdate.label "Actualizar">
 <!ENTITY lightning.imipbar.btnUpdate.tooltiptext "Actualizar evento en el calendario">
 <!ENTITY lightning.imipbar.description "Este mensaje contiene una invitación a un evento.">
+<!ENTITY lightning.imipbar.btnSend.label "Enviar respuesta ahora">
+<!ENTITY lightning.imipbar.btnSend.tooltiptext "Enviar respuesta al organizador">
+<!ENTITY lightning.imipbar.btnSendSeries.tooltiptext "Enviar respuesta para la serie completa al organizador">
+<!ENTITY lightning.imipbar.btnDontSend.label "No enviar respuesta">
+<!ENTITY lightning.imipbar.btnDontSend.tooltiptext "Cambiar su estado de participación sin enviar respuesta al organizador">
+<!ENTITY lightning.imipbar.btnDontSendSeries.tooltiptext "Cambiar su estado de participación para toda la serie sin enviar respuesta al organizador">
 <!ENTITY lightning.keys.event.showCalendar.key "C">
 <!ENTITY lightning.keys.event.showTasks.key "D">
 <!ENTITY lightning.keys.event.new "I">

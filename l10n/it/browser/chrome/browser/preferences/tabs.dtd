@@ -4,8 +4,6 @@
 
 <!ENTITY ctrlTabRecentlyUsedOrder.label "Scorri le schede con Ctrl+Tab ordinandole in base all’utilizzo più recente">
 <!ENTITY ctrlTabRecentlyUsedOrder.accesskey "z">
-<!ENTITY newWindowsAsTabs.label "Apri le nuove finestre in una nuova scheda">
-<!ENTITY newWindowsAsTabs.accesskey "A">
 <!ENTITY newWindowsAsTabs3.label "Apri link in schede invece di nuove finestre">
 <!ENTITY newWindowsAsTabs3.accesskey "A">
 <!ENTITY warnOnCloseMultipleTabs.label "Avvisa quando si chiudono più schede">

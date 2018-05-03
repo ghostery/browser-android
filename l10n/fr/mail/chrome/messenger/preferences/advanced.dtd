@@ -41,7 +41,7 @@
 
 <!-- Data Choices -->
 <!ENTITY telemetrySection.label          "Télémétrie">
-<!ENTITY telemetryDesc.label             "Envoie des informations sur les performances, le matériel, l’utilisation et les personnalisations de votre client de messagerie à &vendorShortName; pour aider à améliorer &brandShortName;">
+<!ENTITY telemetryDesc.label             "Envoie des informations sur les performances, le matériel, l’utilisation et les personnalisations de votre client de messagerie à &vendorShortName; pour nous aider à améliorer &brandShortName;">
 <!ENTITY enableTelemetry.label           "Activer la télémétrie">
 <!ENTITY enableTelemetry.accesskey       "A">
 <!ENTITY telemetryLearnMore.label        "En savoir plus">

@@ -4,7 +4,7 @@
 
 <!ENTITY     window.title                  "Параметры - Данные сайтов">
 
-<!ENTITY     window1.title                 "Параметры - Куки и данные сайтов">
+<!ENTITY     window2.title                 "Управление куками и данными сайтов">
 <!ENTITY     hostCol.label                 "Сайт">
 <!ENTITY     statusCol.label               "Статус">
 <!ENTITY     cookiesCol.label              "Куки">

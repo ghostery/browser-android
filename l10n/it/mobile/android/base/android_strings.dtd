@@ -176,6 +176,8 @@
 <!ENTITY pref_tracking_protection_disabled "Disattivata">
 <!ENTITY pref_whats_new_notification "Novità di &brandShortName;">
 <!ENTITY pref_whats_new_notification_summary "Visualizza informazioni sulle nuove caratteristiche dopo un aggiornamento">
+<!ENTITY pref_feature_tips_notification "Suggerimenti relativi a prodotti e caratteristiche">
+<!ENTITY pref_feature_tips_notification_summary "Informazioni relative all’utilizzo di &brandShortName; e altri prodotti di &vendorShortName;">
 <!ENTITY pref_category_experimental "Caratteristiche sperimentali">
 <!ENTITY pref_custom_tabs2 "Schede personalizzate">
 <!ENTITY pref_custom_tabs_summary4 "Consenti alle app di aprire contenuti web in schede personalizzate">
@@ -265,7 +267,6 @@
 <!ENTITY datareporting_notification_ticker_text "&datareporting_notification_title;: &datareporting_notification_action_long;">
 <!ENTITY datareporting_fhr_title "Analisi integrità di &brandShortName;">
 <!ENTITY datareporting_fhr_summary2 "Condividi informazioni con &vendorShortName; sullo stato di integrità del browser per comprenderne al meglio le prestazioni">
-<!ENTITY datareporting_abouthr_title "Visualizza analisi integrità">
 <!ENTITY datareporting_telemetry_title "Telemetria">
 <!ENTITY datareporting_telemetry_summary "Condividi con &vendorShortName; informazioni relative a prestazioni, utilizzo, hardware e personalizzazioni del browser per contribuire al miglioramento di &brandShortName;">
 <!ENTITY datareporting_crashreporter_summary "Invia a &vendorShortName; segnalazioni relative ad arresti anomali di &brandShortName; per migliorarne la stabilità e la sicurezza">

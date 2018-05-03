@@ -8,7 +8,6 @@
 <!ENTITY update.updateButton.label3 "Riavvia per aggiornare &brandShorterName;">
 <!ENTITY update.updateButton.accesskey "R">
 <!ENTITY warningDesc.version "&brandShortName; è una versione sperimentale e potrebbe risultare instabile.">
-<!ENTITY warningDesc.telemetryDesc "Dati relativi a prestazioni, caratteristiche hardware, utilizzo delle funzionalità e personalizzazioni del browser vengono inviati automaticamente a &vendorShortName; per contribuire al miglioramento di &brandShortName;.">
 <!ENTITY community.exp.start "">
 <!ENTITY community.exp.mozillaLink "&vendorShortName;">
 <!ENTITY community.exp.middle " è una ">

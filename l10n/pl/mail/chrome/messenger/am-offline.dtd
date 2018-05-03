@@ -5,8 +5,6 @@
 <!ENTITY doNotDownloadPop3Movemail.label "Pobrane wiadomości przechowywane są lokalnie na komputerze użytkownika. Aby zaoszczędzić miejsce na dysku:">
 <!ENTITY doNotDownloadNntp.label "Wiadomości udostępniane w trybie offline przechowywane są lokalnie na komputerze użytkownika. Aby zaoszczędzić miejsce na dysku:">
 <!ENTITY doNotDownloadImap.label "Wiadomości udostępniane w trybie offline przechowywane są lokalnie na komputerze użytkownika. Aby zaoszczędzić miejsce na dysku kopie mogą być przechowywane przez ograniczony czas lub wedle rozmiaru.">
-<!ENTITY allFoldersOffline.label "Przechowuj wiadomości dla tego konta lokalnie na komputerze">
-<!ENTITY allFoldersOffline.accesskey "P">
 <!ENTITY allFoldersOffline2.label "Przechowuj wiadomości we wszystkich folderach dla tego konta lokalnie na komputerze">
 <!ENTITY allFoldersOffline2.accesskey "P">
 <!ENTITY allFoldersOfflineNote.label "Uwaga: zmiana tej opcji wpływa na wszystkie foldery w tym koncie. Aby ustawić poszczególne foldery, użyj przycisku „Zaawansowane…”.">

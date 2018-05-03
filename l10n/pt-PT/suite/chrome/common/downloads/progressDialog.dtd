@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY progress.title                  "A transferir…">
+<!ENTITY progress.title                  "Transferência em progresso…">
 <!ENTITY closeWindow.key                 "w">
 <!ENTITY cmd.pause.tooltip               "Pausa">
 <!ENTITY cmd.resume.tooltip              "Retomar">
@@ -13,7 +13,7 @@
 <!ENTITY cmd.show.label                  "Abrir a pasta respetiva">
 <!ENTITY cmd.show.accesskey              "b">
 <!ENTITY cmd.goToDownloadPage.label      "Ir para a página de transferência">
-<!ENTITY cmd.goToDownloadPage.accesskey  "r">
+<!ENTITY cmd.goToDownloadPage.accesskey  "I">
 <!ENTITY cmd.copyDownloadLink.label      "Copiar ligação da transferência">
 <!ENTITY cmd.copyDownloadLink.accesskey  "l">
 <!ENTITY closeWhenDone.label             "Fechar esta janela ao terminar a transferência.">

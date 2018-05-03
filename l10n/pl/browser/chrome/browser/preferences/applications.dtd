@@ -6,8 +6,8 @@
 <!ENTITY applications.description "Wybierz, jak program &brandShortName; obsługuje pobierane z sieci pliki lub aplikacje używane podczas przeglądania.">
 
 <!ENTITY typeColumn.label "Typ zawartości">
-<!ENTITY typeColumn.accesskey "">
+<!ENTITY typeColumn.accesskey "T">
 <!ENTITY actionColumn2.label "Czynność">
-<!ENTITY actionColumn2.accesskey "">
+<!ENTITY actionColumn2.accesskey "C">
 
 <!ENTITY filter2.emptytext "Typ pliku lub nazwa aplikacji">

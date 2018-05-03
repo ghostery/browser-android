@@ -36,6 +36,12 @@
 <!ENTITY newFeedAccountCmd.accesskey "я">
 <!ENTITY newIMContactCmd.label "Контакт в чате…">
 <!ENTITY newIMContactCmd.accesskey "о">
+<!ENTITY  newMessageCmd2.key "N">
+<!ENTITY  newMessageCmd.key "M">
+<!ENTITY  newMessageCmd.label "Сообщение">
+<!ENTITY  newMessageCmd.accesskey "о">
+<!ENTITY  newContactCmd.label "Контакт адресной книги…">
+<!ENTITY  newContactCmd.accesskey "а">
 <!ENTITY openMessageFileCmd.label "Открыть сохранённое сообщение…">
 <!ENTITY openMessageFileCmd.accesskey "с">
 <!ENTITY saveAsMenu.label "Сохранить как">
@@ -317,7 +323,6 @@
 <!ENTITY goBackCmd.commandKey "[">
 <!ENTITY goChatCmd.label "Чат">
 <!ENTITY goChatCmd.accesskey "а">
-<!ENTITY goChatCmd.key "I">
 <!ENTITY goChatCmd2.key "H">
 <!ENTITY prevStarredMsgCmd.label "отмеченное звёздочкой сообщение">
 <!ENTITY prevStarredMsgCmd.accesskey "з">
@@ -510,8 +515,6 @@
 <!ENTITY devToolboxCmd.label "Панель разработки">
 <!ENTITY devToolboxCmd.accesskey "а">
 <!ENTITY devToolboxCmd.commandkey "i">
-<!ENTITY addonDebugCmd.label "Отладчик дополнений">
-<!ENTITY addonDebugCmd.accesskey "л">
 <!ENTITY debugAddonsCmd.label "Отладка дополнений">
 <!ENTITY debugAddonsCmd.accesskey "л">
 <!ENTITY tabsDebugCmd.label "Отладчик фрейма содержимого">
@@ -646,6 +649,7 @@
 <!-- Folder Pane Context Menu -->
 <!ENTITY folderContextGetMessages.label "Получить сообщения">
 <!ENTITY folderContextGetMessages.accesskey "л">
+<!ENTITY folderContextMarkAllFoldersRead.label "Отметить все папки как прочитанные">
 <!ENTITY folderContextPauseAllUpdates.label "Приостановить все обновления">
 <!ENTITY folderContextPauseUpdates.label "Приостановить обновления">
 <!ENTITY folderContextPauseUpdates.accesskey "и">

@@ -14,6 +14,11 @@
   -  shown next to error details when the Browser Toolbox is unable to open. -->
 <!ENTITY browserToolboxErrorMessage          "Ошибка открытия Инструментов браузера:">
 
+<!-- LOCALIZATION NOTE (browserToolboxStatusMessage): This is the label
+  -  shown next to status details when the Browser Toolbox fails to connect or
+  -  appears to be taking a while to do so. -->
+<!ENTITY browserToolboxStatusMessage "Состояние соединения Инструментов браузера:">
+
 <!-- LOCALIZATION NOTE (options.context.advancedSettings): This is the label for
   -  the heading of the advanced settings group in the options panel. -->
 <!ENTITY options.context.advancedSettings "Дополнительные параметры">
@@ -70,7 +75,7 @@
   -  options panel and is used for settings that trigger page reload. -->
 <!ENTITY options.context.triggersPageRefresh  "* Только текущая сессия, перезагружает страницу">
 
-<!-- LOCALIZATION NOTE (options.enableChrome.label4): This is the label for the
+<!-- LOCALIZATION NOTE (options.enableChrome.label5): This is the label for the
   -  checkbox that toggles chrome debugging, i.e. devtools.chrome.enabled
   -  boolean preference in about:config, in the options panel. -->
 <!ENTITY options.enableChrome.label5    "Включить инструменты отладки browser chrome и дополнений">
@@ -144,7 +149,7 @@
   -  heading of the group of Debugger preferences in the options panel. -->
 <!ENTITY options.debugger.label            "Отладчик">
 
-<!-- LOCALIZATION NOTE (options.sourceMap.label): This is the
+<!-- LOCALIZATION NOTE (options.sourceMaps.label): This is the
    - label for the checkbox that toggles source maps in all tools -->
 <!ENTITY options.sourceMaps.label      "Включить Карты Исходников">
 <!ENTITY options.sourceMaps.tooltip1   "Если вы включите эту настройку, исходники будут картированы в инструментах.">

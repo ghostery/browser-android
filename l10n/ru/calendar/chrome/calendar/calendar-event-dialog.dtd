@@ -398,6 +398,7 @@
 <!-- Read-Only dialog -->
 <!ENTITY read.only.general.label         "Основные">
 <!ENTITY read.only.title.label           "Название:">
+<!ENTITY read.only.calendar.label        "Календарь:">
 <!ENTITY read.only.event.start.label     "Дата начала:">
 <!ENTITY read.only.task.start.label      "Дата начала:">
 <!ENTITY read.only.event.end.label       "Дата окончания:">
@@ -416,3 +417,17 @@
 <!ENTITY read.only.attendees.label       "Участники">
 <!ENTITY read.only.description.label     "Описание">
 <!ENTITY read.only.link.label            "Связанная ссылка">
+
+<!-- Summary dialog -->
+<!ENTITY summary.dialog.saveclose.label         "Сохранить и закрыть">
+<!ENTITY summary.dialog.saveclose.tooltiptext   "Сохранить изменения и закрыть окно без сохранения статуса участия и отправки ответа">
+<!ENTITY summary.dialog.accept.label            "Принять">
+<!ENTITY summary.dialog.accept.tooltiptext      "Принять приглашение">
+<!ENTITY summary.dialog.tentative.label         "Ориентировочно">
+<!ENTITY summary.dialog.tentative.tooltiptext   "Ориентировочно принять приглашение">
+<!ENTITY summary.dialog.decline.label           "Отклонить">
+<!ENTITY summary.dialog.decline.tooltiptext     "Отклонить приглашение">
+<!ENTITY summary.dialog.dontsend.label          "Не отправлять ответ">
+<!ENTITY summary.dialog.dontsend.tooltiptext    "Изменить мой статус участия без отправки ответа организатору и закрыть окно">
+<!ENTITY summary.dialog.send.label              "Отправить ответ сейчас">
+<!ENTITY summary.dialog.send.tooltiptext        "Отправить ответ организатору  и закрыть окно">

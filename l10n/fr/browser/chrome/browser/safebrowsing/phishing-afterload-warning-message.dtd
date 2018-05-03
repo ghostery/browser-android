@@ -51,7 +51,7 @@
 
 <!ENTITY safeb.blocked.phishingPage.errorDesc.noOverride "<span id='phishing_sitename'/> a été <a id='error_desc_link'>signalé comme étant un site trompeur</a>. Vous pouvez <a id='report_detection'>signaler une erreur de détection</a>.">
 
-<!ENTITY safeb.blocked.phishingPage.learnMore "Consultez <a id='learn_more_link'>www.antiphishing.org</a> pour en savoir plus sur les sites trompeurs et le hameçonnage. Consultez <a id='firefox_support'>support.mozilla.org</a> pour en savoir plus sur le système de protection de &brandShortName; contre l’hameçonnage et les logiciels malveillants.">
+<!ENTITY safeb.blocked.phishingPage.learnMore "Consultez <a id='learn_more_link'>www.antiphishing.org</a> pour en savoir plus sur les sites trompeurs et l’hameçonnage. Consultez <a id='firefox_support'>support.mozilla.org</a> pour en savoir plus sur le système de protection de &brandShortName; contre l’hameçonnage et les logiciels malveillants.">
 
 
 <!ENTITY safeb.blocked.harmfulPage.title "Ce site peut contenir des logiciels malveillants">

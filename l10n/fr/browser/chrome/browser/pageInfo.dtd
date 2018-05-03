@@ -60,9 +60,6 @@
 <!ENTITY  permissionsFor        "Permissions pour :">
 <!ENTITY  permPlugins           "Activer les plugins">
 
-<!ENTITY  permClearStorage           "Supprimer les données">
-<!ENTITY  permClearStorage.accesskey "d">
-
 <!ENTITY  securityTab           "Sécurité">
 <!ENTITY  securityTab.accesskey "S">
 <!ENTITY  securityView.certView "Afficher le certificat">
@@ -81,6 +78,9 @@
 <!ENTITY  securityView.privacy.cookies                  "Ce site web collecte-t-il des informations (cookies) sur mon ordinateur ?">
 <!ENTITY  securityView.privacy.viewCookies              "Voir les cookies">
 <!ENTITY  securityView.privacy.viewCookies.accessKey    "k">
+<!ENTITY  securityView.privacy.siteData                 "Ce site web collecte-t-il des informations sur mon ordinateur ?">
+<!ENTITY  securityView.privacy.clearSiteData            "Effacer les cookies et les données de sites">
+<!ENTITY  securityView.privacy.clearSiteData.accessKey  "E">
 <!ENTITY  securityView.privacy.passwords                "Ai-je un mot de passe enregistré pour ce site web ?">
 <!ENTITY  securityView.privacy.viewPasswords            "Voir les mots de passe enregistrés">
 <!ENTITY  securityView.privacy.viewPasswords.accessKey  "V">

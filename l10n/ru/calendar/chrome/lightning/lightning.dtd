@@ -42,7 +42,6 @@
      These strings are used in the calendar wizard and the calendar properties dialog, but are only
      displayed when setting/using a caldav calendar -->
 <!ENTITY lightning.calendarproperties.email.label                           "Эл. Почта:">
-
 <!ENTITY lightning.calendarproperties.forceEmailScheduling.label            "Предпочитать отправлять эл.письма с приглашениями со стороны клиента">
 <!-- LOCALIZATON NOTE(lightning.calendarproperties.forceEmailScheduling.tooltiptext1,
      lightning.calendarproperties.forceEmailScheduling.tooltiptext2)
@@ -83,6 +82,13 @@
 <!ENTITY lightning.imipbar.btnUpdate.label                                  "Обновить">
 <!ENTITY lightning.imipbar.btnUpdate.tooltiptext                            "Обновить событие в календаре">
 <!ENTITY lightning.imipbar.description                                      "Это письмо содержит приглашение на событие.">
+
+<!ENTITY lightning.imipbar.btnSend.label                                    "Отправить ответ сейчас">
+<!ENTITY lightning.imipbar.btnSend.tooltiptext                              "Отправить ответ организатору">
+<!ENTITY lightning.imipbar.btnSendSeries.tooltiptext                        "Отправить ответ по всей серии событий организатору">
+<!ENTITY lightning.imipbar.btnDontSend.label                                "Не отправлять ответ">
+<!ENTITY lightning.imipbar.btnDontSend.tooltiptext                          "Изменить мой статус участия без отправки ответа организатору">
+<!ENTITY lightning.imipbar.btnDontSendSeries.tooltiptext                    "Изменить мой статус участия в сериях без отправки ответа организатору">
 
 <!-- Lightning specific keybindings -->
 <!ENTITY lightning.keys.event.showCalendar.key "C">

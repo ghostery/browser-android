@@ -82,3 +82,7 @@
 
 <!ENTITY inadequateSecurityError.title "Połączenie nie gwarantuje bezpieczeństwa">
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> używa przestarzałej i podatnej na ataki technologii bezpieczeństwa. Atakujący mógłby łatwo odszyfrować informacje, które miały być bezpieczne. Administrator strony musi naprawić serwer, zanim będzie można ją odwiedzić.</p><p>Kod błędu: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
+
+<!ENTITY blockedByPolicyTemp.title "Strona zablokowana">
+<!ENTITY blockedByPolicyTemp.longDesc "<p>Dostęp do tej strony zablokował administrator.</p>">
+<!ENTITY blockedByPolicy.title "Zablokowana strona">

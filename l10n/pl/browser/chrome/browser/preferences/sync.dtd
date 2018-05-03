@@ -3,15 +3,15 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY engine.bookmarks.label "Zakładki">
-<!ENTITY engine.bookmarks.accesskey "">
+<!ENTITY engine.bookmarks.accesskey "Z">
 <!ENTITY engine.tabs.label2 "Karty">
 <!ENTITY engine.tabs.title "Lista otwartych stron na wszystkich synchronizowanych urządzeniach">
-<!ENTITY engine.tabs.accesskey "">
+<!ENTITY engine.tabs.accesskey "K">
 <!ENTITY engine.history.label "Historia">
-<!ENTITY engine.history.accesskey "">
+<!ENTITY engine.history.accesskey "H">
 <!ENTITY engine.logins.label "Dane logowania">
 <!ENTITY engine.logins.title "Zachowane nazwy użytkownika i hasła">
-<!ENTITY engine.logins.accesskey "">
+<!ENTITY engine.logins.accesskey "a">
 <!ENTITY engine.prefsWin.label "Opcje">
 <!ENTITY engine.prefsWin.accesskey "O">
 <!ENTITY engine.prefs.label "Preferencje">
@@ -19,21 +19,21 @@
 <!ENTITY engine.prefs.title "Zmienione ustawienia ogólne, prywatności i bezpieczeństwa">
 <!ENTITY engine.addons.label "Dodatki">
 <!ENTITY engine.addons.title "Rozszerzenia i motywy dla Firefoksa na komputery">
-<!ENTITY engine.addons.accesskey "">
+<!ENTITY engine.addons.accesskey "d">
 <!ENTITY engine.addresses.label "Adresy">
 <!ENTITY engine.addresses.title "Zachowane adresy pocztowe (tylko na komputerach)">
-<!ENTITY engine.addresses.accesskey "">
+<!ENTITY engine.addresses.accesskey "d">
 <!ENTITY engine.creditcards.label "Dane kart płatniczych">
 <!ENTITY engine.creditcards.title "Nazwiska, numery i okresy ważności (tylko na komputerach)">
-<!ENTITY engine.creditcards.accesskey "">
+<!ENTITY engine.creditcards.accesskey "k">
 
 <!ENTITY fxaSyncDeviceName.label "Nazwa urządzenia">
 <!ENTITY changeSyncDeviceName2.label "Zmień nazwę urządzenia…">
-<!ENTITY changeSyncDeviceName2.accesskey "">
+<!ENTITY changeSyncDeviceName2.accesskey "n">
 <!ENTITY cancelChangeSyncDeviceName.label "Anuluj">
-<!ENTITY cancelChangeSyncDeviceName.accesskey "">
+<!ENTITY cancelChangeSyncDeviceName.accesskey "A">
 <!ENTITY saveChangeSyncDeviceName.label "Zachowaj">
-<!ENTITY saveChangeSyncDeviceName.accesskey "">
+<!ENTITY saveChangeSyncDeviceName.accesskey "Z">
 
 <!ENTITY prefs.tosLink.label        "Warunki korzystania z usługi">
 
@@ -46,35 +46,40 @@
 
 <!ENTITY notSignedIn.label "Nie zalogowano">
 <!ENTITY signIn.label "Zaloguj">
-<!ENTITY signIn.accesskey "">
+<!ENTITY signIn.accesskey "o">
 <!ENTITY profilePicture.tooltip "Zmień obraz przypisany do konta">
 <!ENTITY verifiedManage.label "Zarządzaj kontem">
-<!ENTITY verifiedManage.accesskey "">
+<!ENTITY verifiedManage.accesskey "Z">
 <!ENTITY disconnect3.label "Rozłącz…">
-<!ENTITY disconnect3.accesskey "">
+<!ENTITY disconnect3.accesskey "R">
 <!ENTITY verify.label "Zweryfikuj adres e-mail">
-<!ENTITY verify.accesskey "">
+<!ENTITY verify.accesskey "s">
 <!ENTITY forget.label "Usuń adres e-mail">
-<!ENTITY forget.accesskey "">
+<!ENTITY forget.accesskey "U">
 
 <!ENTITY resendVerification.label "Wyślij nową wiadomość weryfikującą">
 <!ENTITY resendVerification.accesskey "W">
 <!ENTITY cancelSetup.label "Anuluj konfigurację">
 <!ENTITY cancelSetup.accesskey "A">
+<!ENTITY removeAccount.label "Usuń konto">
+<!ENTITY removeAccount.accesskey "U">
 
 <!ENTITY signedOut.caption "Zabierz swoją sieć ze sobą">
 <!ENTITY signedOut.description "Synchronizuj zakładki, historię, karty, hasła, dodatki i ustawienia między wszystkimi swoimi urządzeniami.">
 <!ENTITY signedOut.accountBox.title "&syncBrand.fxAccount.label;">
 <!ENTITY signedOut.accountBox.create2 "Nie masz konta? Utwórz je…">
-<!ENTITY signedOut.accountBox.create2.accesskey "">
+<!ENTITY signedOut.accountBox.create2.accesskey "U">
 <!ENTITY signedOut.accountBox.signin2 "Zaloguj się">
-<!ENTITY signedOut.accountBox.signin2.accesskey "">
+<!ENTITY signedOut.accountBox.signin2.accesskey "Z">
 
 <!ENTITY signedIn.settings.label "Ustawienia synchronizacji">
 <!ENTITY signedIn.settings.description "Wybierz, co synchronizować pomiędzy urządzeniami używając programu &brandShortName;.">
 
-<!ENTITY mobilePromo3.start "Pobierz Firefoksa na">
+<!ENTITY mobilePromo3.start "Pobierz Firefoksa na ">
 <!ENTITY mobilePromo3.androidLink "Androida">
 <!ENTITY mobilePromo3.iOSBefore " lub ">
 <!ENTITY mobilePromo3.iOSLink "iOSa">
 <!ENTITY mobilePromo3.end ", aby synchronizować ze swoim urządzeniem przenośnym.">
+
+<!ENTITY mobilepromo.singledevice "Połącz inne urządzenie">
+<!ENTITY mobilepromo.multidevice "Zarządzaj urządzeniami">

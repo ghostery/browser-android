@@ -54,12 +54,14 @@ can reach it easily. -->
 <!ENTITY  sendToDeviceOfflineFeedback.label  "Na fila (offline)">
 <!ENTITY  moveToNewWindow.label              "Mover para nova janela">
 <!ENTITY  moveToNewWindow.accesskey          "j">
-<!ENTITY  bookmarkAllTabs.label              "Criar marcadores para todos os separadores…">
+<!ENTITY  bookmarkAllTabs.label              "Adicionar todos os separadores aos marcadores…">
 <!ENTITY  bookmarkAllTabs.accesskey          "t">
 <!ENTITY  undoCloseTab.label                 "Reabrir separador fechado">
 <!ENTITY  undoCloseTab.accesskey             "b">
 <!ENTITY  closeTab.label                     "Fechar separador">
 <!ENTITY  closeTab.accesskey                 "c">
+
+<!ENTITY  hiddenTabs.label                   "Separadores ocultados">
 
 <!ENTITY  listAllTabs.label      "Listar todos os separadores">
 
@@ -93,7 +95,7 @@ when there are no windows but Firefox is still running. -->
 
 <!ENTITY toolbarContextMenu.reloadAllTabs.label "Recarregar todos os separadores">
 <!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "a">
-<!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Criar marcadores para todos os separadores…">
+<!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Adicionar todos os separadores aos marcadores…">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "t">
 <!ENTITY toolbarContextMenu.undoCloseTab.label "Reabrir separador fechado">
 <!ENTITY toolbarContextMenu.undoCloseTab.accesskey "b">
@@ -175,21 +177,21 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY bookmarksMenu.label "Marcadores">
 <!ENTITY bookmarksMenu.accesskey "M">
-<!ENTITY bookmarkThisPageCmd.label "Adicionar página aos marcadores">
+<!ENTITY bookmarkThisPageCmd.label "Adicionar esta página aos marcadores">
 <!ENTITY editThisBookmarkCmd.label "Editar este marcador">
 <!ENTITY bookmarkThisPageCmd.commandkey "d">
 
 <!ENTITY subscribeToPageMenupopup.label "Subscrever esta página">
 <!ENTITY subscribeToPageMenuitem.label "Subscrever esta página…">
-<!ENTITY addCurPagesCmd.label "Criar marcadores para todos os separadores…">
+<!ENTITY addCurPagesCmd.label "Adicionar todos os separadores aos marcadores…">
 <!ENTITY showAllBookmarks2.label "Mostrar todos os marcadores">
 <!ENTITY recentBookmarks.label "Marcadores recentes">
 <!ENTITY otherBookmarksCmd.label "Outros marcadores">
 <!ENTITY mobileBookmarksCmd.label "Marcadores de dispositivo móvel">
 <!ENTITY bookmarksToolbarChevron.tooltip "Mostrar mais marcadores">
-<!ENTITY showRecentlyBookmarked.label     "Mostrar marcadores recentemente adicionados">
+<!ENTITY showRecentlyBookmarked.label     "Mostrar marcadores recentes">
 <!ENTITY showRecentlyBookmarked.accesskey "t">
-<!ENTITY hideRecentlyBookmarked.label     "Ocultar marcadores recentemente adicionados">
+<!ENTITY hideRecentlyBookmarked.label     "Ocultar marcadores recentes">
 <!ENTITY hideRecentlyBookmarked.accesskey "c">
 
 <!ENTITY backCmd.label                "Anterior">
@@ -218,9 +220,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.indexedDBNotificationAnchor.tooltip       "Abrir painel de mensagem de armazenamento offline">
 <!ENTITY urlbar.passwordNotificationAnchor.tooltip        "Abrir painel de mensagem de guardar palavra-passe">
 <!ENTITY urlbar.pluginsNotificationAnchor.tooltip         "Gerir utilização de plugins">
-<!ENTITY urlbar.webNotificationAnchor.tooltip             "Alterar se deseja ou não receber notificações do site">
+<!ENTITY urlbar.webNotificationAnchor.tooltip             "Alterar se pode ou não receber notificações do site">
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip     "Armazenar dados em armazenamento persistente">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip   "O navegador está sob controlo remoto">
+
+<!ENTITY urlbar.webAuthnAnchor.tooltip                    "Abrir painel de Autenticação Web">
 
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip      "Gerir a partilha da sua câmara e/ou microfone com o site">
 <!ENTITY urlbar.webRTCShareMicrophoneNotificationAnchor.tooltip   "Gerir a partilha do seu microfone com o site">
@@ -240,9 +244,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.webNotificationsBlocked.tooltip  "Bloqueou as notificações para este website.">
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Bloqueou o armazenamento de dados para este website.">
 <!ENTITY urlbar.popupBlocked.tooltip             "Bloqueou pop-ups para este website.">
-
 <!ENTITY urlbar.canvasBlocked.tooltip            "Bloqueou a extração de dados da tela para este website.">
 
+<!ENTITY urlbar.flashPluginBlocked.tooltip       "Bloqueou este website de utilizar o plugin Adobe Flash.">
 <!ENTITY urlbar.midiBlocked.tooltip              "Bloqueou o acesso MIDI para este website.">
 
 <!ENTITY urlbar.openHistoryPopup.tooltip                "Mostrar histórico">
@@ -268,7 +272,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY addBookmarksMenu.label             "Adicionar menu de marcadores à barra de ferramentas">
 <!ENTITY removeBookmarksMenu.label          "Remover menu de marcadores da barra de ferramentas">
 
-<!-- LOCALIZATION NOTE (bookmarksSidebarGtkCmd.commandkey): This command
+<!-- LOCALIZATION NOTE (bookmarksGtkCmd.commandkey): This command
   -  key should not contain the letters A-F, since these are reserved
   -  shortcut keys on Linux. -->
 <!ENTITY bookmarksGtkCmd.commandkey "o">
@@ -299,6 +303,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY inspectContextMenu.label     "Inspecionar elemento">
 <!ENTITY inspectContextMenu.accesskey "t">
+
+<!ENTITY inspectA11YContextMenu.label     "Inspecionar propriedades de acessibilidade">
 
 <!ENTITY fileMenu.label         "Ficheiro">
 <!ENTITY fileMenu.accesskey       "F">
@@ -385,10 +391,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!-- LOCALIZATION NOTE (appMenuRemoteTabs.tabsnotsyncing.label): This is shown
      when Sync is configured but syncing tabs is disabled. -->
 <!ENTITY appMenuRemoteTabs.tabsnotsyncing.label "Ative a sincronização de separadores para ver uma lista de separadores dos seus outros dispositivos.">
-<!-- LOCALIZATION NOTE (appMenuRemoteTabs.noclients.label): This is shown
+<!-- LOCALIZATION NOTE (appMenuRemoteTabs.noclients.subtitle): This is shown
      when Sync is configured but this appears to be the only device attached to
      the account. We also show links to download Firefox for android/ios. -->
-<!ENTITY appMenuRemoteTabs.noclients.title "Sem separadores sincronizados... ainda!">
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "Pretende ver os seus separadores de outros dispositivos aqui?">
 <!ENTITY appMenuRemoteTabs.openprefs.label "Preferências do Sync">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "Abrir preferências do Sync">
@@ -397,7 +402,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY appMenuRemoteTabs.signin.label "Iniciar sessão no Sync">
 <!ENTITY appMenuRemoteTabs.managedevices.label "Gerir dispositivos…">
 <!ENTITY appMenuRemoteTabs.sidebar.label "Ver barra lateral de separadores sincronizados">
-
 <!ENTITY appMenuRemoteTabs.connectdevice.label "Ligar outro dispositivo">
 
 <!ENTITY appMenuRecentHighlights.label "Destaques recentes">
@@ -440,6 +444,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY openCmd.commandkey           "l">
 <!ENTITY urlbar.placeholder2          "Pesquisar ou introduzir um endereço">
+<!ENTITY urlbar.placeholder3          "Introduza termos de pesquisa e endereços aqui">
 <!ENTITY urlbar.accesskey             "d">
 <!-- LOCALIZATION NOTE (urlbar.extension.label): Used to indicate that a selected autocomplete entry is provided by an extension. -->
 <!ENTITY urlbar.extension.label       "Extensão:">
@@ -566,11 +571,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY viewBGImageCmd.accesskey     "m">
 <!ENTITY setDesktopBackgroundCmd.label      "Definir como fundo do ambiente de trabalho…">
 <!ENTITY setDesktopBackgroundCmd.accesskey  "e">
-<!ENTITY bookmarkPageCmd2.label       "Guardar esta página nos marcadores">
+<!ENTITY bookmarkPageCmd2.label       "Adicionar esta página aos marcadores">
 <!ENTITY bookmarkPageCmd2.accesskey   "m">
-<!ENTITY bookmarkThisLinkCmd.label      "Guardar esta ligação nos marcadores">
+<!ENTITY bookmarkThisLinkCmd.label      "Adicionar esta ligação aos marcadores">
 <!ENTITY bookmarkThisLinkCmd.accesskey  "l">
-<!ENTITY bookmarkThisFrameCmd.label      "Guardar este frame nos marcadores">
+<!ENTITY bookmarkThisFrameCmd.label      "Adicionar este frame aos marcadores">
 <!ENTITY bookmarkThisFrameCmd.accesskey  "m">
 <!ENTITY pageAction.copyLink.label    "Copiar ligação">
 <!ENTITY copyURLFeedback.label        "Copiado!">
@@ -806,7 +811,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY syncedTabs.sidebar.label              "Separadores sincronizados">
 <!ENTITY syncedTabs.sidebar.noclients.label    "Inicie sessão no Firefox a partir dos seus outros dispositivos para ver os seus separadores aqui.">
-<!ENTITY syncedTabs.sidebar.noclients.title    "Sem separadores sincronizados... ainda!">
 <!ENTITY syncedTabs.sidebar.noclients.subtitle "Pretende ver os seus separadores de outros dispositivos aqui?">
 <!ENTITY syncedTabs.sidebar.notsignedin.label  "Inicie sessão para ver uma lista de separadores dos seus outros dispositivos.">
 <!ENTITY syncedTabs.sidebar.unverified.label   "A sua conta necessita de ser verificada.">
@@ -816,7 +820,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      when Sync is configured but syncing tabs is disabled. -->
 <!ENTITY syncedTabs.sidebar.tabsnotsyncing.label       "Ative a sincronização de separadores para ver uma lista de separadores dos seus outros dispositivos.">
 <!ENTITY syncedTabs.sidebar.searchPlaceholder  "Pesquisar separadores sincronizados">
-
 <!ENTITY syncedTabs.sidebar.connectAnotherDevice  "Ligar outro dispositivo">
 
 <!-- LOCALIZATION NOTE (syncedTabs.context.open.accesskey,
@@ -831,7 +834,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY syncedTabs.context.openInNewWindow.accesskey        "j">
 <!ENTITY syncedTabs.context.openInNewPrivateWindow.label     "Abrir ligação em nova janela privada">
 <!ENTITY syncedTabs.context.openInNewPrivateWindow.accesskey "p">
-<!ENTITY syncedTabs.context.bookmarkSingleTab.label          "Criar marcador para este separador…">
+<!ENTITY syncedTabs.context.bookmarkSingleTab.label          "Adicionar este separador aos marcadores…">
 <!ENTITY syncedTabs.context.bookmarkSingleTab.accesskey      "C">
 <!ENTITY syncedTabs.context.copy.label                       "Copiar">
 <!ENTITY syncedTabs.context.copy.accesskey                   "C">
@@ -986,11 +989,22 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY updateRestart.panelUI.label2 "Reiniciar para atualizar o &brandShorterName;">
 
 <!ENTITY newTabControlled.message "Uma extensão alterou a página que vê quando abre um novo separador. Pode restaurar as suas definições se não quiser esta alteração.">
+
 <!ENTITY newTabControlled.header.message "O seu novo separador foi alterado.">
 <!ENTITY newTabControlled.keepButton.label "Manter alterações">
 <!ENTITY newTabControlled.keepButton.accesskey "M">
 <!ENTITY newTabControlled.restoreButton.label "Restaurar definições">
 <!ENTITY newTabControlled.restoreButton.accesskey "R">
+
+<!ENTITY newTabControlled.disableButton.label "Desativar extensão">
+<!ENTITY newTabControlled.disableButton.accesskey "D">
+
+<!ENTITY homepageControlled.message "Uma extensão alterou o que vê como sua página inicial. Pode restaurar as suas definições se não quiser esta alteração.">
+<!ENTITY homepageControlled.header.message "A sua página inicial alterou.">
+<!ENTITY homepageControlled.keepButton.label "Manter alterações">
+<!ENTITY homepageControlled.keepButton.accesskey "M">
+<!ENTITY homepageControlled.disableButton.label "Desativar extensão">
+<!ENTITY homepageControlled.disableButton.accesskey "D">
 
 <!ENTITY pageActionButton.tooltip "Ações da página">
 <!ENTITY pageAction.addToUrlbar.label "Adicionar à barra de endereço">
@@ -1001,6 +1015,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY pageAction.sendTabToDevice.label "Enviar separador para dispositivo">
 <!ENTITY sendToDevice.syncNotReady.label "A sincronizar dispositivos…">
+
+<!ENTITY pageAction.shareUrl.label "Partilhar">
 
 <!ENTITY libraryButton.tooltip "Ver histórico, marcadores guardados, e mais">
 

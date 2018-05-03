@@ -80,7 +80,7 @@
 <!ENTITY changeSettings.label            "Modifier les paramètres">
 <!ENTITY changeSettings.accesskey        "M">
 
-<!ENTITY contactYourProvider.description "&brandShortName; vous laissera accéder à vos courriels en utilisant les configurations fournies. Cependant, vous devriez vraiment contacter votre administrateur ou votre fournisseur de messagerie concernant ces connexions incorrectes. Consultez la FAQ de &brandShortName; pour plus d’informations.">
+<!ENTITY contactYourProvider.description "&brandShortName; peut vous permettre d’accéder à vos courriels en utilisant les configurations fournies. Cependant, vous devriez contacter votre administrateur ou votre fournisseur de messagerie au sujet de ces connexions incorrectes. Consultez la FAQ de &brandShortName; pour plus d’informations.">
 
 <!ENTITY insecureServer.tooltip.title    "Attention ! Ce serveur n’est pas sécurisé.">
 <!ENTITY insecureServer.tooltip.details  "Cliquez sur le cercle pour plus de détails.">

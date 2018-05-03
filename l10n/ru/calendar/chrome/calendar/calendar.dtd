@@ -172,16 +172,53 @@
 <!ENTITY calendar.context.copyevent.accesskey         "К">
 <!ENTITY calendar.context.pasteevent.label            "Вставить">
 <!ENTITY calendar.context.pasteevent.accesskey        "ь">
-<!ENTITY calendar.context.button.label                "Мероприятия" >
-<!ENTITY calendar.context.button.accesskey            "я" >
-<!ENTITY calendar.context.attendance.menu.label       "Участники" >
-<!ENTITY calendar.context.attendance.menu.accesskey   "ч" >
-<!ENTITY calendar.context.attendance.occurrence.label "Этот повтор" >
+<!ENTITY calendar.context.button.label                "Мероприятия">
+<!ENTITY calendar.context.button.accesskey            "я">
+
+<!ENTITY calendar.context.attendance.menu.label                 "Участники">
+<!ENTITY calendar.context.attendance.menu.accesskey             "ч">
+<!ENTITY calendar.context.attendance.occurrence.label           "Этот повтор">
 <!ENTITY calendar.context.attendance.all.label        "Все повторы" >
 
+<!ENTITY calendar.context.attendance.all2.label                 "Все серии событий">
+<!ENTITY calendar.context.attendance.send.label                 "Отправить уведомление сейчас">
+<!ENTITY calendar.context.attendance.send.accesskey             "п">
+<!ENTITY calendar.context.attendance.dontsend.label             "Не отправлять уведомление">
+<!ENTITY calendar.context.attendance.dontsend.accesskey         "е">
+
+<!ENTITY calendar.context.attendance.occ.accepted.accesskey     "и">
+<!ENTITY calendar.context.attendance.occ.accepted.label         "Принято">
+<!ENTITY calendar.context.attendance.occ.tentative.accesskey    "н">
+<!ENTITY calendar.context.attendance.occ.tentative.label        "Ориентировочно принято">
+<!ENTITY calendar.context.attendance.occ.declined.accesskey     "л">
+<!ENTITY calendar.context.attendance.occ.declined.label         "Отклонено">
+<!ENTITY calendar.context.attendance.occ.delegated.accesskey    "е">
+<!ENTITY calendar.context.attendance.occ.delegated.label        "Делегировано">
+<!ENTITY calendar.context.attendance.occ.needsaction.accesskey  "ж">
+<!ENTITY calendar.context.attendance.occ.needsaction.label      "В ожидании действия">
+<!ENTITY calendar.context.attendance.occ.inprogress.accesskey   "с">
+<!ENTITY calendar.context.attendance.occ.inprogress.label       "В процессе">
+<!ENTITY calendar.context.attendance.occ.completed.accesskey    "ш">
+<!ENTITY calendar.context.attendance.occ.completed.label        "Завершено">
+
+<!ENTITY calendar.context.attendance.all.accepted.accesskey     "я">
+<!ENTITY calendar.context.attendance.all.accepted.label         "Принято">
+<!ENTITY calendar.context.attendance.all.tentative.accesskey    "т">
+<!ENTITY calendar.context.attendance.all.tentative.label        "Ориентировочно принято">
+<!ENTITY calendar.context.attendance.all.declined.accesskey     "к">
+<!ENTITY calendar.context.attendance.all.declined.label         "Отклонено">
+<!ENTITY calendar.context.attendance.all.delegated.accesskey    "е">
+<!ENTITY calendar.context.attendance.all.delegated.label        "Делегировано">
+<!ENTITY calendar.context.attendance.all.needsaction.accesskey  "е">
+<!ENTITY calendar.context.attendance.all.needsaction.label      "В ожидании действия">
+<!ENTITY calendar.context.attendance.all.inprogress.accesskey   "п">
+<!ENTITY calendar.context.attendance.all.inprogress.label       "В процессе">
+<!ENTITY calendar.context.attendance.all.completed.accesskey    "о">
+<!ENTITY calendar.context.attendance.all.completed.label        "Завершено">
+
 <!-- Task Context Menu -->
-<!ENTITY calendar.context.progress.label              "Завершено">
-<!ENTITY calendar.context.progress.accesskey          "З">
+<!ENTITY calendar.context.progress.label              "Прогресс">
+<!ENTITY calendar.context.progress.accesskey          "г">
 <!ENTITY calendar.context.priority.label              "Важность">
 <!ENTITY calendar.context.priority.accesskey          "В">
 <!ENTITY calendar.context.postpone.label              "Отложить задачу">

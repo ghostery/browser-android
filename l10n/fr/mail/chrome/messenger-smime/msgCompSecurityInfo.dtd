@@ -5,7 +5,7 @@
 <!--LOCALIZATION NOTE msgCompSecurityInfo.dtd UI for viewing security status when composing a message -->
 
 <!ENTITY title.label "Sécurité des messages">
-<!ENTITY subject.plaintextWarning "Note : Le champ « Sujet » d’un message n’est jamais chiffré.">
+<!ENTITY subject.plaintextWarning "Veuillez noter : le champ « Sujet » d’un message n’est jamais chiffré.">
 <!ENTITY status.heading "Le contenu du message sera envoyé de la façon suivante :">
 <!ENTITY status.signed "Signé numériquement :">
 <!ENTITY status.encrypted "Chiffré :">

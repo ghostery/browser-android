@@ -3,8 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY  trackingProtectionHeader2.label      "Защита от отслеживания">
-<!ENTITY  trackingProtection2.description      "Отслеживание - это сбор ваших данных веб-серфинга на множестве веб-сайтов. Отслеживание можно использовать для построения профиля и отображения содержимого на основе вашего веб-серфинга и персональной информации.">
-<!ENTITY  trackingProtection2.radioGroupLabel  "Использовать защиту от отслеживания для блокировки известных трекеров">
 <!ENTITY  trackingProtection3.description      "Защита от отслеживания блокирует онлайн-трекеры, которые собирают данные вашего веб-сёрфинга на различных веб-сайтах.">
 <!ENTITY  trackingProtection3.radioGroupLabel  "Использовать защиту от отслеживания для блокировки известных трекеров">
 <!ENTITY  trackingProtectionAlways.label       "Всегда">
@@ -13,7 +11,6 @@
 <!ENTITY  trackingProtectionPrivate.accesskey  "в">
 <!ENTITY  trackingProtectionNever.label        "Никогда">
 <!ENTITY  trackingProtectionNever.accesskey    "а">
-<!ENTITY  trackingProtectionLearnMore.label    "Подробнее">
 <!ENTITY  trackingProtectionLearnMore2.label    "Узнайте больше о защите от отслеживания и вашей приватности">
 <!ENTITY  trackingProtectionExceptions.label   "Исключения…">
 <!ENTITY  trackingProtectionExceptions.accesskey "л">
@@ -24,11 +21,6 @@
 <!ENTITY trackingProtectionPBMLearnMore.label "Подробнее">
 <!ENTITY changeBlockList2.label               "Сменить список блокировки…">
 <!ENTITY changeBlockList2.accesskey           "м">
-
-<!ENTITY  doNotTrack.description        "Передавать сайтам сигнал “Не отслеживать”, означающий, чтобы вы не хотите быть отслеживаемыми">
-<!ENTITY  doNotTrack.learnMore.label    "Подробнее">
-<!ENTITY  doNotTrack.default.label      "Только при использовании защиты от отслеживания">
-<!ENTITY  doNotTrack.always.label       "Всегда">
 
 <!ENTITY  history.label                 "История">
 <!ENTITY  permissions.label             "Разрешения">
@@ -52,9 +44,11 @@
 <!ENTITY  acceptThirdParty2.pre.label     "Принимать куки со сторонних веб-сайтов">
 <!ENTITY  acceptThirdParty2.pre.accesskey "н">
 
-<!ENTITY  acceptCookies3.label          "Принимать куки и данные сайтов с веб-сайтов">
-<!ENTITY  acceptCookies3.accesskey      "у">
+<!ENTITY  acceptCookies4.label          "Принимать куки и данные сайтов с веб-сайтов (рекомендуется)">
+<!ENTITY  acceptCookies4.accesskey      "и">
 
+<!ENTITY  blockCookies.label            "Блокировать куки и данные сайтов (может нарушить работу веб-сайтов)">
+<!ENTITY  blockCookies.accesskey        "л">
 
 <!ENTITY  acceptThirdParty3.pre.label     "Принимать куки и данные сайтов со сторонних веб-сайтов">
 <!ENTITY  acceptThirdParty3.pre.accesskey "н">
@@ -91,6 +85,8 @@
 <!ENTITY  rememberActions.middle.label        " или ">
 <!ENTITY  rememberActions.removeCookies.label "удалить отдельные куки">
 <!ENTITY  rememberActions.post.label          ".">
+
+<!ENTITY  rememberDescription1.label      "&brandShortName; будет помнить историю посещений, загрузок, поиска и сохранять данные форм.">
 
 <!ENTITY  dontrememberDescription.label  "&brandShortName; будет использовать те же настройки, что и при приватном просмотре, и не будет помнить историю вашей работы с веб-сайтами.">
 

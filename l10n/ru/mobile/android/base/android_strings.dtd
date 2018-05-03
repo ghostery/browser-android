@@ -282,6 +282,13 @@
 <!ENTITY pref_whats_new_notification "Что нового в &brandShortName;">
 <!ENTITY pref_whats_new_notification_summary "Узнавать о новых возможностях после обновления">
 
+<!-- Localization note (pref_feature_tips_notification): Title of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification"-->
+<!ENTITY pref_feature_tips_notification "Советы по продукту и возможностям">
+<!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification_summary"-->
+<!ENTITY pref_feature_tips_notification_summary "Подробнее об использовании &brandShortName; и других продуктов &vendorShortName;">
+
 <!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
      for experimental features. -->
 <!ENTITY pref_category_experimental "Экспериментальные возможности">
@@ -422,7 +429,6 @@
      crashReporterDesc.label). -->
 <!ENTITY datareporting_fhr_title "Отчёт о здоровье &brandShortName;">
 <!ENTITY datareporting_fhr_summary2 "Делится данными о здоровье вашего браузера с &vendorShortName; и помогает вам больше узнать о скорости его работы">
-<!ENTITY datareporting_abouthr_title "Посмотреть мой отчёт о здоровье">
 <!ENTITY datareporting_telemetry_title "Телеметрия">
 <!ENTITY datareporting_telemetry_summary "Делится сведениями о производительности, использовании, аппаратном обеспечении и настройках вашего браузера с &vendorShortName;, чтобы помочь нам сделать &brandShortName; ещё лучше">
 <!ENTITY datareporting_crashreporter_summary "&brandShortName; отправляет сообщения о падениях, чтобы помочь &vendorShortName; сделать ваш браузер более стабильным и безопасным">

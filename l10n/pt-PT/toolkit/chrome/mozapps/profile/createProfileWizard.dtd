@@ -8,7 +8,7 @@
 <!-- First wizard page -->
 <!ENTITY profileCreationExplanation_1.text  "O &brandShortName; armazena informações acerca das suas definições e preferências no seu perfil pessoal.">
 <!ENTITY profileCreationExplanation_2.text  "Se está a partilhar esta cópia do &brandShortName; com outros utilizadores, pode utilizar perfis para separar as informações de cada um dos utilizadores. Para fazer isto, cada utilizador deve criar o seu próprio perfil.">
-<!ENTITY profileCreationExplanation_3.text  "Se é apenas um utilizador a utilizar esta cópia do &brandShortName;, deve ter pelo menos um perfil. Se desejar, poderá criar múltiplos perfis para armazenar diferentes conjuntos de definições e preferências. Por exemplo, pode querer ter perfis separados para utilização profissional e pessoal.">
+<!ENTITY profileCreationExplanation_3.text  "Se é apenas um utilizador a utilizar esta cópia do &brandShortName;, deve ter pelo menos um perfil. Se pretender, pode criar múltiplos perfis para armazenar diferentes conjuntos de definições e preferências. Por exemplo, pode querer ter perfis separados para utilização profissional e pessoal.">
 <!ENTITY profileCreationExplanation_4.text  "Para iniciar a criação do seu perfil, clique em Seguinte.">
 <!ENTITY profileCreationExplanation_4Mac.text  "Para iniciar a criação do seu perfil, clique em Continuar.">
 <!ENTITY profileCreationExplanation_4Gnome.text  "Para iniciar a criação do seu perfil, clique em Seguinte.">

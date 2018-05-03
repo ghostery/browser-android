@@ -23,7 +23,7 @@
 <!ENTITY radioNotSend.accesskey "N">
 <!ENTITY radioAskUnsent.label "Perguntar">
 <!ENTITY radioAskUnsent.accesskey "P">
-<!ENTITY textGoingOffline "Transferir mensagens para utilização offline?">
+<!ENTITY textGoingOffline "Descarregar mensagens para utilização offline?">
 <!ENTITY radioAutoDownload.label "Sim">
 <!ENTITY radioAutoDownload.accesskey "i">
 <!ENTITY radioNotDownload.label "Não">

@@ -17,13 +17,9 @@
 <!ENTITY openHelp.label "Pomoc Thunderbirda">
 <!ENTITY openHelp.accesskey "P">
 <!ENTITY openHelp.commandkey "VK_F1">
-<!ENTITY openHelpMac.label "Pomoc programu &brandShortName;">
 <!ENTITY openHelpMac2.label "Pomoc programu &brandFullName;">
 <!ENTITY openHelpMac2.commandkey "?">
 <!ENTITY openHelpMac2.modifiers "accel">
-
-<!ENTITY aboutMenuCmd.label "O programie &brandShortName;">
-<!ENTITY aboutMenuCmd.accesskey "O">
 
 <!ENTITY aboutMenuCmd2.label "O programie &brandFullName;">
 <!ENTITY aboutMenuCmd2.accesskey "O">

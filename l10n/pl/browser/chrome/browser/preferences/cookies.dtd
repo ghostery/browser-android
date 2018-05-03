@@ -21,7 +21,7 @@
 <!ENTITY     focusSearch1.key               "f">
 
 <!ENTITY searchFilter.label "Szukaj">
-<!ENTITY searchFilter.accesskey "">
+<!ENTITY searchFilter.accesskey "S">
 
 <!ENTITY     button.close.label             "Zamknij">
-<!ENTITY button.close.accesskey "">
+<!ENTITY button.close.accesskey "Z">

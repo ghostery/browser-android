@@ -23,6 +23,7 @@
 <!ENTITY aboutNetworking.sent                  "Отправлено">
 <!ENTITY aboutNetworking.received              "Получено">
 <!ENTITY aboutNetworking.family                "Семейство">
+<!ENTITY aboutNetworking.trr                   "TRR">
 <!ENTITY aboutNetworking.addresses             "Адреса">
 <!ENTITY aboutNetworking.expires               "Истекает через (сек.)">
 <!ENTITY aboutNetworking.messagesSent          "Сообщений отправлено">
