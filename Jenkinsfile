@@ -37,6 +37,9 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                             cp mozconfigs/cliqz.mozconfig mozilla-release/mozconfig
                             cd mozilla-release
                             ./mach build
+                            for lang in `ls ../l10n/`; do
+                                ./mach build chrome-$lang
+                            done
                             ./mach package
                         '''
                         apk = sh(returnStdout: true, 

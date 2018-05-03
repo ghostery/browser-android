@@ -84,12 +84,18 @@ Here is a list of utility scripts you can find inside the `utils` folder:
     It makes easy to run an emulator from the command line by presenting a list
     of the already available emulators (i.e. those created using Android
     Studio).
+
 2. **forward.sh**
 
     It forwards the port 6000 to the Firefox debug socket if it exists. If no
     argument is given, it will use `com.cliqz.browser` as the app id, otherwise
     it will append a dot arg to the app id (i.e. `./forward.sh alpha` will use
     `com.cliqz.browser.alpha` as app id).
+
+3. **multibuild.sh**
+
+    This script builds a multi locale apk given the branding and the desired
+    architecture (i.e. arm, x86).
 
 [1]: https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Build_Instructions/Simple_Firefox_for_Android_build
 [2]: https://github.com/cliqz-oss/cliqz-android/blob/946a61d5a08636c4c945ec36d557394ef0ef5b4a/mozconfigs/stefano.mozconfig#L26
