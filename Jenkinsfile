@@ -31,14 +31,7 @@ node('us-east-1 && ubuntu && docker && !gpu') {
             docker.withRegistry('https://141047255820.dkr.ecr.us-east-1.amazonaws.com') {
                 docker.image("${baseImageName}").inside {
                     stage('Build APK') {
-                        sh '''#!/bin/bash -l
-                            set -e
-                            set -x
-                            cp mozconfigs/cliqz.mozconfig mozilla-release/mozconfig
-                            cd mozilla-release
-                            ./mach build
-                            ./mach package
-                        '''
+                        sh 'utils/multibuild.sh cliqz-alpha i386'
                         apk = sh(returnStdout: true, 
                             script: """cd mozilla-release/objdir-frontend-android/dist && \
                             find *.apk -name 'fennec*i386*' -not -name '*-unsigned-*'""").trim()
