@@ -8,6 +8,7 @@
 <!ENTITY toggleToolboxF12.keytext "F12">
 
 <!ENTITY browserToolboxErrorMessage "Błąd otwierania narzędzi przeglądarki:">
+<!ENTITY browserToolboxStatusMessage "Status połączenia z narzędziami przeglądarki:">
 
 <!ENTITY options.toolNotSupported.label "* Nieobsługiwane dla bieżącego celu narzędzi">
 <!ENTITY options.context.triggersPageRefresh "* Tylko bieżąca sesja, przeładowuje stronę">

@@ -209,6 +209,9 @@
 <!ENTITY pref_whats_new_notification "Nowości w przeglądarce &brandShortName;">
 <!ENTITY pref_whats_new_notification_summary "Powiadamianie o nowych funkcjach po aktualizacji">
 
+<!ENTITY pref_feature_tips_notification "Porady o programie i funkcjach">
+<!ENTITY pref_feature_tips_notification_summary "Więcej informacji o przeglądarce &brandShortName; i innych programach od organizacji &vendorShortName;">
+
 <!ENTITY pref_category_experimental "Funkcje eksperymentalne">
 
 <!ENTITY pref_custom_tabs2 "Niestandardowe karty">
@@ -314,7 +317,6 @@
 
 <!ENTITY datareporting_fhr_title "Raport o zdrowiu programu &brandShortName;">
 <!ENTITY datareporting_fhr_summary2 "Raport o zdrowiu Firefoksa ułatwia zrozumienie wydajności przeglądarki i udostępnia dane o jej stanie organizacji &vendorShortName;.">
-<!ENTITY datareporting_abouthr_title "Wyświetl">
 <!ENTITY datareporting_telemetry_title "Telemetria">
 <!ENTITY datareporting_telemetry_summary "Udostępnianie organizacji &vendorShortName; danych o wydajności, wykorzystaniu, modyfikacjach przeglądarki oraz o sprzęcie, na którym działa, ułatwia ulepszanie programu &brandShortName;.">
 <!ENTITY datareporting_crashreporter_summary "&brandShortName; może przesyłać zgłoszenia awarii, aby ułatwić organizacji &vendorShortName; poprawianie stabilności i bezpieczeństwa przeglądarki.">

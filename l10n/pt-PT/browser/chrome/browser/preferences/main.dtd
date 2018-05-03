@@ -44,5 +44,3 @@
 <!ENTITY useFirefoxSync.label             "Dica: Isto utiliza perfis separados. Utilize o Sync para partilhar dados entre eles.">
 <!ENTITY getStarted.notloggedin.label     "Iniciar sessão no &syncBrand.shortName.label;…">
 <!ENTITY getStarted.configured.label      "Abrir as preferências do &syncBrand.shortName.label;">
-
-<!ENTITY e10sEnabled.label                "Ativar o multi-processo do &brandShortName;">

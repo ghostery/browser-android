@@ -317,7 +317,6 @@
 <!ENTITY goBackCmd.commandKey "[">
 <!ENTITY goChatCmd.label "Chat">
 <!ENTITY goChatCmd.accesskey "c">
-<!ENTITY goChatCmd.key "I">
 <!ENTITY goChatCmd2.key "H">
 <!ENTITY prevStarredMsgCmd.label "Messaggio speciale">
 <!ENTITY prevStarredMsgCmd.accesskey "S">
@@ -367,6 +366,8 @@
 <!ENTITY editAsNewMsgCmd.key "e">
 <!ENTITY editDraftMsgCmd.label "Modifica bozza messaggio">
 <!ENTITY editDraftMsgCmd.accesskey "E">
+<!ENTITY editTemplateMsgCmd.label "Modifica modello">
+<!ENTITY editTemplateMsgCmd.accesskey "m">
 <!ENTITY newMsgFromTemplateCmd.label "Nuovo messaggio da modello">
 <!ENTITY newMsgFromTemplateCmd.keycode "VK_RETURN"><!-- do not change "VK_RETURN" -->
 <!ENTITY createFilter.label "Crea un filtro dal messaggio…">
@@ -760,6 +761,8 @@
 <!ENTITY contextEditMsgAsNew.label "Modifica come nuovo messaggio">
 <!ENTITY contextEditMsgAsNew.accesskey "M">
 <!ENTITY contextEditDraftMsg.label "Modifica bozza messaggio">
+<!ENTITY contextEditTemplate.label "Modifica modello">
+<!ENTITY contextEditTemplate.accesskey "m">
 <!ENTITY contextArchive.label "Archivia">
 <!ENTITY contextArchive.accesskey "c">
 <!ENTITY contextReplySender.label "Rispondi solo al mittente">

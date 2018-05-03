@@ -22,7 +22,7 @@
 <!ENTITY otherUsersNamespace.accesskey "t">
 <!ENTITY overrideNamespaces.label "Permitir que o servidor substitua estes 'namespaces'">
 <!ENTITY overrideNamespaces.accesskey "a">
-<!ENTITY pop3DeferringDesc.label "Ao transferir correio desta conta de servidor, utilizar a seguinte pasta para guardar as mensagens:" >
+<!ENTITY pop3DeferringDesc.label "Ao descarregar correio desta conta de servidor, utilizar a seguinte pasta para guardar as mensagens:" >
 <!ENTITY accountInbox.label "Caixa de entrada desta conta">
 <!ENTITY accountInbox.accesskey "s">
 <!ENTITY deferToServer.label "Caixa de entrada de outra conta">

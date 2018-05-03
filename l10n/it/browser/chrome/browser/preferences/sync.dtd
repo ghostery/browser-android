@@ -37,7 +37,7 @@
 <!ENTITY fxaPrivacyNotice.link.label "Informativa sulla privacy">
 <!ENTITY signedInUnverified.beforename.label "">
 <!ENTITY signedInUnverified.aftername.label "non è verificato.">
-<!ENTITY signedInLoginFailure.beforename.label "Accedi per riattivare la connessione">
+<!ENTITY signedInLoginFailure.beforename.label "Accedi per riattivare la connessione con">
 <!ENTITY signedInLoginFailure.aftername.label "">
 <!ENTITY notSignedIn.label "Accesso non effettuato.">
 <!ENTITY signIn.label "Accedi">
@@ -51,10 +51,6 @@
 <!ENTITY resendVerification.accesskey "n">
 <!ENTITY cancelSetup.label "Annulla configurazione">
 <!ENTITY cancelSetup.accesskey "z">
-<!ENTITY verify.label "Verifica email">
-<!ENTITY verify.accesskey "V">
-<!ENTITY forget.label "Dimentica questa email">
-<!ENTITY forget.accesskey "m">
 <!ENTITY signedOut.caption "Il tuo Web, sempre con te">
 <!ENTITY signedOut.description "Sincronizza segnalibri, cronologia, schede, password, componenti aggiuntivi e impostazioni attraverso tutti i tuoi dispositivi.">
 <!ENTITY signedOut.accountBox.title "Connetti &syncBrand.fxAccount.label;">

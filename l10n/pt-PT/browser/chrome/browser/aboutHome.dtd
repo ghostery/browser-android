@@ -18,7 +18,7 @@
 <!-- LOCALIZATION NOTE (abouthome.defaultSnippet2.v1):
      text in <a/> will be linked to the featured add-ons on addons.mozilla.org
 -->
-<!ENTITY abouthome.defaultSnippet2.v1 "É fácil personalizar o seu Firefox da maneira exata que deseja. <a>Escolha dentre milhares de Extras</a>.">
+<!ENTITY abouthome.defaultSnippet2.v1 "É fácil personalizar o seu Firefox da maneira exata que quiser. <a>Escolha dentre milhares de Extras</a>.">
 <!-- LOCALIZATION NOTE (abouthome.rightsSnippet): text in <a/> will be linked to about:rights -->
 <!ENTITY abouthome.rightsSnippet "O &brandFullName; é um software livre e de código aberto da Fundação Mozilla sem fins lucrativos. <a>Conheça os seus direitos…</a>">
 

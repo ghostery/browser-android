@@ -60,9 +60,6 @@
 <!ENTITY  permissionsFor        "Разрешения для:">
 <!ENTITY  permPlugins           "Включать плагины">
 
-<!ENTITY  permClearStorage           "Очистить хранилище">
-<!ENTITY  permClearStorage.accesskey "и">
-
 <!ENTITY  securityTab           "Защита">
 <!ENTITY  securityTab.accesskey "щ">
 <!ENTITY  securityView.certView "Просмотреть сертификат">
@@ -81,6 +78,9 @@
 <!ENTITY  securityView.privacy.cookies                  "Хранит ли этот веб-сайт информацию (куки) на моём компьютере?">
 <!ENTITY  securityView.privacy.viewCookies              "Просмотреть куки">
 <!ENTITY  securityView.privacy.viewCookies.accessKey    "м">
+<!ENTITY  securityView.privacy.siteData                 "Хранит ли этот веб-сайт информацию на моём компьютере?">
+<!ENTITY  securityView.privacy.clearSiteData            "Удалить куки и данные сайта">
+<!ENTITY  securityView.privacy.clearSiteData.accessKey  "а">
 <!ENTITY  securityView.privacy.passwords                "Сохранял ли я для этого веб-сайта какие-либо пароли?">
 <!ENTITY  securityView.privacy.viewPasswords            "Просмотреть сохранённые пароли">
 <!ENTITY  securityView.privacy.viewPasswords.accessKey  "о">

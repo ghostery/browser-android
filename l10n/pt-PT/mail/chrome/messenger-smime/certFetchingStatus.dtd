@@ -4,6 +4,6 @@
 
 <!--LOCALIZATION NOTE shown while obtaining certificates from a directory -->
 
-<!ENTITY title.label "A transferir certificados">
+<!ENTITY title.label "A descarregar certificados">
 <!ENTITY info.message "A pesquisar diretório dos certificados dos destinatários. Pode demorar alguns minutos.">
 <!ENTITY stop.label "Parar pesquisa">

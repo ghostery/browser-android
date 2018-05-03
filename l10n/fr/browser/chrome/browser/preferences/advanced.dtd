@@ -53,22 +53,22 @@ available. -->
 <!ENTITY networkProxy.label              "Proxy réseau">
 
 <!ENTITY connectionDesc.label            "Configurer la façon dont &brandShortName; se connecte à Internet">
-
-<!ENTITY connectionSettingsLearnMore.label "En savoir plus">
 <!ENTITY connectionSettings.label        "Paramètres…">
 <!ENTITY connectionSettings.accesskey    "P">
 
 <!ENTITY httpCache.label                 "Contenu web en cache">
 
 <!--  Site Data section manages sites using Storage API and is under Network -->
-<!ENTITY siteData.label                  "Données des sites">
+<!ENTITY siteData.label                  "Données de sites">
 <!ENTITY clearSiteData.label             "Effacer toutes les données">
 <!ENTITY clearSiteData.accesskey         "f">
-<!ENTITY siteData1.label                 "Cookies et données des sites">
+<!ENTITY siteData1.label                 "Cookies et données de sites">
 <!ENTITY clearSiteData1.label            "Effacer les données…">
 <!ENTITY clearSiteData1.accesskey        "E">
 <!ENTITY siteDataSettings.label          "Paramètres…">
 <!ENTITY siteDataSettings.accesskey      "a">
+<!ENTITY siteDataSettings1.label         "Gérer les données…">
+<!ENTITY siteDataSettings1.accesskey     "G">
 <!ENTITY siteDataLearnMoreLink.label     "En savoir plus">
 
 <!-- LOCALIZATION NOTE:

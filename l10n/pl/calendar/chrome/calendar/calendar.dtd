@@ -176,7 +176,43 @@
 <!ENTITY calendar.context.attendance.menu.accesskey   "c" >
 <!ENTITY calendar.context.attendance.occurrence.label "To wystąpienie" >
 <!ENTITY calendar.context.attendance.all.label        "Wszystkie wystąpienia" >
-    
+
+<!ENTITY calendar.context.attendance.all2.label "Ukończ serię">
+<!ENTITY calendar.context.attendance.send.label "Wyślij powiadomienie teraz">
+<!ENTITY calendar.context.attendance.send.accesskey "W">
+<!ENTITY calendar.context.attendance.dontsend.label "Nie wysyłaj powiadomienia">
+<!ENTITY calendar.context.attendance.dontsend.accesskey "N">
+
+<!ENTITY calendar.context.attendance.occ.accepted.accesskey "P">
+<!ENTITY calendar.context.attendance.occ.accepted.label "Przyjęte">
+<!ENTITY calendar.context.attendance.occ.tentative.accesskey "W">
+<!ENTITY calendar.context.attendance.occ.tentative.label "Wstępnie przyjęte">
+<!ENTITY calendar.context.attendance.occ.declined.accesskey "O">
+<!ENTITY calendar.context.attendance.occ.declined.label "Odrzucone">
+<!ENTITY calendar.context.attendance.occ.delegated.accesskey "d">
+<!ENTITY calendar.context.attendance.occ.delegated.label "Oddelegowane">
+<!ENTITY calendar.context.attendance.occ.needsaction.accesskey "N">
+<!ENTITY calendar.context.attendance.occ.needsaction.label "Nadal do wykonania">
+<!ENTITY calendar.context.attendance.occ.inprogress.accesskey "k">
+<!ENTITY calendar.context.attendance.occ.inprogress.label "W trakcie">
+<!ENTITY calendar.context.attendance.occ.completed.accesskey "U">
+<!ENTITY calendar.context.attendance.occ.completed.label "Ukończone">
+
+<!ENTITY calendar.context.attendance.all.accepted.accesskey "r">
+<!ENTITY calendar.context.attendance.all.accepted.label "Przyjęte">
+<!ENTITY calendar.context.attendance.all.tentative.accesskey "s">
+<!ENTITY calendar.context.attendance.all.tentative.label "Wstępnie przyjęte">
+<!ENTITY calendar.context.attendance.all.declined.accesskey "z">
+<!ENTITY calendar.context.attendance.all.declined.label "Odrzucone">
+<!ENTITY calendar.context.attendance.all.delegated.accesskey "e">
+<!ENTITY calendar.context.attendance.all.delegated.label "Oddelegowane">
+<!ENTITY calendar.context.attendance.all.needsaction.accesskey "a">
+<!ENTITY calendar.context.attendance.all.needsaction.label "Nadal do wykonania">
+<!ENTITY calendar.context.attendance.all.inprogress.accesskey "i">
+<!ENTITY calendar.context.attendance.all.inprogress.label "W trakcie">
+<!ENTITY calendar.context.attendance.all.completed.accesskey "c">
+<!ENTITY calendar.context.attendance.all.completed.label "Ukończone">
+
 <!-- Task Context Menu -->
 <!ENTITY calendar.context.progress.label              "Postęp">
 <!ENTITY calendar.context.progress.accesskey          "P">

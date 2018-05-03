@@ -13,7 +13,6 @@
 <!ENTITY pref.calendar.alarms.sound.play.accessKey "w">
 <!ENTITY pref.showalarmbox "Wyświetl okno przypomnienia">
 <!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "k">
-<!ENTITY pref.missedalarms "Wyświetl pominięte przypomnienia">
 <!ENTITY pref.missedalarms2 "Wyświetl pominięte przypomnienia dla zapisywalnych kalendarzy">
 <!ENTITY pref.calendar.alarms.missedAlarms.accessKey "l">
 <!ENTITY pref.calendar.alarms.defaults.label "Domyślne ustawienia przypomnień">

@@ -172,12 +172,49 @@
 <!ENTITY calendar.context.copyevent.accesskey         "p">
 <!ENTITY calendar.context.pasteevent.label            "Coller">
 <!ENTITY calendar.context.pasteevent.accesskey        "o">
-<!ENTITY calendar.context.button.label                "Aujourd’hui" >
-<!ENTITY calendar.context.button.accesskey            "A" >
-<!ENTITY calendar.context.attendance.menu.label       "Participation" >
-<!ENTITY calendar.context.attendance.menu.accesskey   "a" >
-<!ENTITY calendar.context.attendance.occurrence.label "Cette occurrence" >
+<!ENTITY calendar.context.button.label                "Aujourd’hui">
+<!ENTITY calendar.context.button.accesskey            "A">
+
+<!ENTITY calendar.context.attendance.menu.label                 "Participation">
+<!ENTITY calendar.context.attendance.menu.accesskey             "a">
+<!ENTITY calendar.context.attendance.occurrence.label           "Cette occurrence">
 <!ENTITY calendar.context.attendance.all.label        "Toutes les occurrences" >
+
+<!ENTITY calendar.context.attendance.all2.label                 "Séries complètes">
+<!ENTITY calendar.context.attendance.send.label                 "Envoyer une notification maintenant">
+<!ENTITY calendar.context.attendance.send.accesskey             "E">
+<!ENTITY calendar.context.attendance.dontsend.label             "Ne pas envoyer de notification">
+<!ENTITY calendar.context.attendance.dontsend.accesskey         "N">
+
+<!ENTITY calendar.context.attendance.occ.accepted.accesskey     "A">
+<!ENTITY calendar.context.attendance.occ.accepted.label         "Accepté">
+<!ENTITY calendar.context.attendance.occ.tentative.accesskey    "c">
+<!ENTITY calendar.context.attendance.occ.tentative.label        "Accepté provisoirement">
+<!ENTITY calendar.context.attendance.occ.declined.accesskey     "R">
+<!ENTITY calendar.context.attendance.occ.declined.label         "Refusé">
+<!ENTITY calendar.context.attendance.occ.delegated.accesskey    "D">
+<!ENTITY calendar.context.attendance.occ.delegated.label        "Délégué">
+<!ENTITY calendar.context.attendance.occ.needsaction.accesskey  "S">
+<!ENTITY calendar.context.attendance.occ.needsaction.label      "Nécessite encore une action">
+<!ENTITY calendar.context.attendance.occ.inprogress.accesskey   "E">
+<!ENTITY calendar.context.attendance.occ.inprogress.label       "En cours">
+<!ENTITY calendar.context.attendance.occ.completed.accesskey    "T">
+<!ENTITY calendar.context.attendance.occ.completed.label        "Terminé">
+
+<!ENTITY calendar.context.attendance.all.accepted.accesskey     "A">
+<!ENTITY calendar.context.attendance.all.accepted.label         "Accepté">
+<!ENTITY calendar.context.attendance.all.tentative.accesskey    "c">
+<!ENTITY calendar.context.attendance.all.tentative.label        "Accepté provisoirement">
+<!ENTITY calendar.context.attendance.all.declined.accesskey     "R">
+<!ENTITY calendar.context.attendance.all.declined.label         "Refusé">
+<!ENTITY calendar.context.attendance.all.delegated.accesskey    "D">
+<!ENTITY calendar.context.attendance.all.delegated.label        "Délégué">
+<!ENTITY calendar.context.attendance.all.needsaction.accesskey  "s">
+<!ENTITY calendar.context.attendance.all.needsaction.label      "Nécessite encore une action">
+<!ENTITY calendar.context.attendance.all.inprogress.accesskey   "E">
+<!ENTITY calendar.context.attendance.all.inprogress.label       "En cours">
+<!ENTITY calendar.context.attendance.all.completed.accesskey    "T">
+<!ENTITY calendar.context.attendance.all.completed.label        "Terminé">
 
 <!-- Task Context Menu -->
 <!ENTITY calendar.context.progress.label              "Progression">
@@ -194,11 +231,11 @@
 
 <!ENTITY progress.level.0             "Non commencée">
 <!ENTITY progress.level.0.accesskey   "N">
-<!ENTITY progress.level.25            "Terminée à 25&percnt;">
+<!ENTITY progress.level.25            "Terminée à 25 &percnt;">
 <!ENTITY progress.level.25.accesskey  "2">
-<!ENTITY progress.level.50            "Terminée à 50&percnt;">
+<!ENTITY progress.level.50            "Terminée à 50 &percnt;">
 <!ENTITY progress.level.50.accesskey  "5">
-<!ENTITY progress.level.75            "Terminée à 75&percnt;">
+<!ENTITY progress.level.75            "Terminée à 75 &percnt;">
 <!ENTITY progress.level.75.accesskey  "7">
 <!ENTITY progress.level.100            "Terminée">
 <!ENTITY progress.level.100.accesskey  "T">

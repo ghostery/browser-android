@@ -53,13 +53,13 @@
      the UI, without this page being forgotten every time those strings are
      updated.  -->
 <!-- intro paragraph for branded builds -->
-<!ENTITY rights2.webservices-a "O &brandFullName; usa serviços de informação baseados na web (&quot;Serviços&quot;) para disponibilizar algumas das funcionalidades fornecidas para uso próprio com esta versão binária do &brandShortName; sobre os termos descritos em baixo. Se não desejar utilizar um mais serviços ou os termos abaixo são inaceitáveis, pode desativar a funcionalidade ou serviço(s). Instruções sobre como desativar uma funcionalidade em particular ou serviço podem ser encontradas ">
+<!ENTITY rights2.webservices-a "O &brandFullName; usa serviços de informação baseados na web (&quot;Serviços&quot;) para disponibilizar algumas das funcionalidades fornecidas para uso próprio com esta versão binária do &brandShortName; sobre os termos descritos em baixo. Se não pretende utilizar um mais serviços ou os termos abaixo são inaceitáveis, pode desativar a funcionalidade ou serviço(s). Instruções sobre como desativar uma funcionalidade em particular ou serviço podem ser encontradas ">
 <!ENTITY rights2.webservices-b "aqui">
 <!ENTITY rights3.webservices-c ". Pode desativar mais funcionalidades ou serviços nas preferências da aplicação.">
 
 <!-- safe browsing points for branded builds -->
 <!ENTITY rights.safebrowsing-a "Navegação segura: ">
-<!ENTITY rights.safebrowsing-b "Não é recomendado desativar a funcionalidade de navegação segura pois pode resultar em você ir para sites inseguros.  Se desejar desativar completamente a funcionalidade, siga este passos:">
+<!ENTITY rights.safebrowsing-b "Não é recomendado desativar a funcionalidade de navegação segura pois pode resultar em você ir para sites inseguros.  Se pretender desativar completamente a funcionalidade, siga este passos:">
 <!ENTITY rights.safebrowsing-term1 "Abrir preferências da aplicação">
 <!ENTITY rights.safebrowsing-term2 "Selecione a seleção de segurança">
 <!ENTITY rights2.safebrowsing-term3 "Desmarque a opção para &quot;&enableSafeBrowsing.label;&quot;">

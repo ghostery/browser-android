@@ -28,6 +28,9 @@
 <!-- LOCALIZATION NOTE (then.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY then.label                           "Затем:">
 <!ENTITY then.accesskey                       "е">
+<!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
+<!ENTITY quoting.label                        "При цитировании,">
+<!ENTITY quoting.accesskey                    "н">
 <!ENTITY aboveQuote.label                     "поместить курсор перед цитируемым текстом">
 <!ENTITY belowQuote.label                     "поместить курсор после цитируемого текста">
 <!ENTITY selectAndQuote.label                 "выделить цитируемый текст">

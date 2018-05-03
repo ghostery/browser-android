@@ -13,7 +13,6 @@
 <!ENTITY pref.calendar.alarms.sound.play.accessKey "e">
 <!ENTITY pref.showalarmbox "Mostrar la ventana de aviso">
 <!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "M">
-<!ENTITY pref.missedalarms "Mostrar avisos vencidos">
 <!ENTITY pref.missedalarms2 "Mostrar recordatorios ocultados en calendarios escribibles">
 <!ENTITY pref.calendar.alarms.missedAlarms.accessKey "o">
 <!ENTITY pref.calendar.alarms.defaults.label "Valores predeterminados para avisos">

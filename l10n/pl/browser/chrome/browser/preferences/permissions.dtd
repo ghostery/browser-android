@@ -8,22 +8,22 @@
 <!ENTITY treehead.sitename2.label "Witryna">
 <!ENTITY treehead.status.label        "Status">
 <!ENTITY removepermission2.label "Usuń witrynę">
-<!ENTITY removepermission2.accesskey "">
+<!ENTITY removepermission2.accesskey "U">
 <!ENTITY removeallpermissions2.label "Usuń wszystkie witryny">
-<!ENTITY removeallpermissions2.accesskey "">
+<!ENTITY removeallpermissions2.accesskey "w">
 <!ENTITY address2.label "Adres witryny:">
-<!ENTITY address2.accesskey "">
+<!ENTITY address2.accesskey "s">
 <!ENTITY block.label                  "Blokuj">
-<!ENTITY block.accesskey "">
+<!ENTITY block.accesskey "B">
 <!ENTITY session.label                "Zezwalaj na czas sesji">
-<!ENTITY session.accesskey "">
+<!ENTITY session.accesskey "c">
 <!ENTITY allow.label                  "Zezwalaj">
-<!ENTITY allow.accesskey "">
+<!ENTITY allow.accesskey "Z">
 <!ENTITY windowClose.key              "w">
 
 <!ENTITY button.cancel.label "Anuluj">
-<!ENTITY button.cancel.accesskey "">
+<!ENTITY button.cancel.accesskey "A">
 <!ENTITY button.ok.label "Zachowaj">
-<!ENTITY button.ok.accesskey "">
+<!ENTITY button.ok.accesskey "h">
 
 <!ENTITY searchbox.placeholder "Szukaj witryn">

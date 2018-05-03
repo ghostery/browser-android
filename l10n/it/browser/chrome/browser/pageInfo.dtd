@@ -69,6 +69,9 @@
 <!ENTITY securityView.privacy.cookies "Questo sito web sta memorizzando informazioni (cookie) sul computer?">
 <!ENTITY securityView.privacy.viewCookies "Mostra cookie">
 <!ENTITY securityView.privacy.viewCookies.accessKey "k">
+<!ENTITY securityView.privacy.siteData "Questo sito web sta memorizzando informazioni sul computer?">
+<!ENTITY securityView.privacy.clearSiteData "Elimina cookie e dati dei siti web">
+<!ENTITY securityView.privacy.clearSiteData.accessKey "E">
 <!ENTITY securityView.privacy.passwords "Esistono password memorizzate per questo sito web?">
 <!ENTITY securityView.privacy.viewPasswords "Mostra password">
 <!ENTITY securityView.privacy.viewPasswords.accessKey "w">

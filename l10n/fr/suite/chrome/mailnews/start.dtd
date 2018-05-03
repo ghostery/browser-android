@@ -5,7 +5,7 @@
 <!ENTITY startpage.title "Bienvenue dans &brandShortName; Courrier et Groupes">
 <!--# LOCALIZATION NOTE (headline.label): the URL for <a id="vendorURL"> is fetched from brand.properties -->
 <!ENTITY headline.label
-'Bienvenue dans <a id="vendorURL" href="">&brandShortName;</a> Courrier et Groupes&#x00A0;!'>
+'Bienvenue dans <a id="vendorURL" href="">&brandShortName;</a> courrier et groupes !'>
 <!ENTITY description.label
 "&brandShortName; Courrier et Groupes est un client de messagerie puissant et ouvert, offrant une détection avancée du courrier indésirable et plusieurs autres fonctions utiles.">
 <!ENTITY features.title "Fonctions">
@@ -22,10 +22,10 @@
 <!ENTITY dict_intro.label "Les dictionnaires sont utilisés pour vérifier l’orthographe de vos messages.">
 <!--# LOCALIZATION NOTE (dict_info.label): the URL for <a id="dictURL"> is fetched from brand.properties -->
 <!ENTITY dict_info.label
-'D&#x2019;autres dictionnaires peuvent être installés depuis la section
+'D’autres dictionnaires peuvent être installés depuis la section
 <a id="dictURL" href="">Dictionnaires</a> sur <a href="http://addons.mozilla.org/">&brandShortName; Add-ons</a>.'>
 <!ENTITY info.title "Plus d’informations">
 <!--# LOCALIZATION NOTE (info_bugs.label): the URL for <a id="releaseNotesURL"> is fetched from brand.properties -->
 <!ENTITY info_bugs.label
 '<a href="http://www.mozilla.org/mailnews/">Nous</a> acceptons volontiers les rapports de bogues ainsi que les demandes
-d&#x2019;améliorations, mais veuillez d&#x2019;abord lire les <a id="releaseNotesURL" href="">notes de version</a> et faire une recherche dans <a href="https://bugzilla.mozilla.org/query.cgi">Bugzilla</a>.'>
+d’améliorations, mais veuillez d’abord lire les <a id="releaseNotesURL" href="">notes de version</a> et faire une recherche dans <a href="https://bugzilla.mozilla.org/query.cgi">Bugzilla</a>.'>

@@ -82,6 +82,9 @@
 <!ENTITY reorderAttachmentsCmd.label "Reordenar adjuntos…">
 <!ENTITY reorderAttachmentsCmd.accesskey "R">
 <!ENTITY reorderAttachmentsCmd.key "x">
+<!ENTITY toggleAttachmentPaneCmd.label "Panel de adjuntos">
+<!ENTITY toggleAttachmentPaneCmd.accesskey "j">
+<!ENTITY toggleAttachmentPaneCmd.key "m">
 <!ENTITY selectAllCmd.label "Seleccionar todo">
 <!ENTITY selectAllCmd.key "A">
 <!ENTITY selectAllCmd.accesskey "t">
@@ -101,19 +104,10 @@
 <!ENTITY findPrevCmd.key2 "VK_F3">
 <!ENTITY reorderAttachmentsPanel.label "Reordenar adjuntos">
 <!ENTITY moveAttachmentTopPanelBtn.label "Mover a la parte superior">
-<!ENTITY moveAttachmentTopPanelBtn.accesskey "o">
 <!ENTITY moveAttachmentUpPanelBtn.label "Arriba">
-<!ENTITY moveAttachmentUpPanelBtn.accesskey "b">
 <!ENTITY moveAttachmentBundleUpPanelBtn.label "Mover juntos">
-<!ENTITY moveAttachmentBundleUpPanelBtn.accesskey "e">
 <!ENTITY moveAttachmentDownPanelBtn.label "Abajo">
-<!ENTITY moveAttachmentDownPanelBtn.accesskey "A">
 <!ENTITY moveAttachmentBottomPanelBtn.label "Mover a la parte inferior">
-<!ENTITY moveAttachmentBottomPanelBtn.accesskey "M">
-<!ENTITY sortAttachmentsTogglePanelBtn.AZ.label "Ordenar selección: A - Z">
-<!ENTITY sortAttachmentsTogglePanelBtn.AZ.accesskey "O">
-<!ENTITY sortAttachmentsTogglePanelBtn.ZA.label "Ordenar selección: Z - A">
-<!ENTITY sortAttachmentsTogglePanelBtn.ZA.accesskey "O">
 <!ENTITY sortAttachmentsPanelBtn.Sort.AZ.label "Ordenar: A - Z">
 <!ENTITY sortAttachmentsPanelBtn.Sort.ZA.label "Ordenar: Z - A">
 <!ENTITY sortAttachmentsPanelBtn.SortSelection.AZ.label "Ordenar selección: A - Z">
@@ -213,6 +207,7 @@
 <!ENTITY quoteButton.tooltip "Citar el mensaje anterior">
 <!ENTITY addressButton.tooltip "Seleccionar un destinatario de una libreta de direcciones">
 <!ENTITY attachButton.tooltip "Incluir un adjunto">
+<!ENTITY attachButton.tooltip2 "Añadir un adjunto">
 <!ENTITY spellingButton.tooltip "Revisar ortografía de la selección o del mensaje completo">
 <!ENTITY saveButton.tooltip "Guardar este mensaje">
 <!ENTITY cutButton.tooltip "Cortar">
@@ -231,6 +226,8 @@
 <!ENTITY subject.label "Asunto:">
 <!ENTITY subject.accesskey "S">
 <!ENTITY attachments.accesskey "j">
+<!ENTITY attachmentBucketHeader.tooltip "Panel de adjuntos">
+<!ENTITY attachmentBucketCloseButton.tooltip "Ocultar el panel de adjuntos">
 <!ENTITY SmileButton.tooltip "Insertar un emoticono">
 <!ENTITY smiley1Cmd.label "Sonriendo">
 <!ENTITY smiley2Cmd.label "Triste">
@@ -273,6 +270,8 @@
 <!ENTITY renameAttachment.accesskey "R">
 <!ENTITY reorderAttachments.label "Reordenar adjuntos…">
 <!ENTITY reorderAttachments.accesskey "R">
+<!ENTITY removeAllAttachments.label "Eliminar todos los adjuntos">
+<!ENTITY removeAllAttachments.accesskey "j">
 <!ENTITY selectAll.label "Seleccionar todo">
 <!ENTITY selectAll.accesskey "A">
 <!ENTITY attachFile.label "Adjuntar archivo(s)…">
@@ -287,6 +286,8 @@
 <!ENTITY convertRegularAttachment.accesskey "A">
 <!ENTITY attachPage.label "Adjuntar página web…">
 <!ENTITY attachPage.accesskey "W">
+<!ENTITY initiallyShowAttachmentPane.label "Al abrir, mostrar el panel de adjuntos">
+<!ENTITY initiallyShowAttachmentPane.accesskey "m">
 <!ENTITY spellAddDictionaries.label "Añadir diccionarios…">
 <!ENTITY spellAddDictionaries.accesskey "A">
 <!ENTITY addressesSidebarTitle.label "Contactos">

@@ -1,8 +1,8 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- extracted from am-addressing.xul -->
 
+<!-- extracted from am-addressing.xul -->
 
 <!ENTITY addressing.label          "Endereçamento e composição">
 <!ENTITY addressingGroupTitle.label "Endereçamento">
@@ -18,8 +18,8 @@
 <!ENTITY directories.label         "Utilizar um servidor LDAP diferente:">
 <!ENTITY directories.accesskey     "D">
 <!ENTITY directoriesNone.label     "Nenhum">
-<!-- am-addressing.xul -->
 
+<!-- am-addressing.xul -->
 
 <!ENTITY compositionGroupTitle.label          "Composição">
 <!-- LOCALIZATION NOTE (useHtml.label) : do not translate "html" in below line -->
@@ -30,6 +30,9 @@
 <!-- LOCALIZATION NOTE (then.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY then.label                           "Então,">
 <!ENTITY then.accesskey                       "t">
+<!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
+<!ENTITY quoting.label                        "Ao citar,">
+<!ENTITY quoting.accesskey                    "c">
 <!ENTITY aboveQuote.label                     "iniciar a minha resposta acima da citação">
 <!ENTITY belowQuote.label                     "iniciar a minha resposta abaixo da citação">
 <!ENTITY selectAndQuote.label                 "selecionar a citação">

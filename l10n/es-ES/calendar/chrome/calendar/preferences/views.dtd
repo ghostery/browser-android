@@ -29,3 +29,5 @@
 <!ENTITY pref.numberofweeks.4 "4 semanas">
 <!ENTITY pref.numberofweeks.5 "5 semanas">
 <!ENTITY pref.numberofweeks.6 "6 semanas">
+<!ENTITY pref.showlocation.label "Mostrar dirección">
+<!ENTITY pref.showlocation.accesskey "d">

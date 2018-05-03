@@ -25,7 +25,7 @@
 <!ENTITY resetTrainingData.accesskey "R">
 
 <!-- Phishing Detector -->
-<!ENTITY phishingDetector1.intro  "&brandShortName; peut analyser les messages pour trouver les courriers susceptibles d’être frauduleux en cherchant les techniques usuelles utilisées pour tromper les utilisateurs.">
+<!ENTITY phishingDetector1.intro  "&brandShortName; peut analyser les messages pour trouver les courriers susceptibles d’être frauduleux en cherchant les techniques habituelles utilisées pour tromper les utilisateurs.">
 <!ENTITY enablePhishingDetector1.label    "Signaler si le message en cours de lecture est susceptible d’être frauduleux">
 <!ENTITY enablePhishingDetector1.accesskey  "S">
 <!ENTITY useDownloadedList.label "Utiliser une liste téléchargée de courriers susceptibles d’être frauduleux">

@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY window.title                     "Exceções - Tradução">
-<!ENTITY window.width                     "40em">
+<!ENTITY window.width                     "36em">
 <!ENTITY windowClose.key                  "w">
 
 <!ENTITY noTranslationForLanguages2.label "Tradução não será oferecida para os seguintes idiomas">

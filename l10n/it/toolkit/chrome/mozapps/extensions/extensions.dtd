@@ -3,7 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY addons.windowTitle "Gestione componenti aggiuntivi">
-<!ENTITY search.placeholder "Cerca tra i componenti aggiuntivi">
 <!ENTITY search.placeholder2 "Cerca in addons.mozilla.org">
 <!ENTITY search.buttonlabel "Cerca">
 <!ENTITY search.commandkey "f">
@@ -12,7 +11,6 @@
 <!ENTITY listEmpty.availableUpdates.label "Nessun aggiornamento disponibile">
 <!ENTITY listEmpty.recentUpdates.label "Nessun componente aggiuntivo è stato aggiornato di recente">
 <!ENTITY listEmpty.findUpdates.label "Controlla aggiornamenti">
-<!ENTITY listEmpty.search.label "Non è stato trovato alcun componente aggiuntivo corrispondente">
 <!ENTITY listEmpty.button.label "Scopri altre informazioni sui componenti aggiuntivi">
 <!ENTITY installAddonFromFile.label "Installa componente aggiuntivo da file…">
 <!ENTITY installAddonFromFile.accesskey "I">
@@ -30,7 +28,6 @@
 <!ENTITY warning.updatesecurity.label "Il controllo sulla sicurezza degli aggiornamenti dei componenti aggiuntivi è disattivato. Il sistema potrebbe essere danneggiato da un aggiornamento.">
 <!ENTITY warning.updatesecurity.enable.label "Attiva">
 <!ENTITY warning.updatesecurity.enable.tooltip "Attiva il controllo sulla sicurezza degli aggiornamenti dei componenti aggiuntivi">
-<!ENTITY view.search.label "Cerca">
 <!ENTITY view.discover.label "Esplora">
 <!ENTITY view.recentUpdates.label "Aggiornamenti recenti">
 <!ENTITY view.availableUpdates.label "Aggiornamenti disponibili">
@@ -128,15 +125,6 @@
 <!ENTITY sort.name.tooltip "Ordina per nome">
 <!ENTITY sort.dateUpdated.label "Ultimo aggiornamento">
 <!ENTITY sort.dateUpdated.tooltip "Ordina per data di aggiornamento">
-<!ENTITY sort.relevance.label "Pertinenza">
-<!ENTITY sort.relevance.tooltip "Ordina per pertinenza">
-<!ENTITY sort.price.label "Prezzo">
-<!ENTITY sort.price.tooltip "Ordina per prezzo">
-<!ENTITY search.filter2.label "Cerca:">
-<!ENTITY search.filter2.installed.label "Componenti aggiuntivi installati">
-<!ENTITY search.filter2.installed.tooltip "Visualizza i componenti aggiuntivi installati">
-<!ENTITY search.filter2.available.label "Componenti aggiuntivi disponibili">
-<!ENTITY search.filter2.available.tooltip "Visualizza i componenti aggiuntivi disponibili per l’installazione">
 <!ENTITY addon.homepage "Sito web">
 <!ENTITY addon.details.label "Altro">
 <!ENTITY addon.details.tooltip "Visualizza ulteriori dettagli su questo componente aggiuntivo">

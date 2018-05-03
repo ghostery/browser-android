@@ -9,6 +9,7 @@
 <!ENTITY iconsAndText.label       "Texte et icônes">
 <!ENTITY icons.label              "Icônes">
 <!ENTITY text.label               "Texte">
+<!ENTITY iconsBesideText.label    "Texte à côté des icônes">
 <!ENTITY useSmallIcons.label      "Petites icônes">
 <!ENTITY restoreDefaultSet.label  "Configuration par défaut">
 <!ENTITY addNewToolbar.label      "Nouvelle barre">

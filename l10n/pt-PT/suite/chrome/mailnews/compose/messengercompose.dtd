@@ -119,7 +119,7 @@
 <!ENTITY addressButton.tooltip "Selecione um destinatário de um dos livros de endereços"> 
 <!ENTITY attachButton.tooltip "Incluir um anexo"> 
 <!ENTITY saveButton.tooltip "Guardar esta mensagem"> 
-<!ENTITY stopButton.tooltip "Parar a transferência atual"> 
+<!ENTITY stopButton.tooltip "Parar descarga em curso"> 
 
 <!-- context menu items -->
 <!ENTITY openAttachment.label "Abrir">

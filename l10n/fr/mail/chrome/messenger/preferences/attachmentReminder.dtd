@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY attachmentReminderDialog.title   "Mots-clés de rappel pour les pièces jointes">
-<!ENTITY attachKeywordText.label          "&brandShortName; vous avertira de l’absence de pièce jointe si vous êtes sur le point d’envoyer un courriel contenant l’un de ces mots-clés.">
+<!ENTITY attachKeywordText.label          "&brandShortName; vous avertira de l’absence de pièces jointes si vous êtes sur le point d’envoyer un courriel contenant l’un de ces mots-clés.">
 <!ENTITY newKeywordButton.label           "Nouveau…">
 <!ENTITY newKeywordButton.accesskey       "N">
 <!ENTITY editKeywordButton1.label         "Modifier…">

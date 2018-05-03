@@ -15,7 +15,6 @@
 <!ENTITY downloadCert.message1 "È stato richiesto di dare fiducia a una nuova autorità di certificazione (CA).">
 <!ENTITY downloadCert.trustSSL "Dai fiducia a questa CA per l’identificazione di siti web.">
 <!ENTITY downloadCert.trustEmail "Dai fiducia a questa CA per l’identificazione di utenti di posta.">
-<!ENTITY downloadCert.trustObjSign "Dai fiducia a questa CA per l’identificazione di produttori software.">
 <!ENTITY downloadCert.message3 "Prima di dare fiducia a questa CA per un qualsiasi scopo, è consigliabile esaminare il suo certificato, le politiche e procedure da essa adottate (se disponibili).">
 <!ENTITY downloadCert.viewCert.label "Visualizza">
 <!ENTITY downloadCert.viewCert.text "Esamina certificato CA">

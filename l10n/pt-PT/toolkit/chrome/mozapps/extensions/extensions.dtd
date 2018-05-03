@@ -3,8 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "Gestor de extras">
 
-<!ENTITY search.placeholder                   "Pesquisar todos os extras">
-
 <!ENTITY search.placeholder2                  "Pesquisar em addons.mozilla.org">
 <!ENTITY search.buttonlabel                   "Pesquisar">
 <!-- LOCALIZATION NOTE (search.commandKey):
@@ -14,9 +12,8 @@
 <!ENTITY loading.label                        "A carregar…">
 <!ENTITY listEmpty.installed.label            "Não tem instalado qualquer extra deste tipo">
 <!ENTITY listEmpty.availableUpdates.label     "Nenhuma atualização encontrada">
-<!ENTITY listEmpty.recentUpdates.label        "Não possui extras atualizados recentemente">
+<!ENTITY listEmpty.recentUpdates.label        "Não atualizou quaisquer extras recentemente">
 <!ENTITY listEmpty.findUpdates.label          "Procurar atualizações">
-<!ENTITY listEmpty.search.label               "Não foram encontrados extras correspondentes">
 <!ENTITY listEmpty.button.label               "Saber mais acerca dos extras">
 <!ENTITY installAddonFromFile.label           "Instalar extra a partir de ficheiro…">
 <!ENTITY installAddonFromFile.accesskey       "I">
@@ -41,7 +38,6 @@
 <!ENTITY warning.updatesecurity.enable.tooltip     "Ativar verificação de segurança de atualização do extra">
 
 <!-- categories / views -->
-<!ENTITY view.search.label                    "Pesquisar">
 <!ENTITY view.discover.label                  "Obter extras">
 <!ENTITY view.recentUpdates.label             "Atualizações recentes">
 <!ENTITY view.availableUpdates.label          "Atualizações disponíveis">
@@ -172,16 +168,6 @@
 <!ENTITY sort.name.tooltip                    "Ordenar por nome">
 <!ENTITY sort.dateUpdated.label               "Última atualização">
 <!ENTITY sort.dateUpdated.tooltip             "Ordenar por data de atualização">
-<!ENTITY sort.relevance.label                 "Melhor correspondência">
-<!ENTITY sort.relevance.tooltip               "Ordenar por relevância">
-<!ENTITY sort.price.label                     "Preço">
-<!ENTITY sort.price.tooltip                   "Ordenar por preço">
-
-<!ENTITY search.filter2.label                 "Pesquisar:">
-<!ENTITY search.filter2.installed.label       "Os meus extras">
-<!ENTITY search.filter2.installed.tooltip     "Mostra os extras instalados">
-<!ENTITY search.filter2.available.label       "Extras disponíveis">
-<!ENTITY search.filter2.available.tooltip     "Mostra os extras disponíveis para instalação">
 
 <!ENTITY addon.homepage                       "Página inicial">
 <!ENTITY addon.details.label                  "Mais">

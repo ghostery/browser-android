@@ -118,6 +118,9 @@
 <!ENTITY messengerCmd.label "Poczta i grupy dyskusyjne">
 <!ENTITY messengerCmd.accesskey "P">
 <!ENTITY messengerCmd.commandkey "1">
+<!ENTITY addressBookCmd.label "Książka adresowa">
+<!ENTITY addressBookCmd.accesskey "K">
+<!ENTITY addressBookCmd.key "B">
 <!ENTITY searchAddressesCmd.label "Wyszukaj wizytówki…">
 <!ENTITY searchAddressesCmd.accesskey "S">
 <!ENTITY importCmd.label "Importuj…">

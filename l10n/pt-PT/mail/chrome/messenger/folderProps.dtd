@@ -39,12 +39,12 @@
 
 <!ENTITY offlineFolder.check.label               "Selecionar esta pasta para utilização offline">
 <!ENTITY offlineFolder.check.accesskey           "S">
-<!ENTITY offlineFolder.button.label              "Transferir agora">
+<!ENTITY offlineFolder.button.label              "Descarregar agora">
 <!ENTITY offlineFolder.button.accesskey          "D">
 
 <!ENTITY selectofflineNewsgroup.check.label      "Selecionar este grupo de notícias para utilização offline">
 <!ENTITY selectofflineNewsgroup.check.accesskey  "o">
-<!ENTITY offlineNewsgroup.button.label           "Transferir agora">
+<!ENTITY offlineNewsgroup.button.label           "Descarregar agora">
 <!ENTITY offlineNewsgroup.button.accesskey       "D">
 
 <!ENTITY folderProps.name.label                  "Nome:">

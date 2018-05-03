@@ -7,7 +7,7 @@
 <!-- about:config warning page -->
 <!-- LOCALIZATION NOTE: aboutWarningTitle.label should be attention grabbing and playful -->
 <!ENTITY aboutWarningTitle.label "Isto pode violar a sua garantia!">
-<!ENTITY aboutWarningText.label "A alteração destas definições avançadas pode ter resultados indesejados na estabilidade, segurança e desempenho desta aplicação. Só deve continuar se souber o que está a fazer.">
+<!ENTITY aboutWarningText.label "A alteração destas definições avançadas pode ser prejudicial para a estabilidade, segurança e desempenho desta aplicação. Apenas deve continuar se tem a certeza do que está a fazer.">
 <!ENTITY aboutWarningButton2.label "Eu aceito o risco!">
 <!ENTITY aboutWarningCheckbox.label "Mostrar este aviso da próxima vez">
 

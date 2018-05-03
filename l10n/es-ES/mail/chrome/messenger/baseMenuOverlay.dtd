@@ -17,11 +17,8 @@
 <!ENTITY openHelp.label "Contenidos de la ayuda">
 <!ENTITY openHelp.accesskey "u">
 <!ENTITY openHelp.commandkey "VK_F1">
-<!ENTITY openHelpMac.label "Ayuda de &brandShortName;">
 <!ENTITY openHelpMac2.label "Ayuda de &brandFullName;">
 <!ENTITY openHelpMac2.commandkey "?">
 <!ENTITY openHelpMac2.modifiers "accel">
-<!ENTITY aboutMenuCmd.label "Acerca de &brandShortName;">
-<!ENTITY aboutMenuCmd.accesskey "T">
 <!ENTITY aboutMenuCmd2.label "Acerca de &brandFullName;">
 <!ENTITY aboutMenuCmd2.accesskey "A">

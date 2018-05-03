@@ -3,8 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY trackingProtectionHeader2.label "Protezione antitracciamento">
-<!ENTITY trackingProtection2.description "Il tracciamento consiste nella raccolta di informazioni sul visitatore attraverso siti diversi. Può essere utilizzato per costruire un vero e proprio profilo e visualizzare contenuti basati sulle abitudini di navigazione e sui dati personali.">
-<!ENTITY trackingProtection2.radioGroupLabel "Utilizza la protezione antitracciamento per bloccare i tracciatori conosciuti">
 <!ENTITY trackingProtection3.description "La protezione antitracciamento blocca elementi utilizzati per raccogliere dati sulla navigazione attraverso siti diversi.">
 <!ENTITY trackingProtection3.radioGroupLabel "Utilizza la protezione antitracciamento per bloccare i tracciatori conosciuti">
 <!ENTITY trackingProtectionAlways.label "Sempre">
@@ -13,7 +11,6 @@
 <!ENTITY trackingProtectionPrivate.accesskey "f">
 <!ENTITY trackingProtectionNever.label "Mai">
 <!ENTITY trackingProtectionNever.accesskey "a">
-<!ENTITY trackingProtectionLearnMore.label "Ulteriori informazioni">
 <!ENTITY trackingProtectionLearnMore2.label "Ulteriori informazioni sulla protezione antitracciamento e la privacy">
 <!ENTITY trackingProtectionExceptions.label "Eccezioni…">
 <!ENTITY trackingProtectionExceptions.accesskey "E">
@@ -22,10 +19,6 @@
 <!ENTITY trackingProtectionPBMLearnMore.label "Ulteriori informazioni">
 <!ENTITY changeBlockList2.label "Seleziona elenco…">
 <!ENTITY changeBlockList2.accesskey "l">
-<!ENTITY doNotTrack.description "Invia ai siti web un segnale “Do Not Track” per chiedere di non effettuare alcun tracciamento">
-<!ENTITY doNotTrack.learnMore.label "Ulteriori informazioni">
-<!ENTITY doNotTrack.default.label "Solo quando è attiva la protezione antitracciamento">
-<!ENTITY doNotTrack.always.label "Sempre">
 <!ENTITY history.label "Cronologia">
 <!ENTITY permissions.label "Permessi">
 <!ENTITY addressBar.label "Barra degli indirizzi">
@@ -41,8 +34,8 @@
 <!ENTITY suggestionSettings2.label "Modifica le impostazioni relative ai suggerimenti dei motori di ricerca">
 <!ENTITY acceptCookies2.label "Accetta i cookie dai siti web">
 <!ENTITY acceptCookies2.accesskey "k">
-<!ENTITY acceptCookies3.label "Accetta cookie e dati dai siti web">
-<!ENTITY acceptCookies3.accesskey "k">
+<!ENTITY acceptCookies4.label "Accetta cookie e dati dai siti web (consigliato)">
+<!ENTITY acceptCookies4.accesskey "k">
 <!ENTITY acceptThirdParty2.pre.label "Accetta i cookie di terze parti">
 <!ENTITY acceptThirdParty2.pre.accesskey "t">
 <!ENTITY blockCookies.label "Blocca cookie e dati dei siti web (potrebbe causare malfunzionamenti in alcuni siti)">
@@ -67,6 +60,7 @@
 <!ENTITY historyHeader.custom.label "utilizza impostazioni personalizzate">
 <!ENTITY historyHeader.post.label "">
 <!ENTITY rememberDescription.label "Verranno salvate la cronologia di navigazione, i download, le informazioni inserite nei moduli o nei campi di ricerca e i cookie impostati dai siti visitati.">
+<!ENTITY rememberDescription1.label "Verranno salvate la cronologia di navigazione, i download, le informazioni inserite nei moduli o nei campi di ricerca.">
 <!ENTITY rememberActions.pre.label "È possibile ">
 <!ENTITY rememberActions.clearHistory.label "cancellare la cronologia recente">
 <!ENTITY rememberActions.middle.label " o ">

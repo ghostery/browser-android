@@ -4,15 +4,22 @@
 
 <!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd">
 %brandDTD;
+
 <!ENTITY loadError.label "Problema al cargar la página">
 <!ENTITY retry.label "Reintentar">
 <!ENTITY returnToPreviousPage.label "Ir atrás">
 <!ENTITY advanced.label "Avanzado">
+
+<!-- Specific error messages -->
+
 <!ENTITY connectionFailure.title "No se puede conectar">
 <!ENTITY connectionFailure.longDesc "&sharedLongDesc;">
+
 <!ENTITY deniedPortAccess.title "Esta dirección está restringida">
 <!ENTITY deniedPortAccess.longDesc "">
+
 <!ENTITY dnsNotFound.pageTitle "Servidor no encontrado">
+<!-- Localization note (dnsNotFound.title1) - "Hmm" is a sound made when considering or puzzling over something. You don't have to include it in your translation if your language does not have a written word like this. -->
 <!ENTITY dnsNotFound.title1 "Uf. Tenemos problemas para encontrar ese sitio.">
 <!ENTITY dnsNotFound.longDesc1 "
 <strong>Si esa dirección es correcta, aquí hay otras tres cosas que puede probar:</strong>
@@ -22,6 +29,7 @@
   <li>Si está conectado a través de un cortafuegos, compruebe que &brandShortName; tiene permiso para acceder a la web.</li>
 </ul>
 ">
+
 <!ENTITY fileNotFound.title "Archivo no encontrado">
 <!ENTITY fileNotFound.longDesc "
 <ul>
@@ -31,53 +39,68 @@
    eliminado.</li>
 </ul>
 ">
+
 <!ENTITY fileAccessDenied.title "El acceso al archivo ha sido denegado">
 <!ENTITY fileAccessDenied.longDesc "
 <ul>
   <li>Puede haber sido eliminado, movido o sus permisos de archivo pueden estar impidiendo el acceso al mismo.</li>
 </ul>
 ">
+
 <!ENTITY generic.title "Oops.">
 <!ENTITY generic.longDesc "
 <p>&brandShortName; no puede cargar esta página por alguna razón.</p>
 ">
+
 <!ENTITY captivePortal.title "Iniciar sesión en la red">
 <!ENTITY captivePortal.longDesc2 "
 <p>Debe iniciar sesión en esta red antes de que pueda acceder a Internet.</p>
 ">
+
 <!ENTITY openPortalLoginPage.label2 "Abrir página de inicio de sesión en la red">
+
 <!ENTITY malformedURI.pageTitle "URL no válida">
+<!-- Localization note (malformedURI.title1) - "Hmm" is a sound made when considering or puzzling over something. You don't have to include it in your translation if your language does not have a written word like this. -->
 <!ENTITY malformedURI.title1 "Uf. Esa dirección no parece correcta.">
+
 <!ENTITY netInterrupt.title "La conexión ha sido interrumpida">
 <!ENTITY netInterrupt.longDesc "&sharedLongDesc;">
+
 <!ENTITY notCached.title "Documento expirado">
 <!ENTITY notCached.longDesc "<p>El documento requerido ya no está disponible en la caché de &brandShortName;.</p><ul><li>Como precaución de seguridad, &brandShortName; no vuelve a pedir automáticamente documentos sensibles.</li><li>Haga clic en Reintentar para volver a pedir el documento del sitio web.</li></ul>">
+
 <!ENTITY netOffline.title "Modo sin conexión">
 <!ENTITY netOffline.longDesc2 "
 <ul>
   <li>Presione &quot;Probar de nuevo&quot; para cambiar al modo con conexión y recargar la página.</li>
 </ul>">
+
 <!ENTITY contentEncodingError.title "Error de codificación de contenido">
 <!ENTITY contentEncodingError.longDesc "
 <ul>
   <li>Contacte con los propietarios del sitio web para informarles de este problema.</li>
 </ul>
 ">
+
 <!ENTITY unsafeContentType.title "Tipo de archivo no seguro">
 <!ENTITY unsafeContentType.longDesc "
 <ul>
   <li>Contacte con los propietarios del sitio web para informarles de este problema.</li>
 </ul>">
+
 <!ENTITY netReset.title "La conexión ha sido reiniciada">
 <!ENTITY netReset.longDesc "&sharedLongDesc;">
+
 <!ENTITY netTimeout.title "La conexión ha caducado">
 <!ENTITY netTimeout.longDesc "&sharedLongDesc;">
+
 <!ENTITY unknownProtocolFound.title "La dirección no resulta comprensible">
 <!ENTITY unknownProtocolFound.longDesc "
 <ul>
   <li>Podría necesitar instalar otro software para abrir esta dirección.</li>
 </ul>
 ">
+
 <!ENTITY proxyConnectFailure.title "El servidor proxy está rechazando las conexiones">
 <!ENTITY proxyConnectFailure.longDesc "
 <ul>
@@ -87,6 +110,7 @@
     que el servidor proxy está funcionando.</li>
 </ul>
 ">
+
 <!ENTITY proxyResolveFailure.title "No se puede encontrar el servidor proxy">
 <!ENTITY proxyResolveFailure.longDesc "
 <ul>
@@ -99,6 +123,7 @@
     para acceder a la web.</li>
 </ul>
 ">
+
 <!ENTITY redirectLoop.title "La página no está redirigiendo adecuadamente">
 <!ENTITY redirectLoop.longDesc "
 <ul>
@@ -106,6 +131,7 @@
     la recepción de cookies.</li>
 </ul>
 ">
+
 <!ENTITY unknownSocketType.title "Respuesta inesperada del servidor">
 <!ENTITY unknownSocketType.longDesc "
 <ul>
@@ -115,6 +141,7 @@
    servidor.</li>
 </ul>
 ">
+
 <!ENTITY nssFailure2.title "Conexión segura fallida">
 <!ENTITY nssFailure2.longDesc2 "
 <ul>
@@ -122,8 +149,13 @@
   <li>Contacte con los propietarios del sitio web para informarles de este problema.</li>
 </ul>
 ">
+
 <!ENTITY certerror.longpagetitle1 "Su conexión no es segura">
+<!-- Localization note (certerror.introPara) - The text content of the span tag
+will be replaced at runtime with the name of the server to which the user
+was trying to connect. -->
 <!ENTITY certerror.introPara "El propietario de <span class='hostname' /> ha configurado su sitio web de manera incorrecta. Para evitar que su información sea robada, &brandShortName; no ha conectado con este sitio web.">
+
 <!ENTITY sharedLongDesc "
 <ul>
   <li>El sitio podría estar no disponible temporalmente o
@@ -135,23 +167,43 @@
     acceder a la web.</li>
 </ul>
 ">
+
 <!ENTITY cspBlocked.title "Bloqueado por la política de seguridad de contenido">
 <!ENTITY cspBlocked.longDesc "<p>&brandShortName; evitó que esta página se cargue de esta forma porque la página tiene una política de seguridad de contenido que no lo permite.</p>">
+
 <!ENTITY corruptedContentErrorv2.title "Error de contenido dañado">
 <!ENTITY corruptedContentErrorv2.longDesc "<p>La página que está intentando ver no se puede mostrar porque se ha detectado un error en la transmisión de datos.</p><ul><li>Contacte con los propietarios del sitio web para informarles de este problema.</li></ul>">
+
+
 <!ENTITY securityOverride.exceptionButtonLabel "Añadir excepción…">
+
 <!ENTITY errorReporting.automatic2 "Informar de errores como esto ayuda a Mozilla a identificar y bloquear sitios maliciosos">
 <!ENTITY errorReporting.learnMore "Más información…">
+
 <!ENTITY remoteXUL.title "XUL remoto">
 <!ENTITY remoteXUL.longDesc "<p><ul><li>Contacte con los propietarios del sitio web para informarles de este problema.</li></ul></p>">
+
 <!ENTITY sslv3Used.title "No es posible conectar de manera segura">
+<!-- LOCALIZATION NOTE (sslv3Used.longDesc2) - Do not translate
+     "SSL_ERROR_UNSUPPORTED_VERSION". -->
 <!ENTITY sslv3Used.longDesc2 "Información avanzada: SSL_ERROR_UNSUPPORTED_VERSION">
+
+<!-- LOCALIZATION NOTE (certerror.wrongSystemTime2,
+                        certerror.wrongSystemTimeWithoutReference) - The <span id='..' />
+     tags will be injected with actual values, please leave them unchanged. -->
 <!ENTITY certerror.wrongSystemTime2 "<p> &brandShortName; no se ha conectado a <span id='wrongSystemTime_URL'/> porque el reloj de su equipo parece mostrar una hora errónea y esto impide una conexión segura.</p> <p>Su equipo tiene fecha y hora establecidos en <span id='wrongSystemTime_systemDate'/>, cuando debería ser <span id='wrongSystemTime_actualDate'/>. Para corregir este problema, cambie su configuración de fecha y hora para que indique la hora correcta.</p>">
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>&brandShortName; no se ha conectado a <span id='wrongSystemTimeWithoutReference_URL'/> porque el reloj de su equipo parece mostrar una hora errónea y esto impide una conexión segura.</p> <p>Su equipo tiene fecha y hora establecidos en <span id='wrongSystemTimeWithoutReference_systemDate'/>. Para corregir este problema, cambie su configuración de fecha y hora para que indique la hora correcta.</p>">
-<!ENTITY certerror.pagetitle1 "Conexión insegura">
+
+<!ENTITY certerror.pagetitle1  "Conexión insegura">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Este sitio usa Seguridad estricta de transporte de HTTP (HSTS) para especificar que &brandShortName; sólo puede conectarse a él de modo seguro. Como resultado, no es posible añadir una excepción para este certificado.">
 <!ENTITY certerror.copyToClipboard.label "Copiar texto al portapapeles">
+
 <!ENTITY inadequateSecurityError.title "Su conexión no es segura">
+<!-- LOCALIZATION NOTE (inadequateSecurityError.longDesc) - Do not translate
+     "NS_ERROR_NET_INADEQUATE_SECURITY". -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> usa tecnología de seguridad que está obsoleta y es vulnerable a ataques. Un atacante podría revelar fácilmente información que usted pensaría que es segura. El administrador del sitio web tendrá que corregir el problema antes de que se pueda visitar el sitio.</p><p>Código de error: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
+
+<!ENTITY blockedByPolicy.title "Página bloqueada">
+
 <!ENTITY prefReset.longDesc "Parece que su configuración de seguridad de red podría estar causando esto. ¿Quiere restaurar la configuración predeterminada?">
 <!ENTITY prefReset.label "Restablecer configuración predeterminada">

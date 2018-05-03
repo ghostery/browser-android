@@ -172,12 +172,49 @@
 <!ENTITY calendar.context.copyevent.accesskey         "C">
 <!ENTITY calendar.context.pasteevent.label            "Colar">
 <!ENTITY calendar.context.pasteevent.accesskey        "o">
-<!ENTITY calendar.context.button.label                "Painel hoje" >
-<!ENTITY calendar.context.button.accesskey            "j" >
-<!ENTITY calendar.context.attendance.menu.label       "Assistência" >
-<!ENTITY calendar.context.attendance.menu.accesskey   "s" >
-<!ENTITY calendar.context.attendance.occurrence.label "Esta ocorrência" >
+<!ENTITY calendar.context.button.label                "Painel hoje">
+<!ENTITY calendar.context.button.accesskey            "j">
+
+<!ENTITY calendar.context.attendance.menu.label                 "Assistência">
+<!ENTITY calendar.context.attendance.menu.accesskey             "s">
+<!ENTITY calendar.context.attendance.occurrence.label           "Esta ocorrência">
 <!ENTITY calendar.context.attendance.all.label        "Todas as ocorrências" >
+
+<!ENTITY calendar.context.attendance.all2.label                 "Completar a série">
+<!ENTITY calendar.context.attendance.send.label                 "Enviar uma notificação agora">
+<!ENTITY calendar.context.attendance.send.accesskey             "E">
+<!ENTITY calendar.context.attendance.dontsend.label             "Não enviar uma notificação">
+<!ENTITY calendar.context.attendance.dontsend.accesskey         "N">
+
+<!ENTITY calendar.context.attendance.occ.accepted.accesskey     "A">
+<!ENTITY calendar.context.attendance.occ.accepted.label         "Aceite">
+<!ENTITY calendar.context.attendance.occ.tentative.accesskey    "e">
+<!ENTITY calendar.context.attendance.occ.tentative.label        "Aceite provisoriamente">
+<!ENTITY calendar.context.attendance.occ.declined.accesskey     "c">
+<!ENTITY calendar.context.attendance.occ.declined.label         "Recusado">
+<!ENTITY calendar.context.attendance.occ.delegated.accesskey    "g">
+<!ENTITY calendar.context.attendance.occ.delegated.label        "Delegado">
+<!ENTITY calendar.context.attendance.occ.needsaction.accesskey  "A">
+<!ENTITY calendar.context.attendance.occ.needsaction.label      "Ainda necessita de ação">
+<!ENTITY calendar.context.attendance.occ.inprogress.accesskey   "E">
+<!ENTITY calendar.context.attendance.occ.inprogress.label       "Em progresso">
+<!ENTITY calendar.context.attendance.occ.completed.accesskey    "C">
+<!ENTITY calendar.context.attendance.occ.completed.label        "Completado">
+
+<!ENTITY calendar.context.attendance.all.accepted.accesskey     "e">
+<!ENTITY calendar.context.attendance.all.accepted.label         "Aceite">
+<!ENTITY calendar.context.attendance.all.tentative.accesskey    "v">
+<!ENTITY calendar.context.attendance.all.tentative.label        "Aceite provisoriamente">
+<!ENTITY calendar.context.attendance.all.declined.accesskey     "d">
+<!ENTITY calendar.context.attendance.all.declined.label         "Recusado">
+<!ENTITY calendar.context.attendance.all.delegated.accesskey    "l">
+<!ENTITY calendar.context.attendance.all.delegated.label        "Delegado">
+<!ENTITY calendar.context.attendance.all.needsaction.accesskey  "n">
+<!ENTITY calendar.context.attendance.all.needsaction.label      "Ainda necessita de ação">
+<!ENTITY calendar.context.attendance.all.inprogress.accesskey   "p">
+<!ENTITY calendar.context.attendance.all.inprogress.label       "Em progresso">
+<!ENTITY calendar.context.attendance.all.completed.accesskey    "m">
+<!ENTITY calendar.context.attendance.all.completed.label        "Completado">
 
 <!-- Task Context Menu -->
 <!ENTITY calendar.context.progress.label              "Progresso">

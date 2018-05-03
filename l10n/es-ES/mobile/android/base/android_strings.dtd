@@ -282,6 +282,13 @@
 <!ENTITY pref_whats_new_notification "Novedades en &brandShortName;">
 <!ENTITY pref_whats_new_notification_summary "Conoza las nuevas funciones tras una actualización">
 
+<!-- Localization note (pref_feature_tips_notification): Title of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification"-->
+<!ENTITY pref_feature_tips_notification "Consejos sobre productos y características">
+<!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification_summary"-->
+<!ENTITY pref_feature_tips_notification_summary "Más información sobre el uso de &brandShortName; y otros productos de &vendorShortName;">
+
 <!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
      for experimental features. -->
 <!ENTITY pref_category_experimental "Características experimentales">
@@ -422,7 +429,6 @@
      crashReporterDesc.label). -->
 <!ENTITY datareporting_fhr_title "Informe de salud de &brandShortName;">
 <!ENTITY datareporting_fhr_summary2 "Comparte datos con &vendorShortName; sobre la salud de su navegador y le ayuda a entender el rendimiento de éste">
-<!ENTITY datareporting_abouthr_title "Ver mi informe de salud">
 <!ENTITY datareporting_telemetry_title "Telemetry">
 <!ENTITY datareporting_telemetry_summary "Comparte datos de rendimiento, uso, hardware y personalizaciones sobre su navegador con &vendorShortName; para ayudar a hacer &brandShortName; mejor">
 <!ENTITY datareporting_crashreporter_summary "&brandShortName; envía informes de fallo para ayudar a &vendorShortName; a crear un navegador más estable y seguro">

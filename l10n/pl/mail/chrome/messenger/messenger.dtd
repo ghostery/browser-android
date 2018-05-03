@@ -31,6 +31,12 @@
 <!ENTITY newFeedAccountCmd.accesskey "a">
 <!ENTITY newIMContactCmd.label "Wizytówkę dla kontaktu z komunikatora…">
 <!ENTITY newIMContactCmd.accesskey "t">
+<!ENTITY newMessageCmd2.key "N">
+<!ENTITY newMessageCmd.key "M">
+<!ENTITY newMessageCmd.label "Wiadomość">
+<!ENTITY newMessageCmd.accesskey "W">
+<!ENTITY newContactCmd.label "Wizytówkę…">
+<!ENTITY newContactCmd.accesskey "z">
 <!ENTITY newOtherAccountsCmd.label "Konfigurację innego konta…">
 <!ENTITY newOtherAccountsCmd.accesskey "o">
 
@@ -492,8 +498,6 @@
 <!ENTITY devToolboxCmd.label "Zestaw narzędzi dla programistów">
 <!ENTITY devToolboxCmd.accesskey "Z">
 <!ENTITY devToolboxCmd.commandkey "i">
-<!ENTITY addonDebugCmd.label "Debuger dodatków">
-<!ENTITY addonDebugCmd.accesskey "D">
 <!ENTITY debugAddonsCmd.label "Debuguj dodatki">
 <!ENTITY debugAddonsCmd.accesskey "D">
 <!ENTITY tabsDebugCmd.label "Debuger ramek treści">
@@ -613,6 +617,7 @@
 
 <!ENTITY folderContextGetMessages.label "Pobierz wiadomości">
 <!ENTITY folderContextGetMessages.accesskey "P">
+<!ENTITY folderContextMarkAllFoldersRead.label "Oznacz wszystkie foldery jako przeczytane">
 <!ENTITY folderContextPauseAllUpdates.label "Wstrzymaj wszystkie aktualizacje">
 <!ENTITY folderContextPauseUpdates.label "Wstrzymaj aktualizacje">
 <!ENTITY folderContextPauseUpdates.accesskey "s">

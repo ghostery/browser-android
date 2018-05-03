@@ -23,7 +23,7 @@
 <!ENTITY stopButton.label "Parar">
 <!ENTITY stopButton.accessKey "P">
 <!ENTITY userDictionary.label "Dicionário pessoal:">
-<!ENTITY moreDictionaries.label "Transferir mais dicionários…">
+<!ENTITY moreDictionaries.label "Descarregar mais dicionários…">
 <!ENTITY addToUserDictionaryButton.label "Adicionar palavra">
 <!ENTITY addToUserDictionaryButton.accessKey "d">
 <!ENTITY editUserDictionaryButton.label "Editar…">

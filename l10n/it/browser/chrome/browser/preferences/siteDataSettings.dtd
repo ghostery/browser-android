@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY window.title "Impostazioni - Dati dei siti web">
-<!ENTITY window1.title "Impostazioni - Cookie e dati dei siti web">
+<!ENTITY window2.title "Gestione cookie e dati dei siti web">
 <!ENTITY hostCol.label "Sito">
 <!ENTITY statusCol.label "Stato">
 <!ENTITY cookiesCol.label "Cookie">

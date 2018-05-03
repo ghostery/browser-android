@@ -2,6 +2,12 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
+<!ENTITY  windowClose.key "w">
+<!ENTITY  preferencesDefaultTitleMac.title "Preferências">
+<!ENTITY  preferencesDefaultTitleWin.title "Opções">
+<!ENTITY  preferencesCloseButton.label "Fechar">
+<!ENTITY  preferencesCloseButton.accesskey "c">
+
 <!--LOCALIZATION NOTE (.label): Preferences categories that appear on the left of the preferences dialog -->
 <!ENTITY prefWindow.title "Preferências">
 <!ENTITY categoryHeader "Categoria">
@@ -10,6 +16,7 @@
 <!ENTITY content.label "Conteúdo">
 <!ENTITY fonts.label "Tipos de letra">
 <!ENTITY colors.label "Cores">
+<!ENTITY media.label "Multimédia">
 <!ENTITY spellingPane.label "Escrita">
 
 <!ENTITY navigator.label "Navegador">

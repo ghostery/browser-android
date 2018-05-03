@@ -8,7 +8,6 @@
 <!ENTITY feedTitle.accesskey "T">
 <!ENTITY feedLocation.label "URL del canal:">
 <!ENTITY feedLocation.accesskey "L">
-<!ENTITY feedLocation.placeholder "Introduzca una URL de canal válida para añadir">
 <!ENTITY feedLocation2.placeholder "Introduzca una URL de canal válida">
 <!ENTITY locationValidate.label "Validar">
 <!ENTITY validateText.label "Comprobar validación y recuperar una URL válida.">

@@ -42,7 +42,7 @@
 <!ENTITY daysEnd.label "dias">
 <!ENTITY deleteOnServer2.label "Até eu as apagar">
 <!ENTITY deleteOnServer2.accesskey "A">
-<!ENTITY downloadOnBiff.label "Transferir novas mensagens automaticamente">
+<!ENTITY downloadOnBiff.label "Descarregar novas mensagens automaticamente">
 <!ENTITY downloadOnBiff.accesskey "m">
 <!ENTITY username.label "Nome de acesso">
 <!ENTITY deleteMessagePrefix.label "Se eu apagar uma mensagem:">
@@ -63,7 +63,7 @@
     maxMessengerStart.label will be followed by maxMessagesEnd.label with the number
    of messages between them
 -->
-<!ENTITY maxMessagesStart.label "Perguntar antes de transferir mais do que">
+<!ENTITY maxMessagesStart.label "Perguntar antes de descarregar mais do que">
 <!ENTITY maxMessagesStart.accesskey "t">
 <!-- LOCALIZATION NOTE (maxMessagesEnd.label) : see note for maxMessagesStart.label -->
 <!ENTITY maxMessagesEnd.label "mensagens">

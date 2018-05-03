@@ -19,6 +19,6 @@
 <!ENTITY cmd.removeFromHistory.accesskey           "e">
 <!ENTITY cmd.clearList.label                       "Limpar lista">
 <!ENTITY cmd.clearList.accesskey                   "L">
-<!ENTITY cmd.clearList.tooltip                     "Remover todas as entradas de ficheiros guardados, exceto as transferências em curso.">
+<!ENTITY cmd.clearList.tooltip                     "Remover todas as entradas de ficheiros guardados, exceto as descargas em curso.">
 <!ENTITY cmd.searchDownloads.label                 "Pesquisar…">
 <!ENTITY cmd.searchDownloads.key                   "F">

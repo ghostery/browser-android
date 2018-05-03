@@ -63,7 +63,7 @@
 <!ENTITY emptyTrashCmd.accesskey		"x">
 <!ENTITY offlineMenu.label "Modo desligado">
 <!ENTITY offlineMenu.accesskey "l">
-<!ENTITY synchronizeOfflineCmd.label "Transferir/Sync agora…">
+<!ENTITY synchronizeOfflineCmd.label "Transferir ou sincronizar agora…">
 <!ENTITY synchronizeOfflineCmd.accesskey "s">
 <!ENTITY settingsOfflineCmd.label "Definições do modo offline…">
 <!ENTITY settingsOfflineCmd.accesskey "e">
@@ -440,7 +440,7 @@
 <!ENTITY deleteButton.tooltip "Apagar pasta ou mensagem selecionada">
 <!ENTITY undeleteButton.tooltip "Restaurar mensagem selecionada">
 <!ENTITY markButton.tooltip "Marcar mensagens">
-<!ENTITY stopButton.tooltip "Parar transferência atual">
+<!ENTITY stopButton.tooltip "Parar descarga em curso">
 <!ENTITY throbber.tooltip "Ir para a página inicial do &vendorShortName;">
 <!ENTITY junkButton.tooltip "Marcar mensagens selecionadas como lixo">
 <!ENTITY notJunkButton.tooltip "Marcar mensagens selecionadas como não sendo lixo">

@@ -14,6 +14,11 @@
   -  shown next to error details when the Browser Toolbox is unable to open. -->
 <!ENTITY browserToolboxErrorMessage          "Une erreur s’est produite lors de l’ouverture de la boîte à outils du navigateur :">
 
+<!-- LOCALIZATION NOTE (browserToolboxStatusMessage): This is the label
+  -  shown next to status details when the Browser Toolbox fails to connect or
+  -  appears to be taking a while to do so. -->
+<!ENTITY browserToolboxStatusMessage "État de la connexion de la boîte à outils du navigateur :">
+
 <!-- LOCALIZATION NOTE (options.context.advancedSettings): This is the label for
   -  the heading of the advanced settings group in the options panel. -->
 <!ENTITY options.context.advancedSettings "Paramètres avancés">
@@ -70,7 +75,7 @@
   -  options panel and is used for settings that trigger page reload. -->
 <!ENTITY options.context.triggersPageRefresh  "* Pour cette session, recharge la page">
 
-<!-- LOCALIZATION NOTE (options.enableChrome.label4): This is the label for the
+<!-- LOCALIZATION NOTE (options.enableChrome.label5): This is the label for the
   -  checkbox that toggles chrome debugging, i.e. devtools.chrome.enabled
   -  boolean preference in about:config, in the options panel. -->
 <!ENTITY options.enableChrome.label5    "Activer le débogage du chrome du navigateur et des modules">
@@ -144,7 +149,7 @@
   -  heading of the group of Debugger preferences in the options panel. -->
 <!ENTITY options.debugger.label            "Débogueur">
 
-<!-- LOCALIZATION NOTE (options.sourceMap.label): This is the
+<!-- LOCALIZATION NOTE (options.sourceMaps.label): This is the
    - label for the checkbox that toggles source maps in all tools -->
 <!ENTITY options.sourceMaps.label      "Activer les liens vers les sources">
 <!ENTITY options.sourceMaps.tooltip1   "En activant cette option, les sources seront liées dans les outils.">

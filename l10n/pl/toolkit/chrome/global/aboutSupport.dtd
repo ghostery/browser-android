@@ -22,7 +22,7 @@
 <!ENTITY aboutSupport.extensionVersion "Wersja">
 <!ENTITY aboutSupport.extensionId "ID">
 
-<!ENTITY aboutSupport.securitySoftwareTitle "Oprogramowanie bezpieczeństwa">
+<!ENTITY aboutSupport.securitySoftwareTitle "Oprogramowanie zabezpieczające">
 <!ENTITY aboutSupport.securitySoftwareType "Typ">
 <!ENTITY aboutSupport.securitySoftwareName "Nazwa">
 <!ENTITY aboutSupport.securitySoftwareAntivirus "Program antywirusowy">
@@ -62,6 +62,7 @@
 <!ENTITY aboutSupport.appBasicsProfiles "Profile">
 <!ENTITY aboutSupport.appBasicsMultiProcessSupport "Okna wieloprocesowe">
 <!ENTITY aboutSupport.appBasicsProcessCount "Procesy treści sieciowych">
+<!ENTITY aboutSupport.enterprisePolicies "Zasady organizacji">
 <!ENTITY aboutSupport.appBasicsKeyGoogle "Klucz Google">
 <!ENTITY aboutSupport.appBasicsKeyMozilla "Klucz usługi lokalizacji Mozilli">
 <!ENTITY aboutSupport.appBasicsSafeMode "Tryb awaryjny">

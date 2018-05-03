@@ -2,6 +2,9 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
+<!ENTITY aboutPrivateBrowsing.title "Przeglądanie prywatne">
+<!ENTITY aboutPrivateBrowsing.notPrivate.title "Otworzyć okno prywatne?">
+
 <!ENTITY aboutPrivateBrowsing.notPrivate "Okno bez aktywnego trybu prywatnego.">
 <!ENTITY privatebrowsingpage.openPrivateWindow.label "Otwórz okno w trybie prywatnym">
 <!ENTITY privatebrowsingpage.openPrivateWindow.accesskey "O">

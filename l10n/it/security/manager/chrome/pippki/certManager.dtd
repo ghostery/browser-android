@@ -33,7 +33,6 @@
 <!ENTITY certmgr.editcert.edittrust "Modifica impostazioni attendibilità:">
 <!ENTITY certmgr.editcert.trustssl "Questo certificato può identificare siti web.">
 <!ENTITY certmgr.editcert.trustemail "Questo certificato può identificare utenti di posta.">
-<!ENTITY certmgr.editcert.trustobjsign "Questo certificato può identificare produttori software.">
 <!ENTITY certmgr.deletecert.title "Eliminazione certificato">
 <!ENTITY certmgr.certname "Nome certificato">
 <!ENTITY certmgr.certserver "Server">

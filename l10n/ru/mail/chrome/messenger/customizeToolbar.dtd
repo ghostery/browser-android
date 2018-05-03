@@ -9,6 +9,7 @@
 <!ENTITY iconsAndText.label       "Значки и текст">
 <!ENTITY icons.label              "Значки">
 <!ENTITY text.label               "Текст">
+<!ENTITY iconsBesideText.label    "Значки рядом с текстом">
 <!ENTITY useSmallIcons.label      "Маленькие значки">
 <!ENTITY restoreDefaultSet.label  "Восстановить по умолчанию">
 <!ENTITY addNewToolbar.label      "Добавить панель">
