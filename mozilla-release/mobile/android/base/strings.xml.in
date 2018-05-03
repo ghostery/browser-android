@@ -656,7 +656,7 @@
   <string name="pref_what_is_human_web">&pref_what_is_human_web;</string>
   <string name="pref_enable_human_web">&pref_enable_human_web;</string>
   <string name="pref_category_human_web_summary">&pref_category_human_web_summary;</string>
-  <string name="pref_human_web_url">https://cliqz.com/en/whycliqz/human-web</string>
+  <string name="pref_human_web_url">&pref_human_web_url;</string>
 
   <!-- MyOffrz -->
   <string name="my_offrz_title">&my_offrz_title;</string>	
@@ -685,15 +685,15 @@
   <string name="pref_imprint">&pref_imprint;</string>
 
   <!-- Support Cliqz -->
-  <string name="pref_support_cliqz_url">https://cliqz.com/en/support</string>
+  <string name="pref_support_cliqz_url">&pref_support_cliqz_url;</string>
   <string name="pref_support_cliqz">&pref_support_cliqz;</string>
 
   <!-- Tips & tricks -->
   <string name="pref_tips_tricks">&pref_tips_tricks;</string>
-  <string name="pref_tips_tricks_url">https://cliqz.com/en/tips-android</string>
+  <string name="pref_tips_tricks_url">&pref_tips_tricks_url;</string>
   
   <!-- Report Website -->
-  <string name="pref_report_website_url">https://cliqz.com/en/report-url</string>
+  <string name="pref_report_website_url">&pref_report_website_url;</string>
   <string name="pref_report_website">&pref_report_website;</string>
   <!-- Cliqz end -->
 </resources>
