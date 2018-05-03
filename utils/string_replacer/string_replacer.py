@@ -37,46 +37,40 @@ def collect():
 
 def replace():
     print "Replacing Strings"
-    mydict = {}
-    with open("./out_translations.csv", "r") as dictfile:
-        reader = csv.reader(dictfile, delimiter=';')
-        mydict = {rows[1]:rows[2] for rows in reader}
-        print mydict
-        
-        for filepath in filepaths:
-            with open("../../../" + filepath.replace("\n", ""), "r") as file:
-                data = file.readlines()
 
-            for i, line in enumerate(data):
-                line = line.replace("\n", "")
+    with open("./out_strings.csv", "r") as csvfile:
 
-                try:
-                    replace = mydict[line]
+        out = csv.reader(csvfile, delimiter='\t')
 
-                    if(replace == "-") | (replace == "?"):
-                        print "skip"
-                        continue
-                    else:
-                        data[i] = replace + "\n"
-                        print data[i]
-                except Exception, e:
-                    print ""
-            with open("../../../" + filepath.replace("\n", ""), "w") as file:
-                file.writelines(data)
+        #Skips the firt row = CSV Header
+        next(out, None)
+
+        for line in out:
+        	path = line[0]
+        	row = int(line[1])
+        	orig = line[2]
+        	new = line[3]
+
+        	cleanpath = path.replace("\n", "")
+
+        	with open("../../../" + cleanpath, "r") as file:
+        		data = file.readlines()
+
+        		for i, line in enumerate(data):
+        			line = line.replace("\n", "")
+        			if (i+1) == row:
+        				data[i] = new + "\n"
+
+        	with open("../../../" + cleanpath, "w") as file:
+        		file.writelines(data)
+        		
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print "Error"
+        print "This script takes one argument: python string_replacer.py [collect | replace]"
     elif sys.argv[1] == "collect":
         collect()
     elif sys.argv[1] == "replace":
         replace()
     else:
-        print "Error"
-
-
-
-
-
-
-
+        print "Sorry, something went wrong."

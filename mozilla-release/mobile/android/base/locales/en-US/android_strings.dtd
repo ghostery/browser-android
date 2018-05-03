@@ -142,19 +142,19 @@
 <!ENTITY pref_category_general_summary3 "Search, CliqzTab, Browsing, Notifications, Download, MyOffrz">
 
 <!-- Localization note (pref_category_language) : This is the preferences
-     section in which the user picks the locale in which to display Firefox
+     section in which the user picks the locale in which to display &brandShortName;
      UI. The locale includes both language and region concepts. -->
 <!ENTITY pref_category_language "Language">
 <!ENTITY pref_category_language_summary "Change the language of your browser">
 <!ENTITY pref_browser_locale "Browser language">
 
 <!-- Localization note (locale_system_default) : This string indicates that
-     Firefox will use the locale currently selected in Android's settings
+     &brandShortName; will use the locale currently selected in Android's settings
      to display browser chrome. -->
 <!ENTITY locale_system_default "System default">
 
 <!-- Localization note (overlay_share_label) : This is the label that appears
-     in Android's intent chooser when sending a link to Firefox to bookmark,
+     in Android's intent chooser when sending a link to &brandShortName; to bookmark,
      send to another device, or add to Reading List. -->
 <!ENTITY overlay_share_label "Add to &brandShortName;">
 
@@ -176,7 +176,7 @@
 <!-- Localization note (overlay_no_synced_devices) : Used when the menu option
      to send a tab to a synced device is pressed and no other synced devices
      are found. -->
-<!ENTITY overlay_no_synced_devices "No Firefox Account connected devices found">
+<!ENTITY overlay_no_synced_devices "No &brandShortName; Account connected devices found">
 
 <!ENTITY pref_category_search3 "Search">
 <!ENTITY pref_category_search_summary2 "Add, set default, show suggestions">
@@ -227,7 +227,7 @@
 <!ENTITY home_homepage_title "Set a Homepage">
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
-     button for this string, they will use the built-in default Firefox homepage (about:home). -->
+     button for this string, they will use the built-in default &brandShortName; homepage (about:home). -->
 <!ENTITY home_homepage_radio_default "&brandShortName; Home">
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
@@ -293,7 +293,7 @@
 <!ENTITY pref_custom_tabs_summary4 "Allow apps to open web content in a quickly loading custom tab">
 
 <!-- Localization note (custom_tabs_menu_item_open_in): The variable is replaced by the name of
-     default browser from user's preference, such as "Open in Firefox" -->
+     default browser from user's preference, such as "Open in &brandShortName;" -->
 <!ENTITY custom_tabs_menu_item_open_in "Open in &formatS;">
 <!ENTITY custom_tabs_menu_footer "Powered by &brandShortName;">
 <!-- Long-click title of CustomTabsActivity will copy URL to clipboard and display this hint -->
@@ -363,7 +363,7 @@
 <!ENTITY pref_qrcode_enabled_summary2 "Allow QR scanner in the URL bar">
 
 <!ENTITY pref_use_master_password "Use master password">
-<!ENTITY pref_sync_default_title "Firefox Account">
+<!ENTITY pref_sync_default_title "&brandShortName; Account">
 <!ENTITY pref_sync2 "Sign in">
 <!ENTITY pref_sync_summary2 "Sync your tabs, bookmarks, logins, history">
 <!ENTITY pref_search_suggestions "Show search suggestions">
@@ -751,7 +751,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      "relative time span string" produced by Android.  This string describes the
      time the tabs were last synced relative to the current time; examples
      include "42 minutes ago", "4 days ago", "last week", etc. The subject of
-     "Last synced" is one of the user's other Sync clients, typically Firefox on
+     "Last synced" is one of the user's other Sync clients, typically &brandShortName; on
      their desktop or laptop.-->
 <!ENTITY remote_tabs_last_synced "Last synced: &formatS;">
 <!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
@@ -775,7 +775,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- LOCALIZATION NOTE (devtools_auth_scan_header): This header text appears
      above a QR reader that is actively scanning for QR codes.  The expected QR
      code has already been displayed by the client trying to connect (such as
-     desktop Firefox via WebIDE), so you just need to aim this device at the QR
+     desktop &brandShortName; via WebIDE), so you just need to aim this device at the QR
      code. -->
 <!ENTITY devtools_auth_scan_header "Scanning for the QR code displayed on your other device">
 
@@ -783,7 +783,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- Localization note: These are features the device owner (e.g. parent) can enable or disable for
      a restricted profile (e.g. child). Used inside the Android settings UI. -->
 <!ENTITY restrictable_feature_addons_installation "Add-ons">
-<!ENTITY restrictable_feature_addons_installation_description "Add features or functionality to Firefox. Note: Add-ons can disable certain restrictions.">
+<!ENTITY restrictable_feature_addons_installation_description "Add features or functionality to &brandShortName;. Note: Add-ons can disable certain restrictions.">
 <!ENTITY restrictable_feature_private_browsing "Private Browsing">
 <!ENTITY restrictable_feature_private_browsing_description "Allows family members to browse without saving information about the sites and pages they\'ve visited.">
 <!ENTITY restrictable_feature_clear_history "Clear History">
@@ -799,13 +799,13 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- LOCALIZATION NOTE (bookmarks_about_browser): link title for about:fennec -->
 <!ENTITY bookmarks_about_browser "Cliqz: About your browser">
 <!-- LOCALIZATION NOTE (bookmarks_addons): link title for https://addons.mozilla.org/en-US/mobile -->
-<!ENTITY bookmarks_addons "Firefox: Customize with add-ons">
+<!ENTITY bookmarks_addons "&brandShortName;: Customize with add-ons">
 <!-- LOCALIZATION NOTE (bookmarks_support): link title for https://support.mozilla.org/ -->
 <!ENTITY bookmarks_support "Cliqz: Support">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_support): link title for https://support.mozilla.org/kb/controlledaccess -->
-<!ENTITY bookmarks_restricted_support2 "Firefox Help and Support for restricted profiles on Android tablets">
+<!ENTITY bookmarks_restricted_support2 "&brandShortName; Help and Support for restricted profiles on Android tablets">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_webmaker):link title for https://webmaker.org -->
-<!ENTITY bookmarks_restricted_webmaker "Learn the Web: Mozilla Webmaker">
+<!ENTITY bookmarks_restricted_webmaker "Learn the Web: &vendorShortName; Webmaker">
 
 <!-- LOCALIZATION NOTE (unsupported_sdk_version): The user installed a build of this app that does not support
      the Android version of this device. the formatS1 is replaced by the CPU ABI (e.g., ARMv7); the formatS2 is

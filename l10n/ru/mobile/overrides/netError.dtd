@@ -181,7 +181,7 @@
 <!-- LOCALIZATION NOTE (securityOverride.warningContent) - Do not translate the
 contents of the <xul:button> tags.  The only language content is the label= field,
 which uses strings already defined above. The button is included here (instead of
-netError.xhtml) because it exposes functionality specific to firefox. -->
+netError.xhtml) because it exposes functionality specific to &brandShortName;. -->
 
 <!ENTITY securityOverride.warningContent "
 <p>Вам не следует добавлять исключение, если вы используете соединение с Интернетом, которому не полностью доверяете, или если вы обычно не видите предупреждения при соединении с этим сервером.</p>

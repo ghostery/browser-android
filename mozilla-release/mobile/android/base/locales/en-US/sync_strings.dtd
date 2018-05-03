@@ -4,7 +4,7 @@
 
 <!-- Don't localize these. They're here until they have
      a better place to live. -->
-<!ENTITY syncBrand.fullName.label "Firefox Sync">
+<!ENTITY syncBrand.fullName.label "&brandShortName; Sync">
 <!ENTITY syncBrand.shortName.label "Sync">
 
 <!-- Main titles. -->
@@ -22,8 +22,8 @@
 <!ENTITY sync.configure.engines.title.tabs 'Tabs'>
 
 <!-- Localization note (sync.default.client.name): Default string of the "Device
-     name" menu item upon setting up Firefox Sync.  The placeholder &formatS1
-     will be replaced by the name of the Firefox release channel and &formatS2
+     name" menu item upon setting up &brandShortName; Sync.  The placeholder &formatS1
+     will be replaced by the name of the &brandShortName; release channel and &formatS2
      by the model name of the Android device. Examples look like "Aurora on
      GT-I1950" and "Fennec on MI 2S". -->
 <!ENTITY sync.default.client.name '&formatS1; on &formatS2;'>
@@ -43,7 +43,7 @@
 
 <!-- Localization note: these are shown in screens after the user has
      created or signed in to an account, and take the user back to
-     Firefox. -->
+     &brandShortName;. -->
 <!ENTITY fxaccount_back_to_browsing 'Back to browsing'>
 
 <!ENTITY fxaccount_getting_started_welcome_to_sync 'Welcome to &syncBrand.shortName.label;'>
@@ -61,7 +61,7 @@
 <!ENTITY fxaccount_status_needs_upgrade 'You need to upgrade &brandShortName; to sign in.'>
 <!ENTITY fxaccount_status_needs_master_sync_automatically_enabled '&syncBrand.shortName.label; is set up, but not syncing automatically. Toggle “Auto-sync data” in Android Settings &gt; Data Usage.'>
 <!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 '&syncBrand.shortName.label; is set up, but not syncing automatically. Toggle “Auto-sync data” in the menu of Android Settings &gt; Accounts.'>
-<!ENTITY fxaccount_status_needs_finish_migrating 'Tap to sign in to your new Firefox Account.'>
+<!ENTITY fxaccount_status_needs_finish_migrating 'Tap to sign in to your new &brandShortName; Account.'>
 <!ENTITY fxaccount_status_choose_what 'Choose what to sync'>
 <!ENTITY fxaccount_status_bookmarks 'Bookmarks'>
 <!ENTITY fxaccount_status_history 'History'>
@@ -84,8 +84,8 @@
 <!ENTITY fxaccount_remove_account_dialog_title2 'Disconnect from Sync?'>
 <!ENTITY fxaccount_remove_account_dialog_message2 'Your browsing data will remain on this device, but it will no longer sync with your account.'>
 <!-- Localization note: format string below will be replaced
-     with the Firefox Account's email address. -->
-<!ENTITY fxaccount_remove_account_toast2 'Firefox Account &formatS; disconnected.'>
+     with the &brandShortName; Account's email address. -->
+<!ENTITY fxaccount_remove_account_toast2 '&brandShortName; Account &formatS; disconnected.'>
 <!-- Localization note (fxaccount_remove_account_dialog_action_confirm): This is the label for the
  confirm button in the dialog that shows up when disconnecting from sync. -->
 <!ENTITY fxaccount_remove_account_dialog_action_confirm 'Disconnect'>
@@ -93,23 +93,23 @@
 <!ENTITY fxaccount_enable_debug_mode 'Enable Debug Mode'>
 
 <!-- Localization note: this is the name shown by the Android system
-     itself for a Firefox Account. Don't localize this. -->
-<!ENTITY fxaccount_account_type_label 'Firefox'>
+     itself for a &brandShortName; Account. Don't localize this. -->
+<!ENTITY fxaccount_account_type_label '&brandShortName;'>
 
 <!-- Localization note: these are shown by the Android system itself,
-     when the user navigates to the Android > Accounts > {Firefox
-     Account} Screen. The link takes the user to the Firefox Account
-     status activity, which lets them manage their Firefox
+     when the user navigates to the Android > Accounts > {&brandShortName;
+     Account} Screen. The link takes the user to the &brandShortName; Account
+     status activity, which lets them manage their &brandShortName;
      Account. -->
 <!ENTITY fxaccount_options_title '&syncBrand.shortName.label; Options'>
 <!ENTITY fxaccount_options_configure_title 'Configure &syncBrand.shortName.label;'>
 
 <!ENTITY fxaccount_sync_sign_in_error_notification_title2 '&syncBrand.shortName.label; is not connected'>
 <!-- Localization note: the format string below will be replaced
-     with the Firefox Account's email address. -->
+     with the &brandShortName; Account's email address. -->
 <!ENTITY fxaccount_sync_sign_in_error_notification_text2 'Tap to sign in as &formatS;'>
 
 <!ENTITY fxaccount_sync_finish_migrating_notification_title 'Finish upgrading &syncBrand.shortName.label;?'>
 <!-- Localization note: the format string below will be replaced
-     with the Firefox Account's email address. -->
+     with the &brandShortName; Account's email address. -->
 <!ENTITY fxaccount_sync_finish_migrating_notification_text 'Tap to sign in as &formatS;'>

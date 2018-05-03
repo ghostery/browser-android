@@ -4,7 +4,7 @@
 
 <!ENTITY firstrun_panel_title_welcome "Bienvenue">
 <!ENTITY firstrun_urlbar_message2 "Merci d’avoir choisi &brandShortName;">
-<!ENTITY firstrun_urlbar_subtext2 "Un navigateur mobile et moderne par Mozilla, l’organisation à but non lucratif qui s’engage à défendre un Web libre et ouvert.">
+<!ENTITY firstrun_urlbar_subtext2 "Un navigateur mobile et moderne par &vendorShortName;, l’organisation à but non lucratif qui s’engage à défendre un Web libre et ouvert.">
 <!ENTITY firstrun_panel_title_privacy "Vie privée">
 <!ENTITY firstrun_privacy_message "Naviguez comme si personne ne vous regardait">
 <!ENTITY firstrun_privacy_subtext "La navigation privée avec la protection contre le pistage bloque les traqueurs lorsque vous naviguez et ne conserve pas votre historique lorsque vous avez terminé.">
@@ -142,19 +142,19 @@
 <!ENTITY pref_category_general_summary3 "Accueil, langue, file d’onglets">
 
 <!-- Localization note (pref_category_language) : This is the preferences
-     section in which the user picks the locale in which to display Firefox
+     section in which the user picks the locale in which to display &brandShortName;
      UI. The locale includes both language and region concepts. -->
 <!ENTITY pref_category_language "Langue">
 <!ENTITY pref_category_language_summary "Modifier la langue du navigateur">
 <!ENTITY pref_browser_locale "Langue du navigateur">
 
 <!-- Localization note (locale_system_default) : This string indicates that
-     Firefox will use the locale currently selected in Android's settings
+     &brandShortName; will use the locale currently selected in Android's settings
      to display browser chrome. -->
 <!ENTITY locale_system_default "Valeur par défaut du système">
 
 <!-- Localization note (overlay_share_label) : This is the label that appears
-     in Android's intent chooser when sending a link to Firefox to bookmark,
+     in Android's intent chooser when sending a link to &brandShortName; to bookmark,
      send to another device, or add to Reading List. -->
 <!ENTITY overlay_share_label "Ajouter à &brandShortName;">
 
@@ -176,7 +176,7 @@
 <!-- Localization note (overlay_no_synced_devices) : Used when the menu option
      to send a tab to a synced device is pressed and no other synced devices
      are found. -->
-<!ENTITY overlay_no_synced_devices "Aucun appareil connecté au compte Firefox trouvé">
+<!ENTITY overlay_no_synced_devices "Aucun appareil connecté au compte &brandShortName; trouvé">
 
 <!ENTITY pref_category_search3 "Recherche">
 <!ENTITY pref_category_search_summary2 "Ajouter, définir un moteur par défaut, afficher des suggestions">
@@ -227,7 +227,7 @@
 <!ENTITY home_homepage_title "Définir une page d’accueil">
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
-     button for this string, they will use the built-in default Firefox homepage (about:home). -->
+     button for this string, they will use the built-in default &brandShortName; homepage (about:home). -->
 <!ENTITY home_homepage_radio_default "Accueil de &brandShortName;">
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
@@ -293,7 +293,7 @@
 <!ENTITY pref_custom_tabs_summary4 "Autoriser les applications à ouvrir du contenu web rapidement dans un onglet personnalisé.">
 
 <!-- Localization note (custom_tabs_menu_item_open_in): The variable is replaced by the name of
-     default browser from user's preference, such as "Open in Firefox" -->
+     default browser from user's preference, such as "Open in &brandShortName;" -->
 <!ENTITY custom_tabs_menu_item_open_in "Ouvrir dans &formatS;">
 <!ENTITY custom_tabs_menu_footer "Proposé par &brandShortName;">
 <!-- Long-click title of CustomTabsActivity will copy URL to clipboard and display this hint -->
@@ -363,7 +363,7 @@
 <!ENTITY pref_qrcode_enabled_summary2 "Permettre la lecture des QR codes depuis la barre d’adresse">
 
 <!ENTITY pref_use_master_password "Mot de passe principal">
-<!ENTITY pref_sync_default_title "Compte Firefox">
+<!ENTITY pref_sync_default_title "Compte &brandShortName;">
 <!ENTITY pref_sync2 "Se connecter">
 <!ENTITY pref_sync_summary2 "Synchroniser onglets, marque-pages, identifiants, historique">
 <!ENTITY pref_search_suggestions "Suggestions de recherche">
@@ -385,8 +385,8 @@
 <!ENTITY pref_private_data_syncedTabs "Onglets synchronisés">
 
 <!ENTITY pref_default_browser "Définir comme navigateur par défaut">
-<!ENTITY pref_default_browser_mozilla_support_tablet "Consulter l’assistance de Mozilla">
-<!ENTITY pref_about_firefox "À propos de &brandShortName;">
+<!ENTITY pref_default_browser_mozilla_support_tablet "Consulter l’assistance de &vendorShortName;">
+<!ENTITY pref_about_&brandShortName; "À propos de &brandShortName;">
 <!ENTITY pref_vendor_faqs "FAQ">
 <!ENTITY pref_vendor_feedback "Donner votre avis">
 
@@ -749,7 +749,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      "relative time span string" produced by Android.  This string describes the
      time the tabs were last synced relative to the current time; examples
      include "42 minutes ago", "4 days ago", "last week", etc. The subject of
-     "Last synced" is one of the user's other Sync clients, typically Firefox on
+     "Last synced" is one of the user's other Sync clients, typically &brandShortName; on
      their desktop or laptop.-->
 <!ENTITY remote_tabs_last_synced "Dernière synchronisation : &formatS;">
 <!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
@@ -773,7 +773,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- LOCALIZATION NOTE (devtools_auth_scan_header): This header text appears
      above a QR reader that is actively scanning for QR codes.  The expected QR
      code has already been displayed by the client trying to connect (such as
-     desktop Firefox via WebIDE), so you just need to aim this device at the QR
+     desktop &brandShortName; via WebIDE), so you just need to aim this device at the QR
      code. -->
 <!ENTITY devtools_auth_scan_header "Veuillez scanner le QR code affiché par l’autre appareil">
 
@@ -781,7 +781,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- Localization note: These are features the device owner (e.g. parent) can enable or disable for
      a restricted profile (e.g. child). Used inside the Android settings UI. -->
 <!ENTITY restrictable_feature_addons_installation "Modules complémentaires">
-<!ENTITY restrictable_feature_addons_installation_description "Ajoutent des fonctionnalités à Firefox. Note : les modules peuvent désactiver certaines restrictions.">
+<!ENTITY restrictable_feature_addons_installation_description "Ajoutent des fonctionnalités à &brandShortName;. Note : les modules peuvent désactiver certaines restrictions.">
 <!ENTITY restrictable_feature_private_browsing "Navigation privée">
 <!ENTITY restrictable_feature_private_browsing_description "Permet aux membres de la famille de naviguer sans enregistrer d’informations sur les sites qu’ils ont visités.">
 <!ENTITY restrictable_feature_clear_history "Effacer l’historique">
@@ -795,15 +795,15 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 
 <!-- Default Bookmarks titles-->
 <!-- LOCALIZATION NOTE (bookmarks_about_browser): link title for about:fennec -->
-<!ENTITY bookmarks_about_browser "Firefox : à propos de votre navigateur">
+<!ENTITY bookmarks_about_browser "&brandShortName; : à propos de votre navigateur">
 <!-- LOCALIZATION NOTE (bookmarks_addons): link title for https://addons.mozilla.org/en-US/mobile -->
-<!ENTITY bookmarks_addons "Firefox : personnalisation avec des modules">
+<!ENTITY bookmarks_addons "&brandShortName; : personnalisation avec des modules">
 <!-- LOCALIZATION NOTE (bookmarks_support): link title for https://support.mozilla.org/ -->
-<!ENTITY bookmarks_support "Firefox : assistance">
+<!ENTITY bookmarks_support "&brandShortName; : assistance">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_support): link title for https://support.mozilla.org/kb/controlledaccess -->
-<!ENTITY bookmarks_restricted_support2 "Aide et assistance de Firefox pour les profils restreints sur les tablettes Android">
+<!ENTITY bookmarks_restricted_support2 "Aide et assistance de &brandShortName; pour les profils restreints sur les tablettes Android">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_webmaker):link title for https://webmaker.org -->
-<!ENTITY bookmarks_restricted_webmaker "Apprenez le Web : Mozilla Webmaker">
+<!ENTITY bookmarks_restricted_webmaker "Apprenez le Web : &vendorShortName; Webmaker">
 
 <!-- LOCALIZATION NOTE (unsupported_sdk_version): The user installed a build of this app that does not support
      the Android version of this device. the formatS1 is replaced by the CPU ABI (e.g., ARMv7); the formatS2 is
