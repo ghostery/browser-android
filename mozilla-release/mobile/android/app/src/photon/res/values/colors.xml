@@ -225,7 +225,10 @@
     <color name="url_bar_urltext">#737373</color>
     <color name="url_bar_urltext_private">#B2B2B2</color>
     <color name="url_bar_domaintext">@color/photon_url_bar_domain</color>
-    <color name="url_bar_domaintext_private">@color/photon_url_bar_domain_private</color>
+    <!-- Cliqz start -->
+    <!-- make url bar domain color as normal tab url domain color -->
+    <color name="url_bar_domaintext_private">@color/url_bar_domaintext</color>
+    <!-- Cliqz end -->
     <color name="url_bar_blockedtext">@color/photon_url_bar_blocked</color>
     <color name="url_bar_blockedtext_private">@color/photon_url_bar_blocked_private</color>
     <color name="url_bar_shadow">#12000000</color>
