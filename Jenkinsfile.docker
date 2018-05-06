@@ -6,7 +6,7 @@ node('us-east-1 && ubuntu && docker && !gpu') {
 
     stage('Checkout') {
         checkout scm
-        dockerTag = readFile('mozilla-release/browser/config/version_display.txt')
+        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
     }
 
     def baseImageName = "browser-f/android:${dockerTag}"
