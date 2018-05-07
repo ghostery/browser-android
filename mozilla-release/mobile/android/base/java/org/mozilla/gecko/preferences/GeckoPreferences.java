@@ -183,7 +183,10 @@ public class GeckoPreferences
     public static final String PREFS_TAB_QUEUE_LAST_SITE = NON_PREF_PREFIX + "last_site";
     public static final String PREFS_TAB_QUEUE_LAST_TIME = NON_PREF_PREFIX + "last_time";
 
-    private static final String PREFS_DYNAMIC_TOOLBAR = "browser.chrome.dynamictoolbar";
+    /* CLiqz start */
+    // change its access to be public so we can use it inside @GeckoPreferenceFragment
+    public static final String PREFS_DYNAMIC_TOOLBAR = "browser.chrome.dynamictoolbar";
+    /* CLiqz end */
 
     public static final String PREFS_SHUTDOWN_INTENT = "app.shutdownintent.enabled";
     public static final String PREFS_MMA_DEVICE_ID = "mma.device_id";
@@ -214,9 +217,10 @@ public class GeckoPreferences
     final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
     // add rate cliqz browser to the settings menu
     private static final String PREFS_rate_cliqz = NON_PREF_PREFIX + "rate.cliqz";
-    // add keys for General Home , Vendor screen
+    // add keys for General Home , Vendor screen , General language
     public static final String PREF_GENERAL_HOME = NON_PREF_PREFIX + "general.home";
     public static final String PREF_VENDOR_SCREEN = NON_PREF_PREFIX + "vendor.screen";
+    public static final String PREF_GENERAL_LANGUAGE = NON_PREF_PREFIX + "general.language";
     // add support cliqz to the settings menu
     private static final String PREFS_SUPPORT_CLIQZ = NON_PREF_PREFIX + "support.cliqz";
     // add Tips & tricks to the settings menu

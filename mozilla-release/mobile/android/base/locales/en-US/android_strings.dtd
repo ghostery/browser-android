@@ -139,7 +139,7 @@
 <!ENTITY settings "Settings">
 <!ENTITY settings_title "Settings">
 <!ENTITY pref_category_general "General">
-<!ENTITY pref_category_general_summary3 "Language, tab queue">
+<!ENTITY pref_category_general_summary3 "Search, CliqzTab, Browsing, Notifications, Download, MyOffrz">
 
 <!-- Localization note (pref_category_language) : This is the preferences
      section in which the user picks the locale in which to display Firefox
