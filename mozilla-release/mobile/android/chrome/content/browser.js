@@ -6378,9 +6378,9 @@ var Cliqz = {
     }
   },
 
-  _extensionListener: function(msg) {
+  _searchExtensionListener: function(msg) {
     switch (msg.data.action) {
-      case 'openLink': 
+      case 'openLink':
         var success = this.hidePanel(this.Search.panel);
         if (success) {
           BrowserApp.deck.selectedPanel.loadURI(msg.data.data);
@@ -6402,12 +6402,36 @@ var Cliqz = {
     }
   },
 
+  _privacyExtensionListener: function(ev) {
+    const data = ev.data[0];
+    if (data.recipient.extensionId === 'firefox@ghostery.com') {
+      const msg = data.data.deserialize(this);
+      if (msg.target === 'ANDROID_BROWSER'){
+        console.log('Dispaching event from the privacy extension to native', msg);
+        switch (data.action) {
+          case 'setIcon':
+            GlobalEventDispatcher.sendRequest({
+              type: "Privacy:Count",
+              data: msg.payload
+            });
+          break;
+          default:
+            console.log('unexpected message', msg)
+        }
+      }
+    }
+  },
+
   get Ghostery() {
     if (!this._ghostery) {
       this._ghostery = this._createBrowserForExtension('firefox@ghostery.com');
       this._ghostery.loadTab = function(tab) {
         this.load('app/templates/panel_android.html?tabId=' + tab)
       }.bind(this._ghostery);
+
+
+      Services.cpmm.addMessageListener("MessageChannel:Messages",
+        this._privacyExtensionListener.bind(this));
     }
 
     return this._ghostery;
@@ -6420,7 +6444,7 @@ var Cliqz = {
 
       setTimeout(() => {
         // TODO: find a better moment to attach
-        this._search.panel.contentWindow.addEventListener('message', this._extensionListener.bind(this));
+        this._search.panel.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
       }, 100);
     }
 
