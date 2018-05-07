@@ -33,6 +33,8 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
+        <!-- Cliqz start -->
+        <!-- round UrlBar EditText corners -->
         <org.mozilla.gecko.toolbar.ToolbarEditText
             android:id="@+id/url_edit_text"
             style="@style/UrlBar.EditLayout.Title"
@@ -42,7 +44,10 @@
             android:contentDescription="@string/url_bar_default_text"
             android:imeOptions="actionGo|flagNoExtractUi|flagNoFullscreen"
             android:inputType="textUri"
-            android:selectAllOnFocus="true"/>
+            android:selectAllOnFocus="true"
+            android:background="@drawable/rounded_edittext"/>
+        <!-- Cliqz end -->
+
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
 
     <org.mozilla.gecko.toolbar.ToolbarRoundButton

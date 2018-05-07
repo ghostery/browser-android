@@ -98,7 +98,11 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
 
     private final ThemedTextView mTitle;
     private final ThemedLinearLayout mThemeBackground;
-    private final int mTitlePadding;
+    /* Cliqz start */
+    /* add padding left and rename padding to padding right */
+    private final int mTitlePaddingRight;
+    private final int mTitlePaddingLeft;
+    /* Cliqz end */
     private final HorizontalScrollView mTitleScroll;
     private final int mMinUrlScrollMargin;
     private ToolbarPrefs mPrefs;
@@ -130,7 +134,11 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
 
         mTitle = (ThemedTextView) findViewById(R.id.url_bar_title);
         mThemeBackground = (ThemedLinearLayout) findViewById(R.id.url_bar_title_bg);
-        mTitlePadding = mTitle.getPaddingRight();
+        /* Cliqz start */
+        /* get left and right padding form the textView */
+        mTitlePaddingRight = mTitle.getPaddingRight();
+        mTitlePaddingLeft = mTitle.getPaddingLeft();
+        /* Cliqz end */
         mTitleScroll = (HorizontalScrollView) findViewById(R.id.url_bar_title_scroll_view);
 
         final OnLayoutChangeListener resizeListener = new OnLayoutChangeListener() {
@@ -157,7 +165,10 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mBlockedColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_blockedtext));
         mPrivateBlockedColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_blockedtext_private));
         mDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext));
+        /* Cliqz start */
+        /* set domain in gray as well so it appears with whit Url bar background */
         mPrivateDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext_private));
+        /* Cliqz end */
 
         mSiteSecurity = (ThemedImageButton) findViewById(R.id.site_security);
 
@@ -375,7 +386,10 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private void scrollTitle() {
         final Editable text = mTitle.getEditableText();
         final int textViewWidth = mTitle.getWidth();
-        final int textWidth = textViewWidth - mTitlePadding;
+        /* Cliqz start */
+        /* subtract padding left as well from the textWidth */
+        final int textWidth = textViewWidth - mTitlePaddingRight - mTitlePaddingLeft;
+        /* Cliqz end */
         final int scrollViewWidth = mTitleScroll.getWidth();
         if (textWidth <= scrollViewWidth) {
             // The text fits within the ScrollView, so nothing to do here...
@@ -447,7 +461,15 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         // We want title to fill the whole space available for it when there are icons
         // being shown on the right side of the toolbar as the icons already have some
         // padding in them. This is just to avoid wasting space when icons are shown.
-        mTitle.setPadding(0, 0, (!isShowingProgress ? mTitlePadding : 0), 0);
+        /* Cliqz start */
+        /* modifying the condition so no padding left nor right will appear while progress bar
+        visible otherwise padding will apply */
+        if(isShowingProgress){
+            mTitle.setPadding(0,0,0,0);
+        } else{
+            mTitle.setPadding(mTitlePaddingLeft,0,mTitlePaddingRight,0);
+        }
+        /* Cliqz end */
     }
 
     List<? extends View> getFocusOrder() {
