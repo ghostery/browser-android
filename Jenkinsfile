@@ -16,10 +16,7 @@ node('us-east-1 && ubuntu && docker && !gpu') {
             ) {
             stage('Checkout') {
                 checkout scm
-                def delim = '"'
-                dockerTag = sh(returnStdout: true,
-                    script: """curl https://api.github.com/repos/cliqz-oss/cliqz-android/branches/upstream-releases | \
-                    grep -m 1 sha | cut -d '${delim}' -f 4""").trim()
+                dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
                 withCredentials([file(credentialsId: 'ceb2d5e9-fc88-418f-aa65-ce0e0d2a7ea1', variable: 'SSH_KEY')]) {
                     cloneRepoViaSSH(
                         "git@github.com:cliqz/autobots.git",
@@ -77,7 +74,7 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                         "deviceName=127.0.0.1:5556",
                         "MODULE=testSmoke",
                         "TEST=SmokeTest",
-                        "appPackage=org.mozilla.fennec_",
+                        "appPackage=com.cliqz.browser.alpha",
                         "appActivity=org.mozilla.gecko.LauncherActivity"
                         ]) {
                         withCredentials([file(credentialsId: 'da5f91e6-e1ca-4aac-94ea-352b6769228b', variable: 'FILE' )]) {
@@ -106,6 +103,7 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                                     source ~/venv/bin/activate
                                     chmod 0755 requirements.txt
                                     pip install -r requirements.txt
+                                    export deviceType="$($ANDROID_HOME/platform-tools/adb shell getprop ro.build.characteristics)"
                                     python testRunner.py || true
                                '''
                            }
@@ -180,7 +178,6 @@ def withGenymotion(
     }
 }
 
-@NonCPS
 def cloneRepoViaSSH(String repoLink, String args) {
     sh """#!/bin/bash -l
         set -x
@@ -193,7 +190,6 @@ def cloneRepoViaSSH(String repoLink, String args) {
     """
 }
 
-@NonCPS
 def archiveTestResults() {
     try {
         archiveArtifacts allowEmptyArchive: true, artifacts: 'autobots/*.log'
