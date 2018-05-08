@@ -923,4 +923,25 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 
 <!-- Report Website -->
 <!ENTITY pref_report_website "Report Website">
+
+<!-- General - Search-->
+<!ENTITY pref_search_category "Search">
+<!ENTITY pref_search_regional "Search results for">
+<!ENTITY pref_search_regional_germany "Germany">
+<!ENTITY pref_search_regional_france "France">
+<!ENTITY pref_search_regional_usa "United States">
+<!ENTITY pref_search_query_suggestions "Search query suggestions">
+<!ENTITY pref_search_block_adult_content "Block explicit content">
+<!ENTITY pref_search_auto_completion "Enable Autocompletion">
+<!ENTITY pref_search_complementary_engine "Complementary search engine">
+<!ENTITY pref_search_complementary_engine_Google "Google">
+<!ENTITY pref_search_complementary_engine_bing "bing">
+<!ENTITY pref_search_complementary_engine_yahoo "yahoo">
+<!ENTITY pref_search_complementary_engine_duck "DuckDuckGo">
+<!ENTITY pref_search_complementary_engine_ecosia "Ecosia">
+<!ENTITY pref_search_complementary_engine_start_page "StartPage">
+<!ENTITY pref_search_complementary_engine_qwant "Qwant">
+
+<!-- General - Browsing -->
+<!ENTITY pref_browsing_category "Browsing">
 <!-- Cliqz end -->

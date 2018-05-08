@@ -696,5 +696,26 @@
   <!-- Report Website -->
   <string name="pref_report_website_url">&pref_report_website_url;</string>
   <string name="pref_report_website">&pref_report_website;</string>
+
+  <!-- General - Search-->
+  <string name="pref_search_category">&pref_search_category;</string>
+  <string name="pref_search_regional">&pref_search_regional;</string>
+  <string name="pref_search_regional_germany">&pref_search_regional_germany;</string>
+  <string name="pref_search_regional_france">&pref_search_regional_france;</string>
+  <string name="pref_search_regional_usa">&pref_search_regional_usa;</string>
+  <string name="pref_search_query_suggestions">&pref_search_query_suggestions;</string>
+  <string name="pref_search_block_adult_content">&pref_search_block_adult_content;</string>
+  <string name="pref_search_auto_completion">&pref_search_auto_completion;</string>
+  <string name="pref_search_complementary_engine">&pref_search_complementary_engine;</string>
+  <string name="pref_search_complementary_engine_Google">&pref_search_complementary_engine_Google;</string>
+  <string name="pref_search_complementary_engine_bing">&pref_search_complementary_engine_bing;</string>
+  <string name="pref_search_complementary_engine_yahoo">&pref_search_complementary_engine_yahoo;</string>
+  <string name="pref_search_complementary_engine_duck">&pref_search_complementary_engine_duck;</string>
+  <string name="pref_search_complementary_engine_ecosia">&pref_search_complementary_engine_ecosia;</string>
+  <string name="pref_search_complementary_engine_start_page">&pref_search_complementary_engine_start_page;</string>
+  <string name="pref_search_complementary_engine_qwant">&pref_search_complementary_engine_qwant;</string>
+
+  <!-- General - Browsing -->
+  <string name="pref_browsing_category">&pref_browsing_category;</string>
   <!-- Cliqz end -->
 </resources>

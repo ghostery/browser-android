@@ -28,20 +28,53 @@
                       android:title="@string/pref_scroll_title_bar2"
                       android:summary="@string/pref_scroll_title_bar_summary" />
 
-    <SwitchPreference android:key="android.not_a_preference.tab_queue"
-                      android:title="@string/pref_tab_queue_title"
-                      android:summary="@string/pref_tab_queue_summary"
-                      android:defaultValue="false" />
 
     <SwitchPreference android:key="android.not_a_preference.compact_tabs"
                       android:title="@string/pref_compact_tabs"
                       android:summary="@string/pref_compact_tabs_summary"
                       android:defaultValue="true" />
 
-    <SwitchPreference android:key="android.not_a_preference.customtabs_58"
-                      android:title="@string/pref_custom_tabs"
-                      android:summary="@string/pref_custom_tabs_summary"
-                      android:defaultValue="true"/>
+    <!-- Cliqz start -->
+    <!-- add search category -->
+    <PreferenceCategory android:title="@string/pref_search_category">
+        <ListPreference
+            android:key="pref.search.regional"
+            android:title="@string/pref_search_regional"
+            android:entries="@array/pref_search_regional_entries"
+            android:entryValues="@array/pref_search_regional_values"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref.search.query.suggestions"
+            android:title="@string/pref_search_query_suggestions" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref.search.block.adult.content"
+            android:title="@string/pref_search_block_adult_content" />
+        <CheckBoxPreference
+            android:key="pref.search.auto.completion"
+            android:title="@string/pref_search_auto_completion" />
+        <ListPreference
+            android:key="pref.search.complementary.engine"
+            android:title="@string/pref_search_complementary_engine"
+            android:entries="@array/pref_search_complementary_engine_entries_values"
+            android:entryValues="@array/pref_search_complementary_engine_entries_values"/>
+    </PreferenceCategory>
 
+    <!-- set browsing category for tab queue and custom tabs from FF-->
+    <PreferenceCategory android:title="@string/pref_browsing_category">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="android.not_a_preference.tab_queue"
+            android:summary="@string/pref_tab_queue_summary"
+            android:title="@string/pref_tab_queue_title" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="android.not_a_preference.customtabs_58"
+            android:summary="@string/pref_custom_tabs_summary"
+            android:title="@string/pref_custom_tabs" />
+    </PreferenceCategory>
+    <!-- Cliqz end -->
 </PreferenceScreen>
 
