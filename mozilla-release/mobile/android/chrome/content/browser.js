@@ -6357,7 +6357,33 @@ var Cliqz = {
 
       "Privacy:Show",
       "Privacy:Hide",
+      "Privacy:GetInfo"
     ]);
+
+    ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
+
+    Services.cpmm.addMessageListener("MessageChannel:Messages",
+      this._privacyExtensionListener.bind(this));
+  },
+
+  _messageExtension(id, msg) {
+    Services.cpmm.sendAsyncMessage("MessageChannel:Messages", [{
+      messageName: "Extension:Message",
+      channelId: ExtensionUtils.getUniqueId(),
+      sender: {
+          id,
+          extensionId: id,
+      },
+      recipient: {
+          extensionId: id
+      },
+      data: new StructuredCloneHolder(msg),
+      responseType: 3 // MessageChannel.RESPONSE_NONE
+    }]);
+  },
+
+  messagePrivacyExtension(msg) {
+    Cliqz._messageExtension('firefox@ghostery.com', msg);
   },
 
   _createBrowserForExtension: function (id) {
@@ -6408,10 +6434,16 @@ var Cliqz = {
       const msg = data.data.deserialize(this);
       if (msg.target === 'ANDROID_BROWSER'){
         console.log('Dispaching event from the privacy extension to native', msg);
-        switch (data.action) {
+        switch (msg.action) {
           case 'setIcon':
             GlobalEventDispatcher.sendRequest({
               type: "Privacy:Count",
+              data: msg.payload
+            });
+          break;
+          case 'panelData':
+            GlobalEventDispatcher.sendRequest({
+              type: "Privacy:Info",
               data: msg.payload
             });
           break;
@@ -6428,10 +6460,6 @@ var Cliqz = {
       this._ghostery.loadTab = function(tab) {
         this.load('app/templates/panel_android.html?tabId=' + tab)
       }.bind(this._ghostery);
-
-
-      Services.cpmm.addMessageListener("MessageChannel:Messages",
-        this._privacyExtensionListener.bind(this));
     }
 
     return this._ghostery;
@@ -6513,6 +6541,9 @@ var Cliqz = {
         break;
       case "Privacy:Hide":
         this.hidePanel(this.Ghostery.panel);
+        break;
+      case "Privacy:GetInfo":
+        this.messagePrivacyExtension({ name: 'getAndroidPanelData' });
         break;
     }
   }
