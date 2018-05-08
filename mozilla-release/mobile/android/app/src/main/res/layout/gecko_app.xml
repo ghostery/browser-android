@@ -70,6 +70,35 @@
 
             </FrameLayout>
 
+            <!--Cliqz start-->
+            <LinearLayout
+                android:id="@+id/control_center_container"
+                android:background="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/conrol_center_tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/general_blue_color"
+                    gecko:tabTextColor="@android:color/white"
+                    gecko:tabSelectedTextColor="@android:color/white"
+                    gecko:tabIndicatorColor="@android:color/white"
+                    gecko:tabMode="fixed"/>
+
+
+                <org.mozilla.gecko.controlcenter.ControlCenterViewPager
+                    android:id="@+id/control_center_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+            <!--Cliqz End-->
+
+
             <View android:id="@+id/doorhanger_overlay"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"

@@ -678,9 +678,10 @@
   <string name="pref_block_ads_what_fair">&pref_block_ads_what_fair;</string>
   <string name="pref_block_ads_data">&pref_block_ads_data;</string>
   <string name="pref_block_ads_fair_description">&pref_block_ads_fair_description;</string>
-	
+
   <!-- Rate Cliqz -->
   <string name="pref_category_rate_cliqz">&pref_category_rate_cliqz;</string>
+
 
   <!-- Support Cliqz -->
   <string name="pref_support_cliqz_url">&pref_support_cliqz_url;</string>
@@ -689,10 +690,61 @@
   <!-- Tips & tricks -->
   <string name="pref_tips_tricks">&pref_tips_tricks;</string>
   <string name="pref_tips_tricks_url">&pref_tips_tricks_url;</string>
-  
+
   <!-- Report Website -->
   <string name="pref_report_website_url">&pref_report_website_url;</string>
   <string name="pref_report_website">&pref_report_website;</string>
+
+  <!-- Control Center -->
+  <string name="title_overview">&title_overview;</string>
+  <string name="title_site_trackers">&title_site_trackers;</string>
+  <string name="title_global_trackers">&title_global_trackers;</string>
+  <string name="trust_site">&trust_site;</string>
+  <string name="restrict_site">&restrict_site;</string>
+  <string name="pause_ghostery">&pause_ghostery;</string>
+  <string name="resume_ghostery">&resume_ghostery;</string>
+  <string name="enhanced_options">&enhanced_options;</string>
+  <string name="enhanced_anti_tracking">&enhanced_anti_tracking;</string>
+  <string name="enhanced_ad_blocking">&enhanced_ad_blocking;</string>
+  <string name="smart_blocking">&smart_blocking;</string>
+  <string name="enhanced_anti_tracking_info">&enhanced_anti_tracking_info;</string>
+  <string name="enhanced_ad_blocking_info">&enhanced_ad_blocking_info;</string>
+  <string name="smart_blocking_info">&smart_blocking_info;</string>
+  <string name="site_trackers_list_title">&site_trackers_list_title;</string>
+  <string name="global_trackers_list_title">&global_trackers_list_title;</string>
+  <string name="reset_settings">&reset_settings;</string>
+  <string name="settings_menu">&settings_menu;</string>
+  <string name="on_this_site">&on_this_site;</string>
+  <string name="trackers">&trackers;</string>
+  <string name="blocked">&blocked;</string>
+  <string name="tracker_info">&tracker_info;</string>
+  <string name="block_all">&block_all;</string>
+  <string name="unblock_all">&unblock_all;</string>
+  <string name="num_blocked">%d &blocked;</string>
+  <plurals name="total_trackers_found">
+      <item quantity="zero">%d &zero_trackers_found;</item>
+      <item quantity="one">%d &one_trackers_found;</item>
+      <item quantity="two">%d &two_trackers_found;</item>
+      <item quantity="few">%d &few_trackers_found;</item>
+      <item quantity="many">%d &many_trackers_found;</item>
+      <item quantity="other">%d &other_trackers_found;</item>
+  </plurals>
+  <plurals name="total_trackers_blocked">
+      <item quantity="zero">%d &zero_trackers_blocked;</item>
+      <item quantity="one">%d &one_trackers_blocked;</item>
+      <item quantity="two">%d &two_trackers_blocked;</item>
+      <item quantity="few">%d &few_trackers_blocked;</item>
+      <item quantity="many">%d &many_trackers_blocked;</item>
+      <item quantity="other">%d &other_trackers_blocked;</item>
+  </plurals>
+  <plurals name="total_trackers">
+    <item quantity="zero">%d &zero_trackers;</item>
+    <item quantity="one">%d &one_trackers;</item>
+    <item quantity="two">%d &two_trackers;</item>
+    <item quantity="few">%d &few_trackers;</item>
+    <item quantity="many">%d &many_trackers;</item>
+    <item quantity="other">%d &other_trackers;</item>
+  </plurals>
 
   <!-- General - Search-->
   <string name="pref_search_category">&pref_search_category;</string>

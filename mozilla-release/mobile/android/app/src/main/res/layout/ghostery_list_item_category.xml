@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright © Cliqz 2018 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/main_layout">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/category_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="5dp"
+            app:srcCompat="@drawable/ic_category_advertising"
+            tools:ignore="contentDescription" />
+
+        <TextView
+            android:id="@+id/category_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/category_icon"
+            android:layout_toEndOf="@id/category_icon"
+            android:layout_toRightOf="@id/category_icon"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:text="Advertising" />
+
+        <TextView
+            android:id="@+id/total_trackers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/category_name"
+            android:layout_alignStart="@id/category_name"
+            android:layout_below="@id/category_name"
+            android:textSize="12sp"
+            tools:text="11 trackers" />
+
+        <TextView
+            android:id="@+id/blocked_trackers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/total_trackers"
+            android:layout_toEndOf="@id/total_trackers"
+            android:layout_toRightOf="@id/total_trackers"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingStart="10dp"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="12sp"
+            tools:text="2 blocked" />
+
+        <TextView
+            android:id="@+id/this_site_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/total_trackers"
+            android:layout_alignStart="@id/total_trackers"
+            android:layout_below="@id/total_trackers"
+            android:text="@string/on_this_site"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/cb_block_all"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:focusable="false"
+            app:srcCompat="@drawable/ic_cb_unchecked"
+            tools:checked="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/this_site_text"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:src="@android:drawable/arrow_down_float"
+            tools:ignore="contentDescription" />
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/tracker_options"
+        layout="@layout/ghostery_tracker_options_layout" />
+</FrameLayout>

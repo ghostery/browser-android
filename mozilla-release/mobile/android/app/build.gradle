@@ -26,7 +26,7 @@ android {
         buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\""
         buildConfigField 'String', 'APP_VERSION_NAME', '"1.0.0"'
         buildConfigField 'String', 'EXTENSION_VERSION', '"1.0.0"'
-
+        multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -259,6 +259,12 @@ dependencies {
 
     // Including the Robotium JAR directly can cause issues with dexing.
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.5.4'
+
+    /*Cliqz Start*/
+    //Library for control center donut - chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+    /*Cliqz End*/
+
 }
 
 // TODO: (bug 1261486): This impl is not robust -

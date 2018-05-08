@@ -924,6 +924,50 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!-- Report Website -->
 <!ENTITY pref_report_website "Report Website">
 
+<!-- Control Center -->
+<!ENTITY title_overview "OVERVIEW">
+<!ENTITY title_site_trackers "SITE TRACKERS">
+<!ENTITY title_global_trackers "GLOBAL TRACKERS">
+<!ENTITY zero_trackers_found "Trackers found">
+<!ENTITY one_trackers_found "Tracker found">
+<!ENTITY two_trackers_found "Trackers found">
+<!ENTITY few_trackers_found "Trackers found">
+<!ENTITY many_trackers_found "Trackers found">
+<!ENTITY other_trackers_found "Trackers found">
+<!ENTITY zero_trackers_blocked "Trackers blocked">
+<!ENTITY one_trackers_blocked "Tracker blocked">
+<!ENTITY two_trackers_blocked "Trackers blocked">
+<!ENTITY few_trackers_blocked "Trackers blocked">
+<!ENTITY many_trackers_blocked "Trackers blocked">
+<!ENTITY other_trackers_blocked "Trackers blocked">
+<!ENTITY zero_trackers "Trackers">
+<!ENTITY one_trackers "Tracker">
+<!ENTITY two_trackers "Trackers">
+<!ENTITY few_trackers "Trackers">
+<!ENTITY many_trackers "Trackers">
+<!ENTITY other_trackers "Trackers">
+<!ENTITY trust_site "Trust Site">
+<!ENTITY restrict_site "Restrict Site">
+<!ENTITY pause_ghostery "Pause Ghostery">
+<!ENTITY resume_ghostery "Resume Ghostery">
+<!ENTITY enhanced_options "Enhanced Options">
+<!ENTITY enhanced_anti_tracking "Enhanced Anti-Tracking">
+<!ENTITY enhanced_ad_blocking "Enhanced Ad Blocking">
+<!ENTITY smart_blocking "Smart Blocking">
+<!ENTITY enhanced_anti_tracking_info "Enhanced anti tracking information">
+<!ENTITY enhanced_ad_blocking_info "Enhanced ad blocking information">
+<!ENTITY smart_blocking_info "Enhanced anti tracking information">
+<!ENTITY site_trackers_list_title "Trackers on this site">
+<!ENTITY global_trackers_list_title "Trackers across sites">
+<!ENTITY reset_settings "Reset Settings">
+<!ENTITY settings_menu "Settings menu">
+<!ENTITY on_this_site "On this site">
+<!ENTITY trackers "TRACKERS">
+<!ENTITY blocked "BLOCKED">
+<!ENTITY tracker_info "Tracker Info">
+<!ENTITY block_all "Block all">
+<!ENTITY unblock_all "Unblock all">
+
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Search">
 <!ENTITY pref_search_regional "Search results for">

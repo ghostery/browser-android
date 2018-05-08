@@ -12,8 +12,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.VectorDrawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;

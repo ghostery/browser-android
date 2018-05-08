@@ -168,6 +168,7 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
 
     public HomePager(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         mContext = context;
 
         mConfig = HomeConfig.getDefault(mContext);
@@ -385,6 +386,12 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
         }
 
         return super.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
     }
 
     public void setBanner(HomeBanner banner) {
