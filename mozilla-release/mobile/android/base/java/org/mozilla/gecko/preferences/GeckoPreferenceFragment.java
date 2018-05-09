@@ -29,16 +29,21 @@ import android.content.Loader;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
 import com.squareup.leakcanary.RefWatcher;
 
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_COMPACT_TABS;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_DYNAMIC_TOOLBAR;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREF_GENERAL_HOME;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREF_GENERAL_LANGUAGE;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREF_VENDOR_SCREEN;
 
 /* A simple implementation of PreferenceFragment for large screen devices
@@ -94,25 +99,34 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
         PreferenceScreen screen = getPreferenceScreen();
         setPreferenceScreen(screen);
         /* Cliqz start */
-        // remove Home setting from General settings
         if(res == R.xml.preferences_general || res == R.xml.preferences_general_tablet){
-            PreferenceScreen homePreferenceScreen = (PreferenceScreen) screen.findPreference
-                    (PREF_GENERAL_HOME);
-            if(homePreferenceScreen != null) {
-                screen.removePreference(homePreferenceScreen);
-            }
+            // remove Home setting from General settings
+            removePreference(screen,PREF_GENERAL_HOME);
+            // remove Language setting from General settings
+            removePreference(screen,PREF_GENERAL_LANGUAGE);
+            // remove Full-screen browsing setting from General settings
+            removePreference(screen,PREFS_DYNAMIC_TOOLBAR);
+            // remove Compact tabs setting from General settings
+            removePreference(screen,PREFS_COMPACT_TABS);
         }
         // remove Mozilla Fennec (About, Feedback, FAQ)
         else if(res == R.xml.preferences){
-            PreferenceScreen vendorPreferenceScreen = (PreferenceScreen) screen.findPreference(PREF_VENDOR_SCREEN);
-            if(vendorPreferenceScreen != null) {
-                screen.removePreference(vendorPreferenceScreen);
-            }
+            removePreference(screen,PREF_VENDOR_SCREEN);
         }
         /* Cliqz end */
         mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);
         syncPreference = (SyncPreference) findPreference(GeckoPreferences.PREFS_SYNC);
     }
+
+    /* Cliqz start */
+    // remove not needed preferences from FF
+    private void removePreference(PreferenceScreen screen,String preferenceKey){
+        final Preference preference = screen.findPreference(preferenceKey);
+        if(preference != null) {
+            screen.removePreference(preference);
+        }
+    }
+    /* Cliqz end */
 
     /**
      * Return the title to use for this preference fragment.
