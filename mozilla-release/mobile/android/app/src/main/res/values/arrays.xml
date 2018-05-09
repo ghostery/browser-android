@@ -147,4 +147,28 @@
         <item>2</item> <!-- Wifi-only -->
         <item>0</item> <!-- Blocked -->
     </string-array>
+    <!-- Cliqz start -->
+    <!-- add search regional entries and values-->
+    <string-array name="pref_search_regional_entries">
+        <item>@string/pref_search_regional_germany</item>
+        <item>@string/pref_search_regional_france</item>
+        <item>@string/pref_search_regional_usa</item>
+    </string-array>
+    <string-array name="pref_search_regional_values">
+        <item>de</item>
+        <item>fr</item>
+        <item>us</item>
+    </string-array>
+
+    <!-- add search complementry search engine entries and values-->
+    <string-array name="pref_search_complementary_engine_entries_values">
+        <item>@string/pref_search_complementary_engine_Google</item>
+        <item>@string/pref_search_complementary_engine_bing</item>
+        <item>@string/pref_search_complementary_engine_yahoo</item>
+        <item>@string/pref_search_complementary_engine_duck</item>
+        <item>@string/pref_search_complementary_engine_ecosia</item>
+        <item>@string/pref_search_complementary_engine_start_page</item>
+        <item>@string/pref_search_complementary_engine_qwant</item>
+    </string-array>
+    <!-- Cliqz end -->
 </resources>
