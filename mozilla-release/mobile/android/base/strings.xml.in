@@ -717,5 +717,11 @@
 
   <!-- General - Browsing -->
   <string name="pref_browsing_category">&pref_browsing_category;</string>
+
+  <!-- CliqzTab -->
+  <string name="pref_cliqz_tab_category">&pref_cliqz_tab_category;</string>
+  <string name="pref_cliqz_tab_background">&pref_cliqz_tab_background;</string>
+  <string name="pref_cliqz_tab_topsites">&pref_cliqz_tab_topsites;</string>
+  <string name="pref_cliqz_tab_news">&pref_cliqz_tab_news;</string>
   <!-- Cliqz end -->
 </resources>

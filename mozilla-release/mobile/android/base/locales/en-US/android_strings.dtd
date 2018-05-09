@@ -944,4 +944,10 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 
 <!-- General - Browsing -->
 <!ENTITY pref_browsing_category "Browsing">
+
+<!-- CliqzTab -->
+<!ENTITY pref_cliqz_tab_category "CliqzTab">
+<!ENTITY pref_cliqz_tab_background "Show background image">
+<!ENTITY pref_cliqz_tab_topsites "Show most visited websites">
+<!ENTITY pref_cliqz_tab_news "Show News">
 <!-- Cliqz end -->
