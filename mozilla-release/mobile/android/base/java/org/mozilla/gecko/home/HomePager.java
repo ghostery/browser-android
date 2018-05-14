@@ -72,10 +72,12 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
     private String mInitialPanelId;
     private Bundle mRestoreData;
 
-    // Cached original ViewPager background.
     /* Cliqz Start */
+    // Cached original ViewPager background.
     //private final Drawable mOriginalBackground;
-    /* Cliqzz End */
+    // add appSharedPreference
+    private SharedPreferences appPreferences;
+    /* Cliqz End */
 
     // Telemetry session for current panel.
     private TelemetryContract.Session mCurrentPanelSession;
@@ -189,17 +191,24 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
         //  attribute, but it is not working properly.
         setFocusableInTouchMode(true);
 
-        /*Cliqz Start*/
-        //mOriginalBackground = getBackground();
-        /*Cliqz End*/
         addOnPageChangeListener(new PageChangeListener());
 
         mLoadState = LoadState.UNLOADED;
         /*Cliqz Start*/
-        AppBackgroundManager.getInstance(context.getApplicationContext()).setViewBackground(this,
-                ContextCompat.getColor(context, R.color.url_bar));
+        // get appSharedPreference, setMoriginalBackground if showBackground false
+        appPreferences = GeckoSharedPrefs.forApp(getContext());
+        appPreferences.registerOnSharedPreferenceChangeListener(this);
         /*Cliqz End*/
     }
+
+    /*Cliqz Start*/
+    // remove the listener from the appSharedPreference
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        appPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+    /*Cliqz End*/
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
@@ -441,9 +450,7 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
             mTabStrip.setVisibility(View.VISIBLE);
             // Restore original background.
             /*Cliqz Start*/
-            //setBackgroundDrawable(mOriginalBackground);
-            AppBackgroundManager.getInstance(getContext().getApplicationContext()).setViewBackground(this,
-                    ContextCompat.getColor(getContext(), R.color.url_bar));
+            reloadBackground();
             /*Cliqz End*/
         }
 
@@ -627,6 +634,27 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
     @Override
     public void onPrepareLoad(Drawable placeHolderDrawable) {
 
+    }
+    // This part is derived from @{@link TabQueueHelper}.java
+    // check if show background image is enabled
+    public boolean isBackgroundEnabled(){
+        return  appPreferences.getBoolean(GeckoPreferences.PREF_IS_BACKGROUND_ENABLED,true);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(TextUtils.equals(key, GeckoPreferences.PREF_IS_BACKGROUND_ENABLED)) {
+            reloadBackground();
+        }
+    }
+
+    private void reloadBackground(){
+        if(isBackgroundEnabled()) {
+            AppBackgroundManager.getInstance(getContext().getApplicationContext()).setViewBackground(this,
+                    ContextCompat.getColor(getContext(), R.color.url_bar));
+        }else{
+            setBackgroundDrawable(null);
+        }
     }
     /* Cliqz End */
 }
