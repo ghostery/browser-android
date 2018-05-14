@@ -123,6 +123,8 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         /* Cliqz start */
         // create empty TopNews list at the beginning
         topNews = Collections.emptyList();
+        // set topSitesCursor null at the beginning
+        topSitesCursor = null;
         /* Cliqz end */
     }
 

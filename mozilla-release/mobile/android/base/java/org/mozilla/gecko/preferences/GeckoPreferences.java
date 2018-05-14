@@ -227,6 +227,9 @@ public class GeckoPreferences
     private static final String PREFS_TIPS_TRICKS = NON_PREF_PREFIX + "tips.tricks";
     // add report browser to the settings menu
     private static final String PREFS_REPORT_BROWSER = NON_PREF_PREFIX + "report.browser";
+    public static final String PREF_IS_BACKGROUND_ENABLED = "pref.cliqz.tab.background";
+    public static final String PREF_IS_TOP_SITES_ENABLED = "pref.cliqz.tab.topsites";
+    public static final String PREF_IS_NEWS_ENABLED = "pref.cliqz.tab.news";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;

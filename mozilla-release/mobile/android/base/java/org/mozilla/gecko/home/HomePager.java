@@ -6,6 +6,7 @@
 package org.mozilla.gecko.home;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,6 +17,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,14 +27,17 @@ import com.booking.rtlviewpager.RtlViewPager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.activitystream.ActivityStream;
+import org.mozilla.gecko.activitystream.homepanel.ActivityStreamPanel;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.ViewHelper;
 import org.mozilla.gecko.home.HomeAdapter.OnAddPanelListener;
 import org.mozilla.gecko.home.HomeConfig.PanelConfig;
+import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.util.AppBackgroundManager;
 import org.mozilla.gecko.util.ThreadUtils;
 
@@ -41,7 +46,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 /* Cliqz start */
-public class HomePager extends RtlViewPager implements HomeScreen, Target {
+public class HomePager extends RtlViewPager implements HomeScreen, Target, SharedPreferences
+        .OnSharedPreferenceChangeListener{
 /* Cliqz end */
 
     @Override
@@ -66,10 +72,12 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target {
     private String mInitialPanelId;
     private Bundle mRestoreData;
 
-    // Cached original ViewPager background.
     /* Cliqz Start */
+    // Cached original ViewPager background.
     //private final Drawable mOriginalBackground;
-    /* Cliqzz End */
+    // add appSharedPreference
+    private SharedPreferences appPreferences;
+    /* Cliqz End */
 
     // Telemetry session for current panel.
     private TelemetryContract.Session mCurrentPanelSession;
@@ -183,17 +191,24 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target {
         //  attribute, but it is not working properly.
         setFocusableInTouchMode(true);
 
-        /*Cliqz Start*/
-        //mOriginalBackground = getBackground();
-        /*Cliqz End*/
         addOnPageChangeListener(new PageChangeListener());
 
         mLoadState = LoadState.UNLOADED;
         /*Cliqz Start*/
-        AppBackgroundManager.getInstance(context.getApplicationContext()).setViewBackground(this,
-                ContextCompat.getColor(context, R.color.url_bar));
+        // get appSharedPreference, setMoriginalBackground if showBackground false
+        appPreferences = GeckoSharedPrefs.forApp(getContext());
+        appPreferences.registerOnSharedPreferenceChangeListener(this);
         /*Cliqz End*/
     }
+
+    /*Cliqz Start*/
+    // remove the listener from the appSharedPreference
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        appPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+    /*Cliqz End*/
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
@@ -435,9 +450,7 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target {
             mTabStrip.setVisibility(View.VISIBLE);
             // Restore original background.
             /*Cliqz Start*/
-            //setBackgroundDrawable(mOriginalBackground);
-            AppBackgroundManager.getInstance(getContext().getApplicationContext()).setViewBackground(this,
-                    ContextCompat.getColor(getContext(), R.color.url_bar));
+            reloadBackground();
             /*Cliqz End*/
         }
 
@@ -621,6 +634,27 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target {
     @Override
     public void onPrepareLoad(Drawable placeHolderDrawable) {
 
+    }
+    // This part is derived from @{@link TabQueueHelper}.java
+    // check if show background image is enabled
+    public boolean isBackgroundEnabled(){
+        return  appPreferences.getBoolean(GeckoPreferences.PREF_IS_BACKGROUND_ENABLED,true);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(TextUtils.equals(key, GeckoPreferences.PREF_IS_BACKGROUND_ENABLED)) {
+            reloadBackground();
+        }
+    }
+
+    private void reloadBackground(){
+        if(isBackgroundEnabled()) {
+            AppBackgroundManager.getInstance(getContext().getApplicationContext()).setViewBackground(this,
+                    ContextCompat.getColor(getContext(), R.color.url_bar));
+        }else{
+            setBackgroundDrawable(null);
+        }
     }
     /* Cliqz End */
 }

@@ -79,6 +79,23 @@
             android:summary="@string/pref_custom_tabs_summary"
             android:title="@string/pref_custom_tabs" />
     </PreferenceCategory>
+
+    <!-- add cliqz tab category -->
+    <PreferenceCategory android:title="@string/pref_cliqz_tab_category">
+        <CheckBoxPreference
+            android:key="pref.cliqz.tab.background"
+            android:title="@string/pref_cliqz_tab_background"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="pref.cliqz.tab.topsites"
+            android:title="@string/pref_cliqz_tab_topsites"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="pref.cliqz.tab.news"
+            android:title="@string/pref_cliqz_tab_news"
+            android:defaultValue="true" />
+    </PreferenceCategory>
     <!-- Cliqz end -->
+
 </PreferenceScreen>
 
