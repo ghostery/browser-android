@@ -115,7 +115,6 @@ public class ActivityStreamPanel extends FrameLayout {
     }
 
     public void load(LoaderManager lm) {
-        lm.initLoader(LOADER_ID_TOPSITES, null, new TopSitesCallback());
         if (sharedPreferences.getBoolean(PREF_BOOKMARKS_ENABLED, true) || sharedPreferences.getBoolean(PREF_VISITED_ENABLED, true)) {
             lm.initLoader(LOADER_ID_HIGHLIGHTS, null, new HighlightsCallbacks());
         }
@@ -125,6 +124,10 @@ public class ActivityStreamPanel extends FrameLayout {
             lm.initLoader(LOADER_ID_POCKET, null, new PocketStoriesCallbacks());
         }
         /* Cliqz start */
+        // add check to show the topsites if it's enabled
+        if(isTopSitesEnabled()) {
+            lm.initLoader(LOADER_ID_TOPSITES, null, new TopSitesCallback());
+        }
         // init TopNews Loader if show news enabled
         if(isNewsEnabled()) {
             lm.initLoader(LOADER_ID_TOP_NEWS, null, new TopNewsCallback());
@@ -274,6 +277,11 @@ public class ActivityStreamPanel extends FrameLayout {
     }
 
     // This part is derived from @{@link TabQueueHelper}.java
+    public boolean isTopSitesEnabled(){
+        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
+        return  prefs.getBoolean(GeckoPreferences.PREF_IS_TOP_SITES_ENABLED,true);
+    }
+
     private boolean isNewsEnabled(){
         final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
         return  prefs.getBoolean(GeckoPreferences.PREF_IS_NEWS_ENABLED,true);
