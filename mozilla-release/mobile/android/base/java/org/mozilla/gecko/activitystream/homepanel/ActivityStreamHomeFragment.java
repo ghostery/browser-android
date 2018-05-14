@@ -18,6 +18,7 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.home.HomeFragment;
+import org.mozilla.gecko.preferences.GeckoPreferences;
 
 /**
  * Simple wrapper around the ActivityStream view that allows embedding as a HomePager panel.
@@ -28,25 +29,42 @@ public class ActivityStreamHomeFragment
 
     private boolean isSessionActive;
     private SharedPreferences sharedPreferences;
+    /* Cliqz start */
+    /* add appSharedPreference*/
+    private SharedPreferences appPreferences;
+    /* Cliqz end */
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         sharedPreferences = GeckoSharedPrefs.forProfile(getContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        /* Cliqz start */
+        /* initialize and set Listener on change for appSharedPreference*/
+        appPreferences = GeckoSharedPrefs.forApp(getContext());
+        appPreferences.registerOnSharedPreferenceChangeListener(this);
+        /* Cliqz end */
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        /* Cliqz start */
+        /* unregister the Listener on change for appSharedPreference*/
+        appPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        /* Cliqz end */
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         final boolean shouldReload = TextUtils.equals(s, ActivityStreamPanel.PREF_BOOKMARKS_ENABLED)
                 || TextUtils.equals(s, ActivityStreamPanel.PREF_VISITED_ENABLED)
-                || TextUtils.equals(s, ActivityStreamPanel.PREF_POCKET_ENABLED);
+                || TextUtils.equals(s, ActivityStreamPanel.PREF_POCKET_ENABLED)
+                /* Cliqz start */
+                // check if the show topSite and show news changed
+                || TextUtils.equals(s, GeckoPreferences.PREF_IS_NEWS_ENABLED);
+                /* Cliqz end */
 
         if (shouldReload) {
             activityStreamPanel.reload(getLoaderManager(), getContext(), sharedPreferences);

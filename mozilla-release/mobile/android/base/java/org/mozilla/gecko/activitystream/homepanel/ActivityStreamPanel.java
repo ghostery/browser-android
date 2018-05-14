@@ -30,6 +30,7 @@ import org.mozilla.gecko.activitystream.homepanel.topstories.PocketStoriesLoader
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.fxa.FirefoxAccounts;
 import org.mozilla.gecko.home.HomePager;
+import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
 import java.util.Collections;
@@ -124,8 +125,10 @@ public class ActivityStreamPanel extends FrameLayout {
             lm.initLoader(LOADER_ID_POCKET, null, new PocketStoriesCallbacks());
         }
         /* Cliqz start */
-        // init TopNews Loader
-        lm.initLoader(LOADER_ID_TOP_NEWS, null, new TopNewsCallback());
+        // init TopNews Loader if show news enabled
+        if(isNewsEnabled()) {
+            lm.initLoader(LOADER_ID_TOP_NEWS, null, new TopNewsCallback());
+        }
         /* Cliqz end */
     }
 
@@ -268,6 +271,12 @@ public class ActivityStreamPanel extends FrameLayout {
         public void onLoaderReset(Loader<List<TopNews>> loader) {
             adapter.swapTopNews(Collections.<TopNews>emptyList());
         }
+    }
+
+    // This part is derived from @{@link TabQueueHelper}.java
+    private boolean isNewsEnabled(){
+        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
+        return  prefs.getBoolean(GeckoPreferences.PREF_IS_NEWS_ENABLED,true);
     }
     /* Cliqz end */
 }

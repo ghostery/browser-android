@@ -6,6 +6,7 @@
 package org.mozilla.gecko.home;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,6 +17,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,14 +27,17 @@ import com.booking.rtlviewpager.RtlViewPager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.activitystream.ActivityStream;
+import org.mozilla.gecko.activitystream.homepanel.ActivityStreamPanel;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.ViewHelper;
 import org.mozilla.gecko.home.HomeAdapter.OnAddPanelListener;
 import org.mozilla.gecko.home.HomeConfig.PanelConfig;
+import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.util.AppBackgroundManager;
 import org.mozilla.gecko.util.ThreadUtils;
 
@@ -41,7 +46,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 /* Cliqz start */
-public class HomePager extends RtlViewPager implements HomeScreen, Target {
+public class HomePager extends RtlViewPager implements HomeScreen, Target, SharedPreferences
+        .OnSharedPreferenceChangeListener{
 /* Cliqz end */
 
     @Override
