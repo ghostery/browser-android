@@ -42,7 +42,8 @@
      and we can't use a hardware layer because that causes problems with the snapshot
      for our toolbar animation.-->
         <!-- Cliqz start -->
-        <!-- round the corners of horizontal ScrollView and UrlBar TextView inside it -->
+        <!-- round the corners of horizontal ScrollView and UrlBar TextView inside it, change
+        fadeWidth to 50dp-->
         <org.mozilla.gecko.widget.FadedHorizontalScrollView
             android:id="@+id/url_bar_title_scroll_view"
             android:layout_width="match_parent"
@@ -51,15 +52,16 @@
             android:scrollbars="none"
             android:overScrollMode="never"
             android:layerType="software"
-            gecko:fadeWidth="25dp"
+            gecko:fadeWidth="50dp"
             android:background="@drawable/rounded_edittext"
             >
 
-            <!-- add padding left and right -->
+            <!-- add padding left , right and set height to wrap content -->
             <org.mozilla.gecko.widget.themed.ThemedTextView
                 android:id="@+id/url_bar_title"
                 style="@style/UrlBar.Title"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingRight="@dimen/padding_10"
                 android:paddingLeft="@dimen/padding_10"/>
