@@ -3892,27 +3892,31 @@ public class BrowserApp extends GeckoApp
             MenuUtils.safeSetVisible(aMenu, R.id.new_guest_session, false);
         }
 
-        if (SwitchBoard.isInExperiment(this, Experiments.TOP_ADDONS_MENU)) {
-            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, true);
-            GeckoMenuItem item = (GeckoMenuItem) aMenu.findItem(R.id.addons_top_level);
-            if (item != null) {
-                if (mExtensionPermissionsHelper.getShowUpdateIcon()) {
-                    item.setIcon(R.drawable.ic_addon_update);
-                } else {
-                    item.setIcon(null);
-                }
-            }
-            MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
-        } else {
-            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
-            MenuUtils.safeSetVisible(aMenu, R.id.addons, true);
-        }
-
-        if (!Restrictions.isAllowed(this, Restrictable.INSTALL_EXTENSION)) {
-            MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
-            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
-        }
-
+        /* Cliqz start */
+        // hide add-ons
+        MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
+        MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
+//        if (SwitchBoard.isInExperiment(this, Experiments.TOP_ADDONS_MENU)) {
+//            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, true);
+//            GeckoMenuItem item = (GeckoMenuItem) aMenu.findItem(R.id.addons_top_level);
+//            if (item != null) {
+//                if (mExtensionPermissionsHelper.getShowUpdateIcon()) {
+//                    item.setIcon(R.drawable.ic_addon_update);
+//                } else {
+//                    item.setIcon(null);
+//                }
+//            }
+//            MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
+//        } else {
+//            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
+//            MenuUtils.safeSetVisible(aMenu, R.id.addons, true);
+//        }
+//
+//        if (!Restrictions.isAllowed(this, Restrictable.INSTALL_EXTENSION)) {
+//            MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
+//            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
+//        }
+        /* Cliqz end */
         // Hide panel menu items if the panels themselves are hidden.
         // If we don't know whether the panels are hidden, just show the menu items.
         bookmarksList.setVisible(prefs.getBoolean(HomeConfig.PREF_KEY_BOOKMARKS_PANEL_ENABLED, true));
