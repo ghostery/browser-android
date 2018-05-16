@@ -9,11 +9,13 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -118,23 +120,28 @@ public class FadedHorizontalScrollView extends HorizontalScrollView {
 
         final Matrix matrix = mFadePaint.matrix;
         final Shader fade = mFadePaint.fade;
-
-        if (drawLeft) {
-            matrix.setScale(1, effectiveFadeLeft);
-            matrix.postRotate(-90);
-            matrix.postTranslate(left, mFadeTop);
-            fade.setLocalMatrix(matrix);
-            mFadePaint.setShader(fade);
-            canvas.drawRect(left, mFadeTop, left + effectiveFadeLeft, mFadeBottom, mFadePaint);
-        }
-
+        /* Cliqz start */
+        // remove fading left
+        // if (drawLeft) {
+        //    matrix.setScale(1, effectiveFadeLeft);
+        //    matrix.postRotate(-90);
+        //    matrix.postTranslate(left, mFadeTop);
+        //    fade.setLocalMatrix(matrix);
+        //    mFadePaint.setShader(fade);
+        //    canvas.drawRect(left, mFadeTop, left + effectiveFadeLeft, mFadeBottom, mFadePaint);
+        //}
         if (drawRight) {
             matrix.setScale(1, effectiveFadeRight);
             matrix.postRotate(90);
             matrix.postTranslate(right, mFadeTop);
             fade.setLocalMatrix(matrix);
             mFadePaint.setShader(fade);
-            canvas.drawRect(right - effectiveFadeRight, mFadeTop, right, mFadeBottom, mFadePaint);
+        // draw rounded rectangle to work with rounded urlBar
+        // canvas.drawRect(right - effectiveFadeRight, mFadeTop, right, mFadeBottom,
+        //          mFadePaint);
+            canvas.drawRoundRect(new RectF(right - effectiveFadeRight, mFadeTop, right,
+                    mFadeBottom), 50, 50, mFadePaint);
+            /* Cliqz end */
         }
     }
 
@@ -158,9 +165,14 @@ public class FadedHorizontalScrollView extends HorizontalScrollView {
 
         public FadePaint() {
             matrix = new Matrix();
-            fade = new LinearGradient(0, 0, 0, 1, 0xFF000000, 0, Shader.TileMode.CLAMP);
+            /* Cliqz start*/
+            // change gradient color to be white and goes for transparent
+            fade = new LinearGradient(0, 0, 0, 1, 0xFFFFFFFF,0x50FFFFFF, Shader.TileMode
+                    .CLAMP);
             setShader(fade);
-            setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+            // remove this mode effect from the LinearGradient
+            //setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+            /* Cliqz end*/
         }
     }
 
