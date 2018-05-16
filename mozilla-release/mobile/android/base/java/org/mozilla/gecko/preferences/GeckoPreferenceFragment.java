@@ -30,21 +30,17 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import com.squareup.leakcanary.RefWatcher;
-
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_COMPACT_TABS;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_DYNAMIC_TOOLBAR;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREF_GENERAL_HOME;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREF_GENERAL_LANGUAGE;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREF_VENDOR_SCREEN;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_GENERAL_HOME;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_GENERAL_LANGUAGE;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_VENDOR_SCREEN;
 
 /* A simple implementation of PreferenceFragment for large screen devices
  * This will strip category headers (so that they aren't shown to the user twice)
@@ -101,9 +97,9 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
         /* Cliqz start */
         if(res == R.xml.preferences_general || res == R.xml.preferences_general_tablet){
             // remove Home setting from General settings
-            removePreference(screen,PREF_GENERAL_HOME);
+            removePreference(screen, PREFS_GENERAL_HOME);
             // remove Language setting from General settings
-            removePreference(screen,PREF_GENERAL_LANGUAGE);
+            removePreference(screen, PREFS_GENERAL_LANGUAGE);
             // remove Full-screen browsing setting from General settings
             removePreference(screen,PREFS_DYNAMIC_TOOLBAR);
             // remove Compact tabs setting from General settings
@@ -111,7 +107,7 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
         }
         // remove Mozilla Fennec (About, Feedback, FAQ)
         else if(res == R.xml.preferences){
-            removePreference(screen,PREF_VENDOR_SCREEN);
+            removePreference(screen, PREFS_VENDOR_SCREEN);
         }
         /* Cliqz end */
         mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);

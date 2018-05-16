@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.support.v4.content.ContextCompat.getDrawable;
+import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzEnable;
+import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
 
 /**
  * Cliqz 2018
@@ -158,15 +160,21 @@ public class MyOffrzPanel extends HomeFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (!isMyOffrzEnable()) {
+    public void onResume() {
+        super.onResume();
+        if (!isMyOffrzEnable(getContext())) {
             activationVG.setVisibility(View.VISIBLE);
+            onboardingVG.setVisibility(View.GONE);
             myOffrzDeactivateView.setVisibility(View.VISIBLE);
             myOffrzDeactivateView.bringToFront();
             enableClickActionsOnOffrz(false);
-        } else if (isMyOffrzOnboardingEnabled()) {
-            onboardingVG.setVisibility(View.VISIBLE);
+        }else{
+            activationVG.setVisibility(View.GONE);
+            myOffrzDeactivateView.setVisibility(View.GONE);
+            enableClickActionsOnOffrz(true);
+            if (isMyOffrzOnboardingEnabled()) {
+                onboardingVG.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -199,7 +207,7 @@ public class MyOffrzPanel extends HomeFragment {
         @Override
         public Loader<JSONObject> onCreateLoader(int id, Bundle args) {
             trace("Creating TopSitesLoader: " + id);
-            return new MyOffrzLoader(getActivity());
+            return new MyOffrzLoader(getContext());
         }
 
         @Override
@@ -275,7 +283,7 @@ public class MyOffrzPanel extends HomeFragment {
             }
 
             offersContainer.addView(offer);
-            if(!isMyOffrzEnable()) {
+            if(!isMyOffrzEnable(getContext())) {
                 myOffrzDeactivateView.setVisibility(View.VISIBLE);
                 myOffrzDeactivateView.bringToFront();
                 holder.enableClickActions(false);
@@ -394,35 +402,23 @@ public class MyOffrzPanel extends HomeFragment {
     // add get and set function for MyOffrz OnBoarding pref.
     // This part is derived from @{@link TabQueuePanel}.java
     public void setMyOffrzOnboardingEnabled(boolean value) {
-        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getActivity());
+        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(GeckoPreferences.IS_MYOFFRZ_ONBOARDING_ENABLED, value).apply();
     }
     
     // This part is derived from @{@link TabQueueHelper}.java
     public boolean isMyOffrzOnboardingEnabled() {
-        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getActivity());
+        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
         return  prefs.getBoolean(GeckoPreferences.IS_MYOFFRZ_ONBOARDING_ENABLED,true);
     }
 
     // add getter and setter for on/off MyOffrz
     // This part is derived from @{@link TabQueuePanel}.java
     public void setMyOffrzEnabled(boolean value) {
-        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getActivity());
+        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(GeckoPreferences.IS_MYOFFRZ_ENABLED, value).apply();
-    }
-
-    // This part is derived from @{@link TabQueueHelper}.java
-    public boolean isMyOffrzEnable(){
-        final SharedPreferences prefs = GeckoSharedPrefs.forApp(getActivity());
-        return  prefs.getBoolean(GeckoPreferences.IS_MYOFFRZ_ENABLED,isMyOffrzSupportedForLang());
-    }
-
-    private boolean isMyOffrzSupportedForLang(){
-        final LocaleManager localeManager = BrowserLocaleManager.getInstance();
-        final Locale locale = localeManager.getDefaultSystemLocale();
-        return Locale.GERMAN.getLanguage().equals(locale.getLanguage());
+        editor.putBoolean(GeckoPreferences.PREFS_SHOW_MYOFFRZ, value).apply();
     }
     /* Cliqz end */
 

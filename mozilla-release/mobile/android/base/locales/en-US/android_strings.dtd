@@ -924,7 +924,7 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!-- Report Website -->
 <!ENTITY pref_report_website "Report Website">
 
-<!-- General - Search-->
+<!-- General Settings - Search-->
 <!ENTITY pref_search_category "Search">
 <!ENTITY pref_search_regional "Search results for">
 <!ENTITY pref_search_regional_germany "Germany">
@@ -942,7 +942,7 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_search_complementary_engine_start_page "StartPage">
 <!ENTITY pref_search_complementary_engine_qwant "Qwant">
 
-<!-- General - Browsing -->
+<!-- General Settings - Browsing -->
 <!ENTITY pref_browsing_category "Browsing">
 
 <!-- CliqzTab -->
@@ -950,4 +950,10 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_cliqz_tab_background "Show background image">
 <!ENTITY pref_cliqz_tab_topsites "Show most visited websites">
 <!ENTITY pref_cliqz_tab_news "Show News">
+
+<!-- General Settings - myOffrz -->
+<!ENTITY pref_myoffrz_category "MyOffrz">
+<!ENTITY pref_show_myoffrz "Show MyOffrz">
+<!ENTITY pref_about_myoffrz "About MyOffrz">
+
 <!-- Cliqz end -->

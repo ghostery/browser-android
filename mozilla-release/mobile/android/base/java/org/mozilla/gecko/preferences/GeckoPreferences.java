@@ -99,6 +99,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzEnable;
+import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
+
 public class GeckoPreferences
     extends AppCompatPreferenceActivity
     implements BundleEventListener,
@@ -183,11 +186,6 @@ public class GeckoPreferences
     public static final String PREFS_TAB_QUEUE_LAST_SITE = NON_PREF_PREFIX + "last_site";
     public static final String PREFS_TAB_QUEUE_LAST_TIME = NON_PREF_PREFIX + "last_time";
 
-    /* CLiqz start */
-    // change its access to be public so we can use it inside @GeckoPreferenceFragment
-    public static final String PREFS_DYNAMIC_TOOLBAR = "browser.chrome.dynamictoolbar";
-    /* CLiqz end */
-
     public static final String PREFS_SHUTDOWN_INTENT = "app.shutdownintent.enabled";
     public static final String PREFS_MMA_DEVICE_ID = "mma.device_id";
 
@@ -203,12 +201,12 @@ public class GeckoPreferences
     private static final int REQUEST_CODE_TAB_QUEUE = 8;
 
     /* Cliqz start */
+    // change its access to be public so we can use it inside @GeckoPreferenceFragment
+    public static final String PREFS_DYNAMIC_TOOLBAR = "browser.chrome.dynamictoolbar";
     // add human web link
     private static final String PREFS_HUMAN_WEB_LINK = NON_PREF_PREFIX + "human.web.link";
     // add IS_MYOFFRZ_ONBOARDING_ENABLED
     public static final String IS_MYOFFRZ_ONBOARDING_ENABLED = "myoffrz_onboarding_enabled";
-    // add enable/disable my offer
-    public static final String IS_MYOFFRZ_ENABLED = "myoffrz_enabled";
     // add Block Ads, Block Ads fair, what is fair and Block Ads data
     private static final String PREFS_BLOCK_ADS = "cb_block_ads";
     private static final String PREFS_BLOCK_ADS_FAIR = "cb_block_ads_fair";
@@ -218,18 +216,22 @@ public class GeckoPreferences
     // add rate cliqz browser to the settings menu
     private static final String PREFS_rate_cliqz = NON_PREF_PREFIX + "rate.cliqz";
     // add keys for General Home , Vendor screen , General language
-    public static final String PREF_GENERAL_HOME = NON_PREF_PREFIX + "general.home";
-    public static final String PREF_VENDOR_SCREEN = NON_PREF_PREFIX + "vendor.screen";
-    public static final String PREF_GENERAL_LANGUAGE = NON_PREF_PREFIX + "general.language";
+    public static final String PREFS_GENERAL_HOME = NON_PREF_PREFIX + "general.home";
+    public static final String PREFS_VENDOR_SCREEN = NON_PREF_PREFIX + "vendor.screen";
+    public static final String PREFS_GENERAL_LANGUAGE = NON_PREF_PREFIX + "general.language";
     // add support cliqz to the settings menu
     private static final String PREFS_SUPPORT_CLIQZ = NON_PREF_PREFIX + "support.cliqz";
     // add Tips & tricks to the settings menu
     private static final String PREFS_TIPS_TRICKS = NON_PREF_PREFIX + "tips.tricks";
     // add report browser to the settings menu
     private static final String PREFS_REPORT_BROWSER = NON_PREF_PREFIX + "report.browser";
-    public static final String PREF_IS_BACKGROUND_ENABLED = "pref.cliqz.tab.background";
-    public static final String PREF_IS_TOP_SITES_ENABLED = "pref.cliqz.tab.topsites";
-    public static final String PREF_IS_NEWS_ENABLED = "pref.cliqz.tab.news";
+    // add cliqz tab category items to general settings menu
+    public static final String PREFS_IS_BACKGROUND_ENABLED = "pref.cliqz.tab.background";
+    public static final String PREFS_IS_TOP_SITES_ENABLED = "pref.cliqz.tab.topsites";
+    public static final String PREFS_IS_NEWS_ENABLED = "pref.cliqz.tab.news";
+    // add show myoffrz and about my offrz to general settings menu
+    public static final String PREFS_SHOW_MYOFFRZ = "pref.show.myoffrz";
+    public static final String PREFS_ABOUT_MYOFFRZ = NON_PREF_PREFIX+ "about.myoffrz";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -884,7 +886,7 @@ public class GeckoPreferences
                         }
                     });
                 }
-                // Format the Human web link
+                // Format the support cliqz link
                 else if(PREFS_SUPPORT_CLIQZ.equals(key)){
                     final String url = getResources().getString(R.string.pref_support_cliqz_url);
                     ((LinkPreference) pref).setUrl(url);
@@ -898,6 +900,15 @@ public class GeckoPreferences
                 else if (PREFS_REPORT_BROWSER.equals(key)){
                     final String url = getResources().getString(R.string.pref_report_website_url);
                     ((LinkPreference) pref).setUrl(url);
+                }
+                // Format About My Offrz url
+                else if (PREFS_ABOUT_MYOFFRZ.equals(key)){
+                    final String url = getResources().getString(R.string.pref_myoffrz_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                else if (PREFS_SHOW_MYOFFRZ.equals(key)){
+                    ((CheckBoxPreference)pref).setDefaultValue(isMyOffrzSupportedForLang());
+                    ((CheckBoxPreference)pref).setChecked(isMyOffrzEnable(getApplicationContext()));
                 }
                 /* Cliqz end */
 
