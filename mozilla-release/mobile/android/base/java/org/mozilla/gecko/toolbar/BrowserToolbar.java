@@ -5,13 +5,31 @@
 
 package org.mozilla.gecko.toolbar;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.Clipboard;
 import org.mozilla.gecko.EventDispatcher;
@@ -42,27 +60,9 @@ import org.mozilla.gecko.widget.TouchDelegateWithReset;
 import org.mozilla.gecko.widget.themed.ThemedImageButton;
 import org.mozilla.gecko.widget.themed.ThemedRelativeLayout;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
-import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.support.annotation.NonNull;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
 * {@code BrowserToolbar} is single entry point for users of the toolbar
@@ -213,7 +213,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         focusOrder = new ArrayList<View>();
 
         final Resources res = getResources();
-        shadowSize = res.getDimensionPixelSize(R.dimen.browser_toolbar_shadow_size);
+        /*Cliqz Start*/
+        shadowSize = 0;
+        /*Cliqz End*/
 
         shadowPaint = new Paint();
         shadowColor = ContextCompat.getColor(context, R.color.url_bar_shadow);

@@ -4,14 +4,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.mozilla.gecko.activitystream.homepanel.topsites;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
@@ -100,7 +99,9 @@ import java.util.List;
     @Override
     public TopSitesCard onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        final FrameLayout card = (FrameLayout) inflater.inflate(R.layout.activity_stream_topsites_card, parent, false);
+        /*Cliqz Start*/
+        final RelativeLayout card = (RelativeLayout) inflater.inflate(R.layout.activity_stream_topsites_card, parent, false);
+        /*Cliqz End*/
         return new TopSitesCard(card, onCardLongClickListener);
     }
 

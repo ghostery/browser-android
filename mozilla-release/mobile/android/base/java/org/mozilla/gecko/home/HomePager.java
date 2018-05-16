@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -141,7 +142,9 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
      * Special type of child views that could be added as pager decorations by default.
      */
     public interface Decor {
-        void onAddPagerView(String title);
+        /*Cliqz Start*/
+        void onAddPagerView(@DrawableRes int iconId);
+        /*Cliqz End*/
         void removeAllPagerViews();
         void onPageSelected(int position);
         void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
@@ -173,11 +176,13 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
 
         mAddPanelListener = new OnAddPanelListener() {
             @Override
-            public void onAddPanel(String title) {
+            /*Cliqz Start*/
+            public void onAddPanel(@DrawableRes int resId) {
                 if (mDecor != null) {
-                    mDecor.onAddPagerView(title);
+                    mDecor.onAddPagerView(resId);
                 }
             }
+            /*Cliqz End*/
         };
 
         // This is to keep all 4 panels in memory after they are

@@ -277,6 +277,7 @@
     <!-- General -->
     <color name="general_blue_color">#00aef0</color>
     <color name="general_dark_color">#424242</color>
+    <color name="inactive_tab_color">#E2F0FC</color>
 
     <!-- news -->
     <color name="news_bg_color_press">#cdcdcd</color>

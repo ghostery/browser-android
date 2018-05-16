@@ -5,29 +5,29 @@
 
 package org.mozilla.gecko.home;
 
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
-import android.content.res.ColorStateList;
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.Tab;
-import org.mozilla.gecko.Tabs;
-import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
-
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.accessibility.AccessibilityEvent;
-import android.widget.TextView;
+import android.widget.ImageView;
+
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.Tab;
+import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 
 /**
  * {@code TabMenuStripLayout} is the view that draws the {@code HomePager}
@@ -38,7 +38,9 @@ class TabMenuStripLayout extends ThemedLinearLayout
 
     private TabMenuStrip.OnTitleClickListener onTitleClickListener;
     private Drawable strip;
-    private TextView selectedView;
+    /*Cliqz Start*/
+    private ImageView selectedView;
+    /*Cliqz End*/
 
     // Data associated with the scrolling of the strip drawable.
     private View toTab;
@@ -95,40 +97,25 @@ class TabMenuStripLayout extends ThemedLinearLayout
         Tabs.unregisterOnTabsChangedListener(this);
     }
 
-    void onAddPagerView(String title) {
-        final TextView button = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.tab_menu_strip, this, false);
-        button.setText(title.toUpperCase());
-        button.setTextColor(inactiveTextColor);
-
-        // Set titles width to weight, or wrap text width.
-        if (titlebarFill) {
-            button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f));
-        } else {
-            button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        }
-
-        if (getChildCount() == 0) {
-
-            ViewCompat.setPaddingRelative(button,
-                    ViewCompat.getPaddingStart(button) + tabContentStart,
-                    button.getPaddingTop(),
-                    ViewCompat.getPaddingEnd(button),
-                    button.getPaddingBottom()
-            );
-        }
-
-        addView(button);
-        button.setOnClickListener(new ViewClickListener(getChildCount() - 1));
-        button.setOnFocusChangeListener(this);
+    /*Cliqz Start*/
+    void onAddPagerView(@DrawableRes int iconId) {
+        final ImageView imageView = (ImageView) LayoutInflater.from(getContext()).inflate(R.layout.tab_menu_strip, this, false);
+        imageView.setId(iconId); //for automation test purpose
+        imageView.setImageResource(iconId);
+        addView(imageView);
+        imageView.setOnClickListener(new ViewClickListener(getChildCount() - 1));
+        imageView.setOnFocusChangeListener(this);
     }
+    /*Cliqz End*/
 
     void onPageSelected(final int position) {
+        /*Cliqz Start*/
         if (selectedView != null) {
-            selectedView.setTextColor(inactiveTextColor);
+                selectedView.setColorFilter(ContextCompat.getColor(getContext(), R.color.inactive_tab_color), PorterDuff.Mode.SRC_ATOP);
         }
-
-        selectedView = (TextView) getChildAt(position);
-        selectedView.setTextColor(activeTextColor);
+        selectedView = (ImageView) getChildAt(position);
+        selectedView.setColorFilter(ContextCompat.getColor(getContext(), android.R.color.white), PorterDuff.Mode.SRC_ATOP);
+        /*Cliqz End*/
 
         // Callback to measure and draw the strip after the view is visible.
         ViewTreeObserver vto = selectedView.getViewTreeObserver();
@@ -154,11 +141,12 @@ class TabMenuStripLayout extends ThemedLinearLayout
                                 endPaddingOffset = 0;
                             }
                         }
-
+                        /*Cliqz Start*/
                         strip.setBounds(selectedView.getLeft() + startPaddingOffset,
-                                        selectedView.getTop(),
+                                        0,
                                         selectedView.getRight() + endPaddingOffset,
-                                        selectedView.getBottom());
+                                        getHeight());
+                        /*Cliqz End*/
                     }
 
                     prevProgress = position;

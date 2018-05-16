@@ -5,23 +5,17 @@
 
 package org.mozilla.gecko.home;
 
-import android.support.v4.content.ContextCompat;
-import org.mozilla.gecko.R;
-
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import org.mozilla.gecko.R;
 
 /**
  * {@code TabMenuStrip} is the view used to display {@code HomePager} tabs
@@ -59,7 +53,9 @@ public class TabMenuStrip extends HorizontalScrollView
         layout = new TabMenuStripLayout(context, attrs);
         addView(layout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-        shadowSize = res.getDimensionPixelSize(R.dimen.tabs_strip_shadow_size);
+        /*Cliqz Start*/
+        shadowSize = 0;
+        /*Cliqz End*/
 
         shadowPaint = new Paint();
         shadowPaint.setColor(ContextCompat.getColor(context, R.color.url_bar_shadow));
@@ -75,9 +71,11 @@ public class TabMenuStrip extends HorizontalScrollView
     }
 
     @Override
-    public void onAddPagerView(String title) {
-        layout.onAddPagerView(title);
+    /*Cliqz Start*/
+    public void onAddPagerView(@DrawableRes int iconId) {
+        layout.onAddPagerView(iconId);
     }
+    /*Cliqz End*/
 
     @Override
     public void removeAllPagerViews() {

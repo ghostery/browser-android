@@ -9,9 +9,10 @@ import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopSite;
 import org.mozilla.gecko.activitystream.homepanel.stream.TopPanelRow;
@@ -40,8 +41,9 @@ import java.util.concurrent.Future;
 
     private TopSite topSite;
     private int absolutePosition;
-
-    /* package-local */ TopSitesCard(final FrameLayout card, final TopPanelRow.OnCardLongClickListener onCardLongClickListener) {
+    /*Cliqz Start*/
+    /* package-local */ TopSitesCard(final RelativeLayout card, final TopPanelRow.OnCardLongClickListener onCardLongClickListener) {
+    /*Cliqz End*/
         super(card);
 
         faviconView = (FaviconView) card.findViewById(R.id.favicon);

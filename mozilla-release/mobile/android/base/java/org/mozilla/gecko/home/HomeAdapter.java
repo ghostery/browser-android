@@ -5,17 +5,18 @@
 
 package org.mozilla.gecko.home;
 
-import org.mozilla.gecko.activitystream.ActivityStream;
-import org.mozilla.gecko.home.HomeConfig.PanelConfig;
-import org.mozilla.gecko.home.HomeConfig.PanelType;
-import org.mozilla.gecko.activitystream.homepanel.ActivityStreamHomeFragment;
-
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
+
+import org.mozilla.gecko.activitystream.ActivityStream;
+import org.mozilla.gecko.activitystream.homepanel.ActivityStreamHomeFragment;
+import org.mozilla.gecko.home.HomeConfig.PanelConfig;
+import org.mozilla.gecko.home.HomeConfig.PanelType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +37,9 @@ public class HomeAdapter extends FragmentStatePagerAdapter {
     private HomeFragment.PanelStateChangeListener mPanelStateChangeListener = null;
 
     public interface OnAddPanelListener {
-        void onAddPanel(String title);
+        /*Cliqz Start*/
+        void onAddPanel(@DrawableRes int iconId);
+        /*Cliqz End*/
     }
 
     public void setPanelStateChangeListener(HomeFragment.PanelStateChangeListener listener) {
@@ -146,7 +149,9 @@ public class HomeAdapter extends FragmentStatePagerAdapter {
         mPanelInfos.add(info);
 
         if (mAddPanelListener != null) {
-            mAddPanelListener.onAddPanel(info.getTitle());
+            /*Cliqz Start*/
+            mAddPanelListener.onAddPanel(info.getIconId());
+            /*Cliqz End*/
         }
     }
 
@@ -220,5 +225,12 @@ public class HomeAdapter extends FragmentStatePagerAdapter {
 
             return args;
         }
+
+        /*Cliqz Start*/
+        @DrawableRes
+        public int getIconId() {
+            return mPanelConfig.getIconId();
+        }
+        /*Cliqz End*/
     }
 }
