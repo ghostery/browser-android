@@ -40,6 +40,7 @@ import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_COMPACT_TABS;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_DYNAMIC_TOOLBAR;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_GENERAL_HOME;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_GENERAL_LANGUAGE;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_NOTIFICATIONS_SCREEN;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_VENDOR_SCREEN;
 
 /* A simple implementation of PreferenceFragment for large screen devices
@@ -105,9 +106,10 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
             // remove Compact tabs setting from General settings
             removePreference(screen,PREFS_COMPACT_TABS);
         }
-        // remove Mozilla Fennec (About, Feedback, FAQ)
+        // remove Mozilla Fennec (About, Feedback, FAQ) & notifications screens
         else if(res == R.xml.preferences){
             removePreference(screen, PREFS_VENDOR_SCREEN);
+            removePreference(screen, PREFS_NOTIFICATIONS_SCREEN);
         }
         /* Cliqz end */
         mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);

@@ -215,9 +215,10 @@ public class GeckoPreferences
     final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
     // add rate cliqz browser to the settings menu
     private static final String PREFS_rate_cliqz = NON_PREF_PREFIX + "rate.cliqz";
-    // add keys for General Home , Vendor screen , General language
+    // add keys for General Home , Vendor screen , notifications screen, General language
     public static final String PREFS_GENERAL_HOME = NON_PREF_PREFIX + "general.home";
     public static final String PREFS_VENDOR_SCREEN = NON_PREF_PREFIX + "vendor.screen";
+    public static final String PREFS_NOTIFICATIONS_SCREEN = NON_PREF_PREFIX + "notifications.screen";
     public static final String PREFS_GENERAL_LANGUAGE = NON_PREF_PREFIX + "general.language";
     // add support cliqz to the settings menu
     private static final String PREFS_SUPPORT_CLIQZ = NON_PREF_PREFIX + "support.cliqz";
