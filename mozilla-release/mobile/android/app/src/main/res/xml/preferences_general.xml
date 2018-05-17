@@ -105,6 +105,21 @@
             android:key="android.not_a_preference.about.myoffrz"
             android:title="@string/pref_about_myoffrz" />
     </PreferenceCategory>
+
+    <!-- add Subscriptions & Notifications category -->
+    <PreferenceCategory android:title="@string/pref_subscriptions_notifications_category">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref.news.notifications"
+            android:title="@string/pref_news_notifications" />
+        <CheckBoxPreference android:key="android.not_a_preference.notifications.whats_new"
+            android:title="@string/pref_whats_new_notification"
+            android:summary="@string/pref_whats_new_notification_summary"
+            android:defaultValue="true" />
+        <Preference
+            android:key="pref.rest.subscriptions"
+            android:title="@string/pref_reset_subscriptions" />
+    </PreferenceCategory>
     <!-- Cliqz end -->
 
 </PreferenceScreen>
