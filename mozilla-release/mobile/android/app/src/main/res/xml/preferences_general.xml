@@ -95,6 +95,16 @@
             android:title="@string/pref_cliqz_tab_news"
             android:defaultValue="true" />
     </PreferenceCategory>
+
+    <!-- add MyOffrz category -->
+    <PreferenceCategory android:title="@string/pref_myoffrz_category">
+        <CheckBoxPreference
+            android:key="pref.show.myoffrz"
+            android:title="@string/pref_show_myoffrz" />
+        <org.mozilla.gecko.preferences.LinkPreference
+            android:key="android.not_a_preference.about.myoffrz"
+            android:title="@string/pref_about_myoffrz" />
+    </PreferenceCategory>
     <!-- Cliqz end -->
 
 </PreferenceScreen>

@@ -33,7 +33,6 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.activitystream.ActivityStream;
-import org.mozilla.gecko.activitystream.homepanel.ActivityStreamPanel;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.ViewHelper;
 import org.mozilla.gecko.home.HomeAdapter.OnAddPanelListener;
@@ -643,12 +642,12 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
     // This part is derived from @{@link TabQueueHelper}.java
     // check if show background image is enabled
     public boolean isBackgroundEnabled(){
-        return  appPreferences.getBoolean(GeckoPreferences.PREF_IS_BACKGROUND_ENABLED,true);
+        return  appPreferences.getBoolean(GeckoPreferences.PREFS_IS_BACKGROUND_ENABLED,true);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(TextUtils.equals(key, GeckoPreferences.PREF_IS_BACKGROUND_ENABLED)) {
+        if(TextUtils.equals(key, GeckoPreferences.PREFS_IS_BACKGROUND_ENABLED)) {
             reloadBackground();
         }
     }

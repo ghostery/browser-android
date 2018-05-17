@@ -63,8 +63,8 @@ public class ActivityStreamHomeFragment
                 || TextUtils.equals(s, ActivityStreamPanel.PREF_POCKET_ENABLED)
                 /* Cliqz start */
                 // check if the show topSite and show news changed
-                || TextUtils.equals(s, GeckoPreferences.PREF_IS_TOP_SITES_ENABLED)
-                || TextUtils.equals(s, GeckoPreferences.PREF_IS_NEWS_ENABLED);
+                || TextUtils.equals(s, GeckoPreferences.PREFS_IS_TOP_SITES_ENABLED)
+                || TextUtils.equals(s, GeckoPreferences.PREFS_IS_NEWS_ENABLED);
                 /* Cliqz end */
 
         if (shouldReload) {
