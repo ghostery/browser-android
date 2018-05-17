@@ -734,5 +734,7 @@
   <string name="pref_subscriptions_notifications_category">&pref_subscriptions_notifications_category;</string>
   <string name="pref_news_notifications">&pref_news_notifications;</string>
   <string name="pref_reset_subscriptions">&pref_reset_subscriptions;</string>
+  <string name="pref_reset_subscriptions_description">&pref_reset_subscriptions_description;</string>
+  <string name="pref_reset_subscriptions_toast">&pref_reset_subscriptions_toast;</string>
   <!-- Cliqz end -->
 </resources>
