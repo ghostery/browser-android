@@ -956,4 +956,8 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_show_myoffrz "Show MyOffrz">
 <!ENTITY pref_about_myoffrz "About MyOffrz">
 
+<!-- General Settings - Subscriptions and Notifications -->
+<!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
+<!ENTITY pref_news_notifications "News notifications">
+<!ENTITY pref_reset_subscriptions "Reset all subscriptions">
 <!-- Cliqz end -->

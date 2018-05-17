@@ -724,10 +724,15 @@
   <string name="pref_cliqz_tab_topsites">&pref_cliqz_tab_topsites;</string>
   <string name="pref_cliqz_tab_news">&pref_cliqz_tab_news;</string>
 
-  <!-- General Settings - CliqzTab -->
+  <!-- General Settings - MyOffrz -->
   <string name="pref_myoffrz_category">&pref_myoffrz_category;</string>
   <string name="pref_show_myoffrz">&pref_show_myoffrz;</string>
   <string name="pref_about_myoffrz">&pref_about_myoffrz;</string>
   <string name="pref_myoffrz_url">&pref_myoffrz_url;</string>
+
+  <!-- General Settings - Subscriptions and Notifications -->
+  <string name="pref_subscriptions_notifications_category">&pref_subscriptions_notifications_category;</string>
+  <string name="pref_news_notifications">&pref_news_notifications;</string>
+  <string name="pref_reset_subscriptions">&pref_reset_subscriptions;</string>
   <!-- Cliqz end -->
 </resources>
