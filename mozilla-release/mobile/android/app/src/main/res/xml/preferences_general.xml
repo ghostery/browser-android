@@ -119,6 +119,14 @@
         <Preference
             android:key="pref.rest.subscriptions"
             android:title="@string/pref_reset_subscriptions" />
+
+    <!-- add download options category -->
+    <PreferenceCategory android:title="@string/pref_download_options_category">
+        <CheckBoxPreference
+            android:key="pref.limit.data.usage"
+            android:title="@string/pref_limit_data_usage"
+            android:summary="@string/pref_limit_data_usage_summary"
+            android:defaultValue="true" />
     </PreferenceCategory>
     <!-- Cliqz end -->
 
