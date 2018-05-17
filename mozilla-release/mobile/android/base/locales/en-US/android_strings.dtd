@@ -960,4 +960,6 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
 <!ENTITY pref_news_notifications "News notifications">
 <!ENTITY pref_reset_subscriptions "Reset all subscriptions">
+<!ENTITY pref_reset_subscriptions_description "Would you like to reset all your subscriptions (e.g. to Bundesliga games)?">
+<!ENTITY pref_reset_subscriptions_toast "All subscriptions reset">
 <!-- Cliqz end -->

@@ -50,6 +50,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.mozilla.gecko.AboutPages;
@@ -88,6 +89,7 @@ import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.InputOptionsUtils;
+import org.mozilla.gecko.util.SubscriptionsManager;
 import org.mozilla.gecko.util.ThreadUtils;
 import org.mozilla.gecko.util.ViewUtil;
 
@@ -233,6 +235,9 @@ public class GeckoPreferences
     // add show myoffrz and about my offrz to general settings menu
     public static final String PREFS_SHOW_MYOFFRZ = "pref.show.myoffrz";
     public static final String PREFS_ABOUT_MYOFFRZ = NON_PREF_PREFIX+ "about.myoffrz";
+    // add Subscriptions key and dialog for reset it
+    public static final String PREFS_RESET_SUBSCRIPTIONS = "pref.rest.subscriptions";
+    final private int DIALOG_CREATE_RESET_SUBSCRIPTIONS = 3;
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -907,9 +912,20 @@ public class GeckoPreferences
                     final String url = getResources().getString(R.string.pref_myoffrz_url);
                     ((LinkPreference) pref).setUrl(url);
                 }
+                // Set default value of show my offrz depend on system language
                 else if (PREFS_SHOW_MYOFFRZ.equals(key)){
                     ((CheckBoxPreference)pref).setDefaultValue(isMyOffrzSupportedForLang());
                     ((CheckBoxPreference)pref).setChecked(isMyOffrzEnable(getApplicationContext()));
+                }
+                // Open dialog
+                else if(PREFS_RESET_SUBSCRIPTIONS.equals(key)){
+                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            showDialog(DIALOG_CREATE_RESET_SUBSCRIPTIONS);
+                            return true;
+                        }
+                    });
                 }
                 /* Cliqz end */
 
@@ -1435,6 +1451,28 @@ public class GeckoPreferences
                 ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod
                         (CustomLinkMovementMethod.getInstance(this));
                 break;
+            case DIALOG_CREATE_RESET_SUBSCRIPTIONS:
+                builder.setTitle(R.string.pref_reset_subscriptions)
+                        .setMessage(R.string.pref_reset_subscriptions_description)
+                        .setCancelable(true)
+                        .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final Context context = getApplicationContext();
+                                final SubscriptionsManager subscriptionsManager = new
+                                        SubscriptionsManager(context);
+                                subscriptionsManager.resetSubscriptions();
+                                Toast.makeText(context, R.string.pref_reset_subscriptions_toast,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .show();
             /* Cliqz end */
             default:
                 return null;
