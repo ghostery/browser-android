@@ -21,7 +21,6 @@ ac_add_options --with-android-sdk=/home/jenkins/.mozbuild/android-sdk-linux
 mk_add_options MOZ_OBJDIR=./objdir-frontend-android/ghostery
 
 #Add extension in distribution
-# ac_add_options --with-android-distribution-directory=/home/stefano/projects/cliqz-android/cliqz
 ac_add_options --with-android-distribution-directory="$topsrcdir/cliqz"
 
 # l10n support
