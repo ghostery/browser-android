@@ -975,4 +975,7 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_download_options_category "Download Options">
 <!ENTITY pref_limit_data_usage "Limit mobile data usage">
 <!ENTITY pref_limit_data_usage_summary "Only download video on Wi-Fi">
+
+<!-- General Settings - Show hints -->
+<!ENTITY pref_show_hints "Show hints">
 <!-- Cliqz end -->

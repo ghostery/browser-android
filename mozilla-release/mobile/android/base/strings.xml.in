@@ -746,5 +746,8 @@
   <string name = "pref_download_options_category">&pref_download_options_category;</string>
   <string name = "pref_limit_data_usage">&pref_limit_data_usage;</string>
   <string name = "pref_limit_data_usage_summary">&pref_limit_data_usage_summary;</string>
+
+  <!-- General Settings - show hints -->
+  <string name="pref_show_hints">&pref_show_hints;</string>
   <!-- Cliqz end -->
 </resources>
