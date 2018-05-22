@@ -43,6 +43,8 @@ import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_GENERAL_LANGU
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_NOTIFICATIONS_SCREEN;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_DONTTRACK;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_DONTTRACK_LEARN_MORE;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_TRACKING_PROTECTION;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_TRACKING_PROTECTION_LEARN_MORE;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_VENDOR_SCREEN;
 
 /* A simple implementation of PreferenceFragment for large screen devices
@@ -113,10 +115,13 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
             removePreference(screen, PREFS_VENDOR_SCREEN);
             removePreference(screen, PREFS_NOTIFICATIONS_SCREEN);
         }
-        // remove don't track
         else if(res == R.xml.preferences_privacy){
+            // remove don't track
             removePreference(screen,PREFS_PRIVACY_DONTTRACK);
             removePreference(screen,PREFS_PRIVACY_DONTTRACK_LEARN_MORE);
+            // remove tracking protection
+            removePreference(screen,PREFS_PRIVACY_TRACKING_PROTECTION);
+            removePreference(screen,PREFS_PRIVACY_TRACKING_PROTECTION_LEARN_MORE);
         }
         /* Cliqz end */
         mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);

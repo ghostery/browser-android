@@ -246,6 +246,11 @@ public class GeckoPreferences
     public static final String PREFS_PRIVACY_DONTTRACK = "privacy.donottrackheader.enabled";
     public static final String PREFS_PRIVACY_DONTTRACK_LEARN_MORE =
             NON_PREF_PREFIX + "donottrackheader.learn_more";
+    // add tracking protection key
+    public static final String PREFS_PRIVACY_TRACKING_PROTECTION = "privacy.trackingprotection" +
+            ".state";
+    public static final String PREFS_PRIVACY_TRACKING_PROTECTION_LEARN_MORE = NON_PREF_PREFIX +
+    "trackingprotection.learn_more";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
