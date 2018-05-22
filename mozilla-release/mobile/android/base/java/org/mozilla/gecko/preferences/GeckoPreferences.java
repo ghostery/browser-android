@@ -242,6 +242,10 @@ public class GeckoPreferences
     private static final String PREFS_CLEAR_FAVORITES = NON_PREF_PREFIX + "privacy.clear" +
             ".favorites";
     final private int DIALOG_CREATE_CLEAR_FAVORITES = 4;
+    // add don't track me key
+    public static final String PREFS_PRIVACY_DONTTRACK = "privacy.donottrackheader.enabled";
+    public static final String PREFS_PRIVACY_DONTTRACK_LEARN_MORE =
+            NON_PREF_PREFIX + "donottrackheader.learn_more";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
