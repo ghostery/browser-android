@@ -6,7 +6,6 @@ loader: taskgraph.loader.single_dep:loader
 
 transforms:
    - taskgraph.transforms.release_sign_and_push_langpacks:transforms
-   - taskgraph.transforms.release_notifications:transforms
    - taskgraph.transforms.task:transforms
 
 kind-dependencies:
@@ -26,13 +25,17 @@ job-template:
       by-project:
          mozilla-beta: scriptworker-prov-v1/addon-v1
          mozilla-release: scriptworker-prov-v1/addon-v1
+         mozilla-esr60: scriptworker-prov-v1/addon-v1
          default: scriptworker-prov-v1/addon-dev
    worker:
       implementation: sign-and-push-addons
       channel:
          by-project:
             # Only release langpacks are listed publicly
-            mozilla-release: listed
+            mozilla-release:
+               by-platform:
+                  macosx64.*: unlisted  # ja-JP-mac is only langpack on mac, and is unlisted always
+                  default: listed
             default: unlisted
       upstream-artifacts:   # See transforms
    run-on-projects: []
@@ -41,6 +44,8 @@ job-template:
          mozilla-beta:
             - project:releng:addons.mozilla.org:server:production
          mozilla-release:
+            - project:releng:addons.mozilla.org:server:production
+         mozilla-esr60:
             - project:releng:addons.mozilla.org:server:production
          default:
             - project:releng:addons.mozilla.org:server:staging
