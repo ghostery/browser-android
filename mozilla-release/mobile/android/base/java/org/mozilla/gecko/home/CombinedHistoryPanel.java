@@ -72,9 +72,11 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
     private final static String FORMAT_S2 = "%2$s";
 
     private CombinedHistoryRecyclerView mRecyclerView;
-    private CombinedHistoryAdapter mHistoryAdapter;
+    /* Cliqz start */
+    private CliqzSimplifiedHistoryAdapter mHistoryAdapter;
     private ClientsAdapter mClientsAdapter;
-    private RecentTabsAdapter mRecentTabsAdapter;
+    // private RecentTabsAdapter mRecentTabsAdapter;
+    /* Cliqz end */
     private CursorLoaderCallbacks mCursorLoaderCallbacks;
 
     private Bundle mSavedRestoreBundle;
@@ -116,7 +118,8 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         if (mPanelStateChangeListener != null ) {
             cachedRecentTabsCount = mPanelStateChangeListener.getCachedRecentTabsCount();
         }
-        mHistoryAdapter = new CombinedHistoryAdapter(getResources(), cachedRecentTabsCount);
+        /* Cliqz start */
+        mHistoryAdapter = new CliqzSimplifiedHistoryAdapter(getResources(), cachedRecentTabsCount);
         if (mPanelStateChangeListener != null) {
             mHistoryAdapter.setPanelStateChangeListener(mPanelStateChangeListener);
         }
@@ -125,8 +128,9 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         // The RecentTabsAdapter doesn't use a cursor and therefore can't use the CursorLoader's
         // onLoadFinished() callback for updating the panel state when the closed tab count changes.
         // Instead, we provide it with independent callbacks as necessary.
-        mRecentTabsAdapter = new RecentTabsAdapter(getContext(),
-                mHistoryAdapter.getRecentTabsUpdateHandler(), getPanelStateUpdateHandler());
+        // mRecentTabsAdapter = new RecentTabsAdapter(getContext(),
+        //         mHistoryAdapter.getRecentTabsUpdateHandler(), getPanelStateUpdateHandler());
+        /* Cliqz end */
 
         mSyncStatusListener = new RemoteTabsSyncListener();
         FirefoxAccounts.addSyncStatusListener(mSyncStatusListener);
@@ -157,8 +161,8 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         mPanelFooterButton.setText(R.string.home_clear_history_button);
         mPanelFooterButton.setOnClickListener(new OnFooterButtonClickListener());
 
-        mRecentTabsAdapter.startListeningForClosedTabs();
-        mRecentTabsAdapter.startListeningForHistorySanitize();
+        // mRecentTabsAdapter.startListeningForClosedTabs();
+        // mRecentTabsAdapter.startListeningForHistorySanitize();
 
         if (mSavedRestoreBundle != null) {
             setPanelStateFromBundle(mSavedRestoreBundle);
@@ -172,9 +176,11 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
             mPanelLevel = PARENT;
         }
 
-        mRecyclerView.setAdapter(mPanelLevel == PARENT ? mHistoryAdapter :
-                mPanelLevel == CHILD_SYNC ? mClientsAdapter : mRecentTabsAdapter);
-
+        /* Cliqz start */
+        // mRecyclerView.setAdapter(mPanelLevel == PARENT ? mHistoryAdapter :
+        //         mPanelLevel == CHILD_SYNC ? mClientsAdapter : mRecentTabsAdapter);
+        mRecyclerView.setAdapter(mHistoryAdapter);
+        /* Cliqz end */
         final RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
         animator.setAddDuration(100);
         animator.setChangeDuration(100);
@@ -185,7 +191,7 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         mRecyclerView.setItemAnimator(animator);
         mRecyclerView.addItemDecoration(new HistoryDividerItemDecoration(getContext()));
         mRecyclerView.setOnHistoryClickedListener(mUrlOpenListener);
-        mRecyclerView.setOnPanelLevelChangeListener(new OnLevelChangeListener());
+        // Cliqz start // mRecyclerView.setOnPanelLevelChangeListener(new OnLevelChangeListener());
         mRecyclerView.setHiddenClientsDialogBuilder(new HiddenClientsHelper());
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -268,12 +274,14 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
     }
 
     private void setPanelStateFromBundle(Bundle data) {
+        /* Cliqz start * /
         if (data != null && data.getBoolean("goToRecentTabs", false) && mPanelLevel != CHILD_RECENT_TABS) {
             mPanelLevel = CHILD_RECENT_TABS;
             mRecyclerView.swapAdapter(mRecentTabsAdapter, true);
             updateEmptyView(CHILD_RECENT_TABS);
             updateButtonFromLevel();
         }
+        /* Cliqz end */
     }
 
     @Override
@@ -350,7 +358,7 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
 
                 case LOADER_ID_REMOTE:
                     final List<RemoteClient> clients = mDB.getTabsAccessor().getClientsFromCursor(c);
-                    mHistoryAdapter.getDeviceUpdateHandler().onDeviceCountUpdated(clients.size());
+                    // Cliqz start // mHistoryAdapter.getDeviceUpdateHandler().onDeviceCountUpdated(clients.size());
                     mClientsAdapter.setClients(clients);
                     updateEmptyView(CHILD_SYNC);
                     break;
@@ -383,6 +391,7 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         return mPanelStateUpdateHandler;
     }
 
+    /* Cliqz start * /
     protected class OnLevelChangeListener implements OnPanelLevelChangeListener {
         @Override
         public boolean changeLevel(PanelLevel level) {
@@ -410,12 +419,13 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
             return true;
         }
     }
+    /* Cliqz end */
 
     private void updateButtonFromLevel() {
         switch (mPanelLevel) {
             case PARENT:
                 final boolean historyRestricted = !Restrictions.isAllowed(getActivity(), Restrictable.CLEAR_HISTORY);
-                if (historyRestricted || mHistoryAdapter.getItemCount() == mHistoryAdapter.getNumVisibleSmartFolders()) {
+                if (historyRestricted /* Cliqz start // || mHistoryAdapter.getItemCount() == mHistoryAdapter.getNumVisibleSmartFolders() */) {
                     mPanelFooterButton.setVisibility(View.GONE);
                 } else {
                     mPanelFooterButton.setText(R.string.home_clear_history_button);
@@ -423,16 +433,21 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
                 }
                 break;
             case CHILD_RECENT_TABS:
-                if (mRecentTabsAdapter.getClosedTabsCount() > 1) {
-                    mPanelFooterButton.setText(R.string.home_restore_all);
-                    mPanelFooterButton.setVisibility(View.VISIBLE);
-                } else {
+                /* Cliqz start */
+                // if (mRecentTabsAdapter.getClosedTabsCount() > 1) {
+                //     mPanelFooterButton.setText(R.string.home_restore_all);
+                //     mPanelFooterButton.setVisibility(View.VISIBLE);
+                // } else {
                     mPanelFooterButton.setVisibility(View.GONE);
-                }
+                // }
+                /* Cliqz start */
                 break;
+            /* Cliqz start * /
             case CHILD_SYNC:
-                mPanelFooterButton.setVisibility(View.GONE);
+                if (mRecentTabsAdapter.getClosedTabsCount() > 1) {
+                               mPanelFooterButton.setVisibility(View.GONE);
                 break;
+            /* Cliqz end */
         }
     }
 
@@ -466,12 +481,14 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
 
                     dialogBuilder.show();
                     break;
+                /* Cliqz start * /
                 case CHILD_RECENT_TABS:
                     final String telemetryExtra = mRecentTabsAdapter.restoreAllTabs();
                     if (telemetryExtra != null) {
                         Telemetry.sendUIEvent(TelemetryContract.Event.LOAD_URL, TelemetryContract.Method.BUTTON, telemetryExtra);
                     }
                     break;
+                /* Cliqz end */
             }
         }
     }
@@ -484,15 +501,15 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         if (mPanelLevel == level) {
             switch (mPanelLevel) {
                 case PARENT:
-                    showEmptyHistoryView = mHistoryAdapter.getItemCount() == mHistoryAdapter.getNumVisibleSmartFolders();
+                    showEmptyHistoryView = mHistoryAdapter.getItemCount() == 0; // Cliqz start // mHistoryAdapter.getNumVisibleSmartFolders();
                     break;
 
                 case CHILD_SYNC:
-                    showEmptyClientsView = mClientsAdapter.getItemCount() == 1;
+                    showEmptyClientsView = false; // Cliqz start // mClientsAdapter.getItemCount() == 1;
                     break;
 
                 case CHILD_RECENT_TABS:
-                    showEmptyRecentTabsView = mRecentTabsAdapter.getClosedTabsCount() == 0;
+                    showEmptyRecentTabsView = false; // Cliqz start // mRecentTabsAdapter.getClosedTabsCount() == 0;
                     break;
             }
         }
@@ -663,6 +680,7 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         }
     }
 
+    /* Cliqz start * /
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -670,6 +688,7 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         mRecentTabsAdapter.stopListeningForClosedTabs();
         mRecentTabsAdapter.stopListeningForHistorySanitize();
     }
+    /* Cliqz end */
 
     @Override
     public void onDestroy() {

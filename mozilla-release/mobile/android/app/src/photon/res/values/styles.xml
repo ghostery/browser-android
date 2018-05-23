@@ -153,16 +153,28 @@
         <item name="android:background">@color/pressed_about_page_header_grey</item>
     </style>
 
-    <style name="Widget.TwoLinePageRow.Title">
-        <item name="android:textAppearance">@style/TextAppearance.Widget.Home.ItemTitle</item>
-        <item name="android:textSize">@dimen/home_twolinepagerow_title_textsize</item>
+
+    <!-- Cliqz start -->
+    <style name="Widget.TwoLinePageRow.Text">
+        <item name="android:shadowColor">@android:color/darker_gray</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:shadowDx">1.2</item>
+        <item name="android:shadowDy">1.2</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="Widget.TwoLinePageRow.Url">
+    <style name="Widget.TwoLinePageRow.Title" parent="Widget.TwoLinePageRow.Text">
+        <item name="android:textAppearance">@style/TextAppearance.Widget.Home.ItemTitle</item>
+        <item name="android:textSize">@dimen/home_twolinepagerow_title_textsize</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.TwoLinePageRow.Url" parent="Widget.TwoLinePageRow.Text">
         <item name="android:textAppearance">@style/TextAppearance.Widget.Home.ItemDescription</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="android:singleLine">true</item>
     </style>
+    <!-- Cliqz end -->
 
     <style name="Widget.FolderView" parent="Widget.FolderTitle.OneLine">
         <item name="android:layout_height">@dimen/page_group_height</item>
@@ -227,21 +239,21 @@
 
     <style name="Widget.Home" />
 
+    <!-- Cliqz start -->
     <style name="Widget.Home.HeaderItem">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">120dp</item>
+        <item name="android:layout_gravity">center</item>
         <item name="android:textAppearance">@style/TextAppearance.Widget.Home.Header</item>
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@drawable/home_header_item_bg</item>
         <item name="android:focusable">false</item>
-        <item name="android:gravity">center|left|start</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
-        <item name="android:paddingTop">11dp</item>
-        <item name="android:paddingBottom">11dp</item>
+        <item name="android:gravity">center</item>
         <item name="android:includeFontPadding">false</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
     </style>
+    <!-- Cliqz end -->
 
     <style name="Widget.Home.ActionButton">
         <item name="android:layout_width">match_parent</item>
@@ -394,12 +406,18 @@
            tools:ignore="UnusedResources" />
 
     <style name="TextAppearance.Widget.Home.Header" parent="TextAppearance.Small">
-        <item name="android:textColor">@color/disabled_grey</item>
+        <!-- Cliqz start -->
+        <item name="android:textColor">@android:color/black</item>
+        <!-- Cliqz end -->
         <item name="android:textSize">12sp</item>
     </style>
 
     <style name="TextAppearance.Widget.Home.ItemTitle" parent="TextAppearance">
         <item name="android:textSize">16sp</item>
+        <!-- Cliqz start -->
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">monospace</item>
+        <!-- Cliqz end -->
     </style>
 
     <style name="TextAppearance.Widget.Home.ItemDescription" parent="TextAppearance.Micro">

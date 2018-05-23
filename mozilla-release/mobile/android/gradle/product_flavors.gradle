@@ -30,6 +30,11 @@ ext.configureProductFlavors = {
         minApi21 {
             dimension "minApi"
 
+            /* Cliqz begin */
+            // Enable multidexing
+            multiDexEnabled true
+            /* Cliqz end */
+            
             // For pre-dexing, setting `minSdkVersion 21` allows the Android gradle plugin to
             // pre-DEX each module and produce an APK that can be tested on
             // Android Lollipop without time consuming DEX merging processes.
