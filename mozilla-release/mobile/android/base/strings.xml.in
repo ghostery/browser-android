@@ -749,5 +749,12 @@
 
   <!-- General Settings - show hints -->
   <string name="pref_show_hints">&pref_show_hints;</string>
+
+  <!-- Privacy Settings - Browsing -->
+  <string name="pref_privacy_browsing_category">&pref_privacy_browsing_category;</string>
+  <string name="pref_privacy_antitracking">&pref_privacy_antitracking;</string>
+  <string name="pref_privacy_cookies">&pref_privacy_cookies;</string>
+  <string name="pref_privacy_cookies_summary">&pref_privacy_cookies_summary;</string>
+  <string name="pref_privacy_auto_forget_tab">&pref_privacy_auto_forget_tab;</string>
   <!-- Cliqz end -->
 </resources>

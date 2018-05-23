@@ -31,13 +31,30 @@
             android:persistent="false"
             url="https://support.mozilla.org/kb/firefox-android-tracking-protection" />
 
+    <!-- Cliqz start -->
+    <!-- add privacy browsing category -->
+    <PreferenceCategory android:title="@string/pref_privacy_browsing_category">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref.privacy.antitracking"
+            android:title="@string/pref_privacy_antitracking" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref.privacy.cookies"
+            android:summary="@string/pref_privacy_cookies_summary"
+            android:title="@string/pref_privacy_cookies" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref.privacy.auto.forget.tab"
+            android:title="@string/pref_privacy_auto_forget_tab" />
+    </PreferenceCategory>
+    <!-- hide FF Cookie preference
     <ListPreference android:key="network.cookie.cookieBehavior"
                     android:title="@string/pref_cookies_menu"
                     android:entries="@array/pref_cookies_entries"
                     android:entryValues="@array/pref_cookies_values"
-                    android:persistent="false" />
+                    android:persistent="false" /> -->
 
-    <!-- Cliqz start -->
     <PreferenceCategory android:title="@string/pref_privacy_clear_data_category">
         <Preference
             android:key="android.not_a_preference.privacy.clear.favorites"
@@ -65,6 +82,18 @@
 
     </PreferenceCategory>
 
+    <!-- This pref is persisted in both Gecko and Java -->
+    <org.mozilla.gecko.preferences.ListCheckboxPreference
+                        android:key="android.not_a_preference.history.clear_on_exit"
+                        gecko:entries="@array/pref_private_data_entries"
+                        gecko:entryValues="@array/pref_private_data_values"
+                        gecko:initialValues="@array/pref_clear_on_exit_defaults"
+
+                        android:title="@string/pref_clear_on_exit_title"
+                        android:summary="@string/pref_clear_on_exit_summary2"
+
+                        android:dialogTitle="@string/pref_clear_on_exit_dialog_title"
+                        android:positiveButtonText="@string/button_set"/>
     <!-- Cliqz end -->
     <PreferenceCategory android:title="@string/pref_category_logins">
 
@@ -111,6 +140,7 @@
                             android:summary="@string/datareporting_fhr_summary2"
                             android:defaultValue="true" />
 
+        <!-- Cliqz start -->
         <!-- add human web setting -->
         <PreferenceScreen android:title="@string/pref_category_human_web"
             android:summary="@string/pref_category_human_web_summary"
@@ -118,7 +148,7 @@
             <extra android:name="resource"
                 android:value="preferences_human_web"/>
         </PreferenceScreen>
-
+        <!-- Cliqz end -->
     </PreferenceCategory>
 
 </PreferenceScreen>
