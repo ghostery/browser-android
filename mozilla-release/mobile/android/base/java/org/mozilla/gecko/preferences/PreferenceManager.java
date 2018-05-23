@@ -1,13 +1,9 @@
 package org.mozilla.gecko.preferences;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import org.mozilla.gecko.GeckoSharedPrefs;
-
 import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
-
 /**
  * Copyright © Cliqz 2018
  */
@@ -34,7 +30,12 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.PREFS_SHOW_MYOFFRZ, value).apply();
     }
 
-    public boolean isMyOffrzEnable(){
-        return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SHOW_MYOFFRZ,isMyOffrzSupportedForLang());
+    public boolean isMyOffrzEnable() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SHOW_MYOFFRZ, isMyOffrzSupportedForLang());
+    }
+
+    public boolean isBlockAdsEnabled() {
+        return  mAppSharedPreferences.getBoolean(GeckoPreferences
+                .PREFS_BLOCK_ADS,true);
     }
 }

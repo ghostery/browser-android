@@ -7,13 +7,13 @@
                   android:enabled="false">
 
     <CheckBoxPreference
-        android:key="cb_block_ads"
-        android:title="@string/pref_block_ads"
-        android:checked="true"/>
+        android:key="pref.block.ads"
+        android:title="@string/pref_block_ads" />
     <CheckBoxPreference
-        android:key="cb_block_ads_fair"
+        android:key="pref.block.ads.fair"
         android:title="@string/pref_block_ads_fair"
-        android:checked="true"/>
+        android:defaultValue="true"
+        android:enabled="false"/>
     <Preference
         android:key="android.not_a_preference.block.ads.what.fair"
         android:title="@string/pref_block_ads_what_fair"

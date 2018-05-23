@@ -982,7 +982,5 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!-- Privacy Settings - Browsing -->
 <!ENTITY pref_privacy_browsing_category "Browsing">
 <!ENTITY pref_privacy_antitracking "Anti-Tracking">
-<!ENTITY pref_privacy_cookies "Cookies">
-<!ENTITY pref_privacy_cookies_summary "Recommended">
 <!ENTITY pref_privacy_auto_forget_tab "Automatic Forget Tab">
 <!-- Cliqz end -->
