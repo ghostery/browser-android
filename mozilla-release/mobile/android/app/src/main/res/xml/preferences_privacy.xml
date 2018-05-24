@@ -37,20 +37,35 @@
                     android:entryValues="@array/pref_cookies_values"
                     android:persistent="false" />
 
+    <!-- Cliqz start -->
+    <PreferenceCategory android:title="@string/pref_privacy_clear_data_category">
+        <Preference
+            android:key="android.not_a_preference.privacy.clear.favorites"
+            android:title="@string/pref_privacy_clear_favorites" />
 
-    <!-- This pref is persisted in both Gecko and Java -->
-    <org.mozilla.gecko.preferences.ListCheckboxPreference
-                        android:key="android.not_a_preference.history.clear_on_exit"
-                        gecko:entries="@array/pref_private_data_entries"
-                        gecko:entryValues="@array/pref_private_data_values"
-                        gecko:initialValues="@array/pref_clear_on_exit_defaults"
+        <org.mozilla.gecko.preferences.PrivateDataPreference
+            android:key="android.not_a_preference.privacy.clear"
+            android:persistent="true"
+            android:positiveButtonText="@string/button_clear_data"
+            android:title="@string/pref_clear_private_data_now"
+            gecko:entries="@array/pref_private_data_entries"
+            gecko:entryKeys="@array/pref_private_data_keys"
+            gecko:entryValues="@array/pref_private_data_values"
+            gecko:initialValues="@array/pref_private_data_defaults" />
 
-                        android:title="@string/pref_clear_on_exit_title"
-                        android:summary="@string/pref_clear_on_exit_summary2"
+        <!-- This pref is persisted in both Gecko and Java -->
+        <org.mozilla.gecko.preferences.ListCheckboxPreference
+            android:dialogTitle="@string/pref_clear_on_exit_dialog_title"
+            android:key="android.not_a_preference.history.clear_on_exit"
+            android:positiveButtonText="@string/button_set"
+            android:title="@string/pref_clear_on_exit_title"
+            gecko:entries="@array/pref_private_data_entries"
+            gecko:entryValues="@array/pref_private_data_values"
+            gecko:initialValues="@array/pref_clear_on_exit_defaults" />
 
-                        android:dialogTitle="@string/pref_clear_on_exit_dialog_title"
-                        android:positiveButtonText="@string/button_set"/>
+    </PreferenceCategory>
 
+    <!-- Cliqz end -->
     <PreferenceCategory android:title="@string/pref_category_logins">
 
         <org.mozilla.gecko.preferences.LinkPreference

@@ -373,7 +373,10 @@
 <!-- Localization note (pref_private_data_openTabs): Open tabs is an option in
      the Clear Private Data  dialog and refers to currently open tabs. -->
 <!ENTITY pref_private_data_openTabs "Open tabs">
-<!ENTITY pref_private_data_history2 "Browsing history">
+<!-- Cliqz start -->
+<!-- change the value to "history" -->
+<!ENTITY pref_private_data_history2 "History">
+<!-- Cliqz end -->
 <!ENTITY pref_private_data_searchHistory "Search history">
 <!ENTITY pref_private_data_formdata2 "Form history">
 <!ENTITY pref_private_data_cookies2 "Cookies &amp; active logins">
@@ -962,4 +965,9 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_reset_subscriptions "Reset all subscriptions">
 <!ENTITY pref_reset_subscriptions_description "Would you like to reset all your subscriptions (e.g. to Bundesliga games)?">
 <!ENTITY pref_reset_subscriptions_toast "All subscriptions reset">
+
+<!-- Privacy Settings -->
+<!ENTITY pref_privacy_clear_data_category "Clear Data">
+<!ENTITY pref_privacy_clear_favorites "Clear Favorites">
+<!ENTITY pref_privacy_clear_favorites_description "Would you like to clear favorites?">
 <!-- Cliqz end -->
