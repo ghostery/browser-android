@@ -46,6 +46,17 @@ public abstract class CombinedHistoryItem extends RecyclerView.ViewHolder {
         }
     }
 
+    /* Cliqz start */
+    public static class HeaderItem extends  CombinedHistoryItem {
+        final TextView textView;
+
+        public HeaderItem(View view) {
+            super(view);
+            textView = (TextView) view.findViewById(R.id.home_header_text);
+        }
+    }
+    /* Cliqz end */
+
     public static class SmartFolder extends CombinedHistoryItem {
         final Context context;
         final ImageView icon;

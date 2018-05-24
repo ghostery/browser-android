@@ -295,6 +295,13 @@
     <color name="myoffrz_bg">#E7ECEE</color>
     <color name="myoffrz_onboarding_bg">#b8dfee</color>
     <color name="myoffrz_deactivated_layout">#40000000</color>
+
+    <!-- History and Favorites -->
+    <color name="history_favorites_row">@android:color/white</color>
+    <color name="history_favorites_row_private">@android:color/white</color>
+    <color name="history_favorites_row_shadow">@android:color/darker_gray</color>
+    <color name="history_favorites_row_private_shadow">@android:color/darker_gray</color>
+
     <!-- Cliqz end -->
 
 </resources>

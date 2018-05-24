@@ -23,7 +23,9 @@ public class HistoryDividerItemDecoration extends RecyclerView.ItemDecoration {
         mDividerHeight = (int) context.getResources().getDimension(R.dimen.page_row_divider_height);
 
         mDividerPaint = new Paint();
-        mDividerPaint.setColor(ContextCompat.getColor(context, R.color.toolbar_divider_grey));
+        /* Cliqz start */
+        mDividerPaint.setColor(ContextCompat.getColor(context, android.R.color.white));
+        /* Cliqz end */
         mDividerPaint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 

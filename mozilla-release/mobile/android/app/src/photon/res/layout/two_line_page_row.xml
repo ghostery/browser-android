@@ -31,7 +31,8 @@
         android:paddingEnd="10dp"
         android:paddingRight="10dp">
 
-        <org.mozilla.gecko.widget.FadedSingleColorTextView
+        <!-- Cliqz start -->
+        <org.mozilla.gecko.widget.themed.ThemedTextView
             android:id="@+id/title"
             style="@style/Widget.TwoLinePageRow.Title"
             android:layout_width="match_parent"
@@ -44,7 +45,7 @@
             gecko:fadeWidth="90dp"
             tools:text="This is a long test title"/>
 
-        <org.mozilla.gecko.widget.FadedSingleColorTextView
+        <org.mozilla.gecko.widget.themed.ThemedTextView
             android:id="@+id/url"
             style="@style/Widget.TwoLinePageRow.Url"
             android:layout_width="match_parent"
@@ -58,18 +59,24 @@
             gecko:fadeWidth="90dp"
             tools:drawableLeft="@drawable/ic_url_bar_tab"
             tools:drawableStart="@drawable/ic_url_bar_tab"
+            android:drawableTint="@android:color/white"
             tools:text="http://test.com/test"/>
+        <!-- Cliqz end -->
 
     </LinearLayout>
 
-    <ImageView
+    <!-- Cliqz start -->
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/status_icon_bookmark"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="center"
         android:src="@drawable/star_blue"
+        gecko:srcCompat="@drawable/star_blue"
+        android:tint="@android:color/white"
         android:visibility="gone"
         tools:visibility="visible"/>
+    <!-- Cliqz end -->
 
     <View
         android:id="@+id/padding_end"
