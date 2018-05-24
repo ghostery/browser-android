@@ -4,7 +4,7 @@
 
 <!ENTITY firstrun_panel_title_welcome "Benvenuto">
 <!ENTITY firstrun_urlbar_message2 "Grazie per aver scelto &brandShortName;">
-<!ENTITY firstrun_urlbar_subtext2 "Un browser mobile moderno realizzato da Mozilla, l’organizzazione non-profit che si impegna per mantenere il Web libero e aperto.">
+<!ENTITY firstrun_urlbar_subtext2 "Un browser mobile moderno realizzato da &vendorShortName;, l’organizzazione non-profit che si impegna per mantenere il Web libero e aperto.">
 <!ENTITY firstrun_panel_title_privacy "Privacy">
 <!ENTITY firstrun_privacy_message "Naviga come se nessuno stesse guardando">
 <!ENTITY firstrun_privacy_subtext "La navigaziona anonima con protezione antitracciamento blocca gli elementi traccianti durante la navigazione e non conserva alcuna cronologia quando hai finito.">
@@ -108,7 +108,7 @@
 <!ENTITY overlay_share_send_tab_btn_label "Invia a un altro dispositivo">
 <!ENTITY overlay_share_no_url "Nessun link disponibile in questa condivisione">
 <!ENTITY overlay_share_select_device "Seleziona dispositivo">
-<!ENTITY overlay_no_synced_devices "Non è disponibile alcun dispositivo connesso all’account Firefox">
+<!ENTITY overlay_no_synced_devices "Non è disponibile alcun dispositivo connesso all’account &brandShortName;">
 <!ENTITY pref_category_search3 "Ricerca">
 <!ENTITY pref_category_search_summary2 "Aggiungi nuovi motori di ricerca, imposta motore predefinito, suggerimenti">
 <!ENTITY pref_category_accessibility "Accessibilità">
@@ -225,7 +225,7 @@
 <!ENTITY pref_qrcode_enabled "Scansione codici QR">
 <!ENTITY pref_qrcode_enabled_summary2 "Consenti la scansione di codici QR nella barra degli indirizzi">
 <!ENTITY pref_use_master_password "Usa password principale">
-<!ENTITY pref_sync_default_title "Account Firefox">
+<!ENTITY pref_sync_default_title "Account &brandShortName;">
 <!ENTITY pref_sync2 "Accedi">
 <!ENTITY pref_sync_summary2 "Sincronizza schede, segnalibri, accessi, cronologia">
 <!ENTITY pref_search_suggestions "Mostra suggerimenti di ricerca">
@@ -244,8 +244,8 @@
 <!ENTITY pref_private_data_downloadFiles2 "Download">
 <!ENTITY pref_private_data_syncedTabs "Schede sincronizzate">
 <!ENTITY pref_default_browser "Imposta come browser predefinito">
-<!ENTITY pref_default_browser_mozilla_support_tablet "Visita il supporto Mozilla">
-<!ENTITY pref_about_firefox "Informazioni su &brandShortName;">
+<!ENTITY pref_default_browser_mozilla_support_tablet "Visita il supporto &vendorShortName;">
+<!ENTITY pref_about_&brandShortName; "Informazioni su &brandShortName;">
 <!ENTITY pref_vendor_faqs "FAQ">
 <!ENTITY pref_vendor_feedback "Invia feedback">
 <!ENTITY pref_dialog_set_default "Imposta come predefinito">
@@ -459,7 +459,7 @@
 <!ENTITY intent_uri_private_browsing_multiple_match_title "Uscire dalla modalità Navigazione anonima?">
 <!ENTITY devtools_auth_scan_header "Scansione del codice QR visualizzato sull’altro dispositivo">
 <!ENTITY restrictable_feature_addons_installation "Componenti aggiuntivi">
-<!ENTITY restrictable_feature_addons_installation_description "Aggiungi nuove caratteristiche a Firefox. Attenzione: i componenti aggiuntivi possono rimuovere alcune limitazioni.">
+<!ENTITY restrictable_feature_addons_installation_description "Aggiungi nuove caratteristiche a &brandShortName;. Attenzione: i componenti aggiuntivi possono rimuovere alcune limitazioni.">
 <!ENTITY restrictable_feature_private_browsing "Navigazione anonima">
 <!ENTITY restrictable_feature_private_browsing_description "Consenti ai membri della famiglia di navigare senza salvare alcuna informazione relativa alle pagine visitate.">
 <!ENTITY restrictable_feature_clear_history "Eliminazione cronologia">
@@ -470,11 +470,11 @@
 <!ENTITY restrictable_feature_camera_microphone_description "Consenti ai membri della famiglia di utilizzare strumenti di comunicazione in tempo reale sui siti web.">
 <!ENTITY restrictable_feature_block_list "Blocco contenuti">
 <!ENTITY restrictable_feature_block_list_description "Blocca siti web che includono contenuti sensibili.">
-<!ENTITY bookmarks_about_browser "Firefox: informazioni sul browser">
-<!ENTITY bookmarks_addons "Firefox: personalizza con i componenti aggiuntivi">
-<!ENTITY bookmarks_support "Firefox: supporto">
-<!ENTITY bookmarks_restricted_support2 "Supporto per l’uso di profili limitati in Firefox su tablet Android">
-<!ENTITY bookmarks_restricted_webmaker "Impara il Web: Mozilla Webmaker">
+<!ENTITY bookmarks_about_browser "&brandShortName;: informazioni sul browser">
+<!ENTITY bookmarks_addons "&brandShortName;: personalizza con i componenti aggiuntivi">
+<!ENTITY bookmarks_support "&brandShortName;: supporto">
+<!ENTITY bookmarks_restricted_support2 "Supporto per l’uso di profili limitati in &brandShortName; su tablet Android">
+<!ENTITY bookmarks_restricted_webmaker "Impara il Web: &vendorShortName; Webmaker">
 <!ENTITY unsupported_sdk_version "Siamo spiacenti, questa versione di &brandShortName; non è compatibile con questo dispositivo (&formatS1;, &formatS2;). È necessario scaricare la versione corretta.">
 <!ENTITY corrupt_apk "Impossibile aprire &brandShortName;. Reinstallarlo e riprovare.">
 <!ENTITY eol_notification_title2 "&brandShortName; non verrà più aggiornato">

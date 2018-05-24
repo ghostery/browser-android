@@ -4,7 +4,7 @@
 <!ENTITY aboutPage.title                        "À propos de &brandShortName;">
 <!ENTITY aboutPage.warningVersion               "&brandShortName; est expérimental et peut être instable.">
 <!ENTITY aboutPage.telemetryStart               " Il envoie automatiquement des informations sur les performances, le matériel, l’utilisation et les personnalisations à ">
-<!ENTITY aboutPage.telemetryMozillaLink         "&vendorShortName;">
+<!ENTITY aboutPage.telemetry&vendorShortName;Link         "&vendorShortName;">
 <!ENTITY aboutPage.telemetryEnd                 " pour aider à améliorer &brandShortName;.">
 <!ENTITY aboutPage.checkForUpdates.link         "Vérifier les mises à jour »">
 <!ENTITY aboutPage.checkForUpdates.checking     "Recherche de mises à jour…">
@@ -21,4 +21,4 @@
 <!ENTITY aboutPage.license.label                "Informations de licence">
 
 <!-- LOCALIZATION NOTE (aboutPage.logoTrademark): The message is explicitly about the word "Firefox" being trademarked, that's why we use it, instead of brandShortName. -->
-<!ENTITY aboutPage.logoTrademark                "Firefox et les logos Firefox sont des marques déposées de la Mozilla Foundation.">
+<!ENTITY aboutPage.logoTrademark                "&brandShortName; et les logos &brandShortName; sont des marques déposées de la &vendorShortName; Foundation.">

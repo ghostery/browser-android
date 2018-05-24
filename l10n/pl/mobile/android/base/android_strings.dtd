@@ -290,7 +290,7 @@
 
 <!ENTITY pref_default_browser "Ustaw jako domyślną przeglądarkę">
 <!ENTITY pref_default_browser_mozilla_support_tablet "Pomoc Mozilli">
-<!ENTITY pref_about_firefox "O programie &brandShortName;">
+<!ENTITY pref_about_&brandShortName; "O programie &brandShortName;">
 <!ENTITY pref_vendor_faqs "Najczęściej zadawane pytania">
 <!ENTITY pref_vendor_feedback "Wyślij opinię">
 
@@ -564,7 +564,7 @@
 <!ENTITY devtools_auth_scan_header "Skanowanie kodu QR wyświetlonego na drugim urządzeniu">
 
 <!ENTITY restrictable_feature_addons_installation "Dodatki">
-<!ENTITY restrictable_feature_addons_installation_description "Dodawanie funkcji do przeglądarki Firefox. Uwaga: Dodatki mogą wyłączać pewne ograniczenia.">
+<!ENTITY restrictable_feature_addons_installation_description "Dodawanie funkcji do przeglądarki &brandShortName;. Uwaga: Dodatki mogą wyłączać pewne ograniczenia.">
 <!ENTITY restrictable_feature_private_browsing "Tryb prywatny">
 <!ENTITY restrictable_feature_private_browsing_description "Umożliwia członkom rodziny przeglądanie bez zachowywania informacji o odwiedzanych stronach.">
 <!ENTITY restrictable_feature_clear_history "Czyszczenie historii przeglądania">
@@ -576,11 +576,11 @@
 <!ENTITY restrictable_feature_block_list "Lista blokowanych stron">
 <!ENTITY restrictable_feature_block_list_description "Blokowanie stron zawierających wrażliwą treść.">
 
-<!ENTITY bookmarks_about_browser "Firefox: O przeglądarce">
-<!ENTITY bookmarks_addons "Firefox: Dodatki">
-<!ENTITY bookmarks_support "Firefox: Pomoc">
-<!ENTITY bookmarks_restricted_support2 "Firefox: Pomoc dla ograniczonych profili na tabletach Android">
-<!ENTITY bookmarks_restricted_webmaker "Twórz Internet: Mozilla Webmaker">
+<!ENTITY bookmarks_about_browser "&brandShortName;: O przeglądarce">
+<!ENTITY bookmarks_addons "&brandShortName;: Dodatki">
+<!ENTITY bookmarks_support "&brandShortName;: Pomoc">
+<!ENTITY bookmarks_restricted_support2 "&brandShortName;: Pomoc dla ograniczonych profili na tabletach Android">
+<!ENTITY bookmarks_restricted_webmaker "Twórz Internet: &vendorShortName; Webmaker">
 
 <!ENTITY unsupported_sdk_version "Ta wersja przeglądarki &brandShortName; nie może działać na tym urządzeniu (&formatS1;, &formatS2;). Proszę pobrać właściwą wersję.">
 
