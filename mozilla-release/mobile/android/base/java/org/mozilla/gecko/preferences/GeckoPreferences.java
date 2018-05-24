@@ -719,19 +719,32 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
-                } else if (PREFS_TELEMETRY_ENABLED.equals(key)) {
-                    if (!AppConstants.MOZ_TELEMETRY_REPORTING || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
+                }
+                /* Cliqz start */
+                // let telemetry be always visible
+//                 else if (PREFS_TELEMETRY_ENABLED.equals(key)) {
+//                    if (!AppConstants.MOZ_TELEMETRY_REPORTING || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
+//                        preferences.removePreference(pref);
+//                        i--;
+//                        continue;
+//                    }
+//                }
+                // remove Healthreport always
+                else if (PREFS_HEALTHREPORT_UPLOAD_ENABLED.equals(key)) {
+//                    if (!AppConstants.MOZ_SERVICES_HEALTHREPORT || !Restrictions.isAllowed (this, Restrictable.DATA_CHOICES)) {
                         preferences.removePreference(pref);
                         i--;
                         continue;
-                    }
-                } else if (PREFS_HEALTHREPORT_UPLOAD_ENABLED.equals(key)) {
-                    if (!AppConstants.MOZ_SERVICES_HEALTHREPORT || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
-                        preferences.removePreference(pref);
-                        i--;
-                        continue;
-                    }
-                } else if (PREFS_CRASHREPORTER_ENABLED.equals(key)) {
+//                    }
+                }
+                // remove Geo learn more link
+                else if(PREFS_GEO_LEARN_MORE.equals(key)) {
+                    preferences.removePreference(pref);
+                    i--;
+                    continue;
+                }
+                /* Cliqz end */
+                else if (PREFS_CRASHREPORTER_ENABLED.equals(key)) {
                     if (!AppConstants.MOZ_CRASHREPORTER || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
                         preferences.removePreference(pref);
                         i--;
