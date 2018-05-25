@@ -39,13 +39,19 @@ def build(Map m){
                         sh """#!/bin/bash -l
                             set -e
                             set -x
-                            rm -rf autobot*
                             cp ${flavor} mozilla-release/mozconfig
+                        """
+                        sh '''#!/bin/bash -l
+                            set -x 
+                            set -e 
                             cd mozilla-release
                             ./mach clobber
                             ./mach build
+                            for language in `ls ../l10n/`; do
+                                ./mach build chrome-$language
+                            done
                             ./mach package
-                        """
+                        '''
                         apk = sh(returnStdout: true, 
                             script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
                             find *.apk -name 'fennec*i386*' -not -name '*-unsigned-*'""").trim()

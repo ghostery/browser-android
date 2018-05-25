@@ -7,7 +7,6 @@ ac_add_options --with-branding=mobile/android/branding/ghostery
 
 
 # Build Firefox for Android Artifact Mode:
-ac_add_options --with-android-min-sdk=21
 ac_add_options --enable-application=mobile/android
 ac_add_options --target=i386-linux-android
 # ac_add_options --target=arm-linux-androideabi
@@ -21,7 +20,7 @@ ac_add_options --with-android-sdk=/home/jenkins/.mozbuild/android-sdk-linux
 mk_add_options MOZ_OBJDIR=./objdir-frontend-android/ghostery
 
 #Add extension in distribution
-ac_add_options --with-android-distribution-directory="$topsrcdir/cliqz"
+#ac_add_options --with-android-distribution-directory="$topsrcdir/cliqz"
 
 # l10n support
 ac_add_options --with-l10n-base="$topsrcdir/../l10n"
