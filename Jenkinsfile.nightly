@@ -1,0 +1,161 @@
+#!/bin/env groovy
+@Library('cliqz-shared-library@v1.2') _
+def matrix = [
+        'cliqz':[
+            'config':'mozconfigs/cliqz.mozconfig',
+        ],
+        'ghostery':[
+            'config':'mozconfigs/ghostery.mozconfig',
+        ],
+        'cliqz-alpha':[
+            'config':'mozconfigs/cliqz-alpha.mozconfig',
+        ],
+        'ghostery-alpha':[
+            'config':'mozconfigs/ghostery-alpha.mozconfig',
+        ],
+]
+
+def build(Map m){
+    def flavor = m.config
+    def flavorname = m.name
+    def nodeLabel = 'master'
+    return {
+        node(nodeLabel){
+            def apk = ""
+            getImage().inside {
+                stage('Build APKS') {
+                    sh """#!/bin/bash -l
+                        set -e
+                        set -x
+                        cp ${flavor} mozilla-release/mozconfig
+                        cd mozilla-release
+                        ./mach clobber
+                        ./mach build
+                        ./mach package
+                    """
+                    apk = sh(returnStdout: true,
+                        script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
+                        find *.apk -name 'fennec*i386*' -not -name '*-unsigned-*'""").trim()
+                }
+                stage('Upload') {
+                    withCredentials([
+                        [
+                            $class: 'UsernamePasswordMultiBinding',
+                            credentialsId: 'f1732e5f-3e84-47ad-9286-a5fa6657ec43',
+                            passwordVariable: 'AWS_SECRET_ACCESS_KEY',
+                            usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        ]
+                    ]) {
+                        def s3Path = "s3://repository.cliqz.com/dist/android/cliqz-android/nightly/${flavorname}"
+                        def apkPath = "mozilla-release/objdir-frontend-android/${flavorname}/dist/*.apk"
+                        sh "aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${id}.apk"
+                        sh "aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk"
+                    }
+                }
+            }
+
+//            stage('Clean Up') {
+//                sh '''#!/bin/bash
+//                    rm -f mozilla-release/mozconfig
+//                    rm -rf mozilla-release/objdir-frontend-android
+//                    rm -rf autobots
+//                '''
+//            }
+        }
+    }
+}
+
+def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
+    [("Building ${it[0]}"):build(
+        name: it[0],
+        config:it[1]['config']
+    )]
+}
+node ('master'){
+    def dockerTag = ""
+    stage('Checkout') {
+        git branch:'master',
+            credentialsId: 'cliqz-oss-ci',
+            url: 'git@github.com:cliqz-oss/cliqz-android.git'
+        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
+    }
+    def imageName ="browser-f/android:${dockerTag}"
+
+    stage('Build docker image') {
+        docker.build(imageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
+    }
+}
+
+stage('Build Applications'){
+    parallel stepsForParallelBuilds
+}
+
+
+stage('JIRA'){
+    withEnv(['JIRA_SITE=cliqztix']){
+        def list1 =getIssueList()
+        def transitionInput = [
+            transition: [
+                    id: '121'
+            ]
+        ]
+        for (element in list1){
+            try{
+                def issue = jiraGetIssue idOrKey: element
+                if(issue.data.fields.status.name == "Resolved"){
+                    jiraTransitionIssue idOrKey: element, input: transitionInput
+                    echo "Transistioned ${element}"
+                }
+            }
+            catch (Error e){
+                echo e
+            }
+        }
+    }
+}
+
+stage('Send email') {
+    def bodytxt = '$PROJECT_NAME - Build # $BUILD_NUMBER'
+    bodytxt += '\n\nCheck console output at http://magrathea:8080/job/' + env.JOB_NAME + '/' + env.BUILD_NUMBER + '/ to view the results.'
+    bodytxt += '\n\nUploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/' + id + '.apk\n\n'
+    bodytxt += '\n\nLatest Debug Build (For Telemetry): http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/latest.apk'
+    bodytxt += '\n\n\n\n\n $CHANGES_SINCE_LAST_SUCCESS'
+    emailext(
+        to: 'stefano@cliqz.com,javier@cliqz.com,joseph@cliqz.com,sharath@cliqz.com,alina@cliqz.com,rajeev@cliqz.com,cliqztester@gmail.com,testcliqz@gmail.com,cliqztest55@gmail.com,mobiletestingcliqz@gmail.com,mobiletesterq@gmail.com',
+        subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
+        body: bodytxt
+    )
+}
+
+
+@NonCPS
+def getChangeString() {
+    MAX_MSG_LEN = 100
+    def changeString = ""
+    echo "Gathering SCM changes"
+    def changeLogSets = currentBuild.changeSets
+    for (int i = 0; i < changeLogSets.size(); i++) {
+        def entries = changeLogSets[i].items
+        for (int j = 0; j < entries.length; j++) {
+            def entry = entries[j]
+            truncated_msg = entry.msg.take(MAX_MSG_LEN)
+            changeString += " - ${truncated_msg} [${entry.author}]\n"
+        }
+    }
+    if (!changeString) {
+        changeString = " - No new changes"
+    }
+    return changeString
+}
+
+@NonCPS
+def getIssueList(){
+    def list =[]
+    def changes = getChangeString()
+    def re = /AB2-([0-9])*/
+    def y = changes =~ re
+    while (y){
+        list.add(y.group().toString())
+    }
+    return list
+}
