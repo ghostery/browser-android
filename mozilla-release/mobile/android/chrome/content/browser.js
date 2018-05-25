@@ -6357,7 +6357,8 @@ var Cliqz = {
 
       "Privacy:Show",
       "Privacy:Hide",
-      "Privacy:GetInfo"
+      "Privacy:GetInfo",
+      "Privacy:SetInfo"
     ]);
 
     ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
@@ -6547,6 +6548,9 @@ var Cliqz = {
         break;
       case "Privacy:GetInfo":
         this.messagePrivacyExtension({ name: 'getAndroidPanelData' });
+        break;
+      case "Privacy:SetInfo":
+        this.messagePrivacyExtension({ name: 'setPanelData', message: data });
         break;
     }
   }
