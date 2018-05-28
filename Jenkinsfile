@@ -33,6 +33,7 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                             set -x
                             cp mozconfigs/cliqz.mozconfig mozilla-release/mozconfig
                             cd mozilla-release
+                            export GRADLE_FLAGS="--stacktrace"
                             ./mach build
                             for lang in `ls ../l10n/`; do
                                 ./mach build chrome-$lang
