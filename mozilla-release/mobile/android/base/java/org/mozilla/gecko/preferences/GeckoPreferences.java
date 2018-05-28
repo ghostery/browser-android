@@ -238,6 +238,10 @@ public class GeckoPreferences
     // add Subscriptions key and dialog for reset it
     public static final String PREFS_RESET_SUBSCRIPTIONS = "pref.rest.subscriptions";
     final private int DIALOG_CREATE_RESET_SUBSCRIPTIONS = 3;
+    // add clear favorites key
+    private static final String PREFS_CLEAR_FAVORITES = NON_PREF_PREFIX + "privacy.clear" +
+            ".favorites";
+    final private int DIALOG_CREATE_CLEAR_FAVORITES = 4;
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -917,12 +921,22 @@ public class GeckoPreferences
                     ((CheckBoxPreference)pref).setDefaultValue(isMyOffrzSupportedForLang());
                     ((CheckBoxPreference)pref).setChecked(isMyOffrzEnable(getApplicationContext()));
                 }
-                // Open dialog
+                // Open rest subscriptions dialog
                 else if(PREFS_RESET_SUBSCRIPTIONS.equals(key)){
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
                             showDialog(DIALOG_CREATE_RESET_SUBSCRIPTIONS);
+                            return true;
+                        }
+                    });
+                }
+                // Open clear favorites dialog
+                else if(PREFS_CLEAR_FAVORITES.equals(key)){
+                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            showDialog(DIALOG_CREATE_CLEAR_FAVORITES);
                             return true;
                         }
                     });
@@ -1451,6 +1465,7 @@ public class GeckoPreferences
                 ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod
                         (CustomLinkMovementMethod.getInstance(this));
                 break;
+            // create dialog for reset all subscriptions
             case DIALOG_CREATE_RESET_SUBSCRIPTIONS:
                 builder.setTitle(R.string.pref_reset_subscriptions)
                         .setMessage(R.string.pref_reset_subscriptions_description)
@@ -1471,8 +1486,30 @@ public class GeckoPreferences
                                 Toast.makeText(context, R.string.pref_reset_subscriptions_toast,
                                         Toast.LENGTH_SHORT).show();
                             }
+                        });
+                dialog = builder.create();
+                dialog.show();
+                break;
+            // create dialog for clear favorites
+            case DIALOG_CREATE_CLEAR_FAVORITES:
+                builder.setTitle(R.string.pref_privacy_clear_favorites)
+                        .setMessage(R.string.pref_privacy_clear_favorites_description)
+                        .setCancelable(true)
+                        .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
                         })
-                        .show();
+                        .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO: clear favorites from database
+                            }
+                        });
+                dialog = builder.create();
+                dialog.show();
+                break;
             /* Cliqz end */
             default:
                 return null;
