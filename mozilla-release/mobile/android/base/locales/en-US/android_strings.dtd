@@ -970,4 +970,8 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_privacy_clear_data_category "Clear Data">
 <!ENTITY pref_privacy_clear_favorites "Clear Favorites">
 <!ENTITY pref_privacy_clear_favorites_description "Would you like to clear favorites?">
+
+<!-- Help Settings -->
+<!ENTITY pref_category_help "Help">
+<!ENTITY pref_category_help_summary "Best out of cliqz, FAQ , Report Website, Rate us">
 <!-- Cliqz end -->
