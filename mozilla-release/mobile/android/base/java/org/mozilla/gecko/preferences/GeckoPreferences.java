@@ -58,6 +58,7 @@ import org.mozilla.gecko.AdjustConstants;
 import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.BrowserLocaleManager;
+import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.DataReportingNotification;
 import org.mozilla.gecko.DynamicToolbar;
 import org.mozilla.gecko.EventDispatcher;
@@ -242,6 +243,18 @@ public class GeckoPreferences
     private static final String PREFS_CLEAR_FAVORITES = NON_PREF_PREFIX + "privacy.clear" +
             ".favorites";
     final private int DIALOG_CREATE_CLEAR_FAVORITES = 4;
+    // add keys to about settings items
+    public static final String PREFS_ABOUT_APP_VERSION_NAME = NON_PREF_PREFIX+ "about.app.version";
+    public static final String PREFS_ABOUT_ARN = "pref.about.arn";
+    public static final String PREFS_ABOUT_EXTENSION_VERSION = NON_PREF_PREFIX+ "about.extension.version";
+    public static final String PREFS_ABOUT_PRIVACY_POLICY = NON_PREF_PREFIX+ "about.privacy.policy";
+    public static final String PREFS_ABOUT_EULA = NON_PREF_PREFIX+ "about.eula";
+    public static final String PREFS_ABOUT_ANDROID_OPEN_SOURCE_PROJECT = NON_PREF_PREFIX+ "about" +
+            ".android.open.source.project";
+    public static final String PREFS_ABOUT_HP_HOSTS_AD_SERVER = NON_PREF_PREFIX+ "about.hp.hosts" +
+            ".ad.server";
+    public static final String PREFS_ABOUT_CRUX = NON_PREF_PREFIX+ "about.crux";
+    public static final String PREFS_ABOUT_IMPRINT = NON_PREF_PREFIX+ "about.imprint";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -940,6 +953,50 @@ public class GeckoPreferences
                             return true;
                         }
                     });
+                }
+                // set app version name
+                else if (PREFS_ABOUT_APP_VERSION_NAME.equals(key)) {
+                    pref.setSummary(BuildConfig.APP_VERSION_NAME);
+                }
+                // set extension version
+                else if (PREFS_ABOUT_EXTENSION_VERSION.equals(key)) {
+                    pref.setSummary(BuildConfig.EXTENSION_VERSION);
+                }
+                // remove arn on production @TODO getARN from GCM Endpoint and set as a summary
+                else if (PREFS_ABOUT_ARN.equals(key) && !BuildConfig.DEBUG) {
+                    preferences.removePreference(pref);
+                    i--;
+                    continue;
+                }
+                // Format Privacy Policy url
+                else if (PREFS_ABOUT_PRIVACY_POLICY.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_privacy_policy_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format EULA url
+                else if (PREFS_ABOUT_EULA.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_eula_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format Android Open Source Project url
+                else if (PREFS_ABOUT_ANDROID_OPEN_SOURCE_PROJECT.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_apache_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format hp hosts ad server url
+                else if (PREFS_ABOUT_HP_HOSTS_AD_SERVER.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_hp_hosts_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format crux url
+                else if (PREFS_ABOUT_CRUX.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_crux_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format imprint url
+                else if (PREFS_ABOUT_IMPRINT.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_imprint_url);
+                    ((LinkPreference) pref).setUrl(url);
                 }
                 /* Cliqz end */
 
