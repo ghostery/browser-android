@@ -77,14 +77,6 @@
                android:value="preferences_vendor"/>
     </PreferenceScreen>
 
-    <!-- add human web setting -->
-    <PreferenceScreen android:title="@string/pref_category_human_web"
-        android:summary="@string/pref_category_human_web_summary"
-        android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
-        <extra android:name="resource"
-            android:value="preferences_human_web"/>
-    </PreferenceScreen>
-
     <!-- add block ads setting -->
     <PreferenceScreen android:title="@string/pref_category_block_ads"
         android:summary="@string/pref_category_block_ads_summary"
