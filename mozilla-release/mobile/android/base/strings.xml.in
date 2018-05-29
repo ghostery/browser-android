@@ -681,9 +681,6 @@
 	
   <!-- Rate Cliqz -->
   <string name="pref_category_rate_cliqz">&pref_category_rate_cliqz;</string>
-  
-  <!-- Imprint -->
-  <string name="pref_imprint">&pref_imprint;</string>
 
   <!-- Support Cliqz -->
   <string name="pref_support_cliqz_url">&pref_support_cliqz_url;</string>
@@ -741,5 +738,28 @@
   <string name="pref_privacy_clear_data_category">&pref_privacy_clear_data_category;</string>
   <string name="pref_privacy_clear_favorites">&pref_privacy_clear_favorites;</string>
   <string name="pref_privacy_clear_favorites_description">&pref_privacy_clear_favorites_description;</string>
+
+  <!-- About Settings -->
+  <string name="pref_category_about_us">&pref_category_about_us;</string>
+  <string name="pref_category_about_us_summary">&pref_category_about_us_summary;</string>
+  <string name="pref_app_version">&pref_app_version;</string>
+  <string name="pref_about_arn">&pref_about_arn;</string>
+  <string name="pref_extension_version">&pref_extension_version;</string>
+  <string name="pref_category_policies_licenses">&pref_category_policies_licenses;</string>
+  <string name="pref_about_privacy_policy">&pref_about_privacy_policy;</string>
+  <string name="pref_about_eula">&pref_about_eula;</string>
+  <string name="pref_about_android_open_source_project">&pref_about_android_open_source_project;</string>
+  <string name="pref_about_android_open_source_project_summary">&pref_about_android_open_source_project_summary;</string>
+  <string name="pref_about_hp_hosts_ad_server">&pref_about_hp_hosts_ad_server;</string>
+  <string name="pref_about_hp_hosts_ad_server_summary">&pref_about_hp_hosts_ad_server_summary;</string>
+  <string name="pref_about_crux">&pref_about_crux;</string>
+  <string name="pref_about_crux_summary">&pref_about_crux_summary;</string>
+  <string name="pref_about_imprint">&pref_about_imprint;</string>
+  <string name="pref_privacy_policy_url">&pref_privacy_policy_url;</string>
+  <string name="pref_eula_url">&pref_eula_url;</string>
+  <string name="pref_apache_url">&pref_apache_url;</string>
+  <string name="pref_hp_hosts_url">&pref_hp_hosts_url;</string>
+  <string name="pref_crux_url">&pref_crux_url;</string>
+  <string name="pref_imprint_url">&pref_imprint_url;</string>
   <!-- Cliqz end -->
 </resources>

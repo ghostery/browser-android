@@ -24,6 +24,8 @@ android {
         testInstrumentationRunner 'org.mozilla.gecko.FennecInstrumentationTestRunner'
         // Used by Robolectric based tests; see TestRunner.
         buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\""
+        buildConfigField 'String', 'APP_VERSION_NAME', '"1.0.0"'
+        buildConfigField 'String', 'EXTENSION_VERSION', '"1.0.0"'
 
         vectorDrawables.useSupportLibrary = true
     }
