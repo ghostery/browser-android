@@ -694,13 +694,24 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
-                } else if (PREFS_SCREEN_ADVANCED.equals(key) &&
-                        !Restrictions.isAllowed(this, Restrictable.ADVANCED_SETTINGS)) {
+                }
+
+                else if (PREFS_SCREEN_ADVANCED.equals(key)) {
                     preferences.removePreference(pref);
                     i--;
                     continue;
 
-                } else if (PREFS_CATEGORY_EXPERIMENTAL_FEATURES.equals(key) && ((PreferenceGroup) pref).getPreferenceCount() == 0) {
+                }
+                 /* Cliqz start */
+                // remove advanced settings always
+                else if (PREFS_SCREEN_ADVANCED.equals(key)) {//&&!Restrictions.isAllowed(this, Restrictable.ADVANCED_SETTINGS))
+                    preferences.removePreference(pref);
+                    i--;
+                    continue;
+
+                }
+                /* Cliqz end */
+                else if (PREFS_CATEGORY_EXPERIMENTAL_FEATURES.equals(key) && ((PreferenceGroup) pref).getPreferenceCount() == 0) {
                     preferences.removePreference(pref);
                     i--;
                     continue;
