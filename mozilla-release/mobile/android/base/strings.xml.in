@@ -723,6 +723,8 @@
   <string name="pref_cliqz_tab_background">&pref_cliqz_tab_background;</string>
   <string name="pref_cliqz_tab_topsites">&pref_cliqz_tab_topsites;</string>
   <string name="pref_cliqz_tab_news">&pref_cliqz_tab_news;</string>
+  <string name="pref_cliqz_tab_restore_top_sites">&pref_cliqz_tab_restore_top_sites;</string>
+  <string name="pref_cliqz_tab_restore_top_sites_description">&pref_cliqz_tab_restore_top_sites_description;</string>
 
   <!-- General Settings - MyOffrz -->
   <string name="pref_myoffrz_category">&pref_myoffrz_category;</string>

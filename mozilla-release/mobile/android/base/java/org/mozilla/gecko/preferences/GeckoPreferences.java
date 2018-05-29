@@ -242,6 +242,9 @@ public class GeckoPreferences
     private static final String PREFS_CLEAR_FAVORITES = NON_PREF_PREFIX + "privacy.clear" +
             ".favorites";
     final private int DIALOG_CREATE_CLEAR_FAVORITES = 4;
+    // add restore top sites key
+    public static final String PREFS_RESTORE_TOP_SITES = NON_PREF_PREFIX+ "restore.top.sites";
+    final private int DIALOG_CREATE_RESTORE_TOP_SITES = 5;
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -965,6 +968,16 @@ public class GeckoPreferences
                         }
                     });
                 }
+                // Open restore top sites dialog
+                else if(PREFS_RESTORE_TOP_SITES.equals(key)) {
+                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            showDialog(DIALOG_CREATE_RESTORE_TOP_SITES);
+                            return true;
+                        }
+                    });
+                }
                 /* Cliqz end */
 
                 // Some Preference UI elements are not actually preferences,
@@ -1534,6 +1547,26 @@ public class GeckoPreferences
                 dialog = builder.create();
                 dialog.show();
                 break;
+            // create dialog for restore top sites
+            case DIALOG_CREATE_RESTORE_TOP_SITES:
+                builder.setTitle(R.string.pref_cliqz_tab_restore_top_sites)
+                    .setMessage(R.string.pref_cliqz_tab_restore_top_sites_description)
+                    .setCancelable(true)
+                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO: restore top sites
+                        }
+                    });
+            dialog = builder.create();
+            dialog.show();
+            break;
             /* Cliqz end */
             default:
                 return null;
