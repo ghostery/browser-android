@@ -970,4 +970,9 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_privacy_clear_data_category "Clear Data">
 <!ENTITY pref_privacy_clear_favorites "Clear Favorites">
 <!ENTITY pref_privacy_clear_favorites_description "Would you like to clear favorites?">
+
+<!-- General Settings - Download Options -->
+<!ENTITY pref_download_options_category "Download Options">
+<!ENTITY pref_limit_data_usage "Limit mobile data usage">
+<!ENTITY pref_limit_data_usage_summary "Only download video on Wi-Fi">
 <!-- Cliqz end -->

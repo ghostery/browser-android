@@ -741,5 +741,10 @@
   <string name="pref_privacy_clear_data_category">&pref_privacy_clear_data_category;</string>
   <string name="pref_privacy_clear_favorites">&pref_privacy_clear_favorites;</string>
   <string name="pref_privacy_clear_favorites_description">&pref_privacy_clear_favorites_description;</string>
+
+  <!-- General Settings - Download Options -->
+  <string name = "pref_download_options_category">&pref_download_options_category;</string>
+  <string name = "pref_limit_data_usage">&pref_limit_data_usage;</string>
+  <string name = "pref_limit_data_usage_summary">&pref_limit_data_usage_summary;</string>
   <!-- Cliqz end -->
 </resources>
