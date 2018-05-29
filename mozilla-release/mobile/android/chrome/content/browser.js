@@ -6462,7 +6462,7 @@ var Cliqz = {
     if (!this._ghostery) {
       this._ghostery = this._createBrowserForExtension('firefox@ghostery.com');
       this._ghostery.loadTab = function(tab) {
-        this.load('app/templates/panel_android.html?tabId=' + tab)
+        this.load('app/templates/panel_android_ui.html?tabId=' + tab)
       }.bind(this._ghostery);
     }
 
