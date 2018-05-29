@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cliqz 2018
+   - This file is derived from @preferences_vendor.xml
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:title="@string/pref_category_help" >
+
+    <!-- add Tips & Tricks setting -->
+    <org.mozilla.gecko.preferences.LinkPreference
+        android:key="android.not_a_preference.tips.tricks"
+        android:title="@string/pref_tips_tricks"
+        android:persistent="false" />
+
+    <!-- add FAQ Support -->
+    <org.mozilla.gecko.preferences.LinkPreference
+        android:key="android.not_a_preference.support.cliqz"
+        android:title="@string/pref_support_cliqz"
+        android:persistent="false" />
+
+    <!-- add Report Website setting -->
+    <org.mozilla.gecko.preferences.LinkPreference
+        android:key="android.not_a_preference.report.browser"
+        android:title="@string/pref_report_website"
+        android:persistent="false" />
+
+    <!-- add rate cliqz browser setting -->
+    <Preference
+        android:key="android.not_a_preference.rate.cliqz"
+        android:persistent="false"
+        android:title="@string/pref_category_rate_cliqz" />
+
+</PreferenceScreen>

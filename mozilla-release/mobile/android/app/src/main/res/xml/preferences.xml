@@ -85,12 +85,6 @@
             android:value="preferences_block_ads"/>
     </PreferenceScreen>
 
-    <!-- add rate cliqz browser setting -->
-    <Preference
-        android:key="android.not_a_preference.rate.cliqz"
-        android:persistent="false"
-        android:title="@string/pref_category_rate_cliqz"/>
-
     <!-- add Imprint setting -->
     <org.mozilla.gecko.preferences.LinkPreference
         android:key="android.not_a_preference.imprint"
@@ -98,23 +92,11 @@
         android:persistent="false"
         url="https://cliqz.com/legal" />
 
-    <!-- FAQ Support -->
-    <org.mozilla.gecko.preferences.LinkPreference
-        android:key="android.not_a_preference.support.cliqz"
-        android:title="@string/pref_support_cliqz"
-        android:persistent="false" />
-
-    <!-- add Tips & Tricks setting -->
-    <org.mozilla.gecko.preferences.LinkPreference
-        android:key="android.not_a_preference.tips.tricks"
-        android:title="@string/pref_tips_tricks"
-        android:persistent="false"/>
-
-    <!-- add Report Website setting -->
-    <org.mozilla.gecko.preferences.LinkPreference
-        android:key="android.not_a_preference.report.browser"
-        android:title="@string/pref_report_website"
-        android:persistent="false" />
     <!-- Cliqz end -->
-
+    <PreferenceScreen android:title="@string/pref_category_help"
+        android:summary="@string/pref_category_help_summary"
+        android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
+        <extra android:name="resource"
+            android:value="preferences_help"/>
+    </PreferenceScreen>
 </PreferenceScreen>
