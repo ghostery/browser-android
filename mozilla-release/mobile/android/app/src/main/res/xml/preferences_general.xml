@@ -119,7 +119,8 @@
         <Preference
             android:key="pref.rest.subscriptions"
             android:title="@string/pref_reset_subscriptions" />
-
+    </PreferenceCategory>
+   
     <!-- add download options category -->
     <PreferenceCategory android:title="@string/pref_download_options_category">
         <CheckBoxPreference
