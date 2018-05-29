@@ -61,6 +61,7 @@ import org.mozilla.gecko.BrowserLocaleManager;
 import org.mozilla.gecko.DataReportingNotification;
 import org.mozilla.gecko.DynamicToolbar;
 import org.mozilla.gecko.EventDispatcher;
+import org.mozilla.gecko.GeckoApp;
 import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.GeckoProfile;
 import org.mozilla.gecko.GeckoSharedPrefs;
@@ -209,8 +210,9 @@ public class GeckoPreferences
     // add IS_MYOFFRZ_ONBOARDING_ENABLED
     public static final String IS_MYOFFRZ_ONBOARDING_ENABLED = "myoffrz_onboarding_enabled";
     // add Block Ads, Block Ads fair, what is fair and Block Ads data
-    private static final String PREFS_BLOCK_ADS = "cb_block_ads";
-    private static final String PREFS_BLOCK_ADS_FAIR = "cb_block_ads_fair";
+    public static final String PREFS_BLOCK_ADS = "pref.block.ads";
+    private static final String PREFS_BLOCK_ADS_FAIR = "pref.block.ads.fair";
+    Preference prefBlockAdsFair;
     private static final String PREFS_BLOCK_ADS_WHAT_FAIR = NON_PREF_PREFIX + "block.ads.what.fair";
     private static final String PREFS_BLOCK_ADS_DATA = NON_PREF_PREFIX + "block.ads.data";
     final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
@@ -970,7 +972,7 @@ public class GeckoPreferences
                     });
                 }
                 // Open rest subscriptions dialog
-                else if(PREFS_RESET_SUBSCRIPTIONS.equals(key)){
+                else if (PREFS_RESET_SUBSCRIPTIONS.equals(key)) {
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -980,7 +982,7 @@ public class GeckoPreferences
                     });
                 }
                 // Open clear favorites dialog
-                else if(PREFS_CLEAR_FAVORITES.equals(key)){
+                else if(PREFS_CLEAR_FAVORITES.equals(key)) {
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -988,6 +990,17 @@ public class GeckoPreferences
                             return true;
                         }
                     });
+                }
+                // set listener for value change if blockAds
+                else if (PREFS_BLOCK_ADS.equals(key)) {
+                    pref.setOnPreferenceChangeListener(this);
+                }
+                // Enable blockAdsFair if BlockAds Enabled
+                else if (PREFS_BLOCK_ADS_FAIR.equals(key)) {
+                    prefBlockAdsFair = pref;
+                    final PreferenceManager preferenceManager = new PreferenceManager
+                            (getApplicationContext());
+                    prefBlockAdsFair.setEnabled(preferenceManager.isBlockAdsEnabled());
                 }
                 /* Cliqz end */
 
@@ -1306,6 +1319,12 @@ public class GeckoPreferences
             // BrowserSearch is notified immediately about the new enabled state.
             EventDispatcher.getInstance().dispatch("SearchEngines:GetVisible", null);
         }
+        /* Cliqz start */
+        // enable blockAdsFair if blockAds checked
+        else if(PREFS_BLOCK_ADS.equals(prefName)) {
+            prefBlockAdsFair.setEnabled((Boolean) newValue);
+        }
+        /* Cliqz end */
 
         // Send Gecko-side pref changes to Gecko
         if (isGeckoPref(prefName)) {
@@ -1562,7 +1581,6 @@ public class GeckoPreferences
             default:
                 return null;
         }
-
         return dialog;
     }
 

@@ -77,14 +77,6 @@
                android:value="preferences_vendor"/>
     </PreferenceScreen>
 
-    <!-- add block ads setting -->
-    <PreferenceScreen android:title="@string/pref_category_block_ads"
-        android:summary="@string/pref_category_block_ads_summary"
-        android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
-        <extra android:name="resource"
-            android:value="preferences_block_ads"/>
-    </PreferenceScreen>
-
     <!-- add rate cliqz browser setting -->
     <Preference
         android:key="android.not_a_preference.rate.cliqz"

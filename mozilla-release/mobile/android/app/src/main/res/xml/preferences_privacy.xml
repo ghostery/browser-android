@@ -31,13 +31,38 @@
             android:persistent="false"
             url="https://support.mozilla.org/kb/firefox-android-tracking-protection" />
 
+    <!-- Cliqz start -->
+    <!-- add privacy browsing category -->
+    <PreferenceCategory android:title="@string/pref_privacy_browsing_category">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref.privacy.antitracking"
+            android:title="@string/pref_privacy_antitracking" />
+        <ListPreference android:key="network.cookie.cookieBehavior"
+            android:title="@string/pref_cookies_menu"
+            android:entries="@array/pref_cookies_entries"
+            android:entryValues="@array/pref_cookies_values"
+            android:persistent="false" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref.privacy.auto.forget.tab"
+            android:title="@string/pref_privacy_auto_forget_tab" />
+
+        <!-- add block ads setting -->
+        <PreferenceScreen android:title="@string/pref_category_block_ads"
+            android:summary="@string/pref_category_block_ads_summary"
+            android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
+            <extra android:name="resource"
+                android:value="preferences_block_ads"/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <!-- hide FF Cookie preference
     <ListPreference android:key="network.cookie.cookieBehavior"
                     android:title="@string/pref_cookies_menu"
                     android:entries="@array/pref_cookies_entries"
                     android:entryValues="@array/pref_cookies_values"
-                    android:persistent="false" />
+                    android:persistent="false" /> -->
 
-    <!-- Cliqz start -->
     <PreferenceCategory android:title="@string/pref_privacy_clear_data_category">
         <Preference
             android:key="android.not_a_preference.privacy.clear.favorites"
@@ -64,8 +89,8 @@
             gecko:initialValues="@array/pref_clear_on_exit_defaults" />
 
     </PreferenceCategory>
-
     <!-- Cliqz end -->
+
     <PreferenceCategory android:title="@string/pref_category_logins">
 
         <org.mozilla.gecko.preferences.LinkPreference
@@ -111,6 +136,7 @@
                             android:summary="@string/datareporting_fhr_summary2"
                             android:defaultValue="true" />
 
+        <!-- Cliqz start -->
         <!-- add human web setting -->
         <PreferenceScreen android:title="@string/pref_category_human_web"
             android:summary="@string/pref_category_human_web_summary"
@@ -118,7 +144,7 @@
             <extra android:name="resource"
                 android:value="preferences_human_web"/>
         </PreferenceScreen>
-
+        <!-- Cliqz end -->
     </PreferenceCategory>
 
 </PreferenceScreen>
