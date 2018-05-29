@@ -393,7 +393,7 @@
 
 <!ENTITY pref_default_browser "Сделать браузером по умолчанию">
 <!ENTITY pref_default_browser_mozilla_support_tablet "Посетить Поддержку &vendorShortName;">
-<!ENTITY pref_about_&brandShortName; "О &brandShortName;">
+<!ENTITY pref_about_firefox "О &brandShortName;">
 <!ENTITY pref_vendor_faqs "FAQ">
 <!ENTITY pref_vendor_feedback "Отправить отзыв">
 

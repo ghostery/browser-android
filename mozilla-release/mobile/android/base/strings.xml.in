@@ -660,8 +660,8 @@
   <string name="pref_human_web_url">&pref_human_web_url;</string>
 
   <!-- MyOffrz -->
-  <string name="my_offrz_title">&my_offrz_title;</string>	
-  <string name="my_offrz_no_offers_msg">&my_offrz_no_offers_msg;</string>
+  <string name="myoffrz_title">&myoffrz_title;</string>	
+  <string name="myoffrz_no_offers_msg">&myoffrz_no_offers_msg;</string>
   <string name="myoffrz_onboarding_description">&myoffrz_onboarding_description;</string>
   <string name="myoffrz_order_now_label">&myoffrz_order_now_label;</string>
   <string name="myoffrz_tap_code_to_copy_label">&myoffrz_tap_code_to_copy_label;</string>

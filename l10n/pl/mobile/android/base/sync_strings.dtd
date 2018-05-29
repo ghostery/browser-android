@@ -41,7 +41,7 @@
 <!ENTITY fxaccount_getting_started_welcome_to_sync "Witaj w usłudze &syncBrand.shortName.label;">
 <!ENTITY fxaccount_getting_started_description2 "Zaloguj się i synchronizuj karty, zakładki, dane logowania i więcej.">
 <!ENTITY fxaccount_getting_started_get_started "Zaloguj się">
-<!ENTITY fxaccount_getting_started_old_&brandShortName; "Korzystasz ze starej wersji usługi &syncBrand.shortName.label;?">
+<!ENTITY fxaccount_getting_started_old_firefox "Korzystasz ze starej wersji usługi &syncBrand.shortName.label;?">
 
 <!ENTITY fxaccount_status_auth_server "Serwer konta">
 <!ENTITY fxaccount_status_sync_now "Synchronizuj">

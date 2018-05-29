@@ -893,8 +893,8 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_category_human_web_summary "What, Enable">
 
 <!-- MyOffrz -->
-<!ENTITY my_offrz_title "MYOFFRZ">
-<!ENTITY my_offrz_no_offers_msg "Here you\'ll find a new offer every week">
+<!ENTITY myoffrz_title "MYOFFRZ">
+<!ENTITY myoffrz_no_offers_msg "Here you\'ll find a new offer every week">
 <!ENTITY myoffrz_onboarding_description "Receive attractive discounts and bargains with MyOffrz">
 <!ENTITY myoffrz_order_now_label "Order Now!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Tap code to copy">
