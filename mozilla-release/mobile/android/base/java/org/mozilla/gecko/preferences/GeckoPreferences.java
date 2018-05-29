@@ -58,6 +58,7 @@ import org.mozilla.gecko.AdjustConstants;
 import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.BrowserLocaleManager;
+import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.DataReportingNotification;
 import org.mozilla.gecko.DynamicToolbar;
 import org.mozilla.gecko.EventDispatcher;
@@ -251,8 +252,23 @@ public class GeckoPreferences
     public static final String PREFS_PRIVACY_TRACKING_PROTECTION = "privacy.trackingprotection" +
             ".state";
     public static final String PREFS_PRIVACY_TRACKING_PROTECTION_LEARN_MORE = NON_PREF_PREFIX +
-    "trackingprotection.learn_more";
+            "trackingprotection.learn_more";
     public static final String PREFS_SHOW_HINTS = NON_PREF_PREFIX+ "show.hints";
+    // add restore top sites key
+    public static final String PREFS_RESTORE_TOP_SITES = NON_PREF_PREFIX+ "restore.top.sites";
+    final private int DIALOG_CREATE_RESTORE_TOP_SITES = 5;
+    // add keys to about settings items
+    public static final String PREFS_ABOUT_APP_VERSION_NAME = NON_PREF_PREFIX+ "about.app.version";
+    public static final String PREFS_ABOUT_ARN = "pref.about.arn";
+    public static final String PREFS_ABOUT_EXTENSION_VERSION = NON_PREF_PREFIX+ "about.extension.version";
+    public static final String PREFS_ABOUT_PRIVACY_POLICY = NON_PREF_PREFIX+ "about.privacy.policy";
+    public static final String PREFS_ABOUT_EULA = NON_PREF_PREFIX+ "about.eula";
+    public static final String PREFS_ABOUT_ANDROID_OPEN_SOURCE_PROJECT = NON_PREF_PREFIX+ "about" +
+            ".android.open.source.project";
+    public static final String PREFS_ABOUT_HP_HOSTS_AD_SERVER = NON_PREF_PREFIX+ "about.hp.hosts" +
+            ".ad.server";
+    public static final String PREFS_ABOUT_CRUX = NON_PREF_PREFIX+ "about.crux";
+    public static final String PREFS_ABOUT_IMPRINT = NON_PREF_PREFIX+ "about.imprint";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -706,12 +722,10 @@ public class GeckoPreferences
                         continue;
                     }
                 }
-
                 else if (PREFS_SCREEN_ADVANCED.equals(key)) {
                     preferences.removePreference(pref);
                     i--;
                     continue;
-
                 }
                  /* Cliqz start */
                 // remove advanced settings always
@@ -1001,6 +1015,60 @@ public class GeckoPreferences
                     final PreferenceManager preferenceManager = new PreferenceManager
                             (getApplicationContext());
                     prefBlockAdsFair.setEnabled(preferenceManager.isBlockAdsEnabled());
+                }
+                // Open restore top sites dialog
+                else if(PREFS_RESTORE_TOP_SITES.equals(key)) {
+                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            showDialog(DIALOG_CREATE_RESTORE_TOP_SITES);
+                            return true;
+                        }
+                    });
+                }
+                // set app version name
+                else if (PREFS_ABOUT_APP_VERSION_NAME.equals(key)) {
+                    pref.setSummary(BuildConfig.APP_VERSION_NAME);
+                }
+                // set extension version
+                else if (PREFS_ABOUT_EXTENSION_VERSION.equals(key)) {
+                    pref.setSummary(BuildConfig.EXTENSION_VERSION);
+                }
+                // remove arn on production @TODO getARN from GCM Endpoint and set as a summary
+                else if (PREFS_ABOUT_ARN.equals(key) && !BuildConfig.DEBUG) {
+                    preferences.removePreference(pref);
+                    i--;
+                    continue;
+                }
+                // Format Privacy Policy url
+                else if (PREFS_ABOUT_PRIVACY_POLICY.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_privacy_policy_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format EULA url
+                else if (PREFS_ABOUT_EULA.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_eula_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format Android Open Source Project url
+                else if (PREFS_ABOUT_ANDROID_OPEN_SOURCE_PROJECT.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_apache_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format hp hosts ad server url
+                else if (PREFS_ABOUT_HP_HOSTS_AD_SERVER.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_hp_hosts_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format crux url
+                else if (PREFS_ABOUT_CRUX.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_crux_url);
+                    ((LinkPreference) pref).setUrl(url);
+                }
+                // Format imprint url
+                else if (PREFS_ABOUT_IMPRINT.equals(key)) {
+                    final String url = getResources().getString(R.string.pref_imprint_url);
+                    ((LinkPreference) pref).setUrl(url);
                 }
                 /* Cliqz end */
 
@@ -1577,6 +1645,26 @@ public class GeckoPreferences
                 dialog = builder.create();
                 dialog.show();
                 break;
+            // create dialog for restore top sites
+            case DIALOG_CREATE_RESTORE_TOP_SITES:
+                builder.setTitle(R.string.pref_cliqz_tab_restore_top_sites)
+                    .setMessage(R.string.pref_cliqz_tab_restore_top_sites_description)
+                    .setCancelable(true)
+                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO: restore top sites
+                        }
+                    });
+            dialog = builder.create();
+            dialog.show();
+            break;
             /* Cliqz end */
             default:
                 return null;
