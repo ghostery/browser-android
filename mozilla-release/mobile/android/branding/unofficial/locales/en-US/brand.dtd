@@ -7,3 +7,14 @@
 <!ENTITY  vendorShortName "Mozilla">
 
 <!ENTITY  brandPocket     "Pocket">
+<!ENTITY  pref_human_web_url "https://cliqz.com/whycliqz/human-web">
+<!ENTITY  pref_support_cliqz_url "https://cliqz.com/support">
+<!ENTITY  pref_tips_tricks_url "https://cliqz.com/tips-android">
+<!ENTITY  pref_report_website_url "https://cliqz.com/report-url">
+<!ENTITY  pref_myoffrz_url "https://cliqz.com/myoffrz">
+<!ENTITY  pref_privacy_policy_url "https://cliqz.com/privacy-browser">
+<!ENTITY  pref_eula_url "https://www.mozilla.org/MPL/2.0/">
+<!ENTITY  pref_apache_url "http://www.apache.org/licenses/LICENSE-2.0">
+<!ENTITY  pref_hp_hosts_url "http://hosts-file.net/">
+<!ENTITY  pref_crux_url "https://github.com/chimbori/crux/blob/master/LICENSE.txt">
+<!ENTITY  pref_imprint_url "https://cliqz.com/legal">

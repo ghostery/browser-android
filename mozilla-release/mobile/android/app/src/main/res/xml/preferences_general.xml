@@ -94,6 +94,9 @@
             android:key="pref.cliqz.tab.news"
             android:title="@string/pref_cliqz_tab_news"
             android:defaultValue="true" />
+        <Preference
+            android:key="android.not_a_preference.restore.top.sites"
+            android:title="@string/pref_cliqz_tab_restore_top_sites" />
     </PreferenceCategory>
 
     <!-- add MyOffrz category -->

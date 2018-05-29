@@ -915,9 +915,6 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!-- Rate Cliqz -->
 <!ENTITY pref_category_rate_cliqz "Rate Cliqz Browser">
 
-<!-- Imprint -->
-<!ENTITY pref_imprint "Imprint">
-
 <!-- Support Cliqz -->
 <!ENTITY pref_support_cliqz "FAQs &amp; Support">
 
@@ -948,11 +945,13 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!-- General Settings - Browsing -->
 <!ENTITY pref_browsing_category "Browsing">
 
-<!-- CliqzTab -->
+<!-- General Settings - CliqzTab -->
 <!ENTITY pref_cliqz_tab_category "CliqzTab">
 <!ENTITY pref_cliqz_tab_background "Show background image">
 <!ENTITY pref_cliqz_tab_topsites "Show most visited websites">
 <!ENTITY pref_cliqz_tab_news "Show News">
+<!ENTITY pref_cliqz_tab_restore_top_sites "Restore most visited websites">
+<!ENTITY pref_cliqz_tab_restore_top_sites_description "Start page shows most-visited websites again">
 
 <!-- General Settings - myOffrz -->
 <!ENTITY pref_myoffrz_category "MyOffrz">
@@ -983,4 +982,26 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_privacy_browsing_category "Browsing">
 <!ENTITY pref_privacy_antitracking "Anti-Tracking">
 <!ENTITY pref_privacy_auto_forget_tab "Automatic Forget Tab">
+
+<!-- Help Settings -->
+<!ENTITY pref_category_help "Help">
+<!ENTITY pref_category_help_summary "Best out of cliqz, FAQ , Report Website, Rate us">
+
+<!-- About Settings -->
+<!ENTITY pref_category_about_us "About us">
+<!ENTITY pref_category_about_us_summary
+    "AppVersion, Extension version, Policies and Licenses, Imprint">
+<!ENTITY pref_app_version "Application Version">
+<!ENTITY pref_about_arn "Device ARN">
+<!ENTITY pref_extension_version "Extension Version">
+<!ENTITY pref_category_policies_licenses "Policies and Licenses">
+<!ENTITY pref_about_privacy_policy "Privacy Policy">
+<!ENTITY pref_about_eula "EULA">
+<!ENTITY pref_about_android_open_source_project "Android Open Source Project">
+<!ENTITY pref_about_android_open_source_project_summary "Apache License 2.0">
+<!ENTITY pref_about_hp_hosts_ad_server "hpHosts Ad Server List">
+<!ENTITY pref_about_hp_hosts_ad_server_summary "Freeware">
+<!ENTITY pref_about_crux "Crux">
+<!ENTITY pref_about_crux_summary "Apache License 2.0">
+<!ENTITY pref_about_imprint "Imprint">
 <!-- Cliqz end -->
