@@ -6357,7 +6357,8 @@ var Cliqz = {
 
       "Privacy:Show",
       "Privacy:Hide",
-      "Privacy:GetInfo"
+      "Privacy:GetInfo",
+      "Privacy:SetInfo"
     ]);
 
     ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
@@ -6461,7 +6462,7 @@ var Cliqz = {
     if (!this._ghostery) {
       this._ghostery = this._createBrowserForExtension('firefox@ghostery.com');
       this._ghostery.loadTab = function(tab) {
-        this.load('app/templates/panel_android.html?tabId=' + tab)
+        this.load('app/templates/panel_android_ui.html?tabId=' + tab)
       }.bind(this._ghostery);
     }
 
@@ -6547,6 +6548,9 @@ var Cliqz = {
         break;
       case "Privacy:GetInfo":
         this.messagePrivacyExtension({ name: 'getAndroidPanelData' });
+        break;
+      case "Privacy:SetInfo":
+        this.messagePrivacyExtension({ name: 'setPanelData', message: data });
         break;
     }
   }
