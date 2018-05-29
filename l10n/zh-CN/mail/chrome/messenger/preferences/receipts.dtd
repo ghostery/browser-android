@@ -1,0 +1,26 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title                  "返回回执">
+<!ENTITY requestReceipt.label          "发送消息时，总是要求得到邮件回执">
+<!ENTITY requestReceipt.accesskey      "W">
+<!ENTITY receiptArrive.label           "当收到邮件回执时:">
+<!ENTITY leaveIt.label                 "留在“收件箱”中">
+<!ENTITY leaveIt.accesskey             "i">
+<!ENTITY moveToSent.label              "移到“已发送邮件”文件夹中">
+<!ENTITY moveToSent.accesskey          "m">
+<!ENTITY requestMDN.label              "当我收到索取邮件回执的请求时:">
+<!ENTITY never.label                   "总不发送邮件回执">
+<!ENTITY never.accesskey               "n">
+<!ENTITY returnSome.label              "允许对某些消息返回邮件回执">
+<!ENTITY returnSome.accesskey          "r">
+<!ENTITY notInToCc.label               "如果我不在此消息的“收件人”或“抄送”列表中:">
+<!ENTITY notInToCc.accesskey           "f">
+<!ENTITY outsideDomain.label           "如果发送着来自我的域之外:">
+<!ENTITY outsideDomain.accesskey       "t">
+<!ENTITY otherCases.label              "其它情况:">
+<!ENTITY otherCases.accesskey          "a">
+<!ENTITY askMe.label                   "询问我">
+<!ENTITY alwaysSend.label              "总是发送">
+<!ENTITY neverSend.label               "总不发送">

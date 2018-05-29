@@ -1,0 +1,22 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY window.title                 "清除資料">
+<!ENTITY window.width                 "35em">
+
+<!ENTITY window.description           "清除 &brandShortName; 儲存的所有 Cookie 與網站資料可能會將您從許多網站登出，並清除網頁離線內容。單純清除快取資料則不會影響登入狀態。">
+<!ENTITY windowClose.key              "w">
+
+<!ENTITY clearSiteData.label          "Cookie 與網站資料">
+<!ENTITY clearSiteData.accesskey      "S">
+<!ENTITY clearSiteData.description    "清除後，網站可能會要求您重新登入">
+
+<!ENTITY clearCache.label             "網頁快取內容">
+<!ENTITY clearCache.accesskey         "W">
+<!ENTITY clearCache.description       "需要網站重新載入圖片與資料">
+
+<!ENTITY button.cancel.label          "取消">
+<!ENTITY button.cancel.accesskey      "C">
+<!ENTITY button.clear.label           "清除">
+<!ENTITY button.clear.accesskey       "l">

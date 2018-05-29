@@ -1,0 +1,12 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY attachmentReminderDialog.title   "一些附件提醒的关键字">
+<!ENTITY attachKeywordText.label          "如果您要发送的邮件中包含了此类关键字，&brandShortName; 会自动提醒您漏掉了附件。">
+<!ENTITY newKeywordButton.label           "新建…">
+<!ENTITY newKeywordButton.accesskey       "N">
+<!ENTITY editKeywordButton1.label         "编辑…">
+<!ENTITY editKeywordButton1.accesskey     "E">
+<!ENTITY removeKeywordButton.label        "删除">
+<!ENTITY removeKeywordButton.accesskey    "D">

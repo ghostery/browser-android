@@ -1,0 +1,51 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY aboutTelemetry.pingDataSource "Ping-gegevensbron:">
+<!ENTITY aboutTelemetry.showCurrentPingData "Huidige ping-gegevens">
+<!ENTITY aboutTelemetry.showArchivedPingData "Gearchiveerde ping-gegevens">
+<!ENTITY aboutTelemetry.showSubsessionData "Subsessiegegevens tonen">
+<!ENTITY aboutTelemetry.choosePing "Ping kiezen:">
+<!ENTITY aboutTelemetry.archivePingType "Pingtype">
+<!ENTITY aboutTelemetry.archivePingHeader "Ping">
+<!ENTITY aboutTelemetry.optionGroupToday "Vandaag">
+<!ENTITY aboutTelemetry.optionGroupYesterday "Gisteren">
+<!ENTITY aboutTelemetry.optionGroupOlder "Ouder">
+<!ENTITY aboutTelemetry.payloadChoiceHeader "Nettolading">
+<!-- LOCALIZATION NOTE(aboutTelemetry.previousPing, aboutTelemetry.nextPing):
+	These strings are displayed when selecting Archived pings, and they’re
+	used to move to the next or previous ping. -->
+<!ENTITY aboutTelemetry.previousPing "&lt;&lt;">
+<!ENTITY aboutTelemetry.nextPing "&gt;&gt;">
+
+<!ENTITY aboutTelemetry.pageTitle "Telemetry-gegevens">
+<!ENTITY aboutTelemetry.moreInformations "Zoekt u meer informatie?">
+<!ENTITY aboutTelemetry.firefoxDataDoc "De <a>Firefox Data Documentation</a> bevat handleidingen over het werken met onze gegevenshulpmiddelen.">
+<!ENTITY aboutTelemetry.telemetryClientDoc "De <a>Firefox Telemetry-clientdocumentatie</a> bevat definities voor concepten, API-documentatie en gegevensverwijzingen.">
+<!ENTITY aboutTelemetry.telemetryDashboard "Met de <a>Telemetry-dashboards</a> kunt u de gegevens visualiseren die Mozilla via Telemetry ontvangt.">
+
+<!ENTITY aboutTelemetry.showInFirefoxJsonViewer "Openen in de JSON-viewer">
+
+<!ENTITY aboutTelemetry.homeSection "Start">
+<!ENTITY aboutTelemetry.generalDataSection "Algemene gegevens">
+<!ENTITY aboutTelemetry.environmentDataSection "Omgevingsgegevens">
+<!ENTITY aboutTelemetry.sessionInfoSection "Sessie-informatie">
+<!ENTITY aboutTelemetry.scalarsSection "Scalars">
+<!ENTITY aboutTelemetry.keyedScalarsSection "Keyed Scalars">
+<!ENTITY aboutTelemetry.histogramsSection "Histogrammen">
+<!ENTITY aboutTelemetry.keyedHistogramsSection "Sleutelhistogrammen">
+<!ENTITY aboutTelemetry.eventsSection "Gebeurtenissen">
+<!ENTITY aboutTelemetry.simpleMeasurementsSection "Eenvoudige metingen">
+<!ENTITY aboutTelemetry.telemetryLogSection "Telemetry-logboek">
+<!ENTITY aboutTelemetry.slowSqlSection "Trage SQL-instructies">
+<!ENTITY aboutTelemetry.chromeHangsSection "Browservastlopers">
+<!ENTITY aboutTelemetry.addonDetailsSection "Add-on-details">
+<!ENTITY aboutTelemetry.capturedStacksSection "Vastgelegde stacks">
+<!ENTITY aboutTelemetry.lateWritesSection "Late schrijfacties">
+<!ENTITY aboutTelemetry.rawPayloadSection "Onbewerkte nettolading">
+<!ENTITY aboutTelemetry.raw "Onbewerkte JSON">
+
+<!ENTITY aboutTelemetry.fullSqlWarning "NOOT: debugging van trage SQL is ingeschakeld. Volledige SQL-strings kunnen hieronder worden weergegeven, maar deze zullen niet bij Telemetry worden ingediend.">
+<!ENTITY aboutTelemetry.fetchStackSymbols "Functienamen voor stacks ophalen">
+<!ENTITY aboutTelemetry.hideStackSymbols "Onbewerkte stackgegevens tonen">

@@ -1,0 +1,40 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY messengerStartPage.label         "&brandShortName; 開始頁">
+<!ENTITY enableStartPage.label            "當啟動 &brandShortName; 時，在郵件區顯示開始頁">
+<!ENTITY enableStartPage.accesskey        "W">
+<!ENTITY location.label                   "位置:">
+<!ENTITY location1.accesskey               "o">
+<!ENTITY useDefault.label                 "回復預設值">
+<!ENTITY useDefault.accesskey             "R">
+
+<!ENTITY changeDockIconOptions.label      "修改應用程式圖示的偏好設定">
+<!ENTITY dockOptions.label                "應用程式圖示選項…">
+<!ENTITY dockOptions.accesskey            "n">
+
+<!ENTITY newMessagesArrive.label          "當有新郵件時:">
+<!ENTITY playSound.label                  "播放音效">
+<!ENTITY playSound1.accesskey             "d">
+<!ENTITY playSoundMac.label               "播放下列音效檔案:">
+<!ENTITY playSoundMac.accesskey           "d">
+<!ENTITY showAnimatedAlert.label          "顯示警告視窗">
+<!ENTITY showAnimatedAlert.accesskey      "S">
+<!ENTITY notificationAlertSettings2.label "可在系統偏好設定的通知窗格中關閉警示與預設音效。">
+<!ENTITY customizeMailAlert.label         "自訂…">
+<!ENTITY customizeMailAlert.accesskey     "C">
+
+<!ENTITY showTrayIcon.label               "顯示工具列圖示">
+<!ENTITY showTrayIcon.accesskey           "t">
+
+<!ENTITY play.label                       "播放">
+<!ENTITY play.accesskey                   "P">
+<!ENTITY systemsound.label                "系統預設音效">
+<!ENTITY systemsound.accesskey            "y">
+<!ENTITY customsound.label                "使用下列音效檔案">
+<!ENTITY customsound.accesskey            "U">
+<!ENTITY browse.label                     "瀏覽…">
+<!ENTITY browse.accesskey                 "B">
+
+<!ENTITY defaultSearchEngine.label        "預設搜尋引擎">

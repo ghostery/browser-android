@@ -1,0 +1,54 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.mainbox.label "Általános beállítások" >
+<!ENTITY pref.dateformat.label "Dátumszöveg formátuma:" >
+<!ENTITY pref.dateformat.accesskey "D">
+<!ENTITY pref.dateformat.long "Hosszú" >
+<!ENTITY pref.dateformat.short "Rövid"  >
+
+<!ENTITY pref.timezones.caption "Időzóna">
+<!ENTITY pref.timezones.label "Válassza ki a legközelebbi várost az időzónájában:">
+<!ENTITY pref.timezones.accesskey "V">
+
+<!ENTITY pref.defaults.label "Alapértelmezett értékek új elemekhez">
+<!ENTITY pref.events.label "Események">
+<!ENTITY pref.tasks.label "Feladatok">
+
+<!ENTITY pref.default_event_length.label "Alapértelmezett hossz:" >
+<!ENTITY pref.default_event_length.accesskey "A">
+
+<!ENTITY pref.default_task_none.label "Nincs">
+<!ENTITY pref.default_task_start_of_day.label "Nap kezdete">
+<!ENTITY pref.default_task_end_of_day.label "Nap vége">
+<!ENTITY pref.default_task_tomorrow.label "Holnap">
+<!ENTITY pref.default_task_next_week.label "Következő hét">
+<!ENTITY pref.default_task_offset_current.label "Aktuális időhöz képest">
+<!ENTITY pref.default_task_offset_start.label "Kezdéshez képest">
+<!ENTITY pref.default_task_offset_next_hour.label "Következő órához képest">
+
+<!ENTITY pref.calendar.todaypane.agenda.caption "Ma panel">
+<!ENTITY pref.soondays.label "A várakozó szakaszban megjelenik:">
+<!ENTITY pref.soondays.accesskey "v">
+
+<!-- LOCALIZATION NOTE (pref.soondays2.label):
+     "Upcoming" is the name of a section and the translation must match the
+     translation of that section name (calendar.upcoming.button.label). Also,
+     it should be upper case (as a proper name) if the target language permits.
+  -->
+<!ENTITY pref.soondays2.label "A várakozó szakaszban megjelenik:">
+<!ENTITY pref.soondays2.accesskey "v">
+
+<!ENTITY pref.accessibility.label "Kisegítő lehetőségek" >
+<!ENTITY pref.systemcolors.label "Színek optimalizálása" >
+<!ENTITY pref.systemcolors.accesskey "S">
+
+<!ENTITY pref.eventsandtasks.label "Események és feladatok" >
+<!ENTITY pref.editInTab.label "Események és feladatok szerkesztése ablak helyett lapon." >
+<!ENTITY pref.editInTab.accesskey "m">

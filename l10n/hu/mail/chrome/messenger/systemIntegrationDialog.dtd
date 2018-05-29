@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title  "Integrálódás a rendszerbe">
+<!ENTITY acceptIntegration.label  "Legyen ez az alapértelmezett">
+<!ENTITY cancelIntegration.label  "Integráció kihagyása">
+<!ENTITY cancelIntegration2.label  "Mégse">
+<!ENTITY defaultClient.intro  "A &brandShortName; beállítása alapértelmezett kliensként:">
+
+<!ENTITY email.label "Levelezés">
+<!ENTITY newsgroups.label "Hírcsoportok">
+<!ENTITY feeds.label "Hírforrások">
+
+<!ENTITY unsetDefault.tooltip "Nem lehet a &brandShortName;ból törölni a &brandShortName; beállítását alapértelmezett kliensként. Másik alkalmazás alapértelmezetté tételéhez használja annak „Beállítás alapértelmezettként” ablakát.">
+
+<!ENTITY checkOnStartup.label "Ellenőrzés elvégzése a &brandShortName; minden indításakor">
+<!ENTITY checkOnStartup.accesskey "E">
+
+<!ENTITY searchIntegration.label "A(z) &searchIntegration.engineName; kereshet az üzenetek között">
+<!ENTITY searchIntegration.accesskey "s">

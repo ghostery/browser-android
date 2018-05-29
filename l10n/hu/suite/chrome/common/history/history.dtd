@@ -1,0 +1,57 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!-- history.xul, history-panel.xul, placesOverlay.xul -->
+
+
+<!ENTITY historyWindowTitle.label       "Előzmények">
+<!ENTITY menuBar.tooltip                "Menüsor">
+<!ENTITY searchBar.tooltip              "Kereső">
+
+<!ENTITY search.placeholder             "Keresési előzmények">
+<!ENTITY search.key                     "K">
+<!ENTITY view.label                     "Megjelenítés">
+
+<!ENTITY view.columns.label             "Oszlopok megjelenítése">
+<!ENTITY view.columns.accesskey         "O">
+<!ENTITY view.sortBy.label              "Rendezés">
+<!ENTITY view.sortBy.accesskey          "R">
+<!ENTITY view.groupBy.label             "Csoportosítás">
+<!ENTITY view.groupBy.accesskey         "C">
+
+<!ENTITY view.unsorted.label            "Rendezetlen">
+<!ENTITY view.unsorted.accesskey        "e">
+<!ENTITY view.sortAscending.label       "Növekvő sorrendben">
+<!ENTITY view.sortAscending.accesskey   "N">
+<!ENTITY view.sortDescending.label      "Csökkenő sorrendben">
+<!ENTITY view.sortDescending.accesskey  "C">
+
+<!ENTITY view.groupNone.label           "Nincs">
+<!ENTITY view.groupNone.accesskey       "N">
+<!ENTITY view.groupDay.label            "Dátum">
+<!ENTITY view.groupDay.accesskey        "D">
+<!ENTITY view.groupSite.label           "Webhely">
+<!ENTITY view.groupSite.accesskey       "W">
+<!ENTITY view.groupDayAndSite.label     "Dátum és webhely">
+<!ENTITY view.groupDayAndSite.accesskey "t">
+
+<!ENTITY cmd.open.label                 "Megnyitás">
+<!ENTITY cmd.open.accesskey             "M">
+<!ENTITY cmd.open_window.label          "Megnyitás új ablakban">
+<!ENTITY cmd.open_window.accesskey      "a">
+<!ENTITY cmd.open_tab.label             "Megnyitás új lapon">
+<!ENTITY cmd.open_tab.accesskey         "l">
+
+<!ENTITY bookmarkLinkCmd.label          "Bookmark This Link…">
+<!ENTITY bookmarkLinkCmd.accesskey      "B">
+<!ENTITY bookmarkLinksCmd.label         "Bookmark These Links">
+<!ENTITY bookmarkLinksCmd.accesskey     "B">
+
+<!ENTITY col.title.label                "Cím">
+<!ENTITY col.title.accesskey            "C">
+<!ENTITY col.url.label                  "Hely">
+<!ENTITY col.url.accesskey              "l">
+<!ENTITY col.lastvisit.label            "Utoljára látogatva">
+<!ENTITY col.lastvisit.accesskey        "v">
+<!ENTITY col.visitcount.label           "Látogatások száma">
+<!ENTITY col.visitcount.accesskey       "s">

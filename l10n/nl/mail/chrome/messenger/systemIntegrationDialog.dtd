@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title  "Systeemintegratie">
+<!ENTITY acceptIntegration.label  "Als standaard instellen">
+<!ENTITY cancelIntegration.label  "Integratie overslaan">
+<!ENTITY cancelIntegration2.label  "Annuleren">
+<!ENTITY defaultClient.intro  "&brandShortName; als de standaardclient gebruiken voor:">
+
+<!ENTITY email.label "E-mail">
+<!ENTITY newsgroups.label "Nieuwsgroepen">
+<!ENTITY feeds.label "Feeds">
+
+<!ENTITY unsetDefault.tooltip "Het is niet mogelijk om het instellen van &brandShortName; als de standaardclient binnen &brandShortName; ongedaan te maken. Om een andere toepassing de standaardclient te maken, moet u het dialoogvenster ‘Als standaard instellen’ ervan gebruiken.">
+
+<!ENTITY checkOnStartup.label "Deze controle altijd uitvoeren bij het starten van &brandShortName;">
+<!ENTITY checkOnStartup.accesskey "D">
+
+<!ENTITY searchIntegration.label "&searchIntegration.engineName; toestaan om berichten te doorzoeken">
+<!ENTITY searchIntegration.accesskey "t">

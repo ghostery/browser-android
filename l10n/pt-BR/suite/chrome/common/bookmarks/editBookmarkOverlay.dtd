@@ -1,0 +1,28 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY editBookmarkOverlay.name.label                      "Nome:">
+<!ENTITY editBookmarkOverlay.name.accesskey                  "N">
+<!ENTITY editBookmarkOverlay.location.label                  "Endereço:">
+<!ENTITY editBookmarkOverlay.location.accesskey              "E">
+<!ENTITY editBookmarkOverlay.feedLocation.label              "Localização da fonte de notícias:">
+<!ENTITY editBookmarkOverlay.feedLocation.accesskey          "L">
+<!ENTITY editBookmarkOverlay.siteLocation.label              "Endereço do site:">
+<!ENTITY editBookmarkOverlay.siteLocation.accesskey          "s">
+<!ENTITY editBookmarkOverlay.folder.label                    "Pasta:">
+<!ENTITY editBookmarkOverlay.folder.accesskey                "P">
+<!ENTITY editBookmarkOverlay.foldersExpanderDown.tooltip     "Mostrar todas as pastas de favoritos">
+<!ENTITY editBookmarkOverlay.expanderUp.tooltip              "Ocultar">
+<!ENTITY editBookmarkOverlay.tags.label                      "Tags:">
+<!ENTITY editBookmarkOverlay.tags.accesskey                  "a">
+<!ENTITY editBookmarkOverlay.tagsEmptyDesc.label             "Separar rótulos com vírgulas">
+<!ENTITY editBookmarkOverlay.description.label               "Descrição:">
+<!ENTITY editBookmarkOverlay.description.accesskey           "D">
+<!ENTITY editBookmarkOverlay.keyword.label                   "Palavra chave:">
+<!ENTITY editBookmarkOverlay.keyword.accesskey               "P">
+<!ENTITY editBookmarkOverlay.tagsExpanderDown.tooltip        "Mostrar todos os rótulos">
+<!ENTITY editBookmarkOverlay.choose.label                    "Escolha…">
+<!ENTITY editBookmarkOverlay.newFolderButton.label           "Nova pasta">
+<!ENTITY editBookmarkOverlay.newFolderButton.accesskey       "o">
+<!ENTITY editBookmarkOverlay.newFolderButton.tooltip         "Criar nova pasta">

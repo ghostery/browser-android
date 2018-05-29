@@ -1,0 +1,122 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label       "一般">
+<!ENTITY dataChoicesTab.label    "回報資料">
+<!ENTITY itemUpdate.label        "更新">
+<!ENTITY itemNetworking.label    "網路與磁碟空間">
+<!ENTITY itemCertificates.label  "憑證">
+
+<!-- General Settings -->
+<!ENTITY enableGlodaSearch.label       "開啟全域搜尋與索引器">
+<!ENTITY enableGlodaSearch.accesskey   "E">
+<!ENTITY dateTimeFormatting.label      "日期與時間格式">
+<!ENTITY allowHWAccel.label            "可用時開啟硬體加速">
+<!ENTITY allowHWAccel.accesskey        "h">
+<!ENTITY storeType.label               "新帳號的訊息儲存方式:">
+<!ENTITY storeType.accesskey           "T">
+<!ENTITY mboxStore2.label              "為每個信件匣建立一個檔案（mbox）">
+<!ENTITY maildirStore.label            "為每封訊息建立檔案（maildir）">
+
+<!ENTITY scrolling.label               "捲動">
+<!ENTITY useAutoScroll.label           "使用自動捲動">
+<!ENTITY useAutoScroll.accesskey       "U">
+<!ENTITY useSmoothScrolling.label      "使用平滑捲動">
+<!ENTITY useSmoothScrolling.accesskey  "m">
+
+<!ENTITY systemIntegration.label       "系統整合">
+<!ENTITY alwaysCheckDefault.label      "每次啟動時檢查 &brandShortName; 是否為預設電子郵件用戶端">
+<!ENTITY alwaysCheckDefault.accesskey  "a">
+<!ENTITY searchIntegration.label       "允許 &searchIntegration.engineName; 搜尋訊息">
+<!ENTITY searchIntegration.accesskey   "s">
+<!ENTITY checkDefaultsNow.label        "立刻檢查…">
+<!ENTITY checkDefaultsNow.accesskey    "N">
+<!ENTITY configEditDesc.label          "進階組態">
+<!ENTITY configEdit.label              "組態編輯器…">
+<!ENTITY configEdit.accesskey          "C">
+<!ENTITY returnReceiptsInfo.label      "決定 &brandShortName; 要如何處理收件回執">
+<!ENTITY showReturnReceipts.label      "收件回執…">
+<!ENTITY showReturnReceipts.accesskey  "R">
+
+<!-- Data Choices -->
+<!ENTITY telemetrySection.label          "Telemetry">
+<!ENTITY telemetryDesc.label             "分享您郵件軟體的效能、使用方式、硬體設備與自訂功能的資料給 &vendorShortName; 以幫助我們讓 &brandShortName; 變得更好">
+<!ENTITY enableTelemetry.label           "啟用 Telemetry">
+<!ENTITY enableTelemetry.accesskey       "T">
+<!ENTITY telemetryLearnMore.label        "更多資訊">
+
+<!ENTITY crashReporterSection.label      "程式錯誤回報員">
+<!ENTITY crashReporterDesc.label         "&brandShortName; 會回傳錯誤報告給 &vendorShortName;，讓您的郵件軟體更穩定、更安全。">
+<!ENTITY enableCrashReporter.label       "啟用程式錯誤回報員">
+<!ENTITY enableCrashReporter.accesskey   "C">
+<!ENTITY crashReporterLearnMore.label    "更多資訊">
+
+<!-- Update -->
+<!-- LOCALIZATION NOTE (updateApp.label):
+  Strings from aboutDialog.dtd are displayed in this section of the preferences.
+  Please check for possible accesskey conflicts.
+-->
+<!ENTITY updateApp2.label                "&brandShortName; 更新">
+<!-- LOCALIZATION NOTE (updateApp.version.*): updateApp.version.pre is
+  followed by a version number, keep the trailing space or replace it with
+  a different character as needed. updateApp.version.post is displayed after
+  the version number, and is empty on purpose for English. You can use it
+  if required by your language.
+ -->
+<!ENTITY updateApp.version.pre           "">
+<!ENTITY updateApp.version.post          " 版">
+<!ENTITY updateAuto.label                "自動安裝更新（建議的，保持安全性）">
+<!ENTITY updateAuto.accesskey            "A">
+<!ENTITY updateCheck.label               "自動檢查更新，但讓我選擇要不要安裝">
+<!ENTITY updateCheck.accesskey           "C">
+<!ENTITY updateManual.label              "不要檢查更新（不建議，可能會有安全性風險）">
+<!ENTITY updateManual.accesskey          "N">
+<!ENTITY updateHistory.label             "顯示更新記錄">
+<!ENTITY updateHistory.accesskey         "p">
+
+<!ENTITY useService.label                "在背景服務當中安裝更新">
+<!ENTITY useService.accesskey            "b">
+
+<!-- Networking and Disk Space -->
+<!ENTITY showSettings.label            "設定…">
+<!ENTITY showSettings.accesskey        "S">
+<!ENTITY proxiesConfigure.label        "設定 &brandShortName; 要如何連到網路">
+<!ENTITY connectionsInfo.caption       "連線">
+<!ENTITY offlineInfo.caption           "離線模式">
+<!ENTITY offlineInfo.label             "離線模式設定">
+<!ENTITY showOffline.label             "離線模式…">
+<!ENTITY showOffline.accesskey         "O">
+
+<!ENTITY Diskspace                       "磁碟空間">
+<!ENTITY offlineCompactFolders.label     "在可以節省超過">
+<!ENTITY offlineCompactFolders.accesskey "a">
+<!ENTITY offlineCompactFoldersMB.label   "MB 時壓實重整所有郵件匣">
+
+<!-- LOCALIZATION NOTE:
+  The entities useCacheBefore.label and useCacheAfter.label appear on a single
+  line in preferences as follows:
+
+  &useCacheBefore.label  [ textbox for cache size in MB ]   &useCacheAfter.label;
+-->
+<!ENTITY useCacheBefore.label            "最多使用">
+<!ENTITY useCacheBefore.accesskey        "U">
+<!ENTITY useCacheAfter.label             "MB 磁碟空間存放快取資料">
+<!ENTITY overrideSmartCacheSize.label    "停用自動快取管理">
+<!ENTITY overrideSmartCacheSize.accesskey "v">
+<!ENTITY clearCacheNow.label             "立刻清除">
+<!ENTITY clearCacheNow.accesskey         "C">
+
+<!-- Certificates -->
+<!ENTITY certSelection.description       "當伺服器要求我的個人憑證時:">
+<!ENTITY certs.auto                      "自動選擇一組憑證">
+<!ENTITY certs.auto.accesskey            "m">
+<!ENTITY certs.ask                       "每次都詢問我">
+<!ENTITY certs.ask.accesskey             "A">
+<!ENTITY enableOCSP.label                "向 OCSP 回應伺服器查詢，以確認憑證有效性">
+<!ENTITY enableOCSP.accesskey            "Q">
+
+<!ENTITY manageCertificates.label "管理憑證">
+<!ENTITY manageCertificates.accesskey "M">
+<!ENTITY viewSecurityDevices.label "安全裝置">
+<!ENTITY viewSecurityDevices.accesskey "S">

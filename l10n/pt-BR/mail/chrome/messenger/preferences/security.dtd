@@ -1,0 +1,48 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemJunk.label          "Antispam">
+<!ENTITY itemPhishing.label      "Antifraude">
+<!ENTITY itemPasswords.label     "Senhas">
+<!ENTITY itemAntiVirus.label     "Antivírus">
+
+<!-- Junk Mail Controls -->
+<!ENTITY junkMail.intro "Defina suas configurações padrão para spam. Opções específicas para cada conta podem ser definidas em “Configurar contas”.">
+<!ENTITY manualMark.label "Ao marcar mensagens como spam:">
+<!ENTITY manualMark.accesskey "A">
+<!ENTITY manualMarkModeMove.label "Movê-las para a pasta “Spam” da conta">
+<!ENTITY manualMarkModeMove.accesskey "o">
+<!ENTITY manualMarkModeDelete.label "Excluí-las">
+<!ENTITY manualMarkModeDelete.accesskey "x">
+<!ENTITY markAsReadOnSpam.label "Marcar como lidas as mensagens definidas como spam">
+<!ENTITY markAsReadOnSpam.accesskey "M">
+<!ENTITY enableAdaptiveJunkLogging.label "Registrar as atividades do filtro antispam adaptativo">
+<!ENTITY enableAdaptiveJunkLogging.accesskey "R">
+<!ENTITY openJunkLog.label "Exibir log">
+<!ENTITY openJunkLog.accesskey "E">
+<!ENTITY resetTrainingData.label "Excluir o treinamento">
+<!ENTITY resetTrainingData.accesskey "c">
+
+<!-- Phishing Detector -->
+<!ENTITY phishingDetector1.intro  "O &brandShortName; pode verificar se mensagens são possíveis fraudes (também conhecidas como phishing scams), detectando as técnicas de falsificação mais comuns.">
+<!ENTITY enablePhishingDetector1.label    "Alertar se a mensagem exibida for um possível golpe">
+<!ENTITY enablePhishingDetector1.accesskey  "A">
+<!ENTITY useDownloadedList.label "Receber e usar uma lista de possíveis fraudes de e-mail">
+<!ENTITY useDownloadedList.accesskey "R">
+
+<!-- Passwords -->
+<!ENTITY savedPasswords.intro           "O &brandShortName; pode memorizar nomes de usuário e senhas de todas as suas contas.">
+<!ENTITY useMasterPassword.label        "Usar uma senha mestra">
+<!ENTITY useMasterPassword.accesskey    "U">
+<!ENTITY masterPassword.intro           "A senha mestra protege todas as suas senhas — mas você deve fornecê-la uma vez por sessão.">
+<!ENTITY changeMasterPassword.label     "Modificar senha mestra…">
+<!ENTITY changeMasterPassword.accesskey "M">
+<!ENTITY savedPasswords.label           "Senhas memorizadas…">
+<!ENTITY savedPasswords.accesskey       "S">
+
+<!-- Anti Virus -->
+<!ENTITY antiVirus.intro      "O &brandShortName; pode facilitar a análise de novas mensagens por antivírus antes que elas sejam armazenadas localmente.">
+<!ENTITY antiVirus.label      "Aplicativos antivírus podem colocar uma mensagem recebida em quarentena">
+<!ENTITY antiVirus.accesskey  "A">
+

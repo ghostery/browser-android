@@ -1,0 +1,73 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemFormatting.label             "Opmaak">
+<!ENTITY itemTags.label                   "Labels">
+<!ENTITY itemAdvanced.label               "Geavanceerd">
+
+<!ENTITY style.label                      "Stijl:">
+<!ENTITY style.accesskey                  "t">
+<!ENTITY regularStyle.label               "Normaal">
+<!ENTITY bold.label                       "Vet">
+<!ENTITY italic.label                     "Cursief">
+<!ENTITY boldItalic.label                 "Vet en cursief">
+<!ENTITY size.label                       "Grootte:">
+<!ENTITY size.accesskey                   "r">
+<!ENTITY regularSize.label                "Normaal">
+<!ENTITY bigger.label                     "Groter">
+<!ENTITY smaller.label                    "Kleiner">
+<!ENTITY quotedTextColor.label            "Kleur:">
+<!ENTITY quotedTextColor.accesskey        "u">
+<!ENTITY displayWidth.label               "Plattetekstberichten">
+<!ENTITY displayText.label                "Geciteerde tekst in plattetekstberichten weergeven als:">
+
+<!-- LOCALIZATION NOTE : (emoticonsAndStructs.label) 'Emoticons' are also known as 'Smileys', e.g. :-)   -->
+<!ENTITY convertEmoticons.label        "Emoticons weergeven als afbeeldingen">
+<!ENTITY convertEmoticons.accesskey    "E">
+
+<!-- labels -->
+<!ENTITY displayTagsText.label     "Labels kunnen worden gebruikt voor het categoriseren van uw berichten.">
+<!ENTITY newTagButton.label        "Nieuw…">
+<!ENTITY newTagButton.accesskey    "N">
+<!ENTITY editTagButton1.label      "Bewerken…">
+<!ENTITY editTagButton1.accesskey  "B">
+<!ENTITY removeTagButton.label     "Verwijderen">
+<!ENTITY removeTagButton.accesskey "V">
+
+<!-- Fonts and Colors -->
+<!ENTITY fontsAndColors1.label   "Lettertypen &amp; kleuren">
+<!ENTITY defaultFont.label       "Standaardlettertype:">
+<!ENTITY defaultFont.accesskey   "S">
+<!ENTITY defaultSize.label       "Grootte:">
+<!ENTITY defaultSize.accesskey   "G">
+<!ENTITY fontOptions.accesskey   "c">
+<!ENTITY fontOptions.label       "Geavanceerd…">
+<!ENTITY colorButton.label       "Kleuren…">
+<!ENTITY colorButton.accesskey   "K">
+
+<!-- Advanced -->
+<!ENTITY reading.caption                  "Lezen">
+<!ENTITY display.caption                  "Weergave">
+<!ENTITY showCondensedAddresses.label     "Van personen in mijn adresboek alleen weergavenaam tonen">
+<!ENTITY showCondensedAddresses.accesskey "V">
+
+<!ENTITY autoMarkAsRead.label             "Berichten automatisch als gelezen markeren">
+<!ENTITY autoMarkAsRead.accesskey         "B">
+<!ENTITY markAsReadNoDelay.label          "Direct bij weergeven">
+<!ENTITY markAsReadNoDelay.accesskey      "D">
+<!-- LOCALIZATION NOTE (markAsReadDelay.label): This will concatenate to
+     "After displaying for [___] seconds",
+     using (markAsReadDelay.label) and a number (secondsLabel.label). -->
+<!ENTITY markAsReadDelay.label            "Na">
+<!ENTITY markAsReadDelay.accesskey        "N">
+<!ENTITY secondsLabel.label               "seconden weergeven">
+<!ENTITY openMsgIn.label                  "Nieuwe berichten openen in:">
+<!ENTITY openMsgInNewTab.label            "Een nieuw tabblad">
+<!ENTITY openMsgInNewTab.accesskey        "t">
+<!ENTITY reuseExpRadio0.label             "Een nieuw berichtvenster">
+<!ENTITY reuseExpRadio0.accesskey         "i">
+<!ENTITY reuseExpRadio1.label             "Een bestaand berichtvenster">
+<!ENTITY reuseExpRadio1.accesskey         "e">
+<!ENTITY closeMsgOnMoveOrDelete.label     "Berichtvenster/-tabblad sluiten bij verplaatsen of verwijderen">
+<!ENTITY closeMsgOnMoveOrDelete.accesskey "s">

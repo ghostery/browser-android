@@ -1,0 +1,29 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  windowClose.key                  "w">
+<!ENTITY  preferencesDefaultTitleMac.title "Voorkeuren">
+<!ENTITY  preferencesDefaultTitleWin.title "Opties">
+<!ENTITY  preferencesCloseButton.label     "Sluiten">
+<!ENTITY  preferencesCloseButton.accesskey "S">
+
+<!ENTITY  prefWindow.titleWin     "Opties">
+<!ENTITY  prefWindow.titleGNOME   "&brandShortName;-voorkeuren">
+<!ENTITY  prefWindow.titleMAC     "Voorkeuren">
+<!ENTITY  prefWindow.styleWindows "width: 55em; min-height: 41em;">
+<!ENTITY  prefWindow.styleMac     "width: 56em;">
+<!ENTITY  prefWindow.styleGNOME   "width: 60em; min-height: 38em;">
+
+<!ENTITY paneGeneral.title        "Algemeen">
+<!ENTITY paneDisplay.title        "Weergave">
+<!ENTITY paneComposition.title    "Opstellen">
+<!ENTITY paneChat.title           "Chat">
+<!ENTITY paneAttachments.title    "Bijlagen">
+<!ENTITY panePrivacy.title        "Privacy">
+<!ENTITY paneSecurity.title       "Beveiliging">
+<!ENTITY paneAdvanced.title       "Geavanceerd">
+<!ENTITY paneAccount.title        "Accounts">
+
+<!ENTITY okButton.title           "OK">
+<!ENTITY okButton.accesskey       "O">

@@ -1,0 +1,7 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<!ENTITY fileExceedsQuota.title   "Hightail">
+<!ENTITY fileExceedsQuota.storageLimitReached   "저장공간이 부족합니다">
+<!ENTITY fileExceedsQuota.description "2GB 제한에 도달했습니다.">
+<!ENTITY fileExceedsQuota.description1 "현재 #XXX GB 을 사용하고 계십니다.">

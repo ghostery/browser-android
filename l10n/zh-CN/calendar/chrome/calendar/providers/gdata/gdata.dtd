@@ -1,0 +1,22 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY gdata-provider.label "Google 日历">
+
+<!ENTITY gdata.privacy.default.label "Google 默认">
+<!ENTITY gdata.privacy.default.accesskey "D">
+
+<!ENTITY gdata.migration.title "迁移只读日历">
+<!ENTITY gdata.migration.description "Google 日历提供者发现您拥有一些只读的 Google 日历。如果您想要修改其中的日历，请从下面选择">
+<!ENTITY gdata.migration.upgrade.label "升级">
+<!ENTITY gdata.migration.upgrade.accesskey "U">
+<!ENTITY gdata.migration.showagain.label "总是检查">
+
+<!ENTITY gdata.reminder.default "预设提醒">
+<!ENTITY gdata.reminder.action.sms.label "发送文本消息">
+
+<!ENTITY gdata.wizard.session.description "请选择现有的会话，或者输入您的电子邮件地址以建立新的会话。每个账号您只需建立一个会话。">
+<!ENTITY gdata.wizard.calendars.description "请选择您要订阅的日历与任务列表。">
+
+<!ENTITY gdata.wizard.nextstep.description "请前往下一步设置您的日历。">

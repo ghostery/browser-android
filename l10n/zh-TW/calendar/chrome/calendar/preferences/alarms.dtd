@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.alarmgoesoff.label "鬧鈴時間到時:">
+<!ENTITY pref.playasound "播放音效">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "s">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "使用預設音效">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "d">
+<!ENTITY pref.calendar.alarms.sound.browse.label "瀏覽…">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "B">
+<!ENTITY pref.calendar.alarms.sound.play.label "播放">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "P">
+<!ENTITY pref.showalarmbox "顯示鬧鈴訊息">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "x">
+<!ENTITY pref.missedalarms "列出過期的鬧鈴">
+<!ENTITY pref.missedalarms2 "為可寫入的行事曆顯示錯過的提醒">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "m">
+<!ENTITY pref.calendar.alarms.defaults.label "鬧鈴預設值">
+<!ENTITY pref.defalarm4events.label "預設事件的鬧鈴設定:">
+<!ENTITY pref.defalarm4events.accesskey "e">
+<!ENTITY pref.defalarm4todos.label "預設的工作鬧鈴設定:">
+<!ENTITY pref.defalarm4todos.accesskey "a">
+<!ENTITY pref.alarm.on "開啟">
+<!ENTITY pref.alarm.off "關閉">
+<!ENTITY pref.defalarmlen4events.label "鬧鈴預設於事件前多久停止:">
+<!ENTITY pref.defalarmlen4events.accesskey "u">
+<!ENTITY pref.defalarmlen4todos.label "鬧鈴預設於工作前多久停止:">
+<!ENTITY pref.defalarmlen4todos.accesskey "o">
+
+<!ENTITY pref.defaultsnoozelength.label "預設稍後提醒長度:" >
+<!ENTITY pref.defaultsnoozelength.accesskey "S">

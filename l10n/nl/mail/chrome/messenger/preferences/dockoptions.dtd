@@ -1,0 +1,16 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dockOptionsDialog.title               "Programmaymboolopties">
+<!ENTITY window.macWidth                       "35em">
+
+<!ENTITY bounceSystemDockIcon.label            "Het programmasymbool laten bewegen als een nieuw bericht binnenkomt">
+<!ENTITY bounceSystemDockIcon.accesskey        "b">
+<!ENTITY newMessagesCountDock.label            "Aantal nieuwe berichten">
+<!ENTITY newMessagesCountDock.accesskey        "n">
+<!ENTITY showAllUnreadMessagesCount.label      "Aantal ongelezen berichten">
+<!ENTITY showAllUnreadMessagesCount.accesskey  "o">
+<!ENTITY dockIconBadge.label                   "Programmasymboolbadge">
+<!ENTITY dockIconShow.label                    "Programmasymbool markeren met:">
+<!ENTITY directNotificationSettings.label      "U kunt de badge uitschakelen via het paneel Berichtgeving in Systeemvoorkeuren.">

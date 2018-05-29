@@ -1,0 +1,23 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- extracted from MsgSynchronize.xul and msgSelectOffline.xul-->
+
+<!ENTITY MsgSynchronize.label "Recebimento e sincronização de mensagens">
+<!ENTITY MsgSelect.label "Itens para leitura off-line">
+<!ENTITY MsgSyncDesc.label "Se você já selecionou pastas de mensagens ou newsgroups para leitura off-line, pode agora recebê-los e/ou sincronizá-los. Para escolher agora os itens utilize o botão “Selecionar”.">
+<!ENTITY MsgSyncDirections.label "Receber e/ou sincronizar estes itens:">
+<!ENTITY syncTypeMail.label "Mensagens de e-mail">
+<!ENTITY syncTypeMail.accesskey "M">
+<!ENTITY syncTypeNews.label "Mensagens de newsgroup">
+<!ENTITY syncTypeNews.accesskey "n">
+<!ENTITY sendMessage.label "Enviar mensagens não enviadas">
+<!ENTITY sendMessage.accesskey "E">
+<!ENTITY workOffline.label "Entrar no modo off-line ao concluir o download e/ou sincronização">
+<!ENTITY workOffline.accesskey "t">
+<!ENTITY selectButton.label "Selecionar…">
+<!ENTITY selectButton.accesskey "S">
+<!ENTITY MsgSelectDesc.label "Selecione pastas de mensagens e newsgroups para leitura off-line:">
+<!ENTITY MsgSelectInd.label "Receber">
+<!ENTITY MsgSelectItems.label "Pastas e newsgroups">

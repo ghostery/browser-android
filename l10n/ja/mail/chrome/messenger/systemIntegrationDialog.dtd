@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title	"システム統合">
+<!ENTITY acceptIntegration.label	"既定として設定">
+<!ENTITY cancelIntegration.label	"統合をスキップ">
+<!ENTITY cancelIntegration2.label	"キャンセル">
+<!ENTITY defaultClient.intro		"&brandShortName; を次の既定のクライアントとして使用する:">
+
+<!ENTITY email.label			"メール">
+<!ENTITY newsgroups.label		"ニュース">
+<!ENTITY feeds.label			"フィード">
+
+<!ENTITY unsetDefault.tooltip		"&brandShortName; から既定のクライアントの設定を解除することはできません。他のプログラムを既定に設定するには、そのプログラムから設定してください。">
+
+<!ENTITY checkOnStartup.label		"起動時に &brandShortName; が既定のクライアントとして設定されているか確認する">
+<!ENTITY checkOnStartup.accesskey	"A">
+
+<!ENTITY searchIntegration.label	"&searchIntegration.engineName; によるメッセージの検索を許可する">
+<!ENTITY searchIntegration.accesskey	"S">

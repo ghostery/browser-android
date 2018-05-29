@@ -1,0 +1,54 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.mainbox.label "常规设置" >
+<!ENTITY pref.dateformat.label "日期格式：" >
+<!ENTITY pref.dateformat.accesskey "D">
+<!ENTITY pref.dateformat.long "长" >
+<!ENTITY pref.dateformat.short "短"  >
+
+<!ENTITY pref.timezones.caption "时区">
+<!ENTITY pref.timezones.label "请选择距离您所在时区最近的城市：">
+<!ENTITY pref.timezones.accesskey "S">
+
+<!ENTITY pref.defaults.label "新项目默认值">
+<!ENTITY pref.events.label "事件">
+<!ENTITY pref.tasks.label "任务">
+
+<!ENTITY pref.default_event_length.label "默认长度：" >
+<!ENTITY pref.default_event_length.accesskey "e">
+
+<!ENTITY pref.default_task_none.label "无">
+<!ENTITY pref.default_task_start_of_day.label "开始日期">
+<!ENTITY pref.default_task_end_of_day.label "结束日期">
+<!ENTITY pref.default_task_tomorrow.label "明天">
+<!ENTITY pref.default_task_next_week.label "下周">
+<!ENTITY pref.default_task_offset_current.label "相对当前时间的关系">
+<!ENTITY pref.default_task_offset_start.label "相对开始时间的关系">
+<!ENTITY pref.default_task_offset_next_hour.label "相对下个小时的关系">
+
+<!ENTITY pref.calendar.todaypane.agenda.caption "今日面板">
+<!ENTITY pref.soondays.label "“即将到来”区块将显示：">
+<!ENTITY pref.soondays.accesskey "u">
+
+<!-- LOCALIZATION NOTE (pref.soondays2.label):
+     "Upcoming" is the name of a section and the translation must match the
+     translation of that section name (calendar.upcoming.button.label). Also,
+     it should be upper case (as a proper name) if the target language permits.
+  -->
+<!ENTITY pref.soondays2.label "“即将到来”区块将显示：">
+<!ENTITY pref.soondays2.accesskey "U">
+
+<!ENTITY pref.accessibility.label "可用性" >
+<!ENTITY pref.systemcolors.label "为无障碍使用优化颜色" >
+<!ENTITY pref.systemcolors.accesskey "c">
+
+<!ENTITY pref.eventsandtasks.label "事件和任务" >
+<!ENTITY pref.editInTab.label "在标签页而非对话框窗口中编辑事件和任务。" >
+<!ENTITY pref.editInTab.accesskey "t">

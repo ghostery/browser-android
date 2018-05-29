@@ -1,0 +1,33 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!ENTITY pref.toolbars.title "도구 모음">
+<!ENTITY composition.caption "도구 모음 편집 버튼 보이기:">
+<!ENTITY new.label "새로">
+<!ENTITY open.label "열기">
+<!ENTITY save.label "저장">
+<!ENTITY publish.label "출판">
+<!ENTITY preview.label "브라우징">
+<!ENTITY cut.label "잘라내기">
+<!ENTITY copy.label "복사하기">
+<!ENTITY paste.label "붙여넣기">
+<!ENTITY print.label "인쇄">
+<!ENTITY find.label "찾기">
+<!ENTITY image.label "이미지">
+<!ENTITY hline.label "구분자">
+<!ENTITY table.label "표">
+<!ENTITY link.label "링크">
+<!ENTITY anchor.label "내부 링크">
+<!ENTITY formatting.caption "도구 모음 설정 버튼 보이기:">
+<!ENTITY smaller.label "작게">
+<!ENTITY larger.label "크게">
+<!ENTITY bold.label "굵게">
+<!ENTITY bullets.label "표시">
+<!ENTITY numbers.label "숫자">
+<!ENTITY italic.label "기울임">
+<!ENTITY outdent.label "한 수준 위로">
+<!ENTITY indent.label "한 수준 아래로">
+<!ENTITY underline.label "밑줄">
+<!ENTITY absolutePosition.label "절대 위치">
+<!ENTITY decreaseZIndex.label "뒤로 가져가기">
+<!ENTITY increaseZIndex.label "앞으로 가져오기">

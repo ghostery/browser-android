@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title                 "Formato de envio">
+<!ENTITY sendMail.title               "Mensagens com formatação">
+<!ENTITY autoDowngrade.label          "Enviar mensagens como texto sem formatação, se possível">
+<!ENTITY autoDowngrade.accesskey      "t">
+<!ENTITY sendMaildesc.label           "Ao enviar mensagens com formatação (HTML) e um destinatário não estiver definido para receber nesse formato:">
+<!ENTITY askMe.label                  "Perguntar qual é o formato desejado">
+<!ENTITY askMe.accesskey              "P">
+<!ENTITY convertPlain.label           "Enviar só uma versão sem formatação">
+<!ENTITY convertPlain.accesskey       "v">
+<!ENTITY sendHTML.label               "Enviar só no formato original HTML">
+<!ENTITY sendHTML.accesskey           "E">
+<!ENTITY sendBoth.label               "Enviar junto uma versão sem formatação">
+<!ENTITY sendBoth.accesskey           "n">
+<!ENTITY override.label               "Nota: especifique o formato de cada destinatário através do catálogo de endereços.">
+
+<!ENTITY domaindesc.label             "Ao enviar uma mensagem para um endereço com um dos domínios abaixo, o &brandShortName; automaticamente envia a mensagem no formato correto.">
+<!ENTITY HTMLTab.label                "Enviar em HTML">
+<!ENTITY HTMLTab.accesskey            "H">
+<!ENTITY PlainTextTab.label           "Enviar como texto sem formatação">
+<!ENTITY PlainTextTab.accesskey       "t">
+<!ENTITY AddHtmlDomain.label          "Adicionar…">
+<!ENTITY AddHtmlDomain.accesskey      "A">
+<!ENTITY AddPlainText.label           "Adicionar…">
+<!ENTITY AddPlainText.accesskey       "A">
+<!ENTITY DeleteHtmlDomain.label       "Excluir">
+<!ENTITY DeleteHtmlDomain.accesskey   "x">
+<!ENTITY DeletePlainText.label        "Excluir">
+<!ENTITY DeletePlainText.accesskey    "x">
+
+<!ENTITY add.htmltitle                "Adicionar um domínio">
+<!ENTITY add.htmldomain               "Domínio de HTML:">
+<!ENTITY add.plaintexttitle           "Adicionar um domínio">
+<!ENTITY add.plaintextdomain          "Domínio de texto sem formatação:">

@@ -1,0 +1,115 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Don't localize these. They're here until they have
+     a better place to live. -->
+<!ENTITY syncBrand.fullName.label "Firefox 同步">
+<!ENTITY syncBrand.shortName.label "同步">
+
+<!-- Main titles. -->
+<!ENTITY sync.title.connect.label '连接到 &syncBrand.shortName.label;'>
+
+<!-- J-PAKE Key Screen -->
+<!ENTITY sync.subtitle.connect.label '要想激活您的新设备，请在设备上选择“设置 &syncBrand.shortName.label;”。'>
+<!ENTITY sync.subtitle.pair.label '要想激活，请在您的其他设备上选择“设备配对”。'>
+<!ENTITY sync.pin.default.label '...\n...\n...\n'>
+<!ENTITY sync.link.nodevice.label '该设备不在我身边…'>
+
+<!-- Configure Engines -->
+<!ENTITY sync.configure.engines.title.passwords2 '登录信息'>
+<!ENTITY sync.configure.engines.title.history '历史记录'>
+<!ENTITY sync.configure.engines.title.tabs '标签页'>
+
+<!-- Localization note (sync.default.client.name): Default string of the "Device
+     name" menu item upon setting up Firefox Sync.  The placeholder &formatS1
+     will be replaced by the name of the Firefox release channel and &formatS2
+     by the model name of the Android device. Examples look like "Aurora on
+     GT-I1950" and "Fennec on MI 2S". -->
+<!ENTITY sync.default.client.name '在 &formatS2; 上使用的 &formatS1;'>
+
+<!-- Bookmark folder strings -->
+<!ENTITY bookmarks.folder.menu.label '书签菜单'>
+<!ENTITY bookmarks.folder.places.label ''>
+<!ENTITY bookmarks.folder.tags.label '标签'>
+<!ENTITY bookmarks.folder.toolbar.label '书签工具栏'>
+<!ENTITY bookmarks.folder.other.label '其他书签'>
+<!ENTITY bookmarks.folder.desktop.label '桌面设备上的书签'>
+<!ENTITY bookmarks.folder.mobile.label '移动设备上的书签'>
+<!-- Pinned sites on about:home. This folder should never be shown to the user, but we have to give it a string name -->
+<!ENTITY bookmarks.folder.pinned.label '已固定'>
+
+<!-- Firefox Account strings. -->
+
+<!-- Localization note: these are shown in screens after the user has
+     created or signed in to an account, and take the user back to
+     Firefox. -->
+<!ENTITY fxaccount_back_to_browsing '返回浏览状态'>
+
+<!ENTITY fxaccount_getting_started_welcome_to_sync '欢迎使用 &syncBrand.shortName.label;'>
+<!ENTITY fxaccount_getting_started_description2 '登录以同步您的标签页、书签、登录信息等。'>
+<!ENTITY fxaccount_getting_started_get_started '开始使用'>
+<!ENTITY fxaccount_getting_started_old_firefox '使用旧版本的 &syncBrand.shortName.label;？'>
+
+<!ENTITY fxaccount_status_auth_server '账户服务器'>
+<!ENTITY fxaccount_status_sync_now '立即同步'>
+<!ENTITY fxaccount_status_syncing2 '正在同步…'>
+<!ENTITY fxaccount_status_device_name '设备名称'>
+<!ENTITY fxaccount_status_sync_server '同步服务器'>
+<!ENTITY fxaccount_status_needs_verification2 '您的账户需要验证。点按此处重发验证邮件。'>
+<!ENTITY fxaccount_status_needs_credentials '无法连接。点按以登录。'>
+<!ENTITY fxaccount_status_needs_upgrade '您需要升级 &brandShortName; 才能登录。'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled '&syncBrand.shortName.label; 已设置但尚未开始自动同步。请在 Android 设置 &gt; 数据使用 中切换“自动同步数据”。'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 '&syncBrand.shortName.label; 已设置但尚未开始自动同步。请在 Android 设置 &gt; 数据使用 中切换“自动同步数据”。'>
+<!ENTITY fxaccount_status_needs_finish_migrating '点按以登录到您全新的 Firefox 账户。'>
+<!ENTITY fxaccount_status_choose_what '选择要同步的信息'>
+<!ENTITY fxaccount_status_bookmarks '书签'>
+<!ENTITY fxaccount_status_history '历史记录'>
+<!ENTITY fxaccount_status_passwords2 '登录信息'>
+<!ENTITY fxaccount_status_tabs '打开的标签页'>
+<!ENTITY fxaccount_status_additional_settings '额外设置'>
+<!ENTITY fxaccount_pref_sync_use_metered2 '仅通过 Wi-Fi 同步'>
+<!-- Localization note: Only affects background syncing, user initiated
+     syncs will still be done regardless of the connection -->
+<!ENTITY fxaccount_pref_sync_use_metered_summary2 '避免 &brandShortName; 通过蜂窝或流量计费网络同步'>
+<!ENTITY fxaccount_status_legal '法律' >
+<!-- Localization note: when tapped, the following two strings link to
+     external web pages.  Compare fxaccount_policy_{linktos,linkprivacy}:
+     these strings are separated to accommodate languages that decline
+     the two uses differently. -->
+<!ENTITY fxaccount_status_linktos2 '服务条款'>
+<!ENTITY fxaccount_status_linkprivacy2 '隐私声明'>
+<!ENTITY fxaccount_remove_account '断开&ellipsis;'>
+
+<!ENTITY fxaccount_remove_account_dialog_title2 '断开同步？'>
+<!ENTITY fxaccount_remove_account_dialog_message2 '您的浏览数据将继续保留在此设备上，但它将不再与您的账号同步。'>
+<!-- Localization note: format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_remove_account_toast2 'Firefox 账号 &formatS; 已断开。'>
+<!-- Localization note (fxaccount_remove_account_dialog_action_confirm): This is the label for the
+ confirm button in the dialog that shows up when disconnecting from sync. -->
+<!ENTITY fxaccount_remove_account_dialog_action_confirm '断开'>
+
+<!ENTITY fxaccount_enable_debug_mode '启用调试模式'>
+
+<!-- Localization note: this is the name shown by the Android system
+     itself for a Firefox Account. Don't localize this. -->
+<!ENTITY fxaccount_account_type_label 'Firefox'>
+
+<!-- Localization note: these are shown by the Android system itself,
+     when the user navigates to the Android > Accounts > {Firefox
+     Account} Screen. The link takes the user to the Firefox Account
+     status activity, which lets them manage their Firefox
+     Account. -->
+<!ENTITY fxaccount_options_title '&syncBrand.shortName.label; 选项'>
+<!ENTITY fxaccount_options_configure_title '配置 &syncBrand.shortName.label;'>
+
+<!ENTITY fxaccount_sync_sign_in_error_notification_title2 '&syncBrand.shortName.label; 未连接'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_sign_in_error_notification_text2 '点按此处以使用 &formatS; 登录'>
+
+<!ENTITY fxaccount_sync_finish_migrating_notification_title '完成升级 &syncBrand.shortName.label;？'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_finish_migrating_notification_text '点按此处以使用 &formatS; 登录'>

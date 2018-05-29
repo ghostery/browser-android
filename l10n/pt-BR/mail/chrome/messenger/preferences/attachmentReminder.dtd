@@ -1,0 +1,12 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY attachmentReminderDialog.title   "Palavras-chave do lembrete de anexos">
+<!ENTITY attachKeywordText.label          "O &brandShortName; o alertará sobre a ausência de anexos quando você enviar um e-mail contendo uma destas palavra-chave.">
+<!ENTITY newKeywordButton.label           "Novo…">
+<!ENTITY newKeywordButton.accesskey       "N">
+<!ENTITY editKeywordButton1.label         "Editar…">
+<!ENTITY editKeywordButton1.accesskey     "E">
+<!ENTITY removeKeywordButton.label        "Excluir">
+<!ENTITY removeKeywordButton.accesskey    "x">

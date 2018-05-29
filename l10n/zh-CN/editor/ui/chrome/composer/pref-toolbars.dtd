@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.toolbars.title    "工具栏">
+
+<!ENTITY composition.caption    "在编写工具栏中显示这些按钮:">
+
+<!ENTITY new.label              "新建">
+<!ENTITY open.label             "打开">
+<!ENTITY save.label             "保存">
+<!ENTITY publish.label          "发布">
+<!ENTITY preview.label          "浏览">
+<!ENTITY cut.label              "剪切">
+<!ENTITY copy.label             "复制">
+<!ENTITY paste.label            "粘贴">
+<!ENTITY print.label            "打印">
+<!ENTITY find.label             "查找">
+<!ENTITY image.label            "图像">
+<!ENTITY hline.label            "水平线">
+<!ENTITY table.label            "表格">
+<!ENTITY link.label             "链接">
+<!ENTITY anchor.label           "锚标">
+
+<!ENTITY formatting.caption     "在格式工具栏中显示这些按钮:">
+
+<!ENTITY smaller.label          "缩小">
+<!ENTITY larger.label           "更大">
+<!ENTITY bold.label             "粗体">
+<!ENTITY bullets.label          "条目">
+<!ENTITY numbers.label          "编号">
+<!ENTITY italic.label           "斜体">
+<!ENTITY outdent.label          "突出文本">
+<!ENTITY indent.label           "缩进">
+<!ENTITY underline.label        "下划线">
+
+<!ENTITY absolutePosition.label "绝对定位">
+<!ENTITY decreaseZIndex.label   "置后">
+<!ENTITY increaseZIndex.label   "前置">

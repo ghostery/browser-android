@@ -1,0 +1,29 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  windowClose.key                  "w">
+<!ENTITY  preferencesDefaultTitleMac.title "偏好設定">
+<!ENTITY  preferencesDefaultTitleWin.title "選項">
+<!ENTITY  preferencesCloseButton.label     "關閉">
+<!ENTITY  preferencesCloseButton.accesskey "C">
+
+<!ENTITY  prefWindow.titleWin     "選項">
+<!ENTITY  prefWindow.titleGNOME   "&brandShortName; 偏好設定">
+<!ENTITY  prefWindow.titleMAC     "偏好設定">
+<!ENTITY  prefWindow.styleWindows "width: 44em; min-height: 38.5em;">
+<!ENTITY  prefWindow.styleMac     "width: 52em;">
+<!ENTITY  prefWindow.styleGNOME   "width: 47em; min-height: 38em;">
+
+<!ENTITY paneGeneral.title        "一般">
+<!ENTITY paneDisplay.title        "顯示">
+<!ENTITY paneComposition.title    "編輯">
+<!ENTITY paneChat.title           "聊天">
+<!ENTITY paneAttachments.title    "附件">
+<!ENTITY panePrivacy.title        "個人隱私">
+<!ENTITY paneSecurity.title       "安全性">
+<!ENTITY paneAdvanced.title       "進階">
+<!ENTITY paneAccount.title        "帳號">
+
+<!ENTITY okButton.title           "確定">
+<!ENTITY okButton.accesskey       "O">

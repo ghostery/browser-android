@@ -1,0 +1,41 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.calendar.view.allview.caption "일반">
+<!ENTITY pref.calendar.view.dayandweekviews.caption "날짜와 주일 보기">
+<!ENTITY pref.calendar.view.multiweekview.caption "여러 주 보기">
+<!ENTITY pref.calendar.view.workweek.caption "근무 주">
+
+<!ENTITY pref.weekstarts.label "한 주의 시작:">
+<!ENTITY pref.weekstarts.accesskey "r">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.label "주차 표시">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "w">
+<!ENTITY pref.daysoff.label "근무 주 포함 요일:">
+
+<!ENTITY pref.calendar.view.daystart.label "일일 시작 시점:">
+<!ENTITY pref.calendar.view.daystart.accesskey "D">
+<!ENTITY pref.calendar.view.dayend.label "일일 종료 시점:">
+<!ENTITY pref.calendar.view.dayend.accesskey "y">
+<!ENTITY pref.calendar.view.visiblehours.label "한 번에 표시할 시간:">
+<!ENTITY pref.calendar.view.visiblehours.accesskey "o">
+<!ENTITY pref.calendar.view.visiblehoursend.label "시간">
+
+<!ENTITY pref.numberofweeks.label "기본 표시 주 (이전 주 포함):">
+<!ENTITY pref.numberofweeks.accesskey "e">
+<!ENTITY pref.numberofpreviousweeks.label "이전 주 표시:">
+<!ENTITY pref.numberofpreviousweeks.accesskey "P">
+<!ENTITY pref.numberofweeks.0 "없음">
+<!ENTITY pref.numberofweeks.1 "1주">
+<!ENTITY pref.numberofweeks.2 "2주">
+<!ENTITY pref.numberofweeks.3 "3주">
+<!ENTITY pref.numberofweeks.4 "4주">
+<!ENTITY pref.numberofweeks.5 "5주">
+<!ENTITY pref.numberofweeks.6 "6주">
+<!ENTITY pref.showlocation.label "위치 보기">
+<!ENTITY pref.showlocation.accesskey "L">

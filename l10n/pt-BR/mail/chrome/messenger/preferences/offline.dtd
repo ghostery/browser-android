@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "Configurar modo off-line">
+
+<!ENTITY checkAutoDetect.label "Seguir automaticamente o estado on-line detectado">
+<!ENTITY checkAutoDetect.accesskey "d">
+<!ENTITY titleStartUp "Estado manual quando inicializando:">
+<!ENTITY radioRememberPrevState.label "Somente se já estava no modo off-line">
+<!ENTITY radioRememberPrevState.accesskey "t">
+<!ENTITY radioAskState.label "Pergunte-me pelo estado on-line">
+<!ENTITY radioAskState.accesskey "g">
+<!ENTITY radioAlwaysOnlineState.label "On-line">
+<!ENTITY radioAlwaysOnlineState.accesskey "l">
+<!ENTITY radioAlwaysOffline.label "Desconectado">
+<!ENTITY radioAlwaysOffline.accesskey "D">
+
+<!ENTITY textGoingOnline "Ao sair do modo off-line enviar as mensagens não enviadas?">
+<!ENTITY radioAutoSend.label "Sim">
+<!ENTITY radioAutoSend.accesskey "S">
+<!ENTITY radioNotSend.label "Não">
+<!ENTITY radioNotSend.accesskey "N">
+<!ENTITY radioAskUnsent.label "Perguntar">
+<!ENTITY radioAskUnsent.accesskey "P">
+<!ENTITY textGoingOffline "Ao entrar no modo off-line receber as mensagens definidas para leitura off-line?">
+<!ENTITY radioAutoDownload.label "Sim">
+<!ENTITY radioAutoDownload.accesskey "m">
+<!ENTITY radioNotDownload.label "Não">
+<!ENTITY radioNotDownload.accesskey "o">
+<!ENTITY radioAskDownload.label "Perguntar">
+<!ENTITY radioAskDownload.accesskey "r">

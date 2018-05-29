@@ -1,0 +1,41 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.calendar.view.allview.caption "Általános">
+<!ENTITY pref.calendar.view.dayandweekviews.caption "Napi és heti nézetek">
+<!ENTITY pref.calendar.view.multiweekview.caption "Többheti nézet">
+<!ENTITY pref.calendar.view.workweek.caption "Munkahét">
+
+<!ENTITY pref.weekstarts.label "Hét kezdőnapja:">
+<!ENTITY pref.weekstarts.accesskey "H">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Hétszám megjelenítése a nézetekben és a mini hónapban">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "H">
+<!ENTITY pref.daysoff.label "A munkahét napjai:">
+
+<!ENTITY pref.calendar.view.daystart.label "A nap kezdete:">
+<!ENTITY pref.calendar.view.daystart.accesskey "k">
+<!ENTITY pref.calendar.view.dayend.label "A nap vége:">
+<!ENTITY pref.calendar.view.dayend.accesskey "v">
+<!ENTITY pref.calendar.view.visiblehours.label "Megjelenítés:">
+<!ENTITY pref.calendar.view.visiblehours.accesskey "e">
+<!ENTITY pref.calendar.view.visiblehoursend.label "órát egyszerre">
+
+<!ENTITY pref.numberofweeks.label "Megjelenítendő hetek száma (beleértve az előző heteket is)">
+<!ENTITY pref.numberofweeks.accesskey "M">
+<!ENTITY pref.numberofpreviousweeks.label "Megjelenítendő előző hetek:">
+<!ENTITY pref.numberofpreviousweeks.accesskey "e">
+<!ENTITY pref.numberofweeks.0 "nincs">
+<!ENTITY pref.numberofweeks.1 "1 hét">
+<!ENTITY pref.numberofweeks.2 "2 hét">
+<!ENTITY pref.numberofweeks.3 "3 hét">
+<!ENTITY pref.numberofweeks.4 "4 hét">
+<!ENTITY pref.numberofweeks.5 "5 hét">
+<!ENTITY pref.numberofweeks.6 "6 hét">
+<!ENTITY pref.showlocation.label "Hely megjelenítése">
+<!ENTITY pref.showlocation.accesskey "H">

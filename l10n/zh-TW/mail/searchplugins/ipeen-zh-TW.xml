@@ -1,0 +1,8 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
+<ShortName>愛評網店家搜尋</ShortName>
+<Description>使用關鍵字快速搜尋「iPeen 愛評網」上面豐富的美食、餐廳、景點、民宿資訊</Description>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="16" height="16" type="image/x-icon">data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAzMzMAP///wAbE8sAADXqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAERERERAAAAEREREREQADMzMzMzERADREREREQxEANERERERDEQA0REIkREMRADREQiREQxEANERCJERDEQA0REIkREMRADREREREQxEANERCJERDEAA0REREREMAADREREREQwAAAzMzMzMwAAAAAAAAAAAAD//wAA+AMAAPABAADAAQAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAIADAACABwAAgAcAAMAPAAD//wAA</Image>
+<Url type="text/html" method="GET" template="http://www.ipeen.com.tw/search/index.php?kw={searchTerms}" />
+<SearchForm>http://www.ipeen.com.tw/</SearchForm>
+</SearchPlugin>

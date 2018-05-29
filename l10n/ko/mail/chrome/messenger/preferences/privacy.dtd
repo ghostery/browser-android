@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Mail Content -->
+<!ENTITY captionMailContent.label "메일 내용">
+
+<!ENTITY acceptRemoteContent.label "메시지에 외부 컨텐츠 허용">
+<!ENTITY acceptRemoteContent.accesskey "A">
+<!ENTITY remoteContentExceptions.label "예외…">
+<!ENTITY remoteContentExceptions.accesskey "x">
+<!ENTITY acceptRemoteContentInfo.label "외부 컨텐츠의 개인정보 이슈에 대해 더 알아보기">
+
+<!-- Web Content -->
+<!ENTITY captionWebContent.label "웹 내용">
+
+<!ENTITY keepHistory.label "방문한 웹 사이트와 링크 기억하기">
+<!ENTITY keepHistory.accesskey "R">
+<!ENTITY acceptCookies.label "쿠키 허용">
+<!ENTITY acceptCookies.accesskey "A">
+<!ENTITY acceptThirdParty.pre.label "서드 파티 쿠키 허용:">
+<!ENTITY acceptThirdParty.pre.accesskey "c">
+<!ENTITY acceptThirdParty.always.label "항상">
+<!ENTITY acceptThirdParty.never.label "허용하지 않음">
+<!ENTITY acceptThirdParty.visited.label "방문했던 사이트는 허용">
+<!ENTITY keepUntil.label "유지:">
+<!ENTITY keepUntil.accesskey "K">
+<!ENTITY expire.label "만료">
+<!ENTITY close.label "&brandShortName;을 닫을 때">
+<!ENTITY askEachTime.label "매 번 묻기">
+<!ENTITY cookieExceptions.label "예외…">
+<!ENTITY cookieExceptions.accesskey "E">
+<!ENTITY showCookies.label "쿠키 보기…">
+<!ENTITY showCookies.accesskey "S">
+
+<!ENTITY dntTrackingNotOkay.label2 "웹 사이트에 방문자 추적 중지를 요청">
+<!ENTITY dntTrackingNotOkay.accesskey "n">
+<!ENTITY doNotTrackInfo.label "방문자 추적 중지에 대해 더 알아보기">

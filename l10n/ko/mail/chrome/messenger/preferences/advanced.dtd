@@ -1,0 +1,122 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label       "일반">
+<!ENTITY dataChoicesTab.label    "데이터 선택">
+<!ENTITY itemUpdate.label        "업데이트">
+<!ENTITY itemNetworking.label    "네트워크 및 디스크 용량">
+<!ENTITY itemCertificates.label  "인증서">
+
+<!-- General Settings -->
+<!ENTITY enableGlodaSearch.label       "전체 검색 및 색인 사용함">
+<!ENTITY enableGlodaSearch.accesskey   "E">
+<!ENTITY dateTimeFormatting.label      "날짜와 시간 형식">
+<!ENTITY allowHWAccel.label            "하드웨어 가속 사용하기">
+<!ENTITY allowHWAccel.accesskey        "h">
+<!ENTITY storeType.label               "새 계정에 대한 메시지 저장 타입:">
+<!ENTITY storeType.accesskey           "T">
+<!ENTITY mboxStore2.label              "큰 파일 하나 (mbox)">
+<!ENTITY maildirStore.label            "메시지 당 파일 하나 (maildir)">
+
+<!ENTITY scrolling.label               "스크롤">
+<!ENTITY useAutoScroll.label           "자동스크롤 사용하기">
+<!ENTITY useAutoScroll.accesskey       "U">
+<!ENTITY useSmoothScrolling.label      "부드러운 스크롤 사용하기">
+<!ENTITY useSmoothScrolling.accesskey  "m">
+
+<!ENTITY systemIntegration.label       "시스템 통합">
+<!ENTITY alwaysCheckDefault.label      "시작 시 &brandShortName;가 기본 메일 프로그램인지 항상 확인">
+<!ENTITY alwaysCheckDefault.accesskey  "A">
+<!ENTITY searchIntegration.label       "검색 시 &searchIntegration.engineName; 엔진 사용 허가">
+<!ENTITY searchIntegration.accesskey   "S">
+<!ENTITY checkDefaultsNow.label        "지금 확인">
+<!ENTITY checkDefaultsNow.accesskey    "N">
+<!ENTITY configEditDesc.label          "고급 설정">
+<!ENTITY configEdit.label              "설정 편집…">
+<!ENTITY configEdit.accesskey          "C">
+<!ENTITY returnReceiptsInfo.label      "수신 확인 메시지 설정">
+<!ENTITY showReturnReceipts.label      "수신 확인…">
+<!ENTITY showReturnReceipts.accesskey  "R">
+
+<!-- Data Choices -->
+<!ENTITY telemetrySection.label          "Telemetry">
+<!ENTITY telemetryDesc.label             "여러분의 이메일 클라이언트에 대한 성능, 사용량, 하드웨어, 맞춤 기능 정보를 &vendorShortName;에 공유하고 &brandShortName;를 더 좋게 만들도록 도와주세요">
+<!ENTITY enableTelemetry.label           "Telemetry 활성화">
+<!ENTITY enableTelemetry.accesskey       "T">
+<!ENTITY telemetryLearnMore.label        "더 알아보기">
+
+<!ENTITY crashReporterSection.label      "오류 보고서">
+<!ENTITY crashReporterDesc.label         "여러분의 이메일 클라이언트를 더 안전하고 안정하게 만들기 위해 &brandShortName;이 오류 보고서를 &vendorShortName;로 보냅니다">
+<!ENTITY enableCrashReporter.label       "오류 보고서 활성화">
+<!ENTITY enableCrashReporter.accesskey   "C">
+<!ENTITY crashReporterLearnMore.label    "더 알아보기">
+
+<!-- Update -->
+<!-- LOCALIZATION NOTE (updateApp.label):
+  Strings from aboutDialog.dtd are displayed in this section of the preferences.
+  Please check for possible accesskey conflicts.
+-->
+<!ENTITY updateApp2.label                "&brandShortName; 업데이트">
+<!-- LOCALIZATION NOTE (updateApp.version.*): updateApp.version.pre is
+  followed by a version number, keep the trailing space or replace it with
+  a different character as needed. updateApp.version.post is displayed after
+  the version number, and is empty on purpose for English. You can use it
+  if required by your language.
+ -->
+<!ENTITY updateApp.version.pre           " ">
+<!ENTITY updateApp.version.post          " 버전">
+<!ENTITY updateAuto.label                "자동으로 업데이트 설치하기 (추천방식: 보안이 강화됨)">
+<!ENTITY updateAuto.accesskey            "A">
+<!ENTITY updateCheck.label               "새 업데이트를 체크하고 설치여부 묻기">
+<!ENTITY updateCheck.accesskey           "C">
+<!ENTITY updateManual.label              "새 업데이트 체크하지 않기(추천하지 않음: 보안 위험)">
+<!ENTITY updateManual.accesskey          "N">
+<!ENTITY updateHistory.label             "업데이트 기록 보기">
+<!ENTITY updateHistory.accesskey         "p">
+
+<!ENTITY useService.label                "업데이트 설치를 위해 백그라운드 서비스를 이용">
+<!ENTITY useService.accesskey            "b">
+
+<!-- Networking and Disk Space -->
+<!ENTITY showSettings.label            "연결 설정…">
+<!ENTITY showSettings.accesskey        "S">
+<!ENTITY proxiesConfigure.label        "&brandShortName; 인터넷 연결 방식 설정">
+<!ENTITY connectionsInfo.caption       "연결">
+<!ENTITY offlineInfo.caption           "오프라인">
+<!ENTITY offlineInfo.label             "오프라인 설정">
+<!ENTITY showOffline.label             "오프라인…">
+<!ENTITY showOffline.accesskey         "O">
+
+<!ENTITY Diskspace                       "디스크 용량">
+<!ENTITY offlineCompactFolders.label     "지정된 용량 이상 저장할 때 폴더 압축">
+<!ENTITY offlineCompactFolders.accesskey "a">
+<!ENTITY offlineCompactFoldersMB.label   "MB (총)">
+
+<!-- LOCALIZATION NOTE:
+  The entities useCacheBefore.label and useCacheAfter.label appear on a single
+  line in preferences as follows:
+
+  &useCacheBefore.label  [ textbox for cache size in MB ]   &useCacheAfter.label;
+-->
+<!ENTITY useCacheBefore.label            "페이지 캐시">
+<!ENTITY useCacheBefore.accesskey        "U">
+<!ENTITY useCacheAfter.label             "MB 까지 캐시 사용">
+<!ENTITY overrideSmartCacheSize.label    "자동 캐시 관리 덮어씀">
+<!ENTITY overrideSmartCacheSize.accesskey "v">
+<!ENTITY clearCacheNow.label             "지금 삭제">
+<!ENTITY clearCacheNow.accesskey         "C">
+
+<!-- Certificates -->
+<!ENTITY certSelection.description       "서버가 사설 인증서를 요청할 경우:">
+<!ENTITY certs.auto                      "자동으로 선택">
+<!ENTITY certs.auto.accesskey            "m">
+<!ENTITY certs.ask                       "매번 물어보기">
+<!ENTITY certs.ask.accesskey             "A">
+<!ENTITY enableOCSP.label                "OCSP 응답 서버에 이 인증서의 유효성 확인하기">
+<!ENTITY enableOCSP.accesskey            "Q">
+
+<!ENTITY manageCertificates.label "인증서 관리">
+<!ENTITY manageCertificates.accesskey "M">
+<!ENTITY viewSecurityDevices.label "보안 장치">
+<!ENTITY viewSecurityDevices.accesskey "S">

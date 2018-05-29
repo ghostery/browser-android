@@ -1,0 +1,40 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY messengerStartPage.label         "&brandShortName; kezdőoldal">
+<!ENTITY enableStartPage.label            "Kezdőoldal betöltése az üzenetek helyére a &brandShortName; indításakor">
+<!ENTITY enableStartPage.accesskey        "K">
+<!ENTITY location.label                   "Hely:">
+<!ENTITY location1.accesskey               "H">
+<!ENTITY useDefault.label                 "Alaphelyzet">
+<!ENTITY useDefault.accesskey             "A">
+
+<!ENTITY changeDockIconOptions.label      "Az appikon beállításainak módosítása">
+<!ENTITY dockOptions.label                "Appikon beállításai…">
+<!ENTITY dockOptions.accesskey            "A">
+
+<!ENTITY newMessagesArrive.label          "Új üzenet érkezésekor:">
+<!ENTITY playSound.label                  "Hangjelzés">
+<!ENTITY playSound1.accesskey             "H">
+<!ENTITY playSoundMac.label               "A következő hangfájl lejátszása:">
+<!ENTITY playSoundMac.accesskey           "h">
+<!ENTITY showAnimatedAlert.label          "Figyelmeztető ablak">
+<!ENTITY showAnimatedAlert.accesskey      "F">
+<!ENTITY notificationAlertSettings2.label "Az értesítések és az alapértelmezett hang letilthatók a Rendszerbeállítások Értesítés lapján.">
+<!ENTITY customizeMailAlert.label         "Testreszabás…">
+<!ENTITY customizeMailAlert.accesskey     "T">
+
+<!ENTITY showTrayIcon.label               "Tálcaikon megjelenítése">
+<!ENTITY showTrayIcon.accesskey           "t">
+
+<!ENTITY play.label                       "Lejátszás">
+<!ENTITY play.accesskey                   "L">
+<!ENTITY systemsound.label                "Alapértelmezett rendszerhang az új üzenethez">
+<!ENTITY systemsound.accesskey            "r">
+<!ENTITY customsound.label                "A következő hangfájl használata">
+<!ENTITY customsound.accesskey            "h">
+<!ENTITY browse.label                     "Tallózás…">
+<!ENTITY browse.accesskey                 "T">
+
+<!ENTITY defaultSearchEngine.label        "Alapértelmezett keresőszolgáltatás">

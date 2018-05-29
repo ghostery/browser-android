@@ -1,0 +1,28 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Help Menu -->
+<!ENTITY helpMenu.label "Help">
+<!ENTITY helpMenu.accesskey "H">
+<!-- LOCALIZATION NOTE some localizations of Windows use "?"
+                       for the help button in the menubar but Gnome does not.   -->
+<!ENTITY helpMenuWin.label "Help">
+<!ENTITY helpMenuWin.accesskey "H">
+<!ENTITY helpTroubleshootingInfo.label     "Probleemoplossingsinformatie">
+<!ENTITY helpTroubleshootingInfo.accesskey "P">
+<!ENTITY helpSafeMode.label     "Herstarten met uitgeschakelde add-ons…">
+<!ENTITY helpSafeMode.accesskey "r">
+<!ENTITY releaseCmd2.label "Uitgaveopmerkingen">
+<!ENTITY releaseCmd2.accesskey "U">
+<!ENTITY whatsNewCmd.label "Wat is er nieuw">
+<!ENTITY whatsNewCmd.accesskey "W">
+<!ENTITY openHelp.label "Helpinhoud">
+<!ENTITY openHelp.accesskey "H">
+<!ENTITY openHelp.commandkey "VK_F1">
+<!ENTITY openHelpMac2.label "&brandFullName; Help">
+<!ENTITY openHelpMac2.commandkey   "?">
+<!ENTITY openHelpMac2.modifiers    "accel">
+
+<!ENTITY aboutMenuCmd2.label "Over &brandFullName;">
+<!ENTITY aboutMenuCmd2.accesskey "T">

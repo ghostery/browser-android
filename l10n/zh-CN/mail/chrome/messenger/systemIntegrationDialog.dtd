@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title  "系统集成">
+<!ENTITY acceptIntegration.label  "设为默认值">
+<!ENTITY cancelIntegration.label  "跳过整合">
+<!ENTITY cancelIntegration2.label  "取消">
+<!ENTITY defaultClient.intro  "使用 &brandShortName; 作为下列应用的默认客户端：">
+
+<!ENTITY email.label "电子邮件">
+<!ENTITY newsgroups.label "新闻组">
+<!ENTITY feeds.label "收取点">
+
+<!ENTITY unsetDefault.tooltip "无法在 &brandShortName; 中取消 &brandShortName; 的默认程序设置，要将另一个应用程序设置为默认，你必须使用它自己的“设置为默认”对话框。">
+
+<!ENTITY checkOnStartup.label "启动 &brandShortName; 时总是进行此项检查">
+<!ENTITY checkOnStartup.accesskey "A">
+
+<!ENTITY searchIntegration.label "允许 &searchIntegration.engineName; 搜索邮件">
+<!ENTITY searchIntegration.accesskey "s">

@@ -1,0 +1,24 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY notificationsDialog2.title       "새 메일 알림 설정">
+<!ENTITY window.width                     "30em">
+
+<!ENTITY alertCustomization.intro         "경고 알람을 사용할 필드 선택:">
+<!ENTITY previewText.label                "메시지 미리 보기">
+<!ENTITY previewText.accesskey            "M">
+<!ENTITY subject.label                    "제목">
+<!ENTITY subject.accesskey                "S">
+<!ENTITY sender.label                     "보낸 사람">
+<!ENTITY sender.accesskey                 "e">
+
+<!-- LOCALIZATION NOTE: totalOpenTimeBefore.label is displayed first, then
+there's a field where the user can enter a number, and totalOpenTimeEnd.label
+is displayed at the end of the line. The translations of the
+totalOpenTimeBefore.label and totalOpenTimeEnd.label parts don't have to mean
+the exact same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  totalOpenTimeBefore.label       "새 메일 알림을 ">
+<!ENTITY  totalOpenTimeBefore.accesskey   "N">
+<!ENTITY  totalOpenTimeEnd.label          "초 동안 보여주기">

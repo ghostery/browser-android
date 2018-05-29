@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.alarmgoesoff.label "알람 시 동작:">
+<!ENTITY pref.playasound "소리 재생">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "s">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "기본 소리 사용">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "d">
+<!ENTITY pref.calendar.alarms.sound.browse.label "찾아보기…">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "B">
+<!ENTITY pref.calendar.alarms.sound.play.label "재생">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "P">
+<!ENTITY pref.showalarmbox "알람 상자 보이기">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "x">
+<!ENTITY pref.missedalarms "경과된 알람 보이기">
+<!ENTITY pref.missedalarms2 "수정 가능한 캘린더의 경과된 알람 보이기">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "m">
+<!ENTITY pref.calendar.alarms.defaults.label "알람 기본 설정">
+<!ENTITY pref.defalarm4events.label "이벤트 기본 알람 설정:">
+<!ENTITY pref.defalarm4events.accesskey "e">
+<!ENTITY pref.defalarm4todos.label "태스크 기본 알람 설정:">
+<!ENTITY pref.defalarm4todos.accesskey "a">
+<!ENTITY pref.alarm.on "켜기">
+<!ENTITY pref.alarm.off "끄기">
+<!ENTITY pref.defalarmlen4events.label "이벤트 전 기본 알람 시간:">
+<!ENTITY pref.defalarmlen4events.accesskey "u">
+<!ENTITY pref.defalarmlen4todos.label "태스크 전 기본 알람 시간:">
+<!ENTITY pref.defalarmlen4todos.accesskey "o">
+
+<!ENTITY pref.defaultsnoozelength.label "Default Snooze Length:" >
+<!ENTITY pref.defaultsnoozelength.accesskey "S">

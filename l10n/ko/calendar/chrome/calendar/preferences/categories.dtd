@@ -1,0 +1,24 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.categories.new.title "새 카테고리">
+<!ENTITY pref.categories.newButton.label "새…">
+<!ENTITY pref.categories.newButton.accesskey "N">
+<!ENTITY pref.categories.edit.title "분류 편집">
+<!ENTITY pref.categories.editButton.label "편집…">
+<!ENTITY pref.categories.editButton.accesskey "E">
+<!ENTITY pref.categories.removeButton.label "제거">
+<!ENTITY pref.categories.removeButton.accesskey "R">
+<!ENTITY pref.categories.name.label "이름">
+<!ENTITY pref.categories.color.label "색상">
+<!ENTITY pref.categories.usecolor.label "색상 사용">
+<!ENTITY pref.categories.none.label "(없음)">
+<!ENTITY pref.categories.overwrite "같은 이름의 분류가 이미 존재합니다. \n 덮어쓰시겠습니까?">
+<!ENTITY pref.categories.overwrite.title "경고: 이름 중복">
+<!ENTITY pref.categories.noBlankCategories "분류명을 입력해야 합니다.">

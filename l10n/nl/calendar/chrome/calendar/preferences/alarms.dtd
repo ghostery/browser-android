@@ -1,0 +1,36 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.alarmgoesoff.label "Als een herinnering plaatsvindt:">
+<!ENTITY pref.playasound "Een geluid afspelen">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "u">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "Standaardgeluid gebruiken">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "S">
+<!ENTITY pref.calendar.alarms.sound.browse.label "Bladeren…">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "B">
+<!ENTITY pref.calendar.alarms.sound.play.label "Afspelen">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "A">
+<!ENTITY pref.showalarmbox "Het herinneringsvenster tonen">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "r">
+<!ENTITY pref.missedalarms2 "Gemiste herinneringen voor schrijfbare agenda’s tonen">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "G">
+<!ENTITY pref.calendar.alarms.defaults.label "Standaard herinneringsinstellingen">
+<!ENTITY pref.defalarm4events.label "Standaard herinneringsinstelling voor gebeurtenissen:">
+<!ENTITY pref.defalarm4events.accesskey "l">
+<!ENTITY pref.defalarm4todos.label "Standaard herinneringsinstelling voor taken:">
+<!ENTITY pref.defalarm4todos.accesskey "k">
+<!ENTITY pref.alarm.on "Aan">
+<!ENTITY pref.alarm.off "Uit">
+<!ENTITY pref.defalarmlen4events.label "Standaard tijd voorafgaand aan een gebeurtenis waarop een herinnering verschijnt:">
+<!ENTITY pref.defalarmlen4events.accesskey "c">
+<!ENTITY pref.defalarmlen4todos.label "Standaard tijd voorafgaand aan een taak waarop een herinnering verschijnt:">
+<!ENTITY pref.defalarmlen4todos.accesskey "h">
+
+<!ENTITY pref.defaultsnoozelength.label "Standaard sluimerduur:" >
+<!ENTITY pref.defaultsnoozelength.accesskey "d">

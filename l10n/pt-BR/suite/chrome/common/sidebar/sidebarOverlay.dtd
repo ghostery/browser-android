@@ -1,0 +1,34 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY sidebar.panels.label           "Painel">
+<!ENTITY sidebar.reload.label           "Recarregar">
+<!ENTITY sidebar.reload.accesskey       "R">
+<!ENTITY sidebar.picker.label           "Abas">
+<!ENTITY sidebar.customize.label        "Personalizar Painel...">
+<!ENTITY sidebar.customize.accesskey    "s">
+<!ENTITY sidebar.hide.label             "Ocultar aba">
+<!ENTITY sidebar.hide.accesskey         "O">
+<!ENTITY sidebar.switch.label           "Alternar para esta aba">
+<!ENTITY sidebar.switch.accesskey       "e">
+<!ENTITY sidebarCmd.label               "Painel">
+<!ENTITY sidebarCmd.accesskey           "P">
+<!ENTITY sidebar.loading.label          "Carregando...">
+<!ENTITY sidebar.loadstopped.label      "Carregamento interrompido">
+<!ENTITY sidebar.loading.stop.label     "Parar">
+<!ENTITY sidebar.loading.stop.accesskey "P">
+
+<!ENTITY sidebar.no-panels.state     "O Painel está vazio.">
+<!ENTITY sidebar.no-panels.add       "Você pode adicionar abas clicando no botão &quot;Abas&quot; acima.">
+<!ENTITY sidebar.no-panels.hide      "Se você quiser ocultar o Painel totalmente, clique no menu Exibir, Ferramentas e selecione Painel.">
+<!ENTITY sidebar.sbDirectory.label   "Baixar mais abas">
+
+<!ENTITY sidebar.pagenotfound.label  "Esta aba não está disponível neste momento">
+<!ENTITY sidebar.close.tooltip       "Fechar Painel">
+<!ENTITY sidebar.open.tooltip        "Abrir Painel">
+
+<!ENTITY sidebar.search.label         "Pesquisar">
+<!ENTITY sidebar.client-bookmarks.label     "Favoritos">
+<!ENTITY sidebar.client-history.label       "Histórico">
+<!ENTITY sidebar.client-addressbook.label   "Catálogo de Endereços">

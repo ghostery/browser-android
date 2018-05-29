@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "Kapcsolat nélküli beállítások">
+
+<!ENTITY checkAutoDetect.label "A felismert online állapot követése automatikusan">
+<!ENTITY checkAutoDetect.accesskey "f">
+<!ENTITY titleStartUp "Kézi állapot indításkor:">
+<!ENTITY radioRememberPrevState.label "Előző online állapot megjegyzése">
+<!ENTITY radioRememberPrevState.accesskey "E">
+<!ENTITY radioAskState.label "Kérdezzen az online állapotról">
+<!ENTITY radioAskState.accesskey "o">
+<!ENTITY radioAlwaysOnlineState.label "Kapcsolatban">
+<!ENTITY radioAlwaysOnlineState.accesskey "p">
+<!ENTITY radioAlwaysOffline.label "Kapcsolat nélkül">
+<!ENTITY radioAlwaysOffline.accesskey "n">
+
+<!ENTITY textGoingOnline "Postázandó üzenetek elküldése a csatlakozáskor">
+<!ENTITY radioAutoSend.label "Igen">
+<!ENTITY radioAutoSend.accesskey "I">
+<!ENTITY radioNotSend.label "Soha">
+<!ENTITY radioNotSend.accesskey "S">
+<!ENTITY radioAskUnsent.label "Kérdés">
+<!ENTITY radioAskUnsent.accesskey "K">
+<!ENTITY textGoingOffline "Üzenetek letöltése kapcsolat nélküli üzemmódra váltáskor">
+<!ENTITY radioAutoDownload.label "Igen">
+<!ENTITY radioAutoDownload.accesskey "g">
+<!ENTITY radioNotDownload.label "Soha">
+<!ENTITY radioNotDownload.accesskey "o">
+<!ENTITY radioAskDownload.label "Kérdés">
+<!ENTITY radioAskDownload.accesskey "d">

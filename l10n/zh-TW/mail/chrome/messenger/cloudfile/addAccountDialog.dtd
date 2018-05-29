@@ -1,0 +1,14 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<!ENTITY addAccountDialog.title   "設定雲端檔案鏈結">
+<!ENTITY addAccountDialog.menuTitle "選擇線上儲存服務">
+<!ENTITY addAccountDialog.style "width: 40em; min-height: 20em;">
+<!ENTITY addAccountDialog.accountName.label "帳號名稱:">
+<!ENTITY addAccountDialog.noAccountText "很抱歉，目前的 &brandShortName; 版本只允許在每個線上儲存服務當中使用一個帳號。">
+<!ENTITY addAccountDialog.createAccountText2 "您可以使用下列的雲端儲存服務來傳送大檔案。您可以連線到已有帳號的服務，或是新註冊一個。">
+<!ENTITY addAccountDialog.authorizing "正在檢查授權…">
+<!ENTITY addAccountDialog.error "設定帳號時發生錯誤！">
+<!ENTITY addAccountDialog.acceptButton.label "設定帳號">
+<!ENTITY addAccountDialog.learnMore "更多資訊…">
+

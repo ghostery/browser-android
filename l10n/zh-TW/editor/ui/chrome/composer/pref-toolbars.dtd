@@ -1,0 +1,40 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.toolbars.title    "工具列">
+
+<!ENTITY composition.caption    "在編輯工具列上顯示這些按鈕:">
+
+<!ENTITY new.label              "新增">
+<!ENTITY open.label             "開啟舊檔">
+<!ENTITY save.label             "儲存">
+<!ENTITY publish.label          "發佈">
+<!ENTITY preview.label          "瀏覽">
+<!ENTITY cut.label              "剪下">
+<!ENTITY copy.label             "複製">
+<!ENTITY paste.label            "貼上">
+<!ENTITY print.label            "列印">
+<!ENTITY find.label             "尋找">
+<!ENTITY image.label            "圖片">
+<!ENTITY hline.label            "水平線">
+<!ENTITY table.label            "表格">
+<!ENTITY link.label             "鏈結">
+<!ENTITY anchor.label           "錨點">
+
+<!ENTITY formatting.caption     "在格式工具列上顯示這些按鈕:">
+
+<!ENTITY smaller.label          "減少">
+<!ENTITY larger.label           "增加">
+<!ENTITY bold.label             "粗體字">
+<!ENTITY bullets.label          "符號清單">
+<!ENTITY numbers.label          "數字">
+<!ENTITY italic.label           "斜體字">
+<!ENTITY outdent.label          "向左縮排">
+<!ENTITY indent.label           "縮排">
+<!ENTITY underline.label        "加底線">
+
+<!ENTITY absolutePosition.label "絕對定位">
+<!ENTITY decreaseZIndex.label   "移至底層">
+<!ENTITY increaseZIndex.label   "提至上層">
+

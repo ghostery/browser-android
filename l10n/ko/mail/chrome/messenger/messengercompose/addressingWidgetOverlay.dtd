@@ -1,0 +1,12 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- address labels -->
+<!--LOCALIZATION NOTE addressingWidgetOverlay.dtd The basic mail/news composition headers as they are seen in UI -->
+<!ENTITY toAddr.label   "받는 사람:">
+<!ENTITY ccAddr.label   "참조:">
+<!ENTITY bccAddr.label  "숨은 참조:">
+<!ENTITY replyAddr.label   "회신 주소:">
+<!ENTITY newsgroupsAddr.label   "뉴스 그룹:">
+<!ENTITY followupAddr.label   "전달:">

@@ -1,0 +1,49 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemJunk.label          "垃圾郵件">
+<!ENTITY itemPhishing.label      "電子郵件詐騙">
+<!ENTITY itemPasswords.label     "密碼">
+<!ENTITY itemAntiVirus.label     "防毒">
+
+<!-- Junk Mail Controls -->
+<!ENTITY junkMail.intro "您可以到帳號設定調整各個帳號的預設垃圾郵件處理方式。">
+<!ENTITY manualMark.label "當標示郵件為垃圾信時:">
+<!ENTITY manualMark.accesskey "W">
+<!ENTITY manualMarkModeMove.label "移動到該帳號的「垃圾郵件」資料夾">
+<!ENTITY manualMarkModeMove.accesskey "o">
+<!ENTITY manualMarkModeDelete.label "刪除它">
+<!ENTITY manualMarkModeDelete.accesskey "D">
+<!ENTITY markAsReadOnSpam.label "標示垃圾郵件為已讀">
+<!ENTITY markAsReadOnSpam.accesskey "M">
+<!ENTITY enableAdaptiveJunkLogging.label "啟用漸進式垃圾郵件過濾記錄">
+<!ENTITY enableAdaptiveJunkLogging.accesskey "E">
+<!ENTITY openJunkLog.label "顯示記錄">
+<!ENTITY openJunkLog.accesskey "S">
+<!ENTITY resetTrainingData.label "重設訓練資料">
+<!ENTITY resetTrainingData.accesskey "R">
+
+<!-- Phishing Detector -->
+<!ENTITY phishingDetector1.intro  "&brandShortName; 可以分析詐騙郵件常用的手法找出可疑的郵件。">
+<!ENTITY enablePhishingDetector1.label    "當我閱讀可能是詐騙信的郵件時告訴我">
+<!ENTITY enablePhishingDetector1.accesskey  "T">
+<!ENTITY useDownloadedList.label "使用下載好的可疑詐騙郵件清單">
+<!ENTITY useDownloadedList.accesskey "U">
+
+<!-- Passwords -->
+<!ENTITY savedPasswords.intro           "&brandShortName; 可以幫您記住所有帳號的密碼。">
+<!ENTITY useMasterPassword.label        "使用主控密碼">
+<!ENTITY useMasterPassword.accesskey    "U">
+<!ENTITY masterPassword.intro           "主控密碼可以保護您的密碼，但您每個作業階段時都必須輸入它一次。">
+<!ENTITY changeMasterPassword.label     "變更主控密碼…">
+<!ENTITY changeMasterPassword.accesskey "c">
+<!ENTITY savedPasswords.label           "已存密碼…">
+<!ENTITY savedPasswords.accesskey       "S">
+
+<!-- Anti Virus -->
+<!ENTITY antiVirus.intro      "&brandShortName; 可讓防毒軟體在郵件存入電腦前檢查郵件是否有問題。">
+<!ENTITY antiVirus.label      "允許防毒軟體個別處理與檢查新郵件">
+<!ENTITY antiVirus.accesskey  "A">
+
+

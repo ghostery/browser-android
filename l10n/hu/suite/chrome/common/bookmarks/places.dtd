@@ -1,0 +1,114 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY bookmarksManager.title         "Könyvjelzőkezelő">
+<!ENTITY bookmarksManager.width         "700">
+<!ENTITY bookmarksManager.height        "500">
+
+<!ENTITY file.accesskey                 "F">
+<!ENTITY file.close.label               "Bezárás">
+<!ENTITY file.close.accesskey           "B">
+<!ENTITY cmd.close.key                  "w">
+
+<!ENTITY view.columns.label             "Oszlopok megjelenítése">
+<!ENTITY view.columns.accesskey         "O">
+<!ENTITY view.sort.label                "Rendezés">
+<!ENTITY view.sort.accesskey            "R">
+<!ENTITY view.unsorted.label            "Rendezetlen">
+<!ENTITY view.unsorted.accesskey        "e">
+<!ENTITY view.sortAscending.label       "Növekvő sorrendben">
+<!ENTITY view.sortAscending.accesskey   "N">
+<!ENTITY view.sortDescending.label      "Csökkenő sorrendben">
+<!ENTITY view.sortDescending.accesskey  "C">
+
+<!ENTITY cmd.findInBookmarks.label      "Keresés a könyvjelzők között…">
+<!ENTITY cmd.findInBookmarks.accesskey  "K">
+<!ENTITY cmd.findCurrent.label          "Keresés az aktuális gyűjteményben…">
+<!ENTITY cmd.findCurrent.accesskey      "e">
+
+<!ENTITY cmd.exportHTML.label           "HTML exportálása…">
+<!ENTITY cmd.exportHTML.accesskey       "e">
+<!ENTITY cmd.importHTML.label           "HTML importálása…">
+<!ENTITY cmd.importHTML.accesskey       "i">
+
+<!ENTITY cmd.backup.label               "Mentés…">
+<!ENTITY cmd.backup.accesskey           "M">
+<!ENTITY cmd.restore2.label             "Visszaállítás">
+<!ENTITY cmd.restore2.accesskey         "V">
+<!ENTITY cmd.restoreFromFile.label      "Tallózás…">
+<!ENTITY cmd.restoreFromFile.accesskey  "T">
+
+<!ENTITY cmd.bookmarkLink.label         "Oldal felvétele a könyvjelzők közé…">
+<!ENTITY cmd.bookmarkLink.accesskey     "O">
+<!ENTITY cmd.delete.label               "Oldal törlése">
+<!ENTITY cmd.delete.accesskey           "t">
+<!ENTITY cmd.deleteDomainData.label     "Webhely elfelejtése">
+<!ENTITY cmd.deleteDomainData.accesskey "W">
+
+<!ENTITY cmd.open.label                  "Megnyitás">
+<!ENTITY cmd.open.accesskey              "M">
+<!ENTITY cmd.open_tab.label              "Megnyitás új lapon">
+<!ENTITY cmd.open_tab.accesskey          "l">
+<!ENTITY cmd.open_window.label           "Megnyitás új ablakban">
+<!ENTITY cmd.open_window.accesskey       "a">
+<!ENTITY cmd.open_private.label          "Megnyitás privát ablakban">
+<!ENTITY cmd.open_private.accesskey      "p">
+<!ENTITY cmd.open_all_in_tabs.label      "Mindegyik megnyitása külön lapon">
+<!ENTITY cmd.open_all_in_tabs.accesskey  "M">
+
+<!ENTITY cmd.properties.label      "Tulajdonságok">
+<!ENTITY cmd.properties.accesskey  "T">
+
+<!ENTITY cmd.sortby_name.label              "Rendezés név szerint">
+<!ENTITY cmd.sortby_name.accesskey          "R">
+
+<!ENTITY cmd.new_bookmark.label            "Új könyvjelző…">
+<!ENTITY cmd.new_bookmark.accesskey        "k">
+<!ENTITY cmd.new_folder.label              "Új mappa…">
+<!ENTITY cmd.new_folder.accesskey          "m">
+<!ENTITY cmd.context_new_folder.accesskey  "j">
+<!ENTITY cmd.new_separator.label           "Új elválasztó">
+<!ENTITY cmd.new_separator.accesskey       "e">
+
+<!ENTITY cmd.reloadLivebookmark.label      "Élő könyvjelző frissítése">
+<!ENTITY cmd.reloadLivebookmark.accesskey  "f">
+
+<!ENTITY cmd.moveBookmarks.label                  "Áthelyezés…">
+<!ENTITY cmd.moveBookmarks.accesskey              "t">
+
+<!ENTITY col.title.label         "Név">
+<!ENTITY col.tags.label          "Címkék">
+<!ENTITY col.url.label           "Hely">
+<!ENTITY col.lastvisit.label     "Látogatás dátuma">
+<!ENTITY col.visitcount.label    "Látogatások száma">
+<!ENTITY col.keyword.label       "Kulcsszó">
+<!ENTITY col.description.label   "Leírás">
+<!ENTITY col.dateadded.label     "Hozzáadva">
+<!ENTITY col.lastmodified.label  "Utoljára módosítva">
+
+<!ENTITY search.label                              "Keresés:">
+<!ENTITY search.placeholder                        "Keresés a könyvjelzők között">
+
+<!ENTITY search.in.label                           "Keresési hely:">
+<!ENTITY search.scopeFolder.label                  "Kijelölt mappa">
+<!ENTITY search.scopeFolder.accesskey              "m">
+<!ENTITY search.scopeBookmarks.label               "Könyvjelzők">
+<!ENTITY search.scopeBookmarks.accesskey           "K">
+<!ENTITY saveSearch.label                          "Mentés">
+<!ENTITY saveSearch.accesskey                      "M">
+
+<!ENTITY cmd.find.key  "F">
+
+<!ENTITY backButton.tooltip  "Ugrás vissza">
+<!ENTITY forwardButton.tooltip  "Ugrás előre">
+
+<!ENTITY detailsPane.more.label "Több">
+<!ENTITY detailsPane.more.accesskey "T">
+<!ENTITY detailsPane.fewer.label "Kevesebb">
+<!ENTITY detailsPane.fewer.accesskey "K">
+<!ENTITY detailsPane.selectAnItemText.description "Jelöljön ki egy elemet megtekintésre, és szerkessze tulajdonságait">
+
+<!ENTITY editBookmark.done.label "Kész">
+<!ENTITY editBookmark.cancel.label "Mégse">
+<!ENTITY editBookmark.removeBookmark.accessKey "l">

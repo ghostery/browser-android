@@ -1,0 +1,80 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!-- for SearchDialog.xul -->
+
+<!ENTITY searchHeading.label         "Keresés helye:">
+<!ENTITY searchHeading.accesskey     "K">
+<!ENTITY searchSubfolders.label      "Keresés az almappákban is">
+<!ENTITY searchSubfolders.accesskey  "m">
+<!ENTITY searchOnServer.label        "Keresés a kiszolgálón">
+<!ENTITY searchOnServer.accesskey    "e">
+<!ENTITY resetButton.label           "Alaphelyzet">
+<!ENTITY resetButton.accesskey       "A">
+<!ENTITY openButton.label            "Megnyitás">
+<!ENTITY openButton.accesskey        "n">
+<!ENTITY deleteButton.label          "Törlés">
+<!ENTITY deleteButton.accesskey      "T">
+<!ENTITY searchDialogTitle.label     "Üzenetek keresése">
+<!ENTITY results.label               "Eredmények">
+<!ENTITY moveButton.label            "Áthelyezés">
+<!ENTITY moveButton.accesskey        "t">
+<!ENTITY closeCmd.key                "W"> 
+<!ENTITY openInFolder.label          "Megnyitás mappában">
+<!ENTITY openInFolder.accesskey      "m">
+<!ENTITY saveAsVFButton.label        "Mentés keresési mappaként">
+<!ENTITY saveAsVFButton.accesskey    "k">
+<!-- for ABSearchDialog.xul -->
+
+<!ENTITY abSearchHeading.label       "Keresési hely:">
+<!ENTITY abSearchHeading.accesskey   "h">
+<!ENTITY propertiesButton.label      "Tulajdonságok">
+<!ENTITY propertiesButton.accesskey  "u">
+<!ENTITY composeButton.label         "Új üzenet">
+<!ENTITY composeButton.accesskey     "z">
+<!ENTITY deleteCardButton.label      "Törlés">
+<!ENTITY deleteCardButton.accesskey  "T">
+<!ENTITY abSearchDialogTitle.label   "Összetett keresés a címjegyzékben">
+<!-- Thread Pane -->
+
+<!ENTITY threadColumn.label "Témacsoport">
+<!ENTITY fromColumn.label "Feladó">
+<!ENTITY recipientColumn.label "Címzett">
+<!ENTITY correspondentColumn.label "Szerkesztők">
+<!ENTITY subjectColumn.label "Tárgy">
+<!ENTITY dateColumn.label "Dátum">
+<!ENTITY priorityColumn.label "Prioritás">
+<!ENTITY tagsColumn.label "Címke">
+<!ENTITY accountColumn.label "Postafiók">
+<!ENTITY statusColumn.label "Állapot">
+<!ENTITY sizeColumn.label "Méret">
+<!ENTITY junkStatusColumn.label "Szemét-e">
+<!ENTITY unreadColumn.label "Olvasatlan">
+<!ENTITY totalColumn.label "Összesen">
+<!ENTITY readColumn.label "Olvasott">
+<!ENTITY receivedColumn.label "Beérkezés">
+<!ENTITY starredColumn.label "Csillagozott">
+<!ENTITY locationColumn.label "Hely">
+<!ENTITY idColumn.label "Érkezési sorrend">
+<!-- Thread Pane Tooltips -->
+
+<!ENTITY columnChooser2.tooltip "Jelölje ki a megjelenítendő oszlopokat">
+<!ENTITY threadColumn2.tooltip "Témacsoportok megjelenítése">
+<!ENTITY fromColumn2.tooltip "Rendezés feladó szerint">
+<!ENTITY recipientColumn2.tooltip "Rendezés címzett szerint">
+<!ENTITY correspondentColumn2.tooltip "Rendezés szerkesztők szerint">
+<!ENTITY subjectColumn2.tooltip "Rendezés tárgy szerint">
+<!ENTITY dateColumn2.tooltip "Rendezés dátum szerint">
+<!ENTITY priorityColumn2.tooltip "Rendezés sürgősség szerint">
+<!ENTITY tagsColumn2.tooltip "Rendezés címkék szerint">
+<!ENTITY accountColumn2.tooltip "Rendezés postafiók szerint">
+<!ENTITY statusColumn2.tooltip "Rendezés állapot szerint">
+<!ENTITY sizeColumn2.tooltip "Rendezés méret szerint">
+<!ENTITY junkStatusColumn2.tooltip "Rendezés szemétállapot szerint">
+<!ENTITY unreadColumn2.tooltip "A témacsoport olvasatlan üzeneteinek száma">
+<!ENTITY totalColumn2.tooltip "A témacsoport üzeneteinek száma">
+<!ENTITY readColumn2.tooltip "Rendezés olvasottság szerint">
+<!ENTITY receivedColumn2.tooltip "Rendezés beérkezés szerint">
+<!ENTITY starredColumn2.tooltip "Rendezés csillag szerint">
+<!ENTITY locationColumn2.tooltip "Rendezés hely szerint">
+<!ENTITY idColumn2.tooltip "Rendezés beérkezés szerint">

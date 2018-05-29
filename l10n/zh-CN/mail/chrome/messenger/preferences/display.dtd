@@ -1,0 +1,73 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemFormatting.label             "格式">
+<!ENTITY itemTags.label                   "标签">
+<!ENTITY itemAdvanced.label               "高级">
+
+<!ENTITY style.label                      "样式：">
+<!ENTITY style.accesskey                  "y">
+<!ENTITY regularStyle.label               "常规">
+<!ENTITY bold.label                       "粗体">
+<!ENTITY italic.label                     "斜体">
+<!ENTITY boldItalic.label                 "粗斜体">
+<!ENTITY size.label                       "大小：">
+<!ENTITY size.accesskey                   "z">
+<!ENTITY regularSize.label                "常规">
+<!ENTITY bigger.label                     "较大">
+<!ENTITY smaller.label                    "较小">
+<!ENTITY quotedTextColor.label            "颜色:">
+<!ENTITY quotedTextColor.accesskey        "o">
+<!ENTITY displayWidth.label               "纯文本消息">
+<!ENTITY displayText.label                "当显示引用的纯文本消息时使用以下设置：">
+
+<!-- LOCALIZATION NOTE : (emoticonsAndStructs.label) 'Emoticons' are also known as 'Smileys', e.g. :-)   -->
+<!ENTITY convertEmoticons.label        "以图形显示颜文字">
+<!ENTITY convertEmoticons.accesskey    "e">
+
+<!-- labels -->
+<!ENTITY displayTagsText.label     "标签用于对消息进行分类或区分优先级。">
+<!ENTITY newTagButton.label        "新建…">
+<!ENTITY newTagButton.accesskey    "N">
+<!ENTITY editTagButton1.label      "编辑…">
+<!ENTITY editTagButton1.accesskey  "E">
+<!ENTITY removeTagButton.label     "删除">
+<!ENTITY removeTagButton.accesskey "D">
+
+<!-- Fonts and Colors -->
+<!ENTITY fontsAndColors1.label   "字体和颜色">
+<!ENTITY defaultFont.label       "默认字体:">
+<!ENTITY defaultFont.accesskey   "D">
+<!ENTITY defaultSize.label       "大小：">
+<!ENTITY defaultSize.accesskey   "S">
+<!ENTITY fontOptions.accesskey   "A">
+<!ENTITY fontOptions.label       "高级">
+<!ENTITY colorButton.label       "颜色…">
+<!ENTITY colorButton.accesskey   "C">
+
+<!-- Advanced -->
+<!ENTITY reading.caption                  "阅读">
+<!ENTITY display.caption                  "显示">
+<!ENTITY showCondensedAddresses.label     "只显示我的通讯录中的显示名称">
+<!ENTITY showCondensedAddresses.accesskey "S">
+
+<!ENTITY autoMarkAsRead.label             "自动将消息标为已读">
+<!ENTITY autoMarkAsRead.accesskey         "A">
+<!ENTITY markAsReadNoDelay.label          "显示时立即">
+<!ENTITY markAsReadNoDelay.accesskey      "o">
+<!-- LOCALIZATION NOTE (markAsReadDelay.label): This will concatenate to
+     "After displaying for [___] seconds",
+     using (markAsReadDelay.label) and a number (secondsLabel.label). -->
+<!ENTITY markAsReadDelay.label            "显示">
+<!ENTITY markAsReadDelay.accesskey        "d">
+<!ENTITY secondsLabel.label               "秒之后">
+<!ENTITY openMsgIn.label                  "打开消息：">
+<!ENTITY openMsgInNewTab.label            "在新标签页">
+<!ENTITY openMsgInNewTab.accesskey        "t">
+<!ENTITY reuseExpRadio0.label             "在新的消息窗口">
+<!ENTITY reuseExpRadio0.accesskey         "n">
+<!ENTITY reuseExpRadio1.label             "在现有的消息窗口">
+<!ENTITY reuseExpRadio1.accesskey         "e">
+<!ENTITY closeMsgOnMoveOrDelete.label     "移动或删除后关闭消息窗口/标签页">
+<!ENTITY closeMsgOnMoveOrDelete.accesskey "C">

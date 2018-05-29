@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.alarmgoesoff.label "Értesítés megjelenésekor:">
+<!ENTITY pref.playasound "Hangjelzés">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "H">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "Alapértelmezett hang használata">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "A">
+<!ENTITY pref.calendar.alarms.sound.browse.label "Tallózás…">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "T">
+<!ENTITY pref.calendar.alarms.sound.play.label "Lejátszás">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "L">
+<!ENTITY pref.showalarmbox "Értesítő párbeszédpanel megjelenítése">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "r">
+<!ENTITY pref.missedalarms "Az elmulasztott értesítések megjelenítése">
+<!ENTITY pref.missedalarms2 "Elszalasztott emlékeztetők megjelenítése az írható naptárakhoz">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "z">
+<!ENTITY pref.calendar.alarms.defaults.label "Értesítések alapbeállításai">
+<!ENTITY pref.defalarm4events.label "Események alapértelmezett értesítési beállítása:">
+<!ENTITY pref.defalarm4events.accesskey "e">
+<!ENTITY pref.defalarm4todos.label "Feladatok alapértelmezett értesítési beállítása:">
+<!ENTITY pref.defalarm4todos.accesskey "F">
+<!ENTITY pref.alarm.on "Be">
+<!ENTITY pref.alarm.off "Ki">
+<!ENTITY pref.defalarmlen4events.label "Értesítés bekapcsolása az esemény előtt:">
+<!ENTITY pref.defalarmlen4events.accesskey "k">
+<!ENTITY pref.defalarmlen4todos.label "Értesítés bekapcsolása a feladat előtt:">
+<!ENTITY pref.defalarmlen4todos.accesskey "o">
+
+<!ENTITY pref.defaultsnoozelength.label "Alapértelmezett szundihossz:" >
+<!ENTITY pref.defaultsnoozelength.accesskey "s">

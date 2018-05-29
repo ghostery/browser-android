@@ -1,0 +1,883 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY firstrun_panel_title_welcome "Welkom">
+<!ENTITY firstrun_urlbar_message2 "Bedankt voor het kiezen van &brandShortName;">
+<!ENTITY firstrun_urlbar_subtext2 "Een moderne mobiele browser van Mozilla, de non-profitorganisatie met toewijding aan een vrij en open web.">
+<!ENTITY firstrun_panel_title_privacy "Privacy">
+<!ENTITY firstrun_privacy_message "Surf alsof niemand meekijkt">
+<!ENTITY firstrun_privacy_subtext "Privénavigatie met Bescherming tegen volgen blokkeert trackers terwijl u surft en onthoudt geen geschiedenis zodra u hiermee stopt.">
+<!ENTITY firstrun_panel_title_customize "Aanpassen">
+<!ENTITY firstrun_customize_message "Maak &brandShortName; van uzelf.">
+<!ENTITY firstrun_customize_subtext "Pas &brandShortName; aan met add-ons. Blokkeer advertenties, voeg functies toe, of kies een nieuw thema om uw persoonlijkheid te weerspiegelen.">
+<!ENTITY firstrun_bookmarks_title "Geschiedenis">
+<!ENTITY firstrun_bookmarks_message "Uw favorieten, centraal">
+<!ENTITY firstrun_bookmarks_subtext "Zie resultaten uit uw bladwijzers en geschiedenis tijdens het zoeken.">
+<!ENTITY firstrun_data_title "Gegevens">
+<!ENTITY firstrun_data_message "Minder gegevens, meer besparen">
+<!ENTITY firstrun_data_subtext2 "Zet afbeeldingen uit voor minder gegevensverkeer bij elke bezochte website.">
+<!ENTITY firstrun_sync_title "Sync">
+<!ENTITY firstrun_sync_message2 "Ga verder waar u was gebleven.">
+<!ENTITY firstrun_sync_subtext2 "Gebruik Sync om de bladwijzers, wachtwoorden en andere dingen die u in &brandShortName; op al uw apparaten opslaat te vinden.">
+<!ENTITY firstrun_signin_message "Maak verbinding en begin">
+<!ENTITY firstrun_signin_button "Aanmelden bij Sync">
+<!ENTITY  onboard_start_button_browser "Beginnen met browsen">
+<!ENTITY firstrun_button_notnow "Niet nu">
+<!ENTITY firstrun_button_next "Volgende">
+
+<!ENTITY firstrun_tabqueue_title "Koppelingen">
+<!-- Localization note (firstrun_tabqueue_message): 'Tab queue' is a feature that allows users to queue up or save links from outside of Firefox (without switching apps) - these links will be loaded in Firefox the next time Firefox is opened. -->
+<!ENTITY firstrun_tabqueue_message_off "Tabbladwachtrij inschakelen">
+<!ENTITY firstrun_tabqueue_subtext_off "Sla koppelingen op voor later in &brandShortName; bij erop tikken in andere apps.">
+
+<!ENTITY firstrun_tabqueue_message_on "Gelukt!">
+<!ENTITY firstrun_tabqueue_subtext_on "U kunt dit altijd uitschakelen in &settings; onder &pref_category_general;.">
+
+<!ENTITY firstrun_readerview_title "Artikelen">
+<!-- Localization note (firstrun_readerview_message): This is a casual way of describing getting rid of unnecessary things, and is referring to simplifying websites so only the article text and images are visible, removing unnecessary headers or ads. -->
+<!ENTITY firstrun_readerview_message "Rommel verwijderen">
+<!ENTITY firstrun_readerview_subtext "Gebruik de lezerweergave om artikelen makkelijker te lezen \u2013 zelfs offline.">
+
+<!-- Localization note (firstrun_devices_title): This is a casual way of addressing the user, somewhat referring to their online identity (which would include other devices, Firefox usage, accounts, etc). -->
+<!ENTITY firstrun_account_title "U">
+<!ENTITY firstrun_account_message "Hebt u &brandShortName; op een ander apparaat?">
+
+<!ENTITY  onboard_start_restricted1 "Blijf veilig en in controle met deze vereenvoudigde versie van &brandShortName;.">
+
+<!-- Localization note: These are used as the titles of different pages on the home screen.
+     They are automatically converted to all caps by the Android platform. -->
+<!ENTITY  bookmarks_title "Bladwijzers">
+<!ENTITY  history_title "Geschiedenis">
+
+<!ENTITY  switch_to_tab "Wisselen naar tabblad">
+
+<!-- Localization note: Shown in a snackbar when tab is loaded from cache while device was offline. -->
+<!ENTITY  tab_offline_version "Offlineversie getoond">
+
+<!ENTITY  crash_reporter_title "&brandShortName;-crashreporter">
+<!ENTITY  crash_message2 "&brandShortName; ondervond een probleem en is vastgelopen. Bij herstarten ervan worden uw tabbladen op de &brandShortName;-startpagina vermeld.">
+<!ENTITY  crash_send_report_message3 "&vendorShortName; van deze crash op de hoogte stellen, zodat dit kan worden verholpen">
+<!ENTITY  crash_include_url2 "Het adres van de bezochte pagina bijvoegen">
+<!ENTITY  crash_sorry "Het spijt ons">
+<!ENTITY  crash_comment "Voeg een opmerking toe (opmerkingen zijn publiekelijk zichtbaar)">
+<!ENTITY  crash_allow_contact2 "&vendorShortName; toestaan om contact met mij op te nemen over dit rapport">
+<!ENTITY  crash_email "Uw e-mailadres">
+<!ENTITY  crash_closing_alert "Afsluiten zonder een crashrapport te verzenden?">
+<!ENTITY  sending_crash_report "Crashrapport verzenden\u2026">
+<!ENTITY  crash_close_label "Sluiten">
+<!ENTITY  crash_restart_label "&brandShortName; herstarten">
+
+<!ENTITY url_bar_default_text2 "Voer zoekterm of adres in">
+
+<!ENTITY bookmark "Bladwijzer">
+<!ENTITY bookmark_remove "Bladwijzer verwijderen">
+<!ENTITY bookmark_added "Bladwijzer toegevoegd">
+<!-- Localization note (bookmark_already_added) : This string is
+     used as a label in a toast. It is the verb "to bookmark", not
+     the noun "a bookmark". -->
+<!ENTITY bookmark_already_added "Bladwijzer al gemaakt">
+<!ENTITY bookmark_removed "Bladwijzer verwijderd">
+<!ENTITY bookmark_updated "Bladwijzer bijgewerkt">
+<!ENTITY bookmark_options "Opties">
+<!ENTITY bookmark_save "Opslaan">
+<!ENTITY screenshot_added_to_bookmarks "Schermafbeelding aan bladwijzers toegevoegd">
+<!-- Localization note (screenshot_folder_label_in_bookmarks): We save links to screenshots
+     the user takes. The folder we store these links in is located in the bookmarks list
+     and is labeled by this String. -->
+<!ENTITY screenshot_folder_label_in_bookmarks "Schermafbeeldingen">
+<!ENTITY readinglist_smartfolder_label_in_bookmarks "Leeslijst">
+
+<!-- Localization note (bookmark_folder_items): The variable is replaced by the number of items
+     in the folder. -->
+<!ENTITY bookmark_folder_items "&formatD; items">
+<!ENTITY bookmark_folder_one_item "1 item">
+<!ENTITY bookmark_folder_updated "Map bijgewerkt">
+<!ENTITY bookmark_parent_folder "Bovenliggende map">
+<!ENTITY bookmark_add_folder "Nieuwe map toevoegen">
+
+<!ENTITY reader_saved_offline "Offline opgeslagen">
+<!-- Localization note (reader_switch_to_bookmarks) : This
+     string is used as an action in a snackbar - it lets you
+     "switch" to the bookmarks (saved items) panel. -->
+<!ENTITY reader_switch_to_bookmarks "Wisselen">
+
+<!ENTITY history_today_section "Vandaag">
+<!ENTITY history_yesterday_section "Gisteren">
+<!ENTITY history_week_section3 "Afgelopen 7 dagen">
+<!ENTITY history_older_section3 "Ouder dan 6 maanden">
+
+<!ENTITY search "Zoeken">
+<!ENTITY reload "Vernieuwen">
+<!ENTITY forward "Vooruit">
+<!ENTITY menu "Menu">
+<!ENTITY back "Terug">
+<!ENTITY stop "Stoppen">
+<!ENTITY site_security "Websitebeveiliging">
+<!ENTITY edit_mode_cancel "Annuleren">
+
+<!ENTITY close_tab "Tabblad sluiten">
+<!ENTITY one_tab "1 tabblad">
+<!-- Localization note (num_tabs2) : Number of tabs is always more than one.
+     We can't use android plural forms, sadly. See bug #753859. -->
+<!ENTITY num_tabs2 "&formatD; tabbladen">
+<!ENTITY new_tab_opened "Nieuw tabblad geopend">
+<!ENTITY new_private_tab_opened "Nieuw privétabblad geopend">
+<!-- Localization note (switch_button_message): This string should be as short
+     as possible because it's shown as a label in a toast.  Ideally, this string
+     is upper-case, to match Google and Android's convention. -->
+<!ENTITY switch_button_message "WISSELEN">
+<!-- Localization note (tab_title_prefix_is_playing_audio): This string is not
+     visible in the UI, but rather used as a text-to-speech content description
+     for sight-impaired a11y users. The content description is set on a tab
+     title in a list of open tabs when content in that tab is playing audio.
+     &formatS; will be replaced with the title of the tab, as received from the
+     web page. When audio is not playing in a tab, &formatS; will be used as
+     the content description. -->
+<!ENTITY tab_title_prefix_is_playing_audio "Audio afspelen – &formatS;">
+
+<!ENTITY settings "Instellingen">
+<!ENTITY settings_title "Instellingen">
+<!ENTITY pref_category_general "Algemeen">
+<!ENTITY pref_category_general_summary3 "Startpagina, taal, tabbladwachtrij">
+
+<!-- Localization note (pref_category_language) : This is the preferences
+     section in which the user picks the locale in which to display Firefox
+     UI. The locale includes both language and region concepts. -->
+<!ENTITY pref_category_language "Taal">
+<!ENTITY pref_category_language_summary "De taal van uw browser wijzigen">
+<!ENTITY pref_browser_locale "Browsertaal">
+
+<!-- Localization note (locale_system_default) : This string indicates that
+     Firefox will use the locale currently selected in Android's settings
+     to display browser chrome. -->
+<!ENTITY locale_system_default "Systeemstandaard">
+
+<!-- Localization note (overlay_share_label) : This is the label that appears
+     in Android's intent chooser when sending a link to Firefox to bookmark,
+     send to another device, or add to Reading List. -->
+<!ENTITY overlay_share_label "Toevoegen aan &brandShortName;">
+
+<!-- Localization note (overlay_share_bookmark_btn_label) : This string is
+     used in the share overlay menu to select an action. It is the verb
+     "to bookmark", not the noun "a bookmark". -->
+<!ENTITY overlay_share_bookmark_btn_label "Bladwijzer maken">
+<!ENTITY overlay_share_bookmark_btn_label_already "Bladwijzer al gemaakt">
+<!ENTITY overlay_share_send_other "Verzenden naar andere apparaten">
+
+<!ENTITY overlay_share_open_browser_btn_label "Openen in &brandShortName;">
+<!-- Localization note (overlay_share_send_tab_btn_label) : Used on the
+     share overlay menu to represent the "Send Tab" action when the user
+     either has not set up Sync, or has no other devices to send a tab
+     to. -->
+<!ENTITY overlay_share_send_tab_btn_label "Verzenden naar ander apparaat">
+<!ENTITY overlay_share_no_url "Geen koppeling gevonden in deze deler">
+<!ENTITY overlay_share_select_device "Apparaat selecteren">
+<!-- Localization note (overlay_no_synced_devices) : Used when the menu option
+     to send a tab to a synced device is pressed and no other synced devices
+     are found. -->
+<!ENTITY overlay_no_synced_devices "Geen via Firefox-account gekoppelde apparaten gevonden">
+
+<!ENTITY pref_category_search3 "Zoeken">
+<!ENTITY pref_category_search_summary2 "Toevoegen, standaard instellen, suggesties tonen">
+<!ENTITY pref_category_accessibility "Toegankelijkheid">
+<!ENTITY pref_category_accessibility_summary2 "Tekstgrootte, zoomen, spraakinvoer">
+<!ENTITY pref_category_privacy_short "Privacy">
+<!ENTITY pref_category_privacy_summary4 "Volgen, aanmeldingen, gegevenskeuzes">
+<!ENTITY pref_category_vendor2 "&vendorShortName; &brandShortName;">
+<!ENTITY pref_category_vendor_summary2 "Over &brandShortName;, FAQ’s, feedback">
+<!ENTITY pref_category_datareporting "Gegevenskeuzes">
+<!ENTITY pref_category_logins "Aanmeldingen">
+<!ENTITY pref_learn_more "Meer info">
+<!ENTITY pref_category_installed_search_engines "Geïnstalleerde zoekmachines">
+<!ENTITY pref_category_add_search_providers "Meer zoekproviders toevoegen">
+<!ENTITY pref_category_search_restore_defaults "Zoekmachines herstellen">
+<!ENTITY pref_search_restore_defaults "Standaardwaarden herstellen">
+<!ENTITY pref_search_restore_defaults_summary "Standaardwaarden herstellen">
+<!-- Localization note (pref_search_hint) : "TIP" as in "hint", "clue" etc. Displayed as an
+     advisory message on the customise search providers settings page explaining how to add new
+     search providers.
+     The &formatI; in the string will be replaced by a small image of the icon described, and can be moved to wherever
+     it is applicable. -->
+<!ENTITY pref_search_hint2 "TIP: voeg een website aan uw lijst met zoekproviders toe door uw vinger op het zoekveld ervan te houden en daarna het pictogram &formatI; aan te raken.">
+<!ENTITY pref_category_advanced "Geavanceerd">
+<!-- Localization note (pref_category_advanced_summary3): “data saver” in this
+     context means consuming less data, e.g. by not loading images, not
+     “storing data”. -->
+<!ENTITY pref_category_advanced_summary3 "Tabbladen herstellen, gegevensbesparing, ontwikkelaarshulpmiddelen">
+<!ENTITY pref_category_notifications "Notificaties">
+<!ENTITY pref_category_notifications_summary "Nieuwe functies, website-updates">
+<!ENTITY pref_developer_remotedebugging_usb "Remote debugging via USB">
+<!ENTITY pref_developer_remotedebugging_wifi "Remote debugging via wifi">
+<!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Wifi-debugging vereist dat een QR-codelezer-app op uw apparaat is geïnstalleerd.">
+<!ENTITY pref_remember_signons2 "Aanmeldingen onthouden">
+<!ENTITY pref_manage_logins "Aanmeldingen beheren">
+
+<!ENTITY pref_category_home "Startpagina">
+<!ENTITY pref_category_home_summary "Uw startpagina aanpassen">
+<!ENTITY pref_category_home_panels "Panelen">
+<!ENTITY pref_category_home_add_ons "Add-ons">
+<!ENTITY pref_home_updates2 "Inhoudsupdates">
+<!ENTITY pref_home_updates_enabled "Ingeschakeld">
+<!ENTITY pref_home_updates_wifi "Alleen via wifi">
+<!ENTITY pref_category_home_homepage "Startpagina">
+<!-- Localization note (home_homepage_every_new_tab): The user will see a switch to determine if the
+     home page will be use in every new tab. -->
+<!ENTITY home_homepage_every_new_tab "Ook voor nieuwe tabbladen gebruiken">
+<!ENTITY home_homepage_title "Een startpagina instellen">
+<!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
+     buttons to choose the homepage they'd like to start on. When they click the radio
+     button for this string, they will use the built-in default Firefox homepage (about:home). -->
+<!ENTITY home_homepage_radio_default "&brandShortName;-startpagina">
+<!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
+     buttons to choose the homepage they'd like to start on. When they click the radio
+     button for this string, a text field will appear below the radio button and allow the
+     user to insert an address of their choice. -->
+<!ENTITY home_homepage_radio_user_address "Aangepast">
+<!-- Localization note (home_homepage_hint_user_address): The user will see a series of
+     radio buttons to choose the homepage they'd like to start on. When they click a
+     particular radio button, a text field will appear below the radio button and allow the
+     user to insert an address of their choice. This string is the hint text to that
+     text field. -->
+<!ENTITY home_homepage_hint_user_address "Voer adres of zoekterm in">
+
+<!-- Localization note: These are shown in the left sidebar on tablets -->
+<!ENTITY pref_header_general "Algemeen">
+<!ENTITY pref_header_search "Zoeken">
+<!ENTITY pref_header_privacy_short "Privacy">
+<!ENTITY pref_header_accessibility "Toegankelijkheid">
+<!ENTITY pref_header_notifications "Notificaties">
+<!ENTITY pref_header_advanced "Geavanceerd">
+<!ENTITY pref_header_help "Help">
+<!ENTITY pref_header_vendor "&vendorShortName;">
+
+<!ENTITY pref_cookies_menu "Cookies">
+<!ENTITY pref_cookies_accept_all "Ingeschakeld">
+<!ENTITY pref_cookies_not_accept_foreign "Ingeschakeld, behalve van derden">
+<!ENTITY pref_cookies_disabled "Uitgeschakeld">
+
+<!-- Localization note (pref_category_data_saver): “data saver” in this
+     context means consuming less data, e.g. by not loading images, not
+     “storing data”. -->
+<!ENTITY pref_category_data_saver "Gegevensbesparing">
+<!ENTITY pref_category_media "Media">
+<!ENTITY pref_category_developer_tools "Ontwikkelaarshulpmiddelen">
+
+<!ENTITY pref_tap_to_load_images_title2 "Afbeeldingen tonen">
+<!ENTITY pref_tap_to_load_images_enabled "Altijd">
+<!ENTITY pref_tap_to_load_images_data "Alleen via wifi">
+<!ENTITY pref_tap_to_load_images_disabled2 "Geblokkeerd">
+
+<!ENTITY pref_show_web_fonts "Weblettertypen tonen">
+<!ENTITY pref_show_web_fonts_summary2 "Externe weblettertypen downloaden bij het laden van een pagina">
+
+<!ENTITY pref_tracking_protection_title2 "Bescherming tegen volgen">
+<!ENTITY pref_donottrack_title "Niet volgen">
+<!ENTITY pref_donottrack_summary "&brandShortName; zal websites laten weten dat u niet gevolgd wilt worden">
+
+<!ENTITY pref_tracking_protection_enabled "Ingeschakeld">
+<!ENTITY pref_tracking_protection_enabled_pb "Ingeschakeld in Privénavigatie">
+<!ENTITY pref_tracking_protection_disabled "Uitgeschakeld">
+
+<!ENTITY pref_whats_new_notification "Wat is er nieuw in &brandShortName;">
+<!ENTITY pref_whats_new_notification_summary "Meer info over nieuwe functies na een update">
+
+<!-- Localization note (pref_feature_tips_notification): Title of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification"-->
+<!ENTITY pref_feature_tips_notification "Tips over producten en functies">
+<!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification_summary"-->
+<!ENTITY pref_feature_tips_notification_summary "Meer info over het gebruik van &brandShortName; en andere &vendorShortName;-producten">
+
+<!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
+     for experimental features. -->
+<!ENTITY pref_category_experimental "Experimentele functies">
+
+<!-- Custom Tabs is an Android API for allowing third-party apps to open URLs in a customized UI.
+     Instead of switching to the browser it appears as if the user stays in the third-party app.
+     For more see: https://developer.chrome.com/multidevice/android/customtabs -->
+<!ENTITY pref_custom_tabs2 "Aangepaste tabbladen">
+<!ENTITY pref_custom_tabs_summary4 "Toestaan dat apps webinhoud laden in een snel openend eigen tabblad">
+
+<!-- Localization note (custom_tabs_menu_item_open_in): The variable is replaced by the name of
+     default browser from user's preference, such as "Open in Firefox" -->
+<!ENTITY custom_tabs_menu_item_open_in "Openen in &formatS;">
+<!ENTITY custom_tabs_menu_footer "Mogelijk gemaakt door &brandShortName;">
+<!-- Long-click title of CustomTabsActivity will copy URL to clipboard and display this hint -->
+<!ENTITY custom_tabs_hint_url_copy "URL gekopieerd">
+
+<!ENTITY pref_pwa "Progressieve webapps">
+<!ENTITY pref_pwa_summary "Toestaan dat webapps aan het startscherm worden toegevoegd">
+
+<!ENTITY tracking_protection_prompt_title "Nu met Bescherming tegen volgen">
+<!ENTITY tracking_protection_prompt_text "Blokkeer actief volgelementen, zodat u zich geen zorgen hoeft te maken.">
+<!ENTITY tracking_protection_prompt_tip_text "Bezoek Privacyinstellingen voor meer info">
+<!ENTITY tracking_protection_prompt_action_button "Begrepen!">
+
+<!ENTITY tab_queue_toast_message3 "Tabblad opgeslagen in &brandShortName;">
+<!ENTITY tab_queue_toast_action "Nu openen">
+<!ENTITY tab_queue_prompt_title "Meerdere koppelingen openen?">
+<!ENTITY tab_queue_prompt_text4 "Sla ze op voor de volgende keer dat u &brandShortName; opent.">
+<!ENTITY tab_queue_prompt_tip_text2 "U kunt dit later wijzigen in Instellingen">
+<!-- Localization note (tab_queue_prompt_permit_drawing_over_apps): This additional text is shown if the
+     user needs to enable an Android setting in order to enable tab queues. -->
+<!ENTITY tab_queue_prompt_permit_drawing_over_apps "Zet Over andere apps tekenen aan">
+<!ENTITY tab_queue_prompt_positive_action_button "Inschakelen">
+<!ENTITY tab_queue_prompt_negative_action_button "Niet nu">
+<!-- Localization note (tab_queue_prompt_settings_button): This button is shown if the user needs to
+     enable a permission in Android's setting in order to enable tab queues. -->
+<!ENTITY tab_queue_prompt_settings_button "Naar Instellingen">
+<!ENTITY tab_queue_notification_title "&brandShortName;">
+<!-- Localization note (tab_queue_notification_text_plural2) : The
+     formatD is replaced with the number of tabs queued.  The
+     number of tabs queued is always more than one.  We can't use
+     Android plural forms, sadly. See Bug #753859. -->
+<!ENTITY tab_queue_notification_text_plural2 "&formatD; tabbladen wachten">
+<!-- Localization note (tab_queue_notification_text_singular2) : This is the
+     text of a notification; we expect only one tab queued. -->
+<!ENTITY tab_queue_notification_text_singular2 "1 tabblad wacht">
+
+<!-- Localization note (tab_queue_notification_settings): This notification text is shown if a tab
+     has been queued but we are missing the system permission to show an overlay. -->
+<!ENTITY tab_queue_notification_settings "Schakel de machtiging ‘Over andere apps tekenen’ in voor &brandShortName; om meerdere koppelingen te openen">
+
+<!ENTITY pref_char_encoding "Tekenset">
+<!ENTITY pref_char_encoding_on "Menu tonen">
+<!ENTITY pref_char_encoding_off "Menu niet tonen">
+<!ENTITY pref_clear_private_data2 "Privégegevens wissen">
+<!-- Localization note (pref_clear_private_data_now_tablet): This action to clear private data is only shown on tablets.
+     The action is shown below a header saying "Clear private data"; See pref_clear_private_data -->
+<!ENTITY pref_clear_private_data_now_tablet "Nu wissen">
+<!ENTITY pref_clear_on_exit_title3 "Privégegevens wissen bij afsluiten">
+<!ENTITY pref_clear_on_exit_summary2 "&brandShortName; zal automatisch uw gegevens wissen als u \u2018Afsluiten\u2019 selecteert in het hoofdmenu">
+<!ENTITY pref_clear_on_exit_dialog_title "Selecteer welke gegevens u wilt wissen">
+<!ENTITY pref_restore_tabs "Tabbladen herstellen">
+<!ENTITY pref_restore_always "Altijd herstellen">
+<!ENTITY pref_restore_quit "Niet herstellen na afsluiten van &brandShortName;">
+
+<!-- Localization note (pref_use_system_font_size, pref_use_system_font_size_summary):
+     Font size here refers to the name of the corresponding Android system setting. -->
+<!ENTITY pref_use_system_font_size "Grootte van systeemlettertype gebruiken">
+<!ENTITY pref_use_system_font_size_summary "Webinhoud schalen volgens de grootte van het systeemlettertype">
+
+<!ENTITY pref_media_autoplay_enabled "Automatisch afspelen toestaan">
+<!ENTITY pref_media_autoplay_enabled_summary "Automatisch afspelen van video’s en andere media-inhoud door websites beheren">
+<!ENTITY pref_zoom_force_enabled "Zoom altijd inschakelen">
+<!ENTITY pref_zoom_force_enabled_summary "Overschrijven forceren, zodat u elke pagina kunt zoomen">
+<!ENTITY pref_voice_input "Spraakinvoer">
+<!ENTITY pref_voice_input_summary2 "Spraakdictee in de URL-balk toestaan">
+<!ENTITY pref_qrcode_enabled "QR-codelezer">
+<!ENTITY pref_qrcode_enabled_summary2 "QR-scanner in de URL-balk toestaan">
+
+<!ENTITY pref_use_master_password "Hoofdwachtwoord gebruiken">
+<!ENTITY pref_sync_default_title "Firefox-account">
+<!ENTITY pref_sync2 "Aanmelden">
+<!ENTITY pref_sync_summary2 "Tabbladen, bladwijzers, aanmeldingen, geschiedenis synchroniseren">
+<!ENTITY pref_search_suggestions "Zoeksuggesties tonen">
+<!ENTITY pref_history_search_suggestions "Zoekgeschiedenis tonen">
+<!ENTITY pref_import_options "Importeeropties">
+<!ENTITY pref_import_android_summary "Bladwijzers en geschiedenis vanuit de systeemeigen browser importeren">
+<!-- Localization note (pref_private_data_openTabs): Open tabs is an option in
+     the Clear Private Data  dialog and refers to currently open tabs. -->
+<!ENTITY pref_private_data_openTabs "Open tabbladen">
+<!ENTITY pref_private_data_history2 "Navigatiegeschiedenis">
+<!ENTITY pref_private_data_searchHistory "Zoekgeschiedenis">
+<!ENTITY pref_private_data_formdata2 "Formuliergeschiedenis">
+<!ENTITY pref_private_data_cookies2 "Cookies &amp; actieve aanmeldingen">
+<!ENTITY pref_private_data_passwords2 "Opgeslagen aanmeldingen">
+<!ENTITY pref_private_data_cache "Buffer">
+<!ENTITY pref_private_data_offlineApps "Offlinewebsitegegevens">
+<!ENTITY pref_private_data_siteSettings2 "Website-instellingen">
+<!ENTITY pref_private_data_downloadFiles2 "Downloads">
+<!ENTITY pref_private_data_syncedTabs "Gesynchroniseerde tabbladen">
+
+<!ENTITY pref_default_browser "Standaardbrowser maken">
+<!ENTITY pref_default_browser_mozilla_support_tablet "Mozilla Support bezoeken">
+<!ENTITY pref_about_firefox "Over &brandShortName;">
+<!ENTITY pref_vendor_faqs "FAQ’s">
+<!ENTITY pref_vendor_feedback "Feedback geven">
+
+<!ENTITY pref_dialog_set_default "Instellen als standaard">
+<!ENTITY pref_dialog_default "Standaard">
+<!ENTITY pref_dialog_remove "Verwijderen">
+<!ENTITY pref_dialog_activitystream_header_content "Extra inhoud">
+<!ENTITY pref_dialog_activitystream_recentBookmarks "Recente bladwijzers">
+<!ENTITY pref_dialog_activitystream_visited "Bezocht">
+
+<!ENTITY pref_search_last_toast "U kunt uw laatste zoekmachine niet verwijderen of uitschakelen.">
+
+<!ENTITY pref_panels_show "Tonen">
+<!ENTITY pref_panels_hide "Verbergen">
+<!ENTITY pref_panels_reorder "Volgorde wijzigen">
+<!ENTITY pref_panels_move_up "Omhoog verplaatsen">
+<!ENTITY pref_panels_move_down "Omlaag verplaatsen">
+
+<!ENTITY datareporting_notification_title "&brandShortName;-statistieken &amp; -gegevens">
+<!ENTITY datareporting_notification_action "Kies wat u wilt delen">
+<!-- Used in datareporting_notification_ticket_text, but unused in strings.xml. -->
+<!ENTITY datareporting_notification_action_long "Kies welke gegevens u wilt delen">
+<!ENTITY datareporting_notification_summary "Om uw ervaring te verbeteren, verzendt &brandShortName; automatisch een aantal gegevens naar &vendorShortName;.">
+<!-- When this item is removed, also remove datareporting_notification_action_long:
+     it is unused in strings.xml. -->
+<!ENTITY datareporting_notification_ticker_text "&datareporting_notification_title;: &datareporting_notification_action_long;">
+
+<!-- Localization note (datareporting_fhr_title, datareporting_fhr_summary2,
+     reporting_telemetry_title, datareporting_telemetry_summary,
+     datareporting_crashreporter_summary) : These match the strings in
+     en-US/chrome/browser/preferences/advanced.dtd (healthReportSection.label,
+     healthReportDesc.label, telemetrySection.label, telemetryDesc.label,
+     crashReporterDesc.label). -->
+<!ENTITY datareporting_fhr_title "&brandShortName;-statusrapport">
+<!ENTITY datareporting_fhr_summary2 "Deelt gegevens over uw browserstatus met &vendorShortName; en helpt u uw browserprestaties te begrijpen">
+<!ENTITY datareporting_telemetry_title "Telemetry">
+<!ENTITY datareporting_telemetry_summary "Deelt gegevens over prestaties, hardware, gebruik en aanpassingen van uw browser met &vendorShortName; om &brandShortName; te helpen verbeteren">
+<!ENTITY datareporting_crashreporter_summary "&brandShortName; verzendt crashrapporten om &vendorShortName; te helpen uw browser stabieler en veiliger te maken">
+<!-- Localization note (datareporting_crashreporter_title_short) : This string matches
+     (crashReporterSection.label) in en-US/chrome/browser/preferences/advanced.dtd.-->
+<!ENTITY datareporting_crashreporter_title_short "Crashreporter">
+<!ENTITY datareporting_wifi_title2 "&vendorShortName;-locatieservice">
+<!ENTITY datareporting_wifi_geolocation_summary4 "Help &vendorShortName; de wereld in kaart te brengen! Deel de geschatte wifi- en gsm-locatie van uw apparaat om onze geolocatieservice te verbeteren.">
+<!-- Localization note (pref_update_autodownload2) : This should mention downloading
+     specifically, since the pref only prevents automatic downloads and not the
+     actual notification that an update is available. -->
+<!ENTITY pref_update_autodownload3 "Automatische updates">
+<!ENTITY pref_update_autodownload_wifi "Alleen via wifi">
+<!ENTITY pref_update_autodownload_never "Nooit">
+<!ENTITY pref_update_autodownload_always "Altijd">
+
+<!-- Localization note (help_menu) : This string is used in the main menu-->
+<!ENTITY help_menu "Help">
+
+<!ENTITY quit "Afsluiten">
+
+<!ENTITY addons "Add-ons">
+<!ENTITY logins "Aanmeldingen">
+<!ENTITY downloads "Downloads">
+<!ENTITY char_encoding "Tekenset">
+
+<!ENTITY share "Delen">
+<!ENTITY share_title "Delen via">
+<!ENTITY share_image_failed "Kan deze afbeelding niet delen">
+<!ENTITY save_as_pdf "Opslaan als PDF">
+<!ENTITY print "Afdrukken">
+<!ENTITY view_page_source "Paginabron bekijken">
+<!ENTITY find_in_page "Zoeken op pagina">
+<!ENTITY desktop_mode "Desktopwebsite opvragen">
+<!ENTITY page "Pagina">
+<!ENTITY tools "Extra">
+<!ENTITY new_tab "Nieuw tabblad">
+<!ENTITY new_private_tab "Nieuw privétabblad">
+<!ENTITY close_all_tabs "Alle tabbladen sluiten">
+<!ENTITY close_private_tabs "Privétabbladen sluiten">
+<!ENTITY tabs_normal "Tabbladen">
+<!ENTITY tabs_private "Privé">
+<!ENTITY set_image_fail "Kan afbeelding niet instellen">
+<!ENTITY set_image_path_fail "Kan afbeelding niet opslaan">
+<!ENTITY set_image_chooser_title "Afbeelding instellen als">
+
+<!-- Localization note (find_text, find_prev, find_next, find_close) : These strings are used
+     as alternate text for accessibility. They are not visible in the UI. -->
+<!ENTITY find_text "Zoeken op pagina">
+<!ENTITY find_prev "Vorige">
+<!ENTITY find_next "Volgende">
+<!ENTITY find_close "Sluiten">
+
+<!-- Localization note (media_sending_to, media_play, media_pause, media_stop) : These strings are used
+     as alternate text for accessibility. They are not visible in the UI. -->
+<!ENTITY media_sending_to "Verzenden naar apparaat">
+<!ENTITY media_play "Afspelen">
+<!ENTITY media_pause "Pauzeren">
+<!ENTITY media_stop "Stoppen">
+
+<!ENTITY contextmenu_open_new_tab "Openen in nieuw tabblad">
+<!ENTITY contextmenu_open_private_tab "Openen in privétabblad">
+<!ENTITY contextmenu_remove "Verwijderen">
+<!ENTITY contextmenu_add_page_shortcut "Paginasnelkoppeling toevoegen">
+<!ENTITY contextmenu_set_as_homepage "Instellen als startpagina">
+<!ENTITY contextmenu_share "Delen">
+<!ENTITY contextmenu_pasteandgo "Plakken &amp; Gaan">
+<!ENTITY contextmenu_paste "Plakken">
+<!ENTITY contextmenu_copyurl "Adres kopiëren">
+<!ENTITY contextmenu_edit_bookmark "Bewerken">
+<!ENTITY contextmenu_subscribe "Abonneren op pagina">
+<!ENTITY contextmenu_site_settings "Website-instellingen bewerken">
+<!ENTITY contextmenu_top_sites_edit "Bewerken">
+<!ENTITY contextmenu_top_sites_pin "Website vastmaken">
+<!ENTITY contextmenu_top_sites_unpin "Website losmaken">
+<!-- Localization note (contextmenu_pin_to_top_sites, contextmenu_unpin_from_top_sites): These strings are used to
+     pin/unpin items from top sites when the user is not on the top sites screen so they'd be missing context on what
+     just "Pin Site" or "Unpin Site" would mean. -->
+<!ENTITY contextmenu_pin_to_top_sites "Vastmaken aan topwebsites">
+<!ENTITY contextmenu_unpin_from_top_sites "Losmaken van topwebsites">
+<!ENTITY contextmenu_add_search_engine "Zoekmachine toevoegen">
+
+<!-- Localization note (pinned_page_to_top_sites, unpinned_page_from_top_sites): These strings are shown in a snackbar
+     after the user pins/unpins the currently displayed page from top sites. -->
+<!ENTITY pinned_page_to_top_sites "Pagina vastgemaakt aan topwebsites">
+<!ENTITY unpinned_page_from_top_sites "Pagina losgemaakt van topwebsites">
+
+<!-- Localization note (doorhanger_login_no_username): This string is used in the save-login doorhanger
+     where normally a username would be displayed. In this case, no username was found, and this placeholder
+     contains brackets to indicate this is not actually a username, but rather a placeholder -->
+<!ENTITY doorhanger_login_no_username "[Geen gebruikersnaam]">
+<!ENTITY doorhanger_login_edit_title "Aanmelding bewerken">
+<!ENTITY doorhanger_login_edit_username_hint "Gebruikersnaam">
+<!ENTITY doorhanger_login_edit_password_hint "Wachtwoord">
+<!ENTITY doorhanger_login_edit_toggle "Wachtwoord tonen">
+<!ENTITY doorhanger_login_select_message "Wachtwoord van &formatS; kopiëren?">
+<!ENTITY doorhanger_login_select_toast_copy "Wachtwoord naar klembord gekopieerd">
+<!ENTITY doorhanger_login_select_action_text "Andere aanmelding selecteren">
+<!ENTITY doorhanger_login_select_title "Wachtwoord kopiëren van">
+
+<!-- Localization note (pref_scroll_title_bar2): Label for setting that controls
+     whether or not the dynamic toolbar is enabled. -->
+<!ENTITY pref_scroll_title_bar2 "Volledigschermnavigatie">
+<!ENTITY pref_scroll_title_bar_summary2 "De &brandShortName;-werkbalk verbergen bij het omlaag scrollen op een pagina">
+
+<!ENTITY pref_tab_queue_title3 "Tabbladwachtrij">
+<!ENTITY pref_tab_queue_summary4 "Koppelingen opslaan voor de volgende keer dat u &brandShortName; opent">
+
+<!-- Localization note (pref_compact_tabs): Label for setting that controls whether 1 wide column or
+     2 narrower (compact) columns are used for tabs in the tabs tray in portrait mode on phones. -->
+<!ENTITY pref_compact_tabs "Compacte tabbladen">
+<!ENTITY pref_compact_tabs_summary2 "Tabbladen in twee kolommen schikken in staande modus">
+
+<!-- Localization note (page_removed): This string appears in a toast message when
+     any page is removed frome about:home. This includes pages that are in history,
+     bookmarks, or reading list. -->
+<!ENTITY page_removed "Pagina verwijderd">
+<!ENTITY folder_removed "Map verwijderd">
+
+<!ENTITY bookmark_edit_title "Bladwijzer bewerken">
+<!ENTITY bookmark_edit_folder_title "Map bewerken">
+<!ENTITY bookmark_edit_name "Naam">
+<!ENTITY bookmark_edit_location "Locatie">
+<!ENTITY bookmark_edit_keyword "Sleutelwoord">
+<!ENTITY bookmark_select_folder "Map selecteren">
+
+<!-- Localization note (site_settings_*) : These strings are used in the "Site Settings"
+     dialog that appears after selecting the "Edit Site Settings" context menu item. -->
+<!ENTITY site_settings_title3       "Website-instellingen">
+<!ENTITY site_settings_cancel       "Annuleren">
+<!ENTITY site_settings_clear        "Wissen">
+
+<!-- Localization note : These strings are used as alternate text for accessibility.
+     They are not visible in the UI. -->
+<!ENTITY page_action_dropmarker_description "Aanvullende acties">
+
+<!ENTITY masterpassword_create_title "Hoofdwachtwoord aanmaken">
+<!ENTITY masterpassword_remove_title "Hoofdwachtwoord verwijderen">
+<!ENTITY masterpassword_password "Wachtwoord">
+<!ENTITY masterpassword_confirm "Bevestig wachtwoord">
+
+<!ENTITY button_ok "OK">
+<!ENTITY button_cancel "Annuleren">
+<!ENTITY button_yes "Ja">
+<!ENTITY button_no "Nee">
+<!ENTITY button_clear_data "Gegevens wissen">
+<!ENTITY button_set "Instellen">
+<!ENTITY button_clear "Wissen">
+<!ENTITY button_copy "Kopiëren">
+
+<!ENTITY home_top_sites_title "Topwebsites">
+<!-- Localization note (home_top_sites_add): This string is used as placeholder
+     text underneath empty thumbnails in the Top Sites page on about:home. -->
+<!ENTITY home_top_sites_add "Een website toevoegen">
+
+<!-- Localization note (home_title): This string should be kept in sync
+     with the page title defined in aboutHome.dtd -->
+<!ENTITY home_title "&brandShortName;-startpagina">
+<!ENTITY home_history_title "Geschiedenis">
+<!ENTITY home_synced_devices_smartfolder "Gesynchroniseerde apparaten">
+<!ENTITY home_synced_devices_number "&formatD; apparaten">
+<!-- Localization note (home_synced_devices_one_device): This is the singular version of home_synced_devices_number, referring to the number of devices a user has synced. -->
+<!ENTITY home_synced_devices_one "1 apparaat">
+<!ENTITY home_history_back_to2 "Terug naar volledige geschiedenis">
+<!ENTITY home_clear_history_button "Geschiedenis wissen">
+<!ENTITY home_clear_history_confirm "Weet u zeker dat u uw geschiedenis wilt wissen?">
+<!ENTITY home_bookmarks_empty "Hier verschijnen uw opgeslagen bladwijzers.">
+<!ENTITY home_closed_tabs_title2 "Onlangs gesloten">
+<!ENTITY home_last_tabs_empty "Hier verschijnen uw recente tabbladen.">
+<!ENTITY home_restore_all "Alle herstellen">
+<!ENTITY home_closed_tabs_number "&formatD; tabbladen">
+<!-- Localization note (home_closed_tabs_one): This is the singular version of home_closed_tabs_number, referring to the number of recently closed tabs available. -->
+<!ENTITY home_closed_tabs_one "1 tabblad">
+<!ENTITY home_most_recent_empty "Hier verschijnen uw meest recent bezochte websites.">
+<!-- Localization note (home_most_recent_emptyhint2): "Psst" is a sound that might be used to attract someone's attention unobtrusively, and intended to hint at Private Browsing to the user.
+     The placeholders &formatS1; and &formatS2; are used to mark the location of text underlining. -->
+<!ENTITY home_most_recent_emptyhint2 "Psst: een &formatS1;Nieuw privétabblad&formatS2; openen zal geen geschiedenis van u opslaan.">
+
+<!-- Localization note (home_default_empty): This string is used as the default text when there
+     is no data to show in an about:home panel that was created by an add-on. -->
+<!ENTITY home_default_empty "Geen inhoud voor dit paneel gevonden.">
+
+<!-- Localization note (home_back_up_to_filter): The variable is replaced by the name of the
+     previous location in the navigation, such as the previous folder -->
+<!ENTITY home_move_back_to_filter "Terug naar &formatS;">
+
+<!-- Localization note (home_remote_tabs_many_hidden_devices) : The
+     formatD is replaced with the number of hidden devices.  The
+     number of hidden devices is always more than one.  We can't use
+     Android plural forms, sadly. See Bug #753859. -->
+<!ENTITY home_remote_tabs_many_hidden_devices "&formatD; apparaten verborgen">
+<!-- Localization note (home_remote_tabs_hidden_devices_title) : This is the
+     title of a dialog; we expect more than one device. -->
+<!ENTITY home_remote_tabs_hidden_devices_title "Verborgen apparaten">
+<!-- Localization note (home_remote_tabs_unhide_selected_devices) : This is
+     the text of a button; we expect more than one device. -->
+<!ENTITY home_remote_tabs_unhide_selected_devices "Geselecteerde apparaten zichtbaar maken">
+
+<!-- Localization note (home_pinned_site) : This is a snackbar label displayed after
+    a site is pinned or unpinned. -->
+<!ENTITY home_pinned_site "Website vastgemaakt">
+<!ENTITY home_unpinned_site "Website losgemaakt">
+
+<!ENTITY remote_tabs_panel_moved_title "Waar zijn mijn tabbladen gebleven?">
+<!ENTITY remote_tabs_panel_moved_desc "We hebben uw tabbladen van andere apparaten naar een paneel op uw startpagina verplaatst dat telkens wanneer u een nieuw tabblad opent makkelijk bereikbaar is.">
+<!ENTITY remote_tabs_panel_moved_link "Breng me naar mijn nieuwe paneel.">
+
+<!ENTITY pin_site_dialog_hint "Voer een zoekterm in">
+
+<!ENTITY filepicker_title "Bestand kiezen">
+<!ENTITY filepicker_audio_title "Een geluid kiezen of opnemen">
+<!ENTITY filepicker_image_title "Een foto kiezen of maken">
+<!ENTITY filepicker_video_title "Een video kiezen of opnemen">
+
+<!-- Site identity popup -->
+<!ENTITY identity_connected_to "U bent verbonden met">
+<!-- Localization note (identity_run_by) : This string appears between a
+domain name (above) and an organization name (below). E.g.
+
+example.com
+which is run by
+Example Enterprises, Inc.
+
+The layout of the identity dialog prevents combining this into a single string with
+substitution variables.  If it is difficult to translate the sense of the string
+with that structure, consider a translation which ignores the preceding domain and
+just addresses the organization to follow, e.g. "This site is run by " -->
+<!ENTITY identity_connection_secure "Beveiligde verbinding">
+<!ENTITY identity_connection_insecure "Niet-beveiligde verbinding">
+<!ENTITY identity_connection_chromeui "Dit is een beveiligde &brandShortName;-pagina">
+
+<!-- Mixed content notifications in site identity popup -->
+<!ENTITY mixed_content_blocked_all1 "&brandShortName; heeft onveilige inhoud op deze pagina geblokkeerd.">
+<!ENTITY mixed_content_blocked_some1 "&brandShortName; heeft een deel van de onveilige inhoud op deze pagina geblokkeerd.">
+<!ENTITY mixed_content_display_loaded1 "Onderdelen van deze pagina zijn niet beveiligd (zoals afbeeldingen).">
+<!ENTITY mixed_content_protection_disabled1 "U hebt bescherming tegen onveilige inhoud uitgeschakeld.">
+
+<!-- Tracking content notifications in site identity popup -->
+<!ENTITY doorhanger_tracking_title2 "Bescherming tegen volgen">
+<!ENTITY doorhanger_tracking_state_enabled "Ingeschakeld">
+<!ENTITY doorhanger_tracking_state_disabled "Uitgeschakeld">
+<!ENTITY doorhanger_tracking_message_enabled1 "Pogingen om uw onlinegedrag te volgen zijn geblokkeerd.">
+<!ENTITY doorhanger_tracking_message_disabled2 "Deze pagina bevat elementen die uw surfgedrag zouden kunnen volgen.">
+
+<!-- Common mixed and tracking content strings in site identity popup -->
+<!ENTITY learn_more "Meer info">
+<!ENTITY enable_protection "Bescherming inschakelen">
+<!ENTITY disable_protection "Bescherming uitschakelen">
+
+<!ENTITY private_data_success "Privégegevens gewist">
+<!ENTITY private_data_fail "Sommige privégegevens konden niet worden gewist">
+
+<!ENTITY bookmarkhistory_button_import "Importeren">
+<!ENTITY bookmarkhistory_import_both "Bladwijzers en geschiedenis importeren
+                                      uit Android">
+<!ENTITY bookmarkhistory_import_bookmarks "Bladwijzers importeren
+                                           uit Android">
+<!ENTITY bookmarkhistory_import_history "Geschiedenis importeren
+                                         uit Android">
+<!ENTITY bookmarkhistory_import_wait "Een moment geduld…">
+
+<!ENTITY suggestions_prompt3 "Wilt u zoeksuggesties aanzetten?">
+<!--  Localization note (search_bar_item_desc): When the user clicks the url bar
+      and starts typing, a list of icons of search engines appears at the bottom
+      of the screen. When a user clicks an icon, the entered text will be searched
+      via the search engine that uses the icon they clicked. This text is used
+      for screen reader users when they hover each icon - &formatS; will be
+      replaced with the name of the currently highlighted icon. -->
+<!ENTITY search_bar_item_desc "Zoeken met &formatS;">
+
+<!-- Localization note (suggestion_for_engine): The placeholder &formatS1; will be
+     replaced with the name of the search engine. The placeholder &formatS2; will be
+     replaced with the search query. -->
+<!ENTITY suggestion_for_engine "Zoeken bij &formatS1; naar &formatS2;">
+
+<!ENTITY searchable_description "Bladwijzers en geschiedenis">
+
+<!-- Updater notifications -->
+<!ENTITY updater_start_title2 "Update voor &brandShortName; beschikbaar">
+<!ENTITY updater_start_select2 "Raak aan om te downloaden">
+
+<!ENTITY updater_downloading_title2 "&brandShortName; downloaden">
+<!ENTITY updater_downloading_title_failed2 "Downloaden mislukt">
+<!ENTITY updater_downloading_select2 "Raak aan om update na downloaden toe te passen">
+<!ENTITY updater_downloading_retry2 "Raak aan om opnieuw te proberen">
+
+<!ENTITY updater_apply_title3 "Update voor &brandShortName; gedownload">
+<!ENTITY updater_apply_select3 "Raak aan om te installeren">
+
+<!-- Localization note (updater_permission_text): This text is shown in a notification and as a snackbar
+     if the app requires a runtime permission to download updates. Currently, the updater only sees
+     remotely advertised updates in the Nightly and Aurora channels. -->
+<!ENTITY updater_permission_text "Verleen &brandShortName; de machtiging voor toegang tot opslag om bestanden en updates te downloaden.">
+<!-- LOCALIZATION NOTE (updater_permission_allow): This action is shown in a snackbar along with updater_permission_text. -->
+<!ENTITY updater_permission_allow "Verlenen">
+
+    <!-- Guest mode -->
+<!ENTITY new_guest_session "Nieuwe gastsessie">
+<!ENTITY exit_guest_session "Gastsessie verlaten">
+<!ENTITY guest_session_dialog_continue "Doorgaan">
+<!ENTITY guest_session_dialog_cancel "Annuleren">
+<!ENTITY new_guest_session_title "&brandShortName; zal nu herstarten">
+<!ENTITY new_guest_session_text2 "De persoon die dit gebruikt, zal uw persoonlijke navigatiegegevens (zoals opgeslagen aanmeldingen, geschiedenis of bladwijzers) niet kunnen zien.\n\nAls uw gast klaar is, worden zijn of haar navigatiegegevens verwijderd en wordt uw sessie hersteld.">
+<!ENTITY guest_browsing_notification_title "Gastnavigatie is ingeschakeld">
+<!ENTITY guest_browsing_notification_text "Tik om af te sluiten">
+
+<!ENTITY exit_guest_session_title "&brandShortName; zal nu herstarten">
+<!ENTITY exit_guest_session_text "De navigatiegegevens van deze sessie zullen worden verwijderd.">
+
+<!-- Miscellaneous -->
+<!-- LOCALIZATION NOTE (ellipsis): This text is appended to a piece of text that does not fit in the
+     designated space. Use the unicode ellipsis char, \u2026, or use "..." if \u2026 doesn't suit
+     traditions in your locale. -->
+<!ENTITY ellipsis "…">
+
+<!ENTITY colon ":">
+
+<!-- These are only used for accessibility for the done and overflow-menu buttons in the actionbar.
+     They are never shown to users -->
+<!ENTITY actionbar_menu "Menu">
+<!ENTITY actionbar_done "Gereed">
+
+<!-- Voice search in the awesome bar -->
+<!ENTITY voicesearch_prompt "Spreek nu">
+
+<!-- Localization note (remote_tabs_last_synced): the variable is replaced by a
+     "relative time span string" produced by Android.  This string describes the
+     time the tabs were last synced relative to the current time; examples
+     include "42 minutes ago", "4 days ago", "last week", etc. The subject of
+     "Last synced" is one of the user's other Sync clients, typically Firefox on
+     their desktop or laptop.-->
+<!ENTITY remote_tabs_last_synced "Laatst gesynchroniseerd: &formatS;">
+<!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
+<!ENTITY remote_tabs_never_synced "Laatst gesynchroniseerd: nooit">
+
+<!-- LOCALIZATION NOTE (intent_uri_private_browsing_prompt): This string will
+     appear in an alert when a user, who is currently in private browsing,
+     clicks a link that will open an external Android application. "&formatS;"
+     will be replaced with the name of the application that will be opened. -->
+<!ENTITY intent_uri_private_browsing_prompt "Deze koppeling wordt in &formatS; geopend. Weet u zeker dat u Privénavigatie wilt afsluiten?">
+<!-- LOCALIZATION NOTE (intent_uri_private_browsing_multiple_match_title): This
+     string will appear as the title of an alert when a user, who is currently
+     in private browsing, clicks a link that will open an external Android
+     application and more than one application is available to open that link.
+     We don't have control over the style of this dialog and it looks
+     unpolished when this string is longer than one line so ideally keep it
+     short! -->
+<!ENTITY intent_uri_private_browsing_multiple_match_title "Privénavigatie afsluiten?">
+
+<!-- DevTools Authentication -->
+<!-- LOCALIZATION NOTE (devtools_auth_scan_header): This header text appears
+     above a QR reader that is actively scanning for QR codes.  The expected QR
+     code has already been displayed by the client trying to connect (such as
+     desktop Firefox via WebIDE), so you just need to aim this device at the QR
+     code. -->
+<!ENTITY devtools_auth_scan_header "QR-code scannen die op uw andere apparaat wordt weergegeven">
+
+<!-- Restrictable features -->
+<!-- Localization note: These are features the device owner (e.g. parent) can enable or disable for
+     a restricted profile (e.g. child). Used inside the Android settings UI. -->
+<!ENTITY restrictable_feature_addons_installation "Add-ons">
+<!ENTITY restrictable_feature_addons_installation_description "Voeg functies of functionaliteiten toe aan Firefox. Noot: add-ons kunnen bepaalde beperkingen uitschakelen.">
+<!ENTITY restrictable_feature_private_browsing "Privénavigatie">
+<!ENTITY restrictable_feature_private_browsing_description "Laat gezinsleden surfen zonder gegevens over de door hen bezochte websites en pagina’s op te slaan.">
+<!ENTITY restrictable_feature_clear_history "Geschiedenis wissen">
+<!ENTITY restrictable_feature_clear_history_description "Laat gezinsleden gegevens over de door hen bezochte websites verwijderen.">
+<!ENTITY restrictable_feature_advanced_settings "Geavanceerde instellingen">
+<!ENTITY restrictable_feature_advanced_settings_description "Omvatten het importeren van bladwijzers, herstellen van tabbladen en automatische updates. Zet dit uit voor vereenvoudigde instellingen die voor elk gezinslid passend zijn.">
+<!ENTITY restrictable_feature_camera_microphone "Camera &amp; microfoon">
+<!ENTITY restrictable_feature_camera_microphone_description "Laat gezinsleden deelnemen aan realtime-communicatie op websites.">
+<!ENTITY restrictable_feature_block_list "Blokkeerlijst">
+<!ENTITY restrictable_feature_block_list_description "Blokkeer websites die gevoelige inhoud bevatten.">
+
+<!-- Default Bookmarks titles-->
+<!-- LOCALIZATION NOTE (bookmarks_about_browser): link title for about:fennec -->
+<!ENTITY bookmarks_about_browser "Firefox: over uw browser">
+<!-- LOCALIZATION NOTE (bookmarks_addons): link title for https://addons.mozilla.org/en-US/mobile -->
+<!ENTITY bookmarks_addons "Firefox: aanpassen met add-ons">
+<!-- LOCALIZATION NOTE (bookmarks_support): link title for https://support.mozilla.org/ -->
+<!ENTITY bookmarks_support "Firefox: ondersteuning">
+<!-- LOCALIZATION NOTE (bookmarks_restricted_support): link title for https://support.mozilla.org/kb/controlledaccess -->
+<!ENTITY bookmarks_restricted_support2 "Firefox: hulp en ondersteuning voor beperkte profielen op Android-tablets">
+<!-- LOCALIZATION NOTE (bookmarks_restricted_webmaker):link title for https://webmaker.org -->
+<!ENTITY bookmarks_restricted_webmaker "Leer het web: Mozilla Webmaker">
+
+<!-- LOCALIZATION NOTE (unsupported_sdk_version): The user installed a build of this app that does not support
+     the Android version of this device. the formatS1 is replaced by the CPU ABI (e.g., ARMv7); the formatS2 is
+     replaced by the Android OS version (e.g., 14)-->
+<!ENTITY unsupported_sdk_version "Sorry! Deze &brandShortName; werkt niet op dit apparaat (&formatS1;, &formatS2;). Download de juiste versie.">
+
+<!-- LOCALIZATION NOTE(corrupt_apk): This notification is shown if corruption has been detected on startup and the user has to reinstall Firefox -->
+<!ENTITY corrupt_apk "Kan &brandShortName; niet openen. Installeer opnieuw en probeer het nogmaals.">
+
+<!ENTITY eol_notification_title2 "&brandShortName; wordt niet meer bijgewerkt">
+<!ENTITY eol_notification_summary "Tik voor meer info">
+
+<!-- LOCALIZATION NOTE (whatsnew_notification_title, whatsnew_notification_summary): These strings
+     are used for a system notification that's shown to users after the app updates. -->
+<!ENTITY whatsnew_notification_title "&brandShortName; is up-to-date">
+<!ENTITY whatsnew_notification_summary "Ontdek wat er nieuw is in deze versie">
+
+<!ENTITY promotion_add_page_shortcut "Paginasnelkoppeling toevoegen">
+
+<!ENTITY helper_first_offline_bookmark_title "Offline lezen">
+<!ENTITY helper_first_offline_bookmark_message "Vind uw lezerweergave-items in de bladwijzers, zelfs offline.">
+<!ENTITY helper_first_offline_bookmark_button "Naar Bladwijzers">
+
+<!ENTITY helper_triple_readerview_open_title "Offline beschikbaar">
+<!ENTITY helper_triple_readerview_open_message "Maak bladwijzers voor lezerweergave-items om ze offline te lezen.">
+<!ENTITY helper_triple_readerview_open_button "Toevoegen aan bladwijzers">
+
+<!ENTITY activity_stream_topsites "Topwebsites">
+<!-- LOCALIZATION NOTE (activity_stream_topstories): &brandPocket is the brand of the company, Pocket, that is being used to provide suggestions for articles. -->
+<!ENTITY activity_stream_topstories "Aanbevolen door &brandPocket;">
+<!ENTITY activity_stream_highlights "Highlights">
+
+<!-- LOCALIZATION NOTE (activity_stream_link_more1): Link-like text displayed to take user to a website with more content from Pocket. -->
+<!ENTITY activity_stream_link_more1 "MEER">
+
+<!-- LOCALIZATION NOTE (activity_stream_highlight_label_bookmarked): This label is shown in the Activity
+Stream list for highlights sourced from th user's bookmarks. -->
+<!ENTITY activity_stream_highlight_label_bookmarked "Bladwijzer gemaakt">
+<!-- LOCALIZATION NOTE (activity_stream_highlight_label_visited): This label is shown in the Activity
+Stream list for highlights sourced from th user's bookmarks. -->
+<!ENTITY activity_stream_highlight_label_visited "Bezocht">
+<!-- LOCALIZATION NOTE (activity_stream_highlight_label_trending): This label is shown in the Activity Stream list for highlights sourced from a recommendations engine. -->
+<!ENTITY activity_stream_highlight_label_trending "Populair">
+<!-- LOCALIZATION NOTE (activity_stream_highlights_empty): This text is shown when we could not find highlights for this user. This is also shown on first run. -->
+<!ENTITY activity_stream_highlights_empty "Begin met surfen, en we tonen hier een aantal geweldige artikelen, video’s en andere pagina’s die u onlangs hebt bezocht of waarvoor u een bladwijzer hebt gemaakt.">
+
+<!-- LOCALIZATION NOTE (activity_stream_remove): This label is shown in the Activity Stream context menu,
+and allows hiding a URL/page from highlights or topsites. The page remains in history/bookmarks, but
+is simply hidden from the Activity Stream panel. -->
+<!ENTITY activity_stream_remove "Verwijderen">
+<!ENTITY activity_stream_delete_history "Verwijderen uit geschiedenis">
+
+<!ENTITY private_tab_panel_title "Privénavigatie + Bescherming tegen volgen">
+<!ENTITY private_tab_panel_description "&brandShortName; blokkeert onderdelen van de pagina’s die uw surfactiviteit kunnen volgen.">
+<!ENTITY private_tab_panel_description2 "Er wordt geen geschiedenis onthouden, maar gedownloade bestanden en nieuwe bladwijzers worden wel op uw apparaat opgeslagen.">
+<!ENTITY private_tab_learn_more "Wilt u meer weten?">
+
+<!ENTITY fullscreen_warning "Volledig scherm geopend">
+
+<!-- LOCALIZATION NOTE (pwa_add_to_launcher_confirm): The plus sign here is part of UI design -->
+<!ENTITY pwa_add_to_launcher_confirm "+ Toevoegen aan startscherm">
+
+<!-- LOCALIZATION NOTE (pwa_add_to_launcher_badge2): Used as label in the page actions dropdown list,
+displayed when there are more than 3 actions available for a page.
+See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
+<!ENTITY pwa_add_to_launcher_badge2 "Toevoegen aan startscherm">
+<!ENTITY pwa_continue_to_website "Doorgaan naar website">
+<!ENTITY pwa_onboarding_sumo "U kunt deze website eenvoudig aan uw startscherm toevoegen voor directe toegang en sneller surfen met een app-achtige ervaring.">

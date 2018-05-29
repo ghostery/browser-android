@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.toolbars.title    "Barra de ferramentas">
+
+<!ENTITY composition.caption    "Mostrar esses botões na barra de ferramentas de composição:">
+
+<!ENTITY new.label              "Novo">
+<!ENTITY open.label             "Abrir">
+<!ENTITY save.label             "Salvar">
+<!ENTITY publish.label          "Publicar">
+<!ENTITY preview.label          "Navegar">
+<!ENTITY cut.label              "Recortar">
+<!ENTITY copy.label             "Copiar">
+<!ENTITY paste.label            "Colar">
+<!ENTITY print.label            "Imprimir">
+<!ENTITY find.label             "Localizar">
+<!ENTITY image.label            "Imagem">
+<!ENTITY hline.label            "Linha H.">
+<!ENTITY table.label            "Tabela">
+<!ENTITY link.label             "Link">
+<!ENTITY anchor.label           "Âncora">
+
+<!ENTITY formatting.caption     "Mostrar esses botões na barra de ferramentas de formatação:">
+
+<!ENTITY smaller.label          "Menor">
+<!ENTITY larger.label           "Maior">
+<!ENTITY bold.label             "Negrito">
+<!ENTITY bullets.label          "Marcadores">
+<!ENTITY numbers.label          "Números">
+<!ENTITY italic.label           "Itálico">
+<!ENTITY outdent.label          "Avançar texto">
+<!ENTITY indent.label           "Recuar texto">
+<!ENTITY underline.label        "Sublinhado">
+
+<!ENTITY absolutePosition.label "Posicionamento absoluto">
+<!ENTITY decreaseZIndex.label   "Enviar para trás">
+<!ENTITY increaseZIndex.label   "Trazer para frente">

@@ -1,0 +1,51 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.mainbox.label "Algemene instellingen" >
+<!ENTITY pref.dateformat.label "Datumtekstnotatie:" >
+<!ENTITY pref.dateformat.accesskey "n">
+<!ENTITY pref.dateformat.long "Lang" >
+<!ENTITY pref.dateformat.short "Kort"  >
+
+<!ENTITY pref.timezones.caption "Tijdzone">
+<!ENTITY pref.timezones.label "Selecteer de dichtstbijzijnde stad in uw tijdzone:">
+<!ENTITY pref.timezones.accesskey "S">
+
+<!ENTITY pref.defaults.label "Standaardwaarden voor nieuwe items">
+<!ENTITY pref.events.label "Gebeurtenissen">
+<!ENTITY pref.tasks.label "Taken">
+
+<!ENTITY pref.default_event_length.label "Standaardlengte:" >
+<!ENTITY pref.default_event_length.accesskey "e">
+
+<!ENTITY pref.default_task_none.label "Geen">
+<!ENTITY pref.default_task_start_of_day.label "Begin van dag">
+<!ENTITY pref.default_task_end_of_day.label "Einde van dag">
+<!ENTITY pref.default_task_tomorrow.label "Morgen">
+<!ENTITY pref.default_task_next_week.label "Volgende week">
+<!ENTITY pref.default_task_offset_current.label "Relatief t.o.v. huidige tijd">
+<!ENTITY pref.default_task_offset_start.label "Relatief t.o.v. begin">
+<!ENTITY pref.default_task_offset_next_hour.label "Relatief t.o.v. volgend uur">
+
+<!ENTITY pref.calendar.todaypane.agenda.caption "Venster Vandaag">
+<!-- LOCALIZATION NOTE (pref.soondays2.label):
+     "Upcoming" is the name of a section and the translation must match the
+     translation of that section name (calendar.upcoming.button.label). Also,
+     it should be upper case (as a proper name) if the target language permits.
+  -->
+<!ENTITY pref.soondays2.label "De sectie Aanstaand toont:">
+<!ENTITY pref.soondays2.accesskey "A">
+
+<!ENTITY pref.accessibility.label "Toegankelijkheid" >
+<!ENTITY pref.systemcolors.label "Kleuren optimaliseren voor toegankelijkheid" >
+<!ENTITY pref.systemcolors.accesskey "o">
+
+<!ENTITY pref.eventsandtasks.label "Gebeurtenissen en taken" >
+<!ENTITY pref.editInTab.label "Gebeurtenissen en taken in een tabblad bewerken in plaats van in een dialoogvenster" >
+<!ENTITY pref.editInTab.accesskey "t">

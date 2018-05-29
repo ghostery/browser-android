@@ -1,0 +1,13 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<!ENTITY addAccountDialog.title   "Óriásfájl-küldés beállítása">
+<!ENTITY addAccountDialog.menuTitle "Válasszon online tárolószolgáltatást">
+<!ENTITY addAccountDialog.style "width: 40em; min-height: 20em;">
+<!ENTITY addAccountDialog.accountName.label "Fiók neve:">
+<!ENTITY addAccountDialog.noAccountText "Elnézést, de a &brandShortName; jelenlegi verziója csak egy fiókot engedélyez minden online tárolószolgáltatáshoz.">
+<!ENTITY addAccountDialog.createAccountText2 "Nagy mellékleteket több online tárolószolgáltatás egyikének használatával küldhet. Állítson be egy meglévő fiókot, vagy hozzon létre egy újat.">
+<!ENTITY addAccountDialog.authorizing "Jogosultság ellenőrzése…">
+<!ENTITY addAccountDialog.error "Hiba történt a fiók beállítása közben!">
+<!ENTITY addAccountDialog.acceptButton.label "Fiók beállítása">
+<!ENTITY addAccountDialog.learnMore "További tudnivalók…">

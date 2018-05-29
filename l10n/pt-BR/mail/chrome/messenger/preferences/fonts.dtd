@@ -1,0 +1,80 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  fontsAndEncodingsDialog.title           "Fontes e codificações">
+
+<!ENTITY  language.label                          "Fontes padrão para:">
+<!ENTITY  language.accesskey                      "F">
+
+<!ENTITY  size.label                              "Tamanho:">
+<!ENTITY  sizeProportional.accesskey              "h">
+<!ENTITY  sizeMonospace.accesskey                 "n">
+
+<!ENTITY  proportional.label                      "Proporcional:">
+<!ENTITY  proportional.accesskey                  "P">
+
+<!ENTITY  serif.label                             "Com serifa:">
+<!ENTITY  serif.accesskey                         "C">
+<!ENTITY  sans-serif.label                        "Sem serifa:">
+<!ENTITY  sans-serif.accesskey                    "S">
+<!ENTITY  monospace.label                         "Monoespaçada:">
+<!ENTITY  monospace.accesskey                     "o">
+
+<!-- LOCALIZATION NOTE (font.langGroup.latin) :
+     Translate "Latin" as the name of Latin (Roman) script, not as the name of the Latin language. -->
+<!ENTITY  font.langGroup.latin                    "Latino">
+<!ENTITY  font.langGroup.japanese                 "Japonês">
+<!ENTITY  font.langGroup.trad-chinese             "Chinês tradicional (Taiwan)">
+<!ENTITY  font.langGroup.simpl-chinese            "Chinês simplificado">
+<!ENTITY  font.langGroup.trad-chinese-hk          "Chinês tradicional (Hong Kong)">
+<!ENTITY  font.langGroup.korean                   "Coreano">
+<!ENTITY  font.langGroup.cyrillic                 "Cirílico">
+<!ENTITY  font.langGroup.el                       "Grego">
+<!ENTITY  font.langGroup.other                    "Outros sistemas de escrita">
+<!ENTITY  font.langGroup.thai                     "Tailandês">
+<!ENTITY  font.langGroup.hebrew                   "Hebraico">
+<!ENTITY  font.langGroup.arabic                   "Árabe">
+<!ENTITY  font.langGroup.devanagari               "Devanágari">
+<!ENTITY  font.langGroup.tamil                    "Tâmil">
+<!ENTITY  font.langGroup.armenian                 "Armênio">
+<!ENTITY  font.langGroup.bengali                  "Bengalês">
+<!ENTITY  font.langGroup.canadian                 "Silabário do Canadá unificado">
+<!ENTITY  font.langGroup.ethiopic                 "Etíope">
+<!ENTITY  font.langGroup.georgian                 "Georgiano">
+<!ENTITY  font.langGroup.gujarati                 "Guzerate">
+<!ENTITY  font.langGroup.gurmukhi                 "Gurmuqui">
+<!ENTITY  font.langGroup.khmer                    "Khmer">
+<!ENTITY  font.langGroup.malayalam                "Malaiala">
+<!ENTITY  font.langGroup.math                     "Matemática">
+<!ENTITY  font.langGroup.odia                     "Odia">
+<!ENTITY  font.langGroup.telugu                   "Telugu">
+<!ENTITY  font.langGroup.kannada                  "Kannada">
+<!ENTITY  font.langGroup.sinhala                  "Sinhala">
+<!ENTITY  font.langGroup.tibetan                  "Tibetano">
+<!-- Minimum font size -->
+<!ENTITY minSize.label                            "Tamanho mínimo permitido:">
+<!ENTITY minSize.accesskey                        "m">
+<!ENTITY minSize.none                             "Nenhum">
+
+<!-- default font type -->
+<!ENTITY  useDefaultFontSerif.label               "Com serifa">
+<!ENTITY  useDefaultFontSansSerif.label           "Sem serifa">
+
+<!-- fonts in message -->
+<!ENTITY  fontControl.label                       "Controle das fontes">
+<!ENTITY  useFixedWidthForPlainText.label         "Usar fonte monoespaçada em mensagens sem formatação">
+<!ENTITY  fixedWidth.accesskey                    "U">
+<!ENTITY  useDocumentFonts.label                  "Mensagens podem usar outras fontes">
+<!ENTITY  useDocumentFonts.accesskey              "n">
+
+<!-- Language settings -->
+<!ENTITY sendDefaultCharset.label         "Para mensagens enviadas:">
+<!ENTITY sendDefaultCharset.accesskey     "r">
+<!ENTITY languagesTitle2.label            "Codificação do texto">
+<!ENTITY composingDescription2.label      "Defina a codificação de texto para recebimento e envio de mensagens">
+
+<!ENTITY viewDefaultCharsetList.label     "Para mensagens recebidas:">
+<!ENTITY viewDefaultCharsetList.accesskey  "e">
+<!ENTITY replyInDefaultCharset3.label     "Quando possível, use a codificação de texto padrão nas respostas">
+<!ENTITY replyInDefaultCharset3.accesskey "Q">

@@ -1,0 +1,880 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY firstrun_panel_title_welcome "환영합니다">
+<!ENTITY firstrun_urlbar_message2 "&brandShortName;를 선택해 주셔서 감사합니다">
+<!ENTITY firstrun_urlbar_subtext2 "자유롭고 개방된 웹을 위해 일하는 비영리재단 Mozilla에서 만든 최신 모바일 브라우저입니다.">
+<!ENTITY firstrun_panel_title_privacy "개인 정보">
+<!ENTITY firstrun_privacy_message "누구에게도 보이지 않는 웹 이용">
+<!ENTITY firstrun_privacy_subtext "추적 방지가 되어 있는 개인정보 보호 브라우징은 추적자를 차단하고 브라우징을 마칠 때 탐색 기록을 저장하지 않습니다.">
+<!ENTITY firstrun_panel_title_customize "개인화">
+<!ENTITY firstrun_customize_message "나만의 &brandShortName;를 만드세요.">
+<!ENTITY firstrun_customize_subtext "부가 기능으로 &brandShortName;를 개인화 해보세요. 광고를 차단하고 새 기능을 추가하고 새로운 테마를 골라보세요.">
+<!ENTITY firstrun_bookmarks_title "방문목록">
+<!ENTITY firstrun_bookmarks_message "좋아하는 내용을, 맨 앞에 두세요">
+<!ENTITY firstrun_bookmarks_subtext "북마크와 방문기록에서 검색하여 결과를 가져옵니다.">
+<!ENTITY firstrun_data_title "데이터">
+<!ENTITY firstrun_data_message "더 적은 데이터, 더 많은 절약">
+<!ENTITY firstrun_data_subtext2 "데이터 사용량을 줄이기 위해 방문하는 모든 사이트에서 이미지를 가져오지 않습니다.">
+<!ENTITY firstrun_sync_title "Sync">
+<!ENTITY firstrun_sync_message2 "중단했던 지점에서 다시 시작하세요.">
+<!ENTITY firstrun_sync_subtext2 "Sync를 이용해서 즐겨찾기나 비밀번호, &brandShortName;에 저장한 다른 설정을 사용하는 모든 기기에서 찾아보세요.">
+<!ENTITY firstrun_signin_message "연결 및 시작하기">
+<!ENTITY firstrun_signin_button "Sync 로그인">
+<!ENTITY  onboard_start_button_browser "브라우징 시작">
+<!ENTITY firstrun_button_notnow "다음에">
+<!ENTITY firstrun_button_next "다음">
+
+<!ENTITY firstrun_tabqueue_title "링크">
+<!-- Localization note (firstrun_tabqueue_message): 'Tab queue' is a feature that allows users to queue up or save links from outside of Firefox (without switching apps) - these links will be loaded in Firefox the next time Firefox is opened. -->
+<!ENTITY firstrun_tabqueue_message_off "탭 목록 활성화">
+<!ENTITY firstrun_tabqueue_subtext_off "다른 앱에서 링크 탭하여 나중에 &brandShortName; 에서 볼 수 있도록 저장합니다.">
+
+<!ENTITY firstrun_tabqueue_message_on "성공!">
+<!ENTITY firstrun_tabqueue_subtext_on "언제든지 &settings; 의 &pref_category_general;에서 끌 수 있습니다.">
+
+<!ENTITY firstrun_readerview_title "문서">
+<!-- Localization note (firstrun_readerview_message): This is a casual way of describing getting rid of unnecessary things, and is referring to simplifying websites so only the article text and images are visible, removing unnecessary headers or ads. -->
+<!ENTITY firstrun_readerview_message "내용만 간단하게">
+<!ENTITY firstrun_readerview_subtext "읽기 모드를 사용하면 문서를 더 읽기 좋게 만들어줍니다 \u2014 또한 오프라인에서도 볼 수 있습니다.">
+
+<!-- Localization note (firstrun_devices_title): This is a casual way of addressing the user, somewhat referring to their online identity (which would include other devices, Firefox usage, accounts, etc). -->
+<!ENTITY firstrun_account_title "사용자">
+<!ENTITY firstrun_account_message "다른 기기에서 &brandShortName; 를 사용하시나요?">
+
+<!ENTITY  onboard_start_restricted1 "&brandShortName; 간소화 버전으로 더 쉽고 안전하고 사용하세요.">
+
+<!-- Localization note: These are used as the titles of different pages on the home screen.
+     They are automatically converted to all caps by the Android platform. -->
+<!ENTITY  bookmarks_title "북마크">
+<!ENTITY  history_title "방문 기록">
+
+<!ENTITY  switch_to_tab "탭 전환">
+
+<!-- Localization note: Shown in a snackbar when tab is loaded from cache while device was offline. -->
+<!ENTITY  tab_offline_version "오프라인 버전 표시">
+
+<!ENTITY  crash_reporter_title "&brandShortName; 문제점 보고">
+<!ENTITY  crash_message2 "&brandShortName;가 문제가 생겨 예기치 않게 종료하였습니다. 다시 시작하면 현재 탭 목록이 &brandShortName; 첫 화면에 보일 것입니다.">
+<!ENTITY  crash_send_report_message3 "문제점을 고치기 위해 &vendorShortName;에 보내기">
+<!ENTITY  crash_include_url2 "방문 했던 페이지의 주소 포함하기">
+<!ENTITY  crash_sorry "죄송합니다">
+<!ENTITY  crash_comment "의견 추가하기 (의견은 공개적으로 불 수 있습니다)">
+<!ENTITY  crash_allow_contact2 "이 보고서에 대해 &vendorShortName;가 연락하는 것을 허가함">
+<!ENTITY  crash_email "이메일">
+<!ENTITY  crash_closing_alert "문제점 보고서를 보내지 않고 종료하시겠습니까?">
+<!ENTITY  sending_crash_report "문제 보내기\u2026">
+<!ENTITY  crash_close_label "닫기">
+<!ENTITY  crash_restart_label "&brandShortName; 다시 시작">
+
+<!ENTITY url_bar_default_text2 "검색어 또는 주소를 입력하세요">
+
+<!ENTITY bookmark "북마크">
+<!ENTITY bookmark_remove "북마크 삭제">
+<!ENTITY bookmark_added "북마크 추가">
+<!-- Localization note (bookmark_already_added) : This string is
+     used as a label in a toast. It is the verb "to bookmark", not
+     the noun "a bookmark". -->
+<!ENTITY bookmark_already_added "이미 북마크됨">
+<!ENTITY bookmark_removed "북마크 삭제">
+<!ENTITY bookmark_updated "북마크 업데이트">
+<!ENTITY bookmark_options "설정">
+<!ENTITY bookmark_save "저장">
+<!ENTITY screenshot_added_to_bookmarks "스크린샷이 북마크에 추가되었습니다">
+<!-- Localization note (screenshot_folder_label_in_bookmarks): We save links to screenshots
+     the user takes. The folder we store these links in is located in the bookmarks list
+     and is labeled by this String. -->
+<!ENTITY screenshot_folder_label_in_bookmarks "스크린샷">
+<!ENTITY readinglist_smartfolder_label_in_bookmarks "읽기 목">
+
+<!-- Localization note (bookmark_folder_items): The variable is replaced by the number of items
+     in the folder. -->
+<!ENTITY bookmark_folder_items "&formatD; 개 항목">
+<!ENTITY bookmark_folder_one_item "1개 항목">
+<!ENTITY bookmark_folder_updated "폴더 업데이트됨">
+<!ENTITY bookmark_parent_folder "상위 폴더">
+<!ENTITY bookmark_add_folder "새 폴더 추가">
+
+<!ENTITY reader_saved_offline "오프라인으로 저장됨">
+<!-- Localization note (reader_switch_to_bookmarks) : This
+     string is used as an action in a snackbar - it lets you
+     "switch" to the bookmarks (saved items) panel. -->
+<!ENTITY reader_switch_to_bookmarks "전환">
+
+<!ENTITY history_today_section "오늘">
+<!ENTITY history_yesterday_section "어제">
+<!ENTITY history_week_section3 "최근 7일">
+<!ENTITY history_older_section3 "6개월 전">
+
+<!ENTITY search "검색">
+<!ENTITY reload "새로 고침">
+<!ENTITY forward "앞으로">
+<!ENTITY menu "메뉴">
+<!ENTITY back "뒤로">
+<!ENTITY stop "중지">
+<!ENTITY site_security "보안 정보">
+<!ENTITY edit_mode_cancel "취소">
+
+<!ENTITY close_tab "탭 닫기">
+<!ENTITY one_tab "한 개의 탭">
+<!-- Localization note (num_tabs2) : Number of tabs is always more than one.
+     We can't use android plural forms, sadly. See bug #753859. -->
+<!ENTITY num_tabs2 "&formatD; 개의 탭">
+<!ENTITY new_tab_opened "새 탭 열림">
+<!ENTITY new_private_tab_opened "새 사생활 탭 열림">
+<!-- Localization note (switch_button_message): This string should be as short
+     as possible because it's shown as a label in a toast.  Ideally, this string
+     is upper-case, to match Google and Android's convention. -->
+<!ENTITY switch_button_message "스위치">
+<!-- Localization note (tab_title_prefix_is_playing_audio): This string is not
+     visible in the UI, but rather used as a text-to-speech content description
+     for sight-impaired a11y users. The content description is set on a tab
+     title in a list of open tabs when content in that tab is playing audio.
+     &formatS; will be replaced with the title of the tab, as received from the
+     web page. When audio is not playing in a tab, &formatS; will be used as
+     the content description. -->
+<!ENTITY tab_title_prefix_is_playing_audio "오디오 재생 – &formatS;">
+
+<!ENTITY settings "프로그램 설정">
+<!ENTITY settings_title "프로그램 설정">
+<!ENTITY pref_category_general "일반">
+<!ENTITY pref_category_general_summary3 "홈, 언어, 탭 목록">
+
+<!-- Localization note (pref_category_language) : This is the preferences
+     section in which the user picks the locale in which to display Firefox
+     UI. The locale includes both language and region concepts. -->
+<!ENTITY pref_category_language "언어">
+<!ENTITY pref_category_language_summary "브라우저 언어 변경">
+<!ENTITY pref_browser_locale "브라우저 언어">
+
+<!-- Localization note (locale_system_default) : This string indicates that
+     Firefox will use the locale currently selected in Android's settings
+     to display browser chrome. -->
+<!ENTITY locale_system_default "시스템 기본">
+
+<!-- Localization note (overlay_share_label) : This is the label that appears
+     in Android's intent chooser when sending a link to Firefox to bookmark,
+     send to another device, or add to Reading List. -->
+<!ENTITY overlay_share_label "&brandShortName;에 추가">
+
+<!-- Localization note (overlay_share_bookmark_btn_label) : This string is
+     used in the share overlay menu to select an action. It is the verb
+     "to bookmark", not the noun "a bookmark". -->
+<!ENTITY overlay_share_bookmark_btn_label "북마크">
+<!ENTITY overlay_share_bookmark_btn_label_already "이미 북마크 됨">
+<!ENTITY overlay_share_send_other "다른 기기로 보내기">
+
+<!ENTITY overlay_share_open_browser_btn_label "&brandShortName;에서 열기">
+<!-- Localization note (overlay_share_send_tab_btn_label) : Used on the
+     share overlay menu to represent the "Send Tab" action when the user
+     either has not set up Sync, or has no other devices to send a tab
+     to. -->
+<!ENTITY overlay_share_send_tab_btn_label "다른 기기로 보내기">
+<!ENTITY overlay_share_no_url "공유 할 링크가 없음">
+<!ENTITY overlay_share_select_device "기기 선택">
+<!-- Localization note (overlay_no_synced_devices) : Used when the menu option
+     to send a tab to a synced device is pressed and no other synced devices
+     are found. -->
+<!ENTITY overlay_no_synced_devices "Firefox 계정에 연결 된 기기 없음">
+
+<!ENTITY pref_category_search3 "검색">
+<!ENTITY pref_category_search_summary2 "추가, 기본 설정, 제안 표시">
+<!ENTITY pref_category_accessibility "접근성">
+<!ENTITY pref_category_accessibility_summary2 "텍스트 크기, 확대/축소, 음성 입력">
+<!ENTITY pref_category_privacy_short "개인 정보">
+<!ENTITY pref_category_privacy_summary4 "추적, 쿠키, 데이터 선택">
+<!ENTITY pref_category_vendor2 "&vendorShortName; &brandShortName;">
+<!ENTITY pref_category_vendor_summary2 "&brandShortName;소개, FAQ, 피드백">
+<!ENTITY pref_category_datareporting "데이터 선택">
+<!ENTITY pref_category_logins "로그인">
+<!ENTITY pref_learn_more "더 알아보기">
+<!ENTITY pref_category_installed_search_engines "설치된 검색 엔진">
+<!ENTITY pref_category_add_search_providers "검색 엔진 추가하기">
+<!ENTITY pref_category_search_restore_defaults "검색 엔진 초기화">
+<!ENTITY pref_search_restore_defaults "기본값 복원">
+<!ENTITY pref_search_restore_defaults_summary "기본값 복원">
+<!-- Localization note (pref_search_hint) : "TIP" as in "hint", "clue" etc. Displayed as an
+     advisory message on the customise search providers settings page explaining how to add new
+     search providers.
+     The &formatI; in the string will be replaced by a small image of the icon described, and can be moved to wherever
+     it is applicable. -->
+<!ENTITY pref_search_hint2 "TIP: 검색어 입력창을 길게 누른 다음 &formatI; 아이콘을 터치하시면 어느 사이트든 검색 엔진으로 추가할 수 있습니다.">
+<!ENTITY pref_category_advanced "고급">
+<!-- Localization note (pref_category_advanced_summary3): “data saver” in this
+     context means consuming less data, e.g. by not loading images, not
+     “storing data”. -->
+<!ENTITY pref_category_advanced_summary3 "탭 복구, 데이터 절약, 개발자 도구">
+<!ENTITY pref_category_notifications "알림">
+<!ENTITY pref_category_notifications_summary "새로운 기능, 웹사이트 업데이트">
+<!ENTITY pref_developer_remotedebugging_usb "USB 원격 디버깅">
+<!ENTITY pref_developer_remotedebugging_wifi "Wi-Fi 원격 디버깅">
+<!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Wi-Fi 디버깅을 하려면 QR 코드 리더 앱을 설치해야 합니다.">
+<!ENTITY pref_remember_signons2 "로그인 저장">
+<!ENTITY pref_manage_logins "로그인 관리">
+
+<!ENTITY pref_category_home "홈">
+<!ENTITY pref_category_home_summary "홈페이지 커스터마이즈">
+<!ENTITY pref_category_home_panels "패널">
+<!ENTITY pref_category_home_add_ons "부가 기능">
+<!ENTITY pref_home_updates2 "콘텐츠 업데이트">
+<!ENTITY pref_home_updates_enabled "사용함">
+<!ENTITY pref_home_updates_wifi "Wi-Fi에서만 사용함">
+<!ENTITY pref_category_home_homepage "홈페이지">
+<!-- Localization note (home_homepage_every_new_tab): The user will see a switch to determine if the
+     home page will be use in every new tab. -->
+<!ENTITY home_homepage_every_new_tab "새로운 탭에도 사용하기">
+<!ENTITY home_homepage_title "홈페이지 지정하기">
+<!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
+     buttons to choose the homepage they'd like to start on. When they click the radio
+     button for this string, they will use the built-in default Firefox homepage (about:home). -->
+<!ENTITY home_homepage_radio_default "&brandShortName; 홈">
+<!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
+     buttons to choose the homepage they'd like to start on. When they click the radio
+     button for this string, a text field will appear below the radio button and allow the
+     user to insert an address of their choice. -->
+<!ENTITY home_homepage_radio_user_address "사용자">
+<!-- Localization note (home_homepage_hint_user_address): The user will see a series of
+     radio buttons to choose the homepage they'd like to start on. When they click a
+     particular radio button, a text field will appear below the radio button and allow the
+     user to insert an address of their choice. This string is the hint text to that
+     text field. -->
+<!ENTITY home_homepage_hint_user_address "주소나 검색어 입력">
+
+<!-- Localization note: These are shown in the left sidebar on tablets -->
+<!ENTITY pref_header_general "일반">
+<!ENTITY pref_header_search "검색">
+<!ENTITY pref_header_privacy_short "개인 정보">
+<!ENTITY pref_header_accessibility "접근성">
+<!ENTITY pref_header_notifications "알림">
+<!ENTITY pref_header_advanced "고급">
+<!ENTITY pref_header_help "도움말">
+<!ENTITY pref_header_vendor "&vendorShortName;">
+
+<!ENTITY pref_cookies_menu "쿠키">
+<!ENTITY pref_cookies_accept_all "사용하기">
+<!ENTITY pref_cookies_not_accept_foreign "사용하기 (제3자 쿠키 제외)">
+<!ENTITY pref_cookies_disabled "사용 안 함">
+
+<!-- Localization note (pref_category_data_saver): “data saver” in this
+     context means consuming less data, e.g. by not loading images, not
+     “storing data”. -->
+<!ENTITY pref_category_data_saver "데이터 절약">
+<!ENTITY pref_category_media "미디어">
+<!ENTITY pref_category_developer_tools "개발자 도구">
+
+<!ENTITY pref_tap_to_load_images_title2 "이미지 보기">
+<!ENTITY pref_tap_to_load_images_enabled "항상">
+<!ENTITY pref_tap_to_load_images_data "Wi-Fi에서만 사용함">
+<!ENTITY pref_tap_to_load_images_disabled2 "차단됨">
+
+<!ENTITY pref_show_web_fonts "웹폰트 보기">
+<!ENTITY pref_show_web_fonts_summary2 "페이지를 불러올 때 원격으로 폰트 다운로드">
+
+<!ENTITY pref_tracking_protection_title2 "추적 방지">
+<!ENTITY pref_donottrack_title "추적 중지">
+<!ENTITY pref_donottrack_summary "&brandShortName;가 사이트들에 방문자 추적 중지 요청을 합니다.">
+
+<!ENTITY pref_tracking_protection_enabled "사용">
+<!ENTITY pref_tracking_protection_enabled_pb "사생활 보호 모드 활성화됨">
+<!ENTITY pref_tracking_protection_disabled "사용 안 함">
+
+<!ENTITY pref_whats_new_notification "&brandShortName; 달라진 점">
+<!ENTITY pref_whats_new_notification_summary "업데이트 후 새로운 기능에 대해 자세히 알아보기">
+
+<!-- Localization note (pref_feature_tips_notification): Title of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification"-->
+<!ENTITY pref_feature_tips_notification "제품과 기능 팁">
+<!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
+     Similar to the already existing "pref_whats_new_notification_summary"-->
+<!ENTITY pref_feature_tips_notification_summary "&brandShortName; 사용과 다른 &vendorShortName; 제품에 대해 자세히 알아보기">
+
+<!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
+     for experimental features. -->
+<!ENTITY pref_category_experimental "실험적인 기능">
+
+<!-- Custom Tabs is an Android API for allowing third-party apps to open URLs in a customized UI.
+     Instead of switching to the browser it appears as if the user stays in the third-party app.
+     For more see: https://developer.chrome.com/multidevice/android/customtabs -->
+<!ENTITY pref_custom_tabs2 "커스텀 탭">
+<!ENTITY pref_custom_tabs_summary4 "앱이 빠르게 로딩되는 커스텀 탭에서 웹 콘텐츠를 열어볼 수 있게 허용">
+
+<!-- Localization note (custom_tabs_menu_item_open_in): The variable is replaced by the name of
+     default browser from user's preference, such as "Open in Firefox" -->
+<!ENTITY custom_tabs_menu_item_open_in "&formatS;에서 열기">
+<!ENTITY custom_tabs_menu_footer "&brandShortName;에 의해 구동">
+<!-- Long-click title of CustomTabsActivity will copy URL to clipboard and display this hint -->
+<!ENTITY custom_tabs_hint_url_copy "URL 복사됨">
+
+<!ENTITY pref_pwa "프로그레시브 웹 앱">
+<!ENTITY pref_pwa_summary "홈스크린에 웹앱이 추가되도록 허용">
+
+<!ENTITY tracking_protection_prompt_title "추적 방지 시작">
+<!ENTITY tracking_protection_prompt_text "적극적으로 추적 요소들을 차단합니다. 더 이상 걱정할 필요 없습니다.">
+<!ENTITY tracking_protection_prompt_tip_text "더 자세한 내용은 사생활 설정에서 확인하세요">
+<!ENTITY tracking_protection_prompt_action_button "알겠습니다!">
+
+<!ENTITY tab_queue_toast_message3 "&brandShortName;에 저장된 탭">
+<!ENTITY tab_queue_toast_action "지금 열기">
+<!ENTITY tab_queue_prompt_title "여러 개의 링크를 열까요?">
+<!ENTITY tab_queue_prompt_text4 "다음번 &brandShortName;를 열 때까지 저장합니다.">
+<!ENTITY tab_queue_prompt_tip_text2 "나중에 설정에서 변경할 수 있습니다">
+<!-- Localization note (tab_queue_prompt_permit_drawing_over_apps): This additional text is shown if the
+     user needs to enable an Android setting in order to enable tab queues. -->
+<!ENTITY tab_queue_prompt_permit_drawing_over_apps "다른 앱 위에 나타내기 허용 켜기">
+<!ENTITY tab_queue_prompt_positive_action_button "활성화">
+<!ENTITY tab_queue_prompt_negative_action_button "나중에 하기">
+<!-- Localization note (tab_queue_prompt_settings_button): This button is shown if the user needs to
+     enable a permission in Android's setting in order to enable tab queues. -->
+<!ENTITY tab_queue_prompt_settings_button "설정으로 이동">
+<!ENTITY tab_queue_notification_title "&brandShortName;">
+<!-- Localization note (tab_queue_notification_text_plural2) : The
+     formatD is replaced with the number of tabs queued.  The
+     number of tabs queued is always more than one.  We can't use
+     Android plural forms, sadly. See Bug #753859. -->
+<!ENTITY tab_queue_notification_text_plural2 "&formatD;개 탭 대기 중">
+<!-- Localization note (tab_queue_notification_text_singular2) : This is the
+     text of a notification; we expect only one tab queued. -->
+<!ENTITY tab_queue_notification_text_singular2 "1개 탭 대기 중">
+
+<!-- Localization note (tab_queue_notification_settings): This notification text is shown if a tab
+     has been queued but we are missing the system permission to show an overlay. -->
+<!ENTITY tab_queue_notification_settings "\&quot;여러개의 링크 열기\&quot;를 하시려면, &brandShortName; 에 대한 \&apos;다른 앱 위에 나타내기\&apos; 권한을 활성화해주세요">
+
+<!ENTITY pref_char_encoding "문자 인코딩 표시">
+<!ENTITY pref_char_encoding_on "메뉴 보기">
+<!ENTITY pref_char_encoding_off "메뉴 숨기기">
+<!ENTITY pref_clear_private_data2 "개인 정보 삭제">
+<!-- Localization note (pref_clear_private_data_now_tablet): This action to clear private data is only shown on tablets.
+     The action is shown below a header saying "Clear private data"; See pref_clear_private_data -->
+<!ENTITY pref_clear_private_data_now_tablet "지금 삭제">
+<!ENTITY pref_clear_on_exit_title3 "나갈 때 개인 데이터 삭제">
+<!ENTITY pref_clear_on_exit_summary2 "주 메뉴를 통해 \&quot;종료\&quot; 시킬때 마다 &brandShortName;가 자동으로 정보를 삭제합니다">
+<!ENTITY pref_clear_on_exit_dialog_title "삭제할 정보 선택">
+<!ENTITY pref_restore_tabs "탭 복원">
+<!ENTITY pref_restore_always "항상 복원">
+<!ENTITY pref_restore_quit "&brandShortName; 종료 후 복원하지 않음">
+
+<!-- Localization note (pref_use_system_font_size, pref_use_system_font_size_summary):
+     Font size here refers to the name of the corresponding Android system setting. -->
+<!ENTITY pref_use_system_font_size "시스템 폰트 크기 사용">
+<!ENTITY pref_use_system_font_size_summary "시스템 폰트 크기에 따라 웹 컨텐츠 조정">
+
+<!ENTITY pref_media_autoplay_enabled "자동 재생 허가">
+<!ENTITY pref_media_autoplay_enabled_summary "웹 사이트의 영상이나 다른 미디어 콘텐츠에 대한 자동 재생 권한 설정">
+<!ENTITY pref_zoom_force_enabled "항상 줌 활성화">
+<!ENTITY pref_zoom_force_enabled_summary "어느 페이지든 항상 줌을 할 수 있도록 설정">
+<!ENTITY pref_voice_input "음성 입력">
+<!ENTITY pref_voice_input_summary2 "제목창에 음성 입력 허가">
+<!ENTITY pref_qrcode_enabled "QR 코드 리더">
+<!ENTITY pref_qrcode_enabled_summary2 "제목창에 QR 스캐너 허가">
+
+<!ENTITY pref_use_master_password "기본 암호 사용">
+<!ENTITY pref_sync_default_title "Firefox 계정">
+<!ENTITY pref_sync2 "로그인">
+<!ENTITY pref_sync_summary2 "탭, 북마크, 로그인, 방문 이력 동기화">
+<!ENTITY pref_search_suggestions "추천 검색어 표시">
+<!ENTITY pref_history_search_suggestions "검색 이력 표시">
+<!ENTITY pref_import_options "가져오기 옵션">
+<!ENTITY pref_import_android_summary "기본 브라우저에서 북마크 및 방문 이력 가져오기">
+<!-- Localization note (pref_private_data_openTabs): Open tabs is an option in
+     the Clear Private Data  dialog and refers to currently open tabs. -->
+<!ENTITY pref_private_data_openTabs "열려있는 탭">
+<!ENTITY pref_private_data_history2 "방문 기록">
+<!ENTITY pref_private_data_searchHistory "검색 기록">
+<!ENTITY pref_private_data_formdata2 "양식 데이터 기록">
+<!ENTITY pref_private_data_cookies2 "쿠키 및 로그인">
+<!ENTITY pref_private_data_passwords2 "저장된 로그인">
+<!ENTITY pref_private_data_cache "캐시">
+<!ENTITY pref_private_data_offlineApps "오프라인 웹 데이터">
+<!ENTITY pref_private_data_siteSettings2 "웹 사이트별 설정">
+<!ENTITY pref_private_data_downloadFiles2 "다운로드">
+<!ENTITY pref_private_data_syncedTabs "동기화된 탭">
+
+<!ENTITY pref_default_browser "기본 브라우저로 지정">
+<!ENTITY pref_default_browser_mozilla_support_tablet "Mozilla 도움말 방문">
+<!ENTITY pref_about_firefox "&brandShortName; 정보">
+<!ENTITY pref_vendor_faqs "FAQ">
+<!ENTITY pref_vendor_feedback "피드백 보내기">
+
+<!ENTITY pref_dialog_set_default "기본으로 설정">
+<!ENTITY pref_dialog_default "기본">
+<!ENTITY pref_dialog_remove "삭제">
+<!ENTITY pref_dialog_activitystream_header_content "추가 콘텐츠">
+<!ENTITY pref_dialog_activitystream_recentBookmarks "최근 북마크">
+<!ENTITY pref_dialog_activitystream_visited "방문한">
+
+<!ENTITY pref_search_last_toast "마지막 남은 검색 엔진은 삭제하거나 비활성화 할 수 없습니다.">
+
+<!ENTITY pref_panels_show "보이기">
+<!ENTITY pref_panels_hide "숨기기">
+<!ENTITY pref_panels_reorder "순서 변경">
+<!ENTITY pref_panels_move_up "위로 이동">
+<!ENTITY pref_panels_move_down "아래로 이동">
+
+<!ENTITY datareporting_notification_title "&brandShortName; 통계 &amp; 데이터">
+<!ENTITY datareporting_notification_action "공유 대상 선택하기">
+<!-- Used in datareporting_notification_ticket_text, but unused in strings.xml. -->
+<!ENTITY datareporting_notification_action_long "공유할 정보 선택하기">
+<!ENTITY datareporting_notification_summary "여러분이 보다 나은 경험을 할 수 있도록 &brandShortName;는 &vendorShortName;에 자동으로 일부 정보를 전송합니다.">
+<!-- When this item is removed, also remove datareporting_notification_action_long:
+     it is unused in strings.xml. -->
+<!ENTITY datareporting_notification_ticker_text "&datareporting_notification_title;: &datareporting_notification_action_long;">
+
+<!-- Localization note (datareporting_fhr_title, datareporting_fhr_summary2,
+     reporting_telemetry_title, datareporting_telemetry_summary,
+     datareporting_crashreporter_summary) : These match the strings in
+     en-US/chrome/browser/preferences/advanced.dtd (healthReportSection.label,
+     healthReportDesc.label, telemetrySection.label, telemetryDesc.label,
+     crashReporterDesc.label). -->
+<!ENTITY datareporting_fhr_title "&brandShortName; 상태 검사 보고서">
+<!ENTITY datareporting_fhr_summary2 "브라우저 상태를 &vendorShortName;와 공유하고 성능을 이해할 수 있도록 도움">
+<!ENTITY datareporting_telemetry_title "데이터 수집">
+<!ENTITY datareporting_telemetry_summary "브라우저의 성능, 사용, 그리고 설정에 대한 데이터를 &vendorShortName;와 공유하여 &brandShortName;가 보다 나아지도록 도움">
+<!ENTITY datareporting_crashreporter_summary "&brandShortName;가 오류 보고서를 전송하여 &vendorShortName;가 브라우저를 보다 안정적이고 보안이 강화되도록 도움">
+<!-- Localization note (datareporting_crashreporter_title_short) : This string matches
+     (crashReporterSection.label) in en-US/chrome/browser/preferences/advanced.dtd.-->
+<!ENTITY datareporting_crashreporter_title_short "오류 보고서">
+<!ENTITY datareporting_wifi_title2 "&vendorShortName; 위치 기반 서비스">
+<!ENTITY datareporting_wifi_geolocation_summary4 "&vendorShortName;가 더 나은 지도를 만들고자 합니다! 위치 기반 서비스 품질 향상을 위해 대략적인 Wi-Fi와 셀룰러 위치 데이터를 공유해주세요.">
+<!-- Localization note (pref_update_autodownload2) : This should mention downloading
+     specifically, since the pref only prevents automatic downloads and not the
+     actual notification that an update is available. -->
+<!ENTITY pref_update_autodownload3 "자동 업데이트">
+<!ENTITY pref_update_autodownload_wifi "Wi-Fi에서만 사용함">
+<!ENTITY pref_update_autodownload_never "사용 안 함">
+<!ENTITY pref_update_autodownload_always "항상 사용함">
+
+<!-- Localization note (help_menu) : This string is used in the main menu-->
+<!ENTITY help_menu "도움말">
+
+<!ENTITY quit "종료">
+
+<!ENTITY addons "부가 기능">
+<!ENTITY logins "로그인">
+<!ENTITY downloads "다운로드">
+<!ENTITY char_encoding "문자 인코딩">
+
+<!ENTITY share "공유">
+<!ENTITY share_title "공유 방법 선택">
+<!ENTITY share_image_failed "이미지 공유하지 않기">
+<!ENTITY save_as_pdf "PDF로 저장">
+<!ENTITY print "인쇄">
+<!ENTITY view_page_source "페이지 소스 보기">
+<!ENTITY find_in_page "페이지내 검색">
+<!ENTITY desktop_mode "PC웹으로 보기">
+<!ENTITY page "페이지">
+<!ENTITY tools "도구">
+<!ENTITY new_tab "새 탭">
+<!ENTITY new_private_tab "새 사생활 탭">
+<!ENTITY close_all_tabs "모든 탭 닫기">
+<!ENTITY close_private_tabs "사생활 탭 닫기">
+<!ENTITY tabs_normal "탭">
+<!ENTITY tabs_private "사생활">
+<!ENTITY set_image_fail "이미지 지정 실패">
+<!ENTITY set_image_path_fail "이미지 저장 실패">
+<!ENTITY set_image_chooser_title "이미지로 지정">
+
+<!-- Localization note (find_text, find_prev, find_next, find_close) : These strings are used
+     as alternate text for accessibility. They are not visible in the UI. -->
+<!ENTITY find_text "페이지내 검색">
+<!ENTITY find_prev "이전">
+<!ENTITY find_next "다음">
+<!ENTITY find_close "닫기">
+
+<!-- Localization note (media_sending_to, media_play, media_pause, media_stop) : These strings are used
+     as alternate text for accessibility. They are not visible in the UI. -->
+<!ENTITY media_sending_to "기기로 보내기">
+<!ENTITY media_play "재생">
+<!ENTITY media_pause "일시 정지">
+<!ENTITY media_stop "정지">
+
+<!ENTITY contextmenu_open_new_tab "새 탭 열기">
+<!ENTITY contextmenu_open_private_tab "사생활 탭 열기">
+<!ENTITY contextmenu_remove "삭제">
+<!ENTITY contextmenu_add_page_shortcut "페이지 바로가기 추가">
+<!ENTITY contextmenu_set_as_homepage "홈페이지로 설정">
+<!ENTITY contextmenu_share "공유">
+<!ENTITY contextmenu_pasteandgo "붙여넣고 바로 가기">
+<!ENTITY contextmenu_paste "붙여넣기">
+<!ENTITY contextmenu_copyurl "주소 복사">
+<!ENTITY contextmenu_edit_bookmark "편집">
+<!ENTITY contextmenu_subscribe "페이지 구독">
+<!ENTITY contextmenu_site_settings "사이트 설정 변경">
+<!ENTITY contextmenu_top_sites_edit "수정">
+<!ENTITY contextmenu_top_sites_pin "사이트 고정">
+<!ENTITY contextmenu_top_sites_unpin "사이트 고정 해제">
+<!-- Localization note (contextmenu_pin_to_top_sites, contextmenu_unpin_from_top_sites): These strings are used to
+     pin/unpin items from top sites when the user is not on the top sites screen so they'd be missing context on what
+     just "Pin Site" or "Unpin Site" would mean. -->
+<!ENTITY contextmenu_pin_to_top_sites "상위 사이트에 고정">
+<!ENTITY contextmenu_unpin_from_top_sites "상위 사이트에서 해제">
+<!ENTITY contextmenu_add_search_engine "검색엔진 추가">
+
+<!-- Localization note (pinned_page_to_top_sites, unpinned_page_from_top_sites): These strings are shown in a snackbar
+     after the user pins/unpins the currently displayed page from top sites. -->
+<!ENTITY pinned_page_to_top_sites "상위 사이트에 페이지 고정">
+<!ENTITY unpinned_page_from_top_sites "상위 사이트에서 페이지 고정 해제">
+
+<!-- Localization note (doorhanger_login_no_username): This string is used in the save-login doorhanger
+     where normally a username would be displayed. In this case, no username was found, and this placeholder
+     contains brackets to indicate this is not actually a username, but rather a placeholder -->
+<!ENTITY doorhanger_login_no_username "[사용자명 없음]">
+<!ENTITY doorhanger_login_edit_title "로그인 수정">
+<!ENTITY doorhanger_login_edit_username_hint "사용자명">
+<!ENTITY doorhanger_login_edit_password_hint "암호">
+<!ENTITY doorhanger_login_edit_toggle "암호 보이기">
+<!ENTITY doorhanger_login_select_message "&formatS;에서 암호를 복사할까요?">
+<!ENTITY doorhanger_login_select_toast_copy "암호가 클립보드에 복사됨">
+<!ENTITY doorhanger_login_select_action_text "다른 로그인 선택">
+<!ENTITY doorhanger_login_select_title "암호 복사하기">
+
+<!-- Localization note (pref_scroll_title_bar2): Label for setting that controls
+     whether or not the dynamic toolbar is enabled. -->
+<!ENTITY pref_scroll_title_bar2 "전체 화면 브라우징">
+<!ENTITY pref_scroll_title_bar_summary2 "페이지를 스크롤 할 때 &brandShortName; 제목창을 숨깁니다">
+
+<!ENTITY pref_tab_queue_title3 "탭 목록">
+<!ENTITY pref_tab_queue_summary4 "다음에 &brandShortName;를 열 때까지 링크 저장">
+
+<!-- Localization note (pref_compact_tabs): Label for setting that controls whether 1 wide column or
+     2 narrower (compact) columns are used for tabs in the tabs tray in portrait mode on phones. -->
+<!ENTITY pref_compact_tabs "탭 간소화">
+<!ENTITY pref_compact_tabs_summary2 "세로 모드에서 탭을 두 다단으로 정렬">
+
+<!-- Localization note (page_removed): This string appears in a toast message when
+     any page is removed frome about:home. This includes pages that are in history,
+     bookmarks, or reading list. -->
+<!ENTITY page_removed "페이지 삭제됨">
+<!ENTITY folder_removed "폴더 삭제됨">
+
+<!ENTITY bookmark_edit_title "북마크 편집">
+<!ENTITY bookmark_edit_folder_title "폴더 편집">
+<!ENTITY bookmark_edit_name "이름">
+<!ENTITY bookmark_edit_location "위치">
+<!ENTITY bookmark_edit_keyword "키워드">
+<!ENTITY bookmark_select_folder "폴더 선택">
+
+<!-- Localization note (site_settings_*) : These strings are used in the "Site Settings"
+     dialog that appears after selecting the "Edit Site Settings" context menu item. -->
+<!ENTITY site_settings_title3       "사이트 설정">
+<!ENTITY site_settings_cancel       "취소">
+<!ENTITY site_settings_clear        "변경">
+
+<!-- Localization note : These strings are used as alternate text for accessibility.
+     They are not visible in the UI. -->
+<!ENTITY page_action_dropmarker_description "추가 기능">
+
+<!ENTITY masterpassword_create_title "기본 암호 만들기">
+<!ENTITY masterpassword_remove_title "기본 암호 삭제">
+<!ENTITY masterpassword_password "암호">
+<!ENTITY masterpassword_confirm "암호 다시 입력">
+
+<!ENTITY button_ok "확인">
+<!ENTITY button_cancel "취소">
+<!ENTITY button_yes "예">
+<!ENTITY button_no "아니오">
+<!ENTITY button_clear_data "데이터 삭제">
+<!ENTITY button_set "설정">
+<!ENTITY button_clear "지우기">
+<!ENTITY button_copy "복사">
+
+<!ENTITY home_top_sites_title "상위 사이트">
+<!-- Localization note (home_top_sites_add): This string is used as placeholder
+     text underneath empty thumbnails in the Top Sites page on about:home. -->
+<!ENTITY home_top_sites_add "사이트 추가">
+
+<!-- Localization note (home_title): This string should be kept in sync
+     with the page title defined in aboutHome.dtd -->
+<!ENTITY home_title "&brandShortName; 홈">
+<!ENTITY home_history_title "방문 기록">
+<!ENTITY home_synced_devices_smartfolder "동기화된 기기">
+<!ENTITY home_synced_devices_number "&formatD; 기기">
+<!-- Localization note (home_synced_devices_one_device): This is the singular version of home_synced_devices_number, referring to the number of devices a user has synced. -->
+<!ENTITY home_synced_devices_one "1 기기">
+<!ENTITY home_history_back_to2 "전체 이력으로 돌아가기">
+<!ENTITY home_clear_history_button "방문 기록 삭제">
+<!ENTITY home_clear_history_confirm "방문 기록을 삭제하시겠습니까?">
+<!ENTITY home_bookmarks_empty "저장한 북마크가 여기에 표시됩니다.">
+<!ENTITY home_closed_tabs_title2 "최근에 닫음">
+<!ENTITY home_last_tabs_empty "이전 종료 시 방문한 탭이 여기에 표시됩니다.">
+<!ENTITY home_restore_all "모두 복원">
+<!ENTITY home_closed_tabs_number "&formatD; 개의 탭">
+<!-- Localization note (home_closed_tabs_one): This is the singular version of home_closed_tabs_number, referring to the number of recently closed tabs available. -->
+<!ENTITY home_closed_tabs_one "1 개의 탭">
+<!ENTITY home_most_recent_empty "가장 최근에 방문한 웹사이트가 여기에 표시됩니다.">
+<!-- Localization note (home_most_recent_emptyhint2): "Psst" is a sound that might be used to attract someone's attention unobtrusively, and intended to hint at Private Browsing to the user.
+     The placeholders &formatS1; and &formatS2; are used to mark the location of text underlining. -->
+<!ENTITY home_most_recent_emptyhint2 "잠깐! &formatS1;새 사생활 보호 탭&formatS2;을 사용하면 방문 내역이 저장되지 않습니다.">
+
+<!-- Localization note (home_default_empty): This string is used as the default text when there
+     is no data to show in an about:home panel that was created by an add-on. -->
+<!ENTITY home_default_empty "패널에 콘텐츠가 없습니다.">
+
+<!-- Localization note (home_back_up_to_filter): The variable is replaced by the name of the
+     previous location in the navigation, such as the previous folder -->
+<!ENTITY home_move_back_to_filter "&formatS;으로 돌아가기">
+
+<!-- Localization note (home_remote_tabs_many_hidden_devices) : The
+     formatD is replaced with the number of hidden devices.  The
+     number of hidden devices is always more than one.  We can't use
+     Android plural forms, sadly. See Bug #753859. -->
+<!ENTITY home_remote_tabs_many_hidden_devices "숨겨진 기기 &formatD;대">
+<!-- Localization note (home_remote_tabs_hidden_devices_title) : This is the
+     title of a dialog; we expect more than one device. -->
+<!ENTITY home_remote_tabs_hidden_devices_title "숨겨진 기기들">
+<!-- Localization note (home_remote_tabs_unhide_selected_devices) : This is
+     the text of a button; we expect more than one device. -->
+<!ENTITY home_remote_tabs_unhide_selected_devices "선택한 기기 숨기기 취소">
+
+<!-- Localization note (home_pinned_site) : This is a snackbar label displayed after
+    a site is pinned or unpinned. -->
+<!ENTITY home_pinned_site "고정된 사이트">
+<!ENTITY home_unpinned_site "고정되지 않은 사이트">
+
+<!ENTITY remote_tabs_panel_moved_title "탭들이 어디로 갔나요?">
+<!ENTITY remote_tabs_panel_moved_desc "새로운 탭을 열 때 마다 쉽게 접근 할 수 있도록 탭들을 다른 기기에서 홈 페이지의 패널로 옮겼습니다.">
+<!ENTITY remote_tabs_panel_moved_link "새로운 패널로 데려다주세요.">
+
+<!ENTITY pin_site_dialog_hint "검색어를 입력하세요">
+
+<!ENTITY filepicker_title "파일 선택">
+<!ENTITY filepicker_audio_title "음성 선택 또는 녹음">
+<!ENTITY filepicker_image_title "사진 선택 또는 촬영">
+<!ENTITY filepicker_video_title "동영상 선택 또는 녹화">
+
+<!-- Site identity popup -->
+<!ENTITY identity_connected_to "현재 웹 사이트는 인증 되었음">
+<!-- Localization note (identity_run_by) : This string appears between a
+domain name (above) and an organization name (below). E.g.
+
+example.com
+which is run by
+Example Enterprises, Inc.
+
+The layout of the identity dialog prevents combining this into a single string with
+substitution variables.  If it is difficult to translate the sense of the string
+with that structure, consider a translation which ignores the preceding domain and
+just addresses the organization to follow, e.g. "This site is run by " -->
+<!ENTITY identity_connection_secure "보안 연결">
+<!ENTITY identity_connection_insecure "비보안 연결">
+<!ENTITY identity_connection_chromeui "안전한 &brandShortName; 페이지입니다">
+
+<!-- Mixed content notifications in site identity popup -->
+<!ENTITY mixed_content_blocked_all1 "&brandShortName;가 이 페이지의 비보안 요소들을 차단했습니다.">
+<!ENTITY mixed_content_blocked_some1 "&brandShortName;가 이 페이지의 일부 비보안 요소들을 차단했습니다.">
+<!ENTITY mixed_content_display_loaded1 "이 페이지는 일부 비보안 요소들을 (예: 이미지) 가지고 있습니다.">
+<!ENTITY mixed_content_protection_disabled1 "비보안 요소 차단을 비활성화 하였습니다.">
+
+<!-- Tracking content notifications in site identity popup -->
+<!ENTITY doorhanger_tracking_title2 "추적 방지">
+<!ENTITY doorhanger_tracking_state_enabled "활성화됨">
+<!ENTITY doorhanger_tracking_state_disabled "비활성화됨">
+<!ENTITY doorhanger_tracking_message_enabled1 "여러분의 온라인 활동을 추적하고자 하는 시도들을 차단합니다.">
+<!ENTITY doorhanger_tracking_message_disabled2 "이 페이지는 브라우징 활동을 추적하는 요소들을 포함하고 있을 수 있습니다.">
+
+<!-- Common mixed and tracking content strings in site identity popup -->
+<!ENTITY learn_more "더 알아보기">
+<!ENTITY enable_protection "보호하기">
+<!ENTITY disable_protection "보호하지 않기">
+
+<!ENTITY private_data_success "개인 정보 삭제 완료">
+<!ENTITY private_data_fail "일부 개인 정보 삭제 안됨">
+
+<!ENTITY bookmarkhistory_button_import "가져오기">
+<!ENTITY bookmarkhistory_import_both "안드로이드로 부터 북마크 및 방문기록 가져오기">
+<!ENTITY bookmarkhistory_import_bookmarks "북마크 가져오는 중">
+<!ENTITY bookmarkhistory_import_history "방문 기록 가져오는 중">
+<!ENTITY bookmarkhistory_import_wait "잠시 기다리세요…">
+
+<!ENTITY suggestions_prompt3 "검색 자동완성을 사용하시겠습니까?">
+<!--  Localization note (search_bar_item_desc): When the user clicks the url bar
+      and starts typing, a list of icons of search engines appears at the bottom
+      of the screen. When a user clicks an icon, the entered text will be searched
+      via the search engine that uses the icon they clicked. This text is used
+      for screen reader users when they hover each icon - &formatS; will be
+      replaced with the name of the currently highlighted icon. -->
+<!ENTITY search_bar_item_desc "&formatS;에서 검색">
+
+<!-- Localization note (suggestion_for_engine): The placeholder &formatS1; will be
+     replaced with the name of the search engine. The placeholder &formatS2; will be
+     replaced with the search query. -->
+<!ENTITY suggestion_for_engine "&formatS1;에서 &formatS2; 검색">
+
+<!ENTITY searchable_description "북마크 및 방문 기록">
+
+ <!-- Updater notifications -->
+<!ENTITY updater_start_title2 "&brandShortName; 업데이트 가능">
+<!ENTITY updater_start_select2 "다운로드 하기">
+
+<!ENTITY updater_downloading_title2 "&brandShortName; 다운로드 중">
+<!ENTITY updater_downloading_title_failed2 "다운로드 실패">
+<!ENTITY updater_downloading_select2 "다운로드된 업데이트 적용">
+<!ENTITY updater_downloading_retry2 "재시도">
+
+<!ENTITY updater_apply_title3 "다운로드된 &brandShortName; 업데이트">
+<!ENTITY updater_apply_select3 "터치해서 설치">
+
+<!-- Localization note (updater_permission_text): This text is shown in a notification and as a snackbar
+     if the app requires a runtime permission to download updates. Currently, the updater only sees
+     remotely advertised updates in the Nightly and Aurora channels. -->
+<!ENTITY updater_permission_text "파일을 다운로드 받고 업데이트하기 위해, &brandShortName; 가 저장소에 접근하는 것을 허가합니다.">
+<!-- LOCALIZATION NOTE (updater_permission_allow): This action is shown in a snackbar along with updater_permission_text. -->
+<!ENTITY updater_permission_allow "허용">
+
+    <!-- Guest mode -->
+<!ENTITY new_guest_session "새 손님 세션">
+<!ENTITY exit_guest_session "손님 세션 나가기">
+<!ENTITY guest_session_dialog_continue "계속">
+<!ENTITY guest_session_dialog_cancel "취소">
+<!ENTITY new_guest_session_title "&brandShortName;를 다시 시작합니다">
+<!ENTITY new_guest_session_text2 "손님 세션으로 사용 중인 사용자는 개인 브라우징 정보(저장된 로그인, 방문내역, 북마크)를 볼 수 없습니다.\n\n손님 세션이 종료되면, 해당 브라우징 정보는 모두 삭제되고 기존 세션으로 돌아갑니다.">
+<!ENTITY guest_browsing_notification_title "손님 브라우징 활성화">
+<!ENTITY guest_browsing_notification_text "나가기">
+
+<!ENTITY exit_guest_session_title "&brandShortName;를 다시 시작합니다">
+<!ENTITY exit_guest_session_text "이 세션의 브라우징 데이터는 모두 삭제됩니다.">
+
+<!-- Miscellaneous -->
+<!-- LOCALIZATION NOTE (ellipsis): This text is appended to a piece of text that does not fit in the
+     designated space. Use the unicode ellipsis char, \u2026, or use "..." if \u2026 doesn't suit
+     traditions in your locale. -->
+<!ENTITY ellipsis "…">
+
+<!ENTITY colon ":">
+
+<!-- These are only used for accessibility for the done and overflow-menu buttons in the actionbar.
+     They are never shown to users -->
+<!ENTITY actionbar_menu "메뉴">
+<!ENTITY actionbar_done "완료">
+
+<!-- Voice search in the awesome bar -->
+<!ENTITY voicesearch_prompt "지금 말하세요">
+
+<!-- Localization note (remote_tabs_last_synced): the variable is replaced by a
+     "relative time span string" produced by Android.  This string describes the
+     time the tabs were last synced relative to the current time; examples
+     include "42 minutes ago", "4 days ago", "last week", etc. The subject of
+     "Last synced" is one of the user's other Sync clients, typically Firefox on
+     their desktop or laptop.-->
+<!ENTITY remote_tabs_last_synced "마지막 동기화: &formatS;">
+<!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
+<!ENTITY remote_tabs_never_synced "마지막 동기화: 없음">
+
+<!-- LOCALIZATION NOTE (intent_uri_private_browsing_prompt): This string will
+     appear in an alert when a user, who is currently in private browsing,
+     clicks a link that will open an external Android application. "&formatS;"
+     will be replaced with the name of the application that will be opened. -->
+<!ENTITY intent_uri_private_browsing_prompt "이 링크는 &formatS; 앱을 실행합니다. 사생활 보호 모드를 종료하시겠습니까?">
+<!-- LOCALIZATION NOTE (intent_uri_private_browsing_multiple_match_title): This
+     string will appear as the title of an alert when a user, who is currently
+     in private browsing, clicks a link that will open an external Android
+     application and more than one application is available to open that link.
+     We don't have control over the style of this dialog and it looks
+     unpolished when this string is longer than one line so ideally keep it
+     short! -->
+<!ENTITY intent_uri_private_browsing_multiple_match_title "사생활 보호 모드를 종료하시겠습니까?">
+
+<!-- DevTools Authentication -->
+<!-- LOCALIZATION NOTE (devtools_auth_scan_header): This header text appears
+     above a QR reader that is actively scanning for QR codes.  The expected QR
+     code has already been displayed by the client trying to connect (such as
+     desktop Firefox via WebIDE), so you just need to aim this device at the QR
+     code. -->
+<!ENTITY devtools_auth_scan_header "다른 기기에 표시된 QR 코드 스캔하기">
+
+<!-- Restrictable features -->
+<!-- Localization note: These are features the device owner (e.g. parent) can enable or disable for
+     a restricted profile (e.g. child). Used inside the Android settings UI. -->
+<!ENTITY restrictable_feature_addons_installation "부가 기능">
+<!ENTITY restrictable_feature_addons_installation_description "Firefox에 기능을 추가합니다. 참고: 부가 기능은 특정 제한을 해제할 수 있습니다.">
+<!ENTITY restrictable_feature_private_browsing "사생활 보호 브라우징">
+<!ENTITY restrictable_feature_private_browsing_description "가족 구성원이 그들이 방문한 사이트와 페이지의 기록을 남기지 않을 수 있도록 허용합니다.">
+<!ENTITY restrictable_feature_clear_history "방문목록 지우기">
+<!ENTITY restrictable_feature_clear_history_description "가족 구성원이 그들이 방문한 페이지와 사이트 정보를 삭제 할 수 있도록 허용합니다.">
+<!ENTITY restrictable_feature_advanced_settings "고급 설정">
+<!ENTITY restrictable_feature_advanced_settings_description "이는 북마크 가져오기, 탭 복구, 자동 업데이트를 포함합니다. 가족 구성원들이 사용하기에 알맞은 간편 설정은 비활성화됩니다.">
+<!ENTITY restrictable_feature_camera_microphone "카메라와 마이크">
+<!ENTITY restrictable_feature_camera_microphone_description "가족 구성원이 웹 사이트 상에서 실시간으로 대화하도록 허용합니다.">
+<!ENTITY restrictable_feature_block_list "차단 목록">
+<!ENTITY restrictable_feature_block_list_description "민감한 콘텐츠를 포함하는 웹사이트를 차단합니다.">
+
+<!-- Default Bookmarks titles-->
+<!-- LOCALIZATION NOTE (bookmarks_about_browser): link title for about:fennec -->
+<!ENTITY bookmarks_about_browser "Firefox: 브라우저 소개">
+<!-- LOCALIZATION NOTE (bookmarks_addons): link title for https://addons.mozilla.org/en-US/mobile -->
+<!ENTITY bookmarks_addons "Firefox: 부가 기능으로 커스터마이징">
+<!-- LOCALIZATION NOTE (bookmarks_support): link title for https://support.mozilla.org/ -->
+<!ENTITY bookmarks_support "Firefox: 도움말">
+<!-- LOCALIZATION NOTE (bookmarks_restricted_support): link title for https://support.mozilla.org/kb/controlledaccess -->
+<!ENTITY bookmarks_restricted_support2 "Android 타블렛에서 제한된 프로필 사용에 대한 Firefox 도움말">
+<!-- LOCALIZATION NOTE (bookmarks_restricted_webmaker):link title for https://webmaker.org -->
+<!ENTITY bookmarks_restricted_webmaker "웹을 배웁시다: Mozilla Webmaker">
+
+<!-- LOCALIZATION NOTE (unsupported_sdk_version): The user installed a build of this app that does not support
+     the Android version of this device. the formatS1 is replaced by the CPU ABI (e.g., ARMv7); the formatS2 is
+     replaced by the Android OS version (e.g., 14)-->
+<!ENTITY unsupported_sdk_version "죄송합니다! 이 &brandShortName; 는 이 기기 (&formatS1;, &formatS2;)에서 동작하지 않습니다. 알맞은 버전을 다운로드 해주세요.">
+
+<!-- LOCALIZATION NOTE(corrupt_apk): This notification is shown if corruption has been detected on startup and the user has to reinstall Firefox -->
+<!ENTITY corrupt_apk "&brandShortName;를 열 수 없습니다. 재설치 후 다시 시도하시기 바랍니다.">
+
+<!ENTITY eol_notification_title2 "&brandShortName;를 더이상 업데이트 하지 않음">
+<!ENTITY eol_notification_summary "탭해서 자세히 보기">
+
+<!-- LOCALIZATION NOTE (whatsnew_notification_title, whatsnew_notification_summary): These strings
+     are used for a system notification that's shown to users after the app updates. -->
+<!ENTITY whatsnew_notification_title "&brandShortName;가 최신버전입니다">
+<!ENTITY whatsnew_notification_summary "새로운 기능을 확인하세요">
+
+<!ENTITY promotion_add_page_shortcut "페이지 바로가기 추가">
+
+<!ENTITY helper_first_offline_bookmark_title "오프라인으로 읽기">
+<!ENTITY helper_first_offline_bookmark_message "오프라인에서도 북마크된 읽기 모드 항목들을 볼 수 있습니다.">
+<!ENTITY helper_first_offline_bookmark_button "북마크로 이동">
+
+<!ENTITY helper_triple_readerview_open_title "오프라인에서 사용 가능">
+<!ENTITY helper_triple_readerview_open_message "오프라인에서 읽을 수 있도록 읽기 모드 항목들을 북마크합니다.">
+<!ENTITY helper_triple_readerview_open_button "북마크에 추가">
+
+<!ENTITY activity_stream_topsites "상위 사이트">
+<!-- LOCALIZATION NOTE (activity_stream_topstories): &brandPocket is the brand of the company, Pocket, that is being used to provide suggestions for articles. -->
+<!ENTITY activity_stream_topstories "&brandPocket; 추천">
+<!ENTITY activity_stream_highlights "하이라이트">
+
+<!-- LOCALIZATION NOTE (activity_stream_link_more1): Link-like text displayed to take user to a website with more content from Pocket. -->
+<!ENTITY activity_stream_link_more1 "더보기">
+
+<!-- LOCALIZATION NOTE (activity_stream_highlight_label_bookmarked): This label is shown in the Activity
+Stream list for highlights sourced from th user's bookmarks. -->
+<!ENTITY activity_stream_highlight_label_bookmarked "북마크">
+<!-- LOCALIZATION NOTE (activity_stream_highlight_label_visited): This label is shown in the Activity
+Stream list for highlights sourced from th user's bookmarks. -->
+<!ENTITY activity_stream_highlight_label_visited "방문한 사이트">
+<!-- LOCALIZATION NOTE (activity_stream_highlight_label_trending): This label is shown in the Activity Stream list for highlights sourced from a recommendations engine. -->
+<!ENTITY activity_stream_highlight_label_trending "트랜드">
+<!-- LOCALIZATION NOTE (activity_stream_highlights_empty): This text is shown when we could not find highlights for this user. This is also shown on first run. -->
+<!ENTITY activity_stream_highlights_empty "브라우징을 시작하면 최근 방문하거나 북마크한 좋은 글이나 영상, 페이지를 여기에 보여줍니다.">
+
+<!-- LOCALIZATION NOTE (activity_stream_remove): This label is shown in the Activity Stream context menu,
+and allows hiding a URL/page from highlights or topsites. The page remains in history/bookmarks, but
+is simply hidden from the Activity Stream panel. -->
+<!ENTITY activity_stream_remove "삭제">
+<!ENTITY activity_stream_delete_history "방문 기록에서 삭제">
+
+<!ENTITY private_tab_panel_title "사생활 보호 브라우징 + 추적 방지">
+<!ENTITY private_tab_panel_description "&brandShortName;는 웹 브라우징 활동을 추적하는 페이지들을 차단합니다.">
+<!ENTITY private_tab_panel_description2 "어떠한 기록도 남기지 않습니다. 다만, 다운로드 받은 파일이나 추가한 북마크는 기기에 저장됩니다.">
+<!ENTITY private_tab_learn_more "더 알고 싶은가요?">
+
+<!ENTITY fullscreen_warning "전체 화면 모드 진입">
+
+<!-- LOCALIZATION NOTE (pwa_add_to_launcher_confirm): The plus sign here is part of UI design -->
+<!ENTITY pwa_add_to_launcher_confirm "+ 홈 화면에 추가">
+
+<!-- LOCALIZATION NOTE (pwa_add_to_launcher_badge2): Used as label in the page actions dropdown list,
+displayed when there are more than 3 actions available for a page.
+See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
+<!ENTITY pwa_add_to_launcher_badge2 "홈 화면에 추가">
+<!ENTITY pwa_continue_to_website "웹사이트로 계속">
+<!ENTITY pwa_onboarding_sumo "이 웹사이트를 홈스크린에 추가하여 앱과 같이 빠르고 쉽게 접근할 수 있습니다.">

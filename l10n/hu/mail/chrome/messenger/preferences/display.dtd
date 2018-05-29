@@ -1,0 +1,73 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemFormatting.label             "Formázás">
+<!ENTITY itemTags.label                   "Címkék">
+<!ENTITY itemAdvanced.label               "Speciális">
+
+<!ENTITY style.label                      "Stílus:">
+<!ENTITY style.accesskey                  "t">
+<!ENTITY regularStyle.label               "Normál">
+<!ENTITY bold.label                       "Félkövér">
+<!ENTITY italic.label                     "Dőlt">
+<!ENTITY boldItalic.label                 "Félkövér dőlt">
+<!ENTITY size.label                       "Méret:">
+<!ENTITY size.accesskey                   "M">
+<!ENTITY regularSize.label                "Normál">
+<!ENTITY bigger.label                     "Nagyobb">
+<!ENTITY smaller.label                    "Kisebb">
+<!ENTITY quotedTextColor.label            "Szín:">
+<!ENTITY quotedTextColor.accesskey        "z">
+<!ENTITY displayWidth.label               "Normál szöveges levelek">
+<!ENTITY displayText.label                "A következő beállítások használata idézett szöveges levelek esetén:">
+<!-- LOCALIZATION NOTE : (emoticonsAndStructs.label) 'Emoticons' are also known as 'Smileys', e.g. :-)   -->
+
+<!ENTITY convertEmoticons.label        "Hangulatjelek megjelenítése grafikaként">
+<!ENTITY convertEmoticons.accesskey    "H">
+<!-- labels -->
+
+<!ENTITY displayTagsText.label     "A címkék az üzenetek kategorizálására és priorálására használhatók.">
+<!ENTITY newTagButton.label        "Új…">
+<!ENTITY newTagButton.accesskey    "j">
+<!ENTITY editTagButton1.label      "Szerkesztés…">
+<!ENTITY editTagButton1.accesskey  "z">
+<!ENTITY removeTagButton.label     "Törlés">
+<!ENTITY removeTagButton.accesskey "T">
+<!-- Fonts and Colors -->
+
+<!ENTITY fontsAndColors1.label   "Betűk és színek">
+<!ENTITY defaultFont.label       "Alapértelmezett betű:">
+<!ENTITY defaultFont.accesskey   "b">
+<!ENTITY defaultSize.label       "Méret:">
+<!ENTITY defaultSize.accesskey   "M">
+<!ENTITY fontOptions.accesskey   "c">
+<!ENTITY fontOptions.label       "Speciális…">
+<!ENTITY colorButton.label       "Színek…">
+<!ENTITY colorButton.accesskey   "n">
+<!-- Advanced -->
+
+<!ENTITY reading.caption                  "Olvasás">
+<!ENTITY display.caption                  "Megjelenítés">
+<!ENTITY showCondensedAddresses.label     "Csak a név megjelenítése a címjegyzékben szereplő személyeknél">
+<!ENTITY showCondensedAddresses.accesskey "C">
+
+<!ENTITY autoMarkAsRead.label             "Üzenetek automatikus megjelölése olvasottként">
+<!ENTITY autoMarkAsRead.accesskey         "a">
+<!ENTITY markAsReadNoDelay.label          "Megjelenítéskor azonnal">
+<!ENTITY markAsReadNoDelay.accesskey      "M">
+<!-- LOCALIZATION NOTE (markAsReadDelay.label): This will concatenate to
+     "After displaying for [___] seconds",
+     using (markAsReadDelay.label) and a number (secondsLabel.label). -->
+<!ENTITY markAsReadDelay.label            "Megjelenítés után">
+<!ENTITY markAsReadDelay.accesskey        "e">
+<!ENTITY secondsLabel.label               "másodperc">
+<!ENTITY openMsgIn.label                  "Üzenetek megnyitása:">
+<!ENTITY openMsgInNewTab.label            "Új üzenetlapon">
+<!ENTITY openMsgInNewTab.accesskey        "l">
+<!ENTITY reuseExpRadio0.label             "Új üzenetablakban">
+<!ENTITY reuseExpRadio0.accesskey         "z">
+<!ENTITY reuseExpRadio1.label             "Létező üzenetablakban">
+<!ENTITY reuseExpRadio1.accesskey         "l">
+<!ENTITY closeMsgOnMoveOrDelete.label     "Üzenetablak/-lap bezárása áthelyezéskor vagy törléskor">
+<!ENTITY closeMsgOnMoveOrDelete.accesskey "z">

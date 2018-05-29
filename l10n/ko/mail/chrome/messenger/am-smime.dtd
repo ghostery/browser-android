@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY securityTitle.label "보안 설정">
+<!ENTITY securityTab.label "보안">
+<!ENTITY securityHeading.label "서명 또는 암호화된 메시지를 주고받거나 인증하려면 유효한 >인증서를 사용해야 합니다.">
+<!ENTITY encryptionGroupTitle.label "암호화">
+<!ENTITY encryptionChoiceLabel.label "메시지 보낼 때 기본 암호 설정:">
+<!ENTITY neverEncrypt.label "암호화 사용하지 않음">
+<!ENTITY neverEncrypt.accesskey "N">
+<!ENTITY alwaysEncryptMessage.label "암호화 사용함 (개인 인증서 필요)">
+<!ENTITY alwaysEncryptMessage.accesskey "u">
+<!ENTITY encryptionCert.message "다음 개인 인증서 사용:">
+<!ENTITY digitalSign.certificate.button "선택…">
+<!ENTITY digitalSign.certificate.accesskey "S">
+<!ENTITY digitalSign.certificate_clear.button "제거">
+<!ENTITY digitalSign.certificate_clear.accesskey "C">
+<!ENTITY encryption.certificate.button "선택…">
+<!ENTITY encryption.certificate.accesskey "t">
+<!ENTITY encryption.certificate_clear.button "제거">
+<!ENTITY encryption.certificate_clear.accesskey "e">
+<!ENTITY signingGroupTitle.label "디지털 서명">
+<!ENTITY signMessage.label "디지털 서명 메시지 (기본)">
+<!ENTITY signMessage.accesskey "D">
+<!ENTITY signingCert.message "다음 개인 인증서 사용:">
+
+<!ENTITY certificates.label "인증서">
+<!ENTITY manageCerts2.label "인증서 관리">
+<!ENTITY manageCerts2.accesskey "M">
+<!ENTITY manageDevices.label "보안 장치 관리">
+<!ENTITY manageDevices.accesskey "y">
+
+<!-- Strings for the cert picker dialog -->
+<!ENTITY certPicker.title "인증서 선택">
+<!ENTITY certPicker.info  "인증서:">
+<!ENTITY certPicker.detailsLabel "선택한 인증서 상세 정보:">

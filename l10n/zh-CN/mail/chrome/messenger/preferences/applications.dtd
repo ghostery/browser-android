@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  typeColumn.label            "内容类型">
+<!ENTITY  typeColumn.accesskey        "T">
+
+<!ENTITY  actionColumn2.label         "动作">
+<!ENTITY  actionColumn2.accesskey     "A">
+
+<!ENTITY  focusSearch1.key            "f">
+<!ENTITY  focusSearch2.key            "k">
+
+<!ENTITY  filter.placeholder          "搜索">
+
+<!ENTITY saveTo.label                 "保存文件至">
+<!ENTITY saveTo.accesskey             "S">
+<!ENTITY alwaysAsk.label              "总是询问保存文件的位置">
+<!ENTITY alwaysAsk.accesskey          "A">
+<!ENTITY chooseFolderWin.label        "浏览…">
+<!ENTITY chooseFolderWin.accesskey    "B">
+<!ENTITY chooseFolderMac.label        "选择…">
+<!ENTITY chooseFolderMac.accesskey    "C">
+
+<!ENTITY attachments.incoming.label   "接收">
+<!ENTITY attachments.outgoing.label   "发送">
+
+<!ENTITY addCloudFileAccount1.label       "添加…">
+<!ENTITY addCloudFileAccount1.accesskey   "A">
+<!ENTITY addCloudFileAccount.description  "添加一个新的“文件链接”存储服务">
+<!ENTITY removeCloudFileAccount.label     "移除">
+<!ENTITY removeCloudFileAccount.accesskey "R">
+<!ENTITY authRequired.description         "您需要授权才能看到此存储服务的设置。">
+<!ENTITY authRequired.button.label        "授权">
+<!ENTITY authRequired.button.accesskey    "u">
+
+<!ENTITY enableCloudFileAccountOffer.label "大于此数值的文件提议分享：">
+<!ENTITY enableCloudFileAccountOffer.mb "MB">

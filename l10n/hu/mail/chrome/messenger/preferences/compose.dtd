@@ -1,0 +1,68 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label                   "Általános">
+<!ENTITY itemAutoComplete.label              "Címzés">
+<!ENTITY itemSpellCheck.label                "Helyesírás">
+
+<!ENTITY dialogCompose.title                 "Szerkesztés">
+
+<!ENTITY forwardMsg.label                     "Levél továbbítása:">
+<!ENTITY forwardMsg.accesskey                 "L">
+<!ENTITY inline.label                         "Beágyazva">
+<!ENTITY asAttachment.label                   "Mellékletként">
+<!ENTITY addExtension.label                   "Kiterjesztés hozzáadása a fájlnévhez">
+<!ENTITY addExtension.accesskey               "K">
+
+<!ENTITY htmlComposeHeader.label              "HTML">
+<!ENTITY font.label                           "Betű:">
+<!ENTITY font.accesskey                       "B">
+<!ENTITY size.label                           "Méret:">
+<!ENTITY size.accesskey                       "M">
+<!ENTITY fontColor.label                      "Szövegszín:">
+<!ENTITY fontColor.accesskey                  "z">
+<!ENTITY bgColor.label                        "Háttérszín:">
+<!ENTITY bgColor.accesskey                    "H">
+<!ENTITY restoreHTMLDefaults.label            "Alapértelmezett értékek visszaállítása">
+<!ENTITY restoreHTMLDefaults.accesskey        "A">
+<!ENTITY defaultToParagraph.label             "Alapértelmezésben a Bekezdés formátum használata Szövegtörzs helyett">
+<!ENTITY defaultToParagraph.accesskey         "B">
+
+<!ENTITY spellCheck.label                     "Helyesírás ellenőrzése küldés előtt">
+<!ENTITY spellCheck.accesskey                 "H">
+<!ENTITY spellCheckInline.label               "Helyesírás ellenőrzése beírás közben">
+<!ENTITY spellCheckInline1.accesskey          "E">
+<!ENTITY languagePopup.label                  "Nyelv:">
+<!ENTITY languagePopup.accessKey              "N">
+<!ENTITY downloadDictionaries.label           "További szótárak letöltése">
+
+<!ENTITY warnOnSendAccelKey.label             "Jóváhagyás kérése gyorsbillentyűvel végzett levélküldéskor">
+<!ENTITY warnOnSendAccelKey.accesskey         "J">
+<!ENTITY autoSave.label                       "Automatikus mentés">
+<!ENTITY autoSave.accesskey                   "A">
+<!ENTITY autoSaveEnd.label                    "percenként">
+
+<!ENTITY emailCollectionPicker.label           "A kimenő levelek címeinek automatikus hozzáadása:">
+<!ENTITY emailCollectionPicker.accesskey       "e">
+<!ENTITY addressingTitle.label                 "Automatikus címkiegészítés">
+<!ENTITY autocompleteText.label                "Üzenetek címzésekor egyezések keresése a következő helyeken:">
+<!ENTITY addressingEnable.label                "Helyi címjegyzékek">
+<!ENTITY addressingEnable.accesskey            "H">
+<!ENTITY directories.label                     "Címtárkiszolgáló:">
+<!ENTITY directories.accesskey                 "C">
+<!ENTITY directoriesNone.label                 "Nincs">
+<!ENTITY editDirectories.label                 "Címtárak szerkesztése…">
+<!ENTITY editDirectories.accesskey             "C">
+<!ENTITY showAsDefault.label                   "Alapértelmezett indítási könyvtár a címjegyzék ablakban:">
+<!ENTITY showAsDefault.accesskey               "d">
+<!ENTITY showAsDefaultLast.label               "Utoljára használt könyvtár">
+
+<!ENTITY sendOptionsDescription.label          "Szövegformátum beállítása">
+<!ENTITY sendOptions.label                     "Üzenetküldési beállítások…">
+<!ENTITY sendOptions.accesskey                 "b">
+
+<!ENTITY attachmentReminder.label              "Figyelmeztetés a hiányzó mellékletekre">
+<!ENTITY attachmentReminder.accesskey          "m">
+<!ENTITY attachmentReminderOptions.label       "Kulcsszavak…">
+<!ENTITY attachmentReminderOptions.accesskey   "K">

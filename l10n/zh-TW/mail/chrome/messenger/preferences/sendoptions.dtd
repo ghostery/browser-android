@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title                 "寄送選項">
+<!ENTITY sendMail.title               "文字格式">
+<!ENTITY autoDowngrade.label          "可以的話，以純文字傳送訊息">
+<!ENTITY autoDowngrade.accesskey      "t">
+<!ENTITY sendMaildesc.label           "當用 HTML 格式寄信而且收件者中有人可能無法收 HTML 格式的郵件時:">
+<!ENTITY askMe.label                  "詢問我如何處理">
+<!ENTITY askMe.accesskey              "k">
+<!ENTITY convertPlain.label           "轉換郵件為純文字">
+<!ENTITY convertPlain.accesskey       "C">
+<!ENTITY sendHTML.label               "直接以 HTML 格式寄送">
+<!ENTITY sendHTML.accesskey           "S">
+<!ENTITY sendBoth.label               "同時送出純文字與 HTML 格式">
+<!ENTITY sendBoth.accesskey           "e">
+<!ENTITY override.label               "註: 請用通訊錄指定個別收件者可接收的郵件格式。">
+
+<!ENTITY domaindesc.label             "當您寄信到下列網域時，&brandShortName; 會自動送出相對應的格式。">
+<!ENTITY HTMLTab.label                "HTML 格式網域">
+<!ENTITY HTMLTab.accesskey            "H">
+<!ENTITY PlainTextTab.label           "純文字網域">
+<!ENTITY PlainTextTab.accesskey       "P">
+<!ENTITY AddHtmlDomain.label          "新增…">
+<!ENTITY AddHtmlDomain.accesskey      "A">
+<!ENTITY AddPlainText.label           "新增…">
+<!ENTITY AddPlainText.accesskey       "A">
+<!ENTITY DeleteHtmlDomain.label       "刪除">
+<!ENTITY DeleteHtmlDomain.accesskey   "D">
+<!ENTITY DeletePlainText.label        "刪除">
+<!ENTITY DeletePlainText.accesskey    "D">
+
+<!ENTITY add.htmltitle                "新增使用 HTML 格式網域">
+<!ENTITY add.htmldomain               "HTML 格式網域名稱:">
+<!ENTITY add.plaintexttitle           "增加純文字網域名稱">
+<!ENTITY add.plaintextdomain          "純文字網域名稱:">
+

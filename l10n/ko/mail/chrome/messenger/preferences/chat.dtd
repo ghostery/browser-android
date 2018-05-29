@@ -1,0 +1,64 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  generalTab.label            "일반">
+
+<!ENTITY  startupAction.label         "&brandShortName; 시작시:">
+<!ENTITY  startupAction.accesskey     "s">
+<!ENTITY  startupOffline.label        "채팅 계정을 오프 라인">
+<!ENTITY  startupConnectAuto.label    "채팅 계정을 자동 접속">
+
+<!-- LOCALIZATION NOTE: reportIdleAfter.label is displayed first, then
+there's a field where the user can enter a number, and itemTime is
+displayed at the end of the line. The translations of the
+reportIdleAfter.label and idleTime parts don't have to mean the exact
+same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  reportIdleAfter.label         "자리비움 상태가 ">
+<!ENTITY  reportIdleAfter.accesskey     "I">
+<!ENTITY  idleTime                      "분간 계속 되면 상대에게 알림">
+
+<!ENTITY  andSetStatusToAway.label      "아래 메시지를 보내고 자리 비움 상태로 바꿈:">
+<!ENTITY  andSetStatusToAway.accesskey  "A">
+
+<!ENTITY  sendTyping.label              "대화 중 입력 중이라는 상태 전송">
+<!ENTITY  sendTyping.accesskey          "t">
+
+<!ENTITY  chatNotifications.label             "메시지가 도착했을 때:">
+<!ENTITY  desktopChatNotifications.label      "알림 보여주기">
+<!ENTITY  desktopChatNotifications.accesskey  "c">
+<!ENTITY  completeNotification.label          "보낸 사람 이름과 메시지 미리보기 표시">
+<!ENTITY  buddyInfoOnly.label                 "보낸 사람 이름만 표시">
+<!ENTITY  dummyNotification.label             "추가 정보 표시하지 않음">
+<!ENTITY  getAttention.label                  "작업 표시줄 항목을 번쩍임">
+<!ENTITY  getAttention.accesskey              "F">
+<!ENTITY  getAttentionMac.label               "독 아이콘 애니메이션">
+<!ENTITY  getAttentionMac.accesskey           "o">
+<!ENTITY  chatSound.accesskey                 "d">
+<!ENTITY  chatSound.label                     "소리 재생">
+<!ENTITY  play.label                          "재생">
+<!ENTITY  play.accesskey                      "P">
+<!ENTITY  systemSound.label                   "기본 시스템 소리">
+<!ENTITY  systemSound.accesskey               "D">
+<!ENTITY  customsound.label                   "다음 소리 파일 사용">
+<!ENTITY  customsound.accesskey               "U">
+<!ENTITY  browse.label                        "찾아보기…">
+<!ENTITY  browse.accesskey                    "B">
+
+<!ENTITY messageStyleTab.title             "메시지 스타일">
+<!ENTITY messageStylePreview.label         "미리보기:">
+<!ENTITY messageStyleTheme.label           "테마:">
+<!ENTITY messageStyleTheme.accesskey       "T">
+<!ENTITY messageStyleThunderbirdTheme.label "Thunderbird">
+<!ENTITY messageStyleBubblesTheme.label    "거품">
+<!ENTITY messageStyleDarkTheme.label       "어두운">
+<!ENTITY messageStylePaperSheetsTheme.label "종이">
+<!ENTITY messageStyleSimpleTheme.label     "단순">
+<!ENTITY messageStyleDefaultTheme.label    "기본">
+<!ENTITY messageStyleVariant.label         "다른 형태:">
+<!ENTITY messageStyleVariant.accesskey     "V">
+<!ENTITY messageStyleShowHeader.label      "헤더 보기">
+<!ENTITY messageStyleShowHeader.accesskey  "H">
+<!ENTITY messageStyleNoPreview.title       "미리보기 없음">
+<!ENTITY messageStyleNoPreview.description "현재 테마가 유효하지 않거나 사용할 수 없습니다(부가기능 비활성화, 안전 모드, …).">

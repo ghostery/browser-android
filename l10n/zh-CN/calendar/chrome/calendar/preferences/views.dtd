@@ -1,0 +1,41 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.calendar.view.allview.caption "常规">
+<!ENTITY pref.calendar.view.dayandweekviews.caption "日周视图">
+<!ENTITY pref.calendar.view.multiweekview.caption "多周视图">
+<!ENTITY pref.calendar.view.workweek.caption "工作周">
+
+<!ENTITY pref.weekstarts.label "周起始日为：">
+<!ENTITY pref.weekstarts.accesskey "r">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.label "在视图和小月历中显示周数">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "w">
+<!ENTITY pref.daysoff.label "工作周包括：">
+
+<!ENTITY pref.calendar.view.daystart.label "每日开始于：">
+<!ENTITY pref.calendar.view.daystart.accesskey "D">
+<!ENTITY pref.calendar.view.dayend.label "每日结束于：">
+<!ENTITY pref.calendar.view.dayend.accesskey "y">
+<!ENTITY pref.calendar.view.visiblehours.label "每次显示：">
+<!ENTITY pref.calendar.view.visiblehours.accesskey "o">
+<!ENTITY pref.calendar.view.visiblehoursend.label "小时">
+
+<!ENTITY pref.numberofweeks.label "默认显示周数 （包括前几周）：">
+<!ENTITY pref.numberofweeks.accesskey "e">
+<!ENTITY pref.numberofpreviousweeks.label "显示之前周数：">
+<!ENTITY pref.numberofpreviousweeks.accesskey "P">
+<!ENTITY pref.numberofweeks.0 "无">
+<!ENTITY pref.numberofweeks.1 "1 周">
+<!ENTITY pref.numberofweeks.2 "2 周">
+<!ENTITY pref.numberofweeks.3 "3 周">
+<!ENTITY pref.numberofweeks.4 "4 周">
+<!ENTITY pref.numberofweeks.5 "5 周">
+<!ENTITY pref.numberofweeks.6 "6 周">
+<!ENTITY pref.showlocation.label "显示位置">
+<!ENTITY pref.showlocation.accesskey "L">

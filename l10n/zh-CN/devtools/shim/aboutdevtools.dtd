@@ -1,0 +1,85 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- LOCALIZATION NOTE : This file contains the strings used in aboutdevtools.xhtml,
+  -  displayed when going to about:devtools. UI depends on the value of the preference
+  -  "devtools.enabled".
+  -
+  -  "aboutDevtools.enable.*" and "aboutDevtools.newsletter.*" keys are used when DevTools
+     are disabled
+  -  "aboutDevtools.welcome.*" keys are used when DevTools are enabled
+  - -->
+
+<!-- LOCALIZATION NOTE (aboutDevtools.headTitle): Text of the title tag for about:devtools -->
+<!ENTITY  aboutDevtools.headTitle "关于开发者工具">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.enable.title): Title of the top about:devtools
+  -  section displayed when DevTools are disabled. -->
+<!ENTITY  aboutDevtools.enable.title "启用 Firefox 开发者工具">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.enable.inspectElementTitle): Title of the top
+  -  section displayed when devtools are disabled and the user triggered DevTools by using
+  -  the Inspect Element menu item. -->
+<!ENTITY  aboutDevtools.enable.inspectElementTitle "启用 Firefox 开发者工具以使用元素探查器">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.enable.inspectElementMessage): Message displayed
+  -  when users come from using the Inspect Element menu item. -->
+<!ENTITY  aboutDevtools.enable.inspectElementMessage
+          "用开发者工具的探查器来检查和编辑 HTML 和 CSS。">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.enable.aboutDebuggingMessage): Message displayed
+  -  when users come from about:debugging. -->
+<!ENTITY  aboutDevtools.enable.aboutDebuggingMessage
+          "开发和调试 WebExtensions、Web worker、Service worker，……，尽在 Firefox 开发者工具。">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.enable.keyShortcutMessage): Message displayed when
+  -  users pressed a DevTools key shortcut. -->
+<!ENTITY  aboutDevtools.enable.keyShortcutMessage
+          "您已用快捷键激活一个开发者工具。如果这是误操作，您可以关闭此标签页。">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.enable.menuMessage): Message displayed when users
+  -  clicked on a "Enable Developer Tools" menu item. -->
+<!ENTITY  aboutDevtools.enable.menuMessage
+          "使用查看器、调试器来检查、编辑和调试 HTML、CSS 和 JavaScript。">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.enable.menuMessage2): Message displayed when users
+  -  clicked on a "Enable Developer Tools" menu item. -->
+<!ENTITY  aboutDevtools.enable.menuMessage2
+          "使用查看器、调试器等工具来完善您的网站的 HTML、CSS 和 JavaScript。">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.enable.commonMessage): Generic message displayed for
+  -  all possible entry points (keyshortcut, menu item etc…). -->
+<!ENTITY  aboutDevtools.enable.commonMessage
+          "Firefox 开发者工具默认已被禁用，以便您更好的操作浏览器。">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.enable.learnMoreLink): Text for the link to
+  -  https://developer.mozilla.org/docs/Tools displayed in the top section when DevTools
+  -  are disabled. -->
+<!ENTITY  aboutDevtools.enable.learnMoreLink "详细了解开发者工具">
+
+<!ENTITY  aboutDevtools.enable.enableButton "启用开发者工具">
+<!ENTITY  aboutDevtools.enable.closeButton "关闭此页面">
+
+<!ENTITY  aboutDevtools.enable.closeButton2 "关闭此标签页">
+
+<!ENTITY  aboutDevtools.welcome.title "欢迎使用 Firefox 开发者工具！">
+
+<!ENTITY  aboutDevtools.newsletter.title "Mozilla 开发者新闻通讯">
+<!-- LOCALIZATION NOTE (aboutDevtools.newsletter.message): Subscribe form message.
+  -  The newsletter is only available in english at the moment.
+  -  See Bug 1415273 for support of additional languages.-->
+<!ENTITY  aboutDevtools.newsletter.message "获取开发者的新消息、技巧和资源，直接发到您的邮箱。">
+<!ENTITY  aboutDevtools.newsletter.email.placeholder "电子邮件地址">
+<!ENTITY  aboutDevtools.newsletter.privacy.label "我同意 Mozilla 遵循 <a class='external' href='https://www.mozilla.org/privacy/'>隐私政策</a>中的说明来处理我的信息。">
+<!ENTITY  aboutDevtools.newsletter.subscribeButton "订阅">
+<!ENTITY  aboutDevtools.newsletter.thanks.title "谢谢！">
+<!ENTITY  aboutDevtools.newsletter.thanks.message "如果您以前没有成功订阅过 Mozilla 相关的新闻通讯，您可能需要检查收件箱乃至垃圾邮件箱来找到我们发给您的确认邮件。">
+
+<!ENTITY  aboutDevtools.footer.title "Firefox 开发者版本">
+<!ENTITY  aboutDevtools.footer.message "开发者工具不够尽兴？探索专为开发者和现代工作流程打造的 Firefox 浏览器。">
+
+<!-- LOCALIZATION NOTE (aboutDevtools.footer.learnMoreLink): Text for the link to
+  -  https://www.mozilla.org/firefox/developer/ displayed in the footer. -->
+<!ENTITY  aboutDevtools.footer.learnMoreLink "详细了解">
+

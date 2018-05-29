@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY gdata-provider.label "Google 캘린더">
+<!ENTITY gdata.privacy.default.label "Google 기본 설정">
+<!ENTITY gdata.privacy.default.accesskey "D">
+
+<!ENTITY gdata.migration.title "읽기 전용 캘린더 마이그레이션">
+<!ENTITY gdata.migration.description "구글 캘린더에 읽기 전용 모드로 접근할 수 있는 캘린더가 존재합니다. 이 캘린더중 하나를 업그레이드 하려면 하단의 리스트에서 선택을 하십시오.">
+<!ENTITY gdata.migration.upgrade.label "업그레이드">
+<!ENTITY gdata.migration.upgrade.accesskey "U">
+<!ENTITY gdata.migration.showagain.label "항상 검사 ">
+
+<!ENTITY gdata.reminder.default "기본 알림">
+<!ENTITY gdata.reminder.action.sms.label "평문으로 전송">
+
+<!ENTITY gdata.wizard.session.description "이미 존재하는 세션을 선택하거나 이메일을 입력해서 새 세션을 만들어주세요. 계정당 한 세션만 필요합니다.">
+<!ENTITY gdata.wizard.calendars.description "구독하고 싶은 캘린더와 할 일 목록을 선택 해 주세요.">
+
+<!ENTITY gdata.wizard.nextstep.description "다음 단계로 진행 해 주세요.">

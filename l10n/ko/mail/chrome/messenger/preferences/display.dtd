@@ -1,0 +1,73 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemFormatting.label             "서식">
+<!ENTITY itemTags.label                   "태그">
+<!ENTITY itemAdvanced.label               "고급">
+
+<!ENTITY style.label                      "스타일:">
+<!ENTITY style.accesskey                  "y">
+<!ENTITY regularStyle.label               "규칙">
+<!ENTITY bold.label                       "굵게">
+<!ENTITY italic.label                     "기울임">
+<!ENTITY boldItalic.label                 "굵게 기울임">
+<!ENTITY size.label                       "크기:">
+<!ENTITY size.accesskey                   "z">
+<!ENTITY regularSize.label                "규칙">
+<!ENTITY bigger.label                     "크게">
+<!ENTITY smaller.label                    "작게">
+<!ENTITY quotedTextColor.label            "색상:">
+<!ENTITY quotedTextColor.accesskey        "o">
+<!ENTITY displayWidth.label               "일반 텍스트 메시지">
+<!ENTITY displayText.label                "인용 처리된 메시지 표시할 때:">
+
+<!-- LOCALIZATION NOTE : (emoticonsAndStructs.label) 'Emoticons' are also known as 'Smileys', e.g. :-)   -->
+<!ENTITY convertEmoticons.label        "이모티콘 표시">
+<!ENTITY convertEmoticons.accesskey    "D">
+
+<!-- labels -->
+<!ENTITY displayTagsText.label     "태그는 메일의 내용을 분류하거나 차례를 매겨 검색을 도와 줍니다.">
+<!ENTITY newTagButton.label        "새 태그…">
+<!ENTITY newTagButton.accesskey    "N">
+<!ENTITY editTagButton1.label      "편집…">
+<!ENTITY editTagButton1.accesskey  "E">
+<!ENTITY removeTagButton.label     "삭제">
+<!ENTITY removeTagButton.accesskey "D">
+
+<!-- Fonts and Colors -->
+<!ENTITY fontsAndColors1.label   "글꼴 &amp; 색상">
+<!ENTITY defaultFont.label       "기본 글꼴:">
+<!ENTITY defaultFont.accesskey   "D">
+<!ENTITY defaultSize.label       "크기:">
+<!ENTITY defaultSize.accesskey   "S">
+<!ENTITY fontOptions.accesskey   "A">
+<!ENTITY fontOptions.label       "고급 설정…">
+<!ENTITY colorButton.label       "색상…">
+<!ENTITY colorButton.accesskey   "C">
+
+<!-- Advanced -->
+<!ENTITY reading.caption                  "읽기">
+<!ENTITY display.caption                  "표시">
+<!ENTITY showCondensedAddresses.label     "주소록에서 사람에 대한 표시명만 보이기">
+<!ENTITY showCondensedAddresses.accesskey "S">
+
+<!ENTITY autoMarkAsRead.label             "읽은 메시지로 자동 표시">
+<!ENTITY autoMarkAsRead.accesskey         "A">
+<!ENTITY markAsReadNoDelay.label          "출력 후 즉시">
+<!ENTITY markAsReadNoDelay.accesskey      "o">
+<!-- LOCALIZATION NOTE (markAsReadDelay.label): This will concatenate to
+     "After displaying for [___] seconds",
+     using (markAsReadDelay.label) and a number (secondsLabel.label). -->
+<!ENTITY markAsReadDelay.label            "다음 시간이 경과되었을 시 읽은 것으로 표시: ">
+<!ENTITY markAsReadDelay.accesskey        "d">
+<!ENTITY secondsLabel.label               "초">
+<!ENTITY openMsgIn.label                  "메시지 열기:">
+<!ENTITY openMsgInNewTab.label            "새 탭">
+<!ENTITY openMsgInNewTab.accesskey        "t">
+<!ENTITY reuseExpRadio0.label             "새 메시지 창">
+<!ENTITY reuseExpRadio0.accesskey         "n">
+<!ENTITY reuseExpRadio1.label             "기존 메시지 창">
+<!ENTITY reuseExpRadio1.accesskey         "e">
+<!ENTITY closeMsgOnMoveOrDelete.label     "이동시 또는 삭제시 메시지 창 또는 탭 닫기">
+<!ENTITY closeMsgOnMoveOrDelete.accesskey "C">
