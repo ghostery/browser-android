@@ -1,0 +1,115 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Don't localize these. They're here until they have
+     a better place to live. -->
+<!ENTITY syncBrand.fullName.label "Firefox Sync">
+<!ENTITY syncBrand.shortName.label "Sync">
+
+<!-- Main titles. -->
+<!ENTITY sync.title.connect.label '連線到 &syncBrand.shortName.label;'>
+
+<!-- J-PAKE Key Screen -->
+<!ENTITY sync.subtitle.connect.label '請在您的裝置上選擇「設定 &syncBrand.shortName.label;」以啟用您的新裝置。'>
+<!ENTITY sync.subtitle.pair.label '若要啟用，請在您的另一台裝置選擇「與裝置配對」。'>
+<!ENTITY sync.pin.default.label '...\n...\n...\n'>
+<!ENTITY sync.link.nodevice.label '裝置不在我手邊…'>
+
+<!-- Configure Engines -->
+<!ENTITY sync.configure.engines.title.passwords2 '登入資訊'>
+<!ENTITY sync.configure.engines.title.history '歷史'>
+<!ENTITY sync.configure.engines.title.tabs '分頁'>
+
+<!-- Localization note (sync.default.client.name): Default string of the "Device
+     name" menu item upon setting up Firefox Sync.  The placeholder &formatS1
+     will be replaced by the name of the Firefox release channel and &formatS2
+     by the model name of the Android device. Examples look like "Aurora on
+     GT-I1950" and "Fennec on MI 2S". -->
+<!ENTITY sync.default.client.name '&formatS2; 上的 &formatS1;'>
+
+<!-- Bookmark folder strings -->
+<!ENTITY bookmarks.folder.menu.label '書籤選單'>
+<!ENTITY bookmarks.folder.places.label ''>
+<!ENTITY bookmarks.folder.tags.label '標籤'>
+<!ENTITY bookmarks.folder.toolbar.label '書籤工具列'>
+<!ENTITY bookmarks.folder.other.label '其他書籤'>
+<!ENTITY bookmarks.folder.desktop.label '來自電腦的書籤'>
+<!ENTITY bookmarks.folder.mobile.label '行動書籤'>
+<!-- Pinned sites on about:home. This folder should never be shown to the user, but we have to give it a string name -->
+<!ENTITY bookmarks.folder.pinned.label '釘選網站'>
+
+<!-- Firefox Account strings. -->
+
+<!-- Localization note: these are shown in screens after the user has
+     created or signed in to an account, and take the user back to
+     Firefox. -->
+<!ENTITY fxaccount_back_to_browsing '回到瀏覽器'>
+
+<!ENTITY fxaccount_getting_started_welcome_to_sync '歡迎使用 &syncBrand.shortName.label;'>
+<!ENTITY fxaccount_getting_started_description2 '登入以同步您的分頁、書籤、登入帳密與其他資料。'>
+<!ENTITY fxaccount_getting_started_get_started '開始設定'>
+<!ENTITY fxaccount_getting_started_old_firefox '正在使用舊版的 &syncBrand.shortName.label;？'>
+
+<!ENTITY fxaccount_status_auth_server '帳號伺服器'>
+<!ENTITY fxaccount_status_sync_now '立即同步'>
+<!ENTITY fxaccount_status_syncing2 '同步中…'>
+<!ENTITY fxaccount_status_device_name '裝置名稱'>
+<!ENTITY fxaccount_status_sync_server 'Sync 伺服器'>
+<!ENTITY fxaccount_status_needs_verification2 '需要驗證您的帳號，請點擊此處以重寄驗證郵件。'>
+<!ENTITY fxaccount_status_needs_credentials '無法連線，點擊以登入。'>
+<!ENTITY fxaccount_status_needs_upgrade '您需要升級 &brandShortName; 才能登入。'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled '&syncBrand.shortName.label; 已設定完成，但不會自動進行同步。請到 Android 設定 &gt; 帳號與同步處理開啟「自動同步」。'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 '&syncBrand.shortName.label; 已設定完成，但不會自動進行同步。請到 Android 設定的「帳號與同步設定」選單中打開「自動同步資料」才會自動同步。'>
+<!ENTITY fxaccount_status_needs_finish_migrating '點擊此處以登入至您全新的 Firefox 帳號。'>
+<!ENTITY fxaccount_status_choose_what '選擇要同步的內容'>
+<!ENTITY fxaccount_status_bookmarks '書籤'>
+<!ENTITY fxaccount_status_history '瀏覽紀錄'>
+<!ENTITY fxaccount_status_passwords2 '登入資訊'>
+<!ENTITY fxaccount_status_tabs '開啟分頁'>
+<!ENTITY fxaccount_status_additional_settings '附加選項'>
+<!ENTITY fxaccount_pref_sync_use_metered2 '只透過 Wi-Fi 同步'>
+<!-- Localization note: Only affects background syncing, user initiated
+     syncs will still be done regardless of the connection -->
+<!ENTITY fxaccount_pref_sync_use_metered_summary2 '避免 &brandShortName; 透過行動數據或計量網路同步'>
+<!ENTITY fxaccount_status_legal '使用條款' >
+<!-- Localization note: when tapped, the following two strings link to
+     external web pages.  Compare fxaccount_policy_{linktos,linkprivacy}:
+     these strings are separated to accommodate languages that decline
+     the two uses differently. -->
+<!ENTITY fxaccount_status_linktos2 '服務條款'>
+<!ENTITY fxaccount_status_linkprivacy2 '隱私權公告'>
+<!ENTITY fxaccount_remove_account '取消連線&ellipsis;'>
+
+<!ENTITY fxaccount_remove_account_dialog_title2 '要與 Sync 取消連線嗎？'>
+<!ENTITY fxaccount_remove_account_dialog_message2 '您的瀏覽資料將保留在此裝置上，但不再會與您的帳號同步。'>
+<!-- Localization note: format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_remove_account_toast2 '已取消 Firefox 帳號 &formatS; 連線。'>
+<!-- Localization note (fxaccount_remove_account_dialog_action_confirm): This is the label for the
+ confirm button in the dialog that shows up when disconnecting from sync. -->
+<!ENTITY fxaccount_remove_account_dialog_action_confirm '取消連線'>
+
+<!ENTITY fxaccount_enable_debug_mode '開啟除錯模式'>
+
+<!-- Localization note: this is the name shown by the Android system
+     itself for a Firefox Account. Don't localize this. -->
+<!ENTITY fxaccount_account_type_label 'Firefox'>
+
+<!-- Localization note: these are shown by the Android system itself,
+     when the user navigates to the Android > Accounts > {Firefox
+     Account} Screen. The link takes the user to the Firefox Account
+     status activity, which lets them manage their Firefox
+     Account. -->
+<!ENTITY fxaccount_options_title '&syncBrand.shortName.label; 選項'>
+<!ENTITY fxaccount_options_configure_title '設定 &syncBrand.shortName.label;'>
+
+<!ENTITY fxaccount_sync_sign_in_error_notification_title2 '&syncBrand.shortName.label; 未連線'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_sign_in_error_notification_text2 '點擊此處以使用 &formatS; 登入'>
+
+<!ENTITY fxaccount_sync_finish_migrating_notification_title '&syncBrand.shortName.label; 升級完成了嗎？'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_finish_migrating_notification_text '點擊此處以使用 &formatS; 登入'>

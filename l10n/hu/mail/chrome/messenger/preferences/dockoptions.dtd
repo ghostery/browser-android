@@ -1,0 +1,16 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dockOptionsDialog.title               "Appikon beállításai">
+<!ENTITY window.macWidth                       "35em">
+
+<!ENTITY bounceSystemDockIcon.label            "Az appikon animálása új üzenet érkezésekor">
+<!ENTITY bounceSystemDockIcon.accesskey        "a">
+<!ENTITY newMessagesCountDock.label            "Új üzenetek száma">
+<!ENTITY newMessagesCountDock.accesskey        "n">
+<!ENTITY showAllUnreadMessagesCount.label      "Olvasatlan üzenetek száma">
+<!ENTITY showAllUnreadMessagesCount.accesskey  "O">
+<!ENTITY dockIconBadge.label                   "Appikon megjelölése">
+<!ENTITY dockIconShow.label                    "Appikon megjelölése ezzel:">
+<!ENTITY directNotificationSettings.label      "A kitűzőt a Rendszerbeállítások Értesítés lapján tudja letiltani.">

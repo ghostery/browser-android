@@ -1,0 +1,40 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY messengerStartPage.label         "&brandShortName; 시작 페이지">
+<!ENTITY enableStartPage.label            "프로그램 시작시 메시지 창에 시작 페이지 출력">
+<!ENTITY enableStartPage.accesskey        "W">
+<!ENTITY location.label                   "주소:">
+<!ENTITY location1.accesskey               "o">
+<!ENTITY useDefault.label                 "기본 설정 복원">
+<!ENTITY useDefault.accesskey             "R">
+
+<!ENTITY changeDockIconOptions.label      "독 아이콘 설정">
+<!ENTITY dockOptions.label                "독 아이콘 옵션…">
+<!ENTITY dockOptions.accesskey            "n">
+
+<!ENTITY newMessagesArrive.label          "메시지 도착 알림">
+<!ENTITY playSound.label                  "소리로 알리기">
+<!ENTITY playSound1.accesskey             "d">
+<!ENTITY playSoundMac.label               "다음 소리 파일 재생:">
+<!ENTITY playSoundMac.accesskey           "d">
+<!ENTITY showAnimatedAlert.label          "알림창 띄우기">
+<!ENTITY showAnimatedAlert.accesskey      "S">
+<!ENTITY notificationAlertSettings2.label "경고와 기본 소리는 시스템 환경설정의 알림에서 끌 수 있습니다.">
+<!ENTITY customizeMailAlert.label         "사용자 정의…">
+<!ENTITY customizeMailAlert.accesskey     "C">
+
+<!ENTITY showTrayIcon.label               "트레이 아이콘 보이기">
+<!ENTITY showTrayIcon.accesskey           "t">
+
+<!ENTITY play.label                       "미리듣기">
+<!ENTITY play.accesskey                   "P">
+<!ENTITY systemsound.label                "새 메일 알림 소리">
+<!ENTITY systemsound.accesskey            "y">
+<!ENTITY customsound.label                "사용자 정의">
+<!ENTITY customsound.accesskey            "U">
+<!ENTITY browse.label                     "찾아보기…">
+<!ENTITY browse.accesskey                 "B">
+
+<!ENTITY defaultSearchEngine.label        "기본 검색 엔진">

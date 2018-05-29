@@ -1,0 +1,68 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label                   "Algemeen">
+<!ENTITY itemAutoComplete.label              "Adressering">
+<!ENTITY itemSpellCheck.label                "Spelling">
+
+<!ENTITY dialogCompose.title                 "Opstellen">
+
+<!ENTITY forwardMsg.label                     "Berichten doorsturen:">
+<!ENTITY forwardMsg.accesskey                 "d">
+<!ENTITY inline.label                         "In het bericht">
+<!ENTITY asAttachment.label                   "Als bijlage">
+<!ENTITY addExtension.label                   "Extensie aan bestandsnaam toevoegen">
+<!ENTITY addExtension.accesskey               "n">
+
+<!ENTITY htmlComposeHeader.label              "HTML">
+<!ENTITY font.label                           "Lettertype:">
+<!ENTITY font.accesskey                       "L">
+<!ENTITY size.label                           "Grootte:">
+<!ENTITY size.accesskey                       "G">
+<!ENTITY fontColor.label                      "Tekstkleur:">
+<!ENTITY fontColor.accesskey                  "T">
+<!ENTITY bgColor.label                        "Achtergrondkleur:">
+<!ENTITY bgColor.accesskey                    "A">
+<!ENTITY restoreHTMLDefaults.label            "Standaardwaarden herstellen">
+<!ENTITY restoreHTMLDefaults.accesskey        "S">
+<!ENTITY defaultToParagraph.label             "Standaard tekstopmaak Alinea gebruiken in plaats van Tekst">
+<!ENTITY defaultToParagraph.accesskey         "r">
+
+<!ENTITY spellCheck.label                     "Spelling controleren voor het verzenden">
+<!ENTITY spellCheck.accesskey                 "c">
+<!ENTITY spellCheckInline.label               "Spelling controleren tijdens het typen">
+<!ENTITY spellCheckInline1.accesskey          "n">
+<!ENTITY languagePopup.label                  "Taal:">
+<!ENTITY languagePopup.accessKey              "T">
+<!ENTITY downloadDictionaries.label           "Meer woordenboeken downloaden">
+
+<!ENTITY warnOnSendAccelKey.label             "Bevestiging vragen bij het gebruik van sneltoets om bericht te verzenden">
+<!ENTITY warnOnSendAccelKey.accesskey         "B">
+<!ENTITY autoSave.label                       "Elke">
+<!ENTITY autoSave.accesskey                   "E">
+<!ENTITY autoSaveEnd.label                    "minuten automatisch opslaan">
+
+<!ENTITY emailCollectionPicker.label           "E-mailadressen van uitgaande berichten automatisch toevoegen aan mijn:">
+<!ENTITY emailCollectionPicker.accesskey       "E">
+<!ENTITY addressingTitle.label                 "Automatische adresaanvulling">
+<!ENTITY autocompleteText.label                "Bij het adresseren van berichten, naar overeenkomsten zoeken in:">
+<!ENTITY addressingEnable.label                "Lokale adresboeken">
+<!ENTITY addressingEnable.accesskey            "L">
+<!ENTITY directories.label                     "Directoryserver:">
+<!ENTITY directories.accesskey                 "D">
+<!ENTITY directoriesNone.label                 "Geen">
+<!ENTITY editDirectories.label                 "Directory’s bewerken…">
+<!ENTITY editDirectories.accesskey             "b">
+<!ENTITY showAsDefault.label                   "Standaard opstartmap in het adresboekvenster:">
+<!ENTITY showAsDefault.accesskey               "S">
+<!ENTITY showAsDefaultLast.label               "Laatst gebruikte map">
+
+<!ENTITY sendOptionsDescription.label          "Tekstopmaakgedrag configureren">
+<!ENTITY sendOptions.label                     "Verzendopties…">
+<!ENTITY sendOptions.accesskey                 "V">
+
+<!ENTITY attachmentReminder.label              "Controleren op ontbrekende bijlagen">
+<!ENTITY attachmentReminder.accesskey          "C">
+<!ENTITY attachmentReminderOptions.label       "Sleutelwoorden…">
+<!ENTITY attachmentReminderOptions.accesskey   "w">

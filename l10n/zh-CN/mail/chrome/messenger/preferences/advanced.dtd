@@ -1,0 +1,122 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label       "常规">
+<!ENTITY dataChoicesTab.label    "反馈">
+<!ENTITY itemUpdate.label        "更新">
+<!ENTITY itemNetworking.label    "网络 &amp; 磁盘空间">
+<!ENTITY itemCertificates.label  "证书">
+
+<!-- General Settings -->
+<!ENTITY enableGlodaSearch.label       "启用全局搜索以及索引">
+<!ENTITY enableGlodaSearch.accesskey   "E">
+<!ENTITY dateTimeFormatting.label      "日期和时间格式">
+<!ENTITY allowHWAccel.label            "自动启用硬件加速">
+<!ENTITY allowHWAccel.accesskey        "h">
+<!ENTITY storeType.label               "新账户的消息存储类型：">
+<!ENTITY storeType.accesskey           "T">
+<!ENTITY mboxStore2.label              "每个文件夹一个文件 (mbox)">
+<!ENTITY maildirStore.label            "每个消息一个文件（邮件文件夹）">
+
+<!ENTITY scrolling.label               "滚动">
+<!ENTITY useAutoScroll.label           "使用自动滚屏">
+<!ENTITY useAutoScroll.accesskey       "U">
+<!ENTITY useSmoothScrolling.label      "使用平滑滚动">
+<!ENTITY useSmoothScrolling.accesskey  "m">
+
+<!ENTITY systemIntegration.label       "系统集成">
+<!ENTITY alwaysCheckDefault.label      "启动时检查 &brandShortName; 是否为默认邮件客户端">
+<!ENTITY alwaysCheckDefault.accesskey  "A">
+<!ENTITY searchIntegration.label       "允许 &searchIntegration.engineName; 搜索邮件">
+<!ENTITY searchIntegration.accesskey   "S">
+<!ENTITY checkDefaultsNow.label        "立即检查…">
+<!ENTITY checkDefaultsNow.accesskey    "N">
+<!ENTITY configEditDesc.label          "高级配置">
+<!ENTITY configEdit.label              "配置编辑器…">
+<!ENTITY configEdit.accesskey          "C">
+<!ENTITY returnReceiptsInfo.label      "指定 &brandShortName; 如何处理回执">
+<!ENTITY showReturnReceipts.label      "回执…">
+<!ENTITY showReturnReceipts.accesskey  "R">
+
+<!-- Data Choices -->
+<!ENTITY telemetrySection.label          "遥测">
+<!ENTITY telemetryDesc.label             "与 &vendorShortName; 分享您使用 &vendorShortName; 邮件客户端的工作性能、使用方式、硬件设备和有关自定义的数据，帮助我们改进 &brandShortName;，让它变得更好。">
+<!ENTITY enableTelemetry.label           "启用遥测">
+<!ENTITY enableTelemetry.accesskey       "T">
+<!ENTITY telemetryLearnMore.label        "详细了解">
+
+<!ENTITY crashReporterSection.label      "崩溃报告器">
+<!ENTITY crashReporterDesc.label         "&brandShortName; 提交崩溃报告可以帮助 &vendorShortName; 改进您的邮件客户端，让它变得更加稳定和安全。">
+<!ENTITY enableCrashReporter.label       "启用崩溃报告器">
+<!ENTITY enableCrashReporter.accesskey   "C">
+<!ENTITY crashReporterLearnMore.label    "详细了解">
+
+<!-- Update -->
+<!-- LOCALIZATION NOTE (updateApp.label):
+  Strings from aboutDialog.dtd are displayed in this section of the preferences.
+  Please check for possible accesskey conflicts.
+-->
+<!ENTITY updateApp2.label                "&brandShortName; 更新">
+<!-- LOCALIZATION NOTE (updateApp.version.*): updateApp.version.pre is
+  followed by a version number, keep the trailing space or replace it with
+  a different character as needed. updateApp.version.post is displayed after
+  the version number, and is empty on purpose for English. You can use it
+  if required by your language.
+ -->
+<!ENTITY updateApp.version.pre           "版本: ">
+<!ENTITY updateApp.version.post          "">
+<!ENTITY updateAuto.label                "自动安装更新（推荐：可提升安全性）">
+<!ENTITY updateAuto.accesskey            "A">
+<!ENTITY updateCheck.label               "检查更新，但是让我选择是否安装">
+<!ENTITY updateCheck.accesskey           "C">
+<!ENTITY updateManual.label              "不检查更新（不推荐：存在安全风险）">
+<!ENTITY updateManual.accesskey          "N">
+<!ENTITY updateHistory.label             "显示更新历史">
+<!ENTITY updateHistory.accesskey         "p">
+
+<!ENTITY useService.label                "使用后台服务来安装更新">
+<!ENTITY useService.accesskey            "b">
+
+<!-- Networking and Disk Space -->
+<!ENTITY showSettings.label            "设置…">
+<!ENTITY showSettings.accesskey        "S">
+<!ENTITY proxiesConfigure.label        "配置 &brandShortName; 如何连接至国际互联网">
+<!ENTITY connectionsInfo.caption       "连接">
+<!ENTITY offlineInfo.caption           "脱机">
+<!ENTITY offlineInfo.label             "配置脱机设置">
+<!ENTITY showOffline.label             "脱机…">
+<!ENTITY showOffline.accesskey         "O">
+
+<!ENTITY Diskspace                       "磁盘空间">
+<!ENTITY offlineCompactFolders.label     "需要节省空间时压缩全部文件夹">
+<!ENTITY offlineCompactFolders.accesskey "a">
+<!ENTITY offlineCompactFoldersMB.label   "MB 合计">
+
+<!-- LOCALIZATION NOTE:
+  The entities useCacheBefore.label and useCacheAfter.label appear on a single
+  line in preferences as follows:
+
+  &useCacheBefore.label  [ textbox for cache size in MB ]   &useCacheAfter.label;
+-->
+<!ENTITY useCacheBefore.label            "最多使用">
+<!ENTITY useCacheBefore.accesskey        "U">
+<!ENTITY useCacheAfter.label             "MB 磁盘空间作为缓存">
+<!ENTITY overrideSmartCacheSize.label    "覆盖自动缓存管理">
+<!ENTITY overrideSmartCacheSize.accesskey "v">
+<!ENTITY clearCacheNow.label             "立即清空">
+<!ENTITY clearCacheNow.accesskey         "C">
+
+<!-- Certificates -->
+<!ENTITY certSelection.description       "当某个服务器索取我的个人证书时：">
+<!ENTITY certs.auto                      "自动选择">
+<!ENTITY certs.auto.accesskey            "S">
+<!ENTITY certs.ask                       "每次均询问">
+<!ENTITY certs.ask.accesskey             "A">
+<!ENTITY enableOCSP.label                "查询 OCSP 响应服务器以确认证书的当前有效性">
+<!ENTITY enableOCSP.accesskey            "Q">
+
+<!ENTITY manageCertificates.label "管理证书">
+<!ENTITY manageCertificates.accesskey "M">
+<!ENTITY viewSecurityDevices.label "安全设备">
+<!ENTITY viewSecurityDevices.accesskey "D">

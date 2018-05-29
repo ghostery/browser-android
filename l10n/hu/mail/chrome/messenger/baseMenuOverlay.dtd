@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Help Menu -->
+<!ENTITY helpMenu.label "Súgó">
+<!ENTITY helpMenu.accesskey "S">
+<!-- LOCALIZATION NOTE some localizations of Windows use "?"
+                       for the help button in the menubar but Gnome does not.   -->
+<!ENTITY helpMenuWin.label "Súgó">
+<!ENTITY helpMenuWin.accesskey "S">
+<!ENTITY helpTroubleshootingInfo.label     "Hibakeresési információ">
+<!ENTITY helpTroubleshootingInfo.accesskey "H">
+<!ENTITY helpSafeMode.label     "Újraindítás letiltott kiegészítőkkel…">
+<!ENTITY helpSafeMode.accesskey "r">
+<!ENTITY releaseCmd2.label "Verzióinformáció">
+<!ENTITY releaseCmd2.accesskey "V">
+<!ENTITY whatsNewCmd.label "Újdonságok">
+<!ENTITY whatsNewCmd.accesskey "d">
+<!ENTITY openHelp.label "Tartalom">
+<!ENTITY openHelp.accesskey "T">
+<!ENTITY openHelp.commandkey "VK_F1">
+<!ENTITY openHelpMac.label "&brandShortName; súgó">
+<!ENTITY openHelpMac2.label "&brandFullName; Súgó">
+<!ENTITY openHelpMac2.commandkey   "?">
+<!ENTITY openHelpMac2.modifiers    "accel">
+
+<!ENTITY aboutMenuCmd.label "A &brandShortName; névjegye">
+<!ENTITY aboutMenuCmd.accesskey "n">
+
+<!ENTITY aboutMenuCmd2.label "A &brandFullName; névjegye">
+<!ENTITY aboutMenuCmd2.accesskey "n">

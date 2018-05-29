@@ -1,0 +1,57 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!-- history.xul, history-panel.xul, placesOverlay.xul -->
+
+
+<!ENTITY historyWindowTitle.label       "Histórico">
+<!ENTITY menuBar.tooltip                "Menu (clique para exibir)">
+<!ENTITY searchBar.tooltip              "Barra de pesquisa">
+
+<!ENTITY search.placeholder             "Localizar no histórico">
+<!ENTITY search.key                     "f">
+<!ENTITY view.label                     "Visualizar">
+
+<!ENTITY view.columns.label             "Exibir colunas">
+<!ENTITY view.columns.accesskey         "u">
+<!ENTITY view.sortBy.label              "Ordenar por">
+<!ENTITY view.sortBy.accesskey          "O">
+<!ENTITY view.groupBy.label             "Agrupar por">
+<!ENTITY view.groupBy.accesskey         "A">
+
+<!ENTITY view.unsorted.label            "Não ordenar">
+<!ENTITY view.unsorted.accesskey        "N">
+<!ENTITY view.sortAscending.label       "Ordem crescente">
+<!ENTITY view.sortAscending.accesskey   "c">
+<!ENTITY view.sortDescending.label      "Ordem decrescente">
+<!ENTITY view.sortDescending.accesskey  "d">
+
+<!ENTITY view.groupNone.label           "Não agrupar">
+<!ENTITY view.groupNone.accesskey       "N">
+<!ENTITY view.groupDay.label            "Data">
+<!ENTITY view.groupDay.accesskey        "D">
+<!ENTITY view.groupSite.label           "Endereço">
+<!ENTITY view.groupSite.accesskey       "E">
+<!ENTITY view.groupDayAndSite.label     "Data e endereço">
+<!ENTITY view.groupDayAndSite.accesskey "o">
+
+<!ENTITY cmd.open.label                 "Abrir">
+<!ENTITY cmd.open.accesskey             "A">
+<!ENTITY cmd.open_window.label          "Abrir endereço em nova janela">
+<!ENTITY cmd.open_window.accesskey      "e">
+<!ENTITY cmd.open_tab.label             "Abrir endereço em nova aba">
+<!ENTITY cmd.open_tab.accesskey         "v">
+
+<!ENTITY bookmarkLinkCmd.label          "Criar marcador para este link…">
+<!ENTITY bookmarkLinkCmd.accesskey      "C">
+<!ENTITY bookmarkLinksCmd.label         "Criar marcador para estes links">
+<!ENTITY bookmarkLinksCmd.accesskey     "C">
+
+<!ENTITY col.title.label                "Título">
+<!ENTITY col.title.accesskey            "T">
+<!ENTITY col.url.label                  "Endereço">
+<!ENTITY col.url.accesskey              "E">
+<!ENTITY col.lastvisit.label            "Último acesso">
+<!ENTITY col.lastvisit.accesskey        "a">
+<!ENTITY col.visitcount.label           "Contador de acessos">
+<!ENTITY col.visitcount.accesskey       "C">

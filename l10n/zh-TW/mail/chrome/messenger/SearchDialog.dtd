@@ -1,0 +1,81 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- for SearchDialog.xul -->
+<!ENTITY searchHeading.label         "搜尋訊息於:">
+<!ENTITY searchHeading.accesskey     "h">
+<!ENTITY searchSubfolders.label      "搜尋子資料夾">
+<!ENTITY searchSubfolders.accesskey  "e">
+<!ENTITY searchOnServer.label        "在伺服器上執行搜尋">
+<!ENTITY searchOnServer.accesskey    "u">
+<!ENTITY resetButton.label           "清除">
+<!ENTITY resetButton.accesskey       "C">
+<!ENTITY openButton.label            "開啟">
+<!ENTITY openButton.accesskey        "n">
+<!ENTITY deleteButton.label          "刪除">
+<!ENTITY deleteButton.accesskey      "D">
+<!ENTITY searchDialogTitle.label     "搜尋訊息">
+<!ENTITY results.label               "結果">
+<!ENTITY moveButton.label            "移至">
+<!ENTITY moveButton.accesskey        "T">
+<!ENTITY closeCmd.key                "W"> 
+<!ENTITY openInFolder.label          "在資料夾開啟">
+<!ENTITY openInFolder.accesskey      "r">
+<!ENTITY saveAsVFButton.label        "存為即時搜尋資料夾">
+<!ENTITY saveAsVFButton.accesskey    "v">
+
+<!-- for ABSearchDialog.xul -->
+<!ENTITY abSearchHeading.label       "尋找:">
+<!ENTITY abSearchHeading.accesskey   "h">
+<!ENTITY propertiesButton.label      "屬性">
+<!ENTITY propertiesButton.accesskey  "P">
+<!ENTITY composeButton.label         "寫信">
+<!ENTITY composeButton.accesskey     "W">
+<!ENTITY deleteCardButton.label      "刪除">
+<!ENTITY deleteCardButton.accesskey  "D">
+<!ENTITY abSearchDialogTitle.label   "進階通訊錄搜尋">
+
+<!-- Thread Pane -->
+<!ENTITY threadColumn.label "主題">
+<!ENTITY fromColumn.label "從">
+<!ENTITY recipientColumn.label "收件者">
+<!ENTITY correspondentColumn.label "通訊者">
+<!ENTITY subjectColumn.label "主旨">
+<!ENTITY dateColumn.label "日期">
+<!ENTITY priorityColumn.label "重要性">
+<!ENTITY tagsColumn.label "標籤">
+<!ENTITY accountColumn.label "帳號">
+<!ENTITY statusColumn.label "狀態">
+<!ENTITY sizeColumn.label "大小">
+<!ENTITY junkStatusColumn.label "垃圾信狀態">
+<!ENTITY unreadColumn.label "未讀">
+<!ENTITY totalColumn.label "全部">
+<!ENTITY readColumn.label "已讀">
+<!ENTITY receivedColumn.label "接收時間">
+<!ENTITY starredColumn.label "已標星號">
+<!ENTITY locationColumn.label "地點">
+<!ENTITY idColumn.label "收件順序">
+
+<!-- Thread Pane Tooltips -->
+<!ENTITY columnChooser2.tooltip "選擇要顯示的欄位">
+<!ENTITY threadColumn2.tooltip "顯示訊息討論串">
+<!ENTITY fromColumn2.tooltip "依照寄件者排序">
+<!ENTITY recipientColumn2.tooltip "依照收件者排序">
+<!ENTITY correspondentColumn2.tooltip "依照通訊者排序">
+<!ENTITY subjectColumn2.tooltip "依照主旨排序">
+<!ENTITY dateColumn2.tooltip "依照日期排序">
+<!ENTITY priorityColumn2.tooltip "依照重要性排序">
+<!ENTITY tagsColumn2.tooltip "依照標籤排序">
+<!ENTITY accountColumn2.tooltip "依照帳號排序">
+<!ENTITY statusColumn2.tooltip "依照狀態排序">
+<!ENTITY sizeColumn2.tooltip "依照大小排序">
+<!ENTITY junkStatusColumn2.tooltip "依照垃圾信狀態排序">
+<!ENTITY unreadColumn2.tooltip "討論串中未讀訊息數量">
+<!ENTITY totalColumn2.tooltip "討論串中所有訊息數量">
+<!ENTITY readColumn2.tooltip "依照是否已讀排序">
+<!ENTITY receivedColumn2.tooltip "依照接收日期排序">
+<!ENTITY starredColumn2.tooltip "依照星號狀態排序">
+<!ENTITY locationColumn2.tooltip "依照位置">
+<!ENTITY idColumn2.tooltip "依照接收順序排序">
+

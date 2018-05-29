@@ -1,0 +1,80 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  fontsAndEncodingsDialog.title           "字型與字元編碼">
+
+<!ENTITY  language.label                          "對應此種語言:">
+<!ENTITY  language.accesskey                      "t">
+
+<!ENTITY  size.label                              "大小:">
+<!ENTITY  sizeProportional.accesskey              "e">
+<!ENTITY  sizeMonospace.accesskey                 "i">
+
+<!ENTITY  proportional.label                      "比例字型:">
+<!ENTITY  proportional.accesskey                  "P">
+
+<!ENTITY  serif.label                             "襯線字型:">
+<!ENTITY  serif.accesskey                         "S">
+<!ENTITY  sans-serif.label                        "無襯線字型:">
+<!ENTITY  sans-serif.accesskey                    "n">
+<!ENTITY  monospace.label                         "等寬字型:">
+<!ENTITY  monospace.accesskey                     "M">
+
+<!-- LOCALIZATION NOTE (font.langGroup.latin) :
+     Translate "Latin" as the name of Latin (Roman) script, not as the name of the Latin language. -->
+<!ENTITY  font.langGroup.latin                    "拉丁文">
+<!ENTITY  font.langGroup.japanese                 "日文">
+<!ENTITY  font.langGroup.trad-chinese             "正體中文（繁體，臺灣）">
+<!ENTITY  font.langGroup.simpl-chinese            "簡體中文">
+<!ENTITY  font.langGroup.trad-chinese-hk          "正體中文（繁體，香港）">
+<!ENTITY  font.langGroup.korean                   "韓文">
+<!ENTITY  font.langGroup.cyrillic                 "俄文／西里爾文字">
+<!ENTITY  font.langGroup.el                       "希臘文">
+<!ENTITY  font.langGroup.other                    "其他文字系統">
+<!ENTITY  font.langGroup.thai                     "泰文">
+<!ENTITY  font.langGroup.hebrew                   "希伯來文">
+<!ENTITY  font.langGroup.arabic                   "阿拉伯文">
+<!ENTITY  font.langGroup.devanagari               "天城體（梵文）">
+<!ENTITY  font.langGroup.tamil                    "坦米爾文">
+<!ENTITY  font.langGroup.armenian                 "亞美尼亞文">
+<!ENTITY  font.langGroup.bengali                  "孟加拉文">
+<!ENTITY  font.langGroup.canadian                 "加拿大統一音節字">
+<!ENTITY  font.langGroup.ethiopic                 "衣索比亞文">
+<!ENTITY  font.langGroup.georgian                 "喬治亞文">
+<!ENTITY  font.langGroup.gujarati                 "古吉拉特文">
+<!ENTITY  font.langGroup.gurmukhi                 "古魯穆奇字">
+<!ENTITY  font.langGroup.khmer                    "高棉文">
+<!ENTITY  font.langGroup.malayalam                "馬拉亞拉姆文">
+<!ENTITY  font.langGroup.math                     "數學方程式">
+<!ENTITY  font.langGroup.odia                     "奧里亞文">
+<!ENTITY  font.langGroup.telugu                   "泰盧固文">
+<!ENTITY  font.langGroup.kannada                  "康納達文">
+<!ENTITY  font.langGroup.sinhala                  "僧加羅文">
+<!ENTITY  font.langGroup.tibetan                  "藏文">
+<!-- Minimum font size -->
+<!ENTITY minSize.label                            "最小字型大小:">
+<!ENTITY minSize.accesskey                        "z">
+<!ENTITY minSize.none                             "無">
+
+<!-- default font type -->
+<!ENTITY  useDefaultFontSerif.label               "襯線字型 (Serif)">
+<!ENTITY  useDefaultFontSansSerif.label           "無襯線字型 (Sans Serif)">
+
+<!-- fonts in message -->
+<!ENTITY  fontControl.label                       "字型控制">
+<!ENTITY  useFixedWidthForPlainText.label         "純文字郵件使用等寬字型">
+<!ENTITY  fixedWidth.accesskey                    "x">
+<!ENTITY  useDocumentFonts.label                  "允許郵件指定其它字型">
+<!ENTITY  useDocumentFonts.accesskey              "o">
+
+<!-- Language settings -->
+<!ENTITY sendDefaultCharset.label         "外寄的郵件:">
+<!ENTITY sendDefaultCharset.accesskey     "u">
+<!ENTITY languagesTitle2.label            "文字編碼">
+<!ENTITY composingDescription2.label      "指定收發郵件時的預設文字編碼">
+
+<!ENTITY viewDefaultCharsetList.label     "收到的郵件:">
+<!ENTITY viewDefaultCharsetList.accesskey  "I">
+<!ENTITY replyInDefaultCharset3.label     "可用時，在回信中使用預設文字編碼">
+<!ENTITY replyInDefaultCharset3.accesskey "h">

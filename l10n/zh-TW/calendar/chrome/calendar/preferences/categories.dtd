@@ -1,0 +1,24 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.categories.new.title "新增分類">
+<!ENTITY pref.categories.newButton.label "新增…">
+<!ENTITY pref.categories.newButton.accesskey "N">
+<!ENTITY pref.categories.edit.title "編輯類別">
+<!ENTITY pref.categories.editButton.label "編輯…">
+<!ENTITY pref.categories.editButton.accesskey "E">
+<!ENTITY pref.categories.removeButton.label "移除">
+<!ENTITY pref.categories.removeButton.accesskey "R">
+<!ENTITY pref.categories.name.label "名稱">
+<!ENTITY pref.categories.color.label "色彩">
+<!ENTITY pref.categories.usecolor.label "使用色彩">
+<!ENTITY pref.categories.none.label "(無)">
+<!ENTITY pref.categories.overwrite "有相同名稱的類別存在。\n 您要覆寫嗎？">
+<!ENTITY pref.categories.overwrite.title "警告: 重複的名稱">
+<!ENTITY pref.categories.noBlankCategories "您必須輸入類別名稱。">

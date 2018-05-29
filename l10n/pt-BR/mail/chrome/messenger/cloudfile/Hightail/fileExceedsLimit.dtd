@@ -1,0 +1,6 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<!ENTITY fileExceedsLimit.title   "Hightail">
+<!ENTITY fileExceedsLimit.thatsBigFile3 "O envio de arquivos maiores que 50 MB somente é suportado em contas premium.">
+<!ENTITY fileExceedsLimit.style "width: 40em; min-height: 20em;">

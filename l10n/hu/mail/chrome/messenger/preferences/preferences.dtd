@@ -1,0 +1,29 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  windowClose.key                  "w">
+<!ENTITY  preferencesDefaultTitleMac.title "Beállítások">
+<!ENTITY  preferencesDefaultTitleWin.title "Beállítások">
+<!ENTITY  preferencesCloseButton.label     "Bezárás">
+<!ENTITY  preferencesCloseButton.accesskey "B">
+
+<!ENTITY  prefWindow.titleWin     "Beállítások">
+<!ENTITY  prefWindow.titleGNOME   "A &brandShortName; beállításai">
+<!ENTITY  prefWindow.titleMAC     "Beállítások">
+<!ENTITY  prefWindow.styleWindows "width: 55em; min-height: 38.5em;">
+<!ENTITY  prefWindow.styleMac     "width: 55em;">
+<!ENTITY  prefWindow.styleGNOME   "width: 57em; min-height: 38em;">
+
+<!ENTITY paneGeneral.title        "Általános">
+<!ENTITY paneDisplay.title        "Megjelenítés">
+<!ENTITY paneComposition.title    "Szerkesztés">
+<!ENTITY paneChat.title           "Csevegés">
+<!ENTITY paneAttachments.title    "Mellékletek">
+<!ENTITY panePrivacy.title        "Adatvédelem">
+<!ENTITY paneSecurity.title       "Biztonság">
+<!ENTITY paneAdvanced.title       "Speciális">
+<!ENTITY paneAccount.title        "Postafiókok">
+
+<!ENTITY okButton.title           "OK">
+<!ENTITY okButton.accesskey       "O">

@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.alarmgoesoff.label "Quando um alarme dispara:">
+<!ENTITY pref.playasound "Tocar som">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "T">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "Use som padrão">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "U">
+<!ENTITY pref.calendar.alarms.sound.browse.label "Procurar…">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "P">
+<!ENTITY pref.calendar.alarms.sound.play.label "Reproduzir">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "p">
+<!ENTITY pref.showalarmbox "Mostrar aviso">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "M">
+<!ENTITY pref.missedalarms "Mostrar alarmes vencidos">
+<!ENTITY pref.missedalarms2 "Mostrar lembretes perdidos para calendários com permissão de escita">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "v">
+<!ENTITY pref.calendar.alarms.defaults.label "Padrões para alarmes">
+<!ENTITY pref.defalarm4events.label "Configuração padrão de alarmes para eventos:">
+<!ENTITY pref.defalarm4events.accesskey "C">
+<!ENTITY pref.defalarm4todos.label "Configuração padrão de alarmes para tarefas:">
+<!ENTITY pref.defalarm4todos.accesskey "f">
+<!ENTITY pref.alarm.on "Ativado">
+<!ENTITY pref.alarm.off "Desativado">
+<!ENTITY pref.defalarmlen4events.label "Antecedência padrão de alarmes para eventos:">
+<!ENTITY pref.defalarmlen4events.accesskey "A">
+<!ENTITY pref.defalarmlen4todos.label "Antecedência padrão de alarmes para tarefas:">
+<!ENTITY pref.defalarmlen4todos.accesskey "n">
+
+<!ENTITY pref.defaultsnoozelength.label "Duração padrão da soneca:" >
+<!ENTITY pref.defaultsnoozelength.accesskey "s">

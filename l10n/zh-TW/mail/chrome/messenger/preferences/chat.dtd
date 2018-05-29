@@ -1,0 +1,64 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  generalTab.label            "一般">
+
+<!ENTITY  startupAction.label         "當 &brandShortName; 啟動時:">
+<!ENTITY  startupAction.accesskey     "S">
+<!ENTITY  startupOffline.label        "保持我的聊天帳號離線">
+<!ENTITY  startupConnectAuto.label    "自動連線到我的聊天帳號">
+
+<!-- LOCALIZATION NOTE: reportIdleAfter.label is displayed first, then
+there's a field where the user can enter a number, and itemTime is
+displayed at the end of the line. The translations of the
+reportIdleAfter.label and idleTime parts don't have to mean the exact
+same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  reportIdleAfter.label         "讓我的聯絡人在超過">
+<!ENTITY  reportIdleAfter.accesskey     "I">
+<!ENTITY  idleTime                      "分鐘沒有使用後知道我正在閒置">
+
+<!ENTITY  andSetStatusToAway.label      "並將我的狀態設定為不在電腦前，且加上此狀態訊息:">
+<!ENTITY  andSetStatusToAway.accesskey  "a">
+
+<!ENTITY  sendTyping.label              "在對話中傳送正在輸入的通知">
+<!ENTITY  sendTyping.accesskey          "t">
+
+<!ENTITY  chatNotifications.label             "收到只傳給您的私訊時:">
+<!ENTITY  desktopChatNotifications.label      "顯示通知:">
+<!ENTITY  desktopChatNotifications.accesskey  "c">
+<!ENTITY  completeNotification.label          "包含寄件者名稱與訊息預覽">
+<!ENTITY  buddyInfoOnly.label                 "只有寄件者名稱">
+<!ENTITY  dummyNotification.label             "不顯示任何資訊">
+<!ENTITY  getAttention.label                  "閃爍工具列項目">
+<!ENTITY  getAttention.accesskey              "F">
+<!ENTITY  getAttentionMac.label               "在 dock 圖示顯示動畫">
+<!ENTITY  getAttentionMac.accesskey           "o">
+<!ENTITY  chatSound.accesskey                 "d">
+<!ENTITY  chatSound.label                     "播放音效">
+<!ENTITY  play.label                          "播放">
+<!ENTITY  play.accesskey                      "P">
+<!ENTITY  systemSound.label                   "系統預設音效">
+<!ENTITY  systemSound.accesskey               "D">
+<!ENTITY  customsound.label                   "使用下列音效檔案">
+<!ENTITY  customsound.accesskey               "U">
+<!ENTITY  browse.label                        "瀏覽…">
+<!ENTITY  browse.accesskey                    "B">
+
+<!ENTITY messageStyleTab.title             "訊息樣式">
+<!ENTITY messageStylePreview.label         "預覽:">
+<!ENTITY messageStyleTheme.label           "佈景主題:">
+<!ENTITY messageStyleTheme.accesskey       "T">
+<!ENTITY messageStyleThunderbirdTheme.label "Thunderbird">
+<!ENTITY messageStyleBubblesTheme.label    "泡泡">
+<!ENTITY messageStyleDarkTheme.label       "暗色">
+<!ENTITY messageStylePaperSheetsTheme.label "紙張">
+<!ENTITY messageStyleSimpleTheme.label     "簡單">
+<!ENTITY messageStyleDefaultTheme.label    "預設">
+<!ENTITY messageStyleVariant.label         "動態:">
+<!ENTITY messageStyleVariant.accesskey     "V">
+<!ENTITY messageStyleShowHeader.label      "顯示標題">
+<!ENTITY messageStyleShowHeader.accesskey  "H">
+<!ENTITY messageStyleNoPreview.title       "沒有可用預覽">
+<!ENTITY messageStyleNoPreview.description "此佈景主題無效，或無法使用（停用了附加元件、處於安全模式等等）。">

@@ -1,0 +1,24 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+
+<!ENTITY pref.categories.new.title "Új kategória">
+<!ENTITY pref.categories.newButton.label "Új…">
+<!ENTITY pref.categories.newButton.accesskey "j">
+<!ENTITY pref.categories.edit.title "Kategória szerkesztése">
+<!ENTITY pref.categories.editButton.label "Szerkesztés…">
+<!ENTITY pref.categories.editButton.accesskey "S">
+<!ENTITY pref.categories.removeButton.label "Eltávolítás">
+<!ENTITY pref.categories.removeButton.accesskey "E">
+<!ENTITY pref.categories.name.label "Név">
+<!ENTITY pref.categories.color.label "Szín">
+<!ENTITY pref.categories.usecolor.label "Szín használata">
+<!ENTITY pref.categories.none.label "(egyik sem)">
+<!ENTITY pref.categories.overwrite "Már létezik ilyen nevű kategória. \n Felülírja?">
+<!ENTITY pref.categories.overwrite.title "Figyelmeztetés: már van ilyen név">
+<!ENTITY pref.categories.noBlankCategories "Be kell írnia egy kategórianevet.">

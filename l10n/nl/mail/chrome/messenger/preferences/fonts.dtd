@@ -1,0 +1,80 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  fontsAndEncodingsDialog.title           "Lettertypen &amp; tekensets">
+
+<!ENTITY  language.label                          "Lettertypen voor:">
+<!ENTITY  language.accesskey                      "L">
+
+<!ENTITY  size.label                              "Grootte:">
+<!ENTITY  sizeProportional.accesskey              "G">
+<!ENTITY  sizeMonospace.accesskey                 "o">
+
+<!ENTITY  proportional.label                      "Proportioneel:">
+<!ENTITY  proportional.accesskey                  "P">
+
+<!ENTITY  serif.label                             "Met schreef:">
+<!ENTITY  serif.accesskey                         "s">
+<!ENTITY  sans-serif.label                        "Schreefloos:">
+<!ENTITY  sans-serif.accesskey                    "c">
+<!ENTITY  monospace.label                         "Monospace:">
+<!ENTITY  monospace.accesskey                     "M">
+
+<!-- LOCALIZATION NOTE (font.langGroup.latin) :
+     Translate "Latin" as the name of Latin (Roman) script, not as the name of the Latin language. -->
+<!ENTITY  font.langGroup.latin                    "Latijns">
+<!ENTITY  font.langGroup.japanese                 "Japans">
+<!ENTITY  font.langGroup.trad-chinese             "Traditioneel Chinees (Taiwan)">
+<!ENTITY  font.langGroup.simpl-chinese            "Vereenvoudigd Chinees">
+<!ENTITY  font.langGroup.trad-chinese-hk          "Traditioneel Chinees (Hongkong)">
+<!ENTITY  font.langGroup.korean                   "Koreaans">
+<!ENTITY  font.langGroup.cyrillic                 "Cyrillisch">
+<!ENTITY  font.langGroup.el                       "Grieks">
+<!ENTITY  font.langGroup.other                    "Andere schriftsystemen">
+<!ENTITY  font.langGroup.thai                     "Thais">
+<!ENTITY  font.langGroup.hebrew                   "Hebreeuws">
+<!ENTITY  font.langGroup.arabic                   "Arabisch">
+<!ENTITY  font.langGroup.devanagari               "Devanagari">
+<!ENTITY  font.langGroup.tamil                    "Tamil">
+<!ENTITY  font.langGroup.armenian                 "Armeens">
+<!ENTITY  font.langGroup.bengali                  "Bengaals">
+<!ENTITY  font.langGroup.canadian                 "Verenigd Canadees lettergreepschrift">
+<!ENTITY  font.langGroup.ethiopic                 "Ethiopisch">
+<!ENTITY  font.langGroup.georgian                 "Georgisch">
+<!ENTITY  font.langGroup.gujarati                 "Gujarati">
+<!ENTITY  font.langGroup.gurmukhi                 "Gurmukhi">
+<!ENTITY  font.langGroup.khmer                    "Khmer">
+<!ENTITY  font.langGroup.malayalam                "Malayalam">
+<!ENTITY  font.langGroup.math                     "Wiskunde">
+<!ENTITY  font.langGroup.odia                     "Odia">
+<!ENTITY  font.langGroup.telugu                   "Telugu">
+<!ENTITY  font.langGroup.kannada                  "Kannada">
+<!ENTITY  font.langGroup.sinhala                  "Singalees">
+<!ENTITY  font.langGroup.tibetan                  "Tibetaans">
+<!-- Minimum font size -->
+<!ENTITY minSize.label                            "Minimale lettergrootte:">
+<!ENTITY minSize.accesskey                        "n">
+<!ENTITY minSize.none                             "Geen">
+
+<!-- default font type -->
+<!ENTITY  useDefaultFontSerif.label               "Met schreef">
+<!ENTITY  useDefaultFontSansSerif.label           "Schreefloos">
+
+<!-- fonts in message -->
+<!ENTITY  fontControl.label                       "Lettertype-instellingen">
+<!ENTITY  useFixedWidthForPlainText.label         "Vastebreedtelettertype gebruiken voor plattetekstberichten">
+<!ENTITY  fixedWidth.accesskey                    "b">
+<!ENTITY  useDocumentFonts.label                  "Berichten toestaan om andere lettertypen te gebruiken">
+<!ENTITY  useDocumentFonts.accesskey              "a">
+
+<!-- Language settings -->
+<!ENTITY sendDefaultCharset.label         "Uitgaande e-mailberichten:">
+<!ENTITY sendDefaultCharset.accesskey     "U">
+<!ENTITY languagesTitle2.label            "Tekstcodering">
+<!ENTITY composingDescription2.label      "De standaard tekstcodering voor verzenden en ontvangen van e-mailberichten instellen">
+
+<!ENTITY viewDefaultCharsetList.label     "Inkomende e-mailberichten:">
+<!ENTITY viewDefaultCharsetList.accesskey "e">
+<!ENTITY replyInDefaultCharset3.label     "Wanneer mogelijk, de standaard tekstcodering gebruiken in antwoorden">
+<!ENTITY replyInDefaultCharset3.accesskey "W">

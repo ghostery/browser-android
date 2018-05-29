@@ -1,0 +1,22 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY systemIntegration.title  "系統整合">
+<!ENTITY acceptIntegration.label  "設為預設帳號">
+<!ENTITY cancelIntegration.label  "略過整合">
+<!ENTITY cancelIntegration2.label  "取消">
+<!ENTITY defaultClient.intro  "使用 &brandShortName; 作為預設用戶端:">
+
+<!ENTITY email.label "電子郵件">
+<!ENTITY newsgroups.label "新聞群組">
+<!ENTITY feeds.label "消息來源">
+
+<!ENTITY unsetDefault.tooltip "您無法在 &brandShortName; 當中將 &brandShortName; 作為預設郵件軟體的設定取消。若您要將其他軟體作為預設郵件軟體，請使用該軟體自己的「設為預設值」對話框。">
+
+<!ENTITY checkOnStartup.label "每次啟動 &brandShortName; 時都重新檢查">
+<!ENTITY checkOnStartup.accesskey "a">
+
+<!ENTITY searchIntegration.label "允許 &searchIntegration.engineName; 搜尋訊息">
+<!ENTITY searchIntegration.accesskey "s">
+

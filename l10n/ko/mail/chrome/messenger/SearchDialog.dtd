@@ -1,0 +1,80 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- for SearchDialog.xul -->
+<!ENTITY searchHeading.label         "검색:">
+<!ENTITY searchHeading.accesskey     "h">
+<!ENTITY searchSubfolders.label 		 "하위 폴더 검색">
+<!ENTITY searchSubfolders.accesskey  "e">
+<!ENTITY searchOnServer.label        "서버에서 검색 실행">
+<!ENTITY searchOnServer.accesskey    "u">
+<!ENTITY resetButton.label           "초기화">
+<!ENTITY resetButton.accesskey       "C">
+<!ENTITY openButton.label            "열기">
+<!ENTITY openButton.accesskey        "n">
+<!ENTITY deleteButton.label          "삭제">
+<!ENTITY deleteButton.accesskey      "D">
+<!ENTITY searchDialogTitle.label     "메시지 검색">
+<!ENTITY results.label               "결과">
+<!ENTITY moveButton.label            "이동">
+<!ENTITY moveButton.accesskey        "T">
+<!ENTITY closeCmd.key                "W">
+<!ENTITY openInFolder.label          "폴더 열기">
+<!ENTITY openInFolder.accesskey      "r">
+<!ENTITY saveAsVFButton.label        "검색 폴더를 새 이름으로 저장">
+<!ENTITY saveAsVFButton.accesskey    "v">
+
+<!-- for ABSearchDialog.xul -->
+<!ENTITY abSearchHeading.label       "검색:">
+<!ENTITY abSearchHeading.accesskey   "h">
+<!ENTITY propertiesButton.label      "속성">
+<!ENTITY propertiesButton.accesskey  "P">
+<!ENTITY composeButton.label         "쓰기">
+<!ENTITY composeButton.accesskey     "W">
+<!ENTITY deleteCardButton.label      "삭제">
+<!ENTITY deleteCardButton.accesskey  "D">
+<!ENTITY abSearchDialogTitle.label   "주소록 검색">
+
+<!-- Thread Pane -->
+<!ENTITY threadColumn.label          "글타래">
+<!ENTITY fromColumn.label            "보낸 사람">
+<!ENTITY recipientColumn.label       "받는 사람">
+<!ENTITY correspondentColumn.label   "글 쓴 사람">
+<!ENTITY subjectColumn.label         "제목">
+<!ENTITY dateColumn.label            "날짜">
+<!ENTITY priorityColumn.label        "중요도">
+<!ENTITY tagsColumn.label            "태그">
+<!ENTITY accountColumn.label         "계정">
+<!ENTITY statusColumn.label          "메일 상태">
+<!ENTITY sizeColumn.label            "크기">
+<!ENTITY junkStatusColumn.label      "스팸 상태">
+<!ENTITY unreadColumn.label          "읽지 않음">
+<!ENTITY totalColumn.label           "전체">
+<!ENTITY readColumn.label            "읽음">
+<!ENTITY receivedColumn.label        "받은 편지함">
+<!ENTITY starredColumn.label         "별표">
+<!ENTITY locationColumn.label        "주소">
+<!ENTITY idColumn.label              "받은 순서">
+
+<!-- Thread Pane Tooltips -->
+<!ENTITY columnChooser2.tooltip       "표시할 항목 선택">
+<!ENTITY threadColumn2.tooltip        "메시지 표시">
+<!ENTITY fromColumn2.tooltip          "보낸 사람 순으로 정렬">
+<!ENTITY recipientColumn2.tooltip     "받는 사람으로 정렬">
+<!ENTITY correspondentColumn2.tooltip "글 쓴 사람으로 정렬">
+<!ENTITY subjectColumn2.tooltip       "제목으로 정렬">
+<!ENTITY dateColumn2.tooltip          "날짜로 정렬">
+<!ENTITY priorityColumn2.tooltip      "중요도로 정렬">
+<!ENTITY tagsColumn2.tooltip          "태그로 정렬하기">
+<!ENTITY accountColumn2.tooltip       "계정별로 정렬">
+<!ENTITY statusColumn2.tooltip        "메일 상태로 정렬">
+<!ENTITY sizeColumn2.tooltip          "크기로 정렬">
+<!ENTITY junkStatusColumn2.tooltip    "스팸 상태로 정렬">
+<!ENTITY unreadColumn2.tooltip        "글타래의 읽지 않은 메일 수">
+<!ENTITY totalColumn2.tooltip         "메시지 전체 개수">
+<!ENTITY readColumn2.tooltip          "읽은 상태로 정렬">
+<!ENTITY receivedColumn2.tooltip      "받은 날짜 순으로 정렬">
+<!ENTITY starredColumn2.tooltip       "별표로 정렬">
+<!ENTITY locationColumn2.tooltip      "주소로 정렬">
+<!ENTITY idColumn2.tooltip            "받은 순서로 정렬">

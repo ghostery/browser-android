@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  typeColumn.label            "Tartalomtípus">
+<!ENTITY  typeColumn.accesskey        "T">
+
+<!ENTITY  actionColumn2.label         "Művelet">
+<!ENTITY  actionColumn2.accesskey     "M">
+
+<!ENTITY  focusSearch1.key            "f">
+<!ENTITY  focusSearch2.key            "k">
+
+<!ENTITY  filter.placeholder          "Keresés">
+
+<!ENTITY saveTo.label                 "Fájlok mentése">
+<!ENTITY saveTo.accesskey             "m">
+<!ENTITY alwaysAsk.label              "Rákérdezés a fájlok letöltési helyére">
+<!ENTITY alwaysAsk.accesskey          "R">
+<!ENTITY chooseFolderWin.label        "Tallózás…">
+<!ENTITY chooseFolderWin.accesskey    "T">
+<!ENTITY chooseFolderMac.label        "Tallózás…">
+<!ENTITY chooseFolderMac.accesskey    "T">
+
+<!ENTITY attachments.incoming.label   "Bejövő">
+<!ENTITY attachments.outgoing.label   "Kimenő">
+
+<!ENTITY addCloudFileAccount1.label       "Hozzáadás…">
+<!ENTITY addCloudFileAccount1.accesskey   "H">
+<!ENTITY addCloudFileAccount.description  "Adjon hozzá új óriásfájl-küldési tárolószolgáltatást">
+<!ENTITY removeCloudFileAccount.label     "Eltávolítás">
+<!ENTITY removeCloudFileAccount.accesskey "E">
+<!ENTITY authRequired.description         "Engedélyeznie kell a tárolószolgáltatás beállításainak megtekintését.">
+<!ENTITY authRequired.button.label        "Engedélyezés">
+<!ENTITY authRequired.button.accesskey    "E">
+
+<!ENTITY enableCloudFileAccountOffer.label "Fájlmegosztás ajánlása, ha a fájl nagyobb, mint">
+<!ENTITY enableCloudFileAccountOffer.mb "MB">

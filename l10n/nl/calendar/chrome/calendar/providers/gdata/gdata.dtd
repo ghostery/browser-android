@@ -1,0 +1,22 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY gdata-provider.label "Google Agenda">
+
+<!ENTITY gdata.privacy.default.label "Google standaard">
+<!ENTITY gdata.privacy.default.accesskey "s">
+
+<!ENTITY gdata.migration.title "Alleen-lezenagenda’s migreren">
+<!ENTITY gdata.migration.description "De provider voor Google Agenda heeft gedetecteerd dat u bestaande agenda’s hebt die Google Agenda alleen in alleen-lezenmodus kunnen benaderen. Als u een of meer van deze agenda’s wilt bijwerken, selecteer deze dan hieronder.">
+<!ENTITY gdata.migration.upgrade.label "Bijwerken">
+<!ENTITY gdata.migration.upgrade.accesskey "B">
+<!ENTITY gdata.migration.showagain.label "Altijd controleren">
+
+<!ENTITY gdata.reminder.default "Standaardherinnering">
+<!ENTITY gdata.reminder.action.sms.label "Een tekstbericht verzenden">
+
+<!ENTITY gdata.wizard.session.description "Kies een bestaande sessie of voer uw e-mailadres in om een nieuwe sessie aan te maken. U hebt maar één sessie per account nodig.">
+<!ENTITY gdata.wizard.calendars.description "Selecteer de agenda’s en takenlijsten waarop u zich wilt abonneren.">
+
+<!ENTITY gdata.wizard.nextstep.description "Ga verder met de volgende stap om uw agenda’s in te stellen.">

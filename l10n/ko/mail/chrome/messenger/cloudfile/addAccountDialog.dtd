@@ -1,0 +1,13 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<!ENTITY addAccountDialog.title			"Filelink 설정">
+<!ENTITY addAccountDialog.menuTitle		"온라인 스토리지 서비스 선택">
+<!ENTITY addAccountDialog.style			"width: 40em; min-height: 20em;"><!-- en-US: "width: 40em; min-height: 20em;" -->
+<!ENTITY addAccountDialog.accountName.label	"계정명:">
+<!ENTITY addAccountDialog.noAccountText		"죄송합니다만 &brandShortName;현재 버전은 서비스 마다 하나의 계정 밖에 이용할 수 없습니다.">
+<!ENTITY addAccountDialog.createAccountText2	"파일 크기가 큰 첨부 파일은 온라인 스토리지 서비스를 이용해 전송할 수 있습니다. 서비스의 기존 계정에 접속 가능해야 하며 새 계정을 등록해 주십시오.">
+<!ENTITY addAccountDialog.authorizing		"계정 인증 중…">
+<!ENTITY addAccountDialog.error			"계정 설정 중 오류가 발생했습니다.">
+<!ENTITY addAccountDialog.acceptButton.label	"설정"><!-- "Set up Account" -->
+<!ENTITY addAccountDialog.learnMore		"기능 소개…">

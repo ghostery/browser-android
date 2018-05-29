@@ -1,0 +1,40 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY messengerStartPage.label         "&brandShortName;-startpagina">
+<!ENTITY enableStartPage.label            "Wanneer &brandShortName; start, de startpagina in het berichtgedeelte tonen">
+<!ENTITY enableStartPage.accesskey        "W">
+<!ENTITY location.label                   "Locatie:">
+<!ENTITY location1.accesskey              "L">
+<!ENTITY useDefault.label                 "Standaardinstelling herstellen">
+<!ENTITY useDefault.accesskey             "S">
+
+<!ENTITY changeDockIconOptions.label      "Voorkeuren van het programmasymbool wijzigen">
+<!ENTITY dockOptions.label                "Programmasymboolopties…">
+<!ENTITY dockOptions.accesskey            "P">
+
+<!ENTITY newMessagesArrive.label          "Als nieuwe berichten binnenkomen:">
+<!ENTITY playSound.label                  "Een geluid afspelen">
+<!ENTITY playSound1.accesskey             "u">
+<!ENTITY playSoundMac.label               "Het volgende geluidsbestand afspelen:">
+<!ENTITY playSoundMac.accesskey           "v">
+<!ENTITY showAnimatedAlert.label          "Een waarschuwing tonen">
+<!ENTITY showAnimatedAlert.accesskey      "r">
+<!ENTITY notificationAlertSettings2.label "Waarschuwingen en het standaardgeluid kunnen worden uitgeschakeld via het paneel Berichtgeving in Systeemvoorkeuren.">
+<!ENTITY customizeMailAlert.label         "Aanpassen…">
+<!ENTITY customizeMailAlert.accesskey     "A">
+
+<!ENTITY showTrayIcon.label               "Een systeemvakpictogram tonen">
+<!ENTITY showTrayIcon.accesskey           "t">
+
+<!ENTITY play.label                       "Afspelen">
+<!ENTITY play.accesskey                   "f">
+<!ENTITY systemsound.label                "Standaard systeemgeluid voor nieuwe e-mail">
+<!ENTITY systemsound.accesskey            "y">
+<!ENTITY customsound.label                "Het volgende geluidsbestand gebruiken">
+<!ENTITY customsound.accesskey            "v">
+<!ENTITY browse.label                     "Bladeren…">
+<!ENTITY browse.accesskey                 "B">
+
+<!ENTITY defaultSearchEngine.label        "Standaardzoekmachine">

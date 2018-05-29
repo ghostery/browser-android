@@ -1,0 +1,64 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  generalTab.label            "Általános">
+
+<!ENTITY  startupAction.label         "A &brandShortName; indításakor:">
+<!ENTITY  startupAction.accesskey     "s">
+<!ENTITY  startupOffline.label        "A csevegőfiókok kapcsolat nélküli módban legyenek">
+<!ENTITY  startupConnectAuto.label    "Automatikus csatlakozás a csevegőfiókokhoz">
+
+<!-- LOCALIZATION NOTE: reportIdleAfter.label is displayed first, then
+there's a field where the user can enter a number, and itemTime is
+displayed at the end of the line. The translations of the
+reportIdleAfter.label and idleTime parts don't have to mean the exact
+same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  reportIdleAfter.label         "Partnereim értesítése tétlen állapotomról">
+<!ENTITY  reportIdleAfter.accesskey     "P">
+<!ENTITY  idleTime                      "perc tétlenség után">
+
+<!ENTITY  andSetStatusToAway.label      "Az állapotom beállítása távollevőre ezzel az üzenettel:">
+<!ENTITY  andSetStatusToAway.accesskey  "A">
+
+<!ENTITY  sendTyping.label              "A beszélgetések során értesítés küldése a gépelésről">
+<!ENTITY  sendTyping.accesskey          "k">
+
+<!ENTITY  chatNotifications.label             "Önnek címzett új üzenet érkezésekor:">
+<!ENTITY  desktopChatNotifications.label      "Értesítés megjelenítése:">
+<!ENTITY  desktopChatNotifications.accesskey  "r">
+<!ENTITY  completeNotification.label          "feladó nevével és az üzenet előnézetével">
+<!ENTITY  buddyInfoOnly.label                 "csak a feladó nevével">
+<!ENTITY  dummyNotification.label             "információ nélkül">
+<!ENTITY  getAttention.label                  "A tálca elem felvillantása">
+<!ENTITY  getAttention.accesskey              "f">
+<!ENTITY  getAttentionMac.label               "Dokkolóikon animálása">
+<!ENTITY  getAttentionMac.accesskey           "o">
+<!ENTITY  chatSound.accesskey                 "H">
+<!ENTITY  chatSound.label                     "Hangjelzés">
+<!ENTITY  play.label                          "Lejátszás">
+<!ENTITY  play.accesskey                      "L">
+<!ENTITY  systemSound.label                   "Alapértelmezett rendszerhang az új üzenethez">
+<!ENTITY  systemSound.accesskey               "A">
+<!ENTITY  customsound.label                   "A következő hangfájl használata">
+<!ENTITY  customsound.accesskey               "v">
+<!ENTITY  browse.label                        "Tallózás…">
+<!ENTITY  browse.accesskey                    "T">
+
+<!ENTITY messageStyleTab.title             "Üzenetstílusok">
+<!ENTITY messageStylePreview.label         "Előnézet:">
+<!ENTITY messageStyleTheme.label           "Téma:">
+<!ENTITY messageStyleTheme.accesskey       "T">
+<!ENTITY messageStyleThunderbirdTheme.label "Thunderbird">
+<!ENTITY messageStyleBubblesTheme.label    "Buborékok">
+<!ENTITY messageStyleDarkTheme.label       "Sötét">
+<!ENTITY messageStylePaperSheetsTheme.label "Papírlapok">
+<!ENTITY messageStyleSimpleTheme.label     "Egyszerű">
+<!ENTITY messageStyleDefaultTheme.label    "Alapértelmezett">
+<!ENTITY messageStyleVariant.label         "Változat:">
+<!ENTITY messageStyleVariant.accesskey     "V">
+<!ENTITY messageStyleShowHeader.label      "Fejléc megjelenítése">
+<!ENTITY messageStyleShowHeader.accesskey  "F">
+<!ENTITY messageStyleNoPreview.title       "Nem érhető el előnézet">
+<!ENTITY messageStyleNoPreview.description "Ez a téma nem érvényes, vagy jelenleg nem érhető el (letiltott kiegészítő, biztonságos mód, …).">

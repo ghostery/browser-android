@@ -1,0 +1,48 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemJunk.label          "스팸">
+<!ENTITY itemPhishing.label      "사기 메일">
+<!ENTITY itemPasswords.label     "암호">
+<!ENTITY itemAntiVirus.label     "안티 바이러스">
+
+<!-- Junk Mail Controls -->
+<!ENTITY junkMail.intro "기본 스팸 메일 설정을 하시기 바랍니다. 각 계정마다 스팸 메일 설정을 별도로 하실 수 있습니다.">
+<!ENTITY manualMark.label "스팸으로 선택할 때:">
+<!ENTITY manualMark.accesskey "W">
+<!ENTITY manualMarkModeMove.label "계정 내 &quot;스팸&quot; 폴더로 이동">
+<!ENTITY manualMarkModeMove.accesskey "o">
+<!ENTITY manualMarkModeDelete.label "바로 삭제">
+<!ENTITY manualMarkModeDelete.accesskey "D">
+<!ENTITY markAsReadOnSpam.label "스팸으로 표시된 메시지는 읽은 것으로 표시">
+<!ENTITY markAsReadOnSpam.accesskey "M">
+<!ENTITY enableAdaptiveJunkLogging.label "스팸 메일 적응 필터 기록 사용함">
+<!ENTITY enableAdaptiveJunkLogging.accesskey "E">
+<!ENTITY openJunkLog.label "로그 보기">
+<!ENTITY openJunkLog.accesskey "S">
+<!ENTITY resetTrainingData.label "스팸 학습 데이터 재설정">
+<!ENTITY resetTrainingData.accesskey "R">
+
+<!-- Phishing Detector -->
+<!ENTITY phishingDetector1.intro  "&brandShortName;는 여러분을 속이는 사기 기법을 찾아 메일의 사기성 여부를 분석합니다.">
+<!ENTITY enablePhishingDetector1.label    "사기 메일로 의심될 때 알려 주기">
+<!ENTITY enablePhishingDetector1.accesskey  "T">
+<!ENTITY useDownloadedList.label "사기 메일 의심 목록 이용">
+<!ENTITY useDownloadedList.accesskey "U">
+
+<!-- Passwords -->
+<!ENTITY savedPasswords.intro           "&brandShortName;는 계정 암호를 저장할 수 있습니다.">
+<!ENTITY useMasterPassword.label        "기본 암호 사용">
+<!ENTITY useMasterPassword.accesskey    "U">
+<!ENTITY masterPassword.intro           "기본 암호는 모든 일반 암호를 보호합니다. 프로그램 다시 시작할 때 다시 입력해야 합니다.">
+<!ENTITY changeMasterPassword.label     "기본 암호 변경…">
+<!ENTITY changeMasterPassword.accesskey "C">
+<!ENTITY savedPasswords.label           "저장된 암호 목록…">
+<!ENTITY savedPasswords.accesskey       "S">
+
+<!-- Anti Virus -->
+<!ENTITY antiVirus.intro      "&brandShortName;는 안티 바이러스 소프트웨어를 통해 받은 메시지를 PC에 저장하기 전에 검사할 수 있습니다.">
+<!ENTITY antiVirus.label      "안티 바이러스 프로그램이 개별 메시지 검사 허용">
+<!ENTITY antiVirus.accesskey  "A">
+

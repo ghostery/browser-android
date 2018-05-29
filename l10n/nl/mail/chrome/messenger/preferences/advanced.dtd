@@ -1,0 +1,122 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label       "Algemeen">
+<!ENTITY dataChoicesTab.label    "Gegevenskeuzes">
+<!ENTITY itemUpdate.label        "Update">
+<!ENTITY itemNetworking.label    "Netwerk &amp; schijfruimte">
+<!ENTITY itemCertificates.label  "Certificaten">
+
+<!-- General Settings -->
+<!ENTITY enableGlodaSearch.label       "Globaal zoeken en indexer activeren">
+<!ENTITY enableGlodaSearch.accesskey   "G">
+<!ENTITY dateTimeFormatting.label      "Datum- en tijdopmaak">
+<!ENTITY allowHWAccel.label            "Hardwareversnelling gebruiken wanneer beschikbaar">
+<!ENTITY allowHWAccel.accesskey        "v">
+<!ENTITY storeType.label               "Type berichtenopslag voor nieuwe accounts:">
+<!ENTITY storeType.accesskey           "b">
+<!ENTITY mboxStore2.label              "Eén bestand per map (mbox)">
+<!ENTITY maildirStore.label            "Eén bestand per bericht (maildir)">
+
+<!ENTITY scrolling.label               "Scrollen">
+<!ENTITY useAutoScroll.label           "Automatisch scrollen gebruiken">
+<!ENTITY useAutoScroll.accesskey       "m">
+<!ENTITY useSmoothScrolling.label      "Vloeiend scrollen gebruiken">
+<!ENTITY useSmoothScrolling.accesskey  "e">
+
+<!ENTITY systemIntegration.label       "Systeemintegratie">
+<!ENTITY alwaysCheckDefault.label      "Altijd tijdens het opstarten controleren of &brandShortName; de standaard e-mailclient is">
+<!ENTITY alwaysCheckDefault.accesskey  "A">
+<!ENTITY searchIntegration.label       "&searchIntegration.engineName; toestaan om berichten te doorzoeken">
+<!ENTITY searchIntegration.accesskey   "t">
+<!ENTITY checkDefaultsNow.label        "Nu controleren…">
+<!ENTITY checkDefaultsNow.accesskey    "N">
+<!ENTITY configEditDesc.label          "Uitgebreide configuratie">
+<!ENTITY configEdit.label              "Configuratie-editor…">
+<!ENTITY configEdit.accesskey          "C">
+<!ENTITY returnReceiptsInfo.label      "Bepalen hoe &brandShortName; omgaat met leesbevestigingen">
+<!ENTITY showReturnReceipts.label      "Leesbevestigingen…">
+<!ENTITY showReturnReceipts.accesskey  "L">
+
+<!-- Data Choices -->
+<!ENTITY telemetrySection.label          "Telemetry">
+<!ENTITY telemetryDesc.label             "Deelt gegevens over prestaties, hardware, gebruik en aanpassingen van uw e-mailclient met &vendorShortName; om &brandShortName; te helpen verbeteren">
+<!ENTITY enableTelemetry.label           "Telemetry inschakelen">
+<!ENTITY enableTelemetry.accesskey       "T">
+<!ENTITY telemetryLearnMore.label        "Meer info">
+
+<!ENTITY crashReporterSection.label      "Crashreporter">
+<!ENTITY crashReporterDesc.label         "&brandShortName; verzendt crashrapporten om &vendorShortName; te helpen uw e-mailclient stabieler en veiliger te maken">
+<!ENTITY enableCrashReporter.label       "Crashreporter inschakelen">
+<!ENTITY enableCrashReporter.accesskey   "C">
+<!ENTITY crashReporterLearnMore.label    "Meer info">
+
+<!-- Update -->
+<!-- LOCALIZATION NOTE (updateApp.label):
+  Strings from aboutDialog.dtd are displayed in this section of the preferences.
+  Please check for possible accesskey conflicts.
+-->
+<!ENTITY updateApp2.label                 "&brandShortName;-updates">
+<!-- LOCALIZATION NOTE (updateApp.version.*): updateApp.version.pre is
+  followed by a version number, keep the trailing space or replace it with
+  a different character as needed. updateApp.version.post is displayed after
+  the version number, and is empty on purpose for English. You can use it
+  if required by your language.
+ -->
+<!ENTITY updateApp.version.pre           "Versie ">
+<!ENTITY updateApp.version.post          "">
+<!ENTITY updateAuto.label                "Updates automatisch installeren (aanbevolen: verbeterde beveiliging)">
+<!ENTITY updateAuto.accesskey            "U">
+<!ENTITY updateCheck.label               "Controleren op updates, maar mij laten kiezen of ik deze wil installeren">
+<!ENTITY updateCheck.accesskey           "C">
+<!ENTITY updateManual.label              "Nooit controleren op updates (niet aanbevolen: beveiligingsrisico)">
+<!ENTITY updateManual.accesskey          "N">
+<!ENTITY updateHistory.label             "Updategeschiedenis tonen">
+<!ENTITY updateHistory.accesskey         "d">
+
+<!ENTITY useService.label                "Een achtergrondservice gebruiken om updates te installeren">
+<!ENTITY useService.accesskey            "a">
+
+<!-- Networking and Disk Space -->
+<!ENTITY showSettings.label            "Instellingen…">
+<!ENTITY showSettings.accesskey        "I">
+<!ENTITY proxiesConfigure.label        "Configureren hoe &brandShortName; verbinding maakt met het internet">
+<!ENTITY connectionsInfo.caption       "Verbinding">
+<!ENTITY offlineInfo.caption           "Offline">
+<!ENTITY offlineInfo.label             "Offline-instellingen configureren">
+<!ENTITY showOffline.label             "Offline…">
+<!ENTITY showOffline.accesskey         "O">
+
+<!ENTITY Diskspace                       "Schijfruimte">
+<!ENTITY offlineCompactFolders.label     "Alle mappen comprimeren als dit meer bespaart dan">
+<!ENTITY offlineCompactFolders.accesskey "m">
+<!ENTITY offlineCompactFoldersMB.label   "MB in totaal">
+
+<!-- LOCALIZATION NOTE:
+  The entities useCacheBefore.label and useCacheAfter.label appear on a single
+  line in preferences as follows:
+
+  &useCacheBefore.label  [ textbox for cache size in MB ]   &useCacheAfter.label;
+-->
+<!ENTITY useCacheBefore.label            "Tot">
+<!ENTITY useCacheBefore.accesskey        "T">
+<!ENTITY useCacheAfter.label             "MB ruimte gebruiken voor de buffer">
+<!ENTITY overrideSmartCacheSize.label    "Automatisch bufferbeheer negeren">
+<!ENTITY overrideSmartCacheSize.accesskey "A">
+<!ENTITY clearCacheNow.label             "Nu wissen">
+<!ENTITY clearCacheNow.accesskey         "w">
+
+<!-- Certificates -->
+<!ENTITY certSelection.description       "Wanneer een server om mijn persoonlijke certificaat vraagt:">
+<!ENTITY certs.auto                      "Er automatisch een selecteren">
+<!ENTITY certs.auto.accesskey            "a">
+<!ENTITY certs.ask                       "Mij elke keer vragen">
+<!ENTITY certs.ask.accesskey             "e">
+<!ENTITY enableOCSP.label                "OCSP-responderservers vragen om de huidige geldigheid van certificaten te bevestigen">
+<!ENTITY enableOCSP.accesskey            "v">
+
+<!ENTITY manageCertificates.label       "Certificaten beheren">
+<!ENTITY manageCertificates.accesskey   "C">
+<!ENTITY viewSecurityDevices.label      "Beveiligingsapparaten">
+<!ENTITY viewSecurityDevices.accesskey  "B">

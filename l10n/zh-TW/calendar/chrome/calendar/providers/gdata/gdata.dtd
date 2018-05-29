@@ -1,0 +1,23 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY gdata-provider.label "Google Calendar">
+
+<!ENTITY gdata.privacy.default.label "Google 預設值">
+<!ENTITY gdata.privacy.default.accesskey "D">
+
+<!ENTITY gdata.migration.title "轉移唯讀的行事曆">
+<!ENTITY gdata.migration.description "Google Calendar 提供者發現您擁有只能使用於唯讀模式的行事曆。若您想要升級這些行事曆，請在下面選擇">
+<!ENTITY gdata.migration.upgrade.label "升級">
+<!ENTITY gdata.migration.upgrade.accesskey "U">
+<!ENTITY gdata.migration.showagain.label "總是檢查 ">
+
+<!ENTITY gdata.reminder.default "預設提醒">
+<!ENTITY gdata.reminder.action.sms.label "傳送手機簡訊">
+
+<!ENTITY gdata.wizard.session.description "請選擇現有的連線階段，或輸入您的電子郵件地址以建立新的連線階段。每個帳號您只需要建立一個連線。">
+<!ENTITY gdata.wizard.calendars.description "請選擇您要訂閱的行事曆與工作清單。">
+
+<!ENTITY gdata.wizard.nextstep.description "請前往下一步設定您的行事曆。">
+

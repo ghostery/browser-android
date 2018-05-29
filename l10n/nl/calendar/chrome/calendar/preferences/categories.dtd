@@ -1,0 +1,24 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.categories.new.title "Nieuwe categorie">
+<!ENTITY pref.categories.newButton.label "Nieuw…">
+<!ENTITY pref.categories.newButton.accesskey "N">
+<!ENTITY pref.categories.edit.title "Categorie bewerken">
+<!ENTITY pref.categories.editButton.label "Bewerken…">
+<!ENTITY pref.categories.editButton.accesskey "B">
+<!ENTITY pref.categories.removeButton.label "Verwijderen">
+<!ENTITY pref.categories.removeButton.accesskey "V">
+<!ENTITY pref.categories.name.label "Naam">
+<!ENTITY pref.categories.color.label "Kleur">
+<!ENTITY pref.categories.usecolor.label "Kleur gebruiken">
+<!ENTITY pref.categories.none.label "(geen)">
+<!ENTITY pref.categories.overwrite "Er bestaat al een categorie met deze naam. \n Wilt u deze overschrijven?">
+<!ENTITY pref.categories.overwrite.title "Waarschuwing: dubbele naam">
+<!ENTITY pref.categories.noBlankCategories "U moet een categorienaam invoeren.">

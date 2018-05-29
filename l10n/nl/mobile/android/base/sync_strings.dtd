@@ -1,0 +1,115 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Don't localize these. They're here until they have
+     a better place to live. -->
+<!ENTITY syncBrand.fullName.label "Firefox Sync">
+<!ENTITY syncBrand.shortName.label "Sync">
+
+<!-- Main titles. -->
+<!ENTITY sync.title.connect.label 'Verbinden met &syncBrand.shortName.label;'>
+
+<!-- J-PAKE Key Screen -->
+<!ENTITY sync.subtitle.connect.label 'Selecteer ‘&syncBrand.shortName.label; instellen’ op uw nieuwe apparaat om het te activeren.'>
+<!ENTITY sync.subtitle.pair.label 'Selecteer ‘Een apparaat koppelen’ op uw andere apparaat om het te activeren.'>
+<!ENTITY sync.pin.default.label '...\n...\n...\n'>
+<!ENTITY sync.link.nodevice.label 'Ik heb het apparaat niet bij me…'>
+
+<!-- Configure Engines -->
+<!ENTITY sync.configure.engines.title.passwords2 'Aanmeldingen'>
+<!ENTITY sync.configure.engines.title.history 'Geschiedenis'>
+<!ENTITY sync.configure.engines.title.tabs 'Tabbladen'>
+
+<!-- Localization note (sync.default.client.name): Default string of the "Device
+     name" menu item upon setting up Firefox Sync.  The placeholder &formatS1
+     will be replaced by the name of the Firefox release channel and &formatS2
+     by the model name of the Android device. Examples look like "Aurora on
+     GT-I1950" and "Fennec on MI 2S". -->
+<!ENTITY sync.default.client.name '&formatS1; op &formatS2;'>
+
+<!-- Bookmark folder strings -->
+<!ENTITY bookmarks.folder.menu.label 'Bladwijzermenu'>
+<!ENTITY bookmarks.folder.places.label ''>
+<!ENTITY bookmarks.folder.tags.label 'Labels'>
+<!ENTITY bookmarks.folder.toolbar.label 'Bladwijzerwerkbalk'>
+<!ENTITY bookmarks.folder.other.label 'Andere bladwijzers'>
+<!ENTITY bookmarks.folder.desktop.label 'Desktop-bladwijzers'>
+<!ENTITY bookmarks.folder.mobile.label 'Mobiel-bladwijzers'>
+<!-- Pinned sites on about:home. This folder should never be shown to the user, but we have to give it a string name -->
+<!ENTITY bookmarks.folder.pinned.label 'Vastgemaakt'>
+
+<!-- Firefox Account strings. -->
+
+<!-- Localization note: these are shown in screens after the user has
+     created or signed in to an account, and take the user back to
+     Firefox. -->
+<!ENTITY fxaccount_back_to_browsing 'Terug naar navigeren'>
+
+<!ENTITY fxaccount_getting_started_welcome_to_sync 'Welkom bij &syncBrand.shortName.label;'>
+<!ENTITY fxaccount_getting_started_description2 'Meld u aan om uw tabbladen, bladwijzers, aanmeldingen en meer te synchroniseren.'>
+<!ENTITY fxaccount_getting_started_get_started 'Beginnen'>
+<!ENTITY fxaccount_getting_started_old_firefox 'Gebruikt u een oudere versie van &syncBrand.shortName.label;?'>
+
+<!ENTITY fxaccount_status_auth_server 'Accountserver'>
+<!ENTITY fxaccount_status_sync_now 'Nu synchroniseren'>
+<!ENTITY fxaccount_status_syncing2 'Synchroniseren…'>
+<!ENTITY fxaccount_status_device_name 'Apparaatnaam'>
+<!ENTITY fxaccount_status_sync_server 'Sync-server'>
+<!ENTITY fxaccount_status_needs_verification2 'Uw account moet worden geverifieerd. Tik om de verificatie-e-mail opnieuw te verzenden.'>
+<!ENTITY fxaccount_status_needs_credentials 'Kan niet verbinden. Tik om u aan te melden.'>
+<!ENTITY fxaccount_status_needs_upgrade 'U dient &brandShortName; te upgraden om u aan te melden.'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled '&syncBrand.shortName.label; is ingesteld, maar synchroniseert niet automatisch. Schakel ‘Automatisch synchroniseren’ om in Android-instellingen &gt; Gegevensgebruik.'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 '&syncBrand.shortName.label; is ingesteld, maar synchroniseert niet automatisch. Schakel ‘Automatisch synchroniseren’ om in het menu van Android-instellingen &gt; Accounts.'>
+<!ENTITY fxaccount_status_needs_finish_migrating 'Tik om u aan te melden bij uw nieuwe Firefox-account.'>
+<!ENTITY fxaccount_status_choose_what 'Kies wat u wilt synchroniseren'>
+<!ENTITY fxaccount_status_bookmarks 'Bladwijzers'>
+<!ENTITY fxaccount_status_history 'Geschiedenis'>
+<!ENTITY fxaccount_status_passwords2 'Aanmeldingen'>
+<!ENTITY fxaccount_status_tabs 'Open tabbladen'>
+<!ENTITY fxaccount_status_additional_settings 'Extra instellingen'>
+<!ENTITY fxaccount_pref_sync_use_metered2 'Alleen synchroniseren via wifi'>
+<!-- Localization note: Only affects background syncing, user initiated
+     syncs will still be done regardless of the connection -->
+<!ENTITY fxaccount_pref_sync_use_metered_summary2 'Voorkomen dat &brandShortName; synchroniseert via een gsm-netwerk of netwerk naar gebruik'>
+<!ENTITY fxaccount_status_legal 'Juridisch' >
+<!-- Localization note: when tapped, the following two strings link to
+     external web pages.  Compare fxaccount_policy_{linktos,linkprivacy}:
+     these strings are separated to accommodate languages that decline
+     the two uses differently. -->
+<!ENTITY fxaccount_status_linktos2 'Servicevoorwaarden'>
+<!ENTITY fxaccount_status_linkprivacy2 'Privacyverklaring'>
+<!ENTITY fxaccount_remove_account 'Verbreken&ellipsis;'>
+
+<!ENTITY fxaccount_remove_account_dialog_title2 'Verbinding met Sync verbreken?'>
+<!ENTITY fxaccount_remove_account_dialog_message2 'Uw navigatiegegevens blijven op dit apparaat bestaan, maar er wordt niet meer met uw account gesynchroniseerd.'>
+<!-- Localization note: format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_remove_account_toast2 'Firefox-account &formatS; verbroken.'>
+<!-- Localization note (fxaccount_remove_account_dialog_action_confirm): This is the label for the
+ confirm button in the dialog that shows up when disconnecting from sync. -->
+<!ENTITY fxaccount_remove_account_dialog_action_confirm 'Verbreken'>
+
+<!ENTITY fxaccount_enable_debug_mode 'Debugmodus inschakelen'>
+
+<!-- Localization note: this is the name shown by the Android system
+     itself for a Firefox Account. Don't localize this. -->
+<!ENTITY fxaccount_account_type_label 'Firefox'>
+
+<!-- Localization note: these are shown by the Android system itself,
+     when the user navigates to the Android > Accounts > {Firefox
+     Account} Screen. The link takes the user to the Firefox Account
+     status activity, which lets them manage their Firefox
+     Account. -->
+<!ENTITY fxaccount_options_title '&syncBrand.shortName.label;-opties'>
+<!ENTITY fxaccount_options_configure_title '&syncBrand.shortName.label; configureren'>
+
+<!ENTITY fxaccount_sync_sign_in_error_notification_title2 '&syncBrand.shortName.label; is niet verbonden'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_sign_in_error_notification_text2 'Tik om u aan te melden als &formatS;'>
+
+<!ENTITY fxaccount_sync_finish_migrating_notification_title '&syncBrand.shortName.label; upgraden voltooien?'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_finish_migrating_notification_text 'Tik om u aan te melden als &formatS;'>

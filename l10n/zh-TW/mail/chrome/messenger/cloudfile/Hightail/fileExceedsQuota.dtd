@@ -1,0 +1,8 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<!ENTITY fileExceedsQuota.title   "Hightail">
+<!ENTITY fileExceedsQuota.storageLimitReached   "超出儲存空間限制">
+<!ENTITY fileExceedsQuota.description "您的帳號的 2GB 儲存空間已滿。">
+<!ENTITY fileExceedsQuota.description1 "您目前已經使用了 #XXX GB 的儲存空間。">
+

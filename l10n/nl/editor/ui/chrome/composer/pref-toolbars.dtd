@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.toolbars.title    "Werkbalken">
+
+<!ENTITY composition.caption    "Deze knoppen tonen in de compositiewerkbalk:">
+
+<!ENTITY new.label              "Nieuw">
+<!ENTITY open.label             "Openen">
+<!ENTITY save.label             "Opslaan">
+<!ENTITY publish.label          "Publiceren">
+<!ENTITY preview.label          "Bekijken">
+<!ENTITY cut.label              "Knippen">
+<!ENTITY copy.label             "Kopiëren">
+<!ENTITY paste.label            "Plakken">
+<!ENTITY print.label            "Afdrukken">
+<!ENTITY find.label             "Zoeken">
+<!ENTITY image.label            "Afbeelding">
+<!ENTITY hline.label            "H. lijn">
+<!ENTITY table.label            "Tabel">
+<!ENTITY link.label             "Koppeling">
+<!ENTITY anchor.label           "Anker">
+
+<!ENTITY formatting.caption     "Deze knoppen tonen in de opmaakwerkbalk:">
+
+<!ENTITY smaller.label          "Kleiner">
+<!ENTITY larger.label           "Groter">
+<!ENTITY bold.label             "Vet">
+<!ENTITY bullets.label          "Bollen">
+<!ENTITY numbers.label          "Nummers">
+<!ENTITY italic.label           "Cursief">
+<!ENTITY outdent.label          "Uitspringen">
+<!ENTITY indent.label           "Inspringen">
+<!ENTITY underline.label        "Onderstrepen">
+
+<!ENTITY absolutePosition.label "Absolute positionering">
+<!ENTITY decreaseZIndex.label   "Naar achteren sturen">
+<!ENTITY increaseZIndex.label   "Naar voren brengen">

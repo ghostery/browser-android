@@ -1,0 +1,54 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.mainbox.label "일반 설정" >
+<!ENTITY pref.dateformat.label "날짜 형식:" >
+<!ENTITY pref.dateformat.accesskey "D">
+<!ENTITY pref.dateformat.long "긴 형식" >
+<!ENTITY pref.dateformat.short "짧은 형식"  >
+
+<!ENTITY pref.timezones.caption "시간대">
+<!ENTITY pref.timezones.label "여러분의 시간대에서 가장 가까운 도시를 고르세요:">
+<!ENTITY pref.timezones.accesskey "S">
+
+<!ENTITY pref.defaults.label "기본 값">
+<!ENTITY pref.events.label "이벤트">
+<!ENTITY pref.tasks.label "태스크">
+
+<!ENTITY pref.default_event_length.label "기본 시간:" >
+<!ENTITY pref.default_event_length.accesskey "E">
+
+<!ENTITY pref.default_task_none.label "없음">
+<!ENTITY pref.default_task_start_of_day.label "하루의  시작">
+<!ENTITY pref.default_task_end_of_day.label "하루의 끝">
+<!ENTITY pref.default_task_tomorrow.label "내일">
+<!ENTITY pref.default_task_next_week.label "다음 주">
+<!ENTITY pref.default_task_offset_current.label "지금 시간부터">
+<!ENTITY pref.default_task_offset_start.label "시작 시간 부터">
+<!ENTITY pref.default_task_offset_next_hour.label "다음 시간 부터">
+
+<!ENTITY pref.calendar.todaypane.agenda.caption "오늘 창">
+<!ENTITY pref.soondays.label "다가오는 이벤트 섹션:">
+<!ENTITY pref.soondays.accesskey "u">
+
+<!-- LOCALIZATION NOTE (pref.soondays2.label):
+     "Upcoming" is the name of a section and the translation must match the
+     translation of that section name (calendar.upcoming.button.label). Also,
+     it should be upper case (as a proper name) if the target language permits.
+  -->
+<!ENTITY pref.soondays2.label "다가오는 이벤트 섹션:">
+<!ENTITY pref.soondays2.accesskey "U">
+
+<!ENTITY pref.accessibility.label "접근성" >
+<!ENTITY pref.systemcolors.label "시스템 색상 최적화" >
+<!ENTITY pref.systemcolors.accesskey "c">
+
+<!ENTITY pref.eventsandtasks.label "이벤트와 할일" >
+<!ENTITY pref.editInTab.label "다이얼로그 창이 아닌 탭에서 이벤트와 할일을 편집합니다." >
+<!ENTITY pref.editInTab.accesskey "t">

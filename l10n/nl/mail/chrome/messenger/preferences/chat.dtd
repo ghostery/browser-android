@@ -1,0 +1,64 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  generalTab.label            "Algemeen">
+
+<!ENTITY  startupAction.label         "Als &brandShortName; start:">
+<!ENTITY  startupAction.accesskey     "s">
+<!ENTITY  startupOffline.label        "Mijn chataccounts offline houden">
+<!ENTITY  startupConnectAuto.label    "Mijn chataccounts automatisch verbinden">
+
+<!-- LOCALIZATION NOTE: reportIdleAfter.label is displayed first, then
+there's a field where the user can enter a number, and itemTime is
+displayed at the end of the line. The translations of the
+reportIdleAfter.label and idleTime parts don't have to mean the exact
+same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  reportIdleAfter.label         "Mijn contacten na">
+<!ENTITY  reportIdleAfter.accesskey     "c">
+<!ENTITY  idleTime                      "minuten inactiviteit laten weten dat ik niet actief ben">
+
+<!ENTITY  andSetStatusToAway.label      "en mijn status op Afwezig instellen met dit statusbericht:">
+<!ENTITY  andSetStatusToAway.accesskey  "A">
+
+<!ENTITY  sendTyping.label              "Typemeldingen verzenden in conversaties">
+<!ENTITY  sendTyping.accesskey          "T">
+
+<!ENTITY  chatNotifications.label             "Als er aan u geadresseerde berichten binnenkomen:">
+<!ENTITY  desktopChatNotifications.label      "Een melding tonen">
+<!ENTITY  desktopChatNotifications.accesskey  "m">
+<!ENTITY  completeNotification.label          "met naam van de afzender en voorbeeld van het bericht">
+<!ENTITY  buddyInfoOnly.label                 "met alleen de naam van de afzender">
+<!ENTITY  dummyNotification.label             "zonder informatie">
+<!ENTITY  getAttention.label                  "Het taakbalkitem laten knipperen">
+<!ENTITY  getAttention.accesskey              "k">
+<!ENTITY  getAttentionMac.label               "Het programmasymbool bewegen">
+<!ENTITY  getAttentionMac.accesskey           "r">
+<!ENTITY  chatSound.accesskey                 "u">
+<!ENTITY  chatSound.label                     "Een geluid afspelen">
+<!ENTITY  play.label                          "Afspelen">
+<!ENTITY  play.accesskey                      "f">
+<!ENTITY  systemSound.label                   "Standaard systeemgeluid voor nieuwe e-mail">
+<!ENTITY  systemSound.accesskey               "d">
+<!ENTITY  customsound.label                   "Het volgende geluidsbestand gebruiken">
+<!ENTITY  customsound.accesskey               "v">
+<!ENTITY  browse.label                        "Bladeren…">
+<!ENTITY  browse.accesskey                    "B">
+
+<!ENTITY messageStyleTab.title             "Berichtstijlen">
+<!ENTITY messageStylePreview.label         "Voorbeeld:">
+<!ENTITY messageStyleTheme.label           "Thema:">
+<!ENTITY messageStyleTheme.accesskey       "T">
+<!ENTITY messageStyleThunderbirdTheme.label "Thunderbird">
+<!ENTITY messageStyleBubblesTheme.label    "Tekstballonnen">
+<!ENTITY messageStyleDarkTheme.label       "Donker">
+<!ENTITY messageStylePaperSheetsTheme.label "Vellen papier">
+<!ENTITY messageStyleSimpleTheme.label     "Eenvoudig">
+<!ENTITY messageStyleDefaultTheme.label    "Standaard">
+<!ENTITY messageStyleVariant.label         "Variant:">
+<!ENTITY messageStyleVariant.accesskey     "V">
+<!ENTITY messageStyleShowHeader.label      "Kop tonen">
+<!ENTITY messageStyleShowHeader.accesskey  "K">
+<!ENTITY messageStyleNoPreview.title       "Geen voorbeeld beschikbaar">
+<!ENTITY messageStyleNoPreview.description "Dit thema is ongeldig of momenteel niet beschikbaar (uitgeschakelde add-on, veilige modus, …).">

@@ -1,0 +1,48 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemJunk.label          "Szemét">
+<!ENTITY itemPhishing.label      "Becsapós e-mail">
+<!ENTITY itemPasswords.label     "Jelszavak">
+<!ENTITY itemAntiVirus.label     "Antivírus">
+<!-- Junk Mail Controls -->
+
+<!ENTITY junkMail.intro "Az alapértelmezett levélszemét-kezelés beállítása. A postafiókra jellemző levélszemét-kezelés beállításait a Postafiókok beállításai alatt végezheti el.">
+<!ENTITY manualMark.label "A levélszemét kézi megjelölésekor:">
+<!ENTITY manualMark.accesskey "k">
+<!ENTITY manualMarkModeMove.label "Áthelyezés a postafiók „Szemét” mappájába">
+<!ENTITY manualMarkModeMove.accesskey "h">
+<!ENTITY manualMarkModeDelete.label "Törlés">
+<!ENTITY manualMarkModeDelete.accesskey "T">
+<!ENTITY markAsReadOnSpam.label "A szemétként megjelölt levelek megjelölése olvasottként">
+<!ENTITY markAsReadOnSpam.accesskey "o">
+<!ENTITY enableAdaptiveJunkLogging.label "Adaptív levélszemétszűrő-naplózás engedélyezése">
+<!ENTITY enableAdaptiveJunkLogging.accesskey "A">
+<!ENTITY openJunkLog.label "Napló megjelenítése">
+<!ENTITY openJunkLog.accesskey "N">
+<!ENTITY resetTrainingData.label "Tanulási adatok törlése">
+<!ENTITY resetTrainingData.accesskey "T">
+<!-- Phishing Detector -->
+
+<!ENTITY phishingDetector1.intro  "A &brandShortName; képes elemezni az üzeneteket, és kiszűrni a leggyakrabban használt trükköket, amelyekkel Önt becsaphatják.">
+<!ENTITY enablePhishingDetector1.label    "Figyelmeztetés a gyanús e-mailekre">
+<!ENTITY enablePhishingDetector1.accesskey  "F">
+<!ENTITY useDownloadedList.label "Gyanús e-mailek letöltött listájának használata">
+<!ENTITY useDownloadedList.accesskey "G">
+<!-- Passwords -->
+
+<!ENTITY savedPasswords.intro           "A &brandShortName; képes megjegyezni az összes fiók jelszavát.">
+<!ENTITY useMasterPassword.label        "Mesterjelszó használata">
+<!ENTITY useMasterPassword.accesskey    "M">
+<!ENTITY masterPassword.intro           "A mesterjelszó az összes jelszót védi. Minden munkamenet során egyszer meg kell adni.">
+<!ENTITY changeMasterPassword.label     "Mesterjelszó megváltoztatása…">
+<!ENTITY changeMasterPassword.accesskey "z">
+<!ENTITY savedPasswords.label           "Mentett jelszavak…">
+<!ENTITY savedPasswords.accesskey       "e">
+<!-- Anti Virus -->
+
+<!ENTITY antiVirus.intro      "A &brandShortName; könnyen lehetővé teszi a vírusellenes szoftverek számára a bejövő üzenetek ellenőrzését, még mielőtt helyileg tárolná azokat.">
+<!ENTITY antiVirus.label      "A vírusellenes szoftverek karanténba tehetik a bejövő üzeneteket">
+<!ENTITY antiVirus.accesskey  "v">
+

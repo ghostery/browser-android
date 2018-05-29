@@ -1,0 +1,122 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label       "Általános">
+<!ENTITY dataChoicesTab.label    "Adatküldések">
+<!ENTITY itemUpdate.label        "Frissítés">
+<!ENTITY itemNetworking.label    "Hálózat és lemezterület">
+<!ENTITY itemCertificates.label  "Tanúsítványok">
+
+<!-- General Settings -->
+<!ENTITY enableGlodaSearch.label       "Globális keresés és indexelő engedélyezése">
+<!ENTITY enableGlodaSearch.accesskey   "G">
+<!ENTITY dateTimeFormatting.label      "Dátum és idő formázás">
+<!ENTITY allowHWAccel.label            "Hardveres gyorsítás használata, ha elérhető">
+<!ENTITY allowHWAccel.accesskey        "H">
+<!ENTITY storeType.label               "Üzenettároló és típus új fiókokhoz:">
+<!ENTITY storeType.accesskey           "z">
+<!ENTITY mboxStore2.label              "Egy fájl mappánként (mbox)">
+<!ENTITY maildirStore.label            "Egy fájl üzenetenként (maildir)">
+
+<!ENTITY scrolling.label               "Görgetés">
+<!ENTITY useAutoScroll.label           "Automatikus görgetés">
+<!ENTITY useAutoScroll.accesskey       "u">
+<!ENTITY useSmoothScrolling.label      "Finom görgetés">
+<!ENTITY useSmoothScrolling.accesskey  "F">
+
+<!ENTITY systemIntegration.label       "Integrálódás a rendszerbe">
+<!ENTITY alwaysCheckDefault.label      "Indításkor ellenőrzés, hogy a &brandShortName;-e az alapértelmezett levelező">
+<!ENTITY alwaysCheckDefault.accesskey  "I">
+<!ENTITY searchIntegration.label       "A(z) &searchIntegration.engineName; kereshet az üzenetek között">
+<!ENTITY searchIntegration.accesskey   "s">
+<!ENTITY checkDefaultsNow.label        "Ellenőrzés most…">
+<!ENTITY checkDefaultsNow.accesskey    "E">
+<!ENTITY configEditDesc.label          "Haladó beállítások">
+<!ENTITY configEdit.label              "Konfigurációszerkesztő…">
+<!ENTITY configEdit.accesskey          "K">
+<!ENTITY returnReceiptsInfo.label      "A &brandShortName; tértivevény-kezelésének beállítása">
+<!ENTITY showReturnReceipts.label      "Tértivevények…">
+<!ENTITY showReturnReceipts.accesskey  "T">
+
+<!-- Data Choices -->
+<!ENTITY telemetrySection.label          "Telemetria">
+<!ENTITY telemetryDesc.label             "Adatokat küld a &vendorShortName;nak az e-mail kliens teljesítményéről, a felhasználásról, a hardverről és az egyéni beállításokról, hogy a &brandShortName; jobb lehessen.">
+<!ENTITY enableTelemetry.label           "Telemetria bekapcsolása">
+<!ENTITY enableTelemetry.accesskey       "T">
+<!ENTITY telemetryLearnMore.label        "További tudnivalók">
+
+<!ENTITY crashReporterSection.label      "Hibajelentő">
+<!ENTITY crashReporterDesc.label         "A &brandShortName; hibajelentéseket küld, hogy a &vendorShortName; stabilabbá és biztonságosabbá tehesse e-mail kliensét">
+<!ENTITY enableCrashReporter.label       "Hibajelentő bekapcsolása">
+<!ENTITY enableCrashReporter.accesskey   "H">
+<!ENTITY crashReporterLearnMore.label    "További tudnivalók">
+
+<!-- Update -->
+<!-- LOCALIZATION NOTE (updateApp.label):
+  Strings from aboutDialog.dtd are displayed in this section of the preferences.
+  Please check for possible accesskey conflicts.
+-->
+<!ENTITY updateApp2.label                "&brandShortName; frissítések:">
+<!-- LOCALIZATION NOTE (updateApp.version.*): updateApp.version.pre is
+  followed by a version number, keep the trailing space or replace it with
+  a different character as needed. updateApp.version.post is displayed after
+  the version number, and is empty on purpose for English. You can use it
+  if required by your language.
+ -->
+<!ENTITY updateApp.version.pre           "Verzió: ">
+<!ENTITY updateApp.version.post          "">
+<!ENTITY updateAuto.label                "Frissítések automatikus telepítése (ez ajánlott a maximális biztonság érdekében)">
+<!ENTITY updateAuto.accesskey            "a">
+<!ENTITY updateCheck.label               "Frissítések keresése, de a telepítés kézzel történik">
+<!ENTITY updateCheck.accesskey           "k">
+<!ENTITY updateManual.label              "Ne legyen frissítve (nem ajánlott a biztonsági kockázat miatt">
+<!ENTITY updateManual.accesskey          "N">
+<!ENTITY updateHistory.label             "Frissítési előzmények megjelenítése">
+<!ENTITY updateHistory.accesskey         "z">
+
+<!ENTITY useService.label                "Háttérben futó szolgáltatás intézze a frissítést">
+<!ENTITY useService.accesskey            "H">
+
+<!-- Networking and Disk Space -->
+<!ENTITY showSettings.label            "Beállítások…">
+<!ENTITY showSettings.accesskey        "B">
+<!ENTITY proxiesConfigure.label        "A &brandShortName; internetkapcsolatának megadása">
+<!ENTITY connectionsInfo.caption       "Kapcsolat">
+<!ENTITY offlineInfo.caption           "Kapcsolat nélküli munka">
+<!ENTITY offlineInfo.label             "Kapcsolat nélküli munka beállításai">
+<!ENTITY showOffline.label             "Kapcsolat nélkül…">
+<!ENTITY showOffline.accesskey         "K">
+
+<!ENTITY Diskspace                       "Lemezterület">
+<!ENTITY offlineCompactFolders.label     "Minden mappa tömörítése, ha a megtakarított hely több lenne, mint">
+<!ENTITY offlineCompactFolders.accesskey "t">
+<!ENTITY offlineCompactFoldersMB.label   "MB összesen">
+
+<!-- LOCALIZATION NOTE:
+  The entities useCacheBefore.label and useCacheAfter.label appear on a single
+  line in preferences as follows:
+
+  &useCacheBefore.label  [ textbox for cache size in MB ]   &useCacheAfter.label;
+-->
+<!ENTITY useCacheBefore.label            "Legfeljebb">
+<!ENTITY useCacheBefore.accesskey        "L">
+<!ENTITY useCacheAfter.label             "MB hely a gyorsítótárnak">
+<!ENTITY overrideSmartCacheSize.label    "Az automatikus gyorsítótár-kezelés felülbírálása">
+<!ENTITY overrideSmartCacheSize.accesskey "a">
+<!ENTITY clearCacheNow.label             "Törlés most">
+<!ENTITY clearCacheNow.accesskey         "T">
+
+<!-- Certificates -->
+<!ENTITY certSelection.description       "Ha a kiszolgáló elkéri a személyes tanúsítványt:">
+<!ENTITY certs.auto                      "Automatikus választás">
+<!ENTITY certs.auto.accesskey            "u">
+<!ENTITY certs.ask                       "Megerősítés minden alkalommal">
+<!ENTITY certs.ask.accesskey             "M">
+<!ENTITY enableOCSP.label                "Az OCSP válaszoló kiszolgálók lekérdezése a tanúsítványok érvényességének megerősítéséhez">
+<!ENTITY enableOCSP.accesskey            "C">
+
+<!ENTITY manageCertificates.label "Tanúsítványok kezelése">
+<!ENTITY manageCertificates.accesskey "T">
+<!ENTITY viewSecurityDevices.label "Adatvédelmi eszközök">
+<!ENTITY viewSecurityDevices.accesskey "d">

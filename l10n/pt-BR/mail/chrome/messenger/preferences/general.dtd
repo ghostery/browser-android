@@ -1,0 +1,40 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY messengerStartPage.label         "Página inicial do &brandShortName;">
+<!ENTITY enableStartPage.label            "Ao iniciar o &brandShortName;, abrir esta página no painel de mensagens:">
+<!ENTITY enableStartPage.accesskey        "A">
+<!ENTITY location.label                   "Endereço:">
+<!ENTITY location1.accesskey               "E">
+<!ENTITY useDefault.label                 "Restaurar o padrão">
+<!ENTITY useDefault.accesskey             "R">
+
+<!ENTITY changeDockIconOptions.label      "Mudar preferências do ícone">
+<!ENTITY dockOptions.label                "Opções do ícone…">
+<!ENTITY dockOptions.accesskey            "n">
+
+<!ENTITY newMessagesArrive.label          "Ao chegarem novas mensagens">
+<!ENTITY playSound.label                  "Tocar um som">
+<!ENTITY playSound1.accesskey             "c">
+<!ENTITY playSoundMac.label               "Tocar o arquivo de som:">
+<!ENTITY playSoundMac.accesskey           "d">
+<!ENTITY showAnimatedAlert.label          "Mostrar um alerta">
+<!ENTITY showAnimatedAlert.accesskey      "M">
+<!ENTITY notificationAlertSettings2.label "Alertas e a notificação sonoras padrão podem ser desativados no Painel de Notificações nas Preferências do Sistema.">
+<!ENTITY customizeMailAlert.label         "Personalizar…">
+<!ENTITY customizeMailAlert.accesskey     "z">
+
+<!ENTITY showTrayIcon.label               "Exibir ícone na bandeja">
+<!ENTITY showTrayIcon.accesskey           "n">
+
+<!ENTITY play.label                       "Testar">
+<!ENTITY play.accesskey                   "T">
+<!ENTITY systemsound.label                "Som padrão do sistema para novas mensagens">
+<!ENTITY systemsound.accesskey            "S">
+<!ENTITY customsound.label                "Usar este arquivo de som:">
+<!ENTITY customsound.accesskey            "U">
+<!ENTITY browse.label                     "Procurar…">
+<!ENTITY browse.accesskey                 "P">
+
+<!ENTITY defaultSearchEngine.label        "Mecanismo de pesquisa padrão">

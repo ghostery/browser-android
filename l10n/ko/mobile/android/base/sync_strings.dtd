@@ -1,0 +1,115 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Don't localize these. They're here until they have
+     a better place to live. -->
+<!ENTITY syncBrand.fullName.label "Firefox Sync">
+<!ENTITY syncBrand.shortName.label "Sync">
+
+<!-- Main titles. -->
+<!ENTITY sync.title.connect.label '&syncBrand.shortName.label;에 접속'>
+
+<!-- J-PAKE Key Screen -->
+<!ENTITY sync.subtitle.connect.label '새로운 기기를 사용하기 위해 [&syncBrand.shortName.label; 설정]을 선택해 주십시오.'>
+<!ENTITY sync.subtitle.pair.label '유효화를 위해 다른 기기상에서 [기기와 연결하기]를 선택해 주십시오.'>
+<!ENTITY sync.pin.default.label '...\n...\n...\n'>
+<!ENTITY sync.link.nodevice.label '다른 기기 없음…'>
+
+<!-- Configure Engines -->
+<!ENTITY sync.configure.engines.title.passwords2 '로그인'>
+<!ENTITY sync.configure.engines.title.history '방문 기록'>
+<!ENTITY sync.configure.engines.title.tabs '탭'>
+
+<!-- Localization note (sync.default.client.name): Default string of the "Device
+     name" menu item upon setting up Firefox Sync.  The placeholder &formatS1
+     will be replaced by the name of the Firefox release channel and &formatS2
+     by the model name of the Android device. Examples look like "Aurora on
+     GT-I1950" and "Fennec on MI 2S". -->
+<!ENTITY sync.default.client.name '&formatS1;, &formatS2;'>
+
+<!-- Bookmark folder strings -->
+<!ENTITY bookmarks.folder.menu.label '북마크 메뉴'>
+<!ENTITY bookmarks.folder.places.label ''>
+<!ENTITY bookmarks.folder.tags.label '태그'>
+<!ENTITY bookmarks.folder.toolbar.label '북마크 도구모음'>
+<!ENTITY bookmarks.folder.other.label '다른 북마크'>
+<!ENTITY bookmarks.folder.desktop.label '데스크탑 북마크'>
+<!ENTITY bookmarks.folder.mobile.label '모바일 북마크'>
+<!-- Pinned sites on about:home. This folder should never be shown to the user, but we have to give it a string name -->
+<!ENTITY bookmarks.folder.pinned.label '고정 사이트'>
+
+<!-- Firefox Account strings. -->
+
+<!-- Localization note: these are shown in screens after the user has
+     created or signed in to an account, and take the user back to
+     Firefox. -->
+<!ENTITY fxaccount_back_to_browsing '브라우저로 돌아가기'>
+
+<!ENTITY fxaccount_getting_started_welcome_to_sync '&syncBrand.shortName.label; 사용을 환영합니다'>
+<!ENTITY fxaccount_getting_started_description2 '로그인하여 탭, 북마크, 로그인 정보 등을 동기화합니다.'>
+<!ENTITY fxaccount_getting_started_get_started '시작하기'>
+<!ENTITY fxaccount_getting_started_old_firefox '오래된 버전의 &syncBrand.shortName.label;를 사용 중인가요?'>
+
+<!ENTITY fxaccount_status_auth_server '계정 서버'>
+<!ENTITY fxaccount_status_sync_now '지금 동기화'>
+<!ENTITY fxaccount_status_syncing2 '동기화 중…'>
+<!ENTITY fxaccount_status_device_name '기기명'>
+<!ENTITY fxaccount_status_sync_server '동기화 서버'>
+<!ENTITY fxaccount_status_needs_verification2 '인증되지 않은 계정입니다. 인증 메일을 재전송하려면 누르세요.'>
+<!ENTITY fxaccount_status_needs_credentials '연결할 수 없습니다. 로그인 하시려면 누르세요.'>
+<!ENTITY fxaccount_status_needs_upgrade '로그인 하려면 &brandShortName;를 업그레이드 해야 합니다.'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled '&syncBrand.shortName.label;가 설치되었지만 자동으로 동기화되지는 않습니다. 안드로이드 환경 설정 &gt; 데이터 사용에서 \&quot;데이터 자동 동기화\&quot;를 활성화하세요.'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 '&syncBrand.shortName.label;가 설치되었지만, 자동으로 동기화되지는 않습니다. 안드로이드 환경 설정 &gt; 계정에서 “데이터 자동 동기화”를 활성화하세요.'>
+<!ENTITY fxaccount_status_needs_finish_migrating '새 Firefox 계정을 로그인하세요.'>
+<!ENTITY fxaccount_status_choose_what '동기화 항목 선택하기'>
+<!ENTITY fxaccount_status_bookmarks '북마크'>
+<!ENTITY fxaccount_status_history '방문 기록'>
+<!ENTITY fxaccount_status_passwords2 '로그인'>
+<!ENTITY fxaccount_status_tabs '열린 탭'>
+<!ENTITY fxaccount_status_additional_settings '추가 설정'>
+<!ENTITY fxaccount_pref_sync_use_metered2 'Wi-Fi에서 만 싱크함'>
+<!-- Localization note: Only affects background syncing, user initiated
+     syncs will still be done regardless of the connection -->
+<!ENTITY fxaccount_pref_sync_use_metered_summary2 '&brandShortName;가 핸드폰 망이나 과금되는 네트워크에서 싱크하지 않게 함'>
+<!ENTITY fxaccount_status_legal '법률' >
+<!-- Localization note: when tapped, the following two strings link to
+     external web pages.  Compare fxaccount_policy_{linktos,linkprivacy}:
+     these strings are separated to accommodate languages that decline
+     the two uses differently. -->
+<!ENTITY fxaccount_status_linktos2 '이용 약관'>
+<!ENTITY fxaccount_status_linkprivacy2 '개인 정보 보호 정책'>
+<!ENTITY fxaccount_remove_account '연결 끊기&ellipsis;'>
+
+<!ENTITY fxaccount_remove_account_dialog_title2 'Sync를 끊으시겠습니까?'>
+<!ENTITY fxaccount_remove_account_dialog_message2 '브라우징 데이터는 기기에 남지만 계정과 더이상 동기화하지 않을 것입니다.'>
+<!-- Localization note: format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_remove_account_toast2 'Firefox Account &formatS; 연결이 끊어졌습니다.'>
+<!-- Localization note (fxaccount_remove_account_dialog_action_confirm): This is the label for the
+ confirm button in the dialog that shows up when disconnecting from sync. -->
+<!ENTITY fxaccount_remove_account_dialog_action_confirm '연결 끊기'>
+
+<!ENTITY fxaccount_enable_debug_mode '디버그 모드 활성화'>
+
+<!-- Localization note: this is the name shown by the Android system
+     itself for a Firefox Account. Don't localize this. -->
+<!ENTITY fxaccount_account_type_label 'Firefox'>
+
+<!-- Localization note: these are shown by the Android system itself,
+     when the user navigates to the Android > Accounts > {Firefox
+     Account} Screen. The link takes the user to the Firefox Account
+     status activity, which lets them manage their Firefox
+     Account. -->
+<!ENTITY fxaccount_options_title '&syncBrand.shortName.label; 옵션'>
+<!ENTITY fxaccount_options_configure_title '&syncBrand.shortName.label; 설정'>
+
+<!ENTITY fxaccount_sync_sign_in_error_notification_title2 '&syncBrand.shortName.label;가 연결되지 않음'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_sign_in_error_notification_text2 '&formatS;로 로그인하기'>
+
+<!ENTITY fxaccount_sync_finish_migrating_notification_title '&syncBrand.shortName.label; 업그레이드 완료하기?'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_finish_migrating_notification_text '&formatS; 계정으로 로그인하기'>

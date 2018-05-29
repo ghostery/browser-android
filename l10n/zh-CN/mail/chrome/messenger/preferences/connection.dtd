@@ -1,0 +1,47 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  connectionsDialog.title       "连接设置">
+<!ENTITY  window.width                  "49em">
+<!ENTITY  window.macWidth               "44em">
+
+<!ENTITY  proxyTitle.label              "配置访问国际互联网的代理">
+<!ENTITY  noProxyTypeRadio.label        "不使用代理">
+<!ENTITY  noProxyTypeRadio.accesskey    "y">
+<!ENTITY  systemTypeRadio.label         "使用系统代理设置">
+<!ENTITY  systemTypeRadio.accesskey     "U">
+<!ENTITY  WPADTypeRadio.label           "自动检测此网络的代理设置">
+<!ENTITY  WPADTypeRadio.accesskey       "w">
+<!ENTITY  manualTypeRadio.label         "手动配置代理:">
+<!ENTITY  manualTypeRadio.accesskey     "M">
+<!ENTITY  autoTypeRadio.label           "自动代理配置 URL:">
+<!ENTITY  autoTypeRadio.accesskey       "A">
+<!ENTITY  reload.label                  "重新载入">
+<!ENTITY  reload.accesskey              "l">
+<!ENTITY  http.label                    "HTTP 代理:">
+<!ENTITY  http.accesskey                "H">
+<!ENTITY  ssl.label                     "SSL 代理:">
+<!ENTITY  ssl.accesskey                 "S">
+<!ENTITY  socks.label                   "SOCKS 主机:">
+<!ENTITY  socks.accesskey               "C">
+<!ENTITY  socks4.label                  "SOCKS v4">
+<!ENTITY  socks4.accesskey              "K">
+<!ENTITY  socks5.label                  "SOCKS v5">
+<!ENTITY  socks5.accesskey              "v">
+<!ENTITY  HTTPport.label                "端口:">
+<!ENTITY  HTTPport.accesskey            "P">
+<!ENTITY  SSLport.label                 "端口:">
+<!ENTITY  SSLport.accesskey             "o">
+<!ENTITY  SOCKSport.label               "端口:">
+<!ENTITY  SOCKSport.accesskey           "t">
+<!ENTITY  noproxy.label                 "不使用代理:">
+<!ENTITY  noproxy.accesskey             "N">
+<!ENTITY  noproxyExplain.label          "例如： .mozilla.org.cn, .net.nz, 192.168.1.0/24">
+<!ENTITY  shareproxy.label              "为所有协议使用此代理服务器">
+<!ENTITY  shareproxy.accesskey          "x">
+<!ENTITY  autologinproxy.label          "如果密码已保存，不提示身份验证">
+<!ENTITY  autologinproxy.accesskey      "i">
+<!ENTITY  autologinproxy.tooltip        "如果选中此选项，当您已保存身份凭据时，将会自动验证身份。如果身份验证失败，仍将向您询问身份凭据。">
+<!ENTITY  socksRemoteDNS.label          "使用 SOCKS v5 时 DNS 经过代理">
+<!ENTITY  socksRemoteDNS.accesskey      "d">

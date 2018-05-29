@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Mail Content -->
+<!ENTITY captionMailContent.label "邮件内容">
+
+<!ENTITY acceptRemoteContent.label "允许消息中的远程内容">
+<!ENTITY acceptRemoteContent.accesskey "m">
+<!ENTITY remoteContentExceptions.label "例外…">
+<!ENTITY remoteContentExceptions.accesskey "x">
+<!ENTITY acceptRemoteContentInfo.label "详细了解有关远程内容的隐私问题">
+
+<!-- Web Content -->
+<!ENTITY captionWebContent.label "网络内容">
+
+<!ENTITY keepHistory.label "记住我访问过的网站和链接">
+<!ENTITY keepHistory.accesskey "R">
+<!ENTITY acceptCookies.label "接受站点的 Cookie">
+<!ENTITY acceptCookies.accesskey "A">
+<!ENTITY acceptThirdParty.pre.label "接受第三方 Cookie：">
+<!ENTITY acceptThirdParty.pre.accesskey "C">
+<!ENTITY acceptThirdParty.always.label "总是">
+<!ENTITY acceptThirdParty.never.label "总不">
+<!ENTITY acceptThirdParty.visited.label "仅访问过的域">
+<!ENTITY keepUntil.label "保存直至：">
+<!ENTITY keepUntil.accesskey "K">
+<!ENTITY expire.label "它们过期">
+<!ENTITY close.label "我退出 &brandShortName;">
+<!ENTITY askEachTime.label "每次均询问">
+<!ENTITY cookieExceptions.label "例外…">
+<!ENTITY cookieExceptions.accesskey "E">
+<!ENTITY showCookies.label "显示 Cookie…">
+<!ENTITY showCookies.accesskey "S">
+
+<!ENTITY dntTrackingNotOkay.label2 "告诉网站我不想被跟踪">
+<!ENTITY dntTrackingNotOkay.accesskey "n">
+<!ENTITY doNotTrackInfo.label "详细了解有关请勿跟踪">

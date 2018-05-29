@@ -1,0 +1,24 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY notificationsDialog2.title       "Értesítés új üzenetről">
+<!ENTITY window.width                     "30em">
+
+<!ENTITY alertCustomization.intro         "Az értesítésben a következő mezők szerepeljenek:">
+<!ENTITY previewText.label                "Üzenet szövegének előnézete">
+<!ENTITY previewText.accesskey            "z">
+<!ENTITY subject.label                    "Tárgy">
+<!ENTITY subject.accesskey                "T">
+<!ENTITY sender.label                     "Feladó">
+<!ENTITY sender.accesskey                 "F">
+<!-- LOCALIZATION NOTE: totalOpenTimeBefore.label is displayed first, then
+there's a field where the user can enter a number, and totalOpenTimeEnd.label
+is displayed at the end of the line. The translations of the
+totalOpenTimeBefore.label and totalOpenTimeEnd.label parts don't have to mean
+the exact same thing as in English; please try instead to translate the whole
+sentence. -->
+
+<!ENTITY  totalOpenTimeBefore.label       "Új levél értesítés megjelenítése">
+<!ENTITY  totalOpenTimeBefore.accesskey   "m">
+<!ENTITY  totalOpenTimeEnd.label          "másodpercig">

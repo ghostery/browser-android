@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title                 "보내기 설정">
+<!ENTITY sendMail.title               "텍스트 형식">
+<!ENTITY autoDowngrade.label          "가능하다면 메시지를 일반 텍스트로 보냄">
+<!ENTITY autoDowngrade.accesskey      "t">
+<!ENTITY sendMaildesc.label           "HTML 형식으로 메시지를 보내고 수신자가 HTML 형식을 받을 수 없는 목록에 있을 때:">
+<!ENTITY askMe.label                  "다시 물어 보기">
+<!ENTITY askMe.accesskey              "k">
+<!ENTITY convertPlain.label           "텍스트 형식으로 변환">
+<!ENTITY convertPlain.accesskey       "C">
+<!ENTITY sendHTML.label               "HTML 형식으로 보내기">
+<!ENTITY sendHTML.accesskey           "S">
+<!ENTITY sendBoth.label               "텍스트 및 HTML 형식으로 보내기">
+<!ENTITY sendBoth.accesskey           "e">
+<!ENTITY override.label               "안내: 수신자가 선호하는 메일 형식은 주소록에서 변경할 수 있습니다.">
+
+<!ENTITY domaindesc.label             "아래의 목록에 있는 도메인 주소로 메시지를 보낼 경우 &brandShortName;는 자동으로 형식을 변환하여 보냅니다.">
+<!ENTITY HTMLTab.label                "HTML 형식 수신 도메인">
+<!ENTITY HTMLTab.accesskey            "H">
+<!ENTITY PlainTextTab.label           "텍스트 형식 수신 도메인">
+<!ENTITY PlainTextTab.accesskey       "P">
+<!ENTITY AddHtmlDomain.label          "추가…">
+<!ENTITY AddHtmlDomain.accesskey      "A">
+<!ENTITY AddPlainText.label           "추가…">
+<!ENTITY AddPlainText.accesskey       "A">
+<!ENTITY DeleteHtmlDomain.label       "삭제">
+<!ENTITY DeleteHtmlDomain.accesskey   "D">
+<!ENTITY DeletePlainText.label        "삭제">
+<!ENTITY DeletePlainText.accesskey    "D">
+
+<!ENTITY add.htmltitle                "HTML 형식 수신 도메인 추가">
+<!ENTITY add.htmldomain               "HTML 형식 수신 도메인명:">
+<!ENTITY add.plaintexttitle           "텍스트 형식 수신 도메인 추가">
+<!ENTITY add.plaintextdomain          "텍스트 형식 수신 도메인명:">

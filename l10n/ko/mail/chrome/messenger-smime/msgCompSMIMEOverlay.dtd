@@ -1,0 +1,15 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!--LOCALIZATION NOTE msgCompSMIMEOverlay.dtd UI for s/mime hooks in message composition -->
+<!ENTITY menu_securityEncryptRequire.label "암호화">
+<!ENTITY menu_securityEncryptRequire.accesskey "E">
+<!ENTITY menu_securitySign.label "디지털 서명">
+<!ENTITY menu_securitySign.accesskey "M">
+<!ENTITY menu_securityStatus.label "메시지 보안">
+<!ENTITY menu_securityStatus.accesskey "I">
+<!ENTITY securityButton.label "보안">
+<!ENTITY securityButton.tooltip "보안 설정 및 변경하기">
+<!ENTITY menu_viewSecurityStatus.label "메시지 보안 정보">
+<!ENTITY menu_viewSecurityStatus.accesskey "I">

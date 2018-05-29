@@ -1,0 +1,21 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY aboutSupport.appBasicsAppBuildID "應用程式 Build ID">
+
+<!ENTITY aboutSupport.accountsTitle "郵件與新聞帳號">
+<!ENTITY aboutSupport.showPrivateData.mainText "包含帳號名稱">
+<!ENTITY aboutSupport.showPrivateData.explanationText "（可能有可以識別您的資訊）">
+<!ENTITY aboutSupport.accountsID "ID">
+<!ENTITY aboutSupport.accountsName "名稱">
+<!ENTITY aboutSupport.accountsIncomingServer "收件伺服器">
+<!ENTITY aboutSupport.accountsOutgoingServers "寄件伺服器">
+<!ENTITY aboutSupport.accountsServerName "名稱">
+<!ENTITY aboutSupport.accountsConnSecurity "連線安全性">
+<!ENTITY aboutSupport.accountsAuthMethod "認證方式">
+<!ENTITY aboutSupport.accountsDefault "預設值？">
+<!ENTITY aboutSupport.identityName "身份識別">
+
+<!ENTITY aboutSupport.sendViaEmail.label "透過電子郵件寄出">
+

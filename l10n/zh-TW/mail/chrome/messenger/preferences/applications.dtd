@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  typeColumn.label            "內容類型">
+<!ENTITY  typeColumn.accesskey        "t">
+
+<!ENTITY  actionColumn2.label         "動作">
+<!ENTITY  actionColumn2.accesskey     "A">
+
+<!ENTITY  focusSearch1.key            "f">
+<!ENTITY  focusSearch2.key            "k">
+
+<!ENTITY  filter.placeholder          "搜尋">
+
+<!ENTITY saveTo.label                 "儲存檔案到">
+<!ENTITY saveTo.accesskey             "S">
+<!ENTITY alwaysAsk.label              "每次都問我要存到何處">
+<!ENTITY alwaysAsk.accesskey          "A">
+<!ENTITY chooseFolderWin.label        "瀏覽…">
+<!ENTITY chooseFolderWin.accesskey    "B">
+<!ENTITY chooseFolderMac.label        "選擇…">
+<!ENTITY chooseFolderMac.accesskey    "C">
+
+<!ENTITY attachments.incoming.label   "內送">
+<!ENTITY attachments.outgoing.label   "外寄">
+
+<!ENTITY addCloudFileAccount1.label       "新增…">
+<!ENTITY addCloudFileAccount1.accesskey   "A">
+<!ENTITY addCloudFileAccount.description  "新增雲端檔案鏈結儲存服務">
+<!ENTITY removeCloudFileAccount.label     "移除">
+<!ENTITY removeCloudFileAccount.accesskey "R">
+<!ENTITY authRequired.description         "您必須授權才能看到此儲存服務的設定值。">
+<!ENTITY authRequired.button.label        "授權">
+<!ENTITY authRequired.button.accesskey    "u">
+
+<!ENTITY enableCloudFileAccountOffer.label "檔案超過一定大小時使用雲端鏈結服務:">
+<!ENTITY enableCloudFileAccountOffer.mb "MB">

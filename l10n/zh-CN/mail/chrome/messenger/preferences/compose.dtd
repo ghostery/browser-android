@@ -1,0 +1,68 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label                   "常规">
+<!ENTITY itemAutoComplete.label              "地址查找">
+<!ENTITY itemSpellCheck.label                "拼写检查">
+
+<!ENTITY dialogCompose.title                 "撰写">
+
+<!ENTITY forwardMsg.label                     "转发消息：">
+<!ENTITY forwardMsg.accesskey                 "F">
+<!ENTITY inline.label                         "内联">
+<!ENTITY asAttachment.label                   "作为附件">
+<!ENTITY addExtension.label                   "添加扩展名至文件名">
+<!ENTITY addExtension.accesskey               "e">
+
+<!ENTITY htmlComposeHeader.label              "HTML">
+<!ENTITY font.label                           "字体：">
+<!ENTITY font.accesskey                       "n">
+<!ENTITY size.label                           "大小：">
+<!ENTITY size.accesskey                       "z">
+<!ENTITY fontColor.label                      "文本颜色：">
+<!ENTITY fontColor.accesskey                  "T">
+<!ENTITY bgColor.label                        "背景色：">
+<!ENTITY bgColor.accesskey                    "B">
+<!ENTITY restoreHTMLDefaults.label            "恢复默认值">
+<!ENTITY restoreHTMLDefaults.accesskey        "R">
+<!ENTITY defaultToParagraph.label             "默认使用段落而非正文文本格式">
+<!ENTITY defaultToParagraph.accesskey         "P">
+
+<!ENTITY spellCheck.label                     "发送前进行拼写检查">
+<!ENTITY spellCheck.accesskey                 "C">
+<!ENTITY spellCheckInline.label               "启用即时拼写检查">
+<!ENTITY spellCheckInline1.accesskey          "k">
+<!ENTITY languagePopup.label                  "语言：">
+<!ENTITY languagePopup.accessKey              "L">
+<!ENTITY downloadDictionaries.label           "下载更多字典">
+
+<!ENTITY warnOnSendAccelKey.label             "当使用键盘快捷键发送消息时需确认">
+<!ENTITY warnOnSendAccelKey.accesskey         "C">
+<!ENTITY autoSave.label                       "自动保存，每隔">
+<!ENTITY autoSave.accesskey                   "A">
+<!ENTITY autoSaveEnd.label                    "分钟">
+
+<!ENTITY emailCollectionPicker.label           "自动将发送邮件地址添加至：">
+<!ENTITY emailCollectionPicker.accesskey       "A">
+<!ENTITY addressingTitle.label                 "地址自动完成">
+<!ENTITY autocompleteText.label                "对消息进行地址查找时，在下列位置搜索：">
+<!ENTITY addressingEnable.label                "本地通讯录">
+<!ENTITY addressingEnable.accesskey            "L">
+<!ENTITY directories.label                     "目录服务器：">
+<!ENTITY directories.accesskey                 "D">
+<!ENTITY directoriesNone.label                 "无">
+<!ENTITY editDirectories.label                 "编辑目录…">
+<!ENTITY editDirectories.accesskey             "E">
+<!ENTITY showAsDefault.label                   "通讯录窗口中的默认启动目录︰">
+<!ENTITY showAsDefault.accesskey               "S">
+<!ENTITY showAsDefaultLast.label               "最后使用目录">
+
+<!ENTITY sendOptionsDescription.label          "配置文本格式行为：">
+<!ENTITY sendOptions.label                     "发送选项…">
+<!ENTITY sendOptions.accesskey                 "S">
+
+<!ENTITY attachmentReminder.label              "检查缺失的附件">
+<!ENTITY attachmentReminder.accesskey          "m">
+<!ENTITY attachmentReminderOptions.label       "关键字…">
+<!ENTITY attachmentReminderOptions.accesskey   "K">

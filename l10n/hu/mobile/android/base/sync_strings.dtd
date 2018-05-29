@@ -1,0 +1,115 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- Don't localize these. They're here until they have
+     a better place to live. -->
+<!ENTITY syncBrand.fullName.label "Firefox Sync">
+<!ENTITY syncBrand.shortName.label "Sync">
+
+<!-- Main titles. -->
+<!ENTITY sync.title.connect.label 'Csatlakozás a &syncBrand.shortName.label;hez'>
+
+<!-- J-PAKE Key Screen -->
+<!ENTITY sync.subtitle.connect.label 'Új eszközének aktiválásához válassza az eszközön a „&syncBrand.shortName.label; beállítása” lehetőséget.'>
+<!ENTITY sync.subtitle.pair.label 'Az aktiváláshoz válassza a másik eszközön az „Eszköz párosítása” lehetőséget.'>
+<!ENTITY sync.pin.default.label '…\n…\n…\n'>
+<!ENTITY sync.link.nodevice.label 'Nincs nálam az eszköz…'>
+
+<!-- Configure Engines -->
+<!ENTITY sync.configure.engines.title.passwords2 'Bejelentkezések'>
+<!ENTITY sync.configure.engines.title.history 'Előzmények'>
+<!ENTITY sync.configure.engines.title.tabs 'Lapok'>
+
+<!-- Localization note (sync.default.client.name): Default string of the "Device
+     name" menu item upon setting up Firefox Sync.  The placeholder &formatS1
+     will be replaced by the name of the Firefox release channel and &formatS2
+     by the model name of the Android device. Examples look like "Aurora on
+     GT-I1950" and "Fennec on MI 2S". -->
+<!ENTITY sync.default.client.name '&formatS1; ezen: &formatS2;'>
+
+<!-- Bookmark folder strings -->
+<!ENTITY bookmarks.folder.menu.label 'Könyvjelzők menü'>
+<!ENTITY bookmarks.folder.places.label ''>
+<!ENTITY bookmarks.folder.tags.label 'Címkék'>
+<!ENTITY bookmarks.folder.toolbar.label 'Könyvjelző eszköztár'>
+<!ENTITY bookmarks.folder.other.label 'Más könyvjelzők'>
+<!ENTITY bookmarks.folder.desktop.label 'Asztali könyvjelzők'>
+<!ENTITY bookmarks.folder.mobile.label 'Mobil könyvjelzők'>
+<!-- Pinned sites on about:home. This folder should never be shown to the user, but we have to give it a string name -->
+<!ENTITY bookmarks.folder.pinned.label 'Mindig felül'>
+
+<!-- Firefox Account strings. -->
+
+<!-- Localization note: these are shown in screens after the user has
+     created or signed in to an account, and take the user back to
+     Firefox. -->
+<!ENTITY fxaccount_back_to_browsing 'Vissza a böngészéshez'>
+
+<!ENTITY fxaccount_getting_started_welcome_to_sync 'Üdvözli a &syncBrand.shortName.label;'>
+<!ENTITY fxaccount_getting_started_description2 'Szinkronizálja lapjait, könyvjelzőit, jelszavait és sok mást.'>
+<!ENTITY fxaccount_getting_started_get_started 'Kezdeti lépések'>
+<!ENTITY fxaccount_getting_started_old_firefox 'A &syncBrand.shortName.label; régebbi verzióját használja?'>
+
+<!ENTITY fxaccount_status_auth_server 'Fiókkiszolgáló'>
+<!ENTITY fxaccount_status_sync_now 'Szinkronizálás most'>
+<!ENTITY fxaccount_status_syncing2 'Szinkronizálás…'>
+<!ENTITY fxaccount_status_device_name 'Eszköznév'>
+<!ENTITY fxaccount_status_sync_server 'Sync kiszolgáló'>
+<!ENTITY fxaccount_status_needs_verification2 'Fiókját ellenőrizni kell. Koppintson az ellenőrző e-mail újraküldéséhez.'>
+<!ENTITY fxaccount_status_needs_credentials 'Nem sikerült kapcsolódni. Koppintson a bejelentkezéshez.'>
+<!ENTITY fxaccount_status_needs_upgrade 'Frissíteni kell a &brandShortName;ot a bejelentkezéshez.'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled 'A &syncBrand.shortName.label; be van állítva, de nem szinkronizál automatikusan. Állítsa át az „Adatok automatikus szinkronizálása” beállítást az Android beállítások &gt; Adathasználat alatt.'>
+<!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 'A &syncBrand.shortName.label; be van állítva, de nem szinkronizál automatikusan. Állítsa át az „Adatok automatikus szinkronizálása” beállítást az Android beállítások &gt; Fiókok alatt.'>
+<!ENTITY fxaccount_status_needs_finish_migrating 'Koppintson a bejelentkezéshez az új Firefox fiókjába.'>
+<!ENTITY fxaccount_status_choose_what 'Válassza ki, mit szeretne szinkronizálni'>
+<!ENTITY fxaccount_status_bookmarks 'Könyvjelzők'>
+<!ENTITY fxaccount_status_history 'Előzmények'>
+<!ENTITY fxaccount_status_passwords2 'Bejelentkezések'>
+<!ENTITY fxaccount_status_tabs 'Nyitott lapok'>
+<!ENTITY fxaccount_status_additional_settings 'További beállítások'>
+<!ENTITY fxaccount_pref_sync_use_metered2 'Szinkronizálás csak Wi-Fi használatakor'>
+<!-- Localization note: Only affects background syncing, user initiated
+     syncs will still be done regardless of the connection -->
+<!ENTITY fxaccount_pref_sync_use_metered_summary2 'Megakadályozza, hogy a &brandShortName; mobil- vagy forgalmi díjas hálózaton szinkronizáljon'>
+<!ENTITY fxaccount_status_legal 'Legális' >
+<!-- Localization note: when tapped, the following two strings link to
+     external web pages.  Compare fxaccount_policy_{linktos,linkprivacy}:
+     these strings are separated to accommodate languages that decline
+     the two uses differently. -->
+<!ENTITY fxaccount_status_linktos2 'Felhasználási feltételeit'>
+<!ENTITY fxaccount_status_linkprivacy2 'Adatvédelmi megjegyzéseit'>
+<!ENTITY fxaccount_remove_account 'Leválás&ellipsis;'>
+
+<!ENTITY fxaccount_remove_account_dialog_title2 'Leválik a Syncről?'>
+<!ENTITY fxaccount_remove_account_dialog_message2 'Böngészési adatai megmaradnak ezen az eszközön, de nem szinkronizálódnak a fiókjával.'>
+<!-- Localization note: format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_remove_account_toast2 '&formatS; Firefox fiók leválasztva.'>
+<!-- Localization note (fxaccount_remove_account_dialog_action_confirm): This is the label for the
+ confirm button in the dialog that shows up when disconnecting from sync. -->
+<!ENTITY fxaccount_remove_account_dialog_action_confirm 'Kapcsolat bontása'>
+
+<!ENTITY fxaccount_enable_debug_mode 'Hibakeresési mód bekapcsolása'>
+
+<!-- Localization note: this is the name shown by the Android system
+     itself for a Firefox Account. Don't localize this. -->
+<!ENTITY fxaccount_account_type_label 'Firefox'>
+
+<!-- Localization note: these are shown by the Android system itself,
+     when the user navigates to the Android > Accounts > {Firefox
+     Account} Screen. The link takes the user to the Firefox Account
+     status activity, which lets them manage their Firefox
+     Account. -->
+<!ENTITY fxaccount_options_title '&syncBrand.shortName.label; beállításai'>
+<!ENTITY fxaccount_options_configure_title '&syncBrand.shortName.label; beállítása'>
+
+<!ENTITY fxaccount_sync_sign_in_error_notification_title2 '&syncBrand.shortName.label; nincs csatlakozva'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_sign_in_error_notification_text2 'Koppintson a bejelentkezéshez mint &formatS;'>
+
+<!ENTITY fxaccount_sync_finish_migrating_notification_title 'Befejezi a &syncBrand.shortName.label; frissítését?'>
+<!-- Localization note: the format string below will be replaced
+     with the Firefox Account's email address. -->
+<!ENTITY fxaccount_sync_finish_migrating_notification_text 'Koppintson a bejelentkezéshez mint &formatS;'>

@@ -1,0 +1,41 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.calendar.view.allview.caption "Geral">
+<!ENTITY pref.calendar.view.dayandweekviews.caption "Visualizações de dia e semana">
+<!ENTITY pref.calendar.view.multiweekview.caption "Visualização multissemanal">
+<!ENTITY pref.calendar.view.workweek.caption "Dias úteis">
+
+<!ENTITY pref.weekstarts.label "Começar a semana em:">
+<!ENTITY pref.weekstarts.accesskey "C">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Mostrar número da semana em exibições e mini-mês">
+<!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "r">
+<!ENTITY pref.daysoff.label "Definir como dias úteis:">
+
+<!ENTITY pref.calendar.view.daystart.label "Dia começa às:">
+<!ENTITY pref.calendar.view.daystart.accesskey "o">
+<!ENTITY pref.calendar.view.dayend.label "Dia acaba às:">
+<!ENTITY pref.calendar.view.dayend.accesskey "i">
+<!ENTITY pref.calendar.view.visiblehours.label "Mostrar:">
+<!ENTITY pref.calendar.view.visiblehours.accesskey "M">
+<!ENTITY pref.calendar.view.visiblehoursend.label "horas simultaneamente">
+
+<!ENTITY pref.numberofweeks.label "Número de semanas a exibir (incluindo anteriores):">
+<!ENTITY pref.numberofweeks.accesskey "a">
+<!ENTITY pref.numberofpreviousweeks.label "Semanas anteriores a exibir:">
+<!ENTITY pref.numberofpreviousweeks.accesskey "n">
+<!ENTITY pref.numberofweeks.0 "nenhuma">
+<!ENTITY pref.numberofweeks.1 "1 semana">
+<!ENTITY pref.numberofweeks.2 "2 semanas">
+<!ENTITY pref.numberofweeks.3 "3 semanas">
+<!ENTITY pref.numberofweeks.4 "4 semanas">
+<!ENTITY pref.numberofweeks.5 "5 semanas">
+<!ENTITY pref.numberofweeks.6 "6 semanas">
+<!ENTITY pref.showlocation.label "Exibir localização">
+<!ENTITY pref.showlocation.accesskey "l">

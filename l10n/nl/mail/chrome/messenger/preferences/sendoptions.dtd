@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title                 "Verzendopties">
+<!ENTITY sendMail.title               "Tekstopmaak">
+<!ENTITY autoDowngrade.label          "Berichten wanneer mogelijk als platte tekst verzenden">
+<!ENTITY autoDowngrade.accesskey      "B">
+<!ENTITY sendMaildesc.label           "Wanneer een bericht in HTML-opmaak wordt verzonden en van een of meer ontvangers is niet bekend of ze HTML kunnen ontvangen:">
+<!ENTITY askMe.label                  "Mij vragen wat te doen">
+<!ENTITY askMe.accesskey              "v">
+<!ENTITY convertPlain.label           "Bericht converteren naar platte tekst">
+<!ENTITY convertPlain.accesskey       "c">
+<!ENTITY sendHTML.label               "Bericht toch als HTML verzenden">
+<!ENTITY sendHTML.accesskey           "H">
+<!ENTITY sendBoth.label               "Het bericht als platte tekst en HTML verzenden">
+<!ENTITY sendBoth.accesskey           "e">
+<!ENTITY override.label               "Noot: gebruik het adresboek om gewenste tekstopmaak voor ontvangers te specificeren.">
+
+<!ENTITY domaindesc.label             "Wanneer u een bericht stuurt naar een adres met een van de onderstaande domeinnamen, zal &brandShortName; het bericht automatisch in de juiste opmaak verzenden.">
+<!ENTITY HTMLTab.label                "HTML-domeinen">
+<!ENTITY HTMLTab.accesskey            "H">
+<!ENTITY PlainTextTab.label           "Plattetekstdomeinen">
+<!ENTITY PlainTextTab.accesskey       "P">
+<!ENTITY AddHtmlDomain.label          "Toevoegen…">
+<!ENTITY AddHtmlDomain.accesskey      "T">
+<!ENTITY AddPlainText.label           "Toevoegen…">
+<!ENTITY AddPlainText.accesskey       "T">
+<!ENTITY DeleteHtmlDomain.label       "Verwijderen">
+<!ENTITY DeleteHtmlDomain.accesskey   "V">
+<!ENTITY DeletePlainText.label        "Verwijderen">
+<!ENTITY DeletePlainText.accesskey    "V">
+
+<!ENTITY add.htmltitle                "HTML-domeinnaam toevoegen">
+<!ENTITY add.htmldomain               "HTML-domeinnaam:">
+<!ENTITY add.plaintexttitle           "Plattetekstdomeinnaam toevoegen">
+<!ENTITY add.plaintextdomain          "Plattetekstdomeinnaam:">

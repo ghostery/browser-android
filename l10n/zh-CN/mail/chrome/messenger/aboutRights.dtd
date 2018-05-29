@@ -1,0 +1,69 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!-- rights.locale-direction instead of the usual local.dir entity, so RTL can skip translating page. -->
+<!ENTITY rights.locale-direction "ltr">
+<!ENTITY rights.title            "关于您的权利">
+<!ENTITY rights.intro-header     "关于您的权利">
+<!ENTITY rights.intro "&brandFullName; 是一款自由开源软件，由来自世界各地成千上万的社区志愿者共同完成。以下几点您应该了解：">
+<!-- Note on pointa / pointb / pointc form:
+     These points each have an embedded link in the HTML, so each point is
+     split into chunks for text before the link, the link text, and the text
+     after the link. If a localized grammar doesn't need the before or after
+     chunk, it can be left blank.
+
+     Also note the leading/trailing whitespace in strings here, which is
+     deliberate for formatting around the embedded links. -->
+
+<!ENTITY rights.intro-point1a "&brandShortName; 提供给您时依照的条款为 ">
+<!ENTITY rights.intro-point1b "Mozilla 公共许可证（MPL）">
+<!ENTITY rights.intro-point1c "。这表示您可以使用、复制以及向他人分发 &brandShortName;。我们也非常欢迎您按自己的需要修改 &brandShortName; 的源代码。 Mozilla 公共许可证也允许您分发自己修改过的软件。">
+
+<!ENTITY rights.intro-point2a "Mozilla 并不授予您任何关于 Mozilla 以及 Thunderbird 商标或标志的权利。欲了解更详细的商标相关的信息，请参见 ">
+<!ENTITY rights.intro-point2b "这里">
+<!ENTITY rights.intro-point2c "。">
+<!-- point 3 text for official branded builds -->
+
+<!ENTITY rights.intro-point3a "欲了解 &vendorShortName; 的隐私条款请参见 ">
+<!ENTITY rights.intro-point3b "这里">
+<!ENTITY rights.intro-point3c "。">
+<!-- point 3 text for unbranded builds -->
+
+<!ENTITY rights.intro-point3-unbranded "任何适用于此产品的隐私条款都列于此处。">
+<!-- point 4 text for official branded builds -->
+
+<!ENTITY rights.intro-point4a "&brandShortName; 也提供了可选的服务，例如附加组件更新服务；然而，我们不能保证 100&#037; 的精确或毫无错误。更多信息，包括如何禁用服务，请参见 ">
+<!ENTITY rights.intro-point4b "服务条款">
+<!ENTITY rights.intro-point4c "。">
+<!-- point 4 text for unbranded builds -->
+
+<!ENTITY rights.intro-point4a-unbranded "如果此产品结合了网站服务，任何适用的服务条款都链接至">
+<!ENTITY rights.intro-point4b-unbranded "网站服务">
+<!ENTITY rights.intro-point4c-unbranded " 章节。">
+
+<!ENTITY rights.webservices-header "&brandFullName; 网站服务">
+<!-- Note that this paragraph references a couple of entities from
+     preferences/security.dtd, so that we can refer to text the user sees in
+     the UI, without this page being forgotten every time those strings are
+     updated.  -->
+<!-- intro paragraph for branded builds -->
+
+<!ENTITY rights.webservices-a "&brandFullName; 提供了可选的服务 （&quot;服务&quot;），例如附加组件更新服务，均已包含在此 &brandShortName; 二进制发行版供您使用。如果您不想要使用服务或者无法接受如下条款，您也可以禁用安全浏览服务，只需打开首选项，然后选择 ">
+<!ENTITY rights.webservices-b "高级">
+<!ENTITY rights.webservices-c " 选项卡中的 ">
+<!ENTITY rights.webservices-d "更新">
+<!ENTITY rights.webservices-e " 选项卡，取消选中“自动检查更新”。">
+<!-- intro paragraph for unbranded builds -->
+
+<!ENTITY rights.webservices-unbranded "与该产品结合的网站的服务的概述，如果适用的话，同时也应该包括如何禁用它们的说明。">
+<!-- point 1 text for unbranded builds -->
+
+<!ENTITY rights.webservices-term1-unbranded "任何适用于此产品的服务条款都列于此处。">
+<!-- points 1-7 text for branded builds -->
+
+<!ENTITY rights.webservices-term1 "&vendorShortName; 可以保留中止或修改服务的权利。">
+<!ENTITY rights.webservices-term2 "欢迎通过 &brandShortName; 使用这些服务，并且您完全有权利使用。 &vendorShortName; 以及其授权者保留服务的所有其他的权利。这些条款并非用于限制任何开源许可给予您关于 &brandShortName; 的权利，而且是与 &brandShortName; 源代码条款一致。">
+<!ENTITY rights.webservices-term3 "本服务是由 &vendorShortName; 及其贡献者、授权者和分销者提供，拒绝所有担保，无论明示或暗示，包括但不限于保证该服务是可交易或适合您的特定目的的担保。您承担选择适合您目的、质量和性能要求之服务的全部风险。某些司法管辖区不允许除外或限制隐含的保证，因此，此免责声明可能对您不适用。">
+<!ENTITY rights.webservices-term4 "除法律规定，&vendorShortName; 其贡献者、授权者和分销商将不承担以任何方式由使用 &brandShortName; 和服务而引起的任何间接、特殊、偶然、必然、惩罚或象征性的损害造成的损失。集体责任相关的赔偿额度也不得超过500美元。某些司法管辖区不允许排除或限制某些损害，所以此声明和限制可能对您不适用。">
+<!ENTITY rights.webservices-term5 "&vendorShortName; 可在必要时更新这些条款。不得在未得到 &vendorShortName; 书面协议的前提下修改或取消这些条款。">
+<!ENTITY rights.webservices-term6 "这些条款均受美国加利福尼亚州法律的管辖，排除与法律冲突的部分。若这些条款的任何部分被裁定为无效或不可执行，其余部分仍将完全保留其有效性。若这些条款的翻译版本与英文版本发生冲突，以英文版本为准。">

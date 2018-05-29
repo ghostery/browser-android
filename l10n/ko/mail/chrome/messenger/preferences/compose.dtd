@@ -1,0 +1,68 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY itemGeneral.label                   "일반">
+<!ENTITY itemAutoComplete.label              "주소">
+<!ENTITY itemSpellCheck.label                "맞춤법 검사">
+
+<!ENTITY dialogCompose.title                 "작성">
+
+<!ENTITY forwardMsg.label                     "전달 메시지:">
+<!ENTITY forwardMsg.accesskey                 "F">
+<!ENTITY inline.label                         "본문">
+<!ENTITY asAttachment.label                   "첨부">
+<!ENTITY addExtension.label                   "파일 이름에 확장자 추가">
+<!ENTITY addExtension.accesskey               "e">
+
+<!ENTITY htmlComposeHeader.label              "HTML">
+<!ENTITY font.label                           "글꼴:">
+<!ENTITY font.accesskey                       "n">
+<!ENTITY size.label                           "크기:">
+<!ENTITY size.accesskey                       "z">
+<!ENTITY fontColor.label                      "글자:">
+<!ENTITY fontColor.accesskey                  "T">
+<!ENTITY bgColor.label                        "배경:">
+<!ENTITY bgColor.accesskey                    "B">
+<!ENTITY restoreHTMLDefaults.label            "기본 설정으로 복원">
+<!ENTITY restoreHTMLDefaults.accesskey        "R">
+<!ENTITY defaultToParagraph.label             "본문 서식 대신 단락 서식 사용">
+<!ENTITY defaultToParagraph.accesskey         "P">
+
+<!ENTITY spellCheck.label                     "보내기 전에 맞춤법 검사">
+<!ENTITY spellCheck.accesskey                 "C">
+<!ENTITY spellCheckInline.label               "맞춤법 검사">
+<!ENTITY spellCheckInline1.accesskey          "E">
+<!ENTITY languagePopup.label                  "언어:">
+<!ENTITY languagePopup.accessKey              "L">
+<!ENTITY downloadDictionaries.label           "기타 사전 다운로드">
+
+<!ENTITY warnOnSendAccelKey.label             "메시지를 보낼 때 단축키 사용 확인">
+<!ENTITY warnOnSendAccelKey.accesskey         "C">
+<!ENTITY autoSave.label                       "항상 자동 저장">
+<!ENTITY autoSave.accesskey                   "A">
+<!ENTITY autoSaveEnd.label                    "분마다 자동 저장">
+
+<!ENTITY emailCollectionPicker.label           "수신 메일 주소 자동으로 추가:">
+<!ENTITY emailCollectionPicker.accesskey       "A">
+<!ENTITY addressingTitle.label                 "메일 주소 자동 완성">
+<!ENTITY autocompleteText.label                "메일 주소가 내용과 일치:">
+<!ENTITY addressingEnable.label                "내부 주소록">
+<!ENTITY addressingEnable.accesskey            "L">
+<!ENTITY directories.label                     "디렉터리 서버">
+<!ENTITY directories.accesskey                 "D">
+<!ENTITY directoriesNone.label                 "없음">
+<!ENTITY editDirectories.label                 "디렉터리 편집…">
+<!ENTITY editDirectories.accesskey             "E">
+<!ENTITY showAsDefault.label                   "주소록 창의 기본 시작 디렉토리:">
+<!ENTITY showAsDefault.accesskey               "S">
+<!ENTITY showAsDefaultLast.label               "마지막 사용한 디렉토리">
+
+<!ENTITY sendOptionsDescription.label          "텍스트 형식 설정">
+<!ENTITY sendOptions.label                     "보내기 설정…">
+<!ENTITY sendOptions.accesskey                 "S">
+
+<!ENTITY attachmentReminder.label              "첨부 파일의 누락 여부 확인">
+<!ENTITY attachmentReminder.accesskey          "m">
+<!ENTITY attachmentReminderOptions.label       "키워드…">
+<!ENTITY attachmentReminderOptions.accesskey   "K">

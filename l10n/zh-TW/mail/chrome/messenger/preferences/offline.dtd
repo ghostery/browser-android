@@ -1,0 +1,33 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "離線模式設定">
+
+<!ENTITY checkAutoDetect.label "自動使用偵測到的連線狀態">
+<!ENTITY checkAutoDetect.accesskey "d">
+<!ENTITY titleStartUp "啟動時手動指定狀態:">
+<!ENTITY radioRememberPrevState.label "記住之前的連線狀態">
+<!ENTITY radioRememberPrevState.accesskey "R">
+<!ENTITY radioAskState.label "詢問我的連線狀態">
+<!ENTITY radioAskState.accesskey "k">
+<!ENTITY radioAlwaysOnlineState.label "啟動時總是使用連線模式">
+<!ENTITY radioAlwaysOnlineState.accesskey "l">
+<!ENTITY radioAlwaysOffline.label "離線">
+<!ENTITY radioAlwaysOffline.accesskey "f">
+
+<!ENTITY textGoingOnline "當切換到連線模式時寄出未寄郵件？">
+<!ENTITY radioAutoSend.label "是">
+<!ENTITY radioAutoSend.accesskey "Y">
+<!ENTITY radioNotSend.label "不使用">
+<!ENTITY radioNotSend.accesskey "N">
+<!ENTITY radioAskUnsent.label "詢問我">
+<!ENTITY radioAskUnsent.accesskey "s">
+<!ENTITY textGoingOffline "當切換到離線模式時自動下載郵件以供離線閱讀？">
+<!ENTITY radioAutoDownload.label "是">
+<!ENTITY radioAutoDownload.accesskey "e">
+<!ENTITY radioNotDownload.label "不使用">
+<!ENTITY radioNotDownload.accesskey "o">
+<!ENTITY radioAskDownload.label "詢問我">
+<!ENTITY radioAskDownload.accesskey "A">
+

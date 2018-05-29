@@ -1,0 +1,20 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY aboutSupport.appBasicsAppBuildID "Build-ID van de toepassing">
+
+<!ENTITY aboutSupport.accountsTitle "E-mail- en nieuwsaccounts">
+<!ENTITY aboutSupport.showPrivateData.mainText "Accountnamen bijsluiten">
+<!ENTITY aboutSupport.showPrivateData.explanationText "(mogelijke indentificatiegegevens)">
+<!ENTITY aboutSupport.accountsID "ID">
+<!ENTITY aboutSupport.accountsName "Naam">
+<!ENTITY aboutSupport.accountsIncomingServer "Inkomende server">
+<!ENTITY aboutSupport.accountsOutgoingServers "Uitgaande servers">
+<!ENTITY aboutSupport.accountsServerName "Naam">
+<!ENTITY aboutSupport.accountsConnSecurity "Verbindingsbeveiliging">
+<!ENTITY aboutSupport.accountsAuthMethod "Authenticatiemethode">
+<!ENTITY aboutSupport.accountsDefault "Standaard?">
+<!ENTITY aboutSupport.identityName "Identiteit">
+
+<!ENTITY aboutSupport.sendViaEmail.label "Verzenden via e-mail">

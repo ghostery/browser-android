@@ -1,0 +1,24 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY notificationsDialog2.title       "自定义新邮件警告">
+<!ENTITY window.width                     "30em">
+
+<!ENTITY alertCustomization.intro         "选择在提示通知中要显示的字段：">
+<!ENTITY previewText.label                "消息预览文本">
+<!ENTITY previewText.accesskey            "M">
+<!ENTITY subject.label                    "标题">
+<!ENTITY subject.accesskey                "S">
+<!ENTITY sender.label                     "发件人">
+<!ENTITY sender.accesskey                 "e">
+
+<!-- LOCALIZATION NOTE: totalOpenTimeBefore.label is displayed first, then
+there's a field where the user can enter a number, and totalOpenTimeEnd.label
+is displayed at the end of the line. The translations of the
+totalOpenTimeBefore.label and totalOpenTimeEnd.label parts don't have to mean
+the exact same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  totalOpenTimeBefore.label       "显示新邮件提示：">
+<!ENTITY  totalOpenTimeBefore.accesskey   "N">
+<!ENTITY  totalOpenTimeEnd.label          "秒">

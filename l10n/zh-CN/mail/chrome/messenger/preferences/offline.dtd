@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "脱机设置">
+
+<!ENTITY checkAutoDetect.label "自动使用检测到的联机状态">
+<!ENTITY checkAutoDetect.accesskey "d">
+<!ENTITY titleStartUp "启动时手动指定状态：">
+<!ENTITY radioRememberPrevState.label "记住上次的联机状态">
+<!ENTITY radioRememberPrevState.accesskey "R">
+<!ENTITY radioAskState.label "向我询问联机状态">
+<!ENTITY radioAskState.accesskey "k">
+<!ENTITY radioAlwaysOnlineState.label "联机">
+<!ENTITY radioAlwaysOnlineState.accesskey "l">
+<!ENTITY radioAlwaysOffline.label "脱机">
+<!ENTITY radioAlwaysOffline.accesskey "f">
+
+<!ENTITY textGoingOnline "联机时发送未发送的消息吗？">
+<!ENTITY radioAutoSend.label "是">
+<!ENTITY radioAutoSend.accesskey "Y">
+<!ENTITY radioNotSend.label "否">
+<!ENTITY radioNotSend.accesskey "N">
+<!ENTITY radioAskUnsent.label "询问我">
+<!ENTITY radioAskUnsent.accesskey "s">
+<!ENTITY textGoingOffline "切换至脱机状态时下载消息以供脱机使用吗？">
+<!ENTITY radioAutoDownload.label "是">
+<!ENTITY radioAutoDownload.accesskey "e">
+<!ENTITY radioNotDownload.label "否">
+<!ENTITY radioNotDownload.accesskey "o">
+<!ENTITY radioAskDownload.label "询问我">
+<!ENTITY radioAskDownload.accesskey "A">

@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dialog.title                 "Üzenetküldési beállítások">
+<!ENTITY sendMail.title               "Szövegformátum">
+<!ENTITY autoDowngrade.label          "Üzenetek küldése normál szövegként, ha lehetséges">
+<!ENTITY autoDowngrade.accesskey      "n">
+<!ENTITY sendMaildesc.label           "Ha HTML-üzenetet küldése esetén egy vagy több címzettről nem ismert, hogy képes-e HTML-t fogadni:">
+<!ENTITY askMe.label                  "Kérdezzen rá, hogy mi a teendő">
+<!ENTITY askMe.accesskey              "K">
+<!ENTITY convertPlain.label           "Konvertálás szöveges üzenetté">
+<!ENTITY convertPlain.accesskey       "z">
+<!ENTITY sendHTML.label               "Küldés HTML formátumban">
+<!ENTITY sendHTML.accesskey           "H">
+<!ENTITY sendBoth.label               "Küldés mind szöveges, mind HTML-módban">
+<!ENTITY sendBoth.accesskey           "s">
+<!ENTITY override.label               "Megjegyzés: használja a címjegyzéket a címzettek preferált üzenetformátumának beállításához.">
+
+<!ENTITY domaindesc.label             "Ha üzenetét az alábbi tartományokhoz tartozó címre küldi, a &brandShortName; automatikusan a helyes formátumban fogja elküldeni.">
+<!ENTITY HTMLTab.label                "HTML-t fogadni képes tartományok">
+<!ENTITY HTMLTab.accesskey            "H">
+<!ENTITY PlainTextTab.label           "Normál szöveget kérő tartományok">
+<!ENTITY PlainTextTab.accesskey       "e">
+<!ENTITY AddHtmlDomain.label          "Hozzáadás…">
+<!ENTITY AddHtmlDomain.accesskey      "H">
+<!ENTITY AddPlainText.label           "Hozzáadás…">
+<!ENTITY AddPlainText.accesskey       "H">
+<!ENTITY DeleteHtmlDomain.label       "Törlés">
+<!ENTITY DeleteHtmlDomain.accesskey   "T">
+<!ENTITY DeletePlainText.label        "Törlés">
+<!ENTITY DeletePlainText.accesskey    "T">
+
+<!ENTITY add.htmltitle                "HTML-levelet fogadni képes tartomány felvétele">
+<!ENTITY add.htmldomain               "HTML-levelet fogadni képes tartományok:">
+<!ENTITY add.plaintexttitle           "Normál szöveget kérő tartomány felvétele">
+<!ENTITY add.plaintextdomain          "Normál szöveget kérő tartományok:">

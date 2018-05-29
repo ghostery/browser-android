@@ -1,0 +1,113 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY aboutTelemetry.pingDataSource "
+핑 데이터 소스:
+">
+<!ENTITY aboutTelemetry.showCurrentPingData "
+현재 핑 데이터
+">
+<!ENTITY aboutTelemetry.showArchivedPingData "
+저장된 핑 데이터
+">
+<!ENTITY aboutTelemetry.showSubsessionData "
+하위 세션 데이터 보기
+">
+<!ENTITY aboutTelemetry.choosePing "
+핑 선택:
+">
+<!ENTITY aboutTelemetry.archivePingType "
+핑 종류
+">
+<!ENTITY aboutTelemetry.archivePingHeader "
+핑
+">
+<!ENTITY aboutTelemetry.optionGroupToday "
+오늘
+">
+<!ENTITY aboutTelemetry.optionGroupYesterday "
+어제
+">
+<!ENTITY aboutTelemetry.optionGroupOlder "
+이전
+">
+<!ENTITY aboutTelemetry.payloadChoiceHeader "
+  페이로드
+">
+<!-- LOCALIZATION NOTE(aboutTelemetry.previousPing, aboutTelemetry.nextPing):
+	These strings are displayed when selecting Archived pings, and they’re
+	used to move to the next or previous ping. -->
+<!ENTITY aboutTelemetry.previousPing "&lt;&lt;">
+<!ENTITY aboutTelemetry.nextPing "&gt;&gt;">
+
+<!ENTITY aboutTelemetry.pageTitle "수집 데이터">
+<!ENTITY aboutTelemetry.moreInformations "
+자세한 정보가 필요하세요?
+">
+<!ENTITY aboutTelemetry.firefoxDataDoc "<a>Firefox Data Documentation</a>에 데이터 도구를 다루는 방법이 나와 있습니다.">
+<!ENTITY aboutTelemetry.telemetryClientDoc "<a>Firefox Telemetry client documentation</a>에 개요와 API 문서, 데이터 참조가 포함되어 있습니다.">
+<!ENTITY aboutTelemetry.telemetryDashboard "<a>Telemetry dashboards</a>를 이용하여 Telemetry를 통해 Mozilla가 수신한 데이터를 시각화 할 수 있습니다.">
+
+<!ENTITY aboutTelemetry.showInFirefoxJsonViewer "JSON 뷰어에서 열기">
+
+<!ENTITY aboutTelemetry.homeSection "홈">
+<!ENTITY aboutTelemetry.generalDataSection "
+  일반 데이타
+">
+<!ENTITY aboutTelemetry.environmentDataSection "
+  환경 데이타
+">
+<!ENTITY aboutTelemetry.sessionInfoSection "
+  세션 정보
+">
+<!ENTITY aboutTelemetry.scalarsSection "
+  스칼라
+">
+<!ENTITY aboutTelemetry.keyedScalarsSection "
+  키 스칼라
+">
+<!ENTITY aboutTelemetry.histogramsSection "
+  히스토그램
+">
+<!ENTITY aboutTelemetry.keyedHistogramsSection "
+  키가 들어간 히스토그램
+">
+<!ENTITY aboutTelemetry.eventsSection "
+  이벤트
+">
+<!ENTITY aboutTelemetry.simpleMeasurementsSection "
+  단순 측정
+">
+<!ENTITY aboutTelemetry.telemetryLogSection "
+  수집 기능 로그
+">
+<!ENTITY aboutTelemetry.slowSqlSection "
+  느린 SQL 문
+">
+<!ENTITY aboutTelemetry.chromeHangsSection "
+  브라우저 중단
+">
+<!ENTITY aboutTelemetry.addonDetailsSection "
+  부가 기능 상세
+">
+<!ENTITY aboutTelemetry.capturedStacksSection "스택 캡처">
+<!ENTITY aboutTelemetry.lateWritesSection "
+  최종 작성
+">
+<!ENTITY aboutTelemetry.rawPayloadSection "
+원본 페이로드
+">
+<!ENTITY aboutTelemetry.raw "
+원본 JSON
+">
+
+<!ENTITY aboutTelemetry.fullSqlWarning "
+  주의E: 느린 SQL 디버깅이 시작합니다. 전체 SQL 문자열이 표시되나 데이터 측정에는 포함되지 않습니다.
+">
+<!ENTITY aboutTelemetry.fetchStackSymbols "
+  스택에 대한 함수 이름 가져오기
+">
+<!ENTITY aboutTelemetry.hideStackSymbols "
+  원본 스택 데이터 보기
+">

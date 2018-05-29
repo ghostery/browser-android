@@ -1,0 +1,73 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY folderProps.windowtitle.label           "Propriedades">
+
+<!ENTITY generalInfo.label                       "Geral">
+<!ENTITY folderCharsetFallback2.label            "Codificação secundária do texto:">
+<!ENTITY folderCharsetFallback2.accesskey        "e">
+<!ENTITY folderCharsetEnforce2.label             "Aplicar codificação a todas as mensagens da pasta (a configuração individual de codificação de texto das mensagens e a detecção automática serão ignoradas)">
+<!ENTITY folderCharsetEnforce2.accesskey         "A">
+<!ENTITY folderRebuildSummaryFileTip2.label      "Recriar arquivo de índice">
+<!ENTITY folderRebuildSummaryFile2.label         "Reparar pasta">
+<!ENTITY folderRebuildSummaryFile2.accesskey     "R">
+<!ENTITY folderRebuildSummaryFile.explanation    "O arquivo de índice da pasta (.msf) pode ocasionalmente ser danificado e fazer com que mensagens aparentem estar perdidas ou mensagens excluídas continuem a ser exibidas; reparando a pasta estes problemas podem ser corrigidos.">
+<!ENTITY folderIncludeInGlobalSearch.label       "Incluir as mensagens desta pasta nos resultados da pesquisa global">
+<!ENTITY folderIncludeInGlobalSearch.accesskey   "I">
+
+<!ENTITY retention.label "Exclusão">
+<!ENTITY retentionUseAccount.label  "Usar minhas configurações da conta">
+<!ENTITY retentionUseAccount.accesskey "U">
+<!ENTITY daysOld.label "dias">
+<!ENTITY message.label "mensagens">
+<!ENTITY retentionCleanup.label "Para recuperar espaço em disco, mensagens antigas podem ser permanentemente excluídas.">
+<!ENTITY retentionCleanupImap.label "Para recuperar espaço em disco, mensagens antigas podem ser permanentemente excluídas (tanto as cópias locais como as originais no servidor remoto).">
+<!ENTITY retentionCleanupPop.label "Para recuperar espaço em disco, mensagens antigas podem ser permanentemente excluídas (incluindo as originais no servidor remoto).">
+<!ENTITY retentionDeleteMsg.label "Excluir mensagens com mais de">
+<!ENTITY retentionDeleteMsg.accesskey "x">
+<!ENTITY retentionKeepAll.label "Não excluir nenhuma mensagem">
+<!ENTITY retentionKeepAll.accesskey "N">
+<!ENTITY retentionKeepRecent.label "Excluir tudo, exceto as últimas">
+<!ENTITY retentionKeepRecent.accesskey "E">
+<!-- LOCALIZATION NOTE: Unhide with .keepUnreadOnly { display: -moz-box; } -->
+<!ENTITY retentionKeepUnreadHidden.label "Sempre excluir as mensagens lidas (ignora a opção de data)">
+<!ENTITY retentionApplyToFlagged.label "Sempre preservar as mensagens com estrela">
+<!ENTITY retentionApplyToFlagged.accesskey "S">
+
+<!ENTITY folderSynchronizationTab.label          "Sincronização">
+<!ENTITY folderCheckForNewMessages2.label         "Ao receber novas mensagens desta conta, sempre verificar esta pasta">
+<!ENTITY folderCheckForNewMessages2.accesskey     "A">
+
+<!ENTITY offlineFolder.check.label               "Selecionar a pasta para leitura off-line">
+<!ENTITY offlineFolder.check.accesskey           "S">
+<!ENTITY offlineFolder.button.label              "Receber agora">
+<!ENTITY offlineFolder.button.accesskey          "R">
+
+<!ENTITY selectofflineNewsgroup.check.label      "Selecionar este newsgroup para leitura off-line">
+<!ENTITY selectofflineNewsgroup.check.accesskey  "S">
+<!ENTITY offlineNewsgroup.button.label           "Receber agora">
+<!ENTITY offlineNewsgroup.button.accesskey       "R">
+
+<!ENTITY folderProps.name.label                  "Nome:">
+<!ENTITY folderProps.name.accesskey              "N">
+<!ENTITY folderProps.location.label              "Endereço:">
+<!ENTITY folderProps.location.accesskey          "E">
+
+<!ENTITY folderSharingTab.label                  "Compartilhamento">
+<!ENTITY privileges.button.label                 "Direitos…">
+<!ENTITY privileges.button.accesskey             "D">
+<!ENTITY permissionsDesc.label                   "Você possui estas permissões:">
+<!ENTITY folderType.label                        "Pasta de tipo:">
+
+<!ENTITY folderQuotaTab.label                    "Cota">
+<!ENTITY folderQuotaRoot.label                   "Quota Root:">
+<!ENTITY folderQuotaUsage.label                  "Uso:">
+<!ENTITY folderQuotaStatus.label                 "Status:">
+
+<!ENTITY numberOfMessages.label                  "Número de mensagens:">
+<!-- LOCALIZATION NOTE: When the number of messages can't be determined, this string is displayed as the number -->
+<!ENTITY numberUnknown.label                     "desconhecido">
+<!ENTITY sizeOnDisk.label                        "Tamanho em disco:">
+<!-- LOCALIZATION NOTE: When the size can't be determined, this string is displayed as the size -->
+<!ENTITY sizeUnknown.label                       "desconhecido">

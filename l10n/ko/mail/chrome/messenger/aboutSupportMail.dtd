@@ -1,0 +1,20 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY aboutSupport.appBasicsAppBuildID "애플리케이션 빌드 ID">
+
+<!ENTITY aboutSupport.accountsTitle "메일과 뉴스 계정">
+<!ENTITY aboutSupport.showPrivateData.mainText "계정 이름 포함">
+<!ENTITY aboutSupport.showPrivateData.explanationText "(개인 식별 가능한 정보입니다.)">
+<!ENTITY aboutSupport.accountsID "아이디">
+<!ENTITY aboutSupport.accountsName "계정 이름">
+<!ENTITY aboutSupport.accountsIncomingServer "받는 서버">
+<!ENTITY aboutSupport.accountsOutgoingServers "보내는 서버">
+<!ENTITY aboutSupport.accountsServerName "서버 이름">
+<!ENTITY aboutSupport.accountsConnSecurity "연결 보호">
+<!ENTITY aboutSupport.accountsAuthMethod "인증 방법">
+<!ENTITY aboutSupport.accountsDefault "기본">
+<!ENTITY aboutSupport.identityName "Identity">
+
+<!ENTITY aboutSupport.sendViaEmail.label "메일 보내기">

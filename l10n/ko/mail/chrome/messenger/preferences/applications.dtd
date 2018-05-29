@@ -1,0 +1,38 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  typeColumn.label            "콘텐츠 형식">
+<!ENTITY  typeColumn.accesskey        "T">
+
+<!ENTITY  actionColumn2.label         "실행 방식">
+<!ENTITY  actionColumn2.accesskey     "A">
+
+<!ENTITY  focusSearch1.key            "f">
+<!ENTITY  focusSearch2.key            "k">
+
+<!ENTITY  filter.placeholder          "검색하기">
+
+<!ENTITY saveTo.label                 "저장 경로:">
+<!ENTITY saveTo.accesskey             "S">
+<!ENTITY alwaysAsk.label              "파일을 저장할 때 항상 물어보기">
+<!ENTITY alwaysAsk.accesskey          "A">
+<!ENTITY chooseFolderWin.label        "선택…">
+<!ENTITY chooseFolderWin.accesskey    "B">
+<!ENTITY chooseFolderMac.label        "선택…">
+<!ENTITY chooseFolderMac.accesskey    "C">
+
+<!ENTITY attachments.incoming.label   "수신">
+<!ENTITY attachments.outgoing.label   "송신">
+
+<!ENTITY addCloudFileAccount1.label       "추가…">
+<!ENTITY addCloudFileAccount1.accesskey   "A">
+<!ENTITY addCloudFileAccount.description  "새로운 파일 공유 스토리지 서비스를 추가합니다">
+<!ENTITY removeCloudFileAccount.label     "삭제">
+<!ENTITY removeCloudFileAccount.accesskey "R">
+<!ENTITY authRequired.description         "이 스토리지 서비스의 설정을 보기 위해서 허가가 필요합니다.">
+<!ENTITY authRequired.button.label        "허가">
+<!ENTITY authRequired.button.accesskey    "U">
+
+<!ENTITY enableCloudFileAccountOffer.label "다음 크기보다 큰 파일의 첨부시에 링크 공유:">
+<!ENTITY enableCloudFileAccountOffer.mb "MB">

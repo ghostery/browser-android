@@ -1,0 +1,39 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY pref.toolbars.title    "Eszköztárak">
+
+<!ENTITY composition.caption    "A következő gombok jelenjenek meg a Szerkesztés eszköztáron:">
+
+<!ENTITY new.label              "Új">
+<!ENTITY open.label             "Megnyitás">
+<!ENTITY save.label             "Mentés">
+<!ENTITY publish.label          "Közzététel">
+<!ENTITY preview.label          "Megtekintés">
+<!ENTITY cut.label              "Kivágás">
+<!ENTITY copy.label             "Másolás">
+<!ENTITY paste.label            "Beillesztés">
+<!ENTITY print.label            "Nyomtatás">
+<!ENTITY find.label             "Keresés">
+<!ENTITY image.label            "Kép">
+<!ENTITY hline.label            "V. vonal">
+<!ENTITY table.label            "Táblázat">
+<!ENTITY link.label             "Hivatkozás">
+<!ENTITY anchor.label           "Horgony">
+
+<!ENTITY formatting.caption     "A következő gombok jelenjenek meg a Formázás eszköztáron:">
+
+<!ENTITY smaller.label          "Kisebb">
+<!ENTITY larger.label           "Nagyobb">
+<!ENTITY bold.label             "Félkövér">
+<!ENTITY bullets.label          "Felsorolás">
+<!ENTITY numbers.label          "Számozás">
+<!ENTITY italic.label           "Dőlt">
+<!ENTITY outdent.label          "Behúzás csökkentése">
+<!ENTITY indent.label           "Behúzás">
+<!ENTITY underline.label        "Aláhúzott">
+
+<!ENTITY absolutePosition.label "Abszolút pozicionálás">
+<!ENTITY decreaseZIndex.label   "Hátraküldés">
+<!ENTITY increaseZIndex.label   "Előrehozás">

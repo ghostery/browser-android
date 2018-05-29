@@ -1,0 +1,7 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<!ENTITY fileExceedsQuota.title   "Hightail">
+<!ENTITY fileExceedsQuota.storageLimitReached   "Limite de armazenamento atingido">
+<!ENTITY fileExceedsQuota.description "Você atingiu o limite de armazenamento de 2GB da sua conta.">
+<!ENTITY fileExceedsQuota.description1 "Seu uso do armazenamento atual é #XXX GB.">

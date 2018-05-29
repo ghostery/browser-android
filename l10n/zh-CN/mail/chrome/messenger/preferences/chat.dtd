@@ -1,0 +1,64 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  generalTab.label            "常规">
+
+<!ENTITY  startupAction.label         "启动 &brandShortName; 时:">
+<!ENTITY  startupAction.accesskey     "s">
+<!ENTITY  startupOffline.label        "保持我的聊天账户离线">
+<!ENTITY  startupConnectAuto.label    "自动连接我的聊天账户">
+
+<!-- LOCALIZATION NOTE: reportIdleAfter.label is displayed first, then
+there's a field where the user can enter a number, and itemTime is
+displayed at the end of the line. The translations of the
+reportIdleAfter.label and idleTime parts don't have to mean the exact
+same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  reportIdleAfter.label         "当我不活动超过">
+<!ENTITY  reportIdleAfter.accesskey     "I">
+<!ENTITY  idleTime                      "分钟时，让我的联系人获知">
+
+<!ENTITY  andSetStatusToAway.label      "，并设置我的状态为离开，状态文本：">
+<!ENTITY  andSetStatusToAway.accesskey  "A">
+
+<!ENTITY  sendTyping.label              "在对话时发送正在输入通知">
+<!ENTITY  sendTyping.accesskey          "t">
+
+<!ENTITY  chatNotifications.label             "当有直接发送给您的消息时：">
+<!ENTITY  desktopChatNotifications.label      "显示通知">
+<!ENTITY  desktopChatNotifications.accesskey  "c">
+<!ENTITY  completeNotification.label          "带有发送者的名称和消息预览">
+<!ENTITY  buddyInfoOnly.label                 "仅带有发送者的名称">
+<!ENTITY  dummyNotification.label             "不带有任何信息">
+<!ENTITY  getAttention.label                  "刷新任务栏项目">
+<!ENTITY  getAttention.accesskey              "F">
+<!ENTITY  getAttentionMac.label               "动画 Dock 图标">
+<!ENTITY  getAttentionMac.accesskey           "o">
+<!ENTITY  chatSound.accesskey                 "d">
+<!ENTITY  chatSound.label                     "播放声音">
+<!ENTITY  play.label                          "播放">
+<!ENTITY  play.accesskey                      "P">
+<!ENTITY  systemSound.label                   "默认的系统新邮件提示声">
+<!ENTITY  systemSound.accesskey               "D">
+<!ENTITY  customsound.label                   "使用下列声音文件">
+<!ENTITY  customsound.accesskey               "U">
+<!ENTITY  browse.label                        "浏览…">
+<!ENTITY  browse.accesskey                    "B">
+
+<!ENTITY messageStyleTab.title             "消息样式">
+<!ENTITY messageStylePreview.label         "预览：">
+<!ENTITY messageStyleTheme.label           "主题：">
+<!ENTITY messageStyleTheme.accesskey       "T">
+<!ENTITY messageStyleThunderbirdTheme.label "Thunderbird">
+<!ENTITY messageStyleBubblesTheme.label    "气泡">
+<!ENTITY messageStyleDarkTheme.label       "黑夜">
+<!ENTITY messageStylePaperSheetsTheme.label "纸张">
+<!ENTITY messageStyleSimpleTheme.label     "简朴">
+<!ENTITY messageStyleDefaultTheme.label    "默认">
+<!ENTITY messageStyleVariant.label         "变体：">
+<!ENTITY messageStyleVariant.accesskey     "V">
+<!ENTITY messageStyleShowHeader.label      "显示报头">
+<!ENTITY messageStyleShowHeader.accesskey  "H">
+<!ENTITY messageStyleNoPreview.title       "没有预览可用">
+<!ENTITY messageStyleNoPreview.description "此主题无效或目前不可用（原因例如：已被禁用、处在安全模式，……）。">

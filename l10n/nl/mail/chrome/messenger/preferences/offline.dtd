@@ -1,0 +1,32 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY offlineDialog.title "Offline-instellingen">
+
+<!ENTITY checkAutoDetect.label "Automatisch gedetecteerde onlinetoestand volgen">
+<!ENTITY checkAutoDetect.accesskey "A">
+<!ENTITY titleStartUp "Handmatige toestand bij het opstarten:">
+<!ENTITY radioRememberPrevState.label "Vorige onlinetoestand hanteren">
+<!ENTITY radioRememberPrevState.accesskey "h">
+<!ENTITY radioAskState.label "Mij de onlinetoestand vragen">
+<!ENTITY radioAskState.accesskey "M">
+<!ENTITY radioAlwaysOnlineState.label "Online">
+<!ENTITY radioAlwaysOnlineState.accesskey "O">
+<!ENTITY radioAlwaysOffline.label "Offline">
+<!ENTITY radioAlwaysOffline.accesskey "f">
+
+<!ENTITY textGoingOnline "Niet-verzonden berichten verzenden bij online gaan?">
+<!ENTITY radioAutoSend.label "Ja">
+<!ENTITY radioAutoSend.accesskey "J">
+<!ENTITY radioNotSend.label "Nee">
+<!ENTITY radioNotSend.accesskey "N">
+<!ENTITY radioAskUnsent.label "Mij vragen">
+<!ENTITY radioAskUnsent.accesskey "v">
+<!ENTITY textGoingOffline "Berichten downloaden voor offlinegebruik bij offline gaan?">
+<!ENTITY radioAutoDownload.label "Ja">
+<!ENTITY radioAutoDownload.accesskey "a">
+<!ENTITY radioNotDownload.label "Nee">
+<!ENTITY radioNotDownload.accesskey "e">
+<!ENTITY radioAskDownload.label "Mij vragen">
+<!ENTITY radioAskDownload.accesskey "r">

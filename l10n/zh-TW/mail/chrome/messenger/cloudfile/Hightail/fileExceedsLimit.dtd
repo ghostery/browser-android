@@ -1,0 +1,7 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<!ENTITY fileExceedsLimit.title   "Hightail">
+<!ENTITY fileExceedsLimit.thatsBigFile3 "需要使用付費帳號才能傳送大於 50 MB 的檔案。">
+<!ENTITY fileExceedsLimit.style "width: 40em; min-height: 20em;">
+
