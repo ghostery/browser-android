@@ -1,0 +1,14 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY  brandShortName  "Ghostery Alpha">
+<!ENTITY  vendorShortName "Ghostery Alpha">
+<!ENTITY  vendorName      "Cliqz GmbH">
+<!ENTITY  brandFullName   "Ghostery Browser Alpha">
+<!ENTITY  brandPocket     "Pocket">
+<!ENTITY  pref_human_web_url "https://cliqz.com/whycliqz/human-web">
+<!ENTITY  pref_support_cliqz_url "https://cliqz.com/support">
+<!ENTITY  pref_tips_tricks_url "https://cliqz.com/tips-android">
+<!ENTITY  pref_report_website_url "https://cliqz.com/report-url">
+<!ENTITY  pref_myoffrz_url "https://cliqz.com/myoffrz">

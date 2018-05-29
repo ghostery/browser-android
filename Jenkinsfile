@@ -1,132 +1,180 @@
 #!/bin/env groovy
+@Library('cliqz-shared-library@v1.2') _
+def matrix = [
+        'cliqz':[
+            'config':'mozconfigs/cliqz.mozconfig',
+            'test': true, 
+        ],
+        'ghostery':[
+            'config':'mozconfigs/ghostery.mozconfig',
+            'test': false,
+        ],
+        'cliqz-alpha':[
+            'config':'mozconfigs/cliqz-alpha.mozconfig',
+            'test': false,
+        ],
+        'ghostery-alpha':[
+            'config':'mozconfigs/ghostery-alpha.mozconfig',
+            'test': false,
+        ],
+    ]
 
-node('us-east-1 && ubuntu && docker && !gpu') {
-
-    def dockerTag = ""
-    def apk = ""
-    try {
-        withGenymotion(
-            "ami-13050368",
-            "1",
-            "t2.medium",
-            "android_ci_genymotion",
-            "sg-5bbf173f",
-            "subnet-341ff61f",
-            "us-east-1"
-            ) {
+def build(Map m){
+    def flavor = m.config
+    def flavorname = m.name
+    def nodeLabel = 'us-east-1 && ubuntu && docker && !gpu'
+    def test =m.test
+    return {
+        node(nodeLabel){
+            def dockerTag = ""
+            def apk = ""
             stage('Checkout') {
                 checkout scm
                 dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
-                withCredentials([file(credentialsId: 'ceb2d5e9-fc88-418f-aa65-ce0e0d2a7ea1', variable: 'SSH_KEY')]) {
-                    cloneRepoViaSSH(
-                        "git@github.com:cliqz/autobots.git",
-                        "-b version2.0 --single-branch --depth=1"
-                    )
-                }
             }
             def baseImageName = "browser-f/android:${dockerTag}"
             docker.withRegistry('https://141047255820.dkr.ecr.us-east-1.amazonaws.com') {
                 docker.image("${baseImageName}").inside {
-                    stage('Build APK') {
-                        sh '''#!/bin/bash -l
+                    stage('Build APKS') {
+                        sh """#!/bin/bash -l
                             set -e
                             set -x
-                            cp mozconfigs/cliqz.mozconfig mozilla-release/mozconfig
+                            cp ${flavor} mozilla-release/mozconfig
+                        """
+                        sh '''#!/bin/bash -l
+                            set -x 
+                            set -e 
                             cd mozilla-release
-                            export GRADLE_FLAGS="--stacktrace"
+                            ./mach clobber
                             ./mach build
-                            for lang in `ls ../l10n/`; do
-                                ./mach build chrome-$lang
+                            for language in `ls ../l10n/`; do
+                                ./mach build chrome-$language
                             done
                             ./mach package
                         '''
                         apk = sh(returnStdout: true, 
-                            script: """cd mozilla-release/objdir-frontend-android/dist && \
+                            script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
                             find *.apk -name 'fennec*i386*' -not -name '*-unsigned-*'""").trim()
                     }
-                }
-                timeout(5) {
-                    stage('Genymotion Status') {
-                        def status = sh(returnStdout: true, script: """
-                                aws ec2 describe-instance-status \
-                                --region=$REGION \
-                                --instance-id $INSTANCE_ID \
-                                --query 'InstanceStatuses[].InstanceStatus[].Details[].Status' \
-                                --output text
-                            """).trim()
-                        while (status != 'passed') {
-                            println "Waiting for the instance to fully Boot up...."
-                            sleep(15)
-                            status = sh(returnStdout: true, script: """
-                                aws ec2 describe-instance-status \
-                                --region=$REGION \
-                                --instance-id $INSTANCE_ID \
-                                --query 'InstanceStatuses[].InstanceStatus[].Details[].Status' \
-                                --output text
-                            """).trim()
-                            println "Instance Status: ${status}"
-                        }
+                    stage('Upload APK') {
+                        archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorname}/dist/*.apk"
                     }
                 }
-                docker.image("${baseImageName}").inside {
-                    withEnv([
-                        "APP=${apk}",
-                        "platformName=android",
-                        "deviceName=127.0.0.1:5556",
-                        "MODULE=testSmoke",
-                        "TEST=SmokeTest",
-                        "appPackage=com.cliqz.browser.alpha",
-                        "appActivity=org.mozilla.gecko.LauncherActivity"
-                        ]) {
-                        withCredentials([file(credentialsId: 'da5f91e6-e1ca-4aac-94ea-352b6769228b', variable: 'FILE' )]) {
-                            stage('Genymotion ADB Connect') {
-                                sh'''#!/bin/bash -l
-                                    set -x
-                                    set -e
-                                    chmod 400 $FILE
-                                    ssh -v -o StrictHostKeyChecking=no -i $FILE root@$IP "setprop persist.sys.usb.config adb"
-                                    ssh -v -o StrictHostKeyChecking=no -i $FILE -NL 5556:127.0.0.1:5555 root@$IP &
-                                    $ANDROID_HOME/platform-tools/adb connect 127.0.0.1:5556
-                                    $ANDROID_HOME/platform-tools/adb wait-for-device
-                                '''
+                if (test == true){
+                    try {
+                        withGenymotion(
+                        "ami-13050368",
+                        "1",
+                        "t2.medium",
+                        "android_ci_genymotion",
+                        "sg-5bbf173f",
+                        "subnet-341ff61f",
+                        "us-east-1"
+                        ) {
+                            stage('Checkout') {
+                                dir('autobots'){
+                                    git branch:'version2.0',
+                                    credentialsId: 'cliqz-ci',
+                                    url: 'https://github.com/cliqz/autobots.git'
+                                }
+                            }
+                            timeout(10) {
+                                stage('Genymotion Status') {
+                                    def status = sh(returnStdout: true, script: """
+                                            aws ec2 describe-instance-status \
+                                            --region=$REGION \
+                                            --instance-id $INSTANCE_ID \
+                                            --query 'InstanceStatuses[].InstanceStatus[].Details[].Status' \
+                                            --output text
+                                        """).trim()
+                                    while (status != 'passed') {
+                                        println "Waiting for the instance to fully Boot up...."
+                                        sleep(15)
+                                        status = sh(returnStdout: true, script: """
+                                            aws ec2 describe-instance-status \
+                                            --region=$REGION \
+                                            --instance-id $INSTANCE_ID \
+                                            --query 'InstanceStatuses[].InstanceStatus[].Details[].Status' \
+                                            --output text
+                                        """).trim()
+                                        println "Instance Status: ${status}"
+                                    }
+                                }
+                            }
+                            docker.image("${baseImageName}").inside {
+                                withEnv([
+                                    "APP=${apk}",
+                                    "FLAVOR=${flavorname}",
+                                    "platformName=android",
+                                    "deviceName=127.0.0.1:5556",
+                                    "MODULE=testSmoke",
+                                    "TEST=SmokeTest",
+                                    "appPackage=com.cliqz.browser",
+                                    "appActivity=org.mozilla.gecko.LauncherActivity"
+                                    ]) {
+                                    withCredentials([file(credentialsId: 'da5f91e6-e1ca-4aac-94ea-352b6769228b', variable: 'FILE' )]) {
+                                        stage('Genymotion ADB Connect') {
+                                            sh'''#!/bin/bash -l
+                                                set -x
+                                                set -e
+                                                chmod 400 $FILE
+                                                ssh -v -o StrictHostKeyChecking=no -i $FILE root@$IP "setprop persist.sys.usb.config adb"
+                                                ssh -v -o StrictHostKeyChecking=no -i $FILE -NL 5556:127.0.0.1:5555 root@$IP &
+                                                $ANDROID_HOME/platform-tools/adb connect 127.0.0.1:5556
+                                                $ANDROID_HOME/platform-tools/adb wait-for-device
+                                            '''
+                                        }
+                                    }
+                                    stage('Run Tests') {
+                                        timeout(60) {
+                                            sh'''#!/bin/bash -l
+                                                set -x
+                                                set -e
+                                                appium &
+                                                sleep 10
+                                                export app=$PWD/mozilla-release/objdir-frontend-android/$FLAVOR/dist/$APP
+                                                cd autobots
+                                                virtualenv ~/venv
+                                                source ~/venv/bin/activate
+                                                chmod 0755 requirements.txt
+                                                pip install -r requirements.txt
+                                                python testRunner.py || true
+                                           '''
+                                       }
+                                    }
+                                }
+                                stage('Upload Results') {
+                                    archiveTestResults()
+                                }
                             }
                         }
-                        stage('Run Tests') {
-                            timeout(60) {
-                                sh'''#!/bin/bash -l
-                                    set -x
-                                    set -e
-                                    appium &
-                                    sleep 10
-                                    export app=$PWD/mozilla-release/objdir-frontend-android/dist/$APP
-                                    cd autobots
-                                    virtualenv ~/venv
-                                    source ~/venv/bin/activate
-                                    chmod 0755 requirements.txt
-                                    pip install -r requirements.txt
-                                    export deviceType="$($ANDROID_HOME/platform-tools/adb shell getprop ro.build.characteristics)"
-                                    python testRunner.py || true
-                               '''
-                           }
-                        }
+                    }catch(e) {
+                      print e  
                     }
-                    stage('Upload APK') {
-                        archiveArtifacts allowEmptyArchive: true, artifacts: 'mozilla-release/objdir-frontend-android/dist/*.apk'
-                        archiveTestResults()
-                    }
-                }
+                }     
             }
-        }
-    } finally {
-        stage('Clean Up') {
-            sh '''#!/bin/bash
-                rm -f mozilla-release/mozconfig
-                rm -rf mozilla-release/objdir-frontend-android
-                rm -rf autobots
-            '''
+            stage('Clean Up') {
+                sh '''#!/bin/bash
+                    rm -f mozilla-release/mozconfig
+                    rm -rf mozilla-release/objdir-frontend-android
+                    rm -rf autobots
+                '''
+            }
         }
     }
 }
+ 
+
+def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
+    [("Building ${it[0]}"):build(
+        name: it[0],
+        config:it[1]['config'],
+        test:it[1]['test']
+    )]
+}
+
+parallel stepsForParallelBuilds    
+ 
 
 def withGenymotion(
         String instanceImage,

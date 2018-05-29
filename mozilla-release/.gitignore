@@ -61,7 +61,8 @@ parser/html/java/javaparser/
 .settings/
 
 # Ignore the files and directory that JetBrains IDEs create.
-/.idea/
+*.idea/
+
 *.iml
 # Android Monitor in Android Studio creates a captures/ directory.
 /captures/
