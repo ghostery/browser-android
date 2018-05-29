@@ -101,7 +101,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzEnable;
 import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
 
 public class GeckoPreferences
@@ -251,6 +250,7 @@ public class GeckoPreferences
             ".state";
     public static final String PREFS_PRIVACY_TRACKING_PROTECTION_LEARN_MORE = NON_PREF_PREFIX +
     "trackingprotection.learn_more";
+    public static final String PREFS_SHOW_HINTS = NON_PREF_PREFIX+ "show.hints";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -951,8 +951,23 @@ public class GeckoPreferences
                 }
                 // Set default value of show my offrz depend on system language
                 else if (PREFS_SHOW_MYOFFRZ.equals(key)){
-                    ((CheckBoxPreference)pref).setDefaultValue(isMyOffrzSupportedForLang());
-                    ((CheckBoxPreference)pref).setChecked(isMyOffrzEnable(getApplicationContext()));
+                    final PreferenceManager preferenceManager = new PreferenceManager
+                            (getApplicationContext());
+                    pref.setDefaultValue(isMyOffrzSupportedForLang());
+                    ((CheckBoxPreference)pref).setChecked(preferenceManager.isMyOffrzEnable());
+                }
+                // reset all Onboarding
+                else if(PREFS_SHOW_HINTS.equals(key)){
+                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            final PreferenceManager preferenceManager = new PreferenceManager
+                                    (getApplicationContext());
+                            preferenceManager.setMyOffrzOnboardingEnabled(true);
+                            // TODO: enable all OnBoarding here.
+                            return true;
+                        }
+                    });
                 }
                 // Open rest subscriptions dialog
                 else if(PREFS_RESET_SUBSCRIPTIONS.equals(key)){

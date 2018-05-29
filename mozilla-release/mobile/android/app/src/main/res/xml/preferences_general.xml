@@ -120,7 +120,7 @@
             android:key="pref.rest.subscriptions"
             android:title="@string/pref_reset_subscriptions" />
     </PreferenceCategory>
-   
+
     <!-- add download options category -->
     <PreferenceCategory android:title="@string/pref_download_options_category">
         <CheckBoxPreference
@@ -129,6 +129,11 @@
             android:summary="@string/pref_limit_data_usage_summary"
             android:defaultValue="true" />
     </PreferenceCategory>
+
+    <!-- show hints - reset all onBoarding -->
+    <Preference
+        android:key="android.not_a_preference.show.hints"
+        android:title="@string/pref_show_hints" />
     <!-- Cliqz end -->
 
 </PreferenceScreen>

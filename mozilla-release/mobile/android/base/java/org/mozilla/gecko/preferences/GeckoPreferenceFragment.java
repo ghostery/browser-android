@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import org.mozilla.gecko.AppConstants.Versions;
 import org.mozilla.gecko.BrowserLocaleManager;
+import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.LocaleManager;
@@ -45,6 +46,7 @@ import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_DONTT
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_DONTTRACK_LEARN_MORE;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_TRACKING_PROTECTION;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_TRACKING_PROTECTION_LEARN_MORE;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_SHOW_HINTS;
 import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_VENDOR_SCREEN;
 
 /* A simple implementation of PreferenceFragment for large screen devices
@@ -109,6 +111,10 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
             removePreference(screen,PREFS_DYNAMIC_TOOLBAR);
             // remove Compact tabs setting from General settings
             removePreference(screen,PREFS_COMPACT_TABS);
+            // remove show hints in production
+            if (!BuildConfig.DEBUG) {
+                removePreference(screen,PREFS_SHOW_HINTS);
+            }
         }
         // remove Mozilla Fennec (About, Feedback, FAQ) & notifications screens
         else if(res == R.xml.preferences){
