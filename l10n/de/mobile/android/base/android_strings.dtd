@@ -386,7 +386,7 @@
 
 <!ENTITY pref_default_browser "Als Standardbrowser verwenden">
 <!ENTITY pref_default_browser_mozilla_support_tablet "&vendorShortName;-Hilfe aufrufen">
-<!ENTITY pref_about_&brandShortName; "Über &brandShortName;">
+<!ENTITY pref_about_firefox "Über &brandShortName;">
 <!ENTITY pref_vendor_faqs "Häufig gestellte Fragen">
 <!ENTITY pref_vendor_feedback "Feedback senden">
 

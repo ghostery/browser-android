@@ -49,7 +49,7 @@
 <!ENTITY fxaccount_getting_started_welcome_to_sync 'Willkommen bei &syncBrand.shortName.label;'>
 <!ENTITY fxaccount_getting_started_description2 'Melden Sie sich an, um Ihre Tabs, Lesezeichen, Zugangsdaten &amp; mehr zu synchronisieren.'>
 <!ENTITY fxaccount_getting_started_get_started 'Anmelden'>
-<!ENTITY fxaccount_getting_started_old_&brandShortName; 'Verwenden Sie eine ältere Version von &syncBrand.shortName.label;?'>
+<!ENTITY fxaccount_getting_started_old_firefox 'Verwenden Sie eine ältere Version von &syncBrand.shortName.label;?'>
 
 <!ENTITY fxaccount_status_auth_server 'Konto-Server'>
 <!ENTITY fxaccount_status_sync_now 'Jetzt synchronisieren'>

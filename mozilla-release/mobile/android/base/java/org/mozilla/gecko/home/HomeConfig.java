@@ -1706,7 +1706,7 @@ public final class HomeConfig {
         /* Cliqz start */
         // return MyOffrz title in case of MyOffrz type
         case MY_OFFRZ:
-            return R.string.my_offrz_title;
+            return R.string.myoffrz_title;
         /* Cliqz end */
 
         default:

@@ -4,7 +4,7 @@
 <!ENTITY aboutPage.title                        "О &brandShortName;">
 <!ENTITY aboutPage.warningVersion               "&brandShortName; является экспериментальным и может быть нестабилен.">
 <!ENTITY aboutPage.telemetryStart               " Он автоматически отправляет информацию о производительности, аппаратном обеспечении, использовании и настройках в ">
-<!ENTITY aboutPage.telemetry&vendorShortName;Link         "&vendorShortName;">
+<!ENTITY aboutPage.telemetryMozillaLink         "&vendorShortName;">
 <!ENTITY aboutPage.telemetryEnd                 ", чтобы помочь сделать &brandShortName; лучше.">
 <!ENTITY aboutPage.checkForUpdates.link         "Проверить обновления »">
 <!ENTITY aboutPage.checkForUpdates.checking     "Поиск обновлений…">

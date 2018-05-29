@@ -49,7 +49,7 @@
 <!ENTITY fxaccount_getting_started_welcome_to_sync 'Bienvenue dans &syncBrand.shortName.label;'>
 <!ENTITY fxaccount_getting_started_description2 'Connectez-vous pour synchroniser vos onglets, marque-pages, identifiants et bien plus.'>
 <!ENTITY fxaccount_getting_started_get_started 'Démarrer'>
-<!ENTITY fxaccount_getting_started_old_&brandShortName; 'Vous utilisez une ancienne version de &syncBrand.shortName.label; ?'>
+<!ENTITY fxaccount_getting_started_old_firefox 'Vous utilisez une ancienne version de &syncBrand.shortName.label; ?'>
 
 <!ENTITY fxaccount_status_auth_server 'Serveur de comptes'>
 <!ENTITY fxaccount_status_sync_now 'Synchroniser maintenant'>

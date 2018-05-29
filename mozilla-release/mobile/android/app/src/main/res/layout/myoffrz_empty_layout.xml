@@ -22,6 +22,6 @@
         android:padding="@dimen/myoffrz_padding_10"
         android:textColor="@color/myoffrz_bg_text"
         android:textSize="@dimen/myoffrz_text_size"
-        android:text="@string/my_offrz_no_offers_msg"/>
+        android:text="@string/myoffrz_no_offers_msg"/>
 
 </LinearLayout>

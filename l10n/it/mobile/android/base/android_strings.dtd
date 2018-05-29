@@ -245,7 +245,7 @@
 <!ENTITY pref_private_data_syncedTabs "Schede sincronizzate">
 <!ENTITY pref_default_browser "Imposta come browser predefinito">
 <!ENTITY pref_default_browser_mozilla_support_tablet "Visita il supporto &vendorShortName;">
-<!ENTITY pref_about_&brandShortName; "Informazioni su &brandShortName;">
+<!ENTITY pref_about_firefox "Informazioni su &brandShortName;">
 <!ENTITY pref_vendor_faqs "FAQ">
 <!ENTITY pref_vendor_feedback "Invia feedback">
 <!ENTITY pref_dialog_set_default "Imposta come predefinito">

@@ -4,7 +4,7 @@
 <!ENTITY aboutPage.title                        "Über &brandShortName;">
 <!ENTITY aboutPage.warningVersion               "&brandShortName; ist experimentell und könnte instabil sein.">
 <!ENTITY aboutPage.telemetryStart               " Um &brandShortName; verbessern zu können, werden automatisch Informationen zu Testzwecken an ">
-<!ENTITY aboutPage.telemetry&vendorShortName;Link         "&vendorShortName;">
+<!ENTITY aboutPage.telemetryMozillaLink         "&vendorShortName;">
 <!ENTITY aboutPage.telemetryEnd                 " gesendet.">
 <!ENTITY aboutPage.checkForUpdates.link         "Nach Updates suchen »">
 <!ENTITY aboutPage.checkForUpdates.checking     "Nach Updates suchen…">

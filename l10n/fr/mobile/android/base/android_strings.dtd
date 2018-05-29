@@ -386,7 +386,7 @@
 
 <!ENTITY pref_default_browser "Définir comme navigateur par défaut">
 <!ENTITY pref_default_browser_mozilla_support_tablet "Consulter l’assistance de &vendorShortName;">
-<!ENTITY pref_about_&brandShortName; "À propos de &brandShortName;">
+<!ENTITY pref_about_firefox "À propos de &brandShortName;">
 <!ENTITY pref_vendor_faqs "FAQ">
 <!ENTITY pref_vendor_feedback "Donner votre avis">
 

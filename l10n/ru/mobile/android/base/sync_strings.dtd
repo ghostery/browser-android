@@ -49,7 +49,7 @@
 <!ENTITY fxaccount_getting_started_welcome_to_sync 'Добро пожаловать в Синхронизацию'>
 <!ENTITY fxaccount_getting_started_description2 'Войдите для синхронизации ваших вкладок, закладок, логинов и многого другого.'>
 <!ENTITY fxaccount_getting_started_get_started 'Начать'>
-<!ENTITY fxaccount_getting_started_old_&brandShortName; 'Используете старую версию Синхронизации?'>
+<!ENTITY fxaccount_getting_started_old_firefox 'Используете старую версию Синхронизации?'>
 
 <!ENTITY fxaccount_status_auth_server 'Сервер аккаунта'>
 <!ENTITY fxaccount_status_sync_now 'Синхронизировать'>
