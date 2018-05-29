@@ -35,4 +35,4 @@ then
     emuname=${emuNames[$n]}
 fi
 
-emulator "@${emuname}" &
+$EMULATOR "@${emuname}" &

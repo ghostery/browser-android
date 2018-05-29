@@ -63,12 +63,14 @@ esac
 
 [ -f "${MOZ_CONFIG}" ] && mv "${MOZ_CONFIG}" "${MOZ_CONFIG_BAK}"
 
+ANDROID_HOME="${ANDROID_HOME:-$HOME/.mozbuild/android-sdk-linux}"
+
 cat <<EOF > "${MOZ_CONFIG}"
 # Build Firefox for Android:
 ac_add_options --enable-application=mobile/android
 ac_add_options --target="${CLIQZ_ARCH}"
 # With the following Android SDK:
-ac_add_options --with-android-sdk="\$HOME/.mozbuild/android-sdk-linux"
+ac_add_options --with-android-sdk="${ANDROID_HOME}"
 # Enable artifact building:
 ac_add_options --enable-artifact-builds
 # Write build artifacts to:

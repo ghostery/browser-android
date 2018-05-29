@@ -103,7 +103,7 @@ public class ToolbarEditText extends CustomEditText
 
         /* Cliqz start */
         EventDispatcher.getInstance().registerUiThreadListener(this,
-                "Cliqz:Autocomplete", null);
+                "Search:Autocomplete", null);
         /* Cliqz end */
     }
 
@@ -674,13 +674,13 @@ public class ToolbarEditText extends CustomEditText
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         EventDispatcher.getInstance().unregisterUiThreadListener(this,
-                "Cliqz:Autocomplete", null);
+                "Search:Autocomplete", null);
     }
 
     @Override
     public void handleMessage(String event, GeckoBundle message, EventCallback callback) {
         switch (event) {
-            case "Cliqz:Autocomplete":
+            case "Search:Autocomplete":
                 final String autoCompletion = message.getString("data");
                 onAutocomplete(autoCompletion);
                 break;

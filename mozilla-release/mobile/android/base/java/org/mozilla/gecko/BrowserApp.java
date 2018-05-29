@@ -891,7 +891,8 @@ public class BrowserApp extends GeckoApp
             "Sanitize:Finished",
             "Sanitize:OpenTabs",
             /* Cliqz start */
-            "Cliqz:OpenLink",
+            "Search:OpenLink",
+            "Privacy:Count",
             /* Cliqz end */
             null);
 
@@ -1723,7 +1724,8 @@ public class BrowserApp extends GeckoApp
             "Sanitize:Finished",
             "Sanitize:OpenTabs",
             /* Cliqz start */
-            "Cliqz:OpenLink",
+            "Search:OpenLink",
+            "Privacy:Count",
             /* Cliqz end */
             null);
 
@@ -2309,9 +2311,12 @@ public class BrowserApp extends GeckoApp
 
                 break;
             /* Cliqz start */
-            case "Cliqz:OpenLink":
+            case "Search:OpenLink":
                 // for now we handle the actual opening in JS
                 mBrowserToolbar.cancelEdit();
+                break;
+            case "Privacy:Count":
+                mBrowserToolbar.updateGhosty(message.getInt("tabId"), message.getInt("count"));
                 break;
             /* Cliqz end */
             default:
