@@ -18,8 +18,8 @@ src_dirs = [ "mobile/android/base/locales/en-US",
              "mobile/locales/en-US/overrides" ]
 
 # The locales we want to translate to
-locales = [ "de", "es-ES", "fr", "hu", "it", "ja", "ko", "nl", "pl", "pt_BR",
-            "ru", "zh_CN", "zh_TW", ]
+locales = [ "de", "es-ES", "fr", "hu", "it", "ja", "ko", "nl", "pl", "pt-BR",
+            "ru", "zh-CN", "zh-TW", ]
 
 root_path = os.path.abspath(os.path.join(os.getcwd(), os.path.pardir))
 try:
@@ -77,7 +77,11 @@ def parse_dtd(file, out_index=defaultdict(lambda: [])):
     try:
         dtd = etree.DTD(file)
         for e in dtd.entities():
-            out[e.name] = { 'message': e.content, 'orig': e.orig }
+            if e.name in out:
+                raise Exception("Overwriting {}".format(e.name))
+            msg = e.content if e.content else ""
+            org = e.orig if e.orig else ""
+            out[e.name] = { 'message': msg, 'orig': org }
             out_index[fname].append(e.name)
     except Exception as e:
         print "Can't parse {}".format(file)
@@ -117,11 +121,11 @@ def generate_json(locale, files, gen_index=False):
     for f in files:
         out.update(parse_file(f, out_index))
     f = open(fname, "w")
-    f.write(json.dumps(out, indent=4))
+    f.write(json.dumps(out, indent=4, ensure_ascii=False))
     f.close()
     if gen_index:
         fi = open(iname, "we")
-        fi.write(json.dumps(out_index, indent=4))
+        fi.write(json.dumps(out_index, indent=4,  ensure_ascii=False))
         fi.close()
 
 if __name__ == "__main__":
