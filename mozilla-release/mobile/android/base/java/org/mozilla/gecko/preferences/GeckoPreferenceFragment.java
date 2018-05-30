@@ -37,18 +37,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_COMPACT_TABS;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_DYNAMIC_TOOLBAR;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_GENERAL_HOME;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_GENERAL_LANGUAGE;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_NOTIFICATIONS_SCREEN;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_DONTTRACK;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_DONTTRACK_LEARN_MORE;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_TRACKING_PROTECTION;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_PRIVACY_TRACKING_PROTECTION_LEARN_MORE;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_SHOW_HINTS;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_VENDOR_SCREEN;
-
 /* A simple implementation of PreferenceFragment for large screen devices
  * This will strip category headers (so that they aren't shown to the user twice)
  * as well as initializing Gecko prefs when a fragment is shown.
@@ -101,48 +89,10 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
 
         PreferenceScreen screen = getPreferenceScreen();
         setPreferenceScreen(screen);
-        /* Cliqz start */
-        if(res == R.xml.preferences_general || res == R.xml.preferences_general_tablet){
-            // remove Home setting from General settings
-            removePreference(screen, PREFS_GENERAL_HOME);
-            // remove Language setting from General settings
-            removePreference(screen, PREFS_GENERAL_LANGUAGE);
-            // remove Full-screen browsing setting from General settings
-            removePreference(screen,PREFS_DYNAMIC_TOOLBAR);
-            // remove Compact tabs setting from General settings
-            removePreference(screen,PREFS_COMPACT_TABS);
-            // remove show hints in production
-            if (!BuildConfig.DEBUG) {
-                removePreference(screen,PREFS_SHOW_HINTS);
-            }
-        }
-        // remove Mozilla Fennec (About, Feedback, FAQ) & notifications screens
-        else if(res == R.xml.preferences){
-            removePreference(screen, PREFS_VENDOR_SCREEN);
-            removePreference(screen, PREFS_NOTIFICATIONS_SCREEN);
-        }
-        else if(res == R.xml.preferences_privacy){
-            // remove don't track
-            removePreference(screen,PREFS_PRIVACY_DONTTRACK);
-            removePreference(screen,PREFS_PRIVACY_DONTTRACK_LEARN_MORE);
-            // remove tracking protection
-            removePreference(screen,PREFS_PRIVACY_TRACKING_PROTECTION);
-            removePreference(screen,PREFS_PRIVACY_TRACKING_PROTECTION_LEARN_MORE);
-        }
-        /* Cliqz end */
+
         mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);
         syncPreference = (SyncPreference) findPreference(GeckoPreferences.PREFS_SYNC);
     }
-
-    /* Cliqz start */
-    // remove not needed preferences from FF
-    private void removePreference(PreferenceScreen screen,String preferenceKey){
-        final Preference preference = screen.findPreference(preferenceKey);
-        if(preference != null) {
-            screen.removePreference(preference);
-        }
-    }
-    /* Cliqz end */
 
     /**
      * Return the title to use for this preference fragment.
