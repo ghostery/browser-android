@@ -22,6 +22,7 @@ RUN dpkg --add-architecture i386 && \
         unzip \
         uuid \
         wget \
+        yasm \
         zip && \
     apt-get install -y \
         automake \
@@ -88,7 +89,7 @@ ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux
 ENV PATH "/home/jenkins/node-v8.9.3-linux-x64/bin:$PATH"
 ENV NVM_DIR /home/jenkins/nvm
 ENV NODE_VERSION 8.9.3
-ENV CLANG_HOME /home/jenkins/clang
+ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04/
 SHELL ["/bin/bash", "-l", "-c"]
 
 # Install nvm with node and npm
@@ -121,13 +122,11 @@ RUN mkdir -p $ANDROID_NDK_HOME; \
     rm -r ndk.zip;
 
 #Install CLang
-RUN mkdir -p $CLANG_HOME; \
-    cd $CLANG_HOME; \
-    wget --output-document=clang.tar.xz --quiet  https://repository.cliqz.com/dist/android/artifacts/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz && \
-    tar xf clang.tar.xz && \
-    cp -r clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04/* $CLANG_HOME; \
-    rm -rf clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04 clang.tar.xz && \
-    echo 'export PATH=$CLANG_HOME/bin:$PATH' >> ~/.bashrc && \
+RUN mkdir -p /home/jenkins/clang; \
+    cd /home/jenkins/clang; \
+    wget --output-document=clang.tar.xz --quiet "https://repository.cliqz.com/dist/android/artifacts/clang/clang%2Bllvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"; \
+    tar xf clang.tar.xz; \
+    echo 'export PATH=$CLANG_HOME/bin:$PATH' >> ~/.bashrc; \
     echo 'export LD_LIBRARY_PATH=$CLANG_HOME/lib:LD_LIBRARY_PATH' >> ~/.bashrc
 
 #Installation of 'yarn'; 'appium' & 'wd' for Integration Tests
