@@ -15,6 +15,7 @@ import android.view.View;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.util.ThreadUtils;
 
 import java.util.Locale;
@@ -103,5 +104,14 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
         ThreadUtils.assertOnUiThread();
         mTrackerCount = count;
         invalidate();
+    }
+
+    @Override
+    public void setPrivateMode(boolean isPrivate) {
+        super.setPrivateMode(isPrivate);
+        if (mGhostyDrawable != null) {
+            final int[] state = isPrivate ? new int[] { R.attr.state_private } : new int[] {};
+            mGhostyDrawable.setState(state);
+        }
     }
 }
