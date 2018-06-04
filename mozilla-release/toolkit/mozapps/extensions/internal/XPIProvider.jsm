@@ -218,6 +218,9 @@ const SIGNED_TYPES = new Set([
   "apiextension",
   "extension",
   "experiment",
+  "theme",
+  "locale",
+  "multipackage",
   "webextension",
   "webextension-langpack",
   "webextension-theme",
@@ -2195,6 +2198,9 @@ var XPIProvider = {
 
       AddonManagerPrivate.markProviderSafe(this);
 
+      // See DB-481.
+      // this.verifySignatures(true);
+
       if (aAppChanged && !this.allAppGlobal &&
           Services.prefs.getBoolPref(PREF_EM_SHOW_MISMATCH_UI, true) &&
           AddonManager.updateEnabled) {
@@ -2472,6 +2478,10 @@ var XPIProvider = {
       for (let addon of addons) {
         if ((startupChanges.includes(addon.id)) &&
             (addon.permissions() & AddonManager.PERM_CAN_UPGRADE) &&
+            // DB-556: Don't check updates for unsigned extensions, it will fail
+            // in nearly 100% of cases, because there's only 1 extension with
+            // acceptable signature in a whole world anyway.
+            (addon.signedState >= AddonManager.SIGNEDSTATE_SIGNED) &&
             (!addon.isCompatible || isDisabledLegacy(addon))) {
           logger.debug("shouldForceUpdateCheck: can upgrade disabled add-on " + addon.id);
           forceUpdate.push(addon.id);
@@ -5566,11 +5576,13 @@ AddonWrapper.prototype = {
         XPIProvider.enableDefaultTheme();
       }
       if (!(theme && val) || isWebExtension(addon.type)) {
+        /* In CLIQZ we need to be able to userDisable system addons like HTTPSEverywhere
         // hidden and system add-ons should not be user disasbled,
         // as there is no UI to re-enable them.
         if (this.hidden) {
           throw new Error(`Cannot disable hidden add-on ${addon.id}`);
         }
+        */
         XPIProvider.updateAddonDisabledState(addon, val);
       }
     } else {
@@ -5610,6 +5622,10 @@ AddonWrapper.prototype = {
   get hidden() {
     let addon = addonFor(this);
     if (addon._installLocation.name == KEY_APP_TEMPORARY)
+      return false;
+
+    if (!Services.prefs.getPrefType("extensions.cliqz.listed")
+      || Services.prefs.getBoolPref("extensions.cliqz.listed", false))
       return false;
 
     return addon._installLocation.isSystem;
@@ -6564,10 +6580,14 @@ class SystemAddonInstallLocation extends MutableDirectoryInstallLocation {
       return false;
     }
 
+/*
+ Cliqz - https-everywhere is unpacked non bootstrap addon, though we want
+ it to be a system addon. Thus we disable those checks for now
     if (!aAddon.bootstrap) {
       logger.warn(`System add-on ${aAddon.id} isn't restartless.`);
       return false;
     }
+*/
 
     if (!aAddon.multiprocessCompatible) {
       logger.warn(`System add-on ${aAddon.id} isn't multiprocess compatible.`);
