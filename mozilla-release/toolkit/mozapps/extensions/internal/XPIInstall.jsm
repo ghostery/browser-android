@@ -1001,14 +1001,14 @@ function getSignedStatus(aRv, aCert, aAddonID) {
       if (expectedCommonName && expectedCommonName != aCert.commonName)
         return AddonManager.SIGNEDSTATE_BROKEN;
 
-      if (aCert.organizationalUnit == "Mozilla Components") {
+      if (aCert.organizationalUnit == "Cliqz Frontend") {
         return AddonManager.SIGNEDSTATE_SYSTEM;
       }
-
+/*
       if (aCert.organizationalUnit == "Mozilla Extensions") {
         return AddonManager.SIGNEDSTATE_PRIVILEGED;
       }
-
+*/
       return /preliminary/i.test(aCert.organizationalUnit)
                ? AddonManager.SIGNEDSTATE_PRELIMINARY
                : AddonManager.SIGNEDSTATE_SIGNED;
@@ -1061,7 +1061,7 @@ function verifyZipSignedState(aFile, aAddon) {
       cert: null
     });
 
-  let root = Ci.nsIX509CertDB.AddonsPublicRoot;
+  let root = Ci.nsIX509CertDB.CliqzAddonsRoot;
   if (!AppConstants.MOZ_REQUIRE_SIGNING && Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false))
     root = Ci.nsIX509CertDB.AddonsStageRoot;
 
@@ -1103,7 +1103,7 @@ function verifyDirSignedState(aDir, aAddon) {
       cert: null,
     });
 
-  let root = Ci.nsIX509CertDB.AddonsPublicRoot;
+  let root = Ci.nsIX509CertDB.CliqzAddonsRoot;
   if (!AppConstants.MOZ_REQUIRE_SIGNING && Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false))
     root = Ci.nsIX509CertDB.AddonsStageRoot;
 
@@ -1561,15 +1561,19 @@ class AddonInstall {
         // This add-on isn't properly signed by a signature that chains to the
         // trusted root.
         let state = this.addon.signedState;
+        const manifest = this.addon;
         this.addon = null;
         zipreader.close();
 
-        if (state == AddonManager.SIGNEDSTATE_MISSING)
+        if (state == AddonManager.SIGNEDSTATE_MISSING ||
+            state == AddonManager.SIGNEDSTATE_UNKNOWN)
           return Promise.reject([AddonManager.ERROR_SIGNEDSTATE_REQUIRED,
-                                 "signature is required but missing"]);
+                                 "signature is required but missing",
+                                 manifest]);
 
         return Promise.reject([AddonManager.ERROR_CORRUPT_FILE,
-                               "signature verification failed"]);
+                               "signature verification failed",
+                               manifest]);
       }
     }
 
@@ -2329,7 +2333,8 @@ var DownloadAddonInstall = class extends AddonInstall {
       return;
     }
 
-    logger.debug("Download of " + this.sourceURI.spec + " completed.");
+    logger.debug("Download of " + this.sourceURI.spec +
+            " completed with satatus " + aStatus);
 
     if (Components.isSuccessCode(aStatus)) {
       if (!(aRequest instanceof Ci.nsIHttpChannel) || aRequest.requestSucceeded) {
@@ -2363,7 +2368,10 @@ var DownloadAddonInstall = class extends AddonInstall {
               onUpdateFinished: aAddon => this.downloadCompleted(),
             }, AddonManager.UPDATE_WHEN_ADDON_INSTALLED);
           }
-        }, ([error, message]) => {
+        }, ([error, message, manifest]) => {
+          manifest = manifest || this.addon;
+          XPIDatabase.reportAddonInstallationAttempt(manifest.id, manifest.type,
+              "download");
           this.removeTemporaryFile();
           this.downloadFailed(error, message);
         });
