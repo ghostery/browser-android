@@ -11,3 +11,4 @@ chrome.jar:
     content/ext-pageAction.js
     content/ext-tabs.js
     content/ext-utils.js
+    content/ext-history.js

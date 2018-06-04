@@ -7,3 +7,4 @@ chrome.jar:
     content/schemas/browsing_data.json
     content/schemas/page_action.json
     content/schemas/tabs.json
+    content/schemas/history.json
