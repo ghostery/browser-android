@@ -900,7 +900,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         tabsCounter.setPrivateMode(isPrivate);
         urlEditLayout.setPrivateMode(isPrivate);
         urlDisplayLayout.setPrivateMode(isPrivate);
-
+        /* Cliqz start */
+        ghostyButton.setPrivateMode(isPrivate);
+        /* Cliqz end */
         ((ThemedImageButton) menuButton).setPrivateMode(isPrivate);
 
         shadowPaint.setColor(isPrivate ? shadowPrivateColor : shadowColor);
