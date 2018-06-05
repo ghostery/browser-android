@@ -101,5 +101,13 @@ extensions.registerModules({
       ["tabs"],
     ],
   },
+  history: {
+    url: "chrome://browser/content/ext-history.js",
+    schema: "chrome://browser/content/schemas/history.json",
+    scopes: ["addon_parent"],
+    paths: [
+      ["history"],
+    ],
+  },
 });
 
