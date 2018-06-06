@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Cliqz © Copyright 2018 -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/block_all"
+        android:title="@string/block_all" />
+    <item
+        android:id="@+id/unblock_all"
+        android:title="@string/unblock_all"/>
+    <item
+        android:id="@+id/reset_settings"
+        android:title="@string/reset_settings" />
+</menu>

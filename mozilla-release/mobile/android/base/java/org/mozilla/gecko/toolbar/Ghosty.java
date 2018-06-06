@@ -21,11 +21,19 @@ import org.mozilla.gecko.util.ThreadUtils;
 import java.util.Locale;
 
 /**
- * Copyright &copy; Cliqz 2018
+ * Copyright © Cliqz 2018
  */
 class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
 
+    public interface OnGhostyClickedListener {
+
+        void showControlCenter();
+
+        void hideControlCenter();
+    }
+
     private boolean mShowingGhostery = false;
+    private OnGhostyClickedListener mOnGhostyClickedListener;
     private Paint mPaint;
     private int mTrackerCount = 0;
 
@@ -61,6 +69,10 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
         mGhostyHeight = mGhostyDrawable.getIntrinsicHeight();
     }
 
+    public void setOnGhostyClickedListener(OnGhostyClickedListener onGhostyClickedListener) {
+        mOnGhostyClickedListener = onGhostyClickedListener;
+    }
+
     private String getTrackerCountString() {
         if (mTrackerCount <= 0) {
             return "HELLO";
@@ -72,11 +84,11 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (mShowingGhostery) {
-            EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
+            mOnGhostyClickedListener.hideControlCenter();
         } else {
-            EventDispatcher.getInstance().dispatch("Privacy:Show", null);
+            mOnGhostyClickedListener.showControlCenter();
+            EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
         }
-
         mShowingGhostery = !mShowingGhostery;
     }
 

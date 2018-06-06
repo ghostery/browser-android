@@ -83,7 +83,8 @@ import java.util.List;
 */
 public abstract class BrowserToolbar extends ThemedRelativeLayout
                                      implements Tabs.OnTabsChangedListener,
-                                                GeckoMenu.ActionItemBarPresenter {
+                                                GeckoMenu.ActionItemBarPresenter,
+                                                Ghosty.OnGhostyClickedListener {
     private static final String LOGTAG = "GeckoToolbar";
 
     private static final int LIGHTWEIGHT_THEME_INVERT_ALPHA_START = 204; // 255 - alpha = invert_alpha
@@ -205,6 +206,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
         /* Cliqz start */
         ghostyButton = (Ghosty) findViewById(R.id.ghosty);
+        ghostyButton.setOnGhostyClickedListener(this);
         /* Cliqz end */
 
         menuButton = findViewById(R.id.menu);
@@ -1046,6 +1048,15 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         EventDispatcher.getInstance().dispatch("Search:Hide", null);
     }
 
+    @Override
+    public void showControlCenter() {
+        activity.showControlCenter();
+    }
+
+    @Override
+    public void hideControlCenter() {
+        activity.hideControlCenter();
+    }
     /**
      * Update the tracker count for the current selected tab
      *

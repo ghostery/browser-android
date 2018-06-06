@@ -296,6 +296,16 @@
     <color name="myoffrz_onboarding_bg">#b8dfee</color>
     <color name="myoffrz_deactivated_layout">#40000000</color>
 
+    <!-- ControlCenter -->
+    <color name="advertising">#CB55CD</color>
+    <color name="audio_video_player">#EF671E</color>
+    <color name="comments">#43B7C5</color>
+    <color name="customer_interaction">#FDC257</color>
+    <color name="essential">#FC9734</color>
+    <color name="pornvertising">#ECAFC2</color>
+    <color name="site_analytics">#87D7EF</color>
+    <color name="social_media">#388EE8</color>
+    <color name="default_category">#E8E8E8</color> 
     <!-- History and Favorites -->
     <color name="history_favorites_row">@android:color/white</color>
     <color name="history_favorites_row_private">@android:color/white</color>

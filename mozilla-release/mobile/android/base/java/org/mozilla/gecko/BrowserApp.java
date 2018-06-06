@@ -43,11 +43,13 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -69,8 +71,9 @@ import android.view.Window;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
-
 import org.mozilla.gecko.AppConstants.Versions;
 import org.mozilla.gecko.DynamicToolbar.VisibilityTransition;
 import org.mozilla.gecko.Tabs.TabEvents;
@@ -83,6 +86,10 @@ import org.mozilla.gecko.bookmarks.BookmarkEditFragment;
 import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
 import org.mozilla.gecko.cleanup.FileCleanupController;
+import org.mozilla.gecko.controlcenter.ControlCenterPagerAdapter;
+import org.mozilla.gecko.controlcenter.GlobalTrackersFragment;
+import org.mozilla.gecko.controlcenter.OverviewFragment;
+import org.mozilla.gecko.controlcenter.SiteTrackersFragment;
 import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.db.SuggestedSites;
@@ -274,6 +281,10 @@ public class BrowserApp extends GeckoApp
     private int mCachedRecentTabsCount;
     private ActionModeCompat mActionMode;
     private TabHistoryController tabHistoryController;
+
+    private ViewPager mControlCenterPager;
+    private View mControlCenterContainer;
+    private ControlCenterPagerAdapter mControlCenterPagerAdapter;
 
     private static final int GECKO_TOOLS_MENU = -1;
     private static final int ADDON_MENU_OFFSET = 1000;
@@ -867,6 +878,20 @@ public class BrowserApp extends GeckoApp
         mMediaCastingBar = (MediaCastingBar) findViewById(R.id.media_casting);
 
         doorhangerOverlay = findViewById(R.id.doorhanger_overlay);
+        /*Cliqz start*/
+        mControlCenterPager = (ViewPager) findViewById(R.id.control_center_pager);
+        mControlCenterContainer = findViewById(R.id.control_center_container);
+
+        mControlCenterPagerAdapter = new ControlCenterPagerAdapter(getSupportFragmentManager(), getBaseContext());
+        mControlCenterPagerAdapter.addFragment(new OverviewFragment());
+        mControlCenterPagerAdapter.addFragment(new SiteTrackersFragment());
+        mControlCenterPagerAdapter.addFragment(new GlobalTrackersFragment());
+        mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
+        mControlCenterPager.setOffscreenPageLimit(3);
+
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.conrol_center_tab_layout);
+        tabLayout.setupWithViewPager(mControlCenterPager);
+        /*Cliqz end*/
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
             "Search:Keyword",
@@ -892,6 +917,7 @@ public class BrowserApp extends GeckoApp
             "Sanitize:OpenTabs",
             /* Cliqz start */
             "Search:OpenLink",
+            "Privacy:Info",
             "Privacy:Count",
             /* Cliqz end */
             null);
@@ -1843,6 +1869,9 @@ public class BrowserApp extends GeckoApp
         }
 
         mHomeScreenContainer.setPadding(0, height, 0, 0);
+        /*Cliqz Start*/
+        mControlCenterContainer.setPadding(0, height, 0, 0);
+        /*Cliqz End*/
 
         if (mLayerView != null && height != mToolbarHeight) {
             mToolbarHeight = height;
@@ -2314,6 +2343,9 @@ public class BrowserApp extends GeckoApp
             case "Search:OpenLink":
                 // for now we handle the actual opening in JS
                 mBrowserToolbar.cancelEdit();
+                break;
+            case "Privacy:Info":
+                mControlCenterPagerAdapter.setTrackingData(message);
                 break;
             case "Privacy:Count":
                 mBrowserToolbar.updateGhosty(message.getInt("tabId"), message.getInt("count"));
@@ -4647,6 +4679,14 @@ public class BrowserApp extends GeckoApp
     private void hidePanelSearch() {
         EventDispatcher.getInstance().dispatch("Search:Hide", null);
         EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
+    }
+
+    public void showControlCenter() {
+        mControlCenterContainer.setVisibility(View.VISIBLE);
+    }
+
+    public void hideControlCenter() {
+        mControlCenterContainer.setVisibility(View.GONE);
     }
     /* Cliqz end */
 }
