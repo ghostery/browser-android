@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -125,7 +126,6 @@ import org.mozilla.gecko.media.VideoPlayer;
 import org.mozilla.gecko.menu.GeckoMenu;
 import org.mozilla.gecko.menu.GeckoMenuItem;
 import org.mozilla.gecko.mma.MmaDelegate;
-import org.mozilla.gecko.mozglue.GeckoLoader;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationHelper;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
@@ -916,9 +916,10 @@ public class BrowserApp extends GeckoApp
             "Sanitize:Finished",
             "Sanitize:OpenTabs",
             /* Cliqz start */
+            "Search:GetHistory",
             "Search:OpenLink",
-            "Privacy:Info",
             "Privacy:Count",
+            "Privacy:Info",
             /* Cliqz end */
             null);
 
@@ -1750,8 +1751,10 @@ public class BrowserApp extends GeckoApp
             "Sanitize:Finished",
             "Sanitize:OpenTabs",
             /* Cliqz start */
+            "Search:GetHistory",
             "Search:OpenLink",
             "Privacy:Count",
+            "Privacy:Info",
             /* Cliqz end */
             null);
 
@@ -2339,18 +2342,54 @@ public class BrowserApp extends GeckoApp
                 }
 
                 break;
+
             /* Cliqz start */
+            case "Search:GetHistory":
+                final String query = message.getString("data", "");
+                final BrowserDB sdb = BrowserDB.from(getProfile());
+                final ContentResolver scr = getContentResolver();
+                final Cursor scu = sdb.getHistoryForQuery(scr, query, 5);
+                final GeckoBundle smessage = new GeckoBundle();
+                smessage.putString("text", query);
+                final ArrayList<GeckoBundle> results = new ArrayList<>(5);
+                try {
+                    while (scu != null && scu.moveToNext()) {
+                        final GeckoBundle row = new GeckoBundle();
+                        row.putInt("id", scu.getInt(scu.getColumnIndex(BrowserContract.History._ID)));
+                        row.putString("url",
+                                scu.getString(scu.getColumnIndex(BrowserContract.History.URL)));
+                        row.putString("title",
+                                scu.getString(scu.getColumnIndex(BrowserContract.History.TITLE)));
+                        row.putDouble("lastVisitTime",
+                                scu.getLong(scu.getColumnIndex(BrowserContract.History.DATE_LAST_VISITED)));
+                        row.putInt("visitCount",
+                                scu.getInt(scu.getColumnIndex(BrowserContract.History.VISITS)));
+                        results.add(row);
+                    }
+                } finally {
+                    if (scu != null) {
+                        scu.close();
+                    }
+                }
+                smessage.putBundleArray("results", results);
+                EventDispatcher.getInstance().dispatch("Search:SetHistory", smessage);
+                break;
+
             case "Search:OpenLink":
                 // for now we handle the actual opening in JS
                 mBrowserToolbar.cancelEdit();
                 break;
-            case "Privacy:Info":
-                mControlCenterPagerAdapter.setTrackingData(message);
-                break;
+
             case "Privacy:Count":
                 mBrowserToolbar.updateGhosty(message.getInt("tabId"), message.getInt("count"));
                 break;
+
+            case "Privacy:Info":
+                mControlCenterPagerAdapter.setTrackingData(message);
+                break;
+
             /* Cliqz end */
+
             default:
                 super.handleMessage(event, message, callback);
                 break;
