@@ -124,6 +124,10 @@ public class LocalBrowserDB extends BrowserDB {
     private final Uri mActivityStreamBlockedUriWithProfile;
     private final Uri mPageMetadataWithProfile;
 
+    /* Cliqz start */
+    private final Uri mMostVisitedHistoryWithProfile;
+    /* Cliqz end */
+
     private LocalSearches searches;
     private LocalTabsAccessor tabsAccessor;
     private LocalURLMetadata urlMetadata;
@@ -161,6 +165,10 @@ public class LocalBrowserDB extends BrowserDB {
                                       .appendQueryParameter(BrowserContract.PARAM_INCREMENT_VISITS, "true")
                                       .appendQueryParameter(BrowserContract.PARAM_INSERT_IF_NEEDED, "true")
                                       .build();
+
+        /* Cliqz start */
+        mMostVisitedHistoryWithProfile = DBUtils.appendProfile(profile, History.CONTENT_URI);
+        /* Cliqz end */
 
         searches = new LocalSearches(mProfile);
         tabsAccessor = new LocalTabsAccessor(mProfile);
@@ -2065,4 +2073,28 @@ public class LocalBrowserDB extends BrowserDB {
         cr.insert(mActivityStreamBlockedUriWithProfile, values);
     }
 
+    /* Cliqz start */
+    @Nullable public Cursor getHistoryForQuery(@NonNull ContentResolver cr, @NonNull String query, int limit) {
+        final Uri uri = mMostVisitedHistoryWithProfile.buildUpon()
+                .appendQueryParameter(BrowserContract.PARAM_LIMIT, String.valueOf(limit))
+                .build();
+        final String[] projection = new String[] {
+                History._ID,
+                History.URL,
+                History.TITLE,
+                History.DATE_LAST_VISITED,
+                History.VISITS
+        };
+        final String selection = query.isEmpty() ? null : History.URL + " LIKE ? OR " + History.TITLE + " LIKE ? ";
+        final String[] selectionArgs;
+        if (query.isEmpty()) {
+            selectionArgs = null;
+        } else {
+            final String likeQuery = "%" + query + "%";
+            selectionArgs = new String[] { likeQuery, likeQuery };
+        }
+        final String sortOrder = History.DATE_LAST_VISITED + " DESC, " + History.VISITS + " DESC";
+        return cr.query(uri, projection, selection, selectionArgs, sortOrder);
+    }
+    /* Cliqz end */
 }

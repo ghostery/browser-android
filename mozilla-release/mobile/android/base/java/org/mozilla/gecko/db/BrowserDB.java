@@ -22,6 +22,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.CursorLoader;
 
@@ -198,6 +199,17 @@ public abstract class BrowserDB {
      * @param url The page URL. Only pages exactly matching this URL will be blocked.
      */
     public abstract void blockActivityStreamSite(ContentResolver cr, String url);
+
+    /* Cliqz start */
+    /**
+     * Search the keyword in the history urls or page titles, the <code>Cursor</code> is ordered
+     * by last visit date descending and number of visit descending.
+     *
+     * @param query a string to search in the urls or the page titles
+     * @param limit return at most limit elements
+     */
+    @Nullable public abstract Cursor getHistoryForQuery(@NonNull ContentResolver cr, @NonNull String query, int limit);
+    /* Cliqz end */
 
     public static BrowserDB from(final Context context) {
         return from(GeckoProfile.get(context));

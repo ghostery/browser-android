@@ -8,10 +8,28 @@ CWD=`dirname $0`
 
 source "${CWD}/android.sh"
 
-flavor=""
-if [ -n "${1}" ]
-then
-    flavor=".${1}"
-fi
+declare -a flavors=(  "Cliqz" "Cliqz Alpha" "Ghostery" "Ghostery Alpha" )
+declare -A packages
+packages=( \
+    ["${flavors[0]}"]="com.cliqz.browser" \
+    ["${flavors[1]}"]="com.cliqz.browser.alpha" \
+    ["${flavors[2]}"]="com.ghostery.android" \
+    ["${flavors[3]}"]="com.ghostery.android.alpha" )
 
-$ABD forward tcp:6000 localfilesystem:/data/data/com.cliqz.browser${flavor}/firefox-debugger-socket
+counter=0
+for f in "${flavors[@]}"
+do
+    ((counter++))
+    echo "${counter}. $f"
+done
+echo -n "Please, pick one: "
+while read n
+do
+    [ $n -gt 0 ] && [ $n -le $counter ] && break
+    echo -n "Invalid input $n. Please, pick one: "
+done
+
+flavor="${flavors[$[ n - 1]]}"
+package="${packages[$flavor]}"
+
+$ABD forward tcp:6000 localfilesystem:/data/data/${package}/firefox-debugger-socket
