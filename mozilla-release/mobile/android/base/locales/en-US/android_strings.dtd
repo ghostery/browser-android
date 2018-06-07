@@ -928,24 +928,24 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY title_overview "OVERVIEW">
 <!ENTITY title_site_trackers "SITE TRACKERS">
 <!ENTITY title_global_trackers "GLOBAL TRACKERS">
-<!ENTITY zero_trackers_found "Trackers found">
-<!ENTITY one_trackers_found "Tracker found">
-<!ENTITY two_trackers_found "Trackers found">
-<!ENTITY few_trackers_found "Trackers found">
-<!ENTITY many_trackers_found "Trackers found">
-<!ENTITY other_trackers_found "Trackers found">
-<!ENTITY zero_trackers_blocked "Trackers blocked">
-<!ENTITY one_trackers_blocked "Tracker blocked">
-<!ENTITY two_trackers_blocked "Trackers blocked">
-<!ENTITY few_trackers_blocked "Trackers blocked">
-<!ENTITY many_trackers_blocked "Trackers blocked">
-<!ENTITY other_trackers_blocked "Trackers blocked">
-<!ENTITY zero_trackers "Trackers">
-<!ENTITY one_trackers "Tracker">
-<!ENTITY two_trackers "Trackers">
-<!ENTITY few_trackers "Trackers">
-<!ENTITY many_trackers "Trackers">
-<!ENTITY other_trackers "Trackers">
+<!ENTITY zero_trackers_found "\u0025d Trackers found">
+<!ENTITY one_trackers_found "\u0025d Tracker found">
+<!ENTITY two_trackers_found "\u0025d Trackers found">
+<!ENTITY few_trackers_found "\u0025d Trackers found">
+<!ENTITY many_trackers_found "\u0025d Trackers found">
+<!ENTITY other_trackers_found "\u0025d Trackers found">
+<!ENTITY zero_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY one_trackers_blocked "\u0025d Tracker blocked">
+<!ENTITY two_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY few_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY many_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY other_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY zero_trackers "\u0025d Trackers">
+<!ENTITY one_trackers "\u0025d Tracker">
+<!ENTITY two_trackers "\u0025d Trackers">
+<!ENTITY few_trackers "\u0025d Trackers">
+<!ENTITY many_trackers "\u0025d Trackers">
+<!ENTITY other_trackers "\u0025d Trackers">
 <!ENTITY trust_site "Trust Site">
 <!ENTITY restrict_site "Restrict Site">
 <!ENTITY pause_ghostery "Pause Ghostery">
@@ -964,6 +964,7 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY on_this_site "On this site">
 <!ENTITY trackers "TRACKERS">
 <!ENTITY blocked "BLOCKED">
+<!ENTITY num_blocked "\u0025d BLOCKED">
 <!ENTITY tracker_info "Tracker Info">
 <!ENTITY block_all "Block all">
 <!ENTITY unblock_all "Unblock all">

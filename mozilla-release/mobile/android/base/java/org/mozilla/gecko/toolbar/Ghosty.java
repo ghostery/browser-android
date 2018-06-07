@@ -27,12 +27,9 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
 
     public interface OnGhostyClickedListener {
 
-        void showControlCenter();
-
-        void hideControlCenter();
+        void toggleControlCenter();
     }
 
-    private boolean mShowingGhostery = false;
     private OnGhostyClickedListener mOnGhostyClickedListener;
     private Paint mPaint;
     private int mTrackerCount = 0;
@@ -83,13 +80,7 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (mShowingGhostery) {
-            mOnGhostyClickedListener.hideControlCenter();
-        } else {
-            mOnGhostyClickedListener.showControlCenter();
-            EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
-        }
-        mShowingGhostery = !mShowingGhostery;
+        mOnGhostyClickedListener.toggleControlCenter();
     }
 
     @Override

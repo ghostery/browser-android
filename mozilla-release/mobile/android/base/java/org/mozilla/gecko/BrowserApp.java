@@ -1255,6 +1255,11 @@ public class BrowserApp extends GeckoApp
             return;
         }
 
+        if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
+            hideControlCenter();
+            return;
+        }
+
         super.onBackPressed();
     }
 
@@ -4720,11 +4725,16 @@ public class BrowserApp extends GeckoApp
         EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
     }
 
-    public void showControlCenter() {
-        mControlCenterContainer.setVisibility(View.VISIBLE);
+    public void toggleControlCenter() {
+        if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
+            mControlCenterContainer.setVisibility(View.GONE);
+        } else {
+            mControlCenterContainer.setVisibility(View.VISIBLE);
+            EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
+        }
     }
 
-    public void hideControlCenter() {
+    private void hideControlCenter() {
         mControlCenterContainer.setVisibility(View.GONE);
     }
     /* Cliqz end */
