@@ -104,7 +104,7 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         final ImageView stateCheckBox = (ImageView) convertView.findViewById(R.id.cb_block_all);
         categoryIcon.setImageDrawable(ContextCompat.getDrawable(mContext, category.categoryIcon));
         categoryNameTextView.setText(categoryName);
-        totalTrackersTextView.setText(mContext.getResources().getQuantityString(R.plurals.total_trackers, totalTrackers));
+        totalTrackersTextView.setText(mContext.getResources().getQuantityString(R.plurals.total_trackers, totalTrackers, totalTrackers));
         blockedTrackersTextView.setText(mContext.getString(R.string.num_blocked, blockedTrackers));
         if (blockedTrackers == 0) {
             stateCheckBox.setImageResource(R.drawable.ic_cb_unchecked);

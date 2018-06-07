@@ -720,30 +720,30 @@
   <string name="tracker_info">&tracker_info;</string>
   <string name="block_all">&block_all;</string>
   <string name="unblock_all">&unblock_all;</string>
-  <string name="num_blocked">%d &blocked;</string>
+  <string name="num_blocked">&num_blocked;</string>
   <plurals name="total_trackers_found">
-      <item quantity="zero">%d &zero_trackers_found;</item>
-      <item quantity="one">%d &one_trackers_found;</item>
-      <item quantity="two">%d &two_trackers_found;</item>
-      <item quantity="few">%d &few_trackers_found;</item>
-      <item quantity="many">%d &many_trackers_found;</item>
-      <item quantity="other">%d &other_trackers_found;</item>
+      <item quantity="zero">&zero_trackers_found;</item>
+      <item quantity="one">&one_trackers_found;</item>
+      <item quantity="two">&two_trackers_found;</item>
+      <item quantity="few">&few_trackers_found;</item>
+      <item quantity="many">&many_trackers_found;</item>
+      <item quantity="other">&other_trackers_found;</item>
   </plurals>
   <plurals name="total_trackers_blocked">
-      <item quantity="zero">%d &zero_trackers_blocked;</item>
-      <item quantity="one">%d &one_trackers_blocked;</item>
-      <item quantity="two">%d &two_trackers_blocked;</item>
-      <item quantity="few">%d &few_trackers_blocked;</item>
-      <item quantity="many">%d &many_trackers_blocked;</item>
-      <item quantity="other">%d &other_trackers_blocked;</item>
+      <item quantity="zero">&zero_trackers_blocked;</item>
+      <item quantity="one">&one_trackers_blocked;</item>
+      <item quantity="two">&two_trackers_blocked;</item>
+      <item quantity="few">&few_trackers_blocked;</item>
+      <item quantity="many">&many_trackers_blocked;</item>
+      <item quantity="other">&other_trackers_blocked;</item>
   </plurals>
   <plurals name="total_trackers">
-    <item quantity="zero">%d &zero_trackers;</item>
-    <item quantity="one">%d &one_trackers;</item>
-    <item quantity="two">%d &two_trackers;</item>
-    <item quantity="few">%d &few_trackers;</item>
-    <item quantity="many">%d &many_trackers;</item>
-    <item quantity="other">%d &other_trackers;</item>
+    <item quantity="zero">&zero_trackers;</item>
+    <item quantity="one">&one_trackers;</item>
+    <item quantity="two">&two_trackers;</item>
+    <item quantity="few">&few_trackers;</item>
+    <item quantity="many">&many_trackers;</item>
+    <item quantity="other">&other_trackers;</item>
   </plurals>
 
   <!-- General - Search-->
