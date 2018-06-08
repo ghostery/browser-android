@@ -287,9 +287,11 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                     .getStringArray("site_blacklist"));
             final List<String> whitelist = Arrays.asList(data.getBundle("data").getBundle("summary")
                     .getStringArray("site_whitelist"));
-            if (whitelist.contains(pagehost)) {
+            final boolean isWhiteListed = whitelist.contains(pagehost);
+            final boolean isBlackListed = blacklist.contains(pagehost);
+            if (isWhiteListed) {
                 trackerCheckBox.setImageResource(R.drawable.ic_cb_checked_trust);
-            } else if (blacklist.contains(pagehost)) {
+            } else if (isBlackListed) {
                 trackerCheckBox.setImageResource(R.drawable.ic_cb_checked_restricted);
             } else if (isSiteSpecificAllowed) {
                 trackerCheckBox.setImageResource(R.drawable.ic_cb_checked_trust);
@@ -300,8 +302,11 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
             } else {
                 trackerCheckBox.setImageResource(R.drawable.ic_cb_unchecked);
             }
+            final float fullWidth = 3 * mContext.getResources().getDimension(R.dimen.ghostery_list_item_action_button_width);
+            final float partialWidth = 2 * mContext.getResources().getDimension(R.dimen.ghostery_list_item_action_button_width);
             final ObjectAnimator animation = ObjectAnimator.ofFloat(view, "translationX",
-                    parent.getWidth() - Utils.convertDpToPixel(240));
+                    parent.getWidth() - (isSiteSpecificAllowed || isSiteSpecificBlocked || isWhiteListed || isBlackListed
+                            ? partialWidth : fullWidth));
             animation.setDuration(400);
             trackerCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
