@@ -20,7 +20,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_margin="5dp"
-            app:srcCompat="@drawable/ic_category_advertising"
+            app:srcCompat="@drawable/cc_ic_category_advertising"
             tools:ignore="contentDescription" />
 
         <TextView

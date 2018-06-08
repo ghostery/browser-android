@@ -971,6 +971,12 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY cc_tracker_info "Tracker Info">
 <!ENTITY cc_block_all "Block all">
 <!ENTITY cc_unblock_all "Unblock all">
+<!ENTITY cc_block "Block">
+<!ENTITY cc_unblock "Unblock">
+<!ENTITY cc_trust "Trust">
+<!ENTITY cc_untrust "Untrust">
+<!ENTITY cc_restrict "Restrict">
+<!ENTITY cc_unrestrict "Unrestrict">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Search">

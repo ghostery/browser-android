@@ -40,6 +40,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private boolean mIsSiteRestricted;
     private boolean mIsGhosteryPaused;
     private GeckoBundle controlCenterSettingsData;
+    private final List<Integer> colors = new ArrayList<>();
+    private final List<Integer> disabledColors = new ArrayList<>();
 
     public OverviewFragment() {
     }
@@ -73,16 +75,19 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final int totalTrackers = allowedTrackers + blockedTrackers;
         final String domainName = controlCenterSettingsData.getBundle("data").getBundle("summary").getString("pageHost");
         final List<PieEntry> entries = new ArrayList<>();
-        final List<Integer> colors = new ArrayList<>();
+        mIsGhosteryPaused = controlCenterSettingsData.getBundle("data").getBundle("summary").getBoolean("paused_blocking");
         final GeckoBundle[] categories = controlCenterSettingsData.getBundle("data").getBundle("summary").getBundleArray("categories");
+        colors.clear();
+        disabledColors.clear();
         for (GeckoBundle categoryBundle : categories != null ? categories : new GeckoBundle[0]) {
             final Categories category = Categories.safeValueOf(categoryBundle.getString("id"));
             final int trackersCount = categoryBundle.getInt("num_total");
             entries.add(new PieEntry(trackersCount));
             colors.add(ContextCompat.getColor(getContext(), category.categoryColor));
+            disabledColors.add(ContextCompat.getColor(getContext(), category.categoryColorDisabled));
         }
         final PieDataSet set = new PieDataSet(entries, "cc");
-        set.setColors(colors);
+        set.setColors(mIsGhosteryPaused ? disabledColors : colors);
         final PieData pieData = new PieData(set);
         pieData.setDrawValues(false);
         mPieChart.setHighlightPerTapEnabled(false);
@@ -103,7 +108,6 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 .getBundle("summary").getStringArray("site_whitelist"));
         mIsSiteRestricted = blackList.contains(domainName);
         mIsSiteTrusted = whiteList.contains(domainName);
-        mIsGhosteryPaused = controlCenterSettingsData.getBundle("data").getBundle("summary").getBoolean("paused_blocking");
         if (!mIsGhosteryPaused) {
             styleButton(mTrustSiteButton, mIsSiteTrusted);
             styleButton(mRestrictSiteButton, mIsSiteRestricted);
@@ -143,6 +147,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final GeckoBundle geckoBundle = new GeckoBundle();
         geckoBundle.putBoolean("paused_blocking", mIsGhosteryPaused);
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+        controlCenterSettingsData.getBundle("data").getBundle("summary").putBoolean("paused_blocking", mIsGhosteryPaused);
     }
 
     private void handleTrustButtonClick() {
@@ -166,6 +171,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
             updatedBlackList.remove(pageHost);
             updatedWhiteList.add(pageHost);
+            final GeckoBundle geckoBundle = new GeckoBundle();
+            geckoBundle.putBoolean("paused_blocking", false);
+            EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
         } else {
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
@@ -201,6 +209,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
             updatedBlackList.add(pageHost);
             updatedWhiteList.remove(pageHost);
+            final GeckoBundle geckoBundle = new GeckoBundle();
+            geckoBundle.putBoolean("paused_blocking", false);
+            EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
         } else {
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
@@ -228,10 +239,14 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 button.setBackgroundResource(R.drawable.button_background_control_center_blue);
                 buttonText.setText(getString(R.string.cc_resume_ghostery));
                 buttonIcon.setImageResource(R.drawable.ic_resume);
+                ((PieDataSet) mPieChart.getData().getDataSet()).setColors(disabledColors);
+                mPieChart.invalidate();
             } else {
                 button.setBackgroundResource(R.drawable.button_backgorund_control_center_white);
                 buttonText.setText(R.string.cc_pause_ghostery);
                 buttonIcon.setImageResource(R.drawable.ic_pause);
+                ((PieDataSet) mPieChart.getData().getDataSet()).setColors(colors);
+                mPieChart.invalidate();
             }
         } else if (button == mRestrictSiteButton) {
             if (state) {
