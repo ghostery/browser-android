@@ -87,10 +87,8 @@ Here is a list of utility scripts you can find inside the `utils` folder:
 
 2. **forward.sh**
 
-    It forwards the port 6000 to the Firefox debug socket if it exists. If no
-    argument is given, it will use `com.cliqz.browser` as the app id, otherwise
-    it will append a dot arg to the app id (i.e. `./forward.sh alpha` will use
-    `com.cliqz.browser.alpha` as app id).
+    It forwards the port 6000 to the Firefox debug socket if it exists. It will
+    ask for the branding you want to connect to (i.e. Cliqz, Ghosthery, etc.).
 
 3. **multibuild.sh**
 

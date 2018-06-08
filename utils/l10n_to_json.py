@@ -66,6 +66,13 @@ def parse_file(file, out_index=defaultdict(lambda: [])):
     else:
         return {}
 
+def safeEncode(str):
+    str = str if str else u""
+    try:
+        return str.encode("utf8")
+    except UnicodeEncodeError:
+        return u""
+
 def parse_dtd(file, out_index=defaultdict(lambda: [])):
     """
     Generates a dictionary from a .dtd file, it also add the file and its keys
@@ -79,8 +86,8 @@ def parse_dtd(file, out_index=defaultdict(lambda: [])):
         for e in dtd.entities():
             if e.name in out:
                 raise Exception("Overwriting {}".format(e.name))
-            msg = e.content if e.content else ""
-            org = e.orig if e.orig else ""
+            msg = safeEncode(e.content)
+            org = safeEncode(e.orig)
             out[e.name] = { 'message': msg, 'orig': org }
             out_index[fname].append(e.name)
     except Exception as e:

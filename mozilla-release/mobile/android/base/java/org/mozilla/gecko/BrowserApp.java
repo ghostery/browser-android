@@ -2350,13 +2350,15 @@ public class BrowserApp extends GeckoApp
 
             /* Cliqz start */
             case "Search:GetHistory":
-                final String query = message.getString("data", "");
+                final GeckoBundle query = message.getBundle("data");
+                final String text = query != null ? query.getString("text", "") : "";
+                final int limit = query != null ? query.getInt("maxResults", 5) : 5;
                 final BrowserDB sdb = BrowserDB.from(getProfile());
                 final ContentResolver scr = getContentResolver();
-                final Cursor scu = sdb.getHistoryForQuery(scr, query, 5);
+                final Cursor scu = sdb.getHistoryForQuery(scr, text, limit);
                 final GeckoBundle smessage = new GeckoBundle();
-                smessage.putString("text", query);
-                final ArrayList<GeckoBundle> results = new ArrayList<>(5);
+                smessage.putString("text", text);
+                final ArrayList<GeckoBundle> results = new ArrayList<>(limit);
                 try {
                     while (scu != null && scu.moveToNext()) {
                         final GeckoBundle row = new GeckoBundle();
