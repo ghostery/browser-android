@@ -1,0 +1,12 @@
+<!--Copyright © Cliqz 2018-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="12dp"
+    android:height="7dp"
+    android:viewportWidth="12"
+    android:viewportHeight="7">
+  <path
+      android:pathData="M10.6,7l-4.6,-4.3513l-4.6,4.3513l-1.4,-1.3243l6,-5.6757l6,5.6757z"
+      android:strokeWidth="1"
+      android:fillColor="#C8C7C2"
+      android:strokeColor="#00000000"/>
+</vector>

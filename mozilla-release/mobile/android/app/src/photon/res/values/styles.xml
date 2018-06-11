@@ -1005,4 +1005,16 @@
         <item name="android:layout_alignLeft">@+id/pwa_confirm_title</item>
     </style>
 
+    <!--Cliqz Start-->
+    <style name="TabLayoutStyle" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Theme.ToogleTheme" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/general_blue_color</item>
+    </style>
+    <!--Cliqz End-->
+
 </resources>

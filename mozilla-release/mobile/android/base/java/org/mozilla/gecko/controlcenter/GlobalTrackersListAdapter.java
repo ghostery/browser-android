@@ -10,8 +10,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.utils.Utils;
-
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tabs;
@@ -102,22 +100,24 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         final TextView blockedTrackersTextView = (TextView) convertView.findViewById(R.id.blocked_trackers);
         final ImageView categoryIcon = (ImageView) convertView.findViewById(R.id.category_icon);
         final ImageView stateCheckBox = (ImageView) convertView.findViewById(R.id.cb_block_all);
+        final ImageView stateArrow = (ImageView) convertView.findViewById(R.id.cc_state_arrow);
+        stateArrow.setImageResource(isExpanded ? R.drawable.cc_ic_collapse_arrow : R.drawable.cc_ic_expand_arrow);
         categoryIcon.setImageDrawable(ContextCompat.getDrawable(mContext, category.categoryIcon));
         categoryNameTextView.setText(categoryName);
         totalTrackersTextView.setText(mContext.getResources().getQuantityString(R.plurals.cc_total_trackers, totalTrackers, totalTrackers));
         blockedTrackersTextView.setText(mContext.getString(R.string.cc_num_blocked, blockedTrackers));
         if (blockedTrackers == 0) {
-            stateCheckBox.setImageResource(R.drawable.ic_cb_unchecked);
+            stateCheckBox.setImageResource(0);
         } else if (blockedTrackers == totalTrackers) {
-            stateCheckBox.setImageResource(R.drawable.ic_cb_checked_block);
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
         } else {
-            stateCheckBox.setImageResource(R.drawable.ic_cb_checked_mixed);
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_mixed);
         }
         return convertView;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.ghostery_list_item_global_tracker, null);
@@ -138,13 +138,14 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
             }
         });
         if (isBlocked) {
-            trackerCheckBox.setImageResource(R.drawable.ic_cb_checked_block);
+            trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
         } else {
-            trackerCheckBox.setImageResource(R.drawable.ic_cb_unchecked);
+            trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_unchecked);
         }
         trackerNameTextView.setText(trackerName);
         final ObjectAnimator animation = ObjectAnimator.ofFloat(blockButton, "translationX",
-                parent.getWidth() - Utils.convertDpToPixel(80));
+                parent.getWidth() - mContext.getResources()
+                        .getDimension(R.dimen.ghostery_list_item_action_button_width));
         animation.setDuration(400);
         trackerCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +158,14 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
             public void onClick(View v) {
                 final GeckoBundle selectedAppIds = data.getBundle("data").getBundle("blocking")
                         .getBundle("selected_app_ids");
-                selectedAppIds.putInt(trackerId, 1);
+                final int numBlocked = getGroup(groupPosition).getInt("num_blocked");
+                if (isBlocked) {
+                    selectedAppIds.remove(trackerId);
+                    getGroup(groupPosition).putInt("num_blocked", numBlocked-1);
+                } else {
+                    selectedAppIds.putInt(trackerId, 1);
+                    getGroup(groupPosition).putInt("num_blocked", numBlocked+1);
+                }
                 final GeckoBundle geckoBundle = new GeckoBundle();
                 geckoBundle.putBundle("selected_app_ids", selectedAppIds);
                 EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
@@ -168,7 +176,7 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
                     final GeckoBundle[] trackers = category.getBundleArray("trackers");
                     for (GeckoBundle tracker : trackers) {
                         if (tracker.getInt("id") == Integer.valueOf(trackerId)) {
-                            tracker.putBoolean("blocked", true);
+                            tracker.putBoolean("blocked", !isBlocked);
                         }
                     }
                 }

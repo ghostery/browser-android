@@ -1,5 +1,6 @@
 package org.mozilla.gecko.controlcenter;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -9,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.github.mikephil.charting.utils.Utils;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
@@ -106,6 +105,8 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         final TextView blockedTrackersTextView = (TextView) convertView.findViewById(R.id.blocked_trackers);
         final ImageView categoryIcon = (ImageView) convertView.findViewById(R.id.category_icon);
         final ImageView stateCheckBox = (ImageView) convertView.findViewById(R.id.cb_block_all);
+        final ImageView stateArrow = (ImageView) convertView.findViewById(R.id.cc_state_arrow);
+        stateArrow.setImageResource(isExpanded ? R.drawable.cc_ic_collapse_arrow : R.drawable.cc_ic_expand_arrow);
         final String pageHost = data.getBundle("data").getBundle("summary").getString("pageHost");
         categoryIcon.setImageDrawable(ContextCompat.getDrawable(mContext, category.categoryIcon));
         categoryNameTextView.setText(categoryName);
@@ -125,15 +126,15 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
             }
         }
         if (numRestricted == totalTrackers) {
-            stateCheckBox.setImageResource(R.drawable.ic_cb_checked_restricted);
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_restricted);
         } else if (numTrusted == totalTrackers) {
-            stateCheckBox.setImageResource(R.drawable.ic_cb_checked_trust);
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_trust);
         } else if (numBlocked == totalTrackers) {
-            stateCheckBox.setImageResource(R.drawable.ic_cb_checked_block);
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
         } else if (numBlocked == 0 && numRestricted == 0 && numTrusted == 0) {
-            stateCheckBox.setImageResource(R.drawable.ic_cb_unchecked);
+            stateCheckBox.setImageResource(0);
         } else {
-            stateCheckBox.setImageResource(R.drawable.ic_cb_checked_mixed);
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_mixed);
         }
         return convertView;
     }
@@ -217,7 +218,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                         geckoBundle.putBundle("site_specific_unblocks", siteSpecificUnblockBundle);
                         geckoBundle.putBundle("site_specific_blocks", siteSpecificBlockBundle);
                         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                        notifyDataSetChanged();
                     }
                 });
                 restrictButton.setOnClickListener(new View.OnClickListener() {
@@ -261,7 +261,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                         geckoBundle.putBundle("site_specific_unblocks", siteSpecificUnblockBundle);
                         geckoBundle.putBundle("site_specific_blocks", siteSpecificBlockBundle);
                         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                        notifyDataSetChanged();
                     }
                 });
                 blockButton.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +279,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                         final GeckoBundle geckoBundle = new GeckoBundle();
                         geckoBundle.putBundle("selected_app_ids", selectedAppIds);
                         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                        notifyDataSetChanged();
                     }
                 });
             }
@@ -293,17 +291,17 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
             final boolean isWhiteListed = whitelist.contains(pagehost);
             final boolean isBlackListed = blacklist.contains(pagehost);
             if (isWhiteListed) {
-                trackerCheckBox.setImageResource(R.drawable.ic_cb_checked_trust);
+                trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_trust);
             } else if (isBlackListed) {
-                trackerCheckBox.setImageResource(R.drawable.ic_cb_checked_restricted);
+                trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_restricted);
             } else if (isSiteSpecificAllowed) {
-                trackerCheckBox.setImageResource(R.drawable.ic_cb_checked_trust);
+                trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_trust);
             } else if (isSiteSpecificBlocked) {
-                trackerCheckBox.setImageResource(R.drawable.ic_cb_checked_restricted);
+                trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_restricted);
             } else if (isBlocked) {
-                trackerCheckBox.setImageResource(R.drawable.ic_cb_checked_block);
+                trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
             } else {
-                trackerCheckBox.setImageResource(R.drawable.ic_cb_unchecked);
+                trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_unchecked);
             }
             final float fullWidth = 3 * mContext.getResources().getDimension(R.dimen.ghostery_list_item_action_button_width);
             final float partialWidth = 2 * mContext.getResources().getDimension(R.dimen.ghostery_list_item_action_button_width);
@@ -348,5 +346,26 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         final ObjectAnimator animation = ObjectAnimator.ofFloat(optionsMenuView, "translationX", listItemView.getWidth());
         animation.setDuration(400);
         animation.start();
+        animation.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
 }

@@ -47,7 +47,7 @@
 <!-- Control Center -->
 <!ENTITY cc_title_overview "OVERVIEW">
 <!ENTITY cc_title_site_trackers "SITE TRACKERS">
-<!ENTITY cc_title_global_trackers "GLOBAL TRACKERS">
+<!ENTITY cc_title_global_trackers "ALL TRACKERS">
 <!ENTITY cc_zero_trackers_found "&formatD; Trackers found">
 <!ENTITY cc_one_trackers_found "&formatD; Tracker found">
 <!ENTITY cc_two_trackers_found "&formatD; Trackers found">
@@ -104,7 +104,7 @@
 <!ENTITY cc_settings_menu "Settings menu">
 <!ENTITY cc_on_this_site "On this site">
 <!ENTITY cc_trackers "TRACKERS">
-<!ENTITY cc_blocked "BLOCKED">
+<!ENTITY cc_blocked "Blocked">
 <!ENTITY cc_num_blocked "&formatD; BLOCKED">
 <!ENTITY cc_tracker_info "Tracker Info">
 <!ENTITY cc_block_all "Block all">
