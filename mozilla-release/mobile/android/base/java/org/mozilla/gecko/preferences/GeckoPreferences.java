@@ -721,8 +721,8 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
-                }
-                else if (PREFS_SCREEN_ADVANCED.equals(key)) {
+                } else if (PREFS_SCREEN_ADVANCED.equals(key) &&
+                        !Restrictions.isAllowed(this, Restrictable.ADVANCED_SETTINGS)) {
                     preferences.removePreference(pref);
                     i--;
                     continue;
