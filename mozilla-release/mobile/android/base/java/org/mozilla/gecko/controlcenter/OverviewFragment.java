@@ -62,7 +62,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
 
     @Override
     public String getTitle(Context context) {
-        return context.getString(R.string.title_overview);
+        return context.getString(R.string.cc_title_overview);
     }
 
     @Override
@@ -88,14 +88,14 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mPieChart.setHighlightPerTapEnabled(false);
         mPieChart.setData(pieData);
         mPieChart.setDrawEntryLabels(false);
-        mPieChart.setCenterText(getResources().getQuantityString(R.plurals.total_trackers_found, totalTrackers, totalTrackers));
+        mPieChart.setCenterText(getResources().getQuantityString(R.plurals.cc_total_trackers_found, totalTrackers, totalTrackers));
         mPieChart.setCenterTextSize(22);
         mPieChart.setHoleRadius(70);
         mPieChart.setDescription(null);
         mPieChart.setDrawMarkers(false);
         mPieChart.getLegend().setEnabled(false);
         mPieChart.invalidate();
-        mTrackersBlocked.setText(getResources().getQuantityString(R.plurals.total_trackers_blocked, blockedTrackers, blockedTrackers));
+        mTrackersBlocked.setText(getResources().getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers));
         mDomainName.setText(domainName);
         final List<String> blackList = Arrays.asList(controlCenterSettingsData.getBundle("data")
                 .getBundle("summary").getStringArray("site_blacklist"));
@@ -226,11 +226,11 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         if (button == mPauseGhosteryButton) {
             if (state) {
                 button.setBackgroundResource(R.drawable.button_background_control_center_blue);
-                buttonText.setText(getString(R.string.resume_ghostery));
+                buttonText.setText(getString(R.string.cc_resume_ghostery));
                 buttonIcon.setImageResource(R.drawable.ic_resume);
             } else {
                 button.setBackgroundResource(R.drawable.button_backgorund_control_center_white);
-                buttonText.setText(R.string.pause_ghostery);
+                buttonText.setText(R.string.cc_pause_ghostery);
                 buttonIcon.setImageResource(R.drawable.ic_pause);
             }
         } else if (button == mRestrictSiteButton) {

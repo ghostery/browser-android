@@ -11,13 +11,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:text="@string/trackers"/>
+        android:text="@string/cc_trackers"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="@string/blocked"/>
+        android:text="@string/cc_blocked"/>
 
 </RelativeLayout>

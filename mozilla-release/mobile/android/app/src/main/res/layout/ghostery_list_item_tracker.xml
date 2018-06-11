@@ -21,7 +21,7 @@
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/tracker_info"
+            android:contentDescription="@string/cc_tracker_info"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_info_blue" />
 

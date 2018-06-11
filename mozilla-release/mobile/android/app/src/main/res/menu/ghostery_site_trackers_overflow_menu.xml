@@ -3,8 +3,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/block_all"
-        android:title="@string/block_all" />
+        android:title="@string/cc_block_all" />
     <item
         android:id="@+id/unblock_all"
-        android:title="@string/unblock_all"/>
+        android:title="@string/cc_unblock_all"/>
 </menu>

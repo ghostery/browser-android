@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/pause_ghostery"
+                android:text="@string/cc_pause_ghostery"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/restrict_site"
+                android:text="@string/cc_restrict_site"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -125,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="@string/trust_site"
+                android:text="@string/cc_trust_site"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -159,7 +159,7 @@
             android:drawableTop="@drawable/notch"
             android:gravity="center"
             android:padding="5dp"
-            android:text="@string/enhanced_options"
+            android:text="@string/cc_enhanced_options"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -188,7 +188,7 @@
                 android:layout_toEndOf="@id/enhanced_tracking_icon"
                 android:layout_toRightOf="@id/enhanced_tracking_icon"
                 android:padding="5dp"
-                android:text="3"
+                tools:text="3"
                 android:textColor="@color/general_blue_color"
                 android:textSize="20sp" />
 
@@ -200,7 +200,7 @@
                 android:layout_toEndOf="@+id/enhanced_tracking_count"
                 android:layout_toRightOf="@id/enhanced_tracking_count"
                 android:padding="5dp"
-                android:text="@string/enhanced_anti_tracking"
+                android:text="@string/cc_enhanced_anti_tracking"
                 android:textColor="@color/general_blue_color"
                 android:textSize="12sp" />
 
@@ -211,7 +211,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/enhanced_tracking_text"
                 android:layout_toRightOf="@id/enhanced_tracking_text"
-                android:contentDescription="@string/enhanced_anti_tracking_info"
+                android:contentDescription="@string/cc_enhanced_anti_tracking_info"
                 android:src="@drawable/ic_info_gray" />
 
             <android.support.v7.widget.SwitchCompat
@@ -248,7 +248,7 @@
                 android:layout_toEndOf="@id/enhanced_blocking_icon"
                 android:layout_toRightOf="@id/enhanced_blocking_icon"
                 android:padding="5dp"
-                android:text="3"
+                tools:text="3"
                 android:textColor="@color/general_blue_color"
                 android:textSize="20sp" />
 
@@ -260,7 +260,7 @@
                 android:layout_toEndOf="@+id/enhanced_blocking_count"
                 android:layout_toRightOf="@id/enhanced_blocking_count"
                 android:padding="5dp"
-                android:text="@string/enhanced_ad_blocking"
+                android:text="@string/cc_enhanced_ad_blocking"
                 android:textColor="@color/general_blue_color"
                 android:textSize="12sp" />
 
@@ -271,7 +271,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/enhanced_blocking_text"
                 android:layout_toRightOf="@id/enhanced_blocking_text"
-                android:contentDescription="@string/enhanced_ad_blocking_info"
+                android:contentDescription="@string/cc_enhanced_ad_blocking_info"
                 android:src="@drawable/ic_info_gray" />
 
             <android.support.v7.widget.SwitchCompat
@@ -308,7 +308,7 @@
                 android:layout_toEndOf="@id/smart_blocking_icon"
                 android:layout_toRightOf="@id/smart_blocking_icon"
                 android:padding="5dp"
-                android:text="3"
+                tools:text="3"
                 android:textColor="@color/general_blue_color"
                 android:textSize="20sp" />
 
@@ -320,7 +320,7 @@
                 android:layout_toEndOf="@+id/smart_blocking_count"
                 android:layout_toRightOf="@id/smart_blocking_count"
                 android:padding="5dp"
-                android:text="@string/smart_blocking"
+                android:text="@string/cc_smart_blocking"
                 android:textColor="@color/general_blue_color"
                 android:textSize="12sp" />
 
@@ -331,7 +331,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/smart_blocking_text"
                 android:layout_toRightOf="@id/smart_blocking_text"
-                android:contentDescription="@string/smart_blocking_info"
+                android:contentDescription="@string/cc_smart_blocking_info"
                 android:src="@drawable/ic_info_gray" />
 
             <android.support.v7.widget.SwitchCompat

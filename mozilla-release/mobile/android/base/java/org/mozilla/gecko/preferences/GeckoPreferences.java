@@ -727,14 +727,7 @@ public class GeckoPreferences
                     i--;
                     continue;
                 }
-                 /* Cliqz start */
-                // remove advanced settings always
-                else if (PREFS_SCREEN_ADVANCED.equals(key)) {//&&!Restrictions.isAllowed(this, Restrictable.ADVANCED_SETTINGS))
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-
-                }
+                /* Cliqz start */
                 // remove Mozilla Fennec (About, Feedback, FAQ)
                 else if (PREFS_VENDOR_SCREEN.equals(key)) {
                     preferences.removePreference(pref);
