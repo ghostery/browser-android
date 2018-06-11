@@ -957,6 +957,27 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY enhanced_anti_tracking_info "Enhanced anti tracking information">
 <!ENTITY enhanced_ad_blocking_info "Enhanced ad blocking information">
 <!ENTITY smart_blocking_info "Enhanced anti tracking information">
+<!ENTITY cc_zero_anti_tracking_blocked "Personal data points anonymized">
+<!ENTITY cc_one_anti_tracking_blocked "Personal data point anonymized">
+<!ENTITY cc_two_anti_tracking_blocked "Personal data points anonymized">
+<!ENTITY cc_few_anti_tracking_blocked "Personal data points anonymized">
+<!ENTITY cc_many_anti_tracking_blocked "Personal data points anonymized">
+<!ENTITY cc_other_anti_tracking_blocked "Personal data points anonymized">
+<!ENTITY cc_zero_ad_blocking_blocked "Ads blocked">
+<!ENTITY cc_one_ad_blocking_blocked "Ad blocked">
+<!ENTITY cc_two_ad_blocking_blocked "Ads blocked">
+<!ENTITY cc_few_ad_blocking_blocked "Ads blocked">
+<!ENTITY cc_many_ad_blocking_blocked "Ads blocked">
+<!ENTITY cc_other_ad_blocking_blocked "Ads blocked">
+<!ENTITY cc_zero_smart_blocking_blocked "Trackers adjusted">
+<!ENTITY cc_one_smart_blocking_blocked "Tracker adjusted">
+<!ENTITY cc_two_smart_blocking_blocked "Trackers adjusted">
+<!ENTITY cc_few_smart_blocking_blocked "Trackers adjusted">
+<!ENTITY cc_many_smart_blocking_blocked "Trackers adjusted">
+<!ENTITY cc_other_smart_blocking_blocked "Trackers adjusted">
+<!ENTITY cc_anti_tracking_about "Anonymize unblocked and unknown trackers for greater browsing protection">
+<!ENTITY cc_ad_blocking_about "Block advertisements on websites you visit">
+<!ENTITY cc_smart_blocking_about "Automatically block and unblock trackers to optimize page performance">
 <!ENTITY site_trackers_list_title "Trackers on this site">
 <!ENTITY global_trackers_list_title "Trackers across sites">
 <!ENTITY reset_settings "Reset Settings">
