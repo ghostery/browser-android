@@ -32,9 +32,6 @@ allprojects {
                 url repository
             }
         }
-        maven {
-            url "https://jitpack.io"
-        }
     }
 }
 
