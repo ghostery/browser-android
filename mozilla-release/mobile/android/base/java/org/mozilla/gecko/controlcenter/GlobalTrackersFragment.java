@@ -38,7 +38,7 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
 
     @Override
     public String getTitle(Context context) {
-        return context.getString(R.string.title_global_trackers);
+        return context.getString(R.string.cc_title_global_trackers);
     }
 
     @Override

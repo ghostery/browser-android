@@ -388,8 +388,10 @@
 <!ENTITY pref_private_data_syncedTabs "Synced tabs">
 
 <!ENTITY pref_default_browser "Make default browser">
-<!ENTITY pref_default_browser_mozilla_support_tablet "Visit Cliqz Support">
+<!-- Cliqz start -->
+<!ENTITY pref_default_browser_mozilla_support_tablet "Visit &brandShortName; Support">
 <!ENTITY pref_about_firefox "About &brandShortName;">
+<!-- Cliqz end -->
 <!ENTITY pref_vendor_faqs "FAQs">
 <!ENTITY pref_vendor_feedback "Give feedback">
 
@@ -799,17 +801,18 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY restrictable_feature_block_list_description "Block websites that include sensitive content.">
 
 <!-- Default Bookmarks titles-->
+<!-- Cliqz start -->
 <!-- LOCALIZATION NOTE (bookmarks_about_browser): link title for about:fennec -->
-<!ENTITY bookmarks_about_browser "Cliqz: About your browser">
+<!ENTITY bookmarks_about_browser "&brandShortName;: About your browser">
 <!-- LOCALIZATION NOTE (bookmarks_addons): link title for https://addons.mozilla.org/en-US/mobile -->
 <!ENTITY bookmarks_addons "&brandShortName;: Customize with add-ons">
 <!-- LOCALIZATION NOTE (bookmarks_support): link title for https://support.mozilla.org/ -->
-<!ENTITY bookmarks_support "Cliqz: Support">
+<!ENTITY bookmarks_support "&brandShortName;: Support">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_support): link title for https://support.mozilla.org/kb/controlledaccess -->
 <!ENTITY bookmarks_restricted_support2 "&brandShortName; Help and Support for restricted profiles on Android tablets">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_webmaker):link title for https://webmaker.org -->
 <!ENTITY bookmarks_restricted_webmaker "Learn the Web: &vendorShortName; Webmaker">
-
+<!-- Cliqz end -->
 <!-- LOCALIZATION NOTE (unsupported_sdk_version): The user installed a build of this app that does not support
      the Android version of this device. the formatS1 is replaced by the CPU ABI (e.g., ARMv7); the formatS2 is
      replaced by the Android OS version (e.g., 14)-->
@@ -909,65 +912,65 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_block_ads "Block Ads">
 <!ENTITY pref_block_ads_fair "Fair Blocking">
 <!ENTITY pref_block_ads_what_fair "What is \'fair\'">
-<!ENTITY pref_block_ads_fair_description "The Cliqz Ad Blocker is in beta at the moment. The final version will provide the following options: Allow Fair Ads (default setting), Block All Ads, Allow All Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
-<!ENTITY pref_block_ads_data "Please note: Cliqz Browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.">
+<!ENTITY pref_block_ads_fair_description "The Ad Blocker is in beta at the moment. The final version will provide the following options: Allow Fair Ads (default setting), Block All Ads, Allow All Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
+<!ENTITY pref_block_ads_data "Please note: the browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.">
 
 <!-- Rate Cliqz -->
-<!ENTITY pref_category_rate_cliqz "Rate Cliqz Browser">
+<!ENTITY pref_category_rate_cliqz "Rate &brandShortName; Browser">
 
 <!-- Support Cliqz -->
 <!ENTITY pref_support_cliqz "FAQs &amp; Support">
 
 <!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Get the best out of Cliqz">
+<!ENTITY pref_tips_tricks "Get the best out of &brandShortName;">
 
 <!-- Report Website -->
 <!ENTITY pref_report_website "Report Website">
 
 <!-- Control Center -->
-<!ENTITY title_overview "OVERVIEW">
-<!ENTITY title_site_trackers "SITE TRACKERS">
-<!ENTITY title_global_trackers "GLOBAL TRACKERS">
-<!ENTITY zero_trackers_found "\u0025d Trackers found">
-<!ENTITY one_trackers_found "\u0025d Tracker found">
-<!ENTITY two_trackers_found "\u0025d Trackers found">
-<!ENTITY few_trackers_found "\u0025d Trackers found">
-<!ENTITY many_trackers_found "\u0025d Trackers found">
-<!ENTITY other_trackers_found "\u0025d Trackers found">
-<!ENTITY zero_trackers_blocked "\u0025d Trackers blocked">
-<!ENTITY one_trackers_blocked "\u0025d Tracker blocked">
-<!ENTITY two_trackers_blocked "\u0025d Trackers blocked">
-<!ENTITY few_trackers_blocked "\u0025d Trackers blocked">
-<!ENTITY many_trackers_blocked "\u0025d Trackers blocked">
-<!ENTITY other_trackers_blocked "\u0025d Trackers blocked">
-<!ENTITY zero_trackers "\u0025d Trackers">
-<!ENTITY one_trackers "\u0025d Tracker">
-<!ENTITY two_trackers "\u0025d Trackers">
-<!ENTITY few_trackers "\u0025d Trackers">
-<!ENTITY many_trackers "\u0025d Trackers">
-<!ENTITY other_trackers "\u0025d Trackers">
-<!ENTITY trust_site "Trust Site">
-<!ENTITY restrict_site "Restrict Site">
-<!ENTITY pause_ghostery "Pause Ghostery">
-<!ENTITY resume_ghostery "Resume Ghostery">
-<!ENTITY enhanced_options "Enhanced Options">
-<!ENTITY enhanced_anti_tracking "Enhanced Anti-Tracking">
-<!ENTITY enhanced_ad_blocking "Enhanced Ad Blocking">
-<!ENTITY smart_blocking "Smart Blocking">
-<!ENTITY enhanced_anti_tracking_info "Enhanced anti tracking information">
-<!ENTITY enhanced_ad_blocking_info "Enhanced ad blocking information">
-<!ENTITY smart_blocking_info "Enhanced anti tracking information">
-<!ENTITY site_trackers_list_title "Trackers on this site">
-<!ENTITY global_trackers_list_title "Trackers across sites">
-<!ENTITY reset_settings "Reset Settings">
-<!ENTITY settings_menu "Settings menu">
-<!ENTITY on_this_site "On this site">
-<!ENTITY trackers "TRACKERS">
-<!ENTITY blocked "BLOCKED">
-<!ENTITY num_blocked "\u0025d BLOCKED">
-<!ENTITY tracker_info "Tracker Info">
-<!ENTITY block_all "Block all">
-<!ENTITY unblock_all "Unblock all">
+<!ENTITY cc_title_overview "OVERVIEW">
+<!ENTITY cc_title_site_trackers "SITE TRACKERS">
+<!ENTITY cc_title_global_trackers "GLOBAL TRACKERS">
+<!ENTITY cc_zero_trackers_found "\u0025d Trackers found">
+<!ENTITY cc_one_trackers_found "\u0025d Tracker found">
+<!ENTITY cc_two_trackers_found "\u0025d Trackers found">
+<!ENTITY cc_few_trackers_found "\u0025d Trackers found">
+<!ENTITY cc_many_trackers_found "\u0025d Trackers found">
+<!ENTITY cc_other_trackers_found "\u0025d Trackers found">
+<!ENTITY cc_zero_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY cc_one_trackers_blocked "\u0025d Tracker blocked">
+<!ENTITY cc_two_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY cc_few_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY cc_many_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY cc_other_trackers_blocked "\u0025d Trackers blocked">
+<!ENTITY cc_zero_trackers "\u0025d Trackers">
+<!ENTITY cc_one_trackers "\u0025d Tracker">
+<!ENTITY cc_two_trackers "\u0025d Trackers">
+<!ENTITY cc_few_trackers "\u0025d Trackers">
+<!ENTITY cc_many_trackers "\u0025d Trackers">
+<!ENTITY cc_other_trackers "\u0025d Trackers">
+<!ENTITY cc_trust_site "Trust Site">
+<!ENTITY cc_restrict_site "Restrict Site">
+<!ENTITY cc_pause_ghostery "Pause Ghostery">
+<!ENTITY cc_resume_ghostery "Resume Ghostery">
+<!ENTITY cc_enhanced_options "Enhanced Options">
+<!ENTITY cc_enhanced_anti_tracking "Enhanced Anti-Tracking">
+<!ENTITY cc_enhanced_ad_blocking "Enhanced Ad Blocking">
+<!ENTITY cc_smart_blocking "Smart Blocking">
+<!ENTITY cc_enhanced_anti_tracking_info "Enhanced anti tracking information">
+<!ENTITY cc_enhanced_ad_blocking_info "Enhanced ad blocking information">
+<!ENTITY cc_smart_blocking_info "Enhanced anti tracking information">
+<!ENTITY cc_site_trackers_list_title "Trackers on this site">
+<!ENTITY cc_global_trackers_list_title "Trackers across sites">
+<!ENTITY cc_reset_settings "Reset Settings">
+<!ENTITY cc_settings_menu "Settings menu">
+<!ENTITY cc_on_this_site "On this site">
+<!ENTITY cc_trackers "TRACKERS">
+<!ENTITY cc_blocked "BLOCKED">
+<!ENTITY cc_num_blocked "\u0025d BLOCKED">
+<!ENTITY cc_tracker_info "Tracker Info">
+<!ENTITY cc_block_all "Block all">
+<!ENTITY cc_unblock_all "Unblock all">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Search">
@@ -991,7 +994,7 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_browsing_category "Browsing">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_cliqz_tab_category "CliqzTab">
+<!ENTITY pref_cliqz_tab_category "New Tab">
 <!ENTITY pref_cliqz_tab_background "Show background image">
 <!ENTITY pref_cliqz_tab_topsites "Show most visited websites">
 <!ENTITY pref_cliqz_tab_news "Show News">
@@ -1049,4 +1052,28 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pref_about_crux "Crux">
 <!ENTITY pref_about_crux_summary "Apache License 2.0">
 <!ENTITY pref_about_imprint "Imprint">
+
+<!-- Specific browser subtext -->
+<!ENTITY firstrun_urlbar_subtext2_cliqz "Cliqz - A fast and private browser. Made in Germany">
+<!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - keep your browsing cleaner, faster and safer">
+
+<!-- Ghostery onboarding -->
+<!ENTITY ghostery_onboarding_new_users_title "Introducing Ghostery">
+<!ENTITY ghostery_onboarding_new_users_text "Keep your browsing cleaner, faster, and safer with Ghostery.">
+<!ENTITY ghostery_onboarding_old_users_title "Introducing new Ghostery">
+<!ENTITY ghostery_onboarding_old_users_text "Support Ghostery by participating in Ghostery Rewards and share Human Web &amp; analytics data. Learn more.">
+<!ENTITY ghostery_onboarding_tracking_protection_title "Tracking Protection">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Browse smarter with our tracking protection featrues. You can turn these off in the Ghostery Control Center.">
+<!ENTITY ghostery_onboarding_quick_search_title "Quick Search">
+<!ENTITY ghostery_onboarding_quick_search_text "Save time and data volume: Quick search instantly shows relevant results while typing.">
+<!ENTITY ghostery_onboarding_new_tab_title "New Tab">
+<!ENTITY ghostery_onboarding_new_tab_text "Every new Tab comes with top sites, news and a background image. Customize it to your needs.">
+<!ENTITY ghostery_onboarding_action_button "Start Browsing">
+<!ENTITY ghostery_onboarding_contextual_title "Tracking Protection Enabled">
+<!ENTITY ghostery_onboarding_contextual_item1_title "Enhanced Anti-Tracking">
+<!ENTITY ghostery_onboarding_contextual_item1_text "Further protects your personal data">
+<!ENTITY ghostery_onboarding_contextual_item2_title "Smart Blocking &amp; Ad Blocking">
+<!ENTITY ghostery_onboarding_contextual_item2_text "Optimizes performance as you browse">
+<!ENTITY ghostery_onboarding_contextual_text "You can enable or disable these features anytime in the Ghostery Control Center.">
+<!ENTITY ghostery_onboarding_contextual_button "Show me now">
 <!-- Cliqz end -->

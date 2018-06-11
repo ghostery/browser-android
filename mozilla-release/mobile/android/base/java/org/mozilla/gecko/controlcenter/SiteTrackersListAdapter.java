@@ -109,8 +109,8 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         final String pageHost = data.getBundle("data").getBundle("summary").getString("pageHost");
         categoryIcon.setImageDrawable(ContextCompat.getDrawable(mContext, category.categoryIcon));
         categoryNameTextView.setText(categoryName);
-        totalTrackersTextView.setText(mContext.getResources().getQuantityString(R.plurals.total_trackers, totalTrackers, totalTrackers));
-        blockedTrackersTextView.setText(mContext.getResources().getString(R.string.num_blocked, blockedTrackers));
+        totalTrackersTextView.setText(mContext.getResources().getQuantityString(R.plurals.cc_total_trackers, totalTrackers, totalTrackers));
+        blockedTrackersTextView.setText(mContext.getResources().getString(R.string.cc_num_blocked, blockedTrackers));
         int numBlocked = 0;
         int numTrusted = 0;
         int numRestricted = 0;
