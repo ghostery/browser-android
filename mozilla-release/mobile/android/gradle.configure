@@ -236,9 +236,12 @@ set_config('GRADLE_FLAGS', gradle_flags)
 # Local developer default is (jcenter, maven.google.com).
 option(env='GRADLE_MAVEN_REPOSITORIES',
        nargs='+',
-       default=('https://jcenter.bintray.com/',
-                'https://maven.google.com/',
+       # Cliqz start: reverse the order here, Jenkins will fail otherwise
+       default=('https://maven.google.com/',
+                'https://jcenter.bintray.com/',
+                'https://jitpack.io',
        ),
+       # Cliqz end
        help='Comma-separated URLs of Maven repositories containing Gradle dependencies.')
 
 @depends('GRADLE_MAVEN_REPOSITORIES')

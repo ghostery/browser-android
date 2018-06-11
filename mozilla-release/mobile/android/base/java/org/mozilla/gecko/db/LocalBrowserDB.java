@@ -81,6 +81,11 @@ public class LocalBrowserDB extends BrowserDB {
     // Calculate this once, at initialization. isLoggable is too expensive to
     // have in-line in each log call.
     private static final boolean logDebug = Log.isLoggable(LOGTAG, Log.DEBUG);
+
+    /* Cliqz start */
+    private static final int CLIQZ_MAX_HISTORY_TERMS = 10;
+    /* Cliqz end */
+
     protected static void debug(String message) {
         if (logDebug) {
             Log.d(LOGTAG, message);
@@ -2077,6 +2082,9 @@ public class LocalBrowserDB extends BrowserDB {
     @Nullable public Cursor getHistoryForQuery(@NonNull ContentResolver cr, @NonNull String query, int limit) {
         final Uri uri = mMostVisitedHistoryWithProfile.buildUpon()
                 .appendQueryParameter(BrowserContract.PARAM_LIMIT, String.valueOf(limit))
+                // Due to Firefox internal logic, we ask to show deleted history points int the uri
+                // and then filter them in the query
+                .appendQueryParameter(BrowserContract.PARAM_SHOW_DELETED, "1")
                 .build();
         final String[] projection = new String[] {
                 History._ID,
@@ -2085,13 +2093,38 @@ public class LocalBrowserDB extends BrowserDB {
                 History.DATE_LAST_VISITED,
                 History.VISITS
         };
-        final String selection = query.isEmpty() ? null : History.URL + " LIKE ? OR " + History.TITLE + " LIKE ? ";
+        final String selection;
         final String[] selectionArgs;
         if (query.isEmpty()) {
+            selection = null;
             selectionArgs = null;
         } else {
-            final String likeQuery = "%" + query + "%";
-            selectionArgs = new String[] { likeQuery, likeQuery };
+            final StringBuilder selectionBuilder = new StringBuilder();
+            final ArrayList<String> argumentsList = new ArrayList<>();
+            selectionBuilder
+                    .append(History.IS_DELETED).append(" = 0 AND ")
+                    .append(History.URL).append(" NOT LIKE ?");
+            argumentsList.add("moz-extension://%");
+            final String[] terms = query.split(" ");
+            String j = " AND (";
+            for (int i = 0; i < Math.min(terms.length, CLIQZ_MAX_HISTORY_TERMS); i++) {
+                selectionBuilder
+                        .append(j)
+                        .append(History.URL)
+                        .append(" LIKE ? OR ")
+                        .append(History.TITLE)
+                        .append(" LIKE ?");
+                j = " OR ";
+                final String likeTerm = "%" + terms[i].replaceAll("([%_\\\\])", "\\\\$1") + "%";
+                argumentsList.add(likeTerm);
+                argumentsList.add(likeTerm);
+            }
+            if (terms.length > 0) {
+                selectionBuilder.append(")");
+            }
+            selection = selectionBuilder.append(" COLLATE NOCASE").toString();
+            final String[] conv = new String[argumentsList.size()];
+            selectionArgs = argumentsList.toArray(conv);
         }
         final String sortOrder = History.DATE_LAST_VISITED + " DESC, " + History.VISITS + " DESC";
         return cr.query(uri, projection, selection, selectionArgs, sortOrder);
