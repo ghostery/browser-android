@@ -6471,7 +6471,7 @@ var Cliqz = {
 
   get Search() {
     if (!this._search) {
-      this._search = this._createBrowserForExtension('search@cliqz.com');
+      this._search = this._createBrowserForExtension('android@cliqz.com');
       this._search.load('index.html');
 
       setTimeout(() => {
