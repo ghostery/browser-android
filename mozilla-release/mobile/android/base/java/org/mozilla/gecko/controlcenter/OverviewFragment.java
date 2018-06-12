@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.PieEntry;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.anolysis.ControlCenterSimple;
 import org.mozilla.gecko.util.GeckoBundle;
 
 import java.util.ArrayList;
@@ -53,9 +54,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mPieChart = (PieChart) view.findViewById(R.id.donut);
         mDomainName = (TextView) view.findViewById(R.id.domain_name);
         mTrackersBlocked = (TextView) view.findViewById(R.id.trackers_blocked);
-        mTrustSiteButton = (RelativeLayout) view.findViewById(R.id.trust_site_button);
-        mRestrictSiteButton = (RelativeLayout) view.findViewById(R.id.restrict_site_button);
-        mPauseGhosteryButton = (RelativeLayout) view.findViewById(R.id.pause_ghostery_button);
+        mTrustSiteButton = (RelativeLayout) view.findViewById(R.id.ghostery_trust_site_button);
+        mRestrictSiteButton = (RelativeLayout) view.findViewById(R.id.ghostery_restrict_site_button);
+        mPauseGhosteryButton = (RelativeLayout) view.findViewById(R.id.ghostery_pause_button);
         mTrustSiteButton.setOnClickListener(this);
         mRestrictSiteButton.setOnClickListener(this);
         mPauseGhosteryButton.setOnClickListener(this);
@@ -125,13 +126,13 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.trust_site_button:
+            case R.id.ghostery_trust_site_button:
                 handleTrustButtonClick();
                 break;
-            case R.id.restrict_site_button:
+            case R.id.ghostery_restrict_site_button:
                 handleRestrictButtonClick();
                 break;
-            case R.id.pause_ghostery_button:
+            case R.id.ghostery_pause_button:
                 handlePauseButtonClick();
                 break;
         }
@@ -143,6 +144,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         if (mIsGhosteryPaused) {
             styleButton(mTrustSiteButton, false);
             styleButton(mRestrictSiteButton, false);
+            ControlCenterSimple.pause();
+        } else {
+            ControlCenterSimple.resume();
         }
         final GeckoBundle geckoBundle = new GeckoBundle();
         geckoBundle.putBoolean("paused_blocking", mIsGhosteryPaused);
@@ -151,6 +155,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     }
 
     private void handleTrustButtonClick() {
+        ControlCenterSimple.trustSite();
         final String pageHost = controlCenterSettingsData.getBundle("data").getBundle("summary")
                 .getString("pageHost");
         //get list of blacklisted and whitelisted sites and then add/remove current site and send back the new lists
@@ -178,6 +183,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
             updatedWhiteList.remove(pageHost);
+            ControlCenterSimple.restrictSite();
         }
         final GeckoBundle geckoBundle = new GeckoBundle();
         geckoBundle.putStringArray("site_whitelist", updatedWhiteList);
@@ -189,6 +195,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     }
 
     private void handleRestrictButtonClick() {
+        ControlCenterSimple.restrictSite();
         final String pageHost = controlCenterSettingsData.getBundle("data").getBundle("summary")
                 .getString("pageHost");
         //get list of blacklisted and whitelisted sites and then add/remove current site and send back the new lists
