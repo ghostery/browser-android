@@ -171,116 +171,119 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
             final TextView trustButtonTv = (TextView) view.findViewById(R.id.trust_button_text);
             final TextView restrictButtonTv = (TextView) view.findViewById(R.id.restrict_button_text);
             final TextView blockButtonTv = (TextView) view.findViewById(R.id.block_button_text);
-            trustButtonTv.setText(isSiteSpecificAllowed ? "Untust" : "Trust");
-            restrictButtonTv.setText(isSiteSpecificBlocked ? "Unrestrict" : "Restrict");
-            blockButtonTv.setText(isBlocked ? "Unblock" : "Block");
-            trustButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    hideOptionsMenu(v);
-                    final GeckoBundle siteSpecificUnblockBundle = data.getBundle("data").getBundle("blocking")
-                            .getBundle("site_specific_unblocks");
-                    final GeckoBundle siteSpecificBlockBundle = data.getBundle("data").getBundle("blocking")
-                            .getBundle("site_specific_blocks");
-                    final int[] siteSpecificUnblockList = siteSpecificUnblockBundle.getIntArray(pagehost);
-                    final int[] siteSpecificBlockList = siteSpecificBlockBundle.getIntArray(pagehost);
-                    final ArrayList<Integer> updatedUnblockList = new ArrayList<>();
-                    final ArrayList<Integer> updatedBlockList = new ArrayList<>();
-                    if (isSiteSpecificAllowed) {
-                        childGeckoBundle.putBoolean("ss_allowed", false);
-                        for (int unblockedTrackerId : siteSpecificUnblockList) {
-                            if (unblockedTrackerId != trackerId) {
-                                updatedUnblockList.add(unblockedTrackerId);
+            trustButtonTv.setText(isSiteSpecificAllowed ?  R.string.cc_untrust : R.string.cc_trust);
+            restrictButtonTv.setText(isSiteSpecificBlocked ? R.string.cc_unrestrict : R.string.cc_restrict);
+            blockButtonTv.setText(isBlocked ? R.string.cc_unblock : R.string.cc_block);
+            final boolean isPaused = data.getBundle("data").getBundle("summary").getBoolean("paused_blocking");
+            if (!isPaused) {
+                trustButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        hideOptionsMenu(v);
+                        final GeckoBundle siteSpecificUnblockBundle = data.getBundle("data").getBundle("blocking")
+                                .getBundle("site_specific_unblocks");
+                        final GeckoBundle siteSpecificBlockBundle = data.getBundle("data").getBundle("blocking")
+                                .getBundle("site_specific_blocks");
+                        final int[] siteSpecificUnblockList = siteSpecificUnblockBundle.getIntArray(pagehost);
+                        final int[] siteSpecificBlockList = siteSpecificBlockBundle.getIntArray(pagehost);
+                        final ArrayList<Integer> updatedUnblockList = new ArrayList<>();
+                        final ArrayList<Integer> updatedBlockList = new ArrayList<>();
+                        if (isSiteSpecificAllowed) {
+                            childGeckoBundle.putBoolean("ss_allowed", false);
+                            for (int unblockedTrackerId : siteSpecificUnblockList) {
+                                if (unblockedTrackerId != trackerId) {
+                                    updatedUnblockList.add(unblockedTrackerId);
+                                }
                             }
-                        }
-                    } else {
-                        childGeckoBundle.putBoolean("ss_allowed", true);
-                        childGeckoBundle.putBoolean("ss_blocked", false);
-                        final int unblockListLength = siteSpecificUnblockList == null ? 0 : siteSpecificUnblockList.length;
-                        for (int i = 0; i < unblockListLength; i++) {
-                            updatedUnblockList.add(siteSpecificUnblockList[i]);
-                        }
-                        updatedUnblockList.add(trackerId);
-                        final int blockListLength = siteSpecificBlockList == null ? 0 : siteSpecificBlockList.length;
-                        for (int i = 0; i < blockListLength; i++) {
-                            updatedBlockList.add(siteSpecificBlockList[i]);
-                        }
-                        updatedBlockList.remove(Integer.valueOf(trackerId)); //remove the site from the restricted list if its there
-                    }
-
-                    siteSpecificUnblockBundle.putIntArray(pagehost, updatedUnblockList);
-                    siteSpecificBlockBundle.putIntArray(pagehost, updatedBlockList);
-
-                    final GeckoBundle geckoBundle = new GeckoBundle();
-                    geckoBundle.putBundle("site_specific_unblocks", siteSpecificUnblockBundle);
-                    geckoBundle.putBundle("site_specific_blocks", siteSpecificBlockBundle);
-                    EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                    notifyDataSetChanged();
-                }
-            });
-            restrictButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    hideOptionsMenu(v);
-                    final GeckoBundle siteSpecificUnblockBundle = data.getBundle("data").getBundle("blocking")
-                            .getBundle("site_specific_unblocks");
-                    final GeckoBundle siteSpecificBlockBundle = data.getBundle("data").getBundle("blocking")
-                            .getBundle("site_specific_blocks");
-                    final int[] siteSpecificUnblockList = siteSpecificUnblockBundle.getIntArray(pagehost);
-                    final int[] siteSpecificBlockList = siteSpecificBlockBundle.getIntArray(pagehost);
-                    final ArrayList<Integer> updatedUnblockList = new ArrayList<>();
-                    final ArrayList<Integer> updatedBlockList = new ArrayList<>();
-                    if (isSiteSpecificBlocked) {
-                        childGeckoBundle.putBoolean("ss_blocked", false);
-                        for (int blockedTrackerId : siteSpecificBlockList) {
-                            if (blockedTrackerId != trackerId) {
-                                updatedBlockList.add(blockedTrackerId);
+                        } else {
+                            childGeckoBundle.putBoolean("ss_allowed", true);
+                            childGeckoBundle.putBoolean("ss_blocked", false);
+                            final int unblockListLength = siteSpecificUnblockList == null ? 0 : siteSpecificUnblockList.length;
+                            for (int i = 0; i < unblockListLength; i++) {
+                                updatedUnblockList.add(siteSpecificUnblockList[i]);
                             }
+                            updatedUnblockList.add(trackerId);
+                            final int blockListLength = siteSpecificBlockList == null ? 0 : siteSpecificBlockList.length;
+                            for (int i = 0; i < blockListLength; i++) {
+                                updatedBlockList.add(siteSpecificBlockList[i]);
+                            }
+                            updatedBlockList.remove(Integer.valueOf(trackerId)); //remove the site from the restricted list if its there
                         }
-                    } else {
-                        childGeckoBundle.putBoolean("ss_allowed", false);
-                        childGeckoBundle.putBoolean("ss_blocked", true);
-                        final int blockListLength = siteSpecificBlockList == null ? 0 : siteSpecificBlockList.length;
-                        for (int i = 0; i < blockListLength; i++) {
-                            updatedBlockList.add(siteSpecificBlockList[i]);
-                        }
-                        updatedUnblockList.add(trackerId);
-                        final int unBlockListLength = siteSpecificUnblockList == null ? 0 : siteSpecificUnblockList.length;
-                        for (int i = 0; i < unBlockListLength; i++) {
-                            updatedUnblockList.add(siteSpecificUnblockList[i]);
-                        }
-                        updatedUnblockList.remove(Integer.valueOf(trackerId)); //remove the site from the restricted list if its there
-                    }
 
-                    siteSpecificUnblockBundle.putIntArray(pagehost, updatedUnblockList);
-                    siteSpecificBlockBundle.putIntArray(pagehost, updatedBlockList);
+                        siteSpecificUnblockBundle.putIntArray(pagehost, updatedUnblockList);
+                        siteSpecificBlockBundle.putIntArray(pagehost, updatedBlockList);
 
-                    final GeckoBundle geckoBundle = new GeckoBundle();
-                    geckoBundle.putBundle("site_specific_unblocks", siteSpecificUnblockBundle);
-                    geckoBundle.putBundle("site_specific_blocks", siteSpecificBlockBundle);
-                    EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                    notifyDataSetChanged();
-                }
-            });
-            blockButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    hideOptionsMenu(v);
-                    final GeckoBundle selectedAppIds = data.getBundle("data").getBundle("blocking")
-                            .getBundle("selected_app_ids");
-                    if (isBlocked) {
-                        selectedAppIds.remove(Integer.toString(trackerId));
-                        childGeckoBundle.putBoolean("blocked", false);
-                    } else {
-                        selectedAppIds.putInt(Integer.toString(trackerId), 1);
-                        childGeckoBundle.putBoolean("blocked", true);
+                        final GeckoBundle geckoBundle = new GeckoBundle();
+                        geckoBundle.putBundle("site_specific_unblocks", siteSpecificUnblockBundle);
+                        geckoBundle.putBundle("site_specific_blocks", siteSpecificBlockBundle);
+                        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+                        notifyDataSetChanged();
                     }
-                    final GeckoBundle geckoBundle = new GeckoBundle();
-                    geckoBundle.putBundle("selected_app_ids", selectedAppIds);
-                    EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                    notifyDataSetChanged();
-                }
-            });
+                });
+                restrictButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        hideOptionsMenu(v);
+                        final GeckoBundle siteSpecificUnblockBundle = data.getBundle("data").getBundle("blocking")
+                                .getBundle("site_specific_unblocks");
+                        final GeckoBundle siteSpecificBlockBundle = data.getBundle("data").getBundle("blocking")
+                                .getBundle("site_specific_blocks");
+                        final int[] siteSpecificUnblockList = siteSpecificUnblockBundle.getIntArray(pagehost);
+                        final int[] siteSpecificBlockList = siteSpecificBlockBundle.getIntArray(pagehost);
+                        final ArrayList<Integer> updatedUnblockList = new ArrayList<>();
+                        final ArrayList<Integer> updatedBlockList = new ArrayList<>();
+                        if (isSiteSpecificBlocked) {
+                            childGeckoBundle.putBoolean("ss_blocked", false);
+                            for (int blockedTrackerId : siteSpecificBlockList) {
+                                if (blockedTrackerId != trackerId) {
+                                    updatedBlockList.add(blockedTrackerId);
+                                }
+                            }
+                        } else {
+                            childGeckoBundle.putBoolean("ss_allowed", false);
+                            childGeckoBundle.putBoolean("ss_blocked", true);
+                            final int blockListLength = siteSpecificBlockList == null ? 0 : siteSpecificBlockList.length;
+                            for (int i = 0; i < blockListLength; i++) {
+                                updatedBlockList.add(siteSpecificBlockList[i]);
+                            }
+                            updatedUnblockList.add(trackerId);
+                            final int unBlockListLength = siteSpecificUnblockList == null ? 0 : siteSpecificUnblockList.length;
+                            for (int i = 0; i < unBlockListLength; i++) {
+                                updatedUnblockList.add(siteSpecificUnblockList[i]);
+                            }
+                            updatedUnblockList.remove(Integer.valueOf(trackerId)); //remove the site from the restricted list if its there
+                        }
+
+                        siteSpecificUnblockBundle.putIntArray(pagehost, updatedUnblockList);
+                        siteSpecificBlockBundle.putIntArray(pagehost, updatedBlockList);
+
+                        final GeckoBundle geckoBundle = new GeckoBundle();
+                        geckoBundle.putBundle("site_specific_unblocks", siteSpecificUnblockBundle);
+                        geckoBundle.putBundle("site_specific_blocks", siteSpecificBlockBundle);
+                        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+                        notifyDataSetChanged();
+                    }
+                });
+                blockButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        hideOptionsMenu(v);
+                        final GeckoBundle selectedAppIds = data.getBundle("data").getBundle("blocking")
+                                .getBundle("selected_app_ids");
+                        if (isBlocked) {
+                            selectedAppIds.remove(Integer.toString(trackerId));
+                            childGeckoBundle.putBoolean("blocked", false);
+                        } else {
+                            selectedAppIds.putInt(Integer.toString(trackerId), 1);
+                            childGeckoBundle.putBoolean("blocked", true);
+                        }
+                        final GeckoBundle geckoBundle = new GeckoBundle();
+                        geckoBundle.putBundle("selected_app_ids", selectedAppIds);
+                        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+                        notifyDataSetChanged();
+                    }
+                });
+            }
             trackerNameTextView.setText(trackerName);
 
             final List<String> blacklist = Arrays.asList(data.getBundle("data").getBundle("summary")
@@ -303,12 +306,14 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
             final ObjectAnimator animation = ObjectAnimator.ofFloat(view, "translationX",
                     parent.getWidth() - Utils.convertDpToPixel(240));
             animation.setDuration(400);
-            trackerCheckBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    animation.start();
-                }
-            });
+            if (!isPaused) {
+                trackerCheckBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        animation.start();
+                    }
+                });
+            }
         }
         return convertView;
     }

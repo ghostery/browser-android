@@ -10,15 +10,15 @@ import org.mozilla.gecko.R;
  */
 public enum Categories {
 
-    advertising(R.color.advertising, R.drawable.ic_category_advertising),
-    audio_video_player(R.color.audio_video_player, R.drawable.ic_category_audio_video),
-    comments(R.color.comments, R.drawable.ic_category_comments),
-    customer_interaction(R.color.customer_interaction, R.drawable.ic_category_customer_interaction),
-    essential(R.color.essential, R.drawable.ic_category_essential),
-    pornvertising(R.color.pornvertising, R.drawable.ic_category_pornvertising),
-    site_analytics(R.color.site_analytics, R.drawable.ic_category_site_analytics),
-    social_media(R.color.social_media, R.drawable.ic_category_social_media),
-    unknown(R.color.default_category, R.drawable.ic_category_pornvertising); //TODO get icon for unknown
+    advertising(R.color.cc_advertising, R.color.cc_advertising_disabled, R.drawable.cc_ic_category_advertising),
+    audio_video_player(R.color.cc_audio_video_player, R.color.cc_audio_video_player_disabled, R.drawable.cc_ic_category_audio_video),
+    comments(R.color.cc_comments, R.color.cc_comments_disabled, R.drawable.cc_ic_category_comments),
+    customer_interaction(R.color.cc_customer_interaction, R.color.cc_customer_interaction_disabled, R.drawable.cc_ic_category_customer_interaction),
+    essential(R.color.cc_essential, R.color.cc_essential_disabled, R.drawable.cc_ic_category_essential),
+    pornvertising(R.color.cc_pornvertising, R.color.cc_pornvertising_disabled, R.drawable.cc_ic_category_pornvertising),
+    site_analytics(R.color.cc_site_analytics, R.color.cc_site_analytics_disabled, R.drawable.cc_ic_category_site_analytics),
+    social_media(R.color.cc_social_media, R.color.cc_social_media_disabled, R.drawable.cc_ic_category_social_media),
+    unknown(R.color.cc_default_category, R.color.cc_default_category_disabled, R.drawable.cc_ic_category_advertising); //TODO get icon for unknown
 
     public static Categories safeValueOf(String value) {
         try {
@@ -29,10 +29,12 @@ public enum Categories {
     }
 
     public final @ColorRes int categoryColor;
+    public final @ColorRes int categoryColorDisabled;
     public final @DrawableRes int categoryIcon;
 
-    Categories(@ColorRes int color, @DrawableRes int icon) {
+    Categories(@ColorRes int color, @ColorRes int colorDisabled, @DrawableRes int icon) {
         categoryColor = color;
+        categoryColorDisabled = colorDisabled;
         categoryIcon = icon;
     }
 }
