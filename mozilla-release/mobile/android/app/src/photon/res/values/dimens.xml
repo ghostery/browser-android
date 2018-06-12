@@ -280,6 +280,9 @@
     <dimen name="myoffrz_padding_16">16dp</dimen>
     <dimen name="myoffrz_padding_5">@dimen/padding_5</dimen>
     <dimen name="myoffrz_padding_20">20dp</dimen>
+
+    <!-- Control Center -->
+    <dimen name="ghostery_list_item_action_button_width">80dp</dimen>
     <!-- Cliqz end -->
 
 </resources>

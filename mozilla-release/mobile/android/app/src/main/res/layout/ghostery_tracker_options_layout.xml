@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:id="@+id/trust_button"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/ghostery_list_item_action_button_width"
         android:layout_height="match_parent"
         android:background="@android:color/holo_green_light">
 
@@ -33,7 +33,7 @@
 
     <RelativeLayout
         android:id="@+id/restrict_button"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/ghostery_list_item_action_button_width"
         android:layout_height="match_parent"
         android:background="@android:color/holo_red_dark">
 
@@ -57,7 +57,7 @@
 
     <RelativeLayout
         android:id="@+id/block_button"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/ghostery_list_item_action_button_width"
         android:layout_height="match_parent"
         android:background="@android:color/holo_red_light">
 
