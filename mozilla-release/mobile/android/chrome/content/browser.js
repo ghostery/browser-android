@@ -6364,17 +6364,17 @@ var Cliqz = {
     ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
 
     Services.cpmm.addMessageListener("MessageChannel:Messages",
-      this._privacyExtensionListener.bind(this));
+      this._extensionListener.bind(this));
   },
 
-  _messageExtension(id, msg) {
+  _messageExtension(id, msg, opts = {}) {
     Services.cpmm.sendAsyncMessage("MessageChannel:Messages", [{
       messageName: "Extension:Message",
       channelId: ExtensionUtils.getUniqueId(),
-      sender: {
+      sender: Object.assign({
           id,
           extensionId: id,
-      },
+      }, opts.senderOptions),
       recipient: {
           extensionId: id
       },
@@ -6385,6 +6385,14 @@ var Cliqz = {
 
   messagePrivacyExtension(msg) {
     Cliqz._messageExtension('firefox@ghostery.com', msg);
+  },
+  messageSearchExtension(msg) {
+    msg.source = 'cliqz-android';
+    Cliqz._messageExtension('android@cliqz.com', msg, {
+      senderOptions: {
+        contextId: 'mobile-cards',
+      },
+    });
   },
 
   _createBrowserForExtension: function (id) {
@@ -6405,56 +6413,66 @@ var Cliqz = {
     }
   },
 
-  _searchExtensionListener: function(msg) {
-    switch (msg.data.action) {
-      case 'openLink':
+  _searchExtensionListener(msg) {
+    console.log('Dispaching event from the search extension to native', msg);
+    switch (msg.action) {
+      case 'openUrl': // args [url as string]
+        if (!msg.args[0]) {
+          break;
+        }
         var success = this.hidePanel(this.Search.panel);
         if (success) {
-          BrowserApp.deck.selectedPanel.loadURI(msg.data.data);
+          BrowserApp.deck.selectedPanel.loadURI(msg.args[0]);
         }
         // used by the java side to exit the edit mode
         GlobalEventDispatcher.sendRequest({
           type: "Search:OpenLink"
         });
         break;
-      case 'autocomplete':
+      case 'autocomplete': // args [data as object]
         GlobalEventDispatcher.sendRequest({
           type: "Search:Autocomplete",
           data: msg.data.data
         });
         break;
       default:
-        console.log("Message not handled", msg);
-        break;
+        console.log('unexpected message', msg)
     }
   },
 
-  _privacyExtensionListener: function(ev) {
+  _privacyExtensionListener(msg) {
+    console.log('Dispaching event from the privacy extension to native', msg);
+    switch (msg.action) {
+      case 'setIcon':
+        var count = Number.parseInt(msg.payload.text);
+        count = count ? count : 0;
+        GlobalEventDispatcher.sendRequest({
+          type: "Privacy:Count",
+          tabId: msg.payload.tabId,
+          count: count
+        });
+      break;
+      case 'panelData':
+        GlobalEventDispatcher.sendRequest({
+          type: "Privacy:Info",
+          data: msg.payload
+        });
+      break;
+      default:
+        console.log('unexpected message', msg)
+    }
+  },
+
+  _extensionListener(ev) {
     const data = ev.data[0];
+    const msg = data.data.deserialize(this);
+    if (msg.target !== 'ANDROID_BROWSER') {
+      return;
+    }
     if (data.recipient.extensionId === 'firefox@ghostery.com') {
-      const msg = data.data.deserialize(this);
-      if (msg.target === 'ANDROID_BROWSER'){
-        console.log('Dispaching event from the privacy extension to native', msg);
-        switch (msg.action) {
-          case 'setIcon':
-            var count = Number.parseInt(msg.payload.text);
-            count = count ? count : 0;
-            GlobalEventDispatcher.sendRequest({
-              type: "Privacy:Count",
-              tabId: msg.payload.tabId,
-              count: count
-            });
-          break;
-          case 'panelData':
-            GlobalEventDispatcher.sendRequest({
-              type: "Privacy:Info",
-              data: msg.payload
-            });
-          break;
-          default:
-            console.log('unexpected message', msg)
-        }
-      }
+      this._privacyExtensionListener(msg);
+    } else if (data.recipient.extensionId === 'android@cliqz.com') {
+      this._searchExtensionListener(msg);
     }
   },
 
@@ -6472,7 +6490,7 @@ var Cliqz = {
   get Search() {
     if (!this._search) {
       this._search = this._createBrowserForExtension('android@cliqz.com');
-      this._search.load('index.html');
+      this._search.load('modules/mobile-cards/cards.html');
 
       setTimeout(() => {
         // TODO: find a better moment to attach
@@ -6529,14 +6547,11 @@ var Cliqz = {
         break;
       case "Search:Hide":
         this.hidePanel(this.Search.panel);
+        this.messageSearchExtension({ module: 'search', action: 'stopSearch', args: []});
         break;
       case "Search:Search":
         let q = data.q || "";
-        this.Search.panel.contentWindow.postMessage({
-           type: "Cliqz:Search",
-           q: q,
-           oq: this.oldQuery
-        }, "*");
+        this.messageSearchExtension({ module: 'search', action: 'startSearch', args: [q]});
         break;
 
       case "Privacy:Show":
