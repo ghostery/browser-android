@@ -6351,14 +6351,14 @@ var ExternalApps = {
 var Cliqz = {
   init: function () {
     GlobalEventDispatcher.registerListener(this, [
-      "Search:Search",
       "Search:Hide",
+      "Search:Search",
       "Search:Show",
 
-      "Privacy:Show",
-      "Privacy:Hide",
       "Privacy:GetInfo",
+      "Privacy:Hide",
       "Privacy:SetInfo"
+      "Privacy:Show",
     ]);
 
     ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
@@ -6541,9 +6541,15 @@ var Cliqz = {
   },
 
   onEvent: function(event, data, callback) {
+    // event cases should be sorted in alphabitical order
     switch(event) {
-      case "Search:Show":
-        this.overlayPanel(this.Search.panel);
+      case "Search:Analysis":
+        const { data: msg = {}, immediate = false, schema = '' } = data;
+        this.messageSearchExtension({
+          module: 'anolysis',
+          action: 'handleTelemetrySignal',
+          args: [msg, immediate, schema]
+        });
         break;
       case "Search:Hide":
         this.hidePanel(this.Search.panel);
@@ -6553,19 +6559,22 @@ var Cliqz = {
         let q = data.q || "";
         this.messageSearchExtension({ module: 'search', action: 'startSearch', args: [q]});
         break;
+      case "Search:Show":
+        this.overlayPanel(this.Search.panel);
+        break;
 
-      case "Privacy:Show":
-        this.overlayPanel(this.Ghostery.panel);
-        this.Ghostery.loadTab(BrowserApp.selectedTab.id);
+      case "Privacy:GetInfo":
+        this.messagePrivacyExtension({ name: 'getAndroidPanelData' });
         break;
       case "Privacy:Hide":
         this.hidePanel(this.Ghostery.panel);
         break;
-      case "Privacy:GetInfo":
-        this.messagePrivacyExtension({ name: 'getAndroidPanelData' });
-        break;
       case "Privacy:SetInfo":
         this.messagePrivacyExtension({ name: 'setPanelData', message: data });
+        break;
+      case "Privacy:Show":
+        this.overlayPanel(this.Ghostery.panel);
+        this.Ghostery.loadTab(BrowserApp.selectedTab.id);
         break;
     }
   }
