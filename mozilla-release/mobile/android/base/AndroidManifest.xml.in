@@ -5,13 +5,12 @@
       package="@ANDROID_PACKAGE_NAME@"
       android:installLocation="internalOnly"
       android:versionCode="@ANDROID_VERSION_CODE@"
-      android:versionName="@MOZ_APP_VERSION@"
-    <!-- Cliqz Start
+      android:versionName="@MOZ_APP_VERSION@">
+    <!-- Cliqz Start, this was part of the manifest tag ->
 #ifdef MOZ_ANDROID_SHARED_ID
       android:sharedUserId="@MOZ_ANDROID_SHARED_ID@"
 #endif
-    Cliqz End -->
-      >
+    <! - Cliqz End -->
     <uses-sdk android:minSdkVersion="@MOZ_ANDROID_MIN_SDK_VERSION@"
 #ifdef MOZ_ANDROID_MAX_SDK_VERSION
               android:maxSdkVersion="@MOZ_ANDROID_MAX_SDK_VERSION@"
