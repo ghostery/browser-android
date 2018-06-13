@@ -6357,7 +6357,7 @@ var Cliqz = {
 
       "Privacy:GetInfo",
       "Privacy:Hide",
-      "Privacy:SetInfo"
+      "Privacy:SetInfo",
       "Privacy:Show",
     ]);
 
