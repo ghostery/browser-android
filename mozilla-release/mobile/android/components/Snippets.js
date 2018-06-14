@@ -421,6 +421,7 @@ Snippets.prototype = {
     switch(topic) {
       case "browser-delayed-startup-finished":
         // Add snippets to be cycled through.
+        /* Cliqz Start o/
         if (Services.prefs.getBoolPref("browser.snippets.firstrunHomepage.enabled")) {
           loadHomePanelsBanner();
         }
@@ -428,6 +429,7 @@ Snippets.prototype = {
         if (Services.prefs.getBoolPref("browser.snippets.syncPromo.enabled")) {
           loadSyncPromoBanner();
         }
+        /o Cliqz End */
 
         if (Services.prefs.getBoolPref("browser.snippets.enabled")) {
           loadSnippetsFromCache();
