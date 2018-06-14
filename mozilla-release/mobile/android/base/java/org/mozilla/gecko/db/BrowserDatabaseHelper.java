@@ -20,6 +20,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -27,6 +29,7 @@ import org.mozilla.apache.commons.codec.binary.Base32;
 import org.mozilla.gecko.GeckoProfile;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.annotation.RobocopTarget;
+import org.mozilla.gecko.anolysis.FavoritesMigrationMetrics;
 import org.mozilla.gecko.background.common.PrefsBranch;
 import org.mozilla.gecko.db.BrowserContract.ActivityStreamBlocklist;
 import org.mozilla.gecko.db.BrowserContract.Bookmarks;
@@ -2545,26 +2548,39 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void migrateBookmarks(SQLiteDatabase db) {
+        final SparseIntArray folders = new SparseIntArray();
         final Cursor rowCursor = db.rawQuery("SELECT * FROM ghostery.bookmarks ORDER BY _id ASC", null);
-        final Cursor maxIdCurosr = db.rawQuery("SELECT MAX(_id) AS maxId FROM bookmarks", null);
-        final int urlColoumnIndex = rowCursor.getColumnIndex("url");
-        final int titleColoumnIndex = rowCursor.getColumnIndex("title");
-        final int parentIdColoumnIndex = rowCursor.getColumnIndex("bookmark_folder_id");
-        final int dateColoumnIndex = rowCursor.getColumnIndex("date");
-        int maxId = 0;
-        while(maxIdCurosr.moveToNext()) {
-            maxId = maxIdCurosr.getInt(0);
+        // If there are not rows, it is pointless to continue the migration
+        if (rowCursor.getCount() == 0) {
+            rowCursor.close();
+            FavoritesMigrationMetrics.folders(0, 0, 0);
+            return;
         }
-        maxIdCurosr.close();
+        final Cursor maxIdCursor = db.rawQuery("SELECT MAX(_id) AS maxId FROM bookmarks", null);
+        final int idColumnIndex = rowCursor.getColumnIndex("_id");
+        final int urlColumnIndex = rowCursor.getColumnIndex("url");
+        final int titleColumnIndex = rowCursor.getColumnIndex("title");
+        final int parentIdColumnIndex = rowCursor.getColumnIndex("bookmark_folder_id");
+        final int dateColumnIndex = rowCursor.getColumnIndex("date");
+        int maxId = 0;
+        while(maxIdCursor.moveToNext()) {
+            maxId = maxIdCursor.getInt(0);
+        }
+        maxIdCursor.close();
+        int count = 0;
+        int rootCount = 0;
         while(rowCursor.moveToNext()) {
-            final String url = rowCursor.getString(urlColoumnIndex);
-            final String title = rowCursor.getString(titleColoumnIndex);
-            final int parentId = rowCursor.getInt(parentIdColoumnIndex);
-            final long timeStamp = rowCursor.getLong(dateColoumnIndex);
+            final int id = rowCursor.getInt(idColumnIndex);
+            final String url = rowCursor.getString(urlColumnIndex);
+            final String title = rowCursor.getString(titleColumnIndex);
+            final int parentId = rowCursor.getInt(parentIdColumnIndex);
+            final long timeStamp = rowCursor.getLong(dateColumnIndex);
             final ContentValues contentValues = new ContentValues();
+            final boolean isFolder = url == null;
             contentValues.put(Bookmarks.TITLE, title);
             contentValues.put(Bookmarks.URL, url);
-            contentValues.put(Bookmarks.TYPE, url == null ? 0 : 1);
+            contentValues.put(Bookmarks.TYPE, isFolder ? Bookmarks.TYPE_FOLDER : Bookmarks.TYPE_BOOKMARK);
+            // Firefox has already some entry added, so we adjust the parent id
             contentValues.put(Bookmarks.PARENT, parentId == -1 ? 1 : parentId + maxId);
             contentValues.put(Bookmarks.POSITION, Long.MIN_VALUE);
             contentValues.put(Bookmarks.DATE_CREATED, timeStamp);
@@ -2574,8 +2590,52 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(Bookmarks.SYNC_VERSION, 0);
             contentValues.put(Bookmarks.LOCAL_VERSION, 1);
             db.insert(Bookmarks.TABLE_NAME, null, contentValues);
+
+            if (isFolder) {
+                folders.append(id, parentId);
+                rootCount = parentId == -1 ? rootCount+1 : rootCount;
+            }
+            count++;
         }
         rowCursor.close();
+
+        // Anolysis here
+        final int maxDepth = calculateMaxDepth(folders);
+        FavoritesMigrationMetrics.folders(count, rootCount, maxDepth);
+    }
+
+    private static int calculateMaxDepth(SparseIntArray folders) {
+        switch (folders.size()) {
+            case 0:
+                return 0;
+            case 1:
+                return 1;
+            default:
+                break;
+        }
+        final SparseIntArray depths = new SparseIntArray();
+        int maxDepth = 0;
+        for (int keyIndex = 0; keyIndex < folders.size(); keyIndex++) {
+            final int key = folders.keyAt(keyIndex);
+            maxDepth = Math.max(maxDepth, calculateDepth(key, folders, depths));
+        }
+        return maxDepth;
+    }
+
+    private static int calculateDepth(int key, SparseIntArray folders, SparseIntArray depths) {
+        final int storedDepth = depths.get(key, -1);
+        if (storedDepth > -1) {
+            return storedDepth;
+        }
+        final int depth;
+        final int nextKey = folders.get(key, -1);
+        if (nextKey == -1) {
+            depth = 1;
+        } else {
+            depth = 1 + calculateDepth(nextKey, folders, depths);
+        }
+        depths.append(key, depth);
+        return depth;
     }
 
     private void migrateHistory(SQLiteDatabase db) {

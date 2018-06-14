@@ -82,7 +82,7 @@ import org.mozilla.gecko.activitystream.ActivityStreamTelemetry;
 import org.mozilla.gecko.adjust.AdjustBrowserAppDelegate;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.annotation.RobocopTarget;
-import org.mozilla.gecko.anolysis.ControlCenterSimple;
+import org.mozilla.gecko.anolysis.ControlCenterMetrics;
 import org.mozilla.gecko.bookmarks.BookmarkEditFragment;
 import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
@@ -4733,7 +4733,7 @@ public class BrowserApp extends GeckoApp
         } else {
             mControlCenterContainer.setVisibility(View.VISIBLE);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
-            ControlCenterSimple.show();
+            ControlCenterMetrics.show();
         }
     }
 
