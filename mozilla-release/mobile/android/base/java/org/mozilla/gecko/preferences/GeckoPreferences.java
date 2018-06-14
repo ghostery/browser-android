@@ -11,7 +11,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -59,10 +58,7 @@ import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.BrowserLocaleManager;
 import org.mozilla.gecko.BuildConfig;
-import org.mozilla.gecko.DataReportingNotification;
-import org.mozilla.gecko.DynamicToolbar;
 import org.mozilla.gecko.EventDispatcher;
-import org.mozilla.gecko.GeckoApp;
 import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.GeckoProfile;
 import org.mozilla.gecko.GeckoSharedPrefs;
@@ -479,11 +475,13 @@ public class GeckoPreferences
         // capture EXTRA_SHOW_FRAGMENT_TITLE from the intent and store the title ID.
 
         // If launched from notification, explicitly cancel the notification.
+        /* Cliqz Start o/
         if (intentExtras != null && intentExtras.containsKey(DataReportingNotification.ALERT_NAME_DATAREPORTING_NOTIFICATION)) {
             Telemetry.sendUIEvent(TelemetryContract.Event.LAUNCH, Method.NOTIFICATION, "settings-data-choices");
             NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(DataReportingNotification.ALERT_NAME_DATAREPORTING_NOTIFICATION.hashCode());
         }
+        /o Cliqz End */
     }
 
     /**
