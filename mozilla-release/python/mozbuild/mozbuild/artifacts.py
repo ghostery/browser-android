@@ -1033,6 +1033,25 @@ class Artifacts(object):
             return urls
         return None
 
+    #Cliqz start
+    def store_to_filepath(self, filename, destn):
+        self.log(logging.INFO, 'artifact',
+            {
+                'filename': filename,
+                'destn': destn
+            },
+            'Adding {filename} to {destn}')
+        shutil.copy(filename, destn)
+        os.remove(filename)
+
+    def add_from_url(self, url, destn):
+        self.log(logging.INFO, 'artifact',
+            {'url': url},
+            'Adding from {url}')
+        filename = self._artifact_cache.fetch(url)
+        return self.store_to_filepath(filename, destn)
+    #Cliqz end
+
     def install_from_file(self, filename, distdir):
         self.log(logging.INFO, 'artifact',
             {'filename': filename},

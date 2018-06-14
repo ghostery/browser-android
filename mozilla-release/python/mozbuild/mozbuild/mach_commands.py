@@ -1168,6 +1168,43 @@ class PackageFrontend(MachCommandBase):
         '''
         pass
 
+    #Cliqz start
+    def _add_artifacts(self, tree=None, job=None, skip_cache=False):
+        state_dir = self._mach_context.state_dir
+        cache_dir = os.path.join(state_dir, 'package-frontend')
+
+        here = os.path.abspath(os.path.dirname(__file__))
+        build_obj = MozbuildObject.from_environment(cwd=here)
+
+        hg = None
+        if conditions.is_hg(build_obj):
+            hg = build_obj.substs['HG']
+
+        git = '/usr/local/bin/git'
+        if 'GIT' in os.environ:
+            git = os.environ['GIT']
+
+        from mozbuild.artifacts import Artifacts
+        extensions = Artifacts(tree, self.substs, self.defines, job,
+                              log=self.log, cache_dir=cache_dir,
+                              skip_cache=skip_cache, hg=hg, git=git,
+                              topsrcdir=self.topsrcdir)
+        return extensions
+
+    @ArtifactSubCommand('artifact', 'add',
+        'Add a Extension file to the extensions directory')
+    @CommandArgument('source', metavar='SRC', nargs='?', type=str,
+        help='Where to fetch and install artifacts from.  Can be a remote URL;',
+        default=None)
+    @CommandArgument('destn', nargs='?', type=str,
+        help='Where to add the file')
+    def artifact_add(self, source=None, destn=None, skip_cache=False, tree=None, job=None, verbose=False):
+        self._set_log_level(verbose)
+        extensions=self._add_artifacts(tree=tree, job=job, skip_cache=skip_cache)
+
+        return extensions.add_from_url(source, destn)
+    #Cliqz end
+
     def _make_artifacts(self, tree=None, job=None, skip_cache=False):
         state_dir = self._mach_context.state_dir
         cache_dir = os.path.join(state_dir, 'package-frontend')

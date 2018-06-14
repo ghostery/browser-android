@@ -10,5 +10,5 @@ mk_add_options MOZ_OBJDIR=./objdir-frontend-android/cliqz
 # Branding
 ac_add_options --with-branding=mobile/android/branding/cliqz
 #Add extension in distribution
-#ac_add_options --with-android-distribution-directory="$topsrcdir/cliqz"
+ac_add_options --with-android-distribution-directory="$topsrcdir/../distribution"
 
