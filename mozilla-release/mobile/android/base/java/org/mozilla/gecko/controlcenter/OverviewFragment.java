@@ -19,7 +19,7 @@ import com.github.mikephil.charting.data.PieEntry;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
-import org.mozilla.gecko.anolysis.ControlCenterSimple;
+import org.mozilla.gecko.anolysis.ControlCenterMetrics;
 import org.mozilla.gecko.util.GeckoBundle;
 
 import java.util.ArrayList;
@@ -144,9 +144,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         if (mIsGhosteryPaused) {
             styleButton(mTrustSiteButton, false);
             styleButton(mRestrictSiteButton, false);
-            ControlCenterSimple.pause();
+            ControlCenterMetrics.pause();
         } else {
-            ControlCenterSimple.resume();
+            ControlCenterMetrics.resume();
         }
         final GeckoBundle geckoBundle = new GeckoBundle();
         geckoBundle.putBoolean("paused_blocking", mIsGhosteryPaused);
@@ -155,7 +155,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     }
 
     private void handleTrustButtonClick() {
-        ControlCenterSimple.trustSite();
+        ControlCenterMetrics.trustSite();
         final String pageHost = controlCenterSettingsData.getBundle("data").getBundle("summary")
                 .getString("pageHost");
         //get list of blacklisted and whitelisted sites and then add/remove current site and send back the new lists
@@ -183,7 +183,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
             updatedWhiteList.remove(pageHost);
-            ControlCenterSimple.restrictSite();
+            ControlCenterMetrics.restrictSite();
         }
         final GeckoBundle geckoBundle = new GeckoBundle();
         geckoBundle.putStringArray("site_whitelist", updatedWhiteList);
@@ -195,7 +195,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     }
 
     private void handleRestrictButtonClick() {
-        ControlCenterSimple.restrictSite();
+        ControlCenterMetrics.restrictSite();
         final String pageHost = controlCenterSettingsData.getBundle("data").getBundle("summary")
                 .getString("pageHost");
         //get list of blacklisted and whitelisted sites and then add/remove current site and send back the new lists

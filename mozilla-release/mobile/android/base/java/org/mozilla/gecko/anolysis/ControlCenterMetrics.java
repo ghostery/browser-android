@@ -3,9 +3,9 @@ Copyright © Cliqz 2018
  */
 package org.mozilla.gecko.anolysis;
 
-public class ControlCenterSimple {
+public class ControlCenterMetrics {
 
-    private ControlCenterSimple() {
+    private ControlCenterMetrics() {
         // no instances
     }
 
