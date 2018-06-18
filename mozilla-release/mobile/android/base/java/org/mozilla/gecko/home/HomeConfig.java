@@ -1646,15 +1646,14 @@ public final class HomeConfig {
     // configuration. Because they don't consider the active configuration, it
     // is only sensible to do this for built-in panels (and not for dynamic
     // panels).
-    /* package-private */ static final String TOP_SITES_PANEL_ID = "4becc86b-41eb-429a-a042-88fe8b5a094e";
+    /* Cliqz start */
+    public static final String TOP_SITES_PANEL_ID = "4becc86b-41eb-429a-a042-88fe8b5a094e";
+    public static final String COMBINED_HISTORY_PANEL_ID = "4d716ce2-e063-486d-9e7c-b190d7b04dc6";
     private static final String BOOKMARKS_PANEL_ID = "7f6d419a-cd6c-4e34-b26f-f68b1b551907";
     private static final String HISTORY_PANEL_ID = "f134bf20-11f7-4867-ab8b-e8e705d7fbe8";
-    private static final String COMBINED_HISTORY_PANEL_ID = "4d716ce2-e063-486d-9e7c-b190d7b04dc6";
     private static final String RECENT_TABS_PANEL_ID = "5c2601a5-eedc-4477-b297-ce4cef52adf8";
     private static final String REMOTE_TABS_PANEL_ID = "72429afd-8d8b-43d8-9189-14b779c563d0";
     private static final String DEPRECATED_READING_LIST_PANEL_ID = "20f4549a-64ad-4c32-93e4-1dcef792733b";
-    /* Cliqz start */
-    // add MyOffrz ID
     private static final String MY_OFFRZ_PANEL_ID = "4b3eded8-02ce-e304-9b54-6e5e21121633";
     /* Cliqz end */
 
