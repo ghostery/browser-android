@@ -10,6 +10,7 @@ RUN dpkg --add-architecture i386 && \
         build-essential \
         ccache \
         curl \
+        git \
         language-pack-en \
         libncurses5:i386 \
         libstdc++6:i386 \
@@ -86,7 +87,7 @@ RUN set -eux; \
 USER jenkins
 ENV ANDROID_HOME /home/jenkins/.mozbuild/android-sdk-linux
 ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux
-ENV PATH "/home/jenkins/node-v8.9.3-linux-x64/bin:$PATH"
+ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.9.3-linux-x64/bin:$PATH"
 ENV NVM_DIR /home/jenkins/nvm
 ENV NODE_VERSION 8.9.3
 ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04/
@@ -142,4 +143,4 @@ RUN rvm reload && \
 gem install fastlane --version 2.87.0
 
 #Install AWS CLI
-RUN pip install awscli
+RUN pip install awscli --upgrade --user
