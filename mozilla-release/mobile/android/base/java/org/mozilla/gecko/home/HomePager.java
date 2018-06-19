@@ -581,6 +581,9 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            /* Cliqz Start */
+            ((HomeAdapter)getAdapter()).updateBgAlpha(position, positionOffset);
+            /* Cliqz End */
             if (mDecor != null) {
                 mDecor.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }

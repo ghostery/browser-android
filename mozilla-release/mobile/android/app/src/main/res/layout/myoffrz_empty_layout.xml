@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright © Cliqz 2018 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright © Cliqz 2018 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
+
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/empty_offers_icon_iv"
         android:layout_width="@dimen/myoffrz_icon_size"
@@ -14,14 +13,15 @@
         android:background="@drawable/oval_shape_white"
         android:scaleType="center"
         android:tint="@color/myoffrz_icon_tint"
-        app:srcCompat="@drawable/myoffrz_icon_black"/>
+        app:srcCompat="@drawable/myoffrz_icon_black" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/myoffrz_padding_10"
+        android:text="@string/myoffrz_no_offers_msg"
         android:textColor="@color/myoffrz_bg_text"
-        android:textSize="@dimen/myoffrz_text_size"
-        android:text="@string/myoffrz_no_offers_msg"/>
+        android:textSize="@dimen/myoffrz_text_size" />
 
 </LinearLayout>

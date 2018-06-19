@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright © Cliqz 2018 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/home_panesl_background_overlay">
 
-    <include layout="@layout/myoffrz_empty_layout"
+    <include
         android:id="@+id/empty_offers_outer_container"
-        android:visibility="gone"/>
+        layout="@layout/myoffrz_empty_layout"
+        android:visibility="gone" />
 
-    <include layout="@layout/myoffrz_layout"
-        android:id="@+id/offers_outer_container" />
+    <include
+        android:id="@+id/offers_outer_container"
+        layout="@layout/myoffrz_layout" />
 </FrameLayout>

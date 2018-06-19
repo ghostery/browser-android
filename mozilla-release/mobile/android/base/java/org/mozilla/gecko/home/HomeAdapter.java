@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
+import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.ActivityStream;
 import org.mozilla.gecko.activitystream.homepanel.ActivityStreamHomeFragment;
 import org.mozilla.gecko.home.HomeConfig.PanelConfig;
@@ -185,6 +186,19 @@ public class HomeAdapter extends FragmentStatePagerAdapter {
         }
     }
 
+    /* Cliqz Start */
+    public void updateBgAlpha(int position, float positionOffset) {
+        if (position == 0) {
+            final CombinedHistoryPanel historyPanel = (CombinedHistoryPanel) mPanels.get(HomeConfig.COMBINED_HISTORY_PANEL_ID);
+            final ActivityStreamHomeFragment freshTab = (ActivityStreamHomeFragment) mPanels.get(HomeConfig.TOP_SITES_PANEL_ID);
+            final int opacity = (int) (64*positionOffset);
+            String desiredHex = Integer.toString(opacity)+"000000";
+            historyPanel.getView().findViewById(R.id.root_view).setBackgroundColor(Integer.parseInt(desiredHex,16));
+            freshTab.getView().findViewById(R.id.root_view).setBackgroundColor(Integer.parseInt(desiredHex,16));
+        }
+    }
+    /*Cliqz End */
+
     private final class PanelInfo {
         private final PanelConfig mPanelConfig;
 
@@ -228,7 +242,7 @@ public class HomeAdapter extends FragmentStatePagerAdapter {
 
         /*Cliqz Start*/
         @DrawableRes
-        public int getIconId() {
+        int getIconId() {
             return mPanelConfig.getIconId();
         }
         /*Cliqz End*/

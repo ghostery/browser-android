@@ -74,6 +74,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONArray;
 import org.mozilla.gecko.AppConstants.Versions;
 import org.mozilla.gecko.DynamicToolbar.VisibilityTransition;
 import org.mozilla.gecko.Tabs.TabEvents;
@@ -82,7 +85,7 @@ import org.mozilla.gecko.activitystream.ActivityStreamTelemetry;
 import org.mozilla.gecko.adjust.AdjustBrowserAppDelegate;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.annotation.RobocopTarget;
-import org.mozilla.gecko.anolysis.ControlCenterSimple;
+import org.mozilla.gecko.anolysis.ControlCenterMetrics;
 import org.mozilla.gecko.bookmarks.BookmarkEditFragment;
 import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
@@ -1014,6 +1017,38 @@ public class BrowserApp extends GeckoApp
         // We want to get an understanding of how our user base is spread (bug 1221646).
         final String installerPackageName = getPackageManager().getInstallerPackageName(getPackageName());
         Telemetry.sendUIEvent(TelemetryContract.Event.LAUNCH, TelemetryContract.Method.SYSTEM, "installer_" + installerPackageName);
+
+        /*Cliqz Start*/
+        final SharedPreferences sharedPreferences = getSharedPreferences(GeckoSharedPrefs.APP_PREFS_NAME, 0);
+        if (sharedPreferences.contains("TABS_BACKUP_JSON")) {
+            try {
+                final String tabsRestoreData = sharedPreferences.getString("TABS_BACKUP_JSON", "{}");
+                final int currentTabId = sharedPreferences.getInt("TABS_BACKUP_CURRENT_ID", -1);
+                final JSONObject jsonObject = new JSONObject(tabsRestoreData);
+                String urlToOpenInEnd = null;
+                final JSONArray ids = jsonObject.names();
+                for (int i = 0; i < ids.length(); i++) {
+                    final String id = (String) ids.get(i);
+                    final JSONObject tabDetails = jsonObject.getJSONObject(id);
+                    final String url = tabDetails.getString("url");
+                    if (currentTabId != -1 && currentTabId == Integer.parseInt(id)) {
+                        urlToOpenInEnd = url;
+                    } else {
+                        Tabs.getInstance().loadUrlInTab(url);
+                    }
+                }
+                if (urlToOpenInEnd != null) {
+                    Tabs.getInstance().loadUrlInTab(urlToOpenInEnd);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                final SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("TABS_BACKUP_JSON");
+                editor.apply();
+            }
+        }
+        /*Cliqz End*/
     }
 
     /**
@@ -4733,7 +4768,7 @@ public class BrowserApp extends GeckoApp
         } else {
             mControlCenterContainer.setVisibility(View.VISIBLE);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
-            ControlCenterSimple.show();
+            ControlCenterMetrics.show();
         }
     }
 
