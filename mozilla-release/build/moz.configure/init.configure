@@ -24,7 +24,7 @@ def check_build_environment(help, dist):
     if dist:
         dist = normsep(dist[0])
     else:
-        dist = os.path.join(topsrcdir, '../distribution')
+        dist = os.path.join(topobjdir, 'dist')
 
     result = namespace(
         topsrcdir=topsrcdir,
@@ -999,7 +999,7 @@ def milestone(build_env, _):
     milestone_path = os.path.join(build_env.topsrcdir,
                                   'config',
                                   'milestone.txt')
-    #Cliqz start                         
+    # Cliqz Start
     search_path = os.path.join(build_env.topsrcdir,
                                   'config',
                                   'search.txt')
@@ -1010,7 +1010,7 @@ def milestone(build_env, _):
         search = fh.read().strip()
     with open(ghostery_path, 'r') as fh:
         ghostery = fh.read().strip()
-    #Cliqz end
+    # Cliqz End
     with open(milestone_path, 'r') as fh:
         milestone = fh.read().splitlines()[-1]
 
@@ -1031,18 +1031,18 @@ def milestone(build_env, _):
     # Only expose major milestone and alpha version in the symbolversion
     # string; as the name suggests, we use it for symbol versioning on Linux.
     return namespace(version=milestone,
-                     #Cliqz start 
-                     search=search, 
+                     # Cliqz Start
+                     search=search,
                      ghostery=ghostery,
-                     #Cliqz end
+                     # Cliqz End
                      uaversion='%s.0' % major_version,
                      symbolversion='%s%s' % (major_version, ab_patch),
                      is_nightly=is_nightly,
                      is_release_or_beta=is_release_or_beta)
-#Cliqz start
+# Cliqz Start
 set_config('SEARCH_EXTENSION_VERSION', milestone.search)
 set_config('GHOSTERY_EXTENSION_VERSION', milestone.ghostery)
-#Cliqz end
+# Cliqz End
 set_config('GRE_MILESTONE', milestone.version)
 set_config('NIGHTLY_BUILD', milestone.is_nightly)
 set_define('NIGHTLY_BUILD', milestone.is_nightly)

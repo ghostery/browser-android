@@ -87,11 +87,11 @@ def _defines():
                 'MOZ_UPDATE_CHANNEL',
                 'OMNIJAR_NAME',
                 'OS_TARGET',
-                'TARGET_XPCOM_ABI',
-                #Cliqz start
+                # Cliqz Start
                 'GHOSTERY_EXTENSION_VERSION',
-                'SEARCH_EXTENSION_VERSION'):
-                #Cliqz end
+                'SEARCH_EXTENSION_VERSION',
+                # Cliqz End
+                'TARGET_XPCOM_ABI'):
         DEFINES[var] = CONFIG[var]
 
     # Mangle our package name to avoid Bug 750548.

@@ -17,7 +17,7 @@ ac_add_options --with-android-sdk=/home/jenkins/.mozbuild/android-sdk-linux
 
 
 # Write build artifacts to:
-mk_add_options MOZ_OBJDIR=./objdir-frontend-android/ghostery-alpha	
+mk_add_options MOZ_OBJDIR=./objdir-frontend-android/ghostery-alpha
 
 # l10n support
 ac_add_options --with-l10n-base="$topsrcdir/../l10n"
