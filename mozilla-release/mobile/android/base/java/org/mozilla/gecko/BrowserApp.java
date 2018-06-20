@@ -1977,12 +1977,13 @@ public class BrowserApp extends GeckoApp
                         }
                     }
                 });
-
+                /* Cliqz Start o/
                 // Display notification for Mozilla data reporting, if data should be collected.
                 if (AppConstants.MOZ_DATA_REPORTING &&
                         Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
                     DataReportingNotification.checkAndNotifyPolicy(this);
                 }
+                /o Cliqz End */
                 break;
 
             case "Gecko:DelayedStartup":
