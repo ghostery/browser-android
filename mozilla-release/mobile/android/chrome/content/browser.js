@@ -6351,7 +6351,11 @@ var ExternalApps = {
 var Cliqz = {
   init: function () {
     GlobalEventDispatcher.registerListener(this, [
+      "Search:Analysis",
+      "Search:Backend",
+      "Search:ComplementarySearch",
       "Search:Hide",
+      "Search:Pref",
       "Search:Search",
       "Search:Show",
 
@@ -6551,6 +6555,22 @@ var Cliqz = {
           args: [msg, immediate, schema]
         });
         break;
+      case "Search:Backend":
+        // data: { defaultCountry: string (lower case 2-letter code) }
+        this.messageSearchExtension({
+          module: 'control-center',
+          action: 'searchIndexCountry',
+          args: [{defaultCountry: data}]
+        });
+        break;
+      case "Search:ComplementarySearch":
+        // data: { defaultSearch: string (name of the search engine) }
+        this.messageSearchExtension({
+          module: 'control-center',
+          action: 'complementarySearch',
+          args: [data]
+        });
+        break;
       case "Search:Hide":
         this.hidePanel(this.Search.panel);
         this.messageSearchExtension({ module: 'search', action: 'stopSearch', args: []});
@@ -6568,6 +6588,14 @@ var Cliqz = {
         break;
       case "Privacy:Hide":
         this.hidePanel(this.Ghostery.panel);
+        break;
+      case "Search:Pref":
+        // data: { pref: string, value: string }
+        this.messageSearchExtension({
+          module: 'control-center',
+          action: 'updatePref',
+          args: [data]
+        });
         break;
       case "Privacy:SetInfo":
         this.messagePrivacyExtension({ name: 'setPanelData', message: data });
