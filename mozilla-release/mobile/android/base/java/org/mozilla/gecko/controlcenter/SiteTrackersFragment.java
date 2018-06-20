@@ -28,7 +28,17 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.ghostery_site_trackers_fragment, container, false);
-        ExpandableListView mTrackersList = (ExpandableListView) view.findViewById(R.id.trackers_list);
+        final ExpandableListView mTrackersList = (ExpandableListView) view.findViewById(R.id.trackers_list);
+        mTrackersList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            int previousExpandedGroup = -1;
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if ((previousExpandedGroup != -1) && (previousExpandedGroup != groupPosition)) {
+                    mTrackersList.collapseGroup(previousExpandedGroup);
+                }
+                previousExpandedGroup = groupPosition;
+            }
+        });
         View mOverflowMenu = view.findViewById(R.id.overflow_menu);
         mOverflowMenu.setOnClickListener(this);
         mTrackerListAdapter = new SiteTrackersListAdapter(getContext());

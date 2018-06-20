@@ -30,7 +30,7 @@
             android:layout_alignTop="@id/category_icon"
             android:layout_toEndOf="@id/category_icon"
             android:layout_toRightOf="@id/category_icon"
-            android:textColor="@android:color/black"
+            android:textColor="@color/cc_text_color"
             android:textSize="16sp"
             tools:text="Advertising" />
 
@@ -42,6 +42,7 @@
             android:layout_alignStart="@id/category_name"
             android:layout_below="@id/category_name"
             android:textSize="12sp"
+            android:textColor="@color/cc_text_color"
             tools:text="11 trackers" />
 
         <TextView
@@ -67,6 +68,7 @@
             android:layout_alignStart="@id/total_trackers"
             android:layout_below="@id/total_trackers"
             android:text="@string/cc_on_this_site"
+            android:textColor="@color/cc_text_color"
             android:textSize="12sp" />
 
         <ImageView
@@ -76,17 +78,20 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:focusable="false"
-            app:srcCompat="@drawable/ic_cb_unchecked"
+            android:layout_margin="10dp"
+            app:srcCompat="@drawable/cc_ic_cb_unchecked"
             tools:checked="true" />
 
         <ImageView
+            android:id="@+id/cc_state_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/this_site_text"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:padding="5dp"
-            android:src="@android:drawable/arrow_down_float"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            app:srcCompat="@drawable/cc_ic_expand_arrow"
             tools:ignore="contentDescription" />
 
     </RelativeLayout>

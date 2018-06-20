@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/cc_transparency">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
         <TextView
             android:layout_width="match_parent"
@@ -18,7 +20,7 @@
             android:layout_centerVertical="true"
             android:padding="10dp"
             android:text="@string/cc_site_trackers_list_title"
-            android:textColor="@android:color/black"
+            android:textColor="@color/cc_text_color"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -42,5 +44,7 @@
         android:footerDividersEnabled="true"
         android:groupIndicator="@null"
         android:headerDividersEnabled="true"
-        tools:listitem="@layout/ghostery_list_item_category" />
+        tools:listitem="@layout/ghostery_list_item_category"
+        android:childDivider="@drawable/cc_trackers_separator"
+        android:divider="@drawable/cc_categories_separator"/>
 </LinearLayout>

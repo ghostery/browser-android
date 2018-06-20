@@ -1,0 +1,22 @@
+<!--Copyright © Cliqz 2018-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M1.45,1.45h21.1v21.1h-21.1z"
+      android:strokeWidth="0.899999976"
+      android:fillColor="#E74055"
+      android:strokeColor="#FFFFFF"/>
+  <path
+      android:pathData="M0.55,0.55h22.9v22.9h-22.9z"
+      android:strokeWidth="0.899999976"
+      android:fillColor="#00000000"
+      android:strokeColor="#E74055"/>
+  <path
+      android:pathData="M19.9605,5.3711l-1.6211,-1.6211l-6.4842,6.4842l-6.4842,-6.4842l-1.6211,1.6211l6.4842,6.4842l-6.4842,6.4842l1.6211,1.6211l6.4842,-6.4842l6.4842,6.4842l1.6211,-1.6211l-6.4842,-6.4842z"
+      android:strokeWidth="1"
+      android:fillColor="#FFFFFF"
+      android:strokeColor="#00000000"/>
+</vector>

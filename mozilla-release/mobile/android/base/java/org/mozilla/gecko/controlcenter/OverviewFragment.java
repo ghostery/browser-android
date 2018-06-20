@@ -5,9 +5,16 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.SwitchCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +23,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.Utils;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
@@ -29,7 +37,7 @@ import java.util.List;
 /**
  * Copyright © Cliqz 2018
  */
-public class OverviewFragment extends ControlCenterFragment implements View.OnClickListener {
+public class OverviewFragment extends ControlCenterFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private PieChart mPieChart;
     private TextView mDomainName;
@@ -37,6 +45,10 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private RelativeLayout mTrustSiteButton;
     private RelativeLayout mRestrictSiteButton;
     private RelativeLayout mPauseGhosteryButton;
+    private TextView mSmartBlockingCount;
+    private SwitchCompat mSmartBlockingSwitch;
+    private SwitchCompat mAdBlockingSwitch;
+    private SwitchCompat mAntiTrackingSwitch;
     private boolean mIsSiteTrusted;
     private boolean mIsSiteRestricted;
     private boolean mIsGhosteryPaused;
@@ -57,9 +69,16 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mTrustSiteButton = (RelativeLayout) view.findViewById(R.id.ghostery_trust_site_button);
         mRestrictSiteButton = (RelativeLayout) view.findViewById(R.id.ghostery_restrict_site_button);
         mPauseGhosteryButton = (RelativeLayout) view.findViewById(R.id.ghostery_pause_button);
+        mAdBlockingSwitch = (SwitchCompat) view.findViewById(R.id.enhanced_blocking_switch);
+        mAntiTrackingSwitch = (SwitchCompat) view.findViewById(R.id.enhanced_tracking_switch);
+        mSmartBlockingSwitch = (SwitchCompat) view.findViewById(R.id.smart_blocking_switch);
+        mSmartBlockingCount = (TextView) view.findViewById(R.id.smart_blocking_count);
         mTrustSiteButton.setOnClickListener(this);
         mRestrictSiteButton.setOnClickListener(this);
         mPauseGhosteryButton.setOnClickListener(this);
+        mSmartBlockingSwitch.setOnCheckedChangeListener(this);
+        mAntiTrackingSwitch.setOnCheckedChangeListener(this);
+        mAdBlockingSwitch.setOnCheckedChangeListener(this);
         return view;
     }
 
@@ -71,10 +90,27 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     @Override
     public void updateUI(GeckoBundle controlCenterSettingsData) {
         this.controlCenterSettingsData = controlCenterSettingsData;
-        final int allowedTrackers = controlCenterSettingsData.getBundle("data").getBundle("summary").getBundle("trackerCounts").getInt("allowed");
-        final int blockedTrackers = controlCenterSettingsData.getBundle("data").getBundle("summary").getBundle("trackerCounts").getInt("blocked");
+        final int allowedTrackers = controlCenterSettingsData.getBundle("data").getBundle("summary")
+                .getBundle("trackerCounts").getInt("allowed");
+        final int blockedTrackers = controlCenterSettingsData.getBundle("data").getBundle("summary")
+                .getBundle("trackerCounts").getInt("blocked");
         final int totalTrackers = allowedTrackers + blockedTrackers;
-        final String domainName = controlCenterSettingsData.getBundle("data").getBundle("summary").getString("pageHost");
+        final String domainName = controlCenterSettingsData.getBundle("data").getBundle("summary")
+                .getString("pageHost");
+        final boolean isSmartBlockEnabled = controlCenterSettingsData.getBundle("data")
+                .getBundle("panel").getBundle("panel").getBoolean("enable_smart_block");
+        final boolean isAdBlockEnabled = controlCenterSettingsData.getBundle("data").getBundle("panel")
+                .getBundle("panel").getBoolean("enable_ad_block");
+        final boolean isAntiTrackingEnabled = controlCenterSettingsData.getBundle("data")
+                .getBundle("panel").getBundle("panel").getBoolean("enable_anti_tracking");
+        final int smartBlockCount = controlCenterSettingsData.getBundle("data").getBundle("panel")
+                .getBundle("panel").getBundle("smartBlock").getBundle("blocked").keys().length +
+                controlCenterSettingsData.getBundle("data").getBundle("panel").getBundle("panel")
+                        .getBundle("smartBlock").getBundle("unblocked").keys().length;
+        mSmartBlockingCount.setText(Integer.toString(smartBlockCount));
+        mSmartBlockingSwitch.setChecked(isSmartBlockEnabled);
+        mAdBlockingSwitch.setChecked(isAdBlockEnabled);
+        mAntiTrackingSwitch.setChecked(isAntiTrackingEnabled);
         final List<PieEntry> entries = new ArrayList<>();
         mIsGhosteryPaused = controlCenterSettingsData.getBundle("data").getBundle("summary").getBoolean("paused_blocking");
         final GeckoBundle[] categories = controlCenterSettingsData.getBundle("data").getBundle("summary").getBundleArray("categories");
@@ -94,14 +130,23 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mPieChart.setHighlightPerTapEnabled(false);
         mPieChart.setData(pieData);
         mPieChart.setDrawEntryLabels(false);
-        mPieChart.setCenterText(getResources().getQuantityString(R.plurals.cc_total_trackers_found, totalTrackers, totalTrackers));
-        mPieChart.setCenterTextSize(22);
-        mPieChart.setHoleRadius(70);
+        final String pieChartText = getResources().getQuantityString(R.plurals.cc_total_trackers_found, totalTrackers, totalTrackers);
+        final Spannable centerTextSpan = new SpannableString(pieChartText);
+        centerTextSpan.setSpan(new AbsoluteSizeSpan((int)Utils.convertDpToPixel(40), false), 0,
+                Integer.toString(totalTrackers).length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        mPieChart.setCenterText(centerTextSpan);
+        mPieChart.setCenterTextSize(20);
+        mPieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.cc_text_color));
+        mPieChart.setHoleRadius(80);
         mPieChart.setDescription(null);
         mPieChart.setDrawMarkers(false);
         mPieChart.getLegend().setEnabled(false);
         mPieChart.invalidate();
-        mTrackersBlocked.setText(getResources().getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers));
+        final String trackersBlocked = getResources().getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers);
+        final Spannable trackersBlockedSpan = new SpannableString(trackersBlocked);
+        trackersBlockedSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.cc_restricted)), 0,
+                Integer.toString(totalTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        mTrackersBlocked.setText(trackersBlockedSpan);
         mDomainName.setText(domainName);
         final List<String> blackList = Arrays.asList(controlCenterSettingsData.getBundle("data")
                 .getBundle("summary").getStringArray("site_blacklist"));
@@ -122,7 +167,6 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
 
     }
 
-    //TODO: send messages to the extension on changing state of the button
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -136,6 +180,23 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 handlePauseButtonClick();
                 break;
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        final GeckoBundle geckoBundle = new GeckoBundle();
+        switch (buttonView.getId()) {
+            case R.id.enhanced_tracking_switch:
+                geckoBundle.putBoolean("enable_anti_tracking", isChecked);
+                break;
+            case R.id.enhanced_blocking_switch:
+                geckoBundle.putBoolean("enable_ad_block", isChecked);
+                break;
+            case R.id.smart_blocking_switch:
+                geckoBundle.putBoolean("enable_smart_block", isChecked);
+                break;
+        }
+        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
     }
 
     private void handlePauseButtonClick() {
@@ -235,7 +296,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
 
     private void styleButton(RelativeLayout button, boolean state) {
         final int textAndIconColor = ContextCompat.getColor(getContext(),
-                state ? android.R.color.white : android.R.color.black);
+                state ? android.R.color.white : R.color.cc_text_color);
         final TextView buttonText = (TextView) button.findViewById(R.id.button_text);
         final ImageView buttonIcon = (ImageView) button.findViewById(R.id.button_icon);
         buttonIcon.setColorFilter(textAndIconColor, PorterDuff.Mode.SRC_ATOP);
@@ -243,29 +304,29 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         //special cases for background color and text
         if (button == mPauseGhosteryButton) {
             if (state) {
-                button.setBackgroundResource(R.drawable.button_background_control_center_blue);
+                button.setBackgroundResource(R.drawable.cc_button_background_blue);
                 buttonText.setText(getString(R.string.cc_resume_ghostery));
-                buttonIcon.setImageResource(R.drawable.ic_resume);
+                buttonIcon.setImageResource(R.drawable.cc_ic_resume);
                 ((PieDataSet) mPieChart.getData().getDataSet()).setColors(disabledColors);
                 mPieChart.invalidate();
             } else {
-                button.setBackgroundResource(R.drawable.button_backgorund_control_center_white);
+                button.setBackgroundResource(R.drawable.cc_button_background_white);
                 buttonText.setText(R.string.cc_pause_ghostery);
-                buttonIcon.setImageResource(R.drawable.ic_pause);
+                buttonIcon.setImageResource(R.drawable.cc_ic_pause);
                 ((PieDataSet) mPieChart.getData().getDataSet()).setColors(colors);
                 mPieChart.invalidate();
             }
         } else if (button == mRestrictSiteButton) {
             if (state) {
-                button.setBackgroundResource(R.drawable.button_background_control_center_red);
+                button.setBackgroundResource(R.drawable.cc_button_background_red);
             } else {
-                button.setBackgroundResource(R.drawable.button_backgorund_control_center_white);
+                button.setBackgroundResource(R.drawable.cc_button_background_white);
             }
         } else if (button == mTrustSiteButton) {
             if (state) {
-                button.setBackgroundResource(R.drawable.button_background_control_center_green);
+                button.setBackgroundResource(R.drawable.cc_button_background_green);
             } else {
-                button.setBackgroundResource(R.drawable.button_backgorund_control_center_white);
+                button.setBackgroundResource(R.drawable.cc_button_background_white);
             }
         }
     }

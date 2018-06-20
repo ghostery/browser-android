@@ -45,7 +45,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            app:srcCompat="@drawable/ic_cb_unchecked"
+            app:srcCompat="@drawable/cc_ic_cb_unchecked"
             tools:checked="true" />
 
     </RelativeLayout>

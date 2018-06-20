@@ -316,6 +316,9 @@
     <color name="cc_site_analytics_disabled">#9D9D9D</color>
     <color name="cc_social_media_disabled">#A4A4A4</color>
     <color name="cc_default_category_disabled">#E8E8E8</color>
+    <color name="cc_text_color">#4A4A4A</color>
+    <color name="cc_restricted">#BE4948</color>
+    <color name="cc_transparency">#FAFFFFFF</color>
     <!-- History and Favorites -->
     <color name="history_favorites_row">@android:color/white</color>
     <color name="history_favorites_row_private">@android:color/white</color>
