@@ -142,4 +142,4 @@ RUN rvm reload && \
 gem install fastlane --version 2.87.0
 
 #Install AWS CLI
-RUN pip install awscli
+RUN pip install awscli --upgrade --user

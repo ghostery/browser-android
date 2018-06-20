@@ -209,9 +209,13 @@ binaries::
 	@$(MAKE) install-manifests install_manifests=dist/include
 endif
 
+#Cliqz start
 recurse_artifact:
 	$(topsrcdir)/mach --log-no-times artifact install https://repository.cliqz.com/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/cliqz-target.apk
 	$(topsrcdir)/mach --log-no-times artifact install https://repository.cliqz.com/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/target.common.tests.zip
+	$(topsrcdir)/mach --log-no-times artifact add "https://s3.amazonaws.com/cdncliqz/update/android_browser_beta/firefox@ghostery.com/latest.xpi" "$(MOZ_ANDROID_DISTRIBUTION_DIRECTORY)/assets/distribution/extensions/firefox@ghostery.com.xpi"
+	$(topsrcdir)/mach --log-no-times artifact add "https://s3.amazonaws.com/cdncliqz/update/edge/cliqz-android/master/latest.zip" "$(MOZ_ANDROID_DISTRIBUTION_DIRECTORY)/assets/distribution/extensions/android@cliqz.com.xpi"
+#Cliqz end
 
 ifdef MOZ_WIDGET_TOOLKIT
 ifdef ENABLE_TESTS
