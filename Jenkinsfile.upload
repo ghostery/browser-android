@@ -33,7 +33,8 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                         set -x
                         cd mozilla-release/mobile/android
                         fastlane alpha
-                }    '''
+                    '''
+                }
             }
         }
         finally {
