@@ -156,16 +156,18 @@ stage('JIRA'){
 }
 
 stage('Send email') {
-    def bodytxt = '$PROJECT_NAME - Build # $BUILD_NUMBER'
-    bodytxt += '\n\nCheck console output at http://magrathea:8080/job/' + env.JOB_NAME + '/' + env.BUILD_NUMBER + '/ to view the results.'
-    bodytxt += '\n\nCliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz.apk'
-    bodytxt += '\n\nCliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/cliqz-alpha.apk'
-    bodytxt += '\n\nGhostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/ghostery.apk'
-    bodytxt += '\n\nGhostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/ghostery-alpha.apk'
-    bodytxt += '\n\n\n$CHANGES_SINCE_LAST_SUCCESS'
-    bodytxt += '\n\nIssues Transtioned '+transitionIssueList
+    def projectName  = '$PROJECT_NAME'
+    def changesSinceLastSuccess = '$CHANGES_SINCE_LAST_SUCCESS'
+    def bodytxt = """\n${projectName} - Build # ${env.BUILD_NUMBER}
+    Check console output at http://magrathea:8080/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/ to view the results.
+    Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz.apk
+    Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/cliqz-alpha.apk
+    Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/ghostery.apk
+    Ghostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/ghostery-alpha.apk
+    ${changesSinceLastSuccess}
+    Issues Transtioned ${transitionIssueList}""".stripMargin()
     emailext(
-            to: 'joseph@cliqz.com',
+            to: 'androiddev@cliqz.com',
             subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
             body: bodytxt
     )
