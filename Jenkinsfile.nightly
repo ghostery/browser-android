@@ -19,9 +19,7 @@ def codeImage
 node ('master'){
     def dockerTag = "" 
     stage('Checkout') {
-        git branch: 'master',
-            credentialsId: 'cliqz-m-oss',
-            url: 'https://github.com/cliqz-oss/cliqz-android.git'
+        checkout scm
         dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
     }
     baseImageName ="browser-f/android:${dockerTag}"
@@ -61,8 +59,7 @@ def build(Map m){
                         ]) {
                             def s3Path = "s3://repository.cliqz.com/dist/android/cache"
                             def cachePath = ".gradle/caches"
-                            sh """#!/bin/bash -l 
-                                pip install awscli --upgrade --user
+                            sh """#!/bin/bash -l
                                 cd
                                 aws s3 sync --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath}
                             """                        
@@ -96,7 +93,6 @@ def build(Map m){
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${flavorname}"
                         def apkPath = "mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
                         sh """#!/bin/bash -l 
-                            pip install awscli --upgrade --user
                             aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${flavorname}.apk
                             aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk
                         """
@@ -158,7 +154,7 @@ stage('JIRA'){
 stage('Send email') {
     def projectName  = '$PROJECT_NAME'
     def changesSinceLastSuccess = '$CHANGES_SINCE_LAST_SUCCESS'
-    def bodytxt = """\n${projectName} - Build # ${env.BUILD_NUMBER}
+    def bodytxt = """${projectName} - Build # ${env.BUILD_NUMBER}
     Check console output at http://magrathea:8080/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/ to view the results.
     Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz.apk
     Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/cliqz-alpha.apk
