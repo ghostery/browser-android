@@ -2,25 +2,25 @@
 @Library('cliqz-shared-library@v1.2') _
 def matrix = [
         'cliqz':[
-            'target':'i386-linux-android',
+            'target': 'i386-linux-android',
             'test': true,
         ],
         'ghostery':[
-            'target':'arm-linux-androideabi',
+            'target': 'arm-linux-androideabi',
             'test': false,
         ],
         'cliqz-alpha':[
-            'target':'arm-linux-androideabi',
+            'target': 'arm-linux-androideabi',
             'test': false,
         ],
         'ghostery-alpha':[
-            'target':'arm-linux-androideabi',
+            'target': 'arm-linux-androideabi',
             'test': false,
         ],
     ]
 
 def build(Map m){
-    def target = m.target
+    def androidtarget = m.target
     def flavorname = m.name
     def nodeLabel = 'us-east-1 && ubuntu && docker && !gpu'
     def test = m.test
@@ -50,19 +50,15 @@ def build(Map m){
                             """
                         }
                     }
-                    stage('Build APK: ${flavorname}') {
-                        sh """#!/bin/bash -l
-                            set -e
-                            set -x
-                            cp mozconfigs/jenkins.mozconfig mozilla-release/mozconfig
-                        """
+                    stage("Build APK: ${flavorname}") {
                         withEnv([
-                                "ANDROID_TARGET=${target}",
-                                "BRAND=${flavorname}"
+                            "ANDROID_TARGET=${androidtarget}",
+                            "BRAND=${flavorname}"
                             ]) {
                             sh '''#!/bin/bash -l
-                                set -x 
-                                set -e 
+                                set -x
+                                set -e
+                                cp mozconfigs/jenkins.mozconfig mozilla-release/mozconfig
                                 cd mozilla-release
                                 ./mach clobber
                                 ./mach build
@@ -76,8 +72,8 @@ def build(Map m){
                             script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
                             find *.apk -name 'fennec*i386*' -not -name '*-unsigned-*'""").trim()
                     }
-                    stage('Upload APK: ${flavorname}') {
-                        archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorname}/dist/*.apk"
+                    stage("Upload APK: ${flavorname}") {
+                        archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
                     }
                 }
                 if (test == true){
@@ -141,14 +137,11 @@ def build(Map m){
                                                 ssh -v -o StrictHostKeyChecking=no -i $FILE root@$IP "setprop persist.sys.usb.config adb"
                                                 ssh -v -o StrictHostKeyChecking=no -i $FILE -NL 5556:127.0.0.1:5555 root@$IP &
                                                 $ANDROID_HOME/platform-tools/adb connect 127.0.0.1:5556
-                                                $ANDROID_HOME/platform-tools/adb shell \
-                                                    "setprop persist.graph_mode 1080x1920-32; \
-                                                    setprop persist.dpi XXHDPI;"
                                                 $ANDROID_HOME/platform-tools/adb wait-for-device
                                             '''
                                         }
                                     }
-                                    stage('Run Tests: ${flavorname}') {
+                                    stage("Run Tests: ${flavorname}") {
                                         timeout(60) {
                                             sh'''#!/bin/bash -l
                                                 set -x
@@ -166,21 +159,22 @@ def build(Map m){
                                        }
                                     }
                                 }
-                                stage('Upload Results: ${flavorname}') {
+                                stage("Upload Results: ${flavorname}") {
                                     archiveTestResults()
                                 }
                             }
                         }
                     }catch(e) {
-                      print e  
+                      print e
                     }
-                }     
+                }
             }
             stage('Clean Up') {
                 sh '''#!/bin/bash
                     rm -f mozilla-release/mozconfig
                     rm -rf mozilla-release/objdir-frontend-android
                     rm -rf autobots
+                    rm -f screenshots.zip
                 '''
             }
         }
@@ -191,7 +185,7 @@ def build(Map m){
 def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
     [("Building ${it[0]}"):build(
         name: it[0],
-        config:it[1]['config'],
+        target:it[1]['target'],
         test:it[1]['test']
     )]
 }

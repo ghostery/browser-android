@@ -9,7 +9,7 @@ ac_add_options --with-android-sdk=$ANDROID_HOME
 # Allow artifact builds:
 ac_add_options --enable-artifact-builds
 
-# Available Branding: 'cliqz', 'cliqz-alpha', 'ghostery' & 'ghostery-alpha'
+# Available Brands: 'cliqz', 'cliqz-alpha', 'ghostery' & 'ghostery-alpha'
 # Write build artifacts to:
 mk_add_options MOZ_OBJDIR=./objdir-frontend-android/$BRAND
 
