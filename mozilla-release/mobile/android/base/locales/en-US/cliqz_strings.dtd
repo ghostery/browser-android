@@ -115,6 +115,11 @@
 <!ENTITY cc_untrust "Untrust">
 <!ENTITY cc_restrict "Restrict">
 <!ENTITY cc_unrestrict "Unrestrict">
+<!ENTITY cc_toast_overview_restrict "All trackers restricted on this site">
+<!ENTITY cc_toast-overview_trust "All trackers allowed on this site">
+<!ENTITY cc_toast_site_trust "Tracker trusted on this site">
+<!ENTITY cc_toast_site_restrict "Tracker restricted on this site">
+<!ENTITY cc_toast_site_block "Tracker blocked on this site">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Search">
