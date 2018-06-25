@@ -21,6 +21,7 @@
         android:duplicateParentState="true"
         android:focusable="false"/>
 
+    <!-- Cliqz start -->
     <org.mozilla.gecko.toolbar.BackButton
         android:id="@+id/back"
         style="@style/UrlBar.BackButton"
@@ -28,11 +29,14 @@
         android:layout_height="@dimen/tablet_nav_button_width"
         android:layout_centerVertical="true"
         android:layout_margin="4dp"
-        android:background="@drawable/url_bar_nav_button"
         android:contentDescription="@string/back"
-        android:src="@drawable/ic_menu_back"
+        android:src="@drawable/ic_menu_back"/>
+    <!--
+        android:background="@drawable/url_bar_nav_button"
         gecko:borderColor="@color/nav_button_border_color"
-        gecko:borderColorPrivate="@color/nav_button_border_color_private"/>
+        gecko:borderColorPrivate="@color/nav_button_border_color_private"
+    -->
+    <!-- Cliqz end -->
 
     <org.mozilla.gecko.toolbar.ForwardButton
         android:id="@+id/forward"

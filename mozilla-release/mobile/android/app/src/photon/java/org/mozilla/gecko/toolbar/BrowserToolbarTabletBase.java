@@ -5,20 +5,22 @@
 
 package org.mozilla.gecko.toolbar;
 
-import java.util.Arrays;
-
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.Tab;
-import org.mozilla.gecko.Tabs;
-import org.mozilla.gecko.tabs.TabHistoryController;
-import org.mozilla.gecko.menu.MenuItemActionBar;
-import org.mozilla.gecko.widget.themed.ThemedImageButton;
-
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.Tab;
+import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.menu.MenuItemActionBar;
+import org.mozilla.gecko.tabs.TabHistoryController;
+import org.mozilla.gecko.widget.themed.ThemedImageButton;
+
+import java.util.Arrays;
 
 /**
  * A base implementations of the browser toolbar for tablets.
@@ -93,6 +95,10 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
 
     @Override
     public boolean addActionItem(final View actionItem) {
+        if (actionItem instanceof MenuItemActionBar) {
+            final MenuItemActionBar itemActionBar = (MenuItemActionBar) actionItem;
+            itemActionBar.setImageTintList(ColorStateList.valueOf(Color.WHITE));
+        }
         actionItemBar.addView(actionItem, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         return true;
     }

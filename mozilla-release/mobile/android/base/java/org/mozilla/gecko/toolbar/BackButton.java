@@ -5,7 +5,6 @@
 package org.mozilla.gecko.toolbar;
 
 import android.content.Context;
-import android.graphics.Path;
 import android.util.AttributeSet;
 
 public class BackButton extends NavButton {
@@ -13,6 +12,7 @@ public class BackButton extends NavButton {
         super(context, attrs);
     }
 
+    /* Cliqz start o/
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
@@ -24,4 +24,5 @@ public class BackButton extends NavButton {
         mBorderPath.reset();
         mBorderPath.addCircle(width / 2, height / 2, (width / 2) - (mBorderWidth / 2), Path.Direction.CW);
     }
+    /o Cliqz end */
 }
