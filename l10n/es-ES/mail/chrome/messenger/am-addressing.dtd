@@ -19,6 +19,8 @@
 <!ENTITY autoQuote.accesskey "C">
 <!ENTITY then.label "Entonces,">
 <!ENTITY then.accesskey "T">
+<!ENTITY quoting.label "Al citar,">
+<!ENTITY quoting.accesskey "l">
 <!ENTITY aboveQuote.label "comenzar mi respuesta sobre el texto citado">
 <!ENTITY belowQuote.label "comenzar mi respuesta bajo el texto citado">
 <!ENTITY selectAndQuote.label "seleccionar el texto citado">

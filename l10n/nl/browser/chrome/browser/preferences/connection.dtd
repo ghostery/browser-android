@@ -7,8 +7,6 @@
 <!ENTITY  window.width2                 "51em">
 <!ENTITY  window.macWidth2              "46em">
 
-<!ENTITY  proxyTitle.label              "Proxy’s voor toegang tot het internet configureren">
-
 <!ENTITY  proxyTitle.label2             "Proxytoegang tot het internet configureren">
 <!ENTITY  noProxyTypeRadio.label        "Geen proxy">
 <!ENTITY  noProxyTypeRadio.accesskey    "y">

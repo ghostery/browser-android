@@ -73,6 +73,41 @@ should-restart-ok = Reiniciar o { -brand-short-name } agora
 cancel-no-restart-button = Cancelar
 restart-later = Reiniciar mais tarde
 
+## Extension Control Notifications
+##
+## These strings are used to inform the user
+## about changes made by extensions to browser settings.
+##
+## <img data-l10n-name="icon"/> is going to be replaced by the extension icon.
+##
+## Variables:
+##   $name (String): name of the extension
+
+# This string is shown to notify the user that their home page
+# is being controlled by an extension.
+extension-controlled-homepage-override = Uma extensão, <img data-l10n-name="icon"/> { $name }, está a controlar a sua página inicial.
+# This string is shown to notify the user that their new tab page
+# is being controlled by an extension.
+extension-controlled-new-tab-url = Uma extensão, <img data-l10n-name="icon"/> { $name }, está a controlar a sua página Novo separador.
+# This string is shown to notify the user that the default search engine
+# is being controlled by an extension.
+extension-controlled-default-search = Uma extensão, <img data-l10n-name="icon"/> { $name }, definiu o seu motor de pesquisa predefinido.
+# This string is shown to notify the user that Container Tabs
+# are being enabled by an extension.
+extension-controlled-privacy-containers = Uma extensão, <img data-l10n-name="icon"/> { $name }, requer separadores contentores.
+# This string is shown to notify the user that their tracking protection preferences
+# are being controlled by an extension.
+extension-controlled-websites-tracking-protection-mode = Uma extensão, <img data-l10n-name="icon"/> { $name }, está a controlar a proteção contra monitorização.
+# This string is shown to notify the user that their proxy configuration preferences
+# are being controlled by an extension.
+extension-controlled-proxy-config = Uma extensão, <img data-l10n-name="icon"/> { $name }, está a controlar como o { -brand-short-name } se liga à internet.
+# This string is shown after the user disables an extension to notify the user
+# how to enable an extension that they disabled.
+#
+# <img data-l10n-name="addons-icon"/> will be replaced with Add-ons icon
+# <img data-l10n-name="menu-icon"/> will be replaced with Menu icon
+extension-controlled-enable = Para ativar esta extensão vá a <img data-l10n-name="addons-icon"/> Extras no menu <img data-l10n-name="menu-icon"/>.
+
 ## Preferences UI Search Results
 
 search-results-header = Resultados da pesquisa
@@ -110,15 +145,18 @@ startup-blank-page =
     .label = Mostrar uma página em branco
 startup-prev-session =
     .label = Mostrar as suas janelas e separadores abertos da última vez
+startup-restore-previous-session =
+    .label = Restaurar sessão anterior
+    .accesskey = s
 disable-extension =
     .label = Desativar extensão
 home-page-header = Página inicial
 tabs-group-header = Separadores
 ctrl-tab-recently-used-order =
-    .label = Ctrl+Tab atravessa em ciclo os separadores na ordem de recentemente utilizados
+    .label = Ctrl+Tab permuta em ciclo os separadores pela ordem dos mais recentemente utilizados
     .accesskey = T
 open-new-link-as-tabs =
-    .label = Abrir ligações em separadores em vez de em novas janelas
+    .label = Abrir ligações em novos separadores em vez de novas janelas
     .accesskey = j
 warn-on-close-multiple-tabs =
     .label = Avisar-lhe ao fechar múltiplos separadores
@@ -127,7 +165,7 @@ warn-on-open-many-tabs =
     .label = Avisar-lhe se a abertura de múltiplos separadores puder tornar o { -brand-short-name } lento
     .accesskey = d
 switch-links-to-new-tabs =
-    .label = Ao abrir uma ligação em novo separador, mudar para o mesmo imediatamente
+    .label = Ao abrir uma ligação num novo separador, mudar para o mesmo imediatamente
     .accesskey = o
 show-tabs-in-taskbar =
     .label = Pré-visualizar separadores na barra de tarefas do Windows
@@ -177,7 +215,7 @@ colors-settings =
     .label = Cores…
     .accesskey = C
 language-header = Idioma
-choose-language-description = Escolha o seu idioma preferencial para mostrar páginas
+choose-language-description = Escolha o seu idioma preferencial para apresentar as páginas
 choose-button =
     .label = Escolher…
     .accesskey = o
@@ -225,7 +263,7 @@ applications-type-column =
 applications-action-column =
     .label = Ação
     .accesskey = A
-drm-content-header = Conteúdo de Gestão de Direitos Digitais (DRM)
+drm-content-header = Conteúdo com Gestão de Direitos Digitais (DRM)
 play-drm-content =
     .label = Reproduzir conteúdo controlado por DRM
     .accesskey = p
@@ -242,7 +280,7 @@ update-application-auto =
     .label = Instalar atualizações automaticamente (recomendado)
     .accesskey = a
 update-application-check-choose =
-    .label = Procurar atualizações mas deixar-lhe escolher instalá-las
+    .label = Procurar atualizações mas deixar escolher quando as instalar
     .accesskey = c
 update-application-manual =
     .label = Nunca procurar atualizações (não recomendado)
@@ -297,6 +335,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Proxy de rede
+network-proxy-connection-description = Configure como o { -brand-short-name } se liga à internet.
 network-proxy-connection-learn-more = Saber mais
 network-proxy-connection-settings =
     .label = Definições…
@@ -434,7 +473,7 @@ sync-resend-verification =
     .accesskey = r
 sync-remove-account =
     .label = Remover conta
-    .accesskey = p
+    .accesskey = R
 sync-sign-in =
     .label = Iniciar sessão
     .accesskey = c
@@ -540,6 +579,9 @@ history-private-browsing-permanent =
 history-remember-option =
     .label = Memorizar o meu histórico de navegação e de transferências
     .accesskey = h
+history-remember-browser-option =
+    .label = Memorizar histórico de navegação e de transferências
+    .accesskey = z
 history-remember-search-option =
     .label = Memorizar histórico de pesquisas e de formulários
     .accesskey = f
@@ -556,19 +598,24 @@ history-clear-button =
 ## Privacy Section - Site Data
 
 sitedata-header = Cookies e dados de sites
+sitedata-total-size-calculating = A calcular tamanho dos dados de sites e cache…
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+sitedata-total-size = Os seus cookies, dados de sites e cache estão atualmente a utilizar { $value } { $unit } de espaço em disco.
 sitedata-learn-more = Saber mais
 sitedata-accept-cookies-option =
     .label = Aceitar cookies e dados de sites de websites (recomendado)
     .accesskey = A
 sitedata-block-cookies-option =
-    .label = Bloquear cookies e dados de sites (pode causar que os websites quebrem)
+    .label = Bloquear cookies e dados de sites (pode fazer com que os websites deixam de funcionar)
     .accesskey = B
 sitedata-keep-until = Manter até
     .accesskey = a
 sitedata-keep-until-expire =
     .label = expirarem
 sitedata-keep-until-closed =
-    .label = { -brand-short-name } está fechado
+    .label = o { -brand-short-name } ser fechado
 sitedata-accept-third-party-desc = Aceitar cookies de terceiros e dados de sites
     .accesskey = s
 sitedata-accept-third-party-always-option =
@@ -650,6 +697,12 @@ permissions-notification-link = Saber mais
 permissions-notification-pause =
     .label = Pausar notificações até o { -brand-short-name } reiniciar
     .accesskey = n
+permissions-block-autoplay-media =
+    .label = Bloquear websites de reproduzir multimédia automaticamente com som
+    .accesskey = B
+permissions-block-autoplay-media-exceptions =
+    .label = Exceções…
+    .accesskey = E
 permissions-block-popups =
     .label = Bloquear janelas pop-up
     .accesskey = B
@@ -676,6 +729,9 @@ collection-health-report =
     .label = Permitir ao { -brand-short-name } enviar dados técnicos e de interação para a { -vendor-short-name }
     .accesskey = r
 collection-health-report-link = Saber mais
+collection-studies =
+    .label = Permitir ao { -brand-short-name } instalar e executar estudos
+collection-studies-link = Ver estudos do { -brand-short-name }
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = Relato de dados está desativado para a configuração desta compilação

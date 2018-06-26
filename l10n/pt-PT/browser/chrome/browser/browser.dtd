@@ -35,6 +35,9 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "Fechar outros separadores">
 <!ENTITY  closeOtherTabs.accesskey           "o">
 
+<!ENTITY  closeSelectedTabs.label            "Fechar separadores selecionados">
+<!ENTITY  closeSelectedTabs.accesskey        "s">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -54,6 +57,8 @@ can reach it easily. -->
 <!ENTITY  sendToDeviceOfflineFeedback.label  "Na fila (offline)">
 <!ENTITY  moveToNewWindow.label              "Mover para nova janela">
 <!ENTITY  moveToNewWindow.accesskey          "j">
+<!ENTITY  reopenInContainer.label            "Reabrir no contentor">
+<!ENTITY  reopenInContainer.accesskey        "e">
 <!ENTITY  bookmarkAllTabs.label              "Adicionar todos os separadores aos marcadores…">
 <!ENTITY  bookmarkAllTabs.accesskey          "t">
 <!ENTITY  undoCloseTab.label                 "Reabrir separador fechado">
@@ -89,9 +94,9 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY menubarCmd.label "Barra de menu">
 <!ENTITY menubarCmd.accesskey "m">
 <!ENTITY navbarCmd.label "Barra de navegação">
-<!ENTITY personalbarCmd.label "Barra de marcadores">
+<!ENTITY personalbarCmd.label "Barra de ferramentas de marcadores">
 <!ENTITY personalbarCmd.accesskey "B">
-<!ENTITY bookmarksToolbarItem.label "Itens da barra de marcadores">
+<!ENTITY bookmarksToolbarItem.label "Itens da barra de ferramentas marcadores">
 
 <!ENTITY toolbarContextMenu.reloadAllTabs.label "Recarregar todos os separadores">
 <!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "a">
@@ -129,7 +134,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY showAllTabsCmd.label "Mostrar todos os separadores">
 <!ENTITY showAllTabsCmd.accesskey "t">
 <!ENTITY toggleReaderMode.key "R">
-
 <!ENTITY toggleReaderMode.win.keycode "VK_F9">
 
 <!ENTITY fxaSignIn.label "Iniciar sessão no &syncBrand.shortName.label;">
@@ -189,17 +193,13 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY otherBookmarksCmd.label "Outros marcadores">
 <!ENTITY mobileBookmarksCmd.label "Marcadores de dispositivo móvel">
 <!ENTITY bookmarksToolbarChevron.tooltip "Mostrar mais marcadores">
-<!ENTITY showRecentlyBookmarked.label     "Mostrar marcadores recentes">
-<!ENTITY showRecentlyBookmarked.accesskey "t">
-<!ENTITY hideRecentlyBookmarked.label     "Ocultar marcadores recentes">
-<!ENTITY hideRecentlyBookmarked.accesskey "c">
 
 <!ENTITY backCmd.label                "Anterior">
 <!ENTITY backCmd.accesskey            "A">
 <!ENTITY backButton.tooltip           "Retroceder uma página">
 <!ENTITY forwardCmd.label             "Seguinte">
 <!ENTITY forwardCmd.accesskey         "S">
-<!ENTITY forwardButton.tooltip        "Ir para a página seguinte">
+<!ENTITY forwardButton.tooltip        "Avançar uma página">
 <!ENTITY backForwardButtonMenu.tooltip "Clique com o botão direito ou desloque para baixo para mostrar o histórico">
 <!ENTITY backForwardButtonMenuMac.tooltip "Desloque para baixo para mostrar o histórico">
 <!ENTITY reloadCmd.label              "Recarregar">
@@ -234,7 +234,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.translateNotificationAnchor.tooltip       "Traduzir esta página">
 <!ENTITY urlbar.translatedNotificationAnchor.tooltip      "Gerir tradução de páginas">
 <!ENTITY urlbar.emeNotificationAnchor.tooltip             "Gerir utilização de software DRM">
-
 <!ENTITY urlbar.midiNotificationAnchor.tooltip            "Abrir painel MIDI">
 
 <!ENTITY urlbar.cameraBlocked.tooltip            "Bloqueou a sua câmara para este website.">
@@ -245,7 +244,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Bloqueou o armazenamento de dados para este website.">
 <!ENTITY urlbar.popupBlocked.tooltip             "Bloqueou pop-ups para este website.">
 <!ENTITY urlbar.canvasBlocked.tooltip            "Bloqueou a extração de dados da tela para este website.">
-
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "Bloqueou este website de utilizar o plugin Adobe Flash.">
 <!ENTITY urlbar.midiBlocked.tooltip              "Bloqueou o acesso MIDI para este website.">
 
@@ -255,6 +253,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!-- Toolbar items -->
 <!ENTITY homeButton.label             "Página inicial">
+
+<!ENTITY homeButton.defaultPage.tooltip "Página inicial do &brandShortName;">
 
 <!ENTITY bookmarksButton.label          "Marcadores">
 <!ENTITY bookmarksCmd.commandkey "b">
@@ -395,7 +395,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      when Sync is configured but this appears to be the only device attached to
      the account. We also show links to download Firefox for android/ios. -->
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "Pretende ver os seus separadores de outros dispositivos aqui?">
-<!ENTITY appMenuRemoteTabs.openprefs.label "Preferências do Sync">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "Abrir preferências do Sync">
 <!ENTITY appMenuRemoteTabs.notsignedin.label "Inicie sessão para ver uma lista de separadores dos seus outros dispositivos.">
 <!ENTITY appMenuRemoteTabs.unverified.label "A sua conta necessita de ser verificada.">
@@ -437,6 +436,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.addMoreItems.label "Adicionar mais itens…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "A">
 
+<!ENTITY customizeMenu.autoHideDownloadsButton.label "Ocultar automaticamente na barra de ferramentas">
+<!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "a">
+<!ENTITY customizeMenu.manageExtension.label "Gerir extensão">
+<!ENTITY customizeMenu.manageExtension.accesskey "e">
+
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
     secondary commands. -->
@@ -444,7 +448,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY openCmd.commandkey           "l">
 <!ENTITY urlbar.placeholder2          "Pesquisar ou introduzir um endereço">
-<!ENTITY urlbar.placeholder3          "Introduza termos de pesquisa e endereços aqui">
 <!ENTITY urlbar.accesskey             "d">
 <!-- LOCALIZATION NOTE (urlbar.extension.label): Used to indicate that a selected autocomplete entry is provided by an extension. -->
 <!ENTITY urlbar.extension.label       "Extensão:">
@@ -798,6 +801,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY identity.moreInfoLinkText2 "Mais informação">
 
+<!ENTITY identity.clearSiteData "Limpar cookies e dados de sites…">
+
 <!ENTITY identity.permissions "Permissões">
 <!ENTITY identity.permissionsEmpty "Não concedeu quaisquer permissões especiais a este site.">
 <!ENTITY identity.permissionsReloadHint "Poderá ter de recarregar a página para as alterações se aplicarem.">
@@ -901,6 +906,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.allWindowsShared.message "Serão partilhadas todas as janelas visíveis no seu ecrã.">
 
 <!ENTITY trackingProtection.title "Proteção contra monitorização">
+<!ENTITY trackingProtection.tooltip "Abrir preferências de proteção contra monitorização">
 <!ENTITY trackingProtection.detectedBlocked3 "O &brandShortName; está a bloquear partes da página que podem monitorizar a sua navegação.">
 <!ENTITY trackingProtection.detectedNotBlocked3 "Este site incluí elementos que podem monitorizar a sua navegação. A proteção contra monitorização foi desativada por si.">
 <!ENTITY trackingProtection.notDetected3 "Não foram detetados elementos de monitorização nesta página.">
@@ -988,14 +994,9 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY updateRestart.cancelButton.accesskey "n">
 <!ENTITY updateRestart.panelUI.label2 "Reiniciar para atualizar o &brandShorterName;">
 
-<!ENTITY newTabControlled.message "Uma extensão alterou a página que vê quando abre um novo separador. Pode restaurar as suas definições se não quiser esta alteração.">
-
 <!ENTITY newTabControlled.header.message "O seu novo separador foi alterado.">
 <!ENTITY newTabControlled.keepButton.label "Manter alterações">
 <!ENTITY newTabControlled.keepButton.accesskey "M">
-<!ENTITY newTabControlled.restoreButton.label "Restaurar definições">
-<!ENTITY newTabControlled.restoreButton.accesskey "R">
-
 <!ENTITY newTabControlled.disableButton.label "Desativar extensão">
 <!ENTITY newTabControlled.disableButton.accesskey "D">
 
@@ -1005,6 +1006,12 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY homepageControlled.keepButton.accesskey "M">
 <!ENTITY homepageControlled.disableButton.label "Desativar extensão">
 <!ENTITY homepageControlled.disableButton.accesskey "D">
+
+<!ENTITY tabHideControlled.header.message "Aceda aos seus separadores ocultados">
+<!ENTITY tabHideControlled.keepButton.label "Manter separadores ocultados">
+<!ENTITY tabHideControlled.keepButton.accesskey "M">
+<!ENTITY tabHideControlled.disableButton.label "Desativar extensão">
+<!ENTITY tabHideControlled.disableButton.accesskey "D">
 
 <!ENTITY pageActionButton.tooltip "Ações da página">
 <!ENTITY pageAction.addToUrlbar.label "Adicionar à barra de endereço">

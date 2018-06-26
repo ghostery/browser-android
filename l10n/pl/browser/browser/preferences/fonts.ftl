@@ -138,3 +138,12 @@ fonts-languages-fallback-name-vietnamese =
     .label = Wietnamskie
 fonts-languages-fallback-name-other =
     .label = Inne (łącznie z zachodnioeuropejskimi)
+fonts-very-large-warning-title = Duży rozmiar minimalny czcionki
+fonts-very-large-warning-message = Ustawiasz bardzo duży rozmiar minimalny czcionki (większy niż 24 piksele). Może to spowodować trudności lub uniemożliwić korzystanie z niektórych ważnych stron konfiguracyjnych (takich jak ta).
+fonts-very-large-warning-accept = Zachowaj zmiany
+# Variables:
+#   $name {string, "Arial"} - Name of the default font
+fonts-label-default =
+    .label = Domyślna ({ $name })
+fonts-label-default-unnamed =
+    .label = Domyślna

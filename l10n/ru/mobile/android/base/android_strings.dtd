@@ -70,6 +70,15 @@
 
 <!ENTITY url_bar_default_text2 "Введите запрос или адрес">
 
+<!-- Localization note (url_bar_qrcode_text2) : This text will be
+     heard by non-visual users when the focus is on the QR Code
+     icon in the url bar. -->
+<!ENTITY url_bar_qrcode_text2 "Используйте ваш QR-ридер для поиска или ввода адреса">
+<!-- Localization note (url_bar_mic_text2) : This text will be
+     heard by non-visual users when the focus is on the Microphone
+     icon in the url bar. -->
+<!ENTITY url_bar_mic_text2 "Используйте ваш микрофон для поиска или ввода адреса">
+
 <!ENTITY bookmark "Закладка">
 <!ENTITY bookmark_remove "Удалить закладку">
 <!ENTITY bookmark_added "Закладка добавлена">
@@ -207,6 +216,7 @@
 <!ENTITY pref_category_advanced_summary3 "Восстановление вкладок, экономия трафика, инструменты разработчика">
 <!ENTITY pref_category_notifications "Уведомления">
 <!ENTITY pref_category_notifications_summary "Новые возможности, обновления сайтов">
+<!ENTITY pref_category_notifications_summary2 "Новые возможности, советы по продукту">
 <!ENTITY pref_developer_remotedebugging_usb "Удалённая отладка через USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Удалённая отладка через Wi-Fi">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Для удалённой отладки через Wi-Fi необходимо, чтобы на вашем устройстве было установлено приложение для чтения QR-кодов.">
@@ -543,7 +553,7 @@
 <!ENTITY pref_compact_tabs_summary2 "Отображать вкладки в два столбца в портретном режиме">
 
 <!-- Localization note (page_removed): This string appears in a toast message when
-     any page is removed frome about:home. This includes pages that are in history,
+     any page is removed from about:home. This includes pages that are in history,
      bookmarks, or reading list. -->
 <!ENTITY page_removed "Страница удалена">
 <!ENTITY folder_removed "Папка удалена">
@@ -758,7 +768,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      "Last synced" is one of the user's other Sync clients, typically Firefox on
      their desktop or laptop.-->
 <!ENTITY remote_tabs_last_synced "Последняя синхронизация: &formatS;">
-<!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
+<!-- Localization note: Used when the sync has not happened yet, showed in place of a date -->
 <!ENTITY remote_tabs_never_synced "Последняя синхронизация: никогда">
 
 <!-- LOCALIZATION NOTE (intent_uri_private_browsing_prompt): This string will

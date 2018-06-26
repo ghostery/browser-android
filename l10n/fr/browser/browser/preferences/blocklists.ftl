@@ -16,3 +16,15 @@ blocklist-button-cancel =
 blocklist-button-ok =
     .label = Enregistrer les modifications
     .accesskey = E
+# This template constructs the name of the block list in the block lists dialog.
+# It combines the list name and description.
+# e.g. "Standard (Recommended). This list does a pretty good job."
+#
+# Variables:
+#   $listName {string, "Standard (Recommended)."} - List name.
+#   $description {string, "This list does a pretty good job."} - Description of the list.
+blocklist-item-list-template = { $listName } { $description }
+blocklist-item-moz-std-name = Protection basique de Disconnect.me (Recommandée).
+blocklist-item-moz-std-desc = Autorise certains éléments de pistage afin que des sites fonctionnent correctement.
+blocklist-item-moz-full-name = Protection stricte de Disconnect.me.
+blocklist-item-moz-full-desc = Bloque les éléments de pistage connus. Certains sites peuvent ne pas fonctionner correctement.

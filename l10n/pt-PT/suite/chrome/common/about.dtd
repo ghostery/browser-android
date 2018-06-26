@@ -49,7 +49,7 @@
      phrase, so if your locale needs a space between words, add it at the end
      of this entity. -->
 <!ENTITY about.buildconfig.beforeTheLink "Veja a ">
-<!ENTITY about.buildconfig.linkTitle     "configuração de compilação">
+<!ENTITY about.buildconfig.linkTitle     "configuração da compilação">
 <!-- LOCALIZATION NOTE (about.buildconfig.afterTheLink): note that there is no
      space between the linked about.buildconfig.linkTitle phrase and this
      phrase, so if your locale needs a space between words, add it at the

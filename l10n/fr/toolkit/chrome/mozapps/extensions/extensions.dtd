@@ -3,11 +3,9 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "Gestionnaire de modules complémentaires">
 
-<!ENTITY search.placeholder                   "Rechercher dans tous les modules">
-
 <!ENTITY search.placeholder2                  "Rechercher sur addons.mozilla.org">
 <!ENTITY search.buttonlabel                   "Rechercher">
-<!-- LOCALIZATION NOTE (search.commandKey):
+<!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
 <!ENTITY search.commandkey                    "f">
 
@@ -16,7 +14,6 @@
 <!ENTITY listEmpty.availableUpdates.label     "Aucune mise à jour trouvée">
 <!ENTITY listEmpty.recentUpdates.label        "Vous n’avez pas mis à jour vos modules complémentaires depuis un certain temps">
 <!ENTITY listEmpty.findUpdates.label          "Vérifier les mises à jour">
-<!ENTITY listEmpty.search.label               "Aucun module correspondant">
 <!ENTITY listEmpty.button.label               "En apprendre plus sur les modules complémentaires">
 <!ENTITY installAddonFromFile.label           "Installer un module depuis un fichier…">
 <!ENTITY installAddonFromFile.accesskey       "I">
@@ -24,9 +21,6 @@
 
 <!ENTITY getThemes.description                "Vous cherchez à personnaliser votre navigateur ?">
 <!ENTITY getThemes.learnMore                  "Faites votre choix parmi des milliers de thèmes.">
-
-<!ENTITY cmd.back.tooltip                     "Reculer d’une page">
-<!ENTITY cmd.forward.tooltip                  "Avancer d’une page">
 
 
 <!ENTITY showUnsignedExtensions.button.label  "Certaines extensions n’ont pas pu être vérifiées">
@@ -44,7 +38,6 @@
 <!ENTITY warning.updatesecurity.enable.tooltip     "Activer la vérification de mises à jour de sécurité pour les modules complémentaires">
 
 <!-- categories / views -->
-<!ENTITY view.search.label                    "Rechercher">
 <!ENTITY view.discover.label                  "Catalogue">
 <!ENTITY view.recentUpdates.label             "Mis à jour">
 <!ENTITY view.availableUpdates.label          "À mettre à jour">
@@ -121,7 +114,7 @@
 <!ENTITY cmd.showReleaseNotes.tooltip         "Afficher les notes de version pour cette mise à jour">
 <!ENTITY cmd.hideReleaseNotes.label           "Masquer les notes de version">
 <!ENTITY cmd.hideReleaseNotes.tooltip         "Masquer les notes de version pour cette mise à jour">
-<!ENTITY cmd.findReplacement.label            "Trouver un module équivalent">
+<!ENTITY cmd.findReplacement.label            "Rechercher un module équivalent">
 
 <!-- discovery view -->
 <!-- LOCALIZATION NOTE (discover.title,discover.description,discover.footer):
@@ -136,7 +129,6 @@
 <!ENTITY detail.lastupdated.label             "Dernière mise à jour">
 <!ENTITY detail.creator.label                 "Développeur">
 <!ENTITY detail.homepage.label                "Page d’accueil">
-<!ENTITY detail.numberOfDownloads.label       "Téléchargements">
 
 <!ENTITY detail.contributions.description     "Le développeur de ce module demande que vous l’aidiez à assurer la poursuite de son développement en lui versant une petite contribution.">
 
@@ -175,16 +167,6 @@
 <!ENTITY sort.name.tooltip                    "Trier par nom">
 <!ENTITY sort.dateUpdated.label               "Dernière mise à jour">
 <!ENTITY sort.dateUpdated.tooltip             "Trier par date de dernière mise à jour">
-<!ENTITY sort.relevance.label                 "Pertinence">
-<!ENTITY sort.relevance.tooltip               "Trier par pertinence">
-<!ENTITY sort.price.label                     "Prix">
-<!ENTITY sort.price.tooltip                   "Trier par prix">
-
-<!ENTITY search.filter2.label                 "Rechercher :">
-<!ENTITY search.filter2.installed.label       "Mes modules complémentaires">
-<!ENTITY search.filter2.installed.tooltip     "Afficher les modules complémentaires installés">
-<!ENTITY search.filter2.available.label       "Modules complémentaires disponibles">
-<!ENTITY search.filter2.available.tooltip     "Afficher les modules complémentaires disponibles à l’installation">
 
 <!ENTITY addon.homepage                       "Page d’accueil">
 <!ENTITY addon.details.label                  "Plus">

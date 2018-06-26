@@ -70,6 +70,15 @@
 
 <!ENTITY url_bar_default_text2 "검색어 또는 주소를 입력하세요">
 
+<!-- Localization note (url_bar_qrcode_text2) : This text will be
+     heard by non-visual users when the focus is on the QR Code
+     icon in the url bar. -->
+<!ENTITY url_bar_qrcode_text2 "검색을 위해서 QA 리더를 사용하거나 주소 입력">
+<!-- Localization note (url_bar_mic_text2) : This text will be
+     heard by non-visual users when the focus is on the Microphone
+     icon in the url bar. -->
+<!ENTITY url_bar_mic_text2 "검색을 위해서 마이크를 사용하거나 주소 입력">
+
 <!ENTITY bookmark "북마크">
 <!ENTITY bookmark_remove "북마크 삭제">
 <!ENTITY bookmark_added "북마크 추가">
@@ -207,6 +216,7 @@
 <!ENTITY pref_category_advanced_summary3 "탭 복구, 데이터 절약, 개발자 도구">
 <!ENTITY pref_category_notifications "알림">
 <!ENTITY pref_category_notifications_summary "새로운 기능, 웹사이트 업데이트">
+<!ENTITY pref_category_notifications_summary2 "새로운 기능, 제품 팁">
 <!ENTITY pref_developer_remotedebugging_usb "USB 원격 디버깅">
 <!ENTITY pref_developer_remotedebugging_wifi "Wi-Fi 원격 디버깅">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Wi-Fi 디버깅을 하려면 QR 코드 리더 앱을 설치해야 합니다.">
@@ -543,7 +553,7 @@
 <!ENTITY pref_compact_tabs_summary2 "세로 모드에서 탭을 두 다단으로 정렬">
 
 <!-- Localization note (page_removed): This string appears in a toast message when
-     any page is removed frome about:home. This includes pages that are in history,
+     any page is removed from about:home. This includes pages that are in history,
      bookmarks, or reading list. -->
 <!ENTITY page_removed "페이지 삭제됨">
 <!ENTITY folder_removed "폴더 삭제됨">
@@ -758,7 +768,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      "Last synced" is one of the user's other Sync clients, typically Firefox on
      their desktop or laptop.-->
 <!ENTITY remote_tabs_last_synced "마지막 동기화: &formatS;">
-<!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
+<!-- Localization note: Used when the sync has not happened yet, showed in place of a date -->
 <!ENTITY remote_tabs_never_synced "마지막 동기화: 없음">
 
 <!-- LOCALIZATION NOTE (intent_uri_private_browsing_prompt): This string will

@@ -64,6 +64,9 @@
 
 <!ENTITY url_bar_default_text2 "Wpisz adres lub szukaj">
 
+<!ENTITY url_bar_qrcode_text2 "Użyj czytnika kodów QR, aby wpisać adres lub wyszukać">
+<!ENTITY url_bar_mic_text2 "Użyj mikrofonu, aby wpisać adres lub wyszukać">
+
 <!ENTITY bookmark "Dodaj zakładkę">
 <!ENTITY bookmark_remove "Usuń zakładkę">
 <!ENTITY bookmark_added "Dodano zakładkę">
@@ -135,10 +138,10 @@
 <!ENTITY pref_category_accessibility "Dostępność">
 <!ENTITY pref_category_accessibility_summary2 "Rozmiar tekstu, powiększanie, sterowanie głosowe">
 <!ENTITY pref_category_privacy_short "Prywatność">
-<!ENTITY pref_category_privacy_summary4 "Śledzenie, dane logowania, zarządzanie danymi">
+<!ENTITY pref_category_privacy_summary4 "Śledzenie, dane logowania, udostępniane dane">
 <!ENTITY pref_category_vendor2 "&vendorShortName; &brandShortName;">
 <!ENTITY pref_category_vendor_summary2 "O programie &brandShortName;, najczęściej zadawane pytania, opinie">
-<!ENTITY pref_category_datareporting "Udostępnianie danych">
+<!ENTITY pref_category_datareporting "Udostępniane dane">
 <!ENTITY pref_category_logins "Dane logowania">
 <!ENTITY pref_learn_more "Więcej informacji">
 <!ENTITY pref_category_installed_search_engines "Zainstalowane wyszukiwarki">
@@ -151,6 +154,7 @@
 <!ENTITY pref_category_advanced_summary3 "Przywracanie kart, oszczędzanie danych, narzędzia dla programistów">
 <!ENTITY pref_category_notifications "Powiadomienia">
 <!ENTITY pref_category_notifications_summary "Powiadomienia ze stron i o nowych funkcjach">
+<!ENTITY pref_category_notifications_summary2 "Nowe funkcje, porady o programie">
 <!ENTITY pref_developer_remotedebugging_usb "Zdalne debugowanie przez USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Zdalne debugowanie przez Wi-Fi">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Debugowanie przez Wi-Fi wymaga zainstalowania czytnika kodów QR na urządzeniu.">

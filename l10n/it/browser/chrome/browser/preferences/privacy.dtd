@@ -32,12 +32,8 @@
 <!ENTITY locbar.searches.label "ricerche correlate dal motore di ricerca predefinito">
 <!ENTITY locbar.searches.accesskey "h">
 <!ENTITY suggestionSettings2.label "Modifica le impostazioni relative ai suggerimenti dei motori di ricerca">
-<!ENTITY acceptCookies2.label "Accetta i cookie dai siti web">
-<!ENTITY acceptCookies2.accesskey "k">
 <!ENTITY acceptCookies4.label "Accetta cookie e dati dai siti web (consigliato)">
 <!ENTITY acceptCookies4.accesskey "k">
-<!ENTITY acceptThirdParty2.pre.label "Accetta i cookie di terze parti">
-<!ENTITY acceptThirdParty2.pre.accesskey "t">
 <!ENTITY blockCookies.label "Blocca cookie e dati dei siti web (potrebbe causare malfunzionamenti in alcuni siti)">
 <!ENTITY blockCookies.accesskey "B">
 <!ENTITY acceptThirdParty3.pre.label "Accetta cookie e dati da siti di terze parti">
@@ -51,25 +47,14 @@
 <!ENTITY close.label "alla chiusura di &brandShortName;">
 <!ENTITY cookieExceptions.label "Eccezioni…">
 <!ENTITY cookieExceptions.accesskey "z">
-<!ENTITY showCookies.label "Mostra i cookie…">
-<!ENTITY showCookies.accesskey "r">
 <!ENTITY historyHeader2.pre.label "Impostazioni cronologia:">
 <!ENTITY historyHeader2.pre.accesskey "m">
 <!ENTITY historyHeader.remember.label "salva la cronologia">
 <!ENTITY historyHeader.dontremember.label "non salvare la cronologia">
 <!ENTITY historyHeader.custom.label "utilizza impostazioni personalizzate">
 <!ENTITY historyHeader.post.label "">
-<!ENTITY rememberDescription.label "Verranno salvate la cronologia di navigazione, i download, le informazioni inserite nei moduli o nei campi di ricerca e i cookie impostati dai siti visitati.">
 <!ENTITY rememberDescription1.label "Verranno salvate la cronologia di navigazione, i download, le informazioni inserite nei moduli o nei campi di ricerca.">
-<!ENTITY rememberActions.pre.label "È possibile ">
-<!ENTITY rememberActions.clearHistory.label "cancellare la cronologia recente">
-<!ENTITY rememberActions.middle.label " o ">
-<!ENTITY rememberActions.removeCookies.label "rimuovere i singoli cookie">
-<!ENTITY rememberActions.post.label ".">
 <!ENTITY dontrememberDescription.label "Verranno utilizzate le stesse impostazioni della Navigazione anonima: in questo modo non verrà salvata alcuna cronologia relativa alla navigazione.">
-<!ENTITY dontrememberActions.pre.label "È inoltre possibile ">
-<!ENTITY dontrememberActions.clearHistory.label "cancellare tutta la cronologia corrente">
-<!ENTITY dontrememberActions.post.label ".">
 <!ENTITY clearHistoryButton.label "Cancella cronologia…">
 <!ENTITY clearHistoryButton.accesskey "e">
 <!ENTITY privateBrowsingPermanent2.label "Utilizza sempre la modalità Navigazione anonima">
@@ -82,11 +67,6 @@
 <!ENTITY clearOnClose.accesskey "C">
 <!ENTITY clearOnCloseSettings.label "Impostazioni…">
 <!ENTITY clearOnCloseSettings.accesskey "I">
-<!ENTITY browserContainersLearnMore.label "Ulteriori informazioni">
-<!ENTITY browserContainersEnabled.label "Attiva schede contenitore">
-<!ENTITY browserContainersEnabled.accesskey "h">
-<!ENTITY browserContainersSettings.label "Impostazioni…">
-<!ENTITY browserContainersSettings.accesskey "o">
 <!ENTITY a11yPrivacy.checkbox.label "Impedisci ai servizi di accessibilità di accedere al browser">
 <!ENTITY a11yPrivacy.checkbox.accesskey "b">
 <!ENTITY a11yPrivacy.learnmore.label "Ulteriori informazioni">

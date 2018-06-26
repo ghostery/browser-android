@@ -97,7 +97,6 @@
 <!ENTITY detail.lastupdated.label "Ultimo aggiornamento">
 <!ENTITY detail.creator.label "Sviluppatore">
 <!ENTITY detail.homepage.label "Sito web">
-<!ENTITY detail.numberOfDownloads.label "Download">
 <!ENTITY detail.contributions.description "Lo sviluppatore di questo componente aggiuntivo chiede agli utenti una piccola donazione per contribuire al suo sviluppo.">
 <!ENTITY detail.updateType "Aggiornamento automatico">
 <!ENTITY detail.updateDefault.label "Predefinito">

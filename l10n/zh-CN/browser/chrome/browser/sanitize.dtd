@@ -8,22 +8,14 @@
      The column width should be set at half of the dialog width. -->
 <!ENTITY sanitizePrefs2.modal.width    "34em">
 <!ENTITY sanitizePrefs2.column.width   "17em">
-<!-- LOCALIZATION NOTE (sanitizePrefs2.inContent.dialog.width): width of the
-     Clear History on Shutdown subdialog in the in-content preferences.
-     Should be large enough to contain the item* strings on a single line.
-     The column width adjusts the width of the first column in the dialog.
-     You can set the column width to a value that makes the dialog look visually balanced,
-     or at half of the dialog width if unsure. -->
-<!ENTITY sanitizePrefs2.inContent.dialog.width "34em">
-<!ENTITY sanitizePrefs2.inContent.column.width "24em">
 
 <!ENTITY sanitizeDialog2.title         "清除最近的历史记录">
 <!-- LOCALIZATION NOTE (sanitizeDialog2.width): width of the Clear Recent History dialog -->
 <!ENTITY sanitizeDialog2.width         "34em">
 
-<!ENTITY clearDataSettings2.label     "当我退出 &brandShortName; 时，自动清除所有：">
-
 <!ENTITY clearDataSettings3.label     "当我退出 &brandShortName; 时，自动清除所有">
+
+<!ENTITY clearDataSettings4.label     "退出后，&brandShortName; 会自动清除所有">
 
 <!-- XXX rearrange entities to match physical layout when l10n isn't an issue -->
 <!-- LOCALIZATION NOTE (clearTimeDuration.*): "Time range to clear" dropdown.

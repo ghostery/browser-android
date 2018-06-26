@@ -22,7 +22,7 @@
 
 <!ENTITY navbarCmd.label "Barra de navegação">
 <!ENTITY navbarCmd.accesskey "n">
-<!ENTITY bookmarksToolbarCmd.label     "Barra de marcadores">
+<!ENTITY bookmarksToolbarCmd.label     "Barra de ferramentas de marcadores">
 <!ENTITY bookmarksToolbarCmd.accesskey "m">
 
 <!ENTITY closeWindow.label "Fechar janela">
@@ -35,8 +35,12 @@
 <!ENTITY feedsMenu.accesskey "S">
 
 <!ENTITY menuBar.tooltip                  "Barra de menus">
-<!ENTITY bookmarksToolbar.tooltip         "Barra de marcadores">
+<!ENTITY bookmarksToolbar.tooltip         "Barra de ferramentas de marcadores">
 <!ENTITY navigationToolbar.tooltip        "Barra de navegação">
+
+<!ENTITY editBookmark.done.label "Feito">
+<!ENTITY editBookmark.cancel.label "Cancelar">
+<!ENTITY editBookmark.removeBookmark.accessKey "R">
 
 <!-- Toolbar items --> 
 <!ENTITY backButton.label             "Anterior">

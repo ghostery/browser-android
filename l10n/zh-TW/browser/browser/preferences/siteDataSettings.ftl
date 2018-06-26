@@ -7,6 +7,7 @@
 
 site-data-settings-window =
     .title = 管理 Cookie 與網站資料
+site-data-settings-description = 下列網站在您的電腦上儲存了 Cookie 及網站資料。{ -brand-short-name } 會將來自這些網站的資料保留於持續性儲存空間，到您主動刪除為止。也會在需要磁碟空間時，就刪除保留於非持續性儲存空間的資料。
 site-data-search-textbox =
     .placeholder = 搜尋網站
     .accesskey = S
@@ -27,11 +28,25 @@ site-data-button-cancel =
 site-data-button-save =
     .label = 儲存變更
     .accesskey = a
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+site-usage-pattern = { $value } { $unit }
+site-usage-persistent = { site-usage-pattern }（持續）
+site-data-remove-all =
+    .label = 移除全部
+    .accesskey = e
+site-data-remove-shown =
+    .label = 移除全部顯示項目
+    .accesskey = e
 
 ## Removing
 
 site-data-removing-window =
     .title = { site-data-removing-header }
+site-data-removing-dialog =
+    .title = { site-data-removing-header }
+    .buttonlabelaccept = 移除
 site-data-removing-header = 移除 Cookie 與網站資料
 site-data-removing-desc = 移除 Cookie 與網站資料後，可能會將您從大部分網站登出。確定要移除嗎？
 site-data-removing-table = 將移除下列網站的 Cookie 與網站資料

@@ -22,6 +22,9 @@
 <!ENTITY menuBar.tooltip "Barra de menú">
 <!ENTITY bookmarksToolbar.tooltip "Barra de herramientas de marcadores">
 <!ENTITY navigationToolbar.tooltip "Barra de herramientas de navegación">
+<!ENTITY editBookmark.done.label "Hecho">
+<!ENTITY editBookmark.cancel.label "Cancelar">
+<!ENTITY editBookmark.removeBookmark.accessKey "E">
 <!ENTITY backButton.label "Anterior">
 <!ENTITY backButton.tooltip "Ir a la página anterior">
 <!ENTITY forwardButton.label "Siguiente">

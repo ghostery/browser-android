@@ -62,11 +62,11 @@ available. -->
 <!ENTITY siteData.label                  "Dados de sites">
 <!ENTITY clearSiteData.label             "Limpar todos os dados">
 <!ENTITY clearSiteData.accesskey         "L">
+<!ENTITY siteDataSettings.label          "Definições…">
+<!ENTITY siteDataSettings.accesskey      "i">
 <!ENTITY siteData1.label                 "Cookies e dados de sites">
 <!ENTITY clearSiteData1.label            "Limpar dados…">
 <!ENTITY clearSiteData1.accesskey        "L">
-<!ENTITY siteDataSettings.label          "Definições…">
-<!ENTITY siteDataSettings.accesskey      "i">
 <!ENTITY siteDataSettings1.label         "Gerir dados…">
 <!ENTITY siteDataSettings1.accesskey     "G">
 <!ENTITY siteDataLearnMoreLink.label     "Saber mais">
@@ -105,7 +105,7 @@ available. -->
 <!ENTITY updateApplication.description   "Permitir ao &brandShortName;">
 <!ENTITY updateAuto3.label               "Instalar atualizações automaticamente (recomendado)">
 <!ENTITY updateAuto3.accesskey           "a">
-<!ENTITY updateCheckChoose2.label        "Procurar atualizações mas deixar-lhe escolher instalá-las">
+<!ENTITY updateCheckChoose2.label        "Procurar atualizações mas deixar escolher quando as instalar">
 <!ENTITY updateCheckChoose2.accesskey    "c">
 <!ENTITY updateManual2.label             "Nunca procurar atualizações (não recomendado)">
 <!ENTITY updateManual2.accesskey         "N">

@@ -8,7 +8,7 @@
 <!ENTITY sendingPrefix.label "寄送郵件時，">
 <!ENTITY fccMailFolder.label "複製一份到:">
 <!ENTITY fccMailFolder.accesskey "P">
-<!ENTITY fccReplyFollowsParent.label "將回信與原信放在同一郵件匣 (像 Gmail 那樣)">
+<!ENTITY fccReplyFollowsParent.label "將回信與原信放在同一郵件匣（像 Gmail 那樣）">
 <!ENTITY fccReplyFollowsParent.accesskey "r">
 <!-- LOCALIZATION NOTE (ccAddress.label): do not translate "Cc" in below line -->
 <!ENTITY ccAddress.label "寄送副本 (Cc) 至:">
@@ -48,4 +48,3 @@
 <!ENTITY templatesFolderOn.accesskey "m">
 <!ENTITY templateInOtherFolder.label "其他郵件匣:">
 <!ENTITY templateInOtherFolder.accesskey "e">
-

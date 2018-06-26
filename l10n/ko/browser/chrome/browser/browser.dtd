@@ -35,6 +35,9 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "다른 탭 모두 닫기">
 <!ENTITY  closeOtherTabs.accesskey           "o">
 
+<!ENTITY  closeSelectedTabs.label            "선택한 탭 닫기">
+<!ENTITY  closeSelectedTabs.accesskey        "S">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -54,6 +57,8 @@ can reach it easily. -->
 <!ENTITY  sendToDeviceOfflineFeedback.label  "대기중 (오프라인)">
 <!ENTITY  moveToNewWindow.label              "새 창으로 이동">
 <!ENTITY  moveToNewWindow.accesskey          "W">
+<!ENTITY  reopenInContainer.label            "컨테이너에서 다시 열기">
+<!ENTITY  reopenInContainer.accesskey        "e">
 <!ENTITY  bookmarkAllTabs.label              "모든 탭 북마크…">
 <!ENTITY  bookmarkAllTabs.accesskey          "T">
 <!ENTITY  undoCloseTab.label                 "닫았던 탭 다시 열기">
@@ -129,7 +134,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY showAllTabsCmd.label "모든 탭 표시">
 <!ENTITY showAllTabsCmd.accesskey "A">
 <!ENTITY toggleReaderMode.key "R">
-
 <!ENTITY toggleReaderMode.win.keycode "VK_F9">
 
 <!ENTITY fxaSignIn.label "&syncBrand.shortName.label;에 로그인">
@@ -189,10 +193,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY otherBookmarksCmd.label "다른 북마크">
 <!ENTITY mobileBookmarksCmd.label "모바일 북마크">
 <!ENTITY bookmarksToolbarChevron.tooltip "북마크 계속 보기">
-<!ENTITY showRecentlyBookmarked.label     "최근 한 북마크 보이기">
-<!ENTITY showRecentlyBookmarked.accesskey "h">
-<!ENTITY hideRecentlyBookmarked.label     "최근 한 북마크 숨기기">
-<!ENTITY hideRecentlyBookmarked.accesskey "H">
 
 <!ENTITY backCmd.label                "뒤로">
 <!ENTITY backCmd.accesskey            "B">
@@ -234,7 +234,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.translateNotificationAnchor.tooltip       "페이지 번역">
 <!ENTITY urlbar.translatedNotificationAnchor.tooltip      "페이지 번역 관리">
 <!ENTITY urlbar.emeNotificationAnchor.tooltip             "DRM 소프트웨어 사용 관리">
-
 <!ENTITY urlbar.midiNotificationAnchor.tooltip            "MIDI 패널 열기">
 
 <!ENTITY urlbar.cameraBlocked.tooltip            "이 사이트의 카메라 사용을 차단하였습니다.">
@@ -245,7 +244,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "이 사이트의 영구 저장소 사용을 차단하였습니다.">
 <!ENTITY urlbar.popupBlocked.tooltip             "이 사이트의 팝업을 차단하였습니다.">
 <!ENTITY urlbar.canvasBlocked.tooltip            "이 사이트의 캔바스 데이타 추출을 차단하였습니다.">
-
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "이 사이트에서 Adobe Flash 플러그인을 사용할 수 없게 설정하였습니다.">
 <!ENTITY urlbar.midiBlocked.tooltip              "이 사이트의 MIDI 접근을 차단하였습니다.">
 
@@ -255,6 +253,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!-- Toolbar items -->
 <!ENTITY homeButton.label             "홈">
+
+<!ENTITY homeButton.defaultPage.tooltip "&brandShortName; 홈 페이지">
 
 <!ENTITY bookmarksButton.label          "북마크">
 <!ENTITY bookmarksCmd.commandkey "b">
@@ -395,7 +395,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      when Sync is configured but this appears to be the only device attached to
      the account. We also show links to download Firefox for android/ios. -->
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "다른 기기에서도 여기에서 열린 탭을 사용하시겠습니까?">
-<!ENTITY appMenuRemoteTabs.openprefs.label "Sync 설정">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "Sync 설정 열기">
 <!ENTITY appMenuRemoteTabs.notsignedin.label "다른 기기의 탭 목록을 보기 위해서 로그인 하세요.">
 <!ENTITY appMenuRemoteTabs.unverified.label "계정 확인이 필요합니다.">
@@ -437,6 +436,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.addMoreItems.label "더 많은 아이템 추가…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "A">
 
+<!ENTITY customizeMenu.autoHideDownloadsButton.label "툴바에서 자동 숨김">
+<!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "A">
+<!ENTITY customizeMenu.manageExtension.label "부가 기능 관리">
+<!ENTITY customizeMenu.manageExtension.accesskey "E">
+
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
     secondary commands. -->
@@ -444,7 +448,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY openCmd.commandkey           "l">
 <!ENTITY urlbar.placeholder2          "검색어나 주소 입력">
-<!ENTITY urlbar.placeholder3          "여기에 검색어나 주소 입력">
 <!ENTITY urlbar.accesskey             "d">
 <!-- LOCALIZATION NOTE (urlbar.extension.label): Used to indicate that a selected autocomplete entry is provided by an extension. -->
 <!ENTITY urlbar.extension.label       "확장기능:">
@@ -798,6 +801,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY identity.moreInfoLinkText2 "더 보기">
 
+<!ENTITY identity.clearSiteData "쿠키와 사이트 데이타 삭제…">
+
 <!ENTITY identity.permissions "권한">
 <!ENTITY identity.permissionsEmpty "이 사이트를 특별한 권한으로 승인하지 않았습니다.">
 <!ENTITY identity.permissionsReloadHint "이 페이지를 다시 읽어들여야 바뀐 점이 올라올 때도 있습니다.">
@@ -901,6 +906,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.allWindowsShared.message "화면에 표시되어 있는 모든 창을 공유합니다.">
 
 <!ENTITY trackingProtection.title "추적 보호">
+<!ENTITY trackingProtection.tooltip "추적 보호 설정 열기">
 <!ENTITY trackingProtection.detectedBlocked3 "&brandShortName;가 사용자의 탐색을 추적할 수 있는 페이지의 부분을 차단하였습니다.">
 <!ENTITY trackingProtection.detectedNotBlocked3 "이 사이트는 사용자의 탐색을 추적할 수 있는 요소를 포함하고 있습니다. 보호 기능이 꺼져 있습니다.">
 <!ENTITY trackingProtection.notDetected3 "페이지에서 추적을 하는 요소를 발견하지 못했습니다.">
@@ -988,16 +994,24 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY updateRestart.cancelButton.accesskey "N">
 <!ENTITY updateRestart.panelUI.label2 "&brandShorterName; 업데이트를 위해 재시작">
 
-<!ENTITY newTabControlled.message "새 탭을 열 때 지금 보고 있는 페이지를 확장 프로그램이 변경했습니다. 이 변경을 원하지 않으면 설정을 복원할 수 있습니다.">
-
 <!ENTITY newTabControlled.header.message "새 탭이 변경되었습니다.">
 <!ENTITY newTabControlled.keepButton.label "변경 사항 유지">
 <!ENTITY newTabControlled.keepButton.accesskey "K">
-<!ENTITY newTabControlled.restoreButton.label "설정 복원">
-<!ENTITY newTabControlled.restoreButton.accesskey "R">
-
 <!ENTITY newTabControlled.disableButton.label "확장기능 비활성화">
 <!ENTITY newTabControlled.disableButton.accesskey "D">
+
+<!ENTITY homepageControlled.message "확장기능이 홈페이지를 변경하였습니다. 이 변경을 원하지 않으시면 설정에서 다시 복원할 수 있습니다.">
+<!ENTITY homepageControlled.header.message "홈페이지가 변경되었습니다.">
+<!ENTITY homepageControlled.keepButton.label "변경 유지">
+<!ENTITY homepageControlled.keepButton.accesskey "K">
+<!ENTITY homepageControlled.disableButton.label "확장기능 비활성화">
+<!ENTITY homepageControlled.disableButton.accesskey "D">
+
+<!ENTITY tabHideControlled.header.message "숨겨진 탭에 접근">
+<!ENTITY tabHideControlled.keepButton.label "숨겨진 탭 유지">
+<!ENTITY tabHideControlled.keepButton.accesskey "K">
+<!ENTITY tabHideControlled.disableButton.label "확장기능 비활성화">
+<!ENTITY tabHideControlled.disableButton.accesskey "D">
 
 <!ENTITY pageActionButton.tooltip "페이지 작업">
 <!ENTITY pageAction.addToUrlbar.label "주소 표시줄에 추가">
@@ -1008,6 +1022,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY pageAction.sendTabToDevice.label "기기로 탭 보내기">
 <!ENTITY sendToDevice.syncNotReady.label "기기를 동기화하고 있습니다…">
+
+<!ENTITY pageAction.shareUrl.label "공유">
 
 <!ENTITY libraryButton.tooltip "방문 목록, 즐겨찾기 등 보기">
 

@@ -15,11 +15,6 @@
   -  is displayed as the tooltip for the buffer capacity during a recording. -->
 <!ENTITY performanceUI.bufferStatusTooltip "O gerador de perfis armazena amostras num buffer circular e, assim que o buffer atinge o limite para uma gravação, as novas amostras são sobrescritas às amostras do início da gravação.">
 
-<!-- LOCALIZATION NOTE (performanceUI.disabledRealTime.nonE10SBuild): This string
-  -  is displayed as a message for why the real time overview graph is disabled
-  -  when running on a non-multiprocess build. -->
-<!ENTITY performanceUI.disabledRealTime.nonE10SBuild "Gravação de dados em tempo real desativada num Firefox que não seja multi-processo.">
-
 <!-- LOCALIZATION NOTE (performanceUI.disabledRealTime.disabledE10S): This string
   -  is displayed as a message for why the real time overview graph is disabled
   -  when running on a build that can run multiprocess Firefox, but just is not enabled. -->
@@ -29,7 +24,7 @@
   -  is displayed when the profiler's circular buffer has started to overlap. -->
 <!ENTITY performanceUI.bufferStatusFull "O buffer está cheio. As amostras antigas serão agora sobrescritas.">
 
-<!-- LOCALIZATION NOTE (performanceUI.loadingNotice): This is the label shown
+<!-- LOCALIZATION NOTE (performanceUI.unavailableNoticePB): This is the label shown
   -  in the details view while the profiler is unavailable, for example, while
   -  in Private Browsing mode. -->
 <!ENTITY performanceUI.unavailableNoticePB "Atualmente, a gravação de perfil está indisponível. Por favor feche todas as janelas de navegação privada e tente novamente.">
@@ -41,7 +36,7 @@
 <!-- LOCALIZATION NOTE (performanceUI.toolbar.*): These strings are displayed
   -  in the toolbar on buttons that select which view is currently shown. -->
 <!ENTITY performanceUI.toolbar.waterfall "Cascata">
-<!ENTITY performanceUI.toolbar.waterfall.tooltiptext "Mostra as diferentes operações que o navegador está a executar durante a gravação, dispostas em cascata de forma sequencial.">
+<!ENTITY performanceUI.toolbar.waterfall.tooltiptext "Mostra as diferentes operações que o navegador está a realizar durante a gravação, dispostas em cascata de forma sequencial.">
 <!ENTITY performanceUI.toolbar.js-calltree "Árvore de invocações">
 <!ENTITY performanceUI.toolbar.js-calltree.tooltiptext "Destaca as funções JavaScript onde o navegador despendeu mais tempo durante a gravação.">
 <!ENTITY performanceUI.toolbar.memory-calltree "Alocações">

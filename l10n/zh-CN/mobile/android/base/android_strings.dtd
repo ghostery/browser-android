@@ -66,9 +66,18 @@
 <!ENTITY  crash_closing_alert "不发送崩溃报告并退出？">
 <!ENTITY  sending_crash_report "正在发送崩溃报告\u2026">
 <!ENTITY  crash_close_label "关闭">
-<!ENTITY  crash_restart_label "重启 &brandShortName;">
+<!ENTITY  crash_restart_label "重开 &brandShortName;">
 
 <!ENTITY url_bar_default_text2 "搜索或输入网址">
+
+<!-- Localization note (url_bar_qrcode_text2) : This text will be
+     heard by non-visual users when the focus is on the QR Code
+     icon in the url bar. -->
+<!ENTITY url_bar_qrcode_text2 "使用您的二维码扫描器来搜索或输入网址">
+<!-- Localization note (url_bar_mic_text2) : This text will be
+     heard by non-visual users when the focus is on the Microphone
+     icon in the url bar. -->
+<!ENTITY url_bar_mic_text2 "使用您的麦克风来搜索或输入网址">
 
 <!ENTITY bookmark "添加书签">
 <!ENTITY bookmark_remove "移除书签">
@@ -207,6 +216,7 @@
 <!ENTITY pref_category_advanced_summary3 "恢复标签页、节省流量、开发者工具">
 <!ENTITY pref_category_notifications "通知">
 <!ENTITY pref_category_notifications_summary "新功能、网站更新">
+<!ENTITY pref_category_notifications_summary2 "新功能、产品小窍门">
 <!ENTITY pref_developer_remotedebugging_usb "通过 USB 远程调试">
 <!ENTITY pref_developer_remotedebugging_wifi "通过 Wi-Fi 远程调试">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "您的设备需要安装二维码扫描应用才能使用 Wi-Fi 调试。">
@@ -543,7 +553,7 @@
 <!ENTITY pref_compact_tabs_summary2 "竖屏模式下标签页列为两排">
 
 <!-- Localization note (page_removed): This string appears in a toast message when
-     any page is removed frome about:home. This includes pages that are in history,
+     any page is removed from about:home. This includes pages that are in history,
      bookmarks, or reading list. -->
 <!ENTITY page_removed "页面已移除">
 <!ENTITY folder_removed "文件夹已移除">
@@ -758,7 +768,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      "Last synced" is one of the user's other Sync clients, typically Firefox on
      their desktop or laptop.-->
 <!ENTITY remote_tabs_last_synced "最后同步：&formatS;">
-<!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
+<!-- Localization note: Used when the sync has not happened yet, showed in place of a date -->
 <!ENTITY remote_tabs_never_synced "最后同步：从未">
 
 <!-- LOCALIZATION NOTE (intent_uri_private_browsing_prompt): This string will

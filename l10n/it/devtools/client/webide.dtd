@@ -34,8 +34,6 @@
 <!ENTITY runtimeMenu_takeScreenshot_accesskey "s">
 <!ENTITY runtimeMenu_showDetails_label "Informazioni runtime">
 <!ENTITY runtimeMenu_showDetails_accesskey "n">
-<!ENTITY runtimeMenu_showMonitor_label "Monitor">
-<!ENTITY runtimeMenu_showMonitor_accesskey "M">
 <!ENTITY runtimeMenu_showDevicePrefs_label "Preferenze dispositivo">
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "z">
 <!ENTITY runtimeMenu_showSettings_label "Impostazioni dispositivo">
@@ -114,8 +112,6 @@
 <!ENTITY devicesetting_newname "Nome nuova impostazione">
 <!ENTITY devicesetting_newtext "Valore impostazione">
 <!ENTITY devicesetting_addnew "Aggiungi nuova impostazione">
-<!ENTITY monitor_title "Monitor">
-<!ENTITY monitor_help "Aiuto">
 <!ENTITY wifi_auth_header "Identificazione client">
 <!ENTITY wifi_auth_scan_request "Il terminale con cui si sta cercando di connettersi richiede ulteriori informazioni per autenticare questa connessione. Effettuare la scansione del codice QR utilizzando l’altro dispositivo.">
 <!ENTITY wifi_auth_no_scanner "Nessuna richiesta di scansione del QR?">

@@ -46,19 +46,10 @@
 
 <!ENTITY  feedTab               "Feeds">
 <!ENTITY  feedTab.accesskey     "F">
-<!ENTITY  feedSubscribe         "Assinar">
-<!ENTITY  feedSubscribe.accesskey "I">
 
 <!ENTITY  permTab               "Permissões">
 <!ENTITY  permTab.accesskey     "P">
-<!ENTITY  permUseDefault        "Usar o padrão">
-<!ENTITY  permAskAlways         "Perguntar">
-<!ENTITY  permAllow             "Permitir">
-<!ENTITY  permAllowSession      "Excluir ao sair">
-<!ENTITY  permHide              "Ocultar">
-<!ENTITY  permBlock             "Bloquear">
 <!ENTITY  permissionsFor        "Permissões para:">
-<!ENTITY  permPlugins           "Ativar plugins">
 
 <!ENTITY  securityTab           "Segurança">
 <!ENTITY  securityTab.accesskey "S">
@@ -74,14 +65,14 @@
 <!ENTITY  securityView.identity.validity "Expira em:">
 
 <!ENTITY  securityView.privacy.header                   "Privacidade e histórico">
-<!ENTITY  securityView.privacy.history                  "Este site foi visitado anteriormente?">
+<!ENTITY  securityView.privacy.history                  "Eu já visitei este site antes?">
 <!ENTITY  securityView.privacy.cookies                  "Este site armazena dados (cookies) no meu computador?">
 <!ENTITY  securityView.privacy.viewCookies              "Ver cookies">
 <!ENTITY  securityView.privacy.viewCookies.accessKey    "k">
 <!ENTITY  securityView.privacy.siteData                 "Este site está armazenando informações no meu computador?">
 <!ENTITY  securityView.privacy.clearSiteData            "Limpar cookies e dados de site">
 <!ENTITY  securityView.privacy.clearSiteData.accessKey  "C">
-<!ENTITY  securityView.privacy.passwords                "Há senhas memorizadas deste site?">
+<!ENTITY  securityView.privacy.passwords                "Eu salvei alguma senha deste site?">
 <!ENTITY  securityView.privacy.viewPasswords            "Ver senhas salvas">
 <!ENTITY  securityView.privacy.viewPasswords.accessKey  "s">
 
