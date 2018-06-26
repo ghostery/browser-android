@@ -3,6 +3,7 @@ package org.mozilla.gecko.controlcenter;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
@@ -33,6 +34,12 @@ import org.mozilla.gecko.util.GeckoBundle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.mozilla.gecko.util.GeckoBundleUtils.safeGetBoolean;
+import static org.mozilla.gecko.util.GeckoBundleUtils.safeGetBundle;
+import static org.mozilla.gecko.util.GeckoBundleUtils.safeGetInt;
+import static org.mozilla.gecko.util.GeckoBundleUtils.safeGetString;
+import static org.mozilla.gecko.util.GeckoBundleUtils.safeGetStringArray;
 
 /**
  * Copyright © Cliqz 2018
@@ -87,33 +94,26 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         return context.getString(R.string.cc_title_overview);
     }
 
+
     @Override
     public void updateUI(GeckoBundle controlCenterSettingsData) {
         this.controlCenterSettingsData = controlCenterSettingsData;
-        final int allowedTrackers = controlCenterSettingsData.getBundle("data").getBundle("summary")
-                .getBundle("trackerCounts").getInt("allowed");
-        final int blockedTrackers = controlCenterSettingsData.getBundle("data").getBundle("summary")
-                .getBundle("trackerCounts").getInt("blocked");
+        final int allowedTrackers = safeGetInt(controlCenterSettingsData, "data/summary/trackerCounts/allowed");
+        final int blockedTrackers = safeGetInt(controlCenterSettingsData, "data/summary/trackerCounts/blocked");
         final int totalTrackers = allowedTrackers + blockedTrackers;
-        final String domainName = controlCenterSettingsData.getBundle("data").getBundle("summary")
-                .getString("pageHost");
-        final boolean isSmartBlockEnabled = controlCenterSettingsData.getBundle("data")
-                .getBundle("panel").getBundle("panel").getBoolean("enable_smart_block");
-        final boolean isAdBlockEnabled = controlCenterSettingsData.getBundle("data").getBundle("panel")
-                .getBundle("panel").getBoolean("enable_ad_block");
-        final boolean isAntiTrackingEnabled = controlCenterSettingsData.getBundle("data")
-                .getBundle("panel").getBundle("panel").getBoolean("enable_anti_tracking");
-        final int smartBlockCount = controlCenterSettingsData.getBundle("data").getBundle("panel")
-                .getBundle("panel").getBundle("smartBlock").getBundle("blocked").keys().length +
-                controlCenterSettingsData.getBundle("data").getBundle("panel").getBundle("panel")
-                        .getBundle("smartBlock").getBundle("unblocked").keys().length;
+        final String domainName = safeGetString(controlCenterSettingsData, "data/summary/pageHost");
+        final boolean isSmartBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_smart_block");
+        final boolean isAdBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_ad_block");
+        final boolean isAntiTrackingEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_anti_tracking");
+        final int smartBlockCount = safeGetBundle(controlCenterSettingsData,"data/panel/panel/smartBlock/blocked").keys().length +
+                safeGetBundle(controlCenterSettingsData, "data/panel/panel/smartBlock/unblocked").keys().length;
         mSmartBlockingCount.setText(Integer.toString(smartBlockCount));
         mSmartBlockingSwitch.setChecked(isSmartBlockEnabled);
         mAdBlockingSwitch.setChecked(isAdBlockEnabled);
         mAntiTrackingSwitch.setChecked(isAntiTrackingEnabled);
         final List<PieEntry> entries = new ArrayList<>();
-        mIsGhosteryPaused = controlCenterSettingsData.getBundle("data").getBundle("summary").getBoolean("paused_blocking");
-        final GeckoBundle[] categories = controlCenterSettingsData.getBundle("data").getBundle("summary").getBundleArray("categories");
+        mIsGhosteryPaused = safeGetBoolean(controlCenterSettingsData, "data/summary/paused_blocking");
+        final GeckoBundle[] categories = safeGetBundle(controlCenterSettingsData, "data/summary").getBundleArray("categories");
         colors.clear();
         disabledColors.clear();
         for (GeckoBundle categoryBundle : categories != null ? categories : new GeckoBundle[0]) {
@@ -148,10 +148,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 Integer.toString(totalTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mTrackersBlocked.setText(trackersBlockedSpan);
         mDomainName.setText(domainName);
-        final List<String> blackList = Arrays.asList(controlCenterSettingsData.getBundle("data")
-                .getBundle("summary").getStringArray("site_blacklist"));
-        final List<String> whiteList = Arrays.asList(controlCenterSettingsData.getBundle("data")
-                .getBundle("summary").getStringArray("site_whitelist"));
+        final List<String> blackList = Arrays.asList(safeGetStringArray(controlCenterSettingsData, "data/summary/site_blacklist"));
+        final List<String> whiteList = Arrays.asList(safeGetStringArray(controlCenterSettingsData, "data/summary/site_whitelist"));
         mIsSiteRestricted = blackList.contains(domainName);
         mIsSiteTrusted = whiteList.contains(domainName);
         if (!mIsGhosteryPaused) {

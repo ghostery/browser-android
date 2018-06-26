@@ -16,7 +16,7 @@
     <style name="UrlBar.MenuItem" parent="UrlBar.V17.MenuItem" />
 
     <style name="UrlBar.V17.MenuItem" parent="UrlBar.Base.MenuItem">
-        <item name="android:layout_toStartOf">@id/tabs</item>
+        <item name="android:layout_toStartOf">@id/ghosty</item>
     </style>
 
     <style name="UrlBar.Tabs" parent="UrlBar.V17.Tabs" />

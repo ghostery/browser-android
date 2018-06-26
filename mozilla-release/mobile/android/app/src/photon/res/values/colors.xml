@@ -325,6 +325,9 @@
     <color name="history_favorites_row_shadow">@android:color/darker_gray</color>
     <color name="history_favorites_row_private_shadow">@android:color/darker_gray</color>
 
+    <!-- Browser toolbar icons -->
+    <color name="cliqz_icon">@android:color/white</color>
+    <color name="cliqz_icon_disabled">#33FFFFFF</color>
     <!-- Cliqz end -->
 
 </resources>
