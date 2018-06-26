@@ -154,18 +154,19 @@ stage('JIRA'){
 stage('Send email') {
     def projectName  = '$PROJECT_NAME'
     def changesSinceLastSuccess = '$CHANGES_SINCE_LAST_SUCCESS'
-    def bodytxt = """${projectName} - Build # ${env.BUILD_NUMBER}
-    Check console output at http://magrathea:8080/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/ to view the results.
-    Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz.apk
-    Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/cliqz-alpha.apk
-    Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/ghostery.apk
-    Ghostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/ghostery-alpha.apk
-    ${changesSinceLastSuccess}
-    Issues Transtioned ${transitionIssueList}""".stripMargin()
+    def bodytxt = """
+        ${projectName} - Build # ${env.BUILD_NUMBER}
+        Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
+        Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz.apk
+        Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/cliqz-alpha.apk
+        Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/ghostery.apk
+        Ghostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/ghostery-alpha.apk
+        ${changesSinceLastSuccess}
+        Issues Transtioned ${transitionIssueList}""".stripIndent()
     emailext(
-            to: 'androiddev@cliqz.com',
-            subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
-            body: bodytxt
+        to: 'androiddev@cliqz.com',
+        subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
+        body: bodytxt
     )
 }
 
