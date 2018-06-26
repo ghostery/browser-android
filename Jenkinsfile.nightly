@@ -98,15 +98,13 @@ def build(Map m){
                         """
                     }
                 }
+                stage('Clean Up') {
+                   sh '''#!/bin/bash
+                       rm -f mozilla-release/mozconfig
+                       rm -rf mozilla-release/objdir-frontend-android
+                   '''
+                }
             }
-
-//            stage('Clean Up') {
-//                sh '''#!/bin/bash
-//                    rm -f mozilla-release/mozconfig
-//                    rm -rf mozilla-release/objdir-frontend-android
-//                    rm -rf autobots
-//                '''
-//            }
         }
     }
 }
