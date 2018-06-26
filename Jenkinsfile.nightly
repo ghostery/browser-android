@@ -47,7 +47,7 @@ def build(Map m){
     def nodeLabel = 'master'
     return {
         node(nodeLabel){
-            getImageName().inside('-w /app') {
+            getImageName().inside() {
                 stage('Download cache') {
                         withCredentials([
                             [
@@ -71,6 +71,7 @@ def build(Map m){
                         set -x
                         pwd
                         ls
+                        cd /app
                         cp ${flavor} mozilla-release/mozconfig
                         cd mozilla-release
                         ./mach clobber
@@ -81,6 +82,7 @@ def build(Map m){
                         script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
                         find *.apk -name 'fennec*' -not -name '*-unsigned-*'""").trim()
                 }
+                def id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                 stage('Upload') {
                     withCredentials([
                         [
@@ -93,7 +95,7 @@ def build(Map m){
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${flavorname}"
                         def apkPath = "mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
                         sh """#!/bin/bash -l 
-                            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${flavorname}.apk
+                            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${flavorname}${id}.apk
                             aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk
                         """
                     }
@@ -155,10 +157,10 @@ stage('Send email') {
     def bodytxt = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
-        Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz.apk
-        Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/cliqz-alpha.apk
-        Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/ghostery.apk
-        Ghostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/ghostery-alpha.apk
+        Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/latest.apk
+        Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/latest.apk
+        Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/latest.apk
+        Ghostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/latest.apk
         ${changesSinceLastSuccess}
         Issues Transtioned ${transitionIssueList}""".stripIndent()
     emailext(
