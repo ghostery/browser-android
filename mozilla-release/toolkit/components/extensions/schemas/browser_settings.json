@@ -77,6 +77,10 @@
       "webNotificationsDisabled": {
         "$ref": "types.Setting",
         "description": "Disables webAPI notifications."
+      },
+      "cliqzSearchRegional": {
+        "$ref": "types.Setting",
+        "description": "blah."
       }
     }
   }
