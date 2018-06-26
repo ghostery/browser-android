@@ -87,6 +87,10 @@ def _defines():
                 'MOZ_UPDATE_CHANNEL',
                 'OMNIJAR_NAME',
                 'OS_TARGET',
+                # Cliqz Start
+                'GHOSTERY_EXTENSION_VERSION',
+                'SEARCH_EXTENSION_VERSION',
+                # Cliqz End
                 'TARGET_XPCOM_ABI'):
         DEFINES[var] = CONFIG[var]
 

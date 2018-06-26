@@ -2,28 +2,28 @@
 @Library('cliqz-shared-library@v1.2') _
 def matrix = [
         'cliqz':[
-            'config':'mozconfigs/cliqz.mozconfig',
-            'test': true, 
+            'target': 'i386-linux-android',
+            'test': true,
         ],
         'ghostery':[
-            'config':'mozconfigs/ghostery.mozconfig',
+            'target': 'arm-linux-androideabi',
             'test': false,
         ],
         'cliqz-alpha':[
-            'config':'mozconfigs/cliqz-alpha.mozconfig',
+            'target': 'arm-linux-androideabi',
             'test': false,
         ],
         'ghostery-alpha':[
-            'config':'mozconfigs/ghostery-alpha.mozconfig',
+            'target': 'arm-linux-androideabi',
             'test': false,
         ],
     ]
 
 def build(Map m){
-    def flavor = m.config
+    def androidtarget = m.target
     def flavorname = m.name
     def nodeLabel = 'us-east-1 && ubuntu && docker && !gpu'
-    def test =m.test
+    def test = m.test
     return {
         node(nodeLabel){
             def dockerTag = ""
@@ -37,9 +37,9 @@ def build(Map m){
                 docker.image("${baseImageName}").inside {
                     stage('Download cache') {
                         withCredentials([[
-                                $class: 'AmazonWebServicesCredentialsBinding',  
-                                accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-                                credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b', 
+                                $class: 'AmazonWebServicesCredentialsBinding',
+                                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                                credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b',
                                 secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                             def s3Path = "s3://repository.cliqz.com/dist/android/cache"
                             def cachePath = ".gradle/caches"
@@ -47,32 +47,33 @@ def build(Map m){
                                 pip install awscli --upgrade --user
                                 cd
                                 aws s3 sync --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath}
-                            """                        
+                            """
                         }
                     }
-                    stage('Build APKS') {
-                        sh """#!/bin/bash -l
-                            set -e
-                            set -x
-                            cp ${flavor} mozilla-release/mozconfig
-                        """
-                        sh '''#!/bin/bash -l
-                            set -x 
-                            set -e 
-                            cd mozilla-release
-                            ./mach clobber
-                            ./mach build
-                            for language in `ls ../l10n/`; do
-                                ./mach build chrome-$language
-                            done
-                            ./mach package
-                        '''
-                        apk = sh(returnStdout: true, 
+                    stage("Build APK: ${flavorname}") {
+                        withEnv([
+                            "ANDROID_TARGET=${androidtarget}",
+                            "BRAND=${flavorname}"
+                            ]) {
+                            sh '''#!/bin/bash -l
+                                set -x
+                                set -e
+                                cp mozconfigs/jenkins.mozconfig mozilla-release/mozconfig
+                                cd mozilla-release
+                                ./mach clobber
+                                ./mach build
+                                for language in `ls ../l10n/`; do
+                                    ./mach build chrome-$language
+                                done
+                                ./mach package
+                            '''
+                        }
+                        apk = sh(returnStdout: true,
                             script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
                             find *.apk -name 'fennec*i386*' -not -name '*-unsigned-*'""").trim()
                     }
-                    stage('Upload APK') {
-                        archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorname}/dist/*.apk"
+                    stage("Upload APK: ${flavorname}") {
+                        archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
                     }
                 }
                 if (test == true){
@@ -86,7 +87,7 @@ def build(Map m){
                         "subnet-341ff61f",
                         "us-east-1"
                         ) {
-                            stage('Checkout') {
+                            stage('Checkout Autobots') {
                                 dir('autobots'){
                                     git branch:'version2.0',
                                     credentialsId: 'cliqz-ci',
@@ -140,7 +141,7 @@ def build(Map m){
                                             '''
                                         }
                                     }
-                                    stage('Run Tests') {
+                                    stage("Run Tests: ${flavorname}") {
                                         timeout(60) {
                                             sh'''#!/bin/bash -l
                                                 set -x
@@ -158,38 +159,38 @@ def build(Map m){
                                        }
                                     }
                                 }
-                                stage('Upload Results') {
+                                stage("Upload Results: ${flavorname}") {
                                     archiveTestResults()
                                 }
                             }
                         }
                     }catch(e) {
-                      print e  
+                      print e
                     }
-                }     
+                }
             }
             stage('Clean Up') {
                 sh '''#!/bin/bash
                     rm -f mozilla-release/mozconfig
                     rm -rf mozilla-release/objdir-frontend-android
                     rm -rf autobots
+                    rm -f screenshots.zip
                 '''
             }
         }
     }
 }
- 
+
 
 def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
     [("Building ${it[0]}"):build(
         name: it[0],
-        config:it[1]['config'],
+        target:it[1]['target'],
         test:it[1]['test']
     )]
 }
 
-parallel stepsForParallelBuilds    
- 
+parallel stepsForParallelBuilds
 
 def withGenymotion(
         String instanceImage,
@@ -258,7 +259,7 @@ def archiveTestResults() {
     try {
         archiveArtifacts allowEmptyArchive: true, artifacts: 'autobots/*.log'
         junit 'autobots/test-reports/*.xml'
-        zip archive: true, dir: 'autobots/screenshots', glob: '', zipFile: 'autobots/screenshots.zip'
+        zip archive: true, dir: 'autobots/screenshots', glob: '', zipFile: 'screenshots.zip'
     } catch(e) {
         print e
     }
