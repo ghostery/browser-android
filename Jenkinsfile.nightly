@@ -79,7 +79,7 @@ def build(Map m){
                         ./mach package
                     """
                     apk = sh(returnStdout: true,
-                        script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
+                        script: """cd /app/mozilla-release/objdir-frontend-android/${flavorname}/dist && \
                         find *.apk -name 'fennec*' -not -name '*-unsigned-*'""").trim()
                 }
                 def id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
@@ -93,7 +93,7 @@ def build(Map m){
                         ]
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${flavorname}"
-                        def apkPath = "mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
+                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
                         sh """#!/bin/bash -l 
                             aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${flavorname}${id}.apk
                             aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk
@@ -102,8 +102,8 @@ def build(Map m){
                 }
                 stage('Clean Up') {
                    sh '''#!/bin/bash
-                       rm -f mozilla-release/mozconfig
-                       rm -rf mozilla-release/objdir-frontend-android
+                       rm -f /app/mozilla-release/mozconfig
+                       rm -rf /app/mozilla-release/objdir-frontend-android
                    '''
                 }
             }
