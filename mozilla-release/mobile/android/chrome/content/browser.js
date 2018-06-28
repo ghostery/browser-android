@@ -6490,8 +6490,15 @@ var Cliqz = {
   get Search() {
     if (!this._search) {
       this._search = this._createBrowserForExtension('android@cliqz.com');
-      this._search.load('modules/mobile-cards/cards.html');
-
+      const loadExtension = (waitTime) => {
+        try {
+          this._search.load('modules/mobile-cards/cards.html');
+        } catch (e) {
+          console.log(`Retry loading cards in ${waitTime} ms`);
+          setTimeout(loadExtension, waitTime, waitTime * 2);
+        }
+      }
+      loadExtension(100); // progressive
       setTimeout(() => {
         // TODO: find a better moment to attach
         this._search.panel.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
