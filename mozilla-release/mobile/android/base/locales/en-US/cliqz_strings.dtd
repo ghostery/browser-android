@@ -1,6 +1,7 @@
 <!-- Copyright © Cliqz 2018 -->
 <!-- General -->
 <!ENTITY action_ok "OK">
+<!ENTITY action_exit "Exit">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "News">

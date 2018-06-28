@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is derived from browser_app_menu -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- We disable AlwaysShowAction because we interpret the menu
+     attributes ourselves and thus the warning isn't relevant to us. -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:gecko="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AlwaysShowAction">
+
+    <item
+        android:id="@+id/forward"
+        android:icon="@drawable/ic_menu_forward"
+        android:showAsAction="always"
+        android:title="@string/forward" />
+
+    <item
+        android:id="@+id/bookmark"
+        android:icon="@drawable/ic_menu_bookmark_add"
+        android:showAsAction="always"
+        android:title="@string/bookmark" />
+
+    <item
+        android:id="@+id/downloads"
+        android:icon="@drawable/ic_downloads"
+        android:showAsAction="always"
+        android:title="@string/downloads" />
+
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_menu_share"
+        android:showAsAction="always"
+        android:title="@string/share" />
+
+    <item
+        android:id="@+id/reload"
+        android:icon="@drawable/ic_menu_reload"
+        android:showAsAction="always"
+        android:title="@string/reload" />
+
+    <item
+        android:id="@+id/new_tab"
+        android:title="@string/new_tab" />
+
+    <item
+        android:id="@+id/new_private_tab"
+        android:title="@string/new_private_tab" />
+
+    <item
+        android:id="@+id/bookmarks_list"
+        android:title="@string/bookmarks_title" />
+
+    <item
+        android:id="@+id/history_list"
+        android:title="@string/history_title" />
+
+    <item
+        android:id="@+id/find_in_page"
+        android:title="@string/find_in_page" />
+
+    <item
+        android:id="@+id/desktop_mode"
+        android:checkable="true"
+        android:title="@string/desktop_mode" />
+
+    <item
+        android:id="@+id/pin_to_top_sites"
+        android:title="@string/contextmenu_pin_to_top_sites" />
+
+    <item
+        android:id="@+id/add_to_launcher"
+        android:title="@string/contextmenu_add_page_shortcut" />
+
+    <item
+        android:id="@+id/settings"
+        android:title="@string/settings" />
+
+    <item
+        android:id="@+id/clear_history"
+        android:title="@string/home_clear_history_button" />
+
+    <item
+        android:id="@+id/exit_browser"
+        android:title="@string/action_exit" />
+
+</menu>

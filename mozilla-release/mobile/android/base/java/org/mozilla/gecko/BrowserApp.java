@@ -3695,7 +3695,9 @@ public class BrowserApp extends GeckoApp
         }
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.browser_app_menu, mMenu);
+        /* Cliqz Start */
+        inflater.inflate(R.menu.cliqz_browser_app_menu, mMenu);
+        /* Cliqz End */
 
         // Add browser action menu items, if any exist.
         if (mBrowserActionItemsCache != null && !mBrowserActionItemsCache.isEmpty()) {
@@ -3793,21 +3795,25 @@ public class BrowserApp extends GeckoApp
         }
 
         Tab tab = Tabs.getInstance().getSelectedTab();
+        /* Cliqz Start */
         // Unlike other menu items, the bookmark star is not tinted. See {@link ThemedImageButton#setTintedDrawable}.
+        //final MenuItem back = aMenu.findItem(R.id.back);
+        //final MenuItem saveAsPDF = aMenu.findItem(R.id.save_as_pdf);
+        //final MenuItem print = aMenu.findItem(R.id.print);
+        //final MenuItem viewPageSource = aMenu.findItem(R.id.view_page_source);
+        //final MenuItem charEncoding = aMenu.findItem(R.id.char_encoding);
+        //final MenuItem enterGuestMode = aMenu.findItem(R.id.new_guest_session);
+        //final MenuItem exitGuestMode = aMenu.findItem(R.id.exit_guest_session);
         final MenuItem bookmark = aMenu.findItem(R.id.bookmark);
-        final MenuItem back = aMenu.findItem(R.id.back);
         final MenuItem forward = aMenu.findItem(R.id.forward);
         final MenuItem share = aMenu.findItem(R.id.share);
         final MenuItem bookmarksList = aMenu.findItem(R.id.bookmarks_list);
         final MenuItem historyList = aMenu.findItem(R.id.history_list);
-        final MenuItem saveAsPDF = aMenu.findItem(R.id.save_as_pdf);
-        final MenuItem print = aMenu.findItem(R.id.print);
-        final MenuItem viewPageSource = aMenu.findItem(R.id.view_page_source);
-        final MenuItem charEncoding = aMenu.findItem(R.id.char_encoding);
         final MenuItem findInPage = aMenu.findItem(R.id.find_in_page);
         final MenuItem desktopMode = aMenu.findItem(R.id.desktop_mode);
-        final MenuItem enterGuestMode = aMenu.findItem(R.id.new_guest_session);
-        final MenuItem exitGuestMode = aMenu.findItem(R.id.exit_guest_session);
+        final MenuItem clearHistory = aMenu.findItem(R.id.clear_history);
+        final MenuItem exit = aMenu.findItem(R.id.exit_browser);
+        /* Cliqz End */
 
         // Only show the "Quit" menu item on pre-ICS, television devices,
         // or if the user has explicitly enabled the clear on shutdown pref.
@@ -3824,23 +3830,25 @@ public class BrowserApp extends GeckoApp
         // If tab data is unavailable we disable most of the context menu and related items and
         // return early.
         if (tab == null || tab.getURL() == null) {
+            /* Cliqz Start */
+            //back.setEnabled(false);
+            //saveAsPDF.setEnabled(false);
+            //print.setEnabled(false);
+            //viewPageSource.setEnabled(false);
             bookmark.setEnabled(false);
-            back.setEnabled(false);
             forward.setEnabled(false);
             share.setEnabled(false);
-            saveAsPDF.setEnabled(false);
-            print.setEnabled(false);
-            findInPage.setEnabled(false);
-            viewPageSource.setEnabled(false);
+            findInPage.setVisible(false);
 
             // NOTE: Use MenuUtils.safeSetEnabled because some actions might
             // be on the BrowserToolbar context menu.
             MenuUtils.safeSetEnabled(aMenu, R.id.page, false);
             MenuUtils.safeSetEnabled(aMenu, R.id.subscribe, false);
             MenuUtils.safeSetEnabled(aMenu, R.id.add_search_engine, false);
-            MenuUtils.safeSetEnabled(aMenu, R.id.pin_to_top_sites, false);
-            MenuUtils.safeSetEnabled(aMenu, R.id.add_to_launcher, false);
+            MenuUtils.safeSetVisible(aMenu, R.id.pin_to_top_sites, false);
+            MenuUtils.safeSetVisible(aMenu, R.id.add_to_launcher, false);
             MenuUtils.safeSetEnabled(aMenu, R.id.set_as_homepage, false);
+            /* Cliqz End */
 
             final MenuItem pinToTopSitesItem = aMenu.findItem(R.id.pin_to_top_sites);
             if (pinToTopSitesItem != null) {
@@ -3868,26 +3876,28 @@ public class BrowserApp extends GeckoApp
         // We don't use icons on GB builds so not resolving icons might conserve resources.
         bookmark.setIcon(resolveBookmarkIconDrawable(tab.isBookmark(), resolveMenuIconTint(isPrivate)));
 
-        back.setEnabled(tab.canDoBack());
+        /* Cliqz Start */
         forward.setEnabled(tab.canDoForward());
         desktopMode.setChecked(tab.getDesktopMode());
+        //back.setEnabled(tab.canDoBack());
 
-        View backButtonView = MenuItemCompat.getActionView(back);
+        //View backButtonView = MenuItemCompat.getActionView(back);
 
-        if (backButtonView != null) {
-            backButtonView.setOnLongClickListener(new Button.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    Tab tab = Tabs.getInstance().getSelectedTab();
-                    if (tab != null) {
-                        closeOptionsMenu();
-                        return tabHistoryController.showTabHistory(tab,
-                                TabHistoryController.HistoryAction.BACK);
-                    }
-                    return false;
-                }
-            });
-        }
+        // if (backButtonView != null) {
+        //     backButtonView.setOnLongClickListener(new Button.OnLongClickListener() {
+        //         @Override
+        //         public boolean onLongClick(View view) {
+        //             Tab tab = Tabs.getInstance().getSelectedTab();
+        //             if (tab != null) {
+        //                 closeOptionsMenu();
+        //                 return tabHistoryController.showTabHistory(tab,
+        //                         TabHistoryController.HistoryAction.BACK);
+        //             }
+        //             return false;
+        //         }
+        //     });
+        // }
+        /* Cliqz End */
 
         View forwardButtonView = MenuItemCompat.getActionView(forward);
 
@@ -3990,56 +4000,68 @@ public class BrowserApp extends GeckoApp
         boolean allowPDF = (!(isAboutHome(tab) ||
                                tab.getContentType().equals("application/vnd.mozilla.xul+xml") ||
                                tab.getContentType().startsWith("video/")));
+        /* Cliqz Start o/
         saveAsPDF.setEnabled(allowPDF);
         print.setEnabled(allowPDF);
         print.setVisible(Versions.feature19Plus);
+        /o Cliqz End */
 
         // Disable find in page and view source for about:home, since it won't work on Java content.
         final boolean notInAboutHome = !isAboutHome(tab);
-        findInPage.setEnabled(notInAboutHome);
-        viewPageSource.setEnabled(notInAboutHome);
+        /* Cliqz Start */
+        findInPage.setVisible(notInAboutHome);
+        exit.setVisible(!notInAboutHome);
+        MenuUtils.safeSetVisible(aMenu, R.id.pin_to_top_sites, notInAboutHome);
+        MenuUtils.safeSetVisible(aMenu, R.id.add_to_launcher, notInAboutHome);
+        // viewPageSource.setEnabled(notInAboutHome);
 
-        charEncoding.setVisible(GeckoPreferences.getCharEncodingState());
+        // charEncoding.setVisible(GeckoPreferences.getCharEncodingState());
 
-        if (getProfile().inGuestMode()) {
-            exitGuestMode.setVisible(true);
-        } else {
-            enterGuestMode.setVisible(true);
-        }
+        // if (getProfile().inGuestMode()) {
+            // exitGuestMode.setVisible(true);
+        // } else {
+            // enterGuestMode.setVisible(true);
+        // }
+        /* Cliqz End */
 
         if (!Restrictions.isAllowed(this, Restrictable.GUEST_BROWSING)) {
             MenuUtils.safeSetVisible(aMenu, R.id.new_guest_session, false);
         }
 
-        /* Cliqz start */
-        // hide add-ons
         MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
         MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
-//        if (SwitchBoard.isInExperiment(this, Experiments.TOP_ADDONS_MENU)) {
-//            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, true);
-//            GeckoMenuItem item = (GeckoMenuItem) aMenu.findItem(R.id.addons_top_level);
-//            if (item != null) {
-//                if (mExtensionPermissionsHelper.getShowUpdateIcon()) {
-//                    item.setIcon(R.drawable.ic_addon_update);
-//                } else {
-//                    item.setIcon(null);
-//                }
-//            }
-//            MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
-//        } else {
-//            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
-//            MenuUtils.safeSetVisible(aMenu, R.id.addons, true);
-//        }
-//
-//        if (!Restrictions.isAllowed(this, Restrictable.INSTALL_EXTENSION)) {
-//            MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
-//            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
-//        }
-        /* Cliqz end */
+        if (SwitchBoard.isInExperiment(this, Experiments.TOP_ADDONS_MENU)) {
+            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, true);
+            GeckoMenuItem item = (GeckoMenuItem) aMenu.findItem(R.id.addons_top_level);
+            if (item != null) {
+                if (mExtensionPermissionsHelper.getShowUpdateIcon()) {
+                    item.setIcon(R.drawable.ic_addon_update);
+                } else {
+                    item.setIcon(null);
+                }
+            }
+            MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
+        } else {
+            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
+            MenuUtils.safeSetVisible(aMenu, R.id.addons, true);
+        }
+
+        if (!Restrictions.isAllowed(this, Restrictable.INSTALL_EXTENSION)) {
+            MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
+            MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
+        }
         // Hide panel menu items if the panels themselves are hidden.
         // If we don't know whether the panels are hidden, just show the menu items.
         bookmarksList.setVisible(prefs.getBoolean(HomeConfig.PREF_KEY_BOOKMARKS_PANEL_ENABLED, true));
         historyList.setVisible(prefs.getBoolean(HomeConfig.PREF_KEY_HISTORY_PANEL_ENABLED, true));
+        /* Cliqz Start */
+        historyList.setVisible(notInAboutHome);
+        bookmarksList.setVisible(notInAboutHome);
+        final String mostRecentPanelId = Tabs.getInstance().getSelectedTab().getMostRecentHomePanel();
+        final boolean isFavoritesView = mostRecentPanelId != null
+                && mostRecentPanelId.equals(HomeConfig.BOOKMARKS_PANEL_ID);
+        clearHistory.setVisible(!notInAboutHome && isFavoritesView);
+        /* Cliqz End */
 
         return true;
     }
@@ -4280,6 +4302,18 @@ public class BrowserApp extends GeckoApp
             showGuestModeDialog(GuestModeDialog.LEAVING);
             return true;
         }
+
+        /* Cliqz Start */
+        if (itemId == R.id.clear_history) {
+            showClearHistroyDialog();
+            return true;
+        }
+
+        if (itemId == R.id.exit_browser) {
+            finish();
+            return true;
+        }
+        /* Cliqz End */
 
         // We have a few menu items that can also be in the context menu. If
         // we have not already handled the item, give the context menu handler
@@ -4775,6 +4809,33 @@ public class BrowserApp extends GeckoApp
 
     private void hideControlCenter() {
         mControlCenterContainer.setVisibility(View.GONE);
+    }
+
+    private void showClearHistroyDialog() {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage(R.string.home_clear_history_confirm);
+        dialogBuilder.setNegativeButton(R.string.button_cancel, new AlertDialog.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                dialog.dismiss();
+            }
+        });
+
+        dialogBuilder.setPositiveButton(R.string.button_ok, new AlertDialog.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                dialog.dismiss();
+
+                // Send message to Java to clear history.
+                final GeckoBundle data = new GeckoBundle(1);
+                data.putBoolean("history", true);
+                EventDispatcher.getInstance().dispatch("Sanitize:ClearData", data);
+
+                Telemetry.sendUIEvent(TelemetryContract.Event.SANITIZE, TelemetryContract.Method.BUTTON, "history");
+            }
+        });
+
+        dialogBuilder.show();
     }
     /* Cliqz end */
 }

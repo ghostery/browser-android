@@ -82,7 +82,9 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
     private Bundle mSavedRestoreBundle;
 
     private PanelLevel mPanelLevel;
+    /* Cliqz start o/
     private Button mPanelFooterButton;
+    /o Cliqz End */
 
     private PanelStateUpdateHandler mPanelStateUpdateHandler;
 
@@ -157,9 +159,11 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         mRecentTabsEmptyView = view.findViewById(R.id.home_recent_tabs_empty_view);
         setUpEmptyViews();
 
+        /* Cliqz Start o/
         mPanelFooterButton = (Button) view.findViewById(R.id.history_panel_footer_button);
         mPanelFooterButton.setText(R.string.home_clear_history_button);
         mPanelFooterButton.setOnClickListener(new OnFooterButtonClickListener());
+        /o Cliqz End */
 
         // mRecentTabsAdapter.startListeningForClosedTabs();
         // mRecentTabsAdapter.startListeningForHistorySanitize();
@@ -422,10 +426,11 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
     /* Cliqz end */
 
     private void updateButtonFromLevel() {
+        /* Cliqz Start o/
         switch (mPanelLevel) {
             case PARENT:
                 final boolean historyRestricted = !Restrictions.isAllowed(getActivity(), Restrictable.CLEAR_HISTORY);
-                if (historyRestricted /* Cliqz start // || mHistoryAdapter.getItemCount() == mHistoryAdapter.getNumVisibleSmartFolders() */) {
+                if (historyRestricted  || mHistoryAdapter.getItemCount() == mHistoryAdapter.getNumVisibleSmartFolders() ) {
                     mPanelFooterButton.setVisibility(View.GONE);
                 } else {
                     mPanelFooterButton.setText(R.string.home_clear_history_button);
@@ -433,22 +438,20 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
                 }
                 break;
             case CHILD_RECENT_TABS:
-                /* Cliqz start */
-                // if (mRecentTabsAdapter.getClosedTabsCount() > 1) {
-                //     mPanelFooterButton.setText(R.string.home_restore_all);
-                //     mPanelFooterButton.setVisibility(View.VISIBLE);
-                // } else {
+                if (mRecentTabsAdapter.getClosedTabsCount() > 1) {
+                    mPanelFooterButton.setText(R.string.home_restore_all);
+                    mPanelFooterButton.setVisibility(View.VISIBLE);
+                } else {
                     mPanelFooterButton.setVisibility(View.GONE);
-                // }
-                /* Cliqz start */
+                }
                 break;
-            /* Cliqz start * /
             case CHILD_SYNC:
                 if (mRecentTabsAdapter.getClosedTabsCount() > 1) {
-                               mPanelFooterButton.setVisibility(View.GONE);
+                    mPanelFooterButton.setVisibility(View.GONE);
+                }
                 break;
-            /* Cliqz end */
         }
+        /o Cliqz End */
     }
 
     private class OnFooterButtonClickListener implements View.OnClickListener {
