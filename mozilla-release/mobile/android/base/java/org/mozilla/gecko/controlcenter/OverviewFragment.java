@@ -3,7 +3,6 @@ package org.mozilla.gecko.controlcenter;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
@@ -19,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -238,6 +238,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("paused_blocking", false);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+            Toast.makeText(getContext(), R.string.cc_toast_overview_trust, Toast.LENGTH_SHORT).show();
         } else {
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
@@ -278,6 +279,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("paused_blocking", false);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+            Toast.makeText(getContext(), R.string.cc_toast_overview_restrict, Toast.LENGTH_SHORT).show();
         } else {
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));

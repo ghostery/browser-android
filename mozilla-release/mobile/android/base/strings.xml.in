@@ -755,6 +755,11 @@
     <item quantity="many">&cc_many_trackers;</item>
     <item quantity="other">&cc_other_trackers;</item>
   </plurals>
+  <string name="cc_toast_overview_restrict">&cc_toast_overview_restrict;</string>
+  <string name="cc_toast_overview_trust">&cc_toast_overview_trust;</string>
+  <string name="cc_toast_site_trust">&cc_toast_site_trust;</string>
+  <string name="cc_toast_site_restrict">&cc_toast_site_restrict;</string>
+  <string name="cc_toast_site_block">&cc_toast_site_block;</string>
 
   <!-- General - Search-->
   <string name="pref_search_category">&pref_search_category;</string>
