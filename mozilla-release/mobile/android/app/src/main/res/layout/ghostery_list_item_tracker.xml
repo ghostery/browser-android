@@ -40,8 +40,9 @@
 
         <ImageView
             android:id="@+id/cb_block_tracker"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -52,5 +53,5 @@
 
     <include
         android:id="@+id/tracker_options"
-        layout="@layout/ghostery_tracker_options_layout"/>
+        layout="@layout/ghostery_tracker_options_layout" />
 </FrameLayout>
