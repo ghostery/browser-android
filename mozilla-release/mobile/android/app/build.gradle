@@ -29,6 +29,16 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
+    signingConfigs {
+        if (System.getenv('CERT_PATH') && System.getenv('CERT_PASS')) {
+            release {
+                storeFile file(System.getenv('CERT_PATH'))
+                storePassword System.getenv('CERT_PASS')
+                keyAlias 'browser'
+                keyPassword System.getenv('CERT_PASS')
+            }
+        }
+    }
 
     aaptOptions {
         // The omnijar is already a compressed file itself and Gecko expects it to be
@@ -80,10 +90,15 @@ android {
 
         def isDebuggable = (!mozconfig.substs.MOZILLA_OFFICIAL) || (mozconfig.substs.NIGHTLY_BUILD && mozconfig.substs.MOZ_DEBUG)
         debug {
-            debuggable isDebuggable 
+            debuggable isDebuggable
         }
         release {
-            debuggable isDebuggable
+            if (System.getenv('CERT_PATH') && System.getenv('CERT_PASS')){
+                signingConfig signingConfigs.release
+            }else {
+                debuggable isDebuggable
+            }
+
         }
     }
 

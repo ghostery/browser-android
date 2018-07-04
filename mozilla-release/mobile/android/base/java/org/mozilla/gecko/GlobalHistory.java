@@ -157,6 +157,12 @@ class GlobalHistory {
 
     @WrapForJNI(stubName = "MarkURIVisited", calledFrom = "gecko")
     private static void markUriVisited(final String uri) {
+        /* Cliqz Start */
+        //do not add extension urls to history
+        if (uri.startsWith("moz-extension://")) {
+            return;
+        }
+        /* Cliqz End */
         final Context context = GeckoAppShell.getApplicationContext();
         final BrowserDB db = BrowserDB.from(context);
         ThreadUtils.postToBackgroundThread(new Runnable() {
