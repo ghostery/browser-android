@@ -14,181 +14,192 @@
               android:layout="@layout/tabs_panel_view"
               android:layout_width="match_parent"
               android:layout_height="match_parent"/>
+    <!-- Cliqz Start -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <!-- Cliqz End -->
+       <view class="org.mozilla.gecko.GeckoApp$MainLayout"
+             android:id="@+id/main_layout"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@android:color/transparent">
 
-   <view class="org.mozilla.gecko.GeckoApp$MainLayout"
-         android:id="@+id/main_layout"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:background="@android:color/transparent">
+            <RelativeLayout android:id="@+id/gecko_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/tablet_tab_strip"
+                            android:layout_above="@+id/find_in_page">
 
-        <RelativeLayout android:id="@+id/gecko_layout"
+                <org.mozilla.geckoview.GeckoView android:id="@+id/layer_view"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:scrollbars="none"/>
+
+                <org.mozilla.gecko.FormAssistPopup android:id="@+id/form_assist_popup"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:visibility="gone"/>
+
+                <view class="org.mozilla.gecko.media.VideoPlayer" android:id="@+id/video_player"
+                             android:layout_height="match_parent"
+                             android:layout_width="match_parent">
+                </view>
+
+                <FrameLayout android:id="@+id/home_screen_container"
+                             android:layout_width="match_parent"
+                             android:layout_height="match_parent"
+                             android:visibility="gone">
+
+                    <ViewStub android:id="@+id/home_pager_stub"
+                              android:layout="@layout/home_pager"
+                              android:layout_width="match_parent"
+                              android:layout_height="match_parent"/>
+
+                    <ViewStub android:id="@+id/activity_stream_stub"
+                              android:layout="@layout/activity_stream"
+                              android:layout_width="match_parent"
+                              android:layout_height="match_parent"/>
+
+                    <ViewStub android:id="@+id/home_banner_stub"
+                              android:layout="@layout/home_banner"
+                              android:layout_width="match_parent"
+                              android:layout_height="@dimen/home_banner_height"
+                              android:layout_gravity="bottom"/>
+
+                    <ViewStub android:id="@+id/firstrun_pager_stub"
+                              android:layout="@layout/firstrun_animation_container"
+                              android:layout_width="match_parent"
+                              android:layout_height="match_parent"/>
+
+                </FrameLayout>
+
+                <!--Cliqz start-->
+                <LinearLayout
+                    android:id="@+id/control_center_container"
+                    android:background="@android:color/transparent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/conrol_center_tab_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:elevation="2dp"
+                        gecko:tabTextAppearance="@style/TabLayoutStyle"
+                        android:background="@color/general_blue_color"
+                        gecko:tabSelectedTextColor="@android:color/white"
+                        gecko:tabIndicatorColor="@android:color/white"
+                        gecko:tabMode="fixed"/>
+
+
+                    <org.mozilla.gecko.controlcenter.ControlCenterViewPager
+                        android:id="@+id/control_center_pager"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_below="@+id/tablet_tab_strip"
-                        android:layout_above="@+id/find_in_page">
+                        android:background="@android:color/transparent"/>
 
-            <org.mozilla.geckoview.GeckoView android:id="@+id/layer_view"
+                </LinearLayout>
+                <!--Cliqz End-->
+
+
+                <View android:id="@+id/doorhanger_overlay"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/dark_transparent_overlay"
+                      android:alpha="0"
+                      android:layerType="hardware"/>
+
+            </RelativeLayout>
+
+            <org.mozilla.gecko.FindInPageBar android:id="@+id/find_in_page"
                                              android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             android:scrollbars="none"/>
+                                             android:layout_height="wrap_content"
+                                             android:layout_alignParentBottom="true"
+                                             style="@style/FindBar"
+                                             android:visibility="gone"/>
 
-            <org.mozilla.gecko.FormAssistPopup android:id="@+id/form_assist_popup"
+            <org.mozilla.gecko.MediaCastingBar android:id="@+id/media_casting"
                                                android:layout_width="match_parent"
-                                               android:layout_height="match_parent"
+                                               android:layout_height="wrap_content"
+                                               android:layout_alignParentBottom="true"
+                                               style="@style/FindBar"
                                                android:visibility="gone"/>
 
-            <view class="org.mozilla.gecko.media.VideoPlayer" android:id="@+id/video_player"
-                         android:layout_height="match_parent"
-                         android:layout_width="match_parent">
-            </view>
-
-            <FrameLayout android:id="@+id/home_screen_container"
+            <FrameLayout android:id="@+id/search_container"
                          android:layout_width="match_parent"
                          android:layout_height="match_parent"
-                         android:visibility="gone">
+                         android:layout_below="@+id/browser_chrome"
+                         android:visibility="invisible"/>
 
-                <ViewStub android:id="@+id/home_pager_stub"
-                          android:layout="@layout/home_pager"
+            <!-- When focus is cleared from from BrowserToolbar's EditText to
+                 lower the virtual keyboard, focus will be returned to the root
+                 view. To make sure the EditText is not the first focusable view in
+                 the root view, BrowserToolbar should be specified as low in the
+                 view hierarchy as possible. -->
+
+            <LinearLayout android:id="@id/browser_chrome"
                           android:layout_width="match_parent"
-                          android:layout_height="match_parent"/>
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical">
 
-                <ViewStub android:id="@+id/activity_stream_stub"
-                          android:layout="@layout/activity_stream"
+                <ViewStub android:id="@+id/tablet_tab_strip"
+                          android:inflatedId="@id/tablet_tab_strip"
+                          android:layout="@layout/tab_strip"
                           android:layout_width="match_parent"
-                          android:layout_height="match_parent"/>
+                          android:layout_height="@dimen/tablet_tab_strip_height"
+                          android:visibility="gone"/>
 
-                <ViewStub android:id="@+id/home_banner_stub"
-                          android:layout="@layout/home_banner"
-                          android:layout_width="match_parent"
-                          android:layout_height="@dimen/home_banner_height"
-                          android:layout_gravity="bottom"/>
-
-                <ViewStub android:id="@+id/firstrun_pager_stub"
-                          android:layout="@layout/firstrun_animation_container"
-                          android:layout_width="match_parent"
-                          android:layout_height="match_parent"/>
-
-            </FrameLayout>
-
-            <!--Cliqz start-->
-            <LinearLayout
-                android:id="@+id/control_center_container"
-                android:background="@android:color/transparent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/conrol_center_tab_layout"
+                <ViewFlipper
+                    android:id="@+id/browser_actionbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:elevation="2dp"
-                    gecko:tabTextAppearance="@style/TabLayoutStyle"
-                    android:background="@color/general_blue_color"
-                    gecko:tabSelectedTextColor="@android:color/white"
-                    gecko:tabIndicatorColor="@android:color/white"
-                    gecko:tabMode="fixed"/>
+                    android:layout_height="@dimen/browser_toolbar_height_flipper"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <!-- Cliqz start -->
+                    <!-- change the url background color -->
+                    <org.mozilla.gecko.toolbar.BrowserToolbar
+                        android:id="@+id/browser_toolbar"
+                        style="@style/BrowserToolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@color/url_bar"/>
+                    <!-- Cliqz end -->
+                    <org.mozilla.gecko.ActionModeCompatView android:id="@id/actionbar"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_width="match_parent"
+                                                            style="@style/GeckoActionBar.ActionMode"/>
 
-
-                <org.mozilla.gecko.controlcenter.ControlCenterViewPager
-                    android:id="@+id/control_center_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"/>
+                </ViewFlipper>
 
             </LinearLayout>
-            <!--Cliqz End-->
 
-
-            <View android:id="@+id/doorhanger_overlay"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:background="@color/dark_transparent_overlay"
-                  android:alpha="0"
-                  android:layerType="hardware"/>
-
-        </RelativeLayout>
-
-        <org.mozilla.gecko.FindInPageBar android:id="@+id/find_in_page"
-                                         android:layout_width="match_parent"
-                                         android:layout_height="wrap_content"
-                                         android:layout_alignParentBottom="true"
-                                         style="@style/FindBar"
-                                         android:visibility="gone"/>
-
-        <org.mozilla.gecko.MediaCastingBar android:id="@+id/media_casting"
-                                           android:layout_width="match_parent"
-                                           android:layout_height="wrap_content"
-                                           android:layout_alignParentBottom="true"
-                                           style="@style/FindBar"
-                                           android:visibility="gone"/>
-
-        <FrameLayout android:id="@+id/search_container"
-                     android:layout_width="match_parent"
-                     android:layout_height="match_parent"
-                     android:layout_below="@+id/browser_chrome"
-                     android:visibility="invisible"/>
-
-        <!-- When focus is cleared from from BrowserToolbar's EditText to
-             lower the virtual keyboard, focus will be returned to the root
-             view. To make sure the EditText is not the first focusable view in
-             the root view, BrowserToolbar should be specified as low in the
-             view hierarchy as possible. -->
-
-        <LinearLayout android:id="@id/browser_chrome"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical">
-
-            <ViewStub android:id="@+id/tablet_tab_strip"
-                      android:inflatedId="@id/tablet_tab_strip"
-                      android:layout="@layout/tab_strip"
-                      android:layout_width="match_parent"
-                      android:layout_height="@dimen/tablet_tab_strip_height"
-                      android:visibility="gone"/>
-
-            <ViewFlipper
-                android:id="@+id/browser_actionbar"
+            <org.mozilla.gecko.widget.AnimatedProgressBar
+                android:id="@id/page_progress"
+                style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/browser_toolbar_height_flipper"
-                android:clickable="true"
-                android:focusable="true">
-                <!-- Cliqz start -->
-                <!-- change the url background color -->
-                <org.mozilla.gecko.toolbar.BrowserToolbar
-                    android:id="@+id/browser_toolbar"
-                    style="@style/BrowserToolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="@color/url_bar"/>
-                <!-- Cliqz end -->
-                <org.mozilla.gecko.ActionModeCompatView android:id="@id/actionbar"
-                                                        android:layout_height="match_parent"
-                                                        android:layout_width="match_parent"
-                                                        style="@style/GeckoActionBar.ActionMode"/>
+                android:layout_height="3dp"
+                android:layout_below="@id/browser_chrome"
+                android:layout_marginTop="-2dp"
+                android:background="@null"
+                android:progressDrawable="@drawable/progressbar"
+                android:visibility="gone"
+                app:shiftDuration="@integer/shift_duration_suggestion"
+                app:wrapShiftDrawable="true" />
 
-            </ViewFlipper>
-
-        </LinearLayout>
-
-        <org.mozilla.gecko.widget.AnimatedProgressBar
-            android:id="@id/page_progress"
-            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_below="@id/browser_chrome"
-            android:layout_marginTop="-2dp"
-            android:background="@null"
-            android:progressDrawable="@drawable/progressbar"
-            android:visibility="gone"
-            app:shiftDuration="@integer/shift_duration_suggestion"
-            app:wrapShiftDrawable="true" />
-
-    </view>
-
+        </view>
+    <!-- Cliqz Start -->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/cliqz_intro_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+    </FrameLayout>
+    <!-- Cliqz End -->
     <FrameLayout android:id="@+id/tab_history_panel"
                  android:layout_width="match_parent"
                  android:layout_height="match_parent"

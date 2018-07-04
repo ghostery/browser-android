@@ -134,6 +134,7 @@ public class GeckoPreferences
     private static final String PREFS_SEARCH_RESTORE_DEFAULTS = NON_PREF_PREFIX + "search.restore_defaults";
     private static final String PREFS_DATA_REPORTING_PREFERENCES = NON_PREF_PREFIX + "datareporting.preferences";
     private static final String PREFS_TELEMETRY_ENABLED = "toolkit.telemetry.enabled";
+    public static final String CLIQZ_TELEMETRY_ENABLED = "cliqz.telemetry.enabled";
     private static final String PREFS_CRASHREPORTER_ENABLED = "datareporting.crashreporter.submitEnabled";
     private static final String PREFS_MENU_CHAR_ENCODING = "browser.menu.showCharacterEncoding";
     private static final String PREFS_MP_ENABLED = "privacy.masterpassword.enabled";
@@ -892,13 +893,17 @@ public class GeckoPreferences
                 }
                 /* Cliqz start */
                 // let telemetry be always visible
-//                 else if (PREFS_TELEMETRY_ENABLED.equals(key)) {
-//                    if (!AppConstants.MOZ_TELEMETRY_REPORTING || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
-//                        preferences.removePreference(pref);
-//                        i--;
-//                        continue;
-//                    }
-//                }
+                 else if (CLIQZ_TELEMETRY_ENABLED.equals(key)) {
+                    // if (!AppConstants.MOZ_TELEMETRY_REPORTING || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
+                    //     preferences.removePreference(pref);
+                    //     i--;
+                    //     continue;
+                    // }
+                    final PreferenceManager preferenceManager = new PreferenceManager
+                            (getApplicationContext());
+                    ((CheckBoxPreference)pref).setChecked(preferenceManager.isTelemetryEnabled());
+                    pref.setOnPreferenceChangeListener(this);
+                }
                 // remove Healthreport always
                 else if (PREFS_HEALTHREPORT_UPLOAD_ENABLED.equals(key)) {
 //                    if (!AppConstants.MOZ_SERVICES_HEALTHREPORT || !Restrictions.isAllowed (this, Restrictable.DATA_CHOICES)) {
@@ -1396,6 +1401,14 @@ public class GeckoPreferences
             // below, so we return here.
             return onLocaleSelected(Locales.getLanguageTag(lastLocale), (String) newValue);
         }
+
+        /* Cliqz Start */
+        if (CLIQZ_TELEMETRY_ENABLED.equals(prefName)) {
+            final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+            preferenceManager.setTelemetryEnabled((boolean)newValue);
+            return true;
+        }
+        /* Cliqz End */
 
         if (PREFS_MENU_CHAR_ENCODING.equals(prefName)) {
             setCharEncodingState(((String) newValue).equals("true"));

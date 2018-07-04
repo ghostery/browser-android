@@ -30,6 +30,15 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.PREFS_SHOW_MYOFFRZ, value).apply();
     }
 
+    public void setTelemetryEnabled(boolean value) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putBoolean(GeckoPreferences.CLIQZ_TELEMETRY_ENABLED, value).apply();
+    }
+
+    public boolean isTelemetryEnabled() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.CLIQZ_TELEMETRY_ENABLED, false);
+    }
+
     public boolean isMyOffrzEnable() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SHOW_MYOFFRZ, isMyOffrzSupportedForLang());
     }
