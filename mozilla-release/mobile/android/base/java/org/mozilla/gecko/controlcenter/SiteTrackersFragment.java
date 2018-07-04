@@ -65,10 +65,10 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.block_all:
-                //TODO add actions
+                mTrackerListAdapter.blockAllTrackers();
                 return true;
             case R.id.unblock_all:
-                //TODO add actions
+                mTrackerListAdapter.unBlockAllTrackers();
                 return true;
             default:
                 return false;
@@ -89,6 +89,7 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
         final PopupMenu popup = new PopupMenu(getContext(), v);
         final MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.ghostery_site_trackers_overflow_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(this);
         popup.show();
     }
 }

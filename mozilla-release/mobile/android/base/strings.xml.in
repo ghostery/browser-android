@@ -755,6 +755,11 @@
     <item quantity="many">&cc_many_trackers;</item>
     <item quantity="other">&cc_other_trackers;</item>
   </plurals>
+  <string name="cc_toast_overview_restrict">&cc_toast_overview_restrict;</string>
+  <string name="cc_toast_overview_trust">&cc_toast_overview_trust;</string>
+  <string name="cc_toast_site_trust">&cc_toast_site_trust;</string>
+  <string name="cc_toast_site_restrict">&cc_toast_site_restrict;</string>
+  <string name="cc_toast_site_block">&cc_toast_site_block;</string>
 
   <!-- General - Search-->
   <string name="pref_search_category">&pref_search_category;</string>
@@ -842,5 +847,17 @@
   <string name="pref_hp_hosts_url">&pref_hp_hosts_url;</string>
   <string name="pref_crux_url">&pref_crux_url;</string>
   <string name="pref_imprint_url">&pref_imprint_url;</string>
+
+  <!-- Onboarding -->
+  <string name="ghostery_onboarding_new_users_title">&ghostery_onboarding_new_users_title;</string>
+  <string name="ghostery_onboarding_new_users_text">&ghostery_onboarding_new_users_text;</string>
+  <string name="ghostery_onboarding_old_users_text">&ghostery_onboarding_old_users_text;</string>
+  <string name="ghostery_onboarding_action_button">&ghostery_onboarding_action_button;</string>
+  <string name="ghostery_onboarding_tracking_protection_title">&ghostery_onboarding_tracking_protection_title;</string>
+  <string name="ghostery_onboarding_tracking_protection_text">&ghostery_onboarding_tracking_protection_text;</string>
+  <string name="ghostery_onboarding_quick_search_title">&ghostery_onboarding_quick_search_title;</string>
+  <string name="ghostery_onboarding_quick_search_text">&ghostery_onboarding_quick_search_text;</string>
+  <string name="ghostery_onboarding_new_tab_title">&ghostery_onboarding_new_tab_title;</string>
+  <string name="ghostery_onboarding_new_tab_text">&ghostery_onboarding_new_tab_text;</string>
   <!-- Cliqz end -->
 </resources>
