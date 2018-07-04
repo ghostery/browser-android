@@ -16,6 +16,7 @@ import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.GeckoBundleUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -371,5 +372,42 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
 
             }
         });
+    }
+
+    public void blockAllTrackers() {
+        final GeckoBundle selectedAppIds = GeckoBundleUtils.safeGetBundle(data,"data/blocking/selected_app_ids");
+        final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(data, "data/summary/categories");
+        for (GeckoBundle category : categories) {
+            final int totalTrackers = category.getInt("num_total", 0);
+            category.putInt("num_blocked", totalTrackers);
+            final GeckoBundle[] trackers = GeckoBundleUtils.safeGetBundleArray(category, "trackers");
+            for (GeckoBundle tracker : trackers) {
+                final String trackerId = Integer.toString(tracker.getInt("id"));
+                tracker.putBoolean("blocked", true);
+                selectedAppIds.putInt(trackerId, 1);
+            }
+        }
+        final GeckoBundle geckoBundle = new GeckoBundle();
+        geckoBundle.putBundle("selected_app_ids", selectedAppIds);
+        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+        notifyDataSetChanged();
+    }
+
+    public void unBlockAllTrackers() {
+        final GeckoBundle selectedAppIds = GeckoBundleUtils.safeGetBundle(data,"data/blocking/selected_app_ids");
+        final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(data, "data/summary/categories");
+        for (GeckoBundle category : categories) {
+            category.putInt("num_blocked", 0);
+            final GeckoBundle[] trackers = GeckoBundleUtils.safeGetBundleArray(category, "trackers");
+            for (GeckoBundle tracker : trackers) {
+                final String trackerId = Integer.toString(tracker.getInt("id"));
+                tracker.putBoolean("blocked", false);
+                selectedAppIds.remove(trackerId);
+            }
+        }
+        final GeckoBundle geckoBundle = new GeckoBundle();
+        geckoBundle.putBundle("selected_app_ids", selectedAppIds);
+        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+        notifyDataSetChanged();
     }
 }
