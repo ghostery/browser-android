@@ -28,65 +28,66 @@ def build(Map m){
         node(nodeLabel){
             def dockerTag = ""
             def apk = ""
-            stage('Checkout') {
-                checkout scm
-                dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
-            }
-            def baseImageName = "browser-f/android:${dockerTag}"
-            docker.withRegistry('https://141047255820.dkr.ecr.us-east-1.amazonaws.com') {
-                docker.image("${baseImageName}").inside {
-                    stage('Download cache') {
-                        withCredentials([[
-                                $class: 'AmazonWebServicesCredentialsBinding',
-                                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                                credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b',
-                                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                            def s3Path = "s3://repository.cliqz.com/dist/android/cache"
-                            def cachePath = ".gradle/caches"
-                            sh """#!/bin/bash -l 
-                                pip install awscli --upgrade --user
-                                cd
-                                aws s3 sync --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath}
-                            """
-                        }
-                    }
-                    stage("Build APK: ${flavorname}") {
-                        withEnv([
-                            "ANDROID_TARGET=${androidtarget}",
-                            "BRAND=${flavorname}"
-                            ]) {
-                            sh '''#!/bin/bash -l
-                                set -x
-                                set -e
-                                cp mozconfigs/jenkins.mozconfig mozilla-release/mozconfig
-                                cd mozilla-release
-                                ./mach clobber
-                                ./mach build
-                                for language in `ls ../l10n/`; do
-                                    ./mach build chrome-$language
-                                done
-                                ./mach package
-                            '''
-                        }
-                        apk = sh(returnStdout: true,
-                            script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
-                            find *.apk -name 'fennec*i386*' -not -name '*-unsigned-*'""").trim()
-                    }
-                    stage("Upload APK: ${flavorname}") {
-                        archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
-                    }
+            setupTestInstance(
+                test,
+                "ami-13050368",
+                "1",
+                "t2.medium",
+                "android_ci_genymotion",
+                "sg-5bbf173f",
+                "subnet-341ff61f",
+                "us-east-1"
+            ) {
+                stage('Checkout') {
+                    checkout scm
+                    dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
                 }
-                if (test == true){
-                    try {
-                        withGenymotion(
-                        "ami-13050368",
-                        "1",
-                        "t2.medium",
-                        "android_ci_genymotion",
-                        "sg-5bbf173f",
-                        "subnet-341ff61f",
-                        "us-east-1"
-                        ) {
+                def baseImageName = "browser-f/android:${dockerTag}"
+                docker.withRegistry('https://141047255820.dkr.ecr.us-east-1.amazonaws.com') {
+                    docker.image("${baseImageName}").inside {
+                        stage('Download cache') {
+                            withCredentials([[
+                                    $class: 'AmazonWebServicesCredentialsBinding',
+                                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                                    credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b',
+                                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                                def s3Path = "s3://repository.cliqz.com/dist/android/cache"
+                                def cachePath = ".gradle/caches"
+                                sh """#!/bin/bash -l 
+                                    pip install awscli --upgrade --user
+                                    cd
+                                    aws s3 sync --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath}
+                                """
+                            }
+                        }
+                        stage("Build APK: ${flavorname}") {
+                            withEnv([
+                                "ANDROID_TARGET=${androidtarget}",
+                                "BRAND=${flavorname}"
+                                ]) {
+                                sh '''#!/bin/bash -l
+                                    set -x
+                                    set -e
+                                    cp mozconfigs/jenkins.mozconfig mozilla-release/mozconfig
+                                    cd mozilla-release
+                                    ./mach clobber
+                                    ./mach build
+                                    for language in `ls ../l10n/`; do
+                                        ./mach build chrome-$language
+                                    done
+                                    ./mach package
+                                '''
+                            }
+                            apk = sh(returnStdout: true,
+                                script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
+                                find *.apk -name 'fennec*i386*' -not -name '*-unsigned-*'""").trim()
+                        }
+                        stage("Upload APK: ${flavorname}") {
+                            archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
+                        }
+                    }
+                    if (test == true){
+                        try {
                             stage('Checkout Autobots') {
                                 dir('autobots'){
                                     git branch:'version2.0',
@@ -163,9 +164,9 @@ def build(Map m){
                                     archiveTestResults()
                                 }
                             }
+                        }catch(e) {
+                          print e
                         }
-                    }catch(e) {
-                      print e
                     }
                 }
             }
@@ -192,6 +193,35 @@ def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
 
 parallel stepsForParallelBuilds
 
+
+def setupTestInstance(
+        Boolean inTests,
+        String instanceImage,
+        String count,
+        String instanceType,
+        String keyName,
+        String securityGroup,
+        String subnetId,
+        String region,
+        Closure body
+    ) {
+    if (inTests == true) {
+        withGenymotion(
+            instanceImage,
+            count,
+            instanceType,
+            keyName,
+            securityGroup,
+            subnetId,
+            region
+        ) {
+            body()
+        }
+    } else {
+        body()
+    }
+}
+
 def withGenymotion(
         String instanceImage,
         String count,
@@ -201,7 +231,7 @@ def withGenymotion(
         String subnetId,
         String region,
         Closure body
-    ) { 
+    ) {
     def instance_id = ""
     try {
         instance_id = sh(returnStdout: true, script: """
