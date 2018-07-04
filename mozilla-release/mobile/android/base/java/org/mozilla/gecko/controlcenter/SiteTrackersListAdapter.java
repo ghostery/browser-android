@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
@@ -209,6 +210,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                                 updatedBlockList.add(siteSpecificBlockList[i]);
                             }
                             updatedBlockList.remove(Integer.valueOf(trackerId)); //remove the site from the restricted list if its there
+                            Toast.makeText(mContext, R.string.cc_toast_site_trust, Toast.LENGTH_SHORT).show();
                         }
 
                         siteSpecificUnblockBundle.putIntArray(pagehost, updatedUnblockList);
@@ -251,7 +253,8 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                             for (int i = 0; i < unBlockListLength; i++) {
                                 updatedUnblockList.add(siteSpecificUnblockList[i]);
                             }
-                            updatedUnblockList.remove(Integer.valueOf(trackerId)); //remove the site from the restricted list if its there
+                            updatedUnblockList.remove(Integer.valueOf(trackerId)); //remove the site from the trusted list if its there
+                            Toast.makeText(mContext, R.string.cc_toast_site_restrict, Toast.LENGTH_SHORT).show();
                         }
 
                         siteSpecificUnblockBundle.putIntArray(pagehost, updatedUnblockList);
@@ -275,6 +278,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                         } else {
                             selectedAppIds.putInt(Integer.toString(trackerId), 1);
                             childGeckoBundle.putBoolean("blocked", true);
+                            Toast.makeText(mContext, R.string.cc_toast_site_block, Toast.LENGTH_SHORT).show();
                         }
                         final GeckoBundle geckoBundle = new GeckoBundle();
                         geckoBundle.putBundle("selected_app_ids", selectedAppIds);

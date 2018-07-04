@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
@@ -165,6 +166,7 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
                 } else {
                     selectedAppIds.putInt(trackerId, 1);
                     getGroup(groupPosition).putInt("num_blocked", numBlocked+1);
+                    Toast.makeText(mContext, R.string.cc_toast_site_block, Toast.LENGTH_SHORT).show();
                 }
                 final GeckoBundle geckoBundle = new GeckoBundle();
                 geckoBundle.putBundle("selected_app_ids", selectedAppIds);
