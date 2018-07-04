@@ -131,6 +131,8 @@ def main(output, *args, **kwargs):
     if opts.verbose:
         print('Reading {len} suggested site lists: {lists}'.format(len=len(lists), lists=[list_name for list_name, _ in lists]))
 
+    ''' Cliqz Start
+    Not generating the suggestedsites.json file anymore
     for (list_name, list_item_defaults) in lists:
         names = properties.get_list(list_name)
         if opts.verbose:
@@ -141,6 +143,7 @@ def main(output, *args, **kwargs):
     if not sites:
         print('No sites defined: searched in {}!'.format(sources))
         return 1
+    Cliqz End '''
 
     json.dump(sites, output)
     existed, updated = output.close()  # It's safe to close a FileAvoidWrite multiple times.
