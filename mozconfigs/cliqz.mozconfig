@@ -1,6 +1,6 @@
 # Build Firefox for Android:
 ac_add_options --enable-application=mobile/android
-ac_add_options --target=i386-linux-android
+ac_add_options --target=arm-linux-androideabi
 # With the following Android SDK:
 ac_add_options --with-android-sdk=/home/jenkins/.mozbuild/android-sdk-linux
 # Enable artifact building:

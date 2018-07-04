@@ -16,12 +16,14 @@ def matrix = [
 ]
 def baseImage
 def codeImage
+def id
 node ('master'){
     def dockerTag = "" 
     stage('Checkout') {
         checkout scm
         dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
     }
+    id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
     baseImageName ="browser-f/android:${dockerTag}"
     codeImageName ="browser-f/android:code"
     baseImage = stage('Build base image') {
@@ -45,6 +47,8 @@ def build(Map m){
     def flavorname = m.name
     def getImageName = m.getImageName
     def nodeLabel = 'master'
+    def getId = m.getId
+    def apk = ""
     return {
         node(nodeLabel){
             getImageName().inside() {
@@ -60,6 +64,8 @@ def build(Map m){
                             def s3Path = "s3://repository.cliqz.com/dist/android/cache"
                             def cachePath = ".gradle/caches"
                             sh """#!/bin/bash -l
+                                set -e
+                                set -x
                                 cd
                                 aws s3 sync --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath}
                             """                        
@@ -78,11 +84,16 @@ def build(Map m){
                         ./mach build
                         ./mach package
                     """
+                    withCredentials([
+                            file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
+                            string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
+                    ]) {
+                        sh "./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease"
+                    }
                     apk = sh(returnStdout: true,
-                        script: """cd /app/mozilla-release/objdir-frontend-android/${flavorname}/dist && \
-                        find *.apk -name 'fennec*' -not -name '*-unsigned-*'""").trim()
+                        script: """cd /app/mozilla-release/objdir-frontend-android/${flavorname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
+                        find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                 }
-                def id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                 stage('Upload') {
                     withCredentials([
                         [
@@ -93,9 +104,11 @@ def build(Map m){
                         ]
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${flavorname}"
-                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
+                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${flavorname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
                         sh """#!/bin/bash -l 
-                            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${flavorname}${id}.apk
+                            set -e
+                            set -x
+                            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${flavorname}${getId()}.apk
                             aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk
                         """
                     }
@@ -115,7 +128,8 @@ def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
     [("Building ${it[0]}"):build(
             name: it[0],
             config:it[1]['config'],
-            getImageName: {codeImage}
+            getImageName: {codeImage},
+            getId: {id}
     )]
 }
 
