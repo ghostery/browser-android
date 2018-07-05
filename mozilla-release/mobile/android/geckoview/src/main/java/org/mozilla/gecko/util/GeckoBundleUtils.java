@@ -37,6 +37,9 @@ public final class GeckoBundleUtils {
             if (clazz == String[].class) {
                 return clazz.cast(currentBundle.getStringArray(fk));
             }
+            if (clazz == GeckoBundle[].class) {
+                return clazz.cast(currentBundle.getBundleArray(fk));
+            }
             return defaultValue;
         } catch (Throwable tr) {
             return defaultValue;
@@ -96,5 +99,16 @@ public final class GeckoBundleUtils {
      */
     public static String[] safeGetStringArray(@NonNull GeckoBundle bundle, @NonNull String key) {
         return getValueFromBundle(bundle, key, new String[0], String[].class);
+    }
+
+    /**
+     * Safely resolve a {@link GeckoBundle} array reference inside nested bundles
+     *
+     * @param bundle the top-level bundle
+     * @param key the path to the value (i.e. "nested1/nested2/bundle")
+     * @return the value or an empty {@link GeckoBundle} if the key is not found
+     */
+    public static GeckoBundle[] safeGetBundleArray(@NonNull GeckoBundle bundle, @NonNull String key) {
+        return getValueFromBundle(bundle, key, new GeckoBundle[0], GeckoBundle[].class);
     }
 }

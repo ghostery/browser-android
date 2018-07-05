@@ -74,9 +74,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 import org.mozilla.gecko.AppConstants.Versions;
 import org.mozilla.gecko.DynamicToolbar.VisibilityTransition;
 import org.mozilla.gecko.Tabs.TabEvents;
@@ -131,6 +131,7 @@ import org.mozilla.gecko.menu.GeckoMenuItem;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationHelper;
+import org.mozilla.gecko.onboarding.CliqzIntroPagerAdapter;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.ClearOnShutdownPref;
@@ -285,9 +286,12 @@ public class BrowserApp extends GeckoApp
     private ActionModeCompat mActionMode;
     private TabHistoryController tabHistoryController;
 
+    /* Cliqz Start */
     private ViewPager mControlCenterPager;
     private View mControlCenterContainer;
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
+    private ViewPager mCliqzIntoPager;
+    /* Cliqz End */
 
     private static final int GECKO_TOOLS_MENU = -1;
     private static final int ADDON_MENU_OFFSET = 1000;
@@ -884,14 +888,12 @@ public class BrowserApp extends GeckoApp
         /*Cliqz start*/
         mControlCenterPager = (ViewPager) findViewById(R.id.control_center_pager);
         mControlCenterContainer = findViewById(R.id.control_center_container);
-
         mControlCenterPagerAdapter = new ControlCenterPagerAdapter(getSupportFragmentManager(), getBaseContext());
         mControlCenterPagerAdapter.addFragment(new OverviewFragment());
         mControlCenterPagerAdapter.addFragment(new SiteTrackersFragment());
         mControlCenterPagerAdapter.addFragment(new GlobalTrackersFragment());
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
-
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.conrol_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
         /*Cliqz end*/
@@ -3125,18 +3127,23 @@ public class BrowserApp extends GeckoApp
     private void showFirstrunPager() {
 
         if (mFirstrunAnimationContainer == null) {
-            final ViewStub firstrunPagerStub = (ViewStub) findViewById(R.id.firstrun_pager_stub);
-            mFirstrunAnimationContainer = (FirstrunAnimationContainer) firstrunPagerStub.inflate();
-            mFirstrunAnimationContainer.load(getApplicationContext(), getSupportFragmentManager());
-            mFirstrunAnimationContainer.registerOnFinishListener(new FirstrunAnimationContainer.OnFinishListener() {
-                @Override
-                public void onFinish() {
-                    if (mFirstrunAnimationContainer.showBrowserHint() &&
-                        !Tabs.hasHomepage(BrowserApp.this)) {
-                        enterEditingMode();
-                    }
-                }
-            });
+            /* Cliqz Start */
+            // final ViewStub firstrunPagerStub = (ViewStub) findViewById(R.id.firstrun_pager_stub);
+            // mFirstrunAnimationContainer = (FirstrunAnimationContainer) firstrunPagerStub.inflate();
+            // mFirstrunAnimationContainer.load(getApplicationContext(), getSupportFragmentManager());
+            // mFirstrunAnimationContainer.registerOnFinishListener(new FirstrunAnimationContainer.OnFinishListener() {
+            //     @Override
+            //     public void onFinish() {
+            //         if (mFirstrunAnimationContainer.showBrowserHint() &&
+            //             !Tabs.hasHomepage(BrowserApp.this)) {
+            //             enterEditingMode();
+            //         }
+            //     }
+            // });
+            mCliqzIntoPager = (ViewPager) findViewById(R.id.cliqz_intro_pager);
+            mCliqzIntoPager.setAdapter(new CliqzIntroPagerAdapter(getBaseContext()));
+            mCliqzIntoPager.setVisibility(View.VISIBLE);
+            /* Cliqz End */
         }
 
         mHomeScreenContainer.setVisibility(View.VISIBLE);

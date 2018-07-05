@@ -10,11 +10,13 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.GeckoBundleUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -209,6 +211,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                                 updatedBlockList.add(siteSpecificBlockList[i]);
                             }
                             updatedBlockList.remove(Integer.valueOf(trackerId)); //remove the site from the restricted list if its there
+                            Toast.makeText(mContext, R.string.cc_toast_site_trust, Toast.LENGTH_SHORT).show();
                         }
 
                         siteSpecificUnblockBundle.putIntArray(pagehost, updatedUnblockList);
@@ -251,7 +254,8 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                             for (int i = 0; i < unBlockListLength; i++) {
                                 updatedUnblockList.add(siteSpecificUnblockList[i]);
                             }
-                            updatedUnblockList.remove(Integer.valueOf(trackerId)); //remove the site from the restricted list if its there
+                            updatedUnblockList.remove(Integer.valueOf(trackerId)); //remove the site from the trusted list if its there
+                            Toast.makeText(mContext, R.string.cc_toast_site_restrict, Toast.LENGTH_SHORT).show();
                         }
 
                         siteSpecificUnblockBundle.putIntArray(pagehost, updatedUnblockList);
@@ -275,6 +279,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                         } else {
                             selectedAppIds.putInt(Integer.toString(trackerId), 1);
                             childGeckoBundle.putBoolean("blocked", true);
+                            Toast.makeText(mContext, R.string.cc_toast_site_block, Toast.LENGTH_SHORT).show();
                         }
                         final GeckoBundle geckoBundle = new GeckoBundle();
                         geckoBundle.putBundle("selected_app_ids", selectedAppIds);
@@ -367,5 +372,42 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
 
             }
         });
+    }
+
+    public void blockAllTrackers() {
+        final GeckoBundle selectedAppIds = GeckoBundleUtils.safeGetBundle(data,"data/blocking/selected_app_ids");
+        final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(data, "data/summary/categories");
+        for (GeckoBundle category : categories) {
+            final int totalTrackers = category.getInt("num_total", 0);
+            category.putInt("num_blocked", totalTrackers);
+            final GeckoBundle[] trackers = GeckoBundleUtils.safeGetBundleArray(category, "trackers");
+            for (GeckoBundle tracker : trackers) {
+                final String trackerId = Integer.toString(tracker.getInt("id"));
+                tracker.putBoolean("blocked", true);
+                selectedAppIds.putInt(trackerId, 1);
+            }
+        }
+        final GeckoBundle geckoBundle = new GeckoBundle();
+        geckoBundle.putBundle("selected_app_ids", selectedAppIds);
+        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+        notifyDataSetChanged();
+    }
+
+    public void unBlockAllTrackers() {
+        final GeckoBundle selectedAppIds = GeckoBundleUtils.safeGetBundle(data,"data/blocking/selected_app_ids");
+        final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(data, "data/summary/categories");
+        for (GeckoBundle category : categories) {
+            category.putInt("num_blocked", 0);
+            final GeckoBundle[] trackers = GeckoBundleUtils.safeGetBundleArray(category, "trackers");
+            for (GeckoBundle tracker : trackers) {
+                final String trackerId = Integer.toString(tracker.getInt("id"));
+                tracker.putBoolean("blocked", false);
+                selectedAppIds.remove(trackerId);
+            }
+        }
+        final GeckoBundle geckoBundle = new GeckoBundle();
+        geckoBundle.putBundle("selected_app_ids", selectedAppIds);
+        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+        notifyDataSetChanged();
     }
 }
