@@ -1501,6 +1501,11 @@ public class BrowserApp extends GeckoApp
             public void onFocusChange(View v, boolean hasFocus) {
                 if (isHomePagerVisible()) {
                     mHomeScreen.onToolbarFocusChange(hasFocus);
+                    /* Cliqz Start */
+                    if (hasFocus) {
+                        hideControlCenter();
+                    }
+                    /* Cliqz End */
                 }
             }
         });
