@@ -23,6 +23,9 @@ public class FirstrunPagerConfig {
     public static final String KEY_IMAGE = "imageRes";
     public static final String KEY_TEXT = "textRes";
     public static final String KEY_SUBTEXT = "subtextRes";
+    /* Cliqz Start */
+    public static final int NO_IMAGE_RESOURCE = 0;
+    /* Cliqz End */
 
    public static List<FirstrunPanelConfig> getDefault(Context context) {
         final List<FirstrunPanelConfig> panels = new LinkedList<>();
@@ -90,11 +93,11 @@ public class FirstrunPagerConfig {
 
     private static class SimplePanelConfigs {
         public static final FirstrunPanelConfig welcomePanelConfig = new FirstrunPanelConfig(FirstrunPanel.class.getName(), R.string.firstrun_panel_title_welcome, R.drawable.firstrun_welcome, R.string.firstrun_urlbar_message, R.string.firstrun_urlbar_subtext);
-        public static final FirstrunPanelConfig privatePanelConfig = new FirstrunPanelConfig(FirstrunPanel.class.getName(), R.string.firstrun_panel_title_privacy, R.drawable.firstrun_private, R.string.firstrun_privacy_message, R.string.firstrun_privacy_subtext);
-        public static final FirstrunPanelConfig customizePanelConfig = new FirstrunPanelConfig(FirstrunPanel.class.getName(), R.string.firstrun_panel_title_customize, R.drawable.firstrun_data, R.string.firstrun_customize_message, R.string.firstrun_customize_subtext);
-        public static final FirstrunPanelConfig customizeLastPanelConfig = new FirstrunPanelConfig(LastPanel.class.getName(), R.string.firstrun_panel_title_customize, R.drawable.firstrun_data, R.string.firstrun_customize_message, R.string.firstrun_customize_subtext);
+        public static final FirstrunPanelConfig privatePanelConfig = new FirstrunPanelConfig(FirstrunPanel.class.getName(), R.string.firstrun_panel_title_privacy, /* Cliqz Start R.drawable.firstrun_private */ NO_IMAGE_RESOURCE /* Cliqz End */, R.string.firstrun_privacy_message, R.string.firstrun_privacy_subtext);
+        public static final FirstrunPanelConfig customizePanelConfig = new FirstrunPanelConfig(FirstrunPanel.class.getName(), R.string.firstrun_panel_title_customize, /* Cliqz Start R.drawable.firstrun_data */ NO_IMAGE_RESOURCE /* Cliqz End */, R.string.firstrun_customize_message, R.string.firstrun_customize_subtext);
+        public static final FirstrunPanelConfig customizeLastPanelConfig = new FirstrunPanelConfig(LastPanel.class.getName(), R.string.firstrun_panel_title_customize, /* Cliqz Start R.drawable.firstrun_data */ NO_IMAGE_RESOURCE /* Cliqz End */, R.string.firstrun_customize_message, R.string.firstrun_customize_subtext);
 
-        public static final FirstrunPanelConfig syncPanelConfig = new FirstrunPanelConfig(SyncPanel.class.getName(), R.string.firstrun_sync_title, R.drawable.firstrun_sync, R.string.firstrun_sync_message, R.string.firstrun_sync_subtext);
+        public static final FirstrunPanelConfig syncPanelConfig = new FirstrunPanelConfig(SyncPanel.class.getName(), R.string.firstrun_sync_title, /* Cliqz Start R.drawable.firstrun_sync */ NO_IMAGE_RESOURCE /* Cliqz End */, R.string.firstrun_sync_message, R.string.firstrun_sync_subtext);
 
     }
 }
