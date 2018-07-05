@@ -751,12 +751,6 @@ public class GeckoPreferences
                     i--;
                     continue;
                 }
-                // remove Search Screen
-                else if(PREFS_SEARCH_SCREEN.equals(key)) {
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-                }
                 /* Cliqz end */
                 else if (PREFS_CATEGORY_EXPERIMENTAL_FEATURES.equals(key) && ((PreferenceGroup) pref).getPreferenceCount() == 0) {
                     preferences.removePreference(pref);
