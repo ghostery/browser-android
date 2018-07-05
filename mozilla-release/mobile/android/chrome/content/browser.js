@@ -6299,7 +6299,8 @@ var ExternalApps = {
       return;
 
     let mediaElement = this._getMediaContentElement(contentDocument);
-
+    /* Cliqz start o/
+    // Remove Open in APP button
     this._pageActionId = PageActions.add({
       title: Strings.browser.GetStringFromName("openInApp.pageAction"),
       icon: "drawable://icon_openinapp",
@@ -6337,6 +6338,7 @@ var ExternalApps = {
         }
       }
     });
+    /o Cliqz end */
   },
 
   clearPageAction: function clearPageAction() {
