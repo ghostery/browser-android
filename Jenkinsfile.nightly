@@ -88,7 +88,12 @@ def build(Map m){
                             file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
                             string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
                     ]) {
-                        sh "./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease"
+                        sh """#!/bin/bash -l
+                            set -e
+                            set -x
+                            cd /app/mozilla-release
+                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                        """
                     }
                     apk = sh(returnStdout: true,
                         script: """cd /app/mozilla-release/objdir-frontend-android/${flavorname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
@@ -141,27 +146,31 @@ def transitionIssueList
 stage('JIRA'){
     withEnv(['JIRA_SITE=cliqztix']){
         passedBuilds = []
-        lastSuccessfulBuild(passedBuilds, currentBuild);
-        def list1 = getIssueList()
+        lastSuccessfulBuild(passedBuilds,currentBuild)
+        def issueIds = getIssueList()
         def transitionInput = [
                 transition: [
                         id: '121'
                 ]
         ]
-        for (element in list1){
+        for (element in issueIds){
             try{
                 def issue = jiraGetIssue idOrKey: element
                 if(issue.data.fields.status.name == "Resolved"){
                     jiraTransitionIssue idOrKey: element, input: transitionInput
                     echo "Transistioned ${element}"
+                } else{
+                    echo """Element with id ${element} was not transitioned\nIts status is: """.stripI+issue.data.fields.status.name
                 }
             }
             catch (Error e){
                 echo e
             }
         }
-        transitionIssueList = list1.join(", ")
-        echo transitionIssueList
+        if (issueIds.size() > 0){
+            transitionIssueList = issueIds.join(", ")
+            echo transitionIssueList
+        }
     }
 }
 
@@ -187,7 +196,9 @@ stage('Send email') {
 
 def lastSuccessfulBuild(passedBuilds, build) {
     if ((build != null) && (build.result != 'SUCCESS')) {
+        echo "Finding last succesful build"
         passedBuilds.add(build)
+        echo "Found a build"
         lastSuccessfulBuild(passedBuilds, build.getPreviousBuild())
     }
 }
@@ -195,9 +206,11 @@ def lastSuccessfulBuild(passedBuilds, build) {
 @NonCPS
 def getChangeString(passedBuilds) {
     def changeString = ""
-    echo "Gathering SCM changes"
+    echo "Gathering Changes Since Last Successful Build"
     for (int x = 0; x < passedBuilds.size(); x++) {
         def currentBuild = passedBuilds[x];
+        def buildNumber = currentBuild.number
+        echo "Changes for Build ${buildNumber}"
         def changeLogSets = currentBuild.rawBuild.changeSets
         for (int i = 0; i < changeLogSets.size(); i++) {
             def entries = changeLogSets[i].items
@@ -213,12 +226,18 @@ def getChangeString(passedBuilds) {
 
 @NonCPS
 def getIssueList(){
-    def list =[]
+    def list = []
     def changes = getChangeString(passedBuilds)
     def re = /AB2-([0-9])*/
     def y = changes =~ re
     while (y){
         list.add(y.group().toString())
+    }
+    if (list.size() > 0) {
+        echo 'Detected JIRA tickets'
+        echo list.toString()
+    } else {
+       echo 'No JIRA tickets detected'
     }
     return list
 }
