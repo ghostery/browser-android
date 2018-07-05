@@ -455,7 +455,10 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private void updatePageActions() {
         final boolean isShowingProgress = (mUiMode == UIMode.PROGRESS);
 
-        mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
+        /* Cliqz start o/
+        // keep X button hidden while loading a page
+           mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
+        /o Cliqz end */
         mPageActionLayout.setVisibility(!isShowingProgress ? View.VISIBLE : View.GONE);
 
         // We want title to fill the whole space available for it when there are icons
