@@ -27,7 +27,7 @@
         android:background="@drawable/url_bar_title_bg">
 
         <!-- Cliqz start -->
-        <!-- tint the security icon with white -->
+        <!-- tint the security icon with white && hide it in seach mode-->
         <org.mozilla.gecko.widget.themed.ThemedImageButton
             android:id="@+id/site_security"
             style="@style/UrlBar.SiteIdentity"
@@ -35,7 +35,9 @@
             android:contentDescription="@string/site_security"
             android:src="@drawable/security_mode_icon"
             android:tint="@android:color/white"
-            tools:src="@drawable/ic_lock"/>
+            tools:src="@drawable/ic_lock"
+            android:visibility="gone"
+            />
         <!-- Cliqz end -->
 
         <!-- We need this on a separate layer to avoid fading out the toolbar background as well

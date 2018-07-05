@@ -376,6 +376,15 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mSiteIdentityPopup.setSiteIdentity(siteIdentity);
         mTrackingProtectionEnabled = SecurityModeUtil.isTrackingProtectionEnabled(siteIdentity);
 
+        /* Cliqz start */
+        // show the siteSecurity icon except in search mode
+        if(imageLevel == SecurityModeUtil.IconType.SEARCH.getImageLevel()){
+            mSiteSecurity.setVisibility(GONE);
+        } else{
+            mSiteSecurity.setVisibility(VISIBLE);
+        }
+        /* Cliqz end */
+
         if (mSecurityImageLevel != imageLevel) {
             mSecurityImageLevel = imageLevel;
             mSiteSecurity.setImageLevel(mSecurityImageLevel);
