@@ -62,7 +62,10 @@ public class TabQueuePanel extends FirstrunPanel {
                 editor.putBoolean(GeckoPreferences.PREFS_TAB_QUEUE, b).apply();
 
                 // Set image, text, and typeface changes.
-                imageView.setImageResource(b ? R.drawable.firstrun_tabqueue_on : R.drawable.firstrun_tabqueue_off);
+                /* Cliqz Start */
+                //imageView.setImageResource(b ? R.drawable.firstrun_tabqueue_on : R.drawable.firstrun_tabqueue_off);
+                imageView.setImageResource(0);
+                /* Cliqz End */
                 messageTextView.setText(b ? R.string.firstrun_tabqueue_message_on : R.string.firstrun_tabqueue_message_off);
                 messageTextView.setTypeface(b ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
                 subtextTextView.setText(b ? R.string.firstrun_tabqueue_subtext_on : R.string.firstrun_tabqueue_subtext_off);
