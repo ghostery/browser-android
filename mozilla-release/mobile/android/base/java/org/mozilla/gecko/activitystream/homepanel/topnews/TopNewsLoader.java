@@ -100,8 +100,6 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
         String lang = null;
         String country = GeckoSharedPrefs.forApp(getContext()).getString(SearchEngineManager
                 .PREF_REGION_KEY, null);
-
-        String newsEdition = "intl";
         if (parts.length > 0) {
             lang = parts[0].toLowerCase();
         }
@@ -109,11 +107,7 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
         sb.append("&locale=").append(locale);
         if (lang != null) {
             sb.append("&lang=").append(lang);
-            if (lang.equals(Locale.GERMAN.getLanguage()) || lang.equals(Locale.FRENCH.getLanguage())) {
-                newsEdition = lang;
-            }
         }
-        sb.append("&edition=").append(newsEdition);
         if (country != null) {
             sb.append("&country=").append(country);
         }

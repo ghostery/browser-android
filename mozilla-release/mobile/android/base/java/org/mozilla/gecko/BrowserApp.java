@@ -4814,6 +4814,7 @@ public class BrowserApp extends GeckoApp
             mControlCenterContainer.setVisibility(View.GONE);
         } else {
             mControlCenterContainer.setVisibility(View.VISIBLE);
+            mControlCenterPager.setCurrentItem(0);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
             ControlCenterMetrics.show();
         }
