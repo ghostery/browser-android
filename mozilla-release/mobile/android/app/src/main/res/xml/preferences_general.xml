@@ -57,11 +57,14 @@
         <CheckBoxPreference
             android:key="pref.search.auto.completion"
             android:title="@string/pref_search_auto_completion" />
-        <ListPreference
-            android:key="pref.search.complementary.engine"
-            android:title="@string/pref_search_complementary_engine"
-            android:entries="@array/pref_search_complementary_engine_entries_values"
-            android:entryValues="@array/pref_search_complementary_engine_entries_values"/>
+        <!-- Cliqz start -->
+        <PreferenceScreen android:title="@string/pref_search_complementary_engine"
+            android:key="android.not_a_preference.search_screen"
+            android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
+            <extra android:name="resource"
+                android:value="preferences_search"/>
+        </PreferenceScreen>
+        <!-- Cliqz end -->
     </PreferenceCategory>
 
     <!-- set browsing category for tab queue and custom tabs from FF-->
