@@ -3,6 +3,7 @@ package org.mozilla.gecko.controlcenter;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -295,6 +296,13 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                     .getStringArray("site_whitelist"));
             final boolean isWhiteListed = whitelist.contains(pagehost);
             final boolean isBlackListed = blacklist.contains(pagehost);
+            if (isBlackListed
+                    || (isSiteSpecificBlocked && !isWhiteListed)
+                    || (isBlocked && !(isSiteSpecificAllowed || isWhiteListed))) {
+                trackerNameTextView.setPaintFlags(trackerNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                trackerNameTextView.setPaintFlags(trackerNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
             if (isWhiteListed) {
                 trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_trust);
             } else if (isBlackListed) {
@@ -318,6 +326,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                 trackerCheckBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        notifyDataSetChanged();
                         animation.start();
                     }
                 });
