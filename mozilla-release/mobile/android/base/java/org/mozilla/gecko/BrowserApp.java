@@ -4625,7 +4625,9 @@ public class BrowserApp extends GeckoApp
         };
 
         final String message = isPrivate ?
-                getResources().getString(R.string.new_private_tab_opened) :
+                /* Cliqz Start */
+                getResources().getString(R.string.new_ghost_tab_opened) :
+                /* Cliqz End */
                 getResources().getString(R.string.new_tab_opened);
         final String buttonMessage = getResources().getString(R.string.switch_button_message);
 
