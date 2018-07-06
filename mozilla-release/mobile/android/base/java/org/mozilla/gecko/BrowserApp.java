@@ -2173,9 +2173,11 @@ public class BrowserApp extends GeckoApp
             case "CharEncoding:State":
                 final boolean visible = "true".equals(message.getString("visible"));
                 GeckoPreferences.setCharEncodingState(visible);
+                /* Cliqz Start o/
                 if (mMenu != null) {
                     mMenu.findItem(R.id.char_encoding).setVisible(visible);
                 }
+                /o Cliqz End */
                 break;
 
             case "Experiments:GetActive":
@@ -4816,6 +4818,7 @@ public class BrowserApp extends GeckoApp
             mControlCenterContainer.setVisibility(View.GONE);
         } else {
             mControlCenterContainer.setVisibility(View.VISIBLE);
+            mControlCenterPager.setCurrentItem(0);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
             ControlCenterMetrics.show();
         }
