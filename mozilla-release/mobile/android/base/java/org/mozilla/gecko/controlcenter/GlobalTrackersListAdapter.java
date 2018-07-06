@@ -130,6 +130,7 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         final TextView trackerNameTextView = (TextView) convertView.findViewById(R.id.tracker_name);
         final ImageView trackerCheckBox = (ImageView) convertView.findViewById(R.id.cb_block_tracker);
         final View blockButton = convertView.findViewById(R.id.block_button);
+        final TextView blockButtonText = (TextView) convertView.findViewById(R.id.block_button_text);
         blockButton.setX(parent.getWidth());
         final View infoButton = convertView.findViewById(R.id.info_icon);
         infoButton.setOnClickListener(new View.OnClickListener() {
@@ -140,8 +141,10 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         });
         if (isBlocked) {
             trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
+            blockButtonText.setText(R.string.cc_unblock);
         } else {
             trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_unchecked);
+            blockButtonText.setText(R.string.cc_block);
         }
         trackerNameTextView.setText(trackerName);
         final ObjectAnimator animation = ObjectAnimator.ofFloat(blockButton, "translationX",
@@ -151,6 +154,7 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         trackerCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                notifyDataSetChanged();
                 animation.start();
             }
         });
