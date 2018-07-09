@@ -10,7 +10,7 @@ import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
 
 public class PreferenceManager {
 
-    final SharedPreferences mAppSharedPreferences;
+    private final SharedPreferences mAppSharedPreferences;
 
     public PreferenceManager(Context context) {
         mAppSharedPreferences = GeckoSharedPrefs.forApp(context);
@@ -35,6 +35,21 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.CLIQZ_TELEMETRY_ENABLED, value).apply();
     }
 
+    public void setGhosteryAutoUpdate(boolean value) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putBoolean(GeckoPreferences.PREFS_GHOSTERY_AUTO_UPDATE, value).apply();
+    }
+
+    public void setAllowFirstPartyTrackers(boolean value) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putBoolean(GeckoPreferences.PREFS_GHOSTERY_ALLOW_FIRST_PARTY, value).apply();
+    }
+
+    public void setBlockNewTrackers(boolean value) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putBoolean(GeckoPreferences.PREFS_GHOSTERY_BLOCK_NEW_TRACKERS, value).apply();
+    }
+
     public boolean isTelemetryEnabled() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.CLIQZ_TELEMETRY_ENABLED, false);
     }
@@ -46,5 +61,17 @@ public class PreferenceManager {
     public boolean isBlockAdsEnabled() {
         return  mAppSharedPreferences.getBoolean(GeckoPreferences
                 .PREFS_BLOCK_ADS,true);
+    }
+
+    public boolean isGhosteryAutoUpdateEnabled() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_GHOSTERY_AUTO_UPDATE, true);
+    }
+
+    public boolean areFirstPartyTrackersAllowed() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_GHOSTERY_ALLOW_FIRST_PARTY, true);
+    }
+
+    public boolean areNewTrackersBlocked() {
+        return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_GHOSTERY_BLOCK_NEW_TRACKERS, false);
     }
 }

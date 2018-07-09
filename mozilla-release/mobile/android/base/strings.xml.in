@@ -807,6 +807,12 @@
   <string name="pref_privacy_clear_data_category">&pref_privacy_clear_data_category;</string>
   <string name="pref_privacy_clear_favorites">&pref_privacy_clear_favorites;</string>
   <string name="pref_privacy_clear_favorites_description">&pref_privacy_clear_favorites_description;</string>
+  <string name="pref_category_ghostery_control_center">&pref_category_ghostery_control_center;</string>
+  <string name="pref_ghostery_auto_update_title">&pref_ghostery_auto_update_title;</string>
+  <string name="pref_ghostery_allow_first_party_title">&pref_ghostery_allow_first_party_title;</string>
+  <string name="pref_ghostery_allow_first_party_summary">&pref_ghostery_allow_first_party_summary;</string>
+  <string name="pref_ghostery_block_new_trackers_title">&pref_ghostery_block_new_trackers_title;</string>
+  <string name="pref_ghostery_block_new_trackers_summary">&pref_ghostery_block_new_trackers_summary;</string>
 
   <!-- General Settings - Download Options -->
   <string name = "pref_download_options_category">&pref_download_options_category;</string>
