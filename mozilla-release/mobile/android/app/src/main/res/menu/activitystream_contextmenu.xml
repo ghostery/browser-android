@@ -6,10 +6,12 @@
             android:id="@+id/open_new_tab"
             android:icon="@drawable/as_tab"
             android:title="@string/contextmenu_open_new_tab"/>
+        <!-- Cliqz Start -->
         <item
             android:id="@+id/open_new_private_tab"
             android:icon="@drawable/as_private"
-            android:title="@string/contextmenu_open_private_tab"/>
+            android:title="@string/contextmenu_open_ghost_tab"/>
+        <!-- Cliqz End -->
     </group>
 
     <group android:id="@+id/group1">

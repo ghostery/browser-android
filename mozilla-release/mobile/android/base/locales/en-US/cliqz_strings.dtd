@@ -226,3 +226,10 @@
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimizes performance as you browse">
 <!ENTITY ghostery_onboarding_contextual_text "You can enable or disable these features anytime in the &brandShortName; Control Center.">
 <!ENTITY ghostery_onboarding_contextual_button "Show me now">
+
+<!-- Ghost Tab -->
+<!ENTITY new_ghost_tab_opened "New ghost tab opened">
+<!ENTITY new_ghost_tab "New ghost tab">
+<!ENTITY close_ghost_tabs "Close Ghost Tabs">
+<!ENTITY contextmenu_open_ghost_tab "Open in Ghost Tab">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: using a &formatS1;New Ghost Tab&formatS2; won\'t save your history.">
