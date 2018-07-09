@@ -91,6 +91,7 @@ import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
 import org.mozilla.gecko.cleanup.FileCleanupController;
 import org.mozilla.gecko.controlcenter.ControlCenterPagerAdapter;
+import org.mozilla.gecko.controlcenter.ControlCenterViewPager;
 import org.mozilla.gecko.controlcenter.GlobalTrackersFragment;
 import org.mozilla.gecko.controlcenter.OverviewFragment;
 import org.mozilla.gecko.controlcenter.SiteTrackersFragment;
@@ -216,7 +217,10 @@ public class BrowserApp extends GeckoApp
                                    OnUrlOpenInBackgroundListener,
                                    PropertyAnimator.PropertyAnimationListener,
                                    TabsPanel.TabsLayoutChangeListener,
-                                   View.OnKeyListener {
+                                   View.OnKeyListener,
+                                   /* Cliqz Start */
+                                   ControlCenterViewPager.ControlCenterCallbacks {
+                                   /* Cliqz End */
     private static final String LOGTAG = "GeckoBrowserApp";
 
     private static final int TABS_ANIMATION_DURATION = 450;
@@ -889,9 +893,13 @@ public class BrowserApp extends GeckoApp
         mControlCenterPager = (ViewPager) findViewById(R.id.control_center_pager);
         mControlCenterContainer = findViewById(R.id.control_center_container);
         mControlCenterPagerAdapter = new ControlCenterPagerAdapter(getSupportFragmentManager(), getBaseContext());
+        final SiteTrackersFragment siteTrackersFragment = new SiteTrackersFragment();
+        final GlobalTrackersFragment globalTrackersFragment = new GlobalTrackersFragment();
+        siteTrackersFragment.setControlCenterCallback(this);
+        globalTrackersFragment.setControlCenterCallback(this);
         mControlCenterPagerAdapter.addFragment(new OverviewFragment());
-        mControlCenterPagerAdapter.addFragment(new SiteTrackersFragment());
-        mControlCenterPagerAdapter.addFragment(new GlobalTrackersFragment());
+        mControlCenterPagerAdapter.addFragment(siteTrackersFragment);
+        mControlCenterPagerAdapter.addFragment(globalTrackersFragment);
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.conrol_center_tab_layout);
@@ -4824,7 +4832,8 @@ public class BrowserApp extends GeckoApp
         }
     }
 
-    private void hideControlCenter() {
+    @Override
+    public void hideControlCenter() {
         mControlCenterContainer.setVisibility(View.GONE);
     }
 
