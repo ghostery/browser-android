@@ -230,7 +230,9 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         if (!Restrictions.isAllowed(getActivity(), Restrictable.PRIVATE_BROWSING)) {
             historyHint.setVisibility(View.GONE);
         } else {
-            final String hintText = getResources().getString(R.string.home_most_recent_emptyhint);
+            /* Cliqz Start */
+            final String hintText = getResources().getString(R.string.home_most_recent_emptyhint_ghost_tab);
+            /* Cliqz End */
             final SpannableStringBuilder hintBuilder = formatHintText(hintText);
             if (hintBuilder != null) {
                 historyHint.setText(hintBuilder);

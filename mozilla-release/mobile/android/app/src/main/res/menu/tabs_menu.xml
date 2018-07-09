@@ -7,14 +7,17 @@
 
     <item android:id="@+id/new_tab"
           android:title="@string/new_tab"/>
-
+    <!-- Cliqz Start -->
     <item android:id="@+id/new_private_tab"
-          android:title="@string/new_private_tab"/>
+          android:title="@string/new_ghost_tab"/>
+    <!-- Cliqz End -->
 
     <item android:id="@+id/close_all_tabs"
           android:title="@string/close_all_tabs"/>
 
+    <!-- Cliqz Start -->
     <item android:id="@+id/close_private_tabs"
-          android:title="@string/close_private_tabs"/>
+          android:title="@string/close_ghost_tabs"/>
+    <!-- Cliqz End -->
 
 </menu>

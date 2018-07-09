@@ -866,4 +866,11 @@
   <string name="ghostery_onboarding_new_tab_title">&ghostery_onboarding_new_tab_title;</string>
   <string name="ghostery_onboarding_new_tab_text">&ghostery_onboarding_new_tab_text;</string>
   <!-- Cliqz end -->
+
+  <!-- Ghost Tab -->
+  <string name="new_ghost_tab_opened">&new_ghost_tab_opened;</string>
+  <string name="new_ghost_tab">&new_ghost_tab;</string>
+  <string name="close_ghost_tabs">&close_private_tabs;</string>
+  <string name="contextmenu_open_ghost_tab">&contextmenu_open_ghost_tab;</string>
+  <string name="home_most_recent_emptyhint_ghost_tab">&home_most_recent_emptyhint_ghost_tab;</string>
 </resources>
