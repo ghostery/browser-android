@@ -12,13 +12,10 @@ import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.pwa.PwaUtils;
-import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.util.ResourceDrawableUtils;
 import org.mozilla.gecko.util.BundleEventListener;
-import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
-import org.mozilla.gecko.util.ResourceDrawableUtils;
 import org.mozilla.gecko.util.ShortcutUtils;
 import org.mozilla.gecko.util.ThreadUtils;
 import org.mozilla.gecko.widget.GeckoPopupMenu;
@@ -27,11 +24,9 @@ import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -464,4 +459,10 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
 
 
     }
+    /* Cliqz start */
+    // accessed in @ToolbarDisplayLayout.java based on Actions list size we modify the urlBar width
+    public int getPageActionListSize(){
+        return mPageActionList.size();
+    }
+    /* Cliqz end */
 }

@@ -40,7 +40,6 @@
             android:scrollbars="none"
             android:overScrollMode="never"
             android:layerType="software"
-            gecko:fadeWidth="50dp"
             android:background="@drawable/rounded_edittext"
             >
 
@@ -60,8 +59,7 @@
                 android:src="@drawable/security_mode_icon"
                 android:tint="@android:color/holo_blue_bright"
                 tools:src="@drawable/ic_lock"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <!-- add padding left , right and set height to wrap content -->
             <org.mozilla.gecko.widget.themed.ThemedTextView
@@ -70,8 +68,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingRight="@dimen/padding_10"
-                android:paddingLeft="@dimen/padding_10"/>
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:maxLines="1"
+                />
             </LinearLayout>
         </org.mozilla.gecko.widget.FadedHorizontalScrollView>
         <!-- Cliqz end -->
