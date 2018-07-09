@@ -20,8 +20,13 @@ import org.mozilla.gecko.util.GeckoBundle;
 public class GlobalTrackersFragment extends ControlCenterFragment implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private GlobalTrackersListAdapter mTrackerListAdapter;
+    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
 
     public GlobalTrackersFragment() {
+    }
+
+    public void setControlCenterCallback(ControlCenterViewPager.ControlCenterCallbacks callback) {
+        mControlCenterCallbacks = callback;
     }
 
     @Nullable
@@ -31,7 +36,7 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
         final ExpandableListView mTrackersList = (ExpandableListView) view.findViewById(R.id.trackers_list);
         final View mOverflowMenu = view.findViewById(R.id.overflow_menu);
         mOverflowMenu.setOnClickListener(this);
-        mTrackerListAdapter = new GlobalTrackersListAdapter(getContext());
+        mTrackerListAdapter = new GlobalTrackersListAdapter(getContext(), mControlCenterCallbacks);
         mTrackersList.setAdapter(mTrackerListAdapter);
         return view;
     }
