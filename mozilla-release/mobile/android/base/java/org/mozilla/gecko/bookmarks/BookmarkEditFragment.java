@@ -54,7 +54,7 @@ public class BookmarkEditFragment extends DialogFragment implements SelectFolder
     private EditText locationText;
     private TextInputLayout keywordLayout;
     private EditText keywordText;
-    private EditText folderText;
+    /* Cliqz Start o/ private EditText folderText; /o Cliqz End */
 
     public interface Callbacks {
         /**
@@ -121,7 +121,7 @@ public class BookmarkEditFragment extends DialogFragment implements SelectFolder
         locationText = (EditText) view.findViewById(R.id.edit_bookmark_location);
         keywordLayout = (TextInputLayout) view.findViewById(R.id.edit_bookmark_keyword_layout);
         keywordText = (EditText) view.findViewById(R.id.edit_bookmark_keyword);
-        folderText = (EditText) view.findViewById(R.id.edit_parent_folder);
+        /* Cliqz start o/ folderText = (EditText) view.findViewById(R.id.edit_parent_folder); /o Cliqz End */
 
         toolbar.inflateMenu(R.menu.bookmark_edit_menu);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -168,6 +168,7 @@ public class BookmarkEditFragment extends DialogFragment implements SelectFolder
             }
         });
 
+        /* Cliqz Start o/
         folderText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,6 +187,7 @@ public class BookmarkEditFragment extends DialogFragment implements SelectFolder
                 dialog.show(getActivity().getSupportFragmentManager(), "select-bookmark-folder");
             }
         });
+        /o Cliqz End */
 
         return view;
     }
@@ -216,7 +218,7 @@ public class BookmarkEditFragment extends DialogFragment implements SelectFolder
             bookmark.url = locationText.getText().toString().trim();
             bookmark.title = nameText.getText().toString();
             bookmark.keyword = keywordText.getText().toString();
-            bookmark.folder = folderText.getText().toString();
+            /* Cliqz Start o/ bookmark.folder = folderText.getText().toString(); /o Cliqz End */
             outState.putParcelable(ARG_BOOKMARK, bookmark);
         }
 
@@ -252,11 +254,13 @@ public class BookmarkEditFragment extends DialogFragment implements SelectFolder
         locationText.setText(bookmark.url);
         keywordText.setText(bookmark.keyword);
 
+        /* Cliqz Start o/
         if (Bookmarks.MOBILE_FOLDER_GUID.equals(bookmark.guid)) {
             folderText.setText(R.string.bookmarks_folder_mobile);
         } else {
             folderText.setText(bookmark.folder);
         }
+        /o Cliqz End */
 
         // Enable menu item after bookmark is set to view
         final MenuItem doneItem = toolbar.getMenu().findItem(R.id.done);
