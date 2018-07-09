@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tabs;
@@ -31,9 +32,11 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
     private GeckoBundle[] mListData;
     private GeckoBundle data;
     private Context mContext;
+    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
 
-    SiteTrackersListAdapter(Context context) {
+    SiteTrackersListAdapter(Context context, ControlCenterViewPager.ControlCenterCallbacks callbacks) {
         mContext = context;
+        mControlCenterCallbacks = callbacks;
     }
 
     @Override
@@ -166,6 +169,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
             infoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mControlCenterCallbacks.hideControlCenter();
                     Tabs.getInstance().loadUrlInTab("https://whotracks.me/trackers/" + trackerName.toLowerCase().replace(" ", "_") + ".html");
                 }
             });
