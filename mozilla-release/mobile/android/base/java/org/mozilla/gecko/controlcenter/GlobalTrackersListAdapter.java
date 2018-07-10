@@ -24,8 +24,10 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
     private GeckoBundle[] mListData;
     private GeckoBundle data;
     private Context mContext;
+    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
 
-    GlobalTrackersListAdapter(Context context) {
+    GlobalTrackersListAdapter(Context context, ControlCenterViewPager.ControlCenterCallbacks callbacks) {
+        mControlCenterCallbacks = callbacks;
         mContext = context;
     }
 
@@ -136,6 +138,7 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mControlCenterCallbacks.hideControlCenter();
                 Tabs.getInstance().loadUrlInTab("https://whotracks.me/trackers/" + trackerName.toLowerCase().replace(" ", "_") + ".html");
             }
         });
