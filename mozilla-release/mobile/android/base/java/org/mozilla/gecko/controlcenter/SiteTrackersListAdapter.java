@@ -128,9 +128,14 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                 numBlocked++;
             }
         }
-        if (numRestricted == totalTrackers) {
+        final String pagehost = data.getBundle("data").getBundle("summary").getString("pageHost");
+        final List<String> blacklist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data,"data/summary/site_blacklist"));
+        final List<String> whitelist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data,"data/summary/site_whitelist"));
+        final boolean isWhiteListed = whitelist.contains(pagehost);
+        final boolean isBlackListed = blacklist.contains(pagehost);
+        if (numRestricted == totalTrackers || isBlackListed) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_restricted);
-        } else if (numTrusted == totalTrackers) {
+        } else if (numTrusted == totalTrackers || isWhiteListed) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_trust);
         } else if (numBlocked == totalTrackers) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
