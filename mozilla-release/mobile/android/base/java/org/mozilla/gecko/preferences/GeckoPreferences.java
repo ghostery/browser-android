@@ -265,7 +265,9 @@ public class GeckoPreferences
     private static final String PREFS_ABOUT_IMPRINT = NON_PREF_PREFIX+ "about.imprint";
     // add key to search screen
     private static final String PREFS_SEARCH_SCREEN = NON_PREF_PREFIX+ "search_screen";
-
+    public static final String PREFS_GHOSTERY_AUTO_UPDATE = "ghostery.settings.autoupdate";
+    public static final String PREFS_GHOSTERY_ALLOW_FIRST_PARTY = "ghostery.settings.allowfirstparty";
+    public static final String PREFS_GHOSTERY_BLOCK_NEW_TRACKERS = "ghostery.settings.blocknewtrackers";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -1113,6 +1115,17 @@ public class GeckoPreferences
                     final String url = getResources().getString(R.string.pref_imprint_url);
                     ((LinkPreference) pref).setUrl(url);
                 }
+                //Set up ghostery preferences
+                else if (PREFS_GHOSTERY_AUTO_UPDATE.equals(key)) {
+                     final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+                    ((CheckBoxPreference) pref).setChecked(preferenceManager.isGhosteryAutoUpdateEnabled());
+                } else if (PREFS_GHOSTERY_ALLOW_FIRST_PARTY.equals(key)) {
+                     final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+                    ((CheckBoxPreference) pref).setChecked(preferenceManager.areFirstPartyTrackersAllowed());
+                } else if (PREFS_GHOSTERY_BLOCK_NEW_TRACKERS.equals(key)) {
+                     final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+                    ((CheckBoxPreference) pref).setChecked(preferenceManager.areNewTrackersBlocked());
+                }
                 /* Cliqz end */
 
                 // Some Preference UI elements are not actually preferences,
@@ -1400,6 +1413,30 @@ public class GeckoPreferences
         if (CLIQZ_TELEMETRY_ENABLED.equals(prefName)) {
             final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
             preferenceManager.setTelemetryEnabled((boolean)newValue);
+            return true;
+        }
+        if (PREFS_GHOSTERY_AUTO_UPDATE.equals(prefName)) {
+            final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+            preferenceManager.setGhosteryAutoUpdate((boolean)newValue);
+            final GeckoBundle geckoBundle = new GeckoBundle();
+            geckoBundle.putBoolean("enable_autoupdate", (boolean)newValue);
+            EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+            return true;
+        }
+        if (PREFS_GHOSTERY_ALLOW_FIRST_PARTY.equals(prefName)) {
+            final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+            preferenceManager.setAllowFirstPartyTrackers((boolean)newValue);
+            final GeckoBundle geckoBundle = new GeckoBundle();
+            geckoBundle.putBoolean("ignore_first_party", (boolean)newValue);
+            EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+            return true;
+        }
+        if (PREFS_GHOSTERY_BLOCK_NEW_TRACKERS.equals(prefName)) {
+            final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+            preferenceManager.setBlockNewTrackers((boolean)newValue);
+            final GeckoBundle geckoBundle = new GeckoBundle();
+            geckoBundle.putBoolean("block_by_default", (boolean)newValue);
+            EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
             return true;
         }
         /* Cliqz End */
