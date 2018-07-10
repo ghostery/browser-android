@@ -4263,7 +4263,6 @@ public class BrowserApp extends GeckoApp
         if (itemId == R.id.settings) {
             EventDispatcher.getInstance().dispatch("Search:GetStatus", new GeckoBundle());
             intent = new Intent(this, GeckoPreferences.class);
-
             // We want to know when the Settings activity returns, because
             // we might need to redisplay based on a locale change.
             startActivityForResult(intent, ACTIVITY_REQUEST_PREFERENCES);
