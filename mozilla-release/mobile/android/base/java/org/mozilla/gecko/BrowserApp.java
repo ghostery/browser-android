@@ -137,6 +137,7 @@ import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.ClearOnShutdownPref;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.promotion.AddToHomeScreenPromotion;
 import org.mozilla.gecko.promotion.ReaderViewBookmarkPromotion;
 import org.mozilla.gecko.prompts.Prompt;
@@ -172,6 +173,7 @@ import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GamepadUtils;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.GeckoBundleUtils;
 import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.IntentUtils;
 import org.mozilla.gecko.util.MenuUtils;
@@ -2446,6 +2448,14 @@ public class BrowserApp extends GeckoApp
 
             case "Privacy:Info":
                 mControlCenterPagerAdapter.setTrackingData(message);
+                //sync preferences with the ghostery extension just for safety
+                final boolean isAutoUpdateEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/enable_autoupdate");
+                final boolean areFirstPartyTrackersEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/ignore_first_party");
+                final boolean areNewTrackersBlocked = GeckoBundleUtils.safeGetBoolean(message, "data/settings/block_by_default");
+                final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+                preferenceManager.setGhosteryAutoUpdate(isAutoUpdateEnabled);
+                preferenceManager.setAllowFirstPartyTrackers(areFirstPartyTrackersEnabled);
+                preferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
                 break;
 
             /* Cliqz end */
