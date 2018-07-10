@@ -24,7 +24,9 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
@@ -166,11 +168,19 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
         // Find the distance from the right-edge of the url bar (where we're translating from) to
         // the left-edge of the cancel button (where we're translating to; note that the cancel
         // button must be laid out, i.e. not View.GONE).
-        if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            return editCancel.getRight() - urlBarEntry.getLeft();
-        } else {
-            return editCancel.getLeft() - urlBarEntry.getRight();
+        /* Cliqz start */
+        // X button moved inside the url, replace the X button edge with the screen width
+        final WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        final DisplayMetrics metrics = new DisplayMetrics();
+        if (wm != null) {
+            wm.getDefaultDisplay().getMetrics(metrics);
         }
+        if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+            return metrics.widthPixels - urlBarEntry.getLeft();
+        } else {
+            return metrics.widthPixels - urlBarEntry.getRight();
+        }
+        /* Cliqz end */
     }
 
     protected int getUrlBarCurveTranslation() {
