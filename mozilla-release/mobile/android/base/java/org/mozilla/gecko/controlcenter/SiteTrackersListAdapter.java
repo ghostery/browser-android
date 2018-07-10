@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tabs;
@@ -31,9 +32,11 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
     private GeckoBundle[] mListData;
     private GeckoBundle data;
     private Context mContext;
+    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
 
-    SiteTrackersListAdapter(Context context) {
+    SiteTrackersListAdapter(Context context, ControlCenterViewPager.ControlCenterCallbacks callbacks) {
         mContext = context;
+        mControlCenterCallbacks = callbacks;
     }
 
     @Override
@@ -128,9 +131,14 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                 numBlocked++;
             }
         }
-        if (numRestricted == totalTrackers) {
+        final String pagehost = data.getBundle("data").getBundle("summary").getString("pageHost");
+        final List<String> blacklist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data,"data/summary/site_blacklist"));
+        final List<String> whitelist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data,"data/summary/site_whitelist"));
+        final boolean isWhiteListed = whitelist.contains(pagehost);
+        final boolean isBlackListed = blacklist.contains(pagehost);
+        if (numRestricted == totalTrackers || isBlackListed) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_restricted);
-        } else if (numTrusted == totalTrackers) {
+        } else if (numTrusted == totalTrackers || isWhiteListed) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_trust);
         } else if (numBlocked == totalTrackers) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
@@ -166,6 +174,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
             infoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mControlCenterCallbacks.hideControlCenter();
                     Tabs.getInstance().loadUrlInTab("https://whotracks.me/trackers/" + trackerName.toLowerCase().replace(" ", "_") + ".html");
                 }
             });

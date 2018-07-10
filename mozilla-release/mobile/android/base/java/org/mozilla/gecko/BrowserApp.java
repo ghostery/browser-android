@@ -91,6 +91,7 @@ import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
 import org.mozilla.gecko.cleanup.FileCleanupController;
 import org.mozilla.gecko.controlcenter.ControlCenterPagerAdapter;
+import org.mozilla.gecko.controlcenter.ControlCenterViewPager;
 import org.mozilla.gecko.controlcenter.GlobalTrackersFragment;
 import org.mozilla.gecko.controlcenter.OverviewFragment;
 import org.mozilla.gecko.controlcenter.SiteTrackersFragment;
@@ -136,6 +137,7 @@ import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.ClearOnShutdownPref;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.promotion.AddToHomeScreenPromotion;
 import org.mozilla.gecko.promotion.ReaderViewBookmarkPromotion;
 import org.mozilla.gecko.prompts.Prompt;
@@ -171,6 +173,7 @@ import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GamepadUtils;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.GeckoBundleUtils;
 import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.IntentUtils;
 import org.mozilla.gecko.util.MenuUtils;
@@ -216,7 +219,10 @@ public class BrowserApp extends GeckoApp
                                    OnUrlOpenInBackgroundListener,
                                    PropertyAnimator.PropertyAnimationListener,
                                    TabsPanel.TabsLayoutChangeListener,
-                                   View.OnKeyListener {
+                                   View.OnKeyListener,
+                                   /* Cliqz Start */
+                                   ControlCenterViewPager.ControlCenterCallbacks {
+                                   /* Cliqz End */
     private static final String LOGTAG = "GeckoBrowserApp";
 
     private static final int TABS_ANIMATION_DURATION = 450;
@@ -889,9 +895,13 @@ public class BrowserApp extends GeckoApp
         mControlCenterPager = (ViewPager) findViewById(R.id.control_center_pager);
         mControlCenterContainer = findViewById(R.id.control_center_container);
         mControlCenterPagerAdapter = new ControlCenterPagerAdapter(getSupportFragmentManager(), getBaseContext());
+        final SiteTrackersFragment siteTrackersFragment = new SiteTrackersFragment();
+        final GlobalTrackersFragment globalTrackersFragment = new GlobalTrackersFragment();
+        siteTrackersFragment.setControlCenterCallback(this);
+        globalTrackersFragment.setControlCenterCallback(this);
         mControlCenterPagerAdapter.addFragment(new OverviewFragment());
-        mControlCenterPagerAdapter.addFragment(new SiteTrackersFragment());
-        mControlCenterPagerAdapter.addFragment(new GlobalTrackersFragment());
+        mControlCenterPagerAdapter.addFragment(siteTrackersFragment);
+        mControlCenterPagerAdapter.addFragment(globalTrackersFragment);
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.conrol_center_tab_layout);
@@ -2438,6 +2448,14 @@ public class BrowserApp extends GeckoApp
 
             case "Privacy:Info":
                 mControlCenterPagerAdapter.setTrackingData(message);
+                //sync preferences with the ghostery extension just for safety
+                final boolean isAutoUpdateEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/enable_autoupdate");
+                final boolean areFirstPartyTrackersEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/ignore_first_party");
+                final boolean areNewTrackersBlocked = GeckoBundleUtils.safeGetBoolean(message, "data/settings/block_by_default");
+                final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+                preferenceManager.setGhosteryAutoUpdate(isAutoUpdateEnabled);
+                preferenceManager.setAllowFirstPartyTrackers(areFirstPartyTrackersEnabled);
+                preferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
                 break;
 
             /* Cliqz end */
@@ -4823,7 +4841,8 @@ public class BrowserApp extends GeckoApp
         }
     }
 
-    private void hideControlCenter() {
+    @Override
+    public void hideControlCenter() {
         mControlCenterContainer.setVisibility(View.GONE);
     }
 

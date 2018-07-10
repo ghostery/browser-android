@@ -20,8 +20,13 @@ import org.mozilla.gecko.util.GeckoBundle;
 public class SiteTrackersFragment extends ControlCenterFragment implements View.OnClickListener, PopupMenu.OnMenuItemClickListener{
 
     private SiteTrackersListAdapter mTrackerListAdapter;
+    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
 
     public SiteTrackersFragment() {
+    }
+
+    public void setControlCenterCallback(ControlCenterViewPager.ControlCenterCallbacks callback) {
+        mControlCenterCallbacks = callback;
     }
 
     @Nullable
@@ -41,7 +46,7 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
         });
         View mOverflowMenu = view.findViewById(R.id.overflow_menu);
         mOverflowMenu.setOnClickListener(this);
-        mTrackerListAdapter = new SiteTrackersListAdapter(getContext());
+        mTrackerListAdapter = new SiteTrackersListAdapter(getContext(), mControlCenterCallbacks);
         mTrackersList.setAdapter(mTrackerListAdapter);
         return view;
     }
