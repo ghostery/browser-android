@@ -128,6 +128,9 @@
 <!ENTITY pref_search_regional_germany "Germany">
 <!ENTITY pref_search_regional_france "France">
 <!ENTITY pref_search_regional_usa "United States">
+<!ENTITY pref_search_regional_spain "Spain">
+<!ENTITY pref_search_regional_italy "Italy">
+<!ENTITY pref_search_regional_uk "United Kingdom">
 <!ENTITY pref_search_query_suggestions "Search query suggestions">
 <!ENTITY pref_search_block_adult_content "Block explicit content">
 <!ENTITY pref_search_auto_completion "Enable Autocompletion">

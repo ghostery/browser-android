@@ -154,11 +154,17 @@
         <item>@string/pref_search_regional_germany</item>
         <item>@string/pref_search_regional_france</item>
         <item>@string/pref_search_regional_usa</item>
+        <item>@string/pref_search_regional_spain</item>
+        <item>@string/pref_search_regional_italy</item>
+        <item>@string/pref_search_regional_uk</item>
     </string-array>
     <string-array name="pref_search_regional_values">
         <item>de</item>
         <item>fr</item>
         <item>us</item>
+        <item>es</item>
+        <item>it</item>
+        <item>gb</item>
     </string-array>
 
     <!-- add search complementry search engine entries and values-->
