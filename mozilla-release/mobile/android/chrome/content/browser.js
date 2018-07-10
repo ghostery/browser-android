@@ -5873,28 +5873,12 @@ var SearchEngines = {
       case "SearchEngines:RestoreDefaults":
         // Un-hides all default engines.
         Services.search.restoreDefaultEngines();
-        /* Cliqz start */
-        // Notify Search Extension with the original default engine
-        Cliqz.messageSearchExtension({
-          module: 'control-center',
-          action: 'complementarySearch',
-          args: [{ defaultSearch: Services.search.originalDefaultEngine.name }]
-        });
-        /* Cliqz end */
         break;
       case "SearchEngines:SetDefault":
         engine = this._extractEngineFromJSON(data);
         // Move the new default search engine to the top of the search engine list.
         Services.search.moveEngine(engine, 0);
         Services.search.defaultEngine = engine;
-        /* Cliqz start */
-        // Notify Search Extension with the new default engine
-        Cliqz.messageSearchExtension({
-          module: 'control-center',
-          action: 'complementarySearch',
-          args: [{ defaultSearch: engine.name }]
-        });
-        /* Cliqz end */
         break;
       default:
         dump("Unexpected message type observed: " + event);
