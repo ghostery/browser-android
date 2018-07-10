@@ -813,6 +813,7 @@
   <string name="pref_ghostery_allow_first_party_summary">&pref_ghostery_allow_first_party_summary;</string>
   <string name="pref_ghostery_block_new_trackers_title">&pref_ghostery_block_new_trackers_title;</string>
   <string name="pref_ghostery_block_new_trackers_summary">&pref_ghostery_block_new_trackers_summary;</string>
+  <string name="pref_location_permission_title">&pref_location_permission_title;</string>
 
   <!-- General Settings - Download Options -->
   <string name = "pref_download_options_category">&pref_download_options_category;</string>

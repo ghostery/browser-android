@@ -173,6 +173,7 @@
 <!ENTITY pref_ghostery_allow_first_party_summary "For example, blocking a Facebook tracker on facebook.com might break the site">
 <!ENTITY pref_ghostery_block_new_trackers_title "Block new trackers">
 <!ENTITY pref_ghostery_block_new_trackers_summary "New trackers that are added to Ghostery are blocked by default">
+<!ENTITY pref_location_permission_title "Location permissions">
 
 <!-- General Settings - Download Options -->
 <!ENTITY pref_download_options_category "Download Options">

@@ -7,6 +7,7 @@ package org.mozilla.gecko.preferences;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -17,6 +18,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
 import android.preference.TwoStatePreference;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.LocalBroadcastManager;
@@ -1125,6 +1128,25 @@ public class GeckoPreferences
                 } else if (PREFS_GHOSTERY_BLOCK_NEW_TRACKERS.equals(key)) {
                      final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
                     ((CheckBoxPreference) pref).setChecked(preferenceManager.areNewTrackersBlocked());
+                } else if (PREFS_GEO_REPORTING.equals(key)) {
+                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                         @Override
+                         public boolean onPreferenceClick(Preference preference) {
+                             final PackageManager pm = getPackageManager();
+                             final String packageName = getPackageName();
+                             final Uri permissionsUri = packageName != null ?
+                                     Uri.fromParts("package", packageName, null) : null;
+                             final Intent intent = permissionsUri != null ?
+                                     new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, permissionsUri) :
+                                     null;
+                             final boolean intentSupported = intent != null && pm != null &&
+                                     intent.resolveActivity(pm) != null;
+                             if (intentSupported) {
+                                 startActivity(intent);
+                             }
+                             return true;
+                         }
+                     });
                 }
                 /* Cliqz end */
 
@@ -1453,6 +1475,7 @@ public class GeckoPreferences
             if (!newBooleanValue) {
                 MmaDelegate.stop();
             }
+        /* Cliqz Start o/
         } else if (PREFS_GEO_REPORTING.equals(prefName)) {
             if ((Boolean) newValue) {
                 enableStumbler((CheckBoxPreference) preference);
@@ -1461,6 +1484,7 @@ public class GeckoPreferences
                 broadcastStumblerPref(GeckoPreferences.this, false);
                 return true;
             }
+        /o Cliqz End */
         } else if (PREFS_TAB_QUEUE.equals(prefName)) {
             if ((Boolean) newValue && !TabQueueHelper.canDrawOverlays(this)) {
                 Intent promptIntent = new Intent(this, TabQueuePrompt.class);
