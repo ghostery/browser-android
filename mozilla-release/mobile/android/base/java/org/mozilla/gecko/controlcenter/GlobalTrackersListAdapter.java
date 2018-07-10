@@ -15,6 +15,7 @@ import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.GeckoBundleUtils;
 
 /**
  * Copyright © Cliqz 2018
