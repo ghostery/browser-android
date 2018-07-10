@@ -27,9 +27,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -213,7 +215,11 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
                     // }
                     final Drawable icon = d.mutate();
                     if (useTint) {
-                        DrawableCompat.setTint(icon, Color.WHITE);
+                        DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),R.color
+                                .general_blue_color));
+                    }else{
+                        DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),R.color
+                                .inactive_icon_color));
                     }
                     /* Cliqz end */
 
@@ -243,8 +249,14 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
 
         final ToolbarRoundButton imageButton = new ToolbarRoundButton(mContext, null, R.style.UrlBar_ImageButton);
         final int width = mContext.getResources().getDimensionPixelSize(R.dimen.page_action_button_width);
-        imageButton.setLayoutParams(new LayoutParams(width, LayoutParams.MATCH_PARENT));
-        imageButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        final int height = mContext.getResources().getDimensionPixelSize(R.dimen
+                .browser_toolbar_height);
+
+        LayoutParams params = new LayoutParams(width, height);
+        params.gravity = Gravity.CENTER_VERTICAL;
+        imageButton.setLayoutParams(params);
+        imageButton.setAdjustViewBounds(true);
+        imageButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageButton.setOnClickListener(this);
         imageButton.setOnLongClickListener(this);
         return imageButton;

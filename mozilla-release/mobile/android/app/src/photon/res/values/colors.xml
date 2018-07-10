@@ -280,6 +280,7 @@
     <color name="inactive_tab_color">#E2F0FC</color>
     <color name="home_panesl_background_overlay">#40000000</color>
     <color name="history_list_divider_color">#97A4AE</color>
+    <color name="inactive_icon_color">#97A4AE</color>
 
     <!-- news -->
     <color name="news_bg_color_press">#cdcdcd</color>

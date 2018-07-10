@@ -879,8 +879,9 @@ public class Tab {
             GeckoBundle bundle = new GeckoBundle();
             bundle.putString("id", UUID_PAGE_ACTION_PWA);
             bundle.putString("title", mAppContext.getString(R.string.pwa_add_to_launcher_badge));
-            bundle.putString("icon", "drawable://add_to_homescreen");
+            bundle.putString("icon", "drawable://ic_add_home");
             bundle.putBoolean("important", true);
+            bundle.putBoolean("useTint", true);
             EventDispatcher.getInstance().dispatch("PageActions:Add", bundle);
         } else {
             GeckoBundle bundle = new GeckoBundle();

@@ -45,7 +45,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal"
                 >
@@ -57,7 +57,7 @@
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/site_security"
                 android:src="@drawable/security_mode_icon"
-                android:tint="@android:color/holo_blue_bright"
+                android:tint="@color/general_blue_color"
                 tools:src="@drawable/ic_lock"
                 android:visibility="gone" />
 
@@ -70,20 +70,18 @@
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:maxLines="1"
-                />
+                android:maxLines="1" />
+
+                <org.mozilla.gecko.toolbar.PageActionLayout
+                    android:id="@+id/page_action_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone" />
             </LinearLayout>
         </org.mozilla.gecko.widget.FadedHorizontalScrollView>
         <!-- Cliqz end -->
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
-
-    <org.mozilla.gecko.toolbar.PageActionLayout
-        android:id="@+id/page_action_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible"/>
 
     <org.mozilla.gecko.toolbar.ToolbarRoundButton
         android:id="@+id/stop"

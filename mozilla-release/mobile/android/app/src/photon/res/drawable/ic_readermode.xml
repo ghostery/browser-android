@@ -7,9 +7,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
     <!-- private browsing mode -->
-    <item android:drawable="@drawable/ic_readermode_pm" gecko:state_private="true" />
+    <item android:drawable="@drawable/ic_reader_mode" gecko:state_private="true" />
 
     <!-- normal mode -->
-    <item android:drawable="@drawable/ic_readermode_nm" />
+    <item android:drawable="@drawable/ic_reader_mode" />
 
 </selector>
