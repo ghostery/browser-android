@@ -767,6 +767,9 @@
   <string name="pref_search_regional_germany">&pref_search_regional_germany;</string>
   <string name="pref_search_regional_france">&pref_search_regional_france;</string>
   <string name="pref_search_regional_usa">&pref_search_regional_usa;</string>
+  <string name="pref_search_regional_spain">&pref_search_regional_spain;</string>
+  <string name="pref_search_regional_italy">&pref_search_regional_italy;</string>
+  <string name="pref_search_regional_uk">&pref_search_regional_uk;</string>
   <string name="pref_search_query_suggestions">&pref_search_query_suggestions;</string>
   <string name="pref_search_block_adult_content">&pref_search_block_adult_content;</string>
   <string name="pref_search_auto_completion">&pref_search_auto_completion;</string>
