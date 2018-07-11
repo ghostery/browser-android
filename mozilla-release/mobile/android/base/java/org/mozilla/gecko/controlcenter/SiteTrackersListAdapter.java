@@ -113,7 +113,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         final ImageView stateCheckBox = (ImageView) convertView.findViewById(R.id.cb_block_all);
         final ImageView stateArrow = (ImageView) convertView.findViewById(R.id.cc_state_arrow);
         stateArrow.setImageResource(isExpanded ? R.drawable.cc_ic_collapse_arrow : R.drawable.cc_ic_expand_arrow);
-        final String pageHost = data.getBundle("data").getBundle("summary").getString("pageHost");
+        final String pageHost = GeckoBundleUtils.safeGetString(data, "data/summary/pageHost");
         categoryIcon.setImageDrawable(ContextCompat.getDrawable(mContext, category.categoryIcon));
         categoryNameTextView.setText(categoryName);
         totalTrackersTextView.setText(mContext.getResources().getQuantityString(R.plurals.cc_total_trackers, totalTrackers, totalTrackers));
@@ -131,11 +131,10 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                 numBlocked++;
             }
         }
-        final String pagehost = data.getBundle("data").getBundle("summary").getString("pageHost");
         final List<String> blacklist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data,"data/summary/site_blacklist"));
         final List<String> whitelist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data,"data/summary/site_whitelist"));
-        final boolean isWhiteListed = whitelist.contains(pagehost);
-        final boolean isBlackListed = blacklist.contains(pagehost);
+        final boolean isWhiteListed = whitelist.contains(pageHost);
+        final boolean isBlackListed = blacklist.contains(pageHost);
         if (numRestricted == totalTrackers || isBlackListed) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_restricted);
         } else if (numTrusted == totalTrackers || isWhiteListed) {
@@ -299,10 +298,8 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
             }
             trackerNameTextView.setText(trackerName);
 
-            final List<String> blacklist = Arrays.asList(data.getBundle("data").getBundle("summary")
-                    .getStringArray("site_blacklist"));
-            final List<String> whitelist = Arrays.asList(data.getBundle("data").getBundle("summary")
-                    .getStringArray("site_whitelist"));
+            final List<String> blacklist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data, "data/summary/site_blacklist"));
+            final List<String> whitelist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data, "data/summary/site_whitelist"));
             final boolean isWhiteListed = whitelist.contains(pagehost);
             final boolean isBlackListed = blacklist.contains(pagehost);
             if (isBlackListed
@@ -331,7 +328,9 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                     parent.getWidth() - (isSiteSpecificAllowed || isSiteSpecificBlocked || isWhiteListed || isBlackListed
                             ? partialWidth : fullWidth));
             animation.setDuration(400);
-            if (!isPaused) {
+            if (isPaused || isBlackListed || isWhiteListed) {
+                trackerCheckBox.setOnClickListener(null);
+            } else {
                 trackerCheckBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -350,18 +349,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                 .getBundleArray("categories");
         notifyDataSetChanged();
     }
-
-    private View.OnClickListener trackerOptionsClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            final View optionsMenuView = (View) v.getParent();
-            final View listItemView = (View) optionsMenuView.getParent();
-            final ObjectAnimator animation = ObjectAnimator.ofFloat(optionsMenuView, "translationX", listItemView.getWidth());
-            animation.setDuration(400);
-            animation.start();
-
-        }
-    };
 
     private void hideOptionsMenu(View v) {
         final View optionsMenuView = (View) v.getParent();

@@ -13,6 +13,10 @@ import android.widget.ExpandableListView;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.GeckoBundleUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Copyright © Cliqz 2018
@@ -21,6 +25,8 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
 
     private SiteTrackersListAdapter mTrackerListAdapter;
     private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
+    private GeckoBundle mControlCenterData;
+    private View mOverlay;
 
     public SiteTrackersFragment() {
     }
@@ -34,6 +40,7 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.ghostery_site_trackers_fragment, container, false);
         final ExpandableListView mTrackersList = (ExpandableListView) view.findViewById(R.id.trackers_list);
+        mOverlay = view.findViewById(R.id.disabled_overlay);
         mTrackersList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             int previousExpandedGroup = -1;
             @Override
@@ -58,12 +65,15 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
 
     @Override
     public void updateUI(GeckoBundle data) {
+        mControlCenterData = data;
         mTrackerListAdapter.setData(data);
+        shouldShowOverlay();
     }
 
     @Override
     public void refreshUI() {
         mTrackerListAdapter.notifyDataSetChanged();
+        shouldShowOverlay();
     }
 
     @Override
@@ -96,5 +106,19 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
         inflater.inflate(R.menu.ghostery_site_trackers_overflow_menu, popup.getMenu());
         popup.setOnMenuItemClickListener(this);
         popup.show();
+    }
+
+    private void shouldShowOverlay() {
+        final String pageHost = GeckoBundleUtils.safeGetString(mControlCenterData, "data/summary/pageHost");
+        final List<String> blacklist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(mControlCenterData,"data/summary/site_blacklist"));
+        final List<String> whitelist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(mControlCenterData,"data/summary/site_whitelist"));
+        final boolean isPaused = GeckoBundleUtils.safeGetBoolean(mControlCenterData, "data/summary/paused_blocking");
+        final boolean isWhiteListed = whitelist.contains(pageHost);
+        final boolean isBlackListed = blacklist.contains(pageHost);
+        if (isPaused || isWhiteListed || isBlackListed) {
+            mOverlay.setVisibility(View.VISIBLE);
+        } else {
+            mOverlay.setVisibility(View.GONE);
+        }
     }
 }
