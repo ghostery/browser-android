@@ -123,9 +123,8 @@
                             android:summary="@string/datareporting_crashreporter_summary"
                             android:defaultValue="false" />
 
-        <CheckBoxPreference android:key="android.not_a_preference.app.geo.reportdata"
-                            android:title="@string/datareporting_wifi_title"
-                            android:summary="@string/datareporting_wifi_geolocation_summary" />
+        <Preference android:key="android.not_a_preference.app.geo.reportdata"
+                            android:title="@string/pref_location_permission_title" />
 
         <org.mozilla.gecko.preferences.AlignRightLinkPreference android:key="android.not_a_preference.geo.learn_more"
                                                                 android:title="@string/pref_learn_more"
