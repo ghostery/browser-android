@@ -23,7 +23,6 @@ import java.util.List;
 
 public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements RecyclerViewClickSupport.OnItemClickListener {
 
-    public final int INIT_NUM_SHOWED_NEWS = 3;
     private final Context context;
     private final HomePager.OnUrlOpenListener onUrlOpenListener;
     private List<TopNews> topNews;
@@ -58,13 +57,7 @@ public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements
 
     public void add(List<TopNews> data) {
         topNews.addAll(data);
-        // if the news expanded => add new data to the expanded list so it will appear immediately
-        // otherwise it will remain collapsed with 3 items or less.
-        if (numShowedNews <= INIT_NUM_SHOWED_NEWS) {
-            numShowedNews = Math.min(INIT_NUM_SHOWED_NEWS, data.size());
-        } else {
-            numShowedNews = data.size();
-        }
+        numShowedNews = data.size();
         notifyDataSetChanged();
     }
 

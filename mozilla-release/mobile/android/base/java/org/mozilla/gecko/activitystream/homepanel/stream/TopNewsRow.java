@@ -21,12 +21,18 @@ import static android.support.v4.content.ContextCompat.getDrawable;
  */
 
 public class TopNewsRow extends StreamViewHolder {
+
     public static final int LAYOUT_ID = R.layout.activity_stream_main_topnews;
-    private final Drawable expandNewsIcon, collapseNewsIcon;
+    private final Drawable expandNewsIcon;
+    private final Drawable collapseNewsIcon;
     private TextView title;
-    private RecyclerView newsRView;
     private TopNewsAdapter adapter;
-    private boolean isNewsExpanded = false;
+
+    // By default, the 'Top News' list is expanded i.e. it shows all the top news.
+    private boolean isNewsExpanded = true;
+
+    // Number of items to show in the 'Top News' list when the list is collapsed.
+    private static final int COLLAPSED_NUM_NEWS_COUNT = 3;
 
     public TopNewsRow(final View itemView, HomePager.OnUrlOpenListener onUrlOpenListener) {
         super(itemView);
@@ -36,10 +42,9 @@ public class TopNewsRow extends StreamViewHolder {
         collapseNewsIcon = getDrawable(context, R.drawable.ic_action_collapse);
 
         title = (TextView) itemView.findViewById(R.id.news_title);
-        title.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                expandNewsIcon, null);
+        title.setCompoundDrawablesWithIntrinsicBounds(null, null, collapseNewsIcon, null);
 
-        newsRView = (RecyclerView) itemView.findViewById(R.id.news_recyclerview);
+        RecyclerView newsRView = (RecyclerView) itemView.findViewById(R.id.news_recyclerview);
         adapter = new TopNewsAdapter(context, onUrlOpenListener);
         newsRView.setAdapter(adapter);
         RecyclerViewClickSupport.addTo(newsRView).setOnItemClickListener(adapter);
@@ -49,17 +54,17 @@ public class TopNewsRow extends StreamViewHolder {
             public void onClick(View v) {
                 isNewsExpanded = !isNewsExpanded;
                 final int newsCount = adapter.getTopNewsCount();
+                final int changedCount = newsCount - COLLAPSED_NUM_NEWS_COUNT;
                 if (isNewsExpanded) {
                     title.setCompoundDrawablesWithIntrinsicBounds(null, null,
                             collapseNewsIcon, null);
                     adapter.setNumShowedNews(newsCount);
-                    adapter.notifyItemRangeInserted(adapter.INIT_NUM_SHOWED_NEWS, newsCount - adapter
-                            .INIT_NUM_SHOWED_NEWS);
+                    adapter.notifyItemRangeInserted(COLLAPSED_NUM_NEWS_COUNT, changedCount);
                 } else {
                     title.setCompoundDrawablesWithIntrinsicBounds(null, null,
                             expandNewsIcon, null);
-                    adapter.setNumShowedNews(adapter.INIT_NUM_SHOWED_NEWS);
-                    adapter.notifyItemRangeRemoved(adapter.INIT_NUM_SHOWED_NEWS, newsCount - adapter.INIT_NUM_SHOWED_NEWS);
+                    adapter.setNumShowedNews(COLLAPSED_NUM_NEWS_COUNT);
+                    adapter.notifyItemRangeRemoved(COLLAPSED_NUM_NEWS_COUNT, changedCount);
                 }
             }
         });
