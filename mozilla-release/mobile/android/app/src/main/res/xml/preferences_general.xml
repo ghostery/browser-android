@@ -51,7 +51,6 @@
             android:key="pref.search.query.suggestions"
             android:title="@string/pref_search_query_suggestions" />
         <CheckBoxPreference
-            android:defaultValue="true"
             android:key="pref.search.block.adult.content"
             android:title="@string/pref_search_block_adult_content" />
         <CheckBoxPreference

@@ -6352,7 +6352,10 @@ var ExternalApps = {
 
 var Cliqz = {
   init: function () {
+    this.callbacks = Object.create(null);
+    this.messageId = 1;
     GlobalEventDispatcher.registerListener(this, [
+      "Search:GetStatus",
       "Search:Hide",
       "Search:Search",
       "Search:Show",
@@ -6367,9 +6370,39 @@ var Cliqz = {
 
     Services.cpmm.addMessageListener("MessageChannel:Messages",
       this._extensionListener.bind(this));
+    
+    Services.prefs.addObserver('pref.search.regional', () => {
+      const value = Services.prefs.getCharPref('pref.search.regional');
+      this.messageSearchExtension({
+        module: 'search',
+        action: 'setBackendCountry',
+        args: [value]
+      });
+    });
+
+    Services.prefs.addObserver('pref.search.block.adult.content', () => {
+      const value = Services.prefs.getBoolPref('pref.search.block.adult.content');
+      const key = value ? 'conservative' : 'liberal';
+      this.messageSearchExtension({
+        module: 'search',
+        action: 'setAdultFilter',
+        args: [key]
+      });
+    });
+
+    Services.prefs.addObserver('pref.search.query.suggestions', () => {
+      const value = Services.prefs.getBoolPref('pref.search.query.suggestions');
+      this.messageSearchExtension({
+        module: 'search',
+        action: 'setQuerySuggestions',
+        args: [value]
+      });
+    });
   },
 
   _messageExtension(id, msg, opts = {}) {
+    msg.requestId = this.messageId++;
+
     Services.cpmm.sendAsyncMessage("MessageChannel:Messages", [{
       messageName: "Extension:Message",
       channelId: ExtensionUtils.getUniqueId(),
@@ -6383,14 +6416,19 @@ var Cliqz = {
       data: new StructuredCloneHolder(msg),
       responseType: 3 // MessageChannel.RESPONSE_NONE
     }]);
+
+    let resolver;
+    const promise = new Promise(r => { resolver = r; });
+    this.callbacks[msg.requestId] = resolver;
+    return promise;
   },
 
   messagePrivacyExtension(msg) {
-    Cliqz._messageExtension('firefox@ghostery.com', msg);
+    return Cliqz._messageExtension('firefox@ghostery.com', msg);
   },
   messageSearchExtension(msg) {
     msg.source = 'cliqz-android';
-    Cliqz._messageExtension('android@cliqz.com', msg, {
+    return Cliqz._messageExtension('android@cliqz.com', msg, {
       senderOptions: {
         contextId: 'mobile-cards',
       },
@@ -6468,14 +6506,22 @@ var Cliqz = {
   _extensionListener(ev) {
     const data = ev.data[0];
     const msg = data.data.deserialize(this);
+    const callback = this.callbacks[msg.requestId];
+
     if (msg.target !== 'ANDROID_BROWSER') {
       return;
     }
-    if (data.recipient.extensionId === 'firefox@ghostery.com') {
-      this._privacyExtensionListener(msg);
-    } else if (data.recipient.extensionId === 'android@cliqz.com') {
-      this._searchExtensionListener(msg);
-    }
+    
+    if ('response' in msg && callback) { // handle response
+      callback(msg.response);
+      delete this.callbacks[msg.requestId];
+    } else { // handle request
+      if (data.recipient.extensionId === 'firefox@ghostery.com') {
+        this._privacyExtensionListener(msg);
+      } else if (data.recipient.extensionId === 'android@cliqz.com') {
+        this._searchExtensionListener(msg);
+      }
+    } 
   },
 
   get Ghostery() {
@@ -6549,6 +6595,25 @@ var Cliqz = {
     return true;
   },
 
+  _syncSearchPrefs({ module }) {
+    // TODO: send to java to formulate the settings menu
+    const indexCountries = module.search.supportedIndexCountries;
+    const adult = module.adult.state;
+    const showQuerySuggestions = module.search.showQuerySuggestions;
+    Object.keys(indexCountries).forEach((key) => {
+      if (indexCountries[key].selected) {
+        Services.prefs.setCharPref('pref.search.regional', key);
+      }
+    });
+    Object.keys(adult).forEach((key) => {
+      if (adult[key].selected) {
+        const boolValue = key === 'conservative' ? true : false;
+        Services.prefs.setBoolPref('pref.search.block.adult.content', boolValue);
+      }
+    });
+    Services.prefs.setBoolPref('pref.search.query.suggestions', showQuerySuggestions);
+  },
+
   onEvent: function(event, data, callback) {
     // event cases should be sorted in alphabitical order
     switch(event) {
@@ -6559,6 +6624,13 @@ var Cliqz = {
           action: 'handleTelemetrySignal',
           args: [msg, immediate, schema]
         });
+        break;
+      case "Search:GetStatus":
+        this.messageSearchExtension({
+          module: 'control-center',
+          action: 'status',
+          args: []
+        }).then(this._syncSearchPrefs);
         break;
       case "Search:Hide":
         this.hidePanel(this.Search.panel);
