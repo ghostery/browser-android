@@ -32,4 +32,4 @@ done
 flavor="${flavors[$[ n - 1]]}"
 package="${packages[$flavor]}"
 
-$ABD forward tcp:6000 localfilesystem:/data/data/${package}/firefox-debugger-socket
+$ADB forward tcp:6000 localfilesystem:/data/data/${package}/firefox-debugger-socket
