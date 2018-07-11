@@ -40,6 +40,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 
@@ -123,12 +124,18 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private final SiteIdentityPopup mSiteIdentityPopup;
     private int mSecurityImageLevel;
 
+    /* Cliqz start o/
+    // remove spans colors
     private final ForegroundColorSpan mUrlColorSpan;
     private final ForegroundColorSpan mPrivateUrlColorSpan;
     private final ForegroundColorSpan mBlockedColorSpan;
     private final ForegroundColorSpan mPrivateBlockedColorSpan;
     private final ForegroundColorSpan mDomainColorSpan;
     private final ForegroundColorSpan mPrivateDomainColorSpan;
+    */
+    // add Https color span
+    private final ForegroundColorSpan mHttpsColorSpan;
+    /* Cliqz end */
 
     public ToolbarDisplayLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -168,16 +175,17 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mMinUrlScrollMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                                                               MIN_DOMAIN_SCROLL_MARGIN_DP,
                                                               getResources().getDisplayMetrics());
-        /o Cliqz end */
 
+        // remove spans colors
         mUrlColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_urltext));
         mPrivateUrlColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_urltext_private));
         mBlockedColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_blockedtext));
         mPrivateBlockedColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_blockedtext_private));
         mDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext));
-        /* Cliqz start */
-        /* set domain in gray as well so it appears with whit Url bar background */
         mPrivateDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext_private));
+        */
+        // add Https Color span
+        mHttpsColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.general_blue_color));
         /* Cliqz end */
 
         mSiteSecurity = (ThemedImageButton) findViewById(R.id.site_security);
@@ -315,14 +323,16 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         // Show the about:blocked page title in red, regardless of prefs
         if (tab.getErrorType() == Tab.ErrorType.BLOCKED) {
             final String title = tab.getDisplayTitle();
-
+            /* Cliqz start o/
+            // remove spans colors
             final SpannableStringBuilder builder = new SpannableStringBuilder(title);
             final ForegroundColorSpan fgColorSpan = tab.isPrivate()
                     ? mPrivateBlockedColorSpan
                     : mBlockedColorSpan;
             builder.setSpan(fgColorSpan, 0, title.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-
-            setTitle(builder);
+            */
+            setTitle(title);
+            /* Cliqz end */
             setContentDescription(null);
             return;
         }
@@ -361,12 +371,21 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
             return;
         }
 
-        final SpannableStringBuilder builder = new SpannableStringBuilder(url);
+        /* Cliqz start */
 
+        final SpannableStringBuilder builder = new SpannableStringBuilder(url);
+        /* Cliqz start o/
+        // remove spans colors
         builder.setSpan(isPrivate ? mPrivateUrlColorSpan : mUrlColorSpan, 0, url.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         builder.setSpan(isPrivate ? mPrivateDomainColorSpan : mDomainColorSpan,
                 index, index + baseDomain.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        */
 
+        // set https color to blue
+        if(URLUtil.isHttpsUrl(url)) {
+            builder.setSpan(mHttpsColorSpan,0,5, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+        /* Cliqz end */
         setTitle(builder);
     }
 
