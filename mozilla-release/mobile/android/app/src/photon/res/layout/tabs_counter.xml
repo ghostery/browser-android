@@ -2,41 +2,42 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-
+<!-- Cliqz start -->
+<!-- change width & height -->
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:gecko="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:background="@android:color/black"
-    tools:layout_height="24dp"
-    tools:layout_width="24dp"
+    tools:layout_height="match_parent"
+    tools:layout_width="match_parent"
     tools:parentTag="RelativeLayout">
 
     <FrameLayout
         android:id="@+id/counter_root"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0.5dp">
 
+        <!-- change the box drawable -->
         <org.mozilla.gecko.widget.themed.ThemedImageView
             android:id="@+id/counter_box"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/tabs_counter_box"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_tabs"
             gecko:drawableTintList="@color/tabs_counter_fg"/>
-
+        <!-- change width & height , remove useless textSize it set from java-->
         <org.mozilla.gecko.widget.themed.ThemedTextView
             android:id="@+id/counter_text"
             style="@style/UrlBar.TabCounter.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="@color/tabs_counter_text"
-            android:textSize="12sp"
-            tools:text="18"/>
+            android:gravity="center"
+            android:textColor="@color/tabs_counter_text" />
     </FrameLayout>
-
+    <!--Hide the underline -->
     <org.mozilla.gecko.widget.themed.ThemedImageView
         android:id="@+id/counter_bar"
         android:layout_width="20dp"
@@ -45,6 +46,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="1dp"
         android:src="@drawable/tabs_counter_bar"
-        gecko:drawableTintList="@color/tabs_counter_fg"/>
-
+        gecko:drawableTintList="@color/tabs_counter_fg"
+        android:visibility="gone"
+        />
+    <!-- Cliqz end -->
 </merge>

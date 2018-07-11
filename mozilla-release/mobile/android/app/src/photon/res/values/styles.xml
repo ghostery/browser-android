@@ -903,17 +903,19 @@
     </style>
 
     <!-- Cliqz start -->
+    <!-- add Ghosty icon style -->
     <style name="UrlBar.Ghosty" parent="UrlBar.V15.Ghosty"/>
     <style name="UrlBar.Base.Ghosty" parent="UrlBar.ImageButton"/>
     <style name="UrlBar.V15.Ghosty" parent="UrlBar.Base.Ghosty">
         <item name="android:layout_toLeftOf">@id/tabs</item>
     </style>
-    <!-- Cliqz end -->
 
+    <!-- remove bold from tabs counter text style -->
     <style name="UrlBar.TabCounter.Text">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textStyle">bold</item>
+        <!--<item name="android:textStyle">bold</item>-->
     </style>
+    <!-- Cliqz end -->
 
     <style name="UrlBar.EditCancel" parent="UrlBar.V15.EditCancel"/>
     <style name="UrlBar.Base.EditCancel" parent="UrlBar.ImageButton"/>
