@@ -44,7 +44,7 @@ public class TopNewsRow extends StreamViewHolder {
         title = (TextView) itemView.findViewById(R.id.news_title);
         title.setCompoundDrawablesWithIntrinsicBounds(null, null, collapseNewsIcon, null);
 
-        RecyclerView newsRView = (RecyclerView) itemView.findViewById(R.id.news_recyclerview);
+        final RecyclerView newsRView = (RecyclerView) itemView.findViewById(R.id.news_recyclerview);
         adapter = new TopNewsAdapter(context, onUrlOpenListener);
         newsRView.setAdapter(adapter);
         RecyclerViewClickSupport.addTo(newsRView).setOnItemClickListener(adapter);
@@ -59,12 +59,16 @@ public class TopNewsRow extends StreamViewHolder {
                     title.setCompoundDrawablesWithIntrinsicBounds(null, null,
                             collapseNewsIcon, null);
                     adapter.setNumShowedNews(newsCount);
-                    adapter.notifyItemRangeInserted(COLLAPSED_NUM_NEWS_COUNT, changedCount);
+                    if (changedCount > 0) {
+                        adapter.notifyItemRangeInserted(COLLAPSED_NUM_NEWS_COUNT, changedCount);
+                    }
                 } else {
                     title.setCompoundDrawablesWithIntrinsicBounds(null, null,
                             expandNewsIcon, null);
-                    adapter.setNumShowedNews(COLLAPSED_NUM_NEWS_COUNT);
-                    adapter.notifyItemRangeRemoved(COLLAPSED_NUM_NEWS_COUNT, changedCount);
+                    adapter.setNumShowedNews(Math.min(newsCount, COLLAPSED_NUM_NEWS_COUNT));
+                    if (changedCount > 0) {
+                        adapter.notifyItemRangeRemoved(COLLAPSED_NUM_NEWS_COUNT, changedCount);
+                    }
                 }
             }
         });
