@@ -131,17 +131,21 @@ public class CustomTabsSecurityPopup extends AnchoredPopup {
      * @param security SecurityInformation about the connection.
      */
     private void updateConnectionState(final SecurityInformation security) {
+        /* Cliqz start */
         if (!security.isSecure) {
             if (SecurityInformation.CONTENT_LOADED == security.mixedModeActive) {
                 // Active Mixed Content loaded because user has disabled blocking.
-                mIcon.setImageResource(R.drawable.ic_lock_disabled);
+                // change ic_lock_disabled to info icon
+                mIcon.setImageResource(R.drawable.ic_info);
                 clearSecurityStateIcon();
                 mMixedContentActivity.setVisibility(View.VISIBLE);
                 mMixedContentActivity.setText(R.string.mixed_content_protection_disabled);
             } else if (SecurityInformation.CONTENT_LOADED == security.mixedModePassive) {
                 // Passive Mixed Content loaded.
-                mIcon.setImageResource(R.drawable.ic_lock_inactive);
-                setSecurityStateIcon(R.drawable.ic_warning_major, 1);
+                // change ic_lock_inactive to info icon
+                mIcon.setImageResource(R.drawable.ic_info);
+                // change ic_warning_major to warning
+                setSecurityStateIcon(R.drawable.ic_warning, 1);
                 mMixedContentActivity.setVisibility(View.VISIBLE);
                 if (SecurityInformation.CONTENT_BLOCKED == security.mixedModeActive) {
                     mMixedContentActivity.setText(R.string.mixed_content_blocked_some);
@@ -160,14 +164,17 @@ public class CustomTabsSecurityPopup extends AnchoredPopup {
             mSecurityState.setTextColor(ContextCompat.getColor(mContext, R.color.placeholder_active_grey));
 
         } else if (security.isException) {
-            mIcon.setImageResource(R.drawable.ic_lock_inactive);
-            setSecurityStateIcon(R.drawable.ic_warning_major, 1);
+            // change ic_lock_inactive to info icon
+            mIcon.setImageResource(R.drawable.ic_info);
+            // change ic_warning_major to warning
+            setSecurityStateIcon(R.drawable.ic_warning, 1);
             mSecurityState.setText(R.string.identity_connection_insecure);
             mSecurityState.setTextColor(ContextCompat.getColor(mContext, R.color.placeholder_active_grey));
 
         } else {
             // Connection is secure.
-            mIcon.setImageResource(R.drawable.ic_lock);
+            // change ic_lock to padlock
+            mIcon.setImageResource(R.drawable.ic_padlock);
 
             setSecurityStateIcon(R.drawable.img_check, 2);
             mSecurityState.setTextColor(ContextCompat.getColor(mContext, R.color.affirmative_green));
@@ -182,6 +189,7 @@ public class CustomTabsSecurityPopup extends AnchoredPopup {
                 mMixedContentActivity.setVisibility(View.GONE);
             }
         }
+        /* Cliqz end */
     }
 
     private void clearSecurityStateIcon() {
