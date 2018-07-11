@@ -72,6 +72,7 @@
                 android:singleLine="true"
                 android:maxLines="1"
                 android:textColor="@android:color/black"
+                android:paddingLeft="@dimen/padding_10"
                 />
 
                 <org.mozilla.gecko.toolbar.PageActionLayout
