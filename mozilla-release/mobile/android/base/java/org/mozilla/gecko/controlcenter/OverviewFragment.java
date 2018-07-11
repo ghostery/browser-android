@@ -166,7 +166,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(controlCenterSettingsData, "data/summary/categories");
         for (GeckoBundle category : categories) {
             final GeckoBundle[] trackers = category.getBundleArray("trackers");
-            totalTrackers+=trackers.length;
+            if (trackers != null) {
+                totalTrackers+=trackers.length;
+            }
         }
         return totalTrackers;
     }
@@ -176,14 +178,16 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(controlCenterSettingsData, "data/summary/categories");
         for (GeckoBundle category : categories) {
             final GeckoBundle[] trackers  = category.getBundleArray("trackers");
-            for (GeckoBundle tracker : trackers) {
-                final boolean isBlocked = tracker.getBoolean("blocked");
-                final boolean isTrusted = tracker.getBoolean("ss_allowed");
-                final boolean isRestricted = tracker.getBoolean("ss_blocked");
-                if (isBlocked && !isTrusted) {
-                    totalBlocked++;
-                } else if (isRestricted) {
-                    totalBlocked++;
+            if (trackers != null) {
+                for (GeckoBundle tracker : trackers) {
+                    final boolean isBlocked = tracker.getBoolean("blocked");
+                    final boolean isTrusted = tracker.getBoolean("ss_allowed");
+                    final boolean isRestricted = tracker.getBoolean("ss_blocked");
+                    if (isBlocked && !isTrusted) {
+                        totalBlocked++;
+                    } else if (isRestricted) {
+                        totalBlocked++;
+                    }
                 }
             }
         }

@@ -104,8 +104,8 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         //TODO add name to enum
         final String categoryName = groupGeckoBundle.getString("name");
         final Categories category = Categories.safeValueOf(categoryId);
-        final int totalTrackers = groupGeckoBundle.getInt("num_total");
-        final int blockedTrackers = groupGeckoBundle.getInt("num_blocked");
+        final int totalTrackers = calculateTotalTrackerCount(groupGeckoBundle);
+        final int blockedTrackers = calculateBlockedTrackerCount(groupGeckoBundle);
         final TextView categoryNameTextView = (TextView) convertView.findViewById(R.id.category_name);
         final TextView totalTrackersTextView = (TextView) convertView.findViewById(R.id.total_trackers);
         final TextView blockedTrackersTextView = (TextView) convertView.findViewById(R.id.blocked_trackers);
@@ -414,5 +414,28 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         geckoBundle.putBundle("selected_app_ids", selectedAppIds);
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
         notifyDataSetChanged();
+    }
+
+    private int calculateTotalTrackerCount(GeckoBundle categoryBundle) {
+        final GeckoBundle[] trackers = categoryBundle.getBundleArray("trackers");
+        return trackers == null ? 0 : trackers.length;
+    }
+
+    private int calculateBlockedTrackerCount(GeckoBundle categoryBundle) {
+        int blockedTrackerCount = 0;
+        final GeckoBundle[] trackers = categoryBundle.getBundleArray("trackers");
+        if (trackers != null) {
+            for (GeckoBundle tracker : trackers) {
+                final boolean isBlocked = tracker.getBoolean("blocked");
+                final boolean isTrusted = tracker.getBoolean("ss_allowed");
+                final boolean isRestricted = tracker.getBoolean("ss_blocked");
+                if (isBlocked && !isTrusted) {
+                    blockedTrackerCount++;
+                } else if (isRestricted) {
+                    blockedTrackerCount++;
+                }
+            }
+        }
+        return blockedTrackerCount;
     }
 }
