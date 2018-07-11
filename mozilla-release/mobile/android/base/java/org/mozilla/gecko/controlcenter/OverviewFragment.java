@@ -30,6 +30,7 @@ import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.anolysis.ControlCenterMetrics;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.GeckoBundleUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,8 +100,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     public void updateUI(GeckoBundle controlCenterSettingsData) {
         this.controlCenterSettingsData = controlCenterSettingsData;
         final int allowedTrackers = safeGetInt(controlCenterSettingsData, "data/summary/trackerCounts/allowed");
-        final int blockedTrackers = safeGetInt(controlCenterSettingsData, "data/summary/trackerCounts/blocked");
-        final int totalTrackers = allowedTrackers + blockedTrackers;
+        final int blockedTrackers = calculateBlockedTrackers();
+        final int totalTrackers = calculateTotalTrackers();
         final String domainName = safeGetString(controlCenterSettingsData, "data/summary/pageHost");
         final boolean isSmartBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_smart_block");
         final boolean isAdBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_ad_block");
@@ -145,7 +146,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final String trackersBlocked = getResources().getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers);
         final Spannable trackersBlockedSpan = new SpannableString(trackersBlocked);
         trackersBlockedSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.cc_restricted)), 0,
-                Integer.toString(totalTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                Integer.toString(blockedTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mTrackersBlocked.setText(trackersBlockedSpan);
         mDomainName.setText(domainName);
         final List<String> blackList = Arrays.asList(safeGetStringArray(controlCenterSettingsData, "data/summary/site_blacklist"));
@@ -160,9 +161,43 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         }
     }
 
+    private int calculateTotalTrackers() {
+        int totalTrackers = 0;
+        final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(controlCenterSettingsData, "data/summary/categories");
+        for (GeckoBundle category : categories) {
+            final GeckoBundle[] trackers = category.getBundleArray("trackers");
+            totalTrackers+=trackers.length;
+        }
+        return totalTrackers;
+    }
+
+    private int calculateBlockedTrackers() {
+        int totalBlocked = 0;
+        final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(controlCenterSettingsData, "data/summary/categories");
+        for (GeckoBundle category : categories) {
+            final GeckoBundle[] trackers  = category.getBundleArray("trackers");
+            for (GeckoBundle tracker : trackers) {
+                final boolean isBlocked = tracker.getBoolean("blocked");
+                final boolean isTrusted = tracker.getBoolean("ss_allowed");
+                final boolean isRestricted = tracker.getBoolean("ss_blocked");
+                if (isBlocked && !isTrusted) {
+                    totalBlocked++;
+                } else if (isRestricted) {
+                    totalBlocked++;
+                }
+            }
+        }
+        return totalBlocked;
+    }
+
     @Override
     public void refreshUI() {
-
+        final int blockedTrackers = calculateBlockedTrackers();
+        final String trackersBlocked = getResources().getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers);
+        final Spannable trackersBlockedSpan = new SpannableString(trackersBlocked);
+        trackersBlockedSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.cc_restricted)), 0,
+                Integer.toString(blockedTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        mTrackersBlocked.setText(trackersBlockedSpan);
     }
 
     @Override
