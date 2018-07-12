@@ -101,6 +101,7 @@ esac
 
 AC_SUBST(ANDROID_SOURCE)
 AC_SUBST(ANDROID_PACKAGE_NAME)
+AC_SUBST(KEYSTORE_ALIAS)
 AC_SUBST(OBJCOPY)
 
 dnl ========================================================

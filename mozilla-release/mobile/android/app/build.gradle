@@ -34,7 +34,7 @@ android {
             release {
                 storeFile file(System.getenv('CERT_PATH'))
                 storePassword System.getenv('CERT_PASS')
-                keyAlias 'browser'
+                keyAlias mozconfig.substs.KEYSTORE_ALIAS
                 keyPassword System.getenv('CERT_PASS')
             }
         }
