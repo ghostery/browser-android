@@ -163,8 +163,9 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         }
          /* Cliqz start */
          // create TopNews Layout that contain recycler view of the news
-        else if(type == RowItemType.TOP_NEWS.getViewType()){
-            return new TopNewsRow(inflater.inflate(TopNewsRow.LAYOUT_ID, parent, false),onUrlOpenListener);
+        else if (type == RowItemType.TOP_NEWS.getViewType()) {
+            return new TopNewsRow(inflater.inflate(TopNewsRow.LAYOUT_ID, parent, false),
+                    onUrlOpenListener);
         }
         /* Cliqz end */
         else if (type == RowItemType.TOP_STORIES_TITLE.getViewType()) {
