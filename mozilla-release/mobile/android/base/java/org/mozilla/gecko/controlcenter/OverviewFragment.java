@@ -238,6 +238,18 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         if (mIsGhosteryPaused) {
             styleButton(mTrustSiteButton, false);
             styleButton(mRestrictSiteButton, false);
+            //domain should no longer be restricted/trusted if ghostery is paused
+            final String pageHost = GeckoBundleUtils.safeGetString(controlCenterSettingsData, "data/summary/pageHost");
+            final String[] blackList = GeckoBundleUtils.safeGetStringArray(controlCenterSettingsData, "data/summary/site_blacklist");
+            final String[] whiteList = GeckoBundleUtils.safeGetStringArray(controlCenterSettingsData, "data/summary/site_whitelist");
+            final ArrayList<String> updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
+            final ArrayList<String> updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
+            updatedBlackList.remove(pageHost);
+            updatedWhiteList.remove(pageHost);
+            final GeckoBundle geckoBundle = new GeckoBundle();
+            geckoBundle.putStringArray("site_whitelist", updatedWhiteList);
+            geckoBundle.putStringArray("site_blacklist", updatedBlackList);
+            EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
             ControlCenterMetrics.pause();
         } else {
             ControlCenterMetrics.resume();
@@ -250,15 +262,10 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
 
     private void handleTrustButtonClick() {
         ControlCenterMetrics.trustSite();
-        final String pageHost = controlCenterSettingsData.getBundle("data").getBundle("summary")
-                .getString("pageHost");
+        final String pageHost = GeckoBundleUtils.safeGetString(controlCenterSettingsData, "data/summary/pageHost");
         //get list of blacklisted and whitelisted sites and then add/remove current site and send back the new lists
-        final String[] blackList = controlCenterSettingsData.getBundle("data")
-                .getBundle("summary")
-                .getStringArray("site_blacklist");
-        final String[] whiteList = controlCenterSettingsData.getBundle("data")
-                .getBundle("summary")
-                .getStringArray("site_whitelist");
+        final String[] blackList = GeckoBundleUtils.safeGetStringArray(controlCenterSettingsData, "data/summary/site_blacklist");
+        final String[] whiteList = GeckoBundleUtils.safeGetStringArray(controlCenterSettingsData, "data/summary/site_whitelist");
         final ArrayList<String> updatedBlackList;
         final ArrayList<String> updatedWhiteList;
         mIsSiteTrusted = !mIsSiteTrusted;
@@ -291,15 +298,10 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
 
     private void handleRestrictButtonClick() {
         ControlCenterMetrics.restrictSite();
-        final String pageHost = controlCenterSettingsData.getBundle("data").getBundle("summary")
-                .getString("pageHost");
+        final String pageHost = GeckoBundleUtils.safeGetString(controlCenterSettingsData, "data/summary/pageHost");
         //get list of blacklisted and whitelisted sites and then add/remove current site and send back the new lists
-        final String[] blackList = controlCenterSettingsData.getBundle("data")
-                .getBundle("summary")
-                .getStringArray("site_blacklist");
-        final String[] whiteList = controlCenterSettingsData.getBundle("data")
-                .getBundle("summary")
-                .getStringArray("site_whitelist");
+        final String[] blackList = GeckoBundleUtils.safeGetStringArray(controlCenterSettingsData, "data/summary/site_blacklist");
+        final String[] whiteList = GeckoBundleUtils.safeGetStringArray(controlCenterSettingsData, "data/summary/site_whitelist");
         final ArrayList<String> updatedBlackList;
         final ArrayList<String> updatedWhiteList;
         mIsSiteRestricted = !mIsSiteRestricted;
