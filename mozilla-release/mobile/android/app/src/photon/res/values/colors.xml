@@ -279,12 +279,13 @@
     <color name="general_dark_color">#424242</color>
     <color name="inactive_tab_color">#E2F0FC</color>
     <color name="home_panesl_background_overlay">#40000000</color>
+    <color name="history_list_divider_color">#97A4AE</color>
 
     <!-- news -->
     <color name="news_bg_color_press">#cdcdcd</color>
-    <color name="news_bg_color">#CFFF</color>
-    <color name="news_url_text">#4d000000</color>
-    <color name="news_title_text">#000000</color>
+    <color name="news_bg_color">#40000000</color>
+    <color name="news_url_text">#FFFFFF</color>
+    <color name="news_title_text">#FFFFFF</color>
     <color name="news_local_span">@color/general_blue_color</color>
 
     <!-- URL Bar -->
@@ -292,7 +293,7 @@
 
     <!-- MyOffrz -->
     <color name="myoffrz_icon_tint">@color/general_blue_color</color>
-    <color name="myoffrz_bg_text">#9C9C9C</color>
+    <color name="myoffrz_bg_text">#FFFFFF</color>
     <color name="myoffrz_bg">#E7ECEE</color>
     <color name="myoffrz_onboarding_bg">#b8dfee</color>
     <color name="myoffrz_deactivated_layout">#40000000</color>

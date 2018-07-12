@@ -14,12 +14,12 @@
 
     <org.mozilla.gecko.widget.FaviconView
         android:id="@+id/icon"
-        android:layout_width="@dimen/favicon_small_size"
-        android:layout_height="@dimen/favicon_small_size"
+        android:layout_width="@dimen/ghostery_history_icon_width"
+        android:layout_height="@dimen/ghostery_history_icon_height"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        gecko:backgroundCornerRadius="1dp"
+        gecko:backgroundCornerRadius="12dp"
         tools:background="@android:color/holo_green_light"/>
 
     <LinearLayout

@@ -1,16 +1,11 @@
 <!-- Copyright © Cliqz 2018-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
   <path
-      android:pathData="M17.4783,16.5363l3.1248,-1.0349l-8.6347,-3.4813l3.5175,8.5459l1.0458,-3.0927l2.9215,2.8915l0.9466,-0.9366z"
-      android:strokeWidth="1"
-      android:fillColor="#FFFFFF"
-      android:strokeColor="#00000000"/>
-  <path
-      android:pathData="M11.9682,17.3198C11.9947,17.3198 12.0202,17.3162 12.0466,17.3159L13.4704,20.7857C12.9815,20.8681 12.4803,20.9133 11.9682,20.9133C7.0336,20.9133 3.0188,16.9275 3.0188,12.0282C3.0188,7.1289 7.0336,3.1432 11.9682,3.1432C16.9032,3.1432 20.918,7.1289 20.918,12.0282C20.918,12.5432 20.8711,13.0472 20.786,13.5384L17.2934,12.126C17.294,12.093 17.2983,12.0612 17.2983,12.0282C17.2983,9.1104 14.9071,6.7367 11.9682,6.7367C9.0294,6.7367 6.6385,9.1104 6.6385,12.0282C6.6385,14.946 9.0294,17.3198 11.9682,17.3198Z"
+      android:pathData="M7,12L12.5,12L12.5,6L7,6L7,12ZM15.25,30L20.75,30L20.75,24L15.25,24L15.25,30ZM7,30L12.5,30L12.5,24L7,24L7,30ZM7,21L12.5,21L12.5,15L7,15L7,21ZM15.25,21L20.75,21L20.75,15L15.25,15L15.25,21ZM23.5,6L23.5,12L29,12L29,6L23.5,6ZM15.25,12L20.75,12L20.75,6L15.25,6L15.25,12ZM23.5,21L29,21L29,15L23.5,15L23.5,21ZM23.5,30L29,30L29,24L23.5,24L23.5,30Z"
       android:strokeWidth="1"
       android:fillColor="#FFFFFF"
       android:strokeColor="#00000000"/>

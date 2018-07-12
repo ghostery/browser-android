@@ -13,6 +13,7 @@ import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.activitystream.homepanel.topnews.TopNewsAdapter;
 import org.mozilla.gecko.home.HomePager;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.widget.HistoryDividerItemDecoration;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
 import java.util.List;
@@ -56,6 +57,7 @@ public class TopNewsRow extends StreamViewHolder {
         adapter = new TopNewsAdapter(context, onUrlOpenListener);
         newsRView.setAdapter(adapter);
         RecyclerViewClickSupport.addTo(newsRView).setOnItemClickListener(adapter);
+        newsRView.addItemDecoration(new HistoryDividerItemDecoration(context));
 
         title.setOnClickListener(new View.OnClickListener() {
             @Override

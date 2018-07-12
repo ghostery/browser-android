@@ -6,15 +6,6 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/empty_offers_icon_iv"
-        android:layout_width="@dimen/myoffrz_icon_size"
-        android:layout_height="@dimen/myoffrz_icon_size"
-        android:background="@drawable/oval_shape_white"
-        android:scaleType="center"
-        android:tint="@color/myoffrz_icon_tint"
-        app:srcCompat="@drawable/myoffrz_icon_black" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

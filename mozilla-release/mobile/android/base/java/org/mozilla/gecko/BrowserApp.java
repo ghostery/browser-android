@@ -3823,7 +3823,9 @@ public class BrowserApp extends GeckoApp
 
         if (!GeckoThread.isRunning()) {
             aMenu.findItem(R.id.settings).setEnabled(false);
+            /* Cliqz Start o/
             aMenu.findItem(R.id.help).setEnabled(false);
+            /o Cliqz End*/
         }
 
         Tab tab = Tabs.getInstance().getSelectedTab();

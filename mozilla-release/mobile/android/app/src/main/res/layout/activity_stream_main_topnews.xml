@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:background="@color/top_news_item_background_selector"
         android:padding="@dimen/news_title_padding"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
         android:text="@string/activity_stream_top_news" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/news_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
 
 </LinearLayout>

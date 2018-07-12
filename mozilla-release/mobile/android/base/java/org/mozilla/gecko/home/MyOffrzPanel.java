@@ -70,7 +70,7 @@ public class MyOffrzPanel extends HomeFragment {
 
     ViewGroup onboardingVG , emptyOffersOuterContainer, offersContainer, activationVG;
 
-    ImageView onboardingIcon, emptyOffersIcon;
+    ImageView onboardingIcon;
 
     TextView onboardingText, activationText, learnMoreActivation;
 
@@ -100,7 +100,6 @@ public class MyOffrzPanel extends HomeFragment {
         offersOuterContainer = view.findViewById(R.id.offers_outer_container);
         myOffrzDeactivateView = view.findViewById(R.id.myoffrz_deactivate_view);
         onboardingIcon = (ImageView) view.findViewById(R.id.onboarding_feature_icon_iv);
-        emptyOffersIcon = (ImageView) view.findViewById(R.id.empty_offers_icon_iv);
         onboardingText = (TextView) view.findViewById(R.id.onboarding_feature_description_tv);
         activationText = (TextView) view.findViewById(R.id.activation_feature_description_tv);
         learnMoreActivation = (TextView) view.findViewById(R.id.learn_more_tv);

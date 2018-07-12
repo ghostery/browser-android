@@ -85,7 +85,9 @@ public class ActivityStreamPanel extends FrameLayout {
         contentRecyclerView.setHasFixedSize(true);
         // Override item animations to avoid horrible topsites refreshing
         contentRecyclerView.setItemAnimator(new StreamItemAnimator());
+        /* Cliqz Start o/
         contentRecyclerView.addItemDecoration(new HighlightsDividerItemDecoration(context));
+        /o Cliqz End */
 
         RecyclerViewClickSupport.addTo(contentRecyclerView)
                 .setOnItemClickListener(adapter)
