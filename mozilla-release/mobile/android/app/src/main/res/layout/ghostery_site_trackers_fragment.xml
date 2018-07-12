@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/cc_transparency">
+    android:background="@color/cc_transparency"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,15 +36,27 @@
             android:src="@drawable/ic_overflow_nm" />
     </RelativeLayout>
 
-    <ExpandableListView
-        android:id="@+id/trackers_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="1dp"
-        android:footerDividersEnabled="true"
-        android:groupIndicator="@null"
-        android:headerDividersEnabled="true"
-        tools:listitem="@layout/ghostery_list_item_category"
-        android:childDivider="@drawable/cc_trackers_separator"
-        android:divider="@drawable/cc_categories_separator"/>
+        android:layout_height="match_parent">
+
+        <ExpandableListView
+            android:id="@+id/trackers_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:childDivider="@drawable/cc_trackers_separator"
+            android:divider="@drawable/cc_categories_separator"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="true"
+            android:groupIndicator="@null"
+            android:headerDividersEnabled="true"
+            tools:listitem="@layout/ghostery_list_item_category" />
+
+        <View
+            android:id="@+id/disabled_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#88FFFFFF"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>
