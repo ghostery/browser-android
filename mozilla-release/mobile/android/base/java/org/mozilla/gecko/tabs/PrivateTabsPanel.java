@@ -83,4 +83,12 @@ class PrivateTabsPanel extends RelativeLayout implements CloseAllPanelView {
     public void onCloseAll() {
         tabsLayout.onCloseAll();
     }
+
+    /* Cliqz start */
+    // get tabs count for tab_counter text
+    @Override
+    public int getTabsCount(){
+        return tabsLayout.getTabsCount();
+    }
+    /* Cliqz end */
 }

@@ -48,4 +48,9 @@
 
     <dimen name="tablet_tab_strip_height_pwa">48dp</dimen>
 
+    <!-- Cliqz start -->
+    <!-- Tabs Overview -->
+    <dimen name="tab_panel_text_size">32sp</dimen>
+    <!-- Cliqz end -->
+
 </resources>

@@ -177,7 +177,10 @@
     <dimen name="tab_panel_grid_item_vpadding_compact">6dp</dimen>
 
     <!-- TabsListLayout -->
-    <dimen name="tab_highlight_stroke_width">5dp</dimen>
+    <!-- Cliqz start -->
+    <!-- reduce stroke width of tabs -->
+    <dimen name="tab_highlight_stroke_width">3dp</dimen>
+    <!-- Cliqz end -->
     <dimen name="tab_favicon_size">16dp</dimen>
     <dimen name="tab_favicon_text_size">12sp</dimen>
 
@@ -265,6 +268,7 @@
     <!-- Cliqz start -->
     <!-- General -->
     <dimen name="icon_size">50dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
     <dimen name="padding_10">10dp</dimen>
     <dimen name="padding_5">5dp</dimen>
 
@@ -291,6 +295,9 @@
     <dimen name="ghostery_history_icon_width">48dp</dimen>
     <dimen name="ghostery_history_icon_height">48dp</dimen>
     <dimen name="ghostery_history_divider_height">0.5dp</dimen>
+
+    <!-- Tabs Overview -->
+    <dimen name="tab_panel_text_size">24sp</dimen>
     <!-- Cliqz end -->
 
 </resources>

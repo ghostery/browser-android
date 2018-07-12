@@ -5,12 +5,13 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:gecko="http://schemas.android.com/apk/res-auto">
-
+    <!-- Cliqz start -->
+    <!-- change all status color to blue except normal state is gray for normal and private tabs -->
     <item android:state_focused="true">
 
         <shape android:shape="rectangle">
             <!-- @color/fennec_ui_orange with alpha -->
-            <solid android:color="@color/tab_item_normal_highlight_bg"/>
+            <solid android:color="@color/general_blue_color"/>
             <corners android:radius="@dimen/standard_corner_radius"/>
         </shape>
 
@@ -21,7 +22,7 @@
 
         <shape android:shape="rectangle">
             <!-- @color/private_browsing_purple with alpha -->
-            <solid android:color="@color/tab_item_private_highlight_bg"/>
+            <solid android:color="@color/general_blue_color"/>
             <corners android:radius="@dimen/standard_corner_radius"/>
         </shape>
 
@@ -32,7 +33,7 @@
 
         <shape android:shape="rectangle">
             <!-- @color/private_browsing_purple with alpha -->
-            <solid android:color="@color/tab_item_private_highlight_bg_80"/>
+            <solid android:color="@color/general_blue_color"/>
             <corners android:radius="@dimen/standard_corner_radius"/>
         </shape>
 
@@ -42,7 +43,7 @@
           gecko:state_private="false">
 
         <shape android:shape="rectangle">
-            <solid android:color="@color/tab_item_normal_highlight_bg_80"/>
+            <solid android:color="@color/general_blue_color"/>
             <corners android:radius="@dimen/standard_corner_radius"/>
         </shape>
 
@@ -51,7 +52,7 @@
     <item gecko:state_recording="true">
 
         <shape android:shape="rectangle">
-            <solid android:color="#FFFF0000"/>
+            <solid android:color="@color/general_blue_color"/>
             <corners android:radius="@dimen/standard_corner_radius"/>
         </shape>
 
@@ -64,7 +65,7 @@
           gecko:state_private="true">
 
         <shape android:shape="rectangle">
-            <solid android:color="@color/private_browsing_purple"/>
+            <solid android:color="@color/general_blue_color"/>
             <corners android:radius="@dimen/standard_corner_radius"/>
         </shape>
 
@@ -77,7 +78,7 @@
           gecko:state_private="true">
 
         <shape android:shape="rectangle">
-            <solid android:color="@color/tab_item_private_bg"/>
+            <solid android:color="@color/dark_transparent_overlay"/>
             <corners android:radius="@dimen/standard_corner_radius"/>
         </shape>
 
@@ -89,7 +90,7 @@
           gecko:state_recording="false">
 
         <shape android:shape="rectangle">
-            <solid android:color="@color/tab_item_normal_highlight_bg"/>
+            <solid android:color="@color/general_blue_color"/>
             <corners android:radius="@dimen/standard_corner_radius"/>
         </shape>
 
@@ -101,11 +102,11 @@
           gecko:state_recording="false">
 
         <shape android:shape="rectangle">
-            <solid android:color="@color/tab_item_normal_bg"/>
+            <solid android:color="@color/dark_transparent_overlay"/>
             <corners android:radius="@dimen/standard_corner_radius"/>
         </shape>
 
     </item>
-    <item android:drawable="@android:color/transparent"/>
-
+    <item android:drawable="@color/dark_transparent_overlay"/>
+    <!-- Cliqz end -->
 </selector>
