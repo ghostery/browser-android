@@ -29,6 +29,10 @@ import java.util.List;
  */
 public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
 
+    private static final int STATE_UNCHECKED = 0;
+    private static final int STATE_CHECKED = 1;
+    private static final int STATE_MIXED = 2;
+
     private GeckoBundle[] mListData;
     private GeckoBundle data;
     private Context mContext;
@@ -113,39 +117,73 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         final ImageView stateCheckBox = (ImageView) convertView.findViewById(R.id.cb_block_all);
         final ImageView stateArrow = (ImageView) convertView.findViewById(R.id.cc_state_arrow);
         stateArrow.setImageResource(isExpanded ? R.drawable.cc_ic_collapse_arrow : R.drawable.cc_ic_expand_arrow);
-        final String pageHost = GeckoBundleUtils.safeGetString(data, "data/summary/pageHost");
         categoryIcon.setImageDrawable(ContextCompat.getDrawable(mContext, category.categoryIcon));
         categoryNameTextView.setText(categoryName);
         totalTrackersTextView.setText(mContext.getResources().getQuantityString(R.plurals.cc_total_trackers, totalTrackers, totalTrackers));
         blockedTrackersTextView.setText(mContext.getResources().getString(R.string.cc_num_blocked, blockedTrackers));
         int numBlocked = 0;
         int numTrusted = 0;
-        int numRestricted = 0;
         final GeckoBundle[] trackers = groupGeckoBundle.getBundleArray("trackers");
-        for (GeckoBundle tracker : trackers) {
-            if (tracker.getBoolean("ss_blocked")) {
-                numRestricted++;
-            } else if (tracker.getBoolean("ss_allowed")) {
-                numTrusted++;
-            } else if (tracker.getBoolean("blocked")) {
-                numBlocked++;
+        if (trackers != null) {
+            for (GeckoBundle tracker : trackers) {
+                if (tracker.getBoolean("ss_allowed")) {
+                    numTrusted++;
+                }
+                if (tracker.getBoolean("blocked")) {
+                    numBlocked++;
+                }
             }
         }
-        final List<String> blacklist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data,"data/summary/site_blacklist"));
-        final List<String> whitelist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data,"data/summary/site_whitelist"));
-        final boolean isWhiteListed = whitelist.contains(pageHost);
-        final boolean isBlackListed = blacklist.contains(pageHost);
-        if (numRestricted == totalTrackers || isBlackListed) {
-            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_restricted);
-        } else if (numTrusted == totalTrackers || isWhiteListed) {
-            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_trust);
-        } else if (numBlocked == totalTrackers) {
+        final int state;
+        if (numBlocked == 0) {
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_unchecked);
+            state = STATE_UNCHECKED;
+        } else if (numBlocked == totalTrackers && numTrusted == 0) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
-        } else if (numBlocked == 0 && numRestricted == 0 && numTrusted == 0) {
-            stateCheckBox.setImageResource(0);
-        } else {
+            state = STATE_CHECKED;
+        } else if (numBlocked > 0 && (numTrusted > 0 || numBlocked < totalTrackers)) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_mixed);
+            state = STATE_MIXED;
+        } else {
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_unchecked);
+            state = STATE_UNCHECKED;
         }
+        stateCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int newState;
+                switch (state) {
+                    case STATE_UNCHECKED:
+                        newState = STATE_CHECKED;
+                        break;
+                    case STATE_CHECKED:
+                        newState = STATE_UNCHECKED;
+                        break;
+                    case STATE_MIXED:
+                        newState = STATE_CHECKED;
+                        break;
+                    default:
+                        newState = STATE_UNCHECKED;
+                }
+                if (trackers != null) {
+                    final GeckoBundle selectedAppIds = GeckoBundleUtils.safeGetBundle(data,"data/blocking/selected_app_ids");
+                    for (GeckoBundle tracker : trackers) {
+                        final String trackerId = Integer.toString(tracker.getInt("id"));
+                        if (newState == STATE_CHECKED) {
+                            tracker.putBoolean("blocked", true);
+                            selectedAppIds.putInt(trackerId, 1);
+                        } else {
+                            tracker.putBoolean("blocked", false);
+                            selectedAppIds.remove(trackerId);
+                        }
+                    }
+                    final GeckoBundle geckoBundle = new GeckoBundle();
+                    geckoBundle.putBundle("selected_app_ids", selectedAppIds);
+                    EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+                    notifyDataSetChanged();
+                }
+            }
+        });
         return convertView;
     }
 
@@ -258,7 +296,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                             for (int i = 0; i < blockListLength; i++) {
                                 updatedBlockList.add(siteSpecificBlockList[i]);
                             }
-                            updatedUnblockList.add(trackerId);
+                            updatedBlockList.add(trackerId);
                             final int unBlockListLength = siteSpecificUnblockList == null ? 0 : siteSpecificUnblockList.length;
                             for (int i = 0; i < unBlockListLength; i++) {
                                 updatedUnblockList.add(siteSpecificUnblockList[i]);
