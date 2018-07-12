@@ -111,12 +111,51 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         totalTrackersTextView.setText(mContext.getResources().getQuantityString(R.plurals.cc_total_trackers, totalTrackers, totalTrackers));
         blockedTrackersTextView.setText(mContext.getString(R.string.cc_num_blocked, blockedTrackers));
         if (blockedTrackers == 0) {
-            stateCheckBox.setImageResource(0);
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_unchecked);
         } else if (blockedTrackers == totalTrackers) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
         } else {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_mixed);
         }
+        stateCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //block or unblock the whole category
+                final GeckoBundle selectedAppIds = GeckoBundleUtils.safeGetBundle(data, "data/blocking/selected_app_ids");
+                final GeckoBundle[] trackers = GeckoBundleUtils.safeGetBundleArray(groupGeckoBundle, "trackers");
+                for (GeckoBundle tracker : trackers) {
+                    final String trackerId = tracker.getString("id", "");
+                    tracker.putBoolean("blocked", blockedTrackers < totalTrackers);
+                    if (blockedTrackers < totalTrackers) {
+                        selectedAppIds.putInt(trackerId, 1);
+                    } else {
+                        selectedAppIds.remove(trackerId);
+                    }
+                }
+                if (blockedTrackers < totalTrackers) {
+                    groupGeckoBundle.putInt("num_blocked", totalTrackers);
+                } else {
+                    groupGeckoBundle.putInt("num_blocked", 0);
+                }
+                //reflect the change in sitetrackerview also
+                final GeckoBundle[] siteTrackerCategories = GeckoBundleUtils.safeGetBundleArray(data, "data/summary/categories");
+                for (GeckoBundle siteTrackerCategory : siteTrackerCategories) {
+                    final String siteTrackerCategoryId = siteTrackerCategory.getString("id");
+                    if (categoryId.equals(siteTrackerCategoryId)) {
+                        final int totalTrackers = siteTrackerCategory.getInt("num_total");
+                        siteTrackerCategory.putInt("num_blocked", blockedTrackers < totalTrackers ? totalTrackers : 0);
+                        final GeckoBundle[] siteTrackers = siteTrackerCategory.getBundleArray("trackers");
+                        for (GeckoBundle tracker : siteTrackers) {
+                            tracker.putBoolean("blocked", blockedTrackers < totalTrackers);
+                        }
+                    }
+                }
+                final GeckoBundle geckoBundle = new GeckoBundle();
+                geckoBundle.putBundle("selected_app_ids", selectedAppIds);
+                EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+                notifyDataSetChanged();
+            }
+        });
         return convertView;
     }
 
