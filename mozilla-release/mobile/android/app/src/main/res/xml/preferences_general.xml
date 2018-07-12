@@ -42,7 +42,7 @@
     <!-- add search category -->
     <PreferenceCategory android:title="@string/pref_search_category">
         <ListPreference
-            android:key="pref.search.regional"
+            android:key="cliqz.search.regional"
             android:title="@string/pref_search_regional"
             android:entries="@array/pref_search_regional_entries"
             android:entryValues="@array/pref_search_regional_values"/>

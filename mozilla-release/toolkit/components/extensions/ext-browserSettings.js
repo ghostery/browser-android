@@ -106,6 +106,16 @@ ExtensionPreferencesManager.addSetting("webNotificationsDisabled", {
   },
 });
 
+ExtensionPreferencesManager.addSetting("cliqzSearchRegional", {
+  prefNames: [
+    "cliqz.search.regional",
+  ],
+
+  setCallback(value) {
+    return { [this.prefNames[0]]: value };
+  },
+});
+
 this.browserSettings = class extends ExtensionAPI {
   getAPI(context) {
     let {extension} = context;
