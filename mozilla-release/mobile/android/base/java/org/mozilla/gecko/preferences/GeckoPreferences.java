@@ -233,6 +233,9 @@ public class GeckoPreferences
     public static final String PREFS_IS_BACKGROUND_ENABLED = "pref.cliqz.tab.background";
     public static final String PREFS_IS_TOP_SITES_ENABLED = "pref.cliqz.tab.topsites";
     public static final String PREFS_IS_NEWS_ENABLED = "pref.cliqz.tab.news";
+    // should the 'Top News' list be collapsed or expanded. 'true' for expanded.
+    public static final String PREFS_NEWS_VIEW_EXPANDED = "pref.cliqz.tab.news.viewtype";
+
     // add show myoffrz and about my offrz to general settings menu
     public static final String PREFS_SHOW_MYOFFRZ = "pref.show.myoffrz";
     private static final String PREFS_ABOUT_MYOFFRZ = NON_PREF_PREFIX+ "about.myoffrz";

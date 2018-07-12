@@ -1,15 +1,19 @@
 package org.mozilla.gecko.activitystream.homepanel.topnews;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
+import org.mozilla.gecko.activitystream.homepanel.stream.TopNewsRow;
 import org.mozilla.gecko.home.HomePager;
+import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
@@ -56,8 +60,15 @@ public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements
     }
 
     public void add(List<TopNews> data) {
+        final SharedPreferences preferences = GeckoSharedPrefs.forProfile(context);
+        boolean isNewsExpanded = preferences.getBoolean(GeckoPreferences.PREFS_NEWS_VIEW_EXPANDED,
+                TopNewsRow.PREFS_DEFAULT_NEWS_VIEW_EXPANDED);
+        if (isNewsExpanded) {
+            numShowedNews = data.size();
+        } else {
+            numShowedNews = Math.min(TopNewsRow.COLLAPSED_NUM_NEWS_COUNT, data.size());
+        }
         topNews.addAll(data);
-        numShowedNews = data.size();
         notifyDataSetChanged();
     }
 
