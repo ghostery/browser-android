@@ -412,6 +412,7 @@ public class GeckoApplication extends Application
                         return;
                     }
 
+                    /* Cliqz start o/
                     final ContentResolver cr = context.getContentResolver();
                     final LocalBrowserDB db = new LocalBrowserDB(profile.getName());
 
@@ -423,6 +424,7 @@ public class GeckoApplication extends Application
                     final int offset = distribution == null ? 0 :
                             db.addDistributionBookmarks(cr, distribution, 0);
                     db.addDefaultBookmarks(context, cr, offset);
+                    /o Cliqz end */
 
                     Log.d(LOG_TAG, "Running post-distribution task: android preferences.");
                     DistroSharedPrefsImport.importPreferences(context, distribution);
