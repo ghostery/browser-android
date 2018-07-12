@@ -8,7 +8,7 @@ function isUndefined() {
   fi
 }
 
-type "adb" > /dev/null 2>&1 && ABD="adb"
+type "adb" > /dev/null 2>&1 && ADB="adb"
 type "emulator" > /dev/null 2>&1 && EMULATOR="emulator"
 
 if [ -z "${ADB}" ] && [ -n "${ANDROID_HOME}" ]; then

@@ -160,7 +160,7 @@ stage('JIRA'){
                     jiraTransitionIssue idOrKey: element, input: transitionInput
                     echo "Transistioned ${element}"
                 } else{
-                    echo """Element with id ${element} was not transitioned\nIts status is: """.stripI+issue.data.fields.status.name
+                    echo """Element with id ${element} was not transitioned\nIts status is: """+issue.data.fields.status.name
                 }
             }
             catch (Error e){
