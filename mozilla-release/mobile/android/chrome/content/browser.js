@@ -6596,22 +6596,56 @@ var Cliqz = {
   },
 
   _syncSearchPrefs({ module }) {
-    // TODO: send to java to formulate the settings menu
+    const messages = [];
+    // The service prefs is autoritative
     const indexCountries = module.search.supportedIndexCountries;
-    const adult = module.adult.state;
-    const showQuerySuggestions = module.search.showQuerySuggestions;
-    Object.keys(indexCountries).forEach((key) => {
-      if (indexCountries[key].selected) {
-        Services.prefs.setCharPref('pref.search.regional', key);
-      }
+    // Check if extension has a default
+    const extSearchIndexDefault =
+      Object.keys(indexCountries).find((key) => {
+        return indexCountries[key].selected;
+      });
+    var searchIndex = extSearchIndexDefault ? extSearchIndexDefault : "us";
+    try {
+      searchIndex = Services.prefs.getCharPref("pref.search.regional");
+    } catch (error) {
+      // Oops, we do not have the preference. Let's create one using the
+      // extension default
+      Services.prefs.setCharPref("pref.search.regional", searchIndex);
+    }
+    // Now we have a solid default or a valid preference, let's set it back to
+    // the extension
+    messages.push(["setBackendCountry", searchIndex]);
+
+    const adultState = module.adult.state;
+    const extBlockAdultContentDefault = 
+      Object.keys(adultState).find((key) => {
+       return adultState[key].selected;
+      }) === 'conservative';
+    var blockAdultContent = extBlockAdultContentDefault ?
+      extBlockAdultContentDefault : true;
+    try {
+      blockAdultContent =
+        Services.prefs.getBoolPref("pref.search.block.adult.content");
+    } catch (error) {
+      Services.prefs.setBoolPref("pref.search.block.adult.content", blockAdultContent);
+    }
+    messages.push(["setAdultFilter", blockAdultContent ? "conservative" : "liberal" ]);
+
+    var showQuerySuggestions = Boolean(module.search.showQuerySuggestions);
+    try {
+      showQuerySuggestions = Services.prefs.getBoolPref('pref.search.query.suggestions');
+    } catch (error) {
+      Services.prefs.setBoolPref('pref.search.query.suggestions', showQuerySuggestions);
+    }
+    messages.push(["setQuerySuggestions", showQuerySuggestions]);
+
+    messages.forEach((msg) => {
+      this.messageSearchExtension({
+        module: "search",
+        action: msg[0],
+        args: [ msg[1] ]
+      });
     });
-    Object.keys(adult).forEach((key) => {
-      if (adult[key].selected) {
-        const boolValue = key === 'conservative' ? true : false;
-        Services.prefs.setBoolPref('pref.search.block.adult.content', boolValue);
-      }
-    });
-    Services.prefs.setBoolPref('pref.search.query.suggestions', showQuerySuggestions);
   },
 
   onEvent: function(event, data, callback) {
@@ -6630,7 +6664,7 @@ var Cliqz = {
           module: 'control-center',
           action: 'status',
           args: []
-        }).then(this._syncSearchPrefs);
+        }).then((...args) => this._syncSearchPrefs(...args));
         break;
       case "Search:Hide":
         this.hidePanel(this.Search.panel);
