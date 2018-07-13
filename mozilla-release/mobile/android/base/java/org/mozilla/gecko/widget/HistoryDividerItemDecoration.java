@@ -20,11 +20,12 @@ public class HistoryDividerItemDecoration extends RecyclerView.ItemDecoration {
     private final Paint mDividerPaint;
 
     public HistoryDividerItemDecoration(Context context) {
-        mDividerHeight = (int) context.getResources().getDimension(R.dimen.page_row_divider_height);
-
+        /* Cliqz Start */
+        mDividerHeight = (int) context.getResources().getDimension(R.dimen.ghostery_history_divider_height);
+        /* Cliqz Start */
         mDividerPaint = new Paint();
         /* Cliqz start */
-        mDividerPaint.setColor(ContextCompat.getColor(context, android.R.color.white));
+        mDividerPaint.setColor(ContextCompat.getColor(context, R.color.history_list_divider_color));
         /* Cliqz end */
         mDividerPaint.setStyle(Paint.Style.FILL_AND_STROKE);
     }

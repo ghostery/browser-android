@@ -284,6 +284,11 @@
     <!-- Control Center -->
     <dimen name="ghostery_list_item_action_button_width">75dp</dimen>
     <dimen name="ghostery_overview_button_width">225dp</dimen>
+
+    <!-- History and bookmarks view -->
+    <dimen name="ghostery_history_icon_width">48dp</dimen>
+    <dimen name="ghostery_history_icon_height">48dp</dimen>
+    <dimen name="ghostery_history_divider_height">0.5dp</dimen>
     <!-- Cliqz end -->
 
 </resources>

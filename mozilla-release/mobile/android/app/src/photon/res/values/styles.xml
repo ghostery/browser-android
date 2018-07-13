@@ -244,14 +244,15 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minWidth">120dp</item>
-        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_gravity">left</item>
         <item name="android:textAppearance">@style/TextAppearance.Widget.Home.Header</item>
-        <item name="android:background">@drawable/home_header_item_bg</item>
         <item name="android:focusable">false</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">left</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginStart">20dp</item>
     </style>
     <!-- Cliqz end -->
 
@@ -407,9 +408,10 @@
 
     <style name="TextAppearance.Widget.Home.Header" parent="TextAppearance.Small">
         <!-- Cliqz start -->
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
         <!-- Cliqz end -->
-        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="TextAppearance.Widget.Home.ItemTitle" parent="TextAppearance">

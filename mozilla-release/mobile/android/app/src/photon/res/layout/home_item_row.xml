@@ -9,4 +9,6 @@
                                        android:layout_height="@dimen/wrap_content"
                                        android:background="@android:color/transparent"
                                        android:gravity="center_vertical"
-                                       android:minHeight="@dimen/search_item_min_height"/>
+                                       android:minHeight="@dimen/search_item_min_height"
+                                       android:paddingTop="15dp"
+                                       android:paddingBottom="15dp"/>
