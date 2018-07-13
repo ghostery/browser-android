@@ -55,7 +55,7 @@ import android.widget.RelativeLayout;
 * display state. It's used to display the state of the currently selected
 * tab. It should always be updated through a single entry point
 * (updateFromTab) and should never track any tab events or gecko messages
-* on its own to keep it as dumb as possible.
+* on    its own to keep it as dumb as possible.
 *
 * The UI has two possible modes: progress and display which are triggered
 * when UpdateFlags.PROGRESS is used depending on the current tab state.
@@ -109,13 +109,13 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private final ThemedTextView mTitle;
     private final ThemedLinearLayout mThemeBackground;
     /* Cliqz start */
-    /* add padding left and rename padding to padding right */
+    // add padding left and rename padding to padding right
     private final int mTitlePaddingRight;
     private final int mTitlePaddingLeft;
-    // stop scrolling title, it ellipses form the end.
-//    private final HorizontalScrollView mTitleScroll;
-//    private final int mMinUrlScrollMargin;
-    /* Cliqz end */
+    /* stop scrolling title, it ellipses form the end.
+    private final HorizontalScrollView mTitleScroll;
+    private final int mMinUrlScrollMargin;
+    /o Cliqz end */
     private ToolbarPrefs mPrefs;
     private OnTitleChangeListener mTitleChangeListener;
 
@@ -136,8 +136,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private final ForegroundColorSpan mPrivateBlockedColorSpan;
     private final ForegroundColorSpan mDomainColorSpan;
     private final ForegroundColorSpan mPrivateDomainColorSpan;
-    */
-    // add Https color span
+    // add Https color span */
     private final ForegroundColorSpan mHttpsColorSpan;
     /* Cliqz end */
 
@@ -153,11 +152,10 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
 
         mThemeBackground = (ThemedLinearLayout) findViewById(R.id.url_bar_title_bg);
         /* Cliqz start */
-        /* get left and right padding form the textView */
+        // get left and right padding form the textView
         mTitlePaddingRight = mTitle.getPaddingRight();
         mTitlePaddingLeft = mTitle.getPaddingLeft();
-        // stop scrolling title, it ellipses form the end.
-        /*
+        /* stop scrolling title, it ellipses form the end. o/
         mTitleScroll = (HorizontalScrollView) findViewById(R.id.url_bar_title_scroll_view);
 
         final OnLayoutChangeListener resizeListener = new OnLayoutChangeListener() {
@@ -187,8 +185,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mPrivateBlockedColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_blockedtext_private));
         mDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext));
         mPrivateDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext_private));
-        */
-        // add Https Color span
+        // add Https Color span */
         mHttpsColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.general_blue_color));
         /* Cliqz end */
 
@@ -375,17 +372,14 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
             return;
         }
 
-        /* Cliqz start */
-
         final SpannableStringBuilder builder = new SpannableStringBuilder(url);
         /* Cliqz start o/
         // remove spans colors
         builder.setSpan(isPrivate ? mPrivateUrlColorSpan : mUrlColorSpan, 0, url.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         builder.setSpan(isPrivate ? mPrivateDomainColorSpan : mDomainColorSpan,
                 index, index + baseDomain.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        */
 
-        // set https color to blue
+        // set https color to blue */
         if(URLUtil.isHttpsUrl(url)) {
             builder.setSpan(mHttpsColorSpan,0,5, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
@@ -425,58 +419,56 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         }
     }
 
-    /* Cliqz start */
+    /* Cliqz start o/
     // stop scrolling title, it ellipses form the end.
-//    private void scrollTitle() {
-//        final Editable text = mTitle.getEditableText();
-//        final int textViewWidth = mTitle.getWidth();
-//        /* Cliqz start */
-//        /* subtract padding left as well from the textWidth */
-//        final int textWidth = textViewWidth - mTitlePaddingRight - mTitlePaddingLeft;
-//        /* Cliqz end */
-//        final int scrollViewWidth = mTitleScroll.getWidth();
-//        if (textWidth <= scrollViewWidth) {
-//            // The text fits within the ScrollView, so nothing to do here...
-//            if (textViewWidth > scrollViewWidth) {
-//                // ... although if the TextView is sufficiently padded on the right side, it might
-//                // push the text out of view on the left side, so scroll to the beginning just to be
-//                // on the safe side.
-//                mTitleScroll.scrollTo(0, 0);
-//            }
-//            return;
-//        }
-//
-//        final ForegroundColorSpan spanToCheck =
-//                mTitle.isPrivateMode() ? mPrivateDomainColorSpan : mDomainColorSpan;
-//        final int domainEnd = text != null ? text.getSpanEnd(spanToCheck) : -1;
-//        if (domainEnd == -1) {
-//            // We're not showing a domain, just scroll to the start of the text.
-//            mTitleScroll.scrollTo(0, 0);
-//            return;
-//        }
-//
-//        // If we're showing an URL that is larger than the URL bar, we want to align the end of
-//        // the domain part with the right side of URL bar, so as to put the focus on the base
-//        // domain and avoid phishing attacks using long subdomains that have been crafted to be cut
-//        // off at just the right place and then resemble a legitimate base domain.
-//        final int domainTextWidth = StringUtils.getTextWidth(text.toString(), 0, domainEnd, mTitle.getPaint());
-//        final int overhang = textViewWidth - domainTextWidth;
-//        // For optimal alignment, we want to take the fadingEdge into account and align the domain
-//        // with the start of the fade out.
-//        final int maxFadingEdge = mTitleScroll.getHorizontalFadingEdgeLength();
-//
-//        // The width of the fadingEdge corresponds to the width of the child view that is overhanging
-//        // the ScrollView, clamped by maxFadingEdge.
-//        int targetMargin = overhang / 2;
-//        targetMargin = Math.min(targetMargin, maxFadingEdge);
-//        // Even when there is no fadingEdge, we want to keep a little margin between the domain and
-//        // the end of the URL bar, so as to show the first character or so of the path part.
-//        targetMargin = Math.max(targetMargin, mMinUrlScrollMargin);
-//
-//        final int scrollTarget = domainTextWidth + targetMargin - scrollViewWidth;
-//        mTitleScroll.scrollTo(scrollTarget, 0);
-//    }
-      /* Cliqz end */
+    private void scrollTitle() {
+        final Editable text = mTitle.getEditableText();
+        final int textViewWidth = mTitle.getWidth();
+        // subtract padding left as well from the textWidth
+        final int textWidth = textViewWidth - mTitlePaddingRight - mTitlePaddingLeft;
+        final int scrollViewWidth = mTitleScroll.getWidth();
+        if (textWidth <= scrollViewWidth) {
+            // The text fits within the ScrollView, so nothing to do here...
+            if (textViewWidth > scrollViewWidth) {
+                // ... although if the TextView is sufficiently padded on the right side, it might
+                // push the text out of view on the left side, so scroll to the beginning just to be
+                // on the safe side.
+                mTitleScroll.scrollTo(0, 0);
+            }
+            return;
+        }
+
+        final ForegroundColorSpan spanToCheck =
+                mTitle.isPrivateMode() ? mPrivateDomainColorSpan : mDomainColorSpan;
+        final int domainEnd = text != null ? text.getSpanEnd(spanToCheck) : -1;
+        if (domainEnd == -1) {
+            // We're not showing a domain, just scroll to the start of the text.
+            mTitleScroll.scrollTo(0, 0);
+            return;
+        }
+
+        // If we're showing an URL that is larger than the URL bar, we want to align the end of
+        // the domain part with the right side of URL bar, so as to put the focus on the base
+        // domain and avoid phishing attacks using long subdomains that have been crafted to be cut
+        // off at just the right place and then resemble a legitimate base domain.
+        final int domainTextWidth = StringUtils.getTextWidth(text.toString(), 0, domainEnd, mTitle.getPaint());
+        final int overhang = textViewWidth - domainTextWidth;
+        // For optimal alignment, we want to take the fadingEdge into account and align the domain
+        // with the start of the fade out.
+        final int maxFadingEdge = mTitleScroll.getHorizontalFadingEdgeLength();
+
+        // The width of the fadingEdge corresponds to the width of the child view that is overhanging
+        // the ScrollView, clamped by maxFadingEdge.
+        int targetMargin = overhang / 2;
+        targetMargin = Math.min(targetMargin, maxFadingEdge);
+        // Even when there is no fadingEdge, we want to keep a little margin between the domain and
+        // the end of the URL bar, so as to show the first character or so of the path part.
+        targetMargin = Math.max(targetMargin, mMinUrlScrollMargin);
+
+        final int scrollTarget = domainTextWidth + targetMargin - scrollViewWidth;
+        mTitleScroll.scrollTo(scrollTarget, 0);
+    }
+    /o Cliqz end */
     private void updateProgress(@NonNull Tab tab) {
         final boolean shouldShowThrobber = tab.getState() == Tab.STATE_LOADING;
 
@@ -499,9 +491,10 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private void updatePageActions() {
         final boolean isShowingProgress = (mUiMode == UIMode.PROGRESS);
 
-        /* Cliqz start */
+        /* Cliqz start o/
         // keep X button hidden while loading a page
-        //mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
+        mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
+        */
         mPageActionLayout.setVisibility(!isShowingProgress ? View.VISIBLE : View.GONE);
         // update titleBarWidth relative Actions Buttons width
         updateTitleBarWidth();

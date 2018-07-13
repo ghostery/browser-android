@@ -16,8 +16,8 @@
                   android:paddingBottom="@dimen/doorhanger_section_padding_large"
                   android:paddingTop="@dimen/doorhanger_section_padding_medium">
 
-        <!-- Cliqz start -->
-        <!-- tint the image to blue -->
+        <!-- Cliqz start +->
+             tint the image to blue -->
         <ImageView android:id="@+id/site_identity_icon"
                    android:layout_width="@dimen/doorhanger_icon_size"
                    android:layout_height="@dimen/doorhanger_icon_size"

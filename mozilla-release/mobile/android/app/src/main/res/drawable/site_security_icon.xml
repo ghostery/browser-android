@@ -6,8 +6,8 @@
 
 <!-- level value is matter. It should match SecurityModeUtil.getImageLevel -->
 <level-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Cliqz start -->
-    <!-- change the icons and remove not needed ones -->
+    <!-- Cliqz start +->
+    change the icons and remove not needed ones -->
     <item
         android:drawable="@drawable/site_security_unknown"
         android:maxLevel="0" />
@@ -29,5 +29,5 @@
     <!--<item
         android:drawable="@drawable/ic_search_icon"
         android:maxLevel="6" />
-    Cliqz end -->
+    <+- Cliqz end -->
 </level-list>

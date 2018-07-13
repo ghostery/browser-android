@@ -23,8 +23,10 @@
 
     <dimen name="browser_toolbar_site_security_width">34dp</dimen>
     <dimen name="browser_toolbar_site_security_margin_end">6dp</dimen>
-
+    <!-- Cliqz start +->
+         increase the url bar height -->
     <dimen name="browser_toolbar_url_height">42dp</dimen>
+    <!-- Cliqz end -->
 
     <dimen name="firstrun_background_height">300dp</dimen>
 
