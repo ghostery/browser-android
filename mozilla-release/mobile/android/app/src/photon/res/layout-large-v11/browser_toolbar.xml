@@ -28,26 +28,26 @@
         android:layout_width="@dimen/tablet_nav_button_width"
         android:layout_height="@dimen/tablet_nav_button_width"
         android:layout_centerVertical="true"
-        android:layout_margin="4dp"
         android:contentDescription="@string/back"
         android:src="@drawable/ic_menu_back"/>
     <!--
+        android:layout_margin="4dp"
         android:background="@drawable/url_bar_nav_button"
         gecko:borderColor="@color/nav_button_border_color"
         gecko:borderColorPrivate="@color/nav_button_border_color_private"
     -->
-    <!-- Cliqz end -->
-
+    <!-- change the width and the height -->
     <org.mozilla.gecko.toolbar.ForwardButton
         android:id="@+id/forward"
         style="@style/UrlBar.ForwardButton"
-        android:layout_width="@dimen/tablet_nav_button_width_plus_half"
-        android:layout_height="@dimen/tablet_nav_button_width_plus_half"
+        android:layout_width="@dimen/tablet_nav_button_width"
+        android:layout_height="@dimen/tablet_nav_button_width"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:background="@drawable/url_bar_forward_button"
         android:contentDescription="@string/forward"
         android:src="@drawable/ic_menu_forward"/>
+    <!-- Cliqz end -->
 
     <org.mozilla.gecko.toolbar.ToolbarEditLayout
         android:id="@+id/edit_layout"

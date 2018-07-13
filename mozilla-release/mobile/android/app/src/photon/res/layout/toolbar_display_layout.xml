@@ -44,7 +44,7 @@
             >
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal"
@@ -71,9 +71,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:maxLines="1"
-                android:textColor="@android:color/black"
-                android:paddingLeft="@dimen/padding_10"
-                />
+                android:textColor="@android:color/black" />
 
                 <org.mozilla.gecko.toolbar.PageActionLayout
                     android:id="@+id/page_action_layout"

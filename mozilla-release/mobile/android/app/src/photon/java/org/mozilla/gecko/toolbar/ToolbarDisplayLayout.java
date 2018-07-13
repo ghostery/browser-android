@@ -20,6 +20,7 @@ import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.ViewHelper;
+import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.util.ViewUtil;
 import org.mozilla.gecko.widget.themed.ThemedImageButton;
@@ -42,9 +43,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 
 import android.util.*;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
 * {@code ToolbarDisplayLayout} is the UI for when the toolbar is in
@@ -514,7 +518,8 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         }
         /* Cliqz end */
     }
-
+    /* Cliqz start */
+    // update TitleBar width depend on displayed icons
     void updateTitleBarWidth(){
         final Resources resources = getContext().getResources();
         final WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -523,15 +528,33 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
             wm.getDefaultDisplay().getMetrics(metrics);
         }
         final int buttonWidth = (int)resources.getDimension(R.dimen.browser_toolbar_image_button_width);
-        // 3 icons on the right {3 dot menu, tab icons, ghostry icon} + left security icon + padding
+
         int actionsLayoutWidth = 0;
         if(mPageActionLayout.getVisibility() == VISIBLE){
            actionsLayoutWidth = mPageActionLayout.getPageActionListSize()* buttonWidth;
         }
-        final int buttonsWidth = ( 4 * buttonWidth) + actionsLayoutWidth;
+        // 3 icons on the right {3 dot menu, tab icons, ghostry icon} + left security icon +
+        // padding right
+        final BrowserToolbar parent = (BrowserToolbar) getParent();
+
+        int toolBarbuttonsWidth = parent.ghostyButton.getWidth()+ parent.tabsButton.getWidth() +
+                parent.menuButton.getWidth() + mSiteSecurity.getWidth() + (int) resources
+                .getDimension(R.dimen.padding_10);
+
+        if(HardwareUtils.isTablet()){
+            // add 4 icons back button, forward button,  refresh icon and bookmark icon
+            final BrowserToolbarTablet tabletParent = (BrowserToolbarTablet) getParent();
+            toolBarbuttonsWidth += tabletParent.backButton.getWidth() + tabletParent
+                    .forwardButton.getWidth() + tabletParent.menuButtonMarginView.getWidth() +
+                    tabletParent.actionItemBar.getWidth() + (int) resources.getDimension(R.dimen
+                    .myoffrz_padding_16);
+        }
+
+        final int buttonsWidth = toolBarbuttonsWidth + actionsLayoutWidth;
         final int titleBarWidth = metrics.widthPixels - buttonsWidth;
         mTitle.setWidth(titleBarWidth);
     }
+    /* Cliqz end */
 
     List<? extends View> getFocusOrder() {
         return Arrays.asList(mSiteSecurity, mPageActionLayout, mStop);

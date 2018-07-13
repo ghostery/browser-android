@@ -45,8 +45,11 @@
 
     <style name="UrlBar.V17.ForwardButton" parent="UrlBar.Base.ForwardButton">
         <item name="android:layout_toEndOf">@id/back</item>
+        <!-- Cliqz start +->
+        remove not needed padding
         <item name="android:paddingStart">@dimen/tablet_fwd_button_padding_start</item>
         <item name="android:paddingEnd">@dimen/tablet_fwd_button_padding_end</item>
+        <!+- Cliqz end -->
     </style>
 
     <style name="UrlBar.BackButton" parent="UrlBar.V17.BackButton" />
