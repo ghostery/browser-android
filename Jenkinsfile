@@ -124,10 +124,11 @@ def build(Map m){
                                     "FLAVOR=${flavorname}",
                                     "platformName=android",
                                     "deviceName=127.0.0.1:5556",
-                                    "MODULE=testSmoke",
-                                    "TEST=SmokeTest",
+                                    "MODULE=testCompleteSuite",
+                                    "TEST=CompleteSuite",
                                     "appPackage=com.cliqz.browser",
-                                    "appActivity=org.mozilla.gecko.LauncherActivity"
+                                    "appActivity=org.mozilla.gecko.LauncherActivity",
+                                    "TEST_TYPE=smoke"
                                     ]) {
                                     withCredentials([file(credentialsId: 'da5f91e6-e1ca-4aac-94ea-352b6769228b', variable: 'FILE' )]) {
                                         stage('Genymotion ADB Connect') {
