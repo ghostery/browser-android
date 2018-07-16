@@ -11,15 +11,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp">
+        android:padding="15dp">
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/donut"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:padding="20dp" />
+            android:padding="10dp" />
 
         <TextView
             android:id="@+id/domain_name"
