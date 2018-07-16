@@ -46,10 +46,12 @@
             android:title="@string/pref_search_regional"
             android:entries="@array/pref_search_regional_entries"
             android:entryValues="@array/pref_search_regional_values"/>
+        <!-- Cliqz start -+>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="pref.search.query.suggestions"
             android:title="@string/pref_search_query_suggestions" />
+        <+- Cliqz end -->
         <CheckBoxPreference
             android:key="pref.search.block.adult.content"
             android:title="@string/pref_search_block_adult_content" />
