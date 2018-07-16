@@ -26,18 +26,6 @@
         android:layout_gravity="center_vertical"
         android:background="@drawable/url_bar_title_bg">
 
-        <!-- Cliqz start -->
-        <!-- tint the security icon with white -->
-        <org.mozilla.gecko.widget.themed.ThemedImageButton
-            android:id="@+id/site_security"
-            style="@style/UrlBar.SiteIdentity"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/site_security"
-            android:src="@drawable/security_mode_icon"
-            android:tint="@android:color/white"
-            tools:src="@drawable/ic_lock"/>
-        <!-- Cliqz end -->
-
         <!-- We need this on a separate layer to avoid fading out the toolbar background as well
      and we can't use a hardware layer because that causes problems with the snapshot
      for our toolbar animation.-->
@@ -52,31 +40,49 @@
             android:scrollbars="none"
             android:overScrollMode="never"
             android:layerType="software"
-            gecko:fadeWidth="50dp"
             android:background="@drawable/rounded_edittext"
             >
 
-            <!-- add padding left , right and set height to wrap content -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+            <!-- tint the security icon with white && hide it in seach mode-->
+            <org.mozilla.gecko.widget.themed.ThemedImageButton
+                android:id="@+id/site_security"
+                style="@style/UrlBar.SiteIdentity"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/site_security"
+                android:src="@drawable/security_mode_icon"
+                android:tint="@color/general_blue_color"
+                tools:src="@drawable/ic_lock"
+                android:visibility="gone" />
+
+            <!-- add padding left , right and set height to wrap content, make url color black -->
             <org.mozilla.gecko.widget.themed.ThemedTextView
                 android:id="@+id/url_bar_title"
                 style="@style/UrlBar.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingRight="@dimen/padding_10"
-                android:paddingLeft="@dimen/padding_10"/>
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:textColor="@android:color/black" />
 
+                <org.mozilla.gecko.toolbar.PageActionLayout
+                    android:id="@+id/page_action_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone" />
+            </LinearLayout>
         </org.mozilla.gecko.widget.FadedHorizontalScrollView>
         <!-- Cliqz end -->
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
-
-    <org.mozilla.gecko.toolbar.PageActionLayout
-        android:id="@+id/page_action_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible"/>
 
     <org.mozilla.gecko.toolbar.ToolbarRoundButton
         android:id="@+id/stop"

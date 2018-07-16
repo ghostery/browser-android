@@ -95,12 +95,14 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
 
                     // Checking if voice and QR code input are enabled each time the user taps on the URL bar
                     if (hasFocus) {
+                        /* Cliqz start o/
+                        // keep mic unVisible
                         if (voiceIsEnabled(getContext(), getResources().getString(R.string.voicesearch_prompt))) {
                             mVoiceInput.setVisibility(View.VISIBLE);
                         } else {
                             mVoiceInput.setVisibility(View.GONE);
                         }
-
+                        /o Cliqz end */
                         if (qrCodeIsEnabled(getContext())) {
                             mQrCode.setVisibility(View.VISIBLE);
                         } else {

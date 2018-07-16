@@ -5,8 +5,11 @@
 
 <!-- The favicon drawable is not the same dimensions as the site security
      lock icons so we offset it using this drawable to compensate. -->
+<!-- Cliqz start +->
+     change the drawable -->
 <inset
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/favicon_globe"
+    android:drawable="@drawable/ic_info"
     android:insetTop="@dimen/site_security_unknown_inset_top"
     android:insetBottom="@dimen/site_security_unknown_inset_bottom"/>
+<!-- Cliqz end -->

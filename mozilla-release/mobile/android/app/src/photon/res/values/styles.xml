@@ -862,8 +862,13 @@
         <item name="android:scaleType">center</item>
     </style>
     <style name="UrlBar.V15.SiteIdentity" parent="UrlBar.Base.SiteIdentity">
+        <!-- Cliqz start +->
+        remove not needed padding
+        <item name="android:paddingLeft">3dp</item>
         <item name="android:paddingRight">@dimen/browser_toolbar_site_security_margin_end</item>
+        <!+- Cliqz end -->
     </style>
+
 
     <style name="UrlBar.Entry" parent="UrlBar.V15.Entry"/>
     <style name="UrlBar.Base.Entry" parent="UrlBar.Button"/>
@@ -891,7 +896,10 @@
     <style name="UrlBar.Base.Tabs" parent="UrlBar.ImageButton"/>
     <style name="UrlBar.V15.Tabs" parent="UrlBar.Base.Tabs">
         <item name="android:layout_toLeftOf">@id/menu</item>
+        <!-- Cliqz start +->
+        remove not needed margine
         <item name="android:layout_marginRight">-3dp</item>
+        <!-+ Cliqz end -->
     </style>
 
     <style name="UrlBar.TabCounter" parent="UrlBar.V15.TabCounter"/>
@@ -903,17 +911,19 @@
     </style>
 
     <!-- Cliqz start -->
+    <!-- add Ghosty icon style -->
     <style name="UrlBar.Ghosty" parent="UrlBar.V15.Ghosty"/>
     <style name="UrlBar.Base.Ghosty" parent="UrlBar.ImageButton"/>
     <style name="UrlBar.V15.Ghosty" parent="UrlBar.Base.Ghosty">
         <item name="android:layout_toLeftOf">@id/tabs</item>
     </style>
-    <!-- Cliqz end -->
 
+    <!-- remove bold from tabs counter text style -->
     <style name="UrlBar.TabCounter.Text">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textStyle">bold</item>
+        <!--<item name="android:textStyle">bold</item>-->
     </style>
+    <!-- Cliqz end -->
 
     <style name="UrlBar.EditCancel" parent="UrlBar.V15.EditCancel"/>
     <style name="UrlBar.Base.EditCancel" parent="UrlBar.ImageButton"/>
@@ -923,13 +933,16 @@
 
     <style name="UrlBar.EditLayout" parent="UrlBar.V15.EditLayout"/>
     <style name="UrlBar.Base.EditLayout" parent="UrlBar.Button"/>
+    <!-- Cliqz start -->
+    <!-- cancel button moved inside the urlBar, remove dependencies of outer layout-->
     <style name="UrlBar.V15.EditLayout" parent="UrlBar.Base.EditLayout">
         <item name="android:layout_alignLeft">@id/url_bar_entry</item>
-        <item name="android:layout_toLeftOf">@id/edit_cancel</item>
+        <!--<item name="android:layout_toLeftOf">@id/edit_cancel</item>-->
         <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">0dp</item>
-        <item name="android:layout_marginRight">-3dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <!--<item name="android:layout_marginRight">-3dp</item>-->
     </style>
+    <!-- Cliqz end -->
 
     <style name="UrlBar.EditLayout.Title" parent="UrlBar.V15.EditLayout.Title"/>
     <style name="UrlBar.V15.EditLayout.Title" parent="UrlBar.Title">

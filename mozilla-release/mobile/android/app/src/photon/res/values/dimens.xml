@@ -30,8 +30,10 @@
     <dimen name="browser_toolbar_button_padding">12dp</dimen>
     <dimen name="browser_toolbar_icon_width">48dp</dimen>
     <dimen name="browser_toolbar_menu_radius">2dp</dimen>
-
-    <dimen name="browser_toolbar_url_height">32dp</dimen>
+    <!-- Cliqz start +->
+         increase the url bar height -->
+    <dimen name="browser_toolbar_url_height">36dp</dimen>
+    <!-- Cliqz end -->
 
     <!-- favicon_size includes 4dp of right padding. We can't use margin (which would allow us to
          specify the actual size) because that would decrease the size of our hit target. -->

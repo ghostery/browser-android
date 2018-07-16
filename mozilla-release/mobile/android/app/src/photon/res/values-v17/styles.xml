@@ -57,13 +57,16 @@
 
     <style name="UrlBar.EditLayout" parent="UrlBar.V17.EditLayout" />
 
+    <!-- Cliqz start -->
+    <!-- cancel button moved inside the urlBar, remove dependencies of outer layout-->
     <style name="UrlBar.V17.EditLayout" parent="UrlBar.Base.EditLayout">
         <item name="android:layout_alignStart">@id/url_bar_entry</item>
-        <item name="android:layout_toStartOf">@id/edit_cancel</item>
+        <!--<item name="android:layout_toStartOf">@id/edit_cancel</item>-->
         <item name="android:paddingStart">5dp</item>
-        <item name="android:paddingEnd">0dp</item>
-        <item name="android:layout_marginEnd">-3dp</item>
+        <item name="android:paddingEnd">5dp</item>
+        <!--<item name="android:layout_marginEnd">-3dp</item>-->
     </style>
+    <!-- Cliqz end -->
 
     <style name="UrlBar.EditLayout.Title" parent="UrlBar.V17.EditLayout.Title"/>
     <style name="UrlBar.V17.EditLayout.Title" parent="UrlBar.Title">

@@ -192,6 +192,8 @@ public class FadedHorizontalScrollView extends HorizontalScrollView {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        /* Cliqz start o/
+        // stop scrolling by disabling the touch event
         if (!mInterceptingTouchEvents) {
             final TouchDelegate touchDelegate = getTouchDelegate();
             if (touchDelegate != null && touchDelegate.onTouchEvent(ev)) {
@@ -200,5 +202,7 @@ public class FadedHorizontalScrollView extends HorizontalScrollView {
         }
 
         return super.onTouchEvent(ev);
+        /o Cliqz end */
+        return false;
     }
 }

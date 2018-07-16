@@ -1,0 +1,16 @@
+<!--Copyright © Cliqz 2018 -->
+<vector android:height="24dp" android:viewportHeight="36.0"
+    android:viewportWidth="36.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#000000"
+        android:pathData="M27.91,10L9.09,10C7.94,10 7,10.9 7,12L7,25C7,26.1 7.94,27 9.09,27L27.91,27C29.06,27 30,26.1 30,25L30,12C30,10.9 29.06,10 27.91,10ZM27.91,24C27.91,24.55 27.44,25 26.86,25L18.5,25L18.5,12L26.86,12C27.44,12 27.91,12.45 27.91,13L27.91,24Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#000000"
+        android:pathData="M26.08,15.5L20.33,15.5C19.9,15.5 19.55,15.84 19.55,16.25C19.55,16.66 19.9,17 20.33,17L26.08,17C26.51,17 26.86,16.66 26.86,16.25C26.86,15.84 26.51,15.5 26.08,15.5Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#000000"
+        android:pathData="M26.08,18L20.33,18C19.9,18 19.55,18.34 19.55,18.75C19.55,19.16 19.9,19.5 20.33,19.5L26.08,19.5C26.51,19.5 26.86,19.16 26.86,18.75C26.86,18.34 26.51,18 26.08,18Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#000000"
+        android:pathData="M26.08,20.5L20.33,20.5C19.9,20.5 19.55,20.84 19.55,21.25C19.55,21.66 19.9,22 20.33,22L26.08,22C26.51,22 26.86,21.66 26.86,21.25C26.86,20.84 26.51,20.5 26.08,20.5Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+</vector>

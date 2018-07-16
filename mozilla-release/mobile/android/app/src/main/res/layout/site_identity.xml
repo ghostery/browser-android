@@ -16,13 +16,16 @@
                   android:paddingBottom="@dimen/doorhanger_section_padding_large"
                   android:paddingTop="@dimen/doorhanger_section_padding_medium">
 
+        <!-- Cliqz start +->
+             tint the image to blue -->
         <ImageView android:id="@+id/site_identity_icon"
                    android:layout_width="@dimen/doorhanger_icon_size"
                    android:layout_height="@dimen/doorhanger_icon_size"
                    android:gravity="center_horizontal"
                    android:padding="@dimen/doorhanger_section_padding_small"
-                   android:layout_marginRight="@dimen/doorhanger_section_padding_small"/>
-
+                   android:layout_marginRight="@dimen/doorhanger_section_padding_small"
+                   android:tint="@color/general_blue_color" />
+        <!-- Cliqz end -->
         <LinearLayout android:layout_width="0dp"
                      android:layout_height="wrap_content"
                      android:orientation="vertical"

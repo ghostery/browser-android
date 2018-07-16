@@ -12,13 +12,10 @@ import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.pwa.PwaUtils;
-import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.util.ResourceDrawableUtils;
 import org.mozilla.gecko.util.BundleEventListener;
-import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
-import org.mozilla.gecko.util.ResourceDrawableUtils;
 import org.mozilla.gecko.util.ShortcutUtils;
 import org.mozilla.gecko.util.ThreadUtils;
 import org.mozilla.gecko.widget.GeckoPopupMenu;
@@ -27,7 +24,6 @@ import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -35,6 +31,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -218,7 +215,11 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
                     // }
                     final Drawable icon = d.mutate();
                     if (useTint) {
-                        DrawableCompat.setTint(icon, Color.WHITE);
+                        DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),R.color
+                                .general_blue_color));
+                    }else{
+                        DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),R.color
+                                .inactive_icon_color));
                     }
                     /* Cliqz end */
 
@@ -248,8 +249,14 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
 
         final ToolbarRoundButton imageButton = new ToolbarRoundButton(mContext, null, R.style.UrlBar_ImageButton);
         final int width = mContext.getResources().getDimensionPixelSize(R.dimen.page_action_button_width);
-        imageButton.setLayoutParams(new LayoutParams(width, LayoutParams.MATCH_PARENT));
-        imageButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        final int height = mContext.getResources().getDimensionPixelSize(R.dimen
+                .browser_toolbar_height);
+
+        LayoutParams params = new LayoutParams(width, height);
+        params.gravity = Gravity.CENTER_VERTICAL;
+        imageButton.setLayoutParams(params);
+        imageButton.setAdjustViewBounds(true);
+        imageButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageButton.setOnClickListener(this);
         imageButton.setOnLongClickListener(this);
         return imageButton;
@@ -464,4 +471,10 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
 
 
     }
+    /* Cliqz start */
+    // accessed in @ToolbarDisplayLayout.java based on Actions list size we modify the urlBar width
+    public int getPageActionListSize(){
+        return mPageActionList.size();
+    }
+    /* Cliqz end */
 }
