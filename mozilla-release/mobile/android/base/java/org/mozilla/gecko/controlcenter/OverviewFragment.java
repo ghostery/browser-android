@@ -250,6 +250,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             final ArrayList<String> updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
             updatedBlackList.remove(pageHost);
             updatedWhiteList.remove(pageHost);
+            //update the data source so that other views can reflect changes
+            GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_blacklist", updatedBlackList);
+            GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_whitelist", updatedWhiteList);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putStringArray("site_whitelist", updatedWhiteList);
             geckoBundle.putStringArray("site_blacklist", updatedBlackList);
