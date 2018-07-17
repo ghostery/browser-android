@@ -64,6 +64,14 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
     private int mMaxVisiblePageActions;
     private PwaConfirm mPwaConfirm;
 
+    /* Cliqz Start */
+    private PageActionClickListener mPageActionListener;
+
+    public interface PageActionClickListener {
+        void onClick();
+    }
+    /* Cliqz End */
+
     public PageActionLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -147,6 +155,9 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
                     final GeckoBundle data = new GeckoBundle(1);
                     data.putString("id", id);
                     EventDispatcher.getInstance().dispatch("PageActions:Clicked", data);
+                    /* Cliqz Start */
+                    mPageActionListener.onClick();
+                    /* Cliqz End */
                 }
 
                 @Override
@@ -475,6 +486,10 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
     // accessed in @ToolbarDisplayLayout.java based on Actions list size we modify the urlBar width
     public int getPageActionListSize(){
         return mPageActionList.size();
+    }
+
+    public void setOnPageActionClickedListener(PageActionClickListener listener) {
+        mPageActionListener = listener;
     }
     /* Cliqz end */
 }

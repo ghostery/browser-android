@@ -605,19 +605,22 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mSiteIdentityPopup.destroy();
     }
 
-     /* Cliqz start o/
-     // stop scrolling title, it ellipses form the end.
-    private class TextChangeListener implements TextWatcher {
-        @Override
-        public void afterTextChanged(Editable text) {
-            scrollTitle();
-        }
+    /* Cliqz start */
+    // stop scrolling title, it ellipses form the end.
+    // private class TextChangeListener implements TextWatcher {
+    //     @Override
+    //     public void afterTextChanged(Editable text) {
+    //         scrollTitle();
+    //     }
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+    //     @Override
+    //     public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+    //     @Override
+    //     public void onTextChanged(CharSequence s, int start, int before, int count) { }
+    // }
+    public void setOnPageActionClickedListener(PageActionLayout.PageActionClickListener listener) {
+        mPageActionLayout.setOnPageActionClickedListener(listener);
     }
-    /o Cliqz end */
+    /* Cliqz end */
 }
