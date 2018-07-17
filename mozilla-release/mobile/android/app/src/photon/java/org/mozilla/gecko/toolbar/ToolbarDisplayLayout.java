@@ -474,9 +474,11 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
 
         updateUiMode(shouldShowThrobber ? UIMode.PROGRESS : UIMode.DISPLAY);
 
+        /* Cliqz Start o/
         if (Tab.STATE_SUCCESS == tab.getState() && mTrackingProtectionEnabled) {
             mActivity.showTrackingProtectionPromptIfApplicable();
         }
+        o/ Cliqz End */
     }
 
     private void updateUiMode(UIMode uiMode) {
