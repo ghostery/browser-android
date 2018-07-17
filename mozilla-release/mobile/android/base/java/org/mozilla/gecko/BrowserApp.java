@@ -4168,6 +4168,9 @@ public class BrowserApp extends GeckoApp
 
         mBrowserToolbar.cancelEdit();
 
+        /* Cliqz Start */
+        hideControlCenter();
+        /* Cliqz End */
         if (itemId == R.id.bookmark) {
             tab = Tabs.getInstance().getSelectedTab();
             if (tab != null) {

@@ -207,6 +207,12 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         /* Cliqz start */
         ghostyButton = (Ghosty) findViewById(R.id.ghosty);
         ghostyButton.setOnGhostyClickedListener(this);
+        urlDisplayLayout.setOnPageActionClickedListener(new PageActionLayout.PageActionClickListener() {
+            @Override
+            public void onClick() {
+                activity.hideControlCenter();
+            }
+        });
         /* Cliqz end */
 
         menuButton = findViewById(R.id.menu);
