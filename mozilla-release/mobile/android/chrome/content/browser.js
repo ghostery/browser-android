@@ -6475,10 +6475,19 @@ var Cliqz = {
           type: "Search:OpenLink"
         });
         break;
-      case 'autocomplete': // args [data as object]
+      case 'autocomplete': // args [data as string]
         GlobalEventDispatcher.sendRequest({
           type: "Search:Autocomplete",
-          data: msg.data.data
+          data: msg.args[0]
+        });
+        break;
+      case 'suggestions': // args [query as string, suggestions as array]
+        GlobalEventDispatcher.sendRequest({
+          type: "Search:QuerySuggestions",
+          data: {
+            query: msg.args[0],
+            suggestions: msg.args[1]
+          }
         });
         break;
       default:
