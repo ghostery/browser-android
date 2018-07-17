@@ -3882,6 +3882,7 @@ public class BrowserApp extends GeckoApp
             MenuUtils.safeSetVisible(aMenu, R.id.pin_to_top_sites, false);
             MenuUtils.safeSetVisible(aMenu, R.id.add_to_launcher, false);
             MenuUtils.safeSetEnabled(aMenu, R.id.set_as_homepage, false);
+            MenuUtils.safeSetEnabled(aMenu, R.id.desktop_mode, false);
             /* Cliqz End */
 
             final MenuItem pinToTopSitesItem = aMenu.findItem(R.id.pin_to_top_sites);
@@ -4044,7 +4045,7 @@ public class BrowserApp extends GeckoApp
         final boolean notInAboutHome = !isAboutHome(tab);
         /* Cliqz Start */
         findInPage.setVisible(notInAboutHome);
-        exit.setVisible(!notInAboutHome);
+        desktopMode.setVisible(notInAboutHome);
         MenuUtils.safeSetVisible(aMenu, R.id.pin_to_top_sites, notInAboutHome);
         MenuUtils.safeSetVisible(aMenu, R.id.add_to_launcher, notInAboutHome);
         // viewPageSource.setEnabled(notInAboutHome);
@@ -4092,11 +4093,10 @@ public class BrowserApp extends GeckoApp
         historyList.setVisible(notInAboutHome);
         bookmarksList.setVisible(notInAboutHome);
         final String mostRecentPanelId = Tabs.getInstance().getSelectedTab().getMostRecentHomePanel();
-        final boolean isFavoritesView = mostRecentPanelId != null
-                && mostRecentPanelId.equals(HomeConfig.BOOKMARKS_PANEL_ID);
-        clearHistory.setVisible(!notInAboutHome && isFavoritesView);
+        final boolean isHistoryView = mostRecentPanelId != null
+                && mostRecentPanelId.equals(HomeConfig.COMBINED_HISTORY_PANEL_ID);
+        clearHistory.setVisible(!notInAboutHome && isHistoryView);
         /* Cliqz End */
-
         return true;
     }
 
@@ -4128,7 +4128,9 @@ public class BrowserApp extends GeckoApp
 
     private Drawable resolveBookmarkIconDrawable(final boolean isBookmark, final int tint) {
         if (isBookmark) {
-            return ResourcesCompat.getDrawable(getResources(), R.drawable.star_blue, null);
+            /* Cliqz Start */
+            return ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_bookmark_remove, null);
+            /* Cliqz End */
         } else {
             return DrawableUtil.tintDrawable(this, R.drawable.ic_menu_bookmark_add, tint);
         }
@@ -4168,6 +4170,9 @@ public class BrowserApp extends GeckoApp
 
         mBrowserToolbar.cancelEdit();
 
+        /* Cliqz Start */
+        hideControlCenter();
+        /* Cliqz End */
         if (itemId == R.id.bookmark) {
             tab = Tabs.getInstance().getSelectedTab();
             if (tab != null) {

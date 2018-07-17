@@ -71,8 +71,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="center"
-        android:src="@drawable/star_blue"
-        gecko:srcCompat="@drawable/star_blue"
+        gecko:srcCompat="@drawable/ic_menu_bookmark_remove"
         android:tint="@android:color/white"
         android:visibility="gone"
         tools:visibility="visible"/>
