@@ -7,9 +7,10 @@
      Note: This layout is intended to be used only above 11+.
      android:showDividers are available only 11+
 -->
+<!-- Cliqz Start -->
 <view xmlns:android="http://schemas.android.com/apk/res/android"
       class="org.mozilla.gecko.menu.GeckoMenu$DefaultActionItemBar"
       android:layout_width="@dimen/menu_item_row_width"
       android:layout_height="@dimen/browser_toolbar_height"
-      android:orientation="horizontal"
-      android:background="@color/toolbar_menu_dark_grey"/>
+      android:orientation="horizontal"/>
+<!-- Cliqz End -->

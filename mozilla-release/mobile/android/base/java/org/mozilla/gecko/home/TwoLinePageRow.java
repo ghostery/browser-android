@@ -173,7 +173,9 @@ public class TwoLinePageRow extends ThemedLinearLayout
         if (isReaderItem) {
             mStatusIcon.setImageResource(R.drawable.status_icon_readercache);
         } else if (isBookmark) {
-            mStatusIcon.setImageResource(R.drawable.star_blue);
+            /* Cliqz Start */
+            mStatusIcon.setImageResource(R.drawable.ic_menu_bookmark_remove);
+            /* Cliqz End */
         }
 
         if (mShowIcons && (isBookmark || isReaderItem)) {
