@@ -6427,7 +6427,7 @@ var Cliqz = {
     return Cliqz._messageExtension('firefox@ghostery.com', msg);
   },
   messageSearchExtension(msg) {
-    msg.source = 'cliqz-android';
+    msg.source = 'ANDROID_BROWSER';
     return Cliqz._messageExtension('android@cliqz.com', msg, {
       senderOptions: {
         contextId: 'mobile-cards',
@@ -6469,12 +6469,23 @@ var Cliqz = {
           type: "Search:OpenLink"
         });
         break;
-      case 'autocomplete': // args [data as object]
+      case 'autocomplete': // args [data as string]
         GlobalEventDispatcher.sendRequest({
           type: "Search:Autocomplete",
-          data: msg.data.data
+          data: msg.args[0]
         });
         break;
+      case 'suggestions': // args [query as string, suggestions as array]
+        GlobalEventDispatcher.sendRequest({
+          type: "Search:QuerySuggestions",
+          data: {
+            query: msg.args[0],
+            suggestions: msg.args[1]
+          }
+        });
+        break;
+      case 'getInstallDate':
+        return Services.prefs.getCharPref('pref.cliqz.install.date', '16917');
       default:
         console.log('unexpected message', msg)
     }
@@ -6516,10 +6527,20 @@ var Cliqz = {
       callback(msg.response);
       delete this.callbacks[msg.requestId];
     } else { // handle request
+      let response;
+      let sendCallback;
       if (data.recipient.extensionId === 'firefox@ghostery.com') {
-        this._privacyExtensionListener(msg);
+        response = this._privacyExtensionListener(msg);
+        sendCallback = this.messagePrivacyExtension;
       } else if (data.recipient.extensionId === 'android@cliqz.com') {
-        this._searchExtensionListener(msg);
+        response = this._searchExtensionListener(msg);
+        sendCallback = this.messageSearchExtension;
+      }
+      if ('callbackId' in msg && sendCallback) {
+        sendCallback({
+          response,
+          callbackId: msg.callbackId,
+        });
       }
     } 
   },
