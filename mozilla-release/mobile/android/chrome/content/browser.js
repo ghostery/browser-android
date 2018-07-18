@@ -6370,7 +6370,7 @@ var Cliqz = {
 
     Services.cpmm.addMessageListener("MessageChannel:Messages",
       this._extensionListener.bind(this));
-    
+
     Services.prefs.addObserver('pref.search.regional', () => {
       const value = Services.prefs.getCharPref('pref.search.regional');
       this.messageSearchExtension({
@@ -6398,6 +6398,11 @@ var Cliqz = {
         args: [value]
       });
     });
+
+    window.addEventListener("UIReady", function(aEvent) {
+      // force search init
+      Cliqz.Search;
+    }, {once: true});
   },
 
   _messageExtension(id, msg, opts = {}) {
@@ -6436,8 +6441,6 @@ var Cliqz = {
   },
 
   _createBrowserForExtension: function (id) {
-    const uuids = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
-    const uuid = JSON.parse(uuids)[id];
     const browser = document.createElement("browser");
 
     browser.setAttribute("type", "content");
@@ -6448,6 +6451,9 @@ var Cliqz = {
     return {
       panel: browser,
       load: function(path) {
+        const uuids = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
+        const uuid = JSON.parse(uuids)[id];
+
         browser.loadURIWithFlags("moz-extension://" + uuid + "/" + path, 0, null, null, null);
       }
     }
@@ -6511,7 +6517,7 @@ var Cliqz = {
     if (msg.target !== 'ANDROID_BROWSER') {
       return;
     }
-    
+
     if ('response' in msg && callback) { // handle response
       callback(msg.response);
       delete this.callbacks[msg.requestId];
@@ -6521,7 +6527,7 @@ var Cliqz = {
       } else if (data.recipient.extensionId === 'android@cliqz.com') {
         this._searchExtensionListener(msg);
       }
-    } 
+    }
   },
 
   get Ghostery() {
@@ -6538,19 +6544,17 @@ var Cliqz = {
   get Search() {
     if (!this._search) {
       this._search = this._createBrowserForExtension('android@cliqz.com');
-      const loadExtension = (waitTime) => {
+      const loadExtension = (retry) => {
         try {
           this._search.load('modules/mobile-cards/cards.html');
+          this._search.panel.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
         } catch (e) {
-          console.log(`Retry loading cards in ${waitTime} ms`);
-          setTimeout(loadExtension, waitTime, waitTime * 2);
+          console.log(`Retry ${retry} loading cards`, e, retry);
+          retry && setTimeout(loadExtension.bind(this), 200, retry - 1);
         }
       }
-      loadExtension(100); // progressive
-      setTimeout(() => {
-        // TODO: find a better moment to attach
-        this._search.panel.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
-      }, 100);
+      // retry 100 times to load the cards
+      setTimeout(loadExtension.bind(this), 1000, 100);
     }
 
     return this._search;
@@ -6617,7 +6621,7 @@ var Cliqz = {
     messages.push(["setBackendCountry", searchIndex]);
 
     const adultState = module.adult.state;
-    const extBlockAdultContentDefault = 
+    const extBlockAdultContentDefault =
       Object.keys(adultState).find((key) => {
        return adultState[key].selected;
       }) === 'conservative';
