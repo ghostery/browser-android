@@ -667,7 +667,7 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
             AppBackgroundManager.getInstance(getContext().getApplicationContext()).setViewBackground(this,
                     ContextCompat.getColor(getContext(), R.color.url_bar));
         }else{
-            setBackgroundDrawable(null);
+            setBackgroundResource(R.drawable.cliqz_defualt_background);
         }
     }
     /* Cliqz End */
