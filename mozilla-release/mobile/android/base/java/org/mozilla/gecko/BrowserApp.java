@@ -2486,12 +2486,16 @@ public class BrowserApp extends GeckoApp
     @Override
     public void addTab() {
         MmaDelegate.track(NEW_TAB);
-        Tabs.getInstance().addTab();
+        /* Cliqz Start */
+        Tabs.getInstance().addTab(Tabs.LOADURL_START_EDITING);
+        /* Cliqz End */
     }
 
     @Override
     public void addPrivateTab() {
-        Tabs.getInstance().addPrivateTab();
+        /* Cliqz Start */
+        Tabs.getInstance().addTab(Tabs.LOADURL_PRIVATE | Tabs.LOADURL_START_EDITING);
+        /* Cliqz End */
     }
 
     public void showTrackingProtectionPromptIfApplicable() {
