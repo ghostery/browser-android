@@ -10,6 +10,9 @@ import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -42,6 +45,7 @@ import org.mozilla.gecko.notifications.NotificationClient;
 import org.mozilla.gecko.notifications.NotificationHelper;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.DistroSharedPrefsImport;
+import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.pwa.PwaUtils;
 import org.mozilla.gecko.telemetry.TelemetryBackgroundReceiver;
 import org.mozilla.gecko.util.ActivityResultHandler;
@@ -56,8 +60,8 @@ import org.mozilla.gecko.util.ThreadUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.UUID;
@@ -314,6 +318,23 @@ public class GeckoApplication extends Application
                 "Image:SetAs",
                 "Profile:Create",
                 null);
+
+        /* Cliqz start */
+        final SharedPreferences prefs = GeckoSharedPrefs.forApp(this);
+        if (!prefs.contains(GeckoPreferences.PREFS_BROWSER_INSTALL_DATE) ||
+                !prefs.contains(GeckoPreferences.PREFS_BROWSER_UPGRADE_DATE)) {
+            try {
+                final PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+                prefs
+                    .edit()
+                    .putString(GeckoPreferences.PREFS_BROWSER_INSTALL_DATE, "" + (info.firstInstallTime / 1000L))
+                    .putString(GeckoPreferences.PREFS_BROWSER_UPGRADE_DATE, "" + (info.lastUpdateTime / 1000L))
+                    .apply();
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.e(LOG_TAG, "Can't find " + getPackageName(), e);
+            }
+        }
+        /* Cliqz end */
 
         super.onCreate();
     }
