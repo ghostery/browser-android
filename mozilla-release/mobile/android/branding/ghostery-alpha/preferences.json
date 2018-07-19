@@ -1,0 +1,18 @@
+{
+  "Global": {
+    "id": "ghostery-alpha",
+    "version": 1.0,
+    "about": "Default prerefences for the ghostery-alpha branding"
+  },
+  "LocalizablePreferences": {
+    "browser.search.defaultenginename": "DuckDuckGo",
+    "browser.search.order.1": "DuckDuckGo",
+    "browser.search.order.2": "Google",
+    "browser.search.order.3": "Bing",
+    "browser.search.selectedEngine": "DuckDuckGo",
+    "browser.search.defaultenginename.US": "DuckDuckGo",
+    "distribution.searchplugins.defaultLocale": "de"
+  },
+  "Preferences": {
+  }
+}

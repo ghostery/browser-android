@@ -211,6 +211,11 @@ endif
 
 # Cliqz Start
 recurse_artifact:
+	@rm -rf "$(MOZ_ANDROID_DISTRIBUTION_DIRECTORY)/assets/distribution/searchplugins/" | true
+	@rm "$(MOZ_ANDROID_DISTRIBUTION_DIRECTORY)/assets/distribution/preferences.json" | true
+	@cp -R "$(topsrcdir)/$(MOZ_BRANDING_DIRECTORY)/searchplugins" "$(MOZ_ANDROID_DISTRIBUTION_DIRECTORY)/assets/distribution/searchplugins/" | true
+	@cp "$(topsrcdir)/$(MOZ_BRANDING_DIRECTORY)/preferences.json" "$(MOZ_ANDROID_DISTRIBUTION_DIRECTORY)/assets/distribution" | true
+
 	$(topsrcdir)/mach --log-no-times artifact install https://repository.cliqz.com/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/cliqz-target.apk
 	$(topsrcdir)/mach --log-no-times artifact install https://repository.cliqz.com/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/target.common.tests.zip
 	$(topsrcdir)/mach --log-no-times artifact add "https://s3.amazonaws.com/cdncliqz/update/android_browser_beta/firefox@ghostery.com/firefox@ghostery.com-$(GHOSTERY_EXTENSION_VERSION)-android_browser_beta-signed.xpi" "$(MOZ_ANDROID_DISTRIBUTION_DIRECTORY)/assets/distribution/extensions/firefox@ghostery.com.xpi"
