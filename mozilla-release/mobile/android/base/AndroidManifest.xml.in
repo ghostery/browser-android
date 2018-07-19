@@ -6,6 +6,7 @@
       android:installLocation="internalOnly"
       android:versionName="@MOZ_APP_VERSION@">
     <!-- Cliqz Start, this was part of the manifest tag ->
+    android:versionCode="@ANDROID_VERSION_CODE@"
 #ifdef MOZ_ANDROID_SHARED_ID
       android:sharedUserId="@MOZ_ANDROID_SHARED_ID@"
 #endif

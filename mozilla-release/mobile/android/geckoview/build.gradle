@@ -5,6 +5,42 @@ apply plugin: 'kotlin-android'
 
 apply from: "${topsrcdir}/mobile/android/gradle/product_flavors.gradle"
 
+// This converts MOZ_APP_VERSION into an integer
+// version code.
+//
+// We take something like 58.1.2a1 and come out with 5800102
+// This gives us 3 digits for the major number, and 2 digits
+// each for the minor and build number. Beta and Release
+/* Cliqz start o/
+def computeVersionCode() {
+    String appVersion = mozconfig.substs.MOZ_APP_VERSION
+
+    // Split on the dot delimiter, e.g. 58.1.1a1 -> ["58, "1", "1a1"]
+    String[] parts = appVersion.split('\\.')
+
+    assert parts.size() == 2 || parts.size() == 3
+
+    // Strip out any milestone string ('a1' in the above example)
+    // Present in Nightly (or local) builds only.
+    parts.eachWithIndex { ver, index ->
+        parts[index] = ver.replaceFirst(/[a-zA-Z].'*'/, "")
+    }
+
+    // Major
+    int code = Integer.parseInt(parts[0]) * 100000
+
+    // Minor
+    code += Integer.parseInt(parts[1]) * 100
+
+    // Build
+    if (parts.size() == 3) {
+        code += Integer.parseInt(parts[2])
+    }
+
+    return code;
+}
+/o Cliqz end */
+
 android {
     compileSdkVersion project.ext.compileSdkVersion
 
@@ -13,6 +49,9 @@ android {
         minSdkVersion project.ext.minSdkVersion
         manifestPlaceholders = project.ext.manifestPlaceholders
 
+        /* Cliqz start o/
+        versionCode computeVersionCode()
+        /o Cliqz end */
         versionName "${mozconfig.substs.MOZ_APP_VERSION}-${mozconfig.substs.MOZ_UPDATE_CHANNEL}"
         consumerProguardFiles 'proguard-rules.txt'
 
