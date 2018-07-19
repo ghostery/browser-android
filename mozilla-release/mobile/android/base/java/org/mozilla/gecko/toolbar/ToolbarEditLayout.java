@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.speech.RecognizerIntent;
 import android.widget.Button;
 import org.mozilla.gecko.ActivityHandlerHelper;
-import org.mozilla.gecko.GeckoAppShell;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
@@ -83,9 +82,12 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
+        /* Cliqz start o/
+        // keep searchIcon hidden for tablet and phone
         if (HardwareUtils.isTablet()) {
             mSearchIcon.setVisibility(View.VISIBLE);
         }
+        /o Cliqz end */
 
         mEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
