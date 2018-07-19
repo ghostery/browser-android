@@ -216,7 +216,7 @@ public class GeckoPreferences
     private static final String PREFS_BLOCK_ADS_DATA = NON_PREF_PREFIX + "block.ads.data";
     final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
     // add rate cliqz browser to the settings menu
-    private static final String PREFS_RATE_CLIQZ = NON_PREF_PREFIX + "rate.cliqz";
+    private static final String PREFS_RATE_US = NON_PREF_PREFIX + "rate.us";
     // add keys for General Home , Vendor screen , notifications screen, General language
     private static final String PREFS_GENERAL_HOME = NON_PREF_PREFIX + "general.home";
     private static final String PREFS_VENDOR_SCREEN = NON_PREF_PREFIX + "vendor.screen";
@@ -985,7 +985,7 @@ public class GeckoPreferences
                     });
                 }
                 // add navigate to playstore when click on rate cliqz browser
-                else if (PREFS_RATE_CLIQZ.equals(key)){
+                else if (PREFS_RATE_US.equals(key)){
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
