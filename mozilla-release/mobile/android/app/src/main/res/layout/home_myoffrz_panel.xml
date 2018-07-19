@@ -3,7 +3,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/home_panesl_background_overlay">
+    android:background="@color/home_panel_background_overlay">
 
     <include
         android:id="@+id/empty_offers_outer_container"

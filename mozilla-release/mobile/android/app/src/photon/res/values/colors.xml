@@ -278,7 +278,7 @@
     <color name="general_blue_color">#00aef0</color>
     <color name="general_dark_color">#424242</color>
     <color name="inactive_tab_color">#E2F0FC</color>
-    <color name="home_panesl_background_overlay">#40000000</color>
+    <color name="home_panel_background_overlay">#40000000</color>
     <color name="history_list_divider_color">#97A4AE</color>
     <color name="inactive_icon_color">#97A4AE</color>
 

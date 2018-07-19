@@ -3,11 +3,18 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<org.mozilla.gecko.widget.themed.ThemedImageButton
+<!-- Cliqz start -->
+<!-- change the button to Text, adjust the size, gravity and textColor-->
+<org.mozilla.gecko.widget.themed.ThemedTextView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="@dimen/tabs_panel_indicator_width"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
         android:layout_height="@dimen/browser_toolbar_height"
         android:minWidth="@dimen/tabs_panel_indicator_width"
         android:paddingTop="@dimen/browser_toolbar_button_padding"
         android:paddingBottom="@dimen/browser_toolbar_button_padding"
-        android:background="@drawable/tabs_panel_indicator"/>
+        android:background="@drawable/tabs_panel_indicator"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/menu_item_textsize" />
+<!-- Cliqz end -->

@@ -2,8 +2,10 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-
+<!-- Cliqz start -->
+<!-- change the indicator color of selected private tab to white -->
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-       android:insetTop="@dimen/tabs_panel_indicator_selected_padding_top"
-       android:drawable="@color/tab_item_private_highlight_bg"
-       />
+    android:drawable="@android:color/white"
+    android:insetTop="@dimen/tabs_panel_indicator_selected_padding_top" />
+<!--android:drawable="@color/tab_item_private_highlight_bg"-->
+<!-- Cliqz end -->

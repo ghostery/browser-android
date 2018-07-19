@@ -36,12 +36,16 @@ public class IconTabWidget extends TabWidget {
         }
     }
 
-    public View addTab(final int imageResId, final int stringResId) {
+    public View addTab(final int imageResId, final int stringResId, final int buttonID) {
         View button = LayoutInflater.from(getContext()).inflate(mButtonLayoutId, this, false);
 
+        /* Cliqz start o/
+        // change button view to text and add Id to it
         ((ImageButton) button).setImageResource(imageResId);
-        button.setContentDescription(getContext().getString(stringResId));
-
+        button.setContentDescription(getContext().getString(stringResId));*/
+        ((TextView) button).setText(getContext().getString(stringResId));
+        button.setId(buttonID);
+        /* Cliqz end */
         addView(button);
         button.setOnClickListener(new TabClickListener(getTabCount() - 1));
         button.setOnFocusChangeListener(this);
