@@ -267,6 +267,8 @@ public class GeckoPreferences
     public static final String PREFS_GHOSTERY_AUTO_UPDATE = "ghostery.settings.autoupdate";
     public static final String PREFS_GHOSTERY_ALLOW_FIRST_PARTY = "ghostery.settings.allowfirstparty";
     public static final String PREFS_GHOSTERY_BLOCK_NEW_TRACKERS = "ghostery.settings.blocknewtrackers";
+    // add key for enable quick search
+    public static final String PREF_SEARCH_ENABLE_BROWSER_QUICKSEARCH = "pref.search.enable.browser.quicksearch";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
