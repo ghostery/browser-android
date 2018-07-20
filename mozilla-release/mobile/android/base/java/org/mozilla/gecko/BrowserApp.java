@@ -2443,7 +2443,14 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Privacy:Count":
-                mBrowserToolbar.updateGhosty(message.getInt("tabId"), message.getInt("count"));
+                final Tab selectedTab = Tabs.getInstance().getSelectedTab();
+                if (selectedTab != null
+                        && selectedTab.getURL() != null
+                        && !AboutPages.isAboutHome(selectedTab.getURL())) {
+                    mBrowserToolbar.updateGhosty(message.getInt("tabId"), message.getInt("count"));
+                } else {
+                    mBrowserToolbar.updateGhosty(message.getInt("tabId"), 0);
+                }
                 break;
 
             case "Privacy:Info":

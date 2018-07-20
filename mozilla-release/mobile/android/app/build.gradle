@@ -19,6 +19,9 @@ android {
         minSdkVersion project.ext.minSdkVersion
         manifestPlaceholders = project.ext.manifestPlaceholders
 
+        /* Cliqz start */
+        versionCode 95
+        /* Cliqz end */
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
         testApplicationId 'org.mozilla.roboexample.test'
         testInstrumentationRunner 'org.mozilla.gecko.FennecInstrumentationTestRunner'
@@ -101,7 +104,6 @@ android {
 
         }
     }
-
     // The "audience" flavour dimension distinguishes between _local_ builds (intended for
     // development) and _official_ builds (intended for testing in automation and to ship in one of
     // the Fennec distribution channels).
@@ -121,6 +123,9 @@ android {
         // Before Firefox 57, the user interface followed the Australis design.
         photon {
             dimension "skin"
+            /* Cliqz start */
+            versionCode 5
+            /* Cliqz end */
         }
     }
 
@@ -528,3 +533,23 @@ android.applicationVariants.all { variant ->
     def buildType = "${variant.buildType.name.capitalize()}"
     tasks["compile${productFlavor}${buildType}UnitTestSources"].dependsOn(tasks["merge${productFlavor}${buildType}Assets"])
 }
+
+/* Cliqz start */
+preBuild {
+    doLast{
+        android.applicationVariants.each { variant ->
+            def apiVersion = variant.productFlavors.get(3).versionCode
+            def generatedVersionCode = android.defaultConfig.versionCode * 100 + apiVersion * 10
+            if (mozconfig.substs.CPU_ARCH.toString().equals("x86")){
+                generatedVersionCode = generatedVersionCode+6
+            } else{
+                generatedVersionCode = generatedVersionCode+4
+            }
+            variant.mergedFlavor.versionCode = generatedVersionCode
+            variant.outputs.each { output ->
+                output.setVersionCodeOverride(generatedVersionCode)
+            }
+        }
+    }
+}
+/* Cliqz end */
