@@ -58,11 +58,6 @@ public class PreferenceManager {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SHOW_MYOFFRZ, isMyOffrzSupportedForLang());
     }
 
-    public boolean isBlockAdsEnabled() {
-        return  mAppSharedPreferences.getBoolean(GeckoPreferences
-                .PREFS_BLOCK_ADS,true);
-    }
-
     public boolean isGhosteryAutoUpdateEnabled() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_GHOSTERY_AUTO_UPDATE, true);
     }
