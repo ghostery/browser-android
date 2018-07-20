@@ -683,8 +683,8 @@
   <string name="pref_block_ads_data">&pref_block_ads_data;</string>
   <string name="pref_block_ads_fair_description">&pref_block_ads_fair_description;</string>
 
-  <!-- Rate Cliqz -->
-  <string name="pref_category_rate_cliqz">&pref_category_rate_cliqz;</string>
+  <!-- Rate Us -->
+  <string name="pref_category_rate_us">&pref_category_rate_us;</string>
 
 
   <!-- Support Cliqz -->
