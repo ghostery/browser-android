@@ -2228,6 +2228,12 @@ elif test -f "${EXTERNAL_SOURCE_DIR}/$REAL_BRANDING_DIRECTORY/configure.sh"; the
 fi
 
 AC_SUBST(MOZ_BRANDING_DIRECTORY)
+dnl Cliqz start
+if test -z "$CLIQZ_EXTENSION_VERSION"; then
+    CLIQZ_EXTENSION_VERSION="cliqz"
+fi
+AC_SUBST(CLIQZ_EXTENSION_VERSION)
+dnl Cliqz end
 
 dnl ========================================================
 dnl = Distribution ID
