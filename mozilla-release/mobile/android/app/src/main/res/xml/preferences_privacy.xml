@@ -47,14 +47,6 @@
             android:defaultValue="true"
             android:key="pref.privacy.auto.forget.tab"
             android:title="@string/pref_privacy_auto_forget_tab" />
-
-        <!-- add block ads setting -->
-        <PreferenceScreen android:title="@string/pref_category_block_ads"
-            android:summary="@string/pref_category_block_ads_summary"
-            android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
-            <extra android:name="resource"
-                android:value="preferences_block_ads"/>
-        </PreferenceScreen>
     </PreferenceCategory>
     <!-- hide FF Cookie preference
     <ListPreference android:key="network.cookie.cookieBehavior"
