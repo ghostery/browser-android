@@ -11,6 +11,7 @@ apply from: "${topsrcdir}/mobile/android/gradle/product_flavors.gradle"
 // We take something like 58.1.2a1 and come out with 5800102
 // This gives us 3 digits for the major number, and 2 digits
 // each for the minor and build number. Beta and Release
+/* Cliqz start o/
 def computeVersionCode() {
     String appVersion = mozconfig.substs.MOZ_APP_VERSION
 
@@ -22,7 +23,7 @@ def computeVersionCode() {
     // Strip out any milestone string ('a1' in the above example)
     // Present in Nightly (or local) builds only.
     parts.eachWithIndex { ver, index ->
-        parts[index] = ver.replaceFirst(/[a-zA-Z].*/, "")
+        parts[index] = ver.replaceFirst(/[a-zA-Z].'*'/, "")
     }
 
     // Major
@@ -38,6 +39,7 @@ def computeVersionCode() {
 
     return code;
 }
+/o Cliqz end */
 
 android {
     compileSdkVersion project.ext.compileSdkVersion
@@ -47,7 +49,9 @@ android {
         minSdkVersion project.ext.minSdkVersion
         manifestPlaceholders = project.ext.manifestPlaceholders
 
+        /* Cliqz start o/
         versionCode computeVersionCode()
+        /o Cliqz end */
         versionName "${mozconfig.substs.MOZ_APP_VERSION}-${mozconfig.substs.MOZ_UPDATE_CHANNEL}"
         consumerProguardFiles 'proguard-rules.txt'
 
