@@ -119,7 +119,7 @@
 <!ENTITY cc_toast_overview_restrict "All trackers restricted on this site">
 <!ENTITY cc_toast_overview_trust "All trackers allowed on this site">
 <!ENTITY cc_toast_site_trust "Tracker trusted on this site">
-<!ENTITY cc_toast_site_restrict "Tracker restricted on this site">
+<!ENTITY cc_toast_site_restrict "Tracker blocked on this site">
 <!ENTITY cc_toast_site_block "Tracker blocked on all sites">
 
 <!-- General Settings - Search-->
