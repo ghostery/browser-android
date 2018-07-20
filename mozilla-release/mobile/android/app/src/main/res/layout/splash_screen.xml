@@ -7,10 +7,12 @@
                                        android:layout_height="match_parent"
                                        android:orientation="vertical">
 
+    <!-- Cliqz start +->
     <ImageView
         android:layout_width="116dp"
         android:layout_height="121dp"
         android:layout_centerInParent="true"
         app:srcCompat="@drawable/firefox_logo_svg"/>
+    <!+- Cliqz end -->
 
 </org.mozilla.gecko.widget.SplashScreen>
