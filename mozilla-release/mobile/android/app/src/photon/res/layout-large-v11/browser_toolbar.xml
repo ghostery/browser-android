@@ -119,6 +119,8 @@
 
     <!-- We draw after the menu items so when they are hidden, the cancel button,
          which is thus drawn on top, may be pressed. -->
+    <!-- Cliqz start +->
+         move cancel button inside toolbar_edit_layout
     <org.mozilla.gecko.widget.themed.ThemedImageView
         android:id="@+id/edit_cancel"
         style="@style/UrlBar.EditCancel"
@@ -126,5 +128,6 @@
         android:src="@drawable/close_edit_mode_selector"
         android:visibility="gone"
         tools:visibility="visible"/>
+    <!+- Cliqz end -->
 
 </merge>

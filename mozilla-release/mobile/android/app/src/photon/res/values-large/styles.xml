@@ -184,6 +184,10 @@
     <style name="UrlBar.EditLayout.Title" parent="UrlBar.V15.EditLayout.Title"/>
     <style name="UrlBar.V15.EditLayout.Title" parent="UrlBar.Title">
         <item name="android:paddingRight">8dp</item>
+        <!-- Cliqz start -->
+        <!-- add padding at start to the urlBar edit text-->
+        <item name="android:paddingLeft">@dimen/padding_16</item>
+        <!-- Cliqz end -->
     </style>
 
     <style name="UrlBar.DisplayLayout" parent="UrlBar.V15.DisplayLayout" />
@@ -197,7 +201,12 @@
 
     <style name="UrlBar.EditCancel" parent="UrlBar.V15.EditCancel" />
 
-    <style name="UrlBar.Base.EditCancel" parent="UrlBar.ImageButton" />
+    <!-- Cliqz start -->
+    <!-- add align parent right -->
+    <style name="UrlBar.Base.EditCancel" parent="UrlBar.ImageButton" >
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+    <!-- Cliqz end -->
 
     <style name="UrlBar.V15.EditCancel" parent="UrlBar.Base.EditCancel">
         <item name="android:layout_alignParentRight">true</item>
@@ -221,7 +230,11 @@
 
 
     <style name="TabsTray.AddTab" parent="TabsTray.V15.AddTab"/>
-    <style name="TabsTray.V15.AddTab" parent="TabsTray.Base.AddTab"/>
+    <style name="TabsTray.V15.AddTab" parent="TabsTray.Base.AddTab">
+    <!-- Cliqz start -->
+    <item name="android:layout_marginLeft">@dimen/padding_10</item>
+    </style>
+    <!-- Cliqz end -->
 
     <style name="TabsTray.Menu" parent="TabsTray.V15.Menu"/>
     <style name="TabsTray.V15.Menu" parent="TabsTray.Base.Menu">

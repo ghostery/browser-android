@@ -16,8 +16,11 @@ import android.widget.LinearLayout;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.Telemetry;
+import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.menu.MenuItemActionBar;
 import org.mozilla.gecko.tabs.TabHistoryController;
+import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.widget.themed.ThemedImageButton;
 
 import java.util.Arrays;
@@ -32,6 +35,10 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
 
     protected final BackButton backButton;
     protected final ForwardButton forwardButton;
+    /* Cliqz start */
+    // add cancel button
+    protected final ThemedImageButton editCancel;
+    /* Cliqz end */
 
     protected final View menuButtonMarginView;
 
@@ -44,6 +51,12 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
         backButton.setEnabled(false);
         forwardButton = (ForwardButton) findViewById(R.id.forward);
         forwardButton.setEnabled(false);
+        /* Cliqz start */
+        // initialize cancel button and tint it to black
+        editCancel = (ThemedImageButton)findViewById(R.id.edit_cancel);
+        editCancel.setImageDrawable(DrawableUtil.tintDrawable(getContext(),R.drawable
+                .ic_close_clear,android.R.color.black));
+        /* Cliqz start */
         initButtonListeners();
 
         focusOrder.addAll(Arrays.asList(tabsButton, (View) backButton, (View) forwardButton, this));
@@ -86,6 +99,22 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
                         TabHistoryController.HistoryAction.FORWARD);
             }
         });
+        /* Cliqz start */
+        // add clickListener to cancel button
+        editCancel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // If we exit editing mode during the animation,
+                // we're put into an inconsistent state (bug 1017276).
+                if (!isAnimating()) {
+                    Telemetry.sendUIEvent(TelemetryContract.Event.CANCEL,
+                            TelemetryContract.Method.ACTIONBAR,
+                            getResources().getResourceEntryName(editCancel.getId()));
+                    cancelEdit();
+                }
+            }
+        });
+        /* Cliqz end */
     }
 
     @Override
@@ -134,6 +163,11 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
 
         backButton.setPrivateMode(isPrivate);
         forwardButton.setPrivateMode(isPrivate);
+        /* Cliqz start */
+        // change cancel button to private mode
+        editCancel.setPrivateMode(isPrivate);
+        /* Cliqz end */
+
         ((ThemedImageButton) menuButton).setPrivateMode(isPrivate);
 
         for (int i = 0; i < actionItemBar.getChildCount(); ++i) {

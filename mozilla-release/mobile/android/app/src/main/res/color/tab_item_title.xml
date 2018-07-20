@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <!-- Cliqz start -->
+    <!-- change the text color to black always-->
     <item android:state_checked="true"
-          android:color="@color/about_page_header_grey"/>
+          android:color="@android:color/black"/>
 
     <item android:state_pressed="true"
-          android:color="@color/about_page_header_grey"/>
+          android:color="@android:color/black"/>
 
-    <item android:color="@color/tabs_tray_icon_grey"/>
-
+    <item android:color="@android:color/black"/>
+    <!-- Cliqz end -->
 </selector>

@@ -36,7 +36,10 @@ public class TabsPanelComponent extends TabsPresenterComponent {
 
     public void closePanel() {
         assertTabsPanelIsOpen();
-        mSolo.clickOnView(mSolo.getView(R.id.nav_back));
+        /* Cliqz start */
+        // replace the nav button with tabs button to close the panel
+        mSolo.clickOnView(mSolo.getView(R.id.tabs));
+        /* Cliqz end */
         waitForTabsPanelToClose();
     }
 

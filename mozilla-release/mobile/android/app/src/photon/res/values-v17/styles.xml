@@ -70,7 +70,10 @@
 
     <style name="UrlBar.EditLayout.Title" parent="UrlBar.V17.EditLayout.Title"/>
     <style name="UrlBar.V17.EditLayout.Title" parent="UrlBar.Title">
-        <item name="android:paddingStart">5dp</item>
+        <!-- Cliqz start -->
+        <!-- increase padding at the beginning of the titleBar -->
+        <item name="android:paddingStart">@dimen/padding_16</item>
+        <!-- Cliqz end -->
         <item name="android:paddingEnd">8dp</item>
     </style>
 
@@ -97,7 +100,10 @@
 
     <style name="TabsTray.AddTab" parent="TabsTray.V17.AddTab" />
     <style name="TabsTray.V17.AddTab" parent="TabsTray.Base.AddTab">
-        <item name="android:layout_marginEnd">-3dp</item>
+        <!-- Cliqz start -->
+        <item name="android:layout_marginLeft">@dimen/padding_10</item>
+        <!--<item name="android:layout_marginRight">-3dp</item>
+        <!+- Cliqz end -->
     </style>
 
     <style name="TabsTray.Menu" parent="TabsTray.V17.Menu" />

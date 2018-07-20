@@ -213,12 +213,15 @@ public class TabCounter extends ThemedRelativeLayout {
         }
     }
 
-    void setCount(int count) {
+    /* Cliqz start */
+    // make it public so it can be accessed outside the package
+    public void setCount(int count) {
         adjustTextSize(count);
 
         text.setText(formatForDisplay(count));
         this.count = count;
     }
+    /* Cliqz end */
 
     @Override
     public void setPrivateMode(boolean isPrivate) {

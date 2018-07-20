@@ -6,8 +6,10 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
+    <!-- Cliqz start -->
+    <!-- change the progress bar color on private mode to be the same as normal mode -->
     <!-- private browsing mode -->
-    <item android:drawable="@drawable/progressbar_private" gecko:state_private="true" />
+    <item android:drawable="@drawable/progressbar_normal" gecko:state_private="true" />
 
     <!-- normal modes -->
     <item android:drawable="@drawable/progressbar_normal" />

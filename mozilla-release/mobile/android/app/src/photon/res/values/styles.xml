@@ -501,6 +501,10 @@
         <item name="android:maxLines">1</item>
         <item name="android:gravity">center_vertical|left|start</item>
         <item name="android:hint">@string/url_bar_default_text</item>
+        <!-- Cliqz start -->
+        <!-- add padding left -->
+        <item name="android:paddingLeft">@dimen/padding_10</item>
+        <!-- Cliqz end -->
     </style>
 
     <!-- URL bar - Image Button -->
@@ -946,7 +950,10 @@
 
     <style name="UrlBar.EditLayout.Title" parent="UrlBar.V15.EditLayout.Title"/>
     <style name="UrlBar.V15.EditLayout.Title" parent="UrlBar.Title">
-        <item name="android:paddingLeft">5dp</item>
+        <!-- Cliqz start -->
+        <!-- increase padding at the beginning of the titleBar -->
+        <item name="android:paddingLeft">@dimen/padding_16</item>
+        <!-- Cliqz end -->
         <item name="android:paddingRight">8dp</item>
     </style>
 
@@ -965,7 +972,11 @@
 
     <style name="TabsTray.AddTab" parent="TabsTray.V15.AddTab"/>
     <style name="TabsTray.V15.AddTab" parent="TabsTray.Base.AddTab">
-        <item name="android:layout_marginRight">-3dp</item>
+        <!-- Cliqz start -->
+        <item name="android:layout_marginLeft">@dimen/padding_10</item>
+
+        <!--<item name="android:layout_marginRight">-3dp</item>
+        <!+- Cliqz end -->
     </style>
     <style name="TabsTray.Base.AddTab" parent="UrlBar.ImageButton">
         <item name="drawableTintList">@null</item>

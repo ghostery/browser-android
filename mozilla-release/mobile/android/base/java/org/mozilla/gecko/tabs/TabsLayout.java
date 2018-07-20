@@ -252,4 +252,11 @@ public abstract class TabsLayout extends RecyclerView
     protected boolean isNormal() {
         return !isPrivate;
     }
+
+    /* Cliqz start */
+    // get tabs count for tab_counter text
+    public int getTabsCount(){
+        return tabsAdapter.getItemCount();
+    }
+    /* Cliqz end */
 }

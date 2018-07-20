@@ -69,6 +69,10 @@
     <style name="UrlBar.EditLayout.Title" parent="UrlBar.V17.EditLayout.Title"/>
     <style name="UrlBar.V17.EditLayout.Title" parent="UrlBar.Title">
         <item name="android:paddingEnd">8dp</item>
+        <!-- Cliqz start -->
+        <!-- add padding at start to the urlBar edit text-->
+        <item name="android:paddingStart">@dimen/padding_16</item>
+        <!-- Cliqz end -->
     </style>
 
     <style name="UrlBar.DisplayLayout" parent="UrlBar.V17.DisplayLayout" />
@@ -98,7 +102,11 @@
     </style>
 
     <style name="TabsTray.AddTab" parent="TabsTray.V17.AddTab"/>
-    <style name="TabsTray.V17.AddTab" parent="TabsTray.Base.AddTab"/>
+    <style name="TabsTray.V17.AddTab" parent="TabsTray.Base.AddTab">
+    <!-- Cliqz start -->
+    <item name="android:layout_marginLeft">@dimen/padding_10</item>
+    </style>
+    <!-- Cliqz end -->
 
     <style name="TabsTray.Menu" parent="TabsTray.V17.Menu"/>
     <style name="TabsTray.V17.Menu" parent="TabsTray.Base.Menu">
