@@ -46,19 +46,24 @@
             android:title="@string/pref_search_regional"
             android:entries="@array/pref_search_regional_entries"
             android:entryValues="@array/pref_search_regional_values"/>
-        <!-- Cliqz start -+>
+        <!--
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="pref.search.query.suggestions"
             android:title="@string/pref_search_query_suggestions" />
-        <+- Cliqz end -->
+        -->
         <CheckBoxPreference
             android:key="pref.search.block.adult.content"
             android:title="@string/pref_search_block_adult_content" />
         <CheckBoxPreference
             android:key="pref.search.auto.completion"
             android:title="@string/pref_search_auto_completion" />
-        <!-- Cliqz start -->
+        <CheckBoxPreference
+            android:key="pref.search.enable.browser.quicksearch"
+            android:title="@string/pref_search_enable_browser_quicksearch"
+            android:summary="@string/pref_search_enable_browser_quicksearch_summary"
+            android:defaultValue="true"
+            />
         <PreferenceScreen android:title="@string/pref_search_complementary_engine"
             android:key="android.not_a_preference.search_screen"
             android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >

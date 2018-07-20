@@ -74,4 +74,8 @@ public class PreferenceManager {
     public boolean areNewTrackersBlocked() {
         return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_GHOSTERY_BLOCK_NEW_TRACKERS, false);
     }
+
+    public boolean isQuickSearchEnabled(){
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREF_SEARCH_ENABLE_BROWSER_QUICKSEARCH,true);
+    }
 }
