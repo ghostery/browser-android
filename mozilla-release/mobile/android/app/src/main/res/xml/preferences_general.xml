@@ -57,6 +57,7 @@
             android:title="@string/pref_search_block_adult_content" />
         <CheckBoxPreference
             android:key="pref.search.auto.completion"
+            android:defaultValue="true"
             android:title="@string/pref_search_auto_completion" />
         <CheckBoxPreference
             android:key="pref.search.enable.browser.quicksearch"
