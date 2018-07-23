@@ -50,6 +50,7 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     preferenceManager.setTelemetryEnabled(isChecked);
+                    preferenceManager.setHumanWebEnabled(isChecked);
                 }
             });
             collectDataCb.setChecked(true);

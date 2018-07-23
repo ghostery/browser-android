@@ -13,7 +13,7 @@
         />
 
     <SwitchPreference
-        android:key="browser.cliqz.human.web"
+        android:key="pref.enable.human.web"
         android:title="@string/pref_enable_human_web" />
 
 </PreferenceScreen>
