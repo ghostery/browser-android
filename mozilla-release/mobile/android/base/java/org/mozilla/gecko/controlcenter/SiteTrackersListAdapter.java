@@ -461,7 +461,16 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
 
     private int calculateBlockedTrackerCount(GeckoBundle categoryBundle) {
         int blockedTrackerCount = 0;
+        final String pagehost = data.getBundle("data").getBundle("summary").getString("pageHost");
+        final List<String> blacklist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data, "data/summary/site_blacklist"));
+        final List<String> whitelist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data, "data/summary/site_whitelist"));
         final GeckoBundle[] trackers = categoryBundle.getBundleArray("trackers");
+        if (whitelist.contains(pagehost)) {
+            return 0;
+        }
+        if (blacklist.contains(pagehost)) {
+            return trackers != null ? trackers.length : 0;
+        }
         if (trackers != null) {
             for (GeckoBundle tracker : trackers) {
                 final boolean isBlocked = tracker.getBoolean("blocked");
