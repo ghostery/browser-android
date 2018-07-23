@@ -186,9 +186,12 @@ public class FaviconView extends AppCompatImageView {
         // fill with the coloured background. If applicable, show it.
         // We assume Favicons are still squares and only bother with the background if more than 3px
         // of it would be displayed.
-        if (Math.abs(mIconBitmap.getWidth() - getWidth()) < 3) {
+        /* Cliqz start */
+        // keep the background always transparent around the icon.
+        // if (Math.abs(mIconBitmap.getWidth() - getWidth()) < 3) {
             mDominantColor = Color.TRANSPARENT;
-        }
+        // }
+        /* Cliqz end */
     }
 
     private void scaleBitmap() {
