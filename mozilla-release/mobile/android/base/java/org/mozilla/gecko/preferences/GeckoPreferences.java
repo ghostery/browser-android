@@ -204,8 +204,9 @@ public class GeckoPreferences
 
     /* Cliqz start */
     private static final String PREFS_DYNAMIC_TOOLBAR = "browser.chrome.dynamictoolbar";
-    // add human web link
+    // add human web keys
     private static final String PREFS_HUMAN_WEB_LINK = NON_PREF_PREFIX + "human.web.link";
+    public static final String PREFS_ENABLE_HUMAN_WEB = "pref.enable.human.web";
     // add IS_MYOFFRZ_ONBOARDING_ENABLED
     public static final String IS_MYOFFRZ_ONBOARDING_ENABLED = "myoffrz_onboarding_enabled";
     final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
@@ -969,6 +970,12 @@ public class GeckoPreferences
                 else if (PREFS_HUMAN_WEB_LINK.equals(key)) {
                     final String url = getResources().getString(R.string.pref_human_web_url);
                     ((LinkPreference) pref).setUrl(url);
+                }
+                // set value of human web
+                else if (PREFS_ENABLE_HUMAN_WEB.equals(key)) {
+                    final PreferenceManager preferenceManager = new PreferenceManager
+                            (getApplicationContext());
+                    ((SwitchPreference)pref).setChecked(preferenceManager.isHumanWebEnabled());
                 }
                 // add navigate to playstore when click on rate cliqz browser
                 else if (PREFS_RATE_US.equals(key)){

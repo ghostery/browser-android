@@ -73,4 +73,13 @@ public class PreferenceManager {
     public boolean isQuickSearchEnabled(){
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREF_SEARCH_ENABLE_BROWSER_QUICKSEARCH,true);
     }
+
+    public boolean isHumanWebEnabled(){
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_ENABLE_HUMAN_WEB,true);
+    }
+
+    public void setHumanWebEnabled(boolean value){
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putBoolean(GeckoPreferences.PREFS_ENABLE_HUMAN_WEB, value).apply();
+    }
 }
