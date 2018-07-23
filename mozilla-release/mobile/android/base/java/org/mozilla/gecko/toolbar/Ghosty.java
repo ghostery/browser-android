@@ -100,6 +100,7 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
         //canvas.drawARGB(255, 255, 255, 255);
         mGhostyDrawable.setBounds((int) ghostyLeft, (int) ghostyTop, (int) ghostyRight, (int) ghostyBottom);
         mGhostyDrawable.draw(canvas);
+        setContentDescription(count);
         canvas.drawText(count, w / 2, ghostyTop + height, mPaint);
     }
 
