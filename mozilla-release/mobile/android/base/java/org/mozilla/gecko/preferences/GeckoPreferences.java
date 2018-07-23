@@ -208,15 +208,9 @@ public class GeckoPreferences
     private static final String PREFS_HUMAN_WEB_LINK = NON_PREF_PREFIX + "human.web.link";
     // add IS_MYOFFRZ_ONBOARDING_ENABLED
     public static final String IS_MYOFFRZ_ONBOARDING_ENABLED = "myoffrz_onboarding_enabled";
-    // add Block Ads, Block Ads fair, what is fair and Block Ads data
-    public static final String PREFS_BLOCK_ADS = "pref.block.ads";
-    private static final String PREFS_BLOCK_ADS_FAIR = "pref.block.ads.fair";
-    Preference prefBlockAdsFair;
-    private static final String PREFS_BLOCK_ADS_WHAT_FAIR = NON_PREF_PREFIX + "block.ads.what.fair";
-    private static final String PREFS_BLOCK_ADS_DATA = NON_PREF_PREFIX + "block.ads.data";
     final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
     // add rate cliqz browser to the settings menu
-    private static final String PREFS_RATE_CLIQZ = NON_PREF_PREFIX + "rate.cliqz";
+    private static final String PREFS_RATE_US = NON_PREF_PREFIX + "rate.us";
     // add keys for General Home , Vendor screen , notifications screen, General language
     private static final String PREFS_GENERAL_HOME = NON_PREF_PREFIX + "general.home";
     private static final String PREFS_VENDOR_SCREEN = NON_PREF_PREFIX + "vendor.screen";
@@ -273,6 +267,8 @@ public class GeckoPreferences
     public static final String PREFS_GHOSTERY_AUTO_UPDATE = "ghostery.settings.autoupdate";
     public static final String PREFS_GHOSTERY_ALLOW_FIRST_PARTY = "ghostery.settings.allowfirstparty";
     public static final String PREFS_GHOSTERY_BLOCK_NEW_TRACKERS = "ghostery.settings.blocknewtrackers";
+    // add key for enable quick search
+    public static final String PREF_SEARCH_ENABLE_BROWSER_QUICKSEARCH = "pref.search.enable.browser.quicksearch";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -974,18 +970,8 @@ public class GeckoPreferences
                     final String url = getResources().getString(R.string.pref_human_web_url);
                     ((LinkPreference) pref).setUrl(url);
                 }
-                // open dialog describe what block ads fair means
-                else if(PREFS_BLOCK_ADS_WHAT_FAIR.equals(key)) {
-                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            showDialog(DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR);
-                            return true;
-                        }
-                    });
-                }
                 // add navigate to playstore when click on rate cliqz browser
-                else if (PREFS_RATE_CLIQZ.equals(key)){
+                else if (PREFS_RATE_US.equals(key)){
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -1054,17 +1040,6 @@ public class GeckoPreferences
                             return true;
                         }
                     });
-                }
-                // set listener for value change if blockAds
-                else if (PREFS_BLOCK_ADS.equals(key)) {
-                    pref.setOnPreferenceChangeListener(this);
-                }
-                // Enable blockAdsFair if BlockAds Enabled
-                else if (PREFS_BLOCK_ADS_FAIR.equals(key)) {
-                    prefBlockAdsFair = pref;
-                    final PreferenceManager preferenceManager = new PreferenceManager
-                            (getApplicationContext());
-                    prefBlockAdsFair.setEnabled(preferenceManager.isBlockAdsEnabled());
                 }
                 // Open restore top sites dialog
                 else if(PREFS_RESTORE_TOP_SITES.equals(key)) {
@@ -1501,12 +1476,6 @@ public class GeckoPreferences
             // BrowserSearch is notified immediately about the new enabled state.
             EventDispatcher.getInstance().dispatch("SearchEngines:GetVisible", null);
         }
-        /* Cliqz start */
-        // enable blockAdsFair if blockAds checked
-        else if(PREFS_BLOCK_ADS.equals(prefName)) {
-            prefBlockAdsFair.setEnabled((Boolean) newValue);
-        }
-        /* Cliqz end */
 
         // Send Gecko-side pref changes to Gecko
         if (isGeckoPref(prefName)) {

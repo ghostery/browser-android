@@ -9,6 +9,7 @@ import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.CustomEditText;
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.InputMethods;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnCommitListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnDismissListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnFilterListener;
@@ -72,9 +73,13 @@ public class ToolbarEditText extends CustomEditText
     // Do not process autocomplete result
     private boolean mDiscardAutoCompleteResult;
 
+    /* Cliqz start */
+    final PreferenceManager mPreferenceManager;
+    /* Cliqz end */
     public ToolbarEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
+        mPreferenceManager = new PreferenceManager(mContext);
     }
 
     void setOnCommitListener(OnCommitListener listener) {
@@ -102,8 +107,10 @@ public class ToolbarEditText extends CustomEditText
         addTextChangedListener(new TextChangeListener());
 
         /* Cliqz start */
-        EventDispatcher.getInstance().registerUiThreadListener(this,
-                "Search:Autocomplete", null);
+        if(mPreferenceManager.isQuickSearchEnabled()) {
+            EventDispatcher.getInstance().registerUiThreadListener(this,
+                    "Search:Autocomplete", null);
+        }
         /* Cliqz end */
     }
 
@@ -122,7 +129,9 @@ public class ToolbarEditText extends CustomEditText
             resetAutocompleteState();
             /* Cliqz start */
             // Let's possibly warm up the search extension
-            EventDispatcher.getInstance().dispatch("Search:Warmup", null);
+            if(mPreferenceManager.isQuickSearchEnabled()) {
+                EventDispatcher.getInstance().dispatch("Search:Warmup", null);
+            }
             /* Cliqz end */
             return;
         }
@@ -549,9 +558,11 @@ public class ToolbarEditText extends CustomEditText
 
             /* Cliqz start */
             // Let's send the non-autocompleted text to the Cliqz search extension
-            final GeckoBundle bundle = new GeckoBundle();
-            bundle.putString("q", text);
-            EventDispatcher.getInstance().dispatch("Search:Search", bundle);
+            if(mPreferenceManager.isQuickSearchEnabled()) {
+                final GeckoBundle bundle = new GeckoBundle();
+                bundle.putString("q", text);
+                EventDispatcher.getInstance().dispatch("Search:Search", bundle);
+            }
             /* Cliqz end */
 
             final int textLength = text.length();
@@ -673,8 +684,10 @@ public class ToolbarEditText extends CustomEditText
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        EventDispatcher.getInstance().unregisterUiThreadListener(this,
-                "Search:Autocomplete", null);
+        if(mPreferenceManager.isQuickSearchEnabled()) {
+            EventDispatcher.getInstance().unregisterUiThreadListener(this,
+                    "Search:Autocomplete", null);
+        }
     }
 
     @Override

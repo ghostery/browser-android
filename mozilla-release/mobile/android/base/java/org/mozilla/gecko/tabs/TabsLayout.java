@@ -50,6 +50,10 @@ public abstract class TabsLayout extends RecyclerView
                         // to the parent TabsLayoutItemView in its tag, hence the getTag() call.
                         TabsLayoutItemView itemView = (TabsLayoutItemView) v.getTag();
                         closeTab(itemView);
+                        /* Cliqz start */
+                        // update the counter after removing tabs
+                        tabsPanel.getTabsCounter().setCount(getTabsCount());
+                        /* Cliqz end */
                     }
                 });
         setAdapter(tabsAdapter);

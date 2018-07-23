@@ -33,8 +33,8 @@
 <!ENTITY pref_block_ads_fair_description "The Ad Blocker is in beta at the moment. The final version will provide the following options: Allow Fair Ads (default setting), Block All Ads, Allow All Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "Please note: the browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.">
 
-<!-- Rate Cliqz -->
-<!ENTITY pref_category_rate_cliqz "Rate &brandShortName; Browser">
+<!-- Rate Us -->
+<!ENTITY pref_category_rate_us "Rate Us">
 
 <!-- Support Cliqz -->
 <!ENTITY pref_support_cliqz "FAQs &amp; Support">
@@ -119,7 +119,7 @@
 <!ENTITY cc_toast_overview_restrict "All trackers restricted on this site">
 <!ENTITY cc_toast_overview_trust "All trackers allowed on this site">
 <!ENTITY cc_toast_site_trust "Tracker trusted on this site">
-<!ENTITY cc_toast_site_restrict "Tracker restricted on this site">
+<!ENTITY cc_toast_site_restrict "Tracker blocked on this site">
 <!ENTITY cc_toast_site_block "Tracker blocked on all sites">
 
 <!-- General Settings - Search-->
@@ -142,6 +142,8 @@
 <!ENTITY pref_search_complementary_engine_ecosia "Ecosia">
 <!ENTITY pref_search_complementary_engine_start_page "StartPage">
 <!ENTITY pref_search_complementary_engine_qwant "Qwant">
+<!ENTITY pref_search_enable_browser_quicksearch "Enable Quick Search">
+<!ENTITY pref_search_enable_browser_quicksearch_summary "Get instant result while typing">
 
 <!-- General Settings - Browsing -->
 <!ENTITY pref_browsing_category "Browsing">
@@ -193,7 +195,7 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Help">
-<!ENTITY pref_category_help_summary "Best out of &brandShortName;, FAQ , Report Website, Rate us">
+<!ENTITY pref_category_help_summary "Best out of &brandShortName;, FAQ , Report Website">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "About us">

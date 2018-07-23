@@ -683,8 +683,8 @@
   <string name="pref_block_ads_data">&pref_block_ads_data;</string>
   <string name="pref_block_ads_fair_description">&pref_block_ads_fair_description;</string>
 
-  <!-- Rate Cliqz -->
-  <string name="pref_category_rate_cliqz">&pref_category_rate_cliqz;</string>
+  <!-- Rate Us -->
+  <string name="pref_category_rate_us">&pref_category_rate_us;</string>
 
 
   <!-- Support Cliqz -->
@@ -781,6 +781,9 @@
   <string name="pref_search_complementary_engine_ecosia">&pref_search_complementary_engine_ecosia;</string>
   <string name="pref_search_complementary_engine_start_page">&pref_search_complementary_engine_start_page;</string>
   <string name="pref_search_complementary_engine_qwant">&pref_search_complementary_engine_qwant;</string>
+  <string name="pref_search_enable_browser_quicksearch">&pref_search_enable_browser_quicksearch;</string>
+  <string
+      name="pref_search_enable_browser_quicksearch_summary">&pref_search_enable_browser_quicksearch_summary;</string>
 
   <!-- General Settings - Browsing -->
   <string name="pref_browsing_category">&pref_browsing_category;</string>
