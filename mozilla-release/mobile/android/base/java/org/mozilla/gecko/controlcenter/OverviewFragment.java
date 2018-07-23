@@ -63,6 +63,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private GeckoBundle controlCenterSettingsData;
     private final List<Integer> colors = new ArrayList<>();
     private final List<Integer> disabledColors = new ArrayList<>();
+    private final List<Integer> blockedColors = new ArrayList<>();
 
     public OverviewFragment() {
     }
@@ -123,9 +124,16 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             entries.add(new PieEntry(trackersCount));
             colors.add(ContextCompat.getColor(getContext(), category.categoryColor));
             disabledColors.add(ContextCompat.getColor(getContext(), category.categoryColorDisabled));
+            blockedColors.add(ContextCompat.getColor(getContext(), category.categoryColorBlocked));
         }
         final PieDataSet set = new PieDataSet(entries, "cc");
-        set.setColors(mIsGhosteryPaused ? disabledColors : colors);
+        if (mIsGhosteryPaused) {
+            set.setColors(disabledColors);
+        } else if (mIsSiteRestricted) {
+            set.setColors(blockedColors);
+        } else {
+            set.setColors(colors);
+        }
         final PieData pieData = new PieData(set);
         pieData.setDrawValues(false);
         mPieChart.setHighlightPerTapEnabled(false);
@@ -214,6 +222,15 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         trackersBlockedSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.cc_restricted)), 0,
                 Integer.toString(blockedTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mTrackersBlocked.setText(trackersBlockedSpan);
+        final PieDataSet donutDataset = ((PieDataSet) mPieChart.getData().getDataSet());
+        if (mIsGhosteryPaused) {
+            donutDataset.setColors(disabledColors);
+        } else if (mIsSiteRestricted) {
+            donutDataset.setColors(blockedColors);
+        } else {
+            donutDataset.setColors(colors);
+        }
+        mPieChart.invalidate();
     }
 
     @Override
@@ -250,6 +267,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
 
     private void handlePauseButtonClick() {
         mIsGhosteryPaused = !mIsGhosteryPaused;
+        mIsSiteRestricted = false;
+        mIsSiteTrusted = false;
         styleButton(mPauseGhosteryButton, mIsGhosteryPaused);
         if (mIsGhosteryPaused) {
             styleButton(mTrustSiteButton, false);
@@ -276,7 +295,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final GeckoBundle geckoBundle = new GeckoBundle();
         geckoBundle.putBoolean("paused_blocking", mIsGhosteryPaused);
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-        controlCenterSettingsData.getBundle("data").getBundle("summary").putBoolean("paused_blocking", mIsGhosteryPaused);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", mIsGhosteryPaused);
     }
 
     private void handleTrustButtonClick() {
@@ -289,6 +308,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final ArrayList<String> updatedWhiteList;
         mIsSiteTrusted = !mIsSiteTrusted;
         mIsSiteRestricted = false;
+        mIsGhosteryPaused = false;
         styleButton(mTrustSiteButton, mIsSiteTrusted);
         if (mIsSiteTrusted) {
             styleButton(mRestrictSiteButton, false);
@@ -314,6 +334,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         //update the data source so that other views can reflect changes
         controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_blacklist", updatedBlackList);
         controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_whitelist", updatedWhiteList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", false);
     }
 
     private void handleRestrictButtonClick() {
@@ -326,6 +347,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final ArrayList<String> updatedWhiteList;
         mIsSiteRestricted = !mIsSiteRestricted;
         mIsSiteTrusted = false;
+        mIsGhosteryPaused = false;
         styleButton(mRestrictSiteButton, mIsSiteRestricted);
         if (mIsSiteRestricted) {
             styleButton(mTrustSiteButton, false);
@@ -350,6 +372,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         //update the data source so that other views can reflect changes
         controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_blacklist", updatedBlackList);
         controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_whitelist", updatedWhiteList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", false);
     }
 
     private void styleButton(RelativeLayout button, boolean state) {
@@ -365,14 +388,10 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 button.setBackgroundResource(R.drawable.cc_button_background_blue);
                 buttonText.setText(getString(R.string.cc_resume_ghostery));
                 buttonIcon.setImageResource(R.drawable.cc_ic_resume);
-                ((PieDataSet) mPieChart.getData().getDataSet()).setColors(disabledColors);
-                mPieChart.invalidate();
             } else {
                 button.setBackgroundResource(R.drawable.cc_button_background_white);
                 buttonText.setText(R.string.cc_pause_ghostery);
                 buttonIcon.setImageResource(R.drawable.cc_ic_pause);
-                ((PieDataSet) mPieChart.getData().getDataSet()).setColors(colors);
-                mPieChart.invalidate();
             }
         } else if (button == mRestrictSiteButton) {
             if (state) {
