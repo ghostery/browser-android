@@ -6374,27 +6374,27 @@ var Cliqz = {
     Services.prefs.addObserver('pref.search.regional', () => {
       const value = Services.prefs.getCharPref('pref.search.regional');
       this.messageSearchExtension({
-        module: 'search',
-        action: 'setBackendCountry',
+        module: "search",
+        action: "setBackendCountry",
         args: [value]
       });
     });
 
-    Services.prefs.addObserver('pref.search.block.adult.content', () => {
-      const value = Services.prefs.getBoolPref('pref.search.block.adult.content');
-      const key = value ? 'conservative' : 'liberal';
+    Services.prefs.addObserver("pref.search.block.adult.content", () => {
+      const value = Services.prefs.getBoolPref("pref.search.block.adult.content");
+      const key = value ? "conservative" : "liberal";
       this.messageSearchExtension({
-        module: 'search',
-        action: 'setAdultFilter',
+        module: "search",
+        action: "setAdultFilter",
         args: [key]
       });
     });
 
-    Services.prefs.addObserver('pref.search.query.suggestions', () => {
-      const value = Services.prefs.getBoolPref('pref.search.query.suggestions');
+    Services.prefs.addObserver("pref.search.query.suggestions", () => {
+      const value = Services.prefs.getBoolPref("pref.search.query.suggestions");
       this.messageSearchExtension({
-        module: 'search',
-        action: 'setQuerySuggestions',
+        module: "search",
+        action: "setQuerySuggestions",
         args: [value]
       });
     });
@@ -6429,13 +6429,13 @@ var Cliqz = {
   },
 
   messagePrivacyExtension(msg) {
-    return Cliqz._messageExtension('firefox@ghostery.com', msg);
+    return Cliqz._messageExtension("firefox@ghostery.com", msg);
   },
   messageSearchExtension(msg) {
-    msg.source = 'cliqz-android';
-    return Cliqz._messageExtension('android@cliqz.com', msg, {
+    msg.source = "ANDROID_BROWSER";
+    return Cliqz._messageExtension("android@cliqz.com", msg, {
       senderOptions: {
-        contextId: 'mobile-cards',
+        contextId: "mobile-cards",
       },
     });
   },
@@ -6460,9 +6460,9 @@ var Cliqz = {
   },
 
   _searchExtensionListener(msg) {
-    console.log('Dispaching event from the search extension to native', msg);
+    console.log("Dispaching event from the search extension to native", msg);
     switch (msg.action) {
-      case 'openUrl': // args [url as string]
+      case "openUrl": // args [url as string]
         if (!msg.args[0]) {
           break;
         }
@@ -6475,21 +6475,32 @@ var Cliqz = {
           type: "Search:OpenLink"
         });
         break;
-      case 'autocomplete': // args [data as object]
+      case "autocomplete": // args [data as string]
         GlobalEventDispatcher.sendRequest({
           type: "Search:Autocomplete",
-          data: msg.data.data
+          data: msg.args[0]
         });
         break;
+      case "suggestions": // args [query as string, suggestions as array]
+        GlobalEventDispatcher.sendRequest({
+          type: "Search:QuerySuggestions",
+          data: {
+            query: msg.args[0],
+            suggestions: msg.args[1]
+          }
+        });
+        break;
+      case "getInstallDate":
+        return Services.prefs.getCharPref("android.not_a_preference.browser.install.date", "16917");
       default:
-        console.log('unexpected message', msg)
+        console.log("unexpected message", msg)
     }
   },
 
   _privacyExtensionListener(msg) {
-    console.log('Dispaching event from the privacy extension to native', msg);
+    console.log("Dispaching event from the privacy extension to native", msg);
     switch (msg.action) {
-      case 'setIcon':
+      case "setIcon":
         var count = Number.parseInt(msg.payload.text);
         count = count ? count : 0;
         GlobalEventDispatcher.sendRequest({
@@ -6498,14 +6509,14 @@ var Cliqz = {
           count: count
         });
       break;
-      case 'panelData':
+      case "panelData":
         GlobalEventDispatcher.sendRequest({
           type: "Privacy:Info",
           data: msg.payload
         });
       break;
       default:
-        console.log('unexpected message', msg)
+        console.log("unexpected message", msg)
     }
   },
 
@@ -6514,7 +6525,7 @@ var Cliqz = {
     const msg = data.data.deserialize(this);
     const callback = this.callbacks[msg.requestId];
 
-    if (msg.target !== 'ANDROID_BROWSER') {
+    if (msg.target !== "ANDROID_BROWSER") {
       return;
     }
 
@@ -6522,19 +6533,29 @@ var Cliqz = {
       callback(msg.response);
       delete this.callbacks[msg.requestId];
     } else { // handle request
-      if (data.recipient.extensionId === 'firefox@ghostery.com') {
-        this._privacyExtensionListener(msg);
-      } else if (data.recipient.extensionId === 'android@cliqz.com') {
-        this._searchExtensionListener(msg);
+      let response;
+      let sendCallback;
+      if (data.recipient.extensionId === "firefox@ghostery.com") {
+        response = this._privacyExtensionListener(msg);
+        sendCallback = this.messagePrivacyExtension;
+      } else if (data.recipient.extensionId === "android@cliqz.com") {
+        response = this._searchExtensionListener(msg);
+        sendCallback = this.messageSearchExtension;
+      }
+      if ("requestId" in msg && sendCallback) {
+        sendCallback({
+          response,
+          requestId: msg.requestId,
+        });
       }
     }
   },
 
   get Ghostery() {
     if (!this._ghostery) {
-      this._ghostery = this._createBrowserForExtension('firefox@ghostery.com');
+      this._ghostery = this._createBrowserForExtension("firefox@ghostery.com");
       this._ghostery.loadTab = function(tab) {
-        this.load('app/templates/panel_android_ui.html?tabId=' + tab)
+        this.load("app/templates/panel_android_ui.html?tabId=" + tab)
       }.bind(this._ghostery);
     }
 
@@ -6561,13 +6582,13 @@ var Cliqz = {
   },
 
   overlayPanel: function(panel) {
-    if (panel.hasAttribute('primary')) {
+    if (panel.hasAttribute("primary")) {
       // already visible
       return;
     }
 
     var currentPanel = BrowserApp.deck.selectedPanel;
-    if (currentPanel.hasAttribute('contentsource')) {
+    if (currentPanel.hasAttribute("contentsource")) {
       // current tab is already an overlay
       // -> we simply hide it
       currentPanel.removeAttribute("primary");
@@ -6585,7 +6606,7 @@ var Cliqz = {
 
   hidePanel: function(panel) {
     if (!BrowserApp.deck.backPanel ||
-        !panel.hasAttribute('primary')) {
+        !panel.hasAttribute("primary")) {
       // not visible already
       return false;
     }
@@ -6624,7 +6645,7 @@ var Cliqz = {
     const extBlockAdultContentDefault =
       Object.keys(adultState).find((key) => {
        return adultState[key].selected;
-      }) === 'conservative';
+      }) === "conservative";
     var blockAdultContent = extBlockAdultContentDefault ?
       extBlockAdultContentDefault : true;
     try {
@@ -6637,9 +6658,9 @@ var Cliqz = {
 
     var showQuerySuggestions = Boolean(module.search.showQuerySuggestions);
     try {
-      showQuerySuggestions = Services.prefs.getBoolPref('pref.search.query.suggestions');
+      showQuerySuggestions = Services.prefs.getBoolPref("pref.search.query.suggestions");
     } catch (error) {
-      Services.prefs.setBoolPref('pref.search.query.suggestions', showQuerySuggestions);
+      Services.prefs.setBoolPref("pref.search.query.suggestions", showQuerySuggestions);
     }
     messages.push(["setQuerySuggestions", showQuerySuggestions]);
 
@@ -6656,40 +6677,40 @@ var Cliqz = {
     // event cases should be sorted in alphabitical order
     switch(event) {
       case "Search:Analysis":
-        const { data: msg = {}, immediate = false, schema = '' } = data;
+        const { data: msg = {}, immediate = false, schema = "" } = data;
         this.messageSearchExtension({
-          module: 'anolysis',
-          action: 'handleTelemetrySignal',
+          module: "anolysis",
+          action: "handleTelemetrySignal",
           args: [msg, immediate, schema]
         });
         break;
       case "Search:GetStatus":
         this.messageSearchExtension({
-          module: 'control-center',
-          action: 'status',
+          module: "control-center",
+          action: "status",
           args: []
         }).then((...args) => this._syncSearchPrefs(...args));
         break;
       case "Search:Hide":
         this.hidePanel(this.Search.panel);
-        this.messageSearchExtension({ module: 'search', action: 'stopSearch', args: []});
+        this.messageSearchExtension({ module: "search", action: "stopSearch", args: []});
         break;
       case "Search:Search":
         let q = data.q || "";
-        this.messageSearchExtension({ module: 'search', action: 'startSearch', args: [q]});
+        this.messageSearchExtension({ module: "search", action: "startSearch", args: [q]});
         break;
       case "Search:Show":
         this.overlayPanel(this.Search.panel);
         break;
 
       case "Privacy:GetInfo":
-        this.messagePrivacyExtension({ name: 'getAndroidPanelData' });
+        this.messagePrivacyExtension({ name: "getAndroidPanelData" });
         break;
       case "Privacy:Hide":
         this.hidePanel(this.Ghostery.panel);
         break;
       case "Privacy:SetInfo":
-        this.messagePrivacyExtension({ name: 'setPanelData', message: data });
+        this.messagePrivacyExtension({ name: "setPanelData", message: data });
         break;
       case "Privacy:Show":
         this.overlayPanel(this.Ghostery.panel);

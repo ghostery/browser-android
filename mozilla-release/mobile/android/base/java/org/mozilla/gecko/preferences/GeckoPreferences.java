@@ -135,6 +135,7 @@ public class GeckoPreferences
     // These match keys in resources/xml*/preferences*.xml
     private static final String PREFS_SEARCH_RESTORE_DEFAULTS = NON_PREF_PREFIX + "search.restore_defaults";
     private static final String PREFS_DATA_REPORTING_PREFERENCES = NON_PREF_PREFIX + "datareporting.preferences";
+    // TODO: What is this? Should we just use the Firefox preference and just disable Mozilla telemetry?
     private static final String PREFS_TELEMETRY_ENABLED = "toolkit.telemetry.enabled";
     public static final String CLIQZ_TELEMETRY_ENABLED = "cliqz.telemetry.enabled";
     private static final String PREFS_CRASHREPORTER_ENABLED = "datareporting.crashreporter.submitEnabled";
@@ -203,6 +204,10 @@ public class GeckoPreferences
     private static final int REQUEST_CODE_TAB_QUEUE = 8;
 
     /* Cliqz start */
+    // !!! NOTICE !!!
+    // Some of the following keys do not reflect Firefox naming conventions because they were
+    // already present in the legacy Lightning based Cliqz Browser for Android and we want to carry
+    // them over to this version.
     private static final String PREFS_DYNAMIC_TOOLBAR = "browser.chrome.dynamictoolbar";
     // add human web keys
     private static final String PREFS_HUMAN_WEB_LINK = NON_PREF_PREFIX + "human.web.link";
@@ -270,6 +275,9 @@ public class GeckoPreferences
     public static final String PREFS_GHOSTERY_BLOCK_NEW_TRACKERS = "ghostery.settings.blocknewtrackers";
     // add key for enable quick search
     public static final String PREF_SEARCH_ENABLE_BROWSER_QUICKSEARCH = "pref.search.enable.browser.quicksearch";
+    // Install and upgrade dates for Anolisys
+    public static final String PREFS_BROWSER_INSTALL_DATE = NON_PREF_PREFIX + "browser.install.date";
+    public static final String PREFS_BROWSER_UPGRADE_DATE = NON_PREF_PREFIX + "browser.upgrade.date";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
