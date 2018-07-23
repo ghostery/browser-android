@@ -176,6 +176,18 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private int calculateBlockedTrackers() {
         int totalBlocked = 0;
         final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(controlCenterSettingsData, "data/summary/categories");
+        if (mIsSiteRestricted) {
+            for (GeckoBundle category : categories) {
+                final GeckoBundle[] trackers = category.getBundleArray("trackers");
+                if (trackers != null) {
+                    totalBlocked+=trackers.length;
+                }
+            }
+            return totalBlocked;
+        }
+        if (mIsSiteTrusted) {
+            return 0;
+        }
         for (GeckoBundle category : categories) {
             final GeckoBundle[] trackers  = category.getBundleArray("trackers");
             if (trackers != null) {
@@ -276,6 +288,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final ArrayList<String> updatedBlackList;
         final ArrayList<String> updatedWhiteList;
         mIsSiteTrusted = !mIsSiteTrusted;
+        mIsSiteRestricted = false;
         styleButton(mTrustSiteButton, mIsSiteTrusted);
         if (mIsSiteTrusted) {
             styleButton(mRestrictSiteButton, false);
@@ -312,6 +325,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final ArrayList<String> updatedBlackList;
         final ArrayList<String> updatedWhiteList;
         mIsSiteRestricted = !mIsSiteRestricted;
+        mIsSiteTrusted = false;
         styleButton(mRestrictSiteButton, mIsSiteRestricted);
         if (mIsSiteRestricted) {
             styleButton(mTrustSiteButton, false);
@@ -373,5 +387,6 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 button.setBackgroundResource(R.drawable.cc_button_background_white);
             }
         }
+        refreshUI();
     }
 }
