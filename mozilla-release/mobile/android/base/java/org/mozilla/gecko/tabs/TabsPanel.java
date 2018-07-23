@@ -5,7 +5,6 @@
 
 package org.mozilla.gecko.tabs;
 
-import org.mozilla.gecko.Experiments;
 import org.mozilla.gecko.GeckoApp;
 import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.GeckoSharedPrefs;
@@ -16,7 +15,6 @@ import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.ViewHelper;
 import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.lwt.LightweightThemeDrawable;
-import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.restrictions.Restrictable;
 import org.mozilla.gecko.restrictions.Restrictions;
@@ -29,7 +27,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.content.ContextCompat;
@@ -45,11 +42,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import org.mozilla.gecko.switchboard.SwitchBoard;
-
-import org.mozilla.gecko.widget.themed.ThemedImageButton;
 import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 public class TabsPanel extends LinearLayout
@@ -122,7 +115,7 @@ public class TabsPanel extends LinearLayout
     private View mMenuButton;
     private ImageButton mAddTab;
     // Cliqz: add tabsCounter
-    private TabCounter tabsCounter;
+    private TabCounter mTabsCounter;
 
     // Tab Tray
     // Cliqz: change the panel type to Text instead of button
@@ -214,7 +207,7 @@ public class TabsPanel extends LinearLayout
                                              }
                                          });*/
         // Cliqz: add TabsCounter and listener on it
-        tabsCounter = (TabCounter) findViewById(R.id.tabs_counter);
+        mTabsCounter = (TabCounter) findViewById(R.id.tabs_counter);
         final ImageButton tabsButton = (ImageButton) findViewById(R.id.tabs);
         tabsButton.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -444,7 +437,7 @@ public class TabsPanel extends LinearLayout
         /* Cliqz start */
         // set tabsCounter text "IMPORTANT: do it after mPanel.show(), because it calls
         // refreshTabsData(); to refresh the tabs displayed. "
-        tabsCounter.setCount(mPanel.getTabsCount());
+        mTabsCounter.setCount(mPanel.getTabsCount());
         /* Cliqz end */
         mAddTab.setVisibility(View.VISIBLE);
 
@@ -550,4 +543,10 @@ public class TabsPanel extends LinearLayout
 
         refresh();
     }
+
+    /* Cliqz start */
+    public TabCounter getTabsCounter(){
+        return mTabsCounter;
+    }
+    /* Cliqz end */
 }
