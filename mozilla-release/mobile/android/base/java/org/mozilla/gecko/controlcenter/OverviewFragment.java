@@ -180,7 +180,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             for (GeckoBundle category : categories) {
                 final GeckoBundle[] trackers = category.getBundleArray("trackers");
                 if (trackers != null) {
-                    totalBlocked+=trackers.length;
+                    totalBlocked += trackers.length;
                 }
             }
             return totalBlocked;
