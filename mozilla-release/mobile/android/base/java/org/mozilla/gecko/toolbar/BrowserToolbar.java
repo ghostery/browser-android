@@ -364,8 +364,10 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 urlEditLayout.clearFocus();
 
                 toggleTabs();
-
-                hideOverlays(); // Cliqz
+                /* Cliqz Start */
+                hideOverlays();
+                activity.hideControlCenter();
+                /* Cliqz End */
             }
         });
         tabsButton.setImageLevel(0);
@@ -376,8 +378,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 // Drop the soft keyboard.
                 urlEditLayout.clearFocus();
                 activity.openOptionsMenu();
-
-                hideOverlays(); // Cliqz
+                /* Cliqz Start */
+                hideOverlays();
+                /* Cliqz End */
             }
         });
 
