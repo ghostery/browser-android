@@ -4,9 +4,10 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:gecko="http://schemas.android.com/apk/res-auto">
-
-    <item android:drawable="@color/photon_content_bg_private"
+    <!-- Cliqz start -->
+    <!-- keep the background the same on normal and private mode -->
+    <item android:drawable="@color/photon_content_bg"
           gecko:state_private="true"/>
-
+    <!-- Cliqz end -->
     <item android:drawable="@color/photon_content_bg"/>
 </selector>

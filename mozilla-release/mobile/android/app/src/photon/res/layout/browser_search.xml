@@ -38,6 +38,7 @@
         android:choiceMode="singleChoice"
         android:listSelector="@android:color/transparent"
         android:orientation="horizontal"
-        android:paddingTop="1dp"/>
+        android:paddingTop="1dp"
+        android:background="@drawable/search_list_bg"/>
 
 </LinearLayout>

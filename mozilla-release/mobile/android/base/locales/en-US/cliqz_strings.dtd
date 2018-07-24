@@ -143,7 +143,7 @@
 <!ENTITY pref_search_complementary_engine_start_page "StartPage">
 <!ENTITY pref_search_complementary_engine_qwant "Qwant">
 <!ENTITY pref_search_enable_browser_quicksearch "Enable Quick Search">
-<!ENTITY pref_search_enable_browser_quicksearch_summary "Get instant result while typing">
+<!ENTITY pref_search_enable_browser_quicksearch_summary "Get instant results while typing">
 
 <!-- General Settings - Browsing -->
 <!ENTITY pref_browsing_category "Browsing">
