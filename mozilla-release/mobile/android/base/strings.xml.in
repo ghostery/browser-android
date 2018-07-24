@@ -760,6 +760,33 @@
   <string name="cc_toast_site_trust">&cc_toast_site_trust;</string>
   <string name="cc_toast_site_restrict">&cc_toast_site_restrict;</string>
   <string name="cc_toast_site_block">&cc_toast_site_block;</string>
+  <plurals name="cc_trackers_blocked">
+    <item quantity="zero">&cc_zero_anti_tracking_blocked;</item>
+    <item quantity="one">&cc_one_anti_tracking_blocked;</item>
+    <item quantity="two">&cc_two_anti_tracking_blocked;</item>
+    <item quantity="few">&cc_few_anti_tracking_blocked;</item>
+    <item quantity="many">&cc_many_anti_tracking_blocked;</item>
+    <item quantity="other">&cc_other_anti_tracking_blocked;</item>
+  </plurals>
+  <plurals name="cc_ads_blocked">
+    <item quantity="zero">&cc_zero_ad_blocking_blocked;</item>
+    <item quantity="one">&cc_one_ad_blocking_blocked;</item>
+    <item quantity="two">&cc_two_ad_blocking_blocked;</item>
+    <item quantity="few">&cc_few_ad_blocking_blocked;</item>
+    <item quantity="many">&cc_many_ad_blocking_blocked;</item>
+    <item quantity="other">&cc_other_ad_blocking_blocked;</item>
+  </plurals>
+  <plurals name="cc_trackers_adjusted">
+    <item quantity="zero">&cc_zero_smart_blocking_blocked;</item>
+    <item quantity="one">&cc_one_smart_blocking_blocked;</item>
+    <item quantity="two">&cc_two_smart_blocking_blocked;</item>
+    <item quantity="few">&cc_few_smart_blocking_blocked;</item>
+    <item quantity="many">&cc_many_smart_blocking_blocked;</item>
+    <item quantity="other">&cc_other_smart_blocking_blocked;</item>
+  </plurals>
+  <string name="cc_anti_tracking_about">&cc_anti_tracking_about;</string>
+  <string name="cc_ad_blocking_about">&cc_ad_blocking_about;</string>
+  <string name="cc_smart_blocking_about">&cc_smart_blocking_about;</string>
 
   <!-- General - Search-->
   <string name="pref_search_category">&pref_search_category;</string>

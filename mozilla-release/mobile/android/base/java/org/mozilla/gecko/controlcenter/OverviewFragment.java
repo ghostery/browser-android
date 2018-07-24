@@ -66,6 +66,13 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private final List<Integer> colors = new ArrayList<>();
     private final List<Integer> disabledColors = new ArrayList<>();
     private final List<Integer> blockedColors = new ArrayList<>();
+    private TextView mNotchTitle;
+    private TextView mInfoViewCount;
+    private TextView mInfoViewTitle;
+    private TextView mInfoViewSummary;
+    private ImageView mInfoViewIcon;
+    private View mInfoView;
+    private View mOverview;
 
     public OverviewFragment() {
     }
@@ -74,24 +81,39 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.ghostery_overview_fragment, container, false);
-        mPieChart = (PieChart) view.findViewById(R.id.donut);
-        mDomainName = (TextView) view.findViewById(R.id.domain_name);
-        mTrackersBlocked = (TextView) view.findViewById(R.id.trackers_blocked);
-        mTrustSiteButton = (RelativeLayout) view.findViewById(R.id.ghostery_trust_site_button);
-        mRestrictSiteButton = (RelativeLayout) view.findViewById(R.id.ghostery_restrict_site_button);
-        mPauseGhosteryButton = (RelativeLayout) view.findViewById(R.id.ghostery_pause_button);
-        mAdBlockingSwitch = (SwitchCompat) view.findViewById(R.id.enhanced_blocking_switch);
-        mAntiTrackingSwitch = (SwitchCompat) view.findViewById(R.id.enhanced_tracking_switch);
-        mSmartBlockingSwitch = (SwitchCompat) view.findViewById(R.id.smart_blocking_switch);
-        mSmartBlockingCount = (TextView) view.findViewById(R.id.smart_blocking_count);
-        mCliqzAttrackCount = (TextView) view.findViewById(R.id.enhanced_tracking_count);
-        mAdBlockCount = (TextView) view.findViewById(R.id.enhanced_blocking_count);
+        mPieChart = (PieChart) view.findViewById(R.id.cc_donut);
+        mDomainName = (TextView) view.findViewById(R.id.cc_domain_name);
+        mTrackersBlocked = (TextView) view.findViewById(R.id.cc_trackers_blocked);
+        mTrustSiteButton = (RelativeLayout) view.findViewById(R.id.cc_ghostery_trust_site_button);
+        mRestrictSiteButton = (RelativeLayout) view.findViewById(R.id.cc_ghostery_restrict_site_button);
+        mPauseGhosteryButton = (RelativeLayout) view.findViewById(R.id.cc_ghostery_pause_button);
+        mAdBlockingSwitch = (SwitchCompat) view.findViewById(R.id.cc_enhanced_blocking_switch);
+        mAntiTrackingSwitch = (SwitchCompat) view.findViewById(R.id.cc_enhanced_tracking_switch);
+        mSmartBlockingSwitch = (SwitchCompat) view.findViewById(R.id.cc_smart_blocking_switch);
+        mSmartBlockingCount = (TextView) view.findViewById(R.id.cc_smart_blocking_count);
+        mCliqzAttrackCount = (TextView) view.findViewById(R.id.cc_enhanced_tracking_count);
+        mAdBlockCount = (TextView) view.findViewById(R.id.cc_enhanced_blocking_count);
         mTrustSiteButton.setOnClickListener(this);
         mRestrictSiteButton.setOnClickListener(this);
         mPauseGhosteryButton.setOnClickListener(this);
         mSmartBlockingSwitch.setOnCheckedChangeListener(this);
         mAntiTrackingSwitch.setOnCheckedChangeListener(this);
         mAdBlockingSwitch.setOnCheckedChangeListener(this);
+        mInfoView = view.findViewById(R.id.cc_info_view);
+        mOverview = view.findViewById(R.id.cc_overview_view);
+        mInfoViewCount = (TextView) view.findViewById(R.id.cc_info_view_count);
+        mInfoViewTitle = (TextView) view.findViewById(R.id.cc_info_view_title);
+        mInfoViewSummary = (TextView) view.findViewById(R.id.cc_info_view_summary);
+        mInfoViewIcon = (ImageView) view.findViewById(R.id.cc_info_view_icon);
+        mNotchTitle = (TextView) view.findViewById(R.id.cc_notch_title);
+        final View mAttrackInfoButton = view.findViewById(R.id.cc_enhanced_tracking_info_button);
+        final View mAdBlockingInfoButton = view.findViewById(R.id.cc_enhanced_blocking_info_button);
+        final View mSmartBlockingInfoButton = view.findViewById(R.id.cc_smart_blocking_info_button);
+        final View mInfoViewCloseButton = view.findViewById(R.id.cc_close_info_view_button);
+        mAttrackInfoButton.setOnClickListener(this);
+        mAdBlockingInfoButton.setOnClickListener(this);
+        mSmartBlockingInfoButton.setOnClickListener(this);
+        mInfoViewCloseButton.setOnClickListener(this);
         return view;
     }
 
@@ -111,9 +133,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final boolean isSmartBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_smart_block");
         final boolean isAdBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_ad_block");
         final boolean isAntiTrackingEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_anti_tracking");
-        final int smartBlockCount = safeGetBundle(controlCenterSettingsData,"data/panel/panel/smartBlock/blocked").keys().length +
-                safeGetBundle(controlCenterSettingsData, "data/panel/panel/smartBlock/unblocked").keys().length;
-        mSmartBlockingCount.setText(String.valueOf(smartBlockCount));
+        mSmartBlockingCount.setText(String.valueOf(getSmartBlockingCount()));
         mCliqzAttrackCount.setText(String.valueOf(calculateCliqzAttrackCount()));
         mAdBlockCount.setText(String.valueOf(getAdBlockCount()));
         mSmartBlockingSwitch.setChecked(isSmartBlockEnabled);
@@ -241,6 +261,11 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         return adBlockBundle.getInt("totalCount");
     }
 
+    private int getSmartBlockingCount() {
+        return safeGetBundle(controlCenterSettingsData,"data/panel/panel/smartBlock/blocked").keys().length +
+                safeGetBundle(controlCenterSettingsData, "data/panel/panel/smartBlock/unblocked").keys().length;
+    }
+
     @Override
     public void refreshUI() {
         final int blockedTrackers = calculateBlockedTrackers();
@@ -266,15 +291,26 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ghostery_trust_site_button:
+            case R.id.cc_ghostery_trust_site_button:
                 handleTrustButtonClick();
                 break;
-            case R.id.ghostery_restrict_site_button:
+            case R.id.cc_ghostery_restrict_site_button:
                 handleRestrictButtonClick();
                 break;
-            case R.id.ghostery_pause_button:
+            case R.id.cc_ghostery_pause_button:
                 handlePauseButtonClick();
                 break;
+            case R.id.cc_enhanced_tracking_info_button:
+                handleTrackingInfoButtonClick();
+                break;
+            case R.id.cc_enhanced_blocking_info_button:
+                handleAdBlockingInfoButtonClick();
+                break;
+            case R.id.cc_smart_blocking_info_button:
+                handleSmartBlockingInfoButtonClick();
+                break;
+            case R.id.cc_close_info_view_button:
+                handleInfoViewCloseButtonClick();
         }
     }
 
@@ -282,13 +318,13 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         final GeckoBundle geckoBundle = new GeckoBundle();
         switch (buttonView.getId()) {
-            case R.id.enhanced_tracking_switch:
+            case R.id.cc_enhanced_tracking_switch:
                 geckoBundle.putBoolean("enable_anti_tracking", isChecked);
                 break;
-            case R.id.enhanced_blocking_switch:
+            case R.id.cc_enhanced_blocking_switch:
                 geckoBundle.putBoolean("enable_ad_block", isChecked);
                 break;
-            case R.id.smart_blocking_switch:
+            case R.id.cc_smart_blocking_switch:
                 geckoBundle.putBoolean("enable_smart_block", isChecked);
                 break;
         }
@@ -405,11 +441,47 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", false);
     }
 
+    private void handleTrackingInfoButtonClick() {
+        mOverview.setVisibility(View.INVISIBLE);
+        mInfoView.setVisibility(View.VISIBLE);
+        mInfoViewCount.setText(String.valueOf(calculateCliqzAttrackCount()));
+        mInfoViewTitle.setText(getResources().getQuantityString(R.plurals.cc_trackers_blocked, calculateCliqzAttrackCount()));
+        mInfoViewSummary.setText(R.string.cc_anti_tracking_about);
+        mInfoViewIcon.setImageResource(R.drawable.cc_ic_anti_tracking);
+        mNotchTitle.setText(R.string.cc_enhanced_anti_tracking);
+    }
+
+    private void handleAdBlockingInfoButtonClick() {
+        mOverview.setVisibility(View.INVISIBLE);
+        mInfoView.setVisibility(View.VISIBLE);
+        mInfoViewCount.setText(String.valueOf(getAdBlockCount()));
+        mInfoViewTitle.setText(getResources().getQuantityString(R.plurals.cc_ads_blocked, getAdBlockCount()));
+        mInfoViewSummary.setText(R.string.cc_ad_blocking_about);
+        mInfoViewIcon.setImageResource(R.drawable.cc_ic_ad_blocker);
+        mNotchTitle.setText(R.string.cc_enhanced_ad_blocking);
+    }
+
+    private void handleSmartBlockingInfoButtonClick() {
+        mOverview.setVisibility(View.INVISIBLE);
+        mInfoView.setVisibility(View.VISIBLE);
+        mInfoViewCount.setText(String.valueOf(getSmartBlockingCount()));
+        mInfoViewTitle.setText(getResources().getQuantityString(R.plurals.cc_trackers_adjusted, getSmartBlockingCount()));
+        mInfoViewSummary.setText(R.string.cc_smart_blocking_about);
+        mInfoViewIcon.setImageResource(R.drawable.cc_ic_smart_blocking);
+        mNotchTitle.setText(R.string.cc_smart_blocking);
+    }
+
+    private void handleInfoViewCloseButtonClick() {
+        mOverview.setVisibility(View.VISIBLE);
+        mInfoView.setVisibility(View.INVISIBLE);
+        mNotchTitle.setText(R.string.cc_enhanced_options);
+    }
+
     private void styleButton(RelativeLayout button, boolean state) {
         final int textAndIconColor = ContextCompat.getColor(getContext(),
                 state ? android.R.color.white : R.color.cc_text_color);
-        final TextView buttonText = (TextView) button.findViewById(R.id.button_text);
-        final ImageView buttonIcon = (ImageView) button.findViewById(R.id.button_icon);
+        final TextView buttonText = (TextView) button.findViewById(R.id.cc_button_text);
+        final ImageView buttonIcon = (ImageView) button.findViewById(R.id.cc_button_icon);
         buttonIcon.setColorFilter(textAndIconColor, PorterDuff.Mode.SRC_ATOP);
         buttonText.setTextColor(textAndIconColor);
         //special cases for background color and text
