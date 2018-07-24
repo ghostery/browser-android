@@ -86,10 +86,11 @@ public class AppBackgroundManager {
     }
 
     @UiThread
-    public void setViewBackgroundColor(@NonNull View view, @ColorInt int color) {
+    public void setViewBackgroundDefaultColor(@NonNull View view) {
         view.setTag(R.id.background_manager_mode_key, Mode.COLOR);
         removeLayoutChangedListener(view);
-        view.setBackgroundColor(color);
+        // Default color is a gradient.
+        view.setBackgroundResource(R.drawable.cliqz_default_background);
     }
 
     @UiThread
