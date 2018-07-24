@@ -2229,10 +2229,15 @@ fi
 
 AC_SUBST(MOZ_BRANDING_DIRECTORY)
 dnl Cliqz start
-if test -z "$CLIQZ_EXTENSION_VERSION"; then
-    CLIQZ_EXTENSION_VERSION="cliqz"
+if test -z "$CLIQZ_SEARCH_FLAVOR"; then
+    CLIQZ_SEARCH_FLAVOR="cliqz"
 fi
-AC_SUBST(CLIQZ_EXTENSION_VERSION)
+AC_SUBST(CLIQZ_SEARCH_FLAVOR)
+
+if test -z "$CLIQZ_SEARCH_DEFAULT_ENGINE"; then
+    CLIQZ_SEARCH_DEFAULT_ENGINE="Google"
+fi
+AC_SUBST(CLIQZ_SEARCH_DEFAULT_ENGINE)
 dnl Cliqz end
 
 dnl ========================================================
