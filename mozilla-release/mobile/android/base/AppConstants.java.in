@@ -338,4 +338,9 @@ public class AppConstants {
 //#else
         null;
 //#endif
+    
+    /* Cliqz Start */
+    public static final String CLIQZ_SEARCH_VERSION="@CLIQZ_SEARCH_VERSION@";
+    public static final String CLIQZ_PRIVACY_VERSION="@CLIQZ_PRIVACY_VERSION@";
+    /* Cliqz end */
 }

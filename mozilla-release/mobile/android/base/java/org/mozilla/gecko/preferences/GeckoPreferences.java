@@ -259,7 +259,7 @@ public class GeckoPreferences
     // add keys to about settings items
     private static final String PREFS_ABOUT_APP_VERSION_NAME = NON_PREF_PREFIX+ "about.app.version";
     private static final String PREFS_ABOUT_ARN = "pref.about.arn";
-    private static final String PREFS_ABOUT_EXTENSION_VERSION = NON_PREF_PREFIX+ "about.extension.version";
+    private static final String PREFS_ABOUT_SEARCH_VERSION = NON_PREF_PREFIX+ "about.extension.version";
     private static final String PREFS_ABOUT_PRIVACY_POLICY = NON_PREF_PREFIX+ "about.privacy.policy";
     private static final String PREFS_ABOUT_EULA = NON_PREF_PREFIX+ "about.eula";
     private static final String PREFS_ABOUT_ANDROID_OPEN_SOURCE_PROJECT = NON_PREF_PREFIX+ "about" +
@@ -1071,8 +1071,8 @@ public class GeckoPreferences
                     pref.setSummary(BuildConfig.APP_VERSION_NAME);
                 }
                 // set extension version
-                else if (PREFS_ABOUT_EXTENSION_VERSION.equals(key)) {
-                    pref.setSummary(BuildConfig.EXTENSION_VERSION);
+                else if (PREFS_ABOUT_SEARCH_VERSION.equals(key)) {
+                    pref.setSummary(AppConstants.CLIQZ_SEARCH_VERSION);
                 }
                 // remove arn on production @TODO getARN from GCM Endpoint and set as a summary
                 else if (PREFS_ABOUT_ARN.equals(key) && !BuildConfig.DEBUG) {

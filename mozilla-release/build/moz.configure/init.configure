@@ -1003,13 +1003,13 @@ def milestone(build_env, _):
     search_path = os.path.join(build_env.topsrcdir,
                                   'config',
                                   'search.txt')
-    ghostery_path = os.path.join(build_env.topsrcdir,
+    privacy_path = os.path.join(build_env.topsrcdir,
                                   'config',
-                                  'ghostery.txt')
+                                  'privacy.txt')
     with open(search_path, 'r') as fh:
         search = fh.read().strip()
-    with open(ghostery_path, 'r') as fh:
-        ghostery = fh.read().strip()
+    with open(privacy_path, 'r') as fh:
+        privacy = fh.read().strip()
     # Cliqz End
     with open(milestone_path, 'r') as fh:
         milestone = fh.read().splitlines()[-1]
@@ -1033,15 +1033,15 @@ def milestone(build_env, _):
     return namespace(version=milestone,
                      # Cliqz Start
                      search=search,
-                     ghostery=ghostery,
+                     privacy=privacy,
                      # Cliqz End
                      uaversion='%s.0' % major_version,
                      symbolversion='%s%s' % (major_version, ab_patch),
                      is_nightly=is_nightly,
                      is_release_or_beta=is_release_or_beta)
 # Cliqz Start
-set_config('SEARCH_EXTENSION_VERSION', milestone.search)
-set_config('GHOSTERY_EXTENSION_VERSION', milestone.ghostery)
+set_config('CLIQZ_SEARCH_VERSION', milestone.search)
+set_config('CLIQZ_PRIVACY_VERSION', milestone.privacy)
 # Cliqz End
 set_config('GRE_MILESTONE', milestone.version)
 set_config('NIGHTLY_BUILD', milestone.is_nightly)
