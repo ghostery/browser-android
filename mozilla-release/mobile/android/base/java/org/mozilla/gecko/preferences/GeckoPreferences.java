@@ -138,19 +138,21 @@ public class GeckoPreferences
     // TODO: What is this? Should we just use the Firefox preference and just disable Mozilla telemetry?
     private static final String PREFS_TELEMETRY_ENABLED = "toolkit.telemetry.enabled";
     public static final String CLIQZ_TELEMETRY_ENABLED = "cliqz.telemetry.enabled";
-    private static final String PREFS_CRASHREPORTER_ENABLED = "datareporting.crashreporter.submitEnabled";
+    /* Cliqz start */
+    // private static final String PREFS_CRASHREPORTER_ENABLED = "datareporting.crashreporter.submitEnabled";
     private static final String PREFS_MENU_CHAR_ENCODING = "browser.menu.showCharacterEncoding";
     private static final String PREFS_MP_ENABLED = "privacy.masterpassword.enabled";
     private static final String PREFS_UPDATER_AUTODOWNLOAD = "app.update.autodownload";
     private static final String PREFS_UPDATER_URL = "app.update.url.android";
     private static final String PREFS_GEO_REPORTING = NON_PREF_PREFIX + "app.geo.reportdata";
-    private static final String PREFS_GEO_LEARN_MORE = NON_PREF_PREFIX + "geo.learn_more";
+    // private static final String PREFS_GEO_LEARN_MORE = NON_PREF_PREFIX + "geo.learn_more";
     public static final String PREFS_DEVTOOLS_REMOTE_USB_ENABLED = "devtools.remote.usb.enabled";
     public static final String PREFS_DEVTOOLS_REMOTE_WIFI_ENABLED = "devtools.remote.wifi.enabled";
     private static final String PREFS_DEVTOOLS_REMOTE_LINK = NON_PREF_PREFIX + "remote_debugging.link";
     public static final String PREFS_VOICE_INPUT_ENABLED = NON_PREF_PREFIX + "voice_input_enabled";
     public static final String PREFS_QRCODE_ENABLED = NON_PREF_PREFIX + "qrcode_enabled";
-    private static final String PREFS_TRACKING_PROTECTION_LEARN_MORE = NON_PREF_PREFIX + "trackingprotection.learn_more";
+    // private static final String PREFS_TRACKING_PROTECTION_LEARN_MORE = NON_PREF_PREFIX + "trackingprotection.learn_more";
+    /* Cliqz end */
     private static final String PREFS_CLEAR_PRIVATE_DATA = NON_PREF_PREFIX + "privacy.clear";
     private static final String PREFS_CLEAR_PRIVATE_DATA_EXIT = NON_PREF_PREFIX + "history.clear_on_exit";
     private static final String PREFS_SCREEN_ADVANCED = NON_PREF_PREFIX + "advanced_screen";
@@ -208,73 +210,42 @@ public class GeckoPreferences
     // Some of the following keys do not reflect Firefox naming conventions because they were
     // already present in the legacy Lightning based Cliqz Browser for Android and we want to carry
     // them over to this version.
-    private static final String PREFS_DYNAMIC_TOOLBAR = "browser.chrome.dynamictoolbar";
     // add human web keys
-    private static final String PREFS_HUMAN_WEB_LINK = NON_PREF_PREFIX + "human.web.link";
     public static final String PREFS_ENABLE_HUMAN_WEB = "pref.enable.human.web";
-    // add IS_MYOFFRZ_ONBOARDING_ENABLED
-    public static final String IS_MYOFFRZ_ONBOARDING_ENABLED = "myoffrz_onboarding_enabled";
-    final private int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
+    // add PREFS_MYOFFRZ_ONBOARDING_ENABLED, no naming conventions for old Cliqz Browser compatibility
+    public static final String PREFS_MYOFFRZ_ONBOARDING_ENABLED = "myoffrz_onboarding_enabled";
+    private static final int DIALOG_CREATE_BLOCK_ADS_WHAT_FAIR = 2;
     // add rate cliqz browser to the settings menu
     private static final String PREFS_RATE_US = NON_PREF_PREFIX + "rate.us";
-    // add keys for General Home , Vendor screen , notifications screen, General language
-    private static final String PREFS_GENERAL_HOME = NON_PREF_PREFIX + "general.home";
-    private static final String PREFS_VENDOR_SCREEN = NON_PREF_PREFIX + "vendor.screen";
-    private static final String PREFS_NOTIFICATIONS_SCREEN = NON_PREF_PREFIX + "notifications.screen";
-    private static final String PREFS_GENERAL_LANGUAGE = NON_PREF_PREFIX + "general.language";
-    // add support cliqz to the settings menu
-    private static final String PREFS_SUPPORT_CLIQZ = NON_PREF_PREFIX + "support.cliqz";
-    // add Tips & tricks to the settings menu
-    private static final String PREFS_TIPS_TRICKS = NON_PREF_PREFIX + "tips.tricks";
-    // add report browser to the settings menu
-    private static final String PREFS_REPORT_BROWSER = NON_PREF_PREFIX + "report.browser";
     // add cliqz tab category items to general settings menu
-    public static final String PREFS_IS_BACKGROUND_ENABLED = "pref.cliqz.tab.background";
-    public static final String PREFS_IS_TOP_SITES_ENABLED = "pref.cliqz.tab.topsites";
-    public static final String PREFS_IS_NEWS_ENABLED = "pref.cliqz.tab.news";
+    public static final String PREFS_CLIQZ_TAB_BACKGROUND_ENABLED = "pref.cliqz.tab.background.enabled";
+    public static final String PREFS_CLIQZ_TAB_TOPSITES_ENABLED = "pref.cliqz.tab.topsites.enabled";
+    public static final String PREFS_CLIQZ_TAB_NEWS_ENABLED = "pref.cliqz.tab.news.enabled";
     // should the 'Top News' list be collapsed or expanded. 'true' for expanded.
-    public static final String PREFS_NEWS_VIEW_EXPANDED = "pref.cliqz.tab.news.viewtype";
+    public static final String PREFS_CLIQZ_TAB_NEWS_EXPANDED = "pref.cliqz.tab.news.expanded";
 
     // add show myoffrz and about my offrz to general settings menu
-    public static final String PREFS_SHOW_MYOFFRZ = "pref.show.myoffrz";
-    private static final String PREFS_ABOUT_MYOFFRZ = NON_PREF_PREFIX+ "about.myoffrz";
+    public static final String PREFS_MYOFFRZ_ENABLED = "pref.myoffrz.enabled";
     // add Subscriptions key and dialog for reset it
-    private static final String PREFS_RESET_SUBSCRIPTIONS = "pref.rest.subscriptions";
-    final private int DIALOG_CREATE_RESET_SUBSCRIPTIONS = 3;
+    private static final String PREFS_RESET_SUBSCRIPTIONS = NON_PREF_PREFIX + "reset.subscription";
+    private static final int DIALOG_CREATE_RESET_SUBSCRIPTIONS = 3;
     // add clear favorites key
-    private static final String PREFS_CLEAR_FAVORITES = NON_PREF_PREFIX + "privacy.clear" +
-            ".favorites";
-    final private int DIALOG_CREATE_CLEAR_FAVORITES = 4;
-    // add don't track me key
-    private static final String PREFS_PRIVACY_DONTTRACK = "privacy.donottrackheader.enabled";
-    private static final String PREFS_PRIVACY_DONTTRACK_LEARN_MORE =
-            NON_PREF_PREFIX + "donottrackheader.learn_more";
-    // add tracking protection key
-    private static final String PREFS_PRIVACY_TRACKING_PROTECTION = "privacy.trackingprotection" +
-            ".state";
-    private static final String PREFS_SHOW_HINTS = NON_PREF_PREFIX+ "show.hints";
+    private static final String PREFS_CLEAR_FAVORITES = NON_PREF_PREFIX + "privacy.clear.favorites";
+    private static final int DIALOG_CREATE_CLEAR_FAVORITES = 4;
+    private static final String PREFS_SHOW_HINTS = NON_PREF_PREFIX + "show.hints";
     // add restore top sites key
-    public static final String PREFS_RESTORE_TOP_SITES = NON_PREF_PREFIX+ "restore.top.sites";
-    final private int DIALOG_CREATE_RESTORE_TOP_SITES = 5;
+    public static final String PREFS_RESTORE_TOP_SITES = NON_PREF_PREFIX + "restore.top.sites";
+    private static final int DIALOG_CREATE_RESTORE_TOP_SITES = 5;
     // add keys to about settings items
     private static final String PREFS_ABOUT_APP_VERSION_NAME = NON_PREF_PREFIX+ "about.app.version";
-    private static final String PREFS_ABOUT_ARN = "pref.about.arn";
+    private static final String PREFS_ABOUT_ARN = NON_PREF_PREFIX + "about.arn";
     private static final String PREFS_ABOUT_SEARCH_VERSION = NON_PREF_PREFIX+ "about.extension.version";
-    private static final String PREFS_ABOUT_PRIVACY_POLICY = NON_PREF_PREFIX+ "about.privacy.policy";
-    private static final String PREFS_ABOUT_EULA = NON_PREF_PREFIX+ "about.eula";
-    private static final String PREFS_ABOUT_ANDROID_OPEN_SOURCE_PROJECT = NON_PREF_PREFIX+ "about" +
-            ".android.open.source.project";
-    private static final String PREFS_ABOUT_HP_HOSTS_AD_SERVER = NON_PREF_PREFIX+ "about.hp.hosts" +
-            ".ad.server";
-    private static final String PREFS_ABOUT_CRUX = NON_PREF_PREFIX+ "about.crux";
-    private static final String PREFS_ABOUT_IMPRINT = NON_PREF_PREFIX+ "about.imprint";
     // add key to search screen
-    private static final String PREFS_SEARCH_SCREEN = NON_PREF_PREFIX+ "search_screen";
     public static final String PREFS_GHOSTERY_AUTO_UPDATE = "ghostery.settings.autoupdate";
     public static final String PREFS_GHOSTERY_ALLOW_FIRST_PARTY = "ghostery.settings.allowfirstparty";
     public static final String PREFS_GHOSTERY_BLOCK_NEW_TRACKERS = "ghostery.settings.blocknewtrackers";
     // add key for enable quick search
-    public static final String PREF_SEARCH_ENABLE_BROWSER_QUICKSEARCH = "pref.search.enable.browser.quicksearch";
+    public static final String PREFS_SEARCH_QUICKSEARCH_ENABLED = "pref.search.quicksearch.enabled";
     // Install and upgrade dates for Anolisys
     public static final String PREFS_BROWSER_INSTALL_DATE = NON_PREF_PREFIX + "browser.install.date";
     public static final String PREFS_BROWSER_UPGRADE_DATE = NON_PREF_PREFIX + "browser.upgrade.date";
@@ -737,34 +708,8 @@ public class GeckoPreferences
                     preferences.removePreference(pref);
                     i--;
                     continue;
-                }
-                /* Cliqz start */
-                // remove Mozilla Fennec (About, Feedback, FAQ)
-                else if (PREFS_VENDOR_SCREEN.equals(key)) {
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-                }
-                // remove notifications screen
-                else if (PREFS_NOTIFICATIONS_SCREEN.equals(key)) {
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-                }
-                // remove general home
-                else if(PREFS_GENERAL_HOME.equals(key)) {
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-                }
-                // remove Language setting from General settings
-                else if(PREFS_GENERAL_LANGUAGE.equals(key)) {
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-                }
-                /* Cliqz end */
-                else if (PREFS_CATEGORY_EXPERIMENTAL_FEATURES.equals(key) && ((PreferenceGroup) pref).getPreferenceCount() == 0) {
+
+                } else if (PREFS_CATEGORY_EXPERIMENTAL_FEATURES.equals(key) && ((PreferenceGroup) pref).getPreferenceCount() == 0) {
                     preferences.removePreference(pref);
                     i--;
                     continue;
@@ -787,13 +732,39 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
-                }
-                else if (PREFS_CRASHREPORTER_ENABLED.equals(key)) {
+                /* Cliqz start */
+                } else if (PREFS_TELEMETRY_ENABLED.equals(key)) {
+                    final PreferenceManager preferenceManager = new PreferenceManager
+                            (getApplicationContext());
+                    ((CheckBoxPreference)pref).setChecked(preferenceManager.isTelemetryEnabled());
+                    pref.setOnPreferenceChangeListener(this);
+                /* Cliqz Block Comment start o/
+                } else if (PREFS_TELEMETRY_ENABLED.equals(key)) {
+                    if (!AppConstants.MOZ_TELEMETRY_REPORTING || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
+                        preferences.removePreference(pref);
+                        i--;
+                        continue;
+                    }
+                } else if (PREFS_HEALTHREPORT_UPLOAD_ENABLED.equals(key)) {
+                    if (!AppConstants.MOZ_SERVICES_HEALTHREPORT || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
+                        preferences.removePreference(pref);
+                        i--;
+                        continue;
+                    }
+                } else if (PREFS_CRASHREPORTER_ENABLED.equals(key)) {
                     if (!AppConstants.MOZ_CRASHREPORTER || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
                         preferences.removePreference(pref);
                         i--;
                         continue;
                     }
+                } else if (PREFS_GEO_REPORTING.equals(key) ||
+                           PREFS_GEO_LEARN_MORE.equals(key)) {
+                    if (!AppConstants.MOZ_STUMBLER_BUILD_TIME_ENABLED || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
+                        preferences.removePreference(pref);
+                        i--;
+                        continue;
+                    }
+                /o Cliqz end */
                 } else if (PREFS_DEVTOOLS_REMOTE_USB_ENABLED.equals(key)) {
                     if (!Restrictions.isAllowed(this, Restrictable.REMOTE_DEBUGGING)) {
                         preferences.removePreference(pref);
@@ -867,7 +838,15 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
-                }  else if (PREFS_MP_ENABLED.equals(key)) {
+                /* Cliqz start o/
+                } else if (PREFS_TRACKING_PROTECTION_LEARN_MORE.equals(key)) {
+                    if (!Restrictions.isAllowed(this, Restrictable.PRIVATE_BROWSING)) {
+                        preferences.removePreference(pref);
+                        i--;
+                        continue;
+                    }
+                 /o Cliqz end */
+                } else if (PREFS_MP_ENABLED.equals(key)) {
                     if (!Restrictions.isAllowed(this, Restrictable.MASTER_PASSWORD)) {
                         preferences.removePreference(pref);
                         i--;
@@ -896,97 +875,32 @@ public class GeckoPreferences
                     // Gecko preference because the URL must be formatted.
                     final String url = getResources().getString(R.string.feedback_link, AppConstants.MOZ_APP_VERSION, AppConstants.MOZ_UPDATE_CHANNEL);
                     ((LinkPreference) pref).setUrl(url);
-                }
-                /* Cliqz start */
-                // let telemetry be always visible
-                 else if (CLIQZ_TELEMETRY_ENABLED.equals(key)) {
-                    // if (!AppConstants.MOZ_TELEMETRY_REPORTING || !Restrictions.isAllowed(this, Restrictable.DATA_CHOICES)) {
-                    //     preferences.removePreference(pref);
-                    //     i--;
-                    //     continue;
-                    // }
-                    final PreferenceManager preferenceManager = new PreferenceManager
-                            (getApplicationContext());
-                    ((CheckBoxPreference)pref).setChecked(preferenceManager.isTelemetryEnabled());
-                    pref.setOnPreferenceChangeListener(this);
-                }
-                // remove Healthreport always
-                else if (PREFS_HEALTHREPORT_UPLOAD_ENABLED.equals(key)) {
-//                    if (!AppConstants.MOZ_SERVICES_HEALTHREPORT || !Restrictions.isAllowed (this, Restrictable.DATA_CHOICES)) {
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-//                    }
-                }
-                // remove Geo learn more link always and keep Geo checkbox
-                else if (PREFS_GEO_LEARN_MORE.equals(key)) { // || PREFS_GEO_REPORTING.equals(key)
-//                    if (!AppConstants.MOZ_STUMBLER_BUILD_TIME_ENABLED || !Restrictions
-//                        .isAllowed (this, Restrictable.DATA_CHOICES)) {
+                /* Cliqz start o/
+                } else if (PREFS_DYNAMIC_TOOLBAR.equals(key)) {
+                    if (DynamicToolbar.isForceDisabled()) {
                         preferences.removePreference(pref);
                         i--;
                         continue;
- //                   }
-                }                // remove Full-screen browsing setting from General settings always
-                else if (PREFS_DYNAMIC_TOOLBAR.equals(key)) {
-//                    if (DynamicToolbar.isForceDisabled()) {
+                    }
+                } else if (PREFS_COMPACT_TABS.equals(key)) {
+                    if (HardwareUtils.isTablet()) {
                         preferences.removePreference(pref);
                         i--;
                         continue;
-//                    }
-                }
-                // remove Compact tabs setting from General settings always
-                else if (PREFS_COMPACT_TABS.equals(key)) {
-//                    if (HardwareUtils.isTablet()) {
-                        preferences.removePreference(pref);
-                        i--;
-                        continue;
-//                    }
-                }
-                // remove show hints in production
-                else if(PREFS_SHOW_HINTS.equals(key) && !BuildConfig.DEBUG) {
+                    }
+                /o Cliqz Commend Block end */
+                } else if(PREFS_SHOW_HINTS.equals(key) && !BuildConfig.DEBUG) {
+                    // remove show hints in production
                     preferences.removePreference(pref);
                     i--;
                     continue;
-                }
-                // remove don't track
-                else if(PREFS_PRIVACY_DONTTRACK.equals(key)) {
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-                }
-                // remove don't track learn more
-                else if(PREFS_PRIVACY_DONTTRACK_LEARN_MORE.equals(key)) {
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-                }
-                // remove tracking protection
-                else if(PREFS_PRIVACY_TRACKING_PROTECTION.equals(key)) {
-                    preferences.removePreference(pref);
-                    i--;
-                    continue;
-                }
-                // remove tracking protection learn more always
-                else if (PREFS_TRACKING_PROTECTION_LEARN_MORE.equals(key)) {
-//                    if (!Restrictions.isAllowed(this, Restrictable.PRIVATE_BROWSING)) {
-                        preferences.removePreference(pref);
-                        i--;
-                        continue;
-//                    }
-                }
-                // Format the Human web link
-                else if (PREFS_HUMAN_WEB_LINK.equals(key)) {
-                    final String url = getResources().getString(R.string.pref_human_web_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // set value of human web
-                else if (PREFS_ENABLE_HUMAN_WEB.equals(key)) {
+                } else if (PREFS_ENABLE_HUMAN_WEB.equals(key)) {
+                    // set value of human web
                     final PreferenceManager preferenceManager = new PreferenceManager
                             (getApplicationContext());
                     ((SwitchPreference)pref).setChecked(preferenceManager.isHumanWebEnabled());
-                }
-                // add navigate to playstore when click on rate cliqz browser
-                else if (PREFS_RATE_US.equals(key)){
+                } else if (PREFS_RATE_US.equals(key)){
+                    // add navigate to playstore when click on rate cliqz browser
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -995,36 +909,14 @@ public class GeckoPreferences
                             return true;
                         }
                     });
-                }
-                // Format the support cliqz link
-                else if(PREFS_SUPPORT_CLIQZ.equals(key)){
-                    final String url = getResources().getString(R.string.pref_support_cliqz_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // Format tips & tricks url
-                else if (PREFS_TIPS_TRICKS.equals(key)) {
-                    final String url = getResources().getString(R.string.pref_tips_tricks_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // Format the report website url
-                else if (PREFS_REPORT_BROWSER.equals(key)){
-                    final String url = getResources().getString(R.string.pref_report_website_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // Format About My Offrz url
-                else if (PREFS_ABOUT_MYOFFRZ.equals(key)){
-                    final String url = getResources().getString(R.string.pref_myoffrz_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // Set default value of show my offrz depend on system language
-                else if (PREFS_SHOW_MYOFFRZ.equals(key)){
+                } else if (PREFS_MYOFFRZ_ENABLED.equals(key)){
+                    // Set default value of show my offrz depend on system language
                     final PreferenceManager preferenceManager = new PreferenceManager
                             (getApplicationContext());
                     pref.setDefaultValue(isMyOffrzSupportedForLang());
                     ((CheckBoxPreference)pref).setChecked(preferenceManager.isMyOffrzEnable());
-                }
-                // reset all Onboarding
-                else if(PREFS_SHOW_HINTS.equals(key)){
+                } else if(PREFS_SHOW_HINTS.equals(key)){
+                    // reset all Onboarding
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -1035,9 +927,8 @@ public class GeckoPreferences
                             return true;
                         }
                     });
-                }
-                // Open rest subscriptions dialog
-                else if (PREFS_RESET_SUBSCRIPTIONS.equals(key)) {
+                } else if (PREFS_RESET_SUBSCRIPTIONS.equals(key)) {
+                    // Open rest subscriptions dialog
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -1045,9 +936,8 @@ public class GeckoPreferences
                             return true;
                         }
                     });
-                }
-                // Open clear favorites dialog
-                else if(PREFS_CLEAR_FAVORITES.equals(key)) {
+                } else if(PREFS_CLEAR_FAVORITES.equals(key)) {
+                    // Open clear favorites dialog
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -1055,9 +945,8 @@ public class GeckoPreferences
                             return true;
                         }
                     });
-                }
-                // Open restore top sites dialog
-                else if(PREFS_RESTORE_TOP_SITES.equals(key)) {
+                } else if(PREFS_RESTORE_TOP_SITES.equals(key)) {
+                    // Open restore top sites dialog
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -1065,53 +954,19 @@ public class GeckoPreferences
                             return true;
                         }
                     });
-                }
-                // set app version name
-                else if (PREFS_ABOUT_APP_VERSION_NAME.equals(key)) {
+                } else if (PREFS_ABOUT_APP_VERSION_NAME.equals(key)) {
+                    // set app version name
                     pref.setSummary(BuildConfig.APP_VERSION_NAME);
-                }
-                // set extension version
-                else if (PREFS_ABOUT_SEARCH_VERSION.equals(key)) {
+                } else if (PREFS_ABOUT_SEARCH_VERSION.equals(key)) {
+                    // set extension version
                     pref.setSummary(AppConstants.CLIQZ_SEARCH_VERSION);
-                }
-                // remove arn on production @TODO getARN from GCM Endpoint and set as a summary
-                else if (PREFS_ABOUT_ARN.equals(key) && !BuildConfig.DEBUG) {
+                } else if (PREFS_ABOUT_ARN.equals(key) && !BuildConfig.DEBUG) {
+                    // remove arn on production @TODO getARN from GCM Endpoint and set as a summary
                     preferences.removePreference(pref);
                     i--;
                     continue;
-                }
-                // Format Privacy Policy url
-                else if (PREFS_ABOUT_PRIVACY_POLICY.equals(key)) {
-                    final String url = getResources().getString(R.string.pref_privacy_policy_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // Format EULA url
-                else if (PREFS_ABOUT_EULA.equals(key)) {
-                    final String url = getResources().getString(R.string.pref_eula_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // Format Android Open Source Project url
-                else if (PREFS_ABOUT_ANDROID_OPEN_SOURCE_PROJECT.equals(key)) {
-                    final String url = getResources().getString(R.string.pref_apache_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // Format hp hosts ad server url
-                else if (PREFS_ABOUT_HP_HOSTS_AD_SERVER.equals(key)) {
-                    final String url = getResources().getString(R.string.pref_hp_hosts_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // Format crux url
-                else if (PREFS_ABOUT_CRUX.equals(key)) {
-                    final String url = getResources().getString(R.string.pref_crux_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
-                // Format imprint url
-                else if (PREFS_ABOUT_IMPRINT.equals(key)) {
-                    final String url = getResources().getString(R.string.pref_imprint_url);
-                    ((LinkPreference) pref).setUrl(url);
-                }
                 //Set up ghostery preferences
-                else if (PREFS_GHOSTERY_AUTO_UPDATE.equals(key)) {
+                } else if (PREFS_GHOSTERY_AUTO_UPDATE.equals(key)) {
                      final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
                     ((CheckBoxPreference) pref).setChecked(preferenceManager.isGhosteryAutoUpdateEnabled());
                 } else if (PREFS_GHOSTERY_ALLOW_FIRST_PARTY.equals(key)) {

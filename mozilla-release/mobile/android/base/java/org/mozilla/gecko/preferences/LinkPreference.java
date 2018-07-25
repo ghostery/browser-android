@@ -16,14 +16,29 @@ import org.mozilla.gecko.Tabs;
 class LinkPreference extends Preference {
     private String mUrl;
 
+    /* Cliqz start */
     public LinkPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mUrl = attrs.getAttributeValue(null, "url");
+        parseAttrs(context, attrs);
     }
     public LinkPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mUrl = attrs.getAttributeValue(null, "url");
+        parseAttrs(context, attrs);
     }
+
+    private void parseAttrs(Context context, AttributeSet attrs) {
+        final String urlAttr = attrs.getAttributeValue(null, "url");
+        final String name = urlAttr != null && urlAttr.startsWith("@string/") ? urlAttr.substring(8) : "";
+        if (!name.isEmpty()) {
+            final String packageName = context.getPackageName();
+            final int stringId = context.getResources()
+                    .getIdentifier(name, "string", packageName);
+            mUrl = context.getString(stringId);
+        } else {
+            mUrl = urlAttr;
+        }
+    }
+    /* Cliqz end */
 
     public void setUrl(String url) {
         mUrl = url;

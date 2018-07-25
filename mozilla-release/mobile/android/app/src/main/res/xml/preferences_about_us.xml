@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!-- This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018 -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/pref_category_about_us">
@@ -8,7 +7,7 @@
         android:key="android.not_a_preference.about.app.version"
         android:title="@string/pref_app_version" />
     <Preference
-        android:key="pref.about.arn"
+        android:key="android.not_a_preference.about.arn"
         android:title="@string/pref_about_arn" />
     <Preference
         android:key="android.not_a_preference.about.extension.version"
@@ -19,36 +18,21 @@
         <org.mozilla.gecko.preferences.LinkPreference
             android:key="android.not_a_preference.about.privacy.policy"
             android:persistent="false"
-            android:title="@string/pref_about_privacy_policy" />
+            android:title="@string/pref_about_privacy_policy"
+            url="@string/pref_privacy_policy_url" />
 
         <org.mozilla.gecko.preferences.LinkPreference
             android:key="android.not_a_preference.about.eula"
             android:persistent="false"
-            android:title="@string/pref_about_eula" />
-
-        <org.mozilla.gecko.preferences.LinkPreference
-            android:key="android.not_a_preference.about.android.open.source.project"
-            android:persistent="false"
-            android:summary="@string/pref_about_android_open_source_project_summary"
-            android:title="@string/pref_about_android_open_source_project" />
-
-        <org.mozilla.gecko.preferences.LinkPreference
-            android:key="android.not_a_preference.about.hp.hosts.ad.server"
-            android:persistent="false"
-            android:title="@string/pref_about_hp_hosts_ad_server"
-            android:summary="@string/pref_about_hp_hosts_ad_server_summary" />
-
-        <org.mozilla.gecko.preferences.LinkPreference
-            android:key="android.not_a_preference.about.crux"
-            android:persistent="false"
-            android:summary="@string/pref_about_crux_summary"
-            android:title="@string/pref_about_crux" />
+            android:title="@string/pref_about_eula"
+            url="@string/pref_eula_url" />
 
         <!-- add Imprint setting -->
         <org.mozilla.gecko.preferences.LinkPreference
             android:key="android.not_a_preference.about.imprint"
             android:persistent="false"
-            android:title="@string/pref_about_imprint" />
+            android:title="@string/pref_about_imprint"
+            url="@string/pref_imprint_url" />
     </PreferenceCategory>
 
 </PreferenceScreen>
