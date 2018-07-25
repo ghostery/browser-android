@@ -341,4 +341,8 @@ this.AppConstants = Object.freeze({
     false,
 #endif
 
+  /* Cliqz start */
+  CLIQZ_SEARCH_DEFAULT_ENGINE: "@CLIQZ_SEARCH_DEFAULT_ENGINE@",
+  /* Cliqz end */
+
 });
