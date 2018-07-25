@@ -36,8 +36,8 @@
 <!-- Rate Us -->
 <!ENTITY pref_category_rate_us "Rate Us">
 
-<!-- Support Cliqz -->
-<!ENTITY pref_support_cliqz "FAQs &amp; Support">
+<!-- Cliqz Support -->
+<!ENTITY pref_cliqz_support "FAQs &amp; Support">
 
 <!-- Tips & Tricks -->
 <!ENTITY pref_tips_tricks "Get the best out of &brandShortName;">

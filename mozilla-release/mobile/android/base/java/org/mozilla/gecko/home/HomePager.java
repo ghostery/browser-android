@@ -652,12 +652,12 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
     // This part is derived from @{@link TabQueueHelper}.java
     // check if show background image is enabled
     public boolean isBackgroundEnabled(){
-        return  appPreferences.getBoolean(GeckoPreferences.PREFS_IS_BACKGROUND_ENABLED,true);
+        return  appPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED,true);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(TextUtils.equals(key, GeckoPreferences.PREFS_IS_BACKGROUND_ENABLED)) {
+        if(TextUtils.equals(key, GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED)) {
             reloadBackground();
         }
     }

@@ -8,6 +8,7 @@
                   android:title="@string/pref_category_privacy_short"
                   android:enabled="false">
 
+    <!-- Cliqz start -+>
     <SwitchPreference android:key="privacy.donottrackheader.enabled"
                       android:title="@string/pref_donottrack_title"
                       android:summary="@string/pref_donottrack_summary"
@@ -31,7 +32,7 @@
             android:persistent="false"
             url="https://support.mozilla.org/kb/firefox-android-tracking-protection" />
 
-    <!-- Cliqz start -->
+    <!+- Cliqz Block Comment end -->
     <!-- add privacy browsing category -->
     <PreferenceCategory android:title="@string/pref_privacy_browsing_category">
         <CheckBoxPreference
@@ -109,11 +110,12 @@
                             android:title="@string/datareporting_telemetry_title"
                             android:summary="@string/datareporting_telemetry_summary"
                             android:defaultValue="true"/>
-        <!-- Cliqz end-->
+        <!-- Cliqz Block Comment start -+>
         <CheckBoxPreference android:key="datareporting.crashreporter.submitEnabled"
                             android:title="@string/datareporting_crashreporter_title_short"
                             android:summary="@string/datareporting_crashreporter_summary"
                             android:defaultValue="false" />
+        <!+- Cliqz end-->
 
         <Preference android:key="android.not_a_preference.app.geo.reportdata"
                             android:title="@string/pref_location_permission_title" />
@@ -123,12 +125,12 @@
                                                                 android:persistent="false"
                                                                 url="https://location.services.mozilla.com/" />
 
-        <CheckBoxPreference android:key="android.not_a_preference.healthreport.uploadEnabled"
+        <!-- Cliqz start -->
+        <!-- <CheckBoxPreference android:key="android.not_a_preference.healthreport.uploadEnabled"
                             android:title="@string/datareporting_fhr_title"
                             android:summary="@string/datareporting_fhr_summary2"
-                            android:defaultValue="true" />
+                            android:defaultValue="true" /> -->
 
-        <!-- Cliqz start -->
         <!-- add human web setting -->
         <PreferenceScreen android:title="@string/pref_category_human_web"
             android:summary="@string/pref_category_human_web_summary"

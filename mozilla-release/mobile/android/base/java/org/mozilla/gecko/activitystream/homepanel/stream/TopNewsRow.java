@@ -49,7 +49,7 @@ public class TopNewsRow extends StreamViewHolder {
         title = (TextView) itemView.findViewById(R.id.news_title);
 
         final SharedPreferences preferences = GeckoSharedPrefs.forProfile(context);
-        isNewsExpanded = preferences.getBoolean(GeckoPreferences.PREFS_NEWS_VIEW_EXPANDED,
+        isNewsExpanded = preferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_EXPANDED,
                 PREFS_DEFAULT_NEWS_VIEW_EXPANDED);
         toggleNewsListDrawable(isNewsExpanded);
 
@@ -79,7 +79,7 @@ public class TopNewsRow extends StreamViewHolder {
                 }
 
                 final SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(GeckoPreferences.PREFS_NEWS_VIEW_EXPANDED, isNewsExpanded);
+                editor.putBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_EXPANDED, isNewsExpanded);
                 editor.apply();
             }
         });

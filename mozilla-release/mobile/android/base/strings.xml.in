@@ -688,8 +688,8 @@
 
 
   <!-- Support Cliqz -->
-  <string name="pref_support_cliqz_url">&pref_support_cliqz_url;</string>
-  <string name="pref_support_cliqz">&pref_support_cliqz;</string>
+  <string name="pref_cliqz_support_url">&pref_cliqz_support_url;</string>
+  <string name="pref_cliqz_support">&pref_cliqz_support;</string>
 
   <!-- Tips & tricks -->
   <string name="pref_tips_tricks">&pref_tips_tricks;</string>
