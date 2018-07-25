@@ -6120,7 +6120,17 @@ var ActivityObserver = {
 
   observe: function ao_observe(aSubject, aTopic, aData) {
     let isForeground = false;
-    let tab = BrowserApp.selectedTab;
+    let tab;
+    if (Cliqz.Search.browser && Cliqz.Search.browser.getAttribute("primary")) {
+      // Search view is on top
+      tab = Cliqz.Search;
+    } else if (Cliqz.Ghostery.browser && Cliqz.Ghostery.browser.getAttribute("primary")) {
+      // Ghostery view is on top
+      tab = Cliqz.Ghostery;
+    } else {
+      // Browser tab is on top
+      tab = BrowserApp.selectedTab;
+    }
 
     UITelemetry.addEvent("show.1", "system", null, aTopic);
 
@@ -6448,14 +6458,20 @@ var Cliqz = {
     browser.setAttribute("contentsource", id);
     BrowserApp.deck.appendChild(browser);
 
+    // return a tab look-alike object to get handled properly by ActivityObserver
     return {
-      panel: browser,
+      browser,
       load: function(path) {
         const uuids = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
         const uuid = JSON.parse(uuids)[id];
 
         browser.loadURIWithFlags("moz-extension://" + uuid + "/" + path, 0, null, null, null);
-      }
+      },
+      setActive(active) {
+        active ? this.browser.focus() : this.browser.blur();
+        this.browser.docShellIsActive = active;
+      },
+      getActive() { return this.browser.docShellIsActive; }
     }
   },
 
@@ -6466,7 +6482,7 @@ var Cliqz = {
         if (!msg.args[0]) {
           break;
         }
-        var success = this.hidePanel(this.Search.panel);
+        var success = this.hidePanel(this.Search.browser);
         if (success) {
           BrowserApp.deck.selectedPanel.loadURI(msg.args[0]);
         }
@@ -6568,7 +6584,7 @@ var Cliqz = {
       const loadExtension = (retry) => {
         try {
           this._search.load('modules/mobile-cards/cards.html');
-          this._search.panel.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
+          this._search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
         } catch (e) {
           console.log(`Retry ${retry} loading cards`, e, retry);
           retry && setTimeout(loadExtension.bind(this), 200, retry - 1);
@@ -6692,7 +6708,7 @@ var Cliqz = {
         }).then((...args) => this._syncSearchPrefs(...args));
         break;
       case "Search:Hide":
-        this.hidePanel(this.Search.panel);
+        this.hidePanel(this.Search.browser);
         this.messageSearchExtension({ module: "search", action: "stopSearch", args: []});
         break;
       case "Search:Search":
@@ -6700,20 +6716,20 @@ var Cliqz = {
         this.messageSearchExtension({ module: "search", action: "startSearch", args: [q]});
         break;
       case "Search:Show":
-        this.overlayPanel(this.Search.panel);
+        this.overlayPanel(this.Search.browser);
         break;
 
       case "Privacy:GetInfo":
         this.messagePrivacyExtension({ name: "getAndroidPanelData" });
         break;
       case "Privacy:Hide":
-        this.hidePanel(this.Ghostery.panel);
+        this.hidePanel(this.Ghostery.browser);
         break;
       case "Privacy:SetInfo":
         this.messagePrivacyExtension({ name: "setPanelData", message: data });
         break;
       case "Privacy:Show":
-        this.overlayPanel(this.Ghostery.panel);
+        this.overlayPanel(this.Ghostery.browser);
         this.Ghostery.loadTab(BrowserApp.selectedTab.id);
         break;
     }
