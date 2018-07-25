@@ -3,6 +3,9 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Exit">
 
+<!-- Onboarding -->
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "News">
 
@@ -14,14 +17,14 @@
 <!ENTITY pref_category_human_web_summary "What, Enable">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "MYOFFRZ">
+<!ENTITY myoffrz_title "&offerBrandName;">
 <!ENTITY myoffrz_no_offers_msg "Here you\'ll find a new offer every week">
-<!ENTITY myoffrz_onboarding_description "Receive attractive discounts and bargains with MyOffrz">
+<!ENTITY myoffrz_onboarding_description "Receive attractive discounts and bargains with &offerBrandName;">
 <!ENTITY myoffrz_order_now_label "Order Now!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Tap code to copy">
 <!ENTITY myoffrz_terms_and_conditions_label "Terms">
 <!ENTITY myoffrz_message_code_copied "Code copied">
-<!ENTITY myoffrz_activation_description "Activate MyOffrz to receive attractive discounts and bargains.">
+<!ENTITY myoffrz_activation_description "Activate &offerBrandName; to receive attractive discounts and bargains.">
 <!ENTITY myoffrz_activate "Activate">
 
 <!-- Block Ads -->
@@ -149,7 +152,7 @@
 <!ENTITY pref_browsing_category "Browsing">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_cliqz_tab_category "New Tab">
+<!ENTITY pref_category_general_summary4 "Search, &pref_new_tab_category;, Browsing, Notifications, Download, &offerBrandName;">
 <!ENTITY pref_cliqz_tab_background "Show background image">
 <!ENTITY pref_cliqz_tab_topsites "Show most visited websites">
 <!ENTITY pref_cliqz_tab_news "Show News">
@@ -157,9 +160,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "Start page shows most-visited websites again">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "MyOffrz">
-<!ENTITY pref_show_myoffrz "Show MyOffrz">
-<!ENTITY pref_about_myoffrz "About MyOffrz">
+<!ENTITY pref_myoffrz_category "&offerBrandName;">
+<!ENTITY pref_show_myoffrz "Show &offerBrandName;">
+<!ENTITY pref_about_myoffrz "About &offerBrandName;">
 
 <!-- General Settings - Subscriptions and Notifications -->
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
