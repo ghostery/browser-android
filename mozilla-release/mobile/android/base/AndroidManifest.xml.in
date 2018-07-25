@@ -54,7 +54,8 @@
              package hierarchy inside the Android package used to have an
              org.mozilla.{fennec,firefox,firefox_beta} subtree *and* an
              org.mozilla.gecko subtree; it now only has org.mozilla.gecko. -->
-        <activity android:name="@MOZ_ANDROID_BROWSER_INTENT_CLASS@"
+        <!-- Cliqz start -->
+        <!-- <activity android:name="@MOZ_ANDROID_BROWSER_INTENT_CLASS@"
                   android:label="@string/moz_app_displayname"
                   android:taskAffinity="@ANDROID_PACKAGE_NAME@.BROWSER"
                   android:alwaysRetainTaskState="true"
@@ -62,7 +63,17 @@
                   android:windowSoftInputMode="stateUnspecified|adjustResize"
                   android:launchMode="singleTask"
                   android:exported="true"
+                  android:theme="@style/Gecko.App" /> -->
+        <activity android:name="@MOZ_ANDROID_BROWSER_INTENT_CLASS@"
+                  android:label="@string/moz_app_displayname"
+                  android:taskAffinity="@ANDROID_PACKAGE_NAME@.BROWSER"
+                  android:alwaysRetainTaskState="true"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|locale|layoutDirection|smallestScreenSize|screenLayout"
+                  android:windowSoftInputMode="stateUnspecified|adjustPan"
+                  android:launchMode="singleTask"
+                  android:exported="true"
                   android:theme="@style/Gecko.App" />
+         <!-- Cliqz end -->
 
         <!-- Bug 1256615 / Bug 1268455: We published an .App alias and we need to maintain it
              forever.  If we don't, home screen shortcuts will disappear because the intent
