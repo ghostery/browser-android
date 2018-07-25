@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
+
 /**
  * Copyright © Cliqz 2018
  */
-
+// TODO: Transform this to a collection of static methods that take a context as the first parameter
 public class PreferenceManager {
 
     private final SharedPreferences mAppSharedPreferences;
@@ -18,16 +19,16 @@ public class PreferenceManager {
 
     public void setMyOffrzOnboardingEnabled(boolean value) {
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
-        editor.putBoolean(GeckoPreferences.IS_MYOFFRZ_ONBOARDING_ENABLED, value).apply();
+        editor.putBoolean(GeckoPreferences.PREFS_MYOFFRZ_ONBOARDING_ENABLED, value).apply();
     }
 
     public boolean isMyOffrzOnboardingEnabled() {
-        return  mAppSharedPreferences.getBoolean(GeckoPreferences.IS_MYOFFRZ_ONBOARDING_ENABLED,true);
+        return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_MYOFFRZ_ONBOARDING_ENABLED,true);
     }
 
     public void setMyOffrzEnabled(boolean value) {
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
-        editor.putBoolean(GeckoPreferences.PREFS_SHOW_MYOFFRZ, value).apply();
+        editor.putBoolean(GeckoPreferences.PREFS_MYOFFRZ_ENABLED, value).apply();
     }
 
     public void setTelemetryEnabled(boolean value) {
@@ -55,7 +56,7 @@ public class PreferenceManager {
     }
 
     public boolean isMyOffrzEnable() {
-        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SHOW_MYOFFRZ, isMyOffrzSupportedForLang());
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_MYOFFRZ_ENABLED, isMyOffrzSupportedForLang());
     }
 
     public boolean isGhosteryAutoUpdateEnabled() {
@@ -71,7 +72,7 @@ public class PreferenceManager {
     }
 
     public boolean isQuickSearchEnabled(){
-        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREF_SEARCH_ENABLE_BROWSER_QUICKSEARCH,true);
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SEARCH_QUICKSEARCH_ENABLED,true);
     }
 
     public boolean isHumanWebEnabled(){

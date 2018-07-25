@@ -61,7 +61,7 @@ public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements
 
     public void add(List<TopNews> data) {
         final SharedPreferences preferences = GeckoSharedPrefs.forProfile(context);
-        boolean isNewsExpanded = preferences.getBoolean(GeckoPreferences.PREFS_NEWS_VIEW_EXPANDED,
+        boolean isNewsExpanded = preferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_EXPANDED,
                 TopNewsRow.PREFS_DEFAULT_NEWS_VIEW_EXPANDED);
         if (isNewsExpanded) {
             numShowedNews = data.size();

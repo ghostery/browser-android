@@ -10,7 +10,7 @@
         android:key="android.not_a_preference.human.web.link"
         android:persistent="false"
         android:title="@string/pref_what_is_human_web"
-        />
+        url="@string/pref_human_web_url" />
 
     <SwitchPreference
         android:key="pref.enable.human.web"
