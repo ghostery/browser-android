@@ -193,7 +193,6 @@ stage('Send email') {
     )
 }
 
-
 def lastSuccessfulBuild(passedBuilds, build) {
     if ((build != null) && (build.result != 'SUCCESS')) {
         echo "Finding last succesful build"
@@ -219,6 +218,9 @@ def getChangeString(passedBuilds) {
                 changeString += "* ${entry.msg} \n"
             }
         }
+    }
+    if (!changeString) {
+        changeString = " - No new changes"
     }
     echo changeString
     return changeString;
