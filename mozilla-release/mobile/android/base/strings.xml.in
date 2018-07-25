@@ -32,7 +32,10 @@
   <string name="firstrun_panel_title_welcome">&firstrun_panel_title_welcome;</string>
 
   <string name="firstrun_urlbar_message">&firstrun_urlbar_message2;</string>
-  <string name="firstrun_urlbar_subtext">&firstrun_urlbar_subtext2;</string>
+  <!-- Cliqz start -->
+  <!-- <string name="firstrun_urlbar_subtext">&firstrun_urlbar_subtext2;</string> -->
+  <string name="firstrun_urlbar_subtext">&firstrun_urlbar_subtext3;</string>
+  <!-- Cliqz end -->
   <string name="firstrun_panel_title_privacy">&firstrun_panel_title_privacy;</string>
   <string name="firstrun_privacy_message">&firstrun_privacy_message;</string>
   <string name="firstrun_privacy_subtext">&firstrun_privacy_subtext;</string>
@@ -139,7 +142,10 @@
   <string name="settings">&settings;</string>
   <string name="settings_title">&settings_title;</string>
   <string name="pref_category_general">&pref_category_general;</string>
-  <string name="pref_category_general_summary">&pref_category_general_summary3;</string>
+  <!-- Cliqz start -->
+  <!-- <string name="pref_category_general_summary">&pref_category_general_summary3;</string> -->
+  <string name="pref_category_general_summary">&pref_category_general_summary4;</string>
+  <!-- Cliqz end -->
 
   <string name="pref_category_search">&pref_category_search3;</string>
   <string name="pref_category_search_summary">&pref_category_search_summary2;</string>
@@ -688,8 +694,8 @@
 
 
   <!-- Support Cliqz -->
-  <string name="pref_support_cliqz_url">&pref_support_cliqz_url;</string>
-  <string name="pref_support_cliqz">&pref_support_cliqz;</string>
+  <string name="pref_cliqz_support_url">&pref_cliqz_support_url;</string>
+  <string name="pref_cliqz_support">&pref_cliqz_support;</string>
 
   <!-- Tips & tricks -->
   <string name="pref_tips_tricks">&pref_tips_tricks;</string>
@@ -816,7 +822,7 @@
   <string name="pref_browsing_category">&pref_browsing_category;</string>
 
   <!-- General Settings - CliqzTab -->
-  <string name="pref_cliqz_tab_category">&pref_cliqz_tab_category;</string>
+  <string name="pref_cliqz_tab_category">&pref_new_tab_category;</string>
   <string name="pref_cliqz_tab_background">&pref_cliqz_tab_background;</string>
   <string name="pref_cliqz_tab_topsites">&pref_cliqz_tab_topsites;</string>
   <string name="pref_cliqz_tab_news">&pref_cliqz_tab_news;</string>

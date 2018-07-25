@@ -9,6 +9,7 @@
                   xmlns:gecko="http://schemas.android.com/apk/res-auto"
                   android:enabled="false">
 
+    <!-- Cliqz start -+>
     <PreferenceScreen android:key="android.not_a_preference.general.home"
                       android:title="@string/pref_category_home"
                       android:summary="@string/pref_category_home_summary"
@@ -17,16 +18,12 @@
                    android:value="preferences_home" />
     </PreferenceScreen>
 
-    <!-- Cliqz start -->
-    <!-- add key to language preference-->
-    <PreferenceScreen android:key="android.not_a_preference.general.language"
-                      android:title="@string/pref_category_language"
+    <PreferenceScreen android:title="@string/pref_category_language"
                       android:summary="@string/pref_category_language_summary"
                       android:fragment="org.mozilla.gecko.preferences.GeckoPreferenceFragment" >
         <extra android:name="resource"
                android:value="preferences_locale" />
     </PreferenceScreen>
-    <!-- Cliqz end -->
 
     <SwitchPreference android:key="browser.chrome.dynamictoolbar"
                       android:title="@string/pref_scroll_title_bar2"
@@ -37,8 +34,8 @@
                       android:title="@string/pref_compact_tabs"
                       android:summary="@string/pref_compact_tabs_summary"
                       android:defaultValue="true" />
+    <!+- Cliqz Block Comment End -->
 
-    <!-- Cliqz start -->
     <!-- add search category -->
     <PreferenceCategory android:title="@string/pref_search_category">
         <ListPreference
@@ -60,7 +57,7 @@
             android:defaultValue="true"
             android:title="@string/pref_search_auto_completion" />
         <CheckBoxPreference
-            android:key="pref.search.enable.browser.quicksearch"
+            android:key="pref.search.quicksearch.enabled"
             android:title="@string/pref_search_enable_browser_quicksearch"
             android:summary="@string/pref_search_enable_browser_quicksearch_summary"
             android:defaultValue="true"
@@ -93,15 +90,15 @@
     <!-- add cliqz tab category -->
     <PreferenceCategory android:title="@string/pref_cliqz_tab_category">
         <CheckBoxPreference
-            android:key="pref.cliqz.tab.background"
+            android:key="pref.cliqz.tab.background.enabled"
             android:title="@string/pref_cliqz_tab_background"
             android:defaultValue="true" />
         <CheckBoxPreference
-            android:key="pref.cliqz.tab.topsites"
+            android:key="pref.cliqz.tab.topsites.enabled"
             android:title="@string/pref_cliqz_tab_topsites"
             android:defaultValue="true" />
         <CheckBoxPreference
-            android:key="pref.cliqz.tab.news"
+            android:key="pref.cliqz.tab.news.enabled"
             android:title="@string/pref_cliqz_tab_news"
             android:defaultValue="true" />
         <Preference
@@ -112,11 +109,12 @@
     <!-- add MyOffrz category -->
     <PreferenceCategory android:title="@string/pref_myoffrz_category">
         <CheckBoxPreference
-            android:key="pref.show.myoffrz"
+            android:key="pref.myoffrz.enabled"
             android:title="@string/pref_show_myoffrz" />
         <org.mozilla.gecko.preferences.LinkPreference
             android:key="android.not_a_preference.about.myoffrz"
-            android:title="@string/pref_about_myoffrz" />
+            android:title="@string/pref_about_myoffrz"
+            url="@string/pref_myoffrz_url" />
     </PreferenceCategory>
 
     <!-- add Subscriptions & Notifications category -->
@@ -130,7 +128,7 @@
             android:summary="@string/pref_whats_new_notification_summary"
             android:defaultValue="true" />
         <Preference
-            android:key="pref.rest.subscriptions"
+            android:key="android.not_a_preference.reset.subscription"
             android:title="@string/pref_reset_subscriptions" />
     </PreferenceCategory>
 

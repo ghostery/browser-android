@@ -281,12 +281,12 @@ public class ActivityStreamPanel extends FrameLayout {
     // This part is derived from @{@link TabQueueHelper}.java
     public boolean isTopSitesEnabled(){
         final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
-        return  prefs.getBoolean(GeckoPreferences.PREFS_IS_TOP_SITES_ENABLED,true);
+        return  prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_TOPSITES_ENABLED,true);
     }
 
     private boolean isNewsEnabled(){
         final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
-        return  prefs.getBoolean(GeckoPreferences.PREFS_IS_NEWS_ENABLED,true);
+        return  prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_ENABLED,true);
     }
     /* Cliqz end */
 }
