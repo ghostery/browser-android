@@ -2793,7 +2793,10 @@ SearchService.prototype = {
   // Get the original Engine object that is the default for this region,
   // ignoring changes the user may have subsequently made.
   get originalDefaultEngine() {
-    let defaultEngine = this.getVerifiedGlobalAttr("searchDefault");
+    /* Cliqz start */
+    // let defaultEngine = this.getVerifiedGlobalAttr("searchDefault");
+    let defaultEngine = AppConstants.CLIQZ_SEARCH_DEFAULT_ENGINE;
+    /* Cliqz end */
     if (!defaultEngine) {
       let defaultPrefB = Services.prefs.getDefaultBranch(BROWSER_SEARCH_PREF);
       let nsIPLS = Ci.nsIPrefLocalizedString;

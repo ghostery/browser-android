@@ -303,7 +303,10 @@ for var in ('ANDROID_PACKAGE_NAME',
             'MOZ_WIDGET_TOOLKIT',
             'DLL_PREFIX',
             'DLL_SUFFIX',
-            'DEBUG_JS_MODULES'):
+            # Cliqz start #
+            'DEBUG_JS_MODULES',
+            'CLIQZ_SEARCH_DEFAULT_ENGINE'):
+            # Cliqz end #
             DEFINES[var] = CONFIG[var]
 
 for var in ('MOZ_TOOLKIT_SEARCH',
