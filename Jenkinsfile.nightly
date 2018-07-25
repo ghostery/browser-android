@@ -176,7 +176,7 @@ stage('JIRA'){
 
 stage('Send email') {
     def projectName  = '$PROJECT_NAME'
-    def changesSinceLastSuccess = '$CHANGES_SINCE_LAST_SUCCESS'
+    def changesSinceLastSuccess = getChangeString(passedBuilds)
     def bodytxt = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
@@ -216,7 +216,7 @@ def getChangeString(passedBuilds) {
             def entries = changeLogSets[i].items
             for (int j = 0; j < entries.length; j++) {
                 def entry = entries[j]
-                changeString += "* ${entry.msg} by ${entry.author} \n"
+                changeString += "* ${entry.msg} \n"
             }
         }
     }
