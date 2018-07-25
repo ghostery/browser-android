@@ -4,7 +4,7 @@
 <!ENTITY action_exit "Exit">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "Cliqz - A fast and private browser. Made in Germany">
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "News">

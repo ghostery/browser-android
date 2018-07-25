@@ -8,6 +8,7 @@
 <!ENTITY  brandFullName   "Cliqz Browser">
 <!ENTITY  offerBrandName  "MyOffrz">
 <!ENTITY  brandPocket     "Pocket">
+<!ENTITY  firstrun_urlbar_subtext "Cliqz - A fast and private browser. Made in Germany">
 <!ENTITY  pref_new_tab_category "Cliqz Tab">
 <!ENTITY  pref_human_web_url "https://cliqz.com/whycliqz/human-web">
 <!ENTITY  pref_support_cliqz_url "https://cliqz.com/support">

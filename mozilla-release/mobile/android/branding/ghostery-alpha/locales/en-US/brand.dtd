@@ -8,6 +8,7 @@
 <!ENTITY  brandFullName   "Ghostery Browser Alpha">
 <!ENTITY  offerBrandName  "Rewards">
 <!ENTITY  brandPocket     "Pocket">
+<!ENTITY  firstrun_urlbar_subtext "Ghostery - keep your browsing cleaner, faster and safer">
 <!ENTITY  pref_new_tab_category "Start Tab">
 <!ENTITY  pref_human_web_url "https://cliqz.com/whycliqz/human-web">
 <!ENTITY  pref_support_cliqz_url "https://cliqz.com/support">
