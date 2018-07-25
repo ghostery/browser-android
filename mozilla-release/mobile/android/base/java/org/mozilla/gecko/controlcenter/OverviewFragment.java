@@ -54,6 +54,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private RelativeLayout mRestrictSiteButton;
     private RelativeLayout mPauseGhosteryButton;
     private TextView mSmartBlockingCount;
+    private TextView mCliqzAttrackCount;
+    private TextView mAdBlockCount;
     private SwitchCompat mSmartBlockingSwitch;
     private SwitchCompat mAdBlockingSwitch;
     private SwitchCompat mAntiTrackingSwitch;
@@ -82,6 +84,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mAntiTrackingSwitch = (SwitchCompat) view.findViewById(R.id.enhanced_tracking_switch);
         mSmartBlockingSwitch = (SwitchCompat) view.findViewById(R.id.smart_blocking_switch);
         mSmartBlockingCount = (TextView) view.findViewById(R.id.smart_blocking_count);
+        mCliqzAttrackCount = (TextView) view.findViewById(R.id.enhanced_tracking_count);
+        mAdBlockCount = (TextView) view.findViewById(R.id.enhanced_blocking_count);
         mTrustSiteButton.setOnClickListener(this);
         mRestrictSiteButton.setOnClickListener(this);
         mPauseGhosteryButton.setOnClickListener(this);
@@ -109,7 +113,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final boolean isAntiTrackingEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_anti_tracking");
         final int smartBlockCount = safeGetBundle(controlCenterSettingsData,"data/panel/panel/smartBlock/blocked").keys().length +
                 safeGetBundle(controlCenterSettingsData, "data/panel/panel/smartBlock/unblocked").keys().length;
-        mSmartBlockingCount.setText(Integer.toString(smartBlockCount));
+        mSmartBlockingCount.setText(String.valueOf(smartBlockCount));
+        mCliqzAttrackCount.setText(String.valueOf(calculateCliqzAttrackCount()));
+        mAdBlockCount.setText(String.valueOf(getAdBlockCount()));
         mSmartBlockingSwitch.setChecked(isSmartBlockEnabled);
         mAdBlockingSwitch.setChecked(isAdBlockEnabled);
         mAntiTrackingSwitch.setChecked(isAntiTrackingEnabled);
@@ -214,6 +220,27 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         return totalBlocked;
     }
 
+    private int calculateCliqzAttrackCount() {
+        int count = 0;
+        final GeckoBundle attrackBundle = GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/cliqz/antitracking");
+        final String[] categories =  attrackBundle.keys();
+        for (String category : categories) {
+            final GeckoBundle categoryBundle = GeckoBundleUtils.safeGetBundle(attrackBundle, category);
+            final String[] trackers = categoryBundle.keys();
+            for (String tracker : trackers) {
+                if (categoryBundle.getString(tracker).equals("unsafe")) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private int getAdBlockCount() {
+        final GeckoBundle adBlockBundle = GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/cliqz/adblock");
+        return adBlockBundle.getInt("totalCount");
+    }
+
     @Override
     public void refreshUI() {
         final int blockedTrackers = calculateBlockedTrackers();
@@ -222,15 +249,18 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         trackersBlockedSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.cc_restricted)), 0,
                 Integer.toString(blockedTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mTrackersBlocked.setText(trackersBlockedSpan);
-        final PieDataSet donutDataset = ((PieDataSet) mPieChart.getData().getDataSet());
-        if (mIsGhosteryPaused) {
-            donutDataset.setColors(disabledColors);
-        } else if (mIsSiteRestricted) {
-            donutDataset.setColors(blockedColors);
-        } else {
-            donutDataset.setColors(colors);
+        final PieData donutData = mPieChart.getData();
+        if (donutData != null) {
+            final PieDataSet donutDataset = ((PieDataSet) donutData.getDataSet());
+            if (mIsGhosteryPaused) {
+                donutDataset.setColors(disabledColors);
+            } else if (mIsSiteRestricted) {
+                donutDataset.setColors(blockedColors);
+            } else {
+                donutDataset.setColors(colors);
+            }
+            mPieChart.invalidate();
         }
-        mPieChart.invalidate();
     }
 
     @Override
