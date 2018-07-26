@@ -50,10 +50,6 @@ public abstract class TabsLayout extends RecyclerView
                         // to the parent TabsLayoutItemView in its tag, hence the getTag() call.
                         TabsLayoutItemView itemView = (TabsLayoutItemView) v.getTag();
                         closeTab(itemView);
-                        /* Cliqz start */
-                        // update the counter after removing tabs
-                        tabsPanel.getTabsCounter().setCount(getTabsCount());
-                        /* Cliqz end */
                     }
                 });
         setAdapter(tabsAdapter);
@@ -87,6 +83,10 @@ public abstract class TabsLayout extends RecyclerView
         Tabs.getInstance().refreshThumbnails();
         Tabs.registerOnTabsChangedListener(this);
         refreshTabsData();
+        /* Cliqz start */
+        // set tabs count , should be done after refreshTabsData() called
+        tabsPanel.getTabsCounter().setCount(tabsAdapter.getItemCount());
+        /* Cliqz end */
     }
 
     @Override
@@ -121,6 +121,10 @@ public abstract class TabsLayout extends RecyclerView
                     // scrollSelectedTabToTopOfTray().)
                     scrollToPosition(tabIndex);
                 }
+                /* Cliqz start */
+                // update the counter after undo tabs
+                tabsPanel.getTabsCounter().setCount(tabsAdapter.getItemCount());
+                /* Cliqz end */
                 break;
 
             case CLOSED:
@@ -227,6 +231,11 @@ public abstract class TabsLayout extends RecyclerView
         if (closingLastTab) {
             autoHidePanel();
         }
+
+        /* Cliqz start */
+        // update the counter after removing tabs
+        tabsPanel.getTabsCounter().setCount(tabsAdapter.getItemCount());
+        /* Cliqz end */
     }
 
     @Override
@@ -257,10 +266,4 @@ public abstract class TabsLayout extends RecyclerView
         return !isPrivate;
     }
 
-    /* Cliqz start */
-    // get tabs count for tab_counter text
-    public int getTabsCount(){
-        return tabsAdapter.getItemCount();
-    }
-    /* Cliqz end */
 }
