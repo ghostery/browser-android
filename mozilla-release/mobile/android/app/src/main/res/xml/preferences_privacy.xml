@@ -114,19 +114,19 @@
         <CheckBoxPreference android:key="datareporting.crashreporter.submitEnabled"
                             android:title="@string/datareporting_crashreporter_title_short"
                             android:summary="@string/datareporting_crashreporter_summary"
-                            android:defaultValue="false" />
-        <!+- Cliqz end-->
+                            android:defaultValue="false" /> -->
 
         <Preference android:key="android.not_a_preference.app.geo.reportdata"
                             android:title="@string/pref_location_permission_title" />
 
+        <!-- Cliqz Block Comment start -+>
         <org.mozilla.gecko.preferences.AlignRightLinkPreference android:key="android.not_a_preference.geo.learn_more"
                                                                 android:title="@string/pref_learn_more"
                                                                 android:persistent="false"
                                                                 url="https://location.services.mozilla.com/" />
 
-        <!-- Cliqz start -->
-        <!-- <CheckBoxPreference android:key="android.not_a_preference.healthreport.uploadEnabled"
+
+        <CheckBoxPreference android:key="android.not_a_preference.healthreport.uploadEnabled"
                             android:title="@string/datareporting_fhr_title"
                             android:summary="@string/datareporting_fhr_summary2"
                             android:defaultValue="true" /> -->
