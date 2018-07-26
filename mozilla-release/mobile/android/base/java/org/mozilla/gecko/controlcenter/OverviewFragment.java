@@ -124,6 +124,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final GeckoBundle[] categories = safeGetBundle(controlCenterSettingsData, "data/summary").getBundleArray("categories");
         colors.clear();
         disabledColors.clear();
+        blockedColors.clear();
         for (GeckoBundle categoryBundle : categories != null ? categories : new GeckoBundle[0]) {
             final Categories category = Categories.safeValueOf(categoryBundle.getString("id"));
             final int trackersCount = categoryBundle.getInt("num_total");
