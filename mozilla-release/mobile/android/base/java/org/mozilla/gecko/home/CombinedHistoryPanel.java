@@ -225,14 +225,13 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         final TextView historyText = (TextView) mHistoryEmptyView.findViewById(R.id.home_empty_text);
         historyText.setText(R.string.home_most_recent_empty);
 
+        /* Cliqz Start o/
         final TextView historyHint = (TextView) mHistoryEmptyView.findViewById(R.id.home_empty_hint);
 
         if (!Restrictions.isAllowed(getActivity(), Restrictable.PRIVATE_BROWSING)) {
             historyHint.setVisibility(View.GONE);
         } else {
-            /* Cliqz Start */
             final String hintText = getResources().getString(R.string.home_most_recent_emptyhint_ghost_tab);
-            /* Cliqz End */
             final SpannableStringBuilder hintBuilder = formatHintText(hintText);
             if (hintBuilder != null) {
                 historyHint.setText(hintBuilder);
@@ -240,6 +239,7 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
                 historyHint.setVisibility(View.VISIBLE);
             }
         }
+        /o Cliqz End */
 
         // Set up Clients empty view.
         final Button syncSetupButton = (Button) mClientsEmptyView.findViewById(R.id.sync_setup_button);
