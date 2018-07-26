@@ -34,7 +34,6 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
-        final PreferenceManager preferenceManager = new PreferenceManager(mContext);
         final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         final ViewGroup layout = (ViewGroup) layoutInflater.inflate(screens[position], container, false);
         final Button startBrowsing = (Button) layout.findViewById(R.id.start_browsing);
@@ -49,15 +48,21 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
             collectDataCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    preferenceManager.setTelemetryEnabled(isChecked);
-                    preferenceManager.setHumanWebEnabled(isChecked);
+                    setPreferencesValues(isChecked);
                 }
             });
             collectDataCb.setChecked(true);
-            preferenceManager.setTelemetryEnabled(true);
+            setPreferencesValues(true);
         }
         container.addView(layout);
         return layout;
+    }
+
+    private void setPreferencesValues(boolean value){
+        final PreferenceManager preferenceManager = new PreferenceManager(mContext);
+        preferenceManager.setTelemetryEnabled(value);
+        preferenceManager.setHumanWebEnabled(value);
+        preferenceManager.setMyOffrzEnabled(value);
     }
 
     @Override

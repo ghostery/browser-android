@@ -2,6 +2,7 @@ package org.mozilla.gecko.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
 
@@ -82,5 +83,13 @@ public class PreferenceManager {
     public void setHumanWebEnabled(boolean value){
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
         editor.putBoolean(GeckoPreferences.PREFS_ENABLE_HUMAN_WEB, value).apply();
+    }
+
+    public void registerOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
+        mAppSharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
+        mAppSharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
 }
