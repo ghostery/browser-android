@@ -6,7 +6,7 @@
 <!ENTITY  vendorShortName "Ghostery">
 <!ENTITY  vendorName      "Cliqz GmbH">
 <!ENTITY  brandFullName   "Ghostery Browser">
-<!ENTITY  offerBrandName  "Rewards">
+<!ENTITY  brandMyOffrz    "Ghostery Rewards">
 <!ENTITY  brandPocket     "Pocket">
 <!ENTITY  firstrun_urlbar_subtext "Ghostery - keep your browsing cleaner, faster and safer">
 <!ENTITY  pref_new_tab_category "Start Tab">
