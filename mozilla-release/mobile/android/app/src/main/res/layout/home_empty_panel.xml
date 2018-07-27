@@ -22,13 +22,16 @@
                android:layout_marginBottom="10dp"
                android:gravity="top|center"
                android:scaleType="fitCenter"/>
-
+    <!-- Cliqz Start -->
     <TextView android:id="@+id/home_empty_text"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:gravity="top|center"
-              android:textAppearance="@style/TextAppearance.EmptyMessage"/>
+              android:textAppearance="@style/TextAppearance.EmptyMessage"
+              android:textColor="@android:color/white"/>
+    <!-- Cliqz End -->
 
+    <!-- Cliqz Start -+>
     <TextView android:id="@+id/home_empty_hint"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -36,6 +39,7 @@
               android:gravity="top|center"
               android:textAppearance="@style/TextAppearance.EmptyHint"
               android:textColorLink="#0a84ff" />
+    <!+- Cliqz End -->
     <!-- Empty spacer view -->
     <View android:layout_width="match_parent"
           android:layout_height="0dip"

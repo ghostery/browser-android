@@ -17,14 +17,14 @@
 <!ENTITY pref_category_human_web_summary "What, Enable">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&offerBrandName;">
+<!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_msg "Here you\'ll find a new offer every week">
-<!ENTITY myoffrz_onboarding_description "Receive attractive discounts and bargains with &offerBrandName;">
+<!ENTITY myoffrz_onboarding_description "Receive attractive discounts and bargains with &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Order Now!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Tap code to copy">
 <!ENTITY myoffrz_terms_and_conditions_label "Terms">
 <!ENTITY myoffrz_message_code_copied "Code copied">
-<!ENTITY myoffrz_activation_description "Activate &offerBrandName; to receive attractive discounts and bargains.">
+<!ENTITY myoffrz_activation_description "Activate &brandMyOffrz; to receive attractive discounts and bargains.">
 <!ENTITY myoffrz_activate "Activate">
 
 <!-- Block Ads -->
@@ -119,7 +119,7 @@
 <!ENTITY cc_untrust "Untrust">
 <!ENTITY cc_restrict "Restrict">
 <!ENTITY cc_unrestrict "Unrestrict">
-<!ENTITY cc_toast_overview_restrict "All trackers restricted on this site">
+<!ENTITY cc_toast_overview_restrict "All trackers blocked on this site">
 <!ENTITY cc_toast_overview_trust "All trackers allowed on this site">
 <!ENTITY cc_toast_site_trust "Tracker trusted on this site">
 <!ENTITY cc_toast_site_restrict "Tracker blocked on this site">
@@ -152,7 +152,7 @@
 <!ENTITY pref_browsing_category "Browsing">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "Search, &pref_new_tab_category;, Browsing, Notifications, Download, &offerBrandName;">
+<!ENTITY pref_category_general_summary4 "Search, &pref_new_tab_category;, Browsing, Notifications, Download, &brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "Show background image">
 <!ENTITY pref_cliqz_tab_topsites "Show most visited websites">
 <!ENTITY pref_cliqz_tab_news "Show News">
@@ -160,9 +160,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "Start page shows most-visited websites again">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&offerBrandName;">
-<!ENTITY pref_show_myoffrz "Show &offerBrandName;">
-<!ENTITY pref_about_myoffrz "About &offerBrandName;">
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "Show &brandMyOffrz;">
+<!ENTITY pref_about_myoffrz "About &brandMyOffrz;">
 
 <!-- General Settings - Subscriptions and Notifications -->
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -226,7 +226,7 @@
 <!ENTITY ghostery_onboarding_new_users_title "Introducing &brandShortName;">
 <!ENTITY ghostery_onboarding_new_users_text "Keep your browsing cleaner, faster, and safer. By using this app you agree to &brandShortName;\'s Privacy Policy.">
 <!ENTITY ghostery_onboarding_old_users_title "Introducing new &brandShortName;">
-<!ENTITY ghostery_onboarding_old_users_text "Support &brandShortName; by participating in &brandShortName; Rewards and share Human Web &amp; analytics data. Learn more.">
+<!ENTITY ghostery_onboarding_old_users_text "Support &brandShortName; by participating in &brandMyOffrz; and share Human Web &amp; analytics data. Learn more.">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Tracking Protection">
 <!ENTITY ghostery_onboarding_tracking_protection_text "Browse smarter with our tracking protection featrues. You can turn these off in the &brandShortName; Control Center.">
 <!ENTITY ghostery_onboarding_quick_search_title "Quick Search">
