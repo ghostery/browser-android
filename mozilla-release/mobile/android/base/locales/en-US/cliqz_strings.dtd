@@ -119,7 +119,7 @@
 <!ENTITY cc_untrust "Untrust">
 <!ENTITY cc_restrict "Restrict">
 <!ENTITY cc_unrestrict "Unrestrict">
-<!ENTITY cc_toast_overview_restrict "All trackers restricted on this site">
+<!ENTITY cc_toast_overview_restrict "All trackers blocked on this site">
 <!ENTITY cc_toast_overview_trust "All trackers allowed on this site">
 <!ENTITY cc_toast_site_trust "Tracker trusted on this site">
 <!ENTITY cc_toast_site_restrict "Tracker blocked on this site">
