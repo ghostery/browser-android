@@ -1991,7 +1991,9 @@ public class BrowserApp extends GeckoApp
                     public void run() {
                         if (menu != null) {
                             menu.findItem(R.id.settings).setEnabled(true);
+                            /* Cliqz Start o/
                             menu.findItem(R.id.help).setEnabled(true);
+                            /o Cliqz End */
                         }
                     }
                 });
