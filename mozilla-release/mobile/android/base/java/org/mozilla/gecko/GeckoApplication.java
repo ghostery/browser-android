@@ -22,6 +22,8 @@ import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -66,7 +68,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.UUID;
 
-public class GeckoApplication extends Application
+public class GeckoApplication extends MultiDexApplication
                               implements HapticFeedbackDelegate {
     private static final String LOG_TAG = "GeckoApplication";
     private static final String MEDIA_DECODING_PROCESS_CRASH = "MEDIA_DECODING_PROCESS_CRASH";
@@ -86,6 +88,14 @@ public class GeckoApplication extends Application
     public GeckoApplication() {
         super();
     }
+
+    /* Cliqz start */
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+    /* Cliqz end */
 
     public static RefWatcher getRefWatcher(Context context) {
         GeckoApplication app = (GeckoApplication) context.getApplicationContext();

@@ -224,7 +224,7 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
                     // } else {
                     //     icon = d;
                     // }
-                    final Drawable icon = d.mutate();
+                    final Drawable icon = DrawableCompat.wrap(d.mutate());
                     if (useTint) {
                         DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),R.color
                                 .general_blue_color));

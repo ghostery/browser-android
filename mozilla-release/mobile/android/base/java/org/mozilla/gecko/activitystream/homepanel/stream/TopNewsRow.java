@@ -2,7 +2,9 @@ package org.mozilla.gecko.activitystream.homepanel.stream;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -42,9 +44,12 @@ public class TopNewsRow extends StreamViewHolder {
     public TopNewsRow(final View itemView, HomePager.OnUrlOpenListener onUrlOpenListener) {
         super(itemView);
         final Context context = itemView.getContext();
+        final Resources resources = context.getResources();
+        final Resources.Theme theme = context.getTheme();
 
-        expandNewsIcon = getDrawable(context, R.drawable.ic_action_expand);
-        collapseNewsIcon = getDrawable(context, R.drawable.ic_action_collapse);
+        expandNewsIcon = VectorDrawableCompat.create(resources, R.drawable.ic_action_expand, theme);
+        collapseNewsIcon =
+                VectorDrawableCompat.create(resources, R.drawable.ic_action_collapse, theme);
 
         title = (TextView) itemView.findViewById(R.id.news_title);
 

@@ -45,7 +45,10 @@ final class UnusedResourcesUtil {
             R.drawable.close,
             R.drawable.homepage_banner_firstrun,
             R.drawable.ic_readermode,
-            R.drawable.ic_readermode_on,
+            /* Cliqz start */
+            // R.drawable.ic_readermode_on,
+            R.drawable.ic_readermode,
+            /* Cliqz end */
             R.drawable.icon_openinapp,
             R.drawable.pause,
             R.drawable.phone,
