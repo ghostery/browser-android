@@ -7,14 +7,13 @@
     android:layout_height="match_parent"
     android:background="@color/cc_transparency">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="15dp">
 
         <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/donut"
+            android:id="@+id/cc_donut"
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_alignParentTop="true"
@@ -22,10 +21,10 @@
             android:padding="10dp" />
 
         <TextView
-            android:id="@+id/domain_name"
+            android:id="@+id/cc_domain_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/donut"
+            android:layout_below="@id/cc_donut"
             android:layout_centerHorizontal="true"
             android:padding="10dp"
             android:textColor="@android:color/black"
@@ -33,10 +32,10 @@
             tools:text="domain.com" />
 
         <TextView
-            android:id="@+id/trackers_blocked"
+            android:id="@+id/cc_trackers_blocked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/domain_name"
+            android:layout_below="@id/cc_domain_name"
             android:layout_centerHorizontal="true"
             android:padding="2dp"
             android:textColor="@android:color/black"
@@ -44,7 +43,7 @@
             tools:text="11 trackers blocked" />
 
         <RelativeLayout
-            android:id="@+id/ghostery_pause_button"
+            android:id="@+id/cc_ghostery_pause_button"
             android:layout_width="@dimen/ghostery_overview_button_width"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -55,7 +54,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/button_text"
+                android:id="@+id/cc_button_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -64,31 +63,31 @@
                 android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/button_icon"
+                android:id="@+id/cc_button_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignBottom="@id/button_text"
-                android:layout_alignTop="@id/button_text"
+                android:layout_alignBottom="@id/cc_button_text"
+                android:layout_alignTop="@id/cc_button_text"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/button_text"
-                android:layout_toStartOf="@id/button_text"
+                android:layout_toLeftOf="@id/cc_button_text"
+                android:layout_toStartOf="@id/cc_button_text"
                 app:srcCompat="@drawable/cc_ic_pause"
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/ghostery_restrict_site_button"
+            android:id="@+id/cc_ghostery_restrict_site_button"
             android:layout_width="@dimen/ghostery_overview_button_width"
             android:layout_height="wrap_content"
-            android:layout_above="@id/ghostery_pause_button"
+            android:layout_above="@id/cc_ghostery_pause_button"
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
             android:background="@drawable/cc_button_background_white"
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/button_text"
+                android:id="@+id/cc_button_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -97,31 +96,31 @@
                 android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/button_icon"
+                android:id="@+id/cc_button_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/button_text"
-                android:layout_alignTop="@id/button_text"
+                android:layout_alignBottom="@id/cc_button_text"
+                android:layout_alignTop="@id/cc_button_text"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/button_text"
-                android:layout_toStartOf="@id/button_text"
+                android:layout_toLeftOf="@id/cc_button_text"
+                android:layout_toStartOf="@id/cc_button_text"
                 app:srcCompat="@drawable/cc_ic_restrict"
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/ghostery_trust_site_button"
+            android:id="@+id/cc_ghostery_trust_site_button"
             android:layout_width="@dimen/ghostery_overview_button_width"
             android:layout_height="wrap_content"
-            android:layout_above="@id/ghostery_restrict_site_button"
+            android:layout_above="@id/cc_ghostery_restrict_site_button"
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
             android:background="@drawable/cc_button_background_white"
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/button_text"
+                android:id="@+id/cc_button_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -130,13 +129,13 @@
                 android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/button_icon"
+                android:id="@+id/cc_button_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignBottom="@id/button_text"
-                android:layout_alignTop="@id/button_text"
-                android:layout_toLeftOf="@id/button_text"
-                android:layout_toStartOf="@id/button_text"
+                android:layout_alignBottom="@id/cc_button_text"
+                android:layout_alignTop="@id/cc_button_text"
+                android:layout_toLeftOf="@id/cc_button_text"
+                android:layout_toStartOf="@id/cc_button_text"
                 app:srcCompat="@drawable/ic_trust_site"
                 tools:ignore="contentDescription" />
 
@@ -159,6 +158,7 @@
             android:background="@drawable/cc_notch_shadow" />
 
         <TextView
+            android:id="@+id/cc_notch_title"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@android:color/white"
@@ -170,213 +170,285 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/white"
-            android:paddingBottom="10dp"
-            android:paddingEnd="15dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingStart="15dp"
-            android:paddingTop="5dp">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/enhanced_tracking_icon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/cc_ic_anti_tracking"
-                tools:ignore="ContentDescription" />
+            <RelativeLayout
+                android:id="@+id/cc_info_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:visibility="gone">
 
-            <TextView
-                android:id="@+id/enhanced_tracking_count"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/cc_close_info_view_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:paddingEnd="10dp"
+                    android:paddingRight="10dp"
+                    app:srcCompat="@drawable/close" />
+
+                <ImageView
+                    android:id="@+id/cc_info_view_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp" />
+
+                <TextView
+                    android:id="@+id/cc_info_view_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/cc_info_view_icon"
+                    android:layout_toEndOf="@id/cc_info_view_icon"
+                    android:layout_toRightOf="@id/cc_info_view_icon"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:textSize="30dp"
+                    android:textColor="@color/general_blue_color"/>
+
+                <TextView
+                    android:id="@+id/cc_info_view_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/cc_info_view_icon"
+                    android:layout_centerHorizontal="true"
+                    android:padding="10dp"
+                    android:textColor="@color/general_blue_color"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/cc_info_view_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/cc_info_view_title"
+                    android:padding="10dp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/cc_overview_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/enhanced_tracking_icon"
-                android:layout_toRightOf="@id/enhanced_tracking_icon"
-                android:padding="5dp"
-                tools:text="3"
-                android:textColor="@color/general_blue_color"
-                android:textSize="24sp" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/enhanced_tracking_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/enhanced_tracking_count"
-                android:layout_toRightOf="@id/enhanced_tracking_count"
-                android:padding="5dp"
-                android:text="@string/cc_enhanced_anti_tracking"
-                android:textColor="@color/general_blue_color"
-                android:textSize="16sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/white"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingStart="15dp"
+                    android:paddingTop="5dp">
 
-            <ImageView
-                android:id="@+id/enhanced_tracking_info_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/enhanced_tracking_text"
-                android:layout_toRightOf="@id/enhanced_tracking_text"
-                android:contentDescription="@string/cc_enhanced_anti_tracking_info"
-                android:src="@drawable/cc_ic_info_gray" />
+                    <ImageView
+                        android:id="@+id/cc_enhanced_tracking_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/cc_ic_anti_tracking"
+                        tools:ignore="ContentDescription" />
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/enhanced_tracking_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:theme="@style/Theme.ToogleTheme" />
+                    <TextView
+                        android:id="@+id/cc_enhanced_tracking_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/cc_enhanced_tracking_icon"
+                        android:layout_toRightOf="@id/cc_enhanced_tracking_icon"
+                        android:padding="5dp"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="24sp"
+                        tools:text="3" />
 
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/cc_enhanced_tracking_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/cc_enhanced_tracking_count"
+                        android:layout_toRightOf="@id/cc_enhanced_tracking_count"
+                        android:padding="5dp"
+                        android:text="@string/cc_enhanced_anti_tracking"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="16sp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/cc_line_separator" />
+                    <ImageView
+                        android:id="@+id/cc_enhanced_tracking_info_button"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/cc_enhanced_tracking_text"
+                        android:layout_toRightOf="@id/cc_enhanced_tracking_text"
+                        android:contentDescription="@string/cc_enhanced_anti_tracking_info"
+                        app:srcCompat="@drawable/cc_ic_info_gray" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/white"
-            android:paddingBottom="10dp"
-            android:paddingEnd="15dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingStart="15dp"
-            android:paddingTop="10dp">
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/cc_enhanced_tracking_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:theme="@style/Theme.ToogleTheme" />
 
-            <ImageView
-                android:id="@+id/enhanced_blocking_icon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/cc_ic_ad_blocker"
-                tools:ignore="ContentDescription" />
+                </RelativeLayout>
 
-            <TextView
-                android:id="@+id/enhanced_blocking_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/enhanced_blocking_icon"
-                android:layout_toRightOf="@id/enhanced_blocking_icon"
-                android:padding="5dp"
-                tools:text="3"
-                android:textColor="@color/general_blue_color"
-                android:textSize="24sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/cc_line_separator" />
 
-            <TextView
-                android:id="@+id/enhanced_blocking_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/enhanced_blocking_count"
-                android:layout_toRightOf="@id/enhanced_blocking_count"
-                android:padding="5dp"
-                android:text="@string/cc_enhanced_ad_blocking"
-                android:textColor="@color/general_blue_color"
-                android:textSize="16sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/white"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingStart="15dp"
+                    android:paddingTop="10dp">
 
-            <ImageView
-                android:id="@+id/enhanced_blocking_info_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/enhanced_blocking_text"
-                android:layout_toRightOf="@id/enhanced_blocking_text"
-                android:contentDescription="@string/cc_enhanced_ad_blocking_info"
-                android:src="@drawable/cc_ic_info_gray" />
+                    <ImageView
+                        android:id="@+id/cc_enhanced_blocking_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/cc_ic_ad_blocker"
+                        tools:ignore="ContentDescription" />
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/enhanced_blocking_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:theme="@style/Theme.ToogleTheme" />
+                    <TextView
+                        android:id="@+id/cc_enhanced_blocking_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/cc_enhanced_blocking_icon"
+                        android:layout_toRightOf="@id/cc_enhanced_blocking_icon"
+                        android:padding="5dp"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="24sp"
+                        tools:text="3" />
 
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/cc_enhanced_blocking_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/cc_enhanced_blocking_count"
+                        android:layout_toRightOf="@id/cc_enhanced_blocking_count"
+                        android:padding="5dp"
+                        android:text="@string/cc_enhanced_ad_blocking"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="16sp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/cc_line_separator" />
+                    <ImageView
+                        android:id="@+id/cc_enhanced_blocking_info_button"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/cc_enhanced_blocking_text"
+                        android:layout_toRightOf="@id/cc_enhanced_blocking_text"
+                        android:contentDescription="@string/cc_enhanced_ad_blocking_info"
+                        app:srcCompat="@drawable/cc_ic_info_gray" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/white"
-            android:paddingBottom="10dp"
-            android:paddingEnd="15dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingStart="15dp"
-            android:paddingTop="10dp">
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/cc_enhanced_blocking_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:theme="@style/Theme.ToogleTheme" />
 
-            <ImageView
-                android:id="@+id/smart_blocking_icon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/cc_ic_smart_blocking"
-                tools:ignore="ContentDescription" />
+                </RelativeLayout>
 
-            <TextView
-                android:id="@+id/smart_blocking_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/smart_blocking_icon"
-                android:layout_toRightOf="@id/smart_blocking_icon"
-                android:padding="5dp"
-                tools:text="3"
-                android:textColor="@color/general_blue_color"
-                android:textSize="24sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/cc_line_separator" />
 
-            <TextView
-                android:id="@+id/smart_blocking_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/smart_blocking_count"
-                android:layout_toRightOf="@id/smart_blocking_count"
-                android:padding="5dp"
-                android:text="@string/cc_smart_blocking"
-                android:textColor="@color/general_blue_color"
-                android:textSize="16sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/white"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingStart="15dp"
+                    android:paddingTop="10dp">
 
-            <ImageView
-                android:id="@+id/info_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/smart_blocking_text"
-                android:layout_toRightOf="@id/smart_blocking_text"
-                android:contentDescription="@string/cc_smart_blocking_info"
-                android:src="@drawable/cc_ic_info_gray" />
+                    <ImageView
+                        android:id="@+id/cc_smart_blocking_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/cc_ic_smart_blocking"
+                        tools:ignore="ContentDescription" />
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/smart_blocking_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:theme="@style/Theme.ToogleTheme" />
+                    <TextView
+                        android:id="@+id/cc_smart_blocking_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/cc_smart_blocking_icon"
+                        android:layout_toRightOf="@id/cc_smart_blocking_icon"
+                        android:padding="5dp"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="24sp"
+                        tools:text="3" />
 
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/cc_smart_blocking_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/cc_smart_blocking_count"
+                        android:layout_toRightOf="@id/cc_smart_blocking_count"
+                        android:padding="5dp"
+                        android:text="@string/cc_smart_blocking"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/cc_smart_blocking_info_button"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/cc_smart_blocking_text"
+                        android:layout_toRightOf="@id/cc_smart_blocking_text"
+                        android:contentDescription="@string/cc_smart_blocking_info"
+                        app:srcCompat="@drawable/cc_ic_info_gray" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/cc_smart_blocking_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:theme="@style/Theme.ToogleTheme" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+        </FrameLayout>
+
 
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

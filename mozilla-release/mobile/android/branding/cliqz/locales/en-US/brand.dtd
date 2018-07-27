@@ -6,7 +6,7 @@
 <!ENTITY  vendorShortName "Cliqz">
 <!ENTITY  vendorName      "Cliqz GmbH">
 <!ENTITY  brandFullName   "Cliqz Browser">
-<!ENTITY  offerBrandName  "MyOffrz">
+<!ENTITY  brandMyOffrz    "Cliqz Offers">
 <!ENTITY  brandPocket     "Pocket">
 <!ENTITY  firstrun_urlbar_subtext "Cliqz - A fast and private browser. Made in Germany">
 <!ENTITY  pref_new_tab_category "Cliqz Tab">
