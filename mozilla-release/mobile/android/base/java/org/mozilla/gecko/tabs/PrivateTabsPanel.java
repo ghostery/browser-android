@@ -5,6 +5,13 @@
 
 package org.mozilla.gecko.tabs;
 
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import org.mozilla.gecko.GeckoApp;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tabs;
@@ -12,13 +19,6 @@ import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.tabs.TabsPanel.CloseAllPanelView;
 import org.mozilla.gecko.tabs.TabsPanel.TabsLayout;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import static org.mozilla.gecko.Tabs.LOADURL_NEW_TAB;
 import static org.mozilla.gecko.Tabs.LOADURL_PRIVATE;
@@ -83,12 +83,4 @@ class PrivateTabsPanel extends RelativeLayout implements CloseAllPanelView {
     public void onCloseAll() {
         tabsLayout.onCloseAll();
     }
-
-    /* Cliqz start */
-    // get tabs count for tab_counter text
-    @Override
-    public int getTabsCount(){
-        return tabsLayout.getTabsCount();
-    }
-    /* Cliqz end */
 }
