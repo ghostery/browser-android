@@ -249,8 +249,10 @@ public class BookmarksPanel extends HomeFragment implements BookmarkEditFragment
             final ViewStub emptyViewStub = (ViewStub) getView().findViewById(R.id.home_empty_view_stub);
             mEmptyView = emptyViewStub.inflate();
 
+            /* Cliqz Start o/
             final ImageView emptyIcon = (ImageView) mEmptyView.findViewById(R.id.home_empty_image);
             emptyIcon.setImageResource(R.drawable.icon_bookmarks_empty);
+            /o Cliqz End */
 
             final TextView emptyText = (TextView) mEmptyView.findViewById(R.id.home_empty_text);
             emptyText.setText(R.string.home_bookmarks_empty);
