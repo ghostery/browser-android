@@ -1,1 +1,1 @@
-8.99.1.cf048c4
+https://s3.amazonaws.com/cdncliqz/update/android_browser_pre/firefox@ghostery.com/latest.xpi
