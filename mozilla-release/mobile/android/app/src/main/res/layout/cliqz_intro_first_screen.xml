@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="11dp"
         app:srcCompat="@drawable/cliqz_intro_ic_dots_first_screen"
-        tools:ignore="contentDescription" />
+        android:contentDescription="@string/onboarding_introduction"/>
 
     <Button
         android:id="@+id/start_browsing"
@@ -98,5 +98,5 @@
         android:layout_marginTop="26dp"
         android:scaleType="fitCenter"
         android:src="@drawable/cliqz_intro_ic_first_screen"
-        tools:ignore="contentDescription" />
+        android:contentDescription="@string/onboarding_introduction" />
 </RelativeLayout>

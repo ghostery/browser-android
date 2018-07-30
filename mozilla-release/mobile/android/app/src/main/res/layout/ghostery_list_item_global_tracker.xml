@@ -8,6 +8,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/cc_tracker_view_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="20dp">
