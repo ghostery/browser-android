@@ -62,10 +62,6 @@ public class TabsPanel extends LinearLayout
         void show();
         void hide();
         boolean shouldExpand();
-        /* Cliqz start */
-        // get tabs count for tab_counter text
-        int getTabsCount();
-        /* Cliqz end */
     }
 
     public interface CloseAllPanelView extends PanelView {
@@ -434,11 +430,6 @@ public class TabsPanel extends LinearLayout
                 throw new IllegalArgumentException("Unknown panel type " + panelToShow);
         }
         mPanel.show();
-        /* Cliqz start */
-        // set tabsCounter text "IMPORTANT: do it after mPanel.show(), because it calls
-        // refreshTabsData(); to refresh the tabs displayed. "
-        mTabsCounter.setCount(mPanel.getTabsCount());
-        /* Cliqz end */
         mAddTab.setVisibility(View.VISIBLE);
 
         mMenuButton.setEnabled(true);
