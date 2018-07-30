@@ -930,7 +930,11 @@
     <!-- Cliqz end -->
 
     <style name="UrlBar.EditCancel" parent="UrlBar.V15.EditCancel"/>
-    <style name="UrlBar.Base.EditCancel" parent="UrlBar.ImageButton"/>
+    <!-- Cliqz start -->
+    <style name="UrlBar.Base.EditCancel" parent="UrlBar.ImageButton">
+        <item name="drawableTintList">@null</item>
+    </style>
+    <!-- Cliqz end -->
     <style name="UrlBar.V15.EditCancel" parent="UrlBar.Base.EditCancel">
         <item name="android:layout_alignParentRight">true</item>
     </style>
