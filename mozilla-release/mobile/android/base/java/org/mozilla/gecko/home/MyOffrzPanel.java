@@ -3,6 +3,7 @@ package org.mozilla.gecko.home;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,7 +43,8 @@ import static android.support.v4.content.ContextCompat.getDrawable;
  * Cliqz 2018
  * This file is derived from @{@link TopSitesPanel}.java
  */
-public class MyOffrzPanel extends HomeFragment {
+public class MyOffrzPanel extends HomeFragment implements SharedPreferences
+        .OnSharedPreferenceChangeListener{
 
     private static final String LOGTAG = "GeckoMyOffrzPanel";
     private static final String ACTIONS_KEY = "actions";
@@ -147,6 +149,7 @@ public class MyOffrzPanel extends HomeFragment {
                 enableClickActionsOnOffrz(true);
             }
         });
+        mPreferenceManager.registerOnSharedPreferenceChangeListener(this);
         return view;
     }
 
@@ -159,13 +162,28 @@ public class MyOffrzPanel extends HomeFragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateLayouts();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPreferenceManager.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        updateLayouts();
+    }
+
+    private void updateLayouts(){
         if (!mPreferenceManager.isMyOffrzEnable()) {
             activationVG.setVisibility(View.VISIBLE);
             onboardingVG.setVisibility(View.GONE);
             myOffrzDeactivateView.setVisibility(View.VISIBLE);
             myOffrzDeactivateView.bringToFront();
             enableClickActionsOnOffrz(false);
-        }else{
+        }else {
             activationVG.setVisibility(View.GONE);
             myOffrzDeactivateView.setVisibility(View.GONE);
             enableClickActionsOnOffrz(true);
@@ -196,7 +214,6 @@ public class MyOffrzPanel extends HomeFragment {
         onboardingVG.setVisibility(View.GONE);
         mPreferenceManager.setMyOffrzOnboardingEnabled(false);
     }
-
 
     private class MyOffrzLoaderCallbacks implements
             LoaderManager.LoaderCallbacks<JSONObject> {
