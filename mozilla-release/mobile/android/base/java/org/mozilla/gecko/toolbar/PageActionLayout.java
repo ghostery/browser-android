@@ -35,6 +35,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -336,6 +337,16 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
                 ((ThemedImageButton) v).setPrivateMode(isPrivateMode());
             }
         }
+        /* Cliqz start */
+        // updateTitleBarWidth based on how many pageActions appear
+        ViewParent parent = getParent();
+        while(parent != null && !(parent instanceof ToolbarDisplayLayout)) {
+            parent = parent.getParent();
+        }
+        if (parent != null) {
+            ((ToolbarDisplayLayout) parent).updateTitleBarWidth();
+        }
+        /* Cliqz end */
     }
 
     private PageAction getPageActionForViewAt(int index) {
