@@ -338,7 +338,7 @@
 
     <!-- Browser toolbar icons -->
     <color name="cliqz_icon">@android:color/black</color>
-    <color name="cliqz_icon_disabled">#33FFFFFF</color>
+    <color name="cliqz_icon_disabled">@color/disabled_grey</color>
     <!-- Cliqz end -->
 
 </resources>

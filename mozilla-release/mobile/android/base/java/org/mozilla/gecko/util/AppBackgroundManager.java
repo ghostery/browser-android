@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
@@ -15,17 +14,13 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;
 
 import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.R;
-import org.mozilla.gecko.home.HomePager;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Copyright © Cliqz 2018
@@ -47,15 +42,12 @@ public class AppBackgroundManager {
     private static final int MIN_BACKGROUND_SIZE = 240;
     private static final int MAX_BACKGROUND_SIZE = 3840;
     private static final int SIZE_DELTA = 120;
-    private static final long LAYOUT_SAFE_DELAY = 1000L;
+    // private static final long LAYOUT_SAFE_DELAY = 1000L;
 
     private final DisplayMetrics displayMetrics = new DisplayMetrics();
-    private final Executor executor = Executors.newSingleThreadExecutor();
     private final Resources resources;
     private final String backgroundImageUri;
     private final int backgroundSize;
-    private final Map<String, BitmapDrawable> portraitCache = new HashMap<>();
-    private final Map<String, BitmapDrawable> landscapeCache = new HashMap<>();
 
     private AppBackgroundManager(Context context) {
         resources = context.getResources();
@@ -138,37 +130,16 @@ public class AppBackgroundManager {
     }
 
     @UiThread
-    private void internalSetViewBackground(View view) {
+    private void internalSetViewBackground(final View view) {
         // Somebody set a color, we do not set the background view
         if (!Mode.IMAGE.equals(view.getTag(R.id.background_manager_mode_key))) {
             return;
         }
 
-        // Select the correct cache
-        final Map<String, BitmapDrawable> cache = getOrientedCache();
-
-        // Check if we have the right bitmap in the cache
-        final Rect bitmapRect = genBitmapRect(view);
-        final BitmapDrawable bitmapDrawable = cache.get(bitmapRect.flattenToString());
-        if (bitmapDrawable != null) {
-            view.setBackground(bitmapDrawable);
-        } else {
-            Picasso.with(view.getContext())
-                    .load(backgroundImageUri)
-                    .transform(new CropTransformation(view))
-                    .into((HomePager)view);
-        }
-    }
-
-    private Map<String, BitmapDrawable> getOrientedCache() {
-        final int orientation = resources.getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            landscapeCache.clear();
-            return portraitCache;
-        } else {
-            portraitCache.clear();
-            return landscapeCache;
-        }
+        Picasso.with(view.getContext())
+                .load(backgroundImageUri)
+                .transform(new CropTransformation(view))
+                .into((Target) view);
     }
 
     @UiThread
@@ -219,17 +190,17 @@ public class AppBackgroundManager {
         @Override
         public Bitmap transform(Bitmap source) {
             final Rect bitmapRect = genBitmapRect(view);
-            final Map<String, BitmapDrawable> cache = getOrientedCache();
             final Bitmap result = Bitmap.createBitmap(source, bitmapRect.left, bitmapRect.top, bitmapRect.right-bitmapRect.left,bitmapRect.bottom-bitmapRect.top);
             source.recycle();
-            cache.put(bitmapRect.flattenToString(), new BitmapDrawable(resources, result));
             return result;
         }
 
         @Override
         public String key() {
             //need different keys for different orientation for caching purposes
-            return "cliqzCrop"+view.getResources().getConfiguration().orientation;
+            final int orientation = view.getResources().getConfiguration().orientation;
+            final String rect = genBitmapRect(view).flattenToString();
+            return String.format(Locale.US, "cliqzCrop-%d-%s", orientation, rect);
         }
     }
 }

@@ -913,7 +913,6 @@ public class GeckoPreferences
                     // Set default value of show my offrz depend on system language
                     final PreferenceManager preferenceManager = new PreferenceManager
                             (getApplicationContext());
-                    pref.setDefaultValue(isMyOffrzSupportedForLang());
                     ((CheckBoxPreference)pref).setChecked(preferenceManager.isMyOffrzEnable());
                 } else if(PREFS_SHOW_HINTS.equals(key)){
                     // reset all Onboarding
