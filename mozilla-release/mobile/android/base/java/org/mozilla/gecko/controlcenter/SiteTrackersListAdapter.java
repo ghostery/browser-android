@@ -32,6 +32,8 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
     private static final int STATE_UNCHECKED = 0;
     private static final int STATE_CHECKED = 1;
     private static final int STATE_MIXED = 2;
+    private static final int STATE_TRUSTED = 3;
+    private static final int STATE_RESTRICTED = 4;
 
     private GeckoBundle[] mListData;
     private GeckoBundle data;
@@ -134,8 +136,19 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                 }
             }
         }
+        final String pagehost = GeckoBundleUtils.safeGetString(data, "data/summary/pageHost");
+        final List<String> blacklist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data, "data/summary/site_blacklist"));
+        final List<String> whitelist = Arrays.asList(GeckoBundleUtils.safeGetStringArray(data, "data/summary/site_whitelist"));
+        final boolean isWhiteListed = whitelist.contains(pagehost);
+        final boolean isBlackListed = blacklist.contains(pagehost);
         final int state;
-        if (numBlocked == 0) {
+        if (isBlackListed) {
+            state = STATE_RESTRICTED;
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_restricted);
+        } else if (isWhiteListed) {
+            state = STATE_TRUSTED;
+            stateCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_trust);
+        } else if (numBlocked == 0) {
             stateCheckBox.setImageResource(R.drawable.cc_ic_cb_unchecked);
             state = STATE_UNCHECKED;
         } else if (numBlocked == totalTrackers && numTrusted == 0) {
@@ -199,7 +212,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
             final View view = convertView.findViewById(R.id.tracker_options);
             view.setX(parent.getWidth());
             final GeckoBundle childGeckoBundle = getChild(groupPosition, childPosition);
-            final String pagehost = data.getBundle("data").getBundle("summary").getString("pageHost");
+            final String pagehost = GeckoBundleUtils.safeGetString(data, "data/summary/pageHost");
             final String trackerName = childGeckoBundle.getString("name");
             final int trackerId = childGeckoBundle.getInt("id");
             final boolean isBlocked = childGeckoBundle.getBoolean("blocked");
