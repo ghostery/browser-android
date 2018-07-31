@@ -323,12 +323,15 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
     }
 
     private boolean qrCodeIsEnabled(Context context) {
+        /* Cliqz start o/
         final boolean qrCodeIsSupported = InputOptionsUtils.supportsQrCodeReader(context);
         if (!qrCodeIsSupported) {
             return false;
         }
         return GeckoSharedPrefs.forApp(context)
                 .getBoolean(GeckoPreferences.PREFS_QRCODE_ENABLED, true);
+        /o Cliqz end */
+        return false;
     }
 
     private void launchQRCodeReader() {
