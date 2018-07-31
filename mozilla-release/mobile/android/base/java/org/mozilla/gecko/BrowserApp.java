@@ -2496,7 +2496,10 @@ public class BrowserApp extends GeckoApp
                 preferenceManager.setAllowFirstPartyTrackers(areFirstPartyTrackersEnabled);
                 preferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
                 break;
-
+            case "Search:QuerySuggestions":
+                final String [] querySuggestions = message.getBundle("data").getStringArray
+                        ("suggestions");
+                break;
             /* Cliqz end */
 
             default:
@@ -3489,6 +3492,8 @@ public class BrowserApp extends GeckoApp
             getSupportFragmentManager().beginTransaction()
                     .hide(mBrowserSearch).commitAllowingStateLoss();
             mBrowserSearch.setUserVisibleHint(false);
+            EventDispatcher.getInstance().unregisterUiThreadListener(this,
+                    "Search:QuerySuggestions", null);
         } else {
             hidePanelSearch();
         }
@@ -4893,6 +4898,8 @@ public class BrowserApp extends GeckoApp
     /* Cliqz start */
     private void showCliqzSearch() {
         EventDispatcher.getInstance().dispatch("Search:Show", null);
+        EventDispatcher.getInstance().registerUiThreadListener(this,
+                "Search:QuerySuggestions", null);
     }
 
     private void hidePanelSearch() {
