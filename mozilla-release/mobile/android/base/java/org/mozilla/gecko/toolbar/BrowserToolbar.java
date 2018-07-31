@@ -684,6 +684,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
         if (flags.contains(UpdateFlags.PROGRESS)) {
             updateFocusOrder();
+            /* Cliqz Start */
+            activity.toggleReloadButtonIcon(tab.getState() != Tab.STATE_LOADING);
+            /* Cliqz End */
         }
     }
 
