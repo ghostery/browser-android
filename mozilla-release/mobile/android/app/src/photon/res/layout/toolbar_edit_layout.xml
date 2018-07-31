@@ -51,7 +51,7 @@
             android:id="@+id/edit_cancel"
             style="@style/UrlBar.EditCancel"
             android:contentDescription="@string/edit_mode_cancel"
-            android:src="@drawable/ic_close_clear"
+            gecko:srcCompat="@drawable/ic_close_clear"
             android:visibility="visible"
             gecko:showLWTBackground="true"
             android:tint="@android:color/black"

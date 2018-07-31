@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +73,9 @@ class TabMenuStripLayout extends ThemedLinearLayout
         a.recycle();
 
         if (stripResId != -1) {
-            strip = ResourcesCompat.getDrawable(getResources(), stripResId, null);
+            /* Cliqz start */
+            strip = DrawableCompat.wrap(ContextCompat.getDrawable(context, stripResId));
+            /* Cliqz end */
 
             if (stripColor != null) {
                 final int backgroundTintColor = stripColor.getColorForState(getDrawableState(), Color.TRANSPARENT);

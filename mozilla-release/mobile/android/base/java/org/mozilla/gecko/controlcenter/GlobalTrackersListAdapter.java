@@ -3,6 +3,7 @@ package org.mozilla.gecko.controlcenter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +107,7 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         final ImageView stateCheckBox = (ImageView) convertView.findViewById(R.id.cb_block_all);
         final ImageView stateArrow = (ImageView) convertView.findViewById(R.id.cc_state_arrow);
         stateArrow.setImageResource(isExpanded ? R.drawable.cc_ic_collapse_arrow : R.drawable.cc_ic_expand_arrow);
-        categoryIcon.setImageDrawable(ContextCompat.getDrawable(mContext, category.categoryIcon));
+        categoryIcon.setImageDrawable(AppCompatDrawableManager.get().getDrawable(mContext, category.categoryIcon));
         categoryNameTextView.setText(categoryName);
         totalTrackersTextView.setText(mContext.getResources().getQuantityString(R.plurals.cc_total_trackers, totalTrackers, totalTrackers));
         blockedTrackersTextView.setText(mContext.getString(R.string.cc_num_blocked, blockedTrackers));

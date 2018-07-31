@@ -23,10 +23,12 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
 
     private Context mContext;
     private final @LayoutRes
-    int[] screens = new int[]{R.layout.cliqz_intro_first_screen,
+    int[] screens = new int[] {
+            R.layout.cliqz_intro_first_screen,
             R.layout.cliqz_intro_second_screen,
             R.layout.cliqz_intro_third_screen,
-            R.layout.cliqz_intro_fourth_screen};
+            R.layout.cliqz_intro_fourth_screen
+    };
 
     public CliqzIntroPagerAdapter(Context context) {
         mContext = context;

@@ -1,21 +1,21 @@
 package org.mozilla.gecko.toolbar;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import android.graphics.drawable.StateListDrawable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.View;
 
-import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
-import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.util.ThreadUtils;
 
 import java.util.Locale;
@@ -34,7 +34,7 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
     private Paint mPaint;
     private int mTrackerCount = 0;
 
-    private Drawable mGhostyDrawable;
+    private StateListDrawable mGhostyDrawable;
     private int mGhostyWidth;
     private int mGhostyHeight;
     private float mTextDistance;
@@ -54,14 +54,23 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
     private void initialize(Context context) {
         setOnClickListener(this);
         mPaint = new Paint();
+        final Resources res = context.getResources();
+        final Resources.Theme theme = context.getTheme();
         final DisplayMetrics metrics = getResources().getDisplayMetrics();
         final float textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
         mTextDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, metrics);
         mPaint.setTextSize(textSize);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setColor(Color.WHITE);
-        mGhostyDrawable = ContextCompat.getDrawable(context, R.drawable.url_bar_small_ghosty);
-        DrawableCompat.setTint(mGhostyDrawable, Color.WHITE);
+        mGhostyDrawable = new StateListDrawable();
+        final VectorDrawableCompat ghosty =
+                VectorDrawableCompat.create(res, R.drawable.ic_ghosty, theme);
+        ghosty.setTint(Color.WHITE);
+        final VectorDrawableCompat ninjaGhosty =
+                VectorDrawableCompat.create(res, R.drawable.ic_ghosty_forget, theme);
+        ninjaGhosty.setTint(Color.WHITE);
+        mGhostyDrawable.addState(new int[] { R.attr.state_private }, ninjaGhosty);
+        mGhostyDrawable.addState(StateSet.WILD_CARD, ghosty);
         mGhostyWidth = mGhostyDrawable.getIntrinsicWidth();
         mGhostyHeight = mGhostyDrawable.getIntrinsicHeight();
     }

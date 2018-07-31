@@ -25,7 +25,7 @@
             android:id="@+id/counter_box"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_tabs"
+            android:src="@drawable/ic_tab"
             gecko:drawableTintList="@color/tabs_counter_fg"/>
         <!-- change width & height , remove useless textSize it set from java-->
         <org.mozilla.gecko.widget.themed.ThemedTextView

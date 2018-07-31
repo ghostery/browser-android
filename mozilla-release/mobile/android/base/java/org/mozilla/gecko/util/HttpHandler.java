@@ -17,7 +17,6 @@ import java.net.URL;
 /**
  * Copyright © Cliqz 2018
  */
-
 public class HttpHandler {
 
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
@@ -27,7 +26,7 @@ public class HttpHandler {
 
     @Nullable
     public static JSONObject sendRequest(String method, URL url, String contentType, String content) {
-        HttpURLConnection httpURLConnection;
+        HttpURLConnection httpURLConnection = null;
         try {
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod(method);
@@ -64,6 +63,10 @@ public class HttpHandler {
             Log.e(TAG, "Error parsing response" + url.toString(), e);
         } catch (RuntimeException e) {
             Log.e(TAG, "Error getting data from server" + url.toString(), e);
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
         }
         return null;
     }
