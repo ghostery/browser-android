@@ -98,10 +98,8 @@ android {
         release {
             if (System.getenv('CERT_PATH') && System.getenv('CERT_PASS')){
                 signingConfig signingConfigs.release
-            }else {
-                debuggable isDebuggable
             }
-
+            debuggable false
         }
     }
     // The "audience" flavour dimension distinguishes between _local_ builds (intended for
