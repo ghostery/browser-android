@@ -1549,8 +1549,11 @@ public class GeckoPreferences
                 dialog = builder.create();
                 dialog.show();
                 //To make the link clickable
+                final CustomLinkMovementMethod customLinkMovementMethod =
+                        CustomLinkMovementMethod.getInstance(this);
+                customLinkMovementMethod.init(CustomLinkMovementMethod.OPEN_IN_TAB);
                 ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod
-                        (CustomLinkMovementMethod.getInstance(this));
+                        (customLinkMovementMethod);
                 break;
             // create dialog for reset all subscriptions
             case DIALOG_CREATE_RESET_SUBSCRIPTIONS:
