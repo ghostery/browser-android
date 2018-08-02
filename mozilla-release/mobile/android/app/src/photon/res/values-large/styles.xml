@@ -119,7 +119,7 @@
     <style name="UrlBar.Base.MenuItem" />
 
     <style name="UrlBar.V15.MenuItem" parent="UrlBar.Base.MenuItem">
-        <item name="android:layout_toLeftOf">@id/tabs</item>
+        <item name="android:layout_toLeftOf">@id/ghosty</item>
     </style>
 
     <style name="UrlBar.Tabs" parent="UrlBar.V15.Tabs" />

@@ -53,6 +53,9 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
 
     @Override
     public void refreshUI() {
+        if (getView() == null) {
+            return; //return if view is not inflated yet
+        }
         mTrackerListAdapter.notifyDataSetChanged();
     }
 

@@ -72,6 +72,9 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
 
     @Override
     public void refreshUI() {
+        if (getView() == null) {
+            return; //return if view is not inflated yet
+        }
         mTrackerListAdapter.notifyDataSetChanged();
         shouldShowOverlay();
     }
