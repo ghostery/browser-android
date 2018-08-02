@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,9 +51,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private PieChart mPieChart;
     private TextView mDomainName;
     private TextView mTrackersBlocked;
-    private RelativeLayout mTrustSiteButton;
-    private RelativeLayout mRestrictSiteButton;
-    private RelativeLayout mPauseGhosteryButton;
+    private LinearLayout mTrustSiteButton;
+    private LinearLayout mRestrictSiteButton;
+    private LinearLayout mPauseGhosteryButton;
     private TextView mSmartBlockingCount;
     private TextView mCliqzAttrackCount;
     private TextView mAdBlockCount;
@@ -84,9 +85,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mPieChart = (PieChart) view.findViewById(R.id.cc_donut);
         mDomainName = (TextView) view.findViewById(R.id.cc_domain_name);
         mTrackersBlocked = (TextView) view.findViewById(R.id.cc_trackers_blocked);
-        mTrustSiteButton = (RelativeLayout) view.findViewById(R.id.cc_ghostery_trust_site_button);
-        mRestrictSiteButton = (RelativeLayout) view.findViewById(R.id.cc_ghostery_restrict_site_button);
-        mPauseGhosteryButton = (RelativeLayout) view.findViewById(R.id.cc_ghostery_pause_button);
+        mTrustSiteButton = (LinearLayout) view.findViewById(R.id.cc_ghostery_trust_site_button);
+        mRestrictSiteButton = (LinearLayout) view.findViewById(R.id.cc_ghostery_restrict_site_button);
+        mPauseGhosteryButton = (LinearLayout) view.findViewById(R.id.cc_ghostery_pause_button);
         mAdBlockingSwitch = (SwitchCompat) view.findViewById(R.id.cc_enhanced_blocking_switch);
         mAntiTrackingSwitch = (SwitchCompat) view.findViewById(R.id.cc_enhanced_tracking_switch);
         mSmartBlockingSwitch = (SwitchCompat) view.findViewById(R.id.cc_smart_blocking_switch);
@@ -478,7 +479,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mNotchTitle.setText(R.string.cc_enhanced_options);
     }
 
-    private void styleButton(RelativeLayout button, boolean state) {
+    private void styleButton(ViewGroup button, boolean state) {
         final int textAndIconColor = ContextCompat.getColor(getContext(),
                 state ? android.R.color.white : R.color.cc_text_color);
         final TextView buttonText = (TextView) button.findViewById(R.id.cc_button_text);
