@@ -210,6 +210,9 @@ binaries::
 endif
 
 # Cliqz Start
+ifeq ($(CLIQZ_SEARCH_FLAVOR),ghostery)
+CLIQZ_SEARCH_VERSION := $(GHOSTERY_SEARCH_VERSION)
+endif
 recurse_artifact:
 	$(topsrcdir)/mach --log-no-times artifact install https://repository.cliqz.com/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/cliqz-target.apk
 	$(topsrcdir)/mach --log-no-times artifact install https://repository.cliqz.com/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/target.common.tests.zip

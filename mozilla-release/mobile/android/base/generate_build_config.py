@@ -90,6 +90,7 @@ def _defines():
                 # Cliqz Start
                 'CLIQZ_PRIVACY_VERSION',
                 'CLIQZ_SEARCH_VERSION',
+                'CLIQZ_CHANNEL',
                 # Cliqz End
                 'TARGET_XPCOM_ABI'):
         DEFINES[var] = CONFIG[var]

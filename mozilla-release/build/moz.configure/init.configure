@@ -995,6 +995,7 @@ add_old_configure_assignment('MOZ_BUILD_APP', build_project)
 @depends(check_build_environment, '--help')
 @imports(_from='__builtin__', _import='open')
 @imports('re')
+@imports(_from='os', _import='environ')
 def milestone(build_env, _):
     milestone_path = os.path.join(build_env.topsrcdir,
                                   'config',
@@ -1007,9 +1008,15 @@ def milestone(build_env, _):
                                   'config',
                                   'privacy.txt')
     with open(search_path, 'r') as fh:
-        search = fh.read().strip()
+        search = fh.read().strip().splitlines()
+    search_exts = {'cliqz': "", 'ghostery': ""}
+    for each in search:
+        search_exts[each.split("=")[0]] = each.split("=")[-1]
+
     with open(privacy_path, 'r') as fh:
         privacy = fh.read().strip()
+
+    channel = environ.get('CLIQZ_CHANNEL') or 'MA99'
     # Cliqz End
     with open(milestone_path, 'r') as fh:
         milestone = fh.read().splitlines()[-1]
@@ -1032,15 +1039,19 @@ def milestone(build_env, _):
     # string; as the name suggests, we use it for symbol versioning on Linux.
     return namespace(version=milestone,
                      # Cliqz Start
-                     search=search,
+                     search_cliqz=search_exts['cliqz'],
+                     search_ghostery=search_exts['ghostery'],
                      privacy=privacy,
+                     channel=channel,
                      # Cliqz End
                      uaversion='%s.0' % major_version,
                      symbolversion='%s%s' % (major_version, ab_patch),
                      is_nightly=is_nightly,
                      is_release_or_beta=is_release_or_beta)
 # Cliqz Start
-set_config('CLIQZ_SEARCH_VERSION', milestone.search)
+set_config('CLIQZ_CHANNEL', milestone.channel)
+set_config('CLIQZ_SEARCH_VERSION', milestone.search_cliqz)
+set_config('GHOSTERY_SEARCH_VERSION', milestone.search_ghostery)
 set_config('CLIQZ_PRIVACY_VERSION', milestone.privacy)
 # Cliqz End
 set_config('GRE_MILESTONE', milestone.version)

@@ -1,1 +1,2 @@
-master/1.29.1.1b251.d66aa87
+ghostery=master/1.29.1.1b350.39d890c
+cliqz=master/3.29.1.1b350.39d890c
