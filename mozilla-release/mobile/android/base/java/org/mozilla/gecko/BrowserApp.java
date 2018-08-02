@@ -4144,7 +4144,6 @@ public class BrowserApp extends GeckoApp
     private Drawable resolveBookmarkIconDrawable(final boolean isBookmark, final int tint) {
         if (isBookmark) {
             /* Cliqz Start */
-            //return ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_bookmark_remove, null);
             return VectorDrawableCompat.create(getResources(), R.drawable.ic_menu_bookmark_remove, null);
             /* Cliqz End */
         } else {
