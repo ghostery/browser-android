@@ -82,6 +82,7 @@ def build(Map m){
                         cd mozilla-release
                         ./mach clobber
                         ./mach build
+                        ./mach build chrome-de
                         ./mach package
                     """
                     withCredentials([

@@ -1,0 +1,250 @@
+<!-- Copyright © Cliqz 2018 -->
+<!-- General -->
+<!ENTITY action_ok "OK">
+<!ENTITY action_exit "Beenden">
+
+<!-- Onboarding -->
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
+
+<!-- News -->
+<!ENTITY activity_stream_top_news "Nachrichten">
+
+<!-- Settings -->
+<!-- Human Web -->
+<!ENTITY pref_category_human_web "Human Web">
+<!ENTITY pref_what_is_human_web "Was ist „Human Web“?">
+<!ENTITY pref_enable_human_web "Human Web aktivieren">
+<!ENTITY pref_category_human_web_summary "Was, aktivieren">
+
+<!-- MyOffrz -->
+<!ENTITY myoffrz_title "&brandMyOffrz;">
+<!ENTITY myoffrz_no_offers_msg "Hier finden Sie jede Woche ein neues Angebot">
+<!ENTITY myoffrz_onboarding_description "Attraktive Preisnachlässe und Sonderangebote mit &brandMyOffrz;">
+<!ENTITY myoffrz_order_now_label "Jetzt bestellen!">
+<!ENTITY myoffrz_tap_code_to_copy_label "Code zum Kopieren antippen">
+<!ENTITY myoffrz_terms_and_conditions_label "Bedingungen">
+<!ENTITY myoffrz_message_code_copied "Code kopiert">
+<!ENTITY myoffrz_activation_description "Aktivieren Sie &brandMyOffrz;, um attraktive Preisnachlässe und Sonderangebote zu erhalten.">
+<!ENTITY myoffrz_activate "Aktivieren">
+
+<!-- Block Ads -->
+<!ENTITY pref_category_block_ads "Werbung blockieren (Beta)">
+<!ENTITY pref_category_block_ads_summary "Werbung blockieren, angemessene Blockierung, was ist angemessen?">
+<!ENTITY pref_block_ads "Werbung blockieren">
+<!ENTITY pref_block_ads_fair "Angemessene Blockierung">
+<!ENTITY pref_block_ads_what_fair "Was ist \'angemessen\'">
+<!ENTITY pref_block_ads_fair_description "Der Werbeblocker ist zurzeit in der Beta-Phase. Die endgültige Version wird die folgenden Optionen haben: angemessene Werbung zulassen (Standardeinstellung), alle Werbung blockieren, alle Werbung zulassen. Mehr\nhttps://cliqz.com/whycliqz/adblocking">
+<!ENTITY pref_block_ads_data "Zu beachten: Der Browser muss zuerst einige Datenpakete herunterladen, bevor der Werbeblocker effizient funktionieren kann. Dafür muss die App eine WLAN-Verbindung haben.">
+
+<!-- Rate Us -->
+<!ENTITY pref_category_rate_us "Bewerten Sie uns">
+
+<!-- Cliqz Support -->
+<!ENTITY pref_cliqz_support "FAQs &amp; Support">
+
+<!-- Tips & Tricks -->
+<!ENTITY pref_tips_tricks "Holen Sie das Beste aus &brandShortName; heraus">
+
+<!-- Report Website -->
+<!ENTITY pref_report_website "Website melden">
+
+<!-- Control Center -->
+<!ENTITY cc_title_overview "ÜBERBLICK">
+<!ENTITY cc_title_site_trackers "WEBSITE-TRACKER">
+<!ENTITY cc_title_global_trackers "ALLE TRACKER">
+<!ENTITY cc_zero_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_one_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_two_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_few_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_many_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_other_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_zero_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_one_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_two_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_few_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_many_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_other_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_zero_trackers "&formatD; Tracker">
+<!ENTITY cc_one_trackers "&formatD; Tracker">
+<!ENTITY cc_two_trackers "&formatD; Tracker">
+<!ENTITY cc_few_trackers "&formatD; Tracker">
+<!ENTITY cc_many_trackers "&formatD; Tracker">
+<!ENTITY cc_other_trackers "&formatD; Tracker">
+<!ENTITY cc_trust_site "Website vertrauen">
+<!ENTITY cc_restrict_site "Website nicht vertrauen">
+<!ENTITY cc_pause_ghostery "Ghostery pausieren">
+<!ENTITY cc_resume_ghostery "Ghostery fortsetzen">
+<!ENTITY cc_enhanced_options "Erweiterte Optionen">
+<!ENTITY cc_enhanced_anti_tracking "Verbessertes Anti-Tracking">
+<!ENTITY cc_enhanced_ad_blocking "Erweiterter Werbeblocker">
+<!ENTITY cc_smart_blocking "Smart Blocking">
+<!ENTITY cc_enhanced_anti_tracking_info "Informationen zu erweitertem Anti-Tracking">
+<!ENTITY cc_enhanced_ad_blocking_info "Informationen zu erweiterten Werbeblockern">
+<!ENTITY cc_smart_blocking_info "Informationen zu erweitertem Anti-Tracking">
+<!ENTITY cc_zero_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
+<!ENTITY cc_one_anti_tracking_blocked "Persönlicher Datenpunkt anonymisiert">
+<!ENTITY cc_two_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
+<!ENTITY cc_few_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
+<!ENTITY cc_many_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
+<!ENTITY cc_other_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
+<!ENTITY cc_zero_ad_blocking_blocked "Werbung blockiert">
+<!ENTITY cc_one_ad_blocking_blocked "Werbung blockiert">
+<!ENTITY cc_two_ad_blocking_blocked "Werbung blockiert">
+<!ENTITY cc_few_ad_blocking_blocked "Werbung blockiert">
+<!ENTITY cc_many_ad_blocking_blocked "Werbung blockiert">
+<!ENTITY cc_other_ad_blocking_blocked "Werbung blockiert">
+<!ENTITY cc_zero_smart_blocking_blocked "Tracker angepasst">
+<!ENTITY cc_one_smart_blocking_blocked "Tracker angepasst">
+<!ENTITY cc_two_smart_blocking_blocked "Tracker angepasst">
+<!ENTITY cc_few_smart_blocking_blocked "Tracker angepasst">
+<!ENTITY cc_many_smart_blocking_blocked "Tracker angepasst">
+<!ENTITY cc_other_smart_blocking_blocked "Tracker angepasst">
+<!ENTITY cc_anti_tracking_about "Entsperrte und unbekannte Tracker für besseren Browsing-Schutz anonymisieren">
+<!ENTITY cc_ad_blocking_about "Blockieren von Werbung auf Websites, die Sie besuchen">
+<!ENTITY cc_smart_blocking_about "Tracker automatisch blockieren und entsperren, um die Seitenleistung zu optimieren">
+<!ENTITY cc_site_trackers_list_title "Tracker auf dieser Website">
+<!ENTITY cc_global_trackers_list_title "Tracker über mehrere Websites">
+<!ENTITY cc_reset_settings "Einstellungen zurücksetzen">
+<!ENTITY cc_settings_menu "Menü „Einstellungen“">
+<!ENTITY cc_on_this_site "Auf dieser Website">
+<!ENTITY cc_trackers "TRACKER">
+<!ENTITY cc_blocked "Blockiert">
+<!ENTITY cc_num_blocked "&formatD; BLOCKIERT">
+<!ENTITY cc_tracker_info "Tracker-info">
+<!ENTITY cc_block_all "Alle blockieren">
+<!ENTITY cc_unblock_all "Alle entsperren">
+<!ENTITY cc_block "Blockieren">
+<!ENTITY cc_unblock "Entsperren">
+<!ENTITY cc_trust "Vertrauen">
+<!ENTITY cc_untrust "Nicht vertrauen">
+<!ENTITY cc_restrict "Einschränken">
+<!ENTITY cc_unrestrict "Einschränkung aufheben">
+<!ENTITY cc_toast_overview_restrict "Alle Tracker auf dieser Website blockiert">
+<!ENTITY cc_toast_overview_trust "Alle Tracker auf dieser Website zugelassen">
+<!ENTITY cc_toast_site_trust "Tracker vertrauenswürdig auf dieser Website">
+<!ENTITY cc_toast_site_restrict "Tracker auf dieser Website blockiert">
+<!ENTITY cc_toast_site_block "Tracker auf allen Websites blockiert">
+
+<!-- General Settings - Search-->
+<!ENTITY pref_search_category "Suche">
+<!ENTITY pref_search_regional "Suchergebnisse für">
+<!ENTITY pref_search_regional_germany "Deutschland">
+<!ENTITY pref_search_regional_france "Frankreich">
+<!ENTITY pref_search_regional_usa "Vereinigte Staaten">
+<!ENTITY pref_search_regional_spain "Spanien">
+<!ENTITY pref_search_regional_italy "Italien">
+<!ENTITY pref_search_regional_uk "Vereinigtes Königreich">
+<!ENTITY pref_search_query_suggestions "Vorschläge zur Suchanfrage">
+<!ENTITY pref_search_block_adult_content "Anstößige Inhalte blockieren">
+<!ENTITY pref_search_auto_completion "Autovervollständigung aktivieren">
+<!ENTITY pref_search_complementary_engine "Ergänzende Suchmaschine">
+<!ENTITY pref_search_complementary_engine_Google "Google">
+<!ENTITY pref_search_complementary_engine_bing "bing">
+<!ENTITY pref_search_complementary_engine_yahoo "yahoo">
+<!ENTITY pref_search_complementary_engine_duck "DuckDuckGo">
+<!ENTITY pref_search_complementary_engine_ecosia "Ecosia">
+<!ENTITY pref_search_complementary_engine_start_page "Startseite">
+<!ENTITY pref_search_complementary_engine_qwant "Qwant">
+<!ENTITY pref_search_enable_browser_quicksearch "Schnellsuche aktivieren">
+<!ENTITY pref_search_enable_browser_quicksearch_summary "Sofortige Ergebnisse beim Tippen">
+
+<!-- General Settings - Browsing -->
+<!ENTITY pref_browsing_category "Browsen">
+
+<!-- General Settings - CliqzTab -->
+<!ENTITY pref_category_general_summary4 "Suche, &pref_new_tab_category;, Browsen, Benachrichtigungen, Download, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_background "Hintergrundbild zeigen">
+<!ENTITY pref_cliqz_tab_topsites "Am meisten besuchte Websites zeigen">
+<!ENTITY pref_cliqz_tab_news "Neuigkeiten zeigen">
+<!ENTITY pref_cliqz_tab_restore_top_sites "Am meisten besuchte Websites wiederherstellen">
+<!ENTITY pref_cliqz_tab_restore_top_sites_description "Die Startseite zeigt die am meisten besuchten Websites noch einmal">
+
+<!-- General Settings - myOffrz -->
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "&brandMyOffrz; zeigen">
+<!ENTITY pref_about_myoffrz "Über &brandMyOffrz;">
+
+<!-- General Settings - Subscriptions and Notifications -->
+<!ENTITY pref_subscriptions_notifications_category "Abonnements und Benachrichtigungen">
+<!ENTITY pref_news_notifications "Benachrichtigungen zu Neuigkeiten">
+<!ENTITY pref_reset_subscriptions "Alle Abonnements zurücksetzen">
+<!ENTITY pref_reset_subscriptions_description "Möchten Sie alle Ihre Abonnements zurücksetzen (z. B. auf Bundesligaspiele)?">
+<!ENTITY pref_reset_subscriptions_toast "Zurücksetzen aller Abonnements">
+
+<!-- Privacy Settings -->
+<!ENTITY pref_privacy_clear_data_category "Daten löschen">
+<!ENTITY pref_privacy_clear_favorites "Favoriten löschen">
+<!ENTITY pref_privacy_clear_favorites_description "Sollen Favoriten gelöscht werden?">
+<!ENTITY pref_category_ghostery_control_center "Ghostery-Steuerzentrale">
+<!ENTITY pref_ghostery_auto_update_title "Tracker-Bibliothek automatisch aktualisieren">
+<!ENTITY pref_ghostery_allow_first_party_title "Von Websitebesitzern erstellte Tracker zulassen">
+<!ENTITY pref_ghostery_allow_first_party_summary "Wenn zum Beispiel ein Facebook-Tracker auf facebook.com blockiert wird, kann die Website unbenutzbar werden">
+<!ENTITY pref_ghostery_block_new_trackers_title "Neue Tracker blockieren">
+<!ENTITY pref_ghostery_block_new_trackers_summary "Neue, zu Ghostery hinzugefügte Tracker werden standardmäßig blockiert">
+<!ENTITY pref_location_permission_title "Standortgenehmigungen">
+
+<!-- General Settings - Download Options -->
+<!ENTITY pref_download_options_category "Download-Optionen">
+<!ENTITY pref_limit_data_usage "Mobile Datennutzung einschränken">
+<!ENTITY pref_limit_data_usage_summary "Nur Videos auf WLAN herunterladen">
+
+<!-- General Settings - Show hints -->
+<!ENTITY pref_show_hints "Hinweise zeigen">
+
+<!-- Privacy Settings - Browsing -->
+<!ENTITY pref_privacy_browsing_category "Browsen">
+<!ENTITY pref_privacy_antitracking "Anti-Tracking">
+<!ENTITY pref_privacy_auto_forget_tab "Tab „Automatisch vergessen“">
+
+<!-- Help Settings -->
+<!ENTITY pref_category_help "Hilfe">
+<!ENTITY pref_category_help_summary "Das Beste von &brandShortName;, FAQ, Website melden">
+
+<!-- About Settings -->
+<!ENTITY pref_category_about_us "Über uns">
+<!ENTITY pref_category_about_us_summary
+    "App-Version, Erweiterungsversion, Richtlinien und Zulassungen, Imprint">
+<!ENTITY pref_app_version "Anwendungsversion">
+<!ENTITY pref_about_arn "Gerät ARN">
+<!ENTITY pref_extension_version "Erweiterungsversion">
+<!ENTITY pref_category_policies_licenses "Richtlinien und Zulassungen">
+<!ENTITY pref_about_privacy_policy "Datenschutzrichtlinie">
+<!ENTITY pref_about_eula "EULA">
+<!ENTITY pref_about_android_open_source_project "Android Open-Source-Projekt">
+<!ENTITY pref_about_android_open_source_project_summary "Apache License 2.0">
+<!ENTITY pref_about_hp_hosts_ad_server "hpHosts Ad-Server-Liste">
+<!ENTITY pref_about_hp_hosts_ad_server_summary "Freeware">
+<!ENTITY pref_about_crux "Crux">
+<!ENTITY pref_about_crux_summary "Apache License 2.0">
+<!ENTITY pref_about_imprint "Imprint">
+
+<!-- Specific browser subtext -->
+<!ENTITY firstrun_urlbar_subtext2_cliqz "Cliqz – ein schneller und persönlicher Browser. Made in Germany">
+<!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery – für einfacheres, schnelleres und sichereres Browsen">
+
+<!-- Ghostery onboarding -->
+<!ENTITY ghostery_onboarding_new_users_title "Einführung von &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_text "Für einfacheres, schnelleres und sichereres Browsen. Durch Verwendung dieser App stimmen Sie der Datenschutzrichtlinie von &brandShortName; zu">
+<!ENTITY ghostery_onboarding_old_users_title "Einführung des neuen &brandShortName;">
+<!ENTITY ghostery_onboarding_old_users_text "Unterstützen Sie &brandShortName; durch Teilnahme an &brandMyOffrz; und geben Sie Daten zum Human Web und Analysedaten frei. Weitere Informationen">
+<!ENTITY ghostery_onboarding_tracking_protection_title "Tracking-Schutz aktiviert">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Intelligenteres Browsen mit unseren Tracking-Schutzfunktionen. Sie können sie in der &brandShortName;-Steuerzentrale abschalten.">
+<!ENTITY ghostery_onboarding_quick_search_title "Schnellsuche">
+<!ENTITY ghostery_onboarding_quick_search_text "Zum Einsparen von Zeit und Datenvolumen: Quick Search zeigt Ihnen sofort wichtige Ergebnisse, während Sie tippen.">
+<!ENTITY ghostery_onboarding_new_tab_title "Neuer Tab">
+<!ENTITY ghostery_onboarding_new_tab_text "Jeder neue Tab enthält Top-Websites, Nachrichten und ein Hintergrundbild. Sie können ihn nach Bedarf anpassen.">
+<!ENTITY ghostery_onboarding_action_button "Browsen beginnen">
+<!ENTITY ghostery_onboarding_contextual_title "Tracking-Schutz aktiviert">
+<!ENTITY ghostery_onboarding_contextual_item1_title "Verbessertes Anti-Tracking">
+<!ENTITY ghostery_onboarding_contextual_item1_text "Zusätzlicher Schutz Ihrer persönlichen Daten">
+<!ENTITY ghostery_onboarding_contextual_item2_title "Smart Blocking &amp; Werbeblocker">
+<!ENTITY ghostery_onboarding_contextual_item2_text "Optimiert die Leistung während des Browsens">
+<!ENTITY ghostery_onboarding_contextual_text "Sie können diese Funktionen jederzeit in der &brandShortName;-Steuerzentrale aktivieren oder deaktivieren.">
+<!ENTITY ghostery_onboarding_contextual_button "Jetzt zeigen">
+
+<!-- Ghost Tab -->
+<!ENTITY new_ghost_tab_opened "Neuer Ghost-Tab geöffnet">
+<!ENTITY new_ghost_tab "Neuer Ghost-Tab">
+<!ENTITY close_ghost_tabs "Ghost-Tabs schließen">
+<!ENTITY contextmenu_open_ghost_tab "In Ghost-Tab öffnen">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &formatS1;neuen Ghost-Tabs&formatS2; wird Ihr Verlauf nicht gespeichert.">
