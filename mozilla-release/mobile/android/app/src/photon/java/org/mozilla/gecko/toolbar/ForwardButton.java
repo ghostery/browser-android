@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
 
+import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.lwt.LightweightTheme;
 
@@ -22,7 +23,6 @@ public class ForwardButton extends NavButton {
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
-
         mPath.reset();
         mPath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
 
