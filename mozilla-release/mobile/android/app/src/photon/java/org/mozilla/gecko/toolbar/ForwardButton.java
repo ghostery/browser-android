@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
 
-import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.lwt.LightweightTheme;
 
