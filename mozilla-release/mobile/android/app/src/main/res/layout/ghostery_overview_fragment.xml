@@ -51,6 +51,7 @@
             android:layout_marginBottom="60dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/cc_button_background_white"
+            android:gravity="center_horizontal"
             android:padding="8dp">
 
             <TextView
@@ -84,6 +85,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
             android:background="@drawable/cc_button_background_white"
+            android:gravity="center_horizontal"
             android:padding="8dp">
 
             <TextView
@@ -117,6 +119,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
             android:background="@drawable/cc_button_background_white"
+            android:gravity="center_horizontal"
             android:padding="8dp">
 
             <TextView
