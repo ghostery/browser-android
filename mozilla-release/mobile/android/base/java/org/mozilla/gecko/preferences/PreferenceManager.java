@@ -3,7 +3,13 @@ package org.mozilla.gecko.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+
+import org.mozilla.gecko.BrowserLocaleManager;
 import org.mozilla.gecko.GeckoSharedPrefs;
+import org.mozilla.gecko.LocaleManager;
+
+import java.util.Locale;
+
 import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
 
 /**
@@ -91,5 +97,15 @@ public class PreferenceManager {
 
     public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
         mAppSharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    public boolean isQuerySuggestionsEnabled(){
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SEARCH_QUERY_SUGGESTIONS,
+                true);
+    }
+
+    public String getSearchRegional(Context context){
+        return mAppSharedPreferences.getString(GeckoPreferences.PREFS_SEARCH_REGIONAL,new
+                Countries(context).getDefaultCountryCode());
     }
 }
