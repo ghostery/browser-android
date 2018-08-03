@@ -46,7 +46,7 @@
         android:layout_gravity="center_vertical"
         android:background="@drawable/url_bar_forward_button"
         android:contentDescription="@string/forward"
-        android:src="@drawable/ic_menu_forward"/>
+        gecko:srcCompat="@drawable/ic_menu_forward"/>
     <!-- Cliqz end -->
 
     <org.mozilla.gecko.toolbar.ToolbarEditLayout
@@ -76,7 +76,6 @@
         android:layout_centerVertical="true"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:src="@drawable/ic_ghosty"
         android:background="@drawable/url_bar_action_button"
         android:gravity="center_horizontal"
         gecko:drawableTintList="@color/url_bar_image_color"/>
