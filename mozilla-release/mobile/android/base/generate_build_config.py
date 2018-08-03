@@ -89,7 +89,9 @@ def _defines():
                 'OS_TARGET',
                 # Cliqz Start
                 'CLIQZ_PRIVACY_VERSION',
+                'CLIQZ_PRIVACY_LINK',
                 'CLIQZ_SEARCH_VERSION',
+                'CLIQZ_SEARCH_LINK',
                 'CLIQZ_CHANNEL',
                 # Cliqz End
                 'TARGET_XPCOM_ABI'):

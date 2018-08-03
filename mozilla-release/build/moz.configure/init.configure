@@ -995,29 +995,10 @@ add_old_configure_assignment('MOZ_BUILD_APP', build_project)
 @depends(check_build_environment, '--help')
 @imports(_from='__builtin__', _import='open')
 @imports('re')
-@imports(_from='os', _import='environ')
 def milestone(build_env, _):
     milestone_path = os.path.join(build_env.topsrcdir,
                                   'config',
                                   'milestone.txt')
-    # Cliqz Start
-    search_path = os.path.join(build_env.topsrcdir,
-                                  'config',
-                                  'search.txt')
-    privacy_path = os.path.join(build_env.topsrcdir,
-                                  'config',
-                                  'privacy.txt')
-    with open(search_path, 'r') as fh:
-        search = fh.read().strip().splitlines()
-    search_exts = {'cliqz': "", 'ghostery': ""}
-    for each in search:
-        search_exts[each.split("=")[0]] = each.split("=")[-1]
-
-    with open(privacy_path, 'r') as fh:
-        privacy = fh.read().strip()
-
-    channel = environ.get('CLIQZ_CHANNEL') or 'MA99'
-    # Cliqz End
     with open(milestone_path, 'r') as fh:
         milestone = fh.read().splitlines()[-1]
 
@@ -1038,22 +1019,65 @@ def milestone(build_env, _):
     # Only expose major milestone and alpha version in the symbolversion
     # string; as the name suggests, we use it for symbol versioning on Linux.
     return namespace(version=milestone,
-                     # Cliqz Start
-                     search_cliqz=search_exts['cliqz'],
-                     search_ghostery=search_exts['ghostery'],
-                     privacy=privacy,
-                     channel=channel,
-                     # Cliqz End
                      uaversion='%s.0' % major_version,
                      symbolversion='%s%s' % (major_version, ab_patch),
                      is_nightly=is_nightly,
                      is_release_or_beta=is_release_or_beta)
+
 # Cliqz Start
-set_config('CLIQZ_CHANNEL', milestone.channel)
-set_config('CLIQZ_SEARCH_VERSION', milestone.search_cliqz)
-set_config('GHOSTERY_SEARCH_VERSION', milestone.search_ghostery)
-set_config('CLIQZ_PRIVACY_VERSION', milestone.privacy)
+# Also set the Extension Details.
+# CLIQZ_CHANNEL, CLIQZ_SEARCH_VERSION, CLIQZ_PRIVACY_VERSION,
+# CLIQZ_SEARCH_LINK, CLIQZ_PRIVACY_LINK
+@depends(check_build_environment, '--help')
+@imports(_from='__builtin__', _import='open')
+@imports(_from='os', _import='environ')
+def cliqz_extentions(build_env, _):
+    search_path = os.path.join(build_env.topsrcdir,
+                                  'config',
+                                  'search.txt')
+    privacy_path = os.path.join(build_env.topsrcdir,
+                                  'config',
+                                  'privacy.txt')
+    test_path = os.path.join(build_env.topsrcdir,
+                                  'config',
+                                  'testFile.txt')
+    with open(search_path, 'r') as fh:
+        search = fh.read().strip().splitlines()
+    search_exts = {'cliqz': "", 'ghostery': ""}
+    for each in search:
+        search_exts[each.split("=")[0]] = each.split("=")[-1]
+    if "ghostery" in build_env.dist:
+        search_link = environ.get('SEARCH_EXT') or search_exts['ghostery']
+    else:
+        search_link = environ.get('SEARCH_EXT') or search_exts['cliqz']
+    try:
+        search_version = search_link.split("/")[-1][:-4]
+    except:
+        search_version = "debug_ver"
+
+    with open(privacy_path, 'r') as fh:
+        privacy_link = fh.read().strip()
+    privacy_link = environ.get('PRIVACY_EXT') or privacy_link
+    try:
+        privacy_version = (privacy_link.split("/")[-1][:-4]).split("-")[1]
+    except:
+        privacy_version = "debug_ver"
+
+    channel = environ.get('CLIQZ_CHANNEL') or 'MA99'
+
+    return namespace(search_link=search_link,
+                     search_version=search_version,
+                     privacy_link=privacy_link,
+                     privacy_version=privacy_version,
+                     channel=channel)
+
+set_config('CLIQZ_CHANNEL', cliqz_extentions.channel)
+set_config('CLIQZ_SEARCH_VERSION', cliqz_extentions.search_version)
+set_config('CLIQZ_SEARCH_LINK', cliqz_extentions.search_link)
+set_config('CLIQZ_PRIVACY_VERSION', cliqz_extentions.privacy_version)
+set_config('CLIQZ_PRIVACY_LINK', cliqz_extentions.privacy_link)
 # Cliqz End
+
 set_config('GRE_MILESTONE', milestone.version)
 set_config('NIGHTLY_BUILD', milestone.is_nightly)
 set_define('NIGHTLY_BUILD', milestone.is_nightly)

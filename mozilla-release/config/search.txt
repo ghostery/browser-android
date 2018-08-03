@@ -1,2 +1,2 @@
-ghostery=master/1.29.1.1b350.39d890c
-cliqz=master/3.29.1.1b350.39d890c
+ghostery=https://s3.amazonaws.com/cdncliqz/update/edge/ghostery-android/master/1.29.1.1b350.39d890c.zip
+cliqz=https://s3.amazonaws.com/cdncliqz/update/edge/cliqz-android/master/3.29.1.1b350.39d890c.zip
