@@ -22,7 +22,6 @@ public class ForwardButton extends NavButton {
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
-
         mPath.reset();
         mPath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
 

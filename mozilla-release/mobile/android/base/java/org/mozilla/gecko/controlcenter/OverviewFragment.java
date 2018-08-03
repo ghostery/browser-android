@@ -122,9 +122,11 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         return context.getString(R.string.cc_title_overview);
     }
 
-
     @Override
     public void updateUI(GeckoBundle controlCenterSettingsData) {
+        if (getView() == null) {
+            return; //return if view is not inflated yet
+        }
         this.controlCenterSettingsData = controlCenterSettingsData;
         final int allowedTrackers = safeGetInt(controlCenterSettingsData, "data/summary/trackerCounts/allowed");
         final int blockedTrackers = calculateBlockedTrackers();
