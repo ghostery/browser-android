@@ -8,6 +8,8 @@ package org.mozilla.gecko.toolbar;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -126,7 +128,8 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
     public boolean addActionItem(final View actionItem) {
         if (actionItem instanceof MenuItemActionBar) {
             final MenuItemActionBar itemActionBar = (MenuItemActionBar) actionItem;
-            itemActionBar.setImageTintList(ColorStateList.valueOf(Color.WHITE));
+            itemActionBar.setColorFilter(ContextCompat.getColor(getContext(), android.R.color.white),
+                    PorterDuff.Mode.SRC_ATOP);
         }
         actionItemBar.addView(actionItem, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         return true;
@@ -146,7 +149,7 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
     @Override
     public void refresh() {
         super.refresh();
-        forwardButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_forward));
+        forwardButton.setImageResource(R.drawable.ic_menu_forward);
         backButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_back));
     }
 
