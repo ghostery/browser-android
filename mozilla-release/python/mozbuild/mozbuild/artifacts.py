@@ -1041,7 +1041,15 @@ class Artifacts(object):
                 'destn': destn
             },
             'Adding {filename} to {destn}')
-        shutil.copy(filename, destn)
+        if filename == destn:
+            self.log(logging.INFO, 'artifact',
+            {
+                'filename': filename,
+                'destn': destn
+            },
+            'Both {filename} & {destn} are Same. Skipping Copy.')
+        else:
+            shutil.copy(filename, destn)
         os.remove(filename)
 
     def add_from_url(self, url, destn):
