@@ -87,6 +87,7 @@ node('master') {
                         set -e
                         set -x
                         cd mozilla-release/mobile/android
+                        mv fastlane/Appfile.ghostery fastlane/Appfile
                         fastlane alpha
                     '''
                 }
