@@ -10,14 +10,11 @@
 <!ENTITY  brandPocket     "Pocket">
 <!ENTITY  firstrun_urlbar_subtext "Ghostery - keep your browsing cleaner, faster and safer">
 <!ENTITY  pref_new_tab_category "Start Tab">
-<!ENTITY  pref_human_web_url "https://cliqz.com/whycliqz/human-web">
-<!ENTITY  pref_cliqz_support_url "https://cliqz.com/support">
-<!ENTITY  pref_tips_tricks_url "https://cliqz.com/tips-android">
+<!ENTITY  pref_human_web_url "https://www.ghostery.com/faqs/what-is-ghostery-rewards/">
+<!ENTITY  pref_cliqz_support_url "https://ghostery.zendesk.com/hc/en-us/requests/new">
+<!ENTITY  pref_tips_tricks_url "https://www.ghostery.com/">
 <!ENTITY  pref_report_website_url "https://cliqz.com/report-url">
 <!ENTITY  pref_myoffrz_url "https://www.ghostery.com/faqs/what-is-ghostery-rewards/">
 <!ENTITY  pref_privacy_policy_url "https://cliqz.com/privacy-browser">
 <!ENTITY  pref_eula_url "https://www.ghostery.com/about-ghostery/mobile-browser-end-user-license-agreement/">
-<!ENTITY  pref_apache_url "http://www.apache.org/licenses/LICENSE-2.0">
-<!ENTITY  pref_hp_hosts_url "http://hosts-file.net/">
-<!ENTITY  pref_crux_url "https://github.com/chimbori/crux/blob/master/LICENSE.txt">
-<!ENTITY  pref_imprint_url "https://cliqz.com/legal">
+<!ENTITY  pref_imprint_url "https://www.ghostery.com/about-ghostery/">
