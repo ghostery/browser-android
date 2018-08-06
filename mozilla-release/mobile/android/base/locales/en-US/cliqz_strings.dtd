@@ -194,12 +194,12 @@
 <!ENTITY pref_show_myoffrz "Show &brandMyOffrz;">
 <!ENTITY pref_about_myoffrz "About &brandMyOffrz;">
 
-<!-- General Settings - Subscriptions and Notifications -->
+<!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
 <!ENTITY pref_news_notifications "News notifications">
 <!ENTITY pref_reset_subscriptions "Reset all subscriptions">
 <!ENTITY pref_reset_subscriptions_description "Would you like to reset all your subscriptions (e.g. to Bundesliga games)?">
-<!ENTITY pref_reset_subscriptions_toast "All subscriptions reset">
+<!ENTITY pref_reset_subscriptions_toast "All subscriptions reset"> -->
 
 <!-- Privacy Settings -->
 <!ENTITY pref_privacy_clear_data_category "Clear Data">
