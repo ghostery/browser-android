@@ -9,7 +9,7 @@ def matrix = [
     'ghostery':[
         'bundleid': 'com.ghostery.android.ghostery',
         'target': 'i386-linux-android',
-        'test': false,
+        'test': true,
     ],
     'cliqz-alpha':[
         'bundleid': 'com.cliqz.browser.alpha',
