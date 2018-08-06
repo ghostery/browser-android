@@ -1041,15 +1041,23 @@ class Artifacts(object):
                 'destn': destn
             },
             'Adding {filename} to {destn}')
-        shutil.copy(filename, destn)
-        os.remove(filename)
+        if filename == destn:
+            self.log(logging.INFO, 'artifact',
+            {
+                'filename': filename,
+                'destn': destn
+            },
+            'Both {filename} & {destn} are Same. Skipping Copy.')
+        else:
+            shutil.copy(filename, destn)
 
     def add_from_url(self, url, destn):
         self.log(logging.INFO, 'artifact',
             {'url': url},
             'Adding from {url}')
         filename = self._artifact_cache.fetch(url)
-        return self.store_to_filepath(filename, destn)
+        self.store_to_filepath(filename, destn)
+        os.remove(filename)
     #Cliqz end
 
     def install_from_file(self, filename, distdir):
