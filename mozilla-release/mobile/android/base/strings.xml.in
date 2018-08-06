@@ -921,9 +921,6 @@
   <string name="pref_about_imprint">&pref_about_imprint;</string>
   <string name="pref_privacy_policy_url">&pref_privacy_policy_url;</string>
   <string name="pref_eula_url">&pref_eula_url;</string>
-  <string name="pref_apache_url">&pref_apache_url;</string>
-  <string name="pref_hp_hosts_url">&pref_hp_hosts_url;</string>
-  <string name="pref_crux_url">&pref_crux_url;</string>
   <string name="pref_imprint_url">&pref_imprint_url;</string>
 
   <!-- Onboarding -->
