@@ -17,7 +17,4 @@
 <!ENTITY  pref_myoffrz_url "https://cliqz.com/myoffrz">
 <!ENTITY  pref_privacy_policy_url "https://cliqz.com/privacy-browser">
 <!ENTITY  pref_eula_url "https://www.example.com">
-<!ENTITY  pref_apache_url "http://www.apache.org/licenses/LICENSE-2.0">
-<!ENTITY  pref_hp_hosts_url "http://hosts-file.net/">
-<!ENTITY  pref_crux_url "https://github.com/chimbori/crux/blob/master/LICENSE.txt">
 <!ENTITY  pref_imprint_url "https://cliqz.com/legal">

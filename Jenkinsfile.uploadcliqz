@@ -15,7 +15,7 @@ node('master') {
     baseImage.inside() {
         try {
             stage('Build and Signs APKS') {
-                withEnv(['ANDROID_TARGET=i386-linux-android', 'BRAND=cliqz']) {
+                withEnv(['ANDROID_TARGET=i386-linux-android', 'BRAND=cliqz', 'CLIQZ_CHANNEL=MA00']) {
                     sh '''#!/bin/bash -l
                         set -e
                         set -x
@@ -46,7 +46,7 @@ node('master') {
                         cp ${apkPath} mozilla-release/mobile/android/x86.apk
                     """
                 }
-                withEnv(['ANDROID_TARGET=arm-linux-androideabi', 'BRAND=cliqz']) {
+                withEnv(['ANDROID_TARGET=arm-linux-androideabi', 'BRAND=cliqz', 'CLIQZ_CHANNEL=MA00']) {
                     sh '''#!/bin/bash -l
                         set -e
                         set -x
@@ -87,6 +87,7 @@ node('master') {
                         set -e
                         set -x
                         cd mozilla-release/mobile/android
+                        mv fastlane/Appfile.cliqz fastlane/Appfile
                         fastlane alpha
                     '''
                 }
