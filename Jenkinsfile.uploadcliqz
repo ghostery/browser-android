@@ -1,0 +1,106 @@
+#!/bin/env groovy
+
+node('master') {
+    
+    def dockerTag = ""
+    
+    stage('Checkout') {
+        checkout scm
+        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
+    }
+    def baseImageName = "browser-f/android:${dockerTag}"
+    baseImage = stage('Build base image') {
+        docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
+    }
+    baseImage.inside() {
+        try {
+            stage('Build and Signs APKS') {
+                withEnv(['ANDROID_TARGET=i386-linux-android', 'BRAND=cliqz', 'CLIQZ_CHANNEL=MA00']) {
+                    sh '''#!/bin/bash -l
+                        set -e
+                        set -x
+                        cd mozilla-release
+                        cp ../mozconfigs/jenkins.mozconfig mozconfig
+                        ./mach clobber
+                        ./mach build
+                        ./mach package
+                    '''
+                    withCredentials([
+                            file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
+                            string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
+                    ]) {
+                        sh """#!/bin/bash -l
+                            set -e
+                            set -x
+                            cd mozilla-release
+                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                        """
+                    }
+                    apk = sh(returnStdout: true,
+                        script: """cd mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
+                        find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
+                    def apkPath = "mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                    sh """#!/bin/bash -l
+                        set -e
+                        set -x
+                        cp ${apkPath} mozilla-release/mobile/android/x86.apk
+                    """
+                }
+                withEnv(['ANDROID_TARGET=arm-linux-androideabi', 'BRAND=cliqz', 'CLIQZ_CHANNEL=MA00']) {
+                    sh '''#!/bin/bash -l
+                        set -e
+                        set -x
+                        cd mozilla-release
+                        cp ../mozconfigs/jenkins.mozconfig mozconfig
+                        ./mach clobber
+                        ./mach build
+                        ./mach package
+                    '''
+                     withCredentials([
+                            file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
+                            string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
+                    ]) {
+                        sh """#!/bin/bash -l
+                            set -e
+                            set -x
+                            cd mozilla-release
+                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                        """
+                    }
+                    apk = sh(returnStdout: true,
+                        script: """cd mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
+                        find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
+                    def apkPath = "mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                    sh """#!/bin/bash -l
+                        set -e
+                        set -x
+                        cp ${apkPath} mozilla-release/mobile/android/arm.apk
+                    """
+                }
+            }
+            stage('Upload') {
+                withCredentials([
+                    file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH'),
+                    string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS'),
+                    file(credentialsId: '2939d2e1-dd9a-4097-adc2-430e3d67157a', variable: 'PLAY_STORE_CERT')]) {
+                    sh '''#!/bin/bash -l
+                        set -e
+                        set -x
+                        cd mozilla-release/mobile/android
+                        mv fastlane/Appfile.cliqz fastlane/Appfile
+                        fastlane alpha
+                    '''
+                }
+            }
+        }
+        finally {
+            stage('Clean Up') {
+                sh '''#!/bin/bash -l
+                    rm -f mozilla-release/mozconfig
+                    rm -rf mozilla-release/objdir-frontend-android
+                    rm -f mozilla-release/mobile/android/*.apk
+                '''
+            }
+        }
+    }
+}

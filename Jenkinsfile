@@ -1,27 +1,32 @@
 #!/bin/env groovy
 @Library('cliqz-shared-library@v1.2') _
 def matrix = [
-        'cliqz':[
-            'target': 'i386-linux-android',
-            'test': true,
-        ],
-        'ghostery':[
-            'target': 'arm-linux-androideabi',
-            'test': false,
-        ],
-        'cliqz-alpha':[
-            'target': 'arm-linux-androideabi',
-            'test': false,
-        ],
-        'ghostery-alpha':[
-            'target': 'arm-linux-androideabi',
-            'test': false,
-        ],
-    ]
+    'cliqz':[
+        'bundleid': 'com.cliqz.browser',
+        'target': 'i386-linux-android',
+        'test': true,
+    ],
+    'ghostery':[
+        'bundleid': 'com.ghostery.android.ghostery',
+        'target': 'i386-linux-android',
+        'test': false,
+    ],
+    'cliqz-alpha':[
+        'bundleid': 'com.cliqz.browser.alpha',
+        'target': 'arm-linux-androideabi',
+        'test': false,
+    ],
+    'ghostery-alpha':[
+        'bundleid': 'com.ghostery.android.alpha',
+        'target': 'arm-linux-androideabi',
+        'test': false,
+    ],
+]
 
 def build(Map m){
     def androidtarget = m.target
     def flavorname = m.name
+    def bundleid = m.bundleid
     def nodeLabel = 'us-east-1 && ubuntu && docker && !gpu'
     def test = m.test
     return {
@@ -123,7 +128,7 @@ def build(Map m){
                                     "deviceName=127.0.0.1:5556",
                                     "MODULE=testCompleteSuite",
                                     "TEST=CompleteSuite",
-                                    "appPackage=com.cliqz.browser",
+                                    "appPackage=${bundleid}",
                                     "appActivity=org.mozilla.gecko.LauncherActivity",
                                     "TEST_TYPE=smoke"
                                     ]) {
@@ -184,6 +189,7 @@ def build(Map m){
 def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
     [("Building ${it[0]}"):build(
         name: it[0],
+        bundleid: it[1]['bundleid'],
         target:it[1]['target'],
         test:it[1]['test']
     )]

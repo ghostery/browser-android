@@ -42,107 +42,101 @@
             android:textSize="20sp"
             tools:text="11 trackers blocked" />
 
-        <RelativeLayout
-            android:id="@+id/cc_ghostery_pause_button"
-            android:layout_width="@dimen/ghostery_overview_button_width"
+        <LinearLayout
+            android:id="@+id/cc_ghostery_trust_site_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@id/cc_trackers_blocked"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
-            android:layout_marginTop="20dp"
+            android:layout_centerInParent="true"
+            android:layout_margin="5dp"
             android:background="@drawable/cc_button_background_white"
-            android:gravity="center_horizontal"
+            android:gravity="center"
+            android:minWidth="@dimen/ghostery_overview_button_width"
+            android:orientation="horizontal"
             android:padding="8dp">
-
-            <TextView
-                android:id="@+id/cc_button_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/cc_pause_ghostery"
-                android:textColor="@color/cc_text_color"
-                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/cc_button_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignBottom="@id/cc_button_text"
-                android:layout_alignTop="@id/cc_button_text"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/cc_button_text"
-                android:layout_toStartOf="@id/cc_button_text"
-                app:srcCompat="@drawable/cc_ic_pause"
-                tools:ignore="ContentDescription" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/cc_ghostery_restrict_site_button"
-            android:layout_width="@dimen/ghostery_overview_button_width"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/cc_ghostery_pause_button"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/cc_button_background_white"
-            android:gravity="center_horizontal"
-            android:padding="8dp">
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_trust_site"
+                tools:ignore="contentDescription" />
 
             <TextView
                 android:id="@+id/cc_button_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/cc_restrict_site"
-                android:textColor="@color/cc_text_color"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:id="@+id/cc_button_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/cc_button_text"
-                android:layout_alignTop="@id/cc_button_text"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/cc_button_text"
-                android:layout_toStartOf="@id/cc_button_text"
-                app:srcCompat="@drawable/cc_ic_restrict"
-                tools:ignore="ContentDescription" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/cc_ghostery_trust_site_button"
-            android:layout_width="@dimen/ghostery_overview_button_width"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/cc_ghostery_restrict_site_button"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/cc_button_background_white"
-            android:gravity="center_horizontal"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/cc_button_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
                 android:text="@string/cc_trust_site"
                 android:textColor="@color/cc_text_color"
                 android:textSize="16sp" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cc_ghostery_restrict_site_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cc_ghostery_trust_site_button"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/cc_button_background_white"
+            android:gravity="center"
+            android:minWidth="@dimen/ghostery_overview_button_width"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
             <ImageView
                 android:id="@+id/cc_button_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignBottom="@id/cc_button_text"
-                android:layout_alignTop="@id/cc_button_text"
-                android:layout_toLeftOf="@id/cc_button_text"
-                android:layout_toStartOf="@id/cc_button_text"
-                app:srcCompat="@drawable/ic_trust_site"
-                tools:ignore="contentDescription" />
+                app:srcCompat="@drawable/cc_ic_restrict"
+                tools:ignore="ContentDescription" />
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/cc_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/cc_restrict_site"
+                android:textColor="@color/cc_text_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cc_ghostery_pause_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cc_ghostery_restrict_site_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/cc_button_background_white"
+            android:gravity="center"
+            android:minWidth="@dimen/ghostery_overview_button_width"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/cc_button_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/cc_ic_pause"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/cc_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/cc_pause_ghostery"
+                android:textColor="@color/cc_text_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -212,8 +206,8 @@
                     android:layout_toRightOf="@id/cc_info_view_icon"
                     android:paddingLeft="10dp"
                     android:paddingStart="10dp"
-                    android:textSize="30dp"
-                    android:textColor="@color/general_blue_color"/>
+                    android:textColor="@color/general_blue_color"
+                    android:textSize="30dp"/>
 
                 <TextView
                     android:id="@+id/cc_info_view_title"
@@ -229,8 +223,8 @@
                     android:id="@+id/cc_info_view_summary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@id/cc_info_view_title"
+                    android:layout_centerHorizontal="true"
                     android:padding="10dp" />
 
             </RelativeLayout>
