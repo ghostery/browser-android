@@ -6364,6 +6364,8 @@ var Cliqz = {
   init: function () {
     this.callbacks = Object.create(null);
     this.messageId = 1;
+    this.extensionMessageQueue = [];
+    this.searchExtensionReady = false;
     GlobalEventDispatcher.registerListener(this, [
       "Search:GetStatus",
       "Search:Hide",
@@ -6442,6 +6444,10 @@ var Cliqz = {
     return Cliqz._messageExtension("firefox@ghostery.com", msg);
   },
   messageSearchExtension(msg) {
+    if (!this.searchExtensionReady) {
+      this.extensionMessageQueue.push(msg);
+      return;
+    }
     msg.source = "ANDROID_BROWSER";
     return Cliqz._messageExtension("android@cliqz.com", msg, {
       senderOptions: {
@@ -6508,6 +6514,14 @@ var Cliqz = {
         break;
       case "getInstallDate":
         return Services.prefs.getCharPref("android.not_a_preference.browser.install.date", "16917");
+      case "ready":
+        if (this.searchExtensionReady) {
+          return;
+        }
+        this.searchExtensionReady = true;
+        this.extensionMessageQueue.forEach(msg => this.messageSearchExtension(msg));
+        this.extensionMessageQueue = [];
+        break;
       default:
         console.log("unexpected message", msg)
     }
