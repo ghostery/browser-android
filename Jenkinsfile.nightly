@@ -103,34 +103,35 @@ def build(Map m){
                         "ANDROID_TARGET=${androidtarget}",
                         "BRAND=${brandname}",
                         "CLIQZ_CHANNEL=${cliqzchannel}"
-                        ])
-                    sh """#!/bin/bash -l
-                        set -e
-                        set -x
-                        pwd
-                        ls
-                        cd /app
-                        cp mozconfigs/jenkins.mozconfig mozilla-release/mozconfig
-                        cd mozilla-release
-                        ./mach clobber
-                        ./mach build
-                        ./mach build chrome-de
-                        ./mach package
-                    """
-                    withCredentials([
-                        file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
-                        string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
-                    ]) {
+                        ]){
                         sh """#!/bin/bash -l
                             set -e
                             set -x
-                            cd /app/mozilla-release
-                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            pwd
+                            ls
+                            cd /app
+                            cp mozconfigs/jenkins.mozconfig mozilla-release/mozconfig
+                            cd mozilla-release
+                            ./mach clobber
+                            ./mach build
+                            ./mach build chrome-de
+                            ./mach package
                         """
+                        withCredentials([
+                            file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
+                            string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
+                        ]) {
+                            sh """#!/bin/bash -l
+                                set -e
+                                set -x
+                                cd /app/mozilla-release
+                                ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            """
+                        }
+                        apk = sh(returnStdout: true,
+                            script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
+                            find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                     }
-                    apk = sh(returnStdout: true,
-                        script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
-                        find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                 }
                 stage('Upload') {
                     withCredentials([
