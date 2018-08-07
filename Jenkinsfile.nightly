@@ -1,18 +1,42 @@
 #!/bin/env groovy
 @Library('cliqz-shared-library@v1.2') _
 def matrix = [
-        'cliqz':[
-                'config':'mozconfigs/cliqz.mozconfig',
-        ],
-        'ghostery':[
-                'config':'mozconfigs/ghostery.mozconfig',
-        ],
-        'cliqz-alpha':[
-                'config':'mozconfigs/cliqz-alpha.mozconfig',
-        ],
-        'ghostery-alpha':[
-                'config':'mozconfigs/ghostery-alpha.mozconfig',
-        ],
+    'Cliqz ARM':[
+        'arch': 'arm',
+        'brand': 'cliqz',
+        'channel': 'MA99',
+        'target': 'arm-linux-androideabi',
+    ],
+    'Cliqz X86':[
+        'arch': 'x86',
+        'brand': 'cliqz',
+        'channel': 'MA99',
+        'target': 'i386-linux-android',
+    ],
+    'Ghostery ARM':[
+        'arch': 'arm',
+        'brand': 'ghostery',
+        'channel': 'MA99',
+        'target': 'arm-linux-androideabi',
+    ],
+    'Ghostery X86':[
+        'arch': 'x86',
+        'brand': 'ghostery',
+        'channel': 'MA99',
+        'target': 'i386-linux-android',
+    ],
+    'Cliqz Alpha':[
+        'arch': 'arm',
+        'brand': 'cliqz-alpha',
+        'channel': 'MA99',
+        'target': 'arm-linux-androideabi',
+    ],
+    'Ghostery Alpha':[
+        'arch': 'arm',
+        'brand': 'ghostery-alpha',
+        'channel': 'MA99',
+        'target': 'arm-linux-androideabi',
+    ],
 ]
 def baseImage
 def codeImage
@@ -43,8 +67,11 @@ node ('master'){
 }
 
 def build(Map m){
-    def flavor = m.config
     def flavorname = m.name
+    def buildarch = m.arch
+    def brandname = m.brand
+    def cliqzchannel = m.channel
+    def androidtarget = m.target
     def getImageName = m.getImageName
     def nodeLabel = 'master'
     def getId = m.getId
@@ -68,37 +95,43 @@ def build(Map m){
                                 set -x
                                 cd
                                 aws s3 sync --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath}
-                            """                        
+                            """
                         }
                     }
-                stage('Build APKS') {
-                    sh """#!/bin/bash -l
-                        set -e
-                        set -x
-                        pwd
-                        ls
-                        cd /app
-                        cp ${flavor} mozilla-release/mozconfig
-                        cd mozilla-release
-                        ./mach clobber
-                        ./mach build
-                        ./mach build chrome-de
-                        ./mach package
-                    """
-                    withCredentials([
-                            file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
-                            string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
-                    ]) {
+                stage('Build APK: ${flavorname}') {
+                    withEnv([
+                        "ANDROID_TARGET=${androidtarget}",
+                        "BRAND=${brandname}",
+                        "CLIQZ_CHANNEL=${cliqzchannel}"
+                        ]){
                         sh """#!/bin/bash -l
                             set -e
                             set -x
-                            cd /app/mozilla-release
-                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            pwd
+                            ls
+                            cd /app
+                            cp mozconfigs/jenkins.mozconfig mozilla-release/mozconfig
+                            cd mozilla-release
+                            ./mach clobber
+                            ./mach build
+                            ./mach build chrome-de
+                            ./mach package
                         """
+                        withCredentials([
+                            file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
+                            string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
+                        ]) {
+                            sh """#!/bin/bash -l
+                                set -e
+                                set -x
+                                cd /app/mozilla-release
+                                ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            """
+                        }
+                        apk = sh(returnStdout: true,
+                            script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
+                            find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                     }
-                    apk = sh(returnStdout: true,
-                        script: """cd /app/mozilla-release/objdir-frontend-android/${flavorname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
-                        find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                 }
                 stage('Upload') {
                     withCredentials([
@@ -109,14 +142,23 @@ def build(Map m){
                             usernameVariable: 'AWS_ACCESS_KEY_ID',
                         ]
                     ]) {
-                        def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${flavorname}"
-                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${flavorname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
-                        sh """#!/bin/bash -l 
-                            set -e
-                            set -x
-                            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${flavorname}${getId()}.apk
-                            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk
-                        """
+                        def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
+                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                        if (buildarch=='arm'){
+                            sh """#!/bin/bash -l 
+                                set -e
+                                set -x
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${brandname}${getId()}.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk
+                            """
+                        } else {
+                            sh """#!/bin/bash -l 
+                                set -e
+                                set -x
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${brandname}${getId()}_${arch}.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest_${arch}.apk
+                            """
+                        }
                     }
                 }
                 stage('Clean Up') {
@@ -133,7 +175,10 @@ def build(Map m){
 def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
     [("Building ${it[0]}"):build(
             name: it[0],
-            config:it[1]['config'],
+            arch: it[1]['arch'],
+            brand: it[1]['brand'],
+            channel: it[1]['channel'],
+            target: it[1]['target'],
             getImageName: {codeImage},
             getId: {id}
     )]
@@ -182,8 +227,10 @@ stage('Send email') {
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
         Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/latest.apk
+        Cliqz X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/latest_x86.apk
         Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/latest.apk
         Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/latest.apk
+        Ghostery X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/latest_x86.apk
         Ghostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/latest.apk
         ${changesSinceLastSuccess}
         Issues Transtioned ${transitionIssueList}""".stripIndent()

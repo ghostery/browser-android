@@ -1200,9 +1200,12 @@ class PackageFrontend(MachCommandBase):
         help='Where to add the file')
     def artifact_add(self, source=None, destn=None, skip_cache=False, tree=None, job=None, verbose=False):
         self._set_log_level(verbose)
+        import urlparse
         extensions=self._add_artifacts(tree=tree, job=job, skip_cache=skip_cache)
-
-        return extensions.add_from_url(source, destn)
+        if source and os.path.isfile(source):
+            return extensions.store_to_filepath(source, destn)
+        elif urlparse.urlparse(source).scheme:
+            return extensions.add_from_url(source, destn)
     #Cliqz end
 
     def _make_artifacts(self, tree=None, job=None, skip_cache=False):

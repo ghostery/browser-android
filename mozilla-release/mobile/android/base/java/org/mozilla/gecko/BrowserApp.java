@@ -45,6 +45,7 @@ import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
@@ -4143,7 +4144,7 @@ public class BrowserApp extends GeckoApp
     private Drawable resolveBookmarkIconDrawable(final boolean isBookmark, final int tint) {
         if (isBookmark) {
             /* Cliqz Start */
-            return ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_bookmark_remove, null);
+            return VectorDrawableCompat.create(getResources(), R.drawable.ic_menu_bookmark_remove, null);
             /* Cliqz End */
         } else {
             return DrawableUtil.tintDrawable(this, R.drawable.ic_menu_bookmark_add, tint);
