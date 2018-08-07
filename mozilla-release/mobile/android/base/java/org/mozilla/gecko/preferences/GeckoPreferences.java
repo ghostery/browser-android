@@ -162,7 +162,7 @@ public class GeckoPreferences
     public static final String PREFS_HISTORY_SAVED_SEARCH = NON_PREF_PREFIX + "search.search_history.enabled";
     private static final String PREFS_FAQ_LINK = NON_PREF_PREFIX + "faq.link";
     private static final String PREFS_FEEDBACK_LINK = NON_PREF_PREFIX + "feedback.link";
-    public static final String PREFS_NOTIFICATIONS_WHATS_NEW = NON_PREF_PREFIX + "notifications.whats_new";
+//    public static final String PREFS_NOTIFICATIONS_WHATS_NEW = NON_PREF_PREFIX + "notifications.whats_new";
     public static final String PREFS_APP_UPDATE_LAST_BUILD_ID = "app.update.last_build_id";
     public static final String PREFS_READ_PARTNER_CUSTOMIZATIONS_PROVIDER = NON_PREF_PREFIX + "distribution.read_partner_customizations_provider";
     public static final String PREFS_READ_PARTNER_BOOKMARKS_PROVIDER = NON_PREF_PREFIX + "distribution.read_partner_bookmarks_provider";
@@ -227,8 +227,8 @@ public class GeckoPreferences
     // add show myoffrz and about my offrz to general settings menu
     public static final String PREFS_MYOFFRZ_ENABLED = "pref.myoffrz.enabled";
     // add Subscriptions key and dialog for reset it
-    private static final String PREFS_RESET_SUBSCRIPTIONS = NON_PREF_PREFIX + "reset.subscription";
-    private static final int DIALOG_CREATE_RESET_SUBSCRIPTIONS = 3;
+    // private static final String PREFS_RESET_SUBSCRIPTIONS = NON_PREF_PREFIX + "reset.subscription";
+    // private static final int DIALOG_CREATE_RESET_SUBSCRIPTIONS = 3;
     // add clear favorites key
     private static final String PREFS_CLEAR_FAVORITES = NON_PREF_PREFIX + "privacy.clear.favorites";
     private static final int DIALOG_CREATE_CLEAR_FAVORITES = 4;
@@ -926,7 +926,7 @@ public class GeckoPreferences
                             return true;
                         }
                     });
-                } else if (PREFS_RESET_SUBSCRIPTIONS.equals(key)) {
+                /*} else if (PREFS_RESET_SUBSCRIPTIONS.equals(key)) {
                     // Open rest subscriptions dialog
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
@@ -934,7 +934,7 @@ public class GeckoPreferences
                             showDialog(DIALOG_CREATE_RESET_SUBSCRIPTIONS);
                             return true;
                         }
-                    });
+                    });*/
                 } else if(PREFS_CLEAR_FAVORITES.equals(key)) {
                     // Open clear favorites dialog
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -1552,7 +1552,7 @@ public class GeckoPreferences
                 ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod
                         (CustomLinkMovementMethod.getInstance(this));
                 break;
-            // create dialog for reset all subscriptions
+            /* create dialog for reset all subscriptions
             case DIALOG_CREATE_RESET_SUBSCRIPTIONS:
                 builder.setTitle(R.string.pref_reset_subscriptions)
                         .setMessage(R.string.pref_reset_subscriptions_description)
@@ -1576,7 +1576,7 @@ public class GeckoPreferences
                         });
                 dialog = builder.create();
                 dialog.show();
-                break;
+                break;*/
             // create dialog for clear favorites
             case DIALOG_CREATE_CLEAR_FAVORITES:
                 builder.setTitle(R.string.pref_privacy_clear_favorites)

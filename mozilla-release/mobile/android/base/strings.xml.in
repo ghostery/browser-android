@@ -867,12 +867,12 @@
   <string name="pref_about_myoffrz">&pref_about_myoffrz;</string>
   <string name="pref_myoffrz_url">&pref_myoffrz_url;</string>
 
-  <!-- General Settings - Subscriptions and Notifications -->
+  <!-- General Settings - Subscriptions and Notifications
   <string name="pref_subscriptions_notifications_category">&pref_subscriptions_notifications_category;</string>
   <string name="pref_news_notifications">&pref_news_notifications;</string>
   <string name="pref_reset_subscriptions">&pref_reset_subscriptions;</string>
   <string name="pref_reset_subscriptions_description">&pref_reset_subscriptions_description;</string>
-  <string name="pref_reset_subscriptions_toast">&pref_reset_subscriptions_toast;</string>
+  <string name="pref_reset_subscriptions_toast">&pref_reset_subscriptions_toast;</string> -->
 
   <!-- Privacy Settings -->
   <string name="pref_privacy_clear_data_category">&pref_privacy_clear_data_category;</string>
@@ -921,9 +921,6 @@
   <string name="pref_about_imprint">&pref_about_imprint;</string>
   <string name="pref_privacy_policy_url">&pref_privacy_policy_url;</string>
   <string name="pref_eula_url">&pref_eula_url;</string>
-  <string name="pref_apache_url">&pref_apache_url;</string>
-  <string name="pref_hp_hosts_url">&pref_hp_hosts_url;</string>
-  <string name="pref_crux_url">&pref_crux_url;</string>
   <string name="pref_imprint_url">&pref_imprint_url;</string>
 
   <!-- Onboarding -->
