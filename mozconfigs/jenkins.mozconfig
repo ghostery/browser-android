@@ -15,3 +15,6 @@ mk_add_options MOZ_OBJDIR=./objdir-frontend-android/$BRAND
 
 # Branding
 ac_add_options --with-branding=mobile/android/branding/$BRAND
+
+# l10n support
+ac_add_options --with-l10n-base=$topsrcdir/../l10n
