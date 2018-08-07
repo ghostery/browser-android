@@ -56,7 +56,9 @@ public class WhatsNewReceiver extends BroadcastReceiver {
     }
 
     private boolean isPreferenceEnabled(Context context) {
-        return GeckoSharedPrefs.forApp(context).getBoolean(GeckoPreferences.PREFS_NOTIFICATIONS_WHATS_NEW, true);
+        // @TODO
+        // return GeckoSharedPrefs.forApp(context).getBoolean(GeckoPreferences.PREFS_NOTIFICATIONS_WHATS_NEW, true);
+        return false;
     }
 
     private void showWhatsNewNotification(Context context) {

@@ -68,7 +68,6 @@
             <extra android:name="resource"
                 android:value="preferences_search"/>
         </PreferenceScreen>
-        <!-- Cliqz end -->
     </PreferenceCategory>
 
     <!-- set browsing category for tab queue and custom tabs from FF-->
@@ -117,7 +116,8 @@
             url="@string/pref_myoffrz_url" />
     </PreferenceCategory>
 
-    <!-- add Subscriptions & Notifications category -->
+    <!-- Cliqz Block comment start +->
+    add Subscriptions & Notifications category
     <PreferenceCategory android:title="@string/pref_subscriptions_notifications_category">
         <CheckBoxPreference
             android:defaultValue="true"
@@ -131,6 +131,7 @@
             android:key="android.not_a_preference.reset.subscription"
             android:title="@string/pref_reset_subscriptions" />
     </PreferenceCategory>
+    <!-+ Cliqz Block comment end -->
 
     <!-- add download options category -->
     <PreferenceCategory android:title="@string/pref_download_options_category">
