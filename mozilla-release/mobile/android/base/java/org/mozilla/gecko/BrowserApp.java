@@ -1039,7 +1039,7 @@ public class BrowserApp extends GeckoApp
                 final JSONObject jsonObject = new JSONObject(tabsRestoreData);
                 String urlToOpenInEnd = null;
                 final JSONArray ids = jsonObject.names();
-                for (int i = 0; i < ids.length(); i++) {
+                for (int i = 0; ids != null && i < ids.length(); i++) {
                     final String id = (String) ids.get(i);
                     final JSONObject tabDetails = jsonObject.getJSONObject(id);
                     final String url = tabDetails.getString("url");
