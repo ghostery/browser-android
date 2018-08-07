@@ -153,6 +153,7 @@ def build(Map m){
                                                 appium &
                                                 sleep 10
                                                 export app=$PWD/mozilla-release/objdir-frontend-android/$FLAVOR/dist/$APP
+                                                $ANDROID_HOME/platform-tools/adb install $app
                                                 cd autobots
                                                 virtualenv ~/venv
                                                 source ~/venv/bin/activate

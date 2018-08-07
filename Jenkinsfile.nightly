@@ -98,7 +98,7 @@ def build(Map m){
                             """
                         }
                     }
-                stage('Build APK: ${flavorname}') {
+                stage("Build APK: ${flavorname}") {
                     withEnv([
                         "ANDROID_TARGET=${androidtarget}",
                         "BRAND=${brandname}",
@@ -133,7 +133,7 @@ def build(Map m){
                             find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                     }
                 }
-                stage('Upload') {
+                stage("Upload: ${flavorname}") {
                     withCredentials([
                         [
                             $class: 'UsernamePasswordMultiBinding',
@@ -144,7 +144,7 @@ def build(Map m){
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
                         def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
-                        if (buildarch=='arm'){
+                        if (buildarch=="arm"){
                             sh """#!/bin/bash -l 
                                 set -e
                                 set -x
@@ -155,8 +155,8 @@ def build(Map m){
                             sh """#!/bin/bash -l 
                                 set -e
                                 set -x
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${brandname}${getId()}_${arch}.apk
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest_${arch}.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${brandname}${getId()}_${buildarch}.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest_${buildarch}.apk
                             """
                         }
                     }
