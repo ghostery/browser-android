@@ -46,7 +46,7 @@
                                            e transferindo a versão mais recente da aplicação:">
                                            
 <!ENTITY  errorpatching.intro             "A atualização parcial não pôde ser aplicada. 
-                                           O &brandShortName; vai tentar transferir o pacote de atualização completo.">
+                                           O &brandShortName; irá tentar novamente ao transferir a atualização completa.">
 
 <!ENTITY  genericBackgroundError.label    "O &brandShortName; não consegue determinar se existe uma atualização disponível. Por favor verifique se tem a última versão do &brandShortName; em:">
 

@@ -5,7 +5,7 @@
 <!ENTITY window.width                                   "30em">
 
 <!ENTITY languages.customize.Header                     "Idiomas">
-<!ENTITY languages.customize2.description               "Páginas web às vezes são oferecidas em mais de um idioma. Escolher idiomas para apresentar essas páginas web, em ordem de preferência">
+<!ENTITY languages.customize2.description               "Algumas páginas são oferecidas em mais de um idioma. Escolha idiomas para apresentar essas páginas, em ordem de preferência">
 <!ENTITY languages.customize.moveUp.label               "Para cima">
 <!ENTITY languages.customize.moveUp.accesskey           "c">
 <!ENTITY languages.customize.moveDown.label             "Para baixo">
@@ -15,5 +15,4 @@
 <!ENTITY languages.customize.selectLanguage.label       "Selecione um idioma para adicionar…">
 <!ENTITY languages.customize.addButton.label            "Adicionar">
 <!ENTITY languages.customize.addButton.accesskey        "A">
-
 <!ENTITY languages.customize.spoofEnglish               "Solicitar versões em inglês de páginas da web para maior privacidade">

@@ -38,6 +38,10 @@
 <!ENTITY bookmarksToolbar.tooltip         "Панель закладок">
 <!ENTITY navigationToolbar.tooltip        "Панель навигации">
 
+<!ENTITY editBookmark.done.label "Готово">
+<!ENTITY editBookmark.cancel.label "Отмена">
+<!ENTITY editBookmark.removeBookmark.accessKey "а">
+
 <!-- Toolbar items --> 
 <!ENTITY backButton.label             "Назад">
 <!ENTITY backButton.tooltip           "На предыдущую страницу">

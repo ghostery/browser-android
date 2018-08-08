@@ -18,7 +18,7 @@
 <!ENTITY rights.intro-point1b "Mozilla Public License">
 <!ENTITY rights.intro-point1c ". Isto significa que pode utilizar, copiar e distribuir o &brandShortName; para outras pessoas.  Também pode modificar o código fonte do &brandShortName; conforme as suas necessidades. A Mozilla Public License também lhe dá o direito de distribuir as suas versões modificadas.">
 
-<!ENTITY rights.intro-point2-a "Não tem nenhum direito às marcas registadas ou licenças às marcas registadas da Fundação Mozilla ou qualquer outra, incluindo sem limitações o nome ou logo do Firefox. Pode encontrar informação adicional sobre marcas registadas ">
+<!ENTITY rights.intro-point2-a "Não lhe é concedido nenhum direito às marcas registadas ou licenças das marcas registadas da Fundação Mozilla ou de qualquer outra parte, incluindo sem limitações, o nome ou logótipo do Firefox. Informação adicional sobre marcas registadas pode ser encontrada ">
 <!ENTITY rights.intro-point2-b "aqui">
 <!ENTITY rights.intro-point2-c ".">
 
@@ -34,7 +34,7 @@
 <!ENTITY rights.intro-point3-unbranded "Quaisquer políticas de privacidade aplicáveis a este produto devem ser colocadas aqui.">
 
 <!-- point 4 text for official branded builds -->
-<!ENTITY rights2.intro-point4a "Algumas das funcionalidades do &brandShortName; fazem uso de serviços de informação baseados na web, no entanto, não podemos garantir que é 100&#037; eficaz ou livre de erros. Pode encontrar mais detalhes, incluindo informação de como desativar as funcionalidades que utilizam estes serviços, nos ">
+<!ENTITY rights2.intro-point4a "Algumas das funcionalidades do &brandShortName; fazem uso de serviços de informação baseados na web, no entanto, não podemos garantir que são 100&#037; eficazes ou livres de erros. Mais detalhes, incluindo informação sobre como desativar as funcionalidades que utilizam estes serviços, podem ser encontrados nos ">
 <!ENTITY rights.intro-point4b "termos do serviço">
 <!ENTITY rights.intro-point4c ".">
 
@@ -58,8 +58,8 @@
 <!ENTITY rights3.webservices-c ". Pode desativar mais funcionalidades ou serviços nas preferências da aplicação.">
 
 <!-- safe browsing points for branded builds -->
-<!ENTITY rights.safebrowsing-a "Navegação segura: ">
-<!ENTITY rights.safebrowsing-b "Não é recomendado desativar a funcionalidade de navegação segura pois pode resultar em você ir para sites inseguros.  Se pretender desativar completamente a funcionalidade, siga este passos:">
+<!ENTITY rights.safebrowsing-a "SafeBrowsing: ">
+<!ENTITY rights.safebrowsing-b "Não é recomendado desativar a funcionalidade de Navegação segura pois pode resultar em que vá para sites inseguros.  Se desejar desativar completamente a funcionalidade, siga estes passos:">
 <!ENTITY rights.safebrowsing-term1 "Abrir preferências da aplicação">
 <!ENTITY rights.safebrowsing-term2 "Selecione a seleção de segurança">
 <!ENTITY rights2.safebrowsing-term3 "Desmarque a opção para &quot;&enableSafeBrowsing.label;&quot;">
@@ -67,7 +67,7 @@
 
 <!-- location aware browsing points for branded builds -->
 <!ENTITY rights.locationawarebrowsing-a "Navegação com conhecimento da localização: ">
-<!ENTITY rights.locationawarebrowsing-b "é sempre de indicação explícita.  Não serão enviadas quaisquer informações de localização sem a sua permissão.  Se quiser desativar completamente a funcionalidade, siga este passos:">
+<!ENTITY rights.locationawarebrowsing-b "é sempre de indicação explícita.  Não serão enviadas quaisquer informações de localização sem a sua permissão.  Se quiser desativar completamente a funcionalidade, siga estes passos:">
 <!ENTITY rights.locationawarebrowsing-term1a "Na barra de URL, escreva ">
 <!ENTITY rights.locationawarebrowsing-term1b "about:config">
 <!ENTITY rights.locationawarebrowsing-term2 "Escreva geo.enabled">

@@ -18,9 +18,8 @@
 <!-- Downloading a cert -->
 <!ENTITY downloadCert.title "下载证书">
 <!ENTITY downloadCert.message1 "您被要求信任一个新的数字证书认证机构（CA）。">
-<!ENTITY downloadCert.trustSSL "信任由此证书颁发机构标识的网站。">
-<!ENTITY downloadCert.trustEmail "信任由此证书颁发机构标识的电子邮件用户。">
-<!ENTITY downloadCert.trustObjSign "信任由此证书颁发机构标识的软件开发者。">
+<!ENTITY downloadCert.trustSSL "信任由此证书颁发机构来标识网站。">
+<!ENTITY downloadCert.trustEmail "信任由此证书颁发机构来标识电子邮件用户。">
 <!ENTITY downloadCert.message3 "在信任此证书颁发机构之前，您应该检查它的证书、策略和它的手续（如果有的话）。">
 <!ENTITY downloadCert.viewCert.label "查看">
 <!ENTITY downloadCert.viewCert.text "检查CA证书">

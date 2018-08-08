@@ -59,7 +59,7 @@ signedInLoginFailure.aftername.label): these two string are used respectively
 before and after the account email address. Localizers can use one of them, or
 both, to better adapt this sentence to their language.
 -->
-<!ENTITY signedInLoginFailure.beforename.label "Por favor, entrar para reconectar">
+<!ENTITY signedInLoginFailure.beforename.label "Entre para reconectar">
 <!ENTITY signedInLoginFailure.aftername.label "">
 
 <!ENTITY notSignedIn.label            "Você não entrou.">
@@ -74,9 +74,6 @@ both, to better adapt this sentence to their language.
 <!ENTITY resendVerification.accesskey "r">
 <!ENTITY cancelSetup.label            "Cancelar configuração">
 <!ENTITY cancelSetup.accesskey        "g">
-
-<!ENTITY removeAccount.label          "Remover conta">
-<!ENTITY removeAccount.accesskey      "R">
 
 <!ENTITY signedOut.caption            "Leve a web com você">
 <!ENTITY signedOut.description        "Sincronizar seus favoritos, histórico, abas, senhas, extensões e preferências entre os seus dispositivos.">

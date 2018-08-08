@@ -66,12 +66,47 @@ close-button =
 
 ## Browser Restart Dialog
 
-feature-enable-requires-restart = { -brand-short-name } 必须重新启动才能启用此功能。
-feature-disable-requires-restart = { -brand-short-name } 必须重新启动才能禁用此功能。
-should-restart-title = 重新启动 { -brand-short-name }
-should-restart-ok = 立即重启 { -brand-short-name }
+feature-enable-requires-restart = 必须重新打开 { -brand-short-name } 才能启用此功能。
+feature-disable-requires-restart = 必须重新打开 { -brand-short-name } 才能禁用此功能。
+should-restart-title = 重新打开 { -brand-short-name }
+should-restart-ok = 立即重开 { -brand-short-name }
 cancel-no-restart-button = 取消
-restart-later = 稍后重启
+restart-later = 稍后重开
+
+## Extension Control Notifications
+##
+## These strings are used to inform the user
+## about changes made by extensions to browser settings.
+##
+## <img data-l10n-name="icon"/> is going to be replaced by the extension icon.
+##
+## Variables:
+##   $name (String): name of the extension
+
+# This string is shown to notify the user that their home page
+# is being controlled by an extension.
+extension-controlled-homepage-override = 扩展 <img data-l10n-name="icon"/> { $name } 正在控制您的主页。
+# This string is shown to notify the user that their new tab page
+# is being controlled by an extension.
+extension-controlled-new-tab-url = 扩展 <img data-l10n-name="icon"/> { $name } 正在控制您的新标签页。
+# This string is shown to notify the user that the default search engine
+# is being controlled by an extension.
+extension-controlled-default-search = 您的默认搜索引擎由扩展 <img data-l10n-name="icon"/> { $name } 设置。
+# This string is shown to notify the user that Container Tabs
+# are being enabled by an extension.
+extension-controlled-privacy-containers = 扩展 <img data-l10n-name="icon"/> { $name } 需要启用身份标签页功能才能使用。
+# This string is shown to notify the user that their tracking protection preferences
+# are being controlled by an extension.
+extension-controlled-websites-tracking-protection-mode = 跟踪保护功能由扩展 <img data-l10n-name="icon"/> { $name } 控制。
+# This string is shown to notify the user that their proxy configuration preferences
+# are being controlled by an extension.
+extension-controlled-proxy-config = 扩展 <img data-l10n-name="icon"/> { $name } 正在控制 { -brand-short-name } 如何连接互联网。
+# This string is shown after the user disables an extension to notify the user
+# how to enable an extension that they disabled.
+#
+# <img data-l10n-name="addons-icon"/> will be replaced with Add-ons icon
+# <img data-l10n-name="menu-icon"/> will be replaced with Menu icon
+extension-controlled-enable = 要启用该扩展，请从 <img data-l10n-name="menu-icon"/> 菜单打开 <img data-l10n-name="addons-icon"/> 附加组件页面。
 
 ## Preferences UI Search Results
 
@@ -110,6 +145,9 @@ startup-blank-page =
     .label = 显示空白页
 startup-prev-session =
     .label = 显示您上次的窗口和标签页
+startup-restore-previous-session =
+    .label = 恢复先前的浏览状态
+    .accesskey = s
 disable-extension =
     .label = 禁用扩展
 home-page-header = 主页
@@ -293,6 +331,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = 网络代理
+network-proxy-connection-description = 配置 { -brand-short-name } 如何连接互联网。
 network-proxy-connection-learn-more = 详细了解
 network-proxy-connection-settings =
     .label = 设置…
@@ -398,7 +437,7 @@ containers-remove-button =
 
 sync-signedout-caption = 让您个性化的网络体验随身相伴
 sync-signedout-description = 在您的各种设备间同步您的书签、历史记录、标签页、密码、附加组件与首选项。
-sync-signedout-account-title = 使用 { -fxaccount-brand-name } 登录，开启同步功能
+sync-signedout-account-title = 使用 { -fxaccount-brand-name }登录，开启同步功能
 sync-signedout-account-create = 没有账户吗？注册一个吧
     .accesskey = C
 sync-signedout-account-signin =
@@ -536,6 +575,9 @@ history-private-browsing-permanent =
 history-remember-option =
     .label = 记住我的浏览和下载历史
     .accesskey = b
+history-remember-browser-option =
+    .label = 记住浏览和下载历史
+    .accesskey = b
 history-remember-search-option =
     .label = 记住搜索和表单历史
     .accesskey = f
@@ -552,6 +594,11 @@ history-clear-button =
 ## Privacy Section - Site Data
 
 sitedata-header = Cookie 和网站数据
+sitedata-total-size-calculating = 正在计算网站数据和缓存的大小…
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+sitedata-total-size = 您已存储的 Cookie、网站数据和缓存目前使用 { $value } { $unit } 磁盘空间。
 sitedata-learn-more = 详细了解
 sitedata-accept-cookies-option =
     .label = 接受来自网站的 Cookie 和网站数据（推荐）
@@ -644,8 +691,14 @@ permissions-notification-settings =
     .accesskey = n
 permissions-notification-link = 详细了解
 permissions-notification-pause =
-    .label = 暂停通知直至 { -brand-short-name } 重新启动
+    .label = 暂停通知直至下次打开 { -brand-short-name }
     .accesskey = n
+permissions-block-autoplay-media =
+    .label = 阻止网站自动播放有声媒体内容
+    .accesskey = B
+permissions-block-autoplay-media-exceptions =
+    .label = 例外…
+    .accesskey = E
 permissions-block-popups =
     .label = 拦截弹出式窗口
     .accesskey = B
@@ -672,6 +725,9 @@ collection-health-report =
     .label = 允许 { -brand-short-name } 向 { -vendor-short-name } 发送技术信息及交互数据
     .accesskey = r
 collection-health-report-link = 详细了解
+collection-studies =
+    .label = 允许 { -brand-short-name } 安装并运行一些实验项目
+collection-studies-link = 查看 { -brand-short-name } 在进行的实验
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = 在此构建配置下数据反馈被禁用

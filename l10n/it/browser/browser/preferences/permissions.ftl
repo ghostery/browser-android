@@ -36,3 +36,96 @@ permissions-button-ok =
     .accesskey = S
 permissions-searchbox =
     .placeholder = Cerca sito web
+permissions-capabilities-allow =
+    .label = Consenti
+permissions-capabilities-block =
+    .label = Blocca
+permissions-capabilities-prompt =
+    .label = Chiedi sempre
+
+## Invalid Hostname Dialog
+
+permissions-invalid-uri-title = Il nome inserito per il server non è valido
+permissions-invalid-uri-label = Inserire un nome valido per il server
+
+## Exceptions - Tracking Protection
+
+permissions-exceptions-tracking-protection-window =
+    .title = Eccezioni - Protezione antitracciamento
+    .style = { permissions-window.style }
+permissions-exceptions-tracking-protection-desc = La protezione antitracciamento è stata disattivata per i seguenti siti web.
+
+## Exceptions - Cookies
+
+permissions-exceptions-cookie-window =
+    .title = Eccezioni - Cookie e dati dei siti web
+    .style = { permissions-window.style }
+permissions-exceptions-cookie-desc = È possibile indicare quali siti web potranno o meno salvare cookie e dati. Inserire l’indirizzo esatto del sito web da gestire e fare clic su Blocca, Consenti per la sessione o Consenti.
+
+## Exceptions - Pop-ups
+
+permissions-exceptions-popup-window =
+    .title = Siti web con permesso - Finestre pop-up
+    .style = { permissions-window.style }
+permissions-exceptions-popup-desc = È possibile indicare quali siti web potranno aprire finestre pop-up. Inserire l’indirizzo esatto del sito web a cui dare il permesso e fare clic su Consenti.
+
+## Exceptions - Saved Logins
+
+permissions-exceptions-saved-logins-window =
+    .title = Eccezioni - Accessi salvati
+    .style = { permissions-window.style }
+permissions-exceptions-saved-logins-desc = Non verranno salvate le credenziali di accesso per i seguenti siti web
+
+## Exceptions - Add-ons
+
+permissions-exceptions-addons-window =
+    .title = Siti web con permesso - Installazione componenti
+    .style = { permissions-window.style }
+permissions-exceptions-addons-desc = È possibile specificare quali siti web avranno il permesso di installare componenti aggiuntivi. Inserire l’indirizzo esatto del sito web a cui dare il permesso e fare clic su Consenti.
+
+## Exceptions - Autoplay Media
+
+permissions-exceptions-autoplay-media-window =
+    .title = Siti web con permesso - Riproduzione automatica
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc = È possibile specificare quali siti web avranno il permesso di riprodurre automaticamente contenuti multimediali. Inserire l’indirizzo esatto del sito web a cui dare il permesso e fare clic su Consenti.
+
+## Site Permissions - Notifications
+
+permissions-site-notification-window =
+    .title = Impostazioni - Permessi notifiche
+    .style = { permissions-window.style }
+permissions-site-notification-desc = I seguenti siti web hanno richiesto il permesso di inviare notifiche. È possibile indicare quali siti web potranno inviarle o bloccare direttamente le nuove richieste.
+permissions-site-notification-disable-label =
+    .label = Blocca nuove richieste di inviare notifiche
+permissions-site-notification-disable-desc = Verrà impedito a qualunque sito web non presente nell’elenco di richiedere il permesso di inviare notifiche. Il blocco delle notifiche potrebbe comportare il malfunzionamento di alcuni siti web.
+
+## Site Permissions - Location
+
+permissions-site-location-window =
+    .title = Impostazioni - Permessi posizione
+    .style = { permissions-window.style }
+permissions-site-location-desc = I seguenti siti web hanno richiesto il permesso di accedere alla posizione corrente. È possibile indicare quali siti web potranno accedere a questa informazione o bloccare direttamente le nuove richieste.
+permissions-site-location-disable-label =
+    .label = Blocca nuove richieste di accesso alla posizione corrente
+permissions-site-location-disable-desc = Verrà impedito a qualunque sito web non presente nell’elenco di richiedere il permesso di accedere alla posizione corrente. L’impossibilità di accedere alla posizione potrebbe comportare il malfunzionamento di alcuni siti web.
+
+## Site Permissions - Camera
+
+permissions-site-camera-window =
+    .title = Impostazioni - Permessi fotocamera
+    .style = { permissions-window.style }
+permissions-site-camera-desc = I seguenti siti web hanno richiesto il permesso di utilizzare la fotocamera. È possibile indicare quali siti web potranno accedere al dispositivo o bloccare direttamente le nuove richieste.
+permissions-site-camera-disable-label =
+    .label = Blocca nuove richieste di accesso alla fotocamera
+permissions-site-camera-disable-desc = Verrà impedito a qualunque sito web non presente nell’elenco di richiedere il permesso di accedere alla fotocamera. L’impossibilità di accedere al dispositivo potrebbe comportare il malfunzionamento di alcuni siti web.
+
+## Site Permissions - Microphone
+
+permissions-site-microphone-window =
+    .title = Impostazioni - Permessi microfono
+    .style = { permissions-window.style }
+permissions-site-microphone-desc = I seguenti siti web hanno richiesto il permesso di utilizzare il microfono. È possibile indicare quali siti web potranno accedere al dispositivo o bloccare direttamente le nuove richieste.
+permissions-site-microphone-disable-label =
+    .label = Blocca nuove richieste di accesso al microfono
+permissions-site-microphone-disable-desc = Verrà impedito a qualunque sito web non presente nell’elenco di richiedere il permesso di accedere al microfono. L’impossibilità di accedere al dispositivo potrebbe comportare il malfunzionamento di alcuni siti web.

@@ -9,8 +9,8 @@
 <!ENTITY firstrun_privacy_message "Navegue como si nadie le observara">
 <!ENTITY firstrun_privacy_subtext "La navegación privada con protección contra rastreo bloquea los rastreadores mientras navega y no recuerda su historial cuando termina de navegar.">
 <!ENTITY firstrun_panel_title_customize "Personalizar">
-<!ENTITY firstrun_customize_message "Crea tu propio &brandShortName;.">
-<!ENTITY firstrun_customize_subtext "Personaliza &brandShortName; con complementos. Bloquea anuncios, agrega características o elije un nuevo tema que refleje tu personalidad.">
+<!ENTITY firstrun_customize_message "Cree su propio &brandShortName;.">
+<!ENTITY firstrun_customize_subtext "Personalice &brandShortName; con complementos. Bloquee anuncios, agregue características o elija un nuevo tema que refleje su personalidad.">
 <!ENTITY firstrun_bookmarks_title "Historial">
 <!ENTITY firstrun_bookmarks_message "Sus sitios preferidos, a la vista">
 <!ENTITY firstrun_bookmarks_subtext "Obtenga resultados de sus marcadores e historial cuando busque.">
@@ -69,6 +69,15 @@
 <!ENTITY  crash_restart_label "Reiniciar &brandShortName;">
 
 <!ENTITY url_bar_default_text2 "Término de búsqueda o dirección">
+
+<!-- Localization note (url_bar_qrcode_text2) : This text will be
+     heard by non-visual users when the focus is on the QR Code
+     icon in the url bar. -->
+<!ENTITY url_bar_qrcode_text2 "Utiliza tu lector de código QR para buscar o introduce una dirección">
+<!-- Localization note (url_bar_mic_text2) : This text will be
+     heard by non-visual users when the focus is on the Microphone
+     icon in the url bar. -->
+<!ENTITY url_bar_mic_text2 "Utiliza tu micrófono para buscar o introduce una dirección">
 
 <!ENTITY bookmark "Marcador">
 <!ENTITY bookmark_remove "Elminar marcador">
@@ -207,6 +216,7 @@
 <!ENTITY pref_category_advanced_summary3 "Restaurar pestañas, ahorro de datos, herramientas de desarrollo">
 <!ENTITY pref_category_notifications "Notificaciones">
 <!ENTITY pref_category_notifications_summary "Nuevas funciones, actual. sitios web">
+<!ENTITY pref_category_notifications_summary2 "Nuevas funcionalidades, sugerencias de productos">
 <!ENTITY pref_developer_remotedebugging_usb "Depuración remota USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Depuración remota wifi">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "La depuración wifi requiere que su dispositivo tenga una aplicación lectora de códigos QR instalada.">
@@ -543,7 +553,7 @@
 <!ENTITY pref_compact_tabs_summary2 "Organizar pestañas en dos columnas en la orientación vertical">
 
 <!-- Localization note (page_removed): This string appears in a toast message when
-     any page is removed frome about:home. This includes pages that are in history,
+     any page is removed from about:home. This includes pages that are in history,
      bookmarks, or reading list. -->
 <!ENTITY page_removed "Página eliminada">
 <!ENTITY folder_removed "Carpeta eliminada">
@@ -761,7 +771,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      "Last synced" is one of the user's other Sync clients, typically Firefox on
      their desktop or laptop.-->
 <!ENTITY remote_tabs_last_synced "Última sincr.: &formatS;">
-<!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
+<!-- Localization note: Used when the sync has not happened yet, showed in place of a date -->
 <!ENTITY remote_tabs_never_synced "Última sincronización: nunca">
 
 <!-- LOCALIZATION NOTE (intent_uri_private_browsing_prompt): This string will

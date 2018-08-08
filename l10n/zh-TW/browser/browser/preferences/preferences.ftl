@@ -73,6 +73,41 @@ should-restart-ok = 立刻重新啟動 { -brand-short-name }
 cancel-no-restart-button = 取消
 restart-later = 稍後再重新啟動
 
+## Extension Control Notifications
+##
+## These strings are used to inform the user
+## about changes made by extensions to browser settings.
+##
+## <img data-l10n-name="icon"/> is going to be replaced by the extension icon.
+##
+## Variables:
+##   $name (String): name of the extension
+
+# This string is shown to notify the user that their home page
+# is being controlled by an extension.
+extension-controlled-homepage-override = 擴充套件「<img data-l10n-name="icon"/> { $name }」正在控制您的首頁內容。
+# This string is shown to notify the user that their new tab page
+# is being controlled by an extension.
+extension-controlled-new-tab-url = 擴充套件「<img data-l10n-name="icon"/> { $name }」正在控制您的新分頁內容。
+# This string is shown to notify the user that the default search engine
+# is being controlled by an extension.
+extension-controlled-default-search = 擴充套件「<img data-l10n-name="icon"/> { $name }」修改了您的預設搜尋引擎。
+# This string is shown to notify the user that Container Tabs
+# are being enabled by an extension.
+extension-controlled-privacy-containers = 擴充套件「<img data-l10n-name="icon"/> { $name }」需要開啟容器分頁功能才能使用。
+# This string is shown to notify the user that their tracking protection preferences
+# are being controlled by an extension.
+extension-controlled-websites-tracking-protection-mode = 擴充套件「<img data-l10n-name="icon"/> { $name }」正在控制您的追蹤保護設定。
+# This string is shown to notify the user that their proxy configuration preferences
+# are being controlled by an extension.
+extension-controlled-proxy-config = 擴充套件「<img data-l10n-name="icon"/> { $name }」正在控制您的 { -brand-short-name } 如何連線至網際網路。
+# This string is shown after the user disables an extension to notify the user
+# how to enable an extension that they disabled.
+#
+# <img data-l10n-name="addons-icon"/> will be replaced with Add-ons icon
+# <img data-l10n-name="menu-icon"/> will be replaced with Menu icon
+extension-controlled-enable = 要啟用這套擴充套件，請到 <img data-l10n-name="menu-icon"/> 選單中的 <img data-l10n-name="addons-icon"/> 附加元件。
+
 ## Preferences UI Search Results
 
 search-results-header = 搜尋結果
@@ -110,6 +145,9 @@ startup-blank-page =
     .label = 顯示空白頁
 startup-prev-session =
     .label = 顯示您上次瀏覽的視窗與分頁
+startup-restore-previous-session =
+    .label = 回復先前的瀏覽狀態
+    .accesskey = s
 disable-extension =
     .label = 停用擴充套件
 home-page-header = 首頁
@@ -285,6 +323,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = 網路代理伺服器
+network-proxy-connection-description = 設定 { -brand-short-name } 要如何連線至網際網路。
 network-proxy-connection-learn-more = 了解更多
 network-proxy-connection-settings =
     .label = 設定…
@@ -528,6 +567,9 @@ history-private-browsing-permanent =
 history-remember-option =
     .label = 保留我的瀏覽與下載記錄
     .accesskey = b
+history-remember-browser-option =
+    .label = 保留瀏覽與下載記錄
+    .accesskey = b
 history-remember-search-option =
     .label = 保留我的搜尋列與表單輸入的內容
     .accesskey = f
@@ -544,6 +586,11 @@ history-clear-button =
 ## Privacy Section - Site Data
 
 sitedata-header = Cookie 與網站資料
+sitedata-total-size-calculating = 正在計算網站資料與快取大小…
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+sitedata-total-size = 您儲存的 Cookie、網站資料與快取目前使用了 { $value } { $unit } 磁碟空間
 sitedata-learn-more = 了解更多
 sitedata-accept-cookies-option =
     .label = 接受網站設定的 Cookie 與網站資料（建議）
@@ -638,6 +685,12 @@ permissions-notification-link = 了解更多
 permissions-notification-pause =
     .label = 暫停通知到 { -brand-short-name } 重新啟動後
     .accesskey = n
+permissions-block-autoplay-media =
+    .label = 防止網站自動播放有聲音的媒體內容
+    .accesskey = B
+permissions-block-autoplay-media-exceptions =
+    .label = 例外網站…
+    .accesskey = E
 permissions-block-popups =
     .label = 封鎖彈出型視窗
     .accesskey = B
@@ -664,6 +717,9 @@ collection-health-report =
     .label = 允許 { -brand-short-name } 傳送技術與互動資料給 { -vendor-short-name }
     .accesskey = r
 collection-health-report-link = 更多資訊
+collection-studies =
+    .label = 允許 { -brand-short-name } 安裝並進行研究
+collection-studies-link = 檢視 { -brand-short-name } 所進行的研究
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = 進行編譯設定時，已停用了資料回報功能

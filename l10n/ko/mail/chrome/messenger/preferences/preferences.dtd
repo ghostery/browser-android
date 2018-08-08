@@ -2,17 +2,23 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY prefWindow.titleWin "설정">
-<!ENTITY prefWindow.titleGNOME "&brandShortName; 환경 설정">
+<!ENTITY  windowClose.key                  "w">
+<!ENTITY  preferencesDefaultTitleMac.title "환경 설정">
+<!ENTITY  preferencesDefaultTitleWin.title "설정">
+<!ENTITY  preferencesCloseButton.label     "닫기">
+<!ENTITY  preferencesCloseButton.accesskey "C">
+
+<!ENTITY  prefWindow.titleWin     "설정">
+<!ENTITY  prefWindow.titleGNOME   "&brandShortName; 환경 설정">
 <!ENTITY  prefWindow.titleMAC     "환경설정">
-<!ENTITY prefWindow.styleWindows "width: 44em; min-height: 38.5em;">
-<!ENTITY prefWindow.styleMac "width: 47em;">
-<!ENTITY prefWindow.styleGNOME "width: 42em; min-height: 38em;">
+<!ENTITY  prefWindow.styleWindows "width: 44em; min-height: 38.5em;">
+<!ENTITY  prefWindow.styleMac     "width: 47em;">
+<!ENTITY  prefWindow.styleGNOME   "width: 42em; min-height: 38em;">
 
 <!ENTITY paneGeneral.title        "일반">
 <!ENTITY paneDisplay.title        "표시">
 <!ENTITY paneComposition.title    "쓰기">
-<!ENTITY paneChat.title		        "채팅">
+<!ENTITY paneChat.title           "채팅">
 <!ENTITY paneAttachments.title    "첨부">
 <!ENTITY panePrivacy.title        "개인정보">
 <!ENTITY paneSecurity.title       "보안">

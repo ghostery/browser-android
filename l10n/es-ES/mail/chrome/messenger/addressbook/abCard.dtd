@@ -120,7 +120,6 @@
 <!ENTITY IRC.accesskey "R">
 <!ENTITY Photo.tab "Foto">
 <!ENTITY Photo.accesskey "o">
-<!ENTITY PhotoDesc.label "Elija una de las siguientes:">
 <!ENTITY GenericPhoto.label "Foto genérica">
 <!ENTITY GenericPhoto.accesskey "g">
 <!ENTITY DefaultPhoto.label "Predeterminado">

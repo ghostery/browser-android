@@ -7,17 +7,13 @@
 <!ENTITY  blockPopups.label           "Bloquear janelas popup">
 <!ENTITY  blockPopups.accesskey       "B">
 
-<!ENTITY  notificationsDoNotDisturb.label      "Não me perturbe">
-<!ENTITY  notificationsDoNotDisturb.accesskey  "n">
-<!ENTITY  notificationsDoNotDisturbDetails.value "Nenhuma notificação será mostrada até que reinicie o &brandShortName;">
-
 <!ENTITY  popupExceptions.label                                 "Exceções…">
 <!ENTITY  popupExceptions.accesskey                             "E">
 
 <!ENTITY  notificationPermissions.label                         "Notificações">
 <!ENTITY  notificationSettingsButton.label                      "Configurações…">
 <!ENTITY  notificationSettingsButton.accesskey                  "n">
-<!ENTITY  notificationPermissionsLearnMore.label                "Saber mais">
+<!ENTITY  notificationPermissionsLearnMore.label                "Saiba mais">
 
 <!ENTITY  locationPermissions.label                             "Localização">
 <!ENTITY  locationSettingsButton.label                          "Configurações…">
@@ -31,30 +27,6 @@
 <!ENTITY  microphoneSettingsButton.label                        "Configurações…">
 <!ENTITY  microphoneSettingsButton.accesskey                    "m">
 
-<!ENTITY  fontsAndColors.label        "Fontes e cores">
-
-<!ENTITY  defaultFont2.label          "Fonte padrão">
-<!ENTITY  defaultFont2.accesskey      "d">
-<!ENTITY  defaultSize2.label          "Tamanho">
-<!ENTITY  defaultSize2.accesskey      "T">
-
-<!ENTITY  advancedFonts.label         "Avançado…">
-<!ENTITY  advancedFonts.accesskey     "v">
-
-<!ENTITY  colors.label                "Cores…">
-<!ENTITY  colors.accesskey            "o">
-
-
-<!ENTITY language2.label              "Idioma">
-<!ENTITY chooseLanguage.label         "Escolha o idioma preferido para exibir páginas">
-<!ENTITY chooseButton.label           "Selecionar…">
-<!ENTITY chooseButton.accesskey       "S">
-
-<!ENTITY translateWebPages.label      "Traduzir conteúdo da web">
-<!ENTITY translateWebPages.accesskey  "r">
-<!ENTITY translateExceptions.label    "Exceções…">
-<!ENTITY translateExceptions.accesskey "x">
-
 <!-- LOCALIZATION NOTE (translation.options.attribution.beforeLogo,
   -                     translation.options.attribution.afterLogo):
   -  These 2 strings are displayed before and after a 'Microsoft Translator'
@@ -64,9 +36,3 @@
   -->
 <!ENTITY translation.options.attribution.beforeLogo "Traduções por">
 <!ENTITY translation.options.attribution.afterLogo "">
-
-<!ENTITY  drmContent2.label              "Conteúdo DRM (Digital Rights Management - Gerenciamento de Direitos Digitais)">
-
-<!ENTITY  playDRMContent2.label          "Reproduzir conteúdo controlado por DRM">
-<!ENTITY  playDRMContent2.accesskey      "R">
-<!ENTITY  playDRMContent.learnMore.label "Saber mais">

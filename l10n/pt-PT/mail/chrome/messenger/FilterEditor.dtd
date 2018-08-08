@@ -28,7 +28,7 @@
 <!ENTITY contextArchive.label "Ao arquivar">
 <!ENTITY contextArchive.accesskey "A">
 
-<!ENTITY filterActionDesc.label "Efetuar estas ações:">
+<!ENTITY filterActionDesc.label "Realizar estas ações:">
 <!ENTITY filterActionDesc.accesskey "E">
 
 <!ENTITY filterActionOrderWarning.label "Nota: as ações serão excutadas por uma ordem diferente.">

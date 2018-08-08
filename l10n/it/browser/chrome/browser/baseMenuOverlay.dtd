@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY minimizeWindow.key "m">
-<!ENTITY minimizeWindow.label "Contrai">
+<!ENTITY minimizeWindow.label "Comprimi">
 <!ENTITY bringAllToFront.label "Porta tutto in primo piano">
 <!ENTITY zoomWindow.label "Ridimensiona">
 <!ENTITY windowMenu.label "Finestra">

@@ -54,6 +54,8 @@
 <!ENTITY crash_close_label "Chiudi">
 <!ENTITY crash_restart_label "Riavvia &brandShortName;">
 <!ENTITY url_bar_default_text2 "Cerca o inserisci un indirizzo">
+<!ENTITY url_bar_qrcode_text2 "Utilizza il lettore QR per cercare o inserire un indirizzo">
+<!ENTITY url_bar_mic_text2 "Utilizza il microfono per cercare o inserire un indirizzo">
 <!ENTITY bookmark "Segnalibro">
 <!ENTITY bookmark_remove "Elimina segnalibro">
 <!ENTITY bookmark_added "Aggiunto segnalibro">
@@ -130,6 +132,7 @@
 <!ENTITY pref_category_advanced_summary3 "Ripristino schede, risparmio dati, strumenti di sviluppo">
 <!ENTITY pref_category_notifications "Notifiche">
 <!ENTITY pref_category_notifications_summary "Nuove funzioni, aggiornamenti dai siti web">
+<!ENTITY pref_category_notifications_summary2 "Nuove funzioni, suggerimenti sul prodotto">
 <!ENTITY pref_developer_remotedebugging_usb "Debug remoto tramite USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Debug remoto tramite Wi-Fi">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Il debug tramite Wi-Fi richiede la presenza sul dispositivo di un’app per la scansione di codici QR.">

@@ -46,19 +46,10 @@
 
 <!ENTITY  feedTab               "Feeds">
 <!ENTITY  feedTab.accesskey     "F">
-<!ENTITY  feedSubscribe         "Abonneren">
-<!ENTITY  feedSubscribe.accesskey "A">
 
 <!ENTITY  permTab               "Toestemmingen">
 <!ENTITY  permTab.accesskey     "T">
-<!ENTITY  permUseDefault        "Standaard gebruiken">
-<!ENTITY  permAskAlways         "Altijd vragen">
-<!ENTITY  permAllow             "Toestaan">
-<!ENTITY  permAllowSession      "Toestaan voor sessie">
-<!ENTITY  permHide              "Verbergen">
-<!ENTITY  permBlock             "Blokkeren">
 <!ENTITY  permissionsFor        "Toestemmingen voor:">
-<!ENTITY  permPlugins           "Plug-ins activeren">
 
 <!ENTITY  securityTab           "Beveiliging">
 <!ENTITY  securityTab.accesskey "B">

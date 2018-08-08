@@ -28,10 +28,11 @@
 <!-- LOCALIZATION NOTE (then.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY then.label                           "Lors de la rédaction">
 <!ENTITY then.accesskey                       "t">
+<!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY aboveQuote.label                     "la réponse commence avant la citation">
 <!ENTITY belowQuote.label                     "la réponse commence après la citation">
 <!ENTITY selectAndQuote.label                 "la citation est sélectionnée">
-<!ENTITY place.label                          "et placer la signature">
+<!ENTITY place.label                          "et la signature est placée">
 <!ENTITY place.accesskey                      "s">
 <!ENTITY belowText.label                      "sous la citation (recommandé)">
 <!ENTITY aboveText.label                      "sous ma réponse (au-dessus de la citation)">
