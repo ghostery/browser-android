@@ -3,7 +3,9 @@ package org.mozilla.gecko.controlcenter;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Spannable;
@@ -17,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +75,23 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private ImageView mInfoViewIcon;
     private View mInfoView;
     private View mOverview;
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private final BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback =
+            new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                    if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                        mOverview.setVisibility(View.VISIBLE);
+                        mInfoView.setVisibility(View.INVISIBLE);
+                        mNotchTitle.setText(R.string.cc_enhanced_options);
+                    }
+                }
+
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+                }
+            };
 
     public OverviewFragment() {
     }
@@ -107,6 +125,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mInfoViewSummary = (TextView) view.findViewById(R.id.cc_info_view_summary);
         mInfoViewIcon = (ImageView) view.findViewById(R.id.cc_info_view_icon);
         mNotchTitle = (TextView) view.findViewById(R.id.cc_notch_title);
+        final View mBottomSheetRootView = view.findViewById(R.id.cc_bottom_sheet_root_view);
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetRootView);
+        mBottomSheetBehavior.setBottomSheetCallback(mBottomSheetCallback);
         final View mAttrackInfoButton = view.findViewById(R.id.cc_enhanced_tracking_info_button);
         final View mAdBlockingInfoButton = view.findViewById(R.id.cc_enhanced_blocking_info_button);
         final View mSmartBlockingInfoButton = view.findViewById(R.id.cc_smart_blocking_info_button);
@@ -128,6 +149,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         if (getView() == null) {
             return; //return if view is not inflated yet
         }
+        mNotchTitle.setText(R.string.cc_enhanced_options);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         this.controlCenterSettingsData = controlCenterSettingsData;
         final int allowedTrackers = safeGetInt(controlCenterSettingsData, "data/summary/trackerCounts/allowed");
         final int blockedTrackers = calculateBlockedTrackers();

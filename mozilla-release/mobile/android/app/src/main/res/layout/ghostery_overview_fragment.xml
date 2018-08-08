@@ -141,6 +141,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/cc_bottom_sheet_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -282,8 +283,9 @@
 
                     <ImageView
                         android:id="@+id/cc_enhanced_tracking_info_button"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:padding="6dp"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@id/cc_enhanced_tracking_text"
                         android:layout_toRightOf="@id/cc_enhanced_tracking_text"
@@ -353,8 +355,9 @@
 
                     <ImageView
                         android:id="@+id/cc_enhanced_blocking_info_button"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:padding="6dp"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@id/cc_enhanced_blocking_text"
                         android:layout_toRightOf="@id/cc_enhanced_blocking_text"
@@ -424,8 +427,9 @@
 
                     <ImageView
                         android:id="@+id/cc_smart_blocking_info_button"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:padding="6dp"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@id/cc_smart_blocking_text"
                         android:layout_toRightOf="@id/cc_smart_blocking_text"
