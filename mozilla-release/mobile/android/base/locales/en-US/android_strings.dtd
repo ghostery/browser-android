@@ -470,7 +470,7 @@
 <!-- Cliqz start -->
 <!-- change text of normal and private tabs -->
 <!ENTITY tabs_normal "TABS">
-<!ENTITY tabs_private "FORGET TABS">
+<!ENTITY tabs_private "GHOST TABS">
 <!-- Cliqz end -->
 <!ENTITY set_image_fail "Unable to set image">
 <!ENTITY set_image_path_fail "Unable to save image">
