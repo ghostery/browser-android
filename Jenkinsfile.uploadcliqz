@@ -23,8 +23,8 @@ node('master') {
                         cp ../mozconfigs/jenkins.mozconfig mozconfig
                         ./mach clobber
                         ./mach build
-                        for language in `ls ../l10n/`; do
-                            ./mach build chrome-$language
+                        for lang in `ls ../l10n/`; do
+                            ./mach build chrome-$lang
                         done
                         ./mach package
                     '''
@@ -57,8 +57,8 @@ node('master') {
                         cp ../mozconfigs/jenkins.mozconfig mozconfig
                         ./mach clobber
                         ./mach build
-                        for language in `ls ../l10n/`; do
-                            ./mach build chrome-$language
+                        for lang in `ls ../l10n/`; do
+                            ./mach build chrome-$lang
                         done
                         ./mach package
                     '''
