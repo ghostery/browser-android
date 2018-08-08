@@ -33,6 +33,22 @@
             url="https://support.mozilla.org/kb/firefox-android-tracking-protection" />
 
     <!+- Cliqz Block Comment end -->
+
+    <!-- Cliqz start -->
+    <PreferenceCategory android:title="@string/pref_category_ghostery_control_center">
+        <CheckBoxPreference
+            android:key="ghostery.settings.autoupdate"
+            android:title="@string/pref_ghostery_auto_update_title"/>
+        <CheckBoxPreference
+            android:key="ghostery.settings.allowfirstparty"
+            android:title="@string/pref_ghostery_allow_first_party_title"
+            android:summary="@string/pref_ghostery_allow_first_party_summary"/>
+        <CheckBoxPreference
+            android:key="ghostery.settings.blocknewtrackers"
+            android:title="@string/pref_ghostery_block_new_trackers_title"
+            android:summary="@string/pref_ghostery_block_new_trackers_summary"/>
+    </PreferenceCategory>
+    <!-- Cliqz End -->
     <!-- add privacy browsing category -->
     <PreferenceCategory android:title="@string/pref_privacy_browsing_category">
         <CheckBoxPreference
@@ -140,22 +156,6 @@
         </PreferenceScreen>
         <!-- Cliqz end -->
     </PreferenceCategory>
-
-    <!-- Cliqz start -->
-    <PreferenceCategory android:title="@string/pref_category_ghostery_control_center">
-        <CheckBoxPreference
-            android:key="ghostery.settings.autoupdate"
-            android:title="@string/pref_ghostery_auto_update_title"/>
-        <CheckBoxPreference
-            android:key="ghostery.settings.allowfirstparty"
-            android:title="@string/pref_ghostery_allow_first_party_title"
-            android:summary="@string/pref_ghostery_allow_first_party_summary"/>
-        <CheckBoxPreference
-            android:key="ghostery.settings.blocknewtrackers"
-            android:title="@string/pref_ghostery_block_new_trackers_title"
-            android:summary="@string/pref_ghostery_block_new_trackers_summary"/>
-    </PreferenceCategory>
-    <!-- Cliqz End -->
 
 </PreferenceScreen>
 
