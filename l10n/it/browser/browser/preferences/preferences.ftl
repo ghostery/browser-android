@@ -73,6 +73,41 @@ should-restart-ok = Riavvia { -brand-short-name } adesso
 cancel-no-restart-button = Annulla
 restart-later = Riavvia in seguito
 
+## Extension Control Notifications
+##
+## These strings are used to inform the user
+## about changes made by extensions to browser settings.
+##
+## <img data-l10n-name="icon"/> is going to be replaced by the extension icon.
+##
+## Variables:
+##   $name (String): name of the extension
+
+# This string is shown to notify the user that their home page
+# is being controlled by an extension.
+extension-controlled-homepage-override = La pagina iniziale è attualmente gestita da un’estensione (<img data-l10n-name="icon"/> { $name }).
+# This string is shown to notify the user that their new tab page
+# is being controlled by an extension.
+extension-controlled-new-tab-url = La pagina Nuova scheda è attualmente gestita da un’estensione (<img data-l10n-name="icon"/> { $name }).
+# This string is shown to notify the user that the default search engine
+# is being controlled by an extension.
+extension-controlled-default-search = Il motore di ricerca predefinito è attualmente impostato da un’estensione (<img data-l10n-name="icon"/> { $name }).
+# This string is shown to notify the user that Container Tabs
+# are being enabled by an extension.
+extension-controlled-privacy-containers = Le schede contenitore sono necessarie per il funzionamento di un’estensione (<img data-l10n-name="icon"/> { $name }).
+# This string is shown to notify the user that their tracking protection preferences
+# are being controlled by an extension.
+extension-controlled-websites-tracking-protection-mode = La protezione antitracciamento è attualmente gestita da un’estensione (<img data-l10n-name="icon"/> { $name }).
+# This string is shown to notify the user that their proxy configuration preferences
+# are being controlled by an extension.
+extension-controlled-proxy-config = Le impostazioni di <img data-l10n-name="icon"/> { $name } relative alla connessione a Internet sono attualmente gestite da un’estensione ({ -brand-short-name }).
+# This string is shown after the user disables an extension to notify the user
+# how to enable an extension that they disabled.
+#
+# <img data-l10n-name="addons-icon"/> will be replaced with Add-ons icon
+# <img data-l10n-name="menu-icon"/> will be replaced with Menu icon
+extension-controlled-enable = Per attivare questa estensione aprire Componenti aggiuntivi <img data-l10n-name="addons-icon"/> nel menu <img data-l10n-name="menu-icon"/>.
+
 ## Preferences UI Search Results
 
 search-results-header = Risultati della ricerca
@@ -102,9 +137,6 @@ is-not-default = { -brand-short-name } non è il browser predefinito
 set-as-my-default-browser =
     .label = Imposta come browser predefinito…
     .accesskey = o
-startup-restore-previous-session =
-    .label = Ripristina la sessione precedente
-    .accesskey = R
 startup-page = Quando si avvia { -brand-short-name }
     .accesskey = Q
 startup-user-homepage =
@@ -113,6 +145,9 @@ startup-blank-page =
     .label = Mostra una pagina vuota
 startup-prev-session =
     .label = Mostra le finestre e le schede dell’ultima sessione
+startup-restore-previous-session =
+    .label = Ripristina la sessione precedente
+    .accesskey = R
 disable-extension =
     .label = Disattiva estensione
 home-page-header = Pagina iniziale
@@ -300,6 +335,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Server proxy
+network-proxy-connection-description = Determina come { -brand-short-name } si collega a Internet.
 network-proxy-connection-learn-more = Ulteriori informazioni
 network-proxy-connection-settings =
     .label = Impostazioni…
@@ -543,6 +579,9 @@ history-private-browsing-permanent =
 history-remember-option =
     .label = Conserva la cronologia di navigazione e dei download
     .accesskey = d
+history-remember-browser-option =
+    .label = Conserva la cronologia di navigazione e dei download
+    .accesskey = d
 history-remember-search-option =
     .label = Conserva la cronologia delle ricerche e dei moduli
     .accesskey = g
@@ -559,6 +598,11 @@ history-clear-button =
 ## Privacy Section - Site Data
 
 sitedata-header = Cookie e dati dei siti web
+sitedata-total-size-calculating = Calcolo dimensioni…
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+sitedata-total-size = I cookie, i dati salvati dai siti web e la cache stanno utilizzando { $value } { $unit } di spazio su disco
 sitedata-learn-more = Ulteriori informazioni
 sitedata-accept-cookies-option =
     .label = Accetta cookie e dati dai siti web (consigliato)
@@ -653,6 +697,12 @@ permissions-notification-link = Ulteriori informazioni
 permissions-notification-pause =
     .label = Sospendi notifiche fino al riavvio di { -brand-short-name }
     .accesskey = n
+permissions-block-autoplay-media =
+    .label = Impedisci ai siti web di riprodurre automaticamente contenuti multimediali con audio
+    .accesskey = m
+permissions-block-autoplay-media-exceptions =
+    .label = Eccezioni…
+    .accesskey = E
 permissions-block-popups =
     .label = Blocca le finestre pop-up
     .accesskey = B
@@ -679,6 +729,9 @@ collection-health-report =
     .label = Consenti a { -brand-short-name } di inviare a { -vendor-short-name } dati tecnici e relativi all’interazione con il browser
     .accesskey = v
 collection-health-report-link = Ulteriori informazioni
+collection-studies =
+    .label = Consenti a { -brand-short-name } di installare e condurre studi
+collection-studies-link = Visualizza studi di { -brand-short-name }
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = L’invio dei dati è stato disattivato nella configurazione utilizzata per questa build

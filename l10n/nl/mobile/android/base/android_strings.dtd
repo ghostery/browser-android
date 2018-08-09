@@ -70,6 +70,15 @@
 
 <!ENTITY url_bar_default_text2 "Voer zoekterm of adres in">
 
+<!-- Localization note (url_bar_qrcode_text2) : This text will be
+     heard by non-visual users when the focus is on the QR Code
+     icon in the url bar. -->
+<!ENTITY url_bar_qrcode_text2 "Gebruik uw QR-lezer om te zoeken of voer adres in">
+<!-- Localization note (url_bar_mic_text2) : This text will be
+     heard by non-visual users when the focus is on the Microphone
+     icon in the url bar. -->
+<!ENTITY url_bar_mic_text2 "Gebruik uw microfoon om te zoeken of voer adres in">
+
 <!ENTITY bookmark "Bladwijzer">
 <!ENTITY bookmark_remove "Bladwijzer verwijderen">
 <!ENTITY bookmark_added "Bladwijzer toegevoegd">
@@ -207,6 +216,7 @@
 <!ENTITY pref_category_advanced_summary3 "Tabbladen herstellen, gegevensbesparing, ontwikkelaarshulpmiddelen">
 <!ENTITY pref_category_notifications "Notificaties">
 <!ENTITY pref_category_notifications_summary "Nieuwe functies, website-updates">
+<!ENTITY pref_category_notifications_summary2 "Nieuwe functies, producttips">
 <!ENTITY pref_developer_remotedebugging_usb "Remote debugging via USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Remote debugging via wifi">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Wifi-debugging vereist dat een QR-codelezer-app op uw apparaat is geïnstalleerd.">
@@ -543,7 +553,7 @@
 <!ENTITY pref_compact_tabs_summary2 "Tabbladen in twee kolommen schikken in staande modus">
 
 <!-- Localization note (page_removed): This string appears in a toast message when
-     any page is removed frome about:home. This includes pages that are in history,
+     any page is removed from about:home. This includes pages that are in history,
      bookmarks, or reading list. -->
 <!ENTITY page_removed "Pagina verwijderd">
 <!ENTITY folder_removed "Map verwijderd">
@@ -761,7 +771,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      "Last synced" is one of the user's other Sync clients, typically Firefox on
      their desktop or laptop.-->
 <!ENTITY remote_tabs_last_synced "Laatst gesynchroniseerd: &formatS;">
-<!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
+<!-- Localization note: Used when the sync has not happened yet, showed in place of a date -->
 <!ENTITY remote_tabs_never_synced "Laatst gesynchroniseerd: nooit">
 
 <!-- LOCALIZATION NOTE (intent_uri_private_browsing_prompt): This string will

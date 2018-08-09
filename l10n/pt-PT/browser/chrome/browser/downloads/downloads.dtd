@@ -58,7 +58,7 @@
 <!ENTITY cmd.showMac.accesskey            "F">
 <!ENTITY cmd.showDownloads.label          "Mostrar pasta de transferências">
 <!ENTITY cmd.retry.label                  "Voltar a tentar">
-<!ENTITY cmd.goToDownloadPage.label       "Ir para a página de transferências">
+<!ENTITY cmd.goToDownloadPage.label       "Ir para a página da transferência">
 <!ENTITY cmd.goToDownloadPage.accesskey   "g">
 <!ENTITY cmd.copyDownloadLink.label       "Copiar ligação da transferência">
 <!ENTITY cmd.copyDownloadLink.accesskey   "l">
@@ -77,13 +77,13 @@
      This is the tooltip of the action button shown when malware is blocked.
      -->
 <!ENTITY cmd.removeFile.label             "Remover ficheiro">
-<!-- LOCALIZATION NOTE (cmd.chooseUnblock.tooltip):
+<!-- LOCALIZATION NOTE (cmd.chooseUnblock.label):
      This is the tooltip of the action button shown when potentially unwanted
      downloads are blocked. This opens a dialog where the user can choose
      whether to unblock or remove the download. Removing is the default option.
      -->
 <!ENTITY cmd.chooseUnblock.label          "Remover ficheiro ou permitir transferência">
-<!-- LOCALIZATION NOTE (cmd.chooseOpen.tooltip):
+<!-- LOCALIZATION NOTE (cmd.chooseOpen.label):
      This is the tooltip of the action button shown when uncommon downloads are
      blocked.This opens a dialog where the user can choose whether to open the
      file or remove the download. Opening is the default option.

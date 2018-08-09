@@ -38,6 +38,10 @@
 <!ENTITY bookmarksToolbar.tooltip         "書籤工具列">
 <!ENTITY navigationToolbar.tooltip        "瀏覽工具列">
 
+<!ENTITY editBookmark.done.label "完成">
+<!ENTITY editBookmark.cancel.label "取消">
+<!ENTITY editBookmark.removeBookmark.accessKey "R">
+
 <!-- Toolbar items --> 
 <!ENTITY backButton.label             "上一頁">
 <!ENTITY backButton.tooltip           "回到上一頁">
@@ -80,4 +84,3 @@
 <!ENTITY viewCertificate.accesskey   "C">
 <!ENTITY viewCertManager.label       "開啟憑證管理員">
 <!ENTITY viewCertManager.accesskey   "M">
-

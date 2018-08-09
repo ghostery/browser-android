@@ -5,15 +5,43 @@
 clear-site-data-window =
     .title = Limpar dados
     .style = width: 35em
-clear-site-data-description = Ao limpar todos os cookies e dados de sites armazenados pelo { -brand-short-name } pode desconectar você de sites e remover conteúdos off-line. Limpar os dados em cache não irá afetar seus acessos.
+clear-site-data-description = Limpar todos os cookies e dados de sites armazenados pelo { -brand-short-name } pode desconectar você de sites e remover conteúdos off-line. Limpar os dados em cache não irá afetar seus acessos.
 clear-site-data-close-key =
     .key = w
-clear-site-data-cookies = Cookies e Dados do site
-    .accesskey = S
-clear-site-data-cookies-info = Você pode ser desconectado dos sites se limpar
-clear-site-data-cache = Conteúdo de sites armazenados
-    .accesskey = W
-clear-site-data-cache-info = Isso irá requerer que sites recarreguem as imagens e os dados
+# The parameters in parentheses in this string describe disk usage
+# in the format ($amount $unit), e.g. "Cookies and Site Data (24 KB)"
+# Variables:
+#   $amount (Number) - Amount of site data currently stored on disk
+#   $unit (String) - Abbreviation of the unit that $amount is in, e.g. "MB"
+clear-site-data-cookies-with-data =
+    .label = Cookies e Dados de sites ({ $amount } { $unit })
+    .accesskey = s
+# This string is a placeholder for while the data used to fill
+# clear-site-data-cookies-with-data is loading. This placeholder is usually
+# only shown for a very short time (< 1s), so it should be very similar
+# or the same as clear-site-data-cookies-with-data (except the amount and unit),
+# to avoid flickering.
+clear-site-data-cookies-empty =
+    .label = Cookies e Dados de sites
+    .accesskey = s
+clear-site-data-cookies-info = Você pode ser desconectado de sites se limpar
+# The parameters in parentheses in this string describe disk usage
+# in the format ($amount $unit), e.g. "Cached Web Content (24 KB)"
+# Variables:
+#   $amount (Number) - Amount of cache currently stored on disk
+#   $unit (String) - Abbreviation of the unit that $amount is in, e.g. "MB"
+clear-site-data-cache-with-data =
+    .label = Conteúdo armazenado de sites ({ $amount } { $unit })
+    .accesskey = a
+# This string is a placeholder for while the data used to fill
+# clear-site-data-cache-with-data is loading. This placeholder is usually
+# only shown for a very short time (< 1s), so it should be very similar
+# or the same as clear-site-data-cache-with-data (except the amount and unit),
+# to avoid flickering.
+clear-site-data-cache-empty =
+    .label = Conteúdo armazenado de sites
+    .accesskey = a
+clear-site-data-cache-info = Fará com que sites precisem recarregar imagens e dados
 clear-site-data-cancel =
     .label = Cancelar
     .accesskey = C

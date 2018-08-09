@@ -90,7 +90,7 @@
 <!ENTITY newlistButton.tooltip                          "Créer une nouvelle liste de diffusion"> 
 <!ENTITY editItemButton.tooltip                         "Modifier l’élément sélectionné">
 <!ENTITY newmsgButton.tooltip                           "Écrire un courrier à la sélection"> 
-<!ENTITY newIM.tooltip                                  "Envoyer un message instantané ou initier un chat"> 
+<!ENTITY newIM.tooltip                                  "Envoyer un message instantané ou lancer une discussion"> 
 <!ENTITY deleteItemButton.tooltip                       "Supprimer l’élément sélectionné">
 <!ENTITY throbber.tooltip                               "Visiter le site web de &vendorShortName;">
 <!ENTITY advancedButton.tooltip                         "Recherche avancée d’adresses">

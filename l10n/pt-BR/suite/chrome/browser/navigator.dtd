@@ -1,13 +1,13 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- extracted from content/navigator.xul -->
+
 <!-- LOCALIZATION NOTE : FILE This file contains the browser main menu items --> 
 <!-- LOCALIZATION NOTE : FILE Do not translate commandkeys --> 
+
 <!-- LOCALIZATION NOTE (mainWindow.title): DONT_TRANSLATE --> 
-
-
-
 <!ENTITY mainWindow.title "&brandShortName;">
 <!-- LOCALIZATION NOTE (mainWindow.titlemodifier) : DONT_TRANSLATE --> 
 <!ENTITY mainWindow.titlemodifier "&brandShortName;">
@@ -37,8 +37,12 @@
 <!ENTITY menuBar.tooltip                  "Menu (clique para exibir)">
 <!ENTITY bookmarksToolbar.tooltip         "Barra dos favoritos">
 <!ENTITY navigationToolbar.tooltip        "Barra de ferramentas (clique para exibir)">
-<!-- Toolbar items --> 
 
+<!ENTITY editBookmark.done.label "Concluído">
+<!ENTITY editBookmark.cancel.label "Cancelar">
+<!ENTITY editBookmark.removeBookmark.accessKey "R">
+
+<!-- Toolbar items --> 
 <!ENTITY backButton.label             "Voltar">
 <!ENTITY backButton.tooltip           "Página anterior">
 <!ENTITY forwardButton.label          "Avançar">
@@ -68,8 +72,8 @@
 <!ENTITY homeButton.label             "Página Inicial">
 <!ENTITY bookmarksToolbarItem.label   "Marcadores da barra de ferramentas">
 <!ENTITY bookmarksToolbarChevron.tooltip "Exibir mais favoritos">
-<!-- Statusbar -->
 
+<!-- Statusbar -->
 <!ENTITY  statusText.label            "Concluído">
 
 <!ENTITY popupIcon.tooltiptext      "Um popup foi bloqueado - clique para desbloquear este site">

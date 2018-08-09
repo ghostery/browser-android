@@ -1,13 +1,13 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- Entities for AccountWizard -->
 
+<!-- Entities for AccountWizard -->
 
 <!ENTITY windowTitle.label "Postafiók varázsló">
 <!ENTITY accountWizard.size "width: 40em; height: 38em;">
-<!-- Entities for Account Type page -->
 
+<!-- Entities for Account Type page -->
 
 <!ENTITY accountSetupInfo2.label "Mielőtt üzeneteket kaphatna, először be kell állítania egy postafiókot.">
 <!ENTITY accountTypeTitle.label "Új postafiók beállítása">
@@ -17,13 +17,17 @@
 <!ENTITY accountTypeMail.accesskey "L">
 <!ENTITY accountTypeNews.label "Hírcsoportfiók">
 <!ENTITY accountTypeNews.accesskey "H">
-<!-- Entities for Identity page -->
 
+<!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
+<!ENTITY accountTypeMovemail.label "Unix levélgyűjtő (Movemail)">
+<!ENTITY accountTypeMovemail.accesskey "U">
+
+<!-- Entities for Identity page -->
 
 <!ENTITY identityTitle.label "Felhasználó">
 <!ENTITY identityDesc.label "Minden postafiókhoz tartozik egy személyazonosság. Az itt megadott név megjelenik a másoknak küldött levelek fejlécében.">
-<!-- LOCALIZATION NOTE (fullnameDesc.label) : do not translate two of "&quot;" in below line -->
 
+<!-- LOCALIZATION NOTE (fullnameDesc.label) : do not translate two of "&quot;" in below line -->
 <!ENTITY fullnameDesc.label "Adja meg azt a nevet, amelyet a kézbesítendő levelek „Feladó” sorában akar megjelentetni.">
 <!-- LOCALIZATION NOTE (fullnameExample.label) : use following directions for below line
   1, do not translate two of "&quot;"
@@ -35,8 +39,8 @@
 
 <!ENTITY emailLabel.label "E-mail cím:">
 <!ENTITY emailLabel.accesskey "E">
-<!-- Entities for Incoming Server page -->
 
+<!-- Entities for Incoming Server page -->
 
 <!ENTITY incomingTitle.label "A bejövő levelek kiszolgáló adatai">
 <!ENTITY incomingServerTypeDesc.label "Válassza ki a bejövő leveleket kezelő kiszolgáló típusát">
@@ -64,8 +68,8 @@
 <!ENTITY newsServerNameDesc.label "Írja be a hírcsoport-kiszolgáló (NNTP) nevét (pl.: „news.example.net”).">
 <!ENTITY newsServerLabel.label "Hírcsoport-kiszolgáló:">
 <!ENTITY newsServerLabel.accesskey "H">
-<!-- Entities for Outgoing Server page -->
 
+<!-- Entities for Outgoing Server page -->
 
 <!ENTITY outgoingTitle.label "A kimenő levelek kiszolgáló adatai">
 <!-- LOCALIZATION NOTE (outgoingServer.description) : Do not translate "SMTP" and "&quot;smtp.example.net&quot;" in below line -->
@@ -75,10 +79,10 @@
 <!ENTITY outgoingUsername.description "Írja be az e-mail szolgáltatója által megadott kimenő felhasználói nevét (ez általában ugyanaz, mint a bejövő felhasználói név).">
 <!ENTITY outgoingUsername.label "Kimenő felhasználó név:">
 <!ENTITY outgoingUsername.accesskey "f">
+
 <!-- LOCALIZATION NOTE (modifyOutgoing.suffix) : This string will be appended after each of
      haveSmtp1.suffix3, haveSmtp2.suffix3, haveSmtp3.suffix3 .
 -->
-
 <!ENTITY modifyOutgoing.suffix "You can modify outgoing server settings from within Mail &amp; Newsgroups Account Settings.">
 <!-- LOCALIZATION NOTE (haveSmtp1.prefix and haveSmtp1.suffix3) : Do not translate "SMTP" and "&quot;" in
      these variables. Also, translate haveSmtp1.prefix and haveSmtp1.suffix3 as a single sentence, inserting
@@ -98,16 +102,16 @@
 -->
 <!ENTITY haveSmtp3.prefix "A kimenő (SMTP) kiszolgálója, „">
 <!ENTITY haveSmtp3.suffix3 "” ugyanaz, mint a bejövő kiszolgálója, és a bejövő felhasználó neve lesz használva az eléréséhez.">
-<!-- Entities for Account name page -->
 
+<!-- Entities for Account name page -->
 
 <!ENTITY accnameTitle.label "Postafiók neve">
 <!-- LOCALIZATION NOTE (accnameDesc.label) : do not translate any "&quot;" in below line -->
 <!ENTITY accnameDesc.label "Írja be milyen néven szeretne hivatkozni erre a postafiókra (például: „Munka”, „Otthon” vagy „Hírek”).">
 <!ENTITY accnameLabel.label "Postafiók neve:">
 <!ENTITY accnameLabel.accesskey "P">
-<!-- Entities for Done (Congratulations) page -->
 
+<!-- Entities for Done (Congratulations) page -->
 
 <!ENTITY completionTitle.label "Gratulálunk!">
 <!ENTITY completionText.label "Ellenőrizze, hogy az alábbi adatok helyesek-e.">

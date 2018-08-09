@@ -1,13 +1,13 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- Entities for AccountWizard -->
 
+<!-- Entities for AccountWizard -->
 
 <!ENTITY windowTitle.label "Assistente de Contas">
 <!ENTITY accountWizard.size "width: 60em; height: 38em;">
-<!-- Entities for Account Type page -->
 
+<!-- Entities for Account Type page -->
 
 <!ENTITY accountSetupInfo2.label "Para receber mensagens, antes você precisa configurar uma conta.">
 <!ENTITY accountTypeTitle.label "Configurações de conta">
@@ -17,13 +17,17 @@
 <!ENTITY accountTypeMail.accesskey "e">
 <!ENTITY accountTypeNews.label "Conta de grupos de notícias">
 <!ENTITY accountTypeNews.accesskey "n">
-<!-- Entities for Identity page -->
 
+<!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
+<!ENTITY accountTypeMovemail.label "Unix Mailspool (Movemail)">
+<!ENTITY accountTypeMovemail.accesskey "U">
+
+<!-- Entities for Identity page -->
 
 <!ENTITY identityTitle.label "Identidade">
 <!ENTITY identityDesc.label "Cada conta tem sua própria identidade, que é a informação que identifica você aos destinatários das suas mensagens.">
-<!-- LOCALIZATION NOTE (fullnameDesc.label) : do not translate two of "&quot;" in below line -->
 
+<!-- LOCALIZATION NOTE (fullnameDesc.label) : do not translate two of "&quot;" in below line -->
 <!ENTITY fullnameDesc.label "Forneça o nome que você quer que seja exibido no campo &quot;De&quot; das mensagens que você envia.">
 <!-- LOCALIZATION NOTE (fullnameExample.label) : use following directions for below line
   1, do not translate two of "&quot;"
@@ -35,8 +39,8 @@
 
 <!ENTITY emailLabel.label "Endereço de email:">
 <!ENTITY emailLabel.accesskey "E">
-<!-- Entities for Incoming Server page -->
 
+<!-- Entities for Incoming Server page -->
 
 <!ENTITY incomingTitle.label "Informações do servidor de recebimento">
 <!ENTITY incomingServerTypeDesc.label "Tipo de servidor utilizado para receber mensagens:">
@@ -64,8 +68,8 @@
 <!ENTITY newsServerNameDesc.label "Forneça o nome do servidor de notícias (NNTP) (por exemplo, &quot;news.exemplo.com.br&quot;).">
 <!ENTITY newsServerLabel.label "Servidor de grupos de notícias:">
 <!ENTITY newsServerLabel.accesskey "g">
-<!-- Entities for Outgoing Server page -->
 
+<!-- Entities for Outgoing Server page -->
 
 <!ENTITY outgoingTitle.label "Informações do servidor de envio">
 <!-- LOCALIZATION NOTE (outgoingServer.description) : Do not translate "SMTP" and "&quot;smtp.example.net&quot;" in below line -->
@@ -75,10 +79,10 @@
 <!ENTITY outgoingUsername.description "Forneça o nome de usuário do servidor SMTP (usado para enviar mensagens), dado a você pelo seu provedor de email. Normalmente é o mesmo nome de usuário usado para receber mensagens.">
 <!ENTITY outgoingUsername.label "Nome de usuário do servidor de envio:">
 <!ENTITY outgoingUsername.accesskey "N">
+
 <!-- LOCALIZATION NOTE (modifyOutgoing.suffix) : This string will be appended after each of
      haveSmtp1.suffix3, haveSmtp2.suffix3, haveSmtp3.suffix3 .
 -->
-
 <!ENTITY modifyOutgoing.suffix "Você pode modificar configurações do servidor a partir de Config&amp;urações de contas...">
 <!-- LOCALIZATION NOTE (haveSmtp1.prefix and haveSmtp1.suffix3) : Do not translate "SMTP" and "&quot;" in
      these variables. Also, translate haveSmtp1.prefix and haveSmtp1.suffix3 as a single sentence, inserting
@@ -98,16 +102,16 @@
 -->
 <!ENTITY haveSmtp3.prefix "O seu servidor SMTP (de enviar mensagens), &quot;">
 <!ENTITY haveSmtp3.suffix3 "”, é o mesmo servidor usado para receber mensagens. Será usado o mesmo nome de usuário.">
-<!-- Entities for Account name page -->
 
+<!-- Entities for Account name page -->
 
 <!ENTITY accnameTitle.label "Nome da conta">
 <!-- LOCALIZATION NOTE (accnameDesc.label) : do not translate any "&quot;" in below line -->
 <!ENTITY accnameDesc.label "Forneça o nome pelo qual você quer se referir a esta conta (por exemplo, &quot;Conta do trabalho&quot;, &quot;Casa&quot; ou &quot;Conta de notícias&quot;).">
 <!ENTITY accnameLabel.label "Nome da conta:">
 <!ENTITY accnameLabel.accesskey "t">
-<!-- Entities for Done (Congratulations) page -->
 
+<!-- Entities for Done (Congratulations) page -->
 
 <!ENTITY completionTitle.label "Parabéns!">
 <!ENTITY completionText.label "Verifique se as informações abaixo estão corretas:">

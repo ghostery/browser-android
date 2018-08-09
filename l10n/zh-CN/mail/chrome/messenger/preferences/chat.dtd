@@ -15,7 +15,7 @@ displayed at the end of the line. The translations of the
 reportIdleAfter.label and idleTime parts don't have to mean the exact
 same thing as in English; please try instead to translate the whole
 sentence. -->
-<!ENTITY  reportIdleAfter.label         "当我不活动超过">
+<!ENTITY  reportIdleAfter.label         "当我闲置超过">
 <!ENTITY  reportIdleAfter.accesskey     "I">
 <!ENTITY  idleTime                      "分钟时，让我的联系人获知">
 

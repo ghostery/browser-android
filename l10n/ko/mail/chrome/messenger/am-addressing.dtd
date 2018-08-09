@@ -3,6 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!-- extracted from am-addressing.xul -->
+
 <!ENTITY addressing.label          "쓰기 및 주소">
 <!ENTITY addressingGroupTitle.label "쓰기 및 주소">
 <!ENTITY addressingText.label      "주소 검색 설정:">
@@ -15,8 +16,10 @@
 <!ENTITY directories.label         "다른 LDAP 서버 사용:">
 <!ENTITY directories.accesskey     "d">
 <!ENTITY directoriesNone.label     "없음">
+
 <!-- am-addressing.xul -->
-<!ENTITY compositionGroupTitle.label "메시지 쓰기">
+
+<!ENTITY compositionGroupTitle.label          "메시지 쓰기">
 <!-- LOCALIZATION NOTE (useHtml.label) : do not translate "html" in below line -->
 <!ENTITY useHtml.label                        "HTML 형식으로 메일 쓰기">
 <!ENTITY useHtml.accesskey                    "C">
@@ -25,6 +28,9 @@
 <!-- LOCALIZATION NOTE (then.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY then.label                           "메시지 위치">
 <!ENTITY then.accesskey                       "T">
+<!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
+<!ENTITY quoting.label                        "인용할 때,">
+<!ENTITY quoting.accesskey                    "q">
 <!ENTITY aboveQuote.label                     "인용문 위에서 회신 시작">
 <!ENTITY belowQuote.label                     "인용문 아래에서 회신 시작">
 <!ENTITY selectAndQuote.label                 "인용문 선택">

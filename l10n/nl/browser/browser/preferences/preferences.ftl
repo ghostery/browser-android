@@ -85,6 +85,47 @@ should-restart-ok = { -brand-short-name } nu herstarten
 cancel-no-restart-button = Annuleren
 restart-later = Later herstarten
 
+## Extension Control Notifications
+##
+## These strings are used to inform the user
+## about changes made by extensions to browser settings.
+##
+## <img data-l10n-name="icon"/> is going to be replaced by the extension icon.
+##
+## Variables:
+##   $name (String): name of the extension
+
+# This string is shown to notify the user that their home page
+# is being controlled by an extension.
+extension-controlled-homepage-override = Een extensie, <img data-l10n-name="icon"/> { $name }, beheert uw startpagina.
+
+# This string is shown to notify the user that their new tab page
+# is being controlled by an extension.
+extension-controlled-new-tab-url = Een extensie, <img data-l10n-name="icon"/> { $name }, beheert uw nieuw-tabbladpagina.
+
+# This string is shown to notify the user that the default search engine
+# is being controlled by an extension.
+extension-controlled-default-search = Een extensie, <img data-l10n-name="icon"/> { $name }, heeft uw standaardzoekmachine ingesteld.
+
+# This string is shown to notify the user that Container Tabs
+# are being enabled by an extension.
+extension-controlled-privacy-containers = Een extensie, <img data-l10n-name="icon"/> { $name }, vereist containertabbladen.
+
+# This string is shown to notify the user that their tracking protection preferences
+# are being controlled by an extension.
+extension-controlled-websites-tracking-protection-mode = Een extensie, <img data-l10n-name="icon"/> { $name }, heeft beheer over bescherming tegen volgen.
+
+# This string is shown to notify the user that their proxy configuration preferences
+# are being controlled by an extension.
+extension-controlled-proxy-config = Een extensie, <img data-l10n-name="icon"/> { $name }, heeft beheer over hoe { -brand-short-name } verbinding maakt met het internet.
+
+# This string is shown after the user disables an extension to notify the user
+# how to enable an extension that they disabled.
+#
+# <img data-l10n-name="addons-icon"/> will be replaced with Add-ons icon
+# <img data-l10n-name="menu-icon"/> will be replaced with Menu icon
+extension-controlled-enable = Ga naar <img data-l10n-name="addons-icon"/> Add-ons in het menu <img data-l10n-name="menu-icon"/> om de extensie in te schakelen.
+
 ## Preferences UI Search Results
 
 search-results-header = Zoekresultaten
@@ -237,8 +278,8 @@ translate-web-pages =
 
 # The <img> element is replaced by the logo of the provider
 # used to provide machine translations for web pages.
-translate-attribution = Vertalingen door <img data-l10n-name="logo"/>
 
+translate-attribution = Vertalingen door <img data-l10n-name="logo"/>
 translate-exceptions =
     .label = Uitzonderingen…
     .accesskey = z
@@ -386,6 +427,8 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Netwerkproxy
+
+network-proxy-connection-description = Configureren hoe { -brand-short-name } verbinding maakt met het internet.
 
 network-proxy-connection-learn-more = Meer info
 
@@ -686,6 +729,10 @@ history-remember-option =
     .label = Mijn navigatie- en downloadgeschiedenis onthouden
     .accesskey = v
 
+history-remember-browser-option =
+    .label = Navigatie- en downloadgeschiedenis onthouden
+    .accesskey = v
+
 history-remember-search-option =
     .label = Zoek- en formuliergeschiedenis onthouden
     .accesskey = f
@@ -705,6 +752,13 @@ history-clear-button =
 ## Privacy Section - Site Data
 
 sitedata-header = Cookies en websitegegevens
+
+sitedata-total-size-calculating = Grootte van websitegegevens en buffer berekenen…
+
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+sitedata-total-size = Uw opgeslagen cookies, websitegegevens en buffer gebruiken momenteel { $value } { $unit } aan schijfruimte.
 
 sitedata-learn-more = Meer info
 
@@ -824,6 +878,14 @@ permissions-notification-pause =
     .label = Notificaties pauzeren totdat { -brand-short-name } wordt herstart
     .accesskey = N
 
+permissions-block-autoplay-media =
+    .label = Automatisch afspelen van media met geluid door websites blokkeren
+    .accesskey = s
+
+permissions-block-autoplay-media-exceptions =
+    .label = Uitzonderingen…
+    .accesskey = U
+
 permissions-block-popups =
     .label = Pop-upvensters blokkeren
     .accesskey = P
@@ -857,6 +919,10 @@ collection-health-report =
     .label = { -brand-short-name } toestaan om technische en interactiegegevens naar { -vendor-short-name } te verzenden
     .accesskey = r
 collection-health-report-link = Meer info
+
+collection-studies =
+    .label = { -brand-short-name } toestaan om onderzoeken te installeren en uit te voeren
+collection-studies-link = { -brand-short-name }-onderzoeken weergeven
 
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.

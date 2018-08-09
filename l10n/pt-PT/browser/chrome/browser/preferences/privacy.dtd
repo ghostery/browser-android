@@ -47,7 +47,7 @@
 <!ENTITY  acceptCookies4.label          "Aceitar cookies e dados de sites de websites (recomendado)">
 <!ENTITY  acceptCookies4.accesskey      "A">
 
-<!ENTITY  blockCookies.label            "Bloquear cookies e dados de sites (pode causar que os websites quebrem)">
+<!ENTITY  blockCookies.label            "Bloquear cookies e dados de sites (pode fazer com que os websites deixam de funcionar)">
 <!ENTITY  blockCookies.accesskey        "B">
 
 <!ENTITY  acceptThirdParty3.pre.label     "Aceitar cookies de terceiros e dados de sites">
@@ -115,7 +115,7 @@
 <!ENTITY  clearOnCloseSettings.accesskey "e">
 
 <!ENTITY  browserContainersLearnMore.label      "Saber mais">
-<!ENTITY  browserContainersEnabled.label        "Ativar separadores contentores">
+<!ENTITY  browserContainersEnabled.label        "Ativar separadores isolados">
 <!ENTITY  browserContainersEnabled.accesskey    "n">
 <!ENTITY  browserContainersSettings.label        "Definições…">
 <!ENTITY  browserContainersSettings.accesskey    "i">

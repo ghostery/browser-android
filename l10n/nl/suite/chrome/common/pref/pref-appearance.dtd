@@ -23,10 +23,6 @@
 
 <!ENTITY pref.locales.title                     "Taal van gebruikersinterface">
 <!ENTITY selectLocale.label                     "Selecteer de taal voor tekst die in dialoogvensters, menu’s, werkbalken en knopteksten verschijnt:">
-<!--LOCALIZATION NOTE (restartOnLangChange.label): Don't translate "&brandShortName;".
-    Place &brandShortName; in the phrase where the name of the application should appear
--->
-<!ENTITY restartOnLangChange.label              "Nieuwe taalvoorkeuren worden van kracht zodra u &brandShortName; herstart.">
 
 <!--LOCALIZATION NOTE (dateTimeFormatting.label): labels/accesskeys for
      radiobuttons are set dynamically from prefutilities.properties

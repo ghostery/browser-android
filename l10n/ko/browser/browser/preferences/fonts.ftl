@@ -138,3 +138,12 @@ fonts-languages-fallback-name-vietnamese =
     .label = 베트남어
 fonts-languages-fallback-name-other =
     .label = 기타 (중앙유럽어 포함)
+fonts-very-large-warning-title = 최소 글꼴 크기가 너무 큼
+fonts-very-large-warning-message = 최소 글꼴 크기가 너무 큽니다(24 픽셀을 넘음). 이렇게 되면 이 페이지와 같은 몇몇 중요한 설정 페이지가 보기 힘들어질 수 있습니다.
+fonts-very-large-warning-accept = 그래도 이렇게 바꾸기
+# Variables:
+#   $name {string, "Arial"} - Name of the default font
+fonts-label-default =
+    .label = 기본 ({ $name })
+fonts-label-default-unnamed =
+    .label = 기본

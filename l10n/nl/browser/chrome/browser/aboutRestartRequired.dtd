@@ -1,0 +1,13 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY restartRequired.title "Herstart vereist">
+
+<!ENTITY restartRequired.header "Sorry. We moeten nog een klein dingetje uitvoeren om te kunnen blijven werken.">
+<!ENTITY restartRequired.description "
+<p>We hebben zojuist een update op de achtergrond uitgevoerd. Klik op &brandShortName; herstarten om het toepassen ervan te voltooien.</p>
+<p>Daarna zullen al uw pagina’s, vensters en tabbladen worden hersteld, zodat u snel verder kunt.</p>
+">
+
+<!ENTITY restartButton.label "&brandShortName; herstarten">

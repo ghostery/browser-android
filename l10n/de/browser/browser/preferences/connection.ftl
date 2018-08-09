@@ -13,6 +13,7 @@ connection-close-key =
     .key = w
 connection-disable-extension =
     .label = Erweiterung deaktivieren
+connection-proxy-configure = Proxy-Zugriff auf das Internet konfigurieren
 connection-proxy-option-no =
     .label = Kein Proxy
     .accesskey = e

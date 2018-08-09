@@ -1,0 +1,10 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY restartRequired.title "Wymagane ponowne uruchomienie">
+
+<!ENTITY restartRequired.header "Niestety! Potrzebna jest chwila przerwy.">
+<!ENTITY restartRequired.description "<p>W tle została właśnie zainstalowana aktualizacja. Kliknij „Uruchom ponowne”, aby dokończyć uaktualnianie.</p><p>Wszystkie strony, okna i otwarte karty zostaną przywrócone po ponownym uruchomieniu.</p>">
+
+<!ENTITY restartButton.label "Uruchom ponownie">

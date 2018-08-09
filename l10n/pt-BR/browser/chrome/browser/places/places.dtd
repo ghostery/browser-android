@@ -8,7 +8,7 @@
 <!ENTITY places.library.height "500">
 <!ENTITY organize.label        "Organizar">
 <!ENTITY organize.accesskey    "O">
-<!ENTITY organize.tooltip      "Organizar seus favoritos">
+<!ENTITY organize.tooltip      "Organize seus favoritos">
 
 <!ENTITY file.close.label               "Fechar">
 <!ENTITY file.close.accesskey           "F">
@@ -27,9 +27,9 @@
 <!ENTITY view.sortDescending.label      "Ordem decrescente">
 <!ENTITY view.sortDescending.accesskey  "r">
 
-<!ENTITY importBookmarksFromHTML.label     "Importar favoritos em HTML…">
+<!ENTITY importBookmarksFromHTML.label     "Importar favoritos de HTML…">
 <!ENTITY importBookmarksFromHTML.accesskey "I">
-<!ENTITY exportBookmarksToHTML.label       "Exportar favoritos como HTML…">
+<!ENTITY exportBookmarksToHTML.label       "Exportar favoritos para HTML…">
 <!ENTITY exportBookmarksToHTML.accesskey   "E">
 <!ENTITY importOtherBrowser.label          "Importar dados de outro navegador…">
 <!ENTITY importOtherBrowser.accesskey      "m">
@@ -73,9 +73,6 @@
 <!ENTITY cmd.reloadLivebookmark.label      "Recarregar RSS">
 <!ENTITY cmd.reloadLivebookmark.accesskey  "R">
 
-<!ENTITY cmd.moveBookmarks.label                  "Mover…">
-<!ENTITY cmd.moveBookmarks.accesskey              "M">
-
 <!ENTITY col.name.label          "Nome">
 <!ENTITY col.tags.label          "Etiquetas">
 <!ENTITY col.url.label           "Endereço">
@@ -83,7 +80,7 @@
 <!ENTITY col.visitcount.label    "Número de visitas">
 <!ENTITY col.description.label   "Descrição">
 <!ENTITY col.dateadded.label     "Adicionado">
-<!ENTITY col.lastmodified.label  "Modificado">
+<!ENTITY col.lastmodified.label  "Última modificação">
 
 <!ENTITY historySearch.placeholder  "Pesquisar no histórico">
 <!ENTITY bookmarksSearch.placeholder  "Pesquisar nos favoritos">

@@ -88,7 +88,7 @@
      an anchor that links to a site to provide additional information regarding
      why the system is no longer supported. As this is all in one line, try to
      make the localized text short (see bug 843497 for screenshots). -->
-<!ENTITY update.unsupported.start    "Não pode efetuar mais atualizações neste sistema. ">
+<!ENTITY update.unsupported.start    "Não pode realizar mais atualizações neste sistema. ">
 <!ENTITY update.unsupported.linkText "Saber mais">
 <!ENTITY update.unsupported.end      "">
 

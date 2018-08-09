@@ -7,7 +7,7 @@ languages-window =
     .style = width: 30em
 languages-close-key =
     .key = W
-languages-description = Páginas web às vezes são oferecidas em mais de um idioma. Escolher idiomas para apresentar essas páginas web, em ordem de preferência
+languages-description = Algumas páginas são oferecidas em mais de um idioma. Escolha idiomas para apresentar essas páginas, em ordem de preferência
 languages-customize-spoof-english =
     .label = Solicitar versões em inglês de páginas da web para maior privacidade
 languages-customize-moveup =
@@ -24,3 +24,15 @@ languages-customize-select-language =
 languages-customize-add =
     .label = Adicionar
     .accesskey = A
+# The pattern used to generate strings presented to the user in the
+# locale selection list.
+#
+# Example:
+#   Icelandic [is]
+#   Spanish (Chile) [es-CL]
+#
+# Variables:
+#   $locale (String) - A name of the locale (for example: "Icelandic", "Spanish (Chile)")
+#   $code (String) - Locale code of the locale (for example: "is", "es-CL")
+languages-code-format =
+    .label = { $locale }  [{ $code }]

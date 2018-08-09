@@ -35,6 +35,9 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "关闭其他标签页">
 <!ENTITY  closeOtherTabs.accesskey           "o">
 
+<!ENTITY  closeSelectedTabs.label            "关闭已选标签页">
+<!ENTITY  closeSelectedTabs.accesskey        "S">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -54,6 +57,8 @@ can reach it easily. -->
 <!ENTITY  sendToDeviceOfflineFeedback.label  "已排队 (离线)">
 <!ENTITY  moveToNewWindow.label              "移动到新窗口">
 <!ENTITY  moveToNewWindow.accesskey          "W">
+<!ENTITY  reopenInContainer.label            "使用身份标签页打开">
+<!ENTITY  reopenInContainer.accesskey        "e">
 <!ENTITY  bookmarkAllTabs.label              "为全部标签页添加书签…">
 <!ENTITY  bookmarkAllTabs.accesskey          "T">
 <!ENTITY  undoCloseTab.label                 "恢复关闭的标签页">
@@ -129,7 +134,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY showAllTabsCmd.label "显示所有标签页">
 <!ENTITY showAllTabsCmd.accesskey "A">
 <!ENTITY toggleReaderMode.key "R">
-
 <!ENTITY toggleReaderMode.win.keycode "VK_F9">
 
 <!ENTITY fxaSignIn.label "登录&syncBrand.shortName.label;服务">
@@ -189,10 +193,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY otherBookmarksCmd.label "其他书签">
 <!ENTITY mobileBookmarksCmd.label "移动版书签">
 <!ENTITY bookmarksToolbarChevron.tooltip "显示更多书签">
-<!ENTITY showRecentlyBookmarked.label     "显示最近的书签">
-<!ENTITY showRecentlyBookmarked.accesskey "h">
-<!ENTITY hideRecentlyBookmarked.label     "隐藏最近的书签">
-<!ENTITY hideRecentlyBookmarked.accesskey "H">
 
 <!ENTITY backCmd.label                "后退">
 <!ENTITY backCmd.accesskey            "B">
@@ -234,7 +234,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.translateNotificationAnchor.tooltip       "翻译此页面">
 <!ENTITY urlbar.translatedNotificationAnchor.tooltip      "管理页面翻译">
 <!ENTITY urlbar.emeNotificationAnchor.tooltip             "管理 DRM 软件使用">
-
 <!ENTITY urlbar.midiNotificationAnchor.tooltip            "打开 MIDI 面板">
 
 <!ENTITY urlbar.cameraBlocked.tooltip            "您已阻止此网站使用您的摄像头。">
@@ -245,7 +244,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "您已阻止此网站使用持久存储。">
 <!ENTITY urlbar.popupBlocked.tooltip             "您已拦截此网站的弹出窗口。">
 <!ENTITY urlbar.canvasBlocked.tooltip            "您已禁止此网站获取 Canvas 数据。">
-
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "您已阻止此网站使用 Adobe Flash 插件。">
 <!ENTITY urlbar.midiBlocked.tooltip              "您已阻止此网站访问 MIDI。">
 
@@ -255,6 +253,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!-- Toolbar items -->
 <!ENTITY homeButton.label             "主页">
+
+<!ENTITY homeButton.defaultPage.tooltip "&brandShortName; 主页">
 
 <!ENTITY bookmarksButton.label          "书签">
 <!ENTITY bookmarksCmd.commandkey "b">
@@ -395,7 +395,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      when Sync is configured but this appears to be the only device attached to
      the account. We also show links to download Firefox for android/ios. -->
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "想查看您在其他设备上的标签页吗？">
-<!ENTITY appMenuRemoteTabs.openprefs.label "同步服务首选项">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "打开同步首选项">
 <!ENTITY appMenuRemoteTabs.notsignedin.label "登录以查看来自您的其他设备的标签页列表。">
 <!ENTITY appMenuRemoteTabs.unverified.label "您的账号需要验证。">
@@ -437,6 +436,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.addMoreItems.label "添加更多项目…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "A">
 
+<!ENTITY customizeMenu.autoHideDownloadsButton.label "于工具栏自动隐去">
+<!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "A">
+<!ENTITY customizeMenu.manageExtension.label "管理扩展">
+<!ENTITY customizeMenu.manageExtension.accesskey "E">
+
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
     secondary commands. -->
@@ -444,7 +448,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY openCmd.commandkey           "l">
 <!ENTITY urlbar.placeholder2          "搜索或输入网址">
-<!ENTITY urlbar.placeholder3          "在这里输入搜索关键词或网址">
 <!ENTITY urlbar.accesskey             "d">
 <!-- LOCALIZATION NOTE (urlbar.extension.label): Used to indicate that a selected autocomplete entry is provided by an extension. -->
 <!ENTITY urlbar.extension.label       "扩展：">
@@ -798,6 +801,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY identity.moreInfoLinkText2 "更多信息">
 
+<!ENTITY identity.clearSiteData "清除 Cookie 和网站数据…">
+
 <!ENTITY identity.permissions "权限">
 <!ENTITY identity.permissionsEmpty "您尚未授予此站点任何权限。">
 <!ENTITY identity.permissionsReloadHint "您可能需要重新载入此页面以应用更改。">
@@ -901,6 +906,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.allWindowsShared.message "您的屏幕上的所有可见窗口都将被共享。">
 
 <!ENTITY trackingProtection.title "跟踪保护">
+<!ENTITY trackingProtection.tooltip "打开跟踪保护首选项">
 <!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; 已拦截该页面可能跟踪您的浏览行为的内容。">
 <!ENTITY trackingProtection.detectedNotBlocked3 "此网站包含的某些元素可能跟踪您的浏览行为，但您已经禁用保护。">
 <!ENTITY trackingProtection.notDetected3 "此页面上未检测到跟踪元素。">
@@ -980,22 +986,17 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY updateManual.cancelButton.accesskey "N">
 <!ENTITY updateManual.panelUI.label "下载 &brandShorterName; 的副本">
 
-<!ENTITY updateRestart.message2 "快速地重启后，&brandShorterName; 将恢复您所有在隐私浏览模式外打开的标签页和窗口。">
-<!ENTITY updateRestart.header.message2 "重启 &brandShorterName; 以更新。">
-<!ENTITY updateRestart.acceptButton.label "重启并恢复当前浏览状态">
+<!ENTITY updateRestart.message2 "稍等片刻，&brandShorterName; 重开后将恢复您所有不在隐私浏览模式中打开的标签页和窗口。">
+<!ENTITY updateRestart.header.message2 "重开 &brandShorterName; 以更新。">
+<!ENTITY updateRestart.acceptButton.label "重开并恢复当前浏览状态">
 <!ENTITY updateRestart.acceptButton.accesskey "R">
 <!ENTITY updateRestart.cancelButton.label "暂时不要">
 <!ENTITY updateRestart.cancelButton.accesskey "N">
-<!ENTITY updateRestart.panelUI.label2 "重启 &brandShorterName; 以更新">
-
-<!ENTITY newTabControlled.message "一个扩展更改了您打开新标签页时看到的页面。如果您不想做此更改，可以还原此设置。">
+<!ENTITY updateRestart.panelUI.label2 "重开 &brandShorterName; 以更新">
 
 <!ENTITY newTabControlled.header.message "您的新标签页已变更。">
 <!ENTITY newTabControlled.keepButton.label "保留更改">
 <!ENTITY newTabControlled.keepButton.accesskey "K">
-<!ENTITY newTabControlled.restoreButton.label "还原设置">
-<!ENTITY newTabControlled.restoreButton.accesskey "R">
-
 <!ENTITY newTabControlled.disableButton.label "禁用扩展">
 <!ENTITY newTabControlled.disableButton.accesskey "D">
 
@@ -1005,6 +1006,12 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY homepageControlled.keepButton.accesskey "K">
 <!ENTITY homepageControlled.disableButton.label "禁用扩展">
 <!ENTITY homepageControlled.disableButton.accesskey "D">
+
+<!ENTITY tabHideControlled.header.message "存取您隐藏的标签页">
+<!ENTITY tabHideControlled.keepButton.label "保持隐藏标签页">
+<!ENTITY tabHideControlled.keepButton.accesskey "K">
+<!ENTITY tabHideControlled.disableButton.label "禁用扩展">
+<!ENTITY tabHideControlled.disableButton.accesskey "D">
 
 <!ENTITY pageActionButton.tooltip "页面动作">
 <!ENTITY pageAction.addToUrlbar.label "添加到地址栏">

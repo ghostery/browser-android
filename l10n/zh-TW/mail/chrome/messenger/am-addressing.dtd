@@ -28,6 +28,9 @@
 <!-- LOCALIZATION NOTE (then.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY then.label                           "然後，">
 <!ENTITY then.accesskey                       "T">
+<!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
+<!ENTITY quoting.label                        "引用時，">
+<!ENTITY quoting.accesskey                    "q">
 <!ENTITY aboveQuote.label                     "在引文前面開始回信">
 <!ENTITY belowQuote.label                     "在引文之後開始回信">
 <!ENTITY selectAndQuote.label                 "選取引言">
@@ -45,4 +48,3 @@
 
 <!ENTITY globalAddressingPrefs.label          "全域地址偏好設定…">
 <!ENTITY globalAddressingPrefs.accesskey      "P">
-

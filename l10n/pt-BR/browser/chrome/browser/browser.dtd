@@ -35,6 +35,9 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "Fechar as outras abas">
 <!ENTITY  closeOtherTabs.accesskey           "o">
 
+<!ENTITY  closeSelectedTabs.label            "Fechar abas selecionadas">
+<!ENTITY  closeSelectedTabs.accesskey        "F">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -54,6 +57,8 @@ can reach it easily. -->
 <!ENTITY  sendToDeviceOfflineFeedback.label  "Na fila (off-line)">
 <!ENTITY  moveToNewWindow.label              "Mover para uma nova janela">
 <!ENTITY  moveToNewWindow.accesskey          "v">
+<!ENTITY  reopenInContainer.label            "Reabrir no Contêiner">
+<!ENTITY  reopenInContainer.accesskey        "e">
 <!ENTITY  bookmarkAllTabs.label              "Adicionar todas as abas…">
 <!ENTITY  bookmarkAllTabs.accesskey          "t">
 <!ENTITY  undoCloseTab.label                 "Reabrir aba">
@@ -86,7 +91,7 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY goOfflineCmd.label "Trabalhar off-line">
 <!ENTITY goOfflineCmd.accesskey "o">
 
-<!ENTITY menubarCmd.label "Barra de menus">
+<!ENTITY menubarCmd.label "Barra de menu">
 <!ENTITY menubarCmd.accesskey "m">
 <!ENTITY navbarCmd.label "Barra de navegação">
 <!ENTITY personalbarCmd.label "Barra de favoritos">
@@ -129,7 +134,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY showAllTabsCmd.label "Mostrar todas as abas">
 <!ENTITY showAllTabsCmd.accesskey "t">
 <!ENTITY toggleReaderMode.key "R">
-
 <!ENTITY toggleReaderMode.win.keycode "VK_F9">
 
 <!ENTITY fxaSignIn.label "Entrar no &syncBrand.shortName.label;">
@@ -189,10 +193,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY otherBookmarksCmd.label "Outros favoritos">
 <!ENTITY mobileBookmarksCmd.label "Favoritos do celular">
 <!ENTITY bookmarksToolbarChevron.tooltip "Mostrar mais favoritos">
-<!ENTITY showRecentlyBookmarked.label     "Mostrar favoritos recentes">
-<!ENTITY showRecentlyBookmarked.accesskey "h">
-<!ENTITY hideRecentlyBookmarked.label     "Ocultar favoritos recentes">
-<!ENTITY hideRecentlyBookmarked.accesskey "H">
 
 <!ENTITY backCmd.label                "Voltar">
 <!ENTITY backCmd.accesskey            "V">
@@ -234,7 +234,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.translateNotificationAnchor.tooltip       "Traduzir esta página">
 <!ENTITY urlbar.translatedNotificationAnchor.tooltip      "Gerenciar tradução da página">
 <!ENTITY urlbar.emeNotificationAnchor.tooltip             "Gerenciar o uso do software DRM">
-
 <!ENTITY urlbar.midiNotificationAnchor.tooltip            "Abrir o painel MIDI">
 
 <!ENTITY urlbar.cameraBlocked.tooltip            "Você bloqueou sua câmera para este site.">
@@ -245,7 +244,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Você bloqueou o armazenamento persistente para este site.">
 <!ENTITY urlbar.popupBlocked.tooltip             "Você bloqueou pop-ups para esse site.">
 <!ENTITY urlbar.canvasBlocked.tooltip            "Você bloqueou a extração de dados da tela para este site.">
-
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "Você bloqueou o uso do Adobe Flash para este site.">
 <!ENTITY urlbar.midiBlocked.tooltip              "Você bloqueou o acesso MIDI para este site.">
 
@@ -255,6 +253,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!-- Toolbar items -->
 <!ENTITY homeButton.label             "Página inicial">
+
+<!ENTITY homeButton.defaultPage.tooltip "Página inicial do &brandShortName;">
 
 <!ENTITY bookmarksButton.label          "Favoritos">
 <!ENTITY bookmarksCmd.commandkey "b">
@@ -395,7 +395,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      when Sync is configured but this appears to be the only device attached to
      the account. We also show links to download Firefox for android/ios. -->
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "Quer ver suas abas de outros dispositivos aqui?">
-<!ENTITY appMenuRemoteTabs.openprefs.label "Preferências do Sync">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "Abrir preferências do Sync">
 <!ENTITY appMenuRemoteTabs.notsignedin.label "Entrar para ver uma lista de abas de seus outros dispositivos.">
 <!ENTITY appMenuRemoteTabs.unverified.label "Sua conta precisa ser verificada.">
@@ -437,6 +436,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.addMoreItems.label "Adicionar mais itens…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "A">
 
+<!ENTITY customizeMenu.autoHideDownloadsButton.label "Ocultar automaticamente na barra de ferramentas">
+<!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "O">
+<!ENTITY customizeMenu.manageExtension.label "Gerenciar extensão">
+<!ENTITY customizeMenu.manageExtension.accesskey "e">
+
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
     secondary commands. -->
@@ -444,7 +448,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY openCmd.commandkey           "l">
 <!ENTITY urlbar.placeholder2          "Pesquisar ou abrir endereço">
-<!ENTITY urlbar.placeholder3          "Digite aqui os termos de pesquisa e endereços">
 <!ENTITY urlbar.accesskey             "d">
 <!-- LOCALIZATION NOTE (urlbar.extension.label): Used to indicate that a selected autocomplete entry is provided by an extension. -->
 <!ENTITY urlbar.extension.label       "Extensão:">
@@ -791,12 +794,14 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY identity.enableMixedContentBlocking.accesskey "e">
 <!ENTITY identity.disableMixedContentBlocking.label "Desativar proteção por enquanto">
 <!ENTITY identity.disableMixedContentBlocking.accesskey "D">
-<!ENTITY identity.learnMore "Saber mais">
+<!ENTITY identity.learnMore "Saiba mais">
 
 <!ENTITY identity.removeCertException.label "Remover exceção">
 <!ENTITY identity.removeCertException.accesskey "R">
 
 <!ENTITY identity.moreInfoLinkText2 "Mais informações">
+
+<!ENTITY identity.clearSiteData "Limpar os cookies e dados do site…">
 
 <!ENTITY identity.permissions "Permissões">
 <!ENTITY identity.permissionsEmpty "Você não concedeu permissões especiais a este site.">
@@ -901,18 +906,19 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.allWindowsShared.message "Todas as janelas visíveis na sua tela serão compartilhadas.">
 
 <!ENTITY trackingProtection.title "Proteção contra rastreamento">
+<!ENTITY trackingProtection.tooltip "Abrir preferências de proteção contra rastreamento">
 <!ENTITY trackingProtection.detectedBlocked3 "O &brandShortName; está bloqueando partes da página que podem rastrear a sua navegação.">
 <!ENTITY trackingProtection.detectedNotBlocked3 "Esta página tem elementos que podem rastrear a sua navegação. Você desativou a proteção.">
 <!ENTITY trackingProtection.notDetected3 "Nenhum elemento de rastreamento detectado nesta página.">
 <!-- LOCALIZATION NOTE (trackingProtection.unblock.label, trackingProtection.unblock.accesskey):
      The associated button with this label and accesskey is only shown when opening the control
      center while looking at a site with trackers in NON-private browsing mode. -->
-<!ENTITY trackingProtection.unblock.label "Desabilitar a proteção neste site">
+<!ENTITY trackingProtection.unblock.label "Desativar a proteção neste site">
 <!ENTITY trackingProtection.unblock.accesskey "D">
 <!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate.label, trackingProtection.unblockPrivate.accesskey):
      The associated button with this label and accesskey is only shown when opening the control
      center while looking at a site with trackers in PRIVATE browsing mode. -->
-<!ENTITY trackingProtection.unblockPrivate.label "Desabilitar a proteção nesta sessão">
+<!ENTITY trackingProtection.unblockPrivate.label "Desativar a proteção nesta sessão">
 <!ENTITY trackingProtection.unblockPrivate.accesskey "D">
 <!ENTITY trackingProtection.block2.label "Habilitar proteção">
 <!ENTITY trackingProtection.block2.accesskey "A">
@@ -950,7 +956,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY panicButton.view.deleteCookies           "Excluir <html:strong>cookies</html:strong> recentes">
 <!ENTITY panicButton.view.deleteHistory           "Excluir <html:strong>histórico</html:strong> recente">
 <!ENTITY panicButton.view.deleteTabsAndWindows    "Fechar todas as <html:strong>abas</html:strong> e <html:strong>janelas</html:strong>">
-<!ENTITY panicButton.view.openNewWindow           "Abrir uma nova janela">
+<!ENTITY panicButton.view.openNewWindow           "Abrir uma nova janela limpa">
 
 <!ENTITY panicButton.view.undoWarning             "Esta ação não poderá ser desfeita.">
 <!ENTITY panicButton.view.forgetButton            "Esquecer!">
@@ -959,7 +965,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY panicButton.thankyou.msg2                "Navegação segura!">
 <!ENTITY panicButton.thankyou.buttonlabel         "Obrigado!">
 
-<!ENTITY emeLearnMoreContextMenu.label            "Saber mais sobre o DRM…">
+<!ENTITY emeLearnMoreContextMenu.label            "Saiba mais sobre DRM…">
 <!ENTITY emeLearnMoreContextMenu.accesskey        "D">
 
 <!ENTITY updateAvailable.message "Atualize o &brandShorterName; para ganhar mais velocidade e privacidade.">
@@ -971,32 +977,27 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY updateAvailable.cancelButton.accesskey "N">
 <!ENTITY updateAvailable.panelUI.label "Baixar atualização do &brandShorterName;">
 
-<!ENTITY updateManual.message "Baixar uma nova copia do &brandShorterName;.">
+<!ENTITY updateManual.message "Baixe uma nova cópia do &brandShorterName; e ajudaremos a instalar.">
 <!ENTITY updateManual.whatsnew.label "Veja o que há de novo.">
 <!ENTITY updateManual.header.message "Não é possível atualizar o &brandShorterName; para a versão mais recente.">
 <!ENTITY updateManual.acceptButton.label "Baixar o &brandShorterName;">
 <!ENTITY updateManual.acceptButton.accesskey "B">
 <!ENTITY updateManual.cancelButton.label "Agora não">
 <!ENTITY updateManual.cancelButton.accesskey "n">
-<!ENTITY updateManual.panelUI.label "Baixar uma nova copia do &brandShorterName;">
+<!ENTITY updateManual.panelUI.label "Baixar uma nova cópia do &brandShorterName;">
 
 <!ENTITY updateRestart.message2 "Após um reinício rápido, &brandShorterName; irá restaurar todas as suas abas abertas e janelas que não sejam de Navegação Privativa.">
-<!ENTITY updateRestart.header.message2 "Reiniciar para atualizar o &brandShorterName;.">
+<!ENTITY updateRestart.header.message2 "Reinicie para atualizar o &brandShorterName;.">
 <!ENTITY updateRestart.acceptButton.label "Reiniciar e restaurar">
 <!ENTITY updateRestart.acceptButton.accesskey "R">
 <!ENTITY updateRestart.cancelButton.label "Agora não">
 <!ENTITY updateRestart.cancelButton.accesskey "n">
 <!ENTITY updateRestart.panelUI.label2 "Reiniciar para atualizar o &brandShorterName;">
 
-<!ENTITY newTabControlled.message "Uma extensão alterou a página que você vê ao abrir uma nova aba. Você pode restaurar as suas configurações se não quiser esta alteração.">
-
 <!ENTITY newTabControlled.header.message "Sua nova aba foi alterada.">
 <!ENTITY newTabControlled.keepButton.label "Manter alterações">
 <!ENTITY newTabControlled.keepButton.accesskey "M">
-<!ENTITY newTabControlled.restoreButton.label "Restaurar configurações">
-<!ENTITY newTabControlled.restoreButton.accesskey "R">
-
-<!ENTITY newTabControlled.disableButton.label "Desabilitar extensão">
+<!ENTITY newTabControlled.disableButton.label "Desativar extensão">
 <!ENTITY newTabControlled.disableButton.accesskey "D">
 
 <!ENTITY homepageControlled.message "Uma extensão alterou o que você vê como página inicial. Você pode restaurar a sua configuração se não quiser esta alteração.">
@@ -1005,6 +1006,12 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY homepageControlled.keepButton.accesskey "M">
 <!ENTITY homepageControlled.disableButton.label "Desativar extensão">
 <!ENTITY homepageControlled.disableButton.accesskey "D">
+
+<!ENTITY tabHideControlled.header.message "Acessar suas abas ocultadas">
+<!ENTITY tabHideControlled.keepButton.label "Manter abas ocultadas">
+<!ENTITY tabHideControlled.keepButton.accesskey "M">
+<!ENTITY tabHideControlled.disableButton.label "Desativar extensão">
+<!ENTITY tabHideControlled.disableButton.accesskey "D">
 
 <!ENTITY pageActionButton.tooltip "Ações da página">
 <!ENTITY pageAction.addToUrlbar.label "Adicionar na barra de endereço">

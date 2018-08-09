@@ -8,22 +8,14 @@
      The column width should be set at half of the dialog width. -->
 <!ENTITY sanitizePrefs2.modal.width    "36em">
 <!ENTITY sanitizePrefs2.column.width   "17em">
-<!-- LOCALIZATION NOTE (sanitizePrefs2.inContent.dialog.width): width of the
-     Clear History on Shutdown subdialog in the in-content preferences.
-     Should be large enough to contain the item* strings on a single line.
-     The column width adjusts the width of the first column in the dialog.
-     You can set the column width to a value that makes the dialog look visually balanced,
-     or at half of the dialog width if unsure. -->
-<!ENTITY sanitizePrefs2.inContent.dialog.width "56em">
-<!ENTITY sanitizePrefs2.inContent.column.width "30em">
 
 <!ENTITY sanitizeDialog2.title         "Effacer l’historique récent">
 <!-- LOCALIZATION NOTE (sanitizeDialog2.width): width of the Clear Recent History dialog -->
 <!ENTITY sanitizeDialog2.width         "34em">
 
-<!ENTITY clearDataSettings2.label     "Lorsque je quitte &brandShortName;, supprimer automatiquement les éléments suivants :">
-
 <!ENTITY clearDataSettings3.label     "Lorsque je quitte &brandShortName;, supprimer automatiquement les éléments suivants">
+
+<!ENTITY clearDataSettings4.label     "À la fermeture de &brandShortName;, supprimer automatiquement les éléments suivants">
 
 <!-- XXX rearrange entities to match physical layout when l10n isn't an issue -->
 <!-- LOCALIZATION NOTE (clearTimeDuration.*): "Time range to clear" dropdown.
@@ -56,7 +48,7 @@ that require it.  -->
 <!ENTITY itemCookies.accesskey             "C">
 <!ENTITY itemCache.label                   "Cache">
 <!ENTITY itemCache.accesskey               "a">
-<!ENTITY itemOfflineApps.label             "Données de site web hors connexion">
+<!ENTITY itemOfflineApps.label             "Données de sites web hors connexion">
 <!ENTITY itemOfflineApps.accesskey         "W">
 <!ENTITY itemActiveLogins.label            "Connexions actives">
 <!ENTITY itemActiveLogins.accesskey        "x">

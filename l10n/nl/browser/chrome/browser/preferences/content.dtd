@@ -27,30 +27,6 @@
 <!ENTITY  microphoneSettingsButton.label                        "Instellingen…">
 <!ENTITY  microphoneSettingsButton.accesskey                    "t">
 
-<!ENTITY  fontsAndColors.label        "Lettertypen &amp; kleuren">
-
-<!ENTITY  defaultFont2.label          "Standaardlettertype">
-<!ENTITY  defaultFont2.accesskey      "S">
-<!ENTITY  defaultSize2.label          "Grootte">
-<!ENTITY  defaultSize2.accesskey      "G">
-
-<!ENTITY  advancedFonts.label         "Geavanceerd…">
-<!ENTITY  advancedFonts.accesskey     "c">
-
-<!ENTITY  colors.label                "Kleuren…">
-<!ENTITY  colors.accesskey            "K">
-
-
-<!ENTITY language2.label              "Taal">
-<!ENTITY chooseLanguage.label         "Talen van uw voorkeur kiezen voor het weergeven van webpagina’s">
-<!ENTITY chooseButton.label           "Kiezen…">
-<!ENTITY chooseButton.accesskey       "z">
-
-<!ENTITY translateWebPages.label      "Webinhoud vertalen">
-<!ENTITY translateWebPages.accesskey  "W">
-<!ENTITY translateExceptions.label    "Uitzonderingen…">
-<!ENTITY translateExceptions.accesskey "z">
-
 <!-- LOCALIZATION NOTE (translation.options.attribution.beforeLogo,
   -                     translation.options.attribution.afterLogo):
   -  These 2 strings are displayed before and after a 'Microsoft Translator'
@@ -60,9 +36,3 @@
   -->
 <!ENTITY translation.options.attribution.beforeLogo "Vertalingen door">
 <!ENTITY translation.options.attribution.afterLogo "">
-
-<!ENTITY  drmContent2.label              "Digital Rights Management (DRM)-inhoud">
-
-<!ENTITY  playDRMContent2.label          "DRM-beheerde inhoud afspelen">
-<!ENTITY  playDRMContent2.accesskey      "D">
-<!ENTITY  playDRMContent.learnMore.label "Meer info">
