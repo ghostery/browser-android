@@ -4,7 +4,7 @@ ac_add_options --target=$ANDROID_TARGET
 
 # With the following Android SDK and NDK:
 ac_add_options --with-android-sdk=$ANDROID_HOME
-ac_add_options --with-android-ndk=$ANDROID_NDK_HOME
+ac_add_options --with-android-ndk=$ANDROID_NDK_HOME/android-ndk-r15c
 
 # Write build artifacts to:
 mk_add_options MOZ_OBJDIR=./objdir-frontend-android/
