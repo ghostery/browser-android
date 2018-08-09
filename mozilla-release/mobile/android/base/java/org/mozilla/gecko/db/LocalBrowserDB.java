@@ -11,6 +11,8 @@ import java.lang.IllegalAccessException;
 import java.lang.NoSuchFieldException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -770,6 +772,14 @@ public class LocalBrowserDB extends BrowserDB {
         ContentValues values = new ContentValues();
 
         values.put(History.URL, uri);
+        /* Cliqz start */
+        try {
+            values.put(History.DOMAIN, new URI(uri).getHost());
+        } catch (URISyntaxException e) {
+            Log.e(LOGTAG, "Couldn't parse the uri");
+            values.put(History.DOMAIN, "");
+        }
+        /* Cliqz end */
         values.put(History.DATE_LAST_VISITED, System.currentTimeMillis());
         values.put(History.IS_DELETED, 0);
 

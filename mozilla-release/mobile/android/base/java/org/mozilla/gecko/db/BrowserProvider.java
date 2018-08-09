@@ -1026,7 +1026,10 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
                 "(" + Combined.URL + " NOT LIKE ?)";
 
         if (excludeRemoteOnly) {
-            ignoreForTopSitesWhereClause += " AND (" + Combined.LOCAL_VISITS_COUNT + " > 0)";
+            /* Cliqz start */
+            ignoreForTopSitesWhereClause += " AND (" + Combined.LOCAL_VISITS_COUNT + " > 2)";
+            ignoreForTopSitesWhereClause += " AND (" + Combined.DATE_LAST_VISITED + " > STRFTIME('%s', DATE('now', '-6 months')) * 1000)";
+            /* Cliqz end */
         }
 
         final String[] ignoreForTopSitesArgs = new String[] {
@@ -1089,13 +1092,24 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
                        Combined.BOOKMARK_ID + ", " +
                        Combined.HISTORY_ID + ", " +
                        Combined.HISTORY_GUID + ", " +
+                       /* Cliqz start */
+                       Combined.DOMAIN + ", " +
+                       Combined.VISITS + ", " +
+                       Combined.DATE_LAST_VISITED + ", " +
+                       "(" + Combined.DATE_LAST_VISITED + " / 86400000 - STRFTIME('%s', DATE('now', '-6 months')) / 86400) AS " + TopSites.DAYS_COUNT + ", " +
+                       /* Cliqz end */
                        Bookmarks.URL + ", " +
                        Bookmarks.TITLE + ", " +
                        Combined.HISTORY_ID + ", " +
                        TopSites.TYPE_TOP + " AS " + TopSites.TYPE +
-                       " FROM " + Combined.VIEW_NAME +
+                       /* Cliqz start */
+                       " FROM" + "( SELECT * FROM " + Combined.VIEW_NAME + " ORDER BY " + Combined.VISITS + ") AS " + Combined.VIEW_NAME +
+                       /* Cliqz end */
                        " WHERE " + ignoreForTopSitesWhereClause +
-                       " ORDER BY " + BrowserContract.getCombinedFrecencySortOrder(true, false) +
+                       /* Cliqz start */
+                       " GROUP BY " + TopSites.DOMAIN +
+                       " ORDER BY " + Combined.VISITS + " DESC" +
+                       /* Cliqz end */
                        " LIMIT " + totalLimit,
 
                        ignoreForTopSitesArgs);
@@ -1139,6 +1153,12 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
                     TopSites.HISTORY_ID + ", " +
                     Combined.HISTORY_GUID + ", " +
                     Bookmarks.URL + ", " +
+                    /* Cliqz start */
+                    TopSites.DOMAIN + ", " +
+                    TopSites.VISITS + ", " +
+                    TopSites.DATE_LAST_VISITED + ", " +
+                    TopSites.DAYS_COUNT + ", " +
+                    /* Cliqz end */
                     Bookmarks.TITLE + ", " +
                     "COALESCE(" + Bookmarks.POSITION + ", " +
                     DBUtils.qualifyColumn(TABLE_TOPSITES, "rowid") + " + " + suggestedGridLimit +
@@ -1159,6 +1179,12 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
                     " -1 AS " + TopSites.HISTORY_ID + ", " +
                     " NULL AS " + Combined.HISTORY_GUID + ", " +
                     Bookmarks.URL + ", " +
+                    /* Cliqz start */
+                    "NULL AS " + TopSites.DOMAIN + ", " +
+                    "NULL AS " + TopSites.VISITS + ", " +
+                    "NULL AS " + TopSites.DATE_LAST_VISITED + ", " +
+                    "NULL AS " + TopSites.DAYS_COUNT + ", " +
+                    /* Cliqz end */
                     Bookmarks.TITLE + ", " +
                     Bookmarks.POSITION + ", " +
                     "NULL AS " + Combined.HISTORY_ID + ", " +
@@ -1177,6 +1203,10 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
                     DBUtils.qualifyColumn(TABLE_TOPSITES, Bookmarks.TITLE) + ", " +
                     DBUtils.qualifyColumn(TABLE_TOPSITES, Bookmarks.POSITION) + ", " +
                     DBUtils.qualifyColumn(TABLE_TOPSITES, TopSites.TYPE) + ", " +
+                    /* Cliqz start */
+                    "SUM(" + DBUtils.qualifyColumn(TABLE_TOPSITES, TopSites.DAYS_COUNT) +") AS count, " +
+                    DBUtils.qualifyColumn(TABLE_TOPSITES, TopSites.VISITS) + ", " +
+                    /* Cliqz end */
                     PageMetadata.JSON + " AS " + TopSites.PAGE_METADATA_JSON +
 
                     " FROM (" + selectTopSites + ") AS " + TABLE_TOPSITES +
@@ -1185,12 +1215,18 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
                             DBUtils.qualifyColumn(TABLE_TOPSITES, Combined.HISTORY_GUID) + " = " +
                             DBUtils.qualifyColumn(TABLE_PAGE_METADATA, PageMetadata.HISTORY_GUID) +
 
-                    " GROUP BY " + DBUtils.qualifyColumn(TABLE_TOPSITES, Bookmarks.URL) + // remove duplicates.
+                    /* Cliqz start */
+                    " GROUP BY " + TopSites.DOMAIN + // one topsite per domain
+                    /* Cliqz end */
 
                     // In case position is non-unique (as in Activity Stream pins, whose position
                     // is always zero), we need to ensure we get stable ordering.
-                    " ORDER BY " + Bookmarks.POSITION + ", " + Bookmarks.URL,
-
+                    /* Cliqz start */
+                    " ORDER BY " + Bookmarks.POSITION + ", " +
+                            "count" + " DESC" + ", " +
+                            TopSites.VISITS + " DESC" + ", " +
+                            TopSites.DATE_LAST_VISITED + " DESC",
+                    /* Cliqz end */
                     null);
 
             c.setNotificationUri(getContext().getContentResolver(),

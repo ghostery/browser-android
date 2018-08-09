@@ -136,6 +136,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                 Bookmarks._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 Bookmarks.TITLE + " TEXT," +
                 Bookmarks.URL + " TEXT," +
+                /* Cliqz start */
+                Bookmarks.DOMAIN + " TEXT," +
+                /* Cliqz end */
                 Bookmarks.TYPE + " INTEGER NOT NULL DEFAULT " + Bookmarks.TYPE_BOOKMARK + "," +
                 Bookmarks.PARENT + " INTEGER," +
                 Bookmarks.POSITION + " INTEGER NOT NULL," +
@@ -172,6 +175,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                 History._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 History.TITLE + " TEXT," +
                 History.URL + " TEXT NOT NULL," +
+                /* Cliqz start */
+                History.DOMAIN + " TEXT," +
+                /* Cliqz end */
                 // Can we drop VISITS count? Can we calculate it in the Combined view as a sum?
                 // See Bug 1277329.
                 History.VISITS + " INTEGER NOT NULL DEFAULT 0," +
@@ -384,6 +390,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                     "-1 AS " + Combined.HISTORY_ID + "," +
                     "0 AS " + Combined._ID + "," +
                     qualifyColumn(TABLE_BOOKMARKS, Bookmarks.URL) + " AS " + Combined.URL + ", " +
+                    /* Cliqz start */
+                    qualifyColumn(TABLE_BOOKMARKS, Bookmarks.DOMAIN) + " AS " + Combined.DOMAIN + ", " +
+                    /* Cliqz end */
                     qualifyColumn(TABLE_BOOKMARKS, Bookmarks.TITLE) + " AS " + Combined.TITLE + ", " +
                     "-1 AS " + Combined.VISITS + ", " +
                     "-1 AS " + Combined.DATE_LAST_VISITED + "," +
@@ -418,6 +427,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                         "0 AS " + Combined._ID + "," +
                         qualifyColumn(TABLE_HISTORY, History.URL) + " AS " + Combined.URL + "," +
 
+                        /* Cliqz start */
+                        qualifyColumn(TABLE_HISTORY, History.DOMAIN) + " AS " + Combined.DOMAIN + ", " +
+                        /* Cliqz end */
                         // Prioritize bookmark titles over history titles, since the user may have
                         // customized the title for a bookmark.
                         "COALESCE(" + qualifyColumn(TABLE_BOOKMARKS, Bookmarks.TITLE) + ", " +
@@ -485,6 +497,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                 "-1 AS " + Combined.HISTORY_ID + "," +
                 "0 AS " + Combined._ID + "," +
                 qualifyColumn(TABLE_BOOKMARKS, Bookmarks.URL) + " AS " + Combined.URL + ", " +
+                /* Cliqz start */
+                qualifyColumn(TABLE_BOOKMARKS, Bookmarks.DOMAIN) + " AS " + Combined.DOMAIN + ", " +
+                /* Cliqz end */
                 qualifyColumn(TABLE_BOOKMARKS, Bookmarks.TITLE) + " AS " + Combined.TITLE + ", " +
                 "-1 AS " + Combined.VISITS + ", " +
                 "-1 AS " + Combined.DATE_LAST_VISITED + "," +
@@ -522,6 +537,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                 qualifyColumn(TABLE_HISTORY, History._ID) + " AS " + Combined.HISTORY_ID + "," +
                 "0 AS " + Combined._ID + "," +
                 qualifyColumn(TABLE_HISTORY, History.URL) + " AS " + Combined.URL + "," +
+                /* Cliqz start */
+                qualifyColumn(TABLE_HISTORY, History.DOMAIN) + " AS " + Combined.DOMAIN + ", " +
+                /* Cliqz end */
 
                 // Prioritize bookmark titles over history titles, since the user may have
                 // customized the title for a bookmark.
@@ -612,6 +630,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                 "-1 AS " + Combined.HISTORY_ID + "," +
                 "0 AS " + Combined._ID + "," +
                 qualifyColumn(TABLE_BOOKMARKS, Bookmarks.URL) + " AS " + Combined.URL + ", " +
+                /* Cliqz start */
+                qualifyColumn(TABLE_BOOKMARKS, Bookmarks.DOMAIN) + " AS " + Combined.DOMAIN + ", " +
+                /* Cliqz end */
                 qualifyColumn(TABLE_BOOKMARKS, Bookmarks.TITLE) + " AS " + Combined.TITLE + ", " +
                 "-1 AS " + Combined.VISITS + ", " +
                 "-1 AS " + Combined.DATE_LAST_VISITED + "," +
@@ -649,6 +670,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                 qualifyColumn(TABLE_HISTORY, History._ID) + " AS " + Combined.HISTORY_ID + "," +
                 "0 AS " + Combined._ID + "," +
                 qualifyColumn(TABLE_HISTORY, History.URL) + " AS " + Combined.URL + "," +
+                /* Cliqz start */
+                qualifyColumn(TABLE_HISTORY, History.DOMAIN) + " AS " + Combined.DOMAIN + ", " +
+                /* Cliqz end */
 
                 // Prioritize bookmark titles over history titles, since the user may have
                 // customized the title for a bookmark.
@@ -721,6 +745,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                 "-1 AS " + Combined.HISTORY_ID + "," +
                 "0 AS " + Combined._ID + "," +
                 qualifyColumn(TABLE_BOOKMARKS, Bookmarks.URL) + " AS " + Combined.URL + ", " +
+                /* Cliqz start */
+                qualifyColumn(TABLE_BOOKMARKS, Bookmarks.DOMAIN) + " AS " + Combined.DOMAIN + ", " +
+                /* Cliqz end */
                 qualifyColumn(TABLE_BOOKMARKS, Bookmarks.TITLE) + " AS " + Combined.TITLE + ", " +
                 "-1 AS " + Combined.VISITS + ", " +
                 "-1 AS " + Combined.DATE_LAST_VISITED + "," +
@@ -759,6 +786,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                 qualifyColumn(TABLE_HISTORY, History._ID) + " AS " + Combined.HISTORY_ID + "," +
                 "0 AS " + Combined._ID + "," +
                 qualifyColumn(TABLE_HISTORY, History.URL) + " AS " + Combined.URL + "," +
+                /* Cliqz start */
+                qualifyColumn(TABLE_HISTORY, History.DOMAIN) + " AS " + Combined.DOMAIN + ", " +
+                /* Cliqz end */
 
                 // Prioritize bookmark titles over history titles, since the user may have
                 // customized the title for a bookmark.

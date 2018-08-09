@@ -176,6 +176,9 @@ public class BrowserContract {
     public interface URLColumns {
         public static final String URL = "url";
         public static final String TITLE = "title";
+        /* Cliqz start */
+        public static final String DOMAIN = "domain";
+        /* Cliqz end */
     }
 
     @RobocopTarget
@@ -625,7 +628,9 @@ public class BrowserContract {
     }
 
     @RobocopTarget
-    public static final class TopSites implements CommonColumns, URLColumns {
+    /* Cliqz start */
+    public static final class TopSites implements CommonColumns, URLColumns, HistoryColumns, VisitsColumns {
+    /* Cliqz end */
         private TopSites() {}
 
         public static final int TYPE_BLANK = 0;
@@ -640,6 +645,9 @@ public class BrowserContract {
         public static final String HISTORY_ID = "history_id";
         public static final String TYPE = "type";
         public static final String PAGE_METADATA_JSON = "page_metadata_json";
+        /* Cliqz start */
+        public static final String DAYS_COUNT = "days_count";
+        /* Cliqz end */
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, "topsites");
     }
