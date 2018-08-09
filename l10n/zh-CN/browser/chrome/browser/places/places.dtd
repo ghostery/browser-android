@@ -73,13 +73,10 @@
 <!ENTITY cmd.reloadLivebookmark.label      "重新载入实时书签">
 <!ENTITY cmd.reloadLivebookmark.accesskey  "R">
 
-<!ENTITY cmd.moveBookmarks.label                  "移动…">
-<!ENTITY cmd.moveBookmarks.accesskey              "M">
-
 <!ENTITY col.name.label          "名称">
 <!ENTITY col.tags.label          "标签">
 <!ENTITY col.url.label           "网址">
-<!ENTITY col.mostrecentvisit.label "最近访问">
+<!ENTITY col.mostrecentvisit.label "上次访问">
 <!ENTITY col.visitcount.label    "访问次数">
 <!ENTITY col.description.label   "描述">
 <!ENTITY col.dateadded.label     "添加日期">

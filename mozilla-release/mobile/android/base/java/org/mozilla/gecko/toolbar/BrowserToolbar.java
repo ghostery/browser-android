@@ -96,7 +96,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     }
 
     public interface OnCommitListener {
-        public void onCommit();
+        public void onCommitByKey();
     }
 
     public interface OnDismissListener {
@@ -461,6 +461,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public void onTabChanged(@Nullable Tab tab, Tabs.TabEvents msg, String data) {
         Log.d(LOGTAG, "onTabChanged: " + msg);
         final Tabs tabs = Tabs.getInstance();

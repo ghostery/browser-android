@@ -5,8 +5,8 @@
 
 <!ENTITY migrationWizard.title          "Assistente de importação">
 
-<!ENTITY importFrom.label               "Importar opções, marcadores, histórico, palavras-passe e outros dados do:">
-<!ENTITY importFromUnix.label           "Importar preferências, marcadores, histórico, palavras-passe e outros dados do:">
+<!ENTITY importFrom.label               "Importar opções, marcadores, histórico, palavras-passe e outros dados de:">
+<!ENTITY importFromUnix.label           "Importar preferências, marcadores, histórico, palavras-passe e outros dados de:">
 <!ENTITY importFromBookmarks.label      "Importar marcadores de:">
 
 <!ENTITY importFromIE.label             "Microsoft Internet Explorer">
@@ -47,4 +47,4 @@
 <!ENTITY done.title                     "Importação concluída">
 <!ENTITY done.label                     "Os seguintes itens foram importados com sucesso:">
 
-<!ENTITY closeSourceBrowser.label       "Por favor certifique-se que o navegador selecionado está fechado.">
+<!ENTITY closeSourceBrowser.label       "Por favor certifique-se de que o navegador selecionado está fechado antes de continuar.">

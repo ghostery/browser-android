@@ -61,13 +61,13 @@
 <!ENTITY  useDefaultFontSerif.label               "Com serifa">
 <!ENTITY  useDefaultFontSansSerif.label           "Sem serifa">
 
-<!ENTITY  allowPagesToUseOwn.label                "Permitir que páginas escolham suas próprias fontes, ao invés de suas seleções acima">
+<!ENTITY  allowPagesToUseOwn.label                "Permitir que páginas escolham suas próprias fontes, ao invés das seleções acima">
 <!ENTITY  allowPagesToUseOwn.accesskey            "P">
 
 <!ENTITY languages.customize.Fallback2.grouplabel "Codificação de texto para conteúdo legado">
 <!ENTITY languages.customize.Fallback3.label      "Codificação de texto alternativa">
 <!ENTITY languages.customize.Fallback3.accesskey  "C">
-<!ENTITY languages.customize.Fallback2.desc       "Esta codificação de texto é usada para conteúdo legado que falha ao declarar a sua codificação.">
+<!ENTITY languages.customize.Fallback2.desc       "Esta codificação de texto é usada para conteúdo legado que não declara a própria codificação.">
 
 <!ENTITY languages.customize.Fallback.auto        "Padrão do idioma atual">
 <!-- LOCALIZATION NOTE (languages.customize.Fallback.arabic):

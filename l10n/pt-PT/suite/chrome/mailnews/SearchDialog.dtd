@@ -1,13 +1,13 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- for SearchDialog.xul -->
 
+<!-- for SearchDialog.xul -->
 <!ENTITY searchHeading.label         "Procurar mensagens em:">
 <!ENTITY searchHeading.accesskey     "e">
 <!ENTITY searchSubfolders.label      "Pesquisar subpastas">
 <!ENTITY searchSubfolders.accesskey  "u">
-<!ENTITY searchOnHeading.label       "Pesquisar em:">
+<!ENTITY searchOnHeading.label       "Realizar operações de pesquisa em:">
 <!ENTITY searchOnHeading.accesskey   "P">
 <!ENTITY searchOnRemote.label        "Servidor remoto">
 <!ENTITY searchOnLocal.label         "Sistema local">
@@ -27,8 +27,8 @@
 <!ENTITY goToFolderButton.accesskey  "b">
 <!ENTITY saveAsVFButton.label        "Guardar como pasta de pesquisa">
 <!ENTITY saveAsVFButton.accesskey    "c">
-<!-- for ABSearchDialog.xul -->
 
+<!-- for ABSearchDialog.xul -->
 <!ENTITY abSearchHeading.label       "Procurar em:">
 <!ENTITY abSearchHeading.accesskey   "u">
 <!ENTITY propertiesButton.label      "Propriedades">

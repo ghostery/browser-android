@@ -7,12 +7,10 @@
 <!ENTITY certmgr.tab.others2 "Persone">
 <!ENTITY certmgr.tab.websites3 "Server">
 <!ENTITY certmgr.tab.ca "Autorità">
-<!ENTITY certmgr.tab.orphan2 "Altro">
 <!ENTITY certmgr.mine2 "Sono presenti certificati rilasciati dalle seguenti organizzazioni che attestano la propria identità">
 <!ENTITY certmgr.others2 "Sono presenti certificati su file che identificano le seguenti persone">
 <!ENTITY certmgr.websites3 "Sono presenti certificati su file che identificano i seguenti server">
 <!ENTITY certmgr.cas2 "Sono presenti certificati su file che identificano le seguenti autorità di certificazione">
-<!ENTITY certmgr.orphans2 "Sono presenti certificati su file che non rientrano in nessuna delle altre categorie">
 <!ENTITY certmgr.detail.general_tab.title "Generale">
 <!ENTITY certmgr.detail.general_tab.accesskey "G">
 <!ENTITY certmgr.detail.prettyprint_tab.title "Dettagli">

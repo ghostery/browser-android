@@ -8,14 +8,14 @@
 <!ENTITY places.library.height "500">
 <!ENTITY organize.label        "Organizar">
 <!ENTITY organize.accesskey    "O">
-<!ENTITY organize.tooltip      "Organizar marcadores">
+<!ENTITY organize.tooltip      "Organize os seus marcadores">
 
 <!ENTITY file.close.label               "Fechar">
 <!ENTITY file.close.accesskey           "e">
 <!ENTITY cmd.close.key                  "w">
 <!ENTITY views.label                    "Vistas">
 <!ENTITY views.accesskey                "V">
-<!ENTITY views.tooltip                  "Mudar vista">
+<!ENTITY views.tooltip                  "Altere a sua vista">
 <!ENTITY view.columns.label             "Mostrar colunas">
 <!ENTITY view.columns.accesskey         "c">
 <!ENTITY view.sort.label                "Ordenar">
@@ -66,7 +66,7 @@
 <!ENTITY cmd.new_bookmark.accesskey        "m">
 <!ENTITY cmd.new_folder.label              "Nova pasta…">
 <!ENTITY cmd.new_folder.accesskey          "a">
-<!ENTITY cmd.context_new_folder.accesskey  "P">
+<!ENTITY cmd.context_new_folder.accesskey  "p">
 <!ENTITY cmd.new_separator.label           "Novo separador">
 <!ENTITY cmd.new_separator.accesskey       "s">
 
@@ -110,9 +110,9 @@
 <!ENTITY byDate.accesskey         "d">
 <!ENTITY bySite.label             "Por site">
 <!ENTITY bySite.accesskey         "s">
-<!ENTITY byMostVisited.label      "Por mais visitadas">
+<!ENTITY byMostVisited.label      "Por mais visitados">
 <!ENTITY byMostVisited.accesskey  "v">
-<!ENTITY byLastVisited.label      "Por último acesso">
+<!ENTITY byLastVisited.label      "Por última visita">
 <!ENTITY byLastVisited.accesskey  "l">
 <!ENTITY byDayAndSite.label       "Por data e site">
 <!ENTITY byDayAndSite.accesskey   "t">

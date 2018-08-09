@@ -7,14 +7,12 @@
 <!ENTITY  window.width2                 "49em">
 <!ENTITY  window.macWidth2              "44em">
 
-<!ENTITY  proxyTitle.label              "Acesso à internet">
-
 <!ENTITY  proxyTitle.label2             "Configure o Proxy de acesso à Internet">
 <!ENTITY  noProxyTypeRadio.label        "Sem proxy">
 <!ENTITY  noProxyTypeRadio.accesskey    "S">
 <!ENTITY  systemTypeRadio.label         "Usar as configurações de proxy do sistema">
 <!ENTITY  systemTypeRadio.accesskey     "a">
-<!ENTITY  WPADTypeRadio.label           "Autodetectar as configurações de proxy para esta rede">
+<!ENTITY  WPADTypeRadio.label           "Detectar automaticamente as configurações de proxy para esta rede">
 <!ENTITY  WPADTypeRadio.accesskey       "i">
 <!ENTITY  manualTypeRadio2.label        "Configuração manual de proxy">
 <!ENTITY  manualTypeRadio2.accesskey    "m">

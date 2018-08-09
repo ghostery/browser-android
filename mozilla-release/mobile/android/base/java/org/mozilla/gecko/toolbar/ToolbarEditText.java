@@ -629,7 +629,7 @@ public class ToolbarEditText extends CustomEditText
                 final Editable content = getText();
                 if (!hasCompositionString(content)) {
                     if (mCommitListener != null) {
-                        mCommitListener.onCommit();
+                        mCommitListener.onCommitByKey();
                     }
 
                     return true;
@@ -655,7 +655,7 @@ public class ToolbarEditText extends CustomEditText
                 }
 
                 if (mCommitListener != null) {
-                    mCommitListener.onCommit();
+                    mCommitListener.onCommitByKey();
                 }
 
                 return true;

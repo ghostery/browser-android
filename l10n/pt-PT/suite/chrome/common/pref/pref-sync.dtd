@@ -1,23 +1,23 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- The page shown when not logged in... -->
 
+<!-- The page shown when not logged in... -->
 <!ENTITY setupButton.label          "Configurar o &syncBrand.fullName.label;">
 <!ENTITY setupButton.accesskey      "C">
 <!ENTITY weaveDesc.label            "O &syncBrand.fullName.label; permite-lhe aceder ao seu histórico, marcadores, palavras-passe e separadores em todos os seus dispositivos.">
-<!-- The page shown when logged in... -->
 
+<!-- The page shown when logged in... -->
 <!ENTITY accountGroupboxCaption.label "Conta &syncBrand.fullName.label;">
 <!ENTITY accountName.label            "Nome da conta:">
-<!-- Login error feedback -->
 
+<!-- Login error feedback -->
 <!ENTITY updatePass.label             "Atualizar">
 <!ENTITY updatePass.accesskey         "A">
 <!ENTITY resetPass.label              "Repor">
 <!ENTITY resetPass.accesskey          "R">
-<!-- Manage Account -->
 
+<!-- Manage Account -->
 <!ENTITY manageAccount.label          "Gerir conta">
 <!ENTITY manageAccount.accesskey      "a">
 <!ENTITY viewQuota.label              "Ver quota">
@@ -32,8 +32,8 @@
 <!ENTITY unlinkDevice.accesskey       "D">
 <!ENTITY addDevice.label              "Adicionar dispositivo">
 <!ENTITY addDevice.accesskey          "A">
-<!-- Sync Settings -->
 
+<!-- Sync Settings -->
 <!ENTITY syncComputerName.label       "Nome do computador:">
 <!ENTITY syncComputerName.accesskey   "N">
 
@@ -50,7 +50,7 @@
 <!ENTITY engine.passwords.accesskey "P">
 <!ENTITY engine.prefs.label         "Preferências">
 <!ENTITY engine.prefs.accesskey     "P">
-<!-- Footer stuff -->
 
-<!ENTITY prefs.tosLink.label        "Termos do serviço">
+<!-- Footer stuff -->
+<!ENTITY prefs.tosLink.label        "Termos de serviço">
 <!ENTITY prefs.ppLink.label         "Política de privacidade">

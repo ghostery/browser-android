@@ -138,3 +138,12 @@ fonts-languages-fallback-name-vietnamese =
     .label = 越南文
 fonts-languages-fallback-name-other =
     .label = 其他（含西欧）
+fonts-very-large-warning-title = 较大的最小字体大小
+fonts-very-large-warning-message = 您选择了一个非常大的最小字型大小（超过 24 像素）。这可能导致极难或者无法使用非常重要的像是本页的配置页面。
+fonts-very-large-warning-accept = 确定，保存我的更改
+# Variables:
+#   $name {string, "Arial"} - Name of the default font
+fonts-label-default =
+    .label = 默认（{ $name }）
+fonts-label-default-unnamed =
+    .label = 默认

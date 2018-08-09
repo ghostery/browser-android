@@ -35,6 +35,9 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "Overige tabbladen sluiten">
 <!ENTITY  closeOtherTabs.accesskey           "e">
 
+<!ENTITY  closeSelectedTabs.label            "Geselecteerde tabbladen sluiten">
+<!ENTITY  closeSelectedTabs.accesskey        "G">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -129,7 +132,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY showAllTabsCmd.label "Alle tabbladen tonen">
 <!ENTITY showAllTabsCmd.accesskey "A">
 <!ENTITY toggleReaderMode.key "R">
-
 <!ENTITY toggleReaderMode.win.keycode "VK_F9">
 
 <!ENTITY fxaSignIn.label "Aanmelden bij &syncBrand.shortName.label;">
@@ -189,10 +191,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY otherBookmarksCmd.label "Andere bladwijzers">
 <!ENTITY mobileBookmarksCmd.label "Mobiel-bladwijzers">
 <!ENTITY bookmarksToolbarChevron.tooltip "Meer bladwijzers tonen">
-<!ENTITY showRecentlyBookmarked.label     "Recent aangemaakte bladwijzers tonen">
-<!ENTITY showRecentlyBookmarked.accesskey "t">
-<!ENTITY hideRecentlyBookmarked.label     "Recent aangemaakte bladwijzers verbergen">
-<!ENTITY hideRecentlyBookmarked.accesskey "v">
 
 <!ENTITY backCmd.label                "Terug">
 <!ENTITY backCmd.accesskey            "T">
@@ -234,7 +232,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.translateNotificationAnchor.tooltip       "Deze pagina vertalen">
 <!ENTITY urlbar.translatedNotificationAnchor.tooltip      "Paginavertaling beheren">
 <!ENTITY urlbar.emeNotificationAnchor.tooltip             "Gebruik van DRM-software beheren">
-
 <!ENTITY urlbar.midiNotificationAnchor.tooltip            "MIDI-paneel openen">
 
 <!ENTITY urlbar.cameraBlocked.tooltip            "U hebt uw camera voor deze website geblokkeerd.">
@@ -245,7 +242,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "U hebt permanente opslag voor deze website geblokkeerd.">
 <!ENTITY urlbar.popupBlocked.tooltip             "U hebt pop-ups voor deze website geblokkeerd.">
 <!ENTITY urlbar.canvasBlocked.tooltip            "U hebt canvas-gegevensextractie voor deze website geblokkeerd.">
-
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "U hebt het gebruik van de Adobe Flash-plug-in voor deze website geblokkeerd.">
 <!ENTITY urlbar.midiBlocked.tooltip              "U hebt MIDI-toegang voor deze website geblokkeerd.">
 
@@ -255,6 +251,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!-- Toolbar items -->
 <!ENTITY homeButton.label             "Startpagina">
+
+<!ENTITY homeButton.defaultPage.tooltip "&brandShortName;-startpagina">
 
 <!ENTITY bookmarksButton.label          "Bladwijzers">
 <!ENTITY bookmarksCmd.commandkey "b">
@@ -395,7 +393,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      when Sync is configured but this appears to be the only device attached to
      the account. We also show links to download Firefox for android/ios. -->
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "Wilt u hier uw tabbladen van andere apparaten zien?">
-<!ENTITY appMenuRemoteTabs.openprefs.label "Synchronisatievoorkeuren">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "Sync-voorkeuren openen">
 <!ENTITY appMenuRemoteTabs.notsignedin.label "Meld u aan om een lijst van tabbladen van uw andere apparaten weer te geven.">
 <!ENTITY appMenuRemoteTabs.unverified.label "Uw account moet worden geverifieerd.">
@@ -436,6 +433,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.removeFromMenu.accesskey "w">
 <!ENTITY customizeMenu.addMoreItems.label "Meer items toevoegen…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "M">
+
+<!ENTITY customizeMenu.autoHideDownloadsButton.label "Automatisch verbergen in werkbalk">
+<!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "u">
+<!ENTITY customizeMenu.manageExtension.label "Extensie beheren">
+<!ENTITY customizeMenu.manageExtension.accesskey "E">
 
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
@@ -797,6 +799,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY identity.moreInfoLinkText2 "Meer informatie">
 
+<!ENTITY identity.clearSiteData "Cookies en websitegegevens wissen…">
+
 <!ENTITY identity.permissions "Toestemmingen">
 <!ENTITY identity.permissionsEmpty "U hebt deze website geen speciale toestemmingen gegeven.">
 <!ENTITY identity.permissionsReloadHint "Mogelijk dient u de pagina te vernieuwen om wijzigingen van kracht te laten worden.">
@@ -900,6 +904,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.allWindowsShared.message "Alle zichtbare vensters op uw scherm worden gedeeld.">
 
 <!ENTITY trackingProtection.title "Bescherming tegen volgen">
+<!ENTITY trackingProtection.tooltip "Voorkeuren van Bescherming tegen volgen openen">
 <!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; blokkeert onderdelen van de pagina die uw surfgedrag zouden kunnen volgen.">
 <!ENTITY trackingProtection.detectedNotBlocked3 "Deze website bevat elementen die uw surfgedrag zouden kunnen volgen. U hebt bescherming uitgeschakeld.">
 <!ENTITY trackingProtection.notDetected3 "Geen volgelementen op deze pagina gedetecteerd.">
@@ -987,14 +992,9 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY updateRestart.cancelButton.accesskey "N">
 <!ENTITY updateRestart.panelUI.label2 "Herstart om &brandShorterName; bij te werken">
 
-<!ENTITY newTabControlled.message "Een extensie heeft de pagina die u ziet bij het openen van een nieuw tabblad gewijzigd. Als u dit niet wilt, kunt u uw instellingen terugzetten.">
-
 <!ENTITY newTabControlled.header.message "Uw nieuwe tabblad is gewijzigd.">
 <!ENTITY newTabControlled.keepButton.label "Wijzigingen behouden">
 <!ENTITY newTabControlled.keepButton.accesskey "b">
-<!ENTITY newTabControlled.restoreButton.label "Instellingen terugzetten">
-<!ENTITY newTabControlled.restoreButton.accesskey "r">
-
 <!ENTITY newTabControlled.disableButton.label "Extensie uitschakelen">
 <!ENTITY newTabControlled.disableButton.accesskey "u">
 
@@ -1004,6 +1004,12 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY homepageControlled.keepButton.accesskey "b">
 <!ENTITY homepageControlled.disableButton.label "Extensie uitschakelen">
 <!ENTITY homepageControlled.disableButton.accesskey "u">
+
+<!ENTITY tabHideControlled.header.message "Uw verborgen tabbladen benaderen">
+<!ENTITY tabHideControlled.keepButton.label "Tabbladen verborgen houden">
+<!ENTITY tabHideControlled.keepButton.accesskey "v">
+<!ENTITY tabHideControlled.disableButton.label "Extensie uitschakelen">
+<!ENTITY tabHideControlled.disableButton.accesskey "u">
 
 <!ENTITY pageActionButton.tooltip "Pagina-acties">
 <!ENTITY pageAction.addToUrlbar.label "Toevoegen aan adresbalk">

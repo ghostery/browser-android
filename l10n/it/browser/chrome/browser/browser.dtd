@@ -18,6 +18,8 @@
 <!ENTITY closeTabsToTheEnd.accesskey "d">
 <!ENTITY closeOtherTabs.label "Chiudi le altre schede">
 <!ENTITY closeOtherTabs.accesskey "a">
+<!ENTITY closeSelectedTabs.label "Chiudi schede selezionate">
+<!ENTITY closeSelectedTabs.accesskey "z">
 <!ENTITY pinTab.label "Blocca scheda">
 <!ENTITY pinTab.accesskey "h">
 <!ENTITY unpinTab.label "Sblocca scheda">
@@ -32,6 +34,8 @@
 <!ENTITY sendToDeviceOfflineFeedback.label "In coda (non in linea)">
 <!ENTITY moveToNewWindow.label "Sposta in una nuova finestra">
 <!ENTITY moveToNewWindow.accesskey "f">
+<!ENTITY reopenInContainer.label "Riapri in contenitore">
+<!ENTITY reopenInContainer.accesskey "e">
 <!ENTITY bookmarkAllTabs.label "Tutte le schede nei segnalibri…">
 <!ENTITY bookmarkAllTabs.accesskey "T">
 <!ENTITY undoCloseTab.label "Riapri scheda chiusa">
@@ -126,10 +130,6 @@
 <!ENTITY otherBookmarksCmd.label "Altri segnalibri">
 <!ENTITY mobileBookmarksCmd.label "Segnalibri da dispositivi mobile">
 <!ENTITY bookmarksToolbarChevron.tooltip "Visualizza altri segnalibri">
-<!ENTITY showRecentlyBookmarked.label "Visualizza segnalibri recenti">
-<!ENTITY showRecentlyBookmarked.accesskey "b">
-<!ENTITY hideRecentlyBookmarked.label "Nascondi segnalibri recenti">
-<!ENTITY hideRecentlyBookmarked.accesskey "b">
 <!ENTITY backCmd.label "Indietro">
 <!ENTITY backCmd.accesskey "I">
 <!ENTITY backButton.tooltip "Torna indietro di una pagina">
@@ -179,6 +179,7 @@
 <!ENTITY urlbar.openHistoryPopup.tooltip "Visualizza cronologia">
 <!ENTITY searchItem.title "Cerca">
 <!ENTITY homeButton.label "Pagina iniziale&#173;">
+<!ENTITY homeButton.defaultPage.tooltip "Pagina iniziale di &brandShortName;">
 <!ENTITY bookmarksButton.label "Segnalibri">
 <!ENTITY bookmarksCmd.commandkey "b">
 <!ENTITY bookmarksSubview.label "Segnalibri">
@@ -283,7 +284,6 @@
 <!ENTITY appMenuRemoteTabs.showAll.tooltip "Visualizza tutte le schede da questo dispositivo">
 <!ENTITY appMenuRemoteTabs.tabsnotsyncing.label "Attiva la sincronizzazione delle schede per visualizzare le schede disponibili negli altri dispositivi.">
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "Come fare per visualizzare in questa sezione le schede da altri dispositivi?">
-<!ENTITY appMenuRemoteTabs.openprefs.label "Preferenze Sync">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "Apri preferenze Sync">
 <!ENTITY appMenuRemoteTabs.notsignedin.label "Accedi per visualizzare un elenco delle schede aperte in altri dispositivi.">
 <!ENTITY appMenuRemoteTabs.unverified.label "L’account non è ancora stato verificato.">
@@ -312,6 +312,10 @@
 <!ENTITY customizeMenu.removeFromMenu.accesskey "R">
 <!ENTITY customizeMenu.addMoreItems.label "Aggiungi altri elementi…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "A">
+<!ENTITY customizeMenu.autoHideDownloadsButton.label "Nascondi automaticamente nella barra degli strumenti">
+<!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "N">
+<!ENTITY customizeMenu.manageExtension.label "Gestisci estensione">
+<!ENTITY customizeMenu.manageExtension.accesskey "G">
 <!ENTITY moreMenu.label "Altro">
 <!ENTITY openCmd.commandkey "l">
 <!ENTITY urlbar.placeholder2 "Inserisci un indirizzo o avvia una ricerca">
@@ -560,6 +564,7 @@
 <!ENTITY identity.removeCertException.label "Elimina eccezione">
 <!ENTITY identity.removeCertException.accesskey "E">
 <!ENTITY identity.moreInfoLinkText2 "Ulteriori informazioni">
+<!ENTITY identity.clearSiteData "Elimina cookie e dati dei siti web…">
 <!ENTITY identity.permissions "Permessi">
 <!ENTITY identity.permissionsEmpty "Nessun permesso speciale associato a questo sito.">
 <!ENTITY identity.permissionsReloadHint "Potrebbe essere necessario ricaricare la pagina per rendere effettive le modifiche.">
@@ -633,6 +638,7 @@
 <!ENTITY getUserMedia.audioCapture.label "L’audio della scheda verrà condiviso.">
 <!ENTITY getUserMedia.allWindowsShared.message "Tutte le finestre visibili sullo schermo verranno condivise.">
 <!ENTITY trackingProtection.title "Protezione antitracciamento">
+<!ENTITY trackingProtection.tooltip "Apri impostazioni per la protezione antitracciamento">
 <!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; sta bloccando elementi della pagina in grado di tracciare la navigazione.">
 <!ENTITY trackingProtection.detectedNotBlocked3 "In questa pagina sono presenti elementi in grado di tracciare la navigazione. La protezione è disattivata.">
 <!ENTITY trackingProtection.notDetected3 "In questa pagina non sono presenti elementi in grado di tracciare la navigazione.">
@@ -688,12 +694,9 @@
 <!ENTITY updateRestart.cancelButton.label "Non adesso">
 <!ENTITY updateRestart.cancelButton.accesskey "N">
 <!ENTITY updateRestart.panelUI.label2 "Riavvia per aggiornare &brandShorterName;">
-<!ENTITY newTabControlled.message "Un’estensione ha sostituito la pagina visualizzata quando si apre una nuova scheda. È possibile ripristinare queste impostazioni se si tratta di una modifica non voluta.">
 <!ENTITY newTabControlled.header.message "La pagina Nuova scheda è cambiata">
 <!ENTITY newTabControlled.keepButton.label "Mantieni modifiche">
 <!ENTITY newTabControlled.keepButton.accesskey "M">
-<!ENTITY newTabControlled.restoreButton.label "Ripristina impostazioni">
-<!ENTITY newTabControlled.restoreButton.accesskey "R">
 <!ENTITY newTabControlled.disableButton.label "Disattiva estensione">
 <!ENTITY newTabControlled.disableButton.accesskey "D">
 <!ENTITY homepageControlled.message "Un’estensione ha modificato i contenuti visualizzati nella pagina iniziale. È possibile ripristinare queste impostazioni se si tratta di una modifica non voluta.">
@@ -702,6 +705,11 @@
 <!ENTITY homepageControlled.keepButton.accesskey "M">
 <!ENTITY homepageControlled.disableButton.label "Disattiva estensione">
 <!ENTITY homepageControlled.disableButton.accesskey "D">
+<!ENTITY tabHideControlled.header.message "Accedi alle schede nascoste">
+<!ENTITY tabHideControlled.keepButton.label "Mantieni schede nascoste">
+<!ENTITY tabHideControlled.keepButton.accesskey "M">
+<!ENTITY tabHideControlled.disableButton.label "Disattiva estensione">
+<!ENTITY tabHideControlled.disableButton.accesskey "D">
 <!ENTITY pageActionButton.tooltip "Azioni per questa pagina">
 <!ENTITY pageAction.addToUrlbar.label "Aggiungi alla barra degli indirizzi">
 <!ENTITY pageAction.removeFromUrlbar.label "Rimuovi dalla barra degli indirizzi">

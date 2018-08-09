@@ -398,8 +398,6 @@ public class GeckoApplication extends MultiDexApplication
             });
         }
 
-        GeckoAccessibility.setAccessibilityManagerListeners(this);
-
         AudioFocusAgent.getInstance().attachToContext(this);
     }
 

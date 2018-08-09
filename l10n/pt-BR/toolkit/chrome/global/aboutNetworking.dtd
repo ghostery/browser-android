@@ -45,7 +45,7 @@
 <!ENTITY aboutNetworking.rcwn                  "Estatísticas RCWN">
 <!ENTITY aboutNetworking.rcwnStatus            "Status RCWN">
 <!ENTITY aboutNetworking.rcwnCacheWonCount     "Contagem de cache ganha">
-<!ENTITY aboutNetworking.rcwnNetWonCount       "Rede ganhou contagem">
+<!ENTITY aboutNetworking.rcwnNetWonCount       "Contagem de rede ganha">
 <!ENTITY aboutNetworking.totalNetworkRequests  "Contagem total de solicitação de rede">
 <!ENTITY aboutNetworking.rcwnOperation         "Operação de cache">
 <!ENTITY aboutNetworking.rcwnPerfOpen          "Abrir">

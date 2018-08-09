@@ -135,7 +135,6 @@
 
 <!ENTITY Photo.tab "Zdjęcie">
 <!ENTITY Photo.accesskey "Z">
-<!ENTITY PhotoDesc.label "">
 <!ENTITY GenericPhoto.label "Standardowy obraz">
 <!ENTITY GenericPhoto.accesskey "t">
 <!ENTITY DefaultPhoto.label "Domyślne">

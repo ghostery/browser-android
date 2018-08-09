@@ -75,7 +75,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private ImageView mInfoViewIcon;
     private View mInfoView;
     private View mOverview;
-    private BottomSheetBehavior mBottomSheetBehavior;
+    private BottomSheetBehavior<View> mBottomSheetBehavior;
     private final BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback =
             new BottomSheetBehavior.BottomSheetCallback() {
                 @Override

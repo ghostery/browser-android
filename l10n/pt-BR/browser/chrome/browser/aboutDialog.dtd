@@ -5,7 +5,7 @@
 
 <!-- LOCALIZATION NOTE (update.*):
 # These strings are also used in the update pane of preferences.
-# See about:preferences#advanced.
+# See about:preferences#general.
 -->
 <!-- LOCALIZATION NOTE (update.checkForUpdatesButton.*, update.updateButton.*):
 # Only one button is present at a time.
@@ -20,15 +20,13 @@
 
 <!-- LOCALIZATION NOTE (warningDesc.version): This is a warning about the experimental nature of Nightly and Aurora builds. It is only shown in those versions. -->
 <!ENTITY warningDesc.version        "O &brandShortName; é experimental e pode ser instável.">
-<!-- LOCALIZATION NOTE (warningDesc.telemetryDesc): This is a notification that Nightly/Aurora builds automatically send Telemetry data back to Mozilla. It is only shown in those versions. "It" refers to brandShortName. -->
-<!ENTITY warningDesc.telemetryDesc  "Informações de desempenho, hardware, uso e personalizações são enviadas automaticamente de volta a &vendorShortName; para ajudar a melhorar o &brandShortName;.">
 
 <!-- LOCALIZATION NOTE (community.exp.*) This paragraph is shown in "experimental" builds, i.e. Nightly and Aurora builds, instead of the other "community.*" strings below. -->
 <!ENTITY community.exp.start        "">
 <!-- LOCALIZATION NOTE (community.exp.mozillaLink): This is a link title that links to http://www.mozilla.org/. -->
 <!ENTITY community.exp.mozillaLink  "A &vendorShortName;">
 <!ENTITY community.exp.middle       " é uma ">
-<!-- LOCALIZATION NOTE (community.exp.creditslink): This is a link title that links to about:credits. -->
+<!-- LOCALIZATION NOTE (community.exp.creditsLink): This is a link title that links to about:credits. -->
 <!ENTITY community.exp.creditsLink  "comunidade global">
 <!ENTITY community.exp.end          " que trabalha unida para manter a web aberta, pública e acessível a todos.">
 
@@ -41,7 +39,7 @@
 <!ENTITY community.end3             " que trabalha unida para manter a Web aberta, pública e acessível à todos.">
 
 <!ENTITY helpus.start               "Quer ajudar? ">
-<!-- LOCALIZATION NOTE (helpus.donateLink): This is a link title that links to https://sendto.mozilla.org/page/contribute/Give-Now?source=mozillaorg_default_footer&ref=firefox_about&utm_campaign=firefox_about&utm_source=firefox&utm_medium=referral&utm_content=20140929_FireFoxAbout. -->
+<!-- LOCALIZATION NOTE (helpus.donateLink): This is a link title that links to https://donate.mozilla.org/?utm_source=firefox&utm_medium=referral&utm_campaign=firefox_about&utm_content=firefox_about. -->
 <!ENTITY helpus.donateLink          "Faça uma doação">
 <!ENTITY helpus.middle              " ou ">
 <!-- LOCALIZATION NOTE (helpus.getInvolvedLink): This is a link title that links to http://www.mozilla.org/contribute/. -->
@@ -92,7 +90,7 @@
      why the system is no longer supported. As this is all in one line, try to
      make the localized text short (see bug 843497 for screenshots). -->
 <!ENTITY update.unsupported.start    "Não é mais possível realizar atualizações neste sistema. ">
-<!ENTITY update.unsupported.linkText "Saber mais">
+<!ENTITY update.unsupported.linkText "Saiba mais">
 <!ENTITY update.unsupported.end      "">
 
 <!-- LOCALIZATION NOTE (update.downloading.start,update.downloading.end): update.downloading.start and

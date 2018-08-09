@@ -5,7 +5,7 @@
 
 <!ENTITY search.placeholder2                  "Pesquisar em addons.mozilla.org">
 <!ENTITY search.buttonlabel                   "Pesquisar">
-<!-- LOCALIZATION NOTE (search.commandKey):
+<!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
 <!ENTITY search.commandkey                    "f">
 
@@ -65,7 +65,7 @@
 <!ENTITY updates.updating.label               "A atualizar extras">
 <!ENTITY updates.installed.label              "Os seus extras foram atualizados.">
 <!ENTITY updates.downloaded.label             "As atualizações dos seus extras foram transferidas.">
-<!ENTITY updates.restart.label                "Reiniciar agora para completar a instalação">
+<!ENTITY updates.restart.label                "Reiniciar agora para concluir a instalação">
 <!ENTITY updates.noneFound.label              "Nenhuma atualização encontrada">
 <!ENTITY updates.manualUpdatesFound.label     "Ver atualizações disponíveis">
 <!ENTITY updates.updateSelected.label         "Instalar atualizações">
@@ -129,7 +129,6 @@
 <!ENTITY detail.lastupdated.label             "Última atualização">
 <!ENTITY detail.creator.label                 "Programador">
 <!ENTITY detail.homepage.label                "Página inicial">
-<!ENTITY detail.numberOfDownloads.label       "Transferências">
 
 <!ENTITY detail.contributions.description     "O programador deste extra pede para o ajudar no desenvolvimento com uma pequena contribuição.">
 

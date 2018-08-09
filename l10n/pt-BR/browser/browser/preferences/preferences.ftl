@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 do-not-track-description = Enviar aos sites um sinal de “Não rastrear” informando que você não quer ser rastreado
-do-not-track-learn-more = Saber mais
+do-not-track-learn-more = Saiba mais
 do-not-track-option-default =
     .label = Somente quando usar a proteção contra rastreamento
 do-not-track-option-always =
@@ -67,11 +67,46 @@ close-button =
 ## Browser Restart Dialog
 
 feature-enable-requires-restart = O { -brand-short-name } deve ser reiniciado para habilitar esta funcionalidade.
-feature-disable-requires-restart = O { -brand-short-name } deve ser reiniciado para desabilitar esta funcionalidade.
+feature-disable-requires-restart = O { -brand-short-name } deve ser reiniciado para desativar esta funcionalidade.
 should-restart-title = Reiniciar o { -brand-short-name }
 should-restart-ok = Reiniciar o { -brand-short-name } agora
 cancel-no-restart-button = Cancelar
 restart-later = Reiniciar depois
+
+## Extension Control Notifications
+##
+## These strings are used to inform the user
+## about changes made by extensions to browser settings.
+##
+## <img data-l10n-name="icon"/> is going to be replaced by the extension icon.
+##
+## Variables:
+##   $name (String): name of the extension
+
+# This string is shown to notify the user that their home page
+# is being controlled by an extension.
+extension-controlled-homepage-override = Uma extensão, <img data-l10n-name="icon"/> { $name }, está controlando sua página inicial.
+# This string is shown to notify the user that their new tab page
+# is being controlled by an extension.
+extension-controlled-new-tab-url = Uma extensão, <img data-l10n-name="icon"/> { $name }, está controlando a sua página de nova aba.
+# This string is shown to notify the user that the default search engine
+# is being controlled by an extension.
+extension-controlled-default-search = Uma extensão, <img data-l10n-name="icon"/> { $name }, definiu o seu mecanismo de pesquisa padrão.
+# This string is shown to notify the user that Container Tabs
+# are being enabled by an extension.
+extension-controlled-privacy-containers = Uma extensão requer abas contêiner: <img data-l10n-name="icon"/> { $name }.
+# This string is shown to notify the user that their tracking protection preferences
+# are being controlled by an extension.
+extension-controlled-websites-tracking-protection-mode = Uma extensão, <img data-l10n-name="icon"/> { $name }, está controlando sua proteção contra rastreamento.
+# This string is shown to notify the user that their proxy configuration preferences
+# are being controlled by an extension.
+extension-controlled-proxy-config = Uma extensão, <img data-l10n-name="icon"/> { $name }, está controlando como o { -brand-short-name } se conecta à Internet.
+# This string is shown after the user disables an extension to notify the user
+# how to enable an extension that they disabled.
+#
+# <img data-l10n-name="addons-icon"/> will be replaced with Add-ons icon
+# <img data-l10n-name="menu-icon"/> will be replaced with Menu icon
+extension-controlled-enable = Para habilitar esta extensão vá para <img data-l10n-name="addons-icon"/> Extensões no menu <img data-l10n-name="menu-icon"/>.
 
 ## Preferences UI Search Results
 
@@ -97,8 +132,8 @@ get-started-configured = Abrir preferências { -sync-brand-short-name }
 always-check-default =
     .label = Sempre verificar se o { -brand-short-name } é o navegador padrão
     .accesskey = S
-is-default = O { -brand-short-name } é o seu navegador padrão
-is-not-default = O { -brand-short-name } não é o seu navegador padrão
+is-default = { -brand-short-name } é o seu navegador padrão
+is-not-default = { -brand-short-name } não é o seu navegador padrão
 set-as-my-default-browser =
     .label = Tornar padrão…
     .accesskey = D
@@ -110,8 +145,11 @@ startup-blank-page =
     .label = Mostrar uma página em branco
 startup-prev-session =
     .label = Mostrar suas janelas e abas anteriores
+startup-restore-previous-session =
+    .label = Restaurar a sessão anterior
+    .accesskey = R
 disable-extension =
-    .label = Desabilitar extensão
+    .label = Desativar extensão
 home-page-header = Página inicial
 tabs-group-header = Abas
 ctrl-tab-recently-used-order =
@@ -135,20 +173,20 @@ show-tabs-in-taskbar =
 browser-containers-enabled =
     .label = Habilitar abas contêiner
     .accesskey = n
-browser-containers-learn-more = Saber mais
+browser-containers-learn-more = Saiba mais
 browser-containers-settings =
     .label = Configurações…
     .accesskey = i
 containers-disable-alert-title = Fechar todas as abas contêiner?
 containers-disable-alert-desc =
     { $tabCount ->
-        [one] Se você desabilitar a Aba Contêiner agora, { $tabCount } aba contêiner será fechada. Tem certeza de que deseja desativar a Aba Contêiner?
-       *[other] Se você desabilitar a Aba Contêiner agora, { $tabCount } abas contêiner serão fechadas. Tem certeza de que deseja desativar a Aba Contêiner?
+        [one] Se desativar Abas Contêiner agora, { $tabCount } aba contêiner será fechada. Tem certeza que deseja desativar Abas Contêiner?
+       *[other] Se desativar Abas Contêiner agora, { $tabCount } abas contêiner serão fechadas. Tem certeza que deseja desativar Abas Contêiner?
     }
 containers-disable-alert-ok-button =
     { $tabCount ->
-        [one] Fechar { $tabCount } aba container
-       *[other] Fechar { $tabCount } abas container
+        [one] Fechar { $tabCount } aba contêiner
+       *[other] Fechar { $tabCount } abas contêiner
     }
 containers-disable-alert-cancel-button = Manter habilitado
 containers-remove-alert-title = Remover este contêiner?
@@ -156,8 +194,8 @@ containers-remove-alert-title = Remover este contêiner?
 #   $count (Number) - Number of tabs that will be closed.
 containers-remove-alert-msg =
     { $count ->
-        [one] Se você remover este Contêiner agora, { $count } aba contêiner será fechada. Você tem certeza que deseja remover este Contêiner?
-       *[other] Se você remover este Contêiner agora, { $count } abas contêiner serão fechadas. Você tem certeza que deseja remover este Contêiner?
+        [one] Se você remover este Contêiner agora, { $count } aba contêiner será fechada. Tem certeza que deseja remover este Contêiner?
+       *[other] Se você remover este Contêiner agora, { $count } abas contêiner serão fechadas. Tem certeza que deseja remover este Contêiner?
     }
 containers-remove-ok-button = Remover este contêiner
 containers-remove-cancel-button = Não remover este contêiner
@@ -229,9 +267,9 @@ drm-content-header = Conteúdo DRM (Digital Rights Management - Gerenciamento de
 play-drm-content =
     .label = Reproduzir conteúdo controlado por DRM
     .accesskey = R
-play-drm-content-learn-more = Saber mais
+play-drm-content-learn-more = Saiba mais
 update-application-title = Atualizações do { -brand-short-name }
-update-application-description = Manter { -brand-short-name } atualizado para uma melhor performance, estabilidade e segurança.
+update-application-description = Manter o { -brand-short-name } atualizado para melhor desempenho, estabilidade e segurança.
 update-application-info = Versão { $version } <a>Novidades</a>
 update-application-version = Versão { $version } <a data-l10n-name="learn-more">Novidades</a>
 update-history =
@@ -248,10 +286,10 @@ update-application-manual =
     .label = Nunca busque atualizações (não recomendado)
     .accesskey = N
 update-application-use-service =
-    .label = Use um serviço para instalar atualizações em segundo plano
+    .label = Usar um serviço em segundo plano para instalar atualizações
     .accesskey = s
 update-enable-search-update =
-    .label = Atualize automaticamente os mecanismos de pesquisa
+    .label = Atualizar automaticamente os mecanismos de pesquisa
     .accesskey = e
 
 ## General Section - Performance
@@ -260,16 +298,16 @@ performance-title = Desempenho
 performance-use-recommended-settings-checkbox =
     .label = Usar as configurações de desempenho recomendadas
     .accesskey = U
-performance-use-recommended-settings-desc = Essas configurações são adaptadas ao hardware e ao sistema operacional do computador.
-performance-settings-learn-more = Saber mais
+performance-use-recommended-settings-desc = Essas configurações são adaptadas ao hardware e sistema operacional do seu computador.
+performance-settings-learn-more = Saiba mais
 performance-allow-hw-accel =
     .label = Usar aceleração de hardware quando disponível
     .accesskey = r
-performance-limit-content-process-option = Limite do processo de conteúdo
+performance-limit-content-process-option = Limite de processos de conteúdo
     .accesskey = L
 performance-limit-content-process-enabled-desc = Processos de conteúdo adicionais podem melhorar o desempenho ao usar várias abas, mas também usam mais memória.
-performance-limit-content-process-disabled-desc = A modificação do número de processos de conteúdo só é possível com o processo múltiplo do { -brand-short-name }. <a>Saiba como verificar se o processo múltiplo está habilitado</a>
-performance-limit-content-process-blocked-desc = A modificação do número de processos de conteúdo só é possível com o processo múltiplo do { -brand-short-name }. <a data-l10n-name="learn-more">Saiba como verificar se o processo múltiplo está habilitado</a>
+performance-limit-content-process-disabled-desc = Modificar o número de processos de conteúdo só é possível com o multiprocessamento do { -brand-short-name }. <a>Saiba como verificar se o multiprocessamento está ativado</a>
+performance-limit-content-process-blocked-desc = Modificar o número de processos de conteúdo só é possível com o multiprocessamento do { -brand-short-name }. <a data-l10n-name="learn-more">Saiba como verificar se o multiprocessamento está ativado</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
 performance-default-content-process-count =
@@ -288,16 +326,17 @@ browsing-use-onscreen-keyboard =
     .label = Mostrar um teclado sensível ao toque quando necessário
     .accesskey = t
 browsing-use-cursor-navigation =
-    .label = Sempre usar as teclas de cursor para navegar nas páginas
+    .label = Sempre usar as teclas de cursor para navegar dentro das páginas
     .accesskey = c
 browsing-search-on-start-typing =
-    .label = Pesquisar texto quando começa a digitar
+    .label = Procurar texto quando começar a digitar
     .accesskey = x
 
 ## General Section - Proxy
 
 network-proxy-title = Proxy de Rede
-network-proxy-connection-learn-more = Saber mais
+network-proxy-connection-description = Configure como o { -brand-short-name } se conecta à Internet.
+network-proxy-connection-learn-more = Saiba mais
 network-proxy-connection-settings =
     .label = Configurar conexão…
     .accesskey = e
@@ -428,7 +467,7 @@ sync-disconnect =
 sync-manage-account = Gerenciar conta
     .accesskey = o
 sync-signedin-unverified = { $email } não foi verificado.
-sync-signedin-login-failure = Por favor, entrar para reconectar { $email }
+sync-signedin-login-failure = Entre para reconectar { $email }
 sync-resend-verification =
     .label = Reenviar verificação
     .accesskey = r
@@ -540,6 +579,9 @@ history-private-browsing-permanent =
 history-remember-option =
     .label = Memorizar histórico de navegação e downloads
     .accesskey = M
+history-remember-browser-option =
+    .label = Memorizar histórico de navegação e downloads
+    .accesskey = h
 history-remember-search-option =
     .label = Memorizar histórico de pesquisa e formulários
     .accesskey = z
@@ -556,7 +598,12 @@ history-clear-button =
 ## Privacy Section - Site Data
 
 sitedata-header = Cookies e Dados de sites
-sitedata-learn-more = Saber mais
+sitedata-total-size-calculating = Calculando o tamanho dos dados de sites e cache…
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+sitedata-total-size = Seus cookies, dados de sites e cache armazenados estão atualmente usando { $value } { $unit } do espaço em disco.
+sitedata-learn-more = Saiba mais
 sitedata-accept-cookies-option =
     .label = Aceitar cookies e dados de sites (recomendado)
     .accesskey = A
@@ -568,7 +615,7 @@ sitedata-keep-until = Manter até
 sitedata-keep-until-expire =
     .label = Expirarem
 sitedata-keep-until-closed =
-    .label = { -brand-short-name } está fechado
+    .label = { -brand-short-name } ser fechado
 sitedata-accept-third-party-desc = Aceitar cookies e dados de site de terceiros
     .accesskey = t
 sitedata-accept-third-party-always-option =
@@ -633,7 +680,7 @@ permissions-header = Permissões
 permissions-location = Localização
 permissions-location-settings =
     .label = Configurações…
-    .accesskey = l
+    .accesskey = C
 permissions-camera = Câmera
 permissions-camera-settings =
     .label = Configurações…
@@ -646,10 +693,16 @@ permissions-notification = Notificações
 permissions-notification-settings =
     .label = Configurações…
     .accesskey = n
-permissions-notification-link = Saber mais
+permissions-notification-link = Saiba mais
 permissions-notification-pause =
     .label = Pausar as notificações até reiniciar o { -brand-short-name }
     .accesskey = n
+permissions-block-autoplay-media =
+    .label = Bloquear reprodução automática de mídia com som em sites
+    .accesskey = B
+permissions-block-autoplay-media-exceptions =
+    .label = Exceções…
+    .accesskey = E
 permissions-block-popups =
     .label = Bloquear janelas popup
     .accesskey = B
@@ -665,7 +718,7 @@ permissions-addon-exceptions =
 permissions-a11y-privacy-checkbox =
     .label = Impedir que os serviços de acessibilidade acessem o seu navegador
     .accesskey = a
-permissions-a11y-privacy-link = Saber mais
+permissions-a11y-privacy-link = Saiba mais
 
 ## Privacy Section - Data Collection
 
@@ -675,18 +728,21 @@ collection-privacy-notice = Nota sobre privacidade
 collection-health-report =
     .label = Permitir que o { -brand-short-name } envie dados técnicos e de interação para a { -vendor-short-name }
     .accesskey = r
-collection-health-report-link = Saber mais
+collection-health-report-link = Saiba mais
+collection-studies =
+    .label = Permitir que o { -brand-short-name } instale e execute pesquisas
+collection-studies-link = Ver pesquisas do { -brand-short-name }
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = O relatório de dados está desabilitado nesta configuração
 collection-browser-errors =
     .label = Permitir que o { -brand-short-name } envie relatórios de erro do navegador (incluindo mensagens de erro) para a { -vendor-short-name }
     .accesskey = b
-collection-browser-errors-link = Saber mais
+collection-browser-errors-link = Saiba mais
 collection-backlogged-crash-reports =
     .label = Permitir ao { -brand-short-name } enviar relatórios de travamento em seu nome
     .accesskey = e
-collection-backlogged-crash-reports-link = Saber mais
+collection-backlogged-crash-reports-link = Saiba mais
 
 ## Privacy Section - Security
 ##
@@ -698,7 +754,7 @@ security-browsing-protection = Conteúdo Enganoso e Proteção Contra Software P
 security-enable-safe-browsing =
     .label = Bloquear conteúdo perigoso e malicioso
     .accesskey = B
-security-enable-safe-browsing-link = Saber mais
+security-enable-safe-browsing-link = Saiba mais
 security-block-downloads =
     .label = Bloquear downloads perigosos
     .accesskey = d
