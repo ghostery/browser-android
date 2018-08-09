@@ -4232,8 +4232,15 @@ public class BrowserApp extends GeckoApp
 
         if (itemId == R.id.reload) {
             tab = Tabs.getInstance().getSelectedTab();
-            if (tab != null)
-                tab.doReload(false);
+            /* Cliqz Start */
+            if (tab != null) {
+                if (tab.getState() == Tab.STATE_LOADING) {
+                    tab.doStop();
+                } else {
+                    tab.doReload(false);
+                }
+            }
+            /* Cliqz End */
             return true;
         }
 
@@ -4383,7 +4390,9 @@ public class BrowserApp extends GeckoApp
     public boolean onMenuItemLongClick(MenuItem item) {
         if (item.getItemId() == R.id.reload) {
             Tab tab = Tabs.getInstance().getSelectedTab();
-            if (tab != null) {
+            /* Cliqz Start */
+            if (tab != null && tab.getState() != Tab.STATE_LOADING) {
+            /* Cliqz End */
                 tab.doReload(true);
 
                 Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, TelemetryContract.Method.MENU, "reload_force");
@@ -4895,5 +4904,17 @@ public class BrowserApp extends GeckoApp
 
         dialogBuilder.show();
     }
+
+    public void toggleReloadButtonIcon(boolean showReload) {
+        if (mMenu != null) {
+            MenuItem reloadMenuItem = mMenu.findItem(R.id.reload);
+            if (showReload) {
+                reloadMenuItem.setIcon(R.drawable.ic_menu_reload);
+            } else {
+                reloadMenuItem.setIcon(R.drawable.ic_menu_cancel);
+            }
+        }
+    }
+
     /* Cliqz end */
 }
