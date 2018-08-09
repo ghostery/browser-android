@@ -256,7 +256,7 @@
 <!ENTITY ghostery_onboarding_new_users_title "Introducing &brandShortName;">
 <!ENTITY ghostery_onboarding_new_users_text "Keep your browsing cleaner, faster, and safer. By using this app you agree to &brandShortName;\'s Privacy Policy.">
 <!ENTITY ghostery_onboarding_old_users_title "Introducing new &brandShortName;">
-<!ENTITY ghostery_onboarding_old_users_text "Support &brandShortName; by participating in &brandMyOffrz; and share Human Web &amp; analytics data. Learn more.">
+<!ENTITY ghostery_onboarding_old_users_text "Support &brandShortName; by participating in &brandMyOffrz; and share Human Web &amp; analytics data. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022>Learn More.\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Tracking Protection">
 <!ENTITY ghostery_onboarding_tracking_protection_text "Browse smarter with our tracking protection features. You can turn these off in the &brandShortName; Control Center.">
 <!ENTITY ghostery_onboarding_quick_search_title "Quick Search">

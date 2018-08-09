@@ -3,15 +3,18 @@ package org.mozilla.gecko.onboarding;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v4.view.PagerAdapter;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.preferences.PreferenceManager;
+import org.mozilla.gecko.util.CustomLinkMovementMethod;
 
 /**
  * Copyright © Cliqz 2018
@@ -39,6 +42,19 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
         final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         final ViewGroup layout = (ViewGroup) layoutInflater.inflate(screens[position], container, false);
         final Button startBrowsing = (Button) layout.findViewById(R.id.start_browsing);
+        final TextView dataCollectionTv = (TextView) layout.findViewById(R.id.data_collection_detail_tv);
+        if (dataCollectionTv != null) {
+            final CustomLinkMovementMethod customLinkMovementMethod =
+                    CustomLinkMovementMethod.getInstance(new CustomLinkMovementMethod.OnOpenLinkCallBack() {
+                        @Override
+                        public void OnOpenLinkLoaded() {
+
+                        }
+                    });
+            customLinkMovementMethod.init(CustomLinkMovementMethod.OPEN_IN_CUSTOM_TAB);
+            dataCollectionTv.setMovementMethod(customLinkMovementMethod);
+            dataCollectionTv.setText(Html.fromHtml(mContext.getString(R.string.ghostery_onboarding_old_users_text)));
+        }
         startBrowsing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
