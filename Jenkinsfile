@@ -77,6 +77,9 @@ def build(Map m){
                                     cd mozilla-release
                                     ./mach clobber
                                     ./mach build
+                                    for lang in `ls ../l10n/`; do
+                                        ./mach build chrome-$lang
+                                    done
                                     ./mach package
                                 '''
                             }

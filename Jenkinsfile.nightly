@@ -104,7 +104,7 @@ def build(Map m){
                         "BRAND=${brandname}",
                         "CLIQZ_CHANNEL=${cliqzchannel}"
                         ]){
-                        sh """#!/bin/bash -l
+                        sh '''#!/bin/bash -l
                             set -e
                             set -x
                             pwd
@@ -114,11 +114,11 @@ def build(Map m){
                             cd mozilla-release
                             ./mach clobber
                             ./mach build
-                            for language in `ls ../l10n/`; do
-                                ./mach build chrome-$language
+                            for lang in `ls ../l10n/`; do
+                                ./mach build chrome-$lang
                             done
                             ./mach package
-                        """
+                        '''
                         withCredentials([
                             file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
                             string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
