@@ -498,8 +498,6 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
         */
         mPageActionLayout.setVisibility(!isShowingProgress ? View.VISIBLE : View.GONE);
-        // update titleBarWidth relative Actions Buttons width
-        updateTitleBarWidth();
         // We want title to fill the whole space available for it when there are icons
         // being shown on the right side of the toolbar as the icons already have some
         // padding in them. This is just to avoid wasting space when icons are shown.
@@ -523,27 +521,23 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         if (wm != null) {
             wm.getDefaultDisplay().getMetrics(metrics);
         }
-        final int buttonWidth = (int)resources.getDimension(R.dimen.browser_toolbar_image_button_width);
+        final int buttonWidth = (int)resources.getDimension(R.dimen.page_action_button_width);
 
-        int actionsLayoutWidth = 0;
-        if(mPageActionLayout.getVisibility() == VISIBLE){
-           actionsLayoutWidth = mPageActionLayout.getPageActionListSize()* buttonWidth;
-        }
+        final int actionsLayoutWidth = mPageActionLayout.getPageActionListSize()* buttonWidth;
         // 3 icons on the right {3 dot menu, tab icons, ghostry icon} + left security icon +
         // padding right
         final BrowserToolbar parent = (BrowserToolbar) getParent();
 
         int toolBarbuttonsWidth = parent.ghostyButton.getWidth()+ parent.tabsButton.getWidth() +
-                parent.menuButton.getWidth() + mSiteSecurity.getWidth() + (int) resources
-                .getDimension(R.dimen.padding_10);
-
+                parent.menuButton.getWidth() + mSiteSecurity.getWidth() + (int) resources.getDimension(R.dimen
+                .myoffrz_padding_8);
         if(HardwareUtils.isTablet()){
             // add 4 icons back button, forward button,  refresh icon and bookmark icon
             final BrowserToolbarTablet tabletParent = (BrowserToolbarTablet) getParent();
             toolBarbuttonsWidth += tabletParent.backButton.getWidth() + tabletParent
                     .forwardButton.getWidth() + tabletParent.menuButtonMarginView.getWidth() +
                     tabletParent.actionItemBar.getWidth() + (int) resources.getDimension(R.dimen
-                    .myoffrz_padding_16);
+                    .padding_16);
         }
 
         final int buttonsWidth = toolBarbuttonsWidth + actionsLayoutWidth;
