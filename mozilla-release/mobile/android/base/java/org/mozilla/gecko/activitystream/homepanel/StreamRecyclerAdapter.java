@@ -35,6 +35,7 @@ import org.mozilla.gecko.activitystream.homepanel.stream.StreamViewHolder;
 import org.mozilla.gecko.activitystream.homepanel.stream.TopNewsRow;
 import org.mozilla.gecko.activitystream.homepanel.stream.TopPanelRow;
 import org.mozilla.gecko.activitystream.homepanel.stream.WebpageItemRow;
+import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesContextMenu;
 import org.mozilla.gecko.activitystream.homepanel.topstories.PocketStoriesLoader;
 import org.mozilla.gecko.home.HomePager;
 import org.mozilla.gecko.util.StringUtils;
@@ -409,13 +410,16 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
             final ActivityStreamContextMenu.MenuMode menuMode, final WebpageModel webpageModel,
             final boolean shouldOverrideWithImageProvider,
             final int faviconWidth, final int faviconHeight) {
-        ActivityStreamContextMenu.show(tabletContextMenuAnchor, snackbarAnchor,
+        /* Cliqz Start */
+        /* ActivityStreamContextMenu.show(tabletContextMenuAnchor, snackbarAnchor,
                 extras,
                 menuMode,
                 webpageModel,
                 shouldOverrideWithImageProvider,
                 onUrlOpenListener, onUrlOpenInBackgroundListener,
-                faviconWidth, faviconHeight);
+                faviconWidth, faviconHeight); */
+        TopSitesContextMenu.show(tabletContextMenuAnchor, webpageModel, onUrlOpenInBackgroundListener);
+        /* Cliqz End */
 
         Telemetry.sendUIEvent(
                 TelemetryContract.Event.SHOW,
