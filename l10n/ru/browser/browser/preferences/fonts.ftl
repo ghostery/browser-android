@@ -138,3 +138,12 @@ fonts-languages-fallback-name-vietnamese =
     .label = Вьетнамская
 fonts-languages-fallback-name-other =
     .label = Другая (в т.ч. Западноевропейская)
+fonts-very-large-warning-title = Большой наименьший размер шрифта
+fonts-very-large-warning-message = Вы выбрали очень большой наименьший размер шрифта (более 24 пикселей). Это может затруднить или сделать невозможным использование некоторых важных страниц конфигурации, таких как эта.
+fonts-very-large-warning-accept = Всё равно сохранить мои изменения
+# Variables:
+#   $name {string, "Arial"} - Name of the default font
+fonts-label-default =
+    .label = По умолчанию ({ $name })
+fonts-label-default-unnamed =
+    .label = По умолчанию

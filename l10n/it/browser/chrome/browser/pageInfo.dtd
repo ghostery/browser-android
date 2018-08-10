@@ -42,18 +42,9 @@
 <!ENTITY mediaPreview "Anteprima contenuto multimediale:">
 <!ENTITY feedTab "Feed">
 <!ENTITY feedTab.accesskey "F">
-<!ENTITY feedSubscribe "Abbonati">
-<!ENTITY feedSubscribe.accesskey "b">
 <!ENTITY permTab "Permessi">
 <!ENTITY permTab.accesskey "P">
-<!ENTITY permUseDefault "Utilizza predefiniti">
-<!ENTITY permAskAlways "Chiedi ogni volta">
-<!ENTITY permAllow "Consenti">
-<!ENTITY permAllowSession "Consenti per la sessione">
-<!ENTITY permHide "Nascondi">
-<!ENTITY permBlock "Blocca">
 <!ENTITY permissionsFor "Permessi per:">
-<!ENTITY permPlugins "Attivare plugin">
 <!ENTITY securityTab "Sicurezza">
 <!ENTITY securityTab.accesskey "S">
 <!ENTITY securityView.certView "Visualizza certificato">

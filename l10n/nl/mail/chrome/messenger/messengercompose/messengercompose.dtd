@@ -247,7 +247,6 @@
 <!ENTITY sendlaterButton.tooltip "Dit bericht later verzenden">
 <!ENTITY quoteButton.tooltip "Het vorige bericht citeren">
 <!ENTITY addressButton.tooltip "Een ontvanger uit een adresboek selecteren">
-<!ENTITY attachButton.tooltip "Een bijlage koppelen">
 <!ENTITY attachButton.tooltip2 "Een bijlage toevoegen">
 <!ENTITY spellingButton.tooltip "Spelling van selectie of hele bericht controleren">
 <!ENTITY saveButton.tooltip "Dit bericht opslaan">
@@ -275,7 +274,6 @@
      and it must be the same as toggleAttachmentPaneCmd.key, otherwise it won't
      work, as the shortcut key functionality supersedes the access key. -->
 <!ENTITY attachments.accesskey "a">
-
 <!ENTITY attachmentBucketHeader.tooltip "Bijlagenpaneel">
 <!ENTITY attachmentBucketCloseButton.tooltip "Het bijlagenpaneel verbergen">
 

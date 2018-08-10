@@ -26,7 +26,7 @@
 <!ENTITY generic.longDesc "<p>Informações adicionais sobre este problema ou erro não estão disponíveis neste momento.</p>">
 
 <!ENTITY malformedURI.title "Endereço inválido">
-<!ENTITY malformedURI.longDesc "<p>O endereço fornecido não possui um formato reconhecido. Por favor, verificar se há erros no endereço na barra de endereço e tentar de novo.</p>">
+<!ENTITY malformedURI.longDesc "<p>O endereço fornecido não possui um formato reconhecido. Verifique se há erros na barra de endereços e tente novamente.</p>">
 
 <!ENTITY netInterrupt.title "Transferência de dados interrompida">
 <!ENTITY netInterrupt.longDesc "<p>A conexão foi efetuada com êxito, mas foi interrompida durante a transferência de dados. Por favor, tente de novo.</p><ul><li>Não consegue abrir outros sites? Verifique a conexão de rede do computador.</li><li>O problema persiste? Consulte seu administrador de rede ou o suporte do provedor internet.</li></ul>">
@@ -38,7 +38,7 @@
 <!ENTITY netOffline.longDesc2 "<p>O navegador está no modo offline e não pode conectar-se ao item solicitado.</p><ul><li>O computador está conectado a uma rede ativa?</li><li>Pressione “Tentar de novo” para sair do modo offline e recarregar a página.</li></ul>">
 
 <!ENTITY contentEncodingError.title "Erro na codificação do conteúdo">
-<!ENTITY contentEncodingError.longDesc "<p>A página que você está tentando ver não pode ser vista porque usa uma forma não suportada ou inválida de compactação.</p><ul><li>Por favor, contate os responsáveis pelo site para informá-los deste problema.</li></ul>">
+<!ENTITY contentEncodingError.longDesc "<p>A página que você está tentando ver não pode ser exibida porque usa uma forma de compactação não suportada ou inválida.</p><ul><li>Entre em contato com os responsáveis pelo site para informar o problema.</li></ul>">
 
 <!ENTITY unsafeContentType.title "Tipo de arquivo inseguro">
 <!ENTITY unsafeContentType.longDesc "<ul> 
@@ -46,7 +46,7 @@
 </ul>">
 
 <!ENTITY netReset.title "Conexão interrompida">
-<!ENTITY netReset.longDesc "<p>O link de rede foi interrompido durante a negociação da conexão. Por favor, tentar de novo.</p>">
+<!ENTITY netReset.longDesc "<p>O link de rede foi interrompido ao negociar uma conexão. Tente novamente.</p>">
 
 <!ENTITY netTimeout.title "Atingido o tempo limite de conexão">
 <!ENTITY netTimeout.longDesc "<p>O site solicitado não respondeu a solicitação de conexão e o navegador parou de esperar pela resposta.</p><ul><li>O servidor poderia estar sobrecarregado ou temporariamente fora do ar? Tente de novo mais tarde.</li><li>Não consegue abrir outros sites? Verifique a conexão de rede do computador.</li><li>O seu computador ou rede é protegido por um firewall ou proxy? Configurações incorretas podem interferir na navegação.</li><li>O problema persiste? Consulte seu administrador de rede ou o suporte do provedor internet.</li></ul>">

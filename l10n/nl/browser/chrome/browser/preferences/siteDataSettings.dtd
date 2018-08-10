@@ -2,11 +2,8 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY     window.title                  "Instellingen - Websitegegevens">
-
 <!ENTITY     window2.title                 "Cookies en websitegegevens beheren">
 <!ENTITY     hostCol.label                 "Website">
-<!ENTITY     statusCol.label               "Status">
 <!ENTITY     cookiesCol.label              "Cookies">
 <!ENTITY     usageCol.label                "Opslag">
 <!ENTITY     lastAccessedCol.label                "Laatst gebruikt">
@@ -18,9 +15,6 @@
 <!ENTITY     save.accesskey                "s">
 <!ENTITY     cancel.label                  "Annuleren">
 <!ENTITY     cancel.accesskey              "n">
-<!ENTITY     removingDialog.title          "Websitegegevens verwijderen">
-<!ENTITY     removingSelected.description  "Het verwijderen van websitegegevens verwijdert ook gerelateerde cookies en offline-webinhoud. Dit kan u bij websites afmelden. Weet u zeker dat u de wijzigingen wilt aanbrengen?">
-<!ENTITY     siteTree2.label               "De volgende websitecookies zullen worden verwijderd">
 <!ENTITY     removingDialog1.title         "Cookies en websitegegevens verwijderen">
 <!ENTITY     removingSelected1.description "Het verwijderen van cookies en websitegegevens kan u bij websites afmelden. Weet u zeker dat u de wijzigingen wilt aanbrengen?">
 <!ENTITY     siteTree3.label               "Cookies en websitegegevens voor de volgende websites zullen worden verwijderd">

@@ -1,13 +1,13 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- extracted from content/navigator.xul -->
+
 <!-- LOCALIZATION NOTE : FILE This file contains the browser main menu items --> 
 <!-- LOCALIZATION NOTE : FILE Do not translate commandkeys --> 
+
 <!-- LOCALIZATION NOTE (mainWindow.title): DONT_TRANSLATE --> 
-
-
-
 <!ENTITY mainWindow.title "&brandShortName;">
 <!-- LOCALIZATION NOTE (mainWindow.titlemodifier) : DONT_TRANSLATE --> 
 <!ENTITY mainWindow.titlemodifier "&brandShortName;">
@@ -37,8 +37,12 @@
 <!ENTITY menuBar.tooltip                  "Menüsor">
 <!ENTITY bookmarksToolbar.tooltip         "Könyvjelző eszköztár">
 <!ENTITY navigationToolbar.tooltip        "Böngésző eszköztár">
-<!-- Toolbar items --> 
 
+<!ENTITY editBookmark.done.label "Kész">
+<!ENTITY editBookmark.cancel.label "Mégse">
+<!ENTITY editBookmark.removeBookmark.accessKey "e">
+
+<!-- Toolbar items --> 
 <!ENTITY backButton.label             "Vissza">
 <!ENTITY backButton.tooltip           "Ugrás az előző oldalra">
 <!ENTITY forwardButton.label          "Előre">
@@ -68,8 +72,8 @@
 <!ENTITY homeButton.label             "Kezdőlap">
 <!ENTITY bookmarksToolbarItem.label   "Könyvjelző eszköztár elemei">
 <!ENTITY bookmarksToolbarChevron.tooltip "További könyvjelzők megjelenítése">
-<!-- Statusbar -->
 
+<!-- Statusbar -->
 <!ENTITY  statusText.label            "Kész">
 
 <!ENTITY popupIcon.tooltiptext      "A webhely felugró ablakainak engedélyezése">

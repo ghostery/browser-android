@@ -35,6 +35,9 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "Закрыть другие вкладки">
 <!ENTITY  closeOtherTabs.accesskey           "ы">
 
+<!ENTITY  closeSelectedTabs.label            "Закрыть выделенные вкладки">
+<!ENTITY  closeSelectedTabs.accesskey        "ы">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -54,6 +57,8 @@ can reach it easily. -->
 <!ENTITY  sendToDeviceOfflineFeedback.label  "В очереди (без доступа в Интернет)">
 <!ENTITY  moveToNewWindow.label              "Переместить в новое окно">
 <!ENTITY  moveToNewWindow.accesskey          "е">
+<!ENTITY  reopenInContainer.label            "Переоткрыть в контейнере">
+<!ENTITY  reopenInContainer.accesskey        "й">
 <!ENTITY  bookmarkAllTabs.label              "Добавить все вкладки в закладки…">
 <!ENTITY  bookmarkAllTabs.accesskey          "в">
 <!ENTITY  undoCloseTab.label                 "Восстановить закрытую вкладку">
@@ -129,7 +134,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY showAllTabsCmd.label "Показать все вкладки">
 <!ENTITY showAllTabsCmd.accesskey "в">
 <!ENTITY toggleReaderMode.key "R">
-
 <!ENTITY toggleReaderMode.win.keycode "VK_F9">
 
 <!ENTITY fxaSignIn.label "Войти в Синхронизацию">
@@ -189,10 +193,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY otherBookmarksCmd.label "Другие закладки">
 <!ENTITY mobileBookmarksCmd.label "Мобильные закладки">
 <!ENTITY bookmarksToolbarChevron.tooltip "Показать больше закладок">
-<!ENTITY showRecentlyBookmarked.label     "Показать недавно добавленные закладки">
-<!ENTITY showRecentlyBookmarked.accesskey "к">
-<!ENTITY hideRecentlyBookmarked.label     "Скрыть недавно добавленные закладки">
-<!ENTITY hideRecentlyBookmarked.accesskey "к">
 
 <!ENTITY backCmd.label                "Назад">
 <!ENTITY backCmd.accesskey            "а">
@@ -234,7 +234,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.translateNotificationAnchor.tooltip       "Перевод этой страницы">
 <!ENTITY urlbar.translatedNotificationAnchor.tooltip      "Управление переводом страницы">
 <!ENTITY urlbar.emeNotificationAnchor.tooltip             "Управление запуском программы DRM">
-
 <!ENTITY urlbar.midiNotificationAnchor.tooltip            "Открыть MIDI-панель">
 
 <!ENTITY urlbar.cameraBlocked.tooltip            "Вы заблокировали доступ этого веб-сайта к вашей камере.">
@@ -245,7 +244,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Вы заблокировали доступ этого веб-сайта к постоянному хранилищу.">
 <!ENTITY urlbar.popupBlocked.tooltip             "Вы заблокировали всплывающие окна с этого сайта.">
 <!ENTITY urlbar.canvasBlocked.tooltip            "Вы заблокировали извлечение данных canvas с этого веб-сайта.">
-
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "Вы запретили этому веб-сайту использовать плагин Adobe Flash.">
 <!ENTITY urlbar.midiBlocked.tooltip              "Вы заблокировали доступ этого веб-сайта к MIDI.">
 
@@ -255,6 +253,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!-- Toolbar items -->
 <!ENTITY homeButton.label             "Домой">
+
+<!ENTITY homeButton.defaultPage.tooltip "Домашняя страница &brandShortName;">
 
 <!ENTITY bookmarksButton.label          "Закладки">
 <!ENTITY bookmarksCmd.commandkey "b">
@@ -395,7 +395,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      when Sync is configured but this appears to be the only device attached to
      the account. We also show links to download Firefox for android/ios. -->
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "Хотите увидеть здесь ваши вкладки с других устройств?">
-<!ENTITY appMenuRemoteTabs.openprefs.label "Настройки синхронизации">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "Открыть настройки синхронизации">
 <!ENTITY appMenuRemoteTabs.notsignedin.label "Войдите, чтобы увидеть список вкладок с других устройств.">
 <!ENTITY appMenuRemoteTabs.unverified.label "Ваш аккаунт должен быть подтверждён.">
@@ -437,6 +436,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.addMoreItems.label "Добавить элементы…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "о">
 
+<!ENTITY customizeMenu.autoHideDownloadsButton.label "Автоматически скрывать на панели инструментов">
+<!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "о">
+<!ENTITY customizeMenu.manageExtension.label "Управление расширением">
+<!ENTITY customizeMenu.manageExtension.accesskey "в">
+
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
     secondary commands. -->
@@ -444,7 +448,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY openCmd.commandkey           "l">
 <!ENTITY urlbar.placeholder2          "Введите поисковый запрос или адрес">
-<!ENTITY urlbar.placeholder3          "Вводите здесь поисковые запросы и адреса">
 <!ENTITY urlbar.accesskey             "d">
 <!-- LOCALIZATION NOTE (urlbar.extension.label): Used to indicate that a selected autocomplete entry is provided by an extension. -->
 <!ENTITY urlbar.extension.label       "Расширение:">
@@ -798,6 +801,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY identity.moreInfoLinkText2 "Подробнее">
 
+<!ENTITY identity.clearSiteData "Удалить куки и данные сайта…">
+
 <!ENTITY identity.permissions "Разрешения">
 <!ENTITY identity.permissionsEmpty "Вы не давали этому сайту каких-либо специальных разрешений.">
 <!ENTITY identity.permissionsReloadHint "Чтобы изменения возымели действие, вам, возможно, потребуется перезагрузить страницу.">
@@ -901,6 +906,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.allWindowsShared.message "Будет предоставлен доступ ко всем видимым окнам на вашем экране.">
 
 <!ENTITY trackingProtection.title "Защита от отслеживания">
+<!ENTITY trackingProtection.tooltip "Открыть настройки Защиты от отслеживания">
 <!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; блокирует части страницы, которые могут отслеживать ваше поведение в Интернете.">
 <!ENTITY trackingProtection.detectedNotBlocked3 "Этот сайт содержит элементы, которые могут отслеживать ваше поведение в Интернете. Вы отключили защиту.">
 <!ENTITY trackingProtection.notDetected3 "На этой странице не обнаружено ни одного отслеживающего элемента.">
@@ -988,14 +994,9 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY updateRestart.cancelButton.accesskey "е">
 <!ENTITY updateRestart.panelUI.label2 "Перезапустить &brandShorterName; для обновления">
 
-<!ENTITY newTabControlled.message "Страница, отображаемая при открытии Новой вкладки, была изменена расширением. Если вы этого не хотите, вы можете восстановить свои настройки.">
-
 <!ENTITY newTabControlled.header.message "Ваша Новая вкладка была изменена.">
 <!ENTITY newTabControlled.keepButton.label "Сохранить изменение">
 <!ENTITY newTabControlled.keepButton.accesskey "х">
-<!ENTITY newTabControlled.restoreButton.label "Восстановить настройки">
-<!ENTITY newTabControlled.restoreButton.accesskey "н">
-
 <!ENTITY newTabControlled.disableButton.label "Отключить расширение">
 <!ENTITY newTabControlled.disableButton.accesskey "ю">
 
@@ -1005,6 +1006,12 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY homepageControlled.keepButton.accesskey "х">
 <!ENTITY homepageControlled.disableButton.label "Отключить расширение">
 <!ENTITY homepageControlled.disableButton.accesskey "ю">
+
+<!ENTITY tabHideControlled.header.message "Доступ к вашим скрытым вкладкам">
+<!ENTITY tabHideControlled.keepButton.label "Продолжать скрывать вкладки">
+<!ENTITY tabHideControlled.keepButton.accesskey "ж">
+<!ENTITY tabHideControlled.disableButton.label "Отключить расширение">
+<!ENTITY tabHideControlled.disableButton.accesskey "ю">
 
 <!ENTITY pageActionButton.tooltip "Действия на странице">
 <!ENTITY pageAction.addToUrlbar.label "Добавить на панель адреса">

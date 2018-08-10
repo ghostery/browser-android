@@ -199,7 +199,8 @@
 
 <!ENTITY searchItem.title "Znajdź" >
 
-<!ENTITY homeButton.label             "Strona startowa" >
+<!ENTITY homeButton.label "Strona startowa">
+<!ENTITY homeButton.defaultPage.tooltip "Przejdź do strony startowej">
 
 <!ENTITY bookmarksButton.label          "Zakładki">
 <!ENTITY bookmarksCmd.commandkey        "b">
@@ -243,6 +244,7 @@
 
 <!ENTITY inspectContextMenu.label "Zbadaj element">
 <!ENTITY inspectContextMenu.accesskey "t">
+<!ENTITY inspectA11YContextMenu.label "Zbadaj własności dostępności">
 
 <!ENTITY fileMenu.label "Plik" >
 <!ENTITY fileMenu.accesskey "P" >
@@ -353,7 +355,10 @@
 <!ENTITY customizeMenu.removeFromMenu.accesskey "U">
 <!ENTITY customizeMenu.addMoreItems.label "Dodaj więcej…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "w">
-
+<!ENTITY customizeMenu.autoHideDownloadsButton.label "Automatyczne ukrywanie na pasku narzędzi">
+<!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "A">
+<!ENTITY customizeMenu.manageExtension.label "Zarządzaj rozszerzeniem">
+<!ENTITY customizeMenu.manageExtension.accesskey "Z">
 <!ENTITY moreMenu.label "Więcej">
 
 <!ENTITY openCmd.commandkey "l" >
@@ -791,6 +796,19 @@
 <!ENTITY newTabControlled.disableButton.label "Wyłącz rozszerzenie">
 <!ENTITY newTabControlled.disableButton.accesskey "W">
 
+<!ENTITY homepageControlled.message "Rozszerzenie zmieniło stronę startową, ale można przywrócić poprzednią.">
+<!ENTITY homepageControlled.header.message "Strona startowa została zmieniona.">
+<!ENTITY homepageControlled.keepButton.label "Używaj nowej">
+<!ENTITY homepageControlled.keepButton.accesskey "U">
+<!ENTITY homepageControlled.disableButton.label "Wyłącz rozszerzenie">
+<!ENTITY homepageControlled.disableButton.accesskey "W">
+
+<!ENTITY tabHideControlled.header.message "Ukryte karty">
+<!ENTITY tabHideControlled.keepButton.label "Ukrywaj karty">
+<!ENTITY tabHideControlled.keepButton.accesskey "U">
+<!ENTITY tabHideControlled.disableButton.label "Wyłącz rozszerzenie">
+<!ENTITY tabHideControlled.disableButton.accesskey "W">
+
 <!ENTITY pageActionButton.tooltip "Interakcje">
 <!ENTITY pageAction.addToUrlbar.label "Dodaj do paska adresu">
 <!ENTITY pageAction.removeFromUrlbar.label "Usuń z paska adresu">
@@ -801,6 +819,8 @@
 
 <!ENTITY pageAction.sendTabToDevice.label "Wyślij stronę na urządzenie">
 <!ENTITY sendToDevice.syncNotReady.label "Synchronizowanie urządzeń…">
+
+<!ENTITY pageAction.shareUrl.label "Udostępnij">
 
 <!ENTITY libraryButton.tooltip "Wyświetl historię, zapisane zakładki i jeszcze więcej">
 

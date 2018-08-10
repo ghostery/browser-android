@@ -30,13 +30,13 @@
 <!ENTITY contextArchive.label "Ao arquivar">
 <!ENTITY contextArchive.accesskey "A">
 
-<!ENTITY filterActionDesc.label "Efetuar estas ações:">
+<!ENTITY filterActionDesc.label "Realizar estas ações:">
 <!ENTITY filterActionDesc.accesskey "E">
 
 <!ENTITY filterActionOrderWarning.label "Nota: as ações serão executadas por uma ordem diferente.">
 <!ENTITY filterActionOrder.label "Consulte a ordem de execução">
-<!-- New Style Filter Rule Actions -->
 
+<!-- New Style Filter Rule Actions -->
 <!ENTITY moveMessage.label "Mover mensagem para">
 <!ENTITY copyMessage.label "Copiar mensagem para">
 <!ENTITY forwardTo.label "Reencaminhar mensagem para">

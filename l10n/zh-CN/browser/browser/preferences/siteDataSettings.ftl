@@ -7,6 +7,7 @@
 
 site-data-settings-window =
     .title = 管理 Cookie 和网站数据
+site-data-settings-description = 以下网站在您的计算机上存储了 Cookie 和网站数据。{ -brand-short-name } 会永久存储网站的数据，直至您删除，或者在需要空间时删除非持久存储的网站数据。
 site-data-search-textbox =
     .placeholder = 搜索网站
     .accesskey = S
@@ -27,11 +28,25 @@ site-data-button-cancel =
 site-data-button-save =
     .label = 保存更改
     .accesskey = a
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+site-usage-pattern = { $value } { $unit }
+site-usage-persistent = { site-usage-pattern } (持久)
+site-data-remove-all =
+    .label = 全部移除
+    .accesskey = e
+site-data-remove-shown =
+    .label = 移除筛选出的项目
+    .accesskey = e
 
 ## Removing
 
 site-data-removing-window =
     .title = { site-data-removing-header }
+site-data-removing-dialog =
+    .title = { site-data-removing-header }
+    .buttonlabelaccept = 移除
 site-data-removing-header = 移除 Cookie 和网站数据
 site-data-removing-desc = 移除 Cookie 和网站数据可能使您的网站登录状态丢失。确定执行？
 site-data-removing-table = 下列网站的 Cookie 和网站数据将被移除

@@ -131,7 +131,6 @@
 <!ENTITY detail.lastupdated.label             "Laatst bijgewerkt">
 <!ENTITY detail.creator.label                 "Ontwikkelaar">
 <!ENTITY detail.homepage.label                "Homepage">
-<!ENTITY detail.numberOfDownloads.label       "Downloads">
 
 <!ENTITY detail.contributions.description     "De ontwikkelaar van deze add-on vraagt uw steun voor verdere ontwikkeling door middel van een kleine bijdrage.">
 

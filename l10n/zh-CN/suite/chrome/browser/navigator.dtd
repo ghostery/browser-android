@@ -1,13 +1,13 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- extracted from content/navigator.xul -->
+
 <!-- LOCALIZATION NOTE : FILE This file contains the browser main menu items --> 
 <!-- LOCALIZATION NOTE : FILE Do not translate commandkeys --> 
+
 <!-- LOCALIZATION NOTE (mainWindow.title): DONT_TRANSLATE --> 
-
-
-
 <!ENTITY mainWindow.title "&brandShortName;">
 <!-- LOCALIZATION NOTE (mainWindow.titlemodifier) : DONT_TRANSLATE --> 
 <!ENTITY mainWindow.titlemodifier "&brandShortName;">
@@ -37,8 +37,12 @@
 <!ENTITY menuBar.tooltip                  "菜单栏">
 <!ENTITY bookmarksToolbar.tooltip         "书签工具栏">
 <!ENTITY navigationToolbar.tooltip        "导航工具栏">
-<!-- Toolbar items --> 
 
+<!ENTITY editBookmark.done.label "完成">
+<!ENTITY editBookmark.cancel.label "取消">
+<!ENTITY editBookmark.removeBookmark.accessKey "R">
+
+<!-- Toolbar items --> 
 <!ENTITY backButton.label             "后退">
 <!ENTITY backButton.tooltip           "转到上一页">
 <!ENTITY forwardButton.label          "前进">
@@ -56,7 +60,7 @@
 
 <!ENTITY throbber.tooltip             "转到 &vendorShortName; 主页">
 
-<!ENTITY locationBar.tooltip          "输入搜索条件、关键词或web地址">
+<!ENTITY locationBar.tooltip          "输入搜索条件、关键词或网址">
 <!ENTITY locationBar.accesskey        "d">
 <!ENTITY locationBar.title            "地址">
 <!ENTITY proxyIcon.tooltip            "拖放这个图标来建立一个对此页的链接">
@@ -68,8 +72,8 @@
 <!ENTITY homeButton.label             "主页">
 <!ENTITY bookmarksToolbarItem.label   "书签工具栏项目">
 <!ENTITY bookmarksToolbarChevron.tooltip "显示更多书签">
-<!-- Statusbar -->
 
+<!-- Statusbar -->
 <!ENTITY  statusText.label            "完成">
 
 <!ENTITY popupIcon.tooltiptext      "解锁这个站点的弹出内容">

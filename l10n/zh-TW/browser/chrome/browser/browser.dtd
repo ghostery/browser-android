@@ -35,6 +35,9 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "關閉其他分頁">
 <!ENTITY  closeOtherTabs.accesskey           "o">
 
+<!ENTITY  closeSelectedTabs.label            "關閉選擇的分頁">
+<!ENTITY  closeSelectedTabs.accesskey        "S">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -54,6 +57,8 @@ can reach it easily. -->
 <!ENTITY  sendToDeviceOfflineFeedback.label  "已排入佇列（離線）">
 <!ENTITY  moveToNewWindow.label              "移動到新視窗">
 <!ENTITY  moveToNewWindow.accesskey          "W">
+<!ENTITY  reopenInContainer.label            "使用容器開啟">
+<!ENTITY  reopenInContainer.accesskey        "e">
 <!ENTITY  bookmarkAllTabs.label              "將所有分頁加入書籤…">
 <!ENTITY  bookmarkAllTabs.accesskey          "T">
 <!ENTITY  undoCloseTab.label                 "復原已關閉分頁">
@@ -129,7 +134,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY showAllTabsCmd.label "顯示所有分頁">
 <!ENTITY showAllTabsCmd.accesskey "A">
 <!ENTITY toggleReaderMode.key "R">
-
 <!ENTITY toggleReaderMode.win.keycode "VK_F9">
 
 <!ENTITY fxaSignIn.label "登入至 &syncBrand.shortName.label;">
@@ -189,10 +193,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY otherBookmarksCmd.label "其他書籤">
 <!ENTITY mobileBookmarksCmd.label "行動書籤">
 <!ENTITY bookmarksToolbarChevron.tooltip "顯示更多書籤">
-<!ENTITY showRecentlyBookmarked.label     "顯示最近加入書籤的項目">
-<!ENTITY showRecentlyBookmarked.accesskey "h">
-<!ENTITY hideRecentlyBookmarked.label     "隱藏最近加入書籤的項目">
-<!ENTITY hideRecentlyBookmarked.accesskey "H">
 
 <!ENTITY backCmd.label                "上一頁">
 <!ENTITY backCmd.accesskey            "B">
@@ -234,7 +234,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.translateNotificationAnchor.tooltip       "翻譯此頁面">
 <!ENTITY urlbar.translatedNotificationAnchor.tooltip      "管理頁面翻譯">
 <!ENTITY urlbar.emeNotificationAnchor.tooltip             "管理 DRM 軟體使用">
-
 <!ENTITY urlbar.midiNotificationAnchor.tooltip            "開啟 MIDI 面板">
 
 <!ENTITY urlbar.cameraBlocked.tooltip            "您已封鎖此網站的攝影機存取權限。">
@@ -245,7 +244,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "您已封鎖此網站儲存資料至持續性儲存空間。">
 <!ENTITY urlbar.popupBlocked.tooltip             "您封鎖了此網站的彈出視窗。">
 <!ENTITY urlbar.canvasBlocked.tooltip            "您已封鎖此網站讀取 canvas 資料的權限。">
-
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "您已封鎖此網站執行 Adobe Flash 外掛程式。">
 <!ENTITY urlbar.midiBlocked.tooltip              "您已封鎖此網站的 MIDI 存取權限。">
 
@@ -255,6 +253,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!-- Toolbar items -->
 <!ENTITY homeButton.label             "首頁">
+
+<!ENTITY homeButton.defaultPage.tooltip "&brandShortName; 首頁">
 
 <!ENTITY bookmarksButton.label          "書籤">
 <!ENTITY bookmarksCmd.commandkey "b">
@@ -395,7 +395,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      when Sync is configured but this appears to be the only device attached to
      the account. We also show links to download Firefox for android/ios. -->
 <!ENTITY appMenuRemoteTabs.noclients.subtitle "想在這裡看到您其他裝置上開啟的分頁嗎？">
-<!ENTITY appMenuRemoteTabs.openprefs.label "同步偏好設定">
 <!ENTITY appMenuRemoteTabs.opensyncprefs.label "開啟 Sync 偏好設定">
 <!ENTITY appMenuRemoteTabs.notsignedin.label "登入以檢視您其他裝置中的分頁清單。">
 <!ENTITY appMenuRemoteTabs.unverified.label "需要驗證您的帳號。">
@@ -437,6 +436,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.addMoreItems.label "新增更多項目…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "A">
 
+<!ENTITY customizeMenu.autoHideDownloadsButton.label "於工具列自動隱藏">
+<!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "A">
+<!ENTITY customizeMenu.manageExtension.label "管理擴充套件">
+<!ENTITY customizeMenu.manageExtension.accesskey "E">
+
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
     secondary commands. -->
@@ -444,7 +448,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY openCmd.commandkey           "l">
 <!ENTITY urlbar.placeholder2          "搜尋或輸入網址">
-<!ENTITY urlbar.placeholder3          "在此輸入搜尋詞彙或網址">
 <!ENTITY urlbar.accesskey             "d">
 <!-- LOCALIZATION NOTE (urlbar.extension.label): Used to indicate that a selected autocomplete entry is provided by an extension. -->
 <!ENTITY urlbar.extension.label       "擴充套件:">
@@ -798,6 +801,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY identity.moreInfoLinkText2 "更多資訊">
 
+<!ENTITY identity.clearSiteData "清除 Cookie 與網站資料…">
+
 <!ENTITY identity.permissions "權限">
 <!ENTITY identity.permissionsEmpty "您並未授予此網站任何特殊權限。">
 <!ENTITY identity.permissionsReloadHint "您可能需要重新載入頁面才能讓變更生效。">
@@ -901,6 +906,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.allWindowsShared.message "將分享您畫面上所有可見的視窗。">
 
 <!ENTITY trackingProtection.title "追蹤保護">
+<!ENTITY trackingProtection.tooltip "開啟追蹤保護偏好設定">
 <!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; 已經封鎖頁面裡的部分元素，以防止您的瀏覽行為被其追蹤。">
 <!ENTITY trackingProtection.detectedNotBlocked3 "此網站包含可能會追蹤您瀏覽行為的元素，但您已停用保護。">
 <!ENTITY trackingProtection.notDetected3 "未在此頁面偵測到追蹤元素。">
@@ -988,14 +994,9 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY updateRestart.cancelButton.accesskey "N">
 <!ENTITY updateRestart.panelUI.label2 "重新啟動以更新 &brandShorterName;">
 
-<!ENTITY newTabControlled.message "有套擴充套件修改了開啟新分頁時會看到的頁面。若您不想要這個修改，可還原此設定。">
-
 <!ENTITY newTabControlled.header.message "您的「新分頁」已經變更。">
 <!ENTITY newTabControlled.keepButton.label "保留不變">
 <!ENTITY newTabControlled.keepButton.accesskey "K">
-<!ENTITY newTabControlled.restoreButton.label "還原設定">
-<!ENTITY newTabControlled.restoreButton.accesskey "R">
-
 <!ENTITY newTabControlled.disableButton.label "停用擴充套件">
 <!ENTITY newTabControlled.disableButton.accesskey "D">
 
@@ -1005,6 +1006,12 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY homepageControlled.keepButton.accesskey "K">
 <!ENTITY homepageControlled.disableButton.label "停用擴充套件">
 <!ENTITY homepageControlled.disableButton.accesskey "D">
+
+<!ENTITY tabHideControlled.header.message "存取您所有隱藏的分頁">
+<!ENTITY tabHideControlled.keepButton.label "保持隱藏分頁">
+<!ENTITY tabHideControlled.keepButton.accesskey "K">
+<!ENTITY tabHideControlled.disableButton.label "停用擴充套件">
+<!ENTITY tabHideControlled.disableButton.accesskey "D">
 
 <!ENTITY pageActionButton.tooltip "頁面操作">
 <!ENTITY pageAction.addToUrlbar.label "新增至網址列">

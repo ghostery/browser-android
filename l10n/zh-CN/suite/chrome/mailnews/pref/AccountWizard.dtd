@@ -1,13 +1,13 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- Entities for AccountWizard -->
 
+<!-- Entities for AccountWizard -->
 
 <!ENTITY windowTitle.label "帐户向导">
 <!ENTITY accountWizard.size "width: 40em; height: 38em;">
-<!-- Entities for Account Type page -->
 
+<!-- Entities for Account Type page -->
 
 <!ENTITY accountSetupInfo2.label "为了接收消息，您必须先建立一个帐户。">
 <!ENTITY accountTypeTitle.label "新建帐户设置">
@@ -17,13 +17,17 @@
 <!ENTITY accountTypeMail.accesskey "m">
 <!ENTITY accountTypeNews.label "新闻组帐户">
 <!ENTITY accountTypeNews.accesskey "w">
-<!-- Entities for Identity page -->
 
+<!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
+<!ENTITY accountTypeMovemail.label "Unix Mailspool (Movemail)">
+<!ENTITY accountTypeMovemail.accesskey "U">
+
+<!-- Entities for Identity page -->
 
 <!ENTITY identityTitle.label "标识">
 <!ENTITY identityDesc.label "每个帐户可以有一个标识，当其他人接收到您的消息时此标识可以让他们知道这是您发的消息。">
-<!-- LOCALIZATION NOTE (fullnameDesc.label) : do not translate two of "&quot;" in below line -->
 
+<!-- LOCALIZATION NOTE (fullnameDesc.label) : do not translate two of "&quot;" in below line -->
 <!ENTITY fullnameDesc.label "请输入您希望在发送的消息中出现在 &quot;发件人&quot; 字段中的姓名。">
 <!-- LOCALIZATION NOTE (fullnameExample.label) : use following directions for below line
   1, do not translate two of "&quot;"
@@ -35,8 +39,8 @@
 
 <!ENTITY emailLabel.label "电子邮件地址：">
 <!ENTITY emailLabel.accesskey "E">
-<!-- Entities for Incoming Server page -->
 
+<!-- Entities for Incoming Server page -->
 
 <!ENTITY incomingTitle.label "接收服务器信息">
 <!ENTITY incomingServerTypeDesc.label "选择您使用的接收服务器类型。">
@@ -64,8 +68,8 @@
 <!ENTITY newsServerNameDesc.label "输入新闻 (NNTP) 服务器名。（例如，&quot;news.netscape.net&quot;。）">
 <!ENTITY newsServerLabel.label "新闻组服务器:">
 <!ENTITY newsServerLabel.accesskey "S">
-<!-- Entities for Outgoing Server page -->
 
+<!-- Entities for Outgoing Server page -->
 
 <!ENTITY outgoingTitle.label "发信服务器信息">
 <!-- LOCALIZATION NOTE (outgoingServer.description) : Do not translate "SMTP" and "&quot;smtp.example.net&quot;" in below line -->
@@ -75,10 +79,10 @@
 <!ENTITY outgoingUsername.description "请输入您的电子邮件服务提供者提供给您的外发用户名 （通常即为您的接收用户名）。">
 <!ENTITY outgoingUsername.label "外发用户名：">
 <!ENTITY outgoingUsername.accesskey "U">
+
 <!-- LOCALIZATION NOTE (modifyOutgoing.suffix) : This string will be appended after each of
      haveSmtp1.suffix3, haveSmtp2.suffix3, haveSmtp3.suffix3 .
 -->
-
 <!ENTITY modifyOutgoing.suffix "你可以从邮件和新闻组帐号设置中修改发送服务器设置。">
 <!-- LOCALIZATION NOTE (haveSmtp1.prefix and haveSmtp1.suffix3) : Do not translate "SMTP" and "&quot;" in
      these variables. Also, translate haveSmtp1.prefix and haveSmtp1.suffix3 as a single sentence, inserting
@@ -98,16 +102,16 @@
 -->
 <!ENTITY haveSmtp3.prefix "您的外发(SMTP)服务器 , &quot;">
 <!ENTITY haveSmtp3.suffix3 "&quot; ，与你的接收服务器相同，将使用你的接收用户名访问他。">
-<!-- Entities for Account name page -->
 
+<!-- Entities for Account name page -->
 
 <!ENTITY accnameTitle.label "帐户名称">
 <!-- LOCALIZATION NOTE (accnameDesc.label) : do not translate any "&quot;" in below line -->
 <!ENTITY accnameDesc.label "输入您想要此帐户使用的名称。（例如，&quot;工作帐户&quot;、&quot;家庭帐户&quot; 或 &quot;新闻帐户&quot;）">
 <!ENTITY accnameLabel.label "帐户名称:">
 <!ENTITY accnameLabel.accesskey "A">
-<!-- Entities for Done (Congratulations) page -->
 
+<!-- Entities for Done (Congratulations) page -->
 
 <!ENTITY completionTitle.label "恭喜您！">
 <!ENTITY completionText.label "您已输入设置此帐户所有必需的信息。">

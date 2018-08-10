@@ -141,7 +141,6 @@
 
 <!ENTITY Photo.tab                      "Foto">
 <!ENTITY Photo.accesskey                "F">
-<!ENTITY PhotoDesc.label                "Kies een van de volgende opties:">
 <!ENTITY GenericPhoto.label             "Algemene foto">
 <!ENTITY GenericPhoto.accesskey         "A">
 <!ENTITY DefaultPhoto.label             "Standaard">

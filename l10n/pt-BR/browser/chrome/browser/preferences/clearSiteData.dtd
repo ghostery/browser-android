@@ -5,14 +5,14 @@
 <!ENTITY window.title                 "Limpar dados">
 <!ENTITY window.width                 "35em">
 
-<!ENTITY window.description           "Ao limpar todos os cookies e dados de sites armazenados pelo &brandShortName; pode desconectar você de sites e remover conteúdos off-line. Limpar os dados em cache não irá afetar seus acessos.">
+<!ENTITY window.description           "Limpar todos os cookies e dados de sites armazenados pelo &brandShortName; pode desconectar você de sites e remover conteúdos off-line. Limpar os dados em cache não irá afetar seus acessos.">
 <!ENTITY windowClose.key              "w">
 
 <!ENTITY clearSiteData.label          "Cookies e Dados do site">
 <!ENTITY clearSiteData.accesskey      "S">
 <!ENTITY clearSiteData.description    "Você pode ser desconectado dos sites se limpar">
 
-<!ENTITY clearCache.label             "Conteúdo de sites armazenados">
+<!ENTITY clearCache.label             "Conteúdo armazenado de sites">
 <!ENTITY clearCache.accesskey         "W">
 <!ENTITY clearCache.description       "Isso irá requerer que sites recarreguem as imagens e os dados">
 

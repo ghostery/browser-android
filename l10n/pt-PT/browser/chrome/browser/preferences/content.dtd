@@ -7,10 +7,6 @@
 <!ENTITY  blockPopups.label           "Bloquear janelas pop-up">
 <!ENTITY  blockPopups.accesskey       "B">
 
-<!ENTITY  notificationsDoNotDisturb.label      "Não me perturbar">
-<!ENTITY  notificationsDoNotDisturb.accesskey  "N">
-<!ENTITY  notificationsDoNotDisturbDetails.value "Nenhuma notificação será apresentada até reiniciar o &brandShortName;">
-
 <!ENTITY  popupExceptions.label                                 "Exceções…">
 <!ENTITY  popupExceptions.accesskey                             "E">
 
@@ -46,7 +42,7 @@
 
 
 <!ENTITY language2.label              "Idioma">
-<!ENTITY chooseLanguage.label         "Escolha o seu idioma preferencial para mostrar páginas">
+<!ENTITY chooseLanguage.label         "Escolha o seu idioma preferencial para apresentar as páginas">
 <!ENTITY chooseButton.label           "Escolher…">
 <!ENTITY chooseButton.accesskey       "o">
 
@@ -65,7 +61,7 @@
 <!ENTITY translation.options.attribution.beforeLogo "Traduções por">
 <!ENTITY translation.options.attribution.afterLogo "">
 
-<!ENTITY  drmContent2.label              "Conteúdo de Gestão de Direitos Digitais (DRM)">
+<!ENTITY  drmContent2.label              "Conteúdo com Gestão de Direitos Digitais (DRM)">
 
 <!ENTITY  playDRMContent2.label          "Reproduzir conteúdo controlado por DRM">
 <!ENTITY  playDRMContent2.accesskey      "p">

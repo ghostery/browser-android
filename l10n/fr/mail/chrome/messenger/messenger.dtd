@@ -321,8 +321,8 @@
 <!ENTITY goBackCmd.label "Précédent">
 <!ENTITY goBackCmd.accesskey "c">
 <!ENTITY goBackCmd.commandKey "[">
-<!ENTITY goChatCmd.label "Chat">
-<!ENTITY goChatCmd.accesskey "h">
+<!ENTITY goChatCmd.label "Messagerie instantanée">
+<!ENTITY goChatCmd.accesskey "s">
 <!ENTITY goChatCmd2.key "H">
 <!ENTITY prevStarredMsgCmd.label "Message suivi">
 <!ENTITY prevStarredMsgCmd.accesskey "v">
@@ -563,7 +563,7 @@
 <!ENTITY junkButton.label "Indésirable">
 <!ENTITY notJunkButton.label "Acceptable">
 <!ENTITY addressBookButton.label "Adresses">
-<!ENTITY chatButton.label "Chat">
+<!ENTITY chatButton.label "Messagerie instantanée">
 <!ENTITY glodaSearch.title "Recherche globale">
 <!ENTITY searchItem.title "Recherche rapide">
 <!ENTITY mailViewsToolbarItem.title "Vues de courrier">
@@ -875,7 +875,7 @@
   -->
 <!ENTITY quickSearchCmd.key "k">
 <!-- LOCALIZATION NOTE (search.label.base1):
-      This is the base of the empty text for the global search box. We replace
+     This is the base of the empty text for the global search box. We replace
      #1 with the contents of the appropriate search.keyLabel.* value for the
      platform.
      The goal is to convey to the user that typing in the box will allow them

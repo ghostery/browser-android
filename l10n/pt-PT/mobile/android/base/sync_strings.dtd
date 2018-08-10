@@ -32,7 +32,7 @@
 <!ENTITY bookmarks.folder.menu.label 'Menu de Marcadores'>
 <!ENTITY bookmarks.folder.places.label ''>
 <!ENTITY bookmarks.folder.tags.label 'Etiquetas'>
-<!ENTITY bookmarks.folder.toolbar.label 'Barra de marcadores'>
+<!ENTITY bookmarks.folder.toolbar.label 'Barra de ferramentas de marcadores'>
 <!ENTITY bookmarks.folder.other.label 'Outros marcadores'>
 <!ENTITY bookmarks.folder.desktop.label 'Marcadores do Computador'>
 <!ENTITY bookmarks.folder.mobile.label 'Marcadores do Dispositivo Móvel'>
@@ -77,7 +77,7 @@
      external web pages.  Compare fxaccount_policy_{linktos,linkprivacy}:
      these strings are separated to accommodate languages that decline
      the two uses differently. -->
-<!ENTITY fxaccount_status_linktos2 'Termos do serviço'>
+<!ENTITY fxaccount_status_linktos2 'Termos de serviço'>
 <!ENTITY fxaccount_status_linkprivacy2 'Aviso de privacidade'>
 <!ENTITY fxaccount_remove_account 'Desligar&ellipsis;'>
 

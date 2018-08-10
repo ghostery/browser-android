@@ -1,11 +1,11 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- Window title -->
 
+<!-- Window title -->
 <!ENTITY windowTitle.label "Propriedades da página">
 <!ENTITY location.label "Localização:">
-<!ENTITY lastModified.label "Última alteração:">
+<!ENTITY lastModified.label "Última modificação:">
 <!ENTITY titleInput.label "Título:">
 <!ENTITY titleInput.accessKey "T">
 <!ENTITY authorInput.label "Autor:">
