@@ -697,6 +697,12 @@
   <!-- News -->
   <string name="activity_stream_top_news">&activity_stream_top_news;</string>
 
+  <!-- Default Browser Dialog -->
+  <string name="default_browser_title">&default_browser_title;</string>
+  <string name="default_browser_message">&default_browser_message;</string>
+  <string name="default_browser_dialog_proceed">&default_browser_dialog_proceed;</string>
+  <string name="default_browser_dialog_cancel">&default_browser_dialog_cancel;</string>
+
   <!-- Settings -->
   <!-- Human Web -->
   <string name="pref_category_human_web">&pref_category_human_web;</string>
