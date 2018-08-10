@@ -5,6 +5,7 @@
 package org.mozilla.gecko.util;
 
 import android.annotation.TargetApi;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import android.os.Build;
 import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v4.view.ViewCompat;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -195,4 +197,17 @@ public class ViewUtil {
             textView.setTextDirection(View.TEXT_DIRECTION_LTR);
         }
     }
+
+    /* Cliqz start */
+    /**
+     * Converts Density Pixels (DP) to Pixels (PX)
+     *
+     * @param dp the number of density pixels to convert
+     * @return the number of pixels
+     */
+    public static int dpToPx(int dp) {
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        return (int) (dp * metrics.density + 0.5f);
+    }
+    /* Cliqz end */
 }
