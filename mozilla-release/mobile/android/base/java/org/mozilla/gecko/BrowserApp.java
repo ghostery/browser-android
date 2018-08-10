@@ -3338,7 +3338,8 @@ public class BrowserApp extends GeckoApp
                 mHomeScreen = (HomeScreen) asStub.inflate();
             } else {
                 final ViewStub homePagerStub = (ViewStub) findViewById(R.id.home_pager_stub);
-                mHomeScreen = (HomeScreen) homePagerStub.inflate();
+                View view1 = homePagerStub.inflate();
+                mHomeScreen = (HomeScreen) view1.findViewById(R.id.home_pager);
 
                 // For now these listeners are HomePager specific. In future we might want
                 // to have a more abstracted data storage, with one Bundle containing all
