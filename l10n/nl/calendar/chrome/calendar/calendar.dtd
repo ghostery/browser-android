@@ -178,8 +178,6 @@
 <!ENTITY calendar.context.attendance.menu.label                 "Aanwezigheid">
 <!ENTITY calendar.context.attendance.menu.accesskey             "A">
 <!ENTITY calendar.context.attendance.occurrence.label           "Deze gebeurtenis">
-<!ENTITY calendar.context.attendance.all.label        "Alle gebeurtenissen" >
-
 <!ENTITY calendar.context.attendance.all2.label                 "Volledige serie">
 <!ENTITY calendar.context.attendance.send.label                 "Nu een notificatie verzenden">
 <!ENTITY calendar.context.attendance.send.accesskey             "N">

@@ -171,7 +171,7 @@ because displayed names don't have the comma in between. -->
 <!ENTITY editContactPropertiesButton.tooltip            "Modifier les propriétés du contact sélectionné">
 <!ENTITY editMailingListPropertiesButton.tooltip        "Modifier les propriétés de la liste de diffusion sélectionnée">
 <!ENTITY newmsgButton.tooltip                           "Écrire un courrier à la sélection">
-<!ENTITY newIM.tooltip                                  "Envoyer un message instantané ou amorcer un chat">
+<!ENTITY newIM.tooltip                                  "Envoyer un message instantané ou lancer une discussion">
 <!ENTITY deleteButton2.tooltip                          "Supprimer l’élément sélectionné">
 
 <!-- Dir Tree header -->

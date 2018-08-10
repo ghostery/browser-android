@@ -10,7 +10,7 @@
 #define bookmarks_title Marcadores
 #define bookmarks_heading Marcadores
 
-#define bookmarks_toolbarfolder Pasta da barra de marcadores
+#define bookmarks_toolbarfolder Pasta da barra de ferramentas de marcadores
 #define bookmarks_toolbarfolder_description Adicione os marcadores a esta pasta se os quiser mostrar na barra de marcadores
 
 # LOCALIZATION NOTE (getting_started):
@@ -43,7 +43,7 @@
 
 # LOCALIZATION NOTE (nightly_blog):
 # Nightly builds only, link title for https://blog.nightly.mozilla.org/
-#define nightly_blog Blog do Firefox Nightly
+#define nightly_blog Blogue do Firefox Nightly
 
 # LOCALIZATION NOTE (bugzilla):
 # Nightly builds only, link title for https://bugzilla.mozilla.org/

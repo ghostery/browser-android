@@ -36,3 +36,96 @@ permissions-button-ok =
     .accesskey = х
 permissions-searchbox =
     .placeholder = Поиск по веб-сайту
+permissions-capabilities-allow =
+    .label = Разрешить
+permissions-capabilities-block =
+    .label = Блокировать
+permissions-capabilities-prompt =
+    .label = Всегда спрашивать
+
+## Invalid Hostname Dialog
+
+permissions-invalid-uri-title = Введено некорректное сетевое имя сервера
+permissions-invalid-uri-label = Введите корректное сетевое имя сервера.
+
+## Exceptions - Tracking Protection
+
+permissions-exceptions-tracking-protection-window =
+    .title = Исключения — Защита от отслеживания
+    .style = { permissions-window.style }
+permissions-exceptions-tracking-protection-desc = Вы отключили Защиту от отслеживания на следующих веб-сайтах.
+
+## Exceptions - Cookies
+
+permissions-exceptions-cookie-window =
+    .title = Исключения — Куки и данные сайтов
+    .style = { permissions-window.style }
+permissions-exceptions-cookie-desc = Вы можете указать, каким веб-сайтам разрешено всегда или никогда использовать куки и данные сайтов.  Введите точный адрес сайта и нажмите кнопку «Блокировать», «Разрешить на сессию» или «Разрешить».
+
+## Exceptions - Pop-ups
+
+permissions-exceptions-popup-window =
+    .title = Разрешённые веб-сайты — Всплывающие окна
+    .style = { permissions-window.style }
+permissions-exceptions-popup-desc = Вы можете указать, каким веб-сайтам разрешено открывать всплывающие окна. Введите точный адрес для каждого сайта и нажмите кнопку «Разрешить».
+
+## Exceptions - Saved Logins
+
+permissions-exceptions-saved-logins-window =
+    .title = Исключения — Сохранённые логины
+    .style = { permissions-window.style }
+permissions-exceptions-saved-logins-desc = Логины для следующих веб-сайтов не будут сохранены
+
+## Exceptions - Add-ons
+
+permissions-exceptions-addons-window =
+    .title = Разрешённые веб-сайты — Установка дополнений
+    .style = { permissions-window.style }
+permissions-exceptions-addons-desc = Вы можете указать, каким веб-сайтам разрешено устанавливать дополнения. Введите точный адрес каждого сайта и нажмите кнопку «Разрешить».
+
+## Exceptions - Autoplay Media
+
+permissions-exceptions-autoplay-media-window =
+    .title = Разрешённые веб-сайты — Автовоспроизведение
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc = Вы можете указать, каким веб-сайтам разрешено автоматически воспроизводить медиа. Введите точный адрес каждого сайта и нажмите кнопку «Разрешить».
+
+## Site Permissions - Notifications
+
+permissions-site-notification-window =
+    .title = Параметры - Разрешения на отправку уведомлений
+    .style = { permissions-window.style }
+permissions-site-notification-desc = Следующие веб-сайты запросили разрешение отправлять вам уведомления. Вы можете указать каким веб-сайтам разрешено отправлять вам уведомления. Вы также можете блокировать новые запросы с просьбами разрешить отправлять вам уведомления.
+permissions-site-notification-disable-label =
+    .label = Блокировать новые запросы на отправку вам уведомлений
+permissions-site-notification-disable-desc = Это не позволит веб-сайтам, кроме перечисленных выше, запрашивать разрешение на отправку уведомлений. Блокировка уведомлений может нарушить некоторые функции веб-сайта.
+
+## Site Permissions - Location
+
+permissions-site-location-window =
+    .title = Параметры - Разрешения на доступ к местоположению
+    .style = { permissions-window.style }
+permissions-site-location-desc = Следующие веб-сайты запросили разрешение на доступ к вашему местоположению. Вы можете указать каким веб-сайтам разрешено получать доступ к вашему местоположению. Вы также можете блокировать новые запросы с просьбами разрешить доступ к вашему местоположению.
+permissions-site-location-disable-label =
+    .label = Блокировать новые запросы на доступ к вашему местоположению
+permissions-site-location-disable-desc = Это не позволит веб-сайтам, кроме перечисленных выше, запрашивать разрешение на доступ к вашему местоположению. Блокировка доступа к вашему местоположению может нарушить некоторые функции веб-сайта.
+
+## Site Permissions - Camera
+
+permissions-site-camera-window =
+    .title = Параметры - Разрешения на доступ к камере
+    .style = { permissions-window.style }
+permissions-site-camera-desc = Следующие веб-сайты запросили разрешение на доступ к вашей камере. Вы можете указать каким веб-сайтам разрешено получать доступ к вашей камере. Вы также можете блокировать новые запросы с просьбами разрешить доступ к вашей камере.
+permissions-site-camera-disable-label =
+    .label = Блокировать новые запросы на доступ к вашей камере
+permissions-site-camera-disable-desc = Это не позволит веб-сайтам, кроме перечисленных выше, запрашивать разрешение на доступ к вашей камере. Блокировка доступа к вашей камере может нарушить некоторые функции веб-сайта.
+
+## Site Permissions - Microphone
+
+permissions-site-microphone-window =
+    .title = Параметры - Разрешения на доступ к микрофону
+    .style = { permissions-window.style }
+permissions-site-microphone-desc = Следующие веб-сайты запросили разрешение на доступ к вашему микрофону. Вы можете указать каким веб-сайтам разрешено получать доступ к вашему микрофону. Вы также можете блокировать новые запросы с просьбами разрешить доступ к вашему микрофону.
+permissions-site-microphone-disable-label =
+    .label = Блокировать новые запросы на доступ к вашему микрофону
+permissions-site-microphone-disable-desc = Это не позволит веб-сайтам, кроме перечисленных выше, запрашивать разрешение на доступ к вашему микрофону. Блокировка доступа к вашему микрофону может нарушить некоторые функции веб-сайта.

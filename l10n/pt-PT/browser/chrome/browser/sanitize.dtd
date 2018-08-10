@@ -15,6 +15,8 @@
 
 <!ENTITY clearDataSettings3.label     "Quando eu saio do &brandShortName;, o mesmo deve limpar automaticamente todos(as)">
 
+<!ENTITY clearDataSettings4.label     "Quando fechado, o &brandShortName; deve limpar automaticamente todos(as)">
+
 <!-- XXX rearrange entities to match physical layout when l10n isn't an issue -->
 <!-- LOCALIZATION NOTE (clearTimeDuration.*): "Time range to clear" dropdown.
      See UI mockup at bug 480169 -->

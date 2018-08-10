@@ -90,7 +90,7 @@ ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux
 ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.9.3-linux-x64/bin:$PATH"
 ENV NVM_DIR /home/jenkins/nvm
 ENV NODE_VERSION 8.9.3
-ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04/
+ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04
 SHELL ["/bin/bash", "-l", "-c"]
 
 # Install nvm with node and npm

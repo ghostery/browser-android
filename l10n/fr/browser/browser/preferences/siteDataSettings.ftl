@@ -7,6 +7,7 @@
 
 site-data-settings-window =
     .title = Gestion des cookies et des données de sites
+site-data-settings-description = Les sites suivants stockent des cookies et des données de sites sur votre ordinateur. { -brand-short-name } conserve les données des sites avec stockage persistant jusqu’à ce que vous les supprimiez, et supprime les données des sites sans stockage persistant lorsque de l’espace supplémentaire est nécessaire.
 site-data-search-textbox =
     .placeholder = Rechercher des sites web
     .accesskey = R
@@ -27,11 +28,25 @@ site-data-button-cancel =
 site-data-button-save =
     .label = Enregistrer les changements
     .accesskey = E
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+site-usage-pattern = { $value } { $unit }
+site-usage-persistent = { site-usage-pattern } (Persistant)
+site-data-remove-all =
+    .label = Tout supprimer
+    .accesskey = u
+site-data-remove-shown =
+    .label = Supprimer les sites affichés
+    .accesskey = u
 
 ## Removing
 
 site-data-removing-window =
     .title = { site-data-removing-header }
+site-data-removing-dialog =
+    .title = { site-data-removing-header }
+    .buttonlabelaccept = Supprimer
 site-data-removing-header = Suppression des cookies et des données de sites
 site-data-removing-desc = Supprimer les cookies et les données de sites peut vous déconnecter de ces sites web. Voulez-vous vraiment effectuer ces modifications ?
 site-data-removing-table = Les cookies et les données associés aux sites suivants seront supprimés

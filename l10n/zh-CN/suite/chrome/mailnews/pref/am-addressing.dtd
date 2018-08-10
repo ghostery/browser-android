@@ -1,8 +1,8 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- extracted from am-addressing.xul -->
 
+<!-- extracted from am-addressing.xul -->
 
 <!ENTITY addressing.label          "编写 &amp; 地址簿">
 <!ENTITY addressingGroupTitle.label "地址查找">
@@ -18,8 +18,8 @@
 <!ENTITY directories.label         "使用其他 LDAP 服务器：">
 <!ENTITY directories.accesskey     "D">
 <!ENTITY directoriesNone.label     "无">
-<!-- am-addressing.xul -->
 
+<!-- am-addressing.xul -->
 
 <!ENTITY compositionGroupTitle.label          "编写">
 <!-- LOCALIZATION NOTE (useHtml.label) : do not translate "html" in below line -->
@@ -30,6 +30,9 @@
 <!-- LOCALIZATION NOTE (then.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY then.label                           "并且，">
 <!ENTITY then.accesskey                       "T">
+<!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
+<!ENTITY quoting.label                        "当引用时，">
+<!ENTITY quoting.accesskey                    "q">
 <!ENTITY aboveQuote.label                     "在引用内容之前回复">
 <!ENTITY belowQuote.label                     "在引用内容之后回复">
 <!ENTITY selectAndQuote.label                 "选择引用内容">

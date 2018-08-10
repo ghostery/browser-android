@@ -11,6 +11,7 @@
 <!ENTITY sanitizeDialog2.width "30em">
 
 <!ENTITY clearDataSettings3.label "Rzeczy zaznaczone poniżej będą usuwane podczas zamykania Firefoksa.">
+<!ENTITY clearDataSettings4.label "Rzeczy zaznaczone poniżej będą usuwane podczas zamykania programu.">
 
 <!ENTITY clearTimeDuration.label          "Okres do wyczyszczenia: ">
 <!ENTITY clearTimeDuration.accesskey      "O">

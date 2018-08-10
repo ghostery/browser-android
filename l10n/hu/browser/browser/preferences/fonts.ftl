@@ -138,3 +138,12 @@ fonts-languages-fallback-name-vietnamese =
     .label = Vietnami
 fonts-languages-fallback-name-other =
     .label = Egyéb (Nyugat-európai is)
+fonts-very-large-warning-title = Nagy minimális betűméret
+fonts-very-large-warning-message = Nagyon nagy minimális betűméretet választott (24 képpontnál nagyobbat). Ez nehézzé vagy lehetetlenné teheti bizonyos fontos beállítóoldalak – mint ez is – használatát.
+fonts-very-large-warning-accept = Változtatások megtartása mindenképp
+# Variables:
+#   $name {string, "Arial"} - Name of the default font
+fonts-label-default =
+    .label = Alapértelmezett ({ $name })
+fonts-label-default-unnamed =
+    .label = Alapértelmezett

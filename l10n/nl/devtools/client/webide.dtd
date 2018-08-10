@@ -36,8 +36,6 @@
 <!ENTITY runtimeMenu_takeScreenshot_accesskey "S">
 <!ENTITY runtimeMenu_showDetails_label "Runtime-info">
 <!ENTITY runtimeMenu_showDetails_accesskey "e">
-<!ENTITY runtimeMenu_showMonitor_label "Monitor">
-<!ENTITY runtimeMenu_showMonitor_accesskey "M">
 <!ENTITY runtimeMenu_showDevicePrefs_label "Apparaatvoorkeuren">
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "A">
 <!ENTITY runtimeMenu_showSettings_label "Apparaatinstellingen">
@@ -146,10 +144,6 @@
 <!ENTITY devicesetting_newname "Naam van nieuwe instelling">
 <!ENTITY devicesetting_newtext "Instellingwaarde">
 <!ENTITY devicesetting_addnew "Nieuwe instelling toevoegen">
-
-<!-- Monitor -->
-<!ENTITY monitor_title "Monitor">
-<!ENTITY monitor_help "Help">
 
 <!-- WiFi Authentication -->
 <!-- LOCALIZATION NOTE (wifi_auth_header): The header displayed on the dialog

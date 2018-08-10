@@ -38,6 +38,10 @@
 <!ENTITY bookmarksToolbar.tooltip         "Bladwijzerwerkbalk">
 <!ENTITY navigationToolbar.tooltip        "Navigatiewerkbalk">
 
+<!ENTITY editBookmark.done.label "Gereed">
+<!ENTITY editBookmark.cancel.label "Annuleren">
+<!ENTITY editBookmark.removeBookmark.accessKey "v">
+
 <!-- Toolbar items --> 
 <!ENTITY backButton.label             "Terug">
 <!ENTITY backButton.tooltip           "Een pagina terug gaan">

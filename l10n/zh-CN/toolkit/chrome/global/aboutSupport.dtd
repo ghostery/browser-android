@@ -140,7 +140,7 @@ variant of aboutSupport.showDir.label. -->
 <!ENTITY aboutSupport.sandboxSyscallArgs "参数">
 
 <!ENTITY aboutSupport.safeModeTitle "尝试安全模式">
-<!ENTITY aboutSupport.restartInSafeMode.label "以安全模式重新启动…">
+<!ENTITY aboutSupport.restartInSafeMode.label "以安全模式重新打开…">
 
 <!ENTITY aboutSupport.graphicsFeaturesTitle "特性">
 <!ENTITY aboutSupport.graphicsDiagnosticsTitle "诊断">

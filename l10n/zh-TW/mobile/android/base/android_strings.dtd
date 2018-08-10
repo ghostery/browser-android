@@ -70,6 +70,15 @@
 
 <!ENTITY url_bar_default_text2 "搜尋或輸入網址">
 
+<!-- Localization note (url_bar_qrcode_text2) : This text will be
+     heard by non-visual users when the focus is on the QR Code
+     icon in the url bar. -->
+<!ENTITY url_bar_qrcode_text2 "請使用您的 QR Code 掃描器來搜尋或輸入網址">
+<!-- Localization note (url_bar_mic_text2) : This text will be
+     heard by non-visual users when the focus is on the Microphone
+     icon in the url bar. -->
+<!ENTITY url_bar_mic_text2 "請使用您的麥克風來搜尋或輸入網址">
+
 <!ENTITY bookmark "加入書籤">
 <!ENTITY bookmark_remove "移除書籤">
 <!ENTITY bookmark_added "已加入書籤">
@@ -207,6 +216,7 @@
 <!ENTITY pref_category_advanced_summary3 "還原分頁、節省流量、開發者工具">
 <!ENTITY pref_category_notifications "通知">
 <!ENTITY pref_category_notifications_summary "新功能、網站更新">
+<!ENTITY pref_category_notifications_summary2 "新功能、產品小秘訣">
 <!ENTITY pref_developer_remotedebugging_usb "透過 USB 進行遠端除錯">
 <!ENTITY pref_developer_remotedebugging_wifi "透過 Wi-Fi 進行遠端除錯">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "您的裝置需要安裝 QR Code 掃描程式才能使用 Wi-Fi 除錯。">
@@ -543,7 +553,7 @@
 <!ENTITY pref_compact_tabs_summary2 "垂直使用螢幕時，將分頁清單排成兩欄">
 
 <!-- Localization note (page_removed): This string appears in a toast message when
-     any page is removed frome about:home. This includes pages that are in history,
+     any page is removed from about:home. This includes pages that are in history,
      bookmarks, or reading list. -->
 <!ENTITY page_removed "已移除頁面">
 <!ENTITY folder_removed "已移除資料夾">
@@ -758,7 +768,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      "Last synced" is one of the user's other Sync clients, typically Firefox on
      their desktop or laptop.-->
 <!ENTITY remote_tabs_last_synced "最近同步: &formatS;">
-<!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
+<!-- Localization note: Used when the sync has not happened yet, showed in place of a date -->
 <!ENTITY remote_tabs_never_synced "最近同步: 從未">
 
 <!-- LOCALIZATION NOTE (intent_uri_private_browsing_prompt): This string will

@@ -6,13 +6,14 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
        xmlns:gecko="http://schemas.android.com/apk/res-auto">
+    <!-- Cliqz start -->
     <org.mozilla.gecko.widget.themed.ThemedImageView
             android:id="@+id/overlaybtn_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_margin="15dp"
-            gecko:drawableTintList="@color/action_bar_secondary_menu_item_colors"
-            android:scaleType="centerInside"/>
+            gecko:drawableTintList="@color/action_bar_secondary_menu_item_colors"/>
+    <!-- Cliqz end -->
 
     <TextView
             android:textAppearance="@style/TextAppearance.ShareOverlay"

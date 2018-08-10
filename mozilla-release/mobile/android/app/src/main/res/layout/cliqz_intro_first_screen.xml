@@ -56,9 +56,8 @@
             android:id="@+id/data_collection_detail_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ghostery_onboarding_old_users_text"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <TextView

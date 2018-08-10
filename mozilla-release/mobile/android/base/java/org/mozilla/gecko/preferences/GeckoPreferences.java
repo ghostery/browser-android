@@ -249,9 +249,17 @@ public class GeckoPreferences
     // Install and upgrade dates for Anolisys
     public static final String PREFS_BROWSER_INSTALL_DATE = NON_PREF_PREFIX + "browser.install.date";
     public static final String PREFS_BROWSER_UPGRADE_DATE = NON_PREF_PREFIX + "browser.upgrade.date";
+    // add key for query suggestion
+    public static final String PREFS_SEARCH_QUERY_SUGGESTIONS = "cb_query_suggestion";
+    // add key for search regional
+    public static final String PREFS_SEARCH_REGIONAL = "pref.search.regional";
+    // set reference to querySuggestions and it's group so we can hide/show it
+    private Preference mSearchQuerySuggestionsPref;
+    private PreferenceGroup mSearchQuerySuggestionsPrefGroup;
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
+
     {
         final HashMap<String, PrefHandler> tempHandlers = new HashMap<>(2);
         tempHandlers.put(ClearOnShutdownPref.PREF, new ClearOnShutdownPref());
@@ -526,9 +534,17 @@ public class GeckoPreferences
     }
 
     @TargetApi(11)
-    public void switchToHeader(int id) {
+    public void trySwitchToHeader(int id) {
+        /**
+         * Can't switch to an unknown header.
+         * See {@link GeckoPreferenceFragment#getHeader()}
+         */
+        if (id == GeckoPreferenceFragment.HEADER_ID_UNDEFINED) {
+            return;
+        }
+
+        // Can't switch to a header if there are no headers!
         if (mHeaders == null) {
-            // Can't switch to a header if there are no headers!
             return;
         }
 
@@ -993,6 +1009,23 @@ public class GeckoPreferences
                              return true;
                          }
                      });
+                } else if(PREFS_SEARCH_REGIONAL.equals(key)) {
+                    final PreferenceManager preferenceManager = new PreferenceManager
+                            (getApplicationContext());
+                    final String value = preferenceManager.getSearchRegional(getBaseContext());
+                    ((ListPreference) pref).setValue(value);
+                    ((ListPreference) pref).setSummary(new Countries(getBaseContext()).getCountryName(value));
+                } else if (PREFS_SEARCH_QUERY_SUGGESTIONS.equals(key)) {
+                    final PreferenceManager preferenceManager = new PreferenceManager
+                            (getApplicationContext());
+                    mSearchQuerySuggestionsPref = pref;
+                    mSearchQuerySuggestionsPrefGroup = preferences;
+                    if(!preferenceManager.getSearchRegional(getBaseContext()).equals(Locale.GERMAN.getLanguage())) {
+                        ((CheckBoxPreference)pref).setChecked(false);
+                        preferences.removePreference(pref);
+                        i--;
+                        continue;
+                    }
                 }
                 /* Cliqz end */
 
@@ -1062,8 +1095,8 @@ public class GeckoPreferences
         return super.onOptionsItemSelected(item);
     }
 
-    final private int DIALOG_CREATE_MASTER_PASSWORD = 0;
-    final private int DIALOG_REMOVE_MASTER_PASSWORD = 1;
+    private static final int DIALOG_CREATE_MASTER_PASSWORD = 0;
+    private static final int DIALOG_REMOVE_MASTER_PASSWORD = 1;
 
     public static void setCharEncodingState(boolean enabled) {
         sIsCharEncodingEnabled = enabled;
@@ -1356,6 +1389,19 @@ public class GeckoPreferences
             int newIndex = ((ListPreference) preference).findIndexOfValue((String) newValue);
             CharSequence newEntry = ((ListPreference) preference).getEntries()[newIndex];
             ((ListPreference) preference).setSummary(newEntry);
+            /* CLiqz start */
+            if(PREFS_SEARCH_REGIONAL.equals(prefName)){
+                Preference searchQuerySuggestionPref =  findPreference
+                        (PREFS_SEARCH_QUERY_SUGGESTIONS);
+                if(newValue != ((ListPreference) preference).getEntryValues()[0]){
+                    mSearchQuerySuggestionsPrefGroup.removePreference(mSearchQuerySuggestionsPref);
+                    ((CheckBoxPreference)mSearchQuerySuggestionsPref).setChecked(false);
+                } else {
+                    mSearchQuerySuggestionsPrefGroup.addPreference(mSearchQuerySuggestionsPref);
+                    ((CheckBoxPreference)mSearchQuerySuggestionsPref).setChecked(true);
+                }
+            }
+            /* CLiqz end */
         } else if (preference instanceof LinkPreference) {
             setResult(RESULT_CODE_EXIT_SETTINGS);
             finishChoosingTransition();
@@ -1549,8 +1595,11 @@ public class GeckoPreferences
                 dialog = builder.create();
                 dialog.show();
                 //To make the link clickable
+                final CustomLinkMovementMethod customLinkMovementMethod =
+                        CustomLinkMovementMethod.getInstance(this);
+                customLinkMovementMethod.init(CustomLinkMovementMethod.OPEN_IN_TAB);
                 ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod
-                        (CustomLinkMovementMethod.getInstance(this));
+                        (customLinkMovementMethod);
                 break;
             /* create dialog for reset all subscriptions
             case DIALOG_CREATE_RESET_SUBSCRIPTIONS:

@@ -73,6 +73,41 @@ should-restart-ok = { -brand-short-name } újraindítása most
 cancel-no-restart-button = Mégse
 restart-later = Újraindítás később
 
+## Extension Control Notifications
+##
+## These strings are used to inform the user
+## about changes made by extensions to browser settings.
+##
+## <img data-l10n-name="icon"/> is going to be replaced by the extension icon.
+##
+## Variables:
+##   $name (String): name of the extension
+
+# This string is shown to notify the user that their home page
+# is being controlled by an extension.
+extension-controlled-homepage-override = Egy kiterjesztés, a(z) <img data-l10n-name="icon"/> { $name }, vezérli a kezdőoldalt.
+# This string is shown to notify the user that their new tab page
+# is being controlled by an extension.
+extension-controlled-new-tab-url = Egy kiterjesztés, a(z) <img data-l10n-name="icon"/> { $name }, vezérli az Új lap oldalt.
+# This string is shown to notify the user that the default search engine
+# is being controlled by an extension.
+extension-controlled-default-search = Egy kiegészítő, a(z) <img data-l10n-name="icon"/> { $name }, beállította az alapértelmezett keresőszolgáltatást.
+# This string is shown to notify the user that Container Tabs
+# are being enabled by an extension.
+extension-controlled-privacy-containers = A(z) <img data-l10n-name="icon"/> { $name } kiterjesztéshez szükségesek a konténerlapok.
+# This string is shown to notify the user that their tracking protection preferences
+# are being controlled by an extension.
+extension-controlled-websites-tracking-protection-mode = A(z) <img data-l10n-name="icon"/> { $name } kiegészítő vezérli a követés elleni védelmet.
+# This string is shown to notify the user that their proxy configuration preferences
+# are being controlled by an extension.
+extension-controlled-proxy-config = A(z) <img data-l10n-name="icon"/> { $name } kiegészítő vezérli, hogy a { -brand-short-name } hogy kapcsolódik az internethez
+# This string is shown after the user disables an extension to notify the user
+# how to enable an extension that they disabled.
+#
+# <img data-l10n-name="addons-icon"/> will be replaced with Add-ons icon
+# <img data-l10n-name="menu-icon"/> will be replaced with Menu icon
+extension-controlled-enable = A kiegészítő engedélyezéséhez ugorjon a <img data-l10n-name="addons-icon"/> Kiegészítőkhöz a <img data-l10n-name="menu-icon"/> menüben.
+
 ## Preferences UI Search Results
 
 search-results-header = Találatok
@@ -110,6 +145,9 @@ startup-blank-page =
     .label = Üres oldal megjelenítése
 startup-prev-session =
     .label = A legutóbbi ablakok és lapok megjelenítése
+startup-restore-previous-session =
+    .label = Előző munkamenet helyreállítása
+    .accesskey = h
 disable-extension =
     .label = Kiterjesztés letiltása
 home-page-header = Kezdőlap
@@ -297,6 +335,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Hálózati proxy
+network-proxy-connection-description = Állítsa be hogy a { -brand-short-name } hogyan kapcsolódik az internethez.
 network-proxy-connection-learn-more = További tudnivalók
 network-proxy-connection-settings =
     .label = Beállítások…
@@ -540,6 +579,9 @@ history-private-browsing-permanent =
 history-remember-option =
     .label = Böngészési és letöltési előzmények megőrzése
     .accesskey = l
+history-remember-browser-option =
+    .label = Böngészési és letöltési előzmények megőrzése
+    .accesskey = b
 history-remember-search-option =
     .label = Keresőmezők és űrlapmezők előzményeinek megőrzése
     .accesskey = K
@@ -556,6 +598,11 @@ history-clear-button =
 ## Privacy Section - Site Data
 
 sitedata-header = Sütik és oldaladatok
+sitedata-total-size-calculating = Az oldaladatok és a gyorsítótár méretének kiszámítása…
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+sitedata-total-size = A tárolt sütik, oldaladatok és a gyorsítótár jelenleg { $value } { $unit } területet foglal el a lemezen.
 sitedata-learn-more = További tudnivalók
 sitedata-accept-cookies-option =
     .label = Sütik és oldaladatok elfogadása a webhelyektől (ajánlott)
@@ -650,6 +697,12 @@ permissions-notification-link = További tudnivalók
 permissions-notification-pause =
     .label = Értesítések kikapcsolása a { -brand-short-name } újraindulásáig
     .accesskey = e
+permissions-block-autoplay-media =
+    .label = Webhelyek blokkolása, hogy automatikusan ne játszhassanak le médiát hanggal.
+    .accesskey = b
+permissions-block-autoplay-media-exceptions =
+    .label = Kivételek…
+    .accesskey = K
 permissions-block-popups =
     .label = Felugró ablakok tiltása
     .accesskey = F
@@ -676,6 +729,9 @@ collection-health-report =
     .label = Engedélyezés, hogy a { -brand-short-name } műszaki és interakciós adatokat küldjön a Mozillának
     .accesskey = E
 collection-health-report-link = További tudnivalók
+collection-studies =
+    .label = Engedélyezés, hogy a { -brand-short-name } tanulmányokat telepítsen és futasson
+collection-studies-link = { -brand-short-name } tanulmányok megtekintése
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = Az adatjelentést letiltották ehhez a binárishoz

@@ -18,6 +18,10 @@
 <!ENTITY accountTypeNews.label "新聞群組帳號">
 <!ENTITY accountTypeNews.accesskey "w">
 
+<!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
+<!ENTITY accountTypeMovemail.label "Unix Mailspool (Movemail)">
+<!ENTITY accountTypeMovemail.accesskey "U">
+
 <!-- Entities for Identity page -->
 
 <!ENTITY identityTitle.label "身份識別">
@@ -122,4 +126,3 @@
 <!ENTITY deferStorage.accesskey "G">
 <!ENTITY clickFinish.label "按下「完成」即可儲存您的設定並離開帳號設定精靈。">
 <!ENTITY clickFinish.labelMac "點選不儲存這些設定並關閉帳號精靈。">
-

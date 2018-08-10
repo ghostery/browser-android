@@ -63,7 +63,7 @@ Windows/Mac use the term "Folder" instead of "Directory" -->
 <!ENTITY aboutSupport.appBasicsProfileDirWinMac "Pasta do perfil">
 
 <!ENTITY aboutSupport.appBasicsEnabledPlugins "Plugins ativados">
-<!ENTITY aboutSupport.appBasicsBuildConfig "Configuração da versão">
+<!ENTITY aboutSupport.appBasicsBuildConfig "Configuração da compilação">
 <!ENTITY aboutSupport.appBasicsUserAgent "User Agent">
 <!ENTITY aboutSupport.appBasicsOS "SO">
 <!ENTITY aboutSupport.appBasicsMemoryUse "Utilização da memória">

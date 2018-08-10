@@ -18,6 +18,10 @@
 <!ENTITY accountTypeNews.label "Учётная запись новостей">
 <!ENTITY accountTypeNews.accesskey "н">
 
+<!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
+<!ENTITY accountTypeMovemail.label "Локальная почта Unix (Movemail)">
+<!ENTITY accountTypeMovemail.accesskey "к">
+
 <!-- Entities for Identity page -->
 
 <!ENTITY identityTitle.label "Персональные данные">

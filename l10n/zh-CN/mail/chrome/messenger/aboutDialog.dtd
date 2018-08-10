@@ -1,6 +1,9 @@
 <!ENTITY aboutDialog.title          "关于 &brandFullName;">
 
-
+<!-- LOCALIZATION NOTE (update.*):
+# These strings are also used in the update pane of preferences.
+# See about:preferences#advanced.
+-->
 <!-- LOCALIZATION NOTE (update.checkForUpdatesButton.*, update.updateButton.*):
 # Only one button is present at a time.
 # The button when displayed is located directly under the Thunderbird version in
@@ -8,7 +11,7 @@
 -->
 <!ENTITY update.checkForUpdatesButton.label       "检查更新">
 <!ENTITY update.checkForUpdatesButton.accesskey   "C">
-<!ENTITY update.updateButton.label3               "重启以更新 &brandShorterName;">
+<!ENTITY update.updateButton.label3               "重开以更新 &brandShorterName;">
 <!ENTITY update.updateButton.accesskey            "R">
 
 
@@ -75,7 +78,7 @@
      all go into one line and have an anchor in between with text that is the same as the link to a site
      to download the latest version of Firefox (e.g. http://www.firefox.com). As this is all in one line,
      try to make the localized text short (see bug 596813 for screenshots). -->
-<!ENTITY update.manual.start        "下载 ">
+<!ENTITY update.manual.start        "下载">
 <!ENTITY update.manual.linkText     "最新版本">
 <!ENTITY update.manual.end          "">
 

@@ -26,6 +26,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -49,12 +50,18 @@ import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.InputDevice;
 import android.view.KeyEvent;
@@ -71,10 +78,12 @@ import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.Interpolator;
+import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -182,6 +191,7 @@ import org.mozilla.gecko.util.PrefUtils;
 import org.mozilla.gecko.util.ShortcutUtils;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.util.ThreadUtils;
+import org.mozilla.gecko.util.ViewUtil;
 import org.mozilla.gecko.util.WindowUtil;
 import org.mozilla.gecko.widget.ActionModePresenter;
 import org.mozilla.gecko.widget.AnchoredPopup;
@@ -206,6 +216,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
+import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 
 public class BrowserApp extends GeckoApp
                         implements ActionModePresenter,
@@ -295,6 +306,12 @@ public class BrowserApp extends GeckoApp
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
     private ViewPager mCliqzIntoPager;
     private PreferenceManager mPreferenceManager;
+    private LinearLayout mCliqzQuerySuggestionsContainer;
+    private static final int SUGGESTIONS_LIMIT = 3;
+    private static final Pattern FILTER =
+            Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
+    private static final int SUGGESTIONS_TV_PADDING = 20;
+    private static final int FONT_SIZE = 18;
     /* Cliqz End */
 
     private static final int GECKO_TOOLS_MENU = -1;
@@ -432,6 +449,8 @@ public class BrowserApp extends GeckoApp
 
     private final TabEditingState mLastTabEditingState = new TabEditingState();
 
+    private boolean mSuppressNextKeyUp;
+
     // The animator used to toggle HomePager visibility has a race where if the HomePager is shown
     // (starting the animation), the HomePager is hidden, and the HomePager animation completes,
     // both the web content and the HomePager will be hidden. This flag is used to prevent the
@@ -475,6 +494,7 @@ public class BrowserApp extends GeckoApp
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public void onTabChanged(Tab tab, TabEvents msg, String data) {
         if (!mInitialized) {
             super.onTabChanged(tab, msg, data);
@@ -614,6 +634,10 @@ public class BrowserApp extends GeckoApp
         // Global onKey handler. This is called if the focused UI doesn't
         // handle the key event, and before Gecko swallows the events.
         if (event.getAction() != KeyEvent.ACTION_DOWN) {
+            if (mSuppressNextKeyUp && event.getAction() == KeyEvent.ACTION_UP) {
+                mSuppressNextKeyUp = false;
+                return true;
+            }
             return false;
         }
 
@@ -661,7 +685,7 @@ public class BrowserApp extends GeckoApp
                     return true;
 
                 case KeyEvent.KEYCODE_R:
-                    tab.doReload(event.isShiftPressed() ? true : false);
+                    tab.doReload(event.isShiftPressed());
                     return true;
 
                 case KeyEvent.KEYCODE_PERIOD:
@@ -669,8 +693,23 @@ public class BrowserApp extends GeckoApp
                     return true;
 
                 case KeyEvent.KEYCODE_T:
-                    addTab();
+                    int flags = Tabs.LOADURL_START_EDITING;
+                    if (tab.isPrivate()) {
+                        flags |= Tabs.LOADURL_PRIVATE;
+                    }
+                    addTab(flags);
                     return true;
+
+                case KeyEvent.KEYCODE_N:
+                    addTab(Tabs.LOADURL_START_EDITING);
+                    return true;
+
+                case KeyEvent.KEYCODE_P:
+                    if (event.isShiftPressed()) {
+                        addTab(Tabs.LOADURL_PRIVATE | Tabs.LOADURL_START_EDITING);
+                        return true;
+                    }
+                    break;
 
                 case KeyEvent.KEYCODE_W:
                     Tabs.getInstance().closeTab(tab);
@@ -906,6 +945,7 @@ public class BrowserApp extends GeckoApp
         mControlCenterPager.setOffscreenPageLimit(3);
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.conrol_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
+        mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
         /*Cliqz end*/
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
@@ -913,7 +953,7 @@ public class BrowserApp extends GeckoApp
             null);
 
         EventDispatcher.getInstance().registerUiThreadListener(this,
-            "Accessibility:Enabled",
+            "GeckoView:AccessibilityEnabled",
             "Menu:Open",
             "Menu:Update",
             "Menu:Add",
@@ -1447,6 +1487,7 @@ public class BrowserApp extends GeckoApp
         }
 
         MmaDelegate.track(MmaDelegate.RESUMED_FROM_BACKGROUND);
+        MmaDelegate.notifyDefaultBrowserStatus(this);
     }
 
     @Override
@@ -1487,8 +1528,13 @@ public class BrowserApp extends GeckoApp
 
         mBrowserToolbar.setOnCommitListener(new BrowserToolbar.OnCommitListener() {
             @Override
-            public void onCommit() {
-                commitEditingMode();
+            public void onCommitByKey() {
+                if (commitEditingMode()) {
+                    // We're committing in response to a key-down event. Since we'll be hiding the
+                    // ToolbarEditLayout, the corresponding key-up event will end up being sent to
+                    // Gecko which we don't want, as this messes up tracking of the last user input.
+                    mSuppressNextKeyUp = true;
+                }
             }
         });
 
@@ -1515,8 +1561,16 @@ public class BrowserApp extends GeckoApp
                     if (hasFocus) {
                         hideControlCenter();
                     }
-                    /* Cliqz End */
                 }
+                // show/hide query suggestions based on urlBar focus
+                if(mPreferenceManager.isQuerySuggestionsEnabled()) {
+                    if (!hasFocus) {
+                        hideCliqzQuerySuggestions();
+                    } else {
+                        showCliqzQuerySuggestions();
+                    }
+                }
+                /* Cliqz End */
             }
         });
 
@@ -1552,7 +1606,9 @@ public class BrowserApp extends GeckoApp
                 // HomePager visibility first.
                 hideBrowserSearch();
                 hideHomePager();
-
+                /* Cliqz start */
+                hideCliqzQuerySuggestions();
+                /* Cliqz end */
                 // Re-enable doorhanger notifications. They may trigger on the selected tab above.
                 if (mDoorHangerPopup != null) {
                     mDoorHangerPopup.enable();
@@ -1792,7 +1848,7 @@ public class BrowserApp extends GeckoApp
             null);
 
         EventDispatcher.getInstance().unregisterUiThreadListener(this,
-            "Accessibility:Enabled",
+            "GeckoView:AccessibilityEnabled",
             "Menu:Open",
             "Menu:Update",
             "Menu:Add",
@@ -2057,7 +2113,7 @@ public class BrowserApp extends GeckoApp
 
                 break;
 
-            case "Accessibility:Enabled":
+            case "GeckoView:AccessibilityEnabled":
                 mDynamicToolbar.setAccessibilityEnabled(message.getBoolean("enabled"));
                 break;
 
@@ -2468,9 +2524,15 @@ public class BrowserApp extends GeckoApp
                 preferenceManager.setAllowFirstPartyTrackers(areFirstPartyTrackersEnabled);
                 preferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
                 break;
-
+            case "Search:QuerySuggestions":
+                if(mPreferenceManager.isQuerySuggestionsEnabled()) {
+                    final String[] querySuggestions = GeckoBundleUtils.safeGetStringArray
+                            (message, "data/suggestions");
+                    showSuggestions(querySuggestions, GeckoBundleUtils.safeGetString(message,
+                            "data/query"));
+                }
+                break;
             /* Cliqz end */
-
             default:
                 super.handleMessage(event, message, callback);
                 break;
@@ -2495,17 +2557,22 @@ public class BrowserApp extends GeckoApp
     }
 
     @Override
+    public void addTab(final int flags) {
+        if ((flags & Tabs.LOADURL_PRIVATE) == 0) {
+            MmaDelegate.track(NEW_TAB);
+        }
+        Tabs.getInstance().addTab(flags);
+    }
+
+    @Override
     public void addTab() {
-        MmaDelegate.track(NEW_TAB);
-        /* Cliqz Start */
-        Tabs.getInstance().addTab(Tabs.LOADURL_START_EDITING);
-        /* Cliqz End */
+        addTab(Tabs.LOADURL_NONE | Tabs.LOADURL_START_EDITING);
     }
 
     @Override
     public void addPrivateTab() {
         /* Cliqz Start */
-        Tabs.getInstance().addTab(Tabs.LOADURL_PRIVATE | Tabs.LOADURL_START_EDITING);
+        Tabs.getInstance().addTab(Tabs.LOADURL_NONE | Tabs.LOADURL_PRIVATE | Tabs.LOADURL_START_EDITING);
         /* Cliqz End */
     }
 
@@ -2868,9 +2935,12 @@ public class BrowserApp extends GeckoApp
         Telemetry.startUISession(TelemetryContract.Session.AWESOMESCREEN);
     }
 
-    private void commitEditingMode() {
+    /**
+     * @return True if editing mode was successfully committed.
+     */
+    private boolean commitEditingMode() {
         if (!mBrowserToolbar.isEditing()) {
-            return;
+            return false;
         }
 
         Telemetry.stopUISession(TelemetryContract.Session.AWESOMESCREEN,
@@ -2892,6 +2962,8 @@ public class BrowserApp extends GeckoApp
         hideHomePager(url);
         loadUrlOrKeywordSearch(url);
         clearSelectedTabApplicationId();
+
+        return true;
     }
 
     private void clearSelectedTabApplicationId() {
@@ -3451,6 +3523,10 @@ public class BrowserApp extends GeckoApp
             getSupportFragmentManager().beginTransaction()
                     .hide(mBrowserSearch).commitAllowingStateLoss();
             mBrowserSearch.setUserVisibleHint(false);
+            if(mPreferenceManager.isQuerySuggestionsEnabled()) {
+                EventDispatcher.getInstance().unregisterUiThreadListener(this,
+                        "Search:QuerySuggestions", null);
+            }
         } else {
             hidePanelSearch();
         }
@@ -4232,8 +4308,15 @@ public class BrowserApp extends GeckoApp
 
         if (itemId == R.id.reload) {
             tab = Tabs.getInstance().getSelectedTab();
-            if (tab != null)
-                tab.doReload(false);
+            /* Cliqz Start */
+            if (tab != null) {
+                if (tab.getState() == Tab.STATE_LOADING) {
+                    tab.doStop();
+                } else {
+                    tab.doReload(false);
+                }
+            }
+            /* Cliqz End */
             return true;
         }
 
@@ -4383,7 +4466,9 @@ public class BrowserApp extends GeckoApp
     public boolean onMenuItemLongClick(MenuItem item) {
         if (item.getItemId() == R.id.reload) {
             Tab tab = Tabs.getInstance().getSelectedTab();
-            if (tab != null) {
+            /* Cliqz Start */
+            if (tab != null && tab.getState() != Tab.STATE_LOADING) {
+            /* Cliqz End */
                 tab.doReload(true);
 
                 Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, TelemetryContract.Method.MENU, "reload_force");
@@ -4846,6 +4931,10 @@ public class BrowserApp extends GeckoApp
     /* Cliqz start */
     private void showCliqzSearch() {
         EventDispatcher.getInstance().dispatch("Search:Show", null);
+        if(mPreferenceManager.isQuerySuggestionsEnabled()) {
+            EventDispatcher.getInstance().registerUiThreadListener(this,
+                    "Search:QuerySuggestions", null);
+        }
     }
 
     private void hidePanelSearch() {
@@ -4894,6 +4983,95 @@ public class BrowserApp extends GeckoApp
         });
 
         dialogBuilder.show();
+    }
+
+    public void toggleReloadButtonIcon(boolean showReload) {
+        if (mMenu != null) {
+            MenuItem reloadMenuItem = mMenu.findItem(R.id.reload);
+            if (showReload) {
+                reloadMenuItem.setIcon(R.drawable.ic_menu_reload);
+            } else {
+                reloadMenuItem.setIcon(R.drawable.ic_menu_cancel);
+            }
+        }
+    }
+
+    public void showSuggestions(String[] suggestions, String originalQuery) {
+        int occupiedSpace = 0;
+        int shownSuggestions = 0;
+        mCliqzQuerySuggestionsContainer.removeAllViews();
+
+        if ((originalQuery != null && URLUtil.isValidUrl(originalQuery)) ||
+                suggestions == null || suggestions.length == 0) {
+            mCliqzQuerySuggestionsContainer.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        mCliqzQuerySuggestionsContainer.setVisibility(View.VISIBLE);
+
+        for (final String suggestion : suggestions) {
+            if (shownSuggestions >= SUGGESTIONS_LIMIT) {
+                break;
+            }
+            if (FILTER.matcher(suggestion).matches() ||
+                    (originalQuery != null && originalQuery.trim().equals(suggestion))) {
+                continue;
+            }
+            final TextView tv = new TextView(getBaseContext());
+            final ViewGroup.LayoutParams params =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+            tv.setSelected(true);
+            tv.setGravity(Gravity.CENTER);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, FONT_SIZE);
+            tv.setTextColor(ContextCompat.getColor(getBaseContext(),android.R.color.black));
+            tv.setPadding(SUGGESTIONS_TV_PADDING, SUGGESTIONS_TV_PADDING,
+                    SUGGESTIONS_TV_PADDING, SUGGESTIONS_TV_PADDING);
+            tv.setSingleLine(true);
+            tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+            tv.setLayoutParams(params);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBrowserToolbar.onEditSuggestion(suggestion.concat(" "));
+                }
+            });
+            final int beginIndex;
+            if (originalQuery != null && suggestion.startsWith(originalQuery)) {
+                beginIndex = originalQuery.length();
+            } else {
+                beginIndex = 0;
+            }
+            final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(suggestion);
+            stringBuilder.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                    beginIndex, suggestion.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv.setText(stringBuilder);
+            final TextPaint paint = tv.getPaint();
+            final Rect rect = new Rect();
+            paint.getTextBounds(tv.getText().toString(), 0, tv.getText().length(), rect);
+            if (rect.width() < mCliqzQuerySuggestionsContainer.getWidth() - occupiedSpace - 2 * SUGGESTIONS_TV_PADDING) {
+                mCliqzQuerySuggestionsContainer.addView(tv);
+                occupiedSpace = occupiedSpace + rect.width() + 2 * SUGGESTIONS_TV_PADDING;
+                shownSuggestions++;
+                if (shownSuggestions != SUGGESTIONS_LIMIT) {
+                    final View divider = new View(getBaseContext());
+                    final LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
+                            dpToPx(1), ViewGroup.LayoutParams.MATCH_PARENT);
+                    dividerParams.setMargins(0, SUGGESTIONS_TV_PADDING, 0, SUGGESTIONS_TV_PADDING);
+                    divider.setLayoutParams(dividerParams);
+                    divider.setBackgroundColor(Color.BLACK);
+                    mCliqzQuerySuggestionsContainer.addView(divider);
+                }
+            }
+        }
+    }
+
+    private void hideCliqzQuerySuggestions(){
+        mCliqzQuerySuggestionsContainer.setVisibility(View.INVISIBLE);
+    }
+
+    private void showCliqzQuerySuggestions(){
+        mCliqzQuerySuggestionsContainer.setVisibility(View.VISIBLE);
     }
     /* Cliqz end */
 }

@@ -62,8 +62,6 @@
 <!ENTITY cmd.new_separator.accesskey "u">
 <!ENTITY cmd.reloadLivebookmark.label "Ricarica segnalibro Live">
 <!ENTITY cmd.reloadLivebookmark.accesskey "R">
-<!ENTITY cmd.moveBookmarks.label "Sposta…">
-<!ENTITY cmd.moveBookmarks.accesskey "o">
 <!ENTITY col.name.label "Nome">
 <!ENTITY col.tags.label "Etichette">
 <!ENTITY col.url.label "Indirizzo">

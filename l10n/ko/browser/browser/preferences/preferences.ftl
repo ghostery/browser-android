@@ -73,6 +73,41 @@ should-restart-ok = 지금 { -brand-short-name } 재시작
 cancel-no-restart-button = 취소
 restart-later = 나중에 다시 시작
 
+## Extension Control Notifications
+##
+## These strings are used to inform the user
+## about changes made by extensions to browser settings.
+##
+## <img data-l10n-name="icon"/> is going to be replaced by the extension icon.
+##
+## Variables:
+##   $name (String): name of the extension
+
+# This string is shown to notify the user that their home page
+# is being controlled by an extension.
+extension-controlled-homepage-override = <img data-l10n-name="icon"/> { $name } 확장기능이 홈페이지를 제어하고 있습니다.
+# This string is shown to notify the user that their new tab page
+# is being controlled by an extension.
+extension-controlled-new-tab-url = <img data-l10n-name="icon"/> { $name } 확장기능이 새 탭 페이지를 제어하고 있습니다.
+# This string is shown to notify the user that the default search engine
+# is being controlled by an extension.
+extension-controlled-default-search = <img data-l10n-name="icon"/> { $name } 확장기능이 기본 검색 엔진을 설정했습니다.
+# This string is shown to notify the user that Container Tabs
+# are being enabled by an extension.
+extension-controlled-privacy-containers = <img data-l10n-name="icon"/> { $name } 확장기능에는 컨테이너 탭이 필요합니다.
+# This string is shown to notify the user that their tracking protection preferences
+# are being controlled by an extension.
+extension-controlled-websites-tracking-protection-mode = <img data-l10n-name="icon"/> { $name } 확장기능이 추적 방지 기능을 제어하고 있습니다.
+# This string is shown to notify the user that their proxy configuration preferences
+# are being controlled by an extension.
+extension-controlled-proxy-config = <img data-l10n-name="icon"/> { $name } 확장기능이 { -brand-short-name }가 인터넷에 접근하는 방법을 제어하고 있습니다.
+# This string is shown after the user disables an extension to notify the user
+# how to enable an extension that they disabled.
+#
+# <img data-l10n-name="addons-icon"/> will be replaced with Add-ons icon
+# <img data-l10n-name="menu-icon"/> will be replaced with Menu icon
+extension-controlled-enable = 확장 프로그램을 사용하려면 <img data-l10n-name="menu-icon"/> 메뉴에서 <img data-l10n-name="addons-icon"/> 부가 기능으로 이동하십시오.
+
 ## Preferences UI Search Results
 
 search-results-header = 검색 결과
@@ -110,6 +145,9 @@ startup-blank-page =
     .label = 빈 페이지 보기
 startup-prev-session =
     .label = 지난번 창과 탭 보기
+startup-restore-previous-session =
+    .label = 이전 세션 복원
+    .accesskey = s
 disable-extension =
     .label = 확장기능 비활성화
 home-page-header = 홈 페이지
@@ -285,6 +323,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = 네트워크 프록시
+network-proxy-connection-description = { -brand-short-name }가 인터넷에 접근하는 방법을 설정하세요.
 network-proxy-connection-learn-more = 자세히 보기
 network-proxy-connection-settings =
     .label = 설정…
@@ -528,6 +567,9 @@ history-private-browsing-permanent =
 history-remember-option =
     .label = 표시한 페이지 및 파일 다운로드 기록 저장
     .accesskey = b
+history-remember-browser-option =
+    .label = 표시한 페이지 및 파일 다운로드 기록 저장
+    .accesskey = b
 history-remember-search-option =
     .label = 검색 및 입력 기록 저장
     .accesskey = f
@@ -544,6 +586,11 @@ history-clear-button =
 ## Privacy Section - Site Data
 
 sitedata-header = 쿠키와 사이트 데이타
+sitedata-total-size-calculating = 사이트 데이타와 캐시 크기 계산중…
+# Variables:
+#   $value (Number) - Value of the unit (for example: 4.6, 500)
+#   $unit (String) - Name of the unit (for example: "bytes", "KB")
+sitedata-total-size = 현재 저장된 쿠키와 사이트 데이타, 캐시가 { $value } { $unit }의 디스크를 사용하고 있습니다.
 sitedata-learn-more = 더 알아보기
 sitedata-accept-cookies-option =
     .label = 웹사이트의 쿠키와 사이트 데이타 허용(권장)
@@ -638,6 +685,12 @@ permissions-notification-link = 더 알아보기
 permissions-notification-pause =
     .label = { -brand-short-name }를 재시작 할 때 까지 알림을 멈춤
     .accesskey = n
+permissions-block-autoplay-media =
+    .label = 웹사이트에서 소리가 있는 미디어를 자동으로 재생하지 않음
+    .accesskey = B
+permissions-block-autoplay-media-exceptions =
+    .label = 예외 목록…
+    .accesskey = E
 permissions-block-popups =
     .label = 팝업 창 차단
     .accesskey = B
@@ -664,6 +717,9 @@ collection-health-report =
     .label = { -brand-short-name }가 기술과 상호 작용 정보를 { -vendor-short-name }에 전송하도록 허용
     .accesskey = r
 collection-health-report-link = 더 알아보기
+collection-studies =
+    .label = { -brand-short-name }가 연구를 설치하고 실행하도록 허용
+collection-studies-link = { -brand-short-name } 연구 보기
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = 이 빌드 설정에서는 데이타 보고가 비활성화 되어 있음

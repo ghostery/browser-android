@@ -407,11 +407,6 @@
 <!ENTITY read.only.location.label        "Locatie:">
 <!ENTITY read.only.category.label        "Categorie:">
 <!ENTITY read.only.organizer.label       "Organisator:">
-<!ENTITY read.only.reply.label           "Antwoord:">
-<!ENTITY read.only.accept.label          "Ik zal aanwezig zijn">
-<!ENTITY read.only.decline.label         "Ik zal niet aanwezig zijn">
-<!ENTITY read.only.tentative.label       "Ik zal misschien aanwezig zijn">
-<!ENTITY read.only.needs.action.label    "Ik zal later bevestigen">
 <!ENTITY read.only.reminder.label        "Herinnering:">
 <!ENTITY read.only.attachments.label     "Bijlagen:">
 <!ENTITY read.only.attendees.label       "Genodigden">
