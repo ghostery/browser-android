@@ -111,7 +111,16 @@
                       android:background="@color/dark_transparent_overlay"
                       android:alpha="0"
                       android:layerType="hardware"/>
-
+                <!-- Cliqz start -->
+                <!-- add query suggestion view -->
+                <LinearLayout
+                        android:id="@+id/query_suggestions_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/doorhanger_overlay"
+                        android:orientation="horizontal"
+                        android:gravity="center" />
+                <!-- Cliqz end -->
             </RelativeLayout>
 
             <org.mozilla.gecko.FindInPageBar android:id="@+id/find_in_page"

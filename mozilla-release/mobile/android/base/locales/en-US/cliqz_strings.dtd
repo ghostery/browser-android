@@ -2,6 +2,7 @@
 <!-- General -->
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Exit">
+<!ENTITY contextmenu_delete "Delete">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">

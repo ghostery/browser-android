@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018 -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/open_new_tab"
+        android:title="@string/contextmenu_open_new_tab" />
+    <item
+        android:id="@+id/open_ghost_tab"
+        android:title="@string/contextmenu_open_ghost_tab"/>
+    <item
+        android:id="@+id/pin_site"
+        android:title="@string/contextmenu_top_sites_pin" />
+    <item
+        android:id="@+id/add_page_shortcut"
+        android:title="@string/contextmenu_add_page_shortcut" />
+    <item
+        android:id="@+id/delete"
+        android:title="@string/contextmenu_delete"/>
+</menu>
