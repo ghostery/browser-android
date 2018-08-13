@@ -4154,8 +4154,6 @@ public class BrowserApp extends GeckoApp
             MenuUtils.safeSetVisible(aMenu, R.id.new_guest_session, false);
         }
 
-        MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, false);
-        MenuUtils.safeSetVisible(aMenu, R.id.addons, false);
         if (SwitchBoard.isInExperiment(this, Experiments.TOP_ADDONS_MENU)) {
             MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, true);
             GeckoMenuItem item = (GeckoMenuItem) aMenu.findItem(R.id.addons_top_level);

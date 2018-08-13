@@ -66,6 +66,11 @@
         android:checkable="true"
         android:title="@string/desktop_mode" />
 
+
+    <item android:id="@+id/addons_top_level"
+        android:title="@string/addons"
+        gecko:itemType="icon_menu_item" />
+
     <item
         android:id="@+id/pin_to_top_sites"
         android:title="@string/contextmenu_pin_to_top_sites" />
