@@ -134,7 +134,7 @@
     </PreferenceCategory>
     <!-+ Cliqz Block comment end -->
 
-    <!-- add download options category -->
+    <!-- add download options category
     <PreferenceCategory android:title="@string/pref_download_options_category">
         <CheckBoxPreference
             android:key="pref.limit.data.usage"
@@ -142,6 +142,7 @@
             android:summary="@string/pref_limit_data_usage_summary"
             android:defaultValue="true" />
     </PreferenceCategory>
+    !-->
 
     <!-- show hints - reset all onBoarding -->
     <Preference
