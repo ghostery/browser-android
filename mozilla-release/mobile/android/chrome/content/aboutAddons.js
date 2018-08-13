@@ -330,6 +330,14 @@ var Addons = {
       // Don't create item for system add-ons.
       if (aAddons[i].isSystem)
         continue;
+      /* Cliqz start */
+      // hide theme, cliqz and ghostery addons
+      const addonId = aAddons[i].id;
+      if ( addonId === "android@cliqz.com" || addonId === "default-theme@mozilla.org"
+         || addonId === "firefox@ghostery.com"){
+        continue;
+        }
+      /* Cliqz end */
 
       let item = this._createItemForAddon(aAddons[i]);
       list.appendChild(item);
