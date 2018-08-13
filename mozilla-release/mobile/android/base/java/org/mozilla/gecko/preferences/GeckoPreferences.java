@@ -971,7 +971,7 @@ public class GeckoPreferences
                     });
                 } else if (PREFS_ABOUT_APP_VERSION_NAME.equals(key)) {
                     // set app version name
-                    pref.setSummary(BuildConfig.APP_VERSION_NAME);
+                    pref.setSummary(AppConstants.MOZ_APP_VERSION);
                 } else if (PREFS_ABOUT_SEARCH_VERSION.equals(key)) {
                     // set extension version
                     pref.setSummary(AppConstants.CLIQZ_SEARCH_VERSION);
