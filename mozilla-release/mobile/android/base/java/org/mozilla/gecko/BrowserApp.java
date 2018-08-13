@@ -943,7 +943,7 @@ public class BrowserApp extends GeckoApp
         mControlCenterPagerAdapter.addFragment(globalTrackersFragment);
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.conrol_center_tab_layout);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.control_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
         /*Cliqz end*/

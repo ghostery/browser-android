@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_introduction">Introduction</string>
+    <string name="onboarding_attrack">Anti-Tracking</string>
+    <string name="onboarding_search">Search</string>
+    <string name="onboarding_fresh_tab">Fresh-Tab</string>
+</resources>

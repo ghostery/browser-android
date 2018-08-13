@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="11dp"
         app:srcCompat="@drawable/cliqz_intro_ic_dots_third_screen"
-        tools:ignore="contentDescription"/>
+        android:contentDescription="@string/onboarding_search"/>
 
     <Button
         android:id="@+id/start_browsing"
@@ -67,5 +67,5 @@
         android:layout_above="@id/second_screen_title"
         android:scaleType="fitCenter"
         android:src="@drawable/cliqz_intro_ic_third_screen"
-        tools:ignore="contentDescription"/>
+        android:contentDescription="@string/onboarding_search"/>
 </RelativeLayout>
