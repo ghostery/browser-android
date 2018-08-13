@@ -154,7 +154,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         this.controlCenterSettingsData = controlCenterSettingsData;
         final int allowedTrackers = safeGetInt(controlCenterSettingsData, "data/summary/trackerCounts/allowed");
         final int blockedTrackers = calculateBlockedTrackers();
-        final int totalTrackers = calculateTotalTrackers();
+        final int totalTrackers = calculateGhosteryAttrackCount() + calculateCliqzAttrackCount()
+                + getAdBlockCount() + getSmartBlockingCount();
         final String domainName = safeGetString(controlCenterSettingsData, "data/summary/pageHost");
         final boolean isSmartBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_smart_block");
         final boolean isAdBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_ad_block");
@@ -222,7 +223,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         }
     }
 
-    private int calculateTotalTrackers() {
+    private int calculateGhosteryAttrackCount() {
         int totalTrackers = 0;
         final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(controlCenterSettingsData, "data/summary/categories");
         for (GeckoBundle category : categories) {
