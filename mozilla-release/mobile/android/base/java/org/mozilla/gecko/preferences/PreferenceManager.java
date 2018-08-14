@@ -4,24 +4,27 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
-import org.mozilla.gecko.BrowserLocaleManager;
 import org.mozilla.gecko.GeckoSharedPrefs;
-import org.mozilla.gecko.LocaleManager;
-
-import java.util.Locale;
 
 import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
 
 /**
  * Copyright © Cliqz 2018
  */
-// TODO: Transform this to a collection of static methods that take a context as the first parameter
 public class PreferenceManager {
 
     private final SharedPreferences mAppSharedPreferences;
+    private static PreferenceManager preferenceManager = null;
 
-    public PreferenceManager(Context context) {
+    private PreferenceManager(Context context) {
         mAppSharedPreferences = GeckoSharedPrefs.forApp(context);
+    }
+
+    public static PreferenceManager getInstance(Context context) {
+        if (preferenceManager == null) {
+            preferenceManager = new PreferenceManager(context);
+        }
+        return preferenceManager;
     }
 
     public void setMyOffrzOnboardingEnabled(boolean value) {
@@ -107,5 +110,9 @@ public class PreferenceManager {
     public String getSearchRegional(Context context){
         return mAppSharedPreferences.getString(GeckoPreferences.PREFS_SEARCH_REGIONAL,new
                 Countries(context).getDefaultCountryCode());
+    }
+
+    public boolean isAutocompleteEnabled() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_AUTO_COMPLETE, true);
     }
 }

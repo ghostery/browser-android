@@ -77,7 +77,7 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
     }
 
     private void setPreferencesValues(boolean value){
-        final PreferenceManager preferenceManager = new PreferenceManager(mContext);
+        final PreferenceManager preferenceManager = PreferenceManager.getInstance(mContext.getApplicationContext());
         preferenceManager.setTelemetryEnabled(value);
         preferenceManager.setHumanWebEnabled(value);
         preferenceManager.setMyOffrzEnabled(value);
