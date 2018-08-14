@@ -5048,10 +5048,7 @@ public class BrowserApp extends GeckoApp
             final Rect rect = new Rect();
             paint.getTextBounds(tv.getText().toString(), 0, tv.getText().length(), rect);
             if (rect.width() < mCliqzQuerySuggestionsContainer.getWidth() - occupiedSpace - 2 * SUGGESTIONS_TV_PADDING) {
-                mCliqzQuerySuggestionsContainer.addView(tv);
-                occupiedSpace = occupiedSpace + rect.width() + 2 * SUGGESTIONS_TV_PADDING;
-                shownSuggestions++;
-                if (shownSuggestions != SUGGESTIONS_LIMIT) {
+                if (shownSuggestions != 0) {
                     final View divider = new View(getBaseContext());
                     final LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
                             dpToPx(1), ViewGroup.LayoutParams.MATCH_PARENT);
@@ -5060,6 +5057,9 @@ public class BrowserApp extends GeckoApp
                     divider.setBackgroundColor(Color.BLACK);
                     mCliqzQuerySuggestionsContainer.addView(divider);
                 }
+                mCliqzQuerySuggestionsContainer.addView(tv);
+                occupiedSpace = occupiedSpace + rect.width() + 2 * SUGGESTIONS_TV_PADDING;
+                shownSuggestions++;
             }
         }
     }
