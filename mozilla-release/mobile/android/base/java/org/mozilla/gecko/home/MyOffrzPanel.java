@@ -113,7 +113,7 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
         onboardingText.setText(R.string.myoffrz_onboarding_description);
         activationText.setText(R.string.myoffrz_activation_description);
 
-        mPreferenceManager = new PreferenceManager(getContext());
+        mPreferenceManager = PreferenceManager.getInstance(getContext().getApplicationContext());
 
         learnMoreOnBoarding.setOnClickListener(new View.OnClickListener() {
             @Override

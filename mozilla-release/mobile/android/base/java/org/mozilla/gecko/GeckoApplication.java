@@ -669,7 +669,9 @@ public class GeckoApplication extends MultiDexApplication
                                          final String manifestPath, final String manifestUrl,
                                          final Bitmap aIcon) {
         final Intent shortcutIntent = new Intent();
-        shortcutIntent.setAction(GeckoApp.ACTION_WEBAPP);
+        /* Cliqz Start */
+        shortcutIntent.setAction(Intent.ACTION_VIEW);
+        /* Cliqz End */
         shortcutIntent.setData(Uri.parse(aURI));
         shortcutIntent.putExtra("MANIFEST_PATH", manifestPath);
         shortcutIntent.putExtra("MANIFEST_URL", manifestUrl);

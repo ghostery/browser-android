@@ -73,13 +73,9 @@ public class ToolbarEditText extends CustomEditText
     // Do not process autocomplete result
     private boolean mDiscardAutoCompleteResult;
 
-    /* Cliqz start */
-    final PreferenceManager mPreferenceManager;
-    /* Cliqz end */
     public ToolbarEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        mPreferenceManager = new PreferenceManager(mContext);
     }
 
     void setOnCommitListener(OnCommitListener listener) {
@@ -107,7 +103,7 @@ public class ToolbarEditText extends CustomEditText
         addTextChangedListener(new TextChangeListener());
 
         /* Cliqz start */
-        if(mPreferenceManager.isQuickSearchEnabled()) {
+        if(PreferenceManager.getInstance(mContext.getApplicationContext()).isQuickSearchEnabled()) {
             EventDispatcher.getInstance().registerUiThreadListener(this,
                     "Search:Autocomplete", null);
         }
@@ -129,7 +125,7 @@ public class ToolbarEditText extends CustomEditText
             resetAutocompleteState();
             /* Cliqz start */
             // Let's possibly warm up the search extension
-            if(mPreferenceManager.isQuickSearchEnabled()) {
+            if(PreferenceManager.getInstance(mContext.getApplicationContext()).isQuickSearchEnabled()) {
                 EventDispatcher.getInstance().dispatch("Search:Warmup", null);
             }
             /* Cliqz end */
@@ -558,7 +554,7 @@ public class ToolbarEditText extends CustomEditText
 
             /* Cliqz start */
             // Let's send the non-autocompleted text to the Cliqz search extension
-            if(mPreferenceManager.isQuickSearchEnabled()) {
+            if(PreferenceManager.getInstance(mContext.getApplicationContext()).isQuickSearchEnabled()) {
                 final GeckoBundle bundle = new GeckoBundle();
                 bundle.putString("q", text);
                 EventDispatcher.getInstance().dispatch("Search:Search", bundle);
@@ -684,7 +680,7 @@ public class ToolbarEditText extends CustomEditText
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(mPreferenceManager.isQuickSearchEnabled()) {
+        if(PreferenceManager.getInstance(mContext.getApplicationContext()).isQuickSearchEnabled()) {
             EventDispatcher.getInstance().unregisterUiThreadListener(this,
                     "Search:Autocomplete", null);
         }
@@ -695,7 +691,9 @@ public class ToolbarEditText extends CustomEditText
         switch (event) {
             case "Search:Autocomplete":
                 final String autoCompletion = message.getString("data");
-                onAutocomplete(autoCompletion);
+                if (PreferenceManager.getInstance(mContext.getApplicationContext()).isAutocompleteEnabled()) {
+                    onAutocomplete(autoCompletion);
+                }
                 break;
             default:
                 break;
