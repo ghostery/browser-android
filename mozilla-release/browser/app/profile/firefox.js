@@ -1496,8 +1496,10 @@ pref("toolkit.telemetry.hybridContent.enabled", true);
 // Ping Centre Telemetry settings.
 pref("browser.ping-centre.telemetry", true);
 pref("browser.ping-centre.log", false);
-pref("browser.ping-centre.staging.endpoint", "https://onyx_tiles.stage.mozaws.net/v3/links/ping-centre");
-pref("browser.ping-centre.production.endpoint", "https://tiles.services.mozilla.com/v3/links/ping-centre");
+/* Cliqz start */
+pref("browser.ping-centre.staging.endpoint", "");
+pref("browser.ping-centre.production.endpoint", "");
+/* Cliqz end */
 
 // Enable GMP support in the addon manager.
 pref("media.gmp-provider.enabled", true);
@@ -1726,7 +1728,9 @@ pref("browser.chrome.errorReporter.infoURL",
 // Normandy client preferences
 pref("app.normandy.api_url", "https://normandy.cdn.mozilla.net/api/v1");
 pref("app.normandy.dev_mode", false);
-pref("app.normandy.enabled", true);
+/* Cliqz start */
+pref("app.normandy.enabled", false);
+/* Cliqz end */
 pref("app.normandy.first_run", true);
 pref("app.normandy.logging.level", 50); // Warn
 pref("app.normandy.run_interval_seconds", 21600); // 6 hours
