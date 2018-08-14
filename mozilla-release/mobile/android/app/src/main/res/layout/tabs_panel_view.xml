@@ -5,10 +5,11 @@
 
 <!-- The tabs panel is initial hidden on startup. It will be made
      visible when the user activates it. See TabsPanel.show() -->
+<!-- Cliqz start -->
 <org.mozilla.gecko.tabs.TabsPanel xmlns:android="http://schemas.android.com/apk/res/android"
                                   android:id="@+id/tabs_panel"
                                   android:layout_width="match_parent"
                                   android:layout_height="match_parent"
-                                  android:background="@color/text_and_tabs_tray_grey"
                                   android:orientation="vertical"
                                   android:visibility="invisible"/>
+<!-- Cliqz end -->

@@ -10,6 +10,8 @@ import org.mozilla.gecko.ThumbnailHelper;
 import org.mozilla.gecko.widget.CropImageView;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
@@ -19,6 +21,11 @@ import android.util.AttributeSet;
 public class TabsPanelThumbnailView extends CropImageView {
     public static final String LOGTAG = "Gecko" + TabsPanelThumbnailView.class.getSimpleName();
 
+    /* Cliqz start */
+    private Path clipPath;
+
+    private float[] roundedRectRadii;
+    /* Cliqz end */
 
     public TabsPanelThumbnailView(final Context context) {
         this(context, null);
@@ -30,6 +37,13 @@ public class TabsPanelThumbnailView extends CropImageView {
 
     public TabsPanelThumbnailView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        /* Cliqz start */
+        clipPath = new Path();
+        float radius = getResources().getDimension(R.dimen.tab_thumbnail_corner_radius);
+        // The thumbnail has rounded corners from the bottom.
+        roundedRectRadii =
+                new float[] { 0, 0, 0, 0, radius, radius, radius, radius };
+        /* Cliqz end */
     }
 
     @Override
@@ -49,4 +63,14 @@ public class TabsPanelThumbnailView extends CropImageView {
 
         super.setImageDrawable(drawable, resize);
     }
+
+    /* Cliqz start */
+    @Override
+    protected void onDraw(Canvas canvas) {
+        clipPath.addRoundRect(0, 0, this.getWidth(), this.getHeight(), roundedRectRadii,
+                Path.Direction.CW);
+        canvas.clipPath(clipPath);
+        super.onDraw(canvas);
+    }
+    /* Cliqz end */
 }

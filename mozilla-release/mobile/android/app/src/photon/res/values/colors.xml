@@ -96,7 +96,9 @@
     <!-- Status bar background color -->
     <color name="status_bar_bg_color">#F9F9FA</color>
     <color name="status_bar_bg_color_private">#38383D</color>
-    <color name="status_bar_bg_color_tabs_tray">@color/photon_tabs_tray_bg</color>
+    <!-- Cliqz start -->
+    <color name="status_bar_bg_color_tabs_tray">@android:color/black</color>
+    <!-- Cliqz end -->
     <color name="status_bar_bg_color_tablet">@color/photon_tabs_tray_bg</color>
 
     <!-- Toolbar menu item tint color -->

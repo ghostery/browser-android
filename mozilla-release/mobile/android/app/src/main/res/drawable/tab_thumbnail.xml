@@ -12,7 +12,7 @@
         <shape android:shape="rectangle">
             <!-- @color/fennec_ui_orange with alpha -->
             <solid android:color="@color/general_blue_color"/>
-            <corners android:radius="@dimen/standard_corner_radius"/>
+            <corners android:radius="@dimen/tab_thumbnail_corner_radius"/>
         </shape>
 
     </item>
@@ -23,7 +23,7 @@
         <shape android:shape="rectangle">
             <!-- @color/private_browsing_purple with alpha -->
             <solid android:color="@color/general_blue_color"/>
-            <corners android:radius="@dimen/standard_corner_radius"/>
+            <corners android:radius="@dimen/tab_thumbnail_corner_radius"/>
         </shape>
 
     </item>
@@ -34,7 +34,7 @@
         <shape android:shape="rectangle">
             <!-- @color/private_browsing_purple with alpha -->
             <solid android:color="@color/general_blue_color"/>
-            <corners android:radius="@dimen/standard_corner_radius"/>
+            <corners android:radius="@dimen/tab_thumbnail_corner_radius"/>
         </shape>
 
     </item>
@@ -44,7 +44,7 @@
 
         <shape android:shape="rectangle">
             <solid android:color="@color/general_blue_color"/>
-            <corners android:radius="@dimen/standard_corner_radius"/>
+            <corners android:radius="@dimen/tab_thumbnail_corner_radius"/>
         </shape>
 
     </item>
@@ -53,7 +53,7 @@
 
         <shape android:shape="rectangle">
             <solid android:color="@color/general_blue_color"/>
-            <corners android:radius="@dimen/standard_corner_radius"/>
+            <corners android:radius="@dimen/tab_thumbnail_corner_radius"/>
         </shape>
 
     </item>
@@ -66,7 +66,7 @@
 
         <shape android:shape="rectangle">
             <solid android:color="@color/general_blue_color"/>
-            <corners android:radius="@dimen/standard_corner_radius"/>
+            <corners android:radius="@dimen/tab_thumbnail_corner_radius"/>
         </shape>
 
     </item>
@@ -79,7 +79,7 @@
 
         <shape android:shape="rectangle">
             <solid android:color="@color/dark_transparent_overlay"/>
-            <corners android:radius="@dimen/standard_corner_radius"/>
+            <corners android:radius="@dimen/tab_thumbnail_corner_radius"/>
         </shape>
 
     </item>
@@ -91,7 +91,7 @@
 
         <shape android:shape="rectangle">
             <solid android:color="@color/general_blue_color"/>
-            <corners android:radius="@dimen/standard_corner_radius"/>
+            <corners android:radius="@dimen/tab_thumbnail_corner_radius"/>
         </shape>
 
     </item>
@@ -103,7 +103,7 @@
 
         <shape android:shape="rectangle">
             <solid android:color="@color/dark_transparent_overlay"/>
-            <corners android:radius="@dimen/standard_corner_radius"/>
+            <corners android:radius="@dimen/tab_thumbnail_corner_radius"/>
         </shape>
 
     </item>

@@ -170,18 +170,22 @@
     <dimen name="tab_panel_grid_item_vpadding_autofit">8dp</dimen>
     <dimen name="tab_panel_grid_min_item_hspacing_autofit">2dp</dimen>
 
+    <!-- Cliqz start -->
     <!-- CompactTabsGridLayout -->
     <dimen name="tab_panel_grid_hpadding_compact">15dp</dimen>
-    <dimen name="tab_panel_grid_vpadding_compact">7dp</dimen>
-    <dimen name="tab_panel_grid_item_hpadding_compact">10dp</dimen>
-    <dimen name="tab_panel_grid_item_vpadding_compact">6dp</dimen>
+    <dimen name="tab_panel_grid_vpadding_compact">20dp</dimen>
+    <dimen name="tab_panel_grid_item_hpadding_compact">20dp</dimen>
+    <dimen name="tab_panel_grid_item_vpadding_compact">8dp</dimen>
+    <!-- Cliqz end -->
 
     <!-- TabsListLayout -->
     <!-- Cliqz start -->
+    <dimen name="tab_thumbnail_corner_radius">8dp</dimen>
     <!-- reduce stroke width of tabs -->
     <dimen name="tab_highlight_stroke_width">3dp</dimen>
+    <dimen name="tab_favicon_size">25dp</dimen>
+    <dimen name="tab_favicon_corner_radius">6dp</dimen>
     <!-- Cliqz end -->
-    <dimen name="tab_favicon_size">16dp</dimen>
     <dimen name="tab_favicon_text_size">12sp</dimen>
 
     <!-- PageActionButtons dimensions -->

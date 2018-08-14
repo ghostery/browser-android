@@ -31,7 +31,9 @@ public final class ThumbnailHelper {
     private static final boolean DEBUG = false;
     private static final String LOGTAG = "GeckoThumbnailHelper";
 
-    public static final float TABS_PANEL_THUMBNAIL_ASPECT_RATIO = 0.75f;
+    /* Cliqz start */
+    public static final float TABS_PANEL_THUMBNAIL_ASPECT_RATIO = 1f;
+    /* Cliqz end */
     public static final float TOP_SITES_THUMBNAIL_ASPECT_RATIO = 0.571428571f;  // this is a 4:7 ratio (as per UX decision)
     public static final float THUMBNAIL_ASPECT_RATIO;
 

@@ -7,6 +7,7 @@
 <!-- add background to tabs item -->
 <org.mozilla.gecko.tabs.TabsLayoutItemView xmlns:android="http://schemas.android.com/apk/res/android"
                                            xmlns:gecko="http://schemas.android.com/apk/res-auto"
+                                           xmlns:app="http://schemas.android.com/apk/res-auto"
                                            style="@style/TabsItem"
                                            android:id="@+id/info"
                                            android:layout_width="match_parent"
@@ -23,7 +24,7 @@
         android:layout_marginLeft="@dimen/tab_highlight_stroke_width"
         android:layout_marginRight="@dimen/tab_highlight_stroke_width"
         android:layout_marginTop="@dimen/tab_highlight_stroke_width"
-        android:background="@color/toolbar_divider_grey"
+        android:background="@drawable/tab_thumbnail_grey_strip"
         android:duplicateParentState="true"
         android:orientation="horizontal"
         android:padding="@dimen/padding_5">
@@ -31,10 +32,11 @@
         <org.mozilla.gecko.widget.FaviconView
             android:id="@+id/favicon"
             style="@style/TabsLayoutItemFavicon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center_vertical"
             android:scaleType="centerInside"
+            app:backgroundCornerRadius="@dimen/tab_favicon_corner_radius"
             gecko:dominantBorderEnabled="false"
             gecko:overrideScaleType="false"/>
 
@@ -82,12 +84,12 @@
             android:paddingBottom="@dimen/tab_highlight_stroke_width"
             android:duplicateParentState="true"
             android:clipToPadding="false">
-        <!-- Cliqz end -->
 
         <org.mozilla.gecko.tabs.TabsPanelThumbnailView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="180dp" />
+        <!-- Cliqz end -->
 
     </org.mozilla.gecko.widget.TabThumbnailWrapper>
 

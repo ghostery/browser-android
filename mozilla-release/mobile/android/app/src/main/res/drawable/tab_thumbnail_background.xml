@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/toolbar_divider_grey"/>
+            <corners
+                android:bottomLeftRadius="@dimen/tab_thumbnail_corner_radius"
+                android:bottomRightRadius="@dimen/tab_thumbnail_corner_radius"/>
+        </shape>
+    </item>
+</selector>
