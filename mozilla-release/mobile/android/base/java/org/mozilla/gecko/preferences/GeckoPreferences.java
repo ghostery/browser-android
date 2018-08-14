@@ -151,6 +151,7 @@ public class GeckoPreferences
     private static final String PREFS_DEVTOOLS_REMOTE_LINK = NON_PREF_PREFIX + "remote_debugging.link";
     public static final String PREFS_VOICE_INPUT_ENABLED = NON_PREF_PREFIX + "voice_input_enabled";
     public static final String PREFS_QRCODE_ENABLED = NON_PREF_PREFIX + "qrcode_enabled";
+    public static final String PREFS_AUTO_COMPLETE = "pref.search.auto.completion";
     // private static final String PREFS_TRACKING_PROTECTION_LEARN_MORE = NON_PREF_PREFIX + "trackingprotection.learn_more";
     /* Cliqz end */
     private static final String PREFS_CLEAR_PRIVATE_DATA = NON_PREF_PREFIX + "privacy.clear";
@@ -750,8 +751,7 @@ public class GeckoPreferences
                     }
                 /* Cliqz start */
                 } else if (PREFS_TELEMETRY_ENABLED.equals(key)) {
-                    final PreferenceManager preferenceManager = new PreferenceManager
-                            (getApplicationContext());
+                    final PreferenceManager preferenceManager = PreferenceManager.getInstance((getApplicationContext()));
                     ((CheckBoxPreference)pref).setChecked(preferenceManager.isTelemetryEnabled());
                     pref.setOnPreferenceChangeListener(this);
                 /* Cliqz Block Comment start o/
@@ -912,8 +912,7 @@ public class GeckoPreferences
                     continue;
                 } else if (PREFS_ENABLE_HUMAN_WEB.equals(key)) {
                     // set value of human web
-                    final PreferenceManager preferenceManager = new PreferenceManager
-                            (getApplicationContext());
+                    final PreferenceManager preferenceManager = PreferenceManager.getInstance((getApplicationContext()));
                     ((SwitchPreference)pref).setChecked(preferenceManager.isHumanWebEnabled());
                 } else if (PREFS_RATE_US.equals(key)){
                     // add navigate to playstore when click on rate cliqz browser
@@ -927,16 +926,14 @@ public class GeckoPreferences
                     });
                 } else if (PREFS_MYOFFRZ_ENABLED.equals(key)){
                     // Set default value of show my offrz depend on system language
-                    final PreferenceManager preferenceManager = new PreferenceManager
-                            (getApplicationContext());
+                    final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
                     ((CheckBoxPreference)pref).setChecked(preferenceManager.isMyOffrzEnable());
                 } else if(PREFS_SHOW_HINTS.equals(key)){
                     // reset all Onboarding
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
-                            final PreferenceManager preferenceManager = new PreferenceManager
-                                    (getApplicationContext());
+                            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
                             preferenceManager.setMyOffrzOnboardingEnabled(true);
                             // TODO: enable all OnBoarding here.
                             return true;
@@ -982,13 +979,13 @@ public class GeckoPreferences
                     continue;
                 //Set up ghostery preferences
                 } else if (PREFS_GHOSTERY_AUTO_UPDATE.equals(key)) {
-                     final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+                     final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
                     ((CheckBoxPreference) pref).setChecked(preferenceManager.isGhosteryAutoUpdateEnabled());
                 } else if (PREFS_GHOSTERY_ALLOW_FIRST_PARTY.equals(key)) {
-                     final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+                     final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
                     ((CheckBoxPreference) pref).setChecked(preferenceManager.areFirstPartyTrackersAllowed());
                 } else if (PREFS_GHOSTERY_BLOCK_NEW_TRACKERS.equals(key)) {
-                     final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+                     final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
                     ((CheckBoxPreference) pref).setChecked(preferenceManager.areNewTrackersBlocked());
                 } else if (PREFS_GEO_REPORTING.equals(key)) {
                      pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -1010,14 +1007,12 @@ public class GeckoPreferences
                          }
                      });
                 } else if(PREFS_SEARCH_REGIONAL.equals(key)) {
-                    final PreferenceManager preferenceManager = new PreferenceManager
-                            (getApplicationContext());
+                    final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
                     final String value = preferenceManager.getSearchRegional(getBaseContext());
                     ((ListPreference) pref).setValue(value);
                     ((ListPreference) pref).setSummary(new Countries(getBaseContext()).getCountryName(value));
                 } else if (PREFS_SEARCH_QUERY_SUGGESTIONS.equals(key)) {
-                    final PreferenceManager preferenceManager = new PreferenceManager
-                            (getApplicationContext());
+                    final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
                     mSearchQuerySuggestionsPref = pref;
                     mSearchQuerySuggestionsPrefGroup = preferences;
                     if(!preferenceManager.getSearchRegional(getBaseContext()).equals(Locale.GERMAN.getLanguage())) {
@@ -1312,12 +1307,12 @@ public class GeckoPreferences
 
         /* Cliqz Start */
         if (CLIQZ_TELEMETRY_ENABLED.equals(prefName)) {
-            final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
             preferenceManager.setTelemetryEnabled((boolean)newValue);
             return true;
         }
         if (PREFS_GHOSTERY_AUTO_UPDATE.equals(prefName)) {
-            final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
             preferenceManager.setGhosteryAutoUpdate((boolean)newValue);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("enable_autoupdate", (boolean)newValue);
@@ -1325,7 +1320,7 @@ public class GeckoPreferences
             return true;
         }
         if (PREFS_GHOSTERY_ALLOW_FIRST_PARTY.equals(prefName)) {
-            final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
             preferenceManager.setAllowFirstPartyTrackers((boolean)newValue);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("ignore_first_party", (boolean)newValue);
@@ -1333,7 +1328,7 @@ public class GeckoPreferences
             return true;
         }
         if (PREFS_GHOSTERY_BLOCK_NEW_TRACKERS.equals(prefName)) {
-            final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
+            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
             preferenceManager.setBlockNewTrackers((boolean)newValue);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("block_by_default", (boolean)newValue);

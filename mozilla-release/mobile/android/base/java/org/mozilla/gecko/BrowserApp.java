@@ -916,7 +916,7 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
         /* Cliqz start */
-        mPreferenceManager = new PreferenceManager(getBaseContext());
+        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
         mBrowserSearchContainer = findViewById(R.id.search_container);
         mBrowserSearch = (BrowserSearch) getSupportFragmentManager().findFragmentByTag(BROWSER_SEARCH_TAG);
         if (mBrowserSearch == null) {
@@ -2526,10 +2526,9 @@ public class BrowserApp extends GeckoApp
                 final boolean isAutoUpdateEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/enable_autoupdate");
                 final boolean areFirstPartyTrackersEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/ignore_first_party");
                 final boolean areNewTrackersBlocked = GeckoBundleUtils.safeGetBoolean(message, "data/settings/block_by_default");
-                final PreferenceManager preferenceManager = new PreferenceManager(getBaseContext());
-                preferenceManager.setGhosteryAutoUpdate(isAutoUpdateEnabled);
-                preferenceManager.setAllowFirstPartyTrackers(areFirstPartyTrackersEnabled);
-                preferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
+                mPreferenceManager.setGhosteryAutoUpdate(isAutoUpdateEnabled);
+                mPreferenceManager.setAllowFirstPartyTrackers(areFirstPartyTrackersEnabled);
+                mPreferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
                 break;
             case "Search:QuerySuggestions":
                 if(mPreferenceManager.isQuerySuggestionsEnabled()) {
