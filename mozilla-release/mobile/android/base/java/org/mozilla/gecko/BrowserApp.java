@@ -2151,8 +2151,15 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Menu:AddBrowserAction":
+                /* Cliqz start */
+                // remove Ghostery from menu
+                final String label = message.getString("name");
+                if(label.equals("Ghostery")){
+                    break;
+                }
                 final BrowserActionItemInfo browserAction = new BrowserActionItemInfo();
-                browserAction.label = message.getString("name");
+                browserAction.label = label;
+                /* Cliqz end */
                 if (TextUtils.isEmpty(browserAction.label)) {
                     Log.e(LOGTAG, "Invalid browser action name");
                     return;
