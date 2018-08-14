@@ -132,7 +132,7 @@
 <!ENTITY cc_other_smart_blocking_blocked "Trackers adjusted">
 <!ENTITY cc_anti_tracking_about "Anonymize unblocked and unknown trackers for greater browsing protection">
 <!ENTITY cc_ad_blocking_about "Block advertisements on websites you visit">
-<!ENTITY cc_smart_blocking_about "Automatically block and unblock trackers to optimize page performance">
+<!ENTITY cc_smart_blocking_about "Tracker blocking adjusted to optimize page performance">
 <!ENTITY cc_site_trackers_list_title "Trackers on this site">
 <!ENTITY cc_global_trackers_list_title "Trackers across sites">
 <!ENTITY cc_reset_settings "Reset Settings">
