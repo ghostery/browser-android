@@ -119,7 +119,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/doorhanger_overlay"
                         android:orientation="horizontal"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:background="@color/query_suggestion_bg" />
                 <!-- Cliqz end -->
             </RelativeLayout>
 

@@ -332,6 +332,7 @@
     <color name="cc_text_color">#4A4A4A</color>
     <color name="cc_restricted">#BE4948</color>
     <color name="cc_transparency">#FAFFFFFF</color>
+
     <!-- History and Favorites -->
     <color name="history_favorites_row">@android:color/white</color>
     <color name="history_favorites_row_private">@android:color/white</color>
@@ -341,6 +342,9 @@
     <!-- Browser toolbar icons -->
     <color name="cliqz_icon">@android:color/black</color>
     <color name="cliqz_icon_disabled">@color/disabled_grey</color>
+
+    <!-- Query Suggestions -->
+    <color name="query_suggestion_bg">#eeeeee</color>
     <!-- Cliqz end -->
 
 </resources>
