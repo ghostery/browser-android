@@ -312,6 +312,9 @@ public class BrowserApp extends GeckoApp
             Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
     private static final int SUGGESTIONS_TV_PADDING = 20;
     private static final int FONT_SIZE = 18;
+
+    // Minimum app launches until we show the dialog to set default browser.
+    private static final int MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT = 3;
     /* Cliqz End */
 
     private static final int GECKO_TOOLS_MENU = -1;
@@ -1100,8 +1103,44 @@ public class BrowserApp extends GeckoApp
                 editor.apply();
             }
         }
+
+        maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
+
         /*Cliqz End*/
     }
+
+    /* Cliqz Start */
+    private void maybeShowSetDefaultBrowserDialog(SharedPreferences sharedPreferences,
+                                                  final Context context) {
+        int appLaunchCount = sharedPreferences.getInt(GeckoPreferences.PREFS_APP_LAUNCH_COUNT, 0);
+        if (appLaunchCount >= MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT) return;
+        appLaunchCount++;
+        sharedPreferences.edit().putInt(GeckoPreferences.PREFS_APP_LAUNCH_COUNT, appLaunchCount).apply();
+        if (appLaunchCount == MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT && !isDefaultBrowser(Intent.ACTION_VIEW)) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.default_browser_title)
+                    .setMessage(R.string.default_browser_message)
+                    .setPositiveButton(R.string.default_browser_dialog_proceed,
+                            new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent changeDefaultApps =
+                                    new Intent("android.settings.MANAGE_DEFAULT_APPS_SETTINGS");
+                            changeDefaultApps.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(changeDefaultApps);
+                        }
+                    })
+                    .setNegativeButton(R.string.default_browser_dialog_cancel,
+                            new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do nothing.
+                        }
+                    })
+                    .show();
+        }
+    }
+    /* Cliqz End */
 
     /**
      * Initializes the default Switchboard URLs the first time.

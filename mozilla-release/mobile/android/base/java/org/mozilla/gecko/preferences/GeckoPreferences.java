@@ -256,6 +256,8 @@ public class GeckoPreferences
     // set reference to querySuggestions and it's group so we can hide/show it
     private Preference mSearchQuerySuggestionsPref;
     private PreferenceGroup mSearchQuerySuggestionsPrefGroup;
+
+    public static final String PREFS_APP_LAUNCH_COUNT = "app_launch_count";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;

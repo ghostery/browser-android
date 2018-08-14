@@ -9,6 +9,12 @@
 <!-- News -->
 <!ENTITY activity_stream_top_news "Nachrichten">
 
+<!-- Default Browser Dialog -->
+<!ENTITY default_browser_title "&brandShortName; als Standardbrowser">
+<!ENTITY default_browser_message "Du scheinst &brandShortName; gerne zu verwenden. Möchtest du &brandShortName; zu deinem Standardbrowser machen?">
+<!ENTITY default_browser_dialog_proceed "FORTFAHREN">
+<!ENTITY default_browser_dialog_cancel "ABBRECHEN">
+
 <!-- Settings -->
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">

@@ -40,6 +40,12 @@
 <!ENTITY helper_triple_readerview_open_button2 "Add to favorites">
 <!ENTITY private_tab_panel_description3 "We won\'t remember any history, but downloaded files and new favorites will still be saved to your device.">
 
+<!-- Default Browser Dialog -->
+<!ENTITY default_browser_title "&brandShortName; as Default Browser">
+<!ENTITY default_browser_message "You seem to like using &brandShortName;. Do you want to make it your default browser?">
+<!ENTITY default_browser_dialog_proceed "PROCEED">
+<!ENTITY default_browser_dialog_cancel "CANCEL">
+
 <!-- Settings -->
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
