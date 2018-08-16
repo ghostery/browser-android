@@ -35,7 +35,7 @@ def build(Map m){
             def apk = ""
             setupTestInstance(
                 test,
-                "ami-13050368",
+                "ami-07457b491395bb595",
                 "1",
                 "t2.medium",
                 "android_ci_genymotion",
@@ -141,8 +141,8 @@ def build(Map m){
                                                 set -x
                                                 set -e
                                                 chmod 400 $FILE
-                                                ssh -v -o StrictHostKeyChecking=no -i $FILE root@$IP "setprop persist.sys.usb.config adb"
-                                                ssh -v -o StrictHostKeyChecking=no -i $FILE -NL 5556:127.0.0.1:5555 root@$IP &
+                                                ssh -v -o StrictHostKeyChecking=no -i $FILE shell@$IP "setprop persist.sys.usb.config adb"
+                                                ssh -v -o StrictHostKeyChecking=no -i $FILE -NL 5556:127.0.0.1:5555 shell@$IP &
                                                 $ANDROID_HOME/platform-tools/adb connect 127.0.0.1:5556
                                                 $ANDROID_HOME/platform-tools/adb wait-for-device
                                             '''
