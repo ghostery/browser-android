@@ -1104,7 +1104,9 @@ public class BrowserApp extends GeckoApp
             }
         }
 
-        maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
+        if (AppConstants.Versions.feature24Plus) {
+            maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
+        }
 
         /*Cliqz End*/
     }
