@@ -499,6 +499,12 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 case STOP:
                     if (progressBar.getVisibility() == View.VISIBLE) {
                         // Animate the progress bar to completion before it'll get hidden below.
+                        /* Cliqz Start */
+                        // update the control center page once page loads
+                        if (tab.getLoadProgress() == Tab.LOAD_PROGRESS_STOP) {
+                            activity.updateControlCenterIfNeeded();
+                        }
+                        /* Cliqz End */
                         progressBar.setProgress(tab.getLoadProgress());
                     }
                     // Fall through.
