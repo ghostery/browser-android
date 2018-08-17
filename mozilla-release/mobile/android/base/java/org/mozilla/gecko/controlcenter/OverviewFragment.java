@@ -155,7 +155,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final int allowedTrackers = safeGetInt(controlCenterSettingsData, "data/summary/trackerCounts/allowed");
         final int blockedTrackers = calculateBlockedTrackers();
         final int totalTrackers = calculateGhosteryAttrackCount() + calculateCliqzAttrackCount()
-                + getAdBlockCount() + getSmartBlockingCount();
+                + getAdBlockCount();
         final String domainName = safeGetString(controlCenterSettingsData, "data/summary/pageHost");
         final boolean isSmartBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_smart_block");
         final boolean isAdBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_ad_block");
