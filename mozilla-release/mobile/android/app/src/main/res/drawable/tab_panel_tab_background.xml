@@ -10,13 +10,17 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/private_toolbar_grey"/>
+                    <!-- Cliqz Start -->
+                    <solid android:color="@android:color/black"/>
+                    <!-- Cliqz End -->
                 </shape>
             </item>
 
-            <item>
-                <bitmap android:src="@drawable/tab_preview_masq"
-                        android:gravity="center"/>
+            <!-- Cliqz Start -->
+            <item
+                android:gravity="center"
+                android:drawable="@drawable/ic_ghosty_forget_tab_preview">
+                <!-- Cliqz End -->
             </item>
         </layer-list>
     </item>
