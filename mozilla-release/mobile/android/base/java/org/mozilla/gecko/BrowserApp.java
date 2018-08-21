@@ -1107,7 +1107,6 @@ public class BrowserApp extends GeckoApp
         if (AppConstants.Versions.feature24Plus) {
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
-
         /*Cliqz End*/
     }
 

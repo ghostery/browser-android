@@ -2249,6 +2249,11 @@ if test -z "$CLIQZ_SEARCH_DEFAULT_ENGINE"; then
     CLIQZ_SEARCH_DEFAULT_ENGINE="Google"
 fi
 AC_SUBST(CLIQZ_SEARCH_DEFAULT_ENGINE)
+
+if test -z "$MYOFFRZ_CHANNEL"; then
+    MYOFFRZ_CHANNEL="mobile"
+fi
+AC_SUBST(MYOFFRZ_CHANNEL)
 dnl Cliqz end
 
 dnl ========================================================
