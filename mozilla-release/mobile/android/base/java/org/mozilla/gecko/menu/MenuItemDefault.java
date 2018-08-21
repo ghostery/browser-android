@@ -116,8 +116,10 @@ public class MenuItemDefault extends TextView
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
 
+        /* Cliqz start o/
         if (mIcon != null)
             mIcon.setAlpha(enabled ? 255 : 99);
+        /o Cliqz End */
 
         if (mState != null)
             mState.setAlpha(enabled ? 255 : 99);
