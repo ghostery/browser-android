@@ -218,6 +218,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         if (!mIsGhosteryPaused) {
             styleButton(mTrustSiteButton, mIsSiteTrusted);
             styleButton(mRestrictSiteButton, mIsSiteRestricted);
+            styleButton(mPauseGhosteryButton, mIsGhosteryPaused);
         } else {
             styleButton(mPauseGhosteryButton, mIsGhosteryPaused);
         }
