@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -59,6 +60,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -82,6 +84,7 @@ import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 import org.json.JSONArray;
@@ -936,6 +939,15 @@ public class BrowserApp extends GeckoApp
         /*Cliqz start*/
         mControlCenterPager = (ViewPager) findViewById(R.id.control_center_pager);
         mControlCenterContainer = findViewById(R.id.control_center_container);
+        if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+            final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mControlCenterContainer.getLayoutParams();
+            final DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            final int width = displayMetrics.widthPixels;
+            params.width  = width / 4 * 3;
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            mControlCenterContainer.setLayoutParams(params);
+        }
         mControlCenterPagerAdapter = new ControlCenterPagerAdapter(getSupportFragmentManager(), getBaseContext());
         final SiteTrackersFragment siteTrackersFragment = new SiteTrackersFragment();
         final GlobalTrackersFragment globalTrackersFragment = new GlobalTrackersFragment();
@@ -1109,6 +1121,23 @@ public class BrowserApp extends GeckoApp
         }
 
         /*Cliqz End*/
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        hideControlCenter();
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mControlCenterContainer.getLayoutParams();
+        if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+            final DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            final int width = displayMetrics.widthPixels;
+            params.width = width / 4 * 3;
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        } else {
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        }
+        mControlCenterContainer.setLayoutParams(params);
     }
 
     /* Cliqz Start */
