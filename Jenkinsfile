@@ -153,7 +153,8 @@ def build(Map m){
                                             sh'''#!/bin/bash -l
                                                 set -x
                                                 set -e
-                                                appium &
+                                                appium --log $FLAVOR-appium.log &
+                                                echo $! > appium.pid
                                                 sleep 10
                                                 export app=$PWD/mozilla-release/objdir-frontend-android/$FLAVOR/dist/$APP
                                                 $ANDROID_HOME/platform-tools/adb install $app
@@ -162,8 +163,15 @@ def build(Map m){
                                                 source ~/venv/bin/activate
                                                 chmod 0755 requirements.txt
                                                 pip install -r requirements.txt
+                                                $ANDROID_HOME/platform-tools/adb forward tcp:6000 localfilesystem:/data/data/${appPackage}/firefox-debugger-socket
+                                                $ANDROID_HOME/platform-tools/adb forward --list
                                                 python testRunner.py || true
-                                           '''
+                                                $ANDROID_HOME/platform-tools/adb uninstall ${appPackage}
+                                                sleep 10
+                                                $ANDROID_HOME/platform-tools/adb forward --remove-all
+                                                kill `cat appium.pid` || true
+                                                rm -f appium.pid
+                                            '''
                                        }
                                     }
                                 }
