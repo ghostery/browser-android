@@ -121,9 +121,6 @@ public final class HomeConfig {
         private final AuthConfig mAuthConfig;
         private final EnumSet<Flags> mFlags;
         private final int mPosition;
-        /*Cliqz Start*/
-        private final @DrawableRes int mIconId;
-        /*Cliqz End*/
 
         static final String JSON_KEY_TYPE = "type";
         static final String JSON_KEY_TITLE = "title";
@@ -150,9 +147,6 @@ public final class HomeConfig {
 
             mTitle = json.getString(JSON_KEY_TITLE);
             mId = json.getString(JSON_KEY_ID);
-            /*Cliqz Start*/
-            mIconId = getDrawableId(mId);
-            /*Cliqz End*/
             final String layoutTypeId = json.optString(JSON_KEY_LAYOUT, null);
             if (layoutTypeId != null) {
                 mLayoutType = LayoutType.fromId(layoutTypeId);
@@ -162,7 +156,7 @@ public final class HomeConfig {
 
             final JSONArray jsonViews = json.optJSONArray(JSON_KEY_VIEWS);
             if (jsonViews != null) {
-                mViews = new ArrayList<ViewConfig>();
+                mViews = new ArrayList<>();
 
                 final int viewCount = jsonViews.length();
                 for (int i = 0; i < viewCount; i++) {
@@ -202,9 +196,6 @@ public final class HomeConfig {
             mTitle = in.readString();
             mId = in.readString();
             mLayoutType = (LayoutType) in.readParcelable(getClass().getClassLoader());
-            /*Cliqz Start*/
-            mIconId = getDrawableId(mId);
-            /*Cliqz End*/
             mViews = new ArrayList<ViewConfig>();
             in.readTypedList(mViews, ViewConfig.CREATOR);
 
@@ -221,9 +212,6 @@ public final class HomeConfig {
             mTitle = panelConfig.mTitle;
             mId = panelConfig.mId;
             mLayoutType = panelConfig.mLayoutType;
-            /*Cliqz Start*/
-            mIconId = getDrawableId(mId);
-            /*Cliqz End*/
             mViews = new ArrayList<ViewConfig>();
             List<ViewConfig> viewConfigs = panelConfig.mViews;
             if (viewConfigs != null) {
@@ -257,9 +245,6 @@ public final class HomeConfig {
             mAuthConfig = authConfig;
             mFlags = flags;
             mPosition = position;
-            /*Cliqz Start*/
-            mIconId = getDrawableId(mId);
-            /*Cliqz End*/
             validate();
         }
 
@@ -447,24 +432,20 @@ public final class HomeConfig {
         };
 
         /*Cliqz Start*/
-        private int getDrawableId(String panedId) {
+        @DrawableRes
+        public int getIconId() {
             switch (mId) {
                 case TOP_SITES_PANEL_ID:
                     return R.drawable.ic_home_cliqz;
                 case HISTORY_PANEL_ID:
                     return R.drawable.ic_history_white;
                 case MY_OFFRZ_PANEL_ID:
-                    return R.drawable.ic_offrz_white;
+                    return R.drawable.ic_offrz;
                 case BOOKMARKS_PANEL_ID:
                     return R.drawable.ic_star_white;
                 default:
                     return R.drawable.ic_history_white;
             }
-        }
-
-        @DrawableRes
-        public int getIconId() {
-            return mIconId;
         }
         /*Cliqz End*/
     }

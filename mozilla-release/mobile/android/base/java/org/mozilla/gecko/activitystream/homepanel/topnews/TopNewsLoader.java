@@ -43,10 +43,18 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
     }
 
     @Override
+    @Nullable
     public List<TopNews> loadInBackground() {
-        JSONObject result = HttpHandler.sendRequest("PUT", getTopNewsUrl(Integer.MAX_VALUE),
+        final String response = HttpHandler.sendRequest("PUT", getTopNewsUrl(Integer.MAX_VALUE),
                 CONTENT_TYPE_JSON, NEWS_PAYLOAD);
-        return parseResult(result);
+        if (response == null) {
+            return null;
+        }
+        try {
+            return parseResult(new JSONObject(response));
+        } catch (JSONException e) {
+            return null;
+        }
     }
 
     private List<TopNews> parseResult(JSONObject result) {

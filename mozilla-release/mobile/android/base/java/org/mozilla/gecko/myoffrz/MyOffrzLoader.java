@@ -8,28 +8,39 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.util.FileUtils;
-import org.mozilla.gecko.util.StreamUtils;
+import org.mozilla.gecko.util.HttpHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Copyright © Cliqz 2018
  */
 public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
 
-    public static final long SIX_HOURS_IN_S = 21600L;
+    private static final long SIX_HOURS_IN_S = 21600L;
+    private static final String METHOD_GET = "GET";
     private static final String MYOFFRZ_CACHE_FILE = "MyOffrzCache.json";
     private static final String TAG = MyOffrzLoader.class.getSimpleName();
-    public static final String VALIDITY_KEY = "validity";
-    private static final String MYOFFRZ_URL = "https://offers-api.cliqz.com/api/v1" +
-            "/loadsubtriggers?parent_id=mobile-root&t_eng_ver=1";
-
+    private static final String VALIDITY_KEY = "validity";
+    private static final String SUBTRIGGERS_URL_FORMAT = "https://offers-api.cliqz.com/api/v1/loadsubtriggers?parent_id=root&t_eng_ver=22&channel=%s";
+    private static final String OFFRZ_URL_FORMAT = "https://offers-api.cliqz.com/api/v1/offers?intent_name=%s&t_eng_ver=22&channel=%s";
+    private static final String CONDITION_KEY = "condition";
+    private static final String ACTIONS_KEY = "actions";
+    private static final String UI_INFO_KEY = "ui_info";
+    private static final String TEMPLATE_DATA_KEY = "template_data";
+    private static Pattern CONFIG_LOCATION_PATTERN =
+        Pattern.compile(".*\"\\$if_pref\"\\s*,\\s*\\[\\s*\"config_location\"\\s*,\\s*\"([^\"]+)\".*");
+    private static final Pattern ACTIONS_PATTERN =
+        Pattern.compile(".*\"name\"\\s*:\\s*\"([^\"]+).*");
     private static final String DOWNLOAD_DATE = "browserDownloadDate";
 
     private JSONObject mOffrz = null;
@@ -39,16 +50,11 @@ public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
     }
 
     // Indirection for testing
-    String getEndpoint() {
-        return  MYOFFRZ_URL;
-    }
-
-    // Indirection for testing
-    File getCacheFile() {
+    private File getCacheFile() {
         return new File(getContext().getCacheDir(), MYOFFRZ_CACHE_FILE);
     }
 
-    public JSONObject getCachedOffrz(File cachedOffrzFile){
+    private JSONObject getCachedOffrz(File cachedOffrzFile){
         try {
             final JSONObject firstOffrz = FileUtils.readJSONObjectFromFile(cachedOffrzFile);
             if (!expired(firstOffrz)) {
@@ -79,11 +85,16 @@ public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
         }
 
         JSONObject firstOffrz;
+
         try {
-            final URL url = new URL(getEndpoint());
-            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            final String response = StreamUtils.readTextStream(connection.getInputStream());
-            connection.disconnect();
+            // Decode the right action for locale
+            final String actionName = loadSubTriggers();
+            final String response = HttpHandler.sendRequest(METHOD_GET,
+                    new URL(String.format(OFFRZ_URL_FORMAT, actionName, AppConstants.MYOFFRZ_CHANNEL)),
+                    null, null);
+            if (response == null) {
+                return null;
+            }
             final JSONArray offrz = new JSONArray(response);
             firstOffrz = offrz.getJSONObject(0);
             // Add download date here, otherwise the offer will be expired even if it is freshly
@@ -96,10 +107,7 @@ public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
             }
             // Add download date
         } catch (MalformedURLException e) {
-            Log.e(TAG, "Malformed hardcoded url" + getEndpoint());
-            return null;
-        } catch (IOException e) {
-            Log.e(TAG, "Can't open connection to " + getEndpoint(), e);
+            Log.e(TAG, "Malformed hardcoded url");
             return null;
         } catch (JSONException e) {
             Log.e(TAG, "Can't parse json response");
@@ -115,6 +123,35 @@ public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
             Log.e(TAG, "Can't cache data to " + MYOFFRZ_CACHE_FILE);
         }
         return firstOffrz;
+    }
+
+    private String loadSubTriggers() throws MalformedURLException, JSONException {
+        final URL url = new URL(String.format(SUBTRIGGERS_URL_FORMAT, AppConstants.MYOFFRZ_CHANNEL));
+        final String response = HttpHandler.sendRequest(METHOD_GET, url, null, null);
+        if (response == null) {
+            return null;
+        }
+
+        final String country = Locale.getDefault().getCountry().toLowerCase();
+        final JSONArray jsonArray = new JSONArray(response);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            final JSONObject jsonObject = jsonArray.getJSONObject(i);
+            final String condition = jsonObject.getJSONArray(CONDITION_KEY).toString();
+            final Matcher locationMatcher = CONFIG_LOCATION_PATTERN.matcher(condition);
+            if (!locationMatcher.matches()) {
+                continue;
+            }
+            final String location = locationMatcher.group(1);
+            if (!country.equals(location)) {
+                continue;
+            }
+            final String actions = jsonObject.getJSONArray(ACTIONS_KEY).toString();
+            final Matcher actionsMatcher = ACTIONS_PATTERN.matcher(actions);
+            if (actionsMatcher.matches()) {
+                return actionsMatcher.group(1);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -135,13 +172,12 @@ public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
     private static boolean expired(JSONObject offer) {
         final long now = System.currentTimeMillis() / 1000L; // seconds
         try {
-            final JSONArray validityRange = offer.getJSONArray(VALIDITY_KEY);
-            final long start = validityRange.getLong(0); // in seconds
-            final long end = validityRange.getLong(1); // in seconds
+            final long validity = offer.getJSONObject(UI_INFO_KEY).getJSONObject(TEMPLATE_DATA_KEY)
+                    .getLong(VALIDITY_KEY);
             // Using `now - SIX_HOURS_IS_S - 1` as default in the following line ensures we
             // download a new file if there were no DOWNLOAD_DATE in the cached one
             final long downloadDate = offer.optLong(DOWNLOAD_DATE, now - SIX_HOURS_IN_S -1);
-            return now < start || now > end || now > (downloadDate + SIX_HOURS_IN_S);
+            return now > validity || now > (downloadDate + SIX_HOURS_IN_S);
         } catch (JSONException e) {
             return true;
         }

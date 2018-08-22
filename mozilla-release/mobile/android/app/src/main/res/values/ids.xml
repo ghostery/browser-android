@@ -25,5 +25,6 @@
     <!-- cliqz start-->
     <item type="id" name="background_manager_listener_key"/>
     <item type="id" name="background_manager_mode_key"/>
+    <item name="offrz_loader_id" type="id" />
     <!-- cliqz end-->
 </resources>
