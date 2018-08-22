@@ -1104,7 +1104,9 @@ public class BrowserApp extends GeckoApp
             }
         }
 
-        maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
+        if (AppConstants.Versions.feature24Plus) {
+            maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
+        }
 
         /*Cliqz End*/
     }
@@ -1647,6 +1649,7 @@ public class BrowserApp extends GeckoApp
                 hideHomePager();
                 /* Cliqz start */
                 hideCliqzQuerySuggestions();
+                mCliqzQuerySuggestionsContainer.removeAllViews();
                 /* Cliqz end */
                 // Re-enable doorhanger notifications. They may trigger on the selected tab above.
                 if (mDoorHangerPopup != null) {

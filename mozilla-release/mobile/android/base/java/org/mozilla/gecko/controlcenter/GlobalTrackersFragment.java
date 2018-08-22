@@ -69,7 +69,7 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
                 mTrackerListAdapter.unBlockAllTrackers();
                 return true;
             case R.id.reset_settings:
-                //TODO add actions
+                RestoreDefaultsDialog.show(getContext());
                 return true;
             default:
                 return false;

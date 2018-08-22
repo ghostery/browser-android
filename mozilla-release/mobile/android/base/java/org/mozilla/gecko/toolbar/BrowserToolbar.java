@@ -1069,7 +1069,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
     @Override
     public void toggleControlCenter() {
-        activity.toggleControlCenter();
+        if(urlDisplayLayout.isTitleSet()) {
+            activity.toggleControlCenter();
+        }
     }
     /**
      * Update the tracker count for the current selected tab

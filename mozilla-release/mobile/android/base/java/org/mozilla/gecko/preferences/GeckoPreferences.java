@@ -1023,6 +1023,12 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
+                } else if (PREFS_DEFAULT_BROWSER.equals(key)) {
+                    if (!AppConstants.Versions.feature24Plus) {
+                        preferences.removePreference(pref);
+                        i--;
+                    }
+                    continue;
                 }
                 /* Cliqz end */
 
