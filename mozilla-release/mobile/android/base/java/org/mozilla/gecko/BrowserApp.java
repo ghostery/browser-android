@@ -1649,6 +1649,7 @@ public class BrowserApp extends GeckoApp
                 hideHomePager();
                 /* Cliqz start */
                 hideCliqzQuerySuggestions();
+                mCliqzQuerySuggestionsContainer.removeAllViews();
                 /* Cliqz end */
                 // Re-enable doorhanger notifications. They may trigger on the selected tab above.
                 if (mDoorHangerPopup != null) {
