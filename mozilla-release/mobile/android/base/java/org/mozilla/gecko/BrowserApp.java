@@ -5004,6 +5004,12 @@ public class BrowserApp extends GeckoApp
         mControlCenterContainer.setVisibility(View.GONE);
     }
 
+    public void updateControlCenterIfNeeded() {
+        if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
+            EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
+        }
+    }
+
     private void showClearHistroyDialog() {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setMessage(R.string.home_clear_history_confirm);
