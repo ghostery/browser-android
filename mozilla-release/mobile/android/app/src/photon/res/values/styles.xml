@@ -1045,6 +1045,14 @@
     <style name="Theme.ToogleTheme" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/general_blue_color</item>
     </style>
+    <style name="Cliqz.AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="buttonBarNegativeButtonStyle">@style/Cliqz.AlertDialogButton</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Cliqz.AlertDialogButton</item>
+    </style>
+
+    <style name="Cliqz.AlertDialogButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/general_blue_color</item>
+    </style>
     <!--Cliqz End-->
 
 </resources>

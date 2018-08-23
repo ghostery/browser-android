@@ -152,7 +152,7 @@ public class GeckoPreferences
     public static final String PREFS_VOICE_INPUT_ENABLED = NON_PREF_PREFIX + "voice_input_enabled";
     public static final String PREFS_QRCODE_ENABLED = NON_PREF_PREFIX + "qrcode_enabled";
     public static final String PREFS_AUTO_COMPLETE = "pref.search.auto.completion";
-    // private static final String PREFS_TRACKING_PROTECTION_LEARN_MORE = NON_PREF_PREFIX + "trackingprotection.learn_more";
+    public static final String PREFS_OFFRZ_LAST_SIGNATURE = NON_PREF_PREFIX + "offrz.last.signature";
     /* Cliqz end */
     private static final String PREFS_CLEAR_PRIVATE_DATA = NON_PREF_PREFIX + "privacy.clear";
     private static final String PREFS_CLEAR_PRIVATE_DATA_EXIT = NON_PREF_PREFIX + "history.clear_on_exit";

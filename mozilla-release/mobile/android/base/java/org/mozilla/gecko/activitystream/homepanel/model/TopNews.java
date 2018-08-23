@@ -9,7 +9,6 @@ import org.mozilla.gecko.activitystream.homepanel.StreamRecyclerAdapter;
 /**
  *  Copyright © Cliqz 2018
  */
-
 public class TopNews implements WebpageRowModel{
     private final String url;
     private final String title;
