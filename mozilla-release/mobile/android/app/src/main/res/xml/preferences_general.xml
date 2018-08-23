@@ -108,9 +108,6 @@
 
     <!-- add MyOffrz category -->
     <PreferenceCategory android:title="@string/pref_myoffrz_category">
-        <CheckBoxPreference
-            android:key="pref.myoffrz.enabled"
-            android:title="@string/pref_show_myoffrz" />
         <org.mozilla.gecko.preferences.LinkPreference
             android:key="android.not_a_preference.about.myoffrz"
             android:title="@string/pref_about_myoffrz"
