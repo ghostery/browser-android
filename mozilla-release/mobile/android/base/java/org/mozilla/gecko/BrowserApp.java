@@ -1107,7 +1107,6 @@ public class BrowserApp extends GeckoApp
         if (AppConstants.Versions.feature24Plus) {
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
-
         /*Cliqz End*/
     }
 
@@ -5002,6 +5001,12 @@ public class BrowserApp extends GeckoApp
     @Override
     public void hideControlCenter() {
         mControlCenterContainer.setVisibility(View.GONE);
+    }
+
+    public void updateControlCenterIfNeeded() {
+        if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
+            EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
+        }
     }
 
     private void showClearHistroyDialog() {

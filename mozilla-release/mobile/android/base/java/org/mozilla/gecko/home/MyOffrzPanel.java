@@ -5,11 +5,13 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
@@ -25,7 +27,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.myoffrz.MyOffrzLoader;
@@ -35,7 +39,6 @@ import org.mozilla.gecko.util.StringUtils;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import static android.support.v4.content.ContextCompat.getDrawable;
 
@@ -47,21 +50,19 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
         .OnSharedPreferenceChangeListener{
 
     private static final String LOGTAG = "GeckoMyOffrzPanel";
-    private static final String ACTIONS_KEY = "actions";
     private static final String UI_INFO_KEY = "ui_info";
     private static final String TEMPLATE_DATA_KEY = "template_data";
     private static final String TEMPLATE_TITLE_KEY = "title";
     private static final String TEMPLATE_CODE_KEY = "code";
     private static final String ERROR_FALLBACK = "!!! ERROR !!!";
     private static final String TEMPLATE_DESCRIPTION_KEY = "desc";
-    private static final String TEMPLATE_LOGO_KEY = "logo_url";
+    private static final String TEMPLATE_PICTURE_KEY = "picture_url";
+    private static final String TEMPLATE_CONDITIONS = "conditions";
     private static final String ERROR_URL_FALLBAK = "http://cliqz.com";
     private static final String CALL_TO_ACTION_KEY = "call_to_action";
     private static final String CALL_TO_ACTION_TEXT_KEY = "text";
     private static final String CALL_TO_ACTION_URL_KEY = "url";
     private static final String MYOFFRZ_URL = "https://cliqz.com/myoffrz";
-    // Cursor loader ID for MyOffrz
-    private static final int LOADER_ID_MY_OFFRZ = 0;
 
     // Callbacks used for the search and favicon cursor loaders
     private MyOffrzPanel.MyOffrzLoaderCallbacks mMyOffrzLoaderCallbacks;
@@ -206,8 +207,7 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
 
     @Override
     protected void load() {
-        getLoaderManager().initLoader(LOADER_ID_MY_OFFRZ, null, mMyOffrzLoaderCallbacks);
-
+        getLoaderManager().initLoader(R.id.offrz_loader_id, null, mMyOffrzLoaderCallbacks);
     }
 
     private void closeOnboarding() {
@@ -253,11 +253,6 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
                     false);
             final ViewHolder holder = new ViewHolder(offer);
 
-            // !!! No terms and conditions right now !!!
-            holder.termsAndConditions.setVisibility(View.GONE);
-            holder.termsAndConditionsButton.setVisibility(View.GONE);
-            // !!! No terms and conditions right now !!!
-
             final JSONObject templateData = getTemplateData(data);
             if (templateData == null) {
                 return;
@@ -290,10 +285,19 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
                 holder.descrption.setText(templateData.optString(TEMPLATE_DESCRIPTION_KEY, ERROR_FALLBACK));
             }
 
-            if (!templateData.has(TEMPLATE_LOGO_KEY)) {
+            if (!templateData.has(TEMPLATE_PICTURE_KEY)) {
                 holder.image.setVisibility(View.GONE);
             } else {
-                holder.image.setImageURI(Uri.parse(templateData.optString(TEMPLATE_LOGO_KEY, ERROR_URL_FALLBAK)));
+                Picasso.with(getContext())
+                        .load(Uri.parse(templateData.optString(TEMPLATE_PICTURE_KEY, ERROR_URL_FALLBAK)))
+                        .into(holder.image);
+            }
+
+            if (!templateData.has(TEMPLATE_CONDITIONS)) {
+                holder.termsAndConditions.setVisibility(View.GONE);
+                holder.termsAndConditionsButton.setVisibility(View.GONE);
+            } else {
+                holder.termsAndConditions.setText(templateData.optString(TEMPLATE_CONDITIONS, ERROR_FALLBACK));
             }
 
             offersContainer.addView(offer);
@@ -308,23 +312,11 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
         }
 
         private JSONObject getTemplateData(final JSONObject data) {
-            final Object[] path = new Object[] {
-                    ACTIONS_KEY, 1, 1, 1, UI_INFO_KEY, TEMPLATE_DATA_KEY
-            };
-            Object currentNode = data;
-            for (Object key: path) {
-                if (currentNode instanceof JSONObject && key instanceof String) {
-                    currentNode = ((JSONObject) currentNode).opt((String) key);
-                } else if (currentNode instanceof JSONArray && key instanceof Integer) {
-                    currentNode = ((JSONArray) currentNode).opt((Integer) key);
-                } else {
-                    return null;
-                }
-            }
-            if (!(currentNode instanceof JSONObject)) {
+            try {
+                return data.getJSONObject(UI_INFO_KEY).getJSONObject(TEMPLATE_DATA_KEY);
+            } catch (JSONException e) {
                 return null;
             }
-            return (JSONObject) currentNode;
         }
 
         @Override
@@ -349,6 +341,7 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
             descrption = (TextView) view.findViewById(R.id.offer_description_tv);
             image = (ImageView) view.findViewById(R.id.offer_image_iv);
             termsAndConditionsButton = (Button) view.findViewById(R.id.terms_and_conditions_btn);
+            termsAndConditionsButton.setSelected(false);
             termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions_tv);
             copyCode = (Button) view.findViewById(R.id.offer_copy_code_btn);
             goToOffer = (Button) view.findViewById(R.id.go_to_offer_btn);
@@ -381,18 +374,37 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
                 }
             });
 
+            termsAndConditionsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (termsAndConditions.getVisibility() == View.GONE) {
+                        termsAndConditions.setVisibility(View.VISIBLE);
+                        termsAndConditionsButton.setSelected(true);
+                    } else {
+                        termsAndConditions.setVisibility(View.GONE);
+                        termsAndConditionsButton.setSelected(false);
+                    }
+                }
+            });
             setTermsAndConditionButtonDrawables();
         }
 
         private void setTermsAndConditionButtonDrawables() {
             final Context context = getContext();
             final Drawable leftDrawable = getDrawable(context, R.drawable.ic_info_black).mutate();
-            final Drawable rightDrawable = getDrawable(context, R.drawable.arrow_up).mutate();
-
+            final Drawable rightDrawableSelected =
+                    VectorDrawableCompat.create(getResources(), R.drawable.arrow_up, null)
+                    .mutate();
+            final Drawable rightDrawableUnselected =
+                    VectorDrawableCompat.create(getResources(), R.drawable.arrow_down, null)
+                    .mutate();
             final @ColorInt int color = ContextCompat.getColor(context, R.color.general_blue_color);
-
+            DrawableCompat.setTint(rightDrawableSelected, color);
+            DrawableCompat.setTint(rightDrawableUnselected, color);
+            final StateListDrawable rightDrawable = new StateListDrawable();
+            rightDrawable.addState(new int[] { android.R.attr.state_selected }, rightDrawableSelected);
+            rightDrawable.addState(new int[] {}, rightDrawableUnselected);
             DrawableCompat.setTint(leftDrawable, color);
-            DrawableCompat.setTint(rightDrawable, color);
 
             termsAndConditionsButton.setCompoundDrawablesWithIntrinsicBounds(leftDrawable,null,rightDrawable,null);
         }

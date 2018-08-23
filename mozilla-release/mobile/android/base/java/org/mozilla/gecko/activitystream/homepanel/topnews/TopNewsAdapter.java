@@ -24,7 +24,6 @@ import java.util.List;
 /**
  * Copyright © Cliqz 2018
  */
-
 public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements RecyclerViewClickSupport.OnItemClickListener {
 
     private final Context context;

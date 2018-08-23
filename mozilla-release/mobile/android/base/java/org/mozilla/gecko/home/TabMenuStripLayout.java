@@ -5,19 +5,23 @@
 
 package org.mozilla.gecko.home;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +29,14 @@ import android.view.ViewTreeObserver;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 
+import org.json.JSONObject;
+import org.mozilla.gecko.BrowserApp;
+import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.myoffrz.MyOffrzLoader;
+import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 
 /**
@@ -101,6 +110,7 @@ class TabMenuStripLayout extends ThemedLinearLayout
     }
 
     /*Cliqz Start*/
+    @SuppressLint("ResourceType")
     void onAddPagerView(@DrawableRes int iconId) {
         final ImageView imageView = (ImageView) LayoutInflater.from(getContext()).inflate(R.layout.tab_menu_strip, this, false);
         imageView.setId(iconId); //for automation test purpose
@@ -108,16 +118,22 @@ class TabMenuStripLayout extends ThemedLinearLayout
         addView(imageView);
         imageView.setOnClickListener(new ViewClickListener(getChildCount() - 1));
         imageView.setOnFocusChangeListener(this);
+
+        // The following is an hack, I do not particularly like it but I can't find a better way
+        // that does not contemplate rewriting the HomePager with a more suitable one.
+        final Context context = getContext();
+        if (iconId == R.drawable.ic_offrz && context instanceof BrowserApp) {
+            ((BrowserApp) context).getSupportLoaderManager()
+                    .initLoader(R.id.offrz_loader_id, null, new MyOffrzLoaderCallbacks(imageView));
+        }
     }
     /*Cliqz End*/
 
     void onPageSelected(final int position) {
         /*Cliqz Start*/
-        if (selectedView != null) {
-                selectedView.setColorFilter(ContextCompat.getColor(getContext(), R.color.inactive_tab_color), PorterDuff.Mode.SRC_ATOP);
-        }
         selectedView = (ImageView) getChildAt(position);
-        selectedView.setColorFilter(ContextCompat.getColor(getContext(), android.R.color.white), PorterDuff.Mode.SRC_ATOP);
+        // Just to remove the badge from the Offrz page
+        selectedView.setSelected(false);
         /*Cliqz End*/
 
         // Callback to measure and draw the strip after the view is visible.
@@ -308,4 +324,40 @@ class TabMenuStripLayout extends ThemedLinearLayout
             }
         }
     }
+
+    /* Cliqz start */
+    private class MyOffrzLoaderCallbacks implements
+            LoaderManager.LoaderCallbacks<JSONObject> {
+
+        private final ImageView imageView;
+
+        MyOffrzLoaderCallbacks(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        @Override
+        public Loader<JSONObject> onCreateLoader(int id, Bundle args) {
+            return new MyOffrzLoader(getContext());
+        }
+
+        @Override
+        public void onLoadFinished(Loader<JSONObject> loader, JSONObject data) {
+            if (data == null) {
+                return;
+            }
+            final SharedPreferences preferences = GeckoSharedPrefs.forApp(getContext());
+            final String signature = preferences.getString(GeckoPreferences.PREFS_OFFRZ_LAST_SIGNATURE, "");
+            final String offerId = data.optString("offer_id", "");
+            if (!offerId.equals(signature)) {
+                imageView.setSelected(true);
+            }
+            preferences.edit().putString(GeckoPreferences.PREFS_OFFRZ_LAST_SIGNATURE, offerId).apply();
+        }
+
+        @Override
+        public void onLoaderReset(Loader<JSONObject> loader) {
+
+        }
+    }
+    /* Cliqz end */
 }
