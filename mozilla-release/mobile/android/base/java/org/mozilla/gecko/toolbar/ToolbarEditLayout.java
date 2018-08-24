@@ -285,6 +285,7 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
         mEditText.setSelection(editingState.selectionStart, editingState.selectionEnd);
     }
 
+    /* Cliqz start o/
     private boolean voiceIsEnabled(Context context, String prompt) {
         final boolean voiceIsSupported = InputOptionsUtils.supportsVoiceRecognizer(context, prompt);
         if (!voiceIsSupported) {
@@ -293,6 +294,7 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
         return GeckoSharedPrefs.forApp(context)
                 .getBoolean(GeckoPreferences.PREFS_VOICE_INPUT_ENABLED, true);
     }
+    /o Cliqz end */
 
     private void launchVoiceRecognizer() {
         Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, TelemetryContract.Method.ACTIONBAR, "voice_input_launch");
