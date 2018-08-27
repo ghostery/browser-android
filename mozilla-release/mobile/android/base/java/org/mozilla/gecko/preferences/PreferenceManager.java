@@ -32,15 +32,6 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.PREFS_MYOFFRZ_ONBOARDING_ENABLED, value).apply();
     }
 
-    public boolean isMyOffrzOnboardingEnabled() {
-        return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_MYOFFRZ_ONBOARDING_ENABLED,true);
-    }
-
-    public void setMyOffrzEnabled(boolean value) {
-        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
-        editor.putBoolean(GeckoPreferences.PREFS_MYOFFRZ_ENABLED, value).apply();
-    }
-
     public void setTelemetryEnabled(boolean value) {
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
         editor.putBoolean(GeckoPreferences.CLIQZ_TELEMETRY_ENABLED, value).apply();
@@ -63,10 +54,6 @@ public class PreferenceManager {
 
     public boolean isTelemetryEnabled() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.CLIQZ_TELEMETRY_ENABLED, false);
-    }
-
-    public boolean isMyOffrzEnable() {
-        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_MYOFFRZ_ENABLED, isMyOffrzSupportedForLang());
     }
 
     public boolean isGhosteryAutoUpdateEnabled() {

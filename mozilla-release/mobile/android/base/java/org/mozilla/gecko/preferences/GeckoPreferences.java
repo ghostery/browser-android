@@ -225,8 +225,6 @@ public class GeckoPreferences
     // should the 'Top News' list be collapsed or expanded. 'true' for expanded.
     public static final String PREFS_CLIQZ_TAB_NEWS_EXPANDED = "pref.cliqz.tab.news.expanded";
 
-    // add show myoffrz and about my offrz to general settings menu
-    public static final String PREFS_MYOFFRZ_ENABLED = "pref.myoffrz.enabled";
     // add Subscriptions key and dialog for reset it
     // private static final String PREFS_RESET_SUBSCRIPTIONS = NON_PREF_PREFIX + "reset.subscription";
     // private static final int DIALOG_CREATE_RESET_SUBSCRIPTIONS = 3;
@@ -928,10 +926,6 @@ public class GeckoPreferences
                             return true;
                         }
                     });
-                } else if (PREFS_MYOFFRZ_ENABLED.equals(key)){
-                    // Set default value of show my offrz depend on system language
-                    final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-                    ((CheckBoxPreference)pref).setChecked(preferenceManager.isMyOffrzEnable());
                 } else if(PREFS_SHOW_HINTS.equals(key)){
                     // reset all Onboarding
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {

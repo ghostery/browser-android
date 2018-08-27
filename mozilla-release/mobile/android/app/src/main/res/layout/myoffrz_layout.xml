@@ -16,13 +16,6 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-        <include
-            android:id="@+id/offrz_activation_container"
-            layout="@layout/myoffrz_activation_template"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
         <ProgressBar
             android:id="@+id/offers_loading_pb"
             style="?android:attr/progressBarStyle"
