@@ -27,16 +27,8 @@ class LinkPreference extends Preference {
     }
 
     private void parseAttrs(Context context, AttributeSet attrs) {
-        final String urlAttr = attrs.getAttributeValue(null, "url");
-        final String name = urlAttr != null && urlAttr.startsWith("@string/") ? urlAttr.substring(8) : "";
-        if (!name.isEmpty()) {
-            final String packageName = context.getPackageName();
-            final int stringId = context.getResources()
-                    .getIdentifier(name, "string", packageName);
-            mUrl = context.getString(stringId);
-        } else {
-            mUrl = urlAttr;
-        }
+        final int urlAttrValueId = attrs.getAttributeResourceValue(null,"url",-1);
+        mUrl = (urlAttrValueId != -1) ? context.getString(urlAttrValueId) : "";
     }
     /* Cliqz end */
 

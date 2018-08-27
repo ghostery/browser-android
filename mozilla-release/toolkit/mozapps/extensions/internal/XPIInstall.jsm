@@ -277,14 +277,22 @@ class Package {
         cert: null
       };
     }
+    /* Cliqz start */
+    // verify signed addons with cliqz or firefox certification
+    const rootCliqz = Ci.nsIX509CertDB.CliqzAddonsRoot;
+    let rootFirefox = Ci.nsIX509CertDB.AddonsPublicRoot;
 
-    let root = Ci.nsIX509CertDB.CliqzAddonsRoot;
     if (!AppConstants.MOZ_REQUIRE_SIGNING &&
         Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false)) {
-      root = Ci.nsIX509CertDB.AddonsStageRoot;
+      rootFirefox = Ci.nsIX509CertDB.AddonsStageRoot;
     }
 
-    return this.verifySignedStateForRoot(addon, root);
+
+    return Promise.all([
+      this.verifySignedStateForRoot(addon, rootCliqz),
+      this.verifySignedStateForRoot(addon, rootFirefox)
+    ]).then(states => states.sort((a, b) => b.signedState - a.signedState)[0]);
+    /* Cliqz end */
   }
 
   flushCache() {}
