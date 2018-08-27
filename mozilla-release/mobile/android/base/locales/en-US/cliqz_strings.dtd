@@ -63,8 +63,6 @@
 <!ENTITY myoffrz_tap_code_to_copy_label "Tap code to copy">
 <!ENTITY myoffrz_terms_and_conditions_label "Terms">
 <!ENTITY myoffrz_message_code_copied "Code copied">
-<!ENTITY myoffrz_activation_description "Activate &brandMyOffrz; to receive attractive discounts and bargains.">
-<!ENTITY myoffrz_activate "Activate">
 
 <!-- Block Ads -->
 <!ENTITY pref_category_block_ads "Block Ads (Beta)">
@@ -166,7 +164,6 @@
 <!ENTITY cc_reset_changes_dialog_title "Reset all changes?">
 <!ENTITY cc_reset_changes_dialog_message "All previous changes to site and global trackers will be reset.">
 <!ENTITY cc_reset "RESET">
-<!ENTITY cc_reload_toast "Reload page to see changes">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Search">

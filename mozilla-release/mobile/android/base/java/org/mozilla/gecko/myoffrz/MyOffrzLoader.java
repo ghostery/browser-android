@@ -31,8 +31,12 @@ public class MyOffrzLoader extends AsyncTaskLoader<JSONObject> {
     private static final String MYOFFRZ_CACHE_FILE = "MyOffrzCache.json";
     private static final String TAG = MyOffrzLoader.class.getSimpleName();
     private static final String VALIDITY_KEY = "validity";
-    private static final String SUBTRIGGERS_URL_FORMAT = "https://offers-api.cliqz.com/api/v1/loadsubtriggers?parent_id=root&t_eng_ver=22&channel=%s";
-    private static final String OFFRZ_URL_FORMAT = "https://offers-api.cliqz.com/api/v1/offers?intent_name=%s&t_eng_ver=22&channel=%s";
+    private static final String ENDPOINT_PREFIX = "https://offers-api.cliqz.com/api/v1/";
+    // private static final String ENDPOINT_PREFIX = "http://offers-api-stage.clyqz.com:8181/api/v1/";
+    private static final String SUBTRIGGERS_URL_FORMAT = ENDPOINT_PREFIX +
+            "loadsubtriggers?parent_id=root&t_eng_ver=22&channel=%s";
+    private static final String OFFRZ_URL_FORMAT = ENDPOINT_PREFIX +
+            "offers?intent_name=%s&t_eng_ver=22&channel=%s";
     private static final String CONDITION_KEY = "condition";
     private static final String ACTIONS_KEY = "actions";
     private static final String UI_INFO_KEY = "ui_info";
