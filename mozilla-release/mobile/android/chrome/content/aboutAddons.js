@@ -242,6 +242,17 @@ var Addons = {
 
     return outer;
   },
+  /* Cliqz start */
+  // add check for should hidden addons
+  _shouldBeHidden: function(addonId) {
+    // hide theme, cliqz and ghostery addons
+    if (addonId === "android@cliqz.com" || addonId === "default-theme@mozilla.org"
+        || addonId === "firefox@ghostery.com") {
+        return true;
+    }
+    return false;
+  },
+  /* Cliqz end */
 
   _createBrowseItem: function _createBrowseItem() {
     let outer = document.createElement("div");
@@ -331,12 +342,10 @@ var Addons = {
       if (aAddons[i].isSystem)
         continue;
       /* Cliqz start */
-      // hide theme, cliqz and ghostery addons
-      const addonId = aAddons[i].id;
-      if ( addonId === "android@cliqz.com" || addonId === "default-theme@mozilla.org"
-         || addonId === "firefox@ghostery.com"){
+      // add check for should hidden addons
+      if(this._shouldBeHidden(aAddons[i].id)) {
         continue;
-        }
+      }
       /* Cliqz end */
 
       let item = this._createItemForAddon(aAddons[i]);
@@ -681,7 +690,10 @@ var Addons = {
 
     let list = document.getElementById("addons-list");
     let element = this._getElementForAddon(aAddon.id);
-    if (!element) {
+    /* Cliqz start */
+    // add check for should hidden addons
+    if (!element && !this._shouldBeHidden(aAddon.id)) {
+    /* Cliqz end */
       element = this._createItemForAddon(aAddon);
       list.insertBefore(element, list.firstElementChild);
     }
@@ -711,7 +723,11 @@ var Addons = {
         element.querySelector(".version").textContent = aAddon.version;
         element.querySelector(".description-full").textContent = aAddon.description;
       }
-    } else {
+    }
+    /* Cliqz start */
+    // add check for should hidden addons
+    else if(!this._shouldBeHidden(aAddon.id)) {
+    /* Cliqz end */
       element = this._createItemForAddon(aAddon);
 
       // Themes aren't considered active on install, so set existing as disabled, and new one enabled.
