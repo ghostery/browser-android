@@ -105,7 +105,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 .beginTransaction()
                 .detach(this)
                 .attach(this)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Nullable
