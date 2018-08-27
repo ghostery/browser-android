@@ -80,7 +80,6 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
         final PreferenceManager preferenceManager = PreferenceManager.getInstance(mContext.getApplicationContext());
         preferenceManager.setTelemetryEnabled(value);
         preferenceManager.setHumanWebEnabled(value);
-        preferenceManager.setMyOffrzEnabled(value);
     }
 
     @Override
