@@ -372,6 +372,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "Permitir reprodução automática">
 <!ENTITY pref_media_autoplay_enabled_summary "Define se os websites podem reproduzir automaticamente vídeos e outros tipos de conteúdos multimédia">
+<!ENTITY pref_media_autoplay_allow "Permitir reprodução automática">
+<!ENTITY pref_media_autoplay_block "Bloquear reprodução automática">
 <!ENTITY pref_zoom_force_enabled "Ativar sempre o zoom">
 <!ENTITY pref_zoom_force_enabled_summary "Forçar sobreposição para que possa dar zoom em qualquer página">
 <!ENTITY pref_voice_input "Entrada de voz">
@@ -447,6 +449,11 @@
 <!ENTITY datareporting_crashreporter_title_short "Relator de falhas">
 <!ENTITY datareporting_wifi_title2 "Serviço de localização do &vendorShortName;">
 <!ENTITY datareporting_wifi_geolocation_summary4 "Ajude a &vendorShortName; a mapear o mundo! Partilhe a localização aproximada da rede sem fios e da rede móvel do seu dispositivo para melhorar o nosso serviço de geolocalização.">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "Serviço de localização do &vendorShortName; em execução">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -472,7 +479,7 @@
 <!ENTITY print "Imprimir">
 <!ENTITY view_page_source "Ver código fonte da página">
 <!ENTITY find_in_page "Localizar na página">
-<!ENTITY desktop_mode "Pedir site de computador">
+<!ENTITY desktop_mode "Solicitar site de computador">
 <!ENTITY page "Página">
 <!ENTITY tools "Ferramentas">
 <!ENTITY new_tab "Novo separador">
@@ -888,3 +895,16 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "Adicionar ao ecrã inicial">
 <!ENTITY pwa_continue_to_website "Continuar para o website">
 <!ENTITY pwa_onboarding_sumo "Pode adicionar este website facilmente ao seu ecrã inicial para ter acesso instantâneo e navegar mais rápido com uma experiência de quase aplicação.">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "Reproduzir">
+<!ENTITY pip_play_button_description "Retomar reprodução">
+<!ENTITY pip_pause_button_title "Pausar">
+<!ENTITY pip_pause_button_description "Pausar reprodução">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "Serviço de localização do &vendorShortName;">
+<!ENTITY download_notification_channel "Transferências">
+<!ENTITY media_notification_channel "Reprodução de multimédia">

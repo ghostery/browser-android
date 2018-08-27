@@ -11,7 +11,7 @@
 <!ENTITY  noupdatesautodisabled.intro     "目前没有可用的更新。请以后再检查，或者启用 &brandShortName; 的自动更新检查功能。">
 
 <!ENTITY  manualUpdate.title              "无法更新">
-<!ENTITY  manualUpdate.desc               "已有一个推荐的有关安全性与稳定性的更新可用，但是您没有安装该补丁所需的系统权限。请联系您的系统管理员，或是使用有权在本机上安装软件的帐户重试。">
+<!ENTITY  manualUpdate.desc               "有新版推荐您安装，改进了安全性与稳定性，但是您没有安装该补丁所需的系统权限。请联系您的系统管理员，或是使用有权在本机上安装软件的账户重试。">
 <!ENTITY  manualUpdate.space.desc         "有个推荐的安全和稳定性更新可用，但您没有足够的空间来安装它。">
 <!ENTITY  manualUpdateGetMsg.label        "您可以通过此网址获取最新版本的 &brandShortName;：">
 

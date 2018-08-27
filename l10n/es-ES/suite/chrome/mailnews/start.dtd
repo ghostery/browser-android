@@ -17,7 +17,7 @@ abierto, que incluye detección avanzada de correo basura y otras útiles caract
 <!ENTITY feat_integration.label "Fuerte integración con la suite de aplicaciones &brandShortName;">
 <!ENTITY dict.title "Diccionarios">
 <!ENTITY dict_intro.label "Los diccionarios se usan para comprobar la ortografía de sus mensajes.">
-<!ENTITY dict_info.label 'Pueden instalarse muchos idiomas adicionales desde la sección de <a href="https://es-es.addons.mozilla.org/es-ES/seamonkey/1.1/dictionaries/">diccionarios</a> de <a href="http://addons.mozilla.org/">Mozilla Add-ons</a>.'>
+<!ENTITY dict_info.label 'Pueden instalarse muchos idiomas adicionales desde la sección de <a href="dictURL">diccionarios</a> de <a href="https://addons.thunderbird.net/seamonkey/">Add-ons de SeaMonkey y Thunderbird</a>.'>
 <!ENTITY info.title "Más información">
 <!ENTITY info_bugs.label '<a href="https://developer.mozilla.org/docs/Mozilla/Projects/MailNews">Nosotros</a> agradecemos los informes
 de fallos y solicitudes de nuevas características, pero, por favor, lea antes las <a id="releaseNotesURL" href="">notas de la versión</a> y consulte primero <a href="http://bugzilla.mozilla.org/query.cgi">Bugzilla</a>.'>

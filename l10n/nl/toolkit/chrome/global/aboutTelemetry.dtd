@@ -12,7 +12,6 @@
 <!ENTITY aboutTelemetry.optionGroupToday "Vandaag">
 <!ENTITY aboutTelemetry.optionGroupYesterday "Gisteren">
 <!ENTITY aboutTelemetry.optionGroupOlder "Ouder">
-<!ENTITY aboutTelemetry.payloadChoiceHeader "Nettolading">
 <!-- LOCALIZATION NOTE(aboutTelemetry.previousPing, aboutTelemetry.nextPing):
 	These strings are displayed when selecting Archived pings, and they’re
 	used to move to the next or previous ping. -->
@@ -37,7 +36,6 @@
 <!ENTITY aboutTelemetry.keyedHistogramsSection "Sleutelhistogrammen">
 <!ENTITY aboutTelemetry.eventsSection "Gebeurtenissen">
 <!ENTITY aboutTelemetry.simpleMeasurementsSection "Eenvoudige metingen">
-<!ENTITY aboutTelemetry.telemetryLogSection "Telemetry-logboek">
 <!ENTITY aboutTelemetry.slowSqlSection "Trage SQL-instructies">
 <!ENTITY aboutTelemetry.chromeHangsSection "Browservastlopers">
 <!ENTITY aboutTelemetry.addonDetailsSection "Add-on-details">

@@ -60,7 +60,7 @@ permissions-exceptions-tracking-protection-desc = 您已對下列網站停用追
 permissions-exceptions-cookie-window =
     .title = 例外 - Cookie 與網站資料
     .style = { permissions-window.style }
-permissions-exceptions-cookie-desc = 您可指定哪些網站永遠可以或不可以設定 Cookie 和儲存網站資料。請在下方輸入要指定的完整網址，然後點擊「封鎖」、「此次瀏覽階段允許」或「允許」。
+permissions-exceptions-cookie-desc = 您可以指定哪些網站是否可以設定 Cookie 和儲存網站資料。請在下方輸入要指定的完整網址，然後點擊「封鎖」、「此次瀏覽階段允許」或「允許」。
 
 ## Exceptions - Pop-ups
 
@@ -88,6 +88,11 @@ permissions-exceptions-addons-desc = 您可以指定哪些網站可以安裝附�
 permissions-exceptions-autoplay-media-window =
     .title = 允許自動播放的網站
     .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc = 您可以指定允許哪些網站自動播放媒體元素。請輸入想要允許的網站網址，然後點擊「允許」。
+permissions-exceptions-autoplay-media-window2 =
+    .title = 例外 - 自動播放
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc2 = 您可以指定允許哪些網站是否可自動播放有聲音的媒體內容。請輸入您要指定的網站網址後按「封鎖」或「允許」。
 
 ## Site Permissions - Notifications
 

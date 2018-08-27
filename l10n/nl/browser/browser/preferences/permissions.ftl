@@ -103,6 +103,8 @@ permissions-exceptions-autoplay-media-window =
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc = U kunt opgeven welke websites toestemming hebben om automatisch media-elementen af te spelen. Typ het exacte adres van de website die u toestemming wilt geven en klik vervolgens op Toestaan.
 
+permissions-exceptions-autoplay-media-desc2 = U kunt opgeven welke websites altijd of nooit toestemming hebben om automatisch media met geluid af te spelen. Typ het adres van de website die u wilt beheren en klik vervolgens op Blokkeren of Toestaan.
+
 ## Site Permissions - Notifications
 
 permissions-site-notification-window =

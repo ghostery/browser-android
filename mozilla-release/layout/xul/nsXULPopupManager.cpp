@@ -11,7 +11,6 @@
 #include "nsMenuBarFrame.h"
 #include "nsMenuBarListener.h"
 #include "nsContentUtils.h"
-#include "nsIDOMDocument.h"
 #include "nsXULElement.h"
 #include "nsIDOMXULMenuListElement.h"
 #include "nsIDOMXULCommandDispatcher.h"
@@ -387,7 +386,7 @@ bool nsXULPopupManager::ShouldConsumeOnMouseWheelEvent()
   if (frame->PopupType() != ePopupTypePanel)
     return true;
 
-  return frame->GetContent()->AsElement()->AttrValueIs(
+  return !frame->GetContent()->AsElement()->AttrValueIs(
       kNameSpaceID_None, nsGkAtoms::type, nsGkAtoms::arrow, eCaseMatters);
 }
 

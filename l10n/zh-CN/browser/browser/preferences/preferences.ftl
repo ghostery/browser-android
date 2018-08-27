@@ -5,7 +5,7 @@
 do-not-track-description = 向网站发出“请勿跟踪”信号，示明您不想被跟踪
 do-not-track-learn-more = 详细了解
 do-not-track-option-default =
-    .label = 仅在使用跟踪保护时
+    .label = 仅限使用跟踪保护时
 do-not-track-option-always =
     .label = 始终
 pref-page =
@@ -14,14 +14,6 @@ pref-page =
             [windows] 选项
            *[other] 首选项
         }
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 15.4em
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
 #
@@ -137,20 +129,11 @@ is-not-default = { -brand-short-name } 目前不是您的默认浏览器
 set-as-my-default-browser =
     .label = 设为默认…
     .accesskey = D
-startup-page = 在 { -brand-short-name } 启动时
-    .accesskey = s
-startup-user-homepage =
-    .label = 显示您的主页
-startup-blank-page =
-    .label = 显示空白页
-startup-prev-session =
-    .label = 显示您上次的窗口和标签页
 startup-restore-previous-session =
     .label = 恢复先前的浏览状态
     .accesskey = s
 disable-extension =
     .label = 禁用扩展
-home-page-header = 主页
 tabs-group-header = 标签页
 ctrl-tab-recently-used-order =
     .label = 按下 Ctrl+Tab 时，依照最近使用顺序循环切换标签页
@@ -215,6 +198,9 @@ choose-language-description = 选择您想要优先使用哪种语言显示页�
 choose-button =
     .label = 选择…
     .accesskey = o
+choose-browser-language-description = 选择 { -brand-short-name } 显示菜单、消息和通知时使用的语言。
+confirm-browser-language-change-description = 重开 { -brand-short-name } 以应用这些更改
+confirm-browser-language-change-button = 应用并重新打开
 translate-web-pages =
     .label = 翻译网页内容
     .accesskey = T
@@ -266,7 +252,6 @@ play-drm-content =
 play-drm-content-learn-more = 详细了解
 update-application-title = { -brand-short-name } 更新
 update-application-description = 让 { -brand-short-name } 保持最新，持续拥有最强的性能、稳定性和安全性。
-update-application-info = 版本: { $version } <a>新版变化</a>
 update-application-version = 版本: { $version } <a data-l10n-name="learn-more">新版变化</a>
 update-history =
     .label = 显示更新历史…
@@ -302,7 +287,6 @@ performance-allow-hw-accel =
 performance-limit-content-process-option = 内容进程限制
     .accesskey = L
 performance-limit-content-process-enabled-desc = 更多内容进程可以改善使用多个标签页时的性能，但也将消耗更多内存。
-performance-limit-content-process-disabled-desc = 仅在多进程 { -brand-short-name } 时可修改进程数量。 <a>了解如何检查多进程的启用状况</a>
 performance-limit-content-process-blocked-desc = 仅在多进程 { -brand-short-name } 时可修改进程数量。 <a data-l10n-name="learn-more">了解如何检查多进程的启用状况</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
@@ -373,9 +357,6 @@ use-current-pages =
 choose-bookmark =
     .label = 使用书签…
     .accesskey = B
-restore-default =
-    .label = 恢复默认设置
-    .accesskey = R
 
 ## Search Section
 
@@ -598,7 +579,7 @@ sitedata-total-size-calculating = 正在计算网站数据和缓存的大小…
 # Variables:
 #   $value (Number) - Value of the unit (for example: 4.6, 500)
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
-sitedata-total-size = 您已存储的 Cookie、网站数据和缓存目前使用 { $value } { $unit } 磁盘空间。
+sitedata-total-size = 您已存储的 Cookie、网站数据和缓存目前使用了 { $value } { $unit } 磁盘空间。
 sitedata-learn-more = 详细了解
 sitedata-accept-cookies-option =
     .label = 接受来自网站的 Cookie 和网站数据（推荐）
@@ -612,14 +593,34 @@ sitedata-keep-until-expire =
     .label = 它们过期
 sitedata-keep-until-closed =
     .label = { -brand-short-name } 关闭
-sitedata-accept-third-party-desc = 接受第三方 Cookie 和网站数据
+sitedata-accept-third-party-desc = 接受第三方 Cookie 和网站数据:
     .accesskey = y
 sitedata-accept-third-party-always-option =
-    .label = 始终
+    .label = 始终接受
 sitedata-accept-third-party-visited-option =
     .label = 来自访问过的网站
 sitedata-accept-third-party-never-option =
-    .label = 永不
+    .label = 不接受
+sitedata-allow-cookies-option =
+    .label = 接受 Cookie 和站点数据
+    .accesskey = A
+sitedata-disallow-cookies-option =
+    .label = 阻止 Cookie 和站点数据
+    .accesskey = B
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = 阻止类型
+    .accesskey = T
+sitedata-block-trackers-option-recommended =
+    .label = 第三方跟踪器（推荐）
+sitedata-block-trackers-option =
+    .label = 第三方跟踪器
+sitedata-block-unvisited-option =
+    .label = 未访问网站的 Cookie
+sitedata-block-all-third-parties-option =
+    .label = 所有第三方 Cookie
+sitedata-block-always-option =
+    .label = 所有 Cookie（可能导致网站异常）
 sitedata-clear =
     .label = 清除数据…
     .accesskey = l
@@ -644,6 +645,44 @@ addressbar-locbar-openpage-option =
     .label = 已打开的标签页
     .accesskey = O
 addressbar-suggestions-settings = 更改搜索引擎建议的首选项
+
+## Privacy Section - Content Blocking
+
+content-blocking-header = 内容拦截
+content-blocking-desc = 拦截可能减慢您浏览速度且在网络上跟踪您的广告、代码等第三方内容。您可自行设置以在保护与性能之间达到最佳平衡。
+content-blocking-learn-more = 详细了解
+content-blocking-restore-defaults =
+    .label = 恢复默认设置
+    .accesskey = R
+content-blocking-toggle-on =
+    .tooltiptext = 关闭内容拦截
+content-blocking-toggle-off =
+    .tooltiptext = 开启内容拦截
+content-blocking-toggle-label-on = 开
+    .accesskey = O
+content-blocking-toggle-label-off = 关
+    .accesskey = O
+content-blocking-category-label = 选择要拦截的内容
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-label = 减慢加载的跟踪元素
+    .accesskey = S
+content-blocking-fastblock-description = 拦截加载时间超过 5 秒的第三方内容。
+content-blocking-fastblock-option-enabled =
+    .label = 始终拦截
+content-blocking-fastblock-option-disabled =
+    .label = 永不拦截
+content-blocking-tracking-protection-label = 跟踪器
+    .accesskey = T
+content-blocking-tracking-protection-description = 拦截已知的所有跟踪器（注意：可能影响某些页面的加载）。
+content-blocking-tracking-protection-option-enabled =
+    .label = 始终拦截
+content-blocking-tracking-protection-option-pbm =
+    .label = 仅在隐私浏览窗口中拦截
+content-blocking-tracking-protection-option-disabled =
+    .label = 永不拦截
+content-blocking-tracking-protection-change-blocklist = 更换拦截列表…
 
 ## Privacy Section - Tracking
 
@@ -696,9 +735,17 @@ permissions-notification-pause =
 permissions-block-autoplay-media =
     .label = 阻止网站自动播放有声媒体内容
     .accesskey = B
+permissions-block-autoplay-media-menu = 自动播放声音的网站
 permissions-block-autoplay-media-exceptions =
     .label = 例外…
     .accesskey = E
+autoplay-option-ask =
+    .label = 始终询问
+autoplay-option-allow =
+    .label = 允许自动播放
+autoplay-option-dont =
+    .label = 不要自动播放
+permissions-autoplay-link = 详细了解
 permissions-block-popups =
     .label = 拦截弹出式窗口
     .accesskey = B

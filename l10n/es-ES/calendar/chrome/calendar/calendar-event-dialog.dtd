@@ -15,7 +15,7 @@
 <!ENTITY newevent.eventStatus.cancelled.label "Cancelado">
 <!ENTITY newevent.eventStatus.cancelled.accesskey "a">
 <!ENTITY newevent.todoStatus.cancelled.label "Cancelado">
-<!ENTITY newevent.status.tentative.label "Tentativo">
+<!ENTITY newevent.status.tentative.label "Provisional">
 <!ENTITY newevent.status.tentative.accesskey "T">
 <!ENTITY newevent.status.confirmed.label "Confirmado">
 <!ENTITY newevent.status.confirmed.accesskey "C">
@@ -311,7 +311,7 @@
 <!ENTITY event.freebusy.zoom "Ampliación:">
 <!ENTITY event.freebusy.legend.free "Libre">
 <!ENTITY event.freebusy.legend.busy "Ocupado">
-<!ENTITY event.freebusy.legend.busy_tentative "Tentativo">
+<!ENTITY event.freebusy.legend.busy_tentative "Provisional">
 <!ENTITY event.freebusy.legend.busy_unavailable "Fuera de la oficina">
 <!ENTITY event.freebusy.legend.unknown "Sin información">
 <!ENTITY event.attendee.role.required "Asistente necesario">
@@ -336,11 +336,6 @@
 <!ENTITY read.only.location.label "Lugar:">
 <!ENTITY read.only.category.label "Categoría:">
 <!ENTITY read.only.organizer.label "Organizador:">
-<!ENTITY read.only.reply.label "Responder:">
-<!ENTITY read.only.accept.label "Asistiré">
-<!ENTITY read.only.decline.label "No asistiré">
-<!ENTITY read.only.tentative.label "Puede que asista">
-<!ENTITY read.only.needs.action.label "Lo confirmaré más tarde">
 <!ENTITY read.only.reminder.label "Recordatorio:">
 <!ENTITY read.only.attachments.label "Adjuntos:">
 <!ENTITY read.only.attendees.label "Asistentes">

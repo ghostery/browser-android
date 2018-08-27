@@ -57,8 +57,6 @@
 <!ENTITY cmd.preferencesWin.accesskey "O">
 <!ENTITY cmd.preferencesUnix.label "Preferenze">
 <!ENTITY cmd.preferencesUnix.accesskey "P">
-<!ENTITY cmd.about.label "Informazioni su">
-<!ENTITY cmd.about.accesskey "I">
 <!ENTITY cmd.enableAddon.label "Attiva">
 <!ENTITY cmd.enableAddon.accesskey "A">
 <!ENTITY cmd.disableAddon.label "Disattiva">
@@ -120,10 +118,6 @@
 <!ENTITY rating2.label "Voto">
 <!ENTITY progress.pause.tooltip "Pausa">
 <!ENTITY progress.cancel.tooltip "Annulla">
-<!ENTITY sort.name.label "Nome">
-<!ENTITY sort.name.tooltip "Ordina per nome">
-<!ENTITY sort.dateUpdated.label "Ultimo aggiornamento">
-<!ENTITY sort.dateUpdated.tooltip "Ordina per data di aggiornamento">
 <!ENTITY addon.homepage "Sito web">
 <!ENTITY addon.details.label "Altro">
 <!ENTITY addon.details.tooltip "Visualizza ulteriori dettagli su questo componente aggiuntivo">
@@ -152,11 +146,6 @@
 <!ENTITY eula.height "400px">
 <!ENTITY eula.accept "Accetta e installa…">
 <!ENTITY settings.path.button.label "Sfoglia…">
-<!ENTITY experiment.info.label "Che cos’è questo? Occasionalmente la telemetria potrebbe installare ed eseguire esperimenti.">
-<!ENTITY experiment.info.learnmore "Ulteriori informazioni">
-<!ENTITY experiment.info.learnmore.accesskey "U">
-<!ENTITY experiment.info.changetelemetry "Impostazioni telemetria">
-<!ENTITY experiment.info.changetelemetry.accesskey "t">
 <!ENTITY setting.learnmore "Ulteriori informazioni…">
 <!ENTITY disabledUnsigned.heading "Alcuni componenti aggiuntivi sono stati disattivati">
 <!ENTITY disabledUnsigned.description.start "I seguenti componenti non sono stati verificati per l’utilizzo in &brandShortName;. È possibile ">

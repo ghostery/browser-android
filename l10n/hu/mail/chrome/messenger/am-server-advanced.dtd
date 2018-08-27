@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY serverAdvanced.label "Haladó postafiók-beállítások">
+<!ENTITY serverAdvanced.label "Speciális postafiók-beállítások">
 <!-- LOCALIZATION NOTE (serverDirectory.label): Do not translate "IMAP" -->
 <!ENTITY serverDirectory.label "IMAP-kiszolgáló könyvtár:">
 <!ENTITY serverDirectory.accesskey "k">
@@ -22,7 +22,7 @@
 <!ENTITY otherUsersNamespace.accesskey "M">
 <!ENTITY overrideNamespaces.label "A kiszolgáló felülírhatja ezeket a névtartományokat">
 <!ENTITY overrideNamespaces.accesskey "A">
-<!ENTITY pop3DeferringDesc.label "A fiók kiszolgálójáról való levélletöltéskor a következő mappa használata új levelek tárolására:" >
+<!ENTITY pop3DeferringDesc.label "A fiók kiszolgálójáról való levélletöltéskor a következő mappa használata új levelek tárolására:">
 <!ENTITY accountInbox.label "Fiók beérkezett üzenetek mappája">
 <!ENTITY accountInbox.accesskey "F">
 <!ENTITY deferToServer.label "Másik postafiók Beérkezett üzenetek mappája">

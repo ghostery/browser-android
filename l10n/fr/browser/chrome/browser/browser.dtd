@@ -38,6 +38,21 @@ left instead of right. -->
 <!ENTITY  closeSelectedTabs.label            "Fermer les onglets sélectionnés">
 <!ENTITY  closeSelectedTabs.accesskey        "F">
 
+<!ENTITY  pinSelectedTabs.label              "Épingler les onglets">
+<!-- Pin Tab and Pin Selected Tabs have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  pinSelectedTabs.accesskey          "p">
+<!ENTITY  unpinSelectedTabs.label            "Relâcher les onglets">
+<!-- Unpin Tab and Unpin Selected Tabs have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  unpinSelectedTabs.accesskey        "R">
+<!-- Reload Tab and Reload Selected Tabs have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  reloadSelectedTabs.label           "Actualiser les onglets sélectionnés">
+<!ENTITY  reloadSelectedTabs.accesskey       "A">
+<!ENTITY  bookmarkSelectedTabs.label         "Marquer ces onglets…">
+<!ENTITY  bookmarkSelectedTabs.accesskey     "u">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -57,13 +72,14 @@ can reach it easily. -->
 <!ENTITY  sendToDeviceOfflineFeedback.label  "Mis en attente (hors connexion)">
 <!ENTITY  moveToNewWindow.label              "Déplacer vers une nouvelle fenêtre">
 <!ENTITY  moveToNewWindow.accesskey          "n">
+<!ENTITY  reopenInContainer.label            "Rouvrir dans un onglet contextuel">
+<!ENTITY  reopenInContainer.accesskey        "O">
 <!ENTITY  bookmarkAllTabs.label              "Marquer tous les onglets…">
 <!ENTITY  bookmarkAllTabs.accesskey          "u">
 <!ENTITY  undoCloseTab.label                 "Annuler la fermeture de l’onglet">
 <!ENTITY  undoCloseTab.accesskey             "e">
 <!ENTITY  closeTab.label                     "Fermer l’onglet">
 <!ENTITY  closeTab.accesskey                 "F">
-
 <!ENTITY  hiddenTabs.label                   "Onglets masqués">
 
 <!ENTITY  listAllTabs.label      "Lister tous les onglets">
@@ -213,6 +229,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY urlbar.defaultNotificationAnchor.tooltip         "Afficher une notification">
 <!ENTITY urlbar.geolocationNotificationAnchor.tooltip     "Afficher la demande de géolocalisation">
+<!ENTITY urlbar.autoplayNotificationAnchor.tooltip        "Ouvrir le panneau de lecture automatique">
 <!ENTITY urlbar.addonsNotificationAnchor.tooltip          "Afficher le message d’installation du module complémentaire">
 <!ENTITY urlbar.canvasNotificationAnchor.tooltip          "Gérer les permissions d’extraction de canvas">
 <!ENTITY urlbar.indexedDBNotificationAnchor.tooltip       "Afficher le message concernant le stockage de données hors connexion">
@@ -221,7 +238,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.webNotificationAnchor.tooltip             "Gérer l’envoi de notifications par le site">
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip     "Stocker des données dans le stockage persistant">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip   "Le navigateur est contrôlé à distance">
-
 <!ENTITY urlbar.webAuthnAnchor.tooltip                    "Ouvrir le panneau d’authentification web">
 
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip      "Gérer le partage de la caméra et/ou du microphone avec ce site">
@@ -241,6 +257,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.webNotificationsBlocked.tooltip  "Vous avez empêché ce site d’envoyer des notifications.">
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Vous avez empêché ce site d’utiliser le stockage persistant.">
 <!ENTITY urlbar.popupBlocked.tooltip             "Vous avez bloqué des popups pour ce site web.">
+<!ENTITY urlbar.autoplayMediaBlocked.tooltip     "Vous avez empêché ce site de lire automatiquement du contenu multimédia comportant du son.">
 <!ENTITY urlbar.canvasBlocked.tooltip            "Vous avez empêché ce site d’extraire des informations de canvas.">
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "Vous avez empêché ce site d’utiliser le plugin Adobe Flash.">
 <!ENTITY urlbar.midiBlocked.tooltip              "Vous avez bloqué l’accès MIDI pour ce site web.">
@@ -299,6 +316,10 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY webDeveloperMenu.label       "Développement web">
 <!ENTITY webDeveloperMenu.accesskey   "W">
 
+<!ENTITY devtoolsRecordExecution.label "Enregistrer l’exécution">
+<!ENTITY devtoolsSaveRecording.label "Sauvegarder l’enregistrement">
+<!ENTITY devtoolsReplayExecution.label "Rejouer l’exécution">
+
 <!ENTITY inspectContextMenu.label     "Examiner l’élément">
 <!ENTITY inspectContextMenu.accesskey "x">
 
@@ -308,6 +329,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY fileMenu.accesskey       "F">
 <!ENTITY newUserContext.label             "Nouvel onglet contextuel">
 <!ENTITY newUserContext.accesskey         "c">
+<!ENTITY manageUserContext.label          "Gérer les contextes">
+<!ENTITY manageUserContext.accesskey      "o">
 <!ENTITY newNavigatorCmd.label        "Nouvelle fenêtre">
 <!ENTITY newNavigatorCmd.key        "N">
 <!ENTITY newNavigatorCmd.accesskey      "u">
@@ -410,8 +433,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!-- LOCALIZATION NOTE (customizeMenu.addToOverflowMenu.label,
      customizeMenu.pinToOverflowMenu.label, customizeMenu.unpinFromOverflowMenu.label)
      The overflow menu is the menu that appears if you click the chevron (>> button)
-     in the location bar. These labels are only used in Photon, where you can put
-     items into this menu permanently (pinned). -->
+     in the location bar. -->
 <!ENTITY customizeMenu.addToOverflowMenu.label "Ajouter au menu de dépassement">
 <!ENTITY customizeMenu.addToOverflowMenu.accesskey "m">
 <!ENTITY customizeMenu.moveToToolbar.label "Déplacer vers la barre d’outils">
@@ -423,6 +445,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      keys.  -->
 <!ENTITY customizeMenu.moveToPanel.label "Déplacer vers le menu">
 <!ENTITY customizeMenu.moveToPanel.accesskey "D">
+<!-- LOCALIZATION NOTE (customizeMenu.pinToOverflowMenu.accesskey)
+     can appear on the same context menu as menubarCmd and personalbarCmd,
+     so they should have different access keys.  -->
 <!ENTITY customizeMenu.pinToOverflowMenu.label "Épingler au menu de dépassement">
 <!ENTITY customizeMenu.pinToOverflowMenu.accesskey "n">
 <!ENTITY customizeMenu.unpinFromOverflowMenu.label "Retirer du menu de dépassement">
@@ -610,6 +635,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY hidePluginCmd.label          "Masquer ce plugin">
 <!ENTITY hidePluginCmd.accesskey      "q">
 <!ENTITY copyLinkCmd.label            "Copier l’adresse du lien">
+<!-- LOCALIZATION NOTE (copyLinkCmd.accesskey): The access keys for "Copy Link
+Location" and "Copy Email Address" should be the same if possible; the two
+context menu items are mutually exclusive. -->
 <!ENTITY copyLinkCmd.accesskey        "C">
 <!ENTITY copyImageCmd.label           "Copier l’adresse de l’image">
 <!ENTITY copyImageCmd.accesskey       "r">
@@ -620,6 +648,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY copyAudioURLCmd.label        "Copier l’URL du fichier audio">
 <!ENTITY copyAudioURLCmd.accesskey    "o">
 <!ENTITY copyEmailCmd.label           "Copier l’adresse électronique">
+<!-- LOCALIZATION NOTE (copyEmailCmd.accesskey): The access keys for "Copy Link
+Location" and "Copy Email Address" should be the same if possible; the two
+context menu items are mutually exclusive. -->
 <!ENTITY copyEmailCmd.accesskey       "E">
 <!ENTITY thisFrameMenu.label              "Ce cadre">
 <!ENTITY thisFrameMenu.accesskey          "d">
@@ -755,8 +786,15 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY spellAddDictionaries.label "Ajouter des dictionnaires…">
 <!ENTITY spellAddDictionaries.accesskey "A">
 
+<!-- LOCALIZATION NOTE (editBookmark.panel.width): width of the bookmark panel.
+     Should be large enough to fully display the Done and Cancel/
+     Remove Bookmark buttons. -->
+<!ENTITY editBookmark.panel.width                    "26em">
 <!ENTITY editBookmark.done.label                     "Terminer">
 <!ENTITY editBookmark.removeBookmark.accessKey       "R">
+
+<!ENTITY editBookmark.showForNewBookmarks.label       "Afficher l’éditeur lors de l’enregistrement">
+<!ENTITY editBookmark.showForNewBookmarks.accesskey   "A">
 
 <!-- LOCALIZATION NOTE (identity.securityView.label)
      This is the header of the security subview in the Site Identity panel. -->
@@ -804,6 +842,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY identity.permissions "Permissions">
 <!ENTITY identity.permissionsEmpty "Vous n’avez pas accordé de permission particulière à ce site.">
 <!ENTITY identity.permissionsReloadHint "Vous devrez peut-être actualiser la page pour que les changements prennent effet.">
+
+<!ENTITY identity.permissionsPreferences.tooltip "Ouvrir les préférences des permissions">
 
 <!-- Name for the tabs toolbar as spoken by screen readers.
      The word "toolbar" is appended automatically and should not be contained below! -->
@@ -903,6 +943,50 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.audioCapture.label "L’audio de l’onglet sera partagé.">
 <!ENTITY getUserMedia.allWindowsShared.message "L’ensemble des fenêtres visibles sur votre écran seront partagées.">
 
+<!ENTITY trackingProtection.on "Protection contre le pistage : ACTIVÉE">
+<!ENTITY trackingProtection.off "Protection contre le pistage : DÉSACTIVÉE">
+
+<!ENTITY contentBlocking.title "Blocage de contenu">
+<!ENTITY contentBlocking.detected "Du contenu pouvant être bloqué a été détecté sur ce site.">
+<!ENTITY contentBlocking.notDetected "Aucun contenu pouvant être bloqué n’a été détecté sur cette page.">
+<!ENTITY contentBlocking.disabled.label "Désactivé">
+<!ENTITY contentBlocking.disabled.tooltip "Vous avez désactivé le blocage de contenu.">
+<!ENTITY contentBlocking.exception.tooltip "Vous avez désactivé le blocage de contenu pour ce site.">
+
+<!ENTITY contentBlocking.fastBlock.label "Traqueurs qui ralentissent">
+<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.blocked.label):
+     This label signals that this type of content blocking is turned
+     ON and is successfully blocking malicious/slow content, so this is
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Slow-Loading Trackers [are] Blocked"-->
+<!ENTITY contentBlocking.fastBlock.blocked.label "Bloqués">
+<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.add.label):
+     This is displayed as a link to preferences, where the user can add
+     this specific type of content blocking. When this text is shown
+     the type of content blocking is currently not enabled. -->
+<!ENTITY contentBlocking.fastBlock.add.label "Ajouter un blocage…">
+
+<!ENTITY contentBlocking.trackingProtection.label "Traqueurs">
+<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
+     This label signals that this type of content blocking is turned
+     ON and is successfully blocking malicious/slow content, so this is
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Trackers [are] Blocked"-->
+<!ENTITY contentBlocking.trackingProtection.blocked.label "Bloqués">
+<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.add.label):
+     This is displayed as a link to preferences, where the user can add
+     this specific type of content blocking. When this text is shown
+     the type of content blocking is currently not enabled. -->
+<!ENTITY contentBlocking.trackingProtection.add.label "Ajouter un blocage…">
+
+<!ENTITY contentBlocking.openBreakageReportView.label "Signaler des problèmes">
+<!ENTITY contentBlocking.breakageReportView.label "Signaler des problèmes">
+<!ENTITY contentBlocking.breakageReportView.learnMore "En savoir plus">
+<!ENTITY contentBlocking.breakageReportView.collection.url.label "URL">
+<!ENTITY contentBlocking.breakageReportView.collection.userAgent.label "Numéro de version de &brandShortName;">
+<!ENTITY contentBlocking.breakageReportView.sendReport.label "Envoyer le rapport">
+<!ENTITY contentBlocking.breakageReportView.cancel.label "Annuler">
+
 <!ENTITY trackingProtection.title "Protection contre le pistage">
 <!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; a bloqué des éléments de la page qui peuvent pister votre navigation.">
 <!ENTITY trackingProtection.detectedNotBlocked3 "Ce site possède des éléments qui peuvent pister votre navigation. Vous avez désactivé la protection.">
@@ -919,6 +1003,36 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY trackingProtection.unblockPrivate.accesskey "D">
 <!ENTITY trackingProtection.block2.label "Activer la protection">
 <!ENTITY trackingProtection.block2.accesskey "A">
+
+<!ENTITY trackingProtection.tooltip "Ouvrir les préférences de la protection contre le pistage">
+<!ENTITY trackingProtection.detectedBlocked4 "&brandShortName; bloque des éléments de cette page qui pourraient pister votre navigation.">
+<!ENTITY trackingProtection.detectedNotBlocked5 "&brandShortName; a détecté des éléments susceptibles de pister votre navigation.">
+<!ENTITY trackingProtection.detectedException "&brandShortName; a détecté des éléments susceptibles de pister votre navigation. Vous avez désactivé la protection contre le pistage pour ce site.">
+<!ENTITY trackingProtection.notDetected5 "Aucun traqueur n’a été détecté sur cette page.">
+<!ENTITY trackingProtection.notDetectedException "Aucun traqueur n’a été détecté sur cette page. Vous avez désactivé la protection contre le pistage pour ce site.">
+
+<!ENTITY trackingProtection.reloadRequired2 "Vous avez activé la protection contre le pistage. Actualisez cette page pour bloquer tous les traqueurs.">
+
+<!-- LOCALIZATION NOTE (trackingProtection.unblock3.label, trackingProtection.unblock3.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in NON-private browsing mode. -->
+<!ENTITY trackingProtection.unblock3.label "Désactiver pour ce site">
+<!ENTITY trackingProtection.unblock3.accesskey "D">
+<!ENTITY trackingProtection.unblock4.label "Désactiver le blocage pour ce site">
+<!ENTITY trackingProtection.unblock4.accesskey "D">
+<!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate3.label, trackingProtection.unblockPrivate3.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in PRIVATE browsing mode. -->
+<!ENTITY trackingProtection.unblockPrivate3.label "Désactiver pour cette session">
+<!ENTITY trackingProtection.unblockPrivate3.accesskey "D">
+<!ENTITY trackingProtection.block4.label "Activer pour ce site">
+<!ENTITY trackingProtection.block4.accesskey "A">
+<!ENTITY trackingProtection.unblockPrivate4.label "Désactiver temporairement le blocage">
+<!ENTITY trackingProtection.unblockPrivate4.accesskey "D">
+<!ENTITY trackingProtection.block5.label "Activer le blocage pour ce site">
+<!ENTITY trackingProtection.block5.accesskey "A">
+<!ENTITY trackingProtection.reload2.label "Actualiser la page">
+<!ENTITY trackingProtection.reload2.accesskey "c">
 
 <!ENTITY pluginNotification.showAll.label "Tout afficher">
 <!ENTITY pluginNotification.showAll.accesskey "T">
@@ -1021,6 +1135,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY sendToDevice.syncNotReady.label "Synchronisation des appareils…">
 
 <!ENTITY pageAction.shareUrl.label "Partager">
+
+<!ENTITY pageAction.shareMore.label "Plus…">
 
 <!ENTITY libraryButton.tooltip "Consulter l’historique, les marque-pages enregistrés et plus encore">
 

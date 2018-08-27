@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 connection-window =
-    .title = Configurar conexão
+    .title = Configuração de conexão
     .style =
         { PLATFORM() ->
             [macos] width: 44em
@@ -13,7 +13,7 @@ connection-close-key =
     .key = W
 connection-disable-extension =
     .label = Desativar extensão
-connection-proxy-configure = Configure o Proxy de acesso à Internet
+connection-proxy-configure = Configuração do proxy de acesso à Internet
 connection-proxy-option-no =
     .label = Sem proxy
     .accesskey = S
@@ -22,7 +22,7 @@ connection-proxy-option-system =
     .accesskey = a
 connection-proxy-option-auto =
     .label = Detectar automaticamente as configurações de proxy para esta rede
-    .accesskey = i
+    .accesskey = r
 connection-proxy-option-manual =
     .label = Configuração manual de proxy
     .accesskey = m
@@ -31,7 +31,7 @@ connection-proxy-http = Proxy HTTP
 connection-proxy-http-port = Porta
     .accesskey = P
 connection-proxy-http-share =
-    .label = Usar este proxy para todos os protocolos
+    .label = Usar este servidor de proxy para todos os protocolos
     .accesskey = x
 connection-proxy-ssl = Proxy SSL
     .accesskey = S

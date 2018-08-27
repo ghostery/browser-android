@@ -5,6 +5,7 @@
 sync-disconnect-dialog =
     .title = Se déconnecter de { -sync-brand-short-name } ?
     .style = width: 36em; min-height: 35em;
+sync-disconnect-heading = Voulez-vous également supprimer les données de navigation de cet ordinateur ? Les données de { -sync-brand-name } seront conservées sur votre compte dans tous les cas.
 sync-disconnect-remove-sync-caption = Supprimer les données de { -sync-brand-name }
 sync-disconnect-remove-sync-data = Marque-pages, historique, mots de passe, etc.
 sync-disconnect-remove-other-caption = Supprimer les autres données privées

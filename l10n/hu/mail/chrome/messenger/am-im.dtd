@@ -5,7 +5,7 @@
 <!ENTITY accountWindow.title           "Fiók tulajdonságai">
 <!ENTITY accountWindow.width           "300">
 <!ENTITY account.general               "Általános">
-<!ENTITY account.advanced              "Haladó beállítások">
+<!ENTITY account.advanced              "Speciális beállítások">
 <!ENTITY account.name                  "Felhasználónév:">
 <!ENTITY account.password              "Jelszó:">
 <!ENTITY account.alias                 "Álnév:">

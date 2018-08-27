@@ -372,6 +372,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "Automatisch afspelen toestaan">
 <!ENTITY pref_media_autoplay_enabled_summary "Automatisch afspelen van video’s en andere media-inhoud door websites beheren">
+<!ENTITY pref_media_autoplay_allow "Automatisch afspelen toestaan">
+<!ENTITY pref_media_autoplay_block "Automatisch afspelen blokkeren">
 <!ENTITY pref_zoom_force_enabled "Zoom altijd inschakelen">
 <!ENTITY pref_zoom_force_enabled_summary "Overschrijven forceren, zodat u elke pagina kunt zoomen">
 <!ENTITY pref_voice_input "Spraakinvoer">
@@ -447,6 +449,11 @@
 <!ENTITY datareporting_crashreporter_title_short "Crashreporter">
 <!ENTITY datareporting_wifi_title2 "&vendorShortName;-locatieservice">
 <!ENTITY datareporting_wifi_geolocation_summary4 "Help &vendorShortName; de wereld in kaart te brengen! Deel de geschatte wifi- en gsm-locatie van uw apparaat om onze geolocatieservice te verbeteren.">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "&vendorShortName;-locatieservice actief">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -891,3 +898,16 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "Toevoegen aan startscherm">
 <!ENTITY pwa_continue_to_website "Doorgaan naar website">
 <!ENTITY pwa_onboarding_sumo "U kunt deze website eenvoudig aan uw startscherm toevoegen voor directe toegang en sneller surfen met een app-achtige ervaring.">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "Afspelen">
+<!ENTITY pip_play_button_description "Afspelen hervatten">
+<!ENTITY pip_pause_button_title "Pauzeren">
+<!ENTITY pip_pause_button_description "Afspelen pauzeren">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "&vendorShortName;-locatieservice">
+<!ENTITY download_notification_channel "Downloads">
+<!ENTITY media_notification_channel "Media afspelen">

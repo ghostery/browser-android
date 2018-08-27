@@ -38,11 +38,6 @@
 <!ENTITY  aboutDevtools.enable.keyShortcutMessage
           "您按下了開發者工具的快捷鍵。若不是您要的，可以直接關閉此分頁。">
 
-<!-- LOCALIZATION NOTE (aboutDevtools.enable.menuMessage): Message displayed when users
-  -  clicked on a "Enable Developer Tools" menu item. -->
-<!ENTITY  aboutDevtools.enable.menuMessage
-          "使用檢測器、除錯器等工具，檢查、編輯或對 HTML、CSS 及 JavaScript 除錯。">
-
 <!-- LOCALIZATION NOTE (aboutDevtools.enable.menuMessage2): Message displayed when users
   -  clicked on a "Enable Developer Tools" menu item. -->
 <!ENTITY  aboutDevtools.enable.menuMessage2
@@ -59,8 +54,6 @@
 <!ENTITY  aboutDevtools.enable.learnMoreLink "了解開發者工具的更多資訊">
 
 <!ENTITY  aboutDevtools.enable.enableButton "啟用開發者工具">
-<!ENTITY  aboutDevtools.enable.closeButton "關閉此頁面">
-
 <!ENTITY  aboutDevtools.enable.closeButton2 "關閉此分頁">
 
 <!ENTITY  aboutDevtools.welcome.title "歡迎使用 Firefox 開發者工具！">
@@ -73,7 +66,7 @@
 <!ENTITY  aboutDevtools.newsletter.email.placeholder "電子郵件">
 <!ENTITY  aboutDevtools.newsletter.privacy.label "我同意 Mozilla 依照<a class='external' href='https://www.mozilla.org/privacy/'>隱私權保護政策</a>當中描述的方式處理這些資訊。">
 <!ENTITY  aboutDevtools.newsletter.subscribeButton "訂閱">
-<!ENTITY  aboutDevtools.newsletter.thanks.title "感謝您！">
+<!ENTITY  aboutDevtools.newsletter.thanks.title "謝啦！">
 <!ENTITY  aboutDevtools.newsletter.thanks.message "若您先前沒有確認訂閱過 Mozilla 電子報，現在可能需要確認。請到信箱收信，或到垃圾信件匣中看看有沒有來自我們的訊息。">
 
 <!ENTITY  aboutDevtools.footer.title "Firefox Developer Edition">

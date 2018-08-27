@@ -20,7 +20,7 @@ languages-customize-remove =
     .label = Remover
     .accesskey = R
 languages-customize-select-language =
-    .placeholder = Selecione um idioma para adicionar…
+    .placeholder = Selecione um idioma a adicionar…
 languages-customize-add =
     .label = Adicionar
     .accesskey = A
@@ -36,3 +36,5 @@ languages-customize-add =
 #   $code (String) - Locale code of the locale (for example: "is", "es-CL")
 languages-code-format =
     .label = { $locale }  [{ $code }]
+languages-active-code-format =
+    .value = { languages-code-format.label }

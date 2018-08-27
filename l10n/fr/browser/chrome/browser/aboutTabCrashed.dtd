@@ -15,7 +15,7 @@
      happen. If you have a similar word or short phrase that is not profane or
      vulgar, use it. If not, feel free to skip the word in your
      translation. -->
-<!ENTITY tabCrashed.header2 "Mince, l’onglet a planté…">
+<!ENTITY tabCrashed.header2 "Zut, l’onglet a planté…">
 <!ENTITY tabCrashed.offerHelp2 "Nous pouvons vous aider !">
 <!ENTITY tabCrashed.single.offerHelpMessage2 "Choisissez &tabCrashed.restoreTab; pour recharger la page.">
 <!ENTITY tabCrashed.multiple.offerHelpMessage2 "Choisissez &tabCrashed.restoreTab; ou &tabCrashed.restoreAll; pour recharger la page.">

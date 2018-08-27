@@ -44,7 +44,7 @@
 <!ENTITY translation.errorTranslating.label     "翻译此页面时出错。">
 <!ENTITY translation.tryAgain.button            "重试">
 
-<!ENTITY translation.serviceUnavailable.label   "现在暂时无法进行翻译。请稍后再试。">
+<!ENTITY translation.serviceUnavailable.label   "暂时无法翻译。请稍后再试。">
 
 <!ENTITY translation.options.menu               "选项">
 <!-- LOCALIZATION NOTE (translation.options.neverForSite.accesskey,

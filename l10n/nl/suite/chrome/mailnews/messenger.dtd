@@ -11,7 +11,7 @@
 <!ENTITY tabmailClose.tooltip "Tabblad sluiten">
 <!ENTITY tabmailNewButton.tooltip "Huidige tabblad dupliceren">
 <!ENTITY tabmailCloseButton.tooltip "Huidige tabblad sluiten">
-<!ENTITY tabmailAllTabs.tooltip "Alle tabbladtitels weergeven">
+<!ENTITY tabmailAllTabs.tooltip "Alle tabbladtitels tonen">
 
 <!-- menu items: the . means that the menu item isn't implemented yet -->
 

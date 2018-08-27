@@ -38,6 +38,21 @@ left instead of right. -->
 <!ENTITY  closeSelectedTabs.label            "关闭已选标签页">
 <!ENTITY  closeSelectedTabs.accesskey        "S">
 
+<!ENTITY  pinSelectedTabs.label              "固定标签页">
+<!-- Pin Tab and Pin Selected Tabs have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  pinSelectedTabs.accesskey          "P">
+<!ENTITY  unpinSelectedTabs.label            "取消固定标签页">
+<!-- Unpin Tab and Unpin Selected Tabs have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  unpinSelectedTabs.accesskey        "b">
+<!-- Reload Tab and Reload Selected Tabs have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  reloadSelectedTabs.label           "重新载入所选标签页">
+<!ENTITY  reloadSelectedTabs.accesskey       "R">
+<!ENTITY  bookmarkSelectedTabs.label         "将多个标签页加入书签…">
+<!ENTITY  bookmarkSelectedTabs.accesskey     "k">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -65,7 +80,6 @@ can reach it easily. -->
 <!ENTITY  undoCloseTab.accesskey             "U">
 <!ENTITY  closeTab.label                     "关闭标签页">
 <!ENTITY  closeTab.accesskey                 "c">
-
 <!ENTITY  hiddenTabs.label                   "隐藏标签页">
 
 <!ENTITY  listAllTabs.label      "列出全部标签页">
@@ -215,6 +229,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY urlbar.defaultNotificationAnchor.tooltip         "打开消息面板">
 <!ENTITY urlbar.geolocationNotificationAnchor.tooltip     "打开位置请求面板">
+<!ENTITY urlbar.autoplayNotificationAnchor.tooltip        "打开自动播放面板">
 <!ENTITY urlbar.addonsNotificationAnchor.tooltip          "打开附加组件安装消息面板">
 <!ENTITY urlbar.canvasNotificationAnchor.tooltip          "管理画布(canvas)提取权限">
 <!ENTITY urlbar.indexedDBNotificationAnchor.tooltip       "打开离线存储消息面板">
@@ -223,7 +238,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.webNotificationAnchor.tooltip             "更改您是否接收该网站发来的通知">
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip     "在持久存储中存储数据">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip   "浏览器正被远程控制">
-
 <!ENTITY urlbar.webAuthnAnchor.tooltip                    "打开 Web 认证面板">
 
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip      "管理您是否与该网站共享摄像头和麦克风">
@@ -243,6 +257,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.webNotificationsBlocked.tooltip  "您已阻止此网站发送通知。">
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "您已阻止此网站使用持久存储。">
 <!ENTITY urlbar.popupBlocked.tooltip             "您已拦截此网站的弹出窗口。">
+<!ENTITY urlbar.autoplayMediaBlocked.tooltip     "您已阻止此网站自动播放有声媒体内容。">
 <!ENTITY urlbar.canvasBlocked.tooltip            "您已禁止此网站获取 Canvas 数据。">
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "您已阻止此网站使用 Adobe Flash 插件。">
 <!ENTITY urlbar.midiBlocked.tooltip              "您已阻止此网站访问 MIDI。">
@@ -301,6 +316,10 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY webDeveloperMenu.label       "Web 开发者">
 <!ENTITY webDeveloperMenu.accesskey   "W">
 
+<!ENTITY devtoolsRecordExecution.label "录下执行过程">
+<!ENTITY devtoolsSaveRecording.label "保存记录">
+<!ENTITY devtoolsReplayExecution.label "回放执行过程">
+
 <!ENTITY inspectContextMenu.label     "查看元素">
 <!ENTITY inspectContextMenu.accesskey "Q">
 
@@ -310,6 +329,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY fileMenu.accesskey       "F">
 <!ENTITY newUserContext.label             "新建身份标签页">
 <!ENTITY newUserContext.accesskey         "C">
+<!ENTITY manageUserContext.label          "管理身份">
+<!ENTITY manageUserContext.accesskey      "O">
 <!ENTITY newNavigatorCmd.label        "新建窗口">
 <!ENTITY newNavigatorCmd.key        "N">
 <!ENTITY newNavigatorCmd.accesskey      "N">
@@ -412,8 +433,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!-- LOCALIZATION NOTE (customizeMenu.addToOverflowMenu.label,
      customizeMenu.pinToOverflowMenu.label, customizeMenu.unpinFromOverflowMenu.label)
      The overflow menu is the menu that appears if you click the chevron (>> button)
-     in the location bar. These labels are only used in Photon, where you can put
-     items into this menu permanently (pinned). -->
+     in the location bar. -->
 <!ENTITY customizeMenu.addToOverflowMenu.label "添加到折叠菜单">
 <!ENTITY customizeMenu.addToOverflowMenu.accesskey "M">
 <!ENTITY customizeMenu.moveToToolbar.label "移动到工具栏">
@@ -425,6 +445,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      keys.  -->
 <!ENTITY customizeMenu.moveToPanel.label "移动到菜单">
 <!ENTITY customizeMenu.moveToPanel.accesskey "o">
+<!-- LOCALIZATION NOTE (customizeMenu.pinToOverflowMenu.accesskey)
+     can appear on the same context menu as menubarCmd and personalbarCmd,
+     so they should have different access keys.  -->
 <!ENTITY customizeMenu.pinToOverflowMenu.label "隐藏到折叠菜单">
 <!ENTITY customizeMenu.pinToOverflowMenu.accesskey "P">
 <!ENTITY customizeMenu.unpinFromOverflowMenu.label "移出折叠菜单">
@@ -612,6 +635,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY hidePluginCmd.label          "隐藏此插件">
 <!ENTITY hidePluginCmd.accesskey      "H">
 <!ENTITY copyLinkCmd.label            "复制链接地址">
+<!-- LOCALIZATION NOTE (copyLinkCmd.accesskey): The access keys for "Copy Link
+Location" and "Copy Email Address" should be the same if possible; the two
+context menu items are mutually exclusive. -->
 <!ENTITY copyLinkCmd.accesskey        "a">
 <!ENTITY copyImageCmd.label           "复制图像地址">
 <!ENTITY copyImageCmd.accesskey       "o">
@@ -622,6 +648,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY copyAudioURLCmd.label        "复制音频地址">
 <!ENTITY copyAudioURLCmd.accesskey    "o">
 <!ENTITY copyEmailCmd.label           "复制邮件地址">
+<!-- LOCALIZATION NOTE (copyEmailCmd.accesskey): The access keys for "Copy Link
+Location" and "Copy Email Address" should be the same if possible; the two
+context menu items are mutually exclusive. -->
 <!ENTITY copyEmailCmd.accesskey       "E">
 <!ENTITY thisFrameMenu.label              "此框架">
 <!ENTITY thisFrameMenu.accesskey          "h">
@@ -757,8 +786,15 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY spellAddDictionaries.label "添加字典…">
 <!ENTITY spellAddDictionaries.accesskey "A">
 
+<!-- LOCALIZATION NOTE (editBookmark.panel.width): width of the bookmark panel.
+     Should be large enough to fully display the Done and Cancel/
+     Remove Bookmark buttons. -->
+<!ENTITY editBookmark.panel.width                    "23em">
 <!ENTITY editBookmark.done.label                     "完成">
 <!ENTITY editBookmark.removeBookmark.accessKey       "R">
+
+<!ENTITY editBookmark.showForNewBookmarks.label       "保存时显示编辑器">
+<!ENTITY editBookmark.showForNewBookmarks.accesskey   "S">
 
 <!-- LOCALIZATION NOTE (identity.securityView.label)
      This is the header of the security subview in the Site Identity panel. -->
@@ -806,6 +842,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY identity.permissions "权限">
 <!ENTITY identity.permissionsEmpty "您尚未授予此站点任何权限。">
 <!ENTITY identity.permissionsReloadHint "您可能需要重新载入此页面以应用更改。">
+
+<!ENTITY identity.permissionsPreferences.tooltip "打开权限偏好设置">
 
 <!-- Name for the tabs toolbar as spoken by screen readers.
      The word "toolbar" is appended automatically and should not be contained below! -->
@@ -905,8 +943,53 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.audioCapture.label "来自此标签页的音频将被共享。">
 <!ENTITY getUserMedia.allWindowsShared.message "您的屏幕上的所有可见窗口都将被共享。">
 
+<!ENTITY trackingProtection.on "跟踪保护：开">
+<!ENTITY trackingProtection.off "跟踪保护：关">
+
+<!ENTITY contentBlocking.title "内容拦截">
+<!ENTITY contentBlocking.detected "此网站上检测到可拦截内容。">
+<!ENTITY contentBlocking.notDetected "此页面上未检测到可拦截内容。">
+<!ENTITY contentBlocking.disabled.label "已禁用">
+<!ENTITY contentBlocking.disabled.tooltip "您已禁用内容拦截。">
+<!ENTITY contentBlocking.exception.tooltip "您已对此网站禁用内容拦截。">
+
+<!ENTITY contentBlocking.fastBlock.label "减慢加载的跟踪器">
+<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.blocked.label):
+     This label signals that this type of content blocking is turned
+     ON and is successfully blocking malicious/slow content, so this is
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Slow-Loading Trackers [are] Blocked"-->
+<!ENTITY contentBlocking.fastBlock.blocked.label "已拦截">
+<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.add.label):
+     This is displayed as a link to preferences, where the user can add
+     this specific type of content blocking. When this text is shown
+     the type of content blocking is currently not enabled. -->
+<!ENTITY contentBlocking.fastBlock.add.label "添加拦截…">
+
+<!ENTITY contentBlocking.trackingProtection.label "跟踪器">
+<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
+     This label signals that this type of content blocking is turned
+     ON and is successfully blocking malicious/slow content, so this is
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Trackers [are] Blocked"-->
+<!ENTITY contentBlocking.trackingProtection.blocked.label "已拦截">
+<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.add.label):
+     This is displayed as a link to preferences, where the user can add
+     this specific type of content blocking. When this text is shown
+     the type of content blocking is currently not enabled. -->
+<!ENTITY contentBlocking.trackingProtection.add.label "添加拦截…">
+
+<!ENTITY contentBlocking.openBreakageReportView.label "反馈故障">
+<!ENTITY contentBlocking.breakageReportView.label "反馈故障">
+<!ENTITY contentBlocking.breakageReportView.description "内容拦截功能可能导致某些网站出现问题。如果您反馈故障问题，您可以帮助 &brandShortName; 为所有人提供更好的体验。这将向 Mozilla 发送网址（URL）以及您的隐私设置和内容拦截设置。">
+<!ENTITY contentBlocking.breakageReportView.learnMore "详细了解">
+<!ENTITY contentBlocking.breakageReportView.collection.url.label "网址">
+<!ENTITY contentBlocking.breakageReportView.collection.userAgent.label "&brandShortName; 版本号">
+<!ENTITY contentBlocking.breakageReportView.collection.comments.label "您遇到了什么问题？（可选）">
+<!ENTITY contentBlocking.breakageReportView.sendReport.label "发送反馈">
+<!ENTITY contentBlocking.breakageReportView.cancel.label "取消">
+
 <!ENTITY trackingProtection.title "跟踪保护">
-<!ENTITY trackingProtection.tooltip "打开跟踪保护首选项">
 <!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; 已拦截该页面可能跟踪您的浏览行为的内容。">
 <!ENTITY trackingProtection.detectedNotBlocked3 "此网站包含的某些元素可能跟踪您的浏览行为，但您已经禁用保护。">
 <!ENTITY trackingProtection.notDetected3 "此页面上未检测到跟踪元素。">
@@ -922,6 +1005,36 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY trackingProtection.unblockPrivate.accesskey "D">
 <!ENTITY trackingProtection.block2.label "启用保护">
 <!ENTITY trackingProtection.block2.accesskey "E">
+
+<!ENTITY trackingProtection.tooltip "打开跟踪保护首选项">
+<!ENTITY trackingProtection.detectedBlocked4 "&brandShortName; 已拦截该页面可能跟踪您的浏览行为的内容。">
+<!ENTITY trackingProtection.detectedNotBlocked5 "&brandShortName; 包含可能跟踪您的浏览行为的元素。">
+<!ENTITY trackingProtection.detectedException "&brandShortName; 包含的某些元素可能跟踪您的浏览行为，但您已经禁用保护。">
+<!ENTITY trackingProtection.notDetected5 "未检测到此页面含有跟踪元素。">
+<!ENTITY trackingProtection.notDetectedException "未检测到此页面含有跟踪元素。您已对此网站禁用保护。">
+
+<!ENTITY trackingProtection.reloadRequired2 "您已启用跟踪保护。重新载入此页面以拦截所有跟踪器。">
+
+<!-- LOCALIZATION NOTE (trackingProtection.unblock3.label, trackingProtection.unblock3.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in NON-private browsing mode. -->
+<!ENTITY trackingProtection.unblock3.label "在此网站上禁用">
+<!ENTITY trackingProtection.unblock3.accesskey "D">
+<!ENTITY trackingProtection.unblock4.label "对此网站禁用拦截">
+<!ENTITY trackingProtection.unblock4.accesskey "D">
+<!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate3.label, trackingProtection.unblockPrivate3.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in PRIVATE browsing mode. -->
+<!ENTITY trackingProtection.unblockPrivate3.label "在本次会话中禁用">
+<!ENTITY trackingProtection.unblockPrivate3.accesskey "D">
+<!ENTITY trackingProtection.block4.label "在本次会话中启用">
+<!ENTITY trackingProtection.block4.accesskey "E">
+<!ENTITY trackingProtection.unblockPrivate4.label "暂时禁用拦截">
+<!ENTITY trackingProtection.unblockPrivate4.accesskey "D">
+<!ENTITY trackingProtection.block5.label "启用对此网站的拦截">
+<!ENTITY trackingProtection.block5.accesskey "E">
+<!ENTITY trackingProtection.reload2.label "重新载入页面">
+<!ENTITY trackingProtection.reload2.accesskey "R">
 
 <!ENTITY pluginNotification.showAll.label "全部显示">
 <!ENTITY pluginNotification.showAll.accesskey "S">
@@ -968,7 +1081,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY emeLearnMoreContextMenu.label            "详细了解数字版权管理（DRM）…">
 <!ENTITY emeLearnMoreContextMenu.accesskey        "D">
 
-<!ENTITY updateAvailable.message "更新您的 &brandShorterName;，享受最新的速度性能与隐私权保障。">
+<!ENTITY updateAvailable.message "更新您的 &brandShorterName;，享受最新速度性能与隐私权保障。">
 <!ENTITY updateAvailable.whatsnew.label "看看有什么新功能。">
 <!ENTITY updateAvailable.header.message "新版 &brandShorterName; 发布了。">
 <!ENTITY updateAvailable.acceptButton.label "下载更新">
@@ -977,14 +1090,14 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY updateAvailable.cancelButton.accesskey "N">
 <!ENTITY updateAvailable.panelUI.label "下载 &brandShorterName; 更新">
 
-<!ENTITY updateManual.message "下载 &brandShorterName; 的副本，我们将协助您安装它。">
-<!ENTITY updateManual.whatsnew.label "了解有什么新功能。">
+<!ENTITY updateManual.message "建议下载 &brandShorterName; 完整包，我们将协助您安装它。">
+<!ENTITY updateManual.whatsnew.label "看看有什么新功能。">
 <!ENTITY updateManual.header.message "&brandShorterName; 无法更新到最新版本。">
 <!ENTITY updateManual.acceptButton.label "下载 &brandShorterName;">
 <!ENTITY updateManual.acceptButton.accesskey "D">
 <!ENTITY updateManual.cancelButton.label "暂时不要">
 <!ENTITY updateManual.cancelButton.accesskey "N">
-<!ENTITY updateManual.panelUI.label "下载 &brandShorterName; 的副本">
+<!ENTITY updateManual.panelUI.label "下载 &brandShorterName; 完整包">
 
 <!ENTITY updateRestart.message2 "稍等片刻，&brandShorterName; 重开后将恢复您所有不在隐私浏览模式中打开的标签页和窗口。">
 <!ENTITY updateRestart.header.message2 "重开 &brandShorterName; 以更新。">
@@ -1024,6 +1137,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY sendToDevice.syncNotReady.label "正在同步设备…">
 
 <!ENTITY pageAction.shareUrl.label "分享">
+
+<!ENTITY pageAction.shareMore.label "更多…">
 
 <!ENTITY libraryButton.tooltip "查看浏览历史、已保存的书签等">
 

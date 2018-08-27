@@ -17,14 +17,6 @@ pref-page =
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
 #
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 15.4em
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
 # Please keep the placeholder string short to avoid truncation.
 #
 # Notice: The value of the `.style` attribute is a CSS string, and the `width`
@@ -137,20 +129,11 @@ is-not-default = { -brand-short-name } no es su navegador predet.
 set-as-my-default-browser =
     .label = Convertir en predeterminado…
     .accesskey = C
-startup-page = Cuando se inicie { -brand-short-name }
-    .accesskey = N
-startup-user-homepage =
-    .label = Mostrar su página de inicio
-startup-blank-page =
-    .label = Mostrar una página en blanco
-startup-prev-session =
-    .label = Mostrar sus ventanas y pestañas de la última sesión
 startup-restore-previous-session =
     .label = Restaurar sesión previa
     .accesskey = s
 disable-extension =
     .label = Desactivar extensión
-home-page-header = Página de inicio
 tabs-group-header = Pestañas
 ctrl-tab-recently-used-order =
     .label = Ctrl+Tab pasa por las pestañas en orden de uso reciente
@@ -219,6 +202,9 @@ choose-language-description = Elegir el idioma preferido para mostrar las págin
 choose-button =
     .label = Seleccionar…
     .accesskey = o
+choose-browser-language-description = Seleccione los idiomas en los que se mostrarán los menús, mensajes y notificaciones de { -brand-short-name }.
+confirm-browser-language-change-description = Reinicie { -brand-short-name } para aplicar los cambios
+confirm-browser-language-change-button = Aplicar y reiniciar
 translate-web-pages =
     .label = Traducir contenido web
     .accesskey = d
@@ -270,7 +256,6 @@ play-drm-content =
 play-drm-content-learn-more = Saber más
 update-application-title = Actualizaciones de { -brand-short-name }
 update-application-description = Mantenga { -brand-short-name } actualizado para un rendimiento, estabilidad y seguridad óptimos.
-update-application-info = Versión { $version } <a>Novedades</a>
 update-application-version = Versión { $version } <a data-l10n-name="learn-more">Novedades</a>
 update-history =
     .label = Mostrar historial de actualizaciones…
@@ -306,7 +291,6 @@ performance-allow-hw-accel =
 performance-limit-content-process-option = Límite de procesos de contenido
     .accesskey = L
 performance-limit-content-process-enabled-desc = Más procesos de contenido pueden mejorar el rendimiento al usar múltiples pestañas, pero también usarán más memoria.
-performance-limit-content-process-disabled-desc = Modificar el número de procesos de contenido solo es posible con { -brand-short-name } multiproceso. <a>Sepa cómo comprobar si el multiproceso está activado</a>
 performance-limit-content-process-blocked-desc = Modificar el número de procesos de contenido solo es posible con { -brand-short-name } multiproceso. <a data-l10n-name="learn-more">Sepa cómo comprobar si el multiproceso está activado</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
@@ -377,9 +361,6 @@ use-current-pages =
 choose-bookmark =
     .label = Usar marcador…
     .accesskey = m
-restore-default =
-    .label = Restaurar al valor predeterminado
-    .accesskey = v
 
 ## Search Section
 
@@ -649,6 +630,44 @@ addressbar-locbar-openpage-option =
     .accesskey = A
 addressbar-suggestions-settings = Cambiar preferencias de sugerencias de buscadores
 
+## Privacy Section - Content Blocking
+
+content-blocking-header = Bloqueo de contenido
+content-blocking-desc = Bloquee el contenido de terceros, como anuncios o código, que puede ralentizar la navegación y realizar un seguimiento de los sitios que visita. Personalice su configuración para obtener el mejor equilibrio entre protección y rendimiento.
+content-blocking-learn-more = Saber más
+content-blocking-restore-defaults =
+    .label = Restaurar ajustes predeterminados
+    .accesskey = R
+content-blocking-toggle-on =
+    .tooltiptext = Desactivar el bloqueo de contenido
+content-blocking-toggle-off =
+    .tooltiptext = Activar el bloqueo de contenido
+content-blocking-toggle-label-on = ACTIVADO
+    .accesskey = A
+content-blocking-toggle-label-off = DESACTIVADO
+    .accesskey = D
+content-blocking-category-label = Elija qué va a bloquear
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-label = Elementos de rastreo lentos
+    .accesskey = l
+content-blocking-fastblock-description = Bloquea el contenido de terceros que tarda más de 5 segundos en cargarse.
+content-blocking-fastblock-option-enabled =
+    .label = Bloquear siempre
+content-blocking-fastblock-option-disabled =
+    .label = Nunca bloquear
+content-blocking-tracking-protection-label = Rastreadores
+    .accesskey = T
+content-blocking-tracking-protection-description = Bloquea todos los rastreadores conocidos (Nota: también puede impedir que se carguen algunas páginas).
+content-blocking-tracking-protection-option-enabled =
+    .label = Bloquear siempre
+content-blocking-tracking-protection-option-pbm =
+    .label = Bloquear solo en ventanas privadas
+content-blocking-tracking-protection-option-disabled =
+    .label = Nunca bloquear
+content-blocking-tracking-protection-change-blocklist = Cambiar la lista de bloqueo…
+
 ## Privacy Section - Tracking
 
 tracking-header = Protección contra rastreo
@@ -697,6 +716,19 @@ permissions-notification-link = Saber más
 permissions-notification-pause =
     .label = Pausar notificaciones hasta que { -brand-short-name } se reinicie
     .accesskey = n
+permissions-block-autoplay-media =
+    .label = Bloquear en los sitios web la reproducción automática de medios con sonido
+    .accesskey = B
+permissions-block-autoplay-media-menu = Para sitios web que reproducen sonidos automáticamente
+permissions-block-autoplay-media-exceptions =
+    .label = Excepciones…
+    .accesskey = E
+autoplay-option-ask =
+    .label = Preguntar siempre
+autoplay-option-allow =
+    .label = Permitir reproducción automática
+autoplay-option-dont =
+    .label = No reproducir de manera automática
 permissions-block-popups =
     .label = Bloquear ventanas emergentes
     .accesskey = B

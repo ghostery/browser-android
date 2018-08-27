@@ -26,8 +26,8 @@
 <!ENTITY aboutPrivateBrowsing.note.before "Przeglądanie prywatne ">
 <!ENTITY aboutPrivateBrowsing.note.emphasize "nie czyni użytkownika anonimowym">
 <!ENTITY aboutPrivateBrowsing.note.after " w Internecie. Pracodawca lub dostawca usług internetowych może w dalszym ciągu monitorować odwiedzane strony.">
-<!ENTITY aboutPrivateBrowsing.learnMore3.before "Więcej informacji o ">
-<!ENTITY aboutPrivateBrowsing.learnMore3.title "przeglądaniu prywatnym">
+<!ENTITY aboutPrivateBrowsing.learnMore3.before "Więcej informacji o ">
+<!ENTITY aboutPrivateBrowsing.learnMore3.title "przeglądaniu prywatnym">
 <!ENTITY aboutPrivateBrowsing.learnMore3.after ".">
 
 <!ENTITY trackingProtection.title "Ochrona przed śledzeniem">

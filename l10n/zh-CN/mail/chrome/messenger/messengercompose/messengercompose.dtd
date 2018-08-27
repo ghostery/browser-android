@@ -247,7 +247,6 @@
 <!ENTITY sendlaterButton.tooltip "以后发送此消息">
 <!ENTITY quoteButton.tooltip "引用上一条消息">
 <!ENTITY addressButton.tooltip "从通讯录中选择一个收件人">
-<!ENTITY attachButton.tooltip "添加附件">
 <!ENTITY attachButton.tooltip2 "新增附件">
 <!ENTITY spellingButton.tooltip "检查选定的或整个消息的拼写">
 <!ENTITY saveButton.tooltip "保存此消息">
@@ -275,7 +274,6 @@
      and it must be the same as toggleAttachmentPaneCmd.key, otherwise it won't
      work, as the shortcut key functionality supersedes the access key. -->
 <!ENTITY attachments.accesskey "c">
-
 <!ENTITY attachmentBucketHeader.tooltip "附件面板">
 <!ENTITY attachmentBucketCloseButton.tooltip "隐藏附件面板">
 
@@ -360,6 +358,9 @@
 <!-- Identity popup customize menuitem -->
 <!ENTITY customizeFromAddress.label "自定义发件人地址…">
 <!ENTITY customizeFromAddress.accesskey "A">
+
+<!-- Accessibility name for the document -->
+<!ENTITY aria.message.bodyName "消息正文">
 
 <!-- Status Bar -->
 <!ENTITY languageStatusButton.tooltip "拼写检查语言">

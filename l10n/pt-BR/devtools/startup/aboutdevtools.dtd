@@ -38,11 +38,6 @@
 <!ENTITY  aboutDevtools.enable.keyShortcutMessage
           "You activated a Developer Tools shortcut. If that was a mistake, you can close this Tab.">
 
-<!-- LOCALIZATION NOTE (aboutDevtools.enable.menuMessage): Message displayed when users
-  -  clicked on a "Enable Developer Tools" menu item. -->
-<!ENTITY  aboutDevtools.enable.menuMessage
-          "Examine, edit and debug HTML, CSS, and JavaScript with tools like Inspector and Debugger.">
-
 <!-- LOCALIZATION NOTE (aboutDevtools.enable.menuMessage2): Message displayed when users
   -  clicked on a "Enable Developer Tools" menu item. -->
 <!ENTITY  aboutDevtools.enable.menuMessage2
@@ -59,8 +54,6 @@
 <!ENTITY  aboutDevtools.enable.learnMoreLink "Saber mais sobre o Developer Tools">
 
 <!ENTITY  aboutDevtools.enable.enableButton "Habilitar o Developer Tools">
-<!ENTITY  aboutDevtools.enable.closeButton "Fechar esta página">
-
 <!ENTITY  aboutDevtools.enable.closeButton2 "Fechar esta aba">
 
 <!ENTITY  aboutDevtools.welcome.title "Bem-vindo ao Firefox Developer Tools!">
@@ -81,5 +74,5 @@
 
 <!-- LOCALIZATION NOTE (aboutDevtools.footer.learnMoreLink): Text for the link to
   -  https://www.mozilla.org/firefox/developer/ displayed in the footer. -->
-<!ENTITY  aboutDevtools.footer.learnMoreLink "Saber mais">
+<!ENTITY  aboutDevtools.footer.learnMoreLink "Learn more">
 

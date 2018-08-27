@@ -10,7 +10,7 @@
 <!ENTITY autocompleteToMyDomain.accesskey "o">
 <!ENTITY addressingText.label      "查找地址时：">
 <!-- LOCALIZATION NOTE (override.label) : do not translate "LDAP" in below line -->
-<!ENTITY useGlobal.label           "对此帐户使用我的全局 LDAP 服务器">
+<!ENTITY useGlobal.label           "对此账户使用我的全局 LDAP 服务器">
 <!ENTITY useGlobal.accesskey       "U">
 <!ENTITY editDirectories.label     "编辑目录…">
 <!ENTITY editDirectories.accesskey "E">
@@ -27,9 +27,6 @@
 <!ENTITY useHtml.accesskey                    "C">
 <!ENTITY autoQuote.label                      "回复时自动引用原始消息">
 <!ENTITY autoQuote.accesskey                  "m">
-<!-- LOCALIZATION NOTE (then.label): This will concatenate with the 4 strings that follow. -->
-<!ENTITY then.label                           "并且，">
-<!ENTITY then.accesskey                       "T">
 <!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY quoting.label                        "当引用时，">
 <!ENTITY quoting.accesskey                    "q">

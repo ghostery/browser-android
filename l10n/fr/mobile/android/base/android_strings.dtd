@@ -372,6 +372,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "Lecture automatique">
 <!ENTITY pref_media_autoplay_enabled_summary "Décider si les sites peuvent lancer automatiquement la lecture des vidéos et d’autres contenus multimédia">
+<!ENTITY pref_media_autoplay_allow "Autoriser la lecture automatique">
+<!ENTITY pref_media_autoplay_block "Bloquer la lecture automatique">
 <!ENTITY pref_zoom_force_enabled "Toujours activer le zoom">
 <!ENTITY pref_zoom_force_enabled_summary "Forcer les pages à toujours vous permettre de zoomer">
 <!ENTITY pref_voice_input "Saisie vocale">
@@ -447,6 +449,11 @@
 <!ENTITY datareporting_crashreporter_title_short "Rapports de plantage">
 <!ENTITY datareporting_wifi_title2 "Service de localisation de &vendorShortName;">
 <!ENTITY datareporting_wifi_geolocation_summary4 "Aide &vendorShortName; à cartographier le monde. Les positions approximatives des réseaux Wi-Fi et cellulaires détectés sont envoyées à &vendorShortName; pour améliorer notre service de géolocalisation.">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "Service de localisation de &vendorShortName; actif">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -470,7 +477,7 @@
 <!ENTITY share_image_failed "Impossible de partager cette image">
 <!ENTITY save_as_pdf "Enregistrer en PDF">
 <!ENTITY print "Imprimer">
-<!ENTITY view_page_source "Afficher le code source de la page">
+<!ENTITY view_page_source "Afficher le code source">
 <!ENTITY find_in_page "Rechercher dans la page">
 <!ENTITY desktop_mode "Voir version ordinateur">
 <!ENTITY page "Page">
@@ -502,7 +509,7 @@
 <!ENTITY contextmenu_open_new_tab "Ouvrir dans un nouvel onglet">
 <!ENTITY contextmenu_open_private_tab "Ouvrir en navigation privée">
 <!ENTITY contextmenu_remove "Supprimer">
-<!ENTITY contextmenu_add_page_shortcut "Ajouter un raccourci vers la page">
+<!ENTITY contextmenu_add_page_shortcut "Ajouter en raccourci">
 <!ENTITY contextmenu_set_as_homepage "Définir comme page d’accueil">
 <!ENTITY contextmenu_share "Partager">
 <!ENTITY contextmenu_pasteandgo "Coller et ouvrir">
@@ -888,3 +895,15 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "Ajouter à l’écran d’accueil">
 <!ENTITY pwa_continue_to_website "Continuer vers le site web">
 <!ENTITY pwa_onboarding_sumo "Vous pouvez facilement ajouter ce site à votre écran d’accueil pour y avoir accès directement et naviguer plus rapidement, comme si vous étiez dans l’application.">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "Lecture">
+<!ENTITY pip_play_button_description "Reprendre la lecture">
+<!ENTITY pip_pause_button_title "Pause">
+<!ENTITY pip_pause_button_description "Mettre en pause">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "Service de localisation de &vendorShortName;">
+<!ENTITY download_notification_channel "Téléchargements">

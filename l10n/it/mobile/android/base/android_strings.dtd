@@ -221,6 +221,8 @@
 <!ENTITY pref_use_system_font_size_summary "Ridimensiona i contenuti web in base alle dimensioni dei caratteri di sistema">
 <!ENTITY pref_media_autoplay_enabled "Consenti riproduz. automatica">
 <!ENTITY pref_media_autoplay_enabled_summary "Determina se i siti web possono riprodurre automaticamente video e altri contenuti multimediali">
+<!ENTITY pref_media_autoplay_allow "Consenti riproduz. automatica">
+<!ENTITY pref_media_autoplay_block "Blocca riproduz. automatica">
 <!ENTITY pref_zoom_force_enabled "Consenti sempre zoom">
 <!ENTITY pref_zoom_force_enabled_summary "Ignora le impostazioni della pagina e consenti sempre lo zoom">
 <!ENTITY pref_voice_input "Input vocale">
@@ -276,6 +278,7 @@
 <!ENTITY datareporting_crashreporter_title_short "Crash Reporter">
 <!ENTITY datareporting_wifi_title2 "Georilevazione di &vendorShortName;">
 <!ENTITY datareporting_wifi_geolocation_summary4 "Aiuta &vendorShortName; a creare una mappa del mondo. Condividi la posizione approssimativa del tuo dispositivo all’interno delle reti Wi-Fi e cellulare per migliorare i nostri servizi di georilevazione.">
+<!ENTITY datareporting_stumbler_notification_title "Georilevazione di &vendorShortName; in esecuzione">
 <!ENTITY pref_update_autodownload3 "Aggiornamenti automatici">
 <!ENTITY pref_update_autodownload_wifi "Solo con Wi-Fi">
 <!ENTITY pref_update_autodownload_never "Mai">
@@ -510,3 +513,11 @@
 <!ENTITY pwa_add_to_launcher_badge2 "Agg. a schermata principale">
 <!ENTITY pwa_continue_to_website "Vai al sito web">
 <!ENTITY pwa_onboarding_sumo "È possibile aggiungere questo sito web alla schermata principale, per accedervi più rapidamente e con un’esperienza simile alle app.">
+<!ENTITY pip_play_button_title "Riproduci">
+<!ENTITY pip_play_button_description "Riprendi riproduzione">
+<!ENTITY pip_pause_button_title "Pausa">
+<!ENTITY pip_pause_button_description "Metti in pausa riproduzione">
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "Georilevazione di &vendorShortName;">
+<!ENTITY download_notification_channel "Download">
+<!ENTITY media_notification_channel "Riproduzione file multimediali">

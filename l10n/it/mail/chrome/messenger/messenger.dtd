@@ -201,9 +201,9 @@
 <!ENTITY sortByUnreadCmd.accesskey "L">
 <!ENTITY sortByOrderReceivedCmd.label "Ordine di ricezione">
 <!ENTITY sortByOrderReceivedCmd.accesskey "r">
-<!ENTITY sortAscending.label "Ascendente">
+<!ENTITY sortAscending.label "Crescente">
 <!ENTITY sortAscending.accesskey "n">
-<!ENTITY sortDescending.label "Discendente">
+<!ENTITY sortDescending.label "Decrescente">
 <!ENTITY sortDescending.accesskey "c">
 <!ENTITY sortThreaded.label "Visualizzazione ad albero">
 <!ENTITY sortThreaded.accesskey "b">
@@ -509,8 +509,6 @@
 <!ENTITY devToolboxCmd.label "Cassetta degli strumenti di sviluppo">
 <!ENTITY devToolboxCmd.accesskey "C">
 <!ENTITY devToolboxCmd.commandkey "i">
-<!ENTITY addonDebugCmd.label "Add-on Debugger">
-<!ENTITY addonDebugCmd.accesskey "A">
 <!ENTITY debugAddonsCmd.label "Componenti aggiuntivi di debug">
 <!ENTITY debugAddonsCmd.accesskey "m">
 <!ENTITY tabsDebugCmd.label "Tab di debug del contenuto">
@@ -870,7 +868,7 @@
   -->
 <!ENTITY quickSearchCmd.key "k">
 <!-- LOCALIZATION NOTE (search.label.base1):
-      This is the base of the empty text for the global search box. We replace
+     This is the base of the empty text for the global search box. We replace
      #1 with the contents of the appropriate search.keyLabel.* value for the
      platform.
      The goal is to convey to the user that typing in the box will allow them

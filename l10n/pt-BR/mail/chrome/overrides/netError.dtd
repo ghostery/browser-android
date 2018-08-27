@@ -46,8 +46,8 @@ que o &brandShortName; esteja autorizado a acessar a web.</li>
 <!ENTITY malformedURI.title "Endereço inválido">
 <!ENTITY malformedURI.longDesc "<ul> 
 <li>Normalmente, os endereços web são escritos como 
-<strong>http://www.exemplo.com/</strong></li> 
-<li>Verifique se está a utilizar as barras corretamente (exemplo 
+<strong>http://www.example.com/</strong></li> 
+<li>Verifique se utilizou as barras corretamente (exemplo 
 <strong>/</strong>).</li> 
 </ul>">
 

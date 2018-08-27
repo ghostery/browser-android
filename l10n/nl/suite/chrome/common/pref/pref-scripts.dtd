@@ -20,10 +20,6 @@
 <!ENTITY allowContextmenuDisable.label   "Contextmenu’s uit te schakelen of te vervangen">
 <!ENTITY allowHideStatusBar.label        "De statusbalk te verbergen">
 
-<!ENTITY enableDrmMedia.label            "Digital Rights Management inschakelen voor">
-<!ENTITY enableEmeForSuite.label         "Inhouddecoderingsmodules van derden">
-<!ENTITY enableEmeForSuite.accesskey     "I">
-
 <!ENTITY enablePlugins.label             "Plug-ins inschakelen voor">
 <!ENTITY enablePluginForSuite.label      "Suite">
 <!ENTITY enablePluginForSuite.accesskey  "u">

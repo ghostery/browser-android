@@ -6,12 +6,13 @@
 <!ENTITY mainWindow.titlemodifier "&brandFullName;">
 <!ENTITY mainWindow.titlemodifiermenuseparator " - ">
 <!ENTITY mainWindow.titlePrivateBrowsingSuffix "(tryb prywatny)">
-
 <!ENTITY appmenu.tooltip "Otwórz menu">
 <!ENTITY navbarOverflow.label "Więcej narzędzi…">
 
 <!ENTITY reloadTab.label                     "Odśwież kartę" >
 <!ENTITY reloadTab.accesskey                 "d" >
+<!ENTITY reloadSelectedTabs.label "Odśwież zaznaczone karty">
+<!ENTITY reloadSelectedTabs.accesskey "d">
 <!ENTITY reloadAllTabs.label                 "Odśwież wszystkie karty" >
 <!ENTITY reloadAllTabs.accesskey             "w" >
 <!ENTITY duplicateTab.label "Duplikuj kartę">
@@ -20,7 +21,12 @@
 <!ENTITY closeTabsToTheEnd.accesskey "p">
 <!ENTITY closeOtherTabs.label                "Zamknij inne karty" >
 <!ENTITY closeOtherTabs.accesskey            "i" >
-
+<!ENTITY closeSelectedTabs.label "Zamknij zaznaczone karty">
+<!ENTITY closeSelectedTabs.accesskey "Z">
+<!ENTITY pinSelectedTabs.label "Przypnij karty">
+<!ENTITY pinSelectedTabs.accesskey "k">
+<!ENTITY unpinSelectedTabs.label "Odepnij karty">
+<!ENTITY unpinSelectedTabs.accesskey "k">
 <!ENTITY pinTab.label "Przypnij kartę">
 <!ENTITY pinTab.accesskey "n">
 <!ENTITY unpinTab.label "Odepnij kartę">
@@ -35,16 +41,18 @@
 <!ENTITY sendToDeviceOfflineFeedback.label "W kolejce (tryb offline)">
 <!ENTITY moveToNewWindow.label "Przenieś do nowego okna">
 <!ENTITY moveToNewWindow.accesskey "o">
+<!ENTITY reopenInContainer.label "Otwórz ponownie w karcie z kontekstem">
+<!ENTITY reopenInContainer.accesskey "k">
 <!ENTITY bookmarkAllTabs.label               "Dodaj zakładki do wszystkich kart…">
 <!ENTITY bookmarkAllTabs.accesskey           "k">
+<!ENTITY bookmarkSelectedTabs.label "Dodaj zakładki do zaznaczonych kart…">
+<!ENTITY bookmarkSelectedTabs.accesskey "D">
 <!ENTITY undoCloseTab.label                  "Przywróć zamkniętą kartę">
 <!ENTITY undoCloseTab.accesskey              "P">
 <!ENTITY closeTab.label                      "Zamknij kartę" >
 <!ENTITY closeTab.accesskey                  "a" >
 <!ENTITY hiddenTabs.label "Ukryte karty">
-
 <!ENTITY listAllTabs.label "Pokaż wszystkie karty">
-
 <!ENTITY tabCmd.label "Nowa karta" >
 <!ENTITY tabCmd.accesskey "t" >
 <!ENTITY tabCmd.commandkey "t" >
@@ -59,17 +67,14 @@
 <!ENTITY printCmd.label "Drukuj…" >
 <!ENTITY printCmd.accesskey "D" >
 <!ENTITY printCmd.commandkey "p" >
-
 <!ENTITY goOfflineCmd.label "Pracuj w trybie offline" >
 <!ENTITY goOfflineCmd.accesskey "c" >
-
 <!ENTITY menubarCmd.label "Pasek menu">
 <!ENTITY menubarCmd.accesskey "m">
 <!ENTITY navbarCmd.label "Pasek narzędzi nawigacyjnych" >
 <!ENTITY personalbarCmd.label "Pasek zakładek" >
 <!ENTITY personalbarCmd.accesskey "z" >
 <!ENTITY bookmarksToolbarItem.label "Elementy paska zakładek" >
-
 <!ENTITY toolbarContextMenu.reloadAllTabs.label "Odśwież wszystkie karty">
 <!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "O">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Dodaj zakładki do wszystkich kart…">
@@ -100,7 +105,6 @@
 <!ENTITY showAllTabsCmd.accesskey "W">
 <!ENTITY toggleReaderMode.key "R">
 <!ENTITY toggleReaderMode.win.keycode "VK_F9">
-
 <!ENTITY fxaSignIn.label "Zaloguj się do synchronizacji">
 <!ENTITY fxaSignedIn.tooltip "Otwórz ustawienia synchronizacji">
 <!ENTITY fxaSignInError.label "Zaloguj się ponownie, aby synchronizować">
@@ -113,7 +117,6 @@
 <!ENTITY fullScreenAutohide.accesskey "U">
 <!ENTITY fullScreenExit.label "Opuść tryb pełnoekranowy">
 <!ENTITY fullScreenExit.accesskey "O">
-
 <!ENTITY fullscreenWarning.beforeDomain.label "">
 <!ENTITY fullscreenWarning.afterDomain.label "działa teraz w trybie pełnoekranowym">
 <!ENTITY fullscreenWarning.generic.label "Dokument jest teraz wyświetlany w trybie pełnoekranowym">
@@ -126,10 +129,8 @@
 <!ENTITY exitDOMFullscreenMac.button "Opuść tryb pełnoekranowy (esc)">
 <!ENTITY leaveDOMFullScreen.label "Opuść tryb pełnoekranowy">
 <!ENTITY leaveDOMFullScreen.accesskey "u">
-
 <!ENTITY closeWindow.label "Zamknij okno" >
 <!ENTITY closeWindow.accesskey "m">
-
 <!ENTITY bookmarksMenu.label "Zakładki" >
 <!ENTITY bookmarksMenu.accesskey "Z" >
 <!ENTITY bookmarkThisPageCmd.label "Dodaj zakładkę" >
@@ -147,7 +148,6 @@
 <!ENTITY showRecentlyBookmarked.accesskey "W">
 <!ENTITY hideRecentlyBookmarked.label "Ukryj ostatnio dodane">
 <!ENTITY hideRecentlyBookmarked.accesskey "U">
-
 <!ENTITY backCmd.label "Wstecz" >
 <!ENTITY backCmd.accesskey "W">
 <!ENTITY backButton.tooltip "Przejdź do poprzedniej strony" >
@@ -168,6 +168,7 @@
 <!ENTITY urlbar.viewSiteInfo.label "Wyświetl informacje o stronie">
 <!ENTITY urlbar.defaultNotificationAnchor.tooltip "Wyświetl powiadomienie">
 <!ENTITY urlbar.geolocationNotificationAnchor.tooltip "Wyświetl zapytanie o położenie">
+<!ENTITY urlbar.autoplayNotificationAnchor.tooltip "Wyświetl zapytanie o automatyczne odtwarzanie">
 <!ENTITY urlbar.addonsNotificationAnchor.tooltip "Wyświetl zapytanie o instalację dodatków">
 <!ENTITY urlbar.canvasNotificationAnchor.tooltip "Zarządzaj uprawnieniami odczytu danych canvas">
 <!ENTITY urlbar.indexedDBNotificationAnchor.tooltip "Wyświetl zapytanie o przechowywanie danych offline">
@@ -192,19 +193,17 @@
 <!ENTITY urlbar.webNotificationsBlocked.tooltip "Powiadomienia z tej witryny zostały zablokowane">
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Przechowywanie danych na komputerze przez witrynę zostało zablokowane">
 <!ENTITY urlbar.popupBlocked.tooltip "Wyskakujące okna na tej stronie są blokowane">
-<!ENTITY urlbar.canvasBlocked.tooltip "Odczytywanie danych canvas przez tę witrynę zostało zablokowane">
+<!ENTITY urlbar.autoplayMediaBlocked.tooltip "Automatyczne odtwarzanie treści z dźwiękiem przez witrynę zostało zablokowane">
+<!ENTITY urlbar.canvasBlocked.tooltip "Odczytywanie danych canvas przez witrynę zostało zablokowane">
 <!ENTITY urlbar.flashPluginBlocked.tooltip "Wtyczka Adobe Flash została zablokowana na tej stronie">
-<!ENTITY urlbar.midiBlocked.tooltip "Dostęp do urządzeń MIDI tej witrynie został zablokowany">
+<!ENTITY urlbar.midiBlocked.tooltip "Dostęp do urządzeń MIDI dla tej witryny został zablokowany">
 <!ENTITY urlbar.openHistoryPopup.tooltip "Wyświetl historię">
 
 <!ENTITY searchItem.title "Znajdź" >
-
 <!ENTITY homeButton.label "Strona startowa">
 <!ENTITY homeButton.defaultPage.tooltip "Przejdź do strony startowej">
-
 <!ENTITY bookmarksButton.label          "Zakładki">
 <!ENTITY bookmarksCmd.commandkey        "b">
-
 <!ENTITY bookmarksSubview.label "Zakładki">
 <!ENTITY bookmarksMenuButton2.label "Menu zakładki">
 <!ENTITY bookmarksMenuButton.other.label "Pozostałe zakładki">
@@ -217,16 +216,12 @@
 <!ENTITY bookmarkingTools.label "Narzędzia zakładek">
 <!ENTITY addBookmarksMenu.label "Dodaj menu Zakładki do paska narzędzi">
 <!ENTITY removeBookmarksMenu.label "Usuń menu Zakładki z paska narzędzi">
-
 <!ENTITY bookmarksGtkCmd.commandkey "o">
 <!ENTITY bookmarksWinCmd.commandkey "i">
-
 <!ENTITY historyButton.label            "Historia">
 <!ENTITY historySidebarCmd.commandKey   "h">
-
 <!ENTITY toolsMenu.label "Narzędzia" >
 <!ENTITY toolsMenu.accesskey "N" >
-
 <!ENTITY keywordfield.label "Utwórz słowo kluczowe dla tej wyszukiwarki…">
 <!ENTITY keywordfield.accesskey "U">
 
@@ -238,24 +233,25 @@
 <!ENTITY addons.label "Dodatki">
 <!ENTITY addons.accesskey "D">
 <!ENTITY addons.commandkey            "A">
-
 <!ENTITY webDeveloperMenu.label       "Dla twórców witryn">
 <!ENTITY webDeveloperMenu.accesskey   "W">
-
+<!ENTITY devtoolsRecordExecution.label "Rejestrowanie czynności w karcie">
+<!ENTITY devtoolsSaveRecording.label "Zapisz zarejestrowane dane">
+<!ENTITY devtoolsReplayExecution.label "Odtwórz czynności w karcie">
 <!ENTITY inspectContextMenu.label "Zbadaj element">
 <!ENTITY inspectContextMenu.accesskey "t">
 <!ENTITY inspectA11YContextMenu.label "Zbadaj własności dostępności">
-
 <!ENTITY fileMenu.label "Plik" >
 <!ENTITY fileMenu.accesskey "P" >
 <!ENTITY newUserContext.label "Nowa karta z kontekstem">
 <!ENTITY newUserContext.accesskey "k">
+<!ENTITY manageUserContext.label "Zarządzaj kontekstami">
+<!ENTITY manageUserContext.accesskey "Z">
 <!ENTITY newNavigatorCmd.label "Nowe okno" >
 <!ENTITY newNavigatorCmd.key "N" >
 <!ENTITY newNavigatorCmd.accesskey "N" >
 <!ENTITY newPrivateWindow.label     "Nowe okno prywatne">
 <!ENTITY newPrivateWindow.accesskey "p">
-
 <!ENTITY editMenu.label "Edycja" >
 <!ENTITY editMenu.accesskey "E" >
 <!ENTITY undoCmd.label "Cofnij" >
@@ -283,11 +279,8 @@
 <!ENTITY preferencesCmd2.accesskey "O">
 <!ENTITY preferencesCmdUnix.label       "Preferencje">
 <!ENTITY preferencesCmdUnix.accesskey   "r">
-
 <!ENTITY clearRecentHistory.label     "Wyczyść historię przeglądania…">
-
 <!ENTITY privateBrowsingCmd.commandkey          "P">
-
 <!ENTITY viewMenu.label "Widok" >
 <!ENTITY viewMenu.accesskey "W" >
 <!ENTITY viewToolbarsMenu.label "Paski narzędzi" >
@@ -298,23 +291,19 @@
 <!ENTITY viewCustomizeToolbar.accesskey "t" >
 <!ENTITY overflowCustomizeToolbar.label "Dostosuj pasek narzędzi…">
 <!ENTITY overflowCustomizeToolbar.accesskey "D">
-
 <!ENTITY historyMenu.label "Historia">
 <!ENTITY historyMenu.accesskey "h">
 <!ENTITY historyUndoMenu.label "Ostatnio zamknięte karty">
 <!ENTITY historyUndoWindowMenu.label "Ostatnio zamknięte okna">
 <!ENTITY historyRestoreLastSession.label "Przywróć poprzednią sesję">
-
 <!ENTITY showAllHistoryCmd2.label "Wyświetl całą historię">
 <!ENTITY showAllHistoryCmd.commandkey "H">
-
 <!ENTITY appMenuHistory.showAll.label "Wyświetl całą historię">
 <!ENTITY appMenuHistory.clearRecent.label "Wyczyść historię przeglądania…">
 <!ENTITY appMenuHistory.restoreSession.label "Przywróć poprzednią sesję">
 <!ENTITY appMenuHistory.viewSidebar.label "Wyświetl historię w panelu bocznym">
 <!ENTITY appMenuHistory.recentHistory.label "Ostatnio odwiedzone">
 <!ENTITY appMenuHelp.label "Pomoc">
-
 <!ENTITY appMenuRemoteTabs.label "Karty z innych urządzeń">
 <!ENTITY appMenuRemoteTabs.notabs.label "Brak otwartych kart">
 <!ENTITY appMenuRemoteTabs.showMore.label "Wyświetl więcej">
@@ -332,7 +321,6 @@
 <!ENTITY appMenuRemoteTabs.managedevices.label "Zarządzaj urządzeniami…">
 <!ENTITY appMenuRemoteTabs.sidebar.label "Wyświetl karty z innych urządzeń w panelu bocznym">
 <!ENTITY appMenuRemoteTabs.connectdevice.label "Połącz inne urządzenie">
-
 <!ENTITY appMenuRecentHighlights.label "Ostatnio wyróżnione">
 
 <!ENTITY customizeMenu.addToToolbar.label "Dodaj do paska narzędzi">
@@ -367,7 +355,6 @@
 <!ENTITY urlbar.accesskey "d" >
 <!ENTITY urlbar.extension.label "Rozszerzenie:">
 <!ENTITY urlbar.switchToTab.label     "Przełącz na kartę:">
-
 <!ENTITY urlbar.searchSuggestionsNotification.hintPrefix "Wyszukuj łatwiej!">
 <!ENTITY urlbar.searchSuggestionsNotification.hint "Ikona &#x1F50E; sygnalizuje podpowiedzi wyszukiwarek.">
 <!ENTITY urlbar.searchSuggestionsNotification.changeSettingsWin "Zmień opcje…">
@@ -479,7 +466,7 @@
 <!ENTITY hidePluginCmd.label          "Ukryj tę wtyczkę">
 <!ENTITY hidePluginCmd.accesskey      "U">
 <!ENTITY copyLinkCmd.label "Kopiuj adres odnośnika" >
-<!ENTITY copyLinkCmd.accesskey "K" >
+<!ENTITY copyLinkCmd.accesskey "a" >
 <!ENTITY copyImageCmd.label "Kopiuj adres obrazu">
 <!ENTITY copyImageCmd.accesskey "b" >
 <!ENTITY copyImageContentsCmd.label "Kopiuj obraz">
@@ -489,10 +476,9 @@
 <!ENTITY copyAudioURLCmd.label        "Kopiuj adres dźwięku">
 <!ENTITY copyAudioURLCmd.accesskey    "u">
 <!ENTITY copyEmailCmd.label "Kopiuj adres e-mail" >
-<!ENTITY copyEmailCmd.accesskey "e" >
+<!ENTITY copyEmailCmd.accesskey "a" >
 <!ENTITY thisFrameMenu.label "Ramka" >
 <!ENTITY thisFrameMenu.accesskey "r" >
-
 <!ENTITY mediaPlay.label             "Odtwórz">
 <!ENTITY mediaPlay.accesskey         "z">
 <!ENTITY mediaPause.label            "Wstrzymaj">
@@ -533,25 +519,20 @@
 <!ENTITY fullZoomEnlargeCmd.commandkey "+">
 <!ENTITY fullZoomEnlargeCmd.commandkey2 "=">
 <!ENTITY fullZoomEnlargeCmd.commandkey3 "">
-
 <!ENTITY fullZoomReduceCmd.label        "Pomniejsz">
 <!ENTITY fullZoomReduceCmd.accesskey    "m">
 <!ENTITY fullZoomReduceCmd.commandkey   "-">
 <!ENTITY fullZoomReduceCmd.commandkey2 "">
-
 <!ENTITY fullZoomResetCmd.label         "Rozmiar pierwotny">
 <!ENTITY fullZoomResetCmd.accesskey     "R">
 <!ENTITY fullZoomResetCmd.commandkey    "0">
 <!ENTITY fullZoomResetCmd.commandkey2   "">
-
 <!ENTITY fullZoomToggleCmd.label        "Powiększaj tylko tekst">
 <!ENTITY fullZoomToggleCmd.accesskey    "k">
 <!ENTITY fullZoom.label                 "Powiększenie">
 <!ENTITY fullZoom.accesskey             "w">
-
 <!ENTITY sidebarCloseButton.tooltip "Zamyka panel boczny">
 <!ENTITY sidebarMenuClose.label "Zamknij panel boczny">
-
 <!ENTITY quitApplicationCmdWin2.label "Zakończ">
 <!ENTITY quitApplicationCmdWin2.accesskey "k">
 <!ENTITY quitApplicationCmdWin2.tooltip "Zakończ program &brandShorterName;">
@@ -561,32 +542,26 @@
 <!ENTITY quitApplicationCmd.accesskey   "k" >
 <!ENTITY quitApplicationCmdMac2.label "Zakończ program &brandShorterName;">
 <!ENTITY quitApplicationCmd.key "Q">
-
 <!ENTITY closeCmd.label "Zamknij" >
 <!ENTITY closeCmd.key "W" >
 <!ENTITY closeCmd.accesskey "Z" >
-
 <!ENTITY toggleMuteCmd.key "M">
-
 <!ENTITY pageStyleMenu.label "Styl strony">
 <!ENTITY pageStyleMenu.accesskey "S">
 <!ENTITY pageStyleNoStyle.label "Ignoruj style">
 <!ENTITY pageStyleNoStyle.accesskey "n">
 <!ENTITY pageStylePersistentOnly.label "Styl podstawowy">
 <!ENTITY pageStylePersistentOnly.accesskey "S">
-
 <!ENTITY allowPopups.accesskey "w">
 <!ENTITY editPopupSettingsUnix.label "Edytuj preferencje wyskakujących okien…">
 <!ENTITY editPopupSettings.label "Edytuj opcje blokady wyskakujących okien…">
 <!ENTITY editPopupSettings.accesskey "E">
 <!ENTITY dontShowMessage.accesskey "N">
-
 <!ENTITY bidiSwitchPageDirectionItem.label        "Przełącz kierunek strony">
 <!ENTITY bidiSwitchPageDirectionItem.accesskey    "s">
 <!ENTITY bidiSwitchTextDirectionItem.label        "Przełącz kierunek tekstu">
 <!ENTITY bidiSwitchTextDirectionItem.accesskey    "t">
 <!ENTITY bidiSwitchTextDirectionItem.commandkey   "X">
-
 <!ENTITY findOnCmd.label "Znajdź na tej stronie…" >
 <!ENTITY findOnCmd.accesskey "Z" >
 <!ENTITY findOnCmd.commandkey "f" >
@@ -599,11 +574,13 @@
 <!ENTITY spellAddDictionaries.label "Dodaj słowniki…">
 <!ENTITY spellAddDictionaries.accesskey "o">
 
-<!ENTITY editBookmark.done.label                     "Gotowe">
+<!ENTITY editBookmark.panel.width "25em">
+<!ENTITY editBookmark.done.label "Gotowe">
+<!ENTITY editBookmark.showForNewBookmarks.label "Wyświetlanie tego okna podczas dodawania">
+<!ENTITY editBookmark.showForNewBookmarks.accesskey "W">
 <!ENTITY editBookmark.removeBookmark.accessKey       "U">
 
 <!ENTITY identity.securityView.label "Bezpieczeństwo">
-
 <!ENTITY identity.connectionSecure "Zabezpieczone połączenie">
 <!ENTITY identity.connectionNotSecure "Połączenie nie jest bezpieczne">
 <!ENTITY identity.connectionFile "Strona wczytana z tego komputera">
@@ -632,20 +609,20 @@
 <!ENTITY identity.enableMixedContentBlocking.accesskey "W">
 <!ENTITY identity.disableMixedContentBlocking.label "Tymczasowo wyłącz ochronę">
 <!ENTITY identity.disableMixedContentBlocking.accesskey "T">
-<!ENTITY identity.learnMore "Więcej informacji">
+<!ENTITY identity.learnMore "Więcej informacji">
 
 <!ENTITY identity.removeCertException.label "Usuń wyjątek">
 <!ENTITY identity.removeCertException.accesskey "U">
 
-<!ENTITY identity.moreInfoLinkText2 "Więcej informacji…">
+<!ENTITY identity.moreInfoLinkText2 "Więcej informacji…">
+<!ENTITY identity.clearSiteData "Wyczyść ciasteczka i dane stron…">
 <!ENTITY identity.permissions "Uprawnienia">
 <!ENTITY identity.permissionsEmpty "Strona korzysta z domyślnych uprawnień.">
 <!ENTITY identity.permissionsReloadHint "Ponowne wczytanie strony może być konieczne, aby wprowadzone zmiany przyniosły skutek.">
+<!ENTITY identity.permissionsPreferences.tooltip "Otwórz ustawienia uprawnień">
 
 <!ENTITY tabsToolbar.label "Karty przeglądarki">
-
 <!ENTITY syncTabsMenu3.label "Karty z innych urządzeń">
-
 <!ENTITY syncedTabs.sidebar.label "Karty z innych urządzeń">
 <!ENTITY syncedTabs.sidebar.noclients.label "Zaloguj się w Firefoksie na innym urządzeniu, aby wyświetlić tutaj listę otwartych na nim kart.">
 <!ENTITY syncedTabs.sidebar.noclients.title "Synchronizacja kart wyłączona">
@@ -683,7 +660,6 @@
 <!ENTITY syncReAuthItem.label "Zaloguj się ponownie, aby synchronizować…">
 <!ENTITY syncReAuthItem.accesskey "Z">
 <!ENTITY syncToolbarButton.label      "Synchronizuj">
-
 <!ENTITY customizeMode.menuAndToolbars.header3 "Przeciągaj swoje ulubione elementy na pasek narzędzi lub do menu ukrywania.">
 <!ENTITY customizeMode.restoreDefaults "Przywróć domyślne">
 <!ENTITY customizeMode.done "Gotowe">
@@ -721,20 +697,47 @@
 <!ENTITY getUserMedia.audioCapture.label "Dźwięk z karty będzie udostępniany.">
 <!ENTITY getUserMedia.allWindowsShared.message "Wszystkie widoczne na ekranie okna zostaną udostępnione.">
 
+<!ENTITY trackingProtection.on "Ochrona przed śledzeniem: włączona">
+<!ENTITY trackingProtection.off "Ochrona przed śledzeniem: wyłączona">
 <!ENTITY trackingProtection.title "Ochrona przed śledzeniem">
-<!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; blokuje elementy strony mogące śledzić Twoją aktywność w sieci.">
+<!ENTITY trackingProtection.tooltip "Otwórz ustawienia ochrony przed śledzeniem">
+<!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; blokuje elementy strony mogące śledzić Twoją aktywność.">
+<!ENTITY trackingProtection.detectedBlocked4 "&brandShortName; blokuje elementy tej strony mogące śledzić Twoją aktywność.">
 <!ENTITY trackingProtection.detectedNotBlocked3 "Strona zawiera elementy mogące śledzić Twoją aktywność w sieci, jednak ochrona przed nimi została wyłączona.">
 <!ENTITY trackingProtection.notDetected3 "Nie wykryto elementów śledzących aktywność użytkownika na tej stronie.">
+<!ENTITY trackingProtection.detectedNotBlocked4 "Wykryto elementy śledzące na tej stronie.">
+<!ENTITY trackingProtection.detectedNotBlocked5 "&brandShortName; wykrył elementy mogące śledzić Twoją aktywność.">
+<!ENTITY trackingProtection.notDetected4 "Nie wykryto elementów śledzących na tej stronie.">
+<!ENTITY trackingProtection.notDetected5 "Nie wykryto elementów śledzących na tej stronie.">
+<!ENTITY trackingProtection.detectedException "&brandShortName; wykrył elementy mogące śledzić Twoją aktywność. Ochrona przed śledzeniem została wyłączona dla tej witryny.">
+<!ENTITY trackingProtection.notDetectedException "Nie wykryto elementów mogących śledzić aktywność na tej stronie. Ochrona przed śledzeniem została wyłączona dla tej witryny.">
+<!ENTITY trackingProtection.reloadRequired "Ochrona przed śledzeniem została włączona. Wczytaj ponownie stronę, aby zablokować elementy śledzące.">
+<!ENTITY trackingProtection.reloadRequired2 "Ochrona przed śledzeniem została włączona. Odśwież bieżącą stronę, aby zablokować elementy śledzące.">
 <!ENTITY trackingProtection.unblock.label "Wyłącz ochronę dla tej witryny">
 <!ENTITY trackingProtection.unblock.accesskey "W">
+<!ENTITY trackingProtection.unblock2.label "Wyłącz dla tej witryny">
+<!ENTITY trackingProtection.unblock2.accesskey "W">
+<!ENTITY trackingProtection.unblock3.label "Wyłącz dla tej witryny">
+<!ENTITY trackingProtection.unblock3.accesskey "W">
 <!ENTITY trackingProtection.unblockPrivate.label "Wyłącz ochronę w tym oknie prywatnym">
 <!ENTITY trackingProtection.unblockPrivate.accesskey "W">
+<!ENTITY trackingProtection.unblockPrivate2.label "Tymczasowo wyłącz dla tej witryny">
+<!ENTITY trackingProtection.unblockPrivate2.accesskey "T">
+<!ENTITY trackingProtection.unblockPrivate3.label "Tymczasowo wyłącz dla tej witryny">
+<!ENTITY trackingProtection.unblockPrivate3.accesskey "T">
 <!ENTITY trackingProtection.block2.label "Włącz ochronę dla tej witryny">
 <!ENTITY trackingProtection.block2.accesskey "W">
+<!ENTITY trackingProtection.block3.label "Włącz ochronę przed śledzeniem">
+<!ENTITY trackingProtection.block3.accesskey "W">
+<!ENTITY trackingProtection.block4.label "Włącz ochronę dla tej witryny">
+<!ENTITY trackingProtection.block4.accesskey "W">
+<!ENTITY trackingProtection.reload.label "Odśwież tę stronę">
+<!ENTITY trackingProtection.reload.accesskey "O">
+<!ENTITY trackingProtection.reload2.label "Odśwież stronę">
+<!ENTITY trackingProtection.reload2.accesskey "O">
 
 <!ENTITY pluginNotification.showAll.label "Wyświetl wszystkie">
 <!ENTITY pluginNotification.showAll.accesskey "W">
-
 <!ENTITY pluginActivateNow.label "Pozwól teraz">
 <!ENTITY pluginActivateAlways.label "Pozwól i zapamiętaj">
 <!ENTITY pluginBlockNow.label "Zablokuj wtyczkę">
@@ -757,7 +760,7 @@
 <!ENTITY panicButton.thankyou.msg2 "Bezpiecznego przeglądania!">
 <!ENTITY panicButton.thankyou.buttonlabel "Dzięki!">
 
-<!ENTITY emeLearnMoreContextMenu.label "Więcej informacji o DRM…">
+<!ENTITY emeLearnMoreContextMenu.label "Więcej informacji o DRM…">
 <!ENTITY emeLearnMoreContextMenu.accesskey "D">
 
 <!ENTITY updateAvailable.message "Uaktualnij program &brandShorterName; dla szybkości i bezpieczeństwa.">
@@ -795,7 +798,6 @@
 <!ENTITY newTabControlled.restoreButton.accesskey "P">
 <!ENTITY newTabControlled.disableButton.label "Wyłącz rozszerzenie">
 <!ENTITY newTabControlled.disableButton.accesskey "W">
-
 <!ENTITY homepageControlled.message "Rozszerzenie zmieniło stronę startową, ale można przywrócić poprzednią.">
 <!ENTITY homepageControlled.header.message "Strona startowa została zmieniona.">
 <!ENTITY homepageControlled.keepButton.label "Używaj nowej">
@@ -821,6 +823,7 @@
 <!ENTITY sendToDevice.syncNotReady.label "Synchronizowanie urządzeń…">
 
 <!ENTITY pageAction.shareUrl.label "Udostępnij">
+<!ENTITY pageAction.shareMore.label "Więcej…">
 
 <!ENTITY libraryButton.tooltip "Wyświetl historię, zapisane zakładki i jeszcze więcej">
 

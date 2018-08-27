@@ -8,7 +8,11 @@
 <!ENTITY loadError.label "Ocorreu um problema ao carregar a página">
 <!ENTITY retry.label "Tentar novamente">
 <!ENTITY returnToPreviousPage.label "Retroceder">
+<!ENTITY returnToPreviousPage1.label "Retroceder (recomendado)">
 <!ENTITY advanced.label "Avançado">
+
+<!ENTITY continue2.label "Mais…">
+<!ENTITY moreInformation.label "Mais informação">
 
 <!-- Specific error messages -->
 
@@ -96,10 +100,30 @@
 <!ENTITY nssFailure2.longDesc2 "<ul> <li>A página que está a tentar ver não pode ser mostrada porque não foi possível verificar a autenticidade dos dados recebidos.</li> <li>Por favor, reporte o problema aos proprietários do website.</li> </ul>">
 
 <!ENTITY certerror.longpagetitle1 "A sua ligação não é segura">
-<!-- Localization note (certerror.introPara) - The text content of the span tag
+<!ENTITY certerror.longpagetitle2 "Aviso: Potencial risco de segurança à frente">
+<!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "O proprietário de <span class='hostname'/> configurou o website incorretamente.  Para impedir que a sua informação fosse furtada, o &brandShortName; não se ligou a este website.">
+
+<!ENTITY certerror.introPara2 "O &brandShortName; detetou um potencial risco de segurança e não continuou para <span class='hostname'/>. Se visitar este site, atacantes podem tentar furtar informação como palavras-passe, emails, ou detalhes de cartão de crédito.">
+
+<!ENTITY certerror.expiredCert.secondPara "Este problema é mais provável porque o seu relógio do computador está definido para a hora errada, o que podem impedir o &brandShortName; de se ligar em segurança.">
+
+<!ENTITY certerror.whatCanYouDoAboutItTitle "O que pode fazer quanto a isto?">
+
+<!ENTITY certerror.unknownIssuer.whatCanYouDoAboutIt "
+<p>O problema é mais provável ser com o website, e não há nada que possa fazer para o resolver.</p>
+<p>Se está numa rede empresarial ou a utilizar software de anti-vírus, pode entrar em contacto com as equipas de apoio para assistência. Pode também notificar o administrador do website acerca do problema.</p>
+">
+
+<!ENTITY certerror.expiredCert.whatCanYouDoAboutIt2 "
+<p>O relógio do seu computador está definido para <span id='wrongSystemTime_systemDate2'/>. Certifique-se que o seu computador está definido para a data, hora e fuso horário corretos nas suas definições de sistema, e depois atualize <span class='hostname'/>.</p>
+<p>Se o seu relógio já está definido para a hora correta, o website deve estar mal configurado, e não há nada que possa fazer para resolver o problema. Pode notificar o administrador do website acerca do problema.</p>
+">
+
+<!ENTITY certerror.badCertDomain.whatCanYouDoAboutIt "
+<p>O problema é mais provável ser com o website, e não há nada que possa fazer para o resolver. Pode notificar o administrador do website acerca do problema.</p>">
 
 <!ENTITY sharedLongDesc "<ul> <li>O site pode estar temporariamente indisponível ou demasiado ocupado. Tente novamente dentro de alguns momentos.</li> <li>Se não conseguir carregar quaisquer páginas, verifique a ligação do seu computador à rede.</li> <li>Se o seu computador ou rede estiverem protegidos por uma firewall ou proxy, certifique-se de que o &brandShortName; tem permissão para aceder à Web.</li> </ul>">
 
@@ -111,6 +135,8 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "Adicionar exceção…">
+
+<!ENTITY securityOverride.exceptionButton1Label "Aceitar o risco e continuar">
 
 <!ENTITY errorReporting.automatic2 "Comunicar erros como este para ajudar a Mozilla a identificar e bloquear sites maliciosos">
 <!ENTITY errorReporting.learnMore "Saber mais…">
@@ -130,7 +156,9 @@ was trying to connect. -->
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>O &brandShortName; não se ligou a <span id='wrongSystemTimeWithoutReference_URL'/> porque o relógio do seu computador parece mostrar a hora errada e isto está a impedir uma ligação segura.</p> <p>O seu computador está definido para <span id='wrongSystemTimeWithoutReference_systemDate'/>. Para reparar este problema, altere as suas definições de data e hora para corresponder à hora correta.</p>">
 
 <!ENTITY certerror.pagetitle1  "Ligação insegura">
+<!ENTITY certerror.pagetitle2  "Aviso: Potencial risco de segurança à frente">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Este site utiliza HTTP Strict Transport Security (HSTS) para especificar que o &brandShortName; apenas se liga ao mesmo em segurança. Como resultado, não é possível adicionar uma exceção para este certificado.">
+<!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "<span class='hostname'></span> tem uma política de segurança chamada HTTP Strict Transport Security (HSTS), que significa que o &brandShortName; apenas pode ligar-se em segurança. Não pode adicionar uma exceção para visitar este site.">
 <!ENTITY certerror.copyToClipboard.label "Copiar texto para a área de transferência">
 
 <!ENTITY inadequateSecurityError.title "A sua ligação não é segura">
@@ -139,6 +167,9 @@ was trying to connect. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> utiliza tecnologia de segurança que está desatualizada e vulnerável a ataques. Um atacante pode facilmente revelar informação que pensou estar segura. O administrador do website precisa de corrigir o servidor primeiro antes que possa visitar o site.</p><p>Código de erro: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Página bloqueada">
+
+<!ENTITY clockSkewError.title "O relógio do seu computador está errado">
+<!ENTITY clockSkewError.longDesc "O seu computador pensa que são <span id='wrongSystemTime_systemDate1'/>, o que impede que o &brandShortName; se ligue corretamente. Para visitar <span class='hostname'></span>, atualize o relógio do seu computador nas suas definições de sistema para a data, hora, e fuso horário corretos, e depois atualize <span class='hostname'></span>.">
 
 <!ENTITY prefReset.longDesc "Parece que as suas definições de segurança de rede podem estar a causar isto. Pretende que as definições predefinidas sejam restauradas?">
 <!ENTITY prefReset.label "Restaurar definições predefinidas">

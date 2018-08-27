@@ -13,5 +13,6 @@
 <!ENTITY useSmallIcons.label "Małe ikony">
 <!ENTITY restoreDefaultSet.label "Domyślny układ">
 <!ENTITY addNewToolbar.label "Nowy pasek">
+<!ENTITY showTitltbar.label "Pasek tytułu">
 <!ENTITY saveChanges.label "Gotowe">
 <!ENTITY undoChanges.label "Cofnij zmiany">

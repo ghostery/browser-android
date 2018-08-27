@@ -17,14 +17,6 @@ pref-page =
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
 #
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 19em
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
 # Please keep the placeholder string short to avoid truncation.
 #
 # Notice: The value of the `.style` attribute is a CSS string, and the `width`
@@ -137,20 +129,11 @@ is-not-default = { -brand-short-name } n’est pas votre navigateur par défaut
 set-as-my-default-browser =
     .label = Définir par défaut…
     .accesskey = D
-startup-page = Au démarrage de { -brand-short-name }
-    .accesskey = d
-startup-user-homepage =
-    .label = Afficher votre page d’accueil
-startup-blank-page =
-    .label = Afficher une page vide
-startup-prev-session =
-    .label = Afficher les derniers onglets et fenêtres utilisés
 startup-restore-previous-session =
     .label = Restaurer la session précédente
     .accesskey = e
 disable-extension =
     .label = Désactiver l’extension
-home-page-header = Page d’accueil
 tabs-group-header = Onglets
 ctrl-tab-recently-used-order =
     .label = Ctrl+Tab fait défiler vos onglets en les classant selon leur dernière utilisation
@@ -219,6 +202,9 @@ choose-language-description = Choix de la langue préférée pour l’affichage 
 choose-button =
     .label = Choisir…
     .accesskey = o
+choose-browser-language-description = Choisissez en quelle langue doivent s’afficher les menus, messages et notifications de { -brand-short-name }.
+confirm-browser-language-change-description = Redémarrer { -brand-short-name } pour appliquer ces changements
+confirm-browser-language-change-button = Appliquer et redémarrer
 translate-web-pages =
     .label = Traduire le contenu web
     .accesskey = w
@@ -270,7 +256,6 @@ play-drm-content =
 play-drm-content-learn-more = En savoir plus
 update-application-title = Mises à jour de { -brand-short-name }
 update-application-description = Conservez { -brand-short-name } à jour pour bénéficier des dernières avancées en matière de performances, de stabilité et de sécurité.
-update-application-info = Version { $version } <a>Notes de version</a>
 update-application-version = Version { $version } <a data-l10n-name="learn-more">Notes de version</a>
 update-history =
     .label = Afficher l’historique des mises à jour…
@@ -306,7 +291,6 @@ performance-allow-hw-accel =
 performance-limit-content-process-option = Nombre maximum de processus de contenu
     .accesskey = N
 performance-limit-content-process-enabled-desc = Davantage de processus de contenu peut améliorer les performances lors de l’utilisation de plusieurs onglets, cependant la consommation de mémoire sera plus importante.
-performance-limit-content-process-disabled-desc = Modifier le nombre de processus de contenu est possible uniquement avec la version multiprocessus de { -brand-short-name }. <a>Apprendre à vérifier si le mode multiprocessus est activé</a>
 performance-limit-content-process-blocked-desc = Modifier le nombre de processus de contenu est possible uniquement avec la version multiprocessus de { -brand-short-name }. <a data-l10n-name="learn-more">Apprendre à vérifier si le mode multiprocessus est activé</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
@@ -377,9 +361,6 @@ use-current-pages =
 choose-bookmark =
     .label = Marque-page…
     .accesskey = m
-restore-default =
-    .label = Restaurer la configuration par défaut
-    .accesskey = R
 
 ## Search Section
 
@@ -624,6 +605,10 @@ sitedata-accept-third-party-visited-option =
     .label = Depuis les sites visités
 sitedata-accept-third-party-never-option =
     .label = Jamais
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = Type de contenu bloqué
+    .accesskey = T
 sitedata-clear =
     .label = Effacer les données…
     .accesskey = E
@@ -648,6 +633,44 @@ addressbar-locbar-openpage-option =
     .label = Les onglets ouverts
     .accesskey = O
 addressbar-suggestions-settings = Modifier les préférences pour les suggestions de recherche
+
+## Privacy Section - Content Blocking
+
+content-blocking-header = Blocage de contenu
+content-blocking-desc = Bloquez des contenus tiers, tels que du code ou de la publicité, qui peuvent ralentir votre navigation et vous pister sur le Web. Réglez les paramètres à votre gré pour obtenir un équilibre entre protection et performance.
+content-blocking-learn-more = En savoir plus
+content-blocking-restore-defaults =
+    .label = Restaurer les valeurs par défaut
+    .accesskey = R
+content-blocking-toggle-on =
+    .tooltiptext = Désactiver le blocage du contenu
+content-blocking-toggle-off =
+    .tooltiptext = Activer le blocage de contenu
+content-blocking-toggle-label-on = ACTIVÉ
+    .accesskey = C
+content-blocking-toggle-label-off = DÉSACTIVÉ
+    .accesskey = C
+content-blocking-category-label = Sélectionnez le contenu à bloquer
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-label = Traqueurs qui ralentissent
+    .accesskey = T
+content-blocking-fastblock-description = Bloque les contenus tiers mettant plus de 5 secondes à charger.
+content-blocking-fastblock-option-enabled =
+    .label = Toujours bloquer
+content-blocking-fastblock-option-disabled =
+    .label = Ne jamais bloquer
+content-blocking-tracking-protection-label = Traqueurs
+    .accesskey = T
+content-blocking-tracking-protection-description = Bloque tous les traqueurs connus (remarque : cela peut empêcher le chargement de certaines pages).
+content-blocking-tracking-protection-option-enabled =
+    .label = Toujours bloquer
+content-blocking-tracking-protection-option-pbm =
+    .label = Bloquer uniquement dans les fenêtres privées
+content-blocking-tracking-protection-option-disabled =
+    .label = Ne jamais bloquer
+content-blocking-tracking-protection-change-blocklist = Modifier la liste de blocage…
 
 ## Privacy Section - Tracking
 
@@ -697,6 +720,20 @@ permissions-notification-link = En savoir plus
 permissions-notification-pause =
     .label = Arrêter les notifications jusqu’au redémarrage de { -brand-short-name }
     .accesskey = n
+permissions-block-autoplay-media =
+    .label = Empêcher les sites web de lancer automatiquement la lecture de contenu multimédia comportant du son
+    .accesskey = E
+permissions-block-autoplay-media-menu = Lorsqu’un site web tente de lire automatiquement du son
+permissions-block-autoplay-media-exceptions =
+    .label = Exceptions…
+    .accesskey = x
+autoplay-option-ask =
+    .label = Toujours demander
+autoplay-option-allow =
+    .label = Autoriser la lecture automatique
+autoplay-option-dont =
+    .label = Interdire la lecture automatique
+permissions-autoplay-link = En savoir plus
 permissions-block-popups =
     .label = Bloquer les fenêtres popup
     .accesskey = B

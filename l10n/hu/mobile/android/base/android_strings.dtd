@@ -372,6 +372,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "Automatikus lejátszás">
 <!ENTITY pref_media_autoplay_enabled_summary "A webhelyek automatikusan lejátszhatnak-e videókat és más médiatartalmakat">
+<!ENTITY pref_media_autoplay_allow "Automatikus lejátszás engedélyezése">
+<!ENTITY pref_media_autoplay_block "Automatikus lejátszás blokkolása">
 <!ENTITY pref_zoom_force_enabled "Nagyítás engedélyezése mindig">
 <!ENTITY pref_zoom_force_enabled_summary "Felülbírálás kényszerítése, hogy bármely oldalt nagyíthasson">
 <!ENTITY pref_voice_input "Hangalapú bevitel">
@@ -447,6 +449,11 @@
 <!ENTITY datareporting_crashreporter_title_short "Hibajelentő">
 <!ENTITY datareporting_wifi_title2 "&vendorShortName; földrajzihely-szolgáltatás">
 <!ENTITY datareporting_wifi_geolocation_summary4 "Segítsen a &vendorShortName;nak feltérképezni a világot! A készülék hozzávetőleges Wi-Fi és mobilhálózati helyének megosztásával hozzájárulhat a helymeghatározási szolgáltatásunk fejlesztéséhez">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "Fut a &vendorShortName; földrajzihely-szolgáltatás">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -888,3 +895,16 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "Kezdőképernyőhöz adás">
 <!ENTITY pwa_continue_to_website "Tovább a weblapra">
 <!ENTITY pwa_onboarding_sumo "Könnyedén hozzáadhatja ezt a weboldalt a Kezdőképernyőhöz, és azonnal elérheti azt, így gyorsabban böngészve, miközben app-szerű élményt kap.">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "Lejátszás">
+<!ENTITY pip_play_button_description "Lejátszás folytatása">
+<!ENTITY pip_pause_button_title "Szünet">
+<!ENTITY pip_pause_button_description "Lejátszás szüneteltetése">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "&vendorShortName; földrajzihely-szolgáltatás">
+<!ENTITY download_notification_channel "Letöltések">
+<!ENTITY media_notification_channel "Médialejátszás">

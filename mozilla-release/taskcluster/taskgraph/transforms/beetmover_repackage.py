@@ -40,6 +40,7 @@ _WINDOWS_BUILD_PLATFORMS = [
 # with a beetmover patch in https://github.com/mozilla-releng/beetmoverscript/.
 # See example in bug 1348286
 _DESKTOP_UPSTREAM_ARTIFACTS_UNSIGNED_EN_US = [
+    "buildhub.json",
     "target.common.tests.zip",
     "target.cppunittest.tests.zip",
     "target.crashreporter-symbols.zip",
@@ -289,10 +290,8 @@ def generate_upstream_artifacts(job, build_task_ref, build_signing_task_ref,
                 if paths:
                     usable_paths = paths[:]
 
-                    no_stub = ("mozilla-esr60", "jamun")
-                    if project in no_stub:
-                        # Stub installer is only generated on win32 and not on esr
-                        # XXX We really should have a better solution for this
+                    use_stub = job["attributes"].get('stub-installer')
+                    if not use_stub:
                         if 'target.stub-installer.exe' in usable_paths:
                             usable_paths.remove('target.stub-installer.exe')
                     upstream_artifacts.append({

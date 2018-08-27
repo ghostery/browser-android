@@ -20,7 +20,7 @@
 <!ENTITY productHelp2.accesskey   "u">
 <!ENTITY helpMac.commandkey       "?">
 
-<!ENTITY helpKeyboardShortcuts.label     "Atalhos do teclado">
+<!ENTITY helpKeyboardShortcuts.label     "Atalhos de teclado">
 <!ENTITY helpKeyboardShortcuts.accesskey "h">
 
 <!ENTITY helpSafeMode.label       "Reiniciar com extensões desativadas…">

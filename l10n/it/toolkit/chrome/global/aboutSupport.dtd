@@ -24,14 +24,6 @@
 <!ENTITY aboutSupport.featureName "Nome">
 <!ENTITY aboutSupport.featureVersion "Versione">
 <!ENTITY aboutSupport.featureId "ID">
-<!ENTITY aboutSupport.experimentsTitle "Caratteristiche sperimentali">
-<!ENTITY aboutSupport.experimentName "Nome">
-<!ENTITY aboutSupport.experimentId "ID">
-<!ENTITY aboutSupport.experimentDescription "Descrizione">
-<!ENTITY aboutSupport.experimentActive "Attiva">
-<!ENTITY aboutSupport.experimentEndDate "Data termine">
-<!ENTITY aboutSupport.experimentHomepage "Pagina iniziale">
-<!ENTITY aboutSupport.experimentBranch "Branch">
 <!ENTITY aboutSupport.appBasicsTitle "Informazioni di base">
 <!ENTITY aboutSupport.appBasicsName "Nome">
 <!ENTITY aboutSupport.appBasicsVersion "Versione">
@@ -53,7 +45,7 @@
 <!ENTITY aboutSupport.appBasicsProcessCount "Processi contenuti web">
 <!ENTITY aboutSupport.enterprisePolicies "Criteri a livello aziendale">
 <!ENTITY aboutSupport.appBasicsKeyGoogle "Chiave Google">
-<!ENTITY aboutSupport.appBasicsKeyMozilla "Chiave per il servizio Mozilla Location">
+<!ENTITY aboutSupport.appBasicsKeyMozilla "Chiave per georilevazione di Mozilla">
 <!ENTITY aboutSupport.appBasicsSafeMode "Modalità provvisoria">
 <!ENTITY aboutSupport.showDir.label "Apri percorso">
 <!ENTITY aboutSupport.showMac.label "Mostra nel Finder">

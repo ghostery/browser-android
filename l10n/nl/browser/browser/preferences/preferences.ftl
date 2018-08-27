@@ -19,15 +19,6 @@ pref-page =
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
 #
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 15.4em
-
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
 # Please keep the placeholder string short to avoid truncation.
 #
 # Notice: The value of the `.style` attribute is a CSS string, and the `width`
@@ -162,24 +153,12 @@ set-as-my-default-browser =
     .label = Standaard maken…
     .accesskey = m
 
-startup-page = Als { -brand-short-name } start
-    .accesskey = a
-
-startup-user-homepage =
-    .label = Uw startpagina tonen
-startup-blank-page =
-    .label = Een lege pagina tonen
-startup-prev-session =
-    .label = Uw vensters en tabbladen van de vorige keer tonen
-
 startup-restore-previous-session =
     .label = Vorige sessie herstellen
     .accesskey = s
 
 disable-extension =
     .label = Extensie uitschakelen
-
-home-page-header = Startpagina
 
 tabs-group-header = Tabbladen
 
@@ -272,14 +251,18 @@ choose-button =
     .label = Kiezen…
     .accesskey = z
 
+choose-browser-language-description = Kies de talen die worden gebruikt voor het weergeven van menu’s, berichten en notificaties van { -brand-short-name }.
+confirm-browser-language-change-description = Herstart { -brand-short-name } om deze wijzigingen toe te passen.
+confirm-browser-language-change-button = Toepassen en herstarten
+
 translate-web-pages =
     .label = Webinhoud vertalen
     .accesskey = W
 
 # The <img> element is replaced by the logo of the provider
 # used to provide machine translations for web pages.
-
 translate-attribution = Vertalingen door <img data-l10n-name="logo"/>
+
 translate-exceptions =
     .label = Uitzonderingen…
     .accesskey = z
@@ -341,8 +324,6 @@ update-application-title = { -brand-short-name }-updates
 
 update-application-description = Houd { -brand-short-name } up-to-date voor de beste prestaties, stabiliteit en beveiliging.
 
-update-application-info = Versie { $version } <a>Wat is er nieuw</a>
-
 update-application-version = Versie { $version } <a data-l10n-name="learn-more">Wat is er nieuw</a>
 
 update-history =
@@ -391,8 +372,6 @@ performance-limit-content-process-option = Limiet van inhoudsprocessen
     .accesskey = L
 
 performance-limit-content-process-enabled-desc = Extra inhoudsprocessen kunnen de prestaties bij het gebruik van meerdere tabbladen verbeteren, maar zullen ook meer geheugen gebruiken.
-performance-limit-content-process-disabled-desc = Aanpassen van het aantal inhoudsprocessen is alleen mogelijk met multiprocess-{ -brand-short-name }. <a>Informatie over het controleren of multiprocess is ingeschakeld</a>
-
 performance-limit-content-process-blocked-desc = Aanpassen van het aantal inhoudsprocessen is alleen mogelijk met multiprocess-{ -brand-short-name }. <a data-l10n-name="learn-more">Informatie over het controleren of multiprocess is ingeschakeld</a>
 
 # Variables:
@@ -481,10 +460,6 @@ use-current-pages =
 choose-bookmark =
     .label = Bladwijzer gebruiken…
     .accesskey = B
-
-restore-default =
-    .label = Standaard herstellen
-    .accesskey = S
 
 ## Search Section
 
@@ -818,6 +793,51 @@ addressbar-locbar-openpage-option =
 
 addressbar-suggestions-settings = Voorkeuren voor zoekmachinesuggesties wijzigen
 
+## Privacy Section - Content Blocking
+
+content-blocking-header = Inhoudsblokkering
+
+content-blocking-desc = Blokkeer inhoud van derden, zoals advertenties of code, die het surfen kan vertragen en u op het web kan volgen. Pas uw instellingen aan voor het optimale evenwicht tussen bescherming en prestaties.
+
+content-blocking-learn-more = Meer info
+content-blocking-restore-defaults =
+  .label = Standaardwaarden herstellen
+  .accesskey = S
+
+content-blocking-toggle-on =
+  .tooltiptext = Inhoudsblokkering uitschakelen
+content-blocking-toggle-off =
+  .tooltiptext = Inhoudsblokkering inschakelen
+
+content-blocking-toggle-label-on = AAN
+  .accesskey = A
+content-blocking-toggle-label-off = UIT
+  .accesskey = U
+
+content-blocking-category-label = Kiezen wat er wordt geblokkkeerd
+
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-label = Trage tracking-elementen
+  .accesskey = T
+content-blocking-fastblock-description = Blokkeert inhoud van derden die langer dan 5 seconden doet over het laden.
+content-blocking-fastblock-option-enabled =
+  .label = Altijd blokkeren
+content-blocking-fastblock-option-disabled =
+  .label = Nooit blokkeren
+
+content-blocking-tracking-protection-label = Trackers
+  .accesskey = T
+content-blocking-tracking-protection-description = Blokkeert alle bekende trackers (Let op: kan ook het laden van bepaalde pagina’s tegengaan).
+content-blocking-tracking-protection-option-enabled =
+  .label = Altijd blokkeren
+content-blocking-tracking-protection-option-pbm =
+  .label = Alleen blokkeren in privévensters
+content-blocking-tracking-protection-option-disabled =
+  .label = Nooit blokkeren
+content-blocking-tracking-protection-change-blocklist = Blokkeerlijst wijzigen…
+
 ## Privacy Section - Tracking
 
 tracking-header = Bescherming tegen volgen
@@ -882,9 +902,18 @@ permissions-block-autoplay-media =
     .label = Automatisch afspelen van media met geluid door websites blokkeren
     .accesskey = s
 
+permissions-block-autoplay-media-menu = Voor websites die automatisch geluid afspelen
+
 permissions-block-autoplay-media-exceptions =
     .label = Uitzonderingen…
     .accesskey = U
+
+autoplay-option-ask =
+    .label = Altijd vragen
+autoplay-option-allow =
+    .label = Automatisch afspelen toestaan
+autoplay-option-dont =
+    .label = Niet automatisch afspelen
 
 permissions-block-popups =
     .label = Pop-upvensters blokkeren

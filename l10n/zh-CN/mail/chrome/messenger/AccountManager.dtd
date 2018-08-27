@@ -4,21 +4,21 @@
 
 <!-- extracted from AccountManager.xul -->
 
-<!ENTITY accountManagerTitle.label "帐户设置">
+<!ENTITY accountManagerTitle.label "账户设置">
 
 <!ENTITY accountActionsButton.label "账户操作">
 <!ENTITY accountActionsButton.accesskey "A">
-<!ENTITY addMailAccountButton.label "添加邮件帐户…">
+<!ENTITY addMailAccountButton.label "添加邮件账户…">
 <!ENTITY addMailAccountButton.accesskey "A">
-<!ENTITY addIMAccountButton.label "添加聊天帐户…">
+<!ENTITY addIMAccountButton.label "添加聊天账户…">
 <!ENTITY addIMAccountButton.accesskey "C">
 <!ENTITY addFeedAccountButton.label "添加收取点账号…">
 <!ENTITY addFeedAccountButton.accesskey "F">
 <!ENTITY addOtherAccountButton.label "添加其他账户…">
 <!ENTITY addOtherAccountButton.accesskey "O">
-<!ENTITY setDefaultButton.label "设置为默认帐户">
+<!ENTITY setDefaultButton.label "设置为默认账户">
 <!ENTITY setDefaultButton.accesskey "D">
-<!ENTITY removeButton.label "删除帐户">
+<!ENTITY removeButton.label "删除账户">
 <!ENTITY removeButton.accesskey "R">
 
 <!-- AccountManager.xul -->

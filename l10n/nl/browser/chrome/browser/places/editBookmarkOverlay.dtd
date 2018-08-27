@@ -25,4 +25,4 @@
 <!ENTITY editBookmarkOverlay.loadInSidebar.accesskey         "D">
 <!ENTITY editBookmarkOverlay.choose.label                    "Kiezen…">
 <!ENTITY editBookmarkOverlay.newFolderButton.label           "Nieuwe map">
-<!ENTITY editBookmarkOverlay.newFolderButton.accesskey       "e">
+<!ENTITY editBookmarkOverlay.newFolderButton.accesskey       "m">

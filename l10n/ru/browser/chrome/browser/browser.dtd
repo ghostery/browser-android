@@ -38,6 +38,21 @@ left instead of right. -->
 <!ENTITY  closeSelectedTabs.label            "Закрыть выделенные вкладки">
 <!ENTITY  closeSelectedTabs.accesskey        "ы">
 
+<!ENTITY  pinSelectedTabs.label              "Закрепить вкладки">
+<!-- Pin Tab and Pin Selected Tabs have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  pinSelectedTabs.accesskey          "к">
+<!ENTITY  unpinSelectedTabs.label            "Открепить вкладки">
+<!-- Unpin Tab and Unpin Selected Tabs have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  unpinSelectedTabs.accesskey        "л">
+<!-- Reload Tab and Reload Selected Tabs have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  reloadSelectedTabs.label           "Обновить выделенные вкладки">
+<!ENTITY  reloadSelectedTabs.accesskey       "и">
+<!ENTITY  bookmarkSelectedTabs.label         "Добавить вкладки в закладки…">
+<!ENTITY  bookmarkSelectedTabs.accesskey     "а">
+
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
 left edge of the tabstrip. Really we just want the string to express the idea
@@ -65,7 +80,6 @@ can reach it easily. -->
 <!ENTITY  undoCloseTab.accesskey             "с">
 <!ENTITY  closeTab.label                     "Закрыть вкладку">
 <!ENTITY  closeTab.accesskey                 "а">
-
 <!ENTITY  hiddenTabs.label                   "Скрытые вкладки">
 
 <!ENTITY  listAllTabs.label      "Список всех вкладок">
@@ -215,6 +229,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY urlbar.defaultNotificationAnchor.tooltip         "Открыть панель сообщений">
 <!ENTITY urlbar.geolocationNotificationAnchor.tooltip     "Открыть панель запроса местоположения">
+<!ENTITY urlbar.autoplayNotificationAnchor.tooltip        "Открыть панель автовоспроизведения">
 <!ENTITY urlbar.addonsNotificationAnchor.tooltip          "Открыть панель сообщения об установке дополнения">
 <!ENTITY urlbar.canvasNotificationAnchor.tooltip          "Управление доступом к информации в canvas">
 <!ENTITY urlbar.indexedDBNotificationAnchor.tooltip       "Открыть панель сообщения об автономном хранилище">
@@ -223,7 +238,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.webNotificationAnchor.tooltip             "Изменение того, можете ли вы получать уведомления с сайта">
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip     "Хранить данные в постоянном хранилище">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip   "Браузер находится под удалённым управлением">
-
 <!ENTITY urlbar.webAuthnAnchor.tooltip                    "Открыть панель веб-авторизации">
 
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip      "Управление доступом сайта к вашей камере и/или микрофону">
@@ -242,7 +256,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.geolocationBlocked.tooltip       "Вы заблокировали доступ этого веб-сайта к информации о местоположении.">
 <!ENTITY urlbar.webNotificationsBlocked.tooltip  "Вы заблокировали уведомления с этого веб-сайта.">
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Вы заблокировали доступ этого веб-сайта к постоянному хранилищу.">
-<!ENTITY urlbar.popupBlocked.tooltip             "Вы заблокировали всплывающие окна с этого сайта.">
+<!ENTITY urlbar.popupBlocked.tooltip             "Вы заблокировали всплывающие окна с этого веб-сайта.">
+<!ENTITY urlbar.autoplayMediaBlocked.tooltip     "Вы заблокировали автоматическое воспроизводение медиа со звуком с этого веб-сайта.">
 <!ENTITY urlbar.canvasBlocked.tooltip            "Вы заблокировали извлечение данных canvas с этого веб-сайта.">
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "Вы запретили этому веб-сайту использовать плагин Adobe Flash.">
 <!ENTITY urlbar.midiBlocked.tooltip              "Вы заблокировали доступ этого веб-сайта к MIDI.">
@@ -301,6 +316,10 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY webDeveloperMenu.label       "Веб-разработка">
 <!ENTITY webDeveloperMenu.accesskey   "б">
 
+<!ENTITY devtoolsRecordExecution.label "Записать выполнение">
+<!ENTITY devtoolsSaveRecording.label "Сохранить запись">
+<!ENTITY devtoolsReplayExecution.label "Проиграть выполнение">
+
 <!ENTITY inspectContextMenu.label     "Исследовать элемент">
 <!ENTITY inspectContextMenu.accesskey "л">
 
@@ -310,6 +329,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY fileMenu.accesskey       "Ф">
 <!ENTITY newUserContext.label             "Новая вкладка в контейнере">
 <!ENTITY newUserContext.accesskey         "а">
+<!ENTITY manageUserContext.label          "Управление контейнерами">
+<!ENTITY manageUserContext.accesskey      "й">
 <!ENTITY newNavigatorCmd.label        "Новое окно">
 <!ENTITY newNavigatorCmd.key        "N">
 <!ENTITY newNavigatorCmd.accesskey      "Н">
@@ -412,8 +433,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!-- LOCALIZATION NOTE (customizeMenu.addToOverflowMenu.label,
      customizeMenu.pinToOverflowMenu.label, customizeMenu.unpinFromOverflowMenu.label)
      The overflow menu is the menu that appears if you click the chevron (>> button)
-     in the location bar. These labels are only used in Photon, where you can put
-     items into this menu permanently (pinned). -->
+     in the location bar. -->
 <!ENTITY customizeMenu.addToOverflowMenu.label "Добавить в расширенное меню">
 <!ENTITY customizeMenu.addToOverflowMenu.accesskey "а">
 <!ENTITY customizeMenu.moveToToolbar.label "Переместить на панель инструментов">
@@ -425,6 +445,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      keys.  -->
 <!ENTITY customizeMenu.moveToPanel.label "Переместить в меню">
 <!ENTITY customizeMenu.moveToPanel.accesskey "е">
+<!-- LOCALIZATION NOTE (customizeMenu.pinToOverflowMenu.accesskey)
+     can appear on the same context menu as menubarCmd and personalbarCmd,
+     so they should have different access keys.  -->
 <!ENTITY customizeMenu.pinToOverflowMenu.label "Прикрепить в расширенном меню">
 <!ENTITY customizeMenu.pinToOverflowMenu.accesskey "к">
 <!ENTITY customizeMenu.unpinFromOverflowMenu.label "Открепить от расширенного меню">
@@ -612,6 +635,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY hidePluginCmd.label          "Скрыть этот плагин">
 <!ENTITY hidePluginCmd.accesskey      "к">
 <!ENTITY copyLinkCmd.label            "Копировать ссылку">
+<!-- LOCALIZATION NOTE (copyLinkCmd.accesskey): The access keys for "Copy Link
+Location" and "Copy Email Address" should be the same if possible; the two
+context menu items are mutually exclusive. -->
 <!ENTITY copyLinkCmd.accesskey        "ы">
 <!ENTITY copyImageCmd.label           "Копировать ссылку на изображение">
 <!ENTITY copyImageCmd.accesskey       "п">
@@ -622,6 +648,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY copyAudioURLCmd.label        "Копировать ссылку на аудио">
 <!ENTITY copyAudioURLCmd.accesskey    "п">
 <!ENTITY copyEmailCmd.label           "Копировать адрес электронной почты">
+<!-- LOCALIZATION NOTE (copyEmailCmd.accesskey): The access keys for "Copy Link
+Location" and "Copy Email Address" should be the same if possible; the two
+context menu items are mutually exclusive. -->
 <!ENTITY copyEmailCmd.accesskey       "э">
 <!ENTITY thisFrameMenu.label              "В этом фрейме">
 <!ENTITY thisFrameMenu.accesskey          "ф">
@@ -757,8 +786,15 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY spellAddDictionaries.label "Добавить словари…">
 <!ENTITY spellAddDictionaries.accesskey "Д">
 
+<!-- LOCALIZATION NOTE (editBookmark.panel.width): width of the bookmark panel.
+     Should be large enough to fully display the Done and Cancel/
+     Remove Bookmark buttons. -->
+<!ENTITY editBookmark.panel.width                    "23em">
 <!ENTITY editBookmark.done.label                     "Готово">
 <!ENTITY editBookmark.removeBookmark.accessKey       "д">
+
+<!ENTITY editBookmark.showForNewBookmarks.label       "Показывать редактор при сохранении">
+<!ENTITY editBookmark.showForNewBookmarks.accesskey   "ы">
 
 <!-- LOCALIZATION NOTE (identity.securityView.label)
      This is the header of the security subview in the Site Identity panel. -->
@@ -806,6 +842,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY identity.permissions "Разрешения">
 <!ENTITY identity.permissionsEmpty "Вы не давали этому сайту каких-либо специальных разрешений.">
 <!ENTITY identity.permissionsReloadHint "Чтобы изменения возымели действие, вам, возможно, потребуется перезагрузить страницу.">
+
+<!ENTITY identity.permissionsPreferences.tooltip "Открыть настройки разрешений">
 
 <!-- Name for the tabs toolbar as spoken by screen readers.
      The word "toolbar" is appended automatically and should not be contained below! -->
@@ -905,8 +943,53 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.audioCapture.label "Будет предоставлен доступ к аудио из вкладки.">
 <!ENTITY getUserMedia.allWindowsShared.message "Будет предоставлен доступ ко всем видимым окнам на вашем экране.">
 
+<!ENTITY trackingProtection.on "Защита от отслеживания: ВКЛЮЧЕНА">
+<!ENTITY trackingProtection.off "Защита от отслеживания: ОТКЛЮЧЕНА">
+
+<!ENTITY contentBlocking.title "Блокировка содержимого">
+<!ENTITY contentBlocking.detected "На этом сайте обнаружено содержимое для блокировки.">
+<!ENTITY contentBlocking.notDetected "На этой странице не обнаружено содержимого для блокировки.">
+<!ENTITY contentBlocking.disabled.label "Отключена">
+<!ENTITY contentBlocking.disabled.tooltip "Вы отключили блокировку содержимого.">
+<!ENTITY contentBlocking.exception.tooltip "Вы отключили блокировку содержимого для этого сайта.">
+
+<!ENTITY contentBlocking.fastBlock.label "Медленно загружающиеся трекеры">
+<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.blocked.label):
+     This label signals that this type of content blocking is turned
+     ON and is successfully blocking malicious/slow content, so this is
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Slow-Loading Trackers [are] Blocked"-->
+<!ENTITY contentBlocking.fastBlock.blocked.label "Заблокированы">
+<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.add.label):
+     This is displayed as a link to preferences, where the user can add
+     this specific type of content blocking. When this text is shown
+     the type of content blocking is currently not enabled. -->
+<!ENTITY contentBlocking.fastBlock.add.label "Добавить блокировку…">
+
+<!ENTITY contentBlocking.trackingProtection.label "Все трекеры">
+<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
+     This label signals that this type of content blocking is turned
+     ON and is successfully blocking malicious/slow content, so this is
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Trackers [are] Blocked"-->
+<!ENTITY contentBlocking.trackingProtection.blocked.label "Заблокированы">
+<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.add.label):
+     This is displayed as a link to preferences, where the user can add
+     this specific type of content blocking. When this text is shown
+     the type of content blocking is currently not enabled. -->
+<!ENTITY contentBlocking.trackingProtection.add.label "Добавить блокировку…">
+
+<!ENTITY contentBlocking.openBreakageReportView.label "Сообщить о проблеме">
+<!ENTITY contentBlocking.breakageReportView.label "Сообщить о проблеме">
+<!ENTITY contentBlocking.breakageReportView.description "Блокировка содержимого может вызывать проблемы с некоторыми веб-сайтами. Когда вы сообщаете о проблеме, вы помогаете сделать &brandShortName; лучше для всех и каждого. (Это отправит адрес сайта, а также информацию о настройках приватности и блокировки содержимого в Mozilla).">
+<!ENTITY contentBlocking.breakageReportView.learnMore "Подробнее">
+<!ENTITY contentBlocking.breakageReportView.collection.url.label "Адрес страницы">
+<!ENTITY contentBlocking.breakageReportView.collection.userAgent.label "Номер версии &brandShortName;">
+<!ENTITY contentBlocking.breakageReportView.collection.comments.label "Какая у вас проблема? (необязательно)">
+<!ENTITY contentBlocking.breakageReportView.sendReport.label "Отправить сообщение">
+<!ENTITY contentBlocking.breakageReportView.cancel.label "Отмена">
+
 <!ENTITY trackingProtection.title "Защита от отслеживания">
-<!ENTITY trackingProtection.tooltip "Открыть настройки Защиты от отслеживания">
 <!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; блокирует части страницы, которые могут отслеживать ваше поведение в Интернете.">
 <!ENTITY trackingProtection.detectedNotBlocked3 "Этот сайт содержит элементы, которые могут отслеживать ваше поведение в Интернете. Вы отключили защиту.">
 <!ENTITY trackingProtection.notDetected3 "На этой странице не обнаружено ни одного отслеживающего элемента.">
@@ -922,6 +1005,36 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY trackingProtection.unblockPrivate.accesskey "и">
 <!ENTITY trackingProtection.block2.label "Включить защиту">
 <!ENTITY trackingProtection.block2.accesskey "ю">
+
+<!ENTITY trackingProtection.tooltip "Открыть настройки Защиты от отслеживания">
+<!ENTITY trackingProtection.detectedBlocked4 "&brandShortName; блокирует части этой страницы, которые могут отслеживать ваше поведение в Интернете.">
+<!ENTITY trackingProtection.detectedNotBlocked5 "&brandShortName; определил элементы, которые могут отслеживать ваше поведение в Интернете.">
+<!ENTITY trackingProtection.detectedException "&brandShortName; определил элементы, которые могут отслеживать ваше поведение в Интернете. Вы отключили защиту для этого сайта.">
+<!ENTITY trackingProtection.notDetected5 "На этой странице не обнаружено ни одного отслеживающего элемента.">
+<!ENTITY trackingProtection.notDetectedException "На этой странице не обнаружено ни одного отслеживающего элемента. Вы отключили защиту для этого сайта.">
+
+<!ENTITY trackingProtection.reloadRequired2 "Вы включили Защиту от отслеживания. Перезагрузите эту страницу, чтобы заблокировать все трекеры.">
+
+<!-- LOCALIZATION NOTE (trackingProtection.unblock3.label, trackingProtection.unblock3.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in NON-private browsing mode. -->
+<!ENTITY trackingProtection.unblock3.label "Отключить для этого сайта">
+<!ENTITY trackingProtection.unblock3.accesskey "ю">
+<!ENTITY trackingProtection.unblock4.label "Отключить блокировку для этого сайта">
+<!ENTITY trackingProtection.unblock4.accesskey "ю">
+<!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate3.label, trackingProtection.unblockPrivate3.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in PRIVATE browsing mode. -->
+<!ENTITY trackingProtection.unblockPrivate3.label "Отключить на эту сессию">
+<!ENTITY trackingProtection.unblockPrivate3.accesskey "ю">
+<!ENTITY trackingProtection.block4.label "Включить для этого сайта">
+<!ENTITY trackingProtection.block4.accesskey "л">
+<!ENTITY trackingProtection.unblockPrivate4.label "Временно отключить блокировку">
+<!ENTITY trackingProtection.unblockPrivate4.accesskey "ю">
+<!ENTITY trackingProtection.block5.label "Включить блокировку для этого сайта">
+<!ENTITY trackingProtection.block5.accesskey "л">
+<!ENTITY trackingProtection.reload2.label "Перезагрузить страницу">
+<!ENTITY trackingProtection.reload2.accesskey "з">
 
 <!ENTITY pluginNotification.showAll.label "Показать все">
 <!ENTITY pluginNotification.showAll.accesskey "о">
@@ -1024,6 +1137,8 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY sendToDevice.syncNotReady.label "Синхронизация устройств…">
 
 <!ENTITY pageAction.shareUrl.label "Поделиться">
+
+<!ENTITY pageAction.shareMore.label "Ещё…">
 
 <!ENTITY libraryButton.tooltip "Просмотр истории, сохранённых закладок и многого другого">
 

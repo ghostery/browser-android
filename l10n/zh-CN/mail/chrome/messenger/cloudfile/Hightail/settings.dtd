@@ -2,5 +2,5 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this file,
    - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
 <!ENTITY hightailSettings.username "用户名：">
-<!ENTITY hightailSettings.needAnAccount "需要一个帐户？">
+<!ENTITY hightailSettings.needAnAccount "需要一个账户？">
 <!ENTITY hightailSettings.learnMore "详细了解…">

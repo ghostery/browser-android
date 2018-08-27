@@ -43,47 +43,39 @@ permissions-capabilities-block =
 permissions-capabilities-prompt =
     .label = Zawsze pytaj
 
-## Invalid Hostname Dialog
-
 permissions-invalid-uri-title = Wprowadzono nieprawidłową nazwę hosta
 permissions-invalid-uri-label = Podaj prawidłową nazwę hosta
-
-## Exceptions - Tracking Protection
 
 permissions-exceptions-tracking-protection-window =
     .title = Wyjątki – Ochrona przed śledzeniem
     .style = { permissions-window.style }
 permissions-exceptions-tracking-protection-desc = Ochrona przed śledzeniem została wyłączona dla następujących witryn.
 
-## Exceptions - Cookies
-
 permissions-exceptions-cookie-window =
     .title = Wyjątki – Ciasteczka i dane stron
     .style = { permissions-window.style }
 permissions-exceptions-cookie-desc = Określ zasady akceptacji ciasteczek i danych stron. Podaj dokładny adres witryny, której uprawnienia chcesz zmodyfikować, a następnie naciśnij Zezwalaj, Blokuj lub Zezwalaj na czas sesji.
-
-## Exceptions - Pop-ups
 
 permissions-exceptions-popup-window =
     .title = Uprawnione witryny – Wyskakujące okna
     .style = { permissions-window.style }
 permissions-exceptions-popup-desc = Określ, które witryny mogą otwierać wyskakujące okna. Podaj dokładny adres witryny, której chcesz na to zezwolić, i naciśnij Zezwalaj.
 
-## Exceptions - Saved Logins
-
 permissions-exceptions-saved-logins-window =
     .title = Wyjątki – zachowywanie danych logowania
     .style = { permissions-window.style }
 permissions-exceptions-saved-logins-desc = Dane logowania dla następujących witryn nie będą zachowywane.
-
-## Exceptions - Add-ons
 
 permissions-exceptions-addons-window =
     .title = Uprawnione witryny – Instalacja dodatków
     .style = { permissions-window.style }
 permissions-exceptions-addons-desc = Określ, które witryny mogą instalować dodatki. Podaj dokładny adres witryny, której chcesz na to zezwolić, i naciśnij Zezwalaj.
 
-## Site Permissions - Notifications
+permissions-exceptions-autoplay-media-window=
+  .title=Uprawnione witryny – Automatyczne odtwarzanie
+  .style={ permissions-window.style }
+permissions-exceptions-autoplay-media-desc=Określ, które witryny mogą automatycznie odtwarzać elementy multimedialne. Podaj dokładny adres witryny, której chcesz na to zezwolić, i naciśnij Zezwalaj.
+permissions-exceptions-autoplay-media-desc2=Określ, które witryny będą mogły zawsze (lub nigdy) automatycznie odtwarzać treści z dźwiękiem. Wprowadź adres witryny, której uprawnienia chcesz określić, i wybierz Zezwalaj lub Blokuj.
 
 permissions-site-notification-window =
     .title = Ustawienia – Powiadomienia
@@ -93,8 +85,6 @@ permissions-site-notification-disable-label =
     .label = Blokowanie nowych próśb o możliwość wyświetlania powiadomień.
 permissions-site-notification-disable-desc = Uniemożliwi to witrynom spoza listy powyżej proszenie o możliwość wysyłania powiadomień. Zablokowanie powiadomień może spowodować, że niektóre funkcje witryny nie będą działać.
 
-## Site Permissions - Location
-
 permissions-site-location-window =
     .title = Ustawienia – Informacje o położeniu
     .style = { permissions-window.style }
@@ -103,8 +93,6 @@ permissions-site-location-disable-label =
     .label = Blokowanie nowych próśb o możliwość uzyskiwania informacji o położeniu
 permissions-site-location-disable-desc = Uniemożliwi to witrynom spoza listy powyżej proszenie o możliwość uzyskiwania informacji o położeniu. Zablokowanie uzyskiwania informacji o położeniu może spowodować, że niektóre funkcje witryny nie będą działać.
 
-## Site Permissions - Camera
-
 permissions-site-camera-window =
     .title = Ustawienia – Kamera
     .style = { permissions-window.style }
@@ -112,8 +100,6 @@ permissions-site-camera-desc = Następujące strony prosiły o dostęp do kamer
 permissions-site-camera-disable-label =
     .label = Blokowanie nowych próśb o dostęp do kamery
 permissions-site-camera-disable-desc = Uniemożliwi to witrynom spoza listy powyżej proszenie o dostęp do kamery. Zablokowanie dostępu do kamery może spowodować, że niektóre funkcje witryny nie będą działać.
-
-## Site Permissions - Microphone
 
 permissions-site-microphone-window =
     .title = Ustawienia – Mikrofon

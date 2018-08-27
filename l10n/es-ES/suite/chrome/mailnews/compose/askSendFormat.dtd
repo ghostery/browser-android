@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY windowTitle.label "Pregunta sobre correo HTML">
-<!ENTITY recipient.label "Algunos destinatarios no están listados como capaces de recibir correo HTML.">
+<!ENTITY recipient.label "Algunos destinatarios pueden no recibir correctamente correo HTML.">
 <!ENTITY question.label "¿Quiere convertir el mensaje a texto sin formato o enviarlo en HTML?">
 <!ENTITY plainTextAndHtml.label "Enviar en ambos formatos, texto sin formato y HTML">
 <!ENTITY plainTextAndHtml.accesskey "a">

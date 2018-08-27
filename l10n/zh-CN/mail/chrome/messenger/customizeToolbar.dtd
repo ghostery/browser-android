@@ -13,5 +13,6 @@
 <!ENTITY useSmallIcons.label      "使用小图标">
 <!ENTITY restoreDefaultSet.label  "恢复默认设置">
 <!ENTITY addNewToolbar.label      "添加新工具栏">
+<!ENTITY showTitltbar.label       "显示标题栏">
 <!ENTITY saveChanges.label        "完成">
 <!ENTITY undoChanges.label        "撤销更改">

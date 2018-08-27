@@ -83,6 +83,14 @@ permissions-exceptions-addons-window =
     .style = { permissions-window.style }
 permissions-exceptions-addons-desc = Puede especificar desde qué sitios web está permitido instalar complementos. Escriba la dirección exacta del sitio que quiere permitir y pulse Permitir.
 
+## Exceptions - Autoplay Media
+
+permissions-exceptions-autoplay-media-window =
+    .title = Sitios web permitidos - Reproducción automática
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc = Puede especificar qué sitios web tienen permitido reproducir automáticamente elementos multimedia. Escriba la dirección exacta del sitio que desea permitir y pulse Permitir.
+permissions-exceptions-autoplay-media-desc2 = Puede especificar qué sitios web pueden reproducir automáticamente contenido multimedia con sonido. Escriba la dirección del sitio que desea administrar y, a continuación, haga clic en Bloquear o Permitir.
+
 ## Site Permissions - Notifications
 
 permissions-site-notification-window =

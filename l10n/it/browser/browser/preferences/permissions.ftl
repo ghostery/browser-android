@@ -88,7 +88,11 @@ permissions-exceptions-addons-desc = È possibile specificare quali siti web avr
 permissions-exceptions-autoplay-media-window =
     .title = Siti web con permesso - Riproduzione automatica
     .style = { permissions-window.style }
-permissions-exceptions-autoplay-media-desc = È possibile specificare quali siti web avranno il permesso di riprodurre automaticamente contenuti multimediali. Inserire l’indirizzo esatto del sito web a cui dare il permesso e fare clic su Consenti.
+permissions-exceptions-autoplay-media-window2 =
+    .title = Eccezioni - Riproduzione automatica
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc = È possibile specificare quali siti web avranno il permesso di riprodurre automaticamente contenuti multimediali con audio. Inserire l’indirizzo esatto del sito web a cui dare il permesso e fare clic su Consenti.
+permissions-exceptions-autoplay-media-desc2 = È possibile specificare quali siti web avranno sempre il permesso di riprodurre automaticamente contenuti multimediali con audio e quali verranno bloccati. Inserire l’indirizzo esatto del sito web da gestire e fare clic su Blocca o Consenti.
 
 ## Site Permissions - Notifications
 

@@ -8,7 +8,11 @@
 <!ENTITY loadError.label "页面载入出错">
 <!ENTITY retry.label "重试">
 <!ENTITY returnToPreviousPage.label "后退">
+<!ENTITY returnToPreviousPage1.label "返回上一页（推荐）">
 <!ENTITY advanced.label "高级">
+
+<!ENTITY continue2.label "更多选项…">
+<!ENTITY moreInformation.label "更多信息">
 
 <!-- Specific error messages -->
 
@@ -20,7 +24,7 @@
 
 <!ENTITY dnsNotFound.pageTitle "找不到服务器">
 <!-- Localization note (dnsNotFound.title1) - "Hmm" is a sound made when considering or puzzling over something. You don't have to include it in your translation if your language does not have a written word like this. -->
-<!ENTITY dnsNotFound.title1 "呃…找不到这个网站。">
+<!ENTITY dnsNotFound.title1 "呃…找不到此网站。">
 <!ENTITY dnsNotFound.longDesc1 "
 <strong>如果确定此网址正确，您可以尝试：</strong>
 <ul>
@@ -109,10 +113,30 @@
 </ul>">
 
 <!ENTITY certerror.longpagetitle1 "您的连接并不安全">
-<!-- Localization note (certerror.introPara) - The text content of the span tag
+<!ENTITY certerror.longpagetitle2 "警告：面临潜在的安全风险">
+<!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "<span class='hostname'/> 的管理员没有正确配置好此网站。为避免您的信息失窃，&brandShortName; 并未与此网站建立连接。">
+
+<!ENTITY certerror.introPara2 "&brandShortName; 检测到潜在的安全威胁，因此没有继续访问 <span class='hostname'/>。若您访问此网站，攻击者可能会尝试窃取您的密码、电子邮件、信用卡等信息。">
+
+<!ENTITY certerror.expiredCert.secondPara "这个问题大多是因为您的计算机时钟被设置为错误的时间，这会阻碍 &brandShortName; 的安全连接。">
+
+<!ENTITY certerror.whatCanYouDoAboutItTitle "您可以做什么？">
+
+<!ENTITY certerror.unknownIssuer.whatCanYouDoAboutIt "
+<p>这个问题大多与网站有关，您无法解决。</p>
+<p>如果您是在使用公司网络或某些防病毒软件时遇到此问题，可考虑联系客服（技术支持）以寻求帮助。您也可以向网站管理员告知此问题。</p>
+">
+
+<!ENTITY certerror.expiredCert.whatCanYouDoAboutIt2 "
+<p>您的计算机时钟目前设置为 <span id='wrongSystemTime_systemDate2'/>。请确保您的计算机在系统设置中已设置了正确的日期、时间和时区，然后刷新 <span class='hostname'/>。</p>
+<p>如果您的时钟已设置正确的时间，则此网站可能存在配置错误，您无法解决此问题。您可以向网站管理员通报该问题。</p>">
+
+<!ENTITY certerror.badCertDomain.whatCanYouDoAboutIt "
+<p>这个问题大多与网站有关，您无法解决。您可以向网站管理员告知此问题。</p>
+">
 
 <!ENTITY sharedLongDesc "<ul> 
 <li>此站点暂时无法使用或者太过忙碌。请过几分钟后再试。</li> 
@@ -129,13 +153,15 @@ was trying to connect. -->
 
 <!ENTITY securityOverride.exceptionButtonLabel "添加例外…">
 
+<!ENTITY securityOverride.exceptionButton1Label "接受风险并继续">
+
 <!ENTITY errorReporting.automatic2 "报告此类错误，帮助 Mozilla 识别与拦截恶意网站">
 <!ENTITY errorReporting.learnMore "详细了解…">
 
 <!ENTITY remoteXUL.title "远程 XUL">
 <!ENTITY remoteXUL.longDesc "<p><ul><li>建议向此网站的管理员反馈这个问题。</li></ul></p>">
 
-<!ENTITY sslv3Used.title "无法安全地进行连接">
+<!ENTITY sslv3Used.title "无法安全地连接">
 <!-- LOCALIZATION NOTE (sslv3Used.longDesc2) - Do not translate
      "SSL_ERROR_UNSUPPORTED_VERSION". -->
 <!ENTITY sslv3Used.longDesc2 "高级信息: SSL_ERROR_UNSUPPORTED_VERSION">
@@ -147,7 +173,9 @@ was trying to connect. -->
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>您的系统时间似乎不正确，因此 &brandShortName; 无法与 <span id='wrongSystemTimeWithoutReference_URL'/> 建立安全连接。</p> <p>您的计算机时间目前被设置为 <span id='wrongSystemTimeWithoutReference_systemDate'/>。请更正您的日期和时间设置来修复此问题。</p>">
 
 <!ENTITY certerror.pagetitle1  "不安全的连接">
-<!ENTITY certerror.whatShouldIDo.badStsCertExplanation "此网站采用了 HTTP 严格传输安全（HSTS）机制，要求 &brandShortName; 只能与其建立安全连接。正因如此，您也不能将此证书加入例外列表。">
+<!ENTITY certerror.pagetitle2  "警告：面临潜在的安全风险">
+<!ENTITY certerror.whatShouldIDo.badStsCertExplanation "此网站采用了 HTTP 严格传输安全（HSTS）机制，要求 &brandShortName; 只能与其建立安全连接，也因此不能将此证书加入例外列表。">
+<!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "<span class='hostname'></span> 启用了被称为 HTTP 严格传输安全（HSTS）的安全策略，这意味着 &brandShortName; 只能安全地与其连接。您无法添加例外以访问此站点。">
 <!ENTITY certerror.copyToClipboard.label "复制文本到剪贴板">
 
 <!ENTITY inadequateSecurityError.title "您的连接不安全">
@@ -156,6 +184,9 @@ was trying to connect. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> 使用了过时的安全技术，较容易遭受攻击。攻击者可以轻易窃取您的信息。该网站的管理员修正服务器后您才能访问该网站。</p><p>错误代码：NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "页面已封锁">
+
+<!ENTITY clockSkewError.title "您的计算机时钟有误">
+<!ENTITY clockSkewError.longDesc "您的计算机时钟为 <span id='wrongSystemTime_systemDate1'/>，这阻止了 &brandShortName; 进行安全连接。要访问 <span class='hostname'></span>，请在您的系统设置中更新计算机时钟至当前日期、时间和时区，然后刷新 <span class='hostname'></span>。">
 
 <!ENTITY prefReset.longDesc "看来可能是您的网络安全设置造成了此问题。您想还原到默认设置吗？">
 <!ENTITY prefReset.label "恢复默认设置">

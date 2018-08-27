@@ -6,7 +6,7 @@
 <!ENTITY firstrun_urlbar_message2 "&brandShortName;를 선택해 주셔서 감사합니다">
 <!ENTITY firstrun_urlbar_subtext2 "자유롭고 개방된 웹을 위해 일하는 비영리재단 Mozilla에서 만든 최신 모바일 브라우저입니다.">
 <!ENTITY firstrun_panel_title_privacy "개인 정보">
-<!ENTITY firstrun_privacy_message "누구에게도 보이지 않는 웹 이용">
+<!ENTITY firstrun_privacy_message "아무도 보지 못하는 것처럼 웹을 탐색하세요">
 <!ENTITY firstrun_privacy_subtext "추적 방지가 되어 있는 개인정보 보호 브라우징은 추적자를 차단하고 브라우징을 마칠 때 탐색 기록을 저장하지 않습니다.">
 <!ENTITY firstrun_panel_title_customize "개인화">
 <!ENTITY firstrun_customize_message "나만의 &brandShortName;를 만드세요.">
@@ -233,8 +233,8 @@
 <!ENTITY pref_category_home_homepage "홈페이지">
 <!-- Localization note (home_homepage_every_new_tab): The user will see a switch to determine if the
      home page will be use in every new tab. -->
-<!ENTITY home_homepage_every_new_tab "새로운 탭에도 사용하기">
-<!ENTITY home_homepage_title "홈페이지 지정하기">
+<!ENTITY home_homepage_every_new_tab "새로운 탭에도 사용">
+<!ENTITY home_homepage_title "홈페이지 지정">
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
      button for this string, they will use the built-in default Firefox homepage (about:home). -->
@@ -262,8 +262,8 @@
 <!ENTITY pref_header_vendor "&vendorShortName;">
 
 <!ENTITY pref_cookies_menu "쿠키">
-<!ENTITY pref_cookies_accept_all "사용하기">
-<!ENTITY pref_cookies_not_accept_foreign "사용하기 (제3자 쿠키 제외)">
+<!ENTITY pref_cookies_accept_all "사용">
+<!ENTITY pref_cookies_not_accept_foreign "사용 (제3자 쿠키 제외)">
 <!ENTITY pref_cookies_disabled "사용 안 함">
 
 <!-- Localization note (pref_category_data_saver): “data saver” in this
@@ -275,18 +275,18 @@
 
 <!ENTITY pref_tap_to_load_images_title2 "이미지 보기">
 <!ENTITY pref_tap_to_load_images_enabled "항상">
-<!ENTITY pref_tap_to_load_images_data "Wi-Fi에서만 사용함">
-<!ENTITY pref_tap_to_load_images_disabled2 "차단됨">
+<!ENTITY pref_tap_to_load_images_data "Wi-Fi에서만 보기">
+<!ENTITY pref_tap_to_load_images_disabled2 "보지 않기">
 
 <!ENTITY pref_show_web_fonts "웹폰트 보기">
 <!ENTITY pref_show_web_fonts_summary2 "페이지를 불러올 때 원격으로 폰트 다운로드">
 
 <!ENTITY pref_tracking_protection_title2 "추적 방지">
 <!ENTITY pref_donottrack_title "추적 중지">
-<!ENTITY pref_donottrack_summary "&brandShortName;가 사이트들에 방문자 추적 중지 요청을 합니다.">
+<!ENTITY pref_donottrack_summary "&brandShortName;가 사이트들에 방문자 추적 중지 요청을 합니다">
 
 <!ENTITY pref_tracking_protection_enabled "사용">
-<!ENTITY pref_tracking_protection_enabled_pb "사생활 보호 모드 활성화됨">
+<!ENTITY pref_tracking_protection_enabled_pb "사생활 보호 모드에서 사용">
 <!ENTITY pref_tracking_protection_disabled "사용 안 함">
 
 <!ENTITY pref_whats_new_notification "&brandShortName; 달라진 점">
@@ -372,6 +372,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "자동 재생 허가">
 <!ENTITY pref_media_autoplay_enabled_summary "웹 사이트의 영상이나 다른 미디어 콘텐츠에 대한 자동 재생 권한 설정">
+<!ENTITY pref_media_autoplay_allow "자동 재생 허용">
+<!ENTITY pref_media_autoplay_block "자동 재생 차단">
 <!ENTITY pref_zoom_force_enabled "항상 줌 활성화">
 <!ENTITY pref_zoom_force_enabled_summary "어느 페이지든 항상 줌을 할 수 있도록 설정">
 <!ENTITY pref_voice_input "음성 입력">
@@ -438,15 +440,20 @@
      healthReportDesc.label, telemetrySection.label, telemetryDesc.label,
      crashReporterDesc.label). -->
 <!ENTITY datareporting_fhr_title "&brandShortName; 상태 검사 보고서">
-<!ENTITY datareporting_fhr_summary2 "브라우저 상태를 &vendorShortName;와 공유하고 성능을 이해할 수 있도록 도움">
+<!ENTITY datareporting_fhr_summary2 "브라우저 상태를 &vendorShortName;와 공유하고 성능을 이해할 수 있도록 돕기">
 <!ENTITY datareporting_telemetry_title "데이터 수집">
-<!ENTITY datareporting_telemetry_summary "브라우저의 성능, 사용, 그리고 설정에 대한 데이터를 &vendorShortName;와 공유하여 &brandShortName;가 보다 나아지도록 도움">
-<!ENTITY datareporting_crashreporter_summary "&brandShortName;가 오류 보고서를 전송하여 &vendorShortName;가 브라우저를 보다 안정적이고 보안이 강화되도록 도움">
+<!ENTITY datareporting_telemetry_summary "브라우저의 성능, 사용, 그리고 설정에 대한 데이터를 &vendorShortName;와 공유하여 &brandShortName;가 보다 나아지도록 돕기">
+<!ENTITY datareporting_crashreporter_summary "&brandShortName;가 오류 보고서를 전송하여 &vendorShortName;가 브라우저를 보다 안정적이고 보안이 강화되도록 돕기">
 <!-- Localization note (datareporting_crashreporter_title_short) : This string matches
      (crashReporterSection.label) in en-US/chrome/browser/preferences/advanced.dtd.-->
 <!ENTITY datareporting_crashreporter_title_short "오류 보고서">
 <!ENTITY datareporting_wifi_title2 "&vendorShortName; 위치 기반 서비스">
 <!ENTITY datareporting_wifi_geolocation_summary4 "&vendorShortName;가 더 나은 지도를 만들고자 합니다! 위치 기반 서비스 품질 향상을 위해 대략적인 Wi-Fi와 셀룰러 위치 데이터를 공유해주세요.">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "&vendorShortName; 위치 기반 서비스 작동중">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -542,7 +549,7 @@
 <!-- Localization note (pref_scroll_title_bar2): Label for setting that controls
      whether or not the dynamic toolbar is enabled. -->
 <!ENTITY pref_scroll_title_bar2 "전체 화면 브라우징">
-<!ENTITY pref_scroll_title_bar_summary2 "페이지를 스크롤 할 때 &brandShortName; 제목창을 숨깁니다">
+<!ENTITY pref_scroll_title_bar_summary2 "페이지를 스크롤 할 때 &brandShortName; 툴바를 숨김">
 
 <!ENTITY pref_tab_queue_title3 "탭 목록">
 <!ENTITY pref_tab_queue_summary4 "다음에 &brandShortName;를 열 때까지 링크 저장">
@@ -888,3 +895,16 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "홈 화면에 추가">
 <!ENTITY pwa_continue_to_website "웹사이트로 계속">
 <!ENTITY pwa_onboarding_sumo "이 웹사이트를 홈스크린에 추가하여 앱과 같이 빠르고 쉽게 접근할 수 있습니다.">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "재생">
+<!ENTITY pip_play_button_description "계속 재생">
+<!ENTITY pip_pause_button_title "일시 중지">
+<!ENTITY pip_pause_button_description "재생 일시 중지">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "&vendorShortName; 위치 기반 서비스">
+<!ENTITY download_notification_channel "다운로드">
+<!ENTITY media_notification_channel "미디어 재생">

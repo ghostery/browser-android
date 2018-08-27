@@ -12,6 +12,7 @@
 <!ENTITY enableGlodaSearch.label       "전체 검색 및 색인 사용함">
 <!ENTITY enableGlodaSearch.accesskey   "E">
 <!ENTITY dateTimeFormatting.label      "날짜와 시간 형식">
+<!ENTITY languageSelector.label        "언어">
 <!ENTITY allowHWAccel.label            "하드웨어 가속 사용하기">
 <!ENTITY allowHWAccel.accesskey        "h">
 <!ENTITY storeType.label               "새 계정에 대한 메시지 저장 타입:">

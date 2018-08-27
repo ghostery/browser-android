@@ -7,11 +7,12 @@
 <!ENTITY itemUpdate.label        "Atualização">
 <!ENTITY itemNetworking.label    "Rede e espaço em disco">
 <!ENTITY itemCertificates.label  "Certificados">
-<!-- General Settings -->
 
+<!-- General Settings -->
 <!ENTITY enableGlodaSearch.label       "Ativar pesquisa global e indexação">
 <!ENTITY enableGlodaSearch.accesskey   "e">
 <!ENTITY dateTimeFormatting.label      "Formatação de data e hora">
+<!ENTITY languageSelector.label        "Idioma">
 <!ENTITY allowHWAccel.label            "Se disponível, utilizar aceleração por hardware">
 <!ENTITY allowHWAccel.accesskey        "h">
 <!ENTITY storeType.label               "Tipo de armazenamento de mensagem para novas contas:">
@@ -38,8 +39,8 @@
 <!ENTITY returnReceiptsInfo.label      "Determinar como é que o &brandShortName; gere os recibos de leitura">
 <!ENTITY showReturnReceipts.label      "Recibos de leitura…">
 <!ENTITY showReturnReceipts.accesskey  "R">
-<!-- Data Choices -->
 
+<!-- Data Choices -->
 <!ENTITY telemetrySection.label          "Telemetria">
 <!ENTITY telemetryDesc.label             "Partilha dados de desempenho, utilização, hardware e personalização acerca do seu cliente de e-mail com a &vendorShortName; para ajudar-nos a fazer o &brandShortName; melhor">
 <!ENTITY enableTelemetry.label           "Ativar telemetria">
@@ -51,12 +52,12 @@
 <!ENTITY enableCrashReporter.label       "Ativar o relator de falhas">
 <!ENTITY enableCrashReporter.accesskey   "r">
 <!ENTITY crashReporterLearnMore.label    "Saber mais">
+
 <!-- Update -->
 <!-- LOCALIZATION NOTE (updateApp.label):
   Strings from aboutDialog.dtd are displayed in this section of the preferences.
   Please check for possible accesskey conflicts.
 -->
-
 <!ENTITY updateApp2.label                "Atualizações do &brandShortName;">
 <!-- LOCALIZATION NOTE (updateApp.version.*): updateApp.version.pre is
   followed by a version number, keep the trailing space or replace it with
@@ -77,8 +78,8 @@
 
 <!ENTITY useService.label                "Utilizar um serviço em segundo plano para instalar atualizações">
 <!ENTITY useService.accesskey            "t">
-<!-- Networking and Disk Space -->
 
+<!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "Definições...">
 <!ENTITY showSettings.accesskey        "s">
 <!ENTITY proxiesConfigure.label        "Configure o modo de ligãção do &brandShortName; à Internet.">
@@ -92,13 +93,13 @@
 <!ENTITY offlineCompactFolders.label     "Compactar todas as pastas se puder libertar pelo menos">
 <!ENTITY offlineCompactFolders.accesskey "a">
 <!ENTITY offlineCompactFoldersMB.label   "MB no total">
+
 <!-- LOCALIZATION NOTE:
   The entities useCacheBefore.label and useCacheAfter.label appear on a single
   line in preferences as follows:
 
   &useCacheBefore.label  [ textbox for cache size in MB ]   &useCacheAfter.label;
 -->
-
 <!ENTITY useCacheBefore.label            "Utilizar até">
 <!ENTITY useCacheBefore.accesskey        "U">
 <!ENTITY useCacheAfter.label             "MB de espaço para cache">
@@ -106,8 +107,8 @@
 <!ENTITY overrideSmartCacheSize.accesskey "o">
 <!ENTITY clearCacheNow.label             "Limpar agora">
 <!ENTITY clearCacheNow.accesskey         "L">
-<!-- Certificates -->
 
+<!-- Certificates -->
 <!ENTITY certSelection.description       "Se um servidor pedir o meu certificado pessoal:">
 <!ENTITY certs.auto                      "Selecionar automaticamente">
 <!ENTITY certs.auto.accesskey            "m">

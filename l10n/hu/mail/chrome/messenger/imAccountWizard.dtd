@@ -17,7 +17,7 @@
 <!ENTITY accountPasswordField.label   "Jelszó:">
 <!ENTITY accountPasswordManager.label "Az itt megadott jelszót a Jelszókezelő fogja tárolni. Hagyja üresen ezt a mezőt, ha a jelszavát a fiók minden csatlakoztatásakor be szeretné kéretni.">
 
-<!ENTITY accountAdvancedTitle.label   "Haladó beállítások">
+<!ENTITY accountAdvancedTitle.label   "Speciális beállítások">
 <!ENTITY accountAdvancedInfo.label    "Nyugodtan hagyja ki ezt a lépést, ha azt szeretné.">
 <!ENTITY accountAdvanced.newMailNotification.label   "Értesítés új levélről">
 <!ENTITY accountAliasGroupbox.caption "Helyi álnév">

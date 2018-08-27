@@ -122,7 +122,7 @@
 <!ENTITY menu "選單">
 <!ENTITY back "上一頁">
 <!ENTITY stop "停止">
-<!ENTITY site_security "網站安全">
+<!ENTITY site_security "網站安全性">
 <!ENTITY edit_mode_cancel "取消">
 
 <!ENTITY close_tab "關閉分頁">
@@ -372,6 +372,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "允許自動播放">
 <!ENTITY pref_media_autoplay_enabled_summary "控制網站是否能夠自動播放影片或其他媒體內容">
+<!ENTITY pref_media_autoplay_allow "允許自動播放">
+<!ENTITY pref_media_autoplay_block "封鎖自動播放">
 <!ENTITY pref_zoom_force_enabled "隨時啟用縮放">
 <!ENTITY pref_zoom_force_enabled_summary "強制讓所有網頁都能縮放大小">
 <!ENTITY pref_voice_input "語音輸入">
@@ -447,6 +449,11 @@
 <!ENTITY datareporting_crashreporter_title_short "程式錯誤回報員">
 <!ENTITY datareporting_wifi_title2 "&vendorShortName; Location Service">
 <!ENTITY datareporting_wifi_geolocation_summary4 "一起來幫忙 &vendorShortName; 畫出全世界的地圖！請分享您的裝置的大略 Wi-Fi 與行動基地台位置，以幫助我們改善地理位置定位服務">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "&vendorShortName; 定位服務執行中">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -470,7 +477,7 @@
 <!ENTITY share_image_failed "無法分享此圖片">
 <!ENTITY save_as_pdf "儲存為 PDF">
 <!ENTITY print "列印">
-<!ENTITY view_page_source "檢視頁面原始碼">
+<!ENTITY view_page_source "檢視原始碼">
 <!ENTITY find_in_page "在頁面中搜尋">
 <!ENTITY desktop_mode "開啟桌面版網站">
 <!ENTITY page "頁面">
@@ -589,7 +596,7 @@
 <!ENTITY button_clear "清除">
 <!ENTITY button_copy "複製">
 
-<!ENTITY home_top_sites_title "最常瀏覽">
+<!ENTITY home_top_sites_title "熱門網站">
 <!-- Localization note (home_top_sites_add): This string is used as placeholder
      text underneath empty thumbnails in the Top Sites page on about:home. -->
 <!ENTITY home_top_sites_add "新增網站">
@@ -847,7 +854,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY helper_triple_readerview_open_message "將閱讀畫面項目加入書籤，以在離線時閱讀。">
 <!ENTITY helper_triple_readerview_open_button "加入書籤">
 
-<!ENTITY activity_stream_topsites "最常瀏覽">
+<!ENTITY activity_stream_topsites "熱門網站">
 <!-- LOCALIZATION NOTE (activity_stream_topstories): &brandPocket is the brand of the company, Pocket, that is being used to provide suggestions for articles. -->
 <!ENTITY activity_stream_topstories "&brandPocket; 推薦">
 <!ENTITY activity_stream_highlights "精選網站">
@@ -888,3 +895,16 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "新增至裝置主畫面">
 <!ENTITY pwa_continue_to_website "繼續前往網站">
 <!ENTITY pwa_onboarding_sumo "您可將此網站加入裝置主畫面，方便快速開啟，或是以類似 App 的方式使用。">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "播放">
+<!ENTITY pip_play_button_description "繼續播放">
+<!ENTITY pip_pause_button_title "暫停">
+<!ENTITY pip_pause_button_description "暫停播放">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "&vendorShortName; Location Service">
+<!ENTITY download_notification_channel "下載項目">
+<!ENTITY media_notification_channel "媒體播放">

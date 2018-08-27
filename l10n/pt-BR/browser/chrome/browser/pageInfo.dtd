@@ -22,7 +22,7 @@
 <!ENTITY  generalSize           "Tamanho:">
 <!ENTITY  generalReferrer       "URL referente:">
 <!ENTITY  generalSource         "Fonte da cache:">
-<!ENTITY  generalModified       "Modificado:">
+<!ENTITY  generalModified       "Modificada em:">
 <!ENTITY  generalEncoding2      "Codificação de texto:">
 <!ENTITY  generalMetaName       "Nome">
 <!ENTITY  generalMetaContent    "Conteúdo">
@@ -30,7 +30,7 @@
 <!ENTITY  mediaTab              "Mídia">
 <!ENTITY  mediaTab.accesskey    "M">
 <!ENTITY  mediaLocation         "Endereço:">
-<!ENTITY  mediaText             "Texto associado:">
+<!ENTITY  mediaText             "Texto substituto:">
 <!ENTITY  mediaAltHeader        "Texto alternativo">
 <!ENTITY  mediaAddress          "Endereço">
 <!ENTITY  mediaType             "Tipo">
@@ -61,14 +61,11 @@
 <!ENTITY  securityView.identity.header   "Identidade do site">
 <!ENTITY  securityView.identity.owner    "Proprietário:">
 <!ENTITY  securityView.identity.domain   "Site:">
-<!ENTITY  securityView.identity.verifier "Verificado por:">
+<!ENTITY  securityView.identity.verifier "Homologado por:">
 <!ENTITY  securityView.identity.validity "Expira em:">
 
 <!ENTITY  securityView.privacy.header                   "Privacidade e histórico">
 <!ENTITY  securityView.privacy.history                  "Eu já visitei este site antes?">
-<!ENTITY  securityView.privacy.cookies                  "Este site armazena dados (cookies) no meu computador?">
-<!ENTITY  securityView.privacy.viewCookies              "Ver cookies">
-<!ENTITY  securityView.privacy.viewCookies.accessKey    "k">
 <!ENTITY  securityView.privacy.siteData                 "Este site está armazenando informações no meu computador?">
 <!ENTITY  securityView.privacy.clearSiteData            "Limpar cookies e dados de site">
 <!ENTITY  securityView.privacy.clearSiteData.accessKey  "C">

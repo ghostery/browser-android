@@ -247,7 +247,6 @@
 <!ENTITY sendlaterButton.tooltip "Üzenet elküldése később">
 <!ENTITY quoteButton.tooltip "Előző üzenet idézése">
 <!ENTITY addressButton.tooltip "Egy címzett kiválasztása a címjegyzékből">
-<!ENTITY attachButton.tooltip "Melléklet hozzáadása">
 <!ENTITY attachButton.tooltip2 "Melléklet hozzáadása">
 <!ENTITY spellingButton.tooltip "A kijelölt rész vagy az egész üzenet helyesírásának ellenőrzése">
 <!ENTITY saveButton.tooltip "Az üzenet mentése">
@@ -275,7 +274,6 @@
      and it must be the same as toggleAttachmentPaneCmd.key, otherwise it won't
      work, as the shortcut key functionality supersedes the access key. -->
 <!ENTITY attachments.accesskey "m">
-
 <!ENTITY attachmentBucketHeader.tooltip "Mellékletek ablaktábla">
 <!ENTITY attachmentBucketCloseButton.tooltip "Mellékletek ablaktábla elrejtése">
 
@@ -360,6 +358,9 @@
 <!-- Identity popup customize menuitem -->
 <!ENTITY customizeFromAddress.label "Feladó címének testreszabása…">
 <!ENTITY customizeFromAddress.accesskey "F">
+
+<!-- Accessibility name for the document -->
+<!ENTITY aria.message.bodyName "Üzenettörzs">
 
 <!-- Status Bar -->
 <!ENTITY languageStatusButton.tooltip "Helyesírás-ellenőrzés nyelve">

@@ -1,0 +1,7 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+choose-messenger-language-description = 选择用于显示 { -brand-short-name } 菜单，消息和通知的语言。
+confirm-messenger-language-change-description = 重开 { -brand-short-name } 以应用这些更改
+confirm-messenger-language-change-button = 应用并重新打开

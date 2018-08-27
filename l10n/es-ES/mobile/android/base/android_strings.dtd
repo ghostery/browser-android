@@ -372,6 +372,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "Permitir autorreproducción">
 <!ENTITY pref_media_autoplay_enabled_summary "Controla si los sitios web pueden autorreproducir vídeos y otro contenido de medios">
+<!ENTITY pref_media_autoplay_allow "Permitir la reproducción automática">
+<!ENTITY pref_media_autoplay_block "Bloquear la reproducción automática">
 <!ENTITY pref_zoom_force_enabled "Activar siempre tamaño personalizado">
 <!ENTITY pref_zoom_force_enabled_summary "Forzar sobrescritura para que pueda variar el tamaño de cualquier página">
 <!ENTITY pref_voice_input "Entrada por voz">
@@ -447,6 +449,11 @@
 <!ENTITY datareporting_crashreporter_title_short "Informe de fallos">
 <!ENTITY datareporting_wifi_title2 "Servicio de localización de &vendorShortName;">
 <!ENTITY datareporting_wifi_geolocation_summary4 "¡Ayude a &vendorShortName; a mapear el mundo! Comparta la ubicación wifi y móvil aproximada de su dispositivo para mejorar nuestro servicio de geolocalización.">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "&vendorShortName; Servicio de localización corriendo">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -677,7 +684,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY mixed_content_protection_disabled1 "Ha desactivado la protección del contenido inseguro.">
 
 <!-- Tracking content notifications in site identity popup -->
-<!ENTITY doorhanger_tracking_title2 "Protección contra rastreo">
+<!ENTITY doorhanger_tracking_title2 "Protección contra el rastreo">
 <!ENTITY doorhanger_tracking_state_enabled "Activado">
 <!ENTITY doorhanger_tracking_state_disabled "Desactivado">
 <!ENTITY doorhanger_tracking_message_enabled1 "Los intentos de rastrear su comportamiento en Internet han sido bloqueado.">
@@ -891,3 +898,16 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "Añadir a la página de inicio">
 <!ENTITY pwa_continue_to_website "Continuar al sitio web">
 <!ENTITY pwa_onboarding_sumo "Puedes agregar este sitio web a tu página de inicio para tener acceso instantáneo y navegar rápidamente como si fuera una aplicación.">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "Reproducir">
+<!ENTITY pip_play_button_description "Renaudar reproducción">
+<!ENTITY pip_pause_button_title "Pausar">
+<!ENTITY pip_pause_button_description "Pausar reproducción">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "&vendorShortName; Servicio de localización">
+<!ENTITY download_notification_channel "Descargas">
+<!ENTITY media_notification_channel "Reproducción multimedia">

@@ -112,7 +112,7 @@
 
 <!ENTITY  securityView.privacy.header                   "Vie privée et historique">
 <!ENTITY  securityView.privacy.history                  "Ai-je déjà visité ce site auparavant ?">
-<!ENTITY  securityView.privacy.cookies                  "Ce site web collecte-t-il des informations (cookies) sur mon ordinateur ?">
+<!ENTITY  securityView.privacy.cookies                  "Ce site web conserve-t-il des informations (cookies) sur mon ordinateur ?">
 <!ENTITY  securityView.privacy.viewCookies              "Gérer les cookies">
 <!ENTITY  securityView.privacy.viewCookies.accessKey    "k">
 <!ENTITY  securityView.privacy.passwords                "Ai-je un mot de passe enregistré pour ce site web ?">

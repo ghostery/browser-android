@@ -8,7 +8,11 @@
 <!ENTITY loadError.label "Probléma az oldal betöltése közben">
 <!ENTITY retry.label "Próbálja újra">
 <!ENTITY returnToPreviousPage.label "Ugrás vissza">
+<!ENTITY returnToPreviousPage1.label "Visszalépés (ajánlott)">
 <!ENTITY advanced.label "Speciális">
+
+<!ENTITY continue2.label "Továbbiak…">
+<!ENTITY moreInformation.label "További tudnivalók">
 
 <!-- Specific error messages -->
 
@@ -88,21 +92,42 @@
 <!ENTITY nssFailure2.longDesc2 "<ul> <li>A megtekinteni kívánt oldal nem jeleníthető meg, mert a kapott adatok hitelessége nem ellenőrizhető.</li> <li>Lépjen kapcsolatba a webhely üzemeltetőjével, és értesítse a problémáról.</li> </ul>">
 
 <!ENTITY certerror.longpagetitle1 "A kapcsolat nem biztonságos">
-<!-- Localization note (certerror.introPara) - The text content of the span tag
+<!ENTITY certerror.longpagetitle2 "Figyelmeztetés: Lehetséges biztonsági kockázat következik">
+<!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "A(z) <span class='hostname'/> tulajdonosa a weboldalát helytelenül állította be. Az Ön adatainak ellopását megakadályozandó a &brandShortName; nem csatlakozott ehhez a weboldalhoz.">
 
+
+<!ENTITY certerror.expiredCert.secondPara "Ennek a problémának a legvalószínűbb oka, hogy hibás a számítógép órabeállítása, amely megakadályozza a &brandShortName; biztonságos kapcsolódósát.">
+
+<!ENTITY certerror.whatCanYouDoAboutItTitle "Mit tehet?">
+
+<!ENTITY certerror.unknownIssuer.whatCanYouDoAboutIt "
+<p>A probléma valószínűleg a weboldallal van, és semmit sem tehet a megoldása érdekében.</p>
+<p>Ha vállalati hálózaton van, vagy antivírus szoftvert használ, akkor segítségért felkeresheti a terméktámogatási csoportot. A weboldal rendszergazdáját is értesítheti a problémáról.</p>
+">
+
+<!ENTITY certerror.expiredCert.whatCanYouDoAboutIt2 "
+<p>A számítógép órája erre van állítva: <span id='wrongSystemTime_systemDate2'/>. Győződjön meg róla, hogy a helyes dátum, idő és időzóna van beállítva a rendszerbeállításokban, majd töltse újra a(z) <span class='hostname'/> oldalt.</p>
+<p>Ha már a helyes időre van állítva az óra, akkor valószínűleg a webhely van rosszul beállítva, és semmit sem tehet a probléma megoldása érdekében. Értesítheti a webhely rendszergazdáját a problémáról.</p>
+">
+
+<!ENTITY certerror.badCertDomain.whatCanYouDoAboutIt "
+<p>A probléma valószínűleg a weboldallal van, és semmit sem tehet a megoldása érdekében. Értesítheti a weboldal rendszergazdáját a problémáról.</p>">
+
 <!ENTITY sharedLongDesc "<ul> <li>A webhely ideiglenesen nem érhető el vagy túlterhelt. Próbálja újra pár perc múlva.</li> <li>Ha semmilyen oldalt nem tud letölteni, ellenőrizze a számítógépe hálózati kapcsolatát.</li> <li>Ha a számítógépet vagy a hálózatot tűzfal vagy proxy védi, ellenőrizze, hogy a &brandShortName; számára engedélyezett-e a webhozzáférés.</li> </ul>">
 
-<!ENTITY cspBlocked.title "Blokkolva a tartalombiztonsági irányelv szerint">
-<!ENTITY cspBlocked.longDesc "<p>A &brandShortName; nem engedte meg, hogy az oldalt ezen a módon betöltse, mert az oldal tartalombiztonsági irányelve ezt tiltja.</p>">
+<!ENTITY cspBlocked.title "Blokkolva a tartalombiztonsági házirend szerint">
+<!ENTITY cspBlocked.longDesc "<p>A &brandShortName; nem engedte meg, hogy az oldalt ezen a módon betöltse, mert az oldal tartalombiztonsági házirendje ezt tiltja.</p>">
 
 <!ENTITY corruptedContentErrorv2.title "Sérült tartalom hiba">
 <!ENTITY corruptedContentErrorv2.longDesc "<p>A megtekinteni kívánt oldal nem jeleníthető meg, mert az adatátvitel közben hiba történt.</p><ul><li>Lépjen kapcsolatba a webhely üzemeltetőjével, és értesítse a problémáról.</li></ul>">
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "Kivétel hozzáadása…">
+
+<!ENTITY securityOverride.exceptionButton1Label "Kockázat elfogadása és továbblépés">
 
 <!ENTITY errorReporting.automatic2 "Az ilyen hibák jelentése segít a Mozillának a rosszindulatú oldalak azonosításában és blokkolásában">
 <!ENTITY errorReporting.learnMore "További tudnivalók…">
@@ -122,7 +147,9 @@ was trying to connect. -->
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>A &brandShortName; nem kapcsolódott ehhez: <span id='wrongSystemTimeWithoutReference_URL'/>, mert a számítógépe órája úgy tűnik, rosszul jár, emiatt nem lehet biztonságosan kapcsolódni.</p> <p>A számítógépe azt hiszi <span id='wrongSystemTimeWithoutReference_systemDate'/> van. Ennek javításához módosítsa a dátum- és időbeállításait, hogy azok megfeleljenek a valós időnek.</p>">
 
 <!ENTITY certerror.pagetitle1  "Nem biztonságos kapcsolat">
+<!ENTITY certerror.pagetitle2  "Figyelmeztetés: Lehetséges biztonsági kockázat következik">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Ez az oldal HTTP Strict Transport Security (HSTS) használatával adja meg, hogy a &brandShortName; csak biztonságosan kapcsolódjon. Emiatt nem lehet kivételt felvenni ehhez a tanúsítványhoz.">
+<!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "A(z) <span class='hostname'></span> oldal a HTTP Strict Transport Security (HSTS) nevű biztonsági házirendet használja, amely azt jelenti, hogy a &brandShortName; csak biztonságosan kapcsolódhat hozzá. Nem adhat hozzá kivételt, hogy felkeresse ezt az oldalt.">
 <!ENTITY certerror.copyToClipboard.label "Szöveg másolása a vágólapra">
 
 <!ENTITY inadequateSecurityError.title "A kapcsolat nem biztonságos">
@@ -131,6 +158,9 @@ was trying to connect. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> olyan biztonsági technológiát használ, amely elavult, és sérülékeny a támadásokkal szemben. Egy támadó könnyen felfedhet olyan információkat, amelyeket biztonságosnak gondol. A weboldal rendszergazdájának ki kell javítania a kiszolgálót, mielőtt meglátogathatja az oldalt.</p><p>Hibakód: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Blokkolt oldal">
+
+<!ENTITY clockSkewError.title "A számítógépe órája hibás">
+<!ENTITY clockSkewError.longDesc "A számítógépe szerint a pontos idő <span id='wrongSystemTime_systemDate1'/>, és ez megakadályozza, hogy a &brandShortName; biztonságosan kapcsolódjon. A(z) <span class='hostname'></span> felkereséséhez frissítse a rendszerbeállításokban a számítógép óráját a jelenlegi dátumra, időre és időzónára, és frissítse a(z) <span class='hostname'></span> oldalt.">
 
 <!ENTITY prefReset.longDesc "Úgy tűnik, ezt a hálózat biztonsági beállításai okozhatják. Szeretné helyreállítani az alapbeállításokat?">
 <!ENTITY prefReset.label "Alap beállítások visszaállítása">

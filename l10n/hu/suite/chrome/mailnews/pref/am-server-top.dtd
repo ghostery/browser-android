@@ -74,9 +74,9 @@
 <!ENTITY abbreviate.label "Hírcsoportnevek megjelenítése a Levelezőmappák panelen:">
 <!ENTITY abbreviateOn.label "Teljes névvel (például: 'netscape.public.mozilla.mail-news')">
 <!ENTITY abbreviateOff.label "Rövidített névvel (például: 'n.p.m.mail-news')">
-<!ENTITY advancedButton.label "Haladó…">
+<!ENTITY advancedButton.label "Speciális…">
 <!ENTITY serverDefaultCharset2.label "Alapértelmezett kódolás:">
-<!ENTITY advancedButton.accesskey "H">
+<!ENTITY advancedButton.accesskey "S">
 <!ENTITY localPath.label "Helyi könyvtár:">
 <!ENTITY localFolderPicker.label "Helyi könyvtár kiválasztása">
 <!ENTITY browseFolder.label "Tallózás…">

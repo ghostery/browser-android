@@ -75,7 +75,7 @@
 <!ENTITY rights.locationawarebrowsing-term4 "位置感知现在已禁用">
 
 <!-- intro paragraph for unbranded builds -->
-<!ENTITY rights.webservices-unbranded "本产品所使用的网站服务的概述，以及有关如何禁用它们的的方法说明（如果适用），应当写在这里。">
+<!ENTITY rights.webservices-unbranded "在此处应当概述此产品所使用的网站服务，并介绍如何禁用它们的（如果有）。">
 
 <!-- point 1 text for unbranded builds -->
 <!ENTITY rights.webservices-term1-unbranded "任何适用于此产品的服务条款都应列于此处。">

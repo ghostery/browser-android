@@ -81,3 +81,5 @@
 <!ENTITY cmd.copyDownloadLink.accesskey "d">
 <!ENTITY cmd.properties.label "Propiedades…">
 <!ENTITY cmd.properties.accesskey "o">
+<!ENTITY cmd.unblock2.label "Permitir descarga">
+<!ENTITY cmd.unblock2.accesskey "m">

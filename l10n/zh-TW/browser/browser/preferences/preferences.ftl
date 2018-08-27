@@ -17,14 +17,6 @@ pref-page =
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
 #
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 15.4em
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
 # Please keep the placeholder string short to avoid truncation.
 #
 # Notice: The value of the `.style` attribute is a CSS string, and the `width`
@@ -137,20 +129,11 @@ is-not-default = { -brand-short-name } 不是您的預設瀏覽器
 set-as-my-default-browser =
     .label = 設為預設瀏覽器…
     .accesskey = D
-startup-page = 當 { -brand-short-name } 啟動時
-    .accesskey = s
-startup-user-homepage =
-    .label = 顯示您的首頁
-startup-blank-page =
-    .label = 顯示空白頁
-startup-prev-session =
-    .label = 顯示您上次瀏覽的視窗與分頁
 startup-restore-previous-session =
     .label = 回復先前的瀏覽狀態
     .accesskey = s
 disable-extension =
     .label = 停用擴充套件
-home-page-header = 首頁
 tabs-group-header = 分頁
 ctrl-tab-recently-used-order =
     .label = 按下 Ctrl+Tab 時，依照最近使用分頁的順序切換分頁標籤
@@ -207,6 +190,9 @@ choose-language-description = 請選擇瀏覽支援多國語言的網頁時要�
 choose-button =
     .label = 選擇…
     .accesskey = o
+choose-browser-language-description = 請選擇 { -brand-short-name } 顯示選單、訊息、通知時使用的語言。
+confirm-browser-language-change-description = 重新啟動 { -brand-short-name } 來套用變更
+confirm-browser-language-change-button = 套用並重新啟動
 translate-web-pages =
     .label = 翻譯網頁內容
     .accesskey = T
@@ -258,7 +244,6 @@ play-drm-content =
 play-drm-content-learn-more = 詳細資訊
 update-application-title = { -brand-short-name } 更新
 update-application-description = 保持更新 { -brand-short-name }，獲得最佳效能、穩定度以及安全性。
-update-application-info = { $version }版 <a>有什麼新鮮事</a>
 update-application-version = { $version }版 <a data-l10n-name="learn-more">有什麼新鮮事</a>
 update-history =
     .label = 顯示更新紀錄…
@@ -294,7 +279,6 @@ performance-allow-hw-accel =
 performance-limit-content-process-option = 內容處理程序數量限制
     .accesskey = L
 performance-limit-content-process-enabled-desc = 調高內容處理程序的數量，可改善開啟多個分頁時的效能，但也會使用更多記憶體。
-performance-limit-content-process-disabled-desc = 僅能在多程序的 { -brand-short-name } 當中修改內容處理程序數量。 <a>了解如何確認多程序模式是否已開啟</a>
 performance-limit-content-process-blocked-desc = 僅能在多程序的 { -brand-short-name } 當中修改內容處理程序數量。 <a data-l10n-name="learn-more">了解如何確認多程序模式是否已開啟</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
@@ -365,9 +349,6 @@ use-current-pages =
 choose-bookmark =
     .label = 使用書籤…
     .accesskey = B
-restore-default =
-    .label = 回復為預設值
-    .accesskey = R
 
 ## Search Section
 
@@ -375,9 +356,9 @@ search-bar-header = 搜尋列
 search-bar-hidden =
     .label = 使用網址列搜尋與上網
 search-bar-shown =
-    .label = 在工具列新增搜尋列
+    .label = 在工具列加入搜尋列
 search-engine-default-header = 預設搜尋引擎
-search-engine-default-desc = 選擇在網址列與搜尋列搜尋時預設使用的搜尋引擎。
+search-engine-default-desc = 請選擇在網址列或搜尋列進行搜尋時，預設要使用的搜尋引擎。
 search-suggestions-option =
     .label = 提供搜尋建議
     .accesskey = s
@@ -466,7 +447,7 @@ sync-sign-in =
     .label = 登入
     .accesskey = g
 sync-signedin-settings-header = 同步設定
-sync-signedin-settings-desc = 選擇要同步哪些資料到您其他使用 { -brand-short-name } 的裝置上。
+sync-signedin-settings-desc = 請選擇要同步哪些資料到您其他使用 { -brand-short-name } 的裝置上。
 sync-engine-bookmarks =
     .label = 書籤
     .accesskey = m
@@ -536,7 +517,7 @@ forms-master-pw-use =
     .label = 使用主控密碼
     .accesskey = U
 forms-master-pw-change =
-    .label = 變更主控密碼…
+    .label = 變更主控密碼
     .accesskey = M
 
 ## Privacy Section - History
@@ -603,7 +584,7 @@ sitedata-keep-until = 保留 Cookie 直到
 sitedata-keep-until-expire =
     .label = Cookie 過期
 sitedata-keep-until-closed =
-    .label = { -brand-short-name } 已關閉
+    .label = 關閉 { -brand-short-name }
 sitedata-accept-third-party-desc = 接受第三方 Cookie 與網站資料
     .accesskey = y
 sitedata-accept-third-party-always-option =
@@ -612,6 +593,26 @@ sitedata-accept-third-party-visited-option =
     .label = 造訪過的網站
 sitedata-accept-third-party-never-option =
     .label = 永不
+sitedata-allow-cookies-option =
+    .label = 允許網站設定 Cookie 與網站資料
+    .accesskey = A
+sitedata-disallow-cookies-option =
+    .label = 封鎖 Cookie 與網站資料
+    .accesskey = B
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = 要封鎖的類型
+    .accesskey = T
+sitedata-block-trackers-option-recommended =
+    .label = 第三方追蹤器（推薦）
+sitedata-block-trackers-option =
+    .label = 第三方追蹤器
+sitedata-block-unvisited-option =
+    .label = 未造訪過的網站的 Cookie
+sitedata-block-all-third-parties-option =
+    .label = 所有第三方追蹤器
+sitedata-block-always-option =
+    .label = 所有 Cookie（可能會造成網站運作不正常）
 sitedata-clear =
     .label = 清除資料…
     .accesskey = l
@@ -636,6 +637,44 @@ addressbar-locbar-openpage-option =
     .label = 開啟分頁
     .accesskey = O
 addressbar-suggestions-settings = 修改搜尋建議偏好設定
+
+## Privacy Section - Content Blocking
+
+content-blocking-header = 內容封鎖
+content-blocking-desc = 封鎖會拖慢您上網速度並追蹤您的廣告或程式碼等第三方網頁內容。可調整相關設定以在保護與效能間取得最佳平衡。
+content-blocking-learn-more = 了解更多
+content-blocking-restore-defaults =
+    .label = 回復為預設值
+    .accesskey = R
+content-blocking-toggle-on =
+    .tooltiptext = 關閉內容封鎖
+content-blocking-toggle-off =
+    .tooltiptext = 開啟內容封鎖
+content-blocking-toggle-label-on = 開啟
+    .accesskey = O
+content-blocking-toggle-label-off = 關閉
+    .accesskey = O
+content-blocking-category-label = 選擇要封鎖的內容
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-label = 很慢才載入的追蹤元素
+    .accesskey = S
+content-blocking-fastblock-description = 封鎖超過 5 秒仍未載入完成的第三方內容。
+content-blocking-fastblock-option-enabled =
+    .label = 總是封鎖
+content-blocking-fastblock-option-disabled =
+    .label = 永不封鎖
+content-blocking-tracking-protection-label = 追蹤器
+    .accesskey = T
+content-blocking-tracking-protection-description = 封鎖所有已知的追蹤器（可能也會無法載入某些頁面）。
+content-blocking-tracking-protection-option-enabled =
+    .label = 總是封鎖
+content-blocking-tracking-protection-option-pbm =
+    .label = 僅在隱私瀏覽視窗封鎖
+content-blocking-tracking-protection-option-disabled =
+    .label = 永不封鎖
+content-blocking-tracking-protection-change-blocklist = 變更封鎖清單…
 
 ## Privacy Section - Tracking
 
@@ -688,9 +727,17 @@ permissions-notification-pause =
 permissions-block-autoplay-media =
     .label = 防止網站自動播放有聲音的媒體內容
     .accesskey = B
+permissions-block-autoplay-media-menu = 針對會自動播放音效的網站
 permissions-block-autoplay-media-exceptions =
     .label = 例外網站…
     .accesskey = E
+autoplay-option-ask =
+    .label = 總是詢問是否要自動播放
+autoplay-option-allow =
+    .label = 允許自動播放
+autoplay-option-dont =
+    .label = 不要自動播放
+permissions-autoplay-link = 了解更多
 permissions-block-popups =
     .label = 封鎖彈出型視窗
     .accesskey = B

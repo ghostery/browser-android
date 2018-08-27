@@ -13,5 +13,6 @@
 <!ENTITY useSmallIcons.label      "Kis ikonok használata">
 <!ENTITY restoreDefaultSet.label  "Alapértelmezett készlet visszaállítása">
 <!ENTITY addNewToolbar.label      "Új eszköztár hozzáadása">
+<!ENTITY showTitltbar.label       "Címsor megjelenítése">
 <!ENTITY saveChanges.label        "Kész">
 <!ENTITY undoChanges.label        "Visszavonás">

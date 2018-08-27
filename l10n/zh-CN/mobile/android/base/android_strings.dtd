@@ -372,6 +372,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "允许自动播放">
 <!ENTITY pref_media_autoplay_enabled_summary "控制网站是否能够自动播放影片或其他媒体内容">
+<!ENTITY pref_media_autoplay_allow "允许自动播放">
+<!ENTITY pref_media_autoplay_block "屏蔽自动播放">
 <!ENTITY pref_zoom_force_enabled "总是启用缩放">
 <!ENTITY pref_zoom_force_enabled_summary "强制让所有页面都能缩放">
 <!ENTITY pref_voice_input "语音输入">
@@ -447,6 +449,11 @@
 <!ENTITY datareporting_crashreporter_title_short "崩溃报告器">
 <!ENTITY datareporting_wifi_title2 "&vendorShortName; 位置服务">
 <!ENTITY datareporting_wifi_geolocation_summary4 "帮助 &vendorShortName; 绘制世界地图！分享附近的 Wi-Fi 和您的设备的地理位置以帮助改善我们的地理定位服务。">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "&vendorShortName; 位置服务运行中">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -678,9 +685,9 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 
 <!-- Tracking content notifications in site identity popup -->
 <!ENTITY doorhanger_tracking_title2 "跟踪保护">
-<!ENTITY doorhanger_tracking_state_enabled "启用">
+<!ENTITY doorhanger_tracking_state_enabled "已启用">
 <!ENTITY doorhanger_tracking_state_disabled "已停用">
-<!ENTITY doorhanger_tracking_message_enabled1 "跟踪您的在线行为的企图已被阻止。">
+<!ENTITY doorhanger_tracking_message_enabled1 "跟踪您在线行为的企图已被阻止。">
 <!ENTITY doorhanger_tracking_message_disabled2 "此页面包含可能跟踪您的浏览行为的元素。">
 
 <!-- Common mixed and tracking content strings in site identity popup -->
@@ -888,3 +895,16 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "添加到主屏幕">
 <!ENTITY pwa_continue_to_website "继续前往网站">
 <!ENTITY pwa_onboarding_sumo "您可以将此网站添加到主屏幕，像用普通应用般快捷打开浏览。">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "播放">
+<!ENTITY pip_play_button_description "继续播放">
+<!ENTITY pip_pause_button_title "暂停">
+<!ENTITY pip_pause_button_description "暂停播放">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "&vendorShortName; 位置服务">
+<!ENTITY download_notification_channel "下载">
+<!ENTITY media_notification_channel "媒体播放">
