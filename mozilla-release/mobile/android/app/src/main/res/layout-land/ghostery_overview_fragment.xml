@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Cliqz © Copyright 2018 -->
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cc_transparency">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:gravity="center">
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/cc_donut"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:padding="5dp"
+            android:layout_marginLeft="20dp"/>
+
+        <TextView
+            android:id="@+id/cc_trackers_blocked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cc_donut"
+            android:padding="2dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            tools:text="11 trackers blocked" />
+
+        <LinearLayout
+            android:id="@+id/cc_ghostery_trust_site_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/cc_button_background_white"
+            android:gravity="center"
+            android:minWidth="@dimen/ghostery_overview_button_width"
+            android:orientation="horizontal"
+            android:padding="3dp">
+
+            <ImageView
+                android:id="@+id/cc_button_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_trust_site"
+                tools:ignore="contentDescription" />
+
+            <TextView
+                android:id="@+id/cc_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/cc_trust_site"
+                android:textColor="@color/cc_text_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cc_ghostery_restrict_site_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cc_ghostery_trust_site_button"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/cc_button_background_white"
+            android:gravity="center"
+            android:minWidth="@dimen/ghostery_overview_button_width"
+            android:orientation="horizontal"
+            android:padding="3dp">
+
+            <ImageView
+                android:id="@+id/cc_button_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/cc_ic_restrict"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/cc_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/cc_restrict_site"
+                android:textColor="@color/cc_text_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cc_ghostery_pause_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cc_ghostery_restrict_site_button"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/cc_button_background_white"
+            android:gravity="center"
+            android:minWidth="@dimen/ghostery_overview_button_width"
+            android:orientation="horizontal"
+            android:padding="3dp">
+
+            <ImageView
+                android:id="@+id/cc_button_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/cc_ic_pause"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/cc_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/cc_pause_ghostery"
+                android:textColor="@color/cc_text_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/cc_bottom_sheet_root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="50dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        android:clickable="true">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/cc_notch_shadow" />
+
+        <TextView
+            android:id="@+id/cc_notch_title"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/white"
+            android:drawableTop="@drawable/cc_notch"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/cc_enhanced_options"
+            android:textColor="@color/general_blue_color"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/cc_info_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/cc_close_info_view_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:paddingEnd="10dp"
+                    android:paddingRight="10dp"
+                    app:srcCompat="@drawable/close" />
+
+                <ImageView
+                    android:id="@+id/cc_info_view_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp" />
+
+                <TextView
+                    android:id="@+id/cc_info_view_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/cc_info_view_icon"
+                    android:layout_toEndOf="@id/cc_info_view_icon"
+                    android:layout_toRightOf="@id/cc_info_view_icon"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/general_blue_color"
+                    android:textSize="30dp"/>
+
+                <TextView
+                    android:id="@+id/cc_info_view_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/cc_info_view_icon"
+                    android:layout_centerHorizontal="true"
+                    android:padding="10dp"
+                    android:textColor="@color/general_blue_color"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/cc_info_view_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/cc_info_view_title"
+                    android:layout_centerHorizontal="true"
+                    android:padding="10dp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/cc_overview_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/white"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingStart="15dp"
+                    android:paddingTop="5dp">
+
+                    <ImageView
+                        android:id="@+id/cc_enhanced_tracking_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/cc_ic_anti_tracking"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/cc_enhanced_tracking_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/cc_enhanced_tracking_icon"
+                        android:layout_toRightOf="@id/cc_enhanced_tracking_icon"
+                        android:padding="5dp"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="24sp"
+                        tools:text="3" />
+
+                    <TextView
+                        android:id="@+id/cc_enhanced_tracking_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/cc_enhanced_tracking_count"
+                        android:layout_toRightOf="@id/cc_enhanced_tracking_count"
+                        android:padding="5dp"
+                        android:text="@string/cc_enhanced_anti_tracking"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/cc_enhanced_tracking_info_button"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:padding="6dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/cc_enhanced_tracking_text"
+                        android:layout_toRightOf="@id/cc_enhanced_tracking_text"
+                        android:contentDescription="@string/cc_enhanced_anti_tracking_info"
+                        app:srcCompat="@drawable/cc_ic_info_gray" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/cc_enhanced_tracking_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:theme="@style/Theme.ToogleTheme" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/cc_line_separator" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/white"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingStart="15dp"
+                    android:paddingTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/cc_enhanced_blocking_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/cc_ic_ad_blocker"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/cc_enhanced_blocking_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/cc_enhanced_blocking_icon"
+                        android:layout_toRightOf="@id/cc_enhanced_blocking_icon"
+                        android:padding="5dp"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="24sp"
+                        tools:text="3" />
+
+                    <TextView
+                        android:id="@+id/cc_enhanced_blocking_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/cc_enhanced_blocking_count"
+                        android:layout_toRightOf="@id/cc_enhanced_blocking_count"
+                        android:padding="5dp"
+                        android:text="@string/cc_enhanced_ad_blocking"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/cc_enhanced_blocking_info_button"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:padding="6dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/cc_enhanced_blocking_text"
+                        android:layout_toRightOf="@id/cc_enhanced_blocking_text"
+                        android:contentDescription="@string/cc_enhanced_ad_blocking_info"
+                        app:srcCompat="@drawable/cc_ic_info_gray" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/cc_enhanced_blocking_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:theme="@style/Theme.ToogleTheme" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/cc_line_separator" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/white"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingStart="15dp"
+                    android:paddingTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/cc_smart_blocking_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/cc_ic_smart_blocking"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/cc_smart_blocking_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/cc_smart_blocking_icon"
+                        android:layout_toRightOf="@id/cc_smart_blocking_icon"
+                        android:padding="5dp"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="24sp"
+                        tools:text="3" />
+
+                    <TextView
+                        android:id="@+id/cc_smart_blocking_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/cc_smart_blocking_count"
+                        android:layout_toRightOf="@id/cc_smart_blocking_count"
+                        android:padding="5dp"
+                        android:text="@string/cc_smart_blocking"
+                        android:textColor="@color/general_blue_color"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/cc_smart_blocking_info_button"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:padding="6dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/cc_smart_blocking_text"
+                        android:layout_toRightOf="@id/cc_smart_blocking_text"
+                        android:contentDescription="@string/cc_smart_blocking_info"
+                        app:srcCompat="@drawable/cc_ic_info_gray" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/cc_smart_blocking_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:theme="@style/Theme.ToogleTheme" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
