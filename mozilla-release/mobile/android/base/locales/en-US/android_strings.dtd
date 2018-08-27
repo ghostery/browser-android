@@ -181,7 +181,10 @@
 <!ENTITY pref_category_search3 "Search">
 <!ENTITY pref_category_search_summary2 "Add, set default, show suggestions">
 <!ENTITY pref_category_accessibility "Accessibility">
-<!ENTITY pref_category_accessibility_summary2 "Text size, zoom, voice input">
+<!-- Cliqz start -->
+<!-- remove , voice input -->
+<!ENTITY pref_category_accessibility_summary2 "Text size, zoom">
+<!-- Cliqz end -->
 <!ENTITY pref_category_privacy_short "Privacy">
 <!ENTITY pref_category_privacy_summary4 "Tracking, logins, data choices">
 <!ENTITY pref_category_vendor2 "&vendorShortName; &brandShortName;">
