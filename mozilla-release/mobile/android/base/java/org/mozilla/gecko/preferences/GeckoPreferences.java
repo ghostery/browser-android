@@ -149,7 +149,7 @@ public class GeckoPreferences
     public static final String PREFS_DEVTOOLS_REMOTE_USB_ENABLED = "devtools.remote.usb.enabled";
     public static final String PREFS_DEVTOOLS_REMOTE_WIFI_ENABLED = "devtools.remote.wifi.enabled";
     private static final String PREFS_DEVTOOLS_REMOTE_LINK = NON_PREF_PREFIX + "remote_debugging.link";
-    public static final String PREFS_VOICE_INPUT_ENABLED = NON_PREF_PREFIX + "voice_input_enabled";
+    // public static final String PREFS_VOICE_INPUT_ENABLED = NON_PREF_PREFIX + "voice_input_enabled";
     public static final String PREFS_QRCODE_ENABLED = NON_PREF_PREFIX + "qrcode_enabled";
     public static final String PREFS_AUTO_COMPLETE = "pref.search.auto.completion";
     public static final String PREFS_OFFRZ_LAST_SIGNATURE = NON_PREF_PREFIX + "offrz.last.signature";
@@ -842,6 +842,7 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
+                /* Cliqz start o/
                 } else if (PREFS_VOICE_INPUT_ENABLED.equals(key)) {
                     if (!InputOptionsUtils.supportsVoiceRecognizer(getApplicationContext(), getResources().getString(R.string.voicesearch_prompt))) {
                         // Remove UI for voice input on non nightly builds.
@@ -849,6 +850,7 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
+                /o Cliqz end */
                 } else if (PREFS_QRCODE_ENABLED.equals(key)) {
                     if (!InputOptionsUtils.supportsQrCodeReader(getApplicationContext())) {
                         // Remove UI for qr code input on non nightly builds
