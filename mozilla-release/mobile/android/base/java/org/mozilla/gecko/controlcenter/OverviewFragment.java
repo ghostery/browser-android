@@ -1,6 +1,7 @@
 package org.mozilla.gecko.controlcenter;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -94,6 +95,17 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             };
 
     public OverviewFragment() {
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //trick to redraw the view
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .detach(this)
+                .attach(this)
+                .commit();
     }
 
     @Nullable
@@ -210,7 +222,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         trackersBlockedSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.cc_restricted)), 0,
                 Integer.toString(blockedTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mTrackersBlocked.setText(trackersBlockedSpan);
-        mDomainName.setText(domainName);
+        if (mDomainName != null) { //landscape mode has no domain name
+            mDomainName.setText(domainName);
+        }
         final List<String> blackList = Arrays.asList(safeGetStringArray(controlCenterSettingsData, "data/summary/site_blacklist"));
         final List<String> whiteList = Arrays.asList(safeGetStringArray(controlCenterSettingsData, "data/summary/site_whitelist"));
         mIsSiteRestricted = blackList.contains(domainName);
