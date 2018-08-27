@@ -16,11 +16,9 @@
                 </shape>
             </item>
 
-            <!-- Cliqz Start -->
-            <item
-                android:gravity="center"
-                android:drawable="@drawable/ic_ghosty_forget_tab_preview">
-                <!-- Cliqz End -->
+            <item>
+                <bitmap android:src="@drawable/tab_preview_masq"
+                        android:gravity="center"/>
             </item>
         </layer-list>
     </item>
