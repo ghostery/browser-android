@@ -840,7 +840,6 @@
   <string name="cc_reset_changes_dialog_title">&cc_reset_changes_dialog_title;</string>
   <string name="cc_reset_changes_dialog_message">&cc_reset_changes_dialog_message;</string>
   <string name="cc_reset">&cc_reset;</string>
-  <string name="cc_reload_toast">&cc_reload_toast;</string>
 
   <!-- General - Search-->
   <string name="pref_search_category">&pref_search_category;</string>
