@@ -4703,7 +4703,7 @@ public class BrowserApp extends GeckoApp
         if (!mInitialized || !Intent.ACTION_MAIN.equals(action)) {
             return;
         }
-
+        /* Cliqz start o/
         // Check to see how many times the app has been launched.
         final String keyName = getPackageName() + ".feedback_launch_count";
         final StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
@@ -4725,6 +4725,7 @@ public class BrowserApp extends GeckoApp
         } finally {
             StrictMode.setThreadPolicy(savedPolicy);
         }
+        /o Cliqz End */
     }
 
     public void openUrls(List<String> urls) {
