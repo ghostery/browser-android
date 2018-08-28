@@ -35,14 +35,27 @@
             android:src="@drawable/ic_overflow_nm" />
     </RelativeLayout>
 
-    <ExpandableListView
-        android:id="@+id/trackers_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:groupIndicator="@null"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-        android:dividerHeight="1dp"
-        android:childDivider="@drawable/cc_trackers_separator"
-        android:divider="@drawable/cc_categories_separator"/>
+        android:layout_height="match_parent">
+
+        <ExpandableListView
+            android:id="@+id/trackers_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:childDivider="@drawable/cc_trackers_separator"
+            android:divider="@drawable/cc_categories_separator"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"
+            android:groupIndicator="@null"
+            android:headerDividersEnabled="false" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
 </LinearLayout>

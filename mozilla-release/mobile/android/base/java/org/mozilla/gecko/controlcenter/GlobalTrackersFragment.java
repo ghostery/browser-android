@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.support.v7.widget.PopupMenu;
+import android.widget.ProgressBar;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.util.GeckoBundle;
@@ -21,6 +22,7 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
 
     private GlobalTrackersListAdapter mTrackerListAdapter;
     private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
+    private ProgressBar progressBar;
 
     public GlobalTrackersFragment() {
     }
@@ -34,6 +36,7 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.ghostery_global_trackers_fragment, container, false);
         final ExpandableListView mTrackersList = (ExpandableListView) view.findViewById(R.id.trackers_list);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         final View mOverflowMenu = view.findViewById(R.id.overflow_menu);
         mOverflowMenu.setOnClickListener(this);
         mTrackerListAdapter = new GlobalTrackersListAdapter(getContext(), mControlCenterCallbacks);
@@ -49,6 +52,9 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
     @Override
     public void updateUI(GeckoBundle data) {
         mTrackerListAdapter.setData(data);
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -69,7 +75,12 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
                 mTrackerListAdapter.unBlockAllTrackers();
                 return true;
             case R.id.reset_settings:
-                RestoreDefaultsDialog.show(getContext());
+                RestoreDefaultsDialog.show(getContext(), new RestoreDefaultsDialog.RestoreDialogCallbacks() {
+                    @Override
+                    public void onRestore() {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                });
                 return true;
             default:
                 return false;

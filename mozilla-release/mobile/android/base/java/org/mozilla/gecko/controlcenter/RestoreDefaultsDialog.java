@@ -2,6 +2,7 @@ package org.mozilla.gecko.controlcenter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
@@ -13,15 +14,20 @@ import org.mozilla.gecko.util.GeckoBundle;
  * Copyright © Cliqz 2018
  */
 public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
-
-    private Context mContext;
+    
+    private RestoreDialogCallbacks restoreDialogCallbacks;
 
     private RestoreDefaultsDialog() {
     }
 
-    public static void show(Context context) {
+    public interface RestoreDialogCallbacks {
+
+        void onRestore();
+    }
+
+    public static void show(Context context, RestoreDialogCallbacks restoreDialogCallbacks) {
         final RestoreDefaultsDialog restoreDefaultsDialog = new RestoreDefaultsDialog();
-        restoreDefaultsDialog.mContext = context;
+        restoreDefaultsDialog.restoreDialogCallbacks = restoreDialogCallbacks;
         new AlertDialog.Builder(context, R.style.Cliqz_AlertDialogTheme)
                 .setTitle(R.string.cc_reset_changes_dialog_title)
                 .setMessage(R.string.cc_reset_changes_dialog_message)
@@ -46,7 +52,15 @@ public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
                 geckoBundle.putBoolean("enable_ad_block", true);
                 geckoBundle.putBoolean("enable_smart_block", true);
                 EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                Toast.makeText(mContext, R.string.cc_reload_toast, Toast.LENGTH_SHORT).show();
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //we fetch the new data from the extension, after resetting everything
+                        EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
+                    }
+                }, 2000);
+                restoreDialogCallbacks.onRestore();
                 break;
         }
     }
