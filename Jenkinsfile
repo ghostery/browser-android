@@ -153,12 +153,12 @@ def build(Map m){
                                             sh'''#!/bin/bash -l
                                                 set -x
                                                 set -e
-                                                appium --log $FLAVOR-appium.log &
-                                                echo $! > appium.pid
-                                                sleep 10
                                                 export app=$PWD/mozilla-release/objdir-frontend-android/$FLAVOR/dist/$APP
                                                 $ANDROID_HOME/platform-tools/adb install $app
                                                 cd autobots
+                                                appium --log $FLAVOR-appium.log &
+                                                echo $! > appium.pid
+                                                sleep 10
                                                 virtualenv ~/venv
                                                 source ~/venv/bin/activate
                                                 chmod 0755 requirements.txt
@@ -176,7 +176,7 @@ def build(Map m){
                                     }
                                 }
                                 stage("Upload Results: ${flavorname}") {
-                                    archiveTestResults()
+                                    archiveTestResults("${flavorname}")
                                 }
                             }
                         }catch(e) {
@@ -301,11 +301,11 @@ def cloneRepoViaSSH(String repoLink, String args) {
     """
 }
 
-def archiveTestResults() {
+def archiveTestResults(String flavorName) {
     try {
         archiveArtifacts allowEmptyArchive: true, artifacts: 'autobots/*.log'
         junit 'autobots/test-reports/*.xml'
-        zip archive: true, dir: 'autobots/screenshots', glob: '', zipFile: 'screenshots.zip'
+        zip archive: true, dir: 'autobots/screenshots', glob: '', zipFile: "${flavorName}-screenshots.zip"
     } catch(e) {
         print e
     }
