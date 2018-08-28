@@ -10,10 +10,7 @@ import java.util.concurrent.Future;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.TextViewCompat;
-import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -21,18 +18,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
-import org.mozilla.gecko.db.BrowserContract;
+import org.mozilla.gecko.cliqzicons.RoundedCornersTransformation;
 import org.mozilla.gecko.db.BrowserContract.Combined;
 import org.mozilla.gecko.db.BrowserContract.URLColumns;
-import org.mozilla.gecko.distribution.PartnerBookmarksProviderProxy;
-import org.mozilla.gecko.icons.IconDescriptor;
 import org.mozilla.gecko.icons.IconResponse;
-import org.mozilla.gecko.icons.Icons;
 import org.mozilla.gecko.reader.ReaderModeUtils;
 import org.mozilla.gecko.reader.SavedReaderViewHelper;
+import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.widget.FaviconView;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 import org.mozilla.gecko.widget.themed.ThemedTextView;
@@ -48,7 +45,9 @@ public class TwoLinePageRow extends ThemedLinearLayout
 
     private int mSwitchToTabIconId;
 
-    private final FaviconView mFavicon;
+    /* Cliqz Start */
+    private final ImageView mFavicon;
+    /* Cliqz End */
     private Future<IconResponse> mOngoingIconLoad;
 
     private boolean mShowIcons;
@@ -77,8 +76,9 @@ public class TwoLinePageRow extends ThemedLinearLayout
 
         mSwitchToTabIconId = NO_ICON;
         mShowIcons = true;
-
-        mFavicon = (FaviconView) findViewById(R.id.icon);
+        /* Cliqz Start */
+        mFavicon = (ImageView) findViewById(R.id.icon);
+        /* Cliqz End */
     }
 
     @Override
@@ -266,10 +266,10 @@ public class TwoLinePageRow extends ThemedLinearLayout
             return;
         }
 
+        /* Cliqz Start */
         // Blank the Favicon, so we don't show the wrong Favicon if we scroll and miss DB.
-        mFavicon.clearImage();
-
-        if (mOngoingIconLoad != null) {
+        mFavicon.setImageResource(0);
+        /* if (mOngoingIconLoad != null) {
             mOngoingIconLoad.cancel(true);
         }
 
@@ -295,8 +295,16 @@ public class TwoLinePageRow extends ThemedLinearLayout
                     .build()
                     .execute(mFavicon.createIconCallback());
 
-        }
-
+        } */
+        // Displayed RecentTabsPanel URLs may refer to pages opened in reader mode, so we
+        // remove the about:reader prefix to ensure the Favicon loads properly.
+        final String pageURL = ReaderModeUtils.stripAboutReaderUrl(url);
+        final int favIconSize = getResources().getDimensionPixelSize(R.dimen.ghostery_history_icon_width);
+        Picasso.with(getContext())
+                .load(CliqzLogoUtil.getIconUrl(pageURL, 150, 150))
+                .transform(new RoundedCornersTransformation())
+                .error(CliqzLogoUtil.getDefaultIcon(pageURL, 150, 150))
+                .into(mFavicon);
         updateDisplayedUrl(url, hasReaderCacheItem);
     }
 
