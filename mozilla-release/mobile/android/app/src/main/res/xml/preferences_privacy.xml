@@ -56,10 +56,10 @@
             android:entries="@array/pref_cookies_entries"
             android:entryValues="@array/pref_cookies_values"
             android:persistent="false" />
-        <CheckBoxPreference
+        <!--<CheckBoxPreference
             android:defaultValue="true"
             android:key="pref.privacy.auto.forget.tab"
-            android:title="@string/pref_privacy_auto_forget_tab" />
+            android:title="@string/pref_privacy_auto_forget_tab" />-->
     </PreferenceCategory>
     <!-- hide FF Cookie preference
     <ListPreference android:key="network.cookie.cookieBehavior"
