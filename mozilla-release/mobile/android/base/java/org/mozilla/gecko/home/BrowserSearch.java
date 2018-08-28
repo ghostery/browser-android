@@ -33,7 +33,9 @@ import org.mozilla.gecko.db.BrowserContract.URLColumns;
 import org.mozilla.gecko.home.HomePager.OnUrlOpenListener;
 import org.mozilla.gecko.home.SearchLoader.SearchCursorLoader;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.toolbar.AutocompleteHandler;
+import org.mozilla.gecko.util.AppBackgroundManager;
 import org.mozilla.gecko.util.BundleEventListener;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
@@ -45,7 +47,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
@@ -83,7 +85,7 @@ import android.widget.TextView;
 public class BrowserSearch extends HomeFragment
                            implements BundleEventListener,
                                       SearchEngineBar.OnSearchBarClickListener,
-                                      Tabs.OnTabsChangedListener {
+                                      Tabs.OnTabsChangedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     @RobocopTarget
     public interface SuggestClientFactory {
@@ -188,7 +190,9 @@ public class BrowserSearch extends HomeFragment
 
     // Opt-in prompt view for search suggestions
     private View mSuggestionsOptInPrompt;
-
+    /* Cliqz start */
+    private final PreferenceManager preferenceManager;
+    /* Cliqz end*/
     public interface OnSearchListener {
         void onSearch(SearchEngine engine, String text, TelemetryContract.Method method);
     }
@@ -209,6 +213,9 @@ public class BrowserSearch extends HomeFragment
 
     public BrowserSearch() {
         mSearchTerm = "";
+        /* Cliqz start */
+        preferenceManager = PreferenceManager.getInstance(getContext());
+        /* Cliqz end */
     }
 
     @Override
@@ -228,6 +235,9 @@ public class BrowserSearch extends HomeFragment
             throw new ClassCastException(activity.toString()
                     + " must implement BrowserSearch.OnEditSuggestionListener");
         }
+        /* Cliqz start */
+        preferenceManager.registerOnSharedPreferenceChangeListener(this);
+        /* Cliqz end */
     }
 
     @Override
@@ -237,6 +247,9 @@ public class BrowserSearch extends HomeFragment
         mAutocompleteHandler = null;
         mSearchListener = null;
         mEditSuggestionListener = null;
+        /* Cliqz start */
+        preferenceManager.unregisterOnSharedPreferenceChangeListener(this);
+        /* Cliqz end */
     }
 
     @Override
@@ -302,7 +315,9 @@ public class BrowserSearch extends HomeFragment
         mView = (LinearLayout) inflater.inflate(R.layout.browser_search, container, false);
         mList = (HomeListView) mView.findViewById(R.id.home_list_view);
         mSearchEngineBar = (SearchEngineBar) mView.findViewById(R.id.search_engine_bar);
-
+        /* Cliqz start */
+        reloadBackground();
+        /* Cliqz end */
         return mView;
     }
 
@@ -1385,4 +1400,24 @@ public class BrowserSearch extends HomeFragment
             setSelector(isPrivate ? R.drawable.search_list_selector_private : R.drawable.search_list_selector);
         }
     }
+
+    /* Cliqz start */
+    private void reloadBackground() {
+        final AppBackgroundManager appBackgroundManager = AppBackgroundManager.getInstance
+                (getContext());
+        if (preferenceManager.isBackgroundEnabled()) {
+            appBackgroundManager.setViewBackground(mView, ContextCompat.getColor(getContext(), R
+                    .color.url_bar));
+        } else {
+            appBackgroundManager.setViewBackgroundDefaultColor(mView);
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (TextUtils.equals(key, GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED)) {
+            reloadBackground();
+        }
+    }
+    /* Cliqz end */
 }
