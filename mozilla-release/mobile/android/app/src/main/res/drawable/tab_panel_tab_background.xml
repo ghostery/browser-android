@@ -10,7 +10,9 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/private_toolbar_grey"/>
+                    <!-- Cliqz Start -->
+                    <solid android:color="@android:color/black"/>
+                    <!-- Cliqz End -->
                 </shape>
             </item>
 

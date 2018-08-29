@@ -13,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.icons.IconResponse;
-import org.mozilla.gecko.icons.Icons;
+import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.util.ThreadUtils;
 import org.mozilla.gecko.widget.FaviconView;
 
@@ -59,11 +61,15 @@ public class TabHistoryItemRow extends RelativeLayout {
         if (ongoingIconLoad != null) {
             ongoingIconLoad.cancel(true);
         }
-
-        ongoingIconLoad = Icons.with(getContext())
+        /* Cliqz Start */
+        /* ongoingIconLoad = Icons.with(getContext())
                 .pageUrl(historyPage.getUrl())
                 .skipNetwork()
                 .build()
-                .execute(favicon.createIconCallback());
+                .execute(favicon.createIconCallback()); */
+        Picasso.with(getContext())
+                .load(CliqzLogoUtil.getIconUrl(historyPage.getUrl(), 150, 150))
+                .into(favicon);
+        /* Cliqz End */
     }
 }

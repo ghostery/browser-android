@@ -9,7 +9,8 @@
     android:paddingStart="@dimen/new_card_padding_5"
     android:paddingTop="@dimen/new_card_padding_10">
 
-    <org.mozilla.gecko.widget.FaviconView
+    <!-- Cliqz Start -->
+    <ImageView
         android:id="@+id/favicon"
         android:layout_width="@dimen/news_favicon_size"
         android:layout_height="@dimen/news_favicon_size"
@@ -20,6 +21,7 @@
         android:layout_marginStart="@dimen/new_card_padding_5"
         tools:background="@drawable/favicon_globe"
         tools:ignore="ContentDescription" />
+    <!-- Cliqz End -->
 
     <TextView
         android:id="@+id/url_view"
