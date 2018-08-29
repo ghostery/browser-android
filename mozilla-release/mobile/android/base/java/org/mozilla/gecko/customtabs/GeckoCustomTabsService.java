@@ -36,6 +36,21 @@ public class GeckoCustomTabsService extends CustomTabsService {
     }
 
     @Override
+    protected boolean requestPostMessageChannel(CustomTabsSessionToken sessionToken, Uri postMessageOrigin) {
+        return false;
+    }
+
+    @Override
+    protected int postMessage(CustomTabsSessionToken sessionToken, String message, Bundle extras) {
+        return 0;
+    }
+
+    @Override
+    protected boolean validateRelationship(CustomTabsSessionToken sessionToken, int relation, Uri origin, Bundle extras) {
+        return false;
+    }
+
+    @Override
     protected boolean warmup(long flags) {
 
         Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, TelemetryContract.Method.SERVICE, "customtab-warmup");

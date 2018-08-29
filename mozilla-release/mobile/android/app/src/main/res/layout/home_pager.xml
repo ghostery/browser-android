@@ -1,26 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- This Source Code Form is subject to the terms of the Mozilla Public
+<?xml version="1.0" encoding="utf-8"?><!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!-- This file is used to include the home pager in gecko app
-     layout based on screen size -->
-<!-- Cliqz Start -->
-<org.mozilla.gecko.home.HomePager xmlns:android="http://schemas.android.com/apk/res/android"
-                                  xmlns:gecko="http://schemas.android.com/apk/res-auto"
-                                  android:id="@+id/home_pager"
-                                  android:layout_width="match_parent"
-                                  android:layout_height="match_parent">
+     layout based on screen size --><!-- Cliqz Start -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:gecko="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-    <org.mozilla.gecko.home.TabMenuStrip
+    <com.airbnb.lottie.LottieAnimationView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/tabs_strip_height"
-        android:layout_gravity="top"
-        android:background="@android:color/transparent"
-        gecko:strip="@drawable/home_tab_menu_strip"
-        gecko:stripColor="@android:color/white"
-        gecko:inactiveTextColor="@android:color/transparent"
-        gecko:tabsMarginLeft="@dimen/tab_strip_content_start"/>
+        android:layout_height="match_parent"
+        gecko:lottie_rawRes="@raw/cliqz_animation"
+        gecko:lottie_autoPlay="true"
+        gecko:lottie_loop="true"/>
 
-</org.mozilla.gecko.home.HomePager>
-<!-- Cliqz End -->
+
+    <org.mozilla.gecko.home.HomePager
+
+        android:id="@+id/home_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <org.mozilla.gecko.home.TabMenuStrip
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabs_strip_height"
+            android:layout_gravity="top"
+            android:background="@android:color/transparent"
+            gecko:inactiveTextColor="@android:color/transparent"
+            gecko:strip="@drawable/home_tab_menu_strip"
+            gecko:stripColor="@android:color/white"
+            gecko:tabsMarginLeft="@dimen/tab_strip_content_start" />
+
+    </org.mozilla.gecko.home.HomePager>
+</FrameLayout>
+
+    <!-- Cliqz End -->
