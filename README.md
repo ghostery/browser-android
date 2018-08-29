@@ -1,35 +1,12 @@
-# Cliqz Browser for Android
+# Ghostery Browser for Android
 
-This is the experimental Cliqz Browser for Android based on Firefox.
+This is the next generation Ghostery Browser for Android based on Firefox.
 
 ## Building
 
-**Read the entire paragraph before proceding**
-
-First thing you need a signed copy of the *Cliqz Extension* and the *Ghostery
-Extension* specific to the *Cliqz Browser for Android*, instructions about how
-to get them will be added later. They must be copied in a folder with the
-following structure:
-
-```
-<distribution_directory>
-└── assets
-    └── distribution
-        └── extensions
-            ├── firefox@ghostery.com.xpi
-            └── search@cliqz.com.xpi
-```
-
-The `<distribution_directory>` can be anywhere on your system, but we generally
-prefer to use a folder named `cliqz` inside the project root folder (i.e. the
-full path of the *Cliqz Extension* will be
-`<project_root_folder>/cliqz/assets/distribution/extensions/search@cliqz.com.xpi`
-). An example of how to configure the Firefox build system to pick up a folder
-can be found [here][2].
-
 To build this project follow these [instructions][1]. Please, notice that the
-original **Mozilla Firefox source code is inside the `mozilla-release`
-folder**: before running any command from the link above, you should enter the
+modified **Mozilla Firefox source code is inside the `mozilla-release` folder**:
+before running any command from the link above, you should enter the
 `mozilla-release` folder (`cd <project_root_folder>/mozilla-release`).
 The build process is divided in 5 main steps:
 
@@ -42,8 +19,9 @@ The build process is divided in 5 main steps:
 2. Config file creation
 
    `<project-root>/mozilla-release/mozconfig` is the file where you can specify
-   all the build options. We have a set of examples and real user
-   configurations available in `<project-root>/mozconfigs`.
+   all the build options. An example of how to configure the Firefox build
+   system to pick up a folder can be found [here][2] and in
+   [`<project-root>/mozconfigs`][3].
 
 3. Build
 
@@ -60,20 +38,6 @@ The build process is divided in 5 main steps:
 
    Performed by the `./mach install` command. It rebuilds the APK and pushes it
    to an attached device or emulator.
-
-## Disable addon signature checks
-
-Add the following line to your `mozconfig` file:
-
-```bash
-CLIQZ_DEBUG=1
-```
-
-Alternatively, declare and export the `CLIQZ_DEBUG` variable:
-
-```bash
-$> export CLIQZ_DEBUG=1
-```
 
 ## Utils
 
@@ -96,4 +60,5 @@ Here is a list of utility scripts you can find inside the `utils` folder:
     architecture (i.e. arm, x86).
 
 [1]: https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Build_Instructions/Simple_Firefox_for_Android_build
-[2]: https://github.com/cliqz-oss/cliqz-android/blob/946a61d5a08636c4c945ec36d557394ef0ef5b4a/mozconfigs/stefano.mozconfig#L26
+[2]: https://github.com/ghostery/browser-android/blob/946a61d5a08636c4c945ec36d557394ef0ef5b4a/mozconfigs/stefano.mozconfig#L26
+[3]: https://github.com/ghostery/browser-android/tree/master/mozconfigs
