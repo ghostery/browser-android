@@ -271,7 +271,7 @@ public class BrowserApp extends GeckoApp
     private static final String EOL_NOTIFIED = "eol_notified";
 
     /**
-     * Be aware of {@link org.mozilla.gecko.fxa.EnvironmentUtils.GECKO_PREFS_FIRSTRUN_UUID}.
+     * Be aware of org.mozilla.gecko.fxa.EnvironmentUtils.GECKO_PREFS_FIRSTRUN_UUID.
      */
     private static final String FIRSTRUN_UUID = "firstrun_uuid";
 
@@ -4013,7 +4013,6 @@ public class BrowserApp extends GeckoApp
         final MenuItem findInPage = aMenu.findItem(R.id.find_in_page);
         final MenuItem desktopMode = aMenu.findItem(R.id.desktop_mode);
         final MenuItem clearHistory = aMenu.findItem(R.id.clear_history);
-        final MenuItem exit = aMenu.findItem(R.id.exit_browser);
         /* Cliqz End */
 
         // Only show the "Quit" menu item on pre-ICS, television devices,
@@ -4517,11 +4516,6 @@ public class BrowserApp extends GeckoApp
         /* Cliqz Start */
         if (itemId == R.id.clear_history) {
             showClearHistroyDialog();
-            return true;
-        }
-
-        if (itemId == R.id.exit_browser) {
-            finish();
             return true;
         }
         /* Cliqz End */
