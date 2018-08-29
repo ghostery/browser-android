@@ -90,7 +90,7 @@
               style="@style/TabsLayout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/text_and_tabs_tray_grey"
+              android:background="@android:color/black"
               android:visibility="gone"
               gecko:tabs="tabs_normal"/>
 
@@ -98,7 +98,7 @@
                 android:id="@+id/private_tabs_panel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/text_and_tabs_tray_grey"
+                android:background="@android:color/black"
                 android:visibility="gone"/>
 
         <!-- Cliqz end -->
