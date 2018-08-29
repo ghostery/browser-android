@@ -22,9 +22,10 @@
     <item type="id" name="action_button"/>
     <item type="id" name="page_progress"/>
     <item type="id" name="mediaControlNotification"/>
-    <!-- cliqz start-->
+    <!-- cliqz start -->
     <item type="id" name="background_manager_listener_key"/>
     <item type="id" name="background_manager_mode_key"/>
-    <item name="offrz_loader_id" type="id" />
-    <!-- cliqz end-->
+    <item type="id" name="background_manager_target_key" />
+    <item type="id" name="offrz_loader_id" />
+    <!-- cliqz end -->
 </resources>
