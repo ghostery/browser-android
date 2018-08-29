@@ -98,7 +98,10 @@ public class MenuItemDefault extends TextView
 
         if (mIcon != null) {
             mIcon.setBounds(sIconBounds);
+
+            /* Cliqz start o/
             mIcon.setAlpha(isEnabled() ? 255 : 99);
+            /o Cliqz end */
         }
 
         refreshIcon();
@@ -116,11 +119,14 @@ public class MenuItemDefault extends TextView
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
 
+        /* Cliqz Start o/
         if (mIcon != null)
             mIcon.setAlpha(enabled ? 255 : 99);
 
         if (mState != null)
             mState.setAlpha(enabled ? 255 : 99);
+        /o Cliqz End */
+
     }
 
     private void setCheckable(boolean checkable) {

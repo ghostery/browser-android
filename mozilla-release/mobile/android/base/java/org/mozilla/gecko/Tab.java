@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 import org.mozilla.gecko.annotation.RobocopTarget;
+import org.mozilla.gecko.anolysis.AnalysisBuilder;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.db.URLMetadata;
 import org.mozilla.gecko.icons.IconCallback;
@@ -710,6 +711,11 @@ public class Tab {
 
     void handleContentLoaded() {
         setLoadProgressIfLoading(LOAD_PROGRESS_LOADED);
+        /* Cliqz start */
+        if (!isPrivate()) {
+            new AnalysisBuilder("metrics.history.visits.count").dispatch();
+        }
+        /* Cliqz end */
     }
 
     protected void saveThumbnailToDB(final BrowserDB db) {

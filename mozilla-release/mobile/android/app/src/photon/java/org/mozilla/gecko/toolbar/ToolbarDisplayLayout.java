@@ -621,5 +621,10 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     public void setOnPageActionClickedListener(PageActionLayout.PageActionClickListener listener) {
         mPageActionLayout.setOnPageActionClickedListener(listener);
     }
+
+    // check if the title set
+    public boolean isTitleSet(){
+         return (mTitle.length() > 0);
+    }
     /* Cliqz end */
 }

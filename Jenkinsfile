@@ -35,7 +35,7 @@ def build(Map m){
             def apk = ""
             setupTestInstance(
                 test,
-                "ami-13050368",
+                "ami-07457b491395bb595",
                 "1",
                 "t2.medium",
                 "android_ci_genymotion",
@@ -141,8 +141,8 @@ def build(Map m){
                                                 set -x
                                                 set -e
                                                 chmod 400 $FILE
-                                                ssh -v -o StrictHostKeyChecking=no -i $FILE root@$IP "setprop persist.sys.usb.config adb"
-                                                ssh -v -o StrictHostKeyChecking=no -i $FILE -NL 5556:127.0.0.1:5555 root@$IP &
+                                                ssh -v -o StrictHostKeyChecking=no -i $FILE shell@$IP "setprop persist.sys.usb.config adb"
+                                                ssh -v -o StrictHostKeyChecking=no -i $FILE -NL 5556:127.0.0.1:5555 shell@$IP &
                                                 $ANDROID_HOME/platform-tools/adb connect 127.0.0.1:5556
                                                 $ANDROID_HOME/platform-tools/adb wait-for-device
                                             '''
@@ -153,22 +153,30 @@ def build(Map m){
                                             sh'''#!/bin/bash -l
                                                 set -x
                                                 set -e
-                                                appium &
-                                                sleep 10
                                                 export app=$PWD/mozilla-release/objdir-frontend-android/$FLAVOR/dist/$APP
                                                 $ANDROID_HOME/platform-tools/adb install $app
                                                 cd autobots
+                                                appium --log $FLAVOR-appium.log &
+                                                echo $! > appium.pid
+                                                sleep 10
                                                 virtualenv ~/venv
                                                 source ~/venv/bin/activate
                                                 chmod 0755 requirements.txt
                                                 pip install -r requirements.txt
+                                                $ANDROID_HOME/platform-tools/adb forward tcp:6000 localfilesystem:/data/data/${appPackage}/firefox-debugger-socket
+                                                $ANDROID_HOME/platform-tools/adb forward --list
                                                 python testRunner.py || true
-                                           '''
+                                                $ANDROID_HOME/platform-tools/adb uninstall ${appPackage}
+                                                sleep 10
+                                                $ANDROID_HOME/platform-tools/adb forward --remove-all
+                                                kill `cat appium.pid` || true
+                                                rm -f appium.pid
+                                            '''
                                        }
                                     }
                                 }
                                 stage("Upload Results: ${flavorname}") {
-                                    archiveTestResults()
+                                    archiveTestResults("${flavorname}")
                                 }
                             }
                         }catch(e) {
@@ -293,11 +301,11 @@ def cloneRepoViaSSH(String repoLink, String args) {
     """
 }
 
-def archiveTestResults() {
+def archiveTestResults(String flavorName) {
     try {
         archiveArtifacts allowEmptyArchive: true, artifacts: 'autobots/*.log'
         junit 'autobots/test-reports/*.xml'
-        zip archive: true, dir: 'autobots/screenshots', glob: '', zipFile: 'screenshots.zip'
+        zip archive: true, dir: 'autobots/screenshots', glob: '', zipFile: "${flavorName}-screenshots.zip"
     } catch(e) {
         print e
     }

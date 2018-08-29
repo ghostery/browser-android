@@ -26,6 +26,7 @@
         android:layout_marginBottom="18dp"
         android:background="@android:color/white"
         android:text="@string/ghostery_onboarding_action_button"
+        tools:text="Start Browsing"
         android:textColor="#00AEF0"
         android:textSize="14sp" />
 
@@ -57,7 +58,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="12sp"/>
+            tools:text="Support Ghostery by sharing anonymous analytics and Human Web data to improve Ghostery's performance"
+            android:textSize="13sp"/>
     </LinearLayout>
 
     <TextView
@@ -73,6 +75,7 @@
         android:layout_marginStart="14dp"
         android:gravity="center"
         android:text="@string/ghostery_onboarding_new_users_text"
+        tools:text="Keep your browsing cleaner, faster, and safer. By using this app you agree to Ghostery's Privacy  Policy."
         android:textColor="@android:color/white" />
 
     <TextView
@@ -83,6 +86,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
         android:text="@string/ghostery_onboarding_new_users_title"
+        tools:text="Introducing Ghostery"
         android:textColor="@android:color/white"
         android:textSize="27sp" />
 

@@ -24,15 +24,13 @@
         android:textSize="12sp"
         tools:text="Lorem Ipsum here is a title" />
 
-    <org.mozilla.gecko.widget.FaviconView
+    <ImageView
         android:id="@+id/favicon"
         style="@style/ActivityStreamFaviconView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/news_favicon_size"
+        android:layout_height="@dimen/news_favicon_size"
         android:layout_above="@id/title"
         android:layout_margin="5dp"
-        app:backgroundCornerRadius="12dp"
-        app:enableRoundCorners="true"
         tools:background="@drawable/favicon_globe" />
 
     <!-- Visibility is dynamically set based on pinned state. -->

@@ -55,14 +55,14 @@
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
-<!ENTITY myoffrz_no_offers_msg "Here you\'ll find a new offer every week">
+<!ENTITY myoffrz_no_offers_title "Seems like we do not have any offers">
+<!ENTITY myoffrz_no_offers_msg_line1 "But we\'ll keep looking for you and add">
+<!ENTITY myoffrz_no_offers_msg_line2 "them here as soon as we have one">
 <!ENTITY myoffrz_onboarding_description "Receive attractive discounts and bargains with &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Order Now!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Tap code to copy">
 <!ENTITY myoffrz_terms_and_conditions_label "Terms">
 <!ENTITY myoffrz_message_code_copied "Code copied">
-<!ENTITY myoffrz_activation_description "Activate &brandMyOffrz; to receive attractive discounts and bargains.">
-<!ENTITY myoffrz_activate "Activate">
 
 <!-- Block Ads -->
 <!ENTITY pref_category_block_ads "Block Ads (Beta)">
@@ -141,7 +141,7 @@
 <!ENTITY cc_smart_blocking_about "Tracker blocking adjusted to optimize page performance">
 <!ENTITY cc_site_trackers_list_title "Trackers on this site">
 <!ENTITY cc_global_trackers_list_title "Trackers across sites">
-<!ENTITY cc_reset_settings "Reset Settings">
+<!ENTITY cc_reset_settings "Reset Changes">
 <!ENTITY cc_settings_menu "Settings menu">
 <!ENTITY cc_on_this_site "On this site">
 <!ENTITY cc_trackers "TRACKERS">
@@ -161,6 +161,9 @@
 <!ENTITY cc_toast_site_trust "Tracker trusted on this site">
 <!ENTITY cc_toast_site_restrict "Tracker blocked on this site">
 <!ENTITY cc_toast_site_block "Tracker blocked on all sites">
+<!ENTITY cc_reset_changes_dialog_title "Reset all changes?">
+<!ENTITY cc_reset_changes_dialog_message "All previous changes to site and global trackers will be reset.">
+<!ENTITY cc_reset "RESET">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Search">
@@ -263,7 +266,7 @@
 <!ENTITY ghostery_onboarding_new_users_title "Introducing &brandShortName;">
 <!ENTITY ghostery_onboarding_new_users_text "Keep your browsing cleaner, faster, and safer. By using this app you agree to &brandShortName;\'s Privacy Policy.">
 <!ENTITY ghostery_onboarding_old_users_title "Introducing new &brandShortName;">
-<!ENTITY ghostery_onboarding_old_users_text "Support &brandShortName; by participating in &brandMyOffrz; and share Human Web &amp; analytics data. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022>Learn More.\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_old_users_text "Support &brandShortName; by participating in &brandMyOffrz; and share Human Web &amp; analytics data. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022>Learn more\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Tracking Protection">
 <!ENTITY ghostery_onboarding_tracking_protection_text "Browse smarter with our tracking protection features. You can turn these off in the &brandShortName; Control Center.">
 <!ENTITY ghostery_onboarding_quick_search_title "Quick Search">

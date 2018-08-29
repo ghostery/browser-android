@@ -149,10 +149,10 @@ public class GeckoPreferences
     public static final String PREFS_DEVTOOLS_REMOTE_USB_ENABLED = "devtools.remote.usb.enabled";
     public static final String PREFS_DEVTOOLS_REMOTE_WIFI_ENABLED = "devtools.remote.wifi.enabled";
     private static final String PREFS_DEVTOOLS_REMOTE_LINK = NON_PREF_PREFIX + "remote_debugging.link";
-    public static final String PREFS_VOICE_INPUT_ENABLED = NON_PREF_PREFIX + "voice_input_enabled";
+    // public static final String PREFS_VOICE_INPUT_ENABLED = NON_PREF_PREFIX + "voice_input_enabled";
     public static final String PREFS_QRCODE_ENABLED = NON_PREF_PREFIX + "qrcode_enabled";
     public static final String PREFS_AUTO_COMPLETE = "pref.search.auto.completion";
-    // private static final String PREFS_TRACKING_PROTECTION_LEARN_MORE = NON_PREF_PREFIX + "trackingprotection.learn_more";
+    public static final String PREFS_OFFRZ_LAST_SIGNATURE = NON_PREF_PREFIX + "offrz.last.signature";
     /* Cliqz end */
     private static final String PREFS_CLEAR_PRIVATE_DATA = NON_PREF_PREFIX + "privacy.clear";
     private static final String PREFS_CLEAR_PRIVATE_DATA_EXIT = NON_PREF_PREFIX + "history.clear_on_exit";
@@ -225,8 +225,6 @@ public class GeckoPreferences
     // should the 'Top News' list be collapsed or expanded. 'true' for expanded.
     public static final String PREFS_CLIQZ_TAB_NEWS_EXPANDED = "pref.cliqz.tab.news.expanded";
 
-    // add show myoffrz and about my offrz to general settings menu
-    public static final String PREFS_MYOFFRZ_ENABLED = "pref.myoffrz.enabled";
     // add Subscriptions key and dialog for reset it
     // private static final String PREFS_RESET_SUBSCRIPTIONS = NON_PREF_PREFIX + "reset.subscription";
     // private static final int DIALOG_CREATE_RESET_SUBSCRIPTIONS = 3;
@@ -842,6 +840,7 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
+                /* Cliqz start o/
                 } else if (PREFS_VOICE_INPUT_ENABLED.equals(key)) {
                     if (!InputOptionsUtils.supportsVoiceRecognizer(getApplicationContext(), getResources().getString(R.string.voicesearch_prompt))) {
                         // Remove UI for voice input on non nightly builds.
@@ -849,6 +848,7 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
+                /o Cliqz end */
                 } else if (PREFS_QRCODE_ENABLED.equals(key)) {
                     if (!InputOptionsUtils.supportsQrCodeReader(getApplicationContext())) {
                         // Remove UI for qr code input on non nightly builds
@@ -926,10 +926,6 @@ public class GeckoPreferences
                             return true;
                         }
                     });
-                } else if (PREFS_MYOFFRZ_ENABLED.equals(key)){
-                    // Set default value of show my offrz depend on system language
-                    final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-                    ((CheckBoxPreference)pref).setChecked(preferenceManager.isMyOffrzEnable());
                 } else if(PREFS_SHOW_HINTS.equals(key)){
                     // reset all Onboarding
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {

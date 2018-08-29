@@ -3,13 +3,15 @@ package org.mozilla.gecko.home;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
@@ -25,7 +27,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.myoffrz.MyOffrzLoader;
@@ -35,33 +39,29 @@ import org.mozilla.gecko.util.StringUtils;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import static android.support.v4.content.ContextCompat.getDrawable;
+import static android.view.View.GONE;
 
 /**
  * Cliqz 2018
  * This file is derived from @{@link TopSitesPanel}.java
  */
-public class MyOffrzPanel extends HomeFragment implements SharedPreferences
-        .OnSharedPreferenceChangeListener{
+public class MyOffrzPanel extends HomeFragment {
 
     private static final String LOGTAG = "GeckoMyOffrzPanel";
-    private static final String ACTIONS_KEY = "actions";
     private static final String UI_INFO_KEY = "ui_info";
     private static final String TEMPLATE_DATA_KEY = "template_data";
     private static final String TEMPLATE_TITLE_KEY = "title";
     private static final String TEMPLATE_CODE_KEY = "code";
     private static final String ERROR_FALLBACK = "!!! ERROR !!!";
     private static final String TEMPLATE_DESCRIPTION_KEY = "desc";
-    private static final String TEMPLATE_LOGO_KEY = "logo_url";
+    private static final String TEMPLATE_PICTURE_KEY = "picture_url";
+    private static final String TEMPLATE_CONDITIONS = "conditions";
     private static final String ERROR_URL_FALLBAK = "http://cliqz.com";
     private static final String CALL_TO_ACTION_KEY = "call_to_action";
     private static final String CALL_TO_ACTION_TEXT_KEY = "text";
     private static final String CALL_TO_ACTION_URL_KEY = "url";
-    private static final String MYOFFRZ_URL = "https://cliqz.com/myoffrz";
-    // Cursor loader ID for MyOffrz
-    private static final int LOADER_ID_MY_OFFRZ = 0;
 
     // Callbacks used for the search and favicon cursor loaders
     private MyOffrzPanel.MyOffrzLoaderCallbacks mMyOffrzLoaderCallbacks;
@@ -70,15 +70,15 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
 
     View offersOuterContainer, myOffrzDeactivateView;
 
-    ViewGroup onboardingVG , emptyOffersOuterContainer, offersContainer, activationVG;
+    ViewGroup onboardingVG , emptyOffersOuterContainer, offersContainer;
 
     ImageView onboardingIcon;
 
-    TextView onboardingText, activationText, learnMoreActivation;
+    TextView onboardingText;
 
     ProgressBar progressBar;
 
-    Button learnMoreOnBoarding, activate;
+    Button learnMoreOnBoarding;
     ImageButton closeOnBoarding;
 
     PreferenceManager mPreferenceManager;
@@ -98,20 +98,15 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
                 .empty_offers_outer_container);
         onboardingVG = (ViewGroup) view.findViewById(R.id.offrz_onboaring_container);
         offersContainer = (ViewGroup) view.findViewById(R.id.offers_container);
-        activationVG = (ViewGroup) view.findViewById(R.id.offrz_activation_container);
         offersOuterContainer = view.findViewById(R.id.offers_outer_container);
         myOffrzDeactivateView = view.findViewById(R.id.myoffrz_deactivate_view);
         onboardingIcon = (ImageView) view.findViewById(R.id.onboarding_feature_icon_iv);
         onboardingText = (TextView) view.findViewById(R.id.onboarding_feature_description_tv);
-        activationText = (TextView) view.findViewById(R.id.activation_feature_description_tv);
-        learnMoreActivation = (TextView) view.findViewById(R.id.learn_more_tv);
         learnMoreOnBoarding = (Button) view.findViewById(R.id.learn_more_btn);
-        activate = (Button) view.findViewById(R.id.activate_btn);
         progressBar = (ProgressBar) view.findViewById(R.id.offers_loading_pb);
         closeOnBoarding = (ImageButton) view.findViewById(R.id.onboarding_close_btn);
 
         onboardingText.setText(R.string.myoffrz_onboarding_description);
-        activationText.setText(R.string.myoffrz_activation_description);
 
         mPreferenceManager = PreferenceManager.getInstance(getContext().getApplicationContext());
 
@@ -119,15 +114,8 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
             @Override
             public void onClick(View v) {
                 closeOnboarding();
-                mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(MYOFFRZ_URL),
-                        EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
-            }
-        });
-
-        learnMoreActivation.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(MYOFFRZ_URL),
+                final String url = getString(R.string.pref_myoffrz_url);
+                mUrlOpenListener.onUrlOpen(url,
                         EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
             }
         });
@@ -138,18 +126,6 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
                 closeOnboarding();
             }
         });
-
-        activate.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                mPreferenceManager.setMyOffrzEnabled(true);
-                mPreferenceManager.setMyOffrzOnboardingEnabled(false);
-                activationVG.setVisibility(View.GONE);
-                myOffrzDeactivateView.setVisibility(View.INVISIBLE);
-                enableClickActionsOnOffrz(true);
-            }
-        });
-        mPreferenceManager.registerOnSharedPreferenceChangeListener(this);
         return view;
     }
 
@@ -165,53 +141,26 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
         updateLayouts();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPreferenceManager.unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        updateLayouts();
-    }
-
     private void updateLayouts(){
-        if (!mPreferenceManager.isMyOffrzEnable()) {
-            activationVG.setVisibility(View.VISIBLE);
-            onboardingVG.setVisibility(View.GONE);
-            myOffrzDeactivateView.setVisibility(View.VISIBLE);
-            myOffrzDeactivateView.bringToFront();
-            enableClickActionsOnOffrz(false);
-        }else {
-            activationVG.setVisibility(View.GONE);
-            myOffrzDeactivateView.setVisibility(View.GONE);
-            enableClickActionsOnOffrz(true);
-            if (mPreferenceManager.isMyOffrzOnboardingEnabled()) {
-                onboardingVG.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    private void enableClickActionsOnOffrz(boolean enable){
+        myOffrzDeactivateView.setVisibility(GONE);
+        onboardingVG.setVisibility(View.VISIBLE);
         for(int i = 0 ; i < offersContainer.getChildCount();i++){
             View curChild = offersContainer.getChildAt(i);
             if (curChild.getId() == R.id.offer_card){
-                curChild.findViewById(R.id.terms_and_conditions_btn).setClickable(enable);
-                curChild.findViewById(R.id.go_to_offer_btn).setClickable(enable);
-                curChild.findViewById(R.id.offer_copy_code_btn).setClickable(enable);
+                curChild.findViewById(R.id.terms_and_conditions_btn).setClickable(true);
+                curChild.findViewById(R.id.go_to_offer_btn).setClickable(true);
+                curChild.findViewById(R.id.offer_copy_code_btn).setClickable(true);
             }
         }
     }
 
     @Override
     protected void load() {
-        getLoaderManager().initLoader(LOADER_ID_MY_OFFRZ, null, mMyOffrzLoaderCallbacks);
-
+        getLoaderManager().initLoader(R.id.offrz_loader_id, null, mMyOffrzLoaderCallbacks);
     }
 
     private void closeOnboarding() {
-        onboardingVG.setVisibility(View.GONE);
+        onboardingVG.setVisibility(GONE);
         mPreferenceManager.setMyOffrzOnboardingEnabled(false);
     }
 
@@ -226,7 +175,7 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
 
         @Override
         public void onLoadFinished(Loader<JSONObject> loader, JSONObject data) {
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(GONE);
             if (data == null) {
                 // display an error message here
                 offersOuterContainer.setVisibility(View.INVISIBLE);
@@ -234,7 +183,7 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
                 return;
             }
             offersOuterContainer.setVisibility(View.VISIBLE);
-            emptyOffersOuterContainer.setVisibility(View.GONE);
+            emptyOffersOuterContainer.setVisibility(GONE);
 
             // Remove all previous offers if needed
             final List<View> toBeRemoved = new LinkedList<>();
@@ -252,11 +201,6 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
             final View offer = inflater.inflate(R.layout.myoffrz_offer_template, offersContainer,
                     false);
             final ViewHolder holder = new ViewHolder(offer);
-
-            // !!! No terms and conditions right now !!!
-            holder.termsAndConditions.setVisibility(View.GONE);
-            holder.termsAndConditionsButton.setVisibility(View.GONE);
-            // !!! No terms and conditions right now !!!
 
             final JSONObject templateData = getTemplateData(data);
             if (templateData == null) {
@@ -278,53 +222,45 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
             holder.goToOffer
                     .setText(callToActionData.optString(CALL_TO_ACTION_TEXT_KEY, ERROR_FALLBACK));
             if (!templateData.has(TEMPLATE_CODE_KEY)) {
-                return;
+                holder.tapCodeToCopy.setVisibility(GONE);
+                holder.copyCode.setVisibility(GONE);
+            } else {
+                final String code = templateData.optString(TEMPLATE_CODE_KEY, ERROR_FALLBACK);
+                holder.copyCode.setText(code);
+                holder.setCode(code);
             }
-            final String code = templateData.optString(TEMPLATE_CODE_KEY, ERROR_FALLBACK);
-            holder.copyCode.setText(code);
-            holder.setCode(code);
-
             if (!templateData.has(TEMPLATE_DESCRIPTION_KEY)) {
-                holder.descrption.setVisibility(View.GONE);
+                holder.description.setVisibility(GONE);
             } else {
-                holder.descrption.setText(templateData.optString(TEMPLATE_DESCRIPTION_KEY, ERROR_FALLBACK));
+                holder.description.setText(templateData.optString(TEMPLATE_DESCRIPTION_KEY, ERROR_FALLBACK));
             }
 
-            if (!templateData.has(TEMPLATE_LOGO_KEY)) {
-                holder.image.setVisibility(View.GONE);
+            if (!templateData.has(TEMPLATE_PICTURE_KEY)) {
+                holder.image.setVisibility(GONE);
             } else {
-                holder.image.setImageURI(Uri.parse(templateData.optString(TEMPLATE_LOGO_KEY, ERROR_URL_FALLBAK)));
+                Picasso.with(getContext())
+                        .load(Uri.parse(templateData.optString(TEMPLATE_PICTURE_KEY, ERROR_URL_FALLBAK)))
+                        .into(holder.image);
+            }
+
+            if (!templateData.has(TEMPLATE_CONDITIONS)) {
+                holder.termsAndConditions.setVisibility(GONE);
+                holder.termsAndConditionsButton.setVisibility(GONE);
+            } else {
+                holder.termsAndConditions.setText(templateData.optString(TEMPLATE_CONDITIONS, ERROR_FALLBACK));
             }
 
             offersContainer.addView(offer);
-            if(!mPreferenceManager.isMyOffrzEnable()) {
-                myOffrzDeactivateView.setVisibility(View.VISIBLE);
-                myOffrzDeactivateView.bringToFront();
-                holder.enableClickActions(false);
-            }else{
-                myOffrzDeactivateView.setVisibility(View.INVISIBLE);
-                holder.enableClickActions(true);
-            }
+            myOffrzDeactivateView.setVisibility(View.INVISIBLE);
+            holder.enableClickActions(true);
         }
 
         private JSONObject getTemplateData(final JSONObject data) {
-            final Object[] path = new Object[] {
-                    ACTIONS_KEY, 1, 1, 1, UI_INFO_KEY, TEMPLATE_DATA_KEY
-            };
-            Object currentNode = data;
-            for (Object key: path) {
-                if (currentNode instanceof JSONObject && key instanceof String) {
-                    currentNode = ((JSONObject) currentNode).opt((String) key);
-                } else if (currentNode instanceof JSONArray && key instanceof Integer) {
-                    currentNode = ((JSONArray) currentNode).opt((Integer) key);
-                } else {
-                    return null;
-                }
-            }
-            if (!(currentNode instanceof JSONObject)) {
+            try {
+                return data.getJSONObject(UI_INFO_KEY).getJSONObject(TEMPLATE_DATA_KEY);
+            } catch (JSONException e) {
                 return null;
             }
-            return (JSONObject) currentNode;
         }
 
         @Override
@@ -335,20 +271,27 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
 
     class ViewHolder {
 
-        TextView title, descrption, termsAndConditions;
+        final TextView title;
+        final TextView description;
+        final TextView termsAndConditions;
+        final TextView tapCodeToCopy;
 
-        ImageView image;
+        final ImageView image;
 
-        Button termsAndConditionsButton, copyCode, goToOffer;
+        final Button termsAndConditionsButton;
+        final Button copyCode;
+        final Button goToOffer;
 
         private String mUrl;
         private String mCode;
 
         ViewHolder(@NonNull View view) {
             title = (TextView) view.findViewById(R.id.offer_title_tv);
-            descrption = (TextView) view.findViewById(R.id.offer_description_tv);
+            description = (TextView) view.findViewById(R.id.offer_description_tv);
+            tapCodeToCopy = (TextView) view.findViewById(R.id.offer_tap_code_to_copy_label);
             image = (ImageView) view.findViewById(R.id.offer_image_iv);
             termsAndConditionsButton = (Button) view.findViewById(R.id.terms_and_conditions_btn);
+            termsAndConditionsButton.setSelected(false);
             termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions_tv);
             copyCode = (Button) view.findViewById(R.id.offer_copy_code_btn);
             goToOffer = (Button) view.findViewById(R.id.go_to_offer_btn);
@@ -381,20 +324,43 @@ public class MyOffrzPanel extends HomeFragment implements SharedPreferences
                 }
             });
 
+            termsAndConditionsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (termsAndConditions.getVisibility() == GONE) {
+                        termsAndConditions.setVisibility(View.VISIBLE);
+                        termsAndConditionsButton.setSelected(true);
+                    } else {
+                        termsAndConditions.setVisibility(GONE);
+                        termsAndConditionsButton.setSelected(false);
+                    }
+                }
+            });
             setTermsAndConditionButtonDrawables();
         }
 
         private void setTermsAndConditionButtonDrawables() {
             final Context context = getContext();
             final Drawable leftDrawable = getDrawable(context, R.drawable.ic_info_black).mutate();
-            final Drawable rightDrawable = getDrawable(context, R.drawable.arrow_up).mutate();
-
+            final Drawable rightDrawableSelected = safeVectorLoadAndMutate(R.drawable.arrow_up);
+            final Drawable rightDrawableUnselected = safeVectorLoadAndMutate(R.drawable.arrow_down);
+            if (rightDrawableSelected == null || rightDrawableUnselected == null) {
+                return;
+            }
             final @ColorInt int color = ContextCompat.getColor(context, R.color.general_blue_color);
-
+            DrawableCompat.setTint(rightDrawableSelected, color);
+            DrawableCompat.setTint(rightDrawableUnselected, color);
+            final StateListDrawable rightDrawable = new StateListDrawable();
+            rightDrawable.addState(new int[] { android.R.attr.state_selected }, rightDrawableSelected);
+            rightDrawable.addState(new int[] {}, rightDrawableUnselected);
             DrawableCompat.setTint(leftDrawable, color);
-            DrawableCompat.setTint(rightDrawable, color);
 
             termsAndConditionsButton.setCompoundDrawablesWithIntrinsicBounds(leftDrawable,null,rightDrawable,null);
+        }
+
+        private Drawable safeVectorLoadAndMutate(@DrawableRes int id) {
+            final Drawable drawable = VectorDrawableCompat.create(getResources(), id, null);
+            return drawable != null ? drawable.mutate() : null;
         }
 
         void setOfferUrl(String url) {
