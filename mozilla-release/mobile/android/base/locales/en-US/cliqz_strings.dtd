@@ -288,3 +288,9 @@
 <!ENTITY close_ghost_tabs "Close Ghost Tabs">
 <!ENTITY contextmenu_open_ghost_tab "Open in Ghost Tab">
 <!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: using a &formatS1;New Ghost Tab&formatS2; won\'t save your history.">
+
+<!-- Anti-phishing -->
+<!ENTITY antiphishing_dialog_title "Warning: deceptive website!">
+<!ENTITY antiphishing_message "&brandShortName; has blocked access to &#037;1&#036;s because it has been reported as a phishing website. Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.">
+<!ENTITY antiphishing_walk_away "Back to safe site">
+<!ENTITY antiphishing_ignore_danger "Continue despite warning">

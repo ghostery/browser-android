@@ -954,4 +954,11 @@
   <string name="close_ghost_tabs">&close_private_tabs;</string>
   <string name="contextmenu_open_ghost_tab">&contextmenu_open_ghost_tab;</string>
   <string name="home_most_recent_emptyhint_ghost_tab">&home_most_recent_emptyhint_ghost_tab;</string>
+
+<!-- Anti-phishing -->
+  <string name="antiphishing_dialog_title">&antiphishing_dialog_title;</string>
+  <string name="antiphishing_message">&antiphishing_message;</string>
+  <string name="antiphishing_walk_away">&antiphishing_walk_away;</string>
+  <string name="antiphishing_ignore_danger">&antiphishing_ignore_danger;</string>
+
 </resources>

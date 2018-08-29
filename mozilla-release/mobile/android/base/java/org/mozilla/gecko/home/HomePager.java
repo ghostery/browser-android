@@ -38,6 +38,7 @@ import org.mozilla.gecko.animation.ViewHelper;
 import org.mozilla.gecko.home.HomeAdapter.OnAddPanelListener;
 import org.mozilla.gecko.home.HomeConfig.PanelConfig;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.AppBackgroundManager;
 import org.mozilla.gecko.util.ThreadUtils;
 
@@ -75,8 +76,8 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
     /* Cliqz Start */
     // Cached original ViewPager background.
     //private final Drawable mOriginalBackground;
-    // add appSharedPreference
-    private SharedPreferences appPreferences;
+    // add PreferenceManager
+    private final PreferenceManager preferenceManager;
     /* Cliqz End */
 
     // Telemetry session for current panel.
@@ -201,8 +202,8 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
         mLoadState = LoadState.UNLOADED;
         /*Cliqz Start*/
         // get appSharedPreference, setMoriginalBackground if showBackground false
-        appPreferences = GeckoSharedPrefs.forApp(getContext());
-        appPreferences.registerOnSharedPreferenceChangeListener(this);
+        preferenceManager = PreferenceManager.getInstance(context);
+        preferenceManager.registerOnSharedPreferenceChangeListener(this);
         /*Cliqz End*/
     }
 
@@ -211,7 +212,7 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        appPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        preferenceManager.unregisterOnSharedPreferenceChangeListener(this);
     }
     /*Cliqz End*/
 
@@ -649,11 +650,6 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
     public void onPrepareLoad(Drawable placeHolderDrawable) {
 
     }
-    // This part is derived from @{@link TabQueueHelper}.java
-    // check if show background image is enabled
-    public boolean isBackgroundEnabled() {
-        return  appPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED,true);
-    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -663,12 +659,13 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
     }
 
     private void reloadBackground() {
-        if (isBackgroundEnabled()) {
-            AppBackgroundManager.getInstance(getContext().getApplicationContext()).setViewBackground(this,
-                    ContextCompat.getColor(getContext(), R.color.url_bar));
+        final AppBackgroundManager appBackgroundManager = AppBackgroundManager.getInstance
+                (mContext);
+        if (preferenceManager.isBackgroundEnabled()) {
+            appBackgroundManager.setViewBackground(this, ContextCompat.getColor(mContext, R
+                    .color.url_bar));
         } else {
-            AppBackgroundManager.getInstance(getContext().getApplicationContext())
-                    .setViewBackgroundDefaultColor(this);
+            appBackgroundManager.setViewBackgroundDefaultColor(this);
         }
     }
     /* Cliqz End */
