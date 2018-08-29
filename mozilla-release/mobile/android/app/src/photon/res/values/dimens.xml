@@ -303,6 +303,8 @@
 
     <!-- Tabs Overview -->
     <dimen name="tab_panel_text_size">24sp</dimen>
+    <dimen name="tab_thumbnail_normal_mode_image_padding">50dp</dimen>
+    <dimen name="tab_thumbnail_private_mode_image_padding">10dp</dimen>
     <!-- Cliqz end -->
 
 </resources>
