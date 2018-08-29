@@ -3,16 +3,17 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
+<!-- Cliqz start -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/prompt"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/photon_notification_bg"
               android:focusable="true"
               android:gravity="center_vertical"
               android:minHeight="48dp"
               android:orientation="horizontal">
+              <!--android:background="@color/photon_notification_bg"-->
 
     <TextView
         android:id="@+id/suggestions_prompt_title"
@@ -31,7 +32,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:alpha="0.5"
-        android:background="@drawable/search_suggestion_prompt_no"
         android:focusable="true"
         android:gravity="center"
         android:minWidth="64dp"
@@ -41,12 +41,12 @@
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:textStyle="bold"/>
+        <!--android:background="@drawable/search_suggestion_prompt_no"-->
 
     <TextView
         android:id="@+id/suggestions_prompt_yes"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/search_suggestion_prompt_yes"
         android:focusable="true"
         android:gravity="center"
         android:minWidth="64dp"
@@ -55,4 +55,7 @@
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:textStyle="bold"/>
+        <!--android:background="@drawable/search_suggestion_prompt_yes"-->
+<!-- Cliqz end -->
+
 </LinearLayout>

@@ -254,3 +254,9 @@
 <!ENTITY close_ghost_tabs "Ghost-Tabs schließen">
 <!ENTITY contextmenu_open_ghost_tab "In Ghost-Tab öffnen">
 <!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &formatS1;neuen Ghost-Tabs&formatS2; wird Ihr Verlauf nicht gespeichert.">
+
+<!-- Anti-phishing -->
+<!ENTITY antiphishing_dialog_title "Warnung: betrügerische Website!">
+<!ENTITY antiphishing_message "&brandShortName; hat den Zugriff auf &#037;1&#036;s blockiert, weil diese Seite als Phishing-Website gemeldet wurde. Phishing-Websites geben vor, vertrauenswürdig zu sein, damit du deine Anmeldedaten, dein Passwort oder andere vertrauliche Informationen preisgibst.">
+<!ENTITY antiphishing_walk_away "Zurück zu sicherer">
+<!ENTITY antiphishing_ignore_danger "Trotz der Warnung fortfahren">
