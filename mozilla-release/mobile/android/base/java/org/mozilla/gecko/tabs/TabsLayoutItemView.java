@@ -8,7 +8,7 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.icons.IconResponse;
-import org.mozilla.gecko.icons.Icons;
+import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.widget.FaviconView;
 import org.mozilla.gecko.widget.HoverDelegateWithReset;
 import org.mozilla.gecko.widget.TabThumbnailWrapper;
@@ -29,6 +29,8 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.concurrent.Future;
 
@@ -199,14 +201,17 @@ public class TabsLayoutItemView extends LinearLayout
             final float textSize = resources.getDimensionPixelSize(R.dimen.tab_favicon_text_size);
 
             final Context appContext = getContext().getApplicationContext();
-            mOngoingIconLoad = Icons.with(appContext)
+            /* Cliqz Start */
+            /* mOngoingIconLoad = Icons.with(appContext)
                                        .pageUrl(url)
                                        .skipNetwork()
                                        .targetSize(iconSize)
                                        .textSize(textSize)
                                        .build()
-                                       .execute(mFaviconView.createIconCallback());
-
+                                       .execute(mFaviconView.createIconCallback()); */
+            Picasso.with(getContext())
+                    .load(CliqzLogoUtil.getIconUrl(url, iconSize, iconSize))
+                    .into(mFaviconView);
             mTitle.setContentDescription(tabTitle);
         }
     }
