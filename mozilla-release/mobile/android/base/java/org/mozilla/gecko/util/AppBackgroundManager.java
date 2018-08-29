@@ -79,6 +79,7 @@ public class AppBackgroundManager {
     @UiThread
     public void setViewBackgroundDefaultColor(@NonNull View view) {
         view.setTag(R.id.background_manager_mode_key, Mode.COLOR);
+        view.setTag(R.id.background_manager_target_key, null);
         // Default color is a gradient.
         view.setBackgroundResource(R.drawable.cliqz_default_background);
     }
@@ -90,11 +91,15 @@ public class AppBackgroundManager {
             return;
         }
         view.setTag(R.id.background_manager_mode_key, Mode.IMAGE);
+        // Picasso keeps only a week reference to the target: in order to keep the target alive,
+        // we tag it in the view.
+        final PicassoTarget target = new PicassoTarget(view);
+        view.setTag(R.id.background_manager_target_key, target);
         view.setBackgroundColor(fallbackColor);
 
         Picasso.with(view.getContext())
                 .load(backgroundImageUri)
-                .into(new PicassoTarget(view));
+                .into(target);
     }
 
     private class PicassoTarget implements Target {
@@ -111,18 +116,18 @@ public class AppBackgroundManager {
             if (!Mode.IMAGE.equals(view.getTag(R.id.background_manager_mode_key))) {
                 return;
             }
+            view.setTag(R.id.background_manager_target_key, null);
             final Drawable backgroundDrawable = new CustomBitmapDrawable(view.getResources(), bitmap);
             view.setBackground(backgroundDrawable);
         }
 
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
-
+            view.setTag(R.id.background_manager_target_key, null);
         }
 
         @Override
         public void onPrepareLoad(Drawable placeHolderDrawable) {
-
         }
     }
 
