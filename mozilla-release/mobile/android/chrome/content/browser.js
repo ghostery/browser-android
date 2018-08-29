@@ -6498,7 +6498,7 @@ var Cliqz = {
       "Search:Hide",
       "Search:Search",
       "Search:Show",
-
+      "Privacy:AdblockToggle",
       "Privacy:GetInfo",
       "Privacy:Hide",
       "Privacy:SetInfo",
@@ -6848,6 +6848,9 @@ var Cliqz = {
       case "Search:Show":
         this.isVisible = true; // save the state before search is initialized
         this.Search && this.overlayPanel(this.Search.browser);
+        break;
+      case "Privacy:AdblockToggle":
+        this.messagePrivacyExtension({ name: "adblockToggle", message: data})
         break;
       case "Privacy:GetInfo":
         this.messageExtension({ name: "getAndroidPanelData" });

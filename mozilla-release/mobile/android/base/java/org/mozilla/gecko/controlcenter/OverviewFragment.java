@@ -17,8 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,17 +70,18 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private boolean mIsSiteTrusted;
     private boolean mIsSiteRestricted;
     private boolean mIsGhosteryPaused;
+    private boolean mAreAdsBlockedGlobally;
+    private boolean mIsSiteAdBlockWhiteListed;
     private GeckoBundle controlCenterSettingsData;
     private final List<Integer> colors = new ArrayList<>();
     private final List<Integer> disabledColors = new ArrayList<>();
     private final List<Integer> blockedColors = new ArrayList<>();
     private TextView mNotchTitle;
-    private TextView mInfoViewCount;
-    private TextView mInfoViewTitle;
-    private TextView mInfoViewSummary;
-    private ImageView mInfoViewIcon;
-    private View mInfoView;
+    private RadioGroup mAdBlockOptionsView;
+    private RadioButton mAdBlockDisableDomain;
+    private RadioButton mAdBlockDisableGlobal;
     private View mOverview;
+    private ImageButton mBackButton;
     private BottomSheetBehavior<View> mBottomSheetBehavior;
     private final BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback =
             new BottomSheetBehavior.BottomSheetCallback() {
@@ -85,8 +89,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 public void onStateChanged(@NonNull View bottomSheet, int newState) {
                     if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                         mOverview.setVisibility(View.VISIBLE);
-                        mInfoView.setVisibility(View.INVISIBLE);
+                        mAdBlockOptionsView.setVisibility(View.INVISIBLE);
                         mNotchTitle.setText(R.string.cc_enhanced_options);
+                        mBackButton.setVisibility(View.GONE);
                     }
                 }
 
@@ -132,27 +137,38 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mTrustSiteButton.setOnClickListener(this);
         mRestrictSiteButton.setOnClickListener(this);
         mPauseGhosteryButton.setOnClickListener(this);
-        mInfoView = view.findViewById(R.id.cc_info_view);
+        mBackButton = (ImageButton) view.findViewById(R.id.cc_back_button);
+        mAdBlockOptionsView = (RadioGroup) view.findViewById(R.id.cc_adblock_options_view);
+        mAdBlockDisableDomain = (RadioButton) view.findViewById(R.id.cc_radio_this_domain);
+        mAdBlockDisableGlobal = (RadioButton) view.findViewById(R.id.cc_radio_all_domain);
         mOverview = view.findViewById(R.id.cc_overview_view);
-        mInfoViewCount = (TextView) view.findViewById(R.id.cc_info_view_count);
-        mInfoViewTitle = (TextView) view.findViewById(R.id.cc_info_view_title);
-        mInfoViewSummary = (TextView) view.findViewById(R.id.cc_info_view_summary);
-        mInfoViewIcon = (ImageView) view.findViewById(R.id.cc_info_view_icon);
         mNotchTitle = (TextView) view.findViewById(R.id.cc_notch_title);
 
         final View mBottomSheetRootView = view.findViewById(R.id.cc_bottom_sheet_root_view);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetRootView);
         mBottomSheetBehavior.setBottomSheetCallback(mBottomSheetCallback);
-
-        final View mAttrackInfoButton = view.findViewById(R.id.cc_enhanced_tracking_info_button);
-        final View mAdBlockingInfoButton = view.findViewById(R.id.cc_enhanced_blocking_info_button);
-        final View mSmartBlockingInfoButton = view.findViewById(R.id.cc_smart_blocking_info_button);
-        final View mInfoViewCloseButton = view.findViewById(R.id.cc_close_info_view_button);
-        mAttrackInfoButton.setOnClickListener(this);
-        mAdBlockingInfoButton.setOnClickListener(this);
-        mSmartBlockingInfoButton.setOnClickListener(this);
-        mInfoViewCloseButton.setOnClickListener(this);
-
+        final View enhancedBlockingText = view.findViewById(R.id.cc_enhanced_blocking_text);
+        enhancedBlockingText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mAreAdsBlockedGlobally || mIsSiteAdBlockWhiteListed) {
+                    mAdBlockOptionsView.setVisibility(View.VISIBLE);
+                    mOverview.setVisibility(View.INVISIBLE);
+                    mBackButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdBlockOptionsView.setVisibility(View.INVISIBLE);
+                mOverview.setVisibility(View.VISIBLE);
+                mBackButton.setVisibility(View.GONE);
+                if (mAreAdsBlockedGlobally && !mIsSiteAdBlockWhiteListed) {
+                    mAdBlockingSwitch.setChecked(true);
+                }
+            }
+        });
         return view;
     }
 
@@ -175,8 +191,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 + getAdBlockCount();
         final String domainName = safeGetString(controlCenterSettingsData, "data/summary/pageHost");
         final boolean isSmartBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_smart_block");
-        final boolean isAdBlockEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_ad_block");
         final boolean isAntiTrackingEnabled = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_anti_tracking");
+        mAreAdsBlockedGlobally = safeGetBoolean(controlCenterSettingsData, "data/panel/panel/enable_ad_block");
+        mIsSiteAdBlockWhiteListed = safeGetBoolean(controlCenterSettingsData, "data/cliqz/adblock/disabledForDomain");
         mSmartBlockingCount.setText(String.valueOf(getSmartBlockingCount()));
         mCliqzAttrackCount.setText(String.valueOf(calculateCliqzAttrackCount()));
         mAdBlockCount.setText(String.valueOf(getAdBlockCount()));
@@ -186,7 +203,15 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mAdBlockingSwitch.setOnCheckedChangeListener(null);
 
         mSmartBlockingSwitch.setChecked(isSmartBlockEnabled);
-        mAdBlockingSwitch.setChecked(isAdBlockEnabled);
+        mAdBlockingSwitch.setChecked(mAreAdsBlockedGlobally && !mIsSiteAdBlockWhiteListed);
+        mAdBlockOptionsView.setOnCheckedChangeListener(null);
+        if (!mAreAdsBlockedGlobally || mIsSiteAdBlockWhiteListed) {
+            mAdBlockDisableDomain.setChecked(mIsSiteAdBlockWhiteListed);
+            mAdBlockDisableGlobal.setChecked(!mAreAdsBlockedGlobally);
+        } else {
+            mAdBlockOptionsView.clearCheck();
+        }
+        mAdBlockOptionsView.setOnCheckedChangeListener(adBlockCheckedChangeListener);
         mAntiTrackingSwitch.setChecked(isAntiTrackingEnabled);
 
         mSmartBlockingSwitch.setOnCheckedChangeListener(this);
@@ -375,17 +400,6 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             case R.id.cc_ghostery_pause_button:
                 handlePauseButtonClick();
                 break;
-            case R.id.cc_enhanced_tracking_info_button:
-                handleTrackingInfoButtonClick();
-                break;
-            case R.id.cc_enhanced_blocking_info_button:
-                handleAdBlockingInfoButtonClick();
-                break;
-            case R.id.cc_smart_blocking_info_button:
-                handleSmartBlockingInfoButtonClick();
-                break;
-            case R.id.cc_close_info_view_button:
-                handleInfoViewCloseButtonClick();
         }
     }
 
@@ -399,9 +413,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 geckoBundle.putBoolean("enable_anti_tracking", isChecked);
                 break;
             case R.id.cc_enhanced_blocking_switch:
-                GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/panel/panel")
-                        .putBoolean("enable_ad_block", isChecked);
-                geckoBundle.putBoolean("enable_ad_block", isChecked);
+                handleAdBlockSwitchClick(isChecked);
                 break;
             case R.id.cc_smart_blocking_switch:
                 GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/panel/panel")
@@ -410,6 +422,36 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 break;
         }
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+    }
+
+    private void handleAdBlockSwitchClick(boolean isChecked) {
+        if (isChecked) {
+            if (!mAreAdsBlockedGlobally) {
+                final GeckoBundle geckoBundle = new GeckoBundle();
+                geckoBundle.putBoolean("enable_ad_block", true);
+                EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+            } else if (mIsSiteAdBlockWhiteListed) {
+                GeckoBundle geckoBundle = new GeckoBundle();
+                geckoBundle.putString("url", safeGetString(controlCenterSettingsData, "data/summary/pageUrl"));
+                geckoBundle.putBoolean("isDomain", true);
+                EventDispatcher.getInstance().dispatch("Privacy:AdblockToggle", geckoBundle);
+            }
+        } else {
+            mAdBlockOptionsView.setVisibility(View.VISIBLE);
+            mOverview.setVisibility(View.INVISIBLE);
+            mBackButton.setVisibility(View.VISIBLE);
+            mAdBlockOptionsView.setOnCheckedChangeListener(null);
+            if (mIsSiteAdBlockWhiteListed) {
+                mAdBlockDisableDomain.setChecked(true);
+                mAdBlockDisableGlobal.setChecked(false);
+            } else if (!mAreAdsBlockedGlobally) {
+                mAdBlockDisableDomain.setChecked(false);
+                mAdBlockDisableGlobal.setChecked(true);
+            } else {
+                mAdBlockOptionsView.clearCheck();
+            }
+            mAdBlockOptionsView.setOnCheckedChangeListener(adBlockCheckedChangeListener);
+        }
     }
 
     private void handlePauseButtonClick() {
@@ -526,42 +568,6 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", false);
     }
 
-    private void handleTrackingInfoButtonClick() {
-        mOverview.setVisibility(View.INVISIBLE);
-        mInfoView.setVisibility(View.VISIBLE);
-        mInfoViewCount.setText(String.valueOf(calculateCliqzAttrackCount()));
-        mInfoViewTitle.setText(getResources().getQuantityString(R.plurals.cc_trackers_blocked, calculateCliqzAttrackCount()));
-        mInfoViewSummary.setText(R.string.cc_anti_tracking_about);
-        mInfoViewIcon.setImageResource(R.drawable.cc_ic_anti_tracking);
-        mNotchTitle.setText(R.string.cc_enhanced_anti_tracking);
-    }
-
-    private void handleAdBlockingInfoButtonClick() {
-        mOverview.setVisibility(View.INVISIBLE);
-        mInfoView.setVisibility(View.VISIBLE);
-        mInfoViewCount.setText(String.valueOf(getAdBlockCount()));
-        mInfoViewTitle.setText(getResources().getQuantityString(R.plurals.cc_ads_blocked, getAdBlockCount()));
-        mInfoViewSummary.setText(R.string.cc_ad_blocking_about);
-        mInfoViewIcon.setImageResource(R.drawable.cc_ic_ad_blocker);
-        mNotchTitle.setText(R.string.cc_enhanced_ad_blocking);
-    }
-
-    private void handleSmartBlockingInfoButtonClick() {
-        mOverview.setVisibility(View.INVISIBLE);
-        mInfoView.setVisibility(View.VISIBLE);
-        mInfoViewCount.setText(String.valueOf(getSmartBlockingCount()));
-        mInfoViewTitle.setText(getResources().getQuantityString(R.plurals.cc_trackers_adjusted, getSmartBlockingCount()));
-        mInfoViewSummary.setText(R.string.cc_smart_blocking_about);
-        mInfoViewIcon.setImageResource(R.drawable.cc_ic_smart_blocking);
-        mNotchTitle.setText(R.string.cc_smart_blocking);
-    }
-
-    private void handleInfoViewCloseButtonClick() {
-        mOverview.setVisibility(View.VISIBLE);
-        mInfoView.setVisibility(View.INVISIBLE);
-        mNotchTitle.setText(R.string.cc_enhanced_options);
-    }
-
     private void styleButton(ViewGroup button, boolean state) {
         final int textAndIconColor = ContextCompat.getColor(getContext(),
                 state ? android.R.color.white : R.color.cc_text_color);
@@ -595,4 +601,33 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         }
         refreshUI();
     }
+
+    private RadioGroup.OnCheckedChangeListener adBlockCheckedChangeListener =
+            new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId == R.id.cc_radio_this_domain) {
+                        GeckoBundle geckoBundle1 = new GeckoBundle();
+                        geckoBundle1.putString("url", safeGetString(controlCenterSettingsData, "data/summary/pageUrl"));
+                        geckoBundle1.putBoolean("isDomain", true);
+                        EventDispatcher.getInstance().dispatch("Privacy:AdblockToggle", geckoBundle1);
+                        GeckoBundle geckoBundle2 = new GeckoBundle();
+                        geckoBundle2.putBoolean("enable_ad_block", true);
+                        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle2);
+                        mAreAdsBlockedGlobally = true;
+                        mIsSiteAdBlockWhiteListed = true;
+                    } else {
+                        //we need to toggle
+                        GeckoBundle geckoBundle1 = new GeckoBundle();
+                        geckoBundle1.putString("url", safeGetString(controlCenterSettingsData, "data/summary/pageUrl"));
+                        geckoBundle1.putBoolean("isDomain", true);
+                        EventDispatcher.getInstance().dispatch("Privacy:AdblockToggle", geckoBundle1);
+                        GeckoBundle geckoBundle = new GeckoBundle();
+                        geckoBundle.putBoolean("enable_ad_block", false);
+                        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+                        mAreAdsBlockedGlobally = false;
+                        mIsSiteAdBlockWhiteListed = false;
+                    }
+                }
+            };
 }
