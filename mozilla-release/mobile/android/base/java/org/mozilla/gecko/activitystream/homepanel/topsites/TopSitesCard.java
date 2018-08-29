@@ -13,13 +13,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopSite;
 import org.mozilla.gecko.activitystream.homepanel.stream.TopPanelRow;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.icons.IconCallback;
 import org.mozilla.gecko.icons.IconResponse;
-import org.mozilla.gecko.icons.Icons;
+import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.util.URIUtils;
 import org.mozilla.gecko.util.ViewUtil;
@@ -33,7 +35,7 @@ import java.util.concurrent.Future;
 
 /* package-local */ class TopSitesCard extends RecyclerView.ViewHolder
         implements IconCallback {
-    private final FaviconView faviconView;
+    private final ImageView faviconView;
 
     private final TextView title;
     private final ImageView pinIconView;
@@ -46,7 +48,7 @@ import java.util.concurrent.Future;
     /*Cliqz End*/
         super(card);
 
-        faviconView = (FaviconView) card.findViewById(R.id.favicon);
+        faviconView = (ImageView) card.findViewById(R.id.favicon);
         title = (TextView) card.findViewById(R.id.title);
         pinIconView = (ImageView) card.findViewById(R.id.pin_icon);
 
@@ -66,8 +68,8 @@ import java.util.concurrent.Future;
     void bind(final TopSite topSite, final int absolutePosition) {
         this.topSite = topSite;
         this.absolutePosition = absolutePosition;
-
-        if (ongoingIconLoad != null) {
+        /* Cliqz Start */
+        /* if (ongoingIconLoad != null) {
             ongoingIconLoad.cancel(true);
         }
 
@@ -83,10 +85,14 @@ import java.util.concurrent.Future;
                     .forActivityStream()
                     .build()
                     .execute(this);
-        }
-
+        } */
+        final int newsFavIconSize = faviconView.getResources().getDimensionPixelSize(R.dimen.news_favicon_size);
+        Picasso.with(faviconView.getContext())
+                .load(CliqzLogoUtil.getIconUrl(topSite.getUrl(), newsFavIconSize, newsFavIconSize))
+                .error(CliqzLogoUtil.getDefaultIcon(topSite.getUrl(), newsFavIconSize, newsFavIconSize))
+                .into(faviconView);
+        /* Cliqz End */
         pinIconView.setVisibility(topSite.isPinned() ? View.VISIBLE : View.GONE);
-
         setTopSiteTitle(topSite);
     }
 
@@ -144,7 +150,9 @@ import java.util.concurrent.Future;
 
     @Override
     public void onIconResponse(IconResponse response) {
+        /* Cliqz start o/
         faviconView.updateImage(response);
+        /o Cliqz End */
     }
 
     /** Updates the text of the given view to the page domain. */
