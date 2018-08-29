@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="#000000"
+        android:endColor="@color/general_blue_color"
+        android:angle="90" />
+</shape>

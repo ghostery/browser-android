@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
@@ -78,6 +78,10 @@ public class AppBackgroundManager {
 
     @UiThread
     public void setViewBackgroundDefaultColor(@NonNull View view) {
+        if (view.getTag(R.id.background_manager_mode_key) == Mode.COLOR) {
+            // Every thing is already in place, we have nothing to do here
+            return;
+        }
         view.setTag(R.id.background_manager_mode_key, Mode.COLOR);
         view.setTag(R.id.background_manager_target_key, null);
         // Default color is a gradient.
@@ -131,30 +135,51 @@ public class AppBackgroundManager {
         }
     }
 
-    private static class CustomBitmapDrawable extends BitmapDrawable {
+    private static class CustomBitmapDrawable extends StateListDrawable {
 
         final Rect srcRect;
         final Rect dstRect;
         final int size;
         final int urlBarHeight;
+        private boolean mIsPrivate;
+        final Paint paint;
+        final Paint privatePaint;
+        private Bitmap bitmap;
 
         CustomBitmapDrawable(Resources resources, Bitmap bitmap) {
-            super(resources, bitmap);
+            super();
+            this.bitmap = bitmap;
             size = bitmap.getWidth() * 2;
             srcRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
             dstRect = new Rect();
             urlBarHeight = (int) resources.getDimension(R.dimen.browser_toolbar_height);
+            mIsPrivate = false;
+            paint = new Paint();
+            privatePaint = new Paint();
+            privatePaint.setColor(android.R.color.black);
+            privatePaint.setAlpha(64);
+        }
+
+        @Override
+        protected boolean onStateChange(int[] stateSet) {
+            final boolean oldState = mIsPrivate;
+            mIsPrivate = false;
+            for (int state: stateSet) {
+                mIsPrivate |= state == R.attr.state_private;
+            }
+            return oldState != mIsPrivate;
         }
 
         @Override
         public void draw(Canvas canvas) {
-            final Bitmap bitmap = getBitmap();
-            final Paint paint = getPaint();
             final int cw = canvas.getWidth();
             final int left = -1 * Math.abs(cw - size) / 2;
             final int top = -urlBarHeight;
             dstRect.set(left, top, left + size, top + size);
             canvas.drawBitmap(bitmap, srcRect, dstRect, paint);
+            if(mIsPrivate){
+                canvas.drawRect(dstRect, privatePaint);
+            }
         }
     }
 }

@@ -283,7 +283,7 @@
     <color name="home_panel_background_overlay">#40000000</color>
     <color name="history_list_divider_color">#97A4AE</color>
     <color name="inactive_icon_color">#97A4AE</color>
-
+    <color name="background_ghost_mode">#0080b1</color>
     <!-- news -->
     <color name="news_bg_color_press">#cdcdcd</color>
     <color name="news_bg_color">#40000000</color>

@@ -66,6 +66,9 @@ views = [
     dict(VIEW_NAME_SUFFIX='ProgressBar',
          BASE_TYPE='android.widget.ProgressBar',
          STYLE_CONSTRUCTOR=1),
+    dict(VIEW_NAME_SUFFIX='ViewPager',
+         BASE_TYPE='android.support.v4.view.ViewPager',
+         STYLE_CONSTRUCTOR=1),
 ]
 
 for view in views:

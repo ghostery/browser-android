@@ -28,8 +28,9 @@ import com.booking.rtlviewpager.RtlViewPager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.Tab;
+import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.activitystream.ActivityStream;
@@ -41,14 +42,18 @@ import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.AppBackgroundManager;
 import org.mozilla.gecko.util.ThreadUtils;
+import org.mozilla.gecko.widget.themed.ThemedViewPager;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static org.mozilla.gecko.Tabs.registerOnTabsChangedListener;
+import static org.mozilla.gecko.Tabs.unregisterOnTabsChangedListener;
+
 /* Cliqz start */
-public class HomePager extends RtlViewPager implements HomeScreen, Target, SharedPreferences
-        .OnSharedPreferenceChangeListener{
+public class HomePager extends ThemedViewPager implements HomeScreen, Target, SharedPreferences
+        .OnSharedPreferenceChangeListener, Tabs.OnTabsChangedListener {
 /* Cliqz end */
 
     @Override
@@ -201,18 +206,26 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
 
         mLoadState = LoadState.UNLOADED;
         /*Cliqz Start*/
-        // get appSharedPreference, setMoriginalBackground if showBackground false
+        // get appSharedPreference
         preferenceManager = PreferenceManager.getInstance(context);
-        preferenceManager.registerOnSharedPreferenceChangeListener(this);
         /*Cliqz End*/
     }
 
     /*Cliqz Start*/
-    // remove the listener from the appSharedPreference
+    // add a change listener for the appSharedPreference and onTab changed listener
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        preferenceManager.registerOnSharedPreferenceChangeListener(this);
+        registerOnTabsChangedListener(this);
+    }
+
+    // remove the change listener from the appSharedPreference and onTab changed listener
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         preferenceManager.unregisterOnSharedPreferenceChangeListener(this);
+        unregisterOnTabsChangedListener(this);
     }
     /*Cliqz End*/
 
@@ -666,6 +679,13 @@ public class HomePager extends RtlViewPager implements HomeScreen, Target, Share
                     .color.url_bar));
         } else {
             appBackgroundManager.setViewBackgroundDefaultColor(this);
+        }
+    }
+
+    @Override
+    public void onTabChanged(Tab tab, Tabs.TabEvents msg, String data) {
+        if(tab != null) {
+            setPrivateMode(tab.isPrivate());
         }
     }
     /* Cliqz End */
