@@ -254,6 +254,8 @@
 <!ENTITY close_ghost_tabs "Ghost-Tabs schließen">
 <!ENTITY contextmenu_open_ghost_tab "In Ghost-Tab öffnen">
 <!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &formatS1;neuen Ghost-Tabs&formatS2; wird Ihr Verlauf nicht gespeichert.">
+<!ENTITY private_tab_panel_title2 "Ghost-Modus">
+<!ENTITY private_tab_panel_description3 "Sie browsen im Ghost-Modus: Websites, die Sie in diesem Modus besuchen, werden nicht in Ihrem Browserverlauf gespeichert, und lokale Daten einschließlich Cookies werden nicht gespeichert.">
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Warnung: betrügerische Website!">
