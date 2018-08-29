@@ -3,12 +3,15 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<org.mozilla.gecko.home.SuggestionItem
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- cliqz start -->
+<!-- change the background -->
+<org.mozilla.gecko.home.SuggestionItem xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/search_suggestion_button"
+    xmlns:gecko="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/rounded_text"
+    gecko:backgroundCornerRadius="10dp"
     android:clickable="true"
     android:gravity="center_vertical"
     android:minHeight="@dimen/search_suggestion_item_min_height"
@@ -17,7 +20,7 @@
     android:paddingLeft="@dimen/search_suggestion_item_padding_horizontal"
     android:paddingRight="@dimen/search_suggestion_item_padding_horizontal"
     android:paddingTop="@dimen/search_suggestion_item_padding_vertical">
-
+<!-- cliqz end -->
     <ImageView
         android:id="@+id/suggestion_item_icon"
         android:layout_width="18dip"

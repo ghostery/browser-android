@@ -102,4 +102,8 @@ public class PreferenceManager {
     public boolean isAutocompleteEnabled() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_AUTO_COMPLETE, true);
     }
+
+    public boolean isBackgroundEnabled() {
+        return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED,true);
+    }
 }
