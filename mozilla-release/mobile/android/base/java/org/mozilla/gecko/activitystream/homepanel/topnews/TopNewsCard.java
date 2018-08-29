@@ -9,20 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
-import org.mozilla.gecko.icons.IconCallback;
-import org.mozilla.gecko.icons.IconResponse;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
-import org.mozilla.gecko.widget.FaviconView;
-
-import java.util.concurrent.Future;
 
 /**
  * Cliqz 2018
@@ -30,14 +25,15 @@ import java.util.concurrent.Future;
  */
 
 public class TopNewsCard extends RecyclerView.ViewHolder {
-    private final ImageView faviconView;
 
-    private final TextView titleView, urlView;
-    private Future<IconResponse> ongoingIconLoad;
+    private final ImageView faviconView;
+    private final TextView titleView;
+    private final TextView urlView;
+
 
     private Context context;
 
-    /* package-local */ TopNewsCard(final RelativeLayout card) {
+    /* package-local */ TopNewsCard(final View card) {
         super(card);
         context = card.getContext();
         faviconView = (ImageView) card.findViewById(R.id.favicon);
