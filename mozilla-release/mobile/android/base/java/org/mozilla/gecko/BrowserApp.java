@@ -99,6 +99,9 @@ import org.mozilla.gecko.adjust.AdjustBrowserAppDelegate;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.annotation.RobocopTarget;
 import org.mozilla.gecko.anolysis.ControlCenterMetrics;
+import org.mozilla.gecko.antiphishing.AntiPhishing;
+import org.mozilla.gecko.antiphishing.AntiPhishingDialog;
+import org.mozilla.gecko.antiphishing.AntiPhishingUtils;
 import org.mozilla.gecko.bookmarks.BookmarkEditFragment;
 import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
@@ -236,7 +239,9 @@ public class BrowserApp extends GeckoApp
                                    TabsPanel.TabsLayoutChangeListener,
                                    View.OnKeyListener,
                                    /* Cliqz Start */
-                                   ControlCenterViewPager.ControlCenterCallbacks {
+                                   ControlCenterViewPager.ControlCenterCallbacks,
+                                   AntiPhishing.AntiPhishingCallback,
+                                   AntiPhishingDialog.AntiPhishingDialogActionListener {
                                    /* Cliqz End */
     private static final String LOGTAG = "GeckoBrowserApp";
 
@@ -310,6 +315,9 @@ public class BrowserApp extends GeckoApp
     private ViewPager mCliqzIntoPager;
     private PreferenceManager mPreferenceManager;
     private LinearLayout mCliqzQuerySuggestionsContainer;
+    private String mLastUrl = "";
+    private AntiPhishingDialog antiPhishingDialog;
+    private AntiPhishing antiPhishing;
     private static final int SUGGESTIONS_LIMIT = 3;
     private static final Pattern FILTER =
             Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
@@ -559,6 +567,14 @@ public class BrowserApp extends GeckoApp
                     }
                 }
                 break;
+            /* Cliqz Start */
+            case TITLE:
+                if (!tab.getURL().equals(mLastUrl)) {
+                    mLastUrl = tab.getURL();
+                    antiPhishing.processUrl(tab.getURL(), this);
+                }
+                break;
+            /* Cliqz End */
             case LOAD_ERROR:
             case STOP:
             case MENU_UPDATED:
@@ -1115,6 +1131,9 @@ public class BrowserApp extends GeckoApp
                 editor.apply();
             }
         }
+
+        antiPhishing = new AntiPhishing();
+        antiPhishingDialog = new AntiPhishingDialog(BrowserApp.this);
 
         if (AppConstants.Versions.feature24Plus) {
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
@@ -4703,7 +4722,7 @@ public class BrowserApp extends GeckoApp
         if (!mInitialized || !Intent.ACTION_MAIN.equals(action)) {
             return;
         }
-
+        /* Cliqz start o/
         // Check to see how many times the app has been launched.
         final String keyName = getPackageName() + ".feedback_launch_count";
         final StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
@@ -4725,6 +4744,7 @@ public class BrowserApp extends GeckoApp
         } finally {
             StrictMode.setThreadPolicy(savedPolicy);
         }
+        /o Cliqz End */
     }
 
     public void openUrls(List<String> urls) {
@@ -5152,6 +5172,24 @@ public class BrowserApp extends GeckoApp
 
     private void showCliqzQuerySuggestions(){
         mCliqzQuerySuggestionsContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onUrlProcessed(final String url, boolean isPhishing) {
+        if (!isPhishing) { return; }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!url.equals(mLastUrl) || antiPhishingDialog.isShowing()) { return; }
+                antiPhishingDialog.setUrl(AntiPhishingUtils.getDomain(url));
+                antiPhishingDialog.show();
+            }
+        });
+    }
+
+    @Override
+    public void backPressed() {
+        onBackPressed();
     }
     /* Cliqz end */
 }
