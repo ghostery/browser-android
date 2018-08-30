@@ -4,7 +4,7 @@ def matrix = [
     'cliqz':[
         'bundleid': 'com.cliqz.browser',
         'target': 'i386-linux-android',
-        'test': true,
+        'test': false,
     ],
     'ghostery':[
         'bundleid': 'com.ghostery.android.ghostery',
