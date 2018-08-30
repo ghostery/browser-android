@@ -757,7 +757,7 @@ pref("browser.snippets.geoUrl", "https://location.services.mozilla.com/v1/countr
 pref("browser.snippets.statsUrl", "https://snippets-stats.mozilla.org/mobile");
 
 // These prefs require a restart to take effect.
-pref("browser.snippets.enabled", true);
+pref("browser.snippets.enabled", false);
 pref("browser.snippets.syncPromo.enabled", true);
 pref("browser.snippets.firstrunHomepage.enabled", true);
 
@@ -893,3 +893,4 @@ pref("general.useragent.override.encrypted.google.de", "Mozilla/5.0 (Linux; Andr
 pref("general.useragent.override.google.com", "Mozilla/5.0 (Linux; Android; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36")
 pref("general.useragent.override.google.de", "Mozilla/5.0 (Linux; Android; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36")
 
+pref("extensions.systemAddon.update.url", "");
