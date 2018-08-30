@@ -153,9 +153,9 @@ public class GeckoPreferences
     public static final String PREFS_QRCODE_ENABLED = NON_PREF_PREFIX + "qrcode_enabled";
     public static final String PREFS_AUTO_COMPLETE = "pref.search.auto.completion";
     public static final String PREFS_OFFRZ_LAST_SIGNATURE = NON_PREF_PREFIX + "offrz.last.signature";
-    /* Cliqz end */
     private static final String PREFS_CLEAR_PRIVATE_DATA = NON_PREF_PREFIX + "privacy.clear";
-    private static final String PREFS_CLEAR_PRIVATE_DATA_EXIT = NON_PREF_PREFIX + "history.clear_on_exit";
+    // private static final String PREFS_CLEAR_PRIVATE_DATA_EXIT = NON_PREF_PREFIX + "history.clear_on_exit";
+    /* Cliqz end */
     private static final String PREFS_SCREEN_ADVANCED = NON_PREF_PREFIX + "advanced_screen";
     public static final String PREFS_HOMEPAGE = NON_PREF_PREFIX + "homepage";
     public static final String PREFS_HOMEPAGE_FOR_EVERY_NEW_TAB = NON_PREF_PREFIX + "newtab.load_homepage";
@@ -863,15 +863,15 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
-                 /o Cliqz end */
-                } else if (PREFS_MP_ENABLED.equals(key)) {
-                    if (!Restrictions.isAllowed(this, Restrictable.MASTER_PASSWORD)) {
+                } else if (PREFS_CLEAR_PRIVATE_DATA.equals(key) || PREFS_CLEAR_PRIVATE_DATA_EXIT.equals(key)) {
+                    if (!Restrictions.isAllowed(this, Restrictable.CLEAR_HISTORY)) {
                         preferences.removePreference(pref);
                         i--;
                         continue;
                     }
-                } else if (PREFS_CLEAR_PRIVATE_DATA.equals(key) || PREFS_CLEAR_PRIVATE_DATA_EXIT.equals(key)) {
-                    if (!Restrictions.isAllowed(this, Restrictable.CLEAR_HISTORY)) {
+                 /o Cliqz end */
+                } else if (PREFS_MP_ENABLED.equals(key)) {
+                    if (!Restrictions.isAllowed(this, Restrictable.MASTER_PASSWORD)) {
                         preferences.removePreference(pref);
                         i--;
                         continue;
