@@ -3,7 +3,9 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
+<!-- Cliqz Start -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
        xmlns:gecko="http://schemas.android.com/apk/res-auto"
        xmlns:tools="http://schemas.android.com/tools"
        tools:layout_height="match_parent"
@@ -12,8 +14,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
+        android:fillViewport="true"
         android:scrollbars="none">
 
         <LinearLayout
@@ -21,6 +24,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <!-- Empty spacer view -->
+            <View android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/ic_ghosty_forget"
+                android:layout_gravity="center"
+                android:tint="@android:color/white"/>
 
             <TextView
                 style="@style/TextAppearance.PrivateTab.Title"
@@ -43,7 +58,7 @@
                 android:text="@string/private_tab_panel_description"
                 android:textColor="@color/photon_text_secondary"/>
 
-            <TextView
+            <!-- <TextView
                 style="@style/TextAppearance.PrivateTab.Description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,8 +69,7 @@
                 android:text="@string/private_tab_panel_description2"
                 android:textColor="@color/photon_text_secondary"/>
 
-            <!-- Cliqz Start -->
-            <!-- <TextView
+            <TextView
                 style="@style/TextAppearance.PrivateTab.Description"
                 android:id="@+id/learn_more_link"
                 android:layout_width="wrap_content"
@@ -73,6 +87,11 @@
                 android:clickable="true"
                 android:visibility="gone"
                 android:textColor="@color/link_blue"/>
+
+            <!-- Empty spacer view -->
+            <View android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="2"/>
             <!-- Cliqz End -->
 
         </LinearLayout>

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
@@ -84,7 +83,7 @@ public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements
     @Override
     public TopNewsCard onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(context);
-        final RelativeLayout card = (RelativeLayout) inflater.inflate(R.layout.activity_stream_news_card,
+        final View card = inflater.inflate(R.layout.activity_stream_news_card,
                 parent, false);
         return new TopNewsCard(card);
     }
