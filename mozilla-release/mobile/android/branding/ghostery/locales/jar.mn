@@ -9,3 +9,4 @@
 # Nightly branding only exists in en-US
   locale/branding/brand.dtd        (en-US/brand.dtd)
   locale/branding/brand.properties (en-US/brand.properties)
+  locale/@AB_CD@/browser/appstrings.properties    (en-US/appstrings.properties)
