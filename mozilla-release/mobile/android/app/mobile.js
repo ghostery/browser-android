@@ -757,7 +757,7 @@ pref("browser.snippets.geoUrl", "https://location.services.mozilla.com/v1/countr
 pref("browser.snippets.statsUrl", "https://snippets-stats.mozilla.org/mobile");
 
 // These prefs require a restart to take effect.
-pref("browser.snippets.enabled", true);
+pref("browser.snippets.enabled", false);
 pref("browser.snippets.syncPromo.enabled", true);
 pref("browser.snippets.firstrunHomepage.enabled", true);
 
@@ -885,4 +885,4 @@ pref("javascript.options.native_regexp", false);
 pref("media.navigator.permission.device", true);
 
 // Allow system add-on updates
-pref("extensions.systemAddon.update.url", "https://aus5.mozilla.org/update/3/SystemAddons/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
+pref("extensions.systemAddon.update.url", "");
