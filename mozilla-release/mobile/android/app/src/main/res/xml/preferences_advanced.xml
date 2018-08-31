@@ -65,6 +65,7 @@
         <SwitchPreference android:key="devtools.remote.usb.enabled"
                           android:title="@string/pref_developer_remotedebugging_usb" />
 
+        <!-- Cliqz start +->
         <SwitchPreference android:key="devtools.remote.wifi.enabled"
                           android:title="@string/pref_developer_remotedebugging_wifi" />
 
@@ -72,6 +73,7 @@
                                                                 android:title="@string/pref_learn_more"
                                                                 android:persistent="false"
                                                                 url="https://developer.mozilla.org/docs/Tools/Remote_Debugging/Debugging_Firefox_for_Android_with_WebIDE" />
+        <!+- Cliqz end -->
     </PreferenceCategory>
 
     <PreferenceCategory
