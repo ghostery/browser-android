@@ -285,7 +285,7 @@
     <!-- MyOffrz -->
     <dimen name="myoffrz_icon_size">@dimen/icon_size</dimen>
     <dimen name="myoffrz_padding_10">@dimen/padding_10</dimen>
-    <dimen name="myoffrz_title_text_size">22dp</dimen>
+    <dimen name="myoffrz_title_text_size">22sp</dimen>
     <dimen name="myoffrz_text_size">16sp</dimen>
     <dimen name="myoffrz_padding_8">8dp</dimen>
     <dimen name="myoffrz_padding_16">16dp</dimen>
