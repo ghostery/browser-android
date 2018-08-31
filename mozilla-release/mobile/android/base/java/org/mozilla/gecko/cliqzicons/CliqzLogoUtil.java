@@ -1,19 +1,8 @@
 package org.mozilla.gecko.cliqzicons;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-
-import com.squareup.picasso.Transformation;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -67,12 +56,66 @@ public class CliqzLogoUtil {
             "#073673", "#530773", "#8a52a2", "#9077e3", "#8c275f", "#d248ca", "#db5c8c", "#f8458f",
             "#f36e8d", "#fb91ae", "#c78e6d", "#999999", "#666666", "#333333"};
 
+    //version of the brand database. we need to update version manually whenever the database is updated
+    private static final String DATABASE_VERSION = "1515404421880";
+
     private static final String BASE_ICON_URL =
-            "https://cdn.cliqz.com/brands-database/database/1521469421408/pngs/%s/$_%d.png";
+            "https://cdn.cliqz.com/brands-database/database/%s/pngs/%s/%s_%d.png";
 
     @SuppressLint("DefaultLocale")
     public static String getIconUrl(String url, int width, int height) {
-        return String.format(BASE_ICON_URL, getHostName(url), LogoSizes.getSize(Math.max(width, height)).size);
+        String[] urlParts = {};
+        try {
+            final URI uri = new URI(url);
+            if (uri.getHost() != null) {
+                urlParts = uri.getHost().split("\\.");
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        //We need to get the rule from the brand database which matches the url
+        //cliqz.example.de and ghostery.example.de can have different logos
+        //similarly mobile.example.de and mobile.example.com can have different logos
+        //
+        // This is the example to give an idea what the variables below represent
+        // In case of mobile.example.co.uk, mobile is predomain, example is domain and
+        // .co.uk is the tld
+        StringBuilder tld = new StringBuilder();
+        final String preDomain;
+        final String domain;
+        if (urlParts.length > 2) {
+            preDomain = urlParts[0];
+            domain = urlParts[1];
+            for (int i = 2; i < urlParts.length; i++) {
+                tld.append(".");
+                tld.append(urlParts[i]);
+            }
+        } else if (urlParts.length == 2) {
+            preDomain = "";
+            domain = urlParts[0];
+            tld.append(urlParts[1]);
+        } else {
+            domain = "";
+            preDomain = "";
+        }
+        final String[] availableRules = CliqzIconDatabase.getRulesForDomain(domain);
+        String rule = "";
+        if (availableRules == null) {
+            rule = "$"; //default rule
+        } else {
+            for (String availableRule : availableRules) {
+                if (availableRule.startsWith(preDomain)) {
+                    rule = availableRule;
+                    break;
+                }
+                if (availableRule.endsWith(tld.toString())) {
+                    rule = availableRule;
+                    break;
+                }
+            }
+        }
+        return String.format(BASE_ICON_URL, DATABASE_VERSION, domain, rule,
+                LogoSizes.getSize(Math.max(width, height)).size);
     }
 
     public static Drawable getDefaultIcon(String url, int width, int height) {
