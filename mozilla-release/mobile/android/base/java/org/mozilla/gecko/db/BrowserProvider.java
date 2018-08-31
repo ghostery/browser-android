@@ -1026,7 +1026,9 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
                 "(" + Combined.URL + " NOT LIKE ?)";
 
         if (excludeRemoteOnly) {
-            ignoreForTopSitesWhereClause += " AND (" + Combined.LOCAL_VISITS_COUNT + " > 0)";
+            /* Cliqz start */
+            ignoreForTopSitesWhereClause += " AND (" + Combined.LOCAL_VISITS_COUNT + " > 2)";
+            /* Cliqz end */
         }
 
         final String[] ignoreForTopSitesArgs = new String[] {
