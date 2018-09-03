@@ -2620,7 +2620,7 @@ public class BrowserApp extends GeckoApp
                 mPreferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
                 break;
             case "Search:QuerySuggestions":
-                if(mPreferenceManager.isQuerySuggestionsEnabled()) {
+                if(mPreferenceManager.isQuerySuggestionsEnabled() && mBrowserToolbar.isEditing()) {
                     final String[] querySuggestions = GeckoBundleUtils.safeGetStringArray
                             (message, "data/suggestions");
                     showSuggestions(querySuggestions, GeckoBundleUtils.safeGetString(message,
