@@ -6398,6 +6398,7 @@ var Cliqz = {
       "Privacy:Hide",
       "Privacy:SetInfo",
       "Privacy:Show",
+      "Privacy:SetBlockingPolicy"
     ]);
 
     ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
@@ -6771,6 +6772,17 @@ var Cliqz = {
         this.overlayPanel(this.Ghostery.browser);
         this.Ghostery.loadTab(BrowserApp.selectedTab.id);
         break;
+      case "Privacy:SetBlockingPolicy":
+        // blocking policy = OneOf
+        //    'BLOCKING_POLICY_RECOMMENDED'
+        //    'BLOCKING_POLICY_NOTHING'
+        //    'BLOCKING_POLICY_EVERYTHING'
+        let blockingPolicy = data.blockingPolicy;
+        this.messagePrivacyExtension({
+          origin: 'ghostery-hub',
+          name: 'SET_BLOCKING_POLICY',
+          message: { blockingPolicy }
+        });
     }
   }
 };
