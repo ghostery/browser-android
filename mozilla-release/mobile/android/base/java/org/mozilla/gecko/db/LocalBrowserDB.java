@@ -1302,6 +1302,13 @@ public class LocalBrowserDB extends BrowserDB {
         }
     }
 
+    /* Cliqz Start */
+    @Override
+    public void removeAllBookmarks(ContentResolver cr) {
+        cr.delete(mBookmarksUriWithProfile, Bookmarks.ID + ">?", new String[] { "1" });
+    }
+    /* Cliqz End */
+
     /**
      * Get the favicon from the database, if any, associated with the given favicon URL. (That is,
      * the URL of the actual favicon image, not the URL of the page with which the favicon is associated.)
