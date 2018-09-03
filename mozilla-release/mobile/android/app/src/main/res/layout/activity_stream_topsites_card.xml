@@ -22,7 +22,8 @@
         android:scrollHorizontally="false"
         android:textColor="@android:color/white"
         android:textSize="12sp"
-        tools:text="Lorem Ipsum here is a title" />
+        tools:text="Lorem Ipsum here is a title"
+        tools:textColor="@android:color/black"/>
 
     <ImageView
         android:id="@+id/favicon"
@@ -31,6 +32,7 @@
         android:layout_height="@dimen/news_favicon_size"
         android:layout_above="@id/title"
         android:layout_margin="5dp"
+        android:layout_centerHorizontal="true"
         tools:background="@drawable/favicon_globe" />
 
     <!-- Visibility is dynamically set based on pinned state. -->
