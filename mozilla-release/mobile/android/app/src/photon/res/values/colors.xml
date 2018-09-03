@@ -278,6 +278,7 @@
     <!-- Cliqz start -->
     <!-- General -->
     <color name="general_blue_color">#00aef0</color>
+    <color name="general_dark_blue_color">#0080b3</color>
     <color name="general_dark_color">#424242</color>
     <color name="inactive_tab_color">#E2F0FC</color>
     <color name="home_panel_background_overlay">#40000000</color>
@@ -345,6 +346,9 @@
 
     <!-- Query Suggestions -->
     <color name="query_suggestion_bg">#eeeeee</color>
+
+    <!-- Intro -->
+    <color name="cliqz_intro_text_color">@android:color/white</color>
     <!-- Cliqz end -->
 
 </resources>
