@@ -885,12 +885,10 @@ pref("javascript.options.native_regexp", false);
 pref("media.navigator.permission.device", true);
 
 // Allow system add-on updates
-pref("extensions.systemAddon.update.url", "https://aus5.mozilla.org/update/3/SystemAddons/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
+pref("extensions.systemAddon.update.url", "");
 
 // override the UA on Google SERP pages due to https://bugzilla.mozilla.org/show_bug.cgi?id=975444
-pref("general.useragent.override.encrypted.google.com", "Mozilla/5.0 (Linux; Android; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36")
-pref("general.useragent.override.encrypted.google.de", "Mozilla/5.0 (Linux; Android; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36")
-pref("general.useragent.override.google.com", "Mozilla/5.0 (Linux; Android; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36")
-pref("general.useragent.override.google.de", "Mozilla/5.0 (Linux; Android; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36")
-
-pref("extensions.systemAddon.update.url", "");
+pref("general.useragent.override.encrypted.google.com", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
+pref("general.useragent.override.encrypted.google.de", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
+pref("general.useragent.override.google.com", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
+pref("general.useragent.override.google.de", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
