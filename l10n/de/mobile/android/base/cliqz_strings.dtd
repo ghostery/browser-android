@@ -230,7 +230,7 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Einführung von &brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Für einfacheres, schnelleres und sichereres Browsen. Durch Verwendung dieser App stimmen Sie der Datenschutzrichtlinie von &brandShortName; zu">
+<!ENTITY ghostery_onboarding_new_users_text "Für einfacheres, schnelleres und sichereres Browsen.">
 <!ENTITY ghostery_onboarding_old_users_title "Einführung des neuen &brandShortName;">
 <!ENTITY ghostery_onboarding_old_users_text "Unterstützen Sie &brandShortName; durch Teilnahme an &brandMyOffrz; und geben Sie Daten zum Human Web und Analysedaten frei. Weitere Informationen">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Tracking-Schutz aktiviert">
