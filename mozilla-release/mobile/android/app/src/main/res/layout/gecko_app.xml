@@ -168,8 +168,7 @@
                     android:layout_height="@dimen/browser_toolbar_height_flipper"
                     android:clickable="true"
                     android:focusable="true">
-                    <!-- Cliqz start -->
-                    <!-- change the url background color -->
+
                     <org.mozilla.gecko.toolbar.BrowserToolbar
                         android:id="@+id/browser_toolbar"
                         style="@style/BrowserToolbar"
@@ -177,8 +176,8 @@
                         android:layout_height="match_parent"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="@color/url_bar"/>
-                    <!-- Cliqz end -->
+                        android:background="@drawable/url_bar_bg"/>
+
                     <org.mozilla.gecko.ActionModeCompatView android:id="@id/actionbar"
                                                             android:layout_height="match_parent"
                                                             android:layout_width="match_parent"
