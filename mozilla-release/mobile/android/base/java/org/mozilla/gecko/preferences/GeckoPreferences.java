@@ -73,6 +73,7 @@ import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.TelemetryContract.Method;
 import org.mozilla.gecko.db.BrowserContract.SuggestedSites;
+import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.restrictions.Restrictable;
@@ -1639,7 +1640,9 @@ public class GeckoPreferences
                         .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // TODO: clear favorites from database
+                                final Context context = getApplicationContext();
+                                BrowserDB.from(context).removeAllBookmarks(context.getContentResolver());
+                                dialog.dismiss();
                             }
                         });
                 dialog = builder.create();

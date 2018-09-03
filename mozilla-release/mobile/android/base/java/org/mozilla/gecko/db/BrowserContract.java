@@ -308,7 +308,9 @@ public class BrowserContract {
         public static final String TAGS = "tags";
         public static final String DESCRIPTION = "description";
         public static final String KEYWORD = "keyword";
-
+        /* Cliqz Start */
+        public static final String ID = "_id";
+        /* Cliqz End */
         public static final String ANNOTATION_KEY = "annotation_key";
         public static final String ANNOTATION_VALUE = "annotation_value";
     }

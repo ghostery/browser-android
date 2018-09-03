@@ -60,6 +60,7 @@ public class CombinedHistoryRecyclerView extends RecyclerView
             .setOnItemClickListener(this)
             .setOnItemLongClickListener(this);
 
+        /* Cliqz start o/
         setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -72,6 +73,7 @@ public class CombinedHistoryRecyclerView extends RecyclerView
                 return false;
             }
         });
+        /o Cliqz end */
     }
 
     public void setOnHistoryClickedListener(HomePager.OnUrlOpenListener listener) {
