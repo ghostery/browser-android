@@ -71,7 +71,7 @@
         <item name="android:paddingEnd">8dp</item>
         <!-- Cliqz start -->
         <!-- add padding at start to the urlBar edit text-->
-        <item name="android:paddingStart">@dimen/padding_16</item>
+        <item name="android:paddingStart">@dimen/padding_10</item>
         <!-- Cliqz end -->
     </style>
 

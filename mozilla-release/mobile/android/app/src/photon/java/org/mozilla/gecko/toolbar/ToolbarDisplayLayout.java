@@ -187,7 +187,6 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         // add Https Color span */
         mHttpsColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.general_blue_color));
         /* Cliqz end */
-        mTitle.addTextChangedListener(new TextChangeListener());
 
         mSiteSecurity = (ThemedImageButton) findViewById(R.id.site_security);
 
@@ -493,10 +492,9 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private void updatePageActions() {
         final boolean isShowingProgress = (mUiMode == UIMode.PROGRESS);
 
-        /* Cliqz start o/
+        /* Cliqz start */
         // keep X button hidden while loading a page
-        mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
-        */
+        // mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
         mPageActionLayout.setVisibility(!isShowingProgress ? View.VISIBLE : View.GONE);
         // We want title to fill the whole space available for it when there are icons
         // being shown on the right side of the toolbar as the icons already have some
@@ -509,8 +507,13 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
             mTitle.setPadding(0,0,0,0);
         } else{
             mTitle.setPadding(mTitlePaddingLeft,0,mTitlePaddingRight,0);
+        } */
+        if (mSiteSecurity.getVisibility() == View.VISIBLE) {
+            mTitle.setPadding(0, 0, 0, 0);
+        } else {
+            mTitle.setPadding(mTitlePaddingLeft, 0, mTitlePaddingRight, 0);
         }
-        /o Cliqz end */
+        /* Cliqz end */
     }
     /* Cliqz start */
     // update TitleBar width depend on displayed icons
@@ -600,24 +603,22 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mSiteIdentityPopup.destroy();
     }
 
+    private class TextChangeListener implements TextWatcher {
+        @Override
+        public void afterTextChanged(Editable text) {
+            /* Cliqz Start o/
+            scrollTitle();
+            /o Cliqz End */
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+    }
+
     /* Cliqz start */
-    // stop scrolling title, it ellipses form the end.change the padding if we display url
-     private class TextChangeListener implements TextWatcher {
-         @Override
-         public void afterTextChanged(Editable text) {
-             if(text.toString().equals("")){
-                 mTitle.setPadding(mTitlePaddingLeft,0,mTitlePaddingRight,0);
-             } else {
-                 mTitle.setPadding(0,0,0,0);
-             }
-         }
-
-         @Override
-         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-         @Override
-         public void onTextChanged(CharSequence s, int start, int before, int count) { }
-     }
     public void setOnPageActionClickedListener(PageActionLayout.PageActionClickListener listener) {
         mPageActionLayout.setOnPageActionClickedListener(listener);
     }
