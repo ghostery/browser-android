@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@color/general_blue_color"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Cliqz.Intro.Title.Text"
+        android:text="@string/ghostery_onboarding_new_users_title"
+        tools:text="Introducing Ghostery" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="34dp"
+        android:gravity="center"
+        android:text="@string/ghostery_onboarding_new_users_text"
+        tools:text="Browse cleaner, faster, and safer on-the-go with Ghostery, now optimized for mobile!"
+        android:textColor="@android:color/white" />
+
+    <LinearLayout
+        android:id="@+id/data_collection_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="33dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginStart="7dp"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/collect_data_cb"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginRight="7dp"
+            android:button="@drawable/cliqz_intro_checkbox_selector"
+            android:checked="true" />
+
+        <TextView
+            android:id="@+id/data_collection_detail_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            tools:text="Support Ghostery by sharing anonymous analytics and Human Web data to improve Ghostery's performance"
+            android:textSize="@dimen/cliqz_intro_content_size"/>
+    </LinearLayout>
+</LinearLayout>

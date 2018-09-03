@@ -266,12 +266,16 @@
 <!ENTITY ghostery_onboarding_new_users_text "Keep your browsing cleaner, faster, and safer. By using this app you agree to &brandShortName;\'s Privacy Policy.">
 <!ENTITY ghostery_onboarding_old_users_title "Introducing new &brandShortName;">
 <!ENTITY ghostery_onboarding_old_users_text "Support &brandShortName; by participating in &brandMyOffrz; and share Human Web &amp; analytics data. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022>Learn more\u003C/a\u003E">
-<!ENTITY ghostery_onboarding_tracking_protection_title "Tracking Protection">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Browse smarter with our tracking protection features. You can turn these off in the &brandShortName; Control Center.">
-<!ENTITY ghostery_onboarding_quick_search_title "Quick Search">
-<!ENTITY ghostery_onboarding_quick_search_text "Save time and data volume: Quick search instantly shows relevant results while typing.">
+<!ENTITY ghostery_onboarding_tracking_protection_title "Ad &amp; Tracker Blocking">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Choose what you want Ghostery to block for cleaner, faster, and safer browsing. You can change and customize these settings at any time in the Privacy Control Center.">
+<!ENTITY ghostery_onboarding_tracking_protection_radio1 "Block Nothing">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2 "Block Recommended">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Advertising, Site Analytics and Adult Advertising trackers">
+<!ENTITY ghostery_onboarding_tracking_protection_radio3 "Block Everything">
+<!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
+<!ENTITY ghostery_onboarding_quick_search_text "Stay anonymous, reduce data usage, and save time: results appear instantly as you type in the Ghost search bar.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Every &pref_new_tab_category; comes with top sites, news and a background image. Customize it to your needs.">
+<!ENTITY ghostery_onboarding_new_tab_text "Each new &pref_new_tab_category; is customizable and can display top sites, the latest news, and other tracking insights to come.">
 <!ENTITY ghostery_onboarding_action_button "Start Browsing">
 <!ENTITY ghostery_onboarding_contextual_title "Tracking Protection Enabled">
 <!ENTITY ghostery_onboarding_contextual_item1_title "Enhanced Anti-Tracking">

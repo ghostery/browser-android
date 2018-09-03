@@ -941,6 +941,10 @@
   <string name="ghostery_onboarding_action_button">&ghostery_onboarding_action_button;</string>
   <string name="ghostery_onboarding_tracking_protection_title">&ghostery_onboarding_tracking_protection_title;</string>
   <string name="ghostery_onboarding_tracking_protection_text">&ghostery_onboarding_tracking_protection_text;</string>
+  <string name="ghostery_onboarding_tracking_protection_radio1">&ghostery_onboarding_tracking_protection_radio1;</string>
+  <string name="ghostery_onboarding_tracking_protection_radio2">&ghostery_onboarding_tracking_protection_radio2;</string>
+  <string name="ghostery_onboarding_tracking_protection_radio2_subtext">&ghostery_onboarding_tracking_protection_radio2_subtext;</string>
+  <string name="ghostery_onboarding_tracking_protection_radio3">&ghostery_onboarding_tracking_protection_radio3;</string>
   <string name="ghostery_onboarding_quick_search_title">&ghostery_onboarding_quick_search_title;</string>
   <string name="ghostery_onboarding_quick_search_text">&ghostery_onboarding_quick_search_text;</string>
   <string name="ghostery_onboarding_new_tab_title">&ghostery_onboarding_new_tab_title;</string>
