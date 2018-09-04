@@ -204,6 +204,7 @@ import org.mozilla.gecko.widget.AnchoredPopup;
 import org.mozilla.gecko.widget.AnimatedProgressBar;
 import org.mozilla.gecko.widget.GeckoActionProvider;
 import org.mozilla.gecko.widget.SplashScreen;
+import org.mozilla.gecko.widget.themed.ThemedTabLayout;
 import org.mozilla.geckoview.GeckoSession;
 
 import java.io.File;
@@ -974,7 +975,7 @@ public class BrowserApp extends GeckoApp
         mControlCenterPagerAdapter.addFragment(globalTrackersFragment);
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.control_center_tab_layout);
+        final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
         /*Cliqz end*/
