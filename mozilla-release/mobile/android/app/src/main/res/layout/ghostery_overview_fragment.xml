@@ -112,7 +112,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/cc_ghostery_restrict_site_button"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/cc_button_background_white"
             android:gravity="center"
