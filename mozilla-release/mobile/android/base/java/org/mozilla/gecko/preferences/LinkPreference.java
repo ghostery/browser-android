@@ -14,9 +14,10 @@ import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.Tabs;
 
 class LinkPreference extends Preference {
-    private String mUrl;
-
     /* Cliqz start */
+    private String mUrl;
+    private static final String URL_ATTRIBUTE_NAME = "url";
+
     public LinkPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         parseAttrs(context, attrs);
@@ -27,8 +28,9 @@ class LinkPreference extends Preference {
     }
 
     private void parseAttrs(Context context, AttributeSet attrs) {
-        final int urlAttrValueId = attrs.getAttributeResourceValue(null,"url",-1);
-        mUrl = (urlAttrValueId != -1) ? context.getString(urlAttrValueId) : "";
+        final int urlAttrValueId = attrs.getAttributeResourceValue(null,URL_ATTRIBUTE_NAME,-1);
+        mUrl = (urlAttrValueId != -1) ? context.getString(urlAttrValueId) : attrs
+                .getAttributeValue(null,URL_ATTRIBUTE_NAME);
     }
     /* Cliqz end */
 
