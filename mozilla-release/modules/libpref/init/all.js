@@ -13,7 +13,11 @@
  * Some prefs, especially VarCache prefs, are defined in StaticPrefList.h
  * rather than this (or any other) data file.
  */
-
+/* Cliqz start */
+pref("pref.search.regional", "us");
+pref("pref.search.block.adult.content", true);
+pref("pref.search.query.suggestions", true);
+/* Cliqz end */
 pref("keyword.enabled", false);
 pref("general.useragent.compatMode.firefox", false);
 
