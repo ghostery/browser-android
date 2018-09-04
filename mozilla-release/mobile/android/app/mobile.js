@@ -892,3 +892,7 @@ pref("general.useragent.override.encrypted.google.com", "Mozilla/5.0 (Linux; And
 pref("general.useragent.override.encrypted.google.de", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
 pref("general.useragent.override.google.com", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
 pref("general.useragent.override.google.de", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
+
+/* Cliqz start */
+pref("media.autoplay.enabled", false);
+/* Cliqz end */
