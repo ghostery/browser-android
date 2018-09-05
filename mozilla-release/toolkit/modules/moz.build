@@ -307,7 +307,8 @@ for var in ('ANDROID_PACKAGE_NAME',
             # Cliqz start #
             'DEBUG_JS_MODULES',
             'CLIQZ_CHANNEL',
-            'CLIQZ_SEARCH_DEFAULT_ENGINE'):
+            'CLIQZ_SEARCH_DEFAULT_ENGINE',
+            'MOZ_APP_DISPLAYNAME'):
             # Cliqz end #
             DEFINES[var] = CONFIG[var]
 
