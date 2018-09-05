@@ -101,9 +101,10 @@
             android:key="pref.cliqz.tab.news.enabled"
             android:title="@string/pref_cliqz_tab_news"
             android:defaultValue="true" />
+        <!-- This is blocked cause the Cliqz top-sites logic is not yet implemented.
         <Preference
             android:key="android.not_a_preference.restore.top.sites"
-            android:title="@string/pref_cliqz_tab_restore_top_sites" />
+            android:title="@string/pref_cliqz_tab_restore_top_sites" /> -->
     </PreferenceCategory>
 
     <!-- add MyOffrz category -->
