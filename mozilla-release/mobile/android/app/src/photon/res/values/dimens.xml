@@ -293,7 +293,7 @@
     <dimen name="myoffrz_padding_20">20dp</dimen>
 
     <!-- Control Center -->
-    <dimen name="ghostery_list_item_action_button_width">75dp</dimen>
+    <dimen name="ghostery_list_item_action_button_width">90dp</dimen>
     <dimen name="ghostery_overview_button_width">225dp</dimen>
 
     <!-- History and bookmarks view -->
