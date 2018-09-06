@@ -83,13 +83,13 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <android.support.design.widget.TabLayout
+                    <org.mozilla.gecko.widget.themed.ThemedTabLayout
                         android:id="@+id/control_center_tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:elevation="2dp"
                         gecko:tabTextAppearance="@style/TabLayoutStyle"
-                        android:background="@color/general_blue_color"
+                        android:background="@drawable/url_bar_bg"
                         gecko:tabSelectedTextColor="@android:color/white"
                         gecko:tabIndicatorColor="@android:color/white"
                         gecko:tabMode="fixed"/>
