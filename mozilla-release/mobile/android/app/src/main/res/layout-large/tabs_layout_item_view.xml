@@ -24,7 +24,7 @@
         android:layout_marginLeft="@dimen/tab_highlight_stroke_width"
         android:layout_marginRight="@dimen/tab_highlight_stroke_width"
         android:layout_marginTop="@dimen/tab_highlight_stroke_width"
-        android:background="@drawable/tab_thumbnail_grey_strip"
+        android:background="@drawable/tab_thumbnail_background_strip"
         android:duplicateParentState="true"
         android:orientation="horizontal"
         android:padding="@dimen/padding_10">
@@ -54,7 +54,7 @@
             android:paddingRight="5dp"
             android:paddingStart="0dp"
             android:singleLine="true"
-            android:textColor="@color/tab_item_title"
+            android:textColor="@android:color/white"
             android:textSize="14sp"
             gecko:fadeWidth="15dp"/>
 
@@ -71,7 +71,7 @@
             android:duplicateParentState="true"
             android:scaleType="center"
             android:src="@drawable/tab_item_close_button"
-            android:tint="@android:color/black"
+            android:tint="@android:color/white"
             />
 
     </LinearLayout>

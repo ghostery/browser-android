@@ -17,14 +17,15 @@
                                            android:background="@drawable/tab_thumbnail">
 
     <!-- Cliqz : increase the padding, adding margins and  layout gravity to be central vertical -->
-    <LinearLayout
+    <org.mozilla.gecko.widget.themed.ThemedLinearLayout
+        android:id="@+id/tab_item_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/tab_highlight_stroke_width"
         android:layout_marginRight="@dimen/tab_highlight_stroke_width"
         android:layout_marginTop="@dimen/tab_highlight_stroke_width"
-        android:background="@drawable/tab_thumbnail_grey_strip"
+        android:background="@drawable/tab_thumbnail_background_strip"
         android:duplicateParentState="true"
         android:orientation="horizontal"
         android:padding="@dimen/padding_5">
@@ -38,8 +39,9 @@
             android:scaleType="centerInside"
             app:backgroundCornerRadius="@dimen/tab_favicon_corner_radius"
             gecko:dominantBorderEnabled="false"
-            gecko:overrideScaleType="false"/>
+            gecko:overrideScaleType="false" />
 
+        <!-- Cliqz : change textColor to white-->
         <org.mozilla.gecko.widget.FadedSingleColorTextView
             android:id="@+id/title"
             style="@style/TabLayoutItemTextAppearance"
@@ -54,11 +56,11 @@
             android:paddingRight="5dp"
             android:paddingStart="0dp"
             android:singleLine="true"
-            android:textColor="@color/tab_item_title"
+            android:textColor="@android:color/white"
             android:textSize="14sp"
             gecko:fadeWidth="15dp"/>
 
-        <!-- Cliqz : remove background, tint the color to black-->
+        <!-- Cliqz : remove background, tint the color to white-->
         <ImageView
             android:id="@+id/close"
             style="@style/TabsItemClose"
@@ -69,9 +71,9 @@
             android:duplicateParentState="true"
             android:scaleType="center"
             android:src="@drawable/tab_item_close_button"
-            android:tint="@android:color/black"/>
+            android:tint="@android:color/white"/>
 
-    </LinearLayout>
+    </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
 
     <!-- We set state_private on this View dynamically in TabsGridLayout. -->
     <!--Cliqz: remove the background, remove paddingTop by add each padding separately -->

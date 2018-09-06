@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
+    <item gecko:state_private="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/background_ghost_mode"/>
+            <corners
+                android:topLeftRadius="@dimen/tab_thumbnail_corner_radius"
+                android:topRightRadius="@dimen/tab_thumbnail_corner_radius"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/general_blue_color"/>
+            <corners
+                android:topLeftRadius="@dimen/tab_thumbnail_corner_radius"
+                android:topRightRadius="@dimen/tab_thumbnail_corner_radius"/>
+        </shape>
+    </item>
+</selector>
