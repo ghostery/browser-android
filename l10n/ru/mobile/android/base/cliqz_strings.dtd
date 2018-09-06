@@ -5,7 +5,7 @@
 <!ENTITY contextmenu_delete "Удалить">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Новости">
@@ -41,8 +41,8 @@
 <!ENTITY private_tab_panel_description3 "Мы не будем записывать историю, но загруженные файлы и новое избранное будет сохранено на Вашем устройстве.">
 
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&amp;brandShortName; в качестве браузера по умолчанию">
-<!ENTITY default_browser_message "Кажется, Вам понравилось пользоваться &amp;brandShortName;. Желаете сделать его браузером по умолчанию?">
+<!ENTITY default_browser_title "&brandShortName; в качестве браузера по умолчанию">
+<!ENTITY default_browser_message "Кажется, Вам понравилось пользоваться &brandShortName;. Желаете сделать его браузером по умолчанию?">
 <!ENTITY default_browser_dialog_proceed "ПРОДОЛЖИТЬ">
 <!ENTITY default_browser_dialog_cancel "ОТМЕНА">
 
@@ -54,11 +54,11 @@
 <!ENTITY pref_category_human_web_summary "Что, Включено">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
+<!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Похоже, у нас нет никаких предложений">
 <!ENTITY myoffrz_no_offers_msg_line1 "Но мы продолжим наблюдать за Вами и искать рекламу">
 <!ENTITY myoffrz_no_offers_msg_line2 "они появятся, как только станут доступны">
-<!ENTITY myoffrz_onboarding_description "Получайте привлекательные скидки и предложения &amp;brandMyOffrz;">
+<!ENTITY myoffrz_onboarding_description "Получайте привлекательные скидки и предложения &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Заказать сейчас!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Нажмите на код, чтобы скопировать">
 <!ENTITY myoffrz_terms_and_conditions_label "Положения">
@@ -80,7 +80,7 @@
 <!ENTITY pref_cliqz_support "FAQ и поддержка">
 
 <!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Максимально эффективно используйте &amp;brandShortName;">
+<!ENTITY pref_tips_tricks "Максимально эффективно используйте &brandShortName;">
 
 <!-- Report Website -->
 <!ENTITY pref_report_website "Сообщить о веб-сайте">
@@ -89,24 +89,24 @@
 <!ENTITY cc_title_overview "ОБЗОР">
 <!ENTITY cc_title_site_trackers "ТРЕКЕРЫ САЙТА">
 <!ENTITY cc_title_global_trackers "ВСЕ ТРЕКЕРЫ">
-<!ENTITY cc_zero_trackers_found "Найдено трекеров &amp;formatD;\n">
-<!ENTITY cc_one_trackers_found "Найден трекер &amp;formatD;\n">
-<!ENTITY cc_two_trackers_found "Найдено трекеров &amp;formatD;\n">
-<!ENTITY cc_few_trackers_found "Найдено трекеров &amp;formatD;\n">
-<!ENTITY cc_many_trackers_found "Найдено трекеров &amp;formatD;\n">
-<!ENTITY cc_other_trackers_found "Найдено трекеров &amp;formatD;\n">
-<!ENTITY cc_zero_trackers_blocked "Заблокировано трекеров &amp;formatD;">
-<!ENTITY cc_one_trackers_blocked "Заблокирован трекер &amp;formatD;">
-<!ENTITY cc_two_trackers_blocked "Заблокировано трекеров &amp;formatD;">
-<!ENTITY cc_few_trackers_blocked "Заблокировано трекеров &amp;formatD;">
-<!ENTITY cc_many_trackers_blocked "Заблокировано трекеров &amp;formatD;">
-<!ENTITY cc_other_trackers_blocked "Заблокировано трекеров &amp;formatD;">
-<!ENTITY cc_zero_trackers "Трекеры &amp;formatD;">
-<!ENTITY cc_one_trackers "Трекер &amp;formatD;">
-<!ENTITY cc_two_trackers "Трекеры &amp;formatD;">
-<!ENTITY cc_few_trackers "Трекеры &amp;formatD;">
-<!ENTITY cc_many_trackers "Трекеры &amp;formatD;">
-<!ENTITY cc_other_trackers "Трекеры &amp;formatD;">
+<!ENTITY cc_zero_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_one_trackers_found "Найден трекер &formatD;\n">
+<!ENTITY cc_two_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_few_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_many_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_other_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_zero_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_one_trackers_blocked "Заблокирован трекер &formatD;">
+<!ENTITY cc_two_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_few_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_many_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_other_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_zero_trackers "Трекеры &formatD;">
+<!ENTITY cc_one_trackers "Трекер &formatD;">
+<!ENTITY cc_two_trackers "Трекеры &formatD;">
+<!ENTITY cc_few_trackers "Трекеры &formatD;">
+<!ENTITY cc_many_trackers "Трекеры &formatD;">
+<!ENTITY cc_other_trackers "Трекеры &formatD;">
 <!ENTITY cc_trust_site "Доверять сайту">
 <!ENTITY cc_restrict_site "Запретить сайт">
 <!ENTITY cc_pause_ghostery "Приостановить Ghostery">
@@ -146,7 +146,7 @@
 <!ENTITY cc_on_this_site "На этом сайте">
 <!ENTITY cc_trackers "ТРЕКЕРЫ">
 <!ENTITY cc_blocked "Заблокированные">
-<!ENTITY cc_num_blocked "ЗАБЛОКИРОВАНО &amp;formatD;">
+<!ENTITY cc_num_blocked "ЗАБЛОКИРОВАНО &formatD;">
 <!ENTITY cc_tracker_info "Информация о трекере">
 <!ENTITY cc_block_all "Заблокировать все">
 <!ENTITY cc_unblock_all "Разблокировать все">
@@ -192,7 +192,7 @@
 <!ENTITY pref_browsing_category "Навигация">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "Поиск, &amp;pref_new_tab_category;, Навигация, Уведомления, Загрузка, &amp;brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "Поиск, &pref_new_tab_category;, Навигация, Уведомления, Загрузка, &brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "Показать фоновое изображение">
 <!ENTITY pref_cliqz_tab_topsites "Показать самые посещаемые веб-сайты">
 <!ENTITY pref_cliqz_tab_news "Показать новости">
@@ -200,9 +200,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "На стартовой странице отображаются самые посещаемые веб-сайты">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "Показать &amp;brandMyOffrz;">
-<!ENTITY pref_about_myoffrz "Информация о &amp;brandMyOffrz;">
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "Показать &brandMyOffrz;">
+<!ENTITY pref_about_myoffrz "Информация о &brandMyOffrz;">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -238,7 +238,7 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Помощь">
-<!ENTITY pref_category_help_summary "Лучшее из &amp;brandShortName;, FAQ , Сообщите о веб-сайте">
+<!ENTITY pref_category_help_summary "Лучшее из &brandShortName;, FAQ , Сообщите о веб-сайте">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "О нас">
@@ -263,23 +263,23 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - поддерживайте чистоту, скорость работы и безопасность работы в Интернете">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Представляем &amp;brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Поддерживайте чистоту, скорость работы и безопасность работы в Интернете. Используя это приложение, вы соглашаетесь с Политикой конфиденциальности &amp;brandShortName;.">
-<!ENTITY ghostery_onboarding_old_users_title "Представляем новый &amp;brandShortName;">
-<!ENTITY ghostery_onboarding_old_users_text "Поддержите &amp;brandShortName;, приняв участие в &amp;brandMyOffrz;, поделитесь аналитическими данными и данными Human Web. \u003Ca href=\u0022&amp;pref_privacy_policy_url;\u0022&gt;Подробнее\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_title "Представляем &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_text "Поддерживайте чистоту, скорость работы и безопасность работы в Интернете. Используя это приложение, вы соглашаетесь с Политикой конфиденциальности &brandShortName;.">
+<!ENTITY ghostery_onboarding_old_users_title "Представляем новый &brandShortName;">
+<!ENTITY ghostery_onboarding_old_users_text "Поддержите &brandShortName;, приняв участие в &brandMyOffrz;, поделитесь аналитическими данными и данными Human Web. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022&gt;Подробнее\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Защита от трекинга">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Более эффективно работайте в Интернете благодаря нашим функциям защиты от трекинга. Вы можете это отключить в центре управления &amp;brandShortName;.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Более эффективно работайте в Интернете благодаря нашим функциям защиты от трекинга. Вы можете это отключить в центре управления &brandShortName;.">
 <!ENTITY ghostery_onboarding_quick_search_title "Быстрый поиск">
 <!ENTITY ghostery_onboarding_quick_search_text "Экономьте время и объем данных: быстрый поиск моментально отображает соответствующие результаты при наборе текста.">
-<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Каждая &amp;pref_new_tab_category; содержит главные сайты, новости и фоновое изображение. Настраивайте ее в соответствии со своими потребностями.">
+<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_text "Каждая &pref_new_tab_category; содержит главные сайты, новости и фоновое изображение. Настраивайте ее в соответствии со своими потребностями.">
 <!ENTITY ghostery_onboarding_action_button "Войти в Интернет">
 <!ENTITY ghostery_onboarding_contextual_title "Защита от трекинга включена">
 <!ENTITY ghostery_onboarding_contextual_item1_title "Улучшенный анти-трекинг">
 <!ENTITY ghostery_onboarding_contextual_item1_text "Обеспечивает дополнительную защиту ваших личных данных.">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Умная блокировка и блокировка рекламы">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Оптимизировать производительность во время работы в Интернете">
-<!ENTITY ghostery_onboarding_contextual_text "Вы можете включить или отключить эти функции в любое время в центре управления &amp;brandShortName;.">
+<!ENTITY ghostery_onboarding_contextual_text "Вы можете включить или отключить эти функции в любое время в центре управления &brandShortName;.">
 <!ENTITY ghostery_onboarding_contextual_button "Показать сейчас">
 
 <!-- Ghost Tab -->
@@ -287,4 +287,4 @@
 <!ENTITY new_ghost_tab "Новая вкладка Ghost">
 <!ENTITY close_ghost_tabs "Закрыть вкладки Ghost">
 <!ENTITY contextmenu_open_ghost_tab "Открыть во вкладке Ghost">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: &amp;formatS1;Новая вкладка Ghost&amp;formatS2; не будет сохранять историю.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: &formatS1;Новая вкладка Ghost&formatS2; не будет сохранять историю.">
