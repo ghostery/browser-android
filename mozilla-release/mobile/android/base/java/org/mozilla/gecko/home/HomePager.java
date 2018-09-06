@@ -584,6 +584,12 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         public void onPageSelected(int position) {
             notifyPanelSelected(position);
 
+            /* Cliqz Start */
+            if (position == 1) {
+                ((HomeAdapter) getAdapter()).updateBgAlpha(1.0f);
+            }
+            /* Cliqz End */
+
             if (mHomeBanner != null) {
                 mHomeBanner.setActive(position == mDefaultPageIndex);
             }
@@ -596,7 +602,9 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             /* Cliqz Start */
-            ((HomeAdapter)getAdapter()).updateBgAlpha(position, positionOffset);
+            if (position == 0) {
+                ((HomeAdapter) getAdapter()).updateBgAlpha(positionOffset);
+            }
             /* Cliqz End */
             if (mDecor != null) {
                 mDecor.onPageScrolled(position, positionOffset, positionOffsetPixels);
