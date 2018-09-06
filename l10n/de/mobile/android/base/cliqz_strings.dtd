@@ -5,7 +5,7 @@
 <!ENTITY contextmenu_delete "Löschen">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Nachrichten">
@@ -41,8 +41,8 @@
 <!ENTITY private_tab_panel_description3 "Wir speichern keinen Verlauf, aber Download-Dateien und neue Favoriten bleiben auf Ihrem Gerät gespeichert.">
 
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&amp;brandShortName; als Standardbrowser">
-<!ENTITY default_browser_message "Anscheinend benutzen Sie &amp;brandShortName;. Möchten Sie, dass dies Ihr Standardbrowser ist?">
+<!ENTITY default_browser_title "&brandShortName; als Standardbrowser">
+<!ENTITY default_browser_message "Anscheinend benutzen Sie &brandShortName;. Möchten Sie, dass dies Ihr Standardbrowser ist?">
 <!ENTITY default_browser_dialog_proceed "VORGEHEN">
 <!ENTITY default_browser_dialog_cancel "ABBRECHEN">
 
@@ -54,11 +54,11 @@
 <!ENTITY pref_category_human_web_summary "Was, aktivieren">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
+<!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Wir haben wohl nicht viele Angebote">
 <!ENTITY myoffrz_no_offers_msg_line1 "Wir halten weiter Ausschau für Sie fügen sie hinzu">
 <!ENTITY myoffrz_no_offers_msg_line2 "sobald wir einen haben">
-<!ENTITY myoffrz_onboarding_description "Attraktive Preisnachlässe und Sonderangebote mit &amp;brandMyOffrz;">
+<!ENTITY myoffrz_onboarding_description "Attraktive Preisnachlässe und Sonderangebote mit &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Jetzt bestellen!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Code zum Kopieren antippen">
 <!ENTITY myoffrz_terms_and_conditions_label "Bedingungen">
@@ -80,7 +80,7 @@
 <!ENTITY pref_cliqz_support "FAQ &amp; Support">
 
 <!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Holen Sie das Beste aus &amp;brandShortName; heraus">
+<!ENTITY pref_tips_tricks "Holen Sie das Beste aus &brandShortName; heraus">
 
 <!-- Report Website -->
 <!ENTITY pref_report_website "Website melden">
@@ -89,24 +89,24 @@
 <!ENTITY cc_title_overview "ÜBERBLICK">
 <!ENTITY cc_title_site_trackers "WEBSITE-TRACKER">
 <!ENTITY cc_title_global_trackers "ALLE TRACKER">
-<!ENTITY cc_zero_trackers_found "&amp;formatD;\n Tracker gefunden">
-<!ENTITY cc_one_trackers_found "&amp;formatD;\n Tracker gefunden">
-<!ENTITY cc_two_trackers_found "&amp;formatD;\n Tracker gefunden">
-<!ENTITY cc_few_trackers_found "&amp;formatD;\n Tracker gefunden">
-<!ENTITY cc_many_trackers_found "&amp;formatD;\n Tracker gefunden">
-<!ENTITY cc_other_trackers_found "&amp;formatD;\n Tracker gefunden">
-<!ENTITY cc_zero_trackers_blocked "&amp;formatD; Tracker blockiert">
-<!ENTITY cc_one_trackers_blocked "&amp;formatD; Tracker blockiert">
-<!ENTITY cc_two_trackers_blocked "&amp;formatD; Tracker blockiert">
-<!ENTITY cc_few_trackers_blocked "&amp;formatD; Tracker blockiert">
-<!ENTITY cc_many_trackers_blocked "&amp;formatD; Tracker blockiert">
-<!ENTITY cc_other_trackers_blocked "&amp;formatD; Tracker blockiert">
-<!ENTITY cc_zero_trackers "&amp;formatD; Tracker">
-<!ENTITY cc_one_trackers "&amp;formatD; Tracker">
-<!ENTITY cc_two_trackers "&amp;formatD; Tracker">
-<!ENTITY cc_few_trackers "&amp;formatD; Tracker">
-<!ENTITY cc_many_trackers "&amp;formatD; Tracker">
-<!ENTITY cc_other_trackers "&amp;formatD; Tracker">
+<!ENTITY cc_zero_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_one_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_two_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_few_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_many_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_other_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_zero_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_one_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_two_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_few_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_many_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_other_trackers_blocked "&formatD; Tracker blockiert">
+<!ENTITY cc_zero_trackers "&formatD; Tracker">
+<!ENTITY cc_one_trackers "&formatD; Tracker">
+<!ENTITY cc_two_trackers "&formatD; Tracker">
+<!ENTITY cc_few_trackers "&formatD; Tracker">
+<!ENTITY cc_many_trackers "&formatD; Tracker">
+<!ENTITY cc_other_trackers "&formatD; Tracker">
 <!ENTITY cc_trust_site "Website vertrauen">
 <!ENTITY cc_restrict_site "Website nicht vertrauen">
 <!ENTITY cc_pause_ghostery "Ghostery pausieren">
@@ -146,7 +146,7 @@
 <!ENTITY cc_on_this_site "Auf dieser Website">
 <!ENTITY cc_trackers "TRACKER">
 <!ENTITY cc_blocked "Blockiert">
-<!ENTITY cc_num_blocked "&amp;formatD; BLOCKIERT">
+<!ENTITY cc_num_blocked "&formatD; BLOCKIERT">
 <!ENTITY cc_tracker_info "Tracker-info">
 <!ENTITY cc_block_all "Alle blockieren">
 <!ENTITY cc_unblock_all "Alle entsperren">
@@ -192,7 +192,7 @@
 <!ENTITY pref_browsing_category "Browsen">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "Suche, &amp;pref_new_tab_category;, Browsen, Benachrichtigungen, Download, &amp;brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "Suche, &pref_new_tab_category;, Browsen, Benachrichtigungen, Download, &brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "Hintergrundbild zeigen">
 <!ENTITY pref_cliqz_tab_topsites "Am meisten besuchte Websites zeigen">
 <!ENTITY pref_cliqz_tab_news "Nachrichten zeigen">
@@ -200,9 +200,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "Die Startseite zeigt die am meisten besuchten Websites noch einmal">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "&amp;brandMyOffrz; zeigen">
-<!ENTITY pref_about_myoffrz "Über &amp;brandMyOffrz;">
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "&brandMyOffrz; zeigen">
+<!ENTITY pref_about_myoffrz "Über &brandMyOffrz;">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -238,7 +238,7 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Hilfe">
-<!ENTITY pref_category_help_summary "Das Beste von &amp;brandShortName;, FAQ, Website melden">
+<!ENTITY pref_category_help_summary "Das Beste von &brandShortName;, FAQ, Website melden">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "Über uns">
@@ -263,23 +263,23 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery – für einfacheres, schnelleres und sichereres Browsen">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Einführung von &amp;brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Für einfacheres, schnelleres und sichereres Browsen. Durch Verwendung dieser App stimmen Sie der Datenschutzrichtlinie von &amp;brandShortName; zu.">
-<!ENTITY ghostery_onboarding_old_users_title "Das neue &amp;brandShortName;">
-<!ENTITY ghostery_onboarding_old_users_text "Unterstützen Sie &amp;brandShortName; durch Teilnahme an &amp;brandMyOffrz; und geben Sie Daten zum Human Web und Analysedaten frei. \u003Ca href=\u0022&amp;pref_privacy_policy_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_title "Einführung von &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_text "Für einfacheres, schnelleres und sichereres Browsen. Durch Verwendung dieser App stimmen Sie der Datenschutzrichtlinie von &brandShortName; zu.">
+<!ENTITY ghostery_onboarding_old_users_title "Das neue &brandShortName;">
+<!ENTITY ghostery_onboarding_old_users_text "Unterstützen Sie &brandShortName; durch Teilnahme an &brandMyOffrz; und geben Sie Daten zum Human Web und Analysedaten frei. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Tracking-Schutz">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Intelligenteres Browsen mit unseren Tracking-Schutzfunktionen. Sie können sie in der &amp;brandShortName; Control Center abschalten.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Intelligenteres Browsen mit unseren Tracking-Schutzfunktionen. Sie können sie in der &brandShortName; Control Center abschalten.">
 <!ENTITY ghostery_onboarding_quick_search_title "Schnellsuche">
 <!ENTITY ghostery_onboarding_quick_search_text "Zum Einsparen von Zeit und Datenvolumen: die Schnellsuche zeigt Ihnen sofort wichtige Ergebnisse, während Sie tippen.">
 <!ENTITY ghostery_onboarding_new_tab_title "Neuer Tab">
-<!ENTITY ghostery_onboarding_new_tab_text "Jeder &amp;pref_new_tab_category; enthält Top-Websites, Nachrichten und ein Hintergrundbild. Sie können ihn nach Bedarf anpassen.">
+<!ENTITY ghostery_onboarding_new_tab_text "Jeder &pref_new_tab_category; enthält Top-Websites, Nachrichten und ein Hintergrundbild. Sie können ihn nach Bedarf anpassen.">
 <!ENTITY ghostery_onboarding_action_button "Browsen beginnen">
 <!ENTITY ghostery_onboarding_contextual_title "Tracking-Schutz aktiviert">
 <!ENTITY ghostery_onboarding_contextual_item1_title "Erweitertes Anti-Tracking">
 <!ENTITY ghostery_onboarding_contextual_item1_text "Zusätzlicher Schutz Ihrer persönlichen Daten">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Smart Blocking &amp; Werbeblocker">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimiert die Leistung während des Browsens">
-<!ENTITY ghostery_onboarding_contextual_text "Sie können diese Funktionen jederzeit in der &amp;brandShortName; Control Center aktivieren oder deaktivieren.">
+<!ENTITY ghostery_onboarding_contextual_text "Sie können diese Funktionen jederzeit in der &brandShortName; Control Center aktivieren oder deaktivieren.">
 <!ENTITY ghostery_onboarding_contextual_button "Jetzt zeigen">
 
 <!-- Ghost Tab -->
@@ -287,4 +287,4 @@
 <!ENTITY new_ghost_tab "Neuer Ghost Tab">
 <!ENTITY close_ghost_tabs "Ghost Tabs schließen">
 <!ENTITY contextmenu_open_ghost_tab "In Ghost Tab öffnen">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &amp;formatS1;neuen Ghost Tabs&amp;formatS2; wird Ihr Verlauf nicht gespeichert.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &formatS1;neuen Ghost Tabs&formatS2; wird Ihr Verlauf nicht gespeichert.">
