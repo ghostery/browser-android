@@ -5,7 +5,7 @@
 <!ENTITY contextmenu_delete "Supprimer">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Actualités">
@@ -41,8 +41,8 @@
 <!ENTITY private_tab_panel_description3 "Nous ne conservons aucun historique mais les fichiers téléchargés et les nouveaux favoris seront enregistrés sur votre appareil.">
 
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&amp;brandShortName; comme navigateur par défaut">
-<!ENTITY default_browser_message "Vous semblez aimer &amp;brandShortName;. Voulez-vous en faire votre navigateur par défaut ?">
+<!ENTITY default_browser_title "&brandShortName; comme navigateur par défaut">
+<!ENTITY default_browser_message "Vous semblez aimer &brandShortName;. Voulez-vous en faire votre navigateur par défaut ?">
 <!ENTITY default_browser_dialog_proceed "CONTINUER">
 <!ENTITY default_browser_dialog_cancel "ANNULER">
 
@@ -54,11 +54,11 @@
 <!ENTITY pref_category_human_web_summary "Qu'est-ce que ce, Autoriser">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
+<!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Il semblerait que nous n'ayons aucune offre">
 <!ENTITY myoffrz_no_offers_msg_line1 "Nous allons poursuivre nos recherches pour vous et les ajouterons">
 <!ENTITY myoffrz_no_offers_msg_line2 "ici dès que nous en aurons">
-<!ENTITY myoffrz_onboarding_description "Recevez des offres promotionnelles avec &amp;brandMyOffrz;">
+<!ENTITY myoffrz_onboarding_description "Recevez des offres promotionnelles avec &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Acheter maintenant !">
 <!ENTITY myoffrz_tap_code_to_copy_label "Saisir le code à copier">
 <!ENTITY myoffrz_terms_and_conditions_label "Conditions générales">
@@ -80,7 +80,7 @@
 <!ENTITY pref_cliqz_support "FAQ &amp; assistance">
 
 <!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Le meilleur de &amp;brandShortName;">
+<!ENTITY pref_tips_tricks "Le meilleur de &brandShortName;">
 
 <!-- Report Website -->
 <!ENTITY pref_report_website "Signaler un site">
@@ -89,24 +89,24 @@
 <!ENTITY cc_title_overview "APERÇU">
 <!ENTITY cc_title_site_trackers "MOUCHARDS DU SITE">
 <!ENTITY cc_title_global_trackers "TOUS LES MOUCHARDS">
-<!ENTITY cc_zero_trackers_found "&amp;formatD;\n Mouchards trouvés">
-<!ENTITY cc_one_trackers_found "&amp;formatD;\n Mouchard trouvé">
-<!ENTITY cc_two_trackers_found "&amp;formatD;\n Mouchards trouvés">
-<!ENTITY cc_few_trackers_found "&amp;formatD;\n Mouchards trouvés">
-<!ENTITY cc_many_trackers_found "&amp;formatD;\n Mouchards trouvés">
-<!ENTITY cc_other_trackers_found "&amp;formatD;\n Mouchards trouvés">
-<!ENTITY cc_zero_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_one_trackers_blocked "&amp;formatD; Mouchard bloqué">
-<!ENTITY cc_two_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_few_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_many_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_other_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_zero_trackers "&amp;formatD; Mouchards">
-<!ENTITY cc_one_trackers "&amp;formatD; Mouchard">
-<!ENTITY cc_two_trackers "&amp;formatD; Mouchards">
-<!ENTITY cc_few_trackers "&amp;formatD; Mouchards">
-<!ENTITY cc_many_trackers "&amp;formatD; Mouchards">
-<!ENTITY cc_other_trackers "&amp;formatD; Mouchards">
+<!ENTITY cc_zero_trackers_found "&formatD;\n Mouchards trouvés">
+<!ENTITY cc_one_trackers_found "&formatD;\n Mouchard trouvé">
+<!ENTITY cc_two_trackers_found "&formatD;\n Mouchards trouvés">
+<!ENTITY cc_few_trackers_found "&formatD;\n Mouchards trouvés">
+<!ENTITY cc_many_trackers_found "&formatD;\n Mouchards trouvés">
+<!ENTITY cc_other_trackers_found "&formatD;\n Mouchards trouvés">
+<!ENTITY cc_zero_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_one_trackers_blocked "&formatD; Mouchard bloqué">
+<!ENTITY cc_two_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_few_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_many_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_other_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_zero_trackers "&formatD; Mouchards">
+<!ENTITY cc_one_trackers "&formatD; Mouchard">
+<!ENTITY cc_two_trackers "&formatD; Mouchards">
+<!ENTITY cc_few_trackers "&formatD; Mouchards">
+<!ENTITY cc_many_trackers "&formatD; Mouchards">
+<!ENTITY cc_other_trackers "&formatD; Mouchards">
 <!ENTITY cc_trust_site "Se fier à ce site">
 <!ENTITY cc_restrict_site "Restreindre">
 <!ENTITY cc_pause_ghostery "Suspendre Ghostery">
@@ -146,7 +146,7 @@
 <!ENTITY cc_on_this_site "Sur ce site">
 <!ENTITY cc_trackers "MOUCHARDS">
 <!ENTITY cc_blocked "Bloqué">
-<!ENTITY cc_num_blocked "&amp;formatD; BLOQUÉ">
+<!ENTITY cc_num_blocked "&formatD; BLOQUÉ">
 <!ENTITY cc_tracker_info "Info mouchard">
 <!ENTITY cc_block_all "Tout bloquer">
 <!ENTITY cc_unblock_all "Tout débloquer">
@@ -192,7 +192,7 @@
 <!ENTITY pref_browsing_category "Naviguer">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "Rechercher, &amp;pref_new_tab_category;, Navigation, Notifications, Téléchargement, &amp;brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "Rechercher, &pref_new_tab_category;, Navigation, Notifications, Téléchargement, &brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "Afficher l'image d'arrière-plan">
 <!ENTITY pref_cliqz_tab_topsites "Afficher les sites les plus visités">
 <!ENTITY pref_cliqz_tab_news "Afficher les informations">
@@ -200,9 +200,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "Les sites les plus consultés sont affichés sur la page de démarrage">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "Afficher &amp;brandMyOffrz;">
-<!ENTITY pref_about_myoffrz "Au sujet de &amp;brandShortName;">
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "Afficher &brandMyOffrz;">
+<!ENTITY pref_about_myoffrz "Au sujet de &brandShortName;">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -238,7 +238,7 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Aide">
-<!ENTITY pref_category_help_summary "Le meilleur de &amp;brandShortName;, FAQ, signaler un site">
+<!ENTITY pref_category_help_summary "Le meilleur de &brandShortName;, FAQ, signaler un site">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "Á notre sujet">
@@ -263,23 +263,23 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - pour une navigation plus rapide, plus sûre et plus propre">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Présentation de &amp;brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Pour une navigation plus rapide, plus sûre et plus propre. En utilisant cette app, vous acceptez la politique de confidentialité de &amp;brandShortName;.">
-<!ENTITY ghostery_onboarding_old_users_title "Présentation du nouveau &amp;brandShortName;">
-<!ENTITY ghostery_onboarding_old_users_text "Soutenez &amp;brandShortName; en participant à &amp;brandMyOffrz; et en partageant Human Web et les données analytiques. \u003Ca href=\u0022&amp;pref_privacy_policy_url;\u0022&gt;En savoir plus\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_title "Présentation de &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_text "Pour une navigation plus rapide, plus sûre et plus propre. En utilisant cette app, vous acceptez la politique de confidentialité de &brandShortName;.">
+<!ENTITY ghostery_onboarding_old_users_title "Présentation du nouveau &brandShortName;">
+<!ENTITY ghostery_onboarding_old_users_text "Soutenez &brandShortName; en participant à &brandMyOffrz; et en partageant Human Web et les données analytiques. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022&gt;En savoir plus\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Anti-pistage">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Naviguez de façon intelligente grâce à nos fonctions d'anti-pistage. Vous pouvez les désactiver dans le Centre de Contrôle &amp;brandShortName;.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Naviguez de façon intelligente grâce à nos fonctions d'anti-pistage. Vous pouvez les désactiver dans le Centre de Contrôle &brandShortName;.">
 <!ENTITY ghostery_onboarding_quick_search_title "Recherche rapide">
 <!ENTITY ghostery_onboarding_quick_search_text "Gagner en volume de données et en temps : la recherche rapide permet d'afficher les résultats pendant la saisie.">
-<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Chaque &amp;pref_new_tab_category; est fournie avec les meilleurs sites, actualités et image d'arrière-plan. Adaptez à vos besoins.">
+<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_text "Chaque &pref_new_tab_category; est fournie avec les meilleurs sites, actualités et image d'arrière-plan. Adaptez à vos besoins.">
 <!ENTITY ghostery_onboarding_action_button "Naviguer">
 <!ENTITY ghostery_onboarding_contextual_title "Anti-pistage activé">
 <!ENTITY ghostery_onboarding_contextual_item1_title "Anti-pistage amélioré">
 <!ENTITY ghostery_onboarding_contextual_item1_text "Protection des données personnelles améliorée">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Blocage intelligent et Bloqueur de publicités">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimise les performances de navigation">
-<!ENTITY ghostery_onboarding_contextual_text "Activez ou désactivez ces fonctions à tout moment dans le Centre de Contrôle &amp;brandShortName;.">
+<!ENTITY ghostery_onboarding_contextual_text "Activez ou désactivez ces fonctions à tout moment dans le Centre de Contrôle &brandShortName;.">
 <!ENTITY ghostery_onboarding_contextual_button "Me montrer maintenant">
 
 <!-- Ghost Tab -->
@@ -287,4 +287,4 @@
 <!ENTITY new_ghost_tab "Nouvel onglet fantôme">
 <!ENTITY close_ghost_tabs "Fermer les onglets fantômes">
 <!ENTITY contextmenu_open_ghost_tab "Ouvrir dans un onglet fantôme">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst : l'utilisation d'un &amp;formatS1;nouvel onglet fantôme&amp;formatS2; ne sauvegardera pas votre historique.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst : l'utilisation d'un &formatS1;nouvel onglet fantôme&formatS2; ne sauvegardera pas votre historique.">
