@@ -38,7 +38,6 @@
 <!ENTITY helper_first_offline_favorite_button "Zu Favoriten gehen">
 <!ENTITY helper_triple_readerview_open_message2 "Reader-View-Artikel als Favoriten zum Offline-Lesen.">
 <!ENTITY helper_triple_readerview_open_button2 "Zu Favoriten hinzufügen">
-<!ENTITY private_tab_panel_description3 "Wir speichern keinen Verlauf, aber Download-Dateien und neue Favoriten bleiben auf Ihrem Gerät gespeichert.">
 
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; als Standardbrowser">
@@ -265,15 +264,18 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Einführung von &brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Für einfacheres, schnelleres und sichereres Browsen. Durch Verwendung dieser App stimmen Sie der Datenschutzrichtlinie von &brandShortName; zu.">
-<!ENTITY ghostery_onboarding_old_users_title "Das neue &brandShortName;">
-<!ENTITY ghostery_onboarding_old_users_text "Unterstützen Sie &brandShortName; durch Teilnahme an &brandMyOffrz; und geben Sie Daten zum Human Web und Analysedaten frei. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
-<!ENTITY ghostery_onboarding_tracking_protection_title "Tracking-Schutz">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Intelligenteres Browsen mit unseren Tracking-Schutzfunktionen. Sie können sie in der &brandShortName; Control Center abschalten.">
-<!ENTITY ghostery_onboarding_quick_search_title "Schnellsuche">
-<!ENTITY ghostery_onboarding_quick_search_text "Zum Einsparen von Zeit und Datenvolumen: die Schnellsuche zeigt Ihnen sofort wichtige Ergebnisse, während Sie tippen.">
-<!ENTITY ghostery_onboarding_new_tab_title "Neuer Tab">
-<!ENTITY ghostery_onboarding_new_tab_text "Jeder &pref_new_tab_category; enthält Top-Websites, Nachrichten und ein Hintergrundbild. Sie können ihn nach Bedarf anpassen.">
+<!ENTITY ghostery_onboarding_new_users_text "Surfen Sie auch unterwegs sauberer, schneller und sicherer mit &brandShortName;! Jetzt für Mobilgeräte optimiert!">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Helfen Sie mit, &brandShortName; zu verbessern, indem Sie streng anonyme Statistiken und Human-Web-Daten beisteuern. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren.\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_tracking_protection_title "Werbung und Tracker blockieren">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Wählen Sie aus, was &brandShortName; blockieren soll, damit Sie schneller, sicherer und sauberer surfen. Sie können diese Einstellung jederzeit im Privacy Control Center anpassen und ändern.">
+<!ENTITY ghostery_onboarding_tracking_protection_radio1 "Nichts blockieren">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2 "Empfohlenes blockieren">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Werbung, Erwachsenenwerbung und Website-Analytics-Tracker blockieren">
+<!ENTITY ghostery_onboarding_tracking_protection_radio3 "Alles blockieren">
+<!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
+<!ENTITY ghostery_onboarding_quick_search_text "Bleiben Sie anonym und sparen Sie Zeit und Datenvolumen: Ergebnisse erscheinen in Echtzeit noch während der Eingabe in die &brandShortName;-Suchleiste.">
+<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_text "Passen Sie jeden neuen &pref_new_tab_category; an Ihre Wünsche an, indem Sie einzelne Elemente wie die meistbesuchten Websites, die neuesten Nachrichten und die Tracking-Statistiken ein- oder ausblenden.">
 <!ENTITY ghostery_onboarding_action_button "Browsen beginnen">
 <!ENTITY ghostery_onboarding_contextual_title "Tracking-Schutz aktiviert">
 <!ENTITY ghostery_onboarding_contextual_item1_title "Erweitertes Anti-Tracking">
@@ -289,3 +291,11 @@
 <!ENTITY close_ghost_tabs "Ghost Tabs schließen">
 <!ENTITY contextmenu_open_ghost_tab "In Ghost Tab öffnen">
 <!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &formatS1;neuen Ghost Tabs&formatS2; wird Ihr Verlauf nicht gespeichert.">
+<!ENTITY private_tab_panel_title2 "Ghost Mode">
+<!ENTITY private_tab_panel_description3 "You are browsing in Ghost Mode: Websites you visit in this mode will not be saved in your history, and local data, including cookies, will not be stored.">
+
+<!-- Anti-phishing -->
+<!ENTITY antiphishing_dialog_title "Warning: deceptive website!">
+<!ENTITY antiphishing_message "&brandShortName; has blocked access to &#37;1&#036;s because it has been reported as a phishing website. Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.">
+<!ENTITY antiphishing_walk_away "Back to safe site">
+<!ENTITY antiphishing_ignore_danger "Continue despite warning">
