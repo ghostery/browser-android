@@ -937,7 +937,7 @@
   <!-- Onboarding -->
   <string name="ghostery_onboarding_new_users_title">&ghostery_onboarding_new_users_title;</string>
   <string name="ghostery_onboarding_new_users_text">&ghostery_onboarding_new_users_text;</string>
-  <string name="ghostery_onboarding_old_users_text">&ghostery_onboarding_old_users_text;</string>
+  <string name="ghostery_onboarding_new_users_checkbox">&ghostery_onboarding_new_users_checkbox;</string>
   <string name="ghostery_onboarding_action_button">&ghostery_onboarding_action_button;</string>
   <string name="ghostery_onboarding_tracking_protection_title">&ghostery_onboarding_tracking_protection_title;</string>
   <string name="ghostery_onboarding_tracking_protection_text">&ghostery_onboarding_tracking_protection_text;</string>

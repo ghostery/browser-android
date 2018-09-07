@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[ghostery-android-app.cliqz_stringsdtd]
+minimum_perc = 0
+source_file = mozilla-release/mobile/android/base/locales/en-US/cliqz_strings.dtd
+source_lang = en_US
+file_filter = l10n/<lang>/mobile/android/base/cliqz_strings.dtd
+type = DTD
+
