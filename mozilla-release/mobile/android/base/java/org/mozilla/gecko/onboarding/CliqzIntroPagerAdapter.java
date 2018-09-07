@@ -51,7 +51,7 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
                     CustomLinkMovementMethod.getInstance(this);
             customLinkMovementMethod.init(CustomLinkMovementMethod.OPEN_IN_CUSTOM_TAB);
             dataCollectionTv.setMovementMethod(customLinkMovementMethod);
-            dataCollectionTv.setText(Html.fromHtml(layout.getContext().getString(R.string.ghostery_onboarding_old_users_text)));
+            dataCollectionTv.setText(Html.fromHtml(layout.getContext().getString(R.string.ghostery_onboarding_new_users_checkbox)));
             final CheckBox collectDataCb = (CheckBox) layout.findViewById(R.id.collect_data_cb);
             collectDataCb.setOnCheckedChangeListener(this);
         }
