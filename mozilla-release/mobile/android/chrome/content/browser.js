@@ -11,6 +11,7 @@ ChromeUtils.import("resource://gre/modules/Messaging.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/TelemetryController.jsm");
+const { UUIDMap } = ChromeUtils.import("resource://gre/modules/Extension.jsm", {});
 
 if (AppConstants.ACCESSIBILITY) {
   ChromeUtils.defineModuleGetter(this, "AccessFu",
@@ -6490,8 +6491,7 @@ var Cliqz = {
     return {
       browser,
       load: function(path) {
-        const uuids = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
-        const uuid = JSON.parse(uuids)[id];
+        const uuid = UUIDMap.get(id);
 
         browser.loadURI("moz-extension://" + uuid + "/" + path);
       },
