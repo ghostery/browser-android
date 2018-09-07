@@ -21,7 +21,12 @@
     <dimen name="browser_toolbar_image_button_v_spacing">10dp</dimen>
     <dimen name="browser_toolbar_image_button_h_spacing">10dp</dimen>
 
-    <dimen name="browser_toolbar_site_security_width">34dp</dimen>
+    <!-- Cliqz start -->
+    <!-- Reduce the lock logo size -->
+    <dimen name="browser_toolbar_site_security_width">30dp</dimen>
+    <dimen name="browser_toolbar_site_security_height">30dp</dimen>
+    <dimen name="browser_toolbar_site_security_margin_start">10dp</dimen>
+    <!-- Cliqz end -->
     <dimen name="browser_toolbar_site_security_margin_end">6dp</dimen>
     <!-- Cliqz start +->
          increase the url bar height -->

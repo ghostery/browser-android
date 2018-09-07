@@ -9,6 +9,9 @@
     <style name="UrlBar.SiteIdentity" parent="UrlBar.V17.SiteIdentity" />
 
     <style name="UrlBar.V17.SiteIdentity" parent="UrlBar.Base.SiteIdentity">
+        <!-- Cliqz start -->
+        <item name="android:paddingStart">@dimen/browser_toolbar_site_security_margin_start</item>
+        <!-- Cliqz end -->
         <item name="android:paddingEnd">@dimen/browser_toolbar_site_security_margin_end</item>
     </style>
 
