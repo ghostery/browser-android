@@ -220,11 +220,10 @@
     <style name="UrlBar.SiteIdentity" parent="UrlBar.V15.SiteIdentity" />
 
     <style name="UrlBar.V15.SiteIdentity" parent="UrlBar.Base.SiteIdentity">
-        <!-- Cliqz start +->
-        remove not needed padding
-        <item name="android:paddingLeft">3dp</item>
+        <!-- Cliqz start -->
+        <item name="android:paddingLeft">@dimen/browser_toolbar_site_security_margin_start</item>
         <item name="android:paddingRight">@dimen/browser_toolbar_site_security_margin_end</item>
-        <!+- Cliqz end -->
+        <!-- Cliqz end -->
     </style>
 
 
