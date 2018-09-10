@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -191,6 +192,13 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             colors.add(ContextCompat.getColor(getContext(), category.categoryColor));
             disabledColors.add(ContextCompat.getColor(getContext(), category.categoryColorDisabled));
             blockedColors.add(ContextCompat.getColor(getContext(), category.categoryColorBlocked));
+        }
+        if (entries.isEmpty()) {
+            entries.add(new PieEntry(1));
+            final @ColorRes int defaultColor = ContextCompat.getColor(getContext(), R.color.cc_default_category_disabled);
+            colors.add(defaultColor);
+            disabledColors.add(defaultColor);
+            blockedColors.add(defaultColor);
         }
         final PieDataSet set = new PieDataSet(entries, "cc");
         if (mIsGhosteryPaused) {
