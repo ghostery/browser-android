@@ -1011,6 +1011,7 @@ public class BrowserApp extends GeckoApp
             "Search:OpenLink",
             "Privacy:Count",
             "Privacy:Info",
+            "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
             null);
 
@@ -1968,6 +1969,7 @@ public class BrowserApp extends GeckoApp
             "Search:OpenLink",
             "Privacy:Count",
             "Privacy:Info",
+            "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
             null);
 
@@ -2633,6 +2635,14 @@ public class BrowserApp extends GeckoApp
                     showSuggestions(querySuggestions, GeckoBundleUtils.safeGetString(message,
                             "data/query"));
                 }
+                break;
+            case "Addons:PreventGhosteryCliqz":
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(getString(R.string.prevent_ghostery_addon_dialog_title))
+                        .setMessage(getString(R.string.prevent_ghostery_addon_dialog_message,
+                                GeckoBundleUtils.safeGetString(message,"data")))
+                        .setPositiveButton(getString(R.string.action_ok),null)
+                        .show();
                 break;
             /* Cliqz end */
             default:

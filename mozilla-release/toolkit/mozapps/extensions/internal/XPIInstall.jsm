@@ -30,6 +30,7 @@ Cu.importGlobalProperties(["TextDecoder", "TextEncoder", "fetch"]);
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
+ChromeUtils.import("resource://gre/modules/Messaging.jsm");
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   AddonRepository: "resource://gre/modules/addons/AddonRepository.jsm",
@@ -2585,7 +2586,14 @@ var DownloadAddonInstall = class extends AddonInstall {
         }
 
         this.loadManifest(this.file).then(() => {
-          if (this.addon.isCompatible) {
+          /* Cliqz start */
+          if(this.addon.id === "cliqz@cliqz.com" || this.addon.id === "firefox@ghostery.com"){
+              this._callInstallListeners("onInstallCancelled");
+              EventDispatcher.instance.sendRequest({type: "Addons:PreventGhosteryCliqz", data:
+              this.addon._repositoryAddon.creator.name});
+          }
+          /* Cliqz end */
+          else if (this.addon.isCompatible) {
             this.downloadCompleted();
           } else {
             // TODO Should we send some event here (bug 557716)?
