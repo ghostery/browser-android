@@ -125,8 +125,8 @@ public class CliqzLogoUtil {
             index += hostName.charAt(i);
         }
         index %= DEFAULT_COLORS.length;
-        return new DefaultIconDrawable(hostName, Color.parseColor(DEFAULT_COLORS[index]),
-                LogoSizes.getSize(Math.max(width, height)).size);
+        final int textSize = (int) (LogoSizes.getSize(Math.max(width, height)).size * 0.7);
+        return new DefaultIconDrawable(hostName, Color.parseColor(DEFAULT_COLORS[index]), textSize);
     }
 
     private static String getHostName(String url) {
