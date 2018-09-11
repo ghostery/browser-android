@@ -5,11 +5,18 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:title="@string/pref_category_help">
 
-    <!-- add FAQ Support -->
+    <!-- add FAQ -->
     <org.mozilla.gecko.preferences.LinkPreference
-        android:key="android.not_a_preference.support.cliqz"
-        android:title="@string/pref_cliqz_support"
+        android:key="android.not_a_preference.help.faq"
+        android:title="@string/pref_help_faq"
         android:persistent="false"
-        url="@string/pref_cliqz_support_url" />
+        url="@string/pref_help_faq_url" />
+
+    <!-- add Support -->
+    <Preference
+        android:key="android.not_a_preference.help.support"
+        android:title="@string/pref_help_support"
+        android:persistent="false" />
+
 
 </PreferenceScreen>
