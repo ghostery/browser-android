@@ -79,12 +79,6 @@
 <!-- Cliqz Support -->
 <!ENTITY pref_cliqz_support "FAQs &amp; Support">
 
-<!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Get the best out of &brandShortName;">
-
-<!-- Report Website -->
-<!ENTITY pref_report_website "Report Website">
-
 <!-- Control Center -->
 <!ENTITY cc_title_overview "OVERVIEW">
 <!ENTITY cc_title_site_trackers "SITE TRACKERS">
