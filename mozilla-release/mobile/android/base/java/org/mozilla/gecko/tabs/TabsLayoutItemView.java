@@ -13,12 +13,15 @@ import org.mozilla.gecko.widget.FaviconView;
 import org.mozilla.gecko.widget.HoverDelegateWithReset;
 import org.mozilla.gecko.widget.TabThumbnailWrapper;
 import org.mozilla.gecko.widget.TouchDelegateWithReset;
+import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 import org.mozilla.gecko.widget.themed.ThemedRelativeLayout;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.ViewUtils;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -50,8 +53,14 @@ public class TabsLayoutItemView extends LinearLayout
     private FaviconView mFaviconView;
     private Future<IconResponse> mOngoingIconLoad;
 
+    /*Cliqz start */
+    private final Drawable mDefaultDrawable, mDefaultPrivateDrawable;
+    /*Cliqz end */
+
     public TabsLayoutItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mDefaultDrawable = initDefaultDrawable(R.drawable.ic_ghosty);
+        mDefaultPrivateDrawable = initDefaultDrawable(R.drawable.ic_ghosty_forget);
     }
 
     @Override
@@ -198,20 +207,29 @@ public class TabsLayoutItemView extends LinearLayout
 
             final Resources resources = getResources();
             final int iconSize = resources.getDimensionPixelSize(R.dimen.tab_favicon_size);
+            /* Cliqz start */
+            /* Cliqz Block Comment start o/
             final float textSize = resources.getDimensionPixelSize(R.dimen.tab_favicon_text_size);
 
             final Context appContext = getContext().getApplicationContext();
-            /* Cliqz Start */
-            /* mOngoingIconLoad = Icons.with(appContext)
+
+             mOngoingIconLoad = Icons.with(appContext)
                                        .pageUrl(url)
                                        .skipNetwork()
                                        .targetSize(iconSize)
                                        .textSize(textSize)
                                        .build()
-                                       .execute(mFaviconView.createIconCallback()); */
-            Picasso.with(getContext())
-                    .load(CliqzLogoUtil.getIconUrl(url, iconSize, iconSize))
-                    .into(mFaviconView);
+                                       .execute(mFaviconView.createIconCallback());
+            /o Cliqz Block Comment end */
+            final Context context = getContext();
+            if(tab.getTitle().equals(context.getString(R.string.home_title))) {
+                mFaviconView.setImageDrawable(getDefaultFavIcon(tab,context));
+            } else {
+                Picasso.with(context)
+                        .load(CliqzLogoUtil.getIconUrl(url, iconSize, iconSize))
+                        .into(mFaviconView);
+            }
+            /* Cliqz end */
             mTitle.setContentDescription(tabTitle);
         }
     }
@@ -230,5 +248,23 @@ public class TabsLayoutItemView extends LinearLayout
 
     public void setPrivateMode(boolean isPrivate) {
         ((ThemedRelativeLayout) findViewById(R.id.wrapper)).setPrivateMode(isPrivate);
+        /* Cliqz start */
+        ((ThemedLinearLayout) findViewById(R.id.tab_item_header)).setPrivateMode(isPrivate);
+        /* Cliqz end */
     }
+
+    /* Cliqz start */
+    Drawable initDefaultDrawable(int drawableId) {
+        final Context context = getContext();
+        Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, drawableId))
+                .mutate();
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(context,
+                android.R.color.white));
+        return drawable;
+    }
+
+    Drawable getDefaultFavIcon(Tab tab, Context context) {
+        return tab.isPrivate() ? mDefaultPrivateDrawable : mDefaultDrawable;
+    }
+    /* Cliqz end*/
 }
