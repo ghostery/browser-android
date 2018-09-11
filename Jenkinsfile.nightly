@@ -4,37 +4,37 @@ def matrix = [
     'Cliqz ARM':[
         'arch': 'arm',
         'brand': 'cliqz',
-        'channel': 'MA99',
+        'channel': 'MA02',
         'target': 'arm-linux-androideabi',
     ],
     'Cliqz X86':[
         'arch': 'x86',
         'brand': 'cliqz',
-        'channel': 'MA99',
+        'channel': 'MA02',
         'target': 'i386-linux-android',
     ],
     'Ghostery ARM':[
         'arch': 'arm',
         'brand': 'ghostery',
-        'channel': 'MA99',
+        'channel': 'MA52',
         'target': 'arm-linux-androideabi',
     ],
     'Ghostery X86':[
         'arch': 'x86',
         'brand': 'ghostery',
-        'channel': 'MA99',
+        'channel': 'MA52',
         'target': 'i386-linux-android',
     ],
     'Cliqz Alpha':[
         'arch': 'arm',
         'brand': 'cliqz-alpha',
-        'channel': 'MA99',
+        'channel': 'MA02',
         'target': 'arm-linux-androideabi',
     ],
     'Ghostery Alpha':[
         'arch': 'arm',
         'brand': 'ghostery-alpha',
-        'channel': 'MA99',
+        'channel': 'MA52',
         'target': 'arm-linux-androideabi',
     ],
 ]

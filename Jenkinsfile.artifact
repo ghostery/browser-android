@@ -29,7 +29,7 @@ def build(Map m){
 
             if (!params.REPLACE_TARGET) {
                 try {
-                    def targetAPK = sh(returnStdout: true, 
+                    def targetAPK = sh(returnStdout: true,
                         script: """wget -S --spider '${url}/${arch}/cliqz-target.apk' 2>&1 | grep 'HTTP/1.1 200 OK'""").trim()[-2..-1]
                 } catch(e) {
                     createTarget = true
@@ -51,13 +51,13 @@ def build(Map m){
                         docker.image("${baseImageName}").inside {
                             stage('Download cache') {
                                 withCredentials([[
-                                        $class: 'AmazonWebServicesCredentialsBinding',  
-                                        accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-                                        credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b', 
+                                        $class: 'AmazonWebServicesCredentialsBinding',
+                                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                                        credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b',
                                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                                     def s3Path = "s3://repository.cliqz.com/dist/android/cache"
                                     def cachePath = ".gradle/caches"
-                                    sh """#!/bin/bash -l 
+                                    sh """#!/bin/bash -l
                                         pip install awscli --upgrade --user
                                         cd
                                         aws s3 cp --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath} --recursive
@@ -86,9 +86,9 @@ def build(Map m){
                                 archiveArtifacts allowEmptyArchive: true, artifacts: 'target.apk'
                                 withCredentials([
                                     [
-                                        $class: 'AmazonWebServicesCredentialsBinding',  
-                                        accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-                                        credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b', 
+                                        $class: 'AmazonWebServicesCredentialsBinding',
+                                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                                        credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b',
                                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                                     ]
                                 ]) {
