@@ -4,4 +4,6 @@
 
 <!-- This string should be kept in sync with the home_title string
      in android_strings.dtd -->
-<!ENTITY abouthome.title                  "&brandShortName; Home">
+<!-- Cliqz start -->
+<!ENTITY abouthome.title                  "Start Tab">
+<!-- Cliqz end -->
