@@ -40,6 +40,10 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
         void onInflated(@NonNull ViewGroup layout);
     }
 
+    public interface CliqzIntroClosedListener {
+        void enterFirstRunEditingMode();
+    }
+
     private static class FirstScreenAction implements CustomPageAction,
             CustomLinkMovementMethod.OnOpenLinkCallBack,
             CheckBox.OnCheckedChangeListener {
@@ -126,9 +130,11 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
         }
     }
     private Context mContext;
+    private CliqzIntroClosedListener mCliqzIntroClosedListener;
 
-    public CliqzIntroPagerAdapter(Context context) {
+    public CliqzIntroPagerAdapter(Context context, @NonNull CliqzIntroClosedListener cliqzIntroClosedListener) {
         mContext = context;
+        mCliqzIntroClosedListener = cliqzIntroClosedListener;
     }
 
     @Override
@@ -148,6 +154,7 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 container.setVisibility(View.GONE);
+                mCliqzIntroClosedListener.enterFirstRunEditingMode();
             }
         });
         if (screen.action != null) {
