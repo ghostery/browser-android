@@ -76,15 +76,6 @@
 <!-- Rate Us -->
 <!ENTITY pref_category_rate_us "Rate Us">
 
-<!-- Cliqz Support -->
-<!ENTITY pref_cliqz_support "FAQs &amp; Support">
-
-<!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Get the best out of &brandShortName;">
-
-<!-- Report Website -->
-<!ENTITY pref_report_website "Report Website">
-
 <!-- Control Center -->
 <!ENTITY cc_title_overview "OVERVIEW">
 <!ENTITY cc_title_site_trackers "SITE TRACKERS">
@@ -238,7 +229,10 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Help">
-<!ENTITY pref_category_help_summary "Best out of &brandShortName;, FAQ , Report Website">
+<!ENTITY pref_category_help_summary "FAQ, Support">
+<!ENTITY pref_help_faq "FAQs">
+<!ENTITY pref_help_support "Support">
+<!ENTITY support_email_chooser_title "Send email...">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "About us">

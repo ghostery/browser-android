@@ -5,25 +5,18 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:title="@string/pref_category_help">
 
-    <!-- add Tips & Tricks setting -->
+    <!-- add FAQ -->
     <org.mozilla.gecko.preferences.LinkPreference
-        android:key="android.not_a_preference.tips.tricks"
-        android:title="@string/pref_tips_tricks"
+        android:key="android.not_a_preference.help.faq"
+        android:title="@string/pref_help_faq"
         android:persistent="false"
-        url="@string/pref_tips_tricks_url" />
+        url="@string/pref_help_faq_url" />
 
-    <!-- add FAQ Support -->
-    <org.mozilla.gecko.preferences.LinkPreference
-        android:key="android.not_a_preference.support.cliqz"
-        android:title="@string/pref_cliqz_support"
-        android:persistent="false"
-        url="@string/pref_cliqz_support_url" />
+    <!-- add Support -->
+    <Preference
+        android:key="android.not_a_preference.help.support"
+        android:title="@string/pref_help_support"
+        android:persistent="false" />
 
-    <!-- add Report Website setting -->
-    <org.mozilla.gecko.preferences.LinkPreference
-        android:key="android.not_a_preference.report.browser"
-        android:title="@string/pref_report_website"
-        android:persistent="false"
-        url="@string/pref_report_website_url" />
 
 </PreferenceScreen>
