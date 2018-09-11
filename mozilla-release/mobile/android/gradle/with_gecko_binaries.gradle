@@ -39,7 +39,14 @@ task buildOmnijars(type:Exec) {
 ext.configureVariantWithGeckoBinaries = { variant ->
     // :app needs the full Fennec omni.ja, whereas other projects need the
     // GeckoView-specific omni.ja.
-    def omnijar_dir = "app".equals(project.name) ? "fennec" : "geckoview"
+    /* Cliqz start */
+    // If we change MOZ_APP_NAME, project.name will be that name: i.e. MOZ_APP_NAME <= cliqz
+    // then project.name == "cliqz". This will make the build script fail by looking for a
+    // non-existing folder. We fixed this by inverting the expression below and using the mozconfig
+    // to read the "MOZ_APP_NAME" to define the app name if not "geckoview".
+    def appName = mozconfig.substs.get("MOZ_APP_NAME", "fennec")
+    def omnijar_dir = "geckoview".equals(project.name) ? "geckoview" : appName
+    /* Cliqz end */
     def distDir = "${topobjdir}/dist/${omnijar_dir}"
 
     def syncOmnijarFromDistDir = task("syncOmnijarFromDistDirFor${variant.name.capitalize()}", type: Sync) {
