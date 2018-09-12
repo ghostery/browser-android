@@ -2345,11 +2345,9 @@ public class BrowserApp extends GeckoApp
             case "CharEncoding:State":
                 final boolean visible = "true".equals(message.getString("visible"));
                 GeckoPreferences.setCharEncodingState(visible);
-                /* Cliqz Start o/
                 if (mMenu != null) {
                     mMenu.findItem(R.id.char_encoding).setVisible(visible);
                 }
-                /o Cliqz End */
                 break;
 
             case "Experiments:GetActive":
@@ -4031,7 +4029,7 @@ public class BrowserApp extends GeckoApp
         //final MenuItem saveAsPDF = aMenu.findItem(R.id.save_as_pdf);
         //final MenuItem print = aMenu.findItem(R.id.print);
         //final MenuItem viewPageSource = aMenu.findItem(R.id.view_page_source);
-        //final MenuItem charEncoding = aMenu.findItem(R.id.char_encoding);
+        final MenuItem charEncoding = aMenu.findItem(R.id.char_encoding);
         //final MenuItem enterGuestMode = aMenu.findItem(R.id.new_guest_session);
         //final MenuItem exitGuestMode = aMenu.findItem(R.id.exit_guest_session);
         final MenuItem bookmark = aMenu.findItem(R.id.bookmark);
@@ -4245,7 +4243,7 @@ public class BrowserApp extends GeckoApp
         MenuUtils.safeSetVisible(aMenu, R.id.add_to_launcher, notInAboutHome);
         // viewPageSource.setEnabled(notInAboutHome);
 
-        // charEncoding.setVisible(GeckoPreferences.getCharEncodingState());
+        charEncoding.setVisible(GeckoPreferences.getCharEncodingState());
 
         // if (getProfile().inGuestMode()) {
             // exitGuestMode.setVisible(true);
