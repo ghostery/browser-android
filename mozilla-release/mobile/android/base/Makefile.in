@@ -73,13 +73,13 @@ update-fennec-wrappers:
 # does most of the packaging step, and then updates omni.ja in
 # place. If you're not using an IDE, you should be using |mach build
 # mobile/android && mach package|.
-$(ABS_DIST)/fennec/$(OMNIJAR_NAME): FORCE
+$(ABS_DIST)/$(MOZ_APP_NAME)/$(OMNIJAR_NAME): FORCE
 	$(REPORT_BUILD)
 	$(MAKE) -C ../../../faster
 	$(MAKE) -C ../installer stage-package
 	$(MKDIR) -p $(@D)
-	rsync --update $(DIST)/fennec/$(notdir $(OMNIJAR_NAME)) $@
-	$(RM) $(DIST)/fennec/$(notdir $(OMNIJAR_NAME))
+	rsync --update $(DIST)/$(MOZ_APP_NAME)/$(notdir $(OMNIJAR_NAME)) $@
+	$(RM) $(DIST)/$(MOZ_APP_NAME)/$(notdir $(OMNIJAR_NAME))
 
 ifndef MOZILLA_OFFICIAL
 # Targets built very early during a Gradle build.  In automation,
@@ -90,7 +90,7 @@ gradle-targets: $(generated_resources) $(generated_files)
 
 # Local developers update omni.ja during their builds.  There's a
 # chicken-and-egg problem here.
-gradle-omnijar: $(abspath $(DIST)/fennec/$(OMNIJAR_NAME))
+gradle-omnijar: $(abspath $(DIST)/$(MOZ_APP_NAME)/$(OMNIJAR_NAME))
 else
 # In automation, omni.ja is built only during packaging.
 gradle-omnijar:
