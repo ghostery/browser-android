@@ -13,7 +13,7 @@ public class Countries {
     private String [] mCountries;
     private String [] mCountryCodes;
     private Context mContext;
-    public Countries (Context context){
+    Countries(Context context){
         mCountries = context.getResources().getStringArray(R.array.pref_search_regional_entries);
         mCountryCodes = context.getResources().getStringArray(R.array.pref_search_regional_values);
         mContext = context;

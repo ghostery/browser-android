@@ -15,9 +15,11 @@ public class PreferenceManager {
 
     private final SharedPreferences mAppSharedPreferences;
     private static PreferenceManager preferenceManager = null;
+    private Context mContext;
 
     private PreferenceManager(Context context) {
         mAppSharedPreferences = GeckoSharedPrefs.forApp(context);
+        mContext = context;
     }
 
     public static PreferenceManager getInstance(Context context) {
@@ -94,9 +96,18 @@ public class PreferenceManager {
                 true);
     }
 
-    public String getSearchRegional(Context context){
+    public String getSearchRegional() {
         return mAppSharedPreferences.getString(GeckoPreferences.PREFS_SEARCH_REGIONAL,new
-                Countries(context).getDefaultCountryCode());
+                Countries(mContext).getDefaultCountryCode());
+    }
+
+    //force set the default preference, so that the extension can read it right away
+    public void setSearchRegionalDefault() {
+        if (!mAppSharedPreferences.contains(GeckoPreferences.PREFS_SEARCH_REGIONAL)) {
+            final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+            editor.putString(GeckoPreferences.PREFS_SEARCH_REGIONAL, new Countries(mContext)
+                    .getDefaultCountryCode()).apply();
+        }
     }
 
     public boolean isAutocompleteEnabled() {
