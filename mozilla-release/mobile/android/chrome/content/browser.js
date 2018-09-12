@@ -6387,8 +6387,15 @@ var Cliqz = {
   init: function () {
     this.callbacks = Object.create(null);
     this.messageId = 1;
-    this.extensionMessageQueue = [];
-    this.searchExtensionReady = false;
+    this.extensionsMessageQueue = {
+      "android@cliqz.com": [],
+      "firefox@ghostery.com": []
+    };
+    this.extensionsReady = {
+      "android@cliqz.com": false,
+      "firefox@ghostery.com": true // false
+    };
+
     GlobalEventDispatcher.registerListener(this, [
       "Search:Hide",
       "Search:Search",
@@ -6441,6 +6448,14 @@ var Cliqz = {
   },
 
   _messageExtension(id, msg, opts = {}) {
+    if (!this.extensionsReady[id]) {
+      this.extensionsMessageQueue[id].push({
+        msg: msg,
+        opts: opts
+      });
+      return;
+    }
+
     msg.requestId = this.messageId++;
 
     Services.cpmm.sendAsyncMessage("MessageChannel:Messages", [{
@@ -6466,11 +6481,8 @@ var Cliqz = {
   messagePrivacyExtension(msg) {
     return Cliqz._messageExtension("firefox@ghostery.com", msg);
   },
+
   messageSearchExtension(msg) {
-    if (!this.searchExtensionReady) {
-      this.extensionMessageQueue.push(msg);
-      return;
-    }
     msg.source = "ANDROID_BROWSER";
     return Cliqz._messageExtension("android@cliqz.com", msg, {
       senderOptions: {
@@ -6537,16 +6549,11 @@ var Cliqz = {
       case "getInstallDate":
         return Services.prefs.getCharPref("android.not_a_preference.browser.install.date", "16917");
       case "ready":
-        if (this.searchExtensionReady) {
-          return;
-        }
-        this.searchExtensionReady = true;
         this._syncSearchPrefs();
-        this.extensionMessageQueue.forEach(msg => this.messageSearchExtension(msg));
-        this.extensionMessageQueue = [];
+        this._handleExtensionReady("android@cliqz.com");
         break;
       default:
-        console.log("unexpected message", msg)
+        console.log("unexpected message", msg);
     }
   },
 
@@ -6561,16 +6568,29 @@ var Cliqz = {
           tabId: msg.payload.tabId,
           count: count
         });
-      break;
+        break;
       case "panelData":
         GlobalEventDispatcher.sendRequest({
           type: "Privacy:Info",
           data: msg.payload
         });
-      break;
+        break;
+      case "ready":
+        this._handleExtensionReady("firefox@ghostery.com");
+        break;
       default:
-        console.log("unexpected message", msg)
+        console.log("unexpected message", msg);
     }
+  },
+
+  _handleExtensionReady(id) {
+    if (this.extensionsReady[id]) {
+      return;
+    }
+    this.extensionsReady[id] = true;
+    var queue = this.extensionsMessageQueue[id];
+    this.extensionsMessageQueue[id] = [];
+    queue.forEach(obj => this._messageExtension(id, obj.msg, obj.opts));
   },
 
   _extensionListener(ev) {
@@ -6728,15 +6748,16 @@ var Cliqz = {
         this.Ghostery.loadTab(BrowserApp.selectedTab.id);
         break;
       case "Privacy:SetBlockingPolicy":
-        // blocking policy = OneOf
-        //    'BLOCKING_POLICY_RECOMMENDED'
-        //    'BLOCKING_POLICY_NOTHING'
-        //    'BLOCKING_POLICY_EVERYTHING'
+        // blocking policy should be one of:
+        // 'UPDATE_BLOCK_ALL'
+        // 'UPDATE_BLOCK_NONE'
+        // 'UPDATE_BLOCK_RECOMMENDED'
+        // 'UPDATE_BLOCK_ADS'
         let blockingPolicy = data.blockingPolicy;
         this.messagePrivacyExtension({
           origin: 'ghostery-hub',
-          name: 'SET_BLOCKING_POLICY',
-          message: { blockingPolicy }
+          name: 'updateBlocking',
+          message: blockingPolicy
         });
     }
   }
