@@ -107,11 +107,10 @@ def build(Map m){
                         sh '''#!/bin/bash -l
                             set -e
                             set -x
-                            pwd
-                            ls
-                            cd /app
-                            cp mozconfigs/jenkins.mozconfig mozilla-release/mozconfig
-                            cd mozilla-release
+                            cd /app/mozilla-release
+                            cp ../mozconfigs/deploy.mozconfig mozconfig
+                            export HOST_CC=$CLANG_HOME/bin/clang
+                            export HOST_CXX=$CLANG_HOME/bin/clang++
                             ./mach clobber
                             ./mach build
                             for lang in `ls ../l10n/`; do
@@ -147,14 +146,14 @@ def build(Map m){
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
                         def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
                         if (buildarch=="arm"){
-                            sh """#!/bin/bash -l 
+                            sh """#!/bin/bash -l
                                 set -e
                                 set -x
                                 aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${brandname}${getId()}.apk
                                 aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk
                             """
                         } else {
-                            sh """#!/bin/bash -l 
+                            sh """#!/bin/bash -l
                                 set -e
                                 set -x
                                 aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${brandname}${getId()}_${buildarch}.apk
