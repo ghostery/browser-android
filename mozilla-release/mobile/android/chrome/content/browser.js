@@ -6393,7 +6393,7 @@ var Cliqz = {
     };
     this.extensionsReady = {
       "android@cliqz.com": false,
-      "firefox@ghostery.com": true // false
+      "firefox@ghostery.com": false,
     };
 
     GlobalEventDispatcher.registerListener(this, [
