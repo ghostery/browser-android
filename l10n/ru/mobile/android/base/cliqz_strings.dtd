@@ -1,0 +1,300 @@
+<!-- Copyright © Cliqz 2018 -->
+<!-- General -->
+<!ENTITY action_ok "OK">
+<!ENTITY action_exit "Выход">
+<!ENTITY contextmenu_delete "Удалить">
+
+<!-- Onboarding -->
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
+
+<!-- News -->
+<!ENTITY activity_stream_top_news "Новости">
+
+<!-- Favorites -->
+<!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
+<!ENTITY favorites_title "Избранное">
+<!ENTITY favorites "Избранное">
+<!ENTITY favorite_remove "Удалить избранное">
+<!ENTITY favorite_added "Добавлено избранное">
+<!ENTITY favorite_already_added "Уже в избранном">
+<!ENTITY favorite_removed "Избранное удалено">
+<!ENTITY favorite_updated "Избранное обновлено">
+<!ENTITY screenshot_added_to_favorites "Снимок экрана добавлен в избранное">
+<!ENTITY overlay_share_favorite_btn_label "Избранное">
+<!ENTITY overlay_share_favorite_btn_label_already "Уже в избранном">
+<!ENTITY pref_sync_summary3 "Синхронизировать вкладки, избранное, логины, историю">
+<!ENTITY pref_import_android_summary2 "Импортировать избранное и историю из стандартного браузера">
+<!ENTITY pref_dialog_activitystream_recentFavorites "Недавнее избранное">
+<!ENTITY favorite_edit_title "Изменить избранное">
+<!ENTITY home_favorites_empty "Сохраненное избранное отображаются здесь.">
+<!ENTITY favoritehistory_import_both "Импорт избранного и истории
+                                      из Android">
+<!ENTITY favoritehistory_import_favorites "Импорт избранного
+                                           из Android">
+<!ENTITY searchable_description2 "Избранное и история">
+<!ENTITY new_guest_session_text3 "Человек, который польщуется им, не сможет просмотреть никакие Ваши личные данные, связанные с работой в Интернете (например, сохраненные логины, историю или избранное).\n\nКогда гость закончил работу в браузере, его данные будут удалены, а Ваша сессия восстановлена.">
+<!ENTITY restrictable_feature_advanced_settings_description2 "Это включает в себя импорт избранного, восстановление вкладок и автоматические обновления. Отключите для упрощенных настроек, подхдящих для любого члена семьи.">
+<!ENTITY helper_first_offline_favorite_message "Осуществляйте поиск элементов в режиме чтения даже в автономном режиме.">
+<!ENTITY helper_first_offline_favorite_button "Перейти к избранному">
+<!ENTITY helper_triple_readerview_open_message2 "Добавьте в избранное элементы в режиме чтения для их просмотра в автономном режиме.">
+<!ENTITY helper_triple_readerview_open_button2 "Добавить в избранное">
+
+<!-- Default Browser Dialog -->
+<!ENTITY default_browser_title "&brandShortName; в качестве браузера по умолчанию">
+<!ENTITY default_browser_message "Кажется, Вам понравилось пользоваться &brandShortName;. Желаете сделать его браузером по умолчанию?">
+<!ENTITY default_browser_dialog_proceed "ПРОДОЛЖИТЬ">
+<!ENTITY default_browser_dialog_cancel "ОТМЕНА">
+
+<!-- Settings -->
+<!-- Human Web -->
+<!ENTITY pref_category_human_web "Human Web">
+<!ENTITY pref_what_is_human_web "Что такое Human Web?">
+<!ENTITY pref_enable_human_web "Включить Human Web">
+<!ENTITY pref_category_human_web_summary "Что, Включено">
+
+<!-- MyOffrz -->
+<!ENTITY myoffrz_title "&brandMyOffrz;">
+<!ENTITY myoffrz_no_offers_title "Похоже, у нас нет никаких предложений">
+<!ENTITY myoffrz_no_offers_msg_line1 "Но мы продолжим наблюдать за Вами и искать рекламу">
+<!ENTITY myoffrz_no_offers_msg_line2 "они появятся, как только станут доступны">
+<!ENTITY myoffrz_onboarding_description "Получайте привлекательные скидки и предложения &brandMyOffrz;">
+<!ENTITY myoffrz_order_now_label "Заказать сейчас!">
+<!ENTITY myoffrz_tap_code_to_copy_label "Нажмите на код, чтобы скопировать">
+<!ENTITY myoffrz_terms_and_conditions_label "Положения">
+<!ENTITY myoffrz_message_code_copied "Код скопирован">
+
+<!-- Block Ads -->
+<!ENTITY pref_category_block_ads "Блокировать рекламу (Бета)">
+<!ENTITY pref_category_block_ads_summary "Блокировать рекламу, Согласованная блокировка, Что такое &quot;согласованная блокировка&quot;?">
+<!ENTITY pref_block_ads "Заблокировать рекламу">
+<!ENTITY pref_block_ads_fair "Согласованная блокировка">
+<!ENTITY pref_block_ads_what_fair "Что такое \'согласованная\'">
+<!ENTITY pref_block_ads_fair_description "Блокировщик рекламы в данный момент находится в стадии бета-теста. В финальной версии будут доступны следующие опции: Разрещить согласованную рекламу (настройка по умолчанию), Блокировать всю рекламу, Разрешить всю рекламу. Дополнительная информация\nhttps://cliqz.com/whycliqz/adblocking">
+<!ENTITY pref_block_ads_data "Обратите внимание: чтобы блокировщик рекламы начал работать эффективно, браузер Ghostery должен сначала загрузить некоторые пакеты данных. Для этого приложение должно быть подключено к Wi-Fi.">
+
+<!-- Rate Us -->
+<!ENTITY pref_category_rate_us "Оцените нас">
+
+<!-- Cliqz Support -->
+<!ENTITY pref_cliqz_support "FAQ и поддержка">
+
+<!-- Tips & Tricks -->
+<!ENTITY pref_tips_tricks "Максимально эффективно используйте &brandShortName;">
+
+<!-- Report Website -->
+<!ENTITY pref_report_website "Сообщить о веб-сайте">
+
+<!-- Control Center -->
+<!ENTITY cc_title_overview "ОБЗОР">
+<!ENTITY cc_title_site_trackers "ТРЕКЕРЫ САЙТА">
+<!ENTITY cc_title_global_trackers "ВСЕ ТРЕКЕРЫ">
+<!ENTITY cc_zero_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_one_trackers_found "Найден трекер &formatD;\n">
+<!ENTITY cc_two_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_few_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_many_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_other_trackers_found "Найдено трекеров &formatD;\n">
+<!ENTITY cc_zero_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_one_trackers_blocked "Заблокирован трекер &formatD;">
+<!ENTITY cc_two_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_few_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_many_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_other_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_zero_trackers "Трекеры &formatD;">
+<!ENTITY cc_one_trackers "Трекер &formatD;">
+<!ENTITY cc_two_trackers "Трекеры &formatD;">
+<!ENTITY cc_few_trackers "Трекеры &formatD;">
+<!ENTITY cc_many_trackers "Трекеры &formatD;">
+<!ENTITY cc_other_trackers "Трекеры &formatD;">
+<!ENTITY cc_trust_site "Доверять сайту">
+<!ENTITY cc_restrict_site "Запретить сайт">
+<!ENTITY cc_pause_ghostery "Приостановить Ghostery">
+<!ENTITY cc_resume_ghostery "Возобновить работу Ghostery">
+<!ENTITY cc_enhanced_options "Расширенные параметры">
+<!ENTITY cc_enhanced_anti_tracking "Улучшенный анти-трекинг">
+<!ENTITY cc_enhanced_ad_blocking "Усоверш. блок. рекламы">
+<!ENTITY cc_smart_blocking "Умная блокировка">
+<!ENTITY cc_enhanced_anti_tracking_info "Информация об улучшенном анти-трекинге">
+<!ENTITY cc_enhanced_ad_blocking_info "Информация об усовершенствованной блокировке рекламы">
+<!ENTITY cc_smart_blocking_info "Информация об улучшенном анти-трекинге">
+<!ENTITY cc_zero_anti_tracking_blocked "Личные данные обезличены">
+<!ENTITY cc_one_anti_tracking_blocked "Личные данные обезличены">
+<!ENTITY cc_two_anti_tracking_blocked "Личные данные обезличены">
+<!ENTITY cc_few_anti_tracking_blocked "Личные данные обезличены">
+<!ENTITY cc_many_anti_tracking_blocked "Личные данные обезличены">
+<!ENTITY cc_other_anti_tracking_blocked "Личные данные обезличены">
+<!ENTITY cc_zero_ad_blocking_blocked "Реклама заблокирована">
+<!ENTITY cc_one_ad_blocking_blocked "Реклама заблокирована">
+<!ENTITY cc_two_ad_blocking_blocked "Реклама заблокирована">
+<!ENTITY cc_few_ad_blocking_blocked "Реклама заблокирована">
+<!ENTITY cc_many_ad_blocking_blocked "Реклама заблокирована">
+<!ENTITY cc_other_ad_blocking_blocked "Реклама заблокирована">
+<!ENTITY cc_zero_smart_blocking_blocked "Трекеры скорректированы">
+<!ENTITY cc_one_smart_blocking_blocked "Трекер скорректирован">
+<!ENTITY cc_two_smart_blocking_blocked "Трекеры скорректированы">
+<!ENTITY cc_few_smart_blocking_blocked "Трекеры скорректированы">
+<!ENTITY cc_many_smart_blocking_blocked "Трекеры скорректированы">
+<!ENTITY cc_other_smart_blocking_blocked "Трекеры скорректированы">
+<!ENTITY cc_anti_tracking_about "Анонимизировать разблокированные и неизвестные трекеры для обеспечения большей защиты браузера">
+<!ENTITY cc_ad_blocking_about "Выполняет блокировку рекламы на сайтах, которые вы посещаете">
+<!ENTITY cc_smart_blocking_about "Блокировка трекеров откорректирована для оптимизации работы страницы">
+<!ENTITY cc_site_trackers_list_title "Трекеры на этом сайте">
+<!ENTITY cc_global_trackers_list_title "Трекеры по сайтам">
+<!ENTITY cc_reset_settings "Сбросить изменения">
+<!ENTITY cc_settings_menu "Меню Настройки">
+<!ENTITY cc_on_this_site "На этом сайте">
+<!ENTITY cc_trackers "ТРЕКЕРЫ">
+<!ENTITY cc_blocked "Заблокированные">
+<!ENTITY cc_num_blocked "ЗАБЛОКИРОВАНО &formatD;">
+<!ENTITY cc_tracker_info "Информация о трекере">
+<!ENTITY cc_block_all "Заблокировать все">
+<!ENTITY cc_unblock_all "Разблокировать все">
+<!ENTITY cc_block "Заблокировать">
+<!ENTITY cc_unblock "Разблокировать">
+<!ENTITY cc_trust "Доверять">
+<!ENTITY cc_untrust "Перестать доверять">
+<!ENTITY cc_restrict "Запретить">
+<!ENTITY cc_unrestrict "Разрешить">
+<!ENTITY cc_toast_overview_restrict "На этом сайте все трекеры заблокированы">
+<!ENTITY cc_toast_overview_trust "На этом сайте все трекеры разрешены">
+<!ENTITY cc_toast_site_trust "Разрешенный трекер на этом сайте">
+<!ENTITY cc_toast_site_restrict "На этом сайте трекер заблокирован">
+<!ENTITY cc_toast_site_block "Трекер заблокирован на всех сайтах">
+<!ENTITY cc_reset_changes_dialog_title "Сбросить все изменения?">
+<!ENTITY cc_reset_changes_dialog_message "Все предыдущие изменения по сайту и глобальным трекерам будут сброшены.">
+<!ENTITY cc_reset "СБРОСИТЬ">
+
+<!-- General Settings - Search-->
+<!ENTITY pref_search_category "Поиск">
+<!ENTITY pref_search_regional "Результаты поиска для">
+<!ENTITY pref_search_regional_germany "Германия">
+<!ENTITY pref_search_regional_france "Франция">
+<!ENTITY pref_search_regional_usa "Соединенные Штаты">
+<!ENTITY pref_search_regional_spain "Испания">
+<!ENTITY pref_search_regional_italy "Италия">
+<!ENTITY pref_search_regional_uk "Великобритания">
+<!ENTITY pref_search_query_suggestions "Предложения поисковых запросов">
+<!ENTITY pref_search_block_adult_content "Блокировать нецензурное содержимое">
+<!ENTITY pref_search_auto_completion "Включить автозаполнение">
+<!ENTITY pref_search_complementary_engine "Поисковая система с дополнениями">
+<!ENTITY pref_search_complementary_engine_Google "Google">
+<!ENTITY pref_search_complementary_engine_bing "bing">
+<!ENTITY pref_search_complementary_engine_yahoo "yahoo">
+<!ENTITY pref_search_complementary_engine_duck "DuckDuckGo">
+<!ENTITY pref_search_complementary_engine_ecosia "Ecosia">
+<!ENTITY pref_search_complementary_engine_start_page "StartPage">
+<!ENTITY pref_search_complementary_engine_qwant "Qwant">
+<!ENTITY pref_search_enable_browser_quicksearch "Включить быстрый поиск">
+<!ENTITY pref_search_enable_browser_quicksearch_summary "Получайте мгновенные результаты по мере ввода текста">
+
+<!-- General Settings - Browsing -->
+<!ENTITY pref_browsing_category "Навигация">
+
+<!-- General Settings - CliqzTab -->
+<!ENTITY pref_category_general_summary4 "Поиск, &pref_new_tab_category;, Навигация, Уведомления, Загрузка, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_background "Показать фоновое изображение">
+<!ENTITY pref_cliqz_tab_topsites "Показать самые посещаемые веб-сайты">
+<!ENTITY pref_cliqz_tab_news "Показать новости">
+<!ENTITY pref_cliqz_tab_restore_top_sites "Восстановить самые посещаемые веб-сайты">
+<!ENTITY pref_cliqz_tab_restore_top_sites_description "На стартовой странице отображаются самые посещаемые веб-сайты">
+
+<!-- General Settings - myOffrz -->
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "Показать &brandMyOffrz;">
+<!ENTITY pref_about_myoffrz "Информация о &brandMyOffrz;">
+
+<!-- General Settings - Subscriptions and Notifications
+<!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
+<!ENTITY pref_news_notifications "News notifications">
+<!ENTITY pref_reset_subscriptions "Reset all subscriptions">
+<!ENTITY pref_reset_subscriptions_description "Would you like to reset all your subscriptions (e.g. to Bundesliga games)?">
+<!ENTITY pref_reset_subscriptions_toast "All subscriptions reset"> -->
+
+<!-- Privacy Settings -->
+<!ENTITY pref_privacy_clear_data_category "Сбросить данные">
+<!ENTITY pref_privacy_clear_favorites "Очистить избранное">
+<!ENTITY pref_privacy_clear_favorites_description "Желаете очистить избранное?">
+<!ENTITY pref_category_ghostery_control_center "Центр управления Ghostery">
+<!ENTITY pref_ghostery_auto_update_title "Автоматически обновлять библиотеку трекеров">
+<!ENTITY pref_ghostery_allow_first_party_title "Разрешить трекеры, созданные владельцами сайтов">
+<!ENTITY pref_ghostery_allow_first_party_summary "Например, блокировка трекера Facebook на странице facebook.com может нарушить работу веб-сайта">
+<!ENTITY pref_ghostery_block_new_trackers_title "Блокировать новые трекеры">
+<!ENTITY pref_ghostery_block_new_trackers_summary "Новые трекеры, добавленные в Ghostery, заблокированы по умолчанию.">
+<!ENTITY pref_location_permission_title "Разрешения по использованию местоположения">
+
+<!-- General Settings - Download Options -->
+<!ENTITY pref_download_options_category "Параметры загрузки">
+<!ENTITY pref_limit_data_usage "Ограничить мобильные данные">
+<!ENTITY pref_limit_data_usage_summary "Загружать видео только по Wi-Fi">
+
+<!-- General Settings - Show hints -->
+<!ENTITY pref_show_hints "Показать подсказки">
+
+<!-- Privacy Settings - Browsing -->
+<!ENTITY pref_privacy_browsing_category "Навигация">
+<!ENTITY pref_privacy_antitracking "Анти-трекинг">
+<!ENTITY pref_privacy_auto_forget_tab "Автоматически забывать вкладку">
+
+<!-- Help Settings -->
+<!ENTITY pref_category_help "Помощь">
+<!ENTITY pref_category_help_summary "Лучшее из &brandShortName;, FAQ , Сообщите о веб-сайте">
+
+<!-- About Settings -->
+<!ENTITY pref_category_about_us "О нас">
+<!ENTITY pref_category_about_us_summary
+    "Версия приложения, Расширенная версия, Политики и лицензии, Выходные данные">
+<!ENTITY pref_app_version "Версия приложения">
+<!ENTITY pref_about_arn "ARN устройства">
+<!ENTITY pref_extension_version "Расширенная версия">
+<!ENTITY pref_category_policies_licenses "Политики и лицензии">
+<!ENTITY pref_about_privacy_policy "Политика конфиденциальности">
+<!ENTITY pref_about_eula "Лицензионное соглашение для конечного пользователя">
+<!ENTITY pref_about_android_open_source_project "Проект Android с открытым исходным кодом">
+<!ENTITY pref_about_android_open_source_project_summary "Apache License 2.0">
+<!ENTITY pref_about_hp_hosts_ad_server "Список рекламных серверов hpHosts">
+<!ENTITY pref_about_hp_hosts_ad_server_summary "Бесплатное ПО">
+<!ENTITY pref_about_crux "Crux">
+<!ENTITY pref_about_crux_summary "Apache License 2.0">
+<!ENTITY pref_about_imprint "Выходные данные">
+
+<!-- Specific browser subtext -->
+<!ENTITY firstrun_urlbar_subtext2_cliqz "Cliqz - быстрый и конфиденциальный браузер. Сделано в Германии.">
+<!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - поддерживайте чистоту, скорость работы и безопасность работы в Интернете">
+
+<!-- Ghostery onboarding -->
+<!ENTITY ghostery_onboarding_new_users_title "Представляем &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_text "Пользуйтесь Интернетом быстро и безопасно с Ghostery браузером. Теперь и в Вашем смартфоне!">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Поддержите Ghostery, поделившись анонимной аналитикой и данными Human Web, чтобы улучшить производительность Ghostery. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022&gt;Подробнее\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_tracking_protection_title "Блокировка рекламы и трекеров">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Выберите что &brandShortName; будет блокировать и пользуйтесь Интернетом быстро и безопасно. Вы можете изменять или настраивать эти функции в любое время в центре управления конфиденциальностью.">
+<!ENTITY ghostery_onboarding_tracking_protection_radio1 "Не блокировать">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2 "Блокировать рекомендуемые">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Реклама, аналитика веб-сайтов, трекеры нецензурной рекламы">
+<!ENTITY ghostery_onboarding_tracking_protection_radio3 "Блокировать всё">
+<!ENTITY ghostery_onboarding_quick_search_title "Поиск Ghost">
+<!ENTITY ghostery_onboarding_quick_search_text "Сохраняйте анонимность, экономьте время и объем данных: получайте мгновенные результаты по мере ввода текста в панеле поиска Ghost.">
+<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_text "Каждая &pref_new_tab_category; содержит главные сайты, новости, подсказки о трекерах и может быть персонализирована.">
+<!ENTITY ghostery_onboarding_action_button "Войти в Интернет">
+<!ENTITY ghostery_onboarding_contextual_title "Защита от трекинга включена">
+<!ENTITY ghostery_onboarding_contextual_item1_title "Улучшенный анти-трекинг">
+<!ENTITY ghostery_onboarding_contextual_item1_text "Обеспечивает дополнительную защиту ваших личных данных.">
+<!ENTITY ghostery_onboarding_contextual_item2_title "Умная блокировка и блокировка рекламы">
+<!ENTITY ghostery_onboarding_contextual_item2_text "Оптимизировать производительность во время работы в Интернете">
+<!ENTITY ghostery_onboarding_contextual_text "Вы можете включить или отключить эти функции в любое время в центре управления &brandShortName;.">
+<!ENTITY ghostery_onboarding_contextual_button "Показать сейчас">
+
+<!-- Ghost Tab -->
+<!ENTITY new_ghost_tab_opened "Открыта новая вкладка Ghost">
+<!ENTITY new_ghost_tab "Новая вкладка Ghost">
+<!ENTITY close_ghost_tabs "Закрыть вкладки Ghost">
+<!ENTITY contextmenu_open_ghost_tab "Открыть во вкладке Ghost">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: &formatS1;Новая вкладка Ghost&formatS2; не будет сохранять историю.">
+<!ENTITY private_tab_panel_title2 "Ghost Mode">
+<!ENTITY private_tab_panel_description3 "You are browsing in Ghost Mode: Websites you visit in this mode will not be saved in your history, and local data, including cookies, will not be stored.">
+
+<!-- Anti-phishing -->
+<!ENTITY antiphishing_dialog_title "Warning: deceptive website!">
+<!ENTITY antiphishing_message "&brandShortName; has blocked access to &#37;1&#036;s because it has been reported as a phishing website. Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.">
+<!ENTITY antiphishing_walk_away "Back to safe site">
+<!ENTITY antiphishing_ignore_danger "Continue despite warning">

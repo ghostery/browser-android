@@ -20,6 +20,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -51,7 +52,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.mozilla.gecko.AboutPages;
@@ -90,7 +90,6 @@ import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.InputOptionsUtils;
-import org.mozilla.gecko.util.SubscriptionsManager;
 import org.mozilla.gecko.util.ThreadUtils;
 import org.mozilla.gecko.util.ViewUtil;
 
@@ -102,7 +101,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
+import static org.mozilla.gecko.AppConstants.MOZ_APP_VERSION;
 
 public class GeckoPreferences
     extends AppCompatPreferenceActivity
@@ -258,6 +257,7 @@ public class GeckoPreferences
     private PreferenceGroup mSearchQuerySuggestionsPrefGroup;
 
     public static final String PREFS_APP_LAUNCH_COUNT = "app_launch_count";
+    public static final String PREFS_HELP_SUPPORT = NON_PREF_PREFIX + "help.support";
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
@@ -883,7 +883,7 @@ public class GeckoPreferences
                         pref.setOnPreferenceChangeListener(this);
                 } else if (PREFS_FAQ_LINK.equals(key)) {
                     // Format the FAQ link
-                    final String VERSION = AppConstants.MOZ_APP_VERSION;
+                    final String VERSION = MOZ_APP_VERSION;
                     final String OS = AppConstants.OS_TARGET;
                     final String LOCALE = Locales.getLanguageTag(Locale.getDefault());
 
@@ -892,7 +892,7 @@ public class GeckoPreferences
                 } else if (PREFS_FEEDBACK_LINK.equals(key)) {
                     // Format the feedback link. We can't easily use this "app.feedbackURL"
                     // Gecko preference because the URL must be formatted.
-                    final String url = getResources().getString(R.string.feedback_link, AppConstants.MOZ_APP_VERSION, AppConstants.MOZ_UPDATE_CHANNEL);
+                    final String url = getResources().getString(R.string.feedback_link, MOZ_APP_VERSION, AppConstants.MOZ_UPDATE_CHANNEL);
                     ((LinkPreference) pref).setUrl(url);
                 /* Cliqz start o/
                 } else if (PREFS_DYNAMIC_TOOLBAR.equals(key)) {
@@ -967,7 +967,7 @@ public class GeckoPreferences
                     });
                 } else if (PREFS_ABOUT_APP_VERSION_NAME.equals(key)) {
                     // set app version name
-                    pref.setSummary(AppConstants.MOZ_APP_VERSION);
+                    pref.setSummary(MOZ_APP_VERSION);
                 } else if (PREFS_ABOUT_SEARCH_VERSION.equals(key)) {
                     // set extension version
                     pref.setSummary(AppConstants.CLIQZ_SEARCH_VERSION);
@@ -1026,6 +1026,26 @@ public class GeckoPreferences
                         i--;
                     }
                     continue;
+                } else if(PREFS_HELP_SUPPORT.equals(key)) {
+                    pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            final Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri
+                                    .fromParts("mailto", getString(R.string.support_email),
+                                            null));
+                            final StringBuilder body = new StringBuilder();
+                            body.append("Device: ").append(Build.DEVICE)
+                                    .append("\nOS-Version: ").append(Build.VERSION.SDK_INT)
+                                    .append("\nApp-Version: ").append(MOZ_APP_VERSION);
+                            emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+                                    getString(R.string.support_mail_subject));
+                            emailIntent.putExtra(Intent.EXTRA_TEXT,
+                                    body.toString());
+                            startActivity(Intent.createChooser(emailIntent,
+                                    getString(R.string.support_email_chooser_title)));
+                            return true;
+                        }
+                    });
                 }
                 /* Cliqz end */
 

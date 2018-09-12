@@ -51,6 +51,7 @@
 <!ENTITY pref_what_is_human_web "What is Human Web?">
 <!ENTITY pref_enable_human_web "Enable Human Web">
 <!ENTITY pref_category_human_web_summary "What, Enable">
+<!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
@@ -74,15 +75,6 @@
 
 <!-- Rate Us -->
 <!ENTITY pref_category_rate_us "Rate Us">
-
-<!-- Cliqz Support -->
-<!ENTITY pref_cliqz_support "FAQs &amp; Support">
-
-<!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Get the best out of &brandShortName;">
-
-<!-- Report Website -->
-<!ENTITY pref_report_website "Report Website">
 
 <!-- Control Center -->
 <!ENTITY cc_title_overview "OVERVIEW">
@@ -237,7 +229,10 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Help">
-<!ENTITY pref_category_help_summary "Best out of &brandShortName;, FAQ , Report Website">
+<!ENTITY pref_category_help_summary "FAQ, Support">
+<!ENTITY pref_help_faq "FAQs">
+<!ENTITY pref_help_support "Support">
+<!ENTITY support_email_chooser_title "Send email...">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "About us">
@@ -263,11 +258,10 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Introducing &brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Keep your browsing cleaner, faster, and safer.">
-<!ENTITY ghostery_onboarding_old_users_title "Introducing new &brandShortName;">
-<!ENTITY ghostery_onboarding_old_users_text "Support &brandShortName; by participating in &brandMyOffrz; and share Human Web &amp; analytics data. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022>Learn more\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_text "Browse cleaner, faster, and safer on-the-go with &brandShortName;, now optimized for mobile!">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Support &brandShortName; by sharing anonymous analytics and Human Web data to improve Ghostery’s performance. \u003Ca href=\u0022&human_web_info_url;\u0022>Learn more\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Ad &amp; Tracker Blocking">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Choose what you want Ghostery to block for cleaner, faster, and safer browsing. You can change and customize these settings at any time in the Privacy Control Center.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Choose what you want &brandShortName; to block for cleaner, faster, and safer browsing. You can change and customize these settings at any time in the Privacy Control Center.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Block Nothing">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Block Recommended">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Advertising, Site Analytics and Adult Advertising trackers">

@@ -11,6 +11,7 @@ ChromeUtils.import("resource://gre/modules/Messaging.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/TelemetryController.jsm");
+const { UUIDMap } = ChromeUtils.import("resource://gre/modules/Extension.jsm", {});
 
 if (AppConstants.ACCESSIBILITY) {
   ChromeUtils.defineModuleGetter(this, "AccessFu",
@@ -6389,7 +6390,6 @@ var Cliqz = {
     this.extensionMessageQueue = [];
     this.searchExtensionReady = false;
     GlobalEventDispatcher.registerListener(this, [
-      "Search:GetStatus",
       "Search:Hide",
       "Search:Search",
       "Search:Show",
@@ -6491,8 +6491,7 @@ var Cliqz = {
     return {
       browser,
       load: function(path) {
-        const uuids = Services.prefs.getStringPref("extensions.webextensions.uuids", "{}");
-        const uuid = JSON.parse(uuids)[id];
+        const uuid = UUIDMap.get(id);
 
         browser.loadURI("moz-extension://" + uuid + "/" + path);
       },
@@ -6542,6 +6541,7 @@ var Cliqz = {
           return;
         }
         this.searchExtensionReady = true;
+        this._syncSearchPrefs();
         this.extensionMessageQueue.forEach(msg => this.messageSearchExtension(msg));
         this.extensionMessageQueue = [];
         break;
@@ -6676,49 +6676,11 @@ var Cliqz = {
     return true;
   },
 
-  _syncSearchPrefs({ module }) {
+  _syncSearchPrefs() {
     const messages = [];
-    // The service prefs is autoritative
-    const indexCountries = module.search.supportedIndexCountries;
-    // Check if extension has a default
-    const extSearchIndexDefault =
-      Object.keys(indexCountries).find((key) => {
-        return indexCountries[key].selected;
-      });
-    var searchIndex = extSearchIndexDefault ? extSearchIndexDefault : "us";
-    try {
-      searchIndex = Services.prefs.getCharPref("pref.search.regional");
-    } catch (error) {
-      // Oops, we do not have the preference. Let's create one using the
-      // extension default
-      Services.prefs.setCharPref("pref.search.regional", searchIndex);
-    }
-    // Now we have a solid default or a valid preference, let's set it back to
-    // the extension
-    messages.push(["setBackendCountry", searchIndex]);
-
-    const adultState = module.adult.state;
-    const extBlockAdultContentDefault =
-      Object.keys(adultState).find((key) => {
-       return adultState[key].selected;
-      }) === "conservative";
-    var blockAdultContent = extBlockAdultContentDefault ?
-      extBlockAdultContentDefault : true;
-    try {
-      blockAdultContent =
-        Services.prefs.getBoolPref("pref.search.block.adult.content");
-    } catch (error) {
-      Services.prefs.setBoolPref("pref.search.block.adult.content", blockAdultContent);
-    }
-    messages.push(["setAdultFilter", blockAdultContent ? "conservative" : "liberal" ]);
-
-    var showQuerySuggestions = Boolean(module.search.showQuerySuggestions);
-    try {
-      showQuerySuggestions = Services.prefs.getBoolPref("pref.search.query.suggestions");
-    } catch (error) {
-      Services.prefs.setBoolPref("pref.search.query.suggestions", showQuerySuggestions);
-    }
-    messages.push(["setQuerySuggestions", showQuerySuggestions]);
+    messages.push(["setBackendCountry", Services.prefs.getCharPref("pref.search.regional")]);
+    messages.push(["setAdultFilter", Services.prefs.getBoolPref("pref.search.block.adult.content") ? "conservative" : "liberal" ]);
+    messages.push(["setQuerySuggestions", Services.prefs.getBoolPref("pref.search.query.suggestions")]);
 
     messages.forEach((msg) => {
       this.messageSearchExtension({
@@ -6739,13 +6701,6 @@ var Cliqz = {
           action: "handleTelemetrySignal",
           args: [msg, immediate, schema]
         });
-        break;
-      case "Search:GetStatus":
-        this.messageSearchExtension({
-          module: "control-center",
-          action: "status",
-          args: []
-        }).then((...args) => this._syncSearchPrefs(...args));
         break;
       case "Search:Hide":
         this.hidePanel(this.Search.browser);

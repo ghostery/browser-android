@@ -68,7 +68,8 @@ def build(Map m){
                         stage("Build APK: ${flavorname}") {
                             withEnv([
                                 "ANDROID_TARGET=${androidtarget}",
-                                "BRAND=${flavorname}"
+                                "BRAND=${flavorname}",
+                                "CLIQZ_CHANNEL=MA99"
                                 ]) {
                                 sh '''#!/bin/bash -l
                                     set -x

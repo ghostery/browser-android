@@ -204,6 +204,7 @@ import org.mozilla.gecko.widget.AnchoredPopup;
 import org.mozilla.gecko.widget.AnimatedProgressBar;
 import org.mozilla.gecko.widget.GeckoActionProvider;
 import org.mozilla.gecko.widget.SplashScreen;
+import org.mozilla.gecko.widget.themed.ThemedTabLayout;
 import org.mozilla.geckoview.GeckoSession;
 
 import java.io.File;
@@ -241,7 +242,8 @@ public class BrowserApp extends GeckoApp
                                    /* Cliqz Start */
                                    ControlCenterViewPager.ControlCenterCallbacks,
                                    AntiPhishing.AntiPhishingCallback,
-                                   AntiPhishingDialog.AntiPhishingDialogActionListener {
+                                   AntiPhishingDialog.AntiPhishingDialogActionListener,
+                                   CliqzIntroPagerAdapter.CliqzIntroClosedListener {
                                    /* Cliqz End */
     private static final String LOGTAG = "GeckoBrowserApp";
 
@@ -974,7 +976,7 @@ public class BrowserApp extends GeckoApp
         mControlCenterPagerAdapter.addFragment(globalTrackersFragment);
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.control_center_tab_layout);
+        final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
         /*Cliqz end*/
@@ -1376,6 +1378,10 @@ public class BrowserApp extends GeckoApp
                 // ends when the browsing session/activity has ended. All events
                 // during firstrun will be tagged as FIRSTRUN.
                 Telemetry.startUISession(TelemetryContract.Session.FIRSTRUN);
+                /* Cliqz start */
+            } else {
+                enterEditingMode();
+                /* Cliqz end */
             }
         } finally {
             StrictMode.setThreadPolicy(savedPolicy);
@@ -2339,11 +2345,9 @@ public class BrowserApp extends GeckoApp
             case "CharEncoding:State":
                 final boolean visible = "true".equals(message.getString("visible"));
                 GeckoPreferences.setCharEncodingState(visible);
-                /* Cliqz Start o/
                 if (mMenu != null) {
                     mMenu.findItem(R.id.char_encoding).setVisible(visible);
                 }
-                /o Cliqz End */
                 break;
 
             case "Experiments:GetActive":
@@ -3345,7 +3349,7 @@ public class BrowserApp extends GeckoApp
             //     }
             // });
             mCliqzIntoPager = (ViewPager) findViewById(R.id.cliqz_intro_pager);
-            mCliqzIntoPager.setAdapter(new CliqzIntroPagerAdapter(getBaseContext()));
+            mCliqzIntoPager.setAdapter(new CliqzIntroPagerAdapter(getBaseContext(), this));
             mCliqzIntoPager.setVisibility(View.VISIBLE);
             /* Cliqz End */
         }
@@ -3367,7 +3371,11 @@ public class BrowserApp extends GeckoApp
         // This must be called before the dynamic toolbar is set visible because it calls
         // FormAssistPopup.onMetricsChanged, which queues a runnable that undoes the effect of hide.
         // With hide first, onMetricsChanged will return early instead.
-        mFormAssistPopup.hide();
+        /* Cliqz Start */
+        if (mFormAssistPopup != null) {
+            mFormAssistPopup.hide();
+        }
+        /* Cliqz End */
         mFindInPageBar.hide();
 
         // Refresh toolbar height to possibly restore the toolbar padding
@@ -4021,7 +4029,7 @@ public class BrowserApp extends GeckoApp
         //final MenuItem saveAsPDF = aMenu.findItem(R.id.save_as_pdf);
         //final MenuItem print = aMenu.findItem(R.id.print);
         //final MenuItem viewPageSource = aMenu.findItem(R.id.view_page_source);
-        //final MenuItem charEncoding = aMenu.findItem(R.id.char_encoding);
+        final MenuItem charEncoding = aMenu.findItem(R.id.char_encoding);
         //final MenuItem enterGuestMode = aMenu.findItem(R.id.new_guest_session);
         //final MenuItem exitGuestMode = aMenu.findItem(R.id.exit_guest_session);
         final MenuItem bookmark = aMenu.findItem(R.id.bookmark);
@@ -4235,7 +4243,7 @@ public class BrowserApp extends GeckoApp
         MenuUtils.safeSetVisible(aMenu, R.id.add_to_launcher, notInAboutHome);
         // viewPageSource.setEnabled(notInAboutHome);
 
-        // charEncoding.setVisible(GeckoPreferences.getCharEncodingState());
+        charEncoding.setVisible(GeckoPreferences.getCharEncodingState());
 
         // if (getProfile().inGuestMode()) {
             // exitGuestMode.setVisible(true);
@@ -4458,7 +4466,6 @@ public class BrowserApp extends GeckoApp
         }
 
         if (itemId == R.id.settings) {
-            EventDispatcher.getInstance().dispatch("Search:GetStatus", new GeckoBundle());
             intent = new Intent(this, GeckoPreferences.class);
             // We want to know when the Settings activity returns, because
             // we might need to redisplay based on a locale change.
@@ -5179,6 +5186,11 @@ public class BrowserApp extends GeckoApp
                 antiPhishingDialog.show();
             }
         });
+    }
+
+    @Override
+    public void enterFirstRunEditingMode() {
+        enterEditingMode();
     }
 
     @Override

@@ -20,7 +20,9 @@ node('master') {
                         set -e
                         set -x
                         cd mozilla-release
-                        cp ../mozconfigs/jenkins.mozconfig mozconfig
+                        cp ../mozconfigs/deploy.mozconfig mozconfig
+                        export HOST_CC=$CLANG_HOME/bin/clang
+                        export HOST_CXX=$CLANG_HOME/bin/clang++
                         ./mach clobber
                         ./mach build
                         for lang in `ls ../l10n/`; do
@@ -54,7 +56,9 @@ node('master') {
                         set -e
                         set -x
                         cd mozilla-release
-                        cp ../mozconfigs/jenkins.mozconfig mozconfig
+                        cp ../mozconfigs/deploy.mozconfig mozconfig
+                        export HOST_CC=$CLANG_HOME/bin/clang
+                        export HOST_CXX=$CLANG_HOME/bin/clang++
                         ./mach clobber
                         ./mach build
                         for lang in `ls ../l10n/`; do

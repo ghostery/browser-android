@@ -377,6 +377,9 @@ pref("dom.max_script_run_time", 20);
 pref("devtools.debugger.unix-domain-socket", "/data/data/@ANDROID_PACKAGE_NAME@/firefox-debugger-socket");
 
 // Cliqz start
+pref("pref.search.regional", "us");
+pref("pref.search.block.adult.content", true);
+pref("pref.search.query.suggestions", true);
 #ifdef MOZ_DEFAULT_USB_DEBUG
 pref("devtools.remote.usb.enabled", true);
 #else
@@ -429,11 +432,25 @@ pref("browser.ui.selection.distance", 250);
 pref("plugin.disable", true);
 pref("dom.ipc.plugins.enabled", false);
 
+/* Cliqz start */
 // product URLs
 // The breakpad report server to link to in about:crashes
+#if APP_NAME == ghostery
+pref("breakpad.reportURL", "https://reports.ghostery.com/report/index/");
+#elif APP_NAME == cliqz
+pref("breakpad.reportURL", "https://reports.cliqz.com/report/index/");
+#else
 pref("breakpad.reportURL", "https://crash-stats.mozilla.com/report/index/");
+#endif
 
+#if APP_NAME == ghostery
+pref("app.support.baseURL", "https://www.ghostery.com/faqs/");
+#elif APP_NAME == cliqz
+pref("app.support.baseURL", "https://cliqz.com/support");
+#else
 pref("app.support.baseURL", "https://support.mozilla.org/1/mobile/%VERSION%/%OS%/%LOCALE%/");
+#endif
+/* Cliqz end */
 pref("app.supportURL", "https://support.mozilla.org/1/mobile/%VERSION%/%OS%/%LOCALE%/mobile-help");
 pref("app.faqURL", "https://support.mozilla.org/1/mobile/%VERSION%/%OS%/%LOCALE%/faq");
 

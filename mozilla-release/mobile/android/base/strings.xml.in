@@ -733,19 +733,6 @@
   <!-- Rate Us -->
   <string name="pref_category_rate_us">&pref_category_rate_us;</string>
 
-
-  <!-- Support Cliqz -->
-  <string name="pref_cliqz_support_url">&pref_cliqz_support_url;</string>
-  <string name="pref_cliqz_support">&pref_cliqz_support;</string>
-
-  <!-- Tips & tricks -->
-  <string name="pref_tips_tricks">&pref_tips_tricks;</string>
-  <string name="pref_tips_tricks_url">&pref_tips_tricks_url;</string>
-
-  <!-- Report Website -->
-  <string name="pref_report_website_url">&pref_report_website_url;</string>
-  <string name="pref_report_website">&pref_report_website;</string>
-
   <!-- Control Center -->
   <string name="cc_title_overview">&cc_title_overview;</string>
   <string name="cc_title_site_trackers">&cc_title_site_trackers;</string>
@@ -913,6 +900,12 @@
   <!-- Help Settings -->
   <string name="pref_category_help">&pref_category_help;</string>
   <string name="pref_category_help_summary">&pref_category_help_summary;</string>
+  <string name="pref_help_faq_url">&pref_help_faq_url;</string>
+  <string name="pref_help_faq">&pref_help_faq;</string>
+  <string name="pref_help_support">&pref_help_support;</string>
+  <string name="support_email">&support_email;</string>
+  <string name="support_mail_subject">&support_mail_subject;</string>
+  <string name="support_email_chooser_title">&support_email_chooser_title;</string>
 
   <!-- About Settings -->
   <string name="pref_category_about_us">&pref_category_about_us;</string>
@@ -937,7 +930,7 @@
   <!-- Onboarding -->
   <string name="ghostery_onboarding_new_users_title">&ghostery_onboarding_new_users_title;</string>
   <string name="ghostery_onboarding_new_users_text">&ghostery_onboarding_new_users_text;</string>
-  <string name="ghostery_onboarding_old_users_text">&ghostery_onboarding_old_users_text;</string>
+  <string name="ghostery_onboarding_new_users_checkbox">&ghostery_onboarding_new_users_checkbox;</string>
   <string name="ghostery_onboarding_action_button">&ghostery_onboarding_action_button;</string>
   <string name="ghostery_onboarding_tracking_protection_title">&ghostery_onboarding_tracking_protection_title;</string>
   <string name="ghostery_onboarding_tracking_protection_text">&ghostery_onboarding_tracking_protection_text;</string>
