@@ -66,6 +66,9 @@
         android:checkable="true"
         android:title="@string/desktop_mode" />
 
+    <item android:id="@+id/char_encoding"
+        android:visible="false"
+        android:title="@string/char_encoding" />
 
     <item android:id="@+id/addons_top_level"
         android:title="@string/addons"
