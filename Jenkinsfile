@@ -86,7 +86,7 @@ def build(Map m){
                             }
                             apk = sh(returnStdout: true,
                                 script: """cd mozilla-release/objdir-frontend-android/${flavorname}/dist && \
-                                find *.apk -name 'fennec*' -not -name '*-unsigned-*'""").trim()
+                                find *.apk -not -name 'robo*' -not -name '*-unsigned-*'""").trim()
                         }
                         stage("Upload APK: ${flavorname}") {
                             archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorname}/dist/${apk}"
