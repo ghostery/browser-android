@@ -19,6 +19,12 @@ node('master') {
                     sh '''#!/bin/bash -l
                         set -e
                         set -x
+                        mkdir -p distribution/assets/distribution/extensions
+                        cat mozilla-release/config/search.txt | \
+                            grep cliqz |cut -d= -f2 | \
+                            xargs wget --quiet -O distribution/assets/distribution/extensions/android@cliqz.com.xpi
+                        cat mozilla-release/config/privacy.txt | \
+                            xargs wget --quiet -O distribution/assets/distribution/extensions/firefox@ghostery.com.xpi
                         cd mozilla-release
                         cp ../mozconfigs/deploy.mozconfig mozconfig
                         export HOST_CC=$CLANG_HOME/bin/clang
@@ -55,6 +61,12 @@ node('master') {
                     sh '''#!/bin/bash -l
                         set -e
                         set -x
+                        mkdir -p distribution/assets/distribution/extensions
+                        cat mozilla-release/config/search.txt | \
+                            grep cliqz |cut -d= -f2 | \
+                            xargs wget --quiet -O distribution/assets/distribution/extensions/android@cliqz.com.xpi
+                        cat mozilla-release/config/privacy.txt | \
+                            xargs wget --quiet -O distribution/assets/distribution/extensions/firefox@ghostery.com.xpi
                         cd mozilla-release
                         cp ../mozconfigs/deploy.mozconfig mozconfig
                         export HOST_CC=$CLANG_HOME/bin/clang

@@ -107,6 +107,17 @@ def build(Map m){
                         sh '''#!/bin/bash -l
                             set -e
                             set -x
+                            mkdir -p /app/distribution/assets/distribution/extensions
+                            if [[ $BRAND = *"ghostery"* ]]; then
+                                ext="ghostery"
+                            else
+                                ext="cliqz"
+                            fi
+                            cat /app/mozilla-release/config/search.txt | \
+                                grep $ext |cut -d= -f2 | \
+                                xargs wget --quiet -O /app/distribution/assets/distribution/extensions/android@cliqz.com.xpi
+                            cat /app/mozilla-release/config/privacy.txt | \
+                                xargs wget --quiet -O /app/distribution/assets/distribution/extensions/firefox@ghostery.com.xpi
                             cd /app/mozilla-release
                             cp ../mozconfigs/deploy.mozconfig mozconfig
                             export HOST_CC=$CLANG_HOME/bin/clang
@@ -126,6 +137,7 @@ def build(Map m){
                                 set -e
                                 set -x
                                 cd /app/mozilla-release
+                                export ANDROID_NDK_HOME=$ANDROID_NDK_HOME/android-ndk-r15c
                                 ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
                             """
                         }
@@ -145,6 +157,11 @@ def build(Map m){
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
                         def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                        try {
+                            zip archive: true, dir: '/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release', glob: '', zipFile: "${flavorName}-build.zip"
+                        } catch(e) {
+                            print e
+                        }
                         if (buildarch=="arm"){
                             sh """#!/bin/bash -l
                                 set -e
