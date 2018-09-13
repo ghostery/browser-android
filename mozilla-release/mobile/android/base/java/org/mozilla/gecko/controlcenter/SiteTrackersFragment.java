@@ -66,6 +66,9 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
     @Override
     public void updateUI(GeckoBundle data) {
         mControlCenterData = data;
+        if (mTrackerListAdapter == null) {
+            return;
+        }
         mTrackerListAdapter.setData(data);
         shouldShowOverlay();
     }
