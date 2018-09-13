@@ -155,6 +155,7 @@
 <!ENTITY cc_reset_changes_dialog_title "Reset all changes?">
 <!ENTITY cc_reset_changes_dialog_message "All previous changes to site and global trackers will be reset.">
 <!ENTITY cc_reset "RESET">
+<!ENTITY cc_reload_page_snackbar_text "Page will refresh to apply changes">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Search">
