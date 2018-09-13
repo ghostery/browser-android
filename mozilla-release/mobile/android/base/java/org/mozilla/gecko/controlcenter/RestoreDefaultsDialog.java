@@ -13,7 +13,8 @@ import org.mozilla.gecko.util.GeckoBundle;
  * Copyright © Cliqz 2018
  */
 public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
-    
+
+    private ControlCenterViewPager.ControlCenterCallbacks controlCenterCallbacks;
     private RestoreDialogCallbacks restoreDialogCallbacks;
 
     private RestoreDefaultsDialog() {
@@ -24,8 +25,11 @@ public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
         void onRestore();
     }
 
-    public static void show(Context context, RestoreDialogCallbacks restoreDialogCallbacks) {
+    public static void show(Context context,
+                            ControlCenterViewPager.ControlCenterCallbacks controlCenterCallbacks,
+                            RestoreDialogCallbacks restoreDialogCallbacks) {
         final RestoreDefaultsDialog restoreDefaultsDialog = new RestoreDefaultsDialog();
+        restoreDefaultsDialog.controlCenterCallbacks = controlCenterCallbacks;
         restoreDefaultsDialog.restoreDialogCallbacks = restoreDialogCallbacks;
         new AlertDialog.Builder(context, R.style.Cliqz_AlertDialogTheme)
                 .setTitle(R.string.cc_reset_changes_dialog_title)
@@ -52,6 +56,7 @@ public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
                 geckoBundle.putBoolean("enable_ad_block", true);
                 geckoBundle.putBoolean("enable_smart_block", true);
                 evd.dispatch("Privacy:SetInfo", geckoBundle);
+                controlCenterCallbacks.controlCenterSettingsChanged();
 
                 final GeckoBundle updatePolicyBundle = new GeckoBundle();
                 updatePolicyBundle.putString("blockingPolicy", "UPDATE_BLOCK_RECOMMENDED");

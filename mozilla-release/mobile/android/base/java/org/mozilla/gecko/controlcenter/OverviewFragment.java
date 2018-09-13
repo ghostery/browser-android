@@ -51,6 +51,7 @@ import static org.mozilla.gecko.util.GeckoBundleUtils.safeGetStringArray;
  */
 public class OverviewFragment extends ControlCenterFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
+    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
     private PieChart mPieChart;
     private TextView mDomainName;
     private TextView mTrackersBlocked;
@@ -96,6 +97,10 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             };
 
     public OverviewFragment() {
+    }
+
+    public void setControlCenterCallback(ControlCenterViewPager.ControlCenterCallbacks callback) {
+        mControlCenterCallbacks = callback;
     }
 
     @Override
@@ -176,9 +181,15 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mSmartBlockingCount.setText(String.valueOf(getSmartBlockingCount()));
         mCliqzAttrackCount.setText(String.valueOf(calculateCliqzAttrackCount()));
         mAdBlockCount.setText(String.valueOf(getAdBlockCount()));
+        mSmartBlockingSwitch.setOnCheckedChangeListener(null);
+        mAntiTrackingSwitch.setOnCheckedChangeListener(null);
+        mAdBlockingSwitch.setOnCheckedChangeListener(null);
         mSmartBlockingSwitch.setChecked(isSmartBlockEnabled);
         mAdBlockingSwitch.setChecked(isAdBlockEnabled);
         mAntiTrackingSwitch.setChecked(isAntiTrackingEnabled);
+        mSmartBlockingSwitch.setOnCheckedChangeListener(this);
+        mAntiTrackingSwitch.setOnCheckedChangeListener(this);
+        mAdBlockingSwitch.setOnCheckedChangeListener(this);
         final List<PieEntry> entries = new ArrayList<>();
         mIsGhosteryPaused = safeGetBoolean(controlCenterSettingsData, "data/summary/paused_blocking");
         final GeckoBundle[] categories = safeGetBundle(controlCenterSettingsData, "data/summary").getBundleArray("categories");
@@ -380,6 +391,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 break;
         }
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+        mControlCenterCallbacks.controlCenterSettingsChanged();
     }
 
     private void handlePauseButtonClick() {
@@ -405,6 +417,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             geckoBundle.putStringArray("site_whitelist", updatedWhiteList);
             geckoBundle.putStringArray("site_blacklist", updatedBlackList);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+            mControlCenterCallbacks.controlCenterSettingsChanged();
             ControlCenterMetrics.pause();
         } else {
             ControlCenterMetrics.resume();
@@ -412,6 +425,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final GeckoBundle geckoBundle = new GeckoBundle();
         geckoBundle.putBoolean("paused_blocking", mIsGhosteryPaused);
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+        mControlCenterCallbacks.controlCenterSettingsChanged();
         GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", mIsGhosteryPaused);
     }
 
@@ -437,6 +451,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("paused_blocking", false);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+            mControlCenterCallbacks.controlCenterSettingsChanged();
             Toast.makeText(getContext(), R.string.cc_toast_overview_trust, Toast.LENGTH_SHORT).show();
         } else {
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
@@ -448,6 +463,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         geckoBundle.putStringArray("site_whitelist", updatedWhiteList);
         geckoBundle.putStringArray("site_blacklist", updatedBlackList);
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+        mControlCenterCallbacks.controlCenterSettingsChanged();
         //update the data source so that other views can reflect changes
         controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_blacklist", updatedBlackList);
         controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_whitelist", updatedWhiteList);
@@ -476,6 +492,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("paused_blocking", false);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+            mControlCenterCallbacks.controlCenterSettingsChanged();
             Toast.makeText(getContext(), R.string.cc_toast_overview_restrict, Toast.LENGTH_SHORT).show();
         } else {
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
@@ -486,6 +503,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         geckoBundle.putStringArray("site_whitelist", updatedWhiteList);
         geckoBundle.putStringArray("site_blacklist", updatedBlackList);
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+        mControlCenterCallbacks.controlCenterSettingsChanged();
         //update the data source so that other views can reflect changes
         controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_blacklist", updatedBlackList);
         controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_whitelist", updatedWhiteList);

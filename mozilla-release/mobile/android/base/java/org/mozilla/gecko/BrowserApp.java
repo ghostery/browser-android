@@ -314,6 +314,7 @@ public class BrowserApp extends GeckoApp
     private ViewPager mControlCenterPager;
     private View mControlCenterContainer;
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
+    private boolean mControlCenterSettingsChanged = false;
     private ViewPager mCliqzIntoPager;
     private PreferenceManager mPreferenceManager;
     private LinearLayout mCliqzQuerySuggestionsContainer;
@@ -973,9 +974,11 @@ public class BrowserApp extends GeckoApp
         mControlCenterPagerAdapter = new ControlCenterPagerAdapter(getSupportFragmentManager(), getBaseContext());
         final SiteTrackersFragment siteTrackersFragment = new SiteTrackersFragment();
         final GlobalTrackersFragment globalTrackersFragment = new GlobalTrackersFragment();
+        final OverviewFragment overviewFragment = new OverviewFragment();
         siteTrackersFragment.setControlCenterCallback(this);
         globalTrackersFragment.setControlCenterCallback(this);
-        mControlCenterPagerAdapter.addFragment(new OverviewFragment());
+        overviewFragment.setControlCenterCallback(this);
+        mControlCenterPagerAdapter.addFragment(overviewFragment);
         mControlCenterPagerAdapter.addFragment(siteTrackersFragment);
         mControlCenterPagerAdapter.addFragment(globalTrackersFragment);
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
@@ -5048,6 +5051,10 @@ public class BrowserApp extends GeckoApp
 
     public void toggleControlCenter() {
         if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
+            if (mControlCenterSettingsChanged) {
+                showReloadingTabSnackbar();
+                mControlCenterSettingsChanged = false;
+            }
             mControlCenterContainer.setVisibility(View.GONE);
         } else {
             mControlCenterContainer.setVisibility(View.VISIBLE);
@@ -5059,7 +5066,33 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public void hideControlCenter() {
+        if (mControlCenterSettingsChanged) {
+            showReloadingTabSnackbar();
+            mControlCenterSettingsChanged = false;
+        }
         mControlCenterContainer.setVisibility(View.GONE);
+    }
+
+    public void controlCenterSettingsChanged() {
+        mControlCenterSettingsChanged = true;
+    }
+
+    private void showReloadingTabSnackbar() {
+        final Tab tab = Tabs.getInstance().getSelectedTab();
+        tab.doReload(true);
+        final SnackbarBuilder.SnackbarCallback allowCallback = new SnackbarBuilder.SnackbarCallback() {
+            @Override
+            public void onClick(View v) {
+                tab.doReload(true);
+            }
+        };
+
+        SnackbarBuilder.builder(this)
+                .message(R.string.cc_reload_page_snackbar_text)
+                .duration(2000)
+                .action(R.string.reload)
+                .callback(allowCallback)
+                .buildAndShow();
     }
 
     public void updateControlCenterIfNeeded() {
