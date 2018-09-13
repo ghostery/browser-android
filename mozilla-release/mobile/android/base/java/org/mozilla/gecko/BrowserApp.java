@@ -941,6 +941,9 @@ public class BrowserApp extends GeckoApp
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
         /* Cliqz start */
         mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+        //Forcing the default right away, otherwise extension wont have the right default until and
+        //unless user opens the settings
+        mPreferenceManager.setSearchRegionalDefault();
         mBrowserSearchContainer = findViewById(R.id.search_container);
         mBrowserSearch = (BrowserSearch) getSupportFragmentManager().findFragmentByTag(BROWSER_SEARCH_TAG);
         if (mBrowserSearch == null) {

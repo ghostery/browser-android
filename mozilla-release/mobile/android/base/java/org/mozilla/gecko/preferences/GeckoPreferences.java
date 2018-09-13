@@ -1007,14 +1007,14 @@ public class GeckoPreferences
                      });
                 } else if(PREFS_SEARCH_REGIONAL.equals(key)) {
                     final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-                    final String value = preferenceManager.getSearchRegional(getBaseContext());
+                    final String value = preferenceManager.getSearchRegional();
                     ((ListPreference) pref).setValue(value);
                     ((ListPreference) pref).setSummary(new Countries(getBaseContext()).getCountryName(value));
                 } else if (PREFS_SEARCH_QUERY_SUGGESTIONS.equals(key)) {
                     final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
                     mSearchQuerySuggestionsPref = pref;
                     mSearchQuerySuggestionsPrefGroup = preferences;
-                    if(!preferenceManager.getSearchRegional(getBaseContext()).equals(Locale.GERMAN.getLanguage())) {
+                    if(!preferenceManager.getSearchRegional().equals(Locale.GERMAN.getLanguage())) {
                         ((CheckBoxPreference)pref).setChecked(false);
                         preferences.removePreference(pref);
                         i--;
