@@ -293,3 +293,8 @@
 <!ENTITY antiphishing_message "&brandShortName; has blocked access to &#037;1&#036;s because it has been reported as a phishing website. Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.">
 <!ENTITY antiphishing_walk_away "Back to safe site">
 <!ENTITY antiphishing_ignore_danger "Continue despite warning">
+
+<!-- Ghostery Addon preventing dialog -->
+<!ENTITY prevent_ghostery_addon_dialog_title "Already available!">
+<!ENTITY prevent_ghostery_addon_dialog_message
+        "Add-on was not installed as &formatS1; is already integrated in your browser.">
