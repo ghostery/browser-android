@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
@@ -41,8 +40,9 @@ public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case AlertDialog.BUTTON_POSITIVE:
+                final Handler handler = new Handler();
+                final EventDispatcher evd = EventDispatcher.getInstance();
                 final GeckoBundle geckoBundle = new GeckoBundle();
-                geckoBundle.putBundle("selected_app_ids", new GeckoBundle());
                 geckoBundle.putStringArray("site_whitelist", new String[0]);
                 geckoBundle.putStringArray("site_blacklist", new String[0]);
                 geckoBundle.putBundle("site_specific_unblocks", new GeckoBundle());
@@ -51,15 +51,24 @@ public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
                 geckoBundle.putBoolean("enable_anti_tracking", true);
                 geckoBundle.putBoolean("enable_ad_block", true);
                 geckoBundle.putBoolean("enable_smart_block", true);
-                EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                final Handler handler = new Handler();
+                evd.dispatch("Privacy:SetInfo", geckoBundle);
+
+                final GeckoBundle updatePolicyBundle = new GeckoBundle();
+                updatePolicyBundle.putString("blockingPolicy", "UPDATE_BLOCK_RECOMMENDED");
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        evd.dispatch("Privacy:SetBlockingPolicy", updatePolicyBundle);
+                    }
+                }, 500);
+
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         //we fetch the new data from the extension, after resetting everything
-                        EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
+                        evd.dispatch("Privacy:GetInfo",null);
                     }
-                }, 2000);
+                }, 1000);
                 restoreDialogCallbacks.onRestore();
                 break;
         }

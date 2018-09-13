@@ -12,6 +12,7 @@ import android.widget.ExpandableListView;
 import android.support.v7.widget.PopupMenu;
 import android.widget.ProgressBar;
 
+import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.util.GeckoBundle;
 
@@ -69,10 +70,10 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.block_all:
-                mTrackerListAdapter.blockAllTrackers();
+                dispatchAndRefresh("UPDATE_BLOCK_ALL");
                 return true;
             case R.id.unblock_all:
-                mTrackerListAdapter.unBlockAllTrackers();
+                dispatchAndRefresh("UPDATE_BLOCK_NONE");
                 return true;
             case R.id.reset_settings:
                 RestoreDefaultsDialog.show(getContext(), new RestoreDefaultsDialog.RestoreDialogCallbacks() {
@@ -85,6 +86,20 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
             default:
                 return false;
         }
+    }
+
+    private void dispatchAndRefresh(String policy) {
+        final GeckoBundle bundle = new GeckoBundle();
+        bundle.putString("blockingPolicy", policy);
+        final EventDispatcher evd = EventDispatcher.getInstance();
+        evd.dispatch("Privacy:SetBlockingPolicy", bundle);
+        getView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                evd.dispatch("Privacy:GetInfo", null);
+            }
+        }, 500);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
