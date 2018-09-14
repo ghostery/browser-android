@@ -19,7 +19,7 @@
 <!ENTITY favorite_already_added "Bereits in den Favoriten">
 <!ENTITY favorite_removed "Favorit entfernt">
 <!ENTITY favorite_updated "Favorit aktualisiert">
-<!ENTITY screenshot_added_to_favorites " Zu Favoriten hinzugefügter Screenshot">
+<!ENTITY screenshot_added_to_favorites "Screenshot zu Favoriten hinzugefügt ">
 <!ENTITY overlay_share_favorite_btn_label "Favorit">
 <!ENTITY overlay_share_favorite_btn_label_already "Bereits in den Favoriten">
 <!ENTITY pref_sync_summary3 "Tabs, Favoriten, Logins, Verlauf synchronisieren">
@@ -32,17 +32,17 @@
 <!ENTITY favoritehistory_import_favorites "Favoriten importieren
                                            von Android">
 <!ENTITY searchable_description2 "Favoriten und Verlauf">
-<!ENTITY new_guest_session_text3 "Der Benutzer kann keine Ihrer persönlichen Browsingdaten sehen (z.B. gespeicherte Logins,Verlauf oder Favoriten).\n\nWenn Ihr Gast fertig ist, werden seine Browsingdaten gelöscht und Ihre Sitzung wiederhergestellt.">
+<!ENTITY new_guest_session_text3 "Der Benutzer kann keine deiner persönlichen Browsingdaten sehen (z.B. gespeicherte Logins,Verlauf oder Favoriten).\n\nWenn dein Gast fertig ist, werden seine Browsingdaten gelöscht und deine Sitzung wiederhergestellt.">
 <!ENTITY restrictable_feature_advanced_settings_description2 "Mit Favoritenimport, Tab-Wiederherstellung, Auto-Updates. Abschalten für einfache Einstellungen für die ganze Familie.">
-<!ENTITY helper_first_offline_favorite_message "Finden Sie Ihre Reader-View-Artikel in den Favoriten, auch offline.">
+<!ENTITY helper_first_offline_favorite_message "Finden deine Reader-View-Artikel in den Favoriten, auch offline.">
 <!ENTITY helper_first_offline_favorite_button "Zu Favoriten gehen">
 <!ENTITY helper_triple_readerview_open_message2 "Reader-View-Artikel als Favoriten zum Offline-Lesen.">
 <!ENTITY helper_triple_readerview_open_button2 "Zu Favoriten hinzufügen">
 
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; als Standardbrowser">
-<!ENTITY default_browser_message "Anscheinend benutzen Sie &brandShortName;. Möchten Sie, dass dies Ihr Standardbrowser ist?">
-<!ENTITY default_browser_dialog_proceed "VORGEHEN">
+<!ENTITY default_browser_message "Du scheinst &brandShortName; gerne zu nutzen. Möchten du, dass dies dein Standardbrowser wird?">
+<!ENTITY default_browser_dialog_proceed "FORTFAHREN">
 <!ENTITY default_browser_dialog_cancel "ABBRECHEN">
 
 <!-- Settings -->
@@ -55,9 +55,9 @@
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
-<!ENTITY myoffrz_no_offers_title "Wir haben wohl nicht viele Angebote">
-<!ENTITY myoffrz_no_offers_msg_line1 "Wir halten weiter Ausschau für Sie fügen sie hinzu">
-<!ENTITY myoffrz_no_offers_msg_line2 "sobald wir einen haben">
+<!ENTITY myoffrz_no_offers_title "Wir haben derzeit keine Angebote">
+<!ENTITY myoffrz_no_offers_msg_line1 "Wir halten weiterhin Ausschau für dich und fügen">
+<!ENTITY myoffrz_no_offers_msg_line2 "sie hier hinzu, sobald wir etwas haben. ">
 <!ENTITY myoffrz_onboarding_description "Attraktive Preisnachlässe und Sonderangebote mit &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Jetzt bestellen!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Code zum Kopieren antippen">
@@ -74,16 +74,7 @@
 <!ENTITY pref_block_ads_data "Zu beachten: Der Browser muss zuerst einige Datenpakete herunterladen, bevor der Werbeblocker effizient funktionieren kann. Dafür muss die App eine WLAN-Verbindung haben.">
 
 <!-- Rate Us -->
-<!ENTITY pref_category_rate_us "Bewerten Sie uns">
-
-<!-- Cliqz Support -->
-<!ENTITY pref_cliqz_support "FAQ &amp; Support">
-
-<!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Holen Sie das Beste aus &brandShortName; heraus">
-
-<!-- Report Website -->
-<!ENTITY pref_report_website "Website melden">
+<!ENTITY pref_category_rate_us "Bewerte uns">
 
 <!-- Control Center -->
 <!ENTITY cc_title_overview "ÜBERBLICK">
@@ -113,10 +104,10 @@
 <!ENTITY cc_resume_ghostery "Ghostery fortsetzen">
 <!ENTITY cc_enhanced_options "Erweiterte Optionen">
 <!ENTITY cc_enhanced_anti_tracking "Erweitertes Anti-Tracking">
-<!ENTITY cc_enhanced_ad_blocking "Erweiterter Werbeblocker">
+<!ENTITY cc_enhanced_ad_blocking "Werbeblocker">
 <!ENTITY cc_smart_blocking "Smart Blocking">
 <!ENTITY cc_enhanced_anti_tracking_info "Informationen zu erweitertem Anti-Tracking">
-<!ENTITY cc_enhanced_ad_blocking_info "Informationen zu erweitertem Werbeblocker">
+<!ENTITY cc_enhanced_ad_blocking_info "Informationen zum Werbeblocker">
 <!ENTITY cc_smart_blocking_info "Informationen zu erweitertem Anti-Tracking">
 <!ENTITY cc_zero_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
 <!ENTITY cc_one_anti_tracking_blocked "Persönlicher Datenpunkt anonymisiert">
@@ -238,6 +229,10 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Hilfe">
+<!ENTITY pref_category_help_summary "FAQ, Support">
+<!ENTITY pref_help_faq "FAQs">
+<!ENTITY pref_help_support "Support">
+<!ENTITY support_email_chooser_title "Sende Email...">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "Über uns">
@@ -263,25 +258,25 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Einführung von &brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Surfen Sie auch unterwegs sauberer, schneller und sicherer mit &brandShortName;! Jetzt für Mobilgeräte optimiert!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Helfen Sie mit, &brandShortName; zu verbessern, indem Sie streng anonyme Statistiken und Human-Web-Daten beisteuern. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren.\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_text "Surfe auch unterwegs sauberer, schneller und sicherer mit &brandShortName;! Jetzt für Mobilgeräte optimiert!">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Hilf &brandShortName; indem du anonyme Statistiken und Human-Web-Daten sendest, um &brandShortName;'s Leistung zu verbessern. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Werbung und Tracker blockieren">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Wählen Sie aus, was &brandShortName; blockieren soll, damit Sie schneller, sicherer und sauberer surfen. Sie können diese Einstellung jederzeit im Privacy Control Center anpassen und ändern.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Wähle aus, was &brandShortName; blockieren soll, damit du schneller, sicherer und sauberer surfst. Du kannst diese Einstellung jederzeit im Privacy Control Center anpassen und ändern.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Nichts blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Empfohlenes blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Werbung, Erwachsenenwerbung und Website-Analytics-Tracker blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Alles blockieren">
 <!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
-<!ENTITY ghostery_onboarding_quick_search_text "Bleiben Sie anonym und sparen Sie Zeit und Datenvolumen: Ergebnisse erscheinen in Echtzeit noch während der Eingabe in die &brandShortName;-Suchleiste.">
+<!ENTITY ghostery_onboarding_quick_search_text "Bleibe anonym und spare Zeit und Datenvolumen: Ergebnisse erscheinen in Echtzeit noch während der Eingabe in die &brandShortName;-Suchleiste.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Passen Sie jeden neuen &pref_new_tab_category; an Ihre Wünsche an, indem Sie einzelne Elemente wie die meistbesuchten Websites, die neuesten Nachrichten und die Tracking-Statistiken ein- oder ausblenden.">
+<!ENTITY ghostery_onboarding_new_tab_text "Passe jeden neuen &pref_new_tab_category; an deine Wünsche an, indem du einzelne Elemente wie die meistbesuchten Websites, die neuesten Nachrichten und die Tracking-Statistiken ein- oder ausblendest.">
 <!ENTITY ghostery_onboarding_action_button "Browsen beginnen">
 <!ENTITY ghostery_onboarding_contextual_title "Tracking-Schutz aktiviert">
 <!ENTITY ghostery_onboarding_contextual_item1_title "Erweitertes Anti-Tracking">
-<!ENTITY ghostery_onboarding_contextual_item1_text "Zusätzlicher Schutz Ihrer persönlichen Daten">
+<!ENTITY ghostery_onboarding_contextual_item1_text "Zusätzlicher Schutz deiner persönlichen Daten">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Smart Blocking &amp; Werbeblocker">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimiert die Leistung während des Browsens">
-<!ENTITY ghostery_onboarding_contextual_text "Sie können diese Funktionen jederzeit in der &brandShortName; Control Center aktivieren oder deaktivieren.">
+<!ENTITY ghostery_onboarding_contextual_text "Du kannst diese Funktionen jederzeit in der &brandShortName; Control Center aktivieren oder deaktivieren.">
 <!ENTITY ghostery_onboarding_contextual_button "Jetzt zeigen">
 
 <!-- Ghost Tab -->
@@ -289,12 +284,17 @@
 <!ENTITY new_ghost_tab "Neuer Ghost Tab">
 <!ENTITY close_ghost_tabs "Ghost Tabs schließen">
 <!ENTITY contextmenu_open_ghost_tab "In Ghost Tab öffnen">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &formatS1;neuen Ghost Tabs&formatS2; wird Ihr Verlauf nicht gespeichert.">
-<!ENTITY private_tab_panel_title2 "Ghost Mode">
-<!ENTITY private_tab_panel_description3 "You are browsing in Ghost Mode: Websites you visit in this mode will not be saved in your history, and local data, including cookies, will not be stored.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &formatS1;neuen Ghost Tabs&formatS2; wird dein Verlauf nicht gespeichert.">
+<!ENTITY private_tab_panel_title2 "Ghost-Modus">
+<!ENTITY private_tab_panel_description3 "Du surfst im Ghost-Modus: Websites, die du in diesem Modus besuchst, werden nicht in deinem Browserverlauf gespeichert, und lokale Daten einschließlich Cookies werden nicht gespeichert.">
 
 <!-- Anti-phishing -->
-<!ENTITY antiphishing_dialog_title "Warning: deceptive website!">
-<!ENTITY antiphishing_message "&brandShortName; has blocked access to &#37;1&#036;s because it has been reported as a phishing website. Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.">
-<!ENTITY antiphishing_walk_away "Back to safe site">
-<!ENTITY antiphishing_ignore_danger "Continue despite warning">
+<!ENTITY antiphishing_dialog_title "Warnung: betrügerische Website!">
+<!ENTITY antiphishing_message "Ghostery hat den Zugang zu &#37;1$ gesperrt, weil sie als Phishing-Website gemeldet wurde.\nPhishing-Websites geben sich als andere, vertrauenswürdige Websites aus, um dich zu verleiten, Anmeldedaten, Passwörter oder andere wichtige Informationen preiszugeben.">
+<!ENTITY antiphishing_walk_away "Zurück zu sicherer Seite">
+<!ENTITY antiphishing_ignore_danger "Trotz Warnung fortfahren">
+
+<!-- Ghostery Addon preventing dialog -->
+<!ENTITY prevent_ghostery_addon_dialog_title "Bereits vorhanden!">
+<!ENTITY prevent_ghostery_addon_dialog_message
+        "Add-on wurde nicht installiert, da &formatS1; bereits in deinem Browser integriert ist.">
