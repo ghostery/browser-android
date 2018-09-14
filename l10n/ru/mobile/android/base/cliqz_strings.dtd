@@ -51,6 +51,7 @@
 <!ENTITY pref_what_is_human_web "Что такое Human Web?">
 <!ENTITY pref_enable_human_web "Включить Human Web">
 <!ENTITY pref_category_human_web_summary "Что, Включено">
+<!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
@@ -74,15 +75,6 @@
 
 <!-- Rate Us -->
 <!ENTITY pref_category_rate_us "Оцените нас">
-
-<!-- Cliqz Support -->
-<!ENTITY pref_cliqz_support "FAQ и поддержка">
-
-<!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Максимально эффективно используйте &brandShortName;">
-
-<!-- Report Website -->
-<!ENTITY pref_report_website "Сообщить о веб-сайте">
 
 <!-- Control Center -->
 <!ENTITY cc_title_overview "ОБЗОР">
@@ -237,6 +229,10 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Помощь">
+<!ENTITY pref_category_help_summary "FAQ, поддержка ">
+<!ENTITY pref_help_faq "FAQ">
+<!ENTITY pref_help_support "Поддержка">
+<!ENTITY support_email_chooser_title "Отправить e-mail...">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "О нас">
@@ -263,7 +259,7 @@
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Представляем &brandShortName;">
 <!ENTITY ghostery_onboarding_new_users_text "Пользуйтесь Интернетом быстро и безопасно с Ghostery браузером. Теперь и в Вашем смартфоне!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Поддержите Ghostery, поделившись анонимной аналитикой и данными Human Web, чтобы улучшить производительность Ghostery. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022&gt;Подробнее\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Поддержите &brandShortName; поделившись анонимной аналитикой и данными Human Web, чтобы улучшить производительность Ghostery. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Подробней\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Блокировка рекламы и трекеров">
 <!ENTITY ghostery_onboarding_tracking_protection_text "Выберите что &brandShortName; будет блокировать и пользуйтесь Интернетом быстро и безопасно. Вы можете изменять или настраивать эти функции в любое время в центре управления конфиденциальностью.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Не блокировать">
@@ -289,11 +285,16 @@
 <!ENTITY close_ghost_tabs "Закрыть вкладки Ghost">
 <!ENTITY contextmenu_open_ghost_tab "Открыть во вкладке Ghost">
 <!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: &formatS1;Новая вкладка Ghost&formatS2; не будет сохранять историю.">
-<!ENTITY private_tab_panel_title2 "Ghost Mode">
-<!ENTITY private_tab_panel_description3 "You are browsing in Ghost Mode: Websites you visit in this mode will not be saved in your history, and local data, including cookies, will not be stored.">
+<!ENTITY private_tab_panel_title2 "Режим Ghost">
+<!ENTITY private_tab_panel_description3 "Вы работаете в режиме Ghost: веб-сайты, которые Вы посещаете в этом режиме, не будут сохраняться в Вашей истории, а также не будут сохранены локальные данные, включая файлы cookie.">
 
 <!-- Anti-phishing -->
-<!ENTITY antiphishing_dialog_title "Warning: deceptive website!">
-<!ENTITY antiphishing_message "&brandShortName; has blocked access to &#37;1&#036;s because it has been reported as a phishing website. Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.">
-<!ENTITY antiphishing_walk_away "Back to safe site">
-<!ENTITY antiphishing_ignore_danger "Continue despite warning">
+<!ENTITY antiphishing_dialog_title "Предупреждение: подозрительный веб-сайт! ">
+<!ENTITY antiphishing_message "&brandShortName; заблокировал доступ к &#37;1&#036;s, потому что сайт был представлен как фишинговый сайт. Фишинговые сайты маскируются под другие сайты, которым Вы доверяете, чтобы обмануть Вас и получить доступ к конфиденциальной информации, например логинам и паролям. ">
+<!ENTITY antiphishing_walk_away "Вернуться на безопасный сайт">
+<!ENTITY antiphishing_ignore_danger "Продолжить несмотря на предупреждение">
+
+<!-- Ghostery Addon preventing dialog -->
+<!ENTITY prevent_ghostery_addon_dialog_title "Уже доступно! ">
+<!ENTITY prevent_ghostery_addon_dialog_message
+        "Дополнение не было установлено, так как &formatS1; уже доступен в Вашем браузере. ">

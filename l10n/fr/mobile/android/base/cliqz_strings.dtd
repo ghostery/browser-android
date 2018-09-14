@@ -51,6 +51,7 @@
 <!ENTITY pref_what_is_human_web "Qu'est-ce que le Human Web ?">
 <!ENTITY pref_enable_human_web "Activer le Human Web">
 <!ENTITY pref_category_human_web_summary "Qu'est-ce que ce, Autoriser">
+<!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
@@ -74,15 +75,6 @@
 
 <!-- Rate Us -->
 <!ENTITY pref_category_rate_us "Évaluez-nous">
-
-<!-- Cliqz Support -->
-<!ENTITY pref_cliqz_support "FAQ &amp; assistance">
-
-<!-- Tips & Tricks -->
-<!ENTITY pref_tips_tricks "Le meilleur de &brandShortName;">
-
-<!-- Report Website -->
-<!ENTITY pref_report_website "Signaler un site">
 
 <!-- Control Center -->
 <!ENTITY cc_title_overview "APERÇU">
@@ -237,6 +229,10 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Aide">
+<!ENTITY pref_category_help_summary "FAQ, Assistance">
+<!ENTITY pref_help_faq "FAQs">
+<!ENTITY pref_help_support "Assistance">
+<!ENTITY support_email_chooser_title "Envoyer un email ...">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "Á notre sujet">
@@ -263,7 +259,7 @@
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Nous vous présentons &brandShortName;">
 <!ENTITY ghostery_onboarding_new_users_text "Naviguez de façon plus propre, plus rapide et plus sécurisée avec &brandShortName;, dès maintenant optimisé pour mobile !">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Soutenez Ghostery en partageant des données analytiques et Human Web anonymes afin de permettre à Ghostery d'être plus performant. \u003Ca href=\u0022&pref_privacy_policy_url;\u0022&gt;En savoir plus\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Soutenez &brandShortName; en partageant des données analytiques afin de permettre à Ghostery d'être plus performant. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;En savoir plus\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Bloqueur de mouchards et de publicités.">
 <!ENTITY ghostery_onboarding_tracking_protection_text "Choisissez ce que Ghostery bloquera afin de vous garantir une navigation plus propre, plus rapide et plus sécurisée. Vous pouvez changer et personnaliser ces paramètres quand vous voulez dans le Centre de Contrôle de Vie Privée.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Ne rien bloquer">
@@ -289,11 +285,16 @@
 <!ENTITY close_ghost_tabs "Fermer les onglets fantômes">
 <!ENTITY contextmenu_open_ghost_tab "Ouvrir dans un onglet fantôme">
 <!ENTITY home_most_recent_emptyhint_ghost_tab "Psst : l'utilisation d'un &formatS1;nouvel onglet fantôme&formatS2; ne sauvegardera pas votre historique.">
-<!ENTITY private_tab_panel_title2 "Ghost Mode">
-<!ENTITY private_tab_panel_description3 "You are browsing in Ghost Mode: Websites you visit in this mode will not be saved in your history, and local data, including cookies, will not be stored.">
+<!ENTITY private_tab_panel_title2 "Mode Fantôme">
+<!ENTITY private_tab_panel_description3 "Vous naviguez en Mode Fantôme: les sites visités ne seront pas sauvegardés dans votre historique et les données locales, dont les cookies, ne seront pas stockées.">
 
 <!-- Anti-phishing -->
-<!ENTITY antiphishing_dialog_title "Warning: deceptive website!">
-<!ENTITY antiphishing_message "&brandShortName; has blocked access to &#37;1&#036;s because it has been reported as a phishing website. Phishing websites disguise as other sites you may trust in order to trick you into disclosing your login, password or other sensitive information.">
-<!ENTITY antiphishing_walk_away "Back to safe site">
-<!ENTITY antiphishing_ignore_danger "Continue despite warning">
+<!ENTITY antiphishing_dialog_title "Attention: site malveillant !">
+<!ENTITY antiphishing_message "&brandShortName; a bloqué l'accés à &#37;1&#036;s car il a été reporté comme un site malveillant. Les sites malveillants se déguisent en sites sûrs afin de subtiliser vos identifiants, mots de passe ou toutes autres données sensibles.">
+<!ENTITY antiphishing_walk_away "Retourner au site sûr">
+<!ENTITY antiphishing_ignore_danger "Continuer malgré l'avertissement">
+
+<!-- Ghostery Addon preventing dialog -->
+<!ENTITY prevent_ghostery_addon_dialog_title "Déjà disponible !">
+<!ENTITY prevent_ghostery_addon_dialog_message
+        "Ce module complémentaire n'a pas été installé car $formatS1; est déjà intégré à votre navigateur.">
