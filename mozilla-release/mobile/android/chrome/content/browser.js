@@ -6651,7 +6651,7 @@ var Cliqz = {
         }
       }
       // retry 100 times to load the cards
-      setTimeout(loadExtension.bind(this), 1000, 100);
+      setTimeout(loadExtension.bind(this), 0, 100);
     }
 
     return this._search;

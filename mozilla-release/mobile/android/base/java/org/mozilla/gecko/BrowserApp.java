@@ -645,7 +645,7 @@ public class BrowserApp extends GeckoApp
         if (editingState.isBrowserSearchShown()) {
             showBrowserSearch();
         } else {
-            hideBrowserSearch();
+            hideBrowserSearch(true);
         }
     }
 
@@ -1658,6 +1658,9 @@ public class BrowserApp extends GeckoApp
                     /* Cliqz Start */
                     if (hasFocus) {
                         hideControlCenter();
+                        if(mPreferenceManager.isQuickSearchEnabled()) {
+                            showCliqzSearch();
+                        }
                     }
                 }
                 // show/hide query suggestions based on urlBar focus
@@ -1702,7 +1705,7 @@ public class BrowserApp extends GeckoApp
                 // visibility of the HomePager and hideHomePager will take no action if the
                 // HomePager is hidden, so we want to call hideBrowserSearch to restore the
                 // HomePager visibility first.
-                hideBrowserSearch();
+                hideBrowserSearch(true);
                 hideHomePager();
                 /* Cliqz start */
                 hideCliqzQuerySuggestions();
@@ -3188,7 +3191,7 @@ public class BrowserApp extends GeckoApp
 
     void filterEditingMode(String searchTerm, AutocompleteHandler handler) {
         if (TextUtils.isEmpty(searchTerm)) {
-            hideBrowserSearch();
+            hideBrowserSearch(false);
         } else {
             showBrowserSearch();
             /* Cliqz start */
@@ -3628,7 +3631,7 @@ public class BrowserApp extends GeckoApp
         /* Cliqz end */
     }
 
-    private void hideBrowserSearch() {
+    private void hideBrowserSearch(boolean hidePanel) {
         /* Cliqz start */
         if (!mPreferenceManager.isQuickSearchEnabled()) {
             if (!mBrowserSearch.getUserVisibleHint()) {
@@ -3643,7 +3646,7 @@ public class BrowserApp extends GeckoApp
                 EventDispatcher.getInstance().unregisterUiThreadListener(this,
                         "Search:QuerySuggestions", null);
             }
-        } else {
+        } else if (hidePanel) {
             hidePanelSearch();
         }
         /* Cliqz end */
