@@ -237,7 +237,6 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Aide">
-<!ENTITY pref_category_help_summary "Le meilleur de &brandShortName;, FAQ, signaler un site">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "Á notre sujet">
