@@ -274,6 +274,37 @@ public final class PrefsHelper {
         } while (handler != null);
     }
 
+    /* Cliqz Start */
+    public static void setPrefIfNotExists(final String prefName, final Object value) {
+        getPref(prefName, new PrefHandler() {
+
+            boolean prefExists = false;
+
+            @Override
+            public void prefValue(String pref, boolean value) {
+                prefExists = true;
+            }
+
+            @Override
+            public void prefValue(String pref, int value) {
+                prefExists = true;
+            }
+
+            @Override
+            public void prefValue(String pref, String value) {
+                prefExists = true;
+            }
+
+            @Override
+            public void finish() {
+                if (!prefExists) {
+                    setPref(prefName, value);
+                }
+            }
+        });
+    }
+    /* Cliqz End */
+
     public interface PrefHandler {
         void prefValue(String pref, boolean value);
         void prefValue(String pref, int value);

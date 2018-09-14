@@ -152,6 +152,7 @@ import org.mozilla.gecko.onboarding.CliqzIntroPagerAdapter;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.ClearOnShutdownPref;
+import org.mozilla.gecko.preferences.Countries;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.promotion.AddToHomeScreenPromotion;
@@ -943,7 +944,8 @@ public class BrowserApp extends GeckoApp
         mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
         //Forcing the default right away, otherwise extension wont have the right default until and
         //unless user opens the settings
-        mPreferenceManager.setSearchRegionalDefault();
+        PrefsHelper.setPrefIfNotExists(GeckoPreferences.PREFS_SEARCH_REGIONAL,
+                new Countries(this).getDefaultCountryCode());
         mBrowserSearchContainer = findViewById(R.id.search_container);
         mBrowserSearch = (BrowserSearch) getSupportFragmentManager().findFragmentByTag(BROWSER_SEARCH_TAG);
         if (mBrowserSearch == null) {

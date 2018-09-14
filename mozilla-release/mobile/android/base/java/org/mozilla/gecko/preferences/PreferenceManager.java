@@ -101,15 +101,6 @@ public class PreferenceManager {
                 Countries(mContext).getDefaultCountryCode());
     }
 
-    //force set the default preference, so that the extension can read it right away
-    public void setSearchRegionalDefault() {
-        if (!mAppSharedPreferences.contains(GeckoPreferences.PREFS_SEARCH_REGIONAL)) {
-            final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
-            editor.putString(GeckoPreferences.PREFS_SEARCH_REGIONAL, new Countries(mContext)
-                    .getDefaultCountryCode()).apply();
-        }
-    }
-
     public boolean isAutocompleteEnabled() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_AUTO_COMPLETE, true);
     }

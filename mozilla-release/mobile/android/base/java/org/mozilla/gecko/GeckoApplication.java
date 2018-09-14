@@ -320,19 +320,13 @@ public class GeckoApplication extends Application
                 null);
 
         /* Cliqz start */
-        final SharedPreferences prefs = GeckoSharedPrefs.forApp(this);
-        if (!prefs.contains(GeckoPreferences.PREFS_BROWSER_INSTALL_DATE) ||
-                !prefs.contains(GeckoPreferences.PREFS_BROWSER_UPGRADE_DATE)) {
-            try {
-                final PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-                prefs
-                    .edit()
-                    .putString(GeckoPreferences.PREFS_BROWSER_INSTALL_DATE, "" + (info.firstInstallTime / 1000L))
-                    .putString(GeckoPreferences.PREFS_BROWSER_UPGRADE_DATE, "" + (info.lastUpdateTime / 1000L))
-                    .apply();
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.e(LOG_TAG, "Can't find " + getPackageName(), e);
-            }
+        try {
+            final long milliSecsInADay = 24 * 60 * 60 * 1000;
+            final PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            PrefsHelper.setPrefIfNotExists(GeckoPreferences.PREFS_BROWSER_INSTALL_DATE, "" + (info.firstInstallTime / milliSecsInADay));
+            PrefsHelper.setPrefIfNotExists(GeckoPreferences.PREFS_BROWSER_UPGRADE_DATE, "" + (info.lastUpdateTime / milliSecsInADay));
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(LOG_TAG, "Can't find " + getPackageName(), e);
         }
         /* Cliqz end */
 

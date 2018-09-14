@@ -14,7 +14,6 @@
  * rather than this (or any other) data file.
  */
 /* Cliqz start */
-pref("pref.search.regional", "us");
 pref("pref.search.block.adult.content", true);
 pref("pref.search.query.suggestions", true);
 /* Cliqz end */
