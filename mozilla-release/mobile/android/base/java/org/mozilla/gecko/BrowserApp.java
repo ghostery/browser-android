@@ -242,8 +242,7 @@ public class BrowserApp extends GeckoApp
                                    /* Cliqz Start */
                                    ControlCenterViewPager.ControlCenterCallbacks,
                                    AntiPhishing.AntiPhishingCallback,
-                                   AntiPhishingDialog.AntiPhishingDialogActionListener,
-                                   CliqzIntroPagerAdapter.CliqzIntroClosedListener {
+                                   AntiPhishingDialog.AntiPhishingDialogActionListener {
                                    /* Cliqz End */
     private static final String LOGTAG = "GeckoBrowserApp";
 
@@ -1382,10 +1381,6 @@ public class BrowserApp extends GeckoApp
                 // ends when the browsing session/activity has ended. All events
                 // during firstrun will be tagged as FIRSTRUN.
                 Telemetry.startUISession(TelemetryContract.Session.FIRSTRUN);
-                /* Cliqz start */
-            } else {
-                enterEditingMode();
-                /* Cliqz end */
             }
         } finally {
             StrictMode.setThreadPolicy(savedPolicy);
@@ -3365,7 +3360,7 @@ public class BrowserApp extends GeckoApp
             //     }
             // });
             mCliqzIntoPager = (ViewPager) findViewById(R.id.cliqz_intro_pager);
-            mCliqzIntoPager.setAdapter(new CliqzIntroPagerAdapter(getBaseContext(), this));
+            mCliqzIntoPager.setAdapter(new CliqzIntroPagerAdapter(getBaseContext()));
             mCliqzIntoPager.setVisibility(View.VISIBLE);
             /* Cliqz End */
         }
@@ -3387,11 +3382,7 @@ public class BrowserApp extends GeckoApp
         // This must be called before the dynamic toolbar is set visible because it calls
         // FormAssistPopup.onMetricsChanged, which queues a runnable that undoes the effect of hide.
         // With hide first, onMetricsChanged will return early instead.
-        /* Cliqz Start */
-        if (mFormAssistPopup != null) {
-            mFormAssistPopup.hide();
-        }
-        /* Cliqz End */
+        mFormAssistPopup.hide();
         mFindInPageBar.hide();
 
         // Refresh toolbar height to possibly restore the toolbar padding
@@ -5202,11 +5193,6 @@ public class BrowserApp extends GeckoApp
                 antiPhishingDialog.show();
             }
         });
-    }
-
-    @Override
-    public void enterFirstRunEditingMode() {
-        enterEditingMode();
     }
 
     @Override
