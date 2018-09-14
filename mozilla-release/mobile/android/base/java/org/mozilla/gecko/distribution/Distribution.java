@@ -37,6 +37,8 @@ import ch.boye.httpclientandroidlib.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.gecko.BuildConfig;
+import org.mozilla.gecko.PrefsHelper;
 import org.mozilla.gecko.annotation.RobocopTarget;
 import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.EventDispatcher;
@@ -53,6 +55,7 @@ import org.mozilla.gecko.util.ThreadUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.SystemClock;
 import android.support.annotation.WorkerThread;
 import android.telephony.TelephonyManager;
@@ -69,6 +72,9 @@ public class Distribution {
     // We use "AndroidPreferences" for profile-scoped pref for backward compatibility(bug 1295675)
     public static final String PREF_KEY_PROFILE_PREFERENCES = "AndroidPreferences";
     public static final String PREF_KEY_APPLICATION_PREFERENCES = "ApplicationPreferences";
+    /* Cliqz start */
+    private static final String PREF_CLIQZ_VERSION_CODE = "cliqzVersionCode";
+    /* Cliqz end */
 
     private static final int STATE_UNKNOWN = 0;
     private static final int STATE_NONE = 1;
@@ -490,7 +496,24 @@ public class Distribution {
 
         final String keyName = getKeyName();
         this.state = settings.getInt(keyName, STATE_UNKNOWN);
-
+        /* Cliqz start */
+        // We want to force distributed extensions to be copied over on update, so we force a copy
+        // if the app version code changed.
+        // There is already a "versionCode" in the shared preferences, but that is used to
+        // restore a session after an update. Because we have no guarantee Mozillians will keep
+        // the today update order of that preference, we duplicate it.
+        final int lastCliqzVersion = settings.getInt(PREF_CLIQZ_VERSION_CODE, 0);
+        // Update the version code in the prefs
+        if (lastCliqzVersion != BuildConfig.VERSION_CODE) {
+            settings.edit().putInt(PREF_CLIQZ_VERSION_CODE, BuildConfig.VERSION_CODE).apply();
+        }
+        // We have to force this only if the state is STATE_SET
+        if (lastCliqzVersion != BuildConfig.VERSION_CODE && this.state == STATE_SET) {
+            // Force distribution addons re-installation
+            copyAndCheckAPKDistribution();
+            PrefsHelper.setPref("distribution.addonsInstalled", false);
+        }
+        /* Cliqz end */
         if (this.state == STATE_NONE) {
             runReadyQueue();
             return false;
