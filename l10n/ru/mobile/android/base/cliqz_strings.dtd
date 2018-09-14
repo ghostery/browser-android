@@ -237,7 +237,6 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Помощь">
-<!ENTITY pref_category_help_summary "Лучшее из &brandShortName;, FAQ , Сообщите о веб-сайте">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "О нас">

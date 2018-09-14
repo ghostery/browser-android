@@ -238,7 +238,6 @@
 
 <!-- Help Settings -->
 <!ENTITY pref_category_help "Hilfe">
-<!ENTITY pref_category_help_summary "Das Beste von &brandShortName;, FAQ, Website melden">
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "Über uns">
