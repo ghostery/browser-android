@@ -10,14 +10,15 @@
                                            xmlns:app="http://schemas.android.com/apk/res-auto"
                                            style="@style/TabsItem"
                                            android:id="@+id/info"
-                                           android:layout_width="wrap_content"
+                                           android:layout_width="match_parent"
                                            android:layout_height="wrap_content"
                                            android:gravity="center"
                                            android:orientation="vertical"
                                            android:background="@drawable/tab_thumbnail">
 
     <!-- Cliqz : increase the padding, adding margins and  layout gravity to be central vertical -->
-    <LinearLayout
+    <org.mozilla.gecko.widget.themed.ThemedLinearLayout
+        android:id="@+id/tab_item_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -74,13 +75,13 @@
             android:tint="@android:color/white"
             />
 
-    </LinearLayout>
+    </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
 
     <!-- We set state_private on this View dynamically in TabsGridLayout. -->
     <!--Cliqz: remove the background, remove paddingTop by add each padding separately -->
     <org.mozilla.gecko.widget.TabThumbnailWrapper
             android:id="@+id/wrapper"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/tab_highlight_stroke_width"
             android:paddingRight="@dimen/tab_highlight_stroke_width"
