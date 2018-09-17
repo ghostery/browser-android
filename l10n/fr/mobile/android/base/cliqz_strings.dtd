@@ -290,7 +290,7 @@
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Attention: site malveillant !">
-<!ENTITY antiphishing_message "&brandShortName; a bloqué l'accés à &#37;1&#036;s car il a été reporté comme un site malveillant. Les sites malveillants se déguisent en sites sûrs afin de subtiliser vos identifiants, mots de passe ou toutes autres données sensibles.">
+<!ENTITY antiphishing_message "&brandShortName; a bloqué l'accés à &formatS1; car il a été reporté comme un site malveillant. Les sites malveillants se déguisent en sites sûrs afin de subtiliser vos identifiants, mots de passe ou toutes autres données sensibles.">
 <!ENTITY antiphishing_walk_away "Retourner au site sûr">
 <!ENTITY antiphishing_ignore_danger "Continuer malgré l'avertissement">
 
