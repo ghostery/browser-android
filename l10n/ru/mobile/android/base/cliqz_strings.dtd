@@ -80,18 +80,18 @@
 <!ENTITY cc_title_overview "ОБЗОР">
 <!ENTITY cc_title_site_trackers "ТРЕКЕРЫ САЙТА">
 <!ENTITY cc_title_global_trackers "ВСЕ ТРЕКЕРЫ">
-<!ENTITY cc_zero_trackers_found "Найдено трекеров &formatD;\n">
-<!ENTITY cc_one_trackers_found "Найден трекер &formatD;\n">
-<!ENTITY cc_two_trackers_found "Найдено трекеров &formatD;\n">
-<!ENTITY cc_few_trackers_found "Найдено трекеров &formatD;\n">
-<!ENTITY cc_many_trackers_found "Найдено трекеров &formatD;\n">
-<!ENTITY cc_other_trackers_found "Найдено трекеров &formatD;\n">
-<!ENTITY cc_zero_trackers_blocked "Заблокировано трекеров &formatD;">
-<!ENTITY cc_one_trackers_blocked "Заблокирован трекер &formatD;">
-<!ENTITY cc_two_trackers_blocked "Заблокировано трекеров &formatD;">
-<!ENTITY cc_few_trackers_blocked "Заблокировано трекеров &formatD;">
-<!ENTITY cc_many_trackers_blocked "Заблокировано трекеров &formatD;">
-<!ENTITY cc_other_trackers_blocked "Заблокировано трекеров &formatD;">
+<!ENTITY cc_zero_trackers_found "&formatD;\n трекеров найдено">
+<!ENTITY cc_one_trackers_found "&formatD;\n трекер найден">
+<!ENTITY cc_two_trackers_found "&formatD;\n трекера найдено">
+<!ENTITY cc_few_trackers_found "&formatD;\n трекера найдено">
+<!ENTITY cc_many_trackers_found "&formatD;\n трекеров найдено">
+<!ENTITY cc_other_trackers_found "&formatD;\n трекеров найдено">
+<!ENTITY cc_zero_trackers_blocked "&formatD; трекеров заблокировано">
+<!ENTITY cc_one_trackers_blocked "&formatD; трекер заблокирован">
+<!ENTITY cc_two_trackers_blocked "&formatD; трекера заблокировано">
+<!ENTITY cc_few_trackers_blocked "&formatD; трекеров заблокировано">
+<!ENTITY cc_many_trackers_blocked "&formatD; трекеров заблокировано">
+<!ENTITY cc_other_trackers_blocked "&formatD; трекеров заблокировано">
 <!ENTITY cc_zero_trackers "Трекеры &formatD;">
 <!ENTITY cc_one_trackers "Трекер &formatD;">
 <!ENTITY cc_two_trackers "Трекеры &formatD;">
@@ -290,7 +290,7 @@
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Предупреждение: подозрительный веб-сайт! ">
-<!ENTITY antiphishing_message "&brandShortName; заблокировал доступ к &#37;1&#036;s, потому что сайт был представлен как фишинговый сайт. Фишинговые сайты маскируются под другие сайты, которым Вы доверяете, чтобы обмануть Вас и получить доступ к конфиденциальной информации, например логинам и паролям. ">
+<!ENTITY antiphishing_message "&brandShortName; заблокировал доступ к &formatS1;, потому что сайт был представлен как фишинговый сайт. Фишинговые сайты маскируются под другие сайты, которым Вы доверяете, чтобы обмануть Вас и получить доступ к конфиденциальной информации, например логинам и паролям. ">
 <!ENTITY antiphishing_walk_away "Вернуться на безопасный сайт">
 <!ENTITY antiphishing_ignore_danger "Продолжить несмотря на предупреждение">
 
