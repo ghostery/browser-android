@@ -5049,10 +5049,12 @@ public class BrowserApp extends GeckoApp
     public void toggleControlCenter() {
         if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
             mControlCenterContainer.setVisibility(View.GONE);
+            mDynamicToolbar.setPinned(false, PinReason.DISABLED);
         } else {
             mControlCenterContainer.setVisibility(View.VISIBLE);
             mControlCenterPager.setCurrentItem(0);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
+            mDynamicToolbar.setPinned(true, PinReason.DISABLED);
             ControlCenterMetrics.show();
         }
     }
