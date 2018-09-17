@@ -290,7 +290,7 @@
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Warnung: betrügerische Website!">
-<!ENTITY antiphishing_message "Ghostery hat den Zugang zu &#37;1$ gesperrt, weil sie als Phishing-Website gemeldet wurde.\nPhishing-Websites geben sich als andere, vertrauenswürdige Websites aus, um dich zu verleiten, Anmeldedaten, Passwörter oder andere wichtige Informationen preiszugeben.">
+<!ENTITY antiphishing_message "&brandShortName; hat den Zugang zu &formatS1; gesperrt, weil sie als Phishing-Website gemeldet wurde.\nPhishing-Websites geben sich als andere, vertrauenswürdige Websites aus, um dich zu verleiten, Anmeldedaten, Passwörter oder andere wichtige Informationen preiszugeben.">
 <!ENTITY antiphishing_walk_away "Zurück zu sicherer Seite">
 <!ENTITY antiphishing_ignore_danger "Trotz Warnung fortfahren">
 
