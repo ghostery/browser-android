@@ -131,6 +131,7 @@ import org.mozilla.gecko.home.HomeConfig;
 import org.mozilla.gecko.home.HomeConfig.PanelType;
 import org.mozilla.gecko.home.HomeConfigPrefsBackend;
 import org.mozilla.gecko.home.HomeFragment;
+import org.mozilla.gecko.home.HomePager;
 import org.mozilla.gecko.home.HomePager.OnUrlOpenInBackgroundListener;
 import org.mozilla.gecko.home.HomePager.OnUrlOpenListener;
 import org.mozilla.gecko.home.HomePanelsManager;
@@ -2783,7 +2784,9 @@ public class BrowserApp extends GeckoApp
             delegate.onTabsTrayHidden(this, mTabsPanel);
         }
 
-        refreshStatusBarColor();
+        /* Cliqz start */
+        refreshDrawables();
+        /* Cliqz end */
     }
 
     @Override
@@ -5019,18 +5022,24 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public void onLightweightThemeChanged() {
-        refreshStatusBarColor();
+        /* Cliqz start */
+        refreshDrawables();
+        /* Cliqz end */
     }
 
     @Override
     public void onLightweightThemeReset() {
-        refreshStatusBarColor();
+        /* Cliqz start */
+        refreshDrawables();
+        /* Cliqz end */
     }
 
-    private void refreshStatusBarColor() {
-        final boolean isPrivate = mBrowserToolbar.isPrivateMode();
+    /* Cliqz start */
+    // add isPrivate parameter
+    private void refreshStatusBarColor(boolean isPrivate) {
         WindowUtil.setStatusBarColor(BrowserApp.this, isPrivate);
     }
+    /* Cliqz end */
 
     /* Cliqz start */
     private void showCliqzSearch() {
@@ -5200,6 +5209,18 @@ public class BrowserApp extends GeckoApp
     @Override
     public void backPressed() {
         onBackPressed();
+    }
+
+    private void refreshBackground(boolean isPrivate) {
+        if(isHomePagerVisible()) {
+            ((HomePager)mHomeScreen).setPrivateMode(isPrivate);
+        }
+    }
+
+    private void refreshDrawables(){
+        final boolean isPrivate = mBrowserToolbar.isPrivateMode();
+        refreshStatusBarColor(isPrivate);
+        refreshBackground(isPrivate);
     }
     /* Cliqz end */
 }
