@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.ViewUtils;
@@ -59,8 +60,8 @@ public class TabsLayoutItemView extends LinearLayout
 
     public TabsLayoutItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mDefaultDrawable = initDefaultDrawable(R.drawable.ic_ghosty);
-        mDefaultPrivateDrawable = initDefaultDrawable(R.drawable.ic_ghosty_forget);
+        mDefaultDrawable = initDefaultVectorDrawable(R.drawable.ic_ghosty);
+        mDefaultPrivateDrawable = initDefaultVectorDrawable(R.drawable.ic_ghosty_forget);
     }
 
     @Override
@@ -254,16 +255,16 @@ public class TabsLayoutItemView extends LinearLayout
     }
 
     /* Cliqz start */
-    Drawable initDefaultDrawable(int drawableId) {
+    private Drawable initDefaultVectorDrawable(int drawableId) {
         final Context context = getContext();
-        Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, drawableId))
-                .mutate();
+        final Drawable drawable = VectorDrawableCompat
+                .create(context.getResources(), drawableId, null).mutate();
         DrawableCompat.setTint(drawable, ContextCompat.getColor(context,
                 android.R.color.white));
         return drawable;
     }
 
-    Drawable getDefaultFavIcon(Tab tab, Context context) {
+    private Drawable getDefaultFavIcon(Tab tab, Context context) {
         return tab.isPrivate() ? mDefaultPrivateDrawable : mDefaultDrawable;
     }
     /* Cliqz end*/
