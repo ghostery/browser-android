@@ -41,8 +41,8 @@
             gecko:dominantBorderEnabled="false"
             gecko:overrideScaleType="false" />
 
-        <!-- Cliqz : change textColor to white-->
-        <org.mozilla.gecko.widget.FadedSingleColorTextView
+        <!-- Cliqz : change textColor to white, 3 dots at the end instead of fading -->
+        <TextView
             android:id="@+id/title"
             style="@style/TabLayoutItemTextAppearance"
             android:layout_width="0dip"
@@ -56,9 +56,9 @@
             android:paddingRight="5dp"
             android:paddingStart="0dp"
             android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
-            gecko:fadeWidth="15dp"/>
+            android:textSize="14sp" />
 
         <!-- Cliqz : remove background, tint the color to white-->
         <ImageView
