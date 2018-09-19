@@ -102,7 +102,9 @@ public class SearchEngineAdapter
                         .inflate(R.layout.search_engine_bar_label, parent, false);
         final Drawable icon = DrawableCompat.wrap(
                 ContextCompat.getDrawable(mContext, R.drawable.search_icon_active).mutate());
-        DrawableCompat.setTint(icon, ContextCompat.getColor(mContext, R.color.disabled_grey));
+        /* Cliqz start */
+        DrawableCompat.setTint(icon, ContextCompat.getColor(mContext, android.R.color.white));
+        /* Cliqz end */
 
         final ImageView iconView = (ImageView) view.findViewById(R.id.search_engine_label);
         iconView.setImageDrawable(icon);
