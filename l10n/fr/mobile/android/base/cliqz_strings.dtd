@@ -297,4 +297,4 @@
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "Déjà disponible !">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "Ce module complémentaire n\'a pas été installé car $formatS1; est déjà intégré à votre navigateur.">
+        "Ce module complémentaire n\'a pas été installé car &formatS1; est déjà intégré à votre navigateur.">

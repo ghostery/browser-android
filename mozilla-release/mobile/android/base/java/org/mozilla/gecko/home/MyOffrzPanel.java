@@ -341,26 +341,32 @@ public class MyOffrzPanel extends HomeFragment {
 
         private void setTermsAndConditionButtonDrawables() {
             final Context context = getContext();
-            final Drawable leftDrawable = getDrawable(context, R.drawable.ic_info_black).mutate();
-            final Drawable rightDrawableSelected = safeVectorLoadAndMutate(R.drawable.arrow_up);
-            final Drawable rightDrawableUnselected = safeVectorLoadAndMutate(R.drawable.arrow_down);
-            if (rightDrawableSelected == null || rightDrawableUnselected == null) {
-                return;
-            }
             final @ColorInt int color = ContextCompat.getColor(context, R.color.general_blue_color);
-            DrawableCompat.setTint(rightDrawableSelected, color);
-            DrawableCompat.setTint(rightDrawableUnselected, color);
-            final StateListDrawable rightDrawable = new StateListDrawable();
-            rightDrawable.addState(new int[] { android.R.attr.state_selected }, rightDrawableSelected);
-            rightDrawable.addState(new int[] {}, rightDrawableUnselected);
-            DrawableCompat.setTint(leftDrawable, color);
-
+            final Drawable leftDrawable = loadAndTint(context, R.drawable.ic_info_black, color);
+            final Drawable rightDrawableSelected = loadAndTint(context, R.drawable.arrow_up, color);
+            final Drawable rightDrawableUnselected = loadAndTint(context, R.drawable.arrow_down, color);
+            final StateListDrawable rightDrawable;
+            if (rightDrawableUnselected != null) {
+                rightDrawable = new StateListDrawable();
+                if (rightDrawableSelected != null) {
+                    rightDrawable.addState(new int[] { android.R.attr.state_selected },
+                            rightDrawableSelected);
+                }
+                rightDrawable.addState(new int[] {}, rightDrawableUnselected);
+            } else {
+                rightDrawable = null;
+            }
             termsAndConditionsButton.setCompoundDrawablesWithIntrinsicBounds(leftDrawable,null,rightDrawable,null);
         }
 
-        private Drawable safeVectorLoadAndMutate(@DrawableRes int id) {
-            final Drawable drawable = VectorDrawableCompat.create(getResources(), id, null);
-            return drawable != null ? drawable.mutate() : null;
+        private Drawable loadAndTint(@NonNull Context context, @DrawableRes int id, @ColorInt int color) {
+            final Drawable orig = ContextCompat.getDrawable(context, id);
+            if (orig == null) {
+                return null;
+            }
+            final Drawable compatDrawable = DrawableCompat.wrap(orig.mutate());
+            DrawableCompat.setTint(compatDrawable, color);
+            return compatDrawable;
         }
 
         void setOfferUrl(String url) {

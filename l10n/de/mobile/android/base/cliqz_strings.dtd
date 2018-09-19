@@ -259,7 +259,7 @@
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Einführung von &brandShortName;">
 <!ENTITY ghostery_onboarding_new_users_text "Surfe auch unterwegs sauberer, schneller und sicherer mit &brandShortName;! Jetzt für Mobilgeräte optimiert!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Hilf &brandShortName; indem du anonyme Statistiken und Human-Web-Daten sendest, um &brandShortName;'s Leistung zu verbessern. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Hilf &brandShortName; indem du anonyme Statistiken und Human-Web-Daten sendest, um &brandShortName;s Leistung zu verbessern. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Werbung und Tracker blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_text "Wähle aus, was &brandShortName; blockieren soll, damit du schneller, sicherer und sauberer surfst. Du kannst diese Einstellung jederzeit im Privacy Control Center anpassen und ändern.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Nichts blockieren">
