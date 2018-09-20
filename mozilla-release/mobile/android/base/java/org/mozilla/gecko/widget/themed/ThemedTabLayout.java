@@ -181,7 +181,7 @@ public class ThemedTabLayout extends android.support.design.widget.TabLayout
 
     @Override
     public void onTabChanged(org.mozilla.gecko.Tab tab, Tabs.TabEvents msg, String data) {
-        if(tab != null) {
+        if(tab != null && msg == Tabs.TabEvents.SELECTED) {
             setPrivateMode(tab.isPrivate());
         }
     }
