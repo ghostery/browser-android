@@ -692,7 +692,7 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
 
     @Override
     public void onTabChanged(Tab tab, Tabs.TabEvents msg, String data) {
-        if(tab != null) {
+        if(tab != null && msg == Tabs.TabEvents.SELECTED) {
             setPrivateMode(tab.isPrivate());
         }
     }
