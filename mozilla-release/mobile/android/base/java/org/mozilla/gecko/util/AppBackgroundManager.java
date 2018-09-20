@@ -21,6 +21,8 @@ import com.squareup.picasso.Target;
 
 import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.Tab;
+import org.mozilla.gecko.Tabs;
 
 import java.util.Locale;
 
@@ -141,7 +143,6 @@ public class AppBackgroundManager {
         final Rect dstRect;
         final int size;
         final int urlBarHeight;
-        private boolean mIsPrivate;
         final Paint paint;
         final Paint privatePaint;
         private Bitmap bitmap;
@@ -153,21 +154,10 @@ public class AppBackgroundManager {
             srcRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
             dstRect = new Rect();
             urlBarHeight = (int) resources.getDimension(R.dimen.browser_toolbar_height);
-            mIsPrivate = false;
             paint = new Paint();
             privatePaint = new Paint();
             privatePaint.setColor(android.R.color.black);
             privatePaint.setAlpha(64);
-        }
-
-        @Override
-        protected boolean onStateChange(int[] stateSet) {
-            final boolean oldState = mIsPrivate;
-            mIsPrivate = false;
-            for (int state: stateSet) {
-                mIsPrivate |= state == R.attr.state_private;
-            }
-            return oldState != mIsPrivate;
         }
 
         @Override
@@ -177,7 +167,10 @@ public class AppBackgroundManager {
             final int top = -urlBarHeight;
             dstRect.set(left, top, left + size, top + size);
             canvas.drawBitmap(bitmap, srcRect, dstRect, paint);
-            if(mIsPrivate){
+
+            final Tab tab = Tabs.getInstance().getSelectedTab();
+            boolean isPrivate = tab != null && tab.isPrivate();
+            if (isPrivate) {
                 canvas.drawRect(dstRect, privatePaint);
             }
         }
