@@ -30,7 +30,8 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
 
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String NEWS_PAYLOAD = "{\"q\":\"\",\"results\":[{\"url\":\"rotated-top-news.cliqz.com\",\"snippet\":{}}]}";
-    private static final String NEWS_URL = "https://api.cliqz.com/api/v2/rich-header?path=/v2/map";
+    // TODO: Change this with branding
+    private static final String NEWS_URL = "https://api.ghostery.net/api/v2/rich-header?path=/v2/map";
     private final String TAG = TopNewsRow.class.getSimpleName();
 
     public TopNewsLoader(Context context) {

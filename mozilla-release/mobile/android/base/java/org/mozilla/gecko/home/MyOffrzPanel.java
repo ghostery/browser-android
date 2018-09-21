@@ -58,7 +58,8 @@ public class MyOffrzPanel extends HomeFragment {
     private static final String TEMPLATE_DESCRIPTION_KEY = "desc";
     private static final String TEMPLATE_PICTURE_KEY = "picture_url";
     private static final String TEMPLATE_CONDITIONS = "conditions";
-    private static final String ERROR_URL_FALLBAK = "http://cliqz.com";
+    // TODO: Also the fallback shlud depend on branding
+    private static final String ERROR_URL_FALLBAK = "http://ghostery.com";
     private static final String CALL_TO_ACTION_KEY = "call_to_action";
     private static final String CALL_TO_ACTION_TEXT_KEY = "text";
     private static final String CALL_TO_ACTION_URL_KEY = "url";

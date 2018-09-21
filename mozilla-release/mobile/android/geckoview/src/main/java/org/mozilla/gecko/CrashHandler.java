@@ -34,9 +34,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static final String LOGTAG = "GeckoCrashHandler";
     private static final Thread MAIN_THREAD = Thread.currentThread();
     /* Cliqz start */
-    // TODO: differentiate Cliqz and Ghostery endpoints
+    // TODO: make this branding dependant
     private static final String DEFAULT_SERVER_URL =
-        "https://reports.cliqz.com/submit?id=%1$s&version=%2$s&buildid=%3$s";
+        "https://reports.ghostery.net/submit?id=%1$s&version=%2$s&buildid=%3$s";
         // "https://crash-reports.mozilla.com/submit?id=%1$s&version=%2$s&buildid=%3$s";
     /* Cliqz end */
 

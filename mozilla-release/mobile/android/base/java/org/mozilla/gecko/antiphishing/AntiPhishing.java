@@ -16,7 +16,8 @@ import java.util.Locale;
 public class AntiPhishing {
 
     private static final String TAG = AntiPhishing.class.getSimpleName();
-    private static final String DEFAULT_ENDPOINT = "https://antiphishing.cliqz.com/api/bwlist";
+    // TODO: Change this with branding
+    private static final String DEFAULT_ENDPOINT = "https://antiphishing.ghostery.net/api/bwlist";
 
     public interface AntiPhishingCallback {
         void onUrlProcessed(String url, boolean isPhishing);

@@ -38,9 +38,10 @@ public class AppBackgroundManager {
 
     private static final String TAG = AppBackgroundManager.class.getSimpleName();
 
+    // TODO: Make this branding dependant
     private static final String BACKGROUND_IMAGE_URL_FORMAT = BuildConfig.DEBUG ?
-            "https://cdn.cliqz.com/mobile/background/android/staging/%s_%d.jpg" :
-            "https://cdn.cliqz.com/mobile/background/android/production/%s_%d.jpg";
+            "https://cdn.ghostery.net/mobile/background/android/staging/%s_%d.jpg" :
+            "https://cdn.ghostery.net/mobile/background/android/production/%s_%d.jpg";
     private static final int MIN_BACKGROUND_SIZE = 240;
     private static final int MAX_BACKGROUND_SIZE = 3840;
     private static final int SIZE_DELTA = 120;
