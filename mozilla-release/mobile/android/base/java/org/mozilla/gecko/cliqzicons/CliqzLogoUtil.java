@@ -60,7 +60,7 @@ public class CliqzLogoUtil {
     private static final String DATABASE_VERSION = "1515404421880";
 
     private static final String BASE_ICON_URL =
-            "https://cdn.cliqz.com/brands-database/database/%s/pngs/%s/%s_%d.png";
+            "https://cdn.ghostery.net/brands-database/database/%s/pngs/%s/%s_%d.png";
 
     @SuppressLint("DefaultLocale")
     public static String getIconUrl(String url, int width, int height) {
