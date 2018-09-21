@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:gecko="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cliqz_intro_pager_holder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cliqz_default_background"
+    android:visibility="gone"
+    tools:visibility="visible"
+    tools:theme="@style/Theme.AppCompat.NoActionBar">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/cliqz_intro_tab_dots"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        gecko:tabBackground="@drawable/tab_selector"
+        gecko:tabGravity="center"
+        tools:layout_height="40dp"
+        gecko:tabIndicatorHeight="0dp" />
+
+    <Button
+        android:id="@+id/start_browsing"
+        android:layout_width="156dp"
+        android:layout_height="41dp"
+        android:layout_above="@id/cliqz_intro_tab_dots"
+        android:layout_centerHorizontal="true"
+        android:background="@color/general_blue_color"
+        android:text="@string/ghostery_onboarding_action_button"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        tools:text="Start Browsing" />
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/cliqz_intro_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/start_browsing" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/start_browsing"
+        android:visibility="gone"
+        tools:visibility="visible">
+        <include
+            layout="@layout/cliqz_intro_structure" />
+    </FrameLayout>
+
+</RelativeLayout>
