@@ -13,13 +13,14 @@
         android:layout_marginBottom="15dp"
         android:text="@string/ghostery_onboarding_quick_search_title"
         android:textColor="@color/cliqz_intro_text_color"
-        android:textSize="@dimen/cliqz_intro_title_size"
+        style="@style/Cliqz.Intro.Title.Text"
         tools:text="Ghost Search" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="34dp"
         android:gravity="center"
+        style="@style/Cliqz.Intro.Content.Text"
         android:text="@string/ghostery_onboarding_quick_search_text"
         tools:text="Stay anonymous, reduce data usage, and save time: results appear instantly as you type in the Ghost search bar."
         android:textColor="@android:color/white" />

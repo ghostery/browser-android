@@ -3363,9 +3363,20 @@ public class BrowserApp extends GeckoApp
             //         }
             //     }
             // });
-            mCliqzIntoPager = (ViewPager) findViewById(R.id.cliqz_intro_pager);
+            final View cliqzIntroPagerHolder = findViewById(R.id.cliqz_intro_pager_holder);
+            final ViewPager mCliqzIntoPager = (ViewPager) findViewById(R.id.cliqz_intro_pager);
+            final TabLayout tabLayout = (TabLayout) findViewById(R.id.cliqz_intro_tab_dots);
             mCliqzIntoPager.setAdapter(new CliqzIntroPagerAdapter(getBaseContext()));
-            mCliqzIntoPager.setVisibility(View.VISIBLE);
+            tabLayout.setupWithViewPager(mCliqzIntoPager);
+            cliqzIntroPagerHolder.setVisibility(View.VISIBLE);
+
+            final Button startBrowsing = (Button) cliqzIntroPagerHolder.findViewById(R.id.start_browsing);
+            startBrowsing.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cliqzIntroPagerHolder.setVisibility(View.GONE);
+                }
+            });
             /* Cliqz End */
         }
 
