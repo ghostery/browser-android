@@ -136,20 +136,11 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
         final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         final Screen screen = Screen.values()[position];
         final ViewGroup layout = (ViewGroup) layoutInflater.inflate(R.layout.cliqz_intro_structure, container, false);
-        final ImageView dots = (ImageView) layout.findViewById(R.id.dots);
-        dots.setImageLevel(position);
         final FrameLayout contentContainer = (FrameLayout) layout.findViewById(R.id.content_container);
         contentContainer.removeAllViews();
         final ImageView imageView = (ImageView) layout.findViewById(R.id.image);
         imageView.setImageResource(screen.image);
         layoutInflater.inflate(screen.layout, contentContainer, true);
-        final Button startBrowsing = (Button) layout.findViewById(R.id.start_browsing);
-        startBrowsing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                container.setVisibility(View.GONE);
-            }
-        });
         if (screen.action != null) {
             screen.action.onInflated(layout);
         }
