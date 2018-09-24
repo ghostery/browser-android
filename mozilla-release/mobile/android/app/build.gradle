@@ -20,7 +20,7 @@ android {
         manifestPlaceholders = project.ext.manifestPlaceholders
 
         /* Cliqz start */
-        versionCode 109
+        versionCode 110
         /* Cliqz end */
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
         testApplicationId 'org.mozilla.roboexample.test'
