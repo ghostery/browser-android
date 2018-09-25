@@ -397,8 +397,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
 
     void setData(GeckoBundle data) {
         this.data = data;
-        mListData = data.getBundle("data").getBundle("summary")
-                .getBundleArray("categories");
+        mListData = GeckoBundleUtils.safeGetBundleArray(data,"data/summary/categories");
         notifyDataSetChanged();
     }
 
