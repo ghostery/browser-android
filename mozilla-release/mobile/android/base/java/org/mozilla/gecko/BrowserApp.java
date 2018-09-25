@@ -5061,6 +5061,7 @@ public class BrowserApp extends GeckoApp
             mControlCenterContainer.setVisibility(View.GONE);
             mDynamicToolbar.setPinned(false, PinReason.DISABLED);
         } else {
+            mControlCenterPagerAdapter.setTrackingData(new GeckoBundle());
             mControlCenterContainer.setVisibility(View.VISIBLE);
             mControlCenterPager.setCurrentItem(0);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
