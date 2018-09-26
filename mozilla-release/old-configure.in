@@ -1947,10 +1947,6 @@ case "${target}" in
 
 esac
 
-# Cliqz Start
-# Default Distribution directory
-MOZ_ANDROID_DISTRIBUTION_DIRECTORY="${_topsrcdir}/../distribution"
-# Cliqz End
 # Optional Firefox for Android partner distribution directory.
 MOZ_ARG_WITH_STRING(android-distribution-directory,
 [  --with-android-distribution-directory=dir

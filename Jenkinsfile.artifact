@@ -71,8 +71,6 @@ def build(Map m){
                                         set -x
                                         cp mozconfigs/artifact.mozconfig mozilla-release/mozconfig
                                         cd mozilla-release
-                                        export HOST_CC=$CLANG_HOME/bin/clang
-                                        export HOST_CXX=$CLANG_HOME/bin/clang++
                                         ./mach -v build
                                         ./mach -v package
                                     '''
