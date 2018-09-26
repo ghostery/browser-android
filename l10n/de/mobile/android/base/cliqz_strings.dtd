@@ -155,6 +155,7 @@
 <!ENTITY cc_reset_changes_dialog_title "Alle Änderungen zurücksetzen?">
 <!ENTITY cc_reset_changes_dialog_message "Alle früheren Änderungen an globalen und Website-Trackern werden zurückgesetzt.">
 <!ENTITY cc_reset "ZURÜCKSETZEN">
+<!ENTITY cc_reload_page_snackbar_text "Aktualisiere Seite, um Änderungen zu übernehmen">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Suche">
