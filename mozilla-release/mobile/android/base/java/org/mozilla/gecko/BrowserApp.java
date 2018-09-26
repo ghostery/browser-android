@@ -3637,10 +3637,6 @@ public class BrowserApp extends GeckoApp
             getSupportFragmentManager().beginTransaction()
                     .hide(mBrowserSearch).commitAllowingStateLoss();
             mBrowserSearch.setUserVisibleHint(false);
-            if(mPreferenceManager.isQuerySuggestionsEnabled()) {
-                EventDispatcher.getInstance().unregisterUiThreadListener(this,
-                        "Search:QuerySuggestions", null);
-            }
         } else if (hidePanel) {
             hidePanelSearch();
         }
@@ -5050,6 +5046,10 @@ public class BrowserApp extends GeckoApp
     private void hidePanelSearch() {
         EventDispatcher.getInstance().dispatch("Search:Hide", null);
         EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
+        if(mPreferenceManager.isQuerySuggestionsEnabled()) {
+            EventDispatcher.getInstance().unregisterUiThreadListener(this,
+                    "Search:QuerySuggestions", null);
+        }
     }
 
     public void toggleControlCenter() {
@@ -5151,12 +5151,12 @@ public class BrowserApp extends GeckoApp
         mCliqzQuerySuggestionsContainer.removeAllViews();
 
         if ((originalQuery != null && URLUtil.isValidUrl(originalQuery)) ||
-                suggestions == null || suggestions.length == 0) {
-            mCliqzQuerySuggestionsContainer.setVisibility(View.INVISIBLE);
+                suggestions == null || suggestions.length == 0 || !mBrowserToolbar.hasFocus()) {
+            hideCliqzQuerySuggestions();
             return;
         }
 
-        mCliqzQuerySuggestionsContainer.setVisibility(View.VISIBLE);
+        showCliqzQuerySuggestions();
 
         for (final String suggestion : suggestions) {
             if (shownSuggestions >= SUGGESTIONS_LIMIT) {
