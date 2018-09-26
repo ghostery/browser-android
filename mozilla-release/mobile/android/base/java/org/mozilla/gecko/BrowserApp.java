@@ -46,7 +46,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -87,6 +86,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -151,7 +151,6 @@ import org.mozilla.gecko.notifications.NotificationHelper;
 import org.mozilla.gecko.onboarding.CliqzIntroPagerAdapter;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
-import org.mozilla.gecko.preferences.ClearOnShutdownPref;
 import org.mozilla.gecko.preferences.Countries;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
@@ -194,11 +193,9 @@ import org.mozilla.gecko.util.GeckoBundleUtils;
 import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.IntentUtils;
 import org.mozilla.gecko.util.MenuUtils;
-import org.mozilla.gecko.util.PrefUtils;
 import org.mozilla.gecko.util.ShortcutUtils;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.util.ThreadUtils;
-import org.mozilla.gecko.util.ViewUtil;
 import org.mozilla.gecko.util.WindowUtil;
 import org.mozilla.gecko.widget.ActionModePresenter;
 import org.mozilla.gecko.widget.AnchoredPopup;
@@ -217,7 +214,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -4056,12 +4052,10 @@ public class BrowserApp extends GeckoApp
         // (We check the pref last to save the pref read.)
         // In ICS+, it's easy to kill an app through the task switcher.
         final SharedPreferences prefs = GeckoSharedPrefs.forProfile(this);
-        final boolean visible = HardwareUtils.isTelevision() ||
-                                prefs.getBoolean(GeckoPreferences.PREFS_SHOW_QUIT_MENU, false) ||
-                                !PrefUtils.getStringSet(prefs,
-                                                        ClearOnShutdownPref.PREF,
-                                                        new HashSet<String>()).isEmpty();
-        aMenu.findItem(R.id.quit).setVisible(visible);
+        /* Cliqz Start */
+        //Always show the quit button
+        aMenu.findItem(R.id.quit).setVisible(true);
+        /* Cliqz End */
 
         // If tab data is unavailable we disable most of the context menu and related items and
         // return early.
