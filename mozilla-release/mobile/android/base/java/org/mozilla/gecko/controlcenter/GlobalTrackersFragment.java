@@ -52,6 +52,9 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
 
     @Override
     public void updateUI(GeckoBundle data) {
+        if (mTrackerListAdapter == null) {
+            return;
+        }
         mTrackerListAdapter.setData(data);
         if (progressBar.getVisibility() == View.VISIBLE) {
             progressBar.setVisibility(View.GONE);

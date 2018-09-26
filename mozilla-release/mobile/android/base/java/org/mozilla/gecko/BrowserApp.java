@@ -5050,6 +5050,7 @@ public class BrowserApp extends GeckoApp
         if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
             mControlCenterContainer.setVisibility(View.GONE);
         } else {
+            mControlCenterPagerAdapter.setTrackingData(new GeckoBundle());
             mControlCenterContainer.setVisibility(View.VISIBLE);
             mControlCenterPager.setCurrentItem(0);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
