@@ -942,7 +942,7 @@
     <!-- Cliqz start -->
     <!-- cancel button moved inside the urlBar, remove dependencies of outer layout-->
     <style name="UrlBar.V15.EditLayout" parent="UrlBar.Base.EditLayout">
-        <item name="android:layout_alignLeft">@id/url_bar_entry</item>
+        <!--<item name="android:layout_alignLeft">@id/url_bar_entry</item>-->
         <!--<item name="android:layout_toLeftOf">@id/edit_cancel</item>-->
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
@@ -954,7 +954,7 @@
     <style name="UrlBar.V15.EditLayout.Title" parent="UrlBar.Title">
         <!-- Cliqz start -->
         <!-- increase padding at the beginning of the titleBar -->
-        <item name="android:paddingLeft">@dimen/padding_16</item>
+        <item name="android:paddingLeft">@dimen/padding_10</item>
         <!-- Cliqz end -->
         <item name="android:paddingRight">8dp</item>
     </style>
