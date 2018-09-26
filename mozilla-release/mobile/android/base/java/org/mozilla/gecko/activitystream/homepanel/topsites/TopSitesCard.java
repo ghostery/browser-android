@@ -89,7 +89,7 @@ import java.util.concurrent.Future;
         final int newsFavIconSize = faviconView.getResources().getDimensionPixelSize(R.dimen.news_favicon_size);
         Picasso.with(faviconView.getContext())
                 .load(CliqzLogoUtil.getIconUrl(topSite.getUrl(), newsFavIconSize, newsFavIconSize))
-                .error(CliqzLogoUtil.getDefaultIcon(topSite.getUrl(), newsFavIconSize, newsFavIconSize))
+                .placeholder(CliqzLogoUtil.getDefaultIcon(topSite.getUrl(), newsFavIconSize, newsFavIconSize))
                 .into(faviconView);
         /* Cliqz End */
         pinIconView.setVisibility(topSite.isPinned() ? View.VISIBLE : View.GONE);
