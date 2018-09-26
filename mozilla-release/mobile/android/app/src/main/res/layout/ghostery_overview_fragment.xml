@@ -12,11 +12,12 @@
         android:layout_height="match_parent"
         android:padding="15dp">
 
-        <com.github.mikephil.charting.charts.PieChart
+        <org.mozilla.gecko.controlcenter.CliqzPieChart
             android:id="@+id/cc_donut"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
+            android:layout_above="@+id/cc_domain_name"
             android:layout_centerHorizontal="true"
             android:padding="10dp" />
 
@@ -24,7 +25,7 @@
             android:id="@+id/cc_domain_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cc_donut"
+            android:layout_above="@+id/cc_trackers_blocked"
             android:layout_centerHorizontal="true"
             android:padding="10dp"
             android:textColor="@android:color/black"
@@ -35,9 +36,10 @@
             android:id="@+id/cc_trackers_blocked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cc_domain_name"
+            android:layout_above="@+id/cc_ghostery_trust_site_button"
             android:layout_centerHorizontal="true"
             android:padding="2dp"
+            android:layout_marginBottom="20dp"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             tools:text="11 trackers blocked" />
@@ -46,7 +48,7 @@
             android:id="@+id/cc_ghostery_trust_site_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cc_trackers_blocked"
+            android:layout_above="@+id/cc_ghostery_restrict_site_button"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:layout_margin="5dp"
@@ -79,7 +81,7 @@
             android:id="@+id/cc_ghostery_restrict_site_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cc_ghostery_trust_site_button"
+            android:layout_above="@+id/cc_ghostery_pause_button"
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
             android:background="@drawable/cc_button_background_white"
@@ -110,9 +112,10 @@
             android:id="@+id/cc_ghostery_pause_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cc_ghostery_restrict_site_button"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="65dp"
             android:background="@drawable/cc_button_background_white"
             android:gravity="center"
             android:minWidth="@dimen/ghostery_overview_button_width"
