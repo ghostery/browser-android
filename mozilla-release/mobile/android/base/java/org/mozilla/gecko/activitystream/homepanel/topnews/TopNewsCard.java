@@ -45,7 +45,7 @@ public class TopNewsCard extends RecyclerView.ViewHolder {
         final int newsFavIconSize = context.getResources().getDimensionPixelSize(R.dimen.news_favicon_size);
         Picasso.with(context)
                 .load(CliqzLogoUtil.getIconUrl(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
-                .error(CliqzLogoUtil.getDefaultIcon(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
+                .placeholder(CliqzLogoUtil.getDefaultIcon(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
                 .into(faviconView);
         titleView.setText(buildTitleSpannable(topNews));
         urlView.setText(topNews.getDomain());
