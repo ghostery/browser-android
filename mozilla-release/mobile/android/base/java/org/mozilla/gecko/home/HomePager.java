@@ -585,7 +585,7 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
             notifyPanelSelected(position);
 
             /* Cliqz Start */
-            if (position == 1) {
+            if (position != 0) {
                 ((HomeAdapter) getAdapter()).updateBgAlpha(1.0f);
             }
             /* Cliqz End */
@@ -604,6 +604,9 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
             /* Cliqz Start */
             if (position == 0) {
                 ((HomeAdapter) getAdapter()).updateBgAlpha(positionOffset);
+            }
+            if (position == 1) {
+                ((HomeAdapter) getAdapter()).updateBgAlpha(1.0f);
             }
             /* Cliqz End */
             if (mDecor != null) {
