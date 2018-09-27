@@ -46,6 +46,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -75,6 +76,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -4360,6 +4362,13 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        /* Cliqz start */
+        // remove AddToHomeScreen onboarding if it still be shown
+        View pwaOnboardingView = findViewById(R.id.pwa_onboarding_root);
+        if(pwaOnboardingView != null){
+            ((ViewGroup)pwaOnboardingView.getParent()).removeView(pwaOnboardingView);
+        }
+        /* Cliqz end */
         Tab tab = null;
         Intent intent = null;
 
