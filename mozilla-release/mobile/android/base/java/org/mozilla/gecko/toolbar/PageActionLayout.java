@@ -35,6 +35,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -132,6 +133,12 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
         hidePreviousConfirmPrompt();
 
         if ("PageActions:Add".equals(event)) {
+            /* Cliqz start */
+            if (getVisibility() != VISIBLE) {
+                setVisibility(VISIBLE);
+            }
+            /* Cliqz end */
+
             final String id = message.getString("id");
 
             boolean alreadyAdded = isPwaAdded(id);
@@ -172,6 +179,11 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
 
         } else if ("PageActions:Remove".equals(event)) {
             removePageAction(message.getString("id"));
+            /* Cliqz start */
+            if(mPageActionList.size() == 0 && getVisibility() == VISIBLE) {
+                setVisibility(GONE);
+            }
+            /* Cliqz end */
         }
     }
 
