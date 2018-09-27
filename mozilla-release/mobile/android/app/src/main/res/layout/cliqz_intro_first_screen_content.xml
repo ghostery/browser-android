@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="34dp"
+        style="@style/Cliqz.Intro.Content.Text"
         android:gravity="center"
         android:text="@string/ghostery_onboarding_new_users_text"
         tools:text="Browse cleaner, faster, and safer on-the-go with Ghostery, now optimized for mobile!"

@@ -10,4 +10,9 @@
 
     <dimen name="firstrun_background_height">180dp</dimen>
     <dimen name="firstrun_min_height">180dp</dimen>
+    <!-- Cliqz start -->
+    <dimen name="cliqz_intro_title_size">16dp</dimen>
+    <dimen name="cliqz_intro_content_size">9dp</dimen>
+    <dimen name="cliqz_intro_image_height">150dp</dimen>
+    <!-- Cliqz end -->
 </resources>
