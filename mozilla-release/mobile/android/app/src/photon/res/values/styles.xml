@@ -502,8 +502,9 @@
         <item name="android:gravity">center_vertical|left|start</item>
         <item name="android:hint">@string/url_bar_default_text</item>
         <!-- Cliqz start -->
-        <!-- add padding left -->
-        <item name="android:paddingLeft">@dimen/padding_10</item>
+        <!-- add padding -->
+        <item name="android:paddingStart">@dimen/padding_10</item>
+        <item name="android:paddingEnd">@dimen/padding_10</item>
         <!-- Cliqz end -->
     </style>
 
