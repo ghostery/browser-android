@@ -535,5 +535,13 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         this.topNews = topNews;
         notifyDataSetChanged();
     }
+
+    public void hideTopSitesSection() {
+        for (RowModel rowModel : recyclerViewModel) {
+            if (rowModel.getRowItemType() == RowItemType.TOP_PANEL) {
+                recyclerViewModel.remove(rowModel);
+            }
+        }
+    }
     /* Cliqz end */
 }

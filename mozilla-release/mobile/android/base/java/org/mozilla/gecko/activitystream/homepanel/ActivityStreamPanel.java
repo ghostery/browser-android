@@ -127,11 +127,13 @@ public class ActivityStreamPanel extends FrameLayout {
         }
         /* Cliqz start */
         // add check to show the topsites if it's enabled
-        if(isTopSitesEnabled()) {
+        if (isTopSitesEnabled()) {
             lm.initLoader(LOADER_ID_TOPSITES, null, new TopSitesCallback());
+        } else {
+            adapter.hideTopSitesSection();
         }
         // init TopNews Loader if show news enabled
-        if(isNewsEnabled()) {
+        if (isNewsEnabled()) {
             lm.initLoader(LOADER_ID_TOP_NEWS, null, new TopNewsCallback());
         }
         /* Cliqz end */
@@ -155,6 +157,7 @@ public class ActivityStreamPanel extends FrameLayout {
         lm.destroyLoader(LOADER_ID_HIGHLIGHTS);
         lm.destroyLoader(LOADER_ID_POCKET);
         /* Cliqz start */
+        lm.destroyLoader(LOADER_ID_TOPSITES);
         // destroy TopNews Loader
         lm.destroyLoader(LOADER_ID_TOP_NEWS);
         /* Cliqz end */
