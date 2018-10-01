@@ -188,9 +188,6 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
 
         if (isOnboardingVisible()) {
             onboardingIsPreparing = false;
-            /* Cliqz start */
-            mCliqzInfroHolder.setVisibility(View.GONE);
-            /* Cliqz end */
             return true;
         }
 
@@ -269,6 +266,10 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
                             .append(" values");
             Log.d(LOGTAG, logMessage.toString());
         }
+
+        View ghosterySplashScreen = activity.findViewById(R.id.ghostery_splash_screen);
+        ghosterySplashScreen.setVisibility(View.GONE);
+
         final ViewPager cliqzIntroPager = (ViewPager) mCliqzInfroHolder.findViewById(R.id.cliqz_intro_pager);
         final TabLayout tabLayout = (TabLayout) mCliqzInfroHolder.findViewById(R.id.cliqz_intro_tab_dots);
         cliqzIntroPager.setAdapter(new CliqzIntroPagerAdapter(cliqzIntroPager.getContext()));
@@ -282,6 +283,7 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
             public void onClick(View v) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                 mCliqzInfroHolder.setVisibility(View.GONE);
+                listener.onFinishedOnboarding(true);
             }
         });
         /* Cliqz end */

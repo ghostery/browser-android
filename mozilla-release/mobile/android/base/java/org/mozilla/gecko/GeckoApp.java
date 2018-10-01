@@ -191,6 +191,10 @@ public abstract class GeckoApp extends GeckoActivity
 
     private boolean foregrounded = false;
 
+    /* Cliqz Start */
+    protected boolean isOnboardingVisible = false;
+    /* Cliqz End */
+
     private static final class LastSessionParser extends SessionParser {
         private JSONArray tabs;
         private JSONObject windowObject;
