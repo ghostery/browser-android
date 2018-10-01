@@ -458,7 +458,9 @@ public class Tabs implements BundleEventListener {
         removeTab(tabId);
 
         if (nextTab == null) {
-            nextTab = loadUrl(getHomepageForNewTab(mAppContext), LOADURL_NEW_TAB);
+            /* Cliqz Start */
+            nextTab = loadUrl(getHomepageForNewTab(mAppContext), LOADURL_START_EDITING | Tabs.LOADURL_NEW_TAB);
+            /* Cliqz End */
         }
 
         selectTab(nextTab.getId());

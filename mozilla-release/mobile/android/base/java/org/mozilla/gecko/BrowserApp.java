@@ -1026,6 +1026,9 @@ public class BrowserApp extends GeckoApp
             @Override
             public void run() {
                 mGhosterySplashScreen.setVisibility(View.GONE);
+                if (!isOnboardingVisible) {
+                    enterEditingMode();
+                }
             }
         }, 4000);
         /*Cliqz End*/
@@ -2359,6 +2362,9 @@ public class BrowserApp extends GeckoApp
                     mGhosterySplashScreen = findViewById(R.id.ghostery_splash_screen);
                 }
                 mGhosterySplashScreen.setVisibility(View.GONE);
+                if (!isOnboardingVisible) {
+                    enterEditingMode();
+                }
                 break;
             case "Search:QuerySuggestions":
                 if(mPreferenceManager.isQuerySuggestionsEnabled() && mBrowserToolbar.isEditing()) {
@@ -4528,10 +4534,16 @@ public class BrowserApp extends GeckoApp
         }
 
         splashScreen.show(OnboardingHelper.DELAY_SHOW_DEFAULT_ONBOARDING);
+        /* Cliqz Start */
+        isOnboardingVisible = true;
+        /* Cliqz End */
     }
 
     @Override
     public void onOnboardingScreensVisible() {
+        /* Cliqz Start */
+        isOnboardingVisible = true;
+        /* Cliqz End */
         mHomeScreenContainer.setVisibility(View.VISIBLE);
 
         if (HardwareUtils.isTablet()) {
@@ -4547,9 +4559,10 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public void onFinishedOnboarding(final boolean showBrowserHint) {
-        if (showBrowserHint && !Tabs.hasHomepage(this)) {
-            enterEditingMode();
-        }
+        /* Cliqz Start */
+        enterEditingMode();
+        isOnboardingVisible = false;
+        /* Cliqz End */
     }
 
     /* Cliqz start */
