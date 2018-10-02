@@ -94,7 +94,9 @@
     <color name="tab_strip_title_lwt">#272727</color>
 
     <!-- Status bar background color -->
-    <color name="status_bar_bg_color">#F9F9FA</color>
+    <!-- Cliqz start -->
+    <color name="status_bar_bg_color">#38383D</color>
+    <!-- Cliqz end -->
     <color name="status_bar_bg_color_private">#38383D</color>
     <!-- Cliqz start -->
     <color name="status_bar_bg_color_tabs_tray">@android:color/black</color>
