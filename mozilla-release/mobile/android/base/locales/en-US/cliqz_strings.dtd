@@ -139,8 +139,8 @@
 <!ENTITY cc_blocked "Blocked">
 <!ENTITY cc_num_blocked "&formatD; BLOCKED">
 <!ENTITY cc_tracker_info "Tracker Info">
-<!ENTITY cc_block_all "Block all">
-<!ENTITY cc_unblock_all "Unblock all">
+<!ENTITY cc_block_all "Block All">
+<!ENTITY cc_unblock_all "Unblock All">
 <!ENTITY cc_block "Block">
 <!ENTITY cc_unblock "Unblock">
 <!ENTITY cc_trust "Trust">
@@ -281,8 +281,8 @@
 <!ENTITY ghostery_onboarding_contextual_button "Show me now">
 
 <!-- Ghost Tab -->
-<!ENTITY new_ghost_tab_opened "New ghost tab opened">
-<!ENTITY new_ghost_tab "New ghost tab">
+<!ENTITY new_ghost_tab_opened "New Ghost Tab opened">
+<!ENTITY new_ghost_tab "New Ghost Tab">
 <!ENTITY close_ghost_tabs "Close Ghost Tabs">
 <!ENTITY contextmenu_open_ghost_tab "Open in Ghost Tab">
 <!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: using a &formatS1;New Ghost Tab&formatS2; won\'t save your history.">
