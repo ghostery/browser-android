@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright © Cliqz 2018-->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/tab_indicator_dot_selected"
-        android:state_selected="true" />
-    <item android:drawable="@drawable/tab_indicator_dot_default" />
-</selector>

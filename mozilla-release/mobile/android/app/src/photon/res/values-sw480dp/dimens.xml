@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright © Cliqz 2018-->
-<resources>
-    <dimen name="cliqz_intro_title_size">30sp</dimen>
-    <dimen name="cliqz_intro_content_size">19sp</dimen>
-    <dimen name="cliqz_intro_image_height">300dp</dimen>
-</resources>

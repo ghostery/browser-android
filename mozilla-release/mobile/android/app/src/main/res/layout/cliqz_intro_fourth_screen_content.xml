@@ -13,7 +13,6 @@
         android:layout_marginBottom="15dp"
         android:text="@string/ghostery_onboarding_new_tab_title"
         android:textColor="@color/cliqz_intro_text_color"
-        style="@style/Cliqz.Intro.Title.Text"
         android:textSize="@dimen/cliqz_intro_title_size"
         tools:text="Start Tab" />
     <TextView
@@ -21,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="34dp"
         android:gravity="center"
-        style="@style/Cliqz.Intro.Content.Text"
         android:text="@string/ghostery_onboarding_new_tab_text"
         tools:text="Each new Start Tab is customizable and can display top sites, the latest news, and other tracking insights to come."
         android:textColor="@android:color/white" />

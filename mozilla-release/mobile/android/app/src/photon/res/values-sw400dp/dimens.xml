@@ -7,9 +7,4 @@
 <resources>
     <dimen name="tab_panel_item_width_autofit">176dip</dimen>
     <dimen name="tab_thumbnail_width">137dip</dimen>
-    <!-- Cliqz start -->
-    <dimen name="cliqz_intro_title_size">27sp</dimen>
-    <dimen name="cliqz_intro_content_size">14sp</dimen>
-    <dimen name="cliqz_intro_image_height">200dp</dimen>
-    <!-- Cliqz end -->
 </resources>
