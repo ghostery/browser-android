@@ -1065,7 +1065,7 @@
 
     <style name="Cliqz.Intro.RadioButton" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_height">@dimen/cliqz_intro_radio_button_height</item>
         <item name="android:textColor">@color/cliqz_intro_text_color</item>
         <item name="android:textSize">@dimen/cliqz_intro_content_size</item>
         <item name="android:buttonTint">@color/cliqz_intro_text_color</item>
