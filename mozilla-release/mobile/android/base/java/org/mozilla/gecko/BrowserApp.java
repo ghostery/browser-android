@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -76,7 +77,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -314,7 +314,7 @@ public class BrowserApp extends GeckoApp
     private View mControlCenterContainer;
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
     private boolean mControlCenterSettingsChanged = false;
-    private ViewPager mCliqzIntoPager;
+    private View mCliqzIntroPagerHolder;
     private PreferenceManager mPreferenceManager;
     private LinearLayout mCliqzQuerySuggestionsContainer;
     private String mLastUrl = "";
@@ -3365,18 +3365,21 @@ public class BrowserApp extends GeckoApp
             //         }
             //     }
             // });
-            final View cliqzIntroPagerHolder = findViewById(R.id.cliqz_intro_pager_holder);
-            final ViewPager mCliqzIntoPager = (ViewPager) findViewById(R.id.cliqz_intro_pager);
-            final TabLayout tabLayout = (TabLayout) findViewById(R.id.cliqz_intro_tab_dots);
-            mCliqzIntoPager.setAdapter(new CliqzIntroPagerAdapter(getBaseContext()));
-            tabLayout.setupWithViewPager(mCliqzIntoPager);
-            cliqzIntroPagerHolder.setVisibility(View.VISIBLE);
+            mCliqzIntroPagerHolder = findViewById(R.id.cliqz_intro_pager_holder);
+            final ViewPager cliqzIntroPager = (ViewPager) mCliqzIntroPagerHolder.findViewById(R.id.cliqz_intro_pager);
+            final TabLayout tabLayout = (TabLayout) mCliqzIntroPagerHolder.findViewById(R.id.cliqz_intro_tab_dots);
+            cliqzIntroPager.setAdapter(new CliqzIntroPagerAdapter(getBaseContext()));
+            tabLayout.setupWithViewPager(cliqzIntroPager);
 
-            final Button startBrowsing = (Button) cliqzIntroPagerHolder.findViewById(R.id.start_browsing);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            mCliqzIntroPagerHolder.setVisibility(View.VISIBLE);
+
+            final Button startBrowsing = (Button) mCliqzIntroPagerHolder.findViewById(R.id.start_browsing);
             startBrowsing.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cliqzIntroPagerHolder.setVisibility(View.GONE);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                    mCliqzIntroPagerHolder.setVisibility(View.GONE);
                 }
             });
             /* Cliqz End */
@@ -5271,6 +5274,12 @@ public class BrowserApp extends GeckoApp
         final boolean isPrivate = mBrowserToolbar.isPrivateMode();
         refreshStatusBarColor(isPrivate);
         refreshBackground(isPrivate);
+    }
+
+    @Override
+    public boolean setRequestedOrientationForCurrentActivity(int requestedActivityInfoOrientation) {
+        return (mCliqzIntroPagerHolder == null || mCliqzIntroPagerHolder.getVisibility() != View.VISIBLE) &&
+                super.setRequestedOrientationForCurrentActivity(requestedActivityInfoOrientation);
     }
     /* Cliqz end */
 }
