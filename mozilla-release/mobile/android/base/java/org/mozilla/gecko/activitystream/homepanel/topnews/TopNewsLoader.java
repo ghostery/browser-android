@@ -37,6 +37,7 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
     private static final String NEWS_URL = "https://api.ghostery.net/api/v2/rich-header?path=/v2/map";
     private static final String TOP_NEWS_CACHE_FILE = "TopNewsCache.json";
     private final String TAG = TopNewsRow.class.getSimpleName();
+    private String mData = null;
 
     public TopNewsLoader(Context context) {
         super(context);
@@ -53,11 +54,18 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
         String response = HttpHandler.sendRequest("PUT", getTopNewsUrl(Integer.MAX_VALUE),
                 CONTENT_TYPE_JSON, NEWS_PAYLOAD);
         try {
-            if (response == null) {
-                response = FileUtils.readStringFromFile(getTopNewsCacheFile());
-            } else {
+            if (response != null && response != mData) {
                 FileUtils.writeStringToFile(getTopNewsCacheFile(),response);
+            } else if (response == null) {
+                response = FileUtils.readStringFromFile(getTopNewsCacheFile());
             }
+
+            // prevent reshowing news that are already be shown
+            if(response.equals(mData)) {
+                return null;
+            }
+
+            mData = response;
             return parseResult(new JSONObject(response));
         } catch (Exception e) {
             Log.e(TAG,"problem with loading news");
