@@ -202,8 +202,11 @@
 
         </view>
     <!-- Cliqz Start -->
-        <include layout="@layout/cliqz_intro_pager" />
-
+    <android.support.v4.view.ViewPager
+        android:id="@+id/cliqz_intro_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
     </FrameLayout>
     <!-- Cliqz End -->
     <FrameLayout android:id="@+id/tab_history_panel"
