@@ -38,6 +38,7 @@ import android.nfc.NfcEvent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.StrictMode;
@@ -5105,7 +5106,14 @@ public class BrowserApp extends GeckoApp
 
     private void showReloadingTabSnackbar() {
         final Tab tab = Tabs.getInstance().getSelectedTab();
-        tab.doReload(true);
+        // Delay reload by a second while showing the reload snackbar text.
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tab.doReload(true);
+            }
+        }, 1000);
         final SnackbarBuilder.SnackbarCallback allowCallback = new SnackbarBuilder.SnackbarCallback() {
             @Override
             public void onClick(View v) {
@@ -5115,7 +5123,7 @@ public class BrowserApp extends GeckoApp
 
         SnackbarBuilder.builder(this)
                 .message(R.string.cc_reload_page_snackbar_text)
-                .duration(2000)
+                .duration(2500)
                 .action(R.string.reload)
                 .callback(allowCallback)
                 .buildAndShow();
