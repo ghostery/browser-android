@@ -78,19 +78,19 @@ RUN set -eux; \
     cargo --version; \
     rustc --version; \
     rustup self update; \
-    rustup toolchain install stable-x86_64-unknown-linux-gnu; \
-    rustup default stable-x86_64-unknown-linux-gnu; \
+    rustup toolchain install 1.28.0-x86_64-unknown-linux-gnu; \
+    rustup default 1.28.0-x86_64-unknown-linux-gnu; \
     rustup target add i686-linux-android; \
     rustup target add armv7-linux-androideabi
 
 # Change to User Jenkins and Set Environment Variables
 USER jenkins
 ENV ANDROID_HOME /home/jenkins/.mozbuild/android-sdk-linux
-ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux
+ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r15c
 ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.9.3-linux-x64/bin:$PATH"
 ENV NVM_DIR /home/jenkins/nvm
 ENV NODE_VERSION 8.9.3
-ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04
+ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04/
 SHELL ["/bin/bash", "-l", "-c"]
 
 # Install nvm with node and npm
@@ -116,8 +116,8 @@ RUN mkdir -p $ANDROID_HOME; \
       tools/bin/sdkmanager  --package_file=/home/jenkins/android-packages.txt;
 
 #Install Android NDK
-RUN mkdir -p $ANDROID_NDK_HOME; \
-    cd $ANDROID_NDK_HOME; \
+RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
+    cd /home/jenkins/.mozbuild/android-ndk-linux; \
     wget --output-document=ndk.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-ndk/android-ndk-r15c-linux-x86_64.zip'; \
     unzip ndk.zip; \
     rm -r ndk.zip;
