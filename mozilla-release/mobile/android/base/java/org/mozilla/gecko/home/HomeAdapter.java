@@ -192,8 +192,12 @@ public class HomeAdapter extends FragmentStatePagerAdapter {
         final ActivityStreamHomeFragment freshTab = (ActivityStreamHomeFragment) mPanels.get(HomeConfig.TOP_SITES_PANEL_ID);
         final int opacity = (int) (41.1 * positionOffset);
         String desiredHex = Integer.toString(opacity) + "000000";
-        historyPanel.getView().findViewById(R.id.root_view).setBackgroundColor(Integer.parseInt(desiredHex, 16));
-        freshTab.getView().findViewById(R.id.root_view).setBackgroundColor(Integer.parseInt(desiredHex, 16));
+        if (historyPanel != null) {
+            historyPanel.getView().findViewById(R.id.root_view).setBackgroundColor(Integer.parseInt(desiredHex, 16));
+        }
+        if (freshTab != null) {
+            freshTab.getView().findViewById(R.id.root_view).setBackgroundColor(Integer.parseInt(desiredHex, 16));
+        }
     }
     /*Cliqz End */
 

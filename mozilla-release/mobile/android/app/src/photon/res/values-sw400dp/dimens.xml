@@ -10,6 +10,7 @@
     <!-- Cliqz start -->
     <dimen name="cliqz_intro_title_size">27sp</dimen>
     <dimen name="cliqz_intro_content_size">14sp</dimen>
-    <dimen name="cliqz_intro_image_height">200dp</dimen>
+    <dimen name="cliqz_intro_image_height">250dp</dimen>
+    <dimen name="cliqz_intro_radio_button_height">50dp</dimen>
     <!-- Cliqz end -->
 </resources>
