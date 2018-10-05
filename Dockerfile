@@ -107,8 +107,8 @@ RUN mkdir -p /home/jenkins/.mozbuild/proguard/lib && mkdir -p /home/jenkins/tmp 
 
 #Install Android SDK and the Required SDKs
 COPY mozilla-release/python/mozboot/mozboot/android-packages.txt /home/jenkins/
-RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
-    cd /home/jenkins/.mozbuild/android-ndk-linux; \
+RUN mkdir -p $ANDROID_HOME; \
+    cd $ANDROID_HOME; \
     wget --output-document=sdktools.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-sdk/sdk-tools-linux-3859397.zip'; \
     unzip sdktools.zip; \
     rm -r sdktools.zip; \
@@ -116,8 +116,8 @@ RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
       tools/bin/sdkmanager  --package_file=/home/jenkins/android-packages.txt;
 
 #Install Android NDK
-RUN mkdir -p $ANDROID_NDK_HOME; \
-    cd $ANDROID_NDK_HOME; \
+RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
+    cd /home/jenkins/.mozbuild/android-ndk-linux; \
     wget --output-document=ndk.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-ndk/android-ndk-r15c-linux-x86_64.zip'; \
     unzip ndk.zip; \
     rm -r ndk.zip;
