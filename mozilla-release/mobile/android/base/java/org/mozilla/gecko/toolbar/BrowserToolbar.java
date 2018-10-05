@@ -1074,6 +1074,8 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     public void toggleControlCenter() {
         if(urlDisplayLayout.isTitleSet()) {
             activity.toggleControlCenter();
+        } else {
+            activity.hideControlCenter();
         }
     }
     /**

@@ -6385,6 +6385,12 @@ var ExternalApps = {
 
 var Cliqz = {
   init: function () {
+    console.debug('Cliqz.init()');
+    if (this._isInitialized) {
+      console.debug('Cliqz Already initialized');
+      return;
+    }
+    this._isInitialized = true;
     this.callbacks = Object.create(null);
     this.messageId = 1;
     this.extensionsMessageQueue = {
@@ -6392,8 +6398,8 @@ var Cliqz = {
       "firefox@ghostery.com": []
     };
     this.extensionsReady = {
-      "android@cliqz.com": false,
-      "firefox@ghostery.com": false,
+      "android@cliqz.com": this.READY_STATUS.NOT_READY,
+      "firefox@ghostery.com": this.READY_STATUS.NOT_READY,
     };
 
     GlobalEventDispatcher.registerListener(this, [
@@ -6447,8 +6453,21 @@ var Cliqz = {
     }, {once: true});
   },
 
+  READY_STATUS: {
+    NOT_READY: 0,
+    PINGED: 1,
+    READY: 2
+  },
+
   _messageExtension(id, msg, opts = {}) {
-    if (!this.extensionsReady[id]) {
+    if (this.extensionsReady[id] === this.READY_STATUS.NOT_READY) {
+      this.extensionsMessageQueue[id].push({
+        msg: Object.assign({}, msg),
+        opts: opts
+      });
+      msg.ping = true;
+      this.extensionsReady[id] = this.READY_STATUS.PINGED;
+    } else if (this.extensionsReady[id] === this.READY_STATUS.PINGED) {
       this.extensionsMessageQueue[id].push({
         msg: msg,
         opts: opts
@@ -6559,6 +6578,7 @@ var Cliqz = {
 
   _privacyExtensionListener(msg) {
     console.log("Dispaching event from the privacy extension to native", msg);
+    this._handleExtensionReady("firefox@ghostery.com");
     switch (msg.action) {
       case "setIcon":
         var count = Number.parseInt(msg.payload.text);
@@ -6576,7 +6596,7 @@ var Cliqz = {
         });
         break;
       case "ready":
-        this._handleExtensionReady("firefox@ghostery.com");
+        // it will be considered ready when any message is sent from extension
         break;
       default:
         console.log("unexpected message", msg);
@@ -6584,11 +6604,11 @@ var Cliqz = {
   },
 
   _handleExtensionReady(id) {
-    if (this.extensionsReady[id]) {
+    if (this.extensionsReady[id] === this.READY_STATUS.READY) {
       return;
     }
-    this.extensionsReady[id] = true;
-    var queue = this.extensionsMessageQueue[id];
+    this.extensionsReady[id] = this.READY_STATUS.READY;
+    const queue = this.extensionsMessageQueue[id];
     this.extensionsMessageQueue[id] = [];
     queue.forEach(obj => this._messageExtension(id, obj.msg, obj.opts));
   },

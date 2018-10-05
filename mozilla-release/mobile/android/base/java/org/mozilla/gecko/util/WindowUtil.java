@@ -49,7 +49,9 @@ public class WindowUtil {
                 isDarkTheme = !theme.isLightTheme();
             } else {
                 color = ContextCompat.getColor(activity, R.color.status_bar_bg_color);
-                isDarkTheme = false;
+                /* Cliqz Start */
+                isDarkTheme = true;
+                /* Cliqz End */
             }
         }
         setStatusBarColor(activity, color, isDarkTheme);

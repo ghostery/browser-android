@@ -281,7 +281,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             }
             return totalBlocked;
         }
-        if (mIsSiteTrusted) {
+        if (mIsSiteTrusted || mIsGhosteryPaused) {
             return 0;
         }
         for (GeckoBundle category : categories) {

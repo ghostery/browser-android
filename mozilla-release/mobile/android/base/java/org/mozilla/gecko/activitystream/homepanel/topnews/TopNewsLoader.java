@@ -13,9 +13,12 @@ import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.activitystream.homepanel.stream.TopNewsRow;
 import org.mozilla.gecko.search.SearchEngineManager;
+import org.mozilla.gecko.util.FileUtils;
 import org.mozilla.gecko.util.HttpHandler;
 import org.mozilla.mozstumbler.service.Prefs;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -32,7 +35,9 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
     private static final String NEWS_PAYLOAD = "{\"q\":\"\",\"results\":[{\"url\":\"rotated-top-news.cliqz.com\",\"snippet\":{}}]}";
     // TODO: Change this with branding
     private static final String NEWS_URL = "https://api.ghostery.net/api/v2/rich-header?path=/v2/map";
+    private static final String TOP_NEWS_CACHE_FILE = "TopNewsCache.json";
     private final String TAG = TopNewsRow.class.getSimpleName();
+    private String mData = null;
 
     public TopNewsLoader(Context context) {
         super(context);
@@ -46,14 +51,24 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
     @Override
     @Nullable
     public List<TopNews> loadInBackground() {
-        final String response = HttpHandler.sendRequest("PUT", getTopNewsUrl(Integer.MAX_VALUE),
+        String response = HttpHandler.sendRequest("PUT", getTopNewsUrl(Integer.MAX_VALUE),
                 CONTENT_TYPE_JSON, NEWS_PAYLOAD);
-        if (response == null) {
-            return null;
-        }
         try {
+            if (response != null && response != mData) {
+                FileUtils.writeStringToFile(getTopNewsCacheFile(),response);
+            } else if (response == null) {
+                response = FileUtils.readStringFromFile(getTopNewsCacheFile());
+            }
+
+            // prevent reshowing news that are already be shown
+            if(response.equals(mData)) {
+                return null;
+            }
+
+            mData = response;
             return parseResult(new JSONObject(response));
-        } catch (JSONException e) {
+        } catch (Exception e) {
+            Log.e(TAG,"problem with loading news");
             return null;
         }
     }
@@ -133,5 +148,9 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
             Log.e(TAG, "Error fetching request" + NEWS_URL);
             return null;
         }
+    }
+
+    private File getTopNewsCacheFile() {
+        return new File(getContext().getCacheDir(), TOP_NEWS_CACHE_FILE);
     }
 }
