@@ -38,6 +38,8 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
     private static final String TOP_NEWS_CACHE_FILE = "TopNewsCache.json";
     private final String TAG = TopNewsRow.class.getSimpleName();
     private String mData = null;
+    // rewrite cached topNews file after 30 minutes
+    private static final int CACHED_PERIOD = 1800000;
 
     public TopNewsLoader(Context context) {
         super(context);
@@ -45,30 +47,62 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        // prevent reload the data if the loader still has the data
+        if (mData == null) {
+            forceLoad();
+        }
     }
 
+    /**
+     * Logic:
+     *  - Get cached data if exist and it was written less than 30 minutes ago
+     *  - Request TopNews endpoint to get the data
+     *      * if succeed write it on cached and return it
+     *      * if failed return the cached data if exist else null
+     *
+     * @return
+     */
     @Override
     @Nullable
     public List<TopNews> loadInBackground() {
-        String response = HttpHandler.sendRequest("PUT", getTopNewsUrl(Integer.MAX_VALUE),
-                CONTENT_TYPE_JSON, NEWS_PAYLOAD);
-        try {
-            if (response != null && response != mData) {
-                FileUtils.writeStringToFile(getTopNewsCacheFile(),response);
-            } else if (response == null) {
-                response = FileUtils.readStringFromFile(getTopNewsCacheFile());
-            }
+        String response = null;
+        final File cachedFile = getTopNewsCacheFile();
+        boolean succeedReadFromCache = false;
 
-            // prevent reshowing news that are already be shown
-            if(response.equals(mData)) {
+        if(System.currentTimeMillis() - cachedFile.lastModified() <= CACHED_PERIOD ) {
+            try {
+                response  = FileUtils.readStringFromFile(cachedFile);
+                succeedReadFromCache = true;
+            } catch (IOException e) {
+                Log.e(TAG,"can't read cached news");
+            }
+        }
+
+        if (!succeedReadFromCache) {
+            try {
+                response = HttpHandler.sendRequest("PUT", getTopNewsUrl(Integer.MAX_VALUE),
+                        CONTENT_TYPE_JSON, NEWS_PAYLOAD);
+                if (response != null && response != mData) {
+                    FileUtils.writeStringToFile(cachedFile, response);
+                } else if (response == null) {
+                    response = FileUtils.readStringFromFile(cachedFile);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "problem with loading top news");
                 return null;
             }
+        }
 
-            mData = response;
+        // prevent reshowing news that are already be shown
+        if (response.equals(mData)) {
+            return null;
+        }
+
+        mData = response;
+        try {
             return parseResult(new JSONObject(response));
-        } catch (Exception e) {
-            Log.e(TAG,"problem with loading news");
+        } catch (JSONException e) {
+            Log.e(TAG, "problem with parsing top news");
             return null;
         }
     }
