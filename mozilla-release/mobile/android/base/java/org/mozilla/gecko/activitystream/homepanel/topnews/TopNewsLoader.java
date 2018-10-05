@@ -45,7 +45,9 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        if (mData == null) {
+            forceLoad();
+        }
     }
 
     @Override
