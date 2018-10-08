@@ -143,9 +143,11 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mInfoViewSummary = (TextView) view.findViewById(R.id.cc_info_view_summary);
         mInfoViewIcon = (ImageView) view.findViewById(R.id.cc_info_view_icon);
         mNotchTitle = (TextView) view.findViewById(R.id.cc_notch_title);
+
         final View mBottomSheetRootView = view.findViewById(R.id.cc_bottom_sheet_root_view);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetRootView);
         mBottomSheetBehavior.setBottomSheetCallback(mBottomSheetCallback);
+
         final View mAttrackInfoButton = view.findViewById(R.id.cc_enhanced_tracking_info_button);
         final View mAdBlockingInfoButton = view.findViewById(R.id.cc_enhanced_blocking_info_button);
         final View mSmartBlockingInfoButton = view.findViewById(R.id.cc_smart_blocking_info_button);
@@ -154,6 +156,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mAdBlockingInfoButton.setOnClickListener(this);
         mSmartBlockingInfoButton.setOnClickListener(this);
         mInfoViewCloseButton.setOnClickListener(this);
+
         return view;
     }
 
@@ -181,15 +184,19 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mSmartBlockingCount.setText(String.valueOf(getSmartBlockingCount()));
         mCliqzAttrackCount.setText(String.valueOf(calculateCliqzAttrackCount()));
         mAdBlockCount.setText(String.valueOf(getAdBlockCount()));
+
         mSmartBlockingSwitch.setOnCheckedChangeListener(null);
         mAntiTrackingSwitch.setOnCheckedChangeListener(null);
         mAdBlockingSwitch.setOnCheckedChangeListener(null);
+
         mSmartBlockingSwitch.setChecked(isSmartBlockEnabled);
         mAdBlockingSwitch.setChecked(isAdBlockEnabled);
         mAntiTrackingSwitch.setChecked(isAntiTrackingEnabled);
+
         mSmartBlockingSwitch.setOnCheckedChangeListener(this);
         mAntiTrackingSwitch.setOnCheckedChangeListener(this);
         mAdBlockingSwitch.setOnCheckedChangeListener(this);
+
         final List<PieEntry> entries = new ArrayList<>();
         mIsGhosteryPaused = safeGetBoolean(controlCenterSettingsData, "data/summary/paused_blocking");
         final GeckoBundle[] categories = safeGetBundle(controlCenterSettingsData, "data/summary").getBundleArray("categories");
@@ -352,6 +359,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
 
     @Override
     public void onClick(View v) {
+        if (controlCenterSettingsData == null) {
+            return;
+        }
         switch (v.getId()) {
             case R.id.cc_ghostery_trust_site_button:
                 handleTrustButtonClick();
