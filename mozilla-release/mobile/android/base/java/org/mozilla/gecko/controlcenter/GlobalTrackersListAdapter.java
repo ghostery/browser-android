@@ -240,7 +240,7 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
 
     void setData(GeckoBundle data) {
         this.data = data;
-        mListData = GeckoBundleUtils.safeGetBundleArray(data,"data/summary/categories");
+        mListData = GeckoBundleUtils.safeGetBundleArray(data,"data/settings/categories");
         notifyDataSetChanged();
     }
 }
