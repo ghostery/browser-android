@@ -124,9 +124,11 @@ def build(Map m){
                             export HOST_CXX=$CLANG_HOME/bin/clang++
                             ./mach clobber
                             ./mach build
-                            for lang in `ls ../l10n/`; do
-                                ./mach build chrome-$lang
+                            export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
+                            for AB_CD in $MOZ_CHROME_MULTILOCALE; do
+                                ./mach build chrome-$AB_CD
                             done
+                            export AB_CD=multi
                             ./mach package
                         '''
                         withCredentials([
@@ -137,7 +139,8 @@ def build(Map m){
                                 set -e
                                 set -x
                                 cd /app/mozilla-release
-                                export ANDROID_NDK_HOME=$ANDROID_NDK_HOME/android-ndk-r15c
+                                export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
+                                export AB_CD=multi
                                 ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
                             '''
                         }
