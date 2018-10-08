@@ -102,6 +102,7 @@ public class BookmarksListView extends HomeListView
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final BookmarksListAdapter adapter = getBookmarksListAdapter();
+        /* Cliqz Start o/
         if (adapter.isShowingChildFolder()) {
             if (position == 0) {
                 // If we tap on an opened folder, move back to parent folder.
@@ -133,6 +134,7 @@ public class BookmarksListView extends HomeListView
             // Accounting for the folder view.
             position--;
         }
+        /o Cliqz End */
 
         final Cursor cursor = adapter.getCursor();
         if (cursor == null) {
@@ -193,9 +195,11 @@ public class BookmarksListView extends HomeListView
         // Adjust the item position to account for the parent folder row that is inserted
         // at the top of the list when viewing the contents of a folder.
         final BookmarksListAdapter adapter = getBookmarksListAdapter();
+        /* Cliqz Start o/
         if (adapter.isShowingChildFolder()) {
             position--;
         }
+        /o Cliqz End */
 
         // Temporarily prevent crashes until we figure out what we actually want to do here (bug 1252316).
         if (adapter.getOpenFolderType() == BookmarksListAdapter.FolderType.SCREENSHOTS) {

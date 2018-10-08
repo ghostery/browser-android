@@ -240,6 +240,7 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
+        /* Cliqz Start o/
         // The position also reflects the opened child folder row.
         if (isShowingChildFolder()) {
             if (position == 0) {
@@ -249,6 +250,7 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
             // Accounting for the folder view.
             position--;
         }
+        /o Cliqz End */
 
         if (openFolderType == FolderType.SCREENSHOTS) {
             return VIEW_TYPE_SCREENSHOT;
@@ -311,17 +313,20 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
         return (mParentStack.peek().id != Bookmarks.FIXED_ROOT_ID);
     }
 
+    /* Cliqz Start o/
     @Override
     public int getCount() {
         return super.getCount() + (isShowingChildFolder() ? 1 : 0);
     }
+    /o Cliqz End */
 
     @Override
     public void bindView(View view, Context context, int position) {
         final int viewType = getItemViewType(position);
 
-        final Cursor cursor;
-        if (isShowingChildFolder()) {
+        /* Cliqz Start */
+        final Cursor cursor = getCursor(position);
+        /*if (isShowingChildFolder()) {
             if (position == 0) {
                 cursor = null;
             } else {
@@ -331,7 +336,8 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
             }
         } else {
             cursor = getCursor(position);
-        }
+        }*/
+        /* Cliqz End */
 
         if (viewType == VIEW_TYPE_SCREENSHOT) {
             ((BookmarkScreenshotRow) view).updateFromCursor(cursor);
