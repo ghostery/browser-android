@@ -133,9 +133,6 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mTrustSiteButton.setOnClickListener(this);
         mRestrictSiteButton.setOnClickListener(this);
         mPauseGhosteryButton.setOnClickListener(this);
-        mSmartBlockingSwitch.setOnCheckedChangeListener(this);
-        mAntiTrackingSwitch.setOnCheckedChangeListener(this);
-        mAdBlockingSwitch.setOnCheckedChangeListener(this);
         mInfoView = view.findViewById(R.id.cc_info_view);
         mOverview = view.findViewById(R.id.cc_overview_view);
         mInfoViewCount = (TextView) view.findViewById(R.id.cc_info_view_count);
