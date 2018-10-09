@@ -40,15 +40,20 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
     private String mData = null;
     // rewrite cached topNews file after 30 minutes
     private static final int CACHED_PERIOD = 1800000;
+    private final File mCachedFile;
+    private boolean mIsCachedExpired;
 
     public TopNewsLoader(Context context) {
         super(context);
+        mCachedFile = getTopNewsCacheFile();
+        mIsCachedExpired = false;
     }
 
     @Override
     protected void onStartLoading() {
         // prevent reload the data if the loader still has the data
-        if (mData == null) {
+        mIsCachedExpired = (System.currentTimeMillis() - mCachedFile.lastModified()) > CACHED_PERIOD;
+        if (mData == null || mIsCachedExpired) {
             forceLoad();
         }
     }
@@ -66,12 +71,11 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
     @Nullable
     public List<TopNews> loadInBackground() {
         String response = null;
-        final File cachedFile = getTopNewsCacheFile();
         boolean succeedReadFromCache = false;
 
-        if(System.currentTimeMillis() - cachedFile.lastModified() <= CACHED_PERIOD ) {
+        if(!mIsCachedExpired) {
             try {
-                response  = FileUtils.readStringFromFile(cachedFile);
+                response  = FileUtils.readStringFromFile(mCachedFile);
                 succeedReadFromCache = true;
             } catch (IOException e) {
                 Log.e(TAG,"can't read cached news");
@@ -83,9 +87,9 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
                 response = HttpHandler.sendRequest("PUT", getTopNewsUrl(Integer.MAX_VALUE),
                         CONTENT_TYPE_JSON, NEWS_PAYLOAD);
                 if (response != null && response != mData) {
-                    FileUtils.writeStringToFile(cachedFile, response);
+                    FileUtils.writeStringToFile(mCachedFile, response);
                 } else if (response == null) {
-                    response = FileUtils.readStringFromFile(cachedFile);
+                    response = FileUtils.readStringFromFile(mCachedFile);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "problem with loading top news");
