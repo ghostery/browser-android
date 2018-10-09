@@ -18,14 +18,13 @@ import com.squareup.picasso.Picasso;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopSite;
 import org.mozilla.gecko.activitystream.homepanel.stream.TopPanelRow;
+import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.icons.IconCallback;
 import org.mozilla.gecko.icons.IconResponse;
-import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.util.URIUtils;
 import org.mozilla.gecko.util.ViewUtil;
-import org.mozilla.gecko.widget.FaviconView;
 
 import java.lang.ref.WeakReference;
 import java.net.URI;

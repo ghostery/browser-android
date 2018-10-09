@@ -130,22 +130,35 @@ public class CliqzLogoUtil {
     }
 
     private static String getHostName(String url) {
-        String host = "";
         try {
             final URI uri = new URI(url);
-            //from observations getHost() returns hosts in following formats
-            // - www.facebook.com, mobile.reuters.com, amp.time.com etc and we need just facebook, reuters or time
-            if (uri.getHost() != null) {
-                final String[] hostParts = uri.getHost().split("\\.");
-                if (hostParts.length > 1) {
-                    host = hostParts[1];
-                } else {
-                    host = "";
+            final String uriHost = uri.getHost();
+            if (uriHost == null) {
+                return "";
+            }
+            final String[] hostParts = uriHost.split("\\.");
+            if (hostParts.length == 0) {
+                // This should never happen, just in case
+                return "";
+            } else if (hostParts.length <= 2) {
+                // Urls like https://itsfoss.com that do not have a www., amp., m., etc as prefix
+                return hostParts[0];
+            } else {
+                // Any other url, it will try get the longest component with at least 3 characters.
+                // For a url like  www.ab.co.uk, it will return www as host: this is wrong but we
+                // believe there aren't so many relevant websites with such url format.
+                String host = hostParts[0];
+                for (int i = 1; i < hostParts.length - 1; i++) {
+                    final int len = hostParts[i].length();
+                    if (len >= 3 && len > host.length()) {
+                        host = hostParts[i];
+                    }
                 }
+                return host;
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
+            return "";
         }
-        return host;
     }
 }
