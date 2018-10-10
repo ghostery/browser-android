@@ -5,40 +5,6 @@
 
 package org.mozilla.gecko.home;
 
-import static org.mozilla.gecko.db.URLImageDataTable.TILE_COLOR_COLUMN;
-import static org.mozilla.gecko.db.URLImageDataTable.TILE_IMAGE_URL_COLUMN;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Future;
-
-import org.mozilla.gecko.GeckoProfile;
-import org.mozilla.gecko.GeckoSharedPrefs;
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.Telemetry;
-import org.mozilla.gecko.TelemetryContract;
-import org.mozilla.gecko.db.BrowserContract.Thumbnails;
-import org.mozilla.gecko.db.BrowserContract.TopSites;
-import org.mozilla.gecko.db.BrowserDB;
-import org.mozilla.gecko.home.HomeContextMenuInfo.RemoveItemType;
-import org.mozilla.gecko.home.HomePager.OnUrlOpenListener;
-import org.mozilla.gecko.home.PinSiteDialog.OnSiteSelectedListener;
-import org.mozilla.gecko.home.TopSitesGridView.OnEditPinnedSiteListener;
-import org.mozilla.gecko.home.TopSitesGridView.TopSitesGridContextMenuInfo;
-import org.mozilla.gecko.icons.IconCallback;
-import org.mozilla.gecko.icons.IconResponse;
-import org.mozilla.gecko.icons.Icons;
-import org.mozilla.gecko.preferences.GeckoPreferences;
-import org.mozilla.gecko.restrictions.Restrictable;
-import org.mozilla.gecko.restrictions.Restrictions;
-import org.mozilla.gecko.util.BitmapUtils;
-import org.mozilla.gecko.util.StringUtils;
-import org.mozilla.gecko.util.ThreadUtils;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -63,6 +29,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import org.mozilla.gecko.GeckoProfile;
+import org.mozilla.gecko.GeckoSharedPrefs;
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.Telemetry;
+import org.mozilla.gecko.TelemetryContract;
+import org.mozilla.gecko.db.BrowserContract.Thumbnails;
+import org.mozilla.gecko.db.BrowserContract.TopSites;
+import org.mozilla.gecko.db.BrowserDB;
+import org.mozilla.gecko.home.HomeContextMenuInfo.RemoveItemType;
+import org.mozilla.gecko.home.HomePager.OnUrlOpenListener;
+import org.mozilla.gecko.home.PinSiteDialog.OnSiteSelectedListener;
+import org.mozilla.gecko.home.TopSitesGridView.OnEditPinnedSiteListener;
+import org.mozilla.gecko.home.TopSitesGridView.TopSitesGridContextMenuInfo;
+import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.restrictions.Restrictable;
+import org.mozilla.gecko.restrictions.Restrictions;
+import org.mozilla.gecko.util.BitmapUtils;
+import org.mozilla.gecko.util.StringUtils;
+import org.mozilla.gecko.util.ThreadUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.mozilla.gecko.db.URLImageDataTable.TILE_COLOR_COLUMN;
+import static org.mozilla.gecko.db.URLImageDataTable.TILE_IMAGE_URL_COLUMN;
 
 /**
  * Fragment that displays frecency search results in a ListView.
