@@ -28,7 +28,6 @@ import java.util.Locale;
 /**
  * Copyright © Cliqz 2018
  */
-
 public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
 
     private static final String CONTENT_TYPE_JSON = "application/json";
@@ -38,24 +37,24 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
     private static final String TOP_NEWS_CACHE_FILE = "TopNewsCache.json";
     private final String TAG = TopNewsRow.class.getSimpleName();
     private String mData = null;
+    private long mDataTimestamp = 0;
     // rewrite cached topNews file after 30 minutes
     private static final int CACHED_PERIOD = 1800000;
-    private final File mCachedFile;
-    private boolean mIsCachedExpired;
 
     public TopNewsLoader(Context context) {
         super(context);
-        mCachedFile = getTopNewsCacheFile();
-        mIsCachedExpired = false;
     }
 
     @Override
     protected void onStartLoading() {
         // prevent reload the data if the loader still has the data
-        mIsCachedExpired = (System.currentTimeMillis() - mCachedFile.lastModified()) > CACHED_PERIOD;
-        if (mData == null || mIsCachedExpired) {
+        if (mData == null || isCacheExpired()) {
             forceLoad();
         }
+    }
+
+    private boolean isCacheExpired() {
+        return (System.currentTimeMillis() - mDataTimestamp > CACHED_PERIOD);
     }
 
     /**
@@ -72,10 +71,11 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
     public List<TopNews> loadInBackground() {
         String response = null;
         boolean succeedReadFromCache = false;
-
-        if(!mIsCachedExpired) {
+        final File cachedFile = getTopNewsCacheFile();
+        mDataTimestamp = cachedFile.lastModified();
+        if(isCacheExpired()) {
             try {
-                response  = FileUtils.readStringFromFile(mCachedFile);
+                response  = FileUtils.readStringFromFile(cachedFile);
                 succeedReadFromCache = true;
             } catch (IOException e) {
                 Log.e(TAG,"can't read cached news");
@@ -86,10 +86,10 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
             try {
                 response = HttpHandler.sendRequest("PUT", getTopNewsUrl(Integer.MAX_VALUE),
                         CONTENT_TYPE_JSON, NEWS_PAYLOAD);
-                if (response != null && response != mData) {
-                    FileUtils.writeStringToFile(mCachedFile, response);
+                if (response != null && response.equals(mData)) {
+                    FileUtils.writeStringToFile(cachedFile, response);
                 } else if (response == null) {
-                    response = FileUtils.readStringFromFile(mCachedFile);
+                    response = FileUtils.readStringFromFile(cachedFile);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "problem with loading top news");

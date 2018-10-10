@@ -31,8 +31,8 @@ public class TopNewsRow extends StreamViewHolder {
     public static final int LAYOUT_ID = R.layout.activity_stream_main_topnews;
     // Number of items to show in the 'Top News' list when the list is collapsed.
     public static final int COLLAPSED_NUM_NEWS_COUNT = 3;
-    // By default, the 'Top News' list is expanded i.e. it shows all the top news.
-    public static final boolean PREFS_DEFAULT_NEWS_VIEW_EXPANDED = true;
+    // By default, the 'Top News' list is not expanded i.e. it shows not more than 3 items.
+    public static final boolean PREFS_DEFAULT_NEWS_VIEW_EXPANDED = false;
 
     private final Drawable expandNewsIcon;
     private final Drawable collapseNewsIcon;
