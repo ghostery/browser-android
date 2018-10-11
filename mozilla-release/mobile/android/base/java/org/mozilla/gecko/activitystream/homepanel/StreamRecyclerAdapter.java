@@ -510,12 +510,10 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         return count;
     }
 
-    /* Cliqz start */
-    void swapTopSitesCursor(Cursor cursor) {
+    public void swapTopSitesCursor(Cursor cursor) {
         this.topSitesCursor = cursor;
-        notifyDataSetChanged();
+        notifyItemChanged(0);
     }
-    /* Cliqz end */
 
     @Override
     public long getItemId(int position) {
