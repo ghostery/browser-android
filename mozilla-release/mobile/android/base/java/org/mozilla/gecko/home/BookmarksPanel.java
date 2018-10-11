@@ -37,6 +37,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -244,10 +245,14 @@ public class BookmarksPanel extends HomeFragment implements BookmarkEditFragment
     }
 
     private void updateUiFromCursor(Cursor c) {
-        if ((c == null || c.getCount() == 0) && mEmptyView == null) {
+        /* Cliqz Start */
+        if ((c == null || c.getCount() == 0)) {
             // Set empty page view. We delay this so that the empty view won't flash.
-            final ViewStub emptyViewStub = (ViewStub) getView().findViewById(R.id.home_empty_view_stub);
-            mEmptyView = emptyViewStub.inflate();
+            if (mEmptyView == null) {
+                final ViewStub emptyViewStub = (ViewStub) getView().findViewById(R.id.home_empty_view_stub);
+                mEmptyView = emptyViewStub.inflate();
+            }
+            /* Cliqz End */
 
             /* Cliqz Start o/
             final ImageView emptyIcon = (ImageView) mEmptyView.findViewById(R.id.home_empty_image);
@@ -258,6 +263,23 @@ public class BookmarksPanel extends HomeFragment implements BookmarkEditFragment
             emptyText.setText(R.string.home_bookmarks_empty);
 
             mList.setEmptyView(mEmptyView);
+            /* Cliqz Start */
+            mEmptyView.bringToFront();
+            mEmptyView.setFocusable(true);
+            mEmptyView.setFocusableInTouchMode(true);
+            mEmptyView.requestFocus();
+            mEmptyView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    final int action = event.getAction();
+                    // If the user hit the BACK key, try to move to the parent folder.
+                    if (action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                        return mListAdapter.moveToParentFolder();
+                    }
+                    return false;
+                }
+            });
+            /* Cliqz End */
         }
     }
 
