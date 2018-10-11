@@ -31,9 +31,11 @@ node('master') {
                         export HOST_CXX=$CLANG_HOME/bin/clang++
                         ./mach clobber
                         ./mach build
-                        for lang in `ls ../l10n/`; do
-                            ./mach build chrome-$lang
+                        export MOZ_CHROME_MULTILOCALE="de fr ru"
+                        for AB_CD in $MOZ_CHROME_MULTILOCALE; do
+                            ./mach build chrome-$AB_CD
                         done
+                        export AB_CD=multi
                         ./mach package
                     '''
                     withCredentials([
@@ -44,6 +46,8 @@ node('master') {
                             set -e
                             set -x
                             cd mozilla-release
+                            export MOZ_CHROME_MULTILOCALE="de fr ru"
+                            export AB_CD=multi
                             ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
                         """
                     }
@@ -73,9 +77,11 @@ node('master') {
                         export HOST_CXX=$CLANG_HOME/bin/clang++
                         ./mach clobber
                         ./mach build
-                        for lang in `ls ../l10n/`; do
-                            ./mach build chrome-$lang
+                        export MOZ_CHROME_MULTILOCALE="de fr ru"
+                        for AB_CD in $MOZ_CHROME_MULTILOCALE; do
+                            ./mach build chrome-$AB_CD
                         done
+                        export AB_CD=multi
                         ./mach package
                     '''
                      withCredentials([
@@ -86,6 +92,8 @@ node('master') {
                             set -e
                             set -x
                             cd mozilla-release
+                            export MOZ_CHROME_MULTILOCALE="de fr ru"
+                            export AB_CD=multi
                             ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
                         """
                     }
