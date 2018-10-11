@@ -537,10 +537,15 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
     }
 
     public void hideTopSitesSection() {
+        RowModel topPanel = null;
         for (RowModel rowModel : recyclerViewModel) {
             if (rowModel.getRowItemType() == RowItemType.TOP_PANEL) {
-                recyclerViewModel.remove(rowModel);
+                topPanel = rowModel;
+                break;
             }
+        }
+        if (topPanel != null) {
+            recyclerViewModel.remove(topPanel);
         }
     }
     /* Cliqz end */
