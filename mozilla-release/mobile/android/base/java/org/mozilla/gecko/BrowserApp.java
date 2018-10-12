@@ -3367,13 +3367,14 @@ public class BrowserApp extends GeckoApp
             //     }
             // });
             mCliqzIntroPagerHolder = findViewById(R.id.cliqz_intro_pager_holder);
+            mCliqzIntroPagerHolder.setVisibility(View.VISIBLE);
+
             final ViewPager cliqzIntroPager = (ViewPager) mCliqzIntroPagerHolder.findViewById(R.id.cliqz_intro_pager);
             final TabLayout tabLayout = (TabLayout) mCliqzIntroPagerHolder.findViewById(R.id.cliqz_intro_tab_dots);
             cliqzIntroPager.setAdapter(new CliqzIntroPagerAdapter(getBaseContext()));
             tabLayout.setupWithViewPager(cliqzIntroPager);
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            mCliqzIntroPagerHolder.setVisibility(View.VISIBLE);
 
             final Button startBrowsing = (Button) mCliqzIntroPagerHolder.findViewById(R.id.start_browsing);
             startBrowsing.setOnClickListener(new View.OnClickListener() {
