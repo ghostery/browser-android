@@ -69,7 +69,7 @@ ENV PATH=/usr/local/cargo/bin:$PATH
 
 #Install Rust and android library
 RUN set -eux; \
-    wget "https://repository.cliqz.com/dist/android/artifacts/rustup/rustup-init"; \
+    wget "https://repository.ghostery.net/dist/android/artifacts/rustup/rustup-init"; \
     chmod +x rustup-init; \
     ./rustup-init -y --no-modify-path --default-toolchain 1.20.0; \
     rm rustup-init; \
@@ -101,7 +101,7 @@ ENV PATH "$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 
 #Install Proguard
 RUN mkdir -p /home/jenkins/.mozbuild/proguard/lib && mkdir -p /home/jenkins/tmp && \
-    wget --output-document=/home/jenkins/tmp/proguard.tgz --quiet "https://repository.cliqz.com/dist/android/artifacts/proguard/proguard5.3.3.tar.gz" && \
+    wget --output-document=/home/jenkins/tmp/proguard.tgz --quiet "https://repository.ghostery.net/dist/android/artifacts/proguard/proguard5.3.3.tar.gz" && \
     (cd /home/jenkins/tmp; tar xf proguard.tgz && cp proguard5.3.3/lib/proguard.jar /home/jenkins/.mozbuild/proguard/lib) && \
     rm -rf /home/jenkins/tmp/*
 
@@ -109,7 +109,7 @@ RUN mkdir -p /home/jenkins/.mozbuild/proguard/lib && mkdir -p /home/jenkins/tmp 
 COPY mozilla-release/python/mozboot/mozboot/android-packages.txt /home/jenkins/
 RUN mkdir -p $ANDROID_HOME; \
     cd $ANDROID_HOME; \
-    wget --output-document=sdktools.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-sdk/sdk-tools-linux-3859397.zip'; \
+    wget --output-document=sdktools.zip --quiet 'https://repository.ghostery.net/dist/android/artifacts/android-sdk/sdk-tools-linux-3859397.zip'; \
     unzip sdktools.zip; \
     rm -r sdktools.zip; \
     (while (true); do echo y; sleep 2; done) | \
@@ -118,14 +118,14 @@ RUN mkdir -p $ANDROID_HOME; \
 #Install Android NDK
 RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
     cd /home/jenkins/.mozbuild/android-ndk-linux; \
-    wget --output-document=ndk.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-ndk/android-ndk-r15c-linux-x86_64.zip'; \
+    wget --output-document=ndk.zip --quiet 'https://repository.ghostery.net/dist/android/artifacts/android-ndk/android-ndk-r15c-linux-x86_64.zip'; \
     unzip ndk.zip; \
     rm -r ndk.zip;
 
 #Install CLang
 RUN mkdir -p /home/jenkins/clang; \
     cd /home/jenkins/clang; \
-    wget --output-document=clang.tar.xz --quiet "https://repository.cliqz.com/dist/android/artifacts/clang/clang%2Bllvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"; \
+    wget --output-document=clang.tar.xz --quiet "https://repository.ghostery.net/dist/android/artifacts/clang/clang%2Bllvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"; \
     tar xf clang.tar.xz; \
     echo 'export PATH=$CLANG_HOME/bin:$PATH' >> ~/.bashrc; \
     echo 'export LD_LIBRARY_PATH=$CLANG_HOME/lib:LD_LIBRARY_PATH' >> ~/.bashrc
