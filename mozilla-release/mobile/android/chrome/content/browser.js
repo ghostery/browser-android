@@ -6742,6 +6742,9 @@ var Cliqz = {
           args: [msg, immediate, schema]
         });
         break;
+      case "Search:Backends":
+        this.messageSearchExtension({ module: 'search', action: "getBackendCountries" })
+        break;
       case "Search:Hide":
         this.hidePanel(this.Search.browser);
         this.messageSearchExtension({ module: "search", action: "stopSearch", args: []});
