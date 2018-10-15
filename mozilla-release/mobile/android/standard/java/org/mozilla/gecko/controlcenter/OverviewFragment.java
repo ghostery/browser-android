@@ -51,7 +51,7 @@ import static org.mozilla.gecko.util.GeckoBundleUtils.safeGetStringArray;
  */
 public class OverviewFragment extends ControlCenterFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
+    private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
     private PieChart mPieChart;
     private TextView mDomainName;
     private TextView mTrackersBlocked;
@@ -99,7 +99,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     public OverviewFragment() {
     }
 
-    public void setControlCenterCallback(ControlCenterViewPager.ControlCenterCallbacks callback) {
+    public void setControlCenterCallback(BaseControlCenterPagerAdapter.ControlCenterCallbacks callback) {
         mControlCenterCallbacks = callback;
     }
 

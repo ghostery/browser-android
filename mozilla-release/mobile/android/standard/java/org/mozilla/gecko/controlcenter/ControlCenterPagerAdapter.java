@@ -13,7 +13,8 @@ import java.util.List;
 /**
  * Copyright © Cliqz 2018
  */
-public class ControlCenterPagerAdapter extends FragmentPagerAdapter {
+public class ControlCenterPagerAdapter extends FragmentPagerAdapter
+        implements BaseControlCenterPagerAdapter {
 
     private Context mContext;
     private final List<ControlCenterFragment> mFragmentList = new ArrayList<>();
@@ -38,16 +39,27 @@ public class ControlCenterPagerAdapter extends FragmentPagerAdapter {
         return mFragmentList.get(position).getTitle(mContext);
     }
 
-    public void addFragment(ControlCenterFragment fragment) {
-        mFragmentList.add(fragment);
+    @Override
+    public void init(ControlCenterCallbacks controlCenterCallbacks) {
+        final SiteTrackersFragment siteTrackersFragment = new SiteTrackersFragment();
+        final GlobalTrackersFragment globalTrackersFragment = new GlobalTrackersFragment();
+        final OverviewFragment overviewFragment = new OverviewFragment();
+        siteTrackersFragment.setControlCenterCallback(controlCenterCallbacks);
+        globalTrackersFragment.setControlCenterCallback(controlCenterCallbacks);
+        overviewFragment.setControlCenterCallback(controlCenterCallbacks);
+        mFragmentList.add(overviewFragment);
+        mFragmentList.add(siteTrackersFragment);
+        mFragmentList.add(globalTrackersFragment);
     }
-
+    
+    @Override
     public void setTrackingData(final GeckoBundle message) {
         for(ControlCenterFragment fragment : mFragmentList) {
             fragment.updateUI(message);
         }
     }
 
+    @Override
     public void updateCurrentView(int position) {
         mFragmentList.get(position).refreshUI();
     }

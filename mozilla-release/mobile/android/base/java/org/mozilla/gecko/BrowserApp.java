@@ -109,11 +109,8 @@ import org.mozilla.gecko.bookmarks.BookmarkEditFragment;
 import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
 import org.mozilla.gecko.cleanup.FileCleanupController;
+import org.mozilla.gecko.controlcenter.BaseControlCenterPagerAdapter;
 import org.mozilla.gecko.controlcenter.ControlCenterPagerAdapter;
-import org.mozilla.gecko.controlcenter.ControlCenterViewPager;
-import org.mozilla.gecko.controlcenter.GlobalTrackersFragment;
-import org.mozilla.gecko.controlcenter.OverviewFragment;
-import org.mozilla.gecko.controlcenter.SiteTrackersFragment;
 import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.db.SuggestedSites;
@@ -241,7 +238,7 @@ public class BrowserApp extends GeckoApp
                                    TabsPanel.TabsLayoutChangeListener,
                                    View.OnKeyListener,
                                    /* Cliqz Start */
-                                   ControlCenterViewPager.ControlCenterCallbacks,
+                                   BaseControlCenterPagerAdapter.ControlCenterCallbacks,
                                    AntiPhishing.AntiPhishingCallback,
                                    AntiPhishingDialog.AntiPhishingDialogActionListener {
                                    /* Cliqz End */
@@ -972,15 +969,8 @@ public class BrowserApp extends GeckoApp
             mControlCenterContainer.setLayoutParams(params);
         }
         mControlCenterPagerAdapter = new ControlCenterPagerAdapter(getSupportFragmentManager(), getBaseContext());
-        final SiteTrackersFragment siteTrackersFragment = new SiteTrackersFragment();
-        final GlobalTrackersFragment globalTrackersFragment = new GlobalTrackersFragment();
-        final OverviewFragment overviewFragment = new OverviewFragment();
-        siteTrackersFragment.setControlCenterCallback(this);
-        globalTrackersFragment.setControlCenterCallback(this);
-        overviewFragment.setControlCenterCallback(this);
-        mControlCenterPagerAdapter.addFragment(overviewFragment);
-        mControlCenterPagerAdapter.addFragment(siteTrackersFragment);
-        mControlCenterPagerAdapter.addFragment(globalTrackersFragment);
+        mControlCenterPagerAdapter.init(this);
+
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
         final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);

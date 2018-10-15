@@ -26,9 +26,9 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
     private GeckoBundle[] mListData;
     private GeckoBundle data;
     private Context mContext;
-    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
+    private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
 
-    GlobalTrackersListAdapter(Context context, ControlCenterViewPager.ControlCenterCallbacks callbacks) {
+    GlobalTrackersListAdapter(Context context, BaseControlCenterPagerAdapter.ControlCenterCallbacks callbacks) {
         mControlCenterCallbacks = callbacks;
         mContext = context;
     }

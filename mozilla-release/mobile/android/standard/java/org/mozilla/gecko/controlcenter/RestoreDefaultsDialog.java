@@ -14,7 +14,7 @@ import org.mozilla.gecko.util.GeckoBundle;
  */
 public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
 
-    private ControlCenterViewPager.ControlCenterCallbacks controlCenterCallbacks;
+    private BaseControlCenterPagerAdapter.ControlCenterCallbacks controlCenterCallbacks;
     private RestoreDialogCallbacks restoreDialogCallbacks;
 
     private RestoreDefaultsDialog() {
@@ -26,7 +26,7 @@ public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
     }
 
     public static void show(Context context,
-                            ControlCenterViewPager.ControlCenterCallbacks controlCenterCallbacks,
+                            BaseControlCenterPagerAdapter.ControlCenterCallbacks controlCenterCallbacks,
                             RestoreDialogCallbacks restoreDialogCallbacks) {
         final RestoreDefaultsDialog restoreDefaultsDialog = new RestoreDefaultsDialog();
         restoreDefaultsDialog.controlCenterCallbacks = controlCenterCallbacks;

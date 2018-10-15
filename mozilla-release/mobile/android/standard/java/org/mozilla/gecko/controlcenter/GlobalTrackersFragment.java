@@ -22,13 +22,13 @@ import org.mozilla.gecko.util.GeckoBundle;
 public class GlobalTrackersFragment extends ControlCenterFragment implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private GlobalTrackersListAdapter mTrackerListAdapter;
-    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
+    private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
     private ProgressBar progressBar;
 
     public GlobalTrackersFragment() {
     }
 
-    public void setControlCenterCallback(ControlCenterViewPager.ControlCenterCallbacks callback) {
+    public void setControlCenterCallback(BaseControlCenterPagerAdapter.ControlCenterCallbacks callback) {
         mControlCenterCallbacks = callback;
     }
 

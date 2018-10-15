@@ -39,9 +39,9 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
     private GeckoBundle[] mListData;
     private GeckoBundle data;
     private Context mContext;
-    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
+    private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
 
-    SiteTrackersListAdapter(Context context, ControlCenterViewPager.ControlCenterCallbacks callbacks) {
+    SiteTrackersListAdapter(Context context, BaseControlCenterPagerAdapter.ControlCenterCallbacks callbacks) {
         mContext = context;
         mControlCenterCallbacks = callbacks;
     }

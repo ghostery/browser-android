@@ -24,14 +24,14 @@ import java.util.List;
 public class SiteTrackersFragment extends ControlCenterFragment implements View.OnClickListener, PopupMenu.OnMenuItemClickListener{
 
     private SiteTrackersListAdapter mTrackerListAdapter;
-    private ControlCenterViewPager.ControlCenterCallbacks mControlCenterCallbacks;
+    private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
     private GeckoBundle mControlCenterData;
     private View mOverlay;
 
     public SiteTrackersFragment() {
     }
 
-    public void setControlCenterCallback(ControlCenterViewPager.ControlCenterCallbacks callback) {
+    public void setControlCenterCallback(BaseControlCenterPagerAdapter.ControlCenterCallbacks callback) {
         mControlCenterCallbacks = callback;
     }
 
