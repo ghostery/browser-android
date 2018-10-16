@@ -194,7 +194,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                     final GeckoBundle geckoBundle = new GeckoBundle();
                     geckoBundle.putBundle("selected_app_ids", selectedAppIds);
                     EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                    mControlCenterCallbacks.controlCenterSettingsChanged();
                     notifyDataSetChanged();
                 }
             }
@@ -283,7 +282,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                         geckoBundle.putBundle("site_specific_unblocks", siteSpecificUnblockBundle);
                         geckoBundle.putBundle("site_specific_blocks", siteSpecificBlockBundle);
                         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                        mControlCenterCallbacks.controlCenterSettingsChanged();
                     }
                 });
                 restrictButton.setOnClickListener(new View.OnClickListener() {
@@ -328,7 +326,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                         geckoBundle.putBundle("site_specific_unblocks", siteSpecificUnblockBundle);
                         geckoBundle.putBundle("site_specific_blocks", siteSpecificBlockBundle);
                         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                        mControlCenterCallbacks.controlCenterSettingsChanged();
                     }
                 });
                 blockButton.setOnClickListener(new View.OnClickListener() {
@@ -348,7 +345,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                         final GeckoBundle geckoBundle = new GeckoBundle();
                         geckoBundle.putBundle("selected_app_ids", selectedAppIds);
                         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                        mControlCenterCallbacks.controlCenterSettingsChanged();
                     }
                 });
             }
@@ -450,7 +446,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         final GeckoBundle geckoBundle = new GeckoBundle();
         geckoBundle.putBundle("selected_app_ids", selectedAppIds);
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-        mControlCenterCallbacks.controlCenterSettingsChanged();
         notifyDataSetChanged();
     }
 
@@ -469,7 +464,6 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         final GeckoBundle geckoBundle = new GeckoBundle();
         geckoBundle.putBundle("selected_app_ids", selectedAppIds);
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-        mControlCenterCallbacks.controlCenterSettingsChanged();
         notifyDataSetChanged();
     }
 

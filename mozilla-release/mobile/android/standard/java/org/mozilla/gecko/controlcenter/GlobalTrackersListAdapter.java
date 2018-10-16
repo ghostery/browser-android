@@ -154,7 +154,6 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
                 final GeckoBundle geckoBundle = new GeckoBundle();
                 geckoBundle.putBundle("selected_app_ids", selectedAppIds);
                 EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                mControlCenterCallbacks.controlCenterSettingsChanged();
                 notifyDataSetChanged();
             }
         });
@@ -220,7 +219,6 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
                 final GeckoBundle geckoBundle = new GeckoBundle();
                 geckoBundle.putBundle("selected_app_ids", selectedAppIds);
                 EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-                mControlCenterCallbacks.controlCenterSettingsChanged();
                 childGeckoBundle.putBoolean("blocked",!isBlocked);
                 final GeckoBundle[] siteTrackerCategories = data.getBundle("data")
                         .getBundle("summary").getBundleArray("categories");

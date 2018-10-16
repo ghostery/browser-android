@@ -79,7 +79,7 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
                 dispatchAndRefresh("UPDATE_BLOCK_NONE");
                 return true;
             case R.id.reset_settings:
-                RestoreDefaultsDialog.show(getContext(), mControlCenterCallbacks, new RestoreDefaultsDialog.RestoreDialogCallbacks() {
+                RestoreDefaultsDialog.show(getContext(), new RestoreDefaultsDialog.RestoreDialogCallbacks() {
                     @Override
                     public void onRestore() {
                         progressBar.setVisibility(View.VISIBLE);
@@ -96,7 +96,6 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
         bundle.putString("blockingPolicy", policy);
         final EventDispatcher evd = EventDispatcher.getInstance();
         evd.dispatch("Privacy:SetBlockingPolicy", bundle);
-        mControlCenterCallbacks.controlCenterSettingsChanged();
         getView().postDelayed(new Runnable() {
             @Override
             public void run() {
