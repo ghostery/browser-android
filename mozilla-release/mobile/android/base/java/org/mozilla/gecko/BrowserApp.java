@@ -105,6 +105,7 @@ import org.mozilla.gecko.bookmarks.EditBookmarkTask;
 import org.mozilla.gecko.cleanup.FileCleanupController;
 import org.mozilla.gecko.controlcenter.BaseControlCenterPagerAdapter;
 import org.mozilla.gecko.controlcenter.ControlCenterPagerAdapter;
+import org.mozilla.gecko.controlcenter.ControlCenterUtils;
 import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.db.SuggestedSites;
@@ -206,6 +207,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -295,42 +297,8 @@ public class BrowserApp extends GeckoApp
 
     /* Cliqz Start */
     private View mGhosterySplashScreen;
-    private ViewPager mControlCenterPager;
-    private View mControlCenterContainer;
-    private ControlCenterPagerAdapter mControlCenterPagerAdapter;
-    private boolean mControlCenterSettingsChanged = false;
-    private View mCliqzIntroPagerHolder;
-    private PreferenceManager mPreferenceManager;
-    private LinearLayout mCliqzQuerySuggestionsContainer;
-    private String mLastUrl = "";
-    private AntiPhishingDialog antiPhishingDialog;
-    private AntiPhishing antiPhishing;
-    private static final int SUGGESTIONS_LIMIT = 3;
-    private static final Pattern FILTER =
-            Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
-    private static final int SUGGESTIONS_TV_PADDING = 20;
-    private static final int FONT_SIZE = 18;
-
-    // Minimum app launches until we show the dialog to set default browser.
-    private static final int MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT = 3;
-    /* Cliqz End */
-
-    public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
-
-    // When the static action bar is shown, only the real toolbar chrome should be
-    // shown when the toolbar is visible. Causing the toolbar animator to also
-    // show the snapshot causes the content to shift under the users finger.
-    // See: Bug 1358554
-    private boolean mShowingToolbarChromeForActionBar;
-
-    private SafeIntent safeStartingIntent;
-    private Intent startingIntentAfterPip;
-    private boolean isInAutomation;
-
-    // The types of guest mode dialogs we show.
-    public static enum GuestModeDialog {
-        ENTERING,
-        LEAVING
+    private byte[] mCCDataHash = null;
+    private GeckoBundle mControlCenterTrackingData;
     }
 
     private PropertyAnimator mMainLayoutAnimator;
@@ -853,7 +821,6 @@ public class BrowserApp extends GeckoApp
         }
         mControlCenterPagerAdapter = new ControlCenterPagerAdapter(getSupportFragmentManager(), getBaseContext());
         mControlCenterPagerAdapter.init(this);
-
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
         final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
@@ -2350,6 +2317,8 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Privacy:Info":
+                mCCDataHash = ControlCenterUtils.getCCDataHash(message);
+                mControlCenterTrackingData = message;
                 mControlCenterPagerAdapter.setTrackingData(message);
                 //sync preferences with the ghostery extension just for safety
                 final boolean isAutoUpdateEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/enable_autoupdate");
@@ -4596,9 +4565,11 @@ public class BrowserApp extends GeckoApp
 
     public void toggleControlCenter() {
         if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
-            if (mControlCenterSettingsChanged) {
-                showReloadingTabSnackbar();
-                mControlCenterSettingsChanged = false;
+            if (mCCDataHash != null) {
+                final byte[] newCCDataHash = ControlCenterUtils.getCCDataHash(mControlCenterTrackingData);
+                if (!MessageDigest.isEqual(mCCDataHash, newCCDataHash)) {
+                    showReloadingTabSnackbar();
+                }
             }
             mControlCenterContainer.setVisibility(View.GONE);
             mDynamicToolbar.setPinned(false, PinReason.DISABLED);
@@ -4614,15 +4585,7 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public void hideControlCenter() {
-        if (mControlCenterSettingsChanged) {
-            showReloadingTabSnackbar();
-            mControlCenterSettingsChanged = false;
-        }
         mControlCenterContainer.setVisibility(View.GONE);
-    }
-
-    public void controlCenterSettingsChanged() {
-        mControlCenterSettingsChanged = true;
     }
 
     private void showReloadingTabSnackbar() {

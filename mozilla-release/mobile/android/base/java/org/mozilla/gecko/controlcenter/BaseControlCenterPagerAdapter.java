@@ -18,8 +18,6 @@ public interface BaseControlCenterPagerAdapter {
     interface ControlCenterCallbacks {
 
         void hideControlCenter();
-
-        void controlCenterSettingsChanged();
     }
 
 }

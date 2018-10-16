@@ -46,7 +46,6 @@ public class ControlCenterPagerAdapter extends FragmentPagerAdapter
         final OverviewFragment overviewFragment = new OverviewFragment();
         siteTrackersFragment.setControlCenterCallback(controlCenterCallbacks);
         globalTrackersFragment.setControlCenterCallback(controlCenterCallbacks);
-        overviewFragment.setControlCenterCallback(controlCenterCallbacks);
         mFragmentList.add(overviewFragment);
         mFragmentList.add(siteTrackersFragment);
         mFragmentList.add(globalTrackersFragment);
