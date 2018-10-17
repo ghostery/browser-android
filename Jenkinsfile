@@ -97,7 +97,7 @@ def build(Map m){
                             stage('Checkout Autobots') {
                                 dir('autobots'){
                                     git branch:'version2.0',
-                                    credentialsId: 'cliqz-ci',
+                                    credentialsId: '72723760-98b3-467b-8671-9f442bf6cbd9',
                                     url: 'https://github.com/cliqz/autobots.git'
                                 }
                             }
