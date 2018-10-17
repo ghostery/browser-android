@@ -25,6 +25,18 @@ def matrix = [
         'channel': 'MA52',
         'target': 'i386-linux-android',
     ],
+    'Bond ARM':[
+        'arch': 'arm',
+        'brand': 'bond',
+        'channel': 'MA62',
+        'target': 'arm-linux-androideabi',
+    ],
+    'Bond X86':[
+        'arch': 'x86',
+        'brand': 'bond',
+        'channel': 'MA62',
+        'target': 'i386-linux-android',
+    ],
     'Cliqz Alpha':[
         'arch': 'arm',
         'brand': 'cliqz-alpha',
@@ -76,6 +88,12 @@ def build(Map m){
     def nodeLabel = 'master'
     def getId = m.getId
     def apk = ""
+    def gradleflavor = ""
+    if (brandname=="bond"){
+        gradleflavor = "Bond"
+    } else {
+        gradleflavor = "Photon"
+    }
     return {
         node(nodeLabel){
             getImageName().inside() {
@@ -103,7 +121,7 @@ def build(Map m){
                         "ANDROID_TARGET=${androidtarget}",
                         "BRAND=${brandname}",
                         "CLIQZ_CHANNEL=${cliqzchannel}"
-                        ]){
+                    ]){
                         sh '''#!/bin/bash -l
                             set -e
                             set -x
@@ -135,17 +153,17 @@ def build(Map m){
                             file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
                             string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
                         ]) {
-                            sh '''#!/bin/bash -l
+                            sh """#!/bin/bash -l
                                 set -e
                                 set -x
                                 cd /app/mozilla-release
-                                export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
+                                export MOZ_CHROME_MULTILOCALE=`ls -1 '../l10n/'|paste -s -d ' '`
                                 export AB_CD=multi
-                                ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
-                            '''
+                                ./gradlew assembleOfficialWithGeckoBinariesNoMinApi${gradleflavor}Release
+                            """
                         }
                         apk = sh(returnStdout: true,
-                            script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
+                            script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release && \
                             find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                     }
                 }
@@ -159,9 +177,9 @@ def build(Map m){
                         ]
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
-                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release/${apk}"
                         try {
-                            zip archive: true, dir: '/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release', glob: '', zipFile: "${flavorname}-build.zip"
+                            zip archive: true, dir: "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release", glob: '', zipFile: "${flavorname}-build.zip"
                         } catch(e) {
                             print e
                         }
@@ -258,6 +276,18 @@ stage('Send email') {
     emailext(
         to: 'androiddev@cliqz.com',
         subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
+        body: bodytxt
+    )
+    bodytxt = """
+        ${projectName} - Build # ${env.BUILD_NUMBER}
+        Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
+        Bond apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/latest.apk
+        Bond X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/latest_x86.apk
+        ${changesSinceLastSuccess}
+        Issues Transtioned ${transitionIssueList}""".stripIndent()
+    emailext(
+        to: 'javier@cliqz.com stefano@cliqz.com ravjit@cliqz.com dominik.s@cliqz.com alina@cliqz.com inci@cliqz.com richard@cliqz.com moaz@cliqz.com oleksandra@cliqz.com',
+        subject: 'BOND - Build # $BUILD_NUMBER',
         body: bodytxt
     )
 }
