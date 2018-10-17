@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Copyright © Cliqz 2018-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:background="@color/general_blue_color"
-    android:gravity="center_horizontal">
+    tools:gravity="center_horizontal"
+    tools:layout_height="wrap_content"
+    tools:layout_width="match_parent"
+    tools:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        style="@style/Cliqz.Intro.Text.Title"
         android:text="@string/ghostery_onboarding_quick_search_title"
         android:textColor="@color/cliqz_intro_text_color"
-        style="@style/Cliqz.Intro.Title.Text"
         tools:text="Ghost Search" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="34dp"
-        android:gravity="center"
-        style="@style/Cliqz.Intro.Content.Text"
+        style="@style/Cliqz.Intro.Text.Content"
         android:text="@string/ghostery_onboarding_quick_search_text"
-        tools:text="Stay anonymous, reduce data usage, and save time: results appear instantly as you type in the Ghost search bar."
-        android:textColor="@android:color/white" />
-</LinearLayout>
+        tools:text="Stay anonymous, reduce data usage, and save time: results appear instantly as you type in the Ghost search bar." />
+</merge>

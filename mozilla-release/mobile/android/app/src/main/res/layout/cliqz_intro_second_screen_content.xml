@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Copyright © Cliqz 2018-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:background="@color/general_blue_color"
-    android:gravity="center_horizontal">
+    tools:gravity="center_horizontal"
+    tools:layout_height="wrap_content"
+    tools:layout_width="match_parent"
+    tools:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Cliqz.Intro.Text.Title"
         android:text="@string/ghostery_onboarding_tracking_protection_title"
-        style="@style/Cliqz.Intro.Title.Text"
-        tools:text="Ad &amp; Tracker Blocking"/>
+        tools:text="Ad &amp; Tracker Blocking" />
 
     <TextView
         android:id="@+id/third_screen_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/Cliqz.Intro.Text.Content"
         android:text="@string/ghostery_onboarding_tracking_protection_text"
-        style="@style/Cliqz.Intro.Content.Text"
         tools:text="Choose what you want Ghostery to block for cleaner, faster, and safer browsing. You can change and customize these settings at any time in the Privacy Control Center." />
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <RadioButton
-                android:id="@+id/radio1"
-                android:text="@string/ghostery_onboarding_tracking_protection_radio1"
-                tools:text="Block Nothing"
-                style="@style/Cliqz.Intro.RadioButton"/>
-            <RadioButton
-                android:id="@+id/radio2"
-                android:text="@string/ghostery_onboarding_tracking_protection_radio2"
-                android:checked="true"
-                tools:text="Block Recommended\nblocks ads, site analytics and adult advertising"
-                style="@style/Cliqz.Intro.RadioButton"/>
-            <RadioButton
-                android:id="@+id/radio3"
-                android:text="@string/ghostery_onboarding_tracking_protection_radio3"
-                tools:text="Block Everything"
-                style="@style/Cliqz.Intro.RadioButton"/>
-        </RadioGroup>
-</LinearLayout>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radio1"
+            style="@style/Cliqz.Intro.RadioButton"
+            android:text="@string/ghostery_onboarding_tracking_protection_radio1"
+            tools:text="Block Nothing" />
+
+        <RadioButton
+            android:id="@+id/radio2"
+            style="@style/Cliqz.Intro.RadioButton"
+            android:checked="true"
+            android:text="@string/ghostery_onboarding_tracking_protection_radio2"
+            tools:text="Block Recommended\nblocks ads, site analytics and adult advertising" />
+
+        <RadioButton
+            android:id="@+id/radio3"
+            style="@style/Cliqz.Intro.RadioButton"
+            android:text="@string/ghostery_onboarding_tracking_protection_radio3"
+            tools:text="Block Everything" />
+    </RadioGroup>
+</merge>
