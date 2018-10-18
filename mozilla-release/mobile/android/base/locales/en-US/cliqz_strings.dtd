@@ -260,7 +260,7 @@
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Introducing &brandShortName;">
 <!ENTITY ghostery_onboarding_new_users_text "Browse cleaner, faster, and safer on-the-go with &brandShortName;, now optimized for mobile!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Support &brandShortName; by sharing anonymous analytics and Human Web data to improve Ghostery’s performance. \u003Ca href=\u0022&human_web_info_url;\u0022>Learn more\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Support &brandShortName; by sharing anonymous analytics and Human Web data to improve &brandShortName;’s performance. \u003Ca href=\u0022&human_web_info_url;\u0022>Learn more\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Ad &amp; Tracker Blocking">
 <!ENTITY ghostery_onboarding_tracking_protection_text "Choose what you want &brandShortName; to block for cleaner, faster, and safer browsing. You can change and customize these settings at any time in the Privacy Control Center.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Block Nothing">
