@@ -278,7 +278,7 @@ stage('Send email') {
         subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
         body: bodytxt
     )
-    bodytxt = """
+    bodytxtBond = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
         Bond apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/latest.apk
@@ -286,9 +286,9 @@ stage('Send email') {
         ${changesSinceLastSuccess}
         Issues Transtioned ${transitionIssueList}""".stripIndent()
     emailext(
-        to: 'javier@cliqz.com stefano@cliqz.com ravjit@cliqz.com dominik.s@cliqz.com alina@cliqz.com inci@cliqz.com richard@cliqz.com moaz@cliqz.com oleksandra@cliqz.com',
+        to: 'project-bond@cliqz.com',
         subject: 'BOND - Build # $BUILD_NUMBER',
-        body: bodytxt
+        body: bodytxtBond
     )
 }
 
