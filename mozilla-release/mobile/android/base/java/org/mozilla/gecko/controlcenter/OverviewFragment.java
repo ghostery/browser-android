@@ -234,7 +234,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 Integer.toString(totalTrackers).length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         mPieChart.setCenterText(centerTextSpan);
         mPieChart.setCenterTextSize(18);
-        mPieChart.setCenterTextRadiusPercent(95);
+        mPieChart.setCenterTextRadiusPercent(90);
         mPieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.cc_text_color));
         mPieChart.setHoleRadius(80);
         mPieChart.setDescription(null);
