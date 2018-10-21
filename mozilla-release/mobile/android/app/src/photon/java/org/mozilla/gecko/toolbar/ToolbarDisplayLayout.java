@@ -495,7 +495,13 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         /* Cliqz start */
         // keep X button hidden while loading a page
         // mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
-        mPageActionLayout.setVisibility(!isShowingProgress ? View.VISIBLE : View.GONE);
+        // show AddToHome screen onBoarding after the pageActionLayout appears
+        if(!isShowingProgress){
+            mPageActionLayout.setVisibility(VISIBLE);
+            mPageActionLayout.maybeShowPwaOnboarding();
+        } else {
+            mPageActionLayout.setVisibility(GONE);
+        }
         // We want title to fill the whole space available for it when there are icons
         // being shown on the right side of the toolbar as the icons already have some
         // padding in them. This is just to avoid wasting space when icons are shown.

@@ -133,6 +133,7 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
         hidePreviousConfirmPrompt();
 
         if ("PageActions:Add".equals(event)) {
+
             /* Cliqz start */
             if (getVisibility() != VISIBLE) {
                 setVisibility(VISIBLE);
@@ -146,7 +147,7 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
                 return;
             }
 
-            maybeShowPwaOnboarding(id);
+            /* Cliqz start o/ maybeShowPwaOnboarding(id); /o Cliqz end */
 
             final String title = message.getString("title");
             final String imageURL = message.getString("icon");
@@ -186,22 +187,27 @@ public class PageActionLayout extends ThemedLinearLayout implements BundleEventL
             /* Cliqz end */
         }
     }
-
-    private void maybeShowPwaOnboarding(String id) {
+    /* Cliqz start */
+    // show OnBoarding after AddToHome screen appears on the url bar
+    public void maybeShowPwaOnboarding() {
         // only show pwa at normal mode
         final Tab selectedTab = Tabs.getInstance().getSelectedTab();
         if (!PwaUtils.shouldAddPwaShortcut(selectedTab)) {
             return;
         }
-        if (UUID_PAGE_ACTION_PWA.equals(id)) {
-            final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
-            final boolean show = prefs.getBoolean(PREF_PWA_ONBOARDING, true);
-            if (show && ShortcutUtils.isPinShortcutSupported()) {
-                PwaOnboarding.show(getContext());
-                prefs.edit().putBoolean(PREF_PWA_ONBOARDING, false).apply();
+        for(PageAction action :mPageActionList) {
+            if (UUID_PAGE_ACTION_PWA.equals(action.getID())) {
+                final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
+                final boolean show = prefs.getBoolean(PREF_PWA_ONBOARDING, true);
+                if (show && ShortcutUtils.isPinShortcutSupported()) {
+                    PwaOnboarding.show(getContext());
+                    prefs.edit().putBoolean(PREF_PWA_ONBOARDING, false).apply();
+                    break;
+                }
             }
         }
     }
+    /* Cliqz end */
 
     private boolean isPwaAdded(String id) {
         for (PageAction pageAction : mPageActionList) {
