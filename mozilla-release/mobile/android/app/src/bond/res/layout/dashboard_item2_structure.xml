@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright © Cliqz 2018-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dashboard_item_background"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_10">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/padding_10"
+        android:layout_marginTop="@dimen/padding_10"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/item_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/ic_time_circle" />
+
+        <TextView
+            android:id="@+id/item_measurement"
+            style="@style/dashboard_measurement_value"
+            android:layout_centerInParent="true"
+            tools:text="225 \nMIN" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/item_title"
+        style="@style/dashboard_item_title"
+        tools:text="Item Title" />
+
+    <TextView
+        android:id="@+id/item_content"
+        style="@style/dashboard_item_content"
+        tools:text="Item content is written here" />
+
+</LinearLayout>

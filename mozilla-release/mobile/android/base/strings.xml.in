@@ -969,6 +969,9 @@
   <!-- Ghostery Addon preventing dialog -->
   <string name="prevent_ghostery_addon_dialog_title">&prevent_ghostery_addon_dialog_title;</string>
   <string name="prevent_ghostery_addon_dialog_message">&prevent_ghostery_addon_dialog_message;</string>
+
+  <!-- Cliqz Bond -->
+  <string name="dashboard_title">&dashboard_title;</string>
   <!-- Cliqz end -->
 
 </resources>

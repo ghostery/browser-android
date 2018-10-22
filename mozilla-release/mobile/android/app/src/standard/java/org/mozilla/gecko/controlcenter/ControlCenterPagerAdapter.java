@@ -13,30 +13,10 @@ import java.util.List;
 /**
  * Copyright © Cliqz 2018
  */
-public class ControlCenterPagerAdapter extends FragmentPagerAdapter
-        implements BaseControlCenterPagerAdapter {
-
-    private Context mContext;
-    private final List<ControlCenterFragment> mFragmentList = new ArrayList<>();
+public class ControlCenterPagerAdapter extends BaseControlCenterPagerAdapter {
 
     public ControlCenterPagerAdapter(FragmentManager fm, Context context) {
-        super(fm);
-        this.mContext = context;
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        return mFragmentList.get(position);
-    }
-
-    @Override
-    public int getCount() {
-        return mFragmentList.size();
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return mFragmentList.get(position).getTitle(mContext);
+        super(fm,context);
     }
 
     @Override
@@ -50,17 +30,5 @@ public class ControlCenterPagerAdapter extends FragmentPagerAdapter
         mFragmentList.add(overviewFragment);
         mFragmentList.add(siteTrackersFragment);
         mFragmentList.add(globalTrackersFragment);
-    }
-    
-    @Override
-    public void setTrackingData(final GeckoBundle message) {
-        for(ControlCenterFragment fragment : mFragmentList) {
-            fragment.updateUI(message);
-        }
-    }
-
-    @Override
-    public void updateCurrentView(int position) {
-        mFragmentList.get(position).refreshUI();
     }
 }
