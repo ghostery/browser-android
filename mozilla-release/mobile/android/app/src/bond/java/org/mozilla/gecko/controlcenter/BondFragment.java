@@ -1,0 +1,73 @@
+package org.mozilla.gecko.controlcenter;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.util.GeckoBundle;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Copyright © Cliqz 2018
+ */
+
+public class BondFragment extends ControlCenterFragment {
+
+    private RecyclerView mDashBoardListView;
+    private DashboardAdapter mDashboardAdapter;
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.bond_dashboard_fragment, container, false);
+        mDashBoardListView = (RecyclerView) view.findViewById(R.id.dash_board_list_view);
+        mDashboardAdapter = new DashboardAdapter(getContext());
+        mDashBoardListView.setAdapter(mDashboardAdapter);
+        mDashBoardListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        addDummyData();
+        return view;
+    }
+
+    @Override
+    public String getTitle(Context context) {
+        return context.getString(R.string.dashboard_title);
+    }
+
+    @Override
+    public void updateUI(GeckoBundle data) {
+        if (mDashboardAdapter == null) {
+            return;
+        }
+        mDashboardAdapter.setData(data);
+    }
+
+    @Override
+    public void refreshUI() {
+        if (getView() == null) {
+            return; //return if view is not inflated yet
+        }
+        mDashboardAdapter.notifyDataSetChanged();
+    }
+
+    // @Todo should be removed
+    public void addDummyData() {
+        List<DashboardItemEntity> dashboardItems = new ArrayList<>();
+        dashboardItems.add(new DashboardItemEntity("255","MIN",R.drawable.ic_time_circle,"Time Saved",
+                "That you can spend with your friends"));
+        dashboardItems.add(new DashboardItemEntity("4732","",R.drawable.ic_ad_blocking_shiel,
+                "Ads Blocked",
+                "That you can enjoy surfing without ads"));
+        dashboardItems.add(new DashboardItemEntity("251","MB",-1,"Data Saved","more that" +
+                "enough to watch another video"));
+        dashboardItems.add(new DashboardItemEntity("255","MIN",R.drawable.ic_battery,"Battery Saved",
+                "so that you can enjoy your phone a little longer"));
+        dashboardItems.add(new DashboardItemEntity("","",R.drawable.ic_anti_phishing_hook,"Phishing protection",
+                "so that you can swim freely with our browser"));
+        mDashboardAdapter.addItems(dashboardItems);
+    }
+}

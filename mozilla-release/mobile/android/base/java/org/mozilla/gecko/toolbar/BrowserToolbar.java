@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import org.mozilla.gecko.BrowserApp;
+import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.Clipboard;
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.GeckoSharedPrefs;
@@ -1072,7 +1073,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
     @Override
     public void toggleControlCenter() {
-        if(urlDisplayLayout.isTitleSet()) {
+        if(BuildConfig.FLAVOR_skin.equals("bond") || urlDisplayLayout.isTitleSet()) {
             activity.toggleControlCenter();
         } else {
             activity.hideControlCenter();

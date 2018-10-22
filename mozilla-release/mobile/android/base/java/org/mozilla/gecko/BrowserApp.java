@@ -853,7 +853,6 @@ public class BrowserApp extends GeckoApp
         }
         mControlCenterPagerAdapter = new ControlCenterPagerAdapter(getSupportFragmentManager(), getBaseContext());
         mControlCenterPagerAdapter.init(this);
-
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
         final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
