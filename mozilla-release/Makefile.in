@@ -201,8 +201,8 @@ endif
 
 # Cliqz Start
 recurse_artifact:
-	$(topsrcdir)/mach --log-no-times artifact install https://repository.ghostery.net/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/cliqz-target.apk
-	$(topsrcdir)/mach --log-no-times artifact install https://repository.ghostery.net/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/target.common.tests.zip
+	$(topsrcdir)/mach --log-no-times artifact install https://s3.amazonaws.com/repository.ghostery.net/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/cliqz-target.apk
+	$(topsrcdir)/mach --log-no-times artifact install https://repository.cliqz.com/dist/android/artifacts/$(GRE_MILESTONE)/$(CPU_ARCH)/target.common.tests.zip
 	$(topsrcdir)/mach --log-no-times artifact add "$(CLIQZ_PRIVACY_LINK)" "$(MOZ_ANDROID_DISTRIBUTION_DIRECTORY)/assets/distribution/extensions/firefox@ghostery.com.xpi"
 	$(topsrcdir)/mach --log-no-times artifact add "$(CLIQZ_SEARCH_LINK)" "$(MOZ_ANDROID_DISTRIBUTION_DIRECTORY)/assets/distribution/extensions/android@cliqz.com.xpi"
 # Cliqz End

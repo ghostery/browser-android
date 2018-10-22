@@ -24,7 +24,7 @@ def build(Map m){
     return {
         node(nodeLabel) {
             def version = ((("https://raw.githubusercontent.com/cliqz-oss/cliqz-android/master/mozilla-release/browser/config/version.txt").toURL()).getText()).trim()
-            def url = "https://repository.ghostery.net/dist/android/artifacts/${version}"
+            def url = "https://s3.amazonaws.com/repository.ghostery.net/dist/android/artifacts/${version}"
             def createTarget = false
 
             if (!params.REPLACE_TARGET) {
