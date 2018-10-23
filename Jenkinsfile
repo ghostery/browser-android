@@ -29,6 +29,26 @@ def build(Map m){
     def bundleid = m.bundleid
     def nodeLabel = 'us-east-1 && ubuntu && docker && !gpu'
     def test = m.test
+    def sGroup
+    def subnet
+    def registry
+    def s3Path
+    def credentialsId
+
+    if (env.JENKINS_URL.contains("jenkins-master-v2-gp.clyqz.com")) {
+        sGroup = "sg-5bbf173f"
+        subnet = "subnet-341ff61f"
+        registry = "https://141047255820.dkr.ecr.us-east-1.amazonaws.com"
+        s3Path = "s3://repository.cliqz.com/dist/android/cache"
+        credentialsId = "cliqz-ci"
+    } else {
+        sGroup = "sg-0e66fea9f33f2a661"
+        subnet = "subnet-0d577755"
+        registry = "https://092783680059.dkr.ecr.us-east-1.amazonaws.com"
+        s3Path = "s3://repository.ghostery.net/dist/android/cache"
+        credentialsId = "72723760-98b3-467b-8671-9f442bf6cbd9"
+    }
+
     return {
         node(nodeLabel){
             def dockerTag = ""
@@ -39,8 +59,8 @@ def build(Map m){
                 "1",
                 "t2.medium",
                 "android_ci_genymotion",
-                "sg-0e66fea9f33f2a661",
-                "subnet-0d577755",
+                sGroup,
+                subnet,
                 "us-east-1"
             ) {
                 stage('Checkout') {
@@ -48,7 +68,7 @@ def build(Map m){
                     dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
                 }
                 def baseImageName = "browser-f/android:${dockerTag}"
-                docker.withRegistry('https://092783680059.dkr.ecr.us-east-1.amazonaws.com') {
+                docker.withRegistry(registry) {
                     docker.image("${baseImageName}").inside {
                         stage('Download cache') {
                             withCredentials([[
@@ -56,9 +76,9 @@ def build(Map m){
                                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                                     credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b',
                                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                                def s3Path = "s3://repository.ghostery.net/dist/android/cache"
+
                                 def cachePath = ".gradle/caches"
-                                sh """#!/bin/bash -l 
+                                sh """#!/bin/bash -l
                                     pip install awscli --upgrade --user
                                     cd
                                     aws s3 sync --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath}
@@ -97,7 +117,7 @@ def build(Map m){
                             stage('Checkout Autobots') {
                                 dir('autobots'){
                                     git branch:'version2.0',
-                                    credentialsId: '72723760-98b3-467b-8671-9f442bf6cbd9',
+                                    credentialsId: credentialsId,
                                     url: 'https://github.com/cliqz/autobots.git'
                                 }
                             }
