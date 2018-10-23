@@ -278,7 +278,7 @@ stage('Send email') {
         subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
         body: bodytxt
     )
-    bodytxtBond = """
+    def bodytxtBond = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
         Bond apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/latest.apk
