@@ -1053,20 +1053,25 @@
         <item name="android:textColor">@color/general_blue_color</item>
     </style>
 
-    <style name="Cliqz.Intro.Content.Text" parent="TextAppearance.Widget.TextView">
+    <style name="Cliqz.Intro.Text" parent="TextAppearance.Widget.TextView">
         <item name="android:textColor">@color/cliqz_intro_text_color</item>
-        <item name="android:textSize">@dimen/cliqz_intro_content_size</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="Cliqz.Intro.Text.Content" parent="Cliqz.Intro.Text">
+        <item name="android:textSize">@dimen/cliqz_intro_content_size</item>
     </style>
 
-    <style name="Cliqz.Intro.Title.Text" parent="Cliqz.Intro.Content.Text">
+    <style name="Cliqz.Intro.Text.Title" parent="Cliqz.Intro.Text">
         <item name="android:textSize">@dimen/cliqz_intro_title_size</item>
         <item name="android:layout_marginBottom">15dp</item>
     </style>
 
     <style name="Cliqz.Intro.RadioButton" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/cliqz_intro_radio_button_height</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">8dp</item>
         <item name="android:textColor">@color/cliqz_intro_text_color</item>
         <item name="android:textSize">@dimen/cliqz_intro_content_size</item>
         <item name="android:buttonTint">@color/cliqz_intro_text_color</item>

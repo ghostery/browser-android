@@ -32,11 +32,4 @@ public class ControlCenterViewPager extends RtlViewPager {
             }
         });
     }
-
-    public interface ControlCenterCallbacks {
-
-        public void hideControlCenter();
-
-        void controlCenterSettingsChanged();
-    }
 }

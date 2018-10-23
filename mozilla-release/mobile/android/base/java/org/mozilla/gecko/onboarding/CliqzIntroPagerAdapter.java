@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -136,8 +137,7 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
         final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         final Screen screen = Screen.values()[position];
         final ViewGroup layout = (ViewGroup) layoutInflater.inflate(R.layout.cliqz_intro_structure, container, false);
-        final FrameLayout contentContainer = (FrameLayout) layout.findViewById(R.id.content_container);
-        contentContainer.removeAllViews();
+        final LinearLayout contentContainer = (LinearLayout) layout.findViewById(R.id.content_container);
         final ImageView imageView = (ImageView) layout.findViewById(R.id.image);
         imageView.setImageResource(screen.image);
         layoutInflater.inflate(screen.layout, contentContainer, true);
