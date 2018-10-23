@@ -237,12 +237,12 @@ android {
         //photon should contain some implementation of CC. We take the implementation from standard version
         photon {
             java {
-                srcDir "${topsrcdir}/mobile/android/standard/java"
+                srcDir "${topsrcdir}/mobile/android/app/src/standard/java"
             }
         }
         bond {
             java {
-                srcDir "${topsrcdir}/mobile/android/bond/java"
+                srcDir "${topsrcdir}/mobile/android/app/src/bond/java"
                 srcDir "${topsrcdir}/mobile/android/app/src/photon/java" //need to include the sources in the photon folder
             }
             res {
@@ -251,7 +251,7 @@ android {
         }
         standard {
             java {
-                srcDir "${topsrcdir}/mobile/android/standard/java"
+                srcDir "${topsrcdir}/mobile/android/app/src/standard/java"
                 srcDir "${topsrcdir}/mobile/android/app/src/photon/java" //need to include the sources in the photon folder
             }
             res {
