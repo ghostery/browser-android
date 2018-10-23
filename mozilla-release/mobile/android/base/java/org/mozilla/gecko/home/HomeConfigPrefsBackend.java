@@ -14,6 +14,7 @@ import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.home.HomeConfig.HomeConfigBackend;
 import org.mozilla.gecko.home.HomeConfig.OnReloadListener;
@@ -76,7 +77,11 @@ public class HomeConfigPrefsBackend implements HomeConfigBackend {
         /* Cliqz start */
         // add Offrz panel, change panels order to be TopSites, history, MyOffrz, bookmarks
         panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.COMBINED_HISTORY));
-        panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.MY_OFFRZ));
+        if (BuildConfig.FLAVOR_skin.equals("bond")) {
+            panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.MY_OFFRZ, EnumSet.of(PanelConfig.Flags.DISABLED_PANEL)));
+        } else {
+            panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.MY_OFFRZ));
+        }
         panelConfigs.add(createBuiltinPanelConfig(mContext, PanelType.BOOKMARKS));
         /* Cliqz end */
 
