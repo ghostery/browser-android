@@ -1,6 +1,22 @@
 #!/bin/env groovy
 
 node('us-east-1 && ubuntu && docker && !gpu') {
+    def registry
+    def s3Path
+    def dockerImage
+    def downloadPath
+
+    if (env.JENKINS_URL.contains("jenkins-master-v2-gp.clyqz.com")) {
+        registry = "https://141047255820.dkr.ecr.us-east-1.amazonaws.com"
+        s3Path = "s3://repository.cliqz.com/dist/android/cache"
+        dockerImage = "141047255820.dkr.ecr.us-east-1.amazonaws.com/"
+        downloadPath = "cliqz.com"
+    } else {
+        registry = "https://092783680059.dkr.ecr.us-east-1.amazonaws.com"
+        s3Path = "s3://repository.ghostery.net/dist/android/cache"
+        dockerImage = "092783680059.dkr.ecr.us-east-1.amazonaws.com/"
+        downloadPath = "ghostery.net"
+    }
 
     def dockerTag
 
@@ -10,10 +26,10 @@ node('us-east-1 && ubuntu && docker && !gpu') {
     }
 
     def baseImageName = "browser-f/android:${dockerTag}"
-    
+
     stage('Build Create Docker Image') {
-        docker.withRegistry('https://092783680059.dkr.ecr.us-east-1.amazonaws.com'){
-            def baseImage  = docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` .')
+        docker.withRegistry(registry){
+            def baseImage = docker.build(baseImageName, "--build-arg DOWNLOADPATH=${downloadPath} --build-arg UID=`id -u` --build-arg GID=`id -g` .")
             baseImage.push dockerTag
         }
     }
@@ -53,7 +69,6 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                         ]
                     ]) {
-                        def s3Path = "s3://repository.ghostery.net/dist/android/cache"
                         def cachePath = ".gradle/caches"
                         sh """#!/bin/bash -l
                             cd
