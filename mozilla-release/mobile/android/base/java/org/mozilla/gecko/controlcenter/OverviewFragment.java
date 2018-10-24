@@ -473,8 +473,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
         mControlCenterCallbacks.controlCenterSettingsChanged();
         //update the data source so that other views can reflect changes
-        controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_blacklist", updatedBlackList);
-        controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_whitelist", updatedWhiteList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_blacklist", updatedBlackList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_whitelist", updatedWhiteList);
         GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", false);
     }
 
@@ -513,8 +513,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
         mControlCenterCallbacks.controlCenterSettingsChanged();
         //update the data source so that other views can reflect changes
-        controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_blacklist", updatedBlackList);
-        controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_whitelist", updatedWhiteList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_blacklist", updatedBlackList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_whitelist", updatedWhiteList);
         GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", false);
     }
 
