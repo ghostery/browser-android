@@ -9,7 +9,7 @@
 <!ENTITY firstrun_privacy_message "Naviga come se nessuno stesse guardando">
 <!ENTITY firstrun_privacy_subtext "La navigaziona anonima con protezione antitracciamento blocca gli elementi traccianti durante la navigazione e non conserva alcuna cronologia quando hai finito.">
 <!ENTITY firstrun_panel_title_customize "Personalizza">
-<!ENTITY firstrun_customize_message "Trasforma &brandShortName; nel ”tuo” browser.">
+<!ENTITY firstrun_customize_message "Trasforma &brandShortName; nel “tuo” browser.">
 <!ENTITY firstrun_customize_subtext "Personalizza &brandShortName; con i componenti aggiuntivi: blocca le pubblicità, aggiungi nuove funzioni o scegli un tema che rifletta la tua personalità.">
 <!ENTITY firstrun_bookmarks_title "Cronologia">
 <!ENTITY firstrun_bookmarks_message "I tuoi preferiti in primo piano">
@@ -26,10 +26,6 @@
 <!ENTITY firstrun_button_notnow "Non adesso">
 <!ENTITY firstrun_button_next "Successivo">
 <!ENTITY firstrun_tabqueue_title "Link">
-<!ENTITY firstrun_tabqueue_message_off "Attiva accodamento schede">
-<!ENTITY firstrun_tabqueue_subtext_off "Non caricare immediatamente in &brandShortName; i link aperti da altre app.">
-<!ENTITY firstrun_tabqueue_message_on "Attivato!">
-<!ENTITY firstrun_tabqueue_subtext_on "È possibile disattivare questa funzione in qualunque momento nella sezione &pref_category_general; delle &settings;.">
 <!ENTITY firstrun_readerview_title "Articoli">
 <!ENTITY firstrun_readerview_message "Fai un po’ di ordine">
 <!ENTITY firstrun_readerview_subtext "Utilizza la Modalità lettura per rendere più piacevole la lettura di articoli \u2014 anche non in linea.">
@@ -131,7 +127,6 @@
 <!ENTITY pref_category_advanced "Avanzate">
 <!ENTITY pref_category_advanced_summary3 "Ripristino schede, risparmio dati, strumenti di sviluppo">
 <!ENTITY pref_category_notifications "Notifiche">
-<!ENTITY pref_category_notifications_summary "Nuove funzioni, aggiornamenti dai siti web">
 <!ENTITY pref_category_notifications_summary2 "Nuove funzioni, suggerimenti sul prodotto">
 <!ENTITY pref_developer_remotedebugging_usb "Debug remoto tramite USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Debug remoto tramite Wi-Fi">
@@ -263,8 +258,8 @@
 <!ENTITY pref_panels_show "Mostra">
 <!ENTITY pref_panels_hide "Nascondi">
 <!ENTITY pref_panels_reorder "Modifica ordine">
-<!ENTITY pref_panels_move_up "Sposta in alto">
-<!ENTITY pref_panels_move_down "Sposta in basso">
+<!ENTITY pref_panels_move_up "Sposta su">
+<!ENTITY pref_panels_move_down "Sposta giù">
 <!ENTITY datareporting_notification_title "Statistiche e dati di &brandShortName;">
 <!ENTITY datareporting_notification_action_long "Scegli quali dati condividere">
 <!ENTITY datareporting_notification_action "Scegli cosa condividere">
@@ -505,7 +500,7 @@
 <!ENTITY activity_stream_remove "Rimuovi">
 <!ENTITY activity_stream_delete_history "Elimina dalla cronologia">
 <!ENTITY private_tab_panel_title "Navigazione anonima + Protezione antitracciamento">
-<!ENTITY private_tab_panel_description "&brandShortName; blocca gli elementi della pagina in grado di tracciare la navigazione." >
+<!ENTITY private_tab_panel_description "&brandShortName; bloccherà gli elementi della pagina in grado di tracciare la navigazione." >
 <!ENTITY private_tab_panel_description2 "Non verrà salvata alcuna cronologia, ma i file scaricati e i nuovi segnalibri verranno comunque conservati sul dispositivo." >
 <!ENTITY private_tab_learn_more "Ulteriori informazioni">
 <!ENTITY fullscreen_warning "Attivata modalità schermo intero">
@@ -521,3 +516,6 @@
 <!ENTITY mls_notification_channel "Georilevazione di &vendorShortName;">
 <!ENTITY download_notification_channel "Download">
 <!ENTITY media_notification_channel "Riproduzione file multimediali">
+<!ENTITY leanplum_default_notifications_channel "Notifiche push di &brandShortName;">
+<!ENTITY updater_notification_channel "Aggiornamenti app">
+<!ENTITY synced_tabs_notification_channel "Schede sincronizzate">

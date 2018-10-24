@@ -89,6 +89,9 @@ permissions-exceptions-autoplay-media-window =
     .title = Sitios web permitidos - Reproducción automática
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc = Puede especificar qué sitios web tienen permitido reproducir automáticamente elementos multimedia. Escriba la dirección exacta del sitio que desea permitir y pulse Permitir.
+permissions-exceptions-autoplay-media-window2 =
+    .title = Excepciones - Reproducción automática
+    .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc2 = Puede especificar qué sitios web pueden reproducir automáticamente contenido multimedia con sonido. Escriba la dirección del sitio que desea administrar y, a continuación, haga clic en Bloquear o Permitir.
 
 ## Site Permissions - Notifications

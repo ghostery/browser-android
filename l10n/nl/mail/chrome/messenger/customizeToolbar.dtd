@@ -13,5 +13,6 @@
 <!ENTITY useSmallIcons.label      "Kleine pictogrammen">
 <!ENTITY restoreDefaultSet.label  "Standaardset herstellen">
 <!ENTITY addNewToolbar.label      "Nieuwe werkbalk">
+<!ENTITY showTitlebar.label       "Titelbalk tonen">
 <!ENTITY saveChanges.label        "Gereed">
 <!ENTITY undoChanges.label        "Wijzigingen ongedaan maken">

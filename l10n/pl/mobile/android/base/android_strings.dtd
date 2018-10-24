@@ -27,11 +27,6 @@
 <!ENTITY firstrun_button_next "Dalej">
 
 <!ENTITY firstrun_tabqueue_title "Odnośniki">
-<!ENTITY firstrun_tabqueue_message_off "Włącz kolejkę kart">
-<!ENTITY firstrun_tabqueue_subtext_off "Otwieraj odnośniki z innych aplikacji dopiero po włączeniu przeglądarki &brandShortName;.">
-
-<!ENTITY firstrun_tabqueue_message_on "Sukces!">
-<!ENTITY firstrun_tabqueue_subtext_on "Zawsze można wyłączyć kolejkę kart w sekcji „&pref_category_general;” ustawień.">
 
 <!ENTITY firstrun_readerview_title "Artykuły">
 <!ENTITY firstrun_readerview_message "Popraw czytelność">
@@ -153,7 +148,6 @@
 <!ENTITY pref_category_advanced "Zaawansowane">
 <!ENTITY pref_category_advanced_summary3 "Przywracanie kart, oszczędzanie danych, narzędzia dla programistów">
 <!ENTITY pref_category_notifications "Powiadomienia">
-<!ENTITY pref_category_notifications_summary "Powiadomienia ze stron i o nowych funkcjach">
 <!ENTITY pref_category_notifications_summary2 "Nowe funkcje, porady o programie">
 <!ENTITY pref_developer_remotedebugging_usb "Zdalne debugowanie przez USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Zdalne debugowanie przez Wi-Fi">
@@ -644,3 +638,6 @@
 <!ENTITY mls_notification_channel "Usługi lokalizacji organizacji &vendorShortName;">
 <!ENTITY download_notification_channel "Pobrane pliki">
 <!ENTITY media_notification_channel "Odtwarzanie multimediów">
+<!ENTITY leanplum_default_notifications_channel "Powiadomienia programu &brandShortName;">
+<!ENTITY updater_notification_channel "Aktualizacje aplikacji">
+<!ENTITY synced_tabs_notification_channel "Zsynchronizowane karty">

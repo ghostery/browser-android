@@ -66,7 +66,7 @@
 <!ENTITY cmd.disableTheme.label "Abbandona questo tema">
 <!ENTITY cmd.disableTheme.accesskey "t">
 <!ENTITY cmd.askToActivate.label "Chiedi prima di attivare">
-<!ENTITY cmd.askToActivate.tooltip "Chiedi ogni volta prima di attivare questo componente aggiuntivo">
+<!ENTITY cmd.askToActivate.tooltip "Chiedi sempre prima di attivare questo componente aggiuntivo">
 <!ENTITY cmd.alwaysActivate.label "Attiva sempre">
 <!ENTITY cmd.alwaysActivate.tooltip "Utilizza sempre questo componente aggiuntivo">
 <!ENTITY cmd.neverActivate.label "Non attivare mai">

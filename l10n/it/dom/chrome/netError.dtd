@@ -23,7 +23,7 @@
 <!ENTITY notCached.title "Documento scaduto">
 <!ENTITY notCached.longDesc "<p>Il documento richiesto non è più disponibile nella cache del browser.</p><ul><li>Per ragioni di sicurezza il browser non effettua automaticamente una nuova richiesta per documenti sensibili.</li><li>Fare clic su Riprova per richiedere nuovamente il documento al sito web.</li></ul>">
 <!ENTITY netOffline.title "Non in linea">
-<!ENTITY netOffline.longDesc2 "<p>Il browser si trova in modalità non in linea e non è possibile connettersi con l’elemento richiesto.</p><ul><li>Il computer è collegato a una rete attiva?</li><li>Selezionare &quot;Riprova&quot; per passare alla modalità in linea e ricaricare la pagina.</li></ul>">
+<!ENTITY netOffline.longDesc2 "<p>Il browser si trova in modalità non in linea e non è possibile connettersi con l’elemento richiesto.</p><ul><li>Il computer è collegato a una rete attiva?</li><li>Selezionare “Riprova” per passare alla modalità in linea e ricaricare la pagina.</li></ul>">
 <!ENTITY contentEncodingError.title "Errore di codifica del contenuto">
 <!ENTITY contentEncodingError.longDesc "<p>La pagina che si sta cercando di visualizzare non può essere mostrata poiché fa uso di una forma di compressione non valida o non supportata.</p><ul><li>Contattare il proprietario del sito web per informarlo del problema.</li></ul>">
 <!ENTITY unsafeContentType.title "Tipo di file non sicuro">

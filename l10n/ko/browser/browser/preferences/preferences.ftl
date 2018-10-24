@@ -3,9 +3,11 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 do-not-track-description = 웹사이트에 “방문자 추적 금지” 신호를 보내서 추적을 원하지 않는다고 알림
-do-not-track-learn-more = 더 알아보기
+do-not-track-learn-more = 자세히 보기
 do-not-track-option-default =
     .label = 추적 방지 기능을 사용할 때만
+do-not-track-option-default-content-blocking =
+    .label = { -brand-short-name }가 감지된 추적기를 차단하도록 설정 됐을 때만
 do-not-track-option-always =
     .label = 항상
 pref-page =
@@ -90,6 +92,9 @@ extension-controlled-privacy-containers = <img data-l10n-name="icon"/> { $name }
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = <img data-l10n-name="icon"/> { $name } 확장기능이 추적 방지 기능을 제어하고 있습니다.
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = <img data-l10n-name="icon"/> { $name } 확장기능이 이 설정을 제어하고 있습니다.
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = <img data-l10n-name="icon"/> { $name } 확장기능이 { -brand-short-name }가 인터넷에 접근하는 방법을 제어하고 있습니다.
@@ -191,6 +196,9 @@ choose-button =
     .label = 선택…
     .accesskey = o
 choose-browser-language-description = { -brand-short-name }가 메뉴나 메시지, 알림을 표시하는데 사용할 언어를 선택해 주세요.
+manage-browser-languages-button =
+    .label = 대안 설정…
+    .accesskey = I
 confirm-browser-language-change-description = 변경사항 적용을 위해 { -brand-short-name } 재시작
 confirm-browser-language-change-button = 적용하고 재시작
 translate-web-pages =
@@ -307,6 +315,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = 네트워크 프록시
+network-settings-title = 네트워크 설정
 network-proxy-connection-description = { -brand-short-name }가 인터넷에 접근하는 방법을 설정하세요.
 network-proxy-connection-learn-more = 자세히 보기
 network-proxy-connection-settings =
@@ -545,9 +554,6 @@ history-dontremember-description = { -brand-short-name }는 사생활 보호 모
 history-private-browsing-permanent =
     .label = 사생활 보호 모드로만 이용
     .accesskey = p
-history-remember-option =
-    .label = 표시한 페이지 및 파일 다운로드 기록 저장
-    .accesskey = b
 history-remember-browser-option =
     .label = 표시한 페이지 및 파일 다운로드 기록 저장
     .accesskey = b
@@ -610,9 +616,13 @@ sitedata-block-trackers-option =
 sitedata-block-unvisited-option =
     .label = 방문하지 않은 웹사이트의 쿠키
 sitedata-block-all-third-parties-option =
-    .label = 모든 제3자 쿠기
+    .label = 모든 제3자 쿠키
 sitedata-block-always-option =
-    .label = 모든 쿠기(웹사이트가 작동하지 않을 수 있음)
+    .label = 모든 쿠키(웹사이트가 작동하지 않을 수 있음)
+sitedata-block-all-third-party-option =
+    .label = 모든 제3자 쿠키(웹사이트가 작동하지 않을 수 있음)
+sitedata-block-all-option =
+    .label = 모든 쿠키(웹사이트가 작동 안하게 됨)
 sitedata-clear =
     .label = 데이타 삭제…
     .accesskey = l
@@ -622,6 +632,10 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = 예외 목록…
     .accesskey = E
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = 콘텐츠 차단 설정이 쿠키와 사이트 데이타 설정의 변경을 막고 있습니다.
 
 ## Privacy Section - Address Bar
 
@@ -675,6 +689,45 @@ content-blocking-tracking-protection-option-pbm =
 content-blocking-tracking-protection-option-disabled =
     .label = 차단하지 않음
 content-blocking-tracking-protection-change-blocklist = 차단 목록 변경…
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-slow-loading-trackers-label =
+    .label = 느리게 로딩되는 추적기
+    .accesskey = S
+content-blocking-fastblock-new-description = 페이지가 더 빨리 뜰 수 있도록 추적기를 차단해보세요.
+content-blocking-tracking-protection-all-detected-trackers-label =
+    .label = 모든 감지된 추적기
+    .accesskey = T
+content-blocking-tracking-protection-new-description = 알려진 모든 추적기를 차단합니다. (몇몇 페이지가 로딩되지 않을 수 있습니다.)
+content-blocking-tracking-protection-option-always =
+    .label = 항상
+    .accesskey = A
+content-blocking-tracking-protection-option-private =
+    .label = 사생활 보호 창에서만
+    .accesskey = P
+content-blocking-tracking-protection-change-block-list = 차단 목록 변경
+content-blocking-third-party-cookies-label =
+    .label = 제3자 쿠키
+    .accesskey = C
+content-blocking-reject-trackers-description = 모든 제3자 쿠키나 추적기에 의해 설정된 쿠기를 차단합니다.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = 쿠키와 사이트 데이타 설정이 제3자 쿠키 설정의 변경을 막고 있습니다.
+content-blocking-change-cookie-settings =
+    .label = 쿠키 설정 변경
+    .accesskey = S
+content-blocking-reject-trackers-block-trackers-option-recommended =
+    .label = 추적기(권장)
+    .accesskey = k
+content-blocking-reject-trackers-block-trackers-option =
+    .label = 추적기
+    .accesskey = k
+content-blocking-reject-trackers-all-third-parties-option =
+    .label = 모든 제3자 쿠키(웹사이트가 작동 안 할 수 있음)
+    .accesskey = A
 
 ## Privacy Section - Tracking
 

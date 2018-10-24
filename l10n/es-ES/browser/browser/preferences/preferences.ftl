@@ -6,6 +6,8 @@ do-not-track-description = Enviar a los sitios web una señal “No rastrear” 
 do-not-track-learn-more = Más información
 do-not-track-option-default =
     .label = Solo al usar protección contra rastreo
+do-not-track-option-default-content-blocking =
+    .label = Solo cuando { -brand-short-name } está configurado para bloquear los rastreadores detectados
 do-not-track-option-always =
     .label = Siempre
 pref-page =
@@ -31,7 +33,7 @@ search-input-box =
         }
 policies-notice =
     { PLATFORM() ->
-        [windows] Su organización ha deshabilitado la posibilidad de cambiar algunas opciones. 
+        [windows] Su organización ha deshabilitado la posibilidad de cambiar algunas opciones.
        *[other] Su organización ha deshabilitado la posibilidad de cambiar algunas preferencias.
     }
 pane-general-title = General
@@ -90,6 +92,9 @@ extension-controlled-privacy-containers = Una extensión, <img data-l10n-name="i
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = Una extensión, <img data-l10n-name="icon"/> { $name }, está controlando la protección contra rastreo.
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = Una extensión, <img data-l10n-name="icon"/> { $name }, está controlando esta configuración.
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = Una extensión, <img data-l10n-name="icon"/> { $name }, controla cómo se conecta { -brand-short-name } a Internet.
@@ -203,6 +208,9 @@ choose-button =
     .label = Seleccionar…
     .accesskey = o
 choose-browser-language-description = Seleccione los idiomas en los que se mostrarán los menús, mensajes y notificaciones de { -brand-short-name }.
+manage-browser-languages-button =
+    .label = Establecer alternativas…
+    .accesskey = l
 confirm-browser-language-change-description = Reinicie { -brand-short-name } para aplicar los cambios
 confirm-browser-language-change-button = Aplicar y reiniciar
 translate-web-pages =
@@ -319,6 +327,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Proxy de red
+network-settings-title = Configuración de red
 network-proxy-connection-description = Configurar cómo se conecta { -brand-short-name } a Internet.
 network-proxy-connection-learn-more = Saber más
 network-proxy-connection-settings =
@@ -557,9 +566,6 @@ history-dontremember-description = { -brand-short-name } usará la misma configu
 history-private-browsing-permanent =
     .label = Modo permanente de navegación privada
     .accesskey = n
-history-remember-option =
-    .label = Recordar mi historial de descargas y navegación
-    .accesskey = R
 history-remember-browser-option =
     .label = Recordar historial de navegación y descargas
     .accesskey = h
@@ -605,6 +611,26 @@ sitedata-accept-third-party-visited-option =
     .label = De los visitados
 sitedata-accept-third-party-never-option =
     .label = Nunca
+sitedata-allow-cookies-option =
+    .label = Aceptar cookies y datos del sitio
+    .accesskey = A
+sitedata-disallow-cookies-option =
+    .label = Bloquear cookies y datos del sitio
+    .accesskey = B
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = Tipo bloqueado
+    .accesskey = T
+sitedata-block-trackers-option-recommended =
+    .label = Rastreadores de terceros (recomendado)
+sitedata-block-trackers-option =
+    .label = Rastreadores de terceros
+sitedata-block-unvisited-option =
+    .label = Cookies de sitios web no visitados
+sitedata-block-all-third-party-option =
+    .label = Todas las cookies de terceros (puede causar errores en los sitios web)
+sitedata-block-all-option =
+    .label = Todas las cookies (causará errores en los sitios web)
 sitedata-clear =
     .label = Limpiar datos…
     .accesskey = L
@@ -614,6 +640,10 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = Excepciones…
     .accesskey = E
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = Su configuración del bloqueo de contenido está impidiendo el cambio de los ajustes de cookies y datos del sitio.
 
 ## Privacy Section - Address Bar
 
@@ -650,23 +680,42 @@ content-blocking-category-label = Elija qué va a bloquear
 # "Slow" in this instance means "slow to load on the network".
 # FastBlock is a feature that blocks requests to tracking sites if they
 # have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-label = Elementos de rastreo lentos
-    .accesskey = l
-content-blocking-fastblock-description = Bloquea el contenido de terceros que tarda más de 5 segundos en cargarse.
-content-blocking-fastblock-option-enabled =
-    .label = Bloquear siempre
-content-blocking-fastblock-option-disabled =
-    .label = Nunca bloquear
-content-blocking-tracking-protection-label = Rastreadores
+content-blocking-fastblock-slow-loading-trackers-label =
+    .label = Rastreadores de carga lenta
+    .accesskey = S
+content-blocking-fastblock-new-description = Bloquear solo los rastreadores que impiden cargar rápidamente las páginas.
+content-blocking-tracking-protection-all-detected-trackers-label =
+    .label = Todos los rastreadores detectados
     .accesskey = T
-content-blocking-tracking-protection-description = Bloquea todos los rastreadores conocidos (Nota: también puede impedir que se carguen algunas páginas).
-content-blocking-tracking-protection-option-enabled =
-    .label = Bloquear siempre
-content-blocking-tracking-protection-option-pbm =
-    .label = Bloquear solo en ventanas privadas
-content-blocking-tracking-protection-option-disabled =
-    .label = Nunca bloquear
-content-blocking-tracking-protection-change-blocklist = Cambiar la lista de bloqueo…
+content-blocking-tracking-protection-new-description = Bloquear todos los rastreadores conocidos (puede impedir cargar algunas páginas).
+content-blocking-tracking-protection-option-always =
+    .label = Siempre
+    .accesskey = S
+content-blocking-tracking-protection-option-private =
+    .label = Solo en ventanas privadas
+    .accesskey = p
+content-blocking-tracking-protection-change-block-list = Cambiar la lista de bloqueo
+content-blocking-third-party-cookies-label =
+    .label = Cookies de terceros
+    .accesskey = C
+content-blocking-reject-trackers-description = Bloquear todas las cookies de terceros o solo aquellas establecidas por rastreadores.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = Su configuración en cookies y datos de sitio  está impidiendo el cambio de los ajustes de cookies de terceros.
+content-blocking-change-cookie-settings =
+    .label = Cambiar la configuración de cookies
+    .accesskey = S
+content-blocking-reject-trackers-block-trackers-option-recommended =
+    .label = Rastreadores (recomendado)
+    .accesskey = R
+content-blocking-reject-trackers-block-trackers-option =
+    .label = Rastreadores
+    .accesskey = R
+content-blocking-reject-trackers-all-third-parties-option =
+    .label = Todas las cookies de terceros (puede causar errores en los sitios web)
+    .accesskey = A
 
 ## Privacy Section - Tracking
 
@@ -729,6 +778,7 @@ autoplay-option-allow =
     .label = Permitir reproducción automática
 autoplay-option-dont =
     .label = No reproducir de manera automática
+permissions-autoplay-link = Más información
 permissions-block-popups =
     .label = Bloquear ventanas emergentes
     .accesskey = B

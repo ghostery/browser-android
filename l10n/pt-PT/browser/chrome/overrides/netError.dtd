@@ -108,7 +108,7 @@ was trying to connect. -->
 
 <!ENTITY certerror.introPara2 "O &brandShortName; detetou um potencial risco de segurança e não continuou para <span class='hostname'/>. Se visitar este site, atacantes podem tentar furtar informação como palavras-passe, emails, ou detalhes de cartão de crédito.">
 
-<!ENTITY certerror.expiredCert.secondPara "Este problema é mais provável porque o seu relógio do computador está definido para a hora errada, o que podem impedir o &brandShortName; de se ligar em segurança.">
+<!ENTITY certerror.expiredCert.secondPara "Este problema é mais provável porque o seu relógio do computador está definido para a hora errada, o que pode impedir o &brandShortName; de se ligar em segurança.">
 
 <!ENTITY certerror.whatCanYouDoAboutItTitle "O que pode fazer quanto a isto?">
 

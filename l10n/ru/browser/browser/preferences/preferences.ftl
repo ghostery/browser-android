@@ -6,6 +6,8 @@ do-not-track-description = Передавать сайтам сигнал “Н�
 do-not-track-learn-more = Подробнее
 do-not-track-option-default =
     .label = Только при использовании защиты от отслеживания
+do-not-track-option-default-content-blocking =
+    .label = Только когда { -brand-short-name } настроен на блокировку Обнаруженных трекеров
 do-not-track-option-always =
     .label = Всегда
 pref-page =
@@ -90,6 +92,9 @@ extension-controlled-privacy-containers = Расширение <img data-l10n-na
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = Расширение <img data-l10n-name="icon"/> { $name } контролирует параметры защиты от отслеживания.
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = Расширение <img data-l10n-name="icon"/> { $name } контролирует этот параметр.
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = Расширение <img data-l10n-name="icon"/> { $name } контролирует способ соединения { -brand-short-name } с Интернетом.
@@ -206,6 +211,9 @@ choose-button =
     .label = Выбрать…
     .accesskey = ы
 choose-browser-language-description = Выберите язык отображения меню, сообщений и уведомлений от { -brand-short-name }.
+manage-browser-languages-button =
+    .label = Выбрать альтернативные…
+    .accesskey = ы
 confirm-browser-language-change-description = Перезапустите { -brand-short-name } для применения этих изменений
 confirm-browser-language-change-button = Применить и перезапустить
 translate-web-pages =
@@ -322,6 +330,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Прокси-сервер
+network-settings-title = Параметры сети
 network-proxy-connection-description = Настроить, как { -brand-short-name } соединяется с Интернетом.
 network-proxy-connection-learn-more = Подробнее
 network-proxy-connection-settings =
@@ -560,9 +569,6 @@ history-dontremember-description = { -brand-short-name } будет исполь
 history-private-browsing-permanent =
     .label = Всегда работать в режиме приватного просмотра
     .accesskey = т
-history-remember-option =
-    .label = Помнить историю посещений и загрузок
-    .accesskey = с
 history-remember-browser-option =
     .label = Помнить историю посещений и загрузок
     .accesskey = и
@@ -624,10 +630,10 @@ sitedata-block-trackers-option =
     .label = Сторонние трекеры
 sitedata-block-unvisited-option =
     .label = Куки с непосещённых сайтов
-sitedata-block-all-third-parties-option =
-    .label = Все сторонние куки
-sitedata-block-always-option =
-    .label = Все куки (может нарушить работу веб-сайтов)
+sitedata-block-all-third-party-option =
+    .label = Все сторонние куки (может нарушить работу веб-сайтов)
+sitedata-block-all-option =
+    .label = Все куки (нарушит работу веб-сайтов)
 sitedata-clear =
     .label = Удалить данные…
     .accesskey = а
@@ -637,6 +643,10 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = Исключения…
     .accesskey = ю
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = Ваши настройки в Блокировке содержимого не дают произвести изменения настроек в Куки и данные сайтов.
 
 ## Privacy Section - Address Bar
 
@@ -673,23 +683,42 @@ content-blocking-category-label = Выберите, что блокироват�
 # "Slow" in this instance means "slow to load on the network".
 # FastBlock is a feature that blocks requests to tracking sites if they
 # have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-label = Медленно загружающиеся трекеры
-    .accesskey = л
-content-blocking-fastblock-description = Блокирует стороннее содержимое, загружающееся более 5 секунд.
-content-blocking-fastblock-option-enabled =
-    .label = Всегда блокировать
-content-blocking-fastblock-option-disabled =
-    .label = Никогда не блокировать
-content-blocking-tracking-protection-label = Все трекеры
+content-blocking-fastblock-slow-loading-trackers-label =
+    .label = Медленные трекеры
+    .accesskey = н
+content-blocking-fastblock-new-description = Блокировать только трекеры, не дающие страницам быстро загружаться.
+content-blocking-tracking-protection-all-detected-trackers-label =
+    .label = Все обнаруженные трекеры
     .accesskey = е
-content-blocking-tracking-protection-description = Блокирует все известные трекеры (Примечание: может также предотвратить загрузку некоторых страниц).
-content-blocking-tracking-protection-option-enabled =
-    .label = Всегда блокировать
-content-blocking-tracking-protection-option-pbm =
-    .label = Блокировать только в приватных окнах
-content-blocking-tracking-protection-option-disabled =
-    .label = Никогда не блокировать
-content-blocking-tracking-protection-change-blocklist = Сменить список блокировки…
+content-blocking-tracking-protection-new-description = Блокировать все известные трекеры (Некоторые страницы могут не открыться).
+content-blocking-tracking-protection-option-always =
+    .label = Всегда
+    .accesskey = а
+content-blocking-tracking-protection-option-private =
+    .label = Только в приватных окнах
+    .accesskey = и
+content-blocking-tracking-protection-change-block-list = Сменить список блокировки
+content-blocking-third-party-cookies-label =
+    .label = Сторонние куки
+    .accesskey = о
+content-blocking-reject-trackers-description = Блокировать все сторонние куки или только установленные трекерами.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = Ваши настройки в Куки и данные сайтов не дают произвести изменения настроек в Сторонние куки.
+content-blocking-change-cookie-settings =
+    .label = Изменить параметры куков
+    .accesskey = м
+content-blocking-reject-trackers-block-trackers-option-recommended =
+    .label = Трекеры (рекомендуемые)
+    .accesskey = ы
+content-blocking-reject-trackers-block-trackers-option =
+    .label = Все трекеры
+    .accesskey = к
+content-blocking-reject-trackers-all-third-parties-option =
+    .label = Все сторонние куки (может нарушить работу веб-сайтов)
+    .accesskey = о
 
 ## Privacy Section - Tracking
 

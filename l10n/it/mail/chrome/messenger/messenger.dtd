@@ -36,6 +36,12 @@
 <!ENTITY newFeedAccountCmd.accesskey "d">
 <!ENTITY newIMContactCmd.label "Contatto di Chat…">
 <!ENTITY newIMContactCmd.accesskey "h">
+<!ENTITY  newMessageCmd2.key "N">
+<!ENTITY  newMessageCmd.key "M">
+<!ENTITY  newMessageCmd.label "Messaggio">
+<!ENTITY  newMessageCmd.accesskey "m">
+<!ENTITY  newContactCmd.label "Contatto rubrica…">
+<!ENTITY  newContactCmd.accesskey "C">
 <!ENTITY openMessageFileCmd.label "Apri messaggio salvato…">
 <!ENTITY openMessageFileCmd.accesskey "A">
 <!ENTITY saveAsMenu.label "Salva come">
@@ -643,6 +649,7 @@
 <!-- Folder Pane Context Menu -->
 <!ENTITY folderContextGetMessages.label "Scarica messaggi">
 <!ENTITY folderContextGetMessages.accesskey "c">
+<!ENTITY folderContextMarkAllFoldersRead.label "Marca tutte le cartelle come lette">
 <!ENTITY folderContextPauseAllUpdates.label "Metti in pausa tutti gli aggiornamenti">
 <!ENTITY folderContextPauseUpdates.label "Metti in pausa gli aggiornamenti">
 <!ENTITY folderContextPauseUpdates.accesskey "A">

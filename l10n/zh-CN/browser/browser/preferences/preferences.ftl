@@ -6,6 +6,8 @@ do-not-track-description = 向网站发出“请勿跟踪”信号，示明您�
 do-not-track-learn-more = 详细了解
 do-not-track-option-default =
     .label = 仅限使用跟踪保护时
+do-not-track-option-default-content-blocking =
+    .label = 仅当 { -brand-short-name } 设为拦截检测到的跟踪器
 do-not-track-option-always =
     .label = 始终
 pref-page =
@@ -90,6 +92,9 @@ extension-controlled-privacy-containers = 扩展 <img data-l10n-name="icon"/> { 
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = 跟踪保护功能由扩展 <img data-l10n-name="icon"/> { $name } 控制。
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = 扩展 <img data-l10n-name="icon"/> { $name } 正在控制此设置。
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = 扩展 <img data-l10n-name="icon"/> { $name } 正在控制 { -brand-short-name } 如何连接互联网。
@@ -118,8 +123,8 @@ startup-header = 启动
 # since this setting is only exposed in Firefox Developer Edition
 separate-profile-mode =
     .label = 允许 { -brand-short-name } 和 Firefox 同时运行
-use-firefox-sync = 提示：这将使用单独的配置文件。使用“同步”在它们之间同步数据。
-get-started-not-logged-in = 登录到 { -sync-brand-short-name }…
+use-firefox-sync = 提示：这将使用单独的配置文件，可使用“{ -sync-brand-short-name }”在两套浏览器间共享数据。
+get-started-not-logged-in = 登录到{ -sync-brand-short-name }…
 get-started-configured = 打开{ -sync-brand-short-name }服务首选项
 always-check-default =
     .label = 始终检查 { -brand-short-name } 是否是您的默认浏览器
@@ -199,6 +204,9 @@ choose-button =
     .label = 选择…
     .accesskey = o
 choose-browser-language-description = 选择 { -brand-short-name } 显示菜单、消息和通知时使用的语言。
+manage-browser-languages-button =
+    .label = 设置备用语言…
+    .accesskey = l
 confirm-browser-language-change-description = 重开 { -brand-short-name } 以应用这些更改
 confirm-browser-language-change-button = 应用并重新打开
 translate-web-pages =
@@ -315,6 +323,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = 网络代理
+network-settings-title = 网络设置
 network-proxy-connection-description = 配置 { -brand-short-name } 如何连接互联网。
 network-proxy-connection-learn-more = 详细了解
 network-proxy-connection-settings =
@@ -553,9 +562,6 @@ history-dontremember-description = { -brand-short-name } 将采用与“隐私�
 history-private-browsing-permanent =
     .label = 始终使用隐私浏览模式
     .accesskey = p
-history-remember-option =
-    .label = 记住我的浏览和下载历史
-    .accesskey = b
 history-remember-browser-option =
     .label = 记住浏览和下载历史
     .accesskey = b
@@ -602,10 +608,10 @@ sitedata-accept-third-party-visited-option =
 sitedata-accept-third-party-never-option =
     .label = 不接受
 sitedata-allow-cookies-option =
-    .label = 接受 Cookie 和站点数据
+    .label = 接受 Cookie 和网站数据
     .accesskey = A
 sitedata-disallow-cookies-option =
-    .label = 阻止 Cookie 和站点数据
+    .label = 阻止 Cookie 和网站数据
     .accesskey = B
 # This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
 # The list items are the strings named sitedata-block-*-option*.
@@ -617,10 +623,10 @@ sitedata-block-trackers-option =
     .label = 第三方跟踪器
 sitedata-block-unvisited-option =
     .label = 未访问网站的 Cookie
-sitedata-block-all-third-parties-option =
-    .label = 所有第三方 Cookie
-sitedata-block-always-option =
-    .label = 所有 Cookie（可能导致网站异常）
+sitedata-block-all-third-party-option =
+    .label = 所有第三方 Cookie（可能导致网站异常）
+sitedata-block-all-option =
+    .label = 所有 Cookie（将会导致网站异常）
 sitedata-clear =
     .label = 清除数据…
     .accesskey = l
@@ -630,6 +636,10 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = 例外…
     .accesskey = E
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = 您的内容拦截设置不允许更改 Cookie 和网站数据的设置。
 
 ## Privacy Section - Address Bar
 
@@ -666,23 +676,42 @@ content-blocking-category-label = 选择要拦截的内容
 # "Slow" in this instance means "slow to load on the network".
 # FastBlock is a feature that blocks requests to tracking sites if they
 # have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-label = 减慢加载的跟踪元素
+content-blocking-fastblock-slow-loading-trackers-label =
+    .label = 减慢加载的跟踪器
     .accesskey = S
-content-blocking-fastblock-description = 拦截加载时间超过 5 秒的第三方内容。
-content-blocking-fastblock-option-enabled =
-    .label = 始终拦截
-content-blocking-fastblock-option-disabled =
-    .label = 永不拦截
-content-blocking-tracking-protection-label = 跟踪器
+content-blocking-fastblock-new-description = 拦截减慢页面加载速度的跟踪器。
+content-blocking-tracking-protection-all-detected-trackers-label =
+    .label = 检测到的所有跟踪器
     .accesskey = T
-content-blocking-tracking-protection-description = 拦截已知的所有跟踪器（注意：可能影响某些页面的加载）。
-content-blocking-tracking-protection-option-enabled =
-    .label = 始终拦截
-content-blocking-tracking-protection-option-pbm =
-    .label = 仅在隐私浏览窗口中拦截
-content-blocking-tracking-protection-option-disabled =
-    .label = 永不拦截
-content-blocking-tracking-protection-change-blocklist = 更换拦截列表…
+content-blocking-tracking-protection-new-description = 拦截已知的所有跟踪器。（可能影响某些页面的加载。）
+content-blocking-tracking-protection-option-always =
+    .label = 始终
+    .accesskey = A
+content-blocking-tracking-protection-option-private =
+    .label = 仅在隐私窗口中
+    .accesskey = P
+content-blocking-tracking-protection-change-block-list = 更换拦截列表
+content-blocking-third-party-cookies-label =
+    .label = 第三方 Cookie
+    .accesskey = C
+content-blocking-reject-trackers-description = 拦截所有第三方 Cookie，或只拦截跟踪器设置的 Cookie。
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = 您的 Cookie 和网站数据设置不允许更改第三方 Cookie 的设置。
+content-blocking-change-cookie-settings =
+    .label = 更改 Cookie 设置
+    .accesskey = S
+content-blocking-reject-trackers-block-trackers-option-recommended =
+    .label = 跟踪器（推荐）
+    .accesskey = k
+content-blocking-reject-trackers-block-trackers-option =
+    .label = 跟踪器
+    .accesskey = k
+content-blocking-reject-trackers-all-third-parties-option =
+    .label = 所有第三方 Cookie（可能导致网站故障）
+    .accesskey = A
 
 ## Privacy Section - Tracking
 

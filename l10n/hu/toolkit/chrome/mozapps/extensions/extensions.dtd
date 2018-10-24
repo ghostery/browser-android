@@ -3,11 +3,9 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "Kiegészítőkezelő">
 
-<!ENTITY search.placeholder                   "Keresés a kiegészítők között">
-
 <!ENTITY search.placeholder2                  "Keresés az addons.mozilla.org oldalon">
 <!ENTITY search.buttonlabel                   "Keresés">
-<!-- LOCALIZATION NOTE (search.commandKey):
+<!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
 <!ENTITY search.commandkey                    "f">
 
@@ -16,7 +14,6 @@
 <!ENTITY listEmpty.availableUpdates.label     "Nem találhatók frissítések">
 <!ENTITY listEmpty.recentUpdates.label        "Mostanában nem frissített kiegészítőket">
 <!ENTITY listEmpty.findUpdates.label          "Frissítések keresése">
-<!ENTITY listEmpty.search.label               "Nem található ilyen kiegészítő">
 <!ENTITY listEmpty.button.label               "További tudnivalók a kiegészítőkről">
 <!ENTITY installAddonFromFile.label           "Kiegészítő telepítése fájlból…">
 <!ENTITY installAddonFromFile.accesskey       "f">
@@ -24,9 +21,6 @@
 
 <!ENTITY getThemes.description                "Szeretné testreszabni böngészőjét?">
 <!ENTITY getThemes.learnMore                  "Válogasson több ezer téma közül.">
-
-<!ENTITY cmd.back.tooltip                     "Ugrás az előző oldalra">
-<!ENTITY cmd.forward.tooltip                  "Ugrás a következő oldalra">
 
 
 <!ENTITY showUnsignedExtensions.button.label  "Néhány kiegészítő nem ellenőrizhető">
@@ -44,7 +38,6 @@
 <!ENTITY warning.updatesecurity.enable.tooltip     "Kiegészítők frissítésekor a biztonsági ellenőrzés engedélyezése">
 
 <!-- categories / views -->
-<!ENTITY view.search.label                    "Keresés">
 <!ENTITY view.discover.label                  "Kiegészítők letöltése">
 <!ENTITY view.recentUpdates.label             "Legutóbbi frissítések">
 <!ENTITY view.availableUpdates.label          "Elérhető frissítések">
@@ -87,8 +80,6 @@
 <!ENTITY cmd.preferencesWin.accesskey         "B">
 <!ENTITY cmd.preferencesUnix.label            "Beállítások">
 <!ENTITY cmd.preferencesUnix.accesskey        "B">
-<!ENTITY cmd.about.label                      "Névjegy">
-<!ENTITY cmd.about.accesskey                  "N">
 
 <!ENTITY cmd.enableAddon.label                "Engedélyezés">
 <!ENTITY cmd.enableAddon.accesskey            "E">
@@ -135,7 +126,6 @@
 <!ENTITY detail.lastupdated.label             "Utoljára frissítve">
 <!ENTITY detail.creator.label                 "Fejlesztő">
 <!ENTITY detail.homepage.label                "Honlap">
-<!ENTITY detail.numberOfDownloads.label       "Letöltések">
 
 <!ENTITY detail.contributions.description     "A kiegészítő fejlesztője azt kéri, hogy egy csekély összeggel támogassa a további fejlesztést.">
 
@@ -167,23 +157,6 @@
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "Szünet">
 <!ENTITY progress.cancel.tooltip              "Mégse">
-
-
-<!-- list sorting -->
-<!ENTITY sort.name.label                      "Név">
-<!ENTITY sort.name.tooltip                    "Rendezés név szerint">
-<!ENTITY sort.dateUpdated.label               "Utoljára frissítve">
-<!ENTITY sort.dateUpdated.tooltip             "Rendezés a frissítés ideje szerint">
-<!ENTITY sort.relevance.label                 "Legjobb egyezés">
-<!ENTITY sort.relevance.tooltip               "Rendezés fontosság szerint">
-<!ENTITY sort.price.label                     "Ár">
-<!ENTITY sort.price.tooltip                   "Rendezés ár szerint">
-
-<!ENTITY search.filter2.label                 "Keresés:">
-<!ENTITY search.filter2.installed.label       "Saját kiegészítők">
-<!ENTITY search.filter2.installed.tooltip     "Telepített kiegészítők megjelenítése">
-<!ENTITY search.filter2.available.label       "Elérhető kiegészítők">
-<!ENTITY search.filter2.available.tooltip     "Telepíthető kiegészítők megjelenítése">
 
 <!ENTITY addon.homepage                       "Honlap">
 <!ENTITY addon.details.label                  "Tovább">
@@ -227,24 +200,13 @@
 
 <!ENTITY settings.path.button.label           "Tallózás…">
 
-<!-- LOCALIZATION NOTE (experiment.info.label): The strings related to
-     experiments are present on the "Experiments" tab of the add-ons manager.
-     This tab won't be displayed unless an Experiment add-on is installed.
-     Install https://people.mozilla.org/~gszorc/dummy-experiment-addon.xpi
-     to cause this tab to appear. -->
-<!ENTITY experiment.info.label "Mi ez? A telemetria időről időre kísérleteket telepíthet és futtathat.">
-<!ENTITY experiment.info.learnmore "További tudnivalók">
-<!ENTITY experiment.info.learnmore.accesskey "T">
-<!ENTITY experiment.info.changetelemetry "Telemetria beállításai">
-<!ENTITY experiment.info.changetelemetry.accesskey "b">
-
 <!ENTITY setting.learnmore "További tudnivalók…">
 
 <!ENTITY disabledUnsigned.heading "Néhány kiterjesztés letiltásra került">
 <!-- LOCALIZATION NOTE (disabledUnsigned.description.start, disabledUnsigned.description.findAddonsLink, disabledUnsigned.description.end):
      These entities form a sentence, with
      disabledUnsigned.description.findAddonsLink being a link to an external site. -->
-<!ENTITY disabledUnsigned.description.start "A következő kiegészítők nem lettek ellenőrizve a &brandShortName;ban való használatra. Lehetősége van ">
+<!ENTITY disabledUnsigned.description.start "A következő kiegészítők nem lettek ellenőrizve a &brandShortName; böngészőben való használatra. Lehetősége van ">
 <!ENTITY disabledUnsigned.description.findAddonsLink "helyettesítőket keresni">
 <!ENTITY disabledUnsigned.description.end " vagy megkérni a fejlesztőt az ellenőriztetésre.">
 <!ENTITY disabledUnsigned.learnMore "Tudjon meg többet erőfeszítéseinkről az online biztonsága fenntartásáért.">

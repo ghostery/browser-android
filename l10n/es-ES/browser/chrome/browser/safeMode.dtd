@@ -2,11 +2,18 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY safeModeDialog.title "Modo seguro de &brandShortName;">
-<!ENTITY window.maxWidth "400">
-<!ENTITY startSafeMode.label "Iniciar en Modo seguro">
-<!ENTITY refreshProfile.label "Restablecer &brandShortName;">
-<!ENTITY safeModeDescription3.label "El modo seguro es un modo especial de &brandShortName; que puede ser usado para solucionar problemas.">
-<!ENTITY safeModeDescription4.label "Sus complementos y configuraciones personalizadas serán desactivadas de forma temporal.">
-<!ENTITY refreshProfileInstead.label "También puede omitir la solución de problemas y probar a restablecer &brandShortName;.">
+<!ENTITY safeModeDialog.title         "Modo seguro de &brandShortName;">
+<!ENTITY window.maxWidth              "400">
+
+<!ENTITY startSafeMode.label          "Iniciar en Modo seguro">
+<!ENTITY refreshProfile.label         "Restablecer &brandShortName;">
+
+<!ENTITY safeModeDescription3.label   "El modo seguro es un modo especial de &brandShortName; que puede ser usado para solucionar problemas.">
+<!ENTITY safeModeDescription4.label   "Sus complementos y configuraciones personalizadas serán desactivadas de forma temporal.">
+
+<!ENTITY safeModeDescription5.label   "Sus complementos y ajustes personalizados se deshabilitarán temporalmente y las características de &brandShortName; podrían no funcionar como lo hacen normalmente.">
+
+<!ENTITY refreshProfileInstead.label  "También puede omitir la solución de problemas y probar a restablecer &brandShortName;.">
+
+<!-- LOCALIZATION NOTE (autoSafeModeDescription3.label): Shown on the safe mode dialog after multiple startup crashes. See also chrome/global/resetProfile.dtd -->
 <!ENTITY autoSafeModeDescription3.label "&brandShortName; se cerró inesperadamente al arrancar. Esto podría estar causado por complementos u otros problemas. Puede intentar resolverlo utilizando el modo seguro.">

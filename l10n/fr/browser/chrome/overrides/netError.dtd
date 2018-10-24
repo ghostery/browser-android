@@ -141,6 +141,7 @@ will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "Les propriétaires de <span class='hostname'/> ont mal configuré leur site web. Pour éviter que vos données ne soient dérobées, &brandShortName; ne s’est pas connecté à ce site web.">
 
+<!ENTITY certerror.introPara2 "&brandShortName; a détecté une menace de sécurité potentielle et n’a pas poursuivi vers <span class='hostname'/>. Si vous accédez à ce site, des attaquants pourraient dérober des informations comme vos mots de passe, courriels, ou données de carte bancaire.">
 
 <!ENTITY certerror.expiredCert.secondPara "Ce problème est probablement dû au fait que l’horloge de votre ordinateur est déréglée, ce qui empêche &brandShortName; de se connecter de façon sécurisée.">
 

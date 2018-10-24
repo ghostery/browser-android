@@ -10,3 +10,10 @@ documentation-tab = Documentação
 policy-name = Nome da política
 policy-value = Valor da política
 policy-errors = Erros de políticas
+# 'gpo-machine-only' policies are related to the Group Policy features
+# on Windows. Please use the same terminology that is used on Windows
+# to describe Group Policy.
+# These policies can only be set at the computer-level settings, while
+# the other policies can also be set at the user-level.
+gpo-machine-only =
+    .title = Ao utilizar a Política de grupo, esta política apenas pode ser definida ao nível do computador.

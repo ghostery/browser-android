@@ -92,4 +92,5 @@
      This command is shown in the context menu when downloads are blocked.
      -->
 <!ENTITY cmd.unblock2.label               "Autoriser le téléchargement">
+<!ENTITY cmd.unblock2.accesskey           "o">
 

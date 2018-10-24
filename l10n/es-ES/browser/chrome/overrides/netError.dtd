@@ -11,7 +11,7 @@
 <!ENTITY returnToPreviousPage1.label "Retroceder (recomendado)">
 <!ENTITY advanced.label "Avanzado">
 
-<!ENTITY continue1.label "Continuar…">
+<!ENTITY continue2.label "Más…">
 <!ENTITY moreInformation.label "Más información">
 
 <!-- Specific error messages -->
@@ -156,12 +156,12 @@
 
 <!ENTITY certerror.longpagetitle1 "Su conexión no es segura">
 <!ENTITY certerror.longpagetitle2 "Advertencia: riesgo potencial de seguridad a continuación">
-<!-- Localization note (certerror.introPara, certerror.introPara1) - The text content of the span tag
+<!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "El propietario de <span class='hostname' /> ha configurado su sitio web de manera incorrecta. Para evitar que su información sea robada, &brandShortName; no ha conectado con este sitio web.">
 
-<!ENTITY certerror.introPara1 "&brandShortName; detectó una posible amenaza de seguridad y no accedió a <span class='hostname'/>. Si visita este sitio, los atacantes podrían intentar robar su información como sus contraseñas, correos electrónicos o tarjetas de crédito.">
+<!ENTITY certerror.introPara2 "&brandShortName; ha detectado una posible amenaza de seguridad y no ha cargado <span class='hostname'/>. Si visita este sitio, los atacantes podrían intentar robar información como sus contraseñas, correos electrónicos o detalles de su tarjeta de crédito.">
 
 <!ENTITY certerror.expiredCert.secondPara "Es muy probable que este problema se deba a que el reloj de su ordenador no tiene la hora correcta, lo que impediría que &brandShortName; se conecte de forma segura.">
 
@@ -201,6 +201,8 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "Añadir excepción…">
+
+<!ENTITY securityOverride.exceptionButton1Label "Aceptar el riesgo y continuar">
 
 <!ENTITY errorReporting.automatic2 "Informar de errores como esto ayuda a Mozilla a identificar y bloquear sitios maliciosos">
 <!ENTITY errorReporting.learnMore "Más información…">

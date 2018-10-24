@@ -16,12 +16,12 @@
 
 <!-- LOCALIZATION NOTE (aboutDevtools.enable.title): Title of the top about:devtools
   -  section displayed when DevTools are disabled. -->
-<!ENTITY  aboutDevtools.enable.title "Habilitar o Firefox Developer Tools">
+<!ENTITY  aboutDevtools.enable.title "Ativar o Firefox Developer Tools">
 
 <!-- LOCALIZATION NOTE (aboutDevtools.enable.inspectElementTitle): Title of the top
   -  section displayed when devtools are disabled and the user triggered DevTools by using
   -  the Inspect Element menu item. -->
-<!ENTITY  aboutDevtools.enable.inspectElementTitle "Habilitar o Firefox Developer Tools para usar o Inspect Element">
+<!ENTITY  aboutDevtools.enable.inspectElementTitle "Ative o Firefox Developer Tools para usar o Inspect Element">
 
 <!-- LOCALIZATION NOTE (aboutDevtools.enable.inspectElementMessage): Message displayed
   -  when users come from using the Inspect Element menu item. -->
@@ -53,7 +53,7 @@
   -  are disabled. -->
 <!ENTITY  aboutDevtools.enable.learnMoreLink "Saber mais sobre o Developer Tools">
 
-<!ENTITY  aboutDevtools.enable.enableButton "Habilitar o Developer Tools">
+<!ENTITY  aboutDevtools.enable.enableButton "Ativar Developer Tools">
 <!ENTITY  aboutDevtools.enable.closeButton2 "Fechar esta aba">
 
 <!ENTITY  aboutDevtools.welcome.title "Bem-vindo ao Firefox Developer Tools!">

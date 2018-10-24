@@ -132,7 +132,7 @@ was trying to connect. -->
 
 <!ENTITY certerror.expiredCert.whatCanYouDoAboutIt2 "
 <p>您的计算机时钟目前设置为 <span id='wrongSystemTime_systemDate2'/>。请确保您的计算机在系统设置中已设置了正确的日期、时间和时区，然后刷新 <span class='hostname'/>。</p>
-<p>如果您的时钟已设置正确的时间，则此网站可能存在配置错误，您无法解决此问题。您可以向网站管理员通报该问题。</p>">
+<p>如果您的时钟已设置正确的时间，则此网站可能存在配置错误，您无法解决此问题。您可以向网站管理员反馈该问题。</p>">
 
 <!ENTITY certerror.badCertDomain.whatCanYouDoAboutIt "
 <p>这个问题大多与网站有关，您无法解决。您可以向网站管理员告知此问题。</p>

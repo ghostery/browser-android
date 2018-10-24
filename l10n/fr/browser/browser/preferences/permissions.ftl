@@ -89,6 +89,9 @@ permissions-exceptions-autoplay-media-window =
     .title = Sites autorisés - Lecture automatique
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc = Il vous est possible de préciser quels sites web vous autorisez à lire automatiquement du contenu multimédia. Saisissez l’adresse exacte du site que vous souhaitez autoriser puis cliquez sur Autoriser.
+permissions-exceptions-autoplay-media-window2 =
+    .title = Exceptions - Lecture automatique
+    .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc2 = Vous pouvez indiquer les sites web qui sont toujours ou ne sont jamais autorisés à lancer automatiquement la lecture de contenu multimédia comportant du son. Saisissez l’adresse du site et cliquez sur Bloquer ou Autoriser.
 
 ## Site Permissions - Notifications

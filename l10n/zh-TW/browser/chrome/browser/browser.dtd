@@ -68,8 +68,6 @@ can reach it easily. -->
 <!ENTITY  sendPageToDevice.accesskey         "D">
 <!ENTITY  sendLinkToDevice.label             "將鏈結傳送至裝置">
 <!ENTITY  sendLinkToDevice.accesskey         "D">
-<!ENTITY  sendToDeviceFeedback.label         "已送出！">
-<!ENTITY  sendToDeviceOfflineFeedback.label  "已排入佇列（離線）">
 <!ENTITY  moveToNewWindow.label              "移動到新視窗">
 <!ENTITY  moveToNewWindow.accesskey          "W">
 <!ENTITY  reopenInContainer.label            "使用容器開啟">
@@ -268,7 +266,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!-- Toolbar items -->
 <!ENTITY homeButton.label             "首頁">
-
 <!ENTITY homeButton.defaultPage.tooltip "&brandShortName; 首頁">
 
 <!ENTITY bookmarksButton.label          "書籤">
@@ -428,23 +425,12 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY customizeMenu.addToToolbar.label "新增至工具列">
 <!ENTITY customizeMenu.addToToolbar.accesskey "A">
-<!ENTITY customizeMenu.addToPanel.label "新增至選單">
-<!ENTITY customizeMenu.addToPanel.accesskey "M">
 <!-- LOCALIZATION NOTE (customizeMenu.addToOverflowMenu.label,
      customizeMenu.pinToOverflowMenu.label, customizeMenu.unpinFromOverflowMenu.label)
      The overflow menu is the menu that appears if you click the chevron (>> button)
      in the location bar. -->
 <!ENTITY customizeMenu.addToOverflowMenu.label "新增到收藏選單">
 <!ENTITY customizeMenu.addToOverflowMenu.accesskey "M">
-<!ENTITY customizeMenu.moveToToolbar.label "移動至工具列">
-<!ENTITY customizeMenu.moveToToolbar.accesskey "o">
-<!-- LOCALIZATION NOTE (customizeMenu.moveToPanel.accesskey, customizeMenu.pinToOverflowMenu.accesskey)
-     can appear on the same context menu as menubarCmd and personalbarCmd,
-     so they should have different access keys. customizeMenu.moveToToolbar and
-     customizeMenu.moveToPanel are mutually exclusive, so can share access
-     keys.  -->
-<!ENTITY customizeMenu.moveToPanel.label "移動至選單">
-<!ENTITY customizeMenu.moveToPanel.accesskey "o">
 <!-- LOCALIZATION NOTE (customizeMenu.pinToOverflowMenu.accesskey)
      can appear on the same context menu as menubarCmd and personalbarCmd,
      so they should have different access keys.  -->
@@ -454,15 +440,15 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.unpinFromOverflowMenu.accesskey "U">
 <!ENTITY customizeMenu.removeFromToolbar.label "自工具列移除">
 <!ENTITY customizeMenu.removeFromToolbar.accesskey "R">
-<!ENTITY customizeMenu.removeFromMenu.label "自選單移除">
-<!ENTITY customizeMenu.removeFromMenu.accesskey "R">
 <!ENTITY customizeMenu.addMoreItems.label "新增更多項目…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "A">
-
 <!ENTITY customizeMenu.autoHideDownloadsButton.label "於工具列自動隱藏">
 <!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "A">
 <!ENTITY customizeMenu.manageExtension.label "管理擴充套件">
 <!ENTITY customizeMenu.manageExtension.accesskey "E">
+
+<!ENTITY customizeMenu.removeExtension.label "移除擴充套件">
+<!ENTITY customizeMenu.removeExtension.accesskey "v">
 
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
@@ -604,7 +590,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY bookmarkThisFrameCmd.label      "將此頁框加入書籤">
 <!ENTITY bookmarkThisFrameCmd.accesskey  "m">
 <!ENTITY pageAction.copyLink.label    "複製鏈結">
-<!ENTITY copyURLFeedback.label        "已複製！">
 <!ENTITY emailPageCmd.label           "郵寄鏈結…">
 <!ENTITY emailPageCmd.accesskey       "E">
 <!ENTITY savePageCmd.label            "另存新檔…">
@@ -791,7 +776,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      Remove Bookmark buttons. -->
 <!ENTITY editBookmark.panel.width                    "23em">
 <!ENTITY editBookmark.done.label                     "完成">
-<!ENTITY editBookmark.removeBookmark.accessKey       "R">
 
 <!ENTITY editBookmark.showForNewBookmarks.label       "儲存時顯示編輯器">
 <!ENTITY editBookmark.showForNewBookmarks.accesskey   "S">
@@ -842,7 +826,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY identity.permissions "權限">
 <!ENTITY identity.permissionsEmpty "您並未授予此網站任何特殊權限。">
 <!ENTITY identity.permissionsReloadHint "您可能需要重新載入頁面才能讓變更生效。">
-
 <!ENTITY identity.permissionsPreferences.tooltip "開啟權限偏好設定">
 
 <!-- Name for the tabs toolbar as spoken by screen readers.
@@ -966,10 +949,10 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      the type of content blocking is currently not enabled. -->
 <!ENTITY contentBlocking.fastBlock.add.label "新增封鎖項目…">
 
-<!ENTITY contentBlocking.trackingProtection.label "追蹤器">
+<!ENTITY contentBlocking.trackingProtection2.label "所有偵測到的追蹤器">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
      This label signals that this type of content blocking is turned
-     ON and is successfully blocking malicious/slow content, so this is
+     ON and is successfully blocking tracker content, so this is
      a positive thing. It forms the end of the (imaginary) sentence
      "Trackers [are] Blocked"-->
 <!ENTITY contentBlocking.trackingProtection.blocked.label "封鎖">
@@ -979,33 +962,29 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      the type of content blocking is currently not enabled. -->
 <!ENTITY contentBlocking.trackingProtection.add.label "新增封鎖項目…">
 
-<!ENTITY contentBlocking.openBreakageReportView.label "回報問題">
+<!ENTITY contentBlocking.3rdPartyCookies.label "第三方 Cookie">
+<!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.blocked.label):
+     This label signals that this type of content blocking is turned
+     ON and is successfully blocking third-party cookies, so this is
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Third-Party Cookies [are] Blocked"-->
+<!ENTITY contentBlocking.3rdPartyCookies.blocked.label "封鎖">
+<!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.add.label):
+     This is displayed as a link to preferences, where the user can add
+     this specific type of content blocking. When this text is shown
+     the type of content blocking is currently not enabled. -->
+<!ENTITY contentBlocking.3rdPartyCookies.add.label "新增封鎖項目…">
+
+<!ENTITY contentBlocking.openBreakageReportView2.label "回報問題">
 <!ENTITY contentBlocking.breakageReportView.label "回報問題">
-<!ENTITY contentBlocking.breakageReportView.description "內容封鎖功能可能會造成某些網站運作不正常。若您能回報問題，就可以幫助所有人的 &brandShortName; 變得更好。（將會傳送網址，以及您的隱私保護及內容封鎖設定內容給 Mozilla。）">
+<!ENTITY contentBlocking.breakageReportView2.description "內容封鎖功能可能會造成某些網站運作不正常。當您回報問題時，就能幫助讓所有人的 &brandShortName; 變得更好。（將會回報網址與您的瀏覽器相關設定給 Mozilla。）">
 <!ENTITY contentBlocking.breakageReportView.learnMore "了解更多">
 <!ENTITY contentBlocking.breakageReportView.collection.url.label "網址">
-<!ENTITY contentBlocking.breakageReportView.collection.userAgent.label "&brandShortName; 版本號">
 <!ENTITY contentBlocking.breakageReportView.collection.comments.label "您遇到什麼問題？（選填）">
 <!ENTITY contentBlocking.breakageReportView.sendReport.label "傳送回報">
 <!ENTITY contentBlocking.breakageReportView.cancel.label "取消">
 
 <!ENTITY trackingProtection.title "追蹤保護">
-<!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; 已經封鎖頁面裡的部分元素，以防止您的瀏覽行為被其追蹤。">
-<!ENTITY trackingProtection.detectedNotBlocked3 "此網站包含可能會追蹤您瀏覽行為的元素，但您已停用保護。">
-<!ENTITY trackingProtection.notDetected3 "未在此頁面偵測到追蹤元素。">
-<!-- LOCALIZATION NOTE (trackingProtection.unblock.label, trackingProtection.unblock.accesskey):
-     The associated button with this label and accesskey is only shown when opening the control
-     center while looking at a site with trackers in NON-private browsing mode. -->
-<!ENTITY trackingProtection.unblock.label "為此網站停用保護">
-<!ENTITY trackingProtection.unblock.accesskey "D">
-<!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate.label, trackingProtection.unblockPrivate.accesskey):
-     The associated button with this label and accesskey is only shown when opening the control
-     center while looking at a site with trackers in PRIVATE browsing mode. -->
-<!ENTITY trackingProtection.unblockPrivate.label "此次瀏覽階段停用保護">
-<!ENTITY trackingProtection.unblockPrivate.accesskey "D">
-<!ENTITY trackingProtection.block2.label "啟用保護">
-<!ENTITY trackingProtection.block2.accesskey "E">
-
 <!ENTITY trackingProtection.tooltip "開啟追蹤保護偏好設定">
 <!ENTITY trackingProtection.detectedBlocked4 "&brandShortName; 已封鎖此頁面中的部分元素，以防止您的瀏覽行為被追蹤。">
 <!ENTITY trackingProtection.detectedNotBlocked5 "&brandShortName; 偵測到此頁面中包含某些可能會追蹤您上網行為的元素。">
@@ -1031,7 +1010,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY trackingProtection.block4.accesskey "E">
 <!ENTITY trackingProtection.unblockPrivate4.label "暫時關閉封鎖功能">
 <!ENTITY trackingProtection.unblockPrivate4.accesskey "D">
-<!ENTITY trackingProtection.block5.label "暫時開啟內容封鎖功能">
+<!ENTITY trackingProtection.block5.label "針對此網站開啟內容封鎖功能">
 <!ENTITY trackingProtection.block5.accesskey "E">
 <!ENTITY trackingProtection.reload2.label "重新載入網頁">
 <!ENTITY trackingProtection.reload2.accesskey "R">
@@ -1134,6 +1113,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY pageAction.manageExtension.label "管理擴充套件…">
 
 <!ENTITY pageAction.sendTabToDevice.label "將分頁傳送至裝置">
+
 <!ENTITY sendToDevice.syncNotReady.label "正在同步裝置…">
 
 <!ENTITY pageAction.shareUrl.label "分享">

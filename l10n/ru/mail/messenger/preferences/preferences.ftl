@@ -3,5 +3,8 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 choose-messenger-language-description = Выберите язык отображения меню, сообщений и уведомлений от { -brand-short-name }.
+manage-messenger-languages-button =
+    .label = Выбрать альтернативные…
+    .accesskey = ы
 confirm-messenger-language-change-description = Перезапустите { -brand-short-name } для применения этих изменений
 confirm-messenger-language-change-button = Применить и перезапустить

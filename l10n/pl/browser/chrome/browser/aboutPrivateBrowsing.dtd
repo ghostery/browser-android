@@ -33,3 +33,6 @@
 <!ENTITY trackingProtection.title "Ochrona przed śledzeniem">
 <!ENTITY trackingProtection.description2 "Niektóre strony używają elementów mogących śledzić aktywność użytkownika w Internecie. Dzięki ochronie przed śledzeniem, Firefox zablokuje wiele z elementów mogących zbierać informacje o przeglądaniu.">
 <!ENTITY trackingProtection.startTour1 "Przeczytaj o tym, jak to działa">
+
+<!ENTITY contentBlocking.title "Blokowanie treści">
+<!ENTITY contentBlocking.description "Niektóre strony używają elementów mogących śledzić aktywność użytkownika w Internecie. W oknach przeglądania prywatnego przeglądarka automatycznie zablokuje wiele z elementów mogących zbierać informacje o przeglądaniu.">

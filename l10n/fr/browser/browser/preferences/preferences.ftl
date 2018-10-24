@@ -6,6 +6,8 @@ do-not-track-description = Envoyer aux sites web un signal « Ne pas me pister�
 do-not-track-learn-more = En savoir plus
 do-not-track-option-default =
     .label = Seulement lorsque la protection contre le pistage est utilisée
+do-not-track-option-default-content-blocking =
+    .label = Uniquement quand { -brand-short-name } est réglé pour bloquer les traqueurs détectés
 do-not-track-option-always =
     .label = Toujours
 pref-page =
@@ -90,6 +92,9 @@ extension-controlled-privacy-containers = Une extension, <img data-l10n-name="ic
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = Une extension, <img data-l10n-name="icon"/> { $name }, contrôle la protection contre le pistage.
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = Une extension, <img data-l10n-name="icon"/> { $name }, contrôle ce paramètre.
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = Une extension, <img data-l10n-name="icon"/> { $name }, contrôle la façon dont { -brand-short-name } se connecte à Internet.
@@ -203,6 +208,9 @@ choose-button =
     .label = Choisir…
     .accesskey = o
 choose-browser-language-description = Choisissez en quelle langue doivent s’afficher les menus, messages et notifications de { -brand-short-name }.
+manage-browser-languages-button =
+    .label = Choisir des alternatives…
+    .accesskey = a
 confirm-browser-language-change-description = Redémarrer { -brand-short-name } pour appliquer ces changements
 confirm-browser-language-change-button = Appliquer et redémarrer
 translate-web-pages =
@@ -319,6 +327,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Proxy réseau
+network-settings-title = Paramètres réseau
 network-proxy-connection-description = Configurer la façon dont { -brand-short-name } se connecte à Internet.
 network-proxy-connection-learn-more = En savoir plus
 network-proxy-connection-settings =
@@ -557,9 +566,6 @@ history-dontremember-description = { -brand-short-name } utilisera les mêmes pa
 history-private-browsing-permanent =
     .label = Toujours utiliser le mode de navigation privée
     .accesskey = i
-history-remember-option =
-    .label = Conserver l’historique de navigation et des téléchargements
-    .accesskey = C
 history-remember-browser-option =
     .label = Conserver l’historique de navigation et des téléchargements
     .accesskey = C
@@ -605,10 +611,26 @@ sitedata-accept-third-party-visited-option =
     .label = Depuis les sites visités
 sitedata-accept-third-party-never-option =
     .label = Jamais
+sitedata-allow-cookies-option =
+    .label = Accepter les cookies et les données de site
+    .accesskey = A
+sitedata-disallow-cookies-option =
+    .label = Bloquer les cookies et les données de site
+    .accesskey = B
 # This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
 # The list items are the strings named sitedata-block-*-option*.
 sitedata-block-desc = Type de contenu bloqué
     .accesskey = T
+sitedata-block-trackers-option-recommended =
+    .label = Traqueurs tiers (recommandé)
+sitedata-block-trackers-option =
+    .label = Traqueurs tiers
+sitedata-block-unvisited-option =
+    .label = Cookies de sites web non visités
+sitedata-block-all-third-party-option =
+    .label = Tous les cookies tiers (peut empêcher certains sites de fonctionner)
+sitedata-block-all-option =
+    .label = Tous les cookies (empêchera des sites de fonctionner)
 sitedata-clear =
     .label = Effacer les données…
     .accesskey = E
@@ -618,6 +640,10 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = Exceptions…
     .accesskey = x
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = Vos paramètres de blocage de contenu empêchent la modification des paramètres sur les cookies et les données de sites.
 
 ## Privacy Section - Address Bar
 
@@ -654,23 +680,42 @@ content-blocking-category-label = Sélectionnez le contenu à bloquer
 # "Slow" in this instance means "slow to load on the network".
 # FastBlock is a feature that blocks requests to tracking sites if they
 # have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-label = Traqueurs qui ralentissent
+content-blocking-fastblock-slow-loading-trackers-label =
+    .label = Traqueurs qui ralentissent
+    .accesskey = s
+content-blocking-fastblock-new-description = Ne bloquer que les traqueurs qui empêchent les pages de se charger rapidement.
+content-blocking-tracking-protection-all-detected-trackers-label =
+    .label = Tous les traqueurs détectés
     .accesskey = T
-content-blocking-fastblock-description = Bloque les contenus tiers mettant plus de 5 secondes à charger.
-content-blocking-fastblock-option-enabled =
-    .label = Toujours bloquer
-content-blocking-fastblock-option-disabled =
-    .label = Ne jamais bloquer
-content-blocking-tracking-protection-label = Traqueurs
+content-blocking-tracking-protection-new-description = Bloquer tous les traqueurs connus. (Peut empêcher certaines pages de se charger.)
+content-blocking-tracking-protection-option-always =
+    .label = Toujours
     .accesskey = T
-content-blocking-tracking-protection-description = Bloque tous les traqueurs connus (remarque : cela peut empêcher le chargement de certaines pages).
-content-blocking-tracking-protection-option-enabled =
-    .label = Toujours bloquer
-content-blocking-tracking-protection-option-pbm =
-    .label = Bloquer uniquement dans les fenêtres privées
-content-blocking-tracking-protection-option-disabled =
-    .label = Ne jamais bloquer
-content-blocking-tracking-protection-change-blocklist = Modifier la liste de blocage…
+content-blocking-tracking-protection-option-private =
+    .label = Uniquement en navigation privée
+    .accesskey = v
+content-blocking-tracking-protection-change-block-list = Changer la liste de blocage
+content-blocking-third-party-cookies-label =
+    .label = Cookies tiers
+    .accesskey = C
+content-blocking-reject-trackers-description = Bloquer tous les cookies tiers ou seulement ceux placés par des traqueurs.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = Vos paramètres de cookies et de données de sites empêchent de modifier les paramètres sur les cookies tiers.
+content-blocking-change-cookie-settings =
+    .label = Modifier les paramètres de cookies
+    .accesskey = p
+content-blocking-reject-trackers-block-trackers-option-recommended =
+    .label = Traqueurs (recommandé)
+    .accesskey = q
+content-blocking-reject-trackers-block-trackers-option =
+    .label = Traqueurs
+    .accesskey = q
+content-blocking-reject-trackers-all-third-parties-option =
+    .label = Tous les cookies tiers (peut empêcher certains sites de fonctionner)
+    .accesskey = t
 
 ## Privacy Section - Tracking
 

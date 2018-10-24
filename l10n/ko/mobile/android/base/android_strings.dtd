@@ -27,12 +27,6 @@
 <!ENTITY firstrun_button_next "다음">
 
 <!ENTITY firstrun_tabqueue_title "링크">
-<!-- Localization note (firstrun_tabqueue_message): 'Tab queue' is a feature that allows users to queue up or save links from outside of Firefox (without switching apps) - these links will be loaded in Firefox the next time Firefox is opened. -->
-<!ENTITY firstrun_tabqueue_message_off "탭 목록 활성화">
-<!ENTITY firstrun_tabqueue_subtext_off "다른 앱에서 링크 탭하여 나중에 &brandShortName; 에서 볼 수 있도록 저장합니다.">
-
-<!ENTITY firstrun_tabqueue_message_on "성공!">
-<!ENTITY firstrun_tabqueue_subtext_on "언제든지 &settings; 의 &pref_category_general;에서 끌 수 있습니다.">
 
 <!ENTITY firstrun_readerview_title "문서">
 <!-- Localization note (firstrun_readerview_message): This is a casual way of describing getting rid of unnecessary things, and is referring to simplifying websites so only the article text and images are visible, removing unnecessary headers or ads. -->
@@ -69,7 +63,6 @@
 <!ENTITY  crash_restart_label "&brandShortName; 다시 시작">
 
 <!ENTITY url_bar_default_text2 "검색어 또는 주소를 입력하세요">
-
 <!-- Localization note (url_bar_qrcode_text2) : This text will be
      heard by non-visual users when the focus is on the QR Code
      icon in the url bar. -->
@@ -215,7 +208,6 @@
      “storing data”. -->
 <!ENTITY pref_category_advanced_summary3 "탭 복구, 데이터 절약, 개발자 도구">
 <!ENTITY pref_category_notifications "알림">
-<!ENTITY pref_category_notifications_summary "새로운 기능, 웹사이트 업데이트">
 <!ENTITY pref_category_notifications_summary2 "새로운 기능, 제품 팁">
 <!ENTITY pref_developer_remotedebugging_usb "USB 원격 디버깅">
 <!ENTITY pref_developer_remotedebugging_wifi "Wi-Fi 원격 디버깅">
@@ -908,3 +900,7 @@ Picture-in-picture mini window -->
 <!ENTITY mls_notification_channel "&vendorShortName; 위치 기반 서비스">
 <!ENTITY download_notification_channel "다운로드">
 <!ENTITY media_notification_channel "미디어 재생">
+<!-- These push notifications come without a specific channel and/or name from Leanplum -->
+<!ENTITY leanplum_default_notifications_channel "&brandShortName; 푸시 알림">
+<!ENTITY updater_notification_channel "앱 업데이트">
+<!ENTITY synced_tabs_notification_channel "동기화된 탭">

@@ -67,7 +67,7 @@
 <!ENTITY  securityView.privacy.header                   "Privacidade e histórico">
 <!ENTITY  securityView.privacy.history                  "Eu já visitei este site antes?">
 <!ENTITY  securityView.privacy.siteData                 "Este site está armazenando informações no meu computador?">
-<!ENTITY  securityView.privacy.clearSiteData            "Limpar cookies e dados de site">
+<!ENTITY  securityView.privacy.clearSiteData            "Limpar cookies e dados do site">
 <!ENTITY  securityView.privacy.clearSiteData.accessKey  "C">
 <!ENTITY  securityView.privacy.passwords                "Eu salvei alguma senha deste site?">
 <!ENTITY  securityView.privacy.viewPasswords            "Ver senhas salvas">

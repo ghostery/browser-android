@@ -20,6 +20,7 @@
 <!ENTITY aboutPrivateBrowsing.info.saved.after2          "您的：">
 <!ENTITY aboutPrivateBrowsing.info.downloads             "下载项">
 <!ENTITY aboutPrivateBrowsing.info.bookmarks             "书签">
+<!ENTITY aboutPrivateBrowsing.info.clipboard             "剪贴板内容">
 <!ENTITY aboutPrivateBrowsing.note.before                "隐私浏览模式">
 <!ENTITY aboutPrivateBrowsing.note.emphasize             "无法让您">
 <!ENTITY aboutPrivateBrowsing.note.after                 "在互联网上匿名。您的雇主或者网络服务提供商仍然可以知道您访问了什么页面。">
@@ -30,3 +31,6 @@
 <!ENTITY trackingProtection.title                        "跟踪保护">
 <!ENTITY trackingProtection.description2                 "一些网站使用跟踪器技术监控您在网上的活动。具有“跟踪保护”功能的 Firefox 可以拦截多种跟踪器，防止它们收集您的网上行为。">
 <!ENTITY trackingProtection.startTour1                   "看看怎么用">
+
+<!ENTITY contentBlocking.title                           "内容拦截">
+<!ENTITY contentBlocking.description                     "某些网站会使用跟踪器来监控您在网络上的活动。在隐私窗口中，Firefox 的内容拦截功能会自动拦截许多试图收集您的浏览行为有关信息的跟踪器。">

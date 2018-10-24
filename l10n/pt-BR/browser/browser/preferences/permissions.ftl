@@ -60,7 +60,7 @@ permissions-exceptions-tracking-protection-desc = Você desativou a proteção c
 permissions-exceptions-cookie-window =
     .title = Exceções - Cookies e dados de sites
     .style = { permissions-window.style }
-permissions-exceptions-cookie-desc = Você pode especificar quais sites estão sempre ou nunca permitidos a usar cookies e dados de sites.  Digite o endereço exato do site que você deseja gerenciar e clique em Bloquear, Permitir nesta sessão ou Permitir.
+permissions-exceptions-cookie-desc = Você pode especificar que sites tem ou não permissão para usar cookies e dados de sites.  Digite o endereço exato de um site e clique em Permitir, Bloquear ou Permitir nesta sessão.
 
 ## Exceptions - Pop-ups
 
@@ -90,7 +90,7 @@ permissions-exceptions-autoplay-media-window =
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc = Você pode especificar que sites têm permissão para reproduzir automaticamente elementos de mídia. Digite o endereço exato do site que deseja autorizar e clique em Permitir.
 permissions-exceptions-autoplay-media-window2 =
-    .title = Exceções - Autorreprodução
+    .title = Exceções - Reprodução automática
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc2 = Você pode especificar que sites sempre ou nunca têm permissão para reproduzir automaticamente mídia com som. Digite o endereço do site que deseja gerenciar e então clique em Bloquear ou Permitir.
 

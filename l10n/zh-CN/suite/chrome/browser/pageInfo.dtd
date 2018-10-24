@@ -3,8 +3,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
-<!-- Note to localizers, don't localize the strings 'width' or 'height' -->
 
+<!-- Note to localizers, don't localize the strings 'width' or 'height' -->
 <!ENTITY  pageInfoWindow.dimensions  "width: 100ch; height: 38em;">
 
 <!ENTITY  copy.key               "C">
@@ -28,7 +28,7 @@
 <!ENTITY  generalType           "类型：">
 <!ENTITY  generalMode           "渲染模式：">
 <!ENTITY  generalSize           "大小:">
-<!ENTITY  generalReferrer       "引用URL：">
+<!ENTITY  generalReferrer       "来源网址：">
 <!ENTITY  generalSource         "来源：">
 <!ENTITY  generalModified       "修改时间：">
 <!ENTITY  generalEncoding2      "文字编码：">

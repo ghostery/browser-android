@@ -25,7 +25,7 @@
 
 <!ENTITY helpSafeMode.label       "Reiniciar com extensões desativadas…">
 <!ENTITY helpSafeMode.accesskey   "R">
-<!ENTITY helpSafeMode.stop.label       "Reiniciar com as extensões habilitadas">
+<!ENTITY helpSafeMode.stop.label       "Reiniciar com as extensões ativadas">
 <!ENTITY helpSafeMode.stop.accesskey   "R">
 
 <!ENTITY helpTroubleshootingInfo.label      "Informações para resolver problemas">

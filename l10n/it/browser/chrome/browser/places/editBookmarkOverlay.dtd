@@ -16,8 +16,6 @@
 <!ENTITY editBookmarkOverlay.tags.label "Etichette:">
 <!ENTITY editBookmarkOverlay.tags.accesskey "E">
 <!ENTITY editBookmarkOverlay.tagsEmptyDesc.label "Separare più etichette con una virgola">
-<!ENTITY editBookmarkOverlay.description.label "Descrizione:">
-<!ENTITY editBookmarkOverlay.description.accesskey "D">
 <!ENTITY editBookmarkOverlay.keyword.label "Parola chiave:">
 <!ENTITY editBookmarkOverlay.keyword.accesskey "P">
 <!ENTITY editBookmarkOverlay.tagsExpanderDown.tooltip "Visualizza tutte le etichette">

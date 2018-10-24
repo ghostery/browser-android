@@ -13,8 +13,6 @@
 <!-- LOCALIZATION NOTE (sanitizeDialog2.width): width of the Clear Recent History dialog -->
 <!ENTITY sanitizeDialog2.width         "34em">
 
-<!ENTITY clearDataSettings3.label     "Als ik &brandShortName; afsluit, automatisch het volgende wissen">
-
 <!ENTITY clearDataSettings4.label     "Als &brandShortName; wordt afgesloten, automatisch het volgende wissen">
 
 <!-- XXX rearrange entities to match physical layout when l10n isn't an issue -->

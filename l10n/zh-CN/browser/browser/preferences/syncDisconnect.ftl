@@ -9,7 +9,7 @@ sync-disconnect-heading = 您是否也要移除这台计算机上的浏览器数
 sync-disconnect-remove-sync-caption = 移除 { -sync-brand-name }数据
 sync-disconnect-remove-sync-data = 书签、历史记录、密码等。
 sync-disconnect-remove-other-caption = 移除其他隐私数据
-sync-disconnect-remove-other-data = Cookie、缓存、离线站点数据等。
+sync-disconnect-remove-other-data = Cookie、缓存、离线网站数据等。
 # Shown while the disconnect is in progress
 sync-disconnect-disconnecting = 正在断开连接…
 sync-disconnect-cancel =

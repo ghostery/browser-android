@@ -63,9 +63,9 @@
 <!ENTITY cellAlignBottom.label            "底部">
 <!ENTITY cellAlignJustify.label           "调整">
 <!ENTITY cellInheritColor.label           "（允许表格颜色透过）">
-<!ENTITY cellUseCheckboxHelp.label        "使用检查框决定哪个特性将应用于所选择的单元">
-<!-- Used in both Table and Cell panels  -->
+<!ENTITY cellUseCheckboxHelp.label        "使用复选框决定哪个特性将应用于所选择的单元">
 
+<!-- Used in both Table and Cell panels  -->
 <!ENTITY size.label                       "大小">
 <!ENTITY pixels.label                     "像素">
 <!ENTITY backgroundColor.label            "背景颜色：">

@@ -41,14 +41,14 @@
      lightning.calendarproperties.forceEmailScheduling.label)
      These strings are used in the calendar wizard and the calendar properties dialog, but are only
      displayed when setting/using a caldav calendar -->
-<!ENTITY lightning.calendarproperties.email.label                           "E-mail:">
-<!ENTITY lightning.calendarproperties.forceEmailScheduling.label            "Preferire la pianificazione delle e-mail sul client">
+<!ENTITY lightning.calendarproperties.email.label                           "Email:">
+<!ENTITY lightning.calendarproperties.forceEmailScheduling.label            "Preferire la pianificazione delle email sul client">
 <!-- LOCALIZATON NOTE(lightning.calendarproperties.forceEmailScheduling.tooltiptext1,
      lightning.calendarproperties.forceEmailScheduling.tooltiptext2)
      - tooltiptext1 is used in the calendar wizard when setting a new caldav calendar
      - tooltiptext2 is used in the calendar properties dialog for caldav calendars -->
 <!ENTITY lightning.calendarproperties.forceEmailScheduling.tooltiptext1     "Al momento è possibile abilitare questa opzione dopo aver impostato questo calendario attraverso la finestra delle proprietà se il server del calendario si occupa della pianificazione.">
-<!ENTITY lightning.calendarproperties.forceEmailScheduling.tooltiptext2     "Questa opzione è disponibile solo se il server del calendario si occupa della pianificazione. Se abilitata, consentirà la gesione della pianificazione attraverso e-mail standard invece di lasciarla al server.">
+<!ENTITY lightning.calendarproperties.forceEmailScheduling.tooltiptext2     "Questa opzione è disponibile solo se il server del calendario si occupa della pianificazione. Se abilitata, consentirà la gesione della pianificazione attraverso email standard invece di lasciarla al server.">
 
 <!-- iMIP Bar (meeting support) -->
 <!ENTITY lightning.imipbar.btnAccept.label                                  "Accetta">

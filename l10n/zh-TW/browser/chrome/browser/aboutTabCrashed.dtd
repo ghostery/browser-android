@@ -17,8 +17,8 @@
      translation. -->
 <!ENTITY tabCrashed.header2 "哎呀，您的分頁發生錯誤了。">
 <!ENTITY tabCrashed.offerHelp2 "讓我們來幫忙！">
-<!ENTITY tabCrashed.single.offerHelpMessage2 "點擊 &tabCrashed.restoreTab; 重新載入頁面。">
-<!ENTITY tabCrashed.multiple.offerHelpMessage2 "點擊 &tabCrashed.restoreTab; 或 &tabCrashed.restoreAll; 重新載入頁面。">
+<!ENTITY tabCrashed.single.offerHelpMessage2 "點擊「&tabCrashed.restoreTab;」來重新載入頁面。">
+<!ENTITY tabCrashed.multiple.offerHelpMessage2 "點擊「&tabCrashed.restoreTab;」或「&tabCrashed.restoreAll;」來重新載入頁面。">
 <!ENTITY tabCrashed.requestHelp "願意幫個忙嗎？">
 <!ENTITY tabCrashed.requestHelpMessage "錯誤報告可幫助我們找出問題，並讓 &brandShortName; 變得更好。">
 <!ENTITY tabCrashed.requestReport "回報此分頁">

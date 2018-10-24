@@ -48,13 +48,14 @@ should-restart-title = Ponowne uruchamianie programu { -brand-short-name }
 should-restart-ok = Uruchom ponownie
 cancel-no-restart-button = Anuluj
 restart-later = Później
-extension-controlled-homepage-override = Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> kontroluje stronę startową.
-extension-controlled-new-tab-url = Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> kontroluje stronę nowej karty.
-extension-controlled-default-search = Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> zmieniło domyślną wyszukiwarkę.
-extension-controlled-privacy-containers = Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> wymaga włączonych „Kart z kontekstem”.
-extension-controlled-websites-tracking-protection-mode = Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> kontroluje ochronę przed śledzeniem.
-extension-controlled-proxy-config = Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> kontroluje, jak przeglądarka łączy się z Internetem.
-extension-controlled-enable = Aby włączyć rozszerzenie, przejdź do sekcji <img data-l10n-name="addons-icon"/> Dodatki w menu <img data-l10n-name="menu-icon"/>.
+extension-controlled-homepage-override=Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> kontroluje stronę startową.
+extension-controlled-new-tab-url=Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> kontroluje stronę nowej karty.
+extension-controlled-default-search=Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> zmieniło domyślną wyszukiwarkę.
+extension-controlled-privacy-containers=Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> wymaga włączonych „Kart z kontekstem”.
+extension-controlled-websites-tracking-protection-mode=Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> kontroluje ochronę przed śledzeniem.
+extension-controlled-websites-content-blocking-all-trackers=Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> kontroluje to ustawienie.
+extension-controlled-proxy-config=Rozszerzenie „{ $name }” <img data-l10n-name="icon"/> kontroluje, jak przeglądarka łączy się z Internetem.
+extension-controlled-enable=Aby włączyć rozszerzenie, przejdź do sekcji dodatki <img data-l10n-name="addons-icon"/> w menu <img data-l10n-name="menu-icon"/>.
 
 search-results-header = Wyniki wyszukiwania
 search-results-empty-message =
@@ -156,6 +157,9 @@ colors-settings =
 
 language-header = Język
 choose-browser-language-description=Wybierz język używany do wyświetlania interfejsu użytkownika programu (menu, wiadomości, powiadomienia itp.).
+manage-browser-languages-button=
+  .label=Wybierz alternatywne…
+  .accesskey=W
 confirm-browser-language-change-description=Uruchom przeglądarkę ponownie, aby zastosować zmiany.
 confirm-browser-language-change-button=Uruchom ponownie
 choose-language-description = Wybierz preferowany język, w jakim mają być wyświetlane strony
@@ -265,6 +269,7 @@ browsing-search-on-start-typing =
     .label = Rozpoczynaj wyszukiwanie podczas wpisywania tekstu
     .accesskey = R
 network-proxy-title = Proxy sieciowe
+network-settings-title=Sieć
 network-proxy-connection-description = Konfiguruj, jak { -brand-short-name } ma się łączyć z Internetem.
 network-proxy-connection-learn-more=Więcej informacji
 network-proxy-connection-settings =
@@ -490,14 +495,36 @@ sitedata-keep-until-expire=
   .label=do ich wygaśnięcia
 sitedata-keep-until-closed=
   .label=do zamknięcia programu
-sitedata-accept-third-party-desc = Akceptowanie ciasteczek i danych stron witryn zewnętrznych podmiotów:
-    .accesskey = c
+sitedata-accept-third-party-desc=Akceptowanie ciasteczek i danych stron zewnętrznych witryn:
+  .accesskey=A
 sitedata-accept-third-party-always-option =
     .label = zawsze
 sitedata-accept-third-party-visited-option =
     .label = z odwiedzonych
 sitedata-accept-third-party-never-option =
     .label = nigdy
+sitedata-allow-cookies-option=
+  .label=Akceptowanie ciasteczek i danych stron
+  .accesskey=A
+sitedata-disallow-cookies-option=
+  .label=Blokowanie ciasteczek i danych stron
+  .accesskey=B
+sitedata-block-desc=Blokowanie:
+  .accesskey=B
+sitedata-block-trackers-option-recommended=
+  .label=elementów śledzących zewnętrznych witryn (zalecane)
+sitedata-block-trackers-option=
+  .label=elementów śledzących
+sitedata-block-unvisited-option=
+  .label=ciasteczek nieodwiedzonych witryn
+sitedata-block-all-third-parties-option=
+  .label=wszystkich ciasteczek zewnętrznych witryn
+sitedata-block-all-third-party-option=
+  .label=wszystkich ciasteczek zewnętrznych witryn (może powodować problemy)
+sitedata-block-always-option=
+  .label=wszystkich ciasteczek (może powodować problemy)
+sitedata-block-all-option=
+  .label=wszystkich ciasteczek (powoduje problemy)
 sitedata-clear =
     .label = Wyczyść dane
     .accesskey = a
@@ -507,6 +534,7 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = Wyjątki…
     .accesskey = W
+sitedata-warning-your-settings-prevent-changes=Ustawienia blokowania treści uniemożliwiają zmiany w ustawieniach przechowywania ciasteczek i danych stron.
 
 addressbar-header = Pasek adresu
 addressbar-suggest = Podpowiedzi w pasku adresu opieraj na:
@@ -520,6 +548,79 @@ addressbar-locbar-openpage-option =
     .label = otwartych kartach
     .accesskey = k
 addressbar-suggestions-settings = Zmień ustawienia podpowiedzi dostarczanych przez wyszukiwarki
+
+content-blocking-header=Blokowanie treści
+content-blocking-desc=Blokowane elementów zewnętrznych witryn (jak reklamy i skrypty) mogących spowolnić przeglądanie i śledzić aktywność w sieci. Ustawienia poniżej ułatwiają optymalne dostrojenie poziomu ochrony i szybkości wczytywania witryn.
+content-blocking-learn-more=Więcej informacji
+content-blocking-restore-defaults =
+  .label=Przywróć domyślne
+  .accesskey=P
+content-blocking-toggle-on=
+  .tooltiptext=Wyłącz blokowanie treści
+content-blocking-toggle-off=
+  .tooltiptext=Włącz blokowanie treści
+content-blocking-toggle-label-on=Włączone
+  .accesskey=W
+content-blocking-toggle-label-off=Wyłączone
+  .accesskey=W
+content-blocking-category-label=Blokowane elementy
+content-blocking-fastblock-label=Wolno wczytywane elementy śledzące
+  .accesskey=W
+content-blocking-fastblock-slow-loading-label=Wolno wczytywane elementy śledzące
+  .accesskey=W
+content-blocking-fastblock-slow-loading-trackers-label=
+  .label=Wolno wczytywane elementy śledzące
+  .accesskey=W
+content-blocking-fastblock-description=Blokowanie elementów zewnętrznych witryn, których wczytanie zajmuje ponad 5 sekund.
+content-blocking-fastblock-new-description=Blokowanie elementów śledzących uniemożliwiających szybkie wczytywanie stron.
+content-blocking-fastblock-option-enabled=
+  .label=Obligatoryjne blokowanie
+content-blocking-fastblock-option-disabled=
+  .label=Brak blokowania
+content-blocking-tracking-protection-label=Elementy śledzące
+  .accesskey=E
+content-blocking-tracking-protection-all-label=Wszystkie wykryte elementy śledzące
+  .accesskey=W
+content-blocking-tracking-protection-all-detected-trackers-label=
+  .label=Wszystkie wykryte elementy śledzące
+  .accesskey=W
+content-blocking-tracking-protection-description=Blokowanie wszystkich znanych elementów śledzących. Niektóre strony mogą nie działać prawidłowo.
+content-blocking-tracking-protection-new-description=Blokowanie wszystkich znanych elementów śledzących (niektóre strony mogą nie działać prawidłowo).
+content-blocking-tracking-protection-option-enabled=
+  .label=Obligatoryjne blokowanie
+content-blocking-tracking-protection-option-pbm=
+  .label=Blokowanie w oknach prywatnych
+content-blocking-tracking-protection-option-disabled=
+  .label=Brak blokowania
+content-blocking-tracking-protection-option-always=
+  .label=Obligatoryjne blokowanie
+  .accesskey=e
+content-blocking-tracking-protection-option-private=
+  .label=Blokowanie w oknach prywatnych
+  .accesskey=B
+content-blocking-tracking-protection-change-blocklist=Zmień listę blokowanych…
+content-blocking-tracking-protection-change-block-list=Zmień listę blokowanych
+content-blocking-reject-trackers-label=Ciasteczka zewnętrznych witryn
+  .accesskey=C
+content-blocking-third-party-cookies-label=
+  .label=Ciasteczka zewnętrznych witryn
+  .accesskey=C
+content-blocking-reject-trackers-description=Blokowanie wszystkich ciasteczek zewnętrznych witryn lub tylko ustawianych przez elementy śledzące.
+content-blocking-reject-trackers-warning-all-cookies-blocked=Wszystkie ciasteczka są obecnie blokowane.
+content-blocking-reject-trackers-warning-from-unvisited-cookies-blocked=Ciasteczka nieodwiedzonych witryn są obecnie blokowane.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes=Ustawienia przechowywania ciasteczek i danych stron uniemożliwiają zmiany w ustawieniach ciasteczek zewnętrznych witryn.
+content-blocking-change-cookie-settings=
+  .label=Ustawienia dotyczące ciasteczek i danych stron
+  .accesskey=Z
+content-blocking-reject-trackers-block-trackers-option-recommended=
+  .label=Elementy śledzące (zalecane)
+  .accesskey=E
+content-blocking-reject-trackers-block-trackers-option=
+  .label=Elementy śledzące
+  .accesskey=E
+content-blocking-reject-trackers-all-third-parties-option=
+  .label=Wszystkie ciasteczka zewnętrznych witryn (może powodować problemy)
+  .accesskey=W
 
 tracking-header=Ochrona przed śledzeniem
 tracking-desc=Ochrona przed śledzeniem blokuje elementy, które zbierają informacje o przeglądaniu na wielu różnych stronach. <a data-l10n-name="learn-more">Więcej informacji o ochronie przed śledzeniem i prywatności</a>.
@@ -546,6 +647,8 @@ do-not-track-description=Informuj witryny o preferencjach względem śledzenia 
 do-not-track-learn-more=Więcej informacji
 do-not-track-option-default=
   .label=tylko podczas używania ochrony przed śledzeniem
+do-not-track-option-default-content-blocking=
+  .label=gdy { -brand-short-name } blokuje wykryte elementy śledzące
 do-not-track-option-always=
   .label=zawsze
 
@@ -583,6 +686,7 @@ autoplay-option-block=
   .label=blokuj odtwarzanie
 autoplay-option-dont=
   .label=nie odtwarzaj
+permissions-autoplay-link=Więcej informacji
 permissions-block-autoplay-media-exceptions=
   .label=Wyjątki…
   .accesskey=W

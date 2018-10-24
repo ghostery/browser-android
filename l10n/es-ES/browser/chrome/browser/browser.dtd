@@ -68,8 +68,6 @@ can reach it easily. -->
 <!ENTITY  sendPageToDevice.accesskey         "v">
 <!ENTITY  sendLinkToDevice.label             "Enviar enlace al dispositivo">
 <!ENTITY  sendLinkToDevice.accesskey         "v">
-<!ENTITY  sendToDeviceFeedback.label         "¡Enviado!">
-<!ENTITY  sendToDeviceOfflineFeedback.label  "Encolado (sin conexión)">
 <!ENTITY  moveToNewWindow.label              "Mover a una nueva ventana">
 <!ENTITY  moveToNewWindow.accesskey          "V">
 <!ENTITY  reopenInContainer.label            "Reabrir en contenedor">
@@ -201,6 +199,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY subscribeToPageMenupopup.label "Suscribirse a esta página">
 <!ENTITY subscribeToPageMenuitem.label "Suscribirse a esta página…">
+
 <!ENTITY addCurPagesCmd.label "Añadir pestañas a marcadores…">
 <!ENTITY showAllBookmarks2.label "Mostrar todos los marcadores">
 <!ENTITY recentBookmarks.label "Añadidos recientemente">
@@ -268,7 +267,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!-- Toolbar items -->
 <!ENTITY homeButton.label             "Inicio">
-
 <!ENTITY homeButton.defaultPage.tooltip "Página de inicio de &brandShortName;">
 
 <!ENTITY bookmarksButton.label          "Marcadores">
@@ -428,23 +426,12 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY customizeMenu.addToToolbar.label "Añadir a la barra de herramientas">
 <!ENTITY customizeMenu.addToToolbar.accesskey "b">
-<!ENTITY customizeMenu.addToPanel.label "Añadir al menú">
-<!ENTITY customizeMenu.addToPanel.accesskey "d">
 <!-- LOCALIZATION NOTE (customizeMenu.addToOverflowMenu.label,
      customizeMenu.pinToOverflowMenu.label, customizeMenu.unpinFromOverflowMenu.label)
      The overflow menu is the menu that appears if you click the chevron (>> button)
      in the location bar. -->
 <!ENTITY customizeMenu.addToOverflowMenu.label "Añadir al menú de desborde">
 <!ENTITY customizeMenu.addToOverflowMenu.accesskey "m">
-<!ENTITY customizeMenu.moveToToolbar.label "Mover a la barra de herramientas">
-<!ENTITY customizeMenu.moveToToolbar.accesskey "o">
-<!-- LOCALIZATION NOTE (customizeMenu.moveToPanel.accesskey, customizeMenu.pinToOverflowMenu.accesskey)
-     can appear on the same context menu as menubarCmd and personalbarCmd,
-     so they should have different access keys. customizeMenu.moveToToolbar and
-     customizeMenu.moveToPanel are mutually exclusive, so can share access
-     keys.  -->
-<!ENTITY customizeMenu.moveToPanel.label "Mover al menú">
-<!ENTITY customizeMenu.moveToPanel.accesskey "o">
 <!-- LOCALIZATION NOTE (customizeMenu.pinToOverflowMenu.accesskey)
      can appear on the same context menu as menubarCmd and personalbarCmd,
      so they should have different access keys.  -->
@@ -454,15 +441,15 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.unpinFromOverflowMenu.accesskey "n">
 <!ENTITY customizeMenu.removeFromToolbar.label "Eliminar de la barra de herramientas">
 <!ENTITY customizeMenu.removeFromToolbar.accesskey "R">
-<!ENTITY customizeMenu.removeFromMenu.label "Eliminar del menú">
-<!ENTITY customizeMenu.removeFromMenu.accesskey "E">
 <!ENTITY customizeMenu.addMoreItems.label "Añadir más elementos…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "A">
-
 <!ENTITY customizeMenu.autoHideDownloadsButton.label "Ocultar automáticamente en la barra de herramientas">
 <!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "A">
 <!ENTITY customizeMenu.manageExtension.label "Gestionar extensión">
 <!ENTITY customizeMenu.manageExtension.accesskey "e">
+
+<!ENTITY customizeMenu.removeExtension.label "Eliminar extensión">
+<!ENTITY customizeMenu.removeExtension.accesskey "E">
 
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
@@ -604,7 +591,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY bookmarkThisFrameCmd.label      "Añadir este cuadro a marcadores">
 <!ENTITY bookmarkThisFrameCmd.accesskey  "m">
 <!ENTITY pageAction.copyLink.label    "Copiar enlace">
-<!ENTITY copyURLFeedback.label        "¡Copiado!">
 <!ENTITY emailPageCmd.label           "Enviar enlace…">
 <!ENTITY emailPageCmd.accesskey       "E">
 <!ENTITY savePageCmd.label            "Guardar como…">
@@ -791,7 +777,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      Remove Bookmark buttons. -->
 <!ENTITY editBookmark.panel.width                    "23em">
 <!ENTITY editBookmark.done.label                     "Terminar">
-<!ENTITY editBookmark.removeBookmark.accessKey       "r">
 
 <!ENTITY editBookmark.showForNewBookmarks.label       "Mostrar editor al guardar">
 <!ENTITY editBookmark.showForNewBookmarks.accesskey   "S">
@@ -842,7 +827,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY identity.permissions "Permisos">
 <!ENTITY identity.permissionsEmpty "No ha concedido ningún permiso especial a este sitio.">
 <!ENTITY identity.permissionsReloadHint "Puede que necesite recargar la página para que se apliquen los cambios.">
-
 <!ENTITY identity.permissionsPreferences.tooltip "Abrir ajustes de permisos">
 
 <!-- Name for the tabs toolbar as spoken by screen readers.
@@ -966,10 +950,10 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      the type of content blocking is currently not enabled. -->
 <!ENTITY contentBlocking.fastBlock.add.label "Añadir bloqueo…">
 
-<!ENTITY contentBlocking.trackingProtection.label "Rastreadores">
+<!ENTITY contentBlocking.trackingProtection2.label "Todos los rastreadores detectados">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
      This label signals that this type of content blocking is turned
-     ON and is successfully blocking malicious/slow content, so this is
+     ON and is successfully blocking tracker content, so this is
      a positive thing. It forms the end of the (imaginary) sentence
      "Trackers [are] Blocked"-->
 <!ENTITY contentBlocking.trackingProtection.blocked.label "Bloqueados">
@@ -979,23 +963,29 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      the type of content blocking is currently not enabled. -->
 <!ENTITY contentBlocking.trackingProtection.add.label "Añadir bloqueo…">
 
-<!ENTITY trackingProtection.title "Protección contra rastreo">
-<!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; está bloqueando partes de esta página que pueden rastrear su navegación.">
-<!ENTITY trackingProtection.detectedNotBlocked3 "Este sitio incluye elementos que pueden rastrear su navegación. Tiene la protección desactivada.">
-<!ENTITY trackingProtection.notDetected3 "No se han detectado elementos de rastreo en esta página.">
-<!-- LOCALIZATION NOTE (trackingProtection.unblock.label, trackingProtection.unblock.accesskey):
-     The associated button with this label and accesskey is only shown when opening the control
-     center while looking at a site with trackers in NON-private browsing mode. -->
-<!ENTITY trackingProtection.unblock.label "Desactivar protección en este sitio">
-<!ENTITY trackingProtection.unblock.accesskey "e">
-<!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate.label, trackingProtection.unblockPrivate.accesskey):
-     The associated button with this label and accesskey is only shown when opening the control
-     center while looking at a site with trackers in PRIVATE browsing mode. -->
-<!ENTITY trackingProtection.unblockPrivate.label "Desactivar protección en esta sesión">
-<!ENTITY trackingProtection.unblockPrivate.accesskey "D">
-<!ENTITY trackingProtection.block2.label "Activar protección">
-<!ENTITY trackingProtection.block2.accesskey "A">
+<!ENTITY contentBlocking.3rdPartyCookies.label "Cookies de terceros">
+<!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.blocked.label):
+     This label signals that this type of content blocking is turned
+     ON and is successfully blocking third-party cookies, so this is
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Third-Party Cookies [are] Blocked"-->
+<!ENTITY contentBlocking.3rdPartyCookies.blocked.label "Bloqueado">
+<!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.add.label):
+     This is displayed as a link to preferences, where the user can add
+     this specific type of content blocking. When this text is shown
+     the type of content blocking is currently not enabled. -->
+<!ENTITY contentBlocking.3rdPartyCookies.add.label "Añadir bloqueo…">
 
+<!ENTITY contentBlocking.openBreakageReportView2.label "Informar de un problema">
+<!ENTITY contentBlocking.breakageReportView.label "Informar de problemas">
+<!ENTITY contentBlocking.breakageReportView2.description "El bloqueo de contenido puede causar problemas con algunos sitios. Cuando informa de problemas, ayuda a mejorar &brandShortName; para todos (esto enviará a Mozilla la URL junto con información de la configuración del navegador).">
+<!ENTITY contentBlocking.breakageReportView.learnMore "Más información">
+<!ENTITY contentBlocking.breakageReportView.collection.url.label "URL">
+<!ENTITY contentBlocking.breakageReportView.collection.comments.label "¿Qué problemas tuviste? (Opcional)">
+<!ENTITY contentBlocking.breakageReportView.sendReport.label "Enviar reporte">
+<!ENTITY contentBlocking.breakageReportView.cancel.label "Cancelar">
+
+<!ENTITY trackingProtection.title "Protección contra rastreo">
 <!ENTITY trackingProtection.tooltip "Abrir preferencias de protección contra rastreo">
 <!ENTITY trackingProtection.detectedBlocked4 "&brandShortName; está bloqueando partes de esta página que podrían rastrearle mientras navega.">
 <!ENTITY trackingProtection.detectedNotBlocked5 "&brandShortName; ha detectado elementos que podrían rastrearle mientras navega.">
@@ -1124,6 +1114,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY pageAction.manageExtension.label "Administrar extensión…">
 
 <!ENTITY pageAction.sendTabToDevice.label "Enviar pestaña al dispositivo">
+
 <!ENTITY sendToDevice.syncNotReady.label "Sincronizando dispositivos…">
 
 <!ENTITY pageAction.shareUrl.label "Compartir">

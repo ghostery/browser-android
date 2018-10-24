@@ -37,7 +37,7 @@
 <!ENTITY fullnameLabel.label "Nome:">
 <!ENTITY fullnameLabel.accesskey "N">
 
-<!ENTITY emailLabel.label "Indirizzo e-mail:">
+<!ENTITY emailLabel.label "Indirizzo email:">
 <!ENTITY emailLabel.accesskey "e">
 
 <!-- Entities for Incoming Server page -->

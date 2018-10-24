@@ -27,12 +27,6 @@
 <!ENTITY firstrun_button_next "下一步">
 
 <!ENTITY firstrun_tabqueue_title "鏈結">
-<!-- Localization note (firstrun_tabqueue_message): 'Tab queue' is a feature that allows users to queue up or save links from outside of Firefox (without switching apps) - these links will be loaded in Firefox the next time Firefox is opened. -->
-<!ENTITY firstrun_tabqueue_message_off "打開分頁佇列">
-<!ENTITY firstrun_tabqueue_subtext_off "當在其他應用程式內點擊鏈結時，會在 &brandShortName; 儲存以便稍後查看。">
-
-<!ENTITY firstrun_tabqueue_message_on "成功！">
-<!ENTITY firstrun_tabqueue_subtext_on "您可以在 &pref_category_general; 底下的 &settings; 關閉它。">
 
 <!ENTITY firstrun_readerview_title "文章">
 <!-- Localization note (firstrun_readerview_message): This is a casual way of describing getting rid of unnecessary things, and is referring to simplifying websites so only the article text and images are visible, removing unnecessary headers or ads. -->
@@ -69,7 +63,6 @@
 <!ENTITY  crash_restart_label "重開 &brandShortName;">
 
 <!ENTITY url_bar_default_text2 "搜尋或輸入網址">
-
 <!-- Localization note (url_bar_qrcode_text2) : This text will be
      heard by non-visual users when the focus is on the QR Code
      icon in the url bar. -->
@@ -215,7 +208,6 @@
      “storing data”. -->
 <!ENTITY pref_category_advanced_summary3 "還原分頁、節省流量、開發者工具">
 <!ENTITY pref_category_notifications "通知">
-<!ENTITY pref_category_notifications_summary "新功能、網站更新">
 <!ENTITY pref_category_notifications_summary2 "新功能、產品小秘訣">
 <!ENTITY pref_developer_remotedebugging_usb "透過 USB 進行遠端除錯">
 <!ENTITY pref_developer_remotedebugging_wifi "透過 Wi-Fi 進行遠端除錯">
@@ -908,3 +900,7 @@ Picture-in-picture mini window -->
 <!ENTITY mls_notification_channel "&vendorShortName; Location Service">
 <!ENTITY download_notification_channel "下載項目">
 <!ENTITY media_notification_channel "媒體播放">
+<!-- These push notifications come without a specific channel and/or name from Leanplum -->
+<!ENTITY leanplum_default_notifications_channel "&brandShortName; 推送通知">
+<!ENTITY updater_notification_channel "應用程式更新">
+<!ENTITY synced_tabs_notification_channel "已同步的分頁">

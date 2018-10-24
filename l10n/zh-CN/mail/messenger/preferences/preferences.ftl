@@ -3,5 +3,8 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 choose-messenger-language-description = 选择用于显示 { -brand-short-name } 菜单，消息和通知的语言。
+manage-messenger-languages-button =
+    .label = 设置备用语言…(I)
+    .accesskey = I
 confirm-messenger-language-change-description = 重开 { -brand-short-name } 以应用这些更改
 confirm-messenger-language-change-button = 应用并重新打开

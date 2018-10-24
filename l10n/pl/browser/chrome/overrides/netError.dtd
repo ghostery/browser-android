@@ -12,6 +12,8 @@
 <!ENTITY advanced.label "Zaawansowane">
 <!ENTITY continue.label "Kontynuuj">
 <!ENTITY continue1.label "Kontynuuj…">
+<!ENTITY continue2.label "Więcej…">
+<!ENTITY moreInformation.label "Więcej informacji">
 
 <!ENTITY connectionFailure.title "Nie udało się nawiązać połączenia">
 <!ENTITY connectionFailure.longDesc "&sharedLongDesc;">
@@ -62,11 +64,13 @@
 <!ENTITY certerror.longpagetitle2 "Ostrzeżenie: potencjalne zagrożenie bezpieczeństwa">
 <!ENTITY certerror.introPara "Właściciel witryny <span class='hostname'/> niepoprawnie ją skonfigurował. Program &brandShortName; nie połączył się z nią, aby chronić użytkownika przed kradzieżą informacji.">
 <!ENTITY certerror.introPara1 "&brandShortName; wykrył potencjalne zagrożenie bezpieczeństwa i nie przeszedł do „<span class='hostname'/>”. Jeśli otworzysz tę stronę, atakujący będą mogli przechwycić informacje takie jak hasła, wiadomości czy numery kart płatniczych.">
+<!ENTITY certerror.introPara2 "&brandShortName; wykrył potencjalne zagrożenie bezpieczeństwa i nie przeszedł do „<span class='hostname'/>”. Jeśli otworzysz tę stronę, atakujący będą mogli przechwycić informacje takie jak hasła, wiadomości czy dane kart płatniczych.">
 
 <!ENTITY certerror.expiredCert.secondPara "Jest to prawdopodobnie spowodowane złym czasem zegara systemowego, co uniemożliwiałoby nawiązanie bezpiecznego połączenia.">
 <!ENTITY certerror.whatCanYouDoAboutItTitle "Co zrobić w takim przypadku?">
 <!ENTITY certerror.unknownIssuer.whatCanYouDoAboutIt "<p>Problem leży prawdopodobnie po stronie witryny i nie masz możliwości jego rozwiązania.</p><p>Jeśli połączono poprzez sieć korporacyjną lub używasz oprogramowania antywirusowego, możesz spróbować skontaktować się z zespołem wsparcia. Możesz również powiadomić administratora strony o problemie.</p>">
 <!ENTITY certerror.expiredCert.whatCanYouDoAboutIt "<p>Zegar systemowy jest ustawiony na <span id='wrongSystemTime_systemDate'/>. Upewnij się, że urządzenie ma ustawioną prawidłową datę, czas i strefę czasową w ustawieniach systemowych. Następnie spróbuj otworzyć witrynę „<span class='hostname'/>” ponownie.</p><p>Jeśli wskazania zegara systemowego są prawidłowe, to problem leży prawdopodobnie po stronie witryny i nie masz możliwości jego rozwiązania. Możesz powiadomić administratora strony o problemie.</p>">
+<!ENTITY certerror.expiredCert.whatCanYouDoAboutIt2 "<p>Zegar systemowy jest ustawiony na <span id='wrongSystemTime_systemDate2'/>. Upewnij się, że urządzenie ma ustawioną prawidłową datę, czas i strefę czasową w ustawieniach systemowych. Następnie spróbuj otworzyć witrynę „<span class='hostname'/>” ponownie.</p><p>Jeśli wskazania zegara systemowego są prawidłowe, to problem leży prawdopodobnie po stronie witryny i nie masz możliwości jego rozwiązania. Możesz powiadomić administratora strony o problemie.</p>">
 <!ENTITY certerror.badCertDomain.whatCanYouDoAboutIt "<p>Problem leży prawdopodobnie po stronie witryny i nie masz możliwości jego rozwiązania. Możesz powiadomić administratora strony o problemie.</p>">
 
 <!ENTITY sharedLongDesc "<ul><li>Witryna może być tymczasowo niedostępna lub przeciążona. Spróbuj ponownie za pewien czas.</li><li>Jeśli nie możesz otworzyć żadnej strony, sprawdź swoje połączenie sieciowe.</li><li>Jeśli ten komputer jest chroniony przez zaporę sieciową lub serwer proxy, należy sprawdzić, czy program &brandShortName; jest uprawniony do łączenia się z Internetem.</li></ul>">
@@ -75,6 +79,7 @@
 <!ENTITY corruptedContentErrorv2.title "Błąd: treść uszkodzona">
 <!ENTITY corruptedContentErrorv2.longDesc "<p>Strona, którą próbujesz obejrzeć, nie może być wyświetlona, ponieważ wykryto błąd w transmisji danych.</p><ul><li>Proszę poinformować właścicieli witryny o tym problemie.</li></ul>">
 <!ENTITY securityOverride.exceptionButtonLabel "Dodaj wyjątek…">
+<!ENTITY securityOverride.exceptionButton1Label "Akceptuję ryzyko, kontynuuj">
 <!ENTITY errorReporting.automatic2 "Automatyczne zgłaszanie podobnych temu błędów (pomaga Mozilli identyfikować i blokować niebezpieczne strony)">
 <!ENTITY errorReporting.learnMore "Więcej informacji…">
 <!ENTITY remoteXUL.title "Zdalna treść XUL">
@@ -92,6 +97,8 @@
 
 <!ENTITY inadequateSecurityError.title "Połączenie nie gwarantuje bezpieczeństwa">
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> używa przestarzałej i podatnej na ataki technologii bezpieczeństwa. Atakujący mógłby łatwo odszyfrować informacje, które miały być bezpieczne. Administrator strony musi naprawić serwer, zanim będzie można ją odwiedzić.</p><p>Kod błędu: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
+<!ENTITY clockSkewError.title "Zegar komputera wskazuje błędną datę">
+<!ENTITY clockSkewError.longDesc "Zegar systemowy jest ustawiony na <span id='wrongSystemTime_systemDate1'/>, co uniemożliwia nawiązanie bezpiecznego połączenia. Aby odwiedzić witrynę „<span class='hostname'></span>”, ustaw prawidłową datę, czas i strefę czasową w ustawieniach systemowych, a następnie odśwież „<span class='hostname'></span>”.">
 <!ENTITY blockedByPolicyTemp.title "Strona zablokowana">
 <!ENTITY blockedByPolicyTemp.longDesc "<p>Dostęp do tej strony zablokował administrator.</p>">
 <!ENTITY blockedByPolicy.title "Zablokowana strona">

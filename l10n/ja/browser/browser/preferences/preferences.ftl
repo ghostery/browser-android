@@ -6,6 +6,8 @@ do-not-track-description = ウェブサイトに “Do Not Track” 信号を送
 do-not-track-learn-more = 詳細情報
 do-not-track-option-default =
     .label = トラッキング防止の使用時のみ
+do-not-track-option-default-content-blocking =
+    .label = 検出されたトラッカーをブロックする設定時のみ
 do-not-track-option-always =
     .label = 常に送る
 
@@ -105,6 +107,10 @@ extension-controlled-privacy-containers = 拡張機能 <img data-l10n-name="icon
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = 拡張機能 <img data-l10n-name="icon"/> { $name } がトラッキング防止の設定を変更しています。
+
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = 拡張機能 <img data-l10n-name="icon"/> { $name } により、この設定が変更されています。
 
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
@@ -238,6 +244,13 @@ choose-language-description = ウェブページの表示に使用する言語�
 choose-button =
     .label = 言語設定...
     .accesskey = o
+
+choose-browser-language-description = メニュー、メッセージ、{ -brand-short-name } からの通知に表示される言語を選択します。
+manage-browser-languages-button =
+  .label = 代替言語を設定...
+  .accesskey = l
+confirm-browser-language-change-description = 変更を適用するには、{ -brand-short-name } の再起動が必要です
+confirm-browser-language-change-button = 適用して再起動
 
 translate-web-pages =
     .label = ウェブページを翻訳
@@ -390,6 +403,8 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = ネットワークプロキシ
+
+network-settings-title = ネットワーク設定
 
 network-proxy-connection-description = { -brand-short-name } のインターネットへの接続方法を設定します。
 
@@ -684,10 +699,6 @@ history-private-browsing-permanent =
     .label = 常にプライベートブラウジングモード
     .accesskey = p
 
-history-remember-option =
-    .label = 表示したページとファイルのダウンロードの履歴を残す
-    .accesskey = b
-
 history-remember-browser-option =
     .label = 表示したページとファイルのダウンロードの履歴を残す
     .accesskey = b
@@ -747,6 +758,30 @@ sitedata-accept-third-party-visited-option =
 sitedata-accept-third-party-never-option =
     .label = 常に拒否
 
+sitedata-allow-cookies-option =
+    .label = Cookie とサイトデータを保存する
+    .accesskey = A
+
+sitedata-disallow-cookies-option =
+    .label = Cookie とサイトデータをブロック
+    .accesskey = B
+
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = ブロックの種類
+    .accesskey = T
+
+sitedata-block-trackers-option-recommended =
+    .label = サードパーティトラッカー (推奨)
+sitedata-block-trackers-option =
+    .label = サードパーティトラッカー
+sitedata-block-unvisited-option =
+    .label = 未訪問のウェブサイトの Cookie
+sitedata-block-all-third-party-option =
+    .label = すべてのサードパーティトラッカー (ウェブサイトが動作しない可能性があります)
+sitedata-block-all-option =
+    .label = すべての Cookie (ウェブサイトが動作しない可能性があります)
+
 sitedata-clear =
     .label = データを消去...
     .accesskey = l
@@ -758,6 +793,11 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = 例外サイト...
     .accesskey = E
+
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = 現在のコンテンツブロッキングの設定内容は、Cookie とサイトデータの設定の変更を妨げます。
 
 ## Privacy Section - Address Bar
 
@@ -776,6 +816,70 @@ addressbar-locbar-openpage-option =
     .accesskey = O
 
 addressbar-suggestions-settings = 検索エンジンの検索候補の設定を変更
+
+## Privacy Section - Content Blocking
+
+content-blocking-header = コンテンツブロッキング
+
+content-blocking-desc = ブラウザを遅くしたりウェブ上の行動を追跡したりする広告やコードなどのサードパーティコンテンツをブロックします。保護と性能の最適なバランスの設定にカスタマイズできます。
+
+content-blocking-learn-more = 詳細
+content-blocking-restore-defaults =
+  .label = 既定値に戻す
+  .accesskey = R
+
+content-blocking-toggle-on =
+  .tooltiptext = コンテンツブロッキングをオフにします
+content-blocking-toggle-off =
+  .tooltiptext = コンテンツブロッキングをオンにします
+
+content-blocking-toggle-label-on = オン
+  .accesskey = O
+content-blocking-toggle-label-off = オフ
+  .accesskey = O
+
+content-blocking-category-label = ブロック対象を選択
+
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-slow-loading-trackers-label =
+  .label = 読み込みを遅くするトラッカー
+  .accesskey = S
+content-blocking-fastblock-new-description = ページの読み込みを遅くするトラッカーのみブロックします。
+content-blocking-tracking-protection-all-detected-trackers-label =
+  .label = 検出されたすべてのトラッカー
+  .accesskey = T
+content-blocking-tracking-protection-new-description = 既知のトラッカーをすべてブロックします。(一部のページの読み込みを妨げる可能性があります)
+content-blocking-tracking-protection-option-always =
+  .label = 常に
+  .accesskey = A
+content-blocking-tracking-protection-option-private =
+  .label = プライベートウィンドウのみ
+  .accesskey = p
+content-blocking-tracking-protection-change-block-list = ブロックリストを変更
+
+content-blocking-third-party-cookies-label =
+  .label = サードパーティ Cookie
+  .accesskey = C
+content-blocking-reject-trackers-description = すべてのサードパーティ Cookie、またはトラッカーの Cookie のみをブロックします。
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = 現在のCookie とサイトデータの設定内容は、サードパーティ Cookie の設定の変更を妨げます。
+content-blocking-change-cookie-settings =
+  .label = Cookie の設定を変更
+  .accesskey = S
+content-blocking-reject-trackers-block-trackers-option-recommended =
+  .label = トラッカー (推奨)
+  .accesskey = k
+content-blocking-reject-trackers-block-trackers-option =
+  .label = トラッカー
+  .accesskey = k
+content-blocking-reject-trackers-all-third-parties-option =
+  .label = すべてのサードパーティ Cookie (ウェブサイトが動作しない可能性があります)
+  .accesskey = A
 
 ## Privacy Section - Tracking
 
@@ -851,8 +955,10 @@ autoplay-option-ask =
     .label = 毎回確認する
 autoplay-option-allow =
     .label = 自動再生を許可
-autoplay-option-block =
-    .label = 自動再生をブロック
+autoplay-option-dont =
+    .label = 自動再生しない
+
+permissions-autoplay-link = 詳細
 
 permissions-block-popups =
     .label = ポップアップウィンドウをブロックする

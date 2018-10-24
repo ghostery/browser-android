@@ -27,7 +27,7 @@
 <!ENTITY pkcs12.setpassword.message "Wprowadzane hasło zabezpiecza tworzoną kopię certyfikatu. Utworzenie kopii certyfikatu bez podania hasła zabezpieczającego jest niemożliwe." >
 <!ENTITY pkcs12.setpassword.label1 "Hasło kopii bezpieczeństwa certyfikatu:" >
 <!ENTITY pkcs12.setpassword.label2 "Hasło kopii bezpieczeństwa certyfikatu (ponownie):" >
-<!ENTITY pkcs12.setpassword.reminder "Ważne: Jeżeli hasło zabezpieczające kopię certyfikatu zostanie utracone, późniejsze odtworzenie certyfikatu będzie niemożliwe. Zaleca się zachowanie hasła w bezpiecznym miejscu." >
+<!ENTITY pkcs12.setpassword.reminder "Ważne: jeżeli hasło zabezpieczające kopię certyfikatu zostanie utracone, późniejsze odtworzenie certyfikatu będzie niemożliwe. Zaleca się zachowanie hasła w bezpiecznym miejscu." >
 <!ENTITY chooseToken.title "Wybór tokenu" >
 <!ENTITY chooseToken.message1 "Należy wybrać token." >
 <!ENTITY createCertInfo.title "Generowanie prywatnego klucza" >

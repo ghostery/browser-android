@@ -11,7 +11,7 @@
 -->
 <!ENTITY update.checkForUpdatesButton.label       "Controleren op updates">
 <!ENTITY update.checkForUpdatesButton.accesskey   "C">
-<!ENTITY update.updateButton.label3               "Herstart om &brandShorterName; bij te werken">
+<!ENTITY update.updateButton.label3               "Herstarten om &brandShorterName; bij te werken">
 <!ENTITY update.updateButton.accesskey            "H">
 
 

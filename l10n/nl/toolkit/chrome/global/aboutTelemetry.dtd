@@ -37,7 +37,6 @@
 <!ENTITY aboutTelemetry.eventsSection "Gebeurtenissen">
 <!ENTITY aboutTelemetry.simpleMeasurementsSection "Eenvoudige metingen">
 <!ENTITY aboutTelemetry.slowSqlSection "Trage SQL-instructies">
-<!ENTITY aboutTelemetry.chromeHangsSection "Browservastlopers">
 <!ENTITY aboutTelemetry.addonDetailsSection "Add-on-details">
 <!ENTITY aboutTelemetry.capturedStacksSection "Vastgelegde stacks">
 <!ENTITY aboutTelemetry.lateWritesSection "Late schrijfacties">

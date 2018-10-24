@@ -5,6 +5,9 @@
 languages-window =
     .title = 語言
     .style = width: 30em
+webpage-languages-window =
+    .title = 網頁語言設定
+    .style = width: 40em
 languages-close-key =
     .key = w
 languages-description = 一張網頁有時候會有不同語言的版本，請選擇要顯示的語言版本順序
@@ -38,3 +41,7 @@ languages-code-format =
     .label = { $locale }  [{ $code }]
 languages-active-code-format =
     .value = { languages-code-format.label }
+browser-languages-window =
+    .title = { -brand-short-name } 語言設定
+    .style = width: 40em
+browser-languages-description = { -brand-short-name } 將會以第一種語言作為您的預設語言，並根據所選的順序在需要時顯示其他語言。

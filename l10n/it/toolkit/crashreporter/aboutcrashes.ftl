@@ -4,12 +4,18 @@
 
 crash-reports-title = Segnalazioni di arresto anomalo
 clear-all-reports-label = Rimuovi tutte le segnalazioni
+delete-button-label = Elimina tutto
 delete-confirm-title = Eliminare le segnalazioni?
 delete-confirm-description = Verranno eliminate tutte le segnalazioni e questa operazione non può essere annullata.
+delete-unsubmitted-description = Verranno eliminate tutte le segnalazioni non inviate. Questa operazione non può essere annullata.
+delete-submitted-description = Verrà eliminato l’elenco delle segnalazioni inviate ma non verranno rimossi i relativi dati. Questa operazione non può essere annullata.
 crashes-unsubmitted-label = Segnalazioni non ancora inviate
 id-heading = ID segnalazione
 date-crashed-heading = Data crash
+submit-crash-button-label = Invia
+submit-crash-button-failure-label = Non riuscito
 crashes-submitted-label = Segnalazioni inviate
 date-submitted-heading = Data invio
+view-crash-button-label = Visualizza
 no-reports-label = Non è stata inviata alcuna segnalazione.
 no-config-label = Questa applicazione non è stata configurata per visualizzare le segnalazioni inviate. È necessario impostare il parametro <code>breakpad.reportURL</code>.

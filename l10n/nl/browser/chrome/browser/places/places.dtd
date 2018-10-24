@@ -78,7 +78,6 @@
 <!ENTITY col.url.label           "Locatie">
 <!ENTITY col.mostrecentvisit.label "Meest recente bezoek">
 <!ENTITY col.visitcount.label    "Bezoekteller">
-<!ENTITY col.description.label   "Beschrijving">
 <!ENTITY col.dateadded.label     "Toegevoegd">
 <!ENTITY col.lastmodified.label  "Laatst gewijzigd">
 

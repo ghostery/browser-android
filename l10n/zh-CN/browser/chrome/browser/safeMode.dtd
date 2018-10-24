@@ -11,6 +11,8 @@
 <!ENTITY safeModeDescription3.label   "安全模式是 &brandShortName; 的一种特殊模式，可以用来排查问题。">
 <!ENTITY safeModeDescription4.label   "您的附加组件和自定义设置将被暂时禁用。">
 
+<!ENTITY safeModeDescription5.label   "您的附加组件和自定义设置将被暂时禁用，部分 &brandShortName; 功能也可能暂时停用。">
+
 <!ENTITY refreshProfileInstead.label  "您也可以跳过故障排除并尝试翻新 &brandShortName;。">
 
 <!-- LOCALIZATION NOTE (autoSafeModeDescription3.label): Shown on the safe mode dialog after multiple startup crashes. See also chrome/global/resetProfile.dtd -->

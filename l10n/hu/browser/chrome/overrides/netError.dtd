@@ -30,7 +30,7 @@
 <ul>
   <li>Próbálja újra később.</li>
   <li>Ellenőrizze a hálózati kapcsolatot.</li>
-  <li>Ha van kapcsolat, de tűzfal mögött van, akkor ellenőrizze, hogy a &brandShortName;nak van-e joga a web eléréséhez.</li>
+  <li>Ha van kapcsolat, de tűzfal mögött van, akkor ellenőrizze, hogy a &brandShortName; böngészőnek van-e joga a web eléréséhez.</li>
 </ul>
 ">
 
@@ -98,6 +98,7 @@ will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "A(z) <span class='hostname'/> tulajdonosa a weboldalát helytelenül állította be. Az Ön adatainak ellopását megakadályozandó a &brandShortName; nem csatlakozott ehhez a weboldalhoz.">
 
+<!ENTITY certerror.introPara2 "A &brandShortName; egy lehetséges biztonsági kockázatot észlelt, és nem lépett tovább a(z) <span class='hostname'/> oldalra. Ha felkeresi ezt az oldalt, akkor támadók megpróbálhatják ellopni a jelszavait, e-mailjeit vagy bankkártyaadatait.">
 
 <!ENTITY certerror.expiredCert.secondPara "Ennek a problémának a legvalószínűbb oka, hogy hibás a számítógép órabeállítása, amely megakadályozza a &brandShortName; biztonságos kapcsolódósát.">
 

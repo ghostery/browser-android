@@ -16,7 +16,7 @@
 <!ENTITY newevent.eventStatus.cancelled.accesskey "a">
 <!ENTITY newevent.todoStatus.cancelled.label "Cancelado">
 <!ENTITY newevent.status.tentative.label "Provisional">
-<!ENTITY newevent.status.tentative.accesskey "T">
+<!ENTITY newevent.status.tentative.accesskey "P">
 <!ENTITY newevent.status.confirmed.label "Confirmado">
 <!ENTITY newevent.status.confirmed.accesskey "C">
 <!ENTITY newevent.status.needsaction.label "Necesita intervención">

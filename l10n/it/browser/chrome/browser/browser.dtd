@@ -12,20 +12,28 @@
 <!ENTITY reloadTab.accesskey "R">
 <!ENTITY reloadAllTabs.label "Ricarica tutte le schede">
 <!ENTITY reloadAllTabs.accesskey "i">
+<!ENTITY selectAllTabs.label "Seleziona tutte le schede">
+<!ENTITY selectAllTabs.accesskey "u">
 <!ENTITY duplicateTab.label "Duplica scheda">
 <!ENTITY duplicateTab.accesskey "u">
+<!ENTITY closeTabOptions.label "Opzioni chiusura scheda">
+<!ENTITY closeTabOptions.accesskey "O">
 <!ENTITY closeTabsToTheEnd.label "Chiudi le schede a destra">
 <!ENTITY closeTabsToTheEnd.accesskey "d">
 <!ENTITY closeOtherTabs.label "Chiudi le altre schede">
 <!ENTITY closeOtherTabs.accesskey "a">
 <!ENTITY closeSelectedTabs.label "Chiudi schede selezionate">
 <!ENTITY closeSelectedTabs.accesskey "z">
+<!ENTITY closeTabs.label "Chiudi schede">
+<!ENTITY closeTabs.accesskey "u">
 <!ENTITY pinSelectedTabs.label "Appunta schede">
 <!ENTITY pinSelectedTabs.accesskey "h">
 <!ENTITY unpinSelectedTabs.label "Rilascia schede">
 <!ENTITY unpinSelectedTabs.accesskey "h">
 <!ENTITY reloadSelectedTabs.label "Ricarica schede selezionate">
 <!ENTITY reloadSelectedTabs.accesskey "R">
+<!ENTITY reloadTabs.label "Ricarica schede">
+<!ENTITY reloadTabs.accesskey "R">
 <!ENTITY bookmarkSelectedTabs.label "Aggiungi schede ai segnalibri…">
 <!ENTITY bookmarkSelectedTabs.accesskey "b">
 <!ENTITY pinTab.label "Appunta scheda">
@@ -38,14 +46,22 @@
 <!ENTITY sendPageToDevice.accesskey "I">
 <!ENTITY sendLinkToDevice.label "Invia link a dispositivo">
 <!ENTITY sendLinkToDevice.accesskey "I">
-<!ENTITY sendToDeviceFeedback.label "Inviato">
-<!ENTITY sendToDeviceOfflineFeedback.label "In coda (non in linea)">
+<!ENTITY moveTabOptions.label "Sposta scheda">
+<!ENTITY moveTabOptions.accesskey "S">
+<!ENTITY moveSelectedTabOptions.label "Sposta schede">
+<!ENTITY moveSelectedTabOptions.accesskey "S">
+<!ENTITY moveToStart.label "Sposta all’inizio">
+<!ENTITY moveToStart.accesskey "z">
+<!ENTITY moveToEnd.label "Sposta alla fine">
+<!ENTITY moveToEnd.accesskey "f">
 <!ENTITY moveToNewWindow.label "Sposta in una nuova finestra">
 <!ENTITY moveToNewWindow.accesskey "f">
 <!ENTITY reopenInContainer.label "Riapri in contenitore">
 <!ENTITY reopenInContainer.accesskey "e">
 <!ENTITY bookmarkAllTabs.label "Tutte le schede nei segnalibri…">
 <!ENTITY bookmarkAllTabs.accesskey "T">
+<!ENTITY bookmarkTab.label "Aggiungi scheda ai segnalibri…">
+<!ENTITY bookmarkTab.accesskey "A">
 <!ENTITY undoCloseTab.label "Riapri scheda chiusa">
 <!ENTITY undoCloseTab.accesskey "s">
 <!ENTITY closeTab.label "Chiudi scheda">
@@ -78,6 +94,10 @@
 <!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "R">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Tutte le schede nei segnalibri…">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "T">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.label "Aggiungi schede selezionate ai segnalibri…">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.accesskey "A">
+<!ENTITY toolbarContextMenu.selectAllTabs.label "Seleziona tutte le schede">
+<!ENTITY toolbarContextMenu.selectAllTabs.accesskey "u">
 <!ENTITY toolbarContextMenu.undoCloseTab.label "Riapri scheda chiusa">
 <!ENTITY toolbarContextMenu.undoCloseTab.accesskey "a">
 <!ENTITY pageSourceCmd.label "Sorgente pagina">
@@ -182,7 +202,7 @@
 <!ENTITY urlbar.webNotificationsBlocked.tooltip "Le notifiche sono bloccate per questo sito.">
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Il salvataggio dati nell’archivio permanente è bloccato per questo sito.">
 <!ENTITY urlbar.popupBlocked.tooltip "Sono state bloccate delle finestre pop-up per questo sito web.">
-<!ENTITY urlbar.autoplayMediaBlocked.tooltip "È stata bloccata la riproduzione automatica di contenuti multimediali per questo sito web.">
+<!ENTITY urlbar.autoplayMediaBlocked.tooltip "È stata bloccata la riproduzione automatica di contenuti sonori per questo sito web.">
 <!ENTITY urlbar.canvasBlocked.tooltip "È stato bloccato l’accesso ai dati dei canvas per questo sito web.">
 <!ENTITY urlbar.flashPluginBlocked.tooltip "È stato bloccato l’utilizzo del plugin Adobe Flash per questo sito web.">
 <!ENTITY urlbar.midiBlocked.tooltip "È stato bloccato l’accesso alle funzioni MIDI per questo sito web.">
@@ -309,28 +329,22 @@
 <!ENTITY appMenuRecentHighlights.label "Elementi recenti in evidenza">
 <!ENTITY customizeMenu.addToToolbar.label "Aggiungi alla barra degli strumenti">
 <!ENTITY customizeMenu.addToToolbar.accesskey "A">
-<!ENTITY customizeMenu.addToPanel.label "Aggiungi al menu">
-<!ENTITY customizeMenu.addToPanel.accesskey "m">
 <!ENTITY customizeMenu.addToOverflowMenu.label "Aggiungi al menu extra">
 <!ENTITY customizeMenu.addToOverflowMenu.accesskey "x">
-<!ENTITY customizeMenu.moveToToolbar.label "Sposta nella barra degli strumenti">
-<!ENTITY customizeMenu.moveToToolbar.accesskey "o">
-<!ENTITY customizeMenu.moveToPanel.label "Sposta nel menu">
-<!ENTITY customizeMenu.moveToPanel.accesskey "o">
 <!ENTITY customizeMenu.pinToOverflowMenu.label "Aggiungi al menu extra">
 <!ENTITY customizeMenu.pinToOverflowMenu.accesskey "x">
 <!ENTITY customizeMenu.unpinFromOverflowMenu.label "Rimuovi dal menu extra">
 <!ENTITY customizeMenu.unpinFromOverflowMenu.accesskey "x">
 <!ENTITY customizeMenu.removeFromToolbar.label "Rimuovi dalla barra degli strumenti">
 <!ENTITY customizeMenu.removeFromToolbar.accesskey "b">
-<!ENTITY customizeMenu.removeFromMenu.label "Rimuovi dal menu">
-<!ENTITY customizeMenu.removeFromMenu.accesskey "R">
 <!ENTITY customizeMenu.addMoreItems.label "Aggiungi altri elementi…">
 <!ENTITY customizeMenu.addMoreItems.accesskey "A">
 <!ENTITY customizeMenu.autoHideDownloadsButton.label "Nascondi automaticamente nella barra degli strumenti">
 <!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "N">
 <!ENTITY customizeMenu.manageExtension.label "Gestisci estensione">
 <!ENTITY customizeMenu.manageExtension.accesskey "G">
+<!ENTITY customizeMenu.removeExtension.label "Rimuovi estensione">
+<!ENTITY customizeMenu.removeExtension.accesskey "R">
 <!ENTITY moreMenu.label "Altro">
 <!ENTITY openCmd.commandkey "l">
 <!ENTITY urlbar.placeholder2 "Inserisci un indirizzo o avvia una ricerca">
@@ -412,7 +426,6 @@
 <!ENTITY bookmarkThisFrameCmd.label "Aggiungi riquadro ai segnalibri…">
 <!ENTITY bookmarkThisFrameCmd.accesskey "e">
 <!ENTITY pageAction.copyLink.label "Copia link">
-<!ENTITY copyURLFeedback.label "Copiato">
 <!ENTITY emailPageCmd.label "Invia link per email…">
 <!ENTITY emailPageCmd.accesskey "I">
 <!ENTITY savePageCmd.label "Salva pagina con nome…">
@@ -547,12 +560,12 @@
 <!ENTITY findSelectionCmd.commandkey "e">
 <!ENTITY spellAddDictionaries.label "Aggiungi dizionari…">
 <!ENTITY spellAddDictionaries.accesskey "z">
-<!ENTITY editBookmark.panel.width "23em">
+<!ENTITY editBookmark.panel.width "28em">
 <!ENTITY editBookmark.done.label "Fatto">
 <!ENTITY editBookmark.showForNewBookmarks.label "Visualizza editor quando si salva">
 <!ENTITY editBookmark.showForNewBookmarks.accesskey "V">
-<!ENTITY editBookmark.removeBookmark.accessKey "s">
 <!ENTITY identity.securityView.label "Sicurezza del sito">
+<!ENTITY identity.connection "Connessione">
 <!ENTITY identity.connectionSecure "Connessione sicura">
 <!ENTITY identity.connectionNotSecure "Connessione non sicura">
 <!ENTITY identity.connectionFile "Questa pagina è salvata sul dispositivo in uso.">
@@ -667,40 +680,32 @@
 <!ENTITY contentBlocking.fastBlock.label "Elementi traccianti lenti">
 <!ENTITY contentBlocking.fastBlock.blocked.label "Bloccati">
 <!ENTITY contentBlocking.fastBlock.add.label "Attiva blocco…">
-<!ENTITY contentBlocking.trackingProtection.label "Elementi traccianti">
+<!ENTITY contentBlocking.trackingProtection2.label "Tutti gli elementi traccianti rilevati">
 <!ENTITY contentBlocking.trackingProtection.blocked.label "Bloccati">
 <!ENTITY contentBlocking.trackingProtection.add.label "Attiva blocco…">
-<!ENTITY contentBlocking.openBreakageReportView.label "Segnala un problema">
-<!ENTITY contentBlocking.breakageReportView.label "Segnalazione problemi">
-<!ENTITY contentBlocking.breakageReportView.description "Il blocco contenuti può causare problemi in alcuni siti. Segnalando eventuali anomalie contribuisci a migliorare &brandShortName; per tutti gli utenti. Questa operazione invierà un indirizzo (URL) a Mozilla, insieme a informazioni relative alle attuali impostazioni di privacy e blocco contenuti.">
+<!ENTITY contentBlocking.3rdPartyCookies.label "Cookie di terze parti">
+<!ENTITY contentBlocking.3rdPartyCookies.blocked.label "Bloccati">
+<!ENTITY contentBlocking.3rdPartyCookies.add.label "Attiva blocco…">
+<!ENTITY contentBlocking.openBreakageReportView2.label "Segnala un problema">
+<!ENTITY contentBlocking.breakageReportView.label "Segnalazione problema">
+<!ENTITY contentBlocking.breakageReportView2.description "Il blocco contenuti può causare problemi in alcuni siti. Segnalando eventuali anomalie contribuisci a migliorare &brandShortName; per tutti gli utenti. Questa operazione invierà l’indirizzo (URL) a Mozilla, insieme a informazioni relative alle attuali impostazioni del browser.">
 <!ENTITY contentBlocking.breakageReportView.learnMore "Ulteriori informazioni">
 <!ENTITY contentBlocking.breakageReportView.collection.url.label "Indirizzo">
-<!ENTITY contentBlocking.breakageReportView.collection.userAgent.label "Numero di versione di &brandShortName;">
 <!ENTITY contentBlocking.breakageReportView.collection.comments.label "Che tipo di problema si verifica? (facoltativo)">
 <!ENTITY contentBlocking.breakageReportView.sendReport.label "Invia segnalazione">
 <!ENTITY contentBlocking.breakageReportView.cancel.label "Annulla">
-
 <!ENTITY trackingProtection.title "Protezione antitracciamento">
 <!ENTITY trackingProtection.tooltip "Apri impostazioni per la protezione antitracciamento">
-<!ENTITY trackingProtection.detectedBlocked3 "&brandShortName; sta bloccando elementi della pagina in grado di tracciare la navigazione.">
 <!ENTITY trackingProtection.detectedBlocked4 "&brandShortName; sta bloccando elementi in questa pagina in grado di tracciare la navigazione.">
-<!ENTITY trackingProtection.detectedNotBlocked3 "In questa pagina sono presenti elementi in grado di tracciare la navigazione. La protezione è disattivata.">
 <!ENTITY trackingProtection.detectedNotBlocked5 "&brandShortName; ha rilevato elementi in questa pagina in grado di tracciare la navigazione.">
-<!ENTITY trackingProtection.notDetected3 "In questa pagina non sono presenti elementi in grado di tracciare la navigazione.">
 <!ENTITY trackingProtection.notDetected5 "Nessun elemento tracciante rilevato in questa pagina.">
 <!ENTITY trackingProtection.reloadRequired2 "La protezione antitracciamento è ora attiva. Per bloccare tutti gli elementi traccianti ricaricare la pagina.">
 <!ENTITY trackingProtection.detectedException "Rilevati elementi in grado di tracciare la navigazione. La protezione antitracciamento è stata disattivata per questo sito.">
 <!ENTITY trackingProtection.notDetectedException "Nessun elemento tracciante rilevato in questa pagina. La protezione antitracciamento è stata disattivata per questo sito.">
-<!ENTITY trackingProtection.unblock.label "Disattiva protezione per questo sito">
-<!ENTITY trackingProtection.unblock.accesskey "D">
 <!ENTITY trackingProtection.unblock3.label "Disattiva per questo sito">
 <!ENTITY trackingProtection.unblock3.accesskey "s">
 <!ENTITY trackingProtection.unblock4.label "Disattiva blocco per questo sito">
 <!ENTITY trackingProtection.unblock4.accesskey "s">
-<!ENTITY trackingProtection.unblockPrivate.label "Disattiva protezione per questa sessione">
-<!ENTITY trackingProtection.unblockPrivate.accesskey "D">
-<!ENTITY trackingProtection.block2.label "Attiva protezione">
-<!ENTITY trackingProtection.block2.accesskey "A">
 <!ENTITY trackingProtection.unblockPrivate3.label "Disattiva per questa sessione">
 <!ENTITY trackingProtection.unblockPrivate3.accesskey "D">
 <!ENTITY trackingProtection.block4.label "Attiva per questo sito">

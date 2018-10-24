@@ -6,6 +6,8 @@ do-not-track-description = Enviar um sinal “Do Not Track” significando que n
 do-not-track-learn-more = Saber mais
 do-not-track-option-default =
     .label = Apenas ao utilizar a Proteção contra monitorização
+do-not-track-option-default-content-blocking =
+    .label = Apenas quando o { -brand-short-name } está definido para bloquear trackers detetados
 do-not-track-option-always =
     .label = Sempre
 pref-page =
@@ -90,6 +92,9 @@ extension-controlled-privacy-containers = Uma extensão, <img data-l10n-name="ic
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = Uma extensão, <img data-l10n-name="icon"/> { $name }, está a controlar a proteção contra monitorização.
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = Uma extensão,<img data-l10n-name="icon"/>{ $name }, está a controlar esta definição.
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = Uma extensão, <img data-l10n-name="icon"/> { $name }, está a controlar como o { -brand-short-name } se liga à internet.
@@ -203,6 +208,9 @@ choose-button =
     .label = Escolher…
     .accesskey = o
 choose-browser-language-description = Escolha os idiomas utilizados para mostrar menus, mensagens, e notificações do { -brand-short-name }.
+manage-browser-languages-button =
+    .label = Definir alternativas
+    .accesskey = l
 confirm-browser-language-change-description = Reinicie o { -brand-short-name } para aplicar estas alterações
 confirm-browser-language-change-button = Aplicar e reiniciar
 translate-web-pages =
@@ -319,6 +327,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Proxy de rede
+network-settings-title = Definições de rede
 network-proxy-connection-description = Configure como o { -brand-short-name } se liga à internet.
 network-proxy-connection-learn-more = Saber mais
 network-proxy-connection-settings =
@@ -557,9 +566,6 @@ history-dontremember-description = O { -brand-short-name } irá utilizar as mesm
 history-private-browsing-permanent =
     .label = Utilizar sempre o modo de navegação privada
     .accesskey = p
-history-remember-option =
-    .label = Memorizar o meu histórico de navegação e de transferências
-    .accesskey = h
 history-remember-browser-option =
     .label = Memorizar histórico de navegação e de transferências
     .accesskey = z
@@ -625,6 +631,10 @@ sitedata-block-all-third-parties-option =
     .label = Todos os cookies de terceiros
 sitedata-block-always-option =
     .label = Todos os cookies (pode causar que os websites quebrem)
+sitedata-block-all-third-party-option =
+    .label = Todos os cookies de terceiros (pode causar que websites quebrem)
+sitedata-block-all-option =
+    .label = Todos os cookies (irá causar que websites quebrem)
 sitedata-clear =
     .label = Limpar dados…
     .accesskey = L
@@ -634,6 +644,10 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = Exceções…
     .accesskey = E
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = As suas definições no Bloqueio de conteúdo estão a impedir alterações às definições de Cookies e Dados de sites.
 
 ## Privacy Section - Address Bar
 
@@ -687,6 +701,45 @@ content-blocking-tracking-protection-option-pbm =
 content-blocking-tracking-protection-option-disabled =
     .label = Nunca bloquear
 content-blocking-tracking-protection-change-blocklist = Alterar lista de bloqueio…
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-slow-loading-trackers-label =
+    .label = Trackers de carregamento lento
+    .accesskey = s
+content-blocking-fastblock-new-description = Bloquear apenas os trackers que impedem as páginas de carregar rapidamente.
+content-blocking-tracking-protection-all-detected-trackers-label =
+    .label = Todos os trackers detetados
+    .accesskey = T
+content-blocking-tracking-protection-new-description = Bloquear todos os trackers conhecidos. (Pode impedir algumas páginas de carregar.)
+content-blocking-tracking-protection-option-always =
+    .label = Sempre
+    .accesskey = S
+content-blocking-tracking-protection-option-private =
+    .label = Apenas em janelas privadas
+    .accesskey = p
+content-blocking-tracking-protection-change-block-list = Alterar lista de bloqueio
+content-blocking-third-party-cookies-label =
+    .label = Cookies de terceiros
+    .accesskey = C
+content-blocking-reject-trackers-description = Bloquear todos os cookies de terceiros ou apenas aqueles definidos por trackers.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = As suas definições em Cookies e Dados de sites estão a impedir alterações às definições de Cookies de terceiros.
+content-blocking-change-cookie-settings =
+    .label = Alterar definições de cookies
+    .accesskey = s
+content-blocking-reject-trackers-block-trackers-option-recommended =
+    .label = Trackers (recomendado)
+    .accesskey = k
+content-blocking-reject-trackers-block-trackers-option =
+    .label = Trackers
+    .accesskey = k
+content-blocking-reject-trackers-all-third-parties-option =
+    .label = Todos os cookies de terceiros (pode causar que websites quebrem)
+    .accesskey = a
 
 ## Privacy Section - Tracking
 

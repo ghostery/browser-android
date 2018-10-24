@@ -45,8 +45,8 @@ permissions-capabilities-prompt =
 
 ## Invalid Hostname Dialog
 
-permissions-invalid-uri-title = O endereço que introduziu não é válido
-permissions-invalid-uri-label = Por favor, introduza um endereço válido
+permissions-invalid-uri-title = Nome de servidor inválido introduzido
+permissions-invalid-uri-label = Por favor introduza um nome de servidor válido
 
 ## Exceptions - Tracking Protection
 

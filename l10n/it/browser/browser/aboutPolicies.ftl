@@ -9,3 +9,5 @@ documentation-tab = Documentazione
 policy-name = Nome criterio
 policy-value = Valore criterio
 policy-errors = Errori criterio
+gpo-machine-only =
+    .title = Quando si utilizzano Criteri di gruppo, questo criterio può essere impostato solo a livello di computer.
