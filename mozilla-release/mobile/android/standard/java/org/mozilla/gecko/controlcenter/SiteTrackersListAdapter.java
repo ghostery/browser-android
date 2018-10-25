@@ -41,6 +41,8 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
 
+    private View currentChildView = null;
+
     SiteTrackersListAdapter(Context context, BaseControlCenterPagerAdapter.ControlCenterCallbacks callbacks) {
         mContext = context;
         mControlCenterCallbacks = callbacks;
@@ -387,6 +389,7 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onClick(View v) {
                         notifyDataSetChanged();
+                        currentChildView = view;
                         animation.start();
                     }
                 });
@@ -399,6 +402,39 @@ public class SiteTrackersListAdapter extends BaseExpandableListAdapter {
         this.data = data;
         mListData = GeckoBundleUtils.safeGetBundleArray(data,"data/summary/categories");
         notifyDataSetChanged();
+    }
+
+    boolean hideOptionsMenu() {
+        if (currentChildView != null) {
+            final View listItemView = (View) currentChildView.getParent();
+            final ObjectAnimator animation = ObjectAnimator.ofFloat(currentChildView, "translationX",
+                    listItemView.getWidth());
+            animation.setDuration(400);
+            animation.start();
+            animation.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            return true;
+        }
+        return false;
     }
 
     private void hideOptionsMenu(View v) {
