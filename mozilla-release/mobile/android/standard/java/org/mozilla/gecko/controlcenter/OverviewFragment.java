@@ -233,8 +233,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         centerTextSpan.setSpan(new AbsoluteSizeSpan((int)Utils.convertDpToPixel(40), false), 0,
                 Integer.toString(totalTrackers).length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         mPieChart.setCenterText(centerTextSpan);
-        mPieChart.setCenterTextSize(18);
-        mPieChart.setCenterTextRadiusPercent(90);
+        mPieChart.setCenterTextSizePixels(getResources().getDimension(R.dimen.ghostery_cc_donut_text_size));
+        mPieChart.setCenterTextRadiusPercent(85);
         mPieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.cc_text_color));
         mPieChart.setHoleRadius(80);
         mPieChart.setDescription(null);
@@ -473,8 +473,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
         mControlCenterCallbacks.controlCenterSettingsChanged();
         //update the data source so that other views can reflect changes
-        controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_blacklist", updatedBlackList);
-        controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_whitelist", updatedWhiteList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_blacklist", updatedBlackList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_whitelist", updatedWhiteList);
         GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", false);
     }
 
@@ -513,8 +513,8 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
         mControlCenterCallbacks.controlCenterSettingsChanged();
         //update the data source so that other views can reflect changes
-        controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_blacklist", updatedBlackList);
-        controlCenterSettingsData.getBundle("data").getBundle("summary").putStringArray("site_whitelist", updatedWhiteList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_blacklist", updatedBlackList);
+        GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putStringArray("site_whitelist", updatedWhiteList);
         GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/summary").putBoolean("paused_blocking", false);
     }
 

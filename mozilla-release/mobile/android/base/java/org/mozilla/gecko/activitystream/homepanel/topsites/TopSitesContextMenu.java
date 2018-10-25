@@ -82,8 +82,11 @@ public class TopSitesContextMenu extends PopupMenu implements PopupMenu.OnMenuIt
                 ThreadUtils.postToBackgroundThread(new Runnable() {
                     @Override
                     public void run() {
-                        BrowserDB.from(mContext)
-                                .removeHistoryEntry(mContext.getContentResolver(), mTopSite.getUrl());
+                        final BrowserDB db = BrowserDB.from(mContext);
+                        if (Boolean.TRUE.equals(mTopSite.isPinned())) {
+                            db.unpinSiteForAS(mContext.getContentResolver(), mTopSite.getUrl());
+                        }
+                        db.removeHistoryEntry(mContext.getContentResolver(), mTopSite.getUrl());
                     }
                 });
                 return true;

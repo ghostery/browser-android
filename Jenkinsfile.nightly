@@ -178,6 +178,7 @@ def build(Map m){
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
                         def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release/${apk}"
+                        def fileName = "${brandname}_Nightly-${env.BUILD_NUMBER}_${getId()}"
                         try {
                             zip archive: true, dir: "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release", glob: '', zipFile: "${flavorname}-build.zip"
                         } catch(e) {
@@ -187,14 +188,14 @@ def build(Map m){
                             sh """#!/bin/bash -l
                                 set -e
                                 set -x
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${brandname}${getId()}.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${fileName}.apk
                                 aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk
                             """
                         } else {
                             sh """#!/bin/bash -l
                                 set -e
                                 set -x
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${brandname}${getId()}_${buildarch}.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${fileName}_${buildarch}.apk
                                 aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest_${buildarch}.apk
                             """
                         }
@@ -265,12 +266,12 @@ stage('Send email') {
     def bodytxt = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
-        Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/latest.apk
-        Cliqz X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/latest_x86.apk
-        Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/latest.apk
-        Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/latest.apk
-        Ghostery X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/latest_x86.apk
-        Ghostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/latest.apk
+        Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz_Nightly-${env.BUILD_NUMBER}_${id}.apk
+        Cliqz X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz_Nightly-${env.BUILD_NUMBER}_${id}_x86.apk
+        Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/cliqz-alpha_Nightly-${env.BUILD_NUMBER}_${id}.apk
+        Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/ghostery_Nightly-${env.BUILD_NUMBER}_${id}.apk
+        Ghostery X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/ghostery_Nightly-${env.BUILD_NUMBER}_${id}_x86.apk
+        Ghostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/ghostery-alpha_Nightly-${env.BUILD_NUMBER}_${id}.apk
         ${changesSinceLastSuccess}
         Issues Transtioned ${transitionIssueList}""".stripIndent()
     emailext(
@@ -281,8 +282,8 @@ stage('Send email') {
     def bodytxtBond = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
-        Bond apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/latest.apk
-        Bond X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/latest_x86.apk
+        Bond apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/bond_Nightly-${env.BUILD_NUMBER}_${id}.apk
+        Bond X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/bond_Nightly-${env.BUILD_NUMBER}_${id}_x86.apk
         ${changesSinceLastSuccess}
         Issues Transtioned ${transitionIssueList}""".stripIndent()
     emailext(
