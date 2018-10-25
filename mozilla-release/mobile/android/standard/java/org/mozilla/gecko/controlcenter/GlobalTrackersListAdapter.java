@@ -1,5 +1,6 @@
 package org.mozilla.gecko.controlcenter;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,8 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
     private GeckoBundle data;
     private Context mContext;
     private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
+
+    private View currentChildView = null;
 
     GlobalTrackersListAdapter(Context context, BaseControlCenterPagerAdapter.ControlCenterCallbacks callbacks) {
         mControlCenterCallbacks = callbacks;
@@ -200,6 +203,7 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
                 notifyDataSetChanged();
+                currentChildView = blockButton;
                 animation.start();
             }
         });
@@ -236,6 +240,40 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
             }
         });
         return convertView;
+    }
+
+
+    boolean hideOptionsMenu() {
+        if (currentChildView != null) {
+            final View listItemView = (View) currentChildView.getParent();
+            final ObjectAnimator animation = ObjectAnimator.ofFloat(currentChildView, "translationX",
+                    listItemView.getWidth());
+            animation.setDuration(400);
+            animation.start();
+            animation.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            return true;
+        }
+        return false;
     }
 
     void setData(GeckoBundle data) {
