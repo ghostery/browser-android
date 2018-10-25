@@ -968,25 +968,15 @@ public class LocalBrowserDB extends BrowserDB {
         } else {
             // Right now, we only support showing folder and bookmark type of
             // entries. We should add support for other types though (bug 737024)
-            /* Cliqz Start */
-            // Changing the query to show the bookmarks in a flattened way
-            // c = cr.query(mBookmarksUriWithProfile,
-            //              DEFAULT_BOOKMARK_COLUMNS,
-            //              Bookmarks.PARENT + " = ? AND " +
-            //              "(" + Bookmarks.TYPE + " = ? OR " +
-            //                 "(" + Bookmarks.TYPE + " = ? AND " + Bookmarks.URL + " IS NOT NULL))",
-            //              new String[] { String.valueOf(folderId),
-            //                             String.valueOf(Bookmarks.TYPE_FOLDER),
-            //                             String.valueOf(Bookmarks.TYPE_BOOKMARK) },
-            //              null);
             c = cr.query(mBookmarksUriWithProfile,
                     DEFAULT_BOOKMARK_COLUMNS,
-                    Bookmarks.PARENT + " >= ? AND " +
-                            "(" + Bookmarks.TYPE + " = ? AND " + Bookmarks.URL + " IS NOT NULL)",
+                    Bookmarks.PARENT + " = ? AND " +
+                    "(" + Bookmarks.TYPE + " = ? OR " +
+                       "(" + Bookmarks.TYPE + " = ? AND " + Bookmarks.URL + " IS NOT NULL))",
                     new String[] { String.valueOf(folderId),
-                            String.valueOf(Bookmarks.TYPE_BOOKMARK) },
+                                   String.valueOf(Bookmarks.TYPE_FOLDER),
+                                   String.valueOf(Bookmarks.TYPE_BOOKMARK) },
                     null);
-            /* Cliqz End */
         }
 
         final List<Cursor> cursorsToMerge = getSpecialFoldersCursorList(addDesktopFolder, addScreenshotsFolder, addReadingListFolder);

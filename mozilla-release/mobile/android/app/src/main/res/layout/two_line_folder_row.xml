@@ -3,6 +3,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
+<!-- Cliqz Start -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
        xmlns:gecko="http://schemas.android.com/apk/res-auto"
        xmlns:tools="http://schemas.android.com/tools"
@@ -11,16 +12,16 @@
        tools:layout_width="match_parent"
        tools:minHeight="@dimen/page_row_height"
        tools:orientation="horizontal"
+       tools:background="@android:color/black"
        tools:parentTag="LinearLayout">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="@dimen/favicon_small_size"
-        android:layout_height="@dimen/favicon_small_size"
-        android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:scaleType="fitCenter"
+        android:layout_width="@dimen/ghostery_bookmark_folder_size"
+        android:layout_height="@dimen/ghostery_bookmark_folder_size"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:src="@drawable/folder_closed"/>
 
     <LinearLayout
@@ -37,6 +38,7 @@
             style="@style/Widget.TwoLinePageRow.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             gecko:fadeWidth="90dp"
             tools:text="This is a long test title"/>
 
@@ -53,11 +55,13 @@
 
     <ImageView
         android:id="@+id/indicator"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_gravity="center"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
+        android:tint="@android:color/white"
         android:src="@drawable/arrow"/>
+<!-- Cliqz End -->
 
     <View
         android:id="@+id/padding_end"

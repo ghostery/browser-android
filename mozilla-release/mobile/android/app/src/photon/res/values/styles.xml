@@ -168,11 +168,13 @@
         <item name="android:textAppearance">@style/TextAppearance.Widget.Home.ItemTitle</item>
         <item name="android:textSize">@dimen/home_twolinepagerow_title_textsize</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
     </style>
 
     <style name="Widget.TwoLinePageRow.Url" parent="Widget.TwoLinePageRow.Text">
         <item name="android:textAppearance">@style/TextAppearance.Widget.Home.ItemDescription</item>
         <item name="android:includeFontPadding">false</item>
+        <item name="android:background">@null</item>
     </style>
     <!-- Cliqz end -->
 
@@ -181,7 +183,9 @@
         <item name="android:minHeight">@dimen/page_group_height</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">none</item>
-        <item name="android:background">@color/about_page_header_grey</item>
+        <!-- Cliqz start -->
+        <item name="android:background">@android:color/transparent</item>
+        <!-- Cliqz end -->
         <item name="android:drawablePadding">20dp</item>
     </style>
 
@@ -213,9 +217,13 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="Widget.BookmarkItemView" parent="Widget.TwoLinePageRow"/>
+    <!-- Cliqz Start -->
+    <style name="Widget.BookmarkItemView" />
 
-    <style name="Widget.BookmarksListView" parent="Widget.HomeListView"/>
+    <style name="Widget.BookmarksListView" parent="Widget.HomeListView">
+        <item name="android:dividerHeight">@dimen/ghostery_history_divider_height</item>
+    </style>
+    <!-- Cliqz End -->
 
     <style name="Widget.TopSitesThumbnailView">
       <item name="android:padding">0dip</item>
