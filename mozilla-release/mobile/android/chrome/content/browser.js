@@ -6678,22 +6678,24 @@ var Cliqz = {
   },
 
   overlayPanel: function(panel) {
-    if (panel.hasAttribute("primary")) {
+    /* Cliqz start */
+    var currentPanel = BrowserApp.deck.selectedPanel;
+    if (currentPanel === panel && panel.hasAttribute("primary")) {
       // already visible
       return;
     }
 
-    var currentPanel = BrowserApp.deck.selectedPanel;
     if (currentPanel.hasAttribute("contentsource")) {
       // current tab is already an overlay
       // -> we simply hide it
       currentPanel.removeAttribute("primary");
-    } else {
+    } else if (currentPanel !== panel) {
       // we need to store the current active panel to be able
       // to show it when the overlay panel will close
       BrowserApp.deck.backPanel = currentPanel;
       currentPanel.removeAttribute("primary");
     }
+    /* Cliqz end */
 
     // it must be primary in order to get the touch events
     panel.setAttribute("primary", "true");
