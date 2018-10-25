@@ -26,6 +26,8 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
 
+    private View currentChildView = null;
+
     GlobalTrackersListAdapter(Context context, BaseControlCenterPagerAdapter.ControlCenterCallbacks callbacks) {
         mControlCenterCallbacks = callbacks;
         mContext = context;
