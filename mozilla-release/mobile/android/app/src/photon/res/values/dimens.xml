@@ -102,7 +102,9 @@
     <dimen name="page_row_edge_padding">16dp</dimen>
 
     <!-- Regular page row on about:home -->
-    <dimen name="page_row_height">56dp</dimen>
+    <!-- Cliqz Start -->
+    <dimen name="page_row_height">80dp</dimen>
+    <!-- Cliqz End -->
 
     <!-- Group/heading page row on about:home -->
     <dimen name="page_group_height">56dp</dimen>
@@ -299,11 +301,13 @@
     <!-- Control Center -->
     <dimen name="ghostery_list_item_action_button_width">90dp</dimen>
     <dimen name="ghostery_overview_button_width">225dp</dimen>
+    <dimen name="ghostery_cc_donut_text_size">18sp</dimen>
 
     <!-- History and bookmarks view -->
     <dimen name="ghostery_history_icon_width">48dp</dimen>
     <dimen name="ghostery_history_icon_height">48dp</dimen>
     <dimen name="ghostery_history_divider_height">0.5dp</dimen>
+    <dimen name="ghostery_bookmark_folder_size">38dp</dimen>
 
     <!-- Tabs Overview -->
     <dimen name="tab_panel_text_size">24sp</dimen>

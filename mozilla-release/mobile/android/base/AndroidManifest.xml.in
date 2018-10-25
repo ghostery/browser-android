@@ -425,7 +425,9 @@
             </intent-filter>
         </service>
 
-#include ../services/manifests/FxAccountAndroidManifest_services.xml.in
+/* Cliqz Start */
+// #include ../services/manifests/FxAccountAndroidManifest_services.xml.in
+/* Cliqz End */
 
         <service
             android:name="org.mozilla.gecko.tabqueue.TabReceivedService"
