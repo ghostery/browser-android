@@ -81,15 +81,16 @@ RUN set -eux; \
     rustup toolchain install 1.28.0-x86_64-unknown-linux-gnu; \
     rustup default 1.28.0-x86_64-unknown-linux-gnu; \
     rustup target add i686-linux-android; \
-    rustup target add armv7-linux-androideabi
+    rustup target add armv7-linux-androideabi; \
+    cargo install cbindgen
 
 # Change to User Jenkins and Set Environment Variables
 USER jenkins
 ENV ANDROID_HOME /home/jenkins/.mozbuild/android-sdk-linux
 ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r15c
-ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.9.3-linux-x64/bin:$PATH"
+ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.11.4-linux-x64/bin:$PATH"
 ENV NVM_DIR /home/jenkins/nvm
-ENV NODE_VERSION 8.9.3
+ENV NODE_VERSION 8.11.4
 ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04/
 SHELL ["/bin/bash", "-l", "-c"]
 
