@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
@@ -42,6 +43,12 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
         mOverflowMenu.setOnClickListener(this);
         mTrackerListAdapter = new GlobalTrackersListAdapter(getContext(), mControlCenterCallbacks);
         mTrackersList.setAdapter(mTrackerListAdapter);
+        mTrackersList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return event.getAction() == MotionEvent.ACTION_DOWN && mTrackerListAdapter.hideOptionsMenu();
+            }
+        });
         return view;
     }
 
