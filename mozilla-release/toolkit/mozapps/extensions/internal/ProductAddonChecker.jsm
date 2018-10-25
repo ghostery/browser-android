@@ -6,25 +6,23 @@
 
 /* exported ProductAddonChecker */
 
-const LOCAL_EME_SOURCES = [{
+const LOCAL_GMP_SOURCES = [{
   "id": "gmp-gmpopenh264",
-  "src": "chrome://global/content/gmp-sources/openh264.json"
+  "src": "chrome://global/content/gmp-sources/openh264.json",
 }, {
   "id": "gmp-widevinecdm",
-  "src": "chrome://global/content/gmp-sources/widevinecdm.json"
+  "src": "chrome://global/content/gmp-sources/widevinecdm.json",
 }];
 
 var EXPORTED_SYMBOLS = [ "ProductAddonChecker" ];
-
-Cu.importGlobalProperties(["XMLHttpRequest"]);
 
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/Log.jsm");
 ChromeUtils.import("resource://gre/modules/CertUtils.jsm");
-ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
-ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 ChromeUtils.import("resource://gre/modules/osfile.jsm");
+
+XPCOMUtils.defineLazyGlobalGetters(this, ["XMLHttpRequest"]);
 
 /* globals GMPPrefs */
 ChromeUtils.defineModuleGetter(this, "GMPPrefs",
@@ -218,7 +216,7 @@ function parseXML(document) {
 
   return {
     usedFallback: false,
-    gmpAddons: results
+    gmpAddons: results,
   };
 }
 
@@ -233,7 +231,7 @@ function downloadLocalConfig() {
     return Promise.resolve({usedFallback: true, gmpAddons: []});
   }
 
-  return Promise.all(LOCAL_EME_SOURCES.map(conf => {
+  return Promise.all(LOCAL_GMP_SOURCES.map(conf => {
     return downloadJSON(conf.src).then(addons => {
 
       let platforms = addons.vendors[conf.id].platforms;
@@ -263,7 +261,7 @@ function downloadLocalConfig() {
         "hashFunction": addons.hashFunction,
         "hashValue": details.hashValue,
         "version": addons.vendors[conf.id].version,
-        "size": details.filesize
+        "size": details.filesize,
       };
     });
   })).then(addons => {
@@ -274,7 +272,7 @@ function downloadLocalConfig() {
 
     return {
       usedFallback: true,
-      gmpAddons: addons
+      gmpAddons: addons,
     };
   });
 }
@@ -381,7 +379,7 @@ var computeHash = async function(hashFunction, path) {
  * Verifies that a downloaded file matches what was expected.
  *
  * @param  properties
- *         The properties to check, `size` and `hashFunction` with `hashValue`
+ *         The properties to check, `hashFunction` with `hashValue`
  *         are supported. Any properties missing won't be checked.
  * @param  path
  *         The path of the file to check.
@@ -450,5 +448,5 @@ const ProductAddonChecker = {
       await OS.File.remove(path);
       throw e;
     }
-  }
+  },
 };

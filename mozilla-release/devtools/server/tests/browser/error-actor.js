@@ -27,6 +27,4 @@ ErrorActor.prototype = {
 ErrorActor.prototype.requestTypes = {
   "error": ErrorActor.prototype.onError
 };
-
-DebuggerServer.removeGlobalActor(ErrorActor);
-DebuggerServer.addGlobalActor(ErrorActor, "errorActor");
+exports.ErrorActor = ErrorActor;

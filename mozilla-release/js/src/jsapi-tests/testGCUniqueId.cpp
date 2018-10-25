@@ -6,10 +6,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "gc/GCInternals.h"
-#include "gc/Zone.h"
 #include "js/GCVector.h"
 
 #include "jsapi-tests/tests.h"
+
+#include "gc/Zone-inl.h"
 
 static void
 MinimizeHeap(JSContext* cx)
@@ -111,7 +112,7 @@ BEGIN_TEST(testGCUID)
     // Force a compaction to move the object and check that the uid moved to
     // the new tenured heap location.
     JS::PrepareForFullGC(cx);
-    JS::GCForReason(cx, GC_SHRINK, JS::gcreason::API);
+    JS::NonIncrementalGC(cx, GC_SHRINK, JS::gcreason::API);
     MinimizeHeap(cx);
     CHECK(uintptr_t(obj.get()) != tenuredAddr);
     CHECK(obj->zone()->hasUniqueId(obj));

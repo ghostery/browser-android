@@ -14,7 +14,8 @@
 #include "nsWindow.h"
 #include "mozilla/Logging.h"
 #include "prenv.h"
-#include "mozilla/HangMonitor.h"
+#include "mozilla/BackgroundHangMonitor.h"
+#include "mozilla/Hal.h"
 #include "mozilla/Unused.h"
 #include "mozilla/WidgetUtils.h"
 #include "GeckoProfiler.h"
@@ -46,13 +47,14 @@ static GPollFunc sPollFunc;
 static gint
 PollWrapper(GPollFD *ufds, guint nfsd, gint timeout_)
 {
-    mozilla::HangMonitor::Suspend();
+    mozilla::BackgroundHangMonitor().NotifyWait();
     gint result;
     {
+        AUTO_PROFILER_LABEL("PollWrapper", IDLE);
         AUTO_PROFILER_THREAD_SLEEP;
         result = (*sPollFunc)(ufds, nfsd, timeout_);
     }
-    mozilla::HangMonitor::NotifyActivity();
+    mozilla::BackgroundHangMonitor().NotifyActivity();
     return result;
 }
 
@@ -133,6 +135,8 @@ nsAppShell::EventProcessorCallback(GIOChannel *source,
 
 nsAppShell::~nsAppShell()
 {
+    mozilla::hal::Shutdown();
+
     if (mTag)
         g_source_remove(mTag);
     if (mPipeFDs[0])
@@ -149,6 +153,8 @@ nsAppShell::Init()
     // in any code that uses Glib, Gdk, or Gtk. In later versions of Glib, this call
     // is a no-op.
     g_type_init();
+
+    mozilla::hal::Init();
 
 #ifdef MOZ_ENABLE_DBUS
     if (XRE_IsParentProcess()) {

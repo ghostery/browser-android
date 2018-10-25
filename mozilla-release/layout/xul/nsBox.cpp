@@ -14,7 +14,6 @@
 #include "nsContainerFrame.h"
 #include "nsNameSpaceManager.h"
 #include "nsGkAtoms.h"
-#include "nsIDOMNode.h"
 #include "nsITheme.h"
 #include "nsIServiceManager.h"
 #include "nsBoxLayout.h"
@@ -171,17 +170,15 @@ nsBox::GetXULBorder(nsMargin& aMargin)
   aMargin.SizeTo(0,0,0,0);
 
   const nsStyleDisplay* disp = StyleDisplay();
-  if (disp->mAppearance && gTheme) {
+  if (disp->HasAppearance() && gTheme) {
     // Go to the theme for the border.
     nsPresContext *context = PresContext();
     if (gTheme->ThemeSupportsWidget(context, this, disp->mAppearance)) {
-      nsIntMargin margin(0, 0, 0, 0);
-      gTheme->GetWidgetBorder(context->DeviceContext(), this,
-                              disp->mAppearance, &margin);
-      aMargin.top = context->DevPixelsToAppUnits(margin.top);
-      aMargin.right = context->DevPixelsToAppUnits(margin.right);
-      aMargin.bottom = context->DevPixelsToAppUnits(margin.bottom);
-      aMargin.left = context->DevPixelsToAppUnits(margin.left);
+      LayoutDeviceIntMargin margin =
+        gTheme->GetWidgetBorder(context->DeviceContext(), this,
+                                disp->mAppearance);
+      aMargin = LayoutDevicePixel::ToAppUnits(margin,
+                                              context->AppUnitsPerDevPixel());
       return NS_OK;
     }
   }
@@ -192,31 +189,27 @@ nsBox::GetXULBorder(nsMargin& aMargin)
 }
 
 nsresult
-nsBox::GetXULPadding(nsMargin& aMargin)
+nsBox::GetXULPadding(nsMargin& aPadding)
 {
   const nsStyleDisplay *disp = StyleDisplay();
-  if (disp->mAppearance && gTheme) {
+  if (disp->HasAppearance() && gTheme) {
     // Go to the theme for the padding.
     nsPresContext *context = PresContext();
     if (gTheme->ThemeSupportsWidget(context, this, disp->mAppearance)) {
-      nsIntMargin margin(0, 0, 0, 0);
-      bool useThemePadding;
-
-      useThemePadding = gTheme->GetWidgetPadding(context->DeviceContext(),
-                                                 this, disp->mAppearance,
-                                                 &margin);
+      LayoutDeviceIntMargin padding;
+      bool useThemePadding =
+        gTheme->GetWidgetPadding(context->DeviceContext(),
+                                 this, disp->mAppearance, &padding);
       if (useThemePadding) {
-        aMargin.top = context->DevPixelsToAppUnits(margin.top);
-        aMargin.right = context->DevPixelsToAppUnits(margin.right);
-        aMargin.bottom = context->DevPixelsToAppUnits(margin.bottom);
-        aMargin.left = context->DevPixelsToAppUnits(margin.left);
+        aPadding = LayoutDevicePixel::ToAppUnits(padding,
+                                                context->AppUnitsPerDevPixel());
         return NS_OK;
       }
     }
   }
 
-  aMargin.SizeTo(0,0,0,0);
-  StylePadding()->GetPadding(aMargin);
+  aPadding.SizeTo(0,0,0,0);
+  StylePadding()->GetPadding(aPadding);
 
   return NS_OK;
 }
@@ -529,6 +522,23 @@ nsIFrame::AddXULPrefSize(nsIFrame* aBox, nsSize& aSize, bool &aWidthSet, bool &a
     return (aWidthSet && aHeightSet);
 }
 
+// This returns the scrollbar width we want to use when either native
+// theme is disabled, or the native theme claims that it doesn't support
+// scrollbar.
+static nscoord
+GetScrollbarWidthNoTheme(nsIFrame* aBox)
+{
+    ComputedStyle* scrollbarStyle = nsLayoutUtils::StyleForScrollbar(aBox);
+    switch (scrollbarStyle->StyleUIReset()->mScrollbarWidth) {
+      default:
+      case StyleScrollbarWidth::Auto:
+        return 12 * AppUnitsPerCSSPixel();
+      case StyleScrollbarWidth::Thin:
+        return 6 * AppUnitsPerCSSPixel();
+      case StyleScrollbarWidth::None:
+        return 0;
+    }
+}
 
 bool
 nsIFrame::AddXULMinSize(nsBoxLayoutState& aState, nsIFrame* aBox, nsSize& aSize,
@@ -541,7 +551,7 @@ nsIFrame::AddXULMinSize(nsBoxLayoutState& aState, nsIFrame* aBox, nsSize& aSize,
 
     // See if a native theme wants to supply a minimum size.
     const nsStyleDisplay* display = aBox->StyleDisplay();
-    if (display->mAppearance) {
+    if (display->HasAppearance()) {
       nsITheme *theme = aState.PresContext()->GetTheme();
       if (theme && theme->ThemeSupportsWidget(aState.PresContext(), aBox, display->mAppearance)) {
         LayoutDeviceIntSize size;
@@ -554,6 +564,19 @@ nsIFrame::AddXULMinSize(nsBoxLayoutState& aState, nsIFrame* aBox, nsSize& aSize,
         if (size.height) {
           aSize.height = aState.PresContext()->DevPixelsToAppUnits(size.height);
           aHeightSet = true;
+        }
+      } else {
+        switch (display->mAppearance) {
+          case StyleAppearance::ScrollbarVertical:
+            aSize.width = GetScrollbarWidthNoTheme(aBox);
+            aWidthSet = true;
+            break;
+          case StyleAppearance::ScrollbarHorizontal:
+            aSize.height = GetScrollbarWidthNoTheme(aBox);
+            aHeightSet = true;
+            break;
+          default:
+            break;
         }
       }
     }

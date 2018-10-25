@@ -19,7 +19,7 @@
 #include "mozilla/dom/WebCryptoCommon.h"
 #include "mozilla/dom/WebCryptoTask.h"
 #include "mozilla/dom/WebCryptoThreadPool.h"
-#include "mozilla/dom/WorkerHolder.h"
+#include "mozilla/dom/WorkerRef.h"
 #include "mozilla/dom/WorkerPrivate.h"
 
 // Template taken from security/nss/lib/util/templates.c
@@ -133,47 +133,6 @@ public:
 
 private:
   JSContext* mCx;
-};
-
-class WebCryptoTask::InternalWorkerHolder final : public WorkerHolder
-{
-  InternalWorkerHolder()
-    : WorkerHolder("WebCryptoTask::InternalWorkerHolder")
-  { }
-
-  ~InternalWorkerHolder()
-  {
-    NS_ASSERT_OWNINGTHREAD(InternalWorkerHolder);
-    // Nothing to do here since the parent destructor releases the
-    // worker automatically.
-  }
-
-public:
-  static already_AddRefed<InternalWorkerHolder>
-  Create()
-  {
-    MOZ_ASSERT(!NS_IsMainThread());
-    WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
-    MOZ_ASSERT(workerPrivate);
-    RefPtr<InternalWorkerHolder> ref = new InternalWorkerHolder();
-    if (NS_WARN_IF(!ref->HoldWorker(workerPrivate, Canceling))) {
-      return nullptr;
-    }
-    return ref.forget();
-  }
-
-  virtual bool
-  Notify(WorkerStatus aStatus) override
-  {
-    NS_ASSERT_OWNINGTHREAD(InternalWorkerHolder);
-    // Do nothing here.  Since WebCryptoTask dispatches back to
-    // the worker thread using nsThread::Dispatch() instead of
-    // WorkerRunnable it will always be able to execute its
-    // runnables.
-    return true;
-  }
-
-  NS_INLINE_DECL_REFCOUNTING(WebCryptoTask::InternalWorkerHolder)
 };
 
 template<class OOS>
@@ -385,11 +344,15 @@ WebCryptoTask::DispatchWithPromise(Promise* aResultPromise)
   // private may get torn down before we dispatch back to complete
   // the transaction.
   if (!NS_IsMainThread()) {
-    mWorkerHolder = InternalWorkerHolder::Create();
-    // If we can't register a holder then the worker is already
-    // shutting down.  Don't start new work.
-    if (!mWorkerHolder) {
+    WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
+    MOZ_ASSERT(workerPrivate);
+
+    RefPtr<StrongWorkerRef> workerRef =
+      StrongWorkerRef::Create(workerPrivate, "WebCryptoTask");
+    if (NS_WARN_IF(!workerRef)) {
       mEarlyRv = NS_BINDING_ABORTED;
+    } else {
+      mWorkerRef = new ThreadSafeWorkerRef(workerRef);
     }
   }
   MAYBE_EARLY_FAIL(mEarlyRv);
@@ -416,7 +379,7 @@ WebCryptoTask::Run()
 
   // Stop holding the worker thread alive now that the async work has
   // been completed.
-  mWorkerHolder = nullptr;
+  mWorkerRef = nullptr;
 
   return NS_OK;
 }
@@ -440,7 +403,7 @@ WebCryptoTask::FailWithError(nsresult aRv)
   mResultPromise->MaybeReject(aRv);
   // Manually release mResultPromise while we're on the main thread
   mResultPromise = nullptr;
-  mWorkerHolder = nullptr;
+  mWorkerRef = nullptr;
   Cleanup();
 }
 
@@ -522,7 +485,10 @@ class AesTask : public ReturnArrayBufferViewTask,
 public:
   AesTask(JSContext* aCx, const ObjectOrString& aAlgorithm,
           CryptoKey& aKey, bool aEncrypt)
-    : mSymKey(aKey.GetSymKey())
+    : mMechanism(CKM_INVALID_MECHANISM)
+    , mSymKey(aKey.GetSymKey())
+    , mTagLength(0)
+    , mCounterLength(0)
     , mEncrypt(aEncrypt)
   {
     Init(aCx, aAlgorithm, aKey, aEncrypt);
@@ -531,7 +497,10 @@ public:
   AesTask(JSContext* aCx, const ObjectOrString& aAlgorithm,
           CryptoKey& aKey, const CryptoOperationData& aData,
           bool aEncrypt)
-    : mSymKey(aKey.GetSymKey())
+    : mMechanism(CKM_INVALID_MECHANISM)
+    , mSymKey(aKey.GetSymKey())
+    , mTagLength(0)
+    , mCounterLength(0)
     , mEncrypt(aEncrypt)
   {
     Init(aCx, aAlgorithm, aKey, aEncrypt);
@@ -1686,6 +1655,7 @@ public:
       const nsAString& aFormat,
       const ObjectOrString& aAlgorithm, bool aExtractable,
       const Sequence<nsString>& aKeyUsages)
+    : mModulusLength(0)
   {
     Init(aGlobal, aCx, aFormat, aAlgorithm, aExtractable, aKeyUsages);
   }
@@ -1694,6 +1664,7 @@ public:
       const nsAString& aFormat, JS::Handle<JSObject*> aKeyData,
       const ObjectOrString& aAlgorithm, bool aExtractable,
       const Sequence<nsString>& aKeyUsages)
+    : mModulusLength(0)
   {
     Init(aGlobal, aCx, aFormat, aAlgorithm, aExtractable, aKeyUsages);
     if (NS_FAILED(mEarlyRv)) {
@@ -2363,6 +2334,9 @@ GenerateAsymmetricKeyTask::GenerateAsymmetricKeyTask(
     nsIGlobalObject* aGlobal, JSContext* aCx, const ObjectOrString& aAlgorithm,
     bool aExtractable, const Sequence<nsString>& aKeyUsages)
   : mKeyPair(new CryptoKeyPair())
+  , mMechanism(CKM_INVALID_MECHANISM)
+  , mRsaParams()
+  , mDhParams()
 {
   mArena = UniquePLArenaPool(PORT_NewArena(DER_DEFAULT_CHUNKSIZE));
   if (!mArena) {
@@ -2603,13 +2577,17 @@ public:
   DeriveHkdfBitsTask(JSContext* aCx,
       const ObjectOrString& aAlgorithm, CryptoKey& aKey, uint32_t aLength)
     : mSymKey(aKey.GetSymKey())
+    , mMechanism(CKM_INVALID_MECHANISM)
   {
     Init(aCx, aAlgorithm, aKey, aLength);
   }
 
   DeriveHkdfBitsTask(JSContext* aCx, const ObjectOrString& aAlgorithm,
                       CryptoKey& aKey, const ObjectOrString& aTargetAlgorithm)
-    : mSymKey(aKey.GetSymKey())
+    : mLengthInBits(0)
+    , mLengthInBytes(0)
+    , mSymKey(aKey.GetSymKey())
+    , mMechanism(CKM_INVALID_MECHANISM)
   {
     size_t length;
     mEarlyRv = GetKeyLengthForAlgorithm(aCx, aTargetAlgorithm, length);
@@ -2753,13 +2731,17 @@ public:
   DerivePbkdfBitsTask(JSContext* aCx,
       const ObjectOrString& aAlgorithm, CryptoKey& aKey, uint32_t aLength)
     : mSymKey(aKey.GetSymKey())
+    , mHashOidTag(SEC_OID_UNKNOWN)
   {
     Init(aCx, aAlgorithm, aKey, aLength);
   }
 
   DerivePbkdfBitsTask(JSContext* aCx, const ObjectOrString& aAlgorithm,
                       CryptoKey& aKey, const ObjectOrString& aTargetAlgorithm)
-    : mSymKey(aKey.GetSymKey())
+    : mLength(0)
+    , mIterations(0)
+    , mSymKey(aKey.GetSymKey())
+    , mHashOidTag(SEC_OID_UNKNOWN)
   {
     size_t length;
     mEarlyRv = GetKeyLengthForAlgorithm(aCx, aTargetAlgorithm, length);
@@ -3675,14 +3657,7 @@ WebCryptoTask::WebCryptoTask()
 {
 }
 
-WebCryptoTask::~WebCryptoTask()
-{
-  if (mWorkerHolder) {
-    NS_ProxyRelease(
-      "WebCryptoTask::mWorkerHolder",
-      mOriginalEventTarget, mWorkerHolder.forget());
-  }
-}
+WebCryptoTask::~WebCryptoTask() = default;
 
 } // namespace dom
 } // namespace mozilla

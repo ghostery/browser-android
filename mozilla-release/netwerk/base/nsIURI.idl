@@ -182,11 +182,6 @@ interface nsIURI : nsISupports
     boolean schemeIs(in string scheme);
 
     /**
-     * Clones the current URI.
-     */
-    nsIURI clone();
-
-    /**
      * This method resolves a relative string into an absolute URI string,
      * using this URI as the base. 
      *
@@ -240,17 +235,6 @@ interface nsIURI : nsISupports
      *     http://foo.com/#aaa == http://foo.com/#bbb
      */
     boolean equalsExceptRef(in nsIURI other);
-
-    /**
-     * Clones the current URI, clearing the 'ref' attribute in the clone.
-     */
-    nsIURI cloneIgnoringRef();
-
-    /**
-     * Clones the current URI, replacing the 'ref' attribute in the clone with
-     * the ref supplied.
-     */
-    nsIURI cloneWithNewRef(in AUTF8String newRef);
 
     /**
      * returns a string for the current URI with the ref element cleared.

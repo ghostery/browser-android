@@ -184,6 +184,10 @@ class JSFunction : public js::NativeObject
     js::GCPtrAtom atom_;
 
   public:
+    static inline JS::Result<JSFunction*, JS::OOM&>
+    create(JSContext* cx, js::gc::AllocKind kind, js::gc::InitialHeap heap,
+           js::HandleShape shape, js::HandleObjectGroup group);
+
     /* Call objects must be created for each invocation of this function. */
     bool needsCallObject() const {
         MOZ_ASSERT(!isInterpretedLazy());
@@ -258,6 +262,14 @@ class JSFunction : public js::NativeObject
     }
     bool isLambda()                 const { return flags() & LAMBDA; }
     bool isInterpretedLazy()        const { return flags() & INTERPRETED_LAZY; }
+
+    // This method doesn't check the non-nullness of u.scripted.s.script_,
+    // because it's guaranteed to be non-null when this has INTERPRETED flag,
+    // for live JSFunctions.
+    //
+    // When this JSFunction instance is reached via GC iteration, the above
+    // doesn't hold, and hasUncompletedScript should also be checked.
+    // (see the comment above hasUncompletedScript for more details).
     bool hasScript()                const { return flags() & INTERPRETED; }
 
     bool infallibleIsDefaultClassConstructor(JSContext* cx) const;
@@ -560,13 +572,16 @@ class JSFunction : public js::NativeObject
     // The state of a JSFunction whose script errored out during bytecode
     // compilation. Such JSFunctions are only reachable via GC iteration and
     // not from script.
-    bool hasUncompiledScript() const {
+    // If u.scripted.s.script_ is non-null, the pointed JSScript is guaranteed
+    // to be complete (see the comment above JSScript::initFromFunctionBox
+    // callsite in JSScript::fullyInitFromEmitter).
+    bool hasUncompletedScript() const {
         MOZ_ASSERT(hasScript());
         return !u.scripted.s.script_;
     }
 
     JSScript* nonLazyScript() const {
-        MOZ_ASSERT(!hasUncompiledScript());
+        MOZ_ASSERT(!hasUncompletedScript());
         return u.scripted.s.script_;
     }
 
@@ -927,7 +942,7 @@ class FunctionExtended : public JSFunction
 };
 
 extern bool
-CanReuseScriptForClone(JSCompartment* compartment, HandleFunction fun, HandleObject newParent);
+CanReuseScriptForClone(JS::Realm* realm, HandleFunction fun, HandleObject newParent);
 
 extern JSFunction*
 CloneFunctionReuseScript(JSContext* cx, HandleFunction fun, HandleObject parent,
@@ -1004,7 +1019,7 @@ JSString* FunctionToString(JSContext* cx, HandleFunction fun, bool isToSource);
 template<XDRMode mode>
 XDRResult
 XDRInterpretedFunction(XDRState<mode>* xdr, HandleScope enclosingScope,
-                       HandleScriptSource sourceObject, MutableHandleFunction objp);
+                       HandleScriptSourceObject sourceObject, MutableHandleFunction objp);
 
 /*
  * Report an error that call.thisv is not compatible with the specified class,

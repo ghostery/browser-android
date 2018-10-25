@@ -9,10 +9,10 @@
 <!ENTITY newsSectionHdr.label         "新闻群组"> 
 <!ENTITY subscribeNewsLink.label      "管理新闻组订阅"> 
 
-<!ENTITY accountsSectionHdr.label     "帐户"> 
+<!ENTITY accountsSectionHdr.label     "账户"> 
 <!ENTITY subscribeImapFolders.label   "管理文件夹订阅"> 
-<!ENTITY settingsLink.label           "帐户设置"> 
-<!ENTITY newAcctLink.label            "新帐户"> 
+<!ENTITY settingsLink.label           "账户设置"> 
+<!ENTITY newAcctLink.label            "新账户"> 
 
 <!ENTITY advFeaturesSectionHdr.label  "高级功能"> 
 <!ENTITY searchMsgsLink.label         "查找"> 

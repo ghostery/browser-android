@@ -74,7 +74,7 @@ nsStyleSheetService::RegisterFromEnumerator(nsICategoryManager  *aManager,
     icStr->GetData(name);
 
     nsCString spec;
-    aManager->GetCategoryEntry(aCategory, name.get(), getter_Copies(spec));
+    aManager->GetCategoryEntry(nsDependentCString(aCategory), name, spec);
 
     nsCOMPtr<nsIURI> uri;
     NS_NewURI(getter_AddRefs(uri), spec);
@@ -246,7 +246,7 @@ nsStyleSheetService::SheetRegistered(nsIURI *sheetURI,
                 aSheetType == USER_SHEET ||
                 aSheetType == AUTHOR_SHEET);
   NS_ENSURE_ARG_POINTER(sheetURI);
-  NS_PRECONDITION(_retval, "Null out param");
+  MOZ_ASSERT(_retval, "Null out param");
 
   // Check to see if we have the sheet.
   *_retval = (FindSheetByURI(aSheetType, sheetURI) >= 0);
@@ -280,7 +280,7 @@ NS_IMETHODIMP
 nsStyleSheetService::PreloadSheet(nsIURI* aSheetURI, uint32_t aSheetType,
                                   nsIPreloadedStyleSheet** aSheet)
 {
-  NS_PRECONDITION(aSheet, "Null out param");
+  MOZ_ASSERT(aSheet, "Null out param");
   NS_ENSURE_ARG_POINTER(aSheetURI);
 
   css::SheetParsingMode parsingMode;
@@ -310,8 +310,7 @@ nsStyleSheetService::PreloadSheetAsync(nsIURI* aSheetURI, uint32_t aSheetType,
   nsresult rv = GetParsingMode(aSheetType, &parsingMode);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsCOMPtr<nsIGlobalObject> global =
-    xpc::NativeGlobal(JS::CurrentGlobalOrNull(aCx));
+  nsCOMPtr<nsIGlobalObject> global = xpc::CurrentNativeGlobal(aCx);
   NS_ENSURE_TRUE(global, NS_ERROR_UNEXPECTED);
 
   ErrorResult errv;

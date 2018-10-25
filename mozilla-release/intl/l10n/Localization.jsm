@@ -16,7 +16,7 @@
  */
 
 
-/* fluent-dom@0.2.0 */
+/* fluent-dom@cab517f (July 31, 2018) */
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 /* global console */
@@ -25,13 +25,25 @@ const { L10nRegistry } = ChromeUtils.import("resource://gre/modules/L10nRegistry
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
 const { AppConstants } = ChromeUtils.import("resource://gre/modules/AppConstants.jsm", {});
 
-/*
- * CachedAsyncIterable caches the elements yielded by an iterable.
- *
- * It can be used to iterate over an iterable many times without depleting the
- * iterable.
- */
-class CachedAsyncIterable {
+class CachedIterable extends Array {
+  /**
+   * Create a `CachedIterable` instance from an iterable or, if another
+   * instance of `CachedIterable` is passed, return it without any
+   * modifications.
+   *
+   * @param {Iterable} iterable
+   * @returns {CachedIterable}
+   */
+  static from(iterable) {
+    if (iterable instanceof this) {
+      return iterable;
+    }
+
+    return new this(iterable);
+  }
+}
+
+class CachedAsyncIterable extends CachedIterable {
   /**
    * Create an `CachedAsyncIterable` instance.
    *
@@ -39,6 +51,8 @@ class CachedAsyncIterable {
    * @returns {CachedAsyncIterable}
    */
   constructor(iterable) {
+    super();
+
     if (Symbol.asyncIterator in Object(iterable)) {
       this.iterator = iterable[Symbol.asyncIterator]();
     } else if (Symbol.iterator in Object(iterable)) {
@@ -46,34 +60,46 @@ class CachedAsyncIterable {
     } else {
       throw new TypeError("Argument must implement the iteration protocol.");
     }
-
-    this.seen = [];
   }
 
+  /**
+   * Synchronous iterator over the cached elements.
+   *
+   * Return a generator object implementing the iterator protocol over the
+   * cached elements of the original (async or sync) iterable.
+   */
   [Symbol.iterator]() {
-    const { seen, iterator } = this;
+    const cached = this;
     let cur = 0;
 
     return {
       next() {
-        if (seen.length <= cur) {
-          seen.push(iterator.next());
+        if (cached.length === cur) {
+          return {value: undefined, done: true};
         }
-        return seen[cur++];
+        return cached[cur++];
       }
     };
   }
 
+  /**
+   * Asynchronous iterator caching the yielded elements.
+   *
+   * Elements yielded by the original iterable will be cached and available
+   * synchronously. Returns an async generator object implementing the
+   * iterator protocol over the elements of the original (async or sync)
+   * iterable.
+   */
   [Symbol.asyncIterator]() {
-    const { seen, iterator } = this;
+    const cached = this;
     let cur = 0;
 
     return {
       async next() {
-        if (seen.length <= cur) {
-          seen.push(await iterator.next());
+        if (cached.length <= cur) {
+          cached.push(await cached.iterator.next());
         }
-        return seen[cur++];
+        return cached[cur++];
       }
     };
   }
@@ -85,13 +111,17 @@ class CachedAsyncIterable {
    * @param {number} count - number of elements to consume
    */
   async touchNext(count = 1) {
-    const { seen, iterator } = this;
     let idx = 0;
     while (idx++ < count) {
-      if (seen.length === 0 || seen[seen.length - 1].done === false) {
-        seen.push(await iterator.next());
+      const last = this[this.length - 1];
+      if (last && last.done) {
+        break;
       }
+      this.push(await this.iterator.next());
     }
+    // Return the last cached {value, done} object to allow the calling
+    // code to decide if it needs to call touchNext again.
+    return this[this.length - 1];
   }
 }
 
@@ -123,10 +153,23 @@ class Localization {
    *
    * @returns {Localization}
    */
-  constructor(resourceIds, generateMessages = defaultGenerateMessages) {
+  constructor(resourceIds = [], generateMessages = defaultGenerateMessages) {
     this.resourceIds = resourceIds;
     this.generateMessages = generateMessages;
-    this.ctxs = new CachedAsyncIterable(this.generateMessages(this.resourceIds));
+    this.ctxs = CachedAsyncIterable.from(
+      this.generateMessages(this.resourceIds));
+  }
+
+  addResourceIds(resourceIds) {
+    this.resourceIds.push(...resourceIds);
+    this.onChange();
+    return this.resourceIds.length;
+  }
+
+  removeResourceIds(resourceIds) {
+    this.resourceIds = this.resourceIds.filter(r => !resourceIds.includes(r));
+    this.onChange();
+    return this.resourceIds.length;
   }
 
   /**
@@ -136,7 +179,7 @@ class Localization {
    * DOMLocalization. In case of errors, fetch the next context in the
    * fallback chain.
    *
-   * @param   {Array<Array>}          keys    - Translation keys to format.
+   * @param   {Array<Object>}         keys    - Translation keys to format.
    * @param   {Function}              method  - Formatting function.
    * @returns {Promise<Array<string|Object>>}
    * @private
@@ -144,21 +187,19 @@ class Localization {
   async formatWithFallback(keys, method) {
     const translations = [];
 
-    for await (let ctx of this.ctxs) {
-      // This can operate on synchronous and asynchronous
-      // contexts coming from the iterator.
-      if (typeof ctx.then === "function") {
-        ctx = await ctx;
-      }
+    for await (const ctx of this.ctxs) {
       const missingIds = keysFromContext(method, ctx, keys, translations);
 
       if (missingIds.size === 0) {
         break;
       }
 
-      if (AppConstants.NIGHTLY_BUILD) {
+      if (AppConstants.NIGHTLY_BUILD || Cu.isInAutomation) {
         const locale = ctx.locales[0];
         const ids = Array.from(missingIds).join(", ");
+        if (Cu.isInAutomation) {
+          throw new Error(`Missing translations in ${locale}: ${ids}`);
+        }
         console.warn(`Missing translations in ${locale}: ${ids}`);
       }
     }
@@ -167,26 +208,26 @@ class Localization {
   }
 
   /**
-   * Format translations into {value, attrs} objects.
+   * Format translations into {value, attributes} objects.
    *
    * The fallback logic is the same as in `formatValues` but the argument type
-   * is stricter (an array of arrays) and it returns {value, attrs} objects
-   * which are suitable for the translation of DOM elements.
+   * is stricter (an array of arrays) and it returns {value, attributes}
+   * objects which are suitable for the translation of DOM elements.
    *
    *     docL10n.formatMessages([
-   *       ['hello', { who: 'Mary' }],
-   *       ['welcome', undefined]
+   *       {id: 'hello', args: { who: 'Mary' }},
+   *       {id: 'welcome'}
    *     ]).then(console.log);
    *
    *     // [
-   *     //   { value: 'Hello, Mary!', attrs: null },
-   *     //   { value: 'Welcome!', attrs: { title: 'Hello' } }
+   *     //   { value: 'Hello, Mary!', attributes: null },
+   *     //   { value: 'Welcome!', attributes: { title: 'Hello' } }
    *     // ]
    *
    * Returns a Promise resolving to an array of the translation strings.
    *
-   * @param   {Array<Array>} keys
-   * @returns {Promise<Array<{value: string, attrs: Object}>>}
+   * @param   {Array<Object>} keys
+   * @returns {Promise<Array<{value: string, attributes: Object}>>}
    * @private
    */
   formatMessages(keys) {
@@ -200,16 +241,16 @@ class Localization {
    * either be simple string identifiers or `[id, args]` arrays.
    *
    *     docL10n.formatValues([
-   *       ['hello', { who: 'Mary' }],
-   *       ['hello', { who: 'John' }],
-   *       ['welcome']
+   *       {id: 'hello', args: { who: 'Mary' }},
+   *       {id: 'hello', args: { who: 'John' }},
+   *       {id: 'welcome'}
    *     ]).then(console.log);
    *
    *     // ['Hello, Mary!', 'Hello, John!', 'Welcome!']
    *
    * Returns a Promise resolving to an array of the translation strings.
    *
-   * @param   {Array<Array>} keys
+   * @param   {Array<Object>} keys
    * @returns {Promise<Array<string>>}
    */
   formatValues(keys) {
@@ -239,7 +280,7 @@ class Localization {
    * @returns {Promise<string>}
    */
   async formatValue(id, args) {
-    const [val] = await this.formatValues([[id, args]]);
+    const [val] = await this.formatValues([{id, args}]);
     return val;
   }
 
@@ -248,6 +289,7 @@ class Localization {
    */
   registerObservers() {
     Services.obs.addObserver(this, "intl:app-locales-changed", true);
+    Services.prefs.addObserver("intl.l10n.pseudo", this, true);
   }
 
   /**
@@ -260,7 +302,13 @@ class Localization {
   observe(subject, topic, data) {
     switch (topic) {
       case "intl:app-locales-changed":
-        this.onLanguageChange();
+        this.onChange();
+        break;
+      case "nsPref:changed":
+        switch (data) {
+          case "intl.l10n.pseudo":
+            this.onChange();
+        }
         break;
       default:
         break;
@@ -271,8 +319,10 @@ class Localization {
    * This method should be called when there's a reason to believe
    * that language negotiation or available resources changed.
    */
-  onLanguageChange() {
-    this.ctxs = new CachedAsyncIterable(this.generateMessages(this.resourceIds));
+  onChange() {
+    this.ctxs = CachedAsyncIterable.from(
+      this.generateMessages(this.resourceIds));
+    this.ctxs.touchNext(2);
   }
 }
 
@@ -300,12 +350,11 @@ Localization.prototype.QueryInterface = ChromeUtils.generateQI([
  */
 function valueFromContext(ctx, errors, id, args) {
   const msg = ctx.getMessage(id);
-
   return ctx.format(msg, args, errors);
 }
 
 /**
- * Format all public values of a message into a { value, attrs } object.
+ * Format all public values of a message into a {value, attributes} object.
  *
  * This function is passed as a method to `keysFromContext` and resolve
  * a single L10n Entity using provided `MessageContext`.
@@ -314,7 +363,7 @@ function valueFromContext(ctx, errors, id, args) {
  * entity.
  *
  * If the function fails to retrieve the entity, the value is set to the ID of
- * an entity, and attrs to `null`. If formatting fails, it will return
+ * an entity, and attributes to `null`. If formatting fails, it will return
  * a partially resolved value and attributes.
  *
  * In both cases, an error is being added to the errors array.
@@ -374,7 +423,7 @@ function messageFromContext(ctx, errors, id, args) {
  * @param {Function}       method
  * @param {MessageContext} ctx
  * @param {Array<string>}  keys
- * @param {{Array<{value: string, attrs: Object}>}} translations
+ * @param {{Array<{value: string, attributes: Object}>}} translations
  *
  * @returns {Set<string>}
  * @private
@@ -383,17 +432,17 @@ function keysFromContext(method, ctx, keys, translations) {
   const messageErrors = [];
   const missingIds = new Set();
 
-  keys.forEach((key, i) => {
+  keys.forEach(({id, args}, i) => {
     if (translations[i] !== undefined) {
       return;
     }
 
-    if (ctx.hasMessage(key[0])) {
+    if (ctx.hasMessage(id)) {
       messageErrors.length = 0;
-      translations[i] = method(ctx, messageErrors, key[0], key[1]);
+      translations[i] = method(ctx, messageErrors, id, args);
       // XXX: Report resolver errors
     } else {
-      missingIds.add(key[0]);
+      missingIds.add(id);
     }
   });
 

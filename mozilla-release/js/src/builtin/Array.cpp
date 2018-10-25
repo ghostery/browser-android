@@ -517,7 +517,7 @@ DeleteArrayElement(JSContext* cx, HandleObject obj, uint64_t index, ObjectOpResu
 {
     if (obj->is<ArrayObject>() &&
         !obj->as<NativeObject>().isIndexed() &&
-        !obj->as<NativeObject>().denseElementsAreFrozen())
+        !obj->as<NativeObject>().denseElementsAreSealed())
     {
         ArrayObject* aobj = &obj->as<ArrayObject>();
         if (index <= UINT32_MAX) {
@@ -526,7 +526,7 @@ DeleteArrayElement(JSContext* cx, HandleObject obj, uint64_t index, ObjectOpResu
                 if (!aobj->maybeCopyElementsForWrite(cx))
                     return false;
                 if (idx+1 == aobj->getDenseInitializedLength()) {
-                    aobj->setDenseInitializedLength(idx);
+                    aobj->setDenseInitializedLengthMaybeNonExtensible(cx, idx);
                 } else {
                     aobj->markDenseElementsNotPacked(cx);
                     aobj->setDenseElement(idx, MagicValue(JS_ELEMENTS_HOLE));
@@ -566,7 +566,7 @@ DeletePropertiesOrThrow(JSContext* cx, HandleObject obj, uint64_t len, uint64_t 
 {
     if (obj->is<ArrayObject>() &&
         !obj->as<NativeObject>().isIndexed() &&
-        !obj->as<NativeObject>().denseElementsAreFrozen())
+        !obj->as<NativeObject>().denseElementsAreSealed())
     {
         if (len <= UINT32_MAX) {
             // Skip forward to the initialized elements of this array.
@@ -670,7 +670,7 @@ MaybeInIteration(HandleObject obj, JSContext* cx)
      * the iterated object itself.
      */
 
-    if (MOZ_LIKELY(!cx->compartment()->objectMaybeInIteration(obj)))
+    if (MOZ_LIKELY(!ObjectRealm::get(obj).objectMaybeInIteration(obj)))
         return false;
 
     ObjectGroup* group = JSObject::getGroup(cx, obj);
@@ -780,7 +780,9 @@ js::ArraySetLength(JSContext* cx, Handle<ArrayObject*> arr, HandleId id,
         // for..in iteration over the array. Keys deleted before being reached
         // during the iteration must not be visited, and suppressing them here
         // would be too costly.
-        if (!arr->isIndexed() && !MaybeInIteration(arr, cx)) {
+        // This optimization is also invalid when there are sealed
+        // (non-configurable) elements.
+        if (!arr->isIndexed() && !MaybeInIteration(arr, cx) && !arr->denseElementsAreSealed()) {
             if (!arr->maybeCopyElementsForWrite(cx))
                 return false;
 
@@ -788,9 +790,13 @@ js::ArraySetLength(JSContext* cx, Handle<ArrayObject*> arr, HandleId id,
             uint32_t oldInitializedLength = arr->getDenseInitializedLength();
             MOZ_ASSERT(oldCapacity >= oldInitializedLength);
             if (oldInitializedLength > newLen)
-                arr->setDenseInitializedLength(newLen);
-            if (oldCapacity > newLen)
-                arr->shrinkElements(cx, newLen);
+                arr->setDenseInitializedLengthMaybeNonExtensible(cx, newLen);
+            if (oldCapacity > newLen) {
+                if (arr->isExtensible())
+                    arr->shrinkElements(cx, newLen);
+                else
+                    MOZ_ASSERT(arr->getDenseInitializedLength() == arr->getDenseCapacity());
+            }
 
             // We've done the work of deleting any dense elements needing
             // deletion, and there are no sparse elements.  Thus we can skip
@@ -928,6 +934,9 @@ js::ArraySetLength(JSContext* cx, Handle<ArrayObject*> arr, HandleId id,
     ObjectElements* header = arr->getElementsHeader();
     header->initializedLength = Min(header->initializedLength, newLen);
 
+    if (!arr->isExtensible())
+        arr->shrinkCapacityToInitializedLength(cx);
+
     if (attrs & JSPROP_READONLY)
         arr->setNonWritableLength(cx);
 
@@ -935,16 +944,6 @@ js::ArraySetLength(JSContext* cx, Handle<ArrayObject*> arr, HandleId id,
         return result.fail(JSMSG_CANT_TRUNCATE_ARRAY);
 
     return result.succeed();
-}
-
-bool
-js::WouldDefinePastNonwritableLength(HandleNativeObject obj, uint32_t index)
-{
-    if (!obj->is<ArrayObject>())
-        return false;
-
-    ArrayObject* arr = &obj->as<ArrayObject>();
-    return !arr->lengthIsWritable() && index >= arr->length();
 }
 
 static bool
@@ -1013,30 +1012,30 @@ ObjectMayHaveExtraIndexedProperties(JSObject* obj)
 static bool
 AddLengthProperty(JSContext* cx, HandleArrayObject obj)
 {
-    /*
-     * Add the 'length' property for a newly created array,
-     * and update the elements to be an empty array owned by the object.
-     * The shared emptyObjectElements singleton cannot be used for slow arrays,
-     * as accesses to 'length' will use the elements header.
-     */
+    // Add the 'length' property for a newly created array. Shapes are shared
+    // across realms within a zone and because we update the initial shape with
+    // a Shape that contains the length-property (in NewArray), it's possible
+    // the length property has already been defined.
+
+    Shape* shape = obj->lastProperty();
+    if (!shape->isEmptyShape()) {
+        MOZ_ASSERT(JSID_IS_ATOM(shape->propidRaw(), cx->names().length));
+        MOZ_ASSERT(shape->previous()->isEmptyShape());
+        return true;
+    }
 
     RootedId lengthId(cx, NameToId(cx->names().length));
-    MOZ_ASSERT(!obj->lookup(cx, lengthId));
-
     return NativeObject::addAccessorProperty(cx, obj, lengthId,
                                              array_length_getter, array_length_setter,
-                                             JSPROP_PERMANENT | JSPROP_SHADOWABLE);
+                                             JSPROP_PERMANENT);
 }
 
 static bool
 IsArrayConstructor(const JSObject* obj)
 {
-    // This must only return true if v is *the* Array constructor for the
-    // current compartment; we rely on the fact that any other Array
-    // constructor would be represented as a wrapper.
-    return obj->is<JSFunction>() &&
-           obj->as<JSFunction>().isNative() &&
-           obj->as<JSFunction>().native() == ArrayConstructor;
+    // Note: this also returns true for cross-realm Array constructors in the
+    // same compartment.
+    return IsNativeFunction(obj, ArrayConstructor);
 }
 
 static bool
@@ -1046,23 +1045,23 @@ IsArrayConstructor(const Value& v)
 }
 
 bool
-js::IsWrappedArrayConstructor(JSContext* cx, const Value& v, bool* result)
+js::IsCrossRealmArrayConstructor(JSContext* cx, const Value& v, bool* result)
 {
     if (!v.isObject()) {
         *result = false;
         return true;
     }
-    if (v.toObject().is<WrapperObject>()) {
-        JSObject* obj = CheckedUnwrap(&v.toObject());
+
+    JSObject* obj = &v.toObject();
+    if (obj->is<WrapperObject>()) {
+        obj = CheckedUnwrap(obj);
         if (!obj) {
             ReportAccessDenied(cx);
             return false;
         }
-
-        *result = IsArrayConstructor(obj);
-    } else {
-        *result = false;
     }
+
+    *result = IsArrayConstructor(obj) && obj->as<JSFunction>().realm() != cx->realm();
     return true;
 }
 
@@ -1086,7 +1085,7 @@ IsArraySpecies(JSContext* cx, HandleObject origArray)
     if (!origArray->is<ArrayObject>())
         return true;
 
-    if (cx->compartment()->arraySpeciesLookup.tryOptimizeArray(cx, &origArray->as<ArrayObject>()))
+    if (cx->realm()->arraySpeciesLookup.tryOptimizeArray(cx, &origArray->as<ArrayObject>()))
         return true;
 
     Value ctor;
@@ -1095,6 +1094,11 @@ IsArraySpecies(JSContext* cx, HandleObject origArray)
 
     if (!IsArrayConstructor(ctor))
         return ctor.isUndefined();
+
+    // 9.4.2.3 Step 6.c. Use the current realm's constructor if |ctor| is a
+    // cross-realm Array constructor.
+    if (cx->realm() != ctor.toObject().as<JSFunction>().realm())
+        return true;
 
     jsid speciesId = SYMBOL_TO_JSID(cx->wellKnownSymbols().species);
     JSFunction* getter;
@@ -1269,6 +1273,12 @@ ArrayJoinDenseKernel(JSContext* cx, SeparatorOp sepOp, HandleNativeObject obj, u
              * Symbol stringifying is a TypeError, so into the slow path
              * with those as well.
              */
+            break;
+        } else if (IF_BIGINT(elem.isBigInt(), false)) {
+            // ToString(bigint) doesn't access bigint.toString or
+            // anything like that, so it can't mutate the array we're
+            // walking through, so it *could* be handled here. We don't
+            // do so yet for reasons of initial-implementation economy.
             break;
         } else {
             MOZ_ASSERT(elem.isMagic(JS_ELEMENTS_HOLE) || elem.isNullOrUndefined());
@@ -1528,7 +1538,7 @@ ArrayReverseDenseKernel(JSContext* cx, HandleNativeObject obj, uint32_t length)
     if (obj->getDenseInitializedLength() == 0)
         return DenseElementResult::Success;
 
-    if (obj->denseElementsAreFrozen())
+    if (!obj->isExtensible())
         return DenseElementResult::Incomplete;
 
     if (!IsPackedArray(obj)) {
@@ -2041,7 +2051,7 @@ FillWithUndefined(JSContext* cx, HandleObject obj, uint32_t start, uint32_t coun
             break;
 
         NativeObject* nobj = &obj->as<NativeObject>();
-        if (nobj->denseElementsAreFrozen())
+        if (!nobj->isExtensible())
             break;
 
         if (obj->is<ArrayObject>() &&
@@ -2379,6 +2389,7 @@ void
 js::ArrayShiftMoveElements(NativeObject* obj)
 {
     AutoUnsafeCallWithABI unsafe;
+    MOZ_ASSERT(obj->isExtensible());
     MOZ_ASSERT_IF(obj->is<ArrayObject>(), obj->as<ArrayObject>().lengthIsWritable());
 
     size_t initlen = obj->getDenseInitializedLength();
@@ -2391,6 +2402,8 @@ js::ArrayShiftMoveElements(NativeObject* obj)
 static inline void
 SetInitializedLength(JSContext* cx, NativeObject* obj, size_t initlen)
 {
+    MOZ_ASSERT(obj->isExtensible());
+
     size_t oldInitlen = obj->getDenseInitializedLength();
     obj->setDenseInitializedLength(initlen);
     if (initlen < oldInitlen)
@@ -2401,8 +2414,7 @@ static DenseElementResult
 MoveDenseElements(JSContext* cx, NativeObject* obj, uint32_t dstStart, uint32_t srcStart,
                   uint32_t length)
 {
-    if (obj->denseElementsAreFrozen())
-        return DenseElementResult::Incomplete;
+    MOZ_ASSERT(obj->isExtensible());
 
     if (!obj->maybeCopyElementsForWrite(cx))
         return DenseElementResult::Failure;
@@ -2418,6 +2430,9 @@ ArrayShiftDenseKernel(JSContext* cx, HandleObject obj, MutableHandleValue rval)
         return DenseElementResult::Incomplete;
 
     if (MaybeInIteration(obj, cx))
+        return DenseElementResult::Incomplete;
+
+    if (!obj->as<NativeObject>().isExtensible())
         return DenseElementResult::Incomplete;
 
     size_t initlen = obj->as<NativeObject>().getDenseInitializedLength();
@@ -2543,7 +2558,7 @@ js::array_unshift(JSContext* cx, unsigned argc, Value* vp)
             if (MaybeInIteration(obj, cx))
                 break;
             NativeObject* nobj = &obj->as<NativeObject>();
-            if (nobj->denseElementsAreFrozen())
+            if (!nobj->isExtensible())
                 break;
             if (nobj->is<ArrayObject>() && !nobj->as<ArrayObject>().lengthIsWritable())
                 break;
@@ -2651,8 +2666,9 @@ CanOptimizeForDenseStorage(HandleObject arr, uint64_t endIndex, JSContext* cx)
     if (!arr->as<ArrayObject>().lengthIsWritable())
         return false;
 
-    MOZ_ASSERT(!arr->as<ArrayObject>().denseElementsAreFrozen(),
-               "writable length implies elements are not frozen");
+    /* Also pick the slow path if the object is non-extensible. */
+    if (!arr->as<ArrayObject>().isExtensible())
+        return false;
 
     /* Also pick the slow path if the object is being iterated over. */
     if (MaybeInIteration(arr, cx))
@@ -2964,7 +2980,7 @@ array_splice_impl(JSContext* cx, unsigned argc, Value* vp, bool returnValueIsUse
             len <= UINT32_MAX)
         {
             HandleArrayObject arr = obj.as<ArrayObject>();
-            if (arr->lengthIsWritable()) {
+            if (arr->lengthIsWritable() && arr->isExtensible()) {
                 DenseElementResult result =
                     arr->ensureDenseElements(cx, uint32_t(len), itemCount - deleteCount);
                 if (result == DenseElementResult::Failure)
@@ -3543,10 +3559,9 @@ static const JSFunctionSpec array_methods[] = {
     /* ES7 additions */
     JS_SELF_HOSTED_FN("includes",    "ArrayIncludes",    2,0),
 
-#ifdef NIGHTLY_BUILD
+    /* Future additions */
     JS_SELF_HOSTED_FN("flatMap",     "ArrayFlatMap",     1,0),
-    JS_SELF_HOSTED_FN("flatten",     "ArrayFlatten",     0,0),
-#endif
+    JS_SELF_HOSTED_FN("flat",        "ArrayFlat",        0,0),
 
     JS_FS_END
 };
@@ -3692,7 +3707,8 @@ CreateArrayPrototype(JSContext* cx, JSProtoKey key)
      * arrays in JSON and script literals and allows setDenseArrayElement to
      * be used without updating the indexed type set for such default arrays.
      */
-    if (!JSObject::setNewGroupUnknown(cx, &ArrayObject::class_, arrayProto))
+    ObjectGroupRealm& realm = ObjectGroupRealm::getForNewObject(cx);
+    if (!JSObject::setNewGroupUnknown(cx, realm, &ArrayObject::class_, arrayProto))
         return nullptr;
 
     return arrayProto;
@@ -4177,16 +4193,8 @@ js::ArraySpeciesLookup::initialize(JSContext* cx)
 void
 js::ArraySpeciesLookup::reset()
 {
+    JS_POISON(this, 0xBB, sizeof(this), MemCheckKind::MakeUndefined);
     state_ = State::Uninitialized;
-    arrayProto_ = nullptr;
-    arrayConstructor_ = nullptr;
-    arrayConstructorShape_ = nullptr;
-#ifdef DEBUG
-    arraySpeciesShape_ = nullptr;
-    canonicalSpeciesFunc_ = nullptr;
-#endif
-    arrayProtoShape_ = nullptr;
-    arrayProtoConstructorSlot_ = -1;
 }
 
 bool

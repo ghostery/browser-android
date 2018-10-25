@@ -57,7 +57,7 @@
 <!ENTITY proxyResolveFailure.longDesc "<p>Przeglądarka została skonfigurowana tak, by używać serwera proxy, ale serwer proxy nie może być odnaleziony.</p><ul><li>Czy konfiguracja serwerów proxy w przeglądarce jest prawidłowa? Należy sprawdzić ustawienia i spróbować ponownie.</li><li>Czy komputer podłączony jest do działającej sieci?</li><li>Jeśli nadal występują problemy, należy skonsultować się z administratorem sieci lub dostawcą usług internetowych.</li></ul>">
 
 <!ENTITY redirectLoop.title "Pętla przekierowań">
-<!ENTITY redirectLoop.longDesc "<p>Przeglądarka przerwała próby pobrania żądanego elementu. Witryna przekierowuje żądanie w sposób, który uniemożliwia jego dokończenie.</p><ul><li>Czy ciasteczka zostały wyłączone lub zablokowane dla tej witryny?</li><li><em>UWAGA</em>: Jeśli włączenie obsługi ciasteczek dla tej witryny nie rozwiązuje problemu, najprawdopodobniej jest to problem w konfiguracji serwera, a nie oprogramowania na komputerze użytkownika.</li></ul>">
+<!ENTITY redirectLoop.longDesc "<p>Przeglądarka przerwała próby pobrania żądanego elementu. Witryna przekierowuje żądanie w sposób, który uniemożliwia jego dokończenie.</p><ul><li>Czy ciasteczka zostały wyłączone lub zablokowane dla tej witryny?</li><li><em>Uwaga</em>: jeśli włączenie obsługi ciasteczek dla tej witryny nie rozwiązuje problemu, najprawdopodobniej jest to problem w konfiguracji serwera, a nie oprogramowania na komputerze użytkownika.</li></ul>">
 
 <!ENTITY unknownSocketType.title "Nieoczekiwana odpowiedź serwera">
 <!ENTITY unknownSocketType.longDesc "<p>Witryna odpowiedziała w sposób nieoczekiwany i przeglądarka nie może kontynuować.</p>">

@@ -7,7 +7,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include <string.h> // strlen
+
+#include "jsapi.h" // sundry symbols not moved to more-specific headers yet
 #include "jsfriendapi.h"
+#include "jspubtd.h" // JS::AutoObjectVector
+
+#include "js/CompilationAndEvaluation.h" // JS::CompileFunction
+#include "js/CompileOptions.h" // JS::CompileOptions
+#include "js/RootingAPI.h" // JS::Rooted
+#include "js/TypeDecls.h" // JSFunction, JSObject
 #include "jsapi-tests/tests.h"
 
 BEGIN_TEST(test_cloneScript)
@@ -31,7 +40,7 @@ BEGIN_TEST(test_cloneScript)
 
     // compile for A
     {
-        JSAutoCompartment a(cx, A);
+        JSAutoRealm a(cx, A);
         JS::RootedFunction fun(cx);
         JS::CompileOptions options(cx);
         options.setFileAndLine(__FILE__, 1);
@@ -43,7 +52,7 @@ BEGIN_TEST(test_cloneScript)
 
     // clone into B
     {
-        JSAutoCompartment b(cx, B);
+        JSAutoRealm b(cx, B);
         CHECK(JS::CloneFunctionObject(cx, obj));
     }
 
@@ -112,7 +121,7 @@ BEGIN_TEST(test_cloneScriptWithPrincipals)
 
     // Compile in A
     {
-        JSAutoCompartment a(cx, A);
+        JSAutoRealm a(cx, A);
         JS::CompileOptions options(cx);
         options.setFileAndLine(__FILE__, 1);
         JS::RootedFunction fun(cx);
@@ -131,7 +140,7 @@ BEGIN_TEST(test_cloneScriptWithPrincipals)
 
     // Clone into B
     {
-        JSAutoCompartment b(cx, B);
+        JSAutoRealm b(cx, B);
         JS::RootedObject cloned(cx);
         CHECK(cloned = JS::CloneFunctionObject(cx, obj));
 

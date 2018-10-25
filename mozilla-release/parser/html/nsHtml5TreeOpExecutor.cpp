@@ -16,6 +16,7 @@
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/css/Loader.h"
 #include "nsContentUtils.h"
+#include "nsDocShell.h"
 #include "nsError.h"
 #include "nsHtml5AutoPauseUpdate.h"
 #include "nsHtml5Parser.h"
@@ -25,7 +26,6 @@
 #include "nsHtml5TreeOpExecutor.h"
 #include "nsIContentSecurityPolicy.h"
 #include "nsIContentViewer.h"
-#include "nsIDOMDocument.h"
 #include "nsIDocShell.h"
 #include "nsIDocShellTreeItem.h"
 #include "nsIHTMLDocument.h"
@@ -34,7 +34,6 @@
 #include "nsIScriptError.h"
 #include "nsIScriptGlobalObject.h"
 #include "nsIViewSourceChannel.h"
-#include "nsIWebShellServices.h"
 #include "nsNetUtil.h"
 #include "xpcpublic.h"
 
@@ -138,7 +137,7 @@ nsHtml5TreeOpExecutor::~nsHtml5TreeOpExecutor()
 NS_IMETHODIMP
 nsHtml5TreeOpExecutor::WillParse()
 {
-  NS_NOTREACHED("No one should call this");
+  MOZ_ASSERT_UNREACHABLE("No one should call this");
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -223,14 +222,14 @@ nsHtml5TreeOpExecutor::DidBuildModel(bool aTerminated)
 NS_IMETHODIMP
 nsHtml5TreeOpExecutor::WillInterrupt()
 {
-  NS_NOTREACHED("Don't call. For interface compat only.");
+  MOZ_ASSERT_UNREACHABLE("Don't call. For interface compat only.");
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
 nsHtml5TreeOpExecutor::WillResume()
 {
-  NS_NOTREACHED("Don't call. For interface compat only.");
+  MOZ_ASSERT_UNREACHABLE("Don't call. For interface compat only.");
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -756,7 +755,7 @@ nsHtml5TreeOpExecutor::RunScript(nsIContent* aScriptElement)
 void
 nsHtml5TreeOpExecutor::Start()
 {
-  NS_PRECONDITION(!mStarted, "Tried to start when already started.");
+  MOZ_ASSERT(!mStarted, "Tried to start when already started.");
   mStarted = true;
 }
 
@@ -771,18 +770,18 @@ nsHtml5TreeOpExecutor::NeedsCharsetSwitchTo(NotNull<const Encoding*> aEncoding,
     return;
   }
 
-  nsCOMPtr<nsIWebShellServices> wss = do_QueryInterface(mDocShell);
-  if (!wss) {
+  if (!mDocShell) {
     return;
   }
 
-  // ask the webshellservice to load the URL
-  if (NS_SUCCEEDED(wss->StopDocumentLoad())) {
+  nsDocShell* docShell = static_cast<nsDocShell*>(mDocShell.get());
+
+  if (NS_SUCCEEDED(docShell->CharsetChangeStopDocumentLoad())) {
     nsAutoCString charset;
     aEncoding->Name(charset);
-    wss->ReloadDocument(charset.get(), aSource);
+    docShell->CharsetChangeReloadDocument(charset.get(), aSource);
   }
-  // if the charset switch was accepted, wss has called Terminate() on the
+  // if the charset switch was accepted, mDocShell has called Terminate() on the
   // parser by now
 
   if (!mParser) {
@@ -863,7 +862,7 @@ nsHtml5TreeOpExecutor::MoveOpsFrom(nsTArray<nsHtml5TreeOperation>& aOpQueue)
 {
   MOZ_RELEASE_ASSERT(mFlushState == eNotFlushing,
                      "Ops added to mOpQueue during tree op execution.");
-  mOpQueue.AppendElements(Move(aOpQueue));
+  mOpQueue.AppendElements(std::move(aOpQueue));
 }
 
 void
@@ -1136,7 +1135,7 @@ nsHtml5TreeOpExecutor::SetSpeculationReferrerPolicy(
 void
 nsHtml5TreeOpExecutor::AddSpeculationCSP(const nsAString& aCSP)
 {
-  if (!CSPService::sCSPEnabled) {
+  if (!StaticPrefs::security_csp_enable()) {
     return;
   }
 
@@ -1144,8 +1143,7 @@ nsHtml5TreeOpExecutor::AddSpeculationCSP(const nsAString& aCSP)
 
   nsIPrincipal* principal = mDocument->NodePrincipal();
   nsCOMPtr<nsIContentSecurityPolicy> preloadCsp;
-  nsCOMPtr<nsIDOMDocument> domDoc = do_QueryInterface(mDocument);
-  nsresult rv = principal->EnsurePreloadCSP(domDoc, getter_AddRefs(preloadCsp));
+  nsresult rv = principal->EnsurePreloadCSP(mDocument, getter_AddRefs(preloadCsp));
   NS_ENSURE_SUCCESS_VOID(rv);
 
   // please note that meta CSPs and CSPs delivered through a header need
@@ -1155,15 +1153,6 @@ nsHtml5TreeOpExecutor::AddSpeculationCSP(const nsAString& aCSP)
                              false, // csp via meta tag can not be report only
                              true); // delivered through the meta tag
   NS_ENSURE_SUCCESS_VOID(rv);
-
-  // Record "speculated" referrer policy for preloads
-  bool hasReferrerPolicy = false;
-  uint32_t referrerPolicy = mozilla::net::RP_Unset;
-  rv = preloadCsp->GetReferrerPolicy(&referrerPolicy, &hasReferrerPolicy);
-  NS_ENSURE_SUCCESS_VOID(rv);
-  if (hasReferrerPolicy) {
-    SetSpeculationReferrerPolicy(static_cast<ReferrerPolicy>(referrerPolicy));
-  }
 
   mDocument->ApplySettingsFromCSP(true);
 }

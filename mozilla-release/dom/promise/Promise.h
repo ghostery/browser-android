@@ -9,6 +9,7 @@
 
 #include "mozilla/Attributes.h"
 #include "mozilla/ErrorResult.h"
+#include "mozilla/Move.h"
 #include "mozilla/TimeStamp.h"
 #include "mozilla/TypeTraits.h"
 #include "mozilla/dom/BindingDeclarations.h"
@@ -24,6 +25,7 @@
 class nsIGlobalObject;
 
 namespace mozilla {
+
 namespace dom {
 
 class AnyCallback;
@@ -45,7 +47,7 @@ class Promise : public nsISupports,
 
 public:
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_PROMISE_IID)
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
+  NS_DECL_CYCLE_COLLECTING_ISUPPORTS_FINAL
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(Promise)
   MOZ_DECLARE_WEAKREFERENCE_TYPENAME(Promise)
 
@@ -72,8 +74,8 @@ public:
   // ToJSValue overload in ToJSValue.h.
   // aArg is a const reference so we can pass rvalues like integer constants
   template <typename T>
-  void MaybeResolve(const T& aArg) {
-    MaybeSomething(aArg, &Promise::MaybeResolve);
+  void MaybeResolve(T&& aArg) {
+    MaybeSomething(std::forward<T>(aArg), &Promise::MaybeResolve);
   }
 
   void MaybeResolveWithUndefined();
@@ -141,6 +143,43 @@ public:
        JS::MutableHandle<JS::Value> aRetval,
        ErrorResult& aRv);
 
+  template <typename Callback, typename... Args>
+  using IsHandlerCallback =
+      IsSame<already_AddRefed<Promise>,
+             decltype(DeclVal<Callback>()(
+                (JSContext*)(nullptr),
+                DeclVal<JS::Handle<JS::Value>>(),
+                DeclVal<Args>()...))>;
+
+  template <typename Callback, typename... Args>
+  using ThenResult = typename EnableIf<
+    IsHandlerCallback<Callback, Args...>::value,
+    Result<RefPtr<Promise>, nsresult>>::Type;
+
+  // Similar to the JavaScript Then() function. Accepts a single lambda function
+  // argument, which it attaches as a native resolution handler, and returns a
+  // new promise which resolves with that handler's return value, or propagates
+  // any rejections from this promise.
+  //
+  // Any additional arguments passed after the callback function are stored and
+  // passed as additional arguments to the function when it is called. These
+  // values will participate in cycle collection for the promise handler, and
+  // therefore may safely form reference cycles with the promise chain.
+  //
+  // Any strong references required by the callback should be passed in this
+  // manner, rather than using lambda capture, lambda captures do not support
+  // cycle collection, and can easily lead to leaks.
+  //
+  // Does not currently support rejection handlers.
+  template <typename Callback, typename... Args>
+  ThenResult<Callback, Args...>
+  ThenWithCycleCollectedArgs(Callback&& aOnResolve, Args&&... aArgs);
+
+  Result<RefPtr<Promise>, nsresult>
+  ThenWithoutCycleCollection(
+    const std::function<already_AddRefed<Promise>(JSContext*,
+                                                  JS::HandleValue)>& aCallback);
+
   JSObject* PromiseObj() const
   {
     return mPromiseObj;
@@ -150,7 +189,7 @@ public:
 
   JSObject* GlobalJSObject() const;
 
-  JSCompartment* Compartment() const;
+  JS::Compartment* Compartment() const;
 
   // Create a dom::Promise from a given SpiderMonkey Promise object.
   // aPromiseObj MUST be in the compartment of aGlobal's global JS object.
@@ -182,14 +221,14 @@ protected:
 
 private:
   template <typename T>
-  void MaybeSomething(T& aArgument, MaybeFunc aFunc) {
+  void MaybeSomething(T&& aArgument, MaybeFunc aFunc) {
     MOZ_ASSERT(PromiseObj()); // It was preserved!
 
     AutoEntryScript aes(mGlobal, "Promise resolution or rejection");
     JSContext* cx = aes.cx();
 
     JS::Rooted<JS::Value> val(cx);
-    if (!ToJSValue(cx, aArgument, &val)) {
+    if (!ToJSValue(cx, std::forward<T>(aArgument), &val)) {
       HandleException(cx);
       return;
     }

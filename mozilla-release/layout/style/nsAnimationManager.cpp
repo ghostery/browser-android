@@ -15,13 +15,12 @@
 #include "mozilla/MemoryReporting.h"
 #include "mozilla/ServoStyleSet.h"
 #include "mozilla/StyleAnimationValue.h"
-#include "mozilla/dom/AnimationEffectReadOnly.h"
+#include "mozilla/dom/AnimationEffect.h"
 #include "mozilla/dom/DocumentTimeline.h"
-#include "mozilla/dom/KeyframeEffectReadOnly.h"
+#include "mozilla/dom/KeyframeEffect.h"
 
 #include "nsPresContext.h"
 #include "nsStyleChangeList.h"
-#include "nsContentUtils.h"
 #include "nsLayoutUtils.h"
 #include "nsIFrame.h"
 #include "nsIDocument.h"
@@ -35,9 +34,9 @@
 using namespace mozilla;
 using namespace mozilla::css;
 using mozilla::dom::Animation;
-using mozilla::dom::AnimationEffectReadOnly;
+using mozilla::dom::AnimationEffect;
 using mozilla::dom::AnimationPlayState;
-using mozilla::dom::KeyframeEffectReadOnly;
+using mozilla::dom::KeyframeEffect;
 using mozilla::dom::CSSAnimation;
 
 typedef mozilla::ComputedTiming::AnimationPhase AnimationPhase;
@@ -47,7 +46,7 @@ typedef mozilla::ComputedTiming::AnimationPhase AnimationPhase;
 JSObject*
 CSSAnimation::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return dom::CSSAnimationBinding::Wrap(aCx, this, aGivenProto);
+  return dom::CSSAnimation_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 mozilla::dom::Promise*
@@ -156,7 +155,10 @@ CSSAnimation::HasLowerCompositeOrderThan(const CSSAnimation& aOther) const
 
   // 1. Sort by document order
   if (!mOwningElement.Equals(aOther.mOwningElement)) {
-    return mOwningElement.LessThan(aOther.mOwningElement);
+    return mOwningElement.LessThan(
+      const_cast<CSSAnimation*>(this)->CachedChildIndexRef(),
+      aOther.mOwningElement,
+      const_cast<CSSAnimation*>(&aOther)->CachedChildIndexRef());
   }
 
   // 2. (Same element and pseudo): Sort by position in animation-name
@@ -193,7 +195,6 @@ CSSAnimation::QueueEvents(const StickyTimeDuration& aActiveTime)
     return;
   }
 
-  static constexpr StickyTimeDuration zeroDuration = StickyTimeDuration();
   uint64_t currentIteration = 0;
   ComputedTiming::AnimationPhase currentPhase;
   StickyTimeDuration intervalStartTime;
@@ -203,6 +204,9 @@ CSSAnimation::QueueEvents(const StickyTimeDuration& aActiveTime)
   if (!mEffect) {
     currentPhase = GetAnimationPhaseWithoutEffect
       <ComputedTiming::AnimationPhase>(*this);
+    if (currentPhase == mPreviousPhase) {
+      return;
+    }
   } else {
     ComputedTiming computedTiming = mEffect->GetComputedTiming();
     currentPhase = computedTiming.mPhase;
@@ -211,14 +215,8 @@ CSSAnimation::QueueEvents(const StickyTimeDuration& aActiveTime)
         currentIteration == mPreviousIteration) {
       return;
     }
-    intervalStartTime =
-      std::max(std::min(StickyTimeDuration(-mEffect->SpecifiedTiming().Delay()),
-                        computedTiming.mActiveDuration),
-               zeroDuration);
-    intervalEndTime =
-      std::max(std::min((EffectEnd() - mEffect->SpecifiedTiming().Delay()),
-                        computedTiming.mActiveDuration),
-               zeroDuration);
+    intervalStartTime = IntervalStartTime(computedTiming.mActiveDuration);
+    intervalEndTime = IntervalEndTime(computedTiming.mActiveDuration);
 
     uint64_t iterationBoundary = mPreviousIteration > currentIteration
                                  ? currentIteration + 1
@@ -236,7 +234,7 @@ CSSAnimation::QueueEvents(const StickyTimeDuration& aActiveTime)
 
   auto appendAnimationEvent = [&](EventMessage aMessage,
                                   const StickyTimeDuration& aElapsedTime,
-                                  const TimeStamp& aTimeStamp) {
+                                  const TimeStamp& aScheduledEventTimeStamp) {
     double elapsedTime = aElapsedTime.ToSeconds();
     if (aMessage == eAnimationCancel) {
       // 0 is an inappropriate value for this callsite. What we need to do is
@@ -250,7 +248,7 @@ CSSAnimation::QueueEvents(const StickyTimeDuration& aActiveTime)
                                             mOwningElement.Target(),
                                             aMessage,
                                             elapsedTime,
-                                            aTimeStamp,
+                                            aScheduledEventTimeStamp,
                                             this));
   };
 
@@ -258,8 +256,9 @@ CSSAnimation::QueueEvents(const StickyTimeDuration& aActiveTime)
   if ((mPreviousPhase != AnimationPhase::Idle &&
        mPreviousPhase != AnimationPhase::After) &&
       currentPhase == AnimationPhase::Idle) {
-    TimeStamp activeTimeStamp = ElapsedTimeToTimeStamp(aActiveTime);
-    appendAnimationEvent(eAnimationCancel, aActiveTime, activeTimeStamp);
+    appendAnimationEvent(eAnimationCancel,
+                         aActiveTime,
+                         GetTimelineCurrentTimeAsTimeStamp());
   }
 
   switch (mPreviousPhase) {
@@ -303,7 +302,7 @@ CSSAnimation::QueueEvents(const StickyTimeDuration& aActiveTime)
   mPreviousIteration = currentIteration;
 
   if (!events.IsEmpty()) {
-    presContext->AnimationEventDispatcher()->QueueEvents(Move(events));
+    presContext->AnimationEventDispatcher()->QueueEvents(std::move(events));
   }
 }
 
@@ -363,17 +362,16 @@ public:
                       const nsTimingFunction& aTimingFunction,
                       nsTArray<Keyframe>& aKeyframes)
   {
-    ServoStyleSet* styleSet = aPresContext->StyleSet();
-    MOZ_ASSERT(styleSet);
-    return styleSet->GetKeyframesForName(aElement,
-                                         aName,
-                                         aTimingFunction,
-                                         aKeyframes);
+    return aPresContext->StyleSet()->GetKeyframesForName(
+        aElement,
+        *mComputedStyle,
+        aName,
+        aTimingFunction,
+        aKeyframes);
   }
-  void SetKeyframes(KeyframeEffectReadOnly& aEffect,
-                    nsTArray<Keyframe>&& aKeyframes)
+  void SetKeyframes(KeyframeEffect& aEffect, nsTArray<Keyframe>&& aKeyframes)
   {
-    aEffect.SetKeyframes(Move(aKeyframes), mComputedStyle);
+    aEffect.SetKeyframes(std::move(aKeyframes), mComputedStyle);
   }
 
   // Currently all the animation building code in this file is based on
@@ -402,12 +400,12 @@ public:
   // post the required restyles.
   void NotifyNewOrRemovedAnimation(const Animation& aAnimation)
   {
-    dom::AnimationEffectReadOnly* effect = aAnimation.GetEffect();
+    dom::AnimationEffect* effect = aAnimation.GetEffect();
     if (!effect) {
       return;
     }
 
-    KeyframeEffectReadOnly* keyframeEffect = effect->AsKeyframeEffect();
+    KeyframeEffect* keyframeEffect = effect->AsKeyframeEffect();
     if (!keyframeEffect) {
       return;
     }
@@ -433,13 +431,13 @@ UpdateOldAnimationPropertiesWithNew(
   // Update the old from the new so we can keep the original object
   // identity (and any expando properties attached to it).
   if (aOld.GetEffect()) {
-    dom::AnimationEffectReadOnly* oldEffect = aOld.GetEffect();
+    dom::AnimationEffect* oldEffect = aOld.GetEffect();
     animationChanged = oldEffect->SpecifiedTiming() != aNewTiming;
     oldEffect->SetSpecifiedTiming(aNewTiming);
 
-    KeyframeEffectReadOnly* oldKeyframeEffect = oldEffect->AsKeyframeEffect();
+    KeyframeEffect* oldKeyframeEffect = oldEffect->AsKeyframeEffect();
     if (oldKeyframeEffect) {
-      aBuilder.SetKeyframes(*oldKeyframeEffect, Move(aNewKeyframes));
+      aBuilder.SetKeyframes(*oldKeyframeEffect, std::move(aNewKeyframes));
     }
   }
 
@@ -520,7 +518,7 @@ BuildAnimation(nsPresContext* aPresContext,
     // In order to honor what the spec said, we'd copy more data over.
     UpdateOldAnimationPropertiesWithNew(*oldAnim,
                                         timing,
-                                        Move(keyframes),
+                                        std::move(keyframes),
                                         isStylePaused,
                                         aBuilder);
     return oldAnim.forget();
@@ -530,11 +528,10 @@ BuildAnimation(nsPresContext* aPresContext,
   Maybe<OwningAnimationTarget> target;
   target.emplace(aTarget.mElement, aTarget.mPseudoType);
   KeyframeEffectParams effectOptions;
-  RefPtr<KeyframeEffectReadOnly> effect =
-    new KeyframeEffectReadOnly(aPresContext->Document(), target, timing,
-                               effectOptions);
+  RefPtr<KeyframeEffect> effect =
+    new KeyframeEffect(aPresContext->Document(), target, timing, effectOptions);
 
-  aBuilder.SetKeyframes(*effect, Move(keyframes));
+  aBuilder.SetKeyframes(*effect, std::move(keyframes));
 
   RefPtr<CSSAnimation> animation =
     new CSSAnimation(aPresContext->Document()->GetScopeObject(), animationName);
@@ -652,13 +649,13 @@ nsAnimationManager::DoUpdateAnimations(
 
   // Build the updated animations list, extracting matching animations from
   // the existing collection as we go.
-  OwningCSSAnimationPtrArray newAnimations;
-  newAnimations = BuildAnimations(mPresContext,
-                                  aTarget,
-                                  aStyleDisplay,
-                                  aBuilder,
-                                  collection,
-                                  mMaybeReferencedAnimations);
+  OwningCSSAnimationPtrArray newAnimations =
+    BuildAnimations(mPresContext,
+                    aTarget,
+                    aStyleDisplay,
+                    aBuilder,
+                    collection,
+                    mMaybeReferencedAnimations);
 
   if (newAnimations.IsEmpty()) {
     if (collection) {

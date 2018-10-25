@@ -400,7 +400,7 @@ nsPrintDialogWidgetGTK::ExportHeaderFooter(nsIPrintSettings *aNS)
 nsresult
 nsPrintDialogWidgetGTK::ImportSettings(nsIPrintSettings *aNSSettings)
 {
-  NS_PRECONDITION(aNSSettings, "aSettings must not be null");
+  MOZ_ASSERT(aNSSettings, "aSettings must not be null");
   NS_ENSURE_TRUE(aNSSettings, NS_ERROR_FAILURE);
 
   nsCOMPtr<nsPrintSettingsGTK> aNSSettingsGTK(do_QueryInterface(aNSSettings));
@@ -429,7 +429,7 @@ nsPrintDialogWidgetGTK::ImportSettings(nsIPrintSettings *aNSSettings)
 nsresult
 nsPrintDialogWidgetGTK::ExportSettings(nsIPrintSettings *aNSSettings)
 {
-  NS_PRECONDITION(aNSSettings, "aSettings must not be null");
+  MOZ_ASSERT(aNSSettings, "aSettings must not be null");
   NS_ENSURE_TRUE(aNSSettings, NS_ERROR_FAILURE);
 
   GtkPrintSettings* settings = gtk_print_unix_dialog_get_settings(GTK_PRINT_UNIX_DIALOG(dialog));
@@ -662,6 +662,7 @@ nsFlatpakPrintPortal::nsFlatpakPrintPortal(nsPrintSettingsGTK* aPrintSettings):
   mPrintAndPageSettings(aPrintSettings),
   mProxy(nullptr),
   mLoop(nullptr),
+  mResponseSignalId(0),
   mParentWindow(nullptr)
 {
 }
@@ -678,8 +679,8 @@ nsFlatpakPrintPortal::nsFlatpakPrintPortal(nsPrintSettingsGTK* aPrintSettings):
 nsresult
 nsFlatpakPrintPortal::PreparePrintRequest(GtkWindow* aWindow)
 {
-  NS_PRECONDITION(aWindow, "aWindow must not be null");
-  NS_PRECONDITION(mPrintAndPageSettings, "mPrintAndPageSettings must not be null");
+  MOZ_ASSERT(aWindow, "aWindow must not be null");
+  MOZ_ASSERT(mPrintAndPageSettings, "mPrintAndPageSettings must not be null");
 
   GError* error = nullptr;
   mProxy = g_dbus_proxy_new_for_bus_sync (G_BUS_TYPE_SESSION,
@@ -789,8 +790,10 @@ nsFlatpakPrintPortal::PreparePrint(GtkWindow* aWindow, const char* aWindowHandle
   if (strcmp (aWindowHandleStr, handle) != 0)
   {
     aWindowHandleStr = g_strdup (handle);
-    g_dbus_connection_signal_unsubscribe(
-        g_dbus_proxy_get_connection(G_DBUS_PROXY(mProxy)), mResponseSignalId);
+    if (mResponseSignalId) {
+      g_dbus_connection_signal_unsubscribe(
+          g_dbus_proxy_get_connection(G_DBUS_PROXY(mProxy)), mResponseSignalId);
+    }
   }
   mResponseSignalId =
     g_dbus_connection_signal_subscribe(
@@ -976,8 +979,13 @@ nsFlatpakPrintPortal::Observe(nsISupports *aObject, const char * aTopic,
 }
 
 nsFlatpakPrintPortal::~nsFlatpakPrintPortal() {
-  if (mProxy)
+  if (mProxy) {
+    if (mResponseSignalId) {
+      g_dbus_connection_signal_unsubscribe(
+          g_dbus_proxy_get_connection(G_DBUS_PROXY(mProxy)), mResponseSignalId);
+    }
     g_object_unref(mProxy);
+  }
   if (mLoop)
     g_main_loop_quit(mLoop);
 }
@@ -987,8 +995,8 @@ nsPrintDialogServiceGTK::Show(nsPIDOMWindowOuter *aParent,
                               nsIPrintSettings *aSettings,
                               nsIWebBrowserPrint *aWebBrowserPrint)
 {
-  NS_PRECONDITION(aParent, "aParent must not be null");
-  NS_PRECONDITION(aSettings, "aSettings must not be null");
+  MOZ_ASSERT(aParent, "aParent must not be null");
+  MOZ_ASSERT(aSettings, "aSettings must not be null");
 
   // Check for the flatpak portal first
   nsCOMPtr<nsIGIOService> giovfs =
@@ -1067,8 +1075,8 @@ NS_IMETHODIMP
 nsPrintDialogServiceGTK::ShowPageSetup(nsPIDOMWindowOuter *aParent,
                                        nsIPrintSettings *aNSSettings)
 {
-  NS_PRECONDITION(aParent, "aParent must not be null");
-  NS_PRECONDITION(aNSSettings, "aSettings must not be null");
+  MOZ_ASSERT(aParent, "aParent must not be null");
+  MOZ_ASSERT(aNSSettings, "aSettings must not be null");
   NS_ENSURE_TRUE(aNSSettings, NS_ERROR_FAILURE);
 
   nsCOMPtr<nsIWidget> widget = WidgetUtils::DOMWindowToWidget(aParent);

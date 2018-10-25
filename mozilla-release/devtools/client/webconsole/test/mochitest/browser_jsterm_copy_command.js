@@ -27,10 +27,19 @@ const TEST_URI = `data:text/html;charset=utf-8,
 </body>`;
 
 add_task(async function() {
-  let {jsterm} = await openNewTabAndConsole(TEST_URI);
+  // Run test with legacy JsTerm
+  await pushPref("devtools.webconsole.jsterm.codeMirror", false);
+  await performTests();
+  // And then run it with the CodeMirror-powered one.
+  await pushPref("devtools.webconsole.jsterm.codeMirror", true);
+  await performTests();
+});
+
+async function performTests() {
+  const {jsterm} = await openNewTabAndConsole(TEST_URI);
   const random = Math.random();
-  let string = "Text: " + random;
-  let obj = {a: 1, b: "foo", c: random};
+  const string = "Text: " + random;
+  const obj = {a: 1, b: "foo", c: random};
 
   await testCopy(jsterm, random, random.toString());
   await testCopy(jsterm, JSON.stringify(string), string);
@@ -42,7 +51,7 @@ add_task(async function() {
     }
   );
   await testCopy(jsterm, `$("#${id}")`, outerHTML);
-});
+}
 
 function testCopy(jsterm, stringToCopy, expectedResult) {
   return waitForClipboardPromise(() => {

@@ -121,6 +121,10 @@ typedef enum { SSLAppOpRead = 0,
 /* default number of entries in namedGroupPreferences */
 #define SSL_NAMED_GROUP_COUNT 31
 
+/* The maximum DH and RSA bit-length supported. */
+#define SSL_MAX_DH_KEY_BITS 8192
+#define SSL_MAX_RSA_KEY_BITS 8192
+
 /* Types and names of elliptic curves used in TLS */
 typedef enum {
     ec_type_explicitPrime = 1,      /* not supported */
@@ -226,12 +230,13 @@ typedef struct {
 #define MAX_DTLS_SRTP_CIPHER_SUITES 4
 
 /* MAX_SIGNATURE_SCHEMES allows for all the values we support. */
-#define MAX_SIGNATURE_SCHEMES 15
+#define MAX_SIGNATURE_SCHEMES 18
 
 typedef struct sslOptionsStr {
     /* If SSL_SetNextProtoNego has been called, then this contains the
      * list of supported protocols. */
     SECItem nextProtoNego;
+    PRUint16 recordSizeLimit;
 
     PRUint32 maxEarlyDataSize;
     unsigned int useSecurity : 1;
@@ -261,6 +266,8 @@ typedef struct sslOptionsStr {
     unsigned int enable0RttData : 1;
     unsigned int enableTls13CompatMode : 1;
     unsigned int enableDtlsShortHeader : 1;
+    unsigned int enableHelloDowngradeCheck : 1;
+    unsigned int enableV2CompatibleHello : 1;
 } sslOptions;
 
 typedef enum { sslHandshakingUndetermined = 0,
@@ -547,7 +554,7 @@ typedef SECStatus (*sslRestartTarget)(sslSocket *);
 typedef struct DTLSQueuedMessageStr {
     PRCList link;           /* The linked list link */
     ssl3CipherSpec *cwSpec; /* The cipher spec to use, null for none */
-    SSL3ContentType type;   /* The message type */
+    SSLContentType type;    /* The message type */
     unsigned char *data;    /* The data */
     PRUint16 len;           /* The data length */
 } DTLSQueuedMessage;
@@ -811,7 +818,7 @@ struct ssl3DHParamsStr {
 };
 
 typedef struct SSLWrappedSymWrappingKeyStr {
-    PRUint8 wrappedSymmetricWrappingkey[512];
+    PRUint8 wrappedSymmetricWrappingkey[SSL_MAX_RSA_KEY_BITS / 8];
     CK_MECHANISM_TYPE symWrapMechanism;
     /* unwrapped symmetric wrapping key uses this mechanism */
     CK_MECHANISM_TYPE asymWrapMechanism;
@@ -1210,7 +1217,7 @@ SECStatus ssl_HashHandshakeMessage(sslSocket *ss, SSLHandshakeType type,
 extern PRBool ssl3_WaitingForServerSecondRound(sslSocket *ss);
 
 extern PRInt32 ssl3_SendRecord(sslSocket *ss, ssl3CipherSpec *cwSpec,
-                               SSL3ContentType type,
+                               SSLContentType type,
                                const PRUint8 *pIn, PRInt32 nIn,
                                PRInt32 flags);
 
@@ -1382,7 +1389,7 @@ SECStatus ssl3_SendClientHello(sslSocket *ss, sslClientHelloType type);
  * input into the SSL3 machinery from the actualy network reading code
  */
 SECStatus ssl3_HandleRecord(sslSocket *ss, SSL3Ciphertext *cipher);
-SECStatus ssl3_HandleNonApplicationData(sslSocket *ss, SSL3ContentType rType,
+SECStatus ssl3_HandleNonApplicationData(sslSocket *ss, SSLContentType rType,
                                         DTLSEpoch epoch,
                                         sslSequenceNumber seqNum,
                                         sslBuffer *databuf);
@@ -1635,6 +1642,7 @@ SECStatus ssl3_FillInCachedSID(sslSocket *ss, sslSessionID *sid,
 const ssl3CipherSuiteDef *ssl_LookupCipherSuiteDef(ssl3CipherSuite suite);
 SECStatus ssl3_SelectServerCert(sslSocket *ss);
 SECStatus ssl_PickSignatureScheme(sslSocket *ss,
+                                  CERTCertificate *cert,
                                   SECKEYPublicKey *pubKey,
                                   SECKEYPrivateKey *privKey,
                                   const SSLSignatureScheme *peerSchemes,
@@ -1642,11 +1650,11 @@ SECStatus ssl_PickSignatureScheme(sslSocket *ss,
                                   PRBool requireSha1);
 SECOidTag ssl3_HashTypeToOID(SSLHashType hashType);
 SSLHashType ssl_SignatureSchemeToHashType(SSLSignatureScheme scheme);
-KeyType ssl_SignatureSchemeToKeyType(SSLSignatureScheme scheme);
+SSLAuthType ssl_SignatureSchemeToAuthType(SSLSignatureScheme scheme);
 
 SECStatus ssl3_SetupCipherSuite(sslSocket *ss, PRBool initHashes);
 SECStatus ssl_InsertRecordHeader(const sslSocket *ss, ssl3CipherSpec *cwSpec,
-                                 SSL3ContentType contentType, sslBuffer *wrBuf,
+                                 SSLContentType contentType, sslBuffer *wrBuf,
                                  PRBool *needsLength);
 
 /* Pull in DTLS functions */

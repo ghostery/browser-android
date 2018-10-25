@@ -13,17 +13,17 @@ add_task(async function setup() {
   bm = await PlacesUtils.bookmarks.insert({
     parentGuid: PlacesUtils.bookmarks.unfiledGuid,
     url: "http://example.com/",
-    title: "a bookmark"
+    title: "a bookmark",
   });
   fakeQuery = await PlacesUtils.bookmarks.insert({
     parentGuid: PlacesUtils.bookmarks.unfiledGuid,
     url: "place:terms=foo",
-    title: "a bookmark"
+    title: "a bookmark",
   });
   folderShortcut = await PlacesUtils.bookmarks.insert({
     parentGuid: PlacesUtils.bookmarks.unfiledGuid,
-    url: "place:folder=TOOLBAR",
-    title: "a bookmark"
+    url: `place:parent=${PlacesUtils.bookmarks.toolbarGuid}`,
+    title: "a bookmark",
   });
 
   checkBookmarkObject(bm);
@@ -58,7 +58,7 @@ add_task(async function test_bookmarks_excludeQueries() {
   // When excluding queries, we exclude actual queries, but not folder shortcuts.
   let expectedGuids = [bm.guid, folderShortcut.guid];
   let query = {}, options = {};
-  let queryString = `place:folder=${PlacesUtils.unfiledBookmarksFolderId}&excludeQueries=1`;
+  let queryString = `place:parent=${PlacesUtils.bookmarks.unfiledGuid}&excludeQueries=1`;
   PlacesUtils.history.queryStringToQuery(queryString, query, options);
 
   let root = PlacesUtils.history.executeQuery(query.value, options.value).root;

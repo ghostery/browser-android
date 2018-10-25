@@ -32,70 +32,35 @@ const ADDONS = {
     "install.rdf": {
       id: "addon1@tests.mozilla.org",
       version: "2.0",
-      bootstrap: true,
       name: "Test 1",
-      description: "Test Description",
-
-      targetApplications: [{
-        id: "xpcshell@tests.mozilla.org",
-        minVersion: "1",
-        maxVersion: "1"}],
     },
   },
   test_update8: {
     "install.rdf": {
       id: "addon8@tests.mozilla.org",
       version: "2.0",
-      bootstrap: true,
       name: "Test 8",
-      description: "Test Description",
-
-      targetApplications: [{
-        id: "xpcshell@tests.mozilla.org",
-        minVersion: "1",
-        maxVersion: "1"}],
     },
   },
   test_update12: {
     "install.rdf": {
       id: "addon12@tests.mozilla.org",
       version: "2.0",
-      bootstrap: true,
       name: "Test 12",
-      description: "Test Description",
-
-      targetApplications: [{
-        id: "xpcshell@tests.mozilla.org",
-        minVersion: "1",
-        maxVersion: "1"}],
     },
   },
   test_install2_1: {
     "install.rdf": {
       id: "addon2@tests.mozilla.org",
       version: "2.0",
-      bootstrap: true,
       name: "Real Test 2",
-      description: "Test Description",
-
-      targetApplications: [{
-        id: "xpcshell@tests.mozilla.org",
-        minVersion: "1",
-        maxVersion: "1"}],
     },
   },
   test_install2_2: {
     "install.rdf": {
       id: "addon2@tests.mozilla.org",
       version: "3.0",
-      bootstrap: true,
       name: "Real Test 3",
-      description: "Test Description",
-
-      targetApplications: [{
-        id: "xpcshell@tests.mozilla.org",
-        minVersion: "1",
-        maxVersion: "1"}],
     },
   },
 };
@@ -121,39 +86,28 @@ add_task(async function() {
   await promiseStartupManager();
   await promiseInstallXPI({
     id: "addon1@tests.mozilla.org",
-    version: "1.0",
-    bootstrap: true,
     updateURL: "http://example.com/data/" + updateFile,
-    targetApplications: [{
-      id: appId,
-      minVersion: "1",
-      maxVersion: "1"
-    }],
     name: "Test Addon 1",
   });
 
   await promiseInstallXPI({
     id: "addon2@tests.mozilla.org",
-    version: "1.0",
-    bootstrap: true,
     updateURL: "http://example.com/data/" + updateFile,
     targetApplications: [{
       id: appId,
       minVersion: "0",
-      maxVersion: "0"
+      maxVersion: "0",
     }],
     name: "Test Addon 2",
   });
 
   await promiseInstallXPI({
     id: "addon3@tests.mozilla.org",
-    version: "1.0",
-    bootstrap: true,
     updateURL: "http://example.com/data/" + updateFile,
     targetApplications: [{
       id: appId,
       minVersion: "5",
-      maxVersion: "5"
+      maxVersion: "5",
     }],
     name: "Test Addon 3",
   });
@@ -173,8 +127,8 @@ add_task(async function test_1() {
 
   prepare_test({
     "addon1@tests.mozilla.org": [
-      ["onPropertyChanged", ["applyBackgroundUpdates"]]
-    ]
+      ["onPropertyChanged", ["applyBackgroundUpdates"]],
+    ],
   });
   a1.applyBackgroundUpdates = AddonManager.AUTOUPDATE_DISABLE;
   check_test_completed();
@@ -236,7 +190,7 @@ add_task(async function test_1() {
       "addon1@tests.mozilla.org": [
         ["onInstalling", false],
         "onInstalled",
-      ]
+      ],
     }, [
       "onInstallStarted",
       "onInstallEnded",
@@ -270,7 +224,7 @@ add_task(async function test_1() {
   ok(Math.abs(difference) < MAX_TIME_DIFFERENCE);
 
   end_test();
-  a1.uninstall();
+  await a1.uninstall();
 });
 
 // Check that an update check finds compatibility updates and applies them
@@ -297,7 +251,7 @@ add_task(async function test_3() {
   ok(a2.isActive);
   ok(a2.isCompatible);
   ok(!a2.appDisabled);
-  a2.uninstall();
+  await a2.uninstall();
 });
 
 // Checks that we see no compatibility information when there is none.
@@ -342,7 +296,7 @@ add_task(async function test_5() {
   ok(!a3.isCompatible);
   ok(a3.appDisabled);
 
-  a3.uninstall();
+  await a3.uninstall();
   end_test();
 });
 
@@ -356,7 +310,7 @@ add_task(async function test_6() {
     targetApplications: [{
       id: appId,
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Test Addon 1",
   });
@@ -365,7 +319,7 @@ add_task(async function test_6() {
     prepare_test({}, [
       "onNewInstall",
       "onDownloadStarted",
-      "onDownloadEnded"
+      "onDownloadEnded",
     ], resolve);
 
     AddonManagerInternal.backgroundUpdateCheck();
@@ -379,7 +333,7 @@ add_task(async function test_6() {
       "addon1@tests.mozilla.org": [
         ["onInstalling", false],
         "onInstalled",
-      ]
+      ],
     }, [
       "onInstallStarted",
       "onInstallEnded",
@@ -392,7 +346,7 @@ add_task(async function test_6() {
   equal(a1.releaseNotesURI.spec, "http://example.com/updateInfo.xhtml");
 
   end_test();
-  a1.uninstall();
+  await a1.uninstall();
 });
 
 const PARAMS = "?" + [
@@ -420,7 +374,7 @@ const PARAM_ADDONS = {
       targetApplications: [{
         id: appId,
         minVersion: "1",
-        maxVersion: "2"
+        maxVersion: "2",
       }],
       name: "Test Addon 1",
     },
@@ -443,7 +397,7 @@ const PARAM_ADDONS = {
       targetApplications: [{
         id: "toolkit@mozilla.org",
         minVersion: "0",
-        maxVersion: "3"
+        maxVersion: "3",
       }],
       name: "Test Addon 2",
     },
@@ -470,11 +424,11 @@ const PARAM_ADDONS = {
       targetApplications: [{
         id: appId,
         minVersion: "0",
-        maxVersion: "0"
+        maxVersion: "0",
       }, {
         id: "toolkit@mozilla.org",
         minVersion: "0",
-        maxVersion: "3"
+        maxVersion: "3",
       }],
       name: "Test Addon 3",
     },
@@ -497,7 +451,7 @@ const PARAM_ADDONS = {
       targetApplications: [{
         id: appId,
         minVersion: "1",
-        maxVersion: "5"
+        maxVersion: "5",
       }],
       name: "Test Addon 4",
     },
@@ -520,7 +474,7 @@ const PARAM_ADDONS = {
       targetApplications: [{
         id: appId,
         minVersion: "1",
-        maxVersion: "1"
+        maxVersion: "1",
       }],
       name: "Test Addon 5",
     },
@@ -544,7 +498,7 @@ const PARAM_ADDONS = {
       targetApplications: [{
         id: appId,
         minVersion: "1",
-        maxVersion: "1"
+        maxVersion: "1",
       }],
       name: "Test Addon 6",
     },
@@ -567,7 +521,7 @@ const PARAM_ADDONS = {
       targetApplications: [{
         id: appId,
         minVersion: "1",
-        maxVersion: "2"
+        maxVersion: "2",
       }],
       name: "Test Addon 1",
     },
@@ -591,7 +545,7 @@ const PARAM_ADDONS = {
       targetApplications: [{
         id: appId,
         minVersion: "1",
-        maxVersion: "2"
+        maxVersion: "2",
       }],
       name: "Test Addon 1",
     },
@@ -624,7 +578,7 @@ add_task(async function test_8() {
 
     if (options.initialState) {
       let addon = await AddonManager.getAddonByID(id);
-      Object.assign(addon, options.initialState);
+      await setInitialState(addon, options.initialState);
     }
   }
 
@@ -677,7 +631,7 @@ add_task(async function test_8() {
   }
 
   for (let [, addon] of await getAddons(PARAM_IDS)) {
-    addon.uninstall();
+    await addon.uninstall();
   }
 
   await mockBlocklist.unregister();
@@ -694,7 +648,7 @@ add_task(async function test_9() {
     targetApplications: [{
       id: appId,
       minVersion: "0",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Test Addon 1",
   });
@@ -728,7 +682,7 @@ add_task(async function test_12() {
   ok(a4.isActive);
   ok(a4.isCompatible);
 
-  a4.uninstall();
+  await a4.uninstall();
 });
 
 // Tests that a compatibility update is passed to the listener when there is
@@ -745,7 +699,7 @@ add_task(async function test_13() {
     targetApplications: [{
       id: appId,
       minVersion: "0",
-      maxVersion: "0"
+      maxVersion: "0",
     }],
     name: "Test Addon 7",
   });
@@ -772,7 +726,7 @@ add_task(async function test_13() {
   ok(a7.isCompatible);
   ok(!a7.appDisabled);
 
-  a7.uninstall();
+  await a7.uninstall();
 });
 
 // Test that background update checks doesn't update an add-on that isn't
@@ -787,7 +741,7 @@ add_task(async function test_14() {
     targetApplications: [{
       id: appId,
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Test Addon 1",
   });
@@ -800,7 +754,7 @@ add_task(async function test_14() {
     targetApplications: [{
       id: appId,
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Test Addon 8",
   });
@@ -863,11 +817,11 @@ add_task(async function test_14() {
                                                 "addon8@tests.mozilla.org"]);
   notEqual(a1, null);
   equal(a1.version, "2.0");
-  a1.uninstall();
+  await a1.uninstall();
 
   notEqual(a8, null);
   equal(a8.version, "1.0");
-  a8.uninstall();
+  await a8.uninstall();
 });
 
 add_task(async function test_16() {
@@ -887,7 +841,7 @@ add_task(async function test_16() {
   notEqual(a2.syncGUID, null);
   equal(oldGUID, a2.syncGUID);
 
-  a2.uninstall();
+  await a2.uninstall();
 });
 
 // Test that the update check correctly observes the
@@ -901,7 +855,7 @@ add_task(async function test_17() {
     targetApplications: [{
       id: appId,
       minVersion: "0.1",
-      maxVersion: "0.2"
+      maxVersion: "0.2",
     }],
     name: "Test Addon 9",
   });
@@ -916,7 +870,7 @@ add_task(async function test_17() {
       },
       onDownloadFailed(aInstall) {
         resolve();
-      }
+      },
     };
     AddonManager.addInstallListener(listener);
 
@@ -932,7 +886,7 @@ add_task(async function test_17() {
   AddonManager.removeInstallListener(listener);
 
   let a9 = await AddonManager.getAddonByID("addon9@tests.mozilla.org");
-  a9.uninstall();
+  await a9.uninstall();
 });
 
 // Tests that compatibility updates are applied to addons when the updated
@@ -946,7 +900,7 @@ add_task(async function test_18() {
     targetApplications: [{
       id: appId,
       minVersion: "0.1",
-      maxVersion: "0.2"
+      maxVersion: "0.2",
     }],
     name: "Test Addon 10",
   });
@@ -958,7 +912,7 @@ add_task(async function test_18() {
   ok(result.compatibilityUpdate, "Should have seen a compatibility update");
   ok(!result.updateAvailable, "Should not have seen a version update");
 
-  a10.uninstall();
+  await a10.uninstall();
 });
 
 // Test that the update check correctly observes when an addon opts-in to
@@ -972,7 +926,7 @@ add_task(async function test_19() {
     targetApplications: [{
       id: appId,
       minVersion: "0.1",
-      maxVersion: "0.2"
+      maxVersion: "0.2",
     }],
     name: "Test Addon 11",
   });
@@ -984,7 +938,7 @@ add_task(async function test_19() {
   ok(!result.compatibilityUpdate, "Should not have seen a compatibility update");
   ok(!result.updateAvailable, "Should not have seen a version update");
 
-  a11.uninstall();
+  await a11.uninstall();
 });
 
 // Test that the update succeeds when the update.rdf URN contains a type prefix
@@ -998,7 +952,7 @@ add_task(async function test_20() {
     targetApplications: [{
       id: appId,
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Test Addon 12",
   });
@@ -1007,7 +961,7 @@ add_task(async function test_20() {
     prepare_test({}, [
       "onNewInstall",
       "onDownloadStarted",
-      "onDownloadEnded"
+      "onDownloadEnded",
     ], resolve);
 
     AddonManagerPrivate.backgroundUpdateCheck();
@@ -1021,7 +975,7 @@ add_task(async function test_20() {
       "addon12@tests.mozilla.org": [
         ["onInstalling", false],
         "onInstalled",
-      ]
+      ],
     }, [
       "onInstallStarted",
       "onInstallEnded",
@@ -1034,14 +988,14 @@ add_task(async function test_20() {
   equal(a12.type, "extension");
 
   end_test();
-  a12.uninstall();
+  await a12.uninstall();
 });
 
 add_task(async function cleanup() {
   let addons = await AddonManager.getAddonsByTypes(["extension"]);
 
   for (let addon of addons)
-    addon.uninstall();
+    await addon.uninstall();
 });
 
 // Test that background update checks work for lightweight themes
@@ -1057,7 +1011,7 @@ add_task(async function test_7() {
     footerURL: "http://example.com/data/footer.png",
     previewURL: "http://example.com/data/preview.png",
     iconURL: "http://example.com/data/icon.png",
-    updateURL: "http://example.com/data/lwtheme.js"
+    updateURL: "http://example.com/data/lwtheme.js",
   };
 
   // XXX The lightweight theme manager strips non-https updateURLs so hack it
@@ -1083,7 +1037,7 @@ add_task(async function test_7() {
       footerURL: "http://example.com/data/footer.png",
       previewURL: "http://example.com/data/preview.png",
       iconURL: "http://example.com/data/icon2.png",
-      updateURL: "http://example.com/data/lwtheme.js"
+      updateURL: "http://example.com/data/lwtheme.js",
     }));
   });
 
@@ -1105,10 +1059,10 @@ add_task(async function test_7() {
     prepare_test({
       "1@personas.mozilla.org": [
         ["onInstalling", false],
-        "onInstalled"
-      ]
+        "onInstalled",
+      ],
     }, [
-      "onExternalInstall"
+      "onExternalInstall",
     ], resolve);
 
     AddonManagerInternal.backgroundUpdateCheck();
@@ -1151,7 +1105,7 @@ add_task(async function() {
       footerURL: "http://example.com/data/footer.png?v=3",
       previewURL: "http://example.com/data/preview.png?v=3",
       iconURL: "http://example.com/data/icon2.png?v=3",
-      updateURL: "https://example.com/data/lwtheme.js?v=3"
+      updateURL: "https://example.com/data/lwtheme.js?v=3",
     }));
   });
 
@@ -1167,10 +1121,10 @@ add_task(async function() {
     prepare_test({
       "1@personas.mozilla.org": [
         ["onInstalling", false],
-        "onInstalled"
-      ]
+        "onInstalled",
+      ],
     }, [
-      "onExternalInstall"
+      "onExternalInstall",
     ], resolve);
 
     AddonManagerInternal.backgroundUpdateCheck();
@@ -1212,7 +1166,7 @@ add_task(async function run_test_locked_install() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "0.1",
-      maxVersion: "0.2"
+      maxVersion: "0.2",
     }],
     name: "Test Addon 13",
   }, lockedDir);

@@ -37,15 +37,6 @@ This is likely the same like id.heading in crashes.dtd. -->
 <!ENTITY aboutSupport.featureVersion "Version">
 <!ENTITY aboutSupport.featureId "ID">
 
-<!ENTITY aboutSupport.experimentsTitle "Fonctionnalités expérimentales">
-<!ENTITY aboutSupport.experimentName "Nom">
-<!ENTITY aboutSupport.experimentId "ID">
-<!ENTITY aboutSupport.experimentDescription "Description">
-<!ENTITY aboutSupport.experimentActive "Active">
-<!ENTITY aboutSupport.experimentEndDate "Fin de l’expérimentation">
-<!ENTITY aboutSupport.experimentHomepage "Page d’accueil">
-<!ENTITY aboutSupport.experimentBranch "Branche">
-
 <!ENTITY aboutSupport.appBasicsTitle "Paramètres de base de l’application">
 <!ENTITY aboutSupport.appBasicsName "Nom">
 <!ENTITY aboutSupport.appBasicsVersion "Version">
@@ -71,7 +62,7 @@ Windows/Mac use the term "Folder" instead of "Directory" -->
 <!ENTITY aboutSupport.appBasicsPerformance "Performances">
 
 <!-- LOCALIZATION NOTE the term "Service Workers" should not be translated. -->
-<!ENTITY aboutSupport.appBasicsServiceWorkers "Service workers enregistrés">
+<!ENTITY aboutSupport.appBasicsServiceWorkers "Service workers inscrits">
 
 <!ENTITY aboutSupport.appBasicsProfiles "Profils">
 

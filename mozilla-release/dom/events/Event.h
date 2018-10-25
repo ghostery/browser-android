@@ -148,8 +148,18 @@ public:
   }
 
   void InitEvent(const nsAString& aEventTypeArg,
-                 bool aCanBubbleArg,
-                 bool aCancelableArg);
+                 bool aCanBubble,
+                 bool aCancelable)
+  {
+    InitEvent(aEventTypeArg,
+              aCanBubble ? CanBubble::eYes : CanBubble::eNo,
+              aCancelable ? Cancelable::eYes : Cancelable::eNo);
+  }
+
+  void InitEvent(const nsAString& aEventTypeArg,
+                 mozilla::CanBubble,
+                 mozilla::Cancelable);
+
   void SetTarget(EventTarget* aTarget);
   virtual void DuplicatePrivateData();
   bool IsDispatchStopped();
@@ -201,7 +211,6 @@ public:
   void GetType(nsAString& aType) const;
 
   EventTarget* GetTarget() const;
-  static bool IsSrcElementEnabled(JSContext* /* unused */, JSObject* /* unused */);
   EventTarget* GetCurrentTarget() const;
 
   void ComposedPath(nsTArray<RefPtr<EventTarget>>& aPath);
@@ -272,6 +281,10 @@ public:
     return mEvent->mFlags.mMultipleActionsPrevented;
   }
 
+  bool ReturnValue(CallerType aCallerType) const;
+
+  void SetReturnValue(bool aReturnValue, CallerType aCallerType);
+
   bool IsTrusted() const
   {
     return mEvent->IsTrusted();
@@ -280,6 +293,14 @@ public:
   bool IsSynthesized() const
   {
     return mEvent->mFlags.mIsSynthesizedForTests;
+  }
+
+  bool IsSafeToBeDispatchedAsynchronously() const
+  {
+    // If mEvent is not created by dom::Event nor its subclasses, its lifetime
+    // is not guaranteed.  So, only when mEventIsInternal is true, it's safe
+    // to be dispatched asynchronously.
+    return mEventIsInternal;
   }
 
   double TimeStamp();

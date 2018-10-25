@@ -18,7 +18,7 @@
 #include "mozilla/Services.h"           // for GetObserverService
 #include "mozilla/mozalloc.h"           // for operator new
 #include "nsCRT.h"                      // for nsCRT
-#include "nsDebug.h"                    // for NS_NOTREACHED, NS_ASSERTION, etc
+#include "nsDebug.h"                    // for NS_ASSERTION, etc
 #include "nsFont.h"                     // for nsFont
 #include "nsFontMetrics.h"              // for nsFontMetrics
 #include "nsAtom.h"                    // for nsAtom, NS_Atomize
@@ -47,7 +47,7 @@ using mozilla::widget::ScreenManager;
 class nsFontCache final : public nsIObserver
 {
 public:
-    nsFontCache() {}
+    nsFontCache(): mContext(nullptr) {}
 
     NS_DECL_ISUPPORTS
     NS_DECL_NSIOBSERVER
@@ -204,6 +204,7 @@ nsDeviceContext::nsDeviceContext()
       mAppUnitsPerDevPixel(-1), mAppUnitsPerDevPixelAtUnitFullZoom(-1),
       mAppUnitsPerPhysicalInch(-1),
       mFullZoom(1.0f), mPrintingScale(1.0f),
+      mPrintingTranslate(gfxPoint(0, 0)),
       mIsCurrentlyPrintingDoc(false)
 #ifdef DEBUG
     , mIsInitialized(false)
@@ -270,12 +271,13 @@ nsDeviceContext::IsPrinterContext()
 void
 nsDeviceContext::SetDPI(double* aScale)
 {
-    float dpi = -1.0f;
+    float dpi;
 
     // Use the printing DC to determine DPI values, if we have one.
     if (mDeviceContextSpec) {
         dpi = mDeviceContextSpec->GetDPI();
         mPrintingScale = mDeviceContextSpec->GetPrintingScale();
+        mPrintingTranslate = mDeviceContextSpec->GetPrintingTranslate();
         mAppUnitsPerDevPixelAtUnitFullZoom =
             NS_lround((AppUnitsPerCSSPixel() * 96) / dpi);
     } else {
@@ -414,6 +416,7 @@ nsDeviceContext::CreateRenderingContextCommon(bool aWantReferenceContext)
     MOZ_ASSERT(pContext); // already checked draw target above
 
     gfxMatrix transform;
+    transform.PreTranslate(mPrintingTranslate);
     if (mPrintTarget->RotateNeededForLandscape()) {
       // Rotate page 90 degrees to draw landscape page on portrait paper
       IntSize size = mPrintTarget->GetSize();
@@ -543,11 +546,9 @@ nsDeviceContext::EndDocument(void)
     MOZ_ASSERT(mIsCurrentlyPrintingDoc,
                "Mismatched BeginDocument/EndDocument calls");
 
-    nsresult rv = NS_OK;
-
     mIsCurrentlyPrintingDoc = false;
 
-    rv = mPrintTarget->EndPrinting();
+    nsresult rv = mPrintTarget->EndPrinting();
     if (NS_SUCCEEDED(rv)) {
         mPrintTarget->Finish();
     }
@@ -699,7 +700,7 @@ bool
 nsDeviceContext::SetFullZoom(float aScale)
 {
     if (aScale <= 0) {
-        NS_NOTREACHED("Invalid full zoom value");
+        MOZ_ASSERT_UNREACHABLE("Invalid full zoom value");
         return false;
     }
     int32_t oldAppUnitsPerDevPixel = mAppUnitsPerDevPixel;
@@ -743,7 +744,7 @@ void
 nsDeviceContext::RegisterPageDoneCallback(PrintTarget::PageDoneCallback&& aCallback)
 {
   MOZ_ASSERT(mPrintTarget && aCallback && !IsSyncPagePrinting());
-  mPrintTarget->RegisterPageDoneCallback(Move(aCallback));
+  mPrintTarget->RegisterPageDoneCallback(std::move(aCallback));
 }
 void
 nsDeviceContext::UnregisterPageDoneCallback()

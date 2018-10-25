@@ -3,32 +3,32 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY accountSetupTitle.label    "&syncBrand.fullName.label; 初始设置">
+
 <!-- First page of the wizard -->
 
-
-<!ENTITY setup.pickSetupType.description "欢迎，如果您以前从未使用过 &syncBrand.fullName.label;，您将需要创建一个新帐户。">
-<!ENTITY button.createNewAccount.label "创建新帐户">
-<!ENTITY setup.haveAccount.label "我已经有一个 &syncBrand.fullName.label; 帐户。">
+<!ENTITY setup.pickSetupType.description "欢迎，如果您以前从未使用过 &syncBrand.fullName.label;，您将需要创建一个新账户。">
+<!ENTITY button.createNewAccount.label "创建新账户">
+<!ENTITY setup.haveAccount.label "我已经有一个 &syncBrand.fullName.label; 账户。">
 <!ENTITY button.connect.label "连接">
 
 <!ENTITY setup.choicePage.title.label     "您以前是否使用过 &syncBrand.fullName.label;？">
 <!ENTITY setup.choicePage.new.label       "我以前从未使用过 &syncBrand.shortName.label;">
 <!ENTITY setup.choicePage.existing.label  "我已经在其他计算机上使用过 &syncBrand.shortName.label;">
-<!-- New Account AND Existing Account -->
 
+<!-- New Account AND Existing Account -->
 <!ENTITY server.label               "服务器">
 <!ENTITY server.accesskey           "S">
 <!ENTITY serverType.main.label      "&syncBrand.fullName.label; 服务器">
 <!ENTITY serverType.custom2.label   "使用自定义服务器…">
-<!ENTITY signIn.account2.label      "帐户">
+<!ENTITY signIn.account2.label      "账户">
 <!ENTITY signIn.account2.accesskey  "A">
 <!ENTITY signIn.password.label      "密码">
 <!ENTITY signIn.password.accesskey  "P">
 <!ENTITY signIn.recoveryKey.label     "恢复密钥">
 <!ENTITY signIn.recoveryKey.accesskey "K">
-<!-- New Account Page 1: Basic Account Info -->
 
-<!ENTITY setup.newAccountDetailsPage.title.label "帐户资料">
+<!-- New Account Page 1: Basic Account Info -->
+<!ENTITY setup.newAccountDetailsPage.title.label "账户资料">
 <!ENTITY setup.confirmPassword.label             "确认密码">
 <!ENTITY setup.confirmPassword.accesskey         "C">
 <!ENTITY setup.emailAddress.label                "电子邮件地址">
@@ -42,8 +42,8 @@
 <!ENTITY setup.ppLink.label         "隐私权政策">
 <!ENTITY setup.tosAgree3.label      "">
 <!ENTITY setup.tosAgree2.accesskey  "">
-<!-- New Account Page 2: Recovery Key -->
 
+<!-- New Account Page 2: Recovery Key -->
 <!ENTITY setup.newRecoveryKeyPage.title.label "&brandShortName; 致力于保护您的隐私">
 <!ENTITY setup.newRecoveryKeyPage.description.label "为确保您的隐私，所有数据在上传之前都已经过加密。对数据解密的恢复密钥未上传。">
 <!ENTITY recoveryKeyEntry.label        "您的恢复密钥">
@@ -55,11 +55,11 @@
 <!ENTITY button.syncKeyBackup.print.accesskey "P">
 <!ENTITY button.syncKeyBackup.save.label      "保存…">
 <!ENTITY button.syncKeyBackup.save.accesskey  "S">
+
 <!-- New Account Page 3: Captcha -->
-
 <!ENTITY setup.captchaPage2.title.label     "请确认您不是机器人">
-<!-- Existing Account Page 1: Add Device (incl. Add a Device dialog strings) -->
 
+<!-- Existing Account Page 1: Add Device (incl. Add a Device dialog strings) -->
 <!ENTITY addDevice.title.label              "添加设备">
 <!ENTITY addDevice.showMeHow.label          "告诉我该怎么办。">
 <!ENTITY addDevice.dontHaveDevice.label     "设备不在我身边">
@@ -71,15 +71,15 @@
 <!ENTITY addDevice.dialog.successful.label  "已成功添加该设备。初次的数据同步可能会长达数分钟，且该工作会在后台自动完成。">
 <!ENTITY addDevice.dialog.recoveryKey.label "要激活您的设备，您需要输入您的恢复密钥。请打印或者保存此密钥并随身携带。">
 <!ENTITY addDevice.dialog.connected.label   "设备已连接">
-<!-- Existing Account Page 2: Manual Login -->
 
+<!-- Existing Account Page 2: Manual Login -->
 <!ENTITY setup.signInPage.title.label "登录">
-<!ENTITY existingRecoveryKey.description "您可以到您其他设备的 &syncBrand.shortName.label; 选项页面然后选择 &quot;管理帐户&quot; 下的 &quot;我的恢复密钥 &quot; 来获取一个拷贝。">
+<!ENTITY existingRecoveryKey.description "您可以到您其他设备的 &syncBrand.shortName.label; 选项页面然后选择 &quot;管理账户&quot; 下的 &quot;我的恢复密钥 &quot; 来获取一个拷贝。">
 <!ENTITY verifying.label              "正在校验…">
 <!ENTITY resetPassword.label          "重置密码">
 <!ENTITY resetSyncKey.label           "我丢失了其它设备。">
-<!-- Sync Options -->
 
+<!-- Sync Options -->
 <!ENTITY setup.optionsPage.title      "同步选项">
 <!ENTITY syncComputerName.label       "计算机名：">
 <!ENTITY syncComputerName.accesskey   "C">
@@ -102,15 +102,15 @@
 <!ENTITY choice2.merge.recommended.label "（推荐）">
 <!ENTITY choice2.client.main.label     "用我的 &syncBrand.shortName.label; 数据替换此计算机上的所有数据">
 <!ENTITY choice2.server.main.label     "用此计算机的数据替换所有其他设备">
-<!-- Confirm Merge Options -->
 
+<!-- Confirm Merge Options -->
 <!ENTITY setup.optionsConfirmPage.title "确认">
 <!ENTITY confirm.merge.label    "您已经选择将这台电脑上的数据和其他运行 &syncBrand.fullName.label; 的设备上的数据合并。">
 <!ENTITY confirm.client2.label         "警告：这台电脑中以下 &brandShortName; 数据将被删除：">
 <!ENTITY confirm.client.moreinfo.label "&brandShortName; 将会把您的 &syncBrand.fullName.label; 数据复制到这台计算机上。">
 <!ENTITY confirm.server2.label         "警告：以下设备的数据将被您本地的数据覆盖：">
-<!-- New & Existing Account: Setup Complete -->
 
+<!-- New & Existing Account: Setup Complete -->
 <!ENTITY setup.successPage.title "初始设置完成">
 <!ENTITY changeOptions.label "您可以选择下面的同步选项更改此首选项。">
 <!ENTITY continueUsing.label "您现在可以继续使用 &brandShortName;。">

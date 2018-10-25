@@ -23,7 +23,7 @@
 #include "nsIFrameInlines.h"
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/Likely.h"
-#include "nsISelection.h"
+#include "mozilla/dom/Selection.h"
 #include "TextDrawTarget.h"
 
 using mozilla::layout::TextDrawTarget;
@@ -74,11 +74,10 @@ GetSelfOrNearestBlock(nsIFrame* aFrame)
 static bool
 IsAtomicElement(nsIFrame* aFrame, LayoutFrameType aFrameType)
 {
-  NS_PRECONDITION(!nsLayoutUtils::GetAsBlock(aFrame) ||
-                  !aFrame->IsBlockOutside(),
-                  "unexpected block frame");
-  NS_PRECONDITION(aFrameType != LayoutFrameType::Placeholder,
-                  "unexpected placeholder frame");
+  MOZ_ASSERT(!nsLayoutUtils::GetAsBlock(aFrame) || !aFrame->IsBlockOutside(),
+             "unexpected block frame");
+  MOZ_ASSERT(aFrameType != LayoutFrameType::Placeholder,
+             "unexpected placeholder frame");
   return !aFrame->IsFrameOfType(nsIFrame::eLineParticipant);
 }
 
@@ -98,8 +97,8 @@ IsFullyClipped(nsTextFrame* aFrame, nscoord aLeft, nscoord aRight,
 static bool
 IsInlineAxisOverflowVisible(nsIFrame* aFrame)
 {
-  NS_PRECONDITION(nsLayoutUtils::GetAsBlock(aFrame) != nullptr,
-                  "expected a block frame");
+  MOZ_ASSERT(nsLayoutUtils::GetAsBlock(aFrame) != nullptr,
+             "expected a block frame");
 
   nsIFrame* f = aFrame;
   while (f && f->Style()->IsAnonBox() && !f->IsScrollFrame()) {
@@ -247,7 +246,7 @@ nsDisplayTextOverflowMarker::Paint(nsDisplayListBuilder* aBuilder,
     GetColor(mFrame, &nsStyleText::mWebkitTextFillColor);
 
   // Paint the text-shadows for the overflow marker
-  nsLayoutUtils::PaintTextShadow(mFrame, aCtx, mRect, mVisibleRect,
+  nsLayoutUtils::PaintTextShadow(mFrame, aCtx, mRect, GetPaintRect(),
                                  foregroundColor, PaintTextShadowCallback,
                                  (void*)this);
   aCtx->SetColor(gfx::Color::FromABGR(foregroundColor));
@@ -305,7 +304,7 @@ nsDisplayTextOverflowMarker::CreateWebRenderCommands(mozilla::wr::DisplayListBui
   }
 
   // Run the rendering algorithm to capture the glyphs and shadows
-  RefPtr<TextDrawTarget> textDrawer = new TextDrawTarget(aBuilder, aSc, aManager, this, bounds);
+  RefPtr<TextDrawTarget> textDrawer = new TextDrawTarget(aBuilder, aResources, aSc, aManager, this, bounds);
   RefPtr<gfxContext> captureCtx = gfxContext::CreateOrNull(textDrawer);
   Paint(aDisplayListBuilder, captureCtx);
   textDrawer->TerminateShadows();
@@ -329,7 +328,7 @@ TextOverflow::TextOverflow(nsDisplayListBuilder* aBuilder,
 #ifdef MOZ_XUL
   if (!mScrollableFrame) {
     nsAtom* pseudoType = aBlockFrame->Style()->GetPseudo();
-    if (pseudoType == nsCSSAnonBoxes::mozXULAnonymousBlock) {
+    if (pseudoType == nsCSSAnonBoxes::mozXULAnonymousBlock()) {
       mScrollableFrame =
         nsLayoutUtils::GetScrollableFrameFor(aBlockFrame->GetParent());
       // nsXULScrollFrame::ClampAndSetBounds rounds to nearest pixels
@@ -343,8 +342,8 @@ TextOverflow::TextOverflow(nsDisplayListBuilder* aBuilder,
   mCanHaveInlineAxisScrollbar = false;
   if (mScrollableFrame) {
     auto scrollbarStyle = mBlockWM.IsVertical() ?
-      mScrollableFrame->GetScrollbarStyles().mVertical :
-      mScrollableFrame->GetScrollbarStyles().mHorizontal;
+      mScrollableFrame->GetScrollStyles().mVertical :
+      mScrollableFrame->GetScrollStyles().mHorizontal;
     mCanHaveInlineAxisScrollbar = scrollbarStyle != NS_STYLE_OVERFLOW_HIDDEN;
     if (!mAdjustForPixelSnapping) {
       // Scrolling to the end position can leave some text still overflowing due
@@ -829,11 +828,10 @@ TextOverflow::CanHaveTextOverflow(nsIFrame* aBlockFrame)
   // Inhibit the markers if a descendant content owns the caret.
   RefPtr<nsCaret> caret = aBlockFrame->PresShell()->GetCaret();
   if (caret && caret->IsVisible()) {
-    nsCOMPtr<nsISelection> domSelection = caret->GetSelection();
+    RefPtr<dom::Selection> domSelection = caret->GetSelection();
     if (domSelection) {
-      nsCOMPtr<nsIDOMNode> node;
-      domSelection->GetFocusNode(getter_AddRefs(node));
-      nsCOMPtr<nsIContent> content = do_QueryInterface(node);
+      nsCOMPtr<nsIContent> content =
+        nsIContent::FromNodeOrNull(domSelection->GetFocusNode());
       if (content && nsContentUtils::ContentIsDescendantOf(content,
                        aBlockFrame->GetContent())) {
         return false;

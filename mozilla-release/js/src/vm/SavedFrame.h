@@ -49,6 +49,11 @@ class SavedFrame : public NativeObject {
     SavedFrame*   getParent() const;
     JSPrincipals* getPrincipals();
     bool          isSelfHosted(JSContext* cx);
+    bool          isWasm();
+
+    // When isWasm():
+    uint32_t      wasmFuncIndex();
+    uint32_t      wasmBytecodeOffset();
 
     // Iterator for use with C++11 range based for loops, eg:
     //
@@ -167,16 +172,24 @@ struct SavedFrame::HashPolicy
     static void rekey(Key& key, const Key& newKey);
 };
 
+} // namespace js
+
+namespace mozilla {
+
 template <>
-struct FallibleHashMethods<SavedFrame::HashPolicy>
+struct FallibleHashMethods<js::SavedFrame::HashPolicy>
 {
     template <typename Lookup> static bool hasHash(Lookup&& l) {
-        return SavedFrame::HashPolicy::hasHash(mozilla::Forward<Lookup>(l));
+        return js::SavedFrame::HashPolicy::hasHash(std::forward<Lookup>(l));
     }
     template <typename Lookup> static bool ensureHash(Lookup&& l) {
-        return SavedFrame::HashPolicy::ensureHash(mozilla::Forward<Lookup>(l));
+        return js::SavedFrame::HashPolicy::ensureHash(std::forward<Lookup>(l));
     }
 };
+
+} // namespace mozilla
+
+namespace js {
 
 // Assert that if the given object is not null, that it must be either a
 // SavedFrame object or wrapper (Xray or CCW) around a SavedFrame object.

@@ -34,7 +34,7 @@ add_task(async function test_remove_single() {
       await PlacesUtils.bookmarks.insert({
         parentGuid: PlacesUtils.bookmarks.unfiledGuid,
         url: uri,
-        title: "test bookmark"
+        title: "test bookmark",
       });
     }
 
@@ -44,9 +44,6 @@ add_task(async function test_remove_single() {
       observer = {
         onBeginUpdateBatch() {},
         onEndUpdateBatch() {},
-        onVisits(aVisits) {
-          reject(new Error("Unexpected call to onVisits " + aVisits.length));
-        },
         onTitleChanged(aUri) {
           reject(new Error("Unexpected call to onTitleChanged " + aUri.spec));
         },
@@ -81,7 +78,7 @@ add_task(async function test_remove_single() {
         },
         onDeleteVisits(aURI) {
           Assert.equal(aURI.spec, uri.spec, "Observing onDeleteVisits on the right uri");
-        }
+        },
       };
     });
     PlacesUtils.history.addObserver(observer);
@@ -212,8 +209,19 @@ add_task(async function test_orphans() {
   PlacesUtils.favicons.setAndFetchFaviconForPage(
     uri, SMALLPNG_DATA_URI, true, PlacesUtils.favicons.FAVICON_LOAD_NON_PRIVATE,
     null, Services.scriptSecurityManager.getSystemPrincipal());
-  PlacesUtils.annotations.setPageAnnotation(uri, "test", "restval", 0,
-                                            PlacesUtils.annotations.EXPIRE_NEVER);
+  // Also create a root icon.
+  let faviconURI = Services.io.newURI(uri.spec + "favicon.ico");
+  PlacesUtils.favicons.replaceFaviconDataFromDataURL(
+    faviconURI, SMALLPNG_DATA_URI.spec, 0,
+    Services.scriptSecurityManager.getSystemPrincipal());
+  PlacesUtils.favicons.setAndFetchFaviconForPage(
+    uri, faviconURI, true, PlacesUtils.favicons.FAVICON_LOAD_NON_PRIVATE,
+    null, Services.scriptSecurityManager.getSystemPrincipal());
+
+  await PlacesUtils.history.update({
+    url: uri,
+    annotations: new Map([["test", "restval"]]),
+  });
 
   await PlacesUtils.history.remove(uri);
   Assert.ok(!(await PlacesTestUtils.isPageInDB(uri)), "Page should have been removed");

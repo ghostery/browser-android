@@ -17,8 +17,8 @@
      translation. -->
 <!ENTITY tabCrashed.header2 "糟糕，您的标签页崩溃了。">
 <!ENTITY tabCrashed.offerHelp2 "我们可以帮你！">
-<!ENTITY tabCrashed.single.offerHelpMessage2 "点击 &tabCrashed.restoreTab; 可重新载入该页面。">
-<!ENTITY tabCrashed.multiple.offerHelpMessage2 "点击 &tabCrashed.restoreTab; 或 &tabCrashed.restoreAll; 可重新载入该页面。">
+<!ENTITY tabCrashed.single.offerHelpMessage2 "点击“&tabCrashed.restoreTab;”可重新载入该页面。">
+<!ENTITY tabCrashed.multiple.offerHelpMessage2 "点击“&tabCrashed.restoreTab;”或“&tabCrashed.restoreAll;”可重新载入该页面。">
 <!ENTITY tabCrashed.requestHelp "你愿意帮我们个忙吗？">
 <!ENTITY tabCrashed.requestHelpMessage "反馈崩溃报告能帮助我们找出问题所在，不断改进 &brandShortName;。">
 <!ENTITY tabCrashed.requestReport "反馈此标签页">

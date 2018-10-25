@@ -13,15 +13,6 @@ module.exports = {
     "require": true,
   },
   "overrides": [{
-    // XXX Bug 1230193. We're still working on enabling no-undef for these test
-    // directories.
-    "files": [
-      "server/tests/mochitest/**",
-    ],
-    "rules": {
-      "no-undef": "off",
-    }
-  }, {
     "files": [
       "client/framework/**",
     ],
@@ -52,7 +43,6 @@ module.exports = {
     "files": [
       "client/framework/**",
       "client/scratchpad/**",
-      "client/shared/AppCacheUtils.jsm",
       "client/webide/**",
     ],
     "rules": {
@@ -149,7 +139,40 @@ module.exports = {
     "rules": {
       "no-unused-vars": ["error", {"args": "none", "vars": "local"}],
     }
-  }],
+  }, {
+    // Cu, Cc etc... are not available in most devtools modules loaded by require.
+    "files": [
+      "**"
+    ],
+    "excludedFiles": [
+      // Enable the rule on JSM, test head files and some specific files.
+      "**/*.jsm",
+      "**/test/**/head.js",
+      "**/test/**/shared-head.js",
+      "client/debugger/test/mochitest/code_frame-script.js",
+      "client/inspector/animation-old/test/doc_frame_script.js",
+      "client/inspector/animation/test/doc_frame_script.js",
+      "client/inspector/rules/test/doc_frame_script.js",
+      "client/inspector/shared/test/doc_frame_script.js",
+      "client/jsonview/converter-observer.js",
+      "client/jsonview/test/doc_frame_script.js",
+      "client/responsive.html/browser/content.js",
+      "client/shared/browser-loader.js",
+      "server/actors/webconsole/content-process-forward.js",
+      "server/actors/worker/service-worker-process.js",
+      "server/startup/content-process.js",
+      "server/startup/frame.js",
+      "shared/base-loader.js",
+      "shared/worker/loader.js",
+      "startup/aboutdebugging-registration.js",
+      "startup/aboutdevtools/aboutdevtools-registration.js",
+      "startup/aboutdevtoolstoolbox-registration.js",
+      "startup/devtools-startup.js",
+    ],
+    "rules": {
+      "mozilla/no-define-cc-etc": "off",
+    }
+  }, ],
   "rules": {
     // These are the rules that have been configured so far to match the
     // devtools coding style.
@@ -177,6 +200,7 @@ module.exports = {
     "react/prop-types": "error",
     "react/sort-comp": ["error", {
       order: [
+        "static-methods",
         "lifecycle",
         "everything-else",
         "render"
@@ -214,9 +238,6 @@ module.exports = {
     "brace-style": ["error", "1tbs", {"allowSingleLine": false}],
     // Require camel case names
     "camelcase": "error",
-    // Allow trailing commas for easy list extension.  Having them does not
-    // impair readability, but also not required either.
-    "comma-dangle": "off",
     // Warn about cyclomatic complexity in functions.
     "complexity": ["error", 53],
     // Don't warn for inconsistent naming when capturing this (not so important
@@ -329,8 +350,6 @@ module.exports = {
     "no-return-assign": "error",
     // Allow use of javascript: urls.
     "no-script-url": "off",
-    // Disallow use of comma operator.
-    "no-sequences": "error",
     // Warn about declaration of variables already declared in the outer scope.
     // This isn't an error because it sometimes is useful to use the same name
     // in a small helper function rather than having to come up with another
@@ -368,6 +387,8 @@ module.exports = {
     "one-var": "off",
     // Disallow padding within blocks.
     "padded-blocks": ["error", "never"],
+    // Enforce using `let` only when variables are reassigned.
+    "prefer-const": ["error", { "destructuring": "all" }],
     // Don't require quotes around object literal property names.
     "quote-props": "off",
     // Require use of the second argument for parseInt().

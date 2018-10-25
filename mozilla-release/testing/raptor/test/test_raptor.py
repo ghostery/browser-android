@@ -22,21 +22,24 @@ def test_create_profile(options, app, get_prefs):
     if app != 'firefox':
         return
 
-    # This pref is set in mozprofile
-    firefox_pref = 'user_pref("app.update.enabled", false);'
+    # These prefs are set in mozprofile
+    firefox_prefs = [
+        'user_pref("app.update.disabledForTesting", true);',
+        'user_pref("'
+        'security.turn_off_all_security_so_that_viruses_can_take_over_this_computer", true);'
+    ]
     # This pref is set in raptor
     raptor_pref = 'user_pref("security.enable_java", false);'
 
     prefs_file = os.path.join(raptor.profile.profile, 'user.js')
     with open(prefs_file, 'r') as fh:
         prefs = fh.read()
-        assert firefox_pref in prefs
+        for firefox_pref in firefox_prefs:
+            assert firefox_pref in prefs
         assert raptor_pref in prefs
 
 
 def test_start_and_stop_server(raptor):
-    print("*RW* control server is now:")
-    print(str(raptor.control_server))
     assert raptor.control_server is None
 
     raptor.start_control_server()

@@ -11,7 +11,6 @@
 #include "mozilla/FileUtils.h"
 #include "mozilla/HangAnnotations.h"
 #include "mozilla/PluginLibrary.h"
-#include "mozilla/ipc/CrashReporterHost.h"
 #include "mozilla/plugins/PluginProcessParent.h"
 #include "mozilla/plugins/PPluginModuleParent.h"
 #include "mozilla/plugins/PluginMessageUtils.h"
@@ -33,6 +32,9 @@ class nsPluginTag;
 
 namespace mozilla {
 
+namespace ipc {
+class CrashReporterHost;
+} // namespace ipc
 namespace layers {
 class TextureClientRecycleAllocator;
 } // namespace layers
@@ -168,7 +170,7 @@ protected:
 
 protected:
     void SetChildTimeout(const int32_t aChildTimeout);
-    static void TimeoutChanged(const char* aPref, void* aModule);
+    static void TimeoutChanged(const char* aPref, PluginModuleParent* aModule);
 
     virtual void UpdatePluginTimeout() {}
 
@@ -353,13 +355,9 @@ class PluginModuleContentParent : public PluginModuleParent
 
 class PluginModuleChromeParent
     : public PluginModuleParent
-    , public mozilla::HangMonitor::Annotator
+    , public mozilla::BackgroundHangAnnotator
 {
     friend class mozilla::ipc::CrashReporterHost;
-    using TerminateChildProcessCallback =
-        mozilla::ipc::CrashReporterHost::CallbackWrapper<bool>;
-    using TakeFullMinidumpCallback =
-        mozilla::ipc::CrashReporterHost::CallbackWrapper<nsString>;
   public:
     /**
      * LoadModule
@@ -384,16 +382,12 @@ class PluginModuleChromeParent
      *   provided TakeFullMinidump will use this dump file instead of
      *   generating a new one. If not provided a browser dump will be taken at
      *   the time of this call.
-     * @param aCallback a callback invoked when the operation completes. The ID
-     *   of the newly generated crash dump is provided in the callback argument.
-     *   An empty string will be provided upon failure.
-     * @param aAsync whether to perform the dump asynchronously.
+     * @param aDumpId Returns the ID of the newly generated crash dump. Left
+     *   untouched upon failure.
      */
-    void
-    TakeFullMinidump(base::ProcessId aContentPid,
-                     const nsAString& aBrowserDumpId,
-                     std::function<void(nsString)>&& aCallback,
-                     bool aAsync);
+    void TakeFullMinidump(base::ProcessId aContentPid,
+                          const nsAString& aBrowserDumpId,
+                          nsString& aDumpId);
 
     /*
      * Terminates the plugin process associated with this plugin module. Also
@@ -411,46 +405,11 @@ class PluginModuleChromeParent
      *   TerminateChildProcess will use this dump file instead of generating a
      *   multi-process crash report. If not provided a multi-process dump will
      *   be taken at the time of this call.
-     * @param aCallback a callback invoked when the operation completes. The
-     *   argument denotes whether the operation succeeded.
-     * @param aAsync whether to perform the operation asynchronously.
      */
-    void
-    TerminateChildProcess(MessageLoop* aMsgLoop,
-                          base::ProcessId aContentPid,
-                          const nsCString& aMonitorDescription,
-                          const nsAString& aDumpId,
-                          std::function<void(bool)>&& aCallback,
-                          bool aAsync);
-
-    /**
-     * Helper for passing a dummy callback in calling the above function if it
-     * is called synchronously and the caller doesn't care about the callback
-     * result.
-     */
-    template<typename T>
-    static std::function<void(T)> DummyCallback()
-    {
-        return std::function<void(T)>([](T aResult) { });
-    }
-
-  private:
-    // The following methods are callbacks invoked after calling
-    // TakeFullMinidump(). The methods are invoked in the following order:
-    void TakeBrowserAndPluginMinidumps(bool aReportsReady,
-                                       base::ProcessId aContentPid,
-                                       const nsAString& aBrowserDumpId,
-                                       bool aAsync);
-    void OnTakeFullMinidumpComplete(bool aReportsReady,
-                                    base::ProcessId aContentPid,
-                                    const nsAString& aBrowserDumpId);
-
-
-    // The following method is the callback invoked after calling
-    // TerminateChidlProcess().
-    void TerminateChildProcessOnDumpComplete(MessageLoop* aMsgLoop,
-                                             const nsCString& aMonitorDescription);
-  public:
+    void TerminateChildProcess(MessageLoop* aMsgLoop,
+                               base::ProcessId aContentPid,
+                               const nsCString& aMonitorDescription,
+                               const nsAString& aDumpId);
 
 #ifdef XP_WIN
     /**
@@ -477,14 +436,12 @@ private:
     PluginInstanceParent* GetManagingInstance(mozilla::ipc::IProtocol* aProtocol);
 
     virtual void
-    AnnotateHang(mozilla::HangMonitor::HangAnnotations& aAnnotations) override;
+    AnnotateHang(mozilla::BackgroundHangAnnotations& aAnnotations) override;
 
     virtual bool ShouldContinueFromReplyTimeout() override;
 
     void ProcessFirstMinidump();
     void WriteExtraDataForMinidump();
-    void RetainPluginRef();
-    void ReleasePluginRef();
 
     PluginProcessParent* Process() const { return mSubprocess; }
     base::ProcessHandle ChildProcessHandle() { return mSubprocess->GetChildProcessHandle(); }
@@ -516,7 +473,7 @@ private:
 
     virtual mozilla::ipc::IPCResult RecvNotifyContentModuleDestroyed() override;
 
-    static void CachedSettingChanged(const char* aPref, void* aModule);
+    static void CachedSettingChanged(const char* aPref, PluginModuleChromeParent* aModule);
 
     virtual mozilla::ipc::IPCResult
     AnswerNPN_SetValue_NPPVpluginRequiresAudioDeviceChanges(
@@ -600,12 +557,6 @@ private:
 
     nsCOMPtr<nsIObserver> mPluginOfflineObserver;
     bool mIsBlocklisted;
-
-    nsCOMPtr<nsIFile> mBrowserDumpFile;
-    TakeFullMinidumpCallback mTakeFullMinidumpCallback;
-
-    TerminateChildProcessCallback mTerminateChildProcessCallback;
-
     bool mIsCleaningFromTimeout;
 };
 

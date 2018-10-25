@@ -6,6 +6,7 @@
 
 const { Ci } = require("chrome");
 const { arg, DebuggerClient } = require("devtools/shared/client/debugger-client");
+loader.lazyRequireGetter(this, "getFront", "devtools/shared/protocol", true);
 
 /**
  * A RootClient object represents a root actor on the server. Each
@@ -32,6 +33,23 @@ function RootClient(client, greeting) {
   this.actor = greeting.from;
   this.applicationType = greeting.applicationType;
   this.traits = greeting.traits;
+
+  // Cache root form as this will always be the same value.
+  //
+  // Note that rootForm is overloaded by DebuggerClient.checkRuntimeVersion
+  // in order to support <FF59 that doesn't support getRoot request.
+  Object.defineProperty(this, "rootForm", {
+    get() {
+      delete this.rootForm;
+      this.rootForm = this._getRoot();
+      return this.rootForm;
+    },
+    configurable: true
+  });
+
+  // Cache of already created global scoped fronts
+  // [typeName:string => Front instance]
+  this.fronts = new Map();
 }
 exports.RootClient = RootClient;
 
@@ -43,7 +61,7 @@ RootClient.prototype = {
    * browser.  This can replace usages of `listTabs` that only wanted the global actors
    * and didn't actually care about tabs.
    */
-  getRoot: DebuggerClient.requester({ type: "getRoot" }),
+  _getRoot: DebuggerClient.requester({ type: "getRoot" }),
 
    /**
    * List the open tabs.
@@ -91,8 +109,8 @@ RootClient.prototype = {
   listProcesses: DebuggerClient.requester({ type: "listProcesses" }),
 
   /**
-   * Retrieve all service worker registrations as well as workers from the parent
-   * and child processes. Listing service workers involves merging information coming from
+   * Retrieve all service worker registrations as well as workers from the parent and
+   * content processes. Listing service workers involves merging information coming from
    * registrations and workers, this method will combine this information to present a
    * unified array of serviceWorkers. If you are only interested in other workers, use
    * listWorkers.
@@ -101,9 +119,9 @@ RootClient.prototype = {
    *         - {Array} service
    *           array of form-like objects for serviceworkers
    *         - {Array} shared
-   *           Array of WorkerActor forms, containing shared workers.
+   *           Array of WorkerTargetActor forms, containing shared workers.
    *         - {Array} other
-   *           Array of WorkerActor forms, containing other workers.
+   *           Array of WorkerTargetActor forms, containing other workers.
    */
   listAllWorkers: async function() {
     let registrations = [];
@@ -117,15 +135,15 @@ RootClient.prototype = {
       ({ workers } = await this.listWorkers());
 
       // And then from the Child processes
-      let { processes } = await this.listProcesses();
-      for (let process of processes) {
+      const { processes } = await this.listProcesses();
+      for (const process of processes) {
         // Ignore parent process
         if (process.parent) {
           continue;
         }
-        let { form } = await this._client.getProcess(process.id);
-        let processActor = form.actor;
-        let response = await this._client.request({
+        const { form } = await this._client.getProcess(process.id);
+        const processActor = form.actor;
+        const response = await this._client.request({
           to: processActor,
           type: "listWorkers"
         });
@@ -135,7 +153,7 @@ RootClient.prototype = {
       // Something went wrong, maybe our client is disconnected?
     }
 
-    let result = {
+    const result = {
       service: [],
       shared: [],
       other: []
@@ -148,26 +166,27 @@ RootClient.prototype = {
         scope: form.scope,
         fetch: form.fetch,
         registrationActor: form.actor,
-        active: form.active
+        active: form.active,
+        lastUpdateTime: form.lastUpdateTime
       });
     });
 
     workers.forEach(form => {
-      let worker = {
+      const worker = {
         name: form.url,
         url: form.url,
-        workerActor: form.actor
+        workerTargetActor: form.actor
       };
       switch (form.type) {
         case Ci.nsIWorkerDebugger.TYPE_SERVICE:
-          let registration = result.service.find(r => r.scope === form.scope);
+          const registration = result.service.find(r => r.scope === form.scope);
           if (registration) {
             // XXX: Race, sometimes a ServiceWorkerRegistrationInfo doesn't
             // have a scriptSpec, but its associated WorkerDebugger does.
             if (!registration.url) {
               registration.name = registration.url = form.url;
             }
-            registration.workerActor = form.actor;
+            registration.workerTargetActor = form.actor;
           } else {
             worker.fetch = form.fetch;
 
@@ -192,7 +211,7 @@ RootClient.prototype = {
   },
 
   /**
-   * Fetch the TabActor for the currently selected tab, or for a specific
+   * Fetch the target actor for the currently selected tab, or for a specific
    * tab given as first parameter.
    *
    * @param [optional] object filter
@@ -204,7 +223,7 @@ RootClient.prototype = {
    *        selected tab.
    */
   getTab: function(filter) {
-    let packet = {
+    const packet = {
       to: this.actor,
       type: "getTab"
     };
@@ -215,7 +234,7 @@ RootClient.prototype = {
       } else if (typeof (filter.tabId) == "number") {
         packet.tabId = filter.tabId;
       } else if ("tab" in filter) {
-        let browser = filter.tab.linkedBrowser;
+        const browser = filter.tab.linkedBrowser;
         if (browser.frameLoader.tabParent) {
           // Tabs in child process
           packet.tabId = browser.frameLoader.tabParent.tabId;
@@ -224,9 +243,7 @@ RootClient.prototype = {
           packet.outerWindowID = browser.outerWindowID;
         } else {
           // <iframe mozbrowser> tabs in parent process
-          let windowUtils = browser.contentWindow
-                                   .QueryInterface(Ci.nsIInterfaceRequestor)
-                                   .getInterface(Ci.nsIDOMWindowUtils);
+          const windowUtils = browser.contentWindow.windowUtils;
           packet.outerWindowID = windowUtils.outerWindowID;
         }
       } else {
@@ -240,7 +257,7 @@ RootClient.prototype = {
   },
 
   /**
-   * Fetch the WindowActor for a specific window, like a browser window in
+   * Fetch the ChromeWindowTargetActor for a specific window, like a browser window in
    * Firefox, but it can be used to reach any window in the process.
    *
    * @param number outerWindowID
@@ -251,13 +268,31 @@ RootClient.prototype = {
       throw new Error("Must specify outerWindowID");
     }
 
-    let packet = {
+    const packet = {
       to: this.actor,
       type: "getWindow",
       outerWindowID,
     };
 
     return this.request(packet);
+  },
+
+  /*
+   * This function returns a protocol.js Front for any root actor.
+   * i.e. the one directly served from RootActor.listTabs or getRoot.
+   *
+   * @param String typeName
+   *        The type name used in protocol.js's spec for this actor.
+   */
+  async getFront(typeName) {
+    let front = this.fronts.get(typeName);
+    if (front) {
+      return front;
+    }
+    const rootForm = await this.rootForm;
+    front = getFront(this._client, typeName, rootForm);
+    this.fronts.set(typeName, front);
+    return front;
   },
 
   /**

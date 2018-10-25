@@ -32,13 +32,53 @@ typedef NSInteger mozNSScrollerStyle;
 + (mozNSScrollerStyle)preferredScrollerStyle;
 @end
 
+// Available from 10.12 onwards; test availability at runtime before using
+@interface NSWorkspace(AvailableSinceSierra)
+@property (readonly) BOOL accessibilityDisplayShouldReduceMotion;
+@end
+
 nsLookAndFeel::nsLookAndFeel()
  : nsXPLookAndFeel()
  , mUseOverlayScrollbars(-1)
  , mUseOverlayScrollbarsCached(false)
  , mAllowOverlayScrollbarsOverlap(-1)
  , mAllowOverlayScrollbarsOverlapCached(false)
+ , mPrefersReducedMotion(-1)
+ , mPrefersReducedMotionCached(false)
+ , mColorTextSelectBackground(0)
+ , mColorTextSelectBackgroundDisabled(0)
+ , mColorHighlight(0)
+ , mColorMenuHover(0)
+ , mColorTextSelectForeground(0)
+ , mColorMenuHoverText(0)
+ , mColorButtonText(0)
  , mHasColorButtonText(false)
+ , mColorButtonHoverText(0)
+ , mColorText(0)
+ , mColorWindowText(0)
+ , mColorActiveCaption(0)
+ , mColorActiveBorder(0)
+ , mColorGrayText(0)
+ , mColorInactiveBorder(0)
+ , mColorInactiveCaption(0)
+ , mColorScrollbar(0)
+ , mColorThreeDHighlight(0)
+ , mColorMenu(0)
+ , mColorWindowFrame(0)
+ , mColorFieldText(0)
+ , mColorDialog(0)
+ , mColorDialogText(0)
+ , mColorDragTargetZone(0)
+ , mColorChromeActive(0)
+ , mColorChromeInactive(0)
+ , mColorFocusRing(0)
+ , mColorTextSelect(0)
+ , mColorDisabledToolbarText(0)
+ , mColorMenuSelect(0)
+ , mColorCellHighlight(0)
+ , mColorEvenTreeRow(0)
+ , mColorOddTreeRow(0)
+ , mColorActiveSourceListSelection(0)
  , mInitialized(false)
 {
 }
@@ -73,6 +113,10 @@ nsLookAndFeel::NativeInit()
 void
 nsLookAndFeel::RefreshImpl()
 {
+  if (mShouldRetainCacheForTest) {
+    return;
+  }
+
   nsXPLookAndFeel::RefreshImpl();
 
   // We should only clear the cache if we're in the main browser process.
@@ -81,6 +125,7 @@ nsLookAndFeel::RefreshImpl()
   if (XRE_IsParentProcess()) {
     mUseOverlayScrollbarsCached = false;
     mAllowOverlayScrollbarsOverlapCached = false;
+    mPrefersReducedMotionCached = false;
   }
 
   // Fetch colors next time they are requested.
@@ -508,6 +553,25 @@ nsLookAndFeel::GetIntImpl(IntID aID, int32_t &aResult)
     case eIntID_ContextMenuOffsetHorizontal:
       aResult = 1;
       break;
+    case eIntID_SystemUsesDarkTheme:
+      aResult = SystemWantsDarkTheme();
+      break;
+    case eIntID_PrefersReducedMotion:
+      // Without native event loops,
+      // NSWorkspace.accessibilityDisplayShouldReduceMotion returns stale
+      // information, so we get the information only on the parent processes
+      // or when it's the initial query on child processes.  Otherwise we will
+      // get the info via LookAndFeel::SetIntCache on child processes.
+      if (!mPrefersReducedMotionCached &&
+          [[NSWorkspace sharedWorkspace] respondsToSelector:@selector(
+              accessibilityDisplayShouldReduceMotion)]) {
+        mPrefersReducedMotion =
+          [[NSWorkspace sharedWorkspace]
+            accessibilityDisplayShouldReduceMotion] ? 1 : 0;
+        mPrefersReducedMotionCached = true;
+      }
+      aResult = mPrefersReducedMotion;
+      break;
     default:
       aResult = 0;
       res = NS_ERROR_FAILURE;
@@ -556,6 +620,17 @@ bool nsLookAndFeel::AllowOverlayScrollbarsOverlap()
   return (UseOverlayScrollbars());
 }
 
+bool nsLookAndFeel::SystemWantsDarkTheme()
+{
+  // This returns true if the macOS system appearance is set to dark mode on
+  // 10.14+, false otherwise.
+  if (nsCocoaFeatures::OnMojaveOrLater()) {
+    return !![[NSUserDefaults standardUserDefaults]
+               stringForKey:@"AppleInterfaceStyle"];
+  }
+  return false;
+}
+
 bool
 nsLookAndFeel::GetFontImpl(FontID aID, nsString &aFontName,
                            gfxFontStyle &aFontStyle,
@@ -599,6 +674,11 @@ nsLookAndFeel::GetIntCacheImpl()
   allowOverlayScrollbarsOverlap.value = GetInt(eIntID_AllowOverlayScrollbarsOverlap);
   lookAndFeelIntCache.AppendElement(allowOverlayScrollbarsOverlap);
 
+  LookAndFeelInt prefersReducedMotion;
+  prefersReducedMotion.id = eIntID_PrefersReducedMotion;
+  prefersReducedMotion.value = GetInt(eIntID_PrefersReducedMotion);
+  lookAndFeelIntCache.AppendElement(prefersReducedMotion);
+
   return lookAndFeelIntCache;
 }
 
@@ -614,6 +694,10 @@ nsLookAndFeel::SetIntCacheImpl(const nsTArray<LookAndFeelInt>& aLookAndFeelIntCa
       case eIntID_AllowOverlayScrollbarsOverlap:
         mAllowOverlayScrollbarsOverlap = entry.value;
         mAllowOverlayScrollbarsOverlapCached = true;
+        break;
+      case eIntID_PrefersReducedMotion:
+        mPrefersReducedMotion = entry.value;
+        mPrefersReducedMotionCached = true;
         break;
     }
   }

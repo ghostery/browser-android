@@ -1,8 +1,8 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!--LOCALIZATION NOTE : FILE The Appearance > Content prefs dialog.  -->
 
+<!--LOCALIZATION NOTE : FILE The Appearance > Content prefs dialog.  -->
 
 <!ENTITY pref.content.title                     "Conteúdo">
 <!ENTITY pref.content.description               "Estas definições influenciam como um website e o conteúdo de mensagens aparecem no &brandShortName;.">
@@ -37,7 +37,7 @@
 <!ENTITY enableAutomaticImageResizing.label     "Redimensionar imagens grandes para caberem na janela do navegador">
 <!ENTITY enableAutomaticImageResizing.accesskey "R">
 
-<!ENTITY allowHWAccel.label                     "Se disponível, utilizar aceleração por hardware">
+<!ENTITY allowHWAccel.label                     "Se disponível, utilizar aceleração de hardware">
 <!ENTITY allowHWAccel.accesskey                 "e">
 <!ENTITY blockAutoRefresh.label                 "Avisar-me quando os websites tentarem redirecionar ou recarregar a página">
 <!ENTITY blockAutoRefresh.accesskey             "w">

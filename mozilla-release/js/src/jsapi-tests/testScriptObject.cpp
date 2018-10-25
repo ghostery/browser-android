@@ -5,6 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "js/CompilationAndEvaluation.h"
+#include "js/SourceBufferHolder.h"
 #include "jsapi-tests/tests.h"
 
 struct ScriptObjectFixture : public JSAPITest {
@@ -72,7 +74,8 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScript)
     JS::CompileOptions options(cx);
     options.setFileAndLine(__FILE__, __LINE__);
     JS::RootedScript script(cx);
-    CHECK(JS_CompileUCScript(cx, uc_code, code_size, options, &script));
+    JS::SourceBufferHolder srcBuf(uc_code, code_size, JS::SourceBufferHolder::NoOwnership);
+    CHECK(JS_CompileUCScript(cx, srcBuf, options, &script));
     return tryScript(script);
 }
 END_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScript)
@@ -82,7 +85,8 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScript_empty)
     JS::CompileOptions options(cx);
     options.setFileAndLine(__FILE__, __LINE__);
     JS::RootedScript script(cx);
-    CHECK(JS_CompileUCScript(cx, uc_code, 0, options, &script));
+    JS::SourceBufferHolder srcBuf(uc_code, 0, JS::SourceBufferHolder::NoOwnership);
+    CHECK(JS_CompileUCScript(cx, srcBuf, options, &script));
     return tryScript(script);
 }
 END_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScript_empty)
@@ -92,7 +96,8 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScriptForPrincipal
     JS::CompileOptions options(cx);
     options.setFileAndLine(__FILE__, __LINE__);
     JS::RootedScript script(cx);
-    CHECK(JS_CompileUCScript(cx, uc_code, code_size, options, &script));
+    JS::SourceBufferHolder srcBuf(uc_code, code_size, JS::SourceBufferHolder::NoOwnership);
+    CHECK(JS_CompileUCScript(cx, srcBuf, options, &script));
     return tryScript(script);
 }
 END_FIXTURE_TEST(ScriptObjectFixture, bug438633_JS_CompileUCScriptForPrincipals)
@@ -185,7 +190,7 @@ BEGIN_FIXTURE_TEST(ScriptObjectFixture, CloneAndExecuteScript)
     {
         JS::RootedObject global2(cx, createGlobal());
         CHECK(global2);
-        JSAutoCompartment ac(cx, global2);
+        JSAutoRealm ar(cx, global2);
         CHECK(JS_WrapValue(cx, &fortyTwo));
         CHECK(JS_SetProperty(cx, global, "val", fortyTwo));
         JS::RootedValue value2(cx);

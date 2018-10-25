@@ -36,11 +36,10 @@ function InspectorSearch(inspector, input, clearBtn) {
   this.searchClearButton = clearBtn;
   this._lastSearched = null;
 
-  this.searchClearButton.hidden = true;
-
   this._onKeyDown = this._onKeyDown.bind(this);
   this._onInput = this._onInput.bind(this);
   this._onClearSearch = this._onClearSearch.bind(this);
+
   this.searchBox.addEventListener("keydown", this._onKeyDown, true);
   this.searchBox.addEventListener("input", this._onInput, true);
   this.searchClearButton.addEventListener("click", this._onClearSearch);
@@ -75,7 +74,7 @@ InspectorSearch.prototype = {
   },
 
   async doFullTextSearch(query, reverse) {
-    let lastSearched = this._lastSearched;
+    const lastSearched = this._lastSearched;
     this._lastSearched = query;
 
     if (query.length === 0) {
@@ -86,7 +85,7 @@ InspectorSearch.prototype = {
       return;
     }
 
-    let res = await this.walker.search(query, { reverse });
+    const res = await this.walker.search(query, { reverse });
 
     // Value has changed since we started this request, we're done.
     if (query !== this.searchBox.value) {
@@ -161,11 +160,10 @@ function SelectorAutocompleter(inspector, inputNode) {
   this._onMarkupMutation = this._onMarkupMutation.bind(this);
 
   // Options for the AutocompletePopup.
-  let options = {
+  const options = {
     listId: "searchbox-panel-listbox",
     autoSelect: true,
     position: "top",
-    theme: "auto",
     onClick: this._onSearchPopupClick,
   };
 
@@ -218,7 +216,7 @@ SelectorAutocompleter.prototype = {
       return null;
     }
 
-    let query = this.searchBox.value;
+    const query = this.searchBox.value;
     if (this._lastStateCheckAt == query) {
       // If query is the same, return early.
       return this._state;
@@ -325,7 +323,7 @@ SelectorAutocompleter.prototype = {
    * Handles keypresses inside the input box.
    */
   _onSearchKeypress: function(event) {
-    let popup = this.searchPopup;
+    const popup = this.searchPopup;
     switch (event.keyCode) {
       case KeyCodes.DOM_VK_RETURN:
       case KeyCodes.DOM_VK_TAB:
@@ -387,7 +385,7 @@ SelectorAutocompleter.prototype = {
    * Handles click events from the autocomplete popup.
    */
   _onSearchPopupClick: function(event) {
-    let selectedItem = this.searchPopup.selectedItem;
+    const selectedItem = this.searchPopup.selectedItem;
     if (selectedItem) {
       this.searchBox.value = selectedItem.label;
     }
@@ -412,10 +410,10 @@ SelectorAutocompleter.prototype = {
    * @return {Promise} promise that will resolve when the autocomplete popup is fully
    * displayed or hidden.
    */
-  _showPopup: function(list, firstPart, popupState) {
+  _showPopup: function(list, popupState) {
     let total = 0;
-    let query = this.searchBox.value;
-    let items = [];
+    const query = this.searchBox.value;
+    const items = [];
 
     for (let [value, , state] of list) {
       if (query.match(/[\s>+]$/)) {
@@ -423,19 +421,19 @@ SelectorAutocompleter.prototype = {
         value = query + value;
       } else if (query.match(/[\s>+][\.#a-zA-Z][^\s>+\.#\[]*$/)) {
         // for cases like 'div #a' or 'div .a' or 'div > d' and likewise
-        let lastPart = query.match(/[\s>+][\.#a-zA-Z][^\s>+\.#\[]*$/)[0];
+        const lastPart = query.match(/[\s>+][\.#a-zA-Z][^\s>+\.#\[]*$/)[0];
         value = query.slice(0, -1 * lastPart.length + 1) + value;
       } else if (query.match(/[a-zA-Z][#\.][^#\.\s+>]*$/)) {
         // for cases like 'div.class' or '#foo.bar' and likewise
-        let lastPart = query.match(/[a-zA-Z][#\.][^#\.\s+>]*$/)[0];
+        const lastPart = query.match(/[a-zA-Z][#\.][^#\.\s+>]*$/)[0];
         value = query.slice(0, -1 * lastPart.length + 1) + value;
       } else if (query.match(/[a-zA-Z]*\[[^\]]*\][^\]]*/)) {
         // for cases like '[foo].bar' and likewise
-        let attrPart = query.substring(0, query.lastIndexOf("]") + 1);
+        const attrPart = query.substring(0, query.lastIndexOf("]") + 1);
         value = attrPart + value;
       }
 
-      let item = {
+      const item = {
         preLabel: query,
         label: value
       };
@@ -449,17 +447,19 @@ SelectorAutocompleter.prototype = {
         item.preLabel = "#" + item.preLabel;
       }
 
-      items.unshift(item);
+      items.push(item);
       if (++total > MAX_SUGGESTIONS - 1) {
         break;
       }
     }
 
     if (total > 0) {
-      let onPopupOpened = this.searchPopup.once("popup-opened");
+      const onPopupOpened = this.searchPopup.once("popup-opened");
       this.searchPopup.once("popup-closed", () => {
         this.searchPopup.setItems(items);
-        this.searchPopup.openPopup(this.searchBox);
+        // The offset is left padding (22px) + left border width (1px) of searchBox.
+        const xOffset = 23;
+        this.searchPopup.openPopup(this.searchBox, xOffset);
       });
       this.searchPopup.hidePopup();
       return onPopupOpened;
@@ -472,7 +472,7 @@ SelectorAutocompleter.prototype = {
    * Hide the suggestion popup if necessary.
    */
   hidePopup: function() {
-    let onPopupClosed = this.searchPopup.once("popup-closed");
+    const onPopupClosed = this.searchPopup.once("popup-closed");
     this.searchPopup.hidePopup();
     return onPopupClosed;
   },
@@ -483,7 +483,7 @@ SelectorAutocompleter.prototype = {
    */
   showSuggestions: function() {
     let query = this.searchBox.value;
-    let state = this.state;
+    const state = this.state;
     let firstPart = "";
 
     if (query.endsWith("*") || state === this.States.ATTRIBUTE) {
@@ -514,7 +514,7 @@ SelectorAutocompleter.prototype = {
       query += "*";
     }
 
-    let suggestionsPromise = this.walker.getSuggestionsForQuery(
+    const suggestionsPromise = this.walker.getSuggestionsForQuery(
       query, firstPart, state);
     this._lastQuery = suggestionsPromise.then(result => {
       this.emit("processing-done");
@@ -539,7 +539,7 @@ SelectorAutocompleter.prototype = {
 
       // Wait for the autocomplete-popup to fire its popup-opened event, to make sure
       // the autoSelect item has been selected.
-      return this._showPopup(result.suggestions, firstPart, state);
+      return this._showPopup(result.suggestions, state);
     });
   }
 };

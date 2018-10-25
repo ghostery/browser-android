@@ -4,10 +4,10 @@
 <!ENTITY addAccountDialog.title   "创建文件链接">
 <!ENTITY addAccountDialog.menuTitle "选择一个在线存储服务">
 <!ENTITY addAccountDialog.style "width: 40em; min-height: 20em;">
-<!ENTITY addAccountDialog.accountName.label "帐户名称：">
+<!ENTITY addAccountDialog.accountName.label "账户名称：">
 <!ENTITY addAccountDialog.noAccountText "很抱歉，但目前版本下，&brandShortName; 在每个在线存储服务上各使用一个账户。">
 <!ENTITY addAccountDialog.createAccountText2 "您可以使用一些在线存储服务发送超大的附件。请输入一个已存在的账户或者注册新的账户。">
 <!ENTITY addAccountDialog.authorizing "正在检查授权...">
-<!ENTITY addAccountDialog.error "设立帐户时发生错误！">
+<!ENTITY addAccountDialog.error "设立账户时发生错误！">
 <!ENTITY addAccountDialog.acceptButton.label "设置账户">
 <!ENTITY addAccountDialog.learnMore "详细了解…">

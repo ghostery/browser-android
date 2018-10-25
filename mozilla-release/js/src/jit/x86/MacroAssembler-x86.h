@@ -10,7 +10,8 @@
 #include "jit/JitFrames.h"
 #include "jit/MoveResolver.h"
 #include "jit/x86-shared/MacroAssembler-x86-shared.h"
-#include "vm/JSCompartment.h"
+#include "js/HeapAPI.h"
+#include "vm/Realm.h"
 
 namespace js {
 namespace jit {
@@ -149,6 +150,20 @@ class MacroAssemblerX86 : public MacroAssemblerX86Shared
     }
     template <typename T>
     void storeValue(JSValueType type, Register reg, const T& dest) {
+#ifdef NIGHTLY_BUILD
+        // Bug 1485209 - Diagnostic assert for constructing Values with
+        // nullptr or misaligned (eg poisoned) JSObject/JSString pointers.
+        if (type == JSVAL_TYPE_OBJECT || type == JSVAL_TYPE_STRING) {
+            Label crash, ok;
+            testPtr(reg, Imm32(js::gc::CellAlignMask));
+            j(Assembler::NonZero, &crash);
+            testPtr(reg, reg);
+            j(Assembler::NonZero, &ok);
+            bind(&crash);
+            breakpoint();
+            bind(&ok);
+        }
+#endif
         storeTypeTag(ImmTag(JSVAL_TYPE_TO_TAG(type)), Operand(dest));
         storePayload(reg, Operand(dest));
     }
@@ -829,33 +844,29 @@ class MacroAssemblerX86 : public MacroAssemblerX86Shared
     // Extended unboxing API. If the payload is already in a register, returns
     // that register. Otherwise, provides a move to the given scratch register,
     // and returns that.
-    Register extractObject(const Address& address, Register dest) {
+    MOZ_MUST_USE Register extractObject(const Address& address, Register dest) {
         unboxObject(address, dest);
         return dest;
     }
-    Register extractObject(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractObject(const ValueOperand& value, Register scratch) {
         unboxNonDouble(value, value.payloadReg(), JSVAL_TYPE_OBJECT, scratch);
         return value.payloadReg();
     }
-    Register extractString(const ValueOperand& value, Register scratch) {
-        unboxNonDouble(value, value.payloadReg(), JSVAL_TYPE_STRING, scratch);
-        return value.payloadReg();
-    }
-    Register extractSymbol(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractSymbol(const ValueOperand& value, Register scratch) {
         unboxNonDouble(value, value.payloadReg(), JSVAL_TYPE_SYMBOL, scratch);
         return value.payloadReg();
     }
-    Register extractInt32(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractInt32(const ValueOperand& value, Register scratch) {
         return value.payloadReg();
     }
-    Register extractBoolean(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractBoolean(const ValueOperand& value, Register scratch) {
         return value.payloadReg();
     }
-    Register extractTag(const Address& address, Register scratch) {
+    MOZ_MUST_USE Register extractTag(const Address& address, Register scratch) {
         movl(tagOf(address), scratch);
         return scratch;
     }
-    Register extractTag(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractTag(const ValueOperand& value, Register scratch) {
         return value.typeReg();
     }
 

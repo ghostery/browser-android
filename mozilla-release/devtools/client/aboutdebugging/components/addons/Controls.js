@@ -10,10 +10,10 @@
 loader.lazyImporter(this, "AddonManager",
   "resource://gre/modules/AddonManager.jsm");
 
-const { Cc, Ci } = require("chrome");
 const { createFactory, Component } = require("devtools/client/shared/vendor/react");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
+const { openTemporaryExtension } = require("devtools/client/aboutdebugging/modules/addon");
 const Services = require("Services");
 const AddonsInstallError = createFactory(require("./InstallError"));
 
@@ -44,31 +44,15 @@ class AddonsControls extends Component {
   }
 
   onEnableAddonDebuggingChange(event) {
-    let enabled = event.target.checked;
+    const enabled = event.target.checked;
     Services.prefs.setBoolPref("devtools.chrome.enabled", enabled);
     Services.prefs.setBoolPref("devtools.debugger.remote-enabled", enabled);
   }
 
-  loadAddonFromFile() {
-    this.setState({ installError: null });
-    let fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
-    fp.init(window,
-      Strings.GetStringFromName("selectAddonFromFile2"),
-      Ci.nsIFilePicker.modeOpen);
-    fp.open(res => {
-      if (res == Ci.nsIFilePicker.returnCancel || !fp.file) {
-        return;
-      }
-      let file = fp.file;
-      // AddonManager.installTemporaryAddon accepts either
-      // addon directory or final xpi file.
-      if (!file.isDirectory() &&
-          !file.leafName.endsWith(".xpi") && !file.leafName.endsWith(".zip")) {
-        file = file.parent;
-      }
-
-      this.installAddon(file);
-    });
+  async loadAddonFromFile() {
+    const message = Strings.GetStringFromName("selectAddonFromFile2");
+    const file = await openTemporaryExtension(window, message);
+    this.installAddon(file);
   }
 
   retryInstall() {
@@ -88,7 +72,7 @@ class AddonsControls extends Component {
   }
 
   render() {
-    let { debugDisabled } = this.props;
+    const { debugDisabled } = this.props;
 
     return dom.div({ className: "addons-top" },
       dom.div({ className: "addons-controls" },
@@ -112,7 +96,7 @@ class AddonsControls extends Component {
         dom.button({
           id: "load-addon-from-file",
           onClick: this.loadAddonFromFile,
-        }, Strings.GetStringFromName("loadTemporaryAddon"))
+        }, Strings.GetStringFromName("loadTemporaryAddon2"))
       ),
       AddonsInstallError({
         error: this.state.installError,

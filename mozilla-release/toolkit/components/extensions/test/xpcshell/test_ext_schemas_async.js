@@ -190,7 +190,7 @@ add_task(async function testCheckAsyncResults() {
   if (AppConstants.DEBUG) {
     await Assert.rejects(
       invalid.async_result(),
-      `Type error for widget value (Property "size" is required)`,
+      /Type error for widget value \(Property "size" is required\)/,
       "Should throw for invalid callback argument in DEBUG builds");
   } else {
     deepEqual(await invalid.async_result(), {},
@@ -273,10 +273,10 @@ add_task(async function testAsyncResults() {
       if (!isChromeCompat) { // No promises for chrome.
         await Assert.rejects(
           testnamespace.async_required(), /ONE/,
-          "should reject testnamespace.async_required()").catch(() => {});
+          "should reject testnamespace.async_required()");
         await Assert.rejects(
           testnamespace.async_optional(), /TWO/,
-          "should reject testnamespace.async_optional()").catch(() => {});
+          "should reject testnamespace.async_optional()");
       }
 
       Assert.equal(await runFailCallback(testnamespace.async_required), "ONE");

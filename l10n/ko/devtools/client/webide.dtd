@@ -30,14 +30,12 @@
 
 <!ENTITY runtimeMenu_label "런타임">
 <!ENTITY runtimeMenu_accesskey "R">
-<!ENTITY runtimeMenu_disconnect_label "끊기">
+<!ENTITY runtimeMenu_disconnect_label "연결끊기">
 <!ENTITY runtimeMenu_disconnect_accesskey "D">
 <!ENTITY runtimeMenu_takeScreenshot_label "스크린샷">
 <!ENTITY runtimeMenu_takeScreenshot_accesskey "S">
 <!ENTITY runtimeMenu_showDetails_label "런타임 정보">
 <!ENTITY runtimeMenu_showDetails_accesskey "E">
-<!ENTITY runtimeMenu_showMonitor_label "모니터">
-<!ENTITY runtimeMenu_showMonitor_accesskey "M">
 <!ENTITY runtimeMenu_showDevicePrefs_label "기기 환경 설정">
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "D">
 <!ENTITY runtimeMenu_showSettings_label "기기 설정">
@@ -45,11 +43,9 @@
 
 <!ENTITY viewMenu_label "보기">
 <!ENTITY viewMenu_accesskey "V">
-<!ENTITY viewMenu_toggleEditor_label "편집기 열고 닫기">
-<!ENTITY viewMenu_toggleEditor_accesskey "E">
-<!ENTITY viewMenu_zoomin_label "크게 보기">
+<!ENTITY viewMenu_zoomin_label "확대">
 <!ENTITY viewMenu_zoomin_accesskey "I">
-<!ENTITY viewMenu_zoomout_label "작게 보기">
+<!ENTITY viewMenu_zoomout_label "축소">
 <!ENTITY viewMenu_zoomout_accesskey "O">
 <!ENTITY viewMenu_resetzoom_label "처음 크기로">
 <!ENTITY viewMenu_resetzoom_accesskey "R">
@@ -66,8 +62,6 @@
 <!ENTITY key_play "R">
 <!-- show toolbox -->
 <!ENTITY key_toggleToolbox "VK_F12">
-<!-- toggle sidebar -->
-<!ENTITY key_toggleEditor "B">
 <!-- zoom -->
 <!ENTITY key_zoomin "+">
 <!ENTITY key_zoomin2 "=">
@@ -79,9 +73,7 @@
 <!ENTITY projectPanel_tabs "탭">
 <!ENTITY runtimePanel_usb "USB 기기">
 <!ENTITY runtimePanel_wifi "Wi-Fi 기기">
-<!ENTITY runtimePanel_simulator "시뮬레이터">
 <!ENTITY runtimePanel_other "기타">
-<!ENTITY runtimePanel_installsimulator "시뮬레이터 설치">
 <!ENTITY runtimePanel_noadbhelper "ADB 도우미 설치">
 <!ENTITY runtimePanel_nousbdevice "기기가 안뜹니까?">
 <!ENTITY runtimePanel_refreshDevices_label "기기 새로고침">
@@ -94,7 +86,6 @@
 <!ENTITY details_location "주소">
 <!ENTITY details_manifestURL "앱 ID">
 <!ENTITY details_removeProject_button "프로젝트 삭제">
-<!ENTITY details_showPrepackageLog_button "패키징 전 로그 보기">
 
 <!-- New App -->
 <!ENTITY newAppWindowTitle "새 앱">
@@ -123,21 +114,6 @@
 <!ENTITY prefs_options_rememberlastproject_tooltip "웹IDE를 열면 이전 프로젝트 되살리기">
 <!ENTITY prefs_options_templatesurl "템플릿 URL">
 <!ENTITY prefs_options_templatesurl_tooltip "사용 가능한 템플릿 색인">
-<!ENTITY prefs_options_showeditor "편집기 보기">
-<!ENTITY prefs_options_showeditor_tooltip "내부 편집기 보기">
-<!ENTITY prefs_options_tabsize "탭 크기">
-<!ENTITY prefs_options_expandtab "소프트 탭">
-<!ENTITY prefs_options_expandtab_tooltip "탭 문자 대신 빈칸 쓰기">
-<!ENTITY prefs_options_detectindentation "알아서 들여쓰기">
-<!ENTITY prefs_options_detectindentation_tooltip "소스 내용을 가지고 들여쓰기 알아내기">
-<!ENTITY prefs_options_autocomplete "자동완성">
-<!ENTITY prefs_options_autocomplete_tooltip "코드 자동완성 켜기">
-<!ENTITY prefs_options_autoclosebrackets "괄호 알아서 닫기">
-<!ENTITY prefs_options_autoclosebrackets_tooltip "알아서 닫는 괄호 넣기">
-<!ENTITY prefs_options_keybindings "키 바인딩">
-<!ENTITY prefs_options_keybindings_default "기본">
-<!ENTITY prefs_options_autosavefiles "파일 자동 저장">
-<!ENTITY prefs_options_autosavefiles_tooltip "프로젝트 실행하기 전에 수정된 파일을 자동으로 저장">
 
 <!-- Runtime Details -->
 <!ENTITY runtimedetails_title "런타임 정보">
@@ -169,10 +145,6 @@
 <!ENTITY devicesetting_newtext "설정 값">
 <!ENTITY devicesetting_addnew "새 설정 추가">
 
-<!-- Monitor -->
-<!ENTITY monitor_title "모니터">
-<!ENTITY monitor_help "도움말">
-
 <!-- WiFi Authentication -->
 <!-- LOCALIZATION NOTE (wifi_auth_header): The header displayed on the dialog
      that instructs the user to transfer an authentication token to the
@@ -194,19 +166,3 @@
 
 <!-- Logs panel -->
 <!ENTITY logs_title "패키징 전 명령어 로그">
-
-<!-- Simulator Options -->
-<!ENTITY simulator_title "시뮬레이터 설정">
-<!ENTITY simulator_remove "시뮬레이터 없애기">
-<!ENTITY simulator_reset "기본값으로 복원">
-<!ENTITY simulator_name "이름">
-<!ENTITY simulator_software "소프트웨어">
-<!ENTITY simulator_version "버전">
-<!ENTITY simulator_profile "프로필">
-<!ENTITY simulator_hardware "하드웨어">
-<!ENTITY simulator_device "기기">
-<!ENTITY simulator_screenSize "스크린">
-<!ENTITY simulator_pixelRatio "픽셀 비율">
-<!ENTITY simulator_tv_data "TV 시뮬레이션">
-<!ENTITY simulator_tv_data_open "설정 데이타">
-<!ENTITY simulator_tv_data_open_button "설정 디렉토리 열기…">

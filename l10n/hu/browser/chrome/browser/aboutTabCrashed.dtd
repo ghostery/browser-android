@@ -20,7 +20,7 @@
 <!ENTITY tabCrashed.single.offerHelpMessage2 "Válassza a „&tabCrashed.restoreTab;” lehetőséget az oldal újratöltéséhez.">
 <!ENTITY tabCrashed.multiple.offerHelpMessage2 "Válassza a „&tabCrashed.restoreTab;” vagy „&tabCrashed.restoreAll;” lehetőséget a lap/lapok újratöltéséhez.">
 <!ENTITY tabCrashed.requestHelp "Segít nekünk?">
-<!ENTITY tabCrashed.requestHelpMessage "A hibajelentések segítenek felismerni a problémák okait, és jobbá tenni a &brandShortName;ot.">
+<!ENTITY tabCrashed.requestHelpMessage "A hibajelentések segítenek felismerni a problémák okait, és jobbá tenni a &brandShortName; böngészőt.">
 <!ENTITY tabCrashed.requestReport "A lap jelentése">
 <!ENTITY tabCrashed.sendReport3 "Automatikus összeomlás-bejelentés küldése, hogy megoldhassuk az ilyen problémákat.">
 <!ENTITY tabCrashed.commentPlaceholder2 "Választható hozzászólások (a hozzászólások nyilvánosak)">

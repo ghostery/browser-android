@@ -6,18 +6,23 @@
 
 #include "ChromeUtils.h"
 
+#include "js/AutoByteString.h"
+#include "js/SavedFrameAPI.h"
 #include "jsfriendapi.h"
 #include "WrapperFactory.h"
 
 #include "mozilla/Base64.h"
 #include "mozilla/BasePrincipal.h"
 #include "mozilla/CycleCollectedJSRuntime.h"
-#include "mozilla/PerformanceUtils.h"
+#include "mozilla/PerformanceMetricsCollector.h"
+#include "mozilla/Preferences.h"
 #include "mozilla/TimeStamp.h"
+#include "mozilla/dom/BrowsingContext.h"
 #include "mozilla/dom/ContentParent.h"
 #include "mozilla/dom/IdleDeadline.h"
 #include "mozilla/dom/UnionTypes.h"
 #include "mozilla/dom/WindowBinding.h" // For IdleRequestCallback/Options
+#include "IOActivityMonitor.h"
 #include "nsThreadUtils.h"
 #include "mozJSComponentLoader.h"
 #include "GeckoProfiler.h"
@@ -215,7 +220,7 @@ ChromeUtils::ShallowClone(GlobalObject& aGlobal,
       return;
     }
 
-    JSAutoCompartment ac(cx, obj);
+    JSAutoRealm ar(cx, obj);
 
     if (!JS_Enumerate(cx, obj, &ids) ||
         !values.reserve(ids.length())) {
@@ -238,14 +243,14 @@ ChromeUtils::ShallowClone(GlobalObject& aGlobal,
 
   JS::RootedObject obj(cx);
   {
-    Maybe<JSAutoCompartment> ac;
+    Maybe<JSAutoRealm> ar;
     if (aTarget) {
       JS::RootedObject target(cx, js::CheckedUnwrap(aTarget));
       if (!target) {
         js::ReportAccessDenied(cx);
         return;
       }
-      ac.emplace(cx, target);
+      ar.emplace(cx, target);
     }
 
     obj = JS_NewPlainObject(cx);
@@ -480,16 +485,11 @@ namespace module_getter {
     }
 
     JS::RootedValue value(aCx);
-    {
-      JSAutoCompartment ac(aCx, moduleExports);
-
-      if (!JS_GetPropertyById(aCx, moduleExports, id, &value)) {
-        return false;
-      }
+    if (!JS_GetPropertyById(aCx, moduleExports, id, &value)) {
+      return false;
     }
 
-    if (!JS_WrapValue(aCx, &value) ||
-        !JS_DefinePropertyById(aCx, thisObj, id, value,
+    if (!JS_DefinePropertyById(aCx, thisObj, id, value,
                                JSPROP_ENUMERATE)) {
       return false;
     }
@@ -547,9 +547,7 @@ namespace module_getter {
 
     js::SetFunctionNativeReserved(getter, SLOT_URI, uri);
 
-    return JS_DefinePropertyById(aCx, aTarget, id,
-                                 JS_DATA_TO_FUNC_PTR(JSNative, getter.get()),
-                                 JS_DATA_TO_FUNC_PTR(JSNative, setter.get()),
+    return JS_DefinePropertyById(aCx, aTarget, id, getter, setter,
                                  JSPROP_GETTER | JSPROP_SETTER | JSPROP_ENUMERATE);
   }
 } // namespace module_getter
@@ -655,29 +653,27 @@ ChromeUtils::ClearRecentJSDevError(GlobalObject&)
 }
 #endif // NIGHTLY_BUILD
 
-/* static */ void
-ChromeUtils::RequestPerformanceMetrics(GlobalObject&)
+/* static */
+already_AddRefed<Promise>
+ChromeUtils::RequestPerformanceMetrics(GlobalObject& aGlobal,
+                                       ErrorResult& aRv)
 {
   MOZ_ASSERT(XRE_IsParentProcess());
 
-  // calling all content processes via IPDL (async)
-  nsTArray<ContentParent*> children;
-  ContentParent::GetAll(children);
-  for (uint32_t i = 0; i < children.Length(); i++) {
-    mozilla::Unused << children[i]->SendRequestPerformanceMetrics();
+  // Creating a promise
+  nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
+  MOZ_ASSERT(global);
+  RefPtr<Promise> domPromise = Promise::Create(global, aRv);
+  if (NS_WARN_IF(aRv.Failed())) {
+    return nullptr;
   }
+  MOZ_ASSERT(domPromise);
 
+  // requesting metrics, that will be returned into the promise
+  PerformanceMetricsCollector::RequestMetrics(domPromise);
 
-  // collecting the current process counters and notifying them
-  nsTArray<PerformanceInfo> info;
-  CollectPerformanceInfo(info);
-  SystemGroup::Dispatch(TaskCategory::Performance,
-    NS_NewRunnableFunction(
-      "RequestPerformanceMetrics",
-      [info]() { mozilla::Unused << NS_WARN_IF(NS_FAILED(NotifyPerformanceInfo(info))); }
-    )
-  );
-
+  // sending back the promise instance
+  return domPromise.forget();
 }
 
 constexpr auto kSkipSelfHosted = JS::SavedFrameSelfHosted::Exclude;
@@ -693,7 +689,7 @@ ChromeUtils::GetCallerLocation(const GlobalObject& aGlobal, nsIPrincipal* aPrinc
   JS::StackCapture captureMode(JS::FirstSubsumedFrame(cx, principals));
 
   JS::RootedObject frame(cx);
-  if (!JS::CaptureCurrentStack(cx, &frame, mozilla::Move(captureMode))) {
+  if (!JS::CaptureCurrentStack(cx, &frame, std::move(captureMode))) {
     JS_ClearPendingException(cx);
     aRetval.set(nullptr);
     return;
@@ -711,7 +707,7 @@ ChromeUtils::CreateError(const GlobalObject& aGlobal, const nsAString& aMessage,
                          JS::Handle<JSObject*> aStack,
                          JS::MutableHandle<JSObject*> aRetVal, ErrorResult& aRv)
 {
-  if (aStack && !JS::IsSavedFrame(aStack)) {
+  if (aStack && !JS::IsMaybeWrappedSavedFrame(aStack)) {
     aRv.Throw(NS_ERROR_INVALID_ARG);
     return;
   }
@@ -728,15 +724,16 @@ ChromeUtils::CreateError(const GlobalObject& aGlobal, const nsAString& aMessage,
     uint32_t line = 0;
     uint32_t column = 0;
 
-    Maybe<JSAutoCompartment> ac;
+    Maybe<JSAutoRealm> ar;
     JS::RootedObject stack(cx);
     if (aStack) {
       stack = UncheckedUnwrap(aStack);
-      ac.emplace(cx, stack);
+      ar.emplace(cx, stack);
 
-      if (JS::GetSavedFrameLine(cx, stack, &line) != JS::SavedFrameResult::Ok ||
-          JS::GetSavedFrameColumn(cx, stack, &column) != JS::SavedFrameResult::Ok ||
-          JS::GetSavedFrameSource(cx, stack, &fileName) != JS::SavedFrameResult::Ok) {
+      JSPrincipals* principals = JS::GetRealmPrincipals(js::GetContextRealm(cx));
+      if (JS::GetSavedFrameLine(cx, principals, stack, &line) != JS::SavedFrameResult::Ok ||
+          JS::GetSavedFrameColumn(cx, principals, stack, &column) != JS::SavedFrameResult::Ok ||
+          JS::GetSavedFrameSource(cx, principals, stack, &fileName) != JS::SavedFrameResult::Ok) {
         return;
       }
     }
@@ -767,6 +764,29 @@ ChromeUtils::CreateError(const GlobalObject& aGlobal, const nsAString& aMessage,
 
   cleanup.release();
   aRetVal.set(retVal);
+}
+
+/* static */ already_AddRefed<Promise>
+ChromeUtils::RequestIOActivity(GlobalObject& aGlobal, ErrorResult& aRv)
+{
+  MOZ_ASSERT(XRE_IsParentProcess());
+  MOZ_ASSERT(Preferences::GetBool(IO_ACTIVITY_ENABLED_PREF, false));
+  nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
+  MOZ_ASSERT(global);
+  RefPtr<Promise> domPromise = Promise::Create(global, aRv);
+  if (NS_WARN_IF(aRv.Failed())) {
+    return nullptr;
+  }
+  MOZ_ASSERT(domPromise);
+  mozilla::net::IOActivityMonitor::RequestActivities(domPromise);
+  return domPromise.forget();
+}
+
+/* static */ void
+ChromeUtils::GetRootBrowsingContexts(GlobalObject& aGlobal,
+                                     nsTArray<RefPtr<BrowsingContext>>& aBrowsingContexts)
+{
+  BrowsingContext::GetRootBrowsingContexts(aBrowsingContexts);
 }
 
 } // namespace dom

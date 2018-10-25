@@ -1,7 +1,8 @@
 const { AppConstants } = ChromeUtils.import("resource://gre/modules/AppConstants.jsm", {});
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
-const { MessageContext } = ChromeUtils.import("resource://gre/modules/MessageContext.jsm", {});
-Cu.importGlobalProperties(["fetch"]);
+const { MessageContext, FluentResource } = ChromeUtils.import("resource://gre/modules/MessageContext.jsm", {});
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
 
 /**
  * L10nRegistry is a localization resource management system for Gecko.
@@ -75,10 +76,8 @@ Cu.importGlobalProperties(["fetch"]);
  * and will produce a new set of permutations placing the language pack provided resources
  * at the top.
  */
-
 const L10nRegistry = {
   sources: new Map(),
-  ctxCache: new Map(),
   bootstrap: null,
 
   /**
@@ -94,8 +93,29 @@ const L10nRegistry = {
       await this.bootstrap;
     }
     const sourcesOrder = Array.from(this.sources.keys()).reverse();
+    const pseudoNameFromPref = Services.prefs.getStringPref("intl.l10n.pseudo", "");
     for (const locale of requestedLangs) {
-      yield * generateContextsForLocale(locale, sourcesOrder, resourceIds);
+      for (const fetchPromises of generateResourceSetsForLocale(locale, sourcesOrder, resourceIds)) {
+        const ctx = await Promise.all(fetchPromises).then(
+          dataSets => {
+            const ctx = new MessageContext(locale, {
+              ...MSG_CONTEXT_OPTIONS,
+              transform: PSEUDO_STRATEGIES[pseudoNameFromPref],
+            });
+            for (const data of dataSets) {
+              if (data === null) {
+                return null;
+              }
+              ctx.addResource(data);
+            }
+            return ctx;
+          },
+          () => null
+        );
+        if (ctx !== null) {
+          yield ctx;
+        }
+      }
     }
   },
 
@@ -125,7 +145,6 @@ const L10nRegistry = {
       throw new Error(`Source with name "${source.name}" is not registered.`);
     }
     this.sources.set(source.name, source);
-    this.ctxCache.clear();
     Services.locale.setAvailableLocales(this.getAvailableLocales());
   },
 
@@ -158,21 +177,6 @@ const L10nRegistry = {
 };
 
 /**
- * A helper function for generating unique context ID used for caching
- * MessageContexts.
- *
- * @param {String} locale
- * @param {Array} sourcesOrder
- * @param {Array} resourceIds
- * @returns {String}
- */
-function generateContextID(locale, sourcesOrder, resourceIds) {
-  const sources = sourcesOrder.join(",");
-  const ids = resourceIds.join(",");
-  return `${locale}|${sources}|${ids}`;
-}
-
-/**
  * This function generates an iterator over MessageContexts for a single locale
  * for a given list of resourceIds for all possible combinations of sources.
  *
@@ -186,7 +190,7 @@ function generateContextID(locale, sourcesOrder, resourceIds) {
  * @param {Array} [resolvedOrder]
  * @returns {AsyncIterator<MessageContext>}
  */
-async function* generateContextsForLocale(locale, sourcesOrder, resourceIds, resolvedOrder = []) {
+function* generateResourceSetsForLocale(locale, sourcesOrder, resourceIds, resolvedOrder = []) {
   const resolvedLength = resolvedOrder.length;
   const resourcesLength = resourceIds.length;
 
@@ -207,14 +211,11 @@ async function* generateContextsForLocale(locale, sourcesOrder, resourceIds, res
     // If the number of resolved sources equals the number of resources,
     // create the right context and return it if it loads.
     if (resolvedLength + 1 === resourcesLength) {
-      const ctx = await generateContext(locale, order, resourceIds);
-      if (ctx !== null) {
-        yield ctx;
-      }
-    } else {
+      yield generateResourceSet(locale, order, resourceIds);
+    } else if (resolvedLength < resourcesLength) {
       // otherwise recursively load another generator that walks over the
       // partially resolved list of sources.
-      yield * generateContextsForLocale(locale, sourcesOrder, resourceIds, order);
+      yield * generateResourceSetsForLocale(locale, sourcesOrder, resourceIds, order);
     }
   }
 }
@@ -245,6 +246,93 @@ const MSG_CONTEXT_OPTIONS = {
 };
 
 /**
+ * Pseudolocalizations
+ *
+ * PSEUDO_STRATEGIES is a dict of strategies to be used to modify a
+ * context in order to create pseudolocalizations.  These can be used by
+ * developers to test the localizability of their code without having to
+ * actually speak a foreign language.
+ *
+ * Currently, the following pseudolocales are supported:
+ *
+ *   accented - Ȧȧƈƈḗḗƞŧḗḗḓ Ḗḗƞɠŀīīşħ
+ *
+ *     In Accented English all Latin letters are replaced by accented
+ *     Unicode counterparts which don't impair the readability of the content.
+ *     This allows developers to quickly test if any given string is being
+ *     correctly displayed in its 'translated' form.  Additionally, simple
+ *     heuristics are used to make certain words longer to better simulate the
+ *     experience of international users.
+ *
+ *   bidi - ɥsıʅƃuƎ ıpıԐ
+ *
+ *     Bidi English is a fake RTL locale.  All words are surrounded by
+ *     Unicode formatting marks forcing the RTL directionality of characters.
+ *     In addition, to make the reversed text easier to read, individual
+ *     letters are flipped.
+ *
+ *     Note: The name above is hardcoded to be RTL in case code editors have
+ *     trouble with the RLO and PDF Unicode marks.  In reality, it should be
+ *     surrounded by those marks as well.
+ *
+ * See https://bugzil.la/1450781 for more information.
+ *
+ * In this implementation we use code points instead of inline unicode characters
+ * because the encoding of JSM files mangles them otherwise.
+ */
+
+const ACCENTED_MAP = {
+      // ȦƁƇḒḖƑƓĦĪĴĶĿḾȠǾƤɊŘŞŦŬṼẆẊẎẐ
+      "caps": [550, 385, 391, 7698, 7702, 401, 403, 294, 298, 308, 310, 319, 7742, 544, 510, 420, 586, 344, 350, 358, 364, 7804, 7814, 7818, 7822, 7824],
+      // ȧƀƈḓḗƒɠħīĵķŀḿƞǿƥɋřşŧŭṽẇẋẏẑ
+      "small": [551, 384, 392, 7699, 7703, 402, 608, 295, 299, 309, 311, 320, 7743, 414, 511, 421, 587, 345, 351, 359, 365, 7805, 7815, 7819, 7823, 7825],
+};
+
+const FLIPPED_MAP = {
+      // ∀ԐↃᗡƎℲ⅁HIſӼ⅂WNOԀÒᴚS⊥∩ɅMX⅄Z
+      "caps": [8704, 1296, 8579, 5601, 398, 8498, 8513, 72, 73, 383, 1276, 8514, 87, 78, 79, 1280, 210, 7450, 83, 8869, 8745, 581, 77, 88, 8516, 90],
+      // ɐqɔpǝɟƃɥıɾʞʅɯuodbɹsʇnʌʍxʎz
+      "small": [592, 113, 596, 112, 477, 607, 387, 613, 305, 638, 670, 645, 623, 117, 111, 100, 98, 633, 115, 647, 110, 652, 653, 120, 654, 122],
+};
+
+function transformString(map, elongate = false, prefix = "", postfix = "", msg) {
+  // Exclude access-keys and other single-char messages
+  if (msg.length === 1) {
+    return msg;
+  }
+  // XML entities (&#x202a;) and XML tags.
+  const reExcluded = /(&[#\w]+;|<\s*.+?\s*>)/;
+
+  const parts = msg.split(reExcluded);
+  const modified = parts.map((part) => {
+    if (reExcluded.test(part)) {
+      return part;
+    }
+    return prefix + part.replace(/[a-z]/ig, (ch) => {
+      let cc = ch.charCodeAt(0);
+      if (cc >= 97 && cc <= 122) {
+        const newChar = String.fromCodePoint(map.small[cc - 97]);
+        // duplicate "a", "e", "o" and "u" to emulate ~30% longer text
+        if (elongate && (cc === 97 || cc === 101 || cc === 111 || cc === 117)) {
+          return newChar + newChar;
+        }
+        return newChar;
+      }
+      if (cc >= 65 && cc <= 90) {
+        return String.fromCodePoint(map.caps[cc - 65]);
+      }
+      return ch;
+    }) + postfix;
+  });
+  return modified.join("");
+}
+
+const PSEUDO_STRATEGIES = {
+  "accented": transformString.bind(null, ACCENTED_MAP, true, "", ""),
+  "bidi": transformString.bind(null, FLIPPED_MAP, false, "\u202e", "\u202c"),
+};
+
+/**
  * Generates a single MessageContext by loading all resources
  * from the listed sources for a given locale.
  *
@@ -258,31 +346,10 @@ const MSG_CONTEXT_OPTIONS = {
  * @param {Array} resourceIds
  * @returns {Promise<MessageContext>}
  */
-function generateContext(locale, sourcesOrder, resourceIds) {
-  const ctxId = generateContextID(locale, sourcesOrder, resourceIds);
-  if (L10nRegistry.ctxCache.has(ctxId)) {
-    return L10nRegistry.ctxCache.get(ctxId);
-  }
-
-  const fetchPromises = resourceIds.map((resourceId, i) => {
+function generateResourceSet(locale, sourcesOrder, resourceIds) {
+  return resourceIds.map((resourceId, i) => {
     return L10nRegistry.sources.get(sourcesOrder[i]).fetchFile(locale, resourceId);
   });
-
-  const ctxPromise = Promise.all(fetchPromises).then(
-    dataSets => {
-      const ctx = new MessageContext(locale, MSG_CONTEXT_OPTIONS);
-      for (const data of dataSets) {
-        if (data === null) {
-          return null;
-        }
-        ctx.addMessages(data);
-      }
-      return ctx;
-    },
-    () => null
-  );
-  L10nRegistry.ctxCache.set(ctxId, ctxPromise);
-  return ctxPromise;
 }
 
 /**
@@ -362,7 +429,9 @@ class FileSource {
       if (this.cache[fullPath] === false) {
         return Promise.reject(`The source has no resources for path "${fullPath}"`);
       }
-      if (this.cache[fullPath].then) {
+      // `true` means that the file is indexed, but hasn't
+      // been fetched yet.
+      if (this.cache[fullPath] !== true) {
         return this.cache[fullPath];
       }
     } else if (this.indexed) {
@@ -370,7 +439,7 @@ class FileSource {
       }
     return this.cache[fullPath] = L10nRegistry.load(fullPath).then(
       data => {
-        return this.cache[fullPath] = data;
+        return this.cache[fullPath] = FluentResource.fromString(data);
       },
       err => {
         this.cache[fullPath] = false;

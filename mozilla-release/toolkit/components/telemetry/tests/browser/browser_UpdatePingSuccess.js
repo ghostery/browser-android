@@ -4,6 +4,7 @@
 
 "use strict";
 
+ChromeUtils.import("resource://gre/modules/TelemetryUtils.jsm", this);
 ChromeUtils.import("resource://testing-common/TelemetryArchiveTesting.jsm", this);
 
 add_task(async function test_updatePing() {
@@ -13,10 +14,11 @@ add_task(async function test_updatePing() {
   // Set the preferences needed for the test: they will be cleared up
   // after it runs.
   await SpecialPowers.pushPrefEnv({"set": [
+    [TelemetryUtils.Preferences.UpdatePing, true],
     ["app.update.postupdate", true],
     ["browser.startup.homepage_override.mstone", TEST_VERSION],
     ["browser.startup.homepage_override.buildID", TEST_BUILDID],
-    ["toolkit.telemetry.log.level", "Trace"]
+    ["toolkit.telemetry.log.level", "Trace"],
   ]});
 
   // Start monitoring the ping archive.
@@ -37,7 +39,7 @@ add_task(async function test_updatePing() {
     updatePing = await archiveChecker.promiseFindPing("update", [
         [["payload", "reason"], "success"],
         [["payload", "previousBuildId"], TEST_BUILDID],
-        [["payload", "previousVersion"], TEST_VERSION]
+        [["payload", "previousVersion"], TEST_VERSION],
       ]);
     return !!updatePing;
   }, "Make sure the ping is generated before trying to validate it.", 500, 100);

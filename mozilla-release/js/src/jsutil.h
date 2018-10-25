@@ -153,18 +153,17 @@ Max(T t1, T t2)
 }
 
 template <typename T, typename U>
-static inline U
+static constexpr U
 ComputeByteAlignment(T bytes, U alignment)
 {
     static_assert(mozilla::IsUnsigned<U>::value,
                   "alignment amount must be unsigned");
 
-    MOZ_ASSERT(mozilla::IsPowerOfTwo(alignment));
     return (alignment - (bytes % alignment)) % alignment;
 }
 
 template <typename T, typename U>
-static inline T
+static constexpr T
 AlignBytes(T bytes, U alignment)
 {
     static_assert(mozilla::IsUnsigned<U>::value,
@@ -268,7 +267,8 @@ const uint8_t JS_SWEPT_TENURED_PATTERN     = 0x4B;
 const uint8_t JS_ALLOCATED_TENURED_PATTERN = 0x4D;
 const uint8_t JS_FREED_HEAP_PTR_PATTERN    = 0x6B;
 const uint8_t JS_FREED_CHUNK_PATTERN       = 0x8B;
-#define JS_SWEPT_TI_PATTERN 0x6F
+const uint8_t JS_SWEPT_TI_PATTERN          = 0x6F;
+const uint8_t JS_FRESH_MARK_STACK_PATTERN  = 0x9F;
 
 /*
  * Ensure JS_SWEPT_CODE_PATTERN is a byte pattern that will crash immediately
@@ -343,11 +343,13 @@ AlwaysPoison(void* ptr, uint8_t value, size_t num, MemCheckKind kind)
     SetMemCheckKind(ptr, num, kind);
 }
 
+// JSGC_DISABLE_POISONING environment variable
+extern bool gDisablePoisoning;
+
 static inline void
 Poison(void* ptr, uint8_t value, size_t num, MemCheckKind kind)
 {
-    static bool disablePoison = bool(getenv("JSGC_DISABLE_POISONING"));
-    if (!disablePoison)
+    if (!js::gDisablePoisoning)
         AlwaysPoison(ptr, value, num, kind);
 }
 

@@ -1,22 +1,23 @@
 "use strict";
 
-/* This test will ideally test the following cases
-   (each with and without a callback associated with it)
-   * Case A: Tests which should remove pages (Positives)
-   *   Case A 1: Page has multiple visits both in/out of timeframe, all get deleted
-   *   Case A 2: Page has single uri, removed by host
-   *   Case A 3: Page has random subhost, with same host, removed by wildcard
-   *   Case A 4: Page is localhost and localhost:port, removed by host
-   *   Case A 5: Page is a `file://` type address, removed by empty host
-   * Cases A 1,2,3 will be tried with and without bookmarks added (which prevent page deletion)
-   * Case B: Tests in which no pages are removed (Inverses)
-   *   Case B 1 (inverse): Page has no visits in timeframe, and nothing is deleted
-   *   Case B 2: Page has single uri, not removed since hostname is different
-   *   Case B 3: Page has multiple subhosts, not removed since wildcard doesn't match
-   * Case C: Combinations tests
-   *   Case C 1: Single hostname, multiple visits, at least one in timeframe and hostname
-   *   Case C 2: Random subhosts, multiple visits, at least one in timeframe and hostname-wildcard
-   */
+/*
+This test will ideally test the following cases
+(each with and without a callback associated with it)
+  Case A: Tests which should remove pages (Positives)
+    Case A 1: Page has multiple visits both in/out of timeframe, all get deleted
+    Case A 2: Page has single uri, removed by host
+    Case A 3: Page has random subhost, with same host, removed by wildcard
+    Case A 4: Page is localhost and localhost:port, removed by host
+    Case A 5: Page is a `file://` type address, removed by empty host
+    Cases A 1,2,3 will be tried with and without bookmarks added (which prevent page deletion)
+  Case B: Tests in which no pages are removed (Inverses)
+    Case B 1 (inverse): Page has no visits in timeframe, and nothing is deleted
+    Case B 2: Page has single uri, not removed since hostname is different
+    Case B 3: Page has multiple subhosts, not removed since wildcard doesn't match
+  Case C: Combinations tests
+    Case C 1: Single hostname, multiple visits, at least one in timeframe and hostname
+    Case C 2: Random subhosts, multiple visits, at least one in timeframe and hostname-wildcard
+*/
 
 add_task(async function test_removeByFilter() {
   // Cleanup
@@ -35,7 +36,7 @@ add_task(async function test_removeByFilter() {
       await PlacesUtils.bookmarks.insert({
         parentGuid: PlacesUtils.bookmarks.unfiledGuid,
         url: bookmarkedUri,
-        title: "test bookmark"
+        title: "test bookmark",
       });
     }
     await checkBeforeRemove();
@@ -71,7 +72,7 @@ add_task(async function test_removeByFilter() {
 
   const remoteUriList = [ "http://mozilla.org/test_browserhistory/test_removeByFilter/" + Math.random(),
                           "http://subdomain1.mozilla.org/test_browserhistory/test_removeByFilter/" + Math.random(),
-                          "http://subdomain2.mozilla.org/test_browserhistory/test_removeByFilter/" + Math.random()
+                          "http://subdomain2.mozilla.org/test_browserhistory/test_removeByFilter/" + Math.random(),
                         ];
   const localhostUriList = [ "http://localhost:4500/" + Math.random(), "http://localhost/" + Math.random() ];
   const fileUriList = [ "file:///home/user/files" + Math.random() ];
@@ -80,51 +81,51 @@ add_task(async function test_removeByFilter() {
     {
       uri: remoteUriList[0],
       title,
-      visitDate: new Date(2005, 1, 1) * 1000
+      visitDate: new Date(2005, 1, 1) * 1000,
     },
     {
       uri: remoteUriList[0],
       title,
-      visitDate: new Date(2005, 3, 3) * 1000
+      visitDate: new Date(2005, 3, 3) * 1000,
     },
     {
       uri: remoteUriList[0],
       title,
-      visitDate: new Date(2007, 1, 1) * 1000
-    }
+      visitDate: new Date(2007, 1, 1) * 1000,
+    },
   ];
   let randomHostVisits = [
     {
       uri: remoteUriList[0],
       title,
-      visitDate: new Date(2005, 1, 1) * 1000
+      visitDate: new Date(2005, 1, 1) * 1000,
     },
     {
       uri: remoteUriList[1],
       title,
-      visitDate: new Date(2005, 3, 3) * 1000
+      visitDate: new Date(2005, 3, 3) * 1000,
     },
     {
       uri: remoteUriList[2],
       title,
-      visitDate: new Date(2007, 1, 1) * 1000
-    }
+      visitDate: new Date(2007, 1, 1) * 1000,
+    },
   ];
   let localhostVisits = [
     {
       uri: localhostUriList[0],
-      title
+      title,
     },
     {
       uri: localhostUriList[1],
-      title
-    }
+      title,
+    },
   ];
   let fileVisits = [
     {
       uri: fileUriList[0],
-      title
-    }
+      title,
+    },
   ];
   let assertInDB = async function(aUri) {
       Assert.ok((await PlacesTestUtils.isPageInDB(aUri)));
@@ -155,7 +156,7 @@ add_task(async function test_removeByFilter() {
                                  () => checkClosure(remoteUriList[0]),
                                  callbackUse, bookmarkedUri(remoteUriList));
       // Case A 3: Multiple subhost
-      await removeByFilterTester(randomHostVisits, { host: "*.mozilla.org" },
+      await removeByFilterTester(randomHostVisits, { host: ".mozilla.org" },
                                  async () => { for (let uri of remoteUriList) await assertInDB(uri); },
                                  async () => { for (let uri of checkableArray(remoteUriList)) await checkClosure(uri); },
                                  callbackUse, bookmarkedUri(remoteUriList));
@@ -167,7 +168,7 @@ add_task(async function test_removeByFilter() {
                                async () => { for (let uri of localhostUriList) await assertNotInDB(uri); },
                                callbackUse);
     // Case A 5: Local Files
-    await removeByFilterTester(fileVisits, { host: "" },
+    await removeByFilterTester(fileVisits, { host: "." },
                                async () => { for (let uri of fileUriList) await assertInDB(uri); },
                                async () => { for (let uri of fileUriList) await assertNotInDB(uri); },
                                callbackUse);
@@ -185,7 +186,12 @@ add_task(async function test_removeByFilter() {
                                () => assertInDB(remoteUriList[0]),
                                callbackUse);
     // Case B 3 : Multiple subhosts
-    await removeByFilterTester(randomHostVisits, { host: "*.notthere.org" },
+    await removeByFilterTester(randomHostVisits, { host: ".notthere.org" },
+                               async () => { for (let uri of remoteUriList) await assertInDB(uri); },
+                               async () => { for (let uri of remoteUriList) await assertInDB(uri); },
+                               callbackUse);
+    // Case B 4 : invalid local subhost
+    await removeByFilterTester(randomHostVisits, { host: ".org" },
                                async () => { for (let uri of remoteUriList) await assertInDB(uri); },
                                async () => { for (let uri of remoteUriList) await assertInDB(uri); },
                                callbackUse);
@@ -201,7 +207,7 @@ add_task(async function test_removeByFilter() {
                                callbackUse);
     // Case C 2: multiple subhost
     await removeByFilterTester(randomHostVisits,
-                               { host: "*.mozilla.org",
+                               { host: ".mozilla.org",
                                  beginDate: new Date(2005, 1, 1),
                                  endDate: new Date(2017, 1, 1) },
                                async () => { for (let uri of remoteUriList) await assertInDB(uri); },
@@ -246,11 +252,7 @@ add_task(async function test_error_cases() {
       /TypeError: Expected well formed hostname string for/
   );
   Assert.throws(
-    () => PlacesUtils.history.removeByFilter({host: "*.org"}),
-      /TypeError: Expected well formed hostname string for/
-  );
-  Assert.throws(
-    () => PlacesUtils.history.removeByFilter({host: "www.*.org"}),
+    () => PlacesUtils.history.removeByFilter({host: "www..org"}),
       /TypeError: Expected well formed hostname string for/
   );
   Assert.throws(
@@ -258,7 +260,7 @@ add_task(async function test_error_cases() {
       /TypeError: `host` should be a string/
   );
   Assert.throws(
-    () => PlacesUtils.history.removeByFilter({host: ".mozilla.org"}),
+    () => PlacesUtils.history.removeByFilter({host: "*.mozilla.org"}),
       /TypeError: Expected well formed hostname string for/
   );
   Assert.throws(
@@ -273,6 +275,10 @@ add_task(async function test_error_cases() {
     () => PlacesUtils.history.removeByFilter({host: "(local files)"}),
       /TypeError: Expected well formed hostname string for/
   );
+  Assert.throws(
+    () => PlacesUtils.history.removeByFilter({host: ""}),
+      /TypeError: Expected a non-empty filter/
+  );
 });
 
 // Helper functions
@@ -286,9 +292,6 @@ function getObserverPromise(bookmarkedUri) {
     observer = {
       onBeginUpdateBatch() {},
       onEndUpdateBatch() {},
-      onVisits() {
-        reject(new Error("Unexpected call to onVisits"));
-      },
       onTitleChanged(aUri) {
         reject(new Error("Unexpected call to onTitleChanged"));
       },
@@ -307,14 +310,14 @@ function getObserverPromise(bookmarkedUri) {
           resolve();
         }
       },
-      onDeleteVisits(aURI, aVisitTime) {
+      onDeleteVisits(aURI, aPartialRemoval) {
         try {
-          Assert.equal(aVisitTime, PlacesUtils.toPRTime(new Date(0)), "Observing onDeleteVisits deletes all visits");
+          Assert.equal(aPartialRemoval, false, "Observing onDeleteVisits deletes all visits");
           Assert.equal(aURI.spec, bookmarkedUri, "Bookmarked URI should have all visits removed but not the page itself");
         } finally {
           resolve();
         }
-      }
+      },
     };
   });
   return { observer, promiseObserved };

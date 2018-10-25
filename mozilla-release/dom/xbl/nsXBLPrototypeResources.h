@@ -9,10 +9,8 @@
 
 #include "mozilla/MemoryReporting.h"
 #include "mozilla/StyleSheet.h"
-#include "mozilla/ServoStyleRuleMap.h"
 #include "nsICSSLoaderObserver.h"
 
-class nsCSSRuleProcessor;
 class nsAtom;
 class nsIContent;
 class nsXBLPrototypeBinding;

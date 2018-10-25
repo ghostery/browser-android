@@ -2,8 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-use glutin;
-use glutin::{WindowBuilder, ContextBuilder, EventsLoop, Window, CreationError};
+use glutin::{self, ContextBuilder, CreationError};
+#[cfg(not(windows))]
+use winit::dpi::PhysicalSize;
+use winit::{EventsLoop, Window, WindowBuilder};
 
 #[cfg(not(windows))]
 pub enum Context {}
@@ -27,7 +29,7 @@ impl Context {
         context_builder: ContextBuilder,
         events_loop: &EventsLoop,
     ) -> Result<(Window, Self), CreationError> {
-        use glutin::os::windows::WindowExt;
+        use winit::os::windows::WindowExt;
 
         // FIXME: &context_builder.pf_reqs  https://github.com/tomaka/glutin/pull/1002
         let pf_reqs = &glutin::PixelFormatRequirements::default();
@@ -65,7 +67,7 @@ impl glutin::GlContext for Context {
         match *self {}
     }
 
-    fn resize(&self, _: u32, _: u32) {
+    fn resize(&self, _: PhysicalSize) {
         match *self {}
     }
 }

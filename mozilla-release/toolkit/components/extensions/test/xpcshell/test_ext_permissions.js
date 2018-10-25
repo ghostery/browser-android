@@ -11,6 +11,8 @@ AddonTestUtils.init(this);
 AddonTestUtils.overrideCertDB();
 AddonTestUtils.createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "42");
 
+Services.prefs.setBoolPref("extensions.webextensions.background-delayed-startup", false);
+
 let extensionHandlers = new WeakSet();
 
 function frameScript() {
@@ -21,9 +23,7 @@ function frameScript() {
   MessageChannel.addListener(this, "ExtensionTest:HandleUserInput", {
     receiveMessage({name, data}) {
       if (data) {
-        handle = content.QueryInterface(Ci.nsIInterfaceRequestor)
-                        .getInterface(Ci.nsIDOMWindowUtils)
-                        .setHandlingUserInput(true);
+        handle = content.windowUtils.setHandlingUserInput(true);
       } else if (handle) {
         handle.destruct();
         handle = null;
@@ -36,7 +36,7 @@ async function withHandlingUserInput(extension, fn) {
   let {messageManager} = extension.extension.groupFrameLoader;
 
   if (!extensionHandlers.has(extension)) {
-    messageManager.loadFrameScript(`data:,(${frameScript})(this)`, false);
+    messageManager.loadFrameScript(`data:,(${frameScript}).call(this)`, false, true);
     extensionHandlers.add(extension);
   }
 
@@ -410,7 +410,9 @@ const GRANTED_WITHOUT_USER_PROMPT = [
   "idle",
   "menus",
   "mozillaAddons",
+  "search",
   "storage",
+  "telemetry",
   "theme",
   "webRequest",
   "webRequestBlocking",

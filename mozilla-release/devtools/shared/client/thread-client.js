@@ -1,3 +1,4 @@
+/* -*- indent-tabs-mode: nil; js-indent-level: 2 -*- */
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -25,8 +26,8 @@ const noop = () => {};
  * protocol details in a traditional JavaScript API.
  *
  * @param client DebuggerClient|TabClient
- *        The parent of the thread (tab for tab-scoped debuggers, DebuggerClient
- *        for chrome debuggers).
+ *        The parent of the thread (tab for target-scoped debuggers,
+ *        DebuggerClient for chrome debuggers).
  * @param actor string
  *        The actor ID for this thread.
  */
@@ -77,12 +78,17 @@ ThreadClient.prototype = {
    *        An object with a type property set to the appropriate limit (next,
    *        step, or finish) per the remote debugging protocol specification.
    *        Use null to specify no limit.
+   * @param bool aRewind
+   *        Whether execution should rewind until the limit is reached, rather
+   *        than proceeding forwards. This parameter has no effect if the
+   *        server does not support rewinding.
    * @param function onResponse
    *        Called with the response packet.
    */
   _doResume: DebuggerClient.requester({
     type: "resume",
-    resumeLimit: arg(0)
+    resumeLimit: arg(0),
+    rewind: arg(1)
   }, {
     before: function(packet) {
       this._assertPaused("resume");
@@ -136,7 +142,7 @@ ThreadClient.prototype = {
    * Resume a paused thread.
    */
   resume: function(onResponse) {
-    return this._doResume(null, onResponse);
+    return this._doResume(null, false, onResponse);
   },
 
   /**
@@ -146,7 +152,17 @@ ThreadClient.prototype = {
    *        Called with the response packet.
    */
   resumeThenPause: function(onResponse) {
-    return this._doResume({ type: "break" }, onResponse);
+    return this._doResume({ type: "break" }, false, onResponse);
+  },
+
+  /**
+   * Rewind a thread until a breakpoint is hit.
+   *
+   * @param function aOnResponse
+   *        Called with the response packet.
+   */
+  rewind: function(onResponse) {
+    this._doResume(null, true, onResponse);
   },
 
   /**
@@ -156,7 +172,7 @@ ThreadClient.prototype = {
    *        Called with the response packet.
    */
   stepOver: function(onResponse) {
-    return this._doResume({ type: "next" }, onResponse);
+    return this._doResume({ type: "next" }, false, onResponse);
   },
 
   /**
@@ -166,7 +182,7 @@ ThreadClient.prototype = {
    *        Called with the response packet.
    */
   stepIn: function(onResponse) {
-    return this._doResume({ type: "step" }, onResponse);
+    return this._doResume({ type: "step" }, false, onResponse);
   },
 
   /**
@@ -176,7 +192,37 @@ ThreadClient.prototype = {
    *        Called with the response packet.
    */
   stepOut: function(onResponse) {
-    return this._doResume({ type: "finish" }, onResponse);
+    return this._doResume({ type: "finish" }, false, onResponse);
+  },
+
+  /**
+   * Rewind step over a function call.
+   *
+   * @param function aOnResponse
+   *        Called with the response packet.
+   */
+  reverseStepOver: function(onResponse) {
+    return this._doResume({ type: "next" }, true, onResponse);
+  },
+
+  /**
+   * Rewind step into a function call.
+   *
+   * @param function aOnResponse
+   *        Called with the response packet.
+   */
+  reverseStepIn: function(onResponse) {
+    return this._doResume({ type: "step" }, true, onResponse);
+  },
+
+  /**
+   * Rewind step out of a function call.
+   *
+   * @param function aOnResponse
+   *        Called with the response packet.
+   */
+  reverseStepOut: function(onResponse) {
+    return this._doResume({ type: "finish" }, true, onResponse);
   },
 
   /**
@@ -197,6 +243,25 @@ ThreadClient.prototype = {
    */
   breakOnNext: function(onResponse) {
     return this._doInterrupt("onNext", onResponse);
+  },
+
+  /**
+   * Warp through time to an execution point in the past or future.
+   *
+   * @param object aTarget
+   *        Description of the warp destination.
+   * @param function aOnResponse
+   *        Called with the response packet.
+   */
+  timeWarp: function(target, onResponse) {
+    const warp = () => {
+      this._doResume({ type: "warp", target }, true, onResponse);
+    };
+    if (this.paused) {
+      warp();
+    } else {
+      this.interrupt(warp);
+    }
   },
 
   /**
@@ -396,6 +461,17 @@ ThreadClient.prototype = {
   }),
 
   /**
+   * Toggle pausing via breakpoints in the server.
+   *
+   * @param skip boolean
+   *        Whether the server should skip pausing via breakpoints
+   */
+  skipBreakpoints: DebuggerClient.requester({
+    type: "skipBreakpoints",
+    skip: arg(0),
+  }),
+
+  /**
    * An array of cached frames. Clients can observe the framesadded and
    * framescleared event to keep up to date on changes to this cache,
    * and can fill it using the fillFrames method.
@@ -438,7 +514,7 @@ ThreadClient.prototype = {
       return false;
     }
 
-    let numFrames = this._frameCache.length;
+    const numFrames = this._frameCache.length;
 
     this.getFrames(numFrames, total - numFrames, (response) => {
       if (response.error) {
@@ -446,14 +522,14 @@ ThreadClient.prototype = {
         return;
       }
 
-      let threadGrips = DevToolsUtils.values(this._threadGrips);
+      const threadGrips = DevToolsUtils.values(this._threadGrips);
 
-      for (let i in response.frames) {
-        let frame = response.frames[i];
+      for (const i in response.frames) {
+        const frame = response.frames[i];
         if (!frame.where.source) {
           // Older servers use urls instead, so we need to resolve
           // them to source actors
-          for (let grip of threadGrips) {
+          for (const grip of threadGrips) {
             if (grip instanceof SourceClient && grip.url === frame.url) {
               frame.where.source = grip._form;
             }
@@ -495,7 +571,7 @@ ThreadClient.prototype = {
       return this._pauseGrips[grip.actor];
     }
 
-    let client = new ObjectClient(this.client, grip);
+    const client = new ObjectClient(this.client, grip);
     this._pauseGrips[grip.actor] = client;
     return client;
   },
@@ -515,7 +591,7 @@ ThreadClient.prototype = {
       return this[gripCacheName][grip.actor];
     }
 
-    let client = new LongStringClient(this.client, grip);
+    const client = new LongStringClient(this.client, grip);
     this[gripCacheName][grip.actor] = client;
     return client;
   },
@@ -557,7 +633,7 @@ ThreadClient.prototype = {
       return this[gripCacheName][grip.actor];
     }
 
-    let client = new ArrayBufferClient(this.client, grip);
+    const client = new ArrayBufferClient(this.client, grip);
     this[gripCacheName][grip.actor] = client;
     return client;
   },
@@ -580,7 +656,7 @@ ThreadClient.prototype = {
    *        The property name of the grip cache we want to clear.
    */
   _clearObjectClients: function(gripCacheName) {
-    for (let id in this[gripCacheName]) {
+    for (const id in this[gripCacheName]) {
       this[gripCacheName][id].valid = false;
     }
     this[gripCacheName] = {};

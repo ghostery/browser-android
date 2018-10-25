@@ -43,6 +43,7 @@
 #include "nsServiceManagerUtils.h"
 #include "mozilla/Preferences.h"
 #include "mozilla/dom/HTMLFrameElement.h"
+#include "RetainedDisplayListBuilder.h"
 
 using namespace mozilla;
 using mozilla::layout::RenderFrameParent;
@@ -52,7 +53,7 @@ static bool sShowPreviousPage = true;
 static nsIDocument*
 GetDocumentFromView(nsView* aView)
 {
-  NS_PRECONDITION(aView, "");
+  MOZ_ASSERT(aView, "null view");
 
   nsViewManager* vm = aView->GetViewManager();
   nsIPresShell* ps =  vm ? vm->GetPresShell() : nullptr;
@@ -339,7 +340,7 @@ nsSubDocumentFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
 
   // If we are pointer-events:none then we don't need to HitTest background
   bool pointerEventsNone =
-    StyleUserInterface()->mPointerEvents == NS_STYLE_POINTER_EVENTS_NONE;
+    StyleUI()->mPointerEvents == NS_STYLE_POINTER_EVENTS_NONE;
   if (!aBuilder->IsForEventDelivery() || !pointerEventsNone) {
     nsDisplayListCollection decorations(aBuilder);
     DisplayBorderBackgroundOutline(aBuilder, decorations);
@@ -376,6 +377,16 @@ nsSubDocumentFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
 
   if (!presShell) {
     return;
+  }
+
+  if (aBuilder->IsInFilter()) {
+    nsIDocument* outerDoc = PresShell()->GetDocument();
+    nsIDocument* innerDoc = presShell->GetDocument();
+    if (outerDoc && innerDoc) {
+      if (!outerDoc->NodePrincipal()->Equals(innerDoc->NodePrincipal())) {
+        outerDoc->SetDocumentAndPageUseCounter(eUseCounter_custom_FilteredCrossOriginIFrame);
+      }
+    }
   }
 
   nsIFrame* subdocRootFrame = presShell->GetRootFrame();
@@ -497,7 +508,7 @@ nsSubDocumentFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
               : aBuilder->GetCurrentScrollParentId());
 
       bool hasDocumentLevelListenersForApzAwareEvents =
-          nsDisplayListBuilder::LayerEventRegionsEnabled() &&
+          gfxPlatform::AsyncPanZoomEnabled() &&
           nsLayoutUtils::HasDocumentLevelListenersForApzAwareEvents(presShell);
 
       aBuilder->SetAncestorHasApzAwareEventHandler(hasDocumentLevelListenersForApzAwareEvents);
@@ -1046,7 +1057,7 @@ nsSubDocumentFrame::GetMarginAttributes()
 }
 
 nsFrameLoader*
-nsSubDocumentFrame::FrameLoader()
+nsSubDocumentFrame::FrameLoader() const
 {
   nsIContent* content = GetContent();
   if (!content)
@@ -1059,6 +1070,12 @@ nsSubDocumentFrame::FrameLoader()
     }
   }
   return mFrameLoader;
+}
+
+mozilla::layout::RenderFrameParent*
+nsSubDocumentFrame::GetRenderFrameParent() const
+{
+  return FrameLoader() ? FrameLoader()->GetCurrentRenderFrame() : nullptr;
 }
 
 // XXX this should be called ObtainDocShell or something like that,
@@ -1090,7 +1107,7 @@ DestroyDisplayItemDataForFrames(nsIFrame* aFrame)
 static bool
 BeginSwapDocShellsForDocument(nsIDocument* aDocument, void*)
 {
-  NS_PRECONDITION(aDocument, "");
+  MOZ_ASSERT(aDocument, "null document");
 
   nsIPresShell* shell = aDocument->GetShell();
   if (shell) {
@@ -1130,8 +1147,8 @@ BeginSwapDocShellsForViews(nsView* aSibling)
 static void
 InsertViewsInReverseOrder(nsView* aSibling, nsView* aParent)
 {
-  NS_PRECONDITION(aParent, "");
-  NS_PRECONDITION(!aParent->GetFirstChild(), "inserting into non-empty list");
+  MOZ_ASSERT(aParent, "null view");
+  MOZ_ASSERT(!aParent->GetFirstChild(), "inserting into non-empty list");
 
   nsViewManager* vm = aParent->GetViewManager();
   while (aSibling) {
@@ -1157,6 +1174,9 @@ nsSubDocumentFrame::BeginSwapDocShells(nsIFrame* aOther)
     return NS_ERROR_NOT_IMPLEMENTED;
   }
 
+  ClearDisplayItems();
+  other->ClearDisplayItems();
+
   if (mInnerView && other->mInnerView) {
     nsView* ourSubdocViews = mInnerView->GetFirstChild();
     nsView* ourRemovedViews = ::BeginSwapDocShellsForViews(ourSubdocViews);
@@ -1173,7 +1193,7 @@ nsSubDocumentFrame::BeginSwapDocShells(nsIFrame* aOther)
 static bool
 EndSwapDocShellsForDocument(nsIDocument* aDocument, void*)
 {
-  NS_PRECONDITION(aDocument, "");
+  MOZ_ASSERT(aDocument, "null document");
 
   // Our docshell and view trees have been updated for the new hierarchy.
   // Now also update all nsDeviceContext::mWidget to that of the
@@ -1258,6 +1278,30 @@ nsSubDocumentFrame::EndSwapDocShells(nsIFrame* aOther)
     other->PresShell()->
       FrameNeedsReflow(other, nsIPresShell::eTreeChange, NS_FRAME_IS_DIRTY);
     other->InvalidateFrameSubtree();
+  }
+}
+
+void
+nsSubDocumentFrame::ClearDisplayItems()
+{
+  DisplayItemArray* items = GetProperty(DisplayItems());
+  if (!items) {
+    return;
+  }
+
+  nsIFrame* displayRoot = nsLayoutUtils::GetDisplayRootFrame(this);
+  MOZ_ASSERT(displayRoot);
+
+  RetainedDisplayListBuilder* retainedBuilder =
+    displayRoot->GetProperty(RetainedDisplayListBuilder::Cached());
+  MOZ_ASSERT(retainedBuilder);
+
+  for (nsDisplayItem* i : *items) {
+    if (i->GetType() == DisplayItemType::TYPE_SUBDOCUMENT) {
+      i->GetChildren()->DeleteAll(retainedBuilder->Builder());
+      static_cast<nsDisplaySubDocument*>(i)->Disown();
+      break;
+    }
   }
 }
 

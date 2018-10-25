@@ -123,16 +123,6 @@ var PluginProvider = {
   },
 
   /**
-   * Called to get Addons that have pending operations.
-   *
-   * @param  aTypes
-   *         An array of types to fetch. Can be null to get all types
-   */
-  async getAddonsWithOperationsByTypes(aTypes) {
-    return [];
-  },
-
-  /**
    * Called to get the current AddonInstalls, optionally restricting by type.
    *
    * @param  aTypes
@@ -162,7 +152,7 @@ var PluginProvider = {
           id: tag.name + tag.description,
           name: tag.name,
           description: tag.description,
-          tags: [tag]
+          tags: [tag],
         };
 
         seenPlugins[tag.name][tag.description] = plugin;
@@ -240,7 +230,7 @@ var PluginProvider = {
     // Signal that uninstalls are complete
     for (let plugin of lostPlugins)
       AddonManagerPrivate.callAddonListeners("onUninstalled", plugin);
-  }
+  },
 };
 
 function isFlashPlugin(aPlugin) {
@@ -363,6 +353,13 @@ PluginWrapper.prototype = {
     return val;
   },
 
+  async enable() {
+    this.userDisabled = false;
+  },
+  async disable() {
+    this.userDisabled = true;
+  },
+
   get blocklistState() {
     let { tags: [tag] } = pluginFor(this);
     return tag.blocklistState;
@@ -371,33 +368,6 @@ PluginWrapper.prototype = {
   async getBlocklistURL() {
     let { tags: [tag] } = pluginFor(this);
     return Blocklist.getPluginBlockURL(tag);
-  },
-
-  get size() {
-    function getDirectorySize(aFile) {
-      let size = 0;
-      let entries = aFile.directoryEntries.QueryInterface(Ci.nsIDirectoryEnumerator);
-      let entry;
-      while ((entry = entries.nextFile)) {
-        if (entry.isSymlink() || !entry.isDirectory())
-          size += entry.fileSize;
-        else
-          size += getDirectorySize(entry);
-      }
-      entries.close();
-      return size;
-    }
-
-    let size = 0;
-    let file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-    for (let tag of pluginFor(this).tags) {
-      file.initWithPath(tag.fullpath);
-      if (file.isDirectory())
-        size += getDirectorySize(file);
-      else
-        size += file.fileSize;
-    }
-    return size;
   },
 
   get pluginLibraries() {
@@ -545,12 +515,12 @@ PluginWrapper.prototype = {
       aListener.onNoUpdateAvailable(this);
     if ("onUpdateFinished" in aListener)
       aListener.onUpdateFinished(this);
-  }
+  },
 };
 
 AddonManagerPrivate.registerProvider(PluginProvider, [
   new AddonManagerPrivate.AddonType("plugin", URI_EXTENSION_STRINGS,
                                     "type.plugin.name",
                                     AddonManager.VIEW_TYPE_LIST, 6000,
-                                    AddonManager.TYPE_SUPPORTS_ASK_TO_ACTIVATE)
+                                    AddonManager.TYPE_SUPPORTS_ASK_TO_ACTIVATE),
 ]);

@@ -25,29 +25,13 @@ extern crate test;
 mod animated_properties;
 mod attr;
 mod custom_properties;
-mod keyframes;
 mod logical_geometry;
-mod media_queries;
 mod parsing;
 mod properties;
 mod rule_tree;
 mod size_of;
-#[path = "../../../ports/geckolib/tests/specified_values.rs"]
 mod specified_values;
 mod str;
 mod stylesheets;
 mod stylist;
 mod viewport;
-
-mod writing_modes {
-    use style::logical_geometry::WritingMode;
-    use style::properties::INITIAL_SERVO_VALUES;
-
-    #[test]
-    fn initial_writing_mode_is_empty() {
-        assert_eq!(
-            WritingMode::new(INITIAL_SERVO_VALUES.get_inheritedbox()),
-            WritingMode::empty(),
-        )
-    }
-}

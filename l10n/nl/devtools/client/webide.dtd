@@ -41,6 +41,9 @@
 <!ENTITY runtimeMenu_showSettings_label "Apparaatinstellingen">
 <!ENTITY runtimeMenu_showSettings_accesskey "n">
 
+<!ENTITY runtimeMenu_showPerformancePanel_label "Prestaties">
+<!ENTITY runtimeMenu_showPerformancePanel_accesskey "P">
+
 <!ENTITY viewMenu_label "Beeld">
 <!ENTITY viewMenu_accesskey "l">
 <!ENTITY viewMenu_zoomin_label "Inzoomen">

@@ -106,6 +106,24 @@ public:
                                                      const uint64_t& aWidgetID,
                                                      const uint32_t& aType) override;
 
+  virtual mozilla::ipc::IPCResult RecvVirtualCursorChangeEvent(const uint64_t& aID,
+                                                               const uint64_t& aOldPositionID,
+                                                               const int32_t& aOldStartOffset,
+                                                               const int32_t& aOldEndOffset,
+                                                               const uint64_t& aNewPositionID,
+                                                               const int32_t& aNewStartOffset,
+                                                               const int32_t& aNewEndOffset,
+                                                               const int16_t& aReason,
+                                                               const int16_t& aBoundaryType,
+                                                               const bool& aFromUser) override;
+
+  virtual mozilla::ipc::IPCResult RecvScrollingEvent(const uint64_t& aID,
+                                                     const uint64_t& aType,
+                                                     const uint32_t& aScrollX,
+                                                     const uint32_t& aScrollY,
+                                                     const uint32_t& aMaxScrollX,
+                                                     const uint32_t& aMaxScrollY) override;
+
   mozilla::ipc::IPCResult RecvRoleChangedEvent(const a11y::role& aRole) final;
 
   virtual mozilla::ipc::IPCResult RecvBindChildDoc(PDocAccessibleParent* aChildDoc, const uint64_t& aID) override;

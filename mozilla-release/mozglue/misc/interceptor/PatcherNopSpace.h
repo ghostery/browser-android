@@ -17,13 +17,15 @@ namespace interceptor {
 template <typename VMPolicy>
 class WindowsDllNopSpacePatcher final : public WindowsDllPatcherBase<VMPolicy>
 {
+  typedef typename VMPolicy::MMPolicyT MMPolicyT;
+
   // For remembering the addresses of functions we've patched.
   mozilla::Vector<void*> mPatchedFns;
 
 public:
   template <typename... Args>
   explicit WindowsDllNopSpacePatcher(Args... aArgs)
-    : WindowsDllPatcherBase<VMPolicy>(mozilla::Forward<Args>(aArgs)...)
+    : WindowsDllPatcherBase<VMPolicy>(std::forward<Args>(aArgs)...)
   {}
 
   ~WindowsDllNopSpacePatcher()
@@ -49,8 +51,7 @@ public:
       }
 
       // mov edi, edi
-      fn.WriteShort(0xff8b);
-      fn.Commit();
+      fn.CommitAndWriteShort(0xff8b);
     }
 
     mPatchedFns.clear();
@@ -204,8 +205,7 @@ public:
                                          sizeof(uint16_t));
 
     // Short jump up into our long jump.
-    writableFn.WriteShort(0xF9EB); // jmp $-5
-    return writableFn.Commit();
+    return writableFn.CommitAndWriteShort(0xF9EB); // jmp $-5
   }
 };
 

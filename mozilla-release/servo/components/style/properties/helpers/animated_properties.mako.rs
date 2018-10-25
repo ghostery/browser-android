@@ -5,11 +5,10 @@
 <%namespace name="helpers" file="/helpers.mako.rs" />
 
 <%
-    from data import to_idl_name, SYSTEM_FONT_LONGHANDS
+    from data import to_idl_name, SYSTEM_FONT_LONGHANDS, to_camel_case
     from itertools import groupby
 %>
 
-use cssparser::Parser;
 #[cfg(feature = "gecko")] use gecko_bindings::bindings::RawServoAnimationValueMap;
 #[cfg(feature = "gecko")] use gecko_bindings::structs::RawGeckoGfxMatrix4x4;
 #[cfg(feature = "gecko")] use gecko_bindings::structs::nsCSSPropertyID;
@@ -26,14 +25,13 @@ use servo_arc::Arc;
 use smallvec::SmallVec;
 use std::{cmp, ptr};
 use std::mem::{self, ManuallyDrop};
-#[cfg(feature = "gecko")] use hash::FnvHashMap;
-use style_traits::{KeywordsCollectFn, ParseError, SpecifiedValueInfo};
+use hash::FxHashMap;
 use super::ComputedValues;
-use values::{CSSFloat, CustomIdent, Either};
+use values::CSSFloat;
 use values::animated::{Animate, Procedure, ToAnimatedValue, ToAnimatedZero};
-use values::animated::color::RGBA as AnimatedRGBA;
+use values::animated::color::Color as AnimatedColor;
 use values::animated::effects::Filter as AnimatedFilter;
-use values::animated::effects::FilterList as AnimatedFilterList;
+#[cfg(feature = "gecko")] use values::computed::TransitionProperty;
 use values::computed::{Angle, CalcLengthOrPercentage};
 use values::computed::{ClipRect, Context};
 use values::computed::{Length, LengthOrPercentage, LengthOrPercentageOrAuto};
@@ -53,13 +51,10 @@ use values::distance::{ComputeSquaredDistance, SquaredDistance};
 use values::generics::font::{FontSettings as GenericFontSettings, FontTag, VariationValue};
 use values::computed::font::FontVariationSettings;
 use values::generics::effects::Filter;
-use values::generics::position as generic_position;
 use values::generics::svg::{SVGLength,  SvgLengthOrPercentageOrNumber, SVGPaint};
 use values::generics::svg::{SVGPaintKind, SVGStrokeDashArray, SVGOpacity};
 use void::{self, Void};
 
-/// <https://drafts.csswg.org/css-transitions/#animtype-repeatable-list>
-pub trait RepeatableListAnimatable: Animate {}
 
 /// Returns true if this nsCSSPropertyID is one of the animatable properties.
 #[cfg(feature = "gecko")]
@@ -71,78 +66,6 @@ pub fn nscsspropertyid_is_animatable(property: nsCSSPropertyID) -> bool {
             % endif
         % endfor
         _ => false
-    }
-}
-
-/// A given transition property, that is either `All`, a transitionable longhand property,
-/// a shorthand with at least one transitionable longhand component, or an unsupported property.
-// NB: This needs to be here because it needs all the longhands generated
-// beforehand.
-#[derive(Clone, Debug, Eq, Hash, MallocSizeOf, PartialEq, ToComputedValue, ToCss)]
-pub enum TransitionProperty {
-    /// A shorthand.
-    Shorthand(ShorthandId),
-    /// A longhand transitionable property.
-    Longhand(LonghandId),
-    /// Unrecognized property which could be any non-transitionable, custom property, or
-    /// unknown property.
-    Unsupported(CustomIdent),
-}
-
-impl TransitionProperty {
-    /// Returns `all`.
-    #[inline]
-    pub fn all() -> Self {
-        TransitionProperty::Shorthand(ShorthandId::All)
-    }
-
-    /// Parse a transition-property value.
-    pub fn parse<'i, 't>(input: &mut Parser<'i, 't>) -> Result<Self, ParseError<'i>> {
-        // FIXME(https://github.com/rust-lang/rust/issues/33156): remove this
-        // enum and use PropertyId when stable Rust allows destructors in
-        // statics.
-        //
-        // FIXME: This should handle aliases too.
-        pub enum StaticId {
-            Longhand(LonghandId),
-            Shorthand(ShorthandId),
-        }
-        ascii_case_insensitive_phf_map! {
-            static_id -> StaticId = {
-                % for prop in data.shorthands:
-                "${prop.name}" => StaticId::Shorthand(ShorthandId::${prop.camel_case}),
-                % endfor
-                % for prop in data.longhands:
-                "${prop.name}" => StaticId::Longhand(LonghandId::${prop.camel_case}),
-                % endfor
-            }
-        }
-
-        let location = input.current_source_location();
-        let ident = input.expect_ident()?;
-
-        Ok(match static_id(&ident) {
-            Some(&StaticId::Longhand(id)) => TransitionProperty::Longhand(id),
-            Some(&StaticId::Shorthand(id)) => TransitionProperty::Shorthand(id),
-            None => {
-                TransitionProperty::Unsupported(
-                    CustomIdent::from_ident(location, ident, &["none"])?,
-                )
-            },
-        })
-    }
-
-    /// Convert TransitionProperty to nsCSSPropertyID.
-    #[cfg(feature = "gecko")]
-    pub fn to_nscsspropertyid(&self) -> Result<nsCSSPropertyID, ()> {
-        Ok(match *self {
-            TransitionProperty::Shorthand(ShorthandId::All) => {
-                nsCSSPropertyID::eCSSPropertyExtra_all_properties
-            }
-            TransitionProperty::Shorthand(ref id) => id.to_nscsspropertyid(),
-            TransitionProperty::Longhand(ref id) => id.to_nscsspropertyid(),
-            TransitionProperty::Unsupported(..) => return Err(()),
-        })
     }
 }
 
@@ -172,15 +95,6 @@ impl From<nsCSSPropertyID> for TransitionProperty {
     }
 }
 
-impl SpecifiedValueInfo for TransitionProperty {
-    fn collect_completion_keywords(f: KeywordsCollectFn) {
-        // `transition-property` can actually accept all properties and
-        // arbitrary identifiers, but `all` is a special one we'd like
-        // to list.
-        f(&["all"]);
-    }
-}
-
 /// Returns true if this nsCSSPropertyID is one of the transitionable properties.
 #[cfg(feature = "gecko")]
 pub fn nscsspropertyid_is_transitionable(property: nsCSSPropertyID) -> bool {
@@ -200,7 +114,7 @@ pub fn nscsspropertyid_is_transitionable(property: nsCSSPropertyID) -> bool {
 #[cfg_attr(feature = "servo", derive(MallocSizeOf))]
 pub enum AnimatedProperty {
     % for prop in data.longhands:
-        % if prop.animatable:
+        % if prop.animatable and not prop.logical:
             <%
                 value_type = "longhands::{}::computed_value::T".format(prop.ident)
                 if not prop.is_animatable_with_computed_value:
@@ -217,7 +131,7 @@ impl AnimatedProperty {
     pub fn name(&self) -> &'static str {
         match *self {
             % for prop in data.longhands:
-                % if prop.animatable:
+                % if prop.animatable and not prop.logical:
                     AnimatedProperty::${prop.camel_case}(..) => "${prop.name}",
                 % endif
             % endfor
@@ -229,7 +143,7 @@ impl AnimatedProperty {
     pub fn does_animate(&self) -> bool {
         match *self {
             % for prop in data.longhands:
-                % if prop.animatable:
+                % if prop.animatable and not prop.logical:
                     AnimatedProperty::${prop.camel_case}(ref from, ref to) => from != to,
                 % endif
             % endfor
@@ -240,7 +154,7 @@ impl AnimatedProperty {
     pub fn has_the_same_end_value_as(&self, other: &Self) -> bool {
         match (self, other) {
             % for prop in data.longhands:
-                % if prop.animatable:
+                % if prop.animatable and not prop.logical:
                     (&AnimatedProperty::${prop.camel_case}(_, ref this_end_value),
                      &AnimatedProperty::${prop.camel_case}(_, ref other_end_value)) => {
                         this_end_value == other_end_value
@@ -259,7 +173,7 @@ impl AnimatedProperty {
         {
             match *self {
                 % for prop in data.longhands:
-                % if prop.animatable:
+                % if prop.animatable and not prop.logical:
                     AnimatedProperty::${prop.camel_case}(ref from, ref to) => {
                         // https://drafts.csswg.org/web-animations/#discrete-animation-type
                         % if prop.animation_value_type == "discrete":
@@ -289,12 +203,15 @@ impl AnimatedProperty {
         old_style: &ComputedValues,
         new_style: &ComputedValues,
     ) -> Option<AnimatedProperty> {
+        // FIXME(emilio): Handle the case where old_style and new_style's
+        // writing mode differ.
+        let property = property.to_physical(new_style.writing_mode);
         Some(match property {
             % for prop in data.longhands:
-            % if prop.animatable:
+            % if prop.animatable and not prop.logical:
                 LonghandId::${prop.camel_case} => {
-                    let old_computed = old_style.get_${prop.style_struct.ident.strip("_")}().clone_${prop.ident}();
-                    let new_computed = new_style.get_${prop.style_struct.ident.strip("_")}().clone_${prop.ident}();
+                    let old_computed = old_style.clone_${prop.ident}();
+                    let new_computed = new_style.clone_${prop.ident}();
                     AnimatedProperty::${prop.camel_case}(
                     % if prop.is_animatable_with_computed_value:
                         old_computed,
@@ -315,8 +232,8 @@ impl AnimatedProperty {
 /// A collection of AnimationValue that were composed on an element.
 /// This HashMap stores the values that are the last AnimationValue to be
 /// composed for each TransitionProperty.
-#[cfg(feature = "gecko")]
-pub type AnimationValueMap = FnvHashMap<LonghandId, AnimationValue>;
+pub type AnimationValueMap = FxHashMap<LonghandId, AnimationValue>;
+
 #[cfg(feature = "gecko")]
 unsafe impl HasFFI for AnimationValueMap {
     type FFIType = RawServoAnimationValueMap;
@@ -340,11 +257,10 @@ unsafe impl HasSimpleFFI for AnimationValueMap {}
 #[repr(u16)]
 pub enum AnimationValue {
     % for prop in data.longhands:
-    % if prop.animatable:
     /// `${prop.name}`
+    % if prop.animatable and not prop.logical:
     ${prop.camel_case}(${prop.animated_type()}),
     % else:
-    /// `${prop.name}` (not animatable)
     ${prop.camel_case}(Void),
     % endif
     % endfor
@@ -353,8 +269,11 @@ pub enum AnimationValue {
 <%
     animated = []
     unanimated = []
+    animated_with_logical = []
     for prop in data.longhands:
         if prop.animatable:
+            animated_with_logical.append(prop)
+        if prop.animatable and not prop.logical:
             animated.append(prop)
         else:
             unanimated.append(prop)
@@ -456,7 +375,7 @@ impl AnimationValue {
         let id = unsafe { *(self as *const _ as *const LonghandId) };
         debug_assert_eq!(id, match *self {
             % for prop in data.longhands:
-            % if prop.animatable:
+            % if prop.animatable and not prop.logical:
             AnimationValue::${prop.camel_case}(..) => LonghandId::${prop.camel_case},
             % else:
             AnimationValue::${prop.camel_case}(void) => void::unreachable(void),
@@ -530,17 +449,18 @@ impl AnimationValue {
         %>
 
         let animatable = match *decl {
-            % for (specified_ty, ty, boxed, to_animated, inherit, system), props in groupby(animated, key=keyfunc):
+            % for (specified_ty, ty, boxed, to_animated, inherit, system), props in groupby(animated_with_logical, key=keyfunc):
             ${" |\n".join("PropertyDeclaration::{}(ref value)".format(prop.camel_case) for prop in props)} => {
                 let decl_repr = unsafe {
                     &*(decl as *const _ as *const PropertyDeclarationVariantRepr<${specified_ty}>)
                 };
+                let longhand_id = unsafe {
+                    *(&decl_repr.tag as *const u16 as *const LonghandId)
+                };
                 % if inherit:
                 context.for_non_inherited_property = None;
                 % else:
-                context.for_non_inherited_property = unsafe {
-                    Some(*(&decl_repr.tag as *const u16 as *const LonghandId))
-                };
+                context.for_non_inherited_property = Some(longhand_id);
                 % endif
                 % if system:
                 if let Some(sf) = value.get_system() {
@@ -561,7 +481,7 @@ impl AnimationValue {
                     ptr::write(
                         &mut out as *mut _ as *mut AnimationValueVariantRepr<${ty}>,
                         AnimationValueVariantRepr {
-                            tag: decl_repr.tag,
+                            tag: longhand_id.to_physical(context.builder.writing_mode) as u16,
                             value,
                         },
                     );
@@ -578,24 +498,40 @@ impl AnimationValue {
                     LonghandId::${prop.camel_case} => {
                         let style_struct = match declaration.keyword {
                             % if not prop.style_struct.inherited:
-                                CSSWideKeyword::Unset |
+                            CSSWideKeyword::Unset |
                             % endif
                             CSSWideKeyword::Initial => {
                                 initial.get_${prop.style_struct.name_lower}()
                             },
                             % if prop.style_struct.inherited:
-                                CSSWideKeyword::Unset |
+                            CSSWideKeyword::Unset |
                             % endif
                             CSSWideKeyword::Inherit => {
                                 context.builder
                                        .get_parent_${prop.style_struct.name_lower}()
                             },
                         };
-                        let computed = style_struct.clone_${prop.ident}();
+                        let computed = style_struct
+                        % if prop.logical:
+                            .clone_${prop.ident}(context.builder.writing_mode);
+                        % else:
+                            .clone_${prop.ident}();
+                        % endif
+
                         % if not prop.is_animatable_with_computed_value:
                         let computed = computed.to_animated_value();
                         % endif
-                        AnimationValue::${prop.camel_case}(computed)
+
+                        % if prop.logical:
+                        let wm = context.builder.writing_mode;
+                        <%helpers:logical_setter_helper name="${prop.name}">
+                        <%def name="inner(physical_ident)">
+                            AnimationValue::${to_camel_case(physical_ident)}(computed)
+                        </%def>
+                        </%helpers:logical_setter_helper>
+                        % else:
+                            AnimationValue::${prop.camel_case}(computed)
+                        % endif
                     },
                     % endif
                     % endfor
@@ -632,15 +568,14 @@ impl AnimationValue {
     /// Get an AnimationValue for an AnimatableLonghand from a given computed values.
     pub fn from_computed_values(
         property: LonghandId,
-        computed_values: &ComputedValues
+        style: &ComputedValues,
     ) -> Option<Self> {
+        let property = property.to_physical(style.writing_mode);
         Some(match property {
             % for prop in data.longhands:
-            % if prop.animatable:
+            % if prop.animatable and not prop.logical:
             LonghandId::${prop.camel_case} => {
-                let computed = computed_values
-                    .get_${prop.style_struct.ident.strip("_")}()
-                    .clone_${prop.ident}();
+                let computed = style.clone_${prop.ident}();
                 AnimationValue::${prop.camel_case}(
                 % if prop.is_animatable_with_computed_value:
                     computed
@@ -744,7 +679,7 @@ impl ToAnimatedZero for AnimationValue {
     fn to_animated_zero(&self) -> Result<Self, ()> {
         match *self {
             % for prop in data.longhands:
-            % if prop.animatable and prop.animation_value_type != "discrete":
+            % if prop.animatable and not prop.logical and prop.animation_value_type != "discrete":
             AnimationValue::${prop.camel_case}(ref base) => {
                 Ok(AnimationValue::${prop.camel_case}(base.to_animated_zero()?))
             },
@@ -755,18 +690,45 @@ impl ToAnimatedZero for AnimationValue {
     }
 }
 
-impl RepeatableListAnimatable for LengthOrPercentage {}
-impl RepeatableListAnimatable for Either<f32, LengthOrPercentage> {}
-impl RepeatableListAnimatable for Either<NonNegativeNumber, NonNegativeLengthOrPercentage> {}
-impl RepeatableListAnimatable for SvgLengthOrPercentageOrNumber<LengthOrPercentage, Number> {}
+/// A trait to abstract away the different kind of animations over a list that
+/// there may be.
+pub trait ListAnimation<T> : Sized {
+    /// <https://drafts.csswg.org/css-transitions/#animtype-repeatable-list>
+    fn animate_repeatable_list(&self, other: &Self, procedure: Procedure) -> Result<Self, ()>
+    where
+        T: Animate;
 
-macro_rules! repeated_vec_impl {
-    ($($ty:ty),*) => {
-        $(impl<T> Animate for $ty
-        where
-            T: RepeatableListAnimatable,
-        {
-            fn animate(&self, other: &Self, procedure: Procedure) -> Result<Self, ()> {
+    /// <https://drafts.csswg.org/css-transitions/#animtype-repeatable-list>
+    fn squared_distance_repeatable_list(&self, other: &Self) -> Result<SquaredDistance, ()>
+    where
+        T: ComputeSquaredDistance;
+
+    /// This is the animation used for some of the types like shadows and
+    /// filters, where the interpolation happens with the zero value if one of
+    /// the sides is not present.
+    fn animate_with_zero(&self, other: &Self, procedure: Procedure) -> Result<Self, ()>
+    where
+        T: Animate + Clone + ToAnimatedZero;
+
+    /// This is the animation used for some of the types like shadows and
+    /// filters, where the interpolation happens with the zero value if one of
+    /// the sides is not present.
+    fn squared_distance_with_zero(&self, other: &Self) -> Result<SquaredDistance, ()>
+    where
+        T: ToAnimatedZero + ComputeSquaredDistance;
+}
+
+macro_rules! animated_list_impl {
+    (<$t:ident> for $ty:ty) => {
+        impl<$t> ListAnimation<$t> for $ty {
+            fn animate_repeatable_list(
+                &self,
+                other: &Self,
+                procedure: Procedure,
+            ) -> Result<Self, ()>
+            where
+                T: Animate,
+            {
                 // If the length of either list is zero, the least common multiple is undefined.
                 if self.is_empty() || other.is_empty() {
                     return Err(());
@@ -777,14 +739,14 @@ macro_rules! repeated_vec_impl {
                     this.animate(other, procedure)
                 }).collect()
             }
-        }
 
-        impl<T> ComputeSquaredDistance for $ty
-        where
-            T: ComputeSquaredDistance + RepeatableListAnimatable,
-        {
-            #[inline]
-            fn compute_squared_distance(&self, other: &Self) -> Result<SquaredDistance, ()> {
+            fn squared_distance_repeatable_list(
+                &self,
+                other: &Self,
+            ) -> Result<SquaredDistance, ()>
+            where
+                T: ComputeSquaredDistance,
+            {
                 if self.is_empty() || other.is_empty() {
                     return Err(());
                 }
@@ -794,11 +756,59 @@ macro_rules! repeated_vec_impl {
                     this.compute_squared_distance(other)
                 }).sum()
             }
-        })*
-    };
+
+            fn animate_with_zero(
+                &self,
+                other: &Self,
+                procedure: Procedure,
+            ) -> Result<Self, ()>
+            where
+                T: Animate + Clone + ToAnimatedZero
+            {
+                if procedure == Procedure::Add {
+                    return Ok(
+                        self.iter().chain(other.iter()).cloned().collect()
+                    );
+                }
+                self.iter().zip_longest(other.iter()).map(|it| {
+                    match it {
+                        EitherOrBoth::Both(this, other) => {
+                            this.animate(other, procedure)
+                        },
+                        EitherOrBoth::Left(this) => {
+                            this.animate(&this.to_animated_zero()?, procedure)
+                        },
+                        EitherOrBoth::Right(other) => {
+                            other.to_animated_zero()?.animate(other, procedure)
+                        }
+                    }
+                }).collect()
+            }
+
+            fn squared_distance_with_zero(
+                &self,
+                other: &Self,
+            ) -> Result<SquaredDistance, ()>
+            where
+                T: ToAnimatedZero + ComputeSquaredDistance
+            {
+                self.iter().zip_longest(other.iter()).map(|it| {
+                    match it {
+                        EitherOrBoth::Both(this, other) => {
+                            this.compute_squared_distance(other)
+                        },
+                        EitherOrBoth::Left(list) | EitherOrBoth::Right(list) => {
+                            list.to_animated_zero()?.compute_squared_distance(list)
+                        },
+                    }
+                }).sum()
+            }
+        }
+    }
 }
 
-repeated_vec_impl!(SmallVec<[T; 1]>, Vec<T>);
+animated_list_impl!(<T> for SmallVec<[T; 1]>);
+animated_list_impl!(<T> for Vec<T>);
 
 /// <https://drafts.csswg.org/css-transitions/#animtype-visibility>
 impl Animate for Visibility {
@@ -1027,9 +1037,6 @@ impl<'a> Iterator for FontSettingTagIter<'a> {
     }
 }
 
-impl<H, V> RepeatableListAnimatable for generic_position::Position<H, V>
-    where H: RepeatableListAnimatable, V: RepeatableListAnimatable {}
-
 /// <https://drafts.csswg.org/css-transitions/#animtype-rect>
 impl Animate for ClipRect {
     #[inline]
@@ -1221,25 +1228,21 @@ impl Animate for ComputedTransformOperation {
             ) => {
                 Ok(TransformOperation::Scale(
                     animate_multiplicative_factor(*fx, *tx, procedure)?,
-                    Some(animate_multiplicative_factor(fy.unwrap_or(*fx), ty.unwrap_or(*tx), procedure)?),
+                    Some(animate_multiplicative_factor(
+                        fy.unwrap_or(*fx),
+                        ty.unwrap_or(*tx),
+                        procedure
+                    )?),
                 ))
             },
             (
                 &TransformOperation::Rotate3D(fx, fy, fz, fa),
                 &TransformOperation::Rotate3D(tx, ty, tz, ta),
             ) => {
-                let (fx, fy, fz, fa) = transform::get_normalized_vector_and_angle(fx, fy, fz, fa);
-                let (tx, ty, tz, ta) = transform::get_normalized_vector_and_angle(tx, ty, tz, ta);
-                if (fx, fy, fz) == (tx, ty, tz) {
-                    let ia = fa.animate(&ta, procedure)?;
-                    Ok(TransformOperation::Rotate3D(fx, fy, fz, ia))
-                } else {
-                    let matrix_f = rotate_to_matrix(fx, fy, fz, fa);
-                    let matrix_t = rotate_to_matrix(tx, ty, tz, ta);
-                    Ok(TransformOperation::Matrix3D(
-                        matrix_f.animate(&matrix_t, procedure)?,
-                    ))
-                }
+                let animated = Rotate::Rotate3D(fx, fy, fz, fa)
+                    .animate(&Rotate::Rotate3D(tx, ty, tz, ta), procedure)?;
+                let (fx, fy, fz, fa) = ComputedRotate::resolve(&animated);
+                Ok(TransformOperation::Rotate3D(fx, fy, fz, fa))
             },
             (
                 &TransformOperation::RotateX(fa),
@@ -1293,15 +1296,36 @@ impl Animate for ComputedTransformOperation {
                 &TransformOperation::Perspective(ref fd),
                 &TransformOperation::Perspective(ref td),
             ) => {
-                Ok(TransformOperation::Perspective(
-                    fd.animate(td, procedure)?
-                ))
+                use values::computed::CSSPixelLength;
+                use values::generics::transform::create_perspective_matrix;
+
+                // From https://drafts.csswg.org/css-transforms-2/#interpolation-of-transform-functions:
+                //
+                //    The transform functions matrix(), matrix3d() and
+                //    perspective() get converted into 4x4 matrices first and
+                //    interpolated as defined in section Interpolation of
+                //    Matrices afterwards.
+                //
+                let from = create_perspective_matrix(fd.px());
+                let to = create_perspective_matrix(td.px());
+
+                let interpolated =
+                    Matrix3D::from(from).animate(&Matrix3D::from(to), procedure)?;
+
+                let decomposed = decompose_3d_matrix(interpolated)?;
+                let perspective_z = decomposed.perspective.2;
+                let used_value =
+                    if perspective_z == 0. { 0. } else { -1. / perspective_z };
+                Ok(TransformOperation::Perspective(CSSPixelLength::new(used_value)))
             },
             _ if self.is_translate() && other.is_translate() => {
                 self.to_translate_3d().animate(&other.to_translate_3d(), procedure)
             }
             _ if self.is_scale() && other.is_scale() => {
                 self.to_scale_3d().animate(&other.to_scale_3d(), procedure)
+            }
+            _ if self.is_rotate() && other.is_rotate() => {
+                self.to_rotate_3d().animate(&other.to_rotate_3d(), procedure)
             }
             _ => Err(()),
         }
@@ -1335,37 +1359,9 @@ fn is_matched_operation(first: &ComputedTransformOperation, second: &ComputedTra
         // we animate scale and translate operations against each other
         (a, b) if a.is_translate() && b.is_translate() => true,
         (a, b) if a.is_scale() && b.is_scale() => true,
+        (a, b) if a.is_rotate() && b.is_rotate() => true,
         // InterpolateMatrix and AccumulateMatrix are for mismatched transform.
         _ => false
-    }
-}
-
-/// <https://www.w3.org/TR/css-transforms-1/#Rotate3dDefined>
-fn rotate_to_matrix(x: f32, y: f32, z: f32, a: Angle) -> Matrix3D {
-    let half_rad = a.radians() / 2.0;
-    let sc = (half_rad).sin() * (half_rad).cos();
-    let sq = (half_rad).sin().powi(2);
-
-    Matrix3D {
-        m11: 1.0 - 2.0 * (y * y + z * z) * sq,
-        m12: 2.0 * (x * y * sq + z * sc),
-        m13: 2.0 * (x * z * sq - y * sc),
-        m14: 0.0,
-
-        m21: 2.0 * (x * y * sq - z * sc),
-        m22: 1.0 - 2.0 * (x * x + z * z) * sq,
-        m23: 2.0 * (y * z * sq + x * sc),
-        m24: 0.0,
-
-        m31: 2.0 * (x * z * sq + y * sc),
-        m32: 2.0 * (y * z * sq - x * sc),
-        m33: 1.0 - 2.0 * (x * x + y * y) * sq,
-        m34: 0.0,
-
-        m41: 0.0,
-        m42: 0.0,
-        m43: 0.0,
-        m44: 1.0
     }
 }
 
@@ -1464,10 +1460,10 @@ impl Animate for MatrixDecomposed2D {
         let matrix = self.matrix.animate(&other.matrix, procedure)?;
 
         Ok(MatrixDecomposed2D {
-            translate: translate,
-            scale: scale,
-            angle: angle,
-            matrix: matrix,
+            translate,
+            scale,
+            angle,
+            matrix,
         })
     }
 }
@@ -1781,12 +1777,18 @@ impl Animate for Quaternion {
         use std::f64;
 
         let (this_weight, other_weight) = procedure.weights();
-        debug_assert!((this_weight + other_weight - 1.0f64).abs() <= f64::EPSILON ||
-                      other_weight == 1.0f64 || other_weight == 0.0f64,
-                      "animate should only be used for interpolating or accumulating transforms");
+        debug_assert!(
+            // Doule EPSILON since both this_weight and other_weght have calculation errors
+            // which are approximately equal to EPSILON.
+            (this_weight + other_weight - 1.0f64).abs() <= f64::EPSILON * 2.0 ||
+            other_weight == 1.0f64 || other_weight == 0.0f64,
+            "animate should only be used for interpolating or accumulating transforms"
+        );
 
-        // We take a specialized code path for accumulation (where other_weight is 1)
-        if other_weight == 1.0 {
+        // We take a specialized code path for accumulation (where other_weight
+        // is 1).
+        if let Procedure::Accumulate { .. } = procedure {
+            debug_assert_eq!(other_weight, 1.0);
             if this_weight == 0.0 {
                 return Ok(*other);
             }
@@ -1817,32 +1819,39 @@ impl Animate for Quaternion {
             ));
         }
 
-        let mut product = self.0 * other.0 +
-                          self.1 * other.1 +
-                          self.2 * other.2 +
-                          self.3 * other.3;
+        // Straight from gfxQuaternion::Slerp.
+        //
+        // Dot product, clamped between -1 and 1.
+        let dot =
+            (self.0 * other.0 +
+             self.1 * other.1 +
+             self.2 * other.2 +
+             self.3 * other.3)
+            .min(1.0).max(-1.0);
 
-        // Clamp product to -1.0 <= product <= 1.0
-        product = product.min(1.0);
-        product = product.max(-1.0);
-
-        if product == 1.0 {
+        if dot == 1.0 {
             return Ok(*self);
         }
 
-        let theta = product.acos();
-        let w = (other_weight * theta).sin() * 1.0 / (1.0 - product * product).sqrt();
+        let theta = dot.acos();
+        let rsintheta = 1.0 / (1.0 - dot * dot).sqrt();
 
-        let mut a = *self;
-        let mut b = *other;
-        let mut result = Quaternion(0., 0., 0., 0.,);
+        let right_weight = (other_weight * theta).sin() * rsintheta;
+        let left_weight = (other_weight * theta).cos() - dot * right_weight;
+
+        let mut left = *self;
+        let mut right = *other;
         % for i in range(4):
-            a.${i} *= (other_weight * theta).cos() - product * w;
-            b.${i} *= w;
-            result.${i} = a.${i} + b.${i};
+            left.${i} *= left_weight;
+            right.${i} *= right_weight;
         % endfor
 
-        Ok(result)
+        Ok(Quaternion(
+            left.0 + right.0,
+            left.1 + right.1,
+            left.2 + right.2,
+            left.3 + right.3,
+        ))
     }
 }
 
@@ -1858,7 +1867,8 @@ impl ComputeSquaredDistance for Quaternion {
 }
 
 /// Decompose a 3D matrix.
-/// <https://drafts.csswg.org/css-transforms/#decomposing-a-3d-matrix>
+/// https://drafts.csswg.org/css-transforms-2/#decomposing-a-3d-matrix
+/// http://www.realtimerendering.com/resources/GraphicsGems/gemsii/unmatrix.c
 fn decompose_3d_matrix(mut matrix: Matrix3D) -> Result<MatrixDecomposed3D, ()> {
     // Normalize the matrix.
     if matrix.m44 == 0.0 {
@@ -1866,6 +1876,8 @@ fn decompose_3d_matrix(mut matrix: Matrix3D) -> Result<MatrixDecomposed3D, ()> {
     }
 
     let scaling_factor = matrix.m44;
+
+    // Normalize the matrix.
     % for i in range(1, 5):
         % for j in range(1, 5):
             matrix.m${i}${j} /= scaling_factor;
@@ -1876,9 +1888,9 @@ fn decompose_3d_matrix(mut matrix: Matrix3D) -> Result<MatrixDecomposed3D, ()> {
     // an easy way to test for singularity of the upper 3x3 component.
     let mut perspective_matrix = matrix;
 
-    % for i in range(1, 4):
-        perspective_matrix.m${i}4 = 0.0;
-    % endfor
+    perspective_matrix.m14 = 0.0;
+    perspective_matrix.m24 = 0.0;
+    perspective_matrix.m34 = 0.0;
     perspective_matrix.m44 = 1.0;
 
     if perspective_matrix.determinant() == 0.0 {
@@ -1894,37 +1906,18 @@ fn decompose_3d_matrix(mut matrix: Matrix3D) -> Result<MatrixDecomposed3D, ()> {
             matrix.m44
         ];
 
-        perspective_matrix = perspective_matrix.inverse().unwrap();
-
-        // Transpose perspective_matrix
-        perspective_matrix = Matrix3D {
-            % for i in range(1, 5):
-                % for j in range(1, 5):
-                    m${i}${j}: perspective_matrix.m${j}${i},
-                % endfor
-            % endfor
-        };
-
-        // Multiply right_hand_side with perspective_matrix
-        let mut tmp: [f32; 4] = [0.0; 4];
-        % for i in range(1, 5):
-            tmp[${i - 1}] = (right_hand_side[0] * perspective_matrix.m1${i}) +
-                            (right_hand_side[1] * perspective_matrix.m2${i}) +
-                            (right_hand_side[2] * perspective_matrix.m3${i}) +
-                            (right_hand_side[3] * perspective_matrix.m4${i});
-        % endfor
-
-        Perspective(tmp[0], tmp[1], tmp[2], tmp[3])
+        perspective_matrix = perspective_matrix.inverse().unwrap().transpose();
+        let perspective = perspective_matrix.pre_mul_point4(&right_hand_side);
+        // NOTE(emilio): Even though the reference algorithm clears the
+        // fourth column here (matrix.m14..matrix.m44), they're not used below
+        // so it's not really needed.
+        Perspective(perspective[0], perspective[1], perspective[2], perspective[3])
     } else {
         Perspective(0.0, 0.0, 0.0, 1.0)
     };
 
-    // Next take care of translation
-    let translate = Translate3D (
-        matrix.m41,
-        matrix.m42,
-        matrix.m43
-    );
+    // Next take care of translation (easy).
+    let translate = Translate3D(matrix.m41, matrix.m42, matrix.m43);
 
     // Now get scale and shear. 'row' is a 3 element array of 3 component vectors
     let mut row: [[f32; 3]; 3] = [[0.0; 3]; 3];
@@ -1965,8 +1958,7 @@ fn decompose_3d_matrix(mut matrix: Matrix3D) -> Result<MatrixDecomposed3D, ()> {
     // At this point, the matrix (in rows) is orthonormal.
     // Check for a coordinate system flip.  If the determinant
     // is -1, then negate the matrix and the scaling factors.
-    let pdum3 = cross(row[1], row[2]);
-    if dot(row[0], pdum3) < 0.0 {
+    if dot(row[0], cross(row[1], row[2])) < 0.0 {
         % for i in range(3):
             scale.${i} *= -1.0;
             row[${i}][0] *= -1.0;
@@ -1975,8 +1967,8 @@ fn decompose_3d_matrix(mut matrix: Matrix3D) -> Result<MatrixDecomposed3D, ()> {
         % endfor
     }
 
-    // Now, get the rotations out
-    let mut quaternion = Quaternion (
+    // Now, get the rotations out.
+    let mut quaternion = Quaternion(
         0.5 * ((1.0 + row[0][0] - row[1][1] - row[2][2]).max(0.0) as f64).sqrt(),
         0.5 * ((1.0 - row[0][0] + row[1][1] - row[2][2]).max(0.0) as f64).sqrt(),
         0.5 * ((1.0 - row[0][0] - row[1][1] + row[2][2]).max(0.0) as f64).sqrt(),
@@ -1994,11 +1986,11 @@ fn decompose_3d_matrix(mut matrix: Matrix3D) -> Result<MatrixDecomposed3D, ()> {
     }
 
     Ok(MatrixDecomposed3D {
-        translate: translate,
-        scale: scale,
-        skew: skew,
-        perspective: perspective,
-        quaternion: quaternion
+        translate,
+        scale,
+        skew,
+        perspective,
+        quaternion,
     })
 }
 
@@ -2121,57 +2113,61 @@ impl From<MatrixDecomposed3D> for Matrix3D {
         % endfor
 
         // Apply translation
-        % for i in range(1, 4):
+        % for i in range(1, 5):
             % for j in range(1, 4):
                 matrix.m4${i} += decomposed.translate.${j - 1} * matrix.m${j}${i};
             % endfor
         % endfor
 
         // Apply rotation
-        let x = decomposed.quaternion.0;
-        let y = decomposed.quaternion.1;
-        let z = decomposed.quaternion.2;
-        let w = decomposed.quaternion.3;
+        {
+            let x = decomposed.quaternion.0;
+            let y = decomposed.quaternion.1;
+            let z = decomposed.quaternion.2;
+            let w = decomposed.quaternion.3;
 
-        // Construct a composite rotation matrix from the quaternion values
-        // rotationMatrix is a identity 4x4 matrix initially
-        let mut rotation_matrix = Matrix3D::identity();
-        rotation_matrix.m11 = 1.0 - 2.0 * (y * y + z * z) as f32;
-        rotation_matrix.m12 = 2.0 * (x * y + z * w) as f32;
-        rotation_matrix.m13 = 2.0 * (x * z - y * w) as f32;
-        rotation_matrix.m21 = 2.0 * (x * y - z * w) as f32;
-        rotation_matrix.m22 = 1.0 - 2.0 * (x * x + z * z) as f32;
-        rotation_matrix.m23 = 2.0 * (y * z + x * w) as f32;
-        rotation_matrix.m31 = 2.0 * (x * z + y * w) as f32;
-        rotation_matrix.m32 = 2.0 * (y * z - x * w) as f32;
-        rotation_matrix.m33 = 1.0 - 2.0 * (x * x + y * y) as f32;
+            // Construct a composite rotation matrix from the quaternion values
+            // rotationMatrix is a identity 4x4 matrix initially
+            let mut rotation_matrix = Matrix3D::identity();
+            rotation_matrix.m11 = 1.0 - 2.0 * (y * y + z * z) as f32;
+            rotation_matrix.m12 = 2.0 * (x * y + z * w) as f32;
+            rotation_matrix.m13 = 2.0 * (x * z - y * w) as f32;
+            rotation_matrix.m21 = 2.0 * (x * y - z * w) as f32;
+            rotation_matrix.m22 = 1.0 - 2.0 * (x * x + z * z) as f32;
+            rotation_matrix.m23 = 2.0 * (y * z + x * w) as f32;
+            rotation_matrix.m31 = 2.0 * (x * z + y * w) as f32;
+            rotation_matrix.m32 = 2.0 * (y * z - x * w) as f32;
+            rotation_matrix.m33 = 1.0 - 2.0 * (x * x + y * y) as f32;
 
-        matrix = multiply(rotation_matrix, matrix);
+            matrix = multiply(rotation_matrix, matrix);
+        }
 
         // Apply skew
-        let mut temp = Matrix3D::identity();
-        if decomposed.skew.2 != 0.0 {
-            temp.m32 = decomposed.skew.2;
-            matrix = multiply(temp, matrix);
-        }
+        {
+            let mut temp = Matrix3D::identity();
+            if decomposed.skew.2 != 0.0 {
+                temp.m32 = decomposed.skew.2;
+                matrix = multiply(temp, matrix);
+                temp.m32 = 0.0;
+            }
 
-        if decomposed.skew.1 != 0.0 {
-            temp.m32 = 0.0;
-            temp.m31 = decomposed.skew.1;
-            matrix = multiply(temp, matrix);
-        }
+            if decomposed.skew.1 != 0.0 {
+                temp.m31 = decomposed.skew.1;
+                matrix = multiply(temp, matrix);
+                temp.m31 = 0.0;
+            }
 
-        if decomposed.skew.0 != 0.0 {
-            temp.m31 = 0.0;
-            temp.m21 = decomposed.skew.0;
-            matrix = multiply(temp, matrix);
+            if decomposed.skew.0 != 0.0 {
+                temp.m21 = decomposed.skew.0;
+                matrix = multiply(temp, matrix);
+            }
         }
 
         // Apply scale
         % for i in range(1, 4):
-            % for j in range(1, 4):
-                matrix.m${i}${j} *= decomposed.scale.${i - 1};
-            % endfor
+        % for j in range(1, 5):
+        matrix.m${i}${j} *= decomposed.scale.${i - 1};
+        % endfor
         % endfor
 
         matrix
@@ -2180,16 +2176,17 @@ impl From<MatrixDecomposed3D> for Matrix3D {
 
 // Multiplication of two 4x4 matrices.
 fn multiply(a: Matrix3D, b: Matrix3D) -> Matrix3D {
-    let mut a_clone = a;
+    Matrix3D {
     % for i in range(1, 5):
-        % for j in range(1, 5):
-            a_clone.m${i}${j} = (a.m${i}1 * b.m1${j}) +
-                               (a.m${i}2 * b.m2${j}) +
-                               (a.m${i}3 * b.m3${j}) +
-                               (a.m${i}4 * b.m4${j});
-        % endfor
+    % for j in range(1, 5):
+        m${i}${j}:
+            a.m${i}1 * b.m1${j} +
+            a.m${i}2 * b.m2${j} +
+            a.m${i}3 * b.m3${j} +
+            a.m${i}4 * b.m4${j},
     % endfor
-    a_clone
+    % endfor
+    }
 }
 
 impl Matrix3D {
@@ -2227,11 +2224,22 @@ impl Matrix3D {
         self.m11 * self.m22 * self.m33 * self.m44
     }
 
-    fn inverse(&self) -> Option<Matrix3D> {
+    /// Transpose a matrix.
+    fn transpose(&self) -> Self {
+        Self {
+            % for i in range(1, 5):
+            % for j in range(1, 5):
+            m${i}${j}: self.m${j}${i},
+            % endfor
+            % endfor
+        }
+    }
+
+    fn inverse(&self) -> Result<Matrix3D, ()> {
         let mut det = self.determinant();
 
         if det == 0.0 {
-            return None;
+            return Err(());
         }
 
         det = 1.0 / det;
@@ -2302,22 +2310,33 @@ impl Matrix3D {
              self.m12*self.m21*self.m33 + self.m11*self.m22*self.m33),
         };
 
-        Some(x)
+        Ok(x)
+    }
+
+    /// Multiplies `pin * self`.
+    fn pre_mul_point4(&self, pin: &[f32; 4]) -> [f32; 4] {
+        [
+        % for i in range(1, 5):
+            pin[0] * self.m1${i} +
+            pin[1] * self.m2${i} +
+            pin[2] * self.m3${i} +
+            pin[3] * self.m4${i},
+        % endfor
+        ]
     }
 }
 
 /// <https://drafts.csswg.org/css-transforms-2/#propdef-rotate>
 impl ComputedRotate {
-    fn fill_unspecified(rotate: &ComputedRotate) -> Result<(Number, Number, Number, Angle), ()> {
+    fn resolve(rotate: &ComputedRotate) -> (Number, Number, Number, Angle) {
         // According to the spec:
         // https://drafts.csswg.org/css-transforms-2/#individual-transforms
         //
         // If the axis is unspecified, it defaults to "0 0 1"
         match *rotate {
-            Rotate::None =>
-                Ok((0., 0., 1., Angle::zero())),
-            Rotate::Rotate3D(rx, ry, rz, angle) => Ok((rx, ry, rz, angle)),
-            Rotate::Rotate(angle) => Ok((0., 0., 1., angle)),
+            Rotate::None => (0., 0., 1., Angle::zero()),
+            Rotate::Rotate3D(rx, ry, rz, angle) => (rx, ry, rz, angle),
+            Rotate::Rotate(angle) => (0., 0., 1., angle),
         }
     }
 }
@@ -2329,11 +2348,13 @@ impl Animate for ComputedRotate {
         other: &Self,
         procedure: Procedure,
     ) -> Result<Self, ()> {
-        let from = ComputedRotate::fill_unspecified(self)?;
-        let to = ComputedRotate::fill_unspecified(other)?;
+        let from = ComputedRotate::resolve(self);
+        let to = ComputedRotate::resolve(other);
 
-        let (fx, fy, fz, fa) = transform::get_normalized_vector_and_angle(from.0, from.1, from.2, from.3);
-        let (tx, ty, tz, ta) = transform::get_normalized_vector_and_angle(to.0, to.1, to.2, to.3);
+        let (fx, fy, fz, fa) =
+            transform::get_normalized_vector_and_angle(from.0, from.1, from.2, from.3);
+        let (tx, ty, tz, ta) =
+            transform::get_normalized_vector_and_angle(to.0, to.1, to.2, to.3);
         if (fx, fy, fz) == (tx, ty, tz) {
             return Ok(Rotate::Rotate3D(fx, fy, fz, fa.animate(&ta, procedure)?));
         }
@@ -2344,11 +2365,12 @@ impl Animate for ComputedRotate {
         let tq = Quaternion::from_direction_and_angle(&tv, ta.radians64());
 
         let rq = Quaternion::animate(&fq, &tq, procedure)?;
-        let (x, y, z, angle) =
-            transform::get_normalized_vector_and_angle(rq.0 as f32,
-                                                       rq.1 as f32,
-                                                       rq.2 as f32,
-                                                       rq.3.acos() as f32 *2.0);
+        let (x, y, z, angle) = transform::get_normalized_vector_and_angle(
+            rq.0 as f32,
+            rq.1 as f32,
+            rq.2 as f32,
+            rq.3.acos() as f32 * 2.0,
+        );
 
         Ok(Rotate::Rotate3D(x, y, z, Angle::from_radians(angle)))
     }
@@ -2356,21 +2378,24 @@ impl Animate for ComputedRotate {
 
 /// <https://drafts.csswg.org/css-transforms-2/#propdef-translate>
 impl ComputedTranslate {
-    fn fill_unspecified(translate: &ComputedTranslate)
-        -> Result<(LengthOrPercentage, LengthOrPercentage, Length), ()> {
+    fn resolve(
+        translate: &ComputedTranslate,
+    ) -> (LengthOrPercentage, LengthOrPercentage, Length) {
         // According to the spec:
         // https://drafts.csswg.org/css-transforms-2/#individual-transforms
         //
         // Unspecified translations default to 0px
         match *translate {
             Translate::None => {
-                Ok((LengthOrPercentage::Length(Length::zero()),
+                (
                     LengthOrPercentage::Length(Length::zero()),
-                    Length::zero()))
+                    LengthOrPercentage::Length(Length::zero()),
+                    Length::zero(),
+                )
             },
-            Translate::Translate3D(tx, ty, tz) => Ok((tx, ty, tz)),
-            Translate::Translate(tx, ty) => Ok((tx, ty, Length::zero())),
-            Translate::TranslateX(tx) => Ok((tx, LengthOrPercentage::Length(Length::zero()), Length::zero())),
+            Translate::Translate3D(tx, ty, tz) => (tx, ty, tz),
+            Translate::Translate(tx, ty) => (tx, ty, Length::zero()),
+            Translate::TranslateX(tx) => (tx, LengthOrPercentage::Length(Length::zero()), Length::zero()),
         }
     }
 }
@@ -2382,8 +2407,8 @@ impl Animate for ComputedTranslate {
         other: &Self,
         procedure: Procedure,
     ) -> Result<Self, ()> {
-        let from = ComputedTranslate::fill_unspecified(self)?;
-        let to = ComputedTranslate::fill_unspecified(other)?;
+        let from = ComputedTranslate::resolve(self);
+        let to = ComputedTranslate::resolve(other);
 
         Ok(Translate::Translate3D(from.0.animate(&to.0, procedure)?,
                                   from.1.animate(&to.1, procedure)?,
@@ -2393,17 +2418,16 @@ impl Animate for ComputedTranslate {
 
 /// <https://drafts.csswg.org/css-transforms-2/#propdef-scale>
 impl ComputedScale {
-    fn fill_unspecified(scale: &ComputedScale)
-        -> Result<(Number, Number, Number), ()> {
+    fn resolve(scale: &ComputedScale) -> (Number, Number, Number) {
         // According to the spec:
         // https://drafts.csswg.org/css-transforms-2/#individual-transforms
         //
         // Unspecified scales default to 1
         match *scale {
-            Scale::None => Ok((1.0, 1.0, 1.0)),
-            Scale::Scale3D(sx, sy, sz) => Ok((sx, sy, sz)),
-            Scale::Scale(sx, sy) => Ok((sx, sy, 1.)),
-            Scale::ScaleX(sx) => Ok((sx, 1., 1.)),
+            Scale::None => (1.0, 1.0, 1.0),
+            Scale::Scale3D(sx, sy, sz) => (sx, sy, sz),
+            Scale::Scale(sx, sy) => (sx, sy, 1.),
+            Scale::ScaleX(sx) => (sx, 1., 1.),
         }
     }
 }
@@ -2415,99 +2439,104 @@ impl Animate for ComputedScale {
         other: &Self,
         procedure: Procedure,
     ) -> Result<Self, ()> {
-        let from = ComputedScale::fill_unspecified(self)?;
-        let to = ComputedScale::fill_unspecified(other)?;
+        let from = ComputedScale::resolve(self);
+        let to = ComputedScale::resolve(other);
 
+        // FIXME(emilio, bug 1464791): why does this do something different than
+        // Scale3D / TransformOperation::Scale3D?
         if procedure == Procedure::Add {
             // scale(x1,y1,z1)*scale(x2,y2,z2) = scale(x1*x2, y1*y2, z1*z2)
             return Ok(Scale::Scale3D(from.0 * to.0, from.1 * to.1, from.2 * to.2));
         }
 
-        Ok(Scale::Scale3D(animate_multiplicative_factor(from.0, to.0, procedure)?,
-                          animate_multiplicative_factor(from.1, to.1, procedure)?,
-                          animate_multiplicative_factor(from.2, to.2, procedure)?))
+        Ok(Scale::Scale3D(
+            animate_multiplicative_factor(from.0, to.0, procedure)?,
+            animate_multiplicative_factor(from.1, to.1, procedure)?,
+            animate_multiplicative_factor(from.2, to.2, procedure)?,
+        ))
     }
 }
 
 /// <https://drafts.csswg.org/css-transforms/#interpolation-of-transforms>
 impl Animate for ComputedTransform {
     #[inline]
-    fn animate(
-        &self,
-        other_: &Self,
-        procedure: Procedure,
-    ) -> Result<Self, ()> {
-
-        let animate_equal_lists = |this: &[ComputedTransformOperation],
-                                   other: &[ComputedTransformOperation]|
-                                   -> Result<ComputedTransform, ()> {
-            Ok(Transform(this.iter().zip(other)
-                             .map(|(this, other)| this.animate(other, procedure))
-                             .collect::<Result<Vec<_>, _>>()?))
-            // If we can't animate for a pair of matched transform lists
-            // this means we have at least one undecomposable matrix,
-            // so we should bubble out Err here, and let the caller do
-            // the fallback procedure.
-        };
-        if self.0.is_empty() && other_.0.is_empty() {
-            return Ok(Transform(vec![]));
-        }
-
-
-        let this = &self.0;
-        let other = &other_.0;
+    fn animate(&self, other: &Self, procedure: Procedure) -> Result<Self, ()> {
+        use std::borrow::Cow;
 
         if procedure == Procedure::Add {
-            let result = this.iter().chain(other).cloned().collect::<Vec<_>>();
+            let result = self.0.iter().chain(&other.0).cloned().collect::<Vec<_>>();
             return Ok(Transform(result));
         }
 
+        // https://drafts.csswg.org/css-transforms-1/#transform-transform-neutral-extend-animation
+        fn match_operations_if_possible<'a>(
+            this: &mut Cow<'a, Vec<ComputedTransformOperation>>,
+            other: &mut Cow<'a, Vec<ComputedTransformOperation>>,
+        ) -> bool {
+            if !this.iter().zip(other.iter()).all(|(this, other)| is_matched_operation(this, other)) {
+                return false;
+            }
 
-        // For matched transform lists.
-        {
             if this.len() == other.len() {
-                let is_matched_transforms = this.iter().zip(other).all(|(this, other)| {
-                    is_matched_operation(this, other)
-                });
-
-                if is_matched_transforms {
-                    return animate_equal_lists(this, other);
-                }
+                return true;
             }
+
+            let (shorter, longer) =
+                if this.len() < other.len() {
+                    (this.to_mut(), other)
+                } else {
+                    (other.to_mut(), this)
+                };
+
+            shorter.reserve(longer.len());
+            for op in longer.iter().skip(shorter.len()) {
+                shorter.push(op.to_animated_zero().unwrap());
+            }
+
+            // The resulting operations won't be matched regardless if the
+            // extended component is already InterpolateMatrix /
+            // AccumulateMatrix.
+            //
+            // Otherwise they should be matching operations all the time.
+            let already_mismatched = matches!(
+                longer[0],
+                TransformOperation::InterpolateMatrix { .. } |
+                TransformOperation::AccumulateMatrix { .. }
+            );
+
+            debug_assert_eq!(
+                !already_mismatched,
+                longer.iter().zip(shorter.iter()).all(|(this, other)| is_matched_operation(this, other)),
+                "ToAnimatedZero should generate matched operations"
+            );
+
+            !already_mismatched
         }
 
-        // For mismatched transform lists.
-        let mut owned_this = this.clone();
-        let mut owned_other = other.clone();
+        let mut this = Cow::Borrowed(&self.0);
+        let mut other = Cow::Borrowed(&other.0);
 
-        if this.is_empty() {
-            let this = other_.to_animated_zero()?.0;
-            if this.iter().zip(other).all(|(this, other)| is_matched_operation(this, other)) {
-                return animate_equal_lists(&this, other)
-            }
-            owned_this = this;
-        }
-        if other.is_empty() {
-            let other = self.to_animated_zero()?.0;
-            if this.iter().zip(&other).all(|(this, other)| is_matched_operation(this, other)) {
-                return animate_equal_lists(this, &other)
-            }
-            owned_other = other;
+        if match_operations_if_possible(&mut this, &mut other) {
+            return Ok(Transform(
+                this.iter().zip(other.iter())
+                    .map(|(this, other)| this.animate(other, procedure))
+                    .collect::<Result<Vec<_>, _>>()?
+            ));
         }
 
         match procedure {
             Procedure::Add => Err(()),
             Procedure::Interpolate { progress } => {
                 Ok(Transform(vec![TransformOperation::InterpolateMatrix {
-                    from_list: Transform(owned_this),
-                    to_list: Transform(owned_other),
+                    from_list: Transform(this.into_owned()),
+                    to_list: Transform(other.into_owned()),
                     progress: Percentage(progress as f32),
                 }]))
             },
             Procedure::Accumulate { count } => {
                 Ok(Transform(vec![TransformOperation::AccumulateMatrix {
-                    from_list: Transform(owned_this),
-                    to_list: Transform(owned_other),
+                    from_list: Transform(this.into_owned()),
+                    to_list: Transform(other.into_owned()),
                     count: cmp::min(count, i32::max_value() as u64) as i32,
                 }]))
             },
@@ -2660,6 +2689,9 @@ impl ComputeSquaredDistance for ComputedTransformOperation {
             _ if self.is_scale() && other.is_scale() => {
                 self.to_scale_3d().compute_squared_distance(&other.to_scale_3d())
             }
+            _ if self.is_rotate() && other.is_rotate() => {
+                self.to_rotate_3d().compute_squared_distance(&other.to_rotate_3d())
+            }
             _ => Err(()),
         }
     }
@@ -2668,36 +2700,25 @@ impl ComputeSquaredDistance for ComputedTransformOperation {
 impl ComputeSquaredDistance for ComputedTransform {
     #[inline]
     fn compute_squared_distance(&self, other: &Self) -> Result<SquaredDistance, ()> {
-        let list1 = &self.0;
-        let list2 = &other.0;
+        let squared_dist = self.0.squared_distance_with_zero(&other.0);
 
-        let squared_dist: Result<SquaredDistance, _> = list1.iter().zip_longest(list2).map(|it| {
-            match it {
-                EitherOrBoth::Both(this, other) => {
-                    this.compute_squared_distance(other)
-                },
-                EitherOrBoth::Left(list) | EitherOrBoth::Right(list) => {
-                    list.to_animated_zero()?.compute_squared_distance(list)
-                },
-            }
-        }).sum();
-
-        // Roll back to matrix interpolation if there is any Err(()) in the transform lists, such
-        // as mismatched transform functions.
-        if let Err(_) = squared_dist {
+        // Roll back to matrix interpolation if there is any Err(()) in the
+        // transform lists, such as mismatched transform functions.
+        if squared_dist.is_err() {
             let matrix1: Matrix3D = self.to_transform_3d_matrix(None)?.0.into();
             let matrix2: Matrix3D = other.to_transform_3d_matrix(None)?.0.into();
             return matrix1.compute_squared_distance(&matrix2);
         }
+
         squared_dist
     }
 }
 
 /// Animated SVGPaint
-pub type IntermediateSVGPaint = SVGPaint<AnimatedRGBA, ComputedUrl>;
+pub type IntermediateSVGPaint = SVGPaint<AnimatedColor, ComputedUrl>;
 
 /// Animated SVGPaintKind
-pub type IntermediateSVGPaintKind = SVGPaintKind<AnimatedRGBA, ComputedUrl>;
+pub type IntermediateSVGPaintKind = SVGPaintKind<AnimatedColor, ComputedUrl>;
 
 impl ToAnimatedZero for IntermediateSVGPaint {
     #[inline]
@@ -2828,7 +2849,7 @@ where
 /// <https://www.w3.org/TR/SVG11/painting.html#StrokeDasharrayProperty>
 impl<L> Animate for SVGStrokeDashArray<L>
 where
-    L: Clone + RepeatableListAnimatable,
+    L: Clone + Animate,
 {
     #[inline]
     fn animate(&self, other: &Self, procedure: Procedure) -> Result<Self, ()> {
@@ -2838,7 +2859,22 @@ where
         }
         match (self, other) {
             (&SVGStrokeDashArray::Values(ref this), &SVGStrokeDashArray::Values(ref other)) => {
-                Ok(SVGStrokeDashArray::Values(this.animate(other, procedure)?))
+                Ok(SVGStrokeDashArray::Values(this.animate_repeatable_list(other, procedure)?))
+            },
+            _ => Err(()),
+        }
+    }
+}
+
+impl<L> ComputeSquaredDistance for SVGStrokeDashArray<L>
+where
+    L: ComputeSquaredDistance,
+{
+    #[inline]
+    fn compute_squared_distance(&self, other: &Self) -> Result<SquaredDistance, ()> {
+        match (self, other) {
+            (&SVGStrokeDashArray::Values(ref this), &SVGStrokeDashArray::Values(ref other)) => {
+                this.squared_distance_repeatable_list(other)
             },
             _ => Err(()),
         }
@@ -2929,87 +2965,67 @@ impl ToAnimatedZero for AnimatedFilter {
     }
 }
 
-impl Animate for AnimatedFilterList {
-    #[inline]
-    fn animate(
-        &self,
-        other: &Self,
-        procedure: Procedure,
-    ) -> Result<Self, ()> {
-        if procedure == Procedure::Add {
-            return Ok(AnimatedFilterList(
-                self.0.iter().chain(other.0.iter()).cloned().collect(),
-            ));
+/// The category a property falls into for ordering purposes.
+///
+/// https://drafts.csswg.org/web-animations/#calculating-computed-keyframes
+///
+#[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
+enum PropertyCategory {
+    Custom,
+    PhysicalLonghand,
+    LogicalLonghand,
+    Shorthand,
+}
+
+impl PropertyCategory {
+    fn of(id: &PropertyId) -> Self {
+        match *id {
+            PropertyId::Shorthand(..) |
+            PropertyId::ShorthandAlias(..) => PropertyCategory::Shorthand,
+            PropertyId::Longhand(id) |
+            PropertyId::LonghandAlias(id, ..) => {
+                if id.is_logical() {
+                    PropertyCategory::LogicalLonghand
+                } else {
+                    PropertyCategory::PhysicalLonghand
+                }
+            }
+            PropertyId::Custom(..) => PropertyCategory::Custom,
         }
-        Ok(AnimatedFilterList(self.0.iter().zip_longest(other.0.iter()).map(|it| {
-            match it {
-                EitherOrBoth::Both(this, other) => {
-                    this.animate(other, procedure)
-                },
-                EitherOrBoth::Left(this) => {
-                    this.animate(&this.to_animated_zero()?, procedure)
-                },
-                EitherOrBoth::Right(other) => {
-                    other.to_animated_zero()?.animate(other, procedure)
-                },
-            }
-        }).collect::<Result<Vec<_>, _>>()?))
     }
 }
 
-impl ComputeSquaredDistance for AnimatedFilterList {
-    #[inline]
-    fn compute_squared_distance(&self, other: &Self) -> Result<SquaredDistance, ()> {
-        self.0.iter().zip_longest(other.0.iter()).map(|it| {
-            match it {
-                EitherOrBoth::Both(this, other) => {
-                    this.compute_squared_distance(other)
-                },
-                EitherOrBoth::Left(list) | EitherOrBoth::Right(list) => {
-                    list.to_animated_zero()?.compute_squared_distance(list)
-                },
-            }
-        }).sum()
-    }
-}
-
-/// A comparator to sort PropertyIds such that longhands are sorted before shorthands,
-/// shorthands with fewer components are sorted before shorthands with more components,
-/// and otherwise shorthands are sorted by IDL name as defined by [Web Animations][property-order].
+/// A comparator to sort PropertyIds such that physical longhands are sorted
+/// before logical longhands and shorthands, shorthands with fewer components
+/// are sorted before shorthands with more components, and otherwise shorthands
+/// are sorted by IDL name as defined by [Web Animations][property-order].
 ///
 /// Using this allows us to prioritize values specified by longhands (or smaller
-/// shorthand subsets) when longhands and shorthands are both specified on the one keyframe.
-///
-/// Example orderings that result from this:
-///
-///   margin-left, margin
-///
-/// and:
-///
-///   border-top-color, border-color, border-top, border
+/// shorthand subsets) when longhands and shorthands are both specified on the
+/// one keyframe.
 ///
 /// [property-order] https://drafts.csswg.org/web-animations/#calculating-computed-keyframes
 pub fn compare_property_priority(a: &PropertyId, b: &PropertyId) -> cmp::Ordering {
-    match (a.as_shorthand(), b.as_shorthand()) {
-        // Within shorthands, sort by the number of subproperties, then by IDL name.
-        (Ok(a), Ok(b)) => {
-            let subprop_count_a = a.longhands().count();
-            let subprop_count_b = b.longhands().count();
-            subprop_count_a
-                .cmp(&subprop_count_b)
-                .then_with(|| {
-                    get_idl_name_sort_order(a).cmp(&get_idl_name_sort_order(b))
-                })
-        },
+    let a_category = PropertyCategory::of(a);
+    let b_category = PropertyCategory::of(b);
 
-        // Longhands go before shorthands.
-        (Ok(_), Err(_)) => cmp::Ordering::Greater,
-        (Err(_), Ok(_)) => cmp::Ordering::Less,
-
-        // Both are longhands or custom properties in which case they don't overlap and should
-        // sort equally.
-        _ => cmp::Ordering::Equal,
+    if a_category != b_category {
+        return a_category.cmp(&b_category);
     }
+
+    if a_category == PropertyCategory::Shorthand {
+        let a = a.as_shorthand().unwrap();
+        let b = b.as_shorthand().unwrap();
+        // Within shorthands, sort by the number of subproperties, then by IDL
+        // name.
+        let subprop_count_a = a.longhands().count();
+        let subprop_count_b = b.longhands().count();
+        return subprop_count_a.cmp(&subprop_count_b).then_with(|| {
+            get_idl_name_sort_order(a).cmp(&get_idl_name_sort_order(b))
+        });
+    }
+
+    cmp::Ordering::Equal
 }
 
 fn get_idl_name_sort_order(shorthand: ShorthandId) -> u32 {

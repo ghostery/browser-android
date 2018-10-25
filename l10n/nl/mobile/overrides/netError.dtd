@@ -181,8 +181,8 @@
 </ul>
 ">
 
-<!ENTITY cspBlocked.title "Geblokkeerd door inhoudbeveiligingsbeleid">
-<!ENTITY cspBlocked.longDesc "<p>&brandShortName; heeft voorkomen dat de pagina op deze manier werd geladen, omdat de pagina een inhoudbeveiligingsbeleid heeft dat dit niet toestaat.</p>">
+<!ENTITY cspBlocked.title "Geblokkeerd door inhoudsbeveiligingsbeleid">
+<!ENTITY cspBlocked.longDesc "<p>&brandShortName; heeft voorkomen dat de pagina op deze manier werd geladen, omdat de pagina een inhoudsbeveiligingsbeleid heeft dat dit niet toestaat.</p>">
 
 <!ENTITY corruptedContentErrorv2.title "Beschadigde-inhoudsfout">
 <!ENTITY corruptedContentErrorv2.longDesc "<p>De pagina die u wilt bekijken kan niet worden weergegeven, omdat er een fout in de gegevensoverdracht is gedetecteerd.</p><ul><li>Neem contact op met de website-eigenaars om ze over dit probleem te informeren.</li></ul>">

@@ -8,14 +8,14 @@
 
 #include "nsEnumeratorUtils.h"
 
-#include "nsISimpleEnumerator.h"
 #include "nsIStringEnumerator.h"
+#include "nsSimpleEnumerator.h"
 
 #include "nsCOMPtr.h"
 #include "mozilla/RefPtr.h"
 
 class EmptyEnumeratorImpl
-  : public nsISimpleEnumerator
+  : public nsSimpleEnumerator
   , public nsIUTF8StringEnumerator
   , public nsIStringEnumerator
 {
@@ -52,7 +52,7 @@ EmptyEnumeratorImpl::Release(void)
   return 1;
 }
 
-NS_IMPL_QUERY_INTERFACE(EmptyEnumeratorImpl, nsISimpleEnumerator,
+NS_IMPL_QUERY_INTERFACE_INHERITED(EmptyEnumeratorImpl, nsSimpleEnumerator,
                         nsIUTF8StringEnumerator, nsIStringEnumerator)
 
 // nsISimpleEnumerator interface
@@ -73,7 +73,7 @@ EmptyEnumeratorImpl::HasMore(bool* aResult)
 NS_IMETHODIMP
 EmptyEnumeratorImpl::GetNext(nsISupports** aResult)
 {
-  return NS_ERROR_UNEXPECTED;
+  return NS_ERROR_FAILURE;
 }
 
 NS_IMETHODIMP
@@ -97,11 +97,9 @@ NS_NewEmptyEnumerator(nsISimpleEnumerator** aResult)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class nsSingletonEnumerator final : public nsISimpleEnumerator
+class nsSingletonEnumerator final : public nsSimpleEnumerator
 {
 public:
-  NS_DECL_ISUPPORTS
-
   // nsISimpleEnumerator methods
   NS_IMETHOD HasMoreElements(bool* aResult) override;
   NS_IMETHOD GetNext(nsISupports** aResult) override;
@@ -109,7 +107,7 @@ public:
   explicit nsSingletonEnumerator(nsISupports* aValue);
 
 private:
-  ~nsSingletonEnumerator();
+  ~nsSingletonEnumerator() override;
 
 protected:
   nsCOMPtr<nsISupports> mValue;
@@ -124,12 +122,10 @@ nsSingletonEnumerator::nsSingletonEnumerator(nsISupports* aValue)
 
 nsSingletonEnumerator::~nsSingletonEnumerator() = default;
 
-NS_IMPL_ISUPPORTS(nsSingletonEnumerator, nsISimpleEnumerator)
-
 NS_IMETHODIMP
 nsSingletonEnumerator::HasMoreElements(bool* aResult)
 {
-  NS_PRECONDITION(aResult != 0, "null ptr");
+  MOZ_ASSERT(aResult != 0, "null ptr");
   if (!aResult) {
     return NS_ERROR_NULL_POINTER;
   }
@@ -142,13 +138,13 @@ nsSingletonEnumerator::HasMoreElements(bool* aResult)
 NS_IMETHODIMP
 nsSingletonEnumerator::GetNext(nsISupports** aResult)
 {
-  NS_PRECONDITION(aResult != 0, "null ptr");
+  MOZ_ASSERT(aResult != 0, "null ptr");
   if (!aResult) {
     return NS_ERROR_NULL_POINTER;
   }
 
   if (mConsumed) {
-    return NS_ERROR_UNEXPECTED;
+    return NS_ERROR_FAILURE;
   }
 
   mConsumed = true;
@@ -169,11 +165,9 @@ NS_NewSingletonEnumerator(nsISimpleEnumerator** aResult,
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class nsUnionEnumerator final : public nsISimpleEnumerator
+class nsUnionEnumerator final : public nsSimpleEnumerator
 {
 public:
-  NS_DECL_ISUPPORTS
-
   // nsISimpleEnumerator methods
   NS_IMETHOD HasMoreElements(bool* aResult) override;
   NS_IMETHOD GetNext(nsISupports** aResult) override;
@@ -182,7 +176,7 @@ public:
                     nsISimpleEnumerator* aSecondEnumerator);
 
 private:
-  ~nsUnionEnumerator();
+  ~nsUnionEnumerator() override;
 
 protected:
   nsCOMPtr<nsISimpleEnumerator> mFirstEnumerator, mSecondEnumerator;
@@ -201,12 +195,10 @@ nsUnionEnumerator::nsUnionEnumerator(nsISimpleEnumerator* aFirstEnumerator,
 
 nsUnionEnumerator::~nsUnionEnumerator() = default;
 
-NS_IMPL_ISUPPORTS(nsUnionEnumerator, nsISimpleEnumerator)
-
 NS_IMETHODIMP
 nsUnionEnumerator::HasMoreElements(bool* aResult)
 {
-  NS_PRECONDITION(aResult != 0, "null ptr");
+  MOZ_ASSERT(aResult != 0, "null ptr");
   if (!aResult) {
     return NS_ERROR_NULL_POINTER;
   }
@@ -248,13 +240,13 @@ nsUnionEnumerator::HasMoreElements(bool* aResult)
 NS_IMETHODIMP
 nsUnionEnumerator::GetNext(nsISupports** aResult)
 {
-  NS_PRECONDITION(aResult != 0, "null ptr");
+  MOZ_ASSERT(aResult != 0, "null ptr");
   if (!aResult) {
     return NS_ERROR_NULL_POINTER;
   }
 
   if (mConsumed) {
-    return NS_ERROR_UNEXPECTED;
+    return NS_ERROR_FAILURE;
   }
 
   if (!mAtSecond) {

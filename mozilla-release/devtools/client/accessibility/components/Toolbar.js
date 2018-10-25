@@ -13,6 +13,9 @@ const Button = createFactory(require("./Button"));
 const { connect } = require("devtools/client/shared/vendor/react-redux");
 const { disable, updateCanBeDisabled } = require("../actions/ui");
 
+const { A11Y_LEARN_MORE_LINK } = require("../constants");
+const { openDocLink } = require("devtools/client/shared/link");
+
 class Toolbar extends Component {
   static get propTypes() {
     return {
@@ -48,7 +51,7 @@ class Toolbar extends Component {
   }
 
   onDisable() {
-    let { accessibility, dispatch } = this.props;
+    const { accessibility, dispatch } = this.props;
     this.setState({ disabling: true });
 
     dispatch(disable(accessibility))
@@ -56,10 +59,15 @@ class Toolbar extends Component {
       .catch(() => this.setState({ disabling: false }));
   }
 
+  onLearnMoreClick() {
+    openDocLink(A11Y_LEARN_MORE_LINK +
+      "?utm_source=devtools&utm_medium=a11y-panel-toolbar");
+  }
+
   render() {
-    let { canBeDisabled } = this.props;
-    let { disabling } = this.state;
-    let disableButtonStr = disabling ?
+    const { canBeDisabled } = this.props;
+    const { disabling } = this.state;
+    const disableButtonStr = disabling ?
       "accessibility.disabling" : "accessibility.disable";
     let title;
     let isDisabled = false;
@@ -82,7 +90,12 @@ class Toolbar extends Component {
         disabled: disabling || isDisabled,
         busy: disabling,
         title
-      }, L10N.getStr(disableButtonStr)))
+      }, L10N.getStr(disableButtonStr)),
+      Button({
+        className: "help",
+        title: L10N.getStr("accessibility.learnMore"),
+        onClick: this.onLearnMoreClick
+      }))
     );
   }
 }

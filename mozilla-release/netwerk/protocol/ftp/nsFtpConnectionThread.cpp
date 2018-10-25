@@ -8,6 +8,8 @@
 
 #include "prprf.h"
 #include "mozilla/Logging.h"
+#include "mozilla/NullPrincipal.h"
+#include "mozilla/TextUtils.h"
 #include "prtime.h"
 
 #include "nsIOService.h"
@@ -42,7 +44,6 @@
 #include "nsIURI.h"
 #include "nsIURIMutator.h"
 #include "nsILoadInfo.h"
-#include "NullPrincipal.h"
 #include "nsIAuthPrompt2.h"
 #include "nsIFTPChannelParentInternal.h"
 
@@ -75,6 +76,7 @@ nsFtpState::nsFtpState()
     , mState(FTP_INIT)
     , mNextState(FTP_S_USER)
     , mKeepRunning(true)
+    , mResponseCode(0)
     , mReceivedControlData(false)
     , mTryingCachedControl(false)
     , mRETRFailed(false)
@@ -94,6 +96,8 @@ nsFtpState::nsFtpState()
     , mControlStatus(NS_OK)
     , mDeferredCallbackPending(false)
 {
+    this->mServerAddress.raw.family = 0;
+    this->mServerAddress.inet = {};
     LOG_INFO(("FTP:(%p) nsFtpState created", this));
 
     // make sure handler stays around
@@ -183,9 +187,9 @@ nsFtpState::OnControlDataAvailable(const char *aData, uint32_t aDataLen)
 
         // Does this start with a response code?
         bool startNum = (line.Length() >= 3 &&
-                           isdigit(line[0]) &&
-                           isdigit(line[1]) &&
-                           isdigit(line[2]));
+                           IsAsciiDigit(line[0]) &&
+                           IsAsciiDigit(line[1]) &&
+                           IsAsciiDigit(line[2]));
 
         if (mResponseMsg.IsEmpty()) {
             // If we get here, then we know that we have a complete line, and

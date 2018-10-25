@@ -13,6 +13,7 @@ from taskgraph.util.schema import validate_schema, Schema
 from taskgraph.util.scriptworker import (
     get_signing_cert_scope,
     get_worker_type_for_scope,
+    add_scope_prefix,
 )
 from taskgraph.transforms.task import task_description_schema
 from voluptuous import Any, Required, Optional
@@ -59,7 +60,10 @@ def make_checksums_signing_description(config, jobs):
             'treeherder', {}).get('machine', {}).get('platform', '')
         treeherder.setdefault('platform',
                               "{}/opt".format(dep_th_platform))
-        treeherder.setdefault('tier', 1)
+        treeherder.setdefault(
+            'tier',
+            dep_job.task.get('extra', {}).get('treeherder', {}).get('tier', 1)
+        )
         treeherder.setdefault('kind', 'build')
 
         label = job['label']
@@ -98,7 +102,7 @@ def make_checksums_signing_description(config, jobs):
                        'max-run-time': 3600},
             'scopes': [
                 signing_cert_scope,
-                "project:releng:signing:format:gpg"
+                add_scope_prefix(config, 'signing:format:gpg'),
             ],
             'dependencies': dependencies,
             'attributes': attributes,

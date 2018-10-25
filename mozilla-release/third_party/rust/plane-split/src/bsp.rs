@@ -1,12 +1,14 @@
-use binary_space_partition::{BspNode, Plane, PlaneCut};
+use {Intersection, Plane, Polygon, Splitter};
+
+use binary_space_partition::{BspNode, Plane as BspPlane, PlaneCut};
 use euclid::{TypedPoint3D, TypedVector3D};
 use euclid::approxeq::ApproxEq;
 use num_traits::{Float, One, Zero};
-use std::{fmt, ops};
-use {Intersection, Polygon, Splitter};
+
+use std::{fmt, iter, ops};
 
 
-impl<T, U> Plane for Polygon<T, U> where
+impl<T, U> BspPlane for Polygon<T, U> where
     T: Copy + fmt::Debug + ApproxEq<T> +
         ops::Sub<T, Output=T> + ops::Add<T, Output=T> +
         ops::Mul<T, Output=T> + ops::Div<T, Output=T> +
@@ -15,7 +17,7 @@ impl<T, U> Plane for Polygon<T, U> where
 {
     fn cut(&self, mut plane: Self) -> PlaneCut<Self> {
         debug!("\tCutting anchor {}", plane.anchor);
-        let dist = self.signed_distance_sum_to(&plane);
+        let dist = self.plane.signed_distance_sum_to(&plane);
 
         match self.intersect(&plane) {
             Intersection::Coplanar if dist.approx_eq(&T::zero()) => {
@@ -41,8 +43,12 @@ impl<T, U> Plane for Polygon<T, U> where
                 let mut front = Vec::new();
                 let mut back = Vec::new();
 
-                for sub in Some(plane).into_iter().chain(res_add1).chain(res_add2) {
-                    if self.signed_distance_sum_to(&sub) > T::zero() {
+                for sub in iter::once(plane)
+                    .chain(res_add1)
+                    .chain(res_add2)
+                    .filter(|p| !p.is_empty())
+                {
+                    if self.plane.signed_distance_sum_to(&sub) > T::zero() {
                         front.push(sub)
                     } else {
                         back.push(sub)
@@ -52,15 +58,15 @@ impl<T, U> Plane for Polygon<T, U> where
                     line, front.len(), back.len());
 
                 PlaneCut::Cut {
-                    front: front,
-                    back: back,
+                    front,
+                    back,
                 }
             },
         }
     }
 
-    fn is_aligned(&self, plane: &Self) -> bool {
-        self.normal.dot(plane.normal) > T::zero()
+    fn is_aligned(&self, other: &Self) -> bool {
+        self.plane.normal.dot(other.plane.normal) > T::zero()
     }
 }
 
@@ -100,8 +106,10 @@ impl<T, U> Splitter<T, U> for BspSplitter<T, U> where
         //debug!("\t\ttree before sorting {:?}", self.tree);
         let poly = Polygon {
             points: [TypedPoint3D::origin(); 4],
-            normal: -view, //Note: BSP `order()` is back to front
-            offset: T::zero(),
+            plane: Plane {
+                normal: -view, //Note: BSP `order()` is back to front
+                offset: T::zero(),
+            },
             anchor: 0,
         };
         self.result.clear();

@@ -46,6 +46,12 @@ parent:
    *        mozIThirdPartyUtil.isThirdPartyChannel. Third party requests may be
    *        rejected depending on user preferences; if those checks are
    *        disabled, this parameter is ignored.
+   * @param isTrackingResource
+   *        True if the request has been marked as tracking.
+   * @param firstPartyStorageAccessGranted
+   *        True if host has storage access granted. Note that the storage
+   *        access is automatically granted also if the channel is not marked as
+   *        tracking resource, or if it's not a 3rd party context.
    * @param isSafeTopLevelNav
    *        True for safe methods like e.g. GET.
    * @param isSameSiteForeign
@@ -66,6 +72,8 @@ parent:
    */
   nested(inside_cpow) sync GetCookieString(URIParams host,
                                            bool isForeign,
+                                           bool isTrackingResource,
+                                           bool firstPartyStorageAccessGranted,
                                            bool isSafeTopLevelNav,
                                            bool isSameSiteForeign,
                                            OriginAttributes attrs)
@@ -84,6 +92,12 @@ parent:
    *        mozIThirdPartyUtil.isThirdPartyChannel. Third party requests may be
    *        rejected depending on user preferences; if those checks are
    *        disabled, this parameter is ignored.
+   * @param isTrackingResource
+   *        True if the request has been marked as tracking.
+   * @param firstPartyStorageAccessGranted
+   *        True if host has storage access granted. Note that the storage
+   *        access is automatically granted also if the channel is not marked as
+   *        tracking resource, or if it's not a 3rd party context.
    * @param cookieString
    *        Same as the 'aCookie' argument to nsICookieService.setCookieString.
    * @param serverTime
@@ -103,8 +117,10 @@ parent:
    * @see mozIThirdPartyUtil.isThirdPartyChannel
    */
   nested(inside_cpow) async SetCookieString(URIParams host,
-                                            URIParams channelURI,
+                                            OptionalURIParams channelURI,
                                             bool isForeign,
+                                            bool isTrackingResource,
+                                            bool firstPartyStorageAccessGranted,
                                             nsCString cookieString,
                                             nsCString serverTime,
                                             OriginAttributes attrs,
@@ -112,6 +128,8 @@ parent:
 
   async PrepareCookieList(URIParams host,
                           bool isForeign,
+                          bool isTrackingResource,
+                          bool firstPartyStorageAccessGranted,
                           bool isSafeTopLevelNav,
                           bool isSameSiteForeign,
                           OriginAttributes attrs);

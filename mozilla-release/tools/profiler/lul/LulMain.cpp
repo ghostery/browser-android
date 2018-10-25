@@ -582,10 +582,10 @@ class PriMap {
     MOZ_ASSERT(i <= num_secMaps);
     if (i == num_secMaps) {
       // It goes at the end.
-      mSecMaps.push_back(mozilla::Move(aSecMap));
+      mSecMaps.push_back(std::move(aSecMap));
     } else {
       std::vector<mozilla::UniquePtr<SecMap>>::iterator iter = mSecMaps.begin() + i;
-      mSecMaps.insert(iter, mozilla::Move(aSecMap));
+      mSecMaps.insert(iter, std::move(aSecMap));
     }
     char buf[100];
     SprintfLiteral(buf, "AddSecMap: now have %d SecMaps\n",
@@ -804,7 +804,7 @@ LUL::NotifyAfterMap(uintptr_t aRXavma, size_t aSize,
     mLog(buf);
 
     // Add it to the primary map (the top level set of mapped objects).
-    mPriMap->AddSecMap(mozilla::Move(smap));
+    mPriMap->AddSecMap(std::move(smap));
 
     // Tell the segment array about the mapping, so that the stack
     // scan and __kernel_syscall mechanisms know where valid code is.
@@ -907,8 +907,8 @@ TaggedUWord DerefTUW(TaggedUWord aAddr, const StackImage* aStackImg)
     return TaggedUWord();
   }
 
-  return TaggedUWord(*(uintptr_t*)(aStackImg->mContents + aAddr.Value()
-                                   - aStackImg->mStartAvma));
+  return TaggedUWord(*(uintptr_t*)(
+           &aStackImg->mContents[aAddr.Value() - aStackImg->mStartAvma]));
 }
 
 // RUNS IN NO-MALLOC CONTEXT
@@ -1421,11 +1421,9 @@ LUL::Unwind(/*OUT*/uintptr_t* aFramePCs,
 
     }
 
-#if defined(GP_PLAT_amd64_linux)
-    // There's no RuleSet for the specified address.  On amd64_linux, see if
+#if defined(GP_PLAT_amd64_linux) || defined(GP_PLAT_x86_linux)
+    // There's no RuleSet for the specified address.  On amd64/x86_linux, see if
     // it's possible to recover the caller's frame by using the frame pointer.
-    // This would probably work for the 32-bit case too, but hasn't been
-    // tested for that case.
 
     // We seek to compute (new_IP, new_SP, new_BP) from (old_BP, stack image),
     // and assume the following layout:
@@ -1473,7 +1471,7 @@ LUL::Unwind(/*OUT*/uintptr_t* aFramePCs,
         }
       }
     }
-#endif // defined(GP_PLAT_amd64_linux)
+#endif // defined(GP_PLAT_amd64_linux) || defined(GP_PLAT_x86_linux)
 
     // We failed to recover a frame either using CFI or FP chasing, and we
     // have no other ways to recover the frame.  So we have to give up.

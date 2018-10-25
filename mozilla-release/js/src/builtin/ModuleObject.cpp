@@ -16,6 +16,7 @@
 #include "gc/Tracer.h"
 #include "vm/AsyncFunction.h"
 #include "vm/AsyncIteration.h"
+#include "vm/SelfHosting.h"
 
 #include "vm/JSObject-inl.h"
 #include "vm/JSScript-inl.h"
@@ -348,11 +349,6 @@ IndirectBindingMap::put(JSContext* cx, HandleId name,
     if (!map_) {
         MOZ_ASSERT(!cx->zone()->createdForHelperThread());
         map_.emplace(cx->zone());
-        if (!map_->init()) {
-            map_.reset();
-            ReportOutOfMemory(cx);
-            return false;
-        }
     }
 
     RootedShape shape(cx, environment->lookup(cx, localName));
@@ -772,20 +768,15 @@ ModuleObject::create(JSContext* cx)
     if (!self)
         return nullptr;
 
-    Zone* zone = cx->zone();
-    IndirectBindingMap* bindings = zone->new_<IndirectBindingMap>();
-    if (!bindings) {
-        ReportOutOfMemory(cx);
+    IndirectBindingMap* bindings = cx->new_<IndirectBindingMap>();
+    if (!bindings)
         return nullptr;
-    }
 
     self->initReservedSlot(ImportBindingsSlot, PrivateValue(bindings));
 
-    FunctionDeclarationVector* funDecls = zone->new_<FunctionDeclarationVector>(zone);
-    if (!funDecls) {
-        ReportOutOfMemory(cx);
+    FunctionDeclarationVector* funDecls = cx->new_<FunctionDeclarationVector>(cx->zone());
+    if (!funDecls)
         return nullptr;
-    }
 
     self->initReservedSlot(FunctionDeclarationsSlot, PrivateValue(funDecls));
     return self;
@@ -1000,16 +991,23 @@ ModuleObject::evaluationError() const
     return getReservedSlot(EvaluationErrorSlot);
 }
 
-Value
-ModuleObject::hostDefinedField() const
+JSObject*
+ModuleObject::metaObject() const
 {
-    return getReservedSlot(HostDefinedSlot);
+    Value value = getReservedSlot(MetaObjectSlot);
+    if (value.isObject())
+        return &value.toObject();
+
+    MOZ_ASSERT(value.isUndefined());
+    return nullptr;
 }
 
 void
-ModuleObject::setHostDefinedField(const JS::Value& value)
+ModuleObject::setMetaObject(JSObject* obj)
 {
-    setReservedSlot(HostDefinedSlot, value);
+    MOZ_ASSERT(obj);
+    MOZ_ASSERT(!metaObject());
+    setReservedSlot(MetaObjectSlot, ObjectValue(*obj));
 }
 
 Scope*
@@ -1113,14 +1111,11 @@ ModuleObject::createNamespace(JSContext* cx, HandleModuleObject self, HandleObje
     MOZ_ASSERT(!self->namespace_());
     MOZ_ASSERT(exports->is<ArrayObject>());
 
-    Zone* zone = cx->zone();
-    auto bindings = zone->make_unique<IndirectBindingMap>();
-    if (!bindings) {
-        ReportOutOfMemory(cx);
+    auto bindings = cx->make_unique<IndirectBindingMap>();
+    if (!bindings)
         return nullptr;
-    }
 
-    auto ns = ModuleNamespaceObject::create(cx, self, exports, Move(bindings));
+    auto ns = ModuleNamespaceObject::create(cx, self, exports, std::move(bindings));
     if (!ns)
         return nullptr;
 
@@ -1131,12 +1126,11 @@ ModuleObject::createNamespace(JSContext* cx, HandleModuleObject self, HandleObje
 static bool
 InvokeSelfHostedMethod(JSContext* cx, HandleModuleObject self, HandlePropertyName name)
 {
-    RootedValue fval(cx);
-    if (!GlobalObject::getSelfHostedFunction(cx, cx->global(), name, name, 0, &fval))
-        return false;
+    RootedValue thisv(cx, ObjectValue(*self));
+    FixedInvokeArgs<0> args(cx);
 
     RootedValue ignored(cx);
-    return Call(cx, fval, self, &ignored);
+    return CallSelfHostedFunction(cx, name, thisv, args, &ignored);
 }
 
 /* static */ bool
@@ -1149,6 +1143,22 @@ ModuleObject::Instantiate(JSContext* cx, HandleModuleObject self)
 ModuleObject::Evaluate(JSContext* cx, HandleModuleObject self)
 {
     return InvokeSelfHostedMethod(cx, self, cx->names().ModuleEvaluate);
+}
+
+/* static */ ModuleNamespaceObject*
+ModuleObject::GetOrCreateModuleNamespace(JSContext* cx, HandleModuleObject self)
+{
+    FixedInvokeArgs<1> args(cx);
+    args[0].setObject(*self);
+
+    RootedValue result(cx);
+    if (!CallSelfHostedFunction(cx, cx->names().GetModuleNamespace, UndefinedHandleValue, args,
+                                &result))
+    {
+        return nullptr;
+    }
+
+    return &result.toObject().as<ModuleNamespaceObject>();
 }
 
 DEFINE_GETTER_FUNCTIONS(ModuleObject, namespace_, NamespaceSlot)
@@ -1182,8 +1192,6 @@ GlobalObject::initModuleProto(JSContext* cx, Handle<GlobalObject*> global)
     static const JSFunctionSpec protoFunctions[] = {
         JS_SELF_HOSTED_FN("getExportedNames", "ModuleGetExportedNames", 1, 0),
         JS_SELF_HOSTED_FN("resolveExport", "ModuleResolveExport", 2, 0),
-        JS_SELF_HOSTED_FN("declarationInstantiation", "ModuleInstantiate", 0, 0),
-        JS_SELF_HOSTED_FN("evaluation", "ModuleEvaluate", 0, 0),
         JS_FS_END
     };
 
@@ -1219,14 +1227,6 @@ ModuleBuilder::ModuleBuilder(JSContext* cx, HandleModuleObject module,
     indirectExportEntries_(cx, ExportEntryVector(cx)),
     starExportEntries_(cx, ExportEntryVector(cx))
 {}
-
-bool
-ModuleBuilder::init()
-{
-    return requestedModuleSpecifiers_.init() &&
-           importEntries_.init() &&
-           exportNames_.init();
-}
 
 bool
 ModuleBuilder::buildTables()
@@ -1471,14 +1471,21 @@ ModuleBuilder::processExportObjectBinding(frontend::ParseNode* pn)
     for (ParseNode* node = pn->pn_head; node; node = node->pn_next) {
         MOZ_ASSERT(node->isKind(ParseNodeKind::MutateProto) ||
                    node->isKind(ParseNodeKind::Colon) ||
-                   node->isKind(ParseNodeKind::Shorthand));
+                   node->isKind(ParseNodeKind::Shorthand) ||
+                   node->isKind(ParseNodeKind::Spread));
 
-        ParseNode* target = node->isKind(ParseNodeKind::MutateProto)
-            ? node->pn_kid
-            : node->pn_right;
+        ParseNode* target;
+        if (node->isKind(ParseNodeKind::Spread)) {
+            target = node->pn_kid;
+        } else {
+            if (node->isKind(ParseNodeKind::MutateProto))
+                target = node->pn_kid;
+            else
+                target = node->pn_right;
 
-        if (target->isKind(ParseNodeKind::Assign))
-            target = target->pn_left;
+            if (target->isKind(ParseNodeKind::Assign))
+                target = target->pn_left;
+        }
 
         if (!processExportBinding(target))
             return false;
@@ -1622,4 +1629,30 @@ ArrayObject* ModuleBuilder::createArray(const JS::Rooted<GCHashMap<K, V>>& map)
         array->initDenseElement(i++, ObjectValue(*r.front().value()));
 
     return array;
+}
+
+JSObject*
+js::GetOrCreateModuleMetaObject(JSContext* cx, HandleScript script)
+{
+    MOZ_ASSERT(script->module());
+    RootedModuleObject module(cx, script->module());
+    if (JSObject* obj = module->metaObject())
+        return obj;
+
+    RootedObject metaObject(cx, NewObjectWithGivenProto<PlainObject>(cx, nullptr));
+    if (!metaObject)
+        return nullptr;
+
+    JS::ModuleMetadataHook func = cx->runtime()->moduleMetadataHook;
+    if (!func) {
+        JS_ReportErrorASCII(cx, "Module metadata hook not set");
+        return nullptr;
+    }
+
+    if (!func(cx, script, metaObject))
+        return nullptr;
+
+    module->setMetaObject(metaObject);
+
+    return metaObject;
 }

@@ -89,6 +89,8 @@ nsHttpConnectionInfo::Init(const nsACString &host, int32_t port,
     mNPNToken = npnToken;
     mOriginAttributes = originAttributes;
     mTlsFlags = 0x0;
+    mTrrUsed = false;
+    mTrrDisabled = false;
 
     mUsingHttpsProxy = (proxyInfo && proxyInfo->IsHTTPS());
     mUsingHttpProxy = mUsingHttpsProxy || (proxyInfo && proxyInfo->IsHTTP());
@@ -103,13 +105,6 @@ nsHttpConnectionInfo::Init(const nsACString &host, int32_t port,
     }
 
     SetOriginServer(host, port);
-}
-
-void
-nsHttpConnectionInfo::SetNetworkInterfaceId(const nsACString& aNetworkInterfaceId)
-{
-    mNetworkInterfaceId = aNetworkInterfaceId;
-    BuildHashKey();
 }
 
 void nsHttpConnectionInfo::BuildHashKey()
@@ -147,11 +142,6 @@ void nsHttpConnectionInfo::BuildHashKey()
     mHashKey.AssignLiteral(".......[tlsflags0x00000000]");
 
     mHashKey.Append(keyHost);
-    if (!mNetworkInterfaceId.IsEmpty()) {
-        mHashKey.Append('(');
-        mHashKey.Append(mNetworkInterfaceId);
-        mHashKey.Append(')');
-    }
     mHashKey.Append(':');
     mHashKey.AppendInt(keyPort);
     if (!mUsername.IsEmpty()) {
@@ -221,6 +211,13 @@ void nsHttpConnectionInfo::BuildHashKey()
         mHashKey.AppendLiteral("}");
     }
 
+    if (GetTrrDisabled()) {
+        // When connecting with TRR disabled, we enforce a separate connection
+        // hashkey so that we also can trigger a fresh DNS resolver that then
+        // doesn't use TRR as the previous connection might have.
+        mHashKey.AppendLiteral("[NOTRR]");
+    }
+
     nsAutoCString originAttributes;
     mOriginAttributes.CreateSuffix(originAttributes);
     mHashKey.Append(originAttributes);
@@ -247,10 +244,6 @@ nsHttpConnectionInfo::Clone() const
                                          mOriginAttributes, mRoutedHost, mRoutedPort);
     }
 
-    if (!mNetworkInterfaceId.IsEmpty()) {
-        clone->SetNetworkInterfaceId(mNetworkInterfaceId);
-    }
-
     // Make sure the anonymous, insecure-scheme, and private flags are transferred
     clone->SetAnonymous(GetAnonymous());
     clone->SetPrivate(GetPrivate());
@@ -258,6 +251,8 @@ nsHttpConnectionInfo::Clone() const
     clone->SetNoSpdy(GetNoSpdy());
     clone->SetBeConservative(GetBeConservative());
     clone->SetTlsFlags(GetTlsFlags());
+    clone->SetTrrUsed(GetTrrUsed());
+    clone->SetTrrDisabled(GetTrrDisabled());
     MOZ_ASSERT(clone->Equals(this));
 
     return clone;
@@ -282,9 +277,8 @@ nsHttpConnectionInfo::CloneAsDirectRoute(nsHttpConnectionInfo **outCI)
     clone->SetNoSpdy(GetNoSpdy());
     clone->SetBeConservative(GetBeConservative());
     clone->SetTlsFlags(GetTlsFlags());
-    if (!mNetworkInterfaceId.IsEmpty()) {
-        clone->SetNetworkInterfaceId(mNetworkInterfaceId);
-    }
+    clone->SetTrrUsed(GetTrrUsed());
+    clone->SetTrrDisabled(GetTrrDisabled());
     clone.forget(outCI);
 }
 
@@ -308,6 +302,15 @@ nsHttpConnectionInfo::CreateWildCard(nsHttpConnectionInfo **outParam)
     clone->SetPrivate(GetPrivate());
     clone.forget(outParam);
     return NS_OK;
+}
+
+void
+nsHttpConnectionInfo::SetTrrDisabled(bool aNoTrr)
+{
+    if (mTrrDisabled != aNoTrr) {
+        mTrrDisabled = aNoTrr;
+        BuildHashKey();
+    }
 }
 
 void

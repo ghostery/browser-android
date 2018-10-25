@@ -25,7 +25,7 @@ add_task(async function() {
           {
             type: PlacesUtils.bookmarks.TYPE_SEPARATOR,
           },
-        ]
+        ],
       },
       { title: "bm",
         url: "http://example.com",
@@ -33,7 +33,7 @@ add_task(async function() {
       {
         type: PlacesUtils.bookmarks.TYPE_SEPARATOR,
       },
-    ]
+    ],
   });
 
   await test_query({}, 3, 3, 2);
@@ -45,7 +45,7 @@ add_task(async function() {
 
 async function test_query(opts, expectedRootCc, expectedFolderCc, expectedQueryCc) {
   let query = PlacesUtils.history.getNewQuery();
-  query.setFolders([PlacesUtils.unfiledBookmarksFolderId], 1);
+  query.setParents([PlacesUtils.bookmarks.unfiledGuid], 1);
   let options = PlacesUtils.history.getNewQueryOptions();
   for (const [o, v] of Object.entries(opts)) {
     info(`Setting ${o} to ${v}`);
@@ -75,7 +75,7 @@ async function test_query(opts, expectedRootCc, expectedFolderCc, expectedQueryC
   }
   let f = await PlacesUtils.bookmarks.insert({
     parentGuid: PlacesUtils.bookmarks.unfiledGuid,
-    type: PlacesUtils.bookmarks.TYPE_FOLDER
+    type: PlacesUtils.bookmarks.TYPE_FOLDER,
   });
   checkURIOptions(root.getChild(root.childCount - 1).uri);
   await PlacesUtils.bookmarks.remove(f);

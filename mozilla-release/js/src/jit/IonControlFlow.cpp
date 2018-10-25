@@ -15,6 +15,7 @@ using mozilla::DebugOnly;
 ControlFlowGenerator::ControlFlowGenerator(TempAllocator& temp, JSScript* script)
   : script(script),
     current(nullptr),
+    pc(nullptr),
     alloc_(temp),
     blocks_(temp),
     cfgStack_(temp),
@@ -82,7 +83,7 @@ ControlFlowGraph::init(TempAllocator& alloc, const CFGBlockVector& blocks)
 
         block.setStopPc(blocks[i]->stopPc());
         block.setId(i);
-        blocks_.infallibleAppend(mozilla::Move(block));
+        blocks_.infallibleAppend(std::move(block));
     }
 
     for (size_t i = 0; i < blocks.length(); i++) {
@@ -261,10 +262,11 @@ ControlFlowGenerator::ControlStatus
 ControlFlowGenerator::snoopControlFlow(JSOp op)
 {
     switch (op) {
-      case JSOP_POP:
       case JSOP_NOP: {
         jssrcnote* sn = GetSrcNote(gsn, script, pc);
-        return maybeLoop(op, sn);
+        if (sn && SN_TYPE(sn) == SRC_FOR)
+            return processForLoop(op, sn);
+        break;
       }
 
       case JSOP_RETURN:
@@ -292,12 +294,19 @@ ControlFlowGenerator::snoopControlFlow(JSOp op)
           case SRC_FOR_IN:
           case SRC_FOR_OF:
             // while (cond) { }
-            return processWhileOrForInLoop(sn);
+            return processWhileOrForInOrForOfLoop(sn);
 
           default:
             // Hard assert for now - make an error later.
             MOZ_CRASH("unknown goto case");
         }
+        break;
+      }
+
+      case JSOP_LOOPHEAD: {
+        jssrcnote* sn = GetSrcNote(gsn, script, pc);
+        if (sn && SN_TYPE(sn) == SRC_DO_WHILE)
+            return processDoWhileLoop(sn);
         break;
       }
 
@@ -545,7 +554,7 @@ ControlFlowGenerator::processTry()
 
     // Get the pc of the last instruction in the try block. It's a JSOP_GOTO to
     // jump over the catch block.
-    jsbytecode* endpc = pc + GetSrcNoteOffset(sn, 0);
+    jsbytecode* endpc = pc + GetSrcNoteOffset(sn, SrcNote::Try::EndOfTryJumpOffset);
     MOZ_ASSERT(JSOp(*endpc) == JSOP_GOTO);
     MOZ_ASSERT(GetJumpOffset(endpc) > 0);
 
@@ -896,7 +905,7 @@ ControlFlowGenerator::processForUpdateEnd(CFGState& state)
 }
 
 ControlFlowGenerator::ControlStatus
-ControlFlowGenerator::processWhileOrForInLoop(jssrcnote* sn)
+ControlFlowGenerator::processWhileOrForInOrForOfLoop(jssrcnote* sn)
 {
     // while (cond) { } loops have the following structure:
     //    GOTO cond   ; SRC_WHILE (offset to IFNE)
@@ -906,15 +915,20 @@ ControlFlowGenerator::processWhileOrForInLoop(jssrcnote* sn)
     //    LOOPENTRY
     //    ...
     //    IFNE        ; goes to LOOPHEAD
-    // for (x in y) { } loops are similar; the cond will be a MOREITER.
+    // for-in/for-of loops are similar; for-in/for-of have IFEQ as the back
+    // jump, and the cond of for-in will be a MOREITER.
     MOZ_ASSERT(SN_TYPE(sn) == SRC_FOR_OF || SN_TYPE(sn) == SRC_FOR_IN || SN_TYPE(sn) == SRC_WHILE);
-    int ifneOffset = GetSrcNoteOffset(sn, 0);
-    jsbytecode* ifne = pc + ifneOffset;
-    MOZ_ASSERT(ifne > pc);
+    static_assert(unsigned(SrcNote::While::BackJumpOffset) == unsigned(SrcNote::ForIn::BackJumpOffset),
+                  "SrcNote::{While,ForIn,ForOf}::BackJumpOffset should be same");
+    static_assert(unsigned(SrcNote::While::BackJumpOffset) == unsigned(SrcNote::ForOf::BackJumpOffset),
+                  "SrcNote::{While,ForIn,ForOf}::BackJumpOffset should be same");
+    int backjumppcOffset = GetSrcNoteOffset(sn, SrcNote::While::BackJumpOffset);
+    jsbytecode* backjumppc = pc + backjumppcOffset;
+    MOZ_ASSERT(backjumppc > pc);
 
-    // Verify that the IFNE goes back to a loophead op.
+    // Verify that the back jump goes back to a loophead op.
     MOZ_ASSERT(JSOp(*GetNextPc(pc)) == JSOP_LOOPHEAD);
-    MOZ_ASSERT(GetNextPc(pc) == ifne + GetJumpOffset(ifne));
+    MOZ_ASSERT(GetNextPc(pc) == backjumppc + GetJumpOffset(backjumppc));
 
     jsbytecode* loopEntry = pc + GetJumpOffset(pc);
 
@@ -930,10 +944,10 @@ ControlFlowGenerator::processWhileOrForInLoop(jssrcnote* sn)
     jsbytecode* loopHead = GetNextPc(pc);
     jsbytecode* bodyStart = GetNextPc(loopHead);
     jsbytecode* bodyEnd = pc + GetJumpOffset(pc);
-    jsbytecode* exitpc = GetNextPc(ifne);
+    jsbytecode* exitpc = GetNextPc(backjumppc);
     jsbytecode* continuepc = pc;
 
-    CFGBlock* header = CFGBlock::New(alloc(), GetNextPc(loopEntry));
+    CFGBlock* header = CFGBlock::New(alloc(), loopEntry);
 
     CFGLoopEntry* ins = CFGLoopEntry::New(alloc(), header, stackPhiCount);
     if (LoopEntryCanIonOsr(loopEntry))
@@ -945,7 +959,7 @@ ControlFlowGenerator::processWhileOrForInLoop(jssrcnote* sn)
     current->setStopIns(ins);
     current->setStopPc(pc);
 
-    if (!pushLoop(CFGState::WHILE_LOOP_COND, ifne, current,
+    if (!pushLoop(CFGState::WHILE_LOOP_COND, backjumppc, current,
                   loopHead, bodyEnd, bodyStart, bodyEnd, exitpc, continuepc))
     {
         return ControlStatus::Error;
@@ -1117,8 +1131,8 @@ ControlFlowGenerator::processCondSwitch()
     MOZ_ASSERT(SN_TYPE(sn) == SRC_CONDSWITCH);
 
     // Get the exit pc
-    jsbytecode* exitpc = pc + GetSrcNoteOffset(sn, 0);
-    jsbytecode* firstCase = pc + GetSrcNoteOffset(sn, 1);
+    jsbytecode* exitpc = pc + GetSrcNoteOffset(sn, SrcNote::CondSwitch::EndOffset);
+    jsbytecode* firstCase = pc + GetSrcNoteOffset(sn, SrcNote::CondSwitch::FirstCaseOffset);
 
     // Iterate all cases in the conditional switch.
     // - Stop at the default case. (always emitted after the last case)
@@ -1133,7 +1147,7 @@ ControlFlowGenerator::processCondSwitch()
         // Fetch the next case.
         jssrcnote* caseSn = GetSrcNote(gsn, script, curCase);
         MOZ_ASSERT(caseSn && SN_TYPE(caseSn) == SRC_NEXTCASE);
-        ptrdiff_t off = GetSrcNoteOffset(caseSn, 0);
+        ptrdiff_t off = GetSrcNoteOffset(caseSn, SrcNote::NextCase::NextCaseOffset);
         MOZ_ASSERT_IF(off == 0, JSOp(*GetNextPc(curCase)) == JSOP_JUMPTARGET);
         curCase = off ? curCase + off : GetNextPc(GetNextPc(curCase));
         MOZ_ASSERT(pc < curCase && curCase <= exitpc);
@@ -1166,7 +1180,7 @@ ControlFlowGenerator::processCondSwitch()
             defaultIdx++;
 
         jssrcnote* caseSn = GetSrcNote(gsn, script, curCase);
-        ptrdiff_t off = GetSrcNoteOffset(caseSn, 0);
+        ptrdiff_t off = GetSrcNoteOffset(caseSn, SrcNote::NextCase::NextCaseOffset);
         curCase = off ? curCase + off : GetNextPc(GetNextPc(curCase));
         lastTarget = curTarget;
     }
@@ -1222,7 +1236,7 @@ ControlFlowGenerator::processCondSwitchCase(CFGState& state)
 
     // Fetch the following case in which we will continue.
     jssrcnote* sn = GetSrcNote(gsn, script, pc);
-    ptrdiff_t off = GetSrcNoteOffset(sn, 0);
+    ptrdiff_t off = GetSrcNoteOffset(sn, SrcNote::NextCase::NextCaseOffset);
     MOZ_ASSERT_IF(off == 0, JSOp(*GetNextPc(pc)) == JSOP_JUMPTARGET);
     jsbytecode* casePc = off ? pc + off : GetNextPc(GetNextPc(pc));
     bool nextIsDefault = JSOp(*casePc) == JSOP_DEFAULT;
@@ -1389,70 +1403,33 @@ ControlFlowGenerator::processAndOrEnd(CFGState& state)
 }
 
 ControlFlowGenerator::ControlStatus
-ControlFlowGenerator::maybeLoop(JSOp op, jssrcnote* sn)
-{
-    // This function looks at the opcode and source note and tries to
-    // determine the structure of the loop. For some opcodes, like
-    // POP/NOP which are not explicitly control flow, this source note is
-    // optional. For opcodes with control flow, like GOTO, an unrecognized
-    // or not-present source note is a compilation failure.
-    switch (op) {
-      case JSOP_POP:
-        // for (init; ; update?) ...
-        if (sn && SN_TYPE(sn) == SRC_FOR) {
-            MOZ_CRASH("Not supported anymore?");
-            return processForLoop(op, sn);
-        }
-        break;
-
-      case JSOP_NOP:
-        if (sn) {
-            // do { } while (cond)
-            if (SN_TYPE(sn) == SRC_WHILE)
-                return processDoWhileLoop(sn);
-            // Build a mapping such that given a basic block, whose successor
-            // has a phi
-
-            // for (; ; update?)
-            if (SN_TYPE(sn) == SRC_FOR)
-                return processForLoop(op, sn);
-        }
-        break;
-
-      default:
-        MOZ_CRASH("unexpected opcode");
-    }
-
-    return ControlStatus::None;
-}
-
-ControlFlowGenerator::ControlStatus
 ControlFlowGenerator::processForLoop(JSOp op, jssrcnote* sn)
 {
     // Skip the NOP.
     MOZ_ASSERT(op == JSOP_NOP);
     pc = GetNextPc(pc);
 
-    jsbytecode* condpc = pc + GetSrcNoteOffset(sn, 0);
-    jsbytecode* updatepc = pc + GetSrcNoteOffset(sn, 1);
-    jsbytecode* ifne = pc + GetSrcNoteOffset(sn, 2);
-    jsbytecode* exitpc = GetNextPc(ifne);
+    jsbytecode* condpc = pc + GetSrcNoteOffset(sn, SrcNote::For::CondOffset);
+    jsbytecode* updatepc = pc + GetSrcNoteOffset(sn, SrcNote::For::UpdateOffset);
+    jsbytecode* backjumppc = pc + GetSrcNoteOffset(sn, SrcNote::For::BackJumpOffset);
+    jsbytecode* exitpc = GetNextPc(backjumppc);
 
     // for loops have the following structures:
     //
-    //   NOP or POP
-    //   [GOTO cond | NOP]
+    //   NOP
+    //   [GOTO cond]
     //   LOOPHEAD
     // body:
     //    ; [body]
-    // [increment:]
+    // [update:]
     //   [FRESHENBLOCKSCOPE, if needed by a cloned block]
-    //    ; [increment]
+    //    ; [update]
     // [cond:]
     //   LOOPENTRY
-    //   GOTO body
+    //    ; [cond]
+    //   [GOTO body | IFNE body]
     //
-    // If there is a condition (condpc != ifne), this acts similar to a while
+    // If there is a condition (condpc != backjumppc), this acts similar to a while
     // loop otherwise, it acts like a do-while loop.
     //
     // Note that currently Ion does not compile pushblockscope/popblockscope as
@@ -1461,7 +1438,7 @@ ControlFlowGenerator::processForLoop(JSOp op, jssrcnote* sn)
     jsbytecode* bodyStart = pc;
     jsbytecode* bodyEnd = updatepc;
     jsbytecode* loopEntry = condpc;
-    if (condpc != ifne) {
+    if (condpc != backjumppc) {
         MOZ_ASSERT(JSOp(*bodyStart) == JSOP_GOTO);
         MOZ_ASSERT(bodyStart + GetJumpOffset(bodyStart) == condpc);
         bodyStart = GetNextPc(bodyStart);
@@ -1476,12 +1453,12 @@ ControlFlowGenerator::processForLoop(JSOp op, jssrcnote* sn)
     }
     jsbytecode* loopHead = bodyStart;
     MOZ_ASSERT(JSOp(*bodyStart) == JSOP_LOOPHEAD);
-    MOZ_ASSERT(ifne + GetJumpOffset(ifne) == bodyStart);
+    MOZ_ASSERT(backjumppc + GetJumpOffset(backjumppc) == bodyStart);
     bodyStart = GetNextPc(bodyStart);
 
     MOZ_ASSERT(JSOp(*loopEntry) == JSOP_LOOPENTRY);
 
-    CFGBlock* header = CFGBlock::New(alloc(), GetNextPc(loopEntry));
+    CFGBlock* header = CFGBlock::New(alloc(), loopEntry);
 
     CFGLoopEntry* ins = CFGLoopEntry::New(alloc(), header, 0);
     if (LoopEntryCanIonOsr(loopEntry))
@@ -1494,9 +1471,9 @@ ControlFlowGenerator::processForLoop(JSOp op, jssrcnote* sn)
     // parse the condition.
     jsbytecode* stopAt;
     CFGState::State initial;
-    if (condpc != ifne) {
+    if (condpc != backjumppc) {
         pc = condpc;
-        stopAt = ifne;
+        stopAt = backjumppc;
         initial = CFGState::FOR_LOOP_COND;
     } else {
         pc = bodyStart;
@@ -1511,7 +1488,7 @@ ControlFlowGenerator::processForLoop(JSOp op, jssrcnote* sn)
     }
 
     CFGState& state = cfgStack_.back();
-    state.loop.condpc = (condpc != ifne) ? condpc : nullptr;
+    state.loop.condpc = (condpc != backjumppc) ? condpc : nullptr;
     state.loop.updatepc = (updatepc != condpc) ? updatepc : nullptr;
     if (state.loop.updatepc)
         state.loop.updateEnd = condpc;
@@ -1526,30 +1503,28 @@ ControlFlowGenerator::ControlStatus
 ControlFlowGenerator::processDoWhileLoop(jssrcnote* sn)
 {
     // do { } while() loops have the following structure:
-    //    NOP         ; SRC_WHILE (offset to COND)
-    //    LOOPHEAD    ; SRC_WHILE (offset to IFNE)
+    //    NOP
+    //    LOOPHEAD    ; SRC_DO_WHILE (offsets to COND and IFNE)
     //    LOOPENTRY
     //    ...         ; body
     //    ...
     //    COND        ; start of condition
     //    ...
     //    IFNE ->     ; goes to LOOPHEAD
-    int condition_offset = GetSrcNoteOffset(sn, 0);
+    int condition_offset = GetSrcNoteOffset(sn, SrcNote::DoWhile::CondOffset);
     jsbytecode* conditionpc = pc + condition_offset;
-
-    jssrcnote* sn2 = GetSrcNote(gsn, script, pc + 1);
-    int offset = GetSrcNoteOffset(sn2, 0);
-    jsbytecode* ifne = pc + offset + 1;
+    int offset = GetSrcNoteOffset(sn, SrcNote::DoWhile::BackJumpOffset);
+    jsbytecode* ifne = pc + offset;
     MOZ_ASSERT(ifne > pc);
 
     // Verify that the IFNE goes back to a loophead op.
-    jsbytecode* loopHead = GetNextPc(pc);
+    jsbytecode* loopHead = pc;
     MOZ_ASSERT(JSOp(*loopHead) == JSOP_LOOPHEAD);
     MOZ_ASSERT(loopHead == ifne + GetJumpOffset(ifne));
 
     jsbytecode* loopEntry = GetNextPc(loopHead);
 
-    CFGBlock* header = CFGBlock::New(alloc(), GetNextPc(loopEntry));
+    CFGBlock* header = CFGBlock::New(alloc(), loopEntry);
 
     CFGLoopEntry* ins = CFGLoopEntry::New(alloc(), header, 0);
     if (LoopEntryCanIonOsr(loopEntry))
@@ -1762,22 +1737,22 @@ ControlFlowGenerator::processIfStart(JSOp op)
 
     // The bytecode for if/ternary gets emitted either like this:
     //
-    //    IFEQ X  ; src note (IF_ELSE, COND) points to the GOTO
+    //    IFEQ X     ; src note (IF_ELSE, COND)
     //    ...
     //    GOTO Z
-    // X: ...     ; else/else if
+    // X: JUMPTARGET ; else/else if
     //    ...
-    // Z:         ; join
+    // Z: JUMPTARGET ; join
     //
     // Or like this:
     //
-    //    IFEQ X  ; src note (IF) has no offset
+    //    IFEQ X     ; src note (IF)
     //    ...
-    // Z: ...     ; join
+    // X: JUMPTARGET ; join
     //
     // We want to parse the bytecode as if we were parsing the AST, so for the
-    // IF_ELSE/COND cases, we use the source note and follow the GOTO. For the
-    // IF case, the IFEQ offset is the join point.
+    // IF_ELSE/COND cases, we use the IFEQ/GOTO bytecode offsets to follow the
+    // branch. For the IF case, the IFEQ offset is the join point.
     switch (SN_TYPE(sn)) {
       case SRC_IF:
         if (!cfgStack_.append(CFGState::If(falseStart, test)))
@@ -1789,9 +1764,9 @@ ControlFlowGenerator::processIfStart(JSOp op)
       {
         // Infer the join point from the JSOP_GOTO[X] sitting here, then
         // assert as we much we can that this is the right GOTO.
-        jsbytecode* trueEnd = pc + GetSrcNoteOffset(sn, 0);
+        MOZ_ASSERT(JSOp(*falseStart) == JSOP_JUMPTARGET);
+        jsbytecode* trueEnd = falseStart - JSOP_GOTO_LENGTH;
         MOZ_ASSERT(trueEnd > pc);
-        MOZ_ASSERT(trueEnd < falseStart);
         MOZ_ASSERT(JSOp(*trueEnd) == JSOP_GOTO);
         MOZ_ASSERT(!GetSrcNote(gsn, script, trueEnd));
 
@@ -1848,7 +1823,7 @@ ControlFlowGenerator::processTableSwitch(JSOp op, jssrcnote* sn)
     MOZ_ASSERT(SN_TYPE(sn) == SRC_TABLESWITCH);
 
     // Get the default and exit pc
-    jsbytecode* exitpc = pc + GetSrcNoteOffset(sn, 0);
+    jsbytecode* exitpc = pc + GetSrcNoteOffset(sn, SrcNote::TableSwitch::EndOffset);
     jsbytecode* defaultpc = pc + GET_JUMP_OFFSET(pc);
 
     MOZ_ASSERT(defaultpc > pc && defaultpc <= exitpc);

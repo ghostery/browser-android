@@ -26,7 +26,8 @@ public:
     return rv;
   }
 
-  void free_(void* aPtr) { free(aPtr); }
+  template <typename T>
+  void free_(T* aPtr, size_t aNumElems = 0) { free(aPtr); }
 
   void reportAllocOverflow() const {}
 
@@ -182,7 +183,7 @@ int main(void)
   bl2.WriteBytes(toWrite, kSmallWrite);
   bl2.WriteBytes(toWrite, kSmallWrite);
 
-  bl = mozilla::Move(bl2);
+  bl = std::move(bl2);
   MOZ_RELEASE_ASSERT(bl2.Size() == 0);
   MOZ_RELEASE_ASSERT(bl2.Iter().Done());
 

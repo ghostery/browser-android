@@ -4,11 +4,8 @@
 
 const {LightweightThemeManager} = ChromeUtils.import("resource://gre/modules/LightweightThemeManager.jsm", {});
 
-add_task(async function setup() {
-  await SpecialPowers.pushPrefEnv({
-    set: [["extensions.webextensions.themes.enabled", true]],
-  });
-});
+const {PromiseTestUtils} = ChromeUtils.import("resource://testing-common/PromiseTestUtils.jsm", null);
+PromiseTestUtils.whitelistRejectionsGlobally(/Message manager disconnected/);
 
 add_task(async function test_management_themes() {
   const TEST_ID = "test_management_themes@tests.mozilla.com";
@@ -32,6 +29,9 @@ add_task(async function test_management_themes() {
 
   async function background(TEST_ID) {
     browser.management.onInstalled.addListener(info => {
+      if (info.name == TEST_ID) {
+        return;
+      }
       browser.test.log(`${info.name} was installed`);
       browser.test.assertEq(info.type, "theme", "addon is theme");
       browser.test.sendMessage("onInstalled", info.name);

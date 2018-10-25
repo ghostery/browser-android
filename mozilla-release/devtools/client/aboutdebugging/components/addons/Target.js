@@ -12,6 +12,7 @@ const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const {
   debugLocalAddon,
   debugRemoteAddon,
+  getExtensionUuid,
   isLegacyTemporaryExtension,
   isTemporaryID,
   parseFileUri,
@@ -34,7 +35,7 @@ function filePathForTarget(target) {
   if (!target.temporarilyInstalled || !target.url || !target.url.startsWith("file://")) {
     return [];
   }
-  let path = parseFileUri(target.url);
+  const path = parseFileUri(target.url);
   return [
     dom.dt(
       { className: "addon-target-info-label" },
@@ -65,11 +66,11 @@ function addonIDforTarget(target) {
 }
 
 function internalIDForTarget(target) {
-  if (!target.manifestURL) {
+  const uuid = getExtensionUuid(target);
+  if (!uuid) {
     return [];
   }
-  // Strip off the protocol and rest, leaving us with just the UUID.
-  let uuid = /moz-extension:\/\/([^/]*)/.exec(target.manifestURL)[1];
+
   return [
     dom.dt(
       { className: "addon-target-info-label" },
@@ -139,7 +140,7 @@ function warningMessages(target) {
     ));
   }
 
-  let warnings = target.warnings || [];
+  const warnings = target.warnings || [];
   messages = messages.concat(warnings.map((warning) => {
     return dom.li(
       { className: "addon-target-warning-message addon-target-message" },
@@ -156,7 +157,7 @@ class AddonTarget extends Component {
       connect: PropTypes.object,
       debugDisabled: PropTypes.bool,
       target: PropTypes.shape({
-        addonActor: PropTypes.string.isRequired,
+        addonTargetActor: PropTypes.string.isRequired,
         addonID: PropTypes.string.isRequired,
         form: PropTypes.object.isRequired,
         icon: PropTypes.string,
@@ -176,7 +177,7 @@ class AddonTarget extends Component {
   }
 
   debug() {
-    let { client, connect, target } = this.props;
+    const { client, connect, target } = this.props;
 
     if (connect.type === "REMOTE") {
       debugRemoteAddon(target.form, client);
@@ -186,16 +187,16 @@ class AddonTarget extends Component {
   }
 
   uninstall() {
-    let { target } = this.props;
+    const { target } = this.props;
     uninstallAddon(target.addonID);
   }
 
   async reload() {
-    let { client, target } = this.props;
-    let { AboutDebugging } = window;
+    const { client, target } = this.props;
+    const { AboutDebugging } = window;
     try {
       await client.request({
-        to: target.addonActor,
+        to: target.addonTargetActor,
         type: "reload"
       });
       AboutDebugging.emit("addon-reload");
@@ -205,7 +206,7 @@ class AddonTarget extends Component {
   }
 
   render() {
-    let { target, debugDisabled } = this.props;
+    const { target, debugDisabled } = this.props;
 
     return dom.li(
       { className: "addon-target-container", "data-addon-id": target.addonID },

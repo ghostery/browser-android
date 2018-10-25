@@ -46,21 +46,21 @@ permissions-capabilities-prompt =
 ## Invalid Hostname Dialog
 
 permissions-invalid-uri-title = Nome de servidor inválido
-permissions-invalid-uri-label = Digite um nome de host válido
+permissions-invalid-uri-label = Digite um nome de servidor válido
 
 ## Exceptions - Tracking Protection
 
 permissions-exceptions-tracking-protection-window =
     .title = Exceções - Proteção contra rastreamento
     .style = { permissions-window.style }
-permissions-exceptions-tracking-protection-desc = Você desabilitou a proteção contra rastreamento nestes sites.
+permissions-exceptions-tracking-protection-desc = Você desativou a proteção contra rastreamento nestes sites.
 
 ## Exceptions - Cookies
 
 permissions-exceptions-cookie-window =
     .title = Exceções - Cookies e dados de sites
     .style = { permissions-window.style }
-permissions-exceptions-cookie-desc = Você pode especificar quais sites estão sempre ou nunca permitidos a usar cookies e dados de sites.  Digite o endereço exato do site que você deseja gerenciar e clique em Bloquear, Permitir nesta sessão ou Permitir.
+permissions-exceptions-cookie-desc = Você pode especificar que sites tem ou não permissão para usar cookies e dados de sites.  Digite o endereço exato de um site e clique em Permitir, Bloquear ou Permitir nesta sessão.
 
 ## Exceptions - Pop-ups
 
@@ -89,6 +89,10 @@ permissions-exceptions-autoplay-media-window =
     .title = Sites permitidos - Reprodução automática
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc = Você pode especificar que sites têm permissão para reproduzir automaticamente elementos de mídia. Digite o endereço exato do site que deseja autorizar e clique em Permitir.
+permissions-exceptions-autoplay-media-window2 =
+    .title = Exceções - Reprodução automática
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc2 = Você pode especificar que sites sempre ou nunca têm permissão para reproduzir automaticamente mídia com som. Digite o endereço do site que deseja gerenciar e então clique em Bloquear ou Permitir.
 
 ## Site Permissions - Notifications
 

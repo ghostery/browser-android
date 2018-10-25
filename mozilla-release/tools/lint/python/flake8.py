@@ -13,6 +13,7 @@ from collections import defaultdict
 from mozprocess import ProcessHandlerMixin
 
 from mozlint import result
+from mozlint.util import pip
 from mozlint.pathutils import get_ancestors_by_name
 
 
@@ -53,7 +54,7 @@ LINE_OFFSETS = {
 """Maps a flake8 error to a lineoffset tuple.
 
 The offset is of the form (lineno_offset, num_lines) and is passed
-to the lineoffset property of `ResultContainer`.
+to the lineoffset property of an `Issue`.
 """
 
 # We use sys.prefix to find executables as that gets modified with
@@ -81,12 +82,8 @@ class Flake8Process(ProcessHandlerMixin):
             print('Non JSON output from linter, will not be processed: {}'.format(line))
             return
 
-        if 'code' in res:
-            if res['code'].startswith('W'):
-                res['level'] = 'warning'
-
-            if res['code'] in LINE_OFFSETS:
-                res['lineoffset'] = LINE_OFFSETS[res['code']]
+        if res.get('code') in LINE_OFFSETS:
+            res['lineoffset'] = LINE_OFFSETS[res['code']]
 
         results.append(result.from_config(self.config, **res))
 
@@ -96,32 +93,6 @@ class Flake8Process(ProcessHandlerMixin):
         orig = signal.signal(signal.SIGINT, signal.SIG_IGN)
         ProcessHandlerMixin.run(self, *args, **kwargs)
         signal.signal(signal.SIGINT, orig)
-
-
-def _run_pip(*args):
-    """
-    Helper function that runs pip with subprocess
-    """
-    try:
-        subprocess.check_output([os.path.join(bindir, 'pip')] + list(args),
-                                stderr=subprocess.STDOUT)
-        return True
-    except subprocess.CalledProcessError as e:
-        print(e.output)
-        return False
-
-
-def reinstall_flake8():
-    """
-    Try to install flake8 at the target version, returns True on success
-    otherwise prints the otuput of the pip command and returns False
-    """
-    if _run_pip('install', '-U',
-                '--require-hashes', '-r',
-                FLAKE8_REQUIREMENTS_PATH):
-        return True
-
-    return False
 
 
 def run_process(config, cmd):
@@ -135,7 +106,7 @@ def run_process(config, cmd):
 
 
 def setup(root):
-    if not reinstall_flake8():
+    if not pip.reinstall_program(FLAKE8_REQUIREMENTS_PATH):
         print(FLAKE8_INSTALL_ERROR)
         return 1
 
@@ -149,7 +120,17 @@ def lint(paths, config, **lintargs):
         os.path.join(bindir, 'flake8'),
         '--format', '{"path":"%(path)s","lineno":%(row)s,'
                     '"column":%(col)s,"rule":"%(code)s","message":"%(text)s"}',
+        '--filename', ','.join(['*.{}'.format(e) for e in config['extensions']]),
     ]
+
+    fix_cmdargs = [
+        os.path.join(bindir, 'autopep8'),
+        '--global-config', os.path.join(lintargs['root'], '.flake8'),
+        '--in-place', '--recursive',
+    ]
+
+    if 'exclude' in lintargs:
+        fix_cmdargs.extend(['--exclude', ','.join(lintargs['exclude'])])
 
     # Run any paths with a .flake8 file in the directory separately so
     # it gets picked up. This means only .flake8 files that live in
@@ -161,8 +142,10 @@ def lint(paths, config, **lintargs):
         paths_by_config[os.pathsep.join(configs) if configs else 'default'].append(path)
 
     for configs, paths in paths_by_config.items():
-        cmd = cmdargs[:]
+        if lintargs.get('fix'):
+            subprocess.call(fix_cmdargs + paths)
 
+        cmd = cmdargs[:]
         if configs != 'default':
             configs = reversed(configs.split(os.pathsep))
             cmd.extend(['--append-config={}'.format(c) for c in configs])

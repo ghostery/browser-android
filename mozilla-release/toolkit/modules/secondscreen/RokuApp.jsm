@@ -9,8 +9,9 @@ var EXPORTED_SYMBOLS = ["RokuApp"];
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-Cu.importGlobalProperties(["XMLHttpRequest"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["XMLHttpRequest"]);
 
 // function log(msg) {
 //   Services.console.logStringMessage(msg);
@@ -133,7 +134,7 @@ RokuApp.prototype = {
     } else if (callback) {
       callback();
     }
-  }
+  },
 };
 
 /* RemoteMedia provides a wrapper for using TCP socket to control Roku apps.
@@ -226,5 +227,5 @@ RemoteMedia.prototype = {
 
   get status() {
     return this._status;
-  }
+  },
 };

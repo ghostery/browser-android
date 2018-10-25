@@ -27,13 +27,16 @@ nsCacheEntry::nsCacheEntry(const nsACString &   key,
       mFetchCount(0),
       mLastFetched(0),
       mLastModified(0),
+      mLastValidated(0),
       mExpirationTime(nsICache::NO_EXPIRATION_TIME),
       mFlags(0),
       mPredictedDataSize(-1),
       mDataSize(0),
       mCacheDevice(nullptr),
       mCustomDevice(nullptr),
-      mData(nullptr)
+      mData(nullptr),
+      mRequestQ{},
+      mDescriptorQ{}
 {
     MOZ_COUNT_CTOR(nsCacheEntry);
     PR_INIT_CLIST(this);
@@ -419,7 +422,7 @@ nsCacheEntryHashTable::Shutdown()
 
 
 nsCacheEntry *
-nsCacheEntryHashTable::GetEntry( const nsCString * key)
+nsCacheEntryHashTable::GetEntry( const nsCString * key) const
 {
     NS_ASSERTION(initialized, "nsCacheEntryHashTable not initialized");
     if (!initialized)  return nullptr;

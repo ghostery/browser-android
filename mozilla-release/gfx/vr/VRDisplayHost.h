@@ -42,6 +42,8 @@ public:
   virtual void ZeroSensor() = 0;
   virtual void StartPresentation() = 0;
   virtual void StopPresentation() = 0;
+  virtual void StartVRNavigation();
+  virtual void StopVRNavigation(const TimeDuration& aTimeout);
   void NotifyVSync();
 
   void StartFrame();
@@ -72,25 +74,13 @@ protected:
   explicit VRDisplayHost(VRDeviceType aType);
   virtual ~VRDisplayHost();
 
-#if defined(XP_WIN)
-  // Subclasses should override this SubmitFrame function.
-  // Returns true if the SubmitFrame call will block as necessary
-  // to control timing of the next frame and throttle the render loop
-  // for the needed framerate.
-  virtual bool SubmitFrame(ID3D11Texture2D* aSource,
-                           const IntSize& aSize,
+  // This SubmitFrame() must be overridden by children and block until
+  // the next frame is ready to start and the resources in aTexture can
+  // safely be released.
+  virtual bool SubmitFrame(const layers::SurfaceDescriptor& aTexture,
+                           uint64_t aFrameId,
                            const gfx::Rect& aLeftEyeRect,
                            const gfx::Rect& aRightEyeRect) = 0;
-#elif defined(XP_MACOSX)
-  virtual bool SubmitFrame(MacIOSurface* aMacIOSurface,
-                           const IntSize& aSize,
-                           const gfx::Rect& aLeftEyeRect,
-                           const gfx::Rect& aRightEyeRect) = 0;
-#elif defined(MOZ_ANDROID_GOOGLE_VR)
-  virtual bool SubmitFrame(const mozilla::layers::EGLImageDescriptor* aDescriptor,
-                           const gfx::Rect& aLeftEyeRect,
-                           const gfx::Rect& aRightEyeRect) = 0;
-#endif
 
   VRDisplayInfo mDisplayInfo;
 
@@ -111,6 +101,11 @@ private:
   VRDisplayInfo mLastUpdateDisplayInfo;
   TimeStamp mLastFrameStart;
   bool mFrameStarted;
+#if defined(MOZ_WIDGET_ANDROID)
+protected:
+  uint64_t mLastSubmittedFrameId;
+  uint64_t mLastStartedFrame;
+#endif // defined(MOZ_WIDGET_ANDROID)
 
 #if defined(XP_WIN)
 protected:

@@ -13,3 +13,17 @@ pref("dom.ipc.processPrelaunch.enabled", false);
 
 // Tell Telemetry that we're in GeckoView mode.
 pref("toolkit.telemetry.isGeckoViewMode", true);
+// Disable the Telemetry Event Ping
+pref("toolkit.telemetry.eventping.enabled", false);
+
+pref("geckoview.console.enabled", false);
+
+#ifdef RELEASE_OR_BETA
+pref("geckoview.logging", "Warn");
+#else
+pref("geckoview.logging", "Debug");
+#endif
+
+// Disable Web Push until we get it working
+pref("dom.push.enabled", false);
+

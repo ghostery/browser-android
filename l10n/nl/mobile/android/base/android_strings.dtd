@@ -27,12 +27,6 @@
 <!ENTITY firstrun_button_next "Volgende">
 
 <!ENTITY firstrun_tabqueue_title "Koppelingen">
-<!-- Localization note (firstrun_tabqueue_message): 'Tab queue' is a feature that allows users to queue up or save links from outside of Firefox (without switching apps) - these links will be loaded in Firefox the next time Firefox is opened. -->
-<!ENTITY firstrun_tabqueue_message_off "Tabbladwachtrij inschakelen">
-<!ENTITY firstrun_tabqueue_subtext_off "Sla koppelingen op voor later in &brandShortName; bij erop tikken in andere apps.">
-
-<!ENTITY firstrun_tabqueue_message_on "Gelukt!">
-<!ENTITY firstrun_tabqueue_subtext_on "U kunt dit altijd uitschakelen in &settings; onder &pref_category_general;.">
 
 <!ENTITY firstrun_readerview_title "Artikelen">
 <!-- Localization note (firstrun_readerview_message): This is a casual way of describing getting rid of unnecessary things, and is referring to simplifying websites so only the article text and images are visible, removing unnecessary headers or ads. -->
@@ -69,7 +63,6 @@
 <!ENTITY  crash_restart_label "&brandShortName; herstarten">
 
 <!ENTITY url_bar_default_text2 "Voer zoekterm of adres in">
-
 <!-- Localization note (url_bar_qrcode_text2) : This text will be
      heard by non-visual users when the focus is on the QR Code
      icon in the url bar. -->
@@ -215,7 +208,6 @@
      “storing data”. -->
 <!ENTITY pref_category_advanced_summary3 "Tabbladen herstellen, gegevensbesparing, ontwikkelaarshulpmiddelen">
 <!ENTITY pref_category_notifications "Notificaties">
-<!ENTITY pref_category_notifications_summary "Nieuwe functies, website-updates">
 <!ENTITY pref_category_notifications_summary2 "Nieuwe functies, producttips">
 <!ENTITY pref_developer_remotedebugging_usb "Remote debugging via USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Remote debugging via wifi">
@@ -320,7 +312,7 @@
 <!ENTITY pref_pwa_summary "Toestaan dat webapps aan het startscherm worden toegevoegd">
 
 <!ENTITY tracking_protection_prompt_title "Nu met Bescherming tegen volgen">
-<!ENTITY tracking_protection_prompt_text "Blokkeer actief volgelementen, zodat u zich geen zorgen hoeft te maken.">
+<!ENTITY tracking_protection_prompt_text "Blokkeer actief tracking-elementen, zodat u zich geen zorgen hoeft te maken.">
 <!ENTITY tracking_protection_prompt_tip_text "Bezoek Privacyinstellingen voor meer info">
 <!ENTITY tracking_protection_prompt_action_button "Begrepen!">
 
@@ -372,6 +364,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "Automatisch afspelen toestaan">
 <!ENTITY pref_media_autoplay_enabled_summary "Automatisch afspelen van video’s en andere media-inhoud door websites beheren">
+<!ENTITY pref_media_autoplay_allow "Automatisch afspelen toestaan">
+<!ENTITY pref_media_autoplay_block "Automatisch afspelen blokkeren">
 <!ENTITY pref_zoom_force_enabled "Zoom altijd inschakelen">
 <!ENTITY pref_zoom_force_enabled_summary "Overschrijven forceren, zodat u elke pagina kunt zoomen">
 <!ENTITY pref_voice_input "Spraakinvoer">
@@ -447,6 +441,11 @@
 <!ENTITY datareporting_crashreporter_title_short "Crashreporter">
 <!ENTITY datareporting_wifi_title2 "&vendorShortName;-locatieservice">
 <!ENTITY datareporting_wifi_geolocation_summary4 "Help &vendorShortName; de wereld in kaart te brengen! Deel de geschatte wifi- en gsm-locatie van uw apparaat om onze geolocatieservice te verbeteren.">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "&vendorShortName;-locatieservice actief">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -891,3 +890,20 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "Toevoegen aan startscherm">
 <!ENTITY pwa_continue_to_website "Doorgaan naar website">
 <!ENTITY pwa_onboarding_sumo "U kunt deze website eenvoudig aan uw startscherm toevoegen voor directe toegang en sneller surfen met een app-achtige ervaring.">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "Afspelen">
+<!ENTITY pip_play_button_description "Afspelen hervatten">
+<!ENTITY pip_pause_button_title "Pauzeren">
+<!ENTITY pip_pause_button_description "Afspelen pauzeren">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "&vendorShortName;-locatieservice">
+<!ENTITY download_notification_channel "Downloads">
+<!ENTITY media_notification_channel "Media afspelen">
+<!-- These push notifications come without a specific channel and/or name from Leanplum -->
+<!ENTITY leanplum_default_notifications_channel "&brandShortName;-pushnotificaties">
+<!ENTITY updater_notification_channel "App-updates">
+<!ENTITY synced_tabs_notification_channel "Gesynchroniseerde tabbladen">

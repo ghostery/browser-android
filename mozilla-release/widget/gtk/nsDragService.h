@@ -14,6 +14,7 @@
 #include <gtk/gtk.h>
 
 class nsWindow;
+class nsWaylandDragContext;
 
 namespace mozilla {
 namespace gfx {
@@ -60,13 +61,12 @@ public:
 
     // nsBaseDragService
     virtual nsresult InvokeDragSessionImpl(nsIArray* anArrayTransferables,
-                                           nsIScriptableRegion* aRegion,
+                                           const mozilla::Maybe<mozilla::CSSIntRegion>& aRegion,
                                            uint32_t aActionType) override;
     // nsIDragService
-    NS_IMETHOD InvokeDragSession (nsIDOMNode *aDOMNode,
+    NS_IMETHOD InvokeDragSession (nsINode *aDOMNode,
                                   const nsACString& aPrincipalURISpec,
                                   nsIArray * anArrayTransferables,
-                                  nsIScriptableRegion * aRegion,
                                   uint32_t aActionType,
                                   nsContentPolicyType aContentPolicyType) override;
     NS_IMETHOD StartDragSession() override;
@@ -98,11 +98,13 @@ public:
 
     gboolean ScheduleMotionEvent(nsWindow *aWindow,
                                  GdkDragContext *aDragContext,
+                                 nsWaylandDragContext* aPendingWaylandDragContext,
                                  mozilla::LayoutDeviceIntPoint aWindowPoint,
                                  guint aTime);
     void ScheduleLeaveEvent();
     gboolean ScheduleDropEvent(nsWindow *aWindow,
                                GdkDragContext *aDragContext,
+                               nsWaylandDragContext* aPendingWaylandDragContext,
                                mozilla::LayoutDeviceIntPoint aWindowPoint,
                                guint aTime);
 
@@ -158,6 +160,9 @@ private:
     RefPtr<nsWindow> mPendingWindow;
     mozilla::LayoutDeviceIntPoint mPendingWindowPoint;
     nsCountedRef<GdkDragContext> mPendingDragContext;
+#ifdef MOZ_WAYLAND
+    RefPtr<nsWaylandDragContext> mPendingWaylandDragContext;
+#endif
     guint mPendingTime;
 
     // mTargetWindow and mTargetWindowPoint record the position of the last
@@ -169,9 +174,15 @@ private:
     // motion or drop events.  mTime records the corresponding timestamp.
     nsCountedRef<GtkWidget> mTargetWidget;
     nsCountedRef<GdkDragContext> mTargetDragContext;
+#ifdef MOZ_WAYLAND
+    RefPtr<nsWaylandDragContext> mTargetWaylandDragContext;
+#endif
     // mTargetDragContextForRemote is set while waiting for a reply from
     // a child process.
     nsCountedRef<GdkDragContext> mTargetDragContextForRemote;
+#ifdef MOZ_WAYLAND
+    RefPtr<nsWaylandDragContext> mTargetWaylandDragContextForRemote;
+#endif
     guint           mTargetTime;
 
     // is it OK to drop on us?
@@ -197,8 +208,6 @@ private:
     // our source data items
     nsCOMPtr<nsIArray> mSourceDataItems;
 
-    nsCOMPtr<nsIScriptableRegion> mSourceRegion;
-
     // get a list of the sources in gtk's format
     GtkTargetList *GetSourceList(void);
 
@@ -212,6 +221,7 @@ private:
 
     gboolean Schedule(DragTask aTask, nsWindow *aWindow,
                       GdkDragContext *aDragContext,
+                      nsWaylandDragContext* aPendingWaylandDragContext,
                       mozilla::LayoutDeviceIntPoint aWindowPoint, guint aTime);
 
     // Callback for g_idle_add_full() to run mScheduledTask.
@@ -220,9 +230,11 @@ private:
     void UpdateDragAction();
     void DispatchMotionEvents();
     void ReplyToDragMotion(GdkDragContext* aDragContext);
+#ifdef MOZ_WAYLAND
+    void ReplyToDragMotion(nsWaylandDragContext* aDragContext);
+#endif
     gboolean DispatchDropEvent();
     static uint32_t GetCurrentModifiers();
 };
 
 #endif // nsDragService_h__
-

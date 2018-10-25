@@ -4,7 +4,7 @@
 
 //! Rust wrappers around the raw JS apis
 
-use ac::AutoCompartment;
+use ar::AutoRealm;
 use libc::c_uint;
 use std::cell::{Cell, UnsafeCell};
 use std::char;
@@ -231,10 +231,15 @@ impl Runtime {
         };
         assert!(!ptr.is_null());
         unsafe {
-            let _ac = AutoCompartment::with_obj(self.cx(), glob.get());
+            let _ar = AutoRealm::with_obj(self.cx(), glob.get());
             let options = CompileOptionsWrapper::new(self.cx(), filename_cstr.as_ptr(), line_num);
 
-            if !JS::Evaluate2(self.cx(), options.ptr, ptr as *const u16, len as _, rval) {
+            let mut srcBuf = JS::SourceBufferHolder {
+                data_: ptr,
+                length_: len as _,
+                ownsChars_: false
+            };
+            if !JS::Evaluate(self.cx(), options.ptr, &mut srcBuf, rval) {
                 debug!("...err!");
                 panic::maybe_resume_unwind();
                 Err(())
@@ -304,6 +309,12 @@ impl RootKind for *mut JSString {
 impl RootKind for *mut JS::Symbol {
     #[inline(always)]
     fn rootKind() -> JS::RootKind { JS::RootKind::Symbol }
+}
+
+#[cfg(feature = "bigint")]
+impl RootKind for *mut JS::BigInt {
+    #[inline(always)]
+    fn rootKind() -> JS::RootKind { JS::RootKind::BigInt }
 }
 
 impl RootKind for *mut JSScript {
@@ -551,7 +562,7 @@ impl Default for JS::Value {
     fn default() -> JS::Value { jsval::UndefinedValue() }
 }
 
-impl Default for JS::CompartmentOptions {
+impl Default for JS::RealmOptions {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
 
@@ -609,9 +620,9 @@ impl GCMethods for JS::Value {
 // ___________________________________________________________________________
 // Implementations for various things in jsapi.rs
 
-impl Drop for JSAutoCompartment {
+impl Drop for JSAutoRealm {
     fn drop(&mut self) {
-        unsafe { JS_LeaveCompartment(self.cx_, self.oldCompartment_); }
+        unsafe { JS::LeaveRealm(self.cx_, self.oldRealm_); }
     }
 }
 
@@ -1048,8 +1059,9 @@ pub unsafe fn get_object_class(obj: *mut JSObject) -> *const JSClass {
 }
 
 #[inline]
-pub unsafe fn get_object_compartment(obj: *mut JSObject) -> *mut JSCompartment {
-    (*get_object_group(obj)).compartment
+pub unsafe fn get_object_compartment(obj: *mut JSObject) -> *mut JS::Compartment {
+    let realm = (*get_object_group(obj)).realm as *const JS::shadow::Realm;
+    (*realm).compartment_
 }
 
 #[inline]

@@ -125,12 +125,12 @@ public:
       location ? Some(nsCString(location)) : Nothing(),
       lineno
     };
-    mTypesetForUpcomingEntry.AppendElement(Move(info));
+    mTypesetForUpcomingEntry.AppendElement(std::move(info));
   }
 
   void operator()(JS::TrackedTypeSite site, const char* mirType) override
   {
-    nsTArray<TypeInfo> typeset(Move(mTypesetForUpcomingEntry));
+    nsTArray<TypeInfo> typeset(std::move(mTypesetForUpcomingEntry));
     mLambda(site, mirType, typeset);
   }
 
@@ -142,7 +142,7 @@ private:
 template<typename LambdaT> ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>
 MakeForEachTrackedOptimizationTypeInfoLambdaOp(LambdaT&& aLambda)
 {
-  return ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>(Move(aLambda));
+  return ForEachTrackedOptimizationTypeInfoLambdaOp<LambdaT>(std::move(aLambda));
 }
 
 // As mentioned in ProfileBufferEntry.h, the JSON format contains many
@@ -230,7 +230,7 @@ class ForEachTrackedOptimizationAttemptsLambdaOp
 {
 public:
   explicit ForEachTrackedOptimizationAttemptsLambdaOp(LambdaT&& aLambda)
-    : mLambda(Move(aLambda))
+    : mLambda(std::move(aLambda))
   {}
   void operator()(JS::TrackedStrategy aStrategy, JS::TrackedOutcome aOutcome) override {
     mLambda(aStrategy, aOutcome);
@@ -242,7 +242,7 @@ private:
 template<typename LambdaT> ForEachTrackedOptimizationAttemptsLambdaOp<LambdaT>
 MakeForEachTrackedOptimizationAttemptsLambdaOp(LambdaT&& aLambda)
 {
-  return ForEachTrackedOptimizationAttemptsLambdaOp<LambdaT>(Move(aLambda));
+  return ForEachTrackedOptimizationAttemptsLambdaOp<LambdaT>(std::move(aLambda));
 }
 
 UniqueJSONStrings::UniqueJSONStrings()
@@ -327,7 +327,7 @@ JITFrameInfoForBufferRange::Clone() const
   CopyClassHashtable(jitFrameToFrameJSONMap, mJITFrameToFrameJSONMap);
   return JITFrameInfoForBufferRange{
     mRangeStart, mRangeEnd,
-    Move(jitAddressToJITFramesMap), Move(jitFrameToFrameJSONMap) };
+    std::move(jitAddressToJITFramesMap), std::move(jitFrameToFrameJSONMap) };
 }
 
 JITFrameInfo::JITFrameInfo(const JITFrameInfo& aOther)
@@ -343,6 +343,7 @@ UniqueStacks::FrameKey::NormalFrameData::operator==(const NormalFrameData& aOthe
 {
   return mLocation == aOther.mLocation &&
          mLine == aOther.mLine &&
+         mColumn == aOther.mColumn &&
          mCategory == aOther.mCategory;
 }
 
@@ -366,6 +367,9 @@ UniqueStacks::FrameKey::Hash() const
     if (data.mLine.isSome()) {
       hash = AddToHash(hash, *data.mLine);
     }
+    if (data.mColumn.isSome()) {
+      hash = AddToHash(hash, *data.mColumn);
+    }
     if (data.mCategory.isSome()) {
       hash = AddToHash(hash, *data.mCategory);
     }
@@ -383,8 +387,8 @@ UniqueStacks::FrameKey::Hash() const
 // JIT frame info's string table, so our string table needs to have the same
 // strings at the same indices.
 UniqueStacks::UniqueStacks(JITFrameInfo&& aJITFrameInfo)
-  : mUniqueStrings(Move(aJITFrameInfo.mUniqueStrings))
-  , mJITInfoRanges(Move(aJITFrameInfo.mRanges))
+  : mUniqueStrings(std::move(aJITFrameInfo.mUniqueStrings))
+  , mJITInfoRanges(std::move(aJITFrameInfo.mRanges))
 {
   mFrameTableWriter.StartBareList();
   mStackTableWriter.StartBareList();
@@ -452,9 +456,9 @@ UniqueStacks::LookupFramesForJITAddressFromBufferPos(void* aJITAddress,
       mFrameTableWriter.Splice(frameJSON->get());
       mFrameToIndexMap.Put(frameKey, index);
     }
-    frameKeys.AppendElement(Move(frameKey));
+    frameKeys.AppendElement(std::move(frameKey));
   }
-  return Some(Move(frameKeys));
+  return Some(std::move(frameKeys));
 }
 
 uint32_t
@@ -508,7 +512,8 @@ UniqueStacks::StreamNonJITFrame(const FrameKey& aFrame)
     IMPLEMENTATION = 1,
     OPTIMIZATIONS = 2,
     LINE = 3,
-    CATEGORY = 4
+    COLUMN = 4,
+    CATEGORY = 5
   };
 
   AutoArraySchemaWriter writer(mFrameTableWriter, *mUniqueStrings);
@@ -517,6 +522,9 @@ UniqueStacks::StreamNonJITFrame(const FrameKey& aFrame)
   writer.StringElement(LOCATION, data.mLocation.get());
   if (data.mLine.isSome()) {
     writer.IntElement(LINE, *data.mLine);
+  }
+  if (data.mColumn.isSome()) {
+    writer.IntElement(COLUMN, *data.mColumn);
   }
   if (data.mCategory.isSome()) {
     writer.IntElement(CATEGORY, *data.mCategory);
@@ -626,7 +634,8 @@ StreamJITFrame(JSContext* aContext, SpliceableJSONWriter& aWriter,
     IMPLEMENTATION = 1,
     OPTIMIZATIONS = 2,
     LINE = 3,
-    CATEGORY = 4
+    COLUMN = 4,
+    CATEGORY = 5
   };
 
   AutoArraySchemaWriter writer(aWriter, aUniqueStrings);
@@ -712,7 +721,7 @@ JITFrameInfo::AddInfoForRange(uint64_t aRangeStart, uint64_t aRangeEnd,
 
   mRanges.AppendElement(JITFrameInfoForBufferRange{
     aRangeStart, aRangeEnd,
-    Move(jitAddressToJITFrameMap), Move(jitFrameToFrameJSONMap)
+    std::move(jitAddressToJITFrameMap), std::move(jitFrameToFrameJSONMap)
   });
 }
 
@@ -806,26 +815,26 @@ private:
 // The most complicated part is the stack entry sequence that begins with
 // Label. Here are some examples.
 //
-// - PseudoStack entries without a dynamic string:
+// - ProfilingStack frames without a dynamic string:
 //
 //     Label("js::RunScript")
-//     Category(ProfileEntry::Category::JS)
+//     Category(ProfilingStackFrame::Category::JS)
 //
 //     Label("XREMain::XRE_main")
 //     LineNumber(4660)
-//     Category(ProfileEntry::Category::OTHER)
+//     Category(ProfilingStackFrame::Category::OTHER)
 //
 //     Label("ElementRestyler::ComputeStyleChangeFor")
 //     LineNumber(3003)
-//     Category(ProfileEntry::Category::CSS)
+//     Category(ProfilingStackFrame::Category::CSS)
 //
-// - PseudoStack entries with a dynamic string:
+// - ProfilingStack frames with a dynamic string:
 //
 //     Label("nsObserverService::NotifyObservers")
 //     DynamicStringFragment("domwindo")
 //     DynamicStringFragment("wopened")
 //     LineNumber(291)
-//     Category(ProfileEntry::Category::OTHER)
+//     Category(ProfilingStackFrame::Category::OTHER)
 //
 //     Label("")
 //     DynamicStringFragment("closeWin")
@@ -837,32 +846,32 @@ private:
 //     DynamicStringFragment("ay.js:5)")
 //     DynamicStringFragment("")          # this string holds the closing '\0'
 //     LineNumber(25)
-//     Category(ProfileEntry::Category::JS)
+//     Category(ProfilingStackFrame::Category::JS)
 //
 //     Label("")
 //     DynamicStringFragment("bound (s")
 //     DynamicStringFragment("elf-host")
 //     DynamicStringFragment("ed:914)")
 //     LineNumber(945)
-//     Category(ProfileEntry::Category::JS)
+//     Category(ProfilingStackFrame::Category::JS)
 //
-// - A pseudoStack entry with a dynamic string, but with privacy enabled:
+// - A profiling stack frame with a dynamic string, but with privacy enabled:
 //
 //     Label("nsObserverService::NotifyObservers")
 //     DynamicStringFragment("(private")
 //     DynamicStringFragment(")")
 //     LineNumber(291)
-//     Category(ProfileEntry::Category::OTHER)
+//     Category(ProfilingStackFrame::Category::OTHER)
 //
-// - A pseudoStack entry with an overly long dynamic string:
+// - A profiling stack frame with an overly long dynamic string:
 //
 //     Label("")
 //     DynamicStringFragment("(too lon")
 //     DynamicStringFragment("g)")
 //     LineNumber(100)
-//     Category(ProfileEntry::Category::NETWORK)
+//     Category(ProfilingStackFrame::Category::NETWORK)
 //
-// - A wasm JIT frame entry:
+// - A wasm JIT frame:
 //
 //     Label("")
 //     DynamicStringFragment("wasm-fun")
@@ -878,7 +887,7 @@ private:
 //     DynamicStringFragment("30bc1:38")
 //     DynamicStringFragment("29856)")
 //
-// - A JS frame entry in a synchronous sample:
+// - A JS frame in a synchronous sample:
 //
 //     Label("")
 //     DynamicStringFragment("u (https")
@@ -1019,6 +1028,12 @@ ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter, int aThreadId,
           e.Next();
         }
 
+        Maybe<unsigned> column;
+        if (e.Has() && e.Get().IsColumnNumber()) {
+          column = Some(unsigned(e.Get().u.mInt));
+          e.Next();
+        }
+
         Maybe<unsigned> category;
         if (e.Has() && e.Get().IsCategory()) {
           category = Some(unsigned(e.Get().u.mInt));
@@ -1026,7 +1041,7 @@ ProfileBuffer::StreamSamplesToJSON(SpliceableJSONWriter& aWriter, int aThreadId,
         }
 
         stack = aUniqueStacks.AppendFrame(
-          stack, UniqueStacks::FrameKey(strbuf.get(), line, category));
+          stack, UniqueStacks::FrameKey(strbuf.get(), line, column, category));
 
       } else if (e.Get().IsJitReturnAddr()) {
         numFrames++;

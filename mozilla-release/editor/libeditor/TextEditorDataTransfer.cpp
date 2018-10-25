@@ -46,7 +46,7 @@ namespace mozilla {
 
 using namespace dom;
 
-NS_IMETHODIMP
+nsresult
 TextEditor::PrepareTransferable(nsITransferable** transferable)
 {
   // Create generic Transferable for getting the data
@@ -82,7 +82,7 @@ TextEditor::InsertTextAt(const nsAString& aStringToInsert,
       // Use an auto tracker so that our drop point is correctly
       // positioned after the delete.
       AutoTrackDOMPoint tracker(mRangeUpdater, &targetNode, &targetOffset);
-      nsresult rv = DeleteSelectionAsAction(eNone, eStrip);
+      nsresult rv = DeleteSelectionAsSubAction(eNone, eStrip);
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
@@ -95,7 +95,7 @@ TextEditor::InsertTextAt(const nsAString& aStringToInsert,
     }
   }
 
-  nsresult rv = InsertTextAsAction(aStringToInsert);
+  nsresult rv = InsertTextAsSubAction(aStringToInsert);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -115,7 +115,7 @@ TextEditor::InsertTextFromTransferable(nsITransferable* aTransferable)
                                           &len)) &&
       (bestFlavor.EqualsLiteral(kUnicodeMime) ||
        bestFlavor.EqualsLiteral(kMozTextInternal))) {
-    AutoTransactionsConserveSelection dontChangeMySelection(this);
+    AutoTransactionsConserveSelection dontChangeMySelection(*this);
     nsCOMPtr<nsISupportsString> textDataObj ( do_QueryInterface(genericDataObj) );
     if (textDataObj && len > 0) {
       nsAutoString stuffToPaste;
@@ -163,7 +163,7 @@ TextEditor::InsertFromDataTransfer(DataTransfer* aDataTransfer,
 }
 
 nsresult
-TextEditor::InsertFromDrop(DragEvent* aDropEvent)
+TextEditor::OnDrop(DragEvent* aDropEvent)
 {
   CommitComposition();
 
@@ -217,7 +217,7 @@ TextEditor::InsertFromDrop(DragEvent* aDropEvent)
   RefPtr<Selection> selection = GetSelection();
   NS_ENSURE_TRUE(selection, NS_ERROR_FAILURE);
 
-  bool isCollapsed = selection->Collapsed();
+  bool isCollapsed = selection->IsCollapsed();
 
   // Check if mouse is in the selection
   // if so, jump through some hoops to determine if mouse is over selection (bail)
@@ -294,32 +294,52 @@ TextEditor::InsertFromDrop(DragEvent* aDropEvent)
   return NS_OK;
 }
 
-NS_IMETHODIMP
-TextEditor::Paste(int32_t aSelectionType)
+nsresult
+TextEditor::PasteAsAction(int32_t aClipboardType)
 {
-  if (!FireClipboardEvent(ePaste, aSelectionType)) {
+  if (AsHTMLEditor()) {
+    nsresult rv = AsHTMLEditor()->PasteInternal(aClipboardType);
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return rv;
+    }
+    return NS_OK;
+  }
+
+  if (!FireClipboardEvent(ePaste, aClipboardType)) {
     return NS_OK;
   }
 
   // Get Clipboard Service
   nsresult rv;
-  nsCOMPtr<nsIClipboard> clipboard(do_GetService("@mozilla.org/widget/clipboard;1", &rv));
-  if (NS_FAILED(rv)) {
+  nsCOMPtr<nsIClipboard> clipboard =
+    do_GetService("@mozilla.org/widget/clipboard;1", &rv);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
 
   // Get the nsITransferable interface for getting the data from the clipboard
-  nsCOMPtr<nsITransferable> trans;
-  rv = PrepareTransferable(getter_AddRefs(trans));
-  if (NS_SUCCEEDED(rv) && trans) {
-    // Get the Data from the clipboard
-    if (NS_SUCCEEDED(clipboard->GetData(trans, aSelectionType)) &&
-        IsModifiable()) {
-      rv = InsertTextFromTransferable(trans);
-    }
+  nsCOMPtr<nsITransferable> transferable;
+  rv = PrepareTransferable(getter_AddRefs(transferable));
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return rv;
   }
-
-  return rv;
+  if (NS_WARN_IF(!transferable)) {
+    return NS_OK; // XXX Why?
+  }
+  // Get the Data from the clipboard.
+  rv = clipboard->GetData(transferable, aClipboardType);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return NS_OK; // XXX Why?
+  }
+  // XXX Why don't we check this first?
+  if (!IsModifiable()) {
+    return NS_OK;
+  }
+  rv = InsertTextFromTransferable(transferable);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return rv;
+  }
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -374,23 +394,17 @@ TextEditor::CanPaste(int32_t aSelectionType,
   return NS_OK;
 }
 
-
-NS_IMETHODIMP
-TextEditor::CanPasteTransferable(nsITransferable* aTransferable,
-                                 bool* aCanPaste)
+bool
+TextEditor::CanPasteTransferable(nsITransferable* aTransferable)
 {
-  NS_ENSURE_ARG_POINTER(aCanPaste);
-
   // can't paste if readonly
   if (!IsModifiable()) {
-    *aCanPaste = false;
-    return NS_OK;
+    return false;
   }
 
   // If |aTransferable| is null, assume that a paste will succeed.
   if (!aTransferable) {
-    *aCanPaste = true;
-    return NS_OK;
+    return true;
   }
 
   nsCOMPtr<nsISupports> data;
@@ -399,12 +413,10 @@ TextEditor::CanPasteTransferable(nsITransferable* aTransferable,
                                                getter_AddRefs(data),
                                                &dataLen);
   if (NS_SUCCEEDED(rv) && data) {
-    *aCanPaste = true;
-  } else {
-    *aCanPaste = false;
+    return true;
   }
 
-  return NS_OK;
+  return false;
 }
 
 bool

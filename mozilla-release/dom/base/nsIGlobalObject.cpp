@@ -6,15 +6,17 @@
 
 #include "nsIGlobalObject.h"
 
+#include "mozilla/dom/BlobURLProtocolHandler.h"
 #include "mozilla/dom/ServiceWorker.h"
 #include "mozilla/dom/ServiceWorkerRegistration.h"
 #include "nsContentUtils.h"
 #include "nsThreadUtils.h"
-#include "nsHostObjectProtocolHandler.h"
+#include "nsGlobalWindowInner.h"
 
 using mozilla::MallocSizeOf;
 using mozilla::Maybe;
 using mozilla::DOMEventTargetHelper;
+using mozilla::dom::BlobURLProtocolHandler;
 using mozilla::dom::ClientInfo;
 using mozilla::dom::ServiceWorker;
 using mozilla::dom::ServiceWorkerDescriptor;
@@ -67,7 +69,7 @@ public:
     MOZ_ASSERT(NS_IsMainThread());
 
     for (uint32_t index = 0; index < mURIs.Length(); ++index) {
-      nsHostObjectProtocolHandler::RemoveDataEntry(mURIs[index]);
+      BlobURLProtocolHandler::RemoveDataEntry(mURIs[index]);
     }
 
     return NS_OK;
@@ -90,14 +92,14 @@ nsIGlobalObject::UnlinkHostObjectURIs()
 
   if (NS_IsMainThread()) {
     for (uint32_t index = 0; index < mHostObjectURIs.Length(); ++index) {
-      nsHostObjectProtocolHandler::RemoveDataEntry(mHostObjectURIs[index]);
+      BlobURLProtocolHandler::RemoveDataEntry(mHostObjectURIs[index]);
     }
 
     mHostObjectURIs.Clear();
     return;
   }
 
-  // nsHostObjectProtocolHandler is main-thread only.
+  // BlobURLProtocolHandler is main-thread only.
 
   RefPtr<UnlinkHostObjectURIsRunnable> runnable =
     new UnlinkHostObjectURIsRunnable(mHostObjectURIs);
@@ -123,7 +125,7 @@ nsIGlobalObject::TraverseHostObjectURIs(nsCycleCollectionTraversalCallback &aCb)
   }
 
   for (uint32_t index = 0; index < mHostObjectURIs.Length(); ++index) {
-    nsHostObjectProtocolHandler::Traverse(mHostObjectURIs[index], aCb);
+    BlobURLProtocolHandler::Traverse(mHostObjectURIs[index], aCb);
   }
 }
 
@@ -150,7 +152,7 @@ nsIGlobalObject::ForEachEventTargetObject(const std::function<void(DOMEventTarge
   // Protect against the function call triggering a mutation of the list
   // while we are iterating by copying the DETH references to a temporary
   // list.
-  AutoTArray<DOMEventTargetHelper*, 64> targetList;
+  AutoTArray<RefPtr<DOMEventTargetHelper>, 64> targetList;
   for (const DOMEventTargetHelper* deth = mEventTargetObjects.getFirst();
        deth; deth = deth->getNext()) {
     targetList.AppendElement(const_cast<DOMEventTargetHelper*>(deth));
@@ -207,9 +209,25 @@ nsIGlobalObject::GetOrCreateServiceWorker(const ServiceWorkerDescriptor& aDescri
 }
 
 RefPtr<ServiceWorkerRegistration>
+nsIGlobalObject::GetServiceWorkerRegistration(const mozilla::dom::ServiceWorkerRegistrationDescriptor& aDescriptor) const
+{
+  MOZ_DIAGNOSTIC_ASSERT(false, "this global should not have any service workers");
+  return nullptr;
+}
+
+RefPtr<ServiceWorkerRegistration>
 nsIGlobalObject::GetOrCreateServiceWorkerRegistration(const ServiceWorkerRegistrationDescriptor& aDescriptor)
 {
   MOZ_DIAGNOSTIC_ASSERT(false, "this global should not have any service worker registrations");
+  return nullptr;
+}
+
+nsPIDOMWindowInner*
+nsIGlobalObject::AsInnerWindow()
+{
+  if (MOZ_LIKELY(mIsInnerWindow)) {
+    return static_cast<nsPIDOMWindowInner*>(static_cast<nsGlobalWindowInner*>(this)); 
+  }
   return nullptr;
 }
 

@@ -12,6 +12,7 @@
 #include "CompositableHost.h"
 #include "mozilla/gfx/Point.h"
 #include "mozilla/layers/TextureHost.h"
+#include "mozilla/layers/WebRenderTextureHostWrapper.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/webrender/WebRenderAPI.h"
 #include "mozilla/webrender/WebRenderTypes.h"
@@ -30,6 +31,7 @@ class CompositableHost;
 class CompositorVsyncScheduler;
 class WebRenderImageHost;
 class WebRenderTextureHost;
+class WebRenderTextureHostWrapper;
 
 class AsyncImagePipelineManager final
 {
@@ -48,9 +50,17 @@ public:
   void RemovePipeline(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch);
 
   void HoldExternalImage(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch, WebRenderTextureHost* aTexture);
+  void HoldExternalImage(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch, WebRenderTextureHostWrapper* aWrTextureWrapper);
   void HoldExternalImage(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch, const wr::ExternalImageId& aImageId);
-  void PipelineRendered(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch);
-  void PipelineRemoved(const wr::PipelineId& aPipelineId);
+
+  // This is called from the Renderer thread to notify this class about the
+  // pipelines in the most recently completed render. A copy of the update
+  // information is put into mUpdatesQueue.
+  void NotifyPipelinesUpdated(wr::WrPipelineInfo aInfo);
+
+  // This is run on the compositor thread to process mUpdatesQueue. We make
+  // this a public entry point because we need to invoke it from other places.
+  void ProcessPipelineUpdates();
 
   TimeStamp GetCompositionTime() const {
     return mCompositionTime;
@@ -81,7 +91,10 @@ public:
                                 const gfx::MaybeIntSize& aScaleToSize,
                                 const wr::ImageRendering& aFilter,
                                 const wr::MixBlendMode& aMixBlendMode);
-  void ApplyAsyncImages();
+  void ApplyAsyncImagesOfImageBridge(wr::TransactionBuilder& aSceneBuilderTxn, wr::TransactionBuilder& aFastTxn);
+  void ApplyAsyncImageForPipeline(const wr::PipelineId& aPipelineId, wr::TransactionBuilder& aSceneBuilderTxn);
+
+  void SetEmptyDisplayList(const wr::PipelineId& aPipelineId, wr::TransactionBuilder& aTxn);
 
   void AppendImageCompositeNotification(const ImageCompositeNotificationInfo& aNotification)
   {
@@ -90,13 +103,17 @@ public:
 
   void FlushImageNotifications(nsTArray<ImageCompositeNotificationInfo>* aNotifications)
   {
-    aNotifications->AppendElements(Move(mImageCompositeNotifications));
+    aNotifications->AppendElements(std::move(mImageCompositeNotifications));
   }
 
   void SetWillGenerateFrame();
   bool GetAndResetWillGenerateFrame();
 
+  wr::ExternalImageId GetNextExternalImageId();
+
 private:
+  void ProcessPipelineRendered(const wr::PipelineId& aPipelineId, const wr::Epoch& aEpoch);
+  void ProcessPipelineRemoved(const wr::PipelineId& aPipelineId);
 
   wr::Epoch GetNextImageEpoch();
   uint32_t GetNextResourceId() { return ++mResourceId; }
@@ -118,6 +135,15 @@ private:
     CompositableTextureHostRef mTexture;
   };
 
+  struct ForwardingTextureHostWrapper {
+    ForwardingTextureHostWrapper(const wr::Epoch& aEpoch, WebRenderTextureHostWrapper* aWrTextureWrapper)
+      : mEpoch(aEpoch)
+      , mWrTextureWrapper(aWrTextureWrapper)
+    {}
+    wr::Epoch mEpoch;
+    RefPtr<WebRenderTextureHostWrapper> mWrTextureWrapper;
+  };
+
   struct ForwardingExternalImage {
     ForwardingExternalImage(const wr::Epoch& aEpoch, const wr::ExternalImageId& aImageId)
       : mEpoch(aEpoch)
@@ -130,6 +156,7 @@ private:
   struct PipelineTexturesHolder {
     // Holds forwarding WebRenderTextureHosts.
     std::queue<ForwardingTextureHost> mTextureHosts;
+    std::queue<ForwardingTextureHostWrapper> mTextureHostWrappers;
     std::queue<ForwardingExternalImage> mExternalImages;
     Maybe<wr::Epoch> mDestroyedEpoch;
   };
@@ -164,18 +191,27 @@ private:
     wr::MixBlendMode mMixBlendMode;
     RefPtr<WebRenderImageHost> mImageHost;
     CompositableTextureHostRef mCurrentTexture;
+    RefPtr<WebRenderTextureHostWrapper> mWrTextureWrapper;
     nsTArray<wr::ImageKey> mKeys;
   };
 
+  void ApplyAsyncImageForPipeline(const wr::Epoch& aEpoch,
+                                  const wr::PipelineId& aPipelineId,
+                                  AsyncImagePipeline* aPipeline,
+                                  wr::TransactionBuilder& aSceneBuilderTxn,
+                                  wr::TransactionBuilder& aMaybeFastTxn);
   Maybe<TextureHost::ResourceUpdateOp>
-  UpdateImageKeys(wr::TransactionBuilder& aResourceUpdates,
+  UpdateImageKeys(const wr::Epoch& aEpoch,
+                  const wr::PipelineId& aPipelineId,
                   AsyncImagePipeline* aPipeline,
-                  nsTArray<wr::ImageKey>& aKeys);
+                  nsTArray<wr::ImageKey>& aKeys,
+                  wr::TransactionBuilder& aSceneBuilderTxn,
+                  wr::TransactionBuilder& aMaybeFastTxn);
   Maybe<TextureHost::ResourceUpdateOp>
-  UpdateWithoutExternalImage(wr::TransactionBuilder& aResources,
-                             TextureHost* aTexture,
+  UpdateWithoutExternalImage(TextureHost* aTexture,
                              wr::ImageKey aKey,
-                             TextureHost::ResourceUpdateOp);
+                             TextureHost::ResourceUpdateOp,
+                             wr::TransactionBuilder& aTxn);
 
   RefPtr<wr::WebRenderAPI> mApi;
   wr::IdNamespace mIdNamespace;
@@ -196,6 +232,15 @@ private:
   TimeStamp mCompositeUntilTime;
 
   nsTArray<ImageCompositeNotificationInfo> mImageCompositeNotifications;
+
+  // The lock that protects mUpdatesQueue
+  Mutex mUpdatesLock;
+  // Queue to store rendered pipeline epoch information. This is populated from
+  // the Renderer thread after a render, and is read from the compositor thread
+  // to free resources (e.g. textures) that are no longer needed. Each entry
+  // in the queue is a pair that holds the pipeline id and Some(x) for
+  // a render of epoch x, or Nothing() for a removed pipeline.
+  std::queue<std::pair<wr::PipelineId, Maybe<wr::Epoch>>> mUpdatesQueue;
 };
 
 } // namespace layers

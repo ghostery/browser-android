@@ -10,12 +10,13 @@ const profileDir = gProfD.clone();
 profileDir.append("extensions");
 
 createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "49");
-startupManager();
 
 /**
  *  Schema change with no application update reloads metadata.
  */
 add_task(async function schema_change() {
+  await promiseStartupManager();
+
   const ID = "schema-change@tests.mozilla.org";
 
   let xpiFile = createTempXPIFile({
@@ -26,8 +27,8 @@ add_task(async function schema_change() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1.9.2"
-    }]
+      maxVersion: "1.9.2",
+    }],
   });
 
   await promiseInstallFile(xpiFile);
@@ -47,8 +48,8 @@ add_task(async function schema_change() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1.9.2"
-    }]
+      maxVersion: "1.9.2",
+    }],
   });
 
   Services.prefs.setIntPref(PREF_DB_SCHEMA, 0);
@@ -69,7 +70,7 @@ add_task(async function schema_change() {
   equal(addon.version, "2.0", "Got the expected version");
 
   let waitUninstall = promiseAddonEvent("onUninstalled");
-  addon.uninstall();
+  await addon.uninstall();
   await waitUninstall;
 });
 
@@ -87,8 +88,8 @@ add_task(async function schema_change() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "2"
-    }]
+      maxVersion: "2",
+    }],
   });
 
   await promiseInstallFile(xpiFile);
@@ -108,8 +109,8 @@ add_task(async function schema_change() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "2"
-    }]
+      maxVersion: "2",
+    }],
   });
 
   gAppInfo.version = "2";
@@ -129,7 +130,7 @@ add_task(async function schema_change() {
   equal(addon.version, "1.0", "Got the expected version");
 
   let waitUninstall = promiseAddonEvent("onUninstalled");
-  addon.uninstall();
+  await addon.uninstall();
   await waitUninstall;
 });
 
@@ -147,8 +148,8 @@ add_task(async function schema_change_app_update() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "3"
-    }]
+      maxVersion: "3",
+    }],
   });
 
   await promiseInstallFile(xpiFile);
@@ -168,8 +169,8 @@ add_task(async function schema_change_app_update() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "3"
-    }]
+      maxVersion: "3",
+    }],
   });
 
   gAppInfo.version = "3";
@@ -192,7 +193,7 @@ add_task(async function schema_change_app_update() {
   equal(addon.version, "2.0", "Got the expected version");
 
   let waitUninstall = promiseAddonEvent("onUninstalled");
-  addon.uninstall();
+  await addon.uninstall();
   await waitUninstall;
 });
 
@@ -210,8 +211,8 @@ add_task(async function schema_change() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1.9.2"
-    }]
+      maxVersion: "1.9.2",
+    }],
   });
 
   await promiseInstallFile(xpiFile);
@@ -231,8 +232,8 @@ add_task(async function schema_change() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1.9.2"
-    }]
+      maxVersion: "1.9.2",
+    }],
   });
 
   let file = profileDir.clone();
@@ -251,7 +252,7 @@ add_task(async function schema_change() {
   equal(addon.version, "1.0", "Got the expected version");
 
   let waitUninstall = promiseAddonEvent("onUninstalled");
-  addon.uninstall();
+  await addon.uninstall();
   await waitUninstall;
 });
 
@@ -269,8 +270,8 @@ add_task(async function schema_change() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1.9.2"
-    }]
+      maxVersion: "1.9.2",
+    }],
   });
 
   await promiseInstallFile(xpiFile);
@@ -290,8 +291,8 @@ add_task(async function schema_change() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1.9.2"
-    }]
+      maxVersion: "1.9.2",
+    }],
   });
 
   xpiFile.moveTo(profileDir, `${ID}.xpi`);
@@ -312,6 +313,6 @@ add_task(async function schema_change() {
   equal(addon.version, "2.0", "Got the expected version");
 
   let waitUninstall = promiseAddonEvent("onUninstalled");
-  addon.uninstall();
+  await addon.uninstall();
   await waitUninstall;
 });

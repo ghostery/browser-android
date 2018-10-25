@@ -14,45 +14,44 @@ const TEST_URI =
   </script>`;
 
 add_task(async function() {
-  let hud = await openNewTabAndConsole(TEST_URI);
+  const hud = await openNewTabAndConsole(TEST_URI);
 
-  let inputNode = hud.jsterm.inputNode;
   info("Focus after console is opened");
-  ok(hasFocus(inputNode), "input node is focused after console is opened");
+  ok(isJstermFocused(hud.jsterm), "input node is focused after console is opened");
 
-  hud.jsterm.clearOutput();
-  ok(hasFocus(inputNode), "input node is focused after output is cleared");
+  hud.ui.clearOutput();
+  ok(isJstermFocused(hud.jsterm), "input node is focused after output is cleared");
 
   info("Focus during message logging");
   ContentTask.spawn(gBrowser.selectedBrowser, {}, function() {
     content.wrappedJSObject.console.log("console message 2");
   });
-  let msg = await waitFor(() => findMessage(hud, "console message 2"));
-  ok(hasFocus(inputNode, "input node is focused, first time"));
+  const msg = await waitFor(() => findMessage(hud, "console message 2"));
+  ok(isJstermFocused(hud.jsterm), "input node is focused, first time");
 
   info("Focus after clicking in the output area");
   await waitForBlurredInput(hud);
   EventUtils.sendMouseEvent({type: "click"}, msg);
-  ok(hasFocus(inputNode), "input node is focused, second time");
+  ok(isJstermFocused(hud.jsterm), "input node is focused, second time");
 
   info("Setting a text selection and making sure a click does not re-focus");
   await waitForBlurredInput(hud);
-  let selection = hud.iframeWindow.getSelection();
+  const selection = hud.iframeWindow.getSelection();
   selection.selectAllChildren(msg.querySelector(".message-body"));
   EventUtils.sendMouseEvent({type: "click"}, msg);
-  ok(!hasFocus(inputNode), "input node not focused after text is selected");
+  ok(!isJstermFocused(hud.jsterm), "input node not focused after text is selected");
 });
 
 function waitForBlurredInput(hud) {
-  let inputNode = hud.jsterm.inputNode;
+  const node = hud.jsterm.node || hud.jsterm.inputNode;
   return new Promise(resolve => {
-    let lostFocus = () => {
-      ok(!hasFocus(inputNode), "input node is not focused");
+    const lostFocus = () => {
+      ok(!isJstermFocused(hud.jsterm), "input node is not focused");
       resolve();
     };
-    inputNode.addEventListener("blur", lostFocus, { once: true });
+    node.addEventListener("focusout", lostFocus, { once: true });
 
-    // The 'blur' event fires if we focus e.g. the filter box.
-    inputNode.ownerDocument.querySelector("input.text-filter").focus();
+    // The 'focusout' event fires if we focus e.g. the filter box.
+    node.ownerDocument.querySelector("input.text-filter").focus();
   });
 }

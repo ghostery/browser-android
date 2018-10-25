@@ -109,9 +109,9 @@ function installAddonEngine(name = "engine-addon") {
       return {
         QueryInterface: ChromeUtils.generateQI([Ci.nsISimpleEnumerator]),
         hasMoreElements: () => result.length > 0,
-        getNext: () => result.shift()
+        getNext: () => result.shift(),
       };
-    }
+    },
   });
 }
 
@@ -143,7 +143,7 @@ function installDistributionEngine() {
       if (aProp == XRE_APP_DISTRIBUTION_DIR)
         return distDir.clone();
       return null;
-    }
+    },
   });
 }
 
@@ -232,18 +232,59 @@ function isUSTimezone() {
 
 const kDefaultenginenamePref = "browser.search.defaultenginename";
 const kTestEngineName = "Test search engine";
-const REQ_LOCALES_CHANGED_TOPIC = "intl:requested-locales-changed";
+const TOPIC_LOCALES_CHANGE = "intl:app-locales-changed";
 
 function getDefaultEngineName(isUS) {
-  const nsIPLS = Ci.nsIPrefLocalizedString;
-  // Copy the logic from nsSearchService
-  let pref = kDefaultenginenamePref;
+  // The list of visibleDefaultEngines needs to match or the cache will be ignored.
+  let chan = NetUtil.newChannel({
+    uri: "resource://search-plugins/list.json",
+    loadUsingSystemPrincipal: true,
+  });
+  let searchSettings = parseJsonFromStream(chan.open2());
+  let defaultEngineName = searchSettings.default.searchDefault;
+
   if (isUS === undefined)
     isUS = Services.locale.getRequestedLocale() == "en-US" && isUSTimezone();
-  if (isUS) {
-    pref += ".US";
+
+  if (isUS && ("US" in searchSettings &&
+               "searchDefault" in searchSettings.US)) {
+    defaultEngineName = searchSettings.US.searchDefault;
   }
-  return Services.prefs.getComplexValue(pref, nsIPLS).data;
+  return defaultEngineName;
+}
+
+function getDefaultEngineList(isUS) {
+  // The list of visibleDefaultEngines needs to match or the cache will be ignored.
+  let chan = NetUtil.newChannel({
+    uri: "resource://search-plugins/list.json",
+    loadUsingSystemPrincipal: true,
+  });
+  let json = parseJsonFromStream(chan.open2());
+  let visibleDefaultEngines = json.default.visibleDefaultEngines;
+
+  if (isUS === undefined)
+    isUS = Services.locale.getRequestedLocale() == "en-US" && isUSTimezone();
+
+  if (isUS) {
+    let searchSettings = json.locales["en-US"];
+    if ("US" in searchSettings &&
+        "visibleDefaultEngines" in searchSettings.US) {
+      visibleDefaultEngines = searchSettings.US.visibleDefaultEngines;
+    }
+    // From nsSearchService.js
+    let searchRegion = "US";
+    if ("regionOverrides" in json &&
+        searchRegion in json.regionOverrides) {
+      for (let engine in json.regionOverrides[searchRegion]) {
+        let index = visibleDefaultEngines.indexOf(engine);
+        if (index > -1) {
+          visibleDefaultEngines[index] = json.regionOverrides[searchRegion][engine];
+        }
+      }
+    }
+  }
+
+  return visibleDefaultEngines;
 }
 
 /**
@@ -396,34 +437,6 @@ function installTestEngine() {
 }
 
 /**
- * Set a localized preference on the default branch
- * @param aPrefName
- *        The name of the pref to set.
- */
-function setLocalizedDefaultPref(aPrefName, aValue) {
-  let value = "data:text/plain," + BROWSER_SEARCH_PREF + aPrefName + "=" + aValue;
-  Services.prefs.getDefaultBranch(BROWSER_SEARCH_PREF)
-          .setCharPref(aPrefName, value);
-}
-
-
-/**
- * Installs two test engines, sets them as default for US vs. general.
- */
-function setUpGeoDefaults() {
-  const kSecondTestEngineName = "A second test engine";
-
-  setLocalizedDefaultPref("defaultenginename", "Test search engine");
-  setLocalizedDefaultPref("defaultenginename.US", "A second test engine");
-
-  useHttpServer();
-  return addTestEngines([
-    { name: kTestEngineName, xmlFileName: "engine.xml" },
-    { name: kSecondTestEngineName, xmlFileName: "engine2.xml" },
-  ]);
-}
-
-/**
  * Returns a promise that is resolved when an observer notification from the
  * search service fires with the specified data.
  *
@@ -457,7 +470,7 @@ function asyncReInit() {
   let promise = waitForSearchNotification("reinit-complete");
 
   Services.search.QueryInterface(Ci.nsIObserver)
-          .observe(null, REQ_LOCALES_CHANGED_TOPIC, null);
+          .observe(null, TOPIC_LOCALES_CHANGE, null);
 
   return promise;
 }

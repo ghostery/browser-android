@@ -19,11 +19,11 @@ from voluptuous import Required, Optional, Any
 from taskgraph.transforms.job import run_job_using
 from taskgraph.transforms.job.common import (
     docker_worker_add_workspace_cache,
-    docker_worker_add_gecko_vcs_env_vars,
     docker_worker_setup_secrets,
     docker_worker_add_artifacts,
     docker_worker_add_tooltool,
     generic_worker_add_artifacts,
+    generic_worker_hg_commands,
     support_vcs_checkout,
 )
 
@@ -94,13 +94,16 @@ mozharness_run_schema = Schema({
     # Only disableable on windows
     Required('use-simple-package'): bool,
 
-    # If false don't pass --branch or --skip-buildbot-actions to mozharness script
+    # If false don't pass --branch mozharness script
     # Only disableable on windows
     Required('use-magic-mh-args'): bool,
 
     # if true, perform a checkout of a comm-central based branch inside the
     # gecko checkout
     Required('comm-checkout'): bool,
+
+    # Base work directory used to set up the task.
+    Required('workdir'): basestring,
 })
 
 
@@ -146,6 +149,7 @@ def mozharness_on_docker_worker_setup(config, job, taskdesc):
 
     env = worker.setdefault('env', {})
     env.update({
+        'GECKO_PATH': '{workdir}/workspace/build/src'.format(**run),
         'MOZHARNESS_CONFIG': ' '.join(run['config']),
         'MOZHARNESS_SCRIPT': run['script'],
         'MH_BRANCH': config.params['project'],
@@ -154,6 +158,7 @@ def mozharness_on_docker_worker_setup(config, job, taskdesc):
         'MOZ_BUILD_DATE': config.params['moz_build_date'],
         'MOZ_SCM_LEVEL': config.params['level'],
         'MOZ_AUTOMATION': '1',
+        'PYTHONUNBUFFERED': '1',
     })
 
     if 'actions' in run:
@@ -199,17 +204,18 @@ def mozharness_on_docker_worker_setup(config, job, taskdesc):
     docker_worker_setup_secrets(config, job, taskdesc)
 
     command = [
-        '/builds/worker/bin/run-task',
-        '--vcs-checkout', '/builds/worker/workspace/build/src',
-        '--tools-checkout', '/builds/worker/workspace/build/tools',
+        '{workdir}/bin/run-task'.format(**run),
+        '--vcs-checkout', env['GECKO_PATH'],
+        '--tools-checkout', '{workdir}/workspace/build/tools'.format(**run),
     ]
     if run['comm-checkout']:
-        command.append('--comm-checkout=/builds/worker/workspace/build/src/comm')
+        command.append('--comm-checkout={workdir}/workspace/build/src/comm'.format(**run))
 
     command += [
         '--',
-        '/builds/worker/workspace/build/src/{}'.format(
-            run.get('job-script', 'taskcluster/scripts/builder/build-linux.sh')
+        '{workdir}/workspace/build/src/{script}'.format(
+            workdir=run['workdir'],
+            script=run.get('job-script', 'taskcluster/scripts/builder/build-linux.sh'),
         ),
     ]
 
@@ -237,9 +243,9 @@ def mozharness_on_generic_worker(config, job, taskdesc):
 
     worker = taskdesc['worker']
 
-    generic_worker_add_artifacts(config, job, taskdesc)
-
-    docker_worker_add_gecko_vcs_env_vars(config, job, taskdesc)
+    if not worker.get('skip-artifacts', False):
+        generic_worker_add_artifacts(config, job, taskdesc)
+    support_vcs_checkout(config, job, taskdesc)
 
     env = worker['env']
     env.update({
@@ -279,7 +285,6 @@ def mozharness_on_generic_worker(config, job, taskdesc):
         mh_command.append('--config ' + cfg.replace('/', '\\'))
     if run['use-magic-mh-args']:
         mh_command.append('--branch ' + config.params['project'])
-        mh_command.append(r'--skip-buildbot-actions')
     mh_command.append(r'--work-dir %cd:Z:=z:%\build')
     for action in run.get('actions', []):
         assert ' ' not in action
@@ -292,43 +297,30 @@ def mozharness_on_generic_worker(config, job, taskdesc):
         mh_command.append('--custom-build-variant')
         mh_command.append(run['custom-build-variant-cfg'])
 
-    def checkout_repo(base_repo, head_repo, head_rev, path):
-        hg_command = ['"c:\\Program Files\\Mercurial\\hg.exe"']
-        hg_command.append('robustcheckout')
-        hg_command.extend(['--sharebase', 'y:\\hg-shared'])
-        hg_command.append('--purge')
-        hg_command.extend(['--upstream', base_repo])
-        hg_command.extend(['--revision', head_rev])
-        hg_command.append(head_repo)
-        hg_command.append(path)
-
-        logging_command = [
-            b":: TinderboxPrint:<a href={source_repo}/rev/{revision} "
-            b"title='Built from {repo_name} revision {revision}'>{revision}</a>\n".format(
-                revision=head_rev,
-                source_repo=head_repo,
-                repo_name=head_repo.split('/')[-1],
-            )]
-
-        return [
-            ' '.join(hg_command),
-            ' '.join(logging_command),
-        ]
-
-    hg_commands = checkout_repo(
+    hg_commands = generic_worker_hg_commands(
         base_repo=env['GECKO_BASE_REPOSITORY'],
         head_repo=env['GECKO_HEAD_REPOSITORY'],
         head_rev=env['GECKO_HEAD_REV'],
-        path='.\\build\\src')
+        path=r'.\build\src',
+    )
 
     if run['comm-checkout']:
         hg_commands.extend(
-            checkout_repo(
+            generic_worker_hg_commands(
                 base_repo=env['COMM_BASE_REPOSITORY'],
                 head_repo=env['COMM_HEAD_REPOSITORY'],
                 head_rev=env['COMM_HEAD_REV'],
-                path='.\\build\\src\\comm')
-        )
+                path=r'.\build\src\comm'))
+
+    fetch_commands = []
+    if 'MOZ_FETCHES' in env:
+        # When Bug 1436037 is fixed, run-task can be used for this task,
+        # and this call can go away
+        fetch_commands.append(' '.join([
+            r'c:\mozilla-build\python3\python3.exe',
+            r'build\src\taskcluster\scripts\misc\fetch-content',
+            'task-artifacts',
+        ]))
 
     worker['command'] = []
     if taskdesc.get('needs-sccache'):
@@ -347,6 +339,7 @@ def mozharness_on_generic_worker(config, job, taskdesc):
         ])
 
     worker['command'].extend(hg_commands)
+    worker['command'].extend(fetch_commands)
     worker['command'].extend([
         ' '.join(mh_command)
     ])

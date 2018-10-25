@@ -4,11 +4,11 @@
 
 <!-- extracted from am-main.xul -->
 
-<!ENTITY accountTitle.label "帐号设置">
-<!ENTITY accountName.label "帐户名称:">
+<!ENTITY accountTitle.label "账号设置">
+<!ENTITY accountName.label "账户名称:">
 <!ENTITY accountName.accesskey "N">
 <!ENTITY identityTitle.label "默认标识">
-<!ENTITY identityDesc.label "每个帐户都有一个标识，其他人在读到您的消息时会看到该标识。">
+<!ENTITY identityDesc.label "每个账户都有一个标识，其他人在读到您的消息时会看到该标识。">
 <!ENTITY name.label "您的姓名：">
 <!ENTITY name.accesskey "Y">
 <!ENTITY email.label "电子邮件地址：">

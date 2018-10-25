@@ -11,6 +11,7 @@
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
+#include "libANGLE/PackedEnums.h"
 
 #include <EGL/egl.h>
 
@@ -47,12 +48,12 @@ void QueryRenderbufferiv(const Context *context,
                          GLint *params);
 void QueryShaderiv(const Context *context, Shader *shader, GLenum pname, GLint *params);
 void QueryTexLevelParameterfv(const Texture *texture,
-                              GLenum target,
+                              TextureTarget target,
                               GLint level,
                               GLenum pname,
                               GLfloat *params);
 void QueryTexLevelParameteriv(const Texture *texture,
-                              GLenum target,
+                              TextureTarget target,
                               GLint level,
                               GLenum pname,
                               GLint *params);
@@ -143,6 +144,8 @@ void QueryProgramInterfaceiv(const Program *program,
                              GLenum programInterface,
                              GLenum pname,
                              GLint *params);
+
+ClientVertexArrayType ParamToVertexArrayType(GLenum param);
 
 }  // namespace gl
 

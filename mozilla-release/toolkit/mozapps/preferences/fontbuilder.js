@@ -38,23 +38,25 @@ var FontBuilder = {
       this._allFonts = await this.enumerator.EnumerateAllFontsAsync({});
 
     // Build the UI for the Default Font and Fonts for this CSS type.
-    const popup = document.createElement("menupopup");
+    const popup = document.createXULElement("menupopup");
     let separator;
     if (fonts.length > 0) {
-      const bundlePreferences = document.getElementById("bundlePreferences");
-      let defaultLabel = defaultFont ?
-        bundlePreferences.getFormattedString("labelDefaultFont", [defaultFont]) :
-        bundlePreferences.getString("labelDefaultFontUnnamed");
-      let menuitem = document.createElement("menuitem");
-      menuitem.setAttribute("label", defaultLabel);
+      let menuitem = document.createXULElement("menuitem");
+      if (defaultFont) {
+        document.l10n.setAttributes(menuitem, "fonts-label-default", {
+          name: defaultFont,
+        });
+      } else {
+        document.l10n.setAttributes(menuitem, "fonts-label-default-unnamed");
+      }
       menuitem.setAttribute("value", ""); // Default Font has a blank value
       popup.appendChild(menuitem);
 
-      separator = document.createElement("menuseparator");
+      separator = document.createXULElement("menuseparator");
       popup.appendChild(separator);
 
       for (let font of fonts) {
-        menuitem = document.createElement("menuitem");
+        menuitem = document.createXULElement("menuitem");
         menuitem.setAttribute("value", font);
         menuitem.setAttribute("label", font);
         popup.appendChild(menuitem);
@@ -70,12 +72,12 @@ var FontBuilder = {
       let builtItem = separator ? separator.nextSibling : popup.firstChild;
       let builtItemValue = builtItem ? builtItem.getAttribute("value") : null;
 
-      separator = document.createElement("menuseparator");
+      separator = document.createXULElement("menuseparator");
       popup.appendChild(separator);
 
       for (let font of this._allFonts) {
         if (font != builtItemValue) {
-          const menuitem = document.createElement("menuitem");
+          const menuitem = document.createXULElement("menuitem");
           menuitem.setAttribute("value", font);
           menuitem.setAttribute("label", font);
           popup.appendChild(menuitem);
@@ -106,5 +108,5 @@ var FontBuilder = {
     // with "font.name-list.*".  If "font.name.*" is empty string, it means
     // "default".  So, return empty string in this case.
     return "";
-  }
+  },
 };

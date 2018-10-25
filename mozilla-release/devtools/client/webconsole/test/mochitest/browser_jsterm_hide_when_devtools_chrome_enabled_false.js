@@ -23,6 +23,15 @@
 "use strict";
 
 add_task(async function() {
+  // Run test with legacy JsTerm
+  await pushPref("devtools.webconsole.jsterm.codeMirror", false);
+  await performTests();
+  // And then run it with the CodeMirror-powered one.
+  await pushPref("devtools.webconsole.jsterm.codeMirror", true);
+  await performTests();
+});
+
+async function performTests() {
   let browserConsole, webConsole, objInspector;
 
   // We don't use `pushPref()` because we need to revert the same pref later
@@ -34,7 +43,7 @@ add_task(async function() {
   testJSTermIsVisible(browserConsole);
   await testObjectInspectorPropertiesAreSet(objInspector);
 
-  let browserTab = await addTab("data:text/html;charset=utf8,hello world");
+  const browserTab = await addTab("data:text/html;charset=utf8,hello world");
   webConsole = await openConsole(browserTab);
   objInspector = await getObjectInspector(webConsole);
   testJSTermIsVisible(webConsole);
@@ -52,58 +61,61 @@ add_task(async function() {
   objInspector = await getObjectInspector(webConsole);
   testJSTermIsVisible(webConsole);
   await testObjectInspectorPropertiesAreSet(objInspector);
+
+  info("Close webconsole and browser console");
   await closeConsole(browserTab);
-});
+  await HUDService.toggleBrowserConsole();
+}
 
 /**
  * Returns either the Variables View or Object Inspector depending on which is
  * currently in use.
  */
 async function getObjectInspector(hud) {
-  let { ui, jsterm } = hud;
+  const { ui, jsterm } = hud;
 
   // Filter out other messages to ensure ours stays visible.
   ui.filterBox.value = "browser_console_hide_jsterm_test";
 
-  jsterm.clearOutput();
+  hud.ui.clearOutput();
   jsterm.execute("new Object({ browser_console_hide_jsterm_test: true })");
 
-  let message = await waitFor(
+  const message = await waitFor(
     () => findMessage(hud, "Object { browser_console_hide_jsterm_test: true }")
   );
 
-  let objInspector = message.querySelector(".tree");
+  const objInspector = message.querySelector(".tree");
   return objInspector;
 }
 
 function testJSTermIsVisible(hud) {
-  let inputContainer = hud.ui.window.document
+  const inputContainer = hud.ui.window.document
                                     .querySelector(".jsterm-input-container");
   isnot(inputContainer.style.display, "none", "input is visible");
 }
 
 async function testObjectInspectorPropertiesAreSet(objInspector) {
-  let onMutation = waitForNodeMutation(objInspector, {
+  const onMutation = waitForNodeMutation(objInspector, {
     childList: true
   });
 
-  let arrow = objInspector.querySelector(".arrow");
+  const arrow = objInspector.querySelector(".arrow");
   arrow.click();
   await onMutation;
 
   ok(arrow.classList.contains("expanded"),
     "The arrow of the root node of the tree is expanded after clicking on it");
 
-  let nameNode = objInspector.querySelector(".node:not(.lessen) .object-label");
-  let container = nameNode.parentNode;
-  let name = nameNode.textContent;
-  let value = container.querySelector(".objectBox").textContent;
+  const nameNode = objInspector.querySelector(".node:not(.lessen) .object-label");
+  const container = nameNode.parentNode;
+  const name = nameNode.textContent;
+  const value = container.querySelector(".objectBox").textContent;
 
   is(name, "browser_console_hide_jsterm_test", "name is set correctly");
   is(value, "true", "value is set correctly");
 }
 
 function testJSTermIsNotVisible(hud) {
-  let inputContainer = hud.ui.window.document.querySelector(".jsterm-input-container");
+  const inputContainer = hud.ui.window.document.querySelector(".jsterm-input-container");
   is(inputContainer, null, "input is not in dom");
 }

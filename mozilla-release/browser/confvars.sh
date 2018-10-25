@@ -22,6 +22,12 @@ if test "$OS_ARCH" = "WINNT"; then
             "$MOZ_UPDATE_CHANNEL" = "beta" -o \
             "$MOZ_UPDATE_CHANNEL" = "release"; then
       if ! test "$MOZ_DEBUG"; then
+        if ! test "$USE_STUB_INSTALLER"; then
+          # Expect USE_STUB_INSTALLER from taskcluster for downstream task consistency
+          echo "ERROR: STUB installer expected to be enabled but"
+          echo "ERROR: USE_STUB_INSTALLER is not specified in the environment"
+          exit 1
+        fi
         MOZ_STUB_INSTALLER=1
       fi
     fi
@@ -33,6 +39,13 @@ MOZ_ENABLE_SIGNMAR=1
 
 MOZ_APP_VERSION=$FIREFOX_VERSION
 MOZ_APP_VERSION_DISPLAY=$FIREFOX_VERSION_DISPLAY
+
+if [ "${MOZ_BROWSER_XHTML}" = "1" ]; then
+  BROWSER_CHROME_URL=chrome://browser/content/browser.xhtml
+else
+  BROWSER_CHROME_URL=chrome://browser/content/browser.xul
+fi
+
 # MOZ_APP_DISPLAYNAME will be set by branding/configure.sh
 # MOZ_BRANDING_DIRECTORY is the default branding directory used when none is
 # specified. It should never point to the "official" branding directory.
@@ -60,9 +73,6 @@ if [ "${MOZ_ASAN_REPORTER}" = "1" ]; then
 fi
 
 MOZ_PROFILE_MIGRATOR=1
-
-# Enable checking that add-ons are signed by the trusted root
-MOZ_ADDON_SIGNING=1
 
 # Include the DevTools client, not just the server (which is the default)
 MOZ_DEVTOOLS=all

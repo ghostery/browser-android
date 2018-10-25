@@ -463,10 +463,13 @@ GMPParent::EnsureProcessLoaded()
 void
 GMPParent::WriteExtraDataForMinidump()
 {
-  mCrashReporter->AddNote(NS_LITERAL_CSTRING("GMPPlugin"), NS_LITERAL_CSTRING("1"));
-  mCrashReporter->AddNote(NS_LITERAL_CSTRING("PluginFilename"), NS_ConvertUTF16toUTF8(mName));
-  mCrashReporter->AddNote(NS_LITERAL_CSTRING("PluginName"), mDisplayName);
-  mCrashReporter->AddNote(NS_LITERAL_CSTRING("PluginVersion"), mVersion);
+  mCrashReporter->AddAnnotation(CrashReporter::Annotation::GMPPlugin, true);
+  mCrashReporter->AddAnnotation(CrashReporter::Annotation::PluginFilename,
+                                NS_ConvertUTF16toUTF8(mName));
+  mCrashReporter->AddAnnotation(CrashReporter::Annotation::PluginName,
+                                mDisplayName);
+  mCrashReporter->AddAnnotation(CrashReporter::Annotation::PluginVersion,
+                                mVersion);
 }
 
 bool
@@ -697,7 +700,7 @@ GMPParent::ReadGMPInfoFile(nsIFile* aFile)
       }
     }
 
-    mCapabilities.AppendElement(Move(cap));
+    mCapabilities.AppendElement(std::move(cap));
   }
 
   if (mCapabilities.IsEmpty()) {
@@ -815,7 +818,7 @@ GMPParent::ParseChromiumManifest(const nsAString& aJSON)
   video.mAPIName = NS_LITERAL_CSTRING(CHROMIUM_CDM_API);
   mAdapter = NS_LITERAL_STRING("chromium");
 
-  mCapabilities.AppendElement(Move(video));
+  mCapabilities.AppendElement(std::move(video));
 
   return GenericPromise::CreateAndResolve(true, __func__);
 }
@@ -893,7 +896,7 @@ GMPParent::OpenPGMPContent()
     return false;
   }
 
-  if (!SendInitGMPContentChild(Move(child))) {
+  if (!SendInitGMPContentChild(std::move(child))) {
     return false;
   }
 
@@ -923,7 +926,7 @@ GMPParent::GetGMPContentParent(UniquePtr<MozPromiseHolder<GetGMPContentParentPro
     RefPtr<GMPContentParent::CloseBlocker> blocker(new GMPContentParent::CloseBlocker(mGMPContentParent));
     aPromiseHolder->Resolve(blocker, __func__);
   } else {
-    mGetContentParentPromises.AppendElement(Move(aPromiseHolder));
+    mGetContentParentPromises.AppendElement(std::move(aPromiseHolder));
     // If we don't have a GMPContentParent and we try to get one for the first
     // time (mGetContentParentPromises.Length() == 1) then call PGMPContent::Open. If more
     // calls to GetGMPContentParent happen before mGMPContentParent has been
@@ -946,7 +949,7 @@ already_AddRefed<GMPContentParent>
 GMPParent::ForgetGMPContentParent()
 {
   MOZ_ASSERT(mGetContentParentPromises.IsEmpty());
-  return Move(mGMPContentParent.forget());
+  return mGMPContentParent.forget();
 }
 
 bool

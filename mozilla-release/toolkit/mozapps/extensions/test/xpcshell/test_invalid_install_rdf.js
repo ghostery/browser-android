@@ -41,7 +41,7 @@ add_task(async function() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Invalid install.rdf extension",
   }, userExtensions, undefined, {
@@ -57,7 +57,7 @@ add_task(async function() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Invalid install.rdf extension",
   }, userExtensions, undefined, {
@@ -69,10 +69,11 @@ add_task(async function() {
   await promiseWriteInstallRDFToXPI({
     id: "foo-legacy-legacy@addons.mozilla.org",
     version: "1.0",
+    bootstrap: false,
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Invalid install.rdf extension",
   }, userExtensions, undefined, {

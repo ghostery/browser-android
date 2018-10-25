@@ -13,7 +13,7 @@
 <!-- LOCALIZATION NOTE (sanitizeDialog2.width): width of the Clear Recent History dialog -->
 <!ENTITY sanitizeDialog2.width         "34em">
 
-<!ENTITY clearDataSettings3.label     "Quando eu sair o &brandShortName;, deve limpar tudo automaticamente">
+<!ENTITY clearDataSettings3.label     "Quando eu fechar o &brandShortName;, ele deve limpar tudo automaticamente">
 
 <!ENTITY clearDataSettings4.label     "Ao fechar o &brandShortName; deve limpar tudo automaticamente">
 

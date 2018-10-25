@@ -19,37 +19,6 @@ namespace a11y {
 typedef ProgressMeterAccessible<1> HTMLProgressMeterAccessible;
 
 /**
- * Accessible for HTML input@type="checkbox".
- */
-class HTMLCheckboxAccessible : public LeafAccessible
-{
-
-public:
-  enum { eAction_Click = 0 };
-
-  HTMLCheckboxAccessible(nsIContent* aContent, DocAccessible* aDoc) :
-    LeafAccessible(aContent, aDoc)
-  {
-    // Ignore "CheckboxStateChange" DOM event in lieu of document observer
-    // state change notification.
-    mStateFlags |= eIgnoreDOMUIEvent;
-  }
-
-  // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual uint64_t NativeState() override;
-
-  // ActionAccessible
-  virtual uint8_t ActionCount() override;
-  virtual void ActionNameAt(uint8_t aIndex, nsAString& aName) override;
-  virtual bool DoAction(uint8_t aIndex) override;
-
-  // Widgets
-  virtual bool IsWidget() const override;
-};
-
-
-/**
  * Accessible for HTML input@type="radio" element.
  */
 class HTMLRadioButtonAccessible : public RadioButtonAccessible
@@ -65,7 +34,7 @@ public:
   }
 
   // Accessible
-  virtual uint64_t NativeState() override;
+  virtual uint64_t NativeState() const override;
   virtual void GetPositionAndSizeInternal(int32_t *aPosInSet,
                                           int32_t *aSetSize) override;
 };
@@ -84,21 +53,21 @@ public:
   HTMLButtonAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
+  virtual mozilla::a11y::role NativeRole() const override;
   virtual uint64_t State() override;
-  virtual uint64_t NativeState() override;
+  virtual uint64_t NativeState() const override;
 
   // ActionAccessible
-  virtual uint8_t ActionCount() override;
+  virtual uint8_t ActionCount() const override;
   virtual void ActionNameAt(uint8_t aIndex, nsAString& aName) override;
-  virtual bool DoAction(uint8_t aIndex) override;
+  virtual bool DoAction(uint8_t aIndex) const override;
 
   // Widgets
   virtual bool IsWidget() const override;
 
 protected:
   // Accessible
-  virtual ENameValueFlag NativeName(nsString& aName) override;
+  virtual ENameValueFlag NativeName(nsString& aName) const override;
 };
 
 
@@ -121,16 +90,16 @@ public:
   virtual already_AddRefed<TextEditor> GetEditor() const override;
 
   // Accessible
-  virtual void Value(nsString& aValue) override;
+  virtual void Value(nsString& aValue) const override;
   virtual void ApplyARIAState(uint64_t* aState) const override;
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual uint64_t NativeState() override;
+  virtual mozilla::a11y::role NativeRole() const override;
+  virtual uint64_t NativeState() const override;
   virtual already_AddRefed<nsIPersistentProperties> NativeAttributes() override;
 
   // ActionAccessible
-  virtual uint8_t ActionCount() override;
+  virtual uint8_t ActionCount() const override;
   virtual void ActionNameAt(uint8_t aIndex, nsAString& aName) override;
-  virtual bool DoAction(uint8_t aIndex) override;
+  virtual bool DoAction(uint8_t aIndex) const override;
 
   // Widgets
   virtual bool IsWidget() const override;
@@ -140,12 +109,12 @@ protected:
   virtual ~HTMLTextFieldAccessible() {}
 
   // Accessible
-  virtual ENameValueFlag NativeName(nsString& aName) override;
+  virtual ENameValueFlag NativeName(nsString& aName) const override;
 
   /**
    * Return a XUL widget element this input is part of.
    */
-  nsIContent* XULWidgetElm() const { return mContent->GetBindingParent(); }
+  nsIContent* BindingParent() const { return mContent->GetBindingParent(); }
 };
 
 
@@ -158,7 +127,7 @@ public:
   HTMLFileInputAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
+  virtual mozilla::a11y::role NativeRole() const override;
   virtual nsresult HandleAccEvent(AccEvent* aAccEvent) override;
 };
 
@@ -176,8 +145,8 @@ public:
 }
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual void Value(nsString& aValue) override;
+  virtual mozilla::a11y::role NativeRole() const override;
+  virtual void Value(nsString& aValue) const override;
 
   virtual double MaxValue() const override;
   virtual double MinValue() const override;
@@ -200,8 +169,8 @@ public:
   }
 
   // Accessible
-  virtual void Value(nsString& aValue) override;
-  virtual mozilla::a11y::role NativeRole() override;
+  virtual void Value(nsString& aValue) const override;
+  virtual mozilla::a11y::role NativeRole() const override;
 
   // Value
   virtual double MaxValue() const override;
@@ -224,12 +193,12 @@ public:
   HTMLGroupboxAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual Relation RelationByType(RelationType aType) override;
+  virtual mozilla::a11y::role NativeRole() const override;
+  virtual Relation RelationByType(RelationType aType) const override;
 
 protected:
   // Accessible
-  virtual ENameValueFlag NativeName(nsString& aName) override;
+  virtual ENameValueFlag NativeName(nsString& aName) const override;
 
   // HTMLGroupboxAccessible
   nsIContent* GetLegend() const;
@@ -245,7 +214,7 @@ public:
   HTMLLegendAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual Relation RelationByType(RelationType aType) override;
+  virtual Relation RelationByType(RelationType aType) const override;
 };
 
 /**
@@ -257,11 +226,11 @@ public:
   HTMLFigureAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual Relation RelationByType(RelationType aType) override;
+  virtual Relation RelationByType(RelationType aType) const override;
 
 protected:
   // Accessible
-  virtual ENameValueFlag NativeName(nsString& aName) override;
+  virtual ENameValueFlag NativeName(nsString& aName) const override;
 
   // HTMLLegendAccessible
   nsIContent* Caption() const;
@@ -277,7 +246,7 @@ public:
   HTMLFigcaptionAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual Relation RelationByType(RelationType aType) override;
+  virtual Relation RelationByType(RelationType aType) const override;
 };
 
 } // namespace a11y

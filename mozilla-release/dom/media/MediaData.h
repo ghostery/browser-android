@@ -99,7 +99,7 @@ public:
   AlignedBuffer(AlignedBuffer&& aOther)
     : mData(aOther.mData)
     , mLength(aOther.mLength)
-    , mBuffer(Move(aOther.mBuffer))
+    , mBuffer(std::move(aOther.mBuffer))
     , mCapacity(aOther.mCapacity)
   {
     aOther.mData = nullptr;
@@ -110,7 +110,7 @@ public:
   AlignedBuffer& operator=(AlignedBuffer&& aOther)
   {
     this->~AlignedBuffer();
-    new (this) AlignedBuffer(Move(aOther));
+    new (this) AlignedBuffer(std::move(aOther));
     return *this;
   }
 
@@ -263,7 +263,7 @@ private:
       PodCopy(newData, mData, mLength);
     }
 
-    mBuffer = Move(newBuffer);
+    mBuffer = std::move(newBuffer);
     mCapacity = sizeNeeded.value();
     mData = newData;
 
@@ -401,7 +401,7 @@ public:
     , mChannels(aChannels)
     , mChannelMap(aChannelMap)
     , mRate(aRate)
-    , mAudioData(Move(aData))
+    , mAudioData(std::move(aData))
   {
   }
 
@@ -662,7 +662,7 @@ private:
   MediaRawData* mTarget;
 };
 
-class MediaRawData : public MediaData
+class MediaRawData final : public MediaData
 {
 public:
   MediaRawData();
@@ -700,11 +700,11 @@ public:
   RefPtr<TrackInfoSharedPtr> mTrackInfo;
 
   // Return a deep copy or nullptr if out of memory.
-  virtual already_AddRefed<MediaRawData> Clone() const;
+  already_AddRefed<MediaRawData> Clone() const;
   // Create a MediaRawDataWriter for this MediaRawData. The writer is not
   // thread-safe.
-  virtual UniquePtr<MediaRawDataWriter> CreateWriter();
-  virtual size_t SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const;
+  UniquePtr<MediaRawDataWriter> CreateWriter();
+  size_t SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const;
 
 protected:
   ~MediaRawData();

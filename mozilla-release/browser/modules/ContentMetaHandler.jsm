@@ -3,8 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 "use strict";
-Cu.importGlobalProperties(["URL"]);
 ChromeUtils.import("resource://gre/modules/Services.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
 // Debounce time in milliseconds - this should be long enough to account for
 // sync script tags that could appear between desired meta tags
@@ -16,7 +17,7 @@ const ACCEPTED_PROTOCOLS = ["http:", "https:"];
 const DESCRIPTION_RULES = [
   "twitter:description",
   "description",
-  "og:description"
+  "og:description",
 ];
 
 // Possible image tags, listed in order from least favourable to most favourable
@@ -25,7 +26,7 @@ const PREVIEW_IMAGE_RULES = [
   "twitter:image",
   "og:image",
   "og:image:url",
-  "og:image:secure_url"
+  "og:image:secure_url",
 ];
 
 /*
@@ -108,7 +109,7 @@ var ContentMetaHandler = {
     const entry = metaTags.get(url) || {
       description: {value: null, currMaxScore: -1},
       image: {value: null, currMaxScore: -1},
-      timeout: null
+      timeout: null,
     };
 
     // Malformed meta tag - do not store it
@@ -155,7 +156,7 @@ var ContentMetaHandler = {
         chromeGlobal.sendAsyncMessage("Meta:SetPageInfo", {
           url,
           description: entry.description.value,
-          previewImageURL: entry.image.value
+          previewImageURL: entry.image.value,
         });
 
         // Telemetry for recording the size of page metadata
@@ -165,5 +166,5 @@ var ContentMetaHandler = {
         metaTags.delete(url);
       }, TIMEOUT_DELAY, Ci.nsITimer.TYPE_ONE_SHOT);
     }
-  }
+  },
 };

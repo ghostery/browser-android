@@ -46,7 +46,7 @@
 <!ENTITY rights2.webservices-header "Serviços de informação do &brandFullName; baseados na web">
 
 <!-- point 5 -->
-<!ENTITY rights.intro-point5 "Para poder reproduzir alguns tipos de vídeo, o &brandShortName; descarrega alguns módulos de terceiros para descodificar o conteúdo.">
+<!ENTITY rights.intro-point5 "Para poder reproduzir alguns tipos de vídeo, o &brandShortName; baixa alguns módulos de terceiros para decodificar o conteúdo.">
 
 <!-- Note that this paragraph references a couple of entities from
      preferences/security.dtd, so that we can refer to text the user sees in

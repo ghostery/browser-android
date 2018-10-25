@@ -8,7 +8,7 @@ ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/ctypes.jsm");
-Cu.importGlobalProperties(["fetch"]); /* globals fetch */
+XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]); /* globals fetch */
 
 ChromeUtils.defineModuleGetter(this, "WindowsRegistry",
                                "resource://gre/modules/WindowsRegistry.jsm");
@@ -127,7 +127,7 @@ var UpdateUtils = {
                    "application or GRE directories");
 
     return this._locale = null;
-  }
+  },
 };
 
 /* Get the distribution pref values, from defaults only */
@@ -195,7 +195,7 @@ XPCOMUtils.defineLazyGetter(this, "gWinCPUArch", function aus_gWinCPUArch() {
       {dwProcessorType: DWORD},
       {dwAllocationGranularity: DWORD},
       {wProcessorLevel: WORD},
-      {wProcessorRevision: WORD}
+      {wProcessorRevision: WORD},
       ]);
 
   let kernel32 = false;
@@ -246,16 +246,7 @@ XPCOMUtils.defineLazyGetter(UpdateUtils, "ABI", function() {
     Cu.reportError("XPCOM ABI unknown");
   }
 
-  if (AppConstants.platform == "macosx") {
-    // Mac universal build should report a different ABI than either macppc
-    // or mactel.
-    let macutils = Cc["@mozilla.org/xpcom/mac-utils;1"].
-                   getService(Ci.nsIMacUtils);
-
-    if (macutils.isUniversalBinary) {
-      abi += "-u-" + macutils.architecturesInBinary;
-    }
-  } else if (AppConstants.platform == "win") {
+  if (AppConstants.platform == "win") {
     // Windows build should report the CPU architecture that it's running on.
     abi += "-" + gWinCPUArch;
   }
@@ -300,7 +291,7 @@ XPCOMUtils.defineLazyGetter(UpdateUtils, "OSVersion", function() {
           {wServicePackMinor: WORD},
           {wSuiteMask: WORD},
           {wProductType: BYTE},
-          {wReserved: BYTE}
+          {wReserved: BYTE},
           ]);
 
       let kernel32 = false;

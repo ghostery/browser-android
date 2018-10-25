@@ -67,7 +67,7 @@ def build_dict(config, env=os.environ):
         p = "x86"
     d["processor"] = p
     # hardcoded list of 64-bit CPUs
-    if p in ["x86_64", "ppc64"]:
+    if p in ["x86_64", "ppc64", "aarch64"]:
         d["bits"] = 64
     # hardcoded list of known 32-bit CPUs
     elif p in ["x86", "arm", "ppc"]:
@@ -91,7 +91,6 @@ def build_dict(config, env=os.environ):
     d['telemetry'] = substs.get('MOZ_TELEMETRY_REPORTING') == '1'
     d['tests_enabled'] = substs.get('ENABLE_TESTS') == "1"
     d['bin_suffix'] = substs.get('BIN_SUFFIX', '')
-    d['addon_signing'] = substs.get('MOZ_ADDON_SIGNING') == '1'
     d['require_signing'] = substs.get('MOZ_REQUIRE_SIGNING') == '1'
     d['allow_legacy_extensions'] = substs.get('MOZ_ALLOW_LEGACY_EXTENSIONS') == '1'
     d['official'] = bool(substs.get('MOZILLA_OFFICIAL'))

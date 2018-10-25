@@ -1,6 +1,4 @@
 
-ChromeUtils.import("resource://gre/modules/addons/AddonSettings.jsm");
-
 let profileDir;
 add_task(async function setup() {
   profileDir = gProfD.clone();
@@ -10,7 +8,7 @@ add_task(async function setup() {
     profileDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
 
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
-  startupManager();
+  await promiseStartupManager();
 });
 
 const IMPLICIT_ID_XPI = "data/webext-implicit-id.xpi";
@@ -20,41 +18,26 @@ const IMPLICIT_ID_ID = "webext_implicit_id@tests.mozilla.org";
 // applications or browser_specific_settings, so its id comes
 // from its signature, which should be the ID constant defined below.
 add_task(async function test_implicit_id() {
-  // This test needs to read the xpi certificate which only works
-  // if signing is enabled.
-  ok(AddonSettings.ADDON_SIGNING, "Add-on signing is enabled");
-
   let addon = await promiseAddonByID(IMPLICIT_ID_ID);
   equal(addon, null, "Add-on is not installed");
 
-  let xpifile = do_get_file(IMPLICIT_ID_XPI);
-  await Promise.all([
-    promiseInstallAllFiles([xpifile]),
-    promiseWebExtensionStartup(),
-  ]);
+  await promiseInstallFile(do_get_file(IMPLICIT_ID_XPI));
 
   addon = await promiseAddonByID(IMPLICIT_ID_ID);
   notEqual(addon, null, "Add-on is installed");
 
-  addon.uninstall();
+  await addon.uninstall();
 });
 
 // We should also be able to install webext-implicit-id.xpi temporarily
 // and it should look just like the regular install (ie, the ID should
 // come from the signature)
 add_task(async function test_implicit_id_temp() {
-  // This test needs to read the xpi certificate which only works
-  // if signing is enabled.
-  ok(AddonSettings.ADDON_SIGNING, "Add-on signing is enabled");
-
   let addon = await promiseAddonByID(IMPLICIT_ID_ID);
   equal(addon, null, "Add-on is not installed");
 
   let xpifile = do_get_file(IMPLICIT_ID_XPI);
-  await Promise.all([
-    AddonManager.installTemporaryAddon(xpifile),
-    promiseWebExtensionStartup(),
-  ]);
+  await AddonManager.installTemporaryAddon(xpifile);
 
   addon = await promiseAddonByID(IMPLICIT_ID_ID);
   notEqual(addon, null, "Add-on is installed");
@@ -65,7 +48,7 @@ add_task(async function test_implicit_id_temp() {
         Services.io.newFileURI(xpifile).spec,
         "SourceURI of the add-on has the expected value");
 
-  addon.uninstall();
+  await addon.uninstall();
 });
 
 // We should be able to temporarily install an unsigned web extension
@@ -76,16 +59,13 @@ add_task(async function test_unsigned_no_id_temp_install() {
     name: "no ID",
     description: "extension without an ID",
     manifest_version: 2,
-    version: "1.0"
+    version: "1.0",
   };
 
   const addonDir = await promiseWriteWebManifestForExtension(manifest, gTmpD,
                                                 "the-addon-sub-dir");
   const testDate = new Date();
-  const [addon] = await Promise.all([
-    AddonManager.installTemporaryAddon(addonDir),
-    promiseWebExtensionStartup(),
-  ]);
+  const addon = await AddonManager.installTemporaryAddon(addonDir);
 
   ok(addon.id, "ID should have been auto-generated");
   ok(Math.abs(addon.installDate - testDate) < 10000, "addon has an expected installDate");
@@ -98,16 +78,13 @@ add_task(async function test_unsigned_no_id_temp_install() {
         "SourceURI of the add-on has the expected value");
 
   // Install the same directory again, as if re-installing or reloading.
-  const [secondAddon] = await Promise.all([
-    AddonManager.installTemporaryAddon(addonDir),
-    promiseWebExtensionStartup(),
-  ]);
+  const secondAddon = await AddonManager.installTemporaryAddon(addonDir);
   // The IDs should be the same.
   equal(secondAddon.id, addon.id, "Reinstalled add-on has the expected ID");
   equal(secondAddon.installDate.valueOf(), addon.installDate.valueOf(),
         "Reloaded add-on has the expected installDate.");
 
-  secondAddon.uninstall();
+  await secondAddon.uninstall();
   Services.obs.notifyObservers(addonDir, "flush-cache-entry");
   addonDir.remove(true);
   AddonTestUtils.useRealCertChecks = false;
@@ -121,7 +98,7 @@ add_task(async function test_multiple_no_id_extensions() {
     name: "no ID",
     description: "extension without an ID",
     manifest_version: 2,
-    version: "1.0"
+    version: "1.0",
   };
 
   let extension1 = ExtensionTestUtils.loadExtension({
@@ -160,9 +137,9 @@ add_task(async function test_bss_id() {
 
     browser_specific_settings: {
       gecko: {
-        id: ID
-      }
-    }
+        id: ID,
+      },
+    },
   };
 
   let addon = await promiseAddonByID(ID);
@@ -194,15 +171,15 @@ add_task(async function test_two_ids() {
 
     applications: {
       gecko: {
-        id: BAD_ID
-      }
+        id: BAD_ID,
+      },
     },
 
     browser_specific_settings: {
       gecko: {
-        id: GOOD_ID
-      }
-    }
+        id: GOOD_ID,
+      },
+    },
   };
 
   let extension = ExtensionTestUtils.loadExtension({
@@ -237,7 +214,7 @@ add_task(async function test_strict_min_max() {
       gecko: {
         id: addonId,
         strict_min_version: "1",
-        strict_max_version: "1"
+        strict_max_version: "1",
       },
     },
   };
@@ -263,7 +240,7 @@ add_task(async function test_strict_min_max() {
       gecko: {
         id: addonId,
         strict_min_version: "2",
-        strict_max_version: "2"
+        strict_max_version: "2",
       },
     },
   };
@@ -289,7 +266,7 @@ add_task(async function test_strict_min_max() {
       gecko: {
         id: addonId,
         strict_min_version: "2",
-        strict_max_version: "1"
+        strict_max_version: "1",
       },
     },
   };
@@ -314,7 +291,7 @@ add_task(async function test_strict_min_max() {
     applications: {
       gecko: {
         id: addonId,
-        strict_min_version: "2"
+        strict_min_version: "2",
       },
     },
   };
@@ -339,7 +316,7 @@ add_task(async function test_strict_min_max() {
     applications: {
       gecko: {
         id: addonId,
-        strict_max_version: "1"
+        strict_max_version: "1",
       },
     },
   };
@@ -365,7 +342,7 @@ add_task(async function test_strict_min_max() {
       gecko: {
         id: addonId,
         strict_min_version: "1",
-        strict_max_version: "2"
+        strict_max_version: "2",
       },
     },
   };
@@ -511,10 +488,7 @@ add_task(async function test_permissions_prompt() {
     return Promise.resolve();
   };
 
-  await Promise.all([
-    promiseCompleteInstall(install),
-    promiseWebExtensionStartup(),
-  ]);
+  await install.install();
 
   notEqual(perminfo, undefined, "Permission handler was invoked");
   equal(perminfo.existingAddon, null, "Permission info does not include an existing addon");
@@ -526,7 +500,7 @@ add_task(async function test_permissions_prompt() {
   let addon = await promiseAddonByID(perminfo.addon.id);
   notEqual(addon, null, "Extension was installed");
 
-  addon.uninstall();
+  await addon.uninstall();
   await OS.File.remove(xpi.path);
 });
 

@@ -10,6 +10,8 @@
 #include "mozilla/Types.h" // for decltype
 #include "mozilla/layers/SharedSurfacesChild.h"
 
+#include "base/process_util.h"
+
 #ifdef DEBUG
 /**
  * If defined, this makes SourceSurfaceSharedData::Finalize memory protect the
@@ -186,9 +188,9 @@ SourceSurfaceSharedData::ReallocHandle()
 #endif
 
   if (mMapCount > 0 && !mOldBuf) {
-    mOldBuf = Move(mBuf);
+    mOldBuf = std::move(mBuf);
   }
-  mBuf = Move(buf);
+  mBuf = std::move(buf);
   mClosed = false;
   mShared = false;
   return true;

@@ -45,3 +45,8 @@
 <!ENTITY  autologinproxy.tooltip        "如果选中此选项，当您已保存身份凭据时，将会自动验证身份。如果身份验证失败，仍将向您询问身份凭据。">
 <!ENTITY  socksRemoteDNS.label          "使用 SOCKS v5 时 DNS 经过代理">
 <!ENTITY  socksRemoteDNS.accesskey      "d">
+<!ENTITY  dnsOverHttps.label            "启用基于 HTTPS 的 DNS">
+<!ENTITY  dnsOverHttps.accesskey        "b">
+<!ENTITY  dnsOverHttpsUrl.label         "URL">
+<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
+<!ENTITY  dnsOverHttpsUrl.tooltip       "通过 HTTPS 解析 DNS 的 URL">

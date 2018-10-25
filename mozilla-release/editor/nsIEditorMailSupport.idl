@@ -6,7 +6,8 @@
 #include "nsISupports.idl"
 
 interface nsIArray;
-interface nsIDOMNode;
+
+webidl Node;
 
 [scriptable, builtinclass, uuid(fdf23301-4a94-11d3-9ce4-9960496c41bc)]
 
@@ -25,7 +26,7 @@ interface nsIEditorMailSupport : nsISupports
     * @param aQuotedText  The actual text to be quoted
     * @return             The node which was inserted
     */
-  nsIDOMNode insertAsQuotation(in AString aQuotedText);
+  Node insertAsQuotation(in AString aQuotedText);
 
   /**
    * Inserts a plaintext string at the current location,
@@ -39,15 +40,6 @@ interface nsIEditorMailSupport : nsISupports
    */
    void insertTextWithQuotations(in DOMString aStringToInsert);
 
-  /** Paste a string as quoted text,
-    * whose representation is dependant on the editor type,
-    * replacing the selected text (if any)
-    * @param aCitation    The "mid" URL of the source message
-    * @param aSelectionType Text or html?
-    */
-  void pasteAsCitedQuotation(in AString aCitation,
-                             in long aSelectionType);
-
   /** Insert a string as quoted text
     * (whose representation is dependant on the editor type),
     * replacing the selected text (if any),
@@ -57,21 +49,15 @@ interface nsIEditorMailSupport : nsISupports
     * @param aInsertHTML  Insert as html?  (vs plaintext)
     * @return             The node which was inserted
     */
-  nsIDOMNode insertAsCitedQuotation(in AString aQuotedText,
-                                    in AString aCitation,
-                                    in boolean aInsertHTML);
+  Node insertAsCitedQuotation(in AString aQuotedText,
+                              in AString aCitation,
+                              in boolean aInsertHTML);
 
   /**
    * Rewrap the selected part of the document, re-quoting if necessary.
    * @param aRespectNewlines  Try to maintain newlines in the original?
    */
   void rewrap(in boolean aRespectNewlines);
-
-  /**
-   * Strip any citations in the selected part of the document.
-   */
-  void stripCites();
-
 
   /**
    * Get a list of IMG and OBJECT tags in the current document.

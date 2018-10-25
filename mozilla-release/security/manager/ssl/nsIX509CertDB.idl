@@ -28,13 +28,6 @@ interface nsIOpenSignedAppFileCallback : nsISupports
                                  in nsIX509Cert aSignerCert);
 };
 
-[scriptable, function, uuid(d5f97827-622a-488f-be08-d850432ac8ec)]
-interface nsIVerifySignedDirectoryCallback : nsISupports
-{
-  void verifySignedDirectoryFinished(in nsresult rv,
-                                     in nsIX509Cert aSignerCert);
-};
-
 /**
  * Callback type for use with asyncVerifyCertAtTime.
  * If aPRErrorCode is PRErrorCodeSuccess (i.e. 0), aVerifiedChain represents the
@@ -177,13 +170,26 @@ interface nsIX509CertDB : nsISupports {
   void importCertsFromFile(in nsIFile aFile,
                            in unsigned long aType);
 
+  const uint32_t Success = 0;
+  const uint32_t ERROR_UNKNOWN = 1;
+  const uint32_t ERROR_PKCS12_NOSMARTCARD_EXPORT = 2;
+  const uint32_t ERROR_PKCS12_RESTORE_FAILED = 3;
+  const uint32_t ERROR_PKCS12_BACKUP_FAILED = 4;
+  const uint32_t ERROR_PKCS12_CERT_COLLISION = 5;
+  const uint32_t ERROR_BAD_PASSWORD = 6;
+  const uint32_t ERROR_DECODE_ERROR = 7;
+  const uint32_t ERROR_PKCS12_DUPLICATE_DATA = 8;
+
   /**
    *  Import a PKCS#12 file containing cert(s) and key(s) into the database.
    *
    *  @param aFile Identifies a file that contains the data to be imported.
+   *  @param password The password used to protect the file.
+   *  @return Success or the specific error code on failure.  The return
+   *          values are defined in this file.
    */
   [must_use]
-  void importPKCS12File(in nsIFile aFile);
+  uint32_t importPKCS12File(in nsIFile aFile, in AString aPassword);
 
   /**
    *  Export a set of certs and keys from the database to a PKCS#12 file.
@@ -192,11 +198,14 @@ interface nsIX509CertDB : nsISupports {
    *               exported.
    *  @param count The number of certificates to be exported.
    *  @param aCerts The array of all certificates to be exported.
+   *  @param password The password used to protect the file.
+   *  @return Success or the specific error code on failure
    */
   [must_use]
-  void exportPKCS12File(in nsIFile aFile,
-                        in unsigned long count,
-                        [array, size_is(count)] in nsIX509Cert aCerts);
+  uint32_t exportPKCS12File(in nsIFile aFile,
+                            in unsigned long count,
+                            [array, size_is(count)] in nsIX509Cert aCerts,
+                            in AString aPassword);
 
   /*
    *  Decode a raw data presentation and instantiate an object in memory.
@@ -257,23 +266,6 @@ interface nsIX509CertDB : nsISupports {
   void openSignedAppFileAsync(in AppTrustedRoot trustedRoot,
                               in nsIFile aJarFile,
                               in nsIOpenSignedAppFileCallback callback);
-
-  /**
-   *  Verifies the signature on a directory representing an unpacked signed
-   *  JAR file. To be considered valid, there must be exactly one signature
-   *  on the directory structure and that signature must have signed every
-   *  entry. Further, the signature must come from a certificate that
-   *  is trusted for code signing.
-   *
-   *  On success NS_OK and the trusted certificate that signed the
-   *  unpacked JAR are returned.
-   *
-   *  On failure, an error code is returned.
-   */
-  [must_use]
-  void verifySignedDirectoryAsync(in AppTrustedRoot trustedRoot,
-                                  in nsIFile aUnpackedDir,
-                                  in nsIVerifySignedDirectoryCallback callback);
 
   /*
    * Add a cert to a cert DB from a binary string.

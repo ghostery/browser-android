@@ -1,38 +1,5 @@
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-
-function is_hidden(element) {
-  var style = element.ownerGlobal.getComputedStyle(element);
-  if (style.display == "none")
-    return true;
-  if (style.visibility != "visible")
-    return true;
-  if (style.display == "-moz-popup")
-    return ["hiding", "closed"].includes(element.state);
-
-  // Hiding a parent element will hide all its children
-  if (element.parentNode != element.ownerDocument)
-    return is_hidden(element.parentNode);
-
-  return false;
-}
-
-function is_visible(element) {
-  var style = element.ownerGlobal.getComputedStyle(element);
-  if (style.display == "none")
-    return false;
-  if (style.visibility != "visible")
-    return false;
-  if (style.display == "-moz-popup" && element.state != "open")
-    return false;
-
-  // Hiding a parent element will hide all its children
-  if (element.parentNode != element.ownerDocument)
-    return is_visible(element.parentNode);
-
-  return true;
-}
-
 /**
  * Returns a Promise that resolves once a new tab has been opened in
  * a xul:tabbrowser.
@@ -162,11 +129,11 @@ async function assertMixedContentBlockingState(tabbrowser, states = {}) {
       // HTTP request, there should be no MCB classes for the identity box and the non secure icon
       // should always be visible regardless of MCB state.
       ok(classList.contains("unknownIdentity"), "unknownIdentity on HTTP page");
-      ok(is_hidden(connectionIcon), "connection icon should be hidden");
+      ok(BrowserTestUtils.is_hidden(connectionIcon), "connection icon should be hidden");
     } else {
       // HTTP request, there should be a broken padlock shown always.
       ok(classList.contains("notSecure"), "notSecure on HTTP page");
-      ok(!is_hidden(connectionIcon), "connection icon should be visible");
+      ok(!BrowserTestUtils.is_hidden(connectionIcon), "connection icon should be visible");
     }
 
     ok(!classList.contains("mixedActiveContent"), "No MCB icon on HTTP page");
@@ -184,7 +151,7 @@ async function assertMixedContentBlockingState(tabbrowser, states = {}) {
     is(classList.contains("mixedDisplayContentLoadedActiveBlocked"), passiveLoaded && activeBlocked,
        "identityBox has expected class for passiveLoaded && activeBlocked");
 
-    ok(!is_hidden(connectionIcon), "connection icon should be visible");
+    ok(!BrowserTestUtils.is_hidden(connectionIcon), "connection icon should be visible");
     if (activeLoaded) {
       is(connectionIconImage, "url(\"chrome://browser/skin/connection-mixed-active-loaded.svg\")",
         "Using active loaded icon");
@@ -275,8 +242,8 @@ async function assertMixedContentBlockingState(tabbrowser, states = {}) {
     doc.getElementById("identity-popup-security-expander").click();
     await promiseViewShown;
     is(Array.filter(doc.getElementById("identity-popup-securityView")
-                       .querySelectorAll("[observes=identity-popup-mcb-learn-more]"),
-                    element => !is_hidden(element)).length, 1,
+                       .querySelectorAll(".identity-popup-mcb-learn-more"),
+                    element => !BrowserTestUtils.is_hidden(element)).length, 1,
        "The 'Learn more' link should be visible once.");
   }
 
@@ -304,7 +271,7 @@ async function loadBadCertPage(url) {
             resolve();
           });
         }
-      }
+      },
     };
 
     Services.obs.addObserver(certExceptionDialogObserver,
@@ -318,31 +285,24 @@ async function loadBadCertPage(url) {
   await ContentTask.spawn(gBrowser.selectedBrowser, null, async function() {
     content.document.getElementById("exceptionDialogButton").click();
   });
-  await exceptionDialogResolved;
+  if (!Services.prefs.getBoolPref("browser.security.newcerterrorpage.enabled", false)) {
+    await exceptionDialogResolved;
+  }
   await BrowserTestUtils.browserLoaded(gBrowser.selectedBrowser);
 }
 
 // Utility function to get a handle on the certificate exception dialog.
 // Modified from toolkit/components/passwordmgr/test/prompt_common.js
 function getCertExceptionDialog(aLocation) {
-  let enumerator = Services.wm.getXULWindowEnumerator(null);
-
-  while (enumerator.hasMoreElements()) {
-    let win = enumerator.getNext();
-    let windowDocShell = win.QueryInterface(Ci.nsIXULWindow).docShell;
+  for (let win of Services.wm.getXULWindowEnumerator(null)) {
+    let windowDocShell = win.docShell;
 
     let containedDocShells = windowDocShell.getDocShellEnumerator(
                                       Ci.nsIDocShellTreeItem.typeChrome,
                                       Ci.nsIDocShell.ENUMERATE_FORWARDS);
-    while (containedDocShells.hasMoreElements()) {
-      // Get the corresponding document for this docshell
-      let childDocShell = containedDocShells.getNext();
-      let childDoc = childDocShell.QueryInterface(Ci.nsIDocShell)
-                                  .contentViewer
-                                  .DOMDocument;
-
-      if (childDoc.location.href == aLocation) {
-        return childDoc;
+    for (let {domWindow} of containedDocShells) {
+      if (domWindow.location.href == aLocation) {
+        return domWindow.document;
       }
     }
   }

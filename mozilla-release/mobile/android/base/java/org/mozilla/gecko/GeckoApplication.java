@@ -16,12 +16,15 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -41,6 +44,7 @@ import org.mozilla.gecko.icons.Icons;
 import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.mdns.MulticastDNSManager;
 import org.mozilla.gecko.media.AudioFocusAgent;
+import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationClient;
 import org.mozilla.gecko.notifications.NotificationHelper;
 import org.mozilla.gecko.permissions.Permissions;
@@ -57,6 +61,8 @@ import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.PRNGFixes;
 import org.mozilla.gecko.util.ShortcutUtils;
 import org.mozilla.gecko.util.ThreadUtils;
+import org.mozilla.geckoview.GeckoRuntime;
+import org.mozilla.geckoview.GeckoRuntimeSettings;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,6 +75,7 @@ import java.util.UUID;
 public class GeckoApplication extends Application
                               implements HapticFeedbackDelegate {
     private static final String LOG_TAG = "GeckoApplication";
+    public static final String ACTION_DEBUG = "org.mozilla.gecko.DEBUG";
     private static final String MEDIA_DECODING_PROCESS_CRASH = "MEDIA_DECODING_PROCESS_CRASH";
 
     private boolean mInBackground;
@@ -117,7 +124,7 @@ public class GeckoApplication extends Application
                            "startup (JavaScript) caches.");
             return new String[] { "-purgecaches" };
         }
-        return null;
+        return new String[0];
     }
 
     public static String getDefaultUAString() {
@@ -214,6 +221,51 @@ public class GeckoApplication extends Application
         mInBackground = false;
     }
 
+    private static GeckoRuntime sGeckoRuntime;
+    public static GeckoRuntime getRuntime() {
+        return sGeckoRuntime;
+    }
+
+    public static GeckoRuntime ensureRuntime(@NonNull Context context) {
+        if (sGeckoRuntime != null) {
+            return sGeckoRuntime;
+        }
+
+        return createRuntime(context, null);
+    }
+
+    private static GeckoRuntimeSettings.Builder createSettingsBuilder() {
+        return new GeckoRuntimeSettings.Builder()
+                .javaCrashReportingEnabled(true)
+                .nativeCrashReportingEnabled(true)
+                .crashReportingJobId(JobIdsConstants.getIdForCrashReporter())
+                .arguments(getDefaultGeckoArgs());
+    }
+
+    public static GeckoRuntime createRuntime(@NonNull Context context,
+                                             @Nullable SafeIntent intent) {
+        if (sGeckoRuntime != null) {
+            throw new IllegalStateException("Already have a GeckoRuntime!");
+        }
+
+        if (context == null) {
+            throw new IllegalArgumentException("Context must not be null");
+        }
+
+        GeckoRuntimeSettings.Builder builder = createSettingsBuilder();
+        if (intent != null) {
+            builder.pauseForDebugger(ACTION_DEBUG.equals(intent.getAction()));
+
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                builder.extras(extras);
+            }
+        }
+
+        sGeckoRuntime = GeckoRuntime.create(context, builder.build());
+        return sGeckoRuntime;
+    }
+
     @Override
     public void onCreate() {
         Log.i(LOG_TAG, "zerdatime " + SystemClock.elapsedRealtime() +
@@ -286,6 +338,7 @@ public class GeckoApplication extends Application
         FilePicker.init(context);
         DownloadsIntegration.init();
         HomePanelsManager.getInstance().init(context);
+        AddonUICache.getInstance().init();
 
         GlobalPageMetadata.getInstance().init();
 
@@ -331,6 +384,19 @@ public class GeckoApplication extends Application
         /* Cliqz end */
 
         super.onCreate();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        // API >= 21 natively supports loading multiple DEX files from APK files.
+        // Needs just 'multiDexEnabled true' inside the gradle build configuration.
+        final boolean isMultidexLibNeeded = BuildConfig.FLAVOR_minApi.equals("noMinApi");
+
+        if (isMultidexLibNeeded) {
+            MultiDex.install(this);
+        }
     }
 
     /**
@@ -624,15 +690,27 @@ public class GeckoApplication extends Application
     }
 
     public static void createBrowserShortcut(final String title, final String url) {
-      Icons.with(GeckoAppShell.getApplicationContext())
+        createBrowserShortcut(title, url, true);
+    }
+
+    private static void createBrowserShortcut(final String title, final String url, final boolean skipMemoryCache) {
+        // Try to fetch the icon from the disk cache. The memory cache is
+        // initially skipped to avoid the use of downsized icons.
+        Icons.with(GeckoAppShell.getApplicationContext())
               .pageUrl(url)
               .skipNetwork()
-              .skipMemory()
+              .skipMemoryIf(skipMemoryCache)
               .forLauncherIcon()
               .build()
               .execute(new IconCallback() {
                   @Override
                   public void onIconResponse(final IconResponse response) {
+                      if (response.isGenerated() && skipMemoryCache) {
+                          // The icon was not found in the disk cache.
+                          // Fall back to the memory cache.
+                          createBrowserShortcut(title, url, false);
+                          return;
+                      }
                       createShortcutWithIcon(title, url, response.getBitmap());
                   }
               });

@@ -6,17 +6,19 @@
 
 #include "jit/VMFunctions.h"
 
+#include "builtin/Promise.h"
 #include "builtin/TypedObject.h"
 #include "frontend/BytecodeCompiler.h"
 #include "jit/arm/Simulator-arm.h"
 #include "jit/BaselineIC.h"
-#include "jit/JitCompartment.h"
 #include "jit/JitFrames.h"
+#include "jit/JitRealm.h"
 #include "jit/mips32/Simulator-mips32.h"
 #include "jit/mips64/Simulator-mips64.h"
 #include "vm/ArrayObject.h"
 #include "vm/Debugger.h"
 #include "vm/Interpreter.h"
+#include "vm/SelfHosting.h"
 #include "vm/TraceLogging.h"
 
 #include "jit/BaselineFrame-inl.h"
@@ -335,6 +337,12 @@ StringsEqual(JSContext* cx, HandleString lhs, HandleString rhs, bool* res)
 template bool StringsEqual<true>(JSContext* cx, HandleString lhs, HandleString rhs, bool* res);
 template bool StringsEqual<false>(JSContext* cx, HandleString lhs, HandleString rhs, bool* res);
 
+typedef bool (*StringCompareFn)(JSContext*, HandleString, HandleString, bool*);
+const VMFunction StringsEqualInfo =
+    FunctionInfo<StringCompareFn>(jit::StringsEqual<true>, "StringsEqual");
+const VMFunction StringsNotEqualInfo =
+    FunctionInfo<StringCompareFn>(jit::StringsEqual<false>, "StringsEqual");
+
 bool StringSplitHelper(JSContext* cx, HandleString str, HandleString sep,
                        HandleObjectGroup group, uint32_t limit,
                        MutableHandleValue result)
@@ -347,6 +355,10 @@ bool StringSplitHelper(JSContext* cx, HandleString str, HandleString sep,
     return true;
 }
 
+typedef bool (*StringSplitHelperFn)(JSContext*, HandleString, HandleString, HandleObjectGroup,
+                                    uint32_t limit, MutableHandleValue);
+const VMFunction StringSplitHelperInfo =
+    FunctionInfo<StringSplitHelperFn>(StringSplitHelper, "StringSplitHelper");
 
 bool
 ArrayPopDense(JSContext* cx, HandleObject obj, MutableHandleValue rval)
@@ -385,7 +397,7 @@ ArrayPushDense(JSContext* cx, HandleArrayObject arr, HandleValue v, uint32_t* le
     // IonScript. JSJitFrameIter::ionScript works when the script is invalidated
     // so we use that instead.
     JSJitFrameIter frame(cx->activation()->asJit());
-    MOZ_ASSERT(frame.type() == JitFrame_Exit);
+    MOZ_ASSERT(frame.type() == FrameType::Exit);
     ++frame;
     IonScript* ionScript = frame.ionScript();
 
@@ -472,6 +484,10 @@ SetArrayLength(JSContext* cx, HandleObject obj, HandleValue value, bool strict)
 
     return result.checkStrictErrorOrWarning(cx, obj, id, strict);
 }
+
+typedef bool (*SetArrayLengthFn)(JSContext*, HandleObject, HandleValue, bool);
+const VMFunction SetArrayLengthInfo =
+    FunctionInfo<SetArrayLengthFn>(SetArrayLength, "SetArrayLength");
 
 bool
 CharCodeAt(JSContext* cx, HandleString str, int32_t index, uint32_t* code)
@@ -640,8 +656,11 @@ CreateThis(JSContext* cx, HandleObject callee, HandleObject newTarget, MutableHa
         RootedFunction fun(cx, &callee->as<JSFunction>());
         if (fun->isInterpreted() && fun->isConstructor()) {
             JSScript* script = JSFunction::getOrCreateScript(cx, fun);
+            if (!script)
+                return false;
+            AutoRealm ar(cx, script);
             AutoKeepTypeScripts keepTypes(cx);
-            if (!script || !script->ensureHasTypes(cx, keepTypes))
+            if (!script->ensureHasTypes(cx, keepTypes))
                 return false;
             if (!js::CreateThis(cx, fun, script, newTarget, GenericObject, rval))
                 return false;
@@ -688,11 +707,11 @@ GetDynamicName(JSContext* cx, JSObject* envChain, JSString* str, Value* vp)
 }
 
 void
-PostWriteBarrier(JSRuntime* rt, JSObject* obj)
+PostWriteBarrier(JSRuntime* rt, js::gc::Cell* cell)
 {
     AutoUnsafeCallWithABI unsafe;
-    MOZ_ASSERT(!IsInsideNursery(obj));
-    rt->gc.storeBuffer().putWholeCell(obj);
+    MOZ_ASSERT(!IsInsideNursery(cell));
+    rt->gc.storeBuffer().putWholeCell(cell);
 }
 
 static const size_t MAX_WHOLE_CELL_BUFFER_SIZE = 4096;
@@ -743,12 +762,13 @@ template void
 PostWriteElementBarrier<IndexInBounds::Maybe>(JSRuntime* rt, JSObject* obj, int32_t index);
 
 void
-PostGlobalWriteBarrier(JSRuntime* rt, JSObject* obj)
+PostGlobalWriteBarrier(JSRuntime* rt, GlobalObject* obj)
 {
-    MOZ_ASSERT(obj->is<GlobalObject>());
-    if (!obj->compartment()->globalWriteBarriered) {
+    MOZ_ASSERT(obj->JSObject::is<GlobalObject>());
+
+    if (!obj->realm()->globalWriteBarriered) {
         PostWriteBarrier(rt, obj);
-        obj->compartment()->globalWriteBarriered = 1;
+        obj->realm()->globalWriteBarriered = 1;
     }
 }
 
@@ -761,7 +781,7 @@ GetIndexFromString(JSString* str)
     if (!str->isFlat())
         return -1;
 
-    uint32_t index;
+    uint32_t index = UINT32_MAX;
     if (!str->asFlat().isIndex(&index) || index > INT32_MAX)
         return -1;
 
@@ -777,7 +797,7 @@ WrapObjectPure(JSContext* cx, JSObject* obj)
     MOZ_ASSERT(obj);
     MOZ_ASSERT(cx->compartment() != obj->compartment());
 
-    // From: JSCompartment::getNonWrapperObjectForCurrentCompartment
+    // From: Compartment::getNonWrapperObjectForCurrentCompartment
     // Note that if the object is same-compartment, but has been wrapped into a
     // different compartment, we need to unwrap it and return the bare same-
     // compartment object. Note again that windows are always wrapped by a
@@ -926,31 +946,30 @@ InterpretResume(JSContext* cx, HandleObject obj, HandleValue val, HandleProperty
 {
     MOZ_ASSERT(obj->is<GeneratorObject>());
 
-    RootedValue selfHostedFun(cx);
-    if (!GlobalObject::getIntrinsicValue(cx, cx->global(), cx->names().InterpretGeneratorResume,
-                                         &selfHostedFun))
-    {
-        return false;
-    }
-
-    MOZ_ASSERT(selfHostedFun.toObject().is<JSFunction>());
-
     FixedInvokeArgs<3> args(cx);
 
     args[0].setObject(*obj);
     args[1].set(val);
     args[2].setString(kind);
 
-    return Call(cx, selfHostedFun, UndefinedHandleValue, args, rval);
+    return CallSelfHostedFunction(cx, cx->names().InterpretGeneratorResume, UndefinedHandleValue,
+                                  args, rval);
 }
 
 bool
-DebugAfterYield(JSContext* cx, BaselineFrame* frame)
+DebugAfterYield(JSContext* cx, BaselineFrame* frame, jsbytecode* pc, bool* mustReturn)
 {
+    *mustReturn = false;
+
     // The BaselineFrame has just been constructed by JSOP_RESUME in the
     // caller. We need to set its debuggee flag as necessary.
-    if (frame->script()->isDebuggee())
+    //
+    // If a breakpoint is set on JSOP_DEBUGAFTERYIELD, or stepping is enabled,
+    // we may already have done this work. Don't fire onEnterFrame again.
+    if (frame->script()->isDebuggee() && !frame->isDebuggee()) {
         frame->setIsDebuggee();
+        return DebugPrologue(cx, frame, pc, mustReturn);
+    }
     return true;
 }
 
@@ -963,9 +982,19 @@ GeneratorThrowOrReturn(JSContext* cx, BaselineFrame* frame, Handle<GeneratorObje
     // the exception handler where we will clear the pc.
     JSScript* script = frame->script();
     uint32_t offset = script->yieldAndAwaitOffsets()[genObj->yieldAndAwaitIndex()];
-    frame->setOverridePc(script->offsetToPC(offset));
+    jsbytecode* pc = script->offsetToPC(offset);
+    frame->setOverridePc(pc);
 
-    MOZ_ALWAYS_TRUE(DebugAfterYield(cx, frame));
+    // In the interpreter, GeneratorObject::resume marks the generator as running,
+    // so we do the same.
+    genObj->setRunning();
+
+    bool mustReturn = false;
+    if (!DebugAfterYield(cx, frame, pc, &mustReturn))
+        return false;
+    if (mustReturn)
+        resumeKind = GeneratorObject::RETURN;
+
     MOZ_ALWAYS_FALSE(js::GeneratorThrowOrReturn(cx, frame, genObj, arg, resumeKind));
     return false;
 }
@@ -1075,11 +1104,15 @@ HandleDebugTrap(JSContext* cx, BaselineFrame* frame, uint8_t* retAddr, bool* mus
     jsbytecode* pc = script->baselineScript()->icEntryFromReturnAddress(retAddr).pc(script);
 
     if (*pc == JSOP_DEBUGAFTERYIELD) {
-        // JSOP_DEBUGAFTERYIELD will set the frame's debuggee flag, but if we
-        // set a breakpoint there we have to do it now.
+        // JSOP_DEBUGAFTERYIELD will set the frame's debuggee flag and call the
+        // onEnterFrame handler, but if we set a breakpoint there we have to do
+        // it now.
         MOZ_ASSERT(!frame->isDebuggee());
-        if (!DebugAfterYield(cx, frame))
+
+        if (!DebugAfterYield(cx, frame, pc, mustReturn))
             return false;
+        if (*mustReturn)
+            return true;
     }
 
     MOZ_ASSERT(frame->isDebuggee());
@@ -1143,7 +1176,7 @@ bool
 GlobalHasLiveOnDebuggerStatement(JSContext* cx)
 {
     AutoUnsafeCallWithABI unsafe;
-    return cx->compartment()->isDebuggee() &&
+    return cx->realm()->isDebuggee() &&
            Debugger::hasLiveHook(cx->global(), Debugger::OnDebuggerStatement);
 }
 
@@ -1198,7 +1231,7 @@ bool
 DebugLeaveLexicalEnv(JSContext* cx, BaselineFrame* frame, jsbytecode* pc)
 {
     MOZ_ASSERT(frame->script()->baselineScript()->hasDebugInstrumentation());
-    if (cx->compartment()->isDebuggee())
+    if (cx->realm()->isDebuggee())
         DebugEnvironments::onPopLexical(cx, frame, pc);
     return true;
 }
@@ -1266,7 +1299,7 @@ RecompileImpl(JSContext* cx, bool force)
     JitActivationIterator activations(cx);
     JSJitFrameIter frame(activations->asJit());
 
-    MOZ_ASSERT(frame.type() == JitFrame_Exit);
+    MOZ_ASSERT(frame.type() == FrameType::Exit);
     ++frame;
 
     RootedScript script(cx, frame.script());
@@ -1478,25 +1511,6 @@ ThrowRuntimeLexicalError(JSContext* cx, unsigned errorNumber)
 }
 
 bool
-ThrowReadOnlyError(JSContext* cx, HandleObject obj, int32_t index)
-{
-    // We have to throw different errors depending on whether |index| is past
-    // the array length, etc. It's simpler to just call SetProperty to ensure
-    // we match the interpreter.
-
-    RootedValue objVal(cx, ObjectValue(*obj));
-    RootedValue indexVal(cx, Int32Value(index));
-    RootedId id(cx);
-    if (!ValueToId<CanGC>(cx, indexVal, &id))
-        return false;
-
-    ObjectOpResult result;
-    MOZ_ALWAYS_FALSE(SetProperty(cx, obj, id, UndefinedHandleValue, objVal, result) &&
-                     result.checkStrictErrorOrWarning(cx, obj, id, /* strict = */ true));
-    return false;
-}
-
-bool
 ThrowBadDerivedReturn(JSContext* cx, HandleValue v)
 {
     ReportValueError(cx, JSMSG_BAD_DERIVED_RETURN, JSDVG_IGNORE_STACK, v, nullptr);
@@ -1534,6 +1548,8 @@ bool
 CallNativeGetter(JSContext* cx, HandleFunction callee, HandleObject obj,
                  MutableHandleValue result)
 {
+    AutoRealm ar(cx, callee);
+
     MOZ_ASSERT(callee->isNative());
     JSNative natfun = callee->native();
 
@@ -1551,6 +1567,8 @@ CallNativeGetter(JSContext* cx, HandleFunction callee, HandleObject obj,
 bool
 CallNativeSetter(JSContext* cx, HandleFunction callee, HandleObject obj, HandleValue rhs)
 {
+    AutoRealm ar(cx, callee);
+
     MOZ_ASSERT(callee->isNative());
     JSNative natfun = callee->native();
 
@@ -1904,6 +1922,103 @@ typedef bool (*SetObjectElementFn)(JSContext*, HandleObject, HandleValue,
                                    HandleValue, HandleValue, bool);
 const VMFunction SetObjectElementInfo =
     FunctionInfo<SetObjectElementFn>(js::SetObjectElement, "SetObjectElement");
+
+
+typedef JSString* (*ConcatStringsFn)(JSContext*, HandleString, HandleString);
+const VMFunction ConcatStringsInfo =
+    FunctionInfo<ConcatStringsFn>(ConcatStrings<CanGC>, "ConcatStrings");
+
+static JSString*
+ConvertObjectToStringForConcat(JSContext* cx, HandleValue obj)
+{
+    MOZ_ASSERT(obj.isObject());
+    RootedValue rootedObj(cx, obj);
+    if (!ToPrimitive(cx, &rootedObj))
+        return nullptr;
+    return ToString<CanGC>(cx, rootedObj);
+}
+
+bool
+DoConcatStringObject(JSContext* cx, HandleValue lhs, HandleValue rhs,
+                     MutableHandleValue res)
+{
+    JSString* lstr = nullptr;
+    JSString* rstr = nullptr;
+
+    if (lhs.isString()) {
+        // Convert rhs first.
+        MOZ_ASSERT(lhs.isString() && rhs.isObject());
+        rstr = ConvertObjectToStringForConcat(cx, rhs);
+        if (!rstr)
+            return false;
+
+        // lhs is already string.
+        lstr = lhs.toString();
+    } else {
+        MOZ_ASSERT(rhs.isString() && lhs.isObject());
+        // Convert lhs first.
+        lstr = ConvertObjectToStringForConcat(cx, lhs);
+        if (!lstr)
+            return false;
+
+        // rhs is already string.
+        rstr = rhs.toString();
+    }
+
+    JSString* str = ConcatStrings<NoGC>(cx, lstr, rstr);
+    if (!str) {
+        RootedString nlstr(cx, lstr), nrstr(cx, rstr);
+        str = ConcatStrings<CanGC>(cx, nlstr, nrstr);
+        if (!str)
+            return false;
+    }
+
+    // Technically, we need to call TypeScript::MonitorString for this PC, however
+    // it was called when this stub was attached so it's OK.
+
+    res.setString(str);
+    return true;
+}
+
+typedef bool (*DoConcatStringObjectFn)(JSContext*, HandleValue, HandleValue,
+                                       MutableHandleValue);
+const VMFunction DoConcatStringObjectInfo =
+    FunctionInfo<DoConcatStringObjectFn>(DoConcatStringObject, "DoConcatStringObject", TailCall, PopValues(2));
+
+MOZ_MUST_USE bool
+TrySkipAwait(JSContext* cx, HandleValue val, MutableHandleValue resolved)
+{
+    bool canSkip;
+    if (!TrySkipAwait(cx, val, &canSkip, resolved))
+        return false;
+
+    if (!canSkip)
+        resolved.setMagic(JS_CANNOT_SKIP_AWAIT);
+
+    return true;
+}
+
+typedef bool (*ProxyGetPropertyFn)(JSContext*, HandleObject, HandleId, MutableHandleValue);
+const VMFunction ProxyGetPropertyInfo =
+    FunctionInfo<ProxyGetPropertyFn>(ProxyGetProperty, "ProxyGetProperty");
+
+typedef bool (*ProxyGetPropertyByValueFn)(JSContext*, HandleObject, HandleValue, MutableHandleValue);
+const VMFunction ProxyGetPropertyByValueInfo =
+    FunctionInfo<ProxyGetPropertyByValueFn>(ProxyGetPropertyByValue, "ProxyGetPropertyByValue");
+
+typedef bool (*ProxySetPropertyFn)(JSContext*, HandleObject, HandleId, HandleValue, bool);
+const VMFunction ProxySetPropertyInfo =
+    FunctionInfo<ProxySetPropertyFn>(ProxySetProperty, "ProxySetProperty");
+
+typedef bool (*ProxySetPropertyByValueFn)(JSContext*, HandleObject, HandleValue, HandleValue, bool);
+const VMFunction ProxySetPropertyByValueInfo =
+    FunctionInfo<ProxySetPropertyByValueFn>(ProxySetPropertyByValue, "ProxySetPropertyByValue");
+
+typedef bool (*ProxyHasFn)(JSContext*, HandleObject, HandleValue, MutableHandleValue);
+const VMFunction ProxyHasInfo = FunctionInfo<ProxyHasFn>(ProxyHas, "ProxyHas");
+
+typedef bool (*ProxyHasOwnFn)(JSContext*, HandleObject, HandleValue, MutableHandleValue);
+const VMFunction ProxyHasOwnInfo = FunctionInfo<ProxyHasOwnFn>(ProxyHasOwn, "ProxyHasOwn");
 
 } // namespace jit
 } // namespace js

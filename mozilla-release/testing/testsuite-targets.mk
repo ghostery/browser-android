@@ -113,16 +113,17 @@ stage-all: stage-cppunittests
 endif
 
 TEST_PKGS_ZIP := \
+  $(NULL)
+
+TEST_PKGS_TARGZ := \
   common \
   cppunittest \
   mochitest \
   reftest \
   talos \
+  raptor \
   awsy \
   xpcshell \
-  $(NULL)
-
-TEST_PKGS_TARGZ := \
   web-platform \
   $(NULL)
 

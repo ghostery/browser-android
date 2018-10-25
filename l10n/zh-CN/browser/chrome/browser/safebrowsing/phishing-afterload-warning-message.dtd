@@ -20,7 +20,7 @@
 
 
 <!ENTITY safeb.blocked.malwarePage.title2 "访问此网站可能损害您的计算机">
-<!ENTITY safeb.blocked.malwarePage.shortDesc2 "由于此页面可能试图安装会窃取或删除您电脑上个人资料的恶意软件，&brandShortName; 已进行拦截。">
+<!ENTITY safeb.blocked.malwarePage.shortDesc2 "此页面可能试图安装会窃取或删除您电脑上个人资料的恶意软件，&brandShortName; 已拦截。">
 
 <!-- Localization note (safeb.blocked.malwarePage.errorDesc.override, safeb.blocked.malwarePage.errorDesc.noOverride, safeb.blocked.malwarePage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
 
@@ -32,7 +32,7 @@
 
 
 <!ENTITY safeb.blocked.unwantedPage.title2 "网站可能含有有害程序">
-<!ENTITY safeb.blocked.unwantedPage.shortDesc2 "由于此页面可能试图诱导您安装损害上网体验的程序（例如说修改您的浏览器主页、展示扰人的广告），&brandShortName; 已进行拦截。">
+<!ENTITY safeb.blocked.unwantedPage.shortDesc2 "此页面可能试图诱导您安装损害上网体验的程序（例如说修改您的浏览器主页、展示扰人的广告），&brandShortName; 已拦截。">
 
 <!-- Localization note (safeb.blocked.unwantedPage.errorDesc.override, safeb.blocked.unwantedPage.errorDesc.noOverride, safeb.blocked.unwantedPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
 
@@ -44,7 +44,7 @@
 
 
 <!ENTITY safeb.blocked.phishingPage.title3 "即将进入的是诈骗网站">
-<!ENTITY safeb.blocked.phishingPage.shortDesc3 "由于此页面可能试图诱导您安装恶意软件，透露密码、信用卡号等个人信息，或诱导您做其他对您十分危险的行为，&brandShortName; 已进行拦截。">
+<!ENTITY safeb.blocked.phishingPage.shortDesc3 "此页面可能试图诱导您安装恶意软件，透露密码、信用卡号等个人信息，或诱导您做其他风险行为，&brandShortName; 已拦截。">
 
 <!-- Localization note (safeb.blocked.phishingPage.errorDesc.override, safeb.blocked.phishingPage.errorDesc.noOverride, safeb.blocked.phishingPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
 <!ENTITY safeb.blocked.phishingPage.errorDesc.override "<span id='phishing_sitename'/> 被<a id='error_desc_link'>举报为诈骗网站</a>。您可以<a id='report_detection'>反映侦测有误</a>，或<a id='ignore_warning_link'>忽略此风险</a>并继续前往这个不安全的网站。">
@@ -58,7 +58,7 @@
 <!ENTITY safeb.blocked.harmfulPage.shortDesc2 "&brandShortName; 已拦截此页面，其可能会尝试安装危险的应用，从而窃取或删除您的信息（例如照片、密码、邮件、金融权证等）。">
 
 <!-- Localization note (safeb.blocked.harmfulPage.errorDesc.override, safeb.blocked.harmfulPage.errorDesc.noOverride, safeb.blocked.harmfulPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
-<!ENTITY safeb.blocked.harmfulPage.errorDesc.override "<span id='harmful_sitename'/> 被<a id='error_desc_link'>举报含有潜在有害的软件</a>。您可以<a id='ignore_warning_link'>忽略此风险</a>并继续前往这个不安全的网站。">
+<!ENTITY safeb.blocked.harmfulPage.errorDesc.override "<span id='harmful_sitename'/> 被<a id='error_desc_link'>举报含有风险软件</a>。您可以<a id='ignore_warning_link'>忽略此风险</a>并继续前往这个不安全的网站。">
 
 <!ENTITY safeb.blocked.harmfulPage.errorDesc.noOverride "<span id='harmful_sitename'/> 被<a id='error_desc_link'>举报含有潜在有害的软件</a>。">
 

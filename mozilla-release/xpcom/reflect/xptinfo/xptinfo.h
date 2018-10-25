@@ -16,7 +16,10 @@
 #include <stdint.h>
 #include "nsID.h"
 #include "mozilla/Assertions.h"
+#include "jsapi.h"
 #include "js/Value.h"
+#include "nsString.h"
+#include "nsTArray.h"
 
 // Forward Declarations
 namespace mozilla {
@@ -29,6 +32,7 @@ struct nsXPTInterfaceInfo;
 struct nsXPTType;
 struct nsXPTParamInfo;
 struct nsXPTMethodInfo;
+struct nsXPTConstantInfo;
 struct nsXPTDOMObjectInfo;
 
 // Internal helper methods.
@@ -39,8 +43,12 @@ inline const nsXPTInterfaceInfo* GetInterface(uint16_t aIndex);
 inline const nsXPTType& GetType(uint16_t aIndex);
 inline const nsXPTParamInfo& GetParam(uint16_t aIndex);
 inline const nsXPTMethodInfo& GetMethod(uint16_t aIndex);
+inline const nsXPTConstantInfo& GetConstant(uint16_t aIndex);
 inline const nsXPTDOMObjectInfo& GetDOMObjectInfo(uint16_t aIndex);
 inline const char* GetString(uint32_t aIndex);
+
+const nsXPTInterfaceInfo* InterfaceByIID(const nsIID& aIID);
+const nsXPTInterfaceInfo* InterfaceByName(const char* aName);
 
 extern const uint16_t sInterfacesSize;
 
@@ -55,8 +63,12 @@ extern const uint16_t sInterfacesSize;
 struct nsXPTInterfaceInfo
 {
   // High efficiency getters for Interfaces based on perfect hashes.
-  static const nsXPTInterfaceInfo* ByIID(const nsIID& aIID);
-  static const nsXPTInterfaceInfo* ByName(const char* aName);
+  static const nsXPTInterfaceInfo* ByIID(const nsIID& aIID) {
+    return xpt::detail::InterfaceByIID(aIID);
+  }
+  static const nsXPTInterfaceInfo* ByName(const char* aName) {
+    return xpt::detail::InterfaceByName(aName);
+  }
 
   // These are only needed for Components_interfaces's enumerator.
   static const nsXPTInterfaceInfo* ByIndex(uint16_t aIndex) {
@@ -67,7 +79,7 @@ struct nsXPTInterfaceInfo
 
 
   // Interface flag getters
-  bool IsScriptable() const { return true; } // XXX remove (backcompat)
+  bool IsScriptable() const { return true; } // XXX remove (bug 1480245)
   bool IsFunction() const { return mFunction; }
   bool IsBuiltinClass() const { return mBuiltinClass; }
   bool IsMainProcessScriptableOnly() const { return mMainProcessScriptableOnly; }
@@ -83,18 +95,16 @@ struct nsXPTInterfaceInfo
   // Do we have an ancestor interface with the given IID?
   bool HasAncestor(const nsIID& aIID) const;
 
-  // Constant Getters and Setters.
-  uint16_t ConstantCount() const;
-  const char* Constant(uint16_t aIndex, JS::MutableHandleValue aConst) const;
-
-  // Method Getters and Setters.
+  // Get methods & constants
+  uint16_t ConstantCount() const { return mNumConsts; }
+  const nsXPTConstantInfo& Constant(uint16_t aIndex) const;
   uint16_t MethodCount() const { return mNumMethods; }
   const nsXPTMethodInfo& Method(uint16_t aIndex) const;
 
 
-  //////////////////////////////////////////////
-  // nsIInterfaceInfo backwards compatibility //
-  //////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
+  // nsIInterfaceInfo backwards compatibility (bug 1480245) //
+  ////////////////////////////////////////////////////////////
 
   nsresult GetName(char** aName) const;
   nsresult IsScriptable(bool* aRes) const;
@@ -106,28 +116,14 @@ struct nsXPTInterfaceInfo
   nsresult GetConstant(uint16_t aIndex,
                        JS::MutableHandleValue constant,
                        char** aName) const;
-  nsresult GetTypeForParam(uint16_t aMethodIndex, const nsXPTParamInfo* aParam,
-                           uint16_t aDimension, nsXPTType* aRetval) const;
-  nsresult GetSizeIsArgNumberForParam(uint16_t aMethodIndex,
-                                      const nsXPTParamInfo* aParam,
-                                      uint16_t aDimension,
-                                      uint8_t* aRetval) const;
-  nsresult GetInterfaceIsArgNumberForParam(uint16_t aMethodIndex,
-                                           const nsXPTParamInfo* aParam,
-                                           uint8_t* aRetval) const;
   nsresult IsIID(const nsIID* aIID, bool* aIs) const;
   nsresult GetNameShared(const char** aName) const;
   nsresult GetIIDShared(const nsIID** aIID) const;
   nsresult IsFunction(bool* aRetval) const;
   nsresult HasAncestor(const nsIID* aIID, bool* aRetval) const;
-  nsresult GetIIDForParamNoAlloc(uint16_t aMethodIndex,
-                                 const nsXPTParamInfo* aParam,
-                                 nsIID* aIID) const;
   nsresult IsMainProcessScriptableOnly(bool* aRetval) const;
 
-  // XXX: We can probably get away with removing this method. A shim interface
-  // _should_ never show up in code which calls EnsureResolved().
-  bool EnsureResolved() const { return !mIsShim; }
+  bool EnsureResolved() const { return true; } // XXX: Remove (bug 1480245)
 
   ////////////////////////////////////////////////////////////////
   // Ensure these fields are in the same order as xptcodegen.py //
@@ -144,8 +140,8 @@ struct nsXPTInterfaceInfo
   uint16_t mMethods; // Index into xpt::detail::sMethods
 
   uint16_t mConsts : 14; // Index into xpt::detail::sConsts
-  uint16_t mIsShim : 1; // Is this interface a WebIDL shim?
   uint16_t mFunction : 1;
+  // uint16_t unused : 1;
 
   uint8_t mNumMethods; // NOTE(24/04/18): largest=nsIDocShell (193)
   uint8_t mNumConsts; // NOTE(24/04/18): largest=nsIAccessibleRole (175)
@@ -163,6 +159,14 @@ static_assert(sizeof(nsXPTInterfaceInfo) == 28, "wrong size?");
  */
 enum nsXPTTypeTag : uint8_t
 {
+  // Arithmetic (POD) Types
+  //  - Do not require cleanup,
+  //  - All bit patterns are valid,
+  //  - Outparams may be uninitialized by caller,
+  //  - Directly supported in xptcall.
+  //
+  // NOTE: The name 'Arithmetic' comes from Harbison/Steele. Despite being a tad
+  // unclear, it is used frequently in xptcall, so is unlikely to be changed.
   TD_INT8              = 0,
   TD_INT16             = 1,
   TD_INT32             = 2,
@@ -176,22 +180,41 @@ enum nsXPTTypeTag : uint8_t
   TD_BOOL              = 10,
   TD_CHAR              = 11,
   TD_WCHAR             = 12,
+  _TD_LAST_ARITHMETIC  = TD_WCHAR,
+
+  // Pointer Types
+  //  - Require cleanup unless NULL,
+  //  - All-zeros (NULL) bit pattern is valid,
+  //  - Outparams may be uninitialized by caller,
+  //  - Supported in xptcall as raw pointer.
   TD_VOID              = 13,
   TD_PNSIID            = 14,
-  TD_DOMSTRING         = 15,
-  TD_PSTRING           = 16,
-  TD_PWSTRING          = 17,
-  TD_INTERFACE_TYPE    = 18,
-  TD_INTERFACE_IS_TYPE = 19,
-  TD_ARRAY             = 20,
-  TD_PSTRING_SIZE_IS   = 21,
-  TD_PWSTRING_SIZE_IS  = 22,
-  TD_UTF8STRING        = 23,
-  TD_CSTRING           = 24,
-  TD_ASTRING           = 25,
-  TD_JSVAL             = 26,
-  TD_DOMOBJECT         = 27
+  TD_PSTRING           = 15,
+  TD_PWSTRING          = 16,
+  TD_INTERFACE_TYPE    = 17,
+  TD_INTERFACE_IS_TYPE = 18,
+  TD_LEGACY_ARRAY      = 19,
+  TD_PSTRING_SIZE_IS   = 20,
+  TD_PWSTRING_SIZE_IS  = 21,
+  TD_DOMOBJECT         = 22,
+  TD_PROMISE           = 23,
+  _TD_LAST_POINTER     = TD_PROMISE,
+
+  // Complex Types
+  //  - Require cleanup,
+  //  - Always passed indirectly,
+  //  - Outparams must be initialized by caller,
+  //  - Supported in xptcall due to indirection.
+  TD_DOMSTRING         = 24,
+  TD_UTF8STRING        = 25,
+  TD_CSTRING           = 26,
+  TD_ASTRING           = 27,
+  TD_JSVAL             = 28,
+  TD_ARRAY             = 29,
+  _TD_LAST_COMPLEX     = TD_ARRAY
 };
+
+static_assert(_TD_LAST_COMPLEX < 32, "nsXPTTypeTag must fit in 5 bits");
 
 
 /*
@@ -205,23 +228,32 @@ struct nsXPTType
 {
   nsXPTTypeTag Tag() const { return static_cast<nsXPTTypeTag>(mTag); }
 
+  // The index in the function argument list which should be used when
+  // determining the iid_is or size_is properties of this dependent type.
   uint8_t ArgNum() const {
     MOZ_ASSERT(Tag() == TD_INTERFACE_IS_TYPE ||
                Tag() == TD_PSTRING_SIZE_IS ||
                Tag() == TD_PWSTRING_SIZE_IS ||
-               Tag() == TD_ARRAY);
+               Tag() == TD_LEGACY_ARRAY);
     return mData1;
   }
 
-  const nsXPTType& ArrayElementType() const {
-    MOZ_ASSERT(Tag() == TD_ARRAY);
-    return xpt::detail::GetType(mData2);
-  }
-
 private:
+  // Helper for reading 16-bit data values split between mData1 and mData2.
   uint16_t Data16() const { return ((uint16_t)mData1 << 8) | mData2; }
 
 public:
+  // Get the type of the element in the current array or sequence. Arrays only
+  // fit 8 bits of type data, while sequences support up to 16 bits of type data
+  // due to not needing to store an ArgNum.
+  const nsXPTType& ArrayElementType() const {
+    if (Tag() == TD_LEGACY_ARRAY) {
+      return xpt::detail::GetType(mData2);
+    }
+    MOZ_ASSERT(Tag() == TD_ARRAY);
+    return xpt::detail::GetType(Data16());
+  }
+
   // We store the 16-bit iface value as two 8-bit values in order to
   // avoid 16-bit alignment requirements for XPTTypeDescriptor, which
   // reduces its size and also the size of XPTParamDescriptor.
@@ -235,79 +267,115 @@ public:
     return xpt::detail::GetDOMObjectInfo(Data16());
   }
 
-  // 'Arithmetic' here roughly means that the value is self-contained and
-  // doesn't depend on anything else in memory (ie: not a pointer, not an
-  // XPCOM object, not a jsval, etc).
-  //
-  // Supposedly this terminology comes from Harbison/Steele, but it's still
-  // a rather crappy name. We'd change it if it wasn't used all over the
-  // place in xptcall. :-(
-  bool IsArithmetic() const { return Tag() <= TD_WCHAR; }
-
-  // We used to abuse 'pointer' flag bit in typelib format quite extensively.
-  // We've gotten rid of most of the cases, but there's still a fair amount
-  // of refactoring to be done in XPCWrappedJSClass before we can safely stop
-  // asking about this. In the mean time, we've got a temporary version of
-  // IsPointer() that should do the right thing.
-  bool deprecated_IsPointer() const {
-    return !IsArithmetic() && Tag() != TD_JSVAL;
-  }
+  // See the comments in nsXPTTypeTag for an explanation as to what each of
+  // these categories mean.
+  bool IsArithmetic() const { return Tag() <= _TD_LAST_ARITHMETIC; }
+  bool IsPointer() const { return !IsArithmetic() && Tag() <= _TD_LAST_POINTER; }
+  bool IsComplex() const { return Tag() > _TD_LAST_POINTER; }
 
   bool IsInterfacePointer() const {
     return Tag() == TD_INTERFACE_TYPE || Tag() == TD_INTERFACE_IS_TYPE;
   }
 
-  bool IsArray() const { return Tag() == TD_ARRAY; }
-
   bool IsDependent() const {
-    return Tag() == TD_INTERFACE_IS_TYPE || Tag() == TD_ARRAY ||
+    return (Tag() == TD_ARRAY && InnermostType().IsDependent()) ||
+           Tag() == TD_INTERFACE_IS_TYPE || Tag() == TD_LEGACY_ARRAY ||
            Tag() == TD_PSTRING_SIZE_IS || Tag() == TD_PWSTRING_SIZE_IS;
   }
 
-  bool IsStringClass() const {
-    return Tag() == TD_DOMSTRING || Tag() == TD_ASTRING ||
-           Tag() == TD_CSTRING || Tag() == TD_UTF8STRING;
+  // Unwrap a nested type to its innermost value (e.g. through arrays).
+  const nsXPTType& InnermostType() const {
+    if (Tag() == TD_LEGACY_ARRAY || Tag() == TD_ARRAY) {
+      return ArrayElementType().InnermostType();
+    }
+    return *this;
+  }
+
+  // In-memory size of native type in bytes.
+  inline size_t Stride() const;
+
+  // Offset the given base pointer to reference the element at the given index.
+  void* ElementPtr(const void* aBase, uint32_t aIndex) const {
+    return (char*)aBase + (aIndex * Stride());
+  }
+
+  // Zero out a native value of the given type. The type must not be 'complex'.
+  void ZeroValue(void* aValue) const {
+    MOZ_RELEASE_ASSERT(!IsComplex(), "Cannot zero a complex value");
+    memset(aValue, 0, Stride());
+  }
+
+  // Indexes into the extra types array of a small set of known types.
+  enum class Idx : uint8_t
+  {
+    INT8 = 0,
+    UINT8,
+    INT16,
+    UINT16,
+    INT32,
+    UINT32,
+    INT64,
+    UINT64,
+    FLOAT,
+    DOUBLE,
+    BOOL,
+    CHAR,
+    WCHAR,
+    PNSIID,
+    PSTRING,
+    PWSTRING,
+    INTERFACE_IS_TYPE
+  };
+
+  // Helper methods for fabricating nsXPTType values used by xpconnect.
+  static nsXPTType MkArrayType(Idx aInner) {
+    MOZ_ASSERT(aInner <= Idx::INTERFACE_IS_TYPE);
+    return { TD_LEGACY_ARRAY, false, false, false, 0, (uint8_t)aInner };
+  }
+  static const nsXPTType& Get(Idx aInner) {
+    MOZ_ASSERT(aInner <= Idx::INTERFACE_IS_TYPE);
+    return xpt::detail::GetType((uint8_t)aInner);
   }
 
   ///////////////////////////////////////
   // nsXPTType backwards compatibility //
   ///////////////////////////////////////
 
-  nsXPTType& operator=(uint8_t aPrefix) { mTag = aPrefix; return *this; }
-  operator uint8_t() const { return TagPart(); };
-  uint8_t TagPart() const { return mTag; };
+  nsXPTType& operator=(nsXPTTypeTag aPrefix) { mTag = aPrefix; return *this; }
+  operator nsXPTTypeTag() const { return Tag(); }
 
-  enum // Re-export TD_ interfaces from nsXPTType
-  {
-    T_I8                = TD_INT8             ,
-    T_I16               = TD_INT16            ,
-    T_I32               = TD_INT32            ,
-    T_I64               = TD_INT64            ,
-    T_U8                = TD_UINT8            ,
-    T_U16               = TD_UINT16           ,
-    T_U32               = TD_UINT32           ,
-    T_U64               = TD_UINT64           ,
-    T_FLOAT             = TD_FLOAT            ,
-    T_DOUBLE            = TD_DOUBLE           ,
-    T_BOOL              = TD_BOOL             ,
-    T_CHAR              = TD_CHAR             ,
-    T_WCHAR             = TD_WCHAR            ,
-    T_VOID              = TD_VOID             ,
-    T_IID               = TD_PNSIID           ,
-    T_DOMSTRING         = TD_DOMSTRING        ,
-    T_CHAR_STR          = TD_PSTRING          ,
-    T_WCHAR_STR         = TD_PWSTRING         ,
-    T_INTERFACE         = TD_INTERFACE_TYPE   ,
-    T_INTERFACE_IS      = TD_INTERFACE_IS_TYPE,
-    T_ARRAY             = TD_ARRAY            ,
-    T_PSTRING_SIZE_IS   = TD_PSTRING_SIZE_IS  ,
-    T_PWSTRING_SIZE_IS  = TD_PWSTRING_SIZE_IS ,
-    T_UTF8STRING        = TD_UTF8STRING       ,
-    T_CSTRING           = TD_CSTRING          ,
-    T_ASTRING           = TD_ASTRING          ,
-    T_JSVAL             = TD_JSVAL            ,
-    T_DOMOBJECT         = TD_DOMOBJECT
-  };
+#define TD_ALIAS_(name_, value_) static constexpr nsXPTTypeTag name_ = value_
+  TD_ALIAS_(T_I8                , TD_INT8             );
+  TD_ALIAS_(T_I16               , TD_INT16            );
+  TD_ALIAS_(T_I32               , TD_INT32            );
+  TD_ALIAS_(T_I64               , TD_INT64            );
+  TD_ALIAS_(T_U8                , TD_UINT8            );
+  TD_ALIAS_(T_U16               , TD_UINT16           );
+  TD_ALIAS_(T_U32               , TD_UINT32           );
+  TD_ALIAS_(T_U64               , TD_UINT64           );
+  TD_ALIAS_(T_FLOAT             , TD_FLOAT            );
+  TD_ALIAS_(T_DOUBLE            , TD_DOUBLE           );
+  TD_ALIAS_(T_BOOL              , TD_BOOL             );
+  TD_ALIAS_(T_CHAR              , TD_CHAR             );
+  TD_ALIAS_(T_WCHAR             , TD_WCHAR            );
+  TD_ALIAS_(T_VOID              , TD_VOID             );
+  TD_ALIAS_(T_IID               , TD_PNSIID           );
+  TD_ALIAS_(T_DOMSTRING         , TD_DOMSTRING        );
+  TD_ALIAS_(T_CHAR_STR          , TD_PSTRING          );
+  TD_ALIAS_(T_WCHAR_STR         , TD_PWSTRING         );
+  TD_ALIAS_(T_INTERFACE         , TD_INTERFACE_TYPE   );
+  TD_ALIAS_(T_INTERFACE_IS      , TD_INTERFACE_IS_TYPE);
+  TD_ALIAS_(T_LEGACY_ARRAY      , TD_LEGACY_ARRAY     );
+  TD_ALIAS_(T_PSTRING_SIZE_IS   , TD_PSTRING_SIZE_IS  );
+  TD_ALIAS_(T_PWSTRING_SIZE_IS  , TD_PWSTRING_SIZE_IS );
+  TD_ALIAS_(T_UTF8STRING        , TD_UTF8STRING       );
+  TD_ALIAS_(T_CSTRING           , TD_CSTRING          );
+  TD_ALIAS_(T_ASTRING           , TD_ASTRING          );
+  TD_ALIAS_(T_JSVAL             , TD_JSVAL            );
+  TD_ALIAS_(T_DOMOBJECT         , TD_DOMOBJECT        );
+  TD_ALIAS_(T_PROMISE           , TD_PROMISE          );
+  TD_ALIAS_(T_ARRAY             , TD_ARRAY            );
+#undef TD_ALIAS_
 
   ////////////////////////////////////////////////////////////////
   // Ensure these fields are in the same order as xptcodegen.py //
@@ -339,7 +407,7 @@ static_assert(sizeof(nsXPTType) == 3, "wrong size");
 struct nsXPTParamInfo
 {
   bool IsIn() const { return mType.mInParam; }
-  bool IsOut() const { return mType.mOutParam && !IsDipper(); }
+  bool IsOut() const { return mType.mOutParam; }
   bool IsOptional() const { return mType.mOptionalParam; }
   bool IsShared() const { return false; } // XXX remove (backcompat)
 
@@ -347,30 +415,12 @@ struct nsXPTParamInfo
   const nsXPTType& Type() const { return mType; }
   const nsXPTType& GetType() const { return Type(); } // XXX remove (backcompat)
 
-  // Dipper types are one of the more inscrutable aspects of xpidl. In a
-  // nutshell, dippers are empty container objects, created and passed by the
-  // caller, and filled by the callee. The callee receives a fully- formed
-  // object, and thus does not have to construct anything. But the object is
-  // functionally empty, and the callee is responsible for putting something
-  // useful inside of it.
-  //
-  // Dipper types are treated as `in` parameters when declared as an `out`
-  // parameter. For this reason, dipper types are sometimes referred to as 'out
-  // parameters masquerading as in'. The burden of maintaining this illusion
-  // falls mostly on XPConnect, which creates the empty containers, and harvest
-  // the results after the call.
-  //
-  // Currently, the only dipper types are the string classes.
-  //
-  // XXX: Dipper types may be able to go away? (bug 677784)
-  bool IsDipper() const { return mType.mOutParam && IsStringClass(); }
-
-  // Whether this parameter is passed indirectly on the stack. This mainly
-  // applies to out/inout params, but we use it unconditionally for certain
-  // types.
-  bool IsIndirect() const { return IsOut() || mType.Tag() == TD_JSVAL; }
-
-  bool IsStringClass() const { return mType.IsStringClass(); }
+  // Whether this parameter is passed indirectly on the stack. All out/inout
+  // params are passed indirectly, and complex types are always passed
+  // indirectly.
+  bool IsIndirect() const {
+    return IsOut() || Type().IsComplex();
+  }
 
   ////////////////////////////////////////////////////////////////
   // Ensure these fields are in the same order as xptcodegen.py //
@@ -391,11 +441,13 @@ struct nsXPTMethodInfo
   bool IsSetter() const { return mSetter; }
   bool IsNotXPCOM() const { return mNotXPCOM; }
   bool IsHidden() const { return mHidden; }
+  bool IsSymbol() const { return mIsSymbol; }
   bool WantsOptArgc() const { return mOptArgc; }
   bool WantsContext() const { return mContext; }
   uint8_t ParamCount() const { return mNumParams; }
 
   const char* Name() const {
+    MOZ_ASSERT(!IsSymbol());
     return xpt::detail::GetString(mName);
   }
   const nsXPTParamInfo& Param(uint8_t aIndex) const {
@@ -408,11 +460,41 @@ struct nsXPTMethodInfo
     return mHasRetval ? &Param(mNumParams - 1) : nullptr;
   }
 
+  // If this is an [implicit_jscontext] method, returns the index of the
+  // implicit JSContext* argument in the C++ method's argument list.
+  // Otherwise returns UINT8_MAX.
+  uint8_t IndexOfJSContext() const {
+    if (!WantsContext()) {
+      return UINT8_MAX;
+    }
+    if (IsGetter() || IsSetter()) {
+      // Getters/setters always have the context as first argument.
+      return 0;
+    }
+    // The context comes before the return value, if there is one.
+    MOZ_ASSERT_IF(HasRetval(), ParamCount() > 0);
+    return ParamCount() - uint8_t(HasRetval());
+  }
+
   /////////////////////////////////////////////
   // nsXPTMethodInfo backwards compatibility //
   /////////////////////////////////////////////
 
   const char* GetName() const { return Name(); }
+
+  JS::SymbolCode GetSymbolCode() const
+  {
+    MOZ_ASSERT(IsSymbol());
+    return JS::SymbolCode(mName);
+  }
+
+  JS::Symbol* GetSymbol(JSContext* aCx) const
+  {
+    return JS::GetWellKnownSymbol(aCx, GetSymbolCode());
+  }
+
+  void GetSymbolDescription(JSContext* aCx, nsACString& aID) const;
+
   uint8_t GetParamCount() const { return ParamCount(); }
   const nsXPTParamInfo& GetParam(uint8_t aIndex) const {
     return Param(aIndex);
@@ -433,11 +515,41 @@ struct nsXPTMethodInfo
   uint8_t mOptArgc : 1;
   uint8_t mContext : 1;
   uint8_t mHasRetval : 1;
-  // uint8_t unused : 1;
+  uint8_t mIsSymbol : 1;
 };
 
 // The fields in nsXPTMethodInfo were carefully ordered to minimize size.
 static_assert(sizeof(nsXPTMethodInfo) == 8, "wrong size");
+
+/**
+ * A nsXPTConstantInfo is used to describe a single interface constant.
+ */
+struct nsXPTConstantInfo
+{
+  const char* Name() const {
+    return xpt::detail::GetString(mName);
+  }
+
+  JS::Value JSValue() const {
+    if (mSigned || mValue <= uint32_t(INT32_MAX)) {
+      return JS::Int32Value(int32_t(mValue));
+    }
+    return JS::DoubleValue(mValue);
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // Ensure these fields are in the same order as xptcodegen.py //
+  ////////////////////////////////////////////////////////////////
+
+  uint32_t mName : 31; // Index into xpt::detail::mStrings.
+
+  // Whether the value should be interpreted as a int32_t or uint32_t.
+  uint32_t mSigned: 1;
+  uint32_t mValue; // The value stored as a u32
+};
+
+// The fields in nsXPTConstantInfo were carefully ordered to minimize size.
+static_assert(sizeof(nsXPTConstantInfo) == 8, "wrong size");
 
 /**
  * Object representing the information required to wrap and unwrap DOMObjects.
@@ -471,25 +583,33 @@ struct nsXPTDOMObjectInfo
 namespace xpt {
 namespace detail {
 
-/**
- * The compressed representation of constants from XPT. Not part of the public
- * interface, as we also need to support Shim interfaces.
- */
-struct ConstInfo
+// The UntypedTArray type allows low-level access from XPConnect to nsTArray
+// internals without static knowledge of the array element type in question.
+class UntypedTArray
+  : public nsTArray_base<nsTArrayFallibleAllocator, nsTArray_CopyWithMemutils>
 {
-  ////////////////////////////////////////////////////////////////
-  // Ensure these fields are in the same order as xptcodegen.py //
-  ////////////////////////////////////////////////////////////////
+public:
+  void* Elements() const {
+    return static_cast<void*>(Hdr() + 1);
+  }
 
-  uint32_t mName : 31; // Index into xpt::detail::mStrings.
+  // Changes the length and capacity to be at least large enough for aTo elements.
+  bool SetLength(const nsXPTType& aEltTy, uint32_t aTo) {
+    if (!EnsureCapacity<nsTArrayFallibleAllocator>(aTo, aEltTy.Stride())) {
+      return false;
+    }
+    mHdr->mLength = aTo;
+    return true;
+  }
 
-  // Whether the value should be interpreted as a int32_t or uint32_t.
-  uint32_t mSigned: 1;
-  uint32_t mValue; // The value stored as a u32
+  // Free backing memory for the nsTArray object.
+  void Clear() {
+    if (mHdr != EmptyHdr() && !UsesAutoArrayBuffer()) {
+      nsTArrayFallibleAllocator::Free(mHdr);
+    }
+    mHdr = EmptyHdr();
+  }
 };
-
-// The fields in ConstInfo were carefully ordered to minimize size.
-static_assert(sizeof(ConstInfo) == 8, "wrong size");
 
 
 //////////////////////////////////////////////
@@ -501,19 +621,10 @@ extern const nsXPTInterfaceInfo sInterfaces[];
 extern const nsXPTType sTypes[];
 extern const nsXPTParamInfo sParams[];
 extern const nsXPTMethodInfo sMethods[];
+extern const nsXPTConstantInfo sConsts[];
 extern const nsXPTDOMObjectInfo sDOMObjects[];
 
 extern const char sStrings[];
-extern const ConstInfo sConsts[];
-
-// shim constant information
-extern const mozilla::dom::NativePropertyHooks* sPropHooks[];
-
-// Perfect Hash Function backing data
-static const uint16_t kPHFSize = 512;
-extern const uint32_t sPHF_IIDs[]; // Length == kPHFSize
-extern const uint32_t sPHF_Names[]; // Length == kPHFSize
-extern const uint16_t sPHF_NamesIdxs[]; // Length == sInterfacesSize
 
 
 //////////////////////////////////////
@@ -547,6 +658,12 @@ GetMethod(uint16_t aIndex)
   return sMethods[aIndex];
 }
 
+inline const nsXPTConstantInfo&
+GetConstant(uint16_t aIndex)
+{
+  return sConsts[aIndex];
+}
+
 inline const nsXPTDOMObjectInfo&
 GetDOMObjectInfo(uint16_t aIndex)
 {
@@ -561,5 +678,59 @@ GetString(uint32_t aIndex)
 
 } // namespace detail
 } // namespace xpt
+
+#define XPT_FOR_EACH_ARITHMETIC_TYPE(macro) \
+  macro(TD_INT8,   int8_t) \
+  macro(TD_INT16,  int16_t) \
+  macro(TD_INT32,  int32_t) \
+  macro(TD_INT64,  int64_t) \
+  macro(TD_UINT8,  uint8_t) \
+  macro(TD_UINT16, uint16_t) \
+  macro(TD_UINT32, uint32_t) \
+  macro(TD_UINT64, uint64_t) \
+  macro(TD_FLOAT,  float) \
+  macro(TD_DOUBLE, double) \
+  macro(TD_BOOL,   bool) \
+  macro(TD_CHAR,   char) \
+  macro(TD_WCHAR,  char16_t)
+
+#define XPT_FOR_EACH_POINTER_TYPE(macro) \
+  macro(TD_VOID,              void*) \
+  macro(TD_PNSIID,            nsID*) \
+  macro(TD_PSTRING,           char*) \
+  macro(TD_PWSTRING,          wchar_t*) \
+  macro(TD_INTERFACE_TYPE,    nsISupports*) \
+  macro(TD_INTERFACE_IS_TYPE, nsISupports*) \
+  macro(TD_LEGACY_ARRAY,      void*) \
+  macro(TD_PSTRING_SIZE_IS,   char*) \
+  macro(TD_PWSTRING_SIZE_IS,  wchar_t*) \
+  macro(TD_DOMOBJECT,         void*) \
+  macro(TD_PROMISE,           mozilla::dom::Promise*)
+
+#define XPT_FOR_EACH_COMPLEX_TYPE(macro) \
+  macro(TD_DOMSTRING,  nsString) \
+  macro(TD_UTF8STRING, nsCString) \
+  macro(TD_CSTRING,    nsCString) \
+  macro(TD_ASTRING,    nsString) \
+  macro(TD_JSVAL,      JS::Value) \
+  macro(TD_ARRAY,      xpt::detail::UntypedTArray)
+
+#define XPT_FOR_EACH_TYPE(macro) \
+  XPT_FOR_EACH_ARITHMETIC_TYPE(macro) \
+  XPT_FOR_EACH_POINTER_TYPE(macro) \
+  XPT_FOR_EACH_COMPLEX_TYPE(macro)
+
+inline size_t
+nsXPTType::Stride() const
+{
+  // Compute the stride to use when walking an array of the given type.
+  switch (Tag()) {
+#define XPT_TYPE_STRIDE(tag, type) case tag: return sizeof(type);
+XPT_FOR_EACH_TYPE(XPT_TYPE_STRIDE)
+#undef XPT_TYPE_STRIDE
+  }
+
+  MOZ_CRASH("Unknown type");
+}
 
 #endif /* xptinfo_h */

@@ -35,6 +35,8 @@ jobs:
       - deb7-mercurial
       - deb7-python
       - deb7-python3.5
+      - deb7-python3-defaults
+      - deb7-python-zstandard
       - deb7-xz-utils
   toolchain-build:
     symbol: I(toolchain)
@@ -77,8 +79,15 @@ jobs:
       SNAPSHOT: '20170830T000511Z'
     packages:
       - deb9-mercurial
+      - deb9-python-zstandard
   android-build:
     symbol: I(agb)
+    parent: debian9-base
+  fetch:
+    symbol: I(fetch)
+    parent: debian9-base
+  infer-build:
+    symbol: I(infer)
     parent: debian9-base
   mingw32-build:
     symbol: I(mingw)
@@ -89,8 +98,6 @@ jobs:
     symbol: I(pg)
   google-play-strings:
     symbol: I(gps)
-  funsize-balrog-submitter:
-    symbol: I(fbs)
   update-verify:
     symbol: I(uv)
   diffoscope:
@@ -101,5 +108,7 @@ jobs:
     definition: partner-repack
   periodic-updates:
     symbol: I(file)
+  pipfile-updates:
+    symbol: I(pip)
   firefox-snap:
     symbol: I(snap)

@@ -26,10 +26,11 @@ import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.DoorHangerPopup;
 import org.mozilla.gecko.FormAssistPopup;
+import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.GeckoScreenOrientation;
-import org.mozilla.gecko.GeckoSharedPrefs;
-import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.Telemetry;
+import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.customtabs.CustomTabsActivity;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.prompts.PromptService;
@@ -37,8 +38,7 @@ import org.mozilla.gecko.text.TextSelection;
 import org.mozilla.gecko.util.ActivityUtils;
 import org.mozilla.gecko.util.ColorUtil;
 import org.mozilla.gecko.widget.ActionModePresenter;
-import org.mozilla.geckoview.GeckoResponse;
-import org.mozilla.geckoview.GeckoRuntime;
+import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoSession;
 import org.mozilla.geckoview.GeckoSessionSettings;
 import org.mozilla.geckoview.GeckoView;
@@ -88,6 +88,8 @@ public class WebAppActivity extends AppCompatActivity
 
             Intent lastLaunchIntent = savedInstanceState.getParcelable(SAVED_INTENT);
             setIntent(lastLaunchIntent);
+        } else {
+            Telemetry.sendUIEvent(TelemetryContract.Event.PWA, TelemetryContract.Method.HOMESCREEN);
         }
 
         super.onCreate(savedInstanceState);
@@ -97,7 +99,7 @@ public class WebAppActivity extends AppCompatActivity
         final GeckoSessionSettings settings = new GeckoSessionSettings();
         settings.setBoolean(GeckoSessionSettings.USE_MULTIPROCESS, false);
         mGeckoSession = new GeckoSession(settings);
-        mGeckoView.setSession(mGeckoSession, GeckoRuntime.getDefault(this));
+        mGeckoView.setSession(mGeckoSession, GeckoApplication.ensureRuntime(this));
 
         mGeckoSession.setNavigationDelegate(this);
         mGeckoSession.setContentDelegate(this);
@@ -109,6 +111,11 @@ public class WebAppActivity extends AppCompatActivity
 
             @Override
             public void onPageStop(GeckoSession session, boolean success) {
+
+            }
+
+            @Override
+            public void onProgressChange(GeckoSession session, int progress) {
 
             }
 
@@ -191,18 +198,6 @@ public class WebAppActivity extends AppCompatActivity
         } else {
             finish();
         }
-    }
-
-    @Override
-    public void onResume() {
-        mGeckoSession.setActive(true);
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        mGeckoSession.setActive(false);
-        super.onPause();
     }
 
     @Override
@@ -368,6 +363,12 @@ public class WebAppActivity extends AppCompatActivity
 
     @Override // GeckoSession.ContentDelegate
     public void onExternalResponse(final GeckoSession session, final GeckoSession.WebResponseInfo request) {
+        // Won't happen, as we don't use the GeckoView download support in Fennec
+    }
+
+    @Override // GeckoSession.ContentDelegate
+    public void onCrash(final GeckoSession session) {
+        // Won't happen, as we don't use e10s in Fennec
     }
 
     @Override // GeckoSession.ContentDelegate
@@ -376,29 +377,20 @@ public class WebAppActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLoadRequest(final GeckoSession session, final String urlStr,
-                              final int target,
-                              final int flags,
-                              final GeckoResponse<Boolean> response) {
+    public GeckoResult<Boolean> onLoadRequest(final GeckoSession session, final String urlStr,
+                                              final int target,
+                                              final int flags) {
         final Uri uri = Uri.parse(urlStr);
         if (uri == null) {
             // We can't really handle this, so deny it?
             Log.w(LOGTAG, "Failed to parse URL for navigation: " + urlStr);
-            response.respond(true);
-            return;
+            return GeckoResult.fromValue(true);
         }
 
         if (mManifest.isInScope(uri) && target != TARGET_WINDOW_NEW) {
             // This is in scope and wants to load in the same frame, so
             // let Gecko handle it.
-            response.respond(false);
-            return;
-        }
-
-        if ("javascript".equals(uri.getScheme())) {
-            // These URIs will fail the scope check but should still be loaded in the PWA.
-            response.respond(false);
-            return;
+            return GeckoResult.fromValue(false);
         }
 
         if ("http".equals(uri.getScheme()) || "https".equals(uri.getScheme()) ||
@@ -426,14 +418,20 @@ public class WebAppActivity extends AppCompatActivity
                 Log.w(LOGTAG, "No activity handler found for: " + urlStr);
             }
         }
-        response.respond(true);
+
+        return GeckoResult.fromValue(true);
     }
 
     @Override
-    public void onNewSession(final GeckoSession session, final String uri,
-                             final GeckoResponse<GeckoSession> response) {
+    public GeckoResult<GeckoSession> onNewSession(final GeckoSession session, final String uri) {
         // We should never get here because we abort loads that need a new session in onLoadRequest()
         throw new IllegalStateException("Unexpected new session");
+    }
+
+    @Override
+    public GeckoResult<String> onLoadError(final GeckoSession session, final String urlStr,
+                                           final int category, final int error) {
+        return null;
     }
 
     private void updateFullScreen() {

@@ -9,23 +9,12 @@ ChromeUtils.import("resource://testing-common/httpd.js");
 var testserver = AddonTestUtils.createHttpServer({hosts: ["example.com"]});
 var gInstallDate;
 
-// This verifies that add-ons can be installed from XPI files
-// install.rdf size, icon.png, icon64.png size
-const ADDON1_SIZE = 612;
-
 const ADDONS = {
   test_install1: {
     "install.rdf": {
       id: "addon1@tests.mozilla.org",
       version: "1.0",
       name: "Test 1",
-      description: "Test Description",
-      bootstrap: true,
-
-      targetApplications: [{
-          id: "xpcshell@tests.mozilla.org",
-          minVersion: "1",
-          maxVersion: "1"}],
     },
     "icon.png": "Fake icon image",
     "icon64.png": "Fake icon image",
@@ -35,14 +24,6 @@ const ADDONS = {
       id: "addon2@tests.mozilla.org",
       version: "2.0",
       name: "Real Test 2",
-      description: "Test Description",
-      bootstrap: true,
-
-      targetApplications: [{
-          id: "xpcshell@tests.mozilla.org",
-          minVersion: "1",
-          maxVersion: "1"}],
-
     },
     "icon.png": "Fake icon image",
   },
@@ -51,13 +32,6 @@ const ADDONS = {
       id: "addon2@tests.mozilla.org",
       version: "3.0",
       name: "Real Test 3",
-      description: "Test Description",
-      bootstrap: true,
-
-      targetApplications: [{
-          id: "xpcshell@tests.mozilla.org",
-          minVersion: "1",
-          maxVersion: "1"}],
     },
   },
   test_install3: {
@@ -65,8 +39,6 @@ const ADDONS = {
       id: "addon3@tests.mozilla.org",
       version: "1.0",
       name: "Real Test 4",
-      description: "Test Description",
-      bootstrap: true,
 
       updateURL: "http://example.com/data/test_install.rdf",
 
@@ -81,13 +53,6 @@ const ADDONS = {
       id: "addon6@tests.mozilla.org",
       version: "1.0",
       name: "Addon Test 6",
-      description: "Test Description",
-      bootstrap: true,
-
-      targetApplications: [{
-          id: "xpcshell@tests.mozilla.org",
-          minVersion: "1",
-          maxVersion: "1"}],
     },
   },
   test_install7: {
@@ -149,7 +114,7 @@ add_task(async function setup() {
 // Checks that an install from a local file proceeds as expected
 add_task(async function test_1() {
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let install = await AddonManager.getInstallForFile(XPIS.test_install1);
@@ -168,13 +133,11 @@ add_task(async function test_1() {
   let {addon} = install;
   checkAddon("addon1@tests.mozilla.org", addon, {
     install,
-    size: ADDON1_SIZE,
     iconURL: `jar:${uri.spec}!/icon.png`,
     icon64URL: `jar:${uri.spec}!/icon64.png`,
     sourceURI: uri,
   });
   notEqual(addon.syncGUID, null);
-  ok(addon.hasResource("install.rdf"));
   equal(addon.getResourceURI("install.rdf").spec, `jar:${uri.spec}!/install.rdf`);
 
   let activeInstalls = await AddonManager.getAllInstalls();
@@ -193,7 +156,7 @@ add_task(async function test_1() {
       "addon1@tests.mozilla.org": [
         ["onInstalling", false],
         "onInstalled",
-      ]
+      ],
     }, [
       "onInstallStarted",
       "onInstallEnded",
@@ -207,9 +170,6 @@ add_task(async function test_1() {
 
   addon = await AddonManager.getAddonByID("addon1@tests.mozilla.org");
   ok(addon);
-
-  let pendingAddons = await AddonManager.getAddonsWithOperationsByTypes(null);
-  equal(pendingAddons.length, 0);
 
   uri = NetUtil.newURI(addon.iconURL);
   if (uri instanceof Ci.nsIJARURI) {
@@ -244,7 +204,6 @@ add_task(async function test_1() {
     version: "1.0",
     name: "Test 1",
     foreignInstall: false,
-    size: ADDON1_SIZE,
     iconURL: uri2 + "icon.png",
     icon64URL: uri2 + "icon64.png",
     sourceURI: Services.io.newFileURI(XPIS.test_install1),
@@ -265,9 +224,6 @@ add_task(async function test_1() {
   if (Math.abs(difference) > MAX_TIME_DIFFERENCE)
     do_throw("Add-on update time was out by " + difference + "ms");
 
-  ok(a1.hasResource("install.rdf"));
-  ok(!a1.hasResource("foo.bar"));
-
   equal(a1.getResourceURI("install.rdf").spec, uri2 + "install.rdf");
 
   // Ensure that extension bundle (or icon if unpacked) has updated
@@ -278,7 +234,7 @@ add_task(async function test_1() {
   difference = testFile.lastModifiedTime - Date.now();
   ok(Math.abs(difference) < MAX_TIME_DIFFERENCE);
 
-  a1.uninstall();
+  await a1.uninstall();
   let { id, version } = a1;
   await promiseRestartManager();
   do_check_not_in_crash_annotation(id, version);
@@ -314,7 +270,7 @@ add_task(async function test_2() {
         executeSoon(function() {
           Cu.forceGC();
         });
-      }
+      },
     });
 
     install.install();
@@ -333,8 +289,8 @@ add_task(async function test_2() {
     prepare_test({
       "addon2@tests.mozilla.org": [
         ["onInstalling", false],
-        "onInstalled"
-      ]
+        "onInstalled",
+      ],
     }, [
       "onInstallStarted",
       "onInstallEnded",
@@ -379,7 +335,7 @@ add_task(async function test_2() {
 // Tests that installing a new version of an existing add-on works
 add_task(async function test_4() {
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install2_2.xpi";
@@ -425,7 +381,7 @@ add_task(async function test_4() {
       "addon2@tests.mozilla.org": [
         ["onInstalling", false],
         "onInstalled",
-      ]
+      ],
     }, [
       "onInstallStarted",
       "onInstallEnded",
@@ -459,7 +415,7 @@ add_task(async function test_4() {
   // Update date should be later (or the same if this test is too fast)
   ok(a2.installDate <= a2.updateDate);
 
-  a2.uninstall();
+  await a2.uninstall();
 });
 
 // Tests that an install that requires a compatibility update works
@@ -467,7 +423,7 @@ add_task(async function test_6() {
   await promiseRestartManager();
 
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install3.xpi";
@@ -512,7 +468,7 @@ add_task(async function test_6() {
       "addon3@tests.mozilla.org": [
         ["onInstalling", false],
         "onInstalled",
-      ]
+      ],
     }, [
       "onInstallStarted",
       "onInstallEnded",
@@ -540,7 +496,7 @@ add_task(async function test_6() {
   ok(isExtensionInBootstrappedList(profileDir, a3.id));
 
   ok(XPIS.test_install3.exists());
-  a3.uninstall();
+  await a3.uninstall();
 });
 
 add_task(async function test_8() {
@@ -550,7 +506,7 @@ add_task(async function test_8() {
   AddonManager.addAddonListener(AddonListener);
 
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let install = await AddonManager.getInstallForFile(XPIS.test_install3);
@@ -561,7 +517,7 @@ add_task(async function test_8() {
       "addon3@tests.mozilla.org": [
         ["onInstalling", false],
         "onInstalled",
-      ]
+      ],
     }, [
       "onInstallStarted",
       "onInstallEnded",
@@ -584,7 +540,7 @@ add_task(async function test_8() {
   ok(isExtensionInBootstrappedList(profileDir, a3.id));
 
   ok(XPIS.test_install3.exists());
-  a3.uninstall();
+  await a3.uninstall();
 });
 
 // Test that after cancelling a download it is removed from the active installs
@@ -592,7 +548,7 @@ add_task(async function test_9() {
   await promiseRestartManager();
 
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install3.xpi";
@@ -615,7 +571,7 @@ add_task(async function test_9() {
       "onDownloadEnded",
     ], () => {
       prepare_test({}, [
-        "onDownloadCancelled"
+        "onDownloadCancelled",
       ], resolve);
 
       install.cancel();
@@ -637,7 +593,7 @@ add_task(async function test_14() {
   await promiseRestartManager();
 
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install2_1.xpi";
@@ -648,7 +604,7 @@ add_task(async function test_14() {
 
   install = await new Promise(resolve => {
     prepare_test({ }, [
-      "onDownloadStarted"
+      "onDownloadStarted",
     ], resolve);
     install.install();
   });
@@ -660,7 +616,7 @@ add_task(async function test_14() {
 
   await new Promise(resolve => {
     prepare_test({ }, [
-      "onDownloadCancelled"
+      "onDownloadCancelled",
     ], resolve);
   });
 
@@ -672,7 +628,7 @@ add_task(async function test_14() {
     },
     onDownloadEnded() {
       do_throw("Download should not have continued");
-    }
+    },
   });
 
   // Allow the listener to return to see if it continues downloading. The
@@ -684,7 +640,7 @@ add_task(async function test_14() {
 // Checks that cancelling the install from onDownloadEnded actually cancels it
 add_task(async function test_15() {
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install2_1.xpi";
@@ -696,10 +652,10 @@ add_task(async function test_15() {
   await new Promise(resolve => {
     prepare_test({ }, [
       "onDownloadStarted",
-      "onDownloadEnded"
+      "onDownloadEnded",
     ], () => {
       prepare_test({ }, [
-        "onDownloadCancelled"
+        "onDownloadCancelled",
       ]);
 
       install.cancel();
@@ -713,7 +669,7 @@ add_task(async function test_15() {
   install.addListener({
     onInstallStarted() {
       do_throw("Install should not have continued");
-    }
+    },
   });
 });
 
@@ -727,12 +683,12 @@ add_task(async function test_16() {
     aInstall.addListener({
       onInstallStarted() {
         ok(!aInstall.addon.userDisabled);
-        aInstall.addon.userDisabled = true;
+        aInstall.addon.disable();
       },
 
       onInstallEnded() {
         resolve();
-      }
+      },
     });
     aInstall.install();
   });
@@ -751,7 +707,7 @@ add_task(async function test_16() {
     aInstall_2.addListener({
       onInstallEnded() {
         resolve();
-      }
+      },
     });
     aInstall_2.install();
   });
@@ -769,7 +725,7 @@ add_task(async function test_16() {
     isActive: false,
   });
 
-  a2_2.uninstall();
+  await a2_2.uninstall();
 });
 
 // Verify that changing the userDisabled value before onInstallEnded works
@@ -782,7 +738,7 @@ add_task(async function test_17() {
     aInstall.addListener({
       onInstallEnded() {
         resolve();
-      }
+      },
     });
     aInstall.install();
   });
@@ -804,12 +760,12 @@ add_task(async function test_17() {
     aInstall_2.addListener({
       onInstallStarted() {
         ok(!aInstall_2.addon.userDisabled);
-        aInstall_2.addon.userDisabled = true;
+        aInstall_2.addon.disable();
       },
 
       onInstallEnded() {
         resolve();
-      }
+      },
     });
     aInstall_2.install();
   });
@@ -821,7 +777,7 @@ add_task(async function test_17() {
     isActive: false,
   });
 
-  a2_2.uninstall();
+  await a2_2.uninstall();
 });
 
 // Verify that changing the userDisabled value before onInstallEnded works
@@ -834,12 +790,12 @@ add_task(async function test_18() {
     aInstall.addListener({
       onInstallStarted() {
         ok(!aInstall.addon.userDisabled);
-        aInstall.addon.userDisabled = true;
+        aInstall.addon.disable();
       },
 
       onInstallEnded() {
         resolve();
-      }
+      },
     });
     aInstall.install();
   });
@@ -858,12 +814,12 @@ add_task(async function test_18() {
     aInstall_2.addListener({
       onInstallStarted() {
         ok(aInstall_2.addon.userDisabled);
-        aInstall_2.addon.userDisabled = false;
+        aInstall_2.addon.enable();
       },
 
       onInstallEnded() {
         resolve();
-      }
+      },
     });
     aInstall_2.install();
   });
@@ -876,7 +832,7 @@ add_task(async function test_18() {
     userDisabled: false,
   });
 
-  a2_2.uninstall();
+  await a2_2.uninstall();
 });
 
 
@@ -899,7 +855,7 @@ add_task(async function test_18_1() {
     aInstall.addListener({
       onInstallEnded(unused, aAddon) {
         resolve(aAddon);
-      }
+      },
     });
     aInstall.install();
   });
@@ -911,7 +867,7 @@ add_task(async function test_18_1() {
   let a2 = await AddonManager.getAddonByID("addon2@tests.mozilla.org");
   notEqual(a2.fullDescription, "Repository description");
 
-  a2.uninstall();
+  await a2.uninstall();
 });
 
 // Checks that metadata is downloaded for new installs and is visible before and
@@ -926,7 +882,7 @@ add_task(async function test_19() {
     aInstall.addListener({
       onInstallEnded(unused, aAddon) {
         resolve(aAddon);
-      }
+      },
     });
     aInstall.install();
   });
@@ -939,7 +895,7 @@ add_task(async function test_19() {
   let a2 = await AddonManager.getAddonByID("addon2@tests.mozilla.org");
   equal(a2.fullDescription, "Repository description");
 
-  a2.uninstall();
+  await a2.uninstall();
 });
 
 // Do the same again to make sure it works when the data is already in the cache
@@ -952,7 +908,7 @@ add_task(async function test_20() {
     aInstall.addListener({
       onInstallEnded(unused, aAddon) {
         resolve(aAddon);
-      }
+      },
     });
     aInstall.install();
   });
@@ -965,13 +921,13 @@ add_task(async function test_20() {
   let a2 = await AddonManager.getAddonByID("addon2@tests.mozilla.org");
   equal(a2.fullDescription, "Repository description");
 
-  a2.uninstall();
+  await a2.uninstall();
 });
 
 // Tests that an install can be restarted after being cancelled
 add_task(async function test_22() {
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install3.xpi";
@@ -988,7 +944,7 @@ add_task(async function test_22() {
       "onDownloadEnded",
     ], install1 => {
       prepare_test({}, [
-        "onDownloadCancelled"
+        "onDownloadCancelled",
       ]);
       aInstall.cancel();
       resolve(install1);
@@ -1002,13 +958,13 @@ add_task(async function test_22() {
     prepare_test({
       "addon3@tests.mozilla.org": [
         ["onInstalling", false],
-        "onInstalled"
-      ]
+        "onInstalled",
+      ],
     }, [
       "onDownloadStarted",
       "onDownloadEnded",
       "onInstallStarted",
-      "onInstallEnded"
+      "onInstallEnded",
     ], resolve);
 
     install.install();
@@ -1017,14 +973,14 @@ add_task(async function test_22() {
   ensure_test_completed();
 
   AddonManager.removeAddonListener(AddonListener);
-  install.addon.uninstall();
+  await install.addon.uninstall();
 });
 
 // Tests that an install can be restarted after being cancelled when a hash
 // was provided
 add_task(async function test_23() {
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install3.xpi";
@@ -1042,7 +998,7 @@ add_task(async function test_23() {
       "onDownloadEnded",
     ], () => {
       prepare_test({}, [
-        "onDownloadCancelled"
+        "onDownloadCancelled",
       ]);
 
       install.cancel();
@@ -1058,12 +1014,12 @@ add_task(async function test_23() {
       "addon3@tests.mozilla.org": [
         ["onInstalling", false],
         "onInstalled",
-      ]
+      ],
     }, [
       "onDownloadStarted",
       "onDownloadEnded",
       "onInstallStarted",
-      "onInstallEnded"
+      "onInstallEnded",
     ], resolve);
 
     install.install();
@@ -1072,14 +1028,14 @@ add_task(async function test_23() {
   ensure_test_completed();
 
   AddonManager.removeAddonListener(AddonListener);
-  install.addon.uninstall();
+  await install.addon.uninstall();
 });
 
 // Tests that an install with a bad hash can be restarted after it fails, though
 // it will only fail again
 add_task(async function test_24() {
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install3.xpi";
@@ -1101,7 +1057,7 @@ add_task(async function test_24() {
   await new Promise(resolve => {
     prepare_test({ }, [
       "onDownloadStarted",
-      "onDownloadFailed"
+      "onDownloadFailed",
     ], resolve);
 
     install.install();
@@ -1111,7 +1067,7 @@ add_task(async function test_24() {
 // Tests that installs with a hash for a local file work
 add_task(async function test_25() {
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = Services.io.newFileURI(XPIS.test_install3).spec;
@@ -1124,7 +1080,7 @@ add_task(async function test_25() {
   });
 
   prepare_test({ }, [
-    "onDownloadCancelled"
+    "onDownloadCancelled",
   ]);
 
   aInstall.cancel();
@@ -1136,7 +1092,7 @@ add_task(async function test_26() {
   prepare_test({ }, [
     "onNewInstall",
     "onDownloadStarted",
-    "onDownloadCancelled"
+    "onDownloadCancelled",
   ]);
 
   let url = "http://example.com/redirect?/addons/test_install1.xpi";
@@ -1161,13 +1117,13 @@ add_task(async function test_26() {
         observerService.removeObserver(this);
 
         resolve();
-      }
+      },
     });
 
     aInstall.addListener({
       onDownloadProgress(aDownloadProgressInstall) {
         aDownloadProgressInstall.cancel();
-      }
+      },
     });
 
     aInstall.install();
@@ -1179,7 +1135,7 @@ add_task(async function test_26() {
 // cancelled in mid-download
 add_task(async function test_27() {
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install3.xpi";
@@ -1194,7 +1150,7 @@ add_task(async function test_27() {
     onDownloadProgress() {
       aInstall.removeListener(this);
       aInstall.cancel();
-    }
+    },
   });
 
   let install = await new Promise(resolve => {
@@ -1210,12 +1166,12 @@ add_task(async function test_27() {
       "addon3@tests.mozilla.org": [
         ["onInstalling", false],
         "onInstalled",
-      ]
+      ],
     }, [
       "onDownloadStarted",
       "onDownloadEnded",
       "onInstallStarted",
-      "onInstallEnded"
+      "onInstallEnded",
     ], resolve);
 
     let file = install.file;
@@ -1227,7 +1183,7 @@ add_task(async function test_27() {
   ensure_test_completed();
 
   AddonManager.removeAddonListener(AddonListener);
-  install.addon.uninstall();
+  await install.addon.uninstall();
 });
 
 // Tests that an install with a matching compatibility override has appDisabled
@@ -1236,7 +1192,7 @@ add_task(async function test_29() {
   Services.prefs.setBoolPref("extensions.getAddons.cache.enabled", true);
 
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let url = "http://example.com/addons/test_install6.xpi";
@@ -1256,7 +1212,7 @@ add_task(async function test_29() {
   install = await new Promise(resolve => {
     prepare_test({}, [
       "onDownloadStarted",
-      "onDownloadEnded"
+      "onDownloadEnded",
     ], install2 => {
       resolve(install2);
       return false;
@@ -1275,7 +1231,7 @@ add_task(async function test_29() {
 
   await new Promise(resolve => {
     prepare_test({}, [
-      "onDownloadCancelled"
+      "onDownloadCancelled",
     ], resolve);
     install.cancel();
   });
@@ -1285,7 +1241,7 @@ add_task(async function test_29() {
 // corrupt file
 add_task(async function test_30() {
   prepare_test({ }, [
-    "onNewInstall"
+    "onNewInstall",
   ]);
 
   let install = await AddonManager.getInstallForFile(XPIS.test_install7);

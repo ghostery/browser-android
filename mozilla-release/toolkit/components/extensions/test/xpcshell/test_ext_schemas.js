@@ -1,7 +1,6 @@
 "use strict";
 
 ChromeUtils.import("resource://gre/modules/Schemas.jsm");
-ChromeUtils.import("resource://gre/modules/BrowserUtils.jsm");
 ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
 
 let {LocalAPIImplementation, SchemaAPIInterface} = ExtensionCommon;
@@ -1733,7 +1732,7 @@ add_task(async function testReturns() {
 
   if (AppConstants.DEBUG) {
     Assert.throws(() => root.returns.invalid(),
-                  `Type error for result value (Property "size" is required)`,
+                  /Type error for result value \(Property "size" is required\)/,
                   "Should throw for invalid result in DEBUG builds");
   } else {
     deepEqual(root.returns.invalid(), {},

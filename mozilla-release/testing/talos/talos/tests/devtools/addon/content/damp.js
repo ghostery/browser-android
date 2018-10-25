@@ -1,19 +1,15 @@
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
 const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", {});
+const { AddonManager } = ChromeUtils.import("resource://gre/modules/AddonManager.jsm", {});
 const env = Cc["@mozilla.org/process/environment;1"].getService(Ci.nsIEnvironment);
+let scope = {};
+Services.scriptloader.loadSubScript("chrome://talos-powers-content/content/TalosParentProfiler.js", scope);
+const { TalosParentProfiler } = scope;
 
 XPCOMUtils.defineLazyGetter(this, "require", function() {
   let { require } =
     ChromeUtils.import("resource://devtools/shared/Loader.jsm", {});
   return require;
-});
-XPCOMUtils.defineLazyGetter(this, "gDevTools", function() {
-  let { gDevTools } = require("devtools/client/framework/devtools");
-  return gDevTools;
-});
-XPCOMUtils.defineLazyGetter(this, "TargetFactory", function() {
-  let { TargetFactory } = require("devtools/client/framework/target");
-  return TargetFactory;
 });
 
 // Record allocation count in new subtests if DEBUG_DEVTOOLS_ALLOCATIONS is set to
@@ -26,10 +22,6 @@ const TEST_TIMEOUT = 5 * 60000;
 
 function getMostRecentBrowserWindow() {
   return Services.wm.getMostRecentWindow("navigator:browser");
-}
-
-function getActiveTab(window) {
-  return window.gBrowser.selectedTab;
 }
 
 let gmm = window.getGroupMessageManager("browsers");
@@ -95,7 +87,7 @@ Damp.prototype = {
     // as it slow down next executions almost like a cold start.
 
     // See minimizeMemoryUsage code to justify the 3 iterations and the setTimeout:
-    // https://searchfox.org/mozilla-central/source/xpcom/base/nsMemoryReporterManager.cpp#2574-2585
+    // https://searchfox.org/mozilla-central/rev/33c21c060b7f3a52477a73d06ebcb2bf313c4431/xpcom/base/nsMemoryReporterManager.cpp#2574-2585,2591-2594
     for (let i = 0; i < 3; i++) {
       // See minimizeMemoryUsage code here to justify the GC+CC+GC:
       // https://searchfox.org/mozilla-central/rev/be78e6ea9b10b1f5b2b3b013f01d86e1062abb2b/dom/base/nsJSEnvironment.cpp#341-349
@@ -116,12 +108,16 @@ Damp.prototype = {
    *
    * @param label String
    *        Test title, displayed everywhere in PerfHerder, DevTools Perf Dashboard, ...
+   * @param record Boolean
+   *        Optional, if passed false, the test won't be recorded. It won't appear in
+   *        PerfHerder. Instead we will record perf-html markers and only print the
+   *        timings on stdout.
    *
    * @return object
    *         With a `done` method, to be called whenever the test is finished running
    *         and we should record its duration.
    */
-  runTest(label) {
+  runTest(label, record = true) {
     if (DEBUG_ALLOCATIONS) {
       if (!this.allocationTracker) {
         this.allocationTracker = this.startAllocationTracker();
@@ -139,12 +135,16 @@ Damp.prototype = {
         let end = performance.now();
         let duration = end - start;
         performance.measure(label, startLabel);
-        this._results.push({
-          name: label,
-          value: duration
-        });
+        if (record) {
+          this._results.push({
+            name: label,
+            value: duration
+          });
+        } else {
+          dump(`'${label}' took ${duration}ms.\n`);
+        }
 
-        if (DEBUG_ALLOCATIONS == "normal") {
+        if (DEBUG_ALLOCATIONS == "normal" && record) {
           this._results.push({
             name: label + ".allocations",
             value: this.allocationTracker.countAllocations()
@@ -157,10 +157,24 @@ Damp.prototype = {
   },
 
   async addTab(url) {
-    let tab = this._win.gBrowser.selectedTab = this._win.gBrowser.addTab(url);
+    let tab = this._win.gBrowser.selectedTab = this._win.gBrowser.addTrustedTab(url);
     let browser = tab.linkedBrowser;
     await awaitBrowserLoaded(browser);
     return tab;
+  },
+
+  async waitForPendingPaints(window) {
+    let utils = window.windowUtils;
+    window.performance.mark("pending paints.start");
+    while (utils.isMozAfterPaintPending) {
+      await new Promise(done => {
+        window.addEventListener("MozAfterPaint", function listener() {
+          window.performance.mark("pending paint");
+          done();
+        }, { once: true });
+      });
+    }
+    window.performance.measure("pending paints", "pending paints.start");
   },
 
   closeCurrentTab() {
@@ -183,7 +197,7 @@ Damp.prototype = {
   async testSetup(url) {
     let tab = await this.addTab(url);
     await new Promise(resolve => {
-      setTimeout(resolve, this._config.rest);
+      setTimeout(resolve, 100);
     });
     return tab;
   },
@@ -200,13 +214,9 @@ Damp.prototype = {
     this._runNextTest();
   },
 
-  // Everything below here are common pieces needed for the test runner to function,
-  // just copy and pasted from Tart with /s/TART/DAMP
-
   _win: undefined,
   _dampTab: undefined,
   _results: [],
-  _config: {subtests: [], repeat: 1, rest: 100},
   _nextTestIndex: 0,
   _tests: [],
   _onSequenceComplete: 0,
@@ -297,8 +307,6 @@ Damp.prototype = {
     }
   },
 
-  _onTestComplete: null,
-
   _doneInternal() {
     // Ignore any duplicated call to this method
     if (this._done) {
@@ -317,9 +325,7 @@ Damp.prototype = {
       this._reportAllResults();
     }
 
-    if (this._onTestComplete) {
-      this._onTestComplete(JSON.parse(JSON.stringify(this._results))); // Clone results
-    }
+    TalosParentProfiler.pause("DAMP - end");
   },
 
   startAllocationTracker() {
@@ -350,17 +356,45 @@ Damp.prototype = {
     dump(e.stack + "\n");
   },
 
-  startTest(doneCallback, config) {
+  // Waits for any pending operations that may execute on Firefox startup and that
+  // can still be pending when we start running DAMP tests.
+  async waitBeforeRunningTests() {
+    // Addons may still be being loaded, so wait for them to be fully set up.
+    if (!AddonManager.isReady) {
+      let onAddonManagerReady = new Promise(resolve => {
+        let listener = {
+          onStartup() {
+            AddonManager.removeManagerListener(listener);
+            resolve();
+          },
+          onShutdown() {},
+        };
+        AddonManager.addManagerListener(listener);
+      });
+      await onAddonManagerReady;
+    }
+
+    // SessionRestore triggers some saving sequence on idle,
+    // so wait for that to be processed before starting tests.
+    // https://searchfox.org/mozilla-central/rev/83a923ef7a3b95a516f240a6810c20664b1e0ac9/browser/components/sessionstore/content/content-sessionStore.js#828-830
+    // https://searchfox.org/mozilla-central/rev/83a923ef7a3b95a516f240a6810c20664b1e0ac9/browser/components/sessionstore/content/content-sessionStore.js#858
+    await new Promise(resolve => {
+      setTimeout(resolve, 1500);
+    });
+    await new Promise(resolve => {
+      requestIdleCallback(resolve, { timeout: 15000 });
+    });
+
+    // Free memory before running the first test, otherwise we may have a GC
+    // related to Firefox startup or DAMP setup during the first test.
+    await this.garbageCollect();
+  },
+
+  startTest() {
     try {
       dump("Initialize the head file with a reference to this DAMP instance\n");
       let head = require("chrome://damp/content/tests/head.js");
       head.initialize(this);
-
-      this._onTestComplete = function(results) {
-        TalosParentProfiler.pause("DAMP - end");
-        doneCallback(results);
-      };
-      this._config = config;
 
       this._win = Services.wm.getMostRecentWindow("navigator:browser");
       this._dampTab = this._win.gBrowser.selectedTab;
@@ -371,8 +405,9 @@ Damp.prototype = {
       // Filter tests via `./mach --subtests filter` command line argument
       let filter = Services.prefs.getCharPref("talos.subtests", "");
 
-      let tests = config.subtests.filter(test => !test.disabled)
-                                 .filter(test => test.name.includes(filter));
+      let DAMP_TESTS = require("chrome://damp/content/damp-tests.js");
+      let tests = DAMP_TESTS.filter(test => !test.disabled)
+                            .filter(test => test.name.includes(filter));
 
       if (tests.length === 0) {
         this.error(`Unable to find any test matching '${filter}'`);
@@ -389,14 +424,10 @@ Damp.prototype = {
       // Construct the sequence array while filtering tests
       let sequenceArray = [];
       for (let test of tests) {
-        for (let r = 0; r < config.repeat; r++) {
-          sequenceArray.push(test.path);
-        }
+        sequenceArray.push(test.path);
       }
 
-      // Free memory before running the first test, otherwise we may have a GC
-      // related to Firefox startup or DAMP setup during the first test.
-      this.garbageCollect().then(() => {
+     this.waitBeforeRunningTests().then(() => {
         this._doSequence(sequenceArray, this._doneInternal);
       }).catch(e => {
         this.exception(e);

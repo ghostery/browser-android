@@ -93,7 +93,7 @@ nsAboutProtocolHandler::GetFlagsForURI(nsIURI* aURI, uint32_t* aFlags)
     // Secure (https) pages can load safe about pages without becoming
     // mixed content.
     if (aboutModuleFlags & nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT) {
-        *aFlags |= URI_SAFE_TO_LOAD_IN_SECURE_CONTEXT;
+        *aFlags |= URI_IS_POTENTIALLY_TRUSTWORTHY;
         // about: pages can only be loaded by unprivileged principals
         // if they are marked as LINKABLE
         if (aboutModuleFlags & nsIAboutModule::MAKE_LINKABLE) {
@@ -160,9 +160,6 @@ nsAboutProtocolHandler::NewURI(const nsACString &aSpec,
         NS_ENSURE_SUCCESS(rv, rv);
     }
 
-    // We don't want to allow mutation, since it would allow safe and
-    // unsafe URIs to change into each other...
-    NS_TryToSetImmutable(url);
     url.swap(*result);
     return NS_OK;
 }
@@ -188,7 +185,12 @@ nsAboutProtocolHandler::NewChannel2(nsIURI* uri,
             // a srcdoc iframe.  To ensure that it stays unresolvable, we pretend
             // that it doesn't exist.
             rv = NS_ERROR_FACTORY_NOT_REGISTERED;
-        } else {
+        } else if (!path.EqualsLiteral("blank") &&
+                   !path.EqualsLiteral("neterror") &&
+                   !path.EqualsLiteral("home") &&
+                   !path.EqualsLiteral("welcome") &&
+                   !path.EqualsLiteral("newtab") &&
+                   !path.EqualsLiteral("certerror")) {
             nsCOMPtr<nsIEnterprisePolicies> policyManager =
                 do_GetService("@mozilla.org/browser/enterprisepolicies;1", &rv2);
             if (NS_SUCCEEDED(rv2)) {
@@ -308,7 +310,7 @@ nsSafeAboutProtocolHandler::GetDefaultPort(int32_t *result)
 NS_IMETHODIMP
 nsSafeAboutProtocolHandler::GetProtocolFlags(uint32_t *result)
 {
-    *result = URI_NORELATIVE | URI_NOAUTH | URI_LOADABLE_BY_ANYONE | URI_SAFE_TO_LOAD_IN_SECURE_CONTEXT;
+    *result = URI_NORELATIVE | URI_NOAUTH | URI_LOADABLE_BY_ANYONE | URI_IS_POTENTIALLY_TRUSTWORTHY;
     return NS_OK;
 }
 
@@ -325,7 +327,6 @@ nsSafeAboutProtocolHandler::NewURI(const nsACString &aSpec,
         return rv;
     }
 
-    NS_TryToSetImmutable(*result);
     return NS_OK;
 }
 
@@ -366,7 +367,7 @@ NS_INTERFACE_MAP_END_INHERITING(nsSimpleNestedURI)
 NS_IMETHODIMP
 nsNestedAboutURI::Read(nsIObjectInputStream *aStream)
 {
-    NS_NOTREACHED("Use nsIURIMutator.read() instead");
+    MOZ_ASSERT_UNREACHABLE("Use nsIURIMutator.read() instead");
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -429,13 +430,13 @@ nsNestedAboutURI::StartClone(nsSimpleURI::RefHandlingEnum aRefHandlingMode,
     NS_ENSURE_TRUE(mInnerURI, nullptr);
 
     nsCOMPtr<nsIURI> innerClone;
-    nsresult rv;
+    nsresult rv = NS_OK;
     if (aRefHandlingMode == eHonorRef) {
-        rv = mInnerURI->Clone(getter_AddRefs(innerClone));
+        innerClone = mInnerURI;
     } else if (aRefHandlingMode == eReplaceRef) {
-        rv = mInnerURI->CloneWithNewRef(aNewRef, getter_AddRefs(innerClone));
+        rv = NS_GetURIWithNewRef(mInnerURI, aNewRef, getter_AddRefs(innerClone));
     } else {
-        rv = mInnerURI->CloneIgnoringRef(getter_AddRefs(innerClone));
+        rv = NS_GetURIWithoutRef(mInnerURI, getter_AddRefs(innerClone));
     }
 
     if (NS_FAILED(rv)) {
@@ -444,7 +445,6 @@ nsNestedAboutURI::StartClone(nsSimpleURI::RefHandlingEnum aRefHandlingMode,
 
     nsNestedAboutURI* url = new nsNestedAboutURI(innerClone, mBaseURI);
     SetRefOnClone(url, aRefHandlingMode, aNewRef);
-    url->SetMutable(false);
 
     return url;
 }
@@ -464,9 +464,6 @@ nsNestedAboutURI::Mutate(nsIURIMutator** aMutator)
     if (NS_FAILED(rv)) {
         return rv;
     }
-    // StartClone calls SetMutable(false) but we need the mutator clone
-    // to be mutable
-    mutator->ResetMutable();
     mutator.forget(aMutator);
     return NS_OK;
 }

@@ -5,17 +5,17 @@
 <!ENTITY messengerWindow.title "邮件 &amp; 新闻组">
 <!ENTITY titleModifier.label "&brandShortName;">
 <!ENTITY titleSeparator.label " - ">
-<!-- tabmail -->
 
+<!-- tabmail -->
 <!ENTITY tabmailClose.label "关闭标签页">
 <!ENTITY tabmailClose.tooltip "关闭标签页">
 <!ENTITY tabmailNewButton.tooltip "复制当前标签">
 <!ENTITY tabmailCloseButton.tooltip "关闭当前标签页">
 <!ENTITY tabmailAllTabs.tooltip "列出全部标签页">
-<!-- menu items:  the . means that the menu item isn't implemented yet -->
+
+<!-- menu items: the . means that the menu item isn't implemented yet -->
+
 <!-- File menu items -->
-
-
 <!ENTITY newMessage.label "新建消息">
 <!ENTITY newMessage.accesskey "N">
 <!ENTITY newFolderCmd.label "文件夹…">
@@ -27,7 +27,7 @@
 <!ENTITY newTabCmd.key "t">
 <!ENTITY closeTabCmd.label "关闭标签页">
 <!ENTITY closeTabCmd.accesskey "e">
-<!ENTITY newAccountCmd.label "帐户…">
+<!ENTITY newAccountCmd.label "账户…">
 <!ENTITY newAccountCmd.accesskey "A">
 <!ENTITY openMessageFileCmd.label "打开文件…">
 <!ENTITY openMessageFileCmd.accesskey "O">
@@ -58,9 +58,9 @@
 <!ENTITY renameFolder.label "重命名文件夹…">
 <!ENTITY renameFolder.accesskey "R">
 <!ENTITY compactFolders.label "压缩文件夹。">
-<!ENTITY compactFolders.accesskey  "F">
+<!ENTITY compactFolders.accesskey		"F">
 <!ENTITY emptyTrashCmd.label "清空“废件箱”">
-<!ENTITY emptyTrashCmd.accesskey  "y">
+<!ENTITY emptyTrashCmd.accesskey		"y">
 <!ENTITY offlineMenu.label "脱机">
 <!ENTITY offlineMenu.accesskey "l">
 <!ENTITY synchronizeOfflineCmd.label "立即下载/同步…">
@@ -71,8 +71,8 @@
 <!ENTITY downloadSelectedCmd.accesskey "t">
 <!ENTITY downloadFlaggedCmd.label "获得消息头">
 <!ENTITY downloadFlaggedCmd.accesskey "G">
-<!-- Edit Menu -->
 
+<!-- Edit Menu -->
 <!ENTITY deleteMsgCmd.label "删除消息">
 <!ENTITY deleteMsgCmd.accesskey "D">
 <!ENTITY undeleteMsgCmd.label "恢复已删除的消息">
@@ -98,7 +98,7 @@
 <!ENTITY folderPropsFolderCmd.label "文件夹属性…">
 <!ENTITY folderPropsNewsgroupCmd.label "新闻组属性…">
 <!ENTITY folderPropsCmd.accesskey "o">
-<!ENTITY accountManagerCmd.label "邮件  新闻组帐户设置…">
+<!ENTITY accountManagerCmd.label "邮件  新闻组账户设置…">
 <!ENTITY accountManagerCmd.accesskey "M">
 <!ENTITY undoDeleteMsgCmd.label "撤销 删除消息">
 <!ENTITY redoDeleteMsgCmd.label "重做删除消息">
@@ -110,8 +110,8 @@
 <!ENTITY redoMarkAllCmd.label "重做全部标记为已读">
 <!ENTITY undoDefaultCmd.label "还原">
 <!ENTITY redoDefaultCmd.label "重复">
-<!-- View Menu -->
 
+<!-- View Menu -->
 <!ENTITY showMessengerToolbarCmd.label "邮件工具栏">
 <!ENTITY showMessengerToolbarCmd.accesskey "M">
 <!ENTITY showSearchToolbarCmd.label "搜索栏">
@@ -133,8 +133,8 @@
 <!ENTITY showThreadPaneCmd.accesskey "T">
 <!ENTITY showFolderPaneCmd.label "文件夹面板">
 <!ENTITY showFolderPaneCmd.accesskey "F">
-<!-- sortMenu is also used by addressbook -->
 
+<!-- sortMenu is also used by addressbook -->
 <!ENTITY sortMenu.label "排序">
 <!ENTITY sortMenu.accesskey "t">
 
@@ -234,12 +234,12 @@
 <!ENTITY pageSourceCmd.key "u">
 
 <!ENTITY findCmd.label "在此消息中查找…">
+
 <!-- LOCALIZATION NOTE (quickFilterBar.show.key2):
      This is the key used to show the Lightning quick filter bar. -->
-
 <!ENTITY quickFilterBar.show.key2 "K">
-<!-- Go Menu -->
 
+<!-- Go Menu -->
 
 <!ENTITY goMenu.label "转到">
 <!ENTITY goMenu.accesskey "G">
@@ -274,8 +274,8 @@
 <!ENTITY prevFlaggedMsgCmd.accesskey "F">
 <!ENTITY startPageCmd.label "邮件起始页">
 <!ENTITY startPageCmd.accesskey "S">
-<!-- Message Menu -->
 
+<!-- Message Menu -->
 <!ENTITY msgMenu.label "消息">
 <!ENTITY msgMenu.accesskey "M">
 <!ENTITY newMsgCmd.label "新建消息">
@@ -284,23 +284,23 @@
 <!ENTITY newNewMsgCmd.accesskey "M">
 <!ENTITY replyMsgCmd.label "回复">
 <!ENTITY replyMsgCmd.accesskey "R">
-<!ENTITY replyMsgCmd.key "r">
+<!ENTITY replyMsgCmd.key	"r">
 <!ENTITY replyListCmd.label "回复到列表">
 <!ENTITY replyListCmd.accesskey "y">
 <!ENTITY replyNewsgroupCmd.label "回复到新闻组">
-<!ENTITY replyNewsgroupCmd.accesskey "y">
+<!ENTITY replyNewsgroupCmd.accesskey	"y">
 <!ENTITY replySenderCmd.label "只回复发件人">
 <!ENTITY replySenderCmd.accesskey "R">
 <!ENTITY replyToAllMsgCmd.label "全部回复">
-<!ENTITY replyToAllMsgCmd.accesskey "p">
-<!ENTITY replyToAllMsgCmd.key "r">
+<!ENTITY replyToAllMsgCmd.accesskey	"p">
+<!ENTITY replyToAllMsgCmd.key	"r">
 <!ENTITY replyToSenderAndNewsgroupCmd.label "回复发送人和新闻组">
 <!ENTITY replyToSenderAndNewsgroupCmd.accesskey "p">
 <!ENTITY replyToAllRecipientsCmd.label "回复所有收件人">
 <!ENTITY replyToAllRecipientsCmd.accesskey "A">
 <!ENTITY forwardMsgCmd.label "转发">
 <!ENTITY forwardMsgCmd.accesskey "F">
-<!ENTITY forwardMsgCmd.key "l">
+<!ENTITY forwardMsgCmd.key	"l">
 <!ENTITY forwardAsMenu.label "转发">
 <!ENTITY forwardAsMenu.accesskey "o">
 <!ENTITY forwardAsInline.label "内联">
@@ -373,8 +373,8 @@
 <!ENTITY openFeedSummaryInWindow.accesskey "S">
 <!ENTITY openFeedWebPageInMP.label "切换是否显示消息面板中的网页和摘要">
 <!ENTITY openFeedWebPageInMP.accesskey "T">
-<!-- Tools Menu -->
 
+<!-- Tools Menu -->
 <!ENTITY searchMailCmd.label "搜索消息…">
 <!ENTITY searchMailCmd.accesskey "M">
 <!ENTITY searchMailCmd.key "s">
@@ -394,13 +394,13 @@
 <!ENTITY deleteJunk.accesskey "e">
 <!ENTITY importCmd.label "导入…">
 <!ENTITY importCmd.accesskey "I">
-<!-- Folder Pane -->
 
+<!-- Folder Pane -->
 <!ENTITY nameColumn.label "类别">
 <!ENTITY unreadColumn.label "未读">
 <!ENTITY totalColumn.label "总共">
-<!-- Toolbar items -->
 
+<!-- Toolbar items -->
 <!ENTITY getMsgButton.label "获取邮件">
 <!ENTITY newMsgButton.label "编写">
 <!ENTITY newHTMLMessageCmd.label "用HTML编写">
@@ -421,8 +421,8 @@
 <!ENTITY junkButton.label "垃圾">
 <!ENTITY notJunkButton.label "非垃圾">
 <!ENTITY searchButton.title "高级搜索">
-<!-- Tooltips -->
 
+<!-- Tooltips -->
 <!ENTITY menuBar.tooltip "菜单栏">
 <!ENTITY mailToolbar.tooltip "邮件工具栏">
 <!ENTITY searchToolbar.tooltip "搜索栏">
@@ -444,17 +444,17 @@
 <!ENTITY throbber.tooltip "转到 &vendorShortName; 主页">
 <!ENTITY junkButton.tooltip "将选中的消息标记为垃圾(或者非垃圾)">
 <!ENTITY notJunkButton.tooltip "将所选消息标记为非垃圾邮件">
-<!-- Remote Content Button Popup -->
 
+<!-- Remote Content Button Popup -->
 <!ENTITY remoteContentOptionsAllowForMsg.label "显示此消息中的远程内容">
 <!ENTITY remoteContentOptionsAllowForMsg.accesskey "S">
 <!ENTITY editRemoteContentSettings.label "编辑远程内容的权限…">
 <!ENTITY editRemoteContentSettings.accesskey "E">
+
 <!-- Statusbar -->
+<!ENTITY statusText.label "完成">
 
-<!ENTITY  statusText.label "完成">
 <!-- Thread Pane Context Menu -->
-
 <!ENTITY contextOpenNewWindow.label "在新窗口中打开消息">
 <!ENTITY contextOpenNewWindow.accesskey "W">
 <!ENTITY contextOpenNewTab.label "在新标签页中打开消息">
@@ -489,8 +489,8 @@
 <!ENTITY contextPrint.accesskey "P">
 <!ENTITY contextPrintPreview.label "打印预览">
 <!ENTITY contextPrintPreview.accesskey "v">
-<!-- Folder Pane Context Menu -->
 
+<!-- Folder Pane Context Menu -->
 <!ENTITY folderContextGetMessages.label "获取账户信息">
 <!ENTITY folderContextGetMessages.accesskey "G">
 <!ENTITY folderContextOpenNewWindow.label "在新窗口打开邮件">
@@ -525,8 +525,8 @@
 <!ENTITY folderContextProperties.accesskey "P">
 <!ENTITY folderContextSettings.label "设置…">
 <!ENTITY folderContextSettings.accesskey "e">
-<!-- focusSearchInput.key also used by addressbook -->
 
+<!-- focusSearchInput.key also used by addressbook -->
 <!ENTITY focusSearchInput.key "k">
 <!ENTITY advancedButton.label "高级…">
 <!ENTITY advancedButton.accesskey "A">

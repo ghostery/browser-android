@@ -71,14 +71,15 @@ public:
   NS_IMETHOD GetAddonPolicy(nsISupports** aResult) final;
   NS_IMETHOD GetCsp(nsIContentSecurityPolicy** aCsp) override;
   NS_IMETHOD SetCsp(nsIContentSecurityPolicy* aCsp) override;
-  NS_IMETHOD EnsureCSP(nsIDOMDocument* aDocument, nsIContentSecurityPolicy** aCSP) override;
+  NS_IMETHOD EnsureCSP(nsIDocument* aDocument, nsIContentSecurityPolicy** aCSP) override;
   NS_IMETHOD GetPreloadCsp(nsIContentSecurityPolicy** aPreloadCSP) override;
-  NS_IMETHOD EnsurePreloadCSP(nsIDOMDocument* aDocument, nsIContentSecurityPolicy** aCSP) override;
+  NS_IMETHOD EnsurePreloadCSP(nsIDocument* aDocument, nsIContentSecurityPolicy** aCSP) override;
   NS_IMETHOD GetCspJSON(nsAString& outCSPinJSON) override;
   NS_IMETHOD GetIsNullPrincipal(bool* aResult) override;
   NS_IMETHOD GetIsCodebasePrincipal(bool* aResult) override;
   NS_IMETHOD GetIsExpandedPrincipal(bool* aResult) override;
   NS_IMETHOD GetIsSystemPrincipal(bool* aResult) override;
+  NS_IMETHOD GetIsAddonOrExpandedAddonPrincipal(bool* aResult) override;
   NS_IMETHOD GetOriginAttributes(JSContext* aCx, JS::MutableHandle<JS::Value> aVal) final;
   NS_IMETHOD GetOriginSuffix(nsACString& aOriginSuffix) final;
   NS_IMETHOD GetAppId(uint32_t* aAppId) final;
@@ -112,6 +113,10 @@ public:
   PrincipalKind Kind() const { return mKind; }
 
   already_AddRefed<BasePrincipal> CloneStrippingUserContextIdAndFirstPartyDomain();
+
+  // If this is an add-on content script principal, returns its AddonPolicy.
+  // Otherwise returns null.
+  extensions::WebExtensionPolicy* ContentScriptAddonPolicy();
 
   // Helper to check whether this principal is associated with an addon that
   // allows unprivileged code to load aURI.  aExplicit == true will prevent
@@ -157,6 +162,8 @@ public:
     return (AddonPolicy() &&
             !BasePrincipal::Cast(aDocumentPrincipal)->AddonPolicy());
   }
+
+  uint32_t GetOriginNoSuffixHash() const { return mOriginNoSuffix->hash(); }
 
 protected:
   virtual ~BasePrincipal();

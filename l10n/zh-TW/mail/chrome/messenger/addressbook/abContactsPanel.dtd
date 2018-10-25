@@ -38,7 +38,7 @@
 
 <!ENTITY newContactAbContext.label          "新增聯絡人">
 <!ENTITY newContactAbContext.accesskey      "C">
-<!ENTITY newListAbContext.label             "新增收件清單">
+<!ENTITY newListAbContext.label             "新增群組名單">
 <!ENTITY newListAbContext.accesskey         "L">
 
 <!ENTITY toButton.label                     "加到收件者 (To):">

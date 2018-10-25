@@ -2,11 +2,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!-- LOCALIZATION NOTE (aboutPrivateBrowsing.title):
-     Please ensure this exactly matches tabs.emptyPrivateTabTitle in tabbrowser.properties -->
-<!ENTITY aboutPrivateBrowsing.title                      "사생활 보호 모드">
-<!ENTITY aboutPrivateBrowsing.notPrivate.title           "사생활 보호 창을 여시겠습니까?">
-
 <!ENTITY aboutPrivateBrowsing.notPrivate                 "현재 사생활 보호 창에 있지 않습니다.">
 <!ENTITY privatebrowsingpage.openPrivateWindow.label     "새 사생활 보호 창 시작">
 <!ENTITY privatebrowsingpage.openPrivateWindow.accesskey "P">
@@ -25,6 +20,7 @@
 <!ENTITY aboutPrivateBrowsing.info.saved.after2          ":">
 <!ENTITY aboutPrivateBrowsing.info.downloads             "다운로드">
 <!ENTITY aboutPrivateBrowsing.info.bookmarks             "북마크">
+<!ENTITY aboutPrivateBrowsing.info.clipboard             "복사된 텍스트">
 <!ENTITY aboutPrivateBrowsing.note.before                "사생활 보호 브라우징이 ">
 <!ENTITY aboutPrivateBrowsing.note.emphasize             "사용자를 인터넷에서 완전히 감추는 것은">
 <!ENTITY aboutPrivateBrowsing.note.after                 " 아닙니다. 고용주나 인터넷 서비스 제공자는 여전히 방문한 페이지를 알 수 있습니다.">
@@ -35,3 +31,6 @@
 <!ENTITY trackingProtection.title                        "추적 보호">
 <!ENTITY trackingProtection.description2                 "어떤 사이트들은 사용자의 인터넷 활동을 추적할 수 있는 방법을 사용합니다. Firefox의 추적 방지 기능은 사용자 브라우징 행동을 수집하는 다양한 추적 방법을 막아줍니다.">
 <!ENTITY trackingProtection.startTour1                   "작동 원리 살펴보기">
+
+<!ENTITY contentBlocking.title                           "콘텐츠 차단">
+<!ENTITY contentBlocking.description                     "어떤 웹사이트는 인터넷에서의 사용자 활동을 모니터할 수 있는 추적기를 사용합니다. 사생활 보호 창에서의 Firefox 콘텐츠 차단 기능은 사용자의 브라우징 행동에 관한 정보를 수집하는 많은 추적기를 차단합니다.">

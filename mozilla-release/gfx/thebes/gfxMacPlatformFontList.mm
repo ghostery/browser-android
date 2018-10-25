@@ -57,7 +57,7 @@
 #include "nsDirectoryServiceUtils.h"
 #include "nsDirectoryServiceDefs.h"
 #include "nsAppDirectoryServiceDefs.h"
-#include "nsISimpleEnumerator.h"
+#include "nsIDirectoryEnumerator.h"
 #include "nsCharTraits.h"
 #include "nsCocoaFeatures.h"
 #include "nsCocoaUtils.h"
@@ -381,9 +381,11 @@ MacOSFontEntry::MacOSFontEntry(const nsAString& aPostscriptName,
       mHasAATSmallCaps(false),
       mHasAATSmallCapsInitialized(false),
       mCheckedForTracking(false),
+      mCheckedForOpszAxis(false),
       mTrakTable(nullptr),
       mTrakValues(nullptr),
-      mTrakSizeTable(nullptr)
+      mTrakSizeTable(nullptr),
+      mNumTrakSizes(0)
 {
     mWeightRange = aWeight;
 }
@@ -407,9 +409,11 @@ MacOSFontEntry::MacOSFontEntry(const nsAString& aPostscriptName,
       mHasAATSmallCaps(false),
       mHasAATSmallCapsInitialized(false),
       mCheckedForTracking(false),
+      mCheckedForOpszAxis(false),
       mTrakTable(nullptr),
       mTrakValues(nullptr),
-      mTrakSizeTable(nullptr)
+      mTrakSizeTable(nullptr),
+      mNumTrakSizes(0)
 {
     mFontRef = aFontRef;
     mFontRefInitialized = true;
@@ -1626,7 +1630,7 @@ static const char kSystemFont_system[] = "-apple-system";
 
 bool
 gfxMacPlatformFontList::FindAndAddFamilies(const nsAString& aFamily,
-                                           nsTArray<gfxFontFamily*>* aOutput,
+                                           nsTArray<FamilyAndGeneric>* aOutput,
                                            FindFamiliesFlags aFlags,
                                            gfxFontStyle* aStyle,
                                            gfxFloat aDevToCssSize)
@@ -1873,7 +1877,7 @@ gfxMacPlatformFontList::ActivateFontsFromDir(nsIFile* aDir)
         return;
     }
 
-    nsCOMPtr<nsISimpleEnumerator> e;
+    nsCOMPtr<nsIDirectoryEnumerator> e;
     if (NS_FAILED(aDir->GetDirectoryEntries(getter_AddRefs(e)))) {
         return;
     }

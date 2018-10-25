@@ -35,20 +35,20 @@
 #include "nsILoadGroup.h"
 #include "nsILoadContext.h"
 #include "nsIConsoleService.h"
-#include "nsIDOMNode.h"
 #include "nsIDOMWindowUtils.h"
 #include "nsIDOMWindow.h"
 #include "nsINetworkInterceptController.h"
-#include "NullPrincipal.h"
 #include "nsICorsPreflightCallback.h"
 #include "nsISupportsImpl.h"
 #include "nsHttpChannel.h"
 #include "mozilla/LoadInfo.h"
+#include "mozilla/NullPrincipal.h"
 #include "nsIHttpHeaderVisitor.h"
 #include "nsQueryObject.h"
 #include <algorithm>
 
 using namespace mozilla;
+using namespace mozilla::net;
 
 #define PREFLIGHT_CACHE_SIZE 100
 
@@ -86,10 +86,11 @@ LogBlockedRequest(nsIRequest* aRequest,
   }
 
   nsAutoString msg(blockedMessage.get());
+  nsDependentCString category(aProperty);
 
   if (XRE_IsParentProcess()) {
     if (aCreatingChannel) {
-      rv = aCreatingChannel->LogBlockedCORSRequest(msg);
+      rv = aCreatingChannel->LogBlockedCORSRequest(msg, category);
       if (NS_SUCCEEDED(rv)) {
         return;
       }
@@ -105,10 +106,11 @@ LogBlockedRequest(nsIRequest* aRequest,
     privateBrowsing = nsContentUtils::IsInPrivateBrowsing(loadGroup);
   }
 
-  // log message ourselves
+  // we are passing aProperty as the category so we can link to the
+  // appropriate MDN docs depending on the specific error.
   uint64_t innerWindowID = nsContentUtils::GetInnerWindowID(aRequest);
   nsCORSListenerProxy::LogBlockedCORSRequest(innerWindowID, privateBrowsing,
-                                             msg);
+                                             msg, category);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -419,6 +421,9 @@ nsCORSListenerProxy::nsCORSListenerProxy(nsIStreamListener* aOuter,
     mWithCredentials(aWithCredentials && !gDisableCORSPrivateData),
     mRequestApproved(false),
     mHasBeenCrossSite(false),
+#ifdef DEBUG
+    mInited(false),
+#endif
     mMutex("nsCORSListenerProxy")
 {
 }
@@ -566,11 +571,8 @@ nsCORSListenerProxy::CheckRequestApproved(nsIRequest* aRequest)
     return NS_ERROR_DOM_BAD_URI;
   }
 
-  nsCOMPtr<nsIHttpChannelInternal> internal = do_QueryInterface(aRequest);
-  NS_ENSURE_STATE(internal);
-  bool responseSynthesized = false;
-  if (NS_SUCCEEDED(internal->GetResponseSynthesized(&responseSynthesized)) &&
-      responseSynthesized) {
+  nsCOMPtr<nsILoadInfo> loadInfo = http->GetLoadInfo();
+  if (loadInfo && loadInfo->GetServiceWorkerTaintingSynthesized()) {
     // For synthesized responses, we don't need to perform any checks.
     // Note: This would be unsafe if we ever changed our behavior to allow
     // service workers to intercept CORS preflights.
@@ -584,7 +586,7 @@ nsCORSListenerProxy::CheckRequestApproved(nsIRequest* aRequest)
   // check for duplicate headers
   rv = http->VisitOriginalResponseHeaders(visitor);
   if (NS_FAILED(rv)) {
-    LogBlockedRequest(aRequest, "CORSAllowOriginNotMatchingOrigin", nullptr, topChannel);
+    LogBlockedRequest(aRequest, "CORSMultipleAllowOriginNotAllowed", nullptr, topChannel);
     return rv;
   }
 
@@ -1076,17 +1078,6 @@ nsCORSListenerProxy::CheckPreflightNeeded(nsIChannel* aChannel, UpdateType aUpda
     return NS_OK;
   }
 
-  // A preflight is needed. But if we've already been cross-site, then
-  // we already did a preflight when that happened, and so we're not allowed
-  // to do another preflight again.
-  if (aUpdateType != UpdateType::InternalOrHSTSRedirect) {
-    if (mHasBeenCrossSite) {
-      LogBlockedRequest(aChannel, "CORSPreflightDidNotSucceed", nullptr,
-                        mHttpChannel);
-      return NS_ERROR_DOM_BAD_URI;
-    }
-  }
-
   nsCOMPtr<nsIHttpChannelInternal> internal = do_QueryInterface(http);
   if (!internal) {
     LogBlockedRequest(aChannel, "CORSDidNotSucceed", nullptr, mHttpChannel);
@@ -1270,15 +1261,9 @@ nsCORSPreflightListener::OnStartRequest(nsIRequest *aRequest,
 {
 #ifdef DEBUG
   {
-    nsCOMPtr<nsIHttpChannelInternal> internal = do_QueryInterface(aRequest);
-    bool responseSynthesized = false;
-    if (internal &&
-        NS_SUCCEEDED(internal->GetResponseSynthesized(&responseSynthesized))) {
-      // For synthesized responses, we don't need to perform any checks.
-      // This would be unsafe if we ever changed our behavior to allow
-      // service workers to intercept CORS preflights.
-      MOZ_ASSERT(!responseSynthesized);
-    }
+    nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
+    nsCOMPtr<nsILoadInfo> loadInfo = channel ? channel->GetLoadInfo() : nullptr;
+    MOZ_ASSERT(!loadInfo || !loadInfo->GetServiceWorkerTaintingSynthesized());
   }
 #endif
 
@@ -1491,9 +1476,9 @@ nsCORSListenerProxy::StartCORSPreflight(nsIChannel* aRequestChannel,
   // Either it wasn't cached or the cached result has expired. Build a
   // channel for the OPTIONS request.
 
-  nsCOMPtr<nsILoadInfo> loadInfo = static_cast<mozilla::LoadInfo*>
+  nsCOMPtr<nsILoadInfo> loadInfo = static_cast<mozilla::net::LoadInfo*>
     (originalLoadInfo.get())->CloneForNewRequest();
-  static_cast<mozilla::LoadInfo*>(loadInfo.get())->SetIsPreflight();
+  static_cast<mozilla::net::LoadInfo*>(loadInfo.get())->SetIsPreflight();
 
   nsCOMPtr<nsILoadGroup> loadGroup;
   rv = aRequestChannel->GetLoadGroup(getter_AddRefs(loadGroup));
@@ -1595,7 +1580,8 @@ nsCORSListenerProxy::StartCORSPreflight(nsIChannel* aRequestChannel,
 void
 nsCORSListenerProxy::LogBlockedCORSRequest(uint64_t aInnerWindowID,
                                            bool aPrivateBrowsing,
-                                           const nsAString& aMessage)
+                                           const nsAString& aMessage,
+                                           const nsACString& aCategory)
 {
   nsresult rv = NS_OK;
 
@@ -1622,17 +1608,18 @@ nsCORSListenerProxy::LogBlockedCORSRequest(uint64_t aInnerWindowID,
                                               0,             // lineNumber
                                               0,             // columnNumber
                                               nsIScriptError::warningFlag,
-                                              "CORS",
+                                              aCategory,
                                               aInnerWindowID);
   }
   else {
+    nsCString category = PromiseFlatCString(aCategory);
     rv = scriptError->Init(aMessage,
                            EmptyString(), // sourceName
                            EmptyString(), // sourceLine
                            0,             // lineNumber
                            0,             // columnNumber
                            nsIScriptError::warningFlag,
-                           "CORS",
+                           category.get(),
                            aPrivateBrowsing);
   }
   if (NS_FAILED(rv)) {

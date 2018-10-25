@@ -19,9 +19,9 @@ The canonical source code repository for geckodriver now lives in
 accept pull requests on GitHub.  Patches should be uploaded to a bug in
 the [Testing :: GeckoDriver] component.
 
-[WebDriver protocol]: http://w3c.github.io/webdriver/webdriver-spec.html#protocol
-[Firefox remote protocol]: https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette
-[change log]: https://searchfox.org/mozilla-central/source/testing/geckodriver/CHANGES.md
+[WebDriver protocol]: http://w3c.github.io/webdriver/#protocol
+[Firefox remote protocol]: https://firefox-source-docs.mozilla.org/testing/marionette/marionette/Protocol.html
+[change log]: https://github.com/mozilla/geckodriver/releases
 [Releases]: https://github.com/mozilla/geckodriver/releases
 [supported platforms]: #supported-firefoxen
 [mozilla-central]: https://hg.mozilla.org/mozilla-central/
@@ -33,33 +33,31 @@ the [Testing :: GeckoDriver] component.
 Supported clients
 =================
 
-[Selenium] users must update to [version 3.5] or later to
+[Selenium] users must update to version 3.11 or later to
 use geckodriver.  Other clients that follow the [W3C WebDriver
-specification] are also supported.
-
-[version 3.5]: https://github.com/SeleniumHQ/selenium/releases/tag/selenium-3.5.0
-[W3C WebDriver specification]: https://w3c.github.io/webdriver/webdriver-spec.html
+specification][WebDriver] are also supported.
 
 
 Supported Firefoxen
 ===================
 
-geckodriver is not yet feature complete.  This means that it does not
-yet offer full conformance with the [WebDriver] standard or complete
-compatibility with [Selenium].  You can track the [implementation
-status] of the latest [Firefox Nightly](http://whattrainisitnow.com/)
-on [MDN].  We also keep track of known [Selenium], [remote protocol],
-and [specification] problems in our [issue tracker].
+geckodriver is not yet feature complete.  This means that it does
+not yet offer full conformance with the [WebDriver] standard or
+complete compatibility with [Selenium].  You can track the
+[implementation status] of the latest [Firefox Nightly] on MDN.  We
+also keep track of known [Selenium], [remote protocol], and
+[specification] problems in our [issue tracker].
 
-Support is best in Firefox 57 and greater, although generally the more
-recent the Firefox version, the better the experience as they have more
-bug fixes and features.  Some features will only be available in the
-most recent Firefox versions, and we strongly advise using the latest
-[Firefox Nightly] with geckodriver.  Since Windows XP support in Firefox
-was dropped with Firefox 53, we do not support this platform.
+Support is best in Firefox 57 and greater, although generally the
+more recent the Firefox version, the better the experience as they
+have more bug fixes and features.  Some features will only be
+available in the most recent Firefox versions, and we strongly
+advise using the latest [Firefox Nightly] with geckodriver.  Since
+Windows XP support in Firefox was dropped with Firefox 53, we do
+not support this platform.
 
-[implementation status]: https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver/status
-[MDN]: https://developer.mozilla.org/
+[implementation status]: https://bugzilla.mozilla.org/showdependencytree.cgi?id=721859&hide_resolved=1
+[Firefox Nightly]: https://whattrainisitnow.com/
 [selenium]: https://github.com/mozilla/geckodriver/issues?q=is%3Aissue+is%3Aopen+label%3Aselenium
 [remote protocol]: https://github.com/mozilla/geckodriver/issues?q=is%3Aissue+is%3Aopen+label%3Amarionette
 [specification]: https://github.com/mozilla/geckodriver/issues?q=is%3Aissue+is%3Aopen+label%3Aspec
@@ -72,7 +70,7 @@ WebDriver capabilities
 
 geckodriver supports a number of [capabilities]:
 
-[capabilities]: https://w3c.github.io/webdriver/webdriver-spec.html#capabilities
+[capabilities]: https://w3c.github.io/webdriver/#capabilities
 
 <table>
  <thead>
@@ -87,8 +85,8 @@ geckodriver supports a number of [capabilities]:
  <tr>
   <td><code>acceptInsecureCerts</code>
   <td>boolean
-  <td>Boolean initially set to false,
-   indicating the session will not implicitly trust untrusted
+  <td>false
+  <td>Indicates the session will not implicitly trust untrusted
    or self-signed TLS certificates on navigation.
   <td>
  </tr>
@@ -96,6 +94,7 @@ geckodriver supports a number of [capabilities]:
  <tr>
   <td><code>pageLoadStrategy</code>
   <td>string
+  <td><code>normal</code>
   <td>Defines the page load strategy
    to use for the duration of the session.
    Setting a page load strategy will cause navigation
@@ -203,11 +202,12 @@ Firefox capabilities
 
 geckodriver has a few capabilities that are specific to Firefox.
 
-moz:firefoxOptions
-------------------
 
-A dictionary used to define options which control how Firefox gets started
-and run. It may contain any of the following fields:
+`moz:firefoxOptions`
+--------------------
+
+A dictionary used to define options which control how Firefox gets
+started and run. It may contain any of the following fields:
 
 <table>
  <thead>
@@ -281,46 +281,50 @@ and run. It may contain any of the following fields:
  </tr>
 </table>
 
-moz:useNonSpecCompliantPointerOrigin
-------------------------------------
 
-A boolean value to indicate how the pointer origin for an action command
-will be calculated.
+`moz:useNonSpecCompliantPointerOrigin`
+--------------------------------------
 
-With Firefox 59 the calculation will be based on the requirements by the
-[WebDriver] specification. This means that the pointer origin is no longer
-computed based on the top and left position of the referenced element, but
-on the in-view center point.
+A boolean value to indicate how the pointer origin for an action
+command will be calculated.
 
-To temporarily disable the WebDriver conformant behavior use `false` as value
-for this capability.
+With Firefox 59 the calculation will be based on the requirements by
+the [WebDriver] specification. This means that the pointer origin
+is no longer computed based on the top and left position of the
+referenced element, but on the in-view center point.
 
-Please note that this capability exists only temporarily, and that it will be
-removed once all Selenium bindings can handle the new behavior.
+To temporarily disable the WebDriver conformant behavior use `false`
+as value for this capability.
 
-moz:webdriverClick
-------------------
+Please note that this capability exists only temporarily, and that
+it will be removed once all Selenium bindings can handle the new behavior.
 
-A boolean value to indicate which kind of interactability checks to run
-when performing a click or sending keys to an elements. For Firefoxen prior to
-version 58.0 some legacy code as imported from an older version of
-[FirefoxDriver] was in use.
 
-With Firefox 58 the interactability checks as required by the [WebDriver]
-specification are enabled by default. This means geckodriver will additionally
-check if an element is obscured by another when clicking, and if an element is
-focusable for sending keys.
+`moz:webdriverClick`
+--------------------
 
-Because of this change in behaviour, we are aware that some extra errors could
-be returned. In most cases the test in question might have to be updated
-so it's conform with the new checks. But if the problem is located in
-geckodriver, then please raise an issue in the [issue tracker].
+A boolean value to indicate which kind of interactability checks
+to run when performing a click or sending keys to an elements. For
+Firefoxen prior to version 58.0 some legacy code as imported from
+an older version of FirefoxDriver was in use.
 
-To temporarily disable the WebDriver conformant checks use `false` as value
-for this capability.
+With Firefox 58 the interactability checks as required by the
+[WebDriver] specification are enabled by default. This means
+geckodriver will additionally check if an element is obscured by
+another when clicking, and if an element is focusable for sending keys.
 
-Please note that this capability exists only temporarily, and that it will be
-removed once the interactability checks have been stabilized.
+Because of this change in behaviour, we are aware that some extra
+errors could be returned. In most cases the test in question might
+have to be updated so it's conform with the new checks. But if the
+problem is located in geckodriver, then please raise an issue in the
+[issue tracker].
+
+To temporarily disable the WebDriver conformant checks use `false`
+as value for this capability.
+
+Please note that this capability exists only temporarily, and that
+it will be removed once the interactability checks have been stabilized.
+
 
 `log` object
 ------------
@@ -343,7 +347,7 @@ removed once the interactability checks have been stabilized.
    <code>info</code>, <code>warn</code>,
    <code>error</code>, and <code>fatal</code>.
    If left undefined the default is <code>info</code>.
-   The value is treated case-insensitively.
+   The value is case-insensitive.
  </tr>
 </table>
 
@@ -373,8 +377,8 @@ Capabilities example
 
 The following example selects a specific Firefox binary to run with
 a prepared profile from the filesystem in headless mode (available on
-certain systems and recent Firefoxen).  It also increases the number of
-IPC processes through a preference and enables more verbose logging.
+certain systems and recent Firefoxen).  It also increases the number
+of IPC processes through a preference and enables more verbose logging.
 
 	{
 		"capabilities": {
@@ -397,16 +401,16 @@ IPC processes through a preference and enables more verbose logging.
 Usage
 =====
 
-Usage steps are [documented on
-MDN](https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver),
-but how you invoke geckodriver largely depends on your use case.
+geckodriver is an implementation of WebDriver, and WebDriver can
+be used for widely different purposes.  How you invoke geckodriver
+largely depends on your use case.
 
 
 Selenium
 --------
 
 If you are using geckodriver through [Selenium], you must ensure that
-you have version 3.5 and greater.  Because geckodriver implements the
+you have version 3.11 or greater.  Because geckodriver implements the
 [W3C WebDriver standard][WebDriver] and not the same Selenium wire
 protocol older drivers are using, you may experience incompatibilities
 and migration problems when making the switch from FirefoxDriver to
@@ -502,9 +506,9 @@ And to run:
 [PATH]: https://en.wikipedia.org/wiki/PATH_(variable)
 [Java VM system property]: http://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html
 [java(1)]: http://www.manpagez.com/man/1/java/
-[WebDriver]: https://w3c.github.io/webdriver/webdriver-spec.html
+[WebDriver]: https://w3c.github.io/webdriver/
 [curl(1)]: http://www.manpagez.com/man/1/curl/
-[wdclient]: https://github.com/w3c/wpt-tools/tree/master/webdriver
+[wdclient]: https://github.com/web-platform-tests/wpt/tree/master/tools/webdriver
 
 
 Flags
@@ -533,7 +537,7 @@ Firefox on macOS.  It will then look for _/Applications/Firefox.app_.
 On Windows systems, geckodriver looks for the system Firefox by scanning
 the Windows registry.
 
-[creating a new session]: https://w3c.github.io/webdriver/webdriver-spec.html#new-session
+[creating a new session]: https://w3c.github.io/webdriver/#new-session
 [whereis(1)]: http://www.manpagez.com/man/1/whereis/
 
 
@@ -625,12 +629,11 @@ the built executable with `./mach geckodriver -- --other --flags`.
 [Rust]: https://www.rust-lang.org/
 [Mozilla]: https://www.mozilla.org/en-US/
 [webdriver crate]: https://crates.io/crates/webdriver
-[commands]: https://docs.rs/webdriver/newest/webdriver/command/index.html
-[responses]: https://docs.rs/webdriver/newest/webdriver/response/index.html
+[commands]: https://docs.rs/webdriver/newest/webdriver/command/
+[responses]: https://docs.rs/webdriver/newest/webdriver/response/
 [errors]: https://docs.rs/webdriver/newest/webdriver/error/enum.ErrorStatus.html
 [Marionette protocol]: https://firefox-source-docs.mozilla.org/testing/marionette/marionette/Protocol.html
-[WebDriver]: https://w3c.github.io/webdriver/webdriver-spec.html
-[FirefoxDriver]: https://github.com/SeleniumHQ/selenium/wiki/FirefoxDriver
+[WebDriver]: https://w3c.github.io/webdriver/
 [Marionette]: https://firefox-source-docs.mozilla.org/testing/marionette/marionette/
 [Firefox CI]: https://treeherder.mozilla.org/
 [mozconfig]: https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Build_Instructions/Configuring_Build_Options
@@ -646,4 +649,4 @@ There is also an IRC channel to talk about using and developing
 geckodriver in #ateam on irc.mozilla.org.
 
 [subscribe]: https://lists.mozilla.org/listinfo/tools-marionette
-[archive]: https://groups.google.com/group/mozilla.tools.marionette
+[archive]: https://lists.mozilla.org/pipermail/tools-marionette/

@@ -7,6 +7,7 @@
 #include "ContentPrincipal.h"
 
 #include "mozIThirdPartyUtil.h"
+#include "nsContentUtils.h"
 #include "nscore.h"
 #include "nsScriptSecurityManager.h"
 #include "nsString.h"
@@ -15,7 +16,7 @@
 #include "nsIURI.h"
 #include "nsIURL.h"
 #include "nsIStandardURL.h"
-#include "nsIURIWithPrincipal.h"
+#include "nsIURIWithSpecialOrigin.h"
 #include "nsJSPrincipals.h"
 #include "nsIEffectiveTLDService.h"
 #include "nsIClassInfoImpl.h"
@@ -27,6 +28,7 @@
 #include "nsNetCID.h"
 #include "js/Wrapper.h"
 
+#include "mozilla/dom/BlobURLProtocolHandler.h"
 #include "mozilla/dom/nsCSPContext.h"
 #include "mozilla/dom/ScriptSettings.h"
 #include "mozilla/ClearOnShutdown.h"
@@ -35,16 +37,6 @@
 #include "mozilla/HashFunctions.h"
 
 using namespace mozilla;
-
-static bool URIIsImmutable(nsIURI* aURI)
-{
-  nsCOMPtr<nsIMutable> mutableObj(do_QueryInterface(aURI));
-  bool isMutable;
-  return
-    mutableObj &&
-    NS_SUCCEEDED(mutableObj->GetMutable(&isMutable)) &&
-    !isMutable;
-}
 
 static inline ExtensionPolicyService&
 EPS()
@@ -63,8 +55,6 @@ NS_IMPL_CI_INTERFACE_GETTER(ContentPrincipal,
 
 ContentPrincipal::ContentPrincipal()
   : BasePrincipal(eCodebasePrincipal)
-  , mCodebaseImmutable(false)
-  , mDomainImmutable(false)
 {
 }
 
@@ -96,9 +86,7 @@ ContentPrincipal::Init(nsIURI *aCodebase,
                                        &hasFlag)) &&
       !hasFlag);
 
-  mCodebase = NS_TryToMakeImmutable(aCodebase);
-  mCodebaseImmutable = URIIsImmutable(mCodebase);
-
+  mCodebase = aCodebase;
   FinishInit(aOriginNoSuffix, aOriginAttributes);
 
   return NS_OK;
@@ -168,6 +156,18 @@ ContentPrincipal::GenerateOriginNoSuffixFromURI(nsIURI* aURI,
       (NS_SUCCEEDED(origin->SchemeIs("indexeddb", &isBehaved)) && isBehaved)) {
     rv = origin->GetAsciiSpec(aOriginNoSuffix);
     NS_ENSURE_SUCCESS(rv, rv);
+
+    int32_t pos = aOriginNoSuffix.FindChar('?');
+    int32_t hashPos = aOriginNoSuffix.FindChar('#');
+
+    if (hashPos != kNotFound && (pos == kNotFound || hashPos < pos)) {
+      pos = hashPos;
+    }
+
+    if (pos != kNotFound) {
+      aOriginNoSuffix.Truncate(pos);
+    }
+
     // These URIs could technically contain a '^', but they never should.
     if (NS_WARN_IF(aOriginNoSuffix.FindChar('^', 0) != -1)) {
       aOriginNoSuffix.Truncate();
@@ -178,15 +178,11 @@ ContentPrincipal::GenerateOriginNoSuffixFromURI(nsIURI* aURI,
 
   // This URL can be a blobURL. In this case, we should use the 'parent'
   // principal instead.
-  nsCOMPtr<nsIURIWithPrincipal> uriWithPrincipal = do_QueryInterface(origin);
-  if (uriWithPrincipal) {
-    nsCOMPtr<nsIPrincipal> uriPrincipal;
-    rv = uriWithPrincipal->GetPrincipal(getter_AddRefs(uriPrincipal));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    if (uriPrincipal) {
-      return uriPrincipal->GetOriginNoSuffix(aOriginNoSuffix);
-    }
+  nsCOMPtr<nsIPrincipal> blobPrincipal;
+  if (dom::BlobURLProtocolHandler::GetBlobURLPrincipal(origin,
+                                                       getter_AddRefs(blobPrincipal))) {
+    MOZ_ASSERT(blobPrincipal);
+    return blobPrincipal->GetOriginNoSuffix(aOriginNoSuffix);
   }
 
   // If we reached this branch, we can only create an origin if we have a
@@ -278,31 +274,35 @@ ContentPrincipal::SubsumesInternal(nsIPrincipal* aOther,
 NS_IMETHODIMP
 ContentPrincipal::GetURI(nsIURI** aURI)
 {
-  if (mCodebaseImmutable) {
-    NS_ADDREF(*aURI = mCodebase);
-    return NS_OK;
-  }
-
-  if (!mCodebase) {
-    *aURI = nullptr;
-    return NS_OK;
-  }
-
-  return NS_EnsureSafeToReturn(mCodebase, aURI);
+  NS_ADDREF(*aURI = mCodebase);
+  return NS_OK;
 }
 
 bool
 ContentPrincipal::MayLoadInternal(nsIURI* aURI)
 {
-  // See if aURI is something like a Blob URI that is actually associated with
-  // a principal.
-  nsCOMPtr<nsIURIWithPrincipal> uriWithPrin = do_QueryInterface(aURI);
-  nsCOMPtr<nsIPrincipal> uriPrin;
-  if (uriWithPrin) {
-    uriWithPrin->GetPrincipal(getter_AddRefs(uriPrin));
+  MOZ_ASSERT(aURI);
+
+#if defined(MOZ_THUNDERBIRD) || defined(MOZ_SUITE)
+  nsCOMPtr<nsIURIWithSpecialOrigin> uriWithSpecialOrigin = do_QueryInterface(aURI);
+  if (uriWithSpecialOrigin) {
+    nsCOMPtr<nsIURI> origin;
+    nsresult rv = uriWithSpecialOrigin->GetOrigin(getter_AddRefs(origin));
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return false;
+    }
+    MOZ_ASSERT(origin);
+    OriginAttributes attrs;
+    RefPtr<BasePrincipal> principal = BasePrincipal::CreateCodebasePrincipal(origin, attrs);
+    return nsIPrincipal::Subsumes(principal);
   }
-  if (uriPrin) {
-    return nsIPrincipal::Subsumes(uriPrin);
+#endif
+
+  nsCOMPtr<nsIPrincipal> blobPrincipal;
+  if (dom::BlobURLProtocolHandler::GetBlobURLPrincipal(aURI,
+                                                       getter_AddRefs(blobPrincipal))) {
+    MOZ_ASSERT(blobPrincipal);
+    return nsIPrincipal::Subsumes(blobPrincipal);
   }
 
   // If this principal is associated with an addon, check whether that addon
@@ -330,7 +330,7 @@ ContentPrincipal::MayLoadInternal(nsIURI* aURI)
 NS_IMETHODIMP
 ContentPrincipal::GetHashValue(uint32_t* aValue)
 {
-  NS_PRECONDITION(mCodebase, "Need a codebase");
+  MOZ_ASSERT(mCodebase, "Need a codebase");
 
   *aValue = nsScriptSecurityManager::HashPrincipalByOrigin(this);
   return NS_OK;
@@ -344,19 +344,14 @@ ContentPrincipal::GetDomain(nsIURI** aDomain)
     return NS_OK;
   }
 
-  if (mDomainImmutable) {
-    NS_ADDREF(*aDomain = mDomain);
-    return NS_OK;
-  }
-
-  return NS_EnsureSafeToReturn(mDomain, aDomain);
+  NS_ADDREF(*aDomain = mDomain);
+  return NS_OK;
 }
 
 NS_IMETHODIMP
 ContentPrincipal::SetDomain(nsIURI* aDomain)
 {
-  mDomain = NS_TryToMakeImmutable(aDomain);
-  mDomainImmutable = URIIsImmutable(mDomain);
+  mDomain = aDomain;
   SetHasExplicitDomain();
 
   // Recompute all wrappers between compartments using this principal and other
@@ -523,9 +518,6 @@ ContentPrincipal::Write(nsIObjectOutputStream* aStream)
   if (NS_FAILED(rv)) {
     return rv;
   }
-
-  // mCodebaseImmutable and mDomainImmutable will be recomputed based
-  // on the deserialized URIs in Read().
 
   return NS_OK;
 }

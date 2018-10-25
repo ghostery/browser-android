@@ -41,9 +41,6 @@ var EXPORTED_SYMBOLS = ["PlacesTransactions"];
  * GUIDs, both for input (e.g. for setting the parent folder for a new bookmark)
  * and for output (when the GUID for such a bookmark is propagated).
  *
- * When working in conjugation with older Places API which only expose item ids,
- * use PlacesUtils.promiseItemGuid for converting those to GUIDs (note that
- * for result nodes, the guid is available through their bookmarkGuid getter).
  * Should you need to convert GUIDs to item-ids, use PlacesUtils.promiseItemId.
  *
  * Constructing transactions
@@ -181,7 +178,7 @@ ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.defineModuleGetter(this, "PlacesUtils",
                                "resource://gre/modules/PlacesUtils.jsm");
 
-Cu.importGlobalProperties(["URL"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
 function setTimeout(callback, ms) {
   let timer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
@@ -225,7 +222,7 @@ class TransactionsHistoryArray extends Array {
     let proxy = Object.freeze({
       transact() {
         return TransactionsManager.transact(this);
-      }
+      },
     });
     this.proxifiedToRaw.set(proxy, rawTransaction);
     return proxy;
@@ -431,7 +428,7 @@ var PlacesTransactions = {
    */
   get topRedoEntry() {
     return TransactionsHistory.topRedoEntry;
-  }
+  },
 };
 
 /**
@@ -501,7 +498,7 @@ Enqueuer.prototype = {
    */
   get promise() {
     return this._promise;
-  }
+  },
 };
 
 var TransactionsManager = {
@@ -659,7 +656,7 @@ var TransactionsManager = {
     } catch (ex) {
       console.error(ex, "Couldn't update undo commands.");
     }
-  }
+  },
 };
 
 /**
@@ -785,7 +782,7 @@ DefineTransaction.defineInputProps = function(names, validateFn, defaultValue) {
         return this.validateValue(input[name]);
       },
 
-      isArrayProperty: false
+      isArrayProperty: false,
     });
   }
 };
@@ -842,7 +839,7 @@ DefineTransaction.defineArrayInputProp = function(name, basePropertyName) {
       return [];
     },
 
-    isArrayProperty: true
+    isArrayProperty: true,
   });
 };
 
@@ -1110,7 +1107,7 @@ PT.NewBookmark.prototype = Object.seal({
       await createItem();
     };
     return info.guid;
-  }
+  },
 });
 
 /**
@@ -1177,7 +1174,7 @@ PT.NewFolder.prototype = Object.seal({
       await createItem();
     };
     return folderGuid;
-  }
+  },
 });
 
 /**
@@ -1197,7 +1194,7 @@ PT.NewSeparator.prototype = Object.seal({
     this.undo = PlacesUtils.bookmarks.remove.bind(PlacesUtils.bookmarks, info);
     this.redo = PlacesUtils.bookmarks.insert.bind(PlacesUtils.bookmarks, info);
     return info.guid;
-  }
+  },
 });
 
 /**
@@ -1240,7 +1237,7 @@ PT.NewLivemark.prototype = Object.seal({
       livemark = await createItem();
     };
     return livemark.guid;
-  }
+  },
 });
 
 /**
@@ -1249,26 +1246,35 @@ PT.NewLivemark.prototype = Object.seal({
  * Required Input Properties: guid, newParentGuid.
  * Optional Input Properties  newIndex.
  */
-PT.Move = DefineTransaction(["guid", "newParentGuid"], ["newIndex"]);
+PT.Move = DefineTransaction(["guids", "newParentGuid"], ["newIndex"]);
 PT.Move.prototype = Object.seal({
-  async execute({ guid, newParentGuid, newIndex }) {
-    let originalInfo = await PlacesUtils.bookmarks.fetch(guid);
-    if (!originalInfo)
-      throw new Error("Cannot move a non-existent item");
-    let updateInfo = { guid, parentGuid: newParentGuid, index: newIndex };
-    updateInfo = await PlacesUtils.bookmarks.update(updateInfo);
+  async execute({ guids, newParentGuid, newIndex }) {
+    let originalInfos = [];
+    let index = newIndex;
 
-    // Moving down in the same parent takes in count removal of the item
-    // so to revert positions we must move to oldIndex + 1.
-    if (newParentGuid == originalInfo.parentGuid &&
-        originalInfo.index > updateInfo.index) {
-      originalInfo.index++;
+    for (let guid of guids) {
+      // We need to save the original data for undo.
+      let originalInfo = await PlacesUtils.bookmarks.fetch(guid);
+      if (!originalInfo)
+        throw new Error("Cannot move a non-existent item");
+
+      originalInfos.push(originalInfo);
     }
 
-    this.undo = PlacesUtils.bookmarks.update.bind(PlacesUtils.bookmarks, originalInfo);
-    this.redo = PlacesUtils.bookmarks.update.bind(PlacesUtils.bookmarks, updateInfo);
-    return guid;
-  }
+    await PlacesUtils.bookmarks.moveToFolder(guids, newParentGuid, index);
+
+    this.undo = async function() {
+      // Undo has the potential for moving multiple bookmarks to multiple different
+      // folders and positions, which is very complicated to manage. Therefore we do
+      // individual moves one at a time and hopefully everything is put back approximately
+      // where it should be.
+      for (let info of originalInfos) {
+        await PlacesUtils.bookmarks.update(info);
+      }
+    };
+    this.redo = PlacesUtils.bookmarks.moveToFolder.bind(PlacesUtils.bookmarks, guids, newParentGuid, index);
+    return guids;
+  },
 });
 
 /**
@@ -1288,7 +1294,7 @@ PT.EditTitle.prototype = Object.seal({
 
     this.undo = PlacesUtils.bookmarks.update.bind(PlacesUtils.bookmarks, originalInfo);
     this.redo = PlacesUtils.bookmarks.update.bind(PlacesUtils.bookmarks, updateInfo);
-  }
+  },
 });
 
 /**
@@ -1342,50 +1348,8 @@ PT.EditUrl.prototype = Object.seal({
     this.redo = async function() {
       updatedInfo = await updateItem();
     };
-  }
+  },
 });
-
-/**
- * Transaction for setting annotations for an item.
- *
- * Required Input Properties: guid, annotationObject
- */
-PT.Annotate = DefineTransaction(["guids", "annotations"]);
-PT.Annotate.prototype = {
-  async execute({ guids, annotations }) {
-    let undoAnnosForItemId = new Map();
-    for (let guid of guids) {
-      let itemId = await PlacesUtils.promiseItemId(guid);
-      let currentAnnos = await PlacesUtils.promiseAnnotationsForItem(itemId);
-
-      let undoAnnos = [];
-      for (let newAnno of annotations) {
-        let currentAnno = currentAnnos.find(a => a.name == newAnno.name);
-        if (currentAnno) {
-          undoAnnos.push(currentAnno);
-        } else {
-          // An unset value removes the annotation.
-          undoAnnos.push({ name: newAnno.name });
-        }
-      }
-      undoAnnosForItemId.set(itemId, undoAnnos);
-
-      PlacesUtils.setAnnotationsForItem(itemId, annotations);
-    }
-
-    this.undo = function() {
-      for (let [itemId, undoAnnos] of undoAnnosForItemId) {
-        PlacesUtils.setAnnotationsForItem(itemId, undoAnnos);
-      }
-    };
-    this.redo = async function() {
-      for (let guid of guids) {
-        let itemId = await PlacesUtils.promiseItemId(guid);
-        PlacesUtils.setAnnotationsForItem(itemId, annotations);
-      }
-    };
-  }
-};
 
 /**
  * Transaction for setting the keyword for a bookmark.
@@ -1412,7 +1376,7 @@ PT.EditKeyword.prototype = Object.seal({
       await PlacesUtils.keywords.insert({
         url,
         keyword,
-        postData: postData || (oldKeywordEntry ? oldKeywordEntry.postData : "")
+        postData: postData || (oldKeywordEntry ? oldKeywordEntry.postData : ""),
       });
     }
 
@@ -1424,7 +1388,7 @@ PT.EditKeyword.prototype = Object.seal({
         await PlacesUtils.keywords.insert(oldKeywordEntry);
       }
     };
-  }
+  },
 });
 
 /**
@@ -1448,8 +1412,7 @@ PT.SortByName.prototype = {
 
     // This is not great, since it does main-thread IO.
     // PromiseBookmarksTree can't be used, since it' won't stop at the first level'.
-    let folderId = await PlacesUtils.promiseItemId(guid);
-    let root = PlacesUtils.getFolderContents(folderId, false, false).root;
+    let root = PlacesUtils.getFolderContents(guid, false, false).root;
     for (let i = 0; i < root.childCount; ++i) {
       let node = root.getChild(i);
       oldOrderGuids.push(node.bookmarkGuid);
@@ -1477,7 +1440,7 @@ PT.SortByName.prototype = {
     this.redo = async function() {
       await PlacesUtils.bookmarks.reorder(guid, newOrderGuids);
     };
-  }
+  },
 };
 
 /**
@@ -1524,7 +1487,7 @@ PT.Remove.prototype = {
       }
     };
     this.redo = removeThem;
-  }
+  },
 };
 
 /**
@@ -1572,7 +1535,7 @@ PT.Tag.prototype = {
         await f();
       }
     };
-  }
+  },
 };
 
 /**
@@ -1620,7 +1583,7 @@ PT.Untag.prototype = {
         await f();
       }
     };
-  }
+  },
 };
 
 /**
@@ -1634,8 +1597,10 @@ PT.RenameTag.prototype = {
     // For now this is implemented by untagging and tagging all the bookmarks.
     // We should create a specialized bookmarking API to just rename the tag.
     let onUndo = [], onRedo = [];
-    let urls = PlacesUtils.tagging.getURIsForTag(oldTag);
-    if (urls.length > 0) {
+    let urls = new Set();
+    await PlacesUtils.bookmarks.fetch({tags: [oldTag]}, b => urls.add(b.url));
+    if (urls.size > 0) {
+      urls = Array.from(urls);
       let tagTxn = TransactionsHistory.getRawTransaction(
         PT.Tag({ urls, tags: [tag] })
       );
@@ -1710,7 +1675,7 @@ PT.RenameTag.prototype = {
         await f();
       }
     };
-  }
+  },
 };
 
 /**
@@ -1747,5 +1712,5 @@ PT.Copy.prototype = {
     };
 
     return newItemGuid;
-  }
+  },
 };

@@ -53,7 +53,7 @@ nsDataChannel::OpenContentStream(bool async, nsIInputStream **result,
     // of the URI that does not have a ref and in most cases should share
     // string buffers with the original URI.
     nsCOMPtr<nsIURI> uri;
-    rv = URI()->CloneIgnoringRef(getter_AddRefs(uri));
+    rv = NS_GetURIWithoutRef(URI(), getter_AddRefs(uri));
     if (NS_FAILED(rv))
         return rv;
 
@@ -91,7 +91,7 @@ nsDataChannel::OpenContentStream(bool async, nsIInputStream **result,
     // create an unbounded pipe.
     rv = NS_NewPipe(getter_AddRefs(bufInStream),
                     getter_AddRefs(bufOutStream),
-                    nsIOService::gDefaultSegmentSize,
+                    net::nsIOService::gDefaultSegmentSize,
                     UINT32_MAX,
                     async, true);
     if (NS_FAILED(rv))

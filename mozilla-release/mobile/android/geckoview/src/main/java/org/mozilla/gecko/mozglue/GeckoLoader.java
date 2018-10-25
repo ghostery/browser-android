@@ -8,6 +8,7 @@ package org.mozilla.gecko.mozglue;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -20,6 +21,7 @@ import android.os.Environment;
 import java.util.ArrayList;
 import android.util.Log;
 
+import org.mozilla.gecko.GeckoThread;
 import org.mozilla.gecko.annotation.JNITarget;
 import org.mozilla.gecko.annotation.RobocopTarget;
 import org.mozilla.geckoview.BuildConfig;
@@ -92,17 +94,9 @@ public final class GeckoLoader {
 
     public synchronized static void setupGeckoEnvironment(final Context context,
                                                           final String profilePath,
-                                                          final Bundle extras) {
-        // if we have an intent (we're being launched by an activity)
-        // read in any environmental variables from it here
-        if (extras != null) {
-            String env = extras.getString("env0");
-            Log.d(LOGTAG, "Gecko environment env0: " + env);
-            for (int c = 1; env != null; c++) {
-                putenv(env);
-                env = extras.getString("env" + c);
-                Log.d(LOGTAG, "env" + c + ": " + env);
-            }
+                                                          final Collection<String> env) {
+        for (final String e : env) {
+            putenv(e);
         }
 
         try {
@@ -113,6 +107,9 @@ public final class GeckoLoader {
         }
 
         putenv("MOZ_ANDROID_PACKAGE_NAME=" + context.getPackageName());
+
+        final int crashReporterJobId = GeckoThread.getCrashReporterJobId();
+        putenv("MOZ_ANDROID_CRASH_REPORTER_JOB_ID=" + crashReporterJobId);
 
         setupDownloadEnvironment(context);
 
@@ -144,6 +141,8 @@ public final class GeckoLoader {
         }
 
         putenv("LANG=" + Locale.getDefault().toString());
+
+        putenv("MOZ_ANDROID_DEVICE_SDK_VERSION=" + Build.VERSION.SDK_INT);
 
         // env from extras could have reset out linker flags; set them again.
         loadLibsSetupLocked(context);
@@ -463,7 +462,7 @@ public final class GeckoLoader {
     public static native boolean verifyCRCs(String apkName);
 
     // These methods are implemented in mozglue/android/APKOpen.cpp
-    public static native void nativeRun(String[] args, int prefsFd, int ipcFd, int crashFd, int crashAnnotationFd);
+    public static native void nativeRun(String[] args, int prefsFd, int prefMapFd, int ipcFd, int crashFd, int crashAnnotationFd);
     private static native void loadGeckoLibsNative(String apkName);
     private static native void loadSQLiteLibsNative(String apkName);
     private static native void loadNSSLibsNative(String apkName);

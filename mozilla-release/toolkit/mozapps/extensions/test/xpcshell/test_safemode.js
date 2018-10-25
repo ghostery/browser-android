@@ -2,8 +2,6 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
 
-ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
-
 // Tests that extensions behave correctly in safe mode
 
 var addon1 = {
@@ -17,8 +15,8 @@ var addon1 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 const profileDir = gProfD.clone();
@@ -32,13 +30,13 @@ async function run_test() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
   gAppInfo.inSafeMode = true;
 
-  startupManager();
+  await promiseStartupManager();
 
   let a1 = await AddonManager.getAddonByID("addon1@tests.mozilla.org");
   Assert.equal(a1, null);
   do_check_not_in_crash_annotation(addon1.id, addon1.version);
 
-  writeInstallRDFForExtension(addon1, profileDir, addon1.id, "icon.png");
+  await promiseWriteInstallRDFForExtension(addon1, profileDir, addon1.id, "icon.png");
   gIconURL = do_get_addon_root_uri(profileDir.clone(), addon1.id) + "icon.png";
 
   await promiseRestartManager();
@@ -64,14 +62,14 @@ async function run_test_1() {
   prepare_test({
     "addon1@tests.mozilla.org": [
       ["onDisabling", false],
-      "onDisabled"
-    ]
+      "onDisabled",
+    ],
   });
 
   let a1 = await AddonManager.getAddonByID("addon1@tests.mozilla.org");
   Assert.ok(!hasFlag(a1.operationsRequiringRestart,
                      AddonManager.OP_NEEDS_RESTART_DISABLE));
-  a1.userDisabled = true;
+  await a1.disable();
   Assert.ok(!a1.isActive);
   Assert.equal(a1.aboutURL, null);
   Assert.equal(a1.optionsURL, null);
@@ -91,12 +89,12 @@ async function run_test_2() {
   prepare_test({
     "addon1@tests.mozilla.org": [
       ["onEnabling", false],
-      "onEnabled"
-    ]
+      "onEnabled",
+    ],
   });
 
   let a1 = await AddonManager.getAddonByID("addon1@tests.mozilla.org");
-  a1.userDisabled = false;
+  await a1.enable();
   Assert.ok(!a1.isActive);
   Assert.equal(a1.aboutURL, null);
   Assert.equal(a1.optionsURL, null);

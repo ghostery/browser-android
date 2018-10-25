@@ -4,12 +4,7 @@
 
 /* import-globals-from controller.js */
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-const PTV_interfaces = [Ci.nsITreeView,
-                        Ci.nsINavHistoryResultObserver,
-                        Ci.nsISupportsWeakReference];
 
 /**
  * This returns the key for any node/details object.
@@ -53,25 +48,11 @@ PlacesTreeView.prototype = {
     return this;
   },
 
-  __xulStore: null,
-  get _xulStore() {
-    if (!this.__xulStore) {
-      this.__xulStore = Cc["@mozilla.org/xul/xulstore;1"].getService(Ci.nsIXULStore);
-    }
-    return this.__xulStore;
-  },
-
-  QueryInterface: XPCOMUtils.generateQI(PTV_interfaces),
-
-  // Bug 761494:
-  // ----------
-  // Some addons use methods from nsINavHistoryResultObserver and
-  // nsINavHistoryResultTreeViewer, without QIing to these interfaces first.
-  // That's not a problem when the view is retrieved through the
-  // <tree>.view getter (which returns the wrappedJSObject of this object),
-  // it raises an issue when the view retrieved through the treeBoxObject.view
-  // getter.  Thus, to avoid breaking addons, the interfaces are prefetched.
-  classInfo: XPCOMUtils.generateCI({ interfaces: PTV_interfaces }),
+  QueryInterface: ChromeUtils.generateQI([
+    Ci.nsITreeView,
+    Ci.nsINavHistoryResultObserver,
+    Ci.nsISupportsWeakReference,
+  ]),
 
   /**
    * This is called once both the result and the tree are set.
@@ -368,7 +349,7 @@ PlacesTreeView.prototype = {
         let isopen = false;
 
         if (uri) {
-          let val = this._xulStore.getValue(document.documentURI, uri, "open");
+          let val = Services.xulStore.getValue(document.documentURI, uri, "open");
           isopen = (val == "true");
         }
 
@@ -434,7 +415,7 @@ PlacesTreeView.prototype = {
         nodesInfo.push({
           node: this._rows[i],
           oldRow: i,
-          wasVisible: i >= firstVisibleRow && i <= lastVisibleRow
+          wasVisible: i >= firstVisibleRow && i <= lastVisibleRow,
         });
       }
     }
@@ -570,7 +551,7 @@ PlacesTreeView.prototype = {
     if (!this.__dateFormatter) {
       const dtOptions = {
         dateStyle: "short",
-        timeStyle: "short"
+        timeStyle: "short",
       };
       this.__dateFormatter = new Services.intl.DateTimeFormat(undefined, dtOptions);
     }
@@ -582,10 +563,9 @@ PlacesTreeView.prototype = {
   COLUMN_TYPE_URI: 2,
   COLUMN_TYPE_DATE: 3,
   COLUMN_TYPE_VISITCOUNT: 4,
-  COLUMN_TYPE_DESCRIPTION: 5,
-  COLUMN_TYPE_DATEADDED: 6,
-  COLUMN_TYPE_LASTMODIFIED: 7,
-  COLUMN_TYPE_TAGS: 8,
+  COLUMN_TYPE_DATEADDED: 5,
+  COLUMN_TYPE_LASTMODIFIED: 6,
+  COLUMN_TYPE_TAGS: 7,
 
   _getColumnType: function PTV__getColumnType(aColumn) {
     let columnType = aColumn.element.getAttribute("anonid") || aColumn.id;
@@ -599,8 +579,6 @@ PlacesTreeView.prototype = {
         return this.COLUMN_TYPE_DATE;
       case "visitCount":
         return this.COLUMN_TYPE_VISITCOUNT;
-      case "description":
-        return this.COLUMN_TYPE_DESCRIPTION;
       case "dateAdded":
         return this.COLUMN_TYPE_DATEADDED;
       case "lastModified":
@@ -629,13 +607,6 @@ PlacesTreeView.prototype = {
         return [this.COLUMN_TYPE_VISITCOUNT, false];
       case Ci.nsINavHistoryQueryOptions.SORT_BY_VISITCOUNT_DESCENDING:
         return [this.COLUMN_TYPE_VISITCOUNT, true];
-      case Ci.nsINavHistoryQueryOptions.SORT_BY_ANNOTATION_ASCENDING:
-        if (this._result.sortingAnnotation == PlacesUIUtils.DESCRIPTION_ANNO)
-          return [this.COLUMN_TYPE_DESCRIPTION, false];
-        break;
-      case Ci.nsINavHistoryQueryOptions.SORT_BY_ANNOTATION_DESCENDING:
-        if (this._result.sortingAnnotation == PlacesUIUtils.DESCRIPTION_ANNO)
-          return [this.COLUMN_TYPE_DESCRIPTION, true];
       case Ci.nsINavHistoryQueryOptions.SORT_BY_DATEADDED_ASCENDING:
         return [this.COLUMN_TYPE_DATEADDED, false];
       case Ci.nsINavHistoryQueryOptions.SORT_BY_DATEADDED_DESCENDING:
@@ -924,9 +895,7 @@ PlacesTreeView.prototype = {
   nodeKeywordChanged(aNode, aNewKeyword) {},
 
   nodeAnnotationChanged: function PTV_nodeAnnotationChanged(aNode, aAnno) {
-    if (aAnno == PlacesUIUtils.DESCRIPTION_ANNO) {
-      this._invalidateCellValue(aNode, this.COLUMN_TYPE_DESCRIPTION);
-    } else if (aAnno == PlacesUtils.LMANNO_FEEDURI) {
+    if (aAnno == PlacesUtils.LMANNO_FEEDURI) {
       PlacesUtils.livemarks.getLivemark({ id: aNode.itemId })
         .then(aLivemark => {
           this._controller.cacheLivemarkInfo(aNode, aLivemark);
@@ -1473,7 +1442,7 @@ PlacesTreeView.prototype = {
     return new PlacesInsertionPoint({
       parentId: PlacesUtils.getConcreteItemId(container),
       parentGuid: PlacesUtils.getConcreteItemGuid(container),
-      index, orientation, tagName, dropNearNode
+      index, orientation, tagName, dropNearNode,
     });
   },
 
@@ -1576,14 +1545,6 @@ PlacesTreeView.prototype = {
         return this._convertPRTimeToString(nodeTime);
       case this.COLUMN_TYPE_VISITCOUNT:
         return node.accessCount;
-      case this.COLUMN_TYPE_DESCRIPTION:
-        if (node.itemId != -1) {
-          try {
-            return PlacesUtils.annotations.
-                               getItemAnnotation(node.itemId, PlacesUIUtils.DESCRIPTION_ANNO);
-          } catch (ex) { /* has no description */ }
-        }
-        return "";
       case this.COLUMN_TYPE_DATEADDED:
         if (node.dateAdded)
           return this._convertPRTimeToString(node.dateAdded);
@@ -1637,9 +1598,9 @@ PlacesTreeView.prototype = {
         let docURI = document.documentURI;
 
         if (node.containerOpen) {
-          this._xulStore.removeValue(docURI, uri, "open");
+          Services.xulStore.removeValue(docURI, uri, "open");
         } else {
-          this._xulStore.setValue(docURI, uri, "open", "true");
+          Services.xulStore.setValue(docURI, uri, "open", "true");
         }
       }
     }
@@ -1665,9 +1626,7 @@ PlacesTreeView.prototype = {
     let allowTriState = PlacesUtils.nodeIsFolder(this._result.root);
 
     let oldSort = this._result.sortingMode;
-    let oldSortingAnnotation = this._result.sortingAnnotation;
     let newSort;
-    let newSortingAnnotation = "";
     const NHQO = Ci.nsINavHistoryQueryOptions;
     switch (this._getColumnType(aColumn)) {
       case this.COLUMN_TYPE_TITLE:
@@ -1710,21 +1669,6 @@ PlacesTreeView.prototype = {
           newSort = NHQO.SORT_BY_VISITCOUNT_DESCENDING;
 
         break;
-      case this.COLUMN_TYPE_DESCRIPTION:
-        if (oldSort == NHQO.SORT_BY_ANNOTATION_ASCENDING &&
-            oldSortingAnnotation == PlacesUIUtils.DESCRIPTION_ANNO) {
-          newSort = NHQO.SORT_BY_ANNOTATION_DESCENDING;
-          newSortingAnnotation = PlacesUIUtils.DESCRIPTION_ANNO;
-        } else if (allowTriState &&
-                 oldSort == NHQO.SORT_BY_ANNOTATION_DESCENDING &&
-                 oldSortingAnnotation == PlacesUIUtils.DESCRIPTION_ANNO)
-          newSort = NHQO.SORT_BY_NONE;
-        else {
-          newSort = NHQO.SORT_BY_ANNOTATION_ASCENDING;
-          newSortingAnnotation = PlacesUIUtils.DESCRIPTION_ANNO;
-        }
-
-        break;
       case this.COLUMN_TYPE_DATEADDED:
         if (oldSort == NHQO.SORT_BY_DATEADDED_ASCENDING)
           newSort = NHQO.SORT_BY_DATEADDED_DESCENDING;
@@ -1757,7 +1701,6 @@ PlacesTreeView.prototype = {
       default:
         throw Cr.NS_ERROR_INVALID_ARG;
     }
-    this._result.sortingAnnotation = newSortingAnnotation;
     this._result.sortingMode = newSort;
   },
 
@@ -1821,5 +1764,5 @@ PlacesTreeView.prototype = {
   isSelectable(aRow, aColumn) { return false; },
   performAction(aAction) { },
   performActionOnRow(aAction, aRow) { },
-  performActionOnCell(aAction, aRow, aColumn) { }
+  performActionOnCell(aAction, aRow, aColumn) { },
 };

@@ -3,8 +3,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* import-globals-from ../../../toolkit/components/places/PlacesUtils.jsm */
-/* import-globals-from ../../../toolkit/content/globalOverlay.js */
+/* Shared Places Import - change other consumers if you change this: */
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+XPCOMUtils.defineLazyModuleGetters(this, {
+  PlacesUtils: "resource://gre/modules/PlacesUtils.jsm",
+  PlacesUIUtils: "resource:///modules/PlacesUIUtils.jsm",
+  PlacesTransactions: "resource://gre/modules/PlacesTransactions.jsm",
+  PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.jsm",
+});
+XPCOMUtils.defineLazyScriptGetter(this, "PlacesTreeView",
+                                  "chrome://browser/content/places/treeView.js");
+XPCOMUtils.defineLazyScriptGetter(this, ["PlacesInsertionPoint", "PlacesController",
+                                         "PlacesControllerDragHelper"],
+                                  "chrome://browser/content/places/controller.js");
+/* End Shared Places Import */
 
 /**
  * SelectBookmarkDialog controls the user interface for the "Use Bookmark for
@@ -65,7 +78,7 @@ var SelectBookmarkDialog = {
     var names = [];
     var selectedNode = bookmarks.selectedNode;
     if (PlacesUtils.nodeIsFolder(selectedNode)) {
-      var contents = PlacesUtils.getFolderContents(selectedNode.itemId).root;
+      var contents = PlacesUtils.getFolderContents(selectedNode.bookmarkGuid).root;
       var cc = contents.childCount;
       for (var i = 0; i < cc; ++i) {
         var node = contents.getChild(i);
@@ -81,5 +94,5 @@ var SelectBookmarkDialog = {
     }
     window.arguments[0].urls = urls;
     window.arguments[0].names = names;
-  }
+  },
 };

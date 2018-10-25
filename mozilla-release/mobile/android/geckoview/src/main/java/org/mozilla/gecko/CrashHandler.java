@@ -5,6 +5,20 @@
 
 package org.mozilla.gecko;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Process;
+import android.support.v4.app.JobIntentService;
+import android.util.Log;
+
+import org.mozilla.geckoview.BuildConfig;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,19 +29,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.UUID;
-
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Process;
-import android.util.Log;
-
-import org.mozilla.geckoview.BuildConfig;
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
@@ -236,12 +237,11 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         final Context context = getAppContext();
         final Bundle extras = new Bundle();
         final String pkgName = getAppPackageName();
-        final String processName = getProcessName();
 
-        extras.putString("ProductName", pkgName);
         extras.putLong("CrashTime", getCrashTime());
         extras.putLong("StartupTime", getStartupTime());
-        extras.putString("AndroidProcessName", getProcessName());
+        extras.putString("Android_ProcessName", getProcessName());
+        extras.putString("Android_PackageName", pkgName);
 
         if (context != null) {
             final PackageManager pkgMgr = context.getPackageManager();
@@ -301,32 +301,45 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             final Context context = getAppContext();
             final String javaPkg = getJavaPackageName();
             final String pkg = getAppPackageName();
-            final String component = javaPkg + ".CrashReporter";
+            final String component = javaPkg + ".CrashReporterService";
             final String action = javaPkg + ".reportCrash";
             final ProcessBuilder pb;
+            final int crashReporterJobId = GeckoThread.getCrashReporterJobId();
 
             if (context != null) {
                 final Intent intent = new Intent(action);
-                intent.setComponent(new ComponentName(pkg, component));
+                intent.putExtra("jobId", crashReporterJobId);
                 intent.putExtra("minidumpPath", dumpFile);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                JobIntentService.enqueueWork(
+                        context, new ComponentName(pkg, component), crashReporterJobId, intent);
                 return true;
             }
 
-            if (Build.VERSION.SDK_INT < 17) {
+            final int deviceSdkVersion = Build.VERSION.SDK_INT;
+            if (deviceSdkVersion < 17) {
                 pb = new ProcessBuilder(
-                    "/system/bin/am", "start",
+                    "/system/bin/am",
+                    "startservice",
                     "-a", action,
                     "-n", pkg + '/' + component,
-                    "--es", "minidumpPath", dumpFile);
+                    "--es", "minidumpPath", dumpFile,
+                    "--ei", "jobId", String.valueOf(crashReporterJobId));
             } else {
+                final String startServiceCommand;
+                if (deviceSdkVersion >= 26) {
+                    startServiceCommand = "start-foreground-service";
+                } else {
+                    startServiceCommand = "startservice";
+                }
+
                 pb = new ProcessBuilder(
-                    "/system/bin/am", "start",
+                    "/system/bin/am",
+                    startServiceCommand,
                     "--user", /* USER_CURRENT_OR_SELF */ "-3",
                     "-a", action,
                     "-n", pkg + '/' + component,
-                    "--es", "minidumpPath", dumpFile);
+                    "--es", "minidumpPath", dumpFile,
+                    "--ei", "jobId", String.valueOf(crashReporterJobId));
             }
 
             pb.start().waitFor();

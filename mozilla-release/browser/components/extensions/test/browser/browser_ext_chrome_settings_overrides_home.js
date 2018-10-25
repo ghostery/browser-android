@@ -22,8 +22,7 @@ const NOT_CONTROLLABLE = "not_controllable";
 const HOMEPAGE_URL_PREF = "browser.startup.homepage";
 
 const getHomePageURL = () => {
-  return Services.prefs.getComplexValue(
-    HOMEPAGE_URL_PREF, Ci.nsIPrefLocalizedString).data;
+  return Services.prefs.getStringPref(HOMEPAGE_URL_PREF);
 };
 
 function isConfirmed(id) {
@@ -238,7 +237,7 @@ add_task(async function test_disable() {
 
   let disabledPromise = awaitEvent("shutdown", ID);
   prefPromise = promisePrefChangeObserved(HOMEPAGE_URL_PREF);
-  addon.userDisabled = true;
+  await addon.disable();
   await Promise.all([disabledPromise, prefPromise]);
 
   is(getHomePageURL(), defaultHomePage,
@@ -246,7 +245,7 @@ add_task(async function test_disable() {
 
   let enabledPromise = awaitEvent("ready", ID);
   prefPromise = promisePrefChangeObserved(HOMEPAGE_URL_PREF);
-  addon.userDisabled = false;
+  await addon.enable();
   await Promise.all([enabledPromise, prefPromise]);
 
   is(getHomePageURL(), HOME_URI_1,

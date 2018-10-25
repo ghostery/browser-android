@@ -69,6 +69,7 @@
 #define EGL_ANGLE_platform_angle_opengl 1
 #define EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE 0x320D
 #define EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE 0x320E
+#define EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE 0x3480
 #endif /* EGL_ANGLE_platform_angle_opengl */
 
 #ifndef EGL_ANGLE_platform_angle_null
@@ -174,6 +175,11 @@ EGLAPI EGLint EGLAPIENTRY eglProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limi
 #define EGL_TEXTURE_TYPE_ANGLE 0x345C
 #define EGL_TEXTURE_INTERNAL_FORMAT_ANGLE 0x345D
 #endif /* EGL_ANGLE_iosurface_client_buffer */
+
+#ifndef EGL_ANGLE_create_context_extensions_enabled
+#define EGL_ANGLE_create_context_extensions_enabled 1
+#define EGL_EXTENSIONS_ENABLED_ANGLE 0x345F
+#endif /* EGL_ANGLE_create_context_extensions_enabled */
 
 // clang-format on
 

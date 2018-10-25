@@ -10,8 +10,6 @@
  *     - "add" - for adding a new item.
  *       @ type (String). Possible values:
  *         - "bookmark"
- *           @ loadBookmarkInSidebar - optional, the default state for the
- *             "Load this bookmark in the sidebar" field.
  *         - "folder"
  *           @ URIList (Array of nsIURI objects) - optional, list of uris to
  *             be bookmarked under the new folder.
@@ -19,8 +17,6 @@
  *       @ uri (nsIURI object) - optional, the default uri for the new item.
  *         The property is not used for the "folder with items" type.
  *       @ title (String) - optional, the default title for the new item.
- *       @ description (String) - optional, the default description for the new
- *         item.
  *       @ defaultInsertionPoint (InsertionPoint JS object) - optional, the
  *         default insertion point for the new item.
  *       @ keyword (String) - optional, the default keyword for the new item.
@@ -47,10 +43,8 @@
  *     Possible values:
  *     - "title"
  *     - "location"
- *     - "description"
  *     - "keyword"
  *     - "tags"
- *     - "loadInSidebar"
  *     - "folderPicker" - hides both the tree and the menu.
  *
  * window.arguments[0].bookmarkGuid is set to the guid of the item, if the
@@ -60,9 +54,21 @@
 /* import-globals-from editBookmark.js */
 /* import-globals-from controller.js */
 
+/* Shared Places Import - change other consumers if you change this: */
+ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "PrivateBrowsingUtils",
-                               "resource://gre/modules/PrivateBrowsingUtils.jsm");
+XPCOMUtils.defineLazyModuleGetters(this, {
+  PlacesUtils: "resource://gre/modules/PlacesUtils.jsm",
+  PlacesUIUtils: "resource:///modules/PlacesUIUtils.jsm",
+  PlacesTransactions: "resource://gre/modules/PlacesTransactions.jsm",
+  PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.jsm",
+});
+XPCOMUtils.defineLazyScriptGetter(this, "PlacesTreeView",
+                                  "chrome://browser/content/places/treeView.js");
+XPCOMUtils.defineLazyScriptGetter(this, ["PlacesInsertionPoint", "PlacesController",
+                                         "PlacesControllerDragHelper"],
+                                  "chrome://browser/content/places/controller.js");
+/* End Shared Places Import */
 
 const BOOKMARK_ITEM = 0;
 const BOOKMARK_FOLDER = 1;
@@ -87,9 +93,7 @@ var BookmarkPropertiesPanel = {
   _action: null,
   _itemType: null,
   _uri: null,
-  _loadInSidebar: false,
   _title: "",
-  _description: "",
   _URIs: [],
   _keyword: "",
   _postData: null,
@@ -112,7 +116,7 @@ var BookmarkPropertiesPanel = {
       if (this._itemType == LIVEMARK_CONTAINER)
         return this._strings.getString("dialogAcceptLabelAddLivemark");
 
-      if (this._dummyItem || this._loadInSidebar)
+      if (this._dummyItem)
         return this._strings.getString("dialogAcceptLabelAddItem");
 
       return this._strings.getString("dialogAcceptLabelSaveItem");
@@ -165,7 +169,7 @@ var BookmarkPropertiesPanel = {
         this._defaultInsertionPoint =
           new PlacesInsertionPoint({
             parentId: PlacesUtils.bookmarksMenuFolderId,
-            parentGuid: PlacesUtils.bookmarks.menuGuid
+            parentGuid: PlacesUtils.bookmarks.menuGuid,
           });
       }
 
@@ -185,9 +189,6 @@ var BookmarkPropertiesPanel = {
             this._title = this._strings.getString("newBookmarkDefault");
             this._dummyItem = true;
           }
-
-          if ("loadBookmarkInSidebar" in dialogInfo)
-            this._loadInSidebar = dialogInfo.loadBookmarkInSidebar;
 
           if ("keyword" in dialogInfo) {
             this._keyword = dialogInfo.keyword;
@@ -226,9 +227,6 @@ var BookmarkPropertiesPanel = {
               this._title = this._strings.getString("newLivemarkDefault");
           }
       }
-
-      if ("description" in dialogInfo)
-        this._description = dialogInfo.description;
     } else { // edit
       this._node = dialogInfo.node;
       this._title = this._node.title;
@@ -460,18 +458,9 @@ var BookmarkPropertiesPanel = {
 
   async _promiseNewItem() {
     let [containerId, index, parentGuid] = await this._getInsertionPointDetails();
-    let annotations = [];
-    if (this._description) {
-      annotations.push({ name: PlacesUIUtils.DESCRIPTION_ANNO,
-                         value: this._description });
-    }
-    if (this._loadInSidebar) {
-      annotations.push({ name: PlacesUIUtils.LOAD_IN_SIDEBAR_ANNO,
-                         value: true });
-    }
 
     let itemGuid;
-    let info = { parentGuid, index, title: this._title, annotations };
+    let info = { parentGuid, index, title: this._title };
     if (this._itemType == BOOKMARK_ITEM) {
       info.url = this._uri;
       if (this._keyword)
@@ -479,8 +468,9 @@ var BookmarkPropertiesPanel = {
       if (this._postData)
         info.postData = this._postData;
 
-      if (this._charSet && !PrivateBrowsingUtils.isWindowPrivate(window))
-        PlacesUtils.setCharsetForURI(this._uri, this._charSet);
+      if (this._charSet) {
+        PlacesUIUtils.setCharsetForPage(this._uri, this._charSet, window).catch(Cu.reportError);
+      }
 
       itemGuid = await PlacesTransactions.NewBookmark(info).transact();
     } else if (this._itemType == LIVEMARK_CONTAINER) {
@@ -510,8 +500,8 @@ var BookmarkPropertiesPanel = {
       parent: {
         itemId: containerId,
         bookmarkGuid: parentGuid,
-        type: Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER
-      }
+        type: Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER,
+      },
     });
-  }
+  },
 };

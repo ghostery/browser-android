@@ -18,19 +18,19 @@ const gAppDir = FileUtils.getFile(KEY_APPDIR, []);
 
 var oldAddon = {
   id: "old@tests.mozilla.org",
-  version: 1
+  version: 1,
 };
 var newAddon = {
   id: "new@tests.mozilla.org",
-  version: 1
+  version: 1,
 };
 var ancientAddon = {
   id: "ancient@tests.mozilla.org",
-  version: 1
+  version: 1,
 };
 var invalidAddon = {
   id: "invalid@tests.mozilla.org",
-  version: 1
+  version: 1,
 };
 
 function incrementAppVersion() {
@@ -47,9 +47,10 @@ function clearBlocklists() {
     blocklist.remove(true);
 }
 
-function reloadBlocklist() {
+async function reloadBlocklist() {
   Services.prefs.setBoolPref(PREF_BLOCKLIST_ENABLED, false);
   Services.prefs.setBoolPref(PREF_BLOCKLIST_ENABLED, true);
+  await Blocklist._lastUpdate;
 }
 
 function copyToApp(file) {
@@ -95,15 +96,15 @@ add_test(async function test_copy() {
   copyToApp(OLD);
 
   incrementAppVersion();
-  startupManager();
+  await promiseStartupManager();
 
-  reloadBlocklist();
+  await reloadBlocklist();
   Assert.ok(!(await isBlocklisted(invalidAddon)));
   Assert.ok(!(await isBlocklisted(ancientAddon)));
   Assert.ok(await isBlocklisted(oldAddon));
   Assert.ok(!(await isBlocklisted(newAddon)));
 
-  shutdownManager();
+  await promiseShutdownManager();
 
   run_next_test();
 });
@@ -115,16 +116,16 @@ add_test(async function test_ancient() {
   copyToProfile(OLD, OLD_TSTAMP);
 
   incrementAppVersion();
-  startupManager();
+  await promiseStartupManager();
 
-  reloadBlocklist();
+  await reloadBlocklist();
 
   Assert.ok(!(await isBlocklisted(invalidAddon)));
   Assert.ok(!(await isBlocklisted(ancientAddon)));
   Assert.ok(await isBlocklisted(oldAddon));
   Assert.ok(!(await isBlocklisted(newAddon)));
 
-  shutdownManager();
+  await promiseShutdownManager();
 
   run_next_test();
 });
@@ -136,16 +137,16 @@ add_test(async function test_override() {
   copyToProfile(OLD, OLD_TSTAMP);
 
   incrementAppVersion();
-  startupManager();
+  await promiseStartupManager();
 
-  reloadBlocklist();
+  await reloadBlocklist();
 
   Assert.ok(!(await isBlocklisted(invalidAddon)));
   Assert.ok(!(await isBlocklisted(ancientAddon)));
   Assert.ok(!(await isBlocklisted(oldAddon)));
   Assert.ok(await isBlocklisted(newAddon));
 
-  shutdownManager();
+  await promiseShutdownManager();
 
   run_next_test();
 });
@@ -157,16 +158,16 @@ add_test(async function test_retain() {
   copyToProfile(NEW, NEW_TSTAMP);
 
   incrementAppVersion();
-  startupManager();
+  await promiseStartupManager();
 
-  reloadBlocklist();
+  await reloadBlocklist();
 
   Assert.ok(!(await isBlocklisted(invalidAddon)));
   Assert.ok(!(await isBlocklisted(ancientAddon)));
   Assert.ok(!(await isBlocklisted(oldAddon)));
   Assert.ok(await isBlocklisted(newAddon));
 
-  shutdownManager();
+  await promiseShutdownManager();
 
   run_next_test();
 });
@@ -178,21 +179,21 @@ add_test(async function test_missing() {
   copyToProfile(NEW, NEW_TSTAMP);
 
   incrementAppVersion();
-  startupManager();
-  shutdownManager();
+  await promiseStartupManager();
+  await promiseShutdownManager();
 
   let blocklist = FileUtils.getFile(KEY_PROFILEDIR, [FILE_BLOCKLIST]);
   blocklist.remove(true);
-  startupManager(false);
+  await promiseStartupManager();
 
-  reloadBlocklist();
+  await reloadBlocklist();
 
   Assert.ok(!(await isBlocklisted(invalidAddon)));
   Assert.ok(!(await isBlocklisted(ancientAddon)));
   Assert.ok(await isBlocklisted(oldAddon));
   Assert.ok(!(await isBlocklisted(newAddon)));
 
-  shutdownManager();
+  await promiseShutdownManager();
 
   run_next_test();
 });

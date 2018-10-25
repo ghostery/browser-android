@@ -63,7 +63,7 @@ class FirefoxDataProvider {
    * @param {object} data data payload will be added to application state
    */
   async addRequest(id, data) {
-    let {
+    const {
       method,
       url,
       isXHR,
@@ -71,6 +71,7 @@ class FirefoxDataProvider {
       startedDateTime,
       fromCache,
       fromServiceWorker,
+      isThirdPartyTrackingResource,
     } = data;
 
     if (this.actionsEnabled && this.actions.addRequest) {
@@ -89,6 +90,7 @@ class FirefoxDataProvider {
 
         fromCache,
         fromServiceWorker,
+        isThirdPartyTrackingResource,
       }, true);
     }
 
@@ -102,7 +104,7 @@ class FirefoxDataProvider {
    * @param {object} data data payload will be updated to application state
    */
   async updateRequest(id, data) {
-    let {
+    const {
       responseContent,
       responseCookies,
       responseHeaders,
@@ -113,7 +115,7 @@ class FirefoxDataProvider {
     } = data;
 
     // fetch request detail contents in parallel
-    let [
+    const [
       responseContentObj,
       requestHeadersObj,
       responseHeadersObj,
@@ -131,7 +133,7 @@ class FirefoxDataProvider {
       this.fetchResponseCache(responseCache),
     ]);
 
-    let payload = Object.assign({},
+    const payload = Object.assign({},
       data,
       responseContentObj,
       requestHeadersObj,
@@ -150,10 +152,10 @@ class FirefoxDataProvider {
   }
 
   async fetchResponseContent(responseContent) {
-    let payload = {};
+    const payload = {};
     if (responseContent && responseContent.content) {
-      let { text } = responseContent.content;
-      let response = await this.getLongString(text);
+      const { text } = responseContent.content;
+      const response = await this.getLongString(text);
       responseContent.content.text = response;
       payload.responseContent = responseContent;
     }
@@ -161,9 +163,9 @@ class FirefoxDataProvider {
   }
 
   async fetchRequestHeaders(requestHeaders) {
-    let payload = {};
+    const payload = {};
     if (requestHeaders && requestHeaders.headers && requestHeaders.headers.length) {
-      let headers = await fetchHeaders(requestHeaders, this.getLongString);
+      const headers = await fetchHeaders(requestHeaders, this.getLongString);
       if (headers) {
         payload.requestHeaders = headers;
       }
@@ -172,9 +174,9 @@ class FirefoxDataProvider {
   }
 
   async fetchResponseHeaders(responseHeaders) {
-    let payload = {};
+    const payload = {};
     if (responseHeaders && responseHeaders.headers && responseHeaders.headers.length) {
-      let headers = await fetchHeaders(responseHeaders, this.getLongString);
+      const headers = await fetchHeaders(responseHeaders, this.getLongString);
       if (headers) {
         payload.responseHeaders = headers;
       }
@@ -183,10 +185,10 @@ class FirefoxDataProvider {
   }
 
   async fetchPostData(requestPostData) {
-    let payload = {};
+    const payload = {};
     if (requestPostData && requestPostData.postData) {
-      let { text } = requestPostData.postData;
-      let postData = await this.getLongString(text);
+      const { text } = requestPostData.postData;
+      const postData = await this.getLongString(text);
       const headers = CurlUtils.getHeadersFromMultipartText(postData);
 
       // Calculate total header size and don't forget to include
@@ -205,15 +207,15 @@ class FirefoxDataProvider {
   }
 
   async fetchRequestCookies(requestCookies) {
-    let payload = {};
+    const payload = {};
     if (requestCookies) {
-      let reqCookies = [];
+      const reqCookies = [];
       // request store cookies in requestCookies or requestCookies.cookies
-      let cookies = requestCookies.cookies ?
+      const cookies = requestCookies.cookies ?
         requestCookies.cookies : requestCookies;
       // make sure cookies is iterable
       if (typeof cookies[Symbol.iterator] === "function") {
-        for (let cookie of cookies) {
+        for (const cookie of cookies) {
           reqCookies.push(Object.assign({}, cookie, {
             value: await this.getLongString(cookie.value),
           }));
@@ -227,15 +229,15 @@ class FirefoxDataProvider {
   }
 
   async fetchResponseCookies(responseCookies) {
-    let payload = {};
+    const payload = {};
     if (responseCookies) {
-      let resCookies = [];
+      const resCookies = [];
       // response store cookies in responseCookies or responseCookies.cookies
-      let cookies = responseCookies.cookies ?
+      const cookies = responseCookies.cookies ?
         responseCookies.cookies : responseCookies;
       // make sure cookies is iterable
       if (typeof cookies[Symbol.iterator] === "function") {
-        for (let cookie of cookies) {
+        for (const cookie of cookies) {
           resCookies.push(Object.assign({}, cookie, {
             value: await this.getLongString(cookie.value),
           }));
@@ -249,7 +251,7 @@ class FirefoxDataProvider {
   }
 
   async fetchResponseCache(responseCache) {
-    let payload = {};
+    const payload = {};
     if (responseCache) {
       payload.responseCache = await responseCache;
       payload.responseCacheAvailable = false;
@@ -312,7 +314,7 @@ class FirefoxDataProvider {
    * @param {object} networkInfo network request information
    */
   async onNetworkEvent(networkInfo) {
-    let {
+    const {
       actor,
       cause,
       fromCache,
@@ -323,6 +325,7 @@ class FirefoxDataProvider {
         url,
       },
       startedDateTime,
+      isThirdPartyTrackingResource,
     } = networkInfo;
 
     await this.addRequest(actor, {
@@ -333,6 +336,7 @@ class FirefoxDataProvider {
       method,
       startedDateTime,
       url,
+      isThirdPartyTrackingResource,
     });
 
     this.emit(EVENTS.NETWORK_EVENT, actor);
@@ -345,13 +349,15 @@ class FirefoxDataProvider {
    * @param {object} networkInfo the network request information.
    */
   onNetworkEventUpdate(data) {
-    let { packet, networkInfo } = data;
-    let { actor } = networkInfo;
-    let { updateType } = packet;
+    const { packet, networkInfo } = data;
+    const { actor } = networkInfo;
+    const { updateType } = packet;
 
     switch (updateType) {
       case "securityInfo":
-        this.pushRequestToQueue(actor, { securityState: networkInfo.securityInfo });
+        this.pushRequestToQueue(actor, {
+          securityState: networkInfo.securityState
+        });
         break;
       case "responseStart":
         this.pushRequestToQueue(actor, {
@@ -399,7 +405,7 @@ class FirefoxDataProvider {
    * request payload from pending queue and then update component.
    */
   async onPayloadDataReceived(actor) {
-    let payload = this.payloadQueue.get(actor) || {};
+    const payload = this.payloadQueue.get(actor) || {};
 
     if (!payload.requestHeadersAvailable || !payload.requestCookiesAvailable ||
         !payload.eventTimingsAvailable || !payload.responseContentAvailable) {
@@ -433,7 +439,7 @@ class FirefoxDataProvider {
   requestData(actor, method) {
     // Key string used in `lazyRequestData`. We use this Map to prevent requesting
     // the same data twice at the same time.
-    let key = `${actor}-${method}`;
+    const key = `${actor}-${method}`;
     let promise = this.lazyRequestData.get(key);
     // If a request is pending, reuse it.
     if (promise) {
@@ -477,11 +483,12 @@ class FirefoxDataProvider {
    */
   async _requestData(actor, method) {
     // Calculate real name of the client getter.
-    let clientMethodName = `get${method.charAt(0).toUpperCase()}${method.slice(1)}`;
+    const clientMethodName = `get${method.charAt(0).toUpperCase()}${method.slice(1)}`;
     // The name of the callback that processes request response
-    let callbackMethodName = `on${method.charAt(0).toUpperCase()}${method.slice(1)}`;
+    const callbackMethodName = `on${method.charAt(0).toUpperCase()}${method.slice(1)}`;
     // And the event to fire before updating this data
-    let updatingEventName = `UPDATING_${method.replace(/([A-Z])/g, "_$1").toUpperCase()}`;
+    const updatingEventName =
+      `UPDATING_${method.replace(/([A-Z])/g, "_$1").toUpperCase()}`;
 
     // Emit event that tell we just start fetching some data
     this.emit(EVENTS[updatingEventName], actor);
@@ -493,7 +500,9 @@ class FirefoxDataProvider {
         // e.g. CustomRequestPanel will clone a request with additional '-clone' actor id
         this.webConsoleClient[clientMethodName](actor.replace("-clone", ""), (res) => {
           if (res.error) {
-            reject(new Error(res.message));
+            reject(
+              new Error(`Error while calling method ${clientMethodName}: ${res.message}`)
+            );
           }
           resolve(res);
         });
@@ -518,7 +527,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onRequestHeaders(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       requestHeaders: response
     });
     this.emit(EVENTS.RECEIVED_REQUEST_HEADERS, response.from);
@@ -531,7 +540,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onResponseHeaders(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       responseHeaders: response
     });
     this.emit(EVENTS.RECEIVED_RESPONSE_HEADERS, response.from);
@@ -544,7 +553,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onRequestCookies(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       requestCookies: response
     });
     this.emit(EVENTS.RECEIVED_REQUEST_COOKIES, response.from);
@@ -557,7 +566,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onRequestPostData(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       requestPostData: response
     });
     this.emit(EVENTS.RECEIVED_REQUEST_POST_DATA, response.from);
@@ -570,7 +579,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onSecurityInfo(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       securityInfo: response.securityInfo
     });
     this.emit(EVENTS.RECEIVED_SECURITY_INFO, response.from);
@@ -583,7 +592,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onResponseCookies(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       responseCookies: response
     });
     this.emit(EVENTS.RECEIVED_RESPONSE_COOKIES, response.from);
@@ -595,7 +604,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onResponseCache(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       responseCache: response
     });
     this.emit(EVENTS.RECEIVED_RESPONSE_CACHE, response.from);
@@ -608,7 +617,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onResponseContent(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       // We have to ensure passing mimeType as fetchResponseContent needs it from
       // updateRequest. It will convert the LongString in `response.content.text` to a
       // string.
@@ -625,7 +634,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onEventTimings(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       eventTimings: response
     });
     this.emit(EVENTS.RECEIVED_EVENT_TIMINGS, response.from);
@@ -638,7 +647,7 @@ class FirefoxDataProvider {
    * @param {object} response the message received from the server.
    */
   async onStackTrace(response) {
-    let payload = await this.updateRequest(response.from, {
+    const payload = await this.updateRequest(response.from, {
       stacktrace: response.stacktrace
     });
     this.emit(EVENTS.RECEIVED_EVENT_STACKTRACE, response.from);

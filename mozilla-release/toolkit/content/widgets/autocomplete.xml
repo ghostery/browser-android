@@ -11,20 +11,15 @@
 
   <binding id="autocomplete"
            extends="chrome://global/content/bindings/textbox.xml#textbox">
-    <resources>
-      <stylesheet src="chrome://global/content/autocomplete.css"/>
-      <stylesheet src="chrome://global/skin/autocomplete.css"/>
-    </resources>
-
     <content sizetopopup="pref">
       <children includes="image|deck|stack|box"/>
 
-      <xul:hbox anonid="textbox-input-box" class="textbox-input-box" flex="1" xbl:inherits="tooltiptext=inputtooltiptext">
+      <xul:moz-input-box anonid="moz-input-box" flex="1" xbl:inherits="tooltiptext=inputtooltiptext">
         <children/>
         <html:input anonid="input" class="autocomplete-textbox textbox-input"
                     allowevents="true"
                     xbl:inherits="tooltiptext=inputtooltiptext,value,type=inputtype,maxlength,disabled,size,readonly,placeholder,tabindex,accesskey,mozactionhint"/>
-      </xul:hbox>
+      </xul:moz-input-box>
       <children includes="hbox"/>
 
       <xul:popupset anonid="popupset" class="autocomplete-result-popupset"/>
@@ -76,7 +71,7 @@
             popup = document.getElementById(popupId);
           }
           if (!popup) {
-            popup = document.createElement("panel");
+            popup = document.createXULElement("panel");
             popup.setAttribute("type", "autocomplete-richlistbox");
             popup.setAttribute("noautofocus", "true");
 
@@ -136,10 +131,6 @@
       <property name="searchCount" readonly="true"
                 onget="this.initSearchNames(); return this.mSearchNames.length;"/>
 
-      <field name="shrinkDelay" readonly="true">
-        parseInt(this.getAttribute("shrinkdelay")) || 0
-      </field>
-
       <property name="PrivateBrowsingUtils" readonly="true">
         <getter><![CDATA[
           let module = {};
@@ -148,7 +139,7 @@
             configurable: true,
             enumerable: true,
             writable: true,
-            value: module.PrivateBrowsingUtils
+            value: module.PrivateBrowsingUtils,
           });
           return module.PrivateBrowsingUtils;
         ]]></getter>
@@ -178,10 +169,10 @@
         <body><![CDATA[
           if (aReason == Ci.nsIAutoCompleteInput
                            .TEXTVALUE_REASON_COMPLETEDEFAULT) {
-            this._disableTrim = true;
+            this._textValueSetByCompleteDefault = true;
           }
           this.textValue = aValue;
-          this._disableTrim = false;
+          this._textValueSetByCompleteDefault = false;
         ]]></body>
       </method>
 
@@ -196,8 +187,10 @@
           return this.value;
         ]]></getter>
         <setter><![CDATA[
-          if (typeof this.onBeforeTextValueSet == "function")
+          if (typeof this.onBeforeTextValueSet == "function" &&
+              !this._textValueSetByCompleteDefault) {
             val = this.onBeforeTextValueSet(val);
+          }
 
           this.value = val;
 
@@ -288,7 +281,7 @@
       <!-- =================== PUBLIC MEMBERS =================== -->
 
       <field name="valueIsTyped">false</field>
-      <field name="_disableTrim">false</field>
+      <field name="_textValueSetByCompleteDefault">false</field>
       <property name="value">
         <getter><![CDATA[
           if (typeof this.onBeforeValueGet == "function") {
@@ -304,7 +297,8 @@
           if (typeof this.onBeforeValueSet == "function")
             val = this.onBeforeValueSet(val);
 
-          if (typeof this.trimValue == "function" && !this._disableTrim)
+          if (typeof this.trimValue == "function" &&
+              !this._textValueSetByCompleteDefault)
             val = this.trimValue(val);
 
           this.valueIsTyped = false;
@@ -496,7 +490,7 @@
               if (this.popup.selectedIndex >= 0) {
                 this._selectionDetails = {
                   index: this.popup.selectedIndex,
-                  kind: "key"
+                  kind: "key",
                 };
               }
               cancel = this.handleEnter(aEvent);
@@ -592,7 +586,7 @@
             return this._autocomplete.editor.isSelectionEditable &&
                    this._autocomplete.editor.canPaste(this._kGlobalClipboard);
           },
-          onEvent() {}
+          onEvent() {},
         })
       ]]></field>
 
@@ -648,11 +642,6 @@
   </binding>
 
   <binding id="autocomplete-rich-result-popup" extends="chrome://global/content/bindings/popup.xml#popup">
-    <resources>
-      <stylesheet src="chrome://global/content/autocomplete.css"/>
-      <stylesheet src="chrome://global/skin/autocomplete.css"/>
-    </resources>
-
     <content ignorekeys="true" level="top" consumeoutsideclicks="never">
       <xul:richlistbox anonid="richlistbox" class="autocomplete-richlistbox" flex="1"/>
       <xul:hbox>
@@ -664,7 +653,6 @@
       <field name="mInput">null</field>
       <field name="mPopupOpen">false</field>
       <field name="_currentIndex">0</field>
-      <field name="_rlbAnimated">false</field>
 
       <!-- =================== nsIAutoCompletePopup =================== -->
 
@@ -757,7 +745,7 @@
             // when clearing the selection (val == -1, so selectedItem will be
             // null), we want to scroll back to the top.  see bug #406194
             this.richlistbox.ensureElementIsVisible(
-              this.richlistbox.selectedItem || this.richlistbox.firstChild);
+              this.richlistbox.selectedItem || this.richlistbox.firstElementChild);
           }
           return val;
         ]]>
@@ -833,16 +821,14 @@
           this.richlistbox.collapsed = (this.matchCount == 0);
 
           // Update the richlistbox height.
-          if (this._adjustHeightTimeout) {
-            clearTimeout(this._adjustHeightTimeout);
-          }
-          if (this._shrinkTimeout) {
-            clearTimeout(this._shrinkTimeout);
+          if (this._adjustHeightRAFToken) {
+            cancelAnimationFrame(this._adjustHeightRAFToken);
+            this._adjustHeightRAFToken = null;
           }
 
           if (this.mPopupOpen) {
             delete this._adjustHeightOnPopupShown;
-            this._adjustHeightTimeout = setTimeout(() => this.adjustHeight(), 0);
+            this._adjustHeightRAFToken = requestAnimationFrame(() => this.adjustHeight());
           } else {
             this._adjustHeightOnPopupShown = true;
           }
@@ -883,9 +869,9 @@
       <method name="_collapseUnusedItems">
         <body>
           <![CDATA[
-            let existingItemsCount = this.richlistbox.childNodes.length;
+            let existingItemsCount = this.richlistbox.children.length;
             for (let i = this.matchCount; i < existingItemsCount; ++i) {
-              let item = this.richlistbox.childNodes[i];
+              let item = this.richlistbox.children[i];
 
               item.collapsed = true;
               if (typeof item._onCollapse == "function") {
@@ -900,10 +886,8 @@
         <body>
           <![CDATA[
           // Figure out how many rows to show
-          let rows = this.richlistbox.childNodes;
+          let rows = this.richlistbox.children;
           let numRows = Math.min(this.matchCount, this.maxRows, rows.length);
-
-          this.removeAttribute("height");
 
           // Default the height to 0 if we have no rows to show
           let height = 0;
@@ -911,21 +895,9 @@
             let firstRowRect = rows[0].getBoundingClientRect();
             if (this._rlbPadding == undefined) {
               let style = window.getComputedStyle(this.richlistbox);
-
-              let transition = style.transitionProperty;
-              this._rlbAnimated = transition && transition != "none";
-
               let paddingTop = parseInt(style.paddingTop) || 0;
               let paddingBottom = parseInt(style.paddingBottom) || 0;
               this._rlbPadding = paddingTop + paddingBottom;
-            }
-
-            if (numRows > this.maxRows) {
-              // Set a fixed max-height to avoid flicker when growing the panel.
-              let lastVisibleRowRect = rows[this.maxRows - 1].getBoundingClientRect();
-              let visibleHeight = lastVisibleRowRect.bottom - firstRowRect.top;
-              this.richlistbox.style.maxHeight =
-                visibleHeight + this._rlbPadding + "px";
             }
 
             // The class `forceHandleUnderflow` is for the item might need to
@@ -943,31 +915,12 @@
                      this._rlbPadding;
           }
 
-          let animate = this._rlbAnimated &&
-                        this.getAttribute("dontanimate") != "true";
           let currentHeight = this.richlistbox.getBoundingClientRect().height;
-          if (height > currentHeight) {
-            // Grow immediately.
-            if (animate) {
-              this.richlistbox.removeAttribute("height");
-              this.richlistbox.style.height = height + "px";
-            } else {
-              this.richlistbox.style.removeProperty("height");
-              this.richlistbox.height = height;
-            }
-          } else {
-            // Delay shrinking to avoid flicker.
-            this._shrinkTimeout = setTimeout(() => {
-              this._collapseUnusedItems();
-              if (animate) {
-                this.richlistbox.removeAttribute("height");
-                this.richlistbox.style.height = height + "px";
-              } else {
-                this.richlistbox.style.removeProperty("height");
-                this.richlistbox.height = height;
-              }
-            }, this.mInput.shrinkDelay);
+          if (height <= currentHeight) {
+            this._collapseUnusedItems();
           }
+          this.richlistbox.style.removeProperty("height");
+          this.richlistbox.height = height;
           ]]>
         </body>
       </method>
@@ -978,7 +931,7 @@
           <![CDATA[
           var controller = this.mInput.controller;
           var matchCount = this.matchCount;
-          var existingItemsCount = this.richlistbox.childNodes.length;
+          var existingItemsCount = this.richlistbox.children.length;
 
           // Process maxRows per chunk to improve performance and user experience
           for (let i = 0; i < this.maxRows; i++) {
@@ -990,18 +943,23 @@
             let itemExists = this._currentIndex < existingItemsCount;
 
             let originalValue, originalText, originalType;
-            let value = controller.getValueAt(this._currentIndex);
+            let style = controller.getStyleAt(this._currentIndex);
+            let value =
+              style &&
+                style.includes("autofill") &&
+                style.includes("heuristic") ?
+              controller.getFinalCompleteValueAt(this._currentIndex) :
+              controller.getValueAt(this._currentIndex);
             let label = controller.getLabelAt(this._currentIndex);
             let comment = controller.getCommentAt(this._currentIndex);
-            let style = controller.getStyleAt(this._currentIndex);
             let image = controller.getImageAt(this._currentIndex);
             // trim the leading/trailing whitespace
             let trimmedSearchString = controller.searchString.replace(/^\s+/, "").replace(/\s+$/, "");
 
             if (itemExists) {
-              item = this.richlistbox.childNodes[this._currentIndex];
+              item = this.richlistbox.children[this._currentIndex];
 
-              // Url may be a modified version of value, see _adjustACItem().
+              // Url may be a modified version of value, see _adjustAcItem().
               originalValue = item.getAttribute("url") || item.getAttribute("ac-value");
               originalText = item.getAttribute("ac-text");
               originalType = item.getAttribute("originaltype");
@@ -1021,7 +979,7 @@
 
             } else {
               // need to create a new item
-              item = document.createElementNS("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "richlistitem");
+              item = document.createXULElement("richlistitem");
             }
 
             item.setAttribute("dir", this.style.direction);
@@ -1783,7 +1741,7 @@
 
               // The popup may have changed size between now and the last
               // time the item was shown, so always handle over/underflow.
-              let dwu = window.getInterface(Ci.nsIDOMWindowUtils);
+              let dwu = window.windowUtils;
               let popupWidth = dwu.getBoundsWithoutFlushing(this.parentNode).width;
               if (!this._previousPopupWidth || this._previousPopupWidth != popupWidth) {
                 this._previousPopupWidth = popupWidth;
@@ -1835,7 +1793,7 @@
           }
 
           this.removeAttribute("actiontype");
-          this.classList.remove("overridable-action");
+          this.classList.remove("overridable-action", "emptySearchQuery");
 
           // If the type includes an action, set up the item appropriately.
           if (initialTypes.has("action") || action) {
@@ -1902,6 +1860,11 @@
                   ];
                 }
               } else {
+                // Add the emptySearchQuery class if the search query is the
+                // empty string.  We use it to hide .ac-separator in CSS.
+                if (!searchQuery.trim()) {
+                  this.classList.add("emptySearchQuery");
+                }
                 pairs = [
                   [searchQuery, ""],
                 ];
@@ -1945,7 +1908,7 @@
             displayUrl = this._unescapeUrl(displayUrl);
           }
           // For performance reasons we may want to limit the displayUrl size.
-          if (popup.textRunsMaxLen) {
+          if (popup.textRunsMaxLen && displayUrl) {
             displayUrl = displayUrl.substr(0, popup.textRunsMaxLen);
           }
           this.setAttribute("displayurl", displayUrl);
@@ -2015,12 +1978,17 @@
           if (Array.isArray(title)) {
             // For performance reasons we may want to limit the title size.
             if (popup.textRunsMaxLen) {
-              title = title.map(t => t.substr(0, popup.textRunsMaxLen));
+              title.forEach(t => {
+                // Limit all the even items.
+                for (let i = 0; i < t.length; i += 2) {
+                  t[i] = t[i].substr(0, popup.textRunsMaxLen);
+                }
+              });
             }
             this._setUpEmphasisedSections(this._titleText, title);
           } else {
             // For performance reasons we may want to limit the title size.
-            if (popup.textRunsMaxLen) {
+            if (popup.textRunsMaxLen && title) {
               title = title.substr(0, popup.textRunsMaxLen);
             }
             this._setUpDescription(this._titleText, title, false);
@@ -2219,14 +2187,11 @@
     <handlers>
       <handler event="mouseup">
         <![CDATA[
-        // don't call onPopupClick for the scrollbar buttons, thumb, slider, etc.
-        let item = event.originalTarget;
-        while (item && item.localName != "richlistitem") {
-          item = item.parentNode;
-        }
-
-        if (!item)
+        // Don't call onPopupClick for the scrollbar buttons, thumb, slider, etc.
+        // If we hit the richlistbox and not a richlistitem, we ignore the event.
+        if (event.originalTarget.closest("richlistbox,richlistitem").localName == "richlistbox") {
           return;
+        }
 
         this.parentNode.onPopupClick(event);
       ]]>
@@ -2238,12 +2203,10 @@
           return;
         }
 
-        let item = event.target;
-        while (item && item.localName != "richlistitem") {
-          item = item.parentNode;
-        }
+        let item = event.target.closest("richlistbox,richlistitem");
 
-        if (!item) {
+        // If we hit the richlistbox and not a richlistitem, we ignore the event.
+        if (item.localName == "richlistbox") {
           return;
         }
 

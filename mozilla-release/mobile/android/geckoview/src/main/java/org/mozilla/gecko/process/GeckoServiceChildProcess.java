@@ -24,9 +24,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 public class GeckoServiceChildProcess extends Service {
-
     private static final String LOGTAG = "GeckoServiceChildProcess";
-
     private static IProcessManager sProcessManager;
 
     @WrapForJNI(calledFrom = "gecko")
@@ -44,7 +42,6 @@ public class GeckoServiceChildProcess extends Service {
     public void onCreate() {
         super.onCreate();
 
-        GeckoAppShell.ensureCrashHandling();
         GeckoAppShell.setApplicationContext(getApplicationContext());
     }
 
@@ -63,7 +60,9 @@ public class GeckoServiceChildProcess extends Service {
         public boolean start(final IProcessManager procMan,
                              final String[] args,
                              final Bundle extras,
+                             final int flags,
                              final ParcelFileDescriptor prefsPfd,
+                             final ParcelFileDescriptor prefMapPfd,
                              final ParcelFileDescriptor ipcPfd,
                              final ParcelFileDescriptor crashReporterPfd,
                              final ParcelFileDescriptor crashAnnotationPfd) {
@@ -75,7 +74,10 @@ public class GeckoServiceChildProcess extends Service {
                 sProcessManager = procMan;
             }
 
-            final int prefsFd = prefsPfd.detachFd();
+            final int prefsFd = prefsPfd != null ?
+                                prefsPfd.detachFd() : -1;
+            final int prefMapFd = prefMapPfd != null ?
+                                  prefMapPfd.detachFd() : -1;
             final int ipcFd = ipcPfd.detachFd();
             final int crashReporterFd = crashReporterPfd != null ?
                                         crashReporterPfd.detachFd() : -1;
@@ -85,8 +87,8 @@ public class GeckoServiceChildProcess extends Service {
             ThreadUtils.postToUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (GeckoThread.initChildProcess(args, extras, prefsFd, ipcFd, crashReporterFd,
-                                                     crashAnnotationFd)) {
+                    if (GeckoThread.initChildProcess(args, extras, flags, prefsFd, prefMapFd, ipcFd,
+                                                     crashReporterFd, crashAnnotationFd)) {
                         GeckoThread.launch();
                     }
                 }
@@ -109,6 +111,7 @@ public class GeckoServiceChildProcess extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         Log.i(LOGTAG, "Service has been unbound. Stopping.");
+        stopSelf();
         Process.killProcess(Process.myPid());
         return false;
     }

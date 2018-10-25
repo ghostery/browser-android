@@ -12,6 +12,7 @@
 <!ENTITY enableGlodaSearch.label       "启用全局搜索以及索引">
 <!ENTITY enableGlodaSearch.accesskey   "E">
 <!ENTITY dateTimeFormatting.label      "日期和时间格式">
+<!ENTITY languageSelector.label        "语言">
 <!ENTITY allowHWAccel.label            "自动启用硬件加速">
 <!ENTITY allowHWAccel.accesskey        "h">
 <!ENTITY storeType.label               "新账户的消息存储类型：">

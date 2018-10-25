@@ -62,7 +62,7 @@ function waitForDocLoadAndStopIt(aExpectedURL, aBrowser = gBrowser.selectedBrows
           stopContent(contentStopFromProgressListener, chan.originalURI.spec);
         }
       },
-      QueryInterface: ChromeUtils.generateQI(["nsISupportsWeakReference"])
+      QueryInterface: ChromeUtils.generateQI(["nsISupportsWeakReference"]),
     };
     wp.addProgressListener(progressListener, wp.NOTIFY_STATE_WINDOW);
 
@@ -92,46 +92,14 @@ function waitForDocLoadAndStopIt(aExpectedURL, aBrowser = gBrowser.selectedBrows
   });
 }
 
-function is_hidden(element) {
-  var style = element.ownerGlobal.getComputedStyle(element);
-  if (style.display == "none")
-    return true;
-  if (style.visibility != "visible")
-    return true;
-  if (style.display == "-moz-popup")
-    return ["hiding", "closed"].includes(element.state);
-
-  // Hiding a parent element will hide all its children
-  if (element.parentNode != element.ownerDocument)
-    return is_hidden(element.parentNode);
-
-  return false;
-}
-
-function is_visible(element) {
-  var style = element.ownerGlobal.getComputedStyle(element);
-  if (style.display == "none")
-    return false;
-  if (style.visibility != "visible")
-    return false;
-  if (style.display == "-moz-popup" && element.state != "open")
-    return false;
-
-  // Hiding a parent element will hide all its children
-  if (element.parentNode != element.ownerDocument)
-    return is_visible(element.parentNode);
-
-  return true;
-}
-
 function is_element_visible(element, msg) {
   isnot(element, null, "Element should not be null, when checking visibility");
-  ok(is_visible(element), msg || "Element should be visible");
+  ok(BrowserTestUtils.is_visible(element), msg || "Element should be visible");
 }
 
 function is_element_hidden(element, msg) {
   isnot(element, null, "Element should not be null, when checking visibility");
-  ok(is_hidden(element), msg || "Element should be hidden");
+  ok(BrowserTestUtils.is_hidden(element), msg || "Element should be hidden");
 }
 
 function runHttpServer(scheme, host, port = -1) {
@@ -209,8 +177,7 @@ function promiseAutocompleteResultPopup(inputText,
 }
 
 function promisePageActionPanelOpen() {
-  let dwu = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                  .getInterface(Ci.nsIDOMWindowUtils);
+  let dwu = window.windowUtils;
   return BrowserTestUtils.waitForCondition(() => {
     // Wait for the main page action button to become visible.  It's hidden for
     // some URIs, so depending on when this is called, it may not yet be quite
@@ -316,8 +283,7 @@ function promisePageActionViewChildrenVisible(panelViewNode) {
 
 function promiseNodeVisible(node) {
   info(`promiseNodeVisible waiting, node.id=${node.id} node.localeName=${node.localName}\n`);
-  let dwu = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                  .getInterface(Ci.nsIDOMWindowUtils);
+  let dwu = window.windowUtils;
   return BrowserTestUtils.waitForCondition(() => {
     let bounds = dwu.getBoundsWithoutFlushing(node);
     if (bounds.width > 0 && bounds.height > 0) {
@@ -341,7 +307,7 @@ async function waitForAutocompleteResultAt(index) {
   let searchString = gURLBar.controller.searchString;
   await BrowserTestUtils.waitForCondition(
     () => gURLBar.popup.richlistbox.children.length > index &&
-          gURLBar.popup.richlistbox.children[index].getAttribute("ac-text") == searchString,
+          gURLBar.popup.richlistbox.children[index].getAttribute("ac-text") == searchString.trim(),
     `Waiting for the autocomplete result for "${searchString}" at [${index}] to appear`);
   // Ensure the addition is complete, for proper mouse events on the entries.
   await new Promise(resolve => window.requestIdleCallback(resolve, {timeout: 1000}));

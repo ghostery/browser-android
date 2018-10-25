@@ -94,7 +94,7 @@ fonts-minsize = 최소 글꼴 크기
 fonts-minsize-none =
     .label = 없음
 fonts-allow-own =
-    .label = 위에 선택된 서체 대신에 페이지 폰트 설정 표시 허용
+    .label = 위에 선택된 글꼴 대신에 페이지 글꼴 설정 표시 허용
     .accesskey = A
 
 ## Text Encodings

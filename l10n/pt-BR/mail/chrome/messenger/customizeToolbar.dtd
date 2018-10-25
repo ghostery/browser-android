@@ -13,5 +13,6 @@
 <!ENTITY useSmallIcons.label      "Usar ícones pequenos">
 <!ENTITY restoreDefaultSet.label  "Restaurar configuração padrão">
 <!ENTITY addNewToolbar.label      "Adicionar nova barra de ferramentas">
+<!ENTITY showTitlebar.label       "Mostrar barra de título">
 <!ENTITY saveChanges.label        "Concluído">
 <!ENTITY undoChanges.label        "Desfazer alterações">

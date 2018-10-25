@@ -11,6 +11,10 @@ const TEST_URI = `
     #grid {
       display: grid;
     }
+    #subgrid {
+      display: grid;
+      grid: subgrid;
+    }
     #flex {
       display: flex;
     }
@@ -18,41 +22,57 @@ const TEST_URI = `
       display: block;
     }
   </style>
-  <div id="grid">Grid</div>
+  <div id="grid">
+    <div id="subgrid"></div>
+  </div>
   <div id="flex">Flex</div>
   <div id="block">Block</div>
   <span>HELLO WORLD</span>
 `;
 
 add_task(async function() {
-  let {inspector} = await openInspectorForURL("data:text/html;charset=utf-8," +
+  info("Enable subgrid in order to see the subgrid display type.");
+  await pushPref("layout.css.grid-template-subgrid-value.enabled", true);
+
+  const {inspector} = await openInspectorForURL("data:text/html;charset=utf-8," +
     encodeURIComponent(TEST_URI));
 
   info("Check the display node is shown and the value of #grid.");
   await selectNode("#grid", inspector);
-  let gridContainer = await getContainerForSelector("#grid", inspector);
-  let gridDisplayNode = gridContainer.elt.querySelector(".markupview-display-badge");
+  const gridContainer = await getContainerForSelector("#grid", inspector);
+  const gridDisplayNode = gridContainer.elt.querySelector(
+    ".markup-badge[data-display]");
+  ok(gridDisplayNode, "#grid display node is shown.");
   is(gridDisplayNode.textContent, "grid", "Got the correct display type for #grid.");
-  is(gridDisplayNode.style.display, "inline-block", "#grid display node is shown.");
+
+  info("Check the display node is shown and the value of #subgrid.");
+  await selectNode("#subgrid", inspector);
+  const subgridContainer = await getContainerForSelector("#subgrid", inspector);
+  const subgridDisplayNode = subgridContainer.elt.querySelector(
+    ".markup-badge[data-display]");
+  ok(subgridDisplayNode, "#subgrid display node is shown");
+  is(subgridDisplayNode.textContent, "subgrid",
+    "Got the correct display type for #subgrid");
 
   info("Check the display node is shown and the value of #flex.");
   await selectNode("#flex", inspector);
-  let flexContainer = await getContainerForSelector("#flex", inspector);
-  let flexDisplayNode = flexContainer.elt.querySelector(".markupview-display-badge");
+  const flexContainer = await getContainerForSelector("#flex", inspector);
+  const flexDisplayNode = flexContainer.elt.querySelector(
+    ".markup-badge[data-display]");
+  ok(flexDisplayNode, "#flex display node is shown.");
   is(flexDisplayNode.textContent, "flex", "Got the correct display type for #flex");
-  is(flexDisplayNode.style.display, "inline-block", "#flex display node is shown.");
 
-  info("Check the display node is shown and the value of #block.");
+  info("Check the display node is hidden for #block.");
   await selectNode("#block", inspector);
-  let blockContainer = await getContainerForSelector("#block", inspector);
-  let blockDisplayNode = blockContainer.elt.querySelector(".markupview-display-badge");
-  is(blockDisplayNode.textContent, "block", "Got the correct display type for #block");
-  is(blockDisplayNode.style.display, "none", "#block display node is hidden.");
+  const blockContainer = await getContainerForSelector("#block", inspector);
+  const blockDisplayNode = blockContainer.elt.querySelector(
+    ".markup-badge[data-display]");
+  ok(!blockDisplayNode, "#block display node is hidden.");
 
-  info("Check the display node is shown and the value of span.");
+  info("Check the display node is hidden for span.");
   await selectNode("span", inspector);
-  let spanContainer = await getContainerForSelector("span", inspector);
-  let spanDisplayNode = spanContainer.elt.querySelector(".markupview-display-badge");
-  is(spanDisplayNode.textContent, "inline", "Got the correct display type for #span");
-  is(spanDisplayNode.style.display, "none", "span display node is hidden.");
+  const spanContainer = await getContainerForSelector("span", inspector);
+  const spanDisplayNode = spanContainer.elt.querySelector(
+    ".markup-badge[data-display]");
+  ok(!spanDisplayNode, "span display node is hidden.");
 });

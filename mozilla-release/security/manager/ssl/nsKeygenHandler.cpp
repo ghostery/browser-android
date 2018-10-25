@@ -40,7 +40,6 @@
 #include "nsKeygenHandlerContent.h"
 #include "nsKeygenThread.h"
 #include "nsMemory.h"
-#include "nsNSSComponent.h" // for PIPNSS string bundle calls.
 #include "nsNSSHelper.h"
 #include "nsReadableUtils.h"
 #include "nsUnicharUtils.h"
@@ -243,20 +242,11 @@ nsKeygenFormProcessor::Create(nsISupports* aOuter, const nsIID& aIID, void* *aRe
 nsresult
 nsKeygenFormProcessor::Init()
 {
-  static NS_DEFINE_CID(kNSSComponentCID, NS_NSSCOMPONENT_CID);
-
-  nsresult rv;
-
-  nsCOMPtr<nsINSSComponent> nssComponent;
-  nssComponent = do_GetService(kNSSComponentCID, &rv);
-  if (NS_FAILED(rv))
-    return rv;
-
   // Init possible key size choices.
-  nssComponent->GetPIPNSSBundleString("HighGrade", mSECKeySizeChoiceList[0].name);
+  GetPIPNSSBundleString("HighGrade", mSECKeySizeChoiceList[0].name);
   mSECKeySizeChoiceList[0].size = 2048;
 
-  nssComponent->GetPIPNSSBundleString("MediumGrade", mSECKeySizeChoiceList[1].name);
+  GetPIPNSSBundleString("MediumGrade", mSECKeySizeChoiceList[1].name);
   mSECKeySizeChoiceList[1].size = 1024;
 
   return NS_OK;
@@ -337,10 +327,6 @@ GetSlotWithMechanism(uint32_t aMechanism, nsIInterfaceRequestor* m_ctx,
 
         // Allocate the slot name buffer //
         tokenNameList = static_cast<char16_t**>(moz_xmalloc(sizeof(char16_t *) * numSlots));
-        if (!tokenNameList) {
-            rv = NS_ERROR_OUT_OF_MEMORY;
-            goto loser;
-        }
 
         i = 0;
         slotElement = PK11_GetFirstSafe(slotList);

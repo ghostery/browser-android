@@ -5,9 +5,9 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/dom/DocGroup.h"
-#include "mozilla/dom/DOMPrefs.h"
 #include "mozilla/dom/DOMTypes.h"
 #include "mozilla/dom/TabGroup.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/Telemetry.h"
 #include "nsIDocShell.h"
 #include "nsDOMMutationObserver.h"
@@ -52,8 +52,8 @@ DocGroup::DocGroup(TabGroup* aTabGroup, const nsACString& aKey)
   : mKey(aKey), mTabGroup(aTabGroup)
 {
   // This method does not add itself to mTabGroup->mDocGroups as the caller does it for us.
-  if (mozilla::dom::DOMPrefs::SchedulerLoggingEnabled()) {
-    mPerformanceCounter = new mozilla::PerformanceCounter(aKey);
+  if (mozilla::StaticPrefs::dom_performance_enable_scheduler_timing()) {
+    mPerformanceCounter = new mozilla::PerformanceCounter(NS_LITERAL_CSTRING("DocGroup:") + aKey);
   }
 }
 
@@ -78,14 +78,14 @@ DocGroup::ReportPerformanceInfo()
 #else
   uint32_t pid = getpid();
 #endif
-  uint64_t wid = 0;
-  uint64_t pwid = 0;
+  uint64_t windowID = 0;
   uint16_t count = 0;
   uint64_t duration = 0;
-  nsCString host = NS_LITERAL_CSTRING("None");
+  bool isTopLevel = false;
+  nsCString host;
 
+  // iterating on documents until we find the top window
   for (const auto& document : *this) {
-    // grabbing the host name of the first document
     nsCOMPtr<nsIDocument> doc = do_QueryInterface(document);
     MOZ_ASSERT(doc);
     nsCOMPtr<nsIURI> docURI = doc->GetDocumentURI();
@@ -93,23 +93,29 @@ DocGroup::ReportPerformanceInfo()
       continue;
     }
     docURI->GetHost(host);
-    wid = doc->OuterWindowID();
-
-    // getting the top window id - if not possible
-    // pwid gets the same value than wid
-    pwid = wid;
-    nsPIDOMWindowInner* win = doc->GetInnerWindow();
-    if (win) {
-      nsPIDOMWindowOuter* outer = win->GetOuterWindow();
-      if (outer) {
-        nsCOMPtr<nsPIDOMWindowOuter> top = outer->GetTop();
-        if (top) {
-          pwid = top->WindowID();
-        }
-      }
+    // If the host is empty, using the url
+    if (host.IsEmpty()) {
+      host = docURI->GetSpecOrDefault();
     }
+    // looking for the top level document URI
+    nsPIDOMWindowOuter* win = doc->GetWindow();
+    if (!win) {
+      continue;
+    }
+    nsPIDOMWindowOuter* outer = win->GetOuterWindow();
+    if (!outer) {
+      continue;
+    }
+    nsCOMPtr<nsPIDOMWindowOuter> top = outer->GetTop();
+    if (!top) {
+      continue;
+    }
+    windowID = top->WindowID();
+    isTopLevel = outer->IsTopLevelWindow();
+    break;
   }
 
+  MOZ_ASSERT(!host.IsEmpty());
   duration = mPerformanceCounter->GetExecutionDuration();
   FallibleTArray<CategoryDispatch> items;
 
@@ -120,13 +126,12 @@ DocGroup::ReportPerformanceInfo()
     CategoryDispatch item = CategoryDispatch(index, count);
     if (!items.AppendElement(item, fallible)) {
       NS_ERROR("Could not complete the operation");
-      return PerformanceInfo(host, pid, wid, pwid, duration, false, items);
+      break;
     }
   }
 
-  // setting back all counters to zero
-  mPerformanceCounter->ResetPerformanceCounters();
-  return PerformanceInfo(host, pid, wid, pwid, duration, false, items);
+  return PerformanceInfo(host, pid, windowID, duration, mPerformanceCounter->GetID(),
+                         false, isTopLevel, items);
 }
 
 nsresult
@@ -136,7 +141,7 @@ DocGroup::Dispatch(TaskCategory aCategory,
   if (mPerformanceCounter) {
     mPerformanceCounter->IncrementDispatchCounter(DispatchCategory(aCategory));
   }
-  return mTabGroup->DispatchWithDocGroup(aCategory, Move(aRunnable), this);
+  return mTabGroup->DispatchWithDocGroup(aCategory, std::move(aRunnable), this);
 }
 
 nsISerialEventTarget*
@@ -159,13 +164,10 @@ DocGroup::GetValidAccessPtr()
 }
 
 void
-DocGroup::SignalSlotChange(const HTMLSlotElement* aSlot)
+DocGroup::SignalSlotChange(HTMLSlotElement& aSlot)
 {
-  if (mSignalSlotList.Contains(aSlot)) {
-    return;
-  }
-
-  mSignalSlotList.AppendElement(const_cast<HTMLSlotElement*>(aSlot));
+  MOZ_ASSERT(!mSignalSlotList.Contains(&aSlot));
+  mSignalSlotList.AppendElement(&aSlot);
 
   if (!sPendingDocGroups) {
     // Queue a mutation observer compound microtask.
@@ -174,6 +176,17 @@ DocGroup::SignalSlotChange(const HTMLSlotElement* aSlot)
   }
 
   sPendingDocGroups->AppendElement(this);
+}
+
+void
+DocGroup::MoveSignalSlotListTo(nsTArray<RefPtr<HTMLSlotElement>>& aDest)
+{
+  aDest.SetCapacity(aDest.Length() + mSignalSlotList.Length());
+  for (RefPtr<HTMLSlotElement>& slot : mSignalSlotList) {
+    slot->RemovedFromSignalSlotList();
+    aDest.AppendElement(std::move(slot));
+  }
+  mSignalSlotList.Clear();
 }
 
 bool

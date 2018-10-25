@@ -2,11 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* exported Utils, Logger, PivotContext, PrefCache */
-
 "use strict";
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.defineModuleGetter(this, "Services", // jshint ignore:line
   "resource://gre/modules/Services.jsm");
 ChromeUtils.defineModuleGetter(this, "Rect", // jshint ignore:line
@@ -32,37 +29,6 @@ var Utils = { // jshint ignore:line
     "{aa3c5121-dab2-40e2-81ca-7ea25febc110}": "mobile/android"
   },
 
-  init: function Utils_init(aWindow) {
-    if (this._win) {
-      // XXX: only supports attaching to one window now.
-      throw new Error("Only one top-level window could used with AccessFu");
-    }
-    this._win = Cu.getWeakReference(aWindow);
-  },
-
-  uninit: function Utils_uninit() {
-    if (!this._win) {
-      return;
-    }
-    delete this._win;
-  },
-
-  get win() {
-    if (!this._win) {
-      return null;
-    }
-    return this._win.get();
-  },
-
-  get winUtils() {
-    let win = this.win;
-    if (!win) {
-      return null;
-    }
-    return win.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(
-      Ci.nsIDOMWindowUtils);
-  },
-
   get AccService() {
     if (!this._AccService) {
       this._AccService = Cc["@mozilla.org/accessibilityService;1"].
@@ -81,20 +47,6 @@ var Utils = { // jshint ignore:line
       this._buildApp = this._buildAppMap[Services.appinfo.ID];
     }
     return this._buildApp;
-  },
-
-  get OS() {
-    if (!this._OS) {
-      this._OS = Services.appinfo.OS;
-    }
-    return this._OS;
-  },
-
-  get widgetToolkit() {
-    if (!this._widgetToolkit) {
-      this._widgetToolkit = Services.appinfo.widgetToolkit;
-    }
-    return this._widgetToolkit;
   },
 
   get ScriptName() {
@@ -123,77 +75,11 @@ var Utils = { // jshint ignore:line
     this._AndroidSdkVersion = value;
   },
 
-  get BrowserApp() {
-    if (!this.win) {
-      return null;
-    }
-    switch (this.MozBuildApp) {
-      case "mobile/android":
-        return this.win.BrowserApp;
-      case "browser":
-        return this.win.gBrowser;
-      case "b2g":
-        return this.win.shell;
-      default:
-        return null;
-    }
-  },
-
-  get CurrentBrowser() {
-    if (!this.BrowserApp) {
-      // Get the first content browser element when no 'BrowserApp' exists.
-      return this.win.document.querySelector("browser[type=content]");
-    }
-    if (this.MozBuildApp == "b2g") {
-      return this.BrowserApp.contentBrowser;
-    }
-    return this.BrowserApp.selectedBrowser;
-  },
-
-  get CurrentContentDoc() {
-    let browser = this.CurrentBrowser;
-    return browser ? browser.contentDocument : null;
-  },
-
-  get AllMessageManagers() {
-    let messageManagers = new Set();
-
-    function collectLeafMessageManagers(mm) {
-      for (let i = 0; i < mm.childCount; i++) {
-        let childMM = mm.getChildAt(i);
-
-        if ("sendAsyncMessage" in childMM) {
-          messageManagers.add(childMM);
-        } else {
-          collectLeafMessageManagers(childMM);
-        }
-      }
-    }
-
-    collectLeafMessageManagers(this.win.messageManager);
-
-    let document = this.CurrentContentDoc;
-
-    if (document) {
-      if (document.location.host === "b2g") {
-        // The document is a b2g app chrome (ie. Mulet).
-        let contentBrowser = this.win.content.shell.contentBrowser;
-        messageManagers.add(this.getMessageManager(contentBrowser));
-        document = contentBrowser.contentDocument;
-      }
-
-      let remoteframes = document.querySelectorAll("iframe");
-
-      for (let i = 0; i < remoteframes.length; ++i) {
-        let mm = this.getMessageManager(remoteframes[i]);
-        if (mm) {
-          messageManagers.add(mm);
-        }
-      }
-
-    }
-
-    return messageManagers;
+  getCurrentBrowser: function getCurrentBrowser(aWindow) {
+    let win = aWindow ||
+      Services.wm.getMostRecentWindow("navigator:browser") ||
+      Services.wm.getMostRecentWindow("navigator:geckoview");
+    return win.document.querySelector("browser[type=content][primary=true]");
   },
 
   get isContentProcess() {
@@ -249,8 +135,9 @@ var Utils = { // jshint ignore:line
   },
 
   getMessageManager: function getMessageManager(aBrowser) {
+    let browser = aBrowser || this.getCurrentBrowser();
     try {
-      return aBrowser.frameLoader.messageManager;
+      return browser.frameLoader.messageManager;
     } catch (x) {
       return null;
     }
@@ -273,13 +160,9 @@ var Utils = { // jshint ignore:line
     let attributes = {};
 
     if (aAccessible && aAccessible.attributes) {
-      let attributesEnum = aAccessible.attributes.enumerate();
-
       // Populate |attributes| object with |aAccessible|'s attribute key-value
       // pairs.
-      while (attributesEnum.hasMoreElements()) {
-        let attribute = attributesEnum.getNext().QueryInterface(
-          Ci.nsIPropertyElement);
+      for (let attribute of aAccessible.attributes.enumerate()) {
         attributes[attribute.key] = attribute.value;
       }
     }
@@ -296,9 +179,7 @@ var Utils = { // jshint ignore:line
 
   getContentResolution: function _getContentResolution(aAccessible) {
     let res = { value: 1 };
-    aAccessible.document.window.QueryInterface(
-      Ci.nsIInterfaceRequestor).getInterface(
-      Ci.nsIDOMWindowUtils).getResolution(res);
+    aAccessible.document.window.windowUtils.getResolution(res);
     return res.value;
   },
 
@@ -309,6 +190,18 @@ var Utils = { // jshint ignore:line
     return new Rect(objX.value, objY.value, objW.value, objH.value);
   },
 
+  getTextSelection: function getTextSelection(aAccessible) {
+    const accText = aAccessible.QueryInterface(Ci.nsIAccessibleText);
+    const start = {}, end = {};
+    if (accText.selectionCount) {
+      accText.getSelectionBounds(0, start, end);
+    } else {
+      start.value = end.value = accText.caretOffset;
+    }
+
+    return [start.value, end.value];
+  },
+
   getTextBounds: function getTextBounds(aAccessible, aStart, aEnd,
                                         aPreserveContentScale) {
     let accText = aAccessible.QueryInterface(Ci.nsIAccessibleText);
@@ -317,15 +210,6 @@ var Utils = { // jshint ignore:line
       Ci.nsIAccessibleCoordinateType.COORDTYPE_SCREEN_RELATIVE);
 
     return new Rect(objX.value, objY.value, objW.value, objH.value);
-  },
-
-  /**
-   * Get current display DPI.
-   */
-  get dpi() {
-    delete this.dpi;
-    this.dpi = this.winUtils.displayDPI;
-    return this.dpi;
   },
 
   isInSubtree: function isInSubtree(aAccessible, aSubTreeRoot) {
@@ -361,30 +245,12 @@ var Utils = { // jshint ignore:line
     return false;
   },
 
-  isHidden: function isHidden(aAccessible) {
-    // Need to account for aria-hidden, so can't just check for INVISIBLE
-    // state.
-    let hidden = Utils.getAttributes(aAccessible).hidden;
-    return hidden && hidden === "true";
-  },
-
   visibleChildCount: function visibleChildCount(aAccessible) {
     let count = 0;
     for (let child = aAccessible.firstChild; child; child = child.nextSibling) {
-      if (!this.isHidden(child)) {
-        ++count;
-      }
+      ++count;
     }
     return count;
-  },
-
-  inHiddenSubtree: function inHiddenSubtree(aAccessible) {
-    for (let acc = aAccessible; acc; acc = acc.parent) {
-      if (this.isHidden(acc)) {
-        return true;
-      }
-    }
-    return false;
   },
 
   isAliveAndVisible: function isAliveAndVisible(aAccessible, aIsOnScreen) {
@@ -395,8 +261,7 @@ var Utils = { // jshint ignore:line
     try {
       let state = this.getState(aAccessible);
       if (state.contains(States.DEFUNCT) || state.contains(States.INVISIBLE) ||
-          (aIsOnScreen && state.contains(States.OFFSCREEN)) ||
-          Utils.inHiddenSubtree(aAccessible)) {
+          (aIsOnScreen && state.contains(States.OFFSCREEN))) {
         return false;
       }
     } catch (x) {
@@ -476,37 +341,6 @@ var Utils = { // jshint ignore:line
 
     return parent.role === Roles.LISTITEM && parent.childCount > 1 &&
       aStaticText.indexInParent === 0;
-  },
-
-  dispatchChromeEvent: function dispatchChromeEvent(aType, aDetails) {
-    let details = {
-      type: aType,
-      details: JSON.stringify(
-        typeof aDetails === "string" ? { eventType: aDetails } : aDetails)
-    };
-    let window = this.win;
-    let shell = window.shell || window.content.shell;
-    if (shell) {
-      // On B2G device.
-      shell.sendChromeEvent(details);
-    } else {
-      // Dispatch custom event to have support for desktop and screen reader
-      // emulator add-on.
-      window.dispatchEvent(new window.CustomEvent(aType, {
-        bubbles: true,
-        cancelable: true,
-        detail: details
-      }));
-    }
-
-  },
-
-  isActivatableOnFingerUp: function isActivatableOnFingerUp(aAccessible) {
-    if (aAccessible.role === Roles.KEY) {
-      return true;
-    }
-    let quick_activate = this.getAttributes(aAccessible)["moz-quick-activate"];
-    return quick_activate && JSON.parse(quick_activate);
   }
 };
 
@@ -545,7 +379,8 @@ var Logger = { // jshint ignore:line
 
   logLevel: 1, // INFO;
 
-  test: false,
+  // Note: used for testing purposes. If true, also log to the console service.
+  useConsoleService: false,
 
   log: function log(aLogLevel) {
     if (aLogLevel < this.logLevel) {
@@ -557,9 +392,7 @@ var Logger = { // jshint ignore:line
     message = "[" + Utils.ScriptName + "] " + this._LEVEL_NAMES[aLogLevel + 1] +
       " " + message + "\n";
     dump(message);
-    // Note: used for testing purposes. If |this.test| is true, also log to
-    // the console service.
-    if (this.test) {
+    if (this.useConsoleService) {
       try {
         Services.console.logStringMessage(message);
       } catch (ex) {
@@ -838,12 +671,7 @@ PivotContext.prototype = {
     }
     let child = aAccessible.firstChild;
     while (child) {
-      let include;
-      if (this._includeInvisible) {
-        include = true;
-      } else {
-        include = !Utils.isHidden(child);
-      }
+      let include = true;
       if (include) {
         if (aPreorder) {
           yield child;
@@ -925,9 +753,8 @@ PivotContext.prototype = {
       }
     };
     let getHeaders = function* getHeaders(aHeaderCells) {
-      let enumerator = aHeaderCells.enumerate();
-      while (enumerator.hasMoreElements()) {
-        yield enumerator.getNext().QueryInterface(Ci.nsIAccessible).name;
+      for (let {name} of aHeaderCells.enumerate(Ci.nsIAccessible)) {
+        yield name;
       }
     };
 

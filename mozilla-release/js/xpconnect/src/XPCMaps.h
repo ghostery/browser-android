@@ -34,26 +34,19 @@ class JSObject2WrappedJSMap
 
 public:
     static JSObject2WrappedJSMap* newMap(int length) {
-        auto* map = new JSObject2WrappedJSMap();
-        if (!map->mTable.init(length)) {
-            // This is a decent estimate of the size of the hash table's
-            // entry storage. The |2| is because on average the capacity is
-            // twice the requested length.
-            NS_ABORT_OOM(length * 2 * sizeof(Map::Entry));
-        }
-        return map;
+        return new JSObject2WrappedJSMap(length);
     }
 
     inline nsXPCWrappedJS* Find(JSObject* Obj) {
-        NS_PRECONDITION(Obj,"bad param");
+        MOZ_ASSERT(Obj,"bad param");
         Map::Ptr p = mTable.lookup(Obj);
         return p ? p->value() : nullptr;
     }
 
 #ifdef DEBUG
     inline bool HasWrapper(nsXPCWrappedJS* wrapper) {
-        for (auto r = mTable.all(); !r.empty(); r.popFront()) {
-            if (r.front().value() == wrapper)
+        for (auto iter = mTable.iter(); !iter.done(); iter.next()) {
+            if (iter.get().value() == wrapper)
                 return true;
         }
         return false;
@@ -61,7 +54,7 @@ public:
 #endif
 
     inline nsXPCWrappedJS* Add(JSContext* cx, nsXPCWrappedJS* wrapper) {
-        NS_PRECONDITION(wrapper,"bad param");
+        MOZ_ASSERT(wrapper,"bad param");
         JSObject* obj = wrapper->GetJSObjectPreserveColor();
         Map::AddPtr p = mTable.lookupForAdd(obj);
         if (p)
@@ -72,15 +65,15 @@ public:
     }
 
     inline void Remove(nsXPCWrappedJS* wrapper) {
-        NS_PRECONDITION(wrapper,"bad param");
+        MOZ_ASSERT(wrapper,"bad param");
         mTable.remove(wrapper->GetJSObjectPreserveColor());
     }
 
     inline uint32_t Count() {return mTable.count();}
 
     inline void Dump(int16_t depth) {
-        for (Map::Range r = mTable.all(); !r.empty(); r.popFront())
-            r.front().value()->DebugDump(depth);
+        for (auto iter = mTable.iter(); !iter.done(); iter.next())
+            iter.get().value()->DebugDump(depth);
     }
 
     void UpdateWeakPointersAfterGC();
@@ -94,7 +87,7 @@ public:
     size_t SizeOfWrappedJS(mozilla::MallocSizeOf mallocSizeOf) const;
 
 private:
-    JSObject2WrappedJSMap() {}
+    explicit JSObject2WrappedJSMap(size_t length) : mTable(length) {}
 
     Map mTable;
 };
@@ -112,16 +105,16 @@ public:
 
     static Native2WrappedNativeMap* newMap(int length);
 
-    inline XPCWrappedNative* Find(nsISupports* Obj)
+    inline XPCWrappedNative* Find(nsISupports* Obj) const
     {
-        NS_PRECONDITION(Obj,"bad param");
+        MOZ_ASSERT(Obj,"bad param");
         auto entry = static_cast<Entry*>(mTable.Search(Obj));
         return entry ? entry->value : nullptr;
     }
 
     inline XPCWrappedNative* Add(XPCWrappedNative* wrapper)
     {
-        NS_PRECONDITION(wrapper,"bad param");
+        MOZ_ASSERT(wrapper,"bad param");
         nsISupports* obj = wrapper->GetIdentityObject();
         MOZ_ASSERT(!Find(obj), "wrapper already in new scope!");
         auto entry = static_cast<Entry*>(mTable.Add(obj, mozilla::fallible));
@@ -136,7 +129,7 @@ public:
 
     inline void Remove(XPCWrappedNative* wrapper)
     {
-        NS_PRECONDITION(wrapper,"bad param");
+        MOZ_ASSERT(wrapper,"bad param");
 #ifdef DEBUG
         XPCWrappedNative* wrapperInMap = Find(wrapper->GetIdentityObject());
         MOZ_ASSERT(!wrapperInMap || wrapperInMap == wrapper,
@@ -178,7 +171,7 @@ public:
 
     static IID2WrappedJSClassMap* newMap(int length);
 
-    inline nsXPCWrappedJSClass* Find(REFNSIID iid)
+    inline nsXPCWrappedJSClass* Find(REFNSIID iid) const
     {
         auto entry = static_cast<Entry*>(mTable.Search(&iid));
         return entry ? entry->value : nullptr;
@@ -186,7 +179,7 @@ public:
 
     inline nsXPCWrappedJSClass* Add(nsXPCWrappedJSClass* clazz)
     {
-        NS_PRECONDITION(clazz,"bad param");
+        MOZ_ASSERT(clazz,"bad param");
         const nsIID* iid = &clazz->GetIID();
         auto entry = static_cast<Entry*>(mTable.Add(iid, mozilla::fallible));
         if (!entry)
@@ -200,7 +193,7 @@ public:
 
     inline void Remove(nsXPCWrappedJSClass* clazz)
     {
-        NS_PRECONDITION(clazz,"bad param");
+        MOZ_ASSERT(clazz,"bad param");
         mTable.Remove(&clazz->GetIID());
     }
 
@@ -232,7 +225,7 @@ public:
 
     static IID2NativeInterfaceMap* newMap(int length);
 
-    inline XPCNativeInterface* Find(REFNSIID iid)
+    inline XPCNativeInterface* Find(REFNSIID iid) const
     {
         auto entry = static_cast<Entry*>(mTable.Search(&iid));
         return entry ? entry->value : nullptr;
@@ -240,7 +233,7 @@ public:
 
     inline XPCNativeInterface* Add(XPCNativeInterface* iface)
     {
-        NS_PRECONDITION(iface,"bad param");
+        MOZ_ASSERT(iface,"bad param");
         const nsIID* iid = iface->GetIID();
         auto entry = static_cast<Entry*>(mTable.Add(iid, mozilla::fallible));
         if (!entry)
@@ -254,7 +247,7 @@ public:
 
     inline void Remove(XPCNativeInterface* iface)
     {
-        NS_PRECONDITION(iface,"bad param");
+        MOZ_ASSERT(iface,"bad param");
         mTable.Remove(iface->GetIID());
     }
 
@@ -290,7 +283,7 @@ public:
 
     static ClassInfo2NativeSetMap* newMap(int length);
 
-    inline XPCNativeSet* Find(nsIClassInfo* info)
+    inline XPCNativeSet* Find(nsIClassInfo* info) const
     {
         auto entry = static_cast<Entry*>(mTable.Search(info));
         return entry ? entry->value : nullptr;
@@ -298,7 +291,7 @@ public:
 
     inline XPCNativeSet* Add(nsIClassInfo* info, XPCNativeSet* set)
     {
-        NS_PRECONDITION(info,"bad param");
+        MOZ_ASSERT(info,"bad param");
         auto entry = static_cast<Entry*>(mTable.Add(info, mozilla::fallible));
         if (!entry)
             return nullptr;
@@ -311,7 +304,7 @@ public:
 
     inline void Remove(nsIClassInfo* info)
     {
-        NS_PRECONDITION(info,"bad param");
+        MOZ_ASSERT(info,"bad param");
         mTable.Remove(info);
     }
 
@@ -343,7 +336,7 @@ public:
 
     static ClassInfo2WrappedNativeProtoMap* newMap(int length);
 
-    inline XPCWrappedNativeProto* Find(nsIClassInfo* info)
+    inline XPCWrappedNativeProto* Find(nsIClassInfo* info) const
     {
         auto entry = static_cast<Entry*>(mTable.Search(info));
         return entry ? entry->value : nullptr;
@@ -351,7 +344,7 @@ public:
 
     inline XPCWrappedNativeProto* Add(nsIClassInfo* info, XPCWrappedNativeProto* proto)
     {
-        NS_PRECONDITION(info,"bad param");
+        MOZ_ASSERT(info,"bad param");
         auto entry = static_cast<Entry*>(mTable.Add(info, mozilla::fallible));
         if (!entry)
             return nullptr;
@@ -364,7 +357,7 @@ public:
 
     inline void Remove(nsIClassInfo* info)
     {
-        NS_PRECONDITION(info,"bad param");
+        MOZ_ASSERT(info,"bad param");
         mTable.Remove(info);
     }
 
@@ -401,7 +394,7 @@ public:
 
     static NativeSetMap* newMap(int length);
 
-    inline XPCNativeSet* Find(XPCNativeSetKey* key)
+    inline XPCNativeSet* Find(XPCNativeSetKey* key) const
     {
         auto entry = static_cast<Entry*>(mTable.Search(key));
         return entry ? entry->key_value : nullptr;
@@ -467,7 +460,7 @@ public:
 
     inline XPCWrappedNativeProto* Add(XPCWrappedNativeProto* proto)
     {
-        NS_PRECONDITION(proto,"bad param");
+        MOZ_ASSERT(proto,"bad param");
         auto entry = static_cast<PLDHashEntryStub*>
                                 (mTable.Add(proto, mozilla::fallible));
         if (!entry)
@@ -480,7 +473,7 @@ public:
 
     inline void Remove(XPCWrappedNativeProto* proto)
     {
-        NS_PRECONDITION(proto,"bad param");
+        MOZ_ASSERT(proto,"bad param");
         mTable.Remove(proto);
     }
 
@@ -506,18 +499,11 @@ class JSObject2JSObjectMap
 
 public:
     static JSObject2JSObjectMap* newMap(int length) {
-        auto* map = new JSObject2JSObjectMap();
-        if (!map->mTable.init(length)) {
-            // This is a decent estimate of the size of the hash table's
-            // entry storage. The |2| is because on average the capacity is
-            // twice the requested length.
-            NS_ABORT_OOM(length * 2 * sizeof(Map::Entry));
-        }
-        return map;
+        return new JSObject2JSObjectMap(length);
     }
 
     inline JSObject* Find(JSObject* key) {
-        NS_PRECONDITION(key, "bad param");
+        MOZ_ASSERT(key, "bad param");
         if (Map::Ptr p = mTable.lookup(key))
             return p->value();
         return nullptr;
@@ -525,7 +511,7 @@ public:
 
     /* Note: If the entry already exists, return the old value. */
     inline JSObject* Add(JSContext* cx, JSObject* key, JSObject* value) {
-        NS_PRECONDITION(key,"bad param");
+        MOZ_ASSERT(key,"bad param");
         Map::AddPtr p = mTable.lookupForAdd(key);
         if (p)
             return p->value();
@@ -536,7 +522,7 @@ public:
     }
 
     inline void Remove(JSObject* key) {
-        NS_PRECONDITION(key,"bad param");
+        MOZ_ASSERT(key,"bad param");
         mTable.remove(key);
     }
 
@@ -547,7 +533,7 @@ public:
     }
 
 private:
-    JSObject2JSObjectMap() {}
+    explicit JSObject2JSObjectMap(size_t length) : mTable(length) {}
 
     Map mTable;
 };

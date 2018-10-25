@@ -6,9 +6,6 @@
 
 "use strict";
 
-const Services = require("Services");
-const {gDevTools} = require("devtools/client/framework/devtools");
-
 const Menu = require("devtools/client/framework/menu");
 const MenuItem = require("devtools/client/framework/menu-item");
 
@@ -16,6 +13,8 @@ const { MESSAGE_SOURCE } = require("devtools/client/webconsole/constants");
 
 const clipboardHelper = require("devtools/shared/platform/clipboard");
 const { l10n } = require("devtools/client/webconsole/utils/messages");
+
+loader.lazyRequireGetter(this, "openContentLink", "devtools/client/shared/link", true);
 
 /**
  * Create a Menu instance for the webconsole.
@@ -35,6 +34,8 @@ const { l10n } = require("devtools/client/webconsole/utils/messages");
  *        - {Function} openSidebar (optional) function that will open the object
  *            inspector sidebar
  *        - {String} rootActorId (optional) actor id for the root object being clicked on
+ *        - {Object} executionPoint (optional) when replaying, the execution point where
+ *            this message was logged
  */
 function createContextMenu(hud, parentNode, {
   actor,
@@ -44,13 +45,15 @@ function createContextMenu(hud, parentNode, {
   serviceContainer,
   openSidebar,
   rootActorId,
+  executionPoint,
+  toolbox,
 }) {
-  let win = parentNode.ownerDocument.defaultView;
-  let selection = win.getSelection();
+  const win = parentNode.ownerDocument.defaultView;
+  const selection = win.getSelection();
 
-  let { source, request } = message || {};
+  const { source, request } = message || {};
 
-  let menu = new Menu({
+  const menu = new Menu({
     id: "webconsole-menu"
   });
 
@@ -89,10 +92,7 @@ function createContextMenu(hud, parentNode, {
       if (!request) {
         return;
       }
-      let mainWindow = Services.wm.getMostRecentWindow(gDevTools.chromeWindowType);
-      mainWindow.openWebLinkIn(request.url, "tab", {
-        triggeringPrincipal: mainWindow.document.nodePrincipal,
-      });
+      openContentLink(request.url);
     },
   }));
 
@@ -103,14 +103,14 @@ function createContextMenu(hud, parentNode, {
     accesskey: l10n.getStr("webconsole.menu.storeAsGlobalVar.accesskey"),
     disabled: !actor,
     click: () => {
-      let evalString = `{ let i = 0;
+      const evalString = `{ let i = 0;
         while (this.hasOwnProperty("temp" + i) && i < 1000) {
           i++;
         }
         this["temp" + i] = _self;
         "temp" + i;
       }`;
-      let options = {
+      const options = {
         selectedObjectActor: actor,
       };
 
@@ -165,7 +165,7 @@ function createContextMenu(hud, parentNode, {
     accesskey: l10n.getStr("webconsole.menu.selectAll.accesskey"),
     disabled: false,
     click: () => {
-      let webconsoleOutput = parentNode.querySelector(".webconsole-output");
+      const webconsoleOutput = parentNode.querySelector(".webconsole-output");
       selection.selectAllChildren(webconsoleOutput);
     },
   }));
@@ -181,7 +181,93 @@ function createContextMenu(hud, parentNode, {
     }));
   }
 
+  // Add time warp option if available.
+  if (executionPoint) {
+    menu.append(new MenuItem({
+      id: "console-menu-time-warp",
+      label: l10n.getStr("webconsole.menu.timeWarp.label"),
+      disabled: false,
+      click: () => {
+        const threadClient = toolbox.threadClient;
+        threadClient.timeWarp(executionPoint);
+      },
+    }));
+  }
+
   return menu;
 }
 
 exports.createContextMenu = createContextMenu;
+
+/**
+ * Return an 'edit' menu for a input field. This integrates directly
+ * with docshell commands to provide the right enabled state and editor
+ * functionality.
+ *
+ * You'll need to call menu.popup() yourself, this just returns the Menu instance.
+ *
+ * @returns {Menu}
+ */
+function createEditContextMenu() {
+  const docshell = window.docShell;
+  const menu = new Menu({
+    id: "webconsole-menu"
+  });
+  menu.append(new MenuItem({
+    id: "editmenu-undo",
+    l10nID: "editmenu-undo",
+    disabled: !docshell.isCommandEnabled("cmd_undo"),
+    click: () => {
+      docshell.doCommand("cmd_undo");
+    },
+  }));
+  menu.append(new MenuItem({
+    type: "separator"
+  }));
+  menu.append(new MenuItem({
+    id: "editmenu-cut",
+    l10nID: "editmenu-cut",
+    disabled: !docshell.isCommandEnabled("cmd_cut"),
+    click: () => {
+      docshell.doCommand("cmd_cut");
+    },
+  }));
+  menu.append(new MenuItem({
+    id: "editmenu-copy",
+    l10nID: "editmenu-copy",
+    disabled: !docshell.isCommandEnabled("cmd_copy"),
+    click: () => {
+      docshell.doCommand("cmd_copy");
+    },
+  }));
+  menu.append(new MenuItem({
+    id: "editmenu-paste",
+    l10nID: "editmenu-paste",
+    disabled: !docshell.isCommandEnabled("cmd_paste"),
+    click: () => {
+      docshell.doCommand("cmd_paste");
+    },
+  }));
+  menu.append(new MenuItem({
+    id: "editmenu-delete",
+    l10nID: "editmenu-delete",
+    disabled: !docshell.isCommandEnabled("cmd_delete"),
+    click: () => {
+      docshell.doCommand("cmd_delete");
+    },
+  }));
+  menu.append(new MenuItem({
+    type: "separator"
+  }));
+  menu.append(new MenuItem({
+    id: "editmenu-selectAll",
+    l10nID: "editmenu-select-all",
+    disabled: !docshell.isCommandEnabled("cmd_selectAll"),
+    click: () => {
+      docshell.doCommand("cmd_selectAll");
+    },
+  }));
+  return menu;
+}
+
+exports.createEditContextMenu = createEditContextMenu;

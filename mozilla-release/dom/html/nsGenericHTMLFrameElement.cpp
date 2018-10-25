@@ -8,13 +8,13 @@
 
 #include "mozilla/dom/ContentChild.h"
 #include "mozilla/dom/HTMLIFrameElement.h"
+#include "mozilla/dom/XULFrameElement.h"
 #include "mozilla/Preferences.h"
 #include "mozilla/ErrorResult.h"
 #include "GeckoProfiler.h"
 #include "nsAttrValueInlines.h"
 #include "nsContentUtils.h"
 #include "nsIDocShell.h"
-#include "nsIDOMDocument.h"
 #include "nsIFrame.h"
 #include "nsIInterfaceRequestorUtils.h"
 #include "nsIPermissionManager.h"
@@ -23,7 +23,6 @@
 #include "nsPresContext.h"
 #include "nsServiceManagerUtils.h"
 #include "nsSubDocumentFrame.h"
-#include "nsXULElement.h"
 #include "nsAttrValueOrString.h"
 
 using namespace mozilla;
@@ -79,16 +78,6 @@ nsGenericHTMLFrameElement::~nsGenericHTMLFrameElement()
   if (mFrameLoader) {
     mFrameLoader->Destroy();
   }
-}
-
-nsresult
-nsGenericHTMLFrameElement::GetContentDocument(nsIDOMDocument** aContentDocument)
-{
-  NS_PRECONDITION(aContentDocument, "Null out param");
-  nsCOMPtr<nsIDOMDocument> document =
-    do_QueryInterface(GetContentDocument(*nsContentUtils::SubjectPrincipal()));
-  document.forget(aContentDocument);
-  return NS_OK;
 }
 
 nsIDocument*
@@ -205,7 +194,7 @@ nsGenericHTMLFrameElement::SwapFrameLoaders(HTMLIFrameElement& aOtherLoaderOwner
 }
 
 void
-nsGenericHTMLFrameElement::SwapFrameLoaders(nsXULElement& aOtherLoaderOwner,
+nsGenericHTMLFrameElement::SwapFrameLoaders(XULFrameElement& aOtherLoaderOwner,
                                             ErrorResult& rv)
 {
   aOtherLoaderOwner.SwapFrameLoaders(this, rv);
@@ -242,12 +231,10 @@ nsGenericHTMLFrameElement::LoadSrc()
 nsresult
 nsGenericHTMLFrameElement::BindToTree(nsIDocument* aDocument,
                                       nsIContent* aParent,
-                                      nsIContent* aBindingParent,
-                                      bool aCompileEventHandlers)
+                                      nsIContent* aBindingParent)
 {
   nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent,
-                                                 aCompileEventHandlers);
+                                                 aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (IsInComposedDoc()) {
@@ -414,10 +401,9 @@ nsGenericHTMLFrameElement::DestroyContent()
 }
 
 nsresult
-nsGenericHTMLFrameElement::CopyInnerTo(Element* aDest,
-                                       bool aPreallocateChildren)
+nsGenericHTMLFrameElement::CopyInnerTo(Element* aDest)
 {
-  nsresult rv = nsGenericHTMLElement::CopyInnerTo(aDest, aPreallocateChildren);
+  nsresult rv = nsGenericHTMLElement::CopyInnerTo(aDest);
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsIDocument* doc = aDest->OwnerDoc();

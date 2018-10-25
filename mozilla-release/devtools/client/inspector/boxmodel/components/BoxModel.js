@@ -18,13 +18,13 @@ class BoxModel extends PureComponent {
   static get propTypes() {
     return {
       boxModel: PropTypes.shape(Types.boxModel).isRequired,
-      setSelectedNode: PropTypes.func.isRequired,
-      showBoxModelProperties: PropTypes.bool.isRequired,
       onHideBoxModelHighlighter: PropTypes.func.isRequired,
       onShowBoxModelEditor: PropTypes.func.isRequired,
       onShowBoxModelHighlighter: PropTypes.func.isRequired,
       onShowBoxModelHighlighterForNode: PropTypes.func.isRequired,
       onToggleGeometryEditor: PropTypes.func.isRequired,
+      showBoxModelProperties: PropTypes.bool.isRequired,
+      setSelectedNode: PropTypes.func.isRequired,
     };
   }
 
@@ -34,7 +34,7 @@ class BoxModel extends PureComponent {
   }
 
   onKeyDown(event) {
-    let { target } = event;
+    const { target } = event;
 
     if (target == this.boxModelContainer) {
       this.boxModelMain.onKeyDown(event);
@@ -42,49 +42,51 @@ class BoxModel extends PureComponent {
   }
 
   render() {
-    let {
+    const {
       boxModel,
-      setSelectedNode,
-      showBoxModelProperties,
       onHideBoxModelHighlighter,
       onShowBoxModelEditor,
       onShowBoxModelHighlighter,
       onShowBoxModelHighlighterForNode,
       onToggleGeometryEditor,
+      setSelectedNode,
+      showBoxModelProperties,
     } = this.props;
 
-    return dom.div(
-      {
-        className: "boxmodel-container",
-        tabIndex: 0,
-        ref: div => {
-          this.boxModelContainer = div;
+    return (
+      dom.div(
+        {
+          className: "boxmodel-container",
+          tabIndex: 0,
+          ref: div => {
+            this.boxModelContainer = div;
+          },
+          onKeyDown: this.onKeyDown,
         },
-        onKeyDown: this.onKeyDown,
-      },
-      BoxModelMain({
-        boxModel,
-        boxModelContainer: this.boxModelContainer,
-        ref: boxModelMain => {
-          this.boxModelMain = boxModelMain;
-        },
-        onHideBoxModelHighlighter,
-        onShowBoxModelEditor,
-        onShowBoxModelHighlighter,
-      }),
-      BoxModelInfo({
-        boxModel,
-        onToggleGeometryEditor,
-      }),
-      showBoxModelProperties ?
-        BoxModelProperties({
+        BoxModelMain({
           boxModel,
-          setSelectedNode,
+          boxModelContainer: this.boxModelContainer,
+          ref: boxModelMain => {
+            this.boxModelMain = boxModelMain;
+          },
           onHideBoxModelHighlighter,
-          onShowBoxModelHighlighterForNode,
-        })
-        :
-        null
+          onShowBoxModelEditor,
+          onShowBoxModelHighlighter,
+        }),
+        BoxModelInfo({
+          boxModel,
+          onToggleGeometryEditor,
+        }),
+        showBoxModelProperties ?
+          BoxModelProperties({
+            boxModel,
+            setSelectedNode,
+            onHideBoxModelHighlighter,
+            onShowBoxModelHighlighterForNode,
+          })
+          :
+          null
+      )
     );
   }
 }

@@ -19,14 +19,14 @@
 
 #endif
 
-#include "jsapi.h"
+#include "mozilla/Maybe.h"
 
+#include "jsapi.h"
 
 #include "frontend/BinSource.h"
 #include "frontend/FullParseHandler.h"
 #include "frontend/ParseContext.h"
 #include "frontend/Parser.h"
-#include "gc/Zone.h"
 #include "js/Vector.h"
 
 #include "jsapi-tests/tests.h"
@@ -165,12 +165,16 @@ runTestFromPath(JSContext* cx, const char* path)
         txtOptions.setFileAndLine(txtPath.begin(), 0);
 
         UsedNameTracker txtUsedNames(cx);
-        if (!txtUsedNames.init())
-            MOZ_CRASH("Couldn't initialize used names");
+
+        RootedScriptSourceObject sourceObject(cx, frontend::CreateScriptSourceObject(
+                                                  cx, txtOptions, mozilla::Nothing()));
+        if (!sourceObject)
+            MOZ_CRASH("Couldn't initialize ScriptSourceObject");
+
         js::frontend::Parser<js::frontend::FullParseHandler, char16_t> txtParser(
             cx, allocScope.alloc(), txtOptions, txtSource.begin(), txtSource.length(),
             /* foldConstants = */ false, txtUsedNames, nullptr,
-            nullptr);
+            nullptr, sourceObject, frontend::ParseGoal::Script);
         if (!txtParser.checkOptions())
             MOZ_CRASH("Bad options");
 
@@ -199,8 +203,6 @@ runTestFromPath(JSContext* cx, const char* path)
         binOptions.setFileAndLine(binPath.begin(), 0);
 
         js::frontend::UsedNameTracker binUsedNames(cx);
-        if (!binUsedNames.init())
-            MOZ_CRASH("Couldn't initialized binUsedNames");
 
         js::frontend::BinASTParser<Tok> binParser(cx, allocScope.alloc(), binUsedNames, binOptions);
 

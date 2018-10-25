@@ -2,6 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#ifndef nsWindowsWMain_cpp
+#define nsWindowsWMain_cpp
+
 // This file is a .cpp file meant to be included in nsBrowserApp.cpp and other
 // similar bootstrap code. It converts wide-character windows wmain into UTF-8
 // narrow-character strings.
@@ -74,14 +77,17 @@ static char*
 AllocConvertUTF16toUTF8(char16ptr_t arg)
 {
   // be generous... UTF16 units can expand up to 3 UTF8 units
-  int len = wcslen(arg);
-  char *s = new char[len * 3 + 1];
+  size_t len = wcslen(arg);
+  // ConvertUTF16toUTF8 requires +1. Let's do that here, too, lacking
+  // knowledge of Windows internals.
+  size_t dstLen = len * 3 + 1;
+  char* s = new char[dstLen + 1]; // Another +1 for zero terminator
   if (!s)
     return nullptr;
 
-  ConvertUTF16toUTF8 convert(s);
-  convert.write(arg, len);
-  convert.write_terminator();
+  int written =
+    ::WideCharToMultiByte(CP_UTF8, 0, arg, len, s, dstLen, nullptr, nullptr);
+  s[written] = 0;
   return s;
 }
 
@@ -100,6 +106,14 @@ int wmain(int argc, WCHAR **argv)
 {
   SanitizeEnvironmentVariables();
   SetDllDirectoryW(L"");
+
+  // Only run this code if LauncherProcessWin.h was included beforehand, thus
+  // signalling that the hosting process should support launcher mode.
+#if defined(mozilla_LauncherProcessWin_h)
+  if (mozilla::RunAsLauncherProcess(argc, argv)) {
+    return mozilla::LauncherMain(argc, argv);
+  }
+#endif // defined(mozilla_LauncherProcessWin_h)
 
   char **argvConverted = new char*[argc + 1];
   if (!argvConverted)
@@ -134,3 +148,5 @@ int wmain(int argc, WCHAR **argv)
 
   return result;
 }
+
+#endif // nsWindowsWMain_cpp

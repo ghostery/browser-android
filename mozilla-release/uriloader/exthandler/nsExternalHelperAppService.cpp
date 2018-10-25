@@ -83,7 +83,6 @@
 
 #include "nsIWindowWatcher.h"
 
-#include "nsIDownloadHistory.h" // to mark downloads as visited
 #include "nsDocShellCID.h"
 
 #include "nsCRT.h"
@@ -480,6 +479,7 @@ static const nsDefaultMimeTypeEntry defaultMimeEntries[] =
   { IMAGE_ICO, "ico" },
   { TEXT_PLAIN, "properties" },
   { TEXT_PLAIN, "locale" },
+  { TEXT_PLAIN, "ftl" },
 #if defined(MOZ_WMF)
   { VIDEO_MP4, "mp4" },
   { AUDIO_MP4, "m4a" },
@@ -541,6 +541,7 @@ static const nsExtraMimeTypeEntry extraMimeEntries[] =
   { IMAGE_TIFF, "tiff,tif", "TIFF Image" },
   { IMAGE_XBM, "xbm", "XBM Image" },
   { IMAGE_SVG_XML, "svg", "Scalable Vector Graphics" },
+  { IMAGE_WEBP, "webp", "WebP Image" },
   { MESSAGE_RFC822, "eml", "RFC-822 data" },
   { TEXT_PLAIN, "txt,text", "Text File" },
   { APPLICATION_JSON, "json", "JavaScript Object Notation" },
@@ -1212,7 +1213,10 @@ nsExternalAppHandler::nsExternalAppHandler(nsIMIMEInfo * aMIMEInfo,
 , mForceSave(aForceSave)
 , mCanceled(false)
 , mStopRequestIssued(false)
+, mIsFileChannel(false)
 , mReason(aReason)
+, mTempFileIsExecutable(false)
+, mTimeDownloadStarted(0)
 , mContentLength(-1)
 , mProgress(0)
 , mSaver(nullptr)
@@ -1559,7 +1563,7 @@ nsExternalAppHandler::MaybeApplyDecodingForExtension(nsIRequest *aRequest)
 
 NS_IMETHODIMP nsExternalAppHandler::OnStartRequest(nsIRequest *request, nsISupports * aCtxt)
 {
-  NS_PRECONDITION(request, "OnStartRequest without request?");
+  MOZ_ASSERT(request, "OnStartRequest without request?");
 
   // Set mTimeDownloadStarted here as the download has already started and
   // we want to record the start time before showing the filepicker.
@@ -2155,17 +2159,6 @@ nsresult nsExternalAppHandler::CreateTransfer()
                        channel && NS_UsePrivateBrowsing(channel));
   NS_ENSURE_SUCCESS(rv, rv);
 
-  // Now let's add the download to history
-  nsCOMPtr<nsIDownloadHistory> dh(do_GetService(NS_DOWNLOADHISTORY_CONTRACTID));
-  if (dh) {
-    if (channel && !NS_UsePrivateBrowsing(channel)) {
-      nsCOMPtr<nsIURI> referrer;
-      NS_GetReferrerFromChannel(channel, getter_AddRefs(referrer));
-
-      dh->AddDownload(mSourceUrl, referrer, mTimeDownloadStarted, target);
-    }
-  }
-
   // If we were cancelled since creating the transfer, just return. It is
   // always ok to return NS_OK if we are cancelled. Callers of this function
   // must call Cancel if CreateTransfer fails, but there's no need to cancel
@@ -2312,7 +2305,7 @@ nsresult nsExternalAppHandler::ContinueSave(nsIFile * aNewFileLocation)
   if (mCanceled)
     return NS_OK;
 
-  NS_PRECONDITION(aNewFileLocation, "Must be called with a non-null file");
+  MOZ_ASSERT(aNewFileLocation, "Must be called with a non-null file");
 
   nsresult rv = NS_OK;
   nsCOMPtr<nsIFile> fileToUse = do_QueryInterface(aNewFileLocation);
@@ -2538,9 +2531,8 @@ nsExternalAppHandler::GetName(nsACString& aName)
 // nsIMIMEService methods
 NS_IMETHODIMP nsExternalHelperAppService::GetFromTypeAndExtension(const nsACString& aMIMEType, const nsACString& aFileExt, nsIMIMEInfo **_retval) 
 {
-  NS_PRECONDITION(!aMIMEType.IsEmpty() ||
-                  !aFileExt.IsEmpty(), 
-                  "Give me something to work with");
+  MOZ_ASSERT(!aMIMEType.IsEmpty() || !aFileExt.IsEmpty(),
+             "Give me something to work with");
   LOG(("Getting mimeinfo from type '%s' ext '%s'\n",
         PromiseFlatCString(aMIMEType).get(), PromiseFlatCString(aFileExt).get()));
 
@@ -2603,16 +2595,11 @@ NS_IMETHODIMP nsExternalHelperAppService::GetFromTypeAndExtension(const nsACStri
   // (3) No match yet. Ask extras.
   if (!found) {
     rv = NS_ERROR_FAILURE;
-#ifdef XP_WIN
-    /* XXX Gross hack to wallpaper over the most common Win32
-     * extension issues caused by the fix for bug 116938.  See bug
-     * 120327, comment 271 for why this is needed.  Not even sure we
-     * want to remove this once we have fixed all this stuff to work
-     * right; any info we get from extras on this type is pretty much
-     * useless....
-     */
+    // Getting info for application/octet-stream content-type from extras
+    // does not make a sense because this tends to open all octet-streams
+    // as Binary file with exe, com or bin extension regardless the real
+    // extension.
     if (!typeToUse.Equals(APPLICATION_OCTET_STREAM, nsCaseInsensitiveCStringComparator()))
-#endif
       rv = FillMIMEInfoForMimeTypeFromExtras(typeToUse, *_retval);
     LOG(("Searched extras (by type), rv 0x%08" PRIX32 "\n", static_cast<uint32_t>(rv)));
     // If that didn't work out, try file extension from extras
@@ -2706,8 +2693,7 @@ nsExternalHelperAppService::GetTypeFromExtension(const nsACString& aFileExt,
     // Read the MIME type from the category entry, if available
     nsCString type;
     nsresult rv = catMan->GetCategoryEntry("ext-to-type-mapping",
-                                           lowercaseFileExt.get(),
-                                           getter_Copies(type));
+                                           lowercaseFileExt, type);
     if (NS_SUCCEEDED(rv)) {
       aContentType = type;
       return NS_OK;
@@ -2805,7 +2791,7 @@ NS_IMETHODIMP nsExternalHelperAppService::GetTypeFromFile(nsIFile* aFile, nsACSt
     {
       if (fileName[i] == char16_t('.'))
       {
-        CopyUTF16toUTF8(fileName.get() + i + 1, fileExt);
+        CopyUTF16toUTF8(Substring(fileName, i + 1), fileExt);
         break;
       }
     }

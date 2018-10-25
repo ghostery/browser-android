@@ -164,7 +164,8 @@ NS_IMPL_CYCLE_COLLECTING_ADDREF(nsJSScriptTimeoutHandler)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(nsJSScriptTimeoutHandler)
 
 static bool
-CheckCSPForEval(JSContext* aCx, nsGlobalWindowInner* aWindow, ErrorResult& aError)
+CheckCSPForEval(JSContext* aCx, nsGlobalWindowInner* aWindow,
+                const nsAString& aExpression, ErrorResult& aError)
 {
   // if CSP is enabled, and setTimeout/setInterval was called with a string,
   // disable the registration and log an error
@@ -192,19 +193,18 @@ CheckCSPForEval(JSContext* aCx, nsGlobalWindowInner* aWindow, ErrorResult& aErro
   }
 
   if (reportViolation) {
-    // TODO : need actual script sample in violation report.
-    NS_NAMED_LITERAL_STRING(scriptSample,
-                            "call to eval() or related function blocked by CSP");
-
     // Get the calling location.
     uint32_t lineNum = 0;
+    uint32_t columnNum = 0;
     nsAutoString fileNameString;
-    if (!nsJSUtils::GetCallingLocation(aCx, fileNameString, &lineNum)) {
+    if (!nsJSUtils::GetCallingLocation(aCx, fileNameString, &lineNum,
+                                       &columnNum)) {
       fileNameString.AssignLiteral("unknown");
     }
 
     csp->LogViolationDetails(nsIContentSecurityPolicy::VIOLATION_TYPE_EVAL,
-                             fileNameString, scriptSample, lineNum,
+                             nullptr, // triggering element
+                             fileNameString, aExpression, lineNum, columnNum,
                              EmptyString(), EmptyString());
   }
 
@@ -233,7 +233,7 @@ nsJSScriptTimeoutHandler::nsJSScriptTimeoutHandler(JSContext* aCx,
     return;
   }
 
-  Init(aCx, Move(aArguments));
+  Init(aCx, std::move(aArguments));
 }
 
 nsJSScriptTimeoutHandler::nsJSScriptTimeoutHandler(JSContext* aCx,
@@ -252,7 +252,7 @@ nsJSScriptTimeoutHandler::nsJSScriptTimeoutHandler(JSContext* aCx,
     return;
   }
 
-  *aAllowEval = CheckCSPForEval(aCx, aWindow, aError);
+  *aAllowEval = CheckCSPForEval(aCx, aWindow, aExpression, aError);
   if (aError.Failed() || !*aAllowEval) {
     return;
   }
@@ -271,7 +271,7 @@ nsJSScriptTimeoutHandler::nsJSScriptTimeoutHandler(JSContext* aCx,
   MOZ_ASSERT(aWorkerPrivate);
   aWorkerPrivate->AssertIsOnWorkerThread();
 
-  Init(aCx, Move(aArguments));
+  Init(aCx, std::move(aArguments));
 }
 
 nsJSScriptTimeoutHandler::nsJSScriptTimeoutHandler(JSContext* aCx,
@@ -297,7 +297,7 @@ nsJSScriptTimeoutHandler::Init(JSContext* aCx,
                                nsTArray<JS::Heap<JS::Value>>&& aArguments)
 {
   mozilla::HoldJSObjects(this);
-  mArgs = Move(aArguments);
+  mArgs = std::move(aArguments);
 
   Init(aCx);
 }
@@ -339,7 +339,7 @@ NS_CreateJSTimeoutHandler(JSContext *aCx, nsGlobalWindowInner *aWindow,
   }
 
   RefPtr<nsJSScriptTimeoutHandler> handler =
-    new nsJSScriptTimeoutHandler(aCx, aWindow, aFunction, Move(args), aError);
+    new nsJSScriptTimeoutHandler(aCx, aWindow, aFunction, std::move(args), aError);
   return aError.Failed() ? nullptr : handler.forget();
 }
 
@@ -370,7 +370,7 @@ NS_CreateJSTimeoutHandler(JSContext *aCx, WorkerPrivate* aWorkerPrivate,
   }
 
   RefPtr<nsJSScriptTimeoutHandler> handler =
-    new nsJSScriptTimeoutHandler(aCx, aWorkerPrivate, aFunction, Move(args));
+    new nsJSScriptTimeoutHandler(aCx, aWorkerPrivate, aFunction, std::move(args));
   return handler.forget();
 }
 

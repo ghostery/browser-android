@@ -20,8 +20,8 @@
 
 #include "mozilla/CheckedInt.h"
 
-#include "vm/JSCompartment.h"
 #include "vm/JSContext.h"
+#include "vm/Realm.h"
 #include "wasm/WasmInstance.h"
 #include "wasm/WasmJS.h"
 
@@ -33,7 +33,7 @@ Table::Table(JSContext* cx, const TableDesc& desc, HandleWasmTableObject maybeOb
              UniqueByteArray array)
   : maybeObject_(maybeObject),
     observers_(cx->zone()),
-    array_(Move(array)),
+    array_(std::move(array)),
     kind_(desc.kind),
     length_(desc.limits.initial),
     maximum_(desc.limits.maximum),
@@ -54,7 +54,7 @@ Table::create(JSContext* cx, const TableDesc& desc, HandleWasmTableObject maybeO
     if (!array)
         return nullptr;
 
-    return SharedTable(cx->new_<Table>(cx, desc, maybeObject, Move(array)));
+    return SharedTable(cx->new_<Table>(cx, desc, maybeObject, std::move(array)));
 }
 
 void
@@ -172,10 +172,8 @@ Table::grow(uint32_t delta, JSContext* cx)
     PodZero(newArray + length_, delta);
     length_ = newLength.value();
 
-    if (observers_.initialized()) {
-        for (InstanceSet::Range r = observers_.all(); !r.empty(); r.popFront())
-            r.front()->instance().onMovingGrowTable();
-    }
+    for (InstanceSet::Range r = observers_.all(); !r.empty(); r.popFront())
+        r.front()->instance().onMovingGrowTable();
 
     return oldLength;
 }
@@ -190,11 +188,6 @@ bool
 Table::addMovingGrowObserver(JSContext* cx, WasmInstanceObject* instance)
 {
     MOZ_ASSERT(movingGrowable());
-
-    if (!observers_.initialized() && !observers_.init()) {
-        ReportOutOfMemory(cx);
-        return false;
-    }
 
     if (!observers_.putNew(instance)) {
         ReportOutOfMemory(cx);

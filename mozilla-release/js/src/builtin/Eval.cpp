@@ -11,6 +11,8 @@
 
 #include "frontend/BytecodeCompiler.h"
 #include "gc/HashUtil.h"
+#include "js/SourceBufferHolder.h"
+#include "js/StableStringChars.h"
 #include "vm/Debugger.h"
 #include "vm/GlobalObject.h"
 #include "vm/JSContext.h"
@@ -25,6 +27,9 @@ using mozilla::HashString;
 using mozilla::RangedPtr;
 
 using JS::AutoCheckCannotGC;
+using JS::AutoStableStringChars;
+using JS::CompileOptions;
+using JS::SourceBufferHolder;
 
 // We should be able to assert this for *any* fp->environmentChain().
 static void
@@ -137,35 +142,29 @@ template <typename CharT>
 static bool
 EvalStringMightBeJSON(const mozilla::Range<const CharT> chars)
 {
-    // If the eval string starts with '(' or '[' and ends with ')' or ']', it may be JSON.
-    // Try the JSON parser first because it's much faster.  If the eval string
-    // isn't JSON, JSON parsing will probably fail quickly, so little time
-    // will be lost.
+    // If the eval string starts with '(' or '[' and ends with ')' or ']', it
+    // may be JSON.  Try the JSON parser first because it's much faster.  If
+    // the eval string isn't JSON, JSON parsing will probably fail quickly, so
+    // little time will be lost.
     size_t length = chars.length();
-    if (length > 2 &&
-        ((chars[0] == '[' && chars[length - 1] == ']') ||
-         (chars[0] == '(' && chars[length - 1] == ')')))
-    {
-        // Remarkably, JavaScript syntax is not a superset of JSON syntax:
-        // strings in JavaScript cannot contain the Unicode line and paragraph
-        // terminator characters U+2028 and U+2029, but strings in JSON can.
-        // Rather than force the JSON parser to handle this quirk when used by
-        // eval, we simply don't use the JSON parser when either character
-        // appears in the provided string.  See bug 657367.
-        if (sizeof(CharT) > 1) {
-            for (RangedPtr<const CharT> cp = chars.begin() + 1, end = chars.end() - 1;
-                 cp < end;
-                 cp++)
-            {
-                char16_t c = *cp;
-                if (c == 0x2028 || c == 0x2029)
-                    return false;
-            }
-        }
+    if (length < 2)
+        return false;
 
-        return true;
-    }
-    return false;
+    // It used to be that strings in JavaScript forbid U+2028 LINE SEPARATOR
+    // and U+2029 PARAGRAPH SEPARATOR, so something like
+    //
+    //   eval("['" + "\u2028" + "']");
+    //
+    // i.e. an array containing a string with a line separator in it, *would*
+    // be JSON but *would not* be valid JavaScript.  Handing such a string to
+    // the JSON parser would then fail to recognize a syntax error.  As of
+    // <https://tc39.github.io/proposal-json-superset/> JavaScript strings may
+    // contain these two code points, so it's safe to JSON-parse eval strings
+    // that contain them.
+
+    CharT first = chars[0], last = chars[length - 1];
+    return (first == '[' && last == ']') ||
+           (first == '(' && last == ')');
 }
 
 template <typename CharT>
@@ -228,8 +227,7 @@ EvalKernel(JSContext* cx, HandleValue v, EvalType evalType, AbstractFramePtr cal
     MOZ_ASSERT_IF(evalType == INDIRECT_EVAL, IsGlobalLexicalEnvironment(env));
     AssertInnerizedEnvironmentChain(cx, *env);
 
-    Rooted<GlobalObject*> envGlobal(cx, &env->global());
-    if (!GlobalObject::isRuntimeCodeGenEnabled(cx, envGlobal)) {
+    if (!GlobalObject::isRuntimeCodeGenEnabled(cx, v, cx->global())) {
         JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_CSP_BLOCKED_EVAL);
         return false;
     }
@@ -269,11 +267,14 @@ EvalKernel(JSContext* cx, HandleValue v, EvalType evalType, AbstractFramePtr cal
         const char* filename;
         bool mutedErrors;
         uint32_t pcOffset;
-        DescribeScriptedCallerForCompilation(cx, &maybeScript, &filename, &lineno, &pcOffset,
-                                             &mutedErrors,
-                                             evalType == DIRECT_EVAL
-                                             ? CALLED_FROM_JSOP_EVAL
-                                             : NOT_CALLED_FROM_JSOP_EVAL);
+        if (evalType == DIRECT_EVAL) {
+            DescribeScriptedCallerForDirectEval(cx, callerScript, pc, &filename, &lineno,
+                                                &pcOffset, &mutedErrors);
+            maybeScript = callerScript;
+        } else {
+            DescribeScriptedCallerForCompilation(cx, &maybeScript, &filename, &lineno, &pcOffset,
+                                                 &mutedErrors);
+        }
 
         const char* introducerFilename = filename;
         if (maybeScript && maybeScript->scriptSource()->introducerFilename())
@@ -331,8 +332,8 @@ js::DirectEvalStringFromIon(JSContext* cx,
 {
     AssertInnerizedEnvironmentChain(cx, *env);
 
-    Rooted<GlobalObject*> envGlobal(cx, &env->global());
-    if (!GlobalObject::isRuntimeCodeGenEnabled(cx, envGlobal)) {
+    RootedValue v(cx, StringValue(str));
+    if (!GlobalObject::isRuntimeCodeGenEnabled(cx, v, cx->global())) {
         JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_CSP_BLOCKED_EVAL);
         return false;
     }
@@ -352,17 +353,16 @@ js::DirectEvalStringFromIon(JSContext* cx,
     esg.lookupInEvalCache(linearStr, callerScript, pc);
 
     if (!esg.foundScript()) {
-        RootedScript maybeScript(cx);
         const char* filename;
         unsigned lineno;
         bool mutedErrors;
         uint32_t pcOffset;
-        DescribeScriptedCallerForCompilation(cx, &maybeScript, &filename, &lineno, &pcOffset,
-                                             &mutedErrors, CALLED_FROM_JSOP_EVAL);
+        DescribeScriptedCallerForDirectEval(cx, callerScript, pc, &filename, &lineno, &pcOffset,
+                                            &mutedErrors);
 
         const char* introducerFilename = filename;
-        if (maybeScript && maybeScript->scriptSource()->introducerFilename())
-            introducerFilename = maybeScript->scriptSource()->introducerFilename();
+        if (callerScript->scriptSource()->introducerFilename())
+            introducerFilename = callerScript->scriptSource()->introducerFilename();
 
         RootedScope enclosing(cx, callerScript->innermostScope(pc));
 
@@ -374,7 +374,8 @@ js::DirectEvalStringFromIon(JSContext* cx,
 
         if (introducerFilename) {
             options.setFileAndLine(filename, 1);
-            options.setIntroductionInfo(introducerFilename, "eval", lineno, maybeScript, pcOffset);
+            options.setIntroductionInfo(introducerFilename, "eval", lineno, callerScript,
+                                        pcOffset);
         } else {
             options.setFileAndLine("eval", 1);
             options.setIntroductionType("eval");
@@ -407,8 +408,7 @@ js::IndirectEval(JSContext* cx, unsigned argc, Value* vp)
 {
     CallArgs args = CallArgsFromVp(argc, vp);
 
-    Rooted<GlobalObject*> global(cx, &args.callee().global());
-    RootedObject globalLexical(cx, &global->lexicalEnvironment());
+    RootedObject globalLexical(cx, &cx->global()->lexicalEnvironment());
 
     // Note we'll just pass |undefined| here, then return it directly (or throw
     // if runtime codegen is disabled), if no argument is provided.
@@ -427,7 +427,7 @@ js::DirectEval(JSContext* cx, HandleValue v, MutableHandleValue vp)
                JSOp(*iter.pc()) == JSOP_STRICTEVAL ||
                JSOp(*iter.pc()) == JSOP_SPREADEVAL ||
                JSOp(*iter.pc()) == JSOP_STRICTSPREADEVAL);
-    MOZ_ASSERT(caller.compartment() == caller.script()->compartment());
+    MOZ_ASSERT(caller.realm() == caller.script()->realm());
 
     RootedObject envChain(cx, caller.environmentChain());
     return EvalKernel(cx, v, DIRECT_EVAL, caller, envChain, iter.pc(), vp);
@@ -443,12 +443,12 @@ static bool
 ExecuteInExtensibleLexicalEnvironment(JSContext* cx, HandleScript scriptArg, HandleObject env)
 {
     CHECK_REQUEST(cx);
-    assertSameCompartment(cx, env);
+    cx->check(env);
     MOZ_ASSERT(IsExtensibleLexicalEnvironment(env));
     MOZ_RELEASE_ASSERT(scriptArg->hasNonSyntacticScope());
 
     RootedScript script(cx, scriptArg);
-    if (script->compartment() != cx->compartment()) {
+    if (script->realm() != cx->realm()) {
         script = CloneGlobalScript(cx, ScopeKind::NonSyntactic, script);
         if (!script)
             return false;
@@ -462,23 +462,35 @@ ExecuteInExtensibleLexicalEnvironment(JSContext* cx, HandleScript scriptArg, Han
 }
 
 JS_FRIEND_API(bool)
-js::ExecuteInGlobalAndReturnScope(JSContext* cx, HandleObject global, HandleScript scriptArg,
-                                  MutableHandleObject envArg)
+js::ExecuteInFrameScriptEnvironment(JSContext* cx, HandleObject objArg, HandleScript scriptArg,
+                                    MutableHandleObject envArg)
 {
     RootedObject varEnv(cx, NonSyntacticVariablesObject::create(cx));
     if (!varEnv)
         return false;
 
-    // Create lexical environment with |this| == global.
-    // NOTE: This is required behavior for Gecko FrameScriptLoader
-    RootedObject lexEnv(cx, LexicalEnvironmentObject::createNonSyntactic(cx, varEnv, global));
-    if (!lexEnv)
+    AutoObjectVector envChain(cx);
+    if (!envChain.append(objArg))
         return false;
 
-    if (!ExecuteInExtensibleLexicalEnvironment(cx, scriptArg, lexEnv))
+    RootedObject env(cx);
+    if (!js::CreateObjectsForEnvironmentChain(cx, envChain, varEnv, &env))
         return false;
 
-    envArg.set(lexEnv);
+    // Create lexical environment with |this| == objArg, which should be a Gecko
+    // MessageManager.
+    // NOTE: This is required behavior for Gecko FrameScriptLoader, where some
+    // callers try to bind methods from the message manager in their scope chain
+    // to |this|, and will fail if it is not bound to a message manager.
+    ObjectRealm& realm = ObjectRealm::get(varEnv);
+    env = realm.getOrCreateNonSyntacticLexicalEnvironment(cx, env, varEnv, objArg);
+    if (!env)
+        return false;
+
+    if (!ExecuteInExtensibleLexicalEnvironment(cx, scriptArg, env))
+        return false;
+
+    envArg.set(env);
     return true;
 }
 
@@ -489,9 +501,10 @@ js::NewJSMEnvironment(JSContext* cx)
     if (!varEnv)
         return nullptr;
 
-    // Force LexicalEnvironmentObject to be created
-    MOZ_ASSERT(!cx->compartment()->getNonSyntacticLexicalEnvironment(varEnv));
-    if (!cx->compartment()->getOrCreateNonSyntacticLexicalEnvironment(cx, varEnv))
+    // Force LexicalEnvironmentObject to be created.
+    ObjectRealm& realm = ObjectRealm::get(varEnv);
+    MOZ_ASSERT(!realm.getNonSyntacticLexicalEnvironment(varEnv));
+    if (!realm.getOrCreateNonSyntacticLexicalEnvironment(cx, varEnv))
         return nullptr;
 
     return varEnv;
@@ -508,8 +521,8 @@ JS_FRIEND_API(bool)
 js::ExecuteInJSMEnvironment(JSContext* cx, HandleScript scriptArg, HandleObject varEnv,
                             AutoObjectVector& targetObj)
 {
-    assertSameCompartment(cx, varEnv);
-    MOZ_ASSERT(cx->compartment()->getNonSyntacticLexicalEnvironment(varEnv));
+    cx->check(varEnv);
+    MOZ_ASSERT(ObjectRealm::get(varEnv).getNonSyntacticLexicalEnvironment(varEnv));
     MOZ_DIAGNOSTIC_ASSERT(scriptArg->noScriptRval());
 
     RootedObject env(cx, JS_ExtensibleLexicalEnvironment(varEnv));
@@ -538,7 +551,7 @@ js::ExecuteInJSMEnvironment(JSContext* cx, HandleScript scriptArg, HandleObject 
             return false;
 
         // Create an extensible LexicalEnvironmentObject for target object
-        env = cx->compartment()->getOrCreateNonSyntacticLexicalEnvironment(cx, env);
+        env = ObjectRealm::get(env).getOrCreateNonSyntacticLexicalEnvironment(cx, env);
         if (!env)
             return false;
     }

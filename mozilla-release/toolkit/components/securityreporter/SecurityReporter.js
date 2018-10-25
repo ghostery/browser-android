@@ -3,12 +3,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-Cu.importGlobalProperties(["fetch"]);
-
 const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", {});
 const protocolHandler = Cc["@mozilla.org/network/protocol;1?name=http"]
                           .getService(Ci.nsIHttpProtocolHandler);
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
+
+XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
 
 const TLS_ERROR_REPORT_TELEMETRY_SUCCESS = 6;
 const TLS_ERROR_REPORT_TELEMETRY_FAILURE = 7;
@@ -62,10 +62,7 @@ SecurityReporter.prototype = {
     let asciiCertChain = [];
 
     if (transportSecurityInfo.failedCertChain) {
-      let certs = transportSecurityInfo.failedCertChain.getEnumerator();
-      while (certs.hasMoreElements()) {
-        let cert = certs.getNext();
-        cert.QueryInterface(Ci.nsIX509Cert);
+      for (let cert of transportSecurityInfo.failedCertChain.getEnumerator()) {
         asciiCertChain.push(btoa(getDERString(cert)));
       }
     }
@@ -80,15 +77,15 @@ SecurityReporter.prototype = {
       version: 1,
       build: Services.appinfo.appBuildID,
       product: Services.appinfo.name,
-      channel: UpdateUtils.UpdateChannel
+      channel: UpdateUtils.UpdateChannel,
     };
 
     fetch(endpoint, {
       method: "POST",
       body: JSON.stringify(report),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     }).then(function(aResponse) {
       if (!aResponse.ok) {
         // request returned non-success status
@@ -103,7 +100,7 @@ SecurityReporter.prototype = {
       Services.telemetry.getHistogramById(HISTOGRAM_ID)
           .add(TLS_ERROR_REPORT_TELEMETRY_FAILURE);
     });
-  }
+  },
 };
 
 this.NSGetFactory = XPCOMUtils.generateNSGetFactory([SecurityReporter]);

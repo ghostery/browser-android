@@ -94,14 +94,13 @@
      as attachments.accesskey. -->
 <!ENTITY toggleAttachmentPaneCmd.accesskey "j">
 <!-- LOCALIZATION NOTE (toggleAttachmentPaneCmd.key):
-     With OS-specific access modifier, this defines the shortcut key for showing/
-     hiding/minimizing the attachment pane, e.g. Alt+M on Windows.
-     toggleAttachmentPaneCmd.key and attachments.accesskey must be the same
-     for the bucket view state machinery to work. -->
+     As Mac does not have access keys, this key defines a Mac-only, cross-l10n
+     shortcut key (Ctrl+M). Typically, this key should not be translated unless
+     otherwise required by specific needs of the localization. -->
 <!ENTITY toggleAttachmentPaneCmd.key "j">
 <!ENTITY selectAllCmd.label "Tout sélectionner">
-<!ENTITY selectAllCmd.key "A">
 <!ENTITY selectAllCmd.accesskey "T">
+<!ENTITY selectAllCmd.key "A">
 <!ENTITY findBarCmd.label "Rechercher…">
 <!ENTITY findBarCmd.accesskey "h">
 <!ENTITY findBarCmd.key "F">
@@ -247,7 +246,6 @@
 <!ENTITY sendlaterButton.tooltip "Envoyer ce message plus tard">
 <!ENTITY quoteButton.tooltip "Citer le précédent message">
 <!ENTITY addressButton.tooltip "Sélectionner un destinataire du carnet d’adresses">
-<!ENTITY attachButton.tooltip "Inclure une pièce jointe">
 <!ENTITY attachButton.tooltip2 "Ajouter une pièce jointe">
 <!ENTITY spellingButton.tooltip "Vérifier l’orthographe de la sélection ou du message complet">
 <!ENTITY saveButton.tooltip "Enregistrer ce message">
@@ -271,11 +269,12 @@
 <!ENTITY subject.label "Sujet :">
 <!ENTITY subject.accesskey "S">
 <!-- LOCALIZATION NOTE (attachments.accesskey) This access key character should
-     be taken from the strings in attachmentCount in composeMsgs.properties,
-     and it must be the same as toggleAttachmentPaneCmd.key, otherwise it won't
-     work, as the shortcut key functionality supersedes the access key. -->
+     be taken from the strings of attachmentCount in composeMsgs.properties.
+     Please ensure that this access key is unique: Do not duplicate any other
+     first-level access keys of the compose window, e.g. those of main menu,
+     buttons, or labels (message headers, contacts side bar, attachment reminder
+     bar). -->
 <!ENTITY attachments.accesskey "j">
-
 <!ENTITY attachmentBucketHeader.tooltip "Panneau des pièces jointes">
 <!ENTITY attachmentBucketCloseButton.tooltip "Masquer le panneau des pièces jointes">
 
@@ -360,6 +359,9 @@
 <!-- Identity popup customize menuitem -->
 <!ENTITY customizeFromAddress.label "Personnaliser l’adresse d’expédition…">
 <!ENTITY customizeFromAddress.accesskey "x">
+
+<!-- Accessibility name for the document -->
+<!ENTITY aria.message.bodyName "Corps du message">
 
 <!-- Status Bar -->
 <!ENTITY languageStatusButton.tooltip "Langue de la vérification orthographique">

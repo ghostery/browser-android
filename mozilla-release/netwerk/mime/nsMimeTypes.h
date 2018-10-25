@@ -75,6 +75,7 @@
 #define APPLICATION_RDF_XML                 "application/rdf+xml"
 #define APPLICATION_WAPXHTML_XML            "application/vnd.wap.xhtml+xml"
 #define APPLICATION_PACKAGE                 "application/package"
+#define APPLICATION_JAVASCRIPT_BINAST       "application/javascript-binast"
 
 #define AUDIO_BASIC                         "audio/basic"
 #define AUDIO_OGG                           "audio/ogg"
@@ -113,6 +114,7 @@
 #define IMAGE_MNG                           "video/x-mng"
 #define IMAGE_JNG                           "image/x-jng"
 #define IMAGE_SVG_XML                       "image/svg+xml"
+#define IMAGE_WEBP                          "image/webp"
 
 #define MESSAGE_EXTERNAL_BODY               "message/external-body"
 #define MESSAGE_NEWS                        "message/news"

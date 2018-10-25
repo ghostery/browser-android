@@ -36,6 +36,10 @@ public:
    */
   Accessible* Position() { return mPosition; }
 
+  int32_t StartOffset() { return mStartOffset; }
+
+  int32_t EndOffset() { return mEndOffset; }
+
 private:
   ~nsAccessiblePivot();
   nsAccessiblePivot() = delete;
@@ -49,6 +53,7 @@ private:
   bool NotifyOfPivotChange(Accessible* aOldAccessible,
                            int32_t aOldStart, int32_t aOldEnd,
                            PivotMoveReason aReason,
+                           TextBoundaryType aBoundaryType,
                            bool aIsFromUserInput);
 
   /*

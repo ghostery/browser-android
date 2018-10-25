@@ -11,6 +11,8 @@
 <!ENTITY safeModeDescription3.label   "De veilige modus is een speciale modus van &brandShortName; die kan worden gebruikt om problemen te onderzoeken.">
 <!ENTITY safeModeDescription4.label   "Uw add-ons en aangepaste instellingen zullen tijdelijk worden uitgeschakeld.">
 
+<!ENTITY safeModeDescription5.label   "Uw add-ons en aangepaste instellingen zullen tijdelijk worden uitgeschakeld, en functies van &brandShortName; werken mogelijk niet zoals ze dat nu doen.">
+
 <!ENTITY refreshProfileInstead.label  "Als u probleemoplossing wilt overslaan, kunt u proberen &brandShortName; op te frissen.">
 
 <!-- LOCALIZATION NOTE (autoSafeModeDescription3.label): Shown on the safe mode dialog after multiple startup crashes. See also chrome/global/resetProfile.dtd -->

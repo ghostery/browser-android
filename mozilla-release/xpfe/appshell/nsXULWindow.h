@@ -34,12 +34,16 @@
 #include "nsIWeakReference.h"
 #include "nsIWidgetListener.h"
 #include "nsITabParent.h"
+#include "nsIXULStore.h"
 
 namespace mozilla {
 namespace dom {
 class Element;
 } // namespace dom
 } // namespace mozilla
+
+class nsAtom;
+class nsXULTooltipListener;
 
 // nsXULWindow
 
@@ -101,9 +105,13 @@ protected:
    bool       LoadPositionFromXUL(int32_t aSpecWidth, int32_t aSpecHeight);
    bool       LoadSizeFromXUL(int32_t& aSpecWidth, int32_t& aSpecHeight);
    void       SetSpecifiedSize(int32_t aSpecWidth, int32_t aSpecHeight);
-   bool       LoadMiscPersistentAttributesFromXUL();
+   bool       UpdateWindowStateFromMiscXULAttributes();
    void       SyncAttributesToWidget();
    NS_IMETHOD SavePersistentAttributes();
+
+   bool NeedsTooltipListener();
+   void AddTooltipSupport();
+   void RemoveTooltipSupport();
 
    NS_IMETHOD GetWindowDOMWindow(mozIDOMWindowProxy** aDOMWindow);
    mozilla::dom::Element* GetWindowDOMElement() const;
@@ -141,6 +149,12 @@ protected:
    bool       GetContentScrollbarVisibility();
    void       PersistentAttributesDirty(uint32_t aDirtyFlags);
    nsresult   GetTabCount(uint32_t* aResult);
+
+   void       LoadPersistentWindowState();
+   nsresult   GetPersistentValue(const nsAtom* aAttr,
+                                 nsAString& aValue);
+   nsresult   SetPersistentValue(const nsAtom* aAttr,
+                                 const nsAString& aValue);
 
    nsChromeTreeOwner*      mChromeTreeOwner;
    nsContentTreeOwner*     mContentTreeOwner;
@@ -186,6 +200,7 @@ private:
    MOZ_CAN_RUN_SCRIPT_BOUNDARY nsresult GetPrimaryTabParentSize(int32_t* aWidth, int32_t* aHeight);
    nsresult GetPrimaryContentShellSize(int32_t* aWidth, int32_t* aHeight);
    nsresult SetPrimaryTabParentSize(int32_t aWidth, int32_t aHeight);
+   nsCOMPtr<nsIXULStore> mLocalStore;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsXULWindow, NS_XULWINDOW_IMPL_CID)

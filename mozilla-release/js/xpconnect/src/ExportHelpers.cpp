@@ -119,7 +119,7 @@ public:
                 return nullptr;
             }
 
-            nsIGlobalObject* global = xpc::NativeGlobal(JS::CurrentGlobalOrNull(aCx));
+            nsIGlobalObject* global = xpc::CurrentNativeGlobal(aCx);
             MOZ_ASSERT(global);
 
             // RefPtr<File> needs to go out of scope before toObjectOrNull() is called because
@@ -206,25 +206,18 @@ public:
  * function returns, |val| is set to the result of the clone.
  */
 bool
-StackScopedClone(JSContext* cx, StackScopedCloneOptions& options,
+StackScopedClone(JSContext* cx, StackScopedCloneOptions& options, HandleObject sourceScope,
                  MutableHandleValue val)
 {
     StackScopedCloneData data(cx, &options);
     {
-        // For parsing val we have to enter its compartment.
-        // (unless it's a primitive)
-        Maybe<JSAutoCompartment> ac;
-        if (val.isObject()) {
-            ac.emplace(cx, &val.toObject());
-        } else if (val.isString() && !JS_WrapValue(cx, val)) {
-            return false;
-        }
-
+        // For parsing val we have to enter (a realm in) its compartment.
+        JSAutoRealm ar(cx, sourceScope);
         if (!data.Write(cx, val))
             return false;
     }
 
-    // Now recreate the clones in the target compartment.
+    // Now recreate the clones in the target realm.
     if (!data.Read(cx, val))
         return false;
 
@@ -300,7 +293,7 @@ FunctionForwarder(JSContext* cx, unsigned argc, Value* vp)
         // We manually implement the contents of CrossCompartmentWrapper::call
         // here, because certain function wrappers (notably content->nsEP) are
         // not callable.
-        JSAutoCompartment ac(cx, unwrappedFun);
+        JSAutoRealm ar(cx, unwrappedFun);
         if (!CheckSameOriginArg(cx, options, thisVal) || !JS_WrapValue(cx, &thisVal))
             return false;
 
@@ -399,8 +392,8 @@ ExportFunction(JSContext* cx, HandleValue vfunction, HandleValue vscope, HandleV
 
     {
         // We need to operate in the target scope from here on, let's enter
-        // its compartment.
-        JSAutoCompartment ac(cx, targetScope);
+        // its realm.
+        JSAutoRealm ar(cx, targetScope);
 
         // Unwrapping to see if we have a callable.
         funObj = UncheckedUnwrap(funObj);
@@ -483,7 +476,7 @@ CreateObjectIn(JSContext* cx, HandleValue vobj, CreateObjectInOptions& options,
 
     RootedObject obj(cx);
     {
-        JSAutoCompartment ac(cx, scope);
+        JSAutoRealm ar(cx, scope);
         JS_MarkCrossZoneId(cx, options.defineAs);
 
         obj = JS_NewPlainObject(cx);

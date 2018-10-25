@@ -80,8 +80,6 @@
 <!ENTITY cmd.preferencesWin.accesskey         "O">
 <!ENTITY cmd.preferencesUnix.label            "Preferências">
 <!ENTITY cmd.preferencesUnix.accesskey        "P">
-<!ENTITY cmd.about.label                      "Acerca">
-<!ENTITY cmd.about.accesskey                  "e">
 
 <!ENTITY cmd.enableAddon.label                "Ativar">
 <!ENTITY cmd.enableAddon.accesskey            "A">
@@ -161,13 +159,6 @@
 <!ENTITY progress.pause.tooltip               "Pausar">
 <!ENTITY progress.cancel.tooltip              "Cancelar">
 
-
-<!-- list sorting -->
-<!ENTITY sort.name.label                      "Nome">
-<!ENTITY sort.name.tooltip                    "Ordenar por nome">
-<!ENTITY sort.dateUpdated.label               "Última atualização">
-<!ENTITY sort.dateUpdated.tooltip             "Ordenar por data de atualização">
-
 <!ENTITY addon.homepage                       "Página inicial">
 <!ENTITY addon.details.label                  "Mais">
 <!ENTITY addon.details.tooltip                "Mostrar mais detalhes acerca deste extra">
@@ -201,7 +192,7 @@
 <!ENTITY addon.loadingReleaseNotes.label      "A carregar…">
 <!ENTITY addon.errorLoadingReleaseNotes.label "Ocorreu um erro ao carregar as notas de lançamento.">
 
-<!ENTITY addon.createdBy.label                "De ">
+<!ENTITY addon.createdBy.label                "Por ">
 
 <!ENTITY eula.title                           "Acordo de licença de utilizador final">
 <!ENTITY eula.width                           "560px">
@@ -209,17 +200,6 @@
 <!ENTITY eula.accept                          "Aceitar e instalar…">
 
 <!ENTITY settings.path.button.label           "Procurar…">
-
-<!-- LOCALIZATION NOTE (experiment.info.label): The strings related to
-     experiments are present on the "Experiments" tab of the add-ons manager.
-     This tab won't be displayed unless an Experiment add-on is installed.
-     Install https://people.mozilla.org/~gszorc/dummy-experiment-addon.xpi
-     to cause this tab to appear. -->
-<!ENTITY experiment.info.label "O que é isto? A telemetria pode instalar e executar experiências de vez em quando.">
-<!ENTITY experiment.info.learnmore "Saber mais">
-<!ENTITY experiment.info.learnmore.accesskey "m">
-<!ENTITY experiment.info.changetelemetry "Definições de telemetria">
-<!ENTITY experiment.info.changetelemetry.accesskey "t">
 
 <!ENTITY setting.learnmore "Saber mais…">
 

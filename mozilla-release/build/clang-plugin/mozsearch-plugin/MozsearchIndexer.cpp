@@ -158,8 +158,9 @@ private:
   // Tracks the set of declarations that the current expression/statement is
   // nested inside of.
   struct AutoSetContext {
-    AutoSetContext(IndexConsumer *Self, NamedDecl *Context)
+    AutoSetContext(IndexConsumer *Self, NamedDecl *Context, bool VisitImplicit = false)
         : Self(Self), Prev(Self->CurDeclContext), Decl(Context) {
+      this->VisitImplicit = VisitImplicit || (Prev ? Prev->VisitImplicit : false);
       Self->CurDeclContext = this;
     }
 
@@ -168,6 +169,7 @@ private:
     IndexConsumer *Self;
     AutoSetContext *Prev;
     NamedDecl *Decl;
+    bool VisitImplicit;
   };
   AutoSetContext *CurDeclContext;
 
@@ -271,7 +273,10 @@ private:
           std::string Backing;
           llvm::raw_string_ostream Stream(Backing);
           const TemplateArgumentList &TemplateArgs = Spec->getTemplateArgs();
-#if CLANG_VERSION_MAJOR > 3 ||                                                 \
+#if CLANG_VERSION_MAJOR > 5
+          printTemplateArgumentList(
+              Stream, TemplateArgs.asArray(), PrintingPolicy(CI.getLangOpts()));
+#elif CLANG_VERSION_MAJOR > 3 ||                                                 \
     (CLANG_VERSION_MAJOR == 3 && CLANG_VERSION_MINOR >= 9)
           TemplateSpecializationType::PrintTemplateArgumentList(
               Stream, TemplateArgs.asArray(), PrintingPolicy(CI.getLangOpts()));
@@ -360,7 +365,8 @@ private:
         return std::string("V_") + mangleLocation(Decl->getLocation()) +
                std::string("_") + hash(Decl->getName());
       }
-    } else if (isa<TagDecl>(Decl) || isa<TypedefNameDecl>(Decl)) {
+    } else if (isa<TagDecl>(Decl) || isa<TypedefNameDecl>(Decl) ||
+               isa<ObjCInterfaceDecl>(Decl)) {
       if (!Decl->getIdentifier()) {
         // Anonymous.
         return std::string("T_") + mangleLocation(Decl->getLocation());
@@ -374,6 +380,10 @@ private:
       }
 
       return std::string("NS_") + mangleQualifiedName(getQualifiedName(Decl));
+    } else if (const ObjCIvarDecl *D2 = dyn_cast<ObjCIvarDecl>(Decl)) {
+      const ObjCInterfaceDecl *Iface = D2->getContainingInterface();
+      return std::string("F_<") + getMangledName(Ctx, Iface) + ">_" +
+             D2->getNameAsString();
     } else if (const FieldDecl *D2 = dyn_cast<FieldDecl>(Decl)) {
       const RecordDecl *Record = D2->getParent();
       return std::string("F_<") + getMangledName(Ctx, Record) + ">_" +
@@ -563,7 +573,7 @@ public:
     return Super::TraverseCXXMethodDecl(D);
   }
   bool TraverseCXXConstructorDecl(CXXConstructorDecl *D) {
-    AutoSetContext Asc(this, D);
+    AutoSetContext Asc(this, D, /*VisitImplicit=*/true);
     const FunctionDecl *Def;
     // See TraverseFunctionDecl.
     if (TemplateStack && D->isDefined(Def) && Def && D != Def) {
@@ -786,6 +796,10 @@ public:
       return TemplateStack->shouldVisitTemplateInstantiations();
     }
     return false;
+  }
+
+  bool shouldVisitImplicitCode() const {
+    return CurDeclContext && CurDeclContext->VisitImplicit;
   }
 
   bool TraverseClassTemplateDecl(ClassTemplateDecl *D) {

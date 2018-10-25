@@ -8,6 +8,7 @@
 #define _MOZILLA_WIDGET_GTK_WINDOW_SURFACE_WAYLAND_H
 
 #include <prthread.h>
+#include "mozilla/gfx/Types.h"
 
 namespace mozilla {
 namespace widget {
@@ -66,14 +67,14 @@ public:
   WindowBackBuffer(nsWaylandDisplay* aDisplay, int aWidth, int aHeight);
   ~WindowBackBuffer();
 
-  already_AddRefed<gfx::DrawTarget> Lock(const LayoutDeviceIntRegion& aRegion);
+  already_AddRefed<gfx::DrawTarget> Lock();
 
   void Attach(wl_surface* aSurface);
   void Detach();
   bool IsAttached() { return mAttached; }
 
   bool Resize(int aWidth, int aHeight);
-  bool SetImageDataFromBackBuffer(class WindowBackBuffer* aSourceBuffer);
+  bool SetImageDataFromBuffer(class WindowBackBuffer* aSourceBuffer);
 
   bool IsMatchingSize(int aWidth, int aHeight)
   {
@@ -110,22 +111,32 @@ public:
   already_AddRefed<gfx::DrawTarget> Lock(const LayoutDeviceIntRegion& aRegion) override;
   void                      Commit(const LayoutDeviceIntRegion& aInvalidRegion) final;
   void                      FrameCallbackHandler();
+  void                      DelayedCommitHandler();
 
 private:
-  WindowBackBuffer*         GetBufferToDraw(int aWidth, int aHeight);
-  void                      UpdateScaleFactor();
+  WindowBackBuffer*         GetWaylandBufferToDraw(int aWidth, int aHeight);
+
+  already_AddRefed<gfx::DrawTarget> LockWaylandBuffer(int aWidth, int aHeight);
+  already_AddRefed<gfx::DrawTarget> LockImageSurface(const gfx::IntSize& aLockSize);
+  bool                      CommitImageSurfaceToWaylandBuffer(const LayoutDeviceIntRegion& aRegion);
+  void                      CommitWaylandBuffer();
 
   // TODO: Do we need to hold a reference to nsWindow object?
   nsWindow*                 mWindow;
   nsWaylandDisplay*         mWaylandDisplay;
-  WindowBackBuffer*         mFrontBuffer;
-  WindowBackBuffer*         mBackBuffer;
+  WindowBackBuffer*         mWaylandBuffer;
+  LayoutDeviceIntRegion     mWaylandBufferDamage;
+  WindowBackBuffer*         mBackupBuffer;
+  RefPtr<gfxImageSurface>   mImageSurface;
   wl_callback*              mFrameCallback;
-  wl_surface*               mFrameCallbackSurface;
+  wl_surface*               mLastCommittedSurface;
   MessageLoop*              mDisplayThreadMessageLoop;
-  bool                      mDelayedCommit;
-  bool                      mFullScreenDamage;
+  WindowSurfaceWayland**    mDelayedCommitHandle;
+  bool                      mDrawToWaylandBufferDirectly;
+  bool                      mPendingCommit;
+  bool                      mWaylandBufferFullScreenDamage;
   bool                      mIsMainThread;
+  bool                      mNeedScaleFactorUpdate;
 };
 
 }  // namespace widget

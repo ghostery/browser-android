@@ -13,6 +13,7 @@
 #include "mozilla/DebugOnly.h"
 #include "mozilla/dom/NodeInfo.h"
 #include "mozilla/dom/NodeInfoInlines.h"
+#include "mozilla/NullPrincipal.h"
 #include "nsCOMPtr.h"
 #include "nsString.h"
 #include "nsAtom.h"
@@ -30,7 +31,6 @@
 #include "nsNameSpaceManager.h"
 #include "nsDocument.h"
 #include "nsWindowSizes.h"
-#include "NullPrincipal.h"
 
 using namespace mozilla;
 using mozilla::dom::NodeInfo;
@@ -107,7 +107,7 @@ NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_THIS_END
 nsresult
 nsNodeInfoManager::Init(nsIDocument *aDocument)
 {
-  NS_PRECONDITION(!mPrincipal,
+  MOZ_ASSERT(!mPrincipal,
                   "Being inited when we already have a principal?");
 
   mPrincipal = NullPrincipal::CreateWithoutOriginAttributes();
@@ -319,7 +319,7 @@ nsNodeInfoManager::SetDocumentPrincipal(nsIPrincipal *aPrincipal)
 void
 nsNodeInfoManager::RemoveNodeInfo(NodeInfo *aNodeInfo)
 {
-  NS_PRECONDITION(aNodeInfo, "Trying to remove null nodeinfo from manager!");
+  MOZ_ASSERT(aNodeInfo, "Trying to remove null nodeinfo from manager!");
 
   if (aNodeInfo == mDocumentNodeInfo) {
     mDocumentNodeInfo = nullptr;

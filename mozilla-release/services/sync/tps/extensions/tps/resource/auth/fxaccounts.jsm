@@ -13,12 +13,11 @@ ChromeUtils.import("resource://gre/modules/Timer.jsm");
 ChromeUtils.import("resource://gre/modules/FxAccounts.jsm");
 ChromeUtils.import("resource://gre/modules/FxAccountsClient.jsm");
 ChromeUtils.import("resource://gre/modules/FxAccountsConfig.jsm");
-ChromeUtils.import("resource://services-sync/main.js");
 ChromeUtils.import("resource://tps/logger.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.defineModuleGetter(this, "Services", "resource://gre/modules/Services.jsm");
 
-Cu.importGlobalProperties(["fetch"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
 
 /**
  * Helper object for Firefox Accounts authentication
@@ -182,10 +181,6 @@ var Authentication = {
         await this._completeVerification(account.username);
       }
 
-      if (Weave.Status.login !== Weave.LOGIN_SUCCEEDED) {
-        Logger.logInfo("Logging into Weave.");
-        await Weave.Service.login();
-      }
       return true;
     } catch (error) {
       throw new Error("signIn() failed with: " + error.message);
@@ -200,5 +195,5 @@ var Authentication = {
       // Note: This will clean up the device ID.
       await fxAccounts.signOut();
     }
-  }
+  },
 };

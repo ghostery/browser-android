@@ -32,15 +32,13 @@ add_task(async function test_hierarchical_query() {
           children: [{
             title: "3 title",
             url: "http://a3.com/",
-          }]
-        }]
-      }]
-    }]
+          }],
+        }],
+      }],
+    }],
   });
 
   let [folderGuid, b1, sf1, b2, sf2, b3] = bookmarks.map((bookmark) => bookmark.guid);
-
-  let testFolderId = await PlacesUtils.promiseItemId(folderGuid);
 
   // bookmark query that should result in the "hierarchical" result
   // because there is one query, one folder,
@@ -50,7 +48,7 @@ add_task(async function test_hierarchical_query() {
   var options = histsvc.getNewQueryOptions();
   options.queryType = Ci.nsINavHistoryQueryOptions.QUERY_TYPE_BOOKMARKS;
   var query = histsvc.getNewQuery();
-  query.setFolders([testFolderId], 1);
+  query.setParents([folderGuid], 1);
   var result = histsvc.executeQuery(query, options);
   var root = result.root;
   root.containerOpen = true;
@@ -83,7 +81,7 @@ add_task(async function test_hierarchical_query() {
   options.queryType = Ci.nsINavHistoryQueryOptions.QUERY_TYPE_BOOKMARKS;
   options.maxResults = 10;
   query = histsvc.getNewQuery();
-  query.setFolders([testFolderId], 1);
+  query.setParents([folderGuid], 1);
   result = histsvc.executeQuery(query, options);
   root = result.root;
   root.containerOpen = true;

@@ -20,7 +20,6 @@ Ping 类型
 <!ENTITY aboutTelemetry.optionGroupOlder "
 更早
 ">
-<!ENTITY aboutTelemetry.payloadChoiceHeader "载荷">
 <!-- LOCALIZATION NOTE(aboutTelemetry.previousPing, aboutTelemetry.nextPing):
 	These strings are displayed when selecting Archived pings, and they’re
 	used to move to the next or previous ping. -->
@@ -30,7 +29,7 @@ Ping 类型
 <!ENTITY aboutTelemetry.pageTitle "遥测数据">
 <!ENTITY aboutTelemetry.moreInformations "寻找更多信息？">
 <!ENTITY aboutTelemetry.firefoxDataDoc "
-<a>Firefox 数据文档</a> 包含有关如何使用我们的数据工具的指南。
+<a>Firefox 数据文档</a> 介绍了使用我们的数据工具的方式。
 ">
 <!ENTITY aboutTelemetry.telemetryClientDoc "
 <a>Firefox 遥测客户端文档</a> 包括概念、API 文档以及数据引用的定义。
@@ -55,7 +54,6 @@ Ping 类型
 <!ENTITY aboutTelemetry.keyedHistogramsSection "键索直方图">
 <!ENTITY aboutTelemetry.eventsSection "事件">
 <!ENTITY aboutTelemetry.simpleMeasurementsSection "  简单测量">
-<!ENTITY aboutTelemetry.telemetryLogSection "  遥测日志">
 <!ENTITY aboutTelemetry.slowSqlSection "慢 SQL 语句">
 <!ENTITY aboutTelemetry.chromeHangsSection "  浏览器挂起">
 <!ENTITY aboutTelemetry.addonDetailsSection "   附加组件详情 ">

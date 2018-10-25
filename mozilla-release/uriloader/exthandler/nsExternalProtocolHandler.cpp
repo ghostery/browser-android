@@ -316,7 +316,7 @@ NS_IMETHODIMP nsExtProtocolChannel::GetContentLength(int64_t * aContentLength)
 NS_IMETHODIMP
 nsExtProtocolChannel::SetContentLength(int64_t aContentLength)
 {
-  NS_NOTREACHED("SetContentLength");
+  MOZ_ASSERT_UNREACHABLE("SetContentLength");
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -371,13 +371,13 @@ NS_IMETHODIMP nsExtProtocolChannel::Cancel(nsresult status)
 
 NS_IMETHODIMP nsExtProtocolChannel::Suspend()
 {
-  NS_NOTREACHED("Suspend");
+  MOZ_ASSERT_UNREACHABLE("Suspend");
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP nsExtProtocolChannel::Resume()
 {
-  NS_NOTREACHED("Resume");
+  MOZ_ASSERT_UNREACHABLE("Resume");
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -405,7 +405,7 @@ NS_IMETHODIMP nsExtProtocolChannel::CompleteRedirectSetup(nsIStreamListener *lis
 // From nsIParentChannel (derives from nsIStreamListener)
 //////////////////////////////////////////////////////////////////////
 
-NS_IMETHODIMP nsExtProtocolChannel::SetParentListener(HttpChannelParentListener* aListener)
+NS_IMETHODIMP nsExtProtocolChannel::SetParentListener(mozilla::net::HttpChannelParentListener* aListener)
 {
   // This is called as part of the connect parent operation from
   // ContentParent::RecvExtProtocolChannelConnectParent.  Setting
@@ -422,6 +422,12 @@ NS_IMETHODIMP nsExtProtocolChannel::NotifyTrackingProtectionDisabled()
   return NS_OK;
 }
 
+NS_IMETHODIMP nsExtProtocolChannel::NotifyTrackingCookieBlocked(uint32_t aRejectedReason)
+{
+  // nothing to do
+  return NS_OK;
+}
+
 NS_IMETHODIMP nsExtProtocolChannel::SetClassifierMatchedInfo(const nsACString& aList,
                                                              const nsACString& aProvider,
                                                              const nsACString& aFullHash)
@@ -430,7 +436,7 @@ NS_IMETHODIMP nsExtProtocolChannel::SetClassifierMatchedInfo(const nsACString& a
   return NS_OK;
 }
 
-NS_IMETHODIMP nsExtProtocolChannel::NotifyTrackingResource()
+NS_IMETHODIMP nsExtProtocolChannel::NotifyTrackingResource(bool aIsThirdParty)
 {
   // nothing to do
   return NS_OK;

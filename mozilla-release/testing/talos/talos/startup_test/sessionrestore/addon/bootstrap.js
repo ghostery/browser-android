@@ -6,17 +6,17 @@
 
 "use strict";
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
 ChromeUtils.defineModuleGetter(this, "Services",
   "resource://gre/modules/Services.jsm");
 ChromeUtils.defineModuleGetter(this, "setTimeout",
   "resource://gre/modules/Timer.jsm");
+ChromeUtils.defineModuleGetter(this, "SessionStartup",
+  "resource:///modules/sessionstore/SessionStartup.jsm");
 ChromeUtils.defineModuleGetter(this, "StartupPerformance",
   "resource:///modules/sessionstore/StartupPerformance.jsm");
 
 // Observer Service topics.
-const WINDOW_READY_TOPIC = "browser-delayed-startup-finished";
+const WINDOW_READY_TOPIC = "browser-idle-startup-tasks-finished";
 
 // Process Message Manager topics.
 const MSG_REQUEST = "session-restore-test?duration";
@@ -49,11 +49,9 @@ const sessionRestoreTest = {
     if (StartupPerformance.isRestored) {
       this.onReady(true);
     } else {
-      let sessionStartup = Cc["@mozilla.org/browser/sessionstartup;1"]
-                                 .getService(Ci.nsISessionStartup);
-      sessionStartup.onceInitialized.then(() => {
-        if (sessionStartup.sessionType == Ci.nsISessionStartup.NO_SESSION
-        || sessionStartup.sessionType == Ci.nsISessionStartup.DEFER_SESSION) {
+      SessionStartup.onceInitialized.then(() => {
+        if (SessionStartup.sessionType == SessionStartup.NO_SESSION ||
+            SessionStartup.sessionType == SessionStartup.DEFER_SESSION) {
           this.onReady(false);
         } else {
           Services.obs.addObserver(this, StartupPerformance.RESTORED_TOPIC);
@@ -73,7 +71,7 @@ const sessionRestoreTest = {
     // onReady might fire before the browser window has finished initializing
     // or sometimes soon after. We handle both cases here.
     let win = Services.wm.getMostRecentWindow("navigator:browser");
-    if (!win || !win.gBrowserInit || !win.gBrowserInit.delayedStartupFinished) {
+    if (!win || !win.gBrowserInit || !win.gBrowserInit.idleTasksFinished) {
       // We didn't have a window around yet, so we'll wait until one becomes
       // available before opening the result tab.
       Services.obs.addObserver(this, WINDOW_READY_TOPIC);
@@ -130,7 +128,7 @@ const sessionRestoreTest = {
       queryString = url.search;
     }
 
-    win.gBrowser.addTab("chrome://session-restore-test/content/index.html" + queryString);
+    win.gBrowser.addTrustedTab("chrome://session-restore-test/content/index.html" + queryString);
   }
 };
 

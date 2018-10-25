@@ -68,8 +68,9 @@ ProfileBuffer::AddStoredMarker(ProfilerMarker *aStoredMarker)
 
 void
 ProfileBuffer::CollectCodeLocation(
-  const char* aLabel, const char* aStr, int aLineNumber,
-  const Maybe<js::ProfileEntry::Category>& aCategory)
+  const char* aLabel, const char* aStr,
+  const Maybe<uint32_t>& aLineNumber, const Maybe<uint32_t>& aColumnNumber,
+  const Maybe<js::ProfilingStackFrame::Category>& aCategory)
 {
   AddEntry(ProfileBufferEntry::Label(aLabel));
 
@@ -90,8 +91,12 @@ ProfileBuffer::CollectCodeLocation(
     }
   }
 
-  if (aLineNumber != -1) {
-    AddEntry(ProfileBufferEntry::LineNumber(aLineNumber));
+  if (aLineNumber) {
+    AddEntry(ProfileBufferEntry::LineNumber(*aLineNumber));
+  }
+
+  if (aColumnNumber) {
+    AddEntry(ProfileBufferEntry::ColumnNumber(*aColumnNumber));
   }
 
   if (aCategory.isSome()) {
@@ -130,8 +135,8 @@ static bool
 IsChromeJSScript(JSScript* aScript)
 {
   // WARNING: this function runs within the profiler's "critical section".
-  auto compartment = js::GetScriptCompartment(aScript);
-  return js::IsSystemCompartment(compartment);
+  auto realm = js::GetScriptRealm(aScript);
+  return js::IsSystemRealm(realm);
 }
 
 void
@@ -149,24 +154,25 @@ ProfileBufferCollector::CollectJitReturnAddr(void* aAddr)
 void
 ProfileBufferCollector::CollectWasmFrame(const char* aLabel)
 {
-  mBuf.CollectCodeLocation("", aLabel, -1, Nothing());
+  mBuf.CollectCodeLocation("", aLabel, Nothing(), Nothing(), Nothing());
 }
 
 void
-ProfileBufferCollector::CollectPseudoEntry(const js::ProfileEntry& aEntry)
+ProfileBufferCollector::CollectProfilingStackFrame(const js::ProfilingStackFrame& aFrame)
 {
   // WARNING: this function runs within the profiler's "critical section".
 
-  MOZ_ASSERT(aEntry.kind() == js::ProfileEntry::Kind::CPP_NORMAL ||
-             aEntry.kind() == js::ProfileEntry::Kind::JS_NORMAL);
+  MOZ_ASSERT(aFrame.kind() == js::ProfilingStackFrame::Kind::LABEL ||
+             aFrame.kind() == js::ProfilingStackFrame::Kind::JS_NORMAL);
 
-  const char* label = aEntry.label();
-  const char* dynamicString = aEntry.dynamicString();
+  const char* label = aFrame.label();
+  const char* dynamicString = aFrame.dynamicString();
   bool isChromeJSEntry = false;
-  int lineno = -1;
+  Maybe<uint32_t> line;
+  Maybe<uint32_t> column;
 
-  if (aEntry.isJs()) {
-    // There are two kinds of JS frames that get pushed onto the PseudoStack.
+  if (aFrame.isJsFrame()) {
+    // There are two kinds of JS frames that get pushed onto the ProfilingStack.
     //
     // - label = "", dynamic string = <something>
     // - label = "js::RunScript", dynamic string = nullptr
@@ -176,12 +182,14 @@ ProfileBufferCollector::CollectPseudoEntry(const js::ProfileEntry& aEntry)
     if (label[0] == '\0') {
       MOZ_ASSERT(dynamicString);
 
-      // We call aEntry.script() repeatedly -- rather than storing the result in
+      // We call aFrame.script() repeatedly -- rather than storing the result in
       // a local variable in order -- to avoid rooting hazards.
-      if (aEntry.script()) {
-        isChromeJSEntry = IsChromeJSScript(aEntry.script());
-        if (aEntry.pc()) {
-          lineno = JS_PCToLineNumber(aEntry.script(), aEntry.pc());
+      if (aFrame.script()) {
+        isChromeJSEntry = IsChromeJSScript(aFrame.script());
+        if (aFrame.pc()) {
+          unsigned col = 0;
+          line = Some(JS_PCToLineNumber(aFrame.script(), aFrame.pc(), &col));
+          column = Some(col);
         }
       }
 
@@ -189,8 +197,8 @@ ProfileBufferCollector::CollectPseudoEntry(const js::ProfileEntry& aEntry)
       MOZ_ASSERT(strcmp(label, "js::RunScript") == 0 && !dynamicString);
     }
   } else {
-    MOZ_ASSERT(aEntry.isCpp());
-    lineno = aEntry.line();
+    MOZ_ASSERT(aFrame.isLabelFrame());
+    line = Some(aFrame.line());
   }
 
   if (dynamicString) {
@@ -202,6 +210,6 @@ ProfileBufferCollector::CollectPseudoEntry(const js::ProfileEntry& aEntry)
     }
   }
 
-  mBuf.CollectCodeLocation(label, dynamicString, lineno,
-                           Some(aEntry.category()));
+  mBuf.CollectCodeLocation(label, dynamicString, line, column,
+                           Some(aFrame.category()));
 }

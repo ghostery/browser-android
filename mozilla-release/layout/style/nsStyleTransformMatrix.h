@@ -24,6 +24,10 @@ class nsPresContext;
 struct gfxQuaternion;
 struct nsRect;
 
+namespace mozilla {
+struct MotionPathData;
+}
+
 /**
  * A helper to generate gfxMatrixes from css transform functions.
  */
@@ -74,11 +78,19 @@ namespace nsStyleTransformMatrix {
 
     explicit TransformReferenceBox()
       : mFrame(nullptr)
+      , mX(0)
+      , mY(0)
+      , mWidth(0)
+      , mHeight(0)
       , mIsCached(false)
     {}
 
     explicit TransformReferenceBox(const nsIFrame* aFrame)
       : mFrame(aFrame)
+      , mX(0)
+      , mY(0)
+      , mWidth(0)
+      , mHeight(0)
       , mIsCached(false)
     {
       MOZ_ASSERT(mFrame);
@@ -86,6 +98,10 @@ namespace nsStyleTransformMatrix {
 
     explicit TransformReferenceBox(const nsIFrame* aFrame,
                                    const nsSize& aFallbackDimensions)
+      : mX(0)
+      , mY(0)
+      , mWidth(0)
+      , mHeight(0)
     {
       mFrame = aFrame;
       mIsCached = false;
@@ -187,6 +203,16 @@ namespace nsStyleTransformMatrix {
                                          TransformReferenceBox& aBounds,
                                          float aAppUnitsPerMatrixUnit,
                                          bool* aContains3dTransform);
+
+  // Generate the gfx::Matrix for CSS Transform Module Level 2.
+  // https://drafts.csswg.org/css-transforms-2/#ctm
+  mozilla::gfx::Matrix4x4
+  ReadTransforms(const nsCSSValueList* aIndividualTransforms,
+                 const mozilla::Maybe<mozilla::MotionPathData>& aMotion,
+                 const nsCSSValueList* aTransform,
+                 TransformReferenceBox& aRefBox,
+                 float aAppUnitsPerMatrixUnit,
+                 bool* aContains3dTransform);
 
   /**
    * Given two nsStyleCoord values, compute the 2d position with respect to the

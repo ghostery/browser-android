@@ -10,10 +10,19 @@
 const TEST_URI = "data:text/html;charset=utf8,<p>test inspect() command";
 
 add_task(async function() {
-  let toolbox = await openNewTabAndToolbox(TEST_URI, "webconsole");
-  let hud = toolbox.getCurrentPanel().hud;
+  // Run test with legacy JsTerm
+  await pushPref("devtools.webconsole.jsterm.codeMirror", false);
+  await performTests();
+  // And then run it with the CodeMirror-powered one.
+  await pushPref("devtools.webconsole.jsterm.codeMirror", true);
+  await performTests();
+});
 
-  let jsterm = hud.jsterm;
+async function performTests() {
+  const toolbox = await openNewTabAndToolbox(TEST_URI, "webconsole");
+  const hud = toolbox.getCurrentPanel().hud;
+
+  const jsterm = hud.jsterm;
 
   info("Test `inspect(window)`");
   // Add a global value so we can check it later.
@@ -23,7 +32,7 @@ add_task(async function() {
   const inspectWindowNode = await waitFor(() =>
     findInspectResultMessage(hud.ui.outputNode, 1));
 
-  let objectInspectors = [...inspectWindowNode.querySelectorAll(".tree")];
+  const objectInspectors = [...inspectWindowNode.querySelectorAll(".tree")];
   is(objectInspectors.length, 1, "There is the expected number of object inspectors");
 
   const [windowOi] = objectInspectors;
@@ -38,7 +47,7 @@ add_task(async function() {
     windowOiNodes = windowOi.querySelectorAll(".node");
   }
 
-  let propertiesNodes = [...windowOi.querySelectorAll(".object-label")];
+  const propertiesNodes = [...windowOi.querySelectorAll(".object-label")];
   const testPropertyLabelNode = propertiesNodes.find(el => el.textContent === "testProp");
   ok(testPropertyLabelNode, "The testProp property label is displayed as expected");
 
@@ -55,7 +64,7 @@ add_task(async function() {
   const inspectPrimitiveNode = await waitFor(() =>
     findInspectResultMessage(hud.ui.outputNode, 2));
   is(inspectPrimitiveNode.textContent, 1, "The primitive is displayed as expected");
-});
+}
 
 function findInspectResultMessage(node, index) {
   return node.querySelectorAll(".message.result")[index];

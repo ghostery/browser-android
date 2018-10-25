@@ -10,7 +10,7 @@
 
 <!ENTITY aboutSupport.crashes.title "Сообщения о падениях">
 <!-- LOCALIZATION NOTE (aboutSupport.crashes.id):
-This is likely the same like id.heading in crashes.dtd. -->
+This is likely the same like id.heading in aboutcrashes.ftl. -->
 <!ENTITY aboutSupport.crashes.id "Идентификатор сообщения">
 <!ENTITY aboutSupport.crashes.sendDate "Дата отправки">
 <!ENTITY aboutSupport.crashes.allReports "Все сообщения о падениях">
@@ -33,15 +33,6 @@ This is likely the same like id.heading in crashes.dtd. -->
 <!ENTITY aboutSupport.featureName "Имя">
 <!ENTITY aboutSupport.featureVersion "Версия">
 <!ENTITY aboutSupport.featureId "ID">
-
-<!ENTITY aboutSupport.experimentsTitle "Экспериментальные возможности">
-<!ENTITY aboutSupport.experimentName "Имя">
-<!ENTITY aboutSupport.experimentId "ID">
-<!ENTITY aboutSupport.experimentDescription "Описание">
-<!ENTITY aboutSupport.experimentActive "Активно">
-<!ENTITY aboutSupport.experimentEndDate "Конечная дата">
-<!ENTITY aboutSupport.experimentHomepage "Домашняя страница">
-<!ENTITY aboutSupport.experimentBranch "Ветка">
 
 <!ENTITY aboutSupport.appBasicsTitle "Сведения о приложении">
 <!ENTITY aboutSupport.appBasicsName "Имя">
@@ -76,7 +67,7 @@ Windows/Mac use the term "Folder" instead of "Directory" -->
 
 <!ENTITY aboutSupport.appBasicsProcessCount "Процессы веб-контента">
 
-<!ENTITY aboutSupport.enterprisePolicies "Корпоративная политика">
+<!ENTITY aboutSupport.enterprisePolicies "Корпоративные политики">
 
 <!ENTITY aboutSupport.appBasicsKeyGoogle "Ключ Google">
 <!ENTITY aboutSupport.appBasicsKeyMozilla "Ключ Службы определения местоположения от Mozilla">

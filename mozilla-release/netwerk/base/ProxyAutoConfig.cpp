@@ -15,6 +15,7 @@
 #include "nsIURLParser.h"
 #include "nsJSUtils.h"
 #include "jsfriendapi.h"
+#include "js/CompilationAndEvaluation.h"
 #include "prnetdb.h"
 #include "nsITimer.h"
 #include "mozilla/net/DNS.h"
@@ -412,7 +413,7 @@ bool PACResolve(const nsCString &aHostName, NetAddr *aNetAddr,
 ProxyAutoConfig::ProxyAutoConfig()
   : mJSContext(nullptr)
   , mJSNeedsSetup(false)
-  , mShutdown(false)
+  , mShutdown(true)
   , mIncludePath(false)
   , mExtraHeapSize(0)
 {
@@ -452,7 +453,17 @@ ProxyAutoConfig::ResolveAddress(const nsCString &aHostName,
   // Spin the event loop of the pac thread until lookup is complete.
   // nsPACman is responsible for keeping a queue and only allowing
   // one PAC execution at a time even when it is called re-entrantly.
-  SpinEventLoopUntil([&, helper]() { return !helper->mRequest; });
+  SpinEventLoopUntil([&, helper, this]() {
+    if (!helper->mRequest) {
+      return true;
+    }
+    if (this->mShutdown) {
+      NS_WARNING("mShutdown set with PAC request not cancelled");
+      MOZ_ASSERT(NS_FAILED(helper->mStatus));
+      return true;
+    }
+    return false;
+  });
 
   if (NS_FAILED(helper->mStatus) ||
       NS_FAILED(helper->mResponse->GetNextAddr(0, aNetAddr)))
@@ -651,10 +662,10 @@ private:
       return NS_ERROR_OUT_OF_MEMORY;
     }
 
-    JSAutoRequest ar(mContext);
+    JSAutoRequest areq(mContext);
 
-    JS::CompartmentOptions options;
-    options.creationOptions().setSystemZone();
+    JS::RealmOptions options;
+    options.creationOptions().setNewCompartmentInSystemZone();
     mGlobal = JS_NewGlobalObject(mContext, &sGlobalClass, nullptr,
                                  JS::DontFireOnNewGlobalHook, options);
     if (!mGlobal) {
@@ -663,9 +674,9 @@ private:
     }
     JS::Rooted<JSObject*> global(mContext, mGlobal);
 
-    JSAutoCompartment ac(mContext, global);
+    JSAutoRealm ar(mContext, global);
     AutoPACErrorReporter aper(mContext);
-    if (!JS_InitStandardClasses(mContext, global)) {
+    if (!JS::InitRealmStandardClasses(mContext)) {
       return NS_ERROR_FAILURE;
     }
     if (!JS_DefineFunctions(mContext, global, PACGlobalFunctions)) {
@@ -704,6 +715,8 @@ ProxyAutoConfig::Init(const nsCString &aPACURI,
                       uint32_t aExtraHeapSize,
                       nsIEventTarget *aEventTarget)
 {
+  mShutdown = false; // Shutdown needs to be called prior to destruction
+
   mPACURI = aPACURI;
   mPACScript = sPacUtils;
   mPACScript.Append(aPACScript);
@@ -737,8 +750,8 @@ ProxyAutoConfig::SetupJS()
     return NS_ERROR_FAILURE;
 
   JSContext* cx = mJSContext->Context();
-  JSAutoRequest ar(cx);
-  JSAutoCompartment ac(cx, mJSContext->Global());
+  JSAutoRequest areq(cx);
+  JSAutoRealm ar(cx, mJSContext->Global());
   AutoPACErrorReporter aper(cx);
 
   // check if this is a data: uri so that we don't spam the js console with
@@ -797,8 +810,8 @@ ProxyAutoConfig::GetProxyForURI(const nsCString &aTestURI,
     return NS_ERROR_NOT_AVAILABLE;
 
   JSContext *cx = mJSContext->Context();
-  JSAutoRequest ar(cx);
-  JSAutoCompartment ac(cx, mJSContext->Global());
+  JSAutoRequest areq(cx);
+  JSAutoRealm ar(cx, mJSContext->Global());
   AutoPACErrorReporter aper(cx);
 
   // the sRunning flag keeps a new PAC file from being installed
@@ -865,7 +878,7 @@ ProxyAutoConfig::GC()
   if (!mJSContext || !mJSContext->IsOK())
     return;
 
-  JSAutoCompartment ac(mJSContext->Context(), mJSContext->Global());
+  JSAutoRealm ar(mJSContext->Context(), mJSContext->Global());
   JS_MaybeGC(mJSContext->Context());
 }
 

@@ -1,9 +1,10 @@
 use std::fmt;
 use {SdpType, SdpLine, SdpBandwidth, SdpConnection};
-use attribute_type::SdpAttribute;
+use attribute_type::{SdpAttribute, SdpAttributeType, SdpAttributeRtpmap, SdpAttributeSctpmap};
 use error::{SdpParserError, SdpParserInternalError};
 
 #[derive(Clone)]
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub struct SdpMediaLine {
     pub media: SdpMediaValue,
     pub port: u32,
@@ -13,6 +14,7 @@ pub struct SdpMediaLine {
 }
 
 #[derive(Clone,Debug,PartialEq)]
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub enum SdpMediaValue {
     Audio,
     Video,
@@ -31,6 +33,7 @@ impl fmt::Display for SdpMediaValue {
 }
 
 #[derive(Clone,Debug,PartialEq)]
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub enum SdpProtocolValue {
     RtpSavpf,
     UdpTlsRtpSavpf,
@@ -55,6 +58,7 @@ impl fmt::Display for SdpProtocolValue {
 }
 
 #[derive(Clone)]
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub enum SdpFormatList {
     Integers(Vec<u32>),
     Strings(Vec<String>),
@@ -69,6 +73,7 @@ impl fmt::Display for SdpFormatList {
     }
 }
 
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub struct SdpMedia {
     media: SdpMediaLine,
     connection: Option<SdpConnection>,
@@ -93,6 +98,10 @@ impl SdpMedia {
         &self.media.media
     }
 
+    pub fn set_port(&mut self, port: u32) {
+        self.media.port = port;
+    }
+
     pub fn get_port(&self) -> u32 {
         self.media.port
     }
@@ -109,20 +118,12 @@ impl SdpMedia {
         &self.media.formats
     }
 
-    pub fn has_bandwidth(&self) -> bool {
-        !self.bandwidth.is_empty()
-    }
-
     pub fn get_bandwidth(&self) -> &Vec<SdpBandwidth> {
         &self.bandwidth
     }
 
     pub fn add_bandwidth(&mut self, bw: &SdpBandwidth) {
         self.bandwidth.push(bw.clone())
-    }
-
-    pub fn has_attributes(&self) -> bool {
-        !self.attribute.is_empty()
     }
 
     pub fn get_attributes(&self) -> &Vec<SdpAttribute> {
@@ -137,19 +138,48 @@ impl SdpMedia {
         Ok(self.attribute.push(attr.clone()))
     }
 
-    // FIXME this is a temporary hack until we re-oranize the SdpAttribute enum
-    // so that we can build a generic has_attribute(X) function
-    pub fn has_extmap_attribute(&self) -> bool {
-        for attribute in &self.attribute {
-            if let &SdpAttribute::Extmap(_) = attribute {
-                return true;
-            }
-        }
-        false
+    pub fn get_attribute(&self, t: SdpAttributeType) -> Option<&SdpAttribute> {
+        self.attribute.iter().filter(|a| SdpAttributeType::from(*a) == t).next()
     }
 
-    pub fn has_connection(&self) -> bool {
-        self.connection.is_some()
+    pub fn remove_attribute(&mut self, t: SdpAttributeType) {
+        self.attribute.retain(|a| SdpAttributeType::from(a) != t);
+    }
+
+    pub fn set_attribute(&mut self, attr: &SdpAttribute) -> Result<(), SdpParserInternalError> {
+        self.remove_attribute(SdpAttributeType::from(attr));
+        self.add_attribute(attr)
+    }
+
+    pub fn remove_codecs(&mut self) {
+        match self.media.formats{
+            SdpFormatList::Integers(_) => self.media.formats = SdpFormatList::Integers(Vec::new()),
+            SdpFormatList::Strings(_) => self.media.formats = SdpFormatList::Strings(Vec::new()),
+        }
+
+        self.attribute.retain({|x|
+            match x {
+                &SdpAttribute::Rtpmap(_) |
+                &SdpAttribute::Fmtp(_) |
+                &SdpAttribute::Rtcpfb(_) |
+                &SdpAttribute::Sctpmap(_) => false,
+                _ => true
+            }
+        });
+    }
+
+    pub fn add_codec(&mut self, rtpmap: SdpAttributeRtpmap) -> Result<(),SdpParserInternalError> {
+          match self.media.formats {
+             SdpFormatList::Integers(ref mut x) => x.push(rtpmap.payload_type as u32),
+             SdpFormatList::Strings(ref mut x) => x.push(rtpmap.payload_type.to_string()),
+         }
+
+        self.add_attribute(&SdpAttribute::Rtpmap(rtpmap))?;
+        Ok(())
+    }
+
+    pub fn get_attributes_of_type(&self, t: SdpAttributeType) -> Vec<&SdpAttribute> {
+        self.attribute.iter().filter(|a| SdpAttributeType::from(*a) == t).collect()
     }
 
     pub fn get_connection(&self) -> &Option<SdpConnection> {
@@ -164,9 +194,37 @@ impl SdpMedia {
         }
         Ok(self.connection = Some(c.clone()))
     }
+
+    pub fn add_datachannel(&mut self, name: String, port: u16, streams: u16, msg_size:u32)
+                           -> Result<(),SdpParserInternalError> {
+         // Only one allowed, for now. This may change as the specs (and deployments) evolve.
+        match self.media.proto {
+            SdpProtocolValue::UdpDtlsSctp |
+            SdpProtocolValue::TcpDtlsSctp => {
+                // new data channel format according to draft 21
+                self.media.formats = SdpFormatList::Strings(vec![name]);
+                self.set_attribute(&SdpAttribute::SctpPort(port as u64))?;
+            }
+            _ => {
+                // old data channels format according to draft 05
+                self.media.formats = SdpFormatList::Integers(vec![port as u32]);
+                self.set_attribute(&SdpAttribute::Sctpmap(SdpAttributeSctpmap {
+                    port,
+                    channels: streams as u32,
+                }))?;
+            }
+        }
+
+        if msg_size > 0 {
+            self.set_attribute(&SdpAttribute::MaxMessageSize(msg_size as u64))?;
+        }
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub fn create_dummy_media_section() -> SdpMedia {
     let media_line = SdpMediaLine {
         media: SdpMediaValue::Audio,
@@ -302,7 +360,7 @@ pub fn parse_media(value: &str) -> Result<SdpType, SdpParserInternalError> {
         proto,
         formats,
     };
-    println!("media: {}, {}, {}, {}", m.media, m.port, m.proto, m.formats);
+    trace!("media: {}, {}, {}, {}", m.media, m.port, m.proto, m.formats);
     Ok(SdpType::Media(m))
 }
 
@@ -360,6 +418,7 @@ pub fn parse_media_vector(lines: &[SdpLine]) -> Result<Vec<SdpMedia>, SdpParserE
                        })
         }
     };
+
     for line in lines.iter().skip(1) {
         match line.sdp_type {
             SdpType::Connection(ref c) => {
@@ -374,14 +433,33 @@ pub fn parse_media_vector(lines: &[SdpLine]) -> Result<Vec<SdpMedia>, SdpParserE
             }
             SdpType::Bandwidth(ref b) => sdp_media.add_bandwidth(b),
             SdpType::Attribute(ref a) => {
-                sdp_media
-                    .add_attribute(a)
-                    .map_err(|e: SdpParserInternalError| {
-                                 SdpParserError::Sequence {
-                                     message: format!("{}", e),
-                                     line_number: line.line_number,
-                                 }
-                             })?
+                match a {
+                    &SdpAttribute::DtlsMessage(_) => {
+                        // Ignore this attribute on media level
+                        Ok(())
+                    },
+                    &SdpAttribute::Rtpmap(ref rtpmap) => {
+                        sdp_media.add_attribute(&SdpAttribute::Rtpmap(
+                            SdpAttributeRtpmap {
+                                payload_type: rtpmap.payload_type,
+                                codec_name: rtpmap.codec_name.clone(),
+                                frequency: rtpmap.frequency,
+                                channels: match sdp_media.media.media {
+                                    SdpMediaValue::Video => Some(0),
+                                    _ => rtpmap.channels
+                                },
+                            }
+                        ))
+                    },
+                    _ => {
+                        sdp_media.add_attribute(a)
+                    }
+                }.map_err(|e: SdpParserInternalError| {
+                             SdpParserError::Sequence {
+                                 message: format!("{}", e),
+                                 line_number: line.line_number,
+                             }
+                         })?
             }
             SdpType::Media(ref v) => {
                 media_sections.push(sdp_media);
@@ -408,7 +486,102 @@ pub fn parse_media_vector(lines: &[SdpLine]) -> Result<Vec<SdpMedia>, SdpParserE
             SdpType::Key(_) => (),
         };
     }
+
     media_sections.push(sdp_media);
+
     Ok(media_sections)
 }
-// TODO add unit tests for parse_media_vector
+
+#[test]
+fn test_media_vector_first_line_failure() {
+    let mut sdp_lines: Vec<SdpLine> = Vec::new();
+    let line = SdpLine {
+        line_number: 0,
+        sdp_type: SdpType::Session("hello".to_string())
+    };
+    sdp_lines.push(line);
+    assert!(parse_media_vector(&sdp_lines).is_err());
+}
+
+#[test]
+fn test_media_vector_multiple_connections() {
+    let mut sdp_lines: Vec<SdpLine> = Vec::new();
+    let media_line = SdpMediaLine {
+        media: SdpMediaValue::Audio,
+        port: 9,
+        port_count: 0,
+        proto: SdpProtocolValue::RtpSavpf,
+        formats: SdpFormatList::Integers(Vec::new()),
+    };
+    let media = SdpLine {
+        line_number: 0,
+        sdp_type: SdpType::Media(media_line)
+    };
+    sdp_lines.push(media);
+    use network::{parse_unicast_addr};
+    let addr = parse_unicast_addr("127.0.0.1").unwrap();
+    let c = SdpConnection {
+        addr,
+        ttl: None,
+        amount: None };
+    let c1 = SdpLine {
+        line_number: 1,
+        sdp_type: SdpType::Connection(c.clone())
+    };
+    sdp_lines.push(c1);
+    let c2 = SdpLine {
+        line_number: 2,
+        sdp_type: SdpType::Connection(c)
+    };
+    sdp_lines.push(c2);
+    assert!(parse_media_vector(&sdp_lines).is_err());
+}
+
+#[test]
+fn test_media_vector_invalid_types() {
+    let mut sdp_lines: Vec<SdpLine> = Vec::new();
+    let media_line = SdpMediaLine {
+        media: SdpMediaValue::Audio,
+        port: 9,
+        port_count: 0,
+        proto: SdpProtocolValue::RtpSavpf,
+        formats: SdpFormatList::Integers(Vec::new()),
+    };
+    let media = SdpLine {
+        line_number: 0,
+        sdp_type: SdpType::Media(media_line)
+    };
+    sdp_lines.push(media);
+    use {SdpTiming};
+    let t = SdpTiming { start: 0, stop: 0 };
+    let tline = SdpLine {
+        line_number: 1,
+        sdp_type: SdpType::Timing(t)
+    };
+    sdp_lines.push(tline);
+    assert!(parse_media_vector(&sdp_lines).is_err());
+}
+
+#[test]
+fn test_media_vector_invalid_media_level_attribute() {
+    let mut sdp_lines: Vec<SdpLine> = Vec::new();
+    let media_line = SdpMediaLine {
+        media: SdpMediaValue::Audio,
+        port: 9,
+        port_count: 0,
+        proto: SdpProtocolValue::RtpSavpf,
+        formats: SdpFormatList::Integers(Vec::new()),
+    };
+    let media = SdpLine {
+        line_number: 0,
+        sdp_type: SdpType::Media(media_line)
+    };
+    sdp_lines.push(media);
+    let a = SdpAttribute::IceLite;
+    let aline = SdpLine {
+        line_number: 1,
+        sdp_type: SdpType::Attribute(a)
+    };
+    sdp_lines.push(aline);
+    assert!(parse_media_vector(&sdp_lines).is_err());
+}

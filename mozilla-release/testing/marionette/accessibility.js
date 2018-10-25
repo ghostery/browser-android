@@ -6,12 +6,11 @@
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Log.jsm");
 
-const logger = Log.repository.getLogger("Marionette");
+const {ElementNotAccessibleError} = ChromeUtils.import("chrome://marionette/content/error.js", {});
+const {Log} = ChromeUtils.import("chrome://marionette/content/log.js", {});
 
-const {ElementNotAccessibleError} =
-    ChromeUtils.import("chrome://marionette/content/error.js", {});
+XPCOMUtils.defineLazyGetter(this, "logger", Log.get);
 
 XPCOMUtils.defineLazyGetter(this, "service", () => {
   try {
@@ -271,6 +270,10 @@ accessibility.Checks = class {
    *     True if element is hidden from user, false otherwise.
    */
   isHidden(accessible) {
+    if (!accessible) {
+      return true;
+    }
+
     while (accessible) {
       if (this.hasHiddenAttribute(accessible)) {
         return true;
@@ -296,10 +299,6 @@ accessibility.Checks = class {
    *     |accessible|'s.
    */
   assertVisible(accessible, element, visible) {
-    if (!accessible) {
-      return;
-    }
-
     let hiddenAccessibility = this.isHidden(accessible);
 
     let message;

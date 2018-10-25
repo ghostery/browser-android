@@ -9,8 +9,9 @@ const {
   RESET_EDITOR,
   UPDATE_AXIS_VALUE,
   UPDATE_CUSTOM_INSTANCE,
-  UPDATE_EDITOR_VISIBILITY,
   UPDATE_EDITOR_STATE,
+  UPDATE_PROPERTY_VALUE,
+  UPDATE_WARNING_MESSAGE,
 } = require("./index");
 
 module.exports = {
@@ -29,14 +30,6 @@ module.exports = {
     };
   },
 
-  toggleFontEditor(isVisible, selector = "") {
-    return {
-      type: UPDATE_EDITOR_VISIBILITY,
-      isVisible,
-      selector,
-    };
-  },
-
   updateCustomInstance() {
     return {
       type: UPDATE_CUSTOM_INSTANCE,
@@ -51,11 +44,27 @@ module.exports = {
     };
   },
 
-  updateFontEditor(fonts, properties = {}) {
+  updateFontEditor(fonts, properties = {}, id = "") {
     return {
       type: UPDATE_EDITOR_STATE,
       fonts,
       properties,
+      id,
+    };
+  },
+
+  updateFontProperty(property, value) {
+    return {
+      type: UPDATE_PROPERTY_VALUE,
+      property,
+      value,
+    };
+  },
+
+  updateWarningMessage(warning) {
+    return {
+      type: UPDATE_WARNING_MESSAGE,
+      warning,
     };
   },
 

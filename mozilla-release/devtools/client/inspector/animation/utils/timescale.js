@@ -12,86 +12,156 @@ const { getFormatStr } = require("./l10n");
 const TIME_FORMAT_MAX_DURATION_IN_MS = 4000;
 
 /**
- * TimeScale object holds the total duration, start time and end time information for all
- * animations which should be displayed, and is used to calculate the displayed area for
- * each animation.
- *
- * For the helper to know how to convert, it needs to know all the animations.
- * Whenever a new animation is added to the panel, addAnimation(state) should be
- * called.
+ * TimeScale object holds the total duration, start time and end time and zero position
+ * time information for all animations which should be displayed, and is used to calculate
+ * the displayed area for each animation.
  */
 class TimeScale {
   constructor(animations) {
+    if (!animations.every(animation => animation.state.createdTime)) {
+      // Backward compatibility for createdTime.
+      return this._initializeWithoutCreatedTime(animations);
+    }
+
+    let animationsCurrentTime = -Number.MAX_VALUE;
+    let minStartTime = Infinity;
+    let maxEndTime = 0;
+    let zeroPositionTime = 0;
+
+    for (const animation of animations) {
+      const {
+        createdTime,
+        currentTime,
+        currentTimeAtCreated,
+        delay,
+        duration,
+        endDelay = 0,
+        iterationCount,
+        playbackRate,
+      } = animation.state;
+
+      const toRate = v => v / playbackRate;
+      const negativeDelay = toRate(Math.min(delay, 0));
+      let startPositionTime = createdTime + negativeDelay;
+      // If currentTimeAtCreated is not defined (which happens when connected to server
+      // older than FF62), use startPositionTime instead. See bug 1468475.
+      const originalCurrentTime =
+            toRate(currentTimeAtCreated ? currentTimeAtCreated : startPositionTime);
+      const startPositionTimeAtCreated =
+            createdTime + originalCurrentTime;
+      let animationZeroPositionTime = 0;
+
+      // To shift the zero position time is the following two patterns.
+      //  * Animation has negative current time which is smaller than negative dleay.
+      //  * Animation has negative delay.
+      // Furthermore, we should override the zero position time if we will need to
+      // expand the duration due to this negative current time or negative delay of
+      // this target animation.
+      if (originalCurrentTime < negativeDelay &&
+          startPositionTimeAtCreated < minStartTime) {
+        startPositionTime = startPositionTimeAtCreated;
+        animationZeroPositionTime = Math.abs(originalCurrentTime);
+      } else if (negativeDelay < 0 && startPositionTime < minStartTime) {
+        animationZeroPositionTime = Math.abs(negativeDelay);
+      }
+
+      let endTime = 0;
+
+      if (duration === Infinity) {
+        // Set endTime so as to enable the scrubber with keeping the consinstency of UI
+        // even the duration was Infinity. In case of delay is longer than zero, handle
+        // the graph duration as double of the delay amount. In case of no delay, handle
+        // the duration as 1ms which is short enough so as to make the scrubber movable
+        // and the limited duration is prioritized.
+        endTime = createdTime + (delay > 0 ? delay * 2 : 1);
+      } else {
+        endTime = createdTime +
+                  toRate(delay +
+                         duration * (iterationCount || 1) +
+                         Math.max(endDelay, 0));
+      }
+
+      maxEndTime = Math.max(maxEndTime, endTime);
+      animationsCurrentTime =
+        Math.max(animationsCurrentTime, createdTime + toRate(currentTime));
+
+      if (startPositionTime < minStartTime) {
+        minStartTime = startPositionTime;
+        // Override the previous calculated zero position only if the duration will be
+        // expanded.
+        zeroPositionTime = animationZeroPositionTime;
+      } else {
+        zeroPositionTime = Math.max(zeroPositionTime, animationZeroPositionTime);
+      }
+    }
+
+    this.minStartTime = minStartTime;
+    this.maxEndTime = maxEndTime;
+    this.currentTime = animationsCurrentTime;
+    this.zeroPositionTime = zeroPositionTime;
+  }
+
+  /**
+   * Same as the constructor but doesn't use the animation's createdTime property
+   * which has only been added in FF62, for backward compatbility reasons.
+   *
+   * @param {Array} animations
+   */
+  _initializeWithoutCreatedTime(animations) {
     this.minStartTime = Infinity;
     this.maxEndTime = 0;
     this.documentCurrentTime = 0;
 
     for (const animation of animations) {
-      this.addAnimation(animation.state);
+      const {
+        delay,
+        documentCurrentTime,
+        duration,
+        endDelay = 0,
+        iterationCount,
+        playbackRate,
+        previousStartTime = 0,
+      } = animation.state;
+
+      const toRate = v => v / playbackRate;
+      const minZero = v => Math.max(v, 0);
+      const rateRelativeDuration =
+        toRate(duration * (!iterationCount ? 1 : iterationCount));
+      // Negative-delayed animations have their startTimes set such that we would
+      // be displaying the delay outside the time window if we didn't take it into
+      // account here.
+      const relevantDelay = delay < 0 ? toRate(delay) : 0;
+      const startTime = toRate(minZero(delay)) +
+                        rateRelativeDuration +
+                        endDelay;
+      this.minStartTime = Math.min(
+        this.minStartTime,
+        previousStartTime +
+        relevantDelay +
+        Math.min(startTime, 0)
+      );
+      const length = toRate(delay) + rateRelativeDuration + toRate(minZero(endDelay));
+      const endTime = previousStartTime + length;
+      this.maxEndTime = Math.max(this.maxEndTime, endTime);
+
+      this.documentCurrentTime = Math.max(this.documentCurrentTime, documentCurrentTime);
+      this.zeroPositionTime = this.minStartTime;
     }
   }
 
   /**
-   * Add a new animation to time scale.
-   *
-   * @param {Object} state
-   *                 A PlayerFront.state object.
-   */
-  addAnimation(state) {
-    let {
-      delay,
-      documentCurrentTime,
-      duration,
-      endDelay = 0,
-      iterationCount,
-      playbackRate,
-      previousStartTime = 0,
-    } = state;
-
-    const toRate = v => v / playbackRate;
-    const minZero = v => Math.max(v, 0);
-    const rateRelativeDuration =
-      toRate(duration * (!iterationCount ? 1 : iterationCount));
-    // Negative-delayed animations have their startTimes set such that we would
-    // be displaying the delay outside the time window if we didn't take it into
-    // account here.
-    const relevantDelay = delay < 0 ? toRate(delay) : 0;
-    const startTime = toRate(minZero(delay)) +
-                      rateRelativeDuration +
-                      endDelay;
-    this.minStartTime = Math.min(
-      this.minStartTime,
-      previousStartTime +
-      relevantDelay +
-      Math.min(startTime, 0)
-    );
-    const length = toRate(delay) + rateRelativeDuration + toRate(minZero(endDelay));
-    const endTime = previousStartTime + length;
-    this.maxEndTime = Math.max(this.maxEndTime, endTime);
-
-    this.documentCurrentTime = Math.max(this.documentCurrentTime, documentCurrentTime);
-  }
-
-  /**
-   * Convert a distance in % to a time, in the current time scale.
-   *
-   * @param {Number} distance
-   * @return {Number}
-   */
-  distanceToTime(distance) {
-    return this.minStartTime + (this.getDuration() * distance / 100);
-  }
-
-  /**
-   * Convert a distance in % to a time, in the current time scale.
-   * The time will be relative to the current minimum start time.
+   *  Convert a distance in % to a time, in the current time scale. The time
+   *  will be relative to the zero position time.
+   *  i.e., If zeroPositionTime will be negative and specified time is shorter
+   *  than the absolute value of zero position time, relative time will be
+   *  negative time.
    *
    * @param {Number} distance
    * @return {Number}
    */
   distanceToRelativeTime(distance) {
-    const time = this.distanceToTime(distance);
-    return time - this.minStartTime;
+    return (this.getDuration() * distance / 100)
+           - this.zeroPositionTime;
   }
 
   /**
@@ -102,6 +172,11 @@ class TimeScale {
    * @return {String} The formatted time string.
    */
   formatTime(time) {
+    // Ignore negative zero
+    if (Math.abs(time) < (1 / 1000)) {
+      time = 0.0;
+    }
+
     // Format in milliseconds if the total duration is short enough.
     if (this.getDuration() <= TIME_FORMAT_MAX_DURATION_IN_MS) {
       return getFormatStr("timeline.timeGraduationLabel", time.toFixed(0));
@@ -118,6 +193,33 @@ class TimeScale {
    */
   getDuration() {
     return this.maxEndTime - this.minStartTime;
+  }
+
+  /**
+   * Return current time of this time scale represents.
+   *
+   * @return {Number}
+   */
+  getCurrentTime() {
+    // If currentTime is not defined (which happens when connected to server older
+    // than FF62), use documentCurrentTime instead. See bug 1454392.
+    const baseTime = typeof this.currentTime === "undefined"
+                       ? this.documentCurrentTime : this.currentTime;
+    return baseTime - this.minStartTime;
+  }
+
+  /**
+   * Return end time of given animation.
+   * This time does not include playbackRate and cratedTime.
+   * Also, if the animation has infinite iterations, this returns Infinity.
+   *
+   * @param {Object} animation
+   * @return {Numbber} end time
+   */
+  getEndTime({ state }) {
+    return state.iterationCount ?
+             state.delay + state.duration * state.iterationCount + state.endDelay :
+             Infinity;
   }
 }
 

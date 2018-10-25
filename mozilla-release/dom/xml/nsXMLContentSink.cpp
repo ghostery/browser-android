@@ -79,7 +79,7 @@ NS_NewXMLContentSink(nsIXMLContentSink** aResult,
                      nsISupports* aContainer,
                      nsIChannel* aChannel)
 {
-  NS_PRECONDITION(nullptr != aResult, "null ptr");
+  MOZ_ASSERT(nullptr != aResult, "null ptr");
   if (nullptr == aResult) {
     return NS_ERROR_NULL_POINTER;
   }
@@ -93,7 +93,8 @@ NS_NewXMLContentSink(nsIXMLContentSink** aResult,
 }
 
 nsXMLContentSink::nsXMLContentSink()
-  : mTextLength(0)
+  : mState(eXMLContentSinkState_InProlog)
+  , mTextLength(0)
   , mNotifyLevel(0)
   , mPrettyPrintXML(true)
   , mPrettyPrintHasSpecialRoot(0)
@@ -401,9 +402,9 @@ nsXMLContentSink::OnTransformDone(nsresult aResult,
   if (rootElement) {
     NS_ASSERTION(mDocument->ComputeIndexOf(rootElement) != -1,
                  "rootElement not in doc?");
-    mDocument->BeginUpdate(UPDATE_CONTENT_MODEL);
+    mDocument->BeginUpdate();
     nsNodeUtils::ContentInserted(mDocument, rootElement);
-    mDocument->EndUpdate(UPDATE_CONTENT_MODEL);
+    mDocument->EndUpdate();
   }
 
   // Start the layout process
@@ -456,14 +457,33 @@ nsXMLContentSink::WillResume(void)
 NS_IMETHODIMP
 nsXMLContentSink::SetParser(nsParserBase* aParser)
 {
-  NS_PRECONDITION(aParser, "Should have a parser here!");
+  MOZ_ASSERT(aParser, "Should have a parser here!");
   mParser = aParser;
   return NS_OK;
 }
 
+static bool
+FindIsAttrValue(const char16_t** aAtts, const char16_t** aResult)
+{
+  RefPtr<nsAtom> prefix, localName;
+  for (; *aAtts; aAtts += 2) {
+    int32_t nameSpaceID;
+    nsContentUtils::SplitExpatName(aAtts[0], getter_AddRefs(prefix),
+                                   getter_AddRefs(localName), &nameSpaceID);
+    if (nameSpaceID == kNameSpaceID_None && localName == nsGkAtoms::is) {
+      *aResult = aAtts[1];
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
 nsresult
 nsXMLContentSink::CreateElement(const char16_t** aAtts, uint32_t aAttsCount,
-                                mozilla::dom::NodeInfo* aNodeInfo, uint32_t aLineNumber,
+                                mozilla::dom::NodeInfo* aNodeInfo,
+                                uint32_t aLineNumber, uint32_t aColumnNumber,
                                 nsIContent** aResult, bool* aAppendContent,
                                 FromParser aFromParser)
 {
@@ -475,7 +495,17 @@ nsXMLContentSink::CreateElement(const char16_t** aAtts, uint32_t aAttsCount,
 
   RefPtr<mozilla::dom::NodeInfo> ni = aNodeInfo;
   RefPtr<Element> content;
-  rv = NS_NewElement(getter_AddRefs(content), ni.forget(), aFromParser);
+
+  const char16_t* is = nullptr;
+  if ((aNodeInfo->NamespaceEquals(kNameSpaceID_XHTML) ||
+       aNodeInfo->NamespaceEquals(kNameSpaceID_XUL)) &&
+      FindIsAttrValue(aAtts, &is)) {
+    const nsDependentString isStr(is);
+    rv = NS_NewElement(getter_AddRefs(content), ni.forget(), aFromParser, &isStr);
+  } else {
+    rv = NS_NewElement(getter_AddRefs(content), ni.forget(), aFromParser);
+  }
+
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (aNodeInfo->Equals(nsGkAtoms::script, kNameSpaceID_XHTML)
@@ -484,6 +514,7 @@ nsXMLContentSink::CreateElement(const char16_t** aAtts, uint32_t aAttsCount,
     nsCOMPtr<nsIScriptElement> sele = do_QueryInterface(content);
     if (sele) {
       sele->SetScriptLineNumber(aLineNumber);
+      sele->SetScriptColumnNumber(aColumnNumber);
       sele->SetCreatorParser(GetParser());
     } else {
       MOZ_ASSERT(nsNameSpaceManager::GetInstance()->mSVGDisabled, "Node didn't QI to script, but SVG wasn't disabled.");
@@ -521,6 +552,7 @@ nsXMLContentSink::CreateElement(const char16_t** aAtts, uint32_t aAttsCount,
       }
       if (!aNodeInfo->Equals(nsGkAtoms::link, kNameSpaceID_XHTML)) {
         ssle->SetLineNumber(aFromParser ? aLineNumber : 0);
+        ssle->SetColumnNumber(aFromParser ? aColumnNumber : 0);
       }
     }
   }
@@ -844,7 +876,7 @@ nsXMLContentSink::GetCurrentStackNode()
 nsresult
 nsXMLContentSink::PushContent(nsIContent *aContent)
 {
-  NS_PRECONDITION(aContent, "Null content being pushed!");
+  MOZ_ASSERT(aContent, "Null content being pushed!");
   StackNode *sn = mContentStack.AppendElement();
   NS_ENSURE_TRUE(sn, NS_ERROR_OUT_OF_MEMORY);
 
@@ -960,10 +992,11 @@ NS_IMETHODIMP
 nsXMLContentSink::HandleStartElement(const char16_t *aName,
                                      const char16_t **aAtts,
                                      uint32_t aAttsCount,
-                                     uint32_t aLineNumber)
+                                     uint32_t aLineNumber,
+                                     uint32_t aColumnNumber)
 {
   return HandleStartElement(aName, aAtts, aAttsCount, aLineNumber,
-                            true);
+                            aColumnNumber, true);
 }
 
 nsresult
@@ -971,9 +1004,10 @@ nsXMLContentSink::HandleStartElement(const char16_t *aName,
                                      const char16_t **aAtts,
                                      uint32_t aAttsCount,
                                      uint32_t aLineNumber,
+                                     uint32_t aColumnNumber,
                                      bool aInterruptable)
 {
-  NS_PRECONDITION(aAttsCount % 2 == 0, "incorrect aAttsCount");
+  MOZ_ASSERT(aAttsCount % 2 == 0, "incorrect aAttsCount");
   // Adjust aAttsCount so it's the actual number of attributes
   aAttsCount /= 2;
 
@@ -1005,7 +1039,7 @@ nsXMLContentSink::HandleStartElement(const char16_t *aName,
                                            nsINode::ELEMENT_NODE);
 
   result = CreateElement(aAtts, aAttsCount, nodeInfo, aLineNumber,
-                         getter_AddRefs(content), &appendContent,
+                         aColumnNumber, getter_AddRefs(content), &appendContent,
                          FROM_PARSER_NETWORK);
   NS_ENSURE_SUCCESS(result, result);
 
@@ -1358,7 +1392,7 @@ nsXMLContentSink::ReportError(const char16_t* aErrorText,
                               nsIScriptError *aError,
                               bool *_retval)
 {
-  NS_PRECONDITION(aError && aSourceText && aErrorText, "Check arguments!!!");
+  MOZ_ASSERT(aError && aSourceText && aErrorText, "Check arguments!!!");
   nsresult rv = NS_OK;
 
   // The expat driver should report the error.  We're just cleaning up the mess.
@@ -1539,7 +1573,7 @@ nsXMLContentSink::FlushTags()
   ++mInNotification;
   {
     // Scope so we call EndUpdate before we decrease mInNotification
-    mozAutoDocUpdate updateBatch(mDocument, UPDATE_CONTENT_MODEL, true);
+    mozAutoDocUpdate updateBatch(mDocument, true);
     mBeganUpdate = true;
 
     // Don't release last text node in case we need to add to it again

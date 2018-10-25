@@ -11,6 +11,8 @@
 <!ENTITY safeModeDescription3.label   "Безопасный Режим является специальным режимом работы &brandShortName;, который может быть использован для решения проблем.">
 <!ENTITY safeModeDescription4.label   "Ваши дополнения и сделанные вами настройки будут временно отключены.">
 
+<!ENTITY safeModeDescription5.label   "Ваши дополнения и сделанные вами настройки будут временно отключены, а функции &brandShortName; могут работать не так, как сейчас.">
+
 <!ENTITY refreshProfileInstead.label  "Вы также можете пропустить попытку решения проблемы и попробовать очистить &brandShortName;.">
 
 <!-- LOCALIZATION NOTE (autoSafeModeDescription3.label): Shown on the safe mode dialog after multiple startup crashes. See also chrome/global/resetProfile.dtd -->

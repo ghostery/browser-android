@@ -14,7 +14,7 @@ const { frameSpec } = require("devtools/shared/specs/frame");
 /**
  * An actor for a specified stack frame.
  */
-let FrameActor = ActorClassWithSpec(frameSpec, {
+const FrameActor = ActorClassWithSpec(frameSpec, {
   /**
    * Creates the Frame actor.
    *
@@ -50,11 +50,18 @@ let FrameActor = ActorClassWithSpec(frameSpec, {
   },
 
   getEnvironment: function() {
-    if (!this.frame.environment) {
+    try {
+      if (!this.frame.environment) {
+        return {};
+      }
+    } catch (e) {
+      // |this.frame| might not be live. FIXME Bug 1477030 we shouldn't be
+      // using frames we derived from a point where we are not currently
+      // paused at.
       return {};
     }
 
-    let envActor = this.threadActor.createEnvironmentActor(
+    const envActor = this.threadActor.createEnvironmentActor(
       this.frame.environment,
       this.frameLifetimePool
     );
@@ -66,9 +73,9 @@ let FrameActor = ActorClassWithSpec(frameSpec, {
    * Returns a frame form for use in a protocol message.
    */
   form: function() {
-    let threadActor = this.threadActor;
-    let form = { actor: this.actorID,
-                 type: this.frame.type };
+    const threadActor = this.threadActor;
+    const form = { actor: this.actorID,
+                   type: this.frame.type };
     if (this.frame.type === "call") {
       form.callee = createValueGrip(this.frame.callee, threadActor._pausePool,
         threadActor.objectGrip);
@@ -90,7 +97,7 @@ let FrameActor = ActorClassWithSpec(frameSpec, {
 
     form.arguments = this._args();
     if (this.frame.script) {
-      let generatedLocation = this.threadActor.sources.getFrameLocation(this.frame);
+      const generatedLocation = this.threadActor.sources.getFrameLocation(this.frame);
       form.where = {
         source: generatedLocation.generatedSourceActor.form(),
         line: generatedLocation.generatedLine,

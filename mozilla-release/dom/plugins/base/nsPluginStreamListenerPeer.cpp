@@ -31,7 +31,7 @@
 #include "GeckoProfiler.h"
 #include "nsPluginInstanceOwner.h"
 #include "nsDataHashtable.h"
-#include "NullPrincipal.h"
+#include "mozilla/NullPrincipal.h"
 
 // nsPluginStreamListenerPeer
 
@@ -44,6 +44,7 @@ NS_IMPL_ISUPPORTS(nsPluginStreamListenerPeer,
                   nsIChannelEventSink)
 
 nsPluginStreamListenerPeer::nsPluginStreamListenerPeer()
+  : mLength(0)
 {
   mStreamType = NP_NORMAL;
   mStartBinding = false;

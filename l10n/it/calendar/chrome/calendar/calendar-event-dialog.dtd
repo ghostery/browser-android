@@ -37,7 +37,7 @@
 <!ENTITY event.attendees.notify.accesskey            "f">
 <!ENTITY event.attendees.notifyundisclosed.label     "Separa inviti per partecipante">
 <!ENTITY event.attendees.notifyundisclosed.accesskey "e">
-<!ENTITY event.attendees.notifyundisclosed.tooltip   "Questa opzione invia una e-mail di invito per ogni partecipante. Ogni invito contiene solo il partecipante destinatario in modo che le identità degli altri partecipanti non siano rivelate.">
+<!ENTITY event.attendees.notifyundisclosed.tooltip   "Questa opzione invia una email di invito per ogni partecipante. Ogni invito contiene solo il partecipante destinatario in modo che le identità degli altri partecipanti non siano rivelate.">
 <!ENTITY event.attendees.disallowcounter.label       "Non permettere controproposte">
 <!ENTITY event.attendees.disallowcounter.accesskey   "N">
 <!ENTITY event.attendees.disallowcounter.tooltip     "Indica che non verranno accettate controproposte">
@@ -155,9 +155,9 @@
 
 <!ENTITY event.invite.attendees.label                     "Invita partecipanti…">
 <!ENTITY event.invite.attendees.accesskey                 "n">
-<!ENTITY event.email.attendees.label                      "Scrivi una e-mail a tutti i partecipanti…">
+<!ENTITY event.email.attendees.label                      "Scrivi una email a tutti i partecipanti…">
 <!ENTITY event.email.attendees.accesskey                  "S">
-<!ENTITY event.email.tentative.attendees.label            "Scrivi una e-mail ai partecipanti non certi…">
+<!ENTITY event.email.tentative.attendees.label            "Scrivi una email ai partecipanti non certi…">
 <!ENTITY event.email.tentative.attendees.accesskey        "u">
 <!ENTITY event.remove.attendees.label2                    "Rimuovi tutti i partecipanti">
 <!ENTITY event.remove.attendees.accesskey                 "u">
@@ -407,11 +407,6 @@
 <!ENTITY read.only.location.label        "Luogo:">
 <!ENTITY read.only.category.label        "Categoria:">
 <!ENTITY read.only.organizer.label       "Organizzatore:">
-<!ENTITY read.only.reply.label           "Rispondi:">
-<!ENTITY read.only.accept.label          "Parteciperò">
-<!ENTITY read.only.decline.label         "Non parteciperò">
-<!ENTITY read.only.tentative.label       "Forse posso partecipare">
-<!ENTITY read.only.needs.action.label    "Confermerò più tardi">
 <!ENTITY read.only.reminder.label        "Promemoria:">
 <!ENTITY read.only.attachments.label     "Allegati:">
 <!ENTITY read.only.attendees.label       "Partecipanti">

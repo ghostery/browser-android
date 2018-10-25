@@ -6,13 +6,18 @@
 
 const { Cu } = require("chrome");
 const { Actor, ActorClassWithSpec } = require("devtools/shared/protocol");
-const { flexboxSpec, gridSpec, layoutSpec } = require("devtools/shared/specs/layout");
-const nodeFilterConstants = require("devtools/shared/dom-node-filter-constants");
+const {
+  flexboxSpec,
+  flexItemSpec,
+  gridSpec,
+  layoutSpec,
+} = require("devtools/shared/specs/layout");
+const { SHOW_ELEMENT } = require("devtools/shared/dom-node-filter-constants");
 const { getStringifiableFragments } =
   require("devtools/server/actors/utils/css-grid-utils");
 
-loader.lazyRequireGetter(this, "nodeConstants", "devtools/shared/dom-node-constants");
 loader.lazyRequireGetter(this, "CssLogic", "devtools/server/actors/inspector/css-logic", true);
+loader.lazyRequireGetter(this, "nodeConstants", "devtools/shared/dom-node-constants");
 
 /**
  * Set of actors the expose the CSS layout information to the devtools protocol clients.
@@ -21,7 +26,8 @@ loader.lazyRequireGetter(this, "CssLogic", "devtools/server/actors/inspector/css
  * layout-related information from the document.
  *
  * The |Flexbox| actor provides the container node information to inspect the flexbox
- * container.
+ * container. It is also used to return an array of |FlexItem| actors which provide the
+ * flex item information.
  *
  * The |Grid| actor provides the grid fragment information to inspect the grid container.
  */
@@ -52,8 +58,18 @@ const FlexboxActor = ActorClassWithSpec(flexboxSpec, {
       return this.actorID;
     }
 
-    let form = {
+    const styles = CssLogic.getComputedStyle(this.containerEl);
+
+    const form = {
       actor: this.actorID,
+      // The computed style properties of the flex container.
+      properties: {
+        "align-content": styles.alignContent,
+        "align-items": styles.alignItems,
+        "flex-direction": styles.flexDirection,
+        "flex-wrap": styles.flexWrap,
+        "justify-content": styles.justifyContent,
+      },
     };
 
     // If the WalkerActor already knows the container element, then also return its
@@ -61,6 +77,109 @@ const FlexboxActor = ActorClassWithSpec(flexboxSpec, {
     // cases.
     if (this.walker.hasNode(this.containerEl)) {
       form.containerNodeActorID = this.walker.getNode(this.containerEl).actorID;
+    }
+
+    return form;
+  },
+
+  /**
+   * Returns an array of FlexItemActor objects for all the flex item elements contained
+   * in the flex container element.
+   *
+   * @return {Array} An array of FlexItemActor objects.
+   */
+  getFlexItems() {
+    if (isNodeDead(this.containerEl)) {
+      return [];
+    }
+
+    const flex = this.containerEl.getAsFlexContainer();
+    if (!flex) {
+      return [];
+    }
+
+    const flexItemActors = [];
+
+    for (const line of flex.getLines()) {
+      for (const item of line.getItems()) {
+        flexItemActors.push(new FlexItemActor(this, item.node, {
+          crossMaxSize: item.crossMaxSize,
+          crossMinSize: item.crossMinSize,
+          mainBaseSize: item.mainBaseSize,
+          mainDeltaSize: item.mainDeltaSize,
+          mainMaxSize: item.mainMaxSize,
+          mainMinSize: item.mainMinSize,
+        }));
+      }
+    }
+
+    return flexItemActors;
+  },
+});
+
+/**
+ * The FlexItemActor provides information about a flex items' data.
+ */
+const FlexItemActor = ActorClassWithSpec(flexItemSpec, {
+  /**
+   * @param  {FlexboxActor} flexboxActor
+   *         The FlexboxActor instance.
+   * @param  {DOMNode} element
+   *         The flex item element.
+   * @param  {Object} flexItemSizing
+   *         The flex item sizing data.
+   */
+  initialize(flexboxActor, element, flexItemSizing) {
+    Actor.prototype.initialize.call(this, flexboxActor.conn);
+
+    this.containerEl = flexboxActor.containerEl;
+    this.element = element;
+    this.flexItemSizing = flexItemSizing;
+    this.walker = flexboxActor.walker;
+  },
+
+  destroy() {
+    Actor.prototype.destroy.call(this);
+
+    this.containerEl = null;
+    this.element = null;
+    this.flexItemSizing = null;
+    this.walker = null;
+  },
+
+  form(detail) {
+    if (detail === "actorid") {
+      return this.actorID;
+    }
+
+    const { flexDirection } = CssLogic.getComputedStyle(this.containerEl);
+    const styles = CssLogic.getComputedStyle(this.element);
+    const clientRect = this.element.getBoundingClientRect();
+    const dimension = flexDirection.startsWith("row") ? "width" : "height";
+
+    const form = {
+      actor: this.actorID,
+      // The flex item sizing data.
+      flexItemSizing: this.flexItemSizing,
+      // The computed style properties of the flex item.
+      properties: {
+        "flex-basis": styles.flexBasis,
+        "flex-grow": styles.flexGrow,
+        "flex-shrink": styles.flexShrink,
+        // min-width/height computed style.
+        [`min-${dimension}`]: styles[`min-${dimension}`],
+        // max-width/height computed style.
+        [`max-${dimension}`]: styles[`max-${dimension}`],
+        // Computed width/height of the flex item element.
+        [dimension]: parseFloat(clientRect[dimension.toLowerCase()].toPrecision(6)),
+      },
+    };
+
+    // If the WalkerActor already knows the flex item element, then also return its
+    // ActorID so we avoid the client from doing another round trip to get it in many
+    // cases.
+    if (this.walker.hasNode(this.element)) {
+      form.nodeActorID = this.walker.getNode(this.element).actorID;
     }
 
     return form;
@@ -99,13 +218,13 @@ const GridActor = ActorClassWithSpec(gridSpec, {
 
     // Seralize the grid fragment data into JSON so protocol.js knows how to write
     // and read the data.
-    let gridFragments = this.containerEl.getGridFragments();
+    const gridFragments = this.containerEl.getGridFragments();
     this.gridFragments = getStringifiableFragments(gridFragments);
 
     // Record writing mode and text direction for use by the grid outline.
-    let { direction, writingMode } = CssLogic.getComputedStyle(this.containerEl);
+    const { direction, writingMode } = CssLogic.getComputedStyle(this.containerEl);
 
-    let form = {
+    const form = {
       actor: this.actorID,
       direction,
       gridFragments: this.gridFragments,
@@ -127,17 +246,17 @@ const GridActor = ActorClassWithSpec(gridSpec, {
  * The CSS layout actor provides layout information for the given document.
  */
 const LayoutActor = ActorClassWithSpec(layoutSpec, {
-  initialize(conn, tabActor, walker) {
+  initialize(conn, targetActor, walker) {
     Actor.prototype.initialize.call(this, conn);
 
-    this.tabActor = tabActor;
+    this.targetActor = targetActor;
     this.walker = walker;
   },
 
   destroy() {
     Actor.prototype.destroy.call(this);
 
-    this.tabActor = null;
+    this.targetActor = null;
     this.walker = null;
   },
 
@@ -165,8 +284,7 @@ const LayoutActor = ActorClassWithSpec(layoutSpec, {
       node = node.rawNode;
     }
 
-    let treeWalker = this.walker.getDocumentWalker(node,
-      nodeFilterConstants.SHOW_ELEMENT);
+    const treeWalker = this.walker.getDocumentWalker(node, SHOW_ELEMENT);
     let currentNode = treeWalker.currentNode;
     let displayType = this.walker.getNode(currentNode).displayType;
 
@@ -260,11 +378,11 @@ const LayoutActor = ActorClassWithSpec(layoutSpec, {
       node = node.documentElement;
     }
 
-    let gridElements = node.getElementsWithGrid();
+    const gridElements = node.getElementsWithGrid();
     let gridActors = gridElements.map(n => new GridActor(this, n));
 
-    let frames = node.querySelectorAll("iframe, frame");
-    for (let frame of frames) {
+    const frames = node.querySelectorAll("iframe, frame");
+    for (const frame of frames) {
       gridActors = gridActors.concat(this.getGrids(frame.contentDocument));
     }
 
@@ -277,5 +395,6 @@ function isNodeDead(node) {
 }
 
 exports.FlexboxActor = FlexboxActor;
+exports.FlexItemActor = FlexItemActor;
 exports.GridActor = GridActor;
 exports.LayoutActor = LayoutActor;

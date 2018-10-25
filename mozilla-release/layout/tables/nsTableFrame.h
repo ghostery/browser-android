@@ -34,8 +34,6 @@ class StackingContextHelper;
 }
 } // namespace mozilla
 
-using namespace mozilla;
-
 struct BCPropertyData;
 
 static inline bool
@@ -76,7 +74,9 @@ private:
 class nsAutoPushCurrentTableItem
 {
 public:
-  nsAutoPushCurrentTableItem() : mBuilder(nullptr) {}
+  nsAutoPushCurrentTableItem()
+    : mBuilder(nullptr)
+    , mOldCurrentItem(nullptr) {}
 
   void Push(nsDisplayListBuilder* aBuilder, nsDisplayTableItem* aPushItem)
   {

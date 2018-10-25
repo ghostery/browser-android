@@ -6,7 +6,8 @@ config = {
         "installer": {
             "product-name": "Firefox-%(version)s",
             "check_uptake": True,
-            "alias": "firefox-esr-latest",
+            # convert to firefox-esr-latest when ESR52 stops
+            "alias": "firefox-esr-next-latest",
             "ssl-only": True,
             "add-locales": True,
             "paths": {
@@ -35,7 +36,8 @@ config = {
         "installer-ssl": {
             "product-name": "Firefox-%(version)s-SSL",
             "check_uptake": True,
-            "alias": "firefox-esr-latest-ssl",
+            # convert to firefox-esr-latest-ssl when ESR52 stops
+            "alias": "firefox-esr-next-latest-ssl",
             "ssl-only": True,
             "add-locales": True,
             "paths": {
@@ -58,20 +60,6 @@ config = {
                 "win64": {
                     "path": "/firefox/releases/%(version)s/win64/:lang/Firefox%%20Setup%%20%(version)s.exe",
                     "bouncer-platform": "win64",
-                },
-            },
-        },
-        "sha1-installer": {
-            "product-name": "Firefox-%(version)s-sha1",
-            "check_uptake": True,
-            # XP/Vista Release users are redicted to ESR52
-            "alias": "firefox-sha1",
-            "ssl-only": True,
-            "add-locales": True,
-            "paths": {
-                "win32": {
-                    "path": "/firefox/releases/%(version)s/win32-sha1/:lang/Firefox%%20Setup%%20%(version)s.exe",
-                    "bouncer-platform": "win",
                 },
             },
         },

@@ -9,7 +9,7 @@ var toolbox;
 
 function test() {
   addTab(TEST_URL).then(tab => {
-    let target = TargetFactory.forTab(tab);
+    const target = TargetFactory.forTab(tab);
     gDevTools.showToolbox(target).then(testRegister);
   });
 }
@@ -19,7 +19,7 @@ function testRegister(aToolbox) {
   gDevTools.once("tool-registered", toolRegistered);
 
   gDevTools.registerTool({
-    id: "test-tool",
+    id: "testTool",
     label: "Test Tool",
     inMenu: true,
     isTargetSupported: () => true,
@@ -28,20 +28,20 @@ function testRegister(aToolbox) {
 }
 
 function toolRegistered(toolId) {
-  is(toolId, "test-tool", "tool-registered event handler sent tool id");
+  is(toolId, "testTool", "tool-registered event handler sent tool id");
 
   ok(gDevTools.getToolDefinitionMap().has(toolId), "tool added to map");
 
   // test that it appeared in the UI
-  let doc = toolbox.doc;
-  let tab = doc.getElementById("toolbox-tab-" + toolId);
+  const doc = toolbox.doc;
+  const tab = doc.getElementById("toolbox-tab-" + toolId);
   ok(tab, "new tool's tab exists in toolbox UI");
 
-  let panel = doc.getElementById("toolbox-panel-" + toolId);
+  const panel = doc.getElementById("toolbox-panel-" + toolId);
   ok(panel, "new tool's panel exists in toolbox UI");
 
-  for (let win of getAllBrowserWindows()) {
-    let menuitem = win.document.getElementById("menuitem_" + toolId);
+  for (const win of getAllBrowserWindows()) {
+    const menuitem = win.document.getElementById("menuitem_" + toolId);
     ok(menuitem, "menu item of new tool added to every browser window");
   }
 
@@ -50,35 +50,30 @@ function toolRegistered(toolId) {
 }
 
 function getAllBrowserWindows() {
-  let wins = [];
-  let enumerator = Services.wm.getEnumerator("navigator:browser");
-  while (enumerator.hasMoreElements()) {
-    wins.push(enumerator.getNext());
-  }
-  return wins;
+  return Array.from(Services.wm.getEnumerator("navigator:browser"));
 }
 
 function testUnregister() {
   gDevTools.once("tool-unregistered", toolUnregistered);
 
-  gDevTools.unregisterTool("test-tool");
+  gDevTools.unregisterTool("testTool");
 }
 
 function toolUnregistered(toolId) {
-  is(toolId, "test-tool", "tool-unregistered event handler sent tool id");
+  is(toolId, "testTool", "tool-unregistered event handler sent tool id");
 
   ok(!gDevTools.getToolDefinitionMap().has(toolId), "tool removed from map");
 
   // test that it disappeared from the UI
-  let doc = toolbox.doc;
-  let tab = doc.getElementById("toolbox-tab-" + toolId);
+  const doc = toolbox.doc;
+  const tab = doc.getElementById("toolbox-tab-" + toolId);
   ok(!tab, "tool's tab was removed from the toolbox UI");
 
-  let panel = doc.getElementById("toolbox-panel-" + toolId);
+  const panel = doc.getElementById("toolbox-panel-" + toolId);
   ok(!panel, "tool's panel was removed from toolbox UI");
 
-  for (let win of getAllBrowserWindows()) {
-    let menuitem = win.document.getElementById("menuitem_" + toolId);
+  for (const win of getAllBrowserWindows()) {
+    const menuitem = win.document.getElementById("menuitem_" + toolId);
     ok(!menuitem, "menu item removed from every browser window");
   }
 

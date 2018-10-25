@@ -13,6 +13,12 @@
 #include "nsFrameLoader.h"
 #include "Units.h"
 
+namespace mozilla {
+namespace layout {
+class RenderFrameParent;
+}
+}
+
 /******************************************************************************
  * nsSubDocumentFrame
  *****************************************************************************/
@@ -134,13 +140,15 @@ public:
     }
   }
 
+  mozilla::layout::RenderFrameParent* GetRenderFrameParent() const;
+
 protected:
   friend class AsyncFrameInit;
 
   // Helper method to look up the HTML marginwidth & marginheight attributes.
   mozilla::CSSIntSize GetMarginAttributes();
 
-  nsFrameLoader* FrameLoader();
+  nsFrameLoader* FrameLoader() const;
 
   bool IsInline() { return mIsInline; }
 
@@ -151,6 +159,8 @@ protected:
   // runner, so that we can save and restore the presentation if we're
   // being reframed.
   void ShowViewer();
+
+  void ClearDisplayItems();
 
   /* Obtains the frame we should use for intrinsic size information if we are
    * an HTML <object> or <embed>  (a replaced element - not <iframe>)
@@ -165,7 +175,8 @@ protected:
   nsView* GetViewInternal() const override { return mOuterView; }
   void SetViewInternal(nsView* aView) override { mOuterView = aView; }
 
-  RefPtr<nsFrameLoader> mFrameLoader;
+  mutable RefPtr<nsFrameLoader> mFrameLoader;
+
   nsView* mOuterView;
   nsView* mInnerView;
   bool mIsInline;

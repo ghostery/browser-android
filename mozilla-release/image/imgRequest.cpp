@@ -39,6 +39,7 @@
 #include "imgIRequest.h"
 
 #include "mozilla/IntegerPrintfMacros.h"
+#include "mozilla/Telemetry.h"
 
 using namespace mozilla;
 using namespace mozilla::image;
@@ -80,10 +81,8 @@ imgRequest::~imgRequest()
     mLoader->RemoveFromUncachedImages(this);
   }
   if (mURI) {
-    nsAutoCString spec;
-    mURI->GetSpec(spec);
     LOG_FUNC_WITH_PARAM(gImgLog, "imgRequest::~imgRequest()",
-                        "keyuri", spec.get());
+                        "keyuri", mURI);
   } else
     LOG_FUNC(gImgLog, "imgRequest::~imgRequest()");
 }
@@ -111,17 +110,11 @@ imgRequest::Init(nsIURI *aURI,
   MOZ_ASSERT(aChannel, "No channel");
 
   mProperties = do_CreateInstance("@mozilla.org/properties;1");
-
-  // Use ImageURL to ensure access to URI data off main thread.
-  nsresult rv;
-  mURI = new ImageURL(aURI, rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
+  mURI = aURI;
   mFinalURI = aFinalURI;
   mRequest = aRequest;
   mChannel = aChannel;
   mTimedChannel = do_QueryInterface(mChannel);
-
   mTriggeringPrincipal = aTriggeringPrincipal;
   mCORSMode = aCORSMode;
   mReferrerPolicy = aReferrerPolicy;
@@ -214,7 +207,7 @@ imgRequest::ResetCacheEntry()
 void
 imgRequest::AddProxy(imgRequestProxy* proxy)
 {
-  NS_PRECONDITION(proxy, "null imgRequestProxy passed in");
+  MOZ_ASSERT(proxy, "null imgRequestProxy passed in");
   LOG_SCOPE_WITH_PARAM(gImgLog, "imgRequest::AddProxy", "proxy", proxy);
 
   if (!mFirstProxy) {
@@ -265,12 +258,10 @@ imgRequest::RemoveProxy(imgRequestProxy* proxy, nsresult aStatus)
       if (mLoader) {
         mLoader->SetHasNoProxies(this, mCacheEntry);
       }
-    } else if (MOZ_LOG_TEST(gImgLog, LogLevel::Debug)) {
-      nsAutoCString spec;
-      mURI->GetSpec(spec);
+    } else {
       LOG_MSG_WITH_PARAM(gImgLog,
                          "imgRequest::RemoveProxy no cache entry",
-                         "uri", spec.get());
+                         "uri", mURI);
     }
 
     /* If |aStatus| is a failure code, then cancel the load if it is still in
@@ -422,7 +413,7 @@ imgRequest::IsDecodeRequested() const
   return mDecodeRequested;
 }
 
-nsresult imgRequest::GetURI(ImageURL** aURI)
+nsresult imgRequest::GetURI(nsIURI** aURI)
 {
   MOZ_ASSERT(aURI);
 
@@ -950,6 +941,7 @@ imgRequest::OnStopRequest(nsIRequest* aRequest,
 struct mimetype_closure
 {
   nsACString* newType;
+  uint32_t segmentSize;
 };
 
 /* prototype for these defined below */
@@ -988,7 +980,7 @@ struct NewPartResult final
 
 static NewPartResult
 PrepareForNewPart(nsIRequest* aRequest, nsIInputStream* aInStr, uint32_t aCount,
-                  ImageURL* aURI, bool aIsMultipart, image::Image* aExistingImage,
+                  nsIURI* aURI, bool aIsMultipart, image::Image* aExistingImage,
                   ProgressTracker* aProgressTracker, uint32_t aInnerWindowId)
 {
   NewPartResult result(aExistingImage);
@@ -996,11 +988,49 @@ PrepareForNewPart(nsIRequest* aRequest, nsIInputStream* aInStr, uint32_t aCount,
   if (aInStr) {
     mimetype_closure closure;
     closure.newType = &result.mContentType;
+    closure.segmentSize = 0;
 
     // Look at the first few bytes and see if we can tell what the data is from
     // that since servers tend to lie. :(
     uint32_t out;
     aInStr->ReadSegments(sniff_mimetype_callback, &closure, aCount, &out);
+
+    // We don't support WebP but we are getting reports of Firefox being served
+    // WebP content in the wild. In particular this appears to be a problem on
+    // Fennec where content authors assume Android implies WebP support. The
+    // telemetry below is intended to get a sense of how prevalent this is.
+    //
+    // From the Google WebP FAQ example and the Modernizr library, websites may
+    // supply a tiny WebP image to probe for feature support using scripts. The
+    // probes are implemented as data URIs thus we should have all the content
+    // upfront. We don't want to consider a probe as having observed WebP since
+    // in theory the client should do the right thing when we fail to decode it.
+    // See https://developers.google.com/speed/webp/faq for details.
+    bool webp = result.mContentType.EqualsLiteral(IMAGE_WEBP);
+    bool webpProbe = false;
+    if (webp) {
+      // The probes from the example/library are all < 90 bytes. Round it up
+      // just in case.
+      const uint32_t kMaxProbeSize = 100;
+      if (closure.segmentSize < kMaxProbeSize &&
+          NS_FAILED(aURI->SchemeIs("data", &webpProbe))) {
+        webpProbe = false;
+      }
+
+      if (webpProbe) {
+        Telemetry::ScalarSet(Telemetry::ScalarID::IMAGES_WEBP_PROBE_OBSERVED,
+                             true);
+      } else {
+        Telemetry::ScalarSet(Telemetry::ScalarID::IMAGES_WEBP_CONTENT_OBSERVED,
+                             true);
+      }
+    }
+
+    if (!webpProbe) {
+      Telemetry::ScalarAdd(Telemetry::ScalarID::IMAGES_WEBP_CONTENT_FREQUENCY,
+                           webp ? NS_LITERAL_STRING("webp") :
+                                  NS_LITERAL_STRING("other"), 1);
+    }
   }
 
   nsCOMPtr<nsIChannel> chan(do_QueryInterface(aRequest));
@@ -1187,7 +1217,7 @@ imgRequest::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
         FinishPreparingForNewPart(result);
       } else {
         nsCOMPtr<nsIRunnable> runnable =
-          new FinishPreparingForNewPartRunnable(this, Move(result));
+          new FinishPreparingForNewPartRunnable(this, std::move(result));
         eventTarget->Dispatch(runnable.forget(), NS_DISPATCH_NORMAL);
       }
     }
@@ -1251,6 +1281,7 @@ sniff_mimetype_callback(nsIInputStream* in,
 
   NS_ASSERTION(closure, "closure is null!");
 
+  closure->segmentSize = count;
   if (count > 0) {
     imgLoader::GetMimeTypeFromContent(fromRawSegment, count, *closure->newType);
   }

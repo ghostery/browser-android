@@ -177,6 +177,8 @@ public:
 
   void RefreshStandardFontLoadPrincipal();
 
+  void CopyNonRuleFacesTo(FontFaceSet* aFontFaceSet) const;
+
   nsIDocument* Document() const { return mDocument; }
 
   // -- Web IDL --------------------------------------------------------------
@@ -307,6 +309,9 @@ private:
    * Returns whether we have any loading FontFace objects in the FontFaceSet.
    */
   bool HasLoadingFontFaces();
+
+  // Whether mReady is pending, or would be when created.
+  bool ReadyPromiseIsPending() const;
 
   // Helper function for HasLoadingFontFaces.
   void UpdateHasLoadingFontFaces();

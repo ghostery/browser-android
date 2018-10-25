@@ -15,7 +15,7 @@
 #include "nsIAuthPrompt.h"
 #include "nsIAuthPrompt2.h"
 #include "nsIHttpHeaderVisitor.h"
-#include "nsIRedirectChannelRegistrar.h"
+#include "mozilla/net/RedirectChannelRegistrar.h"
 #include "nsIPromptFactory.h"
 #include "nsIWindowWatcher.h"
 #include "nsQueryObject.h"
@@ -57,9 +57,7 @@ NS_INTERFACE_MAP_BEGIN(HttpChannelParentListener)
   NS_INTERFACE_MAP_ENTRY(nsIRedirectResultListener)
   NS_INTERFACE_MAP_ENTRY(nsINetworkInterceptController)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIInterfaceRequestor)
-  if (aIID.Equals(NS_GET_IID(HttpChannelParentListener))) {
-    foundInterface = static_cast<nsIInterfaceRequestor*>(this);
-  } else
+  NS_INTERFACE_MAP_ENTRY_CONCRETE(HttpChannelParentListener)
 NS_INTERFACE_MAP_END
 
 //-----------------------------------------------------------------------------
@@ -181,8 +179,8 @@ HttpChannelParentListener::AsyncOnChannelRedirect(
 
   // Register the new channel and obtain id for it
   nsCOMPtr<nsIRedirectChannelRegistrar> registrar =
-      do_GetService("@mozilla.org/redirectchannelregistrar;1", &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
+      RedirectChannelRegistrar::GetOrCreate();
+  MOZ_ASSERT(registrar);
 
   rv = registrar->RegisterChannel(newChannel, &mRedirectChannelId);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -210,8 +208,8 @@ HttpChannelParentListener::OnRedirectResult(bool succeeded)
   nsCOMPtr<nsIParentChannel> redirectChannel;
   if (mRedirectChannelId) {
     nsCOMPtr<nsIRedirectChannelRegistrar> registrar =
-        do_GetService("@mozilla.org/redirectchannelregistrar;1", &rv);
-    NS_ENSURE_SUCCESS(rv, rv);
+        RedirectChannelRegistrar::GetOrCreate();
+    MOZ_ASSERT(registrar);
 
     rv = registrar->GetParentChannel(mRedirectChannelId,
                                      getter_AddRefs(redirectChannel));

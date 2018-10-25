@@ -20,7 +20,6 @@ class StyleSheet;
 class nsICSSLoaderObserver;
 class nsINode;
 class nsIPrincipal;
-class nsIStyleLinkingElement;
 class nsIURI;
 
 namespace mozilla {
@@ -39,8 +38,10 @@ class SheetLoadData final
   : public nsIRunnable
   , public nsIThreadObserver
 {
+  typedef nsIStyleSheetLinkingElement::MediaMatched MediaMatched;
+  typedef nsIStyleSheetLinkingElement::IsAlternate IsAlternate;
 protected:
-  virtual ~SheetLoadData(void);
+  virtual ~SheetLoadData();
 
 public:
   // Data for loading a sheet linked from a document
@@ -48,9 +49,10 @@ public:
                 const nsAString& aTitle,
                 nsIURI* aURI,
                 StyleSheet* aSheet,
+                bool aSyncLoad,
                 nsIStyleSheetLinkingElement* aOwningElement,
-                bool aIsAlternate,
-                bool aMediaMatches,
+                IsAlternate aIsAlternate,
+                MediaMatched aMediaMatched,
                 nsICSSLoaderObserver* aObserver,
                 nsIPrincipal* aLoaderPrincipal,
                 nsINode* aRequestingNode);
@@ -123,8 +125,9 @@ public:
   // Number of sheets we @import-ed that are still loading
   uint32_t mPendingChildren;
 
-  // mSyncLoad is true when the load needs to be synchronous -- right
-  // now only for LoadSheetSync and children of sync loads.
+  // mSyncLoad is true when the load needs to be synchronous.
+  // For LoadSheetSync, <link> to chrome stylesheets in UA Widgets,
+  // and children of sync loads.
   bool mSyncLoad : 1;
 
   // mIsNonDocumentSheet is true if the load was triggered by LoadSheetSync or

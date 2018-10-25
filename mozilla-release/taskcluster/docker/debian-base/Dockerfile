@@ -51,10 +51,16 @@ RUN /usr/local/sbin/setup_packages.sh $DOCKER_IMAGE_PACKAGES && \
     apt-get update && \
     apt-get install \
       git \
+      less \
       make \
       mercurial \
+      patch \
       python \
       python3.5 \
+      python3-minimal \
+      python-zstandard \
+      python3-zstandard \
+      vim-tiny \
       xz-utils
 
 # %include testing/mozharness/external_tools/robustcheckout.py
@@ -67,7 +73,7 @@ COPY topsrcdir/taskcluster/docker/recipes/hgrc /etc/mercurial/hgrc.d/mozilla.rc
 # %include taskcluster/docker/recipes/dot-config
 COPY topsrcdir/taskcluster/docker/recipes/dot-config /builds/worker/.config
 
-# %include taskcluster/docker/recipes/run-task
-COPY topsrcdir/taskcluster/docker/recipes/run-task /builds/worker/bin/run-task
+# %include taskcluster/scripts/run-task
+COPY topsrcdir/taskcluster/scripts/run-task /builds/worker/bin/run-task
 
 RUN chown -R worker:worker /builds/worker/bin && chmod 755 /builds/worker/bin/*

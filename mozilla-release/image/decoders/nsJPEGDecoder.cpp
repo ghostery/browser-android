@@ -74,13 +74,28 @@ METHODDEF(void) my_error_exit (j_common_ptr cinfo);
 
 nsJPEGDecoder::nsJPEGDecoder(RasterImage* aImage,
                              Decoder::DecodeStyle aDecodeStyle)
- : Decoder(aImage)
- , mLexer(Transition::ToUnbuffered(State::FINISHED_JPEG_DATA,
-                                   State::JPEG_DATA,
-                                   SIZE_MAX),
-          Transition::TerminateSuccess())
- , mDecodeStyle(aDecodeStyle)
+  : Decoder(aImage)
+  , mLexer(Transition::ToUnbuffered(State::FINISHED_JPEG_DATA,
+                                    State::JPEG_DATA,
+                                    SIZE_MAX),
+           Transition::TerminateSuccess())
+  , mProfile(nullptr)
+  , mProfileLength(0)
+  , mDecodeStyle(aDecodeStyle)
 {
+  this->mErr.pub.error_exit = nullptr;
+  this->mErr.pub.emit_message = nullptr;
+  this->mErr.pub.output_message = nullptr;
+  this->mErr.pub.format_message = nullptr;
+  this->mErr.pub.reset_error_mgr = nullptr;
+  this->mErr.pub.msg_code = 0;
+  this->mErr.pub.trace_level = 0;
+  this->mErr.pub.num_warnings = 0;
+  this->mErr.pub.jpeg_message_table = nullptr;
+  this->mErr.pub.last_jpeg_message = 0;
+  this->mErr.pub.addon_message_table = nullptr;
+  this->mErr.pub.first_addon_message = 0;
+  this->mErr.pub.last_addon_message = 0;
   mState = JPEG_HEADER;
   mReading = true;
   mImageData = nullptr;
@@ -385,8 +400,8 @@ nsJPEGDecoder::ReadJPEGData(const char* aData, size_t aLength)
     jpeg_calc_output_dimensions(&mInfo);
 
     MOZ_ASSERT(!mImageData, "Already have a buffer allocated?");
-    nsresult rv = AllocateFrame(/* aFrameNum = */ 0, OutputSize(),
-                                FullOutputFrame(), SurfaceFormat::B8G8R8X8);
+    nsresult rv = AllocateFrame(OutputSize(), FullOutputFrame(),
+                                SurfaceFormat::B8G8R8X8);
     if (NS_FAILED(rv)) {
       mState = JPEG_ERROR;
       MOZ_LOG(sJPEGDecoderAccountingLog, LogLevel::Debug,
@@ -616,13 +631,30 @@ nsJPEGDecoder::NotifyDone()
 }
 
 void
+nsJPEGDecoder::FinishRow(uint32_t aLastSourceRow)
+{
+  if (mDownscaler) {
+    mDownscaler->CommitRow();
+    if (mDownscaler->HasInvalidation()) {
+      DownscalerInvalidRect invalidRect = mDownscaler->TakeInvalidRect();
+      PostInvalidation(invalidRect.mOriginalSizeRect,
+                       Some(invalidRect.mTargetSizeRect));
+      MOZ_ASSERT(!mDownscaler->HasInvalidation());
+    }
+  } else if (aLastSourceRow != mInfo.output_scanline) {
+    PostInvalidation(nsIntRect(0, aLastSourceRow,
+                               mInfo.output_width,
+                               mInfo.output_scanline - aLastSourceRow));
+  }
+}
+
+void
 nsJPEGDecoder::OutputScanlines(bool* suspend)
 {
   *suspend = false;
 
-  const uint32_t top = mInfo.output_scanline;
-
   while ((mInfo.output_scanline < mInfo.output_height)) {
+      const uint32_t top = mInfo.output_scanline;
       uint32_t* imageRow = nullptr;
       if (mDownscaler) {
         imageRow = reinterpret_cast<uint32_t*>(mDownscaler->RowBuffer());
@@ -639,9 +671,7 @@ nsJPEGDecoder::OutputScanlines(bool* suspend)
           *suspend = true; // suspend
           break;
         }
-        if (mDownscaler) {
-          mDownscaler->CommitRow();
-        }
+        FinishRow(top);
         continue; // all done for this row!
       }
 
@@ -718,20 +748,7 @@ nsJPEGDecoder::OutputScanlines(bool* suspend)
         sampleRow += 3;
       }
 
-      if (mDownscaler) {
-        mDownscaler->CommitRow();
-      }
-  }
-
-  if (mDownscaler && mDownscaler->HasInvalidation()) {
-    DownscalerInvalidRect invalidRect = mDownscaler->TakeInvalidRect();
-    PostInvalidation(invalidRect.mOriginalSizeRect,
-                     Some(invalidRect.mTargetSizeRect));
-    MOZ_ASSERT(!mDownscaler->HasInvalidation());
-  } else if (!mDownscaler && top != mInfo.output_scanline) {
-    PostInvalidation(nsIntRect(0, top,
-                               mInfo.output_width,
-                               mInfo.output_scanline - top));
+      FinishRow(top);
   }
 }
 

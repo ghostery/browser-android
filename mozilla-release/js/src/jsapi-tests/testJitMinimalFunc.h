@@ -43,7 +43,7 @@ struct MinimalFunc : MinimalAlloc
       : options(),
         info(0),
         graph(&alloc),
-        mir(static_cast<CompileCompartment*>(nullptr), options, &alloc, &graph,
+        mir(static_cast<CompileRealm*>(nullptr), options, &alloc, &graph,
             &info, static_cast<const OptimizationInfo*>(nullptr)),
         numParams(0)
     { }
@@ -86,8 +86,6 @@ struct MinimalFunc : MinimalAlloc
         if (!BuildPhiReverseMapping(graph))
             return false;
         ValueNumberer gvn(&mir, graph);
-        if (!gvn.init())
-            return false;
         if (!gvn.run(ValueNumberer::DontUpdateAliasAnalysis))
             return false;
         return true;

@@ -20,12 +20,12 @@
 <!ENTITY            renameButton.accesskey "R">
 <!ENTITY            deleteButton.label     "Excluir…">
 <!ENTITY            deleteButton.accesskey "x">
-<!-- manager entities -->
 
+<!-- manager entities -->
 <!ENTITY            pmDescription.label    "O &brandShortName; armazena em um perfil os seus dados pessoais e preferências.">
 
-<!ENTITY            offlineState.label    "Modo offline">
-<!ENTITY            offlineState.accesskey "M">
+<!ENTITY            offlineState.label    "Trabalhar desconectado">
+<!ENTITY            offlineState.accesskey "d">
 
 <!ENTITY            useSelected.label       "Usar o perfil selecionado sem perguntar ao iniciar">
 <!ENTITY            useSelected.accesskey   "U">

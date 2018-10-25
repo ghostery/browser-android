@@ -12,11 +12,19 @@ const L10N =
   new LocalizationHelper("devtools/client/locales/toolbox.properties");
 
 // Test is slow on Linux EC2 instances - Bug 962931
-requestLongerTimeout(2);
+requestLongerTimeout(4);
 
 add_task(async function() {
-  let toolbox;
+  // Run test with legacy JsTerm
+  await pushPref("devtools.webconsole.jsterm.codeMirror", false);
+  await performTests();
+  // And then run it with the CodeMirror-powered one.
+  await pushPref("devtools.webconsole.jsterm.codeMirror", true);
+  await performTests();
+});
 
+async function performTests() {
+  let toolbox;
   await addTab(TEST_URI);
   await testConsoleLoadOnDifferentPanel();
   await testKeyboardShortcuts();
@@ -24,10 +32,10 @@ add_task(async function() {
 
   info("Testing host types");
   checkHostType(Toolbox.HostType.BOTTOM);
-  checkToolboxUI();
-  await toolbox.switchHost(Toolbox.HostType.SIDE);
-  checkHostType(Toolbox.HostType.SIDE);
-  checkToolboxUI();
+  await checkToolboxUI();
+  await toolbox.switchHost(Toolbox.HostType.RIGHT);
+  checkHostType(Toolbox.HostType.RIGHT);
+  await checkToolboxUI();
   await toolbox.switchHost(Toolbox.HostType.WINDOW);
 
   // checkHostType, below,  will open the meatball menu to read the "Split
@@ -38,7 +46,7 @@ add_task(async function() {
   await new Promise(resolve => requestIdleCallback(resolve));
 
   checkHostType(Toolbox.HostType.WINDOW);
-  checkToolboxUI();
+  await checkToolboxUI();
   await toolbox.switchHost(Toolbox.HostType.BOTTOM);
 
   async function testConsoleLoadOnDifferentPanel() {
@@ -54,7 +62,7 @@ add_task(async function() {
   async function testKeyboardShortcuts() {
     info("About to check that panel responds to ESCAPE keyboard shortcut");
 
-    let splitConsoleReady = toolbox.once("split-console");
+    const splitConsoleReady = toolbox.once("split-console");
     EventUtils.sendKey("ESCAPE", toolbox.win);
     await splitConsoleReady;
     ok(true, "Split console has been triggered via ESCAPE keypress");
@@ -72,22 +80,25 @@ add_task(async function() {
   }
 
   async function getCurrentUIState() {
-    let deck = toolbox.doc.querySelector("#toolbox-deck");
-    let webconsolePanel = toolbox.webconsolePanel;
-    let splitter = toolbox.doc.querySelector("#toolbox-console-splitter");
+    const deck = toolbox.doc.querySelector("#toolbox-deck");
+    const webconsolePanel = toolbox.webconsolePanel;
+    const splitter = toolbox.doc.querySelector("#toolbox-console-splitter");
 
-    let containerHeight = deck.parentNode.getBoundingClientRect().height;
-    let deckHeight = deck.getBoundingClientRect().height;
-    let webconsoleHeight = webconsolePanel.getBoundingClientRect().height;
-    let splitterVisibility = !splitter.getAttribute("hidden");
-    let openedConsolePanel = toolbox.currentToolId === "webconsole";
-    let menuLabel = await getMenuLabel(toolbox);
+    const containerHeight = deck.parentNode.getBoundingClientRect().height;
+    const deckHeight = deck.getBoundingClientRect().height;
+    const webconsoleHeight = webconsolePanel.getBoundingClientRect().height;
+    const splitterVisibility = !splitter.getAttribute("hidden");
+    // Splitter height will be 1px since the margin is negative.
+    const splitterHeight = splitterVisibility ? 1 : 0;
+    const openedConsolePanel = toolbox.currentToolId === "webconsole";
+    const menuLabel = await getMenuLabel(toolbox);
 
     return {
       deckHeight: deckHeight,
       containerHeight: containerHeight,
       webconsoleHeight: webconsoleHeight,
       splitterVisibility: splitterVisibility,
+      splitterHeight: splitterHeight,
       openedConsolePanel: openedConsolePanel,
       menuLabel,
     };
@@ -104,9 +115,9 @@ add_task(async function() {
 
         // Return undefined if the menu item is not available
         let label;
-        if (menuItem) {
+        if (menuItem && menuItem.querySelector(".label")) {
           label =
-            menuItem.label ===
+            menuItem.querySelector(".label").textContent ===
             L10N.getStr("toolbox.meatballMenu.hideconsole.label")
               ? "hide"
               : "split";
@@ -116,7 +127,7 @@ add_task(async function() {
         toolbox.doc.addEventListener("popuphidden", () => {
           resolve(label);
         }, { once: true });
-        EventUtils.synthesizeKey("KEY_Escape");
+        EventUtils.sendKey("ESCAPE", toolbox.win);
       }, { once: true });
     });
   }
@@ -210,7 +221,9 @@ add_task(async function() {
        "Deck has a height > 0 when console is split");
     ok(currentUIState.webconsoleHeight > 0,
        "Web console has a height > 0 when console is split");
-    is(Math.round(currentUIState.deckHeight + currentUIState.webconsoleHeight),
+    is(Math.round(currentUIState.deckHeight +
+                  currentUIState.webconsoleHeight +
+                  currentUIState.splitterHeight),
        currentUIState.containerHeight,
        "Everything adds up to container height");
     ok(!currentUIState.openedConsolePanel,
@@ -234,7 +247,7 @@ add_task(async function() {
   }
 
   async function openPanel(toolId) {
-    let target = TargetFactory.forTab(gBrowser.selectedTab);
+    const target = TargetFactory.forTab(gBrowser.selectedTab);
     toolbox = await gDevTools.showToolbox(target, toolId);
   }
 
@@ -246,7 +259,7 @@ add_task(async function() {
   function checkHostType(hostType) {
     is(toolbox.hostType, hostType, "host type is " + hostType);
 
-    let pref = Services.prefs.getCharPref("devtools.toolbox.host");
+    const pref = Services.prefs.getCharPref("devtools.toolbox.host");
     is(pref, hostType, "host pref is " + hostType);
   }
-});
+}

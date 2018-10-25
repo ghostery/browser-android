@@ -4,11 +4,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "mozilla/ArrayUtils.h"
 #include "mozilla/DebugOnly.h"
 
 #include "nsIOService.h"
-#include "nsIDOMNode.h"
 #include "nsIProtocolHandler.h"
 #include "nsIFileProtocolHandler.h"
 #include "nscore.h"
@@ -31,7 +29,6 @@
 #include "nsIConsoleService.h"
 #include "nsIUploadChannel2.h"
 #include "nsXULAppAPI.h"
-#include "nsIScriptError.h"
 #include "nsIScriptSecurityManager.h"
 #include "nsIProtocolProxyCallback.h"
 #include "nsICancelable.h"
@@ -51,6 +48,7 @@
 #include "mozilla/net/DNS.h"
 #include "mozilla/ipc/URIUtils.h"
 #include "mozilla/net/NeckoChild.h"
+#include "mozilla/net/NeckoParent.h"
 #include "mozilla/dom/ClientInfo.h"
 #include "mozilla/dom/ContentParent.h"
 #include "mozilla/dom/ServiceWorkerDescriptor.h"
@@ -59,7 +57,6 @@
 #include "ReferrerPolicy.h"
 #include "nsContentSecurityManager.h"
 #include "nsContentUtils.h"
-#include "xpcpublic.h"
 
 namespace mozilla {
 namespace net {
@@ -106,7 +103,7 @@ int16_t gBadPortList[] = {
   17,   // qotd
   19,   // chargen
   20,   // ftp-data
-  21,   // ftp-cntl
+  21,   // ftp
   22,   // ssh
   23,   // telnet
   25,   // smtp
@@ -129,39 +126,42 @@ int16_t gBadPortList[] = {
   115,  // sftp
   117,  // uucp-path
   119,  // nntp
-  123,  // NTP
+  123,  // ntp
   135,  // loc-srv / epmap
   139,  // netbios
   143,  // imap2
-  179,  // BGP
+  179,  // bgp
   389,  // ldap
-  465,  // smtp+ssl
+  427,  // afp (alternate)
+  465,  // smtp (alternate)
   512,  // print / exec
   513,  // login
   514,  // shell
   515,  // printer
   526,  // tempo
   530,  // courier
-  531,  // Chat
+  531,  // chat
   532,  // netnews
   540,  // uucp
+  548,  // afp
   556,  // remotefs
   563,  // nntp+ssl
-  587,  //
-  601,  //
+  587,  // smtp (outgoing)
+  601,  // syslog-conn
   636,  // ldap+ssl
   993,  // imap+ssl
   995,  // pop3+ssl
   2049, // nfs
-  3659,    // apple-sasl / PasswordServer
+  3659, // apple-sasl
   4045, // lockd
   6000, // x11
-  6665,    // Alternate IRC [Apple addition]
-  6666,    // Alternate IRC [Apple addition]
-  6667,    // Standard IRC [Apple addition]
-  6668,    // Alternate IRC [Apple addition]
-  6669,    // Alternate IRC [Apple addition]
-  0,    // This MUST be zero so that we can populating the array
+  6665, // irc (alternate)
+  6666, // irc (alternate)
+  6667, // irc (default)
+  6668, // irc (alternate)
+  6669, // irc (alternate)
+  6697, // irc+tls
+  0,    // Sentinel value: This MUST be zero
 };
 
 static const char kProfileChangeNetTeardownTopic[] = "profile-change-net-teardown";
@@ -201,6 +201,16 @@ nsIOService::nsIOService()
 {
 }
 
+static const char* gCallbackPrefs[] = {
+    PORT_PREF_PREFIX,
+    MANAGE_OFFLINE_STATUS_PREF,
+    NECKO_BUFFER_CACHE_COUNT_PREF,
+    NECKO_BUFFER_CACHE_SIZE_PREF,
+    NETWORK_NOTIFY_CHANGED_PREF,
+    NETWORK_CAPTIVE_PORTAL_PREF,
+    nullptr,
+};
+
 nsresult
 nsIOService::Init()
 {
@@ -219,17 +229,10 @@ nsIOService::Init()
         mRestrictedPortList.AppendElement(gBadPortList[i]);
 
     // Further modifications to the port list come from prefs
-    nsCOMPtr<nsIPrefBranch> prefBranch;
-    GetPrefBranch(getter_AddRefs(prefBranch));
-    if (prefBranch) {
-        prefBranch->AddObserver(PORT_PREF_PREFIX, this, true);
-        prefBranch->AddObserver(MANAGE_OFFLINE_STATUS_PREF, this, true);
-        prefBranch->AddObserver(NECKO_BUFFER_CACHE_COUNT_PREF, this, true);
-        prefBranch->AddObserver(NECKO_BUFFER_CACHE_SIZE_PREF, this, true);
-        prefBranch->AddObserver(NETWORK_NOTIFY_CHANGED_PREF, this, true);
-        prefBranch->AddObserver(NETWORK_CAPTIVE_PORTAL_PREF, this, true);
-        PrefsChanged(prefBranch);
-    }
+    Preferences::RegisterPrefixCallbacks(
+        PREF_CHANGE_METHOD(nsIOService::PrefsChanged),
+        gCallbackPrefs, this);
+    PrefsChanged();
 
     // Register for profile change notifications
     nsCOMPtr<nsIObserverService> observerService = services::GetObserverService();
@@ -684,7 +687,7 @@ nsIOService::NewURI(const nsACString &aSpec, const char *aCharset, nsIURI *aBase
         if (!aSpec.IsEmpty() && aSpec[0] == '#') {
             // Looks like a reference instead of a fully-specified URI.
             // --> initialize |uri| as a clone of |aBaseURI|, with ref appended.
-            return aBaseURI->CloneWithNewRef(aSpec, result);
+            return NS_GetURIWithNewRef(aBaseURI, aSpec, result);
         }
 
         rv = aBaseURI->GetScheme(scheme);
@@ -719,7 +722,7 @@ nsIOService::NewFileURI(nsIFile *file, nsIURI **result)
 
 NS_IMETHODIMP
 nsIOService::NewChannelFromURI2(nsIURI* aURI,
-                                nsIDOMNode* aLoadingNode,
+                                nsINode* aLoadingNode,
                                 nsIPrincipal* aLoadingPrincipal,
                                 nsIPrincipal* aTriggeringPrincipal,
                                 uint32_t aSecurityFlags,
@@ -738,7 +741,7 @@ nsIOService::NewChannelFromURI2(nsIURI* aURI,
 }
 nsresult
 nsIOService::NewChannelFromURIWithClientAndController(nsIURI* aURI,
-                                                      nsIDOMNode* aLoadingNode,
+                                                      nsINode* aLoadingNode,
                                                       nsIPrincipal* aLoadingPrincipal,
                                                       nsIPrincipal* aTriggeringPrincipal,
                                                       const Maybe<ClientInfo>& aLoadingClientInfo,
@@ -760,41 +763,6 @@ nsIOService::NewChannelFromURIWithClientAndController(nsIURI* aURI,
                                                    aResult);
 }
 
-/*  ***** DEPRECATED *****
- * please use NewChannelFromURI2 providing the right arguments for:
- *        * aLoadingNode
- *        * aLoadingPrincipal
- *        * aTriggeringPrincipal
- *        * aSecurityFlags
- *        * aContentPolicyType
- *
- * See nsIIoService.idl for a detailed description of those arguments
- */
-NS_IMETHODIMP
-nsIOService::NewChannelFromURI(nsIURI *aURI, nsIChannel **result)
-{
-  NS_ASSERTION(false, "Deprecated, use NewChannelFromURI2 providing loadInfo arguments!");
-
-  const char16_t* params[] = {
-    u"nsIOService::NewChannelFromURI()",
-    u"nsIOService::NewChannelFromURI2()"
-  };
-  nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                  NS_LITERAL_CSTRING("Security by Default"),
-                                  nullptr, // aDocument
-                                  nsContentUtils::eNECKO_PROPERTIES,
-                                  "APIDeprecationWarning",
-                                  params, ArrayLength(params));
-
-  return NewChannelFromURI2(aURI,
-                            nullptr, // aLoadingNode
-                            nsContentUtils::GetSystemPrincipal(),
-                            nullptr, // aTriggeringPrincipal
-                            nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                            nsIContentPolicy::TYPE_OTHER,
-                            result);
-}
-
 NS_IMETHODIMP
 nsIOService::NewChannelFromURIWithLoadInfo(nsIURI* aURI,
                                            nsILoadInfo* aLoadInfo,
@@ -812,7 +780,7 @@ nsresult
 nsIOService::NewChannelFromURIWithProxyFlagsInternal(nsIURI* aURI,
                                                      nsIURI* aProxyURI,
                                                      uint32_t aProxyFlags,
-                                                     nsIDOMNode* aLoadingNode,
+                                                     nsINode* aLoadingNode,
                                                      nsIPrincipal* aLoadingPrincipal,
                                                      nsIPrincipal* aTriggeringPrincipal,
                                                      const Maybe<ClientInfo>& aLoadingClientInfo,
@@ -836,10 +804,9 @@ nsIOService::NewChannelFromURIWithProxyFlagsInternal(nsIURI* aURI,
     // types do.
     if (aLoadingNode || aLoadingPrincipal ||
         aContentPolicyType == nsIContentPolicy::TYPE_DOCUMENT) {
-      nsCOMPtr<nsINode> loadingNode(do_QueryInterface(aLoadingNode));
       loadInfo = new LoadInfo(aLoadingPrincipal,
                               aTriggeringPrincipal,
-                              loadingNode,
+                              aLoadingNode,
                               aSecurityFlags,
                               aContentPolicyType,
                               aLoadingClientInfo,
@@ -971,7 +938,7 @@ NS_IMETHODIMP
 nsIOService::NewChannelFromURIWithProxyFlags2(nsIURI* aURI,
                                               nsIURI* aProxyURI,
                                               uint32_t aProxyFlags,
-                                              nsIDOMNode* aLoadingNode,
+                                              nsINode* aLoadingNode,
                                               nsIPrincipal* aLoadingPrincipal,
                                               nsIPrincipal* aTriggeringPrincipal,
                                               uint32_t aSecurityFlags,
@@ -995,7 +962,7 @@ NS_IMETHODIMP
 nsIOService::NewChannel2(const nsACString& aSpec,
                          const char* aCharset,
                          nsIURI* aBaseURI,
-                         nsIDOMNode* aLoadingNode,
+                         nsINode* aLoadingNode,
                          nsIPrincipal* aLoadingPrincipal,
                          nsIPrincipal* aTriggeringPrincipal,
                          uint32_t aSecurityFlags,
@@ -1014,44 +981,6 @@ nsIOService::NewChannel2(const nsACString& aSpec,
                               aSecurityFlags,
                               aContentPolicyType,
                               result);
-}
-
-/*  ***** DEPRECATED *****
- * please use NewChannel2 providing the right arguments for:
- *        * aLoadingNode
- *        * aLoadingPrincipal
- *        * aTriggeringPrincipal
- *        * aSecurityFlags
- *        * aContentPolicyType
- *
- * See nsIIoService.idl for a detailed description of those arguments
- */
-NS_IMETHODIMP
-nsIOService::NewChannel(const nsACString &aSpec, const char *aCharset, nsIURI *aBaseURI, nsIChannel **result)
-{
-  NS_ASSERTION(false, "Deprecated, use NewChannel2 providing loadInfo arguments!");
-
-  const char16_t* params[] = {
-    u"nsIOService::NewChannel()",
-    u"nsIOService::NewChannel2()"
-  };
-  nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                  NS_LITERAL_CSTRING("Security by Default"),
-                                  nullptr, // aDocument
-                                  nsContentUtils::eNECKO_PROPERTIES,
-                                  "APIDeprecationWarning",
-                                  params, ArrayLength(params));
-
-  // Call NewChannel2 providing default arguments for the loadInfo.
-  return NewChannel2(aSpec,
-                     aCharset,
-                     aBaseURI,
-                     nullptr, // aLoadingNode
-                     nsContentUtils::GetSystemPrincipal(), // aLoadingPrincipal
-                     nullptr, // aTriggeringPrincipal
-                     nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                     nsIContentPolicy::TYPE_OTHER,
-                     result);
 }
 
 bool
@@ -1204,7 +1133,7 @@ nsIOService::SetConnectivityInternal(bool aConnectivity)
     mLastConnectivityChange = PR_IntervalNow();
 
     if (mCaptivePortalService) {
-        if (aConnectivity && !xpc::AreNonLocalConnectionsDisabled() && gCaptivePortalEnabled) {
+        if (aConnectivity && gCaptivePortalEnabled) {
             // This will also trigger a captive portal check for the new network
             static_cast<CaptivePortalService*>(mCaptivePortalService.get())->Start();
         } else {
@@ -1291,23 +1220,21 @@ nsIOService::AllowPort(int32_t inPort, const char *scheme, bool *_retval)
 ////////////////////////////////////////////////////////////////////////////////
 
 void
-nsIOService::PrefsChanged(nsIPrefBranch *prefs, const char *pref)
+nsIOService::PrefsChanged(const char *pref)
 {
-    if (!prefs) return;
-
     // Look for extra ports to block
     if (!pref || strcmp(pref, PORT_PREF("banned")) == 0)
-        ParsePortList(prefs, PORT_PREF("banned"), false);
+        ParsePortList(PORT_PREF("banned"), false);
 
     // ...as well as previous blocks to remove.
     if (!pref || strcmp(pref, PORT_PREF("banned.override")) == 0)
-        ParsePortList(prefs, PORT_PREF("banned.override"), true);
+        ParsePortList(PORT_PREF("banned.override"), true);
 
     if (!pref || strcmp(pref, MANAGE_OFFLINE_STATUS_PREF) == 0) {
         bool manage;
         if (mNetworkLinkServiceInitialized &&
-            NS_SUCCEEDED(prefs->GetBoolPref(MANAGE_OFFLINE_STATUS_PREF,
-                                            &manage))) {
+            NS_SUCCEEDED(Preferences::GetBool(MANAGE_OFFLINE_STATUS_PREF,
+                                              &manage))) {
             LOG(("nsIOService::PrefsChanged ManageOfflineStatus manage=%d\n", manage));
             SetManageOfflineStatus(manage);
         }
@@ -1315,8 +1242,8 @@ nsIOService::PrefsChanged(nsIPrefBranch *prefs, const char *pref)
 
     if (!pref || strcmp(pref, NECKO_BUFFER_CACHE_COUNT_PREF) == 0) {
         int32_t count;
-        if (NS_SUCCEEDED(prefs->GetIntPref(NECKO_BUFFER_CACHE_COUNT_PREF,
-                                           &count)))
+        if (NS_SUCCEEDED(Preferences::GetInt(NECKO_BUFFER_CACHE_COUNT_PREF,
+                                             &count)))
             /* check for bogus values and default if we find such a value */
             if (count > 0)
                 gDefaultSegmentCount = count;
@@ -1324,8 +1251,8 @@ nsIOService::PrefsChanged(nsIPrefBranch *prefs, const char *pref)
 
     if (!pref || strcmp(pref, NECKO_BUFFER_CACHE_SIZE_PREF) == 0) {
         int32_t size;
-        if (NS_SUCCEEDED(prefs->GetIntPref(NECKO_BUFFER_CACHE_SIZE_PREF,
-                                           &size)))
+        if (NS_SUCCEEDED(Preferences::GetInt(NECKO_BUFFER_CACHE_SIZE_PREF,
+                                             &size)))
             /* check for bogus values and default if we find such a value
              * the upper limit here is arbitrary. having a 1mb segment size
              * is pretty crazy.  if you remove this, consider adding some
@@ -1339,16 +1266,16 @@ nsIOService::PrefsChanged(nsIPrefBranch *prefs, const char *pref)
 
     if (!pref || strcmp(pref, NETWORK_NOTIFY_CHANGED_PREF) == 0) {
         bool allow;
-        nsresult rv = prefs->GetBoolPref(NETWORK_NOTIFY_CHANGED_PREF, &allow);
+        nsresult rv = Preferences::GetBool(NETWORK_NOTIFY_CHANGED_PREF, &allow);
         if (NS_SUCCEEDED(rv)) {
             mNetworkNotifyChanged = allow;
         }
     }
 
     if (!pref || strcmp(pref, NETWORK_CAPTIVE_PORTAL_PREF) == 0) {
-        nsresult rv = prefs->GetBoolPref(NETWORK_CAPTIVE_PORTAL_PREF, &gCaptivePortalEnabled);
+        nsresult rv = Preferences::GetBool(NETWORK_CAPTIVE_PORTAL_PREF, &gCaptivePortalEnabled);
         if (NS_SUCCEEDED(rv) && mCaptivePortalService) {
-            if (gCaptivePortalEnabled && !xpc::AreNonLocalConnectionsDisabled()) {
+            if (gCaptivePortalEnabled) {
                 static_cast<CaptivePortalService*>(mCaptivePortalService.get())->Start();
             } else {
                 static_cast<CaptivePortalService*>(mCaptivePortalService.get())->Stop();
@@ -1358,12 +1285,12 @@ nsIOService::PrefsChanged(nsIPrefBranch *prefs, const char *pref)
 }
 
 void
-nsIOService::ParsePortList(nsIPrefBranch *prefBranch, const char *pref, bool remove)
+nsIOService::ParsePortList(const char *pref, bool remove)
 {
     nsAutoCString portList;
 
     // Get a pref string and chop it up into a list of ports.
-    prefBranch->GetCharPref(pref, portList);
+    Preferences::GetCString(pref, portList);
     if (!portList.IsVoid()) {
         nsTArray<nsCString> portListArray;
         ParseString(portList, ',', portListArray);
@@ -1396,13 +1323,6 @@ nsIOService::ParsePortList(nsIPrefBranch *prefBranch, const char *pref, bool rem
 
         }
     }
-}
-
-void
-nsIOService::GetPrefBranch(nsIPrefBranch **result)
-{
-    *result = nullptr;
-    CallGetService(NS_PREFSERVICE_CONTRACTID, result);
 }
 
 class nsWakeupNotifier : public Runnable
@@ -1455,11 +1375,7 @@ nsIOService::Observe(nsISupports *subject,
                      const char *topic,
                      const char16_t *data)
 {
-    if (!strcmp(topic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID)) {
-        nsCOMPtr<nsIPrefBranch> prefBranch = do_QueryInterface(subject);
-        if (prefBranch)
-            PrefsChanged(prefBranch, NS_ConvertUTF16toUTF8(data).get());
-    } else if (!strcmp(topic, kProfileChangeNetTeardownTopic)) {
+    if (!strcmp(topic, kProfileChangeNetTeardownTopic)) {
         if (!mHttpHandlerAlreadyShutingDown) {
           mNetTearingDownStarted = PR_IntervalNow();
         }
@@ -1482,9 +1398,7 @@ nsIOService::Observe(nsISupports *subject,
             mNetworkLinkServiceInitialized = true;
 
             // And now reflect the preference setting
-            nsCOMPtr<nsIPrefBranch> prefBranch;
-            GetPrefBranch(getter_AddRefs(prefBranch));
-            PrefsChanged(prefBranch, MANAGE_OFFLINE_STATUS_PREF);
+            PrefsChanged(MANAGE_OFFLINE_STATUS_PREF);
 
             // Bug 870460 - Read cookie database at an early-as-possible time
             // off main thread. Hence, we have more chance to finish db query
@@ -1601,21 +1515,6 @@ nsIOService::URIChainHasFlags(nsIURI   *uri,
 }
 
 NS_IMETHODIMP
-nsIOService::ToImmutableURI(nsIURI* uri, nsIURI** result)
-{
-    if (!uri) {
-        *result = nullptr;
-        return NS_OK;
-    }
-
-    nsresult rv = NS_EnsureSafeToReturn(uri, result);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    NS_TryToSetImmutable(*result);
-    return NS_OK;
-}
-
-NS_IMETHODIMP
 nsIOService::SetManageOfflineStatus(bool aManage)
 {
     LOG(("nsIOService::SetManageOfflineStatus aManage=%d\n", aManage));
@@ -1646,12 +1545,30 @@ nsIOService::GetManageOfflineStatus(bool* aManage)
 nsresult
 nsIOService::OnNetworkLinkEvent(const char *data)
 {
-    LOG(("nsIOService::OnNetworkLinkEvent data:%s\n", data));
-    if (!mNetworkLinkService)
-        return NS_ERROR_FAILURE;
+    if (IsNeckoChild()) {
+        // There is nothing IO service could do on the child process
+        // with this at the moment.  Feel free to add functionality
+        // here at will, though.
+        return NS_OK;
+    }
 
-    if (mShutdown)
+    if (mShutdown) {
         return NS_ERROR_NOT_AVAILABLE;
+    }
+
+    nsCString dataAsString(data);
+    for (auto* cp : mozilla::dom::ContentParent::AllProcesses(mozilla::dom::ContentParent::eLive)) {
+        PNeckoParent* neckoParent = SingleManagedOrNull(cp->ManagedPNeckoParent());
+        if (!neckoParent) {
+            continue;
+        }
+        Unused << neckoParent->SendNetworkChangeNotification(dataAsString);
+    }
+
+    LOG(("nsIOService::OnNetworkLinkEvent data:%s\n", data));
+    if (!mNetworkLinkService) {
+        return NS_ERROR_FAILURE;
+    }
 
     if (!mManageLinkStatus) {
         LOG(("nsIOService::OnNetworkLinkEvent mManageLinkStatus=false\n"));
@@ -1665,7 +1582,8 @@ nsIOService::OnNetworkLinkEvent(const char *data)
         // but the status of the captive portal may have changed.
         RecheckCaptivePortal();
         return NS_OK;
-    } else if (!strcmp(data, NS_NETWORK_LINK_DATA_DOWN)) {
+    }
+    if (!strcmp(data, NS_NETWORK_LINK_DATA_DOWN)) {
         isUp = false;
     } else if (!strcmp(data, NS_NETWORK_LINK_DATA_UP)) {
         isUp = true;

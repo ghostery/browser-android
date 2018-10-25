@@ -7,11 +7,11 @@
 #include "URLWorker.h"
 
 #include "mozilla/dom/Blob.h"
+#include "mozilla/dom/BlobURLProtocolHandler.h"
 #include "mozilla/dom/WorkerPrivate.h"
 #include "mozilla/dom/WorkerRunnable.h"
 #include "mozilla/dom/WorkerScope.h"
 #include "mozilla/Unused.h"
-#include "nsHostObjectProtocolHandler.h"
 #include "nsProxyRelease.h"
 #include "nsStandardURL.h"
 #include "nsURLHelper.h"
@@ -59,7 +59,7 @@ public:
 
     nsAutoCString url;
     nsresult rv =
-      nsHostObjectProtocolHandler::AddDataEntry(mBlobImpl, principal, url);
+      BlobURLProtocolHandler::AddDataEntry(mBlobImpl, principal, url);
 
     if (NS_FAILED(rv)) {
       NS_WARNING("Failed to add data entry for the blob!");
@@ -112,7 +112,7 @@ public:
     NS_ConvertUTF16toUTF8 url(mURL);
 
     nsIPrincipal* urlPrincipal =
-      nsHostObjectProtocolHandler::GetDataEntryPrincipal(url);
+      BlobURLProtocolHandler::GetDataEntryPrincipal(url);
 
     nsCOMPtr<nsIPrincipal> principal = mWorkerPrivate->GetPrincipal();
 
@@ -120,7 +120,7 @@ public:
     if (urlPrincipal &&
         NS_SUCCEEDED(principal->Subsumes(urlPrincipal, &subsumes)) &&
         subsumes) {
-      nsHostObjectProtocolHandler::RemoveDataEntry(url);
+      BlobURLProtocolHandler::RemoveDataEntry(url);
     }
 
     if (!mWorkerPrivate->IsSharedWorker() &&
@@ -167,7 +167,7 @@ public:
     AssertIsOnMainThread();
 
     NS_ConvertUTF16toUTF8 url(mURL);
-    mValid = nsHostObjectProtocolHandler::HasDataEntry(url);
+    mValid = BlobURLProtocolHandler::HasDataEntry(url);
 
     return true;
   }
@@ -225,7 +225,7 @@ public:
       return true;
     }
 
-    mRetval = Move(uri);
+    mRetval = std::move(uri);
     return true;
   }
 
@@ -271,7 +271,7 @@ public:
   void
   Dispatch(ErrorResult& aRv)
   {
-    WorkerMainThreadRunnable::Dispatch(Terminating, aRv);
+    WorkerMainThreadRunnable::Dispatch(Canceling, aRv);
   }
 
 private:
@@ -318,14 +318,14 @@ public:
       return true;
     }
 
-    mRetval = Move(uri);
+    mRetval = std::move(uri);
     return true;
   }
 
   void
   Dispatch(ErrorResult& aRv)
   {
-    WorkerMainThreadRunnable::Dispatch(Terminating, aRv);
+    WorkerMainThreadRunnable::Dispatch(Canceling, aRv);
   }
 
   nsIURI*
@@ -381,7 +381,7 @@ URLWorker::CreateObjectURL(const GlobalObject& aGlobal, Blob& aBlob,
   RefPtr<CreateURLRunnable> runnable =
     new CreateURLRunnable(workerPrivate, blobImpl, aResult);
 
-  runnable->Dispatch(Terminating, aRv);
+  runnable->Dispatch(Canceling, aRv);
   if (NS_WARN_IF(aRv.Failed())) {
     return;
   }
@@ -404,7 +404,7 @@ URLWorker::RevokeObjectURL(const GlobalObject& aGlobal, const nsAString& aUrl,
   RefPtr<RevokeURLRunnable> runnable =
     new RevokeURLRunnable(workerPrivate, aUrl);
 
-  runnable->Dispatch(Terminating, aRv);
+  runnable->Dispatch(Canceling, aRv);
   if (NS_WARN_IF(aRv.Failed())) {
     return;
   }
@@ -427,7 +427,7 @@ URLWorker::IsValidURL(const GlobalObject& aGlobal, const nsAString& aUrl,
   RefPtr<IsValidURLRunnable> runnable =
     new IsValidURLRunnable(workerPrivate, aUrl);
 
-  runnable->Dispatch(Terminating, aRv);
+  runnable->Dispatch(Canceling, aRv);
   if (NS_WARN_IF(aRv.Failed())) {
     return false;
   }
@@ -462,7 +462,7 @@ URLWorker::Init(const nsAString& aURL, const Optional<nsAString>& aBase,
   // create url proxy
   RefPtr<ConstructorRunnable> runnable =
     new ConstructorRunnable(mWorkerPrivate, aURL, aBase);
-  runnable->Dispatch(Terminating, aRv);
+  runnable->Dispatch(Canceling, aRv);
   if (NS_WARN_IF(aRv.Failed())) {
     return;
   }
@@ -489,7 +489,7 @@ URLWorker::SetHref(const nsAString& aHref, ErrorResult& aRv)
 
   RefPtr<ConstructorRunnable> runnable =
     new ConstructorRunnable(mWorkerPrivate, aHref, Optional<nsAString>());
-  runnable->Dispatch(Terminating, aRv);
+  runnable->Dispatch(Canceling, aRv);
   if (NS_WARN_IF(aRv.Failed())) {
     return;
   }

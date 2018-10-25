@@ -6,7 +6,6 @@
 
 "use strict";
 
-const { getRootBindingParent } = require("devtools/shared/layout/utils");
 const { getTabPrefs } = require("devtools/shared/indentation");
 const InspectorUtils = require("InspectorUtils");
 
@@ -49,6 +48,8 @@ const MAX_DATA_URL_LENGTH = 40;
 const Services = require("Services");
 
 loader.lazyImporter(this, "findCssSelector", "resource://gre/modules/css-selector.js");
+loader.lazyImporter(this, "getCssPath", "resource://gre/modules/css-selector.js");
+loader.lazyImporter(this, "getXPath", "resource://gre/modules/css-selector.js");
 
 const CSSLexer = require("devtools/shared/css/lexer");
 const {LocalizationHelper} = require("devtools/shared/l10n");
@@ -113,7 +114,7 @@ exports.shortSource = function(sheet) {
   }
 
   // If the sheet is a data URL, return a trimmed version of it.
-  let dataUrl = sheet.href.trim().match(/^data:.*?,((?:.|\r|\n)*)$/);
+  const dataUrl = sheet.href.trim().match(/^data:.*?,((?:.|\r|\n)*)$/);
   if (dataUrl) {
     return dataUrl[1].length > MAX_DATA_URL_LENGTH ?
       `${dataUrl[1].substr(0, MAX_DATA_URL_LENGTH - 1)}…` : dataUrl[1];
@@ -128,7 +129,7 @@ exports.shortSource = function(sheet) {
   }
 
   if (url.pathname) {
-    let index = url.pathname.lastIndexOf("/");
+    const index = url.pathname.lastIndexOf("/");
     if (index !== -1 && index < url.pathname.length) {
       return url.pathname.slice(index + 1);
     }
@@ -154,22 +155,22 @@ const SPACE_CHARS = " ";
  */
 function prettifyCSS(text, ruleCount) {
   if (prettifyCSS.LINE_SEPARATOR == null) {
-    let os = Services.appinfo.OS;
+    const os = Services.appinfo.OS;
     prettifyCSS.LINE_SEPARATOR = (os === "WINNT" ? "\r\n" : "\n");
   }
 
   // Stylesheets may start and end with HTML comment tags (possibly with whitespaces
   // before and after). Remove those first. Don't do anything there aren't any.
-  let trimmed = text.trim();
+  const trimmed = text.trim();
   if (trimmed.startsWith("<!--")) {
     text = trimmed.replace(/^<!--/, "").replace(/-->$/, "").trim();
   }
 
-  let originalText = text;
+  const originalText = text;
   text = text.trim();
 
   // don't attempt to prettify if there's more than one line per rule.
-  let lineCount = text.split("\n").length - 1;
+  const lineCount = text.split("\n").length - 1;
   if (ruleCount !== null && lineCount >= ruleCount) {
     return originalText;
   }
@@ -189,7 +190,7 @@ function prettifyCSS(text, ruleCount) {
   // minified file.
   let indent = "";
   let indentLevel = 0;
-  let tokens = CSSLexer.getCSSLexer(text);
+  const tokens = CSSLexer.getCSSLexer(text);
   let result = "";
   let pushbackToken = undefined;
 
@@ -198,16 +199,16 @@ function prettifyCSS(text, ruleCount) {
   // are appended to |result|.  If this encounters EOF, it returns
   // null.  Otherwise it returns the last whitespace token that was
   // seen.  This function also updates |pushbackToken|.
-  let readUntilSignificantToken = () => {
+  const readUntilSignificantToken = () => {
     while (true) {
-      let token = tokens.nextToken();
+      const token = tokens.nextToken();
       if (!token || token.tokenType !== "whitespace") {
         pushbackToken = token;
         return token;
       }
       // Saw whitespace.  Before committing to it, check the next
       // token.
-      let nextToken = tokens.nextToken();
+      const nextToken = tokens.nextToken();
       if (!nextToken || nextToken.tokenType !== "comment") {
         pushbackToken = nextToken;
         return token;
@@ -237,7 +238,7 @@ function prettifyCSS(text, ruleCount) {
   // the final token read.  Note that if the returned token is "{",
   // then it will not be included in the computed start/end token
   // range.  This is used to handle whitespace insertion before a "{".
-  let readUntilNewlineNeeded = () => {
+  const readUntilNewlineNeeded = () => {
     let token;
     while (true) {
       if (pushbackToken) {
@@ -304,7 +305,7 @@ function prettifyCSS(text, ruleCount) {
 
     // Get preference of the user regarding what to use for indentation,
     // spaces or tabs.
-    let tabPrefs = getTabPrefs();
+    const tabPrefs = getTabPrefs();
 
     if (isCloseBrace) {
       // Even if the stylesheet contains extra closing braces, the indent level should
@@ -374,48 +375,6 @@ exports.findCssSelector = findCssSelector;
  * match the element uniquely. It does however, represent the full path from the root
  * node to the element.
  */
-function getCssPath(ele) {
-  ele = getRootBindingParent(ele);
-  const document = ele.ownerDocument;
-  if (!document || !document.contains(ele)) {
-    throw new Error("getCssPath received element not inside document");
-  }
-
-  const getElementSelector = element => {
-    if (!element.localName) {
-      return "";
-    }
-
-    let label = element.nodeName == element.nodeName.toUpperCase()
-                ? element.localName.toLowerCase()
-                : element.localName;
-
-    if (element.id) {
-      label += "#" + element.id;
-    }
-
-    if (element.classList) {
-      for (let cl of element.classList) {
-        label += "." + cl;
-      }
-    }
-
-    return label;
-  };
-
-  let paths = [];
-
-  while (ele) {
-    if (!ele || ele.nodeType !== Node.ELEMENT_NODE) {
-      break;
-    }
-
-    paths.splice(0, 0, getElementSelector(ele));
-    ele = ele.parentNode;
-  }
-
-  return paths.length ? paths.join(" ") : "";
-}
 exports.getCssPath = getCssPath;
 
 /**
@@ -423,59 +382,6 @@ exports.getCssPath = getCssPath;
  * @param {DomNode} ele
  * @returns a string that can be used as an XPath to find the element uniquely.
  */
-function getXPath(ele) {
-  ele = getRootBindingParent(ele);
-  const document = ele.ownerDocument;
-  if (!document || !document.contains(ele)) {
-    throw new Error("getXPath received element not inside document");
-  }
-
-  // Create a short XPath for elements with IDs.
-  if (ele.id) {
-    return `//*[@id="${ele.id}"]`;
-  }
-
-  // Otherwise walk the DOM up and create a part for each ancestor.
-  const parts = [];
-
-  // Use nodeName (instead of localName) so namespace prefix is included (if any).
-  while (ele && ele.nodeType === Node.ELEMENT_NODE) {
-    let nbOfPreviousSiblings = 0;
-    let hasNextSiblings = false;
-
-    // Count how many previous same-name siblings the element has.
-    let sibling = ele.previousSibling;
-    while (sibling) {
-      // Ignore document type declaration.
-      if (sibling.nodeType !== Node.DOCUMENT_TYPE_NODE &&
-          sibling.nodeName == ele.nodeName) {
-        nbOfPreviousSiblings++;
-      }
-
-      sibling = sibling.previousSibling;
-    }
-
-    // Check if the element has at least 1 next same-name sibling.
-    sibling = ele.nextSibling;
-    while (sibling) {
-      if (sibling.nodeName == ele.nodeName) {
-        hasNextSiblings = true;
-        break;
-      }
-      sibling = sibling.nextSibling;
-    }
-
-    const prefix = ele.prefix ? ele.prefix + ":" : "";
-    const nth = nbOfPreviousSiblings || hasNextSiblings
-                ? `[${nbOfPreviousSiblings + 1}]` : "";
-
-    parts.push(prefix + ele.localName + nth);
-
-    ele = ele.parentNode;
-  }
-
-  return parts.length ? "/" + parts.reverse().join("/") : "";
-}
 exports.getXPath = getXPath;
 
 /**
@@ -511,7 +417,7 @@ exports.getBindingElementAndPseudo = getBindingElementAndPseudo;
  * normal element.
  */
 function getCSSStyleRules(node) {
-  let { bindingElement, pseudo } = getBindingElementAndPseudo(node);
+  const { bindingElement, pseudo } = getBindingElementAndPseudo(node);
   return InspectorUtils.getCSSStyleRules(bindingElement, pseudo);
 }
 exports.getCSSStyleRules = getCSSStyleRules;

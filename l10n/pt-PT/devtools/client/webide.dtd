@@ -36,8 +36,6 @@
 <!ENTITY runtimeMenu_takeScreenshot_accesskey "e">
 <!ENTITY runtimeMenu_showDetails_label "Informação do runtime">
 <!ENTITY runtimeMenu_showDetails_accesskey "E">
-<!ENTITY runtimeMenu_showMonitor_label "Monitor">
-<!ENTITY runtimeMenu_showMonitor_accesskey "M">
 <!ENTITY runtimeMenu_showDevicePrefs_label "Preferências do dispositivo">
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "d">
 <!ENTITY runtimeMenu_showSettings_label "Definições do dispositivo">
@@ -75,10 +73,9 @@
 <!ENTITY projectPanel_tabs "Separadores">
 <!ENTITY runtimePanel_usb "Dispositivos USB">
 <!ENTITY runtimePanel_wifi "Dispositivos Wi-Fi">
-<!ENTITY runtimePanel_simulator "Simuladores">
 <!ENTITY runtimePanel_other "Outros">
-<!ENTITY runtimePanel_installsimulator "Instalar simulador">
 <!ENTITY runtimePanel_noadbhelper "Instalar ADB Helper">
+<!ENTITY runtimePanel_noadbextension "Instalar a extensão ADB">
 <!ENTITY runtimePanel_nousbdevice "Não vê o seu dispositivo?">
 <!ENTITY runtimePanel_refreshDevices_label "Atualizar dispositivos">
 
@@ -104,7 +101,7 @@
 
 <!-- Addons -->
 <!ENTITY addons_title "Componentes extra">
-<!ENTITY addons_aboutaddons "Abrir gestor de extras">
+<!ENTITY addons_aboutaddons "Abrir Gestor de extras">
 
 <!-- Prefs -->
 <!ENTITY prefs_title "Preferências">
@@ -149,10 +146,6 @@
 <!ENTITY devicesetting_newtext "Valor da definição">
 <!ENTITY devicesetting_addnew "Adicionar nova definição">
 
-<!-- Monitor -->
-<!ENTITY monitor_title "Monitorizar">
-<!ENTITY monitor_help "Ajuda">
-
 <!-- WiFi Authentication -->
 <!-- LOCALIZATION NOTE (wifi_auth_header): The header displayed on the dialog
      that instructs the user to transfer an authentication token to the
@@ -174,19 +167,3 @@
 
 <!-- Logs panel -->
 <!ENTITY logs_title "Registos de comandos pré-pacote">
-
-<!-- Simulator Options -->
-<!ENTITY simulator_title "Opções do simulador">
-<!ENTITY simulator_remove "Apagar simulador">
-<!ENTITY simulator_reset "Restaurar predefinições">
-<!ENTITY simulator_name "Nome">
-<!ENTITY simulator_software "Software">
-<!ENTITY simulator_version "Versão">
-<!ENTITY simulator_profile "Perfil">
-<!ENTITY simulator_hardware "Hardware">
-<!ENTITY simulator_device "Dispositivo">
-<!ENTITY simulator_screenSize "Ecrã">
-<!ENTITY simulator_pixelRatio "Rácio do pixel">
-<!ENTITY simulator_tv_data "Simulação de TV">
-<!ENTITY simulator_tv_data_open "Dados de configuração">
-<!ENTITY simulator_tv_data_open_button "Abrir diretório de configuração…">

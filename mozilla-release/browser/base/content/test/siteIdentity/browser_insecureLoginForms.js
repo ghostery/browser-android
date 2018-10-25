@@ -45,7 +45,7 @@ add_task(async function test_simple() {
     // the scheme is HTTPS.
     is(Array.every(document.getElementById("identity-popup-mainView")
                            .querySelectorAll("[when-loginforms=insecure]"),
-                   element => !is_hidden(element)),
+                   element => !BrowserTestUtils.is_hidden(element)),
        expectWarning,
        "The relevant messages should be visible or hidden in the main view.");
 
@@ -54,7 +54,7 @@ add_task(async function test_simple() {
     await promiseViewShown;
 
     if (expectWarning) {
-      ok(is_visible(document.getElementById("connection-icon")), "Connection icon should be visible");
+      ok(BrowserTestUtils.is_visible(document.getElementById("connection-icon")), "Connection icon should be visible");
       let connectionIconImage = gBrowser.ownerGlobal
             .getComputedStyle(document.getElementById("connection-icon"))
             .getPropertyValue("list-style-image");
@@ -75,17 +75,15 @@ add_task(async function test_simple() {
       is(securityContentBG,
          "url(\"chrome://browser/skin/controlcenter/mcb-disabled.svg\")",
          "Using expected icon image in the Control Center subview");
-      is(Array.filter(document.getElementById("identity-popup-securityView")
-                              .querySelectorAll("[observes=identity-popup-insecure-login-forms-learn-more]"),
-                      element => !is_hidden(element)).length, 1,
-         "The 'Learn more' link should be visible once.");
+      ok(!BrowserTestUtils.is_hidden(document.getElementById("identity-popup-insecure-login-forms-learn-more")),
+         "The 'Learn more' link should be visible.");
     }
 
     // Messages should be visible when the scheme is HTTP, and invisible when
     // the scheme is HTTPS.
     is(Array.every(document.getElementById("identity-popup-securityView")
                            .querySelectorAll("[when-loginforms=insecure]"),
-                   element => !is_hidden(element)),
+                   element => !BrowserTestUtils.is_hidden(element)),
        expectWarning,
        "The relevant messages should be visible or hidden in the security view.");
 
@@ -161,14 +159,14 @@ add_task(async function test_ignoring_window_opener() {
 
     ok(Array.every(document.getElementById("identity-popup-mainView")
                            .querySelectorAll("[when-loginforms=insecure]"),
-                   element => is_hidden(element)),
+                   element => BrowserTestUtils.is_hidden(element)),
        "All messages should be hidden in the main view.");
 
     let promiseViewShown = BrowserTestUtils.waitForEvent(gIdentityHandler._identityPopup, "ViewShown");
     document.getElementById("identity-popup-security-expander").click();
     await promiseViewShown;
 
-    ok(is_visible(document.getElementById("connection-icon")),
+    ok(BrowserTestUtils.is_visible(document.getElementById("connection-icon")),
        "Connection icon is visible");
 
     // Assert that the identity indicators are still "secure".
@@ -195,7 +193,7 @@ add_task(async function test_ignoring_window_opener() {
 
     ok(Array.every(document.getElementById("identity-popup-securityView")
                            .querySelectorAll("[when-loginforms=insecure]"),
-                   element => is_hidden(element)),
+                   element => BrowserTestUtils.is_hidden(element)),
        "All messages should be hidden in the security view.");
 
     if (gIdentityHandler._identityPopup.state != "closed") {

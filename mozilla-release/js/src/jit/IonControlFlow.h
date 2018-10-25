@@ -25,12 +25,12 @@ class CFGControlInstruction;
 #define TRIVIAL_CFG_NEW_WRAPPERS                                              \
     template <typename... Args>                                               \
     static CFGThisOpcode* New(TempAllocator& alloc, Args&&... args) {         \
-        return new(alloc) CFGThisOpcode(mozilla::Forward<Args>(args)...);     \
+        return new(alloc) CFGThisOpcode(std::forward<Args>(args)...);     \
     }                                                                         \
     template <typename... Args>                                               \
     static CFGThisOpcode* New(TempAllocator::Fallible alloc, Args&&... args)  \
     {                                                                         \
-        return new(alloc) CFGThisOpcode(mozilla::Forward<Args>(args)...);     \
+        return new(alloc) CFGThisOpcode(std::forward<Args>(args)...);     \
     }
 
 class CFGSpace
@@ -854,7 +854,7 @@ class ControlFlowGenerator
     ControlStatus processForCondEnd(CFGState& state);
     ControlStatus processForBodyEnd(CFGState& state);
     ControlStatus processForUpdateEnd(CFGState& state);
-    ControlStatus processWhileOrForInLoop(jssrcnote* sn);
+    ControlStatus processWhileOrForInOrForOfLoop(jssrcnote* sn);
     ControlStatus processNextTableSwitchCase(CFGState& state);
     ControlStatus processCondSwitch();
     ControlStatus processCondSwitchCase(CFGState& state);
@@ -869,7 +869,6 @@ class ControlFlowGenerator
     ControlStatus processContinue(JSOp op);
     ControlStatus processBreak(JSOp op, jssrcnote* sn);
     ControlStatus processReturn(JSOp op);
-    ControlStatus maybeLoop(JSOp op, jssrcnote* sn);
     ControlStatus snoopControlFlow(JSOp op);
     ControlStatus processBrokenLoop(CFGState& state);
     ControlStatus finishLoop(CFGState& state, CFGBlock* successor);

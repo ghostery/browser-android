@@ -1,3 +1,4 @@
+
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -14,16 +15,24 @@
 // to serve out the pages that we want to prototype with. Also
 // update the manifest content 'matches' accordingly
 
+// when the browser starts this webext runner will start automatically; we
+// want to give the browser some time (ms) to settle before starting tests
+var postStartupDelay = 30000;
+
+// delay (ms) between pageload cycles
+var pageCycleDelay = 1000;
+
 var browserName;
 var ext;
+var testName = null;
 var settingsURL = null;
+var csPort = null;
+var benchmarkPort = null;
 var testType;
 var pageCycles = 0;
 var pageCycle = 0;
-var pageCycleDelay = 1000;
 var testURL;
 var testTabID = 0;
-var results = {"page": "", "measurements": {}};
 var getHero = false;
 var getFNBPaint = false;
 var getFCP = false;
@@ -33,7 +42,14 @@ var settings = {};
 var isFNBPaintPending = false;
 var isFCPPending = false;
 var isBenchmarkPending = false;
-var pageTimeout = 5000; // default pageload timeout
+var pageTimeout = 10000; // default pageload timeout
+
+var results = {"name": "",
+               "page": "",
+               "type": "",
+               "lower_is_better": true,
+               "alert_threshold": 2.0,
+               "measurements": {}};
 
 function getTestSettings() {
   console.log("getting test settings from control server");
@@ -48,8 +64,24 @@ function getTestSettings() {
         testType = settings.type;
         pageCycles = settings.page_cycles;
         testURL = settings.test_url;
+
+        // for pageload type tests, the testURL is fine as is - we don't have
+        // to add a port as it's accessed via proxy and the playback tool
+        // however for benchmark tests, their source is served out on a local
+        // webserver, so we need to swap in the webserver port into the testURL
+        if (testType == "benchmark") {
+          // just replace the '<port>' keyword in the URL with actual benchmarkPort
+          testURL = testURL.replace("<port>", benchmarkPort);
+        }
+
         results.page = testURL;
         results.type = testType;
+        results.name = testName;
+        results.unit = settings.unit;
+        results.subtest_unit = settings.subtest_unit;
+        results.lower_is_better = settings.lower_is_better == "true";
+        results.subtest_lower_is_better = settings.subtest_lower_is_better == "true";
+        results.alert_threshold = settings.alert_threshold;
 
         if (settings.page_timeout !== undefined) {
           pageTimeout = settings.page_timeout;
@@ -76,7 +108,7 @@ function getTestSettings() {
         }
 
         // write options to storage that our content script needs to know
-        if (browserName === "firefox") {
+        if (["firefox", "geckoview"].includes(browserName)) {
           ext.storage.local.clear().then(function() {
             ext.storage.local.set({settings}).then(function() {
               console.log("wrote settings to ext local storage");
@@ -98,7 +130,7 @@ function getTestSettings() {
 
 function getBrowserInfo() {
   return new Promise(resolve => {
-    if (browserName === "firefox") {
+    if (["firefox", "geckoview"].includes(browserName)) {
       ext = browser;
       var gettingInfo = browser.runtime.getBrowserInfo();
       gettingInfo.then(function(bi) {
@@ -128,7 +160,7 @@ function testTabCreated(tab) {
 }
 
 async function testTabUpdated(tab) {
-  console.log("tab " + tab.id + " reloaded");
+  console.log("test tab updated");
   // wait for pageload test result from content
   await waitForResult();
   // move on to next cycle (or test complete)
@@ -186,7 +218,7 @@ function nextCycle() {
       } else if (testType == "benchmark") {
         isBenchmarkPending = true;
       }
-      // reload the test page
+      // update the test page - browse to our test URL
       ext.tabs.update(testTabID, {url: testURL}, testTabUpdated);
     }, pageCycleDelay);
   } else {
@@ -203,13 +235,16 @@ function timeoutAlarmListener(alarm) {
 }
 
 function setTimeoutAlarm(timeoutName, timeoutMS) {
-  var timeout_when = window.performance.now() + timeoutMS;
+  // webext alarms require date.now NOT performance.now
+  var now = Date.now(); // eslint-disable-line mozilla/avoid-Date-timing
+  var timeout_when = now + timeoutMS;
   ext.alarms.create(timeoutName, { when: timeout_when });
-  console.log("set " + timeoutName);
+  console.log("now is " + now + ", set raptor alarm " +
+              timeoutName + " to expire at " + timeout_when);
 }
 
 function cancelTimeoutAlarm(timeoutName) {
-  if (browserName === "firefox") {
+  if (browserName === "firefox" || browserName === "geckoview") {
     var clearAlarm = ext.alarms.clear(timeoutName);
     clearAlarm.then(function(onCleared) {
       if (onCleared) {
@@ -286,7 +321,7 @@ function verifyResults() {
 
 function postToControlServer(msgType, msgData) {
   // requires 'control server' running at port 8000 to receive results
-  var url = "http://127.0.0.1:8000/";
+  var url = "http://127.0.0.1:" + csPort + "/";
   var client = new XMLHttpRequest();
   client.onreadystatechange = function() {
     if (client.readyState == XMLHttpRequest.DONE && client.status == 200) {
@@ -322,17 +357,21 @@ function cleanUp() {
     console.log("benchmark complete");
   }
   window.onload = null;
-  // done, dump to console to tell framework to shutdown browser; currently
-  // this only works with Firefox as google chrome doesn't support dump()
-  if (browserName === "firefox")
-    window.dump("\n__raptor_shutdownBrowser\n");
-
+  // tell the control server we are done and the browser can be shutdown
+  postToControlServer("status", "__raptor_shutdownBrowser");
 }
 
 function runner() {
+  console.log("Welcome to Jurassic Park!");
   let config = getTestConfig();
+  console.log("test name is: " + config.test_name);
+  console.log("test settings url is: " + config.test_settings_url);
+  testName = config.test_name;
   settingsURL = config.test_settings_url;
+  csPort = config.cs_port;
   browserName = config.browser;
+  benchmarkPort = config.benchmark_port;
+
   getBrowserInfo().then(function() {
     getTestSettings().then(function() {
       if (testType == "benchmark") {
@@ -348,8 +387,18 @@ function runner() {
       ext.tabs.onCreated.addListener(testTabCreated);
       // timeout alarm listener
       ext.alarms.onAlarm.addListener(timeoutAlarmListener);
-      // create new empty tab, which starts the test
-      ext.tabs.create({url: "about:blank"});
+
+      // create new empty tab, which starts the test; we want to
+      // wait some time for the browser to settle before beginning
+      var text = "* pausing " + postStartupDelay / 1000 + " seconds to let browser settle... *";
+      postToControlServer("status", text);
+
+      // on geckoview you can't create a new tab; only using existing tab - set it blank first
+      if (config.browser == "geckoview") {
+        setTimeout(function() { nextCycle(); }, postStartupDelay);
+      } else {
+        setTimeout(function() { ext.tabs.create({url: "about:blank"}); }, postStartupDelay);
+      }
     });
   });
 }

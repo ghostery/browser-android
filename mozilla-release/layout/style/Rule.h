@@ -10,6 +10,7 @@
 #define mozilla_css_Rule_h___
 
 #include "mozilla/dom/CSSRuleBinding.h"
+#include "mozilla/dom/DocumentOrShadowRoot.h"
 #include "mozilla/StyleSheet.h"
 #include "mozilla/MemoryReporting.h"
 #include "nsISupports.h"
@@ -28,12 +29,27 @@ class Rule : public nsISupports
            , public nsWrapperCache
 {
 protected:
-  Rule(uint32_t aLineNumber, uint32_t aColumnNumber)
-    : mSheet(nullptr),
-      mParentRule(nullptr),
-      mLineNumber(aLineNumber),
-      mColumnNumber(aColumnNumber)
+  Rule(StyleSheet* aSheet,
+       Rule* aParentRule,
+       uint32_t aLineNumber,
+       uint32_t aColumnNumber)
+    : mSheet(aSheet)
+    , mParentRule(aParentRule)
+    , mLineNumber(aLineNumber)
+    , mColumnNumber(aColumnNumber)
   {
+#ifdef DEBUG
+    // Would be nice to check that this->Type() is KEYFRAME_RULE when
+    // mParentRule->Tye() is KEYFRAMES_RULE, but we can't call
+    // this->Type() here since it's virtual.
+    if (mParentRule) {
+      int16_t type = mParentRule->Type();
+      MOZ_ASSERT(type == dom::CSSRule_Binding::MEDIA_RULE ||
+                 type == dom::CSSRule_Binding::DOCUMENT_RULE ||
+                 type == dom::CSSRule_Binding::SUPPORTS_RULE ||
+                 type == dom::CSSRule_Binding::KEYFRAMES_RULE);
+    }
+#endif
   }
 
   Rule(const Rule& aCopy)
@@ -44,7 +60,7 @@ protected:
   {
   }
 
-  virtual ~Rule() {}
+  virtual ~Rule() = default;
 
 public:
 
@@ -60,29 +76,27 @@ public:
 
   StyleSheet* GetStyleSheet() const { return mSheet; }
 
-  // Return the document the rule lives in, if any
-  nsIDocument* GetDocument() const
+  // Return the document the rule applies to, if any.
+  //
+  // Suitable for style updates, and that's about it.
+  nsIDocument* GetComposedDoc() const
   {
-    StyleSheet* sheet = GetStyleSheet();
-    return sheet ? sheet->GetAssociatedDocument() : nullptr;
+    return mSheet ? mSheet->GetComposedDoc() : nullptr;
   }
 
-  virtual void SetStyleSheet(StyleSheet* aSheet);
+  // Clear the mSheet pointer on this rule and descendants.
+  virtual void DropSheetReference();
 
-  // We don't reference count this up reference. The rule will tell us
-  // when it's going away or when we're detached from it.
-  void SetParentRule(Rule* aRule) {
-#ifdef DEBUG
-    if (aRule) {
-      int16_t type = aRule->Type();
-      MOZ_ASSERT(type == dom::CSSRuleBinding::MEDIA_RULE ||
-                 type == dom::CSSRuleBinding::DOCUMENT_RULE ||
-                 type == dom::CSSRuleBinding::SUPPORTS_RULE ||
-                 (type == dom::CSSRuleBinding::KEYFRAMES_RULE &&
-                  Type() == dom::CSSRuleBinding::KEYFRAME_RULE));
-    }
-#endif
-    mParentRule = aRule;
+  // Clear the mParentRule pointer on this rule.
+  void DropParentRuleReference()
+  {
+    mParentRule = nullptr;
+  }
+
+  void DropReferences()
+  {
+    DropSheetReference();
+    DropParentRuleReference();
   }
 
   uint32_t GetLineNumber() const { return mLineNumber; }
@@ -99,16 +113,26 @@ public:
   void SetCssText(const nsAString& aCssText);
   Rule* GetParentRule() const;
   StyleSheet* GetParentStyleSheet() const { return GetStyleSheet(); }
-  nsIDocument* GetParentObject() const { return GetDocument(); }
+  nsINode* GetParentObject() const
+  {
+    if (!mSheet) {
+      return nullptr;
+    }
+    auto* associated = mSheet->GetAssociatedDocumentOrShadowRoot();
+    return associated ? &associated->AsNode() : nullptr;
+  }
 
 protected:
   // True if we're known-live for cycle collection purposes.
   bool IsKnownLive() const;
 
-  // This is sometimes null (e.g., for style attributes).
-  StyleSheet* mSheet;
-  // When the parent GroupRule is destroyed, it will call SetParentRule(nullptr)
-  // on this object. (Through SetParentRuleReference);
+  // mSheet should only ever be null when we create a synthetic CSSFontFaceRule
+  // for an InspectorFontFace.
+  //
+  // mSheet and mParentRule will be cleared when they are detached from the
+  // parent object, either because the rule is removed or the parent is
+  // destroyed.
+  StyleSheet* MOZ_NON_OWNING_REF mSheet;
   Rule* MOZ_NON_OWNING_REF mParentRule;
 
   // Keep the same type so that MSVC packs them.

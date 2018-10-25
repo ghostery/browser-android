@@ -19,7 +19,6 @@
 #include "mozilla/dom/HTMLSlotElement.h"
 #include "mozilla/dom/ShadowRoot.h"
 #include "nsIDocument.h"
-#include "nsIDOMDocument.h"
 #include "nsReadableUtils.h"
 #include "mozilla/InternalMutationEvent.h"
 #include "nsIURI.h"
@@ -66,8 +65,8 @@ CharacterData::CharacterData(already_AddRefed<dom::NodeInfo>&& aNodeInfo)
 
 CharacterData::~CharacterData()
 {
-  NS_PRECONDITION(!IsInUncomposedDoc(),
-                  "Please remove this from the document properly");
+  MOZ_ASSERT(!IsInUncomposedDoc(),
+             "Please remove this from the document properly");
   if (GetParent()) {
     NS_RELEASE(mParent);
   }
@@ -246,8 +245,8 @@ CharacterData::SetTextInternal(uint32_t aOffset, uint32_t aCount,
                                uint32_t aLength, bool aNotify,
                                CharacterDataChangeInfo::Details* aDetails)
 {
-  NS_PRECONDITION(aBuffer || !aLength,
-                  "Null buffer passed to SetTextInternal!");
+  MOZ_ASSERT(aBuffer || !aLength,
+             "Null buffer passed to SetTextInternal!");
 
   // sanitize arguments
   uint32_t textLength = mText.GetLength();
@@ -267,7 +266,7 @@ CharacterData::SetTextInternal(uint32_t aOffset, uint32_t aCount,
   }
 
   nsIDocument *document = GetComposedDoc();
-  mozAutoDocUpdate updateBatch(document, UPDATE_CONTENT_MODEL, aNotify);
+  mozAutoDocUpdate updateBatch(document, aNotify);
 
   bool haveMutationListeners = aNotify &&
     nsContentUtils::HasMutationListeners(this,
@@ -442,32 +441,34 @@ CharacterData::ToCString(nsAString& aBuf, int32_t aOffset,
 
 
 nsresult
-CharacterData::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                          nsIContent* aBindingParent,
-                          bool aCompileEventHandlers)
+CharacterData::BindToTree(nsIDocument* aDocument,
+                          nsIContent* aParent,
+                          nsIContent* aBindingParent)
 {
-  NS_PRECONDITION(aParent || aDocument, "Must have document if no parent!");
-  NS_PRECONDITION(NODE_FROM(aParent, aDocument)->OwnerDoc() == OwnerDoc(),
-                  "Must have the same owner document");
-  NS_PRECONDITION(!aParent || aDocument == aParent->GetUncomposedDoc(),
-                  "aDocument must be current doc of aParent");
-  NS_PRECONDITION(!GetUncomposedDoc() && !IsInUncomposedDoc(),
-                  "Already have a document.  Unbind first!");
+  MOZ_ASSERT(aParent || aDocument, "Must have document if no parent!");
+  MOZ_ASSERT(NODE_FROM(aParent, aDocument)->OwnerDoc() == OwnerDoc(),
+             "Must have the same owner document");
+  MOZ_ASSERT(!aParent || aDocument == aParent->GetUncomposedDoc(),
+             "aDocument must be current doc of aParent");
+  MOZ_ASSERT(!GetUncomposedDoc() && !IsInUncomposedDoc(),
+             "Already have a document.  Unbind first!");
+  MOZ_ASSERT(!IsInComposedDoc(),
+             "Already have a document.  Unbind first!");
   // Note that as we recurse into the kids, they'll have a non-null parent.  So
   // only assert if our parent is _changing_ while we have a parent.
-  NS_PRECONDITION(!GetParent() || aParent == GetParent(),
-                  "Already have a parent.  Unbind first!");
-  NS_PRECONDITION(!GetBindingParent() ||
-                  aBindingParent == GetBindingParent() ||
-                  (!aBindingParent && aParent &&
-                   aParent->GetBindingParent() == GetBindingParent()),
-                  "Already have a binding parent.  Unbind first!");
-  NS_PRECONDITION(aBindingParent != this,
-                  "Content must not be its own binding parent");
-  NS_PRECONDITION(!IsRootOfNativeAnonymousSubtree() ||
-                  aBindingParent == aParent,
-                  "Native anonymous content must have its parent as its "
-                  "own binding parent");
+  MOZ_ASSERT(!GetParent() || aParent == GetParent(),
+             "Already have a parent.  Unbind first!");
+  MOZ_ASSERT(!GetBindingParent() ||
+             aBindingParent == GetBindingParent() ||
+             (!aBindingParent && aParent &&
+              aParent->GetBindingParent() == GetBindingParent()),
+             "Already have a binding parent.  Unbind first!");
+  MOZ_ASSERT(aBindingParent != this,
+             "Content must not be its own binding parent");
+  MOZ_ASSERT(!IsRootOfNativeAnonymousSubtree() ||
+             aBindingParent == aParent,
+             "Native anonymous content must have its parent as its "
+             "own binding parent");
 
   if (!aBindingParent && aParent) {
     aBindingParent = aParent->GetBindingParent();
@@ -490,14 +491,14 @@ CharacterData::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
     if (HasFlag(NODE_IS_ANONYMOUS_ROOT)) {
       aParent->SetMayHaveAnonymousChildren();
     }
-    if (aParent->IsInShadowTree()) {
-      ClearSubtreeRootPointer();
-      SetFlags(NODE_IS_IN_SHADOW_TREE);
-    }
-    ShadowRoot* parentContainingShadow = aParent->GetContainingShadow();
-    if (parentContainingShadow) {
-      ExtendedContentSlots()->mContainingShadow = parentContainingShadow;
-    }
+  }
+
+  if (aParent && aParent->IsInShadowTree()) {
+    ClearSubtreeRootPointer();
+    SetFlags(NODE_IS_IN_SHADOW_TREE);
+    SetIsConnected(aParent->IsInComposedDoc());
+    MOZ_ASSERT(aParent->GetContainingShadow());
+    ExtendedContentSlots()->mContainingShadow = aParent->GetContainingShadow();
   }
 
   bool hadParent = !!GetParentNode();
@@ -508,8 +509,7 @@ CharacterData::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
       NS_ADDREF(aParent);
     }
     mParent = aParent;
-  }
-  else {
+  } else {
     mParent = aDocument;
   }
   SetParentIsContent(aParent);
@@ -524,6 +524,7 @@ CharacterData::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
 
     // XXX See the comment in Element::BindToTree
     SetIsInDocument();
+    SetIsConnected(true);
     if (mText.IsBidi()) {
       aDocument->SetBidiEnabled();
     }
@@ -554,8 +555,7 @@ void
 CharacterData::UnbindFromTree(bool aDeep, bool aNullParent)
 {
   // Unset frame flags; if we need them again later, they'll get set again.
-  UnsetFlags(NS_CREATE_FRAME_IF_NON_WHITESPACE |
-             NS_REFRAME_IF_WHITESPACE);
+  UnsetFlags(NS_CREATE_FRAME_IF_NON_WHITESPACE | NS_REFRAME_IF_WHITESPACE);
 
   nsIDocument* document = GetComposedDoc();
 
@@ -571,6 +571,7 @@ CharacterData::UnbindFromTree(bool aDeep, bool aNullParent)
     SetParentIsContent(false);
   }
   ClearInDocument();
+  SetIsConnected(false);
 
   if (aNullParent || !mParent->IsInShadowTree()) {
     UnsetFlags(NODE_IS_IN_SHADOW_TREE);
@@ -602,109 +603,9 @@ CharacterData::UnbindFromTree(bool aDeep, bool aNullParent)
   nsNodeUtils::ParentChainChanged(this);
 }
 
-already_AddRefed<nsINodeList>
-CharacterData::GetChildren(uint32_t aFilter)
-{
-  return nullptr;
-}
-
-uint32_t
-CharacterData::GetChildCount() const
-{
-  return 0;
-}
-
-nsIContent *
-CharacterData::GetChildAt_Deprecated(uint32_t aIndex) const
-{
-  return nullptr;
-}
-
-
-int32_t
-CharacterData::ComputeIndexOf(const nsINode* aPossibleChild) const
-{
-  return -1;
-}
-
-nsresult
-CharacterData::InsertChildBefore(nsIContent* aKid,
-                                 nsIContent* aBeforeThis,
-                                 bool aNotify)
-{
-  return NS_OK;
-}
-
-nsresult
-CharacterData::InsertChildAt_Deprecated(nsIContent* aKid,
-                                        uint32_t aIndex,
-                                        bool aNotify)
-{
-  return NS_OK;
-}
-
-void
-CharacterData::RemoveChildAt_Deprecated(uint32_t aIndex, bool aNotify)
-{
-}
-
-void
-CharacterData::RemoveChildNode(nsIContent* aKid, bool aNotify)
-{
-}
-
-nsXBLBinding *
-CharacterData::DoGetXBLBinding() const
-{
-  return nullptr;
-}
-
-bool
-CharacterData::IsNodeOfType(uint32_t aFlags) const
-{
-  return false;
-}
-
-void
-CharacterData::SaveSubtreeState()
-{
-}
-
-#ifdef DEBUG
-void
-CharacterData::List(FILE* out, int32_t aIndent) const
-{
-}
-
-void
-CharacterData::DumpContent(FILE* out, int32_t aIndent,
-                           bool aDumpAll) const
-{
-}
-#endif
-
-bool
-CharacterData::IsLink(nsIURI** aURI) const
-{
-  *aURI = nullptr;
-  return false;
-}
-
 //----------------------------------------------------------------------
 
 // Implementation of the nsIContent interface text functions
-
-const nsTextFragment *
-CharacterData::GetText()
-{
-  return &mText;
-}
-
-uint32_t
-CharacterData::TextLength() const
-{
-  return TextDataLength();
-}
 
 nsresult
 CharacterData::SetText(const char16_t* aBuffer,
@@ -771,19 +672,6 @@ CharacterData::ThreadSafeTextIsOnlyWhitespace() const
   }
 
   return true;
-}
-
-void
-CharacterData::AppendTextTo(nsAString& aResult)
-{
-  mText.AppendTo(aResult);
-}
-
-bool
-CharacterData::AppendTextTo(nsAString& aResult,
-                            const mozilla::fallible_t& aFallible)
-{
-  return mText.AppendTo(aResult, aFallible);
 }
 
 already_AddRefed<nsAtom>

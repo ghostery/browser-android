@@ -20,6 +20,8 @@
 #include "mozilla/dom/VRServiceTest.h"
 #include "mozilla/layers/SyncObject.h"
 
+using namespace mozilla::dom;
+
 namespace {
 const nsTArray<RefPtr<dom::VREventObserver>>::index_type kNoIndex =
   nsTArray<RefPtr<dom::VREventObserver> >::NoIndex;
@@ -42,6 +44,7 @@ VRManagerChild::VRManagerChild()
   , mBackend(layers::LayersBackend::LAYERS_NONE)
   , mPromiseID(0)
   , mVRMockDisplay(nullptr)
+  , mLastControllerState{}
 {
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -103,7 +106,7 @@ VRManagerChild::ReinitForContent(Endpoint<PVRManagerChild>&& aEndpoint)
 
   ShutDown();
 
-  return InitForContent(Move(aEndpoint));
+  return InitForContent(std::move(aEndpoint));
 }
 
 /*static*/ void
@@ -440,6 +443,15 @@ VRManagerChild::RunFrameRequestCallbacks()
 }
 
 void
+VRManagerChild::NotifyPresentationGenerationChanged(uint32_t aDisplayID) {
+  nsContentUtils::AddScriptRunner(NewRunnableMethod<uint32_t>(
+    "gfx::VRManagerChild::NotifyPresentationGenerationChangedInternal",
+    this,
+    &VRManagerChild::NotifyPresentationGenerationChangedInternal,
+    aDisplayID));
+}
+
+void
 VRManagerChild::FireDOMVRDisplayMountedEvent(uint32_t aDisplayID)
 {
   nsContentUtils::AddScriptRunner(NewRunnableMethod<uint32_t>(
@@ -549,6 +561,15 @@ VRManagerChild::FireDOMVRDisplayConnectEventsForLoadInternal(uint32_t aDisplayID
                                                             dom::VREventObserver* aObserver)
 {
   aObserver->NotifyVRDisplayConnect(aDisplayID);
+}
+
+void
+VRManagerChild::NotifyPresentationGenerationChangedInternal(uint32_t aDisplayID) {
+  nsTArray<RefPtr<dom::VREventObserver>> listeners;
+  listeners = mListeners;
+  for (auto& listener : listeners) {
+    listener->NotifyPresentationGenerationChanged(aDisplayID);
+  }
 }
 
 void

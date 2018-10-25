@@ -7,6 +7,8 @@
 #ifndef vm_Caches_h
 #define vm_Caches_h
 
+#include <new>
+
 #include "jsmath.h"
 
 #include "frontend/SourceNotes.h"
@@ -81,7 +83,7 @@ struct EvalCacheLookup
     explicit EvalCacheLookup(JSContext* cx) : str(cx), callerScript(cx) {}
     RootedLinearString str;
     RootedScript callerScript;
-    jsbytecode* pc;
+    MOZ_INIT_OUTSIDE_CTOR jsbytecode* pc;
 };
 
 struct EvalCacheHashPolicy
@@ -142,14 +144,20 @@ class NewObjectCache
         char templateObject[MAX_OBJ_SIZE];
     };
 
-    Entry entries[41];  // TODO: reconsider size
+    using EntryArray = Entry[41]; // TODO: reconsider size;
+    EntryArray entries;
 
   public:
 
-    typedef int EntryIndex;
+    using EntryIndex = int;
 
-    NewObjectCache() { mozilla::PodZero(this); }
-    void purge() { mozilla::PodZero(this); }
+    NewObjectCache()
+      : entries{} // zeroes out the array
+    {}
+
+    void purge() {
+        new (&entries) EntryArray{}; // zeroes out the array
+    }
 
     /* Remove any cached items keyed on moved objects. */
     void clearNurseryObjects(JSRuntime* rt);
@@ -232,25 +240,12 @@ class NewObjectCache
 
 class RuntimeCaches
 {
-    UniquePtr<js::MathCache> mathCache_;
-
-    js::MathCache* createMathCache(JSContext* cx);
-
   public:
     js::GSNCache gsnCache;
     js::EnvironmentCoordinateNameCache envCoordinateNameCache;
     js::NewObjectCache newObjectCache;
     js::UncompressedSourceCache uncompressedSourceCache;
     js::EvalCache evalCache;
-
-    bool init();
-
-    js::MathCache* getMathCache(JSContext* cx) {
-        return mathCache_ ? mathCache_.get() : createMathCache(cx);
-    }
-    js::MathCache* maybeGetMathCache() {
-        return mathCache_.get();
-    }
 
     void purgeForMinorGC(JSRuntime* rt) {
         newObjectCache.clearNurseryObjects(rt);
@@ -259,8 +254,7 @@ class RuntimeCaches
 
     void purgeForCompaction() {
         newObjectCache.purge();
-        if (evalCache.initialized())
-            evalCache.clear();
+        evalCache.clear();
     }
 
     void purge() {

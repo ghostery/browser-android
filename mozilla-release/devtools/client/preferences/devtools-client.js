@@ -2,20 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// Developer edition promo preferences
-pref("devtools.devedition.promo.shown", false);
-pref("devtools.devedition.promo.url", "https://www.mozilla.org/firefox/developer/?utm_source=firefox-dev-tools&utm_medium=firefox-browser&utm_content=betadoorhanger");
-
-// Only potentially show in beta release
-#if MOZ_UPDATE_CHANNEL == beta
-  pref("devtools.devedition.promo.enabled", true);
-#else
-  pref("devtools.devedition.promo.enabled", false);
-#endif
-
-// Developer toolbar preferences
-pref("devtools.toolbar.enabled", true);
-
 // Enable DevTools WebIDE by default
 pref("devtools.webide.enabled", true);
 
@@ -23,8 +9,8 @@ pref("devtools.webide.enabled", true);
 pref("devtools.toolbox.footer.height", 250);
 pref("devtools.toolbox.sidebar.width", 500);
 pref("devtools.toolbox.host", "bottom");
-pref("devtools.toolbox.previousHost", "side");
-pref("devtools.toolbox.selectedTool", "webconsole");
+pref("devtools.toolbox.previousHost", "right");
+pref("devtools.toolbox.selectedTool", "inspector");
 pref("devtools.toolbox.sideEnabled", true);
 pref("devtools.toolbox.zoomValue", "1");
 pref("devtools.toolbox.splitconsoleEnabled", false);
@@ -49,20 +35,20 @@ pref("devtools.inspector.enabled", true);
 // What was the last active sidebar in the inspector
 pref("devtools.inspector.activeSidebar", "ruleview");
 pref("devtools.inspector.remote", false);
-// Enable the 3 pane mode toggle in the inspector
-#if defined(NIGHTLY_BUILD)
-pref("devtools.inspector.three-pane-toggle", true);
-#else
-pref("devtools.inspector.three-pane-toggle", false);
-#endif
-// Enable the 3 pane mode in the inspector
-pref("devtools.inspector.three-pane-enabled", false);
-// Show the 3 pane onboarding tooltip in the inspector
-#if defined(NIGHTLY_BUILD)
+
+// Show the 3 pane onboarding tooltip in the inspector only in release or beta builds.
+#if defined(RELEASE_OR_BETA)
 pref("devtools.inspector.show-three-pane-tooltip", true);
 #else
 pref("devtools.inspector.show-three-pane-tooltip", false);
 #endif
+// Enable the 3 pane mode in the inspector
+pref("devtools.inspector.three-pane-enabled", true);
+// Enable the 3 pane mode in the chrome inspector
+pref("devtools.inspector.chrome.three-pane-enabled", false);
+// Whether or not this is the first run of the 3 pane mode. Used to reset the default
+// inspector sidebar widths for its first run.
+pref("devtools.inspector.three-pane-first-run", true);
 // Collapse pseudo-elements by default in the rule-view
 pref("devtools.inspector.show_pseudo_elements", false);
 // The default size for image preview tooltips in the rule-view/computed-view/markup-view
@@ -71,20 +57,24 @@ pref("devtools.inspector.imagePreviewTooltipSize", 300);
 pref("devtools.inspector.showUserAgentStyles", false);
 // Show all native anonymous content (like controls in <video> tags)
 pref("devtools.inspector.showAllAnonymousContent", false);
-// Enable the Flexbox highlighter
-pref("devtools.inspector.flexboxHighlighter.enabled", false);
 // Enable the CSS shapes highlighter
 pref("devtools.inspector.shapesHighlighter.enabled", true);
+// Enable the new Animation Inspector
+pref("devtools.new-animationinspector.enabled", true);
+// Enable the Font Editor
+pref("devtools.inspector.fonteditor.enabled", true);
+// Enable the font highlight-on-hover feature
+pref("devtools.inspector.fonthighlighter.enabled", true);
+
+// Flexbox preferences
+// Enable the Flexbox highlighter in Nightly
+#if defined(NIGHTLY_BUILD)
+pref("devtools.inspector.flexboxHighlighter.enabled", true);
+#else
+pref("devtools.inspector.flexboxHighlighter.enabled", false);
+#endif
 // Enable the Flexbox Inspector panel
 pref("devtools.flexboxinspector.enabled", false);
-// Enable the new Animation Inspector in Nightly only
-#if defined(NIGHTLY_BUILD)
-pref("devtools.new-animationinspector.enabled", true);
-#else
-pref("devtools.new-animationinspector.enabled", false);
-#endif
-// Enable the Variable Fonts editor
-pref("devtools.inspector.fonteditor.enabled", false);
 
 // Grid highlighter preferences
 pref("devtools.gridinspector.gridOutlineMaxColumns", 50);
@@ -238,14 +228,14 @@ pref("devtools.scratchpad.enabled", false);
 // Make sure the DOM panel is hidden by default
 pref("devtools.dom.enabled", false);
 
-// Make sure the Accessibility panel is hidden by default
-pref("devtools.accessibility.enabled", false);
+// Enable the Accessibility panel.
+pref("devtools.accessibility.enabled", true);
+// Counter to promote the Accessibility panel.
+// @remove after release 63 (See Bug 1482461)
+pref("devtools.promote.accessibility", 1);
 
 // Web Audio Editor Inspector Width should be a preference
 pref("devtools.webaudioeditor.inspectorWidth", 300);
-
-// Experimental UI for the browser console that doesn't use a XUL wrapper doc
-pref("devtools.browserconsole.html", false);
 
 // Web console filters
 pref("devtools.webconsole.filter.error", true);
@@ -286,12 +276,19 @@ pref("devtools.netmonitor.persistlog", false);
 // any timestamps.
 pref("devtools.webconsole.timestampMessages", false);
 
-// Web Console automatic multiline mode: |true| if you want incomplete statements
-// to automatically trigger multiline editing (equivalent to shift + enter).
-pref("devtools.webconsole.autoMultiline", true);
-
-// Enable the webconsole sidebar toggle
+// Enable the webconsole sidebar toggle in Nightly builds.
+#if defined(NIGHTLY_BUILD)
+pref("devtools.webconsole.sidebarToggle", true);
+#else
 pref("devtools.webconsole.sidebarToggle", false);
+#endif
+
+// Enable CodeMirror in the JsTerm in Nightly builds
+#if defined(NIGHTLY_BUILD)
+pref("devtools.webconsole.jsterm.codeMirror", true);
+#else
+pref("devtools.webconsole.jsterm.codeMirror", false);
+#endif
 
 // Disable the new performance recording panel by default
 pref("devtools.performance.new-panel-enabled", false);
@@ -317,14 +314,42 @@ pref("devtools.editor.detectindentation", true);
 pref("devtools.editor.enableCodeFolding", true);
 pref("devtools.editor.autocomplete", true);
 
-// Pref to store the browser version at the time of a telemetry ping for an
-// opened developer tool. This allows us to ping telemetry just once per browser
-// version for each user.
-pref("devtools.telemetry.tools.opened.version", "{}");
-
+// Whether or not the viewports are left aligned.
+pref("devtools.responsive.leftAlignViewport.enabled", false);
 // Whether to reload when touch simulation is toggled
 pref("devtools.responsive.reloadConditions.touchSimulation", false);
 // Whether to reload when user agent is changed
 pref("devtools.responsive.reloadConditions.userAgent", false);
 // Whether to show the notification about reloading to apply emulation
 pref("devtools.responsive.reloadNotification.enabled", true);
+// Whether to show the settings onboarding tooltip only in release or beta builds.
+#if defined(RELEASE_OR_BETA)
+pref("devtools.responsive.show-setting-tooltip", true);
+#else
+pref("devtools.responsive.show-setting-tooltip", false);
+#endif
+
+// Enable new about:debugging.
+pref("devtools.aboutdebugging.new-enabled", false);
+pref("devtools.aboutdebugging.network-locations", "[]");
+// Debug target pane collapse/expand settings.
+pref("devtools.aboutdebugging.collapsibilities.installedExtension", false);
+pref("devtools.aboutdebugging.collapsibilities.otherWorker", false);
+pref("devtools.aboutdebugging.collapsibilities.serviceWorker", false);
+pref("devtools.aboutdebugging.collapsibilities.sharedWorker", false);
+pref("devtools.aboutdebugging.collapsibilities.tab", false);
+pref("devtools.aboutdebugging.collapsibilities.temporaryExtension", false);
+
+// about:debugging: only show system add-ons in local builds by default.
+#ifdef MOZILLA_OFFICIAL
+  pref("devtools.aboutdebugging.showSystemAddons", false);
+#else
+  pref("devtools.aboutdebugging.showSystemAddons", true);
+#endif
+
+// Map top-level await expressions in the console
+#if defined(NIGHTLY_BUILD)
+pref("devtools.debugger.features.map-await-expression", true);
+#else
+pref("devtools.debugger.features.map-await-expression", false);
+#endif

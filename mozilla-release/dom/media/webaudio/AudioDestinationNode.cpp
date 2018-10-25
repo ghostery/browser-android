@@ -323,8 +323,10 @@ NS_IMPL_RELEASE_INHERITED(AudioDestinationNode, AudioNode)
 
 AudioDestinationNode::AudioDestinationNode(AudioContext* aContext,
                                            bool aIsOffline,
+                                           bool aAllowedToStart,
                                            uint32_t aNumberOfChannels,
-                                           uint32_t aLength, float aSampleRate)
+                                           uint32_t aLength,
+                                           float aSampleRate)
   : AudioNode(aContext, aNumberOfChannels,
               ChannelCountMode::Explicit, ChannelInterpretation::Speakers)
   , mFramesToProduce(aLength)
@@ -352,7 +354,7 @@ AudioDestinationNode::AudioDestinationNode(AudioContext* aContext,
   mStream->AddMainThreadListener(this);
   mStream->AddAudioOutput(&gWebAudioOutputKey);
 
-  if (!aIsOffline) {
+  if (!aIsOffline && aAllowedToStart) {
     graph->NotifyWhenGraphStarted(mStream);
   }
 }
@@ -491,7 +493,7 @@ AudioDestinationNode::OfflineShutdown()
 JSObject*
 AudioDestinationNode::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return AudioDestinationNodeBinding::Wrap(aCx, this, aGivenProto);
+  return AudioDestinationNode_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 void
@@ -594,20 +596,12 @@ AudioDestinationNode::WindowAudioCaptureChanged(bool aCapture)
 nsresult
 AudioDestinationNode::CreateAudioChannelAgent()
 {
-  if (mIsOffline) {
+  if (mIsOffline || mAudioChannelAgent) {
     return NS_OK;
   }
 
-  nsresult rv = NS_OK;
-  if (mAudioChannelAgent) {
-    rv = mAudioChannelAgent->NotifyStoppedPlaying();
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
-    }
-  }
-
   mAudioChannelAgent = new AudioChannelAgent();
-  rv = mAudioChannelAgent->InitWithWeakCallback(GetOwner(), this);
+  nsresult rv = mAudioChannelAgent->InitWithWeakCallback(GetOwner(), this);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }

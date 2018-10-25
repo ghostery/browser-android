@@ -35,8 +35,6 @@
 #include "nscore.h"
 #include <algorithm>
 
-class nsISelection;
-
 namespace mozilla {
 
 using namespace dom;
@@ -147,7 +145,7 @@ HTMLEditor::CreateResizer(int16_t aLocation,
   nsresult rv =
     ret->SetAttr(kNameSpaceID_None, nsGkAtoms::anonlocation, locationStr, true);
   NS_ENSURE_SUCCESS(rv, nullptr);
-  return Move(ret);
+  return ret;
 }
 
 ManualNACPtr
@@ -345,93 +343,128 @@ HTMLEditor::ShowResizersInner(Element& aResizedElement)
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
+
+  MOZ_ASSERT(mResizedObject == &aResizedElement);
+
+  mHasShownResizers = true;
+
   // XXX Even when it failed to add event listener, should we need to set
   //     _moz_resizing attribute?
   aResizedElement.SetAttr(kNameSpaceID_None, nsGkAtoms::_moz_resizing,
                           NS_LITERAL_STRING("true"), true);
-
-  MOZ_ASSERT(mResizedObject == &aResizedElement);
-
   return NS_OK;
 }
 
 NS_IMETHODIMP
 HTMLEditor::HideResizers()
 {
-  NS_ENSURE_TRUE(mResizedObject, NS_OK);
+  if (NS_WARN_IF(!mResizedObject)) {
+    return NS_OK;
+  }
 
   // get the presshell's document observer interface.
-  nsCOMPtr<nsIPresShell> ps = GetPresShell();
+  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
+  NS_WARNING_ASSERTION(presShell, "There is no presShell");
   // We allow the pres shell to be null; when it is, we presume there
   // are no document observers to notify, but we still want to
   // UnbindFromTree.
 
   NS_NAMED_LITERAL_STRING(mousedown, "mousedown");
 
+  // HTMLEditor should forget all members related to resizers first since
+  // removing a part of UI may cause showing the resizers again.  In such
+  // case, the members may be overwritten by ShowResizers() and this will
+  // lose the chance to release the old resizers.
+  ManualNACPtr topLeftHandle(std::move(mTopLeftHandle));
+  ManualNACPtr topHandle(std::move(mTopHandle));
+  ManualNACPtr topRightHandle(std::move(mTopRightHandle));
+  ManualNACPtr leftHandle(std::move(mLeftHandle));
+  ManualNACPtr rightHandle(std::move(mRightHandle));
+  ManualNACPtr bottomLeftHandle(std::move(mBottomLeftHandle));
+  ManualNACPtr bottomHandle(std::move(mBottomHandle));
+  ManualNACPtr bottomRightHandle(std::move(mBottomRightHandle));
+  ManualNACPtr resizingShadow(std::move(mResizingShadow));
+  ManualNACPtr resizingInfo(std::move(mResizingInfo));
+  RefPtr<Element> activatedHandle(std::move(mActivatedHandle));
+  nsCOMPtr<nsIDOMEventListener> mouseMotionListener(
+                                  std::move(mMouseMotionListenerP));
+  nsCOMPtr<nsIDOMEventListener> resizeEventListener(
+                                  std::move(mResizeEventListenerP));
+  RefPtr<Element> resizedObject(std::move(mResizedObject));
+
+  // Remvoe all handles.
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mTopLeftHandle), ps);
+                             std::move(topLeftHandle), presShell);
 
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mTopHandle), ps);
+                             std::move(topHandle), presShell);
 
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mTopRightHandle), ps);
+                             std::move(topRightHandle), presShell);
 
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mLeftHandle), ps);
+                             std::move(leftHandle), presShell);
 
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mRightHandle), ps);
+                             std::move(rightHandle), presShell);
 
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mBottomLeftHandle), ps);
+                             std::move(bottomLeftHandle), presShell);
 
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mBottomHandle), ps);
+                             std::move(bottomHandle), presShell);
 
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mBottomRightHandle), ps);
+                             std::move(bottomRightHandle), presShell);
 
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mResizingShadow), ps);
+                             std::move(resizingShadow), presShell);
 
   RemoveListenerAndDeleteRef(mousedown, mEventListener, true,
-                             Move(mResizingInfo), ps);
+                             std::move(resizingInfo), presShell);
 
-  if (mActivatedHandle) {
-    mActivatedHandle->UnsetAttr(kNameSpaceID_None, nsGkAtoms::_moz_activated,
-                                true);
-    mActivatedHandle = nullptr;
+  // Remove active state of a resizer.
+  if (activatedHandle) {
+    activatedHandle->UnsetAttr(kNameSpaceID_None, nsGkAtoms::_moz_activated,
+                               true);
   }
 
-  // don't forget to remove the listeners !
+  // Remove resizing state of the target element.
+  resizedObject->UnsetAttr(kNameSpaceID_None, nsGkAtoms::_moz_resizing, true);
 
-  // nsCOMPtr so we can do_QueryInterface into it.
+  // Remove mousemove event listener from the event target.
   nsCOMPtr<EventTarget> target = GetDOMEventTarget();
+  NS_WARNING_ASSERTION(target, "GetDOMEventTarget() returned nullptr");
 
-  if (target && mMouseMotionListenerP) {
+  if (target && mouseMotionListener) {
     target->RemoveEventListener(NS_LITERAL_STRING("mousemove"),
-                                mMouseMotionListenerP, true);
+                                mouseMotionListener, true);
   }
-  mMouseMotionListenerP = nullptr;
+
+  // Remove resize event listener from the window.
+  if (!resizeEventListener) {
+    return NS_OK;
+  }
 
   nsCOMPtr<nsIDocument> doc = GetDocument();
-  if (!doc) {
-    return NS_ERROR_NULL_POINTER;
-  }
-  target = do_QueryInterface(doc->GetWindow());
-  if (!target) {
+  if (NS_WARN_IF(!doc)) {
     return NS_ERROR_NULL_POINTER;
   }
 
-  if (mResizeEventListenerP) {
-    target->RemoveEventListener(NS_LITERAL_STRING("resize"),
-                                mResizeEventListenerP, false);
+  // nsIDocument::GetWindow() may return nullptr when HTMLEditor is destroyed
+  // while the document is being unloaded.  If we cannot retrieve window as
+  // expected, let's ignore it.
+  nsPIDOMWindowOuter* window = doc->GetWindow();
+  if (NS_WARN_IF(!window)) {
+    return NS_OK;
   }
-  mResizeEventListenerP = nullptr;
 
-  mResizedObject->UnsetAttr(kNameSpaceID_None, nsGkAtoms::_moz_resizing, true);
-  mResizedObject = nullptr;
+  nsCOMPtr<EventTarget> targetOfWindow = do_QueryInterface(window);
+  if (NS_WARN_IF(!targetOfWindow)) {
+    return NS_ERROR_NULL_POINTER;
+  }
+  targetOfWindow->RemoveEventListener(NS_LITERAL_STRING("resize"),
+                                      resizeEventListener, false);
 
   return NS_OK;
 }
@@ -527,7 +560,7 @@ HTMLEditor::OnMouseDown(int32_t aClientX,
     // If we have an anonymous element and that element is a resizer,
     // let's start resizing!
     aEvent->PreventDefault();
-
+    mResizerUsedCount++;
     mOriginalX = aClientX;
     mOriginalY = aClientY;
     return StartResizing(aTarget);
@@ -536,6 +569,7 @@ HTMLEditor::OnMouseDown(int32_t aClientX,
   if (anonclass.EqualsLiteral("mozGrabber")) {
     // If we have an anonymous element and that element is a grabber,
     // let's start moving the element!
+    mGrabberUsedCount++;
     mOriginalX = aClientX;
     mOriginalY = aClientY;
     return GrabberClicked();
@@ -690,19 +724,21 @@ HTMLEditor::SetShadowPosition(Element* aShadow,
 int32_t
 HTMLEditor::GetNewResizingIncrement(int32_t aX,
                                     int32_t aY,
-                                    int32_t aID)
+                                    ResizeAt aResizeAt)
 {
   int32_t result = 0;
   if (!mPreserveRatio) {
-    switch (aID) {
-      case kX:
-      case kWidth:
+    switch (aResizeAt) {
+      case ResizeAt::eX:
+      case ResizeAt::eWidth:
         result = aX - mOriginalX;
         break;
-      case kY:
-      case kHeight:
+      case ResizeAt::eY:
+      case ResizeAt::eHeight:
         result = aY - mOriginalY;
         break;
+      default:
+        MOZ_ASSERT_UNREACHABLE("Invalid resizing request");
     }
     return result;
   }
@@ -712,15 +748,15 @@ HTMLEditor::GetNewResizingIncrement(int32_t aX,
   float objectSizeRatio =
               ((float)mResizedObjectWidth) / ((float)mResizedObjectHeight);
   result = (xi > yi) ? xi : yi;
-  switch (aID) {
-    case kX:
-    case kWidth:
+  switch (aResizeAt) {
+    case ResizeAt::eX:
+    case ResizeAt::eWidth:
       if (result == yi)
         result = (int32_t) (((float) result) * objectSizeRatio);
       result = (int32_t) (((float) result) * mWidthIncrementFactor);
       break;
-    case kY:
-    case kHeight:
+    case ResizeAt::eY:
+    case ResizeAt::eHeight:
       if (result == xi)
         result =  (int32_t) (((float) result) / objectSizeRatio);
       result = (int32_t) (((float) result) * mHeightIncrementFactor);
@@ -733,9 +769,10 @@ int32_t
 HTMLEditor::GetNewResizingX(int32_t aX,
                             int32_t aY)
 {
-  int32_t resized = mResizedObjectX +
-                    GetNewResizingIncrement(aX, aY, kX) * mXIncrementFactor;
-  int32_t max =   mResizedObjectX + mResizedObjectWidth;
+  int32_t resized =
+    mResizedObjectX +
+      GetNewResizingIncrement(aX, aY, ResizeAt::eX) * mXIncrementFactor;
+  int32_t max = mResizedObjectX + mResizedObjectWidth;
   return std::min(resized, max);
 }
 
@@ -743,8 +780,9 @@ int32_t
 HTMLEditor::GetNewResizingY(int32_t aX,
                             int32_t aY)
 {
-  int32_t resized = mResizedObjectY +
-                    GetNewResizingIncrement(aX, aY, kY) * mYIncrementFactor;
+  int32_t resized =
+    mResizedObjectY +
+      GetNewResizingIncrement(aX, aY, ResizeAt::eY) * mYIncrementFactor;
   int32_t max =   mResizedObjectY + mResizedObjectHeight;
   return std::min(resized, max);
 }
@@ -753,9 +791,10 @@ int32_t
 HTMLEditor::GetNewResizingWidth(int32_t aX,
                                 int32_t aY)
 {
-  int32_t resized = mResizedObjectWidth +
-                     GetNewResizingIncrement(aX, aY, kWidth) *
-                         mWidthIncrementFactor;
+  int32_t resized =
+    mResizedObjectWidth +
+      GetNewResizingIncrement(aX, aY,
+                              ResizeAt::eWidth) * mWidthIncrementFactor;
   return std::max(resized, 1);
 }
 
@@ -763,9 +802,10 @@ int32_t
 HTMLEditor::GetNewResizingHeight(int32_t aX,
                                  int32_t aY)
 {
-  int32_t resized = mResizedObjectHeight +
-                     GetNewResizingIncrement(aX, aY, kHeight) *
-                         mHeightIncrementFactor;
+  int32_t resized =
+    mResizedObjectHeight +
+      GetNewResizingIncrement(aX, aY,
+                              ResizeAt::eHeight) * mHeightIncrementFactor;
   return std::max(resized, 1);
 }
 
@@ -939,14 +979,14 @@ HTMLEditor::GetResizedObject(Element** aResizedObject)
 NS_IMETHODIMP
 HTMLEditor::GetObjectResizingEnabled(bool* aIsObjectResizingEnabled)
 {
-  *aIsObjectResizingEnabled = mIsObjectResizingEnabled;
+  *aIsObjectResizingEnabled = IsObjectResizerEnabled();
   return NS_OK;
 }
 
 NS_IMETHODIMP
 HTMLEditor::SetObjectResizingEnabled(bool aObjectResizingEnabled)
 {
-  mIsObjectResizingEnabled = aObjectResizingEnabled;
+  EnableObjectResizer(aObjectResizingEnabled);
   return NS_OK;
 }
 

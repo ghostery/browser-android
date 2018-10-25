@@ -18,11 +18,11 @@ const {
   updateDetailVisibility,
   updateElementPickerEnabled,
   updateHighlightedNode,
+  updatePlaybackRates,
   updateSelectedAnimation,
   updateSidebarSize
 } = require("./actions/animations");
 const {
-  isAllAnimationEqual,
   hasAnimationIterationCountInfinite,
   hasRunningAnimation,
 } = require("./utils/utils");
@@ -59,6 +59,7 @@ class AnimationInspector {
     this.onCurrentTimeTimerUpdated = this.onCurrentTimeTimerUpdated.bind(this);
     this.onElementPickerStarted = this.onElementPickerStarted.bind(this);
     this.onElementPickerStopped = this.onElementPickerStopped.bind(this);
+    this.onNavigate = this.onNavigate.bind(this);
     this.onSidebarResized = this.onSidebarResized.bind(this);
     this.onSidebarSelectionChanged = this.onSidebarSelectionChanged.bind(this);
 
@@ -100,7 +101,9 @@ class AnimationInspector {
     } = this;
 
     const target = this.inspector.target;
+    const direction = this.win.document.dir;
     this.animationsFront = new AnimationsFront(target.client, target.form);
+    this.animationsFront.setWalkerActor(this.inspector.walker);
 
     this.animationsCurrentTimeListeners = [];
     this.isCurrentTimeSet = false;
@@ -114,6 +117,7 @@ class AnimationInspector {
       App(
         {
           addAnimationsCurrentTimeListener,
+          direction,
           emitEventForTest,
           getAnimatedPropertyMap,
           getAnimationsCurrentTime,
@@ -147,6 +151,7 @@ class AnimationInspector {
 
   destroy() {
     this.setAnimationStateChangedListenerEnabled(false);
+    this.inspector.off("new-root", this.onNavigate);
     this.inspector.selection.off("new-node-front", this.update);
     this.inspector.sidebar.off("select", this.onSidebarSelectionChanged);
     this.inspector.toolbox.off("inspector-sidebar-resized", this.onSidebarResized);
@@ -183,6 +188,23 @@ class AnimationInspector {
 
   addAnimationsCurrentTimeListener(listener) {
     this.animationsCurrentTimeListeners.push(listener);
+  }
+
+  /**
+   * This function calls AnimationsFront.setCurrentTimes with considering the createdTime
+   * which was introduced bug 1454392.
+   *
+   * @param {Number} currentTime
+   */
+  async doSetCurrentTimes(currentTime) {
+    const { animations, timeScale } = this.state;
+
+    // If currentTime is not defined in timeScale (which happens when connected
+    // to server older than FF62), set currentTime as it is. See bug 1454392.
+    currentTime = typeof timeScale.currentTime === "undefined"
+                    ? currentTime : currentTime + timeScale.minStartTime;
+    await this.animationsFront.setCurrentTimes(animations, currentTime, true,
+                                               { relativeToCreatedTime: true });
   }
 
   /**
@@ -235,7 +257,7 @@ class AnimationInspector {
   getComputedStyle(property, styles) {
     this.simulatedElement.style.cssText = "";
 
-    for (let propertyName in styles) {
+    for (const propertyName in styles) {
       this.simulatedElement.style.setProperty(propertyName, styles[propertyName]);
     }
 
@@ -243,6 +265,10 @@ class AnimationInspector {
   }
 
   getNodeFromActor(actorID) {
+    if (!this.inspector) {
+      return Promise.reject("Animation inspector already destroyed");
+    }
+
     return this.inspector.walker.getNodeFromActor(actorID, ["node"]);
   }
 
@@ -286,12 +312,13 @@ class AnimationInspector {
     }
   }
 
-  onAnimationsMutation(changes) {
-    const animations = [...this.state.animations];
+  async onAnimationsMutation(changes) {
+    let animations = [...this.state.animations];
+    const addedAnimations = [];
 
     for (const {type, player: animation} of changes) {
       if (type === "added") {
-        animations.push(animation);
+        addedAnimations.push(animation);
         animation.on("changed", this.onAnimationStateChanged);
       } else if (type === "removed") {
         const index = animations.indexOf(animation);
@@ -300,7 +327,13 @@ class AnimationInspector {
       }
     }
 
-    this.updateState(animations);
+    // Update existing other animations as well since the currentTime would be proceeded
+    // sice the scrubber position is related the currentTime.
+    // Also, don't update the state of removed animations since React components
+    // may refer to the same instance still.
+    animations = await this.updateAnimations(animations);
+
+    this.updateState(animations.concat(addedAnimations));
   }
 
   onElementPickerStarted() {
@@ -309,6 +342,10 @@ class AnimationInspector {
 
   onElementPickerStopped() {
     this.inspector.store.dispatch(updateElementPickerEnabled(false));
+  }
+
+  onNavigate() {
+    this.inspector.store.dispatch(updatePlaybackRates());
   }
 
   async onSidebarSelectionChanged() {
@@ -326,11 +363,13 @@ class AnimationInspector {
       await this.update();
       this.onSidebarResized(null, this.inspector.getSidebarSize());
       this.animationsFront.on("mutations", this.onAnimationsMutation);
+      this.inspector.on("new-root", this.onNavigate);
       this.inspector.selection.on("new-node-front", this.update);
       this.inspector.toolbox.on("inspector-sidebar-resized", this.onSidebarResized);
     } else {
       this.stopAnimationsCurrentTimeTimer();
       this.animationsFront.off("mutations", this.onAnimationsMutation);
+      this.inspector.off("new-root", this.onNavigate);
       this.inspector.selection.off("new-node-front", this.update);
       this.inspector.toolbox.off("inspector-sidebar-resized", this.onSidebarResized);
       this.setAnimationStateChangedListenerEnabled(false);
@@ -347,7 +386,8 @@ class AnimationInspector {
   }
 
   async rewindAnimationsCurrentTime() {
-    await this.setAnimationsCurrentTime(0, true);
+    const { timeScale } = this.state;
+    await this.setAnimationsCurrentTime(timeScale.zeroPositionTime, true);
   }
 
   selectAnimation(animation) {
@@ -361,7 +401,6 @@ class AnimationInspector {
 
     await this.inspector.getCommonComponentProps()
               .setSelectedNode(nodeFront, { reason: "animation-panel" });
-    await nodeFront.scrollIntoView();
   }
 
   async setAnimationsCurrentTime(currentTime, shouldRefresh) {
@@ -372,12 +411,12 @@ class AnimationInspector {
       return;
     }
 
-    const animations = this.state.animations;
+    let animations = this.state.animations;
     this.isCurrentTimeSet = true;
 
     try {
-      await this.animationsFront.setCurrentTimes(animations, currentTime, true);
-      await this.updateAnimations(animations);
+      await this.doSetCurrentTimes(currentTime);
+      animations = await this.updateAnimations(animations);
     } catch (e) {
       // Expected if we've already been destroyed or other node have been selected
       // in the meantime.
@@ -388,12 +427,12 @@ class AnimationInspector {
     this.isCurrentTimeSet = false;
 
     if (shouldRefresh) {
-      this.updateState([...animations]);
+      this.updateState(animations);
     }
   }
 
   async setAnimationsPlaybackRate(playbackRate) {
-    const animations = this.state.animations;
+    let animations = this.state.animations;
     // "changed" event on each animation will fire respectively when the playback
     // rate changed. Since for each occurrence of event, change of UI is urged.
     // To avoid this, disable the listeners once in order to not capture the event.
@@ -401,7 +440,7 @@ class AnimationInspector {
 
     try {
       await this.animationsFront.setPlaybackRates(animations, playbackRate);
-      await this.updateAnimations(animations);
+      animations = await this.updateAnimations(animations);
     } catch (e) {
       // Expected if we've already been destroyed or other node have been selected
       // in the meantime.
@@ -411,18 +450,39 @@ class AnimationInspector {
       this.setAnimationStateChangedListenerEnabled(true);
     }
 
-    await this.updateState([...animations]);
+    await this.updateState(animations);
   }
 
   async setAnimationsPlayState(doPlay) {
+    if (typeof this.hasPausePlaySome === "undefined") {
+      this.hasPausePlaySome =
+        await this.inspector.target.actorHasMethod("animations", "pauseSome");
+    }
+
+    let { animations, timeScale } = this.state;
+
     try {
-      if (doPlay) {
+      if (doPlay && animations.every(animation =>
+                      timeScale.getEndTime(animation) <= animation.state.currentTime)) {
+        await this.doSetCurrentTimes(timeScale.zeroPositionTime);
+      }
+
+      // If the server does not support pauseSome/playSome function, (which happens
+      // when connected to server older than FF62), use pauseAll/playAll instead.
+      // See bug 1456857.
+      if (this.hasPausePlaySome) {
+        if (doPlay) {
+          await this.animationsFront.playSome(animations);
+        } else {
+          await this.animationsFront.pauseSome(animations);
+        }
+      } else if (doPlay) {
         await this.animationsFront.playAll();
       } else {
         await this.animationsFront.pauseAll();
       }
 
-      await this.updateAnimations(this.state.animations);
+      animations = await this.updateAnimations(animations);
     } catch (e) {
       // Expected if we've already been destroyed or other node have been selected
       // in the meantime.
@@ -430,7 +490,7 @@ class AnimationInspector {
       return;
     }
 
-    await this.updateState([...this.state.animations]);
+    await this.updateState(animations);
   }
 
   /**
@@ -466,7 +526,8 @@ class AnimationInspector {
     await this.inspector.highlighters.hideBoxModelHighlighter();
 
     if (nodeFront) {
-      await this.inspector.highlighters.showBoxModelHighlighter(nodeFront);
+      await this.inspector.highlighters.showBoxModelHighlighter(
+        nodeFront, { hideInfoBar: true, hideGuides: true });
     }
 
     this.inspector.store.dispatch(updateHighlightedNode(nodeFront));
@@ -490,6 +551,11 @@ class AnimationInspector {
    *         https://drafts.csswg.org/web-animations/#the-animation-interface
    */
   simulateAnimation(keyframes, effectTiming, isElementNeeded) {
+    // Don't simulate animation if the animation inspector is already destroyed.
+    if (!this.win) {
+      return null;
+    }
+
     let targetEl = null;
 
     if (isElementNeeded) {
@@ -562,50 +628,65 @@ class AnimationInspector {
     const done = this.inspector.updating("newanimationinspector");
 
     const selection = this.inspector.selection;
-    const nextAnimations =
+    const animations =
       selection.isConnected() && selection.isElementNode()
       ? await this.animationsFront.getAnimationPlayersForNode(selection.nodeFront)
       : [];
-    const currentAnimations = this.state.animations;
-
-    if (!currentAnimations || !isAllAnimationEqual(currentAnimations, nextAnimations)) {
-      this.updateState(nextAnimations);
-      this.setAnimationStateChangedListenerEnabled(true);
-    }
+    this.updateState(animations);
+    this.setAnimationStateChangedListenerEnabled(true);
 
     done();
   }
 
-  updateAnimations(animations) {
-    return new Promise((resolve, reject) => {
-      let count = 0;
-      let error = null;
+  async updateAnimations(animations) {
+    let error = null;
 
-      for (const animation of animations) {
+    const promises = animations.map(animation => {
+      return new Promise(resolve => {
         animation.refreshState().catch(e => {
           error = e;
         }).finally(() => {
-          count += 1;
-
-          if (count === animations.length) {
-            if (error) {
-              reject(error);
-            } else {
-              resolve();
-            }
-          }
+          resolve();
         });
-      }
+      });
     });
+    await Promise.all(promises);
+
+    if (error) {
+      throw new Error(error);
+    }
+
+    // Even when removal animation on inspected document, updateAnimations
+    // might be called before onAnimationsMutation due to the async timing.
+    // Return the animations as result of updateAnimations after getting rid of
+    // the animations since they should not display.
+    return animations.filter(anim => !!anim.state.type);
   }
 
   updateState(animations) {
+    // Animation inspector already destroyed
+    if (!this.inspector) {
+      return;
+    }
+
     this.stopAnimationsCurrentTimeTimer();
+
+    // Although it is not possible to set a delay or end delay of infinity using
+    // the animation API, if the value passed exceeds the limit of our internal
+    // representation of times, it will be treated as infinity. Rather than
+    // adding special case code to represent this very rare case, we simply omit
+    // such animations from the graph.
+    animations = animations.filter(anim => Math.abs(anim.state.delay) !== Infinity &&
+                                           Math.abs(anim.state.endDelay) !== Infinity);
 
     this.inspector.store.dispatch(updateAnimations(animations));
 
     if (hasRunningAnimation(animations)) {
       this.startAnimationsCurrentTimeTimer();
+    } else {
+      // Even no running animations, update the current time once
+      // so as to show the state.
+      this.onCurrentTimeTimerUpdated(this.state.timeScale.getCurrentTime());
     }
   }
 }

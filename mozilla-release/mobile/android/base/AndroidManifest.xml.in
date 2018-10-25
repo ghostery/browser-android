@@ -59,6 +59,8 @@
                   android:taskAffinity="@ANDROID_PACKAGE_NAME@.BROWSER"
                   android:alwaysRetainTaskState="true"
                   android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|locale|layoutDirection|smallestScreenSize|screenLayout"
+                  android:resizeableActivity="true"
+                  android:supportsPictureInPicture="true"
                   android:windowSoftInputMode="stateUnspecified|adjustResize"
                   android:launchMode="singleTask"
                   android:exported="true"
@@ -89,7 +91,6 @@
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:scheme="about" />
-                <data android:scheme="javascript" />
                 <data android:scheme="firefox" />
             </intent-filter>
             <intent-filter>
@@ -185,7 +186,23 @@
             </intent-filter>
         </activity-alias>
 
-        <service android:name="org.mozilla.gecko.GeckoService" />
+        <service
+            android:name="org.mozilla.gecko.GeckoStarterService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
+
+        <service
+            android:name="org.mozilla.gecko.GeckoLoadLibsService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
+
+        <service
+            android:name="org.mozilla.gecko.GeckoServicesCreatorService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
 
         <activity android:name="org.mozilla.gecko.trackingprotection.TrackingProtectionPrompt"
                   android:launchMode="singleTop"
@@ -252,8 +269,7 @@
             android:name="org.mozilla.gecko.notifications.WhatsNewReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <data android:scheme="package" android:path="org.mozilla.gecko" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
@@ -273,7 +289,7 @@
 #include ../services/manifests/FxAccountAndroidManifest_activities.xml.in
 
 #ifdef MOZ_CRASHREPORTER
-  <activity android:name="org.mozilla.gecko.CrashReporter"
+  <activity android:name="org.mozilla.gecko.CrashReporterActivity"
             android:process="@ANDROID_PACKAGE_NAME@.CrashReporter"
             android:label="@string/crash_reporter_title"
             android:icon="@drawable/crash_reporter"
@@ -374,11 +390,47 @@
                   android:authorities="@ANDROID_PACKAGE_NAME@.db.searchhistory"
                   android:exported="false"/>
 
+        <provider android:name="android.support.v4.content.FileProvider"
+                  android:authorities="@ANDROID_PACKAGE_NAME@.fileprovider"
+                  android:exported="false"
+                  android:grantUriPermissions="true">
+                  <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                             android:resource="@xml/provider_paths" />
+        </provider>
+
         <service
             android:exported="false"
-            android:name="org.mozilla.gecko.updater.UpdateService"
-            android:process="@MANGLED_ANDROID_PACKAGE_NAME@.UpdateService">
+            android:name="org.mozilla.gecko.updater.UpdatesApplyService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
         </service>
+
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.updater.UpdatesCheckService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+        </service>
+
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.updater.UpdatesDownloadService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+         </service>
+
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.updater.UpdatesRegisterService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+        </service>
+
+        <receiver
+            android:name="org.mozilla.gecko.updater.UpdateServiceReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="@ANDROID_PACKAGE_NAME@.CHECK_FOR_UPDATE"></action>
+                <action android:name="@ANDROID_PACKAGE_NAME@.APPLY_UPDATE"></action>
+                <action android:name="@ANDROID_PACKAGE_NAME@.DOWNLOAD_UPDATE"></action>
+            </intent-filter>
+        </receiver>
 
         <service
             android:exported="false"
@@ -387,23 +439,34 @@
 
         <service
             android:exported="false"
-            android:name="org.mozilla.gecko.dlc.DownloadContentService">
+            android:name="org.mozilla.gecko.dlc.DlcStudyService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+        </service>
+
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.dlc.DlcSyncService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+        </service>
+
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.dlc.DlcDownloadService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+        </service>
+
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.dlc.DlcCleanupService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
         </service>
 
         <!-- DON'T EXPORT THIS, please! An attacker could delete arbitrary files. -->
         <service
             android:exported="false"
-            android:name="org.mozilla.gecko.cleanup.FileCleanupService">
+            android:name="org.mozilla.gecko.cleanup.FileCleanupService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
         </service>
-
-        <receiver
-            android:name="org.mozilla.gecko.mma.PackageAddedReceiver"
-            android:exported="false">
-            <intent-filter>
-                 <action android:name="android.intent.action.PACKAGE_ADDED"/>
-                 <data android:scheme="package"/>
-            </intent-filter>
-        </receiver>
 
         <receiver
             android:name="org.mozilla.gecko.PackageReplacedReceiver"
@@ -415,6 +478,7 @@
 
         <service
           android:name="org.mozilla.gecko.telemetry.TelemetryUploadService"
+          android:permission="android.permission.BIND_JOB_SERVICE"
           android:exported="false"/>
 
         <service
@@ -429,6 +493,7 @@
 
         <service
             android:name="org.mozilla.gecko.tabqueue.TabReceivedService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false" />
 
 

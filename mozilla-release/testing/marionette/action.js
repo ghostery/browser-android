@@ -6,6 +6,8 @@
 
 "use strict";
 
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+
 ChromeUtils.import("chrome://marionette/content/assert.js");
 const {element} = ChromeUtils.import("chrome://marionette/content/element.js", {});
 const {
@@ -15,6 +17,7 @@ const {
 } = ChromeUtils.import("chrome://marionette/content/error.js", {});
 ChromeUtils.import("chrome://marionette/content/event.js");
 const {pprint} = ChromeUtils.import("chrome://marionette/content/format.js", {});
+const {Sleep} = ChromeUtils.import("chrome://marionette/content/sync.js", {});
 
 this.EXPORTED_SYMBOLS = ["action"];
 
@@ -1216,7 +1219,12 @@ function dispatchPointerDown(a, inputState, window) {
       case action.PointerType.Mouse:
         let mouseEvent = new action.Mouse("mousedown", a.button);
         mouseEvent.update(inputState);
-        if (event.DoubleClickTracker.isClicked()) {
+        if (mouseEvent.ctrlKey) {
+          if (Services.appinfo.OS !== "WINNT") {
+            mouseEvent.button = 2;
+            event.DoubleClickTracker.resetClick();
+          }
+        } else if (event.DoubleClickTracker.isClicked()) {
           mouseEvent = Object.assign({},
               mouseEvent, {clickCount: 2});
         }
@@ -1225,7 +1233,8 @@ function dispatchPointerDown(a, inputState, window) {
             inputState.y,
             mouseEvent,
             window);
-        if (event.MouseButton.isSecondary(a.button)) {
+        if (event.MouseButton.isSecondary(a.button) ||
+            mouseEvent.ctrlKey && Services.appinfo.OS !== "WINNT") {
           let contextMenuEvent = Object.assign({},
               mouseEvent, {type: "contextmenu"});
           event.synthesizeMouseAtPoint(
@@ -1402,8 +1411,8 @@ function performOnePointerMove(inputState, targetX, targetY, win) {
 }
 
 /**
- * Dispatch a pause action equivalent waiting for |a.duration|
- * milliseconds, or a default time interval of |tickDuration|.
+ * Dispatch a pause action equivalent waiting for `a.duration`
+ * milliseconds, or a default time interval of `tickDuration`.
  *
  * @param {action.Action} a
  *     Action to dispatch.
@@ -1414,11 +1423,8 @@ function performOnePointerMove(inputState, targetX, targetY, win) {
  *     Promise that is resolved after the specified time interval.
  */
 function dispatchPause(a, tickDuration) {
-  const timer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
-  let duration = typeof a.duration == "undefined" ? tickDuration : a.duration;
-  return new Promise(resolve =>
-      timer.initWithCallback(resolve, duration, Ci.nsITimer.TYPE_ONE_SHOT)
-  );
+  let ms = typeof a.duration == "undefined" ? tickDuration : a.duration;
+  return Sleep(ms);
 }
 
 // helpers

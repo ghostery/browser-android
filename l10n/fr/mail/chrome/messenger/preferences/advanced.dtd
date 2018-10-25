@@ -12,6 +12,7 @@
 <!ENTITY enableGlodaSearch.label       "Activer la recherche et l’indexation globales">
 <!ENTITY enableGlodaSearch.accesskey   "c">
 <!ENTITY dateTimeFormatting.label      "Format de date et heure">
+<!ENTITY languageSelector.label        "Langues">
 <!ENTITY allowHWAccel.label            "Utiliser l’accélération graphique matérielle si disponible">
 <!ENTITY allowHWAccel.accesskey        "i">
 <!ENTITY storeType.label               "Type de stockage des messages pour les nouveaux comptes :">

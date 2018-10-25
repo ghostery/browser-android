@@ -45,3 +45,8 @@
 <!ENTITY  autologinproxy.tooltip        "Ez a beállítás csendben hitelesíti proxyk felé, ha mentette hozzájuk a hitelesítési adatokat. Ha a hitelesítés sikertelen, akkor felszólítást kap.">
 <!ENTITY  socksRemoteDNS.label          "DNS proxyzása SOCKS v5 használatakor">
 <!ENTITY  socksRemoteDNS.accesskey      "d">
+<!ENTITY  dnsOverHttps.label            "HTTPS feletti DNS bekapcsolása">
+<!ENTITY  dnsOverHttps.accesskey        "b">
+<!ENTITY  dnsOverHttpsUrl.label         "URL">
+<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
+<!ENTITY  dnsOverHttpsUrl.tooltip       "URL a HTTPS feletti DNS feloldásához">

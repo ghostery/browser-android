@@ -216,6 +216,7 @@ add_task(async function test_archiveCleanup() {
     // Check that the pruned pings are not on disk anymore.
     for (let prunedInfo of expectedPrunedInfo) {
       await Assert.rejects(TelemetryArchive.promiseArchivedPingById(prunedInfo.id),
+                           /TelemetryStorage.loadArchivedPing - no ping with id/,
                            "Ping " + prunedInfo.id + " should have been pruned.");
       const pingPath =
         TelemetryStorage._testGetArchivedPingPath(prunedInfo.id, prunedInfo.creationDate, PING_TYPE);
@@ -369,7 +370,7 @@ add_task(async function test_archiveCleanup() {
     type: PING_TYPE,
     creationDate: (new Date()).toISOString(),
     // Generate a ~2MB string to use as the payload.
-    payload: generateRandomString(2 * 1024 * 1024)
+    payload: generateRandomString(2 * 1024 * 1024),
   };
   await TelemetryArchive.promiseArchivePing(OVERSIZED_PING);
 

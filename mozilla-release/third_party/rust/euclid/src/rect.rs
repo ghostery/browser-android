@@ -19,10 +19,13 @@ use size::TypedSize2D;
 use num_traits::NumCast;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use std::cmp::PartialOrd;
-use std::fmt;
-use std::hash::{Hash, Hasher};
-use std::ops::{Add, Div, Mul, Sub};
+
+use core::borrow::Borrow;
+use core::cmp::PartialOrd;
+use core::fmt;
+use core::hash::{Hash, Hasher};
+use core::ops::{Add, Div, Mul, Sub};
+
 
 /// A 2d Rectangle optionally tagged with a unit.
 #[repr(C)]
@@ -94,8 +97,21 @@ impl<T, U> TypedRect<T, U> {
     /// Constructor.
     pub fn new(origin: TypedPoint2D<T, U>, size: TypedSize2D<T, U>) -> Self {
         TypedRect {
-            origin: origin,
-            size: size,
+            origin,
+            size,
+        }
+    }
+}
+
+impl<T, U> TypedRect<T, U>
+where
+    T: Copy + Zero
+{
+    /// Creates a rect of the given size, at offset zero.
+    pub fn from_size(size: TypedSize2D<T, U>) -> Self {
+        TypedRect {
+            origin: TypedPoint2D::zero(),
+            size,
         }
     }
 }
@@ -281,34 +297,32 @@ where
     /// semantic on these edges. This means that the right-most and bottom-most
     /// points provided to `from_points` will count as not contained by the rect.
     /// This behavior may change in the future.
-    pub fn from_points<'a, I>(points: I) -> Self
+    pub fn from_points<I>(points: I) -> Self
     where
-        U: 'a,
-        T: 'a,
-        I: IntoIterator<Item = &'a TypedPoint2D<T, U>>,
+        I: IntoIterator,
+        I::Item: Borrow<TypedPoint2D<T, U>>,
     {
         let mut points = points.into_iter();
 
-        let first = if let Some(first) = points.next() {
-            first
-        } else {
-            return TypedRect::zero();
+        let (mut min_x, mut min_y) = match points.next() {
+            Some(first) => (first.borrow().x, first.borrow().y),
+            None => return TypedRect::zero(),
         };
 
-        let (mut min_x, mut min_y) = (first.x, first.y);
         let (mut max_x, mut max_y) = (min_x, min_y);
         for point in points {
-            if point.x < min_x {
-                min_x = point.x
+            let p = point.borrow();
+            if p.x < min_x {
+                min_x = p.x
             }
-            if point.x > max_x {
-                max_x = point.x
+            if p.x > max_x {
+                max_x = p.x
             }
-            if point.y < min_y {
-                min_y = point.y
+            if p.y < min_y {
+                min_y = p.y
             }
-            if point.y > max_y {
-                max_y = point.y
+            if p.y > max_y {
+                max_y = p.y
             }
         }
         TypedRect::new(
@@ -331,6 +345,16 @@ where
             self.origin.lerp(other.origin, t),
             self.size.lerp(other.size, t),
         )
+    }
+}
+
+impl<T, U> TypedRect<T, U>
+where
+    T: Copy + One + Add<Output = T> + Div<Output = T>,
+{
+    pub fn center(&self) -> TypedPoint2D<T, U> {
+        let two = T::one() + T::one();
+        self.origin + self.size.to_vector() / two
     }
 }
 
@@ -456,8 +480,20 @@ impl<T0: NumCast + Copy, Unit> TypedRect<T0, Unit> {
     /// When casting from floating point to integer coordinates, the decimals are truncated
     /// as one would expect from a simple cast, but this behavior does not always make sense
     /// geometrically. Consider using round(), round_in or round_out() before casting.
-    pub fn cast<T1: NumCast + Copy>(&self) -> Option<TypedRect<T1, Unit>> {
-        match (self.origin.cast(), self.size.cast()) {
+    pub fn cast<T1: NumCast + Copy>(&self) -> TypedRect<T1, Unit> {
+        TypedRect::new(
+            self.origin.cast(),
+            self.size.cast(),
+        )
+    }
+
+    /// Fallible cast from one numeric representation to another, preserving the units.
+    ///
+    /// When casting from floating point to integer coordinates, the decimals are truncated
+    /// as one would expect from a simple cast, but this behavior does not always make sense
+    /// geometrically. Consider using round(), round_in or round_out() before casting.
+    pub fn try_cast<T1: NumCast + Copy>(&self) -> Option<TypedRect<T1, Unit>> {
+        match (self.origin.try_cast(), self.size.try_cast()) {
             (Some(origin), Some(size)) => Some(TypedRect::new(origin, size)),
             _ => None,
         }
@@ -504,12 +540,12 @@ impl<T: Floor + Ceil + Round + Add<T, Output = T> + Sub<T, Output = T>, U> Typed
 impl<T: NumCast + Copy, Unit> TypedRect<T, Unit> {
     /// Cast into an `f32` rectangle.
     pub fn to_f32(&self) -> TypedRect<f32, Unit> {
-        self.cast().unwrap()
+        self.cast()
     }
 
     /// Cast into an `f64` rectangle.
     pub fn to_f64(&self) -> TypedRect<f64, Unit> {
-        self.cast().unwrap()
+        self.cast()
     }
 
     /// Cast into an `usize` rectangle, truncating decimals if any.
@@ -518,7 +554,7 @@ impl<T: NumCast + Copy, Unit> TypedRect<T, Unit> {
     /// to `round()`, `round_in()` or `round_out()` before the cast in order to
     /// obtain the desired conversion behavior.
     pub fn to_usize(&self) -> TypedRect<usize, Unit> {
-        self.cast().unwrap()
+        self.cast()
     }
 
     /// Cast into an `u32` rectangle, truncating decimals if any.
@@ -527,7 +563,7 @@ impl<T: NumCast + Copy, Unit> TypedRect<T, Unit> {
     /// to `round()`, `round_in()` or `round_out()` before the cast in order to
     /// obtain the desired conversion behavior.
     pub fn to_u32(&self) -> TypedRect<u32, Unit> {
-        self.cast().unwrap()
+        self.cast()
     }
 
     /// Cast into an `i32` rectangle, truncating decimals if any.
@@ -536,7 +572,7 @@ impl<T: NumCast + Copy, Unit> TypedRect<T, Unit> {
     /// to `round()`, `round_in()` or `round_out()` before the cast in order to
     /// obtain the desired conversion behavior.
     pub fn to_i32(&self) -> TypedRect<i32, Unit> {
-        self.cast().unwrap()
+        self.cast()
     }
 
     /// Cast into an `i64` rectangle, truncating decimals if any.
@@ -545,7 +581,15 @@ impl<T: NumCast + Copy, Unit> TypedRect<T, Unit> {
     /// to `round()`, `round_in()` or `round_out()` before the cast in order to
     /// obtain the desired conversion behavior.
     pub fn to_i64(&self) -> TypedRect<i64, Unit> {
-        self.cast().unwrap()
+        self.cast()
+    }
+}
+
+impl<T, U> From<TypedSize2D<T, U>> for TypedRect<T, U>
+where T: Copy + Zero
+{
+    fn from(size: TypedSize2D<T, U>) -> Self {
+        Self::from_size(size)
     }
 }
 
@@ -556,7 +600,7 @@ pub fn rect<T: Copy, U>(x: T, y: T, w: T, h: T) -> TypedRect<T, U> {
 
 #[cfg(test)]
 mod tests {
-    use point::Point2D;
+    use point::{Point2D, point2};
     use vector::vec2;
     use side_offsets::SideOffsets2D;
     use size::Size2D;
@@ -800,5 +844,14 @@ mod tests {
             }
             x += 0.1
         }
+    }
+
+    #[test]
+    fn test_center() {
+        let r: Rect<i32> = rect(-2, 5, 4, 10);
+        assert_eq!(r.center(), point2(0, 10));
+
+        let r: Rect<f32> = rect(1.0, 2.0, 3.0, 4.0);
+        assert_eq!(r.center(), point2(2.5, 4.0));
     }
 }

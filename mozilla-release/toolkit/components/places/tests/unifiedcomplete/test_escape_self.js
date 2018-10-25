@@ -8,23 +8,25 @@
  */
 
 add_task(async function test_escape() {
+  Services.prefs.setBoolPref("browser.urlbar.autoFill", false);
+
   let uri1 = NetUtil.newURI("http://unescapeduri/");
   let uri2 = NetUtil.newURI("http://escapeduri/%40/");
   await PlacesTestUtils.addVisits([
     { uri: uri1, title: "title" },
-    { uri: uri2, title: "title" }
+    { uri: uri2, title: "title" },
   ]);
 
   info("Unescaped location matches itself");
   await check_autocomplete({
     search: "http://unescapeduri/",
-    matches: [ { uri: uri1, title: "title" } ]
+    matches: [ { uri: uri1, title: "title" } ],
   });
 
   info("Escaped location matches itself");
   await check_autocomplete({
     search: "http://escapeduri/%40/",
-    matches: [ { uri: uri2, title: "title" } ]
+    matches: [ { uri: uri2, title: "title" } ],
   });
 
   await cleanup();

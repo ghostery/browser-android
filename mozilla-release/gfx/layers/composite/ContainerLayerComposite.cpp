@@ -73,7 +73,7 @@ DrawLayerInfo(const RenderTargetIntRect& aClipRect,
 
   uint32_t maxWidth = std::min<uint32_t>(visibleRegion.GetBounds().Width(), 500);
 
-  IntPoint topLeft = visibleRegion.ToUnknownRegion().GetBounds().TopLeft();
+  IntPoint topLeft = visibleRegion.GetBounds().ToUnknownRect().TopLeft();
   aManager->GetTextRenderer()->RenderText(
     aManager->GetCompositor(),
     ss.str().c_str(),
@@ -148,7 +148,7 @@ TransformLayerGeometry(Layer* aLayer, Maybe<gfx::Polygon>& aGeometry)
   transform = transform.ProjectTo2D();
 
   if (!transform.IsSingular()) {
-    aGeometry->TransformToScreenSpace(transform.Inverse());
+    aGeometry->TransformToScreenSpace(transform.Inverse(), transform);
   } else {
     // Discard the geometry since the result might not be correct.
     aGeometry.reset();
@@ -159,7 +159,7 @@ TransformLayerGeometry(Layer* aLayer, Maybe<gfx::Polygon>& aGeometry)
 template<class ContainerT>
 static gfx::IntRect ContainerVisibleRect(ContainerT* aContainer)
 {
-  gfx::IntRect surfaceRect = aContainer->GetLocalVisibleRegion().ToUnknownRegion().GetBounds();
+  gfx::IntRect surfaceRect = aContainer->GetLocalVisibleRegion().GetBounds().ToUnknownRect();
   return surfaceRect;
 }
 
@@ -170,7 +170,7 @@ struct PreparedLayer
   PreparedLayer(Layer *aLayer,
                 RenderTargetIntRect aClipRect,
                 Maybe<gfx::Polygon>&& aGeometry)
-  : mLayer(aLayer), mClipRect(aClipRect), mGeometry(Move(aGeometry)) {}
+  : mLayer(aLayer), mClipRect(aClipRect), mGeometry(std::move(aGeometry)) {}
 
   RefPtr<Layer> mLayer;
   RenderTargetIntRect mClipRect;
@@ -238,7 +238,7 @@ ContainerPrepare(ContainerT* aContainer,
     layerToRender->Prepare(clipRect);
     aContainer->mPrepared->mLayers.AppendElement(PreparedLayer(layerToRender->GetLayer(),
                                                                clipRect,
-                                                               Move(layer.geometry)));
+                                                               std::move(layer.geometry)));
   }
 
   CULLING_LOG("Preparing container layer %p\n", aContainer->GetLayer());
@@ -316,20 +316,26 @@ RenderMinimap(ContainerT* aContainer,
   gfx::Color pageBorderColor(0, 0, 0);
   gfx::Color criticalDisplayPortColor(1.f, 1.f, 0);
   gfx::Color displayPortColor(0, 1.f, 0);
-  gfx::Color viewPortColor(0, 0, 1.f, 0.3f);
+  gfx::Color layoutPortColor(1.f, 0, 0);
+  gfx::Color visualPortColor(0, 0, 1.f, 0.3f);
 
   // Rects
   ParentLayerRect compositionBounds = fm.GetCompositionBounds();
   LayerRect scrollRect = fm.GetScrollableRect() * fm.LayersPixelsPerCSSPixel();
-  LayerRect viewRect = ParentLayerRect(scrollOffset, compositionBounds.Size()) / LayerToParentLayerScale(1);
+  LayerRect visualRect = ParentLayerRect(scrollOffset, compositionBounds.Size()) / LayerToParentLayerScale(1);
   LayerRect dp = (fm.GetDisplayPort() + fm.GetScrollOffset()) * fm.LayersPixelsPerCSSPixel();
+  Maybe<LayerRect> layoutRect;
   Maybe<LayerRect> cdp;
+  if (fm.IsRootContent()) {
+    CSSRect viewport = aSampler->GetCurrentAsyncLayoutViewport(wrapper);
+    layoutRect = Some(viewport * fm.LayersPixelsPerCSSPixel());
+  }
   if (!fm.GetCriticalDisplayPort().IsEmpty()) {
     cdp = Some((fm.GetCriticalDisplayPort() + fm.GetScrollOffset()) * fm.LayersPixelsPerCSSPixel());
   }
 
   // Don't render trivial minimap. They can show up from textboxes and other tiny frames.
-  if (viewRect.Width() < 64 && viewRect.Height() < 64) {
+  if (visualRect.Width() < 64 && visualRect.Height() < 64) {
     return;
   }
 
@@ -374,9 +380,16 @@ RenderMinimap(ContainerT* aContainer,
     compositor->SlowDrawRect(r, criticalDisplayPortColor, clipRect, aContainer->GetEffectiveTransform());
   }
 
-  // Render the viewport.
-  r = transform.TransformBounds(viewRect.ToUnknownRect());
-  compositor->SlowDrawRect(r, viewPortColor, clipRect, aContainer->GetEffectiveTransform(), 2);
+  // Render the layout viewport if it exists (which is only in the root
+  // content APZC).
+  if (layoutRect) {
+    r = transform.TransformBounds(layoutRect->ToUnknownRect());
+    compositor->SlowDrawRect(r, layoutPortColor, clipRect, aContainer->GetEffectiveTransform());
+  }
+
+  // Render the visual viewport.
+  r = transform.TransformBounds(visualRect.ToUnknownRect());
+  compositor->SlowDrawRect(r, visualPortColor, clipRect, aContainer->GetEffectiveTransform(), 2);
 }
 
 template<class ContainerT> void
@@ -519,7 +532,7 @@ CreateTemporaryTargetAndCopyFromBackground(ContainerT* aContainer,
                                            LayerManagerComposite* aManager)
 {
   Compositor* compositor = aManager->GetCompositor();
-  gfx::IntRect visibleRect = aContainer->GetLocalVisibleRegion().ToUnknownRegion().GetBounds();
+  gfx::IntRect visibleRect = aContainer->GetLocalVisibleRegion().GetBounds().ToUnknownRect();
   RefPtr<CompositingRenderTarget> previousTarget = compositor->GetCurrentRenderTarget();
   gfx::IntRect surfaceRect = gfx::IntRect(visibleRect.X(), visibleRect.Y(),
                                           visibleRect.Width(), visibleRect.Height());
@@ -583,7 +596,7 @@ ContainerRender(ContainerT* aContainer,
       return;
     }
 
-    gfx::Rect visibleRect(aContainer->GetLocalVisibleRegion().ToUnknownRegion().GetBounds());
+    gfx::Rect visibleRect(aContainer->GetLocalVisibleRegion().GetBounds().ToUnknownRect());
 
     RefPtr<Compositor> compositor = aManager->GetCompositor();
 #ifdef MOZ_DUMP_PAINTING

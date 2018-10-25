@@ -39,6 +39,7 @@
 #include "mozilla/dom/TypedArray.h"
 #include "mozilla/dom/File.h"
 #include "mozilla/dom/FormData.h"
+#include "mozilla/dom/MimeType.h"
 #include "mozilla/dom/PerformanceStorage.h"
 #include "mozilla/dom/ServiceWorkerDescriptor.h"
 #include "mozilla/dom/URLSearchParams.h"
@@ -61,7 +62,6 @@ class nsIJSID;
 namespace mozilla {
 namespace dom {
 
-class BlobSet;
 class DOMString;
 class XMLHttpRequestUpload;
 struct OriginAttributesDictionary;
@@ -306,11 +306,6 @@ private:
   bool IsCrossSiteCORSRequest() const;
   bool IsDeniedCrossSiteCORSRequest();
 
-  // Tell our channel what network interface ID we were told to use.
-  // If it's an HTTP channel and we were told to use a non-default
-  // interface ID.
-  void PopulateNetworkInterfaceId();
-
   void UnsuppressEventHandlingAndResume();
 
   // Check pref "dom.mapped_arraybuffer.enabled" to make sure ArrayBuffer is
@@ -442,18 +437,6 @@ public:
     return mChannel;
   }
 
-  virtual void
-  GetNetworkInterfaceId(nsACString& aId) const override
-  {
-    aId = mNetworkInterfaceId;
-  }
-
-  virtual void
-  SetNetworkInterfaceId(const nsACString& aId) override
-  {
-    mNetworkInterfaceId = aId;
-  }
-
   // We need a GetInterface callable from JS for chrome JS
   virtual void
   GetInterface(JSContext* aCx, nsIJSID* aIID,
@@ -498,7 +481,8 @@ public:
 
 protected:
   nsresult DetectCharset();
-  nsresult AppendToResponseText(const char * aBuffer, uint32_t aBufferLen);
+  nsresult AppendToResponseText(Span<const uint8_t> aBuffer,
+                                bool aLast = false);
   static nsresult StreamReaderFunc(nsIInputStream* in,
                                    void* closure,
                                    const char* fromRawSegment,
@@ -639,8 +623,6 @@ protected:
   // part of the surrogate.
   mozilla::UniquePtr<mozilla::Decoder> mDecoder;
 
-  const Encoding* mResponseCharset;
-
   void MatchCharsetAndDecoderToResponseDocument();
 
   XMLHttpRequestResponseType mResponseType;
@@ -741,10 +723,6 @@ protected:
   bool mIsSystem;
   bool mIsAnon;
 
-  // A platform-specific identifer to represent the network interface
-  // that this request is associated with.
-  nsCString mNetworkInterfaceId;
-
   /**
    * Close the XMLHttpRequest's channels.
    */
@@ -784,6 +762,12 @@ protected:
   // When this is set to true, the event dispatching is suspended. This is
   // useful to change the correct state when XHR is working sync.
   bool mEventDispatchingSuspended;
+
+  // True iff mDecoder has processed the end of the stream.
+  // Used in lazy decoding to distinguish between having
+  // processed all the bytes but not the EOF and having
+  // processed all the bytes and the EOF.
+  bool mEofDecoded;
 
   // Our parse-end listener, if we are parsing.
   RefPtr<nsXHRParseEndListener> mParseEndListener;

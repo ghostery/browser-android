@@ -10,6 +10,7 @@
 #include "mozilla/Compiler.h"
 #include "mozilla/FloatingPoint.h"
 #include "mozilla/Range.h"
+#include "mozilla/Utf8.h"
 
 #include "NamespaceImports.h"
 
@@ -145,13 +146,48 @@ extern MOZ_MUST_USE bool
 GetPrefixInteger(JSContext* cx, const CharT* start, const CharT* end, int base,
                  const CharT** endp, double* dp);
 
-/*
- * This is like GetPrefixInteger, but only deals with base 10, and doesn't have
- * and |endp| outparam.  It should only be used when the characters are known to
- * only contain digits.
+inline const char16_t*
+ToRawChars(const char16_t* units)
+{
+    return units;
+}
+
+inline const unsigned char*
+ToRawChars(const unsigned char* units)
+{
+    return units;
+}
+
+inline const unsigned char*
+ToRawChars(const mozilla::Utf8Unit* units)
+{
+    return mozilla::Utf8AsUnsignedChars(units);
+}
+
+/**
+ * Like the prior function, but [start, end) must all be digits in the given
+ * base (and so this function doesn't take a useless outparam).
  */
+template <typename CharT>
 extern MOZ_MUST_USE bool
-GetDecimalInteger(JSContext* cx, const char16_t* start, const char16_t* end, double* dp);
+GetFullInteger(JSContext* cx, const CharT* start, const CharT* end, int base, double* dp)
+{
+    decltype(ToRawChars(start)) realEnd;
+    if (GetPrefixInteger(cx, ToRawChars(start), ToRawChars(end), base, &realEnd, dp)) {
+        MOZ_ASSERT(end == static_cast<const void*>(realEnd));
+        return true;
+    }
+    return false;
+}
+
+/*
+ * This is like GetPrefixInteger, but it only deals with base 10 and doesn't
+ * have an |endp| outparam.  It should only be used when the characters are
+ * known to only contain digits.
+ */
+template <typename CharT>
+extern MOZ_MUST_USE bool
+GetDecimalInteger(JSContext* cx, const CharT* start, const CharT* end, double* dp);
 
 extern MOZ_MUST_USE bool
 StringToNumber(JSContext* cx, JSString* str, double* result);
@@ -169,6 +205,22 @@ ToNumber(JSContext* cx, JS::MutableHandleValue vp)
 
     vp.setNumber(d);
     return true;
+}
+
+bool
+ToNumericSlow(JSContext* cx, JS::MutableHandleValue vp);
+
+// BigInt proposal section 3.1.6
+MOZ_ALWAYS_INLINE MOZ_MUST_USE bool
+ToNumeric(JSContext* cx, JS::MutableHandleValue vp)
+{
+    if (vp.isNumber())
+        return true;
+#ifdef ENABLE_BIGINT
+    if (vp.isBigInt())
+        return true;
+#endif
+    return ToNumericSlow(cx, vp);
 }
 
 MOZ_MUST_USE bool
@@ -195,21 +247,40 @@ js_strtod(JSContext* cx, const CharT* begin, const CharT* end,
 
 namespace js {
 
+/**
+ * Like js_strtod, but for when you don't require a |dEnd| argument *and* it's
+ * possible that the number in the string will not occupy the full [begin, end)
+ * range.
+ */
+template <typename CharT>
+extern MOZ_MUST_USE bool
+StringToDouble(JSContext* cx, const CharT* begin, const CharT* end, double* d)
+{
+    decltype(ToRawChars(begin)) dummy;
+    return js_strtod(cx, ToRawChars(begin), ToRawChars(end), &dummy, d);
+}
+
+/**
+ * Like js_strtod, but for when the number always constitutes the entire range
+ * (and so |dEnd| would be a value already known).
+ */
+template <typename CharT>
+extern MOZ_MUST_USE bool
+FullStringToDouble(JSContext* cx, const CharT* begin, const CharT* end, double* d)
+{
+    decltype(ToRawChars(begin)) realEnd;
+    if (js_strtod(cx, ToRawChars(begin), ToRawChars(end), &realEnd, d)) {
+        MOZ_ASSERT(end == static_cast<const void*>(realEnd));
+        return true;
+    }
+    return false;
+}
+
 extern MOZ_MUST_USE bool
 num_toString(JSContext* cx, unsigned argc, Value* vp);
 
 extern MOZ_MUST_USE bool
 num_valueOf(JSContext* cx, unsigned argc, Value* vp);
-
-static MOZ_ALWAYS_INLINE bool
-ValueFitsInInt32(const Value& v, int32_t* pi)
-{
-    if (v.isInt32()) {
-        *pi = v.toInt32();
-        return true;
-    }
-    return v.isDouble() && mozilla::NumberIsInt32(v.toDouble(), pi);
-}
 
 /*
  * Returns true if the given value is definitely an index: that is, the value
@@ -229,7 +300,7 @@ IsDefinitelyIndex(const Value& v, uint32_t* indexp)
     }
 
     int32_t i;
-    if (v.isDouble() && mozilla::NumberIsInt32(v.toDouble(), &i) && i >= 0) {
+    if (v.isDouble() && mozilla::NumberEqualsInt32(v.toDouble(), &i) && i >= 0) {
         *indexp = uint32_t(i);
         return true;
     }

@@ -32,7 +32,7 @@
 <!ENTITY importFrom360se.label          "360 Secure Browser">
 <!ENTITY importFrom360se.accesskey      "3">
 
-<!ENTITY noMigrationSources.label       "Não foi encontrado nenhum aplicativo que contivesse favoritos, histórico ou informações de senhas.">
+<!ENTITY noMigrationSources.label       "Não foi encontrado nenhum aplicativo que contivesse informações de favoritos, histórico ou senhas.">
 
 <!ENTITY importSource.title             "Importar dados e configurações">
 <!ENTITY importItems.title              "Itens a importar">

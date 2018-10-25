@@ -15,7 +15,7 @@
 <!ENTITY port.label "端口：">
 <!ENTITY port.accesskey "P">
 <!ENTITY serverPortDefault.label "默认：">
-<!-- LOCALIZATION NOTE (biffStart.label) : translate below 2 line with grammer dependency
+<!-- LOCALIZATION NOTE (biffStart.label) : translate below 2 line with grammar dependency
         For example, in Japanese cases:
                 biffStart.label "every"
                 biffEnd.label   "minutes for new messages Check"
@@ -61,7 +61,7 @@
 <!ENTITY loginAtStartup.accesskey "C">
 <!-- LOCALIZATION NOTE (maxMessagesStart.label) : translate below 2 lines with grammar dependency
     maxMessengerStart.label will be followed by maxMessagesEnd.label with the number
-   of messages between them
+    of messages between them
 -->
 <!ENTITY maxMessagesStart.label "当要下载的消息数大于">
 <!ENTITY maxMessagesStart.accesskey "m">
@@ -84,8 +84,8 @@
 <!ENTITY browseNewsrc.label "浏览…">
 <!ENTITY browseNewsrc.accesskey "e">
 
-<!ENTITY accountTitle.label "帐户设置">
-<!ENTITY accountSettingsDesc.label "以下是特殊帐户。没有相关标识。">
+<!ENTITY accountTitle.label "账户设置">
+<!ENTITY accountSettingsDesc.label "以下是特殊账户。没有相关标识。">
 <!ENTITY storeType.label "消息存储方式：">
 <!ENTITY storeType.accesskey "T">
 <!ENTITY mboxStore2.label "为每个文件夹创建文件 (mbox)">

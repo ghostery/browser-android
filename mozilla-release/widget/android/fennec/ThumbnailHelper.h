@@ -13,6 +13,7 @@
 #include "mozIDOMWindow.h"
 #include "nsAppShell.h"
 #include "nsCOMPtr.h"
+#include "nsGlobalWindowOuter.h"
 #include "nsIChannel.h"
 #include "nsIDOMWindowUtils.h"
 #include "nsIDocShell.h"
@@ -202,7 +203,7 @@ public:
         public:
             explicit IdleEvent(Functor&& aCall)
                 : Runnable("ThumbnailHelperIdle")
-                , mLambda(Move(aCall))
+                , mLambda(std::move(aCall))
                 , mIdlePass(false)
             {}
 
@@ -224,7 +225,7 @@ public:
             }
         };
 
-        NS_DispatchToMainThread(new IdleEvent(Move(aCall)));
+        NS_DispatchToMainThread(new IdleEvent(std::move(aCall)));
     }
 
     static void
@@ -239,7 +240,8 @@ public:
         }
 
         // take a screenshot, as wide as possible, proportional to the destination size
-        nsCOMPtr<nsIDOMWindowUtils> utils = do_GetInterface(window);
+        nsCOMPtr<nsIDOMWindowUtils> utils =
+            nsGlobalWindowOuter::Cast(window)->WindowUtils();
         RefPtr<DOMRect> rect;
         if (!utils ||
                 NS_FAILED(utils->GetRootBounds(getter_AddRefs(rect))) ||

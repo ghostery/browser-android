@@ -155,7 +155,7 @@ Pickle::Pickle(uint32_t header_size, const char* data, uint32_t length)
 }
 
 Pickle::Pickle(Pickle&& other)
-   : buffers_(mozilla::Move(other.buffers_)),
+   : buffers_(std::move(other.buffers_)),
      header_(other.header_),
      header_size_(other.header_size_) {
   other.header_ = nullptr;
@@ -165,14 +165,22 @@ Pickle::~Pickle() {
 }
 
 Pickle& Pickle::operator=(Pickle&& other) {
-  BufferList tmp = mozilla::Move(other.buffers_);
-  other.buffers_ = mozilla::Move(buffers_);
-  buffers_ = mozilla::Move(tmp);
+  BufferList tmp = std::move(other.buffers_);
+  other.buffers_ = std::move(buffers_);
+  buffers_ = std::move(tmp);
 
   //std::swap(buffers_, other.buffers_);
   std::swap(header_, other.header_);
   std::swap(header_size_, other.header_size_);
   return *this;
+}
+
+void Pickle::CopyFrom(const Pickle& other) {
+  MOZ_ALWAYS_TRUE(buffers_.CopyFrom(other.buffers_));
+  MOZ_ASSERT(other.header_ == reinterpret_cast<const Header*>(other.buffers_.Start()));
+
+  header_ = reinterpret_cast<Header*>(buffers_.Start());
+  header_size_ = other.header_size_;
 }
 
 bool Pickle::ReadBool(PickleIterator* iter, bool* result) const {

@@ -8,9 +8,9 @@
 
 #include "gc/GC.h"
 #include "jit/Ion.h"
-#include "jit/JitCompartment.h"
+#include "jit/JitRealm.h"
 
-#include "vm/JSCompartment-inl.h"
+#include "vm/Realm-inl.h"
 
 using namespace js;
 using namespace js::jit;
@@ -28,7 +28,7 @@ CompileRuntime::get(JSRuntime* rt)
 }
 
 #ifdef JS_GC_ZEAL
-const void*
+const uint32_t*
 CompileRuntime::addressOfGCZealModeBits()
 {
     return runtime()->gc.addressOfZealModeBits();
@@ -107,6 +107,12 @@ CompileRuntime::mainContextPtr()
     return runtime()->mainContextFromAnyThread();
 }
 
+uint32_t*
+CompileRuntime::addressOfTenuredAllocCount()
+{
+    return runtime()->mainContextFromAnyThread()->addressOfTenuredAllocCount();
+}
+
 const void*
 CompileRuntime::addressOfJitStackLimit()
 {
@@ -171,25 +177,25 @@ CompileZone::addressOfIonBailAfter()
 }
 #endif
 
-const void*
+const uint32_t*
 CompileZone::addressOfNeedsIncrementalBarrier()
 {
     return zone()->addressOfNeedsIncrementalBarrier();
 }
 
-const void*
+gc::FreeSpan**
 CompileZone::addressOfFreeList(gc::AllocKind allocKind)
 {
     return zone()->arenas.addressOfFreeList(allocKind);
 }
 
-const void*
+void*
 CompileZone::addressOfNurseryPosition()
 {
     return zone()->runtimeFromAnyThread()->gc.addressOfNurseryPosition();
 }
 
-const void*
+void*
 CompileZone::addressOfStringNurseryPosition()
 {
     // Objects and strings share a nursery, for now at least.
@@ -205,7 +211,19 @@ CompileZone::addressOfNurseryCurrentEnd()
 const void*
 CompileZone::addressOfStringNurseryCurrentEnd()
 {
+    // Although objects and strings share a nursery (and this may change)
+    // there is still a separate string end address.  The only time it
+    // is different from the regular end address, is when nursery strings are
+    // disabled (it will be NULL).
+    //
+    // This function returns _a pointer to_ that end address.
     return zone()->runtimeFromAnyThread()->gc.addressOfStringNurseryCurrentEnd();
+}
+
+uint32_t*
+CompileZone::addressOfNurseryAllocCount()
+{
+    return zone()->runtimeFromAnyThread()->gc.addressOfNurseryAllocCount();
 }
 
 bool
@@ -230,55 +248,61 @@ CompileZone::setMinorGCShouldCancelIonCompilations()
     rt->gc.storeBuffer().setShouldCancelIonCompilations();
 }
 
-JSCompartment*
-CompileCompartment::compartment()
+JS::Realm*
+CompileRealm::realm()
 {
-    return reinterpret_cast<JSCompartment*>(this);
+    return reinterpret_cast<JS::Realm*>(this);
 }
 
-/* static */ CompileCompartment*
-CompileCompartment::get(JSCompartment* comp)
+/* static */ CompileRealm*
+CompileRealm::get(JS::Realm* realm)
 {
-    return reinterpret_cast<CompileCompartment*>(comp);
+    return reinterpret_cast<CompileRealm*>(realm);
 }
 
 CompileZone*
-CompileCompartment::zone()
+CompileRealm::zone()
 {
-    return CompileZone::get(compartment()->zone());
+    return CompileZone::get(realm()->zone());
 }
 
 CompileRuntime*
-CompileCompartment::runtime()
+CompileRealm::runtime()
 {
-    return CompileRuntime::get(compartment()->runtimeFromAnyThread());
+    return CompileRuntime::get(realm()->runtimeFromAnyThread());
 }
 
-const void*
-CompileCompartment::addressOfRandomNumberGenerator()
+const mozilla::non_crypto::XorShift128PlusRNG*
+CompileRealm::addressOfRandomNumberGenerator()
 {
-    return compartment()->randomNumberGenerator.ptr();
+    return realm()->addressOfRandomNumberGenerator();
 }
 
-const JitCompartment*
-CompileCompartment::jitCompartment()
+const JitRealm*
+CompileRealm::jitRealm()
 {
-    return compartment()->jitCompartment();
+    return realm()->jitRealm();
 }
 
 const GlobalObject*
-CompileCompartment::maybeGlobal()
+CompileRealm::maybeGlobal()
 {
     // This uses unsafeUnbarrieredMaybeGlobal() so as not to trigger the read
     // barrier on the global from off thread.  This is safe because we
     // abort Ion compilation when we GC.
-    return compartment()->unsafeUnbarrieredMaybeGlobal();
+    return realm()->unsafeUnbarrieredMaybeGlobal();
+}
+
+const uint32_t*
+CompileRealm::addressOfGlobalWriteBarriered()
+{
+    return &realm()->globalWriteBarriered;
 }
 
 bool
-CompileCompartment::hasAllocationMetadataBuilder()
+CompileRealm::hasAllocationMetadataBuilder()
 {
-    return compartment()->hasAllocationMetadataBuilder();
+    return realm()->hasAllocationMetadataBuilder();
 }
 
 // Note: This function is thread-safe because setSingletonAsValue sets a boolean
@@ -289,22 +313,28 @@ CompileCompartment::hasAllocationMetadataBuilder()
 // and this would be an unfortunate allocation, but this will not change the
 // semantics of the JavaScript code which is executed.
 void
-CompileCompartment::setSingletonsAsValues()
+CompileRealm::setSingletonsAsValues()
 {
-    compartment()->behaviors().setSingletonsAsValues();
+    realm()->behaviors().setSingletonsAsValues();
 }
 
 JitCompileOptions::JitCompileOptions()
   : cloneSingletons_(false),
     profilerSlowAssertionsEnabled_(false),
     offThreadCompilationAvailable_(false)
+#ifdef ENABLE_WASM_GC
+    , wasmGcEnabled_(false)
+#endif
 {
 }
 
 JitCompileOptions::JitCompileOptions(JSContext* cx)
 {
-    cloneSingletons_ = cx->compartment()->creationOptions().cloneSingletons();
+    cloneSingletons_ = cx->realm()->creationOptions().cloneSingletons();
     profilerSlowAssertionsEnabled_ = cx->runtime()->geckoProfiler().enabled() &&
                                      cx->runtime()->geckoProfiler().slowAssertionsEnabled();
     offThreadCompilationAvailable_ = OffThreadCompilationAvailable(cx);
+#ifdef ENABLE_WASM_GC
+    wasmGcEnabled_ = cx->options().wasmGc();
+#endif
 }

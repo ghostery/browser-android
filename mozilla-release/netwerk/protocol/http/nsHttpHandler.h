@@ -78,8 +78,8 @@ public:
 
     const nsCString& UserAgent();
 
-    nsHttpVersion  HttpVersion()             { return mHttpVersion; }
-    nsHttpVersion  ProxyHttpVersion()        { return mProxyHttpVersion; }
+    enum HttpVersion    HttpVersion()             { return mHttpVersion; }
+    enum HttpVersion    ProxyHttpVersion()        { return mProxyHttpVersion; }
     uint8_t        ReferrerLevel()           { return mReferrerLevel; }
     bool           SpoofReferrerSource()     { return mSpoofReferrerSource; }
     bool           HideOnionReferrerSource() { return mHideOnionReferrerSource; }
@@ -148,6 +148,7 @@ public:
     uint32_t       TailBlockingTotalMax() { return mTailTotalMax; }
 
     uint32_t       ThrottlingReadLimit() { return mThrottleVersion == 1 ? 0 : mThrottleReadLimit; }
+    int32_t        SendWindowSize() { return mSendWindowSize * 1024; }
 
     // TCP Keepalive configuration values.
 
@@ -434,7 +435,7 @@ private:
     //
     void     BuildUserAgent();
     void     InitUserAgentComponents();
-    void     PrefsChanged(nsIPrefBranch *prefs, const char *pref);
+    void     PrefsChanged(const char *pref);
 
     MOZ_MUST_USE nsresult SetAccept(const char *);
     MOZ_MUST_USE nsresult SetAcceptLanguages();
@@ -466,8 +467,8 @@ private:
     // prefs
     //
 
-    uint8_t  mHttpVersion;
-    uint8_t  mProxyHttpVersion;
+    enum HttpVersion mHttpVersion;
+    enum HttpVersion mProxyHttpVersion;
     uint32_t mCapabilities;
     uint8_t  mReferrerLevel;
     uint8_t  mSpoofReferrerSource;
@@ -501,6 +502,8 @@ private:
     uint32_t mThrottleReadInterval;
     uint32_t mThrottleHoldTime;
     uint32_t mThrottleMaxTime;
+
+    int32_t mSendWindowSize;
 
     bool mUrgentStartEnabled;
     bool mTailBlockingEnabled;

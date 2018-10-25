@@ -119,6 +119,7 @@ public:
                               EndTransactionFlags aFlags = END_DEFAULT) = 0;
   virtual void UpdateRenderBounds(const gfx::IntRect& aRect) {}
   virtual void SetDiagnosticTypes(DiagnosticTypes aDiagnostics) {}
+  virtual void InvalidateAll() = 0;
 
   virtual HostLayerManager* AsHostLayerManager() override {
     return this;
@@ -129,7 +130,7 @@ public:
 
   void ExtractImageCompositeNotifications(nsTArray<ImageCompositeNotificationInfo>* aNotifications)
   {
-    aNotifications->AppendElements(Move(mImageCompositeNotifications));
+    aNotifications->AppendElements(std::move(mImageCompositeNotifications));
   }
 
   void AppendImageCompositeNotification(const ImageCompositeNotificationInfo& aNotification)
@@ -305,7 +306,6 @@ public:
   virtual already_AddRefed<ContainerLayer> CreateContainerLayer() override;
   virtual already_AddRefed<ImageLayer> CreateImageLayer() override;
   virtual already_AddRefed<ColorLayer> CreateColorLayer() override;
-  virtual already_AddRefed<BorderLayer> CreateBorderLayer() override;
   virtual already_AddRefed<CanvasLayer> CreateCanvasLayer() override;
   virtual already_AddRefed<RefLayer> CreateRefLayer() override;
 
@@ -404,6 +404,10 @@ public:
   }
   virtual void SetDiagnosticTypes(DiagnosticTypes aDiagnostics) override {
     mCompositor->SetDiagnosticTypes(aDiagnostics);
+  }
+
+  virtual void InvalidateAll() override {
+    AddInvalidRegion(nsIntRegion(mRenderBounds));
   }
 
   void ForcePresent() override { mCompositor->ForcePresent(); }
@@ -546,7 +550,7 @@ public:
   }
   void SetShadowVisibleRegion(LayerIntRegion&& aRegion)
   {
-    mShadowVisibleRegion = Move(aRegion);
+    mShadowVisibleRegion = std::move(aRegion);
   }
 
   void SetShadowOpacity(float aOpacity)
@@ -750,7 +754,7 @@ RenderWithAllMasks(Layer* aLayer, Compositor* aCompositor,
   // into. The final mask gets rendered into the original render target.
 
   // Calculate the size of the intermediate surfaces.
-  gfx::Rect visibleRect(aLayer->GetLocalVisibleRegion().ToUnknownRegion().GetBounds());
+  gfx::Rect visibleRect(aLayer->GetLocalVisibleRegion().GetBounds().ToUnknownRect());
   gfx::Matrix4x4 transform = aLayer->GetEffectiveTransform();
   // TODO: Use RenderTargetIntRect and TransformBy here
   gfx::IntRect surfaceRect =

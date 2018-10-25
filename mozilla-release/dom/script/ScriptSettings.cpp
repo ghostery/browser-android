@@ -11,6 +11,7 @@
 #include "mozilla/dom/WorkerPrivate.h"
 
 #include "jsapi.h"
+#include "js/StableStringChars.h"
 #include "xpcpublic.h"
 #include "nsIGlobalObject.h"
 #include "nsIDocShell.h"
@@ -357,7 +358,7 @@ AutoJSAPI::InitInternal(nsIGlobalObject* aGlobalObject, JSObject* aGlobal,
   if (aGlobal) {
     JS::ExposeObjectToActiveJS(aGlobal);
   }
-  mAutoNullableCompartment.emplace(mCx, aGlobal);
+  mAutoNullableRealm.emplace(mCx, aGlobal);
 
   ScriptSettingsStack::Push(this);
 
@@ -379,7 +380,7 @@ AutoJSAPI::InitInternal(nsIGlobalObject* aGlobalObject, JSObject* aGlobal,
       // particular, we do not expose this data to anyone, which is very
       // important; otherwise it could be a cross-origin information leak.
       exnObj = js::UncheckedUnwrap(exnObj);
-      JSAutoCompartment ac(aCx, exnObj);
+      JSAutoRealm ar(aCx, exnObj);
 
       nsAutoJSString stack, filename, name, message;
       int32_t line;
@@ -490,6 +491,7 @@ AutoJSAPI::Init(nsIGlobalObject* aGlobalObject)
 bool
 AutoJSAPI::Init(JSObject* aObject)
 {
+  MOZ_ASSERT(!js::IsCrossCompartmentWrapper(aObject));
   return Init(xpc::NativeGlobal(aObject));
 }
 
@@ -556,11 +558,10 @@ AutoJSAPI::ReportException()
     return;
   }
 
-  // AutoJSAPI uses a JSAutoNullableCompartment, and may be in a null
-  // compartment when the destructor is called. However, the JS engine
-  // requires us to be in a compartment when we fetch the pending exception.
-  // In this case, we enter the privileged junk scope and don't dispatch any
-  // error events.
+  // AutoJSAPI uses a JSAutoNullableRealm, and may be in a null realm
+  // when the destructor is called. However, the JS engine requires us
+  // to be in a realm when we fetch the pending exception. In this case,
+  // we enter the privileged junk scope and don't dispatch any error events.
   JS::Rooted<JSObject*> errorGlobal(cx(), JS::CurrentGlobalOrNull(cx()));
   if (!errorGlobal) {
     if (mIsMainThread) {
@@ -569,7 +570,8 @@ AutoJSAPI::ReportException()
       errorGlobal = GetCurrentThreadWorkerGlobal();
     }
   }
-  JSAutoCompartment ac(cx(), errorGlobal);
+  MOZ_ASSERT(JS_IsGlobalObject(errorGlobal));
+  JSAutoRealm ar(cx(), errorGlobal);
   JS::Rooted<JS::Value> exn(cx());
   js::ErrorReport jsReport(cx());
   if (StealException(&exn) &&
@@ -577,7 +579,7 @@ AutoJSAPI::ReportException()
     if (mIsMainThread) {
       RefPtr<xpc::ErrorReport> xpcReport = new xpc::ErrorReport();
 
-      RefPtr<nsGlobalWindowInner> win = xpc::WindowGlobalOrNull(errorGlobal);
+      RefPtr<nsGlobalWindowInner> win = xpc::WindowOrNull(errorGlobal);
       nsPIDOMWindowInner* inner = win ? win->AsInner() : nullptr;
       bool isChrome = nsContentUtils::IsSystemPrincipal(
         nsContentUtils::ObjectPrincipal(errorGlobal));
@@ -588,9 +590,10 @@ AutoJSAPI::ReportException()
         JS::RootingContext* rcx = JS::RootingContext::get(cx());
         DispatchScriptErrorEvent(inner, rcx, xpcReport, exn);
       } else {
-        JS::Rooted<JSObject*> stack(cx(),
-          xpc::FindExceptionStackForConsoleReport(inner, exn));
-        xpcReport->LogToConsoleWithStack(stack);
+        JS::Rooted<JSObject*> stack(cx());
+        JS::Rooted<JSObject*> stackGlobal(cx());
+        xpc::FindExceptionStackForConsoleReport(inner, exn, &stack, &stackGlobal);
+        xpcReport->LogToConsoleWithStack(stack, stackGlobal);
       }
     } else {
       // On a worker, we just use the worker error reporting mechanism and don't
@@ -619,7 +622,7 @@ AutoJSAPI::PeekException(JS::MutableHandle<JS::Value> aVal)
 {
   MOZ_ASSERT_IF(mIsMainThread, IsStackTop());
   MOZ_ASSERT(HasException());
-  MOZ_ASSERT(js::GetContextCompartment(cx()));
+  MOZ_ASSERT(js::GetContextRealm(cx()));
   if (!JS_GetPendingException(cx(), aVal)) {
     return false;
   }
@@ -652,6 +655,10 @@ AutoEntryScript::AutoEntryScript(nsIGlobalObject* aGlobalObject,
   // This relies on us having a cx() because the AutoJSAPI constructor already
   // ran.
   , mCallerOverride(cx())
+#ifdef MOZ_GECKO_PROFILER
+  , mAutoProfilerLabel("AutoEntryScript", aReason, __LINE__,
+                       js::ProfilingStackFrame::Category::JS)
+#endif
 {
   MOZ_ASSERT(aGlobalObject);
 
@@ -665,6 +672,8 @@ AutoEntryScript::AutoEntryScript(JSObject* aObject,
                                  bool aIsMainThread)
   : AutoEntryScript(xpc::NativeGlobal(aObject), aReason, aIsMainThread)
 {
+  // xpc::NativeGlobal uses JS::GetNonCCWObjectGlobal, which asserts that
+  // aObject is not a CCW.
 }
 
 AutoEntryScript::~AutoEntryScript()
@@ -692,8 +701,7 @@ AutoEntryScript::DocshellEntryMonitor::Entry(JSContext* aCx, JSFunction* aFuncti
     rootedScript = aScript;
   }
 
-  nsCOMPtr<nsPIDOMWindowInner> window =
-    do_QueryInterface(xpc::NativeGlobal(JS::CurrentGlobalOrNull(aCx)));
+  nsCOMPtr<nsPIDOMWindowInner> window = xpc::CurrentWindowOrNull(aCx);
   if (!window || !window->GetDocShell() ||
       !window->GetDocShell()->GetRecordProfileTimelineMarkers()) {
     return;
@@ -703,7 +711,7 @@ AutoEntryScript::DocshellEntryMonitor::Entry(JSContext* aCx, JSFunction* aFuncti
   nsString filename;
   uint32_t lineNumber = 0;
 
-  js::AutoStableStringChars functionName(aCx);
+  JS::AutoStableStringChars functionName(aCx);
   if (rootedFunction) {
     JS::Rooted<JSString*> displayId(aCx, JS_GetFunctionDisplayId(rootedFunction));
     if (displayId) {
@@ -737,8 +745,7 @@ AutoEntryScript::DocshellEntryMonitor::Entry(JSContext* aCx, JSFunction* aFuncti
 void
 AutoEntryScript::DocshellEntryMonitor::Exit(JSContext* aCx)
 {
-  nsCOMPtr<nsPIDOMWindowInner> window =
-    do_QueryInterface(xpc::NativeGlobal(JS::CurrentGlobalOrNull(aCx)));
+  nsCOMPtr<nsPIDOMWindowInner> window = xpc::CurrentWindowOrNull(aCx);
   // Not really worth checking GetRecordProfileTimelineMarkers here.
   if (window && window->GetDocShell()) {
     nsCOMPtr<nsIDocShell> docShellForJSRunToCompletion = window->GetDocShell();
@@ -820,8 +827,8 @@ AutoSlowOperation::CheckForInterrupt()
 {
   // For now we support only main thread!
   if (mIsMainThread) {
-    // JS_CheckForInterrupt expects us to be in a compartment.
-    JSAutoCompartment ac(cx(), xpc::UnprivilegedJunkScope());
+    // JS_CheckForInterrupt expects us to be in a realm.
+    JSAutoRealm ar(cx(), xpc::UnprivilegedJunkScope());
     JS_CheckForInterrupt(cx());
   }
 }

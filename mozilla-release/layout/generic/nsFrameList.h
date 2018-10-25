@@ -10,6 +10,7 @@
 #include <stdio.h> /* for FILE* */
 #include "nsDebug.h"
 #include "nsTArray.h"
+#include "mozilla/FunctionTypeTraits.h"
 #include "mozilla/RefPtr.h"
 #include "mozilla/ReverseIterator.h"
 
@@ -121,7 +122,7 @@ public:
   void SetFrames(nsIFrame* aFrameList);
 
   void SetFrames(nsFrameList& aFrameList) {
-    NS_PRECONDITION(!mFirstChild, "Losing frames");
+    MOZ_ASSERT(!mFirstChild, "Losing frames");
 
     mFirstChild = aFrameList.FirstChild();
     mLastChild = aFrameList.LastChild();
@@ -229,6 +230,30 @@ public:
                      nsFrameList& aFrameList);
 
   class FrameLinkEnumerator;
+
+  /**
+   * Split this list just before the first frame that matches aPredicate,
+   * and return a nsFrameList containing all the frames before it. The
+   * matched frame and all frames after it stay in this list. If no matched
+   * frame exists, all the frames are drained into the returned list, and
+   * this list ends up empty.
+   *
+   * aPredicate should be of this function signature: bool(nsIFrame*).
+   */
+  template<typename Predicate>
+  nsFrameList Split(Predicate&& aPredicate) {
+    static_assert(
+      std::is_same<typename mozilla::FunctionTypeTraits<Predicate>::ReturnType,
+                   bool>::value &&
+      mozilla::FunctionTypeTraits<Predicate>::arity == 1 &&
+      std::is_same<typename mozilla::FunctionTypeTraits<Predicate>::template ParameterType<0>,
+                   nsIFrame*>::value,
+      "aPredicate should be of this function signature: bool(nsIFrame*)");
+
+    FrameLinkEnumerator link(*this);
+    link.Find(aPredicate);
+    return ExtractHead(link);
+  }
 
   /**
    * Split this frame list such that all the frames before the link pointed to
@@ -394,7 +419,7 @@ public:
      * iterator that is at end!
      */
     nsIFrame* get() const {
-      NS_PRECONDITION(!AtEnd(), "Enumerator is at end");
+      MOZ_ASSERT(!AtEnd(), "Enumerator is at end");
       return mFrame;
     }
 
@@ -458,12 +483,25 @@ public:
     inline FrameLinkEnumerator(const nsFrameList& aList, nsIFrame* aPrevFrame);
 
     void operator=(const FrameLinkEnumerator& aOther) {
-      NS_PRECONDITION(&List() == &aOther.List(), "Different lists?");
+      MOZ_ASSERT(&List() == &aOther.List(), "Different lists?");
       mFrame = aOther.mFrame;
       mPrev = aOther.mPrev;
     }
 
     inline void Next();
+
+    /**
+     * Find the first frame from the current position that satisfies
+     * aPredicate, and stop at it. If no such frame exists, then this method
+     * advances to the end of the list.
+     *
+     * aPredicate should be of this function signature: bool(nsIFrame*).
+     *
+     * Note: Find() needs to see the definition of Next(), so put this
+     * definition in nsIFrame.h.
+     */
+    template<typename Predicate>
+    inline void Find(Predicate&& aPredicate);
 
     bool AtEnd() const { return Enumerator::AtEnd(); }
 

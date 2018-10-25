@@ -93,7 +93,7 @@ AddonUtilsInternal.prototype = {
             if ("enabled" in options && !options.enabled) {
               log.info("Marking add-on as disabled for install: " +
                        install.name);
-              install.addon.userDisabled = true;
+              install.addon.disable();
             }
           },
           onInstallEnded(install, addon) {
@@ -110,7 +110,7 @@ AddonUtilsInternal.prototype = {
             install.removeListener(listener);
 
             rej(new Error("Download failed: " + install.error));
-          }
+          },
         };
         install.addListener(listener);
         install.install();
@@ -153,7 +153,7 @@ AddonUtilsInternal.prototype = {
 
           AddonManager.removeAddonListener(listener);
           res(addon);
-        }
+        },
       };
       AddonManager.addAddonListener(listener);
       addon.uninstall();
@@ -205,7 +205,7 @@ AddonUtilsInternal.prototype = {
       installs:     [],
       addons:       [],
       skipped:      [],
-      errors:       []
+      errors:       [],
     };
 
     let toInstall = [];
@@ -352,7 +352,11 @@ AddonUtilsInternal.prototype = {
     }
 
     this._log.info("Updating userDisabled flag: " + addon.id + " -> " + value);
-    addon.userDisabled = !!value;
+    if (value) {
+      addon.disable();
+    } else {
+      addon.enable();
+    }
   },
 
 };

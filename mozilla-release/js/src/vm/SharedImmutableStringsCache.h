@@ -16,6 +16,7 @@
 #include "builtin/String.h"
 
 #include "js/HashTable.h"
+#include "js/UniquePtr.h"
 #include "js/Utility.h"
 
 #include "threading/ExclusiveData.h"
@@ -44,8 +45,8 @@ class SharedImmutableStringsCache
     struct Hasher;
 
   public:
-    using OwnedChars = mozilla::UniquePtr<char[], JS::FreePolicy>;
-    using OwnedTwoByteChars = mozilla::UniquePtr<char16_t[], JS::FreePolicy>;
+    using OwnedChars = JS::UniqueChars;
+    using OwnedTwoByteChars = JS::UniqueTwoByteChars;
 
     /**
      * Get the canonical, shared, and de-duplicated version of the given `const
@@ -55,8 +56,8 @@ class SharedImmutableStringsCache
      * `intoOwnedChars` must create an owned version of the given string, and
      * must have one of the following types:
      *
-     *     mozilla::UniquePtr<char[], JS::FreePolicy>   intoOwnedChars();
-     *     mozilla::UniquePtr<char[], JS::FreePolicy>&& intoOwnedChars();
+     *     JS::UniqueChars   intoOwnedChars();
+     *     JS::UniqueChars&& intoOwnedChars();
      *
      * It can be used by callers to elide a copy of the string when it is safe
      * to give up ownership of the lookup string to the cache. It must return a
@@ -98,8 +99,8 @@ class SharedImmutableStringsCache
      * `intoOwnedTwoByteChars` must create an owned version of the given string,
      * and must have one of the following types:
      *
-     *     mozilla::UniquePtr<char16_t[], JS::FreePolicy>   intoOwnedTwoByteChars();
-     *     mozilla::UniquePtr<char16_t[], JS::FreePolicy>&& intoOwnedTwoByteChars();
+     *     JS::UniqueTwoByteChars   intoOwnedTwoByteChars();
+     *     JS::UniqueTwoByteChars&& intoOwnedTwoByteChars();
      *
      * It can be used by callers to elide a copy of the string when it is safe
      * to give up ownership of the lookup string to the cache. It must return a
@@ -138,11 +139,9 @@ class SharedImmutableStringsCache
         size_t n = mallocSizeOf(inner_);
 
         auto locked = inner_->lock();
-        if (!locked->set.initialized())
-            return n;
 
         // Size of the table.
-        n += locked->set.sizeOfExcludingThis(mallocSizeOf);
+        n += locked->set.shallowSizeOfExcludingThis(mallocSizeOf);
 
         // Sizes of the strings and their boxes.
         for (auto r = locked->set.all(); !r.empty(); r.popFront()) {
@@ -176,7 +175,7 @@ class SharedImmutableStringsCache
 
     SharedImmutableStringsCache& operator=(SharedImmutableStringsCache&& rhs) {
         MOZ_ASSERT(this != &rhs, "self move not allowed");
-        new (this) SharedImmutableStringsCache(mozilla::Move(rhs));
+        new (this) SharedImmutableStringsCache(std::move(rhs));
         return *this;
     }
 
@@ -213,9 +212,6 @@ class SharedImmutableStringsCache
         auto locked = inner_->lock();
         MOZ_ASSERT(locked->refcount > 0);
 
-        if (!locked->set.initialized())
-            return;
-
         for (Inner::Set::Enum e(locked->set); !e.empty(); e.popFront()) {
             if (e.front()->refcount == 0) {
                 // The chars should be eagerly freed when refcount reaches zero.
@@ -239,10 +235,10 @@ class SharedImmutableStringsCache
       public:
         mutable size_t refcount;
 
-        using Ptr = mozilla::UniquePtr<StringBox, JS::DeletePolicy<StringBox>>;
+        using Ptr = js::UniquePtr<StringBox>;
 
         StringBox(OwnedChars&& chars, size_t length)
-          : chars_(mozilla::Move(chars))
+          : chars_(std::move(chars))
           , length_(length)
           , refcount(0)
         {
@@ -250,7 +246,7 @@ class SharedImmutableStringsCache
         }
 
         static Ptr Create(OwnedChars&& chars, size_t length) {
-            return Ptr(js_new<StringBox>(mozilla::Move(chars), length));
+            return js::MakeUnique<StringBox>(std::move(chars), length);
         }
 
         StringBox(const StringBox&) = delete;

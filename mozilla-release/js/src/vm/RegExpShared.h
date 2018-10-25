@@ -15,20 +15,21 @@
 #include "mozilla/Assertions.h"
 #include "mozilla/MemoryReporting.h"
 
-#include "builtin/SelfHostingDefines.h"
 #include "gc/Barrier.h"
 #include "gc/Heap.h"
 #include "gc/Marking.h"
+#include "gc/Zone.h"
 #include "js/AllocPolicy.h"
 #include "js/UbiNode.h"
 #include "js/Vector.h"
 #include "vm/ArrayObject.h"
 #include "vm/JSAtom.h"
+#include "vm/RegExpConstants.h"
 
 namespace js {
 
 class ArrayObject;
-class RegExpCompartment;
+class RegExpRealm;
 class RegExpShared;
 class RegExpStatics;
 class VectorMatchPairs;
@@ -36,32 +37,6 @@ class VectorMatchPairs;
 using RootedRegExpShared = JS::Rooted<RegExpShared*>;
 using HandleRegExpShared = JS::Handle<RegExpShared*>;
 using MutableHandleRegExpShared = JS::MutableHandle<RegExpShared*>;
-
-enum RegExpFlag : uint8_t
-{
-    IgnoreCaseFlag  = 0x01,
-    GlobalFlag      = 0x02,
-    MultilineFlag   = 0x04,
-    StickyFlag      = 0x08,
-    UnicodeFlag     = 0x10,
-
-    NoFlags         = 0x00,
-    AllFlags        = 0x1f
-};
-
-static_assert(IgnoreCaseFlag == REGEXP_IGNORECASE_FLAG &&
-              GlobalFlag == REGEXP_GLOBAL_FLAG &&
-              MultilineFlag == REGEXP_MULTILINE_FLAG &&
-              StickyFlag == REGEXP_STICKY_FLAG &&
-              UnicodeFlag == REGEXP_UNICODE_FLAG,
-              "Flag values should be in sync with self-hosted JS");
-
-enum RegExpRunStatus
-{
-    RegExpRunStatus_Error,
-    RegExpRunStatus_Success,
-    RegExpRunStatus_Success_NotFound
-};
 
 /*
  * A RegExpShared is the compiled representation of a regexp. A RegExpShared is
@@ -163,7 +138,7 @@ class RegExpShared : public gc::TenuredCell
 
     // Register a table with this RegExpShared, and take ownership.
     bool addTable(JitCodeTable table) {
-        return tables.append(Move(table));
+        return tables.append(std::move(table));
     }
 
     /* Accessors */
@@ -234,7 +209,9 @@ class RegExpZone
         JSAtom* atom;
         uint16_t flag;
 
-        Key() {}
+        Key()
+          : atom(nullptr), flag(0)
+        { }
         Key(JSAtom* atom, RegExpFlag flag)
           : atom(atom), flag(flag)
         { }
@@ -264,10 +241,8 @@ class RegExpZone
     explicit RegExpZone(Zone* zone);
 
     ~RegExpZone() {
-        MOZ_ASSERT_IF(set_.initialized(), set_.empty());
+        MOZ_ASSERT(set_.empty());
     }
-
-    bool init();
 
     bool empty() const { return set_.empty(); }
 
@@ -288,7 +263,7 @@ class RegExpZone
     size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
 };
 
-class RegExpCompartment
+class RegExpRealm
 {
     /*
      * This is the template object where the result of re.exec() is based on,
@@ -321,9 +296,12 @@ class RegExpCompartment
     ArrayObject* createMatchResultTemplateObject(JSContext* cx);
 
   public:
-    explicit RegExpCompartment();
+    explicit RegExpRealm();
 
     void sweep();
+
+    static const size_t MatchResultObjectIndexSlot = 0;
+    static const size_t MatchResultObjectInputSlot = 1;
 
     /* Get or create template object used to base the result of .exec() on. */
     ArrayObject* getOrCreateMatchResultTemplateObject(JSContext* cx) {
@@ -346,10 +324,10 @@ class RegExpCompartment
     }
 
     static size_t offsetOfOptimizableRegExpPrototypeShape() {
-        return offsetof(RegExpCompartment, optimizableRegExpPrototypeShape_);
+        return offsetof(RegExpRealm, optimizableRegExpPrototypeShape_);
     }
     static size_t offsetOfOptimizableRegExpInstanceShape() {
-        return offsetof(RegExpCompartment, optimizableRegExpInstanceShape_);
+        return offsetof(RegExpRealm, optimizableRegExpInstanceShape_);
     }
 };
 

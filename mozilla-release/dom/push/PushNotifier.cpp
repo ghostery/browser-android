@@ -103,7 +103,7 @@ PushNotifier::Dispatch(PushDispatcher& aDispatcher)
 
     nsTArray<ContentParent*> contentActors;
     ContentParent::GetAll(contentActors);
-    if (!contentActors.IsEmpty()) {
+    if (!contentActors.IsEmpty() && !ServiceWorkerParentInterceptEnabled()) {
       // At least one content process is active, so e10s must be enabled.
       // Broadcast a message to notify observers and service workers.
       for (uint32_t i = 0; i < contentActors.Length(); ++i) {
@@ -128,7 +128,7 @@ PushNotifier::Dispatch(PushDispatcher& aDispatcher)
       return NS_OK;
     }
 
-    if (BrowserTabsRemoteAutostart()) {
+    if (BrowserTabsRemoteAutostart() && !ServiceWorkerParentInterceptEnabled()) {
       // e10s is enabled, but no content processes are active.
       return aDispatcher.HandleNoChildProcesses();
     }
@@ -224,9 +224,6 @@ PushData::Binary(uint32_t* aDataLen, uint8_t** aData)
   }
   uint32_t length = mData.Length();
   uint8_t* data = static_cast<uint8_t*>(moz_xmalloc(length * sizeof(uint8_t)));
-  if (!data) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
   memcpy(data, mData.Elements(), length * sizeof(uint8_t));
   *aDataLen = length;
   *aData = data;
@@ -320,9 +317,7 @@ PushDispatcher::DoNotifyObservers(nsISupports *aSubject, const char *aTopic,
     do_GetService(NS_CATEGORYMANAGER_CONTRACTID);
   if (catMan) {
     nsCString contractId;
-    nsresult rv = catMan->GetCategoryEntry("push",
-                                           mScope.BeginReading(),
-                                           getter_Copies(contractId));
+    nsresult rv = catMan->GetCategoryEntry("push", mScope, contractId);
     if (NS_SUCCEEDED(rv)) {
       // Ensure the service is created - we don't need to do anything with
       // it though - we assume the service constructor attaches a listener.

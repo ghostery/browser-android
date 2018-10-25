@@ -14,18 +14,27 @@ info: |
         ...
           3.If bufferData is null, return false.
 includes: [detachArrayBuffer.js]
-features: [ Atomics, ArrayBuffer, TypedArray ]
+features: [ArrayBuffer, Atomics, TypedArray]
 ---*/
 
-var int32Array = new Int32Array(new ArrayBuffer(1024));
-var poisoned = {
+const i32a = new Int32Array(
+  new ArrayBuffer(Int32Array.BYTES_PER_ELEMENT * 4)
+);
+
+const poisoned = {
   valueOf: function() {
-    throw new Test262Error("should not evaluate this code");
+    throw new Test262Error('should not evaluate this code');
   }
 };
 
-$DETACHBUFFER(int32Array.buffer); // Detaching a non-shared ArrayBuffer sets the [[ArrayBufferData]] value to null
+try {
+  $DETACHBUFFER(i32a.buffer); // Detaching a non-shared ArrayBuffer sets the [[ArrayBufferData]] value to null
+} catch (error) {
+  $ERROR(`An unexpected error occurred when detaching ArrayBuffer: ${error.message}`);
+}
 
-assert.throws(TypeError, () => Atomics.wait(int32Array, poisoned, poisoned, poisoned));
+assert.throws(TypeError, function() {
+  Atomics.wait(i32a, poisoned, poisoned, poisoned);
+}, '`Atomics.wait(i32a, poisoned, poisoned, poisoned)` throws TypeError');
 
 reportCompare(0, 0);

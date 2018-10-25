@@ -61,6 +61,9 @@ const enableAnimationFeatures = function() {
   return new Promise(resolve => {
     SpecialPowers.pushPrefEnv({"set": [
       ["dom.animations-api.core.enabled", true],
+      ["dom.animations-api.getAnimations.enabled", true],
+      ["dom.animations-api.implicit-keyframes.enabled", true],
+      ["dom.animations-api.timelines.enabled", true],
       ["layout.css.frames-timing.enabled", true],
     ]}, resolve);
   });
@@ -188,9 +191,8 @@ const clickOnRewindButton = async function(animationInspector, panel) {
  */
 const clickOnCurrentTimeScrubberController = async function(animationInspector,
                                                             panel,
-                                                            mouseDownPosition,
-                                                            mouseMovePosition) {
-  const controllerEl = panel.querySelector(".current-time-scrubber-controller");
+                                                            mouseDownPosition) {
+  const controllerEl = panel.querySelector(".current-time-scrubber-area");
   const bounds = controllerEl.getBoundingClientRect();
   const mousedonwX = bounds.width * mouseDownPosition;
 
@@ -277,8 +279,10 @@ const clickOnTargetNode = async function(animationInspector, panel, index) {
   const targetEl = panel.querySelectorAll(".animation-target .objectBox")[index];
   targetEl.scrollIntoView(false);
   const onHighlight = animationInspector.inspector.toolbox.once("node-highlight");
+  const onAnimationTargetUpdated = animationInspector.once("animation-target-rendered");
   EventUtils.synthesizeMouseAtCenter(targetEl, {}, targetEl.ownerGlobal);
-  await waitForRendering(animationInspector);
+  await onAnimationTargetUpdated;
+  await waitForSummaryAndDetail(animationInspector);
   await onHighlight;
 };
 
@@ -287,34 +291,23 @@ const clickOnTargetNode = async function(animationInspector, panel, index) {
  *
  * @param {DOMElement} panel
  *        #animation-container element.
- * @param {Number} mouseDownPosition
- *        rate on scrubber controller pane.
- *        This method calculates
- *        `mouseDownPosition * offsetWidth + offsetLeft of scrubber controller pane`
- *        as the clientX of MouseEvent.
- * @param {Number} mouseMovePosition
+ * @param {Number} mouseMovePixel
  *        Dispatch mousemove event with mouseMovePosition after mousedown.
- *        Calculation for clinetX is same to above.
  * @param {Number} mouseYPixel
  *        Y of mouse in pixel.
  */
 const dragOnCurrentTimeScrubber = async function(animationInspector,
                                                  panel,
-                                                 mouseDownPosition,
-                                                 mouseMovePosition,
+                                                 mouseMovePixel,
                                                  mouseYPixel) {
   const controllerEl = panel.querySelector(".current-time-scrubber");
-  const bounds = controllerEl.getBoundingClientRect();
-  const mousedonwX = bounds.width * mouseDownPosition;
-  const mousemoveX = bounds.width * mouseMovePosition;
-
-  info(`Drag on scrubber from ${ mousedonwX } to ${ mousemoveX }`);
-  EventUtils.synthesizeMouse(controllerEl, mousedonwX, mouseYPixel,
+  info(`Drag scrubber to X ${ mouseMovePixel }`);
+  EventUtils.synthesizeMouse(controllerEl, 0, mouseYPixel,
                              { type: "mousedown" }, controllerEl.ownerGlobal);
   await waitForSummaryAndDetail(animationInspector);
-  EventUtils.synthesizeMouse(controllerEl, mousemoveX, mouseYPixel,
+  EventUtils.synthesizeMouse(controllerEl, mouseMovePixel, mouseYPixel,
                              { type: "mousemove" }, controllerEl.ownerGlobal);
-  EventUtils.synthesizeMouse(controllerEl, mousemoveX, mouseYPixel,
+  EventUtils.synthesizeMouse(controllerEl, mouseMovePixel, mouseYPixel,
                              { type: "mouseup" }, controllerEl.ownerGlobal);
   await waitForSummaryAndDetail(animationInspector);
 };
@@ -337,7 +330,7 @@ const dragOnCurrentTimeScrubberController = async function(animationInspector,
                                                             panel,
                                                             mouseDownPosition,
                                                             mouseMovePosition) {
-  const controllerEl = panel.querySelector(".current-time-scrubber-controller");
+  const controllerEl = panel.querySelector(".current-time-scrubber-area");
   const bounds = controllerEl.getBoundingClientRect();
   const mousedonwX = bounds.width * mouseDownPosition;
   const mousemoveX = bounds.width * mouseMovePosition;
@@ -368,7 +361,7 @@ const dragOnCurrentTimeScrubberController = async function(animationInspector,
  *         }
  */
 const getDurationAndRate = function(animationInspector, panel, pixels) {
-  const controllerEl = panel.querySelector(".current-time-scrubber-controller");
+  const controllerEl = panel.querySelector(".current-time-scrubber-area");
   const bounds = controllerEl.getBoundingClientRect();
   const duration =
     animationInspector.state.timeScale.getDuration() / bounds.width * pixels;
@@ -448,12 +441,11 @@ const selectNodeAndWaitForAnimations = async function(data, inspector, reason = 
  * Send keyboard event of space to given panel.
  *
  * @param {AnimationInspector} animationInspector
- * @param {DOMElement} panel
- *        #animation-container element.
+ * @param {DOMElement} target element.
  */
-const sendSpaceKeyEvent = async function(animationInspector, panel) {
-  panel.focus();
-  EventUtils.sendKey("SPACE", panel.ownerGlobal);
+const sendSpaceKeyEvent = async function(animationInspector, element) {
+  element.focus();
+  EventUtils.sendKey("SPACE", element.ownerGlobal);
   await waitForSummaryAndDetail(animationInspector);
 };
 
@@ -472,6 +464,28 @@ const setClassAttribute = async function(animationInspector, selector, cls) {
     selector,
   };
   await executeInContent("devtools:test:setAttribute", options);
+  await waitForSummaryAndDetail(animationInspector);
+};
+
+/**
+ * Set a new style properties to the node for the given selector.
+ *
+ * @param {AnimationInspector} animationInspector
+ * @param {String} selector
+ * @param {Object} properties
+ *        e.g. {
+ *               animationDuration: "1000ms",
+ *               animationTimingFunction: "linear",
+ *             }
+ */
+const setEffectTimingAndPlayback = async function(animationInspector,
+                                                  selector, effectTiming, playbackRate) {
+  const options = {
+    effectTiming,
+    playbackRate,
+    selector,
+  };
+  await executeInContent("Test:SetEffectTimingAndPlayback", options);
   await waitForSummaryAndDetail(animationInspector);
 };
 
@@ -512,6 +526,26 @@ const setStyle = async function(animationInspector,
 };
 
 /**
+ * Set a new style properties to the node for the given selector.
+ *
+ * @param {AnimationInspector} animationInspector
+ * @param {String} selector
+ * @param {Object} properties
+ *        e.g. {
+ *               animationDuration: "1000ms",
+ *               animationTimingFunction: "linear",
+ *             }
+ */
+const setStyles = async function(animationInspector, selector, properties) {
+  const options = {
+    properties,
+    selector,
+  };
+  await executeInContent("devtools:test:setMultipleStyles", options);
+  await waitForSummaryAndDetail(animationInspector);
+};
+
+/**
  * Wait for rendering.
  *
  * @param {AnimationInspector} animationInspector
@@ -544,7 +578,15 @@ const waitForAnimationDetail = async function(animationInspector) {
  * @param {AnimationInspector} animationInspector
  */
 const waitForAllAnimationTargets = async function(animationInspector) {
-  for (let i = 0; i < animationInspector.state.animations.length; i++) {
+  const panel =
+    animationInspector.inspector.panelWin.document.getElementById("animation-container");
+  const objectBoxCount = panel.querySelectorAll(".animation-target .objectBox").length;
+
+  if (objectBoxCount === animationInspector.state.animations.length) {
+    return;
+  }
+
+  for (let i = 0; i < animationInspector.state.animations.length - objectBoxCount; i++) {
     await animationInspector.once("animation-target-rendered");
   }
 };
@@ -590,22 +632,18 @@ function assertAnimationsCurrentTime(animationInspector, time) {
  * Check whether the animations are pausing.
  *
  * @param {AnimationInspector} animationInspector
- * @param {DOMElement} panel
- *        #animation-container element.
  */
-function assertAnimationsPausing(animationInspector, panel) {
-  assertAnimationsPausingOrRunning(animationInspector, panel, true);
+function assertAnimationsPausing(animationInspector) {
+  assertAnimationsPausingOrRunning(animationInspector, true);
 }
 
 /**
  * Check whether the animations are pausing/running.
  *
  * @param {AnimationInspector} animationInspector
- * @param {DOMElement} panel
- *        #animation-container element.
  * @param {boolean} shouldPause
  */
-function assertAnimationsPausingOrRunning(animationInspector, panel, shouldPause) {
+function assertAnimationsPausingOrRunning(animationInspector, shouldPause) {
   const hasRunningAnimation =
     animationInspector.state.animations.some(({state}) => state.playState === "running");
 
@@ -620,11 +658,9 @@ function assertAnimationsPausingOrRunning(animationInspector, panel, shouldPause
  * Check whether the animations are running.
  *
  * @param {AnimationInspector} animationInspector
- * @param {DOMElement} panel
- *        #animation-container element.
  */
-function assertAnimationsRunning(animationInspector, panel) {
-  assertAnimationsPausingOrRunning(animationInspector, panel, false);
+function assertAnimationsRunning(animationInspector) {
+  assertAnimationsPausingOrRunning(animationInspector, false);
 }
 
 /**
@@ -752,4 +788,76 @@ function findStopElement(linearGradientEl, offset) {
   }
 
   return null;
+}
+
+/**
+ * Do test for keyframes-graph_computed-value-path-1/2.
+ *
+ * @param {Array} testData
+ */
+async function testKeyframesGraphComputedValuePath(testData) {
+  await addTab(URL_ROOT + "doc_multi_keyframes.html");
+  await removeAnimatedElementsExcept(testData.map(t => `.${ t.targetClass }`));
+  const { animationInspector, panel } = await openAnimationInspector();
+
+  for (const { properties, targetClass } of testData) {
+    info(`Checking keyframes graph for ${ targetClass }`);
+    await clickOnAnimationByTargetSelector(animationInspector,
+                                           panel, `.${ targetClass }`);
+
+    for (const property of properties) {
+      const {
+        name,
+        computedValuePathClass,
+        expectedPathSegments,
+        expectedStopColors,
+      } = property;
+
+      const testTarget = `${ name } in ${ targetClass }`;
+      info(`Checking keyframes graph for ${ testTarget }`);
+      info(`Checking keyframes graph path existence for ${ testTarget }`);
+      const keyframesGraphPathEl = panel.querySelector(`.${ name }`);
+      ok(keyframesGraphPathEl,
+         `The keyframes graph path element of ${ testTarget } should be existence`);
+
+      info(`Checking computed value path existence for ${ testTarget }`);
+      const computedValuePathEl =
+        keyframesGraphPathEl.querySelector(`.${ computedValuePathClass }`);
+      ok(computedValuePathEl,
+         `The computed value path element of ${ testTarget } should be existence`);
+
+      info(`Checking path segments for ${ testTarget }`);
+      const pathEl = computedValuePathEl.querySelector("path");
+      ok(pathEl, `The <path> element of ${ testTarget } should be existence`);
+      assertPathSegments(pathEl, true, expectedPathSegments);
+
+      if (!expectedStopColors) {
+        continue;
+      }
+
+      info(`Checking linearGradient for ${ testTarget }`);
+      const linearGradientEl = computedValuePathEl.querySelector("linearGradient");
+      ok(linearGradientEl,
+         `The <linearGradientEl> element of ${ testTarget } should be existence`);
+
+      for (const expectedStopColor of expectedStopColors) {
+        const { offset, color } = expectedStopColor;
+        assertLinearGradient(linearGradientEl, offset, color);
+      }
+    }
+  }
+}
+
+/**
+ * Check the adjusted current time and created time from specified two animations.
+ *
+ * @param {AnimationPlayerFront.state} animation1
+ * @param {AnimationPlayerFront.state} animation2
+ */
+function checkAdjustingTheTime(animation1, animation2) {
+  const adjustedCurrentTimeDiff = animation2.currentTime / animation2.playbackRate
+                                  - animation1.currentTime / animation1.playbackRate;
+  const createdTimeDiff = animation1.createdTime - animation2.createdTime;
+  ok(Math.abs(adjustedCurrentTimeDiff - createdTimeDiff) < 0.1,
+     "Adjusted time is correct");
 }

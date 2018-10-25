@@ -32,7 +32,7 @@ using JS::ForEachTrackedOptimizationTypeInfoOp;
 bool
 TrackedOptimizations::trackTypeInfo(OptimizationTypeInfo&& ty)
 {
-    return types_.append(mozilla::Move(ty));
+    return types_.append(std::move(ty));
 }
 
 bool
@@ -373,7 +373,6 @@ class jit::UniqueTrackedTypes
         list_(cx)
     { }
 
-    bool init() { return map_.init(); }
     bool getIndexOf(TypeSet::Type ty, uint8_t* indexp);
 
     uint32_t count() const { MOZ_ASSERT(map_.count() == list_.length()); return list_.length(); }
@@ -965,8 +964,6 @@ jit::WriteIonTrackedOptimizationsTable(JSContext* cx, CompactBufferWriter& write
 
     // Write out type info payloads.
     UniqueTrackedTypes uniqueTypes(cx);
-    if (!uniqueTypes.init())
-        return false;
 
     for (const UniqueTrackedOptimizations::SortEntry* p = vec.begin(); p != vec.end(); p++) {
         const TempOptimizationTypeInfoVector* v = p->types;
@@ -1102,7 +1099,7 @@ IonBuilder::trackTypeInfoUnchecked(TrackedTypeSite kind, MIRType mirType,
         site->setOptimizations(nullptr);
         return;
     }
-    if (!site->optimizations()->trackTypeInfo(mozilla::Move(typeInfo)))
+    if (!site->optimizations()->trackTypeInfo(std::move(typeInfo)))
         site->setOptimizations(nullptr);
 }
 
@@ -1114,7 +1111,7 @@ IonBuilder::trackTypeInfoUnchecked(TrackedTypeSite kind, JSObject* obj)
     OptimizationTypeInfo typeInfo(alloc(), kind, MIRType::Object);
     if (!typeInfo.trackType(TypeSet::ObjectType(obj)))
         return;
-    if (!site->optimizations()->trackTypeInfo(mozilla::Move(typeInfo)))
+    if (!site->optimizations()->trackTypeInfo(std::move(typeInfo)))
         site->setOptimizations(nullptr);
 }
 

@@ -9,7 +9,7 @@
 <!ENTITY  noupdatesfound.title            "Nenhuma atualização encontrada">
 <!ENTITY  noupdatesautoenabled.intro      "Não há atualizações disponíveis. O &brandShortName; verificará 
 periodicamente a disponibilidade de novas versões.">
-<!ENTITY  noupdatesautodisabled.intro     "Não há atualizações disponíveis. Por favor, verifique mais tarde ou habilite
+<!ENTITY  noupdatesautodisabled.intro     "Não há atualizações disponíveis. Verifique mais tarde ou ative
                                            a verificação automática de atualizações do &brandShortName;.">
 
 <!ENTITY  manualUpdate.title              "Não foi possível atualizar">
@@ -25,7 +25,7 @@ não tem espaço disponível para a instalar.">
 <!ENTITY  unsupported.label               "O &brandShortName; está desatualizado, mas a última versão não é
                                            suportada no seu sistema. Atualize o seu sistema e tente novamente.
                                            Você não verá este aviso novamente, mas pode">
-<!ENTITY  unsupportedLink.label           "saber mais.">
+<!ENTITY  unsupportedLink.label           "saiba mais.">
 
 <!ENTITY  clickHere.label                 "Mais informações sobre esta atualização">
 
@@ -54,8 +54,8 @@ e baixando a versão mais recente:">
 <!ENTITY  errorpatching.intro             "A atualização parcial não pôde ser aplicada. 
                                            O &brandShortName; tentará de novo, baixando a atualização completa.">
 
-<!ENTITY  genericBackgroundError.label    "O &brandShortName; não consegue determinar se existe uma atualização disponível. Por favor 
-verifique se tem a última versão do &brandShortName; em:">
+<!ENTITY  genericBackgroundError.label    "O &brandShortName; não consegue determinar se existe uma atualização disponível. 
+                                           Verifique se você tem a versão mais recente do &brandShortName; de:">
 
 <!ENTITY  finishedPage.title              "Pronto para instalar">
 <!ENTITY  finishedPage.text               "A atualização será instalada na próxima vez que o &brandShortName; iniciar. Você 

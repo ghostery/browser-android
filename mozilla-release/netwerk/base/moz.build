@@ -38,6 +38,7 @@ XPIDL_SOURCES += [
     'nsIDashboard.idl',
     'nsIDashboardEventNotifier.idl',
     'nsIDeprecationWarner.idl',
+    'nsIDHCPClient.idl',
     'nsIDivertableChannel.idl',
     'nsIDownloader.idl',
     'nsIEncodedChannel.idl',
@@ -62,7 +63,6 @@ XPIDL_SOURCES += [
     'nsINestedURI.idl',
     'nsINetAddr.idl',
     'nsINetUtil.idl',
-    'nsINetworkActivityData.idl',
     'nsINetworkInfoService.idl',
     'nsINetworkInterceptController.idl',
     'nsINetworkLinkService.idl',
@@ -126,7 +126,7 @@ XPIDL_SOURCES += [
     'nsIURI.idl',
     'nsIURIClassifier.idl',
     'nsIURIMutator.idl',
-    'nsIURIWithPrincipal.idl',
+    'nsIURIWithSpecialOrigin.idl',
     'nsIURL.idl',
     'nsIURLParser.idl',
     'nsPILoadGroupInternal.idl',
@@ -172,9 +172,11 @@ EXPORTS.mozilla.net += [
     'ChannelDiverterParent.h',
     'Dashboard.h',
     'DashboardTypes.h',
+    'IOActivityMonitor.h',
     'MemoryDownloader.h',
     'PartiallySeekableInputStream.h',
     'Predictor.h',
+    'RedirectChannelRegistrar.h',
     'ReferrerPolicy.h',
     'SimpleChannelParent.h',
     'TCPFastOpen.h',
@@ -188,10 +190,10 @@ UNIFIED_SOURCES += [
     'ChannelDiverterParent.cpp',
     'Dashboard.cpp',
     'EventTokenBucket.cpp',
+    'IOActivityMonitor.cpp',
     'LoadContextInfo.cpp',
     'LoadInfo.cpp',
     'MemoryDownloader.cpp',
-    'NetworkActivityMonitor.cpp',
     'nsAsyncRedirectVerifyHelper.cpp',
     'nsAsyncStreamCopier.cpp',
     'nsAuthInformationHolder.cpp',
@@ -305,3 +307,6 @@ LOCAL_INCLUDES += [
 
 if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
     CXXFLAGS += ['-Wno-error=shadow']
+
+if CONFIG['CC_TYPE'] == 'clang-cl':
+    AllowCompilerWarnings()  # workaround for bug 1090497

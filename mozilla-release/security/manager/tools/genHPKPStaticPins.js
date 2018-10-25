@@ -22,8 +22,9 @@ if (arguments.length != 3) {
 var { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm", {});
 var { FileUtils } = ChromeUtils.import("resource://gre/modules/FileUtils.jsm", {});
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-Cu.importGlobalProperties(["XMLHttpRequest"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["XMLHttpRequest"]);
 
 var gCertDB = Cc["@mozilla.org/security/x509certdb;1"]
                 .getService(Ci.nsIX509CertDB);
@@ -374,11 +375,9 @@ function downloadAndParseChromePins(filename,
 // nicknames and digests of the SPKInfo for the mozilla trust store
 function loadNSSCertinfo(extraCertificates) {
   let allCerts = gCertDB.getCerts();
-  let enumerator = allCerts.getEnumerator();
   let certNameToSKD = {};
   let certSKDToName = {};
-  while (enumerator.hasMoreElements()) {
-    let cert = enumerator.getNext().QueryInterface(Ci.nsIX509Cert);
+  for (let cert of allCerts.getEnumerator()) {
     if (!cert.isBuiltInRoot) {
       continue;
     }

@@ -17,7 +17,7 @@ This is likely the same like id.heading in crashes.dtd. -->
 <!ENTITY aboutSupport.crashes.id "보고 ID">
 <!ENTITY aboutSupport.crashes.sendDate "전송됨">
 <!ENTITY aboutSupport.crashes.allReports "모든 충돌 보고서">
-<!ENTITY aboutSupport.crashes.noConfig "이 어플리케이션은 충돌 보고서를 표시하도록 설정되어 있지 않습니다.">
+<!ENTITY aboutSupport.crashes.noConfig "이 애플리케이션은 충돌 보고서를 표시하도록 설정되어 있지 않습니다.">
 
 <!ENTITY aboutSupport.extensionsTitle "확장 기능">
 <!ENTITY aboutSupport.extensionName "이름">
@@ -36,15 +36,6 @@ This is likely the same like id.heading in crashes.dtd. -->
 <!ENTITY aboutSupport.featureName "이름">
 <!ENTITY aboutSupport.featureVersion "버전">
 <!ENTITY aboutSupport.featureId "ID">
-
-<!ENTITY aboutSupport.experimentsTitle "실험적인 기능">
-<!ENTITY aboutSupport.experimentName "이름">
-<!ENTITY aboutSupport.experimentId "ID">
-<!ENTITY aboutSupport.experimentDescription "설명">
-<!ENTITY aboutSupport.experimentActive "활성화">
-<!ENTITY aboutSupport.experimentEndDate "종료일">
-<!ENTITY aboutSupport.experimentHomepage "홈페이지">
-<!ENTITY aboutSupport.experimentBranch "브랜치">
 
 <!ENTITY aboutSupport.appBasicsTitle "응용 프로그램 기본 정보">
 <!ENTITY aboutSupport.appBasicsName "이름">
@@ -140,7 +131,7 @@ variant of aboutSupport.showDir.label. -->
 <!ENTITY aboutSupport.sandboxSyscallNumber "시스템 콜">
 <!ENTITY aboutSupport.sandboxSyscallArgs "인자">
 
-<!ENTITY aboutSupport.safeModeTitle "안전 모드">
+<!ENTITY aboutSupport.safeModeTitle "안전 모드 시도">
 <!ENTITY aboutSupport.restartInSafeMode.label "부가 기능 없이 재시작…">
 
 <!ENTITY aboutSupport.graphicsFeaturesTitle "기능">

@@ -12,6 +12,7 @@
 #include "mozilla/dom/quota/PersistenceType.h"
 #include "mozilla/dom/quota/QuotaManager.h"
 #include "mozilla/dom/quota/QuotaObject.h"
+#include "mozilla/net/IOActivityMonitor.h"
 #include "mozilla/IOInterposer.h"
 
 // The last VFS version for which this file has been updated.
@@ -21,19 +22,27 @@
 #define LAST_KNOWN_IOMETHODS_VERSION 3
 
 /**
- * This preference is a workaround to allow users/sysadmins to identify
- * that the profile exists on an NFS share whose implementation
- * is incompatible with SQLite's default locking implementation.
- * Bug 433129 attempted to automatically identify such file-systems,
- * but a reliable way was not found and it was determined that the fallback
- * locking is slower than POSIX locking, so we do not want to do it by default.
-*/
-#define PREF_NFS_FILESYSTEM   "storage.nfs_filesystem"
+ * By default use the unix-excl VFS, for the following reasons:
+ * 1. It improves compatibility with NFS shares, whose implementation
+ *    is incompatible with SQLite's locking requirements.
+ *    Bug 433129 attempted to automatically identify such file-systems,
+ *    but a reliable way was not found and the fallback locking is slower than
+ *    POSIX locking, so we do not want to do it by default.
+ * 2. It allows wal mode to avoid the memory mapped -shm file, reducing the
+ *    likelihood of SIGBUS failures when disk space is exhausted.
+ * 3. It provides some protection from third party database tampering while a
+ *    connection is open.
+ * This preference allows to revert to the "unix" VFS, that is not exclusive,
+ * thus it can be used by developers to query a database through the Sqlite
+ * command line while it's already in use.
+ */
+#define PREF_MULTI_PROCESS_ACCESS "storage.multiProcessAccess.enabled"
 
 namespace {
 
 using namespace mozilla;
 using namespace mozilla::dom::quota;
+using namespace mozilla::net;
 
 struct Histograms {
   const char *name;
@@ -149,6 +158,9 @@ struct telemetry_file {
   // The chunk size for this file. See the documentation for
   // sqlite3_file_control() and FCNTL_CHUNK_SIZE.
   int fileChunkSize;
+
+  // The filename
+  char* location;
 
   // This contains the vfs that actually does work
   sqlite3_file pReal[1];
@@ -361,6 +373,7 @@ xClose(sqlite3_file *pFile)
     delete p->base.pMethods;
     p->base.pMethods = nullptr;
     p->quotaObject = nullptr;
+    delete[] p->location;
 #ifdef DEBUG
     p->fileChunkSize = 0;
 #endif
@@ -378,6 +391,9 @@ xRead(sqlite3_file *pFile, void *zBuf, int iAmt, sqlite_int64 iOfst)
   IOThreadAutoTimer ioTimer(p->histograms->readMS, IOInterposeObserver::OpRead);
   int rc;
   rc = p->pReal->pMethods->xRead(p->pReal, zBuf, iAmt, iOfst);
+  if (rc == SQLITE_OK && IOActivityMonitor::IsActive()) {
+    IOActivityMonitor::Read(nsDependentCString(p->location), iAmt);
+  }
   // sqlite likes to read from empty files, this is normal, ignore it.
   if (rc != SQLITE_IOERR_SHORT_READ)
     Telemetry::Accumulate(p->histograms->readB, rc == SQLITE_OK ? iAmt : 0);
@@ -413,6 +429,10 @@ xWrite(sqlite3_file *pFile, const void *zBuf, int iAmt, sqlite_int64 iOfst)
     }
   }
   rc = p->pReal->pMethods->xWrite(p->pReal, zBuf, iAmt, iOfst);
+  if (rc == SQLITE_OK && IOActivityMonitor::IsActive()) {
+    IOActivityMonitor::Write(nsDependentCString(p->location), iAmt);
+  }
+
   Telemetry::Accumulate(p->histograms->writeB, rc == SQLITE_OK ? iAmt : 0);
   if (p->quotaObject && rc != SQLITE_OK) {
     NS_WARNING("xWrite failed on a quota-controlled file, attempting to "
@@ -664,6 +684,16 @@ xOpen(sqlite3_vfs* vfs, const char *zName, sqlite3_file* pFile,
   rc = orig_vfs->xOpen(orig_vfs, zName, p->pReal, flags, pOutFlags);
   if( rc != SQLITE_OK )
     return rc;
+
+  if (zName) {
+    p->location = new char[7 + strlen(zName) + 1];
+    strcpy(p->location, "file://");
+    strcpy(p->location + 7, zName);
+  } else {
+    p->location = new char[8];
+    strcpy(p->location, "file://");
+  }
+
   if( p->pReal->pMethods ){
     sqlite3_io_methods *pNew = new sqlite3_io_methods;
     const sqlite3_io_methods *pSub = p->pReal->pMethods;
@@ -842,22 +872,22 @@ const char *GetVFSName()
 sqlite3_vfs* ConstructTelemetryVFS()
 {
 #if defined(XP_WIN)
-#define EXPECTED_VFS     "win32"
-#define EXPECTED_VFS_NFS "win32"
+#define EXPECTED_VFS      "win32"
+#define EXPECTED_VFS_EXCL "win32"
 #else
-#define EXPECTED_VFS     "unix"
-#define EXPECTED_VFS_NFS "unix-excl"
+#define EXPECTED_VFS      "unix"
+#define EXPECTED_VFS_EXCL "unix-excl"
 #endif
 
   bool expected_vfs;
   sqlite3_vfs *vfs;
-  if (Preferences::GetBool(PREF_NFS_FILESYSTEM)) {
-    vfs = sqlite3_vfs_find(EXPECTED_VFS_NFS);
-    expected_vfs = (vfs != nullptr);
-  }
-  else {
+  if (Preferences::GetBool(PREF_MULTI_PROCESS_ACCESS, false)) {
+    // Use the non-exclusive VFS.
     vfs = sqlite3_vfs_find(nullptr);
     expected_vfs = vfs->zName && !strcmp(vfs->zName, EXPECTED_VFS);
+  } else {
+    vfs = sqlite3_vfs_find(EXPECTED_VFS_EXCL);
+    expected_vfs = (vfs != nullptr);
   }
   if (!expected_vfs) {
     return nullptr;

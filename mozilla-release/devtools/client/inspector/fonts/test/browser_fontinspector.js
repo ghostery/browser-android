@@ -5,77 +5,78 @@
 
 requestLongerTimeout(2);
 
-const TEST_URI = URL_ROOT + "browser_fontinspector.html";
-const FONTS = [{
-  name: "Ostrich Sans Medium",
-  remote: true,
-  url: URL_ROOT + "ostrich-regular.ttf",
-  cssName: "bar"
-}, {
-  name: "Ostrich Sans Black",
-  remote: true,
-  url: URL_ROOT + "ostrich-black.ttf",
-  cssName: "bar"
-}, {
-  name: "Ostrich Sans Black",
-  remote: true,
-  url: URL_ROOT + "ostrich-black.ttf",
-  cssName: "bar"
-}, {
-  name: "Ostrich Sans Medium",
-  remote: true,
-  url: URL_ROOT + "ostrich-regular.ttf",
-  cssName: "barnormal"
-}];
+const TEST_URI = URL_ROOT + "doc_browser_fontinspector.html";
 
 add_task(async function() {
-  let { inspector, view } = await openFontInspectorForURL(TEST_URI);
+  await pushPref("devtools.inspector.fonteditor.enabled", true);
+  const { inspector, view } = await openFontInspectorForURL(TEST_URI);
   ok(!!view, "Font inspector document is alive.");
 
-  let viewDoc = view.document;
+  const viewDoc = view.document;
 
   await testBodyFonts(inspector, viewDoc);
   await testDivFonts(inspector, viewDoc);
 });
 
-function isRemote(fontLi) {
-  return fontLi.querySelector(".font-origin").classList.contains("remote");
-}
+async function testBodyFonts(inspector, viewDoc) {
+  const FONTS = [{
+    familyName: "bar",
+    name: ["Ostrich Sans Medium", "Ostrich Sans Black"],
+  }, {
+    familyName: "barnormal",
+    name: "Ostrich Sans Medium",
+  }, {
+    // On Linux, Arial does not exist. Liberation Sans is used instead.
+    familyName: ["Arial", "Liberation Sans"],
+    name: ["Arial", "Liberation Sans"],
+  }];
 
-function testBodyFonts(inspector, viewDoc) {
-  let lis = getUsedFontsEls(viewDoc);
-  is(lis.length, 5, "Found 5 fonts");
+  await selectNode("body", inspector);
+
+  const groups = getUsedFontGroupsEls(viewDoc);
+  is(groups.length, 3, "Found 3 font families used on BODY");
 
   for (let i = 0; i < FONTS.length; i++) {
-    let li = lis[i];
-    let font = FONTS[i];
+    const groupEL = groups[i];
+    const font = FONTS[i];
 
-    is(getName(li), font.name, `font ${i} right font name`);
-    is(isRemote(li), font.remote, `font ${i} remote value correct`);
-    is(li.querySelector(".font-origin").textContent, font.url, `font ${i} url correct`);
+    const familyName = getFamilyName(groupEL);
+    ok(font.familyName.includes(familyName),
+      `Font families used on BODY include: ${familyName}`);
+
+    const fontName = getName(groupEL);
+    ok(font.name.includes(fontName),
+      `Fonts used on BODY include: ${fontName}`);
   }
-
-  // test that the bold and regular fonts have different previews
-  let regSrc = lis[0].querySelector(".font-preview").src;
-  let boldSrc = lis[1].querySelector(".font-preview").src;
-  isnot(regSrc, boldSrc, "preview for bold font is different from regular");
-
-  // test system font
-  let localFontName = getName(lis[4]);
-
-  // On Linux test machines, the Arial font doesn't exist.
-  // The fallback is "Liberation Sans"
-  ok((localFontName == "Arial") || (localFontName == "Liberation Sans"),
-     "local font right font name");
-  ok(!isRemote(lis[4]), "local font is local");
 }
 
 async function testDivFonts(inspector, viewDoc) {
-  let updated = inspector.once("fontinspector-updated");
-  await selectNode("div", inspector);
-  await updated;
+  const FONTS = [{
+    selector: "div",
+    familyName: "bar",
+    name: "Ostrich Sans Medium",
+  }, {
+    selector: ".normal-text",
+    familyName: "barnormal",
+    name: "Ostrich Sans Medium",
+  }, {
+    selector: ".bold-text",
+    familyName: "bar",
+    name: "Ostrich Sans Black",
+  }, {
+    selector: ".black-text",
+    familyName: "bar",
+    name: "Ostrich Sans Black",
+  }];
 
-  let lis = getUsedFontsEls(viewDoc);
-  is(lis.length, 1, "Found 1 font on DIV");
-  is(getName(lis[0]), "Ostrich Sans Medium", "The DIV font has the right name");
+  for (let i = 0; i < FONTS.length; i++) {
+    await selectNode(FONTS[i].selector, inspector);
+    const groups = getUsedFontGroupsEls(viewDoc);
+    const groupEl = groups[0];
+    const font = FONTS[i];
+
+    is(groups.length, 1, `Found 1 font on ${FONTS[i].selector}`);
+    is(getName(groupEl), font.name, "The DIV font has the right name");
+    is(getFamilyName(groupEl), font.familyName, `font has the right family name`);
+  }
 }

@@ -3,16 +3,10 @@
  * if a malformed uri is found.
  */
 
-const DESCRIPTION_ANNO = "bookmarkProperties/description";
-const LOAD_IN_SIDEBAR_ANNO = "bookmarkProperties/loadInSidebar";
-
 const TEST_FAVICON_PAGE_URL = "http://en-US.www.mozilla.com/en-US/firefox/central/";
 const TEST_FAVICON_DATA_SIZE = 580;
 
 add_task(async function test_corrupt_file() {
-  // avoid creating the places smart folder during tests
-  Services.prefs.setIntPref("browser.places.smartBookmarksVersion", -1);
-
   // Import bookmarks from the corrupt file.
   let corruptHtml = OS.Path.join(do_get_cwd().path, "bookmarks.corrupt.html");
   await BookmarkHTMLUtils.importFromFile(corruptHtml, { replace: true });
@@ -53,7 +47,7 @@ add_task(async function test_corrupt_database() {
  */
 var database_check = async function() {
   // BOOKMARKS MENU
-  let root = PlacesUtils.getFolderContents(PlacesUtils.bookmarksMenuFolderId).root;
+  let root = PlacesUtils.getFolderContents(PlacesUtils.bookmarks.menuGuid).root;
   Assert.equal(root.childCount, 2);
 
   let folderNode = root.getChild(1);
@@ -61,13 +55,11 @@ var database_check = async function() {
   Assert.equal(folderNode.title, "test");
 
   let bookmark = await PlacesUtils.bookmarks.fetch({
-    guid: folderNode.bookmarkGuid
+    guid: folderNode.bookmarkGuid,
   });
   Assert.equal(PlacesUtils.toPRTime(bookmark.dateAdded), 1177541020000000);
   Assert.equal(PlacesUtils.toPRTime(bookmark.lastModified), 1177541050000000);
-  Assert.equal("folder test comment",
-               PlacesUtils.annotations.getItemAnnotation(folderNode.itemId,
-                                                         DESCRIPTION_ANNO));
+
   // open test folder, and test the children
   PlacesUtils.asQuery(folderNode);
   Assert.equal(folderNode.hasChildren, true);
@@ -82,24 +74,19 @@ var database_check = async function() {
   Assert.equal("test", entry.keyword);
   Assert.equal("hidden1%3Dbar&text1%3D%25s", entry.postData);
 
-  Assert.ok(PlacesUtils.annotations.itemHasAnnotation(bookmarkNode.itemId,
-                                                      LOAD_IN_SIDEBAR_ANNO));
   Assert.equal(bookmarkNode.dateAdded, 1177375336000000);
   Assert.equal(bookmarkNode.lastModified, 1177375423000000);
 
-  Assert.equal((await PlacesUtils.getCharsetForURI(NetUtil.newURI(bookmarkNode.uri))),
-               "ISO-8859-1");
-
-  Assert.equal("item description",
-               PlacesUtils.annotations.getItemAnnotation(bookmarkNode.itemId,
-                                                         DESCRIPTION_ANNO));
+  let pageInfo = await PlacesUtils.history.fetch(bookmarkNode.uri, {includeAnnotations: true});
+  Assert.equal(pageInfo.annotations.get(PlacesUtils.CHARSET_ANNO), "ISO-8859-1",
+    "Should have the correct charset");
 
   // clean up
   folderNode.containerOpen = false;
   root.containerOpen = false;
 
   // BOOKMARKS TOOLBAR
-  root = PlacesUtils.getFolderContents(PlacesUtils.toolbarFolderId).root;
+  root = PlacesUtils.getFolderContents(PlacesUtils.bookmarks.toolbarGuid).root;
   Assert.equal(root.childCount, 3);
 
   // For now some promises are resolved later, so we can't guarantee an order.
@@ -123,7 +110,7 @@ var database_check = async function() {
   root.containerOpen = false;
 
   // UNFILED BOOKMARKS
-  root = PlacesUtils.getFolderContents(PlacesUtils.unfiledBookmarksFolderId).root;
+  root = PlacesUtils.getFolderContents(PlacesUtils.bookmarks.unfiledGuid).root;
   Assert.equal(root.childCount, 1);
   root.containerOpen = false;
 

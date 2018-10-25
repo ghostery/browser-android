@@ -143,7 +143,7 @@ class JS_FRIEND_API(Wrapper) : public ForwardingProxyHandler
 
     static JSObject* Renew(JSObject* existing, JSObject* obj, const Wrapper* handler);
 
-    static const Wrapper* wrapperHandler(JSObject* wrapper);
+    static inline const Wrapper* wrapperHandler(const JSObject* wrapper);
 
     static JSObject* wrappedObject(JSObject* wrapper);
 
@@ -335,9 +335,23 @@ extern JSObject*
 TransparentObjectWrapper(JSContext* cx, HandleObject existing, HandleObject obj);
 
 inline bool
-IsWrapper(JSObject* obj)
+IsWrapper(const JSObject* obj)
 {
     return IsProxy(obj) && GetProxyHandler(obj)->family() == &Wrapper::family;
+}
+
+inline bool
+IsCrossCompartmentWrapper(const JSObject* obj)
+{
+    return IsWrapper(obj) &&
+           (Wrapper::wrapperHandler(obj)->flags() & Wrapper::CROSS_COMPARTMENT);
+}
+
+/* static */ inline const Wrapper*
+Wrapper::wrapperHandler(const JSObject* wrapper)
+{
+    MOZ_ASSERT(IsWrapper(wrapper));
+    return static_cast<const Wrapper*>(GetProxyHandler(wrapper));
 }
 
 // Given a JSObject, returns that object stripped of wrappers. If
@@ -377,9 +391,6 @@ UncheckedUnwrapWithoutExpose(JSObject* obj);
 
 void
 ReportAccessDenied(JSContext* cx);
-
-JS_FRIEND_API(bool)
-IsCrossCompartmentWrapper(JSObject* obj);
 
 JS_FRIEND_API(void)
 NukeCrossCompartmentWrapper(JSContext* cx, JSObject* wrapper);

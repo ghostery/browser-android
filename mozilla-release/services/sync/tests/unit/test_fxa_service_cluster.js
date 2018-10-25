@@ -15,7 +15,8 @@ add_task(async function test_findCluster() {
     body: "",
   });
 
-  await Assert.rejects(Service.identity._findCluster());
+  await Assert.rejects(Service.identity._findCluster(),
+    /TokenServerClientServerError/);
 
   _("_findCluster() returns null on authentication errors.");
   initializeIdentityWithTokenServerResponse({
@@ -39,7 +40,7 @@ add_task(async function test_findCluster() {
         id: "id",
         key: "key",
         uid: "uid",
-      })
+      }),
   });
 
   cluster = await Service.identity._findCluster();

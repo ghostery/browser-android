@@ -20,12 +20,12 @@
 #include "ImageContainer.h"
 #include "Layers.h"
 #include "nsIInterfaceRequestorUtils.h"
-#include "nsIDOMDocument.h"
 #include "nsITabSource.h"
 #include "VideoUtils.h"
 #include "nsServiceManagerUtils.h"
 #include "nsIPrefService.h"
 #include "MediaTrackConstraints.h"
+#include "Tracing.h"
 
 namespace mozilla {
 
@@ -258,6 +258,8 @@ MediaEngineTabVideoSource::Pull(const RefPtr<const AllocationHandle>& aHandle,
                                 StreamTime aDesiredTime,
                                 const PrincipalHandle& aPrincipalHandle)
 {
+  TRACE_AUDIO_CALLBACK_COMMENT("SourceMediaStream %p track %i",
+                               aStream.get(), aTrackID);
   VideoSegment segment;
   RefPtr<layers::Image> image;
   gfx::IntSize imageSize;
@@ -395,6 +397,12 @@ MediaEngineTabVideoSource::Draw() {
   MutexAutoLock lock(mMutex);
   mImage = image;
   mImageSize = size;
+}
+
+nsresult
+MediaEngineTabVideoSource::FocusOnSelectedSource(const RefPtr<const AllocationHandle>& aHandle)
+{
+  return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 nsresult

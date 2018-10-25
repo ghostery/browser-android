@@ -5,6 +5,8 @@
 
 #include "mozilla/ResultExtensions.h"
 #include "nsAutoConfig.h"
+#include "nsJSConfigTriggers.h"
+
 #include "nsIURI.h"
 #include "nsIHttpChannel.h"
 #include "nsIFileStreams.h"
@@ -29,15 +31,9 @@ using mozilla::LogLevel;
 
 mozilla::LazyLogModule MCD("MCD");
 
-extern nsresult EvaluateAdminConfigScript(const char *js_buffer, size_t length,
-                                          const char *filename,
-                                          bool bGlobalContext,
-                                          bool bCallbacks,
-                                          bool skipFirstLine);
-
 // nsISupports Implementation
 
-NS_IMPL_ISUPPORTS(nsAutoConfig, nsIAutoConfig, nsITimerCallback, nsIStreamListener,
+NS_IMPL_ISUPPORTS(nsAutoConfig, nsITimerCallback, nsIStreamListener,
                   nsIObserver, nsIRequestObserver, nsISupportsWeakReference,
                   nsINamed)
 
@@ -67,28 +63,10 @@ nsAutoConfig::~nsAutoConfig()
 {
 }
 
-// attribute string configURL
-NS_IMETHODIMP nsAutoConfig::GetConfigURL(char **aConfigURL)
+void
+nsAutoConfig::SetConfigURL(const char *aConfigURL)
 {
-    if (!aConfigURL)
-        return NS_ERROR_NULL_POINTER;
-
-    if (mConfigURL.IsEmpty()) {
-        *aConfigURL = nullptr;
-        return NS_OK;
-    }
-
-    *aConfigURL = ToNewCString(mConfigURL);
-    if (!*aConfigURL)
-        return NS_ERROR_OUT_OF_MEMORY;
-    return NS_OK;
-}
-NS_IMETHODIMP nsAutoConfig::SetConfigURL(const char *aConfigURL)
-{
-    if (!aConfigURL)
-        return NS_ERROR_NULL_POINTER;
     mConfigURL.Assign(aConfigURL);
-    return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -149,7 +127,7 @@ nsAutoConfig::OnStopRequest(nsIRequest *request, nsISupports *context,
     // Send the autoconfig.jsc to javascript engine.
 
     rv = EvaluateAdminConfigScript(mBuf.get(), mBuf.Length(),
-                              nullptr, false,true, false);
+                                   nullptr, false, true, false);
     if (NS_SUCCEEDED(rv)) {
 
         // Write the autoconfig.jsc to failover.jsc (cached copy)

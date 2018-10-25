@@ -77,21 +77,11 @@ public:
     return mForms;
   }
 
-  // nsIDOMDocument interface
-  using nsDocument::CreateElement;
-  using nsDocument::CreateElementNS;
-  NS_FORWARD_NSIDOMDOCUMENT(nsDocument::)
-
-  // And explicitly import the things from nsDocument that we just shadowed
-  using nsDocument::GetImplementation;
-  using nsDocument::GetTitle;
-  using nsDocument::SetTitle;
-  using nsDocument::GetLastStyleSheetSet;
-  using nsDocument::MozSetImageElement;
-
   mozilla::dom::HTMLAllCollection* All();
 
-  nsISupports* ResolveName(const nsAString& aName, nsWrapperCache **aCache);
+  // Returns whether an object was found for aName.
+  bool ResolveName(JSContext* aCx, const nsAString& aName,
+                   JS::MutableHandle<JS::Value> aRetval, mozilla::ErrorResult& aError);
 
   virtual void AddedForm() override;
   virtual void RemovedForm() override;
@@ -135,14 +125,13 @@ public:
   };
   friend class nsAutoEditingState;
 
-  void EndUpdate(nsUpdateType aUpdateType) override;
+  void EndUpdate() override;
 
   virtual void SetMayStartLayout(bool aMayStartLayout) override;
 
   virtual nsresult SetEditingState(EditingState aState) override;
 
-  virtual nsresult Clone(mozilla::dom::NodeInfo *aNodeInfo, nsINode **aResult,
-                         bool aPreallocateChildren) const override;
+  virtual nsresult Clone(mozilla::dom::NodeInfo*, nsINode** aResult) const override;
 
   virtual void RemovedFromDocShell() override;
   using mozilla::dom::DocumentOrShadowRoot::GetElementById;
@@ -163,7 +152,13 @@ public:
   void SetCookie(const nsAString& aCookie, mozilla::ErrorResult& rv);
   void NamedGetter(JSContext* cx, const nsAString& aName, bool& aFound,
                    JS::MutableHandle<JSObject*> aRetval,
-                   mozilla::ErrorResult& rv);
+                   mozilla::ErrorResult& rv)
+  {
+    JS::Rooted<JS::Value> v(cx);
+    if ((aFound = ResolveName(cx, aName, &v, rv))) {
+      aRetval.set(v.toObjectOrNull());
+    }
+  }
   void GetSupportedNames(nsTArray<nsString>& aNames);
   already_AddRefed<nsIDocument> Open(JSContext* cx,
                                      const mozilla::dom::Optional<nsAString>& /* unused */,
@@ -229,6 +224,9 @@ public:
 
   void GetFormsAndFormControls(nsContentList** aFormList,
                                nsContentList** aFormControlList);
+
+  void UserInteractionForTesting();
+
 protected:
   ~nsHTMLDocument();
 

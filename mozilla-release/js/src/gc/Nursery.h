@@ -51,8 +51,8 @@ class Nursery;
 struct NurseryChunk;
 class HeapSlot;
 class JSONPrinter;
-
-void SetGCZeal(JSRuntime*, uint8_t, uint32_t);
+class MapObject;
+class SetObject;
 
 namespace gc {
 class AutoMaybeStartBackgroundAllocation;
@@ -76,6 +76,8 @@ class TenuringTracer : public JSTracer
 
     // Amount of data moved to the tenured generation during collection.
     size_t tenuredSize;
+    // Number of cells moved to the tenured generation.
+    size_t tenuredCells;
 
     // These lists are threaded through the Nursery using the space from
     // already moved things. The lists are used to fix up the moved things and
@@ -102,6 +104,7 @@ class TenuringTracer : public JSTracer
   private:
     inline void insertIntoObjectFixupList(gc::RelocationOverlay* entry);
     inline void insertIntoStringFixupList(gc::RelocationOverlay* entry);
+
     template <typename T>
     inline T* allocTenured(JS::Zone* zone, gc::AllocKind kind);
 
@@ -287,12 +290,10 @@ class Nursery
         return allocatedChunkCount() * gc::ChunkSize;
     }
     size_t sizeOfMallocedBuffers(mozilla::MallocSizeOf mallocSizeOf) const {
-        if (!mallocedBuffers.initialized())
-            return 0;
         size_t total = 0;
         for (MallocedBuffersSet::Range r = mallocedBuffers.all(); !r.empty(); r.popFront())
             total += mallocSizeOf(r.front());
-        total += mallocedBuffers.sizeOfExcludingThis(mallocSizeOf);
+        total += mallocedBuffers.shallowSizeOfExcludingThis(mallocSizeOf);
         return total;
     }
 
@@ -323,9 +324,11 @@ class Nursery
     /* Print total profile times on shutdown. */
     void printTotalProfileTimes();
 
-    void* addressOfCurrentEnd() const { return (void*)&currentEnd_; }
-    void* addressOfPosition() const { return (void*)&position_; }
-    void* addressOfCurrentStringEnd() const { return (void*)&currentStringEnd_; }
+    void* addressOfPosition() const { return (void**)&position_; }
+    const void* addressOfCurrentEnd() const { return (void**)&currentEnd_; }
+    const void* addressOfCurrentStringEnd() const {
+        return (void*)&currentStringEnd_;
+    }
 
     void requestMinorGC(JS::gcreason::Reason reason) const;
 
@@ -336,6 +339,17 @@ class Nursery
     bool needIdleTimeCollection() const;
 
     bool enableProfiling() const { return enableProfiling_; }
+
+    bool addMapWithNurseryMemory(MapObject* obj) {
+        MOZ_ASSERT_IF(!mapsWithNurseryMemory_.empty(),
+                      mapsWithNurseryMemory_.back() != obj);
+        return mapsWithNurseryMemory_.append(obj);
+    }
+    bool addSetWithNurseryMemory(SetObject* obj) {
+        MOZ_ASSERT_IF(!setsWithNurseryMemory_.empty(),
+                      setsWithNurseryMemory_.back() != obj);
+        return setsWithNurseryMemory_.append(obj);
+    }
 
     /* The amount of space in the mapped nursery available to allocations. */
     static const size_t NurseryChunkUsableSize = gc::ChunkSize - gc::ChunkTrailerSize;
@@ -420,16 +434,13 @@ class Nursery
     ProfileDurations profileDurations_;
     ProfileDurations totalDurations_;
 
-    /*
-     * This data is initialised only if the nursery is enabled and after at
-     * least one call to Nursery::collect()
-     */
     struct {
-        JS::gcreason::Reason reason;
-        size_t nurseryCapacity;
-        size_t nurseryLazyCapacity;
-        size_t nurseryUsedBytes;
-        size_t tenuredBytes;
+        JS::gcreason::Reason reason = JS::gcreason::NO_REASON;
+        size_t nurseryCapacity = 0;
+        size_t nurseryLazyCapacity = 0;
+        size_t nurseryUsedBytes = 0;
+        size_t tenuredBytes = 0;
+        size_t tenuredCells = 0;
     } previousGC;
 
     /*
@@ -482,6 +493,13 @@ class Nursery
 
     using NativeObjectVector = Vector<NativeObject*, 0, SystemAllocPolicy>;
     NativeObjectVector dictionaryModeObjects_;
+
+    /*
+     * Lists of map and set objects allocated in the nursery or with iterators
+     * allocated there. Such objects need to be swept after minor GC.
+     */
+    Vector<MapObject*, 0, SystemAllocPolicy> mapsWithNurseryMemory_;
+    Vector<SetObject*, 0, SystemAllocPolicy> setsWithNurseryMemory_;
 
 #ifdef JS_GC_ZEAL
     struct Canary;
@@ -545,6 +563,7 @@ class Nursery
     void clear();
 
     void sweepDictionaryModeObjects();
+    void sweepMapAndSetObjects();
 
     /* Change the allocable space provided by the nursery. */
     void maybeResizeNursery(JS::gcreason::Reason reason);

@@ -4,20 +4,20 @@
 
 "use strict";
 
-ChromeUtils.import("resource://gre/modules/Log.jsm");
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ChromeUtils.import("chrome://marionette/content/assert.js");
 ChromeUtils.import("chrome://marionette/content/capture.js");
-const {InvalidArgumentError} =
-    ChromeUtils.import("chrome://marionette/content/error.js", {});
+const {InvalidArgumentError} = ChromeUtils.import("chrome://marionette/content/error.js", {});
+const {Log} = ChromeUtils.import("chrome://marionette/content/log.js", {});
+
+XPCOMUtils.defineLazyGetter(this, "logger", Log.get);
 
 this.EXPORTED_SYMBOLS = ["reftest"];
 
 const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const PREF_E10S = "browser.tabs.remote.autostart";
-
-const logger = Log.repository.getLogger("Marionette");
 
 const SCREENSHOT_MODE = {
   unexpected: 0,
@@ -88,20 +88,19 @@ reftest.Runner = class {
     let found = this.driver.findWindow([reftestWin], () => true);
     await this.driver.setWindowHandle(found, true);
 
-    this.windowUtils = reftestWin.QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindowUtils);
+    this.windowUtils = reftestWin.windowUtils;
     this.reftestWin = reftestWin;
     return reftestWin;
   }
 
   async openWindow() {
-    let reftestWin;
+    let reftestWin = this.parentWindow.open(
+        "chrome://marionette/content/reftest.xul",
+        "reftest",
+        "chrome,dialog,height=600,width=600");
+
     await new Promise(resolve => {
-      reftestWin = this.parentWindow.openDialog(
-          "chrome://marionette/content/reftest.xul",
-          "reftest",
-          "chrome,dialog,height=600,width=600,all",
-          resolve);
+      reftestWin.addEventListener("load", resolve, {once: true});
     });
 
     let browser = reftestWin.document.createElementNS(XUL_NS, "xul:browser");
@@ -133,7 +132,7 @@ min-width: 600px; min-height: 600px; max-width: 600px; max-height: 600px`;
 
   abort() {
     if (this.reftestWin) {
-      this.driver.close();
+      this.driver.closeChromeWindow();
     }
     this.reftestWin = null;
   }
@@ -195,7 +194,12 @@ min-width: 600px; min-height: 600px; max-width: 600px; max-height: 600px`;
       try {
         result = await this.runTest(testUrl, references, expected, timeout);
       } catch (e) {
-        result = {status: STATUS.ERROR, message: e.stack, extra: {}};
+        result = {
+          status: STATUS.ERROR,
+          message: String(e),
+          stack: e.stack,
+          extra: {},
+        };
       }
       return result;
     })();
@@ -255,7 +259,7 @@ min-width: 600px; min-height: 600px; max-width: 600px; max-height: 600px`;
         if (references.length) {
           for (let i = references.length - 1; i >= 0; i--) {
             let item = references[i];
-            stack.push([testUrl, item[0], item[1], item[2]]);
+            stack.push([rhsUrl, item[0], item[1], item[2]]);
           }
         } else {
           // Reached a leaf node so all of one reference chain passed

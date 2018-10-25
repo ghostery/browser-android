@@ -19,7 +19,7 @@ const HASHLEN = 32;
 const PREFS = {
   PROVIDER_LISTS: "browser.safebrowsing.provider.mozilla.lists",
   DISALLOW_COMPLETIONS: "urlclassifier.disallow_completions",
-  PROVIDER_GETHASHURL: "browser.safebrowsing.provider.mozilla.gethashURL"
+  PROVIDER_GETHASHURL: "browser.safebrowsing.provider.mozilla.gethashURL",
 };
 
 classifierHelper._curAddChunkNum = 1;
@@ -46,12 +46,7 @@ classifierHelper.waitForInit = function() {
     }, "mozentries-update-finished");
 
     let listener = {
-      QueryInterface(iid) {
-        if (iid.equals(Ci.nsISupports) ||
-          iid.equals(Ci.nsIUrlClassifierUpdateObserver))
-          return this;
-        throw Cr.NS_ERROR_NO_INTERFACE;
-      },
+      QueryInterface: ChromeUtils.generateQI(["nsIUrlClassifierUpdateObserver"]),
 
       handleEvent(value) {
         if (value === table) {
@@ -137,13 +132,7 @@ classifierHelper._update = function(update) {
       try {
         await new Promise((resolve, reject) => {
           let listener = {
-            QueryInterface(iid) {
-              if (iid.equals(Ci.nsISupports) ||
-                  iid.equals(Ci.nsIUrlClassifierUpdateObserver))
-                return this;
-
-              throw Cr.NS_ERROR_NO_INTERFACE;
-            },
+            QueryInterface: ChromeUtils.generateQI(["nsIUrlClassifierUpdateObserver"]),
             updateUrlRequested(url) { },
             streamFinished(status) { },
             updateError(errorCode) {
@@ -151,7 +140,7 @@ classifierHelper._update = function(update) {
             },
             updateSuccess(requestedTimeout) {
               resolve();
-            }
+            },
           };
           dbService.beginUpdate(listener, "", "");
           dbService.beginStream("", "");

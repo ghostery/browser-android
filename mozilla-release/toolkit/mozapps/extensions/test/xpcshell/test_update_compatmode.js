@@ -11,16 +11,15 @@ Services.prefs.setBoolPref(PREF_EM_CHECK_UPDATE_SECURITY, false);
 
 var testserver = AddonTestUtils.createHttpServer({hosts: ["example.com"]});
 testserver.registerDirectory("/data/", do_get_file("data"));
-testserver.registerDirectory("/addons/", do_get_file("addons"));
 
 const profileDir = gProfD.clone();
 profileDir.append("extensions");
 
-function run_test() {
+async function run_test() {
   do_test_pending();
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
 
-  writeInstallRDFForExtension({
+  await promiseWriteInstallRDFForExtension({
     id: "compatmode-normal@tests.mozilla.org",
     version: "1.0",
     bootstrap: true,
@@ -28,12 +27,12 @@ function run_test() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
-    name: "Test Addon - normal"
+    name: "Test Addon - normal",
   }, profileDir);
 
-  writeInstallRDFForExtension({
+  await promiseWriteInstallRDFForExtension({
     id: "compatmode-strict@tests.mozilla.org",
     version: "1.0",
     bootstrap: true,
@@ -41,12 +40,12 @@ function run_test() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
-    name: "Test Addon - strict"
+    name: "Test Addon - strict",
   }, profileDir);
 
-  writeInstallRDFForExtension({
+  await promiseWriteInstallRDFForExtension({
     id: "compatmode-strict-optin@tests.mozilla.org",
     version: "1.0",
     bootstrap: true,
@@ -54,13 +53,13 @@ function run_test() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Test Addon - strict opt-in",
-    strictCompatibility: true
+    strictCompatibility: true,
   }, profileDir);
 
-  writeInstallRDFForExtension({
+  await promiseWriteInstallRDFForExtension({
     id: "compatmode-ignore@tests.mozilla.org",
     version: "1.0",
     bootstrap: true,
@@ -68,12 +67,12 @@ function run_test() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Test Addon - ignore",
   }, profileDir);
 
-  startupManager();
+  await promiseStartupManager();
   run_test_1();
 }
 
@@ -103,7 +102,7 @@ async function run_test_1() {
 
     onUpdateFinished() {
       run_test_2();
-    }
+    },
   }, AddonManager.UPDATE_WHEN_USER_REQUESTED);
 }
 
@@ -128,7 +127,7 @@ async function run_test_2() {
 
     onUpdateFinished() {
       run_test_3();
-    }
+    },
   }, AddonManager.UPDATE_WHEN_USER_REQUESTED);
 }
 
@@ -149,7 +148,7 @@ async function run_test_3() {
 
     onUpdateFinished() {
       run_test_4();
-    }
+    },
   }, AddonManager.UPDATE_WHEN_USER_REQUESTED);
 }
 
@@ -174,6 +173,6 @@ async function run_test_4() {
 
     onUpdateFinished() {
       end_test();
-    }
+    },
   }, AddonManager.UPDATE_WHEN_USER_REQUESTED);
 }

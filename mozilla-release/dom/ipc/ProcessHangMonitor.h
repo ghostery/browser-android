@@ -24,6 +24,10 @@ class ContentParent;
 class TabParent;
 } // namespace dom
 
+namespace layers {
+struct LayersObserverEpoch;
+} // namespace layers
+
 class PProcessHangMonitorParent;
 
 class ProcessHangMonitor final
@@ -45,11 +49,12 @@ class ProcessHangMonitor final
 
   static void ClearHang();
 
-  static void ForcePaint(PProcessHangMonitorParent* aParent,
-                         dom::TabParent* aTab,
-                         uint64_t aLayerObserverEpoch);
-  static void ClearForcePaint(uint64_t aLayerObserverEpoch);
-  static void MaybeStartForcePaint();
+  static void PaintWhileInterruptingJS(PProcessHangMonitorParent* aParent,
+                                       dom::TabParent* aTab,
+                                       bool aForceRepaint,
+                                       const layers::LayersObserverEpoch& aEpoch);
+  static void ClearPaintWhileInterruptingJS(const layers::LayersObserverEpoch& aEpoch);
+  static void MaybeStartPaintWhileInterruptingJS();
 
   enum SlowScriptAction {
     Continue,

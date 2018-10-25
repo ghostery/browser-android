@@ -61,5 +61,5 @@
                                            continuer votre travail et redémarrer plus tard, ou refuser cette mise à jour.">
 
 <!ENTITY  update.details.label            "Détails">
-<!ENTITY  update.installedOn.label        "Installé(e) le :">
+<!ENTITY  update.installedOn.label        "Installée le :">
 <!ENTITY  update.status.label             "État :">

@@ -15,7 +15,6 @@
 #include "dtlsidentity.h"
 #include "keyhi.h"
 #include "logging.h"
-#include "mozilla/Move.h"
 #include "mozilla/Telemetry.h"
 #include "mozilla/UniquePtr.h"
 #include "mozilla/Unused.h"
@@ -63,23 +62,10 @@ static PRDescIdentity transport_layer_identity = PR_INVALID_IO_LAYER;
 //
 // All of this stuff is assumed to happen solely in a single thread
 // (generally the SocketTransportService thread)
-struct Packet {
-  Packet() : data_(nullptr), len_(0) {}
 
-  void Assign(const void *data, int32_t len) {
-    data_.reset(new uint8_t[len]);
-    memcpy(data_.get(), data, len);
-    len_ = len;
-  }
-
-  UniquePtr<uint8_t[]> data_;
-  int32_t len_;
-};
-
-void TransportLayerNSPRAdapter::PacketReceived(const void *data, int32_t len) {
+void TransportLayerNSPRAdapter::PacketReceived(MediaPacket& packet) {
   if (enabled_) {
-    input_.push(new Packet());
-    input_.back()->Assign(data, len);
+    input_.push(new MediaPacket(std::move(packet)));
   }
 }
 
@@ -89,15 +75,16 @@ int32_t TransportLayerNSPRAdapter::Recv(void *buf, int32_t buflen) {
     return -1;
   }
 
-  Packet* front = input_.front();
-  if (buflen < front->len_) {
+  MediaPacket* front = input_.front();
+  int32_t count = static_cast<int32_t>(front->len());
+
+  if (buflen < count) {
     MOZ_ASSERT(false, "Not enough buffer space to receive into");
     PR_SetError(PR_BUFFER_OVERFLOW_ERROR, 0);
     return -1;
   }
 
-  int32_t count = front->len_;
-  memcpy(buf, front->data_.get(), count);
+  memcpy(buf, front->data(), count);
 
   input_.pop();
   delete front;
@@ -111,8 +98,11 @@ int32_t TransportLayerNSPRAdapter::Write(const void *buf, int32_t length) {
     return -1;
   }
 
-  TransportResult r = output_->SendPacket(
-      static_cast<const unsigned char *>(buf), length);
+  MediaPacket packet;
+  // Copies. Oh well.
+  packet.Copy(static_cast<const uint8_t*>(buf), static_cast<size_t>(length));
+
+  TransportResult r = output_->SendPacket(packet);
   if (r >= 0) {
     return r;
   }
@@ -635,7 +625,7 @@ bool TransportLayerDtls::Setup() {
     MOZ_MTLOG(ML_ERROR, "Couldn't reset handshake");
     return false;
   }
-  ssl_fd_ = Move(ssl_fd);
+  ssl_fd_ = std::move(ssl_fd);
 
   // Finally, get ready to receive data
   downward_->SignalStateChange.connect(this, &TransportLayerDtls::StateChange);
@@ -839,11 +829,11 @@ void TransportLayerDtls::StateChange(TransportLayer *layer, State state) {
       break;
 
     case TS_CONNECTING:
-      MOZ_MTLOG(ML_ERROR, LAYER_INFO << "Lower layer is connecting.");
+      MOZ_MTLOG(ML_INFO, LAYER_INFO << "Lower layer is connecting.");
       break;
 
     case TS_OPEN:
-      MOZ_MTLOG(ML_ERROR,
+      MOZ_MTLOG(ML_INFO,
                 LAYER_INFO << "Lower layer is now open; starting TLS");
       // Async, since the ICE layer might need to send a STUN response, and we
       // don't want the handshake to start until that is sent.
@@ -858,7 +848,7 @@ void TransportLayerDtls::StateChange(TransportLayer *layer, State state) {
       break;
 
     case TS_CLOSED:
-      MOZ_MTLOG(ML_ERROR, LAYER_INFO << "Lower layer is now closed");
+      MOZ_MTLOG(ML_INFO, LAYER_INFO << "Lower layer is now closed");
       TL_SET_STATE(TS_CLOSED);
       break;
 
@@ -895,6 +885,8 @@ void TransportLayerDtls::Handshake() {
     }
 
     TL_SET_STATE(TS_OPEN);
+
+    RecordCipherTelemetry();
   } else {
     int32_t err = PR_GetError();
     switch(err) {
@@ -989,10 +981,9 @@ bool TransportLayerDtls::CheckAlpn() {
 
 
 void TransportLayerDtls::PacketReceived(TransportLayer* layer,
-                                        const unsigned char *data,
-                                        size_t len) {
+                                        MediaPacket& packet) {
   CheckThread();
-  MOZ_MTLOG(ML_DEBUG, LAYER_INFO << "PacketReceived(" << len << ")");
+  MOZ_MTLOG(ML_DEBUG, LAYER_INFO << "PacketReceived(" << packet.len() << ")");
 
   if (state_ != TS_CONNECTING && state_ != TS_OPEN) {
     MOZ_MTLOG(ML_DEBUG,
@@ -1000,13 +991,23 @@ void TransportLayerDtls::PacketReceived(TransportLayer* layer,
     return;
   }
 
-  // not DTLS per RFC 7983
-  if (data[0] < 20 || data[0] > 63) {
+  if (!packet.data()) {
+    // Something ate this, probably the SRTP layer
     return;
   }
 
-  nspr_io_adapter_->PacketReceived(data, len);
+  // not DTLS per RFC 7983
+  if (packet.data()[0] < 20 || packet.data()[0] > 63) {
+    return;
+  }
 
+  nspr_io_adapter_->PacketReceived(packet);
+  GetDecryptedPackets();
+}
+
+void
+TransportLayerDtls::GetDecryptedPackets()
+{
   // If we're still connecting, try to handshake
   if (state_ == TS_CONNECTING) {
     Handshake();
@@ -1014,16 +1015,20 @@ void TransportLayerDtls::PacketReceived(TransportLayer* layer,
 
   // Now try a recv if we're open, since there might be data left
   if (state_ == TS_OPEN) {
-    // nICEr uses a 9216 bytes buffer to allow support for jumbo frames
-    unsigned char buf[9216];
     int32_t rv;
     // One packet might contain several DTLS packets
     do {
-      rv = PR_Recv(ssl_fd_.get(), buf, sizeof(buf), 0, PR_INTERVAL_NO_WAIT);
+      // nICEr uses a 9216 bytes buffer to allow support for jumbo frames
+      // Can we peek to get a better idea of the actual size?
+      static const size_t kBufferSize = 9216;
+      auto buffer = MakeUnique<uint8_t[]>(kBufferSize);
+      rv = PR_Recv(ssl_fd_.get(), buffer.get(), kBufferSize, 0, PR_INTERVAL_NO_WAIT);
       if (rv > 0) {
         // We have data
         MOZ_MTLOG(ML_DEBUG, LAYER_INFO << "Read " << rv << " bytes from NSS");
-        SignalPacketReceived(this, buf, rv);
+        MediaPacket packet;
+        packet.Take(std::move(buffer), static_cast<size_t>(rv));
+        SignalPacketReceived(this, packet);
       } else if (rv == 0) {
         TL_SET_STATE(TS_CLOSED);
       } else {
@@ -1069,8 +1074,7 @@ void TransportLayerDtls::SetState(State state,
   TransportLayer::SetState(state, file, line);
 }
 
-TransportResult TransportLayerDtls::SendPacket(const unsigned char *data,
-                                               size_t len) {
+TransportResult TransportLayerDtls::SendPacket(MediaPacket& packet) {
   CheckThread();
   if (state_ != TS_OPEN) {
     MOZ_MTLOG(ML_ERROR, LAYER_INFO << "Can't call SendPacket() in state "
@@ -1078,7 +1082,8 @@ TransportResult TransportLayerDtls::SendPacket(const unsigned char *data,
     return TE_ERROR;
   }
 
-  int32_t rv = PR_Send(ssl_fd_.get(), data, len, 0, PR_INTERVAL_NO_WAIT);
+  int32_t rv = PR_Send(ssl_fd_.get(), packet.data(), packet.len(), 0,
+      PR_INTERVAL_NO_WAIT);
 
   if (rv > 0) {
     // We have data
@@ -1327,6 +1332,67 @@ TransportLayerDtls::RecordHandshakeCompletionTelemetry(
     default:
       MOZ_ASSERT(false);
   }
+}
+
+void
+TransportLayerDtls::RecordCipherTelemetry() {
+  uint16_t cipher;
+
+  nsresult rv = GetCipherSuite(&cipher);
+
+  if (NS_FAILED(rv)) {
+    MOZ_MTLOG(ML_ERROR, "Failed to get cipher suite");
+    return;
+  }
+
+  uint16_t t_cipher = 0;
+
+  switch (cipher) {
+    /* Old DHE ciphers: candidates for removal, see bug 1227519 */
+    case TLS_DHE_RSA_WITH_AES_128_CBC_SHA:
+      t_cipher = 1;
+      break;
+    case TLS_DHE_RSA_WITH_AES_256_CBC_SHA:
+      t_cipher = 2;
+      break;
+    /* Current ciphers */
+    case TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA:
+      t_cipher = 3;
+      break;
+    case TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA:
+      t_cipher = 4;
+      break;
+    case TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA:
+      t_cipher = 5;
+      break;
+    case TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA:
+      t_cipher = 6;
+      break;
+    case TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:
+      t_cipher = 7;
+      break;
+    case TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256:
+      t_cipher = 8;
+      break;
+    case TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256:
+      t_cipher = 9;
+      break;
+    case TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256:
+      t_cipher = 10;
+      break;
+    /* TLS 1.3 ciphers */
+    case TLS_AES_128_GCM_SHA256:
+      t_cipher = 11;
+      break;
+    case TLS_CHACHA20_POLY1305_SHA256:
+      t_cipher = 12;
+      break;
+    case TLS_AES_256_GCM_SHA384:
+      t_cipher = 13;
+      break;
+  }
+
+  Telemetry::Accumulate(Telemetry::WEBRTC_DTLS_CIPHER, t_cipher);
 }
 
 }  // close namespace

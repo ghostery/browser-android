@@ -3,7 +3,12 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY closeNotification.tooltip "Cerrar este mensaje">
+
 <!ENTITY checkForUpdates "Buscar actualizaciones…">
+
 <!ENTITY learnMore "Saber más…">
+
 <!ENTITY defaultButton.label "¡De acuerdo!">
 <!ENTITY defaultButton.accesskey "D">
+
+<!ENTITY moreActionsButton.accessibleLabel "Más acciones">

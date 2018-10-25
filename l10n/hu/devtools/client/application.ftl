@@ -49,6 +49,15 @@ serviceworker-worker-status-registering = Regisztrálás
 # Text displayed when no service workers are visible for the current page. Clicking on the
 # link will open https://developer-mozilla-org/docs/Web/API/Service_Worker_API/Using_Service_Workers
 serviceworker-empty-intro = Regisztrálnia kell a Service Workert, hogy itt vizsgálhassa. <a>További tudnivalók</a>
+# Text displayed when there are no Service Workers to display for the current page,
+# introducing hints to debug Service Worker issues.
+serviceworker-empty-suggestions = Ha a jelenlegi oldalon lennie kellene egy service workernek, akkor itt van néhány dolog amit megpróbálhat
 # Suggestion to check for errors in the Console to investigate why a service worker is not
 # registered. Clicking on the link opens the webconsole.
 serviceworker-empty-suggestions-console = Keressen hibát a konzolban. <a>Nyissa meg a konzolt</a>
+# Suggestion to use the debugger to investigate why a service worker is not registered.
+# Clicking on the link will switch from the Application panel to the debugger.
+serviceworker-empty-suggestions-debugger = Lépjen végig a Service Worker regisztráción, és keressen kivételeket. <a>Nyissa meg a hibakeresőt</a>
+# Suggestion to go to about:debugging in order to see Service Workers for all domains.
+# Clicking on the link will open about:debugging in a new tab.
+serviceworker-empty-suggestions-aboutdebugging = Vizsgálja meg a más tartományokból származó Service Workereket. <a>Nyissa meg az about:debugging oldalt</a>

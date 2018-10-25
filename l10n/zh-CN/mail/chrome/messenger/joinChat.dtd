@@ -5,6 +5,6 @@
 <!ENTITY joinChatWindow.title           "参与聊天">
 <!ENTITY name.label                     "房间">
 <!ENTITY optional.label                 "（可选）">
-<!ENTITY account.label                  "帐户">
+<!ENTITY account.label                  "账户">
 <!ENTITY autojoin.label                 "自动加入聊天室">
 <!ENTITY autojoin.accesskey             "A">

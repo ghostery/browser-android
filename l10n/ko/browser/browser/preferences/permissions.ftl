@@ -83,6 +83,17 @@ permissions-exceptions-addons-window =
     .style = { permissions-window.style }
 permissions-exceptions-addons-desc = 부가 기능이 설치 가능하도록 웹 사이트를 설정할 수 있습니다. 정확한 주소를 입력한 후 허가를 클릭하십시오.
 
+## Exceptions - Autoplay Media
+
+permissions-exceptions-autoplay-media-window =
+    .title = 웹사이트 허용 - 자동 재생
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc = 어떤 웹사이트가 자동으로 미디어를 재생할 수 있는지 설정할 수 있습니다. 허용할 웹사이트의 주소를 정확히 입력하고 허용을 누르세요.
+permissions-exceptions-autoplay-media-window2 =
+    .title = 예외 - 자동 실행
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc2 = 어떤 웹사이트가 자동으로 소리가 있는 미디어를 항상 재생할지 안 할지를 설정할 수 있습니다. 관리할 웹사이트의 주소를 정확히 입력하고 차단이나 허용을 누르세요.
+
 ## Site Permissions - Notifications
 
 permissions-site-notification-window =

@@ -33,7 +33,8 @@ common-tests:
     - mochitest-devtools-chrome
     - mochitest-gpu
     - mochitest-media
-    - mochitest-webgl
+    - mochitest-webgl1-core
+    - mochitest-webgl1-ext
     - reftest
     - reftest-no-accel
     - telemetry-tests-client
@@ -58,6 +59,7 @@ opt-only-tests:
     - mochitest-valgrind
 
 talos:
+    - talos-bcv
     - talos-chrome
     - talos-damp
     - talos-dromaeojs
@@ -66,6 +68,7 @@ talos:
     - talos-g4
     - talos-g5
     - talos-other
+    - talos-sessionrestore-many-windows
     - talos-svgr
     - talos-tp5o
     - talos-perf-reftest
@@ -75,35 +78,52 @@ talos:
     - talos-tps
     - talos-speedometer
     - talos-motionmark
-    - talos-h1
-    - talos-h2
+    # - talos-h1 Bug 1487031 - Disabled for not finding actionable regressions
+    # - talos-h2 Bug 1487031 - Disabled for not finding actionable regressions
+
+raptor-firefox:
+    - raptor-tp6-firefox
+    - raptor-speedometer-firefox
+    - raptor-stylebench-firefox
+    - raptor-motionmark-htmlsuite-firefox
+    - raptor-motionmark-animometer-firefox
+    - raptor-webaudio-firefox
+    - raptor-gdocs-firefox
+    - raptor-sunspider-firefox
+    - raptor-assorted-dom-firefox
+
+raptor-chrome:
+    - raptor-tp6-chrome
+    - raptor-speedometer-chrome
+    - raptor-stylebench-chrome
+    - raptor-motionmark-htmlsuite-chrome
+    - raptor-motionmark-animometer-chrome
+    - raptor-webaudio-chrome
+    - raptor-gdocs-chrome
+    - raptor-sunspider-chrome
+    - raptor-assorted-dom-chrome
+
+# Fetch tasks are only supported on Linux for now,
+# so these need to be separate sets.
+raptor-fetch-firefox:
+    - raptor-unity-webgl-firefox
+    - raptor-wasm-misc-firefox
+    - raptor-wasm-misc-baseline-firefox
+    - raptor-wasm-misc-ion-firefox
+
+raptor-fetch-chrome:
+    - raptor-unity-webgl-chrome
+    - raptor-wasm-misc-chrome
 
 awsy:
     - awsy
+    - awsy-base
 
 awsy-stylo-sequential:
     - awsy-stylo-sequential
 
 ##
 # Limited test sets for specific platforms
-
-linux-qr-talos:
-    - talos-chrome
-    - talos-dromaeojs
-    - talos-g1
-    # - talos-g2 # doesn't work with QR yet
-    - talos-g3
-    - talos-g4
-    - talos-g5
-    - talos-other
-    - talos-svgr
-    - talos-tp5o
-    - talos-perf-reftest
-    - talos-perf-reftest-singletons
-    - talos-tp6
-    - talos-tp6-stylo-threads
-    - talos-speedometer
-    - talos-motionmark
 
 linux-qr-tests:
     - cppunit
@@ -115,11 +135,12 @@ linux-qr-tests:
     - mochitest-a11y
     - mochitest-gpu
     - mochitest-media
-    - mochitest-webgl
+    - mochitest-webgl1-core
     - reftest
     - xpcshell
 
 linux-talos-profiling:
+    - talos-bcv-profiling
     - talos-chrome-profiling
     - talos-damp-profiling
     - talos-dromaeojs-profiling
@@ -142,21 +163,11 @@ linux-talos-flex:
 
 windows-qr-tests:
     - crashtest
+    - mochitest
     - mochitest-gpu
     - mochitest-media
-    - mochitest-webgl
+    - mochitest-webgl1-core
     - reftest
-
-windows-qr-talos:
-    - talos-chrome
-    - talos-dromaeojs
-    - talos-g1
-    - talos-g4
-    - talos-perf-reftest
-    - talos-perf-reftest-singletons
-    - talos-tp5o
-    - talos-speedometer
-    - talos-motionmark
 
 jsdcov-code-coverage-tests:
     - mochitest
@@ -185,7 +196,10 @@ windows-tests:
     - mochitest-devtools-chrome
     - mochitest-gpu
     - mochitest-media
-    - mochitest-webgl
+    - mochitest-webgl1-core
+    - mochitest-webgl1-ext
+    - mochitest-webgl2-core
+    - mochitest-webgl2-ext
     - reftest
     - reftest-no-accel
     - test-coverage
@@ -198,6 +212,7 @@ windows-tests:
     - xpcshell
 
 windows-talos:
+    - talos-bcv
     - talos-chrome
     - talos-damp
     - talos-dromaeojs
@@ -205,6 +220,7 @@ windows-talos:
     - talos-g4
     - talos-g5
     - talos-other
+    - talos-sessionrestore-many-windows
     - talos-perf-reftest
     - talos-perf-reftest-singletons
     - talos-svgr
@@ -214,9 +230,10 @@ windows-talos:
     - talos-tp6
     - talos-tps
     - talos-motionmark
-    - talos-h1
+    # - talos-h1 Bug 1487031 - Disabled for not finding actionable regressions
 
 windows-talos-profiling:
+    - talos-bcv-profiling
     - talos-chrome-profiling
     - talos-damp-profiling
     - talos-dromaeojs-profiling
@@ -252,7 +269,10 @@ macosx64-tests:
     - mochitest-devtools-chrome
     - mochitest-gpu
     - mochitest-media
-    - mochitest-webgl
+    - mochitest-webgl1-core
+    - mochitest-webgl1-ext
+    - mochitest-webgl2-core
+    # - mochitest-webgl2-ext test timeouts
     - reftest
     - test-verify
     - test-verify-gpu
@@ -262,6 +282,7 @@ macosx64-tests:
     - xpcshell
 
 macosx64-talos:
+    - talos-bcv
     - talos-chrome
     - talos-damp
     - talos-dromaeojs
@@ -269,6 +290,7 @@ macosx64-talos:
     - talos-g4
     - talos-g5
     - talos-other
+    - talos-sessionrestore-many-windows
     - talos-svgr
     - talos-tp5o
     - talos-perf-reftest
@@ -281,6 +303,7 @@ macosx64-talos:
     # - talos-h1 # too long to unpack profile- Bug 1442893
 
 macosx64-talos-profiling:
+    - talos-bcv-profiling
     - talos-chrome-profiling
     - talos-damp-profiling
     - talos-dromaeojs-profiling
@@ -298,6 +321,10 @@ macosx64-talos-profiling:
     - talos-tp6-profiling
     # - talos-tps-profiling # Bug 1453007 times out
 
+macosx64-qr-tests:
+    - crashtest
+    - reftest
+
 linux32-tests:
     - cppunit
     - crashtest
@@ -314,7 +341,7 @@ linux32-tests:
     - mochitest-clipboard
     - mochitest-gpu
     - mochitest-media
-    - mochitest-webgl
+    - mochitest-webgl1-core
     - reftest
     - reftest-no-accel
     - web-platform-tests
@@ -338,18 +365,19 @@ android-common-tests:
     - geckoview-junit
     # - jittest # not ready yet: bug 1098508
     - jsreftest
+    - marionette
     - mochitest
     - mochitest-chrome
     - mochitest-clipboard
     - mochitest-gpu
     - mochitest-media
+    # - mochitest-webgl1-core
+    # - mochitest-webgl1-ext
+    # - mochitest-webgl2-core
+    # - mochitest-webgl2-ext
     - reftest
     - test-verify
     - xpcshell
-
-android-debug-tests:
-    # Marionette only available on Fennec debug builds as a security precaution
-    - marionette
 
 android-opt-tests:
     # Robocop tests often fail on Debug builds
@@ -364,8 +392,33 @@ android-x86-tests:
     - xpcshell
     - geckoview
 
+android-x86-kvm-tests:
+    - crashtest
+    - geckoview-junit
+    - jsreftest
+    # - mochitest
+    # - mochitest-chrome
+    - mochitest-clipboard
+    - mochitest-gpu
+    # - mochitest-media
+    # - mochitest-webgl1-core
+    # - reftest
+    # - test-verify
+
+android-ccov-tests:
+    - geckoview-junit
+
 devtools-tests:
     - mochitest-devtools-chrome
 
 mochitest-headless:
     - mochitest-plain-headless
+
+android-hw-arm7-opt-unittests:
+    - mochitest-media
+
+android-hw-arm7-debug-unittests:
+    - mochitest-media
+
+android-hw-aarch64-opt-unittests:
+    - jittest

@@ -4,6 +4,7 @@
 
 <!ENTITY loginAtStartup.label          "Op nieuwe artikelen controleren bij opstarten">
 <!ENTITY loginAtStartup.accesskey      "t">
+
 <!ENTITY biffAll.label                 "Updates inschakelen voor alle feeds">
 <!ENTITY biffAll.accesskey             "e">
 

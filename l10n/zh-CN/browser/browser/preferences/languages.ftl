@@ -5,6 +5,9 @@
 languages-window =
     .title = 语言和字符编码
     .style = width: 30em
+webpage-languages-window =
+    .title = 网页语言设置
+    .style = width: 40em
 languages-close-key =
     .key = w
 languages-description = 某些网页有多种语言可供选择。请选择此类网页应显示的语言，按偏好从上到下排列：
@@ -36,3 +39,9 @@ languages-customize-add =
 #   $code (String) - Locale code of the locale (for example: "is", "es-CL")
 languages-code-format =
     .label = { $locale }  [{ $code }]
+languages-active-code-format =
+    .value = { languages-code-format.label }
+browser-languages-window =
+    .title = { -brand-short-name } 语言设置
+    .style = width: 40em
+browser-languages-description = { -brand-short-name } 将显示的第一个语言作为您的默认语言，并在必要时按语言的顺序显示备用语言。

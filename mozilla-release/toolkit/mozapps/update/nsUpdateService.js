@@ -12,10 +12,9 @@ ChromeUtils.import("resource://gre/modules/Services.jsm", this);
 ChromeUtils.import("resource://gre/modules/ctypes.jsm", this);
 ChromeUtils.import("resource://gre/modules/UpdateTelemetry.jsm", this);
 ChromeUtils.import("resource://gre/modules/AppConstants.jsm", this);
-Cu.importGlobalProperties(["DOMParser", "XMLHttpRequest"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["DOMParser", "XMLHttpRequest"]);
 
 const UPDATESERVICE_CID = Components.ID("{B3C290A6-3943-4B89-8BBE-C01EB7B3B311}");
-const UPDATESERVICE_CONTRACTID = "@mozilla.org/updates/update-service;1";
 
 const PREF_APP_UPDATE_ALTWINDOWTYPE        = "app.update.altwindowtype";
 const PREF_APP_UPDATE_AUTO                 = "app.update.auto";
@@ -32,7 +31,7 @@ const PREF_APP_UPDATE_ELEVATE_NEVER        = "app.update.elevate.never";
 const PREF_APP_UPDATE_ELEVATE_VERSION      = "app.update.elevate.version";
 const PREF_APP_UPDATE_ELEVATE_ATTEMPTS     = "app.update.elevate.attempts";
 const PREF_APP_UPDATE_ELEVATE_MAXATTEMPTS  = "app.update.elevate.maxAttempts";
-const PREF_APP_UPDATE_ENABLED              = "app.update.enabled";
+const PREF_APP_UPDATE_DISABLEDFORTESTING   = "app.update.disabledForTesting";
 const PREF_APP_UPDATE_IDLETIME             = "app.update.idletime";
 const PREF_APP_UPDATE_LOG                  = "app.update.log";
 const PREF_APP_UPDATE_NOTIFIEDUNSUPPORTED  = "app.update.notifiedUnsupported";
@@ -338,7 +337,7 @@ function hasUpdateMutex() {
 function areDirectoryEntriesWriteable(aDir) {
   let items = aDir.directoryEntries;
   while (items.hasMoreElements()) {
-    let item = items.getNext().QueryInterface(Ci.nsIFile);
+    let item = items.nextFile;
     if (!item.isWritable()) {
       LOG("areDirectoryEntriesWriteable - unable to write to " + item.path);
       return false;
@@ -518,40 +517,6 @@ function getCanStageUpdates() {
 
   return gCanStageUpdatesSession;
 }
-
-XPCOMUtils.defineLazyGetter(this, "gCanCheckForUpdates", function aus_gCanCheckForUpdates() {
-  // If the administrator has disabled app update and locked the preference so
-  // users can't check for updates. This preference check is ok in this lazy
-  // getter since locked prefs don't change until the application is restarted.
-  var enabled = Services.prefs.getBoolPref(PREF_APP_UPDATE_ENABLED, true);
-  if (!enabled && Services.prefs.prefIsLocked(PREF_APP_UPDATE_ENABLED)) {
-    LOG("gCanCheckForUpdates - unable to automatically check for updates, " +
-        "the preference is disabled and admistratively locked.");
-    return false;
-  }
-
-  if (Services.policies && !Services.policies.isAllowed("appUpdate")) {
-    LOG("gCanCheckForUpdates - unable to automatically check for updates. " +
-        "Functionality disabled by enterprise policy.");
-    return false;
-  }
-
-  // If we don't know the binary platform we're updating, we can't update.
-  if (!UpdateUtils.ABI) {
-    LOG("gCanCheckForUpdates - unable to check for updates, unknown ABI");
-    return false;
-  }
-
-  // If we don't know the OS version we're updating, we can't update.
-  if (!UpdateUtils.OSVersion) {
-    LOG("gCanCheckForUpdates - unable to check for updates, unknown OS " +
-        "version");
-    return false;
-  }
-
-  LOG("gCanCheckForUpdates - able to check for updates");
-  return true;
-});
 
 /**
  * Logs a string to the error console.
@@ -815,7 +780,7 @@ function cleanUpUpdatesDir(aRemovePatchFiles = true) {
   if (aRemovePatchFiles) {
     let dirEntries = updateDir.directoryEntries;
     while (dirEntries.hasMoreElements()) {
-      let file = dirEntries.getNext().QueryInterface(Ci.nsIFile);
+      let file = dirEntries.nextFile;
       // Now, recursively remove this file.  The recursive removal is needed for
       // Mac OSX because this directory will contain a copy of updater.app,
       // which is itself a directory and the MozUpdater directory on platforms
@@ -864,13 +829,17 @@ ArrayEnumerator.prototype = {
   _index: 0,
   _contents: [],
 
+  [Symbol.iterator]() {
+    return this._contents.values();
+  },
+
   hasMoreElements: function ArrayEnumerator_hasMoreElements() {
     return this._index < this._contents.length;
   },
 
   getNext: function ArrayEnumerator_getNext() {
     return this._contents[this._index++];
-  }
+  },
 };
 
 /**
@@ -1230,7 +1199,7 @@ UpdatePatch.prototype = {
 
   QueryInterface: ChromeUtils.generateQI([Ci.nsIUpdatePatch,
                                           Ci.nsIPropertyBag,
-                                          Ci.nsIWritablePropertyBag])
+                                          Ci.nsIWritablePropertyBag]),
 };
 
 /**
@@ -1257,11 +1226,10 @@ function Update(update) {
     return;
   }
 
-  const ELEMENT_NODE = Ci.nsIDOMNode.ELEMENT_NODE;
   let patch;
   for (let i = 0; i < update.childNodes.length; ++i) {
     let patchElement = update.childNodes.item(i);
-    if (patchElement.nodeType != ELEMENT_NODE ||
+    if (patchElement.nodeType != patchElement.ELEMENT_NODE ||
         patchElement.localName != "patch") {
       continue;
     }
@@ -1532,7 +1500,7 @@ Update.prototype = {
 
   QueryInterface: ChromeUtils.generateQI([Ci.nsIUpdate,
                                           Ci.nsIPropertyBag,
-                                          Ci.nsIWritablePropertyBag])
+                                          Ci.nsIWritablePropertyBag]),
 };
 
 const UpdateServiceFactory = {
@@ -1542,7 +1510,7 @@ const UpdateServiceFactory = {
       throw Cr.NS_ERROR_NO_AGGREGATION;
     return this._instance == null ? this._instance = new UpdateService() :
                                     this._instance;
-  }
+  },
 };
 
 /**
@@ -2017,11 +1985,6 @@ UpdateService.prototype = {
     // UPDATE_LAST_NOTIFY_INTERVAL_DAYS_NOTIFY
     AUSTLMY.pingLastUpdateTime(this._pingSuffix);
     // Histogram IDs:
-    // UPDATE_NOT_PREF_UPDATE_ENABLED_EXTERNAL
-    // UPDATE_NOT_PREF_UPDATE_ENABLED_NOTIFY
-    AUSTLMY.pingBoolPref("UPDATE_NOT_PREF_UPDATE_ENABLED_" + this._pingSuffix,
-                         PREF_APP_UPDATE_ENABLED, true, true);
-    // Histogram IDs:
     // UPDATE_NOT_PREF_UPDATE_AUTO_EXTERNAL
     // UPDATE_NOT_PREF_UPDATE_AUTO_NOTIFY
     AUSTLMY.pingBoolPref("UPDATE_NOT_PREF_UPDATE_AUTO_" + this._pingSuffix,
@@ -2099,14 +2062,12 @@ UpdateService.prototype = {
       } else if (!validUpdateURL) {
         AUSTLMY.pingCheckCode(this._pingSuffix,
                               AUSTLMY.CHK_INVALID_DEFAULT_URL);
-      } else if (!Services.prefs.getBoolPref(PREF_APP_UPDATE_ENABLED, true)) {
-        AUSTLMY.pingCheckCode(this._pingSuffix, AUSTLMY.CHK_PREF_DISABLED);
+      } else if (this.disabledByPolicy) {
+        AUSTLMY.pingCheckCode(this._pingSuffix, AUSTLMY.CHK_DISABLED_BY_POLICY);
       } else if (!hasUpdateMutex()) {
         AUSTLMY.pingCheckCode(this._pingSuffix, AUSTLMY.CHK_NO_MUTEX);
-      } else if (!gCanCheckForUpdates) {
+      } else if (!this.canCheckForUpdates) {
         AUSTLMY.pingCheckCode(this._pingSuffix, AUSTLMY.CHK_UNABLE_TO_CHECK);
-      } else if (!this.backgroundChecker._enabled) {
-        AUSTLMY.pingCheckCode(this._pingSuffix, AUSTLMY.CHK_DISABLED_FOR_SESSION);
       }
 
       this.backgroundChecker.checkForUpdates(this, false);
@@ -2252,8 +2213,7 @@ UpdateService.prototype = {
       return;
     }
 
-    var updateEnabled = Services.prefs.getBoolPref(PREF_APP_UPDATE_ENABLED, true);
-    if (!updateEnabled) {
+    if (this.disabledByPolicy) {
       AUSTLMY.pingCheckCode(this._pingSuffix, AUSTLMY.CHK_PREF_DISABLED);
       LOG("UpdateService:_selectAndInstallUpdate - not prompting because " +
           "update is disabled");
@@ -2345,11 +2305,48 @@ UpdateService.prototype = {
     return this._backgroundChecker;
   },
 
+  get disabledForTesting() {
+    return Cu.isInAutomation &&
+           Services.prefs.getBoolPref(PREF_APP_UPDATE_DISABLEDFORTESTING, false);
+  },
+
+  get disabledByPolicy() {
+    return (Services.policies && !Services.policies.isAllowed("appUpdate")) ||
+           this.disabledForTesting;
+  },
+
   /**
    * See nsIUpdateService.idl
    */
   get canCheckForUpdates() {
-    return gCanCheckForUpdates && hasUpdateMutex();
+    if (this.disabledByPolicy) {
+      LOG("UpdateService.canCheckForUpdates - unable to automatically check " +
+          "for updates, the option has been disabled by the administrator.");
+      return false;
+    }
+
+    // If we don't know the binary platform we're updating, we can't update.
+    if (!UpdateUtils.ABI) {
+      LOG("UpdateService.canCheckForUpdates - unable to check for updates, " +
+          "unknown ABI");
+      return false;
+    }
+
+    // If we don't know the OS version we're updating, we can't update.
+    if (!UpdateUtils.OSVersion) {
+      LOG("UpdateService.canCheckForUpdates - unable to check for updates, " +
+          "unknown OS version");
+      return false;
+    }
+
+    if (!hasUpdateMutex()) {
+      LOG("UpdateService.canCheckForUpdates - unable to check for updates, " +
+          "unable to acquire update mutex");
+      return false;
+    }
+
+    LOG("UpdateService.canCheckForUpdates - able to check for updates");
+    return true;
   },
 
   /**
@@ -2472,18 +2469,12 @@ UpdateService.prototype = {
   },
 
   classID: UPDATESERVICE_CID,
-  classInfo: XPCOMUtils.generateCI({classID: UPDATESERVICE_CID,
-                                    contractID: UPDATESERVICE_CONTRACTID,
-                                    interfaces: [Ci.nsIApplicationUpdateService,
-                                                 Ci.nsITimerCallback,
-                                                 Ci.nsIObserver],
-                                    flags: Ci.nsIClassInfo.SINGLETON}),
 
   _xpcom_factory: UpdateServiceFactory,
   QueryInterface: ChromeUtils.generateQI([Ci.nsIApplicationUpdateService,
                                           Ci.nsIUpdateCheckListener,
                                           Ci.nsITimerCallback,
-                                          Ci.nsIObserver])
+                                          Ci.nsIObserver]),
 };
 
 /**
@@ -2561,7 +2552,7 @@ UpdateManager.prototype = {
         value: updates,
         writable: true,
         configurable: true,
-        enumerable: true
+        enumerable: true,
       });
     }
   },
@@ -2589,11 +2580,10 @@ UpdateManager.prototype = {
       var doc = parser.parseFromStream(fileStream, "UTF-8",
                                        fileStream.available(), "text/xml");
 
-      const ELEMENT_NODE = Ci.nsIDOMNode.ELEMENT_NODE;
       var updateCount = doc.documentElement.childNodes.length;
       for (var i = 0; i < updateCount; ++i) {
         var updateElement = doc.documentElement.childNodes.item(i);
-        if (updateElement.nodeType != ELEMENT_NODE ||
+        if (updateElement.nodeType != updateElement.ELEMENT_NODE ||
             updateElement.localName != "update")
           continue;
 
@@ -2637,7 +2627,7 @@ UpdateManager.prototype = {
       value: updates,
       writable: true,
       configurable: true,
-      enumerable: true
+      enumerable: true,
     });
     return this._updates;
   },
@@ -2854,7 +2844,7 @@ UpdateManager.prototype = {
   },
 
   classID: Components.ID("{093C2356-4843-4C65-8709-D7DBCBBE7DFB}"),
-  QueryInterface: ChromeUtils.generateQI([Ci.nsIUpdateManager, Ci.nsIObserver])
+  QueryInterface: ChromeUtils.generateQI([Ci.nsIUpdateManager, Ci.nsIObserver]),
 };
 
 /**
@@ -2966,7 +2956,13 @@ Checker.prototype = {
       throw Cr.NS_ERROR_NULL_POINTER;
     }
 
-    if (!this.enabled && !force) {
+    let UpdateServiceInstance = UpdateServiceFactory.createInstance();
+    // |force| can override |canCheckForUpdates| since |force| indicates a
+    // manual update check. But nothing should override enterprise policies.
+    if (UpdateServiceInstance.disabledByPolicy) {
+      return;
+    }
+    if (!UpdateServiceInstance.canCheckForUpdates && !force) {
       return;
     }
 
@@ -3022,11 +3018,10 @@ Checker.prototype = {
                       updatesElement.nodeName);
     }
 
-    const ELEMENT_NODE = Ci.nsIDOMNode.ELEMENT_NODE;
     var updates = [];
     for (var i = 0; i < updatesElement.childNodes.length; ++i) {
       var updateElement = updatesElement.childNodes.item(i);
-      if (updateElement.nodeType != ELEMENT_NODE ||
+      if (updateElement.nodeType != updateElement.ELEMENT_NODE ||
           updateElement.localName != "update")
         continue;
 
@@ -3072,6 +3067,22 @@ Checker.prototype = {
   onLoad: function UC_onLoad(event) {
     LOG("Checker:onLoad - request completed downloading document");
     Services.prefs.clearUserPref("security.pki.mitm_canary_issuer");
+    // Check whether there is a mitm, i.e. check whether the root cert is
+    // built-in or not.
+    try {
+      let sslStatus = request.channel.QueryInterface(Ci.nsIRequest)
+                        .securityInfo.QueryInterface(Ci.nsITransportSecurityInfo);
+      if (sslStatus && sslStatus.succeededCertChain) {
+        let rootCert = null;
+        for (rootCert of XPCOMUtils.IterSimpleEnumerator(sslStatus.succeededCertChain.getEnumerator(),
+                                                         Ci.nsIX509Cert));
+        if (rootCert) {
+          Services.prefs.setStringPref("security.pki.mitm_detected", !rootCert.isBuiltInRoot);
+        }
+      }
+    } catch (e) {
+      LOG("Checker:onLoad - Getting sslStatus failed.");
+    }
 
     try {
       // Analyze the resulting DOM and determine the set of updates.
@@ -3118,7 +3129,7 @@ Checker.prototype = {
     // Set MitM pref.
     try {
       var sslStatus = request.channel.QueryInterface(Ci.nsIRequest)
-                        .securityInfo.QueryInterface(Ci.nsISSLStatusProvider)
+                        .securityInfo.QueryInterface(Ci.nsITransportSecurityInfo)
                         .SSLStatus.QueryInterface(Ci.nsISSLStatus);
       if (sslStatus && sslStatus.serverCert && sslStatus.serverCert.issuerName) {
         Services.prefs.setStringPref("security.pki.mitm_canary_issuer",
@@ -3147,37 +3158,17 @@ Checker.prototype = {
   },
 
   /**
-   * Whether or not we are allowed to do update checking.
-   */
-  _enabled: true,
-  get enabled() {
-    return Services.prefs.getBoolPref(PREF_APP_UPDATE_ENABLED, true) &&
-           gCanCheckForUpdates && hasUpdateMutex() && this._enabled;
-  },
-
-  /**
    * See nsIUpdateService.idl
    */
-  stopChecking: function UC_stopChecking(duration) {
+  stopCurrentCheck: function UC_stopCurrentCheck() {
     // Always stop the current check
     if (this._request)
       this._request.abort();
-
-    switch (duration) {
-      case Ci.nsIUpdateChecker.CURRENT_SESSION:
-        this._enabled = false;
-        break;
-      case Ci.nsIUpdateChecker.ANY_CHECKS:
-        this._enabled = false;
-        Services.prefs.setBoolPref(PREF_APP_UPDATE_ENABLED, this._enabled);
-        break;
-    }
-
     this._callback = null;
   },
 
   classID: Components.ID("{898CDC9B-E43F-422F-9CC4-2F6291B415A3}"),
-  QueryInterface: ChromeUtils.generateQI([Ci.nsIUpdateChecker])
+  QueryInterface: ChromeUtils.generateQI([Ci.nsIUpdateChecker]),
 };
 
 /**
@@ -3822,7 +3813,7 @@ Downloader.prototype = {
 
   QueryInterface: ChromeUtils.generateQI([Ci.nsIRequestObserver,
                                           Ci.nsIProgressEventSink,
-                                          Ci.nsIInterfaceRequestor])
+                                          Ci.nsIInterfaceRequestor]),
 };
 
 /**
@@ -3998,7 +3989,7 @@ UpdatePrompt.prototype = {
             this.service.removeObserver(this, "quit-application");
             break;
         }
-      }
+      },
     };
 
     // bug 534090 - show the UI for update available notifications when the
@@ -4070,7 +4061,7 @@ UpdatePrompt.prototype = {
               Services.obs.removeObserver(this, "quit-application");
               break;
           }
-        }
+        },
       };
       idleService.addIdleObserver(observer, IDLE_TIME);
       Services.obs.addObserver(observer, "quit-application");
@@ -4116,7 +4107,7 @@ UpdatePrompt.prototype = {
   classDescription: "Update Prompt",
   contractID: "@mozilla.org/updates/update-prompt;1",
   classID: Components.ID("{27ABA825-35B5-4018-9FDD-F99250A0E722}"),
-  QueryInterface: ChromeUtils.generateQI([Ci.nsIUpdatePrompt])
+  QueryInterface: ChromeUtils.generateQI([Ci.nsIUpdatePrompt]),
 };
 
 var components = [UpdateService, Checker, UpdatePrompt, UpdateManager];

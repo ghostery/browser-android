@@ -61,7 +61,6 @@ class nsPIDOMWindowOuter;
 class imgIRequest;
 class nsIDocument;
 struct nsStyleFont;
-struct nsStyleImageOrientation;
 struct nsOverflowAreas;
 
 namespace mozilla {
@@ -75,6 +74,7 @@ class WritingMode;
 class DisplayItemClip;
 class EffectSet;
 struct ActiveScrolledRoot;
+enum class StyleImageOrientation : uint8_t;
 namespace dom {
 class CanvasRenderingContext2D;
 class DOMRectList;
@@ -119,6 +119,11 @@ struct DisplayPortMarginsPropertyData {
   uint32_t mPriority;
 };
 
+struct MotionPathData {
+  gfx::Point mTranslate;
+  float mRotate;
+};
+
 } // namespace mozilla
 
 // For GetDisplayPort
@@ -133,6 +138,12 @@ enum class DrawStringFlags {
   eForceHorizontal = 0x1 // Forces the text to be drawn horizontally.
 };
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(DrawStringFlags)
+
+enum class ReparentingDirection {
+  Backwards,
+  Forwards,
+  Variable // Could be either of the above; take most pessimistic action.
+};
 
 /**
  * nsLayoutUtils is a namespace class used for various helper
@@ -223,7 +234,7 @@ public:
    * Optionally pass the child, and it only returns true if the child is the
    * scrolled frame for the displayport.
    */
-  static bool FrameHasDisplayPort(nsIFrame* aFrame, nsIFrame* aScrolledFrame = nullptr);
+  static bool FrameHasDisplayPort(nsIFrame* aFrame, const nsIFrame* aScrolledFrame = nullptr);
 
   /**
    * Check if the given element has a margins based displayport but is missing a
@@ -854,7 +865,7 @@ public:
    * non-null pointer to a non-empty Matrix4x4 - The provided matrix will be used
    *   as the transform matrix and applied to the rect.
    */
-  static nsRect TransformFrameRectToAncestor(nsIFrame* aFrame,
+  static nsRect TransformFrameRectToAncestor(const nsIFrame* aFrame,
                                              const nsRect& aRect,
                                              const nsIFrame* aAncestor,
                                              bool* aPreservesAxisAlignedRectangles = nullptr,
@@ -868,7 +879,7 @@ public:
    * aAncestor to go up to the root frame. aInCSSUnits set to true will
    * return CSS units, set to false (the default) will return App units.
    */
-  static Matrix4x4Flagged GetTransformToAncestor(nsIFrame *aFrame,
+  static Matrix4x4Flagged GetTransformToAncestor(const nsIFrame *aFrame,
                                           const nsIFrame *aAncestor,
                                           uint32_t aFlags = 0,
                                           nsIFrame** aOutAncestor = nullptr);
@@ -1221,10 +1232,11 @@ public:
    * or RECTS_USE_MARGIN_BOX, the corresponding type of box is used.
    * Otherwise (by default), the border box is used.
    */
-  static void GetAllInFlowRects(nsIFrame* aFrame, nsIFrame* aRelativeTo,
+  static void GetAllInFlowRects(nsIFrame* aFrame, const nsIFrame* aRelativeTo,
                                 RectCallback* aCallback, uint32_t aFlags = 0);
 
-  static void GetAllInFlowRectsAndTexts(nsIFrame* aFrame, nsIFrame* aRelativeTo,
+  static void GetAllInFlowRectsAndTexts(nsIFrame* aFrame,
+                                        const nsIFrame* aRelativeTo,
                                         RectCallback* aCallback,
                                         mozilla::dom::Sequence<nsString>* aTextList,
                                         uint32_t aFlags = 0);
@@ -1239,7 +1251,7 @@ public:
    * or RECTS_USE_MARGIN_BOX, the corresponding type of box is used.
    * Otherwise (by default), the border box is used.
    */
-  static nsRect GetAllInFlowRectsUnion(nsIFrame* aFrame, nsIFrame* aRelativeTo,
+  static nsRect GetAllInFlowRectsUnion(nsIFrame* aFrame, const nsIFrame* aRelativeTo,
                                        uint32_t aFlags = 0);
 
   enum {
@@ -1990,7 +2002,7 @@ public:
    */
   static already_AddRefed<imgIContainer>
   OrientImage(imgIContainer* aContainer,
-              const nsStyleImageOrientation& aOrientation);
+              const mozilla::StyleImageOrientation& aOrientation);
 
   /**
    * Determine if any corner radius is of nonzero size
@@ -2029,7 +2041,7 @@ public:
    * A frame is a popup if it has its own floating window. Menus, panels
    * and combobox dropdowns are popups.
    */
-  static bool IsPopup(nsIFrame* aFrame);
+  static bool IsPopup(const nsIFrame* aFrame);
 
   /**
    * Find the nearest "display root". This is the nearest enclosing
@@ -2224,7 +2236,6 @@ public:
   }
 
   // There are a bunch of callers of SurfaceFromElement.  Just mark it as
-  // MOZ_CAN_RUN_SCRIPT_BOUNDARY for now.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   static SurfaceFromElementResult SurfaceFromElement(nsIImageLoadingContent *aElement,
                                                      uint32_t aSurfaceFlags,
@@ -2288,7 +2299,8 @@ public:
    */
   static nsresult GetFontFacesForFrames(nsIFrame* aFrame,
                                         UsedFontFaceTable& aResult,
-                                        uint32_t aMaxRanges);
+                                        uint32_t aMaxRanges,
+                                        bool aSkipCollapsedWhitespace);
 
   /**
    * Adds all font faces used within the specified range of text in aFrame,
@@ -2302,7 +2314,8 @@ public:
                                   int32_t aEndOffset,
                                   bool aFollowContinuations,
                                   UsedFontFaceTable& aResult,
-                                  uint32_t aMaxRanges);
+                                  uint32_t aMaxRanges,
+                                  bool aSkipCollapsedWhitespace);
 
   /**
    * Walks the frame tree starting at aFrame looking for textRuns.
@@ -2332,8 +2345,6 @@ public:
    */
   static bool HasAnimationOfProperty(const nsIFrame* aFrame,
                                      nsCSSPropertyID aProperty);
-  static bool MayHaveAnimationOfProperty(const nsIFrame* aFrame,
-                                         nsCSSPropertyID aProperty);
 
   /**
    * Returns true if |aEffectSet| has an animation of |aProperty| regardless of
@@ -2348,8 +2359,6 @@ public:
    */
   static bool HasEffectiveAnimation(const nsIFrame* aFrame,
                                     nsCSSPropertyID aProperty);
-  static bool MayHaveEffectiveAnimation(const nsIFrame* aFrame,
-                                        nsCSSPropertyID aProperty);
 
   /**
    * Checks if off-main-thread animations are enabled.
@@ -2396,11 +2405,6 @@ public:
    * Checks if we should enable parsing for CSS Filters.
    */
   static bool CSSFiltersEnabled();
-
-  /**
-   * Checks whether support for the CSS-wide "unset" value is enabled.
-   */
-  static bool UnsetValueEnabled();
 
   /**
    * Checks whether support for inter-character ruby is enabled.
@@ -2519,10 +2523,6 @@ public:
 
   static bool SVGTransformBoxEnabled() {
     return sSVGTransformBoxEnabled;
-  }
-
-  static bool TextCombineUprightDigitsEnabled() {
-    return sTextCombineUprightDigitsEnabled;
   }
 
   static uint32_t IdlePeriodDeadlineLimit() {
@@ -2799,6 +2799,10 @@ public:
    * resolution, cumulative resolution, zoom, composition size, root
    * composition size, scroll offset and scrollable rect.
    *
+   * Note that for the RCD-RSF, the scroll offset returned is the layout
+   * viewport offset; if you need the visual viewport offset, that needs to
+   * be queried independently via nsIPresShell::GetVisualViewportOffset().
+   *
    * By contrast, ComputeFrameMetrics() computes all the fields, but requires
    * extra inputs and can only be called during frame layer building.
    */
@@ -2856,11 +2860,11 @@ public:
   static bool HasDocumentLevelListenersForApzAwareEvents(nsIPresShell* aShell);
 
   /**
-   * Set the scroll port size for the purpose of clamping the scroll position
+   * Set the viewport size for the purpose of clamping the scroll position
    * for the root scroll frame of this document
-   * (see nsIDOMWindowUtils.setScrollPositionClampingScrollPortSize).
+   * (see nsIDOMWindowUtils.setVisualViewportSize).
    */
-  static void SetScrollPositionClampingScrollPortSize(nsIPresShell* aPresShell,
+  static void SetVisualViewportSize(nsIPresShell* aPresShell,
                                                       CSSSize aSize);
 
   /**
@@ -3111,6 +3115,18 @@ public:
     return ResolveToLength<true>(aGap, aPercentageBasis);
   }
 
+  /**
+   * Get the computed style from which the scrollbar style should be
+   * used for the given scrollbar part frame.
+   */
+  static ComputedStyle* StyleForScrollbar(nsIFrame* aScrollbarPart);
+
+  /**
+   * Generate the motion path transform result.
+   **/
+  static mozilla::Maybe<mozilla::MotionPathData>
+  ResolveMotionPath(const nsIFrame* aFrame);
+
 private:
   static uint32_t sFontSizeInflationEmPerLine;
   static uint32_t sFontSizeInflationMinTwips;
@@ -3125,7 +3141,6 @@ private:
   static bool sInvalidationDebuggingIsEnabled;
   static bool sInterruptibleReflowEnabled;
   static bool sSVGTransformBoxEnabled;
-  static bool sTextCombineUprightDigitsEnabled;
   static uint32_t sIdlePeriodDeadlineLimit;
   static uint32_t sQuiescentFramesBeforeIdlePeriod;
 

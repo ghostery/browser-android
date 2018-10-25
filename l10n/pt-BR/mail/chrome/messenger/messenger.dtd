@@ -8,26 +8,26 @@
 <!-- File Menu -->
 <!ENTITY newFolderCmd.label "Pasta…">
 <!ENTITY newFolderCmd.accesskey "P">
-<!ENTITY closeTabCmd2.label "Fechar aba">
+<!ENTITY closeTabCmd2.label "Fechar a aba">
 <!ENTITY closeTabCmd2.accesskey "F">
 <!ENTITY closeOtherTabsCmd2.label "Fechar as outras abas">
 <!ENTITY closeOtherTabsCmd2.accesskey "o">
-<!ENTITY recentlyClosedTabsCmd.label "Reabrir aba">
-<!ENTITY recentlyClosedTabsCmd.accesskey "b">
+<!ENTITY recentlyClosedTabsCmd.label "Abas fechadas recentemente">
+<!ENTITY recentlyClosedTabsCmd.accesskey "r">
 
-<!ENTITY undoCloseTabCmd.commandkey "t">
+<!ENTITY undoCloseTabCmd.commandkey "T">
 <!-- LOCALIZATION NOTE (moveToNewWindow.label):
      Menu option to cause the current tab to be migrated to a new Thunderbird
      window.
      -->
-<!ENTITY moveToNewWindow.label "Mover para nova janela">
-<!ENTITY moveToNewWindow.accesskey "v">
-<!ENTITY newVirtualFolderCmd.label "Pasta de pesquisa…">
+<!ENTITY moveToNewWindow.label "Mover para uma nova janela">
+<!ENTITY moveToNewWindow.accesskey "j">
+<!ENTITY newVirtualFolderCmd.label "Pesquisa salva…">
 <!ENTITY newVirtualFolderCmd.accesskey "a">
-<!ENTITY newOtherAccountsCmd.label "Configurar outros tipos de contas…">
-<!ENTITY newOtherAccountsCmd.accesskey "u">
-<!ENTITY newCreateEmailAccountCmd.label "Criar uma conta de e-mail…">
-<!ENTITY newCreateEmailAccountCmd.accesskey "r">
+<!ENTITY newOtherAccountsCmd.label "Outras contas…">
+<!ENTITY newOtherAccountsCmd.accesskey "O">
+<!ENTITY newCreateEmailAccountCmd.label "Obter uma nova conta de e-mail…">
+<!ENTITY newCreateEmailAccountCmd.accesskey "O">
 <!ENTITY newExistingEmailAccountCmd.label "Configurar conta de e-mail…">
 <!ENTITY newExistingEmailAccountCmd.accesskey "o">
 <!ENTITY newIMAccountCmd.label "Configurar conta de bate-papo…">
@@ -435,7 +435,7 @@
 <!ENTITY markAsNotJunkCmd.label "Como não spam">
 <!ENTITY markAsNotJunkCmd.accesskey "n">
 <!ENTITY markAsNotJunkCmd.key "j">
-<!ENTITY recalculateJunkScoreCmd.label "Aplicar antispam">
+<!ENTITY recalculateJunkScoreCmd.label "Executar controle de spam">
 <!ENTITY recalculateJunkScoreCmd.accesskey "A">
 <!ENTITY openMessageWindowCmd.label "Abrir mensagem">
 <!ENTITY openMessageWindowCmd.accesskey "b">
@@ -460,7 +460,7 @@
 <!-- Tools Menu -->
 <!ENTITY tasksMenu.label "Ferramentas">
 <!ENTITY tasksMenu.accesskey "F">
-<!ENTITY messengerCmd.label "Mensagens">
+<!ENTITY messengerCmd.label "E-mail e grupos de notícias">
 <!ENTITY messengerCmd.accesskey "M">
 <!ENTITY addressBookCmd.label "Catálogo de endereços">
 <!ENTITY addressBookCmd.accesskey "a">
@@ -493,9 +493,9 @@
 <!ENTITY filtersApplyToSelection.accesskey "g">
 <!ENTITY filtersApplyToMessage.label "Aplicar filtros na mensagem">
 <!ENTITY filtersApplyToMessage.accesskey "p">
-<!ENTITY runJunkControls.label "Aplicar antispam nesta pasta">
+<!ENTITY runJunkControls.label "Executar controle de spam na pasta">
 <!ENTITY runJunkControls.accesskey "r">
-<!ENTITY deleteJunk.label "Excluir spans desta pasta">
+<!ENTITY deleteJunk.label "Excluir e-mails marcados como spam na pasta">
 <!ENTITY deleteJunk.accesskey "x">
 <!ENTITY importCmd.label "Importar…">
 <!ENTITY importCmd.accesskey "I">

@@ -36,8 +36,6 @@
 <!ENTITY runtimeMenu_takeScreenshot_accesskey "K">
 <!ENTITY runtimeMenu_showDetails_label "Futtatókörnyezet infó">
 <!ENTITY runtimeMenu_showDetails_accesskey "t">
-<!ENTITY runtimeMenu_showMonitor_label "Figyelés">
-<!ENTITY runtimeMenu_showMonitor_accesskey "F">
 <!ENTITY runtimeMenu_showDevicePrefs_label "Eszközbeállítások">
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "z">
 <!ENTITY runtimeMenu_showSettings_label "Eszközbeállítások">
@@ -75,10 +73,9 @@
 <!ENTITY projectPanel_tabs "Lapok">
 <!ENTITY runtimePanel_usb "USB eszközök">
 <!ENTITY runtimePanel_wifi "Wi-Fi eszközök">
-<!ENTITY runtimePanel_simulator "Szimulátorok">
 <!ENTITY runtimePanel_other "Egyéb">
-<!ENTITY runtimePanel_installsimulator "Szimulátor telepítése">
 <!ENTITY runtimePanel_noadbhelper "ADB segéd telepítése">
+<!ENTITY runtimePanel_noadbextension "ADB kiegészítő telepítése">
 <!ENTITY runtimePanel_nousbdevice "Nem látja az eszközt?">
 <!ENTITY runtimePanel_refreshDevices_label "Eszközök frissítése">
 
@@ -149,10 +146,6 @@
 <!ENTITY devicesetting_newtext "Beállítás értéke">
 <!ENTITY devicesetting_addnew "Új beállítás hozzáadása">
 
-<!-- Monitor -->
-<!ENTITY monitor_title "Figyelés">
-<!ENTITY monitor_help "Súgó">
-
 <!-- WiFi Authentication -->
 <!-- LOCALIZATION NOTE (wifi_auth_header): The header displayed on the dialog
      that instructs the user to transfer an authentication token to the
@@ -174,19 +167,3 @@
 
 <!-- Logs panel -->
 <!ENTITY logs_title "Előzetes csomagolási parancsnaplók">
-
-<!-- Simulator Options -->
-<!ENTITY simulator_title "Szimulátor beállításai">
-<!ENTITY simulator_remove "Szimulátor törlése">
-<!ENTITY simulator_reset "Alapértelmezések visszaállítása">
-<!ENTITY simulator_name "Név">
-<!ENTITY simulator_software "Szoftver">
-<!ENTITY simulator_version "Verzió">
-<!ENTITY simulator_profile "Profil">
-<!ENTITY simulator_hardware "Hardver">
-<!ENTITY simulator_device "Eszköz">
-<!ENTITY simulator_screenSize "Képernyő">
-<!ENTITY simulator_pixelRatio "Képpontarány:">
-<!ENTITY simulator_tv_data "TV szimuláció">
-<!ENTITY simulator_tv_data_open "Beállítási adatok">
-<!ENTITY simulator_tv_data_open_button "Beállításkönyvtár megnyitása…">

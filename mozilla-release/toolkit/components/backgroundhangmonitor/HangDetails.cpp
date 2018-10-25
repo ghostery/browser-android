@@ -367,8 +367,7 @@ ReadModuleInformation(HangStack& stack)
     }
 
     if (moduleReferenced) {
-      nsDependentCString cstr(info.GetBreakpadId().c_str());
-      HangModule module(info.GetDebugName(), cstr);
+      HangModule module(info.GetDebugName(), info.GetBreakpadId());
       stack.modules().AppendElement(module);
     }
   }
@@ -382,7 +381,7 @@ ProcessHangStackRunnable::Run()
   // it off-main-thread.
   ReadModuleInformation(mHangDetails.stack());
 
-  RefPtr<nsHangDetails> hangDetails = new nsHangDetails(Move(mHangDetails));
+  RefPtr<nsHangDetails> hangDetails = new nsHangDetails(std::move(mHangDetails));
   hangDetails->Submit();
 
   return NS_OK;

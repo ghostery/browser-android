@@ -23,6 +23,7 @@
 #include "jit/JSJitFrameIter.h"
 #include "js/RootingAPI.h"
 #include "js/TypeDecls.h"
+#include "js/UniquePtr.h"
 #include "vm/ArgumentsObject.h"
 #include "vm/JSFunction.h"
 #include "vm/JSScript.h"
@@ -69,7 +70,7 @@ class DebugFrame;
 class Instance;
 }
 
-// VM stack layout
+// [SMDOC] VM stack layout
 //
 // A JSRuntime's stack consists of a linked list of activations. Every activation
 // contains a number of scripted frames that are either running in the interpreter
@@ -77,7 +78,7 @@ class Instance;
 // activation are contiguous: whenever C++ calls back into JS, a new activation is
 // pushed.
 //
-// Every activation is tied to a single JSContext and JSCompartment. This means we
+// Every activation is tied to a single JSContext and JS::Compartment. This means we
 // can reconstruct a given context's stack by skipping activations belonging to other
 // contexts. This happens whenever an embedding enters the JS engine on cx1 and
 // then, from a native called by the JS engine, reenters the VM on cx2.
@@ -102,7 +103,16 @@ class Instance;
 enum MaybeCheckAliasing { CHECK_ALIASING = true, DONT_CHECK_ALIASING = false };
 enum MaybeCheckTDZ { CheckTDZ = true, DontCheckTDZ = false };
 
+} // namespace js
+
+namespace mozilla {
+template <>
+struct IsPod<js::MaybeCheckTDZ> : TrueType {};
+} // namespace mozilla
+
 /*****************************************************************************/
+
+namespace js {
 
 namespace jit {
     class BaselineFrame;
@@ -215,7 +225,7 @@ class AbstractFramePtr
     template <typename SpecificEnvironment>
     inline void popOffEnvironmentChain();
 
-    inline JSCompartment* compartment() const;
+    inline JS::Realm* realm() const;
 
     inline bool hasInitialEnvironment() const;
     inline bool isGlobalFrame() const;
@@ -231,6 +241,7 @@ class AbstractFramePtr
     inline Value calleev() const;
     inline Value& thisArgument() const;
 
+    inline bool isConstructing() const;
     inline Value newTarget() const;
 
     inline bool debuggerNeedsCheckPrimitiveReturn() const;
@@ -301,7 +312,7 @@ class InterpreterFrame
         PREV_UP_TO_DATE        =       0x20,  /* see DebugScopes::updateLiveScopes */
 
         /*
-         * See comment above 'isDebuggee' in JSCompartment.h for explanation of
+         * See comment above 'isDebuggee' in Realm.h for explanation of
          * invariants of debuggee compartments, scripts, and frames.
          */
         DEBUGGEE               =       0x40,  /* Execution is being observed by Debugger */
@@ -906,8 +917,7 @@ class InterpreterStack
     void popInlineFrame(InterpreterRegs& regs);
 
     bool resumeGeneratorCallFrame(JSContext* cx, InterpreterRegs& regs,
-                                  HandleFunction callee, HandleValue newTarget,
-                                  HandleObject envChain);
+                                  HandleFunction callee, HandleObject envChain);
 
     inline void purge(JSRuntime* rt);
 
@@ -1052,18 +1062,26 @@ FillArgumentsFromArraylike(JSContext* cx, Args& args, const Arraylike& arraylike
     return true;
 }
 
+} // namespace js
+
+namespace mozilla {
+
 template <>
-struct DefaultHasher<AbstractFramePtr> {
-    typedef AbstractFramePtr Lookup;
+struct DefaultHasher<js::AbstractFramePtr> {
+    typedef js::AbstractFramePtr Lookup;
 
     static js::HashNumber hash(const Lookup& key) {
         return mozilla::HashGeneric(key.raw());
     }
 
-    static bool match(const AbstractFramePtr& k, const Lookup& l) {
+    static bool match(const js::AbstractFramePtr& k, const Lookup& l) {
         return k == l;
     }
 };
+
+} // namespace mozilla
+
+namespace js {
 
 /*****************************************************************************/
 
@@ -1383,7 +1401,7 @@ namespace jit {
     class JitActivation;
 } // namespace jit
 
-// This class is separate from Activation, because it calls JSCompartment::wrap()
+// This class is separate from Activation, because it calls Compartment::wrap()
 // which can GC and walk the stack. It's not safe to do that within the
 // JitActivation constructor.
 class MOZ_RAII ActivationEntryMonitor
@@ -1411,7 +1429,7 @@ class Activation
 {
   protected:
     JSContext* cx_;
-    JSCompartment* compartment_;
+    JS::Compartment* compartment_;
     Activation* prev_;
     Activation* prevProfiling_;
 
@@ -1451,7 +1469,7 @@ class Activation
     JSContext* cx() const {
         return cx_;
     }
-    JSCompartment* compartment() const {
+    JS::Compartment* compartment() const {
         return compartment_;
     }
     Activation* prev() const {
@@ -1552,8 +1570,7 @@ class InterpreterActivation : public Activation
                                 MaybeConstruct constructing);
     inline void popInlineFrame(InterpreterFrame* frame);
 
-    inline bool resumeGeneratorFrame(HandleFunction callee, HandleValue newTarget,
-                                     HandleObject envChain);
+    inline bool resumeGeneratorFrame(HandleFunction callee, HandleObject envChain);
 
     InterpreterFrame* current() const {
         return regs_.fp();
@@ -1614,13 +1631,10 @@ class BailoutFrameInfo;
 // A JitActivation is used for frames running in Baseline or Ion.
 class JitActivation : public Activation
 {
-  public:
-    static const uintptr_t ExitFpWasmBit = 0x1;
-
-  private:
     // If Baseline, Ion or Wasm code is on the stack, and has called into C++,
     // this will be aligned to an ExitFrame. The last bit indicates if it's a
-    // wasm frame (bit set to ExitFpWasmBit) or not (bit set to !ExitFpWasmBit).
+    // wasm frame (bit set to wasm::ExitOrJitEntryFPTag) or not
+    // (bit set to ~wasm::ExitOrJitEntryFPTag).
     uint8_t* packedExitFP_;
 
     // When hasWasmExitFP(), encodedWasmExitReason_ holds ExitReason.
@@ -1635,7 +1649,7 @@ class JitActivation : public Activation
     // This table is lazily initialized by calling getRematerializedFrame.
     typedef GCVector<RematerializedFrame*> RematerializedFrameVector;
     typedef HashMap<uint8_t*, RematerializedFrameVector> RematerializedFrameTable;
-    RematerializedFrameTable* rematerializedFrames_;
+    js::UniquePtr<RematerializedFrameTable> rematerializedFrames_;
 
     // This vector is used to remember the outcome of the evaluation of recover
     // instructions.
@@ -1672,7 +1686,7 @@ class JitActivation : public Activation
   protected:
     // Used to verify that live registers don't change between a VM call and
     // the OsiPoint that follows it. Protected to silence Clang warning.
-    uint32_t checkRegs_;
+    uint32_t checkRegs_ = 0;
     RegisterDump regs_;
 #endif
 
@@ -1695,12 +1709,15 @@ class JitActivation : public Activation
     bool hasExitFP() const {
         return !!packedExitFP_;
     }
+    uint8_t* jsOrWasmExitFP() const {
+        return (uint8_t*)(uintptr_t(packedExitFP_) & ~wasm::ExitOrJitEntryFPTag);
+    }
     static size_t offsetOfPackedExitFP() {
         return offsetof(JitActivation, packedExitFP_);
     }
 
     bool hasJSExitFP() const {
-        return !(uintptr_t(packedExitFP_) & ExitFpWasmBit);
+        return !(uintptr_t(packedExitFP_) & wasm::ExitOrJitEntryFPTag);
     }
     uint8_t* jsExitFP() const {
         MOZ_ASSERT(hasJSExitFP());
@@ -1791,16 +1808,16 @@ class JitActivation : public Activation
 
     // WebAssembly specific attributes.
     bool hasWasmExitFP() const {
-        return uintptr_t(packedExitFP_) & ExitFpWasmBit;
+        return uintptr_t(packedExitFP_) & wasm::ExitOrJitEntryFPTag;
     }
     wasm::Frame* wasmExitFP() const {
         MOZ_ASSERT(hasWasmExitFP());
-        return (wasm::Frame*)(uintptr_t(packedExitFP_) & ~ExitFpWasmBit);
+        return (wasm::Frame*)(uintptr_t(packedExitFP_) & ~wasm::ExitOrJitEntryFPTag);
     }
     void setWasmExitFP(const wasm::Frame* fp) {
         if (fp) {
-            MOZ_ASSERT(!(uintptr_t(fp) & ExitFpWasmBit));
-            packedExitFP_ = (uint8_t*)(uintptr_t(fp) | ExitFpWasmBit);
+            MOZ_ASSERT(!(uintptr_t(fp) & wasm::ExitOrJitEntryFPTag));
+            packedExitFP_ = (uint8_t*)(uintptr_t(fp) | wasm::ExitOrJitEntryFPTag);
             MOZ_ASSERT(hasWasmExitFP());
         } else {
             packedExitFP_ = nullptr;
@@ -1913,9 +1930,8 @@ class InterpreterFrameIterator
 // asJSJit() and asWasm(), but the user has to be careful not to have those be
 // used after JitFrameIter leaves the scope or the operator++ is called.
 //
-// TODO(bug 1360211) In particular, this can handle the transition from wasm to
-// ion and from ion to wasm, since these will be interleaved in the same
-// JitActivation.
+// In particular, this can handle the transition from wasm to jit and from jit
+// to wasm, since these can be interleaved in the same JitActivation.
 class JitFrameIter
 {
   protected:
@@ -1948,8 +1964,14 @@ class JitFrameIter
     bool done() const;
     void operator++();
 
+    JS::Realm* realm() const;
+
     // Operations which have an effect only on JIT frames.
     void skipNonScriptedJSFrames();
+
+    // Returns true iff this is a JIT frame with a self-hosted script. Note: be
+    // careful, JitFrameIter does not consider functions inlined by Ion.
+    bool isSelfHostedIgnoringInlining() const;
 };
 
 // A JitFrameIter that skips all the non-JSJit frames, skipping interleaved
@@ -2043,7 +2065,8 @@ class FrameIter
 
     FrameIter& operator++();
 
-    JSCompartment* compartment() const;
+    JS::Realm* realm() const;
+    JS::Compartment* compartment() const;
     Activation* activation() const { return data_.activations_.activation(); }
 
     bool isInterp() const {
@@ -2071,7 +2094,7 @@ class FrameIter
     const char* filename() const;
     const char16_t* displayURL() const;
     unsigned computeLine(uint32_t* column = nullptr) const;
-    JSAtom* functionDisplayAtom() const;
+    JSAtom* maybeFunctionDisplayAtom() const;
     bool mutedErrors() const;
 
     bool hasScript() const { return !isWasm(); }
@@ -2082,6 +2105,7 @@ class FrameIter
 
     inline bool wasmDebugEnabled() const;
     inline wasm::Instance* wasmInstance() const;
+    inline uint32_t wasmFuncIndex() const;
     inline unsigned wasmBytecodeOffset() const;
     void wasmUpdateBytecodeOffset();
 
@@ -2141,7 +2165,7 @@ class FrameIter
     bool ensureHasRematerializedFrame(JSContext* cx);
 
     // True when isInterp() or isBaseline(). True when isIon() if it
-    // has a rematerialized frame. False otherwise false otherwise.
+    // has a rematerialized frame. False otherwise.
     bool hasUsableAbstractFramePtr() const;
 
     // -----------------------------------------------------------
@@ -2173,6 +2197,8 @@ class FrameIter
     wasm::WasmFrameIter& wasmFrame() { return data_.jitFrames_.asWasm(); }
 
     bool isIonScripted() const { return isJSJit() && jsJitFrame().isIonScripted(); }
+
+    bool principalsSubsumeFrame() const;
 
     void popActivation();
     void popInterpreterFrame();
@@ -2346,7 +2372,7 @@ inline wasm::Instance*
 FrameIter::wasmInstance() const
 {
     MOZ_ASSERT(!done());
-    MOZ_ASSERT(isWasm() && wasmDebugEnabled());
+    MOZ_ASSERT(isWasm());
     return wasmFrame().instance();
 }
 
@@ -2356,6 +2382,14 @@ FrameIter::wasmBytecodeOffset() const
     MOZ_ASSERT(!done());
     MOZ_ASSERT(isWasm());
     return wasmFrame().lineOrBytecode();
+}
+
+inline uint32_t
+FrameIter::wasmFuncIndex() const
+{
+    MOZ_ASSERT(!done());
+    MOZ_ASSERT(isWasm());
+    return wasmFrame().funcIndex();
 }
 
 inline bool
@@ -2404,4 +2438,5 @@ FrameIter::physicalJitFrame() const
 }
 
 }  /* namespace js */
+
 #endif /* vm_Stack_h */

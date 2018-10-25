@@ -95,7 +95,6 @@ struct WalkStackData
   CONTEXT* context;
 };
 
-DWORD gStackWalkThread;
 CRITICAL_SECTION gDbgHelpCS;
 
 #ifdef _M_AMD64
@@ -189,61 +188,6 @@ InitializeDbgHelpCriticalSection()
   initialized = true;
 }
 
-static unsigned int WINAPI WalkStackThread(void* aData);
-
-static bool
-EnsureWalkThreadReady()
-{
-  static bool walkThreadReady = false;
-  static HANDLE stackWalkThread = nullptr;
-  static HANDLE readyEvent = nullptr;
-
-  if (walkThreadReady) {
-    return walkThreadReady;
-  }
-
-  if (!stackWalkThread) {
-    readyEvent = ::CreateEvent(nullptr, FALSE /* auto-reset*/,
-                               FALSE /* initially non-signaled */,
-                               nullptr);
-    if (!readyEvent) {
-      PrintError("CreateEvent");
-      return false;
-    }
-
-    unsigned int threadID;
-    stackWalkThread = (HANDLE)_beginthreadex(nullptr, 0, WalkStackThread,
-                                             (void*)readyEvent, 0, &threadID);
-    if (!stackWalkThread) {
-      PrintError("CreateThread");
-      ::CloseHandle(readyEvent);
-      readyEvent = nullptr;
-      return false;
-    }
-    gStackWalkThread = threadID;
-    ::CloseHandle(stackWalkThread);
-  }
-
-  MOZ_ASSERT((stackWalkThread && readyEvent) ||
-             (!stackWalkThread && !readyEvent));
-
-  // The thread was created. Try to wait an arbitrary amount of time (1 second
-  // should be enough) for its event loop to start before posting events to it.
-  DWORD waitRet = ::WaitForSingleObject(readyEvent, 1000);
-  if (waitRet == WAIT_TIMEOUT) {
-    // We get a timeout if we're called during static initialization because
-    // the thread will only start executing after we return so it couldn't
-    // have signalled the event. If that is the case, give up for now and
-    // try again next time we're called.
-    return false;
-  }
-  ::CloseHandle(readyEvent);
-  stackWalkThread = nullptr;
-  readyEvent = nullptr;
-
-  return walkThreadReady = true;
-}
-
 static void
 WalkStackMain64(struct WalkStackData* aData)
 {
@@ -254,17 +198,16 @@ WalkStackMain64(struct WalkStackData* aData)
     context = &context_buf;
     memset(context, 0, sizeof(CONTEXT));
     context->ContextFlags = CONTEXT_FULL;
-    if (!GetThreadContext(aData->thread, context)) {
-      if (aData->walkCallingThread) {
-        PrintError("GetThreadContext");
-      }
+    if (aData->walkCallingThread) {
+      ::RtlCaptureContext(context);
+    } else if (!GetThreadContext(aData->thread, context)) {
       return;
     }
   } else {
     context = aData->context;
   }
 
-#if defined(_M_IX86) || defined(_M_IA64)
+#if defined(_M_IX86) || defined(_M_IA64) || defined(_M_ARM64)
   // Setup initial stack frame to walk from.
   STACKFRAME64 frame64;
   memset(&frame64, 0, sizeof(frame64));
@@ -276,6 +219,10 @@ WalkStackMain64(struct WalkStackData* aData)
   frame64.AddrPC.Offset    = context->StIIP;
   frame64.AddrStack.Offset = context->SP;
   frame64.AddrFrame.Offset = context->RsBSP;
+#elif defined _M_ARM64
+  frame64.AddrPC.Offset    = context->Pc;
+  frame64.AddrStack.Offset = context->Sp;
+  frame64.AddrFrame.Offset = context->Fp;
 #endif
   frame64.AddrPC.Mode      = AddrModeFlat;
   frame64.AddrStack.Mode   = AddrModeFlat;
@@ -283,7 +230,7 @@ WalkStackMain64(struct WalkStackData* aData)
   frame64.AddrReturn.Mode  = AddrModeFlat;
 #endif
 
-#ifdef _WIN64
+#ifdef _M_AMD64
   // If there are any active suppressions, then at least one thread (we don't
   // know which) is holding a lock that can deadlock RtlVirtualUnwind. Since
   // that thread may be the one that we're trying to unwind, we can't proceed.
@@ -311,7 +258,7 @@ WalkStackMain64(struct WalkStackData* aData)
     DWORD64 addr;
     DWORD64 spaddr;
 
-#if defined(_M_IX86) || defined(_M_IA64)
+#if defined(_M_IX86) || defined(_M_IA64) || defined(_M_ARM64)
     // 32-bit frame unwinding.
     // Debug routines are not threadsafe, so grab the lock.
     EnterCriticalSection(&gDbgHelpCS);
@@ -320,6 +267,8 @@ WalkStackMain64(struct WalkStackData* aData)
       IMAGE_FILE_MACHINE_IA64,
 #elif defined _M_IX86
       IMAGE_FILE_MACHINE_I386,
+#elif defined _M_ARM64
+      IMAGE_FILE_MACHINE_ARM64,
 #endif
       aData->process,
       aData->thread,
@@ -428,59 +377,6 @@ WalkStackMain64(struct WalkStackData* aData)
   }
 }
 
-static unsigned int WINAPI
-WalkStackThread(void* aData)
-{
-  BOOL msgRet;
-  MSG msg;
-
-  // Call PeekMessage to force creation of a message queue so that
-  // other threads can safely post events to us.
-  ::PeekMessage(&msg, nullptr, WM_USER, WM_USER, PM_NOREMOVE);
-
-  // and tell the thread that created us that we're ready.
-  HANDLE readyEvent = (HANDLE)aData;
-  ::SetEvent(readyEvent);
-
-  while ((msgRet = ::GetMessage(&msg, (HWND)-1, 0, 0)) != 0) {
-    if (msgRet == -1) {
-      PrintError("GetMessage");
-    } else {
-      DWORD ret;
-
-      struct WalkStackData* data = (WalkStackData*)msg.lParam;
-      if (!data) {
-        continue;
-      }
-
-      // Don't suspend the calling thread until it's waiting for
-      // us; otherwise the number of frames on the stack could vary.
-      ret = ::WaitForSingleObject(data->eventStart, INFINITE);
-      if (ret != WAIT_OBJECT_0) {
-        PrintError("WaitForSingleObject");
-      }
-
-      // Suspend the calling thread, dump his stack, and then resume him.
-      // He's currently waiting for us to finish so now should be a good time.
-      ret = ::SuspendThread(data->thread);
-      if (ret == (DWORD)-1) {
-        PrintError("ThreadSuspend");
-      } else {
-        WalkStackMain64(data);
-
-        ret = ::ResumeThread(data->thread);
-        if (ret == (DWORD)-1) {
-          PrintError("ThreadResume");
-        }
-      }
-
-      ::SetEvent(data->eventEnd);
-    }
-  }
-
-  return 0;
-}
-
 /**
  * Walk the stack, translating PC's found into strings and recording the
  * chain in aBuffer. For this to work properly, the DLLs must be rebased
@@ -496,20 +392,19 @@ MozStackWalkThread(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
 {
   static HANDLE myProcess = nullptr;
   HANDLE myThread;
-  DWORD walkerReturn;
   struct WalkStackData data;
 
   InitializeDbgHelpCriticalSection();
 
-  // EnsureWalkThreadReady's _beginthreadex takes a heap lock and must be
-  // avoided if we're walking another (i.e. suspended) thread.
-  if (!aThread && !EnsureWalkThreadReady()) {
-    return;
+  HANDLE targetThread = aThread;
+  if (!aThread) {
+    targetThread = ::GetCurrentThread();
+    data.walkCallingThread = true;
+  } else {
+    DWORD threadId = ::GetThreadId(aThread);
+    DWORD currentThreadId = ::GetCurrentThreadId();
+    data.walkCallingThread = (threadId == currentThreadId);
   }
-
-  HANDLE currentThread = ::GetCurrentThread();
-  HANDLE targetThread = aThread ? aThread : currentThread;
-  data.walkCallingThread = (targetThread == currentThread);
 
   // Have to duplicate handle to get a real handle.
   if (!myProcess) {
@@ -549,50 +444,16 @@ MozStackWalkThread(MozWalkStackCallback aCallback, uint32_t aSkipFrames,
   data.sp_size = ArrayLength(local_sps);
   data.context = aContext;
 
-  if (aThread) {
-    // If we're walking the stack of another thread, we don't need to
-    // use a separate walker thread.
+  WalkStackMain64(&data);
+
+  if (data.pc_count > data.pc_size) {
+    data.pcs = (void**)_alloca(data.pc_count * sizeof(void*));
+    data.pc_size = data.pc_count;
+    data.pc_count = 0;
+    data.sps = (void**)_alloca(data.sp_count * sizeof(void*));
+    data.sp_size = data.sp_count;
+    data.sp_count = 0;
     WalkStackMain64(&data);
-
-    if (data.pc_count > data.pc_size) {
-      data.pcs = (void**)_alloca(data.pc_count * sizeof(void*));
-      data.pc_size = data.pc_count;
-      data.pc_count = 0;
-      data.sps = (void**)_alloca(data.sp_count * sizeof(void*));
-      data.sp_size = data.sp_count;
-      data.sp_count = 0;
-      WalkStackMain64(&data);
-    }
-  } else {
-    data.eventStart = ::CreateEvent(nullptr, FALSE /* auto-reset*/,
-                                    FALSE /* initially non-signaled */, nullptr);
-    data.eventEnd = ::CreateEvent(nullptr, FALSE /* auto-reset*/,
-                                  FALSE /* initially non-signaled */, nullptr);
-
-    ::PostThreadMessage(gStackWalkThread, WM_USER, 0, (LPARAM)&data);
-
-    walkerReturn = ::SignalObjectAndWait(data.eventStart,
-                                         data.eventEnd, INFINITE, FALSE);
-    if (walkerReturn != WAIT_OBJECT_0 && data.walkCallingThread) {
-      PrintError("SignalObjectAndWait (1)");
-    }
-    if (data.pc_count > data.pc_size) {
-      data.pcs = (void**)_alloca(data.pc_count * sizeof(void*));
-      data.pc_size = data.pc_count;
-      data.pc_count = 0;
-      data.sps = (void**)_alloca(data.sp_count * sizeof(void*));
-      data.sp_size = data.sp_count;
-      data.sp_count = 0;
-      ::PostThreadMessage(gStackWalkThread, WM_USER, 0, (LPARAM)&data);
-      walkerReturn = ::SignalObjectAndWait(data.eventStart,
-                                           data.eventEnd, INFINITE, FALSE);
-      if (walkerReturn != WAIT_OBJECT_0 && data.walkCallingThread) {
-        PrintError("SignalObjectAndWait (2)");
-      }
-    }
-
-    ::CloseHandle(data.eventStart);
-    ::CloseHandle(data.eventEnd);
   }
 
   ::CloseHandle(myThread);

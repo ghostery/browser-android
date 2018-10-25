@@ -11,6 +11,7 @@
 #include "nsHTMLDocument.h"
 #include "nsGenericHTMLElement.h"
 #include "nsIStringBundle.h"
+#include "nsIThreadRetargetableStreamListener.h"
 
 #define NSMEDIADOCUMENT_PROPERTIES_URI "chrome://global/locale/layout/MediaDocument.properties"
 
@@ -23,6 +24,9 @@ public:
   MediaDocument();
   virtual ~MediaDocument();
 
+  // Subclasses need to override this.
+  enum MediaDocumentKind MediaDocumentKind() const override = 0;
+
   virtual nsresult Init() override;
 
   virtual nsresult StartDocumentLoad(const char*         aCommand,
@@ -33,15 +37,23 @@ public:
                                      bool                aReset = true,
                                      nsIContentSink*     aSink = nullptr) override;
 
-  virtual void SetScriptGlobalObject(nsIScriptGlobalObject* aGlobalObject) override;
-
   virtual bool WillIgnoreCharsetOverride() override
   {
     return true;
   }
 
 protected:
-  void BecomeInteractive();
+  // Hook to be called once our initial document setup is done.  Subclasses
+  // should call this from SetScriptGlobalObject when setup hasn't been done
+  // yet, a non-null script global is being set, and they have finished whatever
+  // setup work they plan to do for an initial load.
+  void InitialSetupDone();
+
+  // Check whether initial setup has been done.
+  MOZ_MUST_USE bool InitialSetupHasBeenDone() const
+  {
+    return mDidInitialDocumentSetup;
+  }
 
   virtual nsresult CreateSyntheticDocument();
 
@@ -76,11 +88,17 @@ protected:
 
 private:
   enum                          {eWithNoInfo, eWithFile, eWithDim, eWithDimAndFile};
-  bool                          mDocumentElementInserted;
+
+  // A boolean that indicates whether we did our initial document setup.  This
+  // will be false initially, become true when we finish setting up the document
+  // during initial load and stay true thereafter.
+  bool                          mDidInitialDocumentSetup;
 };
 
 
-class MediaDocumentStreamListener: public nsIStreamListener
+class MediaDocumentStreamListener
+  : public nsIStreamListener
+  , public nsIThreadRetargetableStreamListener
 {
 protected:
   virtual ~MediaDocumentStreamListener();
@@ -89,11 +107,13 @@ public:
   explicit MediaDocumentStreamListener(MediaDocument* aDocument);
   void SetStreamListener(nsIStreamListener *aListener);
 
-  NS_DECL_ISUPPORTS
+  NS_DECL_THREADSAFE_ISUPPORTS
 
   NS_DECL_NSIREQUESTOBSERVER
 
   NS_DECL_NSISTREAMLISTENER
+
+  NS_DECL_NSITHREADRETARGETABLESTREAMLISTENER
 
   void DropDocumentRef()
   {
