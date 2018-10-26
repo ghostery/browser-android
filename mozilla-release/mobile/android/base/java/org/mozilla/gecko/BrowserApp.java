@@ -81,6 +81,8 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.webkit.URLUtil;
 import android.widget.Button;
@@ -308,6 +310,7 @@ public class BrowserApp extends GeckoApp
     private TabHistoryController tabHistoryController;
 
     /* Cliqz Start */
+    private View mGhosterySplashScreen;
     private ViewPager mControlCenterPager;
     private View mControlCenterContainer;
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
@@ -1004,6 +1007,7 @@ public class BrowserApp extends GeckoApp
             "Search:GetHistory",
             "Search:OpenLink",
             "Privacy:Count",
+            "Search:Idle",
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
@@ -1138,6 +1142,18 @@ public class BrowserApp extends GeckoApp
         if (AppConstants.Versions.feature24Plus) {
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
+
+        // Splash screen runs at most for 4 seconds.
+        mGhosterySplashScreen = findViewById(R.id.ghostery_splash_screen);
+        final View ghosty = mGhosterySplashScreen.findViewById(R.id.ghosty);
+        final Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulsate);
+        ghosty.startAnimation(pulse);
+        mGhosterySplashScreen.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mGhosterySplashScreen.setVisibility(View.GONE);
+            }
+        }, 4000);
         /*Cliqz End*/
     }
 
@@ -1962,6 +1978,7 @@ public class BrowserApp extends GeckoApp
             "Search:OpenLink",
             "Privacy:Count",
             "Privacy:Info",
+            "Search:Idle",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
             null);
@@ -2620,6 +2637,12 @@ public class BrowserApp extends GeckoApp
                 mPreferenceManager.setGhosteryAutoUpdate(isAutoUpdateEnabled);
                 mPreferenceManager.setAllowFirstPartyTrackers(areFirstPartyTrackersEnabled);
                 mPreferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
+                break;
+            case "Search:Idle":
+                if (mGhosterySplashScreen == null) {
+                    mGhosterySplashScreen = findViewById(R.id.ghostery_splash_screen);
+                }
+                mGhosterySplashScreen.setVisibility(View.GONE);
                 break;
             case "Search:QuerySuggestions":
                 if(mPreferenceManager.isQuerySuggestionsEnabled() && mBrowserToolbar.isEditing()) {
@@ -3358,6 +3381,11 @@ public class BrowserApp extends GeckoApp
             // });
             mCliqzIntroPagerHolder = findViewById(R.id.cliqz_intro_pager_holder);
             mCliqzIntroPagerHolder.setVisibility(View.VISIBLE);
+
+            if (mGhosterySplashScreen == null) {
+                mGhosterySplashScreen = findViewById(R.id.ghostery_splash_screen);
+            }
+            mGhosterySplashScreen.setVisibility(View.GONE);
 
             final ViewPager cliqzIntroPager = (ViewPager) mCliqzIntroPagerHolder.findViewById(R.id.cliqz_intro_pager);
             final TabLayout tabLayout = (TabLayout) mCliqzIntroPagerHolder.findViewById(R.id.cliqz_intro_tab_dots);

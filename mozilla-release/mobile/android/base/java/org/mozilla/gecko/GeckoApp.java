@@ -1185,6 +1185,13 @@ public abstract class GeckoApp extends GeckoActivity
                             }
                         }
                     }
+                    /* Cliqz Start */
+                    // If there's a session restore, we add a new start tab.
+                    final Tab selectedTab = Tabs.getInstance().getSelectedTab();
+                    if (selectedTab != null && !AboutPages.isAboutHome(selectedTab.getURL())) {
+                        Tabs.getInstance().addTab();
+                    }
+                    /* Cliqz End */
                 }
 
                 synchronized (GeckoApp.this) {
