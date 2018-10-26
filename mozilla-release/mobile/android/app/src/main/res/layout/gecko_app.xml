@@ -204,6 +204,8 @@
     <!-- Cliqz Start -->
         <include layout="@layout/cliqz_intro_pager" />
 
+        <include layout="@layout/ghostery_splash_screen" />
+
     </FrameLayout>
     <!-- Cliqz End -->
     <FrameLayout android:id="@+id/tab_history_panel"

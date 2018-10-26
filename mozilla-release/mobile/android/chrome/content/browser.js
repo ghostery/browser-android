@@ -6571,6 +6571,11 @@ var Cliqz = {
         this._syncSearchPrefs();
         this._handleExtensionReady("android@cliqz.com");
         break;
+      case "idle":
+        GlobalEventDispatcher.sendRequest({
+          type: "Search:Idle"
+        });
+        break;
       default:
         console.log("unexpected message", msg);
     }
