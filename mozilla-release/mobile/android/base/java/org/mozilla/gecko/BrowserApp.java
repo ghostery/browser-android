@@ -297,7 +297,6 @@ public class BrowserApp extends GeckoApp
     private TabHistoryController tabHistoryController;
 
     /* Cliqz Start */
-    private View mGhosterySplashScreen;
     private byte[] mCCDataHash = null;
     private GeckoBundle mControlCenterTrackingData;
     private ViewPager mControlCenterPager;
@@ -1019,23 +1018,6 @@ public class BrowserApp extends GeckoApp
         if (AppConstants.Versions.feature24Plus) {
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
-
-        // Splash screen runs at most for 4 seconds.
-        mGhosterySplashScreen = findViewById(R.id.ghostery_splash_screen);
-        final View ghosty = mGhosterySplashScreen.findViewById(R.id.ghosty);
-        final Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulsate);
-        ghosty.startAnimation(pulse);
-        final int splashTimeout = Integer.valueOf(sharedPreferences.getString(GeckoPreferences.PREFS_SPLASH_SCREEN_TIMEOUT,
-                 getResources().getString(R.string.splash_screen_timeout_default)));
-        mGhosterySplashScreen.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mGhosterySplashScreen.setVisibility(View.GONE);
-                if (!isOnboardingVisible) {
-                    enterEditingMode();
-                }
-            }
-        }, TimeUnit.SECONDS.toMillis(splashTimeout));
         /*Cliqz End*/
     }
 
@@ -2367,9 +2349,7 @@ public class BrowserApp extends GeckoApp
                 mPreferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
                 break;
             case "Search:Idle":
-                if (mGhosterySplashScreen == null) {
-                    mGhosterySplashScreen = findViewById(R.id.ghostery_splash_screen);
-                }
+                inflatedGeckoAppView.setVisibility(View.VISIBLE);
                 mGhosterySplashScreen.setVisibility(View.GONE);
                 if (!isOnboardingVisible) {
                     enterEditingMode();
@@ -4398,7 +4378,7 @@ public class BrowserApp extends GeckoApp
     }
 
     @Override
-    public int getLayout() { return R.layout.gecko_app; }
+    public int getLayout() { return R.layout.gecko_app_splash_screen; }
 
     @Override
     public View getDoorhangerOverlay() {

@@ -19,6 +19,7 @@ import org.mozilla.gecko.menu.GeckoMenuInflater;
 import org.mozilla.gecko.menu.MenuPanel;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.notifications.NotificationHelper;
+import org.mozilla.gecko.tabs.TabsPanel;
 import org.mozilla.gecko.util.IntentUtils;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.mozglue.GeckoLoader;
@@ -78,8 +79,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -193,7 +197,9 @@ public abstract class GeckoApp extends GeckoActivity
 
     /* Cliqz Start */
     protected boolean isOnboardingVisible = false;
-    /* Cliqz End */
+    protected View mGhosterySplashScreen;
+    protected View inflatedGeckoAppView;
+    /* Cliqz end */
 
     private static final class LastSessionParser extends SessionParser {
         private JSONArray tabs;
@@ -1069,11 +1075,28 @@ public abstract class GeckoApp extends GeckoActivity
             // Bug 896992 - This intent has already been handled; reset the intent.
             setIntent(new Intent(Intent.ACTION_MAIN));
         }
-
         super.onCreate(savedInstanceState);
 
+        GeckoScreenOrientation.getInstance().update(getResources().getConfiguration().orientation);
         setContentView(getLayout());
+        // Splash screen runs at most for 4 seconds.
+        mGhosterySplashScreen = findViewById(R.id.ghostery_splash_screen);
+        final View ghosty = mGhosterySplashScreen.findViewById(R.id.ghosty);
+        final Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulsate);
+        ghosty.startAnimation(pulse);
+        mGhosterySplashScreen.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                inflatedGeckoAppView.setVisibility(View.VISIBLE);
+                // Use global layout state change to kick off additional initialization
+                addOnGlobalLayoutListener();
+                mGhosterySplashScreen.setVisibility(View.GONE);
+            }
+        }, 4000);
 
+        ViewStub geckoAppStub = (ViewStub) findViewById(R.id.gecko_app_view_stub);
+        inflatedGeckoAppView = geckoAppStub.inflate();
+        inflatedGeckoAppView.setVisibility(View.GONE);
         // Set up Gecko layout.
         mRootLayout = (RelativeLayout) findViewById(R.id.root_layout);
         mGeckoLayout = (RelativeLayout) findViewById(R.id.gecko_layout);
@@ -1114,9 +1137,6 @@ public abstract class GeckoApp extends GeckoActivity
 
         Tabs.getInstance().attachToContext(this, mLayerView, getAppEventDispatcher());
         Tabs.registerOnTabsChangedListener(this);
-
-        // Use global layout state change to kick off additional initialization
-        mMainLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
         mTextSelection = TextSelection.Factory.create(mLayerView, getTextSelectPresenter());
         mTextSelection.create();
@@ -1280,6 +1300,10 @@ public abstract class GeckoApp extends GeckoActivity
                 BrowserLocaleManager.storeAndNotifyOSLocale(getSharedPreferencesForProfile(), osLocale);
             }
         });
+    }
+
+    public void addOnGlobalLayoutListener() {
+        mMainLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
     @Override
