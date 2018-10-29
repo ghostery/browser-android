@@ -28,7 +28,7 @@ def matrix = [
         'arch': 'x86',
         'brand': 'cliqz',
         'channel': 'MA02',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
         'buildParam': params.CLIQZ_X86,
     ],
     'Ghostery ARM':[
@@ -42,7 +42,7 @@ def matrix = [
         'arch': 'x86',
         'brand': 'ghostery',
         'channel': 'MA52',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
         'buildParam': params.GHOSTERY_X86,
     ],
     'Bond ARM':[
@@ -56,7 +56,7 @@ def matrix = [
         'arch': 'x86',
         'brand': 'bond',
         'channel': 'MA62',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
         'buildParam': params.BOND_X86,
     ],
     'Cliqz Alpha ARM':[
@@ -67,10 +67,10 @@ def matrix = [
         'buildParam': params.CLIQZ_ALPHA_ARM,
     ],
     'Cliqz Alpha X86':[
-        'arch': 'arm',
+        'arch': 'x86',
         'brand': 'cliqz-alpha',
         'channel': 'MA02',
-        'target': 'arm-linux-androideabi',
+        'target': 'i686-linux-android',
         'buildParam': params.CLIQZ_ALPHA_X86,
     ],
     'Ghostery Alpha ARM':[
@@ -81,10 +81,10 @@ def matrix = [
         'buildParam': params.GHOSTERY_ALPHA_ARM,
     ],
     'Ghostery Alpha X86':[
-        'arch': 'arm',
+        'arch': 'x86',
         'brand': 'ghostery-alpha',
         'channel': 'MA52',
-        'target': 'arm-linux-androideabi',
+        'target': 'i686-linux-android',
         'buildParam': params.GHOSTERY_ALPHA_X86,
     ],
 ]
@@ -165,21 +165,8 @@ def build(Map m){
                             sh '''#!/bin/bash -l
                                 set -e
                                 set -x
-                                mkdir -p /app/distribution/assets/distribution/extensions
-                                if [[ $BRAND = *"ghostery"* ]]; then
-                                    ext="ghostery"
-                                else
-                                    ext="cliqz"
-                                fi
-                                cat /app/mozilla-release/config/search.txt | \
-                                    grep $ext |cut -d= -f2 | \
-                                    xargs wget --quiet -O /app/distribution/assets/distribution/extensions/android@cliqz.com.xpi
-                                cat /app/mozilla-release/config/privacy.txt | \
-                                    xargs wget --quiet -O /app/distribution/assets/distribution/extensions/firefox@ghostery.com.xpi
                                 cd /app/mozilla-release
                                 cp ../mozconfigs/deploy.mozconfig mozconfig
-                                export HOST_CC=$CLANG_HOME/bin/clang
-                                export HOST_CXX=$CLANG_HOME/bin/clang++
                                 ./mach clobber
                                 ./mach build
                                 export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
