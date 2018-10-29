@@ -11,7 +11,7 @@ def matrix = [
         'arch': 'x86',
         'brand': 'cliqz',
         'channel': 'MA02',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
     ],
     'Ghostery ARM':[
         'arch': 'arm',
@@ -23,7 +23,7 @@ def matrix = [
         'arch': 'x86',
         'brand': 'ghostery',
         'channel': 'MA52',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
     ],
     'Bond ARM':[
         'arch': 'arm',
@@ -35,7 +35,7 @@ def matrix = [
         'arch': 'x86',
         'brand': 'bond',
         'channel': 'MA62',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
     ],
     'Cliqz Alpha':[
         'arch': 'arm',

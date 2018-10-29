@@ -9,7 +9,7 @@ properties([
 
 def matrix = [
         'x86':[
-            'target':'i386-linux-android',
+            'target':'i686-linux-android',
         ],
         'arm':[
             'target':'arm-linux-androideabi',

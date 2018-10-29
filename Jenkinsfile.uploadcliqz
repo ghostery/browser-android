@@ -15,7 +15,7 @@ node('master') {
     baseImage.inside() {
         try {
             stage('Build and Signs APKS') {
-                withEnv(['ANDROID_TARGET=i386-linux-android', 'BRAND=cliqz', 'CLIQZ_CHANNEL=MA00']) {
+                withEnv(['ANDROID_TARGET=i686-linux-android', 'BRAND=cliqz', 'CLIQZ_CHANNEL=MA00']) {
                     sh '''#!/bin/bash -l
                         set -e
                         set -x
