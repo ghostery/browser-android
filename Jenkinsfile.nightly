@@ -286,7 +286,7 @@ stage('Send email') {
         Issues Transtioned ${transitionIssueList}""".stripIndent()
     emailext(
         to: 'project-bond@cliqz.com',
-        subject: 'BOND - Build # $BUILD_NUMBER',
+        subject: 'BOND » nightly - Build # $BUILD_NUMBER',
         body: bodytxtBond
     )
 }
