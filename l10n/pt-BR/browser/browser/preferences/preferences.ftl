@@ -6,6 +6,8 @@ do-not-track-description = Enviar aos sites um sinal de “Não rastrear” info
 do-not-track-learn-more = Saiba mais
 do-not-track-option-default =
     .label = Somente quando usar a proteção contra rastreamento
+do-not-track-option-default-content-blocking =
+    .label = Apenas quando o { -brand-short-name } está configurado para bloquear rastreadores detectados
 do-not-track-option-always =
     .label = Sempre
 pref-page =
@@ -14,14 +16,6 @@ pref-page =
             [windows] Opções
            *[other] Preferências
         }
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 15.4em
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
 #
@@ -66,7 +60,7 @@ close-button =
 
 ## Browser Restart Dialog
 
-feature-enable-requires-restart = O { -brand-short-name } deve ser reiniciado para habilitar esta funcionalidade.
+feature-enable-requires-restart = O { -brand-short-name } deve ser reiniciado para ativar esta funcionalidade.
 feature-disable-requires-restart = O { -brand-short-name } deve ser reiniciado para desativar esta funcionalidade.
 should-restart-title = Reiniciar o { -brand-short-name }
 should-restart-ok = Reiniciar o { -brand-short-name } agora
@@ -98,6 +92,9 @@ extension-controlled-privacy-containers = Uma extensão requer abas contêiner: 
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = Uma extensão, <img data-l10n-name="icon"/> { $name }, está controlando sua proteção contra rastreamento.
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = Uma extensão, <img data-l10n-name="icon"/> { $name }, está controlando esta configuração.
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = Uma extensão, <img data-l10n-name="icon"/> { $name }, está controlando como o { -brand-short-name } se conecta à Internet.
@@ -106,7 +103,7 @@ extension-controlled-proxy-config = Uma extensão, <img data-l10n-name="icon"/> 
 #
 # <img data-l10n-name="addons-icon"/> will be replaced with Add-ons icon
 # <img data-l10n-name="menu-icon"/> will be replaced with Menu icon
-extension-controlled-enable = Para habilitar esta extensão vá para <img data-l10n-name="addons-icon"/> Extensões no menu <img data-l10n-name="menu-icon"/>.
+extension-controlled-enable = Para ativar esta extensão vá para <img data-l10n-name="addons-icon"/> Extensões no menu <img data-l10n-name="menu-icon"/>.
 
 ## Preferences UI Search Results
 
@@ -137,20 +134,11 @@ is-not-default = { -brand-short-name } não é o seu navegador padrão
 set-as-my-default-browser =
     .label = Tornar padrão…
     .accesskey = D
-startup-page = Ao iniciar o { -brand-short-name }
-    .accesskey = i
-startup-user-homepage =
-    .label = Mostrar sua página inicial
-startup-blank-page =
-    .label = Mostrar uma página em branco
-startup-prev-session =
-    .label = Mostrar suas janelas e abas anteriores
 startup-restore-previous-session =
     .label = Restaurar a sessão anterior
     .accesskey = R
 disable-extension =
     .label = Desativar extensão
-home-page-header = Página inicial
 tabs-group-header = Abas
 ctrl-tab-recently-used-order =
     .label = Ctrl+Tab alterna entre as abas por ordem de uso
@@ -165,13 +153,13 @@ warn-on-open-many-tabs =
     .label = Avisar que quando abrir muitas abas, o { -brand-short-name } pode ficar lento
     .accesskey = d
 switch-links-to-new-tabs =
-    .label = Quando abrir um link em uma nova aba, alterne para ela imediatamente
+    .label = Quando abrir um link em uma nova aba, alternar para ela imediatamente
     .accesskey = u
 show-tabs-in-taskbar =
     .label = Mostrar a visualização das abas na barra de tarefas do Windows
     .accesskey = v
 browser-containers-enabled =
-    .label = Habilitar abas contêiner
+    .label = Ativar abas contêiner
     .accesskey = n
 browser-containers-learn-more = Saiba mais
 browser-containers-settings =
@@ -188,7 +176,7 @@ containers-disable-alert-ok-button =
         [one] Fechar { $tabCount } aba contêiner
        *[other] Fechar { $tabCount } abas contêiner
     }
-containers-disable-alert-cancel-button = Manter habilitado
+containers-disable-alert-cancel-button = Manter ativado
 containers-remove-alert-title = Remover este contêiner?
 # Variables:
 #   $count (Number) - Number of tabs that will be closed.
@@ -219,6 +207,12 @@ choose-language-description = Escolha o idioma preferido para exibir páginas
 choose-button =
     .label = Selecionar…
     .accesskey = S
+choose-browser-language-description = Escolha o idioma usado para exibir os menus, mensagens e notificações do { -brand-short-name }
+manage-browser-languages-button =
+    .label = Definir alternativas…
+    .accesskey = l
+confirm-browser-language-change-description = Reiniciar o { -brand-short-name } para aplicar estas alterações
+confirm-browser-language-change-button = Aplicar e reiniciar
 translate-web-pages =
     .label = Traduzir conteúdo da web
     .accesskey = r
@@ -268,20 +262,19 @@ play-drm-content =
     .label = Reproduzir conteúdo controlado por DRM
     .accesskey = R
 play-drm-content-learn-more = Saiba mais
-update-application-title = Atualizações do { -brand-short-name }
-update-application-description = Manter o { -brand-short-name } atualizado para melhor desempenho, estabilidade e segurança.
-update-application-info = Versão { $version } <a>Novidades</a>
+update-application-title = Atualização do { -brand-short-name }
+update-application-description = Mantenha o { -brand-short-name } atualizado para melhor desempenho, estabilidade e segurança.
 update-application-version = Versão { $version } <a data-l10n-name="learn-more">Novidades</a>
 update-history =
     .label = Mostrar histórico de atualizações…
-    .accesskey = p
+    .accesskey = h
 update-application-allow-description = Permitir que o { -brand-short-name }
 update-application-auto =
     .label = Instale atualizações automaticamente (recomendado)
     .accesskey = A
 update-application-check-choose =
-    .label = Busque atualizações, mas permita que você opte por instalá-las
-    .accesskey = C
+    .label = Busque atualizações, mas você decide se instala
+    .accesskey = c
 update-application-manual =
     .label = Nunca busque atualizações (não recomendado)
     .accesskey = N
@@ -306,7 +299,6 @@ performance-allow-hw-accel =
 performance-limit-content-process-option = Limite de processos de conteúdo
     .accesskey = L
 performance-limit-content-process-enabled-desc = Processos de conteúdo adicionais podem melhorar o desempenho ao usar várias abas, mas também usam mais memória.
-performance-limit-content-process-disabled-desc = Modificar o número de processos de conteúdo só é possível com o multiprocessamento do { -brand-short-name }. <a>Saiba como verificar se o multiprocessamento está ativado</a>
 performance-limit-content-process-blocked-desc = Modificar o número de processos de conteúdo só é possível com o multiprocessamento do { -brand-short-name }. <a data-l10n-name="learn-more">Saiba como verificar se o multiprocessamento está ativado</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
@@ -335,6 +327,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Proxy de Rede
+network-settings-title = Configurações de rede
 network-proxy-connection-description = Configure como o { -brand-short-name } se conecta à Internet.
 network-proxy-connection-learn-more = Saiba mais
 network-proxy-connection-settings =
@@ -344,7 +337,7 @@ network-proxy-connection-settings =
 ## Home Section
 
 home-new-windows-tabs-header = Novas janelas e abas
-home-new-windows-tabs-description2 = Escolha o que você vê quando abrir sua página inicial, novas janelas e novas abas.
+home-new-windows-tabs-description2 = Escolha o que ver quando abrir sua página inicial, novas janelas e novas abas.
 
 ## Home Section - Home Page Customization
 
@@ -377,9 +370,6 @@ use-current-pages =
 choose-bookmark =
     .label = Usar favorito…
     .accesskey = f
-restore-default =
-    .label = Restaurar o padrão
-    .accesskey = R
 
 ## Search Section
 
@@ -402,7 +392,7 @@ search-show-suggestions-url-bar-option =
 # "ahead" refers to location (appearing most proximate to), not time
 # (appearing before).
 search-show-suggestions-above-history-option =
-    .label = Mostrar sugestões de pesquisa antes do histórico de navegação nos resultados da barra de endereço
+    .label = Mostrar sugestões de pesquisa antes do histórico de navegação nos resultados da barra de endereços
 search-suggestions-cant-show = As sugestões de pesquisa não serão mostradas nos resultados da barra de endereço, porque você configurou o { -brand-short-name } para nunca lembrar o histórico.
 search-one-click-header = Mecanismos de pesquisa em um clique
 search-one-click-desc = Escolha os mecanismos de pesquisa alternativos que aparecem abaixo da barra de endereços e da barra de pesquisa quando você começa a inserir uma palavra-chave.
@@ -422,8 +412,8 @@ search-find-more-link = Procurar mais mecanismos de pesquisa
 search-keyword-warning-title = Palavra-chave duplicada
 # Variables:
 #   $name (String) - Name of a search engine.
-search-keyword-warning-engine = A palavra-chave escolhida já é usada por “{ $name }”. Por favor, selecione outra.
-search-keyword-warning-bookmark = A palavra-chave escolhida já é usada por um favorito. Por favor, selecione outra.
+search-keyword-warning-engine = A palavra-chave escolhida já é usada por “{ $name }”. Selecione outra.
+search-keyword-warning-bookmark = A palavra-chave escolhida já é usada por um favorito. Selecione outra.
 
 ## Containers Section
 
@@ -446,7 +436,7 @@ sync-signedout-account-create = Não tem uma conta? Inscreva-se agora
     .accesskey = C
 sync-signedout-account-signin =
     .label = Entrar…
-    .accesskey = I
+    .accesskey = E
 # This message contains two links and two icon images.
 #   `<img data-l10n-name="android-icon"/>` - Android logo icon
 #   `<a data-l10n-name="android-link">` - Link to Android Download
@@ -455,7 +445,7 @@ sync-signedout-account-signin =
 #
 # They can be moved within the sentence as needed to adapt
 # to your language, but should not be changed or translated.
-sync-mobile-promo = Baixar o Firefox para <img data-l10n-name="android-icon"/> <a data-l10n-name="android-link">Android</a> ou <img data-l10n-name="ios-icon"/> <a data-l10n-name="ios-link">iOS</a> para sincronizar com o seu dispositivo móvel.
+sync-mobile-promo = Baixe o Firefox para <img data-l10n-name="android-icon"/> <a data-l10n-name="android-link">Android</a> ou <img data-l10n-name="ios-icon"/> <a data-l10n-name="ios-link">iOS</a> para sincronizar com o seu dispositivo móvel.
 
 ## Sync Section - Signed in
 
@@ -536,7 +526,7 @@ privacy-header = Privacidade do navegador
 
 forms-header = Formulários e Senhas
 forms-ask-to-save-logins =
-    .label = Perguntar para contas de acesso e senhas de sites
+    .label = Perguntar se deve salvar contas e senhas de acesso de sites
     .accesskey = r
 forms-exceptions =
     .label = Exceções…
@@ -564,7 +554,7 @@ history-header = Histórico
 #     This will result in "Firefox" + "Will remember history", etc.
 #   - As a stand-alone message, for example "Firefox history settings:".
 history-remember-label = O { -brand-short-name } irá
-    .accesskey = w
+    .accesskey = i
 history-remember-option-all =
     .label = Memorizar tudo
 history-remember-option-never =
@@ -576,9 +566,6 @@ history-dontremember-description = O { -brand-short-name } usará as mesmas conf
 history-private-browsing-permanent =
     .label = Sempre usar o modo de navegação privativa
     .accesskey = v
-history-remember-option =
-    .label = Memorizar histórico de navegação e downloads
-    .accesskey = M
 history-remember-browser-option =
     .label = Memorizar histórico de navegação e downloads
     .accesskey = h
@@ -624,6 +611,26 @@ sitedata-accept-third-party-visited-option =
     .label = De sites visitados
 sitedata-accept-third-party-never-option =
     .label = Nunca
+sitedata-allow-cookies-option =
+    .label = Aceitar cookies e dados de sites
+    .accesskey = A
+sitedata-disallow-cookies-option =
+    .label = Bloquear cookies e dados de sites
+    .accesskey = B
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = Tipo bloqueado
+    .accesskey = T
+sitedata-block-trackers-option-recommended =
+    .label = Rastreadores de terceiros (recomendado)
+sitedata-block-trackers-option =
+    .label = Rastreadores de terceiros
+sitedata-block-unvisited-option =
+    .label = Cookies de sites não visitados
+sitedata-block-all-third-party-option =
+    .label = Todos os cookies de terceiros (pode atrapalhar sites)
+sitedata-block-all-option =
+    .label = Todos os cookies (irá atrapalhar sites)
 sitedata-clear =
     .label = Limpar dados…
     .accesskey = L
@@ -633,6 +640,10 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = Exceções…
     .accesskey = E
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = Suas configurações de bloqueio de conteúdo estão impedindo mudanças nas configurações de Cookies e Dados de sites.
 
 ## Privacy Section - Address Bar
 
@@ -649,6 +660,63 @@ addressbar-locbar-openpage-option =
     .accesskey = A
 addressbar-suggestions-settings = Alterar preferências das sugestões do mecanismo de pesquisa
 
+## Privacy Section - Content Blocking
+
+content-blocking-header = Bloqueio de conteúdo
+content-blocking-desc = Bloqueie conteúdo de terceiros, como propaganda ou código que podem tornar sua navegação mais lenta e rastreá-lo através da Web. Personalize suas configurações para uma proteção e desempenho balanceados.
+content-blocking-learn-more = Saiba mais
+content-blocking-restore-defaults =
+    .label = Restaurar padrões
+    .accesskey = R
+content-blocking-toggle-on =
+    .tooltiptext = Desativar bloqueio de conteúdo
+content-blocking-toggle-off =
+    .tooltiptext = Ativar bloqueio de conteúdo
+content-blocking-toggle-label-on = ATIVAR
+    .accesskey = A
+content-blocking-toggle-label-off = DESATIVAR
+    .accesskey = D
+content-blocking-category-label = Escolher o que bloquear
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-slow-loading-trackers-label =
+    .label = Rastreadores que atrasam o carregamento
+    .accesskey = a
+content-blocking-fastblock-new-description = Bloqueia somente os rastreadores que impedem que páginas sejam carregadas rapidamente.
+content-blocking-tracking-protection-all-detected-trackers-label =
+    .label = Todos os rastreadores detectados
+    .accesskey = T
+content-blocking-tracking-protection-new-description = Bloqueia todos os rastreadores conhecidos (pode impedir que algumas páginas sejam carregadas).
+content-blocking-tracking-protection-option-always =
+    .label = Sempre
+    .accesskey = S
+content-blocking-tracking-protection-option-private =
+    .label = Apenas em janelas privativas
+    .accesskey = p
+content-blocking-tracking-protection-change-block-list = Alterar lista de bloqueio
+content-blocking-third-party-cookies-label =
+    .label = Cookies de terceiros
+    .accesskey = C
+content-blocking-reject-trackers-description = Bloqueia todos os cookies de terceiros ou apenas aqueles definidos por rastreadores.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = Suas configurações em Cookies e Dados de Sites está impedindo alterações nas configurações de Cookies de terceiros.
+content-blocking-change-cookie-settings =
+    .label = Alterar configurações de cookies
+    .accesskey = s
+content-blocking-reject-trackers-block-trackers-option-recommended =
+    .label = Rastreadores (recomendado)
+    .accesskey = R
+content-blocking-reject-trackers-block-trackers-option =
+    .label = Rastreadores
+    .accesskey = R
+content-blocking-reject-trackers-all-third-parties-option =
+    .label = Todos os cookies de terceiros (pode atrapalhar sites)
+    .accesskey = a
+
 ## Privacy Section - Tracking
 
 tracking-header = Proteção contra rastreamento
@@ -656,7 +724,7 @@ tracking-desc = A proteção contra rastreamento bloqueia rastreadores on-line q
 tracking-mode-label = Use a proteção contra rastreamento para bloquear rastreadores conhecidos
 tracking-mode-always =
     .label = Sempre
-    .accesskey = y
+    .accesskey = m
 tracking-mode-private =
     .label = Só em janelas privativas
     .accesskey = l
@@ -700,9 +768,17 @@ permissions-notification-pause =
 permissions-block-autoplay-media =
     .label = Bloquear reprodução automática de mídia com som em sites
     .accesskey = B
+permissions-block-autoplay-media-menu = Para sites que reproduzem som automaticamente
 permissions-block-autoplay-media-exceptions =
     .label = Exceções…
     .accesskey = E
+autoplay-option-ask =
+    .label = Sempre perguntar
+autoplay-option-allow =
+    .label = Permitir reprodução automática
+autoplay-option-dont =
+    .label = Não reproduzir automaticamente
+permissions-autoplay-link = Saiba mais
 permissions-block-popups =
     .label = Bloquear janelas popup
     .accesskey = B

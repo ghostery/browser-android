@@ -13,10 +13,16 @@ ChromeUtils.defineModuleGetter(this, "UtteranceGenerator", // jshint ignore:line
   "resource://gre/modules/accessibility/OutputGenerator.jsm");
 ChromeUtils.defineModuleGetter(this, "States", // jshint ignore:line
   "resource://gre/modules/accessibility/Constants.jsm");
+ChromeUtils.defineModuleGetter(this, "Roles", // jshint ignore:line
+  "resource://gre/modules/accessibility/Constants.jsm");
 ChromeUtils.defineModuleGetter(this, "AndroidEvents", // jshint ignore:line
   "resource://gre/modules/accessibility/Constants.jsm");
 
 var EXPORTED_SYMBOLS = ["Presentation"]; // jshint ignore:line
+
+const EDIT_TEXT_ROLES = new Set([
+  Roles.SPINBUTTON, Roles.PASSWORD_TEXT,
+  Roles.AUTOCOMPLETE, Roles.ENTRY, Roles.EDITCOMBOBOX]);
 
 class AndroidPresentor {
   constructor() {
@@ -30,9 +36,10 @@ class AndroidPresentor {
    *   position.
    * @param {int} aReason the reason for the pivot change.
    *   See nsIAccessiblePivot.
-   * @param {bool} aIsFromUserInput the pivot change was invoked by the user
+   * @param {bool} aBoundaryType the boundary type for the text movement
+   * or NO_BOUNDARY if it was not a text movement. See nsIAccessiblePivot.
    */
-  pivotChanged(aPosition, aOldPosition, aReason, aStartOffset, aEndOffset, aIsUserInput) {
+  pivotChanged(aPosition, aOldPosition, aStartOffset, aEndOffset, aReason, aBoundaryType) {
     let context = new PivotContext(
       aPosition, aOldPosition, aStartOffset, aEndOffset);
     if (!context.accessible) {
@@ -41,45 +48,41 @@ class AndroidPresentor {
 
     let androidEvents = [];
 
-    let isExploreByTouch = (aReason == Ci.nsIAccessiblePivot.REASON_POINT &&
-                            Utils.AndroidSdkVersion >= 14);
-    let focusEventType = (Utils.AndroidSdkVersion >= 16) ?
-      AndroidEvents.ANDROID_VIEW_ACCESSIBILITY_FOCUSED :
-      AndroidEvents.ANDROID_VIEW_FOCUSED;
+    const isExploreByTouch = aReason == Ci.nsIAccessiblePivot.REASON_POINT;
 
     if (isExploreByTouch) {
       // This isn't really used by TalkBack so this is a half-hearted attempt
       // for now.
-      androidEvents.push({eventType: AndroidEvents.ANDROID_VIEW_HOVER_EXIT, text: []});
+      androidEvents.push({eventType: AndroidEvents.VIEW_HOVER_EXIT, text: []});
     }
 
-    if (aReason === Ci.nsIAccessiblePivot.REASON_TEXT) {
-      if (Utils.AndroidSdkVersion >= 16) {
-        let adjustedText = context.textAndAdjustedOffsets;
+    if (aPosition != aOldPosition) {
+      let info = this._infoFromContext(context);
+      let eventType = isExploreByTouch ?
+        AndroidEvents.VIEW_HOVER_ENTER :
+        AndroidEvents.VIEW_ACCESSIBILITY_FOCUSED;
+      androidEvents.push({...info, eventType});
 
-        androidEvents.push({
-          eventType: AndroidEvents.ANDROID_VIEW_TEXT_TRAVERSED_AT_MOVEMENT_GRANULARITY,
-          text: [adjustedText.text],
-          fromIndex: adjustedText.startOffset,
-          toIndex: adjustedText.endOffset
-        });
-      }
-    } else {
-      let state = Utils.getState(context.accessible);
-      androidEvents.push({eventType: (isExploreByTouch) ?
-                           AndroidEvents.ANDROID_VIEW_HOVER_ENTER : focusEventType,
-                         text: Utils.localize(UtteranceGenerator.genForContext(
-                           context)),
-                         bounds: context.bounds,
-                         clickable: context.accessible.actionCount > 0,
-                         checkable: state.contains(States.CHECKABLE),
-                         checked: state.contains(States.CHECKED)});
+      try {
+        context.accessibleForBounds.scrollTo(
+          Ci.nsIAccessibleScrollType.SCROLL_TYPE_ANYWHERE);
+      } catch (e) {}
     }
 
-    try {
-      context.accessibleForBounds.scrollTo(
+    if (aBoundaryType != Ci.nsIAccessiblePivot.NO_BOUNDARY) {
+      const adjustedText = context.textAndAdjustedOffsets;
+
+      androidEvents.push({
+        eventType: AndroidEvents.VIEW_TEXT_TRAVERSED_AT_MOVEMENT_GRANULARITY,
+        text: [adjustedText.text],
+        fromIndex: adjustedText.startOffset,
+        toIndex: adjustedText.endOffset
+      });
+
+      aPosition.QueryInterface(Ci.nsIAccessibleText).scrollSubstringTo(
+        aStartOffset, aEndOffset,
         Ci.nsIAccessibleScrollType.SCROLL_TYPE_ANYWHERE);
-    } catch (e) {}
+    }
 
     if (context.accessible) {
       this.displayedAccessibles.set(context.accessible.document.window, context);
@@ -88,27 +91,41 @@ class AndroidPresentor {
     return androidEvents;
   }
 
+  focused(aObject) {
+    let info = this._infoFromContext(
+      new PivotContext(aObject, null, -1, -1, true, false));
+    return [{ eventType: AndroidEvents.VIEW_FOCUSED, ...info }];
+  }
+
+  /**
+   * An object's check action has been invoked.
+   * Note: Checkable objects use TalkBack's text derived from the event state, so we don't
+   * populate the text here.
+   * @param {nsIAccessible} aAccessible the object that has been invoked.
+   */
+  checked(aAccessible) {
+    return [{
+      eventType: AndroidEvents.VIEW_CLICKED,
+      checked: Utils.getState(aAccessible).contains(States.CHECKED)
+    }];
+  }
+
+  /**
+   * An object's select action has been invoked.
+   * @param {nsIAccessible} aAccessible the object that has been invoked.
+   */
+  selected(aAccessible) {
+    return [{
+      eventType: AndroidEvents.VIEW_SELECTED,
+      selected: Utils.getState(aAccessible).contains(States.SELECTED)
+    }];
+  }
+
   /**
    * An object's action has been invoked.
-   * @param {nsIAccessible} aObject the object that has been invoked.
-   * @param {string} aActionName the name of the action.
    */
-  actionInvoked(aObject, aActionName) {
-    let state = Utils.getState(aObject);
-
-    // Checkable objects use TalkBack's text derived from the event state,
-    // so we don't populate the text here.
-    let text = null;
-    if (!state.contains(States.CHECKABLE)) {
-      text = Utils.localize(UtteranceGenerator.genForAction(aObject,
-        aActionName));
-    }
-
-    return [{
-      eventType: AndroidEvents.ANDROID_VIEW_CLICKED,
-      text,
-      checked: state.contains(States.CHECKED)
-    }];
+  actionInvoked() {
+    return [{ eventType: AndroidEvents.VIEW_CLICKED }];
   }
 
   /**
@@ -116,7 +133,7 @@ class AndroidPresentor {
    */
   textChanged(aAccessible, aIsInserted, aStart, aLength, aText, aModifiedText) {
     let androidEvent = {
-      eventType: AndroidEvents.ANDROID_VIEW_TEXT_CHANGED,
+      eventType: AndroidEvents.VIEW_TEXT_CHANGED,
       text: [aText],
       fromIndex: aStart,
       removedCount: 0,
@@ -142,24 +159,22 @@ class AndroidPresentor {
   textSelectionChanged(aText, aStart, aEnd, aOldStart, aOldEnd, aIsFromUserInput) {
     let androidEvents = [];
 
-    if (Utils.AndroidSdkVersion >= 14 && !aIsFromUserInput) {
+    if (aIsFromUserInput) {
+      let [from, to] = aOldStart < aStart ?
+        [aOldStart, aStart] : [aStart, aOldStart];
       androidEvents.push({
-        eventType: AndroidEvents.ANDROID_VIEW_TEXT_SELECTION_CHANGED,
+        eventType: AndroidEvents.VIEW_TEXT_TRAVERSED_AT_MOVEMENT_GRANULARITY,
+        text: [aText],
+        fromIndex: from,
+        toIndex: to
+      });
+    } else {
+      androidEvents.push({
+        eventType: AndroidEvents.VIEW_TEXT_SELECTION_CHANGED,
         text: [aText],
         fromIndex: aStart,
         toIndex: aEnd,
         itemCount: aText.length
-      });
-    }
-
-    if (Utils.AndroidSdkVersion >= 16 && aIsFromUserInput) {
-      let [from, to] = aOldStart < aStart ?
-        [aOldStart, aStart] : [aStart, aOldStart];
-      androidEvents.push({
-        eventType: AndroidEvents.ANDROID_VIEW_TEXT_TRAVERSED_AT_MOVEMENT_GRANULARITY,
-        text: [aText],
-        fromIndex: from,
-        toIndex: to
       });
     }
 
@@ -172,7 +187,7 @@ class AndroidPresentor {
    * @param {nsIAccessible} aObject the object that has been selected.
    */
   selectionChanged(aObject) {
-    return "todo.selection-changed";
+    return ["todo.selection-changed"];
   }
 
   /**
@@ -181,7 +196,7 @@ class AndroidPresentor {
    * @param {nsIAccessible} aAccessible the object whose value has changed.
    */
   nameChanged(aAccessible) {
-    return "todo.name-changed";
+    return ["todo.name-changed"];
   }
 
   /**
@@ -190,7 +205,7 @@ class AndroidPresentor {
    * @param {nsIAccessible} aAccessible the object whose value has changed.
    */
   valueChanged(aAccessible) {
-    return "todo.value-changed";
+    return ["todo.value-changed"];
   }
 
   /**
@@ -206,55 +221,40 @@ class AndroidPresentor {
   }
 
   /**
-   * The current tab has changed.
-   * @param {PivotContext} aDocContext context object for tab's
-   *   document.
-   * @param {PivotContext} aVCContext context object for tab's current
-   *   virtual cursor position.
+   * The viewport has changed because of scroll.
+   * @param {Window} aWindow window of viewport that changed.
    */
-  tabSelected(aDocContext, aVCContext) {
-    return this.pivotChanged(aVCContext, Ci.nsIAccessiblePivot.REASON_NONE);
+  viewportScrolled(aWindow) {
+    const { windowUtils, devicePixelRatio } = aWindow;
+    const resolution = { value: 1 };
+    windowUtils.getResolution(resolution);
+    const scale = devicePixelRatio * resolution.value;
+    return [{
+      eventType: AndroidEvents.VIEW_SCROLLED,
+      scrollX: aWindow.scrollX * scale,
+      scrollY: aWindow.scrollY * scale,
+      maxScrollX: aWindow.scrollMaxX * scale,
+      maxScrollY: aWindow.scrollMaxY * scale,
+    }];
   }
 
   /**
-   * The viewport has changed, either a scroll, pan, zoom, or
-   *    landscape/portrait toggle.
+   * The viewport has changed, either a pan, zoom, or landscape/portrait toggle.
    * @param {Window} aWindow window of viewport that changed.
    */
   viewportChanged(aWindow) {
-    let currentContext = this.displayedAccessibles.get(aWindow);
-
-    if (Utils.AndroidSdkVersion < 14) {
-      return null;
+    const currentContext = this.displayedAccessibles.get(aWindow);
+    if (!currentContext) {
+      return;
     }
 
-    let events = [{
-      eventType: AndroidEvents.ANDROID_VIEW_SCROLLED,
-      text: [],
-      scrollX: aWindow.scrollX,
-      scrollY: aWindow.scrollY,
-      maxScrollX: aWindow.scrollMaxX,
-      maxScrollY: aWindow.scrollMaxY
-    }];
-
-    if (Utils.AndroidSdkVersion >= 16 && currentContext) {
-      let currentAcc = currentContext.accessibleForBounds;
-      if (Utils.isAliveAndVisible(currentAcc)) {
-        events.push({
-          eventType: AndroidEvents.ANDROID_VIEW_ACCESSIBILITY_FOCUSED,
-          bounds: Utils.getBounds(currentAcc)
-        });
-      }
+    const currentAcc = currentContext.accessibleForBounds;
+    if (Utils.isAliveAndVisible(currentAcc)) {
+      return [{
+        eventType: AndroidEvents.WINDOW_CONTENT_CHANGED,
+        bounds: Utils.getBounds(currentAcc)
+      }];
     }
-
-    return events;
-  }
-
-  /**
-   * We have entered or left text editing mode.
-   */
-  editingModeChanged(aIsEditing) {
-    return this.announce(UtteranceGenerator.genForEditingMode(aIsEditing));
   }
 
   /**
@@ -263,9 +263,7 @@ class AndroidPresentor {
   announce(aAnnouncement) {
     let localizedAnnouncement = Utils.localize(aAnnouncement).join(" ");
     return [{
-      eventType: (Utils.AndroidSdkVersion >= 16) ?
-        AndroidEvents.ANDROID_ANNOUNCEMENT :
-        AndroidEvents.ANDROID_VIEW_TEXT_CHANGED,
+      eventType: AndroidEvents.ANNOUNCEMENT,
       text: [localizedAnnouncement],
       addedCount: localizedAnnouncement.length,
       removedCount: 0,
@@ -280,7 +278,7 @@ class AndroidPresentor {
    */
   noMove(aMoveMethod) {
     return [{
-      eventType: AndroidEvents.ANDROID_VIEW_ACCESSIBILITY_FOCUSED,
+      eventType: AndroidEvents.VIEW_ACCESSIBILITY_FOCUSED,
       exitView: aMoveMethod,
       text: [""]
     }];
@@ -298,6 +296,36 @@ class AndroidPresentor {
       new PivotContext(aAccessible, null, -1, -1, true, !!aIsHide) : null;
     return this.announce(
       UtteranceGenerator.genForLiveRegion(context, aIsHide, aModifiedText));
+  }
+
+  _infoFromContext(aContext) {
+    const state = Utils.getState(aContext.accessible);
+    const info = {
+      bounds: aContext.bounds,
+      focusable: state.contains(States.FOCUSABLE),
+      focused: state.contains(States.FOCUSED),
+      clickable: aContext.accessible.actionCount > 0,
+      checkable: state.contains(States.CHECKABLE),
+      checked: state.contains(States.CHECKED),
+      editable: state.contains(States.EDITABLE),
+      selected: state.contains(States.SELECTED)
+    };
+
+    if (EDIT_TEXT_ROLES.has(aContext.accessible.role)) {
+      let textAcc = aContext.accessible.QueryInterface(Ci.nsIAccessibleText);
+      return {
+        ...info,
+        className: "android.widget.EditText",
+        hint: aContext.accessible.name,
+        text: [textAcc.getText(0, -1)]
+      };
+    }
+
+    return {
+      ...info,
+      className: "android.view.View",
+      text: Utils.localize(UtteranceGenerator.genForContext(aContext)),
+    };
   }
 }
 

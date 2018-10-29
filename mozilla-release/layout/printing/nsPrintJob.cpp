@@ -11,6 +11,7 @@
 #include "nsCRT.h"
 
 #include "mozilla/AsyncEventDispatcher.h"
+#include "mozilla/ComputedStyleInlines.h"
 #include "mozilla/dom/Selection.h"
 #include "mozilla/dom/CustomEvent.h"
 #include "mozilla/dom/ScriptSettings.h"
@@ -76,10 +77,8 @@ static const char kPrintingPromptService[] = "@mozilla.org/embedcomp/printingpro
 #include "mozilla/layout/RemotePrintJobChild.h"
 #include "nsISupportsUtils.h"
 #include "nsIScriptContext.h"
-#include "nsIDOMDocument.h"
 #include "nsIDocumentObserver.h"
 #include "nsISelectionListener.h"
-#include "nsISelectionPrivate.h"
 #include "nsContentCID.h"
 #include "nsLayoutCID.h"
 #include "nsContentUtils.h"
@@ -388,7 +387,7 @@ static void
 MapContentForPO(const UniquePtr<nsPrintObject>& aPO,
                 nsIContent* aContent)
 {
-  NS_PRECONDITION(aPO && aContent, "Null argument");
+  MOZ_ASSERT(aPO && aContent, "Null argument");
 
   nsIDocument* doc = aContent->GetComposedDoc();
 
@@ -621,7 +620,7 @@ nsresult
 nsPrintJob::CommonPrint(bool                    aIsPrintPreview,
                         nsIPrintSettings*       aPrintSettings,
                         nsIWebProgressListener* aWebProgressListener,
-                        nsIDOMDocument* aDoc)
+                        nsIDocument* aDoc)
 {
   // Callers must hold a strong reference to |this| to ensure that we stay
   // alive for the duration of this method, because our main owning reference
@@ -652,7 +651,7 @@ nsresult
 nsPrintJob::DoCommonPrint(bool                    aIsPrintPreview,
                           nsIPrintSettings*       aPrintSettings,
                           nsIWebProgressListener* aWebProgressListener,
-                          nsIDOMDocument*         aDoc)
+                          nsIDocument*            aDoc)
 {
   nsresult rv;
 
@@ -663,7 +662,7 @@ nsPrintJob::DoCommonPrint(bool                    aIsPrintPreview,
     mProgressDialogIsShown = pps != nullptr;
 
     if (mIsDoingPrintPreview) {
-      mOldPrtPreview = Move(mPrtPreview);
+      mOldPrtPreview = std::move(mPrtPreview);
     }
   } else {
     mProgressDialogIsShown = false;
@@ -1033,9 +1032,9 @@ nsPrintJob::Print(nsIPrintSettings*       aPrintSettings,
   // If we have a print preview document, use that instead of the original
   // mDocument. That way animated images etc. get printed using the same state
   // as in print preview.
-  nsCOMPtr<nsIDOMDocument> doc =
-    do_QueryInterface(mPrtPreview && mPrtPreview->mPrintObject ?
-                        mPrtPreview->mPrintObject->mDocument : mDocument);
+  nsIDocument* doc =
+    mPrtPreview && mPrtPreview->mPrintObject ?
+      mPrtPreview->mPrintObject->mDocument : mDocument;
 
   return CommonPrint(false, aPrintSettings, aWebProgressListener, doc);
 }
@@ -1062,11 +1061,9 @@ nsPrintJob::PrintPreview(nsIPrintSettings* aPrintSettings,
   NS_ENSURE_STATE(window);
   nsCOMPtr<nsIDocument> doc = window->GetDoc();
   NS_ENSURE_STATE(doc);
-  nsCOMPtr<nsIDOMDocument> domDoc = do_QueryInterface(doc);
-  MOZ_ASSERT(domDoc);
 
   // Document is not busy -- go ahead with the Print Preview
-  return CommonPrint(true, aPrintSettings, aWebProgressListener, domDoc);
+  return CommonPrint(true, aPrintSettings, aWebProgressListener, doc);
 }
 
 //----------------------------------------------------------------------------------
@@ -1156,8 +1153,6 @@ nsPrintJob::EnumerateDocumentNames(uint32_t* aCount,
 
   int32_t     numDocs = mPrt->mPrintDocList.Length();
   char16_t** array   = (char16_t**) moz_xmalloc(numDocs * sizeof(char16_t*));
-  if (!array)
-    return NS_ERROR_OUT_OF_MEMORY;
 
   for (int32_t i=0;i<numDocs;i++) {
     nsPrintObject* po = mPrt->mPrintDocList.ElementAt(i);
@@ -1411,13 +1406,13 @@ nsPrintJob::BuildDocTree(nsIDocShell*      aParentNode,
       nsCOMPtr<nsIContentViewer>  viewer;
       childAsShell->GetContentViewer(getter_AddRefs(viewer));
       if (viewer) {
-        nsCOMPtr<nsIDOMDocument> doc = do_GetInterface(childAsShell);
+        nsCOMPtr<nsIDocument> doc = do_GetInterface(childAsShell);
         auto po = MakeUnique<nsPrintObject>();
         po->mParent = aPO.get();
         nsresult rv = po->Init(childAsShell, doc, aPO->mPrintPreview);
         if (NS_FAILED(rv))
-          NS_NOTREACHED("Init failed?");
-        aPO->mKids.AppendElement(Move(po));
+          MOZ_ASSERT_UNREACHABLE("Init failed?");
+        aPO->mKids.AppendElement(std::move(po));
         aDocList->AppendElement(aPO->mKids.LastElement().get());
         BuildDocTree(childAsShell, aDocList, aPO->mKids.LastElement());
       }
@@ -1644,7 +1639,7 @@ nsPrintJob::FirePrintingErrorEvent(nsresult aPrintError)
 
   RefPtr<AsyncEventDispatcher> asyncDispatcher =
     new AsyncEventDispatcher(doc, event);
-  asyncDispatcher->mOnlyChromeDispatch = true;
+  asyncDispatcher->mOnlyChromeDispatch = ChromeOnlyDispatch::eYes;
   asyncDispatcher->RunDOMEventWhenSafe();
 
   // Inform any progress listeners of the Error.
@@ -1702,7 +1697,7 @@ nsPrintJob::ReconstructAndReflow(bool doSetPixelScale)
     po->mPresContext->SetPageScale(po->mZoomRatio);
 
     // Calculate scale factor from printer to screen
-    float printDPI = float(printData->mPrintDC->AppUnitsPerCSSInch()) /
+    float printDPI = float(AppUnitsPerCSSInch()) /
                        float(printData->mPrintDC->AppUnitsPerDevPixel());
     po->mPresContext->SetPrintPreviewScale(mScreenDPI / printDPI);
 
@@ -1995,8 +1990,9 @@ nsPrintJob::FirePrintPreviewUpdateEvent()
   if (mIsDoingPrintPreview && !mIsDoingPrinting) {
     nsCOMPtr<nsIContentViewer> cv = do_QueryInterface(mDocViewerPrint);
     (new AsyncEventDispatcher(
-       cv->GetDocument(), NS_LITERAL_STRING("printPreviewUpdate"), true, true)
-    )->RunDOMEventWhenSafe();
+       cv->GetDocument(), NS_LITERAL_STRING("printPreviewUpdate"),
+       CanBubble::eYes, ChromeOnlyDispatch::eYes
+    ))->RunDOMEventWhenSafe();
   }
 }
 
@@ -2093,7 +2089,7 @@ nsPrintJob::OnProgressChange(nsIWebProgress* aWebProgress,
                              int32_t aCurTotalProgress,
                              int32_t aMaxTotalProgress)
 {
-  NS_NOTREACHED("notification excluded in AddProgressListener(...)");
+  MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
 
@@ -2103,7 +2099,7 @@ nsPrintJob::OnLocationChange(nsIWebProgress* aWebProgress,
                              nsIURI* aLocation,
                              uint32_t aFlags)
 {
-  NS_NOTREACHED("notification excluded in AddProgressListener(...)");
+  MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
 
@@ -2113,7 +2109,7 @@ nsPrintJob::OnStatusChange(nsIWebProgress* aWebProgress,
                            nsresult aStatus,
                            const char16_t* aMessage)
 {
-  NS_NOTREACHED("notification excluded in AddProgressListener(...)");
+  MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
 
@@ -2122,7 +2118,7 @@ nsPrintJob::OnSecurityChange(nsIWebProgress* aWebProgress,
                              nsIRequest* aRequest,
                              uint32_t aState)
 {
-  NS_NOTREACHED("notification excluded in AddProgressListener(...)");
+  MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
 
@@ -2347,16 +2343,9 @@ nsPrintJob::ReflowPrintObject(const UniquePtr<nsPrintObject>& aPO)
   UniquePtr<ServoStyleSet> styleSet =
     mDocViewerPrint->CreateStyleSet(aPO->mDocument);
 
-  if (aPO->mDocument->IsSVGDocument()) {
-    // The SVG document only loads minimal-xul.css, so it doesn't apply other
-    // styles. We should add ua.css for applying style which related to print.
-    auto cache = nsLayoutStylesheetCache::Singleton();
-    styleSet->PrependStyleSheet(SheetType::Agent, cache->UASheet());
-  }
-
   aPO->mPresShell = aPO->mDocument->CreateShell(aPO->mPresContext,
                                                 aPO->mViewManager,
-                                                Move(styleSet));
+                                                std::move(styleSet));
   if (!aPO->mPresShell) {
     return NS_ERROR_FAILURE;
   }
@@ -2369,10 +2358,7 @@ nsPrintJob::ReflowPrintObject(const UniquePtr<nsPrintObject>& aPO)
     DeleteUnselectedNodes(aPO->mDocument->GetOriginalDocument(), aPO->mDocument);
   }
 
-  aPO->mPresShell->StyleSet()->EndUpdate();
-
   // The pres shell now owns the style set object.
-
 
   bool doReturn = false;;
   bool documentIsTopLevel = false;
@@ -2400,7 +2386,7 @@ nsPrintJob::ReflowPrintObject(const UniquePtr<nsPrintObject>& aPO)
   aPO->mPresContext->SetIsRootPaginatedDocument(documentIsTopLevel);
   aPO->mPresContext->SetPageScale(aPO->mZoomRatio);
   // Calculate scale factor from printer to screen
-  float printDPI = float(printData->mPrintDC->AppUnitsPerCSSInch()) /
+  float printDPI = float(AppUnitsPerCSSInch()) /
                      float(printData->mPrintDC->AppUnitsPerDevPixel());
   aPO->mPresContext->SetPrintPreviewScale(mScreenDPI / printDPI);
 
@@ -2631,7 +2617,7 @@ DeleteUnselectedNodes(nsIDocument* aOrigDoc, nsIDocument* aDoc)
     selection->AddRange(*lastRange, IgnoreErrors());
   }
 
-  selection->DeleteFromDocument();
+  selection->DeleteFromDocument(IgnoreErrors());
   return NS_OK;
 }
 
@@ -3480,7 +3466,7 @@ nsPrintJob::FinishPrintPreview()
 
   // PrintPreview was built using the mPrt (code reuse)
   // then we assign it over
-  mPrtPreview = Move(mPrt);
+  mPrtPreview = std::move(mPrt);
 
 #endif // NS_PRINT_PREVIEW
 

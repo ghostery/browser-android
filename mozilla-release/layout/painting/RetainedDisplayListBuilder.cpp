@@ -113,12 +113,13 @@ RetainedDisplayListBuilder::PreProcessDisplayList(RetainedDisplayList* aList,
       aList->mDAG.mDirectPredecessorList.Length() >
       (aList->mDAG.mNodesInfo.Length() * kMaxEdgeRatio)) {
     return false;
-
   }
+
+  MOZ_RELEASE_ASSERT(initializeDAG || aList->mDAG.Length() == aList->Count());
 
   nsDisplayList saved;
   aList->mOldItems.SetCapacity(aList->Count());
-  MOZ_ASSERT(aList->mOldItems.IsEmpty());
+  MOZ_RELEASE_ASSERT(aList->mOldItems.IsEmpty());
   while (nsDisplayItem* item = aList->RemoveBottom()) {
 #ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
     item->mMergedItem = false;
@@ -173,7 +174,7 @@ RetainedDisplayListBuilder::PreProcessDisplayList(RetainedDisplayList* aList,
     // display items.
     item->RestoreState();
   }
-  MOZ_ASSERT(aList->mOldItems.Length() == aList->mDAG.Length());
+  MOZ_RELEASE_ASSERT(aList->mOldItems.Length() == aList->mDAG.Length());
   aList->RestoreState();
   return true;
 }
@@ -234,7 +235,6 @@ void
 OldItemInfo::AddedMatchToMergedList(RetainedDisplayListBuilder* aBuilder,
                                     MergedListIndex aIndex)
 {
-  mItem->Destroy(aBuilder->Builder());
   AddedToMergedList(aIndex);
 }
 
@@ -244,7 +244,7 @@ OldItemInfo::Discard(RetainedDisplayListBuilder* aBuilder,
 {
   MOZ_ASSERT(!IsUsed());
   mUsed = mDiscarded = true;
-  mDirectPredecessors = Move(aDirectPredecessors);
+  mDirectPredecessors = std::move(aDirectPredecessors);
   if (mItem) {
     mItem->Destroy(aBuilder->Builder());
   }
@@ -271,12 +271,13 @@ public:
   MergeState(RetainedDisplayListBuilder* aBuilder, RetainedDisplayList& aOldList, uint32_t aOuterKey)
     : mBuilder(aBuilder)
     , mOldList(&aOldList)
-    , mOldItems(Move(aOldList.mOldItems))
-    , mOldDAG(Move(*reinterpret_cast<DirectedAcyclicGraph<OldListUnits>*>(&aOldList.mDAG)))
+    , mOldItems(std::move(aOldList.mOldItems))
+    , mOldDAG(std::move(*reinterpret_cast<DirectedAcyclicGraph<OldListUnits>*>(&aOldList.mDAG)))
     , mOuterKey(aOuterKey)
     , mResultIsModified(false)
   {
     mMergedDAG.EnsureCapacityFor(mOldDAG);
+    MOZ_RELEASE_ASSERT(mOldItems.Length() == mOldDAG.Length());
   }
 
   MergedListIndex ProcessItemFromNewList(nsDisplayItem* aNewItem, const Maybe<MergedListIndex>& aPreviousItem) {
@@ -288,28 +289,90 @@ public:
                             oldItem->Frame() == aNewItem->Frame());
       if (!mOldItems[oldIndex.val].IsChanged()) {
         MOZ_DIAGNOSTIC_ASSERT(!mOldItems[oldIndex.val].IsUsed());
+        nsDisplayItem* destItem;
+        if (ShouldUseNewItem(aNewItem)) {
+          destItem = aNewItem;
+        } else {
+          destItem = oldItem;
+          // The building rect can depend on the overflow rect (when the parent
+          // frame is position:fixed), which can change without invalidating
+          // the frame/items. If we're using the old item, copy the building
+          // rect across from the new item.
+          oldItem->SetBuildingRect(aNewItem->GetBuildingRect());
+        }
+
         if (aNewItem->GetChildren()) {
           Maybe<const ActiveScrolledRoot*> containerASRForChildren;
           if (mBuilder->MergeDisplayLists(aNewItem->GetChildren(),
                                           oldItem->GetChildren(),
-                                          aNewItem->GetChildren(),
+                                          destItem->GetChildren(),
                                           containerASRForChildren,
                                           aNewItem->GetPerFrameKey())) {
+            destItem->InvalidateCachedChildInfo();
             mResultIsModified = true;
 
           }
-          UpdateASR(aNewItem, containerASRForChildren);
-          aNewItem->UpdateBounds(mBuilder->Builder());
+          UpdateASR(destItem, containerASRForChildren);
+          destItem->UpdateBounds(mBuilder->Builder());
         }
 
         AutoTArray<MergedListIndex, 2> directPredecessors = ProcessPredecessorsOfOldNode(oldIndex);
-        MergedListIndex newIndex = AddNewNode(aNewItem, Some(oldIndex), directPredecessors, aPreviousItem);
+        MergedListIndex newIndex = AddNewNode(destItem, Some(oldIndex), directPredecessors, aPreviousItem);
         mOldItems[oldIndex.val].AddedMatchToMergedList(mBuilder, newIndex);
+        if (destItem == aNewItem) {
+          oldItem->Destroy(mBuilder->Builder());
+        } else {
+          aNewItem->Destroy(mBuilder->Builder());
+        }
         return newIndex;
       }
     }
     mResultIsModified = true;
     return AddNewNode(aNewItem, Nothing(), Span<MergedListIndex>(), aPreviousItem);
+  }
+
+  bool ShouldUseNewItem(nsDisplayItem* aNewItem)
+  {
+    // Generally we want to use the old item when the frame isn't marked as modified
+    // so that any cached information on the item (or referencing the item) gets
+    // retained. Quite a few FrameLayerBuilder performance improvements benefit
+    // by this.
+    // Sometimes, however, we can end up where the new item paints something different
+    // from the old item, even though we haven't modified the frame, and it's hard to
+    // fix. In these cases we just always use the new item to be safe.
+    DisplayItemType type = aNewItem->GetType();
+    if (type == DisplayItemType::TYPE_CANVAS_BACKGROUND_COLOR ||
+        type == DisplayItemType::TYPE_SOLID_COLOR) {
+      // The canvas background color item can paint the color from another
+      // frame, and even though we schedule a paint, we don't mark the canvas
+      // frame as invalid.
+      return true;
+    } else if (type == DisplayItemType::TYPE_TABLE_BORDER_COLLAPSE) {
+      // We intentionally don't mark the root table frame as modified when a subframe
+      // changes, even though the border collapse item for the root frame is what paints
+      // the changed border. Marking the root frame as modified would rebuild display
+      // items for the whole table area, and we don't want that.
+      return true;
+    } else if (type == DisplayItemType::TYPE_TEXT_OVERFLOW) {
+      // Text overflow marker items are created with the wrapping block as their frame,
+      // and have an index value to note which line they are created for. Their rendering
+      // can change if the items on that line change, which may not mark the block as modified.
+      // We rebuild them if we build any item on the line, so we should always get new items
+      // if they might have changed rendering, and it's easier to just use the new items
+      // rather than computing if we actually need them.
+      return true;
+    } else if (type == DisplayItemType::TYPE_SUBDOCUMENT) {
+      // nsDisplaySubDocument::mShouldFlatten can change without an invalidation
+      // (and is the reason we unconditionally build the subdocument item), so always
+      // use the new one to make sure we get the right value.
+      return true;
+    } else if (type == DisplayItemType::TYPE_CARET) {
+      // The caret can change position while still being owned by the same frame
+      // and we don't invalidate in that case. Use the new version since the changed
+      // bounds are needed for DLBI.
+      return true;
+    }
+    return false;
   }
 
   RetainedDisplayList Finalize() {
@@ -320,12 +383,13 @@ public:
 
       AutoTArray<MergedListIndex, 2> directPredecessors =
         ResolveNodeIndexesOldToMerged(mOldDAG.GetDirectPredecessors(OldListIndex(i)));
-      ProcessOldNode(OldListIndex(i), Move(directPredecessors));
+      ProcessOldNode(OldListIndex(i), std::move(directPredecessors));
     }
 
     RetainedDisplayList result;
     result.AppendToTop(&mMergedItems);
-    result.mDAG = Move(mMergedDAG);
+    result.mDAG = std::move(mMergedDAG);
+    MOZ_RELEASE_ASSERT(result.mDAG.Length() == result.Count());
     return result;
   }
 
@@ -390,7 +454,7 @@ public:
   void ProcessOldNode(OldListIndex aNode, nsTArray<MergedListIndex>&& aDirectPredecessors) {
     nsDisplayItem* item = mOldItems[aNode.val].mItem;
     if (mOldItems[aNode.val].IsChanged() || HasModifiedFrame(item)) {
-      mOldItems[aNode.val].Discard(mBuilder, Move(aDirectPredecessors));
+      mOldItems[aNode.val].Discard(mBuilder, std::move(aDirectPredecessors));
       mResultIsModified = true;
     } else {
       if (item->GetChildren()) {
@@ -398,6 +462,7 @@ public:
         nsDisplayList empty;
         if (mBuilder->MergeDisplayLists(&empty, item->GetChildren(), item->GetChildren(),
                                         containerASRForChildren, item->GetPerFrameKey())) {
+          item->InvalidateCachedChildInfo();
           mResultIsModified = true;
         }
         UpdateASR(item, containerASRForChildren);
@@ -444,7 +509,7 @@ public:
         if (mStack.IsEmpty()) {
           return result;
         } else {
-          ProcessOldNode(item.mNode, Move(result));
+          ProcessOldNode(item.mNode, std::move(result));
         }
       } else {
         // Grab the current predecessor, push predecessors of that onto the processing
@@ -514,7 +579,7 @@ RetainedDisplayListBuilder::MergeDisplayLists(nsDisplayList* aNewList,
     previousItemIndex = Some(merge.ProcessItemFromNewList(item, previousItemIndex));
   }
 
-  *aOutList = Move(merge.Finalize());
+  *aOutList = merge.Finalize();
   aOutContainerASR = merge.mContainerASR;
   return merge.mResultIsModified;
 }
@@ -816,7 +881,7 @@ ProcessFrameInternal(nsIFrame* aFrame, nsDisplayListBuilder& aBuilder,
 
       // Grab the visible (display list building) rect for children of this wrapper
       // item and convert into into coordinate relative to the current frame.
-      nsRect previousVisible = wrapperItem->GetVisibleRectForChildren();
+      nsRect previousVisible = wrapperItem->GetBuildingRectForChildren();
       if (wrapperItem->ReferenceFrameForChildren() == wrapperItem->ReferenceFrame()) {
         previousVisible -= wrapperItem->ToReferenceFrame();
       } else {

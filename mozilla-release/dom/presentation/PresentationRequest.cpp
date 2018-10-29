@@ -109,14 +109,14 @@ PresentationRequest::Constructor(const GlobalObject& aGlobal,
   }
 
   RefPtr<PresentationRequest> request =
-    new PresentationRequest(window, Move(urls));
+    new PresentationRequest(window, std::move(urls));
   return NS_WARN_IF(!request->Init()) ? nullptr : request.forget();
 }
 
 PresentationRequest::PresentationRequest(nsPIDOMWindowInner* aWindow,
                                          nsTArray<nsString>&& aUrls)
   : DOMEventTargetHelper(aWindow)
-  , mUrls(Move(aUrls))
+  , mUrls(std::move(aUrls))
 {
 }
 
@@ -134,7 +134,7 @@ PresentationRequest::Init()
 PresentationRequest::WrapObject(JSContext* aCx,
                                 JS::Handle<JSObject*> aGivenProto)
 {
-  return PresentationRequestBinding::Wrap(aCx, this, aGivenProto);
+  return PresentationRequest_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 already_AddRefed<Promise>
@@ -216,7 +216,7 @@ PresentationRequest::StartWithDevice(const nsAString& aDeviceId,
   char buffer[NSID_LENGTH];
   uuid.ToProvidedString(buffer);
   nsAutoString id;
-  CopyASCIItoUTF16(buffer, id);
+  CopyASCIItoUTF16(MakeSpan(buffer, NSID_LENGTH - 1), id);
 
   nsCOMPtr<nsIPresentationService> service =
     do_GetService(PRESENTATION_SERVICE_CONTRACTID);

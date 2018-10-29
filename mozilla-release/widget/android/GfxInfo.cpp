@@ -348,25 +348,18 @@ GfxInfo::GetIsGPU2Active(bool* aIsGPU2Active)
 void
 GfxInfo::AddCrashReportAnnotations()
 {
-  CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("AdapterVendorID"),
+  CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::AdapterVendorID,
                                      mGLStrings->Vendor());
-  CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("AdapterDeviceID"),
+  CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::AdapterDeviceID,
                                      mGLStrings->Renderer());
-  CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("AdapterDriverVersion"),
-                                     mGLStrings->Version());
-
-  /* Add an App Note for now so that we get the data immediately. These
-   * can go away after we store the above in the socorro db */
-  nsAutoCString note;
-  note.AppendPrintf("AdapterDescription: '%s'\n", mAdapterDescription.get());
-
-  CrashReporter::AppendAppNotesToCrashReport(note);
+  CrashReporter::AnnotateCrashReport(
+    CrashReporter::Annotation::AdapterDriverVersion, mGLStrings->Version());
 }
 
 const nsTArray<GfxDriverInfo>&
 GfxInfo::GetGfxDriverInfo()
 {
-  if (mDriverInfo->IsEmpty()) {
+  if (sDriverInfo->IsEmpty()) {
     APPEND_TO_DRIVER_BLOCKLIST2(OperatingSystem::Android,
       (nsAString&) GfxDriverInfo::GetDeviceVendor(VendorAll), GfxDriverInfo::allDevices,
       nsIGfxInfo::FEATURE_OPENGL_LAYERS, nsIGfxInfo::FEATURE_STATUS_OK,
@@ -374,7 +367,7 @@ GfxInfo::GetGfxDriverInfo()
       "FEATURE_OK_FORCE_OPENGL" );
   }
 
-  return *mDriverInfo;
+  return *sDriverInfo;
 }
 
 nsresult
@@ -392,7 +385,7 @@ GfxInfo::GetFeatureStatusImpl(int32_t aFeature,
   if (aOS)
     *aOS = os;
 
-  if (mShutdownOccurred) {
+  if (sShutdownOccurred) {
     return NS_OK;
   }
 

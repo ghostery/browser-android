@@ -33,7 +33,7 @@ void CSP_LogLocalizedStr(const char* aName,
                          uint32_t aLineNumber,
                          uint32_t aColumnNumber,
                          uint32_t aFlags,
-                         const char* aCategory,
+                         const nsACString& aCategory,
                          uint64_t aInnerWindowID,
                          bool aFromPrivateWindow);
 
@@ -50,7 +50,7 @@ void CSP_LogMessage(const nsAString& aMessage,
                     uint32_t aLineNumber,
                     uint32_t aColumnNumber,
                     uint32_t aFlags,
-                    const char* aCategory,
+                    const nsACString& aCategory,
                     uint64_t aInnerWindowID,
                     bool aFromPrivateWindow);
 
@@ -90,7 +90,6 @@ static const char* CSPStrDirectives[] = {
   "reflected-xss",             // REFLECTED_XSS_DIRECTIVE
   "base-uri",                  // BASE_URI_DIRECTIVE
   "form-action",               // FORM_ACTION_DIRECTIVE
-  "referrer",                  // REFERRER_DIRECTIVE
   "manifest-src",              // MANIFEST_SRC_DIRECTIVE
   "upgrade-insecure-requests", // UPGRADE_IF_INSECURE_DIRECTIVE
   "child-src",                 // CHILD_SRC_DIRECTIVE
@@ -127,6 +126,7 @@ inline CSPDirective CSP_StringToCSPDirective(const nsAString& aDir)
   macro(CSP_NONE,            "'none'") \
   macro(CSP_NONCE,           "'nonce-") \
   macro(CSP_REQUIRE_SRI_FOR, "require-sri-for") \
+  macro(CSP_REPORT_SAMPLE,   "'report-sample'") \
   macro(CSP_STRICT_DYNAMIC,  "'strict-dynamic'")
 
 enum CSPKeyword {
@@ -239,6 +239,9 @@ class nsCSPBaseSrc {
     virtual void invalidate() const
       { mInvalidated = true; }
 
+    virtual bool isReportSample() const
+      { return false; }
+
   protected:
     // invalidate srcs if 'script-dynamic' is present or also invalidate
     // unsafe-inline' if nonce- or hash-source specified
@@ -337,6 +340,8 @@ class nsCSPKeywordSrc : public nsCSPBaseSrc {
       }
     }
 
+    bool isReportSample() const override
+      { return mKeyword == CSP_REPORT_SAMPLE; }
   private:
     CSPKeyword mKeyword;
 };
@@ -475,6 +480,8 @@ class nsCSPDirective {
     bool visitSrcs(nsCSPSrcVisitor* aVisitor) const;
 
     virtual void getDirName(nsAString& outStr) const;
+
+    bool hasReportSampleKeyword() const;
 
   protected:
     CSPDirective            mDirective;
@@ -677,19 +684,11 @@ class nsCSPPolicy {
     inline bool getReportOnlyFlag() const
       { return mReportOnly; }
 
-    inline void setReferrerPolicy(const nsAString* aValue)
-      {
-        mReferrerPolicy = *aValue;
-        ToLowerCase(mReferrerPolicy);
-      }
-
-    inline void getReferrerPolicy(nsAString& outPolicy) const
-      { outPolicy.Assign(mReferrerPolicy); }
-
     void getReportURIs(nsTArray<nsString> &outReportURIs) const;
 
-    void getDirectiveStringForContentType(nsContentPolicyType aContentType,
-                                          nsAString& outDirective) const;
+    void getDirectiveStringAndReportSampleForContentType(nsContentPolicyType aContentType,
+                                                         nsAString& outDirective,
+                                                         bool* aReportSample) const;
 
     void getDirectiveAsString(CSPDirective aDir, nsAString& outDirective) const;
 
@@ -706,7 +705,6 @@ class nsCSPPolicy {
     nsUpgradeInsecureDirective* mUpgradeInsecDir;
     nsTArray<nsCSPDirective*>   mDirectives;
     bool                        mReportOnly;
-    nsString                    mReferrerPolicy;
 };
 
 #endif /* nsCSPUtils_h___ */

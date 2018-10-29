@@ -492,12 +492,12 @@ class Dumper:
     def CopyDebug(self, file, debug_file, guid, code_file, code_id):
         pass
 
-    def Process(self, file_to_process):
+    def Process(self, file_to_process, count_ctors=False):
         """Process the given file."""
         if self.ShouldProcess(os.path.abspath(file_to_process)):
-            self.ProcessFile(file_to_process)
+            self.ProcessFile(file_to_process, count_ctors=count_ctors)
 
-    def ProcessFile(self, file, dsymbundle=None):
+    def ProcessFile(self, file, dsymbundle=None, count_ctors=False):
         """Dump symbols from these files into a symbol file, stored
         in the proper directory structure in  |symbol_path|; processing is performed
         asynchronously, and Finish must be called to wait for it complete and cleanup.
@@ -509,7 +509,8 @@ class Dumper:
         # the tinderbox vcs path will be assigned further down
         vcs_root = os.environ.get('MOZ_SOURCE_REPO')
         for arch_num, arch in enumerate(self.archs):
-            self.ProcessFileWork(file, arch_num, arch, vcs_root, dsymbundle)
+            self.ProcessFileWork(file, arch_num, arch, vcs_root, dsymbundle,
+                                 count_ctors=count_ctors)
 
     def dump_syms_cmdline(self, file, arch, dsymbundle=None):
         '''
@@ -518,7 +519,9 @@ class Dumper:
         # The Mac dumper overrides this.
         return [self.dump_syms, file]
 
-    def ProcessFileWork(self, file, arch_num, arch, vcs_root, dsymbundle=None):
+    def ProcessFileWork(self, file, arch_num, arch, vcs_root, dsymbundle=None,
+                        count_ctors=False):
+        ctors = 0
         t_start = time.time()
         print("Processing file: %s" % file, file=sys.stderr)
 
@@ -582,6 +585,16 @@ class Dumper:
                             code_id, code_file = bits[2:]
                         f.write(line)
                     else:
+                        if count_ctors and line.startswith("FUNC "):
+                            # Static initializers, as created by clang and gcc
+                            # have symbols that start with "_GLOBAL_sub"
+                            if '_GLOBAL__sub_' in line:
+                                ctors += 1
+                            # MSVC creates `dynamic initializer for '...'`
+                            # symbols.
+                            elif "`dynamic initializer for '" in line:
+                                ctors += 1
+
                         # pass through all other lines unchanged
                         f.write(line)
                 f.close()
@@ -604,6 +617,31 @@ class Dumper:
 
         if dsymbundle:
             shutil.rmtree(dsymbundle)
+
+        if count_ctors:
+            import json
+
+            perfherder_data = {
+                "framework": {"name": "build_metrics"},
+                "suites": [{
+                    "name": "compiler_metrics",
+                    "subtests": [{
+                        "name": "num_static_constructors",
+                        "value": ctors,
+                        "alertChangeType": "absolute",
+                        "alertThreshold": 3
+                    }]}
+                ]
+            }
+            perfherder_extra_options = os.environ.get('PERFHERDER_EXTRA_OPTIONS', '')
+            for opt in perfherder_extra_options.split():
+                for suite in perfherder_data['suites']:
+                    if opt not in suite.get('extraOptions', []):
+                        suite.setdefault('extraOptions', []).append(opt)
+
+            if 'asan' not in perfherder_extra_options.lower():
+                print('PERFHERDER_DATA: %s' % json.dumps(perfherder_data),
+                    file=sys.stderr)
 
         elapsed = time.time() - t_start
         print('Finished processing %s in %.2fs' % (file, elapsed),
@@ -724,9 +762,13 @@ class Dumper_Linux(Dumper):
         # We want to strip out the debug info, and add a
         # .gnu_debuglink section to the object, so the debugger can
         # actually load our debug info later.
+        # In some odd cases, the object might already have an irrelevant
+        # .gnu_debuglink section, and objcopy doesn't want to add one in
+        # such cases, so we make it remove it any existing one first.
         file_dbg = file + ".dbg"
         if subprocess.call([self.objcopy, '--only-keep-debug', file, file_dbg]) == 0 and \
-           subprocess.call([self.objcopy, '--add-gnu-debuglink=%s' % file_dbg, file]) == 0:
+           subprocess.call([self.objcopy, '--remove-section', '.gnu_debuglink',
+                            '--add-gnu-debuglink=%s' % file_dbg, file]) == 0:
             rel_path = os.path.join(debug_file,
                                     guid,
                                     debug_file + ".dbg")
@@ -768,13 +810,14 @@ class Dumper_Mac(Dumper):
             return self.RunFileCommand(file).startswith("Mach-O")
         return False
 
-    def ProcessFile(self, file):
+    def ProcessFile(self, file, count_ctors=False):
         print("Starting Mac pre-processing on file: %s" % file,
               file=sys.stderr)
         dsymbundle = self.GenerateDSYM(file)
         if dsymbundle:
             # kick off new jobs per-arch with our new list of files
-            Dumper.ProcessFile(self, file, dsymbundle=dsymbundle)
+            Dumper.ProcessFile(self, file, dsymbundle=dsymbundle,
+                               count_ctors=count_ctors)
 
     def dump_syms_cmdline(self, file, arch, dsymbundle=None):
         '''
@@ -863,6 +906,9 @@ def main():
 to canonical locations in the source repository. Specify
 <install manifest filename>,<install destination> as a comma-separated pair.
 """)
+    parser.add_option("--count-ctors",
+                      action="store_true", dest="count_ctors", default=False,
+                      help="Count static initializers")
     (options, args) = parser.parse_args()
 
     #check to see if the pdbstr.exe exists
@@ -897,7 +943,7 @@ to canonical locations in the source repository. Specify
                                        s3_bucket=bucket,
                                        file_mapping=file_mapping)
 
-    dumper.Process(args[2])
+    dumper.Process(args[2], options.count_ctors)
 
 # run main if run directly
 if __name__ == "__main__":

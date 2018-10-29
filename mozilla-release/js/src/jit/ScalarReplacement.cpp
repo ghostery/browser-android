@@ -312,7 +312,7 @@ class ObjectMemoryView : public MDefinitionVisitorDefaultNoop
 {
   public:
     typedef MObjectState BlockState;
-    static const char* phaseName;
+    static const char phaseName[];
 
   private:
     TempAllocator& alloc_;
@@ -370,10 +370,12 @@ class ObjectMemoryView : public MDefinitionVisitorDefaultNoop
     void visitObjectGuard(MInstruction* ins, MDefinition* operand);
 };
 
-const char* ObjectMemoryView::phaseName = "Scalar Replacement of Object";
+/* static */ const char
+ObjectMemoryView::phaseName[] = "Scalar Replacement of Object";
 
 ObjectMemoryView::ObjectMemoryView(TempAllocator& alloc, MInstruction* obj)
   : alloc_(alloc),
+    undefinedVal_(nullptr),
     obj_(obj),
     startBlock_(obj->block()),
     state_(nullptr),

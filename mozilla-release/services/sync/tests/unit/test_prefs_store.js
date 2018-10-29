@@ -20,7 +20,7 @@ function makePersona(id) {
   return {
     id: id || Math.random().toString(),
     name: Math.random().toString(),
-    headerURL: "http://localhost:1234/a"
+    headerURL: "http://localhost:1234/a",
   };
 }
 
@@ -39,7 +39,7 @@ add_task(async function run_test() {
     let ids = Object.keys(allIDs);
     Assert.equal(ids.length, 1);
     Assert.equal(ids[0], PREFS_GUID);
-    Assert.ok(allIDs[PREFS_GUID], true);
+    Assert.ok(allIDs[PREFS_GUID]);
 
     Assert.ok((await store.itemExists(PREFS_GUID)));
     Assert.equal(false, (await store.itemExists("random-gibberish")));
@@ -116,7 +116,7 @@ add_task(async function run_test() {
     let usedThemes = JSON.stringify([persona1, persona2]);
     record.value = {
       "lightweightThemes.selectedThemeID": persona1.id,
-      "lightweightThemes.usedThemes": usedThemes
+      "lightweightThemes.usedThemes": usedThemes,
     };
     await store.update(record);
     Assert.equal(prefs.get("lightweightThemes.selectedThemeID"), persona1.id);
@@ -126,7 +126,7 @@ add_task(async function run_test() {
     _("Disable persona");
     record.value = {
       "lightweightThemes.selectedThemeID": null,
-      "lightweightThemes.usedThemes": usedThemes
+      "lightweightThemes.usedThemes": usedThemes,
     };
     await store.update(record);
     Assert.equal(LightweightThemeManager.currentTheme.id, "default-theme@mozilla.org");
@@ -134,7 +134,7 @@ add_task(async function run_test() {
     _("Only the current app's preferences are applied.");
     record = new PrefRec("prefs", "some-fake-app");
     record.value = {
-      "testing.int": 98
+      "testing.int": 98,
     };
     await store.update(record);
     Assert.equal(prefs.get("testing.int"), 42);

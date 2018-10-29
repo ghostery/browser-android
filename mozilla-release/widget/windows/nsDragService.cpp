@@ -29,7 +29,6 @@
 #include "nsIScreenManager.h"
 #include "nsISupportsPrimitives.h"
 #include "nsIURL.h"
-#include "nsCWebBrowserPersist.h"
 #include "nsToolkit.h"
 #include "nsCRT.h"
 #include "nsDirectoryServiceDefs.h"
@@ -68,8 +67,8 @@ nsDragService::~nsDragService()
 }
 
 bool
-nsDragService::CreateDragImage(nsIDOMNode *aDOMNode,
-                               nsIScriptableRegion *aRegion,
+nsDragService::CreateDragImage(nsINode *aDOMNode,
+                               const Maybe<CSSIntRegion>& aRegion,
                                SHDRAGIMAGE *psdi)
 {
   if (!psdi)
@@ -166,7 +165,7 @@ nsDragService::CreateDragImage(nsIDOMNode *aDOMNode,
 //-------------------------------------------------------------------------
 nsresult
 nsDragService::InvokeDragSessionImpl(nsIArray* anArrayTransferables,
-                                     nsIScriptableRegion* aRegion,
+                                     const Maybe<CSSIntRegion>& aRegion,
                                      uint32_t aActionType)
 {
   // Try and get source URI of the items that are being dragged
@@ -200,8 +199,7 @@ nsDragService::InvokeDragSessionImpl(nsIArray* anArrayTransferables,
           do_QueryElementAt(anArrayTransferables, i);
       if (trans) {
         // set the requestingPrincipal on the transferable
-        nsCOMPtr<nsINode> node = do_QueryInterface(mSourceNode);
-        trans->SetRequestingPrincipal(node->NodePrincipal());
+        trans->SetRequestingPrincipal(mSourceNode->NodePrincipal());
         trans->SetContentPolicyType(mContentPolicyType);
         RefPtr<IDataObject> dataObj;
         rv = nsClipboard::CreateNativeDataObject(trans,
@@ -220,8 +218,7 @@ nsDragService::InvokeDragSessionImpl(nsIArray* anArrayTransferables,
         do_QueryElementAt(anArrayTransferables, 0);
     if (trans) {
       // set the requestingPrincipal on the transferable
-      nsCOMPtr<nsINode> node = do_QueryInterface(mSourceNode);
-      trans->SetRequestingPrincipal(node->NodePrincipal());
+      trans->SetRequestingPrincipal(mSourceNode->NodePrincipal());
       trans->SetContentPolicyType(mContentPolicyType);
       rv = nsClipboard::CreateNativeDataObject(trans,
                                                getter_AddRefs(itemToDrag),
@@ -319,7 +316,7 @@ nsDragService::StartInvokingDragSession(IDataObject * aDataObj,
                                          getter_AddRefs(pAsyncOp)))) {
     pAsyncOp->SetAsyncMode(VARIANT_TRUE);
   } else {
-    NS_NOTREACHED("When did our data object stop being async");
+    MOZ_ASSERT_UNREACHABLE("When did our data object stop being async");
   }
 
   // Call the native D&D method
@@ -644,7 +641,7 @@ nsDragService::EndDragSession(bool aDoneDrag, uint32_t aKeyModifiers)
 }
 
 NS_IMETHODIMP
-nsDragService::UpdateDragImage(nsIDOMNode* aImage, int32_t aImageX, int32_t aImageY)
+nsDragService::UpdateDragImage(nsINode* aImage, int32_t aImageX, int32_t aImageY)
 {
   if (!mDataObject) {
     return NS_OK;
@@ -657,7 +654,7 @@ nsDragService::UpdateDragImage(nsIDOMNode* aImage, int32_t aImageX, int32_t aIma
                                  CLSCTX_INPROC_SERVER,
                                  IID_IDragSourceHelper, (void**)&pdsh))) {
     SHDRAGIMAGE sdi;
-    if (CreateDragImage(mSourceNode, nullptr, &sdi)) {
+    if (CreateDragImage(mSourceNode, Nothing(), &sdi)) {
       nsNativeDragTarget::DragImageChanged();
       if (FAILED(pdsh->InitializeFromBitmap(&sdi, mDataObject)))
         DeleteObject(sdi.hbmpDragImage);

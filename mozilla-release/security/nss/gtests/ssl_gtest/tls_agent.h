@@ -10,9 +10,6 @@
 #include "prio.h"
 #include "ssl.h"
 
-// This is an internal header, used to get TLS_1_3_DRAFT_VERSION.
-#include "ssl3prot.h"
-
 #include <functional>
 #include <iostream>
 
@@ -60,8 +57,6 @@ typedef std::function<int32_t(TlsAgent* agent, const SECItem* srvNameArr,
                               PRUint32 srvNameArrSize)>
     SniCallbackFunction;
 
-static const uint8_t kD13 = TLS_1_3_DRAFT_VERSION;
-
 class TlsAgent : public PollTarget {
  public:
   enum Role { CLIENT, SERVER };
@@ -69,6 +64,7 @@ class TlsAgent : public PollTarget {
 
   static const std::string kClient;     // the client key is sign only
   static const std::string kRsa2048;    // bigger sign and encrypt for either
+  static const std::string kRsa8192;    // biggest sign and encrypt for either
   static const std::string kServerRsa;  // both sign and encrypt
   static const std::string kServerRsaSign;
   static const std::string kServerRsaPss;

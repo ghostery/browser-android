@@ -27,7 +27,12 @@ struct Permission
   uint32_t capability, expireType;
   int64_t expireTime;
 
-  Permission() { }
+  Permission()
+    : capability(0)
+    , expireType(0)
+    , expireTime(0)
+  {}
+  
   Permission(const nsCString& aOrigin,
              const nsCString& aType,
              const uint32_t aCapability,
@@ -102,7 +107,8 @@ struct ParamTraits<mozilla::net::NetAddr>
     } else {
       if (XRE_IsParentProcess()) {
         nsPrintfCString msg("%d", aParam.raw.family);
-        CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("Unknown NetAddr socket family"), msg);
+        CrashReporter::AnnotateCrashReport(
+          CrashReporter::Annotation::UnknownNetAddrSocketFamily, msg);
       }
 
       MOZ_CRASH("Unknown socket family");

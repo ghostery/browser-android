@@ -24,7 +24,6 @@
 #include "nsContentCID.h"
 #include "mozilla/dom/XMLDocument.h"
 #include "nsGkAtoms.h"
-#include "nsIMemory.h"
 #include "nsIObserverService.h"
 #include "nsXBLContentSink.h"
 #include "nsXBLBinding.h"
@@ -404,17 +403,18 @@ EnsureSubtreeStyled(Element* aElement)
   for (nsIContent* child = iter.GetNextChild();
        child;
        child = iter.GetNextChild()) {
-    if (!child->IsElement()) {
+    Element* element = Element::FromNode(child);
+    if (!element) {
       continue;
     }
 
-    if (child->AsElement()->HasServoData()) {
+    if (element->HasServoData()) {
       // If any child was styled, all of them should be styled already, so we
       // can bail out.
       return;
     }
 
-    servoSet->StyleNewSubtree(child->AsElement());
+    servoSet->StyleNewSubtree(element);
   }
 }
 
@@ -480,7 +480,7 @@ nsXBLService::LoadBindings(Element* aElement, nsIURI* aURL,
                            nsIPrincipal* aOriginPrincipal,
                            nsXBLBinding** aBinding, bool* aResolveStyle)
 {
-  NS_PRECONDITION(aOriginPrincipal, "Must have an origin principal");
+  MOZ_ASSERT(aOriginPrincipal, "Must have an origin principal");
 
   *aBinding = nullptr;
   *aResolveStyle = false;
@@ -615,8 +615,7 @@ nsXBLService::AttachGlobalKeyHandler(EventTarget* aTarget)
   if (contentNode && contentNode->GetProperty(nsGkAtoms::listener))
     return NS_OK;
 
-  Element* elt =
-   contentNode && contentNode->IsElement() ? contentNode->AsElement() : nullptr;
+  Element* elt = Element::FromNodeOrNull(contentNode);
 
   // Create the key handler
   RefPtr<nsXBLWindowKeyHandler> handler =
@@ -900,9 +899,9 @@ nsXBLService::LoadBindingDocumentInfo(nsIContent* aBoundElement,
                                       bool aForceSyncLoad,
                                       nsXBLDocumentInfo** aResult)
 {
-  NS_PRECONDITION(aBindingURI, "Must have a binding URI");
-  NS_PRECONDITION(!aOriginPrincipal || aBoundDocument,
-                  "If we're doing a security check, we better have a document!");
+  MOZ_ASSERT(aBindingURI, "Must have a binding URI");
+  MOZ_ASSERT(!aOriginPrincipal || aBoundDocument,
+             "If we're doing a security check, we better have a document!");
 
   *aResult = nullptr;
   // Allow XBL in unprivileged documents if it's specified in a privileged or
@@ -915,7 +914,7 @@ nsXBLService::LoadBindingDocumentInfo(nsIContent* aBoundElement,
   RefPtr<nsXBLDocumentInfo> info;
 
   nsCOMPtr<nsIURI> documentURI;
-  nsresult rv = aBindingURI->CloneIgnoringRef(getter_AddRefs(documentURI));
+  nsresult rv = NS_GetURIWithoutRef(aBindingURI, getter_AddRefs(documentURI));
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsBindingManager *bindingManager = nullptr;

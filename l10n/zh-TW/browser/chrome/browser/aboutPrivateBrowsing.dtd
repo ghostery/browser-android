@@ -2,11 +2,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!-- LOCALIZATION NOTE (aboutPrivateBrowsing.title):
-     Please ensure this exactly matches tabs.emptyPrivateTabTitle in tabbrowser.properties -->
-<!ENTITY aboutPrivateBrowsing.title                      "隱私瀏覽">
-<!ENTITY aboutPrivateBrowsing.notPrivate.title           "要開啟隱私視窗嗎？">
-
 <!ENTITY aboutPrivateBrowsing.notPrivate                 "您目前不在隱私瀏覽視窗當中。">
 <!ENTITY privatebrowsingpage.openPrivateWindow.label     "開啟隱私視窗">
 <!ENTITY privatebrowsingpage.openPrivateWindow.accesskey "P">
@@ -25,6 +20,7 @@
 <!ENTITY aboutPrivateBrowsing.info.saved.after2          "您的:">
 <!ENTITY aboutPrivateBrowsing.info.downloads             "下載項目">
 <!ENTITY aboutPrivateBrowsing.info.bookmarks             "書籤">
+<!ENTITY aboutPrivateBrowsing.info.clipboard             "已複製文字">
 <!ENTITY aboutPrivateBrowsing.note.before                "隱私瀏覽">
 <!ENTITY aboutPrivateBrowsing.note.emphasize             "不會讓您完全在網路上匿蹤。">
 <!ENTITY aboutPrivateBrowsing.note.after                 "您的雇主或網路業者還是能知道您看過哪些網站。">
@@ -35,3 +31,6 @@
 <!ENTITY trackingProtection.title                        "追蹤保護">
 <!ENTITY trackingProtection.description2                 "某些網站會使用可在不同網站間監控您的追蹤器。透過追蹤保護功能，Firefox 將封鎖大部分會收集您的上網行為的追蹤器。">
 <!ENTITY trackingProtection.startTour1                   "看看原理是什麼">
+
+<!ENTITY contentBlocking.title                           "內容封鎖">
+<!ENTITY contentBlocking.description                     "某些網站會使用追蹤器，於您在不同網站上網時監控您的行為。在隱私視窗中，Firefox 的內容封鎖功能會封鎖許多嘗試收集您的上網行為的追蹤器。">

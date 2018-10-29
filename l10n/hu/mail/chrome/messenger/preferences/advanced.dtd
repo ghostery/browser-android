@@ -12,6 +12,7 @@
 <!ENTITY enableGlodaSearch.label       "Globális keresés és indexelő engedélyezése">
 <!ENTITY enableGlodaSearch.accesskey   "G">
 <!ENTITY dateTimeFormatting.label      "Dátum és idő formázás">
+<!ENTITY languageSelector.label        "Nyelv">
 <!ENTITY allowHWAccel.label            "Hardveres gyorsítás használata, ha elérhető">
 <!ENTITY allowHWAccel.accesskey        "H">
 <!ENTITY storeType.label               "Üzenettároló és típus új fiókokhoz:">
@@ -32,7 +33,7 @@
 <!ENTITY searchIntegration.accesskey   "s">
 <!ENTITY checkDefaultsNow.label        "Ellenőrzés most…">
 <!ENTITY checkDefaultsNow.accesskey    "E">
-<!ENTITY configEditDesc.label          "Haladó beállítások">
+<!ENTITY configEditDesc.label          "Speciális beállítások">
 <!ENTITY configEdit.label              "Konfigurációszerkesztő…">
 <!ENTITY configEdit.accesskey          "K">
 <!ENTITY returnReceiptsInfo.label      "A &brandShortName; tértivevény-kezelésének beállítása">

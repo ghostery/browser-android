@@ -125,23 +125,18 @@ HTMLLinkElement::HasDeferredDNSPrefetchRequest()
 }
 
 nsresult
-HTMLLinkElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                            nsIContent* aBindingParent,
-                            bool aCompileEventHandlers)
+HTMLLinkElement::BindToTree(nsIDocument* aDocument,
+                            nsIContent* aParent,
+                            nsIContent* aBindingParent)
 {
   Link::ResetLinkState(false, Link::ElementHasHref());
 
   nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent,
-                                                 aCompileEventHandlers);
+                                                 aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  // Link must be inert in ShadowRoot.
-  if (aDocument && !GetContainingShadow()) {
-    aDocument->RegisterPendingLinkUpdate(this);
-  }
-
-  if (IsInComposedDoc()) {
+  if (nsIDocument* doc = GetComposedDoc()) {
+    doc->RegisterPendingLinkUpdate(this);
     TryDNSPrefetchOrPreconnectOrPrefetchOrPreloadOrPrerender();
   }
 
@@ -182,12 +177,8 @@ HTMLLinkElement::UnbindFromTree(bool aDeep, bool aNullParent)
 
   // If this is reinserted back into the document it will not be
   // from the parser.
-  nsCOMPtr<nsIDocument> oldDoc = GetUncomposedDoc();
-
-  // Check for a ShadowRoot because link elements are inert in a
-  // ShadowRoot.
-  ShadowRoot* oldShadowRoot = GetBindingParent() ?
-    GetBindingParent()->GetShadowRoot() : nullptr;
+  nsIDocument* oldDoc = GetUncomposedDoc();
+  ShadowRoot* oldShadowRoot = GetContainingShadow();
 
   CreateAndDispatchEvent(oldDoc, NS_LITERAL_STRING("DOMLinkRemoved"));
   nsGenericHTMLElement::UnbindFromTree(aDeep, aNullParent);
@@ -251,7 +242,10 @@ HTMLLinkElement::CreateAndDispatchEvent(nsIDocument* aDoc,
     return;
 
   RefPtr<AsyncEventDispatcher> asyncDispatcher =
-    new AsyncEventDispatcher(this, aEventName, true, true);
+    new AsyncEventDispatcher(this,
+                             aEventName,
+                             CanBubble::eYes,
+                             ChromeOnlyDispatch::eYes);
   // Always run async in order to avoid running script when the content
   // sink isn't expecting it.
   asyncDispatcher->PostDOMEvent();
@@ -420,80 +414,50 @@ HTMLLinkElement::GetHrefURI() const
   return GetHrefURIForAnchors();
 }
 
-already_AddRefed<nsIURI>
-HTMLLinkElement::GetStyleSheetURL(bool* aIsInline, nsIPrincipal** aTriggeringPrincipal)
+Maybe<nsStyleLinkElement::SheetInfo>
+HTMLLinkElement::GetStyleSheetInfo()
 {
-  *aIsInline = false;
-  *aTriggeringPrincipal = nullptr;
+  nsAutoString rel;
+  GetAttr(kNameSpaceID_None, nsGkAtoms::rel, rel);
+  uint32_t linkTypes = nsStyleLinkElement::ParseLinkTypes(rel);
+  if (!(linkTypes & nsStyleLinkElement::eSTYLESHEET)) {
+    return Nothing();
+  }
+
+  if (!IsCSSMimeTypeAttribute(*this)) {
+    return Nothing();
+  }
+
+  nsAutoString title;
+  nsAutoString media;
+  GetTitleAndMediaForElement(*this, title, media);
+
+  bool alternate = linkTypes & nsStyleLinkElement::eALTERNATE;
+  if (alternate && title.IsEmpty()) {
+    // alternates must have title.
+    return Nothing();
+  }
 
   nsAutoString href;
   GetAttr(kNameSpaceID_None, nsGkAtoms::href, href);
   if (href.IsEmpty()) {
-    return nullptr;
+    return Nothing();
   }
-
-  nsCOMPtr<nsIPrincipal> prin = mTriggeringPrincipal;
-  prin.forget(aTriggeringPrincipal);
 
   nsCOMPtr<nsIURI> uri = Link::GetURI();
-  return uri.forget();
-}
-
-void
-HTMLLinkElement::GetStyleSheetInfo(nsAString& aTitle,
-                                   nsAString& aType,
-                                   nsAString& aMedia,
-                                   bool* aIsAlternate)
-{
-  aTitle.Truncate();
-  aType.Truncate();
-  aMedia.Truncate();
-  *aIsAlternate = false;
-
-  nsAutoString rel;
-  GetAttr(kNameSpaceID_None, nsGkAtoms::rel, rel);
-  uint32_t linkTypes = nsStyleLinkElement::ParseLinkTypes(rel);
-  // Is it a stylesheet link?
-  if (!(linkTypes & nsStyleLinkElement::eSTYLESHEET)) {
-    return;
-  }
-
-  nsAutoString title;
-  GetAttr(kNameSpaceID_None, nsGkAtoms::title, title);
-  title.CompressWhitespace();
-  aTitle.Assign(title);
-
-  // If alternate, does it have title?
-  if (linkTypes & nsStyleLinkElement::eALTERNATE) {
-    if (aTitle.IsEmpty()) { // alternates must have title
-      return;
-    } else {
-      *aIsAlternate = true;
-    }
-  }
-
-  GetAttr(kNameSpaceID_None, nsGkAtoms::media, aMedia);
-  // The HTML5 spec is formulated in terms of the CSSOM spec, which specifies
-  // that media queries should be ASCII lowercased during serialization.
-  nsContentUtils::ASCIIToLower(aMedia);
-
-  nsAutoString mimeType;
-  nsAutoString notUsed;
-  GetAttr(kNameSpaceID_None, nsGkAtoms::type, aType);
-  nsContentUtils::SplitMimeType(aType, mimeType, notUsed);
-  if (!mimeType.IsEmpty() && !mimeType.LowerCaseEqualsLiteral("text/css")) {
-    return;
-  }
-
-  // If we get here we assume that we're loading a css file, so set the
-  // type to 'text/css'
-  aType.AssignLiteral("text/css");
-}
-
-CORSMode
-HTMLLinkElement::GetCORSMode() const
-{
-  return AttrValueToCORSMode(GetParsedAttr(nsGkAtoms::crossorigin));
+  nsCOMPtr<nsIPrincipal> prin = mTriggeringPrincipal;
+  return Some(SheetInfo {
+    *OwnerDoc(),
+    this,
+    uri.forget(),
+    prin.forget(),
+    GetReferrerPolicyAsEnum(),
+    GetCORSMode(),
+    title,
+    media,
+    alternate ? HasAlternateRel::Yes : HasAlternateRel::No,
+    IsInline::No,
+  });
 }
 
 EventStates
@@ -513,7 +477,7 @@ HTMLLinkElement::AddSizeOfExcludingThis(nsWindowSizes& aSizes,
 JSObject*
 HTMLLinkElement::WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return HTMLLinkElementBinding::Wrap(aCx, this, aGivenProto);
+  return HTMLLinkElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 void

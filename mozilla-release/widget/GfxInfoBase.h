@@ -81,10 +81,10 @@ public:
   static void AddCollector(GfxInfoCollectorBase* collector);
   static void RemoveCollector(GfxInfoCollectorBase* collector);
 
-  static nsTArray<GfxDriverInfo>* mDriverInfo;
-  static nsTArray<mozilla::dom::GfxInfoFeatureStatus>* mFeatureStatus;
-  static bool mDriverInfoObserverInitialized;
-  static bool mShutdownOccurred;
+  static nsTArray<GfxDriverInfo>* sDriverInfo;
+  static nsTArray<mozilla::dom::GfxInfoFeatureStatus>* sFeatureStatus;
+  static bool sDriverInfoObserverInitialized;
+  static bool sShutdownOccurred;
 
   virtual nsString Model() { return EmptyString(); }
   virtual nsString Hardware() { return EmptyString(); }
@@ -121,8 +121,7 @@ protected:
     JSContext* aCx,
     JS::Handle<JSObject*> aContainer,
     const char* aName,
-    int32_t aFeature,
-    const Maybe<mozilla::gfx::FeatureStatus>& aKnownStatus,
+    mozilla::gfx::FeatureStatus& aKnownStatus,
     JS::MutableHandle<JSObject*> aOutObj);
 
   NS_IMETHOD ControlGPUProcessForXPCShell(bool aEnable, bool *_retval) override;

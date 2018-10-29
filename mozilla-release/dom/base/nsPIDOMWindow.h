@@ -22,15 +22,17 @@
 #define DOM_WINDOW_FROZEN_TOPIC "dom-window-frozen"
 #define DOM_WINDOW_THAWED_TOPIC "dom-window-thawed"
 
+class nsDOMOfflineResourceList;
+class nsDOMWindowList;
 class nsGlobalWindowInner;
 class nsGlobalWindowOuter;
 class nsIArray;
+class nsIChannel;
 class nsIContent;
 class nsICSSDeclaration;
 class nsIDocShell;
-class nsIDocShellLoadInfo;
+class nsDocShellLoadInfo;
 class nsIDocument;
-class nsIIdleObserver;
 class nsIPrincipal;
 class nsIScriptTimeoutHandler;
 class nsISerialEventTarget;
@@ -44,15 +46,19 @@ typedef uint32_t SuspendTypes;
 
 namespace mozilla {
 class ThrottledEventQueue;
+class AutoplayPermissionManager;
 namespace dom {
 class AudioContext;
 class ClientInfo;
 class ClientState;
+class ContentFrameMessageManager;
 class DocGroup;
 class TabGroup;
 class Element;
+class MozIdleObserver;
 class Navigator;
 class Performance;
+class Selection;
 class ServiceWorker;
 class ServiceWorkerDescriptor;
 class Timeout;
@@ -190,6 +196,8 @@ public:
 
   mozilla::dom::Performance* GetPerformance();
 
+  void QueuePerformanceNavigationTiming();
+
   bool HasMutationListeners(uint32_t aMutationEventType) const
   {
     if (!mOuterWindow) {
@@ -248,6 +256,17 @@ public:
     mMayHavePointerEnterLeaveEventListener = true;
   }
 
+  // Sets the event for window.event. Does NOT take ownership, so
+  // the caller is responsible for clearing the event before the
+  // event gets deallocated. Pass nullptr to set window.event to
+  // undefined. Returns the previous value.
+  mozilla::dom::Event* SetEvent(mozilla::dom::Event* aEvent)
+  {
+    mozilla::dom::Event* old = mEvent;
+    mEvent = aEvent;
+    return old;
+  }
+
   /**
    * Check whether this window is a secure context.
    */
@@ -263,16 +282,6 @@ public:
   // a matching number of Resume() calls.
   void Suspend();
   void Resume();
-
-  // Calling Freeze() on a window will automatically Suspend() it.  In
-  // addition, the window and its children are further treated as no longer
-  // suitable for interaction with the user.  For example, it may be marked
-  // non-visible, cannot be focused, etc.  All worker threads are also frozen
-  // bringing them to a complete stop.  A window can have Freeze() called
-  // multiple times and will only thaw after a matching number of Thaw()
-  // calls.
-  void Freeze();
-  void Thaw();
 
   // Apply the parent window's suspend, freeze, and modal state to the current
   // window.
@@ -325,10 +334,9 @@ public:
   mozilla::Maybe<mozilla::dom::ClientState> GetClientState() const;
   mozilla::Maybe<mozilla::dom::ServiceWorkerDescriptor> GetController() const;
 
-  RefPtr<mozilla::dom::ServiceWorker>
-  GetOrCreateServiceWorker(const mozilla::dom::ServiceWorkerDescriptor& aDescriptor);
-
   void NoteCalledRegisterForServiceWorkerScope(const nsACString& aScope);
+
+  void NoteDOMContentLoaded();
 
   mozilla::dom::TabGroup* TabGroup();
 
@@ -341,19 +349,15 @@ public:
   virtual nsPIDOMWindowOuter* GetScriptableParent() = 0;
   virtual already_AddRefed<nsPIWindowRoot> GetTopWindowRoot() = 0;
 
-  /**
-   * Behavies identically to GetScriptableParent extept that it returns null
-   * if GetScriptableParent would return this window.
-   */
-  virtual nsPIDOMWindowOuter* GetScriptableParentOrNull() = 0;
-
   mozilla::dom::EventTarget* GetChromeEventHandler() const
   {
     return mChromeEventHandler;
   }
 
-  virtual nsresult RegisterIdleObserver(nsIIdleObserver* aIdleObserver) = 0;
-  virtual nsresult UnregisterIdleObserver(nsIIdleObserver* aIdleObserver) = 0;
+  virtual nsresult RegisterIdleObserver(
+    mozilla::dom::MozIdleObserver& aIdleObserver) = 0;
+  virtual nsresult UnregisterIdleObserver(
+    mozilla::dom::MozIdleObserver& aIdleObserver) = 0;
 
   virtual bool IsTopLevelWindowActive() = 0;
 
@@ -587,7 +591,7 @@ public:
 
   virtual nsresult GetControllers(nsIControllers** aControllers) = 0;
 
-  virtual already_AddRefed<nsIDOMWindowCollection> GetFrames() = 0;
+  virtual nsDOMWindowList* GetFrames() = 0;
 
   virtual nsresult GetInnerWidth(int32_t* aWidth) = 0;
   virtual nsresult GetInnerHeight(int32_t* aHeight) = 0;
@@ -598,7 +602,7 @@ public:
 
   virtual mozilla::dom::Element* GetFrameElement() = 0;
 
-  virtual already_AddRefed<nsIDOMOfflineResourceList> GetApplicationCache() = 0;
+  virtual nsDOMOfflineResourceList* GetApplicationCache() = 0;
 
   virtual bool GetFullScreen() = 0;
 
@@ -608,6 +612,11 @@ public:
   mozilla::dom::DocGroup* GetDocGroup() const;
   virtual nsISerialEventTarget*
   EventTargetFor(mozilla::TaskCategory aCategory) const = 0;
+
+  // Returns the AutoplayPermissionManager that documents in this window should
+  // use to request permission to autoplay.
+  already_AddRefed<mozilla::AutoplayPermissionManager>
+  GetAutoplayPermissionManager();
 
 protected:
   void CreatePerformanceObjectIfNeeded();
@@ -691,6 +700,15 @@ protected:
 
   // The number of open WebSockets.
   uint32_t mNumOfOpenWebSockets;
+
+  // If we're in the process of requesting permission for this window to
+  // play audible media, or we've already been granted permission by the
+  // user, this is non-null, and encapsulates the request.
+  RefPtr<mozilla::AutoplayPermissionManager> mAutoplayPermissionManager;
+
+  // The event dispatch code sets and unsets this while keeping
+  // the event object alive.
+  mozilla::dom::Event* mEvent;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsPIDOMWindowInner, NS_PIDOMWINDOWINNER_IID)
@@ -828,7 +846,7 @@ public:
   virtual already_AddRefed<nsPIWindowRoot> GetTopWindowRoot() = 0;
 
   /**
-   * Behavies identically to GetScriptableParent extept that it returns null
+   * Behaves identically to GetScriptableParent except that it returns null
    * if GetScriptableParent would return this window.
    */
   virtual nsPIDOMWindowOuter* GetScriptableParentOrNull() = 0;
@@ -857,14 +875,20 @@ public:
     return mParentTarget;
   }
 
-  virtual void MaybeUpdateTouchState() {}
+  mozilla::dom::ContentFrameMessageManager* GetMessageManager()
+  {
+    // We maintain our mMessageManager state alongside mParentTarget.
+    if (!mParentTarget) {
+      UpdateParentTarget();
+    }
+    return mMessageManager;
+  }
 
   nsIDocument* GetExtantDoc() const
   {
     return mDoc;
   }
   nsIURI* GetDocumentURI() const;
-  nsIURI* GetDocBaseURI() const;
 
   nsIDocument* GetDoc()
   {
@@ -1068,6 +1092,10 @@ public:
                         const nsAString& aPopupWindowName,
                         const nsAString& aPopupWindowFeatures) = 0;
 
+  virtual void
+  NotifyContentBlockingState(unsigned aState,
+                             nsIChannel* aChannel) = 0;
+
   // WebIDL-ish APIs
   void MarkUncollectableForCCGeneration(uint32_t aGeneration)
   {
@@ -1086,17 +1114,17 @@ public:
 
   virtual nsresult GetPrompter(nsIPrompt** aPrompt) = 0;
   virtual nsresult GetControllers(nsIControllers** aControllers) = 0;
-  virtual already_AddRefed<nsISelection> GetSelection() = 0;
+  virtual already_AddRefed<mozilla::dom::Selection> GetSelection() = 0;
   virtual already_AddRefed<nsPIDOMWindowOuter> GetOpener() = 0;
 
-  virtual already_AddRefed<nsIDOMWindowCollection> GetFrames() = 0;
+  virtual nsDOMWindowList* GetFrames() = 0;
 
   // aLoadInfo will be passed on through to the windowwatcher.
   // aForceNoOpener will act just like a "noopener" feature in aOptions except
   //                will not affect any other window features.
   virtual nsresult Open(const nsAString& aUrl, const nsAString& aName,
                         const nsAString& aOptions,
-                        nsIDocShellLoadInfo* aLoadInfo,
+                        nsDocShellLoadInfo* aLoadInfo,
                         bool aForceNoOpener,
                         nsPIDOMWindowOuter **_retval) = 0;
   virtual nsresult OpenDialog(const nsAString& aUrl, const nsAString& aName,
@@ -1118,7 +1146,9 @@ public:
 
   virtual nsresult MoveBy(int32_t aXDif, int32_t aYDif) = 0;
 
-  virtual void UpdateCommands(const nsAString& anAction, nsISelection* aSel, int16_t aReason) = 0;
+  virtual void UpdateCommands(const nsAString& anAction,
+                              mozilla::dom::Selection* aSel,
+                              int16_t aReason) = 0;
 
   mozilla::dom::DocGroup* GetDocGroup() const;
   virtual nsISerialEventTarget*
@@ -1142,11 +1172,7 @@ protected:
   // we have what it takes to do so.
   void MaybeCreateDoc();
 
-  void SetChromeEventHandlerInternal(mozilla::dom::EventTarget* aChromeEventHandler) {
-    mChromeEventHandler = aChromeEventHandler;
-    // mParentTarget will be set when the next event is dispatched.
-    mParentTarget = nullptr;
-  }
+  void SetChromeEventHandlerInternal(mozilla::dom::EventTarget* aChromeEventHandler);
 
   virtual void UpdateParentTarget() = 0;
 
@@ -1157,9 +1183,9 @@ protected:
   nsCOMPtr<nsIDocument> mDoc; // strong
   // Cache the URI when mDoc is cleared.
   nsCOMPtr<nsIURI> mDocumentURI; // strong
-  nsCOMPtr<nsIURI> mDocBaseURI; // strong
 
   nsCOMPtr<mozilla::dom::EventTarget> mParentTarget; // strong
+  RefPtr<mozilla::dom::ContentFrameMessageManager> mMessageManager; // strong
 
   nsCOMPtr<mozilla::dom::Element> mFrameElement;
 

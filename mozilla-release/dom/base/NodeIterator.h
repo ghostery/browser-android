@@ -16,7 +16,6 @@
 #include "nsStubMutationObserver.h"
 
 class nsINode;
-class nsIDOMNode;
 
 namespace mozilla {
 namespace dom {
@@ -72,7 +71,11 @@ private:
     virtual ~NodeIterator();
 
     struct NodePointer {
-        NodePointer() : mNode(nullptr) {}
+        NodePointer()
+          : mNode(nullptr)
+          , mBeforeNode(false)
+        {
+        }
         NodePointer(nsINode *aNode, bool aBeforeNode);
 
         typedef bool (NodePointer::*MoveToMethodType)(nsINode*);

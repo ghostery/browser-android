@@ -49,8 +49,6 @@ const CSS_TYPE_SHORTHAND_AND_LONGHAND = 2;
 //   axis: optional, indicates that the property is an axis-related logical
 //     directional property.  (Type must be CSS_TYPE_LONGHAND and 'logical'
 //     must be true.)
-//   get_computed: if present, the property's computed value shows up on
-//     another property, and this is a function used to get it
 //   initial_values: Values whose computed value should be the same as the
 //     computed value for the property's initial value.
 //   other_values: Values whose computed value should be different from the
@@ -227,7 +225,13 @@ var validGradientAndElementValues = [
   "radial-gradient(at calc(100px + -25%) top, red, blue)",
   "radial-gradient(at left calc(100px + -25%), red, blue)",
   "radial-gradient(at calc(100px + -25px) top, red, blue)",
-  "radial-gradient(at left calc(100px + -25px), red, blue)"
+  "radial-gradient(at left calc(100px + -25px), red, blue)",
+
+  "-webkit-linear-gradient(top, red, blue)",
+  "-moz-linear-gradient(top, red, blue)",
+  "-moz-linear-gradient(center 0%, red, blue)",
+  "-moz-linear-gradient(50% top, red, blue)",
+  "-moz-linear-gradient(50% 0%, red, blue)",
 ];
 var invalidGradientAndElementValues = [
   "-moz-element(#a:1)",
@@ -288,6 +292,10 @@ var invalidGradientAndElementValues = [
   "linear-gradient(to top, red,, blue)",
   "linear-gradient(to top, red, green 35%, 15%, 54%, blue)",
 
+  "linear-gradient(unset, 10px 10px, from(blue))",
+  "linear-gradient(unset, 10px 10px, blue 0)",
+  "repeating-linear-gradient(unset, 10px 10px, blue 0)",
+
 
   "radial-gradient(top left 45deg, red, blue)",
   "radial-gradient(20% bottom -300deg, red, blue)",
@@ -318,7 +326,8 @@ var invalidGradientAndElementValues = [
   "radial-gradient(top left 99deg, cover, red, blue)",
   "radial-gradient(15% 20% -1.2345rad, circle, red, blue)",
   "radial-gradient(45px 399grad, ellipse closest-corner, red, blue)",
-  "radial-gradient(45px 399grad, farthest-side circle, red, blue)"
+  "radial-gradient(45px 399grad, farthest-side circle, red, blue)",
+  "radial-gradient(circle red, blue)",
 ];
 var unbalancedGradientAndElementValues = [
   "-moz-element(#a()",
@@ -501,32 +510,6 @@ var basicShapeUnbalancedValues = [
   "inset(1px 2px 3px 4px round 5px / 6px",
 ];
 
-
-// Gradient values that are incorrectly accepted in Gecko, but are correctly
-// rejected with Servo's style-system backend (stylo):
-let gradientsNewlyRejectedInStylo = [
-  "radial-gradient(circle red, blue)",
-];
-
-// Gradient values that are consistently serialized in Stylo but not
-// in Gecko. Gecko drops the prefix during roundtrip.
-let gradientsValidInStyloBrokenInGecko = [
-  "-webkit-linear-gradient(top, red, blue)",
-  "-moz-linear-gradient(top, red, blue)",
-  "-moz-linear-gradient(center 0%, red, blue)",
-  "-moz-linear-gradient(50% top, red, blue)",
-  "-moz-linear-gradient(50% 0%, red, blue)",
-];
-
-if (SpecialPowers.DOMWindowUtils.isStyledByServo) {
-  invalidGradientAndElementValues.push(...gradientsNewlyRejectedInStylo);
-  validGradientAndElementValues.push(...gradientsValidInStyloBrokenInGecko);
-} else {
-  // NOTE: These are technically invalid, but Gecko's CSS parser thinks they're
-  // valid. So, if we're using Gecko's style system, we add them to the
-  // "valid" list, so we can at least detect if the behavior changes.
-  validGradientAndElementValues.push(...gradientsNewlyRejectedInStylo);
-}
 
 if (IsCSSPropertyPrefEnabled("layout.css.prefixes.webkit")) {
   // Extend gradient lists with valid/invalid webkit-prefixed expressions:
@@ -1198,14 +1181,14 @@ var gCSSProperties = {
     subproperties: [ "animation-name", "animation-duration", "animation-timing-function", "animation-delay", "animation-direction", "animation-fill-mode", "animation-iteration-count", "animation-play-state" ],
     initial_values: [ "none none 0s 0s ease normal running 1.0", "none", "0s", "ease", "normal", "running", "1.0" ],
     other_values: [ "none none 0s 0s cubic-bezier(0.25, 0.1, 0.25, 1.0) normal running 1.0", "bounce 1s linear 2s", "bounce 1s 2s linear", "bounce linear 1s 2s", "linear bounce 1s 2s", "linear 1s bounce 2s", "linear 1s 2s bounce", "1s bounce linear 2s", "1s bounce 2s linear", "1s 2s bounce linear", "1s linear bounce 2s", "1s linear 2s bounce", "1s 2s linear bounce", "bounce linear 1s", "bounce 1s linear", "linear bounce 1s", "linear 1s bounce", "1s bounce linear", "1s linear bounce", "1s 2s bounce", "1s bounce 2s", "bounce 1s 2s", "1s 2s linear", "1s linear 2s", "linear 1s 2s", "bounce 1s", "1s bounce", "linear 1s", "1s linear", "1s 2s", "2s 1s", "bounce", "linear", "1s", "height", "2s", "ease-in-out", "2s ease-in", "opacity linear", "ease-out 2s", "2s color, 1s bounce, 500ms height linear, 1s opacity 4s cubic-bezier(0.0, 0.1, 1.0, 1.0)", "1s \\32bounce linear 2s", "1s -bounce linear 2s", "1s -\\32bounce linear 2s", "1s \\32 0bounce linear 2s", "1s -\\32 0bounce linear 2s", "1s \\2bounce linear 2s", "1s -\\2bounce linear 2s", "2s, 1s bounce", "1s bounce, 2s", "2s all, 1s bounce", "1s bounce, 2s all", "1s bounce, 2s none", "2s none, 1s bounce", "2s bounce, 1s all", "2s all, 1s bounce" ],
-    invalid_values: [ "2s inherit", "inherit 2s", "2s bounce, 1s inherit", "2s inherit, 1s bounce", "2s initial", "2s all,, 1s bounce", "2s all, , 1s bounce", "bounce 1s cubic-bezier(0, rubbish) 2s", "bounce 1s steps(rubbish) 2s" ]
+    invalid_values: [ "2s inherit", "inherit 2s", "2s bounce, 1s inherit", "2s inherit, 1s bounce", "2s initial", "2s all,, 1s bounce", "2s all, , 1s bounce", "bounce 1s cubic-bezier(0, rubbish) 2s", "bounce 1s steps(rubbish) 2s", "2s unset" ]
   },
   "animation-delay": {
     domProp: "animationDelay",
     inherited: false,
     type: CSS_TYPE_LONGHAND,
     initial_values: [ "0s", "0ms" ],
-    other_values: [ "1s", "250ms", "-100ms", "-1s", "1s, 250ms, 2.3s"],
+    other_values: [ "1s", "250ms", "-100ms", "-1s", "1s, 250ms, 2.3s", "calc(1s + 2ms)" ],
     invalid_values: [ "0", "0px" ]
   },
   "animation-direction": {
@@ -1214,14 +1197,14 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     initial_values: [ "normal" ],
     other_values: [ "alternate", "normal, alternate", "alternate, normal", "normal, normal", "normal, normal, normal", "reverse", "alternate-reverse", "normal, reverse, alternate-reverse, alternate" ],
-    invalid_values: [ "normal normal", "inherit, normal", "reverse-alternate" ]
+    invalid_values: [ "normal normal", "inherit, normal", "reverse-alternate", "normal, unset", "unset, normal" ]
   },
   "animation-duration": {
     domProp: "animationDuration",
     inherited: false,
     type: CSS_TYPE_LONGHAND,
     initial_values: [ "0s", "0ms" ],
-    other_values: [ "1s", "250ms", "1s, 250ms, 2.3s"],
+    other_values: [ "1s", "250ms", "1s, 250ms, 2.3s", "calc(1s + 2ms)" ],
     invalid_values: [ "0", "0px", "-1ms", "-2s" ]
   },
   "animation-fill-mode": {
@@ -1237,7 +1220,7 @@ var gCSSProperties = {
     inherited: false,
     type: CSS_TYPE_LONGHAND,
     initial_values: [ "1" ],
-    other_values: [ "infinite", "0", "0.5", "7.75", "-0.0", "1, 2, 3", "infinite, 2", "1, infinite" ],
+    other_values: [ "infinite", "0", "0.5", "7.75", "-0.0", "1, 2, 3", "infinite, 2", "1, infinite", "calc(1 + 2.0)" ],
     // negatives forbidden per
     // http://lists.w3.org/Archives/Public/www-style/2011Mar/0355.html
     invalid_values: [ "none", "-1", "-0.5", "-1, infinite", "infinite, -3" ]
@@ -1248,7 +1231,7 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     initial_values: [ "none" ],
     other_values: [ "all", "ball", "mall", "color", "bounce, bubble, opacity", "foobar", "auto", "\\32bounce", "-bounce", "-\\32bounce", "\\32 0bounce", "-\\32 0bounce", "\\2bounce", "-\\2bounce" ],
-    invalid_values: [ "bounce, initial", "initial, bounce", "bounce, inherit", "inherit, bounce" ]
+    invalid_values: [ "bounce, initial", "initial, bounce", "bounce, inherit", "inherit, bounce", "bounce, unset", "unset, bounce" ]
   },
   "animation-play-state": {
     domProp: "animationPlayState",
@@ -1263,7 +1246,7 @@ var gCSSProperties = {
     inherited: false,
     type: CSS_TYPE_LONGHAND,
     initial_values: [ "ease" ],
-    other_values: [ "cubic-bezier(0.25, 0.1, 0.25, 1.0)", "linear", "ease-in", "ease-out", "ease-in-out", "linear, ease-in, cubic-bezier(0.1, 0.2, 0.8, 0.9)", "cubic-bezier(0.5, 0.5, 0.5, 0.5)", "cubic-bezier(0.25, 1.5, 0.75, -0.5)", "step-start", "step-end", "steps(1)", "steps(2, start)", "steps(386)", "steps(3, end)" ],
+    other_values: [ "cubic-bezier(0.25, 0.1, 0.25, 1.0)", "linear", "ease-in", "ease-out", "ease-in-out", "linear, ease-in, cubic-bezier(0.1, 0.2, 0.8, 0.9)", "cubic-bezier(0.5, 0.5, 0.5, 0.5)", "cubic-bezier(0.25, 1.5, 0.75, -0.5)", "step-start", "step-end", "steps(1)", "steps(2, start)", "steps(386)", "steps(3, end)", "steps(calc(2 + 1))" ],
     invalid_values: [ "none", "auto", "cubic-bezier(0.25, 0.1, 0.25)", "cubic-bezier(0.25, 0.1, 0.25, 0.25, 1.0)", "cubic-bezier(-0.5, 0.5, 0.5, 0.5)", "cubic-bezier(1.5, 0.5, 0.5, 0.5)", "cubic-bezier(0.5, 0.5, -0.5, 0.5)", "cubic-bezier(0.5, 0.5, 1.5, 0.5)", "steps(2, step-end)", "steps(0)", "steps(-2)", "steps(0, step-end, 1)" ]
   },
   "-moz-appearance": {
@@ -1297,7 +1280,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     initial_values: [ "currentColor" ],
     other_values: [ "green", "rgba(255,128,0,0.5)", "transparent" ],
     invalid_values: [ "#0", "#00", "#00000", "#0000000", "#000000000", "000000" ]
@@ -1308,7 +1290,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* XXX hidden is sometimes the same as initial */
     initial_values: [ "none" ],
     other_values: [ "solid", "dashed", "dotted", "double", "outset", "inset", "groove", "ridge" ],
@@ -1320,7 +1301,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     prerequisites: { "border-inline-end-style": "solid" },
     initial_values: [ "medium", "3px", "calc(4px - 1px)" ],
     other_values: [ "thin", "thick", "1px", "2em",
@@ -1447,7 +1427,7 @@ var gCSSProperties = {
       "2px 2px calc(2px + 1%) 2px",
       "1px 2px 2px 2px / 2px 2px calc(2px + 1%) 2px",
             ],
-    invalid_values: [ "2px -2px", "inherit 2px", "inherit / 2px", "2px inherit", "2px / inherit", "2px 2px 2px 2px 2px", "1px / 2px 2px 2px 2px 2px", "2", "2 2", "2px 2px 2px 2px / 2px 2px 2 2px", "2px calc(0px + rubbish)" ]
+    invalid_values: [ "2px -2px", "inherit 2px", "inherit / 2px", "2px inherit", "2px / inherit", "2px 2px 2px 2px 2px", "1px / 2px 2px 2px 2px 2px", "2", "2 2", "2px 2px 2px 2px / 2px 2px 2 2px", "2px calc(0px + rubbish)", "unset 2px", "unset / 2px", "2px unset", "2px / unset" ]
   },
   "border-bottom-left-radius": {
     domProp: "borderBottomLeftRadius",
@@ -1468,7 +1448,7 @@ var gCSSProperties = {
       "calc(25px*3)",
       "calc(3*25px + 50%)",
             ],
-    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "2px calc(0px + rubbish)" ]
+    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "2px calc(0px + rubbish)", "unset 2px", "2px unset" ]
   },
   "border-bottom-right-radius": {
     domProp: "borderBottomRightRadius",
@@ -1489,7 +1469,7 @@ var gCSSProperties = {
       "calc(25px*3)",
       "calc(3*25px + 50%)",
             ],
-    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "2px calc(0px + rubbish)" ]
+    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "2px calc(0px + rubbish)", "unset 2px", "2px unset" ]
   },
   "border-top-left-radius": {
     domProp: "borderTopLeftRadius",
@@ -1510,7 +1490,7 @@ var gCSSProperties = {
       "calc(25px*3)",
       "calc(3*25px + 50%)",
             ],
-    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "2px calc(0px + rubbish)" ]
+    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "2px calc(0px + rubbish)", "unset 2px", "2px unset" ]
   },
   "border-top-right-radius": {
     domProp: "borderTopRightRadius",
@@ -1531,7 +1511,7 @@ var gCSSProperties = {
       "calc(25px*3)",
       "calc(3*25px + 50%)",
             ],
-    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "2px calc(0px + rubbish)" ]
+    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "2px calc(0px + rubbish)", "unset 2px", "2px unset" ]
   },
   "border-inline-start": {
     domProp: "borderInlineStart",
@@ -1548,7 +1528,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     initial_values: [ "currentColor" ],
     other_values: [ "green", "rgba(255,128,0,0.5)", "transparent" ],
     invalid_values: [ "#0", "#00", "#00000", "#0000000", "#000000000", "000000" ]
@@ -1559,7 +1538,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* XXX hidden is sometimes the same as initial */
     initial_values: [ "none" ],
     other_values: [ "solid", "dashed", "dotted", "double", "outset", "inset", "groove", "ridge" ],
@@ -1571,7 +1549,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     prerequisites: { "border-inline-start-style": "solid" },
     initial_values: [ "medium", "3px", "calc(4px - 1px)" ],
     other_values: [ "thin", "thick", "1px", "2em",
@@ -1979,7 +1956,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* no subproperties */
     /* auto may or may not be initial */
     initial_values: [ "0", "0px", "0%", "0em", "0ex", "calc(0pt)", "calc(0% + 0px)" ],
@@ -1999,7 +1975,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* no subproperties */
     /* auto may or may not be initial */
     initial_values: [ "0", "0px", "0%", "0em", "0ex", "calc(0pt)", "calc(0% + 0px)" ],
@@ -2301,7 +2276,7 @@ var gCSSProperties = {
       "2px 2px calc(2px + 1%) 2px",
       "1px 2px 2px 2px / 2px 2px calc(2px + 1%) 2px",
             ],
-    invalid_values: [ "2px -2px", "inherit 2px", "inherit / 2px", "2px inherit", "2px / inherit", "2px 2px 2px 2px 2px", "1px / 2px 2px 2px 2px 2px", "2", "2 2", "2px 2px 2px 2px / 2px 2px 2 2px" ]
+    invalid_values: [ "2px -2px", "inherit 2px", "inherit / 2px", "2px inherit", "2px / inherit", "2px 2px 2px 2px 2px", "1px / 2px 2px 2px 2px 2px", "2", "2 2", "2px 2px 2px 2px / 2px 2px 2 2px", "unset 2px", "unset / 2px", "2px unset", "2px / unset" ]
   },
   "-moz-outline-radius-bottomleft": {
     domProp: "MozOutlineRadiusBottomleft",
@@ -2321,7 +2296,7 @@ var gCSSProperties = {
       "calc(25px*3)",
       "calc(3*25px + 50%)",
             ],
-    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px" ]
+    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "unset 2px", "2px unset" ]
   },
   "-moz-outline-radius-bottomright": {
     domProp: "MozOutlineRadiusBottomright",
@@ -2341,7 +2316,7 @@ var gCSSProperties = {
       "calc(25px*3)",
       "calc(3*25px + 50%)",
             ],
-    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px" ]
+    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "unset 2px", "2px unset" ]
   },
   "-moz-outline-radius-topleft": {
     domProp: "MozOutlineRadiusTopleft",
@@ -2361,7 +2336,7 @@ var gCSSProperties = {
       "calc(25px*3)",
       "calc(3*25px + 50%)",
             ],
-    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px" ]
+    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "unset 2px", "2px unset" ]
   },
   "-moz-outline-radius-topright": {
     domProp: "MozOutlineRadiusTopright",
@@ -2381,7 +2356,7 @@ var gCSSProperties = {
       "calc(25px*3)",
       "calc(3*25px + 50%)",
             ],
-    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px" ]
+    invalid_values: [ "-1px", "4px -2px", "inherit 2px", "2px inherit", "2", "2px 2", "2 2px", "unset 2px", "2px unset" ]
   },
   "padding-inline-end": {
     domProp: "paddingInlineEnd",
@@ -2390,7 +2365,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     // No applies_to_placeholder because we have a !important rule in forms.css.
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* no subproperties */
     initial_values: [ "0", "0px", "0%", "0em", "0ex", "calc(0pt)", "calc(0% + 0px)", "calc(-3px)", "calc(-1%)" ],
     other_values: [ "1px", "3em", "5%",
@@ -2409,7 +2383,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     // No applies_to_placeholder because we have a !important rule in forms.css.
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* no subproperties */
     initial_values: [ "0", "0px", "0%", "0em", "0ex", "calc(0pt)", "calc(0% + 0px)", "calc(-3px)", "calc(-1%)" ],
     other_values: [ "1px", "3em", "5%",
@@ -2428,7 +2401,7 @@ var gCSSProperties = {
     // No applies_to_placeholder because we have a !important rule in forms.css.
     prerequisites: { "display": "block", "overflow": "auto" },
     initial_values: [ "none" ],
-    other_values: [ "both", "horizontal", "vertical" ],
+    other_values: [ "both", "horizontal", "vertical", "inline", "block" ],
     invalid_values: []
   },
   "-moz-stack-sizing": {
@@ -3275,7 +3248,7 @@ var gCSSProperties = {
       "calc(2px) calc(2px) calc(2px)",
       "calc(2px) calc(2px) calc(2px) calc(2px)"
     ],
-    invalid_values: [ "3% 3%", "1px 1px 1px 1px 1px", "2px 2px, none", "red 2px 2px blue", "inherit, 2px 2px", "2px 2px, inherit", "2px 2px -5px", "inset 4px 4px black inset", "inset inherit", "inset none", "3 3", "3px 3", "3 3px", "3px 3px 3", "3px 3px 3px 3", "3px calc(3px + rubbish)", "3px 3px calc(3px + rubbish)", "3px 3px 3px calc(3px + rubbish)", "3px 3px 3px 3px rgb(0, rubbish, 0)" ]
+    invalid_values: [ "3% 3%", "1px 1px 1px 1px 1px", "2px 2px, none", "red 2px 2px blue", "inherit, 2px 2px", "2px 2px, inherit", "2px 2px -5px", "inset 4px 4px black inset", "inset inherit", "inset none", "3 3", "3px 3", "3 3px", "3px 3px 3", "3px 3px 3px 3", "3px calc(3px + rubbish)", "3px 3px calc(3px + rubbish)", "3px 3px 3px calc(3px + rubbish)", "3px 3px 3px 3px rgb(0, rubbish, 0)", "unset, 2px 2px", "2px 2px, unset", "inset unset" ]
   },
   "caption-side": {
     domProp: "captionSide",
@@ -3519,7 +3492,7 @@ var gCSSProperties = {
       '"cswh", "smcp" off, "salt" 4', '"cswh" 1, "smcp" off, "salt" 4',
       '"cswh" 0, \'blah\', "liga", "smcp" off, "salt" 4',
       '"liga"        ,"smcp" 0         , "blah"',
-      '"ab\\"c"', '"ab\\\\c"'
+      '"ab\\"c"', '"ab\\\\c"', "'vert' calc(2)"
     ],
     invalid_values: [
       'liga', 'liga 1', 'liga normal', '"liga" normal', 'normal liga',
@@ -4206,7 +4179,7 @@ var gCSSProperties = {
     prerequisites: { "display": "block", "contain": "none" },
     subproperties: [ "overflow-x", "overflow-y" ],
     initial_values: [ "visible" ],
-    other_values: [ "auto", "scroll", "hidden", "-moz-hidden-unscrollable", "-moz-scrollbars-none",
+    other_values: [ "auto", "scroll", "hidden", "-moz-hidden-unscrollable",
                     "auto auto", "auto scroll", "hidden scroll", "auto hidden",
                     "-moz-hidden-unscrollable -moz-hidden-unscrollable" ],
     invalid_values: [ "-moz-hidden-unscrollable -moz-scrollbars-none" ]
@@ -4554,7 +4527,7 @@ var gCSSProperties = {
     applies_to_placeholder: true,
     initial_values: [ "clip" ],
     other_values: [ "ellipsis", '""', "''", '"hello"', 'clip clip', 'ellipsis ellipsis', 'clip ellipsis', 'clip ""', '"hello" ""', '"" ellipsis' ],
-    invalid_values: [ "none", "auto", '"hello" inherit', 'inherit "hello"', 'clip initial', 'initial clip', 'initial inherit', 'inherit initial', 'inherit none']
+    invalid_values: [ "none", "auto", '"hello" inherit', 'inherit "hello"', 'clip initial', 'initial clip', 'initial inherit', 'inherit initial', 'inherit none', '"hello" unset', 'unset "hello"', 'clip unset', 'unset clip', 'unset inherit', 'unset none', 'initial unset']
   },
   "text-shadow": {
     domProp: "textShadow",
@@ -4579,7 +4552,7 @@ var gCSSProperties = {
       "calc(2px) calc(2px) calc(2px)",
     ],
     invalid_values: [ "3% 3%", "2px 2px -5px", "2px 2px 2px 2px", "2px 2px, none", "none, 2px 2px", "inherit, 2px 2px", "2px 2px, inherit", "2 2px", "2px 2", "2px 2px 2", "2px 2px 2px 2",
-      "calc(2px) calc(2px) calc(2px) calc(2px)", "3px 3px calc(3px + rubbish)"
+      "calc(2px) calc(2px) calc(2px) calc(2px)", "3px 3px calc(3px + rubbish)", "unset, 2px 2px", "2px 2px, unset"
     ]
   },
   "text-transform": {
@@ -4619,7 +4592,7 @@ var gCSSProperties = {
     subproperties: [ "transition-property", "transition-duration", "transition-timing-function", "transition-delay" ],
     initial_values: [ "all 0s ease 0s", "all", "0s", "0s 0s", "ease" ],
     other_values: [ "all 0s cubic-bezier(0.25, 0.1, 0.25, 1.0) 0s", "width 1s linear 2s", "width 1s 2s linear", "width linear 1s 2s", "linear width 1s 2s", "linear 1s width 2s", "linear 1s 2s width", "1s width linear 2s", "1s width 2s linear", "1s 2s width linear", "1s linear width 2s", "1s linear 2s width", "1s 2s linear width", "width linear 1s", "width 1s linear", "linear width 1s", "linear 1s width", "1s width linear", "1s linear width", "1s 2s width", "1s width 2s", "width 1s 2s", "1s 2s linear", "1s linear 2s", "linear 1s 2s", "width 1s", "1s width", "linear 1s", "1s linear", "1s 2s", "2s 1s", "width", "linear", "1s", "height", "2s", "ease-in-out", "2s ease-in", "opacity linear", "ease-out 2s", "2s color, 1s width, 500ms height linear, 1s opacity 4s cubic-bezier(0.0, 0.1, 1.0, 1.0)", "1s \\32width linear 2s", "1s -width linear 2s", "1s -\\32width linear 2s", "1s \\32 0width linear 2s", "1s -\\32 0width linear 2s", "1s \\2width linear 2s", "1s -\\2width linear 2s", "2s, 1s width", "1s width, 2s", "2s all, 1s width", "1s width, 2s all", "2s all, 1s width", "2s width, 1s all", "3s --my-color", "none", "none 2s linear 2s" ],
-    invalid_values: [ "1s width, 2s none", "2s none, 1s width", "2s inherit", "inherit 2s", "2s width, 1s inherit", "2s inherit, 1s width", "2s initial", "1s width,,2s color", "1s width, ,2s color", "bounce 1s cubic-bezier(0, rubbish) 2s", "bounce 1s steps(rubbish) 2s" ]
+    invalid_values: [ "1s width, 2s none", "2s none, 1s width", "2s inherit", "inherit 2s", "2s width, 1s inherit", "2s inherit, 1s width", "2s initial", "1s width,,2s color", "1s width, ,2s color", "bounce 1s cubic-bezier(0, rubbish) 2s", "bounce 1s steps(rubbish) 2s", "2s unset" ]
   },
   "transition-delay": {
     domProp: "transitionDelay",
@@ -4643,7 +4616,7 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     initial_values: [ "all" ],
     other_values: [ "none", "left", "top", "color", "width, height, opacity", "foobar", "auto", "\\32width", "-width", "-\\32width", "\\32 0width", "-\\32 0width", "\\2width", "-\\2width", "all, all", "all, color", "color, all", "--my-color" ],
-    invalid_values: [ "none, none", "color, none", "none, color", "inherit, color", "color, inherit", "initial, color", "color, initial", "none, color", "color, none" ]
+    invalid_values: [ "none, none", "color, none", "none, color", "inherit, color", "color, inherit", "initial, color", "color, initial", "none, color", "color, none", "unset, color", "color, unset" ]
   },
   "transition-timing-function": {
     domProp: "transitionTimingFunction",
@@ -5628,7 +5601,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     logical: true,
     axis: true,
-    get_computed: logical_axis_prop_get_computed,
     /* XXX testing auto has prerequisites */
     initial_values: [ "auto" ],
     prerequisites: { "display": "block" },
@@ -5647,7 +5619,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     initial_values: [ "currentColor" ],
     other_values: [ "green", "rgba(255,128,0,0.5)", "transparent" ],
     invalid_values: [ "#0", "#00", "#00000", "#0000000", "#000000000", "000000" ]
@@ -5658,7 +5629,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* XXX hidden is sometimes the same as initial */
     initial_values: [ "none" ],
     other_values: [ "solid", "dashed", "dotted", "double", "outset", "inset", "groove", "ridge" ],
@@ -5670,7 +5640,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     prerequisites: { "border-block-end-style": "solid" },
     initial_values: [ "medium", "3px", "calc(4px - 1px)" ],
     other_values: [ "thin", "thick", "1px", "2em",
@@ -5700,7 +5669,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     initial_values: [ "currentColor" ],
     other_values: [ "green", "rgba(255,128,0,0.5)", "transparent" ],
     invalid_values: [ "#0", "#00", "#00000", "#0000000", "#000000000", "000000" ]
@@ -5711,7 +5679,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* XXX hidden is sometimes the same as initial */
     initial_values: [ "none" ],
     other_values: [ "solid", "dashed", "dotted", "double", "outset", "inset", "groove", "ridge" ],
@@ -5723,7 +5690,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     prerequisites: { "border-block-start-style": "solid" },
     initial_values: [ "medium", "3px", "calc(4px - 1px)" ],
     other_values: [ "thin", "thick", "1px", "2em",
@@ -5752,7 +5718,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "border-inline-end-color",
     subproperties: [ "border-inline-end-color" ],
-    get_computed: logical_box_prop_get_computed,
   },
   "-moz-border-end-style": {
     domProp: "MozBorderEndStyle",
@@ -5761,7 +5726,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "border-inline-end-style",
     subproperties: [ "border-inline-end-style" ],
-    get_computed: logical_box_prop_get_computed,
   },
   "-moz-border-end-width": {
     domProp: "MozBorderEndWidth",
@@ -5770,7 +5734,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "border-inline-end-width",
     subproperties: [ "border-inline-end-width" ],
-    get_computed: logical_box_prop_get_computed,
   },
   "-moz-border-start": {
     domProp: "MozBorderStart",
@@ -5786,7 +5749,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "border-inline-start-color",
     subproperties: [ "border-inline-start-color" ],
-    get_computed: logical_box_prop_get_computed,
   },
   "-moz-border-start-style": {
     domProp: "MozBorderStartStyle",
@@ -5795,7 +5757,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "border-inline-start-style",
     subproperties: [ "border-inline-start-style" ],
-    get_computed: logical_box_prop_get_computed,
   },
   "-moz-border-start-width": {
     domProp: "MozBorderStartWidth",
@@ -5804,7 +5765,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "border-inline-start-width",
     subproperties: [ "border-inline-start-width" ],
-    get_computed: logical_box_prop_get_computed,
   },
   "inline-size": {
     domProp: "inlineSize",
@@ -5812,7 +5772,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     logical: true,
     axis: true,
-    get_computed: logical_axis_prop_get_computed,
     /* XXX testing auto has prerequisites */
     initial_values: [ "auto" ],
     prerequisites: {
@@ -5844,7 +5803,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* XXX testing auto has prerequisites */
     initial_values: [ "0", "0px", "0%", "calc(0pt)", "calc(0% + 0px)" ],
     other_values: [ "1px", "2em", "5%",
@@ -5863,7 +5821,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     applies_to_first_letter: true,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* XXX testing auto has prerequisites */
     initial_values: [ "0", "0px", "0%", "calc(0pt)", "calc(0% + 0px)" ],
     other_values: [ "1px", "2em", "5%",
@@ -5883,7 +5840,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "margin-inline-end",
     subproperties: [ "margin-inline-end" ],
-    get_computed: logical_box_prop_get_computed,
   },
   "-moz-margin-start": {
     domProp: "MozMarginStart",
@@ -5892,7 +5848,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "margin-inline-start",
     subproperties: [ "margin-inline-start" ],
-    get_computed: logical_box_prop_get_computed,
   },
   "max-block-size": {
     domProp: "maxBlockSize",
@@ -5900,7 +5855,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     logical: true,
     axis: true,
-    get_computed: logical_axis_prop_get_computed,
     prerequisites: { "display": "block" },
     initial_values: [ "none" ],
     other_values: [ "30px", "50%",
@@ -5918,7 +5872,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     logical: true,
     axis: true,
-    get_computed: logical_axis_prop_get_computed,
     prerequisites: { "display": "block" },
     initial_values: [ "none" ],
     other_values: [ "30px", "50%",
@@ -5940,7 +5893,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     logical: true,
     axis: true,
-    get_computed: logical_axis_prop_get_computed,
     prerequisites: { "display": "block" },
     initial_values: [ "auto", "0", "calc(0em)", "calc(-2px)" ],
     other_values: [ "30px", "50%",
@@ -5959,7 +5911,6 @@ var gCSSProperties = {
     type: CSS_TYPE_LONGHAND,
     logical: true,
     axis: true,
-    get_computed: logical_axis_prop_get_computed,
     prerequisites: { "display": "block" },
     initial_values: [ "auto", "0", "calc(0em)", "calc(-2px)" ],
     other_values: [ "30px", "50%",
@@ -5976,12 +5927,11 @@ var gCSSProperties = {
     ],
     invalid_values: [ "none", "5" ]
   },
-  "offset-block-end": {
-    domProp: "offsetBlockEnd",
+  "inset-block-end": {
+    domProp: "insetBlockEnd",
     inherited: false,
     type: CSS_TYPE_LONGHAND,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* FIXME: run tests with multiple prerequisites */
     prerequisites: { "position": "relative" },
     /* XXX 0 may or may not be equal to auto */
@@ -5996,12 +5946,11 @@ var gCSSProperties = {
     ],
     invalid_values: []
   },
-  "offset-block-start": {
-    domProp: "offsetBlockStart",
+  "inset-block-start": {
+    domProp: "insetBlockStart",
     inherited: false,
     type: CSS_TYPE_LONGHAND,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* FIXME: run tests with multiple prerequisites */
     prerequisites: { "position": "relative" },
     /* XXX 0 may or may not be equal to auto */
@@ -6016,12 +5965,11 @@ var gCSSProperties = {
     ],
     invalid_values: []
   },
-  "offset-inline-end": {
-    domProp: "offsetInlineEnd",
+  "inset-inline-end": {
+    domProp: "insetInlineEnd",
     inherited: false,
     type: CSS_TYPE_LONGHAND,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* FIXME: run tests with multiple prerequisites */
     prerequisites: { "position": "relative" },
     /* XXX 0 may or may not be equal to auto */
@@ -6036,12 +5984,11 @@ var gCSSProperties = {
     ],
     invalid_values: []
   },
-  "offset-inline-start": {
-    domProp: "offsetInlineStart",
+  "inset-inline-start": {
+    domProp: "insetInlineStart",
     inherited: false,
     type: CSS_TYPE_LONGHAND,
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     /* FIXME: run tests with multiple prerequisites */
     prerequisites: { "position": "relative" },
     /* XXX 0 may or may not be equal to auto */
@@ -6063,7 +6010,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     // No applies_to_placeholder because we have a !important rule in forms.css.
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     initial_values: [ "0", "0px", "0%", "calc(0pt)", "calc(0% + 0px)", "calc(-3px)", "calc(-1%)" ],
     other_values: [ "1px", "2em", "5%",
       "calc(2px)",
@@ -6081,7 +6027,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     // No applies_to_placeholder because we have a !important rule in forms.css.
     logical: true,
-    get_computed: logical_box_prop_get_computed,
     initial_values: [ "0", "0px", "0%", "calc(0pt)", "calc(0% + 0px)", "calc(-3px)", "calc(-1%)" ],
     other_values: [ "1px", "2em", "5%",
       "calc(2px)",
@@ -6099,7 +6044,6 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "padding-inline-end",
     subproperties: [ "padding-inline-end" ],
-    get_computed: logical_box_prop_get_computed,
   },
   "-moz-padding-start": {
     domProp: "MozPaddingStart",
@@ -6108,124 +6052,8 @@ var gCSSProperties = {
     applies_to_first_letter: true,
     alias_for: "padding-inline-start",
     subproperties: [ "padding-inline-start" ],
-    get_computed: logical_box_prop_get_computed,
   },
 } // end of gCSSProperties
-
-function logical_axis_prop_get_computed(cs, property)
-{
-  // Use defaults for these two properties in case the vertical text
-  // pref (which they live behind) is turned off.
-  var writingMode = cs.getPropertyValue("writing-mode") || "horizontal-tb";
-  var orientation = writingMode.substring(0, writingMode.indexOf("-"));
-
-  var mappings = {
-    "block-size":      { horizontal: "height",
-                         vertical:   "width",
-                         sideways:   "width"      },
-    "inline-size":     { horizontal: "width",
-                         vertical:   "height",
-                         sideways:   "height"     },
-    "max-block-size":  { horizontal: "max-height",
-                         vertical:   "max-width",
-                         sideways:   "max-width"  },
-    "max-inline-size": { horizontal: "max-width",
-                         vertical:   "max-height",
-                         sideways:   "max-height" },
-    "min-block-size":  { horizontal: "min-height",
-                         vertical:   "min-width",
-                         sideways:   "min-width"  },
-    "min-inline-size": { horizontal: "min-width",
-                         vertical:   "min-height",
-                         sideways:   "min-height" },
-  };
-
-  if (!mappings[property]) {
-    throw "unexpected property " + property;
-  }
-
-  var prop = mappings[property][orientation];
-  if (!prop) {
-    throw "unexpected writing mode " + writingMode;
-  }
-
-  return cs.getPropertyValue(prop);
-}
-
-function logical_box_prop_get_computed(cs, property)
-{
-  // http://dev.w3.org/csswg/css-writing-modes-3/#logical-to-physical
-
-  // Use default for writing-mode in case the vertical text
-  // pref (which it lives behind) is turned off.
-  var writingMode = cs.getPropertyValue("writing-mode") || "horizontal-tb";
-
-  var direction = cs.getPropertyValue("direction");
-
-  // keys in blockMappings are writing-mode values
-  var blockMappings = {
-    "horizontal-tb": { "start": "top",   "end": "bottom" },
-    "vertical-rl":   { "start": "right", "end": "left"   },
-    "vertical-lr":   { "start": "left",  "end": "right"  },
-    "sideways-rl":   { "start": "right", "end": "left"   },
-    "sideways-lr":   { "start": "left",  "end": "right"  },
-  };
-
-  // keys in inlineMappings are regular expressions that match against
-  // a {writing-mode,direction} pair as a space-separated string
-  var inlineMappings = {
-    "horizontal-tb ltr": { "start": "left",   "end": "right"  },
-    "horizontal-tb rtl": { "start": "right",  "end": "left"   },
-    "vertical-.. ltr":   { "start": "bottom", "end": "top"    },
-    "vertical-.. rtl":   { "start": "top",    "end": "bottom" },
-    "vertical-.. ltr":   { "start": "top",    "end": "bottom" },
-    "vertical-.. rtl":   { "start": "bottom", "end": "top"    },
-    "sideways-lr ltr":   { "start": "bottom", "end": "top"    },
-    "sideways-lr rtl":   { "start": "top",    "end": "bottom" },
-    "sideways-rl ltr":   { "start": "top",    "end": "bottom" },
-    "sideways-rl rtl":   { "start": "bottom", "end": "top"    },
-  };
-
-  var blockMapping = blockMappings[writingMode];
-  var inlineMapping;
-
-  // test each regular expression in inlineMappings against the
-  // {writing-mode,direction} pair
-  var key = `${writingMode} ${direction}`;
-  for (var k in inlineMappings) {
-    if (new RegExp(k).test(key)) {
-      inlineMapping = inlineMappings[k];
-      break;
-    }
-  }
-
-  if (!blockMapping || !inlineMapping) {
-    throw "Unexpected writing mode property values";
-  }
-
-  function physicalize(aProperty, aMapping, aLogicalPrefix) {
-    for (var logicalSide in aMapping) {
-      var physicalSide = aMapping[logicalSide];
-      logicalSide = aLogicalPrefix + logicalSide;
-      aProperty = aProperty.replace(logicalSide, physicalSide);
-    }
-    return aProperty;
-  }
-
-  if (/^-moz-/.test(property)) {
-    property = physicalize(property.substring(5), inlineMapping, "");
-  } else if (/^offset-(block|inline)-(start|end)/.test(property)) {
-    property = property.substring(7);  // we want "top" not "offset-top", e.g.
-    property = physicalize(property, blockMapping, "block-");
-    property = physicalize(property, inlineMapping, "inline-");
-  } else if (/-(block|inline)-(start|end)/.test(property)) {
-    property = physicalize(property, blockMapping, "block-");
-    property = physicalize(property, inlineMapping, "inline-");
-  } else {
-    throw "Unexpected property";
-  }
-  return cs.getPropertyValue(property);
-}
 
 // Get the computed value for a property.  For shorthands, return the
 // computed values of all the subproperties, delimited by " ; ".
@@ -6242,13 +6070,10 @@ function get_computed_value(cs, property)
     }
     return results.join(" ; ");
   }
-  if (info.get_computed)
-    return info.get_computed(cs, property);
   return cs.getPropertyValue(property);
 }
 
-if (SpecialPowers.DOMWindowUtils.isStyledByServo &&
-    IsCSSPropertyPrefEnabled("layout.css.individual-transform.enabled")) {
+if (IsCSSPropertyPrefEnabled("layout.css.individual-transform.enabled")) {
   gCSSProperties.rotate = {
     domProp: "rotate",
     inherited: false,
@@ -6320,11 +6145,6 @@ if (IsCSSPropertyPrefEnabled("layout.css.touch_action.enabled")) {
     };
 }
 
-if (IsCSSPropertyPrefEnabled("layout.css.text-combine-upright-digits.enabled")) {
-  gCSSProperties["text-combine-upright"].other_values.push(
-    "digits", "digits 2", "digits 3", "digits 4", "digits     3");
-}
-
 if (IsCSSPropertyPrefEnabled("layout.css.text-justify.enabled")) {
   gCSSProperties["text-justify"] = {
     domProp: "textJustify",
@@ -6376,14 +6196,8 @@ if (IsCSSPropertyPrefEnabled("layout.css.font-variations.enabled")) {
     invalid_values: [ "on" ]
   };
   gCSSProperties["font"].subproperties.push("font-optical-sizing");
-  if (SpecialPowers.DOMWindowUtils.isStyledByServo) {
-    gCSSProperties["font-variation-settings"].other_values
-      .push("'vert' calc(2.5)");
-  }
-}
-
-if (SpecialPowers.DOMWindowUtils.isStyledByServo) {
-  gCSSProperties["font-feature-settings"].other_values.push("'vert' calc(2)");
+  gCSSProperties["font-variation-settings"].other_values
+    .push("'vert' calc(2.5)");
 }
 
 if (IsCSSPropertyPrefEnabled("layout.css.frames-timing.enabled")) {
@@ -6527,6 +6341,7 @@ if (IsCSSPropertyPrefEnabled("layout.css.filters.enabled")) {
       "grayscale(350%)",
       "grayscale(4.567)",
 
+      "hue-rotate(0)",
       "hue-rotate(0deg)",
       "hue-rotate(90deg)",
       "hue-rotate(540deg)",
@@ -6683,15 +6498,6 @@ if (IsCSSPropertyPrefEnabled("layout.css.filters.enabled")) {
       "sepia(-1)",
     ]
   };
-
-  // See https://github.com/w3c/fxtf-drafts/issues/228.
-  //
-  // This is updated in Stylo but not Gecko.
-  if (SpecialPowers.DOMWindowUtils.isStyledByServo) {
-    gCSSProperties["filter"].other_values.push("hue-rotate(0)");
-  } else {
-    gCSSProperties["filter"].invalid_values.push("hue-rotate(0)");
-  }
 }
 
 var isGridTemplateSubgridValueEnabled =
@@ -7278,6 +7084,8 @@ if (IsCSSPropertyPrefEnabled("layout.css.contain.enabled")) {
       "strict",
       "layout",
       "style",
+      "size",
+      "content",
       "layout style",
       "style layout",
       "paint",
@@ -7285,6 +7093,9 @@ if (IsCSSPropertyPrefEnabled("layout.css.contain.enabled")) {
       "paint layout",
       "style paint",
       "paint style",
+      "size layout",
+      "style size",
+      "paint size",
       "layout style paint",
       "layout paint style",
       "style paint layout",
@@ -7295,11 +7106,18 @@ if (IsCSSPropertyPrefEnabled("layout.css.contain.enabled")) {
       "strict layout",
       "strict layout style",
       "layout strict",
+      "layout content",
+      "strict content",
       "layout style strict",
       "layout style paint strict",
       "paint strict",
       "style strict",
       "paint paint",
+      "content content",
+      "size content",
+      "content strict size",
+      "paint layout content",
+      "layout size content",
       "strict strict",
       "auto",
       "10px",
@@ -7313,73 +7131,9 @@ if (IsCSSPropertyPrefEnabled("layout.css.image-orientation.enabled")) {
     domProp: "imageOrientation",
     inherited: true,
     type: CSS_TYPE_LONGHAND,
-    initial_values: [
-      "0deg",
-      "0grad",
-      "0rad",
-      "0turn",
-
-      // Rounded initial values.
-      "15deg",
-      "360deg",
-    ],
-    other_values: [
-      "-90deg",
-      "0deg flip",
-      "90deg",
-      "90deg flip",
-      "180deg",
-      "180deg flip",
-      "270deg",
-      "270deg flip",
-      "flip",
-      "from-image",
-
-      // Grad units.
-      "0grad flip",
-      "100grad",
-      "100grad flip",
-      "200grad",
-      "200grad flip",
-      "300grad",
-      "300grad flip",
-
-      // Radian units.
-      "0rad flip",
-      "1.57079633rad",
-      "1.57079633rad flip",
-      "3.14159265rad",
-      "3.14159265rad flip",
-      "4.71238898rad",
-      "4.71238898rad flip",
-
-      // Turn units.
-      "0turn flip",
-      "0.25turn",
-      "0.25turn flip",
-      "0.5turn",
-      "0.5turn flip",
-      "0.75turn",
-      "0.75turn flip",
-
-      // Rounded values.
-      "-45deg flip",
-      "65deg flip",
-      "400deg flip",
-    ],
-    invalid_values: [
-      "none",
-      "0deg none",
-      "flip 0deg",
-      "flip 0deg",
-      "0",
-      "0 flip",
-      "flip 0",
-      "0deg from-image",
-      "from-image 0deg",
-      "flip from-image",
-      "from-image flip",
-    ]
+    initial_values: [ "none" ],
+    other_values: [ "from-image" ],
+    invalid_values: [ "0", "0deg" ]
   };
 }
 
@@ -8106,6 +7860,51 @@ if (IsCSSPropertyPrefEnabled("layout.css.prefixes.webkit")) {
   };
 }
 
+if (IsCSSPropertyPrefEnabled("layout.css.webkit-appearance.enabled")) {
+  gCSSProperties["-webkit-appearance"] = {
+    domProp: "webkitAppearance",
+    inherited: false,
+    type: CSS_TYPE_SHORTHAND_AND_LONGHAND,
+    alias_for: "-moz-appearance",
+    subproperties: [ "-moz-appearance" ],
+  };
+}
+
+if (IsCSSPropertyPrefEnabled("layout.css.offset-logical-properties.enabled")) {
+  gCSSProperties["offset-block-start"] = {
+    domProp: "offsetBlockStart",
+    inherited: false,
+    type: CSS_TYPE_SHORTHAND_AND_LONGHAND,
+    logical: true,
+    alias_for: "inset-block-start",
+    subproperties: [ "inset-block-start" ],
+  };
+  gCSSProperties["offset-block-end"] = {
+    domProp: "offsetBlockEnd",
+    inherited: false,
+    type: CSS_TYPE_SHORTHAND_AND_LONGHAND,
+    logical: true,
+    alias_for: "inset-block-end",
+    subproperties: [ "inset-block-end" ],
+  };
+  gCSSProperties["offset-inline-start"] = {
+    domProp: "offsetInlineStart",
+    inherited: false,
+    type: CSS_TYPE_SHORTHAND_AND_LONGHAND,
+    logical: true,
+    alias_for: "inset-inline-start",
+    subproperties: [ "inset-inline-start" ],
+  };
+  gCSSProperties["offset-inline-end"] = {
+    domProp: "offsetInlineEnd",
+    inherited: false,
+    type: CSS_TYPE_SHORTHAND_AND_LONGHAND,
+    logical: true,
+    alias_for: "inset-inline-end",
+    subproperties: [ "inset-inline-end" ],
+  };
+}
+
 if (IsCSSPropertyPrefEnabled("layout.css.prefixes.gradients")) {
   gCSSProperties["background"].other_values.push(
     "-moz-radial-gradient(10% bottom, #ffffff, black) scroll no-repeat",
@@ -8149,34 +7948,6 @@ if (IsCSSPropertyPrefEnabled("layout.css.text-align-unsafe-value.enabled")) {
 }
 
 gCSSProperties["display"].other_values.push("flow-root");
-
-// Copy aliased properties' fields from their alias targets.
-for (var prop in gCSSProperties) {
-  var entry = gCSSProperties[prop];
-  if (entry.alias_for) {
-    var aliasTargetEntry = gCSSProperties[entry.alias_for];
-    if (!aliasTargetEntry) {
-      ok(false,
-         "Alias '" + prop + "' alias_for field, '" + entry.alias_for + "', " +
-         "must be set to a recognized CSS property in gCSSProperties");
-    } else {
-      // Copy 'values' fields & 'prerequisites' field from aliasTargetEntry:
-      var fieldsToCopy =
-          ["initial_values", "other_values", "invalid_values",
-           "quirks_values", "unbalanced_values",
-           "prerequisites"];
-
-      fieldsToCopy.forEach(function(fieldName) {
-        // (Don't copy the field if the alias already has something there,
-        // or if the aliased property doesn't have anything to copy.)
-        if (!(fieldName in entry) &&
-            fieldName in aliasTargetEntry) {
-          entry[fieldName] = aliasTargetEntry[fieldName]
-        }
-      });
-    }
-  }
-}
 
 if (IsCSSPropertyPrefEnabled("layout.css.column-span.enabled")) {
   gCSSProperties["column-span"] = {
@@ -8330,36 +8101,123 @@ if (false) {
     other_values: [ "green", "#fc3" ],
     invalid_values: [ "000000", "ff00ff" ]
   };
+
+  // |clip-path: path()| is chrome-only.
+  gCSSProperties["clip-path"].other_values.push(
+    "path(nonzero, 'M 10 10 h 100 v 100 h-100 v-100 z')",
+    "path(evenodd, 'M 10 10 h 100 v 100 h-100 v-100 z')",
+    "path('M10,30A20,20 0,0,1 50,30A20,20 0,0,1 90,30Q90,60 50,90Q10,60 10,30z')",
+  );
+
+  gCSSProperties["clip-path"].invalid_values.push(
+    "path(nonzero)",
+    "path(evenodd, '')",
+    "path(abs, 'M 10 10 L 10 10 z')",
+  );
 }
 
-if (IsCSSPropertyPrefEnabled("layout.css.unset-value.enabled")) {
-  gCSSProperties["animation"].invalid_values.push("2s unset");
-  gCSSProperties["animation-direction"].invalid_values.push("normal, unset", "unset, normal");
-  gCSSProperties["animation-name"].invalid_values.push("bounce, unset", "unset, bounce");
-  gCSSProperties["border-radius"].invalid_values.push("unset 2px", "unset / 2px", "2px unset", "2px / unset");
-  gCSSProperties["border-bottom-left-radius"].invalid_values.push("unset 2px", "2px unset");
-  gCSSProperties["border-bottom-right-radius"].invalid_values.push("unset 2px", "2px unset");
-  gCSSProperties["border-top-left-radius"].invalid_values.push("unset 2px", "2px unset");
-  gCSSProperties["border-top-right-radius"].invalid_values.push("unset 2px", "2px unset");
-  gCSSProperties["-moz-outline-radius"].invalid_values.push("unset 2px", "unset / 2px", "2px unset", "2px / unset");
-  gCSSProperties["-moz-outline-radius-bottomleft"].invalid_values.push("unset 2px", "2px unset");
-  gCSSProperties["-moz-outline-radius-bottomright"].invalid_values.push("unset 2px", "2px unset");
-  gCSSProperties["-moz-outline-radius-topleft"].invalid_values.push("unset 2px", "2px unset");
-  gCSSProperties["-moz-outline-radius-topright"].invalid_values.push("unset 2px", "2px unset");
-  gCSSProperties["background-image"].invalid_values.push("linear-gradient(unset, 10px 10px, from(blue))", "linear-gradient(unset, 10px 10px, blue 0)", "repeating-linear-gradient(unset, 10px 10px, blue 0)");
-  gCSSProperties["box-shadow"].invalid_values.push("unset, 2px 2px", "2px 2px, unset", "inset unset");
-  gCSSProperties["text-overflow"].invalid_values.push('"hello" unset', 'unset "hello"', 'clip unset', 'unset clip', 'unset inherit', 'unset none', 'initial unset');
-  gCSSProperties["text-shadow"].invalid_values.push("unset, 2px 2px", "2px 2px, unset");
-  gCSSProperties["transition"].invalid_values.push("2s unset");
-  gCSSProperties["transition-property"].invalid_values.push("unset, color", "color, unset");
-  if (IsCSSPropertyPrefEnabled("layout.css.filters.enabled")) {
-    gCSSProperties["filter"].invalid_values.push("drop-shadow(unset, 2px 2px)", "drop-shadow(2px 2px, unset)");
-  }
-  if (IsCSSPropertyPrefEnabled("layout.css.prefixes.gradients")) {
-    gCSSProperties["background-image"].invalid_values.push(
-      "-moz-linear-gradient(unset, 10px 10px, from(blue))",
-      "-moz-linear-gradient(unset, 10px 10px, blue 0)",
-      "-moz-repeating-linear-gradient(unset, 10px 10px, blue 0)",
-    );
+if (IsCSSPropertyPrefEnabled("layout.css.filters.enabled")) {
+  gCSSProperties["filter"].invalid_values.push("drop-shadow(unset, 2px 2px)", "drop-shadow(2px 2px, unset)");
+}
+
+if (IsCSSPropertyPrefEnabled("layout.css.prefixes.gradients")) {
+  gCSSProperties["background-image"].invalid_values.push(
+    "-moz-linear-gradient(unset, 10px 10px, from(blue))",
+    "-moz-linear-gradient(unset, 10px 10px, blue 0)",
+    "-moz-repeating-linear-gradient(unset, 10px 10px, blue 0)",
+  );
+}
+
+if (IsCSSPropertyPrefEnabled("layout.css.scrollbar-colors.enabled")) {
+  gCSSProperties["scrollbar-face-color"] = {
+    domProp: "scrollbarFaceColor",
+    inherited: true,
+    type: CSS_TYPE_LONGHAND,
+    initial_values: [ "auto" ],
+    other_values: [ "red", "blue", "#ffff00" ],
+    invalid_values: [ "ffff00" ]
+  };
+  gCSSProperties["scrollbar-track-color"] = {
+    domProp: "scrollbarTrackColor",
+    inherited: true,
+    type: CSS_TYPE_LONGHAND,
+    initial_values: [ "auto" ],
+    other_values: [ "red", "blue", "#ffff00" ],
+    invalid_values: [ "ffff00" ]
+  };
+}
+
+if (IsCSSPropertyPrefEnabled("layout.css.scrollbar-width.enabled")) {
+  gCSSProperties["scrollbar-width"] = {
+    domProp: "scrollbarWidth",
+    inherited: false,
+    type: CSS_TYPE_LONGHAND,
+    initial_values: [ "auto" ],
+    other_values: [ "none", "thin" ],
+    invalid_values: [ "1px" ]
+  };
+}
+
+if (IsCSSPropertyPrefEnabled("layout.css.motion-path.enabled")) {
+  gCSSProperties["offset-path"] = {
+    domProp: "offsetPath",
+    inherited: false,
+    type: CSS_TYPE_LONGHAND,
+    initial_values: [ "none" ],
+    other_values: [
+      "path('M 10 10 20 20 H 90 V 90 Z')",
+      "path('M10 10 20,20H90V90Z')",
+      "path('M 10 10 C 20 20, 40 20, 50 10')",
+      "path('M 10 80 C 40 10, 65 10, 95 80 S 1.5e2 150, 180 80')",
+      "path('M 10 80 Q 95 10 180 80')",
+      "path('M 10 80 Q 52.5 10, 95 80 T 180 80')",
+      "path('M 80 80 A 45 45, 0, 0, 0, 1.25e2 1.25e2 L 125 80 Z')",
+      "path('M100-200h20z')",
+      "path('M10,10L20.6.5z')"
+    ],
+    invalid_values: [ "path('')", "path()", "path(a)", "path('M 10 Z')" ,
+                      "path('M 10-10 20')", "path('M 10 10 C 20 20 40 20')" ]
+  };
+}
+
+const OVERFLOW_MOZKWS = [
+  "-moz-scrollbars-none",
+  "-moz-scrollbars-horizontal",
+  "-moz-scrollbars-vertical",
+];
+if (IsCSSPropertyPrefEnabled("layout.css.overflow.moz-scrollbars.enabled")) {
+  gCSSProperties["overflow"].other_values.push(...OVERFLOW_MOZKWS);
+} else {
+  gCSSProperties["overflow"].invalid_values.push(...OVERFLOW_MOZKWS);
+}
+
+// Copy aliased properties' fields from their alias targets. Keep this logic
+// at the bottom of this file to ensure all the aliased properties are
+// processed.
+for (var prop in gCSSProperties) {
+  var entry = gCSSProperties[prop];
+  if (entry.alias_for) {
+    var aliasTargetEntry = gCSSProperties[entry.alias_for];
+    if (!aliasTargetEntry) {
+      ok(false,
+         "Alias '" + prop + "' alias_for field, '" + entry.alias_for + "', " +
+         "must be set to a recognized CSS property in gCSSProperties");
+    } else {
+      // Copy 'values' fields & 'prerequisites' field from aliasTargetEntry:
+      var fieldsToCopy =
+          ["initial_values", "other_values", "invalid_values",
+           "quirks_values", "unbalanced_values",
+           "prerequisites"];
+
+      fieldsToCopy.forEach(function(fieldName) {
+        // (Don't copy the field if the alias already has something there,
+        // or if the aliased property doesn't have anything to copy.)
+        if (!(fieldName in entry) &&
+            fieldName in aliasTargetEntry) {
+          entry[fieldName] = aliasTargetEntry[fieldName]
+        }
+      });
+    }
   }
 }
+

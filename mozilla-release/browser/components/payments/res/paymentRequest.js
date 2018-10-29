@@ -11,6 +11,7 @@
 /* import-globals-from unprivileged-fallbacks.js */
 
 var paymentRequest = {
+  _nextMessageID: 1,
   domReadyPromise: null,
 
   init() {
@@ -54,15 +55,23 @@ var paymentRequest = {
     }
   },
 
+  /**
+   * @param {string} messageType
+   * @param {[object]} detail
+   * @returns {number} message ID to be able to identify a reply (where applicable).
+   */
   sendMessageToChrome(messageType, detail = {}) {
-    log.debug("sendMessageToChrome:", messageType, detail);
+    let messageID = this._nextMessageID++;
+    log.debug("sendMessageToChrome:", messageType, messageID, detail);
     let event = new CustomEvent("paymentContentToChrome", {
       bubbles: true,
       detail: Object.assign({
         messageType,
+        messageID,
       }, detail),
     });
     document.dispatchEvent(event);
+    return messageID;
   },
 
   toggleDebuggingConsole() {
@@ -114,12 +123,52 @@ var paymentRequest = {
 
     log.debug("onShowPaymentRequest: domReadyPromise resolved");
     log.debug("onShowPaymentRequest, isPrivate?", detail.isPrivate);
-    document.querySelector("payment-dialog").setStateFromParent({
+
+    let paymentDialog = document.querySelector("payment-dialog");
+    let hasSavedAddresses = Object.keys(detail.savedAddresses).length != 0;
+    let hasSavedCards = Object.keys(detail.savedBasicCards).length != 0;
+    let shippingRequested = detail.request.paymentOptions.requestShipping;
+    let state = {
       request: detail.request,
       savedAddresses: detail.savedAddresses,
       savedBasicCards: detail.savedBasicCards,
       isPrivate: detail.isPrivate,
-    });
+      page: {
+        id: "payment-summary",
+      },
+    };
+
+    // Onboarding wizard flow.
+    if (!hasSavedAddresses && (shippingRequested || !hasSavedCards)) {
+      state.page = {
+        id: "address-page",
+        onboardingWizard: true,
+      };
+
+      state["address-page"] = {
+        addressFields: null,
+        guid: null,
+      };
+
+      if (shippingRequested) {
+        Object.assign(state["address-page"], {
+          selectedStateKey: ["selectedShippingAddress"],
+          title: paymentDialog.dataset.shippingAddressTitleAdd,
+        });
+      } else {
+        Object.assign(state["address-page"], {
+          selectedStateKey: ["basic-card-page", "billingAddressGUID"],
+          title: paymentDialog.dataset.billingAddressTitleAdd,
+        });
+      }
+    } else if (!hasSavedCards) {
+      state.page = {
+        id: "basic-card-page",
+        onboardingWizard: true,
+      };
+    }
+
+    paymentDialog.setStateFromParent(state);
   },
 
   cancel() {
@@ -128,6 +177,10 @@ var paymentRequest = {
 
   pay(data) {
     this.sendMessageToChrome("pay", data);
+  },
+
+  closeDialog() {
+    this.sendMessageToChrome("closeDialog");
   },
 
   changeShippingAddress(data) {
@@ -145,21 +198,30 @@ var paymentRequest = {
    * @param {string} collectionName The autofill collection that record belongs to.
    * @param {object} record The autofill record to add/update
    * @param {string} [guid] The guid of the autofill record to update
+   * @returns {Promise} when the update response is received
    */
-  updateAutofillRecord(collectionName, record, guid, {
-    errorStateChange,
-    preserveOldProperties,
-    selectedStateKey,
-    successStateChange,
-  }) {
-    this.sendMessageToChrome("updateAutofillRecord", {
-      collectionName,
-      guid,
-      record,
-      errorStateChange,
-      preserveOldProperties,
-      selectedStateKey,
-      successStateChange,
+  updateAutofillRecord(collectionName, record, guid) {
+    return new Promise((resolve, reject) => {
+      let messageID = this.sendMessageToChrome("updateAutofillRecord", {
+        collectionName,
+        guid,
+        record,
+      });
+
+      window.addEventListener("paymentChromeToContent", function onMsg({detail}) {
+        if (detail.messageType != "updateAutofillRecord:Response"
+            || detail.messageID != messageID) {
+          return;
+        }
+        log.debug("updateAutofillRecord: response:", detail);
+        window.removeEventListener("paymentChromeToContent", onMsg);
+        document.querySelector("payment-dialog").setStateFromParent(detail.stateChange);
+        if (detail.error) {
+          reject(detail);
+        } else {
+          resolve(detail);
+        }
+      });
     });
   },
 
@@ -204,6 +266,11 @@ var paymentRequest = {
   onPaymentRequestUnload() {
     // remove listeners that may be used multiple times here
     window.removeEventListener("paymentChromeToContent", this);
+  },
+
+  getAddresses(state) {
+    let addresses = Object.assign({}, state.savedAddresses, state.tempAddresses);
+    return addresses;
   },
 
   getBasicCards(state) {

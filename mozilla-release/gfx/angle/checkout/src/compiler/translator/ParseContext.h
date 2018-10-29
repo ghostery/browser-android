@@ -43,8 +43,8 @@ class TParseContext : angle::NonCopyable
                   const ShBuiltInResources &resources);
     ~TParseContext();
 
-    const pp::Preprocessor &getPreprocessor() const { return mPreprocessor; }
-    pp::Preprocessor &getPreprocessor() { return mPreprocessor; }
+    const angle::pp::Preprocessor &getPreprocessor() const { return mPreprocessor; }
+    angle::pp::Preprocessor &getPreprocessor() { return mPreprocessor; }
     void *getScanner() const { return mScanner; }
     void setScanner(void *scanner) { mScanner = scanner; }
     int getShaderVersion() const { return mShaderVersion; }
@@ -419,6 +419,8 @@ class TParseContext : angle::NonCopyable
     TIntermBranch *addBranch(TOperator op, const TSourceLoc &loc);
     TIntermBranch *addBranch(TOperator op, TIntermTyped *expression, const TSourceLoc &loc);
 
+    void appendStatement(TIntermBlock *block, TIntermNode *statement);
+
     void checkTextureGather(TIntermAggregate *functionCall);
     void checkTextureOffsetConst(TIntermAggregate *functionCall);
     void checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall);
@@ -463,6 +465,8 @@ class TParseContext : angle::NonCopyable
     // TODO(jie.a.chen@intel.com): Double check this once the spec vagueness is resolved.
     // Note that there may be tests in AtomicCounter_test that will need to be updated as well.
     constexpr static size_t kAtomicCounterArrayStride = 4;
+
+    void markStaticReadIfSymbol(TIntermNode *node);
 
     // Returns a clamped index. If it prints out an error message, the token is "[]".
     int checkIndexLessThan(bool outOfRangeIndexIsError,
@@ -545,11 +549,10 @@ class TParseContext : angle::NonCopyable
                                         TIntermTyped *left,
                                         TIntermTyped *right,
                                         const TSourceLoc &loc);
-    TIntermBinary *createAssign(TOperator op,
-                                TIntermTyped *left,
-                                TIntermTyped *right,
-                                const TSourceLoc &loc);
-    TIntermTyped *createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc);
+    TIntermTyped *createUnaryMath(TOperator op,
+                                  TIntermTyped *child,
+                                  const TSourceLoc &loc,
+                                  const TFunction *func);
 
     TIntermTyped *addMethod(TFunctionLookup *fnCall, const TSourceLoc &loc);
     TIntermTyped *addConstructor(TFunctionLookup *fnCall, const TSourceLoc &line);
@@ -604,12 +607,8 @@ class TParseContext : angle::NonCopyable
     TString mHashErrMsg;
     TDiagnostics *mDiagnostics;
     TDirectiveHandler mDirectiveHandler;
-    pp::Preprocessor mPreprocessor;
+    angle::pp::Preprocessor mPreprocessor;
     void *mScanner;
-    bool mUsesFragData;  // track if we are using both gl_FragData and gl_FragColor
-    bool mUsesFragColor;
-    bool mUsesSecondaryOutputs;  // Track if we are using either gl_SecondaryFragData or
-                                 // gl_Secondary FragColor or both.
     int mMinProgramTexelOffset;
     int mMaxProgramTexelOffset;
 
@@ -642,10 +641,6 @@ class TParseContext : angle::NonCopyable
     int mGeometryShaderMaxVertices;
     int mMaxGeometryShaderInvocations;
     int mMaxGeometryShaderMaxVertices;
-
-    // Store gl_in variable with its array size once the array size can be determined. The array
-    // size can also be checked against latter input primitive type declaration.
-    const TVariable *mGlInVariableWithArraySize;
 };
 
 int PaParseStrings(size_t count,

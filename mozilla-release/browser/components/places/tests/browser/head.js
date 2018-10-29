@@ -65,43 +65,6 @@ function promiseClipboard(aPopulateClipboardFn, aFlavor) {
   });
 }
 
-/**
- * Waits for all pending async statements on the default connection, before
- * proceeding with aCallback.
- *
- * @param aCallback
- *        Function to be called when done.
- * @param aScope
- *        Scope for the callback.
- * @param aArguments
- *        Arguments array for the callback.
- *
- * @note The result is achieved by asynchronously executing a query requiring
- *       a write lock.  Since all statements on the same connection are
- *       serialized, the end of this write operation means that all writes are
- *       complete.  Note that WAL makes so that writers don't block readers, but
- *       this is a problem only across different connections.
- */
-function waitForAsyncUpdates(aCallback, aScope, aArguments) {
-  let scope = aScope || this;
-  let args = aArguments || [];
-  let db = PlacesUtils.history.QueryInterface(Ci.nsPIPlacesDatabase)
-                              .DBConnection;
-  let begin = db.createAsyncStatement("BEGIN EXCLUSIVE");
-  begin.executeAsync();
-  begin.finalize();
-
-  let commit = db.createAsyncStatement("COMMIT");
-  commit.executeAsync({
-    handleResult() {},
-    handleError() {},
-    handleCompletion(aReason) {
-      aCallback.apply(scope, args);
-    }
-  });
-  commit.finalize();
-}
-
 function synthesizeClickOnSelectedTreeCell(aTree, aOptions) {
   let tbo = aTree.treeBoxObject;
   if (tbo.view.selection.count != 1)
@@ -285,9 +248,7 @@ var openContextMenuForContentSelector = async function(browser, selector) {
     dump(`openContextMenuForContentSelector: found ${elt}\n`);
 
     /* Open context menu so chrome can access the element */
-    const domWindowUtils =
-      content.QueryInterface(Ci.nsIInterfaceRequestor)
-             .getInterface(Ci.nsIDOMWindowUtils);
+    const domWindowUtils = content.windowUtils;
     let rect = elt.getBoundingClientRect();
     let left = rect.left + rect.width / 2;
     let top = rect.top + rect.height / 2;
@@ -440,4 +401,19 @@ function getToolbarNodeForItemGuid(itemGuid) {
     }
   }
   return null;
+}
+
+// Open the bookmarks Star UI by clicking the star button on the address bar.
+async function clickBookmarkStar() {
+  let shownPromise = promisePopupShown(document.getElementById("editBookmarkPanel"));
+  BookmarkingUI.star.click();
+  await shownPromise;
+}
+
+// Close the bookmarks Star UI by clicking the "Done" button.
+async function hideBookmarksPanel() {
+  let hiddenPromise = promisePopupHidden(document.getElementById("editBookmarkPanel"));
+  // Confirm and close the dialog.
+  document.getElementById("editBookmarkPanelDoneButton").click();
+  await hiddenPromise;
 }

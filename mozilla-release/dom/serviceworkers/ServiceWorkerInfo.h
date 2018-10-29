@@ -12,11 +12,13 @@
 #include "mozilla/dom/WorkerCommon.h"
 #include "mozilla/OriginAttributes.h"
 #include "nsIServiceWorkerManager.h"
-#include "ServiceWorker.h"
 
 namespace mozilla {
 namespace dom {
 
+class ClientInfoAndState;
+class ClientState;
+class ServiceWorkerCloneData;
 class ServiceWorkerPrivate;
 
 /*
@@ -26,7 +28,6 @@ class ServiceWorkerPrivate;
  * by this class and spawn a ServiceWorker in the right global when required.
  */
 class ServiceWorkerInfo final : public nsIServiceWorkerInfo
-                              , public ServiceWorker::Inner
 {
 private:
   nsCOMPtr<nsIPrincipal> mPrincipal;
@@ -54,13 +55,6 @@ private:
   PRTime mActivatedTime;
   PRTime mRedundantTime;
 
-  // We hold rawptrs since the ServiceWorker constructor and destructor ensure
-  // addition and removal.
-  //
-  // There is a high chance of there being at least one ServiceWorker
-  // associated with this all the time.
-  AutoTArray<ServiceWorker*, 1> mInstances;
-
   RefPtr<ServiceWorkerPrivate> mServiceWorkerPrivate;
   bool mSkipWaitingFlag;
 
@@ -77,22 +71,14 @@ private:
   uint64_t
   GetNextID() const;
 
-  // ServiceWorker::Inner implementation
-  virtual void
-  AddServiceWorker(ServiceWorker* aWorker) override;
-
-  virtual void
-  RemoveServiceWorker(ServiceWorker* aWorker) override;
-
-  virtual void
-  PostMessage(nsIGlobalObject* aGlobal,
-              JSContext* aCx, JS::Handle<JS::Value> aMessage,
-              const Sequence<JSObject*>& aTransferable,
-              ErrorResult& aRv) override;
-
 public:
   NS_DECL_ISUPPORTS
   NS_DECL_NSISERVICEWORKERINFO
+
+  void
+  PostMessage(RefPtr<ServiceWorkerCloneData>&& aData,
+              const ClientInfo& aClientInfo,
+              const ClientState& aClientState);
 
   class ServiceWorkerPrivate*
   WorkerPrivate() const
@@ -133,6 +119,8 @@ public:
 
   ServiceWorkerInfo(nsIPrincipal* aPrincipal,
                     const nsACString& aScope,
+                    uint64_t aRegistrationId,
+                    uint64_t aRegistrationVersion,
                     const nsACString& aScriptSpec,
                     const nsAString& aCacheName,
                     nsLoadFlags aLoadFlags);
@@ -191,6 +179,9 @@ public:
     MOZ_DIAGNOSTIC_ASSERT(mHandlesFetch == Unknown);
     mHandlesFetch = aHandlesFetch ? Enabled : Disabled;
   }
+
+  void
+  SetRegistrationVersion(uint64_t aVersion);
 
   bool
   HandlesFetch() const

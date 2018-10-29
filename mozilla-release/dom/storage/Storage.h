@@ -10,7 +10,6 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/ErrorResult.h"
 #include "mozilla/Maybe.h"
-#include "nsIDOMStorage.h"
 #include "nsCycleCollectionParticipant.h"
 #include "nsWeakReference.h"
 #include "nsWrapperCache.h"
@@ -22,13 +21,12 @@ class nsPIDOMWindowInner;
 namespace mozilla {
 namespace dom {
 
-class Storage : public nsIDOMStorage
+class Storage : public nsISupports
               , public nsWrapperCache
 {
 public:
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_AMBIGUOUS(Storage,
-                                                         nsIDOMStorage)
+  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(Storage)
 
   Storage(nsPIDOMWindowInner* aWindow, nsIPrincipal* aPrincipal);
 
@@ -111,6 +109,15 @@ public:
 
   bool IsSessionOnly() const { return mIsSessionOnly; }
 
+  // aStorage can be null if this method is called by LocalStorageCacheChild.
+  //
+  // aImmediateDispatch is for use by child IPC code (LocalStorageCacheChild)
+  // so that PBackground ordering can be maintained.  Without this, the event
+  // would be/ enqueued and run in a future turn of the event loop, potentially
+  // allowing other PBackground Recv* methods to trigger script that wants to
+  // assume our localstorage changes have already been applied.  This is the
+  // case for message manager messages which are used by ContentTask testing
+  // logic and webextensions.
   static void
   NotifyChange(Storage* aStorage, nsIPrincipal* aPrincipal,
                const nsAString& aKey, const nsAString& aOldValue,

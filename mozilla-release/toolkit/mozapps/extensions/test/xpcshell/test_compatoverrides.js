@@ -43,8 +43,8 @@ const COMPAT_RESPONSE = {
               max_version: "2",
             },
           ],
-        }
-      ]
+        },
+      ],
     },
     {
       addon_guid: "addon4@tests.mozilla.org",
@@ -144,7 +144,7 @@ const COMPAT_RESPONSE = {
               guid: "unknown-app@tests.mozilla.org",
               min_version: "0.1",
               max_version: "9",
-            }
+            },
           ],
         },
         {
@@ -200,8 +200,8 @@ var addon1 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 // Hosted, no overrides
@@ -213,8 +213,8 @@ var addon2 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 // Hosted, matching override
@@ -226,8 +226,8 @@ var addon3 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 // Hosted, matching override, wouldn't be compatible if strict checking is enabled
@@ -239,8 +239,8 @@ var addon4 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "0.1",
-    maxVersion: "0.2"
-  }]
+    maxVersion: "0.2",
+  }],
 };
 
 // Hosted, app ID doesn't match in override
@@ -252,8 +252,8 @@ var addon5 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 // Hosted, addon version range doesn't match in override
@@ -265,8 +265,8 @@ var addon6 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 // Hosted, app version range doesn't match in override
@@ -278,8 +278,8 @@ var addon7 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 // Hosted, multiple overrides
@@ -291,8 +291,8 @@ var addon8 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 // Not hosted, matching override
@@ -304,28 +304,28 @@ var addon9 = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 const profileDir = gProfD.clone();
 profileDir.append("extensions");
 
-function run_test() {
+async function run_test() {
   do_test_pending();
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "2");
 
-  writeInstallRDFForExtension(addon1, profileDir);
-  writeInstallRDFForExtension(addon2, profileDir);
-  writeInstallRDFForExtension(addon3, profileDir);
-  writeInstallRDFForExtension(addon4, profileDir);
-  writeInstallRDFForExtension(addon5, profileDir);
-  writeInstallRDFForExtension(addon6, profileDir);
-  writeInstallRDFForExtension(addon7, profileDir);
-  writeInstallRDFForExtension(addon8, profileDir);
-  writeInstallRDFForExtension(addon9, profileDir);
+  await promiseWriteInstallRDFForExtension(addon1, profileDir);
+  await promiseWriteInstallRDFForExtension(addon2, profileDir);
+  await promiseWriteInstallRDFForExtension(addon3, profileDir);
+  await promiseWriteInstallRDFForExtension(addon4, profileDir);
+  await promiseWriteInstallRDFForExtension(addon5, profileDir);
+  await promiseWriteInstallRDFForExtension(addon6, profileDir);
+  await promiseWriteInstallRDFForExtension(addon7, profileDir);
+  await promiseWriteInstallRDFForExtension(addon8, profileDir);
+  await promiseWriteInstallRDFForExtension(addon9, profileDir);
 
-  startupManager();
+  await promiseStartupManager();
 
   AddonManagerInternal.backgroundUpdateCheck().then(run_test_1);
 }
@@ -409,8 +409,8 @@ function run_test_1() {
   check_compat_status(run_test_2);
 }
 
-function run_test_2() {
+async function run_test_2() {
   info("Run test 2");
-  restartManager();
+  await promiseRestartManager();
   check_compat_status(end_test);
 }

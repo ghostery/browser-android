@@ -11,142 +11,16 @@
 #define nsWindowsRestart_cpp
 #endif
 
+#include "mozilla/CmdLineAndEnvUtils.h"
 #include "nsUTF8Utils.h"
 
 #include <shellapi.h>
 
 // Needed for CreateEnvironmentBlock
 #include <userenv.h>
+#ifndef __MINGW32__
 #pragma comment(lib, "userenv.lib")
-
-/**
- * Get the length that the string will take and takes into account the
- * additional length if the string needs to be quoted and if characters need to
- * be escaped.
- */
-static int ArgStrLen(const wchar_t *s)
-{
-  int backslashes = 0;
-  int i = wcslen(s);
-  BOOL hasDoubleQuote = wcschr(s, L'"') != nullptr;
-  // Only add doublequotes if the string contains a space or a tab
-  BOOL addDoubleQuotes = wcspbrk(s, L" \t") != nullptr;
-
-  if (addDoubleQuotes) {
-    i += 2; // initial and final duoblequote
-  }
-
-  if (hasDoubleQuote) {
-    while (*s) {
-      if (*s == '\\') {
-        ++backslashes;
-      } else {
-        if (*s == '"') {
-          // Escape the doublequote and all backslashes preceding the doublequote
-          i += backslashes + 1;
-        }
-
-        backslashes = 0;
-      }
-
-      ++s;
-    }
-  }
-
-  return i;
-}
-
-/**
- * Copy string "s" to string "d", quoting the argument as appropriate and
- * escaping doublequotes along with any backslashes that immediately precede
- * doublequotes.
- * The CRT parses this to retrieve the original argc/argv that we meant,
- * see STDARGV.C in the MSVC CRT sources.
- *
- * @return the end of the string
- */
-static wchar_t* ArgToString(wchar_t *d, const wchar_t *s)
-{
-  int backslashes = 0;
-  BOOL hasDoubleQuote = wcschr(s, L'"') != nullptr;
-  // Only add doublequotes if the string contains a space or a tab
-  BOOL addDoubleQuotes = wcspbrk(s, L" \t") != nullptr;
-
-  if (addDoubleQuotes) {
-    *d = '"'; // initial doublequote
-    ++d;
-  }
-
-  if (hasDoubleQuote) {
-    int i;
-    while (*s) {
-      if (*s == '\\') {
-        ++backslashes;
-      } else {
-        if (*s == '"') {
-          // Escape the doublequote and all backslashes preceding the doublequote
-          for (i = 0; i <= backslashes; ++i) {
-            *d = '\\';
-            ++d;
-          }
-        }
-
-        backslashes = 0;
-      }
-
-      *d = *s;
-      ++d; ++s;
-    }
-  } else {
-    wcscpy(d, s);
-    d += wcslen(s);
-  }
-
-  if (addDoubleQuotes) {
-    *d = '"'; // final doublequote
-    ++d;
-  }
-
-  return d;
-}
-
-/**
- * Creates a command line from a list of arguments. The returned
- * string is allocated with "malloc" and should be "free"d.
- *
- * argv is UTF8
- */
-wchar_t*
-MakeCommandLine(int argc, wchar_t **argv)
-{
-  int i;
-  int len = 0;
-
-  // The + 1 of the last argument handles the allocation for null termination
-  for (i = 0; i < argc; ++i)
-    len += ArgStrLen(argv[i]) + 1;
-
-  // Protect against callers that pass 0 arguments
-  if (len == 0)
-    len = 1;
-
-  wchar_t *s = (wchar_t*) malloc(len * sizeof(wchar_t));
-  if (!s)
-    return nullptr;
-
-  wchar_t *c = s;
-  for (i = 0; i < argc; ++i) {
-    c = ArgToString(c, argv[i]);
-    if (i + 1 != argc) {
-      *c = ' ';
-      ++c;
-    }
-  }
-
-  *c = '\0';
-
-  return s;
-}
+#endif
 
 /**
  * Convert UTF8 to UTF16 without using the normal XPCOM goop, which we
@@ -156,14 +30,15 @@ static char16_t*
 AllocConvertUTF8toUTF16(const char *arg)
 {
   // UTF16 can't be longer in units than UTF8
-  int len = strlen(arg);
+  size_t len = strlen(arg);
   char16_t *s = new char16_t[(len + 1) * sizeof(char16_t)];
   if (!s)
     return nullptr;
 
-  ConvertUTF8toUTF16 convert(s);
-  convert.write(arg, len);
-  convert.write_terminator();
+  size_t dstLen = ::MultiByteToWideChar(
+    CP_UTF8, 0, arg, len, reinterpret_cast<wchar_t*>(s), len);
+  s[dstLen] = 0;
+
   return s;
 }
 
@@ -178,6 +53,22 @@ FreeAllocStrings(int argc, wchar_t **argv)
   delete [] argv;
 }
 
+static wchar_t**
+AllocConvertUTF8toUTF16Strings(int argc, char **argv)
+{
+  wchar_t **argvConverted = new wchar_t*[argc];
+  if (!argvConverted)
+    return nullptr;
+
+  for (int i = 0; i < argc; ++i) {
+    argvConverted[i] = reinterpret_cast<wchar_t*>(AllocConvertUTF8toUTF16(argv[i]));
+    if (!argvConverted[i]) {
+      FreeAllocStrings(i, argvConverted);
+      return nullptr;
+    }
+  }
+  return argvConverted;
+}
 
 
 /**
@@ -198,17 +89,9 @@ WinLaunchChild(const wchar_t *exePath,
                HANDLE userToken,
                HANDLE *hProcess)
 {
-  wchar_t** argvConverted = new wchar_t*[argc];
+  wchar_t **argvConverted = AllocConvertUTF8toUTF16Strings(argc, argv);
   if (!argvConverted)
     return FALSE;
-
-  for (int i = 0; i < argc; ++i) {
-      argvConverted[i] = reinterpret_cast<wchar_t*>(AllocConvertUTF8toUTF16(argv[i]));
-    if (!argvConverted[i]) {
-      FreeAllocStrings(i, argvConverted);
-      return FALSE;
-    }
-  }
 
   BOOL ok = WinLaunchChild(exePath, argc, argvConverted, userToken, hProcess);
   FreeAllocStrings(argc, argvConverted);
@@ -222,10 +105,9 @@ WinLaunchChild(const wchar_t *exePath,
                HANDLE userToken,
                HANDLE *hProcess)
 {
-  wchar_t *cl;
   BOOL ok;
 
-  cl = MakeCommandLine(argc, argv);
+  mozilla::UniquePtr<wchar_t[]> cl(mozilla::MakeCommandLine(argc, argv));
   if (!cl) {
     return FALSE;
   }
@@ -237,7 +119,7 @@ WinLaunchChild(const wchar_t *exePath,
 
   if (userToken == nullptr) {
     ok = CreateProcessW(exePath,
-                        cl,
+                        cl.get(),
                         nullptr,  // no special security attributes
                         nullptr,  // no special thread attributes
                         FALSE, // don't inherit filehandles
@@ -256,7 +138,7 @@ WinLaunchChild(const wchar_t *exePath,
 
     ok = CreateProcessAsUserW(userToken,
                               exePath,
-                              cl,
+                              cl.get(),
                               nullptr,  // no special security attributes
                               nullptr,  // no special thread attributes
                               FALSE,    // don't inherit filehandles
@@ -293,8 +175,6 @@ WinLaunchChild(const wchar_t *exePath,
     if (lpMsgBuf)
       LocalFree(lpMsgBuf);
   }
-
-  free(cl);
 
   return ok;
 }

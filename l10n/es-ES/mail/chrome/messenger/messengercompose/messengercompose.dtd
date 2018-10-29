@@ -206,7 +206,6 @@
 <!ENTITY sendlaterButton.tooltip "Enviar este mensaje más tarde">
 <!ENTITY quoteButton.tooltip "Citar el mensaje anterior">
 <!ENTITY addressButton.tooltip "Seleccionar un destinatario de una libreta de direcciones">
-<!ENTITY attachButton.tooltip "Incluir un adjunto">
 <!ENTITY attachButton.tooltip2 "Añadir un adjunto">
 <!ENTITY spellingButton.tooltip "Revisar ortografía de la selección o del mensaje completo">
 <!ENTITY saveButton.tooltip "Guardar este mensaje">
@@ -293,5 +292,6 @@
 <!ENTITY addressesSidebarTitle.label "Contactos">
 <!ENTITY customizeFromAddress.label "Personalizar dirección De…">
 <!ENTITY customizeFromAddress.accesskey "D">
+<!ENTITY aria.message.bodyName "Cuerpo del mensaje">
 <!ENTITY languageStatusButton.tooltip "Idioma de revisión ortográfica">
 <!ENTITY encodingStatusPanel.tooltip "Codificación de texto">

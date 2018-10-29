@@ -8,17 +8,18 @@
 #include "nsIContentPolicy.idl"
 
 interface nsIChannel;
-interface nsIDOMDocument;
 interface nsINode;
 interface nsIPrincipal;
 interface nsIRedirectHistoryEntry;
 interface nsIURI;
+webidl Document;
 native LoadContextRef(already_AddRefed<nsISupports>);
 %{C++
 #include "nsTArray.h"
 #include "mozilla/BasePrincipal.h"
 #include "mozilla/LoadTainting.h"
 #include "mozilla/UniquePtr.h"
+#include "mozilla/TelemetryHistogramEnums.h"
 #include "nsStringFwd.h"
 
 namespace mozilla {
@@ -31,10 +32,12 @@ class ServiceWorkerDescriptor;
 } // namespace mozilla
 %}
 
+native AnalyticsProvider(mozilla::Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED);
 [ref] native nsIRedirectHistoryEntryArray(const nsTArray<nsCOMPtr<nsIRedirectHistoryEntry>>);
 native OriginAttributes(mozilla::OriginAttributes);
 [ref] native const_OriginAttributesRef(const mozilla::OriginAttributes);
-[ref] native StringArrayRef(const nsTArray<nsCString>);
+[ref] native CStringArrayRef(const nsTArray<nsCString>);
+[ref] native StringArrayRef(const nsTArray<nsString>);
 [ref] native Uint64ArrayRef(const nsTArray<uint64_t>);
 [ref] native PrincipalArrayRef(const nsTArray<nsCOMPtr<nsIPrincipal>>);
 [ref] native const_ClientInfoRef(const mozilla::dom::ClientInfo);
@@ -206,7 +209,7 @@ interface nsILoadInfo : nsISupports
 
   /**
    * Load an error page, it should be one of following : about:neterror,
-   * about:certerror, about:blocked, or about:tabcrashed.
+   * about:certerror, about:blocked, about:tabcrashed or about:restartrequired.
    */
   const unsigned long SEC_LOAD_ERROR_PAGE = (1<<13);
 
@@ -337,7 +340,7 @@ interface nsILoadInfo : nsISupports
    * LoadingDocument is null. When the LoadingDocument is not null, the
    * LoadingPrincipal is set to the principal of the LoadingDocument.
    */
-  readonly attribute nsIDOMDocument loadingDocument;
+  readonly attribute Document loadingDocument;
 
   /**
    * A C++-friendly version of loadingDocument (loadingNode).
@@ -370,7 +373,7 @@ interface nsILoadInfo : nsISupports
    * ContextForTopLevelLoad will always return null.
    */
   [noscript, notxpcom, nostdcall, binaryname(ContextForTopLevelLoad)]
-  nsISupports binaryContextForTopLevelLoad();
+  LoadContextRef binaryContextForTopLevelLoad();
 
   /**
    * For all loads except loads of TYPE_DOCUMENT, the loadingContext
@@ -501,6 +504,12 @@ interface nsILoadInfo : nsISupports
    */
   readonly attribute nsContentPolicyType externalContentPolicyType;
 
+  /**
+   * CSP uses this parameter to send or not CSP violation events.
+   * Default value: true.
+   */
+  [infallible] attribute boolean sendCSPViolationEvents;
+
 %{ C++
   inline nsContentPolicyType GetExternalContentPolicyType()
   {
@@ -627,18 +636,6 @@ interface nsILoadInfo : nsISupports
    * you are doing!!!
    */
   void resetPrincipalToInheritToNullPrincipal();
-
-  /**
-   * Allows certain top-level channels to be agnostic to CSP. If set,
-   * this attribute needs to be set before the CSP is initialized
-   * within nsDocument. If set after, this attribute has no effect.
-   * Please note, that this logic is only available for loads of TYPE_DOCUMENT,
-   * and is discarded for other loads.
-   *
-   * WARNING: Please only use that function if you know exactly what
-   * you are doing!!!
-   */
-  [infallible] attribute boolean allowDocumentToBeAgnosticToCSP;
 
   /**
    * Customized OriginAttributes within LoadInfo to allow overwriting of the
@@ -795,7 +792,7 @@ interface nsILoadInfo : nsISupports
    * Only call this function when using the SEC_REQUIRE_CORS_DATA_INHERITS mode.
    */
   [noscript, notxpcom, nostdcall]
-  void setCorsPreflightInfo(in StringArrayRef unsafeHeaders,
+  void setCorsPreflightInfo(in CStringArrayRef unsafeHeaders,
                             in boolean forcePreflight);
 
   /**
@@ -804,7 +801,7 @@ interface nsILoadInfo : nsISupports
    * loadInfo object - use with caution!
    */
   [noscript, notxpcom, nostdcall, binaryname(CorsUnsafeHeaders)]
-  StringArrayRef corsUnsafeHeaders();
+  CStringArrayRef corsUnsafeHeaders();
 
   /**
    * Returns value set through setCorsPreflightInfo.
@@ -889,6 +886,31 @@ interface nsILoadInfo : nsISupports
   [noscript] readonly attribute nsIPrincipal sandboxedLoadingPrincipal;
 
   /**
+   * Return the top-level principal, which is the principal of the top-level
+   * window.
+   */
+  [noscript] readonly attribute nsIPrincipal topLevelPrincipal;
+
+  /**
+   * A C++-friendly version of topLevelPrincipal.
+   */
+  [noscript, notxpcom, nostdcall, binaryname(TopLevelPrincipal)]
+  nsIPrincipal binaryTopLevelPrincipal();
+
+  /**
+   * Return the top-level storage area principal, which is the principal of
+   * the top-level window if it's not a 3rd party context, non tracking
+   * resource.
+   */
+  [noscript] readonly attribute nsIPrincipal topLevelStorageAreaPrincipal;
+
+  /**
+   * A C++-friendly version of topLevelStorageAreaPrincipal.
+   */
+  [noscript, notxpcom, nostdcall, binaryname(TopLevelStorageAreaPrincipal)]
+  nsIPrincipal binaryTopLevelStorageAreaPrincipal();
+
+  /**
    * Note which client (i.e. global) initiated this network request.  All
    * nsGlobalWindow and WorkerPrivate can be converted to a ClientInfo to
    * be set here.  While this is being added to support service worker
@@ -940,6 +962,22 @@ interface nsILoadInfo : nsISupports
    */
   [noscript, nostdcall, notxpcom]
   void SetReservedClientInfo(in const_ClientInfoRef aClientInfo);
+
+  /**
+   * This will clear any existing reserved or initial client and override
+   * it with the given reserved client.  This is similar to calling
+   * TakeReservedClientSource() and then GiveReservedClientSource() with
+   * a new client as ClientChannelHelper does.  This method is needed,
+   * though, to perform this operation in the parent process where
+   * the LoadInfo does not have direct access to a ClientSource.
+   *
+   * If in doubt, do not call this method.  Its really only needed for
+   * a specific redirect case where the child has created a new client on
+   * redirect and we need to override the parent side's reserved client
+   * to match.
+   */
+  [noscript, nostdcall, notxpcom]
+  void OverrideReservedClientInfoInParent(in const_ClientInfoRef aClientInfo);
 
   /**
    * Return the reserved ClientInfo for this load, if one has been set.
@@ -1005,13 +1043,33 @@ interface nsILoadInfo : nsISupports
   [noscript, nostdcall, notxpcom]
   PerformanceStoragePtr GetPerformanceStorage();
 
-  /* The service worker and fetch specifications require returning the
-   * exact tainting level of the Response passed to FetchEvent.respondWith().
-   * This method allows us to override the tainting level in that case.
-   *
-   * NOTE: This should not be used outside of service worker code! Use
-   *       nsILoadInfo::MaybeIncreaseTainting() instead.
+  /**
+    * The service worker and fetch specifications require returning the
+    * exact tainting level of the Response passed to FetchEvent.respondWith().
+    * This method allows us to override the tainting level in that case.
+    *
+    * NOTE: This should not be used outside of service worker code! Use
+    *       nsILoadInfo::MaybeIncreaseTainting() instead.
    */
   [noscript, nostdcall, notxpcom]
   void SynthesizeServiceWorkerTainting(in LoadTainting aTainting);
+
+  /**
+    * These flags are used for FastBlock statistics to see if a resource is a
+    * tracker and whether it was blocked by the FastBlock mechanism or not.
+    */
+  [infallible] attribute boolean isTracker;
+  [infallible] attribute boolean isTrackerBlocked;
+  attribute AnalyticsProvider trackerBlockedReason;
+
+  /**
+    * The top-level document has been user-interacted.
+    */
+  [infallible] attribute boolean documentHasUserInteracted;
+
+  /**
+    * This attribute represents whether the document to which this
+    * load belongs had finished loading when the load was initiated.
+    */
+  [infallible] attribute boolean documentHasLoaded;
 };

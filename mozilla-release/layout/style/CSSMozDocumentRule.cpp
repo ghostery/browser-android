@@ -6,6 +6,7 @@
 
 #include "mozilla/dom/CSSMozDocumentRule.h"
 #include "mozilla/dom/CSSMozDocumentRuleBinding.h"
+#include "mozilla/ServoBindings.h"
 #include "nsContentUtils.h"
 
 namespace mozilla {
@@ -17,7 +18,7 @@ using namespace mozilla::css;
 CSSMozDocumentRule::WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto)
 {
-  return CSSMozDocumentRuleBinding::Wrap(aCx, this, aGivenProto);
+  return CSSMozDocumentRule_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 bool
@@ -25,46 +26,110 @@ CSSMozDocumentRule::Match(nsIDocument* aDoc,
                           nsIURI* aDocURI,
                           const nsACString& aDocURISpec,
                           const nsACString& aPattern,
-                          URLMatchingFunction aUrlMatchingFunction)
+                          DocumentMatchingFunction aMatchingFunction)
 {
-  switch (aUrlMatchingFunction) {
-    case URLMatchingFunction::eURL: {
-      if (aDocURISpec == aPattern) {
-        return true;
+  switch (aMatchingFunction) {
+    case DocumentMatchingFunction::MediaDocument: {
+      auto kind = aDoc->MediaDocumentKind();
+      if (aPattern.EqualsLiteral("all")) {
+        return kind != nsIDocument::MediaDocumentKind::NotMedia;
       }
-    } break;
-    case URLMatchingFunction::eURLPrefix: {
-      if (StringBeginsWith(aDocURISpec, aPattern)) {
-        return true;
+      MOZ_ASSERT(aPattern.EqualsLiteral("plugin") ||
+                 aPattern.EqualsLiteral("image") ||
+                 aPattern.EqualsLiteral("video"));
+      switch (kind) {
+        case nsIDocument::MediaDocumentKind::NotMedia:
+          return false;
+        case nsIDocument::MediaDocumentKind::Plugin:
+          return aPattern.EqualsLiteral("plugin");
+        case nsIDocument::MediaDocumentKind::Image:
+          return aPattern.EqualsLiteral("image");
+        case nsIDocument::MediaDocumentKind::Video:
+          return aPattern.EqualsLiteral("video");
       }
-    } break;
-    case URLMatchingFunction::eDomain: {
+      MOZ_ASSERT_UNREACHABLE("Unknown media document kind");
+      return false;
+    }
+    case DocumentMatchingFunction::URL:
+      return aDocURISpec == aPattern;
+    case DocumentMatchingFunction::URLPrefix:
+      return StringBeginsWith(aDocURISpec, aPattern);
+    case DocumentMatchingFunction::Domain: {
       nsAutoCString host;
       if (aDocURI) {
         aDocURI->GetHost(host);
       }
       int32_t lenDiff = host.Length() - aPattern.Length();
       if (lenDiff == 0) {
-        if (host == aPattern) {
-          return true;
-        }
-      } else {
-        if (StringEndsWith(host, aPattern) &&
-            host.CharAt(lenDiff - 1) == '.') {
-          return true;
-        }
+        return host == aPattern;
       }
-    } break;
-    case URLMatchingFunction::eRegExp: {
+      return StringEndsWith(host, aPattern) && host.CharAt(lenDiff - 1) == '.';
+    }
+    case DocumentMatchingFunction::RegExp: {
       NS_ConvertUTF8toUTF16 spec(aDocURISpec);
       NS_ConvertUTF8toUTF16 regex(aPattern);
-      if (nsContentUtils::IsPatternMatching(spec, regex, aDoc)) {
-        return true;
-      }
-    } break;
+      return nsContentUtils::IsPatternMatching(spec, regex, aDoc);
+    }
   }
-
+  MOZ_ASSERT_UNREACHABLE("Unknown matching function");
   return false;
+}
+
+CSSMozDocumentRule::CSSMozDocumentRule(RefPtr<RawServoMozDocumentRule> aRawRule,
+                                       StyleSheet* aSheet,
+                                       css::Rule* aParentRule,
+                                       uint32_t aLine,
+                                       uint32_t aColumn)
+  : css::ConditionRule(Servo_MozDocumentRule_GetRules(aRawRule).Consume(),
+                       aSheet, aParentRule, aLine, aColumn)
+  , mRawRule(std::move(aRawRule))
+{
+}
+
+NS_IMPL_ADDREF_INHERITED(CSSMozDocumentRule, css::ConditionRule)
+NS_IMPL_RELEASE_INHERITED(CSSMozDocumentRule, css::ConditionRule)
+
+// QueryInterface implementation for MozDocumentRule
+NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(CSSMozDocumentRule)
+NS_INTERFACE_MAP_END_INHERITING(css::ConditionRule)
+
+#ifdef DEBUG
+/* virtual */ void
+CSSMozDocumentRule::List(FILE* out, int32_t aIndent) const
+{
+  nsAutoCString str;
+  for (int32_t i = 0; i < aIndent; i++) {
+    str.AppendLiteral("  ");
+  }
+  Servo_MozDocumentRule_Debug(mRawRule, &str);
+  fprintf_stderr(out, "%s\n", str.get());
+}
+#endif
+
+void
+CSSMozDocumentRule::GetConditionText(nsAString& aConditionText)
+{
+  Servo_MozDocumentRule_GetConditionText(mRawRule, &aConditionText);
+}
+
+void
+CSSMozDocumentRule::SetConditionText(const nsAString& aConditionText,
+                                     ErrorResult& aRv)
+{
+  aRv.Throw(NS_ERROR_NOT_IMPLEMENTED);
+}
+
+/* virtual */ void
+CSSMozDocumentRule::GetCssText(nsAString& aCssText) const
+{
+  Servo_MozDocumentRule_GetCssText(mRawRule, &aCssText);
+}
+
+/* virtual */ size_t
+CSSMozDocumentRule::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const
+{
+  // TODO Implement this!
+  return aMallocSizeOf(this);
 }
 
 } // namespace dom

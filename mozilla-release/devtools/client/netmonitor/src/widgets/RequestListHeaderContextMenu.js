@@ -4,7 +4,7 @@
 
 "use strict";
 
-const { showMenu } = require("devtools/client/netmonitor/src/utils/menu");
+const { showMenu } = require("devtools/client/shared/components/menu/utils");
 const { HEADERS } = require("../constants");
 const { L10N } = require("../utils/l10n");
 
@@ -29,17 +29,17 @@ class RequestListHeaderContextMenu {
    * Handle the context menu opening.
    */
   open(event = {}, columns) {
-    let menu = [];
-    let subMenu = { timings: [], responseHeaders: [] };
-    let visibleColumns = Object.entries(columns).filter(([column, shown]) => shown);
-    let onlyOneColumn = visibleColumns.length === 1;
+    const menu = [];
+    const subMenu = { timings: [], responseHeaders: [] };
+    const visibleColumns = Object.entries(columns).filter(([column, shown]) => shown);
+    const onlyOneColumn = visibleColumns.length === 1;
 
-    for (let column in columns) {
-      let shown = columns[column];
-      let label = nonLocalizedHeaders.includes(column)
+    for (const column in columns) {
+      const shown = columns[column];
+      const label = nonLocalizedHeaders.includes(column)
           ? stringMap[column] || column
           : L10N.getStr(`netmonitor.toolbar.${stringMap[column] || column}`);
-      let entry = {
+      const entry = {
         id: `request-list-header-${column}-toggle`,
         label,
         type: "checkbox",

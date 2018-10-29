@@ -3,9 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 "use strict";
 
-Cu.importGlobalProperties(["URL"]);
-
-ChromeUtils.import("resource://gre/modules/Log.jsm");
 ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 ChromeUtils.import("resource://services-common/utils.js");
 ChromeUtils.import("resource://services-common/rest.js");
@@ -28,8 +25,8 @@ ChromeUtils.defineModuleGetter(this, "jwcrypto",
 ChromeUtils.defineModuleGetter(this, "FxAccountsOAuthGrantClient",
   "resource://gre/modules/FxAccountsOAuthGrantClient.jsm");
 
-ChromeUtils.defineModuleGetter(this, "FxAccountsMessages",
-  "resource://gre/modules/FxAccountsMessages.js");
+ChromeUtils.defineModuleGetter(this, "FxAccountsCommands",
+  "resource://gre/modules/FxAccountsCommands.js");
 
 ChromeUtils.defineModuleGetter(this, "FxAccountsProfile",
   "resource://gre/modules/FxAccountsProfile.jsm");
@@ -46,6 +43,7 @@ var publicProperties = [
   "accountStatus",
   "canGetKeys",
   "checkVerificationStatus",
+  "commands",
   "getAccountsClient",
   "getAssertion",
   "getDeviceId",
@@ -63,7 +61,6 @@ var publicProperties = [
   "invalidateCertificate",
   "loadAndPoll",
   "localtimeOffsetMsec",
-  "messages",
   "notifyDevices",
   "now",
   "removeCachedOAuthToken",
@@ -414,12 +411,12 @@ FxAccountsInternal.prototype = {
     return this._profile;
   },
 
-  _messages: null,
-  get messages() {
-    if (!this._messages) {
-      this._messages = new FxAccountsMessages(this);
+  _commands: null,
+  get commands() {
+    if (!this._commands) {
+      this._commands = new FxAccountsCommands(this);
     }
-    return this._messages;
+    return this._commands;
   },
 
   // A hook-point for tests who may want a mocked AccountState or mocked storage.
@@ -429,7 +426,7 @@ FxAccountsInternal.prototype = {
     return new AccountState(storage);
   },
 
-  // "Friend" classes of FxAccounts (e.g. FxAccountsMessages) know about the
+  // "Friend" classes of FxAccounts (e.g. FxAccountsCommands) know about the
   // "current account state" system. This method allows them to read and write
   // safely in it.
   // Example of usage:
@@ -608,9 +605,9 @@ FxAccountsInternal.prototype = {
     if (!this.isUserEmailVerified(credentials)) {
       this.startVerifiedCheck(credentials);
     }
-    await this.updateDeviceRegistration();
     Services.telemetry.getHistogramById("FXA_CONFIGURED").add(1);
     await this.notifyObservers(ONLOGIN_NOTIFICATION);
+    await this.updateDeviceRegistration();
     return currentAccountState.resolve();
   },
 
@@ -702,21 +699,28 @@ FxAccountsInternal.prototype = {
         deviceRegistrationVersion: null,
         device: {
           id: data.deviceId,
-          registrationVersion: data.deviceRegistrationVersion
-        }
+          registrationVersion: data.deviceRegistrationVersion,
+        },
       });
       data = await this.currentAccountState.getUserAccountData();
     }
     const {device} = data;
-    if (!device || !device.registrationVersion ||
-        device.registrationVersion < this.DEVICE_REGISTRATION_VERSION) {
-      // There is no device registered or the device registration is outdated.
-      // Either way, we should register the device with FxA
-      // before returning the id to the caller.
+    if ((await this.checkDeviceUpdateNeeded(device))) {
       return this._registerOrUpdateDevice(data);
     }
     // Return the device id that we already registered with the server.
     return device.id;
+  },
+
+  async checkDeviceUpdateNeeded(device) {
+    // There is no device registered or the device registration is outdated.
+    // Either way, we should register the device with FxA
+    // before returning the id to the caller.
+    const availableCommandsKeys = Object.keys((await this.availableCommands())).sort();
+    return !device || !device.registrationVersion ||
+           device.registrationVersion < this.DEVICE_REGISTRATION_VERSION ||
+           !device.registeredCommandsKeys ||
+           !CommonUtils.arrayEqual(device.registeredCommandsKeys, availableCommandsKeys);
   },
 
   async getDeviceList() {
@@ -769,8 +773,8 @@ FxAccountsInternal.prototype = {
       this._profile.tearDown();
       this._profile = null;
     }
-    if (this._messages) {
-      this._messages = null;
+    if (this._commands) {
+      this._commands = null;
     }
     // We "abort" the accountState and assume our caller is about to throw it
     // away and replace it with a new one.
@@ -806,7 +810,7 @@ FxAccountsInternal.prototype = {
   _destroyOAuthToken(tokenData) {
     let client = new FxAccountsOAuthGrantClient({
       serverURL: tokenData.server,
-      client_id: FX_OAUTH_CLIENT_ID
+      client_id: FX_OAUTH_CLIENT_ID,
     });
     return client.destroyToken(tokenData.token);
   },
@@ -969,7 +973,7 @@ FxAccountsInternal.prototype = {
           uid,
           ...this._deriveKeys(uid, CommonUtils.hexToBytes(kB)),
           kA: null, // Remove kA and kB from storage.
-          kB: null
+          kB: null,
         });
         userData = await this.getUserAccountData();
       }
@@ -1051,6 +1055,9 @@ FxAccountsInternal.prototype = {
     // per setSignedInUser(), regardless of whether we've rebooted since
     // setSignedInUser() was called.
     await this.notifyObservers(ONVERIFIED_NOTIFICATION);
+    // Some parts of the device registration depend on the Sync keys being available,
+    // so let's re-trigger it now that we have them.
+    await this.updateDeviceRegistration();
     data = await currentState.getUserAccountData();
     return currentState.resolve(data);
   },
@@ -1115,7 +1122,7 @@ FxAccountsInternal.prototype = {
     let options = {
       duration: ASSERTION_LIFETIME,
       localtimeOffsetMsec: this.localtimeOffsetMsec,
-      now: this.now()
+      now: this.now(),
     };
     let currentState = this.currentAccountState;
     // "audience" should look like "http://123done.org".
@@ -1174,7 +1181,7 @@ FxAccountsInternal.prototype = {
       log.debug("getKeypairAndCertificate: already have keyPair and certificate");
       return {
         keyPair: accountData.keyPair.rawKeyPair,
-        certificate: accountData.cert.rawCert
+        certificate: accountData.cert.rawCert,
       };
     }
     // We are definately going to generate a new cert, either because it has
@@ -1456,7 +1463,7 @@ FxAccountsInternal.prototype = {
         let defaultURL = Services.urlFormatter.formatURLPref("identity.fxaccounts.remote.oauth.uri");
         client = new FxAccountsOAuthGrantClient({
           serverURL: defaultURL,
-          client_id: FX_OAUTH_CLIENT_ID
+          client_id: FX_OAUTH_CLIENT_ID,
         });
       } catch (e) {
         throw this._error(ERROR_INVALID_PARAMETER, e);
@@ -1676,7 +1683,7 @@ FxAccountsInternal.prototype = {
 
   setProfileCache(profileCache) {
     return this.currentAccountState.updateUserAccountData({
-      profileCache
+      profileCache,
     });
   },
 
@@ -1685,13 +1692,17 @@ FxAccountsInternal.prototype = {
     return this.fxaPushService.getSubscription();
   },
 
-  // Once FxA messages is stable, remove this, hardcode the capabilities,
-  // and reset the device registration version.
-  get deviceCapabilities() {
-    if (Services.prefs.getBoolPref("identity.fxaccounts.messages.enabled", true)) {
-      return [CAPABILITY_MESSAGES, CAPABILITY_MESSAGES_SENDTAB];
+  async availableCommands() {
+    if (!Services.prefs.getBoolPref("identity.fxaccounts.commands.enabled", true)) {
+      return {};
     }
-    return [];
+    const sendTabKey = await this.commands.sendTab.getEncryptedKey();
+    if (!sendTabKey) { // This will happen if the account is not verified yet.
+      return {};
+    }
+    return {
+      [COMMAND_SENDTAB]: sendTabKey,
+    };
   },
 
   // If you change what we send to the FxA servers during device registration,
@@ -1718,7 +1729,8 @@ FxAccountsInternal.prototype = {
           deviceOptions.pushAuthKey = urlsafeBase64Encode(authKey);
         }
       }
-      deviceOptions.capabilities = this.deviceCapabilities;
+      deviceOptions.availableCommands = await this.availableCommands();
+      const availableCommandsKeys = Object.keys(deviceOptions.availableCommands).sort();
 
       let device;
       if (currentDevice && currentDevice.id) {
@@ -1729,14 +1741,18 @@ FxAccountsInternal.prototype = {
         log.debug("registering new device details");
         device = await this.fxAccountsClient.registerDevice(
           sessionToken, deviceName, this._getDeviceType(), deviceOptions);
+        Services.obs.notifyObservers(null, ON_NEW_DEVICE_ID);
       }
 
+      // Get the freshest device props before updating them.
+      let {device: deviceProps} = await this.getSignedInUser();
       await this.currentAccountState.updateUserAccountData({
         device: {
-          ...currentDevice, // Copy the other properties (e.g. messagesIndex).
+          ...deviceProps, // Copy the other properties (e.g. handledCommands).
           id: device.id,
-          registrationVersion: this.DEVICE_REGISTRATION_VERSION
-        }
+          registrationVersion: this.DEVICE_REGISTRATION_VERSION,
+          registeredCommandsKeys: availableCommandsKeys,
+        },
       });
       return device.id;
     } catch (error) {
@@ -1802,8 +1818,8 @@ FxAccountsInternal.prototype = {
         await this.currentAccountState.updateUserAccountData({
           device: {
             id: deviceId,
-            registrationVersion: null
-          }
+            registrationVersion: null,
+          },
         });
         return deviceId;
       }
@@ -1826,7 +1842,7 @@ FxAccountsInternal.prototype = {
     log.error("device registration failed", error);
     try {
       this.currentAccountState.updateUserAccountData({
-        device: null
+        device: null,
       });
     } catch (secondError) {
       log.error(

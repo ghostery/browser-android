@@ -18,7 +18,6 @@
 #include "nsHTMLParts.h"
 #include "nsIPresShell.h"
 #include "nsIServiceManager.h"
-#include "nsIDOMNode.h"
 #include "nsDisplayList.h"
 #include "nsLayoutUtils.h"
 #include "nsIFrameInlines.h"
@@ -34,7 +33,7 @@ nsTableWrapperFrame::GetLogicalBaseline(WritingMode aWritingMode) const
 {
   nsIFrame* kid = mFrames.FirstChild();
   if (!kid) {
-    NS_NOTREACHED("no inner table");
+    MOZ_ASSERT_UNREACHABLE("no inner table");
     return nsContainerFrame::GetLogicalBaseline(aWritingMode);
   }
 
@@ -155,7 +154,7 @@ nsTableWrapperFrame::RemoveFrame(ChildListID  aListID,
 {
   // We only have two child frames: the inner table and one caption frame.
   // The inner frame can't be removed so this should be the caption
-  NS_PRECONDITION(kCaptionList == aListID, "can't remove inner frame");
+  MOZ_ASSERT(kCaptionList == aListID, "can't remove inner frame");
 
   if (HasSideCaption()) {
     // The old caption isize had an effect on the inner table isize, so
@@ -672,7 +671,7 @@ nsTableWrapperFrame::GetCaptionOrigin(uint32_t             aCaptionSide,
       aOrigin.B(aWM) = aInnerMargin.BStart(aWM) + aCaptionMargin.BStart(aWM);
       break;
     default:
-      NS_NOTREACHED("Unknown caption alignment type");
+      MOZ_ASSERT_UNREACHABLE("Unknown caption alignment type");
       break;
   }
   return NS_OK;
@@ -764,7 +763,7 @@ nsTableWrapperFrame::GetInnerOrigin(uint32_t             aCaptionSide,
                        aCaptionMargin.BStartEnd(aWM);
       break;
     default:
-      NS_NOTREACHED("Unknown caption alignment type");
+      MOZ_ASSERT_UNREACHABLE("Unknown caption alignment type");
       break;
   }
   return NS_OK;

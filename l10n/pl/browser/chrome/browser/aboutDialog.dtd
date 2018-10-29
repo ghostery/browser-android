@@ -50,7 +50,7 @@
 <!ENTITY update.manual.end          "">
 
 <!ENTITY update.unsupported.start    "Dalsze aktualizacje na tym systemie nie są możliwe. ">
-<!ENTITY update.unsupported.linkText "Więcej informacji">
+<!ENTITY update.unsupported.linkText "Więcej informacji">
 <!ENTITY update.unsupported.end      "">
 
 <!ENTITY update.downloading.start   "Pobieranie aktualizacji — ">

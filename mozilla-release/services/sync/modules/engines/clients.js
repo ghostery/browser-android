@@ -22,7 +22,7 @@
 
 var EXPORTED_SYMBOLS = [
   "ClientEngine",
-  "ClientsRec"
+  "ClientsRec",
 ];
 
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
@@ -71,7 +71,7 @@ function ClientsRec(collection, id) {
 ClientsRec.prototype = {
   __proto__: CryptoWrapper.prototype,
   _logName: "Sync.Record.Clients",
-  ttl: CLIENTS_TTL
+  ttl: CLIENTS_TTL,
 };
 
 Utils.deferGetSet(ClientsRec,
@@ -86,7 +86,7 @@ function ClientEngine(service) {
   SyncEngine.call(this, "Clients", service);
 
   this.fxAccounts = fxAccounts;
-  this.addClientCommandQueue = Promise.resolve();
+  this.addClientCommandQueue = Async.asyncQueueCaller(this._log);
   Utils.defineLazyIDProperty(this, "localID", "services.sync.client.GUID");
 }
 ClientEngine.prototype = {
@@ -293,8 +293,7 @@ ClientEngine.prototype = {
   },
 
   async _addClientCommand(clientId, command) {
-    return this.addClientCommandQueue = (async () => {
-      await this.addClientCommandQueue;
+    this.addClientCommandQueue.enqueueCall(async () => {
       try {
         const localCommands = await this._readCommands();
         const localClientCommands = localCommands[clientId] || [];
@@ -315,7 +314,9 @@ ClientEngine.prototype = {
         this._log.error(e);
         return false;
       }
-    })();
+    });
+
+    return this.addClientCommandQueue.promiseCallsComplete();
   },
 
   async _removeClientCommands(clientId) {
@@ -541,8 +542,8 @@ ClientEngine.prototype = {
       command: "sync:collection_changed",
       data: {
         collections: ["clients"],
-        reason
-      }
+        reason,
+      },
     };
     let excludedIds = null;
     if (!ids) {
@@ -639,8 +640,9 @@ ClientEngine.prototype = {
     this._log.debug("Handling HMAC mismatch for " + item.id);
 
     let base = await SyncEngine.prototype.handleHMACMismatch.call(this, item, mayRetry);
-    if (base != SyncEngine.kRecoveryStrategy.error)
+    if (base != SyncEngine.kRecoveryStrategy.error) {
       return base;
+    }
 
     // It's a bad client record. Save it to be deleted at the end of the sync.
     this._log.debug("Bad client record detected. Scheduling for deletion.");
@@ -924,7 +926,7 @@ ClientEngine.prototype = {
     uris.forEach(uri => {
       uri.sender = {
         id: uri.clientId,
-        name: this.getClientName(uri.clientId)
+        name: this.getClientName(uri.clientId),
       };
     });
     Svc.Obs.notify("weave:engine:clients:display-uris", uris);
@@ -1053,8 +1055,9 @@ ClientStore.prototype = {
   async getAllIDs() {
     let ids = {};
     ids[this.engine.localID] = true;
-    for (let id in this._remoteClients)
+    for (let id in this._remoteClients) {
       ids[id] = true;
+    }
     return ids;
   },
 
@@ -1072,19 +1075,23 @@ ClientsTracker.prototype = {
   _enabled: false,
 
   onStart() {
+    Svc.Obs.add("fxaccounts:new_device_id", this.asyncObserver);
     Svc.Prefs.observe("client.name", this.asyncObserver);
   },
   onStop() {
     Svc.Prefs.ignore("client.name", this.asyncObserver);
+    Svc.Obs.remove("fxaccounts:new_device_id", this.asyncObserver);
   },
 
   async observe(subject, topic, data) {
     switch (topic) {
       case "nsPref:changed":
         this._log.debug("client.name preference changed");
+        // Fallthrough intended.
+      case "fxaccounts:new_device_id":
         await this.addChangedID(this.engine.localID);
-        this.score += SCORE_INCREMENT_XLARGE;
+        this.score += SINGLE_USER_THRESHOLD + 1; // ALWAYS SYNC NOW.
         break;
     }
-  }
+  },
 };

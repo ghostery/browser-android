@@ -43,22 +43,6 @@ XPCOMUtils.defineLazyGetter(this, "log", () => {
   });
 });
 
-// ==== Start XPCOM Boilerplate ==== \\
-
-// Factory object
-const EnterprisePoliciesFactory = {
-  _instance: null,
-  createInstance: function BGSF_createInstance(outer, iid) {
-    if (outer != null)
-      throw Cr.NS_ERROR_NO_AGGREGATION;
-    return this._instance == null ?
-      this._instance = new EnterprisePoliciesManager() : this._instance;
-  }
-};
-
-// ==== End XPCOM Boilerplate ==== //
-
-// Constructor
 function EnterprisePoliciesManager() {
   Services.obs.addObserver(this, "profile-after-change", true);
   Services.obs.addObserver(this, "final-ui-startup", true);
@@ -67,14 +51,11 @@ function EnterprisePoliciesManager() {
 }
 
 EnterprisePoliciesManager.prototype = {
-  // for XPCOM
-  classID:          Components.ID("{ea4e1414-779b-458b-9d1f-d18e8efbc145}"),
+  classID:        Components.ID("{ea4e1414-779b-458b-9d1f-d18e8efbc145}"),
   QueryInterface: ChromeUtils.generateQI([Ci.nsIObserver,
                                           Ci.nsISupportsWeakReference,
                                           Ci.nsIEnterprisePolicies]),
-
-  // redefine the default factory for XPCOMUtils
-  _xpcom_factory: EnterprisePoliciesFactory,
+  _xpcom_factory: XPCOMUtils.generateSingletonFactory(EnterprisePoliciesManager),
 
   _initialize() {
     let provider = this._chooseProvider();
@@ -90,6 +71,7 @@ EnterprisePoliciesManager.prototype = {
     }
 
     this.status = Ci.nsIEnterprisePolicies.ACTIVE;
+    this._parsedPolicies = {};
     this._activatePolicies(provider.policies);
   },
 
@@ -134,6 +116,7 @@ EnterprisePoliciesManager.prototype = {
         continue;
       }
 
+      this._parsedPolicies[policyName] = parsedParameters;
       let policyImpl = Policies[policyName];
 
       for (let timing of Object.keys(this._callbacks)) {
@@ -193,16 +176,16 @@ EnterprisePoliciesManager.prototype = {
 
     DisallowedFeatures = {};
 
+    Services.ppmm.sharedData.delete("EnterprisePolicies:Status");
+    Services.ppmm.sharedData.delete("EnterprisePolicies:DisallowedFeatures");
+
     this._status = Ci.nsIEnterprisePolicies.UNINITIALIZED;
     for (let timing of Object.keys(this._callbacks)) {
       this._callbacks[timing] = [];
     }
-    delete Services.ppmm.initialProcessData.policies;
-    Services.ppmm.broadcastAsyncMessage("EnterprisePolicies:Restart", null);
 
     let { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm",
                                               {});
-
     // Simulate the startup process. This step-by-step is a bit ugly but it
     // tries to emulate the same behavior as of a normal startup.
 
@@ -257,21 +240,13 @@ EnterprisePoliciesManager.prototype = {
   },
 
   disallowFeature(feature, neededOnContentProcess = false) {
-    DisallowedFeatures[feature] = true;
+    DisallowedFeatures[feature] = neededOnContentProcess;
 
     // NOTE: For optimization purposes, only features marked as needed
     // on content process will be passed onto the child processes.
     if (neededOnContentProcess) {
-      Services.ppmm.initialProcessData.policies
-                                      .disallowedFeatures.push(feature);
-
-      if (Services.ppmm.childCount > 1) {
-        // If there has been a content process already initialized, let's
-        // broadcast the newly disallowed feature.
-        Services.ppmm.broadcastAsyncMessage(
-          "EnterprisePolicies:DisallowFeature", {feature}
-        );
-      }
+      Services.ppmm.sharedData.set("EnterprisePolicies:DisallowedFeatures",
+        new Set(Object.keys(DisallowedFeatures).filter(key => DisallowedFeatures[key])));
     }
   },
 
@@ -284,10 +259,7 @@ EnterprisePoliciesManager.prototype = {
   set status(val) {
     this._status = val;
     if (val != Ci.nsIEnterprisePolicies.INACTIVE) {
-      Services.ppmm.initialProcessData.policies = {
-        status: val,
-        disallowedFeatures: [],
-      };
+      Services.ppmm.sharedData.set("EnterprisePolicies:Status", val);
     }
     return val;
   },
@@ -298,6 +270,10 @@ EnterprisePoliciesManager.prototype = {
 
   isAllowed: function BG_sanitize(feature) {
     return !(feature in DisallowedFeatures);
+  },
+
+  getActivePolicies() {
+    return this._parsedPolicies;
   },
 };
 
@@ -370,12 +346,14 @@ class JSONPoliciesProvider {
 
     let alternatePath = Services.prefs.getStringPref(PREF_ALTERNATE_PATH, "");
 
-    if (alternatePath && (!configFile || !configFile.exists())) {
-      // We only want to use the alternate file path if the file on the install
-      // folder doesn't exist. Otherwise it'd be possible for a user to override
-      // the admin-provided policies by changing the user-controlled prefs.
-      // This pref is only meant for tests, so it's fine to use this extra
-      // synchronous configFile.exists() above.
+    // Check if we are in automation *before* we use the synchronous
+    // nsIFile.exists() function or allow the config file to be overriden
+    // An alternate policy path can also be used in Nightly builds (for
+    // testing purposes), but the Background Update Agent will be unable to
+    // detect the alternate policy file so the DisableAppUpdate policy may not
+    // work as expected.
+    if (alternatePath && (Cu.isInAutomation || AppConstants.NIGHTLY_BUILD) &&
+        (!configFile || !configFile.exists())) {
       if (alternatePath.startsWith(MAGIC_TEST_ROOT_PREFIX)) {
         // Intentionally not using a default value on this pref lookup. If no
         // test root is set, we are not currently testing and this function
@@ -422,23 +400,11 @@ class GPOPoliciesProvider {
     this._policies = null;
 
     let wrk = Cc["@mozilla.org/windows-registry-key;1"].createInstance(Ci.nsIWindowsRegKey);
+
     // Machine policies override user policies, so we read
     // user policies first and then replace them if necessary.
-    wrk.open(wrk.ROOT_KEY_CURRENT_USER,
-             "SOFTWARE\\Policies",
-             wrk.ACCESS_READ);
-    if (wrk.hasChild("Mozilla\\Firefox")) {
-      this._readData(wrk);
-    }
-    wrk.close();
-
-    wrk.open(wrk.ROOT_KEY_LOCAL_MACHINE,
-             "SOFTWARE\\Policies",
-             wrk.ACCESS_READ);
-    if (wrk.hasChild("Mozilla\\Firefox")) {
-      this._readData(wrk);
-    }
-    wrk.close();
+    this._readData(wrk, wrk.ROOT_KEY_CURRENT_USER);
+    this._readData(wrk, wrk.ROOT_KEY_LOCAL_MACHINE);
   }
 
   get hasPolicies() {
@@ -453,8 +419,13 @@ class GPOPoliciesProvider {
     return this._failed;
   }
 
-  _readData(wrk) {
-    this._policies = WindowsGPOParser.readPolicies(wrk, this._policies);
+  _readData(wrk, root) {
+    wrk.open(root, "SOFTWARE\\Policies", wrk.ACCESS_READ);
+    if (wrk.hasChild("Mozilla\\Firefox")) {
+      let isMachineRoot = (root == wrk.ROOT_KEY_LOCAL_MACHINE);
+      this._policies = WindowsGPOParser.readPolicies(wrk, this._policies, isMachineRoot);
+    }
+    wrk.close();
   }
 }
 

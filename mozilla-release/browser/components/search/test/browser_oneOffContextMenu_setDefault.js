@@ -24,15 +24,13 @@ function resetEngine() {
 
 registerCleanupFunction(resetEngine);
 
-let searchbar;
 let searchIcon;
 
 add_task(async function init() {
-  await SpecialPowers.pushPrefEnv({ set: [
-    ["browser.search.widget.inNavBar", true],
-  ]});
-
-  searchbar = document.getElementById("searchbar");
+  let searchbar = await gCUITestUtils.addSearchBar();
+  registerCleanupFunction(() => {
+    gCUITestUtils.removeSearchBar();
+  });
   searchIcon = document.getAnonymousElementByAttribute(
     searchbar, "anonid", "searchbar-search-button"
   );
@@ -163,7 +161,7 @@ async function openPopupAndGetEngineButton(isSearch, popup, oneOffBinding, baseI
 
   // Get the one-off button for the test engine.
   let oneOffButton;
-  for (let node of oneOffButtons.childNodes) {
+  for (let node of oneOffButtons.children) {
     if (node.engine && node.engine.name == TEST_ENGINE_NAME) {
       oneOffButton = node;
       break;

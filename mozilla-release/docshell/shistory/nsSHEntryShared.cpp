@@ -12,10 +12,8 @@
 #include "nsIDocShell.h"
 #include "nsIDocShellTreeItem.h"
 #include "nsIDocument.h"
-#include "nsIDOMDocument.h"
 #include "nsILayoutHistoryState.h"
 #include "nsISHistory.h"
-#include "nsISHistoryInternal.h"
 #include "nsIWebNavigation.h"
 #include "nsThreadUtils.h"
 
@@ -93,7 +91,7 @@ nsSHEntryShared::Duplicate(nsSHEntryShared* aEntry)
 void
 nsSHEntryShared::RemoveFromExpirationTracker()
 {
-  nsCOMPtr<nsISHistoryInternal> shistory = do_QueryReferent(mSHistory);
+  nsCOMPtr<nsISHistory> shistory = do_QueryReferent(mSHistory);
   if (shistory && GetExpirationState()->IsTracked()) {
     shistory->RemoveFromExpirationTracker(this);
   }
@@ -139,8 +137,8 @@ nsSHEntryShared::DropPresentationState()
 nsresult
 nsSHEntryShared::SetContentViewer(nsIContentViewer* aViewer)
 {
-  NS_PRECONDITION(!aViewer || !mContentViewer,
-                  "SHEntryShared already contains viewer");
+  MOZ_ASSERT(!aViewer || !mContentViewer,
+             "SHEntryShared already contains viewer");
 
   if (mContentViewer || !aViewer) {
     DropPresentationState();
@@ -156,7 +154,7 @@ nsSHEntryShared::SetContentViewer(nsIContentViewer* aViewer)
     // mSHistory is only set for root entries, but in general bfcache only
     // applies to root entries as well. BFCache for subframe navigation has been
     // disabled since 2005 in bug 304860.
-    if (nsCOMPtr<nsISHistoryInternal> shistory = do_QueryReferent(mSHistory)) {
+    if (nsCOMPtr<nsISHistory> shistory = do_QueryReferent(mSHistory)) {
       shistory->AddToExpirationTracker(this);
     }
 
@@ -191,7 +189,7 @@ nsSHEntryShared::RemoveFromBFCacheSync()
 
   // Now that we've dropped the viewer, we have to clear associated dynamic
   // subframe entries.
-  nsCOMPtr<nsISHistoryInternal> shistory = do_QueryReferent(mSHistory);
+  nsCOMPtr<nsISHistory> shistory = do_QueryReferent(mSHistory);
   if (shistory) {
     shistory->RemoveDynEntriesForBFCacheEntry(this);
   }
@@ -222,7 +220,7 @@ nsSHEntryShared::RemoveFromBFCacheAsync()
         viewer->Destroy();
       }
 
-      nsCOMPtr<nsISHistoryInternal> shistory = do_QueryReferent(self->mSHistory);
+      nsCOMPtr<nsISHistory> shistory = do_QueryReferent(self->mSHistory);
       if (shistory) {
         shistory->RemoveDynEntriesForBFCacheEntry(self);
       }
@@ -248,37 +246,10 @@ nsSHEntryShared::GetID(uint64_t* aID)
 }
 
 void
-nsSHEntryShared::NodeWillBeDestroyed(const nsINode* aNode)
-{
-  NS_NOTREACHED("Document destroyed while we're holding a strong ref to it");
-}
-
-void
-nsSHEntryShared::CharacterDataWillChange(nsIContent* aContent,
-                                         const CharacterDataChangeInfo&)
-{
-}
-
-void
 nsSHEntryShared::CharacterDataChanged(nsIContent* aContent,
                                       const CharacterDataChangeInfo&)
 {
   RemoveFromBFCacheAsync();
-}
-
-void
-nsSHEntryShared::AttributeWillChange(dom::Element* aContent,
-                                     int32_t aNameSpaceID,
-                                     nsAtom* aAttribute,
-                                     int32_t aModType,
-                                     const nsAttrValue* aNewValue)
-{
-}
-
-void
-nsSHEntryShared::NativeAnonymousChildListChange(nsIContent* aContent,
-                                                bool aIsRemove)
-{
 }
 
 void
@@ -308,9 +279,4 @@ nsSHEntryShared::ContentRemoved(nsIContent* aChild,
                                 nsIContent* aPreviousSibling)
 {
   RemoveFromBFCacheAsync();
-}
-
-void
-nsSHEntryShared::ParentChainChanged(nsIContent* aContent)
-{
 }

@@ -23,15 +23,13 @@ public:
 
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(HTMLSlotElement, nsGenericHTMLElement)
-  virtual nsresult Clone(mozilla::dom::NodeInfo* aNodeInfo, nsINode** aResult,
-                         bool aPreallocateChildren) const override;
+  virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // nsIContent
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent,
-                              bool aCompileEventHandlers) override;
-  virtual void UnbindFromTree(bool aDeep = true,
-                              bool aNullParent = true) override;
+  virtual nsresult BindToTree(nsIDocument* aDocument,
+                              nsIContent* aParent,
+                              nsIContent* aBindingParent) override;
+  virtual void UnbindFromTree(bool aDeep, bool aNullParent) override;
 
   virtual nsresult BeforeSetAttr(int32_t aNameSpaceID, nsAtom* aName,
                                  const nsAttrValueOrString* aValue,
@@ -63,15 +61,26 @@ public:
   void RemoveAssignedNode(nsINode* aNode);
   void ClearAssignedNodes();
 
-  void EnqueueSlotChangeEvent() const;
+  void EnqueueSlotChangeEvent();
+  void RemovedFromSignalSlotList()
+  {
+    MOZ_ASSERT(mInSignalSlotList);
+    mInSignalSlotList = false;
+  }
+
   void FireSlotChangeEvent();
 
 protected:
   virtual ~HTMLSlotElement();
-  virtual JSObject*
-  WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
+  JSObject* WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) final;
 
   nsTArray<RefPtr<nsINode>> mAssignedNodes;
+
+  // Whether we're in the signal slot list of our unit of related similar-origin
+  // browsing contexts.
+  //
+  // https://dom.spec.whatwg.org/#signal-slot-list
+  bool mInSignalSlotList = false;
 };
 
 } // namespace dom

@@ -18,6 +18,10 @@
 <!ENTITY accountTypeNews.label "Account gruppi di discussione">
 <!ENTITY accountTypeNews.accesskey "o">
 
+<!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
+<!ENTITY accountTypeMovemail.label "Spool di posta UNIX (Movemail)">
+<!ENTITY accountTypeMovemail.accesskey "U">
+
 <!-- Entities for Identity page -->
 
 <!ENTITY identityTitle.label "Identità">

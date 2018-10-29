@@ -3,11 +3,9 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "부가 기능 관리자">
 
-<!ENTITY search.placeholder                   "부가 기능 검색">
-
 <!ENTITY search.placeholder2                  "addons.mozilla.org에서 검색">
 <!ENTITY search.buttonlabel                   "검색">
-<!-- LOCALIZATION NOTE (search.commandKey):
+<!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
 <!ENTITY search.commandkey                    "f">
 
@@ -16,7 +14,6 @@
 <!ENTITY listEmpty.availableUpdates.label     "업데이트 없음">
 <!ENTITY listEmpty.recentUpdates.label        "부가 기능에 대한 업데이트가 없습니다.">
 <!ENTITY listEmpty.findUpdates.label          "업데이트 확인">
-<!ENTITY listEmpty.search.label               "일치하는 부가 기능 없음">
 <!ENTITY listEmpty.button.label               "부가 기능 자세히 보기">
 <!ENTITY installAddonFromFile.label           "파일에서 부가 기능 설치…">
 <!ENTITY installAddonFromFile.accesskey       "I">
@@ -24,9 +21,6 @@
 
 <!ENTITY getThemes.description                "브라우저를 개인화하는 방법을 찾으시나요?">
 <!ENTITY getThemes.learnMore                  "수많은 테마를 적용해 보세요.">
-
-<!ENTITY cmd.back.tooltip                     "뒤로">
-<!ENTITY cmd.forward.tooltip                  "앞으로">
 
 
 <!ENTITY showUnsignedExtensions.button.label  "몇몇 확장기능은 확인을 할 수 없음">
@@ -37,14 +31,13 @@
 <!-- global warnings -->
 <!ENTITY warning.safemode.label                    "안전 모드에서 부가 기능 전체를 사용할 수 없습니다.">
 <!ENTITY warning.checkcompatibility.label          "부가 기능 호환성 확인 기능을 중단 합니다. 호환성이 맞지 않을 수 있습니다.">
-<!ENTITY warning.checkcompatibility.enable.label   "취소">
+<!ENTITY warning.checkcompatibility.enable.label   "활성화">
 <!ENTITY warning.checkcompatibility.enable.tooltip "부가 기능 호환성 확인 기능 사용">
 <!ENTITY warning.updatesecurity.label              "부가 기능 업데이트 보안 확인 기능을 중단 합니다. 업데이트가 보안 문제를 일으킬 수 있습니다.">
 <!ENTITY warning.updatesecurity.enable.label       "취소">
 <!ENTITY warning.updatesecurity.enable.tooltip     "부가 기능 업데이트 보안 확인 기능 사용">
 
 <!-- categories / views -->
-<!ENTITY view.search.label                    "검색">
 <!ENTITY view.discover.label                  "추천">
 <!ENTITY view.recentUpdates.label             "최근 항목 보기">
 <!ENTITY view.availableUpdates.label          "업데이트 가능 항목">
@@ -87,12 +80,10 @@
 <!ENTITY cmd.preferencesWin.accesskey         "O">
 <!ENTITY cmd.preferencesUnix.label            "환경 설정">
 <!ENTITY cmd.preferencesUnix.accesskey        "P">
-<!ENTITY cmd.about.label                      "정보">
-<!ENTITY cmd.about.accesskey                  "A">
 
-<!ENTITY cmd.enableAddon.label                "사용함">
+<!ENTITY cmd.enableAddon.label                "활성화">
 <!ENTITY cmd.enableAddon.accesskey            "E">
-<!ENTITY cmd.disableAddon.label               "사용 안 함">
+<!ENTITY cmd.disableAddon.label               "비활성화">
 <!ENTITY cmd.disableAddon.accesskey           "D">
 <!ENTITY cmd.enableTheme.label                "테마 적용">
 <!ENTITY cmd.enableTheme.accesskey            "W">
@@ -135,7 +126,6 @@
 <!ENTITY detail.lastupdated.label             "최종 수정일">
 <!ENTITY detail.creator.label                 "제작자">
 <!ENTITY detail.homepage.label                "홈페이지">
-<!ENTITY detail.numberOfDownloads.label       "다운로드수">
 
 <!ENTITY detail.contributions.description     "이 부가 기능 개발자에게 작은 도움을 통해 개발이 지속될 수 있도록 지원할 수 있습니다.">
 
@@ -167,23 +157,6 @@
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "중단">
 <!ENTITY progress.cancel.tooltip              "취소">
-
-
-<!-- list sorting -->
-<!ENTITY sort.name.label                      "이름">
-<!ENTITY sort.name.tooltip                    "이름순">
-<!ENTITY sort.dateUpdated.label               "최종 변경일">
-<!ENTITY sort.dateUpdated.tooltip             "변경일순">
-<!ENTITY sort.relevance.label                 "검색 결과">
-<!ENTITY sort.relevance.tooltip               "가장 적합한 결과">
-<!ENTITY sort.price.label                     "판매 가격">
-<!ENTITY sort.price.tooltip                   "가격순 정렬">
-
-<!ENTITY search.filter2.label                 "검색:">
-<!ENTITY search.filter2.installed.label       "설치된 목록">
-<!ENTITY search.filter2.installed.tooltip     "설치된 부가 기능 보기">
-<!ENTITY search.filter2.available.label       "사용 가능 목록">
-<!ENTITY search.filter2.available.tooltip     "설치 가능한 부가 기능 목록">
 
 <!ENTITY addon.homepage                       "홈페이지">
 <!ENTITY addon.details.label                  "상세보기">
@@ -226,17 +199,6 @@
 <!ENTITY eula.accept                          "동의 및 설치…">
 
 <!ENTITY settings.path.button.label           "찾아보기…">
-
-<!-- LOCALIZATION NOTE (experiment.info.label): The strings related to
-     experiments are present on the "Experiments" tab of the add-ons manager.
-     This tab won't be displayed unless an Experiment add-on is installed.
-     Install https://people.mozilla.org/~gszorc/dummy-experiment-addon.xpi
-     to cause this tab to appear. -->
-<!ENTITY experiment.info.label "필요시 원격 측정이 실험을 설치하고 구동 할 수 있습니다.">
-<!ENTITY experiment.info.learnmore "자세히 보기">
-<!ENTITY experiment.info.learnmore.accesskey "L">
-<!ENTITY experiment.info.changetelemetry "원격 측정 설정">
-<!ENTITY experiment.info.changetelemetry.accesskey "T">
 
 <!ENTITY setting.learnmore "자세히 보기…">
 

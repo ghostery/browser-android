@@ -11,7 +11,7 @@ XPCOMUtils.defineLazyPreferenceGetter(this, "redirectDomain",
 
 let CryptoHash = CC("@mozilla.org/security/hash;1", "nsICryptoHash", "initWithString");
 
-Cu.importGlobalProperties(["URL", "TextEncoder"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL", "TextEncoder"]);
 
 const computeHash = str => {
   let byteArr = new TextEncoder().encode(str);
@@ -30,6 +30,22 @@ this.identity = class extends ExtensionAPI {
           let url = new URL(`https://${hash}.${redirectDomain}/`);
           url.pathname = path;
           return url.href;
+        },
+        launchWebAuthFlow: function(details) {
+          // Validate the url and retreive redirect_uri if it was provided.
+          let url, redirectURI;
+          try {
+            url = new URL(details.url);
+          } catch (e) {
+            return Promise.reject({message: "details.url is invalid"});
+          }
+          try {
+            redirectURI = new URL(url.searchParams.get("redirect_uri") || this.getRedirectURL());
+          } catch (e) {
+            return Promise.reject({message: "redirect_uri is invalid"});
+          }
+
+          return context.childManager.callParentAsyncFunction("identity.launchWebAuthFlowInParent", [details, redirectURI.href]);
         },
       },
     };

@@ -48,6 +48,9 @@ public:
     // used with the instance after that).
     explicit IMContextWrapper(nsWindow* aOwnerWindow);
 
+    // Called when the process is being shut down.
+    static void Shutdown();
+
     // "Enabled" means the users can use all IMEs.
     // I.e., the focus is in the normal editors.
     bool IsEnabled() const;
@@ -64,6 +67,8 @@ public:
     // in the focused editor.
     void OnSelectionChange(nsWindow* aCaller,
                            const IMENotification& aIMENotification);
+    // OnThemeChanged is called when desktop theme is changed.
+    static void OnThemeChanged();
 
     /**
      * OnKeyEvent() is called when aWindow gets a native key press event or a
@@ -127,6 +132,12 @@ public:
                 return "eUnknown";
         }
     }
+
+    /**
+     * GetIMName() returns IM name associated with mContext.  If the context is
+     * xim, this look for actual engine from XMODIFIERS environment variable.
+     */
+    nsDependentCSubstring GetIMName() const;
 
 protected:
     ~IMContextWrapper();

@@ -11,6 +11,7 @@
 #include "jsapi.h"
 
 #include "fuzz-tests/tests.h"
+#include "js/StructuredClone.h"
 #include "vm/Interpreter.h"
 
 #include "vm/JSContext-inl.h"
@@ -30,7 +31,7 @@ static int
 testStructuredCloneReaderFuzz(const uint8_t* buf, size_t size) {
     auto gcGuard = mozilla::MakeScopeExit([&] {
         JS::PrepareForFullGC(gCx);
-        JS::GCForReason(gCx, GC_NORMAL, JS::gcreason::API);
+        JS::NonIncrementalGC(gCx, GC_NORMAL, JS::gcreason::API);
     });
 
     if (!size) return 0;

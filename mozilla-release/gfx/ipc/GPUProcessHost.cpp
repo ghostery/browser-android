@@ -34,7 +34,7 @@ GPUProcessHost::~GPUProcessHost()
 }
 
 bool
-GPUProcessHost::Launch()
+GPUProcessHost::Launch(StringVector aExtraOpts)
 {
   MOZ_ASSERT(mLaunchPhase == LaunchPhase::Unlaunched);
   MOZ_ASSERT(!mGPUChild);
@@ -47,7 +47,7 @@ GPUProcessHost::Launch()
   mLaunchPhase = LaunchPhase::Waiting;
   mLaunchTime = TimeStamp::Now();
 
-  if (!GeckoChildProcessHost::AsyncLaunch()) {
+  if (!GeckoChildProcessHost::AsyncLaunch(aExtraOpts)) {
     mLaunchPhase = LaunchPhase::Complete;
     return false;
   }
@@ -166,6 +166,7 @@ GPUProcessHost::Shutdown()
 
     // The channel might already be closed if we got here unexpectedly.
     if (!mChannelClosed) {
+      mGPUChild->SendShutdownVR();
       mGPUChild->Close();
     }
 
@@ -200,7 +201,7 @@ GPUProcessHost::OnChannelClosed()
   }
 
   // Release the actor.
-  GPUChild::Destroy(Move(mGPUChild));
+  GPUChild::Destroy(std::move(mGPUChild));
   MOZ_ASSERT(!mGPUChild);
 }
 

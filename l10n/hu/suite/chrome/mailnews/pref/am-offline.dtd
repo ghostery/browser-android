@@ -5,8 +5,6 @@
 <!ENTITY doNotDownloadPop3Movemail.label "A lemezterület megtakarítása érdekében nem töltődnek le:">
 <!ENTITY doNotDownloadNntp.label "A lemezterület megtakarítása érdekében nem töltődnek le kapcsolat nélküli munkához:">
 <!ENTITY doNotDownloadImap.label "A lemezhellyel való takarékoskodás céljából az üzenetek kiszolgálóról letöltése és a helyben tárolása korlátozható méret és kor szerint.">
-<!ENTITY allFoldersOffline.label "A postafiókhoz tartozó üzenetek megtartása ezen a számítógépen">
-<!ENTITY allFoldersOffline.accesskey "o">
 <!ENTITY allFoldersOffline2.label "A postafiókhoz tartozó összes mappában lévő üzenetek megtartása ezen a számítógépen.">
 <!ENTITY allFoldersOffline2.accesskey "m">
 <!ENTITY allFoldersOfflineNote.label "Megjegyzés: Ennek a módosítása hatással van a fiók összes mappájára. Az egyes mappák beállításához használja a Speciális… gombot.">
@@ -36,8 +34,8 @@
 <!ENTITY nntpRemoveMsgBody.accesskey "t">
 <!ENTITY offlineSelectNntp.label "Hírcsoportok kiválasztása kapcsolat nélküli munkához…">
 <!ENTITY offlineSelectNntp.accesskey "k">
-<!ENTITY offlineImapAdvancedOffline.label "Haladó…">
-<!ENTITY offlineImapAdvancedOffline.accesskey "H">
+<!ENTITY offlineImapAdvancedOffline.label "Speciális…">
+<!ENTITY offlineImapAdvancedOffline.accesskey "S">
 <!ENTITY syncGroupTitle.label "Üzenetek szinkronizálása">
 <!ENTITY diskspaceGroupTitle.label "Lemezterület">
 

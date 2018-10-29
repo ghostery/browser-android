@@ -17,7 +17,7 @@
 #include "mozilla/LinkedList.h"
 #include "mozilla/TimeStamp.h" // for TimeStamp, TimeDuration
 #include "mozilla/dom/AnimationBinding.h" // for AnimationPlayState
-#include "mozilla/dom/AnimationEffectReadOnly.h"
+#include "mozilla/dom/AnimationEffect.h"
 #include "mozilla/dom/AnimationTimeline.h"
 #include "mozilla/dom/Promise.h"
 #include "nsCSSPropertyID.h"
@@ -60,8 +60,9 @@ public:
   explicit Animation(nsIGlobalObject* aGlobal)
     : DOMEventTargetHelper(aGlobal)
     , mPlaybackRate(1.0)
-    , mPendingState(PendingState::NotPending)
     , mAnimationIndex(sNextAnimationIndex++)
+    , mCachedChildIndex(-1)
+    , mPendingState(PendingState::NotPending)
     , mFinishedAtLastComposeStyle(false)
     , mIsRelevant(false)
     , mFinishedIsResolved(false)
@@ -96,13 +97,13 @@ public:
   // Animation interface methods
   static already_AddRefed<Animation>
   Constructor(const GlobalObject& aGlobal,
-              AnimationEffectReadOnly* aEffect,
+              AnimationEffect* aEffect,
               const Optional<AnimationTimeline*>& aTimeline,
               ErrorResult& aRv);
   void GetId(nsAString& aResult) const { aResult = mId; }
   void SetId(const nsAString& aId);
-  AnimationEffectReadOnly* GetEffect() const { return mEffect; }
-  void SetEffect(AnimationEffectReadOnly* aEffect);
+  AnimationEffect* GetEffect() const { return mEffect; }
+  void SetEffect(AnimationEffect* aEffect);
   AnimationTimeline* GetTimeline() const { return mTimeline; }
   void SetTimeline(AnimationTimeline* aTimeline);
   Nullable<TimeDuration> GetStartTime() const { return mStartTime; }
@@ -155,7 +156,7 @@ public:
 
   virtual void CancelFromStyle() { CancelNoUpdate(); }
   void SetTimelineNoUpdate(AnimationTimeline* aTimeline);
-  void SetEffectNoUpdate(AnimationEffectReadOnly* aEffect);
+  void SetEffectNoUpdate(AnimationEffect* aEffect);
 
   virtual void Tick();
   bool NeedsTicks() const
@@ -172,7 +173,7 @@ public:
    * should begin.
    *
    * When the document finishes painting, any pending animations in its table
-   * are marked as being ready to start by calling StartOnNextTick.
+   * are marked as being ready to start by calling TriggerOnNextTick.
    * The moment when the paint completed is also recorded, converted to a
    * timeline time, and passed to StartOnTick. This is so that when these
    * animations do start, they can be timed from the point when painting
@@ -227,8 +228,9 @@ public:
    */
   void TriggerNow();
   /**
-   * When StartOnNextTick is called, we store the ready time but we don't apply
-   * it until the next tick. In the meantime, GetStartTime() will return null.
+   * When TriggerOnNextTick is called, we store the ready time but we don't
+   * apply it until the next tick. In the meantime, GetStartTime() will return
+   * null.
    *
    * However, if we build layer animations again before the next tick, we
    * should initialize them with the start time that GetStartTime() will return
@@ -363,7 +365,7 @@ public:
   /**
    * Updates various bits of state that we need to update as the result of
    * running ComposeStyle().
-   * See the comment of KeyframeEffectReadOnly::WillComposeStyle for more detail.
+   * See the comment of KeyframeEffect::WillComposeStyle for more detail.
    */
   void WillComposeStyle();
 
@@ -380,6 +382,21 @@ public:
   void NotifyGeometricAnimationsStartingThisFrame();
 
   /**
+   * Reschedule pending pause or pending play tasks when updating the target
+   * effect.
+   *
+   * If we are pending, we will either be registered in the pending animation
+   * tracker and have a null pending ready time, or, after our effect has been
+   * painted, we will be removed from the tracker and assigned a pending ready
+   * time.
+   *
+   * When the target effect is updated, we'll typically need to repaint so for
+   * the latter case where we already have a pending ready time, clear it and put
+   * ourselves back in the pending animation tracker.
+   */
+  void ReschedulePendingTasks();
+
+  /**
    * Used by subclasses to synchronously queue a cancel event in situations
    * where the Animation may have been cancelled.
    *
@@ -388,6 +405,8 @@ public:
    * exist when we would normally go to queue events on the next tick.
    */
   virtual void MaybeQueueCancelEvent(const StickyTimeDuration& aActiveTime) {};
+
+  int32_t& CachedChildIndexRef() { return mCachedChildIndex; }
 
 protected:
   void SilentlySetCurrentTime(const TimeDuration& aNewCurrentTime);
@@ -402,7 +421,7 @@ protected:
     } else if (mPendingState == PendingState::PausePending) {
       PauseAt(aReadyTime);
     } else {
-      NS_NOTREACHED("Can't finish pending if we're not in a pending state");
+      MOZ_ASSERT_UNREACHABLE("Can't finish pending if we're not in a pending state");
     }
   }
   void ApplyPendingPlaybackRate()
@@ -443,7 +462,8 @@ protected:
   void DoFinishNotification(SyncNotifyFlag aSyncNotifyFlag);
   friend class AsyncFinishNotification;
   void DoFinishNotificationImmediately(MicroTaskRunnable* aAsync = nullptr);
-  void DispatchPlaybackEvent(const nsAString& aName);
+  void QueuePlaybackEvent(const nsAString& aName,
+                          TimeStamp&& aScheduledEventTime);
 
   /**
    * Remove this animation from the pending animation tracker and reset
@@ -485,10 +505,51 @@ protected:
     return GetCurrentTimeForHoldTime(Nullable<TimeDuration>());
   }
 
+  // Earlier side of the elapsed time range reported in CSS Animations and CSS
+  // Transitions events.
+  //
+  // https://drafts.csswg.org/css-animations-2/#interval-start
+  // https://drafts.csswg.org/css-transitions-2/#interval-start
+  StickyTimeDuration
+  IntervalStartTime(const StickyTimeDuration& aActiveDuration) const
+  {
+    MOZ_ASSERT(AsCSSTransition() || AsCSSAnimation(),
+               "Should be called for CSS animations or transitions");
+    static constexpr StickyTimeDuration zeroDuration = StickyTimeDuration();
+    return std::max(
+      std::min(StickyTimeDuration(-mEffect->SpecifiedTiming().Delay()),
+               aActiveDuration),
+      zeroDuration);
+  }
+
+  // Later side of the elapsed time range reported in CSS Animations and CSS
+  // Transitions events.
+  //
+  // https://drafts.csswg.org/css-animations-2/#interval-end
+  // https://drafts.csswg.org/css-transitions-2/#interval-end
+  StickyTimeDuration
+  IntervalEndTime(const StickyTimeDuration& aActiveDuration) const
+  {
+    MOZ_ASSERT(AsCSSTransition() || AsCSSAnimation(),
+               "Should be called for CSS animations or transitions");
+
+    static constexpr StickyTimeDuration zeroDuration = StickyTimeDuration();
+    return std::max(
+      std::min((EffectEnd() - mEffect->SpecifiedTiming().Delay()),
+               aActiveDuration),
+      zeroDuration);
+  }
+
+  TimeStamp GetTimelineCurrentTimeAsTimeStamp() const
+  {
+    return mTimeline ? mTimeline->GetCurrentTimeAsTimeStamp() : TimeStamp();
+  }
+
   nsIDocument* GetRenderedDocument() const;
+  nsIDocument* GetTimelineDocument() const;
 
   RefPtr<AnimationTimeline> mTimeline;
-  RefPtr<AnimationEffectReadOnly> mEffect;
+  RefPtr<AnimationEffect> mEffect;
   // The beginning of the delay period.
   Nullable<TimeDuration> mStartTime; // Timeline timescale
   Nullable<TimeDuration> mHoldTime;  // Animation timescale
@@ -510,15 +571,6 @@ protected:
   // See http://drafts.csswg.org/web-animations/#current-finished-promise
   RefPtr<Promise> mFinished;
 
-  // Indicates if the animation is in the pending state (and what state it is
-  // waiting to enter when it finished pending). We use this rather than
-  // checking if this animation is tracked by a PendingAnimationTracker because
-  // the animation will continue to be pending even after it has been removed
-  // from the PendingAnimationTracker while it is waiting for the next tick
-  // (see TriggerOnNextTick for details).
-  enum class PendingState { NotPending, PlayPending, PausePending };
-  PendingState mPendingState;
-
   static uint64_t sNextAnimationIndex;
 
   // The relative position of this animation within the global animation list.
@@ -530,12 +582,29 @@ protected:
   // possible for two different objects to have the same index.
   uint64_t mAnimationIndex;
 
+  // While ordering Animation objects for event dispatch, the index of the
+  // target node in its parent may be cached in mCachedChildIndex.
+  int32_t mCachedChildIndex;
+
+  // Indicates if the animation is in the pending state (and what state it is
+  // waiting to enter when it finished pending). We use this rather than
+  // checking if this animation is tracked by a PendingAnimationTracker because
+  // the animation will continue to be pending even after it has been removed
+  // from the PendingAnimationTracker while it is waiting for the next tick
+  // (see TriggerOnNextTick for details).
+  enum class PendingState : uint8_t
+  {
+    NotPending,
+    PlayPending,
+    PausePending
+  };
+  PendingState mPendingState;
+
   bool mFinishedAtLastComposeStyle;
   // Indicates that the animation should be exposed in an element's
   // getAnimations() list.
   bool mIsRelevant;
 
-  RefPtr<MicroTaskRunnable> mFinishNotificationTask;
   // True if mFinished is resolved or would be resolved if mFinished has
   // yet to be created. This is not set when mFinished is rejected since
   // in that case mFinished is immediately reset to represent a new current
@@ -546,6 +615,8 @@ protected:
   // geometric animations and hence we should run any transform animations on
   // the main thread.
   bool mSyncWithGeometricAnimations;
+
+  RefPtr<MicroTaskRunnable> mFinishNotificationTask;
 
   nsString mId;
 };

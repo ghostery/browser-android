@@ -5,9 +5,7 @@
 <!ENTITY doNotDownloadPop3Movemail.label "為節省磁碟空間，不下載:">
 <!ENTITY doNotDownloadNntp.label "為節省磁碟空間，不下載下列郵件供離線閱讀:">
 <!ENTITY doNotDownloadImap.label "為了節省磁碟空間，可以用郵件大小與時間控制是否下載，或保留從伺服器下載的郵件與本地端離線存檔。">
-<!ENTITY allFoldersOffline.label "在這台電腦上保留這個帳號的郵件">
-<!ENTITY allFoldersOffline.accesskey "o">
-<!ENTITY allFoldersOffline2.label "在這台電腦上保留此帳號的所有信件匣當中的訊息。">
+<!ENTITY allFoldersOffline2.label "在這台電腦上保留此帳號的所有信件匣當中的訊息">
 <!ENTITY allFoldersOffline2.accesskey "o">
 <!ENTITY allFoldersOfflineNote.label "註: 修改此設定會影響此帳號的所有信件匣。若要設定單一信件匣，請點擊「進階…」按鈕。">
 <!ENTITY offlineNotDownload.label "郵件或文章大小超過:">

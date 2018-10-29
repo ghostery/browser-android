@@ -12,7 +12,6 @@
 #include "nsFontFaceLoader.h"
 
 #include "nsError.h"
-#include "nsContentUtils.h"
 #include "mozilla/Preferences.h"
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/Telemetry.h"
@@ -52,10 +51,11 @@ nsFontFaceLoader::nsFontFaceLoader(gfxUserFontEntry* aUserFontEntry,
                                    nsIURI* aFontURI,
                                    FontFaceSet* aFontFaceSet,
                                    nsIChannel* aChannel)
-  : mUserFontEntry(aUserFontEntry),
-    mFontURI(aFontURI),
-    mFontFaceSet(aFontFaceSet),
-    mChannel(aChannel)
+  : mUserFontEntry(aUserFontEntry)
+  , mFontURI(aFontURI)
+  , mFontFaceSet(aFontFaceSet)
+  , mChannel(aChannel)
+  , mStreamLoader(nullptr)
 {
   MOZ_ASSERT(mFontFaceSet,
              "We should get a valid FontFaceSet from the caller!");
@@ -173,7 +173,7 @@ nsFontFaceLoader::LoadTimerCallback(nsITimer* aTimer, void* aClosure)
       break;
 
     default:
-      NS_NOTREACHED("strange font-display value");
+      MOZ_ASSERT_UNREACHABLE("strange font-display value");
       break;
   }
 
@@ -324,8 +324,7 @@ nsFontFaceLoader::OnStopRequest(nsIRequest* aRequest,
 void
 nsFontFaceLoader::Cancel()
 {
-  mUserFontEntry->mFontDataLoadingState = gfxUserFontEntry::NOT_LOADING;
-  mUserFontEntry->mLoader = nullptr;
+  mUserFontEntry->LoadCanceled();
   mFontFaceSet = nullptr;
   if (mLoadTimer) {
     mLoadTimer->Cancel();

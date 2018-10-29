@@ -25,13 +25,17 @@ class MemoryReport;
 
 class nsITimer;
 
-class nsMemoryReporterManager final : public nsIMemoryReporterManager
+class nsMemoryReporterManager final : public nsIMemoryReporterManager,
+                                      public nsIMemoryReporter
 {
   virtual ~nsMemoryReporterManager();
 
 public:
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIMEMORYREPORTERMANAGER
+  NS_DECL_NSIMEMORYREPORTER
+
+  MOZ_DEFINE_MALLOC_SIZE_OF(MallocSizeOf)
 
   nsMemoryReporterManager();
 
@@ -141,14 +145,15 @@ public:
   {
     mozilla::InfallibleAmountFn mJSMainRuntimeGCHeap;
     mozilla::InfallibleAmountFn mJSMainRuntimeTemporaryPeak;
-    mozilla::InfallibleAmountFn mJSMainRuntimeCompartmentsSystem;
-    mozilla::InfallibleAmountFn mJSMainRuntimeCompartmentsUser;
+    mozilla::InfallibleAmountFn mJSMainRuntimeRealmsSystem;
+    mozilla::InfallibleAmountFn mJSMainRuntimeRealmsUser;
 
     mozilla::InfallibleAmountFn mImagesContentUsedUncompressed;
 
     mozilla::InfallibleAmountFn mStorageSQLite;
 
     mozilla::InfallibleAmountFn mLowMemoryEventsVirtual;
+    mozilla::InfallibleAmountFn mLowMemoryEventsCommitSpace;
     mozilla::InfallibleAmountFn mLowMemoryEventsPhysical;
 
     mozilla::InfallibleAmountFn mGhostWindows;

@@ -538,7 +538,7 @@ private:
         break;
 
       default:
-        NS_NOTREACHED("unknown writing mode!");
+        MOZ_ASSERT_UNREACHABLE("unknown writing mode!");
         mWritingMode = 0;
         break;
     }
@@ -1006,6 +1006,10 @@ public:
     CHECK_WRITING_MODE(aWritingMode);
     return mSize.height;
   }
+  nscoord Size(LogicalAxis aAxis, WritingMode aWM) const
+  {
+    return aAxis == eLogicalAxisInline ? ISize(aWM) : BSize(aWM);
+  }
 
   nscoord Width(WritingMode aWritingMode) const
   {
@@ -1030,6 +1034,10 @@ public:
   {
     CHECK_WRITING_MODE(aWritingMode);
     return mSize.height;
+  }
+  nscoord& Size(LogicalAxis aAxis, WritingMode aWM)
+  {
+    return aAxis == eLogicalAxisInline ? ISize(aWM) : BSize(aWM);
   }
 
   /**
@@ -1224,6 +1232,14 @@ public:
     CHECK_WRITING_MODE(aWritingMode);
     return mMargin.bottom;
   }
+  nscoord Start(LogicalAxis aAxis, WritingMode aWM) const
+  {
+    return aAxis == eLogicalAxisInline ? IStart(aWM) : BStart(aWM);
+  }
+  nscoord End(LogicalAxis aAxis, WritingMode aWM) const
+  {
+    return aAxis == eLogicalAxisInline ? IEnd(aWM) : BEnd(aWM);
+  }
 
   nscoord& IStart(WritingMode aWritingMode) // inline-start margin
   {
@@ -1245,6 +1261,14 @@ public:
     CHECK_WRITING_MODE(aWritingMode);
     return mMargin.bottom;
   }
+  nscoord& Start(LogicalAxis aAxis, WritingMode aWM)
+  {
+    return aAxis == eLogicalAxisInline ? IStart(aWM) : BStart(aWM);
+  }
+  nscoord& End(LogicalAxis aAxis, WritingMode aWM)
+  {
+    return aAxis == eLogicalAxisInline ? IEnd(aWM) : BEnd(aWM);
+  }
 
   nscoord IStartEnd(WritingMode aWritingMode) const // inline margins
   {
@@ -1255,6 +1279,10 @@ public:
   {
     CHECK_WRITING_MODE(aWritingMode);
     return mMargin.TopBottom();
+  }
+  nscoord StartEnd(LogicalAxis aAxis, WritingMode aWM) const
+  {
+    return aAxis == eLogicalAxisInline ? IStartEnd(aWM) : BStartEnd(aWM);
   }
 
   /*
@@ -2157,32 +2185,6 @@ nsStylePosition::MaxBSizeDependsOnContainer(mozilla::WritingMode aWM) const
 {
   return aWM.IsVertical() ? MaxWidthDependsOnContainer()
                           : MaxHeightDependsOnContainer();
-}
-
-inline mozilla::StyleFloat
-nsStyleDisplay::PhysicalFloats(mozilla::WritingMode aWM) const
-{
-  using StyleFloat = mozilla::StyleFloat;
-  if (mFloat == StyleFloat::InlineStart) {
-    return aWM.IsBidiLTR() ? StyleFloat::Left : StyleFloat::Right;
-  }
-  if (mFloat == StyleFloat::InlineEnd) {
-    return aWM.IsBidiLTR() ? StyleFloat::Right : StyleFloat::Left;
-  }
-  return mFloat;
-}
-
-inline mozilla::StyleClear
-nsStyleDisplay::PhysicalBreakType(mozilla::WritingMode aWM) const
-{
-  using StyleClear = mozilla::StyleClear;
-  if (mBreakType == StyleClear::InlineStart) {
-    return aWM.IsBidiLTR() ? StyleClear::Left : StyleClear::Right;
-  }
-  if (mBreakType == StyleClear::InlineEnd) {
-    return aWM.IsBidiLTR() ? StyleClear::Right : StyleClear::Left;
-  }
-  return mBreakType;
 }
 
 inline bool

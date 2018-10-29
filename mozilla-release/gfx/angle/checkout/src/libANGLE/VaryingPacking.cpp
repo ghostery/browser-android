@@ -292,10 +292,13 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         const sh::Varying *output = ref.second.fragment;
 
         // Only pack statically used varyings that have a matched input or output, plus special
-        // builtins.
+        // builtins. Note that we pack all statically used user-defined varyings even if they are
+        // not active. GLES specs are a bit vague on whether it's allowed to only pack active
+        // varyings, though GLES 3.1 spec section 11.1.2.1 says that "device-dependent
+        // optimizations" may be used to make vertex shader outputs fit.
         if ((input && output && output->staticUse) ||
-            (input && input->isBuiltIn() && input->staticUse) ||
-            (output && output->isBuiltIn() && output->staticUse))
+            (input && input->isBuiltIn() && input->active) ||
+            (output && output->isBuiltIn() && output->active))
         {
             const sh::Varying *varying = output ? output : input;
 
@@ -329,12 +332,14 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
             }
         }
 
-        // Keep Transform FB varyings in the merged list always.
+        // If the varying is not used in the VS, we know it is inactive.
         if (!input)
         {
+            mInactiveVaryingNames.push_back(ref.first);
             continue;
         }
 
+        // Keep Transform FB varyings in the merged list always.
         for (const std::string &tfVarying : tfVaryings)
         {
             std::vector<unsigned int> subscripts;
@@ -381,6 +386,11 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
                 }
             }
         }
+
+        if (uniqueFullNames.count(ref.first) == 0)
+        {
+            mInactiveVaryingNames.push_back(ref.first);
+        }
     }
 
     std::sort(mPackedVaryings.begin(), mPackedVaryings.end(), ComparePackedVarying);
@@ -426,4 +436,8 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
     return true;
 }
 
+const std::vector<std::string> &VaryingPacking::getInactiveVaryingNames() const
+{
+    return mInactiveVaryingNames;
+}
 }  // namespace rx

@@ -27,6 +27,7 @@ job-defaults:
       sparse-profile: mozharness
    extra:
       app-name: browser
+      branch-prefix: mozilla
       archive-prefix:
          by-project:
             birch: "http://ftp.stage.mozaws.net/pub"
@@ -53,7 +54,7 @@ job-defaults:
       include-version:
          by-project:
             birch: nonbeta
-            jamun: beta
+            jamun: esr
             maple: beta
             mozilla-beta: beta
             mozilla-release: nonbeta
@@ -62,7 +63,7 @@ job-defaults:
       last-watershed:
          by-project:
             birch:
-               by-build-platform:
+               by-platform:
                   linux-.*: "57.0"
                   linux64-.*: "57.0"
                   macosx64-.*: "57.0"
@@ -73,7 +74,7 @@ job-defaults:
             maple: "56.0b3"
             mozilla-beta: "56.0b3"
             mozilla-release:
-               by-build-platform:
+               by-platform:
                   linux-.*: "57.0"
                   linux64-.*: "57.0"
                   macosx64-.*: "57.0"
@@ -81,13 +82,12 @@ job-defaults:
                   win64-.*: "56.0"
                   default: null
             mozilla-esr52:
-               by-build-platform:
+               by-platform:
                   macosx64: "45.9.0esr"
                   win32: "45.3.0esr"
                   win64: "45.3.0esr"
                   default: null
-            # TODO add bz2 -> lzma watershed when we ship the first ESR 52 -> 60 update
-            mozilla-esr60: "60.0esr"
+            mozilla-esr60: "52.0esr"
             default: null
 
 jobs:
@@ -95,7 +95,7 @@ jobs:
       shipping-product: firefox
       treeherder:
          symbol: UVC
-         platform: linux/opt
+         platform: linux32/opt
          kind: test
          tier: 1
       attributes:
@@ -153,7 +153,7 @@ jobs:
       shipping-product: firefox
       treeherder:
          symbol: UVC
-         platform: macosx64/opt
+         platform: osx-cross/opt
          kind: test
          tier: 1
       attributes:
@@ -182,7 +182,7 @@ jobs:
       shipping-product: firefox
       treeherder:
          symbol: UVC
-         platform: win32/opt
+         platform: windows2012-32/opt
          kind: test
          tier: 1
       attributes:
@@ -211,7 +211,7 @@ jobs:
       shipping-product: firefox
       treeherder:
          symbol: UVC
-         platform: win64/opt
+         platform: windows2012-64/opt
          kind: test
          tier: 1
       attributes:
@@ -240,7 +240,7 @@ jobs:
       shipping-product: devedition
       treeherder:
          symbol: UVC
-         platform: linux-devedition/opt
+         platform: linux32-devedition/opt
          kind: test
          tier: 1
       attributes:
@@ -272,7 +272,7 @@ jobs:
       shipping-product: devedition
       treeherder:
          symbol: UVC
-         platform: macosx64-devedition/opt
+         platform: osx-cross-devedition/opt
          kind: test
          tier: 1
       attributes:
@@ -288,7 +288,7 @@ jobs:
       shipping-product: devedition
       treeherder:
          symbol: UVC
-         platform: win32-devedition/opt
+         platform: windows2012-32-devedition/opt
          kind: test
          tier: 1
       attributes:
@@ -304,7 +304,7 @@ jobs:
       shipping-product: devedition
       treeherder:
          symbol: UVC
-         platform: win64-devedition/opt
+         platform: windows2012-64-devedition/opt
          kind: test
          tier: 1
       attributes:

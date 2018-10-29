@@ -5,11 +5,11 @@
 <!ENTITY aboutAddons.title2                     "Extensões">
 <!ENTITY aboutAddons.header2                    "Suas extensões">
 
-<!ENTITY addonAction.enable                     "Habilitar">
-<!ENTITY addonAction.disable                    "Desabilitar">
+<!ENTITY addonAction.enable                     "Ativar">
+<!ENTITY addonAction.disable                    "Desativar">
 <!ENTITY addonAction.uninstall                  "Desinstalar">
 <!ENTITY addonAction.undo                       "Desfazer">
 <!ENTITY addonAction.update                     "Atualizar">
 
 <!ENTITY addonUnsigned.message                  "Esta extensão não pôde ser verificada pelo &brandShortName;.">
-<!ENTITY addonUnsigned.learnMore                "Saber mais">
+<!ENTITY addonUnsigned.learnMore                "Saiba mais">

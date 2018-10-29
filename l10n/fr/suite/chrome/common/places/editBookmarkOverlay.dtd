@@ -21,6 +21,8 @@
 <!ENTITY editBookmarkOverlay.keyword.label                   "Mot-clé :">
 <!ENTITY editBookmarkOverlay.keyword.accesskey               "M">
 <!ENTITY editBookmarkOverlay.tagsExpanderDown.tooltip        "Afficher toutes les étiquettes">
+<!ENTITY editBookmarkOverlay.loadInSidebar.label             "Charger ce marque-page dans un panneau latéral">
+<!ENTITY editBookmarkOverlay.loadInSidebar.accesskey         "h">
 <!ENTITY editBookmarkOverlay.choose.label                    "Choisir…">
 <!ENTITY editBookmarkOverlay.newFolderButton.label           "Nouveau dossier">
 <!ENTITY editBookmarkOverlay.newFolderButton.accesskey       "v">

@@ -11,6 +11,7 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/FilePreferences.h"
 #include "mozilla/ChaosMode.h"
+#include "mozilla/CmdLineAndEnvUtils.h"
 #include "mozilla/IOInterposer.h"
 #include "mozilla/Likely.h"
 #include "mozilla/MemoryChecking.h"
@@ -22,6 +23,7 @@
 #include "mozilla/Services.h"
 #include "mozilla/Telemetry.h"
 #include "mozilla/intl/LocaleService.h"
+#include "mozilla/recordreplay/ParentIPC.h"
 
 #include "nsAppRunner.h"
 #include "mozilla/XREAppData.h"
@@ -103,6 +105,7 @@
 #include <math.h>
 #include "cairo/cairo-features.h"
 #include "mozilla/WindowsDllBlocklist.h"
+#include "mozilla/WinHeaderOnlyUtils.h"
 #include "mozilla/mscom/MainThreadRuntime.h"
 #include "mozilla/widget/AudioSession.h"
 
@@ -153,9 +156,12 @@
 #include <locale.h>
 
 #ifdef XP_UNIX
+#include <errno.h>
+#include <pwd.h>
+#include <string.h>
+#include <sys/resource.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <pwd.h>
 #endif
 
 #ifdef XP_WIN
@@ -233,6 +239,7 @@
 #endif
 
 #include "mozilla/mozalloc_oom.h"
+#include "SafeMode.h"
 
 extern uint32_t gRestartMode;
 extern void InstallSignalHandlers(const char *ProgramName);
@@ -253,6 +260,9 @@ static nsIProfileLock* gProfileLock;
 
 int    gRestartArgc;
 char **gRestartArgv;
+
+// If gRestartedByOS is set, we were automatically restarted by the OS.
+bool gRestartedByOS = false;
 
 bool gIsGtest = false;
 
@@ -307,25 +317,6 @@ using mozilla::dom::ContentParent;
 using mozilla::dom::ContentChild;
 using mozilla::intl::LocaleService;
 
-// Save literal putenv string to environment variable.
-static void
-SaveToEnv(const char *putenv)
-{
-  char *expr = strdup(putenv);
-  if (expr)
-    PR_SetEnv(expr);
-  // We intentionally leak |expr| here since it is required by PR_SetEnv.
-  MOZ_LSAN_INTENTIONALLY_LEAK_OBJECT(expr);
-}
-
-// Tests that an environment variable exists and has a value
-static bool
-EnvHasValue(const char *name)
-{
-  const char *val = PR_GetEnv(name);
-  return (val && *val);
-}
-
 // Save the given word to the specified environment variable.
 static void
 SaveWordToEnv(const char *name, const nsACString & word)
@@ -352,7 +343,10 @@ SaveFileToEnv(const char *name, nsIFile *file)
 }
 
 // Load the path of a file saved with SaveFileToEnv
-static already_AddRefed<nsIFile>
+#ifndef MOZ_ASAN_REPORTER
+static
+#endif
+already_AddRefed<nsIFile>
 GetFileFromEnv(const char *name)
 {
   nsresult rv;
@@ -399,22 +393,6 @@ SaveFileToEnvIfUnset(const char *name, nsIFile *file)
 {
   if (!EnvHasValue(name))
     SaveFileToEnv(name, file);
-}
-
-static bool
-strimatch(const char* lowerstr, const char* mixedstr)
-{
-  while(*lowerstr) {
-    if (!*mixedstr) return false; // mixedstr is shorter
-    if (tolower(*mixedstr) != *lowerstr) return false; // no match
-
-    ++lowerstr;
-    ++mixedstr;
-  }
-
-  if (*mixedstr) return false; // lowerstr is shorter
-
-  return true;
 }
 
 static bool gIsExpectedExit = false;
@@ -483,94 +461,22 @@ enum RemoteResult {
   REMOTE_ARG_BAD    = 2
 };
 
-enum ArgResult {
-  ARG_NONE  = 0,
-  ARG_FOUND = 1,
-  ARG_BAD   = 2 // you wanted a param, but there isn't one
-};
-
-static void RemoveArg(char **argv)
-{
-  do {
-    *argv = *(argv + 1);
-    ++argv;
-  } while (*argv);
-
-  --gArgc;
-}
-
 /**
  * Check for a commandline flag. If the flag takes a parameter, the
  * parameter is returned in aParam. Flags may be in the form -arg or
  * --arg (or /arg on win32).
  *
  * @param aArg the parameter to check. Must be lowercase.
- * @param aCheckOSInt if true returns ARG_BAD if the osint argument is present
- *        when aArg is also present.
  * @param aParam if non-null, the -arg <data> will be stored in this pointer.
  *        This is *not* allocated, but rather a pointer to the argv data.
- * @param aRemArg if true, the argument is removed from the gArgv array.
+ * @param aFlags flags @see CheckArgFlag
  */
 static ArgResult
-CheckArg(const char* aArg, bool aCheckOSInt = false, const char **aParam = nullptr, bool aRemArg = true)
+CheckArg(const char* aArg, const char** aParam = nullptr,
+         CheckArgFlag aFlags = CheckArgFlag::RemoveArg)
 {
   MOZ_ASSERT(gArgv, "gArgv must be initialized before CheckArg()");
-
-  char **curarg = gArgv + 1; // skip argv[0]
-  ArgResult ar = ARG_NONE;
-
-  while (*curarg) {
-    char *arg = curarg[0];
-
-    if (arg[0] == '-'
-#if defined(XP_WIN)
-        || *arg == '/'
-#endif
-        ) {
-      ++arg;
-      if (*arg == '-')
-        ++arg;
-
-      if (strimatch(aArg, arg)) {
-        if (aRemArg)
-          RemoveArg(curarg);
-        else
-          ++curarg;
-        if (!aParam) {
-          ar = ARG_FOUND;
-          break;
-        }
-
-        if (*curarg) {
-          if (**curarg == '-'
-#if defined(XP_WIN)
-              || **curarg == '/'
-#endif
-              )
-            return ARG_BAD;
-
-          *aParam = *curarg;
-          if (aRemArg)
-            RemoveArg(curarg);
-          ar = ARG_FOUND;
-          break;
-        }
-        return ARG_BAD;
-      }
-    }
-
-    ++curarg;
-  }
-
-  if (aCheckOSInt && ar == ARG_FOUND) {
-    ArgResult arOSInt = CheckArg("osint");
-    if (arOSInt == ARG_FOUND) {
-      ar = ARG_BAD;
-      PR_fprintf(PR_STDERR, "Error: argument --osint is invalid\n");
-    }
-  }
-
-  return ar;
+  return CheckArg(gArgc, gArgv, aArg, aParam, aFlags);
 }
 
 /**
@@ -583,38 +489,7 @@ CheckArg(const char* aArg, bool aCheckOSInt = false, const char **aParam = nullp
 static ArgResult
 CheckArgExists(const char* aArg)
 {
-  char **curarg = gArgv + 1; // skip argv[0]
-  while (*curarg) {
-    char *arg = curarg[0];
-
-    if (arg[0] == '-'
-#if defined(XP_WIN)
-        || *arg == '/'
-#endif
-        ) {
-      ++arg;
-      if (*arg == '-')
-        ++arg;
-
-      char delimiter = '=';
-#if defined(XP_WIN)
-      delimiter = ':';
-#endif
-      int i;
-      for (i = 0; arg[i] && arg[i] != delimiter; i++) {}
-      char tmp = arg[i];
-      arg[i] = '\0';
-      bool found = strimatch(aArg, arg);
-      arg[i] = tmp;
-      if (found) {
-        return ARG_FOUND;
-      }
-    }
-
-    ++curarg;
-  }
-
-  return ARG_NONE;
+  return CheckArg(aArg, nullptr, CheckArgFlag::None);
 }
 
 #if defined(XP_WIN)
@@ -684,17 +559,6 @@ ProcessDDE(nsINativeAppSupport* aNative, bool aWait)
   }
 }
 #endif
-
-/**
- * Determines if there is support for showing the profile manager
- *
- * @return true in all environments
-*/
-static bool
-CanShowProfileManager()
-{
-  return true;
-}
 
 bool gSafeMode = false;
 
@@ -847,6 +711,19 @@ nsXULAppInfo::GetUAName(nsACString& aResult)
 }
 
 NS_IMETHODIMP
+nsXULAppInfo::GetSourceURL(nsACString& aResult)
+{
+  if (XRE_IsContentProcess()) {
+    ContentChild* cc = ContentChild::GetSingleton();
+    aResult = cc->GetAppInfo().sourceURL;
+    return NS_OK;
+  }
+  aResult.Assign(gAppData->sourceURL);
+
+  return NS_OK;
+}
+
+NS_IMETHODIMP
 nsXULAppInfo::GetLogConsoleErrors(bool *aResult)
 {
   *aResult = gLogConsoleErrors;
@@ -907,9 +784,10 @@ SYNC_ENUMS(IPDLUNITTEST, IPDLUnitTest)
 SYNC_ENUMS(GMPLUGIN, GMPlugin)
 SYNC_ENUMS(GPU, GPU)
 SYNC_ENUMS(PDFIUM, PDFium)
+SYNC_ENUMS(VR, VR)
 
 // .. and ensure that that is all of them:
-static_assert(GeckoProcessType_PDFium + 1 == GeckoProcessType_End,
+static_assert(GeckoProcessType_VR + 1 == GeckoProcessType_End,
               "Did not find the final GeckoProcessType");
 
 NS_IMETHODIMP
@@ -1065,7 +943,7 @@ nsXULAppInfo::EnsureContentProcess()
     return NS_ERROR_NOT_AVAILABLE;
 
   RefPtr<ContentParent> unused = ContentParent::GetNewOrUsedBrowserProcess(
-    NS_LITERAL_STRING(DEFAULT_REMOTE_TYPE));
+    nullptr, NS_LITERAL_STRING(DEFAULT_REMOTE_TYPE));
   return NS_OK;
 }
 
@@ -1160,6 +1038,13 @@ nsXULAppInfo::GetWindowsDLLBlocklistStatus(bool* aResult)
 #else
   *aResult = false;
 #endif
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsXULAppInfo::GetRestartedByOS(bool* aResult)
+{
+  *aResult = gRestartedByOS;
   return NS_OK;
 }
 
@@ -1340,7 +1225,40 @@ NS_IMETHODIMP
 nsXULAppInfo::AnnotateCrashReport(const nsACString& key,
                                   const nsACString& data)
 {
-  return CrashReporter::AnnotateCrashReport(key, data);
+  CrashReporter::Annotation annotation;
+
+  if (!AnnotationFromString(annotation, PromiseFlatCString(key).get())) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  return CrashReporter::AnnotateCrashReport(annotation, data);
+}
+
+NS_IMETHODIMP
+nsXULAppInfo::RemoveCrashReportAnnotation(const nsACString& key)
+{
+  CrashReporter::Annotation annotation;
+
+  if (!AnnotationFromString(annotation, PromiseFlatCString(key).get())) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  return CrashReporter::RemoveCrashReportAnnotation(annotation);
+}
+
+NS_IMETHODIMP
+nsXULAppInfo::IsAnnotationWhitelistedForPing(const nsACString& aValue,
+                                             bool* aIsWhitelisted)
+{
+  CrashReporter::Annotation annotation;
+
+  if (!AnnotationFromString(annotation, PromiseFlatCString(aValue).get())) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  *aIsWhitelisted = CrashReporter::IsAnnotationWhitelistedForPing(annotation);
+
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -1733,6 +1651,8 @@ DumpHelp()
   printf("  --headless         Run without a GUI.\n");
 #endif
 
+  printf("  --save-recordings  Save recordings for all content processes to a directory.\n");
+
   // this works, but only after the components have registered.  so if you drop in a new command line handler, --help
   // won't not until the second run.
   // out of the bug, because we ship a component.reg file, it works correctly.
@@ -1800,14 +1720,14 @@ ParseRemoteCommandLine(nsCString& program,
 {
   ArgResult ar;
 
-  ar = CheckArg("p", false, profile, false);
+  ar = CheckArg("p", profile, CheckArgFlag::None);
   if (ar == ARG_BAD) {
     // Leave it to the normal command line handling to handle this situation.
     return REMOTE_NOT_FOUND;
   }
 
   const char *temp = nullptr;
-  ar = CheckArg("a", true, &temp);
+  ar = CheckArg("a", &temp, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument -a requires an application name\n");
     return REMOTE_ARG_BAD;
@@ -1816,7 +1736,7 @@ ParseRemoteCommandLine(nsCString& program,
     program.Assign(temp);
   }
 
-  ar = CheckArg("u", true, username);
+  ar = CheckArg("u", username, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument -u requires a username\n");
     return REMOTE_ARG_BAD;
@@ -1829,21 +1749,15 @@ static RemoteResult
 StartRemoteClient(const char* aDesktopStartupID,
                   nsCString& program,
                   const char* profile,
-                  const char* username,
-                  bool aIsX11Display)
+                  const char* username)
 {
   nsAutoPtr<nsRemoteClient> client;
 
-  if (aIsX11Display) {
-    client = new XRemoteClient();
-  } else {
 #if defined(MOZ_ENABLE_DBUS) && defined(MOZ_WAYLAND)
-    client = new DBusRemoteClient();
+  client = new DBusRemoteClient();
 #else
-    MOZ_ASSERT(false, "Missing remote implementation!");
-    return REMOTE_NOT_FOUND;
+  client = new XRemoteClient();
 #endif
-  }
 
   nsresult rv = client->Init();
   if (NS_FAILED(rv))
@@ -1887,7 +1801,44 @@ XRE_GetBinaryPath(nsIFile* *aResult)
 #include <shellapi.h>
 
 typedef BOOL (WINAPI* SetProcessDEPPolicyFunc)(DWORD dwFlags);
-#endif
+
+static void
+RegisterApplicationRestartChanged(const char* aPref, void* aData) {
+  DWORD cchCmdLine = 0;
+  HRESULT rc =
+    ::GetApplicationRestartSettings(::GetCurrentProcess(), nullptr, &cchCmdLine, nullptr);
+  bool wasRegistered = false;
+  if (rc == S_OK) {
+    wasRegistered = true;
+  }
+
+  if (Preferences::GetBool(PREF_WIN_REGISTER_APPLICATION_RESTART, false) && !wasRegistered) {
+    // Make the command line to use when restarting.
+    // Excludes argv[0] because RegisterApplicationRestart adds the
+    // executable name, replace that temporarily with -os-restarted
+    char* exeName = gRestartArgv[0];
+    gRestartArgv[0] = "-os-restarted";
+    wchar_t** restartArgvConverted =
+      AllocConvertUTF8toUTF16Strings(gRestartArgc, gRestartArgv);
+    gRestartArgv[0] = exeName;
+
+    mozilla::UniquePtr<wchar_t[]> restartCommandLine;
+    if (restartArgvConverted) {
+      restartCommandLine = mozilla::MakeCommandLine(gRestartArgc, restartArgvConverted);
+      FreeAllocStrings(gRestartArgc, restartArgvConverted);
+    }
+
+    if (restartCommandLine) {
+      // Flags RESTART_NO_PATCH and RESTART_NO_REBOOT are not set, so we
+      // should be restarted if terminated by an update or restart.
+      ::RegisterApplicationRestart(restartCommandLine.get(), RESTART_NO_CRASH |
+                                                             RESTART_NO_HANG);
+    }
+  } else if (wasRegistered) {
+    ::UnregisterApplicationRestart();
+  }
+}
+#endif // XP_WIN
 
 // If aBlankCommandLine is true, then the application will be launched with a
 // blank command line instead of being launched with the same command line that
@@ -1911,6 +1862,9 @@ static nsresult LaunchChild(nsINativeAppSupport* aNative,
   }
 
   SaveToEnv("MOZ_LAUNCHED_CHILD=1");
+#if defined(MOZ_LAUNCHER_PROCESS)
+  SaveToEnv("MOZ_LAUNCHER_PROCESS=1");
+#endif // defined(MOZ_LAUNCHER_PROCESS)
 
 #if !defined(MOZ_WIDGET_ANDROID) // Android has separate restart code.
 #if defined(XP_MACOSX)
@@ -1928,8 +1882,14 @@ static nsresult LaunchChild(nsINativeAppSupport* aNative,
   if (NS_FAILED(rv))
     return rv;
 
-  if (!WinLaunchChild(exePath.get(), gRestartArgc, gRestartArgv))
+  HANDLE hProcess;
+  if (!WinLaunchChild(exePath.get(), gRestartArgc, gRestartArgv, nullptr, &hProcess))
     return NS_ERROR_FAILURE;
+  // Keep the current process around until the restarted process has created
+  // its message queue, to avoid the launched process's windows being forced
+  // into the background.
+  mozilla::WaitForInputIdle(hProcess);
+  ::CloseHandle(hProcess);
 
 #else
   nsAutoCString exePath;
@@ -2165,10 +2125,6 @@ static ReturnAbortOnError
 ShowProfileManager(nsIToolkitProfileService* aProfileSvc,
                    nsINativeAppSupport* aNative)
 {
-  if (!CanShowProfileManager()) {
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-
   nsresult rv;
 
   nsCOMPtr<nsIFile> profD, profLD;
@@ -2241,7 +2197,7 @@ ShowProfileManager(nsIToolkitProfileService* aProfileSvc,
       rv = ioParamBlock->GetString(0, &profileNamePtr);
       NS_ENSURE_SUCCESS(rv, rv);
 
-      CopyUTF16toUTF8(profileNamePtr, profileName);
+      CopyUTF16toUTF8(MakeStringSpan(profileNamePtr), profileName);
       free(profileNamePtr);
 
       lock->Unlock();
@@ -2256,6 +2212,14 @@ ShowProfileManager(nsIToolkitProfileService* aProfileSvc,
   aProfileSvc->GetStartOffline(&offline);
   if (offline) {
     SaveToEnv("XRE_START_OFFLINE=1");
+  }
+  if (gRestartedByOS) {
+    // Re-add this argument when actually starting the application.
+    char** newArgv = (char**) realloc(gRestartArgv, sizeof(char*) * (gRestartArgc + 2));
+    NS_ENSURE_TRUE(newArgv, NS_ERROR_OUT_OF_MEMORY);
+    gRestartArgv = newArgv;
+    gRestartArgv[gRestartArgc++] = const_cast<char*>("-os-restarted");
+    gRestartArgv[gRestartArgc] = nullptr;
   }
 
   return LaunchChild(aNative);
@@ -2323,7 +2287,7 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
   *aResult = nullptr;
   *aStartOffline = false;
 
-  ar = CheckArg("offline", true);
+  ar = CheckArg("offline", nullptr, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --offline is invalid when argument --osint is specified\n");
     return NS_ERROR_FAILURE;
@@ -2345,7 +2309,7 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
   }
 
   // reset-profile and migration args need to be checked before any profiles are chosen below.
-  ar = CheckArg("reset-profile", true);
+  ar = CheckArg("reset-profile", nullptr, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --reset-profile is invalid when argument --osint is specified\n");
     return NS_ERROR_FAILURE;
@@ -2354,7 +2318,7 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
     gDoProfileReset = true;
   }
 
-  ar = CheckArg("migration", true);
+  ar = CheckArg("migration", nullptr, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --migration is invalid when argument --osint is specified\n");
     return NS_ERROR_FAILURE;
@@ -2381,8 +2345,8 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
 
     // Clear out flags that we handled (or should have handled!) last startup.
     const char *dummy;
-    CheckArg("p", false, &dummy);
-    CheckArg("profile", false, &dummy);
+    CheckArg("p", &dummy);
+    CheckArg("profile", &dummy);
     CheckArg("profilemanager");
 
     if (gDoProfileReset) {
@@ -2411,7 +2375,7 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
     return NS_LockProfilePath(lf, localDir, nullptr, aResult);
   }
 
-  ar = CheckArg("profile", true, &arg);
+  ar = CheckArg("profile", &arg, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --profile requires a path\n");
     return NS_ERROR_FAILURE;
@@ -2445,7 +2409,7 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
     return ProfileLockedDialog(lf, lf, unlocker, aNative, aResult);
   }
 
-  ar = CheckArg("createprofile", true, &arg);
+  ar = CheckArg("createprofile", &arg, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --createprofile requires a profile name\n");
     return NS_ERROR_FAILURE;
@@ -2501,7 +2465,7 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
   rv = aProfileSvc->GetProfileCount(&count);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  ar = CheckArg("p", false, &arg);
+  ar = CheckArg("p", &arg);
   if (ar == ARG_BAD) {
     ar = CheckArg("osint");
     if (ar == ARG_FOUND) {
@@ -2509,9 +2473,7 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
       return NS_ERROR_FAILURE;
     }
 
-    if (CanShowProfileManager()) {
-      return ShowProfileManager(aProfileSvc, aNative);
-    }
+    return ShowProfileManager(aProfileSvc, aNative);
   }
   if (ar) {
     ar = CheckArg("osint");
@@ -2561,17 +2523,15 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
       return ProfileLockedDialog(profile, unlocker, aNative, aResult);
     }
 
-    if (CanShowProfileManager()) {
-      return ShowProfileManager(aProfileSvc, aNative);
-    }
+    return ShowProfileManager(aProfileSvc, aNative);
   }
 
-  ar = CheckArg("profilemanager", true);
+  ar = CheckArg("profilemanager", nullptr, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --profilemanager is invalid when argument --osint is specified\n");
     return NS_ERROR_FAILURE;
   }
-  if (ar == ARG_FOUND && CanShowProfileManager()) {
+  if (ar == ARG_FOUND) {
     return ShowProfileManager(aProfileSvc, aNative);
   }
 
@@ -2624,7 +2584,7 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
   }
 
   bool useDefault = true;
-  if (count > 1 && CanShowProfileManager()) {
+  if (count > 1) {
     aProfileSvc->GetStartWithLastProfile(&useDefault);
   }
 
@@ -2690,10 +2650,6 @@ SelectProfile(nsIProfileLock* *aResult, nsIToolkitProfileService* aProfileSvc, n
 
       return ProfileLockedDialog(profile, unlocker, aNative, aResult);
     }
-  }
-
-  if (!CanShowProfileManager()) {
-    return NS_ERROR_FAILURE;
   }
 
   return ShowProfileManager(aProfileSvc, aNative);
@@ -3162,33 +3118,6 @@ public:
 #endif
 };
 
-#ifdef XP_WIN
-namespace {
-
-bool PolicyHasRegValue(HKEY aKey, LPCWSTR aName, DWORD* aValue)
-{
-  DWORD len = sizeof(DWORD);
-  LONG ret = ::RegGetValueW(aKey, L"SOFTWARE\\Policies\\Mozilla\\Firefox", aName,
-                            RRF_RT_DWORD, nullptr, aValue, &len);
-  return ret == ERROR_SUCCESS;
-}
-
-bool SafeModeBlockedByPolicy()
-{
-  LPCTSTR policyName = L"DisableSafeMode";
-  DWORD value;
-  if (PolicyHasRegValue(HKEY_LOCAL_MACHINE, policyName, &value)) {
-    return value == 1;
-  }
-  if (PolicyHasRegValue(HKEY_CURRENT_USER, policyName, &value)) {
-    return value == 1;
-  }
-  return false;
-}
-
-} // anonymous namespace
-#endif // XP_WIN
-
 #if defined(XP_UNIX) && !defined(ANDROID)
 static SmprintfPointer
 FormatUid(uid_t aId)
@@ -3247,6 +3176,35 @@ CheckForUserMismatch()
   return false;
 }
 #endif
+
+static void
+IncreaseDescriptorLimits()
+{
+#ifdef XP_UNIX
+  // Increase the fd limit to accomodate IPC resources like shared memory.
+  static const rlim_t kFDs = 4096;
+  struct rlimit rlim;
+
+  if (getrlimit(RLIMIT_NOFILE, &rlim) != 0) {
+    Output(false, "getrlimit: %s\n", strerror(errno));
+    return;
+  }
+  // Don't decrease the limit if it's already high enough, but don't
+  // try to go over the hard limit.  (RLIM_INFINITY isn't required to
+  // be the numerically largest rlim_t, so don't assume that.)
+  if (rlim.rlim_cur != RLIM_INFINITY && rlim.rlim_cur < kFDs &&
+      rlim.rlim_cur < rlim.rlim_max) {
+    if (rlim.rlim_max != RLIM_INFINITY && rlim.rlim_max < kFDs) {
+      rlim.rlim_cur = rlim.rlim_max;
+    } else {
+      rlim.rlim_cur = kFDs;
+    }
+    if (setrlimit(RLIMIT_NOFILE, &rlim) != 0) {
+      Output(false, "setrlimit: %s\n", strerror(errno));
+    }
+  }
+#endif
+}
 
 /*
  * XRE_mainInit - Initial setup and command line parameter processing.
@@ -3318,6 +3276,8 @@ XREMain::XRE_mainInit(bool* aExitFlag)
     NS_BREAK();
 #endif
 
+  IncreaseDescriptorLimits();
+
 #ifdef USE_GLX_TEST
   // bug 639842 - it's very important to fire this process BEFORE we set up
   // error handling. indeed, this process is expected to be crashy, and we
@@ -3367,7 +3327,7 @@ XREMain::XRE_mainInit(bool* aExitFlag)
 
   // Check for application.ini overrides
   const char* override = nullptr;
-  ar = CheckArg("override", true, &override);
+  ar = CheckArg("override", &override, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     Output(true, "Incorrect number of arguments passed to --override");
     return 1;
@@ -3444,39 +3404,39 @@ XREMain::XRE_mainInit(bool* aExitFlag)
       CrashReporter::SetServerURL(nsDependentCString(mAppData->crashReporterURL));
 
     // We overwrite this once we finish starting up.
-    CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("StartupCrash"),
-                                       NS_LITERAL_CSTRING("1"));
+    CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::StartupCrash,
+                                       true);
 
     // pass some basic info from the app data
     if (mAppData->vendor)
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("Vendor"),
+      CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::Vendor,
                                          nsDependentCString(mAppData->vendor));
     if (mAppData->name)
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("ProductName"),
+      CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::ProductName,
                                          nsDependentCString(mAppData->name));
     if (mAppData->ID)
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("ProductID"),
+      CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::ProductID,
                                          nsDependentCString(mAppData->ID));
     if (mAppData->version)
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("Version"),
+      CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::Version,
                                          nsDependentCString(mAppData->version));
     if (mAppData->buildID)
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("BuildID"),
+      CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::BuildID,
                                          nsDependentCString(mAppData->buildID));
 
     nsDependentCString releaseChannel(NS_STRINGIFY(MOZ_UPDATE_CHANNEL));
-    CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("ReleaseChannel"),
-                                       releaseChannel);
+    CrashReporter::AnnotateCrashReport(
+      CrashReporter::Annotation::ReleaseChannel, releaseChannel);
 #ifdef MOZ_LINKER
-    CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("CrashAddressLikelyWrong"),
-                                       IsSignalHandlingBroken() ? NS_LITERAL_CSTRING("1")
-                                                                : NS_LITERAL_CSTRING("0"));
+    CrashReporter::AnnotateCrashReport(
+      CrashReporter::Annotation::CrashAddressLikelyWrong,
+      IsSignalHandlingBroken());
 #endif
 
 #ifdef XP_WIN
     nsAutoString appInitDLLs;
     if (widget::WinUtils::GetAppInitDLLs(appInitDLLs)) {
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("AppInitDLLs"),
+      CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::AppInitDLLs,
                                          NS_ConvertUTF16toUTF8(appInitDLLs));
     }
 #endif
@@ -3568,6 +3528,12 @@ XREMain::XRE_mainInit(bool* aExitFlag)
 
   SaveToEnv("MOZ_LAUNCHED_CHILD=");
 
+  // On Windows, the -os-restarted command line switch lets us know when we are
+  // restarted via RegisterApplicationRestart. May be used for other OSes later.
+  if (CheckArg("os-restarted", nullptr, CheckArgFlag::RemoveArg) == ARG_FOUND) {
+    gRestartedByOS = true;
+  }
+
   gRestartArgc = gArgc;
   gRestartArgv = (char**) malloc(sizeof(char*) * (gArgc + 1 + (override ? 2 : 0)));
   if (!gRestartArgv) {
@@ -3587,49 +3553,12 @@ XREMain::XRE_mainInit(bool* aExitFlag)
 
   gRestartArgv[gRestartArgc] = nullptr;
 
-
-  ar = CheckArg("safe-mode", true);
-  if (ar == ARG_BAD) {
-    PR_fprintf(PR_STDERR, "Error: argument --safe-mode is invalid when argument --osint is specified\n");
+  Maybe<bool> safeModeRequested = IsSafeModeRequested(gArgc, gArgv);
+  if (!safeModeRequested) {
     return 1;
   }
-  if (ar == ARG_FOUND) {
-    gSafeMode = true;
-  }
 
-#ifdef XP_WIN
-  // If the shift key is pressed and the ctrl and / or alt keys are not pressed
-  // during startup start in safe mode. GetKeyState returns a short and the high
-  // order bit will be 1 if the key is pressed. By masking the returned short
-  // with 0x8000 the result will be 0 if the key is not pressed and non-zero
-  // otherwise.
-  if ((GetKeyState(VK_SHIFT) & 0x8000) &&
-      !(GetKeyState(VK_CONTROL) & 0x8000) &&
-      !(GetKeyState(VK_MENU) & 0x8000) &&
-      !EnvHasValue("MOZ_DISABLE_SAFE_MODE_KEY")) {
-    gSafeMode = true;
-  }
-#endif
-
-#ifdef XP_MACOSX
-  if ((GetCurrentEventKeyModifiers() & optionKey) &&
-      !EnvHasValue("MOZ_DISABLE_SAFE_MODE_KEY"))
-    gSafeMode = true;
-#endif
-
-#ifdef XP_WIN
-if (gSafeMode && SafeModeBlockedByPolicy()) {
-    gSafeMode = false;
-  }
-#endif
-
-  // The Safe Mode Policy should not be enforced for the env var case
-  // (used by updater and crash-recovery).
-  if (EnvHasValue("MOZ_SAFE_MODE_RESTART")) {
-    gSafeMode = true;
-    // unset the env variable
-    SaveToEnv("MOZ_SAFE_MODE_RESTART=");
-  }
+  gSafeMode = safeModeRequested.value();
 
 #ifdef XP_WIN
   {
@@ -3668,21 +3597,20 @@ if (gSafeMode && SafeModeBlockedByPolicy()) {
     }
 
     if (cpuUpdateRevision > 0) {
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("CPUMicrocodeVersion"),
-                                         nsPrintfCString("0x%x",
-                                                         cpuUpdateRevision));
+      CrashReporter::AnnotateCrashReport(
+        CrashReporter::Annotation::CPUMicrocodeVersion,
+        nsPrintfCString("0x%x", cpuUpdateRevision));
     }
   }
 #endif
 
-    CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("SafeMode"),
-                                       gSafeMode ? NS_LITERAL_CSTRING("1") :
-                                                   NS_LITERAL_CSTRING("0"));
+    CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::SafeMode,
+                                       gSafeMode);
 
   // Handle --no-remote and --new-instance command line arguments. Setup
   // the environment to better accommodate other components and various
   // restart scenarios.
-  ar = CheckArg("no-remote", true);
+  ar = CheckArg("no-remote", nullptr, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --no-remote is invalid when argument --osint is specified\n");
     return 1;
@@ -3691,7 +3619,7 @@ if (gSafeMode && SafeModeBlockedByPolicy()) {
     SaveToEnv("MOZ_NO_REMOTE=1");
   }
 
-  ar = CheckArg("new-instance", true);
+  ar = CheckArg("new-instance", nullptr, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --new-instance is invalid when argument --osint is specified\n");
     return 1;
@@ -3718,7 +3646,7 @@ if (gSafeMode && SafeModeBlockedByPolicy()) {
   NS_ENSURE_SUCCESS(rv, 1);
 
   // Check for --register, which registers chrome and then exits immediately.
-  ar = CheckArg("register", true);
+  ar = CheckArg("register", nullptr, CheckArgFlag::CheckOSInt | CheckArgFlag::RemoveArg);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --register is invalid when argument --osint is specified\n");
     return 1;
@@ -3800,8 +3728,9 @@ static void AnnotateSystemManufacturer()
   hr = classObject->Get(L"Manufacturer", 0, &value, 0, 0);
 
   if (SUCCEEDED(hr) && V_VT(&value) == VT_BSTR) {
-    CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("BIOS_Manufacturer"),
-                                       NS_ConvertUTF16toUTF8(V_BSTR(&value)));
+    CrashReporter::AnnotateCrashReport(
+      CrashReporter::Annotation::BIOS_Manufacturer,
+      NS_ConvertUTF16toUTF8(V_BSTR(&value)));
   }
 
   VariantClear(&value);
@@ -3866,11 +3795,11 @@ static void SetShutdownChecks() {
   // too.
 
 #ifdef DEBUG
-#if defined(MOZ_CODE_COVERAGE) && defined(XP_WIN)
+#if defined(MOZ_CODE_COVERAGE)
   gShutdownChecks = SCM_NOTHING;
 #else
   gShutdownChecks = SCM_CRASH;
-#endif // MOZ_CODE_COVERAGE && XP_WIN
+#endif // MOZ_CODE_COVERAGE
 #else
   const char* releaseChannel = NS_STRINGIFY(MOZ_UPDATE_CHANNEL);
   if (strcmp(releaseChannel, "nightly") == 0 ||
@@ -3904,7 +3833,7 @@ namespace startup {
     nsCOMPtr<nsIFile> crashFile;
     MOZ_TRY(aProfLD->Clone(getter_AddRefs(crashFile)));
     MOZ_TRY(crashFile->Append(FILE_STARTUP_INCOMPLETE));
-    return Move(crashFile);
+    return std::move(crashFile);
   }
 }
 }
@@ -4183,8 +4112,7 @@ XREMain::XRE_mainStartup(bool* aExitFlag)
     const char* desktopStartupIDPtr =
       mDesktopStartupID.IsEmpty() ? nullptr : mDesktopStartupID.get();
 
-    rr = StartRemoteClient(desktopStartupIDPtr, program, profile, username,
-                           GDK_IS_X11_DISPLAY(mGdkDisplay));
+    rr = StartRemoteClient(desktopStartupIDPtr, program, profile, username);
     if (rr == REMOTE_FOUND) {
       *aExitFlag = true;
       return 0;
@@ -4254,7 +4182,7 @@ XREMain::XRE_mainStartup(bool* aExitFlag)
     // to make sure that the maintenance service successfully launches the
     // callback application.
     const char *logFile = nullptr;
-    if (ARG_FOUND == CheckArg("dump-args", false, &logFile)) {
+    if (ARG_FOUND == CheckArg("dump-args", &logFile)) {
       FILE* logFP = fopen(logFile, "wb");
       if (logFP) {
         for (int i = 1; i < gRestartArgc; ++i) {
@@ -4338,6 +4266,18 @@ XREMain::XRE_mainStartup(bool* aExitFlag)
 
   CrashReporter::SetProfileDirectory(mProfD);
 
+#ifdef MOZ_ASAN_REPORTER
+  // In ASan reporter builds, we need to set ASan's log_path as early as
+  // possible, so it dumps its errors into files there instead of using
+  // the default stderr location. Since this is crucial for ASan reporter
+  // to work at all (and we don't want people to use a non-functional
+  // ASan reporter build), all failures while setting log_path are fatal.
+  setASanReporterPath(mProfD);
+
+  // Export to env for child processes
+  SaveFileToEnv("ASAN_REPORTER_PATH", mProfD);
+#endif
+
   nsAutoCString version;
   BuildVersion(version);
 
@@ -4357,9 +4297,8 @@ XREMain::XRE_mainStartup(bool* aExitFlag)
   // If we see .purgecaches, that means someone did a make.
   // Re-register components to catch potential changes.
   nsCOMPtr<nsIFile> flagFile;
-  rv = NS_ERROR_FILE_NOT_FOUND;
   if (mAppData->directory) {
-    rv = mAppData->directory->Clone(getter_AddRefs(flagFile));
+    Unused << mAppData->directory->Clone(getter_AddRefs(flagFile));
   }
   if (flagFile) {
     flagFile->AppendNative(FILE_INVALIDATE_CACHES);
@@ -4435,7 +4374,7 @@ void AddSandboxAnnotations()
   levelString.AppendInt(level);
 
   CrashReporter::AnnotateCrashReport(
-    NS_LITERAL_CSTRING("ContentSandboxLevel"), levelString);
+    CrashReporter::Annotation::ContentSandboxLevel, levelString);
 
   // Include whether or not this instance is capable of content sandboxing
   bool sandboxCapable = false;
@@ -4448,11 +4387,13 @@ void AddSandboxAnnotations()
   sandboxCapable = true;
 #elif defined(XP_LINUX)
   sandboxCapable = SandboxInfo::Get().CanSandboxContent();
+#elif defined(__OpenBSD__)
+  sandboxCapable = true;
+  StartOpenBSDSandbox(GeckoProcessType_Default);
 #endif
 
   CrashReporter::AnnotateCrashReport(
-    NS_LITERAL_CSTRING("ContentSandboxCapable"),
-    sandboxCapable ? NS_LITERAL_CSTRING("1") : NS_LITERAL_CSTRING("0"));
+    CrashReporter::Annotation::ContentSandboxCapable, sandboxCapable);
 }
 #endif /* MOZ_CONTENT_SANDBOX */
 
@@ -4506,16 +4447,18 @@ XREMain::XRE_mainRun()
       nsAutoCString sval;
       rv = defaultPrefBranch->GetCharPref("app.update.channel", sval);
       if (NS_SUCCEEDED(rv)) {
-        CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("ReleaseChannel"),
-                                            sval);
+        CrashReporter::AnnotateCrashReport(
+          CrashReporter::Annotation::ReleaseChannel, sval);
       }
     }
   }
   // Needs to be set after xpcom initialization.
-  CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("FramePoisonBase"),
-                                     nsPrintfCString("%.16" PRIu64, uint64_t(gMozillaPoisonBase)));
-  CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("FramePoisonSize"),
-                                     nsPrintfCString("%" PRIu32, uint32_t(gMozillaPoisonSize)));
+  CrashReporter::AnnotateCrashReport(
+    CrashReporter::Annotation::FramePoisonBase,
+    nsPrintfCString("%.16" PRIu64, uint64_t(gMozillaPoisonBase)));
+  CrashReporter::AnnotateCrashReport(
+    CrashReporter::Annotation::FramePoisonSize,
+    uint32_t(gMozillaPoisonSize));
 
   bool includeContextHeap =
     Preferences::GetBool("toolkit.crashreporter.include_context_heap", false);
@@ -4674,7 +4617,8 @@ XREMain::XRE_mainRun()
 
   nsCString userAgentLocale;
   LocaleService::GetInstance()->GetAppLocaleAsLangTag(userAgentLocale);
-  CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("useragent_locale"), userAgentLocale);
+  CrashReporter::AnnotateCrashReport(
+    CrashReporter::Annotation::useragent_locale, userAgentLocale);
 
   appStartup->GetShuttingDown(&mShuttingDown);
 
@@ -4727,13 +4671,17 @@ XREMain::XRE_mainRun()
   SaveToEnv("XRE_PROFILE_LOCAL_PATH=");
   SaveToEnv("XRE_PROFILE_NAME=");
   SaveToEnv("XRE_START_OFFLINE=");
-  SaveToEnv("NO_EM_RESTART=");
   SaveToEnv("XUL_APP_FILE=");
   SaveToEnv("XRE_BINARY_PATH=");
 
   if (!mShuttingDown) {
     rv = appStartup->CreateHiddenWindow();
     NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
+
+#ifdef XP_WIN
+    Preferences::RegisterCallbackAndCall(RegisterApplicationRestartChanged,
+                                         PREF_WIN_REGISTER_APPLICATION_RESTART);
+#endif
 
 #if defined(HAVE_DESKTOP_STARTUP_ID) && defined(MOZ_WIDGET_GTK)
     nsGTKToolkit* toolkit = nsGTKToolkit::GetToolkit();
@@ -4765,8 +4713,8 @@ XREMain::XRE_mainRun()
 
     (void)appStartup->DoneStartingUp();
 
-    CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("StartupCrash"),
-                                       NS_LITERAL_CSTRING("0"));
+    CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::StartupCrash,
+                                       false);
 
     appStartup->GetShuttingDown(&mShuttingDown);
   }
@@ -4823,7 +4771,7 @@ XREMain::XRE_mainRun()
   flagsString.AppendInt(sandboxInfo.AsInteger());
 
   CrashReporter::AnnotateCrashReport(
-    NS_LITERAL_CSTRING("ContentSandboxCapabilities"), flagsString);
+    CrashReporter::Annotation::ContentSandboxCapabilities, flagsString);
 #endif /* MOZ_SANDBOX && XP_LINUX */
 
 #if defined(MOZ_CONTENT_SANDBOX)
@@ -5112,8 +5060,10 @@ XRE_InitCommandLine(int aArgc, char* aArgv[])
   delete[] canonArgs;
 #endif
 
+  recordreplay::parent::InitializeUIProcess(gArgc, gArgv);
+
   const char *path = nullptr;
-  ArgResult ar = CheckArg("greomni", false, &path);
+  ArgResult ar = CheckArg("greomni", &path);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --greomni requires a path argument\n");
     return NS_ERROR_FAILURE;
@@ -5129,7 +5079,7 @@ XRE_InitCommandLine(int aArgc, char* aArgv[])
     return rv;
   }
 
-  ar = CheckArg("appomni", false, &path);
+  ar = CheckArg("appomni", &path);
   if (ar == ARG_BAD) {
     PR_fprintf(PR_STDERR, "Error: argument --appomni requires a path argument\n");
     return NS_ERROR_FAILURE;
@@ -5168,6 +5118,12 @@ bool
 XRE_IsGPUProcess()
 {
   return XRE_GetProcessType() == GeckoProcessType_GPU;
+}
+
+bool
+XRE_IsVRProcess()
+{
+  return XRE_GetProcessType() == GeckoProcessType_VR;
 }
 
 /**
@@ -5275,7 +5231,6 @@ BrowserTabsRemoteAutostart()
 
   gBrowserTabsRemoteStatus = status;
 
-  mozilla::Telemetry::Accumulate(mozilla::Telemetry::E10S_STATUS, status);
   return gBrowserTabsRemoteAutostart;
 }
 
@@ -5383,3 +5338,32 @@ extern "C" void
 GeckoHandleOOM(size_t size) {
   mozalloc_handle_oom(size);
 }
+
+#ifdef MOZ_ASAN_REPORTER
+void setASanReporterPath(nsIFile* aDir) {
+  nsCOMPtr<nsIFile> dir;
+  aDir->Clone(getter_AddRefs(dir));
+
+  dir->Append(NS_LITERAL_STRING("asan"));
+  nsresult rv = dir->Create(nsIFile::DIRECTORY_TYPE, 0700);
+  if (NS_WARN_IF(NS_FAILED(rv) && rv != NS_ERROR_FILE_ALREADY_EXISTS)) {
+    MOZ_CRASH("[ASan Reporter] Unable to create crash directory.");
+  }
+
+  dir->Append(NS_LITERAL_STRING("ff_asan_log"));
+
+#ifdef XP_WIN
+  nsAutoString nspathW;
+  rv = dir->GetPath(nspathW);
+  NS_ConvertUTF16toUTF8 nspath(nspathW);
+#else
+  nsAutoCString nspath;
+  rv = dir->GetNativePath(nspath);
+#endif
+  if (NS_FAILED(rv)) {
+    MOZ_CRASH("[ASan Reporter] Unable to get native path for crash directory.");
+  }
+
+  __sanitizer_set_report_path(nspath.get());
+}
+#endif

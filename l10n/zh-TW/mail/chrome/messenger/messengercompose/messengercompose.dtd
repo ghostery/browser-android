@@ -247,7 +247,6 @@
 <!ENTITY sendlaterButton.tooltip "稍後再寄出此封郵件">
 <!ENTITY quoteButton.tooltip "引入前封郵件的文字">
 <!ENTITY addressButton.tooltip "從通訊錄裡選擇收件者">
-<!ENTITY attachButton.tooltip "附加檔案">
 <!ENTITY attachButton.tooltip2 "新增附件">
 <!ENTITY spellingButton.tooltip "對郵件的全部或反白部分檢查拼字">
 <!ENTITY saveButton.tooltip "儲存此訊息">
@@ -275,7 +274,6 @@
      and it must be the same as toggleAttachmentPaneCmd.key, otherwise it won't
      work, as the shortcut key functionality supersedes the access key. -->
 <!ENTITY attachments.accesskey "m">
-
 <!ENTITY attachmentBucketHeader.tooltip "附件窗格">
 <!ENTITY attachmentBucketCloseButton.tooltip "隱藏附件窗格">
 
@@ -360,6 +358,9 @@
 <!-- Identity popup customize menuitem -->
 <!ENTITY customizeFromAddress.label "自訂寄件地址…">
 <!ENTITY customizeFromAddress.accesskey "A">
+
+<!-- Accessibility name for the document -->
+<!ENTITY aria.message.bodyName "訊息內文">
 
 <!-- Status Bar -->
 <!ENTITY languageStatusButton.tooltip "拼字檢查語言">

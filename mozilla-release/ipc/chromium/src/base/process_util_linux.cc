@@ -13,7 +13,7 @@
 
 #include "base/eintr_wrapper.h"
 #include "base/logging.h"
-#include "mozilla/Move.h"
+#include "mozilla/ipc/FileDescriptorShuffle.h"
 #include "mozilla/UniquePtr.h"
 
 namespace {
@@ -29,28 +29,37 @@ bool LaunchApp(const std::vector<std::string>& argv,
                ProcessHandle* process_handle)
 {
   mozilla::UniquePtr<char*[]> argv_cstr(new char*[argv.size() + 1]);
-  // Illegal to allocate memory after fork and before execvp
-  InjectiveMultimap fd_shuffle1, fd_shuffle2;
-  fd_shuffle1.reserve(options.fds_to_remap.size());
-  fd_shuffle2.reserve(options.fds_to_remap.size());
 
   EnvironmentArray envp = BuildEnvironmentArray(options.env_map);
+  mozilla::ipc::FileDescriptorShuffle shuffle;
+  if (!shuffle.Init(options.fds_to_remap)) {
+    return false;
+  }
 
   pid_t pid = options.fork_delegate ? options.fork_delegate->Fork() : fork();
+  // WARNING: if pid == 0, only async signal safe operations are permitted from
+  // here until exec or _exit.
+  //
+  // Specifically, heap allocation is not safe: the sandbox's fork substitute
+  // won't run the pthread_atfork handlers that fix up the malloc locks.
+
   if (pid < 0)
     return false;
 
   if (pid == 0) {
     // In the child:
-    for (const auto& fd_map : options.fds_to_remap) {
-      fd_shuffle1.push_back(InjectionArc(fd_map.first, fd_map.second, false));
-      fd_shuffle2.push_back(InjectionArc(fd_map.first, fd_map.second, false));
+    for (const auto& fds : shuffle.Dup2Sequence()) {
+      if (HANDLE_EINTR(dup2(fds.first, fds.second)) != fds.second) {
+        // This shouldn't happen, but check for it.  And see below
+        // about logging being unsafe here, so this is debug only.
+        DLOG(ERROR) << "dup2 failed";
+        _exit(127);
+      }
     }
 
-    if (!ShuffleFileDescriptors(&fd_shuffle1))
-      _exit(127);
-
-    CloseSuperfluousFds(fd_shuffle2);
+    CloseSuperfluousFds(&shuffle, [](void* aCtx, int aFd) {
+      return static_cast<decltype(&shuffle)>(aCtx)->MapsTo(aFd);
+    });
 
     for (size_t i = 0; i < argv.size(); i++)
       argv_cstr[i] = const_cast<char*>(argv[i].c_str());

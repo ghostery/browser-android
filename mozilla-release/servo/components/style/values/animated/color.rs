@@ -6,6 +6,7 @@
 
 use values::animated::{Animate, Procedure, ToAnimatedZero};
 use values::distance::{ComputeSquaredDistance, SquaredDistance};
+use values::generics::color::{Color as GenericColor, ComplexColorRatios};
 
 /// An animated RGBA color.
 ///
@@ -91,42 +92,26 @@ impl ComputeSquaredDistance for RGBA {
     }
 }
 
-#[allow(missing_docs)]
-#[cfg_attr(feature = "servo", derive(MallocSizeOf))]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Color {
-    pub color: RGBA,
-    pub foreground_ratio: f32,
-}
+/// An animated value for `<color>`.
+pub type Color = GenericColor<RGBA>;
 
 impl Color {
-    fn currentcolor() -> Self {
-        Color {
-            color: RGBA::transparent(),
-            foreground_ratio: 1.,
-        }
-    }
-
-    /// Returns a transparent intermediate color.
-    pub fn transparent() -> Self {
-        Color {
-            color: RGBA::transparent(),
-            foreground_ratio: 0.,
-        }
-    }
-
-    fn is_currentcolor(&self) -> bool {
-        self.foreground_ratio >= 1.
-    }
-
-    fn is_numeric(&self) -> bool {
-        self.foreground_ratio <= 0.
-    }
-
     fn effective_intermediate_rgba(&self) -> RGBA {
-        RGBA {
-            alpha: self.color.alpha * (1. - self.foreground_ratio),
-            ..self.color
+        match *self {
+            GenericColor::Numeric(color) => color,
+            GenericColor::Foreground => RGBA::transparent(),
+            GenericColor::Complex(color, ratios) => RGBA {
+                alpha: color.alpha * ratios.bg,
+                ..color.clone()
+            },
+        }
+    }
+
+    fn effective_ratios(&self) -> ComplexColorRatios {
+        match *self {
+            GenericColor::Numeric(..) => ComplexColorRatios::NUMERIC,
+            GenericColor::Foreground => ComplexColorRatios::FOREGROUND,
+            GenericColor::Complex(.., ratios) => ratios,
         }
     }
 }
@@ -134,87 +119,146 @@ impl Color {
 impl Animate for Color {
     #[inline]
     fn animate(&self, other: &Self, procedure: Procedure) -> Result<Self, ()> {
+        use self::GenericColor::*;
+
         // Common cases are interpolating between two numeric colors,
         // two currentcolors, and a numeric color and a currentcolor.
-        //
-        // Note: this algorithm assumes self_portion + other_portion
-        // equals to one, so it may be broken for additive operation.
-        // To properly support additive color interpolation, we would
-        // need two ratio fields in computed color types.
         let (this_weight, other_weight) = procedure.weights();
-        if self.foreground_ratio == other.foreground_ratio {
-            if self.is_currentcolor() {
-                Ok(Color::currentcolor())
-            } else {
-                Ok(Color {
-                    color: self.color.animate(&other.color, procedure)?,
-                    foreground_ratio: self.foreground_ratio,
-                })
-            }
-        } else if self.is_currentcolor() && other.is_numeric() {
-            Ok(Color {
-                color: other.color,
-                foreground_ratio: this_weight as f32,
-            })
-        } else if self.is_numeric() && other.is_currentcolor() {
-            Ok(Color {
-                color: self.color,
-                foreground_ratio: other_weight as f32,
-            })
-        } else {
-            // For interpolating between two complex colors, we need to
-            // generate colors with effective alpha value.
-            let self_color = self.effective_intermediate_rgba();
-            let other_color = other.effective_intermediate_rgba();
-            let color = self_color.animate(&other_color, procedure)?;
-            // Then we compute the final foreground ratio, and derive
-            // the final alpha value from the effective alpha value.
-            let foreground_ratio = self.foreground_ratio
-                .animate(&other.foreground_ratio, procedure)?;
-            let alpha = color.alpha / (1. - foreground_ratio);
-            Ok(Color {
-                color: RGBA {
-                    alpha: alpha,
-                    ..color
+
+        Ok(match (*self, *other, procedure) {
+            // Any interpolation of currentcolor with currentcolor returns currentcolor.
+            (Foreground, Foreground, Procedure::Interpolate { .. }) => Foreground,
+            // Animating two numeric colors.
+            (Numeric(c1), Numeric(c2), _) => Numeric(c1.animate(&c2, procedure)?),
+            // Combinations of numeric color and currentcolor
+            (Foreground, Numeric(color), _) => Self::with_ratios(
+                color,
+                ComplexColorRatios {
+                    bg: other_weight as f32,
+                    fg: this_weight as f32,
                 },
-                foreground_ratio: foreground_ratio,
-            })
-        }
+            ),
+            (Numeric(color), Foreground, _) => Self::with_ratios(
+                color,
+                ComplexColorRatios {
+                    bg: this_weight as f32,
+                    fg: other_weight as f32,
+                },
+            ),
+
+            // Any other animation of currentcolor with currentcolor.
+            (Foreground, Foreground, _) => Self::with_ratios(
+                RGBA::transparent(),
+                ComplexColorRatios {
+                    bg: 0.,
+                    fg: (this_weight + other_weight) as f32,
+                },
+            ),
+
+            // Defer to complex calculations
+            _ => {
+                // Compute the "scaled" contribution for `color`.
+                fn scaled_rgba(color: &Color) -> RGBA {
+                    match *color {
+                        GenericColor::Numeric(color) => color,
+                        GenericColor::Foreground => RGBA::transparent(),
+                        GenericColor::Complex(color, ratios) => RGBA {
+                            red: color.red * ratios.bg,
+                            green: color.green * ratios.bg,
+                            blue: color.blue * ratios.bg,
+                            alpha: color.alpha * ratios.bg,
+                        },
+                    }
+                }
+
+                // Each `Color`, represents a complex combination of foreground color and
+                // background color where fg and bg represent the overall
+                // contributions. ie:
+                //
+                //    color = { bg * mColor, fg * foreground }
+                //          =   { bg_color , fg_color }
+                //          =     bg_color + fg_color
+                //
+                // where `foreground` is `currentcolor`, and `bg_color`,
+                // `fg_color` are the scaled background and foreground
+                // contributions.
+                //
+                // Each operation, lerp, addition, or accumulate, can be
+                // represented as a scaled-addition each complex color. ie:
+                //
+                //    p * col1 + q * col2
+                //
+                // where p = (1 - a), q = a for lerp(a), p = 1, q = 1 for
+                // addition, etc.
+                //
+                // Therefore:
+                //
+                //    col1 op col2
+                //    = p * col1 + q * col2
+                //    = p * { bg_color1, fg_color1 } + q * { bg_color2, fg_color2 }
+                //    = p * (bg_color1 + fg_color1) + q * (bg_color2 + fg_color2)
+                //    = p * bg_color1 + p * fg_color1 + q * bg_color2 + p * fg_color2
+                //    = (p * bg_color1 + q * bg_color2) + (p * fg_color1 + q * fg_color2)
+                //    = (bg_color1 op bg_color2) + (fg_color1 op fg_color2)
+                //
+                // fg_color1 op fg_color2 is equivalent to (fg1 op fg2) * foreground,
+                // so the final color is:
+                //
+                //    = { bg_color, fg_color }
+                //    = { 1 * (bg_color1 op bg_color2), (fg1 op fg2) * foreground }
+
+                // To perform the operation on two complex colors, we need to
+                // generate the scaled contributions of each background color
+                // component.
+                let bg_color1 = scaled_rgba(self);
+                let bg_color2 = scaled_rgba(other);
+                // Perform bg_color1 op bg_color2
+                let bg_color = bg_color1.animate(&bg_color2, procedure)?;
+
+                // Calculate the final foreground color ratios; perform
+                // animation on effective fg ratios.
+                let ComplexColorRatios { fg: fg1, .. } = self.effective_ratios();
+                let ComplexColorRatios { fg: fg2, .. } = other.effective_ratios();
+                // Perform fg1 op fg2
+                let fg = fg1.animate(&fg2, procedure)?;
+
+                Self::with_ratios(bg_color, ComplexColorRatios { bg: 1., fg })
+            }
+        })
     }
 }
 
 impl ComputeSquaredDistance for Color {
     #[inline]
     fn compute_squared_distance(&self, other: &Self) -> Result<SquaredDistance, ()> {
+        use self::GenericColor::*;
+
         // All comments from the Animate impl also applies here.
-        if self.foreground_ratio == other.foreground_ratio {
-            if self.is_currentcolor() {
-                Ok(SquaredDistance::from_sqrt(0.))
-            } else {
-                self.color.compute_squared_distance(&other.color)
+        Ok(match (*self, *other) {
+            (Foreground, Foreground) => SquaredDistance::from_sqrt(0.),
+            (Numeric(c1), Numeric(c2)) => c1.compute_squared_distance(&c2)?,
+            (Foreground, Numeric(color)) | (Numeric(color), Foreground) => {
+                // `computed_squared_distance` is symmetric.
+                color.compute_squared_distance(&RGBA::transparent())?
+                    + SquaredDistance::from_sqrt(1.)
             }
-        } else if self.is_currentcolor() && other.is_numeric() {
-            Ok(
-                RGBA::transparent().compute_squared_distance(&other.color)? +
-                    SquaredDistance::from_sqrt(1.),
-            )
-        } else if self.is_numeric() && other.is_currentcolor() {
-            Ok(self.color.compute_squared_distance(&RGBA::transparent())? +
-                SquaredDistance::from_sqrt(1.))
-        } else {
-            let self_color = self.effective_intermediate_rgba();
-            let other_color = other.effective_intermediate_rgba();
-            Ok(self_color.compute_squared_distance(&other_color)? +
-                self.foreground_ratio
-                    .compute_squared_distance(&other.foreground_ratio)?)
-        }
+            (_, _) => {
+                let self_color = self.effective_intermediate_rgba();
+                let other_color = other.effective_intermediate_rgba();
+                let self_ratios = self.effective_ratios();
+                let other_ratios = other.effective_ratios();
+
+                self_color.compute_squared_distance(&other_color)?
+                    + self_ratios.bg.compute_squared_distance(&other_ratios.bg)?
+                    + self_ratios.fg.compute_squared_distance(&other_ratios.fg)?
+            }
+        })
     }
 }
 
 impl ToAnimatedZero for Color {
     #[inline]
     fn to_animated_zero(&self) -> Result<Self, ()> {
-        // FIXME(nox): This does not look correct to me.
-        Err(())
+        Ok(RGBA::transparent().into())
     }
 }

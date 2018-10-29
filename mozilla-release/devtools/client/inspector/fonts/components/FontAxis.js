@@ -4,79 +4,64 @@
 
 "use strict";
 
-const { PureComponent } = require("devtools/client/shared/vendor/react");
-const dom = require("devtools/client/shared/vendor/react-dom-factories");
+const { createFactory, PureComponent } = require("devtools/client/shared/vendor/react");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
+
+const FontPropertyValue = createFactory(require("./FontPropertyValue"));
+
+const Types = require("../types");
 
 class FontAxis extends PureComponent {
   static get propTypes() {
     return {
-      defaultValue: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
-      label: PropTypes.string.isRequired,
-      min: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
-      max: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
-      name: PropTypes.string.isRequired,
+      axis: PropTypes.shape(Types.fontVariationAxis),
       onChange: PropTypes.func.isRequired,
-      showInput: PropTypes.bool,
-      step: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
-      value: PropTypes.string,
+      value: PropTypes.string.isRequired,
     };
   }
 
-  constructor(props) {
-    super(props);
+  /**
+   * Naive implementation to get increment step for variable font axis that ensures
+   * fine grained control based on range of values between min and max.
+   *
+   * @param  {Number} min
+   *         Minumum value for range.
+   * @param  {Number} max
+   *         Maximum value for range.
+   * @return {Number}
+   *         Step value used in range input for font axis.
+   */
+  getAxisStep(min, max) {
+    let step = 1;
+    const delta = parseInt(max, 10) - parseInt(min, 10);
 
-    this.onChange = this.onChange.bind(this);
-  }
+    if (delta <= 1) {
+      step = 0.001;
+    } else if (delta <= 10) {
+      step = 0.01;
+    } else if (delta <= 100) {
+      step = 0.1;
+    }
 
-  onChange(e) {
-    this.props.onChange(this.props.name, e.target.value);
+    return step;
   }
 
   render() {
-    const defaults = {
-      min: this.props.min,
-      max: this.props.max,
-      onChange: this.onChange,
-      step: this.props.step || 1,
-      value: this.props.value || this.props.defaultValue,
-    };
+    const { axis, value, onChange } = this.props;
 
-    const range = dom.input(
-      {
-        ...defaults,
-        className: "font-axis-slider",
-        title: this.props.label,
-        type: "range",
-      }
-    );
-
-    const input = dom.input(
-      {
-        ...defaults,
-        className: "font-axis-input",
-        type: "number",
-      }
-    );
-
-    return dom.label(
-      {
-        className: "font-control",
-      },
-      dom.span(
-        {
-          className: "font-control-label",
-        },
-        this.props.label
-      ),
-      dom.div(
-        {
-          className: "font-control-input"
-        },
-        range,
-        this.props.showInput ? input : null
-      )
-    );
+    return FontPropertyValue({
+      className: "font-control-axis",
+      label: axis.name,
+      min: axis.minValue,
+      minLabel: true,
+      max: axis.maxValue,
+      maxLabel: true,
+      name: axis.tag,
+      nameLabel: true,
+      onChange,
+      step: this.getAxisStep(axis.minValue, axis.maxValue),
+      value,
+    });
   }
 }
 

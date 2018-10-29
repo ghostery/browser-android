@@ -45,3 +45,8 @@
 <!ENTITY  autologinproxy.tooltip        "저장한 자격 증명이 있으면 조용히 인증합니다. 인증이 되지 않으면 물어볼 것입니다.">
 <!ENTITY  socksRemoteDNS.label          "SOCKS v5를 사용할 때 프록시 DNS">
 <!ENTITY  socksRemoteDNS.accesskey      "d">
+<!ENTITY  dnsOverHttps.label            "HTTPS를 통한 DNS 활성화">
+<!ENTITY  dnsOverHttps.accesskey        "b">
+<!ENTITY  dnsOverHttpsUrl.label         "URL">
+<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
+<!ENTITY  dnsOverHttpsUrl.tooltip       "HTTPS를 통한 DNS를 해결하는 URL">

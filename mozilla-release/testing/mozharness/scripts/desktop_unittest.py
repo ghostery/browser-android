@@ -6,7 +6,6 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 # ***** END LICENSE BLOCK *****
 """desktop_unittest.py
-The goal of this is to extract desktop unittesting from buildbot's factory.py
 
 author: Jordan Lund
 """
@@ -28,8 +27,7 @@ from mozharness.base.errors import BaseErrorList
 from mozharness.base.log import INFO
 from mozharness.base.script import PreScriptAction
 from mozharness.base.vcs.vcsbase import MercurialScript
-from mozharness.mozilla.blob_upload import BlobUploadMixin, blobupload_config_options
-from mozharness.mozilla.buildbot import TBPL_EXCEPTION
+from mozharness.mozilla.automation import TBPL_EXCEPTION
 from mozharness.mozilla.mozbase import MozbaseMixin
 from mozharness.mozilla.structuredlog import StructuredOutputParser
 from mozharness.mozilla.testing.errors import HarnessErrorList
@@ -41,13 +39,13 @@ from mozharness.mozilla.testing.codecoverage import (
 from mozharness.mozilla.testing.testbase import TestingMixin, testing_config_options
 
 SUITE_CATEGORIES = ['gtest', 'cppunittest', 'jittest', 'mochitest', 'reftest', 'xpcshell',
-                    'mozbase', 'mozmill']
+                    'mozmill']
 SUITE_DEFAULT_E10S = ['mochitest', 'reftest']
 SUITE_NO_E10S = ['xpcshell']
 
 
 # DesktopUnittest {{{1
-class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMixin,
+class DesktopUnittest(TestingMixin, MercurialScript, MozbaseMixin,
                       CodeCoverageMixin):
     config_options = [
         [['--mochitest-suite', ], {
@@ -97,14 +95,6 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
             "help": "Specify which jit-test suite to run. "
                     "Suites are defined in the config file\n."
                     "Examples: 'jittest'"}
-         ],
-        [['--mozbase-suite', ], {
-            "action": "extend",
-            "dest": "specified_mozbase_suites",
-            "type": "string",
-            "help": "Specify which mozbase suite to run. "
-                    "Suites are defined in the config file\n."
-                    "Examples: 'mozbase'"}
          ],
         [['--mozmill-suite', ], {
             "action": "extend",
@@ -172,11 +162,10 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
         [["--gpu-required"], {
             "action": "store_true",
             "dest": "gpu_required",
-            "default": "False",
+            "default": False,
             "help": "Run additional verification on modified tests using gpu instances."}
          ],
     ] + copy.deepcopy(testing_config_options) + \
-        copy.deepcopy(blobupload_config_options) + \
         copy.deepcopy(code_coverage_config_options)
 
     def __init__(self, require_config_file=True):
@@ -186,7 +175,6 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
             config_options=self.config_options,
             all_actions=[
                 'clobber',
-                'read-buildbot-config',
                 'download-and-extract',
                 'create-virtualenv',
                 'install',
@@ -221,7 +209,6 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
             ('specified_cppunittest_suites', 'cppunit'),
             ('specified_gtest_suites', 'gtest'),
             ('specified_jittest_suites', 'jittest'),
-            ('specified_mozbase_suites', 'mozbase'),
             ('specified_mozmill_suites', 'mozmill'),
         )
         for s, prefix in suites:
@@ -278,7 +265,6 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
                                                    'blobber_upload_dir')
         dirs['abs_jittest_dir'] = os.path.join(dirs['abs_test_install_dir'],
                                                "jit-test", "jit-test")
-        dirs['abs_mozbase_dir'] = os.path.join(dirs['abs_test_install_dir'], "mozbase")
         dirs['abs_mozmill_dir'] = os.path.join(dirs['abs_test_install_dir'], "mozmill")
 
         if os.path.isabs(c['virtualenv_path']):
@@ -404,11 +390,12 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
                     base_cmd.append('--e10s')
 
             # Ignore chunking if we have user specified test paths
-            if os.environ.get('MOZHARNESS_TEST_PATHS'):
-                base_cmd.extend(os.environ['MOZHARNESS_TEST_PATHS'].split(':'))
-            elif c.get('total_chunks') and c.get('this_chunk') and not self.verify_enabled:
-                base_cmd.extend(['--total-chunks', c['total_chunks'],
-                                 '--this-chunk', c['this_chunk']])
+            if not (self.verify_enabled or self.per_test_coverage):
+                if os.environ.get('MOZHARNESS_TEST_PATHS'):
+                    base_cmd.extend(os.environ['MOZHARNESS_TEST_PATHS'].split(':'))
+                elif c.get('total_chunks') and c.get('this_chunk'):
+                    base_cmd.extend(['--total-chunks', c['total_chunks'],
+                                     '--this-chunk', c['this_chunk']])
 
             if c['no_random']:
                 if suite_category == "mochitest":
@@ -506,7 +493,7 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
     def structured_output(self, suite_category, flavor=None):
         unstructured_flavors = self.config.get('unstructured_flavors')
         if not unstructured_flavors:
-            return False
+            return True
         if suite_category not in unstructured_flavors:
             return True
         if not unstructured_flavors.get(suite_category) or \
@@ -524,13 +511,10 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
     # Actions {{{2
 
     # clobber defined in BaseScript, deletes mozharness/build if exists
-    # read_buildbot_config is in BuildbotMixin.
-    # postflight_read_buildbot_config is in TestingMixin.
     # preflight_download_and_extract is in TestingMixin.
     # create_virtualenv is in VirtualenvMixin.
     # preflight_install is in TestingMixin.
     # install is in TestingMixin.
-    # upload_blobber_files is in BlobUploadMixin
 
     @PreScriptAction('download-and-extract')
     def _pre_download_and_extract(self, action):
@@ -551,7 +535,7 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
                     rejected.append(suite)
                     break
         if rejected:
-            self.buildbot_status(TBPL_EXCEPTION)
+            self.record_status(TBPL_EXCEPTION)
             self.fatal("There are specified suites that are incompatible with "
                        "--artifact try syntax flag: {}".format(', '.join(rejected)),
                        exit_code=self.return_code)
@@ -559,7 +543,7 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
     def download_and_extract(self):
         """
         download and extract test zip / download installer
-        optimizes which subfolders to extract from tests zip
+        optimizes which subfolders to extract from tests archive
         """
         c = self.config
 
@@ -775,11 +759,17 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
 
         max_per_test_time = timedelta(minutes=60)
         max_per_test_tests = 10
+        if self.per_test_coverage:
+            max_per_test_tests = 30
         executed_tests = 0
+        executed_too_many_tests = False
 
         if suites:
             self.info('#### Running %s suites' % suite_category)
             for suite in suites:
+                if executed_too_many_tests and not self.per_test_coverage:
+                    return False
+
                 abs_base_cmd = self._query_abs_base_cmd(suite_category, suite)
                 cmd = abs_base_cmd[:]
                 replace_dict = {
@@ -854,42 +844,52 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
                 env = self.query_env(partial_env=env, log_level=INFO)
                 cmd_timeout = self.get_timeout_for_category(suite_category)
 
-                summary = None
+                summary = {}
                 for per_test_args in self.query_args(suite):
-                    if (datetime.now() - self.start_time) > max_per_test_time:
-                        # Running tests has run out of time. That is okay! Stop running
-                        # them so that a task timeout is not triggered, and so that
-                        # (partial) results are made available in a timely manner.
-                        self.info("TinderboxPrint: Running tests took too long: Not all tests "
-                                  "were executed.<br/>")
-                        # Signal per-test time exceeded, to break out of suites and
-                        # suite categories loops also.
-                        return False
-                    if executed_tests >= max_per_test_tests:
-                        # When changesets are merged between trees or many tests are
-                        # otherwise updated at once, there probably is not enough time
-                        # to run all tests, and attempting to do so may cause other
-                        # problems, such as generating too much log output.
-                        self.info("TinderboxPrint: Too many modified tests: Not all tests "
-                                  "were executed.<br/>")
-                        return False
-                    executed_tests = executed_tests + 1
+                    # Make sure baseline code coverage tests are never
+                    # skipped and that having them run has no influence
+                    # on the max number of actual tests that are to be run.
+                    is_baseline_test = 'baselinecoverage' in per_test_args[-1] \
+                                       if self.per_test_coverage else False
+                    if executed_too_many_tests and not is_baseline_test:
+                        continue
+
+                    if not is_baseline_test:
+                        if (datetime.now() - self.start_time) > max_per_test_time:
+                            # Running tests has run out of time. That is okay! Stop running
+                            # them so that a task timeout is not triggered, and so that
+                            # (partial) results are made available in a timely manner.
+                            self.info("TinderboxPrint: Running tests took too long: Not all tests "
+                                      "were executed.<br/>")
+                            # Signal per-test time exceeded, to break out of suites and
+                            # suite categories loops also.
+                            return False
+                        if executed_tests >= max_per_test_tests:
+                            # When changesets are merged between trees or many tests are
+                            # otherwise updated at once, there probably is not enough time
+                            # to run all tests, and attempting to do so may cause other
+                            # problems, such as generating too much log output.
+                            self.info("TinderboxPrint: Too many modified tests: Not all tests "
+                                      "were executed.<br/>")
+                            executed_too_many_tests = True
+
+                        executed_tests = executed_tests + 1
 
                     final_cmd = copy.copy(cmd)
                     final_cmd.extend(per_test_args)
 
+                    final_env = copy.copy(env)
+
                     if self.per_test_coverage:
-                        gcov_dir, jsvm_dir = self.set_coverage_env(env)
+                        self.set_coverage_env(final_env)
 
                     return_code = self.run_command(final_cmd, cwd=dirs['abs_work_dir'],
                                                    output_timeout=cmd_timeout,
                                                    output_parser=parser,
-                                                   env=env)
+                                                   env=final_env)
 
                     if self.per_test_coverage:
-                        self.add_per_test_coverage_report(
-                            gcov_dir, jsvm_dir, suite, per_test_args[-1]
-                        )
+                        self.add_per_test_coverage_report(final_env, suite, per_test_args[-1])
 
                     # mochitest, reftest, and xpcshell suites do not return
                     # appropriate return codes. Therefore, we must parse the output
@@ -911,12 +911,15 @@ class DesktopUnittest(TestingMixin, MercurialScript, BlobUploadMixin, MozbaseMix
                                                                              summary)
                     parser.append_tinderboxprint_line(suite_name)
 
-                    self.buildbot_status(tbpl_status, level=log_level)
+                    self.record_status(tbpl_status, level=log_level)
                     if len(per_test_args) > 0:
                         self.log_per_test_status(per_test_args[-1], tbpl_status, log_level)
                     else:
                         self.log("The %s suite: %s ran with return status: %s" %
                                  (suite_category, suite, tbpl_status), level=log_level)
+
+            if executed_too_many_tests:
+                return False
         else:
             self.debug('There were no suites to run for %s' % suite_category)
         return True

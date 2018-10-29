@@ -94,14 +94,13 @@
      as attachments.accesskey. -->
 <!ENTITY toggleAttachmentPaneCmd.accesskey "m">
 <!-- LOCALIZATION NOTE (toggleAttachmentPaneCmd.key):
-     With OS-specific access modifier, this defines the shortcut key for showing/
-     hiding/minimizing the attachment pane, e.g. Alt+M on Windows.
-     toggleAttachmentPaneCmd.key and attachments.accesskey must be the same
-     for the bucket view state machinery to work. -->
+     As Mac does not have access keys, this key defines a Mac-only, cross-l10n
+     shortcut key (Ctrl+M). Typically, this key should not be translated unless
+     otherwise required by specific needs of the localization. -->
 <!ENTITY toggleAttachmentPaneCmd.key "m">
 <!ENTITY selectAllCmd.label "전체 선택">
-<!ENTITY selectAllCmd.key "A">
 <!ENTITY selectAllCmd.accesskey "a">
+<!ENTITY selectAllCmd.key "A">
 <!ENTITY findBarCmd.label "찾기…">
 <!ENTITY findBarCmd.accesskey "F">
 <!ENTITY findBarCmd.key "F">
@@ -247,7 +246,6 @@
 <!ENTITY sendlaterButton.tooltip "나중에 보내기">
 <!ENTITY quoteButton.tooltip "이전 메시지 인용">
 <!ENTITY addressButton.tooltip "주소록에서 받는 사람 선택">
-<!ENTITY attachButton.tooltip "메시지에 파일 첨부">
 <!ENTITY attachButton.tooltip2 "첨부파일 추가">
 <!ENTITY spellingButton.tooltip "선택한 텍스트 또는 메시지 맞춤법 검사하기">
 <!ENTITY saveButton.tooltip "메시지 저장">
@@ -271,11 +269,12 @@
 <!ENTITY subject.label "제목:">
 <!ENTITY subject.accesskey "S">
 <!-- LOCALIZATION NOTE (attachments.accesskey) This access key character should
-     be taken from the strings in attachmentCount in composeMsgs.properties,
-     and it must be the same as toggleAttachmentPaneCmd.key, otherwise it won't
-     work, as the shortcut key functionality supersedes the access key. -->
+     be taken from the strings of attachmentCount in composeMsgs.properties.
+     Please ensure that this access key is unique: Do not duplicate any other
+     first-level access keys of the compose window, e.g. those of main menu,
+     buttons, or labels (message headers, contacts side bar, attachment reminder
+     bar). -->
 <!ENTITY attachments.accesskey "m">
-
 <!ENTITY attachmentBucketHeader.tooltip "첨부 창">
 <!ENTITY attachmentBucketCloseButton.tooltip "첨부 창 숨기기">
 
@@ -360,6 +359,9 @@
 <!-- Identity popup customize menuitem -->
 <!ENTITY customizeFromAddress.label "보낸 사람 주소 설정…">
 <!ENTITY customizeFromAddress.accesskey "A">
+
+<!-- Accessibility name for the document -->
+<!ENTITY aria.message.bodyName "메시지 본문">
 
 <!-- Status Bar -->
 <!ENTITY languageStatusButton.tooltip "맞춤법 검사 언어">

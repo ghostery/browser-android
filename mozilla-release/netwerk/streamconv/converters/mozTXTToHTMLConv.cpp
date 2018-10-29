@@ -1371,7 +1371,7 @@ mozTXTToHTMLConv::ScanTXT(const char16_t *text, uint32_t whattodo,
   // need to reallocate and re-copy the characters already in the out String.
   NS_ASSERTION(inLength, "ScanTXT passed 0 length string");
   if (inLength == 0) {
-    *_retval = NS_strdup(text);
+    *_retval = NS_xstrdup(text);
     return NS_OK;
   }
 
@@ -1401,7 +1401,7 @@ mozTXTToHTMLConv::ScanHTML(const char16_t *text, uint32_t whattodo,
 nsresult
 MOZ_NewTXTToHTMLConv(mozTXTToHTMLConv** aConv)
 {
-    NS_PRECONDITION(aConv != nullptr, "null ptr");
+    MOZ_ASSERT(aConv != nullptr, "null ptr");
     if (!aConv)
       return NS_ERROR_NULL_POINTER;
 

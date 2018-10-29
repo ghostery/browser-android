@@ -43,10 +43,13 @@ namespace wasm {
 
 class Instance
 {
-    JSCompartment* const            compartment_;
+    JS::Realm* const                realm_;
     ReadBarrieredWasmInstanceObject object_;
     jit::TrampolinePtr              jsJitArgsRectifier_;
     jit::TrampolinePtr              jsJitExceptionHandler_;
+#ifdef ENABLE_WASM_GC
+    jit::TrampolinePtr              preBarrierCode_;
+#endif
     const SharedCode                code_;
     const UniqueDebugState          debug_;
     const UniqueTlsData             tlsData_;
@@ -55,7 +58,7 @@ class Instance
     bool                            enterFrameTrapsEnabled_;
 
     // Internal helpers:
-    const void** addressOfSigId(const SigIdDesc& sigId) const;
+    const void** addressOfFuncTypeId(const FuncTypeIdDesc& funcTypeId) const;
     FuncImportTls& funcImportTls(const FuncImport& fi);
     TableTls& tableTls(const TableDesc& td) const;
 
@@ -75,13 +78,13 @@ class Instance
              HandleWasmMemoryObject memory,
              SharedTableVector&& tables,
              Handle<FunctionVector> funcImports,
-             const ValVector& globalImportValues,
+             HandleValVector globalImportValues,
              const WasmGlobalObjectVector& globalObjs);
     ~Instance();
     bool init(JSContext* cx);
     void trace(JSTracer* trc);
 
-    JSCompartment* compartment() const { return compartment_; }
+    JS::Realm* realm() const { return realm_; }
     const Code& code() const { return *code_; }
     const CodeTier& code(Tier t) const { return code_->codeTier(t); }
     DebugState& debug() { return *debug_; }
@@ -108,9 +111,14 @@ class Instance
     static constexpr size_t offsetOfJSJitExceptionHandler() {
         return offsetof(Instance, jsJitExceptionHandler_);
     }
+#ifdef ENABLE_WASM_GC
+    static constexpr size_t offsetOfPreBarrierCode() {
+        return offsetof(Instance, preBarrierCode_);
+    }
+#endif
 
     // This method returns a pointer to the GC object that owns this Instance.
-    // Instances may be reached via weak edges (e.g., Compartment::instances_)
+    // Instances may be reached via weak edges (e.g., Realm::instances_)
     // so this perform a read-barrier on the returned object unless the barrier
     // is explicitly waived.
 
@@ -125,8 +133,7 @@ class Instance
     // Return the name associated with a given function index, or generate one
     // if none was given by the module.
 
-    bool getFuncName(uint32_t funcIndex, UTF8Bytes* name) const;
-    JSAtom* getFuncAtom(JSContext* cx, uint32_t funcIndex) const;
+    JSAtom* getFuncDisplayAtom(JSContext* cx, uint32_t funcIndex) const;
     void ensureProfilingLabels(bool profilingEnabled) const;
 
     // Initially, calls to imports in wasm code call out through the generic
@@ -170,6 +177,11 @@ class Instance
     static int32_t wait_i32(Instance* instance, uint32_t byteOffset, int32_t value, int64_t timeout);
     static int32_t wait_i64(Instance* instance, uint32_t byteOffset, int64_t value, int64_t timeout);
     static int32_t wake(Instance* instance, uint32_t byteOffset, int32_t count);
+    static int32_t memCopy(Instance* instance, uint32_t destByteOffset, uint32_t srcByteOffset, uint32_t len);
+    static int32_t memFill(Instance* instance, uint32_t byteOffset, uint32_t value, uint32_t len);
+#ifdef ENABLE_WASM_GC
+    static void postBarrier(Instance* instance, gc::Cell** location);
+#endif
 };
 
 typedef UniquePtr<Instance> UniqueInstance;

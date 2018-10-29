@@ -117,9 +117,11 @@ public:
 
   void InsertResourceEntry(PerformanceEntry* aEntry);
 
+  virtual void QueueNavigationTimingEntry() = 0;
+
 protected:
-  Performance();
-  explicit Performance(nsPIDOMWindowInner* aWindow);
+  explicit Performance(bool aSystemPrincipal);
+  Performance(nsPIDOMWindowInner* aWindow, bool aSystemPrincipal);
 
   virtual ~Performance();
 
@@ -156,7 +158,7 @@ protected:
   nsTObserverArray<PerformanceObserver*> mObservers;
 
 protected:
-  static const uint64_t kDefaultResourceTimingBufferSize = 150;
+  static const uint64_t kDefaultResourceTimingBufferSize = 250;
 
   // When kDefaultResourceTimingBufferSize is increased or removed, these should
   // be changed to use SegmentedVector

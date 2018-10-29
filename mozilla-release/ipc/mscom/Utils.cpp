@@ -33,6 +33,15 @@ namespace mozilla {
 namespace mscom {
 
 bool
+IsCOMInitializedOnCurrentThread()
+{
+  APTTYPE aptType;
+  APTTYPEQUALIFIER aptTypeQualifier;
+  HRESULT hr = CoGetApartmentType(&aptType, &aptTypeQualifier);
+  return hr != CO_E_NOTINITIALIZED;
+}
+
+bool
 IsCurrentThreadMTA()
 {
   APTTYPE aptType;
@@ -332,7 +341,7 @@ IsInterfaceEqualToOrInheritedFrom(REFIID aInterface, REFIID aFrom,
   // inheritance hierarchy.
   RefPtr<ITypeInfo> typeInfo;
   if (RegisteredProxy::Find(aInterface, getter_AddRefs(typeInfo))) {
-    typeInfos.AppendElement(Move(typeInfo));
+    typeInfos.AppendElement(std::move(typeInfo));
   }
 
   /**
@@ -393,7 +402,7 @@ IsInterfaceEqualToOrInheritedFrom(REFIID aInterface, REFIID aFrom,
         return true;
       }
 
-      typeInfos.AppendElement(Move(nextTypeInfo));
+      typeInfos.AppendElement(std::move(nextTypeInfo));
     }
   }
 

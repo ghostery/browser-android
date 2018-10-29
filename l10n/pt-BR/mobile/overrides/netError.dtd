@@ -20,15 +20,15 @@
 <!-- LOCALIZATION NOTE (dnsNotFound.longDesc4) This string contains markup including widgets for searching
      or enabling wifi connections. The text inside tags should be localized.  Do not change the ids. -->
 <!ENTITY dnsNotFound.longDesc4 "<ul> 
-<li>Verificar se o endereço tem erros de digitação, como 
+<li>Verifique se o endereço tem erros de digitação, como 
 <strong>ww</strong>.example.com em vez de 
 <strong>www</strong>.example.com</li> 
 <div id='searchbox'> 
 <input id='searchtext' type='search'></input> 
-<button id='searchbutton'>Pesquisa</button> 
+<button id='searchbutton'>Pesquisar</button> 
 </div> 
-<li>Se não for possível carregar nenhuma página, verifique a conexão Wi-Fi. 
-<button id='wifi'>Habilitar Wi-Fi</button> 
+<li>Se não for possível carregar nenhuma página, verifique a conexão Wi-Fi ou de dados. 
+<button id='wifi'>Ativar Wi-Fi</button> 
 </li> 
 </ul>">
 
@@ -78,14 +78,18 @@
 </ul>">
 
 <!ENTITY contentEncodingError.title "Erro na codificação do conteúdo">
-<!ENTITY contentEncodingError.longDesc "<ul> 
-<li>Por favor, contatar os responsáveis pelo site para informá-los deste problema.</li> 
-</ul>">
+<!ENTITY contentEncodingError.longDesc "
+<ul>
+  <li>Contate os responsáveis pelo site para informar o problema.</li>
+</ul>
+">
 
 <!ENTITY unsafeContentType.title "Tipo de arquivo inseguro">
-<!ENTITY unsafeContentType.longDesc "<ul> 
-<li>Por favor, contatar os responsáveis pelo site para informá-los deste problema.</li> 
-</ul>">
+<!ENTITY unsafeContentType.longDesc "
+<ul>
+  <li>Contate os responsáveis pelo site para informar o problema.</li>
+</ul>
+">
 
 <!ENTITY netReset.title "A conexão foi reiniciada">
 <!ENTITY netReset.longDesc2 "&sharedLongDesc3;">
@@ -130,10 +134,12 @@ cookies.</li>
 </ul>">
 
 <!ENTITY nssFailure2.title "Falha na conexão segura">
-<!ENTITY nssFailure2.longDesc2 "<ul> 
-<li>A página que está tentando ver não pôde ser vista porque a autenticidade dos dados recebidos não pôde ser comprovada.</li> 
-<li>Por favor, contate os responsáveis pelo site para informá-los sobre este problema.</li> 
-</ul>">
+<!ENTITY nssFailure2.longDesc2 "
+<ul>
+  <li>A página que está tentando ver não pôde ser exibida porque a autenticidade dos dados recebidos não pôde ser comprovada.</li>
+  <li>Contate os responsáveis pelo site para informar o problema.</li>
+</ul>
+">
 
 <!ENTITY nssBadCert.title "Falha na conexão segura">
 <!ENTITY nssBadCert.longDesc2 "<ul> 
@@ -173,7 +179,7 @@ netError.xhtml) because it exposes functionality specific to firefox. -->
 <button id='exceptionDialogButton'>&securityOverride.exceptionButtonLabel;</button>">
 
 <!ENTITY remoteXUL.title "XUL remoto">
-<!ENTITY remoteXUL.longDesc "<p><ul><li>Por favor, contatar os responsáveis pelo site para informá-los deste problema.</li></ul></p>">
+<!ENTITY remoteXUL.longDesc "<p><ul><li>Contate os responsáveis pelo site para informar o problema.</li></ul></p>">
 
 <!ENTITY sslv3Used.title "Não foi possível conectar com segurança">
 <!-- LOCALIZATION NOTE (sslv3Used.longDesc) - Do not translate

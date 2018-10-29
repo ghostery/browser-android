@@ -32,4 +32,10 @@ createEnum([
   // Update the preview text.
   "UPDATE_PREVIEW_TEXT",
 
+  // Update the value of a CSS font property
+  "UPDATE_PROPERTY_VALUE",
+
+  // Update the warning message with the reason for not showing the font editor
+  "UPDATE_WARNING_MESSAGE",
+
 ], module.exports);

@@ -9,7 +9,7 @@
 #include "sslerr.h"
 #include "sslproto.h"
 
-// This is internal, just to get TLS_1_3_DRAFT_VERSION.
+// This is internal, just to get DTLS_1_3_DRAFT_VERSION.
 #include "ssl3prot.h"
 
 #include "gtest_utils.h"
@@ -76,7 +76,7 @@ class CorrectMessageSeqAfterHrrFilter : public TlsRecordFilter {
   PacketFilter::Action FilterRecord(const TlsRecordHeader& header,
                                     const DataBuffer& record, size_t* offset,
                                     DataBuffer* output) {
-    if (filtered_packets() > 0 || header.content_type() != content_handshake) {
+    if (filtered_packets() > 0 || header.content_type() != ssl_ct_handshake) {
       return KEEP;
     }
 
@@ -617,6 +617,68 @@ TEST_P(TlsConnectTls13, RetryStatefulDropCookie) {
   server_->CheckErrorCode(SSL_ERROR_MISSING_COOKIE_EXTENSION);
 }
 
+class TruncateHrrCookie : public TlsExtensionFilter {
+ public:
+  TruncateHrrCookie(const std::shared_ptr<TlsAgent>& a)
+      : TlsExtensionFilter(a) {}
+  virtual PacketFilter::Action FilterExtension(uint16_t extension_type,
+                                               const DataBuffer& input,
+                                               DataBuffer* output) {
+    if (extension_type != ssl_tls13_cookie_xtn) {
+      return KEEP;
+    }
+
+    // Claim a zero-length cookie.
+    output->Allocate(2);
+    output->Write(0, static_cast<uint32_t>(0), 2);
+    return CHANGE;
+  }
+};
+
+TEST_P(TlsConnectTls13, RetryCookieEmpty) {
+  ConfigureSelfEncrypt();
+  EnsureTlsSetup();
+
+  TriggerHelloRetryRequest(client_, server_);
+  MakeTlsFilter<TruncateHrrCookie>(client_);
+
+  ExpectAlert(server_, kTlsAlertHandshakeFailure);
+  Handshake();
+  client_->CheckErrorCode(SSL_ERROR_NO_CYPHER_OVERLAP);
+  server_->CheckErrorCode(SSL_ERROR_RX_MALFORMED_CLIENT_HELLO);
+}
+
+class AddJunkToCookie : public TlsExtensionFilter {
+ public:
+  AddJunkToCookie(const std::shared_ptr<TlsAgent>& a) : TlsExtensionFilter(a) {}
+  virtual PacketFilter::Action FilterExtension(uint16_t extension_type,
+                                               const DataBuffer& input,
+                                               DataBuffer* output) {
+    if (extension_type != ssl_tls13_cookie_xtn) {
+      return KEEP;
+    }
+
+    *output = input;
+    // Add junk after the cookie.
+    static const uint8_t junk[2] = {1, 2};
+    output->Append(DataBuffer(junk, sizeof(junk)));
+    return CHANGE;
+  }
+};
+
+TEST_P(TlsConnectTls13, RetryCookieWithExtras) {
+  ConfigureSelfEncrypt();
+  EnsureTlsSetup();
+
+  TriggerHelloRetryRequest(client_, server_);
+  MakeTlsFilter<AddJunkToCookie>(client_);
+
+  ExpectAlert(server_, kTlsAlertHandshakeFailure);
+  Handshake();
+  client_->CheckErrorCode(SSL_ERROR_NO_CYPHER_OVERLAP);
+  server_->CheckErrorCode(SSL_ERROR_RX_MALFORMED_CLIENT_HELLO);
+}
+
 // Stream only because DTLS drops bad packets.
 TEST_F(TlsConnectStreamTls13, RetryStatelessDamageFirstClientHello) {
   ConfigureSelfEncrypt();
@@ -945,14 +1007,17 @@ class HelloRetryRequestAgentTest : public TlsAgentTestClient {
     // Now the supported version.
     i = hrr_data.Write(i, ssl_tls13_supported_versions_xtn, 2);
     i = hrr_data.Write(i, 2, 2);
-    i = hrr_data.Write(i, 0x7f00 | TLS_1_3_DRAFT_VERSION, 2);
+    i = hrr_data.Write(i, (variant_ == ssl_variant_datagram)
+                              ? (0x7f00 | DTLS_1_3_DRAFT_VERSION)
+                              : SSL_LIBRARY_VERSION_TLS_1_3,
+                       2);
     if (len) {
       hrr_data.Write(i, body, len);
     }
     DataBuffer hrr;
     MakeHandshakeMessage(kTlsHandshakeServerHello, hrr_data.data(),
                          hrr_data.len(), &hrr, seq_num);
-    MakeRecord(kTlsHandshakeType, SSL_LIBRARY_VERSION_TLS_1_3, hrr.data(),
+    MakeRecord(ssl_ct_handshake, SSL_LIBRARY_VERSION_TLS_1_3, hrr.data(),
                hrr.len(), hrr_record, seq_num);
   }
 

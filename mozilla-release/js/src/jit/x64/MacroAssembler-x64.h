@@ -10,6 +10,7 @@
 #include "jit/JitFrames.h"
 #include "jit/MoveResolver.h"
 #include "jit/x86-shared/MacroAssembler-x86-shared.h"
+#include "js/HeapAPI.h"
 
 namespace js {
 namespace jit {
@@ -163,6 +164,20 @@ class MacroAssemblerX64 : public MacroAssemblerX86Shared
             movl(Imm32(Upper32Of(GetShiftedTag(type))), ToUpper32(Operand(dest)));
         } else {
             ScratchRegisterScope scratch(asMasm());
+#ifdef NIGHTLY_BUILD
+            // Bug 1485209 - Diagnostic assert for constructing Values with
+            // nullptr or misaligned (eg poisoned) JSObject/JSString pointers.
+            if (type == JSVAL_TYPE_OBJECT || type == JSVAL_TYPE_STRING) {
+                Label crash, ok;
+                testPtr(reg, Imm32(js::gc::CellAlignMask));
+                j(Assembler::NonZero, &crash);
+                testPtr(reg, reg);
+                j(Assembler::NonZero, &ok);
+                bind(&crash);
+                breakpoint();
+                bind(&ok);
+            }
+#endif
             boxValue(type, reg, scratch);
             movq(scratch, Operand(dest));
         }
@@ -546,7 +561,7 @@ class MacroAssemblerX64 : public MacroAssemblerX86Shared
 
     CodeOffsetJump jumpWithPatch(RepatchLabel* label) {
         JmpSrc src = jmpSrc(label);
-        return CodeOffsetJump(size(), addPatchableJump(src, Relocation::HARDCODED));
+        return CodeOffsetJump(size(), addPatchableJump(src, RelocationKind::HARDCODED));
     }
 
     void movePtr(Register src, Register dest) {
@@ -875,43 +890,38 @@ class MacroAssemblerX64 : public MacroAssemblerX86Shared
     // Extended unboxing API. If the payload is already in a register, returns
     // that register. Otherwise, provides a move to the given scratch register,
     // and returns that.
-    Register extractObject(const Address& address, Register scratch) {
+    MOZ_MUST_USE Register extractObject(const Address& address, Register scratch) {
         MOZ_ASSERT(scratch != ScratchReg);
         unboxObject(address, scratch);
         return scratch;
     }
-    Register extractObject(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractObject(const ValueOperand& value, Register scratch) {
         MOZ_ASSERT(scratch != ScratchReg);
         unboxObject(value, scratch);
         return scratch;
     }
-    Register extractString(const ValueOperand& value, Register scratch) {
-        MOZ_ASSERT(scratch != ScratchReg);
-        unboxString(value, scratch);
-        return scratch;
-    }
-    Register extractSymbol(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractSymbol(const ValueOperand& value, Register scratch) {
         MOZ_ASSERT(scratch != ScratchReg);
         unboxSymbol(value, scratch);
         return scratch;
     }
-    Register extractInt32(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractInt32(const ValueOperand& value, Register scratch) {
         MOZ_ASSERT(scratch != ScratchReg);
         unboxInt32(value, scratch);
         return scratch;
     }
-    Register extractBoolean(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractBoolean(const ValueOperand& value, Register scratch) {
         MOZ_ASSERT(scratch != ScratchReg);
         unboxBoolean(value, scratch);
         return scratch;
     }
-    Register extractTag(const Address& address, Register scratch) {
+    MOZ_MUST_USE Register extractTag(const Address& address, Register scratch) {
         MOZ_ASSERT(scratch != ScratchReg);
         loadPtr(address, scratch);
         splitTag(scratch, scratch);
         return scratch;
     }
-    Register extractTag(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractTag(const ValueOperand& value, Register scratch) {
         MOZ_ASSERT(scratch != ScratchReg);
         splitTag(value, scratch);
         return scratch;

@@ -5,7 +5,16 @@
 
 from __future__ import print_function, unicode_literals
 
-import math, os, platform, posixpath, shlex, shutil, subprocess, sys, traceback
+import math
+import os
+import platform
+import posixpath
+import shlex
+import shutil
+import subprocess
+import sys
+import traceback
+
 
 def add_libdir_to_path():
     from os.path import dirname, exists, join, realpath
@@ -14,13 +23,16 @@ def add_libdir_to_path():
     sys.path.insert(0, join(js_src_dir, 'lib'))
     sys.path.insert(0, join(js_src_dir, 'tests', 'lib'))
 
+
 add_libdir_to_path()
 
 import jittests
 from tests import get_jitflags, valid_jitflags, get_cpu_count, get_environment_overlay, \
-                  change_env
+    change_env
 
 # Python 3.3 added shutil.which, but we can't use that yet.
+
+
 def which(name):
     if name.find(os.path.sep) != -1:
         return os.path.abspath(name)
@@ -31,6 +43,7 @@ def which(name):
             return os.path.abspath(full)
 
     return name
+
 
 def choose_item(jobs, max_items, display):
     job_count = len(jobs)
@@ -51,6 +64,7 @@ def choose_item(jobs, max_items, display):
         raise Exception('Unrecognized input')
 
     return jobs[item - 1]
+
 
 def main(argv):
     # The [TESTS] optional arguments are paths of test files relative
@@ -176,7 +190,7 @@ def main(argv):
         if (platform.system() != 'Windows' or
             os.path.isfile(js_shell) or not
             os.path.isfile(js_shell + ".exe") or not
-            os.access(js_shell + ".exe", os.X_OK)):
+                os.access(js_shell + ".exe", os.X_OK)):
             op.error('shell is not executable: ' + js_shell)
 
     if jittests.stdio_might_be_broken():
@@ -239,9 +253,6 @@ def main(argv):
     # This part is equivalent to:
     # skip-if = coverage
     if os.getenv('GCOV_PREFIX') is not None:
-        # GCOV errors.
-        options.exclude += [os.path.join('asm.js', 'testSIMD.js')]               # Bug 1347245
-
         # JSVM errors.
         options.exclude += [os.path.join('basic', 'functionnames.js')]           # Bug 1369783
         options.exclude += [os.path.join('debug', 'Debugger-findScripts-23.js')]
@@ -255,12 +266,17 @@ def main(argv):
         # to be off when it starts.
         options.exclude += [os.path.join('debug', 'Script-getOffsetsCoverage-02.js')]
 
+        # These tests expect functions to be parsed lazily, but lazy parsing
+        # is disabled on coverage build.
+        options.exclude += [os.path.join('debug', 'Debugger-findScripts-uncompleted-01.js')]
+        options.exclude += [os.path.join('debug', 'Debugger-findScripts-uncompleted-02.js')]
+
     if options.exclude_from:
         with open(options.exclude_from) as fh:
             for line in fh:
-                line = line.strip()
-                if not line.startswith("#") and len(line):
-                    options.exclude.append(line)
+                line_exclude = line.strip()
+                if not line_exclude.startswith("#") and len(line_exclude):
+                    options.exclude.append(line_exclude)
 
     if options.exclude:
         exclude_list = []
@@ -322,7 +338,7 @@ def main(argv):
     prologue = os.path.join(jittests.LIB_DIR, 'prologue.js')
     if options.remote:
         prologue = posixpath.join(options.remote_test_root,
-                                'jit-tests', 'jit-tests', 'lib', 'prologue.js')
+                                  'jit-tests', 'jit-tests', 'lib', 'prologue.js')
 
     prefix += ['-f', prologue]
 
@@ -380,6 +396,7 @@ def main(argv):
             sys.exit(1)
         else:
             raise
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

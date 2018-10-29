@@ -152,12 +152,12 @@ describe("private messages", () => {
       getPrivatePacket("XHR GET request"),
     ]));
 
-    let state = getState();
+    const state = getState();
     const publicMessageId = getFirstMessage(state).id;
     const privateMessageId = getLastMessage(state).id;
 
-    dispatch(actions.networkUpdateRequest(publicMessageId));
-    dispatch(actions.networkUpdateRequest(privateMessageId));
+    dispatch(actions.networkUpdateRequest(publicMessageId, {}));
+    dispatch(actions.networkUpdateRequest(privateMessageId, {}));
 
     let networkUpdates = getAllNetworkMessagesUpdateById(getState());
     expect(Object.keys(networkUpdates)).toEqual([publicMessageId, privateMessageId]);
@@ -169,7 +169,7 @@ describe("private messages", () => {
   });
 
   it("releases private backend actors on PRIVATE_MESSAGES_CLEAR action", () => {
-    let releasedActors = [];
+    const releasedActors = [];
     const { dispatch, getState } = setupStore([], {
       hud: {
         proxy: {

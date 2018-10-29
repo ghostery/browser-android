@@ -10,7 +10,7 @@ var EXPORTED_SYMBOLS = [
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-Cu.importGlobalProperties(["XMLHttpRequest"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["XMLHttpRequest"]);
 
 ChromeUtils.defineModuleGetter(this, "FormHistory",
   "resource://gre/modules/FormHistory.jsm");
@@ -107,6 +107,7 @@ var ContentSearch = {
 
   init() {
     Services.obs.addObserver(this, "browser-search-engine-modified");
+    Services.obs.addObserver(this, "browser-search-service");
     Services.obs.addObserver(this, "shutdown-leaks-before-check");
     Services.prefs.addObserver("browser.search.hiddenOneOffs", this);
     this._stringBundle = Services.strings.createBundle("chrome://global/locale/autocomplete.properties");
@@ -133,6 +134,7 @@ var ContentSearch = {
     }
 
     Services.obs.removeObserver(this, "browser-search-engine-modified");
+    Services.obs.removeObserver(this, "browser-search-service");
     Services.obs.removeObserver(this, "shutdown-leaks-before-check");
 
     this._eventQueue.length = 0;
@@ -147,7 +149,7 @@ var ContentSearch = {
    */
   focusInput(messageManager) {
     messageManager.sendAsyncMessage(OUTBOUND_MESSAGE, {
-      type: "FocusInput"
+      type: "FocusInput",
     });
   },
 
@@ -184,6 +186,10 @@ var ContentSearch = {
 
   observe(subj, topic, data) {
     switch (topic) {
+    case "browser-search-service":
+      if (data != "init-complete") {
+        break;
+      }
     case "nsPref:changed":
     case "browser-search-engine-modified":
       this._eventQueue.push({
@@ -240,7 +246,7 @@ var ContentSearch = {
       // UI to prevent further interaction before we start loading.
       this._reply(msg, "Blur");
       browser.loadURI(submission.uri.spec, {
-        postData: submission.postData
+        postData: submission.postData,
       });
     } else {
       let params = {
@@ -339,7 +345,7 @@ var ContentSearch = {
         name: engine.name,
         iconBuffer,
         hidden: hiddenList.includes(engine.name),
-        identifier: engine.identifier
+        identifier: engine.identifier,
       });
     }
     return state;
@@ -450,7 +456,7 @@ var ContentSearch = {
     if (msg.target.contentWindow) {
       engine.speculativeConnect({
         window: msg.target.contentWindow,
-        originAttributes: msg.target.contentPrincipal.originAttributes
+        originAttributes: msg.target.contentPrincipal.originAttributes,
       });
     }
   },

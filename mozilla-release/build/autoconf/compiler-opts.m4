@@ -21,6 +21,9 @@ case "$target" in
         x86_64)
             AS=ml64;
             ;;
+        aarch64)
+            AS=armasm64;
+            ;;
         esac
     fi
     if test -z "$MIDL"; then MIDL=midl; fi
@@ -123,13 +126,14 @@ if test "$GNU_CC"; then
     if test -z "$DEVELOPER_OPTIONS"; then
         CFLAGS="$CFLAGS -ffunction-sections -fdata-sections"
         CXXFLAGS="$CXXFLAGS -ffunction-sections -fdata-sections"
-
-        # For MinGW, we need big-obj otherwise we create too many sections in Unified builds
-        if test "${OS_ARCH}" = "WINNT"; then
-            CFLAGS="$CFLAGS -Wa,-mbig-obj"
-            CXXFLAGS="$CXXFLAGS -Wa,-mbig-obj"
-        fi
     fi
+
+    # For MinGW, we need big-obj otherwise we create too many sections in Unified builds
+    if test "${OS_ARCH}" = "WINNT"; then
+        CFLAGS="$CFLAGS -Wa,-mbig-obj"
+        CXXFLAGS="$CXXFLAGS -Wa,-mbig-obj"
+    fi
+
     CFLAGS="$CFLAGS -fno-math-errno"
     CXXFLAGS="$CXXFLAGS -fno-exceptions -fno-math-errno"
 fi

@@ -51,7 +51,7 @@
 #endif
 
 #ifdef MOZ_WIDGET_ANDROID
-#include "AndroidBridge.h"
+#include "mozilla/jni/Utils.h"
 #endif
 
 namespace mozilla {
@@ -81,6 +81,7 @@ static const char* const sExtensionNames[] = {
     "GL_ANGLE_texture_compression_dxt5",
     "GL_ANGLE_timer_query",
     "GL_APPLE_client_storage",
+    "GL_APPLE_fence",
     "GL_APPLE_framebuffer_multisample",
     "GL_APPLE_sync",
     "GL_APPLE_texture_range",
@@ -220,8 +221,8 @@ ParseVersion(const std::string& versionStr, uint32_t* const out_major,
     return true;
 }
 
-static uint8_t
-ChooseDebugFlags(CreateContextFlags createFlags)
+/*static*/ uint8_t
+GLContext::ChooseDebugFlags(const CreateContextFlags createFlags)
 {
     uint8_t debugFlags = 0;
 
@@ -263,37 +264,12 @@ ChooseDebugFlags(CreateContextFlags createFlags)
 
 GLContext::GLContext(CreateContextFlags flags, const SurfaceCaps& caps,
                      GLContext* sharedContext, bool isOffscreen, bool useTLSIsCurrent)
-  : mImplicitMakeCurrent(false),
-    mUseTLSIsCurrent(ShouldUseTLSIsCurrent(useTLSIsCurrent)),
+  : mUseTLSIsCurrent(ShouldUseTLSIsCurrent(useTLSIsCurrent)),
     mIsOffscreen(isOffscreen),
-    mContextLost(false),
-    mVersion(0),
-    mProfile(ContextProfile::Unknown),
-    mShadingLanguageVersion(0),
-    mVendor(GLVendor::Other),
-    mRenderer(GLRenderer::Other),
-    mTopError(LOCAL_GL_NO_ERROR),
     mDebugFlags(ChooseDebugFlags(flags)),
     mSharedContext(sharedContext),
-    mSymbols{},
-    mCaps(caps),
-    mScreen(nullptr),
-    mLockedSurface(nullptr),
-    mMaxTextureSize(0),
-    mMaxCubeMapTextureSize(0),
-    mMaxTextureImageSize(0),
-    mMaxRenderbufferSize(0),
-    mMaxSamples(0),
-    mNeedsTextureSizeChecks(false),
-    mNeedsFlushBeforeDeleteFB(false),
-    mTextureAllocCrashesOnMapFailure(false),
-    mNeedsCheckAfterAttachTextureToFb(false),
-    mWorkAroundDriverBugs(true),
-    mSyncGLCallCount(0),
-    mHeavyGLCallsSinceLastFlush(false)
+    mCaps(caps)
 {
-    mMaxViewportDims[0] = 0;
-    mMaxViewportDims[1] = 0;
     mOwningThreadId = PlatformThread::CurrentId();
     MOZ_ALWAYS_TRUE( sCurrentContext.init() );
     sCurrentContext.set(0);
@@ -940,7 +916,7 @@ GLContext::InitWithPrefixImpl(const char* prefix, bool trygl)
         (Renderer() == GLRenderer::AdrenoTM305 ||
          Renderer() == GLRenderer::AdrenoTM320 ||
          Renderer() == GLRenderer::AdrenoTM330) &&
-        AndroidBridge::Bridge()->GetAPIVersion() < 21) {
+        jni::GetAPIVersion() < 21) {
         // Bug 1164027. Driver crashes when functions such as
         // glTexImage2D fail due to virtual memory exhaustion.
         mTextureAllocCrashesOnMapFailure = true;
@@ -949,7 +925,7 @@ GLContext::InitWithPrefixImpl(const char* prefix, bool trygl)
 #if MOZ_WIDGET_ANDROID
     if (mWorkAroundDriverBugs &&
         Renderer() == GLRenderer::SGX540 &&
-        AndroidBridge::Bridge()->GetAPIVersion() <= 15) {
+        jni::GetAPIVersion() <= 15) {
         // Bug 1288446. Driver sometimes crashes when uploading data to a
         // texture if the render target has changed since the texture was
         // rendered from. Calling glCheckFramebufferStatus after
@@ -1078,6 +1054,15 @@ GLContext::LoadMoreSymbols(const char* prefix, bool trygl)
             END_SYMBOLS
         };
         fnLoadForExt(symbols, APPLE_texture_range);
+    }
+
+    if (IsExtensionSupported(APPLE_fence)) {
+        const SymLoadStruct symbols[] = {
+            { (PRFuncPtr*) &mSymbols.fFinishObjectAPPLE, { "FinishObjectAPPLE", nullptr } },
+            { (PRFuncPtr*) &mSymbols.fTestObjectAPPLE, { "TestObjectAPPLE", nullptr } },
+            END_SYMBOLS
+        };
+        fnLoadForExt(symbols, APPLE_fence);
     }
 
     if (IsSupported(GLFeature::vertex_array_object)) {
@@ -1696,7 +1681,7 @@ GLContext::InitExtensions()
 #ifdef MOZ_WIDGET_ANDROID
         if (Vendor() == GLVendor::Imagination &&
             Renderer() == GLRenderer::SGX544MP &&
-            AndroidBridge::Bridge()->GetAPIVersion() < 21)
+            jni::GetAPIVersion() < 21)
         {
             // Bug 1026404
             MarkExtensionUnsupported(OES_EGL_image);
@@ -2308,7 +2293,7 @@ GLContext::CreateScreenBufferImpl(const IntSize& size, const SurfaceCaps& caps)
     // it falls out of scope.
     ScopedBindFramebuffer autoFB(this);
 
-    mScreen = Move(newScreen);
+    mScreen = std::move(newScreen);
 
     return true;
 }

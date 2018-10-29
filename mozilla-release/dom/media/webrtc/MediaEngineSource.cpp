@@ -30,6 +30,7 @@ MediaEngineSource::IsVideo(MediaSourceEnum aSource)
       return true;
     case MediaSourceEnum::Microphone:
     case MediaSourceEnum::AudioCapture:
+    case MediaSourceEnum::Other:
       return false;
     default:
       MOZ_ASSERT_UNREACHABLE("Unknown type");
@@ -53,6 +54,12 @@ bool
 MediaEngineSource::GetScary() const
 {
   return false;
+}
+
+nsresult
+MediaEngineSource::FocusOnSelectedSource(const RefPtr<const AllocationHandle>& aHandle)
+{
+  return NS_ERROR_NOT_AVAILABLE;
 }
 
 void

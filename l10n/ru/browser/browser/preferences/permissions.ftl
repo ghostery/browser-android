@@ -89,6 +89,10 @@ permissions-exceptions-autoplay-media-window =
     .title = Разрешённые веб-сайты — Автовоспроизведение
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc = Вы можете указать, каким веб-сайтам разрешено автоматически воспроизводить медиа. Введите точный адрес каждого сайта и нажмите кнопку «Разрешить».
+permissions-exceptions-autoplay-media-window2 =
+    .title = Исключения — Автовоспроизведение
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc2 = Вы можете указать, каким веб-сайтам разрешено всегда или никогда автоматически воспроизводить медиа со звуком. Введите точный адрес сайта и нажмите кнопку «Блокировать» или «Разрешить».
 
 ## Site Permissions - Notifications
 

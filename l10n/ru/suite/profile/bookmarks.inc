@@ -11,11 +11,11 @@
 #define seamonkey_and_mozilla SeaMonkey и Mozilla
 
 # LOCALIZATION NOTE (seamonkey):
-# link title for http://www.seamonkey-project.org/ (in the personal toolbar)
+# link title for https://www.seamonkey-project.org/ (in the personal toolbar)
 #define seamonkey SeaMonkey
 
 # LOCALIZATION NOTE (seamonkey_long):
-# link title for http://www.seamonkey-project.org/ (in normal bookmarks)
+# link title for https://www.seamonkey-project.org/ (in normal bookmarks)
 #define seamonkey_long Проект SeaMonkey
 
 # LOCALIZATION NOTE (mozilla_org):
@@ -23,7 +23,7 @@
 #define mozilla_org mozilla.org
 
 # LOCALIZATION NOTE (mozilla_org_long):
-# link title for http://www.mozilla.org/ (in normal bookmarks)
+# link title for https://www.mozilla.org/ (in normal bookmarks)
 #define mozilla_org_long Организация Mozilla
 
 # LOCALIZATION NOTE (mozilla_projects):
@@ -37,19 +37,19 @@
 #define extend_seamonkey Расширение SeaMonkey
 
 # LOCALIZATION NOTE (seamonkey_addons):
-# link title for https://addons.mozilla.org/en-US/seamonkey/
+# link title for https://addons.thunderbird.net/en-US/seamonkey/
 #define seamonkey_addons Дополнения SeaMonkey
 
 # LOCALIZATION NOTE (seamonkey_themes):
-# link title for https://addons.mozilla.org/en-US/seamonkey/themes
+# link title for https://addons.thunderbird.net/en-US/seamonkey/themes
 #define seamonkey_themes Темы SeaMonkey
 
 # LOCALIZATION NOTE (seamonkey_dictionaries):
-# link title for https://addons.mozilla.org/en-US/seamonkey/dictionaries
+# link title for https://addons.thunderbird.net/en-US/seamonkey/dictionaries
 #define seamonkey_dictionaries Словари проверки орфографии
 
 # LOCALIZATION NOTE (seamonkey_plugins):
-# link title for https://addons.mozilla.org/en-US/seamonkey/plugins
+# link title for https://addons.thunderbird.net/en-US/seamonkey/plugins
 #define seamonkey_plugins Плагины для SeaMonkey
 
 # LOCALIZATION NOTE (mozdev):
@@ -63,7 +63,7 @@
 #define community_support Сообщество и поддержка
 
 # LOCALIZATION NOTE (seamonkey_community):
-# link title for http://www.seamonkey-project.org/community
+# link title for https://www.seamonkey-project.org/community
 #define seamonkey_community Сообщество SeaMonkey
 
 # LOCALIZATION NOTE (mozillazine):
@@ -76,12 +76,12 @@
 
 # LOCALIZATION NOTE (seamonkey_l10n):
 # insert full bookmark line for localized SeaMonkey page (personal toolbar)
-# e.g. #define seamonkey_l10n <DT><A HREF="http://www.seamonkey.tlh/">SeaMonkey tlhIngan</a>
-#define seamonkey_l10n <DT><A HREF="http://www.mozilla-russia.org/products/seamonkey/">Проект SeaMonkey</a> 
+# e.g. #define seamonkey_l10n <DT><A HREF="https://www.seamonkey.tlh/">SeaMonkey tlhIngan</a>
+#define seamonkey_l10n
 
-# LOCALIZATION NOTE (seamonkey_l10n_long):
+ <DT><A HREF="https://mozilla-russia.org/">Сообщество Mozilla Russia</a># LOCALIZATION NOTE (seamonkey_l10n_long):# LOCALIZATION NOTE (seamonkey_l10n_long):
 # insert full bookmark line for localized SeaMonkey page (normal bookmark)
-# e.g. #define seamonkey_l10n_long <DT><A HREF="http://www.seamonkey.tld/">tlhIngan Hol SeaMonkey</a>
-#define seamonkey_l10n_long <DT><A HREF="http://www.mozilla-russia.org/products/seamonkey/">Проект SeaMonkey</a> 
+# e.g. #define seamonkey_l10n_long <DT><A HREF="https://www.seamonkey.tld/">tlhIngan Hol SeaMonkey</a>
+#define seamonkey_l10n_long
 
-#unfilter emptyLines
+#unfilter <DT><A HREF="https://mozilla-russia.org/">Сообщество Mozilla Russia</a>

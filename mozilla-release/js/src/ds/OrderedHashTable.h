@@ -40,8 +40,7 @@
 #include "mozilla/HashFunctions.h"
 #include "mozilla/Move.h"
 
-using mozilla::Forward;
-using mozilla::Move;
+#include "js/HashTable.h"
 
 namespace js {
 
@@ -65,7 +64,7 @@ class OrderedHashTable
         Data* chain;
 
         Data(const T& e, Data* c) : element(e), chain(c) {}
-        Data(T&& e, Data* c) : element(Move(e)), chain(c) {}
+        Data(T&& e, Data* c) : element(std::move(e)), chain(c) {}
     };
 
     class Range;
@@ -105,6 +104,9 @@ class OrderedHashTable
       : hashTable(nullptr),
         data(nullptr),
         dataLength(0),
+        dataCapacity(0),
+        liveCount(0),
+        hashShift(0),
         ranges(nullptr),
         nurseryRanges(nullptr),
         alloc(ap),
@@ -124,7 +126,7 @@ class OrderedHashTable
         uint32_t capacity = uint32_t(buckets * fillFactor());
         Data* dataAlloc = alloc.template pod_malloc<Data>(capacity);
         if (!dataAlloc) {
-            alloc.free_(tableAlloc);
+            alloc.free_(tableAlloc, buckets);
             return false;
         }
 
@@ -135,15 +137,15 @@ class OrderedHashTable
         dataLength = 0;
         dataCapacity = capacity;
         liveCount = 0;
-        hashShift = HashNumberSizeBits - initialBucketsLog2();
+        hashShift = js::kHashNumberBits - initialBucketsLog2();
         MOZ_ASSERT(hashBuckets() == buckets);
         return true;
     }
 
     ~OrderedHashTable() {
         forEachRange<Range::onTableDestroyed>();
-        alloc.free_(hashTable);
-        freeData(data, dataLength);
+        alloc.free_(hashTable, hashBuckets());
+        freeData(data, dataLength, dataCapacity);
     }
 
     /* Return the number of elements in the table. */
@@ -177,7 +179,7 @@ class OrderedHashTable
     MOZ_MUST_USE bool put(ElementInput&& element) {
         HashNumber h = prepareHash(Ops::getKey(element));
         if (Data* e = lookup(Ops::getKey(element), h)) {
-            e->element = Forward<ElementInput>(element);
+            e->element = std::forward<ElementInput>(element);
             return true;
         }
 
@@ -192,7 +194,7 @@ class OrderedHashTable
         h >>= hashShift;
         liveCount++;
         Data* e = &data[dataLength++];
-        new (e) Data(Forward<ElementInput>(element), hashTable[h]);
+        new (e) Data(std::forward<ElementInput>(element), hashTable[h]);
         hashTable[h] = e;
         return true;
     }
@@ -248,7 +250,9 @@ class OrderedHashTable
         if (dataLength != 0) {
             Data** oldHashTable = hashTable;
             Data* oldData = data;
+            uint32_t oldHashBuckets = hashBuckets();
             uint32_t oldDataLength = dataLength;
+            uint32_t oldDataCapacity = dataCapacity;
 
             hashTable = nullptr;
             if (!init()) {
@@ -257,8 +261,8 @@ class OrderedHashTable
                 return false;
             }
 
-            alloc.free_(oldHashTable);
-            freeData(oldData, oldDataLength);
+            alloc.free_(oldHashTable, oldHashBuckets);
+            freeData(oldData, oldDataLength, oldDataCapacity);
             forEachRange<&Range::onClear>();
         }
 
@@ -616,13 +620,13 @@ class OrderedHashTable
 
   public:
     HashNumber prepareHash(const Lookup& l) const {
-        return ScrambleHashCode(Ops::hash(l, hcs));
+        return mozilla::ScrambleHashCode(Ops::hash(l, hcs));
     }
 
   private:
     /* The size of hashTable, in elements. Always a power of two. */
     uint32_t hashBuckets() const {
-        return 1 << (HashNumberSizeBits - hashShift);
+        return 1 << (js::kHashNumberBits - hashShift);
     }
 
     static void destroyData(Data* data, uint32_t length) {
@@ -630,9 +634,9 @@ class OrderedHashTable
             (--p)->~Data();
     }
 
-    void freeData(Data* data, uint32_t length) {
+    void freeData(Data* data, uint32_t length, uint32_t capacity) {
         destroyData(data, length);
-        alloc.free_(data);
+        alloc.free_(data, capacity);
     }
 
     Data* lookup(const Lookup& l, HashNumber h) {
@@ -664,7 +668,7 @@ class OrderedHashTable
             if (!Ops::isEmpty(Ops::getKey(rp->element))) {
                 HashNumber h = prepareHash(Ops::getKey(rp->element)) >> hashShift;
                 if (rp != wp)
-                    wp->element = Move(rp->element);
+                    wp->element = std::move(rp->element);
                 wp->chain = hashTable[h];
                 hashTable[h] = wp;
                 wp++;
@@ -694,7 +698,7 @@ class OrderedHashTable
         }
 
         size_t newHashBuckets =
-            size_t(1) << (HashNumberSizeBits - newHashShift);
+            size_t(1) << (js::kHashNumberBits - newHashShift);
         Data** newHashTable = alloc.template pod_malloc<Data*>(newHashBuckets);
         if (!newHashTable)
             return false;
@@ -704,7 +708,7 @@ class OrderedHashTable
         uint32_t newCapacity = uint32_t(newHashBuckets * fillFactor());
         Data* newData = alloc.template pod_malloc<Data>(newCapacity);
         if (!newData) {
-            alloc.free_(newHashTable);
+            alloc.free_(newHashTable, newHashBuckets);
             return false;
         }
 
@@ -713,15 +717,15 @@ class OrderedHashTable
         for (Data* p = data; p != end; p++) {
             if (!Ops::isEmpty(Ops::getKey(p->element))) {
                 HashNumber h = prepareHash(Ops::getKey(p->element)) >> newHashShift;
-                new (wp) Data(Move(p->element), newHashTable[h]);
+                new (wp) Data(std::move(p->element), newHashTable[h]);
                 newHashTable[h] = wp;
                 wp++;
             }
         }
         MOZ_ASSERT(wp == newData + liveCount);
 
-        alloc.free_(hashTable);
-        freeData(data, dataLength);
+        alloc.free_(hashTable, hashBuckets());
+        freeData(data, dataLength, dataCapacity);
 
         hashTable = newHashTable;
         data = newData;
@@ -755,15 +759,15 @@ class OrderedHashMap
 
         void operator=(Entry&& rhs) {
             MOZ_ASSERT(this != &rhs, "self-move assignment is prohibited");
-            const_cast<Key&>(key) = Move(rhs.key);
-            value = Move(rhs.value);
+            const_cast<Key&>(key) = std::move(rhs.key);
+            value = std::move(rhs.value);
         }
 
       public:
         Entry() : key(), value() {}
         template <typename V>
-        Entry(const Key& k, V&& v) : key(k), value(Forward<V>(v)) {}
-        Entry(Entry&& rhs) : key(Move(rhs.key)), value(Move(rhs.value)) {}
+        Entry(const Key& k, V&& v) : key(k), value(std::forward<V>(v)) {}
+        Entry(Entry&& rhs) : key(std::move(rhs.key)), value(std::move(rhs.value)) {}
 
         const Key key;
         Value value;
@@ -809,7 +813,7 @@ class OrderedHashMap
 
     template <typename V>
     MOZ_MUST_USE bool put(const Key& key, V&& value) {
-        return impl.put(Entry(key, Forward<V>(value)));
+        return impl.put(Entry(key, std::forward<V>(value)));
     }
 
     HashNumber hash(const Key& key) const { return impl.prepareHash(key); }

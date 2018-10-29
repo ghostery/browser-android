@@ -15,7 +15,7 @@ using namespace TelemetryTestHelpers;
 
 TEST_F(TelemetryTestFixture, AccumulateCountHistogram)
 {
-  const uint32_t kExpectedValue = 100;
+  const uint32_t kExpectedValue = 200;
   AutoJSContextWithGlobal cx(mCleanGlobal);
 
   const char* telemetryTestCountName = Telemetry::GetHistogramName(Telemetry::TELEMETRY_TEST_COUNT);
@@ -25,7 +25,8 @@ TEST_F(TelemetryTestFixture, AccumulateCountHistogram)
                        false);
 
   // Accumulate in the histogram
-  Telemetry::Accumulate(Telemetry::TELEMETRY_TEST_COUNT, kExpectedValue);
+  Telemetry::Accumulate(Telemetry::TELEMETRY_TEST_COUNT, kExpectedValue/2);
+  Telemetry::Accumulate("TELEMETRY_TEST_COUNT", kExpectedValue/2);
 
   // Get a snapshot for all the histograms
   JS::RootedValue snapshot(cx.GetJSContext());
@@ -356,8 +357,8 @@ TEST_F(TelemetryTestFixture, AccumulateLinearHistogram_DifferentSamples)
   ASSERT_EQ(uCountLast, kExpectedCountLast) << "The last bucket did not accumulate the correct number of values";
 
   // We accumulated two values that had to be clamped. We expect the count in
-  // 'telemetry.accumulate_clamped_values' to be 4
-  const uint32_t expectedAccumulateClampedCount = 4;
+  // 'telemetry.accumulate_clamped_values' to be 2 (only one storage).
+  const uint32_t expectedAccumulateClampedCount = 2;
   JS::RootedValue scalarsSnapshot(cx.GetJSContext());
   GetScalarsSnapshot(true, cx.GetJSContext(),&scalarsSnapshot);
   CheckKeyedUintScalar("telemetry.accumulate_clamped_values",

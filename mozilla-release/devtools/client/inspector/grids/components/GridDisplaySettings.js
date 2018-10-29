@@ -23,6 +23,7 @@ class GridDisplaySettings extends PureComponent {
 
   constructor(props) {
     super(props);
+
     this.onShowGridAreasCheckboxClick = this.onShowGridAreasCheckboxClick.bind(this);
     this.onShowGridLineNumbersCheckboxClick =
       this.onShowGridLineNumbersCheckboxClick.bind(this);
@@ -31,7 +32,7 @@ class GridDisplaySettings extends PureComponent {
   }
 
   onShowGridAreasCheckboxClick() {
-    let {
+    const {
       highlighterSettings,
       onToggleShowGridAreas,
     } = this.props;
@@ -40,7 +41,7 @@ class GridDisplaySettings extends PureComponent {
   }
 
   onShowGridLineNumbersCheckboxClick() {
-    let {
+    const {
       highlighterSettings,
       onToggleShowGridLineNumbers,
     } = this.props;
@@ -49,7 +50,7 @@ class GridDisplaySettings extends PureComponent {
   }
 
   onShowInfiniteLinesCheckboxClick() {
-    let {
+    const {
       highlighterSettings,
       onToggleShowInfiniteLines,
     } = this.props;
@@ -58,69 +59,52 @@ class GridDisplaySettings extends PureComponent {
   }
 
   render() {
-    let {
+    const {
       highlighterSettings,
     } = this.props;
 
-    return dom.div(
-      {
-        className: "grid-container",
-      },
-      dom.span(
-        {},
-        getStr("layout.gridDisplaySettings")
-      ),
-      dom.ul(
-        {},
-        dom.li(
-          {
-            className: "grid-settings-item",
-          },
-          dom.label(
-            {},
-            dom.input(
-              {
-                id: "grid-setting-show-grid-line-numbers",
-                type: "checkbox",
-                checked: highlighterSettings.showGridLineNumbers,
-                onChange: this.onShowGridLineNumbersCheckboxClick,
-              }
-            ),
-            getStr("layout.displayLineNumbers")
-          )
-        ),
-        dom.li(
-          {
-            className: "grid-settings-item",
-          },
-          dom.label(
-           {},
-           dom.input(
-             {
-               id: "grid-setting-show-grid-areas",
-               type: "checkbox",
-               checked: highlighterSettings.showGridAreasOverlay,
-               onChange: this.onShowGridAreasCheckboxClick,
-             }
-           ),
-           getStr("layout.displayAreaNames")
-          )
-        ),
-        dom.li(
-          {
-            className: "grid-settings-item",
-          },
-          dom.label(
-            {},
-            dom.input(
-              {
-                id: "grid-setting-extend-grid-lines",
-                type: "checkbox",
-                checked: highlighterSettings.showInfiniteLines,
-                onChange: this.onShowInfiniteLinesCheckboxClick,
-              }
-            ),
-            getStr("layout.extendLinesInfinitely")
+    return (
+      dom.div({ className: "grid-container" },
+        dom.span({}, getStr("layout.gridDisplaySettings")),
+        dom.ul({},
+          dom.li({ className: "grid-settings-item" },
+            dom.label({},
+              dom.input(
+                {
+                  id: "grid-setting-show-grid-line-numbers",
+                  type: "checkbox",
+                  checked: highlighterSettings.showGridLineNumbers,
+                  onChange: this.onShowGridLineNumbersCheckboxClick,
+                }
+              ),
+              getStr("layout.displayLineNumbers")
+            )
+          ),
+          dom.li({ className: "grid-settings-item" },
+            dom.label({},
+              dom.input(
+                {
+                  id: "grid-setting-show-grid-areas",
+                  type: "checkbox",
+                  checked: highlighterSettings.showGridAreasOverlay,
+                  onChange: this.onShowGridAreasCheckboxClick,
+                }
+              ),
+              getStr("layout.displayAreaNames")
+            )
+          ),
+          dom.li({ className: "grid-settings-item" },
+            dom.label({},
+              dom.input(
+                {
+                  id: "grid-setting-extend-grid-lines",
+                  type: "checkbox",
+                  checked: highlighterSettings.showInfiniteLines,
+                  onChange: this.onShowInfiniteLinesCheckboxClick,
+                }
+              ),
+              getStr("layout.extendLinesInfinitely")
+            )
           )
         )
       )

@@ -80,7 +80,7 @@ XPCWrappedNativeScope::XPCWrappedNativeScope(JSContext* cx,
     MOZ_COUNT_CTOR(XPCWrappedNativeScope);
 
     // Create the compartment private.
-    JSCompartment* c = js::GetObjectCompartment(aGlobal);
+    JS::Compartment* c = js::GetObjectCompartment(aGlobal);
     MOZ_ASSERT(!JS_GetCompartmentPrivate(c));
     CompartmentPrivate* priv = new CompartmentPrivate(c);
     JS_SetCompartmentPrivate(c, priv);
@@ -291,10 +291,36 @@ JSObject*
 GetXBLScope(JSContext* cx, JSObject* contentScopeArg)
 {
     JS::RootedObject contentScope(cx, contentScopeArg);
-    JSAutoCompartment ac(cx, contentScope);
+    JSAutoRealm ar(cx, contentScope);
     XPCWrappedNativeScope* nativeScope = RealmPrivate::Get(contentScope)->scope;
 
     RootedObject scope(cx, nativeScope->EnsureContentXBLScope(cx));
+    NS_ENSURE_TRUE(scope, nullptr); // See bug 858642.
+
+    scope = js::UncheckedUnwrap(scope);
+    JS::ExposeObjectToActiveJS(scope);
+    return scope;
+}
+
+JSObject*
+GetUAWidgetScope(JSContext* cx, JSObject* contentScopeArg)
+{
+    JS::RootedObject contentScope(cx, contentScopeArg);
+    JSAutoRealm ar(cx, contentScope);
+    nsIPrincipal* principal =
+        nsJSPrincipals::get(JS_GetCompartmentPrincipals(js::GetObjectCompartment(contentScope)));
+
+    if (nsContentUtils::IsSystemPrincipal(principal)) {
+        return JS::GetNonCCWObjectGlobal(contentScope);
+    }
+
+    return GetUAWidgetScope(cx, principal);
+}
+
+JSObject*
+GetUAWidgetScope(JSContext* cx, nsIPrincipal* principal)
+{
+    RootedObject scope(cx, XPCJSRuntime::Get()->GetUAWidgetScope(cx, principal));
     NS_ENSURE_TRUE(scope, nullptr); // See bug 858642.
 
     scope = js::UncheckedUnwrap(scope);
@@ -405,13 +431,13 @@ XPCWrappedNativeScope::UpdateWeakPointersInAllScopesAfterGC()
 }
 
 static inline void
-AssertSameCompartment(DebugOnly<JSCompartment*>& comp, JSObject* obj)
+AssertSameCompartment(DebugOnly<JS::Compartment*>& comp, JSObject* obj)
 {
     MOZ_ASSERT_IF(obj, js::GetObjectCompartment(obj) == comp);
 }
 
 static inline void
-AssertSameCompartment(DebugOnly<JSCompartment*>& comp, const JS::ObjectPtr& obj)
+AssertSameCompartment(DebugOnly<JS::Compartment*>& comp, const JS::ObjectPtr& obj)
 {
 #ifdef DEBUG
     AssertSameCompartment(comp, obj.unbarrieredGet());
@@ -439,7 +465,7 @@ XPCWrappedNativeScope::UpdateWeakPointersAfterGC()
         return;
     }
 
-    DebugOnly<JSCompartment*> comp =
+    DebugOnly<JS::Compartment*> comp =
         js::GetObjectCompartment(mGlobalJSObject.unbarrieredGet());
 
 #ifdef DEBUG

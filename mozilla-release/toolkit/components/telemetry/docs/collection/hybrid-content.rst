@@ -57,9 +57,14 @@ granting permissions to a Mozilla page, it can do so by using the `permission ma
 
 Including the library
 ---------------------
-To use hybrid content telemetry the relative content JS library needs to be included in the page. We don't have a CDN hosted version that can be readily included in the page. For this reason, each consumer will need to fetch the latest version of the library from `here <https://hg.mozilla.org/mozilla-central/file/tip/toolkit/components/telemetry/hybrid-content/HybridContentTelemetry-lib.js>`_ and add it to the page repository. Then this file can be deployed along with the page.
+To use hybrid content telemetry the related content JS library needs to be included in the page. We have different integration options:
 
-Example:
+* Add ``mozilla-hybrid-content-telemetry`` as a dependency to the project and require it in the code.
+* Load it directly from the `external unpkg CDN <https://unpkg.com/mozilla-hybrid-content-telemetry/HybridContentTelemetry-lib.js>`_.
+* Manually fetch the latest version from the `main repository <https://hg.mozilla.org/mozilla-central/file/tip/toolkit/components/telemetry/hybrid-content/HybridContentTelemetry-lib.js>`_ and add it to the page repository. Then this file can be deployed along with the page.
+
+Example (manual inclusion):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: html
 
@@ -71,6 +76,35 @@ Example:
     </head>
     <body> <!-- Other body stuff --> </body>
   </html>
+
+Example (NPM dependency):
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add the dependency to your project:
+
+.. code-block:: shell
+
+  npm install --save mozilla-hybrid-content-telemetry@1.0.0
+
+In your app load the module and use the :ref:`API <the-api>`:
+
+.. code-block:: js
+
+  const ContentTelemetry = require("mozilla-hybrid-content-telemetry");
+
+  ContentTelemetry.registerEvents("page.interaction", {
+    "click": {
+      methods: ["click"],
+      objects: ["red_button", "blue_button"],
+    }
+  });
+
+  // Now events can be recorded.
+  ContentTelemetry.recordEvent("page.interaction", "click", "red_button");
+
+.. note::
+
+  The following examples assume the manual inclusion of the JS library.
 
 Registering the probes
 ----------------------
@@ -174,6 +208,9 @@ Example:
     </body>
   </html>
 
+
+.. _the-api:
+
 The API
 =======
 The hybrid content API is available to the web content through the inclusion of the `HybridContentTelemetry-lib.js <https://dxr.mozilla.org/mozilla-central/source/toolkit/components/telemetry/hybrid-content/HybridContentTelemetry-lib.js>`_ library.
@@ -187,6 +224,7 @@ Authorized content can use the following functions:
 .. code-block:: js
 
   Mozilla.ContentTelemetry.canUpload();
+  Mozilla.ContentTelemetry.initPromise();
   Mozilla.ContentTelemetry.registerEvents(category, eventData);
   Mozilla.ContentTelemetry.recordEvent(category, method, object, value, extra);
 
@@ -217,6 +255,15 @@ Example:
   if (Mozilla.ContentTelemetry.canUpload()) {
     // ... perform the data collection here using another measurement system.
   }
+
+``Mozilla.ContentTelemetry.initPromise()``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: js
+
+  Mozilla.ContentTelemetry.initPromise();
+
+This function returns a Promise that gets resolved as soon as Hybrid Content Telemetry is correctly initialized and the value from ``canUpload`` can be reliably read. The promise will reject if Hybrid Content Telemetry is disabled or the host doesn't have enough privileges to use the API.
 
 ``Mozilla.ContentTelemetry.registerEvents()``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -301,6 +348,10 @@ To enable Hybrid Content Telemetry on ``https://example.mozilla.org``, execute t
   Services.perms.add(hostURI, "hc_telemetry", Services.perms.ALLOW_ACTION);
 
 Afterwards load the page on ``https://example.mozilla.org`` and it will be able to record Telemetry data.
+
+.. note::
+
+  Manual testing requires a host that handles HTTPS connections, as this kind of collection is only allowed on secure hosts. To allow for local testing, a local proxy capable of handling HTTPS connection is required.
 
 Automated testing
 -----------------

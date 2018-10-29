@@ -2,11 +2,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!-- LOCALIZATION NOTE (aboutPrivateBrowsing.title):
-     Please ensure this exactly matches tabs.emptyPrivateTabTitle in tabbrowser.properties -->
-<!ENTITY aboutPrivateBrowsing.title                      "Navegación privada">
-<!ENTITY aboutPrivateBrowsing.notPrivate.title           "¿Abrir una ventana privada?">
-
 <!ENTITY aboutPrivateBrowsing.notPrivate                 "No está actualmente en una ventana privada.">
 <!ENTITY privatebrowsingpage.openPrivateWindow.label     "Abrir una ventana privada">
 <!ENTITY privatebrowsingpage.openPrivateWindow.accesskey "P">
@@ -25,6 +20,7 @@
 <!ENTITY aboutPrivateBrowsing.info.saved.after2          " sus:">
 <!ENTITY aboutPrivateBrowsing.info.downloads             "descargas">
 <!ENTITY aboutPrivateBrowsing.info.bookmarks             "marcadores">
+<!ENTITY aboutPrivateBrowsing.info.clipboard             "texto copiado">
 <!ENTITY aboutPrivateBrowsing.note.before                "La navegación privada ">
 <!ENTITY aboutPrivateBrowsing.note.emphasize             "no le hace anónimo">
 <!ENTITY aboutPrivateBrowsing.note.after                 " en Internet. Su empleador o proveedor de servicios de Internet aún pueden saber qué paginas visita.">
@@ -35,3 +31,6 @@
 <!ENTITY trackingProtection.title                        "Protección contra rastreo">
 <!ENTITY trackingProtection.description2                 "Algunos sitios web usan rastreadores que pueden monitorizar su actividad a través de Internet. Con la protección contra rastreo, Firefox bloqueará muchos rastreadores que pueden recopilar información sobre su comportamiento al navegar.">
 <!ENTITY trackingProtection.startTour1                   "Ver cómo funciona">
+
+<!ENTITY contentBlocking.title                           "Bloqueo de contenido">
+<!ENTITY contentBlocking.description                     "Algunos sitios web usan rastreadores que pueden controlar su actividad a través de Internet. En las ventanas privadas, el bloqueo de contenido de Firefox bloquea automáticamente muchos rastreadores que pueden recopilar información acerca de su navegación.">

@@ -22,18 +22,13 @@ var gLanguagesDialog = {
 
   _selectedItemID: null,
 
-  init() {
-    if (!this._availableLanguagesList.length)
-      this._loadAvailableLanguages();
-  },
+  onLoad() {
+    Preferences.get("intl.accept_languages").on("change",
+      () => this._readAcceptLanguages().catch(Cu.reportError));
 
-  // Ugly hack used to trigger extra reflow in order to work around XUL bug 1194844;
-  // see bug 1194346.
-  forceReflow() {
-    this._activeLanguages.style.fontKerning = "none";
-    setTimeout(() => {
-      this._activeLanguages.style.removeProperty("font-kerning");
-    }, 0);
+    if (!this._availableLanguagesList.length) {
+      document.mozSubdialogReady = this._loadAvailableLanguages();
+    }
   },
 
   get _activeLanguages() {
@@ -44,31 +39,25 @@ var gLanguagesDialog = {
     return document.getElementById("availableLanguages");
   },
 
-  _loadAvailableLanguages() {
+  async _loadAvailableLanguages() {
     // This is a parser for: resource://gre/res/language.properties
     // The file is formatted like so:
     // ab[-cd].accept=true|false
     //  ab = language
     //  cd = region
     var bundleAccepted    = document.getElementById("bundleAccepted");
-    var bundlePreferences = document.getElementById("bundlePreferences");
 
-    function LanguageInfo(aName, aABCD, aIsVisible) {
-      this.name = aName;
-      this.abcd = aABCD;
+    function LocaleInfo(aLocaleName, aLocaleCode, aIsVisible) {
+      this.name = aLocaleName;
+      this.code = aLocaleCode;
       this.isVisible = aIsVisible;
     }
 
     // 1) Read the available languages out of language.properties
-    var strings = bundleAccepted.strings;
 
     let localeCodes = [];
     let localeValues = [];
-    while (strings.hasMoreElements()) {
-      var currString = strings.getNext();
-      if (!(currString instanceof Ci.nsIPropertyElement))
-        break;
-
+    for (let currString of bundleAccepted.strings) {
       var property = currString.key.split("."); // ab[-cd].accept
       if (property[1] == "accept") {
         localeCodes.push(property[0]);
@@ -82,63 +71,90 @@ var gLanguagesDialog = {
       let isVisible = localeValues[i] == "true" &&
         (!(localeCodes[i] in this._acceptLanguages) || !this._acceptLanguages[localeCodes[i]]);
 
-      let name = bundlePreferences.getFormattedString("languageCodeFormat",
-        [localeNames[i], localeCodes[i]]);
-      let li = new LanguageInfo(name, localeCodes[i], isVisible);
+      let li = new LocaleInfo(localeNames[i], localeCodes[i], isVisible);
       this._availableLanguagesList.push(li);
     }
 
-    this._buildAvailableLanguageList();
+    await this._buildAvailableLanguageList();
+    await this._readAcceptLanguages();
   },
 
-  _buildAvailableLanguageList() {
+  async _buildAvailableLanguageList() {
     var availableLanguagesPopup = document.getElementById("availableLanguagesPopup");
     while (availableLanguagesPopup.hasChildNodes())
       availableLanguagesPopup.firstChild.remove();
 
-    // Sort the list of languages by name
-    this._availableLanguagesList.sort(function(a, b) {
-                                        return a.name.localeCompare(b.name);
-                                      });
+    let frag = document.createDocumentFragment();
 
     // Load the UI with the data
     for (var i = 0; i < this._availableLanguagesList.length; ++i) {
-      var abCD = this._availableLanguagesList[i].abcd;
-      if (this._availableLanguagesList[i].isVisible &&
-          (!(abCD in this._acceptLanguages) || !this._acceptLanguages[abCD])) {
-        var menuitem = document.createElement("menuitem");
-        menuitem.id = this._availableLanguagesList[i].abcd;
-        availableLanguagesPopup.appendChild(menuitem);
-        menuitem.setAttribute("label", this._availableLanguagesList[i].name);
+      let locale = this._availableLanguagesList[i];
+      let localeCode = locale.code;
+      if (locale.isVisible &&
+          (!(localeCode in this._acceptLanguages) || !this._acceptLanguages[localeCode])) {
+        var menuitem = document.createXULElement("menuitem");
+        menuitem.id = localeCode;
+        document.l10n.setAttributes(menuitem, "languages-code-format", {
+          locale: locale.name,
+          code: localeCode,
+        });
+        frag.appendChild(menuitem);
       }
     }
+
+    await document.l10n.translateFragment(frag);
+
+    // Sort the list of languages by name
+    let comp = new Services.intl.Collator(undefined, {
+      usage: "sort",
+    });
+
+    let items = Array.from(frag.children);
+
+    items.sort((a, b) => {
+      return comp.compare(a.getAttribute("label"), b.getAttribute("label"));
+    });
+
+    // Re-append items in the correct order:
+    items.forEach(item => frag.appendChild(item));
+
+    availableLanguagesPopup.appendChild(frag);
+
     this._availableLanguages.setAttribute("label", this._availableLanguages.getAttribute("placeholder"));
   },
 
-  readAcceptLanguages() {
+  async _readAcceptLanguages() {
     while (this._activeLanguages.hasChildNodes())
       this._activeLanguages.firstChild.remove();
 
     var selectedIndex = 0;
     var preference = Preferences.get("intl.accept_languages");
     if (preference.value == "")
-      return undefined;
+      return;
     var languages = preference.value.toLowerCase().split(/\s*,\s*/);
     for (var i = 0; i < languages.length; ++i) {
-      var name = this._getLanguageName(languages[i]);
-      if (!name)
-        name = "[" + languages[i] + "]";
-      var listitem = document.createElement("listitem");
+      var listitem = document.createXULElement("richlistitem");
+      var label = document.createXULElement("label");
+      listitem.appendChild(label);
       listitem.id = languages[i];
       if (languages[i] == this._selectedItemID)
         selectedIndex = i;
       this._activeLanguages.appendChild(listitem);
-      listitem.setAttribute("label", name);
+      var localeName = this._getLocaleName(languages[i]);
+      document.l10n.setAttributes(label, "languages-active-code-format", {
+        locale: localeName,
+        code: languages[i],
+      });
 
       // Hash this language as an "Active" language so we don't
       // show it in the list that can be added.
       this._acceptLanguages[languages[i]] = true;
     }
+
+    // We're forcing an early localization here because otherwise
+    // the initial sizing of the dialog will happen before it and
+    // result in overflow.
+    await document.l10n.translateFragment(this._activeLanguages);
 
     if (this._activeLanguages.childNodes.length > 0) {
       this._activeLanguages.ensureIndexIsVisible(selectedIndex);
@@ -148,12 +164,6 @@ var gLanguagesDialog = {
     // Update states of accept-language list and buttons according to
     // privacy.resistFingerprinting and privacy.spoof_english.
     this.readSpoofEnglish();
-
-    return undefined;
-  },
-
-  writeAcceptLanguages() {
-    return undefined;
   },
 
   onAvailableLanguageSelect() {
@@ -187,7 +197,7 @@ var gLanguagesDialog = {
     this._availableLanguages.selectedItem = null;
 
     // Rebuild the available list with the added item removed...
-    this._buildAvailableLanguageList();
+    this._buildAvailableLanguageList().catch(Cu.reportError);
   },
 
   removeLanguage() {
@@ -214,14 +224,14 @@ var gLanguagesDialog = {
     var preference = Preferences.get("intl.accept_languages");
     preference.value = string;
 
-    this._buildAvailableLanguageList();
+    this._buildAvailableLanguageList().catch(Cu.reportError);
   },
 
-  _getLanguageName(aABCD) {
+  _getLocaleName(localeCode) {
     if (!this._availableLanguagesList.length)
       this._loadAvailableLanguages();
     for (var i = 0; i < this._availableLanguagesList.length; ++i) {
-      if (aABCD == this._availableLanguagesList[i].abcd)
+      if (localeCode == this._availableLanguagesList[i].code)
         return this._availableLanguagesList[i].name;
     }
     return "";
@@ -325,10 +335,5 @@ var gLanguagesDialog = {
 
   writeSpoofEnglish() {
     return document.getElementById("spoofEnglish").checked ? 2 : 1;
-  }
+  },
 };
-
-// These focus and resize handlers hack around XUL bug 1194844
-// by triggering extra reflow (see bug 1194346).
-window.addEventListener("focus", () => gLanguagesDialog.forceReflow());
-window.addEventListener("resize", () => gLanguagesDialog.forceReflow());

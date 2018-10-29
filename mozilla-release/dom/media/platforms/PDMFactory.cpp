@@ -97,7 +97,7 @@ public:
     explicit CheckResult(Reason aReason,
                          MediaResult aResult = MediaResult(NS_OK))
       : mReason(aReason),
-        mMediaResult(mozilla::Move(aResult))
+        mMediaResult(std::move(aResult))
     {
     }
     CheckResult(const CheckResult& aOther) = default;
@@ -113,7 +113,7 @@ public:
   void
   AddToCheckList(Func&& aChecker)
   {
-    mCheckerList.AppendElement(mozilla::Forward<Func>(aChecker));
+    mCheckerList.AppendElement(std::forward<Func>(aChecker));
   }
 
   void
@@ -294,7 +294,8 @@ PDMFactory::CreateDecoderWithPDM(PlatformDecoderModule* aPDM,
     return nullptr;
   }
 
-  if (MP4Decoder::IsH264(config.mMimeType) && !aParams.mUseNullDecoder.mUse) {
+  if (MP4Decoder::IsH264(config.mMimeType) && !aParams.mUseNullDecoder.mUse &&
+      !aParams.mNoWrapper.mDontUseWrapper) {
     RefPtr<H264Converter> h = new H264Converter(aPDM, aParams);
     const MediaResult result = h->GetLastError();
     if (NS_SUCCEEDED(result) || result == NS_ERROR_NOT_INITIALIZED) {

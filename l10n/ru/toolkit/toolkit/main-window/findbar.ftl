@@ -1,0 +1,25 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+### This file contains the entities needed to use the Find Bar.
+
+findbar-next =
+    .tooltiptext = Найти следующее вхождение фразы в текст
+findbar-previous =
+    .tooltiptext = Найти предыдущее вхождение фразы в текст
+findbar-find-button-close =
+    .tooltiptext = Закрыть панель поиска
+findbar-highlight-all =
+    .label = Подсветить все
+    .accesskey = в
+    .tooltiptext = Подсветить все вхождения фразы в текст
+findbar-case-sensitive =
+    .label = С учётом регистра
+    .accesskey = е
+    .tooltiptext = Поиск с учётом регистра
+findbar-entire-word =
+    .label = Только слова целиком
+    .accesskey = о
+    .tooltiptext = Поиск только целых слов

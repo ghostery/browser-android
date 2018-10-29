@@ -177,21 +177,19 @@ ScaledFontMac::~ScaledFontMac()
 }
 
 #ifdef USE_SKIA
-SkTypeface* ScaledFontMac::GetSkTypeface()
+SkTypeface* ScaledFontMac::CreateSkTypeface()
 {
-  if (!mTypeface) {
-    if (mCTFont) {
-      mTypeface = SkCreateTypefaceFromCTFont(mCTFont);
-    } else {
-      auto unscaledMac = static_cast<UnscaledFontMac*>(GetUnscaledFont().get());
-      bool dataFont = unscaledMac->IsDataFont();
-      CTFontRef fontFace =
-        CreateCTFontFromCGFontWithVariations(mFont, mSize, !dataFont);
-      mTypeface = SkCreateTypefaceFromCTFont(fontFace);
-      CFRelease(fontFace);
-    }
+  if (mCTFont) {
+    return SkCreateTypefaceFromCTFont(mCTFont);
+  } else {
+    auto unscaledMac = static_cast<UnscaledFontMac*>(GetUnscaledFont().get());
+    bool dataFont = unscaledMac->IsDataFont();
+    CTFontRef fontFace =
+      CreateCTFontFromCGFontWithVariations(mFont, mSize, !dataFont);
+    SkTypeface* typeface = SkCreateTypefaceFromCTFont(fontFace);
+    CFRelease(fontFace);
+    return typeface;
   }
-  return mTypeface;
 }
 #endif
 
@@ -444,8 +442,7 @@ ScaledFontMac::GetWRFontInstanceOptions(Maybe<wr::FontInstanceOptions>* aOutOpti
 
   wr::FontInstanceOptions options;
   options.render_mode = wr::FontRenderMode::Subpixel;
-  options.subpx_dir = wr::SubpixelDirection::Horizontal;
-  options.flags = 0;
+  options.flags = wr::FontInstanceFlags::SUBPIXEL_POSITION;
   if (mUseFontSmoothing) {
     options.flags |= wr::FontInstanceFlags::FONT_SMOOTHING;
   }
@@ -453,6 +450,7 @@ ScaledFontMac::GetWRFontInstanceOptions(Maybe<wr::FontInstanceOptions>* aOutOpti
     options.flags |= wr::FontInstanceFlags::SYNTHETIC_BOLD;
   }
   options.bg_color = wr::ToColorU(mFontSmoothingBackgroundColor);
+  options.synthetic_italics = wr::DegreesToSyntheticItalics(GetSyntheticObliqueAngle());
   *aOutOptions = Some(options);
   return true;
 }
@@ -595,7 +593,7 @@ UnscaledFontMac::CreateScaledFont(Float aGlyphSize,
   RefPtr<ScaledFontMac> scaledFont =
     new ScaledFontMac(fontRef, this, aGlyphSize, fontRef != mFont);
 
-  if (!scaledFont->PopulateCairoScaledFont()) {
+  if (mNeedsCairo && !scaledFont->PopulateCairoScaledFont()) {
     gfxWarning() << "Unable to create cairo scaled Mac font.";
     return nullptr;
   }

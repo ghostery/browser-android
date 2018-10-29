@@ -21,11 +21,11 @@ function closeIdentityPopup() {
 add_task(async function testMainViewVisible() {
   await BrowserTestUtils.withNewTab(PERMISSIONS_PAGE, async function() {
     let permissionsList = document.getElementById("identity-popup-permission-list");
-    let emptyLabel = permissionsList.nextSibling.nextSibling;
+    let emptyLabel = permissionsList.nextElementSibling.nextElementSibling;
 
     await openIdentityPopup();
 
-    ok(!is_hidden(emptyLabel), "List of permissions is empty");
+    ok(!BrowserTestUtils.is_hidden(emptyLabel), "List of permissions is empty");
 
     await closeIdentityPopup();
 
@@ -33,7 +33,7 @@ add_task(async function testMainViewVisible() {
 
     await openIdentityPopup();
 
-    ok(is_hidden(emptyLabel), "List of permissions is not empty");
+    ok(BrowserTestUtils.is_hidden(emptyLabel), "List of permissions is not empty");
 
     let labelText = SitePermissions.getPermissionLabel("camera");
     let labels = permissionsList.querySelectorAll(".identity-popup-permission-label");
@@ -50,7 +50,7 @@ add_task(async function testMainViewVisible() {
 
     await openIdentityPopup();
 
-    ok(!is_hidden(emptyLabel), "List of permissions is empty");
+    ok(!BrowserTestUtils.is_hidden(emptyLabel), "List of permissions is empty");
 
     await closeIdentityPopup();
   });
@@ -87,14 +87,14 @@ add_task(async function testIdentityIcon() {
 add_task(async function testCancelPermission() {
   await BrowserTestUtils.withNewTab(PERMISSIONS_PAGE, async function() {
     let permissionsList = document.getElementById("identity-popup-permission-list");
-    let emptyLabel = permissionsList.nextSibling.nextSibling;
+    let emptyLabel = permissionsList.nextElementSibling.nextElementSibling;
 
     SitePermissions.set(gBrowser.currentURI, "geo", SitePermissions.ALLOW);
     SitePermissions.set(gBrowser.currentURI, "camera", SitePermissions.BLOCK);
 
     await openIdentityPopup();
 
-    ok(is_hidden(emptyLabel), "List of permissions is not empty");
+    ok(BrowserTestUtils.is_hidden(emptyLabel), "List of permissions is not empty");
 
     let cancelButtons = permissionsList
       .querySelectorAll(".identity-popup-permission-remove-button");
@@ -118,8 +118,8 @@ add_task(async function testPermissionHints() {
 
     await openIdentityPopup();
 
-    ok(!is_hidden(emptyHint), "Empty hint is visible");
-    ok(is_hidden(reloadHint), "Reload hint is hidden");
+    ok(!BrowserTestUtils.is_hidden(emptyHint), "Empty hint is visible");
+    ok(BrowserTestUtils.is_hidden(reloadHint), "Reload hint is hidden");
 
     await closeIdentityPopup();
 
@@ -128,20 +128,20 @@ add_task(async function testPermissionHints() {
 
     await openIdentityPopup();
 
-    ok(is_hidden(emptyHint), "Empty hint is hidden");
-    ok(is_hidden(reloadHint), "Reload hint is hidden");
+    ok(BrowserTestUtils.is_hidden(emptyHint), "Empty hint is hidden");
+    ok(BrowserTestUtils.is_hidden(reloadHint), "Reload hint is hidden");
 
     let cancelButtons = permissionsList
       .querySelectorAll(".identity-popup-permission-remove-button");
     SitePermissions.remove(gBrowser.currentURI, "camera");
 
     cancelButtons[0].click();
-    ok(is_hidden(emptyHint), "Empty hint is hidden");
-    ok(!is_hidden(reloadHint), "Reload hint is visible");
+    ok(BrowserTestUtils.is_hidden(emptyHint), "Empty hint is hidden");
+    ok(!BrowserTestUtils.is_hidden(reloadHint), "Reload hint is visible");
 
     cancelButtons[1].click();
-    ok(is_hidden(emptyHint), "Empty hint is hidden");
-    ok(!is_hidden(reloadHint), "Reload hint is visible");
+    ok(BrowserTestUtils.is_hidden(emptyHint), "Empty hint is hidden");
+    ok(!BrowserTestUtils.is_hidden(reloadHint), "Reload hint is visible");
 
     await closeIdentityPopup();
     let loaded = BrowserTestUtils.browserLoaded(browser);
@@ -149,8 +149,8 @@ add_task(async function testPermissionHints() {
     await loaded;
     await openIdentityPopup();
 
-    ok(!is_hidden(emptyHint), "Empty hint is visible after reloading");
-    ok(is_hidden(reloadHint), "Reload hint is hidden after reloading");
+    ok(!BrowserTestUtils.is_hidden(emptyHint), "Empty hint is visible after reloading");
+    ok(BrowserTestUtils.is_hidden(reloadHint), "Reload hint is hidden after reloading");
 
     await closeIdentityPopup();
   });
@@ -266,3 +266,19 @@ add_task(async function testPolicyPermission() {
   });
 });
 
+add_task(async function testHiddenAfterRefresh() {
+  await BrowserTestUtils.withNewTab(PERMISSIONS_PAGE, async function(browser) {
+
+    ok(BrowserTestUtils.is_hidden(gIdentityHandler._identityPopup), "Popup is hidden");
+
+    await openIdentityPopup();
+
+    ok(!BrowserTestUtils.is_hidden(gIdentityHandler._identityPopup), "Popup is shown");
+
+    let reloaded = BrowserTestUtils.browserLoaded(browser, false, PERMISSIONS_PAGE);
+    EventUtils.synthesizeKey("VK_F5", {}, browser.ownerGlobal);
+    await reloaded;
+
+    ok(BrowserTestUtils.is_hidden(gIdentityHandler._identityPopup), "Popup is hidden");
+  });
+});

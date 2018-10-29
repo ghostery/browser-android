@@ -41,6 +41,8 @@ interface Element : Node {
   [Pure]
   DOMString? getAttributeNS(DOMString? namespace, DOMString localName);
   [CEReactions, NeedsSubjectPrincipal=NonSystem, Throws]
+  boolean toggleAttribute(DOMString name, optional boolean force);
+  [CEReactions, NeedsSubjectPrincipal=NonSystem, Throws]
   void setAttribute(DOMString name, DOMString value);
   [CEReactions, NeedsSubjectPrincipal=NonSystem, Throws]
   void setAttributeNS(DOMString? namespace, DOMString name, DOMString value);
@@ -69,9 +71,7 @@ interface Element : Node {
   HTMLCollection getElementsByTagNameNS(DOMString? namespace, DOMString localName);
   [Pure]
   HTMLCollection getElementsByClassName(DOMString classNames);
-  [ChromeOnly, Pure]
-  sequence<Element> getElementsWithGrid();
-
+ 
   [CEReactions, Throws, Pure]
   Element? insertAdjacentElement(DOMString where, Element element); // historical
 
@@ -154,25 +154,6 @@ interface Element : Node {
    */
   boolean scrollByNoFlush(long dx, long dy);
 
-  // Support reporting of Flexbox properties
-  /**
-   * If this element has a display:flex or display:inline-flex style,
-   * this property returns an object with computed values for flex
-   * properties, as well as a property that exposes the flex lines
-   * in this container.
-   */
-  [ChromeOnly, Pure]
-  Flex? getAsFlexContainer();
-
-  // Support reporting of Grid properties
-  /**
-   * If this element has a display:grid or display:inline-grid style,
-   * this property returns an object with computed values for grid
-   * tracks and lines.
-   */
-  [ChromeOnly, Pure]
-  sequence<Grid> getGridFragments();
-
   [ChromeOnly]
   DOMMatrixReadOnly getTransformToAncestor(Element ancestor);
   [ChromeOnly]
@@ -236,16 +217,6 @@ partial interface Element {
   attribute DOMString outerHTML;
   [CEReactions, Throws]
   void insertAdjacentHTML(DOMString position, DOMString text);
-
-  /**
-   * Like the innerHTML setter, but does not sanitize its values, even in
-   * chrome-privileged documents.
-   *
-   * If you're thinking about using this, don't. You have many, much better
-   * options.
-   */
-  [ChromeOnly, Throws]
-  void unsafeSetInnerHTML(DOMString html);
 };
 
 // http://www.w3.org/TR/selectors-api/#interface-definitions
@@ -269,11 +240,15 @@ partial interface Element {
   [BinaryName="shadowRootByMode", Func="nsDocument::IsShadowDOMEnabled"]
   readonly attribute ShadowRoot? shadowRoot;
 
-  [ChromeOnly, Func="nsDocument::IsShadowDOMEnabled", BinaryName="shadowRoot"]
+  [Func="nsDocument::IsShadowDOMEnabledAndCallerIsChromeOrAddon", BinaryName="shadowRoot"]
   readonly attribute ShadowRoot? openOrClosedShadowRoot;
 
   [BinaryName="assignedSlotByMode", Func="nsDocument::IsShadowDOMEnabled"]
   readonly attribute HTMLSlotElement? assignedSlot;
+
+  [ChromeOnly, BinaryName="assignedSlot", Func="nsDocument::IsShadowDOMEnabled"]
+  readonly attribute HTMLSlotElement? openOrClosedAssignedSlot;
+
   [CEReactions, Unscopable, SetterThrows, Func="nsDocument::IsShadowDOMEnabled"]
            attribute DOMString slot;
 };
@@ -294,6 +269,36 @@ partial interface Element {
 
 // https://w3c.github.io/pointerlock/#extensions-to-the-element-interface
 partial interface Element {
-  [NeedsCallerType]
+  [NeedsCallerType, Pref="dom.pointer-lock.enabled"]
   void requestPointerLock();
+};
+
+// Mozilla-specific additions to support devtools
+partial interface Element {
+  // Support reporting of Flexbox properties
+  /**
+   * If this element has a display:flex or display:inline-flex style,
+   * this property returns an object with computed values for flex
+   * properties, as well as a property that exposes the flex lines
+   * in this container.
+   */
+  [ChromeOnly, Pure]
+  Flex? getAsFlexContainer();
+
+  // Support reporting of Grid properties
+  /**
+   * If this element has a display:grid or display:inline-grid style,
+   * this property returns an object with computed values for grid
+   * tracks and lines.
+   */
+  [ChromeOnly, Pure]
+  sequence<Grid> getGridFragments();
+  
+  /**
+   * Returns a sequence of all the descendent elements of this element
+   * that have display:grid or display:inline-grid style and generate
+   * a frame.
+   */
+  [ChromeOnly, Pure]
+  sequence<Element> getElementsWithGrid();
 };

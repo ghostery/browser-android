@@ -89,6 +89,10 @@ permissions-exceptions-autoplay-media-window =
     .title = Engedélyezett webhelyek – Automatikus lejátszás
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc = Megadhatja, hogy mely weboldalak játszhatnak le automatikusan médiaelemeket. Írja be az engedélyezendő webhely pontos címét, és kattintson az Engedélyezés gombra.
+permissions-exceptions-autoplay-media-window2 =
+    .title = Kivételek – Automatikus lejátszás
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc2 = Megadhatja azokat a webhelyeket, amelyek mindig vagy sohasem játszhatnak le automatikusan médiát hanggal. Írja be a kezelni kívánt webhely pontos nevét, majd kattintson a Tiltás vagy Engedélyezés gombok egyikére.
 
 ## Site Permissions - Notifications
 

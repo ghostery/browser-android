@@ -54,13 +54,6 @@ USE_LIBS += [
     'xz-embedded',
 ]
 
-if CONFIG['MOZ_SYSTEM_BZ2']:
-    OS_LIBS += CONFIG['MOZ_BZ2_LIBS']
-else:
-    USE_LIBS += [
-        'bz2',
-    ]
-
 if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
     have_progressui = 1
     srcs += [
@@ -121,3 +114,5 @@ if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
 if CONFIG['CC_TYPE'] == 'gcc':
     CXXFLAGS += ['-Wno-format-truncation']
 
+if CONFIG['CC_TYPE'] == 'clang-cl':
+    AllowCompilerWarnings()  # workaround for bug 1090497

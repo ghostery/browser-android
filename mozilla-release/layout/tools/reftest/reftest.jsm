@@ -16,6 +16,7 @@ Cu.import("chrome://reftest/content/globals.jsm", this);
 Cu.import("chrome://reftest/content/httpd.jsm", this);
 Cu.import("chrome://reftest/content/manifest.jsm", this);
 Cu.import("chrome://reftest/content/StructuredLog.jsm", this);
+Cu.import("chrome://reftest/content/PerTestCoverageUtils.jsm", this);
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/NetUtil.jsm");
 Cu.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -279,7 +280,7 @@ function InitAndStartRefTests()
     }
 #endif
 
-    g.windowUtils = g.containingWindow.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIDOMWindowUtils);
+    g.windowUtils = g.containingWindow.windowUtils;
     if (!g.windowUtils || !g.windowUtils.compareCanvases)
         throw "nsIDOMWindowUtils inteface missing";
 
@@ -374,14 +375,12 @@ function ReadTests() {
             });
         } else if (manifests) {
             // Parse reftest manifests
-            // XXX There is a race condition in the manifest parsing code which
-            // sometimes shows up on Android jsreftests (bug 1416125). It seems
-            // adding/removing log statements can change its frequency.
             logger.debug("Reading " + manifests.length + " manifests");
             manifests = JSON.parse(manifests);
             g.urlsFilterRegex = manifests[null];
 
             var globalFilter = manifests.hasOwnProperty("") ? new RegExp(manifests[""]) : null;
+            delete manifests[""];
             var manifestURLs = Object.keys(manifests);
 
             // Ensure we read manifests from higher up the directory tree first so that we
@@ -510,11 +509,17 @@ function StartTests()
         }
 
         g.totalTests = g.urls.length;
-        if (!g.totalTests && !g.verify)
+        if (!g.totalTests && !g.verify && !g.repeat)
             throw "No tests to run";
 
         g.uriCanvases = {};
-        StartCurrentTest();
+
+        PerTestCoverageUtils.beforeTest()
+        .then(StartCurrentTest)
+        .catch(e => {
+            logger.error("EXCEPTION: " + e);
+            DoneTests();
+        });
     } catch (ex) {
         //g.browser.loadURI('data:text/plain,' + ex);
         ++g.testResults.Exception;
@@ -628,7 +633,7 @@ function StartCurrentTest()
     } else if (g.urls.length == 0 && g.repeat > 0) {
         // Repeat
         g.repeat--;
-        StartTests();
+        ReadTests();
     } else {
         if (g.urls[0].chaosMode) {
             g.windowUtils.enterChaosMode();
@@ -754,28 +759,32 @@ function StartCurrentURI(aURLTargetType)
 
 function DoneTests()
 {
-    if (g.manageSuite) {
-        g.suiteStarted = false
-        logger.suiteEnd({'results': g.testResults});
-    } else {
-        logger._logData('results', {results: g.testResults});
-    }
-    logger.info("Slowest test took " + g.slowestTestTime + "ms (" + g.slowestTestURL + ")");
-    logger.info("Total canvas count = " + g.recycledCanvases.length);
-    if (g.failedUseWidgetLayers) {
-        LogWidgetLayersFailure();
-    }
+    PerTestCoverageUtils.afterTest()
+    .catch(e => logger.error("EXCEPTION: " + e))
+    .then(() => {
+        if (g.manageSuite) {
+            g.suiteStarted = false
+            logger.suiteEnd({'results': g.testResults});
+        } else {
+            logger._logData('results', {results: g.testResults});
+        }
+        logger.info("Slowest test took " + g.slowestTestTime + "ms (" + g.slowestTestURL + ")");
+        logger.info("Total canvas count = " + g.recycledCanvases.length);
+        if (g.failedUseWidgetLayers) {
+            LogWidgetLayersFailure();
+        }
 
-    function onStopped() {
-        let appStartup = Cc["@mozilla.org/toolkit/app-startup;1"].getService(Ci.nsIAppStartup);
-        appStartup.quit(Ci.nsIAppStartup.eForceQuit);
-    }
-    if (g.server) {
-        g.server.stop(onStopped);
-    }
-    else {
-        onStopped();
-    }
+        function onStopped() {
+            let appStartup = Cc["@mozilla.org/toolkit/app-startup;1"].getService(Ci.nsIAppStartup);
+            appStartup.quit(Ci.nsIAppStartup.eForceQuit);
+        }
+        if (g.server) {
+            g.server.stop(onStopped);
+        }
+        else {
+            onStopped();
+        }
+    });
 }
 
 function UpdateCanvasCache(url, canvas)
@@ -1256,7 +1265,7 @@ function FindUnexpectedCrashDumpFiles()
 
     let foundCrashDumpFile = false;
     while (entries.hasMoreElements()) {
-        let file = entries.getNext().QueryInterface(Ci.nsIFile);
+        let file = entries.nextFile;
         let path = String(file.path);
         if (path.match(/\.(dmp|extra)$/) && !g.unexpectedCrashDumpFiles[path]) {
             if (!foundCrashDumpFile) {
@@ -1282,7 +1291,7 @@ function RemovePendingCrashDumpFiles()
 
     let entries = g.pendingCrashDumpDir.directoryEntries;
     while (entries.hasMoreElements()) {
-        let file = entries.getNext().QueryInterface(Ci.nsIFile);
+        let file = entries.nextFile;
         if (file.isFile()) {
           file.remove(false);
           logger.info("This test left pending crash dumps; deleted "+file.path);

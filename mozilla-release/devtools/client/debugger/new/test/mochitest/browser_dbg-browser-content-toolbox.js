@@ -32,7 +32,10 @@ async function enableBreakpoint(dbg, index) {
 }
 
 function findBreakpoint(dbg, url, line) {
-  const { selectors: { getBreakpoint }, getState } = dbg;
+  const {
+    selectors: { getBreakpoint },
+    getState
+  } = dbg;
   const source = findSource(dbg, url);
   return getBreakpoint(getState(), { sourceId: source.id, line });
 }
@@ -46,8 +49,8 @@ add_task(async function() {
   info("Open the Browser Content Toolbox");
   let toolbox = await gDevToolsBrowser.openContentProcessToolbox(gBrowser);
 
-  info("Wait for the debugger to be ready");
-  await toolbox.getPanelWhenReady("jsdebugger");
+  info("Select the debugger");
+  await toolbox.selectTool("jsdebugger");
 
   let dbg = createDebuggerContext(toolbox);
   ok(dbg, "Debugger context is available");

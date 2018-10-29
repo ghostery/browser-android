@@ -45,3 +45,8 @@
 <!ENTITY  autologinproxy.tooltip        "Эта настройка аутентифицирует вас на прокси, не выполняя запросов, если вы сохранили свои учётные данные. Если аутентификация не удастся, вам будет выдан запрос.">
 <!ENTITY  socksRemoteDNS.label          "Отправлять DNS-запросы через прокси, используя SOCKS v5">
 <!ENTITY  socksRemoteDNS.accesskey      "я">
+<!ENTITY  dnsOverHttps.label            "Включить DNS через HTTPS">
+<!ENTITY  dnsOverHttps.accesskey        "л">
+<!ENTITY  dnsOverHttpsUrl.label         "URL">
+<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
+<!ENTITY  dnsOverHttpsUrl.tooltip       "URL для разрешения DNS через HTTPS">

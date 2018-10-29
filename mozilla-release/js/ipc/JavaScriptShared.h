@@ -29,7 +29,7 @@ class ObjectId {
     explicit ObjectId(uint64_t serialNumber, bool hasXrayWaiver)
       : serialNumber_(serialNumber), hasXrayWaiver_(hasXrayWaiver)
     {
-        if (MOZ_UNLIKELY(serialNumber == 0 || serialNumber > SERIAL_NUMBER_MAX))
+        if (isInvalidSerialNumber(serialNumber))
             MOZ_CRASH("Bad CPOW Id");
     }
 
@@ -49,8 +49,11 @@ class ObjectId {
     }
 
     static ObjectId nullId() { return ObjectId(); }
-    static ObjectId deserialize(uint64_t data) {
-        return ObjectId(data >> FLAG_BITS, data & 1);
+    static Maybe<ObjectId> deserialize(uint64_t data) {
+        if (isInvalidSerialNumber(data >> FLAG_BITS)) {
+            return Nothing();
+        }
+        return Some(ObjectId(data >> FLAG_BITS, data & 1));
     }
 
     // For use with StructGCPolicy.
@@ -59,6 +62,10 @@ class ObjectId {
 
   private:
     ObjectId() : serialNumber_(0), hasXrayWaiver_(false) {}
+
+    static bool isInvalidSerialNumber(uint64_t aSerialNumber) {
+        return aSerialNumber == 0 || aSerialNumber > SERIAL_NUMBER_MAX;
+    }
 
     uint64_t serialNumber_ : SERIAL_NUMBER_BITS;
     bool hasXrayWaiver_ : 1;
@@ -91,7 +98,6 @@ class IdToObjectMap
   public:
     IdToObjectMap();
 
-    bool init();
     void trace(JSTracer* trc, uint64_t minimumId = 0);
     void sweep();
 
@@ -118,7 +124,8 @@ class ObjectToIdMap
     using Table = JS::GCHashMap<JS::Heap<JSObject*>, ObjectId, Hasher, js::SystemAllocPolicy>;
 
   public:
-    bool init();
+    ObjectToIdMap();
+
     void trace(JSTracer* trc);
     void sweep();
 
@@ -138,8 +145,6 @@ class JavaScriptShared : public CPOWManager
   public:
     JavaScriptShared();
     virtual ~JavaScriptShared();
-
-    bool init();
 
     void decref();
     void incref();

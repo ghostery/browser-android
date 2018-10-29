@@ -37,12 +37,17 @@ protected:
   static bool SystemWantsOverlayScrollbars();
   static bool AllowOverlayScrollbarsOverlap();
 
+  static bool SystemWantsDarkTheme();
+
 private:
   int32_t mUseOverlayScrollbars;
   bool mUseOverlayScrollbarsCached;
 
   int32_t mAllowOverlayScrollbarsOverlap;
   bool mAllowOverlayScrollbarsOverlapCached;
+
+  int32_t mPrefersReducedMotion;
+  bool mPrefersReducedMotionCached;
 
   nscolor mColorTextSelectBackground;
   nscolor mColorTextSelectBackgroundDisabled;

@@ -7,7 +7,6 @@
 
 "use strict";
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 ChromeUtils.defineModuleGetter(this, "WebRequestCommon",
@@ -67,18 +66,17 @@ var ContentPolicy = {
   },
 
   register() {
-    let catMan = Cc["@mozilla.org/categorymanager;1"].getService(Ci.nsICategoryManager);
-    catMan.addCategoryEntry("content-policy", this._contractID, this._contractID, false, true);
+    Services.catMan.addCategoryEntry("content-policy",
+                                     this._contractID,
+                                     this._contractID, false, true);
   },
 
   unregister() {
-    let catMan = Cc["@mozilla.org/categorymanager;1"].getService(Ci.nsICategoryManager);
-    catMan.deleteCategoryEntry("content-policy", this._contractID, false);
+    Services.catMan.deleteCategoryEntry("content-policy", this._contractID, false);
   },
 
   shouldLoad(contentLocation, loadInfo, mimeTypeGuess) {
     let policyType = loadInfo.externalContentPolicyType;
-    let node = loadInfo.loadingContext;
     let loadingPrincipal = loadInfo.loadingPrincipal;
     let requestPrincipal = loadInfo.triggeringPrincipal;
     let requestOrigin = null;
@@ -103,15 +101,17 @@ var ContentPolicy = {
       return Ci.nsIContentPolicy.ACCEPT;
     }
 
-    let ids = [];
-    for (let [id, {filter}] of this.contentPolicies.entries()) {
+    // Break out early if there are no extension listeners.
+    let haveListeners = false;
+    for (let {filter} of this.contentPolicies.values()) {
       if (WebRequestCommon.typeMatches(policyType, filter.types) &&
           WebRequestCommon.urlMatches(contentLocation, filter.urls)) {
-        ids.push(id);
+        haveListeners = true;
+        break;
       }
     }
 
-    if (!ids.length) {
+    if (!haveListeners) {
       return Ci.nsIContentPolicy.ACCEPT;
     }
 
@@ -121,14 +121,14 @@ var ContentPolicy = {
     let mm = Services.cpmm;
 
     function getWindowId(window) {
-      return window.QueryInterface(Ci.nsIInterfaceRequestor)
-        .getInterface(Ci.nsIDOMWindowUtils)
-        .outerWindowID;
+      return window.windowUtils.outerWindowID;
     }
 
-    if (policyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT ||
-        (ChromeUtils.getClassName(node) == "XULElement" &&
-         node.localName == "browser")) {
+    let node = loadInfo.loadingContext;
+    if (node &&
+        (policyType == Ci.nsIContentPolicy.TYPE_SUBDOCUMENT ||
+        (ChromeUtils.getClassName(node) == "XULFrameElement" &&
+          node.localName == "browser"))) {
       // Chrome sets frameId to the ID of the sub-window. But when
       // Firefox loads an iframe, it sets |node| to the <iframe>
       // element, whose window is the parent window. We adopt the
@@ -167,21 +167,13 @@ var ContentPolicy = {
         }
       }
 
-      let ir = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                     .getInterface(Ci.nsIDocShell)
-                     .QueryInterface(Ci.nsIInterfaceRequestor);
-      try {
-        // If e10s is disabled, this throws NS_NOINTERFACE for closed tabs.
-        mm = ir.getInterface(Ci.nsIContentFrameMessageManager);
-      } catch (e) {
-        if (e.result != Cr.NS_NOINTERFACE) {
-          throw e;
-        }
+      let windowMM = window.docShell.messageManager;
+      if (windowMM) {
+        mm = windowMM;
       }
     }
 
-    let data = {ids,
-                url,
+    let data = {url,
                 type: WebRequestCommon.typeForPolicyType(policyType),
                 windowId,
                 parentWindowId};

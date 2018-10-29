@@ -94,7 +94,7 @@ function waitForEvent(aEventType, aTargetOrFunc, aFunc, aContext, aArg1, aArg2) 
             target != aEvent.accessible)
           return;
 
-        if (target instanceof nsIDOMNode &&
+        if (Node.isInstance(target) &&
             target != aEvent.DOMNode)
           return;
       }
@@ -111,6 +111,28 @@ function waitForEvent(aEventType, aTargetOrFunc, aFunc, aContext, aArg1, aArg2) 
   };
 
   registerA11yEventListener(aEventType, handler);
+}
+
+/**
+ * A promise based version of waitForEvent function.
+ */
+function waitForEventPromise(eventType, target) {
+  return new Promise(resolve => {
+    let eventObserver = {
+      observe(subject, topic, data) {
+        let event = subject.QueryInterface(nsIAccessibleEvent);
+        if (event.eventType !== eventType) {
+          return;
+        }
+
+        if (event.accessible == getAccessible(target)) {
+          Services.obs.removeObserver(this, "accessible-event");
+          resolve(event);
+        }
+      }
+    };
+    Services.obs.addObserver(eventObserver, "accessible-event");
+  });
 }
 
 /**
@@ -1062,7 +1084,7 @@ function synthClick(aNodeOrID, aCheckerOrEventSeq, aArgs) {
 
   this.invoke = function synthClick_invoke() {
     var targetNode = this.DOMNode;
-    if (targetNode instanceof nsIDOMDocument) {
+    if (targetNode.nodeType == targetNode.DOCUMENT_NODE) {
       targetNode =
         this.DOMNode.body ? this.DOMNode.body : this.DOMNode.documentElement;
     }
@@ -1264,8 +1286,7 @@ function synthFocus(aNodeOrID, aCheckerOrEventSeq) {
   this.__proto__ = new synthAction(aNodeOrID, checkerOfEventSeq);
 
   this.invoke = function synthFocus_invoke() {
-    if (this.DOMNode instanceof Ci.nsIDOMNSEditableElement &&
-        this.DOMNode.editor ||
+    if (this.DOMNode.editor ||
         this.DOMNode.localName == "textbox") {
       this.DOMNode.selectionStart = this.DOMNode.selectionEnd = this.DOMNode.value.length;
     }

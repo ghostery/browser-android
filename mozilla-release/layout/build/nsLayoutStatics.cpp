@@ -11,7 +11,6 @@
 
 #include "DateTimeFormat.h"
 #include "nsAttrValue.h"
-#include "nsAutoCopyListener.h"
 #include "nsColorNames.h"
 #include "nsComputedDOMStyle.h"
 #include "nsContentDLF.h"
@@ -49,7 +48,6 @@
 #include "nsHTMLDNSPrefetch.h"
 #include "nsHtml5Module.h"
 #include "nsHTMLTags.h"
-#include "nsIRDFContentSink.h"	// for RDF atom initialization
 #include "mozilla/dom/FallbackEncoding.h"
 #include "nsFocusManager.h"
 #include "nsListControlFrame.h"
@@ -104,13 +102,14 @@
 #include "TouchManager.h"
 #include "DecoderDoctorLogger.h"
 #include "MediaDecoder.h"
+#include "mozilla/ClearSiteData.h"
 #include "mozilla/ServoBindings.h"
 #include "mozilla/StaticPresData.h"
 #include "mozilla/dom/WebIDLGlobalNameHash.h"
 #include "mozilla/dom/ipc/IPCBlobInputStreamStorage.h"
 #include "mozilla/dom/U2FTokenManager.h"
 #include "mozilla/dom/PointerEventHandler.h"
-#include "nsHostObjectProtocolHandler.h"
+#include "mozilla/dom/BlobURLProtocolHandler.h"
 #include "nsThreadManager.h"
 
 using namespace mozilla;
@@ -134,17 +133,17 @@ nsLayoutStatics::Initialize()
 
   ContentParent::StartUp();
 
-  // Register static atoms. Note that nsGkAtoms must be initialized earlier
-  // than here, so it's done in NS_InitAtomTable() instead.
-  nsCSSAnonBoxes::RegisterStaticAtoms();
-  nsCSSPseudoElements::RegisterStaticAtoms();
   nsCSSKeywords::AddRefTable();
   nsCSSProps::AddRefTable();
   nsColorNames::AddRefTable();
 
-  NS_SetStaticAtomsDone();
+#ifdef DEBUG
+  nsCSSPseudoElements::AssertAtoms();
+  nsCSSAnonBoxes::AssertAtoms();
+#endif
 
   StartupJSEnvironment();
+  nsJSContext::EnsureStatics();
 
   nsGlobalWindowInner::Init();
   nsGlobalWindowOuter::Init();
@@ -180,15 +179,6 @@ nsLayoutStatics::Initialize()
     NS_ERROR("Could not initialize HTML DNS prefetch");
     return rv;
   }
-
-#ifdef MOZ_XUL
-  rv = nsXULContentUtils::Init();
-  if (NS_FAILED(rv)) {
-    NS_ERROR("Could not initialize nsXULContentUtils");
-    return rv;
-  }
-
-#endif
 
   nsMathMLOperators::AddRefTable();
 
@@ -294,6 +284,8 @@ nsLayoutStatics::Initialize()
 
   nsThreadManager::InitializeShutdownObserver();
 
+  ClearSiteData::Initialize();
+
   return NS_OK;
 }
 
@@ -362,7 +354,6 @@ nsLayoutStatics::Shutdown()
   WebIDLGlobalNameHash::Shutdown();
   nsListControlFrame::Shutdown();
   nsXBLService::Shutdown();
-  nsAutoCopyListener::Shutdown();
   FrameLayerBuilder::Shutdown();
 
   CubebUtils::ShutdownLibrary();
@@ -401,5 +392,5 @@ nsLayoutStatics::Shutdown()
 
   PromiseDebugging::Shutdown();
 
-  nsHostObjectProtocolHandler::RemoveDataEntries();
+  BlobURLProtocolHandler::RemoveDataEntries();
 }

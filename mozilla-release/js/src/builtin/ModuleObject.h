@@ -12,6 +12,7 @@
 #include "jsapi.h"
 
 #include "builtin/SelfHostingDefines.h"
+#include "gc/Zone.h"
 #include "js/GCVector.h"
 #include "js/Id.h"
 #include "js/UniquePtr.h"
@@ -254,7 +255,7 @@ class ModuleObject : public NativeObject
         NamespaceSlot,
         StatusSlot,
         EvaluationErrorSlot,
-        HostDefinedSlot,
+        MetaObjectSlot,
         RequestedModulesSlot,
         ImportEntriesSlot,
         LocalExportEntriesSlot,
@@ -304,7 +305,7 @@ class ModuleObject : public NativeObject
     ModuleStatus status() const;
     bool hadEvaluationError() const;
     Value evaluationError() const;
-    Value hostDefinedField() const;
+    JSObject* metaObject() const;
     ArrayObject& requestedModules() const;
     ArrayObject& importEntries() const;
     ArrayObject& localExportEntries() const;
@@ -315,7 +316,10 @@ class ModuleObject : public NativeObject
     static bool Instantiate(JSContext* cx, HandleModuleObject self);
     static bool Evaluate(JSContext* cx, HandleModuleObject self);
 
-    void setHostDefinedField(const JS::Value& value);
+    static ModuleNamespaceObject* GetOrCreateModuleNamespace(JSContext* cx,
+                                                             HandleModuleObject self);
+
+    void setMetaObject(JSObject* obj);
 
     // For BytecodeEmitter.
     bool noteFunctionDeclaration(JSContext* cx, HandleAtom name, HandleFunction fun);
@@ -348,7 +352,6 @@ class MOZ_STACK_CLASS ModuleBuilder
   public:
     explicit ModuleBuilder(JSContext* cx, HandleModuleObject module,
                            const frontend::TokenStreamAnyChars& tokenStream);
-    bool init();
 
     bool processImport(frontend::ParseNode* pn);
     bool processExport(frontend::ParseNode* pn);
@@ -406,6 +409,9 @@ class MOZ_STACK_CLASS ModuleBuilder
     template <typename K, typename V>
     ArrayObject* createArray(const JS::Rooted<GCHashMap<K, V>>& map);
 };
+
+JSObject*
+GetOrCreateModuleMetaObject(JSContext* cx, HandleScript script);
 
 } // namespace js
 

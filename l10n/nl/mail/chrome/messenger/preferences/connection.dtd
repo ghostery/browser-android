@@ -10,7 +10,7 @@
 <!ENTITY  noProxyTypeRadio.label        "Geen proxy">
 <!ENTITY  noProxyTypeRadio.accesskey    "y">
 <!ENTITY  systemTypeRadio.label         "Proxyinstellingen van systeem gebruiken">
-<!ENTITY  systemTypeRadio.accesskey     "u">
+<!ENTITY  systemTypeRadio.accesskey     "b">
 <!ENTITY  WPADTypeRadio.label           "Proxyinstellingen voor dit netwerk automatisch detecteren">
 <!ENTITY  WPADTypeRadio.accesskey       "w">
 <!ENTITY  manualTypeRadio.label         "Handmatige proxyconfiguratie:">
@@ -18,11 +18,11 @@
 <!ENTITY  autoTypeRadio.label           "URL voor automatische proxyconfiguratie:">
 <!ENTITY  autoTypeRadio.accesskey       "a">
 <!ENTITY  reload.label                  "Opnieuw laden">
-<!ENTITY  reload.accesskey              "l">
+<!ENTITY  reload.accesskey              "e">
 <!ENTITY  http.label                    "HTTP-proxy:">
-<!ENTITY  http.accesskey                "H">
+<!ENTITY  http.accesskey                "x">
 <!ENTITY  ssl.label                     "SSL-proxy:">
-<!ENTITY  ssl.accesskey                 "S">
+<!ENTITY  ssl.accesskey                 "L">
 <!ENTITY  socks.label                   "SOCKS-host:">
 <!ENTITY  socks.accesskey               "C">
 <!ENTITY  socks4.label                  "SOCKS v4">
@@ -36,12 +36,17 @@
 <!ENTITY  SOCKSport.label               "Poort:">
 <!ENTITY  SOCKSport.accesskey           "t">
 <!ENTITY  noproxy.label                 "Geen proxy voor:">
-<!ENTITY  noproxy.accesskey             "n">
+<!ENTITY  noproxy.accesskey             "G">
 <!ENTITY  noproxyExplain.label          "Voorbeeld: .mozilla.org, .net.nz, 192.168.1.0/24">
 <!ENTITY  shareproxy.label              "Deze proxyserver voor alle protocollen gebruiken">
-<!ENTITY  shareproxy.accesskey          "x">
+<!ENTITY  shareproxy.accesskey          "s">
 <!ENTITY  autologinproxy.label          "Niet om authenticatie vragen als wachtwoord is opgeslagen">
 <!ENTITY  autologinproxy.accesskey      "i">
 <!ENTITY  autologinproxy.tooltip        "Deze optie authenticeert u automatisch bij proxy’s als u hiervoor referenties hebt opgeslagen. Als authenticatie mislukt, wordt hierom gevraagd.">
 <!ENTITY  socksRemoteDNS.label          "DNS via proxy bij gebruik van SOCKS v5">
 <!ENTITY  socksRemoteDNS.accesskey      "D">
+<!ENTITY  dnsOverHttps.label            "DNS over HTTPS inschakelen">
+<!ENTITY  dnsOverHttps.accesskey        "N">
+<!ENTITY  dnsOverHttpsUrl.label         "URL">
+<!ENTITY  dnsOverHttpsUrl.accesskey     "U">
+<!ENTITY  dnsOverHttpsUrl.tooltip       "URL voor het omzetten van DNS over HTTPS">

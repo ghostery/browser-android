@@ -92,7 +92,7 @@ add_storage_task(async function checkInitializedEmpty(sm) {
   }
   await sm.initialize();
   Assert.strictEqual((await sm.getAccountData()), null);
-  Assert.rejects(sm.updateAccountData({kXCS: "kXCS"}), "No user is logged in");
+  await Assert.rejects(sm.updateAccountData({kXCS: "kXCS"}), /No user is logged in/);
 });
 
 // Initialized with account data (ie, simulating a new user being logged in).
@@ -103,8 +103,8 @@ add_storage_task(async function checkNewUser(sm) {
     email: "someone@somewhere.com",
     kXCS: "kXCS",
     device: {
-      id: "device id"
-    }
+      id: "device id",
+    },
   };
   sm.plainStorage = new MockedPlainStorage();
   if (sm.secureStorage) {
@@ -136,8 +136,8 @@ add_storage_task(async function checkEverythingRead(sm) {
     email: "someone@somewhere.com",
     device: {
       id: "wibble",
-      registrationVersion: null
-    }
+      registrationVersion: null,
+    },
   });
   if (sm.secureStorage) {
     sm.secureStorage = new MockedSecureStorage(null);
@@ -158,8 +158,8 @@ add_storage_task(async function checkEverythingRead(sm) {
     kExtKbHash: "kExtKbHash",
     device: {
       id: "wibble",
-      registrationVersion: DEVICE_REGISTRATION_VERSION
-    }
+      registrationVersion: DEVICE_REGISTRATION_VERSION,
+    },
   });
   accountData = await sm.getAccountData();
   Assert.equal(accountData.kSync, "kSync");
@@ -185,13 +185,14 @@ add_storage_task(async function checkEverythingRead(sm) {
   }
 });
 
-add_storage_task(function checkInvalidUpdates(sm) {
+add_storage_task(async function checkInvalidUpdates(sm) {
   sm.plainStorage = new MockedPlainStorage({uid: "uid", email: "someone@somewhere.com"});
   if (sm.secureStorage) {
     sm.secureStorage = new MockedSecureStorage(null);
   }
-  Assert.rejects(sm.updateAccountData({uid: "another"}), "Can't change");
-  Assert.rejects(sm.updateAccountData({email: "someoneelse"}), "Can't change");
+  await sm.initialize();
+
+  await Assert.rejects(sm.updateAccountData({uid: "another"}), /Can't change uid/);
 });
 
 add_storage_task(async function checkNullUpdatesRemovedUnlocked(sm) {

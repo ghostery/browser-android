@@ -5,8 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 "use strict";
 
-const defer = require("devtools/shared/defer");
-
 loader.lazyRequireGetter(this, "EventEmitter", "devtools/shared/event-emitter");
 
 function PerformancePanel(iframeWindow, toolbox) {
@@ -30,8 +28,6 @@ PerformancePanel.prototype = {
     if (this._opening) {
       return this._opening;
     }
-    let deferred = defer();
-    this._opening = deferred.promise;
 
     this.panelWin.gToolbox = this.toolbox;
     this.panelWin.gTarget = this.target;
@@ -41,7 +37,7 @@ PerformancePanel.prototype = {
     // the same front, and the toolbox will also initialize the front,
     // but redo it here so we can hook into the same event to prevent race conditions
     // in the case of the front still being in the process of opening.
-    let front = await this.panelWin.gToolbox.initPerformance();
+    const front = await this.panelWin.gToolbox.initPerformance();
 
     // This should only happen if this is completely unsupported (when profiler
     // does not exist), and in that case, the tool shouldn't be available,
@@ -51,7 +47,7 @@ PerformancePanel.prototype = {
     }
 
     this.panelWin.gFront = front;
-    let { PerformanceController, EVENTS } = this.panelWin;
+    const { PerformanceController, EVENTS } = this.panelWin;
     PerformanceController.on(EVENTS.RECORDING_ADDED, this._checkRecordingStatus);
     PerformanceController.on(EVENTS.RECORDING_STATE_CHANGE, this._checkRecordingStatus);
     await this.panelWin.startupPerformance();
@@ -64,7 +60,9 @@ PerformancePanel.prototype = {
     this.isReady = true;
     this.emit("ready");
 
-    deferred.resolve(this);
+    this._opening = new Promise(resolve => {
+      resolve(this);
+    });
     return this._opening;
   },
 
@@ -80,7 +78,7 @@ PerformancePanel.prototype = {
       return;
     }
 
-    let { PerformanceController, EVENTS } = this.panelWin;
+    const { PerformanceController, EVENTS } = this.panelWin;
     PerformanceController.off(EVENTS.RECORDING_ADDED, this._checkRecordingStatus);
     PerformanceController.off(EVENTS.RECORDING_STATE_CHANGE, this._checkRecordingStatus);
     await this.panelWin.shutdownPerformance();

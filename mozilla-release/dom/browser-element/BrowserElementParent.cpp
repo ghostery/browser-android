@@ -146,7 +146,7 @@ BrowserElementParent::DispatchOpenWindowEvent(Element* aOpenerFrameElement,
   }
 
   JS::Rooted<JSObject*> global(cx, sgo->GetGlobalJSObject());
-  JSAutoCompartment ac(cx, global);
+  JSAutoRealm ar(cx, global);
   if (!ToJSValue(cx, detail, &val)) {
     MOZ_CRASH("Failed to convert dictionary to JS::Value due to OOM.");
     return BrowserElementParent::OPEN_WINDOW_IGNORED;
@@ -160,7 +160,7 @@ BrowserElementParent::DispatchOpenWindowEvent(Element* aOpenerFrameElement,
                            val, &status);
 
   if (dispatchSucceeded) {
-    if (aPopupFrameElement->IsInUncomposedDoc()) {
+    if (aPopupFrameElement->IsInComposedDoc()) {
       return BrowserElementParent::OPEN_WINDOW_ADDED;
     }
     if (status == nsEventStatus_eConsumeNoDefault) {

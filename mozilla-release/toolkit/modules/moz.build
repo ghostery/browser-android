@@ -8,7 +8,7 @@ with Files('**'):
     BUG_COMPONENT = ('Toolkit', 'General')
 
 with Files('addons/**'):
-    BUG_COMPONENT = ('Toolkit', 'WebExtensions: General')
+    BUG_COMPONENT = ('WebExtensions', 'General')
 
 with Files('docs/**'):
     BUG_COMPONENT = ('Toolkit', 'Async Tooling')
@@ -38,7 +38,7 @@ with Files('tests/xpcshell/test_JSONFile.js'):
     BUG_COMPONENT = ('Toolkit', 'Form Manager')
 
 with Files('tests/xpcshell/test_Match*.js'):
-    BUG_COMPONENT = ('Toolkit', 'WebExtensions: General')
+    BUG_COMPONENT = ('WebExtensions', 'General')
 
 with Files('tests/xpcshell/test_NewTabUtils.js'):
     BUG_COMPONENT = ('Firefox', 'New Tab Page')
@@ -52,6 +52,9 @@ with Files('tests/xpcshell/test_client_id.js'):
 with Files('AsyncPrefs.jsm'):
     BUG_COMPONENT = ('Core', 'Security: Process Sandboxing')
 
+with Files('AutoScrollController.jsm'):
+    BUG_COMPONENT = ('Core', 'Panning and Zooming')
+
 with Files('CharsetMenu.jsm'):
     BUG_COMPONENT = ('Firefox', 'Toolbars and Customization')
 
@@ -62,9 +65,9 @@ with Files('Color.jsm'):
     BUG_COMPONENT = ('Toolkit', 'Find Toolbar')
 
 with Files('Console.jsm'):
-    BUG_COMPONENT = ('Firefox', 'Developer Tools: Console')
+    BUG_COMPONENT = ('DevTools', 'Console')
 
-with Files('DateTimePickerHelper.jsm'):
+with Files('DateTimePicker*.jsm'):
     BUG_COMPONENT = ('Core', 'Layout: Form Controls ')
 
 with Files('DeferredTask.jsm'):
@@ -80,7 +83,7 @@ with Files('FormLikeFactory.jsm'):
     BUG_COMPONENT = ('Toolkit', 'Password Manager')
 
 with Files('IndexedDB.jsm'):
-    BUG_COMPONENT = ('Toolkit', 'WebExtensions: General')
+    BUG_COMPONENT = ('WebExtensions', 'General')
 
 with Files('InlineSpellChecker*.jsm'):
     BUG_COMPONENT = ('Core', 'Spell Checker')
@@ -93,9 +96,6 @@ with Files('JSONFile.jsm'):
 
 with Files('LightweightThemeConsumer.jsm'):
     BUG_COMPONENT = ('Firefox', 'Toolbars and Customization')
-
-with Files('Memory.jsm'):
-    BUG_COMPONENT = ('Core', 'DOM: Content Processes')
 
 with Files('NLP.jsm'):
     BUG_COMPONENT = ('Toolkit', 'Find Toolbar')
@@ -126,9 +126,6 @@ with Files('Promise*.jsm'):
 
 with Files('RemoteController.js'):
     BUG_COMPONENT = ('Core', 'Widget')
-
-with Files('RemoteFinder.jsm'):
-    BUG_COMPONENT = ('Toolkit', 'Find Toolbar')
 
 with Files('RemoteSecurityUI.jsm'):
     BUG_COMPONENT = ('Firefox', 'Tabbed Browser')
@@ -169,7 +166,11 @@ with Files('docs/**'):
     SCHEDULES.exclusive = ['docs']
 
 EXTRA_JS_MODULES += [
+    'ActorChild.jsm',
+    'ActorManagerChild.jsm',
+    'ActorManagerParent.jsm',
     'addons/MatchURLFilters.jsm',
+    'addons/SecurityInfo.jsm',
     'addons/WebNavigation.jsm',
     'addons/WebNavigationContent.js',
     'addons/WebNavigationFrames.jsm',
@@ -179,6 +180,8 @@ EXTRA_JS_MODULES += [
     'addons/WebRequestUpload.jsm',
     'AppMenuNotifications.jsm',
     'AsyncPrefs.jsm',
+    'AutoCompletePopupContent.jsm',
+    'AutoScrollController.jsm',
     'Battery.jsm',
     'BinarySearch.jsm',
     'BrowserUtils.jsm',
@@ -188,16 +191,19 @@ EXTRA_JS_MODULES += [
     'ClientID.jsm',
     'Color.jsm',
     'Console.jsm',
+    'CreditCard.jsm',
     'css-selector.js',
-    'DateTimePickerHelper.jsm',
+    'DateTimePickerParent.jsm',
     'DeferredTask.jsm',
     'Deprecated.jsm',
     'E10SUtils.jsm',
     'EventEmitter.jsm',
     'FileUtils.jsm',
+    'FindBarContent.jsm',
     'Finder.jsm',
     'FinderHighlighter.jsm',
     'FinderIterator.jsm',
+    'FinderParent.jsm',
     'FormLikeFactory.jsm',
     'Geometry.jsm',
     'GMPExtractorWorker.js',
@@ -210,7 +216,6 @@ EXTRA_JS_MODULES += [
     'Integration.jsm',
     'JSONFile.jsm',
     'Log.jsm',
-    'Memory.jsm',
     'NewTabUtils.jsm',
     'NLP.jsm',
     'ObjectUtils.jsm',
@@ -227,15 +232,10 @@ EXTRA_JS_MODULES += [
     'PromiseMessage.jsm',
     'PromiseUtils.jsm',
     'RemoteController.js',
-    'RemoteFinder.jsm',
-    'RemotePageManager.jsm',
     'RemoteSecurityUI.jsm',
     'RemoteWebProgress.jsm',
     'ResetProfile.jsm',
     'ResponsivenessMonitor.jsm',
-    'secondscreen/RokuApp.jsm',
-    'secondscreen/SimpleServiceDiscovery.jsm',
-    'SelectContentHelper.jsm',
     'SelectParentHelper.jsm',
     'ServiceRequest.jsm',
     'Services.jsm',
@@ -248,6 +248,7 @@ EXTRA_JS_MODULES += [
     'Troubleshoot.jsm',
     'UpdateUtils.jsm',
     'WebChannel.jsm',
+    'WebProgressChild.jsm',
     'WindowDraggingUtils.jsm',
     'ZipUtils.jsm',
 ]
@@ -285,6 +286,10 @@ if 'Android' != CONFIG['OS_TARGET']:
     ]
 else:
     DEFINES['ANDROID'] = True
+    EXTRA_JS_MODULES += [
+        'secondscreen/RokuApp.jsm',
+        'secondscreen/SimpleServiceDiscovery.jsm',
+    ]
 
 
 if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
@@ -314,6 +319,8 @@ for var in ('ANDROID_PACKAGE_NAME',
 
 for var in ('MOZ_TOOLKIT_SEARCH',
             'MOZ_SYSTEM_NSS',
+            'MOZ_UNSIGNED_APP_SCOPE',
+            'MOZ_UNSIGNED_SYSTEM_SCOPE',
             'MOZ_UPDATER',
             'MOZ_ANDROID_MOZILLA_ONLINE',
             'MOZ_SWITCHBOARD'):

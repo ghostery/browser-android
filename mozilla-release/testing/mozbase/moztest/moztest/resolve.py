@@ -22,6 +22,17 @@ here = os.path.abspath(os.path.dirname(__file__))
 MOCHITEST_CHUNK_BY_DIR = 4
 MOCHITEST_TOTAL_CHUNKS = 5
 
+
+def WebglSuite(name):
+    return {
+        'aliases': (name,),
+        'mach_command': 'mochitest',
+        'kwargs': {'flavor': 'plain', 'subsuite': name, 'test_paths': None},
+        'task_regex': ['mochitest-' + name + '(?:-e10s)?(?:-1)?$',
+                       'test-verify(?:-gpu)?(?:-e10s)?(?:-1)?$'],
+    }
+
+
 TEST_SUITES = {
     'cppunittest': {
         'aliases': ('cpp',),
@@ -63,62 +74,69 @@ TEST_SUITES = {
         'aliases': ('a11y', 'ally'),
         'mach_command': 'mochitest',
         'kwargs': {'flavor': 'a11y', 'test_paths': None},
-        'task_regex': 'mochitest-a11y(?:-1)?$',
+        'task_regex': ['mochitest-a11y(?:-1)?$',
+                       'test-verify(?:-e10s)?(?:-1)?$'],
     },
     'mochitest-browser': {
         'aliases': ('bc', 'browser-chrome'),
         'mach_command': 'mochitest',
         'kwargs': {'flavor': 'browser-chrome', 'test_paths': None},
-        'task_regex': 'mochitest-browser-chrome(?:-e10s)?(?:-1)?$',
+        'task_regex': ['mochitest-browser-chrome(?:-e10s)?(?:-1)?$',
+                       'test-verify(?:-e10s)?(?:-1)?$'],
     },
     'mochitest-chrome': {
         'aliases': ('mc',),
         'mach_command': 'mochitest',
         'kwargs': {'flavor': 'chrome', 'test_paths': None},
-        'task_regex': 'mochitest-chrome(?:-e10s)?(?:-1)?$',
+        'task_regex': ['mochitest-chrome(?:-e10s)?(?:-1)?$',
+                       'test-verify(?:-e10s)?(?:-1)?$'],
     },
     'mochitest-clipboard': {
         'aliases': ('cl', 'clipboard',),
         'mach_command': 'mochitest',
         'kwargs': {'subsuite': 'clipboard', 'test_paths': None},
-        'task_regex': 'mochitest-clipboard(?:-e10s)?(?:-1)?$',
+        'task_regex': ['mochitest-clipboard(?:-e10s)?(?:-1)?$',
+                       'test-verify(?:-e10s)?(?:-1)?$'],
     },
     'mochitest-devtools': {
         'aliases': ('dt', 'devtools-chrome'),
         'mach_command': 'mochitest',
         'kwargs': {'flavor': 'browser-chrome', 'subsuite': 'devtools', 'test_paths': None},
-        'task_regex': 'mochitest-devtools-chrome(?:-e10s)?(?:-1)?$',
+        'task_regex': ['mochitest-devtools-chrome(?:-e10s)?(?:-1)?$',
+                       'test-verify(?:-e10s)?(?:-1)?$'],
     },
     'mochitest-gpu': {
         'aliases': ('gpu',),
         'mach_command': 'mochitest',
         'kwargs': {'subsuite': 'gpu', 'test_paths': None},
-        'task_regex': 'mochitest-gpu(?:-e10s)?(?:-1)?$',
+        'task_regex': ['mochitest-gpu(?:-e10s)?(?:-1)?$',
+                       'test-verify(?:-gpu)?(?:-e10s)?(?:-1)?$'],
     },
     'mochitest-media': {
         'aliases': ('mpm', 'plain-media'),
         'mach_command': 'mochitest',
         'kwargs': {'flavor': 'plain', 'subsuite': 'media', 'test_paths': None},
-        'task_regex': 'mochitest-media(?:-e10s)?(?:-1)?$',
+        'task_regex': ['mochitest-media(?:-e10s)?(?:-1)?$',
+                       'test-verify(?:-e10s)?(?:-1)?$'],
     },
     'mochitest-plain': {
         'aliases': ('mp', 'plain',),
         'mach_command': 'mochitest',
         'kwargs': {'flavor': 'plain', 'test_paths': None},
-        'task_regex': 'mochitest(?:-e10s)?(?:-1)?$',
+        'task_regex': ['mochitest(?:-e10s)?(?:-1)?$',
+                       'test-verify(?:-e10s)?(?:-1)?$'],
     },
     'mochitest-screenshots': {
         'aliases': ('ss', 'screenshots-chrome'),
         'mach_command': 'mochitest',
         'kwargs': {'flavor': 'browser-chrome', 'subsuite': 'screenshots', 'test_paths': None},
-        'task_regex': 'browser-screenshots(?:-e10s)?(?:-1)?$',
+        'task_regex': ['browser-screenshots(?:-e10s)?(?:-1)?$'],
     },
-    'mochitest-webgl': {
-        'aliases': ('webgl',),
-        'mach_command': 'mochitest',
-        'kwargs': {'flavor': 'plain', 'subsuite': 'webgl', 'test_paths': None},
-        'task_regex': 'mochitest-webgl(?:-e10s)?(?:-1)?$',
-    },
+    'mochitest-webgl1-core': WebglSuite('webgl1-core'),
+    'mochitest-webgl1-ext': WebglSuite('webgl1-ext'),
+    'mochitest-webgl2-core': WebglSuite('webgl2-core'),
+    'mochitest-webgl2-ext': WebglSuite('webgl2-ext'),
+    'mochitest-webgl2-deqp': WebglSuite('webgl2-deqp'),
     'python': {
         'mach_command': 'python-test',
         'kwargs': {'tests': None},
@@ -127,18 +145,20 @@ TEST_SUITES = {
         'aliases': ('rr',),
         'mach_command': 'reftest',
         'kwargs': {'tests': None},
-        'task_regex': '(opt|debug)-reftest(?:-no-accel|-gpu|-stylo)?(?:-e10s)?(?:-1)?$',
+        'task_regex': ['(opt|debug)-reftest(?:-no-accel|-gpu|-stylo)?(?:-e10s)?(?:-1)?$',
+                       'test-verify-gpu(?:-e10s)?(?:-1)?$'],
     },
     'robocop': {
         'mach_command': 'robocop',
         'kwargs': {'test_paths': None},
-        'task_regex': 'robocop(?:-e10s)?(?:-1)?$',
+        'task_regex': ['robocop(?:-e10s)?(?:-1)?$'],
     },
     'web-platform-tests': {
         'aliases': ('wpt',),
         'mach_command': 'web-platform-tests',
         'kwargs': {'include': []},
-        'task_regex': 'web-platform-tests(?:-reftests|-wdspec)?(?:-e10s)?(?:-1)?$',
+        'task_regex': ['web-platform-tests(?:-reftests|-wdspec)?(?:-e10s)?(?:-1)?$',
+                       'test-verify-wpt-e10s'],
     },
     'valgrind': {
         'aliases': ('v',),
@@ -149,7 +169,7 @@ TEST_SUITES = {
         'aliases': ('x',),
         'mach_command': 'xpcshell-test',
         'kwargs': {'test_file': 'all'},
-        'task_regex': 'xpcshell(?:-1)?$',
+        'task_regex': ['xpcshell(?:-1)?$', 'test-verify(?:-1)?$'],
     },
 }
 
@@ -194,7 +214,11 @@ _test_subsuites = {
     ('mochitest', 'gpu'): 'mochitest-gpu',
     ('mochitest', 'media'): 'mochitest-media',
     ('mochitest', 'robocop'): 'robocop',
-    ('mochitest', 'webgl'): 'mochitest-webgl',
+    ('mochitest', 'webgl1-core'): 'mochitest-webgl1-core',
+    ('mochitest', 'webgl1-ext'): 'mochitest-webgl1-ext',
+    ('mochitest', 'webgl2-core'): 'mochitest-webgl2-core',
+    ('mochitest', 'webgl2-ext'): 'mochitest-webgl2-ext',
+    ('mochitest', 'webgl2-deqp'): 'mochitest-webgl2-deqp',
 }
 
 

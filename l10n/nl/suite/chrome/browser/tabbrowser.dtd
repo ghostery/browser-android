@@ -17,6 +17,6 @@
 <!ENTITY  bookmarkGroup.accesskey  "B">
 <!ENTITY  closeTabButton.tooltip   "Huidige tabblad sluiten">
 <!ENTITY  newTabButton.tooltip   "Een nieuw tabblad openen">
-<!ENTITY  listAllTabs.tooltip    "Alle tabbladtitels weergeven">
+<!ENTITY  listAllTabs.tooltip    "Alle tabbladtitels tonen">
 <!ENTITY  undoCloseTab.label    "Tabblad sluiten ongedaan maken">
 <!ENTITY  undoCloseTab.accesskey  "o">

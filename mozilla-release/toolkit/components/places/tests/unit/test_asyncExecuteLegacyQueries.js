@@ -14,8 +14,7 @@ add_task(async function test_history_query() {
   let query = PlacesUtils.history.getNewQuery();
 
   return new Promise(resolve => {
-    PlacesUtils.history.QueryInterface(Ci.nsPIPlacesDatabase)
-                       .asyncExecuteLegacyQuery(query, options, {
+    PlacesUtils.history.asyncExecuteLegacyQuery(query, options, {
       handleResult(aResultSet) {
         for (let row; (row = aResultSet.getNextRow());) {
           try {
@@ -46,13 +45,12 @@ add_task(async function test_bookmarks_query() {
   });
 
   let options = PlacesUtils.history.getNewQueryOptions();
-  options.sortingMode = Ci.nsINavHistoryQueryOptions.SORT_BY_LASMODIFIED_DESCENDING;
+  options.sortingMode = Ci.nsINavHistoryQueryOptions.SORT_BY_LASTMODIFIED_DESCENDING;
   options.queryType = options.QUERY_TYPE_BOOKMARKS;
   let query = PlacesUtils.history.getNewQuery();
 
   return new Promise(resolve => {
-    PlacesUtils.history.QueryInterface(Ci.nsPIPlacesDatabase)
-                       .asyncExecuteLegacyQuery(query, options, {
+    PlacesUtils.history.asyncExecuteLegacyQuery(query, options, {
       handleResult(aResultSet) {
         for (let row; (row = aResultSet.getNextRow());) {
           try {
@@ -76,6 +74,6 @@ add_task(async function test_bookmarks_query() {
 function cleanupTest() {
   return Promise.all([
     PlacesUtils.history.clear(),
-    PlacesUtils.bookmarks.eraseEverything()
+    PlacesUtils.bookmarks.eraseEverything(),
   ]);
 }

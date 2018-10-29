@@ -21,6 +21,7 @@
 #include "nsIObserverService.h"
 #include "nsICacheStorageVisitor.h"
 #include "nsISizeOf.h"
+#include "mozilla/net/MozURL.h"
 #include "mozilla/Telemetry.h"
 #include "mozilla/DebugOnly.h"
 #include "mozilla/Services.h"
@@ -52,10 +53,11 @@ namespace net {
 #define kSmartSizeUpdateInterval 60000 // in milliseconds
 
 #ifdef ANDROID
-const uint32_t kMaxCacheSizeKB = 200*1024; // 200 MB
+const uint32_t kMaxCacheSizeKB = 512*1024; // 512 MB
 #else
-const uint32_t kMaxCacheSizeKB = 350*1024; // 350 MB
+const uint32_t kMaxCacheSizeKB = 1024*1024; // 1 GB
 #endif
+const uint32_t kMaxClearOnShutdownCacheSizeKB = 150*1024; // 150 MB
 
 bool
 CacheFileHandle::DispatchRelease()
@@ -93,7 +95,7 @@ CacheFileHandle::Release()
   MOZ_ASSERT(CacheFileIOManager::IsOnIOThreadOrCeased());
 
   LOG(("CacheFileHandle::Release() [this=%p, refcnt=%" PRIuPTR "]", this, mRefCnt.get()));
-  NS_PRECONDITION(0 != mRefCnt, "dup release");
+  MOZ_ASSERT(0 != mRefCnt, "dup release");
   count = --mRefCnt;
   NS_LOG_RELEASE(this, count, "CacheFileHandle");
 
@@ -1064,6 +1066,11 @@ public:
     , mHasHasAltData(false)
     , mHasOnStartTime(false)
     , mHasOnStopTime(false)
+    , mFrecency(0)
+    , mExpirationTime(0)
+    , mHasAltData(false)
+    , mOnStartTime(0)
+    , mOnStopTime(0)
   {
     if (aFrecency) {
       mHasFrecency = true;
@@ -3002,7 +3009,7 @@ CacheFileIOManager::OverLimitEvictionInternal()
     }
   }
 
-  NS_NOTREACHED("We should never get here");
+  MOZ_ASSERT_UNREACHABLE("We should never get here");
   return NS_OK;
 }
 
@@ -3128,7 +3135,9 @@ CacheFileIOManager::EvictAllInternal()
 
 // static
 nsresult
-CacheFileIOManager::EvictByContext(nsILoadContextInfo *aLoadContextInfo, bool aPinned)
+CacheFileIOManager::EvictByContext(nsILoadContextInfo *aLoadContextInfo,
+                                   bool aPinned,
+                                   const nsAString& aOrigin)
 {
   LOG(("CacheFileIOManager::EvictByContext() [loadContextInfo=%p]",
        aLoadContextInfo));
@@ -3141,12 +3150,13 @@ CacheFileIOManager::EvictByContext(nsILoadContextInfo *aLoadContextInfo, bool aP
   }
 
   nsCOMPtr<nsIRunnable> ev;
-  ev = NewRunnableMethod<nsCOMPtr<nsILoadContextInfo>, bool>(
+  ev = NewRunnableMethod<nsCOMPtr<nsILoadContextInfo>, bool, nsString>(
     "net::CacheFileIOManager::EvictByContextInternal",
     ioMan,
     &CacheFileIOManager::EvictByContextInternal,
     aLoadContextInfo,
-    aPinned);
+    aPinned,
+    aOrigin);
 
   rv = ioMan->mIOThread->DispatchAfterPendingOpens(ev);
   if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -3157,7 +3167,9 @@ CacheFileIOManager::EvictByContext(nsILoadContextInfo *aLoadContextInfo, bool aP
 }
 
 nsresult
-CacheFileIOManager::EvictByContextInternal(nsILoadContextInfo *aLoadContextInfo, bool aPinned)
+CacheFileIOManager::EvictByContextInternal(nsILoadContextInfo *aLoadContextInfo,
+                                           bool aPinned,
+                                           const nsAString& aOrigin)
 {
   LOG(("CacheFileIOManager::EvictByContextInternal() [loadContextInfo=%p, pinned=%d]",
       aLoadContextInfo, aPinned));
@@ -3200,6 +3212,8 @@ CacheFileIOManager::EvictByContextInternal(nsILoadContextInfo *aLoadContextInfo,
     }
   }
 
+  NS_ConvertUTF16toUTF8 origin(aOrigin);
+
   // Doom all active handles that matches the load context
   nsTArray<RefPtr<CacheFileHandle> > handles;
   mHandles.GetActiveHandles(&handles);
@@ -3207,18 +3221,30 @@ CacheFileIOManager::EvictByContextInternal(nsILoadContextInfo *aLoadContextInfo,
   for (uint32_t i = 0; i < handles.Length(); ++i) {
     CacheFileHandle* handle = handles[i];
 
-    if (aLoadContextInfo) {
-      bool equals;
-      rv = CacheFileUtils::KeyMatchesLoadContextInfo(handle->Key(),
-                                                     aLoadContextInfo,
-                                                     &equals);
+    nsAutoCString uriSpec;
+    RefPtr<nsILoadContextInfo> info =
+      CacheFileUtils::ParseKey(handle->Key(), nullptr, &uriSpec);
+    if (!info) {
+      LOG(("CacheFileIOManager::EvictByContextInternal() - Cannot parse key in "
+           "handle! [handle=%p, key=%s]", handle, handle->Key().get()));
+      MOZ_CRASH("Unexpected error!");
+    }
+
+    if (aLoadContextInfo && !info->Equals(aLoadContextInfo)) {
+      continue;
+    }
+
+    if (!origin.IsEmpty()) {
+      RefPtr<MozURL> url;
+      rv = MozURL::Init(getter_AddRefs(url), uriSpec);
       if (NS_FAILED(rv)) {
-        LOG(("CacheFileIOManager::EvictByContextInternal() - Cannot parse key in "
-             "handle! [handle=%p, key=%s]", handle, handle->Key().get()));
-        MOZ_CRASH("Unexpected error!");
+        continue;
       }
 
-      if (!equals) {
+      nsAutoCString urlOrigin;
+      url->Origin(urlOrigin);
+
+      if (!urlOrigin.Equals(origin)) {
         continue;
       }
     }
@@ -3244,7 +3270,7 @@ CacheFileIOManager::EvictByContextInternal(nsILoadContextInfo *aLoadContextInfo,
     mContextEvictor->Init(mCacheDirectory);
   }
 
-  mContextEvictor->AddContext(aLoadContextInfo, aPinned);
+  mContextEvictor->AddContext(aLoadContextInfo, aPinned, aOrigin);
 
   return NS_OK;
 }
@@ -3496,12 +3522,8 @@ CacheFileIOManager::RemoveTrashInternal()
       }
       NS_ENSURE_SUCCESS(rv, rv);
 
-      nsCOMPtr<nsISimpleEnumerator> enumerator;
-      rv = mTrashDir->GetDirectoryEntries(getter_AddRefs(enumerator));
-      if (NS_SUCCEEDED(rv)) {
-        mTrashDirEnumerator = do_QueryInterface(enumerator, &rv);
-        NS_ENSURE_SUCCESS(rv, rv);
-      }
+      rv = mTrashDir->GetDirectoryEntries(getter_AddRefs(mTrashDirEnumerator));
+      NS_ENSURE_SUCCESS(rv, rv);
 
       continue; // check elapsed time
     }
@@ -3546,7 +3568,7 @@ CacheFileIOManager::RemoveTrashInternal()
     file->Remove(isDir);
   }
 
-  NS_NOTREACHED("We should never get here");
+  MOZ_ASSERT_UNREACHABLE("We should never get here");
   return NS_OK;
 }
 
@@ -3561,24 +3583,12 @@ CacheFileIOManager::FindTrashDirToRemove()
   // remove all cache files.
   MOZ_ASSERT(mIOThread->IsCurrentThread() || mShuttingDown);
 
-  nsCOMPtr<nsISimpleEnumerator> iter;
+  nsCOMPtr<nsIDirectoryEnumerator> iter;
   rv = mCacheDirectory->GetDirectoryEntries(getter_AddRefs(iter));
   NS_ENSURE_SUCCESS(rv, rv);
 
-  bool more;
-  nsCOMPtr<nsISupports> elem;
-
-  while (NS_SUCCEEDED(iter->HasMoreElements(&more)) && more) {
-    rv = iter->GetNext(getter_AddRefs(elem));
-    if (NS_FAILED(rv)) {
-      continue;
-    }
-
-    nsCOMPtr<nsIFile> file = do_QueryInterface(elem);
-    if (!file) {
-      continue;
-    }
-
+  nsCOMPtr<nsIFile> file;
+  while (NS_SUCCEEDED(iter->GetNextFile(getter_AddRefs(file))) && file) {
     bool isDir = false;
     file->IsDirectory(&isDir);
     if (!isDir) {
@@ -3844,7 +3854,7 @@ CacheFileIOManager::IsEmptyDirectory(nsIFile *aFile, bool *_retval)
 
   nsresult rv;
 
-  nsCOMPtr<nsISimpleEnumerator> enumerator;
+  nsCOMPtr<nsIDirectoryEnumerator> enumerator;
   rv = aFile->GetDirectoryEntries(getter_AddRefs(enumerator));
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -4184,10 +4194,16 @@ CacheFileIOManager::SyncRemoveAllCacheFiles()
 static uint32_t
 SmartCacheSize(const uint32_t availKB)
 {
-  uint32_t maxSize = kMaxCacheSizeKB;
+  uint32_t maxSize;
 
-  if (availKB > 100 * 1024 * 1024) {
-    return maxSize;  // skip computing if we're over 100 GB
+  if (CacheObserver::ClearCacheOnShutdown()) {
+    maxSize = kMaxClearOnShutdownCacheSizeKB;
+  } else {
+    maxSize = kMaxCacheSizeKB;
+  }
+
+  if (availKB > 25 * 1024 * 1024) {
+    return maxSize;  // skip computing if we're over 25 GB
   }
 
   // Grow/shrink in 10 MB units, deliberately, so that in the common case we
@@ -4196,19 +4212,14 @@ SmartCacheSize(const uint32_t availKB)
   uint32_t sz10MBs = 0;
   uint32_t avail10MBs = availKB / (1024*10);
 
-  // .5% of space above 25 GB
-  if (avail10MBs > 2500) {
-    sz10MBs += static_cast<uint32_t>((avail10MBs - 2500)*.005);
-    avail10MBs = 2500;
-  }
-  // 1% of space between 7GB -> 25 GB
+  // 2.5% of space above 7GB
   if (avail10MBs > 700) {
-    sz10MBs += static_cast<uint32_t>((avail10MBs - 700)*.01);
+    sz10MBs += static_cast<uint32_t>((avail10MBs - 700)*.025);
     avail10MBs = 700;
   }
-  // 5% of space between 500 MB -> 7 GB
+  // 7.5% of space between 500 MB -> 7 GB
   if (avail10MBs > 50) {
-    sz10MBs += static_cast<uint32_t>((avail10MBs - 50)*.05);
+    sz10MBs += static_cast<uint32_t>((avail10MBs - 50)*.075);
     avail10MBs = 50;
   }
 
@@ -4217,11 +4228,11 @@ SmartCacheSize(const uint32_t availKB)
   // device owners may be sensitive to storage footprint: Use a smaller
   // percentage of available space and a smaller minimum.
 
-  // 20% of space up to 500 MB (10 MB min)
-  sz10MBs += std::max<uint32_t>(1, static_cast<uint32_t>(avail10MBs * .2));
+  // 16% of space up to 500 MB (10 MB min)
+  sz10MBs += std::max<uint32_t>(1, static_cast<uint32_t>(avail10MBs * .16));
 #else
-  // 40% of space up to 500 MB (50 MB min)
-  sz10MBs += std::max<uint32_t>(5, static_cast<uint32_t>(avail10MBs * .4));
+  // 30% of space up to 500 MB (50 MB min)
+  sz10MBs += std::max<uint32_t>(5, static_cast<uint32_t>(avail10MBs * .3));
 #endif
 
   return std::min<uint32_t>(maxSize, sz10MBs * 10 * 1024);
@@ -4293,9 +4304,11 @@ public:
                         nsTArray<CacheFileHandle*> const& specialHandles)
     : Runnable("net::SizeOfHandlesRunnable")
     , mMonitor("SizeOfHandlesRunnable.mMonitor")
+    , mMonitorNotified(false)
     , mMallocSizeOf(mallocSizeOf)
     , mHandles(handles)
     , mSpecialHandles(specialHandles)
+    , mSize(0)
   {
   }
 

@@ -376,7 +376,7 @@ nsTableRowGroupFrame::ReflowChildren(nsPresContext*         aPresContext,
     nsTableRowFrame *rowFrame = do_QueryFrame(kidFrame);
     if (!rowFrame) {
       // XXXldb nsCSSFrameConstructor needs to enforce this!
-      NS_NOTREACHED("yikes, a non-row child");
+      MOZ_ASSERT_UNREACHABLE("yikes, a non-row child");
       continue;
     }
     nscoord cellSpacingB = tableFrame->GetRowSpacing(rowFrame->GetRowIndex());
@@ -391,10 +391,7 @@ nsTableRowGroupFrame::ReflowChildren(nsPresContext*         aPresContext,
       LogicalRect oldKidRect = kidFrame->GetLogicalRect(wm, containerSize);
       nsRect oldKidVisualOverflow = kidFrame->GetVisualOverflowRect();
 
-      // XXXldb We used to only pass aDesiredSize.mFlags through for the
-      // incremental reflow codepath.
-      ReflowOutput desiredSize(aReflowInput.reflowInput,
-                                      aDesiredSize.mFlags);
+      ReflowOutput desiredSize(aReflowInput.reflowInput);
       desiredSize.ClearSize();
 
       // Reflow the child into the available space, giving it as much bsize as
@@ -1066,8 +1063,8 @@ nsTableRowGroupFrame::UndoContinuedRow(nsPresContext*   aPresContext,
 
   // rowBefore was the prev-sibling of aRow's next-sibling before aRow was created
   nsTableRowFrame* rowBefore = (nsTableRowFrame*)aRow->GetPrevInFlow();
-  NS_PRECONDITION(mFrames.ContainsFrame(rowBefore),
-                  "rowBefore not in our frame list?");
+  MOZ_ASSERT(mFrames.ContainsFrame(rowBefore),
+             "rowBefore not in our frame list?");
 
   AutoFrameListPtr overflows(aPresContext, StealOverflowFrames());
   if (!rowBefore || !overflows || overflows->IsEmpty() ||
@@ -1105,7 +1102,7 @@ nsTableRowGroupFrame::SplitRowGroup(nsPresContext*           aPresContext,
                                     nsReflowStatus&          aStatus,
                                     bool                     aRowForcedPageBreak)
 {
-  NS_PRECONDITION(aPresContext->IsPaginated(), "SplitRowGroup currently supports only paged media");
+  MOZ_ASSERT(aPresContext->IsPaginated(), "SplitRowGroup currently supports only paged media");
 
   nsTableRowFrame* prevRowFrame = nullptr;
   aDesiredSize.Height() = 0;

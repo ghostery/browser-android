@@ -69,17 +69,17 @@ public:
   virtual nsINode* GetNode() const override { return mDocumentNode; }
   nsIDocument* DocumentNode() const { return mDocumentNode; }
 
-  virtual mozilla::a11y::ENameValueFlag Name(nsString& aName) override;
+  virtual mozilla::a11y::ENameValueFlag Name(nsString& aName) const override;
   virtual void Description(nsString& aDescription) override;
   virtual Accessible* FocusedChild() override;
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual uint64_t NativeState() override;
+  virtual mozilla::a11y::role NativeRole() const override;
+  virtual uint64_t NativeState() const override;
   virtual uint64_t NativeInteractiveState() const override;
   virtual bool NativelyUnavailable() const override;
   virtual void ApplyARIAState(uint64_t* aState) const override;
   virtual already_AddRefed<nsIPersistentProperties> Attributes() override;
 
-  virtual void TakeFocus() override;
+  virtual void TakeFocus() const override;
 
 #ifdef A11Y_LOG
   virtual nsresult HandleAccEvent(AccEvent* aEvent) override;
@@ -278,7 +278,12 @@ public:
    * Return an accessible for the given DOM node or container accessible if
    * the node is not accessible.
    */
-  Accessible* GetAccessibleOrContainer(nsINode* aNode) const;
+  enum {
+    eIgnoreARIAHidden = 0,
+    eNoContainerIfARIAHidden = 1
+  };
+  Accessible* GetAccessibleOrContainer(nsINode* aNode,
+                                       int aARIAHiddenFlag = eIgnoreARIAHidden) const;
 
   /**
    * Return a container accessible for the given DOM node.
@@ -292,7 +297,8 @@ public:
    * Return an accessible for the given node if any, or an immediate accessible
    * container for it.
    */
-  Accessible* AccessibleOrTrueContainer(nsINode* aNode) const;
+  Accessible* AccessibleOrTrueContainer(nsINode* aNode,
+                                        int aARIAHiddenFlag = eIgnoreARIAHidden) const;
 
   /**
    * Return an accessible for the given node or its first accessible descendant.
@@ -576,6 +582,8 @@ protected:
    */
   static void ScrollTimerCallback(nsITimer* aTimer, void* aClosure);
 
+  void DispatchScrollingEvent(uint32_t aEventType);
+
 protected:
 
   /**
@@ -597,8 +605,9 @@ protected:
     mNodeToAccessibleMap;
 
   nsIDocument* mDocumentNode;
-    nsCOMPtr<nsITimer> mScrollWatchTimer;
-    uint16_t mScrollPositionChangedTicks; // Used for tracking scroll events
+  nsCOMPtr<nsITimer> mScrollWatchTimer;
+  uint16_t mScrollPositionChangedTicks; // Used for tracking scroll events
+  TimeStamp mLastScrollingDispatch;
 
   /**
    * Bit mask of document load states (@see LoadState).

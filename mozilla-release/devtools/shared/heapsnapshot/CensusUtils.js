@@ -80,6 +80,14 @@ EDGES.internalType = function(breakdown, report) {
   }));
 };
 
+EDGES.descriptiveType = function(breakdown, report) {
+  return Object.keys(report).map(key => ({
+    edge: key,
+    referent: report[key],
+    breakdown: breakdown.then
+  }));
+};
+
 EDGES.objectClass = function(breakdown, report) {
   return Object.keys(report).map(key => ({
     edge: key,
@@ -94,6 +102,7 @@ EDGES.coarseType = function(breakdown, report) {
     { edge: "scripts", referent: report.scripts, breakdown: breakdown.scripts },
     { edge: "strings", referent: report.strings, breakdown: breakdown.strings },
     { edge: "other", referent: report.other, breakdown: breakdown.other },
+    { edge: "domNode", referent: report.domNode, breakdown: breakdown.domNode },
   ];
 };
 
@@ -141,7 +150,7 @@ function recursiveWalk(breakdown, edge, report, visitor) {
     visitor.exit(breakdown, report, edge);
   } else {
     visitor.enter(breakdown, report, edge);
-    for (let { edge: ed, referent, breakdown: subBreakdown }
+    for (const { edge: ed, referent, breakdown: subBreakdown }
       of getReportEdges(breakdown, report)) {
       recursiveWalk(subBreakdown, ed, referent, visitor);
     }
@@ -273,7 +282,7 @@ DiffVisitor.prototype.exit = function(breakdown, report, edge) {
       .map(e => e.edge)
       .filter(e => !visited.has(e));
     const results = this._resultsStack[this._resultsStack.length - 1];
-    for (let edg of unvisited) {
+    for (const edg of unvisited) {
       this._set(results, edg, this._get(other, edg));
     }
   }

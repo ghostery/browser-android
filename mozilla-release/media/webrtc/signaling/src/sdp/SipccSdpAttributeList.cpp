@@ -786,7 +786,7 @@ SipccSdpAttributeList::LoadFmtp(sdp_t* sdp, uint16_t level)
       }
     }
 
-    fmtps->PushEntry(osPayloadType.str(), Move(parameters));
+    fmtps->PushEntry(osPayloadType.str(), std::move(parameters));
   }
 
   if (!fmtps->mFmtps.empty()) {
@@ -1428,12 +1428,6 @@ SipccSdpAttributeList::GetSsrc() const
   }
   const SdpAttribute* attr = GetAttribute(SdpAttribute::kSsrcAttribute);
   return *static_cast<const SdpSsrcAttributeList*>(attr);
-}
-
-const SdpSsrcGroupAttributeList&
-SipccSdpAttributeList::GetSsrcGroup() const
-{
-  MOZ_CRASH("Not yet implemented");
 }
 
 void

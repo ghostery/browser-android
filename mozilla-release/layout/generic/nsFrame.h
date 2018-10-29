@@ -20,6 +20,10 @@
 #include "nsHTMLParts.h"
 #include "nsISelectionDisplay.h"
 
+namespace mozilla {
+enum class TableSelection : uint32_t;
+} // namespace mozilla
+
 /**
  * nsFrame logging constants. We redefine the nspr
  * PRLogModuleInfo.level field to be a bitfield.  Each bit controls a
@@ -622,6 +626,12 @@ public:
       return true;
     }
 
+    // contain: paint, which we should interpret as -moz-hidden-unscrollable
+    // by default.
+    if (aDisp->IsContainPaint()) {
+      return true;
+    }
+
     // and overflow:hidden that we should interpret as -moz-hidden-unscrollable
     if (aDisp->mOverflowX == NS_STYLE_OVERFLOW_HIDDEN &&
         aDisp->mOverflowY == NS_STYLE_OVERFLOW_HIDDEN) {
@@ -667,15 +677,15 @@ protected:
   //   of the enclosing cell or table (if not inside a cell)
   //  aTarget tells us what table element to select (currently only cell and table supported)
   //  (enums for this are defined in nsIFrame.h)
-  NS_IMETHOD GetDataForTableSelection(const nsFrameSelection* aFrameSelection,
-                                      nsIPresShell* aPresShell,
-                                      mozilla::WidgetMouseEvent* aMouseEvent,
-                                      nsIContent** aParentContent,
-                                      int32_t* aContentOffset,
-                                      int32_t* aTarget);
+  nsresult GetDataForTableSelection(const nsFrameSelection* aFrameSelection,
+                                    nsIPresShell* aPresShell,
+                                    mozilla::WidgetMouseEvent* aMouseEvent,
+                                    nsIContent** aParentContent,
+                                    int32_t* aContentOffset,
+                                    mozilla::TableSelection* aTarget);
 
   // Fills aCursor with the appropriate information from ui
-  static void FillCursorInformationFromStyle(const nsStyleUserInterface* ui,
+  static void FillCursorInformationFromStyle(const nsStyleUI* ui,
                                              nsIFrame::Cursor& aCursor);
   NS_IMETHOD DoXULLayout(nsBoxLayoutState& aBoxLayoutState) override;
 
@@ -740,6 +750,12 @@ public:
   static void PrintDisplayList(nsDisplayListBuilder* aBuilder,
                                const nsDisplayList& aList,
                                std::stringstream& aStream,
+                               bool aDumpHtml = false);
+  static void PrintDisplayItem(nsDisplayListBuilder* aBuilder,
+                               nsDisplayItem* aItem,
+                               std::stringstream& aStream,
+                               uint32_t aIndent = 0,
+                               bool aDumpSublist = false,
                                bool aDumpHtml = false);
   static void PrintDisplayListSet(nsDisplayListBuilder* aBuilder,
                                   const nsDisplayListSet& aList,
@@ -838,6 +854,8 @@ public:
   dr_cookie.Change();
 #define DISPLAY_LAYOUT(dr_frame) \
   DR_layout_cookie dr_cookie(dr_frame);
+// FIXME DISPLAY_*_WIDTH should go through a renaming refactoring to reflect the
+// fact that it's displaying a minimum inline size, not a minimum width.
 #define DISPLAY_MIN_WIDTH(dr_frame, dr_result) \
   DR_intrinsic_width_cookie dr_cookie(dr_frame, "Min", dr_result)
 #define DISPLAY_PREF_WIDTH(dr_frame, dr_result) \
@@ -880,12 +898,4 @@ public:
 #endif
 // End Display Reflow Debugging
 
-// similar to NS_ENSURE_TRUE but with no return value
-#define ENSURE_TRUE(x)                                        \
-  PR_BEGIN_MACRO                                              \
-    if (!(x)) {                                               \
-       NS_WARNING("ENSURE_TRUE(" #x ") failed");              \
-       return;                                                \
-    }                                                         \
-  PR_END_MACRO
 #endif /* nsFrame_h___ */

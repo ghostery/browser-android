@@ -17,7 +17,7 @@ namespace dom {
 JSObject*
 SVGStyleElement::WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return SVGStyleElementBinding::Wrap(aCx, this, aGivenProto);
+  return SVGStyleElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 //----------------------------------------------------------------------
@@ -54,7 +54,7 @@ SVGStyleElement::~SVGStyleElement()
 }
 
 //----------------------------------------------------------------------
-// nsIDOMNode methods
+// nsINode methods
 
 
 NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGStyleElement)
@@ -65,12 +65,10 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGStyleElement)
 
 nsresult
 SVGStyleElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                            nsIContent* aBindingParent,
-                            bool aCompileEventHandlers)
+                            nsIContent* aBindingParent)
 {
   nsresult rv = SVGStyleElementBase::BindToTree(aDocument, aParent,
-                                                aBindingParent,
-                                                aCompileEventHandlers);
+                                                aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
 
   void (SVGStyleElement::*update)() = &SVGStyleElement::UpdateStyleSheetInternal;
@@ -216,42 +214,33 @@ SVGStyleElement::SetTitle(const nsAString& aTitle, ErrorResult& rv)
 //----------------------------------------------------------------------
 // nsStyleLinkElement methods
 
-already_AddRefed<nsIURI>
-SVGStyleElement::GetStyleSheetURL(bool* aIsInline, nsIPrincipal** aTriggeringPrincipal)
+Maybe<nsStyleLinkElement::SheetInfo>
+SVGStyleElement::GetStyleSheetInfo()
 {
-  *aIsInline = true;
-  *aTriggeringPrincipal = nullptr;
-  return nullptr;
-}
-
-void
-SVGStyleElement::GetStyleSheetInfo(nsAString& aTitle,
-                                   nsAString& aType,
-                                   nsAString& aMedia,
-                                   bool* aIsAlternate)
-{
-  *aIsAlternate = false;
+  if (!IsCSSMimeTypeAttribute(*this)) {
+    return Nothing();
+  }
 
   nsAutoString title;
-  GetAttr(kNameSpaceID_None, nsGkAtoms::title, title);
-  title.CompressWhitespace();
-  aTitle.Assign(title);
+  nsAutoString media;
+  GetTitleAndMediaForElement(*this, title, media);
 
-  GetAttr(kNameSpaceID_None, nsGkAtoms::media, aMedia);
-  // The SVG spec is formulated in terms of the CSS2 spec,
-  // which specifies that media queries are case insensitive.
-  nsContentUtils::ASCIIToLower(aMedia);
-
-  GetAttr(kNameSpaceID_None, nsGkAtoms::type, aType);
-  if (aType.IsEmpty()) {
-    aType.AssignLiteral("text/css");
-  }
-}
-
-CORSMode
-SVGStyleElement::GetCORSMode() const
-{
-  return AttrValueToCORSMode(GetParsedAttr(nsGkAtoms::crossorigin));
+  return Some(SheetInfo {
+    *OwnerDoc(),
+    this,
+    nullptr,
+    // FIXME(bug 1459822): Why doesn't this need a principal, but
+    // HTMLStyleElement does?
+    nullptr,
+    net::ReferrerPolicy::RP_Unset,
+    // FIXME(bug 1459822): Why does this need a crossorigin attribute, but
+    // HTMLStyleElement doesn't?
+    AttrValueToCORSMode(GetParsedAttr(nsGkAtoms::crossorigin)),
+    title,
+    media,
+    HasAlternateRel::No,
+    IsInline::Yes,
+  });
 }
 
 } // namespace dom

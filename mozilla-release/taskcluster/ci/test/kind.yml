@@ -3,6 +3,7 @@ loader: taskgraph.loader.test:loader
 kind-dependencies:
     - build
     - build-signing
+    - fetch
 
 transforms:
     - taskgraph.transforms.tests:transforms
@@ -26,6 +27,7 @@ jobs-from:
     - marionette.yml
     - misc.yml
     - mochitest.yml
+    - raptor.yml
     - reftest.yml
     - talos.yml
     - web-platform.yml

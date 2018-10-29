@@ -16,6 +16,7 @@
 #include "Units.h"                      // for CSSPoint
 #include "gfxTypes.h"
 #include "mozilla/Attributes.h"         // for override
+#include "mozilla/gfx/2D.h"             // for gfx::Tile
 #include "mozilla/RefPtr.h"             // for RefPtr
 #include "mozilla/ipc/Shmem.h"          // for Shmem
 #include "mozilla/ipc/SharedMemory.h"   // for SharedMemory
@@ -49,6 +50,33 @@ enum class TilePaintFlags : uint8_t {
   Progressive = 0x2,
 };
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(TilePaintFlags)
+
+struct AcquiredBackBuffer
+{
+  AcquiredBackBuffer(gfx::DrawTarget* aTarget,
+                     gfx::DrawTargetCapture* aCapture,
+                     gfx::DrawTarget* aBackBuffer,
+                     const gfx::IntRect& aUpdatedRect,
+                     AutoTArray<RefPtr<TextureClient>, 4>&& aTextureClients)
+    : mTarget(aTarget)
+    , mCapture(aCapture)
+    , mBackBuffer(aBackBuffer)
+    , mUpdatedRect(aUpdatedRect)
+    , mTextureClients(aTextureClients)
+  {}
+
+  AcquiredBackBuffer(const AcquiredBackBuffer&) = delete;
+  AcquiredBackBuffer& operator=(const AcquiredBackBuffer&) = delete;
+
+  AcquiredBackBuffer(AcquiredBackBuffer&&) = default;
+  AcquiredBackBuffer& operator=(AcquiredBackBuffer&&) = default;
+
+  RefPtr<gfx::DrawTarget> mTarget;
+  RefPtr<gfx::DrawTargetCapture> mCapture;
+  RefPtr<gfx::DrawTarget> mBackBuffer;
+  gfx::IntRect mUpdatedRect;
+  AutoTArray<RefPtr<TextureClient>, 4> mTextureClients;
+};
 
 /**
  * Represent a single tile in tiled buffer. The buffer keeps tiles,
@@ -114,6 +142,8 @@ struct TileClient
     CompositableClient::DumpTextureClient(aStream, mFrontBuffer, aCompress);
   }
 
+  void GetSyncTextureSerials(SurfaceMode aMode, nsTArray<uint64_t>& aSerials);
+
   /**
   * Returns an unlocked TextureClient that can be used for writing new
   * data to the tile. This may flip the front-buffer to the back-buffer if
@@ -126,15 +156,12 @@ struct TileClient
   *
   * If nullptr is returned, aTextureClientOnWhite is undefined.
   */
-  TextureClient* GetBackBuffer(CompositableClient&,
-                               const nsIntRegion& aDirtyRegion,
-                               const nsIntRegion& aVisibleRegion,
-                               gfxContentType aContent, SurfaceMode aMode,
-                               nsIntRegion& aAddPaintedRegion,
-                               TilePaintFlags aFlags,
-                               RefPtr<TextureClient>* aTextureClientOnWhite,
-                               std::vector<CapturedTiledPaintState::Copy>* aCopies,
-                               std::vector<RefPtr<TextureClient>>* aClients);
+  Maybe<AcquiredBackBuffer> AcquireBackBuffer(CompositableClient&,
+                                              const nsIntRegion& aDirtyRegion,
+                                              const nsIntRegion& aVisibleRegion,
+                                              gfxContentType aContent,
+                                              SurfaceMode aMode,
+                                              TilePaintFlags aFlags);
 
   void DiscardFrontBuffer();
 
@@ -168,14 +195,16 @@ struct TileClient
   nsIntRegion mInvalidBack;
   nsExpirationState mExpirationState;
 private:
-  // Copies dirty pixels from the front buffer into the back buffer,
-  // and records the copied region in aAddPaintedRegion.
-  void ValidateBackBufferFromFront(const nsIntRegion &aDirtyRegion,
-                                   const nsIntRegion& aVisibleRegion,
-                                   nsIntRegion& aAddPaintedRegion,
-                                   TilePaintFlags aFlags,
-                                   std::vector<CapturedTiledPaintState::Copy>* aCopies,
-                                   std::vector<RefPtr<TextureClient>>* aClients);
+  /*
+   * Copies dirty pixels from the front buffer into the back buffer,
+   * and records the copied region in aAddPaintedRegion.
+   */
+  void ValidateFromFront(const nsIntRegion& aDirtyRegion,
+                         const nsIntRegion& aVisibleRegion,
+                         gfx::DrawTarget* aBackBuffer,
+                         TilePaintFlags aFlags,
+                         gfx::IntRect* aCopiedRegion,
+                         AutoTArray<RefPtr<TextureClient>, 4>* aClients);
 };
 
 /**
@@ -311,6 +340,9 @@ public:
                    LayerManager::DrawPaintedLayerCallback aCallback,
                    void* aCallbackData,
                    TilePaintFlags aFlags) = 0;
+  virtual void GetSyncTextureSerials(const nsIntRegion& aPaintRegion,
+                                     const nsIntRegion& aDirtyRegion,
+                                     nsTArray<uint64_t>& aSerials) { return; }
 
   virtual bool SupportsProgressiveUpdate() = 0;
   virtual bool ProgressiveUpdate(const nsIntRegion& aValidRegion,
@@ -348,143 +380,6 @@ protected:
   CSSToParentLayerScale2D mFrameResolution;
 
   bool mWasLastPaintProgressive;
-};
-
-class ClientMultiTiledLayerBuffer
-  : public TiledLayerBuffer<ClientMultiTiledLayerBuffer, TileClient>
-  , public ClientTiledLayerBuffer
-{
-  friend class TiledLayerBuffer<ClientMultiTiledLayerBuffer, TileClient>;
-public:
-  ClientMultiTiledLayerBuffer(ClientTiledPaintedLayer& aPaintedLayer,
-                              CompositableClient& aCompositableClient,
-                              ClientLayerManager* aManager,
-                              SharedFrameMetricsHelper* aHelper);
-
-  void PaintThebes(const nsIntRegion& aNewValidRegion,
-                   const nsIntRegion& aPaintRegion,
-                   const nsIntRegion& aDirtyRegion,
-                   LayerManager::DrawPaintedLayerCallback aCallback,
-                   void* aCallbackData,
-                   TilePaintFlags aFlags = TilePaintFlags::None) override;
-
-  virtual bool SupportsProgressiveUpdate() override { return true; }
-  /**
-   * Performs a progressive update of a given tiled buffer.
-   * See ComputeProgressiveUpdateRegion below for parameter documentation.
-   * aOutDrawnRegion is an outparameter that contains the region that was
-   * drawn, and which can now be added to the layer's valid region.
-   */
-  bool ProgressiveUpdate(const nsIntRegion& aValidRegion,
-                         const nsIntRegion& aInvalidRegion,
-                         const nsIntRegion& aOldValidRegion,
-                         nsIntRegion& aOutDrawnRegion,
-                         BasicTiledLayerPaintData* aPaintData,
-                         LayerManager::DrawPaintedLayerCallback aCallback,
-                         void* aCallbackData) override;
-  
-  void ResetPaintedAndValidState() override {
-    mValidRegion.SetEmpty();
-    mTiles.mSize.width = 0;
-    mTiles.mSize.height = 0;
-    DiscardBuffers();
-    mRetainedTiles.Clear();
-  }
-
-
-  const nsIntRegion& GetValidRegion() override {
-    return TiledLayerBuffer::GetValidRegion();
-  }
-
-  bool IsLowPrecision() const override {
-    return TiledLayerBuffer::IsLowPrecision();
-  }
-
-  void Dump(std::stringstream& aStream,
-            const char* aPrefix,
-            bool aDumpHtml,
-            TextureDumpMode aCompress) override {
-    TiledLayerBuffer::Dump(aStream, aPrefix, aDumpHtml, aCompress);
-  }
-
-  void ReadLock();
-
-  void Release();
-
-  void DiscardBuffers();
-
-  SurfaceDescriptorTiles GetSurfaceDescriptorTiles();
-
-  void SetResolution(float aResolution) {
-    if (mResolution == aResolution) {
-      return;
-    }
-
-    Update(nsIntRegion(), nsIntRegion(), nsIntRegion(), TilePaintFlags::None);
-    mResolution = aResolution;
-  }
-
-protected:
-  bool ValidateTile(TileClient& aTile,
-                    const nsIntPoint& aTileRect,
-                    nsIntRegion& aDirtyRegion,
-                    TilePaintFlags aFlags);
-
-  void Update(const nsIntRegion& aNewValidRegion,
-              const nsIntRegion& aPaintRegion,
-              const nsIntRegion& aDirtyRegion,
-              TilePaintFlags aFlags);
-
-  TileClient GetPlaceholderTile() const { return TileClient(); }
-
-private:
-  RefPtr<ClientLayerManager> mManager;
-  LayerManager::DrawPaintedLayerCallback mCallback;
-  void* mCallbackData;
-
-  // The region that will be made valid during Update(). Once Update() is
-  // completed then this is identical to mValidRegion.
-  nsIntRegion mNewValidRegion;
-
-  SharedFrameMetricsHelper*  mSharedFrameMetricsHelper;
-
-  // Parameters that are collected during Update for a paint before they
-  // are either executed or replayed on the paint thread.
-  std::vector<gfx::Tile> mPaintTiles;
-  std::vector<RefPtr<CapturedTiledPaintState>> mPaintStates;
-
-  /**
-   * While we're adding tiles, this is used to keep track of the position of
-   * the top-left of the top-left-most tile.  When we come to wrap the tiles in
-   * TiledDrawTarget we subtract the value of this member from each tile's
-   * offset so that all the tiles have a positive offset, then add a
-   * translation to the TiledDrawTarget to compensate.  This is important so
-   * that the mRect of the TiledDrawTarget is always at a positive x/y
-   * position, otherwise its GetSize() methods will be broken.
-   */
-  gfx::IntPoint mTilingOrigin;
-  /**
-   * Calculates the region to update in a single progressive update transaction.
-   * This employs some heuristics to update the most 'sensible' region to
-   * update at this point in time, and how large an update should be performed
-   * at once to maintain visual coherency.
-   *
-   * aInvalidRegion is the current invalid region.
-   * aOldValidRegion is the valid region of mTiledBuffer at the beginning of the
-   * current transaction.
-   * aRegionToPaint will be filled with the region to update. This may be empty,
-   * which indicates that there is no more work to do.
-   * aIsRepeated should be true if this function has already been called during
-   * this transaction.
-   *
-   * Returns true if it should be called again, false otherwise. In the case
-   * that aRegionToPaint is empty, this will return aIsRepeated for convenience.
-   */
-  bool ComputeProgressiveUpdateRegion(const nsIntRegion& aInvalidRegion,
-                                      const nsIntRegion& aOldValidRegion,
-                                      nsIntRegion& aRegionToPaint,
-                                      BasicTiledLayerPaintData* aPaintData,
-                                      bool aIsRepeated);
 };
 
 class TiledContentClient : public CompositableClient
@@ -527,45 +422,7 @@ private:
   const char* mName;
 };
 
-/**
- * An implementation of TiledContentClient that supports
- * multiple tiles and a low precision buffer.
- */
-class MultiTiledContentClient : public TiledContentClient
-{
-public:
-  MultiTiledContentClient(ClientTiledPaintedLayer& aPaintedLayer,
-                          ClientLayerManager* aManager);
-
-protected:
-  ~MultiTiledContentClient()
-  {
-    MOZ_COUNT_DTOR(MultiTiledContentClient);
-
-      mTiledBuffer.DiscardBuffers();
-    mLowPrecisionTiledBuffer.DiscardBuffers();
-  }
-
-public:
-  void ClearCachedResources() override;
-  void UpdatedBuffer(TiledBufferType aType) override;
-
-  ClientTiledLayerBuffer* GetTiledBuffer() override { return &mTiledBuffer; }
-  ClientTiledLayerBuffer* GetLowPrecisionTiledBuffer() override {
-    if (mHasLowPrecision) {
-      return &mLowPrecisionTiledBuffer;
-    }
-    return nullptr;
-  }
-
-private:
-  SharedFrameMetricsHelper mSharedFrameMetricsHelper;
-  ClientMultiTiledLayerBuffer mTiledBuffer;
-  ClientMultiTiledLayerBuffer mLowPrecisionTiledBuffer;
-  bool mHasLowPrecision;
-};
-
 } // namespace layers
 } // namespace mozilla
 
-#endif
+#endif // MOZILLA_GFX_TILEDCONTENTCLIENT_H

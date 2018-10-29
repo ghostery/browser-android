@@ -184,19 +184,10 @@ ViewportFrame::BuildDisplayListForTopLayer(nsDisplayListBuilder* aBuilder,
   if (nsCanvasFrame* canvasFrame = shell->GetCanvasFrame()) {
     if (Element* container = canvasFrame->GetCustomContentContainer()) {
       if (nsIFrame* frame = container->GetPrimaryFrame()) {
-        // Enter this frame for display list building, but only if it is
-        // actually a top layer frame. There is a bug affecting SVG documents
-        // that makes the custom content container not be a top layer frame in
-        // them, because SVG documents don't load `ua.css` when the custom
-        // content container is created. `ua.css` contains the rule that makes
-        // this a top layer frame. This bug is being fixed in bug 1157592.
-        // We have to do this workaround because otherwise we risk building
-        // display items for this frame twice; if the custom content container
-        // frame is not a top layer frame, it's not out-of-flow, so we'll have
-        // built display items for it already when we entered its parent frame.
-        if (frame->StyleDisplay()->mTopLayer != NS_STYLE_TOP_LAYER_NONE) {
-          BuildDisplayListForTopLayerFrame(aBuilder, frame, aList);
-        }
+        MOZ_ASSERT(frame->StyleDisplay()->mTopLayer != NS_STYLE_TOP_LAYER_NONE,
+                   "ua.css should ensure this");
+        MOZ_ASSERT(frame->GetStateBits() & NS_FRAME_OUT_OF_FLOW);
+        BuildDisplayListForTopLayerFrame(aBuilder, frame, aList);
       }
     }
   }
@@ -290,14 +281,14 @@ ViewportFrame::AdjustReflowInputAsContainingBlock(ReflowInput* aReflowInput) con
                "We don't handle correct positioning of fixed frames with "
                "scrollbars in odd positions");
 
-  // If a scroll position clamping scroll-port size has been set, layout
-  // fixed position elements to this size instead of the computed size.
+  // Layout fixed position elements to the visual viewport size if and only if
+  // it has been set and it is larger than the computed size, otherwise use the
+  // computed size.
   nsRect rect(0, 0, aReflowInput->ComputedWidth(), aReflowInput->ComputedHeight());
   nsIPresShell* ps = PresShell();
-  if (ps->IsScrollPositionClampingScrollPortSizeSet()) {
-    rect.SizeTo(ps->GetScrollPositionClampingScrollPortSize());
+  if (ps->IsVisualViewportSizeSet() && rect.Size() < ps->GetVisualViewportSize()) {
+    rect.SizeTo(ps->GetVisualViewportSize());
   }
-
   return rect;
 }
 

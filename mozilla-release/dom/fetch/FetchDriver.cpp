@@ -22,7 +22,6 @@
 
 #include "nsContentPolicyUtils.h"
 #include "nsDataHandler.h"
-#include "nsHostObjectProtocolHandler.h"
 #include "nsNetUtil.h"
 #include "nsPrintfCString.h"
 #include "nsProxyRelease.h"
@@ -30,6 +29,7 @@
 #include "nsStringStream.h"
 #include "nsHttpChannel.h"
 
+#include "mozilla/dom/BlobURLProtocolHandler.h"
 #include "mozilla/dom/File.h"
 #include "mozilla/dom/PerformanceStorage.h"
 #include "mozilla/dom/WorkerCommon.h"
@@ -339,6 +339,7 @@ FetchDriver::FetchDriver(InternalRequest* aRequest,
   , mPerformanceStorage(aPerformanceStorage)
   , mNeedToObserveOnDataAvailable(false)
   , mIsTrackingFetch(aIsTrackingFetch)
+  , mOnStopRequestCalled(false)
 #ifdef DEBUG
   , mResponseAvailableCalled(false)
   , mFetchCalled(false)
@@ -361,7 +362,7 @@ FetchDriver::~FetchDriver()
 }
 
 nsresult
-FetchDriver::Fetch(AbortSignal* aSignal, FetchDriverObserver* aObserver)
+FetchDriver::Fetch(AbortSignalImpl* aSignalImpl, FetchDriverObserver* aObserver)
 {
   AssertIsOnMainThread();
 #ifdef DEBUG
@@ -386,17 +387,17 @@ FetchDriver::Fetch(AbortSignal* aSignal, FetchDriverObserver* aObserver)
     return rv;
   }
 
-  mRequest->SetPrincipalInfo(Move(principalInfo));
+  mRequest->SetPrincipalInfo(std::move(principalInfo));
 
   // If the signal is aborted, it's time to inform the observer and terminate
   // the operation.
-  if (aSignal) {
-    if (aSignal->Aborted()) {
+  if (aSignalImpl) {
+    if (aSignalImpl->Aborted()) {
       Abort();
       return NS_OK;
     }
 
-    Follow(aSignal);
+    Follow(aSignalImpl);
   }
 
   rv = HttpFetch(mRequest->GetPreferredAlternativeDataType());
@@ -476,7 +477,7 @@ FetchDriver::HttpFetch(const nsACString& aPreferredAlternativeDataType)
   const nsLoadFlags bypassFlag = mRequest->SkipServiceWorker() ?
                                  nsIChannel::LOAD_BYPASS_SERVICE_WORKER : 0;
 
-  nsSecurityFlags secFlags = nsILoadInfo::SEC_ABOUT_BLANK_INHERITS;
+  nsSecurityFlags secFlags = 0;
   if (mRequest->Mode() == RequestMode::Cors) {
     secFlags |= nsILoadInfo::SEC_REQUIRE_CORS_DATA_INHERITS;
   } else if (mRequest->Mode() == RequestMode::Same_origin ||
@@ -1286,7 +1287,7 @@ FetchDriver::AsyncOnChannelRedirect(nsIChannel* aOldChannel,
     MOZ_ALWAYS_SUCCEEDS(aNewChannel->GetURI(getter_AddRefs(uri)));
 
     nsCOMPtr<nsIURI> uriClone;
-    nsresult rv = uri->CloneIgnoringRef(getter_AddRefs(uriClone));
+    nsresult rv = NS_GetURIWithoutRef(uri, getter_AddRefs(uriClone));
     if(NS_WARN_IF(NS_FAILED(rv))){
       return rv;
     }

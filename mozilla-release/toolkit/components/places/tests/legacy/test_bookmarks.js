@@ -66,7 +66,7 @@ var bookmarksObserver = {
   },
   QueryInterface: ChromeUtils.generateQI([
     Ci.nsINavBookmarkObserver,
-  ])
+  ]),
 };
 
 
@@ -83,7 +83,6 @@ add_task(async function test_bookmarks() {
   Assert.ok(bs.bookmarksMenuFolder > 0);
   Assert.ok(bs.tagsFolder > 0);
   Assert.ok(bs.toolbarFolder > 0);
-  Assert.ok(bs.unfiledBookmarksFolder > 0);
 
   // test getFolderIdForItem() with bogus item id will throw
   try {
@@ -101,12 +100,12 @@ add_task(async function test_bookmarks() {
   Assert.equal(bs.getFolderIdForItem(bs.bookmarksMenuFolder), bs.placesRoot);
   Assert.equal(bs.getFolderIdForItem(bs.tagsFolder), bs.placesRoot);
   Assert.equal(bs.getFolderIdForItem(bs.toolbarFolder), bs.placesRoot);
-  Assert.equal(bs.getFolderIdForItem(bs.unfiledBookmarksFolder), bs.placesRoot);
 
   // create a folder to hold all the tests
   // this makes the tests more tolerant of changes to default_places.html
   let testRoot = bs.createFolder(root, "places bookmarks xpcshell tests",
                                  bs.DEFAULT_INDEX);
+  let testRootGuid = await PlacesUtils.promiseItemGuid(testRoot);
   Assert.equal(bookmarksObserver._itemAddedId, testRoot);
   Assert.equal(bookmarksObserver._itemAddedParent, root);
   Assert.equal(bookmarksObserver._itemAddedIndex, bmStartIndex);
@@ -249,7 +248,7 @@ add_task(async function test_bookmarks() {
   try {
     let options = hs.getNewQueryOptions();
     let query = hs.getNewQuery();
-    query.setFolders([testRoot], 1);
+    query.setParents([testRootGuid], 1);
     let result = hs.executeQuery(query, options);
     let rootNode = result.root;
     rootNode.containerOpen = true;
@@ -279,6 +278,7 @@ add_task(async function test_bookmarks() {
     let mURI = uri("http://multiple.uris.in.query");
 
     let testFolder = bs.createFolder(testRoot, "test Folder", bs.DEFAULT_INDEX);
+    let testFolderGuid = await PlacesUtils.promiseItemGuid(testFolder);
     // add 2 bookmarks
     bs.insertBookmark(testFolder, mURI, bs.DEFAULT_INDEX, "title 1");
     bs.insertBookmark(testFolder, mURI, bs.DEFAULT_INDEX, "title 2");
@@ -286,7 +286,7 @@ add_task(async function test_bookmarks() {
     // query
     let options = hs.getNewQueryOptions();
     let query = hs.getNewQuery();
-    query.setFolders([testFolder], 1);
+    query.setParents([testFolderGuid], 1);
     let result = hs.executeQuery(query, options);
     let rootNode = result.root;
     rootNode.containerOpen = true;
@@ -326,7 +326,7 @@ add_task(async function test_bookmarks() {
 
   // check if setting an item annotation triggers onItemChanged
   bookmarksObserver._itemChangedId = -1;
-  anno.setItemAnnotation(newId3, "test-annotation", "foo", 0, 0);
+  anno.setItemAnnotation(newId3, "test-annotation", "foo", 0, anno.EXPIRE_NEVER);
   Assert.equal(bookmarksObserver._itemChangedId, newId3);
   Assert.equal(bookmarksObserver._itemChangedProperty, "test-annotation");
   Assert.ok(bookmarksObserver._itemChanged_isAnnotationProperty);
@@ -383,7 +383,7 @@ add_task(async function test_bookmarks() {
   try {
     let options = hs.getNewQueryOptions();
     let query = hs.getNewQuery();
-    query.setFolders([testRoot], 1);
+    query.setParents([testRootGuid], 1);
     let result = hs.executeQuery(query, options);
     let rootNode = result.root;
     rootNode.containerOpen = true;
@@ -441,10 +441,10 @@ add_task(async function test_bookmarks() {
   Assert.equal(bookmarksObserver._itemChangedProperty, "title");
   Assert.equal(bookmarksObserver._itemChangedValue, title15expected);
 
-  testSimpleFolderResult();
+  await testSimpleFolderResult();
 });
 
-function testSimpleFolderResult() {
+async function testSimpleFolderResult() {
   // the time before we create a folder, in microseconds
   // Workaround possible VM timers issues subtracting 1us.
   let beforeCreate = Date.now() * 1000 - 1;
@@ -452,6 +452,7 @@ function testSimpleFolderResult() {
 
   // create a folder
   let parent = bs.createFolder(root, "test", bs.DEFAULT_INDEX);
+  let parentGuid = await PlacesUtils.promiseItemGuid(parent);
 
   // the time before we insert, in microseconds
   // Workaround possible VM timers issues subtracting 1ms.
@@ -473,7 +474,7 @@ function testSimpleFolderResult() {
 
   let options = hs.getNewQueryOptions();
   let query = hs.getNewQuery();
-  query.setFolders([parent], 1);
+  query.setParents([parentGuid], 1);
   let result = hs.executeQuery(query, options);
   let rootNode = result.root;
   rootNode.containerOpen = true;
@@ -505,21 +506,4 @@ function testSimpleFolderResult() {
   Assert.equal(node.title, longName.substring(0, TITLE_LENGTH_MAX));
 
   rootNode.containerOpen = false;
-}
-
-function getChildCount(aFolderId) {
-  let cc = -1;
-  try {
-    let options = hs.getNewQueryOptions();
-    let query = hs.getNewQuery();
-    query.setFolders([aFolderId], 1);
-    let result = hs.executeQuery(query, options);
-    let rootNode = result.root;
-    rootNode.containerOpen = true;
-    cc = rootNode.childCount;
-    rootNode.containerOpen = false;
-  } catch (ex) {
-    do_throw("getChildCount failed: " + ex);
-  }
-  return cc;
 }

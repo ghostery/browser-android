@@ -33,9 +33,9 @@
      the Latin language. -->
 <!ENTITY  font.langGroup.latin                    "拉丁文">
 <!ENTITY  font.langGroup.japanese                 "日文">
-<!ENTITY  font.langGroup.trad-chinese             "正體中文 (繁體中文，臺灣)">
+<!ENTITY  font.langGroup.trad-chinese             "正體中文（繁體，臺灣）">
 <!ENTITY  font.langGroup.simpl-chinese            "簡體中文">
-<!ENTITY  font.langGroup.trad-chinese-hk          "正體中文 (繁體中文，香港)">
+<!ENTITY  font.langGroup.trad-chinese-hk          "正體中文（繁體，香港）">
 <!ENTITY  font.langGroup.korean                   "韓文">
 <!ENTITY  font.langGroup.cyrillic                 "俄文／西里爾文字">
 <!ENTITY  font.langGroup.el                       "希臘文">

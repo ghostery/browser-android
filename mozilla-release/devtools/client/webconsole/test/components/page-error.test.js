@@ -105,7 +105,7 @@ describe("PageError component:", () => {
     expect(learnMore.prop("title")).toBe(url);
 
     learnMore.simulate("click");
-    let call = serviceContainer.openLink.getCall(0);
+    const call = serviceContainer.openLink.getCall(0);
     expect(call.args[0]).toEqual(message.exceptionDocURL);
   });
 
@@ -114,7 +114,7 @@ describe("PageError component:", () => {
     const wrapper = render(PageError({ message, serviceContainer, open: true }));
 
     // There should be a collapse button.
-    expect(wrapper.find(".collapse-button.expanded").length).toBe(1);
+    expect(wrapper.find(".collapse-button[aria-expanded=true]").length).toBe(1);
 
     // There should be five stacktrace items.
     const frameLinks = wrapper.find(`.stack-trace span.frame-link`);
@@ -134,7 +134,8 @@ describe("PageError component:", () => {
         serviceContainer,
       })
     ));
-    wrapper.find(".collapse-button.expanded").simulate("click");
+
+    wrapper.find(".collapse-button[aria-expanded='true']").simulate("click");
     let call = store.dispatch.getCall(0);
     expect(call.args[0]).toEqual({
       id: message.id,
@@ -149,7 +150,7 @@ describe("PageError component:", () => {
         serviceContainer,
       })
     ));
-    wrapper.find(".collapse-button").simulate("click");
+    wrapper.find(".collapse-button[aria-expanded='false']").simulate("click");
     call = store.dispatch.getCall(1);
     expect(call.args[0]).toEqual({
       id: message.id,
@@ -176,7 +177,7 @@ describe("PageError component:", () => {
 
   it("has empty error notes", () => {
     const message = stubPreparedMessages.get("ReferenceError: asdf is not defined");
-    let wrapper = render(PageError({ message, serviceContainer }));
+    const wrapper = render(PageError({ message, serviceContainer }));
 
     const notes = wrapper.find(".error-note");
 
@@ -196,7 +197,7 @@ describe("PageError component:", () => {
       }]
     });
 
-    let wrapper = render(PageError({ message, serviceContainer }));
+    const wrapper = render(PageError({ message, serviceContainer }));
 
     const notes = wrapper.find(".error-note");
     expect(notes.length).toBe(1);
@@ -240,7 +241,7 @@ describe("PageError component:", () => {
       }]
     });
 
-    let wrapper = render(PageError({ message, serviceContainer }));
+    const wrapper = render(PageError({ message, serviceContainer }));
 
     const notes = wrapper.find(".error-note");
     expect(notes.length).toBe(3);
@@ -273,7 +274,7 @@ describe("PageError component:", () => {
   it("displays error notes", () => {
     const message = stubPreparedMessages.get("SyntaxError: redeclaration of let a");
 
-    let wrapper = render(PageError({ message, serviceContainer }));
+    const wrapper = render(PageError({ message, serviceContainer }));
 
     const notes = wrapper.find(".error-note");
     expect(notes.length).toBe(1);

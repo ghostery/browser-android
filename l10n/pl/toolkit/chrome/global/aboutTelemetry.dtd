@@ -43,6 +43,6 @@
 <!ENTITY aboutTelemetry.rawPayloadSection "Nieprzetworzona zawartość">
 <!ENTITY aboutTelemetry.raw "Nieprzetworzony JSON">
 
-<!ENTITY aboutTelemetry.fullSqlWarning "UWAGA: Debugowanie powolnych poleceń SQL jest włączone. Pełne ciągi SQL mogą być widoczne poniżej, ale nie zostaną przesłane do telemetrii.">
+<!ENTITY aboutTelemetry.fullSqlWarning "UWAGA: debugowanie powolnych poleceń SQL jest włączone. Pełne ciągi SQL mogą być widoczne poniżej, ale nie zostaną przesłane do telemetrii.">
 <!ENTITY aboutTelemetry.fetchStackSymbols "Pobierz nazwy funkcji dla stosów">
 <!ENTITY aboutTelemetry.hideStackSymbols "Wyświetl nieprzetworzone dane dla stosów">

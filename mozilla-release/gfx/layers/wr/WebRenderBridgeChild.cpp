@@ -87,13 +87,6 @@ WebRenderBridgeChild::AddWebRenderParentCommand(const WebRenderParentCommand& aC
 }
 
 void
-WebRenderBridgeChild::AddWebRenderParentCommands(const nsTArray<WebRenderParentCommand>& aCommands)
-{
-  MOZ_ASSERT(mIsInTransaction);
-  mParentCommands.AppendElements(aCommands);
-}
-
-void
 WebRenderBridgeChild::BeginTransaction()
 {
   MOZ_ASSERT(!mDestroyed);
@@ -119,7 +112,7 @@ WebRenderBridgeChild::UpdateResources(wr::IpcResourceUpdateQueue& aResources)
   nsTArray<ipc::Shmem> largeShmems;
   aResources.Flush(resourceUpdates, smallShmems, largeShmems);
 
-  this->SendUpdateResources(resourceUpdates, Move(smallShmems), largeShmems);
+  this->SendUpdateResources(resourceUpdates, std::move(smallShmems), largeShmems);
 }
 
 void
@@ -129,6 +122,7 @@ WebRenderBridgeChild::EndTransaction(const wr::LayoutSize& aContentSize,
                                      const gfx::IntSize& aSize,
                                      TransactionId aTransactionId,
                                      const WebRenderScrollData& aScrollData,
+                                     const mozilla::TimeStamp& aRefreshStartTime,
                                      const mozilla::TimeStamp& aTxnStartTime)
 {
   MOZ_ASSERT(!mDestroyed);
@@ -151,8 +145,8 @@ WebRenderBridgeChild::EndTransaction(const wr::LayoutSize& aContentSize,
   this->SendSetDisplayList(aSize, mParentCommands, mDestroyedActors,
                            GetFwdTransactionId(), aTransactionId,
                            aContentSize, dlData, aDL.dl_desc, aScrollData,
-                           Move(resourceUpdates), Move(smallShmems), largeShmems,
-                           mIdNamespace, aTxnStartTime, fwdTime);
+                           std::move(resourceUpdates), std::move(smallShmems), largeShmems,
+                           mIdNamespace, aRefreshStartTime, aTxnStartTime, fwdTime);
 
   mParentCommands.Clear();
   mDestroyedActors.Clear();
@@ -161,7 +155,10 @@ WebRenderBridgeChild::EndTransaction(const wr::LayoutSize& aContentSize,
 
 void
 WebRenderBridgeChild::EndEmptyTransaction(const FocusTarget& aFocusTarget,
+                                          const ScrollUpdatesMap& aUpdates,
+                                          uint32_t aPaintSequenceNumber,
                                           TransactionId aTransactionId,
+                                          const mozilla::TimeStamp& aRefreshStartTime,
                                           const mozilla::TimeStamp& aTxnStartTime)
 {
   MOZ_ASSERT(!mDestroyed);
@@ -172,10 +169,10 @@ WebRenderBridgeChild::EndEmptyTransaction(const FocusTarget& aFocusTarget,
   fwdTime = TimeStamp::Now();
 #endif
 
-  this->SendEmptyTransaction(aFocusTarget,
+  this->SendEmptyTransaction(aFocusTarget, aUpdates, aPaintSequenceNumber,
                              mParentCommands, mDestroyedActors,
                              GetFwdTransactionId(), aTransactionId,
-                             mIdNamespace, aTxnStartTime, fwdTime);
+                             mIdNamespace, aRefreshStartTime, aTxnStartTime, fwdTime);
   mParentCommands.Clear();
   mDestroyedActors.Clear();
   mIsInTransaction = false;
@@ -224,20 +221,18 @@ WebRenderBridgeChild::GetNextExternalImageId()
   return id.value();
 }
 
-wr::ExternalImageId
-WebRenderBridgeChild::AllocExternalImageIdForCompositable(CompositableClient* aCompositable)
-{
-  wr::ExternalImageId imageId = GetNextExternalImageId();
-  AddWebRenderParentCommand(
-    OpAddExternalImageIdForCompositable(imageId, aCompositable->GetIPCHandle()));
-  return imageId;
-}
-
 void
 WebRenderBridgeChild::DeallocExternalImageId(const wr::ExternalImageId& aImageId)
 {
   AddWebRenderParentCommand(
     OpRemoveExternalImageId(aImageId));
+}
+
+void
+WebRenderBridgeChild::ReleaseTextureOfImage(const wr::ImageKey& aKey)
+{
+  AddWebRenderParentCommand(
+    OpReleaseTextureOfImage(aKey));
 }
 
 struct FontFileDataSink
@@ -294,9 +289,7 @@ WebRenderBridgeChild::GetFontKeyForScaledFont(gfx::ScaledFont* aScaledFont)
 {
   MOZ_ASSERT(!mDestroyed);
   MOZ_ASSERT(aScaledFont);
-  MOZ_ASSERT((aScaledFont->GetType() == gfx::FontType::DWRITE) ||
-             (aScaledFont->GetType() == gfx::FontType::MAC) ||
-             (aScaledFont->GetType() == gfx::FontType::FONTCONFIG));
+  MOZ_ASSERT(aScaledFont->CanSerialize());
 
   wr::FontInstanceKey instanceKey = { wr::IdNamespace { 0 }, 0 };
   if (mFontInstanceKeys.Get(aScaledFont, &instanceKey)) {
@@ -400,10 +393,10 @@ WebRenderBridgeChild::GetLayersIPCActor()
 void
 WebRenderBridgeChild::SyncWithCompositor()
 {
-  auto compositorBridge = GetCompositorBridgeChild();
-  if (compositorBridge && compositorBridge->IPCOpen()) {
-    compositorBridge->SendSyncWithCompositor();
+  if (!IPCOpen()) {
+    return;
   }
+  SendSyncWithCompositor();
 }
 
 void
@@ -549,11 +542,13 @@ WebRenderBridgeChild::InForwarderThread()
 }
 
 mozilla::ipc::IPCResult
-WebRenderBridgeChild::RecvWrUpdated(const wr::IdNamespace& aNewIdNamespace)
+WebRenderBridgeChild::RecvWrUpdated(const wr::IdNamespace& aNewIdNamespace,
+                                    const TextureFactoryIdentifier& textureFactoryIdentifier)
 {
   if (mManager) {
     mManager->WrUpdated();
   }
+  IdentifyTextureHost(textureFactoryIdentifier);
   // Update mIdNamespace to identify obsolete keys and messages by WebRenderBridgeParent.
   // Since usage of invalid keys could cause crash in webrender.
   mIdNamespace = aNewIdNamespace;

@@ -22,6 +22,7 @@
 #include "mozilla/DebugOnly.h"
 #include "mozilla/EnumSet.h"
 #include "mozilla/Maybe.h"
+#include "mozilla/RefPtr.h"
 #include "mozilla/TemplateLib.h" // mozilla::tl::Max
 #include "nsCOMPtr.h"
 #include "nsContainerFrame.h"
@@ -34,6 +35,7 @@
 #include "LayerState.h"
 #include "FrameMetrics.h"
 #include "ImgDrawResult.h"
+#include "mozilla/EffectCompositor.h"
 #include "mozilla/EnumeratedArray.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/UniquePtr.h"
@@ -57,17 +59,16 @@ class gfxContext;
 class nsIContent;
 class nsDisplayList;
 class nsDisplayTableItem;
-class nsISelection;
 class nsIScrollableFrame;
 class nsSubDocumentFrame;
 class nsDisplayCompositorHitTestInfo;
-class nsDisplayLayerEventRegions;
 class nsDisplayScrollInfoLayer;
 class nsCaret;
 enum class nsDisplayOwnLayerFlags;
 
 namespace mozilla {
 class FrameLayerBuilder;
+struct MotionPathData;
 namespace layers {
 class Layer;
 class ImageLayer;
@@ -80,6 +81,9 @@ class WebRenderLayerScrollData;
 namespace wr {
 class DisplayListBuilder;
 } // namespace wr
+namespace dom {
+class Selection;
+} // namespace dom
 } // namespace mozilla
 
 // A set of blend modes, that never includes OP_OVER (since it's
@@ -320,6 +324,9 @@ struct ActiveScrolledRoot {
 
 private:
   ActiveScrolledRoot()
+    : mScrollableFrame(nullptr)
+    , mDepth(0)
+    , mRetained(false)
   {
   }
 
@@ -436,6 +443,7 @@ public:
   typedef mozilla::layers::FrameMetrics FrameMetrics;
   typedef mozilla::layers::FrameMetrics::ViewID ViewID;
   typedef mozilla::gfx::Matrix4x4 Matrix4x4;
+  typedef mozilla::Maybe<mozilla::layers::ScrollDirection> MaybeScrollDirection;
 
   /**
    * @param aReferenceFrame the frame at the root of the subtree; its origin
@@ -560,7 +568,7 @@ public:
    * @return the selection that painting should be restricted to (or nullptr
    * in the normal unrestricted case)
    */
-  nsISelection* GetBoundingSelection() { return mBoundingSelection; }
+  mozilla::dom::Selection* GetBoundingSelection() { return mBoundingSelection; }
 
   /**
    * @return the root of given frame's (sub)tree, whose origin
@@ -617,7 +625,7 @@ public:
    * which we are building display items at the moment.
    */
   ViewID GetCurrentScrollbarTarget() const { return mCurrentScrollbarTarget; }
-  nsDisplayOwnLayerFlags GetCurrentScrollbarFlags() const { return mCurrentScrollbarFlags; }
+  MaybeScrollDirection GetCurrentScrollbarDirection() const { return mCurrentScrollbarDirection; }
   /**
    * Returns true if building a scrollbar, and the scrollbar will not be
    * layerized.
@@ -721,12 +729,6 @@ public:
   bool AllowMergingAndFlattening() { return mAllowMergingAndFlattening; }
   void SetAllowMergingAndFlattening(bool aAllow) { mAllowMergingAndFlattening = aAllow; }
 
-  nsDisplayLayerEventRegions* GetLayerEventRegions() { return mLayerEventRegions; }
-  void SetLayerEventRegions(nsDisplayLayerEventRegions* aItem)
-  {
-    mLayerEventRegions = aItem;
-  }
-
   /**
    * Sets the current compositor hit test info to |aHitTestInfo|.
    * This is used during display list building to determine if the parent frame
@@ -735,6 +737,10 @@ public:
   void SetCompositorHitTestInfo(nsDisplayCompositorHitTestInfo* aHitTestInfo)
   {
     mCompositorHitTestInfo = aHitTestInfo;
+  }
+  nsDisplayCompositorHitTestInfo* GetCompositorHitTestInfo() const
+  {
+    return mCompositorHitTestInfo;
   }
 
   /**
@@ -746,8 +752,6 @@ public:
                                           nsDisplayList* aList,
                                           const bool aBuildNew);
 
-  bool IsBuildingLayerEventRegions();
-  static bool LayerEventRegionsEnabled();
   bool IsInsidePointerEventsNoneDoc()
   {
     return CurrentPresShellState()->mInsidePointerEventsNoneDoc;
@@ -831,6 +835,12 @@ public:
    * nsDisplayTransform or SVG foreignObject.
    */
   void SetInTransform(bool aInTransform) { mInTransform = aInTransform; }
+
+  /**
+   * Returns true if we're currently building a display list that's
+   * under an nsDisplayFilter.
+   */
+  bool IsInFilter() const { return mInFilter; }
 
   bool IsInPageSequence() const { return mInPageSequence; }
   void SetInPageSequence(bool aInPage) { mInPageSequence = aInPage; }
@@ -941,8 +951,8 @@ public:
   /**
    * Notifies the builder that a particular themed widget exists
    * at the given rectangle within the currently built display list.
-   * For certain appearance values (currently only NS_THEME_TOOLBAR and
-   * NS_THEME_WINDOW_TITLEBAR) this gets called during every display list
+   * For certain appearance values (currently only StyleAppearance::Toolbar and
+   * StyleAppearance::WindowTitlebar) this gets called during every display list
    * construction, for every themed widget of the right type within the
    * display list, except for themed widgets which are transformed or have
    * effects applied to them (e.g. CSS opacity or filters).
@@ -1071,7 +1081,6 @@ public:
       : mBuilder(aBuilder),
         mPrevFrame(aBuilder->mCurrentFrame),
         mPrevReferenceFrame(aBuilder->mCurrentReferenceFrame),
-        mPrevLayerEventRegions(aBuilder->mLayerEventRegions),
         mPrevCompositorHitTestInfo(aBuilder->mCompositorHitTestInfo),
         mPrevOffset(aBuilder->mCurrentOffsetToReferenceFrame),
         mPrevVisibleRect(aBuilder->mVisibleRect),
@@ -1124,7 +1133,6 @@ public:
     ~AutoBuildingDisplayList() {
       mBuilder->mCurrentFrame = mPrevFrame;
       mBuilder->mCurrentReferenceFrame = mPrevReferenceFrame;
-      mBuilder->mLayerEventRegions = mPrevLayerEventRegions;
       mBuilder->mCompositorHitTestInfo = mPrevCompositorHitTestInfo;
       mBuilder->mCurrentOffsetToReferenceFrame = mPrevOffset;
       mBuilder->mVisibleRect = mPrevVisibleRect;
@@ -1140,7 +1148,6 @@ public:
     AGRState              mCurrentAGRState;
     const nsIFrame*       mPrevFrame;
     const nsIFrame*       mPrevReferenceFrame;
-    nsDisplayLayerEventRegions* mPrevLayerEventRegions;
     nsDisplayCompositorHitTestInfo* mPrevCompositorHitTestInfo;
     nsPoint               mPrevOffset;
     nsRect                mPrevVisibleRect;
@@ -1170,48 +1177,29 @@ public:
   };
 
   /**
-   * A helper class to temporarily set the value of mFilterASR.
+   * A helper class to temporarily set the value of mFilterASR and
+   * mInFilter.
    */
-  class AutoFilterASRSetter {
+  class AutoEnterFilter {
   public:
-    AutoFilterASRSetter(nsDisplayListBuilder* aBuilder, bool aUsingFilter)
-      : mBuilder(aBuilder), mOldValue(aBuilder->mFilterASR)
+    AutoEnterFilter(nsDisplayListBuilder* aBuilder, bool aUsingFilter)
+      : mBuilder(aBuilder)
+      , mOldValue(aBuilder->mFilterASR)
+      , mOldInFilter(aBuilder->mInFilter)
     {
       if (!aBuilder->mFilterASR && aUsingFilter) {
         aBuilder->mFilterASR = aBuilder->CurrentActiveScrolledRoot();
+        aBuilder->mInFilter = true;
       }
     }
-    ~AutoFilterASRSetter() {
+    ~AutoEnterFilter() {
       mBuilder->mFilterASR = mOldValue;
+      mBuilder->mInFilter = mOldInFilter;
     }
   private:
     nsDisplayListBuilder* mBuilder;
     const ActiveScrolledRoot* mOldValue;
-  };
-
-  class AutoSaveRestorePerspectiveIndex {
-  public:
-    AutoSaveRestorePerspectiveIndex(nsDisplayListBuilder* aBuilder,
-                                    const bool aChildrenHavePerspective)
-      : mBuilder(nullptr)
-    {
-      if (aChildrenHavePerspective) {
-        mBuilder = aBuilder;
-        mCachedItemIndex = aBuilder->mPerspectiveItemIndex;
-        aBuilder->mPerspectiveItemIndex = 0;
-      }
-    }
-
-    ~AutoSaveRestorePerspectiveIndex()
-    {
-      if (mBuilder) {
-        mBuilder->mPerspectiveItemIndex = mCachedItemIndex;
-      }
-    }
-
-  private:
-    nsDisplayListBuilder* mBuilder;
-    uint32_t mCachedItemIndex;
+    bool mOldInFilter;
   };
 
   /**
@@ -1359,18 +1347,18 @@ public:
   class AutoCurrentScrollbarInfoSetter {
   public:
     AutoCurrentScrollbarInfoSetter(nsDisplayListBuilder* aBuilder, ViewID aScrollTargetID,
-                                   nsDisplayOwnLayerFlags aScrollbarFlags, bool aWillHaveLayer)
+                                   const MaybeScrollDirection& aScrollbarDirection, bool aWillHaveLayer)
      : mBuilder(aBuilder) {
       aBuilder->mIsBuildingScrollbar = true;
       aBuilder->mCurrentScrollbarTarget = aScrollTargetID;
-      aBuilder->mCurrentScrollbarFlags = aScrollbarFlags;
+      aBuilder->mCurrentScrollbarDirection = aScrollbarDirection;
       aBuilder->mCurrentScrollbarWillHaveLayer = aWillHaveLayer;
     }
     ~AutoCurrentScrollbarInfoSetter() {
       // No need to restore old values because scrollbars cannot be nested.
       mBuilder->mIsBuildingScrollbar = false;
       mBuilder->mCurrentScrollbarTarget = FrameMetrics::NULL_SCROLL_ID;
-      mBuilder->mCurrentScrollbarFlags = (nsDisplayOwnLayerFlags)0;
+      mBuilder->mCurrentScrollbarDirection.reset();
       mBuilder->mCurrentScrollbarWillHaveLayer = false;
     }
   private:
@@ -1487,24 +1475,25 @@ public:
       nsRect visible = aVisibleRect;
       nsRect dirtyRectRelativeToDirtyFrame = aDirtyRect;
 
-      if (nsLayoutUtils::IsFixedPosFrameInDisplayPort(aFrame) &&
-          aBuilder->IsPaintingToWindow()) {
-        // position: fixed items are reflowed into and only drawn inside the
-        // viewport, or the scroll position clamping scrollport size, if one is
-        // set.
-        nsIPresShell* ps = aFrame->PresShell();
-        if (ps->IsScrollPositionClampingScrollPortSizeSet()) {
-          dirtyRectRelativeToDirtyFrame =
-            nsRect(nsPoint(0, 0), ps->GetScrollPositionClampingScrollPortSize());
-          visible = dirtyRectRelativeToDirtyFrame;
 #ifdef MOZ_WIDGET_ANDROID
-        } else {
-          dirtyRectRelativeToDirtyFrame =
-            nsRect(nsPoint(0, 0), aFrame->GetParent()->GetSize());
-          visible = dirtyRectRelativeToDirtyFrame;
-#endif
+        if (nsLayoutUtils::IsFixedPosFrameInDisplayPort(aFrame) &&
+            aBuilder->IsPaintingToWindow()) {
+            // We want to ensure that fixed position elements are visible when
+            // being async scrolled, so we paint them at the size of the larger
+            // viewport.
+            dirtyRectRelativeToDirtyFrame =
+              nsRect(nsPoint(0, 0), aFrame->GetParent()->GetSize());
+
+            nsIPresShell* ps = aFrame->PresShell();
+            if (ps->IsVisualViewportSizeSet() &&
+                dirtyRectRelativeToDirtyFrame.Size() < ps->GetVisualViewportSize()) {
+                dirtyRectRelativeToDirtyFrame.SizeTo(ps->GetVisualViewportSize());
+            }
+
+            visible = dirtyRectRelativeToDirtyFrame;
         }
-      }
+#endif
+
       *aOutDirtyRect = dirtyRectRelativeToDirtyFrame - aFrame->GetPosition();
       visible -= aFrame->GetPosition();
 
@@ -1636,8 +1625,6 @@ public:
   void SetContainsBlendMode(bool aContainsBlendMode) { mContainsBlendMode = aContainsBlendMode; }
   bool ContainsBlendMode() const { return mContainsBlendMode; }
 
-  uint32_t AllocatePerspectiveItemIndex() { return mPerspectiveItemIndex++; }
-
   DisplayListClipState& ClipState() { return mClipState; }
   const ActiveScrolledRoot* CurrentActiveScrolledRoot() { return mCurrentActiveScrolledRoot; }
   const ActiveScrolledRoot* CurrentAncestorASRStackingContextContents() { return mCurrentContainerASR; }
@@ -1750,8 +1737,6 @@ public:
    * Represents a region composed of frame/rect pairs.
    * WeakFrames are used to track whether a rect still belongs to the region.
    * Modified frames and rects are removed and re-added to the region if needed.
-   * nsDisplayLayerEventRegions::FrameRects implements the same functionality
-   * with nsIFrames.
    */
   struct WeakFrameRegion {
     std::vector<WeakFrame> mFrames;
@@ -1817,6 +1802,7 @@ private:
   friend class nsDisplayCanvasBackgroundImage;
   friend class nsDisplayBackgroundImage;
   friend class nsDisplayFixedPosition;
+  friend class nsDisplayPerspective;
   AnimatedGeometryRoot* FindAnimatedGeometryRootFor(nsDisplayItem* aItem);
 
   friend class nsDisplayItem;
@@ -1880,12 +1866,11 @@ private:
 
   nsIFrame* const                mReferenceFrame;
   nsIFrame*                      mIgnoreScrollFrame;
-  nsDisplayLayerEventRegions*    mLayerEventRegions;
   nsDisplayCompositorHitTestInfo* mCompositorHitTestInfo;
 
   nsPresArena mPool;
 
-  nsCOMPtr<nsISelection>         mBoundingSelection;
+  RefPtr<mozilla::dom::Selection> mBoundingSelection;
   AutoTArray<PresShellState,8> mPresShellStates;
   AutoTArray<nsIFrame*,400>    mFramesMarkedForDisplay;
   AutoTArray<nsIFrame*,40>       mFramesMarkedForDisplayIfVisible;
@@ -1956,9 +1941,8 @@ private:
   nsDisplayListBuilderMode       mMode;
   ViewID                         mCurrentScrollParentId;
   ViewID                         mCurrentScrollbarTarget;
-  nsDisplayOwnLayerFlags         mCurrentScrollbarFlags;
+  MaybeScrollDirection           mCurrentScrollbarDirection;
   Preserves3DContext             mPreserves3DCtx;
-  uint32_t                       mPerspectiveItemIndex;
   int32_t                        mSVGEffectsBuildingDepth;
   // When we are inside a filter, the current ASR at the time we entered the
   // filter. Otherwise nullptr.
@@ -1979,6 +1963,7 @@ private:
   // True when we're building a display list that's directly or indirectly
   // under an nsDisplayTransform
   bool                           mInTransform;
+  bool                           mInFilter;
   bool                           mInPageSequence;
   bool                           mIsInChromePresContext;
   bool                           mSyncDecodeImages;
@@ -2033,17 +2018,19 @@ template<typename T, typename... Args>
 MOZ_ALWAYS_INLINE T*
 MakeDisplayItem(nsDisplayListBuilder* aBuilder, Args&&... aArgs)
 {
-  T* item = new (aBuilder) T(aBuilder, mozilla::Forward<Args>(aArgs)...);
+  T* item = new (aBuilder) T(aBuilder, std::forward<Args>(aArgs)...);
 
   const mozilla::SmallPointerArray<mozilla::DisplayItemData>& array =
     item->Frame()->DisplayItemData();
   for (uint32_t i = 0; i < array.Length(); i++) {
     mozilla::DisplayItemData* did = array.ElementAt(i);
     if (did->GetDisplayItemKey() == item->GetPerFrameKey()) {
-      if (!did->HasMergedFrames()) {
-        item->SetDisplayItemData(did);
+      if (did->GetLayer()->AsPaintedLayer()) {
+        if (!did->HasMergedFrames()) {
+          item->SetDisplayItemData(did, did->GetLayer()->Manager());
+        }
+        break;
       }
-      break;
     }
   }
 
@@ -2114,6 +2101,7 @@ public:
     , mDisableSubpixelAA(false)
     , mReusedItem(false)
     , mBackfaceHidden(mFrame->In3DContextAndBackfaceIsHidden())
+    , mPaintRectValid(false)
 #ifdef MOZ_DUMP_PAINTING
     , mPainted(false)
 #endif
@@ -2124,6 +2112,7 @@ public:
 protected:
   virtual ~nsDisplayItem() {
     MOZ_COUNT_DTOR(nsDisplayItem);
+    SetDisplayItemData(nullptr, nullptr);
     if (mFrame) {
       mFrame->RemoveDisplayItem(this);
     }
@@ -2139,7 +2128,6 @@ public:
 
   virtual void RestoreState()
   {
-    mVisibleRect = mState.mVisibleRect;
     mClipChain = mState.mClipChain;
     mClip = mState.mClip;
     mDisableSubpixelAA = false;
@@ -2150,7 +2138,7 @@ public:
     if (mFrame && aFrame == mFrame) {
       MOZ_ASSERT(!mFrame->HasDisplayItem(this));
       mFrame = nullptr;
-      mDisplayItemData = nullptr;
+      SetDisplayItemData(nullptr, nullptr);
     }
   }
 
@@ -2182,11 +2170,13 @@ public:
     , mReferenceFrame(aOther.mReferenceFrame)
     , mAnimatedGeometryRoot(aOther.mAnimatedGeometryRoot)
     , mToReferenceFrame(aOther.mToReferenceFrame)
-    , mVisibleRect(aOther.mVisibleRect)
+    , mBuildingRect(aOther.mBuildingRect)
+    , mPaintRect(aOther.mPaintRect)
     , mForceNotVisible(aOther.mForceNotVisible)
     , mDisableSubpixelAA(aOther.mDisableSubpixelAA)
     , mReusedItem(false)
     , mBackfaceHidden(mFrame->In3DContextAndBackfaceIsHidden())
+    , mPaintRectValid(false)
 #ifdef MOZ_DUMP_PAINTING
     , mPainted(false)
 #endif
@@ -2401,6 +2391,12 @@ public:
   }
 
   /**
+   * This function is called when an item's list of children has been omdified
+   * by RetaineDisplayListBuilder.
+   */
+  virtual void InvalidateCachedChildInfo() {}
+
+  /**
    * @param aSnap set to true if the edges of the rectangles of the opaque
    * region would be snapped to device pixels when drawing
    * @return a region of the item that is opaque --- that is, every pixel
@@ -2485,11 +2481,24 @@ public:
   }
 
   /**
+   * Returns true if this item supports PaintWithClip, where the clipping
+   * is used directly as the primitive geometry instead of needing an explicit
+   * clip.
+   */
+  virtual bool CanPaintWithClip(const DisplayItemClip& aClip) { return false; }
+
+  /**
    * Actually paint this item to some rendering context.
    * Content outside mVisibleRect need not be painted.
    * aCtx must be set up as for nsDisplayList::Paint.
    */
   virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) {}
+
+  /**
+   * Same as Paint, except provides a clip to use the geometry to draw with.
+   * Must not be called unless CanPaintWithClip returned true.
+   */
+  virtual void PaintWithClip(nsDisplayListBuilder* aBuilder, gfxContext* aCtx, const DisplayItemClip& aClip) {}
 
 #ifdef MOZ_DUMP_PAINTING
   /**
@@ -2622,6 +2631,15 @@ public:
   }
 
   /**
+   * Returns true if this item needs to have its geometry updated, despite
+   * returning empty invalidation region.
+   */
+  virtual bool NeedsGeometryUpdates() const
+  {
+    return false;
+  }
+
+  /**
    * Some items such as those calling into the native themed widget machinery
    * have to be painted on the content process. In this case it is best to avoid
    * allocating layers that serializes and forwards the work to the compositor.
@@ -2633,7 +2651,7 @@ public:
    * system as this item (i.e., they have the same reference frame),
    * return the list.
    */
-  virtual nsDisplayList* GetSameCoordinateSystemChildren() const
+  virtual RetainedDisplayList* GetSameCoordinateSystemChildren() const
   {
     return nullptr;
   }
@@ -2662,26 +2680,35 @@ public:
   virtual RetainedDisplayList* GetChildren() const { return nullptr; }
 
   /**
-   * Returns the visible rect.
+   * Returns the building rectangle used by nsDisplayListBuilder when
+   * this item was constructed.
    */
-  const nsRect& GetVisibleRect() const { return mVisibleRect; }
+  const nsRect& GetBuildingRect() const { return mBuildingRect; }
 
-  void SetVisibleRect(const nsRect& aVisibleRect, bool aStore)
+  void SetBuildingRect(const nsRect& aBuildingRect)
   {
-    mVisibleRect = aVisibleRect;
-
-    if (aStore) {
-      mState.mVisibleRect = mVisibleRect;
+    if (aBuildingRect == mBuildingRect) {
+      // Avoid unnecessary paint rect recompution when the
+      // building rect is staying the same.
+      return;
     }
+    mPaintRect = mBuildingRect = aBuildingRect;
+    mPaintRectValid = false;
   }
 
+  void SetPaintRect(const nsRect& aPaintRect) {
+    mPaintRect = aPaintRect;
+    mPaintRectValid = true;
+  }
+  bool HasPaintRect() const { return mPaintRectValid; }
+
   /**
-   * Returns the visible rect for the children, relative to their
-   * reference frame. Can be different from mVisibleRect for nsDisplayTransform,
+   * Returns the building rect for the children, relative to their
+   * reference frame. Can be different from mBuildingRect for nsDisplayTransform,
    * since the reference frame for the children is different from the reference
    * frame for the item itself.
    */
-  virtual const nsRect& GetVisibleRectForChildren() const { return mVisibleRect; }
+  virtual const nsRect& GetBuildingRectForChildren() const { return mBuildingRect; }
 
   /**
    * Stores the given opacity value to be applied when drawing. It is an error to
@@ -2717,8 +2744,7 @@ public:
    * -- Subtracts bounds from aVisibleRegion if the item is opaque
    */
   bool RecomputeVisibility(nsDisplayListBuilder* aBuilder,
-                           nsRegion* aVisibleRegion,
-                           bool aUseClipBounds = true);
+                           nsRegion* aVisibleRegion);
 
   /**
    * Returns the result of aBuilder->ToReferenceFrame(GetUnderlyingFrame())
@@ -2804,9 +2830,14 @@ public:
     return mBackfaceHidden;
   }
 
+  bool HasDifferentFrame(const nsDisplayItem* aOther) const
+  {
+    return mFrame != aOther->mFrame;
+  }
+
   bool HasSameTypeAndClip(const nsDisplayItem* aOther) const
   {
-    return GetType() == aOther->GetType() &&
+    return GetPerFrameKey() == aOther->GetPerFrameKey() &&
            GetClipChain() == aOther->GetClipChain();
   }
 
@@ -2836,11 +2867,23 @@ public:
       nsDisplayListBuilder* aBuilder,
       const ActiveScrolledRoot* aASR) const;
 
-  void SetDisplayItemData(mozilla::DisplayItemData* aDID) {
+  void SetDisplayItemData(mozilla::DisplayItemData* aDID, mozilla::layers::LayerManager* aLayerManager) {
+    if (mDisplayItemData) {
+      MOZ_ASSERT(!mDisplayItemData->GetItem() || mDisplayItemData->GetItem() == this);
+      mDisplayItemData->SetItem(nullptr);
+    }
+    if (aDID) {
+      if (aDID->GetItem()) {
+        aDID->GetItem()->SetDisplayItemData(nullptr, nullptr);
+      }
+      aDID->SetItem(this);
+    }
     mDisplayItemData = aDID;
+    mDisplayItemDataLayerManager = aLayerManager;
   }
 
   mozilla::DisplayItemData* GetDisplayItemData() { return mDisplayItemData; }
+  mozilla::layers::LayerManager* GetDisplayItemDataLayerManager() { return mDisplayItemDataLayerManager; }
 
   // Set the nsDisplayList that this item belongs to, and what
   // index it is within that list. Temporary state for merging
@@ -2866,6 +2909,10 @@ public:
     return true;
   }
 
+  const nsRect& GetPaintRect() const {
+    return mPaintRect;
+  }
+
 protected:
   nsDisplayItem() = delete;
 
@@ -2882,14 +2929,21 @@ protected:
   RefPtr<struct AnimatedGeometryRoot> mAnimatedGeometryRoot;
   // Result of ToReferenceFrame(mFrame), if mFrame is non-null
   nsPoint   mToReferenceFrame;
-  RefPtr<mozilla::DisplayItemData> mDisplayItemData;
-  // This is the rectangle that needs to be painted.
-  // Display item construction sets this to the dirty rect.
+  mozilla::DisplayItemData* mDisplayItemData = nullptr;
+  mozilla::layers::LayerManager* mDisplayItemDataLayerManager = nullptr;
+
+private:
+  // This is the rectangle that nsDisplayListBuilder was using as the visible
+  // rect to decide which items to construct.
+  nsRect    mBuildingRect;
+
   // nsDisplayList::ComputeVisibility sets this to the visible region
-  // of the item by intersecting the current visible region with the bounds
+  // of the item by intersecting the visible region with the bounds
   // of the item. Paint implementations can use this to limit their drawing.
   // Guaranteed to be contained in GetBounds().
-  nsRect    mVisibleRect;
+  nsRect    mPaintRect;
+
+protected:
 
 #ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
 public:
@@ -2906,13 +2960,13 @@ protected:
   bool      mDisableSubpixelAA;
   bool      mReusedItem;
   bool      mBackfaceHidden;
+  bool      mPaintRectValid;
 #ifdef MOZ_DUMP_PAINTING
   // True if this frame has been painted.
   bool      mPainted;
 #endif
 
   struct {
-    nsRect mVisibleRect;
     RefPtr<const DisplayItemClipChain> mClipChain;
     const DisplayItemClip* mClip;
   } mState;
@@ -3189,14 +3243,14 @@ public:
    * If there is an item in this list which is not bounded with respect to
    * aASR (i.e. which does not have "finite bounds" with respect to aASR),
    * then this method trigger an assertion failure.
-   * The optional aVisibleRect out argument can be set to non-null if the
-   * caller is also interested to know the visible rect.  This can be used
+   * The optional aBuildingRect out argument can be set to non-null if the
+   * caller is also interested to know the building rect.  This can be used
    * to get the visible rect efficiently without traversing the display list
    * twice.
    */
   nsRect GetClippedBoundsWithRespectToASR(nsDisplayListBuilder* aBuilder,
                                           const ActiveScrolledRoot* aASR,
-                                          nsRect* aVisibleRect = nullptr) const;
+                                          nsRect* aBuildingRect = nullptr) const;
 
   /**
    * Find the topmost display item that returns a non-null frame, and return
@@ -3209,7 +3263,7 @@ public:
    * Compute the union of the visible rects of the items in the list. The
    * result is not cached.
    */
-  nsRect GetVisibleRect() const;
+  nsRect GetBuildingRect() const;
 
   void SetIsOpaque()
   {
@@ -3238,92 +3292,6 @@ private:
   // This is set to true by FrameLayerBuilder if any display item in this
   // list needs to force the surface containing this list to be transparent.
   bool mForceTransparentSurface;
-};
-
-class FlattenedDisplayItemIterator
-{
-public:
-  FlattenedDisplayItemIterator(nsDisplayListBuilder* aBuilder,
-                               nsDisplayList* aList,
-                               const bool aResolveFlattening = true)
-    : mBuilder(aBuilder)
-    , mNext(aList->GetBottom())
-  {
-    if (aResolveFlattening) {
-      // This is done conditionally in case subclass overrides
-      // ShouldFlattenNextItem().
-      ResolveFlattening();
-    }
-  }
-
-  virtual ~FlattenedDisplayItemIterator()
-  {
-    MOZ_ASSERT(!HasNext());
-  }
-
-  nsDisplayItem* GetNext()
-  {
-    nsDisplayItem* next = mNext;
-
-    // Advance mNext to the following item
-    if (next) {
-      mNext = mNext->GetAbove();
-      ResolveFlattening();
-    }
-    return next;
-  }
-
-  bool HasNext() const
-  {
-    return mNext || !mStack.IsEmpty();
-  }
-
-  nsDisplayItem* PeekNext()
-  {
-    return mNext;
-  }
-
-protected:
-  bool AtEndOfNestedList() const
-  {
-    return !mNext && mStack.Length() > 0;
-  }
-
-  virtual bool ShouldFlattenNextItem() const
-  {
-    return mNext && mNext->ShouldFlattenAway(mBuilder);
-  }
-
-  void ResolveFlattening()
-  {
-    // Handle the case where we reach the end of a nested list, or the current
-    // item should start a new nested list. Repeat this until we find an actual
-    // item, or the very end of the outer list.
-    while (AtEndOfNestedList() || ShouldFlattenNextItem()) {
-      if (AtEndOfNestedList()) {
-        // Pop the last item off the stack.
-        mNext = mStack.LastElement();
-        EndNested(mNext);
-        mStack.RemoveElementAt(mStack.Length() - 1);
-        // We stored the item that was flattened, so advance to the next.
-        mNext = mNext->GetAbove();
-      } else {
-        // This item wants to be flattened. Store the current item on the stack,
-        // and use the first item in the child list instead.
-        mStack.AppendElement(mNext);
-        StartNested(mNext);
-        nsDisplayList* childItems = mNext->GetSameCoordinateSystemChildren();
-        mNext = childItems->GetBottom();
-      }
-    }
-  }
-
-  virtual void EndNested(nsDisplayItem* aItem) {}
-  virtual void StartNested(nsDisplayItem* aItem) {}
-
-  nsDisplayListBuilder* mBuilder;
-  nsDisplayItem* mNext;
-  AutoTArray<nsDisplayItem*, 10> mStack;
 };
 
 /**
@@ -3467,7 +3435,7 @@ public:
   RetainedDisplayList(RetainedDisplayList&& aOther)
   {
     AppendToTop(&aOther);
-    mDAG = mozilla::Move(aOther.mDAG);
+    mDAG = std::move(aOther.mDAG);
   }
   ~RetainedDisplayList()
   {
@@ -3479,7 +3447,7 @@ public:
     MOZ_ASSERT(!Count(), "Can only move into an empty list!");
     MOZ_ASSERT(mOldItems.IsEmpty(), "Can only move into an empty list!");
     AppendToTop(&aOther);
-    mDAG = mozilla::Move(aOther.mDAG);
+    mDAG = std::move(aOther.mDAG);
     return *this;
   }
 
@@ -3500,6 +3468,97 @@ public:
   // Temporary state initialized during the preprocess pass
   // of RetainedDisplayListBuilder and then used during merging.
   nsTArray<OldItemInfo> mOldItems;
+};
+
+class FlattenedDisplayItemIterator
+{
+public:
+  FlattenedDisplayItemIterator(nsDisplayListBuilder* aBuilder,
+                               nsDisplayList* aList,
+                               const bool aResolveFlattening = true)
+    : mBuilder(aBuilder)
+    , mNext(aList->GetBottom())
+  {
+    if (aResolveFlattening) {
+      // This is done conditionally in case subclass overrides
+      // ShouldFlattenNextItem().
+      ResolveFlattening();
+    }
+  }
+
+  virtual ~FlattenedDisplayItemIterator()
+  {
+    MOZ_ASSERT(!HasNext());
+  }
+
+  nsDisplayItem* GetNext()
+  {
+    nsDisplayItem* next = mNext;
+
+    // Advance mNext to the following item
+    if (next) {
+      mNext = mNext->GetAbove();
+      ResolveFlattening();
+    }
+    return next;
+  }
+
+  bool HasNext() const
+  {
+    return mNext || !mStack.IsEmpty();
+  }
+
+  nsDisplayItem* PeekNext()
+  {
+    return mNext;
+  }
+
+protected:
+  bool AtEndOfNestedList() const
+  {
+    return !mNext && mStack.Length() > 0;
+  }
+
+  virtual bool ShouldFlattenNextItem()
+  {
+    return mNext && mNext->ShouldFlattenAway(mBuilder);
+  }
+
+  void ResolveFlattening()
+  {
+    // Handle the case where we reach the end of a nested list, or the current
+    // item should start a new nested list. Repeat this until we find an actual
+    // item, or the very end of the outer list.
+    while (AtEndOfNestedList() || ShouldFlattenNextItem()) {
+      if (AtEndOfNestedList()) {
+        // Pop the last item off the stack.
+        mNext = mStack.LastElement();
+        EndNested(mNext);
+        mStack.RemoveElementAt(mStack.Length() - 1);
+        // We stored the item that was flattened, so advance to the next.
+        mNext = mNext->GetAbove();
+      } else {
+        // This item wants to be flattened. Store the current item on the stack,
+        // and use the first item in the child list instead.
+        mStack.AppendElement(mNext);
+        StartNested(mNext);
+
+        nsDisplayList* childItems =
+          mNext->GetType() != DisplayItemType::TYPE_TRANSFORM
+          ? mNext->GetSameCoordinateSystemChildren()
+          : mNext->GetChildren();
+
+        mNext = childItems->GetBottom();
+      }
+    }
+  }
+
+  virtual void EndNested(nsDisplayItem* aItem) {}
+  virtual void StartNested(nsDisplayItem* aItem) {}
+
+  nsDisplayListBuilder* mBuilder;
+  nsDisplayItem* mNext;
+  AutoTArray<nsDisplayItem*, 10> mStack;
 };
 
 class nsDisplayImageContainer : public nsDisplayItem {
@@ -3586,9 +3645,9 @@ public:
                      gfxContext* aCtx) override {
     MOZ_ASSERT(!!mPaint != !!mOldPaint);
     if (mPaint) {
-      mPaint(mFrame, aCtx->GetDrawTarget(), mVisibleRect, ToReferenceFrame());
+      mPaint(mFrame, aCtx->GetDrawTarget(), GetPaintRect(), ToReferenceFrame());
     } else {
-      mOldPaint(mFrame, aCtx, mVisibleRect, ToReferenceFrame());
+      mOldPaint(mFrame, aCtx, GetPaintRect(), ToReferenceFrame());
     }
   }
   virtual const char* Name() const override { return mName; }
@@ -3738,9 +3797,6 @@ public:
                                    LayerManager* aManager,
                                    const ContainerLayerParameters& aParameters) override;
 
-  virtual already_AddRefed<Layer> BuildLayer(nsDisplayListBuilder* aBuilder,
-                                             LayerManager* aManager,
-                                             const ContainerLayerParameters& aContainerParameters) override;
   virtual bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
                                        mozilla::wr::IpcResourceUpdateQueue& aResources,
                                        const StackingContextHelper& aSc,
@@ -3765,11 +3821,6 @@ public:
   }
 
 protected:
-  void CreateBorderImageWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                          mozilla::wr::IpcResourceUpdateQueue& aResource,
-                                          const StackingContextHelper& aSc,
-                                          mozilla::layers::WebRenderLayerManager* aManager,
-                                          nsDisplayListBuilder* aDisplayListBuilder);
   template<typename T>
   T CalculateBounds(const nsStyleBorder& aStyleBorder) const
   {
@@ -3816,17 +3867,7 @@ protected:
     }
   }
 
-  mozilla::Array<mozilla::gfx::Color, 4> mColors;
-  mozilla::Array<mozilla::LayerCoord, 4> mWidths;
-  mozilla::Array<mozilla::LayerSize, 4> mCorners;
-  mozilla::Array<uint8_t, 4> mBorderStyles;
-  mozilla::LayerRect mRect;
-
-  mozilla::Maybe<nsCSSBorderRenderer> mBorderRenderer;
-  mozilla::Maybe<nsCSSBorderImageRenderer> mBorderImageRenderer;
-
   nsRect mBounds;
-  bool mBorderIsEmpty;
 };
 
 /**
@@ -4332,7 +4373,7 @@ protected:
   nsRect mBackgroundRect;
   nsRect mBounds;
   nsITheme::Transparency mThemeTransparency;
-  uint8_t mAppearance;
+  mozilla::StyleAppearance mAppearance;
 };
 
 class nsDisplayTableThemedBackground : public nsDisplayThemedBackground {
@@ -4413,6 +4454,7 @@ public:
                                    LayerManager* aManager,
                                    const ContainerLayerParameters& aParameters) override;
   virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
+  virtual void PaintWithClip(nsDisplayListBuilder* aBuilder, gfxContext* aCtx, const DisplayItemClip& aClip) override;
   virtual already_AddRefed<Layer> BuildLayer(nsDisplayListBuilder* aBuilder,
                                              LayerManager* aManager,
                                              const ContainerLayerParameters& aContainerParameters) override;
@@ -4437,6 +4479,18 @@ public:
   {
     *aSnap = true;
     return mBackgroundRect;
+  }
+
+  virtual bool CanPaintWithClip(const DisplayItemClip& aClip) override
+  {
+    mozilla::StyleGeometryBox clip = mBackgroundStyle->StyleBackground()->mImage.mLayers[0].mClip;
+    if (clip == mozilla::StyleGeometryBox::Text) {
+      return false;
+    }
+    if (aClip.GetRoundedRectCount() > 1) {
+      return false;
+    }
+    return true;
   }
 
   virtual nsDisplayItemGeometry* AllocateGeometry(nsDisplayListBuilder* aBuilder) override
@@ -4840,224 +4894,6 @@ private:
 };
 
 /**
- * A display item that tracks event-sensitive regions which will be set
- * on the ContainerLayer that eventually contains this item.
- *
- * One of these is created for each stacking context and pseudo-stacking-context.
- * It accumulates regions for event targets contributed by the border-boxes of
- * frames in its (pseudo) stacking context. A nsDisplayLayerEventRegions
- * eventually contributes its regions to the PaintedLayer it is placed in by
- * FrameLayerBuilder. (We don't create a display item for every frame that
- * could be an event target (i.e. almost all frames), because that would be
- * high overhead.)
- *
- * We always make leaf layers other than PaintedLayers transparent to events.
- * For example, an event targeting a canvas or video will actually target the
- * background of that element, which is logically in the PaintedLayer behind the
- * CanvasFrame or ImageFrame. We only need to create a
- * nsDisplayLayerEventRegions when an element's background could be in front
- * of a lower z-order element with its own layer.
- */
-class nsDisplayLayerEventRegions final : public nsDisplayItem {
-public:
-  nsDisplayLayerEventRegions(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame, uint32_t aIndex = 0)
-    : nsDisplayItem(aBuilder, aFrame)
-    , mIndex(aIndex)
-  {
-    MOZ_COUNT_CTOR(nsDisplayLayerEventRegions);
-  }
-
-  virtual void Destroy(nsDisplayListBuilder* aBuilder) override
-  {
-    if (!aBuilder->IsRetainingDisplayList()) {
-      nsDisplayItem::Destroy(aBuilder);
-      return;
-    }
-
-    RemoveItemFromFrames(mHitRegion);
-    RemoveItemFromFrames(mMaybeHitRegion);
-    RemoveItemFromFrames(mDispatchToContentHitRegion);
-    RemoveItemFromFrames(mNoActionRegion);
-    RemoveItemFromFrames(mHorizontalPanRegion);
-    RemoveItemFromFrames(mVerticalPanRegion);
-    nsDisplayItem::Destroy(aBuilder);
-  }
-
-  virtual nsRect GetBounds(nsDisplayListBuilder* aBuilder,
-                           bool* aSnap) const override
-  {
-    *aSnap = false;
-    return nsRect();
-  }
-  nsRect GetHitRegionBounds(nsDisplayListBuilder* aBuilder, bool* aSnap)
-  {
-    *aSnap = false;
-    // TODO: This constructs the two regions, but we're also doing the same
-    // work in AccumulateEventRegions. We should avoid doing it twice.
-    return HitRegion().GetBounds().Union(MaybeHitRegion().GetBounds());
-  }
-
-  virtual void ApplyOpacity(nsDisplayListBuilder* aBuilder,
-                            float aOpacity,
-                            const DisplayItemClipChain* aClip) override
-  {
-    NS_ASSERTION(CanApplyOpacity(), "ApplyOpacity should be allowed");
-  }
-  virtual bool CanApplyOpacity() const override
-  {
-    return true;
-  }
-
-  NS_DISPLAY_DECL_NAME("LayerEventRegions", TYPE_LAYER_EVENT_REGIONS)
-
-  // Indicate that aFrame's border-box contributes to the event regions for
-  // this layer. aFrame must have the same reference frame as mFrame.
-  void AddFrame(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame);
-
-  // Indicate that an inactive scrollframe's scrollport should be added to the
-  // dispatch-to-content region, to ensure that APZ lets content create a
-  // displayport.
-  void AddInactiveScrollPort(nsIFrame* aFrame, const nsRect& aRect);
-
-  bool IsEmpty() const;
-
-  int32_t ZIndex() const override;
-  void SetOverrideZIndex(int32_t aZIndex);
-
-  virtual uint32_t GetPerFrameKey() const override
-  {
-    return (mIndex << TYPE_BITS) | nsDisplayItem::GetPerFrameKey();
-  }
-
-  const nsRegion HitRegion()
-  {
-    return nsRegion(mozilla::gfx::ArrayView<pixman_box32_t>(mHitRegion.mBoxes));
-  }
-  const nsRegion MaybeHitRegion()
-  {
-    nsRegion result(mozilla::gfx::ArrayView<pixman_box32_t>(mMaybeHitRegion.mBoxes));
-
-    // Avoid quadratic performance as a result of the region growing to include
-    // an arbitrarily large number of rects, which can happen on some pages.
-    // TODO: It would be nice if we could ask the initial construction above
-    // to include simplification.
-    result.SimplifyOutward(8);
-    return result;
-  }
-  const nsRegion DispatchToContentHitRegion()
-  {
-    nsRegion result(mozilla::gfx::ArrayView<pixman_box32_t>(mDispatchToContentHitRegion.mBoxes));
-
-    // If this frame has touch-action areas, and there were already
-    // touch-action areas from some other element on this same event regions,
-    // then all we know is that there are multiple elements with touch-action
-    // properties. In particular, we don't know what the relationship is
-    // between those elements in terms of DOM ancestry, and so we don't know
-    // how to combine the regions properly. Instead, we just add all the areas
-    // to the dispatch-to-content region, so that the APZ knows to check with
-    // the main thread. XXX we need to come up with a better way to do this,
-    // see bug 1287829.
-    uint32_t touchActionCount =
-      mNoActionRegion.mBoxes.Length() +
-      mHorizontalPanRegion.mBoxes.Length() +
-      mVerticalPanRegion.mBoxes.Length();
-    if (touchActionCount > 1) {
-      result.OrWith(NoActionRegion());
-      result.OrWith(HorizontalPanRegion());
-      result.OrWith(VerticalPanRegion());
-    }
-
-    result.SimplifyOutward(8);
-    return result;
-  }
-  const nsRegion NoActionRegion()
-  {
-    return nsRegion(mozilla::gfx::ArrayView<pixman_box32_t>(mNoActionRegion.mBoxes));
-  }
-  const nsRegion HorizontalPanRegion()
-  {
-    return nsRegion(mozilla::gfx::ArrayView<pixman_box32_t>(mHorizontalPanRegion.mBoxes));
-  }
-  const nsRegion VerticalPanRegion()
-  {
-    return nsRegion(mozilla::gfx::ArrayView<pixman_box32_t>(mVerticalPanRegion.mBoxes));
-  }
-  nsRegion CombinedTouchActionRegion();
-
-  virtual void WriteDebugInfo(std::stringstream& aStream) override;
-
-  // TODO: nsTArray (vector) might not be a great data structure
-  // choice since we need to remove elements from the middle.
-  // Should profile and try figure out the best approach
-  // here.
-  struct FrameRects {
-    void Add(nsIFrame* aFrame, const nsRect& aRect) {
-      mBoxes.AppendElement(nsRegion::RectToBox(aRect));
-      mFrames.AppendElement(aFrame);
-    }
-    void Add(nsIFrame* aFrame, const pixman_box32& aBox) {
-      mBoxes.AppendElement(aBox);
-      mFrames.AppendElement(aFrame);
-    }
-    void Add(const FrameRects& aOther) {
-      mBoxes.AppendElements(aOther.mBoxes);
-      mFrames.AppendElements(aOther.mFrames);
-    }
-
-    bool IsEmpty() const {
-      return mBoxes.IsEmpty();
-    }
-
-    nsTArray<pixman_box32_t> mBoxes;
-    nsTArray<nsIFrame*> mFrames;
-  };
-
-  virtual void RemoveFrame(nsIFrame* aFrame) override;
-
-private:
-  virtual ~nsDisplayLayerEventRegions()
-  {
-    MOZ_COUNT_DTOR(nsDisplayLayerEventRegions);
-  }
-
-  void RemoveItemFromFrames(FrameRects& aFrameRects)
-  {
-    for (nsIFrame* f : aFrameRects.mFrames) {
-      if (f != mFrame) {
-        f->RemoveDisplayItem(this);
-      }
-    }
-  }
-
-  friend bool MergeLayerEventRegions(nsDisplayItem*, nsDisplayItem*);
-
-  // Relative to aFrame's reference frame.
-  // These are the points that are definitely in the hit region.
-  FrameRects mHitRegion;
-  // These are points that may or may not be in the hit region. Only main-thread
-  // event handling can tell for sure (e.g. because complex shapes are present).
-  FrameRects mMaybeHitRegion;
-  // These are points that need to be dispatched to the content thread for
-  // resolution. Always contained in the union of mHitRegion and mMaybeHitRegion.
-  FrameRects mDispatchToContentHitRegion;
-  // These are points where panning is disabled, as determined by the touch-action
-  // property. Always contained in the union of mHitRegion and mMaybeHitRegion.
-  FrameRects mNoActionRegion;
-  // These are points where panning is horizontal, as determined by the touch-action
-  // property. Always contained in the union of mHitRegion and mMaybeHitRegion.
-  FrameRects mHorizontalPanRegion;
-  // These are points where panning is vertical, as determined by the touch-action
-  // property. Always contained in the union of mHitRegion and mMaybeHitRegion.
-  FrameRects mVerticalPanRegion;
-  // If these event regions are for an inactive scroll frame, the z-index of
-  // this display item is overridden to be the largest z-index of the content
-  // in the scroll frame. This ensures that the event regions item remains on
-  // top of the content after sorting items by z-index.
-  mozilla::Maybe<int32_t> mOverrideZIndex;
-  uint32_t mIndex;
-};
-
-/**
  * A class that lets you wrap a display list as a display item.
  *
  * GetUnderlyingFrame() is troublesome for wrapped lists because if the wrapped
@@ -5094,7 +4930,7 @@ public:
     , mHasZIndexOverride(false)
   {
     MOZ_COUNT_CTOR(nsDisplayWrapList);
-    mBaseVisibleRect = mVisibleRect;
+    mBaseBuildingRect = GetBuildingRect();
     mListPtr = &mList;
   }
 
@@ -5109,7 +4945,7 @@ public:
     , mFrameActiveScrolledRoot(aOther.mFrameActiveScrolledRoot)
     , mMergedFrames(aOther.mMergedFrames)
     , mBounds(aOther.mBounds)
-    , mBaseVisibleRect(aOther.mBaseVisibleRect)
+    , mBaseBuildingRect(aOther.mBaseBuildingRect)
     , mOverrideZIndex(aOther.mOverrideZIndex)
     , mIndex(aOther.mIndex)
     , mHasZIndexOverride(aOther.mHasZIndexOverride)
@@ -5157,9 +4993,9 @@ public:
       SetClipChain(clip, false);
     }
 
-    nsRect visibleRect;
+    nsRect buildingRect;
     mBounds =
-      mListPtr->GetClippedBoundsWithRespectToASR(aBuilder, mActiveScrolledRoot, &visibleRect);
+      mListPtr->GetClippedBoundsWithRespectToASR(aBuilder, mActiveScrolledRoot, &buildingRect);
     // The display list may contain content that's visible outside the visible
     // rect (i.e. the current dirty rect) passed in when the item was created.
     // This happens when the dirty rect has been restricted to the visual
@@ -5167,8 +5003,8 @@ public:
     // rects in nsDisplayListBuilder::MarkOutOfFlowFrameForDisplay), but that
     // frame contains placeholders for out-of-flows that aren't descendants of
     // the frame.
-    mVisibleRect.UnionRect(mBaseVisibleRect, visibleRect);
-    mState.mVisibleRect = mVisibleRect;
+    buildingRect.UnionRect(mBaseBuildingRect, buildingRect);
+    SetBuildingRect(buildingRect);
   }
   virtual void HitTest(nsDisplayListBuilder* aBuilder, const nsRect& aRect,
                        HitTestState* aState, nsTArray<nsIFrame*> *aOutFrames) override;
@@ -5194,6 +5030,7 @@ public:
   virtual void Merge(const nsDisplayItem* aItem) override
   {
     MOZ_ASSERT(CanMerge(aItem));
+    MOZ_ASSERT(Frame() != aItem->Frame());
     MergeFromTrackingMergedFrames(static_cast<const nsDisplayWrapList*>(aItem));
   }
 
@@ -5232,7 +5069,7 @@ public:
 
   virtual nsRect GetComponentAlphaBounds(nsDisplayListBuilder* aBuilder) const override;
 
-  virtual nsDisplayList* GetSameCoordinateSystemChildren() const override
+  virtual RetainedDisplayList* GetSameCoordinateSystemChildren() const override
   {
     NS_ASSERTION(mListPtr->IsEmpty() || !ReferenceFrame() ||
                  !mListPtr->GetBottom()->ReferenceFrame() ||
@@ -5264,7 +5101,7 @@ public:
    */
   virtual nsDisplayWrapList* WrapWithClone(nsDisplayListBuilder* aBuilder,
                                            nsDisplayItem* aItem) {
-    NS_NOTREACHED("We never returned nullptr for GetUnderlyingFrame!");
+    MOZ_ASSERT_UNREACHABLE("We never returned nullptr for GetUnderlyingFrame!");
     return nullptr;
   }
 
@@ -5282,7 +5119,9 @@ protected:
   void MergeFromTrackingMergedFrames(const nsDisplayWrapList* aOther)
   {
     mBounds.UnionRect(mBounds, aOther->mBounds);
-    mVisibleRect.UnionRect(mVisibleRect, aOther->mVisibleRect);
+    nsRect buildingRect;
+    buildingRect.UnionRect(GetBuildingRect(), aOther->GetBuildingRect());
+    SetBuildingRect(buildingRect);
     mMergedFrames.AppendElement(aOther->mFrame);
     mMergedFrames.AppendElements(aOther->mMergedFrames);
   }
@@ -5296,9 +5135,9 @@ protected:
   // this item's own frame.
   nsTArray<nsIFrame*> mMergedFrames;
   nsRect mBounds;
-  // Visible rect contributed by this display item itself.
-  // Our mVisibleRect may include the visible areas of children.
-  nsRect mBaseVisibleRect;
+  // Displaylist building rect contributed by this display item itself.
+  // Our mBuildingRect may include the visible areas of children.
+  nsRect mBaseBuildingRect;
   int32_t mOverrideZIndex;
   uint32_t mIndex;
   bool mHasZIndexOverride;
@@ -5340,17 +5179,19 @@ public:
   nsDisplayOpacity(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                    nsDisplayList* aList,
                    const ActiveScrolledRoot* aActiveScrolledRoot,
-                   bool aForEventsAndPluginsOnly);
+                   bool aForEventsAndPluginsOnly,
+                   bool aNeedsActiveLayer);
 
   nsDisplayOpacity(nsDisplayListBuilder* aBuilder,
                    const nsDisplayOpacity& aOther)
     : nsDisplayWrapList(aBuilder, aOther)
     , mOpacity(aOther.mOpacity)
     , mForEventsAndPluginsOnly(aOther.mForEventsAndPluginsOnly)
-    , mOpacityAppliedToChildren(false)
+    , mNeedsActiveLayer(aOther.mNeedsActiveLayer)
+    , mChildOpacityState(ChildOpacityState::Unknown)
   {
     // We should not try to merge flattened opacities.
-    MOZ_ASSERT(!aOther.mOpacityAppliedToChildren);
+    MOZ_ASSERT(aOther.mChildOpacityState != ChildOpacityState::Applied);
   }
 
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -5361,7 +5202,6 @@ public:
   {
     nsDisplayItem::RestoreState();
     mOpacity = mState.mOpacity;
-    mOpacityAppliedToChildren = false;
   }
 
   virtual nsDisplayWrapList* Clone(nsDisplayListBuilder* aBuilder) const override
@@ -5369,6 +5209,8 @@ public:
     MOZ_COUNT_CTOR(nsDisplayOpacity);
     return MakeDisplayItem<nsDisplayOpacity>(aBuilder, *this);
   }
+
+  virtual void InvalidateCachedChildInfo() override { mChildOpacityState = ChildOpacityState::Unknown; }
 
   virtual nsRegion GetOpaqueRegion(nsDisplayListBuilder* aBuilder,
                                    bool* aSnap) const override;
@@ -5386,7 +5228,7 @@ public:
     // items for the same content element should be merged into a single
     // compositing group
     // aItem->GetUnderlyingFrame() returns non-null because it's nsDisplayOpacity
-    return HasSameTypeAndClip(aItem) && HasSameContent(aItem);
+    return HasDifferentFrame(aItem) && HasSameTypeAndClip(aItem) && HasSameContent(aItem);
   }
 
   virtual nsDisplayItemGeometry* AllocateGeometry(nsDisplayListBuilder* aBuilder) override
@@ -5411,13 +5253,22 @@ public:
   virtual bool CanApplyOpacity() const override;
   virtual bool ShouldFlattenAway(nsDisplayListBuilder* aBuilder) override;
 
+  bool NeedsGeometryUpdates() const override
+  {
+    // For flattened nsDisplayOpacity items, ComputeInvalidationRegion() only
+    // handles invalidation for changed |mOpacity|. In order to keep track of
+    // the current bounds of the item for invalidation, nsDisplayOpacityGeometry
+    // for the corresponding DisplayItemData needs to be updated, even if the
+    // reported invalidation region is empty.
+    return mChildOpacityState == ChildOpacityState::Deferred;
+  }
+
   /**
    * Returns true if ShouldFlattenAway() applied opacity to children.
    */
-  bool OpacityAppliedToChildren() const { return mOpacityAppliedToChildren; }
+  bool OpacityAppliedToChildren() const { return mChildOpacityState == ChildOpacityState::Applied; }
 
   static bool NeedsActiveLayer(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame);
-  static bool MayNeedActiveLayer(nsIFrame* aFrame);
   NS_DISPLAY_DECL_NAME("Opacity", TYPE_OPACITY)
   virtual void WriteDebugInfo(std::stringstream& aStream) override;
 
@@ -5435,8 +5286,21 @@ private:
   bool ApplyOpacityToChildren(nsDisplayListBuilder* aBuilder);
 
   float mOpacity;
-  bool mForEventsAndPluginsOnly;
-  bool mOpacityAppliedToChildren;
+  bool mForEventsAndPluginsOnly : 1;
+  enum class ChildOpacityState : uint8_t {
+    // Our child list has changed since the last time ApplyOpacityToChildren was called.
+    Unknown,
+    // Our children defer opacity handling to us.
+    Deferred,
+    // Opacity is applied to our children.
+    Applied
+  };
+  bool mNeedsActiveLayer : 1;
+#ifndef __GNUC__
+  ChildOpacityState mChildOpacityState : 2;
+#else
+  ChildOpacityState mChildOpacityState;
+#endif
 
   struct {
     float mOpacity;
@@ -5607,7 +5471,7 @@ public:
     {
       // Items for the same content element should be merged into a single
       // compositing group.
-      return HasSameTypeAndClip(aItem) && HasSameContent(aItem)
+      return HasDifferentFrame(aItem) && HasSameTypeAndClip(aItem) && HasSameContent(aItem)
           && mIsForBackground == static_cast<const nsDisplayBlendContainer*>(aItem)->mIsForBackground;
     }
 
@@ -5713,10 +5577,7 @@ protected:
 enum class nsDisplayOwnLayerFlags {
   eNone = 0,
   eGenerateSubdocInvalidations = 1 << 0,
-  eVerticalScrollbar = 1 << 1,
-  eHorizontalScrollbar = 1 << 2,
-  eGenerateScrollableLayer = 1 << 3,
-  eScrollbarContainer = 1 << 4,
+  eGenerateScrollableLayer = 1 << 1,
 };
 
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(nsDisplayOwnLayerFlags)
@@ -5792,6 +5653,7 @@ public:
 
   nsDisplayOwnLayerFlags GetFlags() { return mFlags; }
   bool IsScrollThumbLayer() const;
+  bool IsScrollbarContainer() const;
   NS_DISPLAY_DECL_NAME("OwnLayer", TYPE_OWN_LAYER)
 protected:
   nsDisplayOwnLayerFlags mFlags;
@@ -5864,6 +5726,8 @@ public:
 
   virtual void RemoveFrame(nsIFrame* aFrame) override;
 
+  void Disown();
+
 protected:
   ViewID mScrollParentId;
   bool mForceDispatchToContentRegion;
@@ -5902,10 +5766,12 @@ class nsDisplayStickyPosition : public nsDisplayOwnLayer {
 public:
   nsDisplayStickyPosition(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                           nsDisplayList* aList,
-                          const ActiveScrolledRoot* aActiveScrolledRoot);
+                          const ActiveScrolledRoot* aActiveScrolledRoot,
+                          const ActiveScrolledRoot* aContainerASR);
   nsDisplayStickyPosition(nsDisplayListBuilder* aBuilder,
                           const nsDisplayStickyPosition& aOther)
     : nsDisplayOwnLayer(aBuilder, aOther)
+    , mContainerASR(aOther.mContainerASR)
   {}
 
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -5930,30 +5796,37 @@ public:
     return mozilla::LAYER_ACTIVE;
   }
 
-  virtual bool CanMerge(const nsDisplayItem* aItem) const override
-  {
-    // Items with the same fixed position frame can be merged.
-    return HasSameTypeAndClip(aItem) && mFrame == aItem->Frame();
-  }
-
   virtual bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
                                        mozilla::wr::IpcResourceUpdateQueue& aResources,
                                        const StackingContextHelper& aSc,
                                        mozilla::layers::WebRenderLayerManager* aManager,
                                        nsDisplayListBuilder* aDisplayListBuilder) override;
+
+  const ActiveScrolledRoot* GetContainerASR() const
+  {
+    return mContainerASR;
+  }
+
+private:
+  // This stores the ASR that this sticky container item would have assuming it
+  // has no fixed descendants. This may be the same as the ASR returned by
+  // GetActiveScrolledRoot(), or it may be a descendant of that.
+  RefPtr<const ActiveScrolledRoot> mContainerASR;
 };
 
 class nsDisplayFixedPosition : public nsDisplayOwnLayer {
 public:
   nsDisplayFixedPosition(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                          nsDisplayList* aList,
-                         const ActiveScrolledRoot* aActiveScrolledRoot);
+                         const ActiveScrolledRoot* aActiveScrolledRoot,
+                         const ActiveScrolledRoot* aContainerASR);
   nsDisplayFixedPosition(nsDisplayListBuilder* aBuilder,
                          const nsDisplayFixedPosition& aOther)
     : nsDisplayOwnLayer(aBuilder, aOther)
     , mAnimatedGeometryRootForScrollMetadata(aOther.mAnimatedGeometryRootForScrollMetadata)
     , mIndex(aOther.mIndex)
     , mIsFixedBackground(aOther.mIsFixedBackground)
+    , mContainerASR(aOther.mContainerASR)
   {
     MOZ_COUNT_CTOR(nsDisplayFixedPosition);
   }
@@ -5984,12 +5857,6 @@ public:
     return mozilla::LAYER_ACTIVE_FORCE;
   }
 
-  virtual bool CanMerge(const nsDisplayItem* aItem) const override
-  {
-    // Items with the same fixed position frame can be merged.
-    return HasSameTypeAndClip(aItem) && mFrame == aItem->Frame();
-  }
-
   virtual bool ShouldFixToViewport(nsDisplayListBuilder* aBuilder) const override
   {
     return mIsFixedBackground;
@@ -6003,18 +5870,27 @@ public:
     return mAnimatedGeometryRootForScrollMetadata;
   }
 
+  virtual bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
+                                       mozilla::wr::IpcResourceUpdateQueue& aResources,
+                                       const StackingContextHelper& aSc,
+                                       mozilla::layers::WebRenderLayerManager* aManager,
+                                       nsDisplayListBuilder* aDisplayListBuilder) override;
   virtual bool UpdateScrollData(mozilla::layers::WebRenderScrollData* aData,
                                 mozilla::layers::WebRenderLayerScrollData* aLayerData) override;
+
+  virtual void WriteDebugInfo(std::stringstream& aStream) override;
 
 protected:
   // For background-attachment:fixed
   nsDisplayFixedPosition(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                          nsDisplayList* aList, uint32_t aIndex);
   void Init(nsDisplayListBuilder* aBuilder);
+  ViewID GetScrollTargetId();
 
   RefPtr<AnimatedGeometryRoot> mAnimatedGeometryRootForScrollMetadata;
   uint32_t mIndex;
   bool mIsFixedBackground;
+  RefPtr<const ActiveScrolledRoot> mContainerASR;
 };
 
 class nsDisplayTableFixedPosition : public nsDisplayFixedPosition
@@ -6297,7 +6173,9 @@ public:
    * Paint mask onto aMaskContext in mFrame's coordinate space and
    * return whether the mask layer was painted successfully.
    */
-  bool PaintMask(nsDisplayListBuilder* aBuilder, gfxContext* aMaskContext);
+  bool PaintMask(nsDisplayListBuilder* aBuilder,
+                 gfxContext* aMaskContext,
+                 bool* aMaskPainted = nullptr);
 
   const nsTArray<nsRect>& GetDestRects()
   {
@@ -6350,7 +6228,7 @@ public:
   {
     // Items for the same content element should be merged into a single
     // compositing group.
-    return HasSameTypeAndClip(aItem) && HasSameContent(aItem);
+    return HasDifferentFrame(aItem) && HasSameTypeAndClip(aItem) && HasSameContent(aItem);
   }
 
   virtual void Merge(const nsDisplayItem* aItem) override
@@ -6427,12 +6305,9 @@ class nsDisplayTransform: public nsDisplayItem
   class StoreList : public nsDisplayWrapList {
   public:
     StoreList(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
-              nsDisplayList* aList) :
-      nsDisplayWrapList(aBuilder, aFrame, aList, true) {}
-    StoreList(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
-              nsDisplayItem* aItem) :
-      nsDisplayWrapList(aBuilder, aFrame, aItem, true) {}
-    virtual ~StoreList() {}
+              nsDisplayList* aList)
+      : nsDisplayWrapList(aBuilder, aFrame, aList, true) {}
+    virtual ~StoreList() = default;
 
     virtual void UpdateBounds(nsDisplayListBuilder* aBuilder) override {
       // For extending 3d rendering context, the bounds would be
@@ -6472,16 +6347,13 @@ public:
    * ferries the underlying frame to the nsDisplayItem constructor.
    */
   nsDisplayTransform(nsDisplayListBuilder* aBuilder, nsIFrame *aFrame,
-                     nsDisplayList *aList, const nsRect& aChildrenVisibleRect,
+                     nsDisplayList *aList, const nsRect& aChildrenBuildingRect,
                      uint32_t aIndex = 0, bool aAllowAsyncAnimation = false);
   nsDisplayTransform(nsDisplayListBuilder* aBuilder, nsIFrame *aFrame,
-                     nsDisplayItem *aItem, const nsRect& aChildrenVisibleRect,
-                     uint32_t aIndex = 0);
-  nsDisplayTransform(nsDisplayListBuilder* aBuilder, nsIFrame *aFrame,
-                     nsDisplayList *aList, const nsRect& aChildrenVisibleRect,
+                     nsDisplayList *aList, const nsRect& aChildrenBuildingRect,
                      ComputeTransformFunction aTransformGetter, uint32_t aIndex = 0);
   nsDisplayTransform(nsDisplayListBuilder* aBuilder, nsIFrame *aFrame,
-                     nsDisplayList *aList, const nsRect& aChildrenVisibleRect,
+                     nsDisplayList *aList, const nsRect& aChildrenBuildingRect,
                      const Matrix4x4& aTransform, uint32_t aIndex = 0);
 
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -6490,6 +6362,11 @@ public:
     MOZ_COUNT_DTOR(nsDisplayTransform);
   }
 #endif
+
+  virtual void RestoreState() override
+  {
+    mShouldFlatten = false;
+  }
 
   virtual void UpdateBounds(nsDisplayListBuilder* aBuilder) override
   {
@@ -6523,6 +6400,8 @@ public:
     return mStoredList.GetChildren();
   }
 
+  virtual bool ShouldFlattenAway(nsDisplayListBuilder* aBuilder) override;
+
   virtual void SetActiveScrolledRoot(const ActiveScrolledRoot* aActiveScrolledRoot) override
   {
     nsDisplayItem::SetActiveScrolledRoot(aActiveScrolledRoot);
@@ -6535,7 +6414,6 @@ public:
                            bool* aSnap) const override;
   virtual nsRegion GetOpaqueRegion(nsDisplayListBuilder *aBuilder,
                                    bool* aSnap) const override;
-  virtual mozilla::Maybe<nscolor> IsUniform(nsDisplayListBuilder *aBuilder) const override;
   virtual LayerState GetLayerState(nsDisplayListBuilder* aBuilder,
                                    LayerManager* aManager,
                                    const ContainerLayerParameters& aParameters) override;
@@ -6562,11 +6440,32 @@ public:
     return (mIndex << TYPE_BITS) | nsDisplayItem::GetPerFrameKey();
   }
 
+  nsDisplayItemGeometry* AllocateGeometry(nsDisplayListBuilder* aBuilder) override
+  {
+    return new nsDisplayTransformGeometry(this, aBuilder,
+                                          GetTransformForRendering(),
+                                          mFrame->PresContext()->AppUnitsPerDevPixel());
+  }
+
   virtual void ComputeInvalidationRegion(nsDisplayListBuilder* aBuilder,
                                          const nsDisplayItemGeometry* aGeometry,
                                          nsRegion* aInvalidRegion) const override
   {
-    // We don't need to compute an invalidation region since we have LayerTreeInvalidation
+    const nsDisplayTransformGeometry* geometry =
+      static_cast<const nsDisplayTransformGeometry*>(aGeometry);
+
+    // This code is only called for flattened, inactive transform items.
+    // Only check if the transform has changed. The bounds invalidation should
+    // be handled by the children themselves.
+    if (!geometry->mTransform.FuzzyEqual(GetTransformForRendering())) {
+      bool snap;
+      aInvalidRegion->Or(GetBounds(aBuilder, &snap), geometry->mBounds);
+    }
+  }
+
+  bool NeedsGeometryUpdates() const override
+  {
+    return mShouldFlatten;
   }
 
   virtual const nsIFrame* ReferenceFrameForChildren() const override {
@@ -6583,9 +6482,9 @@ public:
     return mAnimatedGeometryRootForScrollMetadata;
   }
 
-  virtual const nsRect& GetVisibleRectForChildren() const override
+  virtual const nsRect& GetBuildingRectForChildren() const override
   {
-    return mChildrenVisibleRect;
+    return mChildrenBuildingRect;
   }
 
   enum {
@@ -6599,7 +6498,10 @@ public:
    * nsDisplayPerspective created for that.
    */
   const Matrix4x4Flagged& GetTransform() const;
-  Matrix4x4 GetTransformForRendering(mozilla::LayoutDevicePoint* aOutOrigin = nullptr);
+  const Matrix4x4Flagged& GetInverseTransform() const;
+
+  bool ShouldSkipTransform(nsDisplayListBuilder* aBuilder) const;
+  Matrix4x4 GetTransformForRendering(mozilla::LayoutDevicePoint* aOutOrigin = nullptr) const;
 
   /**
    * Return the transform that is aggregation of all transform on the
@@ -6639,8 +6541,20 @@ public:
                               const nsIFrame* aFrame,
                               nsRect *aOutRect);
 
-  bool UntransformVisibleRect(nsDisplayListBuilder* aBuilder,
-                              nsRect* aOutRect) const;
+  bool UntransformRect(nsDisplayListBuilder* aBuilder,
+                       const nsRect& aRect,
+                       nsRect* aOutRect) const;
+  bool UntransformBuildingRect(nsDisplayListBuilder* aBuilder,
+                               nsRect* aOutRect) const
+  {
+    return UntransformRect(aBuilder, GetBuildingRect(), aOutRect);
+
+  }
+  bool UntransformPaintRect(nsDisplayListBuilder* aBuilder,
+                            nsRect* aOutRect) const
+  {
+    return UntransformRect(aBuilder, GetPaintRect(), aOutRect);
+  }
 
   static Point3D GetDeltaToTransformOrigin(const nsIFrame* aFrame,
                                            float aAppUnitsPerPixel,
@@ -6664,15 +6578,27 @@ public:
     FrameTransformProperties(const nsIFrame* aFrame,
                              float aAppUnitsPerPixel,
                              const nsRect* aBoundsOverride);
+    // This constructor is used on the compositor (for animations).
+    // Bug 1186329, Bug 1425837, If we want to support compositor animationsf
+    // or individual transforms and motion path, we may need to update this.
+    // For now, let mIndividualTransformList and mMotion as nullptr and
+    // Nothing().
     FrameTransformProperties(RefPtr<const nsCSSValueSharedList>&&
                                aTransformList,
                              const Point3D& aToTransformOrigin)
       : mFrame(nullptr)
-      , mTransformList(mozilla::Move(aTransformList))
+      , mTransformList(std::move(aTransformList))
       , mToTransformOrigin(aToTransformOrigin)
     {}
 
+    bool HasTransform() const
+    {
+      return mIndividualTransformList || mTransformList || mMotion.isSome();
+    }
+
     const nsIFrame* mFrame;
+    const RefPtr<const nsCSSValueSharedList> mIndividualTransformList;
+    const mozilla::Maybe<mozilla::MotionPathData> mMotion;
     const RefPtr<const nsCSSValueSharedList> mTransformList;
     const Point3D mToTransformOrigin;
   };
@@ -6805,13 +6731,14 @@ private:
                                                        const nsRect* aBoundsOverride);
 
   StoreList mStoredList;
-  mutable Matrix4x4Flagged mTransform;
+  mutable mozilla::Maybe<Matrix4x4Flagged> mTransform;
+  mutable mozilla::Maybe<Matrix4x4Flagged> mInverseTransform;
   // Accumulated transform of ancestors on the preserves-3d chain.
   Matrix4x4 mTransformPreserves3D;
   ComputeTransformFunction mTransformGetter;
   RefPtr<AnimatedGeometryRoot> mAnimatedGeometryRootForChildren;
   RefPtr<AnimatedGeometryRoot> mAnimatedGeometryRootForScrollMetadata;
-  nsRect mChildrenVisibleRect;
+  nsRect mChildrenBuildingRect;
   uint32_t mIndex;
   mutable nsRect mBounds;
   // True for mBounds is valid.
@@ -6830,6 +6757,8 @@ private:
   bool mTransformPreserves3DInited;
   // True if async animation of the transform is allowed.
   bool mAllowAsyncAnimation;
+  // True if this nsDisplayTransform should get flattened
+  bool mShouldFlatten;
 };
 
 /* A display item that applies a perspective transformation to a single
@@ -6844,18 +6773,10 @@ class nsDisplayPerspective : public nsDisplayItem
 public:
   NS_DISPLAY_DECL_NAME("nsDisplayPerspective", TYPE_PERSPECTIVE)
 
-  nsDisplayPerspective(nsDisplayListBuilder* aBuilder, nsIFrame* aTransformFrame,
-                       nsIFrame* aPerspectiveFrame,
+  nsDisplayPerspective(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                        nsDisplayList* aList);
   ~nsDisplayPerspective()
   {
-    if (mTransformFrame) {
-      mTransformFrame->RemoveDisplayItem(this);
-    }
-  }
-
-  virtual uint32_t GetPerFrameKey() const override {
-    return (mIndex << TYPE_BITS) | nsDisplayItem::GetPerFrameKey();
   }
 
   virtual void HitTest(nsDisplayListBuilder* aBuilder, const nsRect& aRect,
@@ -6919,7 +6840,7 @@ public:
     return true;
   }
 
-  virtual nsDisplayList* GetSameCoordinateSystemChildren() const override
+  virtual RetainedDisplayList* GetSameCoordinateSystemChildren() const override
   {
     return mList.GetChildren();
   }
@@ -6940,12 +6861,6 @@ public:
     return mList.GetComponentAlphaBounds(aBuilder);
   }
 
-  nsIFrame* TransformFrame() { return mTransformFrame; }
-
-  virtual nsIFrame* FrameForInvalidation() const override { return mTransformFrame; }
-
-  virtual int32_t ZIndex() const override;
-
   virtual void
   DoUpdateBoundsPreserves3D(nsDisplayListBuilder* aBuilder) override {
     if (mList.GetChildren()->GetTop()) {
@@ -6959,21 +6874,14 @@ public:
     nsDisplayItem::Destroy(aBuilder);
   }
 
-  virtual bool HasDeletedFrame() const override { return !mTransformFrame || nsDisplayItem::HasDeletedFrame(); }
-
   virtual void RemoveFrame(nsIFrame* aFrame) override
   {
-    if (aFrame == mTransformFrame) {
-      mTransformFrame = nullptr;
-    }
     nsDisplayItem::RemoveFrame(aFrame);
     mList.RemoveFrame(aFrame);
   }
 
 private:
   nsDisplayWrapList mList;
-  nsIFrame* mTransformFrame;
-  uint32_t mIndex;
 };
 
 /**
@@ -7089,6 +6997,7 @@ class PaintTelemetry
   enum class Metric {
     DisplayList,
     Layerization,
+    FlushRasterization,
     Rasterization,
     COUNT,
   };

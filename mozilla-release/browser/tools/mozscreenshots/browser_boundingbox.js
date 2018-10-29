@@ -5,8 +5,8 @@
 "use strict";
 
 add_task(async function() {
-  const scale = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                      .getInterface(Ci.nsIDocShell).QueryInterface(Ci.nsIBaseWindow)
+  const scale = window.docShell
+                      .QueryInterface(Ci.nsIBaseWindow)
                       .devicePixelsPerDesktopPixel;
   let {bounds, rects} = TestRunner._findBoundingBox(["#tabbrowser-tabs"]);
   let element = document.querySelector("#tabbrowser-tabs");
@@ -93,10 +93,10 @@ add_task(async function() {
     // Check that nonexistent selectors throws an exception
   Assert.throws(() => {
     TestRunner._findBoundingBox(["#does_not_exist"]);
-  }, "No element for '#does_not_exist' found.", "Checking that nonexistent selectors throws an exception");
+  }, /No element for '#does_not_exist' found/, "Checking that nonexistent selectors throws an exception");
 
   // Check that no selectors throws an exception
   Assert.throws(() => {
     TestRunner._findBoundingBox([]);
-  }, "No selectors specified.", "Checking that no selectors throws an exception");
+  }, /No selectors specified/, "Checking that no selectors throws an exception");
 });

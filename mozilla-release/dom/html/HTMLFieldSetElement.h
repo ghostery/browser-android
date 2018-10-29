@@ -42,17 +42,13 @@ public:
 
   virtual nsresult InsertChildBefore(nsIContent* aChild, nsIContent* aBeforeThis,
                                      bool aNotify) override;
-  virtual nsresult InsertChildAt_Deprecated(nsIContent* aChild, uint32_t aIndex,
-                                            bool aNotify) override;
-  virtual void RemoveChildAt_Deprecated(uint32_t aIndex, bool aNotify) override;
   virtual void RemoveChildNode(nsIContent* aKid, bool aNotify) override;
 
   // nsIFormControl
   NS_IMETHOD Reset() override;
   NS_IMETHOD SubmitNamesValues(HTMLFormSubmission* aFormSubmission) override;
   virtual bool IsDisabledForEvents(EventMessage aMessage) override;
-  virtual nsresult Clone(mozilla::dom::NodeInfo *aNodeInfo, nsINode **aResult,
-                         bool aPreallocateChildren) const override;
+  virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   const nsIContent* GetFirstLegend() const { return mFirstLegend; }
 
@@ -83,7 +79,7 @@ public:
     SetHTMLAttr(nsGkAtoms::name, aValue, aRv);
   }
 
-  NS_IMETHOD GetType(nsAString & aType);
+  void GetType(nsAString & aType) const;
 
   nsIHTMLCollection* Elements();
 

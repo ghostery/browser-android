@@ -24,8 +24,8 @@ using media::TimeUnit;
 using media::TimeIntervals;
 
 MediaSourceDemuxer::MediaSourceDemuxer(AbstractThread* aAbstractMainThread)
-  : mTaskQueue(new AutoTaskQueue(GetMediaThreadPool(MediaThreadType::PLAYBACK),
-                                 "MediaSourceDemuxer::mTaskQueue"))
+  : mTaskQueue(new TaskQueue(GetMediaThreadPool(MediaThreadType::PLAYBACK),
+                             "MediaSourceDemuxer::mTaskQueue"))
   , mMonitor("MediaSourceDemuxer")
 {
   MOZ_ASSERT(NS_IsMainThread());
@@ -186,7 +186,7 @@ MediaSourceDemuxer::DoAttachSourceBuffer(
   RefPtr<mozilla::TrackBuffersManager>&& aSourceBuffer)
 {
   MOZ_ASSERT(OnTaskQueue());
-  mSourceBuffers.AppendElement(Move(aSourceBuffer));
+  mSourceBuffers.AppendElement(std::move(aSourceBuffer));
   ScanSourceBuffersForContent();
 }
 

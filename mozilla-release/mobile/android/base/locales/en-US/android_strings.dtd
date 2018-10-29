@@ -27,12 +27,6 @@
 <!ENTITY firstrun_button_next "Next">
 
 <!ENTITY firstrun_tabqueue_title "Links">
-<!-- Localization note (firstrun_tabqueue_message): 'Tab queue' is a feature that allows users to queue up or save links from outside of Firefox (without switching apps) - these links will be loaded in Firefox the next time Firefox is opened. -->
-<!ENTITY firstrun_tabqueue_message_off "Turn on Tab queue">
-<!ENTITY firstrun_tabqueue_subtext_off "Save links for later in &brandShortName; when tapping them in other apps.">
-
-<!ENTITY firstrun_tabqueue_message_on "Success!">
-<!ENTITY firstrun_tabqueue_subtext_on "You can always turn this off in &settings; under &pref_category_general;.">
 
 <!ENTITY firstrun_readerview_title "Articles">
 <!-- Localization note (firstrun_readerview_message): This is a casual way of describing getting rid of unnecessary things, and is referring to simplifying websites so only the article text and images are visible, removing unnecessary headers or ads. -->
@@ -69,6 +63,14 @@
 <!ENTITY  crash_restart_label "Restart &brandShortName;">
 
 <!ENTITY url_bar_default_text2 "Search or enter address">
+<!-- Localization note (url_bar_qrcode_text2) : This text will be
+     heard by non-visual users when the focus is on the QR Code
+     icon in the url bar. -->
+<!ENTITY url_bar_qrcode_text2 "Use your QR Reader to search or enter address">
+<!-- Localization note (url_bar_mic_text2) : This text will be
+     heard by non-visual users when the focus is on the Microphone
+     icon in the url bar. -->
+<!ENTITY url_bar_mic_text2 "Use your microphone to search or enter address">
 
 <!ENTITY bookmark "Bookmark">
 <!ENTITY bookmark_remove "Remove bookmark">
@@ -209,7 +211,7 @@
      “storing data”. -->
 <!ENTITY pref_category_advanced_summary3 "Restore tabs, data saver, developer tools">
 <!ENTITY pref_category_notifications "Notifications">
-<!ENTITY pref_category_notifications_summary "New features, website updates">
+<!ENTITY pref_category_notifications_summary2 "New features, product tips">
 <!ENTITY pref_developer_remotedebugging_usb "Remote debugging via USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Remote debugging via Wi-Fi">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Wi-Fi debugging requires your device to have a QR code reader app installed.">
@@ -364,7 +366,8 @@
 <!ENTITY pref_use_system_font_size_summary "Scale web content according to the system font size">
 
 <!ENTITY pref_media_autoplay_enabled "Allow autoplay">
-<!ENTITY pref_media_autoplay_enabled_summary "Control if websites can autoplay videos and other media content">
+<!ENTITY pref_media_autoplay_allow "Allow autoplay">
+<!ENTITY pref_media_autoplay_block "Block autoplay">
 <!ENTITY pref_zoom_force_enabled "Always enable zoom">
 <!ENTITY pref_zoom_force_enabled_summary "Force override so you can zoom any page">
 <!ENTITY pref_voice_input "Voice input">
@@ -445,6 +448,11 @@
 <!ENTITY datareporting_crashreporter_title_short "Crash Reporter">
 <!ENTITY datareporting_wifi_title2 "&vendorShortName; Location Service">
 <!ENTITY datareporting_wifi_geolocation_summary4 "Help &vendorShortName; map the world! Share the approximate Wi-Fi and cellular location of your device to improve our geolocation service.">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "&vendorShortName; Location Service running">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -834,9 +842,6 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- LOCALIZATION NOTE(corrupt_apk): This notification is shown if corruption has been detected on startup and the user has to reinstall Firefox -->
 <!ENTITY corrupt_apk "Unable to open &brandShortName;. Please reinstall and try again.">
 
-<!ENTITY eol_notification_title2 "&brandShortName; will no longer update">
-<!ENTITY eol_notification_summary "Tap to learn more">
-
 <!-- LOCALIZATION NOTE (whatsnew_notification_title, whatsnew_notification_summary): These strings
      are used for a system notification that's shown to users after the app updates. -->
 <!ENTITY whatsnew_notification_title "&brandShortName; is up to date">
@@ -893,3 +898,20 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "Add to Home Screen">
 <!ENTITY pwa_continue_to_website "Continue to Website">
 <!ENTITY pwa_onboarding_sumo "You can easily add this website to your Home screen to have instant access and browse faster with an app-like experience.">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "Play">
+<!ENTITY pip_play_button_description "Resume playing">
+<!ENTITY pip_pause_button_title "Pause">
+<!ENTITY pip_pause_button_description "Pause playing">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "&vendorShortName; Location Service">
+<!ENTITY download_notification_channel "Downloads">
+<!ENTITY media_notification_channel "Media playback">
+<!-- These push notifications come without a specific channel and/or name from Leanplum -->
+<!ENTITY leanplum_default_notifications_channel "&brandShortName; Push notifications">
+<!ENTITY updater_notification_channel "App updates">
+<!ENTITY synced_tabs_notification_channel "Synced tabs">

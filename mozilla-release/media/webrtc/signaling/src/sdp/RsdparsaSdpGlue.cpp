@@ -45,4 +45,60 @@ sdp::AddrType convertAddressType(RustSdpAddrType addrType)
   MOZ_CRASH("unknown address type");
 }
 
+std::vector<uint8_t> convertU8Vec(U8Vec* vec)
+{
+  std::vector<std::uint8_t> ret;
+
+  size_t len = u8_vec_len(vec);
+  for (size_t i = 0; i < len; i++) {
+    uint8_t byte;
+    u8_vec_get(vec, i, &byte);
+    ret.push_back(byte);
+  }
+
+  return ret;
+}
+
+std::vector<uint16_t> convertU16Vec(U16Vec* vec)
+{
+  std::vector<std::uint16_t> ret;
+
+  size_t len = u16_vec_len(vec);
+  for (size_t i = 0; i < len; i++) {
+    uint16_t word;
+    u16_vec_get(vec, i, &word);
+    ret.push_back(word);
+  }
+
+  return ret;
+}
+
+std::vector<uint32_t> convertU32Vec(U32Vec* vec)
+{
+  std::vector<std::uint32_t> ret;
+
+  size_t len = u32_vec_len(vec);
+  for (size_t i = 0; i < len; i++) {
+    uint32_t num;
+    u32_vec_get(vec, i, &num);
+    ret.push_back(num);
+  }
+
+  return ret;
+}
+
+std::vector<float> convertF32Vec(F32Vec* vec)
+{
+  std::vector<float> ret;
+
+  size_t len = f32_vec_len(vec);
+  for (size_t i = 0; i < len; i++) {
+    float flt;
+    f32_vec_get(vec, i, &flt);
+    ret.push_back(flt);
+  }
+
+  return ret;
+}
+
 }

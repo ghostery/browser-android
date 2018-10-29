@@ -3,9 +3,11 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 do-not-track-description = 웹사이트에 “방문자 추적 금지” 신호를 보내서 추적을 원하지 않는다고 알림
-do-not-track-learn-more = 더 알아보기
+do-not-track-learn-more = 자세히 보기
 do-not-track-option-default =
     .label = 추적 방지 기능을 사용할 때만
+do-not-track-option-default-content-blocking =
+    .label = { -brand-short-name }가 감지된 추적기를 차단하도록 설정 됐을 때만
 do-not-track-option-always =
     .label = 항상
 pref-page =
@@ -14,14 +16,6 @@ pref-page =
             [windows] 설정
            *[other] 환경 설정
         }
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 15.4em
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
 #
@@ -98,6 +92,9 @@ extension-controlled-privacy-containers = <img data-l10n-name="icon"/> { $name }
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = <img data-l10n-name="icon"/> { $name } 확장기능이 추적 방지 기능을 제어하고 있습니다.
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = <img data-l10n-name="icon"/> { $name } 확장기능이 이 설정을 제어하고 있습니다.
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = <img data-l10n-name="icon"/> { $name } 확장기능이 { -brand-short-name }가 인터넷에 접근하는 방법을 제어하고 있습니다.
@@ -137,20 +134,11 @@ is-not-default = { -brand-short-name }가 기본 브라우저가 아닙니다.
 set-as-my-default-browser =
     .label = 기본값으로…
     .accesskey = D
-startup-page = { -brand-short-name } 가 시작될 때
-    .accesskey = s
-startup-user-homepage =
-    .label = 홈 페이지 보기
-startup-blank-page =
-    .label = 빈 페이지 보기
-startup-prev-session =
-    .label = 지난번 창과 탭 보기
 startup-restore-previous-session =
     .label = 이전 세션 복원
     .accesskey = s
 disable-extension =
     .label = 확장기능 비활성화
-home-page-header = 홈 페이지
 tabs-group-header = 탭
 ctrl-tab-recently-used-order =
     .label = Ctrl+Tab으로 최근 사용한 순서대로 탭 순환
@@ -207,6 +195,12 @@ choose-language-description = 웹 페이지를 표시할 선호 언어 선택
 choose-button =
     .label = 선택…
     .accesskey = o
+choose-browser-language-description = { -brand-short-name }가 메뉴나 메시지, 알림을 표시하는데 사용할 언어를 선택해 주세요.
+manage-browser-languages-button =
+    .label = 대안 설정…
+    .accesskey = I
+confirm-browser-language-change-description = 변경사항 적용을 위해 { -brand-short-name } 재시작
+confirm-browser-language-change-button = 적용하고 재시작
 translate-web-pages =
     .label = 웹 콘텐츠 번역하기
     .accesskey = T
@@ -222,7 +216,7 @@ check-user-spelling =
 
 ## General Section - Files and Applications
 
-files-and-applications-title = 파일과 어플리케이션
+files-and-applications-title = 파일과 애플리케이션
 download-header = 다운로드
 download-save-to =
     .label = 저장 위치
@@ -241,10 +235,10 @@ download-choose-folder =
 download-always-ask-where =
     .label = 파일 저장 위치 항상 묻기
     .accesskey = A
-applications-header = 어플리케이션
+applications-header = 애플리케이션
 applications-description = { -brand-short-name } 가 다운로드 받은 파일이나 브라우저에서 사용하고 있는 응용프로그램에 대해 어떻게 처리할 지 선택하십시오.
 applications-filter =
-    .placeholder = 파일 타입 혹은 어플리케이션 검색
+    .placeholder = 파일 타입 혹은 애플리케이션 검색
 applications-type-column =
     .label = 파일 형식
     .accesskey = T
@@ -258,7 +252,6 @@ play-drm-content =
 play-drm-content-learn-more = 더 알아보기
 update-application-title = { -brand-short-name } 업데이트
 update-application-description = { -brand-short-name }가 최상의 성능, 안정성, 보안을 유지할 수 있도록 최신 버전으로 유지힙니다.
-update-application-info = 버전 { $version } <a>새로운 기능</a>
 update-application-version = 버전 { $version } <a data-l10n-name="learn-more">새로운 기능</a>
 update-history =
     .label = 업데이트 기록 보기…
@@ -294,7 +287,6 @@ performance-allow-hw-accel =
 performance-limit-content-process-option = 컨텐트 프로세스 제한
     .accesskey = L
 performance-limit-content-process-enabled-desc = 추가 컨텐트 프로세스는 다중 탭을 사용 하는 경우 성능을 향상 시킬 수 있지만 더 많은 메모리를 사용 합니다.
-performance-limit-content-process-disabled-desc = 컨텐트 프로세스 갯수 변경은 멀티 프로세스 { -brand-short-name }에서만 가능합니다. <a>멀티 프로세스가 활성화 되었는지 확인하는 방법</a>
 performance-limit-content-process-blocked-desc = 컨텐트 프로세스 갯수 변경은 멀티 프로세스 { -brand-short-name }에서만 가능합니다. <a data-l10n-name="learn-more">멀티 프로세스가 활성화 되었는지 확인하는 방법</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
@@ -323,6 +315,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = 네트워크 프록시
+network-settings-title = 네트워크 설정
 network-proxy-connection-description = { -brand-short-name }가 인터넷에 접근하는 방법을 설정하세요.
 network-proxy-connection-learn-more = 자세히 보기
 network-proxy-connection-settings =
@@ -365,9 +358,6 @@ use-current-pages =
 choose-bookmark =
     .label = 북마크 사용…
     .accesskey = B
-restore-default =
-    .label = 초기 설정
-    .accesskey = R
 
 ## Search Section
 
@@ -564,9 +554,6 @@ history-dontremember-description = { -brand-short-name }는 사생활 보호 모
 history-private-browsing-permanent =
     .label = 사생활 보호 모드로만 이용
     .accesskey = p
-history-remember-option =
-    .label = 표시한 페이지 및 파일 다운로드 기록 저장
-    .accesskey = b
 history-remember-browser-option =
     .label = 표시한 페이지 및 파일 다운로드 기록 저장
     .accesskey = b
@@ -612,6 +599,30 @@ sitedata-accept-third-party-visited-option =
     .label = 방문한 곳만
 sitedata-accept-third-party-never-option =
     .label = 허용 안함
+sitedata-allow-cookies-option =
+    .label = 쿠키와 사이트 데이타 허용
+    .accesskey = A
+sitedata-disallow-cookies-option =
+    .label = 쿠키와 사이트 데이타 차단
+    .accesskey = B
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = 차단 유형
+    .accesskey = T
+sitedata-block-trackers-option-recommended =
+    .label = 제3자 추적기 (권장)
+sitedata-block-trackers-option =
+    .label = 제3자 추적기
+sitedata-block-unvisited-option =
+    .label = 방문하지 않은 웹사이트의 쿠키
+sitedata-block-all-third-parties-option =
+    .label = 모든 제3자 쿠키
+sitedata-block-always-option =
+    .label = 모든 쿠키(웹사이트가 작동하지 않을 수 있음)
+sitedata-block-all-third-party-option =
+    .label = 모든 제3자 쿠키(웹사이트가 작동하지 않을 수 있음)
+sitedata-block-all-option =
+    .label = 모든 쿠키(웹사이트가 작동 안하게 됨)
 sitedata-clear =
     .label = 데이타 삭제…
     .accesskey = l
@@ -621,6 +632,10 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = 예외 목록…
     .accesskey = E
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = 콘텐츠 차단 설정이 쿠키와 사이트 데이타 설정의 변경을 막고 있습니다.
 
 ## Privacy Section - Address Bar
 
@@ -636,6 +651,83 @@ addressbar-locbar-openpage-option =
     .label = 탭 열기
     .accesskey = O
 addressbar-suggestions-settings = 검색 엔진 추천 설정 변경
+
+## Privacy Section - Content Blocking
+
+content-blocking-header = 콘텐츠 차단
+content-blocking-desc = 브라우징을 느리게 하거나 웹에서 사용자를 추적할 수 있는 광고나 코드와 같은 제3자 콘텐츠를 차단합니다. 보호와 성능 사이에서 최적의 균형을 위해 설정을 개인화 하세요.
+content-blocking-learn-more = 자세히 보기
+content-blocking-restore-defaults =
+    .label = 기본값으로
+    .accesskey = R
+content-blocking-toggle-on =
+    .tooltiptext = 콘텐츠 차단 해제
+content-blocking-toggle-off =
+    .tooltiptext = 콘텐츠 차단 설정
+content-blocking-toggle-label-on = 켬
+    .accesskey = O
+content-blocking-toggle-label-off = 끔
+    .accesskey = O
+content-blocking-category-label = 차단할 대상 선택
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-label = 느린 추적 요소
+    .accesskey = S
+content-blocking-fastblock-description = 읽는데 5초이상 걸리는 제3자 콘텐츠를 차단합니다.
+content-blocking-fastblock-option-enabled =
+    .label = 항상 차단
+content-blocking-fastblock-option-disabled =
+    .label = 차단하지 않음
+content-blocking-tracking-protection-label = 추적자
+    .accesskey = T
+content-blocking-tracking-protection-description = 알려진 모든 추적자를 차단합니다(참고: 일부 페이지가 로드되지 않을 수 있습니다).
+content-blocking-tracking-protection-option-enabled =
+    .label = 항상 차단
+content-blocking-tracking-protection-option-pbm =
+    .label = 사생활 보호 창에서만 차단
+content-blocking-tracking-protection-option-disabled =
+    .label = 차단하지 않음
+content-blocking-tracking-protection-change-blocklist = 차단 목록 변경…
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-slow-loading-trackers-label =
+    .label = 느리게 로딩되는 추적기
+    .accesskey = S
+content-blocking-fastblock-new-description = 페이지가 더 빨리 뜰 수 있도록 추적기를 차단해보세요.
+content-blocking-tracking-protection-all-detected-trackers-label =
+    .label = 모든 감지된 추적기
+    .accesskey = T
+content-blocking-tracking-protection-new-description = 알려진 모든 추적기를 차단합니다. (몇몇 페이지가 로딩되지 않을 수 있습니다.)
+content-blocking-tracking-protection-option-always =
+    .label = 항상
+    .accesskey = A
+content-blocking-tracking-protection-option-private =
+    .label = 사생활 보호 창에서만
+    .accesskey = P
+content-blocking-tracking-protection-change-block-list = 차단 목록 변경
+content-blocking-third-party-cookies-label =
+    .label = 제3자 쿠키
+    .accesskey = C
+content-blocking-reject-trackers-description = 모든 제3자 쿠키나 추적기에 의해 설정된 쿠기를 차단합니다.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = 쿠키와 사이트 데이타 설정이 제3자 쿠키 설정의 변경을 막고 있습니다.
+content-blocking-change-cookie-settings =
+    .label = 쿠키 설정 변경
+    .accesskey = S
+content-blocking-reject-trackers-block-trackers-option-recommended =
+    .label = 추적기(권장)
+    .accesskey = k
+content-blocking-reject-trackers-block-trackers-option =
+    .label = 추적기
+    .accesskey = k
+content-blocking-reject-trackers-all-third-parties-option =
+    .label = 모든 제3자 쿠키(웹사이트가 작동 안 할 수 있음)
+    .accesskey = A
 
 ## Privacy Section - Tracking
 
@@ -688,9 +780,17 @@ permissions-notification-pause =
 permissions-block-autoplay-media =
     .label = 웹사이트에서 소리가 있는 미디어를 자동으로 재생하지 않음
     .accesskey = B
+permissions-block-autoplay-media-menu = 소리를 자동으로 재생하는 사이트
 permissions-block-autoplay-media-exceptions =
     .label = 예외 목록…
     .accesskey = E
+autoplay-option-ask =
+    .label = 항상 확인
+autoplay-option-allow =
+    .label = 자동 재생 허용
+autoplay-option-dont =
+    .label = 자동 재생 금지
+permissions-autoplay-link = 자세히 보기
 permissions-block-popups =
     .label = 팝업 창 차단
     .accesskey = B

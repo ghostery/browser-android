@@ -72,7 +72,7 @@ MockStorageManager.prototype = {
   deleteAccountData() {
     this.accountData = null;
     return Promise.resolve();
-  }
+  },
 };
 
 function MockFxAccountsClient() {
@@ -86,7 +86,7 @@ function MockFxAccountsClient() {
     // simulate a call to /recovery_email/status
     return {
       email: this._email,
-      verified: this._verified
+      verified: this._verified,
     };
   };
 
@@ -99,7 +99,7 @@ function MockFxAccountsClient() {
       do_timeout(50, () => {
         resolve({
           kA: expandBytes("11"),
-          wrapKB: expandBytes("22")
+          wrapKB: expandBytes("22"),
         });
       });
     });
@@ -117,7 +117,7 @@ function MockFxAccountsClient() {
   FxAccountsClient.apply(this);
 }
 MockFxAccountsClient.prototype = {
-  __proto__: FxAccountsClient.prototype
+  __proto__: FxAccountsClient.prototype,
 };
 
 /*
@@ -150,7 +150,8 @@ function MockFxAccounts() {
     _registerOrUpdateDevice() {
       return Promise.resolve();
     },
-    fxAccountsClient: new MockFxAccountsClient()
+    fxAccountsClient: new MockFxAccountsClient(),
+    observerPreloads: [],
   });
 }
 
@@ -173,6 +174,9 @@ function MakeFxAccounts(internal = {}) {
   if (!internal._registerOrUpdateDevice) {
     internal._registerOrUpdateDevice = () => Promise.resolve();
   }
+  if (!internal.observerPreloads) {
+    internal.observerPreloads = [];
+  }
   return new FxAccounts(internal);
 }
 
@@ -188,7 +192,7 @@ add_task(async function test_get_signed_in_user_initially_unset() {
     kXCS: "cafe",
     kExtSync: "bacon",
     kExtKbHash: "cheese",
-    verified: true
+    verified: true,
   };
   let result = await account.getSignedInUser();
   Assert.equal(result, null);
@@ -239,7 +243,7 @@ add_task(async function test_set_signed_in_user_signs_out_previous_account() {
     kXCS: "cafe",
     kExtSync: "bacon",
     kExtKbHash: "cheese",
-    verified: true
+    verified: true,
   };
   await account.setSignedInUser(credentials);
 
@@ -264,7 +268,7 @@ add_task(async function test_update_account_data() {
     kXCS: "cafe",
     kExtSync: "bacon",
     kExtKbHash: "cheese",
-    verified: true
+    verified: true,
   };
   await account.setSignedInUser(credentials);
 
@@ -283,13 +287,15 @@ add_task(async function test_update_account_data() {
     uid: "another_uid",
     assertion: "new_assertion",
   };
-  await Assert.rejects(account.updateUserAccountData(newCreds));
+  await Assert.rejects(account.updateUserAccountData(newCreds),
+    /The specified credentials aren't for the current user/);
 
   // should fail without the uid.
   newCreds = {
     assertion: "new_assertion",
   };
-  await Assert.rejects(account.updateUserAccountData(newCreds));
+  await Assert.rejects(account.updateUserAccountData(newCreds),
+    /The specified credentials aren't for the current user/);
 
   // and should fail with a field name that's not known by storage.
   newCreds = {
@@ -297,7 +303,8 @@ add_task(async function test_update_account_data() {
     uid: "another_uid",
     foo: "bar",
   };
-  await Assert.rejects(account.updateUserAccountData(newCreds));
+  await Assert.rejects(account.updateUserAccountData(newCreds),
+    /The specified credentials aren't for the current user/);
 });
 
 add_task(async function test_getCertificateOffline() {
@@ -361,7 +368,7 @@ add_task(async function test_getCertificateExpiredCert() {
   let fxa = MakeFxAccounts({
     getCertificateSigned() {
       return "new cert";
-    }
+    },
   });
   let credentials = {
     email: "foo@example.com",
@@ -732,8 +739,8 @@ add_task(async function test_getKeys_invalid_token() {
   let user = await fxa.internal.getUserAccountData();
   Assert.equal(user.email, yusuf.email);
   Assert.equal(user.keyFetchToken, null);
+  await fxa.internal.abortExistingFlow();
 });
-
 //  fetchAndUnwrapKeys with no keyFetchToken should trigger signOut
 add_test(function test_fetchAndUnwrapKeys_no_token() {
   let fxa = new MockFxAccounts();
@@ -743,7 +750,7 @@ add_test(function test_fetchAndUnwrapKeys_no_token() {
   makeObserver(ONLOGOUT_NOTIFICATION, function() {
     log.debug("test_fetchAndUnwrapKeys_no_token observed logout");
     fxa.internal.getUserAccountData().then(user2 => {
-      run_next_test();
+      fxa.internal.abortExistingFlow().then(run_next_test);
     });
   });
 
@@ -839,17 +846,13 @@ add_task(async function test_getAssertion_invalid_token() {
 add_task(async function test_getAssertion() {
   let fxa = new MockFxAccounts();
 
-  do_check_throws(async function() {
-    await fxa.getAssertion("nonaudience");
-  });
-
   let creds = {
     sessionToken: "sessionToken",
     kSync: expandHex("11"),
     kXCS: expandHex("66"),
     kExtSync: expandHex("88"),
     kExtKbHash: expandHex("22"),
-    verified: true
+    verified: true,
   };
   // By putting kSync/kXCS/kExtSync/kExtKbHash/verified in "creds", we skip ahead
   // to the "we're ready" stage.
@@ -1035,6 +1038,7 @@ add_task(async function test_resend_email_invalid_token() {
   user = await fxa.internal.getUserAccountData();
   Assert.equal(user.email, sophia.email);
   Assert.equal(user.sessionToken, null);
+  await fxa.internal.abortExistingFlow();
 });
 
 add_test(function test_resend_email() {
@@ -1089,7 +1093,7 @@ add_test(function test_getOAuthToken() {
   // create a mock oauth client
   let client = new FxAccountsOAuthGrantClient({
     serverURL: "https://example.com/v1",
-    client_id: "abc123"
+    client_id: "abc123",
   });
   client.getTokenFromAssertion = function() {
     getTokenFromAssertionCalled = true;
@@ -1121,7 +1125,7 @@ add_test(function test_getOAuthTokenScoped() {
   // create a mock oauth client
   let client = new FxAccountsOAuthGrantClient({
     serverURL: "https://example.com/v1",
-    client_id: "abc123"
+    client_id: "abc123",
   });
   client.getTokenFromAssertion = function(assertion, scopeString) {
     equal(scopeString, "foo bar");
@@ -1154,7 +1158,7 @@ add_task(async function test_getOAuthTokenCached() {
   // create a mock oauth client
   let client = new FxAccountsOAuthGrantClient({
     serverURL: "https://example.com/v1",
-    client_id: "abc123"
+    client_id: "abc123",
   });
   client.getTokenFromAssertion = function() {
     numTokenFromAssertionCalls += 1;
@@ -1187,7 +1191,7 @@ add_task(async function test_getOAuthTokenCachedScopeNormalization() {
   // create a mock oauth client
   let client = new FxAccountsOAuthGrantClient({
     serverURL: "https://example.com/v1",
-    client_id: "abc123"
+    client_id: "abc123",
   });
   client.getTokenFromAssertion = function() {
     numTokenFromAssertionCalls += 1;
@@ -1285,12 +1289,12 @@ add_test(function test_getOAuthToken_network_error() {
   // create a mock oauth client
   let client = new FxAccountsOAuthGrantClient({
     serverURL: "https://example.com/v1",
-    client_id: "abc123"
+    client_id: "abc123",
   });
   client.getTokenFromAssertion = function() {
     return Promise.reject(new FxAccountsOAuthGrantClientError({
       error: ERROR_NETWORK,
-      errno: ERRNO_NETWORK
+      errno: ERRNO_NETWORK,
     }));
   };
 
@@ -1314,12 +1318,12 @@ add_test(function test_getOAuthToken_auth_error() {
   // create a mock oauth client
   let client = new FxAccountsOAuthGrantClient({
     serverURL: "https://example.com/v1",
-    client_id: "abc123"
+    client_id: "abc123",
   });
   client.getTokenFromAssertion = function() {
     return Promise.reject(new FxAccountsOAuthGrantClientError({
       error: ERROR_INVALID_FXA_ASSERTION,
-      errno: ERRNO_INVALID_FXA_ASSERTION
+      errno: ERRNO_INVALID_FXA_ASSERTION,
     }));
   };
 
@@ -1343,7 +1347,7 @@ add_test(function test_getOAuthToken_unknown_error() {
   // create a mock oauth client
   let client = new FxAccountsOAuthGrantClient({
     serverURL: "https://example.com/v1",
-    client_id: "abc123"
+    client_id: "abc123",
   });
   client.getTokenFromAssertion = function() {
     return Promise.reject("boom");
@@ -1370,7 +1374,7 @@ add_test(function test_getSignedInUserProfile() {
   };
   let fxa = new FxAccounts({
     _signOutServer() { return Promise.resolve(); },
-    _registerOrUpdateDevice() { return Promise.resolve(); }
+    _registerOrUpdateDevice() { return Promise.resolve(); },
   });
 
   fxa.setSignedInUser(alice).then(() => {
@@ -1401,7 +1405,7 @@ add_test(function test_getSignedInUserProfile_error_uses_account_data() {
       },
       tearDown() {
         teardownCalled = true;
-      }
+      },
     };
 
     fxa.getSignedInUserProfile()
@@ -1482,7 +1486,7 @@ function getTestUser(name) {
     sessionToken: name + "'s session token",
     keyFetchToken: name + "'s keyfetch token",
     unwrapBKey: expandHex("44"),
-    verified: false
+    verified: false,
   };
 }
 
@@ -1498,7 +1502,7 @@ function makeObserver(aObserveTopic, aObserveFunc) {
         removeMe();
         aObserveFunc(aSubject, aTopic, aData);
       }
-    }
+    },
   };
 
   function removeMe() {
@@ -1508,22 +1512,4 @@ function makeObserver(aObserveTopic, aObserveFunc) {
 
   Services.obs.addObserver(observer, aObserveTopic);
   return removeMe;
-}
-
-function do_check_throws(func, result, stack) {
-  if (!stack)
-    stack = Components.stack.caller;
-
-  try {
-    func();
-  } catch (ex) {
-    if (ex.name == result) {
-      return;
-    }
-    do_throw("Expected result " + result + ", caught " + ex.name, stack);
-  }
-
-  if (result) {
-    do_throw("Expected result " + result + ", none thrown", stack);
-  }
 }

@@ -71,13 +71,11 @@ add_task(async function test_bookmarkFields() {
       children: [{
         title: "test title",
         url: "http://test4.com",
-      }]
+      }],
     }],
   });
 
-  let folderId = await PlacesUtils.promiseItemId(bookmarks[0].guid);
-
-  let root = PlacesUtils.getFolderContents(folderId).root;
+  let root = PlacesUtils.getFolderContents(bookmarks[0].guid).root;
   equal(root.childCount, 1);
 
   equal(root.visitType, 0, "Visit type should be 0");

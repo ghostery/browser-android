@@ -38,10 +38,7 @@ using ValueVector = JS::GCVector<JS::Value>;
 using IdVector = JS::GCVector<jsid>;
 using ScriptVector = JS::GCVector<JSScript*>;
 
-template<typename K, typename V> class AutoHashMapRooter;
-template<typename T> class AutoHashSetRooter;
-
-class MOZ_STACK_CLASS SourceBufferHolder;
+class SourceBufferHolder;
 
 class HandleValueArray;
 
@@ -50,6 +47,9 @@ class PropertyResult;
 
 enum class SymbolCode: uint32_t;
 
+#ifdef ENABLE_BIGINT
+class BigInt;
+#endif
 } // namespace JS
 
 // Do the importing.
@@ -94,22 +94,14 @@ using JS::ValueVector;
 using JS::IdVector;
 using JS::ScriptVector;
 
-using JS::AutoHashMapRooter;
-using JS::AutoHashSetRooter;
-
 using JS::GCVector;
 using JS::GCHashMap;
 using JS::GCHashSet;
 
 using JS::CallArgs;
 using JS::CallNonGenericMethod;
-using JS::CompileOptions;
 using JS::IsAcceptableThis;
 using JS::NativeImpl;
-using JS::OwningCompileOptions;
-using JS::ReadOnlyCompileOptions;
-using JS::SourceBufferHolder;
-using JS::TransitiveCompileOptions;
 
 using JS::Rooted;
 using JS::RootedFunction;
@@ -118,6 +110,9 @@ using JS::RootedObject;
 using JS::RootedScript;
 using JS::RootedString;
 using JS::RootedSymbol;
+#ifdef ENABLE_BIGINT
+using JS::RootedBigInt;
+#endif
 using JS::RootedValue;
 
 using JS::PersistentRooted;
@@ -127,6 +122,9 @@ using JS::PersistentRootedObject;
 using JS::PersistentRootedScript;
 using JS::PersistentRootedString;
 using JS::PersistentRootedSymbol;
+#ifdef ENABLE_BIGINT
+using JS::PersistentRootedBigInt;
+#endif
 using JS::PersistentRootedValue;
 
 using JS::Handle;
@@ -136,6 +134,9 @@ using JS::HandleObject;
 using JS::HandleScript;
 using JS::HandleString;
 using JS::HandleSymbol;
+#ifdef ENABLE_BIGINT
+using JS::HandleBigInt;
+#endif
 using JS::HandleValue;
 
 using JS::MutableHandle;
@@ -145,6 +146,9 @@ using JS::MutableHandleObject;
 using JS::MutableHandleScript;
 using JS::MutableHandleString;
 using JS::MutableHandleSymbol;
+#ifdef ENABLE_BIGINT
+using JS::MutableHandleBigInt;
+#endif
 using JS::MutableHandleValue;
 
 using JS::NullHandleValue;
@@ -157,11 +161,16 @@ using JS::HandleValueArray;
 using JS::ObjectOpResult;
 using JS::PropertyResult;
 
+using JS::Compartment;
+using JS::Realm;
 using JS::Zone;
 
 using JS::Symbol;
 using JS::SymbolCode;
 
+#ifdef ENABLE_BIGINT
+using JS::BigInt;
+#endif
 } /* namespace js */
 
 #endif /* NamespaceImports_h */

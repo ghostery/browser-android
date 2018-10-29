@@ -39,7 +39,7 @@
 <!ENTITY menuBar.tooltip       "選單列">
 <!ENTITY modeToolbar.tooltip   "模式工具列">
 <!ENTITY entryToolbar.tooltip  "Javascript 項目工具列">
-<!ENTITY toolbarsCmd.label     "顯示/隱藏">
+<!ENTITY toolbarsCmd.label     "顯示／隱藏">
 <!ENTITY toolbarsCmd.accesskey "w">
 <!ENTITY toolbarMode.label     "模式">
 <!ENTITY toolbarMode.accesskey "M">

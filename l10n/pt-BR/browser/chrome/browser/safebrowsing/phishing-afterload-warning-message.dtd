@@ -20,15 +20,15 @@
 
 
 <!ENTITY safeb.blocked.malwarePage.title2 "Visitar este site pode danificar seu computador">
-<!ENTITY safeb.blocked.malwarePage.shortDesc2 "O &brandShortName; bloqueou o acesso a esta página porque ela pode tentar instalar programas maliciosos que roubam ou deletam suas informações pessoais no seu computador.">
+<!ENTITY safeb.blocked.malwarePage.shortDesc2 "O &brandShortName; bloqueou esta página porque ela pode tentar instalar programas maliciosos que podem roubar ou apagar informações pessoais no seu computador.">
 
 <!-- Localization note (safeb.blocked.malwarePage.errorDesc.override, safeb.blocked.malwarePage.errorDesc.noOverride, safeb.blocked.malwarePage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
 
-<!ENTITY safeb.blocked.malwarePage.errorDesc.override "A página <span id='malware_sitename'/> foi <a id='error_desc_link'>reportada por conter programas maliciosos</a>. Você pode <a id='report_detection'>relatar um problema de detecção</a> ou <a id='ignore_warning_link'>ignorar o risco</a> e visitar a página insegura.">
+<!ENTITY safeb.blocked.malwarePage.errorDesc.override "O site <span id='malware_sitename'/> foi <a id='error_desc_link'>denunciado por conter programas maliciosos</a>. Você pode <a id='report_detection'>relatar um problema de detecção</a> ou <a id='ignore_warning_link'>ignorar o risco</a> e visitar o site inseguro.">
 
-<!ENTITY safeb.blocked.malwarePage.errorDesc.noOverride "A página <span id='malware_sitename'/> foi <a id='error_desc_link'>reportada por conter programas maliciosos</a>. Você pode <a id='report_detection'>relatar um problema de detecção</a>.">
+<!ENTITY safeb.blocked.malwarePage.errorDesc.noOverride "O site <span id='malware_sitename'/> foi <a id='error_desc_link'>denunciado por conter programas maliciosos</a>. Você pode <a id='report_detection'>relatar um problema de detecção</a>.">
 
-<!ENTITY safeb.blocked.malwarePage.learnMore "Saiba mais sobre conteúdo web prejudicial incluindo virus e outro malware e como proteger o seu computador em <a id='learn_more_link'>StopBadware.org</a>. Saiba mais sobre proteção contra phishing e malware do &brandShortName; em <a id='firefox_support'>support.mozilla.org</a>.">
+<!ENTITY safeb.blocked.malwarePage.learnMore "Saiba mais sobre conteúdo web prejudicial, incluindo vírus e outros códigos maliciosos (malware), e como proteger seu computador em <a id='learn_more_link'>StopBadware.org</a>. Saiba mais sobre proteção contra phishing e malware do &brandShortName; em <a id='firefox_support'>support.mozilla.org</a>.">
 
 
 <!ENTITY safeb.blocked.unwantedPage.title2 "O site adiante pode conter programas prejudiciais">
@@ -36,9 +36,9 @@
 
 <!-- Localization note (safeb.blocked.unwantedPage.errorDesc.override, safeb.blocked.unwantedPage.errorDesc.noOverride, safeb.blocked.unwantedPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
 
-<!ENTITY safeb.blocked.unwantedPage.errorDesc.override "<span id='unwanted_sitename'/> foi <a id='error_desc_link'>relatado como contendo software prejudicial</a>. Você pode <a id='ignore_warning_link'>ignorar o risco</a> e ir para este site inseguro.">
+<!ENTITY safeb.blocked.unwantedPage.errorDesc.override "<span id='unwanted_sitename'/> foi <a id='error_desc_link'>denunciado por conter software prejudicial</a>. Você pode <a id='ignore_warning_link'>ignorar o risco</a> e ir para este site inseguro.">
 
-<!ENTITY safeb.blocked.unwantedPage.errorDesc.noOverride "<span id='unwanted_sitename'/> foi <a id='error_desc_link'>relatado como contendo software prejudicial</a>.">
+<!ENTITY safeb.blocked.unwantedPage.errorDesc.noOverride "<span id='unwanted_sitename'/> foi <a id='error_desc_link'>denunciado por conter software prejudicial</a>.">
 
 <!ENTITY safeb.blocked.unwantedPage.learnMore "Saiba mais sobre software nocivo e indesejável no <a id='learn_more_link'>Política de Software Indesejável</a>. Saiba mais sobre Proteção contra Malware e Fraude online do &brandShortName; em <a id='firefox_support'>support.mozilla.org</a>.">
 
@@ -47,9 +47,9 @@
 <!ENTITY safeb.blocked.phishingPage.shortDesc3 "&brandShortName; bloqueou esta página porque ela pode enganá-lo a fazer algo perigoso como instalar software ou revelar informações pessoais como senhas ou números de cartões de crédito.">
 
 <!-- Localization note (safeb.blocked.phishingPage.errorDesc.override, safeb.blocked.phishingPage.errorDesc.noOverride, safeb.blocked.phishingPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
-<!ENTITY safeb.blocked.phishingPage.errorDesc.override "<span id='phishing_sitename'/> foi <a id='error_desc_link'>relatado como um site enganoso</a>. Você pode <a id='report_detection'>relatar um problema de detecção</a> ou <a id='ignore_warning_link'>ignorar o risco</a> e ir para este site inseguro.">
+<!ENTITY safeb.blocked.phishingPage.errorDesc.override "<span id='phishing_sitename'/> foi <a id='error_desc_link'>denunciado como um site enganoso</a>. Você pode <a id='report_detection'>relatar um problema de detecção</a> ou <a id='ignore_warning_link'>ignorar o risco</a> e ir para este site inseguro.">
 
-<!ENTITY safeb.blocked.phishingPage.errorDesc.noOverride "<span id='phishing_sitename'/> foi <a id='error_desc_link'>relatado como um site enganoso</a>. Você pode <a id='report_detection'>relatar um problema de detecção</a>.">
+<!ENTITY safeb.blocked.phishingPage.errorDesc.noOverride "<span id='phishing_sitename'/> foi <a id='error_desc_link'>denunciado como um site enganoso</a>. Você pode <a id='report_detection'>relatar um problema de detecção</a>.">
 
 <!ENTITY safeb.blocked.phishingPage.learnMore "Saiba mais sobre sites enganosos e fraudes online em <a id='learn_more_link'>www.antiphishing.org</a>. Saiba mais sobre a Proteção contra Malware e Fraude online do &brandShortName; em <a id='firefox_support'>support.mozilla.org</a>.">
 
@@ -58,8 +58,8 @@
 <!ENTITY safeb.blocked.harmfulPage.shortDesc2 "O &brandShortName; bloqueou esta página porque ela pode tentar instalar aplicativos perigosos que roubem ou excluam suas informações (por exemplo, fotos, senhas, mensagens e cartões de crédito).">
 
 <!-- Localization note (safeb.blocked.harmfulPage.errorDesc.override, safeb.blocked.harmfulPage.errorDesc.noOverride, safeb.blocked.harmfulPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
-<!ENTITY safeb.blocked.harmfulPage.errorDesc.override "<span id='harmful_sitename'/> foi <a id='error_desc_link'>relatado como contendo um aplicativo potencialmente prejudicial</a>. Você pode <a id='ignore_warning_link'>ignorar o risco</a> e ir para este site inseguro.">
+<!ENTITY safeb.blocked.harmfulPage.errorDesc.override "<span id='harmful_sitename'/> foi <a id='error_desc_link'>denunciado por conter um aplicativo potencialmente prejudicial</a>. Você pode <a id='ignore_warning_link'>ignorar o risco</a> e ir para este site inseguro.">
 
-<!ENTITY safeb.blocked.harmfulPage.errorDesc.noOverride "<span id='harmful_sitename'/> foi <a id='error_desc_link'>relatado como contendo um aplicativo potencialmente prejudicial</a>.">
+<!ENTITY safeb.blocked.harmfulPage.errorDesc.noOverride "<span id='harmful_sitename'/> foi <a id='error_desc_link'>denunciado por conter um aplicativo potencialmente prejudicial</a>.">
 
 <!ENTITY safeb.blocked.harmfulPage.learnMore "Saiba mais sobre a Proteção contra Programas e Páginas Mal Intencionados do &brandShortName; em <a id='firefox_support'>support.mozilla.org</a>.">

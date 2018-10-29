@@ -3,28 +3,28 @@
 add_task(async function test_total() {
   const testTask = ({methodData, details}) => {
     is(content.document.querySelector("#total > currency-amount").textContent,
-       "$60.00",
+       "$60.00 USD",
        "Check total currency amount");
   };
   const args = {
     methodData: [PTU.MethodData.basicCard],
     details: PTU.Details.total60USD,
   };
-  await spawnInDialogForMerchantTask(PTU.ContentTasks.createRequest, testTask, args);
+  await spawnInDialogForMerchantTask(PTU.ContentTasks.createAndShowRequest, testTask, args);
 });
 
 add_task(async function test_modifier_with_no_method_selected() {
   const testTask = async ({methodData, details}) => {
     // There are no payment methods installed/setup so we expect the original (unmodified) total.
     is(content.document.querySelector("#total > currency-amount").textContent,
-       "$2.00",
+       "$2.00 USD",
        "Check unmodified total currency amount");
   };
   const args = {
     methodData: [PTU.MethodData.bobPay, PTU.MethodData.basicCard],
-    details: PTU.Details.bobPayPaymentModifier,
+    details: Object.assign({}, PTU.Details.bobPayPaymentModifier, PTU.Details.total2USD),
   };
-  await spawnInDialogForMerchantTask(PTU.ContentTasks.createRequest, testTask, args);
+  await spawnInDialogForMerchantTask(PTU.ContentTasks.createAndShowRequest, testTask, args);
 });
 
 add_task(async function test_modifier_with_no_method_selected() {
@@ -34,13 +34,13 @@ add_task(async function test_modifier_with_no_method_selected() {
   const testTask = async ({methodData, details}) => {
     // We expect the *only* payment method (the one basic-card) to be selected initially.
     is(content.document.querySelector("#total > currency-amount").textContent,
-       "$2.50",
+       "$2.50 USD",
        "Check modified total currency amount");
   };
   const args = {
     methodData: [PTU.MethodData.bobPay, PTU.MethodData.basicCard],
-    details: PTU.Details.bobPayPaymentModifier,
+    details: Object.assign({}, PTU.Details.bobPayPaymentModifier, PTU.Details.total2USD),
   };
-  await spawnInDialogForMerchantTask(PTU.ContentTasks.createRequest, testTask, args);
+  await spawnInDialogForMerchantTask(PTU.ContentTasks.createAndShowRequest, testTask, args);
   await cleanupFormAutofillStorage();
 });

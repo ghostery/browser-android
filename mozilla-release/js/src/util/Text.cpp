@@ -36,12 +36,6 @@ js_strchr_limit(const Latin1Char* s, char16_t c, const Latin1Char* limit);
 template const char16_t*
 js_strchr_limit(const char16_t* s, char16_t c, const char16_t* limit);
 
-JS_PUBLIC_API(char*)
-js_strdup(const char* s)
-{
-    return DuplicateString(s).release();
-}
-
 int32_t
 js_fputs(const char16_t* s, FILE* f)
 {
@@ -124,36 +118,6 @@ js::InflateString(JSContext* cx, const char* bytes, size_t length)
     chars[length] = 0;
     return chars;
 }
-
-template <typename CharT>
-bool
-js::DeflateStringToBuffer(JSContext* maybecx, const CharT* src, size_t srclen,
-                          char* dst, size_t* dstlenp)
-{
-    size_t dstlen = *dstlenp;
-    if (srclen > dstlen) {
-        for (size_t i = 0; i < dstlen; i++)
-            dst[i] = char(src[i]);
-        if (maybecx) {
-            AutoSuppressGC suppress(maybecx);
-            JS_ReportErrorNumberASCII(maybecx, GetErrorMessage, nullptr,
-                                      JSMSG_BUFFER_TOO_SMALL);
-        }
-        return false;
-    }
-    for (size_t i = 0; i < srclen; i++)
-        dst[i] = char(src[i]);
-    *dstlenp = srclen;
-    return true;
-}
-
-template bool
-js::DeflateStringToBuffer(JSContext* maybecx, const Latin1Char* src, size_t srclen,
-                          char* dst, size_t* dstlenp);
-
-template bool
-js::DeflateStringToBuffer(JSContext* maybecx, const char16_t* src, size_t srclen,
-                          char* dst, size_t* dstlenp);
 
 /*
  * Convert one UCS-4 char and write it into a UTF-8 buffer, which must be at

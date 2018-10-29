@@ -12,11 +12,13 @@
 #include "js/HashTable.h"
 #include "js/Value.h"
 #include "vm/EnvironmentObject.h"
-#include "vm/JSCompartment.h"
 #include "vm/JSObject.h"
+#include "vm/Realm.h"
 #include "vm/SharedArrayObject.h"
 #include "vm/SymbolType.h"
 #include "wasm/WasmJS.h"
+
+#include "gc/Zone-inl.h"
 
 namespace js {
 
@@ -24,7 +26,7 @@ bool
 RuntimeFromMainThreadIsHeapMajorCollecting(JS::shadow::Zone* shadowZone)
 {
     MOZ_ASSERT(CurrentThreadCanAccessRuntime(shadowZone->runtimeFromMainThread()));
-    return JS::CurrentThreadIsHeapMajorCollecting();
+    return JS::RuntimeHeapIsMajorCollecting();
 }
 
 #ifdef DEBUG
@@ -221,6 +223,7 @@ template struct JS_PUBLIC_API(MovableCellHasher<SavedFrame*>);
 template struct JS_PUBLIC_API(MovableCellHasher<EnvironmentObject*>);
 template struct JS_PUBLIC_API(MovableCellHasher<WasmInstanceObject*>);
 template struct JS_PUBLIC_API(MovableCellHasher<JSScript*>);
+template struct JS_PUBLIC_API(MovableCellHasher<LazyScript*>);
 
 #ifdef JS_BROKEN_GCC_ATTRIBUTE_WARNING
 #pragma GCC diagnostic pop

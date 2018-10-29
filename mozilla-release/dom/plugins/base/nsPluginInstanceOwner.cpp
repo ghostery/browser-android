@@ -66,7 +66,6 @@ using mozilla::DefaultXDisplay;
 
 #include "nsContentCID.h"
 #include "nsWidgetsCID.h"
-static NS_DEFINE_CID(kWidgetCID, NS_CHILD_CID);
 static NS_DEFINE_CID(kAppShellCID, NS_APPSHELL_CID);
 
 #ifdef XP_WIN
@@ -123,7 +122,7 @@ public:
   {
     nsContentUtils::DispatchTrustedEvent(mContent->OwnerDoc(), mContent,
         mFinished ? NS_LITERAL_STRING("MozPaintWaitFinished") : NS_LITERAL_STRING("MozPaintWait"),
-        true, true);
+        CanBubble::eYes, Cancelable::eYes);
     return NS_OK;
   }
 
@@ -258,6 +257,7 @@ nsPluginInstanceOwner::GetCurrentImageSize()
 
 nsPluginInstanceOwner::nsPluginInstanceOwner()
   : mPluginWindow(nullptr)
+  , mLastEventloopNestingLevel(0)
 {
   // create nsPluginNativeWindow object, it is derived from NPWindow
   // struct and allows to manipulate native window procedure
@@ -418,7 +418,7 @@ NS_IMETHODIMP nsPluginInstanceOwner::GetURL(const char *aURL,
     return NS_OK;
   }
 
-  nsIDocument *doc = content->GetUncomposedDoc();
+  nsIDocument *doc = content->GetComposedDoc();
   if (!doc) {
     return NS_ERROR_FAILURE;
   }
@@ -485,7 +485,7 @@ NS_IMETHODIMP nsPluginInstanceOwner::GetURL(const char *aURL,
   }
 
   rv = lh->OnLinkClick(content, uri, unitarget.get(), VoidString(),
-                       aPostStream, -1, headersDataStream,
+                       aPostStream, headersDataStream,
                        /* isUserTriggered */ false,
                        /* isTrusted */ true, triggeringPrincipal);
 
@@ -891,11 +891,56 @@ nsPluginInstanceOwner::RequestCommitOrCancel(bool aCommitted)
     }
   }
 
-  if (aCommitted) {
-    widget->NotifyIME(widget::REQUEST_TO_COMMIT_COMPOSITION);
-  } else {
-    widget->NotifyIME(widget::REQUEST_TO_CANCEL_COMPOSITION);
+  // Retrieve TextComposition for the widget with IMEStateManager instead of
+  // using GetTextComposition() because we cannot know whether the method
+  // failed due to no widget or no composition.
+  RefPtr<TextComposition> composition =
+    IMEStateManager::GetTextCompositionFor(widget);
+  if (!composition) {
+    // If there is composition, we should just ignore this request since
+    // the composition may have been committed after the plugin process
+    // sent this request.
+    return true;
   }
+
+  nsCOMPtr<nsIContent> content = do_QueryReferent(mContent);
+  if (content != composition->GetEventTargetNode()) {
+    // If the composition is handled in different node, that means that
+    // the composition for the plugin has gone and new composition has
+    // already started.  So, request from the plugin should be ignored
+    // since user inputs different text now.
+    return true;
+  }
+
+  // If active composition is being handled in the plugin, let's request to
+  // commit/cancel the composition via both IMEStateManager and TextComposition
+  // for avoid breaking the status management of composition.  I.e., don't
+  // call nsIWidget::NotifyIME() directly from here.
+  IMEStateManager::NotifyIME(aCommitted ?
+                                widget::REQUEST_TO_COMMIT_COMPOSITION :
+                                widget::REQUEST_TO_CANCEL_COMPOSITION,
+                             widget, composition->GetTabParent());
+  // FYI: This instance may have been destroyed.  Be careful if you need to
+  //      access members of this class.
+  return true;
+}
+
+bool
+nsPluginInstanceOwner::EnableIME(bool aEnable)
+{
+  if (NS_WARN_IF(!mPluginFrame)) {
+    return false;
+  }
+
+  nsCOMPtr<nsIWidget> widget = GetContainingWidgetIfOffset();
+  if (!widget) {
+    widget = GetRootWidgetForPluginFrame(mPluginFrame);
+    if (NS_WARN_IF(!widget)) {
+      return false;
+    }
+  }
+
+  widget->EnableIMEForPlugin(aEnable);
   return true;
 }
 
@@ -984,7 +1029,7 @@ NPBool nsPluginInstanceOwner::ConvertPointPuppet(PuppetWidget *widget,
 
   nsPresContext* presContext = pluginFrame->PresContext();
   CSSToLayoutDeviceScale scaleFactor(
-    double(nsPresContext::AppUnitsPerCSSPixel()) /
+    double(AppUnitsPerCSSPixel()) /
     presContext->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom());
 
   PuppetWidget *puppetWidget = static_cast<PuppetWidget*>(widget);
@@ -1093,7 +1138,7 @@ NPBool nsPluginInstanceOwner::ConvertPointNoPuppet(nsIWidget *widget,
   }
 
   nsPresContext* presContext = pluginFrame->PresContext();
-  double scaleFactor = double(nsPresContext::AppUnitsPerCSSPixel())/
+  double scaleFactor = double(AppUnitsPerCSSPixel())/
     presContext->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom();
 
   nsCOMPtr<nsIScreen> screen = widget->GetWidgetScreen();
@@ -1425,6 +1470,19 @@ nsresult nsPluginInstanceOwner::DispatchFocusToPlugin(Event* aFocusEvent)
 
 nsresult nsPluginInstanceOwner::ProcessKeyPress(Event* aKeyEvent)
 {
+  // ProcessKeyPress() may be called twice with same eKeyPress event.  One is
+  // by the event listener in the default event group and the other is by the
+  // event listener in the system event group.  When this is called in the
+  // latter case and the event must be fired in the default event group too,
+  // we don't need to do nothing anymore.
+  // XXX Do we need to check whether the document is in chrome?  In strictly
+  //     speaking, it must be yes.  However, our UI must not use plugin in
+  //     chrome.
+  if (!aKeyEvent->WidgetEventPtr()->mFlags.mOnlySystemGroupDispatchInContent &&
+      aKeyEvent->WidgetEventPtr()->mFlags.mInSystemGroup) {
+    return NS_OK;
+  }
+
 #ifdef XP_MACOSX
   return DispatchKeyToPlugin(aKeyEvent);
 #else
@@ -1890,7 +1948,7 @@ TranslateToNPCocoaEvent(WidgetGUIEvent* anEvent, nsIFrame* aObjectFrame)
     nsPresContext* presContext = aObjectFrame->PresContext();
     // Plugin event coordinates need to be translated from device pixels
     // into "display pixels" in HiDPI modes.
-    double scaleFactor = double(nsPresContext::AppUnitsPerCSSPixel())/
+    double scaleFactor = double(AppUnitsPerCSSPixel())/
       aObjectFrame->PresContext()->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom();
     size_t intScaleFactor = ceil(scaleFactor);
     nsIntPoint ptPx(presContext->AppUnitsToDevPixels(pt.x) / intScaleFactor,
@@ -1983,7 +2041,7 @@ void nsPluginInstanceOwner::PerformDelayedBlurs()
   nsContentUtils::DispatchTrustedEvent(content->OwnerDoc(),
                                        windowRoot,
                                        NS_LITERAL_STRING("MozPerformDelayedBlur"),
-                                       false, false, nullptr);
+                                       CanBubble::eNo, Cancelable::eNo, nullptr);
 }
 
 #endif
@@ -2121,11 +2179,11 @@ nsEventStatus nsPluginInstanceOwner::ProcessEvent(const WidgetGUIEvent& anEvent)
         int32_t delta = 0;
         if (wheelEvent->mLineOrPageDeltaY) {
           switch (wheelEvent->mDeltaMode) {
-            case WheelEventBinding::DOM_DELTA_PAGE:
+            case WheelEvent_Binding::DOM_DELTA_PAGE:
               pluginEvent.event = WM_MOUSEWHEEL;
               delta = -WHEEL_DELTA * wheelEvent->mLineOrPageDeltaY;
               break;
-            case WheelEventBinding::DOM_DELTA_LINE: {
+            case WheelEvent_Binding::DOM_DELTA_LINE: {
               UINT linesPerWheelDelta = 0;
               if (NS_WARN_IF(!::SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0,
                                                      &linesPerWheelDelta, 0))) {
@@ -2141,7 +2199,7 @@ nsEventStatus nsPluginInstanceOwner::ProcessEvent(const WidgetGUIEvent& anEvent)
               delta *= wheelEvent->mLineOrPageDeltaY;
               break;
             }
-            case WheelEventBinding::DOM_DELTA_PIXEL:
+            case WheelEvent_Binding::DOM_DELTA_PIXEL:
             default:
               // We don't support WM_GESTURE with this path.
               MOZ_ASSERT(!pluginEvent.event);
@@ -2149,11 +2207,11 @@ nsEventStatus nsPluginInstanceOwner::ProcessEvent(const WidgetGUIEvent& anEvent)
           }
         } else if (wheelEvent->mLineOrPageDeltaX) {
           switch (wheelEvent->mDeltaMode) {
-            case WheelEventBinding::DOM_DELTA_PAGE:
+            case WheelEvent_Binding::DOM_DELTA_PAGE:
               pluginEvent.event = WM_MOUSEHWHEEL;
               delta = -WHEEL_DELTA * wheelEvent->mLineOrPageDeltaX;
               break;
-            case WheelEventBinding::DOM_DELTA_LINE: {
+            case WheelEvent_Binding::DOM_DELTA_LINE: {
               pluginEvent.event = WM_MOUSEHWHEEL;
               UINT charsPerWheelDelta = 0;
               // FYI: SPI_GETWHEELSCROLLCHARS is available on Vista or later.
@@ -2170,7 +2228,7 @@ nsEventStatus nsPluginInstanceOwner::ProcessEvent(const WidgetGUIEvent& anEvent)
               delta *= wheelEvent->mLineOrPageDeltaX;
               break;
             }
-            case WheelEventBinding::DOM_DELTA_PIXEL:
+            case WheelEvent_Binding::DOM_DELTA_PIXEL:
             default:
               // We don't support WM_GESTURE with this path.
               MOZ_ASSERT(!pluginEvent.event);
@@ -2502,6 +2560,7 @@ nsPluginInstanceOwner::Destroy()
   content->RemoveEventListener(NS_LITERAL_STRING("mouseover"), this, false);
   content->RemoveEventListener(NS_LITERAL_STRING("mouseout"), this, false);
   content->RemoveEventListener(NS_LITERAL_STRING("keypress"), this, true);
+  content->RemoveSystemEventListener(NS_LITERAL_STRING("keypress"), this, true);
   content->RemoveEventListener(NS_LITERAL_STRING("keydown"), this, true);
   content->RemoveEventListener(NS_LITERAL_STRING("keyup"), this, true);
   content->RemoveEventListener(NS_LITERAL_STRING("drop"), this, true);
@@ -2804,7 +2863,7 @@ nsresult nsPluginInstanceOwner::Init(nsIContent* aContent)
     // document is destroyed before we try to create the new one.
     objFrame->PresContext()->EnsureVisible();
   } else {
-    NS_NOTREACHED("Should not be initializing plugin without a frame");
+    MOZ_ASSERT_UNREACHABLE("Should not be initializing plugin without a frame");
     return NS_ERROR_FAILURE;
   }
 
@@ -2829,7 +2888,11 @@ nsresult nsPluginInstanceOwner::Init(nsIContent* aContent)
                              false);
   aContent->AddEventListener(NS_LITERAL_STRING("mouseout"), this, false,
                              false);
+  // "keypress" event should be handled when it's in the default event group
+  // if the event is fired in content.  Otherwise, it should be handled when
+  // it's in the system event group.
   aContent->AddEventListener(NS_LITERAL_STRING("keypress"), this, true);
+  aContent->AddSystemEventListener(NS_LITERAL_STRING("keypress"), this, true);
   aContent->AddEventListener(NS_LITERAL_STRING("keydown"), this, true);
   aContent->AddEventListener(NS_LITERAL_STRING("keyup"), this, true);
   aContent->AddEventListener(NS_LITERAL_STRING("drop"), this, true);
@@ -2919,7 +2982,7 @@ NS_IMETHODIMP nsPluginInstanceOwner::CreateWidget(void)
 
     if (!mWidget) {
       // native (single process)
-      mWidget = do_CreateInstance(kWidgetCID, &rv);
+      mWidget = nsIWidget::CreateChildWindow();
       nsWidgetInitData initData;
       initData.mWindowType = eWindowType_plugin;
       initData.mUnicode = false;
@@ -3236,7 +3299,7 @@ nsPluginInstanceOwner::GetContentsScaleFactor(double *result)
   nsCOMPtr<nsIContent> content = do_QueryReferent(mContent);
   nsIPresShell* presShell = nsContentUtils::FindPresShellForDocument(content->OwnerDoc());
   if (presShell) {
-    scaleFactor = double(nsPresContext::AppUnitsPerCSSPixel())/
+    scaleFactor = double(AppUnitsPerCSSPixel())/
       presShell->GetPresContext()->DeviceContext()->AppUnitsPerDevPixelAtUnitFullZoom();
   }
 #endif

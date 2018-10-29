@@ -3,7 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!-- LOCALIZATION NOTE (tapToPlayPlugin): Mobile (used for touch interfaces) only has one type of plugin possible. -->
-<!ENTITY pluginActivationWarning                             "Este site usa um plugin que pode deixar o &brandShortName; lento.">
 <!ENTITY tapToPlayPlugin                                     "Toque aqui para ativar o plugin">
 <!ENTITY clickToActivatePlugin                               "Ativar plugin.">
 <!ENTITY checkForUpdates                                     "Procurar atualizações…">
@@ -29,5 +28,5 @@
 
 <!ENTITY plugin.file                                         "Arquivo">
 <!ENTITY plugin.mimeTypes                                    "Tipos MIME">
-<!ENTITY plugin.flashProtectedMode.label                     "Habilitar o modo protegido do Adobe Flash">
+<!ENTITY plugin.flashProtectedMode.label                     "Ativar o modo protegido do Adobe Flash">
 <!ENTITY plugin.enableBlocklists.label                       "Bloquear conteúdo Flash perigoso e malicioso">

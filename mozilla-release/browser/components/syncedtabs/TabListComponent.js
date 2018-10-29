@@ -11,12 +11,11 @@ let log = ChromeUtils.import("resource://gre/modules/Log.jsm", {})
             .Log.repository.getLogger("Sync.RemoteTabs");
 
 XPCOMUtils.defineLazyModuleGetters(this, {
-  BrowserUITelemetry: "resource:///modules/BrowserUITelemetry.jsm",
   OpenInTabsUtils: "resource:///modules/OpenInTabsUtils.jsm",
 });
 
 var EXPORTED_SYMBOLS = [
-  "TabListComponent"
+  "TabListComponent",
 ];
 
 /**
@@ -60,7 +59,7 @@ TabListComponent.prototype = {
       onFilter: (...args) => this.onFilter(...args),
       onClearFilter: (...args) => this.onClearFilter(...args),
       onFilterFocus: (...args) => this.onFilterFocus(...args),
-      onFilterBlur: (...args) => this.onFilterBlur(...args)
+      onFilterBlur: (...args) => this.onFilterBlur(...args),
     });
 
     this._store.on("change", state => this._view.render(state));
@@ -107,14 +106,12 @@ TabListComponent.prototype = {
   },
 
   onBookmarkTab(uri, title) {
-    this._window.top.PlacesCommandHook
-      .bookmarkLink(this._window.top.PlacesUtils.bookmarksMenuFolderId, uri, title)
-      .catch(Cu.reportError);
+    this._window.top.PlacesCommandHook.bookmarkLink(uri, title)
+                                      .catch(Cu.reportError);
   },
 
   onOpenTab(url, where, params) {
     this._window.openTrustedLinkIn(url, where, params);
-    BrowserUITelemetry.countSyncedTabEvent("open", "sidebar");
   },
 
   onOpenTabs(urls, where) {
@@ -122,7 +119,7 @@ TabListComponent.prototype = {
       return;
     }
     if (where == "window") {
-      this._window.openDialog(this._window.getBrowserURL(), "_blank",
+      this._window.openDialog(this._window.AppConstants.BROWSER_CHROME_URL, "_blank",
                               "chrome,dialog=no,all", urls.join("|"));
     } else {
       let loadInBackground = where == "tabshifted";
@@ -132,7 +129,6 @@ TabListComponent.prototype = {
         triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
       });
     }
-    BrowserUITelemetry.countSyncedTabEvent("openmultiple", "sidebar");
   },
 
   onCopyTabLocation(url) {
@@ -141,5 +137,5 @@ TabListComponent.prototype = {
 
   onSyncRefresh() {
     this._SyncedTabs.syncTabs(true);
-  }
+  },
 };

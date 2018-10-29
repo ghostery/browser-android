@@ -6,13 +6,13 @@
 <!ENTITY itemPhishing.label      "电子邮件欺诈">
 <!ENTITY itemPasswords.label     "密码">
 <!ENTITY itemAntiVirus.label     "防病毒">
-<!-- Junk Mail Controls -->
 
+<!-- Junk Mail Controls -->
 <!ENTITY junkMail.intro "设定您默认的垃圾邮件设置。 
-可以在“帐户设置”中设定特定于帐户的垃圾邮件设置。">
+可以在“账户设置”中设定特定于账户的垃圾邮件设置。">
 <!ENTITY manualMark.label "当我将消息标记为垃圾邮件时：">
 <!ENTITY manualMark.accesskey "W">
-<!ENTITY manualMarkModeMove.label "将它们移动至帐户的“垃圾”文件夹">
+<!ENTITY manualMarkModeMove.label "将它们移动至账户的“垃圾”文件夹">
 <!ENTITY manualMarkModeMove.accesskey "o">
 <!ENTITY manualMarkModeDelete.label "删除它们">
 <!ENTITY manualMarkModeDelete.accesskey "D">
@@ -24,16 +24,16 @@
 <!ENTITY openJunkLog.accesskey "S">
 <!ENTITY resetTrainingData.label "重置训练数据">
 <!ENTITY resetTrainingData.accesskey "R">
-<!-- Phishing Detector -->
 
+<!-- Phishing Detector -->
 <!ENTITY phishingDetector1.intro  "&brandShortName; 可以识别一些常见欺诈伎俩，分析检测是否为欺诈邮件。">
 <!ENTITY enablePhishingDetector1.label    "告诉我正在阅读的消息是否是欺诈邮件">
 <!ENTITY enablePhishingDetector1.accesskey  "T">
 <!ENTITY useDownloadedList.label "使用下载的欺诈邮件列表">
 <!ENTITY useDownloadedList.accesskey "U">
-<!-- Passwords -->
 
-<!ENTITY savedPasswords.intro           "&brandShortName; 能记住您所有帐户的密码信息，因此您不必在每次登录时重复输入密码。">
+<!-- Passwords -->
+<!ENTITY savedPasswords.intro           "&brandShortName; 能记住您所有账户的密码信息，因此您不必在每次登录时重复输入密码。">
 <!ENTITY useMasterPassword.label        "使用主密码">
 <!ENTITY useMasterPassword.accesskey    "U">
 <!ENTITY masterPassword.intro           "设置主密码可以保护您所有的密码 - 但是您必须对每次会话输入一次主密码。">
@@ -41,9 +41,8 @@
 <!ENTITY changeMasterPassword.accesskey "C">
 <!ENTITY savedPasswords.label           "已保存密码…">
 <!ENTITY savedPasswords.accesskey       "S">
-<!-- Anti Virus -->
 
+<!-- Anti Virus -->
 <!ENTITY antiVirus.intro      "&brandShortName; 可以让防病毒软件更容易在传入的邮件被本地保存之前扫描病毒。">
 <!ENTITY antiVirus.label      "允许防病毒软件隔离个别传入的邮件">
 <!ENTITY antiVirus.accesskey  "A">
-

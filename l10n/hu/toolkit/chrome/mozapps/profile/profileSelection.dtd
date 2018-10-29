@@ -5,7 +5,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY            windowtitle.label      "&brandShortName; - Felhasználói profil kiválasztása">
+<!ENTITY            windowtitle.label      "&brandShortName; – Felhasználói profil kiválasztása">
 
 <!ENTITY            profilename.label      "Profil neve:">
 
@@ -20,8 +20,8 @@
 <!ENTITY            renameButton.accesskey "n">
 <!ENTITY            deleteButton.label     "Profil törlése…">
 <!ENTITY            deleteButton.accesskey "t">
-<!-- manager entities -->
 
+<!-- manager entities -->
 <!ENTITY            pmDescription.label    "A beállításokat, jellemzőket és egyéb felhasználói elemeket a &brandShortName; egy felhasználói profilban tárolja.">
 
 <!ENTITY            offlineState.label    "Kapcsolat nélküli munka">

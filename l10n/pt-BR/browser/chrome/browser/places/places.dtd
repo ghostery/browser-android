@@ -15,7 +15,7 @@
 <!ENTITY cmd.close.key                  "w">
 <!ENTITY views.label                    "Visualizações">
 <!ENTITY views.accesskey                "V">
-<!ENTITY views.tooltip                  "Alterar visualização">
+<!ENTITY views.tooltip                  "Altere sua visualização">
 <!ENTITY view.columns.label             "Mostrar colunas">
 <!ENTITY view.columns.accesskey         "c">
 <!ENTITY view.sort.label                "Ordenar por">
@@ -99,6 +99,7 @@
 <!ENTITY detailsPane.more.accesskey "M">
 <!ENTITY detailsPane.less.label "Menos">
 <!ENTITY detailsPane.less.accesskey "M">
+
 <!ENTITY detailsPane.selectAnItemText.description "Selecione um item para ver e editar as suas propriedades">
 
 <!ENTITY view.label               "Exibir">

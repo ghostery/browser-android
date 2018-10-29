@@ -104,12 +104,16 @@ public:
            uintptr_t(getpid()), uintptr_t(pthread_self()));
   }
 
-  Atomic<int32_t> mAllocCount;
-  Atomic<int32_t> mReallocCount;
-  Atomic<int32_t> mFreeCount;
-  Atomic<int32_t> mShareCount;
-  Atomic<int32_t> mAdoptCount;
-  Atomic<int32_t> mAdoptFreeCount;
+  typedef Atomic<int32_t,
+                 mozilla::SequentiallyConsistent,
+                 mozilla::recordreplay::Behavior::DontPreserve> AtomicInt;
+
+  AtomicInt mAllocCount;
+  AtomicInt mReallocCount;
+  AtomicInt mFreeCount;
+  AtomicInt mShareCount;
+  AtomicInt mAdoptCount;
+  AtomicInt mAdoptFreeCount;
 };
 static nsStringStats gStringStats;
 #define STRING_STAT_INCREMENT(_s) (gStringStats.m ## _s ## Count)++
@@ -412,7 +416,7 @@ void Gecko_AssignCString(nsACString* aThis, const nsACString* aOther)
 
 void Gecko_TakeFromCString(nsACString* aThis, nsACString* aOther)
 {
-  aThis->Assign(mozilla::Move(*aOther));
+  aThis->Assign(std::move(*aOther));
 }
 
 void Gecko_AppendCString(nsACString* aThis, const nsACString* aOther)
@@ -432,7 +436,7 @@ bool Gecko_FallibleAssignCString(nsACString* aThis, const nsACString* aOther)
 
 bool Gecko_FallibleTakeFromCString(nsACString* aThis, nsACString* aOther)
 {
-  return aThis->Assign(mozilla::Move(*aOther), mozilla::fallible);
+  return aThis->Assign(std::move(*aOther), mozilla::fallible);
 }
 
 bool Gecko_FallibleAppendCString(nsACString* aThis, const nsACString* aOther)
@@ -455,6 +459,15 @@ char* Gecko_FallibleBeginWritingCString(nsACString* aThis)
   return aThis->BeginWriting(mozilla::fallible);
 }
 
+uint32_t
+Gecko_StartBulkWriteCString(nsACString* aThis,
+                            uint32_t aCapacity,
+                            uint32_t aUnitsToPreserve,
+                            bool aAllowShrinking)
+{
+  return aThis->StartBulkWriteImpl(aCapacity, aUnitsToPreserve, aAllowShrinking).unwrapOr(UINT32_MAX);
+}
+
 void Gecko_FinalizeString(nsAString* aThis)
 {
   aThis->~nsAString();
@@ -467,7 +480,7 @@ void Gecko_AssignString(nsAString* aThis, const nsAString* aOther)
 
 void Gecko_TakeFromString(nsAString* aThis, nsAString* aOther)
 {
-  aThis->Assign(mozilla::Move(*aOther));
+  aThis->Assign(std::move(*aOther));
 }
 
 void Gecko_AppendString(nsAString* aThis, const nsAString* aOther)
@@ -487,7 +500,7 @@ bool Gecko_FallibleAssignString(nsAString* aThis, const nsAString* aOther)
 
 bool Gecko_FallibleTakeFromString(nsAString* aThis, nsAString* aOther)
 {
-  return aThis->Assign(mozilla::Move(*aOther), mozilla::fallible);
+  return aThis->Assign(std::move(*aOther), mozilla::fallible);
 }
 
 bool Gecko_FallibleAppendString(nsAString* aThis, const nsAString* aOther)
@@ -508,6 +521,15 @@ char16_t* Gecko_BeginWritingString(nsAString* aThis)
 char16_t* Gecko_FallibleBeginWritingString(nsAString* aThis)
 {
   return aThis->BeginWriting(mozilla::fallible);
+}
+
+uint32_t
+Gecko_StartBulkWriteString(nsAString* aThis,
+                           uint32_t aCapacity,
+                           uint32_t aUnitsToPreserve,
+                           bool aAllowShrinking)
+{
+  return aThis->StartBulkWriteImpl(aCapacity, aUnitsToPreserve, aAllowShrinking).unwrapOr(UINT32_MAX);
 }
 
 } // extern "C"

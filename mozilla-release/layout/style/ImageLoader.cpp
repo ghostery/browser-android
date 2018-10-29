@@ -46,6 +46,25 @@ ImageLoader::DropDocumentReference()
   mDocument = nullptr;
 }
 
+// Normally, arrays of requests and frames are sorted by their pointer address,
+// for faster lookup. When recording or replaying, we don't do this, so that
+// the arrays retain their insertion order and are consistent between recording
+// and replaying.
+template <typename Elem, typename Item, typename Comparator = nsDefaultComparator<Elem, Item>>
+static size_t
+GetMaybeSortedIndex(const nsTArray<Elem>& aArray, const Item& aItem, bool* aFound,
+                    Comparator aComparator = Comparator())
+{
+  if (recordreplay::IsRecordingOrReplaying()) {
+    size_t index = aArray.IndexOf(aItem, 0, aComparator);
+    *aFound = index != nsTArray<Elem>::NoIndex;
+    return *aFound ? index + 1 : aArray.Length();
+  }
+  size_t index = aArray.IndexOfFirstElementGt(aItem, aComparator);
+  *aFound = index > 0 && aComparator.Equals(aItem, aArray.ElementAt(index - 1));
+  return index;
+}
+
 void
 ImageLoader::AssociateRequestToFrame(imgIRequest* aRequest,
                                      nsIFrame* aFrame,
@@ -84,8 +103,9 @@ ImageLoader::AssociateRequestToFrame(imgIRequest* aRequest,
   FrameWithFlags* fwfToModify(&fwf);
 
   // See if the frameSet already has this frame.
-  uint32_t i = frameSet->IndexOfFirstElementGt(fwf, FrameOnlyComparator());
-  if (i > 0 && aFrame == frameSet->ElementAt(i-1).mFrame) {
+  bool found;
+  uint32_t i = GetMaybeSortedIndex(*frameSet, fwf, &found, FrameOnlyComparator());
+  if (found) {
     // We're already tracking this frame, so prepare to modify the
     // existing FrameWithFlags object.
     fwfToModify = &frameSet->ElementAt(i-1);
@@ -97,20 +117,48 @@ ImageLoader::AssociateRequestToFrame(imgIRequest* aRequest,
 
     // If we weren't already blocking onload, do that now.
     if ((fwfToModify->mFlags & REQUEST_HAS_BLOCKED_ONLOAD) == 0) {
-      fwfToModify->mFlags |= REQUEST_HAS_BLOCKED_ONLOAD;
-
-      // Block document onload until we either remove the frame in
-      // RemoveRequestToFrameMapping or onLoadComplete, or complete a reflow.
-      mDocument->BlockOnload();
-
-      // We need to stay blocked until we get a reflow. If the first frame
-      // is not yet decoded, we'll trigger that reflow from onFrameComplete.
-      // But if the first frame is already decoded, we need to trigger that
-      // reflow now, because we'll never get a call to onFrameComplete.
+      // Get request status to see if we should block onload, and if we can
+      // request reflow immediately.
       uint32_t status = 0;
-      if(NS_SUCCEEDED(aRequest->GetImageStatus(&status)) &&
-         status & imgIRequest::STATUS_FRAME_COMPLETE) {
-        RequestReflowOnFrame(fwfToModify, aRequest);
+      if (NS_SUCCEEDED(aRequest->GetImageStatus(&status)) &&
+          !(status & imgIRequest::STATUS_ERROR)) {
+        // No error, so we can block onload.
+        fwfToModify->mFlags |= REQUEST_HAS_BLOCKED_ONLOAD;
+
+        // Block document onload until we either remove the frame in
+        // RemoveRequestToFrameMapping or onLoadComplete, or complete a reflow.
+        mDocument->BlockOnload();
+
+        // We need to stay blocked until we get a reflow. If the first frame
+        // is not yet decoded, we'll trigger that reflow from onFrameComplete.
+        // But if the first frame is already decoded, we need to trigger that
+        // reflow now, because we'll never get a call to onFrameComplete.
+        if(status & imgIRequest::STATUS_FRAME_COMPLETE) {
+          RequestReflowOnFrame(fwfToModify, aRequest);
+        } else {
+          // If we don't already have a complete frame, kickoff decode. This
+          // will ensure that either onFrameComplete or onLoadComplete will
+          // unblock document onload.
+
+          // We want to request decode in such a way that avoids triggering
+          // sync decode. First, we attempt to convert the aRequest into
+          // a imgIContainer. If that succeeds, then aRequest has an image
+          // and we can request decoding for size at zero size, and that will
+          // trigger async decode. If the conversion to imgIContainer is
+          // unsuccessful, then that means aRequest doesn't have an image yet,
+          // which means we can safely call StartDecoding() on it without
+          // triggering any synchronous work.
+          nsCOMPtr<imgIContainer> imgContainer;
+          aRequest->GetImage(getter_AddRefs(imgContainer));
+          if (imgContainer) {
+            imgContainer->RequestDecodeForSize(gfx::IntSize(0, 0),
+              imgIContainer::DECODE_FLAGS_DEFAULT);
+          } else {
+            // It's safe to call StartDecoding directly, since it can't
+            // trigger synchronous decode without an image. Flags are ignored.
+            aRequest->StartDecoding(imgIContainer::FLAG_NONE);
+          }
+        }
       }
     }
   }
@@ -121,14 +169,14 @@ ImageLoader::AssociateRequestToFrame(imgIRequest* aRequest,
   DebugOnly<bool> didAddToRequestSet(false);
 
   // If we weren't already tracking this frame, add it to the frameSet.
-  if (i == 0 || aFrame != frameSet->ElementAt(i-1).mFrame) {
+  if (!found) {
     frameSet->InsertElementAt(i, fwf);
     didAddToFrameSet = true;
   }
 
   // Add request to the request set if it wasn't already there.
-  i = requestSet->IndexOfFirstElementGt(aRequest);
-  if (i == 0 || aRequest != requestSet->ElementAt(i-1)) {
+  i = GetMaybeSortedIndex(*requestSet, aRequest, &found);
+  if (!found) {
     requestSet->InsertElementAt(i, aRequest);
     didAddToRequestSet = true;
   }
@@ -191,10 +239,10 @@ ImageLoader::RemoveRequestToFrameMapping(imgIRequest* aRequest,
     MOZ_ASSERT(frameSet, "This should never be null");
 
     // Before we remove aFrame from the frameSet, unblock onload if needed.
-    uint32_t i = frameSet->IndexOfFirstElementGt(FrameWithFlags(aFrame),
-                                                 FrameOnlyComparator());
-
-    if (i > 0 && aFrame == frameSet->ElementAt(i-1).mFrame) {
+    bool found;
+    uint32_t i = GetMaybeSortedIndex(*frameSet, FrameWithFlags(aFrame), &found,
+                                     FrameOnlyComparator());
+    if (found) {
       FrameWithFlags& fwf = frameSet->ElementAt(i-1);
       if (fwf.mFlags & REQUEST_HAS_BLOCKED_ONLOAD) {
         mDocument->UnblockOnload(false);
@@ -221,7 +269,11 @@ ImageLoader::RemoveFrameToRequestMapping(imgIRequest* aRequest,
   if (auto entry = mFrameToRequestMap.Lookup(aFrame)) {
     RequestSet* requestSet = entry.Data();
     MOZ_ASSERT(requestSet, "This should never be null");
-    requestSet->RemoveElementSorted(aRequest);
+    if (recordreplay::IsRecordingOrReplaying()) {
+      requestSet->RemoveElement(aRequest);
+    } else {
+      requestSet->RemoveElementSorted(aRequest);
+    }
     if (requestSet->IsEmpty()) {
       aFrame->SetHasImageRequest(false);
       entry.Remove();
@@ -491,10 +543,6 @@ ImageLoader::RequestReflowIfNeeded(FrameSet* aFrameSet, imgIRequest* aRequest)
 void
 ImageLoader::RequestReflowOnFrame(FrameWithFlags* aFwf, imgIRequest* aRequest)
 {
-  // Set the flag indicating that we've requested reflow. This flag will never
-  // be unset.
-  aFwf->mFlags |= REQUEST_HAS_REQUESTED_REFLOW;
-
   nsIFrame* frame = aFwf->mFrame;
 
   // Actually request the reflow.
@@ -667,19 +715,19 @@ ImageLoader::OnLoadComplete(imgIRequest* aRequest)
     return NS_OK;
   }
 
-  // This may be called for a request that never sent a complete frame.
-  // This is what happens in a CORS mode violation, and may happen during
-  // other network events. We check for any frames that have blocked
-  // onload but haven't requested reflow. In such a case, we unblock
-  // onload here, since onFrameComplete will not be called for this request.
-  FrameFlags flagsToCheck(REQUEST_HAS_BLOCKED_ONLOAD |
-                          REQUEST_HAS_REQUESTED_REFLOW);
-  for (FrameWithFlags& fwf : *frameSet) {
-    if ((fwf.mFlags & flagsToCheck) == REQUEST_HAS_BLOCKED_ONLOAD) {
-      // We've blocked onload but haven't requested reflow. Unblock onload
-      // and clear the flag.
-      mDocument->UnblockOnload(false);
-      fwf.mFlags &= ~REQUEST_HAS_BLOCKED_ONLOAD;
+  // Check if aRequest has an error state. If it does, we need to unblock
+  // Document onload for all the frames associated with this request that
+  // have blocked onload. This is what happens in a CORS mode violation, and
+  // may happen during other network events.
+  uint32_t status = 0;
+  if(NS_SUCCEEDED(aRequest->GetImageStatus(&status)) &&
+     status & imgIRequest::STATUS_ERROR) {
+    for (FrameWithFlags& fwf : *frameSet) {
+      if (fwf.mFlags & REQUEST_HAS_BLOCKED_ONLOAD) {
+        // We've blocked onload. Unblock onload and clear the flag.
+        mDocument->UnblockOnload(false);
+        fwf.mFlags &= ~REQUEST_HAS_BLOCKED_ONLOAD;
+      }
     }
   }
 

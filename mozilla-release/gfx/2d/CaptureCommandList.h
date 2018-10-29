@@ -24,14 +24,15 @@ public:
     : mLastCommand(nullptr)
   {}
   CaptureCommandList(CaptureCommandList&& aOther)
-   : mStorage(Move(aOther.mStorage)), mLastCommand(aOther.mLastCommand)
+    : mStorage(std::move(aOther.mStorage))
+    , mLastCommand(aOther.mLastCommand)
   {
     aOther.mLastCommand = nullptr;
   }
   ~CaptureCommandList();
 
-  CaptureCommandList& operator =(CaptureCommandList&& aOther) {
-    mStorage = Move(aOther.mStorage);
+  CaptureCommandList& operator=(CaptureCommandList&& aOther) {
+    mStorage = std::move(aOther.mStorage);
     mLastCommand = aOther.mLastCommand;
     aOther.mLastCommand = nullptr;
     return *this;
@@ -50,12 +51,29 @@ public:
 
   template <typename T>
   T* ReuseOrAppend() {
-    if (mLastCommand != nullptr &&
-      mLastCommand->GetType() == T::Type) {
-      return reinterpret_cast<T*>(mLastCommand);
+    { // Scope lock
+      if (mLastCommand != nullptr &&
+        mLastCommand->GetType() == T::Type) {
+        return reinterpret_cast<T*>(mLastCommand);
+      }
     }
     return Append<T>();
   }
+
+  bool IsEmpty() const {
+    return mStorage.empty();
+  }
+
+  template <typename T>
+  bool BufferWillAlloc() const {
+    return mStorage.size() + sizeof(uint32_t) + sizeof(T) > mStorage.capacity();
+  }
+
+  size_t BufferCapacity() const {
+    return mStorage.capacity();
+  }
+
+  void Clear();
 
   class iterator
   {
@@ -70,6 +88,7 @@ public:
         mEnd = mCurrent + mParent.mStorage.size();
       }
     }
+
     bool Done() const {
       return mCurrent >= mEnd;
     }

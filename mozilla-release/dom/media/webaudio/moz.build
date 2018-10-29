@@ -9,8 +9,6 @@ with Files('*'):
 
 DIRS += ['blink']
 
-TEST_DIRS += ['gtest']
-
 MOCHITEST_MANIFESTS += [
     'test/blink/mochitest.ini',
     'test/mochitest.ini',
@@ -49,8 +47,11 @@ EXPORTS.mozilla.dom += [
     'AudioListener.h',
     'AudioNode.h',
     'AudioParam.h',
+    'AudioParamMap.h',
     'AudioProcessingEvent.h',
     'AudioScheduledSourceNode.h',
+    'AudioWorkletNode.h',
+    'AudioWorkletProcessor.h',
     'BiquadFilterNode.h',
     'ChannelMergerNode.h',
     'ChannelSplitterNode.h',
@@ -85,8 +86,11 @@ UNIFIED_SOURCES += [
     'AudioNodeExternalInputStream.cpp',
     'AudioNodeStream.cpp',
     'AudioParam.cpp',
+    'AudioParamMap.cpp',
     'AudioProcessingEvent.cpp',
     'AudioScheduledSourceNode.cpp',
+    'AudioWorkletNode.cpp',
+    'AudioWorkletProcessor.cpp',
     'BiquadFilterNode.cpp',
     'ChannelMergerNode.cpp',
     'ChannelSplitterNode.cpp',

@@ -16,12 +16,7 @@ const UPDATE_INDICATOR = "chrome://browser/skin/images/extension-update.svg";
 var gStringBundle = Services.strings.createBundle("chrome://browser/locale/aboutAddons.properties");
 
 XPCOMUtils.defineLazyGetter(window, "gChromeWin", function() {
-  return window.QueryInterface(Ci.nsIInterfaceRequestor)
-           .getInterface(Ci.nsIWebNavigation)
-           .QueryInterface(Ci.nsIDocShellTreeItem)
-           .rootTreeItem
-           .QueryInterface(Ci.nsIInterfaceRequestor)
-           .getInterface(Ci.nsIDOMWindow)
+  return window.docShell.rootTreeItem.domWindow
            .QueryInterface(Ci.nsIDOMChromeWindow);
 });
 ChromeUtils.defineModuleGetter(window, "Preferences",
@@ -536,6 +531,13 @@ var Addons = {
 
     let listItem = this._getElementForAddon(addon.id);
 
+    function setDisabled(addon, value) {
+      if (value) {
+        return addon.disable();
+      }
+      return addon.enable();
+    }
+
     let opType;
     if (addon.type == "theme") {
       if (aValue) {
@@ -544,18 +546,18 @@ var Addons = {
         let item = list.firstElementChild;
         while (item) {
           if (item.addon && (item.addon.type == "theme") && (item.addon.isActive)) {
-            item.addon.userDisabled = true;
+            item.addon.disable();
             item.setAttribute("isDisabled", true);
             break;
           }
           item = item.nextSibling;
         }
       }
-      addon.userDisabled = !aValue;
+      setDisabled(addon, !aValue);
     } else if (addon.type == "locale") {
-      addon.userDisabled = !aValue;
+      setDisabled(addon, !aValue);
     } else {
-      addon.userDisabled = !aValue;
+      setDisabled(addon, !aValue);
       opType = this._getOpTypeForOperations(addon.pendingOperations);
 
       if ((addon.pendingOperations & AddonManager.PENDING_ENABLE) ||

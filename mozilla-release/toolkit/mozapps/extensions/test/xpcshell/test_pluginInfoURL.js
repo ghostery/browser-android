@@ -17,7 +17,7 @@ function MockPlugin(name, version, enabledState) {
 MockPlugin.prototype = {
   get disabled() {
     return this.enabledState == Ci.nsIPluginTag.STATE_DISABLED;
-  }
+  },
 };
 
 // The mocked blocked plugin used to test the blocklist.
@@ -26,21 +26,19 @@ const PLUGINS = [
   new MockPlugin("test_with_altInfoURL", "5", Ci.nsIPluginTag.STATE_ENABLED),
   new MockPlugin("test_no_infoURL", "5", Ci.nsIPluginTag.STATE_ENABLED),
   new MockPlugin("test_newVersion", "1", Ci.nsIPluginTag.STATE_ENABLED),
-  new MockPlugin("test_newVersion", "3", Ci.nsIPluginTag.STATE_ENABLED)
+  new MockPlugin("test_newVersion", "3", Ci.nsIPluginTag.STATE_ENABLED),
 ];
 
 /**
  * The entry point of the unit tests, which is also responsible of
  * copying the blocklist file to the profile folder.
  */
-function run_test() {
+add_task(async function setup() {
   copyBlocklistToProfile(do_get_file("data/pluginInfoURL_block.xml"));
 
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "3", "8");
-  startupManager();
-
-  run_next_test();
-}
+  await promiseStartupManager();
+});
 
 /**
  * Test that the blocklist service correctly loads and returns the infoURL for

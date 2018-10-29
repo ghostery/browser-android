@@ -225,9 +225,12 @@ struct NativePtr<Impl, /* Type = */ NativePtrType::WEAK>
     template<class LocalRef>
     static void Set(const LocalRef& instance, Impl* ptr)
     {
+        // Create the new handle first before clearing any old handle, so the
+        // new handle is guaranteed to have different value than any old handle.
+        const uintptr_t handle =
+                reinterpret_cast<uintptr_t>(new WeakPtr<Impl>(ptr));
         Clear(instance);
-        SetNativeHandle(instance.Env(), instance.Get(),
-                          reinterpret_cast<uintptr_t>(new WeakPtr<Impl>(ptr)));
+        SetNativeHandle(instance.Env(), instance.Get(), handle);
         MOZ_CATCH_JNI_EXCEPTION(instance.Env());
     }
 
@@ -270,9 +273,12 @@ struct NativePtr<Impl, /* Type = */ NativePtrType::REFPTR>
     template<class LocalRef>
     static void Set(const LocalRef& instance, Impl* ptr)
     {
+        // Create the new handle first before clearing any old handle, so the
+        // new handle is guaranteed to have different value than any old handle.
+        const uintptr_t handle =
+                reinterpret_cast<uintptr_t>(new RefPtr<Impl>(ptr));
         Clear(instance);
-        SetNativeHandle(instance.Env(), instance.Get(),
-                        reinterpret_cast<uintptr_t>(new RefPtr<Impl>(ptr)));
+        SetNativeHandle(instance.Env(), instance.Get(), handle);
         MOZ_CATCH_JNI_EXCEPTION(instance.Env());
     }
 
@@ -313,7 +319,7 @@ using namespace detail;
  *     {
  *         Functor mCall;
  *     public:
- *         ProxyRunnable(Functor&& call) : mCall(mozilla::Move(call)) {}
+ *         ProxyRunnable(Functor&& call) : mCall(std::move(call)) {}
  *         virtual void run() override { mCall(); }
  *     };
  *
@@ -321,7 +327,7 @@ using namespace detail;
  *     template<class Functor>
  *     static void OnNativeCall(Functor&& call)
  *     {
- *         RunOnAnotherThread(new ProxyRunnable(mozilla::Move(call)));
+ *         RunOnAnotherThread(new ProxyRunnable(std::move(call)));
  *     }
  * };
  */
@@ -519,7 +525,7 @@ struct Dispatcher
     {
         Impl::OnNativeCall(ProxyNativeCall<
                 Impl, typename Traits::Owner, IsStatic,
-                HasThisArg, Args...>(Forward<ProxyArgs>(args)...));
+                HasThisArg, Args...>(std::forward<ProxyArgs>(args)...));
     }
 
     template<class Traits, bool IsStatic = Traits::isStatic,
@@ -534,9 +540,9 @@ struct Dispatcher
         auto proxy = ProxyNativeCall<Impl, typename Traits::Owner, IsStatic,
                                      HasThisArg, Args...>(
                 (HasThisArg || !IsStatic) ? thisArg : nullptr,
-                Forward<ProxyArgs>(args)...);
+                std::forward<ProxyArgs>(args)...);
         DispatchToGeckoPriorityQueue(
-                NS_NewRunnableFunction("PriorityNativeCall", Move(proxy)));
+                NS_NewRunnableFunction("PriorityNativeCall", std::move(proxy)));
     }
 
     template<class Traits, bool IsStatic = Traits::isStatic,
@@ -551,9 +557,9 @@ struct Dispatcher
         auto proxy = ProxyNativeCall<Impl, typename Traits::Owner, IsStatic,
                                      HasThisArg, Args...>(
                 (HasThisArg || !IsStatic) ? thisArg : nullptr,
-                Forward<ProxyArgs>(args)...);
+                std::forward<ProxyArgs>(args)...);
         NS_DispatchToMainThread(
-                NS_NewRunnableFunction("GeckoNativeCall", Move(proxy)));
+                NS_NewRunnableFunction("GeckoNativeCall", std::move(proxy)));
     }
 
     template<class Traits, bool IsStatic = false, typename... ProxyArgs>
@@ -829,7 +835,7 @@ protected:
     {
         static_assert(NativePtrPicker<Impl>::value == NativePtrType::OWNING,
                       "Use another AttachNative for WeakPtr or RefPtr usage");
-        return NativePtr<Impl>::Set(instance, mozilla::Move(ptr));
+        return NativePtr<Impl>::Set(instance, std::move(ptr));
     }
 
     static void AttachNative(const typename Cls::LocalRef& instance, Impl* ptr)

@@ -211,13 +211,13 @@ SetFromTanRadians(double left, double right, double bottom, double top)
 VRDisplayOSVR::VRDisplayOSVR(OSVR_ClientContext* context,
                          OSVR_ClientInterface* iface,
                          OSVR_DisplayConfig* display)
-  : VRDisplayHost(VRDeviceType::OSVR)
+  : VRDisplayLocal(VRDeviceType::OSVR)
   , m_ctx(context)
   , m_iface(iface)
   , m_display(display)
 {
 
-  MOZ_COUNT_CTOR_INHERITED(VRDisplayOSVR, VRDisplayHost);
+  MOZ_COUNT_CTOR_INHERITED(VRDisplayOSVR, VRDisplayLocal);
 
   VRDisplayState& state = mDisplayInfo.mDisplayState;
   state.mIsConnected = true;
@@ -317,22 +317,22 @@ VRDisplayOSVR::GetSensorState()
 
   if (ret == OSVR_RETURN_SUCCESS) {
     result.flags |= VRDisplayCapabilityFlags::Cap_Orientation;
-    result.orientation[0] = orientation.data[1];
-    result.orientation[1] = orientation.data[2];
-    result.orientation[2] = orientation.data[3];
-    result.orientation[3] = orientation.data[0];
+    result.pose.orientation[0] = orientation.data[1];
+    result.pose.orientation[1] = orientation.data[2];
+    result.pose.orientation[2] = orientation.data[3];
+    result.pose.orientation[3] = orientation.data[0];
   } else {
     // default to an identity quaternion
-    result.orientation[3] = 1.0f;
+    result.pose.orientation[3] = 1.0f;
   }
 
   OSVR_PositionState position;
   ret = osvr_GetPositionState(*m_iface, &timestamp, &position);
   if (ret == OSVR_RETURN_SUCCESS) {
     result.flags |= VRDisplayCapabilityFlags::Cap_Position;
-    result.position[0] = position.data[0];
-    result.position[1] = position.data[1];
-    result.position[2] = position.data[2];
+    result.pose.position[0] = position.data[0];
+    result.pose.position[1] = position.data[1];
+    result.pose.position[2] = position.data[2];
   }
 
   result.CalcViewMatrices(mHeadToEye);
@@ -357,18 +357,6 @@ VRDisplayOSVR::SubmitFrame(ID3D11Texture2D* aSource,
 bool
 VRDisplayOSVR::SubmitFrame(MacIOSurface* aMacIOSurface,
                            const IntSize& aSize,
-                           const gfx::Rect& aLeftEyeRect,
-                           const gfx::Rect& aRightEyeRect)
-{
-  // XXX Add code to submit frame
-  MOZ_ASSERT(mSubmitThread->GetThread() == NS_GetCurrentThread());
-  return false;
-}
-
-#elif defined(MOZ_ANDROID_GOOGLE_VR)
-
-bool
-VRDisplayOSVR::SubmitFrame(const mozilla::layers::EGLImageDescriptor*,
                            const gfx::Rect& aLeftEyeRect,
                            const gfx::Rect& aRightEyeRect)
 {

@@ -9,6 +9,7 @@ use cssparser::{Parser, SourceLocation, UnicodeRange};
 use error_reporting::{ContextualParseError, ParseErrorReporter};
 use style_traits::{OneOrMoreSeparated, ParseError, ParsingMode, Separator};
 use stylesheets::{CssRuleType, Namespaces, Origin, UrlExtraData};
+use use_counters::UseCounters;
 
 /// Asserts that all ParsingMode flags have a matching ParsingMode value in gecko.
 #[cfg(feature = "gecko")]
@@ -36,12 +37,6 @@ pub fn assert_parsing_mode_match() {
     }
 }
 
-/// The context required to report a parse error.
-pub struct ParserErrorContext<'a, R: 'a> {
-    /// An error reporter to report syntax errors.
-    pub error_reporter: &'a R,
-}
-
 /// The data that the parser needs from outside in order to parse a stylesheet.
 pub struct ParserContext<'a> {
     /// The `Origin` of the stylesheet, whether it's a user, author or
@@ -55,8 +50,12 @@ pub struct ParserContext<'a> {
     pub parsing_mode: ParsingMode,
     /// The quirks mode of this stylesheet.
     pub quirks_mode: QuirksMode,
+    /// The active error reporter, or none if error reporting is disabled.
+    error_reporter: Option<&'a ParseErrorReporter>,
     /// The currently active namespaces.
     pub namespaces: Option<&'a Namespaces>,
+    /// The use counters we want to record while parsing style rules, if any.
+    pub use_counters: Option<&'a UseCounters>,
 }
 
 impl<'a> ParserContext<'a> {
@@ -68,14 +67,18 @@ impl<'a> ParserContext<'a> {
         rule_type: Option<CssRuleType>,
         parsing_mode: ParsingMode,
         quirks_mode: QuirksMode,
+        error_reporter: Option<&'a ParseErrorReporter>,
+        use_counters: Option<&'a UseCounters>,
     ) -> Self {
-        ParserContext {
+        Self {
             stylesheet_origin,
             url_data,
             rule_type,
             parsing_mode,
             quirks_mode,
+            error_reporter,
             namespaces: None,
+            use_counters,
         }
     }
 
@@ -86,6 +89,8 @@ impl<'a> ParserContext<'a> {
         rule_type: Option<CssRuleType>,
         parsing_mode: ParsingMode,
         quirks_mode: QuirksMode,
+        error_reporter: Option<&'a ParseErrorReporter>,
+        use_counters: Option<&'a UseCounters>,
     ) -> Self {
         Self::new(
             Origin::Author,
@@ -93,23 +98,28 @@ impl<'a> ParserContext<'a> {
             rule_type,
             parsing_mode,
             quirks_mode,
+            error_reporter,
+            use_counters,
         )
     }
 
-    /// Create a parser context based on a previous context, but with a modified rule type.
+    /// Create a parser context based on a previous context, but with a modified
+    /// rule type.
     #[inline]
     pub fn new_with_rule_type(
         context: &'a ParserContext,
         rule_type: CssRuleType,
         namespaces: &'a Namespaces,
     ) -> ParserContext<'a> {
-        ParserContext {
+        Self {
             stylesheet_origin: context.stylesheet_origin,
             url_data: context.url_data,
             rule_type: Some(rule_type),
             parsing_mode: context.parsing_mode,
             quirks_mode: context.quirks_mode,
             namespaces: Some(namespaces),
+            error_reporter: context.error_reporter,
+            use_counters: context.use_counters,
         }
     }
 
@@ -127,21 +137,17 @@ impl<'a> ParserContext<'a> {
     }
 
     /// Record a CSS parse error with this context’s error reporting.
-    pub fn log_css_error<R>(
+    pub fn log_css_error(
         &self,
-        context: &ParserErrorContext<R>,
         location: SourceLocation,
         error: ContextualParseError,
-    ) where
-        R: ParseErrorReporter,
-    {
-        let location = SourceLocation {
-            line: location.line,
-            column: location.column,
+    ) {
+        let error_reporter = match self.error_reporter {
+            Some(r) => r,
+            None => return,
         };
-        context
-            .error_reporter
-            .report_error(self.url_data, location, error)
+
+        error_reporter.report_error(self.url_data, location, error)
     }
 
     /// Returns whether chrome-only rules should be parsed.
@@ -150,10 +156,19 @@ impl<'a> ParserContext<'a> {
     }
 }
 
-// XXXManishearth Replace all specified value parse impls with impls of this
-// trait. This will make it easy to write more generic values in the future.
 /// A trait to abstract parsing of a specified value given a `ParserContext` and
 /// CSS input.
+///
+/// This can be derived on keywords with `#[derive(Parse)]`.
+///
+/// The derive code understands the following attributes on each of the variants:
+///
+///  * `#[parse(aliases = "foo,bar")]` can be used to alias a value with another
+///    at parse-time.
+///
+///  * `#[parse(condition = "function")]` can be used to make the parsing of the
+///    value conditional on `function`, which needs to fulfill
+///    `fn(&ParserContext) -> bool`.
 pub trait Parse: Sized {
     /// Parse a value of this type.
     ///

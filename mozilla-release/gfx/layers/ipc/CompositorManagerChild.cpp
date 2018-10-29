@@ -65,7 +65,7 @@ CompositorManagerChild::Init(Endpoint<PCompositorManagerChild>&& aEndpoint,
     MOZ_ASSERT(sInstance->mNamespace != aNamespace);
   }
 
-  sInstance = new CompositorManagerChild(Move(aEndpoint), aProcessToken,
+  sInstance = new CompositorManagerChild(std::move(aEndpoint), aProcessToken,
                                          aNamespace);
   return sInstance->CanSend();
 }
@@ -154,7 +154,7 @@ CompositorManagerChild::CreateWidgetCompositorBridge(uint64_t aProcessToken,
 CompositorManagerChild::CreateSameProcessWidgetCompositorBridge(LayerManager* aLayerManager,
                                                                 uint32_t aNamespace)
 {
-  MOZ_ASSERT(XRE_IsParentProcess());
+  MOZ_ASSERT(XRE_IsParentProcess() || recordreplay::IsRecordingOrReplaying());
   MOZ_ASSERT(NS_IsMainThread());
   if (NS_WARN_IF(!sInstance || !sInstance->CanSend())) {
     return nullptr;

@@ -4,4 +4,4 @@
 <!ENTITY fileExceedsQuota.title   "Hightail">
 <!ENTITY fileExceedsQuota.storageLimitReached   "Limite de armazenamento atingido">
 <!ENTITY fileExceedsQuota.description "Você atingiu o limite de armazenamento de 2GB da sua conta.">
-<!ENTITY fileExceedsQuota.description1 "Seu uso do armazenamento atual é #XXX GB.">
+<!ENTITY fileExceedsQuota.description1 "O seu uso do armazenamento atual é #XXX GB.">

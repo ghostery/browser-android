@@ -6,16 +6,12 @@
 
 var EXPORTED_SYMBOLS = ["TabState"];
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", this);
-
 ChromeUtils.defineModuleGetter(this, "PrivacyFilter",
   "resource://gre/modules/sessionstore/PrivacyFilter.jsm");
 ChromeUtils.defineModuleGetter(this, "TabStateCache",
   "resource:///modules/sessionstore/TabStateCache.jsm");
 ChromeUtils.defineModuleGetter(this, "TabAttributes",
   "resource:///modules/sessionstore/TabAttributes.jsm");
-ChromeUtils.defineModuleGetter(this, "Utils",
-  "resource://gre/modules/sessionstore/Utils.jsm");
 
 /**
  * Module that contains tab state collection methods.
@@ -105,8 +101,6 @@ var TabStateInternal = {
       tabData.muteReason = tab.muteReason;
     }
 
-    tabData.mediaBlocked = browser.mediaBlocked;
-
     // Save tab attributes.
     tabData.attributes = TabAttributes.get(tab);
 
@@ -127,11 +121,6 @@ var TabStateInternal = {
     if (!("image" in tabData)) {
       let tabbrowser = tab.ownerGlobal.gBrowser;
       tabData.image = tabbrowser.getIcon(tab);
-    }
-
-    // Store the serialized contentPrincipal of this tab to use for the icon.
-    if (!("iconLoadingPrincipal" in tabData)) {
-      tabData.iconLoadingPrincipal = Utils.serializePrincipal(browser.mIconLoadingPrincipal);
     }
 
     // If there is a userTypedValue set, then either the user has typed something
@@ -199,5 +188,5 @@ var TabStateInternal = {
         tabData[key] = value;
       }
     }
-  }
+  },
 };

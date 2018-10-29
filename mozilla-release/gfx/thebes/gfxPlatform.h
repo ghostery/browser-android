@@ -26,6 +26,7 @@
 #include "GfxInfoCollector.h"
 
 #include "mozilla/layers/CompositorTypes.h"
+#include "mozilla/layers/MemoryPressureObserver.h"
 
 class gfxASurface;
 class gfxFont;
@@ -155,7 +156,7 @@ struct BackendPrefsData
   mozilla::gfx::BackendType mContentDefault = mozilla::gfx::BackendType::NONE;
 };
 
-class gfxPlatform {
+class gfxPlatform: public mozilla::layers::MemoryPressureListener {
     friend class SRGBOverrideObserver;
 
 public:
@@ -358,7 +359,8 @@ public:
      * gfxPlatformFontList *and* to call its InitFontList() method.
      */
     virtual gfxPlatformFontList *CreatePlatformFontList() {
-        NS_NOTREACHED("oops, this platform doesn't have a gfxPlatformFontList implementation");
+        MOZ_ASSERT_UNREACHABLE("oops, this platform doesn't have a "
+                               "gfxPlatformFontList implementation");
         return nullptr;
     }
 
@@ -375,8 +377,8 @@ public:
      * available in the system, this may return second or later font in the
      * pref.  If there are no available fonts in the pref, returns empty string.
      */
-    nsString GetDefaultFontName(const nsACString& aLangGroup,
-                                const nsACString& aGenericFamily);
+    nsAutoString GetDefaultFontName(const nsACString& aLangGroup,
+                                    const nsACString& aGenericFamily);
 
     /**
      * Create the appropriate platform font group
@@ -630,7 +632,7 @@ public:
      */
     virtual mozilla::gfx::VsyncSource* GetHardwareVsync() {
       MOZ_ASSERT(mVsyncSource != nullptr);
-      MOZ_ASSERT(XRE_IsParentProcess());
+      MOZ_ASSERT(XRE_IsParentProcess() || mozilla::recordreplay::IsRecordingOrReplaying());
       return mVsyncSource;
     }
 
@@ -737,11 +739,17 @@ public:
       return mHasVariationFontSupport;
     }
 
+    bool HasNativeColrFontSupport() const {
+      return mHasNativeColrFontSupport;
+    }
+
     // you probably want to use gfxVars::UseWebRender() instead of this
     static bool WebRenderPrefEnabled();
     // you probably want to use gfxVars::UseWebRender() instead of this
     static bool WebRenderEnvvarEnabled();
 
+    virtual void
+    OnMemoryPressure(mozilla::layers::MemoryPressureReason aWhy) override;
 protected:
     gfxPlatform();
     virtual ~gfxPlatform();
@@ -830,6 +838,10 @@ protected:
     // Whether the platform supports rendering OpenType font variations
     bool    mHasVariationFontSupport;
 
+    // Whether the platform font APIs have native support for COLR fonts.
+    // Set to true during initialization on platforms that implement this.
+    bool    mHasNativeColrFontSupport = false;
+
     // max character limit for words in word cache
     int32_t mWordCacheCharLimit;
 
@@ -879,8 +891,7 @@ private:
 
     RefPtr<gfxASurface> mScreenReferenceSurface;
     nsCOMPtr<nsIObserver> mSRGBOverrideObserver;
-    nsCOMPtr<nsIObserver> mFontPrefsObserver;
-    nsCOMPtr<nsIObserver> mMemoryPressureObserver;
+    RefPtr<mozilla::layers::MemoryPressureObserver> mMemoryPressureObserver;
 
     // The preferred draw target backend to use for canvas
     mozilla::gfx::BackendType mPreferredCanvasBackend;

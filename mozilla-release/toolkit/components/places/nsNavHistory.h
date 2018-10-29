@@ -7,8 +7,6 @@
 #define nsNavHistory_h_
 
 #include "nsINavHistoryService.h"
-#include "nsPIPlacesDatabase.h"
-#include "nsIBrowserHistory.h"
 #include "nsINavBookmarksService.h"
 #include "nsIFaviconService.h"
 
@@ -56,9 +54,6 @@
 #define TOPIC_AUTOCOMPLETE_FEEDBACK_UPDATED "places-autocomplete-feedback-updated"
 #endif
 
-// Fired after frecency has been updated.
-#define TOPIC_FRECENCY_UPDATED "places-frecency-updated"
-
 // The preference we watch to know when the mobile bookmarks folder is filled by
 // sync.
 #define MOBILE_BOOKMARKS_PREF "browser.bookmarks.showMobileBookmarks"
@@ -66,20 +61,24 @@
 // The guid of the mobile bookmarks virtual query.
 #define MOBILE_BOOKMARKS_VIRTUAL_GUID "mobile____v"
 
-class nsNavHistory;
-class QueryKeyValuePair;
+#define ROOT_GUID "root________"
+#define MENU_ROOT_GUID "menu________"
+#define TOOLBAR_ROOT_GUID "toolbar_____"
+#define UNFILED_ROOT_GUID "unfiled_____"
+#define TAGS_ROOT_GUID "tags________"
+#define MOBILE_ROOT_GUID "mobile______"
+
+class nsIAutoCompleteController;
 class nsIEffectiveTLDService;
 class nsIIDNService;
+class nsNavHistory;
 class PlacesSQLQueryBuilder;
-class nsIAutoCompleteController;
 
 // nsNavHistory
 
 class nsNavHistory final : public nsSupportsWeakReference
                          , public nsINavHistoryService
                          , public nsIObserver
-                         , public nsIBrowserHistory
-                         , public nsPIPlacesDatabase
                          , public mozIStorageVacuumParticipant
 {
   friend class PlacesSQLQueryBuilder;
@@ -89,9 +88,7 @@ public:
 
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSINAVHISTORYSERVICE
-  NS_DECL_NSIBROWSERHISTORY
   NS_DECL_NSIOBSERVER
-  NS_DECL_NSPIPLACESDATABASE
   NS_DECL_MOZISTORAGEVACUUMPARTICIPANT
 
   /**
@@ -174,48 +171,6 @@ public:
    *       otherwise will reuse the old hidden value.
    */
   nsresult UpdateFrecency(int64_t aPlaceId);
-
-  /**
-   * Recalculates frecency for all pages requesting that (frecency < 0). Those
-   * may be generated:
-   *  * After a "clear private data"
-   *  * After removing visits
-   *  * After migrating from older versions
-   */
-  nsresult FixInvalidFrecencies();
-
-  /**
-   * Invalidate the frecencies of a list of places, so they will be recalculated
-   * at the first idle-daily notification.
-   *
-   * @param aPlacesIdsQueryString
-   *        Query string containing list of places to be invalidated.  If it's
-   *        an empty string all places will be invalidated.
-   */
-  nsresult invalidateFrecencies(const nsCString& aPlaceIdsQueryString);
-
-  /**
-   * Calls onDeleteVisits and onDeleteURI notifications on registered listeners
-   * with the history service.
-   *
-   * @param aURI
-   *        The nsIURI object representing the URI of the page being expired.
-   * @param aVisitTime
-   *        The time, in microseconds, that the page being expired was visited.
-   * @param aWholeEntry
-   *        Indicates if this is the last visit for this URI.
-   * @param aGUID
-   *        The unique ID associated with the page.
-   * @param aReason
-   *        Indicates the reason for the removal.
-   *        See nsINavHistoryObserver::REASON_* constants.
-   * @param aTransitionType
-   *        If it's a valid TRANSITION_* value, all visits of the specified type
-   *        have been removed.
-   */
-  nsresult NotifyOnPageExpired(nsIURI *aURI, PRTime aVisitTime,
-                               bool aWholeEntry, const nsACString& aGUID,
-                               uint16_t aReason, uint32_t aTransitionType);
 
   /**
    * These functions return non-owning references to the locale-specific
@@ -301,16 +256,6 @@ public:
                          nsACString& aDomainName);
   static PRTime NormalizeTime(uint32_t aRelative, PRTime aOffset);
 
-  // Don't use these directly, inside nsNavHistory use UpdateBatchScoper,
-  // else use nsINavHistoryService::RunInBatchMode
-  nsresult BeginUpdateBatch();
-  nsresult EndUpdateBatch();
-
-  // The level of batches' nesting, 0 when no batches are open.
-  int32_t mBatchLevel;
-  // Current active transaction for a batch.
-  mozStorageTransaction* mBatchDBTransaction;
-
   typedef nsDataHashtable<nsCStringHashKey, nsCString> StringHash;
 
   /**
@@ -334,6 +279,12 @@ public:
   uint32_t GetRecentFlags(nsIURI *aURI);
 
   /**
+   * Whether there are visits.
+   * Note: This may cause synchronous I/O.
+   */
+  bool hasHistoryEntries();
+
+  /**
    * Registers a TRANSITION_EMBED visit for the session.
    *
    * @param aURI
@@ -351,11 +302,6 @@ public:
    * @return whether the page has a embed visit.
    */
   bool hasEmbedVisit(nsIURI* aURI);
-
-  /**
-   * Clears all registered embed visits.
-   */
-  void clearEmbedVisits();
 
   int32_t GetFrecencyAgedWeight(int32_t aAgeInDays) const
   {
@@ -431,9 +377,10 @@ public:
   }
 
   /**
-   * Fires onVisits event to nsINavHistoryService observers
+   * Updates and invalidates the mDaysOfHistory cache. Should be
+   * called whenever a visit is added.
    */
-  void NotifyOnVisits(nsIVisitData** aVisits, uint32_t aVisitsCount);
+  void UpdateDaysOfHistory(PRTime visitTime);
 
   /**
    * Fires onTitleChanged event to nsINavHistoryService observers
@@ -445,7 +392,7 @@ public:
   /**
    * Fires onFrecencyChanged event to nsINavHistoryService observers
    */
-  void NotifyFrecencyChanged(nsIURI* aURI,
+  void NotifyFrecencyChanged(const nsACString& aSpec,
                              int32_t aNewFrecency,
                              const nsACString& aGUID,
                              bool aHidden,
@@ -466,6 +413,13 @@ public:
                                            PRTime aLastVisitDate) const;
 
   /**
+   * Returns true if frecency is currently being decayed.
+   *
+   * @return True if frecency is being decayed, false if not.
+   */
+  bool IsFrecencyDecaying() const;
+
+  /**
    * Store last insterted id for a table.
    */
   static mozilla::Atomic<int64_t> sLastInsertedPlaceId;
@@ -473,10 +427,6 @@ public:
 
   static void StoreLastInsertedId(const nsACString& aTable,
                                   const int64_t aLastInsertedId);
-
-  bool isBatching() {
-    return mBatchLevel > 0;
-  }
 
 #ifdef XP_WIN
   /**
@@ -496,6 +446,8 @@ public:
                                   const RefPtr<nsNavHistoryQuery>& aQuery,
                                   nsNavHistoryQueryOptions* aOptions);
 
+  void DecayFrecencyCompleted(uint16_t reason);
+
 private:
   ~nsNavHistory();
 
@@ -508,12 +460,14 @@ protected:
   RefPtr<mozilla::places::Database> mDB;
 
   /**
-   * Decays frecency and inputhistory values.  Runs on idle-daily.
+   * Recalculates frecency for all pages where frecency < 0, then decays
+   * frecency and inputhistory values. Pages can invalidate frecencies:
+   *  * After a "clear private data"
+   *  * After removing visits
+   *  * After migrating from older versions
+   * This method runs on idle-daily.
    */
-  nsresult DecayFrecency();
-
-  nsresult RemovePagesInternal(const nsCString& aPlaceIdsQueryString);
-  nsresult CleanupPlacesOnVisitsDelete(const nsCString& aPlaceIdsQueryString);
+  nsresult FixAndDecayFrecency();
 
   /**
    * Loads all of the preferences that we use into member variables.
@@ -553,8 +507,6 @@ protected:
                          nsNavHistoryQueryOptions* aOptions,
                          nsCOMArray<nsNavHistoryResultNode>* aResults);
 
-  void TitleForDomain(const nsCString& domain, nsACString& aTitle);
-
   // observers
   nsMaybeWeakPtrArray<nsINavHistoryObserver> mObservers;
 
@@ -583,7 +535,7 @@ protected:
     VisitHashKey(const VisitHashKey& aOther)
     : nsURIHashKey(aOther)
     {
-      NS_NOTREACHED("Do not call me!");
+      MOZ_ASSERT_UNREACHABLE("Do not call me!");
     }
     PRTime visitTime;
   };
@@ -628,8 +580,12 @@ protected:
   int32_t mUnvisitedTypedBonus;
   int32_t mReloadVisitBonus;
 
+  uint32_t mDecayFrecencyPendingCount;
+
+  nsresult RecalculateOriginFrecencyStatsInternal();
+
   // in nsNavHistoryQuery.cpp
-  nsresult TokensToQuery(const nsTArray<QueryKeyValuePair>& aTokens,
+  nsresult TokensToQuery(const nsTArray<mozilla::places::QueryKeyValuePair>& aTokens,
                          nsNavHistoryQuery* aQuery,
                          nsNavHistoryQueryOptions* aOptions);
 

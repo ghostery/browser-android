@@ -11,7 +11,7 @@ do &brandShortName;, confira o <a id='supportLink'>site de suporte</a>.">
 
 <!ENTITY aboutSupport.crashes.title "Relatórios de travamentos">
 <!-- LOCALIZATION NOTE (aboutSupport.crashes.id):
-This is likely the same like id.heading in crashes.dtd. -->
+This is likely the same like id.heading in aboutcrashes.ftl. -->
 <!ENTITY aboutSupport.crashes.id "ID do relatório">
 <!ENTITY aboutSupport.crashes.sendDate "Envio">
 <!ENTITY aboutSupport.crashes.allReports "Todos os relatórios de travamentos">
@@ -19,7 +19,7 @@ This is likely the same like id.heading in crashes.dtd. -->
 
 <!ENTITY aboutSupport.extensionsTitle "Extensões">
 <!ENTITY aboutSupport.extensionName "Nome">
-<!ENTITY aboutSupport.extensionEnabled "Habilitado">
+<!ENTITY aboutSupport.extensionEnabled "Ativado">
 <!ENTITY aboutSupport.extensionVersion "Versão">
 <!ENTITY aboutSupport.extensionId "ID">
 
@@ -34,15 +34,6 @@ This is likely the same like id.heading in crashes.dtd. -->
 <!ENTITY aboutSupport.featureName "Nome">
 <!ENTITY aboutSupport.featureVersion "Versão">
 <!ENTITY aboutSupport.featureId "ID">
-
-<!ENTITY aboutSupport.experimentsTitle "Funcionalidades experimentais">
-<!ENTITY aboutSupport.experimentName "Nome">
-<!ENTITY aboutSupport.experimentId "ID">
-<!ENTITY aboutSupport.experimentDescription "Descrição">
-<!ENTITY aboutSupport.experimentActive "Ativo">
-<!ENTITY aboutSupport.experimentEndDate "Data de término">
-<!ENTITY aboutSupport.experimentHomepage "Site">
-<!ENTITY aboutSupport.experimentBranch "Marca">
 
 <!ENTITY aboutSupport.appBasicsTitle "Informações básicas sobre o aplicativo">
 <!ENTITY aboutSupport.appBasicsName "Nome">
@@ -61,7 +52,7 @@ This is the Windows- and Mac-specific variant of aboutSupport.appBasicsProfileDi
 Windows/Mac use the term "Folder" instead of "Directory" -->
 <!ENTITY aboutSupport.appBasicsProfileDirWinMac "Pasta do perfil">
 
-<!ENTITY aboutSupport.appBasicsEnabledPlugins "Plugins habilitados">
+<!ENTITY aboutSupport.appBasicsEnabledPlugins "Plugins ativados">
 <!ENTITY aboutSupport.appBasicsBuildConfig "Configuração da compilação">
 <!ENTITY aboutSupport.appBasicsUserAgent "User Agent">
 <!ENTITY aboutSupport.appBasicsOS "OS">

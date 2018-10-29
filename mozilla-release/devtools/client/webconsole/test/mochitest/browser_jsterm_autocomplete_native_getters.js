@@ -11,15 +11,21 @@
 const TEST_URI = "data:text/html;charset=utf-8,Test document.body autocompletion";
 
 add_task(async function() {
-  let { jsterm } = await openNewTabAndConsole(TEST_URI);
+  // Run test with legacy JsTerm
+  await pushPref("devtools.webconsole.jsterm.codeMirror", false);
+  await performTests();
+  // And then run it with the CodeMirror-powered one.
+  await pushPref("devtools.webconsole.jsterm.codeMirror", true);
+  await performTests();
+});
 
-  const {
-    autocompletePopup: popup,
-    completeNode,
-  } = jsterm;
+async function performTests() {
+  const { jsterm } = await openNewTabAndConsole(TEST_URI);
+
+  const { autocompletePopup: popup } = jsterm;
 
   ok(!popup.isOpen, "popup is not open");
-  let onPopupOpen = popup.once("popup-opened");
+  const onPopupOpen = popup.once("popup-opened");
 
   jsterm.setInputValue("document.body");
   EventUtils.sendString(".");
@@ -29,20 +35,20 @@ add_task(async function() {
   ok(popup.isOpen, "popup is open");
   is(popup.itemCount, jsterm._autocompleteCache.length, "popup.itemCount is correct");
   ok(jsterm._autocompleteCache.includes("addEventListener"),
-        "addEventListener is in the list of suggestions");
+    "addEventListener is in the list of suggestions");
   ok(jsterm._autocompleteCache.includes("bgColor"),
     "bgColor is in the list of suggestions");
   ok(jsterm._autocompleteCache.includes("ATTRIBUTE_NODE"),
     "ATTRIBUTE_NODE is in the list of suggestions");
 
-  let onPopupClose = popup.once("popup-closed");
+  const onPopupClose = popup.once("popup-closed");
   EventUtils.synthesizeKey("KEY_Escape");
 
   await onPopupClose;
 
   ok(!popup.isOpen, "popup is not open");
-  let onAutoCompleteUpdated = jsterm.once("autocomplete-updated");
-  let inputStr = "document.b";
+  const onAutoCompleteUpdated = jsterm.once("autocomplete-updated");
+  const inputStr = "document.b";
   jsterm.setInputValue(inputStr);
   EventUtils.sendString("o");
 
@@ -53,5 +59,5 @@ add_task(async function() {
   // > document.bo        <-- input
   // > -----------dy      <-- autocomplete
   const spaces = " ".repeat(inputStr.length + 1);
-  is(completeNode.value, spaces + "dy", "autocomplete shows document.body");
-});
+  checkJsTermCompletionValue(jsterm, spaces + "dy", "autocomplete shows document.body");
+}

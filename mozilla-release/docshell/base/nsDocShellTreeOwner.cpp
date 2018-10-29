@@ -25,7 +25,7 @@
 // Interfaces needed to be included
 #include "nsPresContext.h"
 #include "nsITooltipListener.h"
-#include "nsIDOMNode.h"
+#include "nsINode.h"
 #include "Link.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/MouseEvent.h"
@@ -37,7 +37,6 @@
 #include "nsIStringBundle.h"
 #include "nsPIDOMWindow.h"
 #include "nsPIWindowRoot.h"
-#include "nsIDOMWindowCollection.h"
 #include "nsIWindowWatcher.h"
 #include "nsPIWindowWatcher.h"
 #include "nsIPrompt.h"
@@ -112,7 +111,6 @@ NS_INTERFACE_MAP_BEGIN(nsDocShellTreeOwner)
   NS_INTERFACE_MAP_ENTRY(nsIInterfaceRequestor)
   NS_INTERFACE_MAP_ENTRY(nsIWebProgressListener)
   NS_INTERFACE_MAP_ENTRY(nsIDOMEventListener)
-  NS_INTERFACE_MAP_ENTRY(nsICDocShellTreeOwner)
   NS_INTERFACE_MAP_ENTRY(nsISupportsWeakReference)
 NS_INTERFACE_MAP_END
 
@@ -1044,14 +1042,23 @@ ChromeTooltipListener::ChromeTooltipListener(nsWebBrowser* aInBrowser,
   , mShowingTooltip(false)
   , mTooltipShownOnce(false)
 {
-  mTooltipTextProvider = do_GetService(NS_TOOLTIPTEXTPROVIDER_CONTRACTID);
-  if (!mTooltipTextProvider) {
-    mTooltipTextProvider = do_GetService(NS_DEFAULTTOOLTIPTEXTPROVIDER_CONTRACTID);
-  }
 }
 
 ChromeTooltipListener::~ChromeTooltipListener()
 {
+}
+
+nsITooltipTextProvider*
+ChromeTooltipListener::GetTooltipTextProvider() {
+  if (!mTooltipTextProvider) {
+    mTooltipTextProvider = do_GetService(NS_TOOLTIPTEXTPROVIDER_CONTRACTID);
+  }
+
+  if (!mTooltipTextProvider) {
+    mTooltipTextProvider = do_GetService(NS_DEFAULTTOOLTIPTEXTPROVIDER_CONTRACTID);
+  }
+
+  return mTooltipTextProvider;
 }
 
 // Hook up things to the chrome like context menus and tooltips, if the chrome
@@ -1211,7 +1218,7 @@ ChromeTooltipListener::MouseMove(Event* aMouseEvent)
   if (!mShowingTooltip && !mTooltipShownOnce) {
     nsIEventTarget* target = nullptr;
 
-    nsCOMPtr<EventTarget> eventTarget = aMouseEvent->GetTarget();
+    nsCOMPtr<EventTarget> eventTarget = aMouseEvent->GetComposedTarget();
     if (eventTarget) {
       mPossibleTooltipNode = do_QueryInterface(eventTarget);
       nsCOMPtr<nsIGlobalObject> global(eventTarget->GetOwnerGlobal());
@@ -1310,6 +1317,12 @@ ChromeTooltipListener::sTooltipCallback(nsITimer* aTimer,
 {
   auto self = static_cast<ChromeTooltipListener*>(aChromeTooltipListener);
   if (self && self->mPossibleTooltipNode) {
+    if (!self->mPossibleTooltipNode->IsInComposedDoc()) {
+      // release tooltip target if there is one, NO MATTER WHAT
+      self->mPossibleTooltipNode = nullptr;
+      return;
+    }
+
     // The actual coordinates we want to put the tooltip at are relative to the
     // toplevel docshell of our mWebBrowser.  We know what the screen
     // coordinates of the mouse event were, which means we just need the screen
@@ -1343,12 +1356,12 @@ ChromeTooltipListener::sTooltipCallback(nsITimer* aTimer,
 
     // if there is text associated with the node, show the tip and fire
     // off a timer to auto-hide it.
-
-    if (self->mTooltipTextProvider) {
+    nsITooltipTextProvider* tooltipProvider = self->GetTooltipTextProvider();
+    if (tooltipProvider) {
       nsString tooltipText;
       nsString directionText;
       bool textFound = false;
-      self->mTooltipTextProvider->GetNodeText(
+      tooltipProvider->GetNodeText(
         self->mPossibleTooltipNode, getter_Copies(tooltipText),
         getter_Copies(directionText), &textFound);
 
@@ -1357,7 +1370,7 @@ ChromeTooltipListener::sTooltipCallback(nsITimer* aTimer,
         double scaleFactor = 1.0;
         if (shell->GetPresContext()) {
           nsDeviceContext* dc = shell->GetPresContext()->DeviceContext();
-          scaleFactor = double(nsPresContext::AppUnitsPerCSSPixel()) /
+          scaleFactor = double(AppUnitsPerCSSPixel()) /
                         dc->AppUnitsPerDevPixelAtUnitFullZoom();
         }
         // ShowTooltip expects widget-relative position.

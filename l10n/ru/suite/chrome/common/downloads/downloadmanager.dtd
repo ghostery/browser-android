@@ -88,3 +88,9 @@
 <!ENTITY cmd.copyDownloadLink.accesskey  "п">
 <!ENTITY cmd.properties.label            "Свойства…">
 <!ENTITY cmd.properties.accesskey        "в">
+<!-- LOCALIZATION NOTE (cmd.unblock2.label):
+     This command is shown in the context menu when downloads are blocked.
+     -->
+<!ENTITY cmd.unblock2.label               "Разрешить загрузку">
+<!ENTITY cmd.unblock2.accesskey           "ш">
+

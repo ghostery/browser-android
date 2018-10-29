@@ -56,18 +56,18 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=441737
 //        is(docAcc.docType, "HTML",
 //           "Wrong type of document!");
 
-        // Test for correct nsIDOMDocument retrieval.
+        // Test for correct Document retrieval.
         var domDoc = null;
         try {
-          domDoc = docAcc.DOMDocument.QueryInterface(nsIDOMDocument);
+          domDoc = docAcc.DOMDocument;
         } catch (e) {}
-        ok(domDoc, "no nsIDOMDocument for this doc accessible!");
+        ok(domDoc, "no Document for this doc accessible!");
         is(domDoc, document, "Document nodes do not match!");
 
         // Test for correct nsIDOMWindow retrieval.
         var domWindow = null;
         try {
-          domWindow = docAcc.window.QueryInterface(nsIDOMWindow);
+          domWindow = docAcc.window;
         } catch (e) {}
         ok(domWindow, "no nsIDOMWindow for this doc accessible!");
         is(domWindow, window, "Window nodes do not match!");

@@ -1138,7 +1138,7 @@ CanvasRenderingContext2D::~CanvasRenderingContext2D()
 JSObject*
 CanvasRenderingContext2D::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return CanvasRenderingContext2DBinding::Wrap(aCx, this, aGivenProto);
+  return CanvasRenderingContext2D_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 bool
@@ -2663,7 +2663,8 @@ CreateDeclarationForServo(nsCSSPropertyID aProperty,
                                            data,
                                            ParsingMode::Default,
                                            aDocument->GetCompatibilityMode(),
-                                           aDocument->CSSLoader());
+                                           aDocument->CSSLoader(),
+                                           { });
   }
 
   return servoDeclarations.forget();
@@ -2849,7 +2850,7 @@ public:
   virtual float GetEmLength() const override
   {
     return NSAppUnitsToFloatPixels(mFont.size,
-                                   nsPresContext::AppUnitsPerCSSPixel());
+                                   AppUnitsPerCSSPixel());
   }
 
   virtual float GetExLength() const override
@@ -2861,7 +2862,7 @@ public:
     params.textPerf = mPresContext->GetTextPerfMetrics();
     RefPtr<nsFontMetrics> fontMetrics = dc->GetMetricsFor(mFont, params);
     return NSAppUnitsToFloatPixels(fontMetrics->XHeight(),
-                                   nsPresContext::AppUnitsPerCSSPixel());
+                                   AppUnitsPerCSSPixel());
   }
 
   virtual gfx::Size GetSize() const override
@@ -3740,7 +3741,7 @@ CanvasRenderingContext2D::SetFontInternal(const nsAString& aFont,
   // pixels to CSS pixels, to adjust for the difference in expectations from
   // other nsFontMetrics clients.
   resizedFont.size =
-    (fontStyle->mSize * c->AppUnitsPerDevPixel()) / nsPresContext::AppUnitsPerCSSPixel();
+    (fontStyle->mSize * c->AppUnitsPerDevPixel()) / AppUnitsPerCSSPixel();
 
   nsFontMetrics::Params params;
   params.language = fontStyle->mLanguage;
@@ -3996,6 +3997,12 @@ struct MOZ_STACK_CLASS CanvasBidiProcessor : public nsBidiPresUtils::BidiProcess
 
   CanvasBidiProcessor()
     : nsBidiPresUtils::BidiProcessor()
+    , mCtx(nullptr)
+    , mFontgrp(nullptr)
+    , mAppUnitsPerDevPixel(0)
+    , mOp(CanvasRenderingContext2D::TextDrawOperation::FILL)
+    , mTextRunFlags()
+    , mDoMeasureBoundingBox(false)
   {
     if (Preferences::GetBool(GFX_MISSING_FONTS_NOTIFY_PREF)) {
       mMissingFonts = new gfxMissingFontRecorder();
@@ -4099,7 +4106,7 @@ struct MOZ_STACK_CLASS CanvasBidiProcessor : public nsBidiPresUtils::BidiProcess
   already_AddRefed<gfxPattern> GetPatternFor(Style aStyle)
   {
     const CanvasPattern* pat = mCtx->CurrentState().patternStyles[aStyle];
-    RefPtr<gfxPattern> pattern = new gfxPattern(pat->mSurface, Matrix());
+    RefPtr<gfxPattern> pattern = new gfxPattern(pat->mSurface, pat->mTransform);
     pattern->SetExtend(CvtCanvasRepeatToGfxRepeat(pat->mRepeat));
     return pattern.forget();
   }
@@ -4641,7 +4648,7 @@ CanvasRenderingContext2D::SetLineDash(const Sequence<double>& aSegments,
     }
   }
 
-  CurrentState().dash = Move(dash);
+  CurrentState().dash = std::move(dash);
 }
 
 void
@@ -4665,7 +4672,9 @@ CanvasRenderingContext2D::LineDashOffset() const {
 }
 
 bool
-CanvasRenderingContext2D::IsPointInPath(JSContext* aCx, double aX, double aY, const CanvasWindingRule& aWinding)
+CanvasRenderingContext2D::IsPointInPath(JSContext* aCx, double aX, double aY,
+                                        const CanvasWindingRule& aWinding,
+                                        nsIPrincipal& aSubjectPrincipal)
 {
   if (!FloatValidate(aX, aY)) {
     return false;
@@ -4674,7 +4683,7 @@ CanvasRenderingContext2D::IsPointInPath(JSContext* aCx, double aX, double aY, co
   // Check for site-specific permission and return false if no permission.
   if (mCanvasElement) {
     nsCOMPtr<nsIDocument> ownerDoc = mCanvasElement->OwnerDoc();
-    if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx)) {
+    if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx, aSubjectPrincipal)) {
       return false;
     }
   }
@@ -4691,7 +4700,11 @@ CanvasRenderingContext2D::IsPointInPath(JSContext* aCx, double aX, double aY, co
   return mPath->ContainsPoint(Point(aX, aY), mTarget->GetTransform());
 }
 
-bool CanvasRenderingContext2D::IsPointInPath(JSContext* aCx, const CanvasPath& aPath, double aX, double aY, const CanvasWindingRule& aWinding)
+bool
+CanvasRenderingContext2D::IsPointInPath(JSContext* aCx, const CanvasPath& aPath,
+                                        double aX, double aY,
+                                        const CanvasWindingRule& aWinding,
+                                        nsIPrincipal&)
 {
   if (!FloatValidate(aX, aY)) {
     return false;
@@ -4708,7 +4721,8 @@ bool CanvasRenderingContext2D::IsPointInPath(JSContext* aCx, const CanvasPath& a
 }
 
 bool
-CanvasRenderingContext2D::IsPointInStroke(JSContext* aCx, double aX, double aY)
+CanvasRenderingContext2D::IsPointInStroke(JSContext* aCx, double aX, double aY,
+                                          nsIPrincipal& aSubjectPrincipal)
 {
   if (!FloatValidate(aX, aY)) {
     return false;
@@ -4717,7 +4731,7 @@ CanvasRenderingContext2D::IsPointInStroke(JSContext* aCx, double aX, double aY)
   // Check for site-specific permission and return false if no permission.
   if (mCanvasElement) {
     nsCOMPtr<nsIDocument> ownerDoc = mCanvasElement->OwnerDoc();
-    if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx)) {
+    if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx, aSubjectPrincipal)) {
       return false;
     }
   }
@@ -4743,7 +4757,9 @@ CanvasRenderingContext2D::IsPointInStroke(JSContext* aCx, double aX, double aY)
   return mPath->StrokeContainsPoint(strokeOptions, Point(aX, aY), mTarget->GetTransform());
 }
 
-bool CanvasRenderingContext2D::IsPointInStroke(JSContext* aCx, const CanvasPath& aPath, double aX, double aY)
+bool
+CanvasRenderingContext2D::IsPointInStroke(JSContext* aCx, const CanvasPath& aPath,
+                                          double aX, double aY, nsIPrincipal&)
 {
   if (!FloatValidate(aX, aY)) {
     return false;
@@ -5265,7 +5281,7 @@ CanvasRenderingContext2D::DrawWindow(nsGlobalWindowInner& aWindow, double aX,
   }
 
   // Flush layout updates
-  if (!(aFlags & CanvasRenderingContext2DBinding::DRAWWINDOW_DO_NOT_FLUSH)) {
+  if (!(aFlags & CanvasRenderingContext2D_Binding::DRAWWINDOW_DO_NOT_FLUSH)) {
     nsContentUtils::FlushLayoutForTree(aWindow.AsInner()->GetOuterWindow());
   }
 
@@ -5300,20 +5316,20 @@ CanvasRenderingContext2D::DrawWindow(nsGlobalWindowInner& aWindow, double aX,
            nsPresContext::CSSPixelsToAppUnits((float)aH));
   uint32_t renderDocFlags = (nsIPresShell::RENDER_IGNORE_VIEWPORT_SCROLLING |
                              nsIPresShell::RENDER_DOCUMENT_RELATIVE);
-  if (aFlags & CanvasRenderingContext2DBinding::DRAWWINDOW_DRAW_CARET) {
+  if (aFlags & CanvasRenderingContext2D_Binding::DRAWWINDOW_DRAW_CARET) {
     renderDocFlags |= nsIPresShell::RENDER_CARET;
   }
-  if (aFlags & CanvasRenderingContext2DBinding::DRAWWINDOW_DRAW_VIEW) {
+  if (aFlags & CanvasRenderingContext2D_Binding::DRAWWINDOW_DRAW_VIEW) {
     renderDocFlags &= ~(nsIPresShell::RENDER_IGNORE_VIEWPORT_SCROLLING |
                         nsIPresShell::RENDER_DOCUMENT_RELATIVE);
   }
-  if (aFlags & CanvasRenderingContext2DBinding::DRAWWINDOW_USE_WIDGET_LAYERS) {
+  if (aFlags & CanvasRenderingContext2D_Binding::DRAWWINDOW_USE_WIDGET_LAYERS) {
     renderDocFlags |= nsIPresShell::RENDER_USE_WIDGET_LAYERS;
   }
-  if (aFlags & CanvasRenderingContext2DBinding::DRAWWINDOW_ASYNC_DECODE_IMAGES) {
+  if (aFlags & CanvasRenderingContext2D_Binding::DRAWWINDOW_ASYNC_DECODE_IMAGES) {
     renderDocFlags |= nsIPresShell::RENDER_ASYNC_DECODE_IMAGES;
   }
-  if (aFlags & CanvasRenderingContext2DBinding::DRAWWINDOW_DO_NOT_FLUSH) {
+  if (aFlags & CanvasRenderingContext2D_Binding::DRAWWINDOW_DO_NOT_FLUSH) {
     renderDocFlags |= nsIPresShell::RENDER_DRAWWINDOW_NOT_FLUSHING;
   }
 
@@ -5435,8 +5451,9 @@ CanvasRenderingContext2D::DrawWindow(nsGlobalWindowInner& aWindow, double aX,
 
 already_AddRefed<ImageData>
 CanvasRenderingContext2D::GetImageData(JSContext* aCx, double aSx,
-                                       double aSy, double aSw,
-                                       double aSh, ErrorResult& aError)
+                                       double aSy, double aSw, double aSh,
+                                       nsIPrincipal& aSubjectPrincipal,
+                                       ErrorResult& aError)
 {
   if (mDrawObserver) {
     mDrawObserver->DidDrawCall(CanvasDrawObserver::DrawCallType::GetImageData);
@@ -5502,7 +5519,7 @@ CanvasRenderingContext2D::GetImageData(JSContext* aCx, double aSx,
   }
 
   JS::Rooted<JSObject*> array(aCx);
-  aError = GetImageDataArray(aCx, x, y, w, h, array.address());
+  aError = GetImageDataArray(aCx, x, y, w, h, aSubjectPrincipal, array.address());
   if (aError.Failed()) {
     return nullptr;
   }
@@ -5518,6 +5535,7 @@ CanvasRenderingContext2D::GetImageDataArray(JSContext* aCx,
                                             int32_t aY,
                                             uint32_t aWidth,
                                             uint32_t aHeight,
+                                            nsIPrincipal& aSubjectPrincipal,
                                             JSObject** aRetval)
 {
   if (mDrawObserver) {
@@ -5590,7 +5608,7 @@ CanvasRenderingContext2D::GetImageDataArray(JSContext* aCx,
   bool usePlaceholder = false;
   if (mCanvasElement) {
     nsCOMPtr<nsIDocument> ownerDoc = mCanvasElement->OwnerDoc();
-    usePlaceholder = !CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx);
+    usePlaceholder = !CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx, aSubjectPrincipal);
   }
 
   do {
@@ -6119,7 +6137,7 @@ CanvasPath::CanvasPath(nsISupports* aParent, already_AddRefed<PathBuilder> aPath
 JSObject*
 CanvasPath::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return Path2DBinding::Wrap(aCx, this, aGivenProto);
+  return Path2D_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 already_AddRefed<CanvasPath>

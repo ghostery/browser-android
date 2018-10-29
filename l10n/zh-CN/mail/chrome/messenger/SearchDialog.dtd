@@ -1,8 +1,8 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- for SearchDialog.xul -->
 
+<!-- for SearchDialog.xul -->
 <!ENTITY searchHeading.label         "在以下文件夹中搜索消息:">
 <!ENTITY searchHeading.accesskey     "h">
 <!ENTITY searchSubfolders.label      "搜索子文件夹">
@@ -19,13 +19,13 @@
 <!ENTITY results.label               "结果">
 <!ENTITY moveButton.label            "移动到">
 <!ENTITY moveButton.accesskey        "T">
-<!ENTITY closeCmd.key                "W"> 
+<!ENTITY closeCmd.key                "W">
 <!ENTITY openInFolder.label          "在文件夹中打开">
 <!ENTITY openInFolder.accesskey      "r">
 <!ENTITY saveAsVFButton.label        "将搜索结果保存作为文件夹">
 <!ENTITY saveAsVFButton.accesskey    "v">
-<!-- for ABSearchDialog.xul -->
 
+<!-- for ABSearchDialog.xul -->
 <!ENTITY abSearchHeading.label       "搜索在:">
 <!ENTITY abSearchHeading.accesskey   "h">
 <!ENTITY propertiesButton.label      "属性">
@@ -35,8 +35,8 @@
 <!ENTITY deleteCardButton.label      "删除">
 <!ENTITY deleteCardButton.accesskey  "D">
 <!ENTITY abSearchDialogTitle.label   "通讯录高级搜索">
-<!-- Thread Pane -->
 
+<!-- Thread Pane -->
 <!ENTITY threadColumn.label "话题">
 <!ENTITY fromColumn.label "发件人">
 <!ENTITY recipientColumn.label "收件人">
@@ -45,7 +45,7 @@
 <!ENTITY dateColumn.label "日期">
 <!ENTITY priorityColumn.label "优先级">
 <!ENTITY tagsColumn.label "标签">
-<!ENTITY accountColumn.label "帐户">
+<!ENTITY accountColumn.label "账户">
 <!ENTITY statusColumn.label "状态">
 <!ENTITY sizeColumn.label "大小">
 <!ENTITY junkStatusColumn.label "垃圾状态">
@@ -56,8 +56,8 @@
 <!ENTITY starredColumn.label "已加星标">
 <!ENTITY locationColumn.label "地址">
 <!ENTITY idColumn.label "按接收时间排序">
-<!-- Thread Pane Tooltips -->
 
+<!-- Thread Pane Tooltips -->
 <!ENTITY columnChooser2.tooltip "选择要显示的列">
 <!ENTITY threadColumn2.tooltip "显示消息话题">
 <!ENTITY fromColumn2.tooltip "按发件人排序">

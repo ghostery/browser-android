@@ -114,7 +114,7 @@ HTMLEditorEventListener::MouseDown(MouseEvent* aMouseEvent)
 
     // Detect if mouse point is within current selection for context click
     bool nodeIsInSelection = false;
-    if (isContextClick && !selection->Collapsed()) {
+    if (isContextClick && !selection->IsCollapsed()) {
       uint32_t rangeCount = selection->RangeCount();
 
       for (uint32_t i = 0; i < rangeCount; i++) {
@@ -142,9 +142,8 @@ HTMLEditorEventListener::MouseDown(MouseEvent* aMouseEvent)
           selection->Collapse(parent, offset);
         } else {
           // Get enclosing link if in text so we can select the link
-          RefPtr<Element> linkElement =
-            htmlEditor->GetElementOrParentByTagName(NS_LITERAL_STRING("href"),
-                                                    node);
+          Element* linkElement =
+            htmlEditor->GetElementOrParentByTagName(*nsGkAtoms::href, node);
           if (linkElement) {
             element = linkElement;
           }

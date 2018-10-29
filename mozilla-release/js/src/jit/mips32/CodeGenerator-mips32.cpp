@@ -9,8 +9,8 @@
 #include "mozilla/MathAlgorithms.h"
 
 #include "jit/CodeGenerator.h"
-#include "jit/JitCompartment.h"
 #include "jit/JitFrames.h"
+#include "jit/JitRealm.h"
 #include "jit/MIR.h"
 #include "jit/MIRGraph.h"
 #include "js/Conversions.h"
@@ -586,7 +586,7 @@ CodeGenerator::visitWasmAtomicLoadI64(LWasmAtomicLoadI64* lir)
 
     BaseIndex addr(HeapReg, ptr, TimesOne, offset);
 
-    masm.atomicLoad64(Synchronization::Full(), addr, Register64::Invalid(), output);
+    masm.wasmAtomicLoad64(lir->mir()->access(), addr, Register64::Invalid(), output);
 }
 
 void
@@ -599,5 +599,5 @@ CodeGenerator::visitWasmAtomicStoreI64(LWasmAtomicStoreI64* lir)
 
     BaseIndex addr(HeapReg, ptr, TimesOne, offset);
 
-    masm.atomicStore64(addr, tmp, value);
+    masm.wasmAtomicStore64(lir->mir()->access(), addr, tmp, value);
 }

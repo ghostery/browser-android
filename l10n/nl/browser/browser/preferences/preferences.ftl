@@ -2,10 +2,12 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-do-not-track-description = Websites een ‘Niet volgen’-signaal sturen om te laten weten dat u niet wilt worden gevolgd
+do-not-track-description = Websites een ‘Niet volgen’-signaal sturen om te laten weten dat u niet gevolgd wilt worden
 do-not-track-learn-more = Meer info
 do-not-track-option-default =
     .label = Alleen bij gebruik van Bescherming tegen volgen
+do-not-track-option-default-content-blocking =
+    .label = Alleen wanneer { -brand-short-name } is ingesteld om gedetecteerde trackers te blokkeren
 do-not-track-option-always =
     .label = Altijd
 
@@ -15,15 +17,6 @@ pref-page =
             [windows] Opties
            *[other] Voorkeuren
         }
-
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 15.4em
 
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
@@ -115,6 +108,10 @@ extension-controlled-privacy-containers = Een extensie, <img data-l10n-name="ico
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = Een extensie, <img data-l10n-name="icon"/> { $name }, heeft beheer over bescherming tegen volgen.
 
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = Een extensie, <img data-l10n-name="icon"/> { $name }, heeft beheer over deze instelling.
+
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = Een extensie, <img data-l10n-name="icon"/> { $name }, heeft beheer over hoe { -brand-short-name } verbinding maakt met het internet.
@@ -162,24 +159,12 @@ set-as-my-default-browser =
     .label = Standaard maken…
     .accesskey = m
 
-startup-page = Als { -brand-short-name } start
-    .accesskey = a
-
-startup-user-homepage =
-    .label = Uw startpagina tonen
-startup-blank-page =
-    .label = Een lege pagina tonen
-startup-prev-session =
-    .label = Uw vensters en tabbladen van de vorige keer tonen
-
 startup-restore-previous-session =
     .label = Vorige sessie herstellen
     .accesskey = s
 
 disable-extension =
     .label = Extensie uitschakelen
-
-home-page-header = Startpagina
 
 tabs-group-header = Tabbladen
 
@@ -272,14 +257,21 @@ choose-button =
     .label = Kiezen…
     .accesskey = z
 
+choose-browser-language-description = Kies de talen die worden gebruikt voor het weergeven van menu’s, berichten en notificaties van { -brand-short-name }.
+manage-browser-languages-button =
+  .label = Alternatieven instellen…
+  .accesskey = l
+confirm-browser-language-change-description = Herstart { -brand-short-name } om deze wijzigingen toe te passen.
+confirm-browser-language-change-button = Toepassen en herstarten
+
 translate-web-pages =
     .label = Webinhoud vertalen
     .accesskey = W
 
 # The <img> element is replaced by the logo of the provider
 # used to provide machine translations for web pages.
-
 translate-attribution = Vertalingen door <img data-l10n-name="logo"/>
+
 translate-exceptions =
     .label = Uitzonderingen…
     .accesskey = z
@@ -341,8 +333,6 @@ update-application-title = { -brand-short-name }-updates
 
 update-application-description = Houd { -brand-short-name } up-to-date voor de beste prestaties, stabiliteit en beveiliging.
 
-update-application-info = Versie { $version } <a>Wat is er nieuw</a>
-
 update-application-version = Versie { $version } <a data-l10n-name="learn-more">Wat is er nieuw</a>
 
 update-history =
@@ -391,8 +381,6 @@ performance-limit-content-process-option = Limiet van inhoudsprocessen
     .accesskey = L
 
 performance-limit-content-process-enabled-desc = Extra inhoudsprocessen kunnen de prestaties bij het gebruik van meerdere tabbladen verbeteren, maar zullen ook meer geheugen gebruiken.
-performance-limit-content-process-disabled-desc = Aanpassen van het aantal inhoudsprocessen is alleen mogelijk met multiprocess-{ -brand-short-name }. <a>Informatie over het controleren of multiprocess is ingeschakeld</a>
-
 performance-limit-content-process-blocked-desc = Aanpassen van het aantal inhoudsprocessen is alleen mogelijk met multiprocess-{ -brand-short-name }. <a data-l10n-name="learn-more">Informatie over het controleren of multiprocess is ingeschakeld</a>
 
 # Variables:
@@ -427,6 +415,8 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Netwerkproxy
+
+network-settings-title = Netwerkinstellingen
 
 network-proxy-connection-description = Configureren hoe { -brand-short-name } verbinding maakt met het internet.
 
@@ -481,10 +471,6 @@ use-current-pages =
 choose-bookmark =
     .label = Bladwijzer gebruiken…
     .accesskey = B
-
-restore-default =
-    .label = Standaard herstellen
-    .accesskey = S
 
 ## Search Section
 
@@ -599,13 +585,13 @@ sync-resend-verification =
 
 sync-remove-account =
     .label = Account verwijderen
-    .accesskey = w
+    .accesskey = r
 
 sync-sign-in =
     .label = Aanmelden
     .accesskey = m
 
-sync-signedin-settings-header = Synchronisatie-instellingen
+sync-signedin-settings-header = Sync-instellingen
 sync-signedin-settings-desc = Kies wat u wilt synchroniseren op uw apparaten die { -brand-short-name } gebruiken.
 
 sync-engine-bookmarks =
@@ -648,7 +634,7 @@ sync-engine-prefs =
            *[other] Voorkeuren
         }
     .tooltiptext = Algemene, privacy- en beveiligingsinstellingen die u hebt gewijzigd
-    .accesskey = V
+    .accesskey = O
 
 sync-device-name-header = Apparaatnaam
 
@@ -679,6 +665,8 @@ privacy-header = Browserprivacy
 ## Privacy Section - Forms
 
 forms-header = Formulieren & Wachtwoorden
+
+logins-header = Aanmeldingen & Wachtwoorden
 forms-ask-to-save-logins =
     .label = Vragen voor opslaan van aanmeldingen en wachtwoorden voor websites
     .accesskey = r
@@ -724,10 +712,6 @@ history-dontremember-description = { -brand-short-name } zal dezelfde instelling
 history-private-browsing-permanent =
     .label = Altijd de privénavigatiemodus gebruiken
     .accesskey = m
-
-history-remember-option =
-    .label = Mijn navigatie- en downloadgeschiedenis onthouden
-    .accesskey = v
 
 history-remember-browser-option =
     .label = Navigatie- en downloadgeschiedenis onthouden
@@ -788,6 +772,30 @@ sitedata-accept-third-party-visited-option =
 sitedata-accept-third-party-never-option =
     .label = Nooit
 
+sitedata-allow-cookies-option =
+    .label = Cookies en websitegegevens accepteren
+    .accesskey = a
+
+sitedata-disallow-cookies-option =
+    .label = Cookies en websitegegevens blokkeren
+    .accesskey = b
+
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = Geblokkeerd type
+    .accesskey = t
+
+sitedata-block-trackers-option-recommended =
+    .label = Trackers van derden (aanbevolen)
+sitedata-block-trackers-option =
+    .label = Trackers van derden
+sitedata-block-unvisited-option =
+    .label = Cookies van niet-bezochte websites
+sitedata-block-all-third-party-option =
+    .label = Alle cookies van derden (kan ervoor zorgen dat websites niet goed werken)
+sitedata-block-all-option =
+    .label = Alle cookies (zal ervoor zorgen dat websites niet goed werken)
+
 sitedata-clear =
     .label = Gegevens wissen…
     .accesskey = e
@@ -799,6 +807,11 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = Uitzonderingen…
     .accesskey = U
+
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = Uw instellingen in Inhoudsblokkering voorkomen wijzigingen aan instellingen voor Cookies en websitegegevens.
 
 ## Privacy Section - Address Bar
 
@@ -818,13 +831,77 @@ addressbar-locbar-openpage-option =
 
 addressbar-suggestions-settings = Voorkeuren voor zoekmachinesuggesties wijzigen
 
+## Privacy Section - Content Blocking
+
+content-blocking-header = Inhoudsblokkering
+
+content-blocking-desc = Blokkeer inhoud van derden, zoals advertenties of code, die het surfen kan vertragen en u op het web kan volgen. Pas uw instellingen aan voor het optimale evenwicht tussen bescherming en prestaties.
+
+content-blocking-learn-more = Meer info
+content-blocking-restore-defaults =
+  .label = Standaardwaarden herstellen
+  .accesskey = S
+
+content-blocking-toggle-on =
+  .tooltiptext = Inhoudsblokkering uitschakelen
+content-blocking-toggle-off =
+  .tooltiptext = Inhoudsblokkering inschakelen
+
+content-blocking-toggle-label-on = AAN
+  .accesskey = A
+content-blocking-toggle-label-off = UIT
+  .accesskey = U
+
+content-blocking-category-label = Kiezen wat er wordt geblokkeerd
+
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-slow-loading-trackers-label =
+  .label = Traag ladende trackers
+  .accesskey = T
+content-blocking-fastblock-new-description = Alleen de trackers blokkeren die snel laden van pagina’s tegengaan.
+content-blocking-tracking-protection-all-detected-trackers-label =
+  .label = Alle gedetecteerde trackers
+  .accesskey = d
+content-blocking-tracking-protection-new-description = Alle bekende trackers blokkeren. (Kan het laden van bepaalde pagina’s tegengaan.)
+content-blocking-tracking-protection-option-always =
+  .label = Altijd
+  .accesskey = A
+content-blocking-tracking-protection-option-private =
+  .label = Alleen in privévensters
+  .accesskey = p
+content-blocking-tracking-protection-change-block-list = Blokkeerlijst wijzigen
+
+content-blocking-third-party-cookies-label =
+  .label = Cookies van derden
+  .accesskey = C
+content-blocking-reject-trackers-description = Alle cookies van derden blokkeren of alleen cookies die zijn ingesteld door trackers.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = Uw instellingen in Cookies en websitegegevens voorkomen wijzigingen aan instellingen voor Cookies van derden.
+content-blocking-change-cookie-settings =
+  .label = Cookie-instellingen wijzigen
+  .accesskey = s
+content-blocking-reject-trackers-block-trackers-option-recommended =
+  .label = Trackers (aanbevolen)
+  .accesskey = k
+content-blocking-reject-trackers-block-trackers-option =
+  .label = Trackers
+  .accesskey = k
+content-blocking-reject-trackers-all-third-parties-option =
+  .label = Alle cookies van derden (kan ervoor zorgen dat websites niet goed werken)
+  .accesskey = A
+
 ## Privacy Section - Tracking
 
 tracking-header = Bescherming tegen volgen
 
 tracking-desc = Bescherming tegen volgen blokkeert online trackers die op meerdere websites uw surfgegevens verzamelen. <a data-l10n-name="learn-more">Meer info over Bescherming tegen volgen en uw privacy</a>
 
-tracking-mode-label = Bescherming tegen volgen gebruiken om bekende volgers te blokkeren
+tracking-mode-label = Bescherming tegen volgen gebruiken om bekende trackers te blokkeren
 
 tracking-mode-always =
     .label = Altijd
@@ -838,7 +915,7 @@ tracking-mode-never =
 
 # This string is displayed if privacy.trackingprotection.ui.enabled is set to false.
 # This currently happens on the release and beta channel.
-tracking-pbm-label = Bescherming tegen volgen gebruiken in Privénavigatie om bekende volgers te blokkeren
+tracking-pbm-label = Bescherming tegen volgen gebruiken in Privénavigatie om bekende trackers te blokkeren
     .accesskey = v
 
 tracking-exceptions =
@@ -882,9 +959,20 @@ permissions-block-autoplay-media =
     .label = Automatisch afspelen van media met geluid door websites blokkeren
     .accesskey = s
 
+permissions-block-autoplay-media-menu = Voor websites die automatisch geluid afspelen
+
 permissions-block-autoplay-media-exceptions =
     .label = Uitzonderingen…
     .accesskey = U
+
+autoplay-option-ask =
+    .label = Altijd vragen
+autoplay-option-allow =
+    .label = Automatisch afspelen toestaan
+autoplay-option-dont =
+    .label = Niet automatisch afspelen
+
+permissions-autoplay-link = Meer info
 
 permissions-block-popups =
     .label = Pop-upvensters blokkeren

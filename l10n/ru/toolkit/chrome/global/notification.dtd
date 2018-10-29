@@ -10,3 +10,5 @@
 
 <!ENTITY defaultButton.label "ОК">
 <!ENTITY defaultButton.accesskey "О">
+
+<!ENTITY moreActionsButton.accessibleLabel "Другие действия">

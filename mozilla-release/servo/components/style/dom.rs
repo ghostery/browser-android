@@ -19,7 +19,7 @@ use element_state::ElementState;
 use font_metrics::FontMetricsProvider;
 use media_queries::Device;
 use properties::{AnimationRules, ComputedValues, PropertyDeclarationBlock};
-use selector_parser::{AttrValue, PseudoClassStringArg, PseudoElement, SelectorImpl};
+use selector_parser::{AttrValue, Lang, PseudoElement, SelectorImpl};
 use selectors::Element as SelectorsElement;
 use selectors::matching::{ElementSelectorFlags, QuirksMode, VisitedHandlingMode};
 use selectors::sink::Push;
@@ -135,14 +135,17 @@ pub trait TDocument: Sized + Copy + Clone {
     fn quirks_mode(&self) -> QuirksMode;
 
     /// Get a list of elements with a given ID in this document, sorted by
-    /// document position.
+    /// tree position.
     ///
     /// Can return an error to signal that this list is not available, or also
     /// return an empty slice.
-    fn elements_with_id(
+    fn elements_with_id<'a>(
         &self,
         _id: &Atom,
-    ) -> Result<&[<Self::ConcreteNode as TNode>::ConcreteElement], ()> {
+    ) -> Result<&'a [<Self::ConcreteNode as TNode>::ConcreteElement], ()>
+    where
+        Self: 'a,
+    {
         Err(())
     }
 }
@@ -339,9 +342,24 @@ pub trait TShadowRoot: Sized + Copy + Clone + PartialEq {
     fn host(&self) -> <Self::ConcreteNode as TNode>::ConcreteElement;
 
     /// Get the style data for this ShadowRoot.
-    fn style_data<'a>(&self) -> &'a CascadeData
+    fn style_data<'a>(&self) -> Option<&'a CascadeData>
     where
         Self: 'a;
+
+    /// Get a list of elements with a given ID in this shadow root, sorted by
+    /// tree position.
+    ///
+    /// Can return an error to signal that this list is not available, or also
+    /// return an empty slice.
+    fn elements_with_id<'a>(
+        &self,
+        _id: &Atom,
+    ) -> Result<&'a [<Self::ConcreteNode as TNode>::ConcreteElement], ()>
+    where
+        Self: 'a,
+    {
+        Err(())
+    }
 }
 
 /// The element trait, the main abstraction the style crate acts over.
@@ -446,12 +464,6 @@ pub trait TElement:
     /// Return the list of slotted nodes of this node.
     fn slotted_nodes(&self) -> &[Self::ConcreteNode] {
         &[]
-    }
-
-    /// For a given NAC element, return the closest non-NAC ancestor, which is
-    /// guaranteed to exist.
-    fn closest_non_native_anonymous_ancestor(&self) -> Option<Self> {
-        unreachable!("Servo doesn't know about NAC");
     }
 
     /// Get this element's style attribute.
@@ -639,9 +651,8 @@ pub trait TElement:
         false
     }
 
-    /// Returns true if this element is native anonymous (only Gecko has native
-    /// anonymous content).
-    fn is_native_anonymous(&self) -> bool {
+    /// Returns true if this element is in a native anonymous subtree.
+    fn is_in_native_anonymous_subtree(&self) -> bool {
         false
     }
 
@@ -776,7 +787,7 @@ pub trait TElement:
     /// element.
     fn rule_hash_target(&self) -> Self {
         if self.implemented_pseudo_element().is_some() {
-            self.closest_non_native_anonymous_ancestor()
+            self.pseudo_element_originating_element()
                 .expect("Trying to collect rules for a detached pseudo-element")
         } else {
             *self
@@ -813,30 +824,36 @@ pub trait TElement:
 
         if let Some(shadow) = self.containing_shadow() {
             doc_rules_apply = false;
-            f(
-                shadow.style_data(),
-                self.as_node().owner_doc().quirks_mode(),
-                Some(shadow.host()),
-            );
+            if let Some(data) = shadow.style_data() {
+                f(
+                    data,
+                    self.as_node().owner_doc().quirks_mode(),
+                    Some(shadow.host()),
+                );
+            }
         }
 
         if let Some(shadow) = self.shadow_root() {
-            f(
-                shadow.style_data(),
-                self.as_node().owner_doc().quirks_mode(),
-                Some(shadow.host()),
-            );
+            if let Some(data) = shadow.style_data() {
+                f(
+                    data,
+                    self.as_node().owner_doc().quirks_mode(),
+                    Some(shadow.host()),
+                );
+            }
         }
 
         let mut current = self.assigned_slot();
         while let Some(slot) = current {
             // Slots can only have assigned nodes when in a shadow tree.
             let shadow = slot.containing_shadow().unwrap();
-            f(
-                shadow.style_data(),
-                self.as_node().owner_doc().quirks_mode(),
-                Some(shadow.host()),
-            );
+            if let Some(data) = shadow.style_data() {
+                f(
+                    data,
+                    self.as_node().owner_doc().quirks_mode(),
+                    Some(shadow.host()),
+                );
+            }
             current = slot.assigned_slot();
         }
 
@@ -878,7 +895,7 @@ pub trait TElement:
     fn match_element_lang(
         &self,
         override_lang: Option<Option<AttrValue>>,
-        value: &PseudoClassStringArg,
+        value: &Lang,
     ) -> bool;
 
     /// Returns whether this element is the main body element of the HTML

@@ -27,12 +27,6 @@
 <!ENTITY firstrun_button_next "Siguiente">
 
 <!ENTITY firstrun_tabqueue_title "Enlaces">
-<!-- Localization note (firstrun_tabqueue_message): 'Tab queue' is a feature that allows users to queue up or save links from outside of Firefox (without switching apps) - these links will be loaded in Firefox the next time Firefox is opened. -->
-<!ENTITY firstrun_tabqueue_message_off "Activar cola de pestañas">
-<!ENTITY firstrun_tabqueue_subtext_off "Guarde enlaces para más tarde en &brandShortName; al tocar sobre ellos en otras aplicaciones.">
-
-<!ENTITY firstrun_tabqueue_message_on "¡Éxito!">
-<!ENTITY firstrun_tabqueue_subtext_on "Siempre puede desactivar esto en &settings; bajo &pref_category_general;.">
 
 <!ENTITY firstrun_readerview_title "Artículos">
 <!-- Localization note (firstrun_readerview_message): This is a casual way of describing getting rid of unnecessary things, and is referring to simplifying websites so only the article text and images are visible, removing unnecessary headers or ads. -->
@@ -69,7 +63,6 @@
 <!ENTITY  crash_restart_label "Reiniciar &brandShortName;">
 
 <!ENTITY url_bar_default_text2 "Término de búsqueda o dirección">
-
 <!-- Localization note (url_bar_qrcode_text2) : This text will be
      heard by non-visual users when the focus is on the QR Code
      icon in the url bar. -->
@@ -215,7 +208,6 @@
      “storing data”. -->
 <!ENTITY pref_category_advanced_summary3 "Restaurar pestañas, ahorro de datos, herramientas de desarrollo">
 <!ENTITY pref_category_notifications "Notificaciones">
-<!ENTITY pref_category_notifications_summary "Nuevas funciones, actual. sitios web">
 <!ENTITY pref_category_notifications_summary2 "Nuevas funcionalidades, sugerencias de productos">
 <!ENTITY pref_developer_remotedebugging_usb "Depuración remota USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Depuración remota wifi">
@@ -372,6 +364,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "Permitir autorreproducción">
 <!ENTITY pref_media_autoplay_enabled_summary "Controla si los sitios web pueden autorreproducir vídeos y otro contenido de medios">
+<!ENTITY pref_media_autoplay_allow "Permitir la reproducción automática">
+<!ENTITY pref_media_autoplay_block "Bloquear la reproducción automática">
 <!ENTITY pref_zoom_force_enabled "Activar siempre tamaño personalizado">
 <!ENTITY pref_zoom_force_enabled_summary "Forzar sobrescritura para que pueda variar el tamaño de cualquier página">
 <!ENTITY pref_voice_input "Entrada por voz">
@@ -447,6 +441,11 @@
 <!ENTITY datareporting_crashreporter_title_short "Informe de fallos">
 <!ENTITY datareporting_wifi_title2 "Servicio de localización de &vendorShortName;">
 <!ENTITY datareporting_wifi_geolocation_summary4 "¡Ayude a &vendorShortName; a mapear el mundo! Comparta la ubicación wifi y móvil aproximada de su dispositivo para mejorar nuestro servicio de geolocalización.">
+<!-- Localization note (datareporting_notification_title ) : This will be the title
+     of the notification shown whenever the user has enabled data reporting and the stumbler
+     service is running. -->
+<!ENTITY datareporting_stumbler_notification_title "&vendorShortName; Servicio de localización corriendo">
+
 <!-- Localization note (pref_update_autodownload2) : This should mention downloading
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
@@ -677,7 +676,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY mixed_content_protection_disabled1 "Ha desactivado la protección del contenido inseguro.">
 
 <!-- Tracking content notifications in site identity popup -->
-<!ENTITY doorhanger_tracking_title2 "Protección contra rastreo">
+<!ENTITY doorhanger_tracking_title2 "Protección contra el rastreo">
 <!ENTITY doorhanger_tracking_state_enabled "Activado">
 <!ENTITY doorhanger_tracking_state_disabled "Desactivado">
 <!ENTITY doorhanger_tracking_message_enabled1 "Los intentos de rastrear su comportamiento en Internet han sido bloqueado.">
@@ -891,3 +890,20 @@ See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "Añadir a la página de inicio">
 <!ENTITY pwa_continue_to_website "Continuar al sitio web">
 <!ENTITY pwa_onboarding_sumo "Puedes agregar este sitio web a tu página de inicio para tener acceso instantáneo y navegar rápidamente como si fuera una aplicación.">
+
+<!-- Used by accessibility services to identify the play/pause buttons shown in the
+Picture-in-picture mini window -->
+<!ENTITY pip_play_button_title "Reproducir">
+<!ENTITY pip_play_button_description "Renaudar reproducción">
+<!ENTITY pip_pause_button_title "Pausar">
+<!ENTITY pip_pause_button_description "Pausar reproducción">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "&vendorShortName; Servicio de localización">
+<!ENTITY download_notification_channel "Descargas">
+<!ENTITY media_notification_channel "Reproducción multimedia">
+<!-- These push notifications come without a specific channel and/or name from Leanplum -->
+<!ENTITY leanplum_default_notifications_channel "&brandShortName; Notificaciones push">
+<!ENTITY updater_notification_channel "Actualizaciones de la aplicación">
+<!ENTITY synced_tabs_notification_channel "Pestañas sincronizadas">

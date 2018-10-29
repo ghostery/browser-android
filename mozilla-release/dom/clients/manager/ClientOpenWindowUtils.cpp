@@ -17,6 +17,7 @@
 #include "nsIWebProgress.h"
 #include "nsIWebProgressListener.h"
 #include "nsIWindowWatcher.h"
+#include "nsIXPConnect.h"
 #include "nsNetUtil.h"
 #include "nsPIDOMWindow.h"
 #include "nsPIWindowWatcher.h"
@@ -198,7 +199,7 @@ OpenWindow(const ClientOpenWindowArgs& aArgs,
       return NS_ERROR_TYPE_ERR;
     }
 
-    JSAutoCompartment ac(cx, sandbox);
+    JSAutoRealm ar(cx, sandbox);
 
     // ContentProcess
     nsCOMPtr<nsIWindowWatcher> wwatch =

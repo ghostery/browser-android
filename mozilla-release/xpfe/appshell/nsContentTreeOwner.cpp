@@ -14,7 +14,6 @@
 #include "nsAutoPtr.h"
 
 // Interfaces needed to be included
-#include "nsIDOMNode.h"
 #include "nsIDOMWindow.h"
 #include "nsIDOMChromeWindow.h"
 #include "nsIBrowserDOMWindow.h"
@@ -32,11 +31,10 @@
 #include "nsIMIMEInfo.h"
 #include "nsIWidget.h"
 #include "nsWindowWatcher.h"
-#include "NullPrincipal.h"
 #include "mozilla/BrowserElementParent.h"
-#include "nsIDocShellLoadInfo.h"
+#include "mozilla/NullPrincipal.h"
+#include "nsDocShellLoadInfo.h"
 
-#include "nsIDOMDocument.h"
 #include "nsIScriptObjectPrincipal.h"
 #include "nsIURI.h"
 #include "nsIDocument.h"
@@ -370,7 +368,7 @@ nsContentTreeOwner::GetHasPrimaryContent(bool* aResult)
 
 NS_IMETHODIMP nsContentTreeOwner::OnBeforeLinkTraversal(const nsAString &originalTarget,
                                                         nsIURI *linkURI,
-                                                        nsIDOMNode *linkNode,
+                                                        nsINode *linkNode,
                                                         bool isAppTab,
                                                         nsAString &_retval)
 {
@@ -801,7 +799,7 @@ nsContentTreeOwner::ProvideWindow(mozIDOMWindowProxy* aParent,
                                   const nsAString& aName,
                                   const nsACString& aFeatures,
                                   bool aForceNoOpener,
-                                  nsIDocShellLoadInfo* aLoadInfo,
+                                  nsDocShellLoadInfo* aLoadInfo,
                                   bool* aWindowIsNew,
                                   mozIDOMWindowProxy** aReturn)
 {

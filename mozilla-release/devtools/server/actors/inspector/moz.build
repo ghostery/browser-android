@@ -6,6 +6,7 @@
 
 DevToolsModules(
   'css-logic.js',
+  'custom-element-watcher.js',
   'document-walker.js',
   'event-parsers.js',
   'inspector.js',
@@ -15,4 +16,4 @@ DevToolsModules(
 )
 
 with Files('**'):
-    BUG_COMPONENT = ('Firefox', 'Developer Tools: Inspector')
+    BUG_COMPONENT = ('DevTools', 'Inspector')

@@ -14,15 +14,11 @@ let whitelist = [
   {sourceName: /codemirror\.css$/i,
    isFromDevTools: true},
   // The debugger uses cross-browser CSS.
-  {sourceName: /devtools\/client\/debugger\/new\/debugger.css/i,
+  {sourceName: /devtools\/client\/debugger\/new\/dist\/debugger.css/i,
    isFromDevTools: true},
    // Reps uses cross-browser CSS.
    {sourceName: /devtools-client-shared\/components\/reps\/reps.css/i,
    isFromDevTools: true},
-  // PDFjs is futureproofing its pseudoselectors, and those rules are dropped.
-  {sourceName: /web\/viewer\.css$/i,
-   errorMessage: /Unknown pseudo-class.*(fullscreen|selection)/i,
-   isFromDevTools: false},
   // PDFjs rules needed for compat with other UAs.
   {sourceName: /web\/viewer\.css$/i,
    errorMessage: /Unknown property.*(appearance|user-select)/i,
@@ -30,10 +26,6 @@ let whitelist = [
   // Highlighter CSS uses a UA-only pseudo-class, see bug 985597.
   {sourceName: /highlighters\.css$/i,
    errorMessage: /Unknown pseudo-class.*moz-native-anonymous/i,
-   isFromDevTools: true},
-  // Responsive Design Mode CSS uses a UA-only pseudo-class, see Bug 1241714.
-  {sourceName: /responsive-ua\.css$/i,
-   errorMessage: /Unknown pseudo-class.*moz-dropdown-list/i,
    isFromDevTools: true},
   // UA-only media features.
   {sourceName: /\b(autocomplete-item|svg)\.css$/,
@@ -49,6 +41,12 @@ let whitelist = [
   // Reserved to UA sheets unless layout.css.overflow-clip-box.enabled flipped to true.
   {sourceName: /(?:res|gre-resources)\/forms\.css$/i,
    errorMessage: /Unknown property.*overflow-clip-box/i,
+   isFromDevTools: false},
+  // The '-moz-menulist-button' value is only supported in chrome and UA sheets
+  // but forms.css is loaded as a document sheet by this test.
+  // Maybe bug 1261237 will fix this?
+  {sourceName: /(?:res|gre-resources)\/forms\.css$/i,
+   errorMessage: /Error in parsing value for \u2018-moz-appearance\u2019/iu,
    isFromDevTools: false},
   // These variables are declared somewhere else, and error when we load the
   // files directly. They're all marked intermittent because their appearance
@@ -71,11 +69,25 @@ let whitelist = [
    isFromDevTools: true},
 ];
 
+if (!Services.prefs.getBoolPref("layout.css.xul-box-display-values.content.enabled")) {
+  // These are UA sheets which use non-content-exposed `display` values.
+  whitelist.push({
+    sourceName: /(skin\/shared\/Heartbeat|((?:res|gre-resources)\/(ua|html)))\.css$/i,
+    errorMessage: /Error in parsing value for .*\bdisplay\b/i,
+    isFromDevTools: false,
+  });
+}
+
 if (!Services.prefs.getBoolPref("full-screen-api.unprefix.enabled")) {
   whitelist.push({
     sourceName: /(?:res|gre-resources)\/(ua|html)\.css$/i,
     errorMessage: /Unknown pseudo-class .*\bfullscreen\b/i,
-    isFromDevTools: false
+    isFromDevTools: false,
+  }, {
+    // PDFjs is futureproofing its pseudoselectors, and those rules are dropped.
+    sourceName: /web\/viewer\.css$/i,
+    errorMessage: /Unknown pseudo-class .*\bfullscreen\b/i,
+    isFromDevTools: false,
   });
 }
 
@@ -87,9 +99,6 @@ let propNameWhitelist = [
    isFromDevTools: false},
   // Bug 1441929
   {propName: "--theme-search-overlays-semitransparent",
-   isFromDevTools: true},
-  // Bug 1441878
-  {propName: "--theme-codemirror-gutter-background",
    isFromDevTools: true},
   // These custom properties are retrieved directly from CSSOM
   // in videocontrols.xml to get pre-defined style instead of computed
@@ -114,13 +123,9 @@ let propNameWhitelist = [
    isFromDevTools: false},
   {propName: "--positionDurationBox-width-long",
    isFromDevTools: false},
-  // Used on Linux
-  {propName: "--in-content-box-background-odd",
-   platforms: ["win", "macosx"],
-   isFromDevTools: false},
 
-  // These properties *are* actually referenced. Need to find why
-  // their reference isn't getting counted.
+  // These variables are used in a shorthand, but the CSS parser deletes the values
+  // when expanding the shorthands. See https://github.com/w3c/csswg-drafts/issues/2515
   {propName: "--bezier-diagonal-color",
    isFromDevTools: true},
   {propName: "--bezier-grid-color",
@@ -251,18 +256,20 @@ let customPropsToReferencesMap = new Map();
 
 function processCSSRules(sheet) {
   for (let rule of sheet.cssRules) {
-    if (rule instanceof CSSMediaRule) {
+    if (rule instanceof CSSConditionRule || rule instanceof CSSKeyframesRule) {
       processCSSRules(rule);
       continue;
     }
-    if (!(rule instanceof CSSStyleRule))
+    if (!(rule instanceof CSSStyleRule) && !(rule instanceof CSSKeyframeRule))
       continue;
 
     // Extract urls from the css text.
-    // Note: CSSStyleRule.cssText always has double quotes around URLs even
+    // Note: CSSRule.cssText always has double quotes around URLs even
     //       when the original CSS file didn't.
     let urls = rule.cssText.match(/url\("[^"]*"\)/g);
-    let props = rule.cssText.match(/(var\()?(--[\w\-]+)/g);
+    // Extract props by searching all "--" preceeded by "var(" or a non-word
+    // character.
+    let props = rule.cssText.match(/(var\(|\W)(--[\w\-]+)/g);
     if (!urls && !props)
       continue;
 
@@ -290,8 +297,13 @@ function processCSSRules(sheet) {
         prop = prop.substring(4);
         let prevValue = customPropsToReferencesMap.get(prop) || 0;
         customPropsToReferencesMap.set(prop, prevValue + 1);
-      } else if (!customPropsToReferencesMap.has(prop)) {
-        customPropsToReferencesMap.set(prop, undefined);
+      } else {
+        // Remove the extra non-word character captured by the regular
+        // expression.
+        prop = prop.substring(1);
+        if (!customPropsToReferencesMap.has(prop)) {
+          customPropsToReferencesMap.set(prop, undefined);
+        }
       }
     }
   }
@@ -339,7 +351,7 @@ add_task(async function checkAllTheCSS() {
   iframe.contentWindow.location = testFile;
   await iframeLoaded;
   let doc = iframe.contentWindow.document;
-  doc.docShell.cssErrorReportingEnabled = true;
+  iframe.contentWindow.docShell.cssErrorReportingEnabled = true;
 
   // Parse and remove all manifests from the list.
   // NOTE that this must be done before filtering out devtools paths

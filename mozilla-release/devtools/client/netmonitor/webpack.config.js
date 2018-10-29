@@ -12,7 +12,7 @@ const { NormalModuleReplacementPlugin } = require("webpack");
 const { toolboxConfig } = require("./node_modules/devtools-launchpad/index");
 const { getConfig } = require("./bin/configure");
 
-let webpackConfig = {
+const webpackConfig = {
   entry: {
     netmonitor: [path.join(__dirname, "launchpad.js")]
   },
@@ -73,7 +73,8 @@ let webpackConfig = {
 
       "devtools/client/framework/devtools": path.join(__dirname, "../../client/shared/webpack/shims/framework-devtools-shim"),
       "devtools/client/framework/menu": "devtools-modules/src/menu",
-      "devtools/client/netmonitor/src/utils/menu": "devtools-contextmenu",
+
+      "devtools/client/shared/components/menu/utils": "devtools-contextmenu",
 
       "devtools/client/shared/vendor/react": "react",
       "devtools/client/shared/vendor/react-dom": "react-dom",
@@ -133,7 +134,7 @@ webpackConfig.plugins = mappings.map(([regex, res]) =>
 const basePath = path.join(__dirname, "../../").replace(/\\/g, "\\\\");
 const baseName = path.basename(__dirname);
 
-let config = toolboxConfig(webpackConfig, getConfig(), {
+const config = toolboxConfig(webpackConfig, getConfig(), {
   // Exclude to transpile all scripts in devtools/ but not for this folder
   babelExcludes: new RegExp(`^${basePath}(.(?!${baseName}))*$`)
 });

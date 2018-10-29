@@ -10,11 +10,11 @@
 #include "mozilla/AutoRestore.h"
 #include "mozilla/gfx/2D.h"
 #include "mozilla/gfx/Types.h"
+#include "mozilla/layers/ClipManager.h"
 #include "mozilla/layers/ImageClient.h"
 #include "mozilla/layers/WebRenderBridgeChild.h"
 #include "mozilla/layers/WebRenderLayerManager.h"
 #include "mozilla/layers/IpcResourceUpdateQueue.h"
-#include "mozilla/layers/ScrollingLayersHelper.h"
 #include "mozilla/layers/SharedSurfacesChild.h"
 #include "mozilla/layers/SourceSurfaceSharedData.h"
 #include "mozilla/layers/StackingContextHelper.h"
@@ -63,6 +63,23 @@ NS_DECLARE_FRAME_PROPERTY_WITH_DTOR(BlobGroupDataProperty,
                                     nsTArray<BlobItemData*>,
                                     DestroyBlobGroupDataProperty);
 
+static void
+SetBlobImageVisibleArea(wr::IpcResourceUpdateQueue& aResources,
+                        wr::ImageKey aImageKey,
+                        const LayoutDeviceRect& aImageRect,
+                        const LayoutDeviceRect& aPaintRect)
+{
+  LayoutDeviceRect visibleRect = aImageRect.Intersect(aPaintRect);
+  // Send the visible rect in normalized coordinates.
+  Rect visibleArea = Rect((visibleRect.x - aImageRect.x) / aImageRect.width,
+                          (visibleRect.y - aImageRect.y) / aImageRect.height,
+                          visibleRect.width / aImageRect.width,
+                          visibleRect.height / aImageRect.height);
+
+  aResources.SetImageVisibleArea(aImageKey, visibleArea);
+}
+
+
 // These are currently manually allocated and ownership is help by the mDisplayItems
 // hash table in DIGroup
 struct BlobItemData
@@ -100,7 +117,9 @@ struct BlobItemData
   LayerIntPoint mGroupOffset;
 
   BlobItemData(DIGroup* aGroup, nsDisplayItem *aItem)
-    : mGroup(aGroup)
+    : mUsed(false)
+    , mGroup(aGroup)
+    , mOpacity(0.0)
   {
     mInvalid = false;
     mEmpty = false;
@@ -203,14 +222,16 @@ TakeExternalSurfaces(WebRenderDrawEventRecorder* aRecorder,
 struct DIGroup;
 struct Grouper
 {
-  explicit Grouper(ScrollingLayersHelper& aScrollingHelper)
-   : mScrollingHelper(aScrollingHelper)
+  explicit Grouper(ClipManager& aClipManager)
+   : mAppUnitsPerDevPixel(0)
+   , mDisplayListBuilder(nullptr)
+   , mClipManager(aClipManager)
   {}
 
   int32_t mAppUnitsPerDevPixel;
   std::vector<nsDisplayItem*> mItemStack;
   nsDisplayListBuilder* mDisplayListBuilder;
-  ScrollingLayersHelper& mScrollingHelper;
+  ClipManager& mClipManager;
   Matrix mTransform;
 
   // Paint the list of aChildren display items.
@@ -219,7 +240,8 @@ struct Grouper
                           WebRenderDrawEventRecorder* aRecorder);
 
   // Builds groups of display items split based on 'layer activity'
-  void ConstructGroups(WebRenderCommandBuilder* aCommandBuilder,
+  void ConstructGroups(nsDisplayListBuilder* aDisplayListBuilder,
+                       WebRenderCommandBuilder* aCommandBuilder,
                        wr::DisplayListBuilder& aBuilder,
                        wr::IpcResourceUpdateQueue& aResources,
                        DIGroup* aGroup, nsDisplayList* aList,
@@ -230,6 +252,12 @@ struct Grouper
                                        wr::IpcResourceUpdateQueue& aResources,
                                        DIGroup* aGroup, nsDisplayList* aList,
                                        const StackingContextHelper& aSc);
+  // Helper method for processing a single inactive item
+  void ConstructItemInsideInactive(WebRenderCommandBuilder* aCommandBuilder,
+                                   wr::DisplayListBuilder& aBuilder,
+                                   wr::IpcResourceUpdateQueue& aResources,
+                                   DIGroup* aGroup, nsDisplayItem* aItem,
+                                   const StackingContextHelper& aSc);
   ~Grouper() {
   }
 };
@@ -240,8 +268,8 @@ static bool
 IsContainerLayerItem(nsDisplayItem* aItem)
 {
   switch (aItem->GetType()) {
+    case DisplayItemType::TYPE_WRAP_LIST:
     case DisplayItemType::TYPE_TRANSFORM:
-    case DisplayItemType::TYPE_LAYER_EVENT_REGIONS:
     case DisplayItemType::TYPE_OPACITY:
     case DisplayItemType::TYPE_FILTER:
     case DisplayItemType::TYPE_BLEND_CONTAINER:
@@ -258,7 +286,7 @@ IsContainerLayerItem(nsDisplayItem* aItem)
 #include <sstream>
 
 bool
-UpdateContainerLayerPropertiesAndDetectChange(nsDisplayItem* aItem, BlobItemData* aData)
+UpdateContainerLayerPropertiesAndDetectChange(nsDisplayItem* aItem, BlobItemData* aData, nsDisplayItemGeometry& aGeometry)
 {
   bool changed = false;
   switch (aItem->GetType()) {
@@ -284,10 +312,17 @@ UpdateContainerLayerPropertiesAndDetectChange(nsDisplayItem* aItem, BlobItemData
       GP("UpdateContainerLayerPropertiesAndDetectChange Opacity\n");
       break;
     }
+    case DisplayItemType::TYPE_MASK:
+    case DisplayItemType::TYPE_FILTER: {
+      // These two items go through BasicLayerManager composition which clips to the BuildingRect
+      aGeometry.mBounds = aGeometry.mBounds.Intersect(aItem->GetBuildingRect());
+      break;
+    }
     default:
       break;
   }
-  return changed;
+
+  return changed || !aGeometry.mBounds.IsEqualEdges(aData->mGeometry->mBounds);
 }
 
 struct DIGroup
@@ -312,13 +347,20 @@ struct DIGroup
   nsPoint mLastAnimatedGeometryRootOrigin;
   IntRect mInvalidRect;
   nsRect mGroupBounds;
+  LayoutDeviceRect mPaintRect;
   int32_t mAppUnitsPerDevPixel;
   gfx::Size mScale;
+  FrameMetrics::ViewID mScrollId;
+  LayerPoint mResidualOffset;
   LayerIntRect mLayerBounds;
   Maybe<wr::ImageKey> mKey;
   std::vector<RefPtr<SourceSurface>> mExternalSurfaces;
 
-  DIGroup() : mAppUnitsPerDevPixel(0) {}
+  DIGroup()
+    : mAppUnitsPerDevPixel(0)
+    , mScrollId(FrameMetrics::NULL_SCROLL_ID)
+  {
+  }
 
   void InvalidateRect(const IntRect& aRect)
   {
@@ -346,6 +388,11 @@ struct DIGroup
   static IntRect
   ToDeviceSpace(nsRect aBounds, Matrix& aMatrix, int32_t aAppUnitsPerDevPixel, LayerIntPoint aOffset)
   {
+    // RoundedOut can convert empty rectangles to non-empty ones
+    // so special case them here
+    if (aBounds.IsEmpty()) {
+      return IntRect();
+    }
     return RoundedOut(aMatrix.TransformBounds(ToRect(nsLayoutUtils::RectToGfxRect(aBounds, aAppUnitsPerDevPixel)))) - aOffset.ToUnknownPoint();
   }
 
@@ -381,7 +428,7 @@ struct DIGroup
       // This item is being added for the first time, invalidate its entire area.
       UniquePtr<nsDisplayItemGeometry> geometry(aItem->AllocateGeometry(aBuilder));
       combined = clip.ApplyNonRoundedIntersection(geometry->ComputeInvalidationRegion());
-      aData->mGeometry = Move(geometry);
+      aData->mGeometry = std::move(geometry);
       nsRect bounds = combined.GetBounds();
 
       IntRect transformedRect = ToDeviceSpace(combined.GetBounds(), aMatrix, appUnitsPerDevPixel, mLayerBounds.TopLeft());
@@ -400,10 +447,10 @@ struct DIGroup
       combined = aData->mClip.ApplyNonRoundedIntersection(aData->mGeometry->ComputeInvalidationRegion());
       combined.MoveBy(shift);
       combined.Or(combined, clip.ApplyNonRoundedIntersection(geometry->ComputeInvalidationRegion()));
-      aData->mGeometry = Move(geometry);
+      aData->mGeometry = std::move(geometry);
       */
       combined = clip.ApplyNonRoundedIntersection(geometry->ComputeInvalidationRegion());
-      aData->mGeometry = Move(geometry);
+      aData->mGeometry = std::move(geometry);
 
       GP("matrix: %f %f\n", aMatrix._31, aMatrix._32); 
       GP("frame invalid invalidate: %s\n", aItem->Name());
@@ -446,7 +493,7 @@ struct DIGroup
         // invalidate the invalidated area.
         InvalidateRect(invalidRect);
 
-        aData->mGeometry = Move(geometry);
+        aData->mGeometry = std::move(geometry);
 
         combined = clip.ApplyNonRoundedIntersection(aData->mGeometry->ComputeInvalidationRegion());
         transformedRect = ToDeviceSpace(combined.GetBounds(), aMatrix, appUnitsPerDevPixel, mLayerBounds.TopLeft());
@@ -462,7 +509,7 @@ struct DIGroup
             // geometry change.
             MOZ_RELEASE_ASSERT(geometry->mBounds.IsEqualEdges(aData->mGeometry->mBounds));
           } else {
-            aData->mGeometry = Move(geometry);
+            aData->mGeometry = std::move(geometry);
           }
           combined = clip.ApplyNonRoundedIntersection(aData->mGeometry->ComputeInvalidationRegion());
           IntRect transformedRect = ToDeviceSpace(combined.GetBounds(), aMatrix, appUnitsPerDevPixel, mLayerBounds.TopLeft());
@@ -486,7 +533,7 @@ struct DIGroup
             // other items shouldn't
             MOZ_RELEASE_ASSERT(geometry->mBounds.IsEqualEdges(aData->mGeometry->mBounds));
           } else {
-            aData->mGeometry = Move(geometry);
+            aData->mGeometry = std::move(geometry);
           }
           combined = clip.ApplyNonRoundedIntersection(aData->mGeometry->ComputeInvalidationRegion());
           IntRect transformedRect = ToDeviceSpace(combined.GetBounds(), aMatrix, appUnitsPerDevPixel, mLayerBounds.TopLeft());
@@ -499,10 +546,9 @@ struct DIGroup
         } else if (IsContainerLayerItem(aItem)) {
           UniquePtr<nsDisplayItemGeometry> geometry(aItem->AllocateGeometry(aBuilder));
           // we need to catch bounds changes of containers so that we continue to have the correct bounds rects in the recording
-          if (!geometry->mBounds.IsEqualEdges(aData->mGeometry->mBounds) ||
-              UpdateContainerLayerPropertiesAndDetectChange(aItem, aData)) {
+          if (UpdateContainerLayerPropertiesAndDetectChange(aItem, aData, *geometry)) {
             combined = clip.ApplyNonRoundedIntersection(geometry->ComputeInvalidationRegion());
-            aData->mGeometry = Move(geometry);
+            aData->mGeometry = std::move(geometry);
             IntRect transformedRect = ToDeviceSpace(combined.GetBounds(), aMatrix, appUnitsPerDevPixel, mLayerBounds.TopLeft());
             InvalidateRect(aData->mRect.Intersect(imageRect));
             aData->mRect = transformedRect.Intersect(imageRect);
@@ -513,9 +559,9 @@ struct DIGroup
             combined = clip.ApplyNonRoundedIntersection(geometry->ComputeInvalidationRegion());
             IntRect transformedRect = ToDeviceSpace(combined.GetBounds(), aMatrix, appUnitsPerDevPixel, mLayerBounds.TopLeft());
             auto rect = transformedRect.Intersect(imageRect);
-            MOZ_RELEASE_ASSERT(rect.IsEqualEdges(aData->mRect));
             GP("Layer NoChange: %s %d %d %d %d\n", aItem->Name(),
                    aData->mRect.x, aData->mRect.y, aData->mRect.XMost(), aData->mRect.YMost());
+            MOZ_RELEASE_ASSERT(rect.IsEqualEdges(aData->mRect));
           }
         } else {
           // XXX: this code can eventually be deleted/made debug only
@@ -523,9 +569,9 @@ struct DIGroup
           combined = clip.ApplyNonRoundedIntersection(geometry->ComputeInvalidationRegion());
           IntRect transformedRect = ToDeviceSpace(combined.GetBounds(), aMatrix, appUnitsPerDevPixel, mLayerBounds.TopLeft());
           auto rect = transformedRect.Intersect(imageRect);
-          MOZ_RELEASE_ASSERT(rect.IsEqualEdges(aData->mRect));
           GP("NoChange: %s %d %d %d %d\n", aItem->Name(),
                  aData->mRect.x, aData->mRect.y, aData->mRect.XMost(), aData->mRect.YMost());
+          MOZ_RELEASE_ASSERT(rect.IsEqualEdges(aData->mRect));
         }
       }
     }
@@ -537,6 +583,7 @@ struct DIGroup
   }
 
   void EndGroup(WebRenderLayerManager* aWrManager,
+                nsDisplayListBuilder* aDisplayListBuilder,
                 wr::DisplayListBuilder& aBuilder,
                 wr::IpcResourceUpdateQueue& aResources,
                 Grouper* aGrouper,
@@ -564,14 +611,15 @@ struct DIGroup
 
     // Round the bounds out to leave space for unsnapped content
     LayoutDeviceToLayerScale2D scale(mScale.width, mScale.height);
-    LayerIntRect layerBounds = LayerIntRect::FromUnknownRect(mGroupBounds.ScaleToOutsidePixels(mScale.width, mScale.height, aGrouper->mAppUnitsPerDevPixel));
+    LayerIntRect layerBounds = mLayerBounds;
     IntSize dtSize = layerBounds.Size().ToUnknownSize();
-    LayoutDeviceRect bounds = layerBounds / scale;
+    LayoutDeviceRect bounds = (LayerRect(layerBounds) - mResidualOffset) / scale;
 
     if (mInvalidRect.IsEmpty()) {
       GP("Not repainting group because it's empty\n");
       GP("End EndGroup\n");
       if (mKey) {
+        SetBlobImageVisibleArea(aResources, mKey.value(), bounds, mPaintRect);
         PushImage(aBuilder, bounds);
       }
       return;
@@ -640,6 +688,7 @@ struct DIGroup
       }
     }
     mInvalidRect.SetEmpty();
+    SetBlobImageVisibleArea(aResources, mKey.value(), mPaintRect, bounds);
     PushImage(aBuilder, bounds);
     GP("End EndGroup\n\n");
   }
@@ -650,9 +699,20 @@ struct DIGroup
     GP("PushImage: %f %f %f %f\n", dest.origin.x, dest.origin.y, dest.size.width, dest.size.height);
     gfx::SamplingFilter sampleFilter = gfx::SamplingFilter::LINEAR; //nsLayoutUtils::GetSamplingFilterForFrame(aItem->Frame());
     bool backfaceHidden = false;
+
+    // Emit a dispatch-to-content hit test region covering this area
+    auto hitInfo = CompositorHitTestInfo::eVisibleToHitTest |
+                   CompositorHitTestInfo::eDispatchToContent;
+
+    // XXX - clipping the item against the paint rect breaks some content.
+    // cf. Bug 1455422.
+    //wr::LayoutRect clip = wr::ToLayoutRect(bounds.Intersect(mPaintRect));
+
+    aBuilder.SetHitTestInfo(mScrollId, hitInfo);
     aBuilder.PushImage(dest, dest, !backfaceHidden,
                        wr::ToImageRendering(sampleFilter),
                        mKey.value());
+    aBuilder.ClearHitTestInfo();
   }
 
   void PaintItemRange(Grouper* aGrouper,
@@ -693,7 +753,9 @@ struct DIGroup
         GP("doing children in EndGroup\n");
         aGrouper->PaintContainerItem(this, item, bounds, children, aContext, aRecorder);
       } else {
-        if (dirty) {
+        // Hit test items don't have anything to paint so skip them. Ideally we
+        // would drop these items earlier...
+        if (dirty && item->GetType() != DisplayItemType::TYPE_COMPOSITOR_HITTEST_INFO) {
           // What should the clip settting strategy be? We can set the full clip everytime.
           // this is probably easiest for now. An alternative would be to put the push and the pop
           // into separate items and let invalidation handle it that way.
@@ -705,6 +767,9 @@ struct DIGroup
           }
           aContext->NewPath();
           GP("painting %s %p-%d\n", item->Name(), item->Frame(), item->GetPerFrameKey());
+          if (aGrouper->mDisplayListBuilder->IsPaintingToWindow()) {
+            item->Frame()->AddStateBits(NS_FRAME_PAINTED_THEBES);
+          }
           item->Paint(aGrouper->mDisplayListBuilder, aContext);
           if (currentClip.HasClip()) {
             aContext->Restore();
@@ -741,6 +806,7 @@ Grouper::PaintContainerItem(DIGroup* aGroup, nsDisplayItem* aItem, const IntRect
       if (currentClip.HasClip()) {
         aContext->Save();
         currentClip.ApplyTo(aContext, this->mAppUnitsPerDevPixel);
+        aContext->GetDrawTarget()->FlushItem(aItemBounds);
       } else {
         matrix = aContext->CurrentMatrix();
       }
@@ -754,6 +820,7 @@ Grouper::PaintContainerItem(DIGroup* aGroup, nsDisplayItem* aItem, const IntRect
 
       if (currentClip.HasClip()) {
         aContext->Restore();
+        aContext->GetDrawTarget()->FlushItem(aItemBounds);
       } else {
         aContext->SetMatrix(matrix);
       }
@@ -856,21 +923,32 @@ HasActiveChildren(const nsDisplayList& aList, nsDisplayListBuilder *aDisplayList
 static bool
 IsItemProbablyActive(nsDisplayItem* aItem, nsDisplayListBuilder* aDisplayListBuilder)
 {
-  if (aItem->GetType() == DisplayItemType::TYPE_TRANSFORM) {
+  switch (aItem->GetType()) {
+  case DisplayItemType::TYPE_TRANSFORM: {
     nsDisplayTransform* transformItem = static_cast<nsDisplayTransform*>(aItem);
-    Matrix4x4Flagged t = transformItem->GetTransform();
+    const Matrix4x4Flagged& t = transformItem->GetTransform();
     Matrix t2d;
     bool is2D = t.Is2D(&t2d);
     GP("active: %d\n", transformItem->MayBeAnimated(aDisplayListBuilder));
     return transformItem->MayBeAnimated(aDisplayListBuilder) || !is2D || HasActiveChildren(*transformItem->GetChildren(), aDisplayListBuilder);
-  } else if (aItem->GetType() == DisplayItemType::TYPE_OPACITY) {
+  }
+  case DisplayItemType::TYPE_OPACITY: {
     nsDisplayOpacity* opacityItem = static_cast<nsDisplayOpacity*>(aItem);
     bool active = opacityItem->NeedsActiveLayer(aDisplayListBuilder, opacityItem->Frame());
     GP("active: %d\n", active);
     return active || HasActiveChildren(*opacityItem->GetChildren(), aDisplayListBuilder);
   }
-  // TODO: handle other items?
-  return false;
+  case DisplayItemType::TYPE_WRAP_LIST:
+  case DisplayItemType::TYPE_PERSPECTIVE: {
+    if (aItem->GetChildren()) {
+      return HasActiveChildren(*aItem->GetChildren(), aDisplayListBuilder);
+    }
+    return false;
+  }
+  default:
+    // TODO: handle other items?
+    return false;
+  }
 }
 
 // If we have an item we need to make sure it matches the current group
@@ -902,7 +980,8 @@ GetBlobItemDataForGroup(nsDisplayItem* aItem, DIGroup* aGroup)
 // This does a pass over the display lists and will join the display items
 // into groups as well as paint them
 void
-Grouper::ConstructGroups(WebRenderCommandBuilder* aCommandBuilder,
+Grouper::ConstructGroups(nsDisplayListBuilder* aDisplayListBuilder,
+                         WebRenderCommandBuilder* aCommandBuilder,
                          wr::DisplayListBuilder& aBuilder,
                          wr::IpcResourceUpdateQueue& aResources,
                          DIGroup* aGroup, nsDisplayList* aList,
@@ -913,10 +992,9 @@ Grouper::ConstructGroups(WebRenderCommandBuilder* aCommandBuilder,
   nsDisplayItem* item = aList->GetBottom();
   nsDisplayItem* startOfCurrentGroup = item;
   while (item) {
-    nsDisplayList* children = item->GetChildren();
     if (IsItemProbablyActive(item, mDisplayListBuilder)) {
-      currentGroup->EndGroup(aCommandBuilder->mManager, aBuilder, aResources, this, startOfCurrentGroup, item);
-      mScrollingHelper.BeginItem(item, aSc);
+      currentGroup->EndGroup(aCommandBuilder->mManager, aDisplayListBuilder, aBuilder, aResources, this, startOfCurrentGroup, item);
+      mClipManager.BeginItem(item, aSc);
       sIndent++;
       // Note: this call to CreateWebRenderCommands can recurse back into
       // this function.
@@ -936,7 +1014,8 @@ Grouper::ConstructGroups(WebRenderCommandBuilder* aCommandBuilder,
       // that we're building the display list for.
       if (!groupData->mFollowingGroup.mGroupBounds.IsEqualEdges(currentGroup->mGroupBounds) ||
           groupData->mFollowingGroup.mScale != currentGroup->mScale ||
-          groupData->mFollowingGroup.mAppUnitsPerDevPixel != currentGroup->mAppUnitsPerDevPixel) {
+          groupData->mFollowingGroup.mAppUnitsPerDevPixel != currentGroup->mAppUnitsPerDevPixel ||
+          groupData->mFollowingGroup.mResidualOffset != currentGroup->mResidualOffset) {
         if (groupData->mFollowingGroup.mAppUnitsPerDevPixel != currentGroup->mAppUnitsPerDevPixel) {
           GP("app unit change following: %d %d\n", groupData->mFollowingGroup.mAppUnitsPerDevPixel, currentGroup->mAppUnitsPerDevPixel);
         }
@@ -944,10 +1023,7 @@ Grouper::ConstructGroups(WebRenderCommandBuilder* aCommandBuilder,
         GP("Inner group size change\n");
         groupData->mFollowingGroup.ClearItems();
         if (groupData->mFollowingGroup.mKey) {
-          LayerIntRect layerBounds = LayerIntRect::FromUnknownRect(currentGroup->mGroupBounds.ScaleToOutsidePixels(currentGroup->mScale.width,
-                                                                                                                   currentGroup->mScale.height,
-                                                                                                                   mAppUnitsPerDevPixel));
-          groupData->mFollowingGroup.mInvalidRect = IntRect(IntPoint(0, 0), layerBounds.Size().ToUnknownSize());
+          MOZ_RELEASE_ASSERT(groupData->mFollowingGroup.mInvalidRect.IsEmpty());
           aCommandBuilder->mManager->AddImageKeyForDiscard(groupData->mFollowingGroup.mKey.value());
           groupData->mFollowingGroup.mKey = Nothing();
         }
@@ -956,42 +1032,21 @@ Grouper::ConstructGroups(WebRenderCommandBuilder* aCommandBuilder,
       groupData->mFollowingGroup.mAppUnitsPerDevPixel = currentGroup->mAppUnitsPerDevPixel;
       groupData->mFollowingGroup.mLayerBounds = currentGroup->mLayerBounds;
       groupData->mFollowingGroup.mScale = currentGroup->mScale;
+      groupData->mFollowingGroup.mResidualOffset = currentGroup->mResidualOffset;
+      groupData->mFollowingGroup.mPaintRect = currentGroup->mPaintRect;
 
       currentGroup = &groupData->mFollowingGroup;
 
       startOfCurrentGroup = item->GetAbove();
     } else { // inactive item
-
-      if (item->GetType() == DisplayItemType::TYPE_TRANSFORM) {
-        nsDisplayTransform* transformItem = static_cast<nsDisplayTransform*>(item);
-        Matrix4x4Flagged t = transformItem->GetTransform();
-        Matrix t2d;
-        bool is2D = t.Is2D(&t2d);
-        MOZ_RELEASE_ASSERT(is2D, "Non-2D transforms should be treated as active");
-
-        // Save the current transform.
-        Matrix m = mTransform;
-
-        GP("t2d: %f %f\n", t2d._31, t2d._32);
-        mTransform.PreMultiply(t2d);
-        GP("mTransform: %f %f\n", mTransform._31, mTransform._32);
-        ConstructGroupInsideInactive(aCommandBuilder, aBuilder, aResources, currentGroup, children, aSc);
-
-        mTransform = m; // restore it
-      } else if (children) {
-        ConstructGroupInsideInactive(aCommandBuilder, aBuilder, aResources, currentGroup, children, aSc);
-      }
-
-      GP("Including %s of %d\n", item->Name(), currentGroup->mDisplayItems.Count());
-
-      BlobItemData* data = GetBlobItemDataForGroup(item, currentGroup);
-      currentGroup->ComputeGeometryChange(item, data, mTransform, mDisplayListBuilder); // we compute the geometry change here because we have the transform around still
+      ConstructItemInsideInactive(aCommandBuilder, aBuilder, aResources,
+                                  currentGroup, item, aSc);
     }
 
     item = item->GetAbove();
   }
 
-  currentGroup->EndGroup(aCommandBuilder->mManager, aBuilder, aResources, this, startOfCurrentGroup, nullptr);
+  currentGroup->EndGroup(aCommandBuilder->mManager, aDisplayListBuilder, aBuilder, aResources, this, startOfCurrentGroup, nullptr);
 }
 
 // This does a pass over the display lists and will join the display items
@@ -1003,38 +1058,64 @@ Grouper::ConstructGroupInsideInactive(WebRenderCommandBuilder* aCommandBuilder,
                                        DIGroup* aGroup, nsDisplayList* aList,
                                        const StackingContextHelper& aSc)
 {
-  DIGroup* currentGroup = aGroup;
-
   nsDisplayItem* item = aList->GetBottom();
   while (item) {
-    nsDisplayList* children = item->GetChildren();
-
-    if (item->GetType() == DisplayItemType::TYPE_TRANSFORM) {
-      nsDisplayTransform* transformItem = static_cast<nsDisplayTransform*>(item);
-      Matrix4x4Flagged t = transformItem->GetTransform();
-      Matrix t2d;
-      bool is2D = t.Is2D(&t2d);
-      MOZ_RELEASE_ASSERT(is2D, "Non-2D transforms should be treated as active");
-
-      Matrix m = mTransform;
-
-      GP("t2d: %f %f\n", t2d._31, t2d._32);
-      mTransform.PreMultiply(t2d);
-      GP("mTransform: %f %f\n", mTransform._31, mTransform._32);
-      ConstructGroupInsideInactive(aCommandBuilder, aBuilder, aResources, currentGroup, children, aSc);
-
-      mTransform = m;
-    } else if (children) {
-      ConstructGroupInsideInactive(aCommandBuilder, aBuilder, aResources, currentGroup, children, aSc);
-    }
-
-    GP("Including %s of %d\n", item->Name(), currentGroup->mDisplayItems.Count());
-
-    BlobItemData* data = GetBlobItemDataForGroup(item, currentGroup);
-    currentGroup->ComputeGeometryChange(item, data, mTransform, mDisplayListBuilder); // we compute the geometry change here because we have the transform around still
-
+    ConstructItemInsideInactive(aCommandBuilder, aBuilder, aResources,
+                                aGroup, item, aSc);
     item = item->GetAbove();
   }
+}
+
+void
+Grouper::ConstructItemInsideInactive(WebRenderCommandBuilder* aCommandBuilder,
+                                     wr::DisplayListBuilder& aBuilder,
+                                     wr::IpcResourceUpdateQueue& aResources,
+                                     DIGroup* aGroup, nsDisplayItem* aItem,
+                                     const StackingContextHelper& aSc)
+{
+  nsDisplayList* children = aItem->GetChildren();
+
+  if (aItem->GetType() == DisplayItemType::TYPE_TRANSFORM) {
+    nsDisplayTransform* transformItem = static_cast<nsDisplayTransform*>(aItem);
+    const Matrix4x4Flagged& t = transformItem->GetTransform();
+    Matrix t2d;
+    bool is2D = t.Is2D(&t2d);
+    MOZ_RELEASE_ASSERT(is2D, "Non-2D transforms should be treated as active");
+
+    Matrix m = mTransform;
+
+    GP("t2d: %f %f\n", t2d._31, t2d._32);
+    mTransform.PreMultiply(t2d);
+    GP("mTransform: %f %f\n", mTransform._31, mTransform._32);
+    ConstructGroupInsideInactive(aCommandBuilder, aBuilder, aResources, aGroup, children, aSc);
+
+    mTransform = m;
+  } else if (children) {
+    ConstructGroupInsideInactive(aCommandBuilder, aBuilder, aResources, aGroup, children, aSc);
+  }
+
+  GP("Including %s of %d\n", aItem->Name(), aGroup->mDisplayItems.Count());
+
+  BlobItemData* data = GetBlobItemDataForGroup(aItem, aGroup);
+  aGroup->ComputeGeometryChange(aItem, data, mTransform, mDisplayListBuilder); // we compute the geometry change here because we have the transform around still
+}
+
+/* This is just a copy of nsRect::ScaleToOutsidePixels with an offset added in.
+ * The offset is applied just before the rounding. It's in the scaled space. */
+static mozilla::gfx::IntRect
+ScaleToOutsidePixelsOffset(nsRect aRect, float aXScale, float aYScale,
+                           nscoord aAppUnitsPerPixel, LayerPoint aOffset)
+{
+  mozilla::gfx::IntRect rect;
+  rect.SetNonEmptyBox(NSToIntFloor(NSAppUnitsToFloatPixels(aRect.x,
+                                                           float(aAppUnitsPerPixel)) * aXScale + aOffset.x),
+                      NSToIntFloor(NSAppUnitsToFloatPixels(aRect.y,
+                                                           float(aAppUnitsPerPixel)) * aYScale + aOffset.y),
+                      NSToIntCeil(NSAppUnitsToFloatPixels(aRect.XMost(),
+                                                          float(aAppUnitsPerPixel)) * aXScale + aOffset.x),
+                      NSToIntCeil(NSAppUnitsToFloatPixels(aRect.YMost(),
+                                                          float(aAppUnitsPerPixel)) * aYScale + aOffset.y));
+  return rect;
 }
 
 void
@@ -1049,8 +1130,8 @@ WebRenderCommandBuilder::DoGroupingForDisplayList(nsDisplayList* aList,
     return;
   }
 
-  mScrollingHelper.BeginList(aSc);
-  Grouper g(mScrollingHelper);
+  mClipManager.BeginList(aSc);
+  Grouper g(mClipManager);
   int32_t appUnitsPerDevPixel = aWrappingItem->Frame()->PresContext()->AppUnitsPerDevPixel();
   GP("DoGroupingForDisplayList\n");
 
@@ -1062,11 +1143,16 @@ WebRenderCommandBuilder::DoGroupingForDisplayList(nsDisplayList* aList,
   auto p = group.mGroupBounds;
   auto q = groupBounds;
   gfx::Size scale = aSc.GetInheritedScale();
+  auto trans = ViewAs<LayerPixel>(aSc.GetSnappingSurfaceTransform().GetTranslation());
+  auto snappedTrans = LayerIntPoint::Floor(trans);
+  LayerPoint residualOffset = trans - snappedTrans;
+
   GP("Inherrited scale %f %f\n", scale.width, scale.height);
   GP("Bounds: %d %d %d %d vs %d %d %d %d\n", p.x, p.y, p.width, p.height, q.x, q.y, q.width, q.height);
   if (!group.mGroupBounds.IsEqualEdges(groupBounds) ||
       group.mAppUnitsPerDevPixel != appUnitsPerDevPixel ||
-      group.mScale != scale) {
+      group.mScale != scale ||
+      group.mResidualOffset != residualOffset) {
     if (group.mAppUnitsPerDevPixel != appUnitsPerDevPixel) {
       GP("app unit %d %d\n", group.mAppUnitsPerDevPixel, appUnitsPerDevPixel);
     }
@@ -1078,21 +1164,37 @@ WebRenderCommandBuilder::DoGroupingForDisplayList(nsDisplayList* aList,
 
     group.ClearItems();
     if (group.mKey) {
-      IntSize size = groupBounds.Size().ScaleToNearestPixels(scale.width, scale.height, g.mAppUnitsPerDevPixel);
-      group.mInvalidRect = IntRect(IntPoint(0, 0), size);
+      MOZ_RELEASE_ASSERT(group.mInvalidRect.IsEmpty());
       mManager->AddImageKeyForDiscard(group.mKey.value());
       group.mKey = Nothing();
     }
   }
+
+  FrameMetrics::ViewID scrollId = FrameMetrics::NULL_SCROLL_ID;
+  if (const ActiveScrolledRoot* asr = aWrappingItem->GetActiveScrolledRoot()) {
+    scrollId = asr->GetViewId();
+  }
+
   g.mAppUnitsPerDevPixel = appUnitsPerDevPixel;
-  g.mTransform = Matrix::Scaling(scale.width, scale.height);
-  group.mAppUnitsPerDevPixel = appUnitsPerDevPixel;
+  group.mResidualOffset = residualOffset;
   group.mGroupBounds = groupBounds;
+  group.mPaintRect = LayoutDeviceRect::FromAppUnits(
+    aWrappingItem->GetPaintRect(),
+    appUnitsPerDevPixel
+  );
+  group.mAppUnitsPerDevPixel = appUnitsPerDevPixel;
+  group.mLayerBounds = LayerIntRect::FromUnknownRect(ScaleToOutsidePixelsOffset(group.mGroupBounds,
+                                                                                scale.width,
+                                                                                scale.height,
+                                                                                group.mAppUnitsPerDevPixel,
+                                                                                residualOffset));
+  g.mTransform = Matrix::Scaling(scale.width, scale.height)
+                                .PostTranslate(residualOffset.x, residualOffset.y);
   group.mScale = scale;
-  group.mLayerBounds = LayerIntRect::FromUnknownRect(group.mGroupBounds.ScaleToOutsidePixels(scale.width, scale.height, group.mAppUnitsPerDevPixel));
+  group.mScrollId = scrollId;
   group.mAnimatedGeometryRootOrigin = group.mGroupBounds.TopLeft();
-  g.ConstructGroups(this, aBuilder, aResources, &group, aList, aSc);
-  mScrollingHelper.EndList(aSc);
+  g.ConstructGroups(aDisplayListBuilder, this, aBuilder, aResources, &group, aList, aSc);
+  mClipManager.EndList(aSc);
 }
 
 void
@@ -1110,7 +1212,7 @@ WebRenderCommandBuilder::EmptyTransaction()
     RefPtr<WebRenderCanvasData> canvasData = iter.Get()->GetKey();
     WebRenderCanvasRendererAsync* canvas = canvasData->GetCanvasRenderer();
     if (canvas) {
-      canvas->UpdateCompositableClient();
+      canvas->UpdateCompositableClientForEmptyTransaction();
     }
   }
 }
@@ -1130,47 +1232,53 @@ WebRenderCommandBuilder::BuildWebRenderCommands(wr::DisplayListBuilder& aBuilder
                                                 wr::LayoutSize& aContentSize,
                                                 const nsTArray<wr::WrFilterOp>& aFilters)
 {
-  { // scoping for StackingContextHelper RAII
+  StackingContextHelper sc;
+  aScrollData = WebRenderScrollData(mManager);
+  MOZ_ASSERT(mLayerScrollData.empty());
+  mLastCanvasDatas.Clear();
+  mLastAsr = nullptr;
+  mBuilderDumpIndex = 0;
+  MOZ_ASSERT(mDumpIndent == 0);
+  mClipManager.BeginBuild(mManager, aBuilder);
 
-    StackingContextHelper sc;
-    mParentCommands.Clear();
-    aScrollData = WebRenderScrollData(mManager);
-    MOZ_ASSERT(mLayerScrollData.empty());
-    mLastCanvasDatas.Clear();
-    mLastAsr = nullptr;
-    mScrollingHelper.BeginBuild(mManager, aBuilder);
-
-    {
-      StackingContextHelper pageRootSc(sc, aBuilder, aFilters);
-      CreateWebRenderCommandsFromDisplayList(aDisplayList, nullptr, aDisplayListBuilder,
-                                             pageRootSc, aBuilder, aResourceUpdates);
+  {
+    StackingContextHelper pageRootSc(sc, aBuilder, aFilters);
+    if (ShouldDumpDisplayList()) {
+      mBuilderDumpIndex = aBuilder.Dump(mDumpIndent + 1, Some(mBuilderDumpIndex), Nothing());
     }
-
-    // Make a "root" layer data that has everything else as descendants
-    mLayerScrollData.emplace_back();
-    mLayerScrollData.back().InitializeRoot(mLayerScrollData.size() - 1);
-    auto callback = [&aScrollData](FrameMetrics::ViewID aScrollId) -> bool {
-      return aScrollData.HasMetadataFor(aScrollId).isSome();
-    };
-    if (Maybe<ScrollMetadata> rootMetadata = nsLayoutUtils::GetRootMetadata(
-          aDisplayListBuilder, mManager, ContainerLayerParameters(), callback)) {
-      mLayerScrollData.back().AppendScrollMetadata(aScrollData, rootMetadata.ref());
-    }
-    // Append the WebRenderLayerScrollData items into WebRenderScrollData
-    // in reverse order, from topmost to bottommost. This is in keeping with
-    // the semantics of WebRenderScrollData.
-    for (auto i = mLayerScrollData.crbegin(); i != mLayerScrollData.crend(); i++) {
-      aScrollData.AddLayerData(*i);
-    }
-    mLayerScrollData.clear();
-    mScrollingHelper.EndBuild();
-
-    // Remove the user data those are not displayed on the screen and
-    // also reset the data to unused for next transaction.
-    RemoveUnusedAndResetWebRenderUserData();
+    CreateWebRenderCommandsFromDisplayList(aDisplayList, nullptr, aDisplayListBuilder,
+                                           pageRootSc, aBuilder, aResourceUpdates);
   }
 
-  mManager->WrBridge()->AddWebRenderParentCommands(mParentCommands);
+  // Make a "root" layer data that has everything else as descendants
+  mLayerScrollData.emplace_back();
+  mLayerScrollData.back().InitializeRoot(mLayerScrollData.size() - 1);
+  auto callback = [&aScrollData](FrameMetrics::ViewID aScrollId) -> bool {
+    return aScrollData.HasMetadataFor(aScrollId).isSome();
+  };
+  if (Maybe<ScrollMetadata> rootMetadata = nsLayoutUtils::GetRootMetadata(
+        aDisplayListBuilder, mManager, ContainerLayerParameters(), callback)) {
+    mLayerScrollData.back().AppendScrollMetadata(aScrollData, rootMetadata.ref());
+  }
+  // Append the WebRenderLayerScrollData items into WebRenderScrollData
+  // in reverse order, from topmost to bottommost. This is in keeping with
+  // the semantics of WebRenderScrollData.
+  for (auto i = mLayerScrollData.crbegin(); i != mLayerScrollData.crend(); i++) {
+    aScrollData.AddLayerData(*i);
+  }
+  mLayerScrollData.clear();
+  mClipManager.EndBuild();
+
+  // Remove the user data those are not displayed on the screen and
+  // also reset the data to unused for next transaction.
+  RemoveUnusedAndResetWebRenderUserData();
+}
+
+bool
+WebRenderCommandBuilder::ShouldDumpDisplayList()
+{
+  return (XRE_IsParentProcess() && gfxPrefs::WebRenderDLDumpParent()) ||
+         (XRE_IsContentProcess() && gfxPrefs::WebRenderDLDumpContent());
 }
 
 void
@@ -1188,25 +1296,22 @@ WebRenderCommandBuilder::CreateWebRenderCommandsFromDisplayList(nsDisplayList* a
     return;
   }
 
-  mScrollingHelper.BeginList(aSc);
+  bool dumpEnabled = ShouldDumpDisplayList();
+  if (dumpEnabled) {
+    // If we're inside a nested display list, print the WR DL items from the
+    // wrapper item before we start processing the nested items.
+    mBuilderDumpIndex = aBuilder.Dump(mDumpIndent + 1, Some(mBuilderDumpIndex), Nothing());
+  }
+
+  mDumpIndent++;
+  mClipManager.BeginList(aSc);
 
   bool apzEnabled = mManager->AsyncPanZoomEnabled();
-  EventRegions eventRegions;
 
   FlattenedDisplayItemIterator iter(aDisplayListBuilder, aDisplayList);
   while (nsDisplayItem* i = iter.GetNext()) {
     nsDisplayItem* item = i;
     DisplayItemType itemType = item->GetType();
-
-    // If the item is a event regions item, but is empty (has no regions in it)
-    // then we should just throw it out
-    if (itemType == DisplayItemType::TYPE_LAYER_EVENT_REGIONS) {
-      nsDisplayLayerEventRegions* eventRegions =
-        static_cast<nsDisplayLayerEventRegions*>(item);
-      if (eventRegions->IsEmpty()) {
-        continue;
-      }
-    }
 
     // Peek ahead to the next item and try merging with it or swapping with it
     // if necessary.
@@ -1246,45 +1351,6 @@ WebRenderCommandBuilder::CreateWebRenderCommandsFromDisplayList(nsDisplayList* a
         forceNewLayerData = true;
       }
 
-      // If we're creating a new layer data then flush whatever event regions
-      // we've collected onto the old layer.
-      if (forceNewLayerData && !eventRegions.IsEmpty()) {
-        // If eventRegions is non-empty then we must have a layer data already,
-        // because we (below) force one if we encounter an event regions item
-        // with an empty layer data list. Additionally, the most recently
-        // created layer data must have been created from an item whose ASR
-        // is the same as the ASR on the event region items that were collapsed
-        // into |eventRegions|. This is because any ASR change causes us to force
-        // a new layer data which flushes the eventRegions.
-        MOZ_ASSERT(!mLayerScrollData.empty());
-        mLayerScrollData.back().AddEventRegions(eventRegions);
-        eventRegions.SetEmpty();
-      }
-
-      // Collapse event region data into |eventRegions|, which will either be
-      // empty, or filled with stuff from previous display items with the same
-      // ASR.
-      if (itemType == DisplayItemType::TYPE_LAYER_EVENT_REGIONS) {
-        nsDisplayLayerEventRegions* regionsItem =
-            static_cast<nsDisplayLayerEventRegions*>(item);
-        int32_t auPerDevPixel = item->Frame()->PresContext()->AppUnitsPerDevPixel();
-        EventRegions regions(
-            regionsItem->HitRegion().ScaleToOutsidePixels(1.0f, 1.0f, auPerDevPixel),
-            regionsItem->MaybeHitRegion().ScaleToOutsidePixels(1.0f, 1.0f, auPerDevPixel),
-            regionsItem->DispatchToContentHitRegion().ScaleToOutsidePixels(1.0f, 1.0f, auPerDevPixel),
-            regionsItem->NoActionRegion().ScaleToOutsidePixels(1.0f, 1.0f, auPerDevPixel),
-            regionsItem->HorizontalPanRegion().ScaleToOutsidePixels(1.0f, 1.0f, auPerDevPixel),
-            regionsItem->VerticalPanRegion().ScaleToOutsidePixels(1.0f, 1.0f, auPerDevPixel),
-            /* mDTCRequiresTargetConfirmation = */ false);
-
-        eventRegions.OrWith(regions);
-        if (mLayerScrollData.empty()) {
-          // If we don't have a layer data yet then create one because we will
-          // need it to store this event region information.
-          forceNewLayerData = true;
-        }
-      }
-
       // If we're going to create a new layer data for this item, stash the
       // ASR so that if we recurse into a sublist they will know where to stop
       // walking up their ASR chain when building scroll metadata.
@@ -1293,9 +1359,9 @@ WebRenderCommandBuilder::CreateWebRenderCommandsFromDisplayList(nsDisplayList* a
       }
     }
 
-    mScrollingHelper.BeginItem(item, aSc);
+    mClipManager.BeginItem(item, aSc);
 
-    if (itemType != DisplayItemType::TYPE_LAYER_EVENT_REGIONS) {
+    { // scope restoreDoGrouping
       AutoRestore<bool> restoreDoGrouping(mDoGrouping);
       if (itemType == DisplayItemType::TYPE_SVG_WRAPPER) {
         // Inside an <svg>, all display items that are not LAYER_ACTIVE wrapper
@@ -1310,13 +1376,24 @@ WebRenderCommandBuilder::CreateWebRenderCommandsFromDisplayList(nsDisplayList* a
         mDoGrouping = false;
       }*/
 
+      if (dumpEnabled) {
+        std::stringstream ss;
+        nsFrame::PrintDisplayItem(aDisplayListBuilder, item, ss, static_cast<uint32_t>(mDumpIndent));
+        printf_stderr("%s", ss.str().c_str());
+      }
+
       // Note: this call to CreateWebRenderCommands can recurse back into
       // this function if the |item| is a wrapper for a sublist.
+      item->SetPaintRect(item->GetBuildingRect());
       bool createdWRCommands =
         item->CreateWebRenderCommands(aBuilder, aResources, aSc, mManager,
                                       aDisplayListBuilder);
       if (!createdWRCommands) {
         PushItemAsImage(item, aBuilder, aResources, aSc, aDisplayListBuilder);
+      }
+
+      if (dumpEnabled) {
+        mBuilderDumpIndex = aBuilder.Dump(mDumpIndent + 1, Some(mBuilderDumpIndex), Nothing());
       }
     }
 
@@ -1330,35 +1407,71 @@ WebRenderCommandBuilder::CreateWebRenderCommandsFromDisplayList(nsDisplayList* a
 
         int32_t descendants = mLayerScrollData.size() - layerCountBeforeRecursing;
 
-        mLayerScrollData.emplace_back();
-        mLayerScrollData.back().Initialize(mManager->GetScrollData(), item,
-            descendants, stopAtAsr, aSc.GetTransformForScrollData());
-      } else if (mLayerScrollData.size() != layerCountBeforeRecursing &&
-                 !eventRegions.IsEmpty()) {
-        // We are not forcing a new layer for |item|, but we did create some
-        // layers while recursing. In this case, we need to make sure any
-        // event regions that we were carrying end up on the right layer. So we
-        // do an event region "flush" but retroactively; i.e. the event regions
-        // end up on the layer that was mLayerScrollData.back() prior to the
-        // recursion.
-        MOZ_ASSERT(layerCountBeforeRecursing > 0);
-        mLayerScrollData[layerCountBeforeRecursing - 1].AddEventRegions(eventRegions);
-        eventRegions.SetEmpty();
+        // A deferred transform item is a nsDisplayTransform for which we did
+        // not create a dedicated WebRenderLayerScrollData item at the point
+        // that we encountered the item. Instead, we "deferred" the transform
+        // from that item to combine it into the WebRenderLayerScrollData produced
+        // by child display items. However, in the case where we have a child
+        // display item with a different ASR than the nsDisplayTransform item,
+        // we cannot do this, because it will not conform to APZ's expectations
+        // with respect to how the APZ tree ends up structured. In particular,
+        // the GetTransformToThis() for the child APZ (which is created for the
+        // child item's ASR) will not include the transform when we actually do
+        // want it to.
+        // When we run into this scenario, we solve it by creating two
+        // WebRenderLayerScrollData items; one that just holds the transform,
+        // that we deferred, and a child WebRenderLayerScrollData item that
+        // holds the scroll metadata for the child's ASR.
+        Maybe<nsDisplayTransform*> deferred = aSc.GetDeferredTransformItem();
+        if (deferred && (*deferred)->GetActiveScrolledRoot() != item->GetActiveScrolledRoot()) {
+          // This creates the child WebRenderLayerScrollData for |item|, but
+          // omits the transform (hence the Nothing() as the last argument to
+          // Initialize(...)). We also need to make sure that the ASR from
+          // the deferred transform item is not on this node, so we use that
+          // ASR as the "stop at" ASR for this WebRenderLayerScrollData.
+          mLayerScrollData.emplace_back();
+          mLayerScrollData.back().Initialize(mManager->GetScrollData(), item,
+              descendants, (*deferred)->GetActiveScrolledRoot(), Nothing());
+
+          // The above WebRenderLayerScrollData will also be a descendant of
+          // the transform-holding WebRenderLayerScrollData we create below.
+          descendants++;
+
+          // This creates the WebRenderLayerScrollData for the deferred transform
+          // item. This holds the transform matrix. and the remaining ASRs
+          // needed to complete the ASR chain (i.e. the ones from the stopAtAsr
+          // down to the deferred transform item's ASR, which must be "between"
+          // stopAtAsr and |item|'s ASR in the ASR tree.
+          mLayerScrollData.emplace_back();
+          mLayerScrollData.back().Initialize(mManager->GetScrollData(), *deferred,
+              descendants, stopAtAsr, Some((*deferred)->GetTransform().GetMatrix()));
+        } else {
+          // This is the "simple" case where we don't need to create two
+          // WebRenderLayerScrollData items; we can just create one that also
+          // holds the deferred transform matrix, if any.
+          mLayerScrollData.emplace_back();
+          mLayerScrollData.back().Initialize(mManager->GetScrollData(), item,
+              descendants, stopAtAsr, deferred ? Some((*deferred)->GetTransform().GetMatrix()) : Nothing());
+        }
       }
     }
   }
 
-  // If we have any event region info left over we need to flush it before we
-  // return. Again, at this point the layer data list must be non-empty, and
-  // the most recently created layer data will have been created by an item
-  // with matching ASRs.
-  if (!eventRegions.IsEmpty()) {
-    MOZ_ASSERT(apzEnabled);
-    MOZ_ASSERT(!mLayerScrollData.empty());
-    mLayerScrollData.back().AddEventRegions(eventRegions);
-  }
+  mDumpIndent--;
+  mClipManager.EndList(aSc);
+}
 
-  mScrollingHelper.EndList(aSc);
+void
+WebRenderCommandBuilder::PushOverrideForASR(const ActiveScrolledRoot* aASR,
+                                            const Maybe<wr::WrClipId>& aClipId)
+{
+  mClipManager.PushOverrideForASR(aASR, aClipId);
+}
+
+void
+WebRenderCommandBuilder::PopOverrideForASR(const ActiveScrolledRoot* aASR)
+{
+  mClipManager.PopOverrideForASR(aASR);
 }
 
 Maybe<wr::ImageKey>
@@ -1382,6 +1495,7 @@ WebRenderCommandBuilder::CreateImageKey(nsDisplayItem* aItem,
     if (!aContainer->GetScaleHint().IsEmpty()) {
       scaleToSize = Some(aContainer->GetScaleHint());
     }
+    gfx::Matrix4x4 transform = gfx::Matrix4x4::From2D(aContainer->GetTransformHint());
     // TODO!
     // We appear to be using the image bridge for a lot (most/all?) of
     // layers-free image handling and that breaks frame consistency.
@@ -1390,7 +1504,7 @@ WebRenderCommandBuilder::CreateImageKey(nsDisplayItem* aItem,
                                                  aSc,
                                                  rect,
                                                  scBounds,
-                                                 gfx::Matrix4x4(),
+                                                 transform,
                                                  scaleToSize,
                                                  wr::ImageRendering::Auto,
                                                  wr::MixBlendMode::Normal,
@@ -1446,7 +1560,7 @@ PaintByLayer(nsDisplayItem* aItem,
 {
   UniquePtr<LayerProperties> props;
   if (aManager->GetRoot()) {
-    props = Move(LayerProperties::CloneFrom(aManager->GetRoot()));
+    props = LayerProperties::CloneFrom(aManager->GetRoot());
   }
   FrameLayerBuilder* layerBuilder = new FrameLayerBuilder();
   layerBuilder->Init(aDisplayListBuilder, aManager, nullptr, true);
@@ -1516,8 +1630,7 @@ PaintItemByDrawTarget(nsDisplayItem* aItem,
   switch (aItem->GetType()) {
   case DisplayItemType::TYPE_MASK:
     context->SetMatrix(context->CurrentMatrix().PreScale(aScale.width, aScale.height).PreTranslate(-aOffset.x, -aOffset.y));
-    static_cast<nsDisplayMask*>(aItem)->PaintMask(aDisplayListBuilder, context);
-    isInvalidated = true;
+    static_cast<nsDisplayMask*>(aItem)->PaintMask(aDisplayListBuilder, context, &isInvalidated);
     break;
   case DisplayItemType::TYPE_SVG_WRAPPER:
     {
@@ -1540,6 +1653,9 @@ PaintItemByDrawTarget(nsDisplayItem* aItem,
 
   default:
     context->SetMatrix(context->CurrentMatrix().PreScale(aScale.width, aScale.height).PreTranslate(-aOffset.x, -aOffset.y));
+    if (aDisplayListBuilder->IsPaintingToWindow()) {
+      aItem->Frame()->AddStateBits(NS_FRAME_PAINTED_THEBES);
+    }
     aItem->Paint(aDisplayListBuilder, context);
     isInvalidated = true;
     break;
@@ -1599,10 +1715,10 @@ WebRenderCommandBuilder::GenerateFallbackData(nsDisplayItem* aItem,
 
   // nsDisplayItem::Paint() may refer the variables that come from ComputeVisibility().
   // So we should call ComputeVisibility() before painting. e.g.: nsDisplayBoxShadowInner
-  // uses mVisibleRegion in Paint() and mVisibleRegion is computed in
+  // uses mPaintRect in Paint() and mPaintRect is computed in
   // nsDisplayBoxShadowInner::ComputeVisibility().
   nsRegion visibleRegion(paintBounds);
-  aItem->SetVisibleRect(paintBounds, false);
+  aItem->SetPaintRect(paintBounds);
   aItem->ComputeVisibility(aDisplayListBuilder, &visibleRegion);
 
   const int32_t appUnitsPerDevPixel = aItem->Frame()->PresContext()->AppUnitsPerDevPixel();
@@ -1673,7 +1789,7 @@ WebRenderCommandBuilder::GenerateFallbackData(nsDisplayItem* aItem,
   if (needPaint || !fallbackData->GetKey()) {
     nsAutoPtr<nsDisplayItemGeometry> newGeometry;
     newGeometry = aItem->AllocateGeometry(aDisplayListBuilder);
-    fallbackData->SetGeometry(Move(newGeometry));
+    fallbackData->SetGeometry(std::move(newGeometry));
 
     gfx::SurfaceFormat format = aItem->GetType() == DisplayItemType::TYPE_MASK ?
                                                       gfx::SurfaceFormat::A8 : gfx::SurfaceFormat::B8G8R8A8;

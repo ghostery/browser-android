@@ -58,7 +58,7 @@ TRR::Notify(nsITimer *aTimer)
 // convert a given host request to a DOH 'body'
 //
 nsresult
-TRR::DohEncode(nsCString &aBody)
+TRR::DohEncode(nsCString &aBody, bool aDisableECS)
 {
   aBody.Truncate();
   // Header
@@ -72,8 +72,9 @@ TRR::DohEncode(nsCString &aBody)
   aBody += '\0'; // ANCOUNT
   aBody += '\0';
   aBody += '\0'; // NSCOUNT
-  aBody += '\0';
+
   aBody += '\0'; // ARCOUNT
+  aBody += aDisableECS ? 1 : '\0';   // ARCOUNT low byte for EDNS(0)
 
   // Question
 
@@ -114,6 +115,39 @@ TRR::DohEncode(nsCString &aBody)
   aBody += '\0'; // upper 8 bit CLASS
   aBody += kDNS_CLASS_IN;  // IN - "the Internet"
 
+  if (aDisableECS) {
+    // EDNS(0) is RFC 6891, ECS is RFC 7871
+    aBody += '\0'; // NAME       | domain name  | MUST be 0 (root domain)      |
+    aBody += '\0';
+    aBody += 41;   // TYPE       | u_int16_t    | OPT (41)                     |
+    aBody += 16;   // CLASS      | u_int16_t    | requestor's UDP payload size |
+    aBody += '\0'; // advertise 4K (high-byte: 16 | low-byte: 0), ignored by DoH
+    aBody += '\0'; // TTL        | u_int32_t    | extended RCODE and flags     |
+    aBody += '\0';
+    aBody += '\0';
+    aBody += '\0';
+
+    aBody += '\0'; // upper 8 bit RDLEN
+    aBody += 8;    // RDLEN      | u_int16_t    | length of all RDATA          |
+
+    // RDATA      | octet stream | {attribute,value} pairs      |
+    // The RDATA is just the ECS option setting zero subnet prefix
+
+    aBody += '\0'; // upper 8 bit OPTION-CODE ECS
+    aBody += 8;    // OPTION-CODE, 2 octets, for ECS is 8
+
+    aBody += '\0'; // upper 8 bit OPTION-LENGTH
+    aBody += 4;    // OPTION-LENGTH, 2 octets, contains the length of the payload
+                   // after OPTION-LENGTH
+    aBody += '\0'; // upper 8 bit FAMILY. IANA Address Family Numbers registry, not the
+                   // AF_* constants!
+    aBody += 1;    // FAMILY (Ipv4), 2 octets
+
+    aBody += '\0'; // SOURCE PREFIX-LENGTH      |     SCOPE PREFIX-LENGTH       |
+    aBody += '\0';
+
+    // ADDRESS, minimum number of octets == nothing because zero bits
+  }
   return NS_OK;
 }
 
@@ -122,7 +156,7 @@ TRR::Run()
 {
   MOZ_ASSERT(NS_IsMainThread());
   if ((gTRRService == nullptr) || NS_FAILED(SendHTTPRequest())) {
-    FailData();
+    FailData(NS_ERROR_FAILURE);
     // The dtor will now be run
   }
   return NS_OK;
@@ -163,12 +197,13 @@ TRR::SendHTTPRequest()
   bool useGet = gTRRService->UseGET();
   nsAutoCString body;
   nsCOMPtr<nsIURI> dnsURI;
+  bool disableECS = gTRRService->DisableECS();
 
   LOG(("TRR::SendHTTPRequest resolve %s type %u\n", mHost.get(), mType));
 
   if (useGet) {
     nsAutoCString tmp;
-    rv = DohEncode(tmp);
+    rv = DohEncode(tmp, disableECS);
     NS_ENSURE_SUCCESS(rv, rv);
 
     /* For GET requests, the outgoing packet needs to be Base64url-encoded and
@@ -179,11 +214,12 @@ TRR::SendHTTPRequest()
 
     nsAutoCString uri;
     gTRRService->GetURI(uri);
-    uri.Append(NS_LITERAL_CSTRING("?ct&dns="));
+    uri.Append(NS_LITERAL_CSTRING("?dns="));
     uri.Append(body);
+    LOG(("TRR::SendHTTPRequest GET dns=%s\n", body.get()));
     rv = NS_NewURI(getter_AddRefs(dnsURI), uri);
   } else {
-    rv = DohEncode(body);
+    rv = DohEncode(body, disableECS);
     NS_ENSURE_SUCCESS(rv, rv);
 
     nsAutoCString uri;
@@ -216,7 +252,7 @@ TRR::SendHTTPRequest()
   }
 
   rv = httpChannel->SetRequestHeader(NS_LITERAL_CSTRING("Accept"),
-                                     NS_LITERAL_CSTRING("application/dns-udpwireformat"),
+                                     NS_LITERAL_CSTRING("application/dns-message"),
                                      false);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -254,18 +290,18 @@ TRR::SendHTTPRequest()
     }
     uint32_t streamLength = body.Length();
     nsCOMPtr<nsIInputStream> uploadStream;
-    rv = NS_NewCStringInputStream(getter_AddRefs(uploadStream), Move(body));
+    rv = NS_NewCStringInputStream(getter_AddRefs(uploadStream), std::move(body));
     NS_ENSURE_SUCCESS(rv, rv);
 
     rv = uploadChannel->ExplicitSetUploadStream(uploadStream,
-                                                NS_LITERAL_CSTRING("application/dns-udpwireformat"),
+                                                NS_LITERAL_CSTRING("application/dns-message"),
                                                 streamLength,
                                                 NS_LITERAL_CSTRING("POST"), false);
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
   // set the *default* response content type
-  if (NS_FAILED(httpChannel->SetContentType(NS_LITERAL_CSTRING("application/dns-udpwireformat")))) {
+  if (NS_FAILED(httpChannel->SetContentType(NS_LITERAL_CSTRING("application/dns-message")))) {
     LOG(("TRR::SendHTTPRequest: couldn't set content-type!\n"));
   }
   if (NS_SUCCEEDED(httpChannel->AsyncOpen2(this))) {
@@ -394,9 +430,9 @@ TRR::ReceivePush(nsIHttpChannel *pushed, nsHostRecord *pushedRec)
 
   RefPtr<nsHostRecord> hostRecord;
   nsresult rv;
-  rv = mHostResolver->GetHostRecord(mHost.get(),
+  rv = mHostResolver->GetHostRecord(mHost,
                                     pushedRec->flags, pushedRec->af,
-                                    pushedRec->pb, pushedRec->netInterface,
+                                    pushedRec->pb,
                                     pushedRec->originSuffix,
                                     getter_AddRefs(hostRecord));
   if (NS_FAILED(rv)) {
@@ -485,11 +521,71 @@ TRR::PassQName(unsigned int &index)
   return NS_OK;
 }
 
+// GetQname: retrieves the qname (stores in 'aQname') and stores the index
+// after qname was parsed into the 'aIndex'.
+
+nsresult
+TRR::GetQname(nsAutoCString &aQname, unsigned int &aIndex)
+{
+  uint8_t clength = 0;
+  unsigned int cindex = aIndex;
+  unsigned int loop = 128; // a valid DNS name can never loop this much
+  unsigned int endindex = 0; // index position after this data
+  do {
+    if (cindex >= mBodySize) {
+      LOG(("TRR: bad cname packet\n"));
+      return NS_ERROR_ILLEGAL_VALUE;
+    }
+    clength = static_cast<uint8_t>(mResponse[cindex]);
+    if ((clength & 0xc0) == 0xc0) {
+      // name pointer, get the new offset (14 bits)
+      if ((cindex +1) >= mBodySize) {
+        return NS_ERROR_ILLEGAL_VALUE;
+      }
+      // extract the new index position for the next label
+      uint16_t newpos = (clength & 0x3f) << 8 | mResponse[cindex+1];
+      if (!endindex) {
+        // only update on the first "jump"
+        endindex = cindex + 2;
+      }
+      cindex = newpos;
+      continue;
+    } else if (clength & 0xc0) {
+      // any of those bits set individually is an error
+      LOG(("TRR: bad cname packet\n"));
+      return NS_ERROR_ILLEGAL_VALUE;
+    } else {
+      cindex++;
+    }
+    if (clength) {
+      if (!aQname.IsEmpty()) {
+        aQname.Append(".");
+      }
+      if ((cindex + clength) > mBodySize) {
+        return NS_ERROR_ILLEGAL_VALUE;
+      }
+      aQname.Append((const char *)(&mResponse[cindex]), clength);
+      cindex += clength; // skip label
+    }
+  } while (clength && --loop);
+
+  if (!loop) {
+    LOG(("TRR::DohDecode pointer loop error\n"));
+    return NS_ERROR_ILLEGAL_VALUE;
+  }
+  if (!endindex) {
+    // there was no "jump"
+    endindex = cindex;
+  }
+  aIndex = endindex;
+  return NS_OK;
+}
+
 //
 // DohDecode() collects the TTL and the IP addresses in the response
 //
 nsresult
-TRR::DohDecode()
+TRR::DohDecode(nsCString &aHost)
 {
   // The response has a 12 byte header followed by the question (returned)
   // and then the answer. The answer section itself contains the name, type
@@ -509,7 +605,7 @@ TRR::DohDecode()
   nsAutoCString host;
   nsresult rv;
 
-  LOG(("doh decode %s %d bytes\n", mHost.get(), mBodySize));
+  LOG(("doh decode %s %d bytes\n", aHost.get(), mBodySize));
 
   mCname.Truncate();
 
@@ -519,7 +615,7 @@ TRR::DohDecode()
   }
   uint8_t rcode = mResponse[3] & 0x0F;
   if (rcode) {
-    LOG(("TRR Decode %s RCODE %d\n", mHost.get(), rcode));
+    LOG(("TRR Decode %s RCODE %d\n", aHost.get(), rcode));
     return NS_ERROR_FAILURE;
   }
 
@@ -556,7 +652,8 @@ TRR::DohDecode()
        answerRecords, mBodySize, host.get(), index));
 
   while (answerRecords) {
-    rv = PassQName(index);
+    nsAutoCString qname;
+    rv = GetQname(qname, index);
     if (NS_FAILED(rv)) {
       return rv;
     }
@@ -610,94 +707,70 @@ TRR::DohDecode()
       return NS_ERROR_ILLEGAL_VALUE;
     }
 
-    // RDATA
-    // - A (TYPE 1):  4 bytes
-    // - AAAA (TYPE 28): 16 bytes
-    // - NS (TYPE 2): N bytes
+    if (qname.Equals(aHost)) {
 
-    switch(TYPE) {
-    case TRRTYPE_A:
-      if (RDLENGTH != 4) {
-        LOG(("TRR bad length for A (%u)\n", RDLENGTH));
-        return NS_ERROR_UNEXPECTED;
-      }
-      rv = mDNS.Add(TTL, mResponse, index, RDLENGTH,
-                    mAllowRFC1918);
-      if (NS_FAILED(rv)) {
-        LOG(("TRR:DohDecode failed: local IP addresses or unknown IP family\n"));
-        return rv;
-      }
-      break;
-    case TRRTYPE_AAAA:
-      if (RDLENGTH != 16) {
-        LOG(("TRR bad length for AAAA (%u)\n", RDLENGTH));
-        return NS_ERROR_UNEXPECTED;
-      }
-      rv = mDNS.Add(TTL, mResponse, index, RDLENGTH,
-                    mAllowRFC1918);
-      if (NS_FAILED(rv)) {
-        LOG(("TRR got unique/local IPv6 address!\n"));
-        return rv;
-      }
-      break;
+      // RDATA
+      // - A (TYPE 1):  4 bytes
+      // - AAAA (TYPE 28): 16 bytes
+      // - NS (TYPE 2): N bytes
 
-    case TRRTYPE_NS:
-      break;
-    case TRRTYPE_CNAME:
-      if (mCname.IsEmpty()) {
-        uint8_t clength = 0;
-        unsigned int cindex = index;
-        unsigned int loop = 128; // a valid DNS name can never loop this much
-        do {
-          if (cindex >= mBodySize) {
-            LOG(("TRR: bad cname packet\n"));
-            return NS_ERROR_ILLEGAL_VALUE;
-          }
-          clength = static_cast<uint8_t>(mResponse[cindex]);
-          if ((clength & 0xc0) == 0xc0) {
-            // name pointer, get the new offset (14 bits)
-            if ((cindex +1) >= mBodySize) {
-              return NS_ERROR_ILLEGAL_VALUE;
-            }
-            // extract the new index position for the next label
-            uint16_t newpos = (clength & 0x3f) << 8 | mResponse[cindex+1];
-            cindex = newpos;
-            continue;
-          } else if (clength & 0xc0) {
-            // any of those bits set individually is an error
-            LOG(("TRR: bad cname packet\n"));
-            return NS_ERROR_ILLEGAL_VALUE;
-          } else {
-            cindex++;
-          }
-          if (clength) {
-            if (!mCname.IsEmpty()) {
-              mCname.Append(".");
-            }
-            if ((cindex + clength) > mBodySize) {
-              return NS_ERROR_ILLEGAL_VALUE;
-            }
-            mCname.Append((const char *)(&mResponse[cindex]), clength);
-            cindex += clength; // skip label
-          }
-        } while (clength && --loop);
-
-        if (!loop) {
-          LOG(("TRR::DohDecode pointer loop error\n"));
-          return NS_ERROR_ILLEGAL_VALUE;
+      switch(TYPE) {
+      case TRRTYPE_A:
+        if (RDLENGTH != 4) {
+          LOG(("TRR bad length for A (%u)\n", RDLENGTH));
+          return NS_ERROR_UNEXPECTED;
         }
+        rv = mDNS.Add(TTL, mResponse, index, RDLENGTH,
+                      mAllowRFC1918);
+        if (NS_FAILED(rv)) {
+          LOG(("TRR:DohDecode failed: local IP addresses or unknown IP family\n"));
+          return rv;
+        }
+        break;
+      case TRRTYPE_AAAA:
+        if (RDLENGTH != 16) {
+          LOG(("TRR bad length for AAAA (%u)\n", RDLENGTH));
+          return NS_ERROR_UNEXPECTED;
+        }
+        rv = mDNS.Add(TTL, mResponse, index, RDLENGTH,
+                      mAllowRFC1918);
+        if (NS_FAILED(rv)) {
+          LOG(("TRR got unique/local IPv6 address!\n"));
+          return rv;
+        }
+        break;
 
-        LOG(("TRR::DohDecode CNAME host %s => %s\n",
-             host.get(), mCname.get()));
+      case TRRTYPE_NS:
+        break;
+      case TRRTYPE_CNAME:
+        if (mCname.IsEmpty()) {
+          nsAutoCString qname;
+          unsigned int qnameindex = index;
+          rv = GetQname(qname, qnameindex);
+          if (NS_FAILED(rv)) {
+            return rv;
+          }
+          if(!qname.IsEmpty()) {
+            mCname = qname;
+            LOG(("TRR::DohDecode CNAME host %s => %s\n",
+                 host.get(), mCname.get()));
+          } else {
+            LOG(("TRR::DohDecode empty CNAME for host %s!\n",
+                 host.get()));
+          }
+        }
+        else {
+          LOG(("TRR::DohDecode CNAME - ignoring another entry\n"));
+        }
+        break;
+      default:
+        // skip unknown record types
+        LOG(("TRR unsupported TYPE (%u) RDLENGTH %u\n", TYPE, RDLENGTH));
+        break;
       }
-      else {
-        LOG(("TRR::DohDecode CNAME - ignoring another entry\n"));
-      }
-      break;
-    default:
-      // skip unknown record types
-      LOG(("TRR unsupported TYPE (%u) RDLENGTH %u\n", TYPE, RDLENGTH));
-      break;
+    }
+    else {
+      LOG(("TRR asked for %s data but got %s\n", aHost.get(), qname.get()));
     }
 
     index += RDLENGTH;
@@ -787,7 +860,7 @@ nsresult
 TRR::ReturnData()
 {
   // create and populate an AddrInfo instance to pass on
-  nsAutoPtr<AddrInfo> ai(new AddrInfo(mHost.get(), mType));
+  nsAutoPtr<AddrInfo> ai(new AddrInfo(mHost, mType));
   DOHaddr *item;
   uint32_t ttl = AddrInfo::NO_TTL_DATA;
   while ((item = static_cast<DOHaddr*>(mDNS.mAddresses.popFirst()))) {
@@ -813,16 +886,16 @@ TRR::ReturnData()
 }
 
 nsresult
-TRR::FailData()
+TRR::FailData(nsresult error)
 {
   if (!mHostResolver) {
     return NS_ERROR_FAILURE;
   }
   // create and populate an TRR AddrInfo instance to pass on to signal that
   // this comes from TRR
-  AddrInfo *ai = new AddrInfo(mHost.get(), mType);
+  AddrInfo *ai = new AddrInfo(mHost, mType);
 
-  (void)mHostResolver->CompleteLookup(mRec, NS_ERROR_FAILURE, ai, mPB);
+  (void)mHostResolver->CompleteLookup(mRec, error, ai, mPB);
   mHostResolver = nullptr;
   mRec = nullptr;
   return NS_OK;
@@ -832,10 +905,21 @@ nsresult
 TRR::On200Response()
 {
   // decode body and create an AddrInfo struct for the response
-  nsresult rv = DohDecode();
+  nsresult rv = DohDecode(mHost);
 
   if (NS_SUCCEEDED(rv)) {
     if (!mDNS.mAddresses.getFirst() && !mCname.IsEmpty()) {
+      nsCString cname = mCname;
+      LOG(("TRR: check for CNAME record for %s within previous response\n",
+           cname.get()));
+      rv = DohDecode(cname);
+      if (NS_SUCCEEDED(rv) && mDNS.mAddresses.getFirst()) {
+        LOG(("TRR: Got the CNAME record without asking for it\n"));
+        ReturnData();
+        return NS_OK;
+      }
+      // restore mCname as DohDecode() change it
+      mCname = cname;
       if (!--mCnameLoop) {
         LOG(("TRR::On200Response CNAME loop, eject!\n"));
       } else  {
@@ -871,6 +955,9 @@ TRR::OnStopRequest(nsIRequest *aRequest,
   nsCOMPtr<nsIChannel> channel;
   channel.swap(mChannel);
 
+  // Bad content is still considered "okay" if the HTTP response is okay
+  gTRRService->TRRIsOkay(NS_SUCCEEDED(aStatusCode));
+
   // if status was "fine", parse the response and pass on the answer
   if (!mFailed && NS_SUCCEEDED(aStatusCode)) {
     nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(aRequest);
@@ -881,11 +968,10 @@ TRR::OnStopRequest(nsIRequest *aRequest,
     nsAutoCString contentType;
     httpChannel->GetContentType(contentType);
     if (contentType.Length() &&
-        !contentType.LowerCaseEqualsLiteral("application/dns-udpwireformat")) {
-      // try and parse missing content-types, but otherwise require udpwireformat
-      LOG(("TRR:OnStopRequest %p %s %d should fail due to content type %s\n",
+        !contentType.LowerCaseEqualsLiteral("application/dns-message")) {
+      LOG(("TRR:OnStopRequest %p %s %d wrong content type %s\n",
            this, mHost.get(), mType, contentType.get()));
-      FailData();
+      FailData(NS_ERROR_UNEXPECTED);
       return NS_OK;
     }
 
@@ -904,7 +990,7 @@ TRR::OnStopRequest(nsIRequest *aRequest,
 
   LOG(("TRR:OnStopRequest %p status %x mFailed %d\n",
        this, (int)aStatusCode, mFailed));
-  FailData();
+  FailData(NS_ERROR_UNKNOWN_HOST);
   return NS_OK;
 }
 
@@ -1008,6 +1094,7 @@ TRR::Cancel()
     LOG(("TRR: %p canceling Channel %p %s %d\n", this,
          mChannel.get(), mHost.get(), mType));
     mChannel->Cancel(NS_ERROR_ABORT);
+    gTRRService->TRRIsOkay(false);
   }
 }
 

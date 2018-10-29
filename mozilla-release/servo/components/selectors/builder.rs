@@ -23,7 +23,7 @@ use sink::Push;
 use smallvec::{self, SmallVec};
 use std::cmp;
 use std::iter;
-use std::ops::Add;
+use std::ops::{AddAssign, Add};
 use std::ptr;
 use std::slice;
 
@@ -36,6 +36,7 @@ use std::slice;
 /// (from left to right). Once the process is complete, callers should invoke
 /// build(), which transforms the contents of the SelectorBuilder into a heap-
 /// allocated Selector and leaves the builder in a drained state.
+#[derive(Debug)]
 pub struct SelectorBuilder<Impl: SelectorImpl> {
     /// The entire sequence of simple selectors, from left to right, without combinators.
     ///
@@ -104,7 +105,7 @@ impl<Impl: SelectorImpl> SelectorBuilder<Impl> {
         parsed_slotted: bool,
     ) -> ThinArc<SpecificityAndFlags, Component<Impl>> {
         // Compute the specificity and flags.
-        let mut spec = SpecificityAndFlags(specificity(self.simple_selectors.iter()));
+        let mut spec = SpecificityAndFlags(specificity(&*self, self.simple_selectors.iter()));
         if parsed_pseudo {
             spec.0 |= HAS_PSEUDO_BIT;
         }
@@ -227,6 +228,16 @@ struct Specificity {
     element_selectors: u32,
 }
 
+
+impl AddAssign for Specificity {
+    #[inline]
+    fn add_assign(&mut self, rhs: Self) {
+        self.id_selectors += rhs.id_selectors;
+        self.class_like_selectors += rhs.class_like_selectors;
+        self.element_selectors += rhs.element_selectors;
+    }
+}
+
 impl Add for Specificity {
     type Output = Specificity;
 
@@ -250,6 +261,7 @@ impl Default for Specificity {
 }
 
 impl From<u32> for Specificity {
+    #[inline]
     fn from(value: u32) -> Specificity {
         assert!(value <= MAX_10BIT << 20 | MAX_10BIT << 10 | MAX_10BIT);
         Specificity {
@@ -261,6 +273,7 @@ impl From<u32> for Specificity {
 }
 
 impl From<Specificity> for u32 {
+    #[inline]
     fn from(specificity: Specificity) -> u32 {
         cmp::min(specificity.id_selectors, MAX_10BIT) << 20 |
             cmp::min(specificity.class_like_selectors, MAX_10BIT) << 10 |
@@ -268,36 +281,58 @@ impl From<Specificity> for u32 {
     }
 }
 
-fn specificity<Impl>(iter: slice::Iter<Component<Impl>>) -> u32
+fn specificity<Impl>(builder: &SelectorBuilder<Impl>, iter: slice::Iter<Component<Impl>>) -> u32
 where
     Impl: SelectorImpl,
 {
-    complex_selector_specificity(iter).into()
+    complex_selector_specificity(builder, iter).into()
 }
 
-fn complex_selector_specificity<Impl>(mut iter: slice::Iter<Component<Impl>>) -> Specificity
+fn complex_selector_specificity<Impl>(
+    builder: &SelectorBuilder<Impl>,
+    mut iter: slice::Iter<Component<Impl>>,
+) -> Specificity
 where
     Impl: SelectorImpl,
 {
     fn simple_selector_specificity<Impl>(
+        builder: &SelectorBuilder<Impl>,
         simple_selector: &Component<Impl>,
         specificity: &mut Specificity,
     ) where
         Impl: SelectorImpl,
     {
         match *simple_selector {
-            Component::Combinator(..) => unreachable!(),
-            // FIXME(emilio): Spec doesn't define any particular specificity for
-            // ::slotted(), so apply the general rule for pseudos per:
-            //
-            // https://github.com/w3c/csswg-drafts/issues/1915
-            //
-            // Though other engines compute it dynamically, so maybe we should
-            // do that instead, eventually.
-            Component::Slotted(..) | Component::PseudoElement(..) | Component::LocalName(..) => {
+            Component::Combinator(ref combinator) => {
+                unreachable!(
+                    "Found combinator {:?} in simple selectors vector? {:?}",
+                    combinator,
+                    builder,
+                );
+            }
+            Component::PseudoElement(..) | Component::LocalName(..) => {
                 specificity.element_selectors += 1
             },
-            Component::ID(..) => specificity.id_selectors += 1,
+            Component::Slotted(ref selector) => {
+                specificity.element_selectors += 1;
+                // Note that due to the way ::slotted works we only compete with
+                // other ::slotted rules, so the above rule doesn't really
+                // matter, but we do it still for consistency with other
+                // pseudo-elements.
+                //
+                // See: https://github.com/w3c/csswg-drafts/issues/1915
+                *specificity += Specificity::from(selector.specificity());
+            },
+            Component::Host(ref selector) => {
+                specificity.class_like_selectors += 1;
+                if let Some(ref selector) = *selector {
+                    // See: https://github.com/w3c/csswg-drafts/issues/1915
+                    *specificity += Specificity::from(selector.specificity());
+                }
+            }
+            Component::ID(..) => {
+                specificity.id_selectors += 1;
+            },
             Component::Class(..) |
             Component::AttributeInNoNamespace { .. } |
             Component::AttributeInNoNamespaceExists { .. } |
@@ -308,7 +343,6 @@ where
             Component::Root |
             Component::Empty |
             Component::Scope |
-            Component::Host(..) |
             Component::NthChild(..) |
             Component::NthLastChild(..) |
             Component::NthOfType(..) |
@@ -316,7 +350,9 @@ where
             Component::FirstOfType |
             Component::LastOfType |
             Component::OnlyOfType |
-            Component::NonTSPseudoClass(..) => specificity.class_like_selectors += 1,
+            Component::NonTSPseudoClass(..) => {
+                specificity.class_like_selectors += 1;
+            },
             Component::ExplicitUniversalType |
             Component::ExplicitAnyNamespace |
             Component::ExplicitNoNamespace |
@@ -326,7 +362,7 @@ where
             },
             Component::Negation(ref negated) => {
                 for ss in negated.iter() {
-                    simple_selector_specificity(&ss, specificity);
+                    simple_selector_specificity(builder, &ss, specificity);
                 }
             },
         }
@@ -334,7 +370,7 @@ where
 
     let mut specificity = Default::default();
     for simple_selector in &mut iter {
-        simple_selector_specificity(&simple_selector, &mut specificity);
+        simple_selector_specificity(builder, &simple_selector, &mut specificity);
     }
     specificity
 }

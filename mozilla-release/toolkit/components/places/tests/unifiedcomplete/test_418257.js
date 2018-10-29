@@ -8,7 +8,9 @@
  * are separated from the title by a endash.
  */
 
-add_task(async function test_javascript_match() {
+add_task(async function test() {
+  Services.prefs.setBoolPref("browser.urlbar.autoFill", false);
+
   let uri1 = NetUtil.newURI("http://page1");
   let uri2 = NetUtil.newURI("http://page2");
   let uri3 = NetUtil.newURI("http://page3");
@@ -17,7 +19,7 @@ add_task(async function test_javascript_match() {
     { uri: uri1, title: "tagged" },
     { uri: uri2, title: "tagged" },
     { uri: uri3, title: "tagged" },
-    { uri: uri4, title: "tagged" }
+    { uri: uri4, title: "tagged" },
   ]);
   await addBookmark({ uri: uri1,
                       title: "tagged",
@@ -35,32 +37,32 @@ add_task(async function test_javascript_match() {
   info("Make sure tags come back in the title when matching tags");
   await check_autocomplete({
     search: "page1 tag",
-    matches: [ { uri: uri1, title: "tagged", tags: [ "tag1" ], style: [ "bookmark-tag" ] } ]
+    matches: [ { uri: uri1, title: "tagged", tags: [ "tag1" ], style: [ "bookmark-tag" ] } ],
   });
 
   info("Check tags in title for page2");
   await check_autocomplete({
     search: "page2 tag",
-    matches: [ { uri: uri2, title: "tagged", tags: [ "tag1", "tag2" ], style: [ "bookmark-tag" ] } ]
+    matches: [ { uri: uri2, title: "tagged", tags: [ "tag1", "tag2" ], style: [ "bookmark-tag" ] } ],
   });
 
   info("Make sure tags appear even when not matching the tag");
   await check_autocomplete({
     search: "page3",
-    matches: [ { uri: uri3, title: "tagged", tags: [ "tag1", "tag3" ], style: [ "bookmark-tag" ] } ]
+    matches: [ { uri: uri3, title: "tagged", tags: [ "tag1", "tag3" ], style: [ "bookmark-tag" ] } ],
   });
 
   info("Multiple tags come in commas for page4");
   await check_autocomplete({
     search: "page4",
-    matches: [ { uri: uri4, title: "tagged", tags: [ "tag1", "tag2", "tag3" ], style: [ "bookmark-tag" ] } ]
+    matches: [ { uri: uri4, title: "tagged", tags: [ "tag1", "tag2", "tag3" ], style: [ "bookmark-tag" ] } ],
   });
 
   info("Extra test just to make sure we match the title");
   await check_autocomplete({
     search: "tag2",
     matches: [ { uri: uri2, title: "tagged", tags: [ "tag1", "tag2" ], style: [ "bookmark-tag" ] },
-               { uri: uri4, title: "tagged", tags: [ "tag1", "tag2", "tag3" ], style: [ "bookmark-tag" ] } ]
+               { uri: uri4, title: "tagged", tags: [ "tag1", "tag2", "tag3" ], style: [ "bookmark-tag" ] } ],
   });
 
   await cleanup();

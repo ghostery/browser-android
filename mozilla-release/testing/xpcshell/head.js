@@ -124,6 +124,10 @@ try {
   }
 } catch (e) { }
 
+if (runningInParent) {
+  _Services.prefs.setBoolPref("dom.push.connection.enabled", false);
+}
+
 // Configure a console listener so messages sent to it are logged as part
 // of the test.
 try {
@@ -133,7 +137,7 @@ try {
   }
 
   let listener = {
-    QueryInterface: _XPCOMUtils.generateQI(["nsIConsoleListener"]),
+    QueryInterface: ChromeUtils.generateQI(["nsIConsoleListener"]),
     observe(msg) {
       if (typeof info === "function")
         info("CONSOLE_MESSAGE: (" + levelNames[msg.logLevel] + ") " + msg.toString());
@@ -174,7 +178,7 @@ function _Timer(func, delay) {
   _pendingTimers.push(timer);
 }
 _Timer.prototype = {
-  QueryInterface: _XPCOMUtils.generateQI(["nsITimerCallback"]),
+  QueryInterface: ChromeUtils.generateQI(["nsITimerCallback"]),
 
   notify(timer) {
     _pendingTimers.splice(_pendingTimers.indexOf(timer), 1);
@@ -280,7 +284,7 @@ var _fakeIdleService = {
     lockFactory(aLock) {
       throw Components.Exception("", Cr.NS_ERROR_NOT_IMPLEMENTED);
     },
-    QueryInterface: _XPCOMUtils.generateQI(["nsIFactory"]),
+    QueryInterface: ChromeUtils.generateQI(["nsIFactory"]),
   },
 
   // nsIIdleService
@@ -290,6 +294,7 @@ var _fakeIdleService = {
   addIdleObserver() {},
   removeIdleObserver() {},
 
+  // eslint-disable-next-line mozilla/use-chromeutils-generateqi
   QueryInterface(aIID) {
     // Useful for testing purposes, see test_get_idle.js.
     if (aIID.equals(Ci.nsIFactory)) {
@@ -390,7 +395,8 @@ function _setupDebuggerServer(breakpointFiles, callback) {
   let { OriginalLocation } = require("devtools/server/actors/common");
   DebuggerServer.init();
   DebuggerServer.registerAllActors();
-  DebuggerServer.addActors("resource://testing-common/dbg-actors.js");
+  let { createRootActor } = require("resource://testing-common/dbg-actors.js");
+  DebuggerServer.setRootActor(createRootActor);
   DebuggerServer.allowChromeProcess = true;
 
   // An observer notification that tells us when we can "resume" script
@@ -506,6 +512,12 @@ function _execute_test() {
     this[func] = Assert[func].bind(Assert);
   }
 
+  const {PerTestCoverageUtils} = ChromeUtils.import("resource://testing-common/PerTestCoverageUtils.jsm", {});
+
+  if (runningInParent) {
+    PerTestCoverageUtils.beforeTestSync();
+  }
+
   try {
     do_test_pending("MAIN run_test");
     // Check if run_test() is defined. If defined, run it.
@@ -523,6 +535,10 @@ function _execute_test() {
 
     if (coverageCollector != null) {
       coverageCollector.recordTestCoverage(_TEST_FILE[0]);
+    }
+
+    if (runningInParent) {
+      PerTestCoverageUtils.afterTestSync();
     }
   } catch (e) {
     _passed = false;
@@ -1004,7 +1020,7 @@ function do_load_manifest(path) {
  * @param aPath File path to the document.
  * @param aType Content type to use in DOMParser.
  *
- * @return nsIDOMDocument from the file.
+ * @return Document from the file.
  */
 function do_parse_document(aPath, aType) {
   switch (aType) {
@@ -1111,7 +1127,7 @@ function do_get_profile(notifyProfileAfterChange = false) {
       }
       return null;
     },
-    QueryInterface: _XPCOMUtils.generateQI(["nsIDirectoryServiceProvider"]),
+    QueryInterface: ChromeUtils.generateQI(["nsIDirectoryServiceProvider"]),
   };
   _Services.dirsvc.QueryInterface(Ci.nsIDirectoryService)
            .registerProvider(provider);
@@ -1244,9 +1260,9 @@ function do_await_remote_message(name, optionalCallback) {
       receiveMessage(message) {
         if (message.name == name) {
           mm.removeMessageListener(name, listener);
-          resolve();
+          resolve(message.data);
           if (optionalCallback) {
-            optionalCallback();
+            optionalCallback(message.data);
           } else {
             do_test_finished();
           }
@@ -1269,7 +1285,7 @@ function do_await_remote_message(name, optionalCallback) {
  * Asynchronously send a message to all remote processes. Pairs with do_await_remote_message
  * or equivalent ProcessMessageManager listeners.
  */
-function do_send_remote_message(name) {
+function do_send_remote_message(name, data) {
   var mm;
   var sender;
   if (runningInParent) {
@@ -1279,7 +1295,7 @@ function do_send_remote_message(name) {
     mm = Cc["@mozilla.org/childprocessmessagemanager;1"].getService();
     sender = "sendAsyncMessage";
   }
-  mm[sender](name);
+  mm[sender](name, data);
 }
 
 /**

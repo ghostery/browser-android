@@ -66,6 +66,7 @@
  *       cc-exp-month,
  *       cc-exp-year,          // 2-digit year will be converted to 4 digits
  *                             // upon saving
+ *       cc-type,              // Optional card network id (instrument type)
  *
  *       // computed fields (These fields are computed based on the above fields
  *       // and are not allowed to be modified directly.)
@@ -92,10 +93,10 @@
  * When saving or updating a credit-card record, the storage will encrypt the
  * value of "cc-number", store the encrypted number in "cc-number-encrypted"
  * field, and replace "cc-number" field with the masked number. These all happen
- * in "_computeFields". We do reverse actions in "_stripComputedFields", which
+ * in "computeFields". We do reverse actions in "_stripComputedFields", which
  * decrypts "cc-number-encrypted", restores it to "cc-number", and deletes
  * "cc-number-encrypted". Therefore, calling "_stripComputedFields" followed by
- * "_computeFields" can make sure the encrypt-related fields are up-to-date.
+ * "computeFields" can make sure the encrypt-related fields are up-to-date.
  *
  * In general, you have to decrypt the number by your own outside FormAutofillStorage
  * when necessary. However, you will get the decrypted records when querying
@@ -130,12 +131,16 @@ ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/osfile.jsm");
 
-ChromeUtils.import("resource://formautofill/FormAutofillUtils.jsm");
+ChromeUtils.import("resource://formautofill/FormAutofill.jsm");
 
+ChromeUtils.defineModuleGetter(this, "CreditCard",
+                               "resource://gre/modules/CreditCard.jsm");
 ChromeUtils.defineModuleGetter(this, "JSONFile",
                                "resource://gre/modules/JSONFile.jsm");
 ChromeUtils.defineModuleGetter(this, "FormAutofillNameUtils",
                                "resource://formautofill/FormAutofillNameUtils.jsm");
+ChromeUtils.defineModuleGetter(this, "FormAutofillUtils",
+                               "resource://formautofill/FormAutofillUtils.jsm");
 ChromeUtils.defineModuleGetter(this, "MasterPassword",
                                "resource://formautofill/MasterPassword.jsm");
 ChromeUtils.defineModuleGetter(this, "PhoneNumber",
@@ -194,6 +199,7 @@ const VALID_CREDIT_CARD_FIELDS = [
   "cc-number",
   "cc-exp-month",
   "cc-exp-year",
+  "cc-type",
 ];
 
 const VALID_CREDIT_CARD_COMPUTED_FIELDS = [
@@ -247,7 +253,7 @@ class AutofillRecords {
    *        The schema version for the new record.
    */
   constructor(store, collectionName, validFields, validComputedFields, schemaVersion) {
-    FormAutofillUtils.defineLazyLogGetter(this, "AutofillRecords:" + collectionName);
+    FormAutofill.defineLazyLogGetter(this, "AutofillRecords:" + collectionName);
 
     this.VALID_FIELDS = validFields;
     this.VALID_COMPUTED_FIELDS = validComputedFields;
@@ -323,6 +329,10 @@ class AutofillRecords {
       }
     } else if (!recordToSave.deleted) {
       this._normalizeRecord(recordToSave);
+      // _normalizeRecord shouldn't do any validation (throw) because in the
+      // `update` case it is called with partial records whereas
+      // `_validateFields` is called with a complete one.
+      this._validateFields(recordToSave);
 
       recordToSave.guid = this._generateGUID();
       recordToSave.version = this.version;
@@ -356,7 +366,7 @@ class AutofillRecords {
     } else {
       this._ensureMatchingVersion(record);
       recordToSave = record;
-      this._computeFields(recordToSave);
+      this.computeFields(recordToSave);
     }
 
     if (sourceSync) {
@@ -370,6 +380,7 @@ class AutofillRecords {
 
     Services.obs.notifyObservers({wrappedJSObject: {
       sourceSync,
+      guid: record.guid,
       collectionName: this._collectionName,
     }}, "formautofill-storage-changed", "add");
     return recordToSave.guid;
@@ -433,13 +444,20 @@ class AutofillRecords {
       throw new Error("Record contains no valid field.");
     }
 
+    // _normalizeRecord above is called with the `record` argument provided to
+    // `update` which may not contain all resulting fields when
+    // `preserveOldProperties` is used. This means we need to validate for
+    // missing fields after we compose the record (`recordFound`) with the stored
+    // record like we do in the loop above.
+    this._validateFields(recordFound);
+
     recordFound.timeLastModified = Date.now();
     let syncMetadata = this._getSyncMetaData(recordFound);
     if (syncMetadata) {
       syncMetadata.changeCounter += 1;
     }
 
-    this._computeFields(recordFound);
+    this.computeFields(recordFound);
     this._data[recordFoundIndex] = recordFound;
 
     this._store.saveSoon();
@@ -470,7 +488,10 @@ class AutofillRecords {
     recordFound.timeLastUsed = Date.now();
 
     this._store.saveSoon();
-    Services.obs.notifyObservers(null, "formautofill-storage-changed", "notifyUsed");
+    Services.obs.notifyObservers({wrappedJSObject: {
+      guid,
+      collectionName: this._collectionName,
+    }}, "formautofill-storage-changed", "notifyUsed");
   }
 
   /**
@@ -517,6 +538,7 @@ class AutofillRecords {
     this._store.saveSoon();
     Services.obs.notifyObservers({wrappedJSObject: {
       sourceSync,
+      guid,
       collectionName: this._collectionName,
     }}, "formautofill-storage-changed", "remove");
   }
@@ -748,7 +770,7 @@ class AutofillRecords {
       }
     }
 
-    this._computeFields(newRecord);
+    this.computeFields(newRecord);
   }
 
   /**
@@ -770,7 +792,7 @@ class AutofillRecords {
     // uploaded.
     this._getSyncMetaData(forkedLocalRecord, true);
 
-    this._computeFields(forkedLocalRecord);
+    this.computeFields(forkedLocalRecord);
     this._data.push(forkedLocalRecord);
 
     return forkedLocalRecord;
@@ -837,6 +859,8 @@ class AutofillRecords {
     this._store.saveSoon();
     Services.obs.notifyObservers({wrappedJSObject: {
       sourceSync: true,
+      guid: remoteRecord.guid,
+      forkedGUID,
       collectionName: this._collectionName,
     }}, "formautofill-storage-changed", "reconcile");
 
@@ -1141,7 +1165,7 @@ class AutofillRecords {
       this._stripComputedFields(record);
     }
 
-    hasChanges |= this._computeFields(record);
+    hasChanges |= this.computeFields(record);
     return hasChanges;
   }
 
@@ -1154,7 +1178,7 @@ class AutofillRecords {
       }
       if (typeof record[key] !== "string" &&
           typeof record[key] !== "number") {
-        throw new Error(`"${key}" contains invalid data type.`);
+        throw new Error(`"${key}" contains invalid data type: ${typeof record[key]}`);
       }
       if (!preserveEmptyFields && record[key] === "") {
         delete record[key];
@@ -1187,10 +1211,16 @@ class AutofillRecords {
     return mergedGUIDs;
   }
 
-  // A test-only helper.
-  _nukeAllRecords() {
+  /**
+   * Unconditionally remove all data and tombstones for this collection.
+   */
+  removeAll({sourceSync = false} = {}) {
     this._store.data[this._collectionName] = [];
-    // test-only, so there's no good reason to request a save!
+    this._store.saveSoon();
+    Services.obs.notifyObservers({wrappedJSObject: {
+      sourceSync,
+      collectionName: this._collectionName,
+    }}, "formautofill-storage-changed", "removeAll");
   }
 
   _stripComputedFields(record) {
@@ -1201,10 +1231,30 @@ class AutofillRecords {
   _recordReadProcessor(record) {}
 
   // An interface to be inherited.
-  _computeFields(record) {}
+  computeFields(record) {}
 
-  // An interface to be inherited.
-  _normalizeFields(record) {}
+  /**
+  * An interface to be inherited to mutate the argument to normalize it.
+  *
+  * @param {object} partialRecord containing the record passed by the consumer of
+  *                               storage and in the case of `update` with
+  *                               `preserveOldProperties` will only include the
+  *                               properties that the user is changing so the
+  *                               lack of a field doesn't mean that the record
+  *                               won't have that field.
+  */
+  _normalizeFields(partialRecord) {}
+
+  /**
+   * An interface to be inherited to validate that the complete record is
+   * consistent and isn't missing required fields. Overrides should throw for
+   * invalid records.
+   *
+   * @param {object} record containing the complete record that would be stored
+   *                        if this doesn't throw due to an error.
+   * @throws
+   */
+  _validateFields(record) {}
 
   // An interface to be inherited.
   mergeIfPossible(guid, record, strict) {}
@@ -1216,13 +1266,13 @@ class Addresses extends AutofillRecords {
   }
 
   _recordReadProcessor(address) {
-    if (address.country && !FormAutofillUtils.supportedCountries.includes(address.country)) {
+    if (address.country && !FormAutofill.supportedCountries.includes(address.country)) {
       delete address.country;
       delete address["country-name"];
     }
   }
 
-  _computeFields(address) {
+  computeFields(address) {
     // NOTE: Remember to bump the schema version number if any of the existing
     //       computing algorithm changes. (No need to bump when just adding new
     //       computed fields.)
@@ -1281,7 +1331,7 @@ class Addresses extends AutofillRecords {
     // Compute tel
     if (!("tel-national" in address)) {
       if (address.tel) {
-        let tel = PhoneNumber.Parse(address.tel, address.country || FormAutofillUtils.DEFAULT_REGION);
+        let tel = PhoneNumber.Parse(address.tel, address.country || FormAutofill.DEFAULT_REGION);
         if (tel) {
           if (tel.countryCode) {
             address["tel-country-code"] = tel.countryCode;
@@ -1370,8 +1420,10 @@ class Addresses extends AutofillRecords {
     // Only values included in the region list will be saved.
     let hasLocalizedName = false;
     try {
-      let localizedName = Services.intl.getRegionDisplayNames(undefined, [country]);
-      hasLocalizedName = localizedName != country;
+      if (country) {
+        let localizedName = Services.intl.getRegionDisplayNames(undefined, [country]);
+        hasLocalizedName = localizedName != country;
+      }
     } catch (e) {}
 
     if (country && hasLocalizedName) {
@@ -1387,7 +1439,7 @@ class Addresses extends AutofillRecords {
     if (address.tel || TEL_COMPONENTS.some(c => !!address[c])) {
       FormAutofillUtils.compressTel(address);
 
-      let possibleRegion = address.country || FormAutofillUtils.DEFAULT_REGION;
+      let possibleRegion = address.country || FormAutofill.DEFAULT_REGION;
       let tel = PhoneNumber.Parse(address.tel, possibleRegion);
 
       if (tel && tel.internationalNumber) {
@@ -1481,14 +1533,7 @@ class CreditCards extends AutofillRecords {
     super(store, "creditCards", VALID_CREDIT_CARD_FIELDS, VALID_CREDIT_CARD_COMPUTED_FIELDS, CREDIT_CARD_SCHEMA_VERSION);
   }
 
-  _getMaskedCCNumber(ccNumber) {
-    if (ccNumber.length <= 4) {
-      throw new Error(`Invalid credit card number`);
-    }
-    return "*".repeat(ccNumber.length - 4) + ccNumber.substr(-4);
-  }
-
-  _computeFields(creditCard) {
+  computeFields(creditCard) {
     // NOTE: Remember to bump the schema version number if any of the existing
     //       computing algorithm changes. (No need to bump when just adding new
     //       computed fields.)
@@ -1525,7 +1570,7 @@ class CreditCards extends AutofillRecords {
     if (!("cc-number-encrypted" in creditCard)) {
       if ("cc-number" in creditCard) {
         let ccNumber = creditCard["cc-number"];
-        creditCard["cc-number"] = this._getMaskedCCNumber(ccNumber);
+        creditCard["cc-number"] = CreditCard.getLongMaskedNumber(ccNumber);
         creditCard["cc-number-encrypted"] = MasterPassword.encryptSync(ccNumber);
       } else {
         creditCard["cc-number-encrypted"] = "";
@@ -1565,93 +1610,37 @@ class CreditCards extends AutofillRecords {
 
   _normalizeCCNumber(creditCard) {
     if (creditCard["cc-number"]) {
-      creditCard["cc-number"] = FormAutofillUtils.normalizeCCNumber(creditCard["cc-number"]);
-      if (!creditCard["cc-number"]) {
+      let card = new CreditCard({number: creditCard["cc-number"]});
+      creditCard["cc-number"] = card.number;
+      if (!card.isValidNumber()) {
         delete creditCard["cc-number"];
       }
     }
   }
 
   _normalizeCCExpirationDate(creditCard) {
-    if (creditCard["cc-exp-month"]) {
-      let expMonth = parseInt(creditCard["cc-exp-month"], 10);
-      if (isNaN(expMonth) || expMonth < 1 || expMonth > 12) {
-        delete creditCard["cc-exp-month"];
-      } else {
-        creditCard["cc-exp-month"] = expMonth;
-      }
+    let card = new CreditCard({
+      expirationMonth: creditCard["cc-exp-month"],
+      expirationYear: creditCard["cc-exp-year"],
+      expirationString: creditCard["cc-exp"],
+    });
+    if (card.expirationMonth) {
+      creditCard["cc-exp-month"] = card.expirationMonth;
+    } else {
+      delete creditCard["cc-exp-month"];
     }
-
-    if (creditCard["cc-exp-year"]) {
-      let expYear = parseInt(creditCard["cc-exp-year"], 10);
-      if (isNaN(expYear) || expYear < 0) {
-        delete creditCard["cc-exp-year"];
-      } else if (expYear < 100) {
-        // Enforce 4 digits years.
-        creditCard["cc-exp-year"] = expYear + 2000;
-      } else {
-        creditCard["cc-exp-year"] = expYear;
-      }
+    if (card.expirationYear) {
+      creditCard["cc-exp-year"] = card.expirationYear;
+    } else {
+      delete creditCard["cc-exp-year"];
     }
-
-    if (creditCard["cc-exp"] && (!creditCard["cc-exp-month"] || !creditCard["cc-exp-year"])) {
-      let rules = [
-        {
-          regex: "(\\d{4})[-/](\\d{1,2})",
-          yearIndex: 1,
-          monthIndex: 2,
-        },
-        {
-          regex: "(\\d{1,2})[-/](\\d{4})",
-          yearIndex: 2,
-          monthIndex: 1,
-        },
-        {
-          regex: "(\\d{1,2})[-/](\\d{1,2})",
-        },
-        {
-          regex: "(\\d{2})(\\d{2})",
-        },
-      ];
-
-      for (let rule of rules) {
-        let result = new RegExp(`(?:^|\\D)${rule.regex}(?!\\d)`).exec(creditCard["cc-exp"]);
-        if (!result) {
-          continue;
-        }
-
-        let expYear, expMonth;
-
-        if (!rule.yearIndex || !rule.monthIndex) {
-          expMonth = parseInt(result[1], 10);
-          if (expMonth > 12) {
-            expYear = parseInt(result[1], 10);
-            expMonth = parseInt(result[2], 10);
-          } else {
-            expYear = parseInt(result[2], 10);
-          }
-        } else {
-          expYear = parseInt(result[rule.yearIndex], 10);
-          expMonth = parseInt(result[rule.monthIndex], 10);
-        }
-
-        if (expMonth < 1 || expMonth > 12) {
-          continue;
-        }
-
-        if (expYear < 100) {
-          expYear += 2000;
-        } else if (expYear < 2000) {
-          continue;
-        }
-
-        creditCard["cc-exp-month"] = expMonth;
-        creditCard["cc-exp-year"] = expYear;
-        break;
-      }
-    }
-
     delete creditCard["cc-exp"];
+  }
+
+  _validateFields(creditCard) {
+    if (!creditCard["cc-number"]) {
+      throw new Error("Missing/invalid cc-number");
+    }
   }
 
   /**
@@ -1673,7 +1662,7 @@ class CreditCards extends AutofillRecords {
           if (MasterPassword.isEnabled) {
             // Compare the masked numbers instead when the master password is
             // enabled because we don't want to leak the credit card number.
-            return this._getMaskedCCNumber(clonedTargetCreditCard[field]) == creditCard[field];
+            return CreditCard.getLongMaskedNumber(clonedTargetCreditCard[field]) == creditCard[field];
           }
           return clonedTargetCreditCard[field] == MasterPassword.decryptSync(creditCard["cc-number-encrypted"]);
         }
@@ -1802,6 +1791,10 @@ FormAutofillStorage.prototype = {
   // For test only.
   _saveImmediately() {
     return this._store._save();
+  },
+
+  _finalize() {
+    return this._store.finalize();
   },
 };
 

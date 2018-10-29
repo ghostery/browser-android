@@ -10,6 +10,7 @@ module.exports = {
     "AddonManagerPermissions": false,
     "BroadcastChannel": false,
     "BrowserFeedWriter": false,
+    "CSSAnimation": false,
     "CSSPrimitiveValue": false,
     "CSSValueList": false,
     "Cc": false,
@@ -40,6 +41,9 @@ module.exports = {
     "MatchPattern": false,
     "MatchPatternSet": false,
     "MenuBoxObject": false,
+    // Specific to Firefox (Chrome code only).
+    "PlacesObservers": false,
+    "PlacesWeakCallbackWrapper": false,
     // Specific to Firefox (Chrome code only).
     "SharedArrayBuffer": false,
     "SimpleGestureEvent": false,
@@ -112,6 +116,9 @@ module.exports = {
     // No newline before open brace for a block
     "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
 
+    // Require trailing commas for easy list extension and consistent style.
+    "comma-dangle": ["error", "always-multiline"],
+
     // No space before always a space after a comma
     "comma-spacing": ["error", {"after": true, "before": false}],
 
@@ -176,7 +183,9 @@ module.exports = {
     "mozilla/no-import-into-var-and-global": "error",
     "mozilla/no-useless-parameters": "error",
     "mozilla/no-useless-removeEventListener": "error",
+    "mozilla/rejects-requires-await": "error",
     "mozilla/use-cc-etc": "error",
+    "mozilla/use-chromeutils-generateqi": "error",
     "mozilla/use-chromeutils-import": "error",
     "mozilla/use-default-preference-values": "error",
     "mozilla/use-includes-instead-of-indexOf": "error",
@@ -316,6 +325,9 @@ module.exports = {
 
     // No unnecessary comparisons
     "no-self-compare": "error",
+
+    // No comma sequenced statements
+    "no-sequences": "error",
 
     // No declaring variables from an outer scope
     // "no-shadow": "error",

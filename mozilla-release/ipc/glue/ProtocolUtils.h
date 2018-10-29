@@ -24,13 +24,16 @@
 #include "mozilla/ipc/Shmem.h"
 #include "mozilla/ipc/Transport.h"
 #include "mozilla/ipc/MessageLink.h"
+#include "mozilla/recordreplay/ChildIPC.h"
 #include "mozilla/LinkedList.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/MozPromise.h"
 #include "mozilla/Mutex.h"
 #include "mozilla/NotNull.h"
+#include "mozilla/Scoped.h"
 #include "mozilla/UniquePtr.h"
 #include "MainThreadUtils.h"
+#include "nsICrashReporter.h"
 #include "nsILabelableRunnable.h"
 
 #if defined(ANDROID) && defined(DEBUG)
@@ -50,12 +53,13 @@ namespace {
 // protocol 0.  Oops!  We can get away with this until protocol 0
 // starts approaching its 65,536th message.
 enum {
-    BUILD_ID_MESSAGE_TYPE = kuint16max - 7,
-    CHANNEL_OPENED_MESSAGE_TYPE = kuint16max - 6,
-    SHMEM_DESTROYED_MESSAGE_TYPE = kuint16max - 5,
-    SHMEM_CREATED_MESSAGE_TYPE = kuint16max - 4,
-    GOODBYE_MESSAGE_TYPE       = kuint16max - 3,
-    CANCEL_MESSAGE_TYPE        = kuint16max - 2,
+    BUILD_IDS_MATCH_MESSAGE_TYPE   = kuint16max - 8,
+    BUILD_ID_MESSAGE_TYPE          = kuint16max - 7, // unused
+    CHANNEL_OPENED_MESSAGE_TYPE    = kuint16max - 6,
+    SHMEM_DESTROYED_MESSAGE_TYPE   = kuint16max - 5,
+    SHMEM_CREATED_MESSAGE_TYPE     = kuint16max - 4,
+    GOODBYE_MESSAGE_TYPE           = kuint16max - 3,
+    CANCEL_MESSAGE_TYPE            = kuint16max - 2,
 
     // kuint16max - 1 is used by ipc_channel.h.
 };
@@ -76,6 +80,10 @@ class NeckoParent;
 } // namespace net
 
 namespace ipc {
+
+#ifdef FUZZING
+class ProtocolFuzzerHelper;
+#endif
 
 class MessageChannel;
 
@@ -136,6 +144,10 @@ class IToplevelProtocol;
 
 class IProtocol : public HasResultCodes
 {
+#ifdef FUZZING
+  friend class mozilla::ipc::ProtocolFuzzerHelper;
+#endif
+
 public:
     enum ActorDestroyReason {
         FailedConstructor,
@@ -286,6 +298,13 @@ public:
     {
         return mState->GetIPCChannel();
     }
+    void SetMiddlemanIPCChannel(MessageChannel* aChannel)
+    {
+        // Middleman processes sometimes need to change the channel used by a
+        // protocol.
+        MOZ_RELEASE_ASSERT(recordreplay::IsMiddleman());
+        mState->SetIPCChannel(aChannel);
+    }
 
     // XXX odd ducks, acknowledged
     virtual ProcessId OtherPid() const;
@@ -332,7 +351,7 @@ protected:
         : mId(0)
         , mSide(aSide)
         , mManager(nullptr)
-        , mState(Move(aState))
+        , mState(std::move(aState))
     {}
 
     friend class IToplevelProtocol;
@@ -409,6 +428,10 @@ public:
 
     class ToplevelState final : public ProtocolState
     {
+#ifdef FUZZING
+      friend class mozilla::ipc::ProtocolFuzzerHelper;
+#endif
+
     public:
         ToplevelState(const char* aName, IToplevelProtocol* aProtocol, Side aSide);
 
@@ -456,7 +479,7 @@ public:
 
     void SetTransport(UniquePtr<Transport> aTrans)
     {
-        mTrans = Move(aTrans);
+        mTrans = std::move(aTrans);
     }
 
     Transport* GetTransport() const { return mTrans.get(); }
@@ -750,7 +773,7 @@ DuplicateHandle(HANDLE aSourceHandle,
  */
 void AnnotateSystemError();
 
-enum class State
+enum class LivenessState
 {
   Dead,
   Null,
@@ -758,9 +781,9 @@ enum class State
 };
 
 bool
-StateTransition(bool aIsDelete, State* aNext);
+StateTransition(bool aIsDelete, LivenessState* aNext);
 
-enum class ReEntrantDeleteState
+enum class ReEntrantDeleteLivenessState
 {
   Dead,
   Null,
@@ -771,7 +794,7 @@ enum class ReEntrantDeleteState
 bool
 ReEntrantDeleteStateTransition(bool aIsDelete,
                                bool aIsDeleteReply,
-                               ReEntrantDeleteState* aNext);
+                               ReEntrantDeleteLivenessState* aNext);
 
 /**
  * An endpoint represents one end of a partially initialized IPDL channel. To
@@ -804,7 +827,11 @@ public:
 
     Endpoint()
       : mValid(false)
-    {}
+      , mMode(static_cast<mozilla::ipc::Transport::Mode>(0))
+      , mMyPid(0)
+      , mOtherPid(0)
+    {
+    }
 
     Endpoint(const PrivateIPDLInterface&,
              mozilla::ipc::Transport::Mode aMode,
@@ -859,7 +886,16 @@ public:
     bool Bind(PFooSide* aActor)
     {
         MOZ_RELEASE_ASSERT(mValid);
-        MOZ_RELEASE_ASSERT(mMyPid == base::GetCurrentProcId());
+        if (mMyPid != base::GetCurrentProcId()) {
+            // These pids must match, unless we are recording or replaying, in
+            // which case the parent process will have supplied the pid for the
+            // middleman process instead. Fix this here. If we're replaying
+            // we'll see the pid of the middleman used while recording.
+            MOZ_RELEASE_ASSERT(recordreplay::IsRecordingOrReplaying());
+            MOZ_RELEASE_ASSERT(recordreplay::IsReplaying() ||
+                               mMyPid == recordreplay::child::MiddlemanProcessId());
+            mMyPid = base::GetCurrentProcId();
+        }
 
         UniquePtr<Transport> t = mozilla::ipc::OpenDescriptor(mTransport, mMode);
         if (!t) {
@@ -870,7 +906,7 @@ public:
             return false;
         }
         mValid = false;
-        aActor->SetTransport(Move(t));
+        aActor->SetTransport(std::move(t));
         return true;
     }
 
@@ -891,9 +927,9 @@ private:
 };
 
 #if defined(XP_MACOSX)
-void AnnotateCrashReportWithErrno(const char* tag, int error);
+void AnnotateCrashReportWithErrno(CrashReporter::Annotation tag, int error);
 #else
-static inline void AnnotateCrashReportWithErrno(const char* tag, int error)
+static inline void AnnotateCrashReportWithErrno(CrashReporter::Annotation tag, int error)
 {}
 #endif
 
@@ -913,7 +949,8 @@ CreateEndpoints(const PrivateIPDLInterface& aPrivate,
   TransportDescriptor parentTransport, childTransport;
   nsresult rv;
   if (NS_FAILED(rv = CreateTransport(aParentDestPid, &parentTransport, &childTransport))) {
-    AnnotateCrashReportWithErrno("IpcCreateEndpointsNsresult", int(rv));
+    AnnotateCrashReportWithErrno(
+      CrashReporter::Annotation::IpcCreateEndpointsNsresult, int(rv));
     return rv;
   }
 

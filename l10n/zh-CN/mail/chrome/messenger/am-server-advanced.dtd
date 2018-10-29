@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY serverAdvanced.label "高级帐户设置">
+<!ENTITY serverAdvanced.label "高级账户设置">
 <!-- LOCALIZATION NOTE (serverDirectory.label): Do not translate "IMAP" -->
 <!ENTITY serverDirectory.label "IMAP 服务器目录：">
 <!ENTITY serverDirectory.accesskey "d">
@@ -22,8 +22,8 @@
 <!ENTITY otherUsersNamespace.accesskey "O">
 <!ENTITY overrideNamespaces.label "允许服务器忽略这些名字空间">
 <!ENTITY overrideNamespaces.accesskey "A">
-<!ENTITY pop3DeferringDesc.label "把从服务器上下载下来的此账户的新邮件存放到下列文件夹：" >
-<!ENTITY accountInbox.label "此帐户的收件箱">
+<!ENTITY pop3DeferringDesc.label "把从服务器上下载下来的此账户的新邮件存放到下列文件夹：">
+<!ENTITY accountInbox.label "此账户的收件箱">
 <!ENTITY accountInbox.accesskey "s">
 <!ENTITY deferToServer.label "不同账户的收件箱">
 <!ENTITY deferToServer.accesskey "d">

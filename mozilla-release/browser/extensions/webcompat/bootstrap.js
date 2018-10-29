@@ -2,13 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 const PREF_BRANCH = "extensions.webcompat.";
 const PREF_DEFAULTS = {
   perform_injections: true,
-  perform_ua_overrides: true
+  perform_ua_overrides: true,
 };
 
 const INJECTIONS_ENABLE_PREF_NAME = "extensions.webcompat.perform_injections";
@@ -28,7 +27,7 @@ function InjectionsEnablePrefObserver() {
   let isEnabled = Services.prefs.getBoolPref(INJECTIONS_ENABLE_PREF_NAME);
   webextensionPort.postMessage({
     type: "injection-pref-changed",
-    prefState: isEnabled
+    prefState: isEnabled,
   });
 }
 
@@ -76,7 +75,7 @@ this.startup = function({webExtension}) {
 
   // Listen to the useragentoverrides-initialized notification we get and
   // initialize our overrider there. This is done to avoid slowing down the
-  // apparent startup proces, since we avoid loading anything before the first
+  // apparent startup process, since we avoid loading anything before the first
   // window is visible to the user. See bug 1371442 for details.
   let uaStartupObserver = {
     observe(aSubject, aTopic, aData) {
@@ -87,7 +86,7 @@ this.startup = function({webExtension}) {
       Services.obs.removeObserver(this, UA_OVERRIDES_INIT_TOPIC);
       overrider = new UAOverrider(UAOverrides);
       overrider.init();
-    }
+    },
   };
   Services.obs.addObserver(uaStartupObserver, UA_OVERRIDES_INIT_TOPIC);
 
@@ -106,7 +105,7 @@ this.startup = function({webExtension}) {
         console.error(ex);
       });
       Services.obs.removeObserver(this, BROWSER_STARTUP_FINISHED_TOPIC);
-    }
+    },
   };
   Services.obs.addObserver(appStartupObserver, BROWSER_STARTUP_FINISHED_TOPIC);
 };

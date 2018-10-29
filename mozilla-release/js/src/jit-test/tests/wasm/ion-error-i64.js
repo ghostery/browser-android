@@ -10,8 +10,6 @@ const TRIGGER = options['ion.warmup.trigger'] + 10;
 const ITER = 2 * TRIGGER;
 const EXCEPTION_ITER = ITER - 2;
 
-enableGeckoProfiling();
-
 var instance = wasmEvalText(`(module
     (func $add (export "add") (result i32) (param i32) (param i32)
      get_local 0
@@ -25,14 +23,34 @@ var instance = wasmEvalText(`(module
      call $add
      i64.extend_s/i32
     )
+
+    (func $add_two_i64 (export "add_two_i64") (result i64) (param i64) (param i64)
+     get_local 0
+     get_local 1
+     i64.add
+    )
 )`).exports;
+
+(function() {
+    // In ion-eager mode, make sure we don't try to inline a function that
+    // takes or returns i64 arguments.
+    assertErrorMessage(() => instance.add_two_i64(0, 1), TypeError, /cannot pass i64 to or from JS/);
+})();
+
+enableGeckoProfiling();
 
 var callToMain;
 
 function main() {
-    var arr = [instance.add, (x,y)=>x+y];
-    var arrayCallLine = nextLineNumber(6);
+    var arrayCallLine = nextLineNumber(13);
     for (var i = 0; i < ITER; i++) {
+        var arr = [instance.add, (x,y)=>x+y];
+        if (i === EXCEPTION_ITER) {
+            arr[0] = instance.add64;
+        } else if (i === EXCEPTION_ITER + 1) {
+            arr[0] = instance.add;
+        }
+
         var caught = null;
 
         startProfiling();
@@ -42,12 +60,6 @@ function main() {
             caught = e;
         }
         let profilingStack = endProfiling();
-
-        if (i === EXCEPTION_ITER - 1) {
-            arr[0] = instance.add64;
-        } else if (i === EXCEPTION_ITER) {
-            arr[0] = instance.add;
-        }
 
         assertEq(!!caught, i === EXCEPTION_ITER);
         if (caught) {
@@ -73,7 +85,9 @@ function main() {
             assertEq(+lines[0], arrayCallLine);
             assertEq(+lines[1], callToMain);
         } else if ((i % 2) == 0) {
+            // Regular call to wasm add on 32 bits integers.
             assertEqPreciseStacks(profilingStack, [
+                ['', '0', ''],                // supa-dupa fast path
                 ['', '>', '0,>', '>', ''],    // fast path
                 ['', '!>', '0,!>', '!>', ''], // slow path
             ]);

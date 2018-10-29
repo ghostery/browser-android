@@ -10,9 +10,9 @@
 #include <iostream>
 #include <string>
 
-#include "AccessibleCaretEventHub.h"
 #include "AccessibleCaretManager.h"
 #include "gfxPrefs.h"
+#include "mozilla/AccessibleCaretEventHub.h"
 #include "mozilla/BasicEvents.h"
 #include "mozilla/MouseEvents.h"
 #include "mozilla/TouchEvents.h"
@@ -127,7 +127,7 @@ public:
     event->button = WidgetMouseEvent::eLeftButton;
     event->mRefPoint = LayoutDeviceIntPoint(aX, aY);
 
-    return Move(event);
+    return std::move(event);
   }
 
   static UniquePtr<WidgetEvent> CreateMousePressEvent(nscoord aX, nscoord aY)
@@ -165,7 +165,7 @@ public:
       new dom::Touch(identifier, point, radius, rotationAngle, force));
     event->mTouches.AppendElement(touch);
 
-    return Move(event);
+    return std::move(event);
   }
 
   static UniquePtr<WidgetEvent> CreateTouchStartEvent(nscoord aX, nscoord aY)
@@ -192,7 +192,7 @@ public:
   {
     auto event = MakeUnique<WidgetWheelEvent>(true, aMessage, nullptr);
 
-    return Move(event);
+    return std::move(event);
   }
 
   MOZ_CAN_RUN_SCRIPT_BOUNDARY void TestAsyncPanZoomScroll();

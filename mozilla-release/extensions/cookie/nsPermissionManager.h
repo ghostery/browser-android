@@ -114,8 +114,8 @@ public:
     {}
 
     PermissionHashKey(PermissionHashKey&& toCopy)
-      : nsRefPtrHashKey<PermissionKey>(mozilla::Move(toCopy))
-      , mPermissions(mozilla::Move(toCopy.mPermissions))
+      : nsRefPtrHashKey<PermissionKey>(std::move(toCopy))
+      , mPermissions(std::move(toCopy.mPermissions))
     {}
 
     bool KeyEquals(const PermissionKey* aKey) const
@@ -284,6 +284,9 @@ public:
    */
   static nsTArray<nsCString> GetAllKeysForPrincipal(nsIPrincipal* aPrincipal);
 
+  // From ContentChild.
+  nsresult RemoveAllFromIPC();
+
 private:
   virtual ~nsPermissionManager();
 
@@ -360,6 +363,10 @@ private:
    */
   nsresult
   RemoveAllModifiedSince(int64_t aModificationTime);
+
+  template<class T>
+  nsresult
+  RemovePermissionEntries(T aCondition);
 
   /**
    * Returns false if this permission manager wouldn't have the permission

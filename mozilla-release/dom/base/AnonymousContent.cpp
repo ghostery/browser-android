@@ -22,25 +22,13 @@ NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(AnonymousContent, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(AnonymousContent, Release)
 NS_IMPL_CYCLE_COLLECTION(AnonymousContent, mContentNode)
 
-AnonymousContent::AnonymousContent(Element* aContentNode) :
-  mContentNode(aContentNode)
-{}
-
-AnonymousContent::~AnonymousContent()
+AnonymousContent::AnonymousContent(already_AddRefed<Element> aContentNode)
+  : mContentNode(aContentNode)
 {
+  MOZ_ASSERT(mContentNode);
 }
 
-Element*
-AnonymousContent::GetContentNode()
-{
-  return mContentNode;
-}
-
-void
-AnonymousContent::SetContentNode(Element* aContentNode)
-{
-  mContentNode = aContentNode;
-}
+AnonymousContent::~AnonymousContent() = default;
 
 void
 AnonymousContent::SetTextContentForElement(const nsAString& aElementId,
@@ -206,7 +194,7 @@ AnonymousContent::WrapObject(JSContext* aCx,
                              JS::Handle<JSObject*> aGivenProto,
                              JS::MutableHandle<JSObject*> aReflector)
 {
-  return AnonymousContentBinding::Wrap(aCx, this, aGivenProto, aReflector);
+  return AnonymousContent_Binding::Wrap(aCx, this, aGivenProto, aReflector);
 }
 
 void
@@ -228,7 +216,9 @@ AnonymousContent::GetComputedStylePropertyValue(const nsAString& aElementId,
   }
 
   RefPtr<nsComputedDOMStyle> cs =
-    new nsComputedDOMStyle(element, NS_LITERAL_STRING(""), shell,
+    new nsComputedDOMStyle(element,
+                           NS_LITERAL_STRING(""),
+                           element->OwnerDoc(),
                            nsComputedDOMStyle::eAll);
   aRv = cs->GetPropertyValue(aPropertyName, aResult);
 }

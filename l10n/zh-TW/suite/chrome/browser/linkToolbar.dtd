@@ -16,7 +16,7 @@
 <!ENTITY linkToolbarNever.accesskey "H">
 
 <!-- Toolbar buttons, menus, and menuitems -->
-<!ENTITY topButton.label "首頁">
+<!ENTITY topButton.label "回頂端">
 <!ENTITY upButton.label "上一層">
 <!ENTITY firstButton.label "第一頁">
 <!ENTITY prevButton.label "上一頁">
@@ -46,4 +46,3 @@
 <!ENTITY alternateButton.label "其它版本">
 
 <!ENTITY feedButton.label "訂閱">
-

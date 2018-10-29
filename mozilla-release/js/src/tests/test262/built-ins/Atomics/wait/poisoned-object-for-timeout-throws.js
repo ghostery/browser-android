@@ -1,63 +1,46 @@
-// |reftest| skip-if(!this.hasOwnProperty('Atomics')) -- Atomics is not enabled unconditionally
-// Copyright (C) 2018 Amal Hussein.  All rights reserved.
+// |reftest| skip-if(!this.hasOwnProperty('Atomics')||!this.hasOwnProperty('SharedArrayBuffer')) -- Atomics,SharedArrayBuffer is not enabled unconditionally
+// Copyright (C) 2018 Amal Hussein. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
 esid: sec-atomics.wait
 description: >
-  Passing an object with no callable methods for the timeout param throws
+  Throws a TypeError if index arg can not be converted to an Integer
 info: |
   Atomics.wait( typedArray, index, value, timeout )
 
-  4.Let q be ? ToNumber(timeout).
-    ...
-    Object
-      Apply the following steps:
+  4. Let q be ? ToNumber(timeout).
+
+    Object -> Apply the following steps:
+
       Let primValue be ? ToPrimitive(argument, hint Number).
-        ...
-          g. Return ? OrdinaryToPrimitive(input, hint).
-            ...
-            6.Throw a TypeError exception.
-features: [ Atomics ]
+      Return ? ToNumber(primValue).
+
+features: [Atomics, SharedArrayBuffer, Symbol, Symbol.toPrimitive, TypedArray]
 ---*/
 
-function getReport() {
-  var r;
-  while ((r = $262.agent.getReport()) == null) {
-    $262.agent.sleep(100);
+const i32a = new Int32Array(
+  new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT * 4)
+);
+
+const poisonedValueOf = {
+  valueOf: function() {
+    throw new Test262Error('should not evaluate this code');
   }
-  return r;
-}
+};
 
-$262.agent.start(
-  `
-$262.agent.receiveBroadcast(function (sab) {
- 
-  var int32Array = new Int32Array(sab);  
-  var poisoned = {
-    valueOf: false,
-    toString: false
-  };
-  var err;
-  
-  try {
-    Atomics.wait(int32Array, 0, 0, poisoned);
-  } catch(e) {
-    err = e.name;
+const poisonedToPrimitive = {
+  [Symbol.toPrimitive]: function() {
+    throw new Test262Error("passing a poisoned object using @@ToPrimitive");
   }
-  
-  $262.agent.report(err);
-  $262.agent.leaving();
-})
-`);
+};
 
-var sab = new SharedArrayBuffer(4);
-var int32Array = new Int32Array(sab);
+assert.throws(Test262Error, function() {
+  Atomics.wait(i32a, 0, 0, poisonedValueOf);
+}, '`Atomics.wait(i32a, 0, 0, poisonedValueOf)` throws Test262Error');
 
-$262.agent.broadcast(int32Array.buffer);
-
-assert.sameValue(getReport(), 'TypeError');
-
-assert.sameValue(Atomics.wake(int32Array, 0), 0);
+assert.throws(Test262Error, function() {
+  Atomics.wait(i32a, 0, 0, poisonedToPrimitive);
+}, '`Atomics.wait(i32a, 0, 0, poisonedToPrimitive)` throws Test262Error');
 
 reportCompare(0, 0);

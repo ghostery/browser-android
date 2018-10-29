@@ -1,7 +1,6 @@
 "use strict";
 
 ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ChromeUtils.defineModuleGetter(this, "OSCrypto",
                                "resource://gre/modules/OSCrypto.jsm");
@@ -298,6 +297,7 @@ function makeURI(aURL) {
 add_task(async function setup() {
   if (AppConstants.isPlatformAndVersionAtLeast("win", "6.2")) {
     Assert.throws(() => getFirstResourceOfType(MigrationUtils.resourceTypes.PASSWORDS),
+                  /failed to find/,
                   "The migrator doesn't exist for win8+");
     return;
   }

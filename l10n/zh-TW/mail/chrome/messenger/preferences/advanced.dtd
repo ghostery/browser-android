@@ -12,6 +12,7 @@
 <!ENTITY enableGlodaSearch.label       "開啟全域搜尋與索引器">
 <!ENTITY enableGlodaSearch.accesskey   "E">
 <!ENTITY dateTimeFormatting.label      "日期與時間格式">
+<!ENTITY languageSelector.label        "語言">
 <!ENTITY allowHWAccel.label            "可用時開啟硬體加速">
 <!ENTITY allowHWAccel.accesskey        "h">
 <!ENTITY storeType.label               "新帳號的訊息儲存方式:">

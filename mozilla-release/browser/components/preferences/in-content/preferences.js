@@ -42,7 +42,7 @@ function register_module(categoryName, categoryObject) {
     init() {
       categoryObject.init();
       this.inited = true;
-    }
+    },
   });
 }
 
@@ -89,7 +89,7 @@ function init_all() {
 
   document.dispatchEvent(new CustomEvent("Initialized", {
     "bubbles": true,
-    "cancelable": true
+    "cancelable": true,
   }));
 }
 
@@ -343,14 +343,14 @@ async function confirmRestartPrompt(aRestartToEnable, aDefaultButtonIndex,
                                     aWantRevertAsCancelButton,
                                     aWantRestartLaterButton) {
   let [
-    msg, title, restartButtonText, noRestartButtonText, restartLaterButtonText
+    msg, title, restartButtonText, noRestartButtonText, restartLaterButtonText,
   ] = await document.l10n.formatValues([
-    [aRestartToEnable ?
-      "feature-enable-requires-restart" : "feature-disable-requires-restart"],
-    ["should-restart-title"],
-    ["should-restart-ok"],
-    ["cancel-no-restart-button"],
-    ["restart-later"],
+    {id: aRestartToEnable ?
+      "feature-enable-requires-restart" : "feature-disable-requires-restart"},
+    {id: "should-restart-title"},
+    {id: "should-restart-ok"},
+    {id: "cancel-no-restart-button"},
+    {id: "restart-later"},
   ]);
 
   // Set up the first (index 0) button:

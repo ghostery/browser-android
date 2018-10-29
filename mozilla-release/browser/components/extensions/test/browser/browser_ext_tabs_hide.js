@@ -113,6 +113,7 @@ add_task(function test_doorhanger_disable() {
     document.getAnonymousElementByAttribute(
       popupnotification, "anonid", "secondarybutton").click();
     await popupHidden;
+    await new Promise(executeSoon);
 
     is(gBrowser.visibleTabs.length, 3, "There are 3 visible tabs again");
     is(addon.userDisabled, true, "The extension is now disabled");
@@ -202,7 +203,7 @@ add_task(async function test_tabs_showhide() {
     if (win != window) {
       otherwin = win;
     }
-    let tabs = Array.from(win.gBrowser.tabs.values());
+    let tabs = Array.from(win.gBrowser.tabs);
     ok(!tabs[0].hidden, "first tab not hidden");
     for (let i = 1; i < tabs.length; i++) {
       ok(tabs[i].hidden, "tab hidden value is correct");
@@ -221,7 +222,7 @@ add_task(async function test_tabs_showhide() {
 
   otherwin = SessionStore.undoCloseWindow(0);
   await BrowserTestUtils.waitForEvent(otherwin, "load");
-  let tabs = Array.from(otherwin.gBrowser.tabs.values());
+  let tabs = Array.from(otherwin.gBrowser.tabs);
   ok(!tabs[0].hidden, "first tab not hidden");
   for (let i = 1; i < tabs.length; i++) {
     ok(tabs[i].hidden, "tab hidden value is correct");
@@ -241,7 +242,7 @@ add_task(async function test_tabs_showhide() {
 
   // Check from chrome code that all tabs are visible again.
   for (let win of BrowserWindowIterator()) {
-    let tabs = Array.from(win.gBrowser.tabs.values());
+    let tabs = Array.from(win.gBrowser.tabs);
     for (let i = 0; i < tabs.length; i++) {
       ok(!tabs[i].hidden, "tab hidden value is correct");
     }

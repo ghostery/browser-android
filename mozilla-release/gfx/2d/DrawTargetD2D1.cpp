@@ -48,6 +48,7 @@ DrawTargetD2D1::DrawTargetD2D1()
   : mPushedLayers(1)
   , mSnapshotLock(make_shared<Mutex>("DrawTargetD2D1::mSnapshotLock"))
   , mUsedCommandListsSincePurge(0)
+  , mTransformedGlyphsSinceLastPurge(0)
   , mComplexBlendsWithListInList(0)
   , mDeviceSeq(0)
 {
@@ -164,6 +165,9 @@ DrawTargetD2D1::IntoLuminanceSource(LuminanceType aLuminanceType, float aOpacity
 // are expensive though, especially relatively when little work is done, so
 // we try to reduce the amount of times we execute these purges.
 static const uint32_t kPushedLayersBeforePurge = 25;
+// Rendering glyphs with different transforms causes the glyph cache to grow
+// very large (see bug 1474883) so we must call EndDraw every so often.
+static const uint32_t kTransformedGlyphsBeforePurge = 1000;
 
 void
 DrawTargetD2D1::Flush()
@@ -255,7 +259,24 @@ DrawTargetD2D1::DrawFilter(FilterNode *aNode,
   FilterNodeD2D1* node = static_cast<FilterNodeD2D1*>(aNode);
   node->WillDraw(this);
 
-  mDC->DrawImage(node->OutputEffect(), D2DPoint(aDestPoint), D2DRect(aSourceRect));
+  if (aOptions.mAlpha == 1.0f) {
+    mDC->DrawImage(node->OutputEffect(), D2DPoint(aDestPoint), D2DRect(aSourceRect));
+  } else {
+    RefPtr<ID2D1Image> image;
+    node->OutputEffect()->GetOutput(getter_AddRefs(image));
+
+    Matrix mat = Matrix::Translation(aDestPoint);
+
+    RefPtr<ID2D1ImageBrush> imageBrush;
+    mDC->CreateImageBrush(image,
+                          D2D1::ImageBrushProperties(D2DRect(aSourceRect)),
+                          D2D1::BrushProperties(aOptions.mAlpha, D2DMatrix(mat)),
+                          getter_AddRefs(imageBrush));
+    mDC->FillRectangle(D2D1::RectF(aDestPoint.x, aDestPoint.y,
+                                   aDestPoint.x + aSourceRect.width,
+                                   aDestPoint.y + aSourceRect.height),
+                       imageBrush);
+  }
 
   FinalizeDrawing(aOptions.mCompositionOp, ColorPattern(Color()));
 }
@@ -711,6 +732,10 @@ DrawTargetD2D1::FillGlyphs(ScaledFont *aFont,
 
   if (brush) {
     mDC->DrawGlyphRun(D2D1::Point2F(), &autoRun, brush);
+  }
+
+  if (mTransform.HasNonTranslation()) {
+    mTransformedGlyphsSinceLastPurge += aBuffer.mNumGlyphs;
   }
 
   if (needsRepushedLayers) {
@@ -1268,7 +1293,8 @@ void
 DrawTargetD2D1::FlushInternal(bool aHasDependencyMutex /* = false */)
 {
   if (IsDeviceContextValid()) {
-    if ((mUsedCommandListsSincePurge >= kPushedLayersBeforePurge) &&
+    if ((mUsedCommandListsSincePurge >= kPushedLayersBeforePurge ||
+         mTransformedGlyphsSinceLastPurge >= kTransformedGlyphsBeforePurge) &&
       mPushedLayers.size() == 1) {
       // It's important to pop all clips as otherwise layers can forget about
       // their clip when doing an EndDraw. When we have layers pushed we cannot
@@ -1276,6 +1302,7 @@ DrawTargetD2D1::FlushInternal(bool aHasDependencyMutex /* = false */)
       // layers pushed.
       PopAllClips();
       mUsedCommandListsSincePurge = 0;
+      mTransformedGlyphsSinceLastPurge = 0;
       mDC->EndDraw();
       mDC->BeginDraw();
     }

@@ -19,7 +19,6 @@
 #include "mozilla/Observer.h"
 #include "nsIObserver.h"
 #include "nsIObserverService.h"
-#include "nsIDOMNode.h"
 #include "nsTArray.h"
 #include "nsXULAppAPI.h"
 #include "nsIXULAppInfo.h"
@@ -39,10 +38,10 @@ using namespace mozilla::widget;
 using namespace mozilla;
 using mozilla::MutexAutoLock;
 
-nsTArray<GfxDriverInfo>* GfxInfoBase::mDriverInfo;
-nsTArray<dom::GfxInfoFeatureStatus>* GfxInfoBase::mFeatureStatus;
-bool GfxInfoBase::mDriverInfoObserverInitialized;
-bool GfxInfoBase::mShutdownOccurred;
+nsTArray<GfxDriverInfo>* GfxInfoBase::sDriverInfo;
+nsTArray<dom::GfxInfoFeatureStatus>* GfxInfoBase::sFeatureStatus;
+bool GfxInfoBase::sDriverInfoObserverInitialized;
+bool GfxInfoBase::sShutdownOccurred;
 
 // Observes for shutdown so that the child GfxDriverInfo list is freed.
 class ShutdownObserver : public nsIObserver
@@ -59,23 +58,23 @@ public:
   {
     MOZ_ASSERT(strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID) == 0);
 
-    delete GfxInfoBase::mDriverInfo;
-    GfxInfoBase::mDriverInfo = nullptr;
+    delete GfxInfoBase::sDriverInfo;
+    GfxInfoBase::sDriverInfo = nullptr;
 
-    delete GfxInfoBase::mFeatureStatus;
-    GfxInfoBase::mFeatureStatus = nullptr;
+    delete GfxInfoBase::sFeatureStatus;
+    GfxInfoBase::sFeatureStatus = nullptr;
 
     for (uint32_t i = 0; i < DeviceFamilyMax; i++) {
-      delete GfxDriverInfo::mDeviceFamilies[i];
-      GfxDriverInfo::mDeviceFamilies[i] = nullptr;
+      delete GfxDriverInfo::sDeviceFamilies[i];
+      GfxDriverInfo::sDeviceFamilies[i] = nullptr;
     }
 
     for (uint32_t i = 0; i < DeviceVendorMax; i++) {
-      delete GfxDriverInfo::mDeviceVendors[i];
-      GfxDriverInfo::mDeviceVendors[i] = nullptr;
+      delete GfxDriverInfo::sDeviceVendors[i];
+      GfxDriverInfo::sDeviceVendors[i] = nullptr;
     }
 
-    GfxInfoBase::mShutdownOccurred = true;
+    GfxInfoBase::sShutdownOccurred = true;
 
     return NS_OK;
   }
@@ -85,10 +84,10 @@ NS_IMPL_ISUPPORTS(ShutdownObserver, nsIObserver)
 
 void InitGfxDriverInfoShutdownObserver()
 {
-  if (GfxInfoBase::mDriverInfoObserverInitialized)
+  if (GfxInfoBase::sDriverInfoObserverInitialized)
     return;
 
-  GfxInfoBase::mDriverInfoObserverInitialized = true;
+  GfxInfoBase::sDriverInfoObserverInitialized = true;
 
   nsCOMPtr<nsIObserverService> observerService = services::GetObserverService();
   if (!observerService) {
@@ -639,9 +638,9 @@ GfxInfoBase::GetFeatureStatus(int32_t aFeature, nsACString& aFailureId, int32_t*
 
   if (XRE_IsContentProcess()) {
     // Use the cached data received from the parent process.
-    MOZ_ASSERT(mFeatureStatus);
+    MOZ_ASSERT(sFeatureStatus);
     bool success = false;
-    for (const auto& fs : *mFeatureStatus) {
+    for (const auto& fs : *sFeatureStatus) {
       if (fs.feature() == aFeature) {
         aFailureId = fs.failureId();
         *aStatus = fs.status();
@@ -894,8 +893,8 @@ GfxInfoBase::FindBlocklistedDeviceInList(const nsTArray<GfxDriverInfo>& info,
 void
 GfxInfoBase::SetFeatureStatus(const nsTArray<dom::GfxInfoFeatureStatus>& aFS)
 {
-  MOZ_ASSERT(!mFeatureStatus);
-  mFeatureStatus = new nsTArray<dom::GfxInfoFeatureStatus>(aFS);
+  MOZ_ASSERT(!sFeatureStatus);
+  sFeatureStatus = new nsTArray<dom::GfxInfoFeatureStatus>(aFS);
 }
 
 nsresult
@@ -917,7 +916,7 @@ GfxInfoBase::GetFeatureStatusImpl(int32_t aFeature,
     return NS_OK;
   }
 
-  if (mShutdownOccurred) {
+  if (sShutdownOccurred) {
     // This is futile; we've already commenced shutdown and our blocklists have
     // been deleted. We may want to look into resurrecting the blocklist instead
     // but for now, just don't even go there.
@@ -948,8 +947,8 @@ GfxInfoBase::GetFeatureStatusImpl(int32_t aFeature,
   if (aDriverInfo.Length()) {
     status = FindBlocklistedDeviceInList(aDriverInfo, aSuggestedVersion, aFeature, aFailureId, os);
   } else {
-    if (!mDriverInfo) {
-      mDriverInfo = new nsTArray<GfxDriverInfo>();
+    if (!sDriverInfo) {
+      sDriverInfo = new nsTArray<GfxDriverInfo>();
     }
     status = FindBlocklistedDeviceInList(GetGfxDriverInfo(), aSuggestedVersion, aFeature, aFailureId, os);
   }
@@ -1098,31 +1097,17 @@ NS_IMETHODIMP GfxInfoBase::GetFailures(uint32_t* failureCount,
 
   if (*failureCount != 0) {
     *failures = (char**)moz_xmalloc(*failureCount * sizeof(char*));
-    if (!(*failures)) {
-      return NS_ERROR_OUT_OF_MEMORY;
-    }
     if (indices) {
       *indices = (int32_t*)moz_xmalloc(*failureCount * sizeof(int32_t));
-      if (!(*indices)) {
-        free(*failures);
-        *failures = nullptr;
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
     }
 
     /* copy over the failure messages into the array we just allocated */
     LoggingRecord::const_iterator it;
     uint32_t i=0;
     for(it = loggedStrings.begin() ; it != loggedStrings.end(); ++it, i++) {
-      (*failures)[i] = (char*)nsMemory::Clone(Get<1>(*it).c_str(), Get<1>(*it).size() + 1);
+      (*failures)[i] =
+        (char*) moz_xmemdup(Get<1>(*it).c_str(), Get<1>(*it).size() + 1);
       if (indices) (*indices)[i] = Get<0>(*it);
-
-      if (!(*failures)[i]) {
-        /* <sarcasm> I'm too afraid to use an inline function... </sarcasm> */
-        NS_FREE_XPCOM_ALLOCATED_POINTER_ARRAY(i, (*failures));
-        *failureCount = i;
-        return NS_ERROR_OUT_OF_MEMORY;
-      }
     }
   }
 
@@ -1400,13 +1385,18 @@ GfxInfoBase::DescribeFeatures(JSContext* aCx, JS::Handle<JSObject*> aObj)
   JS::Rooted<JSObject*> obj(aCx);
 
   gfx::FeatureStatus gpuProcess = gfxConfig::GetValue(Feature::GPU_PROCESS);
-  InitFeatureObject(aCx, aObj, "gpuProcess", FEATURE_GPU_PROCESS, Some(gpuProcess), &obj);
+  InitFeatureObject(aCx, aObj, "gpuProcess", gpuProcess, &obj);
+
+  gfx::FeatureStatus wrQualified = gfxConfig::GetValue(Feature::WEBRENDER_QUALIFIED);
+  InitFeatureObject(aCx, aObj, "wrQualified", wrQualified, &obj);
+
+  gfx::FeatureStatus webrender = gfxConfig::GetValue(Feature::WEBRENDER);
+  InitFeatureObject(aCx, aObj, "webrender", webrender, &obj);
 
   // Only include AL if the platform attempted to use it.
   gfx::FeatureStatus advancedLayers = gfxConfig::GetValue(Feature::ADVANCED_LAYERS);
   if (advancedLayers != FeatureStatus::Unused) {
-    InitFeatureObject(aCx, aObj, "advancedLayers", FEATURE_ADVANCED_LAYERS,
-                      Some(advancedLayers), &obj);
+    InitFeatureObject(aCx, aObj, "advancedLayers", advancedLayers, &obj);
 
     if (gfxConfig::UseFallback(Fallback::NO_CONSTANT_BUFFER_OFFSETTING)) {
       JS::Rooted<JS::Value> trueVal(aCx, JS::BooleanValue(true));
@@ -1419,8 +1409,7 @@ bool
 GfxInfoBase::InitFeatureObject(JSContext* aCx,
                                JS::Handle<JSObject*> aContainer,
                                const char* aName,
-                               int32_t aFeature,
-                               const Maybe<mozilla::gfx::FeatureStatus>& aFeatureStatus,
+                               mozilla::gfx::FeatureStatus& aFeatureStatus,
                                JS::MutableHandle<JSObject*> aOutObj)
 {
   JS::Rooted<JSObject*> obj(aCx, JS_NewPlainObject(aCx));
@@ -1428,20 +1417,12 @@ GfxInfoBase::InitFeatureObject(JSContext* aCx,
     return false;
   }
 
-  nsCString failureId = NS_LITERAL_CSTRING("OK");
-  int32_t unused;
-  if (!NS_SUCCEEDED(GetFeatureStatus(aFeature, failureId, &unused))) {
-    return false;
-  }
-
   // Set "status".
-  if (aFeatureStatus) {
-    const char* status = FeatureStatusToString(aFeatureStatus.value());
+  const char* status = FeatureStatusToString(aFeatureStatus);
 
-    JS::Rooted<JSString*> str(aCx, JS_NewStringCopyZ(aCx, status));
-    JS::Rooted<JS::Value> val(aCx, JS::StringValue(str));
-    JS_SetProperty(aCx, obj, "status", val);
-  }
+  JS::Rooted<JSString*> str(aCx, JS_NewStringCopyZ(aCx, status));
+  JS::Rooted<JS::Value> val(aCx, JS::StringValue(str));
+  JS_SetProperty(aCx, obj, "status", val);
 
   // Add the feature object to the container.
   {

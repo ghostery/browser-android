@@ -31,6 +31,10 @@
 #include "builtin/RegExp.h"
 #include "jit/InlinableNatives.h"
 #include "js/Conversions.h"
+#if !EXPOSE_INTL_API
+#include "js/LocaleSensitive.h"
+#endif
+#include "js/StableStringChars.h"
 #include "js/UniquePtr.h"
 #if ENABLE_INTL_API
 # include "unicode/uchar.h"
@@ -68,6 +72,7 @@ using mozilla::PodCopy;
 using mozilla::RangedPtr;
 
 using JS::AutoCheckCannotGC;
+using JS::AutoStableStringChars;
 
 static JSLinearString*
 ArgToLinearString(JSContext* cx, const CallArgs& args, unsigned argno)
@@ -192,12 +197,7 @@ class MOZ_NON_PARAM InlineCharBuffer
         MOZ_ASSERT(heapStorage, "heap storage was not allocated for non-inline string");
 
         heapStorage.get()[length] = '\0'; // Null-terminate
-        JSString* res = NewStringDontDeflate<CanGC>(cx, heapStorage.get(), length);
-        if (!res)
-            return nullptr;
-
-        mozilla::Unused << heapStorage.release();
-        return res;
+        return NewStringDontDeflate<CanGC>(cx, std::move(heapStorage), length);
     }
 
     JSString* toString(JSContext* cx, size_t length)
@@ -214,12 +214,7 @@ class MOZ_NON_PARAM InlineCharBuffer
         MOZ_ASSERT(heapStorage, "heap storage was not allocated for non-inline string");
 
         heapStorage.get()[length] = '\0'; // Null-terminate
-        JSString* res = NewString<CanGC>(cx, heapStorage.get(), length);
-        if (!res)
-            return nullptr;
-
-        mozilla::Unused << heapStorage.release();
-        return res;
+        return NewString<CanGC>(cx, std::move(heapStorage), length);
     }
 };
 
@@ -3136,13 +3131,26 @@ CharSplitHelper(JSContext* cx, HandleLinearString str, uint32_t limit, HandleObj
     RootedArrayObject splits(cx, NewFullyAllocatedStringArray(cx, group, resultlen));
     if (!splits)
         return nullptr;
-    splits->ensureDenseInitializedLength(cx, 0, resultlen);
 
-    for (size_t i = 0; i < resultlen; ++i) {
-        JSString* sub = staticStrings.getUnitStringForElement(cx, str, i);
-        if (!sub)
-            return nullptr;
-        splits->initDenseElement(i, StringValue(sub));
+    if (str->hasLatin1Chars()) {
+        splits->setDenseInitializedLength(resultlen);
+
+        JS::AutoCheckCannotGC nogc;
+        const Latin1Char* latin1Chars = str->latin1Chars(nogc);
+        for (size_t i = 0; i < resultlen; ++i) {
+            Latin1Char c = latin1Chars[i];
+            MOZ_ASSERT(staticStrings.hasUnit(c));
+            splits->initDenseElement(i, StringValue(staticStrings.getUnit(c)));
+        }
+    } else {
+        splits->ensureDenseInitializedLength(cx, 0, resultlen);
+
+        for (size_t i = 0; i < resultlen; ++i) {
+            JSString* sub = staticStrings.getUnitStringForElement(cx, str, i);
+            if (!sub)
+                return nullptr;
+            splits->initDenseElement(i, StringValue(sub));
+        }
     }
 
     return splits;
@@ -3545,7 +3553,7 @@ js::str_fromCodePoint(JSContext* cx, unsigned argc, Value* vp)
     // Step 3.
     static_assert(ARGS_LENGTH_MAX < std::numeric_limits<decltype(args.length())>::max() / 2,
                   "|args.length() * 2 + 1| does not overflow");
-    char16_t* elements = cx->pod_malloc<char16_t>(args.length() * 2 + 1);
+    auto elements = cx->make_pod_array<char16_t>(args.length() * 2 + 1);
     if (!elements)
         return false;
 
@@ -3554,22 +3562,18 @@ js::str_fromCodePoint(JSContext* cx, unsigned argc, Value* vp)
     for (unsigned nextIndex = 0; nextIndex < args.length(); nextIndex++) {
         // Steps 5.a-d.
         uint32_t codePoint;
-        if (!ToCodePoint(cx, args[nextIndex], &codePoint)) {
-            js_free(elements);
+        if (!ToCodePoint(cx, args[nextIndex], &codePoint))
             return false;
-        }
 
         // Step 5.e.
-        unicode::UTF16Encode(codePoint, elements, &length);
+        unicode::UTF16Encode(codePoint, elements.get(), &length);
     }
     elements[length] = 0;
 
     // Step 6.
-    JSString* str = NewString<CanGC>(cx, elements, length);
-    if (!str) {
-        js_free(elements);
+    JSString* str = NewString<CanGC>(cx, std::move(elements), length);
+    if (!str)
         return false;
-    }
 
     args.rval().setString(str);
     return true;
@@ -4068,7 +4072,7 @@ BuildFlatMatchArray(JSContext* cx, HandleString str, HandleString pattern, int32
     }
 
     /* Get the templateObject that defines the shape and type of the output object */
-    JSObject* templateObject = cx->compartment()->regExps.getOrCreateMatchResultTemplateObject(cx);
+    JSObject* templateObject = cx->realm()->regExps.getOrCreateMatchResultTemplateObject(cx);
     if (!templateObject)
         return false;
 

@@ -47,8 +47,7 @@ public:
   }
 
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent,
-                              bool aCompileEventHandlers) override;
+                              nsIContent* aBindingParent) override;
   virtual void UnbindFromTree(bool aDeep = true,
                               bool aNullParent = true) override;
 
@@ -99,12 +98,12 @@ nsTextNode::~nsTextNode()
 
 // Use the CC variant of this, even though this class does not define
 // a new CC participant, to make QIing to the CC interfaces faster.
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(nsTextNode, CharacterData, nsIDOMNode)
+NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED_0(nsTextNode, CharacterData)
 
 JSObject*
 nsTextNode::WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return TextBinding::Wrap(aCx, this, aGivenProto);
+  return Text_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 bool
@@ -137,11 +136,10 @@ nsTextNode::AppendTextForNormalize(const char16_t* aBuffer, uint32_t aLength,
 
 nsresult
 nsTextNode::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                       nsIContent* aBindingParent, bool aCompileEventHandlers)
+                       nsIContent* aBindingParent)
 {
   nsresult rv = CharacterData::BindToTree(aDocument, aParent,
-                                          aBindingParent,
-                                          aCompileEventHandlers);
+                                          aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
 
   SetDirectionFromNewTextNode(this);
@@ -215,9 +213,9 @@ NS_NewAttributeContent(nsNodeInfoManager *aNodeInfoManager,
                        int32_t aNameSpaceID, nsAtom* aAttrName,
                        nsIContent** aResult)
 {
-  NS_PRECONDITION(aNodeInfoManager, "Missing nodeInfoManager");
-  NS_PRECONDITION(aAttrName, "Must have an attr name");
-  NS_PRECONDITION(aNameSpaceID != kNameSpaceID_Unknown, "Must know namespace");
+  MOZ_ASSERT(aNodeInfoManager, "Missing nodeInfoManager");
+  MOZ_ASSERT(aAttrName, "Must have an attr name");
+  MOZ_ASSERT(aNameSpaceID != kNameSpaceID_Unknown, "Must know namespace");
 
   *aResult = nullptr;
 
@@ -236,14 +234,13 @@ NS_IMPL_ISUPPORTS_INHERITED(nsAttributeTextNode, nsTextNode,
 
 nsresult
 nsAttributeTextNode::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                                nsIContent* aBindingParent,
-                                bool aCompileEventHandlers)
+                                nsIContent* aBindingParent)
 {
-  NS_PRECONDITION(aParent && aParent->GetParent(),
-                  "This node can't be a child of the document or of the document root");
+  MOZ_ASSERT(aParent && aParent->GetParent(),
+             "This node can't be a child of the document or of the document root");
 
   nsresult rv = nsTextNode::BindToTree(aDocument, aParent,
-                                       aBindingParent, aCompileEventHandlers);
+                                       aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
 
   NS_ASSERTION(!mGrandparent, "We were already bound!");
@@ -305,4 +302,3 @@ nsAttributeTextNode::UpdateText(bool aNotify)
     SetText(attrValue, aNotify);
   }
 }
-

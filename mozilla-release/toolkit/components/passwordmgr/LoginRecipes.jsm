@@ -17,11 +17,11 @@ const OPTIONAL_KEYS = [
 ];
 const SUPPORTED_KEYS = REQUIRED_KEYS.concat(OPTIONAL_KEYS);
 
-Cu.importGlobalProperties(["URL"]);
-
 ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
 ChromeUtils.defineModuleGetter(this, "LoginHelper",
                                "resource://gre/modules/LoginHelper.jsm");
@@ -234,11 +234,7 @@ var LoginRecipesContent = {
       }
     }
 
-    let mm = win.QueryInterface(Ci.nsIInterfaceRequestor)
-                .getInterface(Ci.nsIWebNavigation)
-                .QueryInterface(Ci.nsIDocShell)
-                .QueryInterface(Ci.nsIInterfaceRequestor)
-                .getInterface(Ci.nsIContentFrameMessageManager);
+    let mm = win.docShell.messageManager;
 
     log.warn("getRecipes: falling back to a synchronous message for:", aHost);
     recipes = mm.sendSyncMessage("RemoteLogins:findRecipes", { formOrigin: aHost })[0];

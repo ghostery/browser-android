@@ -14,7 +14,7 @@
 <!ENTITY keepHistory.accesskey "e">
 <!ENTITY acceptCookies.label "Akceptowanie ciasteczek">
 <!ENTITY acceptCookies.accesskey "A">
-<!ENTITY acceptThirdParty.pre.label "Akceptowanie ciasteczek witryn zewnętrznych podmiotów:">
+<!ENTITY acceptThirdParty.pre.label "Akceptowanie ciasteczek zewnętrznych witryn:">
 <!ENTITY acceptThirdParty.pre.accesskey "k">
 <!ENTITY acceptThirdParty.always.label "zawsze">
 <!ENTITY acceptThirdParty.never.label "nigdy">

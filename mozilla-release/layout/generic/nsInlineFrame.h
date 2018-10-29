@@ -43,7 +43,7 @@ public:
 
   virtual bool IsFrameOfType(uint32_t aFlags) const override
   {
-    if (aFlags & eSupportsCSSTransforms) {
+    if (aFlags & (eSupportsCSSTransforms | eSupportsContainLayoutAndPaint)) {
       return false;
     }
     return nsContainerFrame::IsFrameOfType(aFlags &
@@ -159,9 +159,11 @@ protected:
                          nsIFrame* aFrame,
                          nsReflowStatus& aStatus);
 
-  virtual nsIFrame* PullOneFrame(nsPresContext* aPresContext,
-                                 InlineReflowInput& rs,
-                                 bool* aIsComplete);
+  // Returns whether there's any frame that PullOneFrame would pull from
+  // aNextInFlow or any of aNextInFlow's next-in-flows.
+  static bool HasFramesToPull(nsInlineFrame* aNextInFlow);
+
+  virtual nsIFrame* PullOneFrame(nsPresContext*, InlineReflowInput&);
 
   virtual void PushFrames(nsPresContext* aPresContext,
                           nsIFrame* aFromChild,
@@ -173,18 +175,12 @@ private:
     : nsInlineFrame(aStyle, kClassID)
   {}
 
-  // Helper method for DrainSelfOverflowList() to deal with lazy parenting
-  // (which we only do for nsInlineFrame, not nsFirstLineFrame).
-  enum DrainFlags {
-    eDontReparentFrames = 1, // skip reparenting the overflow list frames
-    eInFirstLine = 2, // the request is for an inline descendant of a nsFirstLineFrame
-  };
   /**
    * Move any frames on our overflow list to the end of our principal list.
-   * @param aFlags one or more of the above DrainFlags
+   * @param aInFirstLine whether we're in a first-line frame.
    * @return true if there were any overflow frames
    */
-  bool DrainSelfOverflowListInternal(DrainFlags aFlags);
+  bool DrainSelfOverflowListInternal(bool aInFirstLine);
 protected:
   nscoord mBaseline;
 };
@@ -221,9 +217,7 @@ protected:
     : nsInlineFrame(aStyle, kClassID)
   {}
 
-  virtual nsIFrame* PullOneFrame(nsPresContext* aPresContext,
-                                 InlineReflowInput& rs,
-                                 bool* aIsComplete) override;
+  nsIFrame* PullOneFrame(nsPresContext*, InlineReflowInput&) override;
 };
 
 #endif /* nsInlineFrame_h___ */

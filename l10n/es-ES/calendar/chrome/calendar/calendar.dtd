@@ -147,7 +147,6 @@
 <!ENTITY calendar.context.attendance.menu.label "Asistencia">
 <!ENTITY calendar.context.attendance.menu.accesskey "s">
 <!ENTITY calendar.context.attendance.occurrence.label "Esta aparición">
-<!ENTITY calendar.context.attendance.all.label "Todas las repeticiones">
 <!ENTITY calendar.context.attendance.all2.label "Series completas">
 <!ENTITY calendar.context.attendance.send.label "Enviar una notificación ahora">
 <!ENTITY calendar.context.attendance.send.accesskey "v">

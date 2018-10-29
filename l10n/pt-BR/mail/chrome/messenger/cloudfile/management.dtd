@@ -3,6 +3,6 @@
    - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
 <!ENTITY cloudfileMgmt.privacyPolicy "Política de privacidade">
 <!ENTITY cloudfileMgmt.termsOfService "Termos de serviço">
-<!ENTITY cloudfileMgmt.usedSpace "Espaço em uso:">
+<!ENTITY cloudfileMgmt.usedSpace "Espaço utilizado:">
 <!ENTITY cloudfileMgmt.unusedSpace "Espaço disponível:">
 <!ENTITY cloudfileMgmt.upgradeOffer "Obter mais espaço">

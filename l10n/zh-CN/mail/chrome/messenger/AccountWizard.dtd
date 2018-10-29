@@ -4,18 +4,18 @@
 
 <!-- Entities for AccountWizard -->
 
-<!ENTITY windowTitle.label "帐户向导">
+<!ENTITY windowTitle.label "账户向导">
 <!ENTITY accountWizard.size "width: 40em; height: 38em;">
 
 <!-- Entities for Account Type page -->
 
-<!ENTITY accountSetupInfo2.label "为了接收消息，您必须先建立一个帐户。">
-<!ENTITY accountTypeTitle.label "新建帐户设置">
-<!ENTITY accountTypeDesc2.label "这个向导会收集必要的信息用来创建一个帐户。如果您不知道其中必要的信息，请联系系统管理员或者互联网服务提供商。">
-<!ENTITY accountTypeDirections.label "选择您要设置的帐户类型：">
+<!ENTITY accountSetupInfo2.label "为了接收消息，您必须先建立一个账户。">
+<!ENTITY accountTypeTitle.label "新建账户设置">
+<!ENTITY accountTypeDesc2.label "这个向导会收集必要的信息用来创建一个账户。如果您不知道其中必要的信息，请联系系统管理员或者互联网服务提供商。">
+<!ENTITY accountTypeDirections.label "选择您要设置的账户类型：">
 <!ENTITY accountTypeMail.label "电子邮件账户">
 <!ENTITY accountTypeMail.accesskey "m">
-<!ENTITY accountTypeNews.label "新闻组帐户">
+<!ENTITY accountTypeNews.label "新闻组账户">
 <!ENTITY accountTypeNews.accesskey "w">
 
 <!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
@@ -25,7 +25,7 @@
 <!-- Entities for Identity page -->
 
 <!ENTITY identityTitle.label "标识">
-<!ENTITY identityDesc.label "每个帐户可以有一个标识，当其他人接收到您的消息时此标识可以让他们知道这是您发的消息。">
+<!ENTITY identityDesc.label "每个账户可以有一个标识，当其他人接收到您的消息时此标识可以让他们知道这是您发的消息。">
 
 <!-- LOCALIZATION NOTE (fullnameDesc.label) : do not translate two of "&quot;" in below line -->
 <!ENTITY fullnameDesc.label "请输入您希望在发送的消息中出现在 &quot;发件人&quot; 字段中的姓名。">
@@ -83,7 +83,7 @@
 <!-- LOCALIZATION NOTE (modifyOutgoing.suffix) : This string will be appended after each of
      haveSmtp1.suffix3, haveSmtp2.suffix3, haveSmtp3.suffix3 .
 -->
-<!ENTITY modifyOutgoing.suffix "你可以在帐户设置中更改外发服务器。">
+<!ENTITY modifyOutgoing.suffix "你可以在账户设置中更改外发服务器。">
 <!-- LOCALIZATION NOTE (haveSmtp1.prefix and haveSmtp1.suffix3) : Do not translate "SMTP" and "&quot;" in
      these variables. Also, translate haveSmtp1.prefix and haveSmtp1.suffix3 as a single sentence, inserting
      text after the "&quot;" entity in haveSmtp1.suffix3, if required grammatically.
@@ -105,16 +105,16 @@
 
 <!-- Entities for Account name page -->
 
-<!ENTITY accnameTitle.label "帐户名称">
+<!ENTITY accnameTitle.label "账户名称">
 <!-- LOCALIZATION NOTE (accnameDesc.label) : do not translate any "&quot;" in below line -->
-<!ENTITY accnameDesc.label "输入您想要此帐户使用的名称。（例如，&quot;工作帐户&quot;、&quot;家庭帐户&quot; 或 &quot;新闻帐户&quot;）">
-<!ENTITY accnameLabel.label "帐户名称:">
+<!ENTITY accnameDesc.label "输入您想要此账户使用的名称。（例如，&quot;工作账户&quot;、&quot;家庭账户&quot; 或 &quot;新闻账户&quot;）">
+<!ENTITY accnameLabel.label "账户名称:">
 <!ENTITY accnameLabel.accesskey "A">
 
 <!-- Entities for Done (Congratulations) page -->
 
 <!ENTITY completionTitle.label "恭喜您！">
-<!ENTITY completionText.label "您已输入设置此帐户所有必需的信息。">
+<!ENTITY completionText.label "您已输入设置此账户所有必需的信息。">
 <!ENTITY serverTypePrefix.label "接收消息服务器类型：">
 <!ENTITY serverNamePrefix.label "接收消息服务器名称：">
 <!ENTITY smtpServerNamePrefix.label "SMTP服务器名称：">
@@ -124,5 +124,5 @@
 <!ENTITY deferStorageDesc.label "若取消勾选此项，此账户的邮件将存放在本身的目录内。此账户将显示为顶层账户。否则它会从属于本地的全局收件箱。">
 <!ENTITY deferStorage.label "使用全局收件箱（将邮件保存至本地文件夹中）">
 <!ENTITY deferStorage.accesskey "G">
-<!ENTITY clickFinish.label "单击“完成”保存设置并退出帐户向导。">
+<!ENTITY clickFinish.label "单击“完成”保存设置并退出账户向导。">
 <!ENTITY clickFinish.labelMac "点击 完成 已保存这些设置并退出账户向导。">

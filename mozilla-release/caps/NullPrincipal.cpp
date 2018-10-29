@@ -16,7 +16,6 @@
 #include "NullPrincipal.h"
 #include "NullPrincipalURI.h"
 #include "nsMemory.h"
-#include "nsIURIWithPrincipal.h"
 #include "nsIClassInfoImpl.h"
 #include "nsNetCID.h"
 #include "nsError.h"
@@ -69,7 +68,7 @@ NullPrincipal::Create(const OriginAttributes& aOriginAttributes, nsIURI* aURI)
 /* static */ already_AddRefed<NullPrincipal>
 NullPrincipal::CreateWithoutOriginAttributes()
 {
-  return NullPrincipal::Create(mozilla::OriginAttributes(), nullptr);
+  return NullPrincipal::Create(OriginAttributes(), nullptr);
 }
 
 nsresult
@@ -160,13 +159,17 @@ NullPrincipal::SetCsp(nsIContentSecurityPolicy* aCsp)
 NS_IMETHODIMP
 NullPrincipal::GetURI(nsIURI** aURI)
 {
-  return NS_EnsureSafeToReturn(mURI, aURI);
+  nsCOMPtr<nsIURI> uri = mURI;
+  uri.forget(aURI);
+  return NS_OK;
 }
 
 NS_IMETHODIMP
 NullPrincipal::GetDomain(nsIURI** aDomain)
 {
-  return NS_EnsureSafeToReturn(mURI, aDomain);
+  nsCOMPtr<nsIURI> uri = mURI;
+  uri.forget(aDomain);
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -181,14 +184,10 @@ bool
 NullPrincipal::MayLoadInternal(nsIURI* aURI)
 {
   // Also allow the load if we are the principal of the URI being checked.
-  nsCOMPtr<nsIURIWithPrincipal> uriPrinc = do_QueryInterface(aURI);
-  if (uriPrinc) {
-    nsCOMPtr<nsIPrincipal> principal;
-    uriPrinc->GetPrincipal(getter_AddRefs(principal));
-
-    if (principal == this) {
-      return true;
-    }
+  nsCOMPtr<nsIPrincipal> blobPrincipal;
+  if (dom::BlobURLProtocolHandler::GetBlobURLPrincipal(aURI,
+                                                       getter_AddRefs(blobPrincipal))) {
+    return blobPrincipal == this;
   }
 
   return false;

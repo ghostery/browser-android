@@ -4,8 +4,8 @@
 
 <!ENTITY aboutSupport.appBasicsAppBuildID "应用程序构建标识符">
 
-<!ENTITY aboutSupport.accountsTitle "邮件和新闻帐户">
-<!ENTITY aboutSupport.showPrivateData.mainText "包括帐户名称">
+<!ENTITY aboutSupport.accountsTitle "邮件和新闻账户">
+<!ENTITY aboutSupport.showPrivateData.mainText "包括账户名称">
 <!ENTITY aboutSupport.showPrivateData.explanationText "（可能是身份信息）">
 <!ENTITY aboutSupport.accountsID "ID">
 <!ENTITY aboutSupport.accountsName "名称">

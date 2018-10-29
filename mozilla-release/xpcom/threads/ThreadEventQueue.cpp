@@ -30,12 +30,20 @@ public:
   bool PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
                 EventPriority aPriority) final
   {
-    return mOwner->PutEventInternal(Move(aEvent), aPriority, this);
+    return mOwner->PutEventInternal(std::move(aEvent), aPriority, this);
   }
 
   void Disconnect(const MutexAutoLock& aProofOfLock) final
   {
     mQueue = nullptr;
+  }
+
+  size_t SizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf) const
+  {
+    if (mQueue) {
+      return mQueue->SizeOfIncludingThis(aMallocSizeOf);
+    }
+    return 0;
   }
 
 private:
@@ -49,7 +57,7 @@ private:
 
 template<class InnerQueueT>
 ThreadEventQueue<InnerQueueT>::ThreadEventQueue(UniquePtr<InnerQueueT> aQueue)
-  : mBaseQueue(Move(aQueue))
+  : mBaseQueue(std::move(aQueue))
   , mLock("ThreadEventQueue")
   , mEventsAvailable(mLock, "EventsAvail")
 {
@@ -68,7 +76,7 @@ bool
 ThreadEventQueue<InnerQueueT>::PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
                                         EventPriority aPriority)
 {
-  return PutEventInternal(Move(aEvent), aPriority, nullptr);
+  return PutEventInternal(std::move(aEvent), aPriority, nullptr);
 }
 
 template<class InnerQueueT>
@@ -79,7 +87,7 @@ ThreadEventQueue<InnerQueueT>::PutEventInternal(already_AddRefed<nsIRunnable>&& 
 {
   // We want to leak the reference when we fail to dispatch it, so that
   // we won't release the event in a wrong thread.
-  LeakRefPtr<nsIRunnable> event(Move(aEvent));
+  LeakRefPtr<nsIRunnable> event(std::move(aEvent));
   nsCOMPtr<nsIThreadObserver> obs;
 
   {
@@ -152,6 +160,7 @@ ThreadEventQueue<InnerQueueT>::GetEvent(bool aMayWait,
       break;
     }
 
+    AUTO_PROFILER_LABEL("ThreadEventQueue::GetEvent::Wait", IDLE);
     mEventsAvailable.Wait();
   }
 
@@ -226,7 +235,7 @@ ThreadEventQueue<InnerQueueT>::PushEventQueue()
 
   MutexAutoLock lock(mLock);
 
-  mNestedQueues.AppendElement(NestedQueueItem(Move(queue), eventTarget));
+  mNestedQueues.AppendElement(NestedQueueItem(std::move(queue), eventTarget));
   return eventTarget.forget();
 }
 
@@ -258,6 +267,22 @@ ThreadEventQueue<InnerQueueT>::PopEventQueue(nsIEventTarget* aTarget)
   }
 
   mNestedQueues.RemoveLastElement();
+}
+
+template<class InnerQueueT>
+size_t
+ThreadEventQueue<InnerQueueT>::SizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf) const
+{
+  size_t n = 0;
+
+  n += mBaseQueue->SizeOfIncludingThis(aMallocSizeOf);
+
+  n += mNestedQueues.ShallowSizeOfExcludingThis(aMallocSizeOf);
+  for (auto& queue : mNestedQueues) {
+    n += queue.mEventTarget->SizeOfIncludingThis(aMallocSizeOf);
+  }
+
+  return SynchronizedEventQueue::SizeOfExcludingThis(aMallocSizeOf) + n;
 }
 
 template<class InnerQueueT>

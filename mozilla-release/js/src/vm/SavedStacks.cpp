@@ -25,12 +25,13 @@
 #include "gc/Policy.h"
 #include "gc/Rooting.h"
 #include "js/CharacterEncoding.h"
+#include "js/SavedFrameAPI.h"
 #include "js/Vector.h"
 #include "util/StringBuffer.h"
 #include "vm/Debugger.h"
 #include "vm/GeckoProfiler.h"
-#include "vm/JSCompartment.h"
 #include "vm/JSScript.h"
+#include "vm/Realm.h"
 #include "vm/SavedFrame.h"
 #include "vm/Time.h"
 #include "vm/WrapperObject.h"
@@ -43,7 +44,6 @@
 using mozilla::AddToHash;
 using mozilla::DebugOnly;
 using mozilla::Maybe;
-using mozilla::Move;
 using mozilla::Nothing;
 using mozilla::Some;
 
@@ -101,21 +101,21 @@ LiveSavedFrameCache::find(JSContext* cx, FramePtr& framePtr, const jsbytecode* p
     MOZ_ASSERT(initialized());
     MOZ_ASSERT(framePtr.hasCachedSavedFrame());
 
-    // If we flushed the cache due to a compartment mismatch, then we shouldn't
+    // If we flushed the cache due to a realm mismatch, then we shouldn't
     // expect to find any frames in the cache.
     if (frames->empty()) {
         frame.set(nullptr);
         return;
     }
 
-    // All our SavedFrames should be in the same compartment. If the last
-    // entry's SavedFrame's compartment doesn't match cx's, flush the cache.
-    if (frames->back().savedFrame->compartment() != cx->compartment()) {
+    // All our SavedFrames should be in the same realm. If the last
+    // entry's SavedFrame's realm doesn't match cx's, flush the cache.
+    if (frames->back().savedFrame->realm() != cx->realm()) {
 #ifdef DEBUG
-        // Check that they are, indeed, all in the same compartment.
-        auto compartment = frames->back().savedFrame->compartment();
+        // Check that they are, indeed, all in the same realm.
+        auto compartment = frames->back().savedFrame->realm();
         for (const auto& f : (*frames))
-            MOZ_ASSERT(compartment == f.savedFrame->compartment());
+            MOZ_ASSERT(compartment == f.savedFrame->realm());
 #endif
         frames->clear();
         frame.set(nullptr);
@@ -124,7 +124,7 @@ LiveSavedFrameCache::find(JSContext* cx, FramePtr& framePtr, const jsbytecode* p
 
     Key key(framePtr);
     while (key != frames->back().key) {
-        MOZ_ASSERT(frames->back().savedFrame->compartment() == cx->compartment());
+        MOZ_ASSERT(frames->back().savedFrame->realm() == cx->realm());
 
         // We know that the cache does contain an entry for frameIter's frame,
         // since its bit is set. That entry must be below this one in the stack,
@@ -554,17 +554,17 @@ SavedFrame::initFromLookup(JSContext* cx, SavedFrame::HandleLookup lookup)
 SavedFrame::create(JSContext* cx)
 {
     RootedGlobalObject global(cx, cx->global());
-    assertSameCompartment(cx, global);
+    cx->check(global);
 
     // Ensure that we don't try to capture the stack again in the
     // `SavedStacksMetadataBuilder` for this new SavedFrame object, and
     // accidentally cause O(n^2) behavior.
-    SavedStacks::AutoReentrancyGuard guard(cx->compartment()->savedStacks());
+    SavedStacks::AutoReentrancyGuard guard(cx->realm()->savedStacks());
 
     RootedNativeObject proto(cx, GlobalObject::getOrCreateSavedFramePrototype(cx, global));
     if (!proto)
         return nullptr;
-    assertSameCompartment(cx, proto);
+    cx->check(proto);
 
     return NewObjectWithGivenProto<SavedFrame>(cx, proto, TenuredObject);
 }
@@ -576,6 +576,29 @@ SavedFrame::isSelfHosted(JSContext* cx)
     return source == cx->names().selfHosted;
 }
 
+bool
+SavedFrame::isWasm()
+{
+    // See WasmFrameIter::computeLine() comment.
+    return bool(getColumn() & wasm::WasmFrameIter::ColumnBit);
+}
+
+uint32_t
+SavedFrame::wasmFuncIndex()
+{
+    // See WasmFrameIter::computeLine() comment.
+    MOZ_ASSERT(isWasm());
+    return getColumn() & ~wasm::WasmFrameIter::ColumnBit;
+}
+
+uint32_t
+SavedFrame::wasmBytecodeOffset()
+{
+    // See WasmFrameIter::computeLine() comment.
+    MOZ_ASSERT(isWasm());
+    return getLine();
+}
+
 /* static */ bool
 SavedFrame::construct(JSContext* cx, unsigned argc, Value* vp)
 {
@@ -585,14 +608,13 @@ SavedFrame::construct(JSContext* cx, unsigned argc, Value* vp)
 }
 
 static bool
-SavedFrameSubsumedByCaller(JSContext* cx, HandleSavedFrame frame)
+SavedFrameSubsumedByPrincipals(JSContext* cx, JSPrincipals* principals, HandleSavedFrame frame)
 {
     auto subsumes = cx->runtime()->securityCallbacks->subsumes;
     if (!subsumes)
         return true;
 
-    auto currentCompartmentPrincipals = cx->compartment()->principals();
-    MOZ_ASSERT(!ReconstructedSavedFramePrincipals::is(currentCompartmentPrincipals));
+    MOZ_ASSERT(!ReconstructedSavedFramePrincipals::is(principals));
 
     auto framePrincipals = frame->getPrincipals();
 
@@ -603,7 +625,7 @@ SavedFrameSubsumedByCaller(JSContext* cx, HandleSavedFrame frame)
     if (framePrincipals == &ReconstructedSavedFramePrincipals::IsNotSystem)
         return true;
 
-    return subsumes(currentCompartmentPrincipals, framePrincipals);
+    return subsumes(principals, framePrincipals);
 }
 
 // Return the first SavedFrame in the chain that starts with |frame| whose
@@ -612,7 +634,7 @@ SavedFrameSubsumedByCaller(JSContext* cx, HandleSavedFrame frame)
 // had the |asyncCause| property set, otherwise it is explicitly set to false.
 template<typename Matcher>
 static SavedFrame*
-GetFirstMatchedFrame(JSContext* cx, Matcher& matches,
+GetFirstMatchedFrame(JSContext* cx, JSPrincipals* principals, Matcher& matches,
                      HandleSavedFrame frame, JS::SavedFrameSelfHosted selfHosted,
                      bool& skippedAsync)
 {
@@ -622,7 +644,7 @@ GetFirstMatchedFrame(JSContext* cx, Matcher& matches,
     while (rootedFrame) {
         if ((selfHosted == JS::SavedFrameSelfHosted::Include ||
              !rootedFrame->isSelfHosted(cx)) &&
-            matches(cx, rootedFrame))
+            matches(cx, principals, rootedFrame))
         {
             return rootedFrame;
         }
@@ -637,26 +659,16 @@ GetFirstMatchedFrame(JSContext* cx, Matcher& matches,
 }
 
 // Return the first SavedFrame in the chain that starts with |frame| whose
-// principals are subsumed by the principals of the context's current
-// compartment, according to |subsumes|. If there is no such frame, return
-// nullptr. |skippedAsync| is set to true if any of the skipped frames had the
-// |asyncCause| property set, otherwise it is explicitly set to false.
+// principals are subsumed by |principals|, according to |subsumes|. If there is
+// no such frame, return nullptr. |skippedAsync| is set to true if any of the
+// skipped frames had the |asyncCause| property set, otherwise it is explicitly
+// set to false.
 static SavedFrame*
-GetFirstSubsumedFrame(JSContext* cx, HandleSavedFrame frame, JS::SavedFrameSelfHosted selfHosted,
-                      bool& skippedAsync)
+GetFirstSubsumedFrame(JSContext* cx, JSPrincipals* principals, HandleSavedFrame frame,
+                      JS::SavedFrameSelfHosted selfHosted, bool& skippedAsync)
 {
-    return GetFirstMatchedFrame(cx, SavedFrameSubsumedByCaller, frame, selfHosted, skippedAsync);
-}
-
-JS_FRIEND_API(JSObject*)
-GetFirstSubsumedSavedFrame(JSContext* cx, HandleObject savedFrame,
-                           JS::SavedFrameSelfHosted selfHosted)
-{
-    if (!savedFrame)
-        return nullptr;
-    bool skippedAsync;
-    RootedSavedFrame frame(cx, &savedFrame->as<SavedFrame>());
-    return GetFirstSubsumedFrame(cx, frame, selfHosted, skippedAsync);
+    return GetFirstMatchedFrame(cx, principals, SavedFrameSubsumedByPrincipals, frame, selfHosted,
+                                skippedAsync);
 }
 
 JS_FRIEND_API(JSObject*)
@@ -671,13 +683,14 @@ GetFirstSubsumedSavedFrame(JSContext* cx, JSPrincipals* principals,
     if (!subsumes)
         return nullptr;
 
-    auto matcher = [&](JSContext* cx, HandleSavedFrame frame) -> bool {
+    auto matcher =
+    [subsumes](JSContext* cx, JSPrincipals* principals, HandleSavedFrame frame) -> bool {
         return subsumes(principals, frame->getPrincipals());
     };
 
     bool skippedAsync;
     RootedSavedFrame frame(cx, &savedFrame->as<SavedFrame>());
-    return GetFirstMatchedFrame(cx, matcher, frame, selfHosted, skippedAsync);
+    return GetFirstMatchedFrame(cx, principals, matcher, frame, selfHosted, skippedAsync);
 }
 
 static MOZ_MUST_USE bool
@@ -737,56 +750,9 @@ SavedFrame_checkThis(JSContext* cx, CallArgs& args, const char* fnName,
 
 namespace JS {
 
-namespace {
-
-// It's possible that our caller is privileged (and hence would see the entire
-// stack) but we're working with an SavedFrame object that was captured in
-// unprivileged code.  If so, drop privileges down to its level.  The idea is
-// that this way devtools code that's asking an exception object for a stack to
-// display will end up with the stack the web developer would see via doing
-// .stack in a web page, with Firefox implementation details excluded.
-//
-// We want callers to pass us the object they were actually passed, not an
-// unwrapped form of it.  That way Xray access to SavedFrame objects should not
-// be affected by AutoMaybeEnterFrameCompartment and the only things that will
-// be affected will be cases in which privileged code works with some C++ object
-// that then pokes at an unprivileged StackFrame it has on hand.
-class MOZ_STACK_CLASS AutoMaybeEnterFrameCompartment
-{
-public:
-    AutoMaybeEnterFrameCompartment(JSContext* cx,
-                                   HandleObject obj
-                                   MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
-    {
-        MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-
-        MOZ_RELEASE_ASSERT(cx->compartment());
-        if (obj)
-            MOZ_RELEASE_ASSERT(obj->compartment());
-
-        // Note that obj might be null here, since we're doing this before
-        // UnwrapSavedFrame.
-        if (obj && cx->compartment() != obj->compartment())
-        {
-            JSSubsumesOp subsumes = cx->runtime()->securityCallbacks->subsumes;
-            if (subsumes && subsumes(cx->compartment()->principals(),
-                                     obj->compartment()->principals()))
-            {
-                ac_.emplace(cx, obj);
-            }
-        }
-    }
-
- private:
-    Maybe<JSAutoCompartment> ac_;
-    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-};
-
-} // namespace
-
 static inline js::SavedFrame*
-UnwrapSavedFrame(JSContext* cx, HandleObject obj, SavedFrameSelfHosted selfHosted,
-                 bool& skippedAsync)
+UnwrapSavedFrame(JSContext* cx, JSPrincipals* principals, HandleObject obj,
+                 SavedFrameSelfHosted selfHosted, bool& skippedAsync)
 {
     if (!obj)
         return nullptr;
@@ -797,21 +763,22 @@ UnwrapSavedFrame(JSContext* cx, HandleObject obj, SavedFrameSelfHosted selfHoste
 
     MOZ_RELEASE_ASSERT(js::SavedFrame::isSavedFrameAndNotProto(*savedFrameObj));
     js::RootedSavedFrame frame(cx, &savedFrameObj->as<js::SavedFrame>());
-    return GetFirstSubsumedFrame(cx, frame, selfHosted, skippedAsync);
+    return GetFirstSubsumedFrame(cx, principals, frame, selfHosted, skippedAsync);
 }
 
 JS_PUBLIC_API(SavedFrameResult)
-GetSavedFrameSource(JSContext* cx, HandleObject savedFrame, MutableHandleString sourcep,
+GetSavedFrameSource(JSContext* cx, JSPrincipals* principals, HandleObject savedFrame,
+                    MutableHandleString sourcep,
                     SavedFrameSelfHosted selfHosted /* = SavedFrameSelfHosted::Include */)
 {
     js::AssertHeapIsIdle();
     CHECK_REQUEST(cx);
-    MOZ_RELEASE_ASSERT(cx->compartment());
+    MOZ_RELEASE_ASSERT(cx->realm());
 
     {
-        AutoMaybeEnterFrameCompartment ac(cx, savedFrame);
         bool skippedAsync;
-        js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, savedFrame, selfHosted, skippedAsync));
+        js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, principals, savedFrame, selfHosted,
+                                                        skippedAsync));
         if (!frame) {
             sourcep.set(cx->runtime()->emptyString);
             return SavedFrameResult::AccessDenied;
@@ -824,17 +791,18 @@ GetSavedFrameSource(JSContext* cx, HandleObject savedFrame, MutableHandleString 
 }
 
 JS_PUBLIC_API(SavedFrameResult)
-GetSavedFrameLine(JSContext* cx, HandleObject savedFrame, uint32_t* linep,
+GetSavedFrameLine(JSContext* cx, JSPrincipals* principals, HandleObject savedFrame,
+                  uint32_t* linep,
                   SavedFrameSelfHosted selfHosted /* = SavedFrameSelfHosted::Include */)
 {
     js::AssertHeapIsIdle();
     CHECK_REQUEST(cx);
-    MOZ_RELEASE_ASSERT(cx->compartment());
+    MOZ_RELEASE_ASSERT(cx->realm());
     MOZ_ASSERT(linep);
 
-    AutoMaybeEnterFrameCompartment ac(cx, savedFrame);
     bool skippedAsync;
-    js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, savedFrame, selfHosted, skippedAsync));
+    js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, principals, savedFrame, selfHosted,
+                                                    skippedAsync));
     if (!frame) {
         *linep = 0;
         return SavedFrameResult::AccessDenied;
@@ -844,17 +812,18 @@ GetSavedFrameLine(JSContext* cx, HandleObject savedFrame, uint32_t* linep,
 }
 
 JS_PUBLIC_API(SavedFrameResult)
-GetSavedFrameColumn(JSContext* cx, HandleObject savedFrame, uint32_t* columnp,
+GetSavedFrameColumn(JSContext* cx, JSPrincipals* principals, HandleObject savedFrame,
+                    uint32_t* columnp,
                     SavedFrameSelfHosted selfHosted /* = SavedFrameSelfHosted::Include */)
 {
     js::AssertHeapIsIdle();
     CHECK_REQUEST(cx);
-    MOZ_RELEASE_ASSERT(cx->compartment());
+    MOZ_RELEASE_ASSERT(cx->realm());
     MOZ_ASSERT(columnp);
 
-    AutoMaybeEnterFrameCompartment ac(cx, savedFrame);
     bool skippedAsync;
-    js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, savedFrame, selfHosted, skippedAsync));
+    js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, principals, savedFrame, selfHosted,
+                                                    skippedAsync));
     if (!frame) {
         *columnp = 0;
         return SavedFrameResult::AccessDenied;
@@ -864,17 +833,18 @@ GetSavedFrameColumn(JSContext* cx, HandleObject savedFrame, uint32_t* columnp,
 }
 
 JS_PUBLIC_API(SavedFrameResult)
-GetSavedFrameFunctionDisplayName(JSContext* cx, HandleObject savedFrame, MutableHandleString namep,
+GetSavedFrameFunctionDisplayName(JSContext* cx, JSPrincipals* principals, HandleObject savedFrame,
+                                 MutableHandleString namep,
                                  SavedFrameSelfHosted selfHosted /* = SavedFrameSelfHosted::Include */)
 {
     js::AssertHeapIsIdle();
     CHECK_REQUEST(cx);
-    MOZ_RELEASE_ASSERT(cx->compartment());
+    MOZ_RELEASE_ASSERT(cx->realm());
 
     {
-        AutoMaybeEnterFrameCompartment ac(cx, savedFrame);
         bool skippedAsync;
-        js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, savedFrame, selfHosted, skippedAsync));
+        js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, principals, savedFrame, selfHosted,
+                                                        skippedAsync));
         if (!frame) {
             namep.set(nullptr);
             return SavedFrameResult::AccessDenied;
@@ -887,22 +857,23 @@ GetSavedFrameFunctionDisplayName(JSContext* cx, HandleObject savedFrame, Mutable
 }
 
 JS_PUBLIC_API(SavedFrameResult)
-GetSavedFrameAsyncCause(JSContext* cx, HandleObject savedFrame, MutableHandleString asyncCausep,
+GetSavedFrameAsyncCause(JSContext* cx, JSPrincipals* principals, HandleObject savedFrame,
+                        MutableHandleString asyncCausep,
                         SavedFrameSelfHosted unused_ /* = SavedFrameSelfHosted::Include */)
 {
     js::AssertHeapIsIdle();
     CHECK_REQUEST(cx);
-    MOZ_RELEASE_ASSERT(cx->compartment());
+    MOZ_RELEASE_ASSERT(cx->realm());
 
     {
-        AutoMaybeEnterFrameCompartment ac(cx, savedFrame);
         bool skippedAsync;
         // This function is always called with self-hosted frames excluded by
         // GetValueIfNotCached in dom/bindings/Exceptions.cpp. However, we want
         // to include them because our Promise implementation causes us to have
         // the async cause on a self-hosted frame. So we just ignore the
         // parameter and always include self-hosted frames.
-        js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, savedFrame, SavedFrameSelfHosted::Include,
+        js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, principals, savedFrame,
+                                                        SavedFrameSelfHosted::Include,
                                                         skippedAsync));
         if (!frame) {
             asyncCausep.set(nullptr);
@@ -918,16 +889,17 @@ GetSavedFrameAsyncCause(JSContext* cx, HandleObject savedFrame, MutableHandleStr
 }
 
 JS_PUBLIC_API(SavedFrameResult)
-GetSavedFrameAsyncParent(JSContext* cx, HandleObject savedFrame, MutableHandleObject asyncParentp,
+GetSavedFrameAsyncParent(JSContext* cx, JSPrincipals* principals, HandleObject savedFrame,
+                         MutableHandleObject asyncParentp,
                          SavedFrameSelfHosted selfHosted /* = SavedFrameSelfHosted::Include */)
 {
     js::AssertHeapIsIdle();
     CHECK_REQUEST(cx);
-    MOZ_RELEASE_ASSERT(cx->compartment());
+    MOZ_RELEASE_ASSERT(cx->realm());
 
-    AutoMaybeEnterFrameCompartment ac(cx, savedFrame);
     bool skippedAsync;
-    js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, savedFrame, selfHosted, skippedAsync));
+    js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, principals, savedFrame, selfHosted,
+                                                    skippedAsync));
     if (!frame) {
         asyncParentp.set(nullptr);
         return SavedFrameResult::AccessDenied;
@@ -937,8 +909,8 @@ GetSavedFrameAsyncParent(JSContext* cx, HandleObject savedFrame, MutableHandleOb
     // The current value of |skippedAsync| is not interesting, because we are
     // interested in whether we would cross any async parents to get from here
     // to the first subsumed parent frame instead.
-    js::RootedSavedFrame subsumedParent(cx, GetFirstSubsumedFrame(cx, parent, selfHosted,
-                                                                  skippedAsync));
+    js::RootedSavedFrame subsumedParent(cx, GetFirstSubsumedFrame(cx, principals, parent,
+                                                                  selfHosted, skippedAsync));
 
     // Even if |parent| is not subsumed, we still want to return a pointer to it
     // rather than |subsumedParent| so it can pick up any |asyncCause| from the
@@ -951,16 +923,17 @@ GetSavedFrameAsyncParent(JSContext* cx, HandleObject savedFrame, MutableHandleOb
 }
 
 JS_PUBLIC_API(SavedFrameResult)
-GetSavedFrameParent(JSContext* cx, HandleObject savedFrame, MutableHandleObject parentp,
+GetSavedFrameParent(JSContext* cx, JSPrincipals* principals, HandleObject savedFrame,
+                    MutableHandleObject parentp,
                     SavedFrameSelfHosted selfHosted /* = SavedFrameSelfHosted::Include */)
 {
     js::AssertHeapIsIdle();
     CHECK_REQUEST(cx);
-    MOZ_RELEASE_ASSERT(cx->compartment());
+    MOZ_RELEASE_ASSERT(cx->realm());
 
-    AutoMaybeEnterFrameCompartment ac(cx, savedFrame);
     bool skippedAsync;
-    js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, savedFrame, selfHosted, skippedAsync));
+    js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, principals, savedFrame, selfHosted,
+                                                    skippedAsync));
     if (!frame) {
         parentp.set(nullptr);
         return SavedFrameResult::AccessDenied;
@@ -970,8 +943,8 @@ GetSavedFrameParent(JSContext* cx, HandleObject savedFrame, MutableHandleObject 
     // The current value of |skippedAsync| is not interesting, because we are
     // interested in whether we would cross any async parents to get from here
     // to the first subsumed parent frame instead.
-    js::RootedSavedFrame subsumedParent(cx, GetFirstSubsumedFrame(cx, parent, selfHosted,
-                                                                  skippedAsync));
+    js::RootedSavedFrame subsumedParent(cx, GetFirstSubsumedFrame(cx, principals, parent,
+                                                                  selfHosted, skippedAsync));
 
     // Even if |parent| is not subsumed, we still want to return a pointer to it
     // rather than |subsumedParent| so it can pick up any |asyncCause| from the
@@ -981,6 +954,36 @@ GetSavedFrameParent(JSContext* cx, HandleObject savedFrame, MutableHandleObject 
     else
         parentp.set(nullptr);
     return SavedFrameResult::Ok;
+}
+
+static bool
+FormatStackFrameLine(JSContext* cx, js::StringBuffer& sb, js::HandleSavedFrame frame)
+{
+    if (frame->isWasm()) {
+        // See comment in WasmFrameIter::computeLine().
+        return sb.append("wasm-function[")
+            && NumberValueToStringBuffer(cx, NumberValue(frame->wasmFuncIndex()), sb)
+            && sb.append(']');
+    }
+
+    return NumberValueToStringBuffer(cx, NumberValue(frame->getLine()), sb);
+}
+
+static bool
+FormatStackFrameColumn(JSContext* cx, js::StringBuffer& sb, js::HandleSavedFrame frame)
+{
+    if (frame->isWasm()) {
+        // See comment in WasmFrameIter::computeLine().
+        js::ToCStringBuf cbuf;
+        const char* cstr = NumberToCString(cx, &cbuf, frame->wasmBytecodeOffset(), 16);
+        if (!cstr)
+            return false;
+
+        return sb.append("0x")
+            && sb.append(cstr, strlen(cstr));
+    }
+
+    return NumberValueToStringBuffer(cx, NumberValue(frame->getColumn()), sb);
 }
 
 static bool
@@ -999,9 +1002,9 @@ FormatSpiderMonkeyStackFrame(JSContext* cx, js::StringBuffer& sb,
         && sb.append('@')
         && sb.append(frame->getSource())
         && sb.append(':')
-        && NumberValueToStringBuffer(cx, NumberValue(frame->getLine()), sb)
+        && FormatStackFrameLine(cx, sb, frame)
         && sb.append(':')
-        && NumberValueToStringBuffer(cx, NumberValue(frame->getColumn()), sb)
+        && FormatStackFrameColumn(cx, sb, frame)
         && sb.append('\n');
 }
 
@@ -1019,20 +1022,20 @@ FormatV8StackFrame(JSContext* cx, js::StringBuffer& sb,
                       sb.append('(')))
         && sb.append(frame->getSource())
         && sb.append(':')
-        && NumberValueToStringBuffer(cx, NumberValue(frame->getLine()), sb)
+        && FormatStackFrameLine(cx, sb, frame)
         && sb.append(':')
-        && NumberValueToStringBuffer(cx, NumberValue(frame->getColumn()), sb)
+        && FormatStackFrameColumn(cx, sb, frame)
         && (!name || sb.append(')'))
         && (lastFrame || sb.append('\n'));
 }
 
 JS_PUBLIC_API(bool)
-BuildStackString(JSContext* cx, HandleObject stack, MutableHandleString stringp,
-                 size_t indent, js::StackFormat format)
+BuildStackString(JSContext* cx, JSPrincipals* principals, HandleObject stack,
+                 MutableHandleString stringp, size_t indent, js::StackFormat format)
 {
     js::AssertHeapIsIdle();
     CHECK_REQUEST(cx);
-    MOZ_RELEASE_ASSERT(cx->compartment());
+    MOZ_RELEASE_ASSERT(cx->realm());
 
     js::StringBuffer sb(cx);
 
@@ -1041,13 +1044,13 @@ BuildStackString(JSContext* cx, HandleObject stack, MutableHandleString stringp,
     MOZ_ASSERT(format != js::StackFormat::Default);
 
     // Enter a new block to constrain the scope of possibly entering the stack's
-    // compartment. This ensures that when we finish the StringBuffer, we are
-    // back in the cx's original compartment, and fulfill our contract with
-    // callers to place the output string in the cx's current compartment.
+    // realm. This ensures that when we finish the StringBuffer, we are back in
+    // the cx's original compartment, and fulfill our contract with callers to
+    // place the output string in the cx's current realm.
     {
-        AutoMaybeEnterFrameCompartment ac(cx, stack);
         bool skippedAsync;
-        js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, stack, SavedFrameSelfHosted::Exclude,
+        js::RootedSavedFrame frame(cx, UnwrapSavedFrame(cx, principals, stack,
+                                                        SavedFrameSelfHosted::Exclude,
                                                         skippedAsync));
         if (!frame) {
             stringp.set(cx->runtime()->emptyString);
@@ -1056,12 +1059,12 @@ BuildStackString(JSContext* cx, HandleObject stack, MutableHandleString stringp,
 
         js::RootedSavedFrame parent(cx);
         do {
-            MOZ_ASSERT(SavedFrameSubsumedByCaller(cx, frame));
+            MOZ_ASSERT(SavedFrameSubsumedByPrincipals(cx, principals, frame));
             MOZ_ASSERT(!frame->isSelfHosted(cx));
 
             parent = frame->getParent();
             bool skippedNextAsync;
-            js::RootedSavedFrame nextFrame(cx, js::GetFirstSubsumedFrame(cx, parent,
+            js::RootedSavedFrame nextFrame(cx, js::GetFirstSubsumedFrame(cx, principals, parent,
                                                                          SavedFrameSelfHosted::Exclude, skippedNextAsync));
 
             switch (format) {
@@ -1086,22 +1089,23 @@ BuildStackString(JSContext* cx, HandleObject stack, MutableHandleString stringp,
     JSString* str = sb.finishString();
     if (!str)
         return false;
-    assertSameCompartment(cx, str);
+    cx->check(str);
     stringp.set(str);
     return true;
 }
 
 JS_PUBLIC_API(bool)
-IsSavedFrame(JSObject* obj)
+IsMaybeWrappedSavedFrame(JSObject* obj)
 {
-    if (!obj)
-        return false;
+    MOZ_ASSERT(obj);
+    return js::SavedFrame::isSavedFrameOrWrapperAndNotProto(*obj);
+}
 
-    JSObject* unwrapped = js::CheckedUnwrap(obj);
-    if (!unwrapped)
-        return false;
-
-    return js::SavedFrame::isSavedFrameAndNotProto(*unwrapped);
+JS_PUBLIC_API(bool)
+IsUnwrappedSavedFrame(JSObject* obj)
+{
+    MOZ_ASSERT(obj);
+    return js::SavedFrame::isSavedFrameAndNotProto(*obj);
 }
 
 } /* namespace JS */
@@ -1112,8 +1116,9 @@ namespace js {
 SavedFrame::sourceProperty(JSContext* cx, unsigned argc, Value* vp)
 {
     THIS_SAVEDFRAME(cx, argc, vp, "(get source)", args, frame);
+    JSPrincipals* principals = cx->realm()->principals();
     RootedString source(cx);
-    if (JS::GetSavedFrameSource(cx, frame, &source) == JS::SavedFrameResult::Ok) {
+    if (JS::GetSavedFrameSource(cx, principals, frame, &source) == JS::SavedFrameResult::Ok) {
         if (!cx->compartment()->wrap(cx, &source))
             return false;
         args.rval().setString(source);
@@ -1127,8 +1132,9 @@ SavedFrame::sourceProperty(JSContext* cx, unsigned argc, Value* vp)
 SavedFrame::lineProperty(JSContext* cx, unsigned argc, Value* vp)
 {
     THIS_SAVEDFRAME(cx, argc, vp, "(get line)", args, frame);
+    JSPrincipals* principals = cx->realm()->principals();
     uint32_t line;
-    if (JS::GetSavedFrameLine(cx, frame, &line) == JS::SavedFrameResult::Ok)
+    if (JS::GetSavedFrameLine(cx, principals, frame, &line) == JS::SavedFrameResult::Ok)
         args.rval().setNumber(line);
     else
         args.rval().setNull();
@@ -1139,8 +1145,9 @@ SavedFrame::lineProperty(JSContext* cx, unsigned argc, Value* vp)
 SavedFrame::columnProperty(JSContext* cx, unsigned argc, Value* vp)
 {
     THIS_SAVEDFRAME(cx, argc, vp, "(get column)", args, frame);
+    JSPrincipals* principals = cx->realm()->principals();
     uint32_t column;
-    if (JS::GetSavedFrameColumn(cx, frame, &column) == JS::SavedFrameResult::Ok)
+    if (JS::GetSavedFrameColumn(cx, principals, frame, &column) == JS::SavedFrameResult::Ok)
         args.rval().setNumber(column);
     else
         args.rval().setNull();
@@ -1151,8 +1158,10 @@ SavedFrame::columnProperty(JSContext* cx, unsigned argc, Value* vp)
 SavedFrame::functionDisplayNameProperty(JSContext* cx, unsigned argc, Value* vp)
 {
     THIS_SAVEDFRAME(cx, argc, vp, "(get functionDisplayName)", args, frame);
+    JSPrincipals* principals = cx->realm()->principals();
     RootedString name(cx);
-    JS::SavedFrameResult result = JS::GetSavedFrameFunctionDisplayName(cx, frame, &name);
+    JS::SavedFrameResult result =
+        JS::GetSavedFrameFunctionDisplayName(cx, principals, frame, &name);
     if (result == JS::SavedFrameResult::Ok && name) {
         if (!cx->compartment()->wrap(cx, &name))
             return false;
@@ -1167,8 +1176,9 @@ SavedFrame::functionDisplayNameProperty(JSContext* cx, unsigned argc, Value* vp)
 SavedFrame::asyncCauseProperty(JSContext* cx, unsigned argc, Value* vp)
 {
     THIS_SAVEDFRAME(cx, argc, vp, "(get asyncCause)", args, frame);
+    JSPrincipals* principals = cx->realm()->principals();
     RootedString asyncCause(cx);
-    JS::SavedFrameResult result = JS::GetSavedFrameAsyncCause(cx, frame, &asyncCause);
+    JS::SavedFrameResult result = JS::GetSavedFrameAsyncCause(cx, principals, frame, &asyncCause);
     if (result == JS::SavedFrameResult::Ok && asyncCause) {
         if (!cx->compartment()->wrap(cx, &asyncCause))
             return false;
@@ -1183,8 +1193,9 @@ SavedFrame::asyncCauseProperty(JSContext* cx, unsigned argc, Value* vp)
 SavedFrame::asyncParentProperty(JSContext* cx, unsigned argc, Value* vp)
 {
     THIS_SAVEDFRAME(cx, argc, vp, "(get asyncParent)", args, frame);
+    JSPrincipals* principals = cx->realm()->principals();
     RootedObject asyncParent(cx);
-    (void) JS::GetSavedFrameAsyncParent(cx, frame, &asyncParent);
+    (void) JS::GetSavedFrameAsyncParent(cx, principals, frame, &asyncParent);
     if (!cx->compartment()->wrap(cx, &asyncParent))
         return false;
     args.rval().setObjectOrNull(asyncParent);
@@ -1195,8 +1206,9 @@ SavedFrame::asyncParentProperty(JSContext* cx, unsigned argc, Value* vp)
 SavedFrame::parentProperty(JSContext* cx, unsigned argc, Value* vp)
 {
     THIS_SAVEDFRAME(cx, argc, vp, "(get parent)", args, frame);
+    JSPrincipals* principals = cx->realm()->principals();
     RootedObject parent(cx);
-    (void) JS::GetSavedFrameParent(cx, frame, &parent);
+    (void) JS::GetSavedFrameParent(cx, principals, frame, &parent);
     if (!cx->compartment()->wrap(cx, &parent))
         return false;
     args.rval().setObjectOrNull(parent);
@@ -1207,27 +1219,20 @@ SavedFrame::parentProperty(JSContext* cx, unsigned argc, Value* vp)
 SavedFrame::toStringMethod(JSContext* cx, unsigned argc, Value* vp)
 {
     THIS_SAVEDFRAME(cx, argc, vp, "toString", args, frame);
+    JSPrincipals* principals = cx->realm()->principals();
     RootedString string(cx);
-    if (!JS::BuildStackString(cx, frame, &string))
+    if (!JS::BuildStackString(cx, principals, frame, &string))
         return false;
     args.rval().setString(string);
     return true;
 }
 
 bool
-SavedStacks::init()
-{
-    return frames.init() &&
-           pcLocationMap.init();
-}
-
-bool
 SavedStacks::saveCurrentStack(JSContext* cx, MutableHandleSavedFrame frame,
                               JS::StackCapture&& capture /* = JS::StackCapture(JS::AllFrames()) */)
 {
-    MOZ_ASSERT(initialized());
-    MOZ_RELEASE_ASSERT(cx->compartment());
-    assertSameCompartment(cx, this);
+    MOZ_RELEASE_ASSERT(cx->realm());
+    MOZ_DIAGNOSTIC_ASSERT(&cx->realm()->savedStacks() == this);
 
     if (creatingSavedFrame ||
         cx->isExceptionPending() ||
@@ -1238,8 +1243,8 @@ SavedStacks::saveCurrentStack(JSContext* cx, MutableHandleSavedFrame frame,
         return true;
     }
 
-    AutoGeckoProfilerEntry pseudoFrame(cx, "js::SavedStacks::saveCurrentStack");
-    return insertFrames(cx, frame, mozilla::Move(capture));
+    AutoGeckoProfilerEntry labelFrame(cx, "js::SavedStacks::saveCurrentStack");
+    return insertFrames(cx, frame, std::move(capture));
 }
 
 bool
@@ -1247,9 +1252,8 @@ SavedStacks::copyAsyncStack(JSContext* cx, HandleObject asyncStack, HandleString
                             MutableHandleSavedFrame adoptedStack,
                             const Maybe<size_t>& maxFrameCount)
 {
-    MOZ_ASSERT(initialized());
-    MOZ_RELEASE_ASSERT(cx->compartment());
-    assertSameCompartment(cx, this);
+    MOZ_RELEASE_ASSERT(cx->realm());
+    MOZ_DIAGNOSTIC_ASSERT(&cx->realm()->savedStacks() == this);
 
     RootedAtom asyncCauseAtom(cx, AtomizeString(cx, asyncCause));
     if (!asyncCauseAtom)
@@ -1282,7 +1286,6 @@ SavedStacks::trace(JSTracer* trc)
 uint32_t
 SavedStacks::count()
 {
-    MOZ_ASSERT(initialized());
     return frames.count();
 }
 
@@ -1295,8 +1298,8 @@ SavedStacks::clear()
 size_t
 SavedStacks::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf)
 {
-    return frames.sizeOfExcludingThis(mallocSizeOf) +
-           pcLocationMap.sizeOfExcludingThis(mallocSizeOf);
+    return frames.shallowSizeOfExcludingThis(mallocSizeOf) +
+           pcLocationMap.shallowSizeOfExcludingThis(mallocSizeOf);
 }
 
 // Given that we have captured a stack frame with the given principals and
@@ -1421,12 +1424,14 @@ SavedStacks::insertFrames(JSContext* cx, MutableHandleSavedFrame frame,
         // needed to construct the SavedFrame::Lookup.
         Rooted<LocationValue> location(cx);
         {
-            AutoCompartmentUnchecked ac(cx, iter.compartment());
-            if (!cx->compartment()->savedStacks().getLocation(cx, iter, &location))
+            AutoRealmUnchecked ar(cx, iter.realm());
+            if (!cx->realm()->savedStacks().getLocation(cx, iter, &location))
                 return false;
         }
-        auto displayAtom = (iter.isWasm() || iter.isFunctionFrame()) ? iter.functionDisplayAtom() : nullptr;
-        auto principals = iter.compartment()->principals();
+
+        RootedAtom displayAtom(cx, iter.maybeFunctionDisplayAtom());
+
+        auto principals = iter.realm()->principals();
         MOZ_ASSERT_IF(framePtr && !iter.isWasm(), iter.pc());
 
         if (!stackChain->emplaceBack(location.source(),
@@ -1563,12 +1568,12 @@ SavedStacks::adoptAsyncStack(JSContext* cx, MutableHandleSavedFrame asyncStack,
     // Attach the asyncCause to the youngest frame.
     stackChain[0]->asyncCause = asyncCause;
 
-    // If we walked the entire stack, and it's in cx's compartment, we don't
+    // If we walked the entire stack, and it's in cx's realm, we don't
     // need to rebuild the full chain again using the lookup objects - we can
     // just use the existing chain. Only the asyncCause on the youngest frame
     // needs to be changed.
     if (currentSavedFrame == nullptr &&
-        asyncStack->compartment() == cx->compartment())
+        asyncStack->realm() == cx->realm())
     {
         SavedFrame::HandleLookup lookup = stackChain[0];
         lookup->parent = asyncStack->getParent();
@@ -1693,14 +1698,16 @@ SavedStacks::getLocation(JSContext* cx, const FrameIter& iter,
     // compartment. Otherwise, we would get dead cross-compartment scripts in
     // the cache because our compartment's sweep method isn't called when their
     // compartment gets collected.
-    assertSameCompartment(cx, this, iter.compartment());
+    MOZ_DIAGNOSTIC_ASSERT(&cx->realm()->savedStacks() == this);
+    cx->check(iter.compartment());
 
     // When we have a |JSScript| for this frame, use a potentially memoized
     // location from our PCLocationMap and copy it into |locationp|. When we do
     // not have a |JSScript| for this frame (wasm frames), we take a slow path
     // that doesn't employ memoization, and update |locationp|'s slots directly.
 
-    if (!iter.hasScript()) {
+    if (iter.isWasm()) {
+        // Only asm.js has a displayURL.
         if (const char16_t* displayURL = iter.displayURL()) {
             locationp.setSource(AtomizeChars(cx, displayURL, js_strlen(displayURL)));
         } else {
@@ -1710,12 +1717,10 @@ SavedStacks::getLocation(JSContext* cx, const FrameIter& iter,
         if (!locationp.source())
             return false;
 
+        // See WasmFrameIter::computeLine() comment.
         uint32_t column = 0;
         locationp.setLine(iter.computeLine(&column));
-        // XXX: Make the column 1-based as in other browsers, instead of 0-based
-        // which is how SpiderMonkey stores it internally. This will be
-        // unnecessary once bug 1144340 is fixed.
-        locationp.setColumn(column + 1);
+        locationp.setColumn(column);
         return true;
     }
 
@@ -1752,9 +1757,9 @@ SavedStacks::getLocation(JSContext* cx, const FrameIter& iter,
 }
 
 void
-SavedStacks::chooseSamplingProbability(JSCompartment* compartment)
+SavedStacks::chooseSamplingProbability(Realm* realm)
 {
-    GlobalObject* global = compartment->maybeGlobal();
+    GlobalObject* global = realm->maybeGlobal();
     if (!global)
         return;
 
@@ -1795,7 +1800,7 @@ SavedStacks::MetadataBuilder::build(JSContext* cx, HandleObject target,
 {
     RootedObject obj(cx, target);
 
-    SavedStacks& stacks = cx->compartment()->savedStacks();
+    SavedStacks& stacks = cx->realm()->savedStacks();
     if (!stacks.bernoulli.trial())
         return nullptr;
 
@@ -1812,30 +1817,35 @@ SavedStacks::MetadataBuilder::build(JSContext* cx, HandleObject target,
 
 const SavedStacks::MetadataBuilder SavedStacks::metadataBuilder;
 
-#ifdef JS_CRASH_DIAGNOSTICS
-void
-CompartmentChecker::check(SavedStacks* stacks)
-{
-    if (&compartment->savedStacks() != stacks) {
-        printf("*** Compartment SavedStacks mismatch: %p vs. %p\n",
-               (void*) &compartment->savedStacks(), stacks);
-        MOZ_CRASH();
-    }
-}
-#endif /* JS_CRASH_DIAGNOSTICS */
-
 /* static */ ReconstructedSavedFramePrincipals ReconstructedSavedFramePrincipals::IsSystem;
 /* static */ ReconstructedSavedFramePrincipals ReconstructedSavedFramePrincipals::IsNotSystem;
 
 UTF8CharsZ
-BuildUTF8StackString(JSContext* cx, HandleObject stack)
+BuildUTF8StackString(JSContext* cx, JSPrincipals* principals, HandleObject stack)
 {
     RootedString stackStr(cx);
-    if (!JS::BuildStackString(cx, stack, &stackStr))
+    if (!JS::BuildStackString(cx, principals, stack, &stackStr))
         return UTF8CharsZ();
 
     char* chars = JS_EncodeStringToUTF8(cx, stackStr);
     return UTF8CharsZ(chars, strlen(chars));
+}
+
+uint32_t
+FixupColumnForDisplay(uint32_t column)
+{
+    // As described in WasmFrameIter::computeLine(), for wasm frames, the
+    // function index is returned as the column with the high bit set. In paths
+    // that format error stacks into strings, this information can be used to
+    // synthesize a proper wasm frame. But when raw column numbers are handed
+    // out, we just fix them to 1 to avoid confusion.
+    if (column & wasm::WasmFrameIter::ColumnBit)
+        return 1;
+
+    // XXX: Make the column 1-based as in other browsers, instead of 0-based
+    // which is how SpiderMonkey stores it internally. This will be
+    // unnecessary once bug 1144340 is fixed.
+    return column + 1;
 }
 
 } /* namespace js */
@@ -1929,7 +1939,7 @@ ConstructSavedFrameStackSlow(JSContext* cx, JS::ubi::StackFrame& frame,
     for (size_t i = stackChain->length(); i != 0; i--) {
         SavedFrame::HandleLookup lookup = stackChain[i-1];
         lookup->parent = parentFrame;
-        parentFrame = cx->compartment()->savedStacks().getOrCreateSavedFrame(cx, lookup);
+        parentFrame = cx->realm()->savedStacks().getOrCreateSavedFrame(cx, lookup);
         if (!parentFrame)
             return false;
     }

@@ -29,7 +29,7 @@ var gLWTheme = {
                 homepageURL: "http://mochi.test:8888/data/index.html",
                 headerURL: "http://mochi.test:8888/data/header.png",
                 previewURL: "http://mochi.test:8888/data/preview.png",
-                iconURL: "http://mochi.test:8888/data/icon.png"
+                iconURL: "http://mochi.test:8888/data/icon.png",
               };
 
 add_task(async function() {
@@ -41,7 +41,7 @@ add_task(async function() {
     version: "1.0",
     description: "A test add-on",
     longDescription: " A longer description",
-    updateDate: gDate
+    updateDate: gDate,
   }, {
     id: "addon2@tests.mozilla.org",
     name: "Test add-on 2",
@@ -58,19 +58,19 @@ add_task(async function() {
     appDisabled: true,
     permissions: AddonManager.PERM_CAN_ENABLE |
                  AddonManager.PERM_CAN_DISABLE |
-                 AddonManager.PERM_CAN_UPGRADE
+                 AddonManager.PERM_CAN_UPGRADE,
   }, {
     id: "addon5@tests.mozilla.org",
     blocklistURL: "http://example.com/addon5@tests.mozilla.org",
     name: "Test add-on 5",
     isActive: false,
     blocklistState: Ci.nsIBlocklistService.STATE_BLOCKED,
-    appDisabled: true
+    appDisabled: true,
   }, {
     id: "addon6@tests.mozilla.org",
     blocklistURL: "http://example.com/addon6@tests.mozilla.org",
     name: "Test add-on 6",
-    operationsRequiringRestart: AddonManager.OP_NEEDS_RESTART_NONE
+    operationsRequiringRestart: AddonManager.OP_NEEDS_RESTART_NONE,
   }, {
     id: "addon8@tests.mozilla.org",
     blocklistURL: "http://example.com/addon8@tests.mozilla.org",
@@ -120,7 +120,7 @@ function get_test_items() {
 
   while (item) {
     if (item.mAddon.id.substring(item.mAddon.id.length - tests.length) == tests &&
-        !is_hidden(item))
+        !BrowserTestUtils.is_hidden(item))
       items[item.mAddon.name] = item;
     item = item.nextSibling;
   }
@@ -166,7 +166,7 @@ add_task(async function() {
   info("Addon 5");
   addon = items["Test add-on 5"];
   addon.parentNode.ensureElementIsVisible(addon);
-  await TestUtils.waitForCondition(() => !is_hidden(get_node(addon, "error-link")));
+  await TestUtils.waitForCondition(() => !BrowserTestUtils.is_hidden(get_node(addon, "error-link")));
   ({ name, version } = await get_tooltip_info(addon));
   is(get_node(addon, "name").value, "Test add-on 5", "Name should be correct");
   is(name, "Test add-on 5", "Tooltip name should be correct");
@@ -206,6 +206,7 @@ add_task(async function() {
 
   info("Disabling");
   EventUtils.synthesizeMouseAtCenter(get_node(addon, "disable-btn"), {}, gManagerWindow);
+  await new Promise(executeSoon);
   is_element_visible(get_class_node(addon, "disabled-postfix"), "Disabled postfix should be visible");
 
   is_element_hidden(get_node(addon, "preferences-btn"), "Preferences button should be hidden");
@@ -222,7 +223,7 @@ add_task(async function() {
   info("Addon 8");
   addon = items["Test add-on 8"];
   addon.parentNode.ensureElementIsVisible(addon);
-  await TestUtils.waitForCondition(() => !is_hidden(get_node(addon, "error-link")));
+  await TestUtils.waitForCondition(() => !BrowserTestUtils.is_hidden(get_node(addon, "error-link")));
   ({ name, version } = await get_tooltip_info(addon));
   is(get_node(addon, "name").value, "Test add-on 8", "Name should be correct");
   is(name, "Test add-on 8", "Tooltip name should be correct");
@@ -244,7 +245,7 @@ add_task(async function() {
   info("Addon 9");
   addon = items["Test add-on 9"];
   addon.parentNode.ensureElementIsVisible(addon);
-  await TestUtils.waitForCondition(() => !is_hidden(get_node(addon, "error-link")));
+  await TestUtils.waitForCondition(() => !BrowserTestUtils.is_hidden(get_node(addon, "error-link")));
   ({ name, version } = await get_tooltip_info(addon));
   is(get_node(addon, "name").value, "Test add-on 9", "Name should be correct");
   is(name, "Test add-on 9", "Tooltip name should be correct");
@@ -345,6 +346,7 @@ add_task(async function() {
 
   info("Enabling");
   EventUtils.synthesizeMouseAtCenter(get_node(addon, "enable-btn"), {}, gManagerWindow);
+  await new Promise(executeSoon);
   is_element_hidden(get_class_node(addon, "disabled-postfix"), "Disabled postfix should be hidden");
 
   is_element_hidden(get_node(addon, "preferences-btn"), "Preferences button should be hidden");
@@ -367,7 +369,7 @@ add_task(async function() {
     version: "2.0",
     description: "A test add-on with a new description",
     updateDate: gDate,
-    operationsRequiringRestart: AddonManager.OP_NEEDS_RESTART_NONE
+    operationsRequiringRestart: AddonManager.OP_NEEDS_RESTART_NONE,
   }, {
     id: "addon14@tests.mozilla.org",
     name: "Test add-on 14",
@@ -456,9 +458,14 @@ add_task(async function() {
 });
 
 
+function tick() {
+  return new Promise(SimpleTest.executeSoon);
+}
+
 add_task(async function() {
   info("Enabling lightweight theme");
   LightweightThemeManager.currentTheme = gLWTheme;
+  await tick();
 
   gManagerWindow.loadView("addons://list/theme");
   await new Promise(resolve => wait_for_view_load(gManagerWindow, resolve));
@@ -472,6 +479,7 @@ add_task(async function() {
 
   info("Disabling lightweight theme");
   LightweightThemeManager.currentTheme = null;
+  await tick();
 
   is_element_hidden(get_node(addon, "preferences-btn"), "Preferences button should be hidden");
   is_element_visible(get_node(addon, "enable-btn"), "Enable button should be hidden");
@@ -487,7 +495,7 @@ add_task(async function() {
   info("Checking that onPropertyChanges for appDisabled updates the UI");
 
   let [aAddon] = await promiseAddonsByIDs(["addon2@tests.mozilla.org"]);
-  aAddon.userDisabled = true;
+  await aAddon.disable();
   aAddon.isCompatible = true;
   aAddon.appDisabled = false;
 
@@ -521,7 +529,7 @@ add_task(async function() {
   info("Addon 10");
   let addon = items["Test add-on 10"];
   addon.parentNode.ensureElementIsVisible(addon);
-  await TestUtils.waitForCondition(() => !is_hidden(get_node(addon, "error-link")));
+  await TestUtils.waitForCondition(() => !BrowserTestUtils.is_hidden(get_node(addon, "error-link")));
   let { name } = await get_tooltip_info(addon);
   is(get_node(addon, "name").value, "Test add-on 10", "Name should be correct");
   is(name, "Test add-on 10", "Tooltip name should be correct");
@@ -542,7 +550,7 @@ add_task(async function() {
   info("Addon 11");
   addon = items["Test add-on 11"];
   addon.parentNode.ensureElementIsVisible(addon);
-  await TestUtils.waitForCondition(() => !is_hidden(get_node(addon, "error-link")));
+  await TestUtils.waitForCondition(() => !BrowserTestUtils.is_hidden(get_node(addon, "error-link")));
   ({ name } = await get_tooltip_info(addon));
   is(get_node(addon, "name").value, "Test add-on 11", "Name should be correct");
   is(name, "Test add-on 11", "Tooltip name should be correct");

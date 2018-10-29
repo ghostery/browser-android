@@ -28,16 +28,6 @@ function nsURLFormatterService() {
     let ABI = "default";
     try {
       ABI = Services.appinfo.XPCOMABI;
-
-      if ("@mozilla.org/xpcom/mac-utils;1" in Cc) {
-        // Mac universal build should report a different ABI than either macppc
-        // or mactel.
-        let macutils = Cc["@mozilla.org/xpcom/mac-utils;1"]
-                         .getService(Ci.nsIMacUtils);
-        if (macutils && macutils.isUniversalBinary) {
-          ABI = "Universal-gcc3";
-        }
-      }
     } catch (e) {}
 
     return ABI;
@@ -99,7 +89,7 @@ nsURLFormatterService.prototype = {
     BING_API_CLIENTID: () => AppConstants.MOZ_BING_API_CLIENTID,
     BING_API_KEY:     () => AppConstants.MOZ_BING_API_KEY,
     DISTRIBUTION() { return this.distribution.id; },
-    DISTRIBUTION_VERSION() { return this.distribution.version; }
+    DISTRIBUTION_VERSION() { return this.distribution.version; },
   },
 
   formatURL: function uf_formatURL(aFormat) {
@@ -140,7 +130,7 @@ nsURLFormatterService.prototype = {
     return AppConstants.MOZ_GOOGLE_API_KEY ? aMsg.replace(RegExp(AppConstants.MOZ_GOOGLE_API_KEY, "g"),
                                                  "[trimmed-google-api-key]")
                                   : aMsg;
-  }
+  },
 };
 
 this.NSGetFactory = XPCOMUtils.generateNSGetFactory([nsURLFormatterService]);

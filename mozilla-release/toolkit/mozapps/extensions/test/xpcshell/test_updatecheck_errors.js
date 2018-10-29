@@ -17,7 +17,6 @@ add_task(async function setup() {
   // Create and configure the HTTP server.
   testserver = AddonTestUtils.createHttpServer({hosts: ["example.com"]});
   testserver.registerDirectory("/data/", do_get_file("data"));
-  testserver.registerDirectory("/addons/", do_get_file("addons"));
 
   await promiseStartupManager();
 });
@@ -31,7 +30,7 @@ add_task(async function() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "1",
-      maxVersion: "1"
+      maxVersion: "1",
     }],
     name: "Test Addon 1",
     bootstrap: "true",
@@ -48,5 +47,5 @@ add_task(async function() {
 
   equal(update.error, AddonManager.UPDATE_STATUS_DOWNLOAD_ERROR);
 
-  addon.uninstall();
+  await addon.uninstall();
 });

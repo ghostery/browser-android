@@ -120,7 +120,8 @@ class TlsRecordFilter : public PacketFilter {
   bool Unprotect(const TlsRecordHeader& header, const DataBuffer& cipherText,
                  uint8_t* inner_content_type, DataBuffer* plaintext);
   bool Protect(const TlsRecordHeader& header, uint8_t inner_content_type,
-               const DataBuffer& plaintext, DataBuffer* ciphertext);
+               const DataBuffer& plaintext, DataBuffer* ciphertext,
+               size_t padding = 0);
 
  protected:
   // There are two filter functions which can be overriden. Both are
@@ -171,20 +172,19 @@ inline std::ostream& operator<<(std::ostream& stream,
   hdr.WriteStream(stream);
   stream << ' ';
   switch (hdr.content_type()) {
-    case kTlsChangeCipherSpecType:
+    case ssl_ct_change_cipher_spec:
       stream << "CCS";
       break;
-    case kTlsAlertType:
+    case ssl_ct_alert:
       stream << "Alert";
       break;
-    case kTlsHandshakeType:
-    case kTlsAltHandshakeType:
+    case ssl_ct_handshake:
       stream << "Handshake";
       break;
-    case kTlsApplicationDataType:
+    case ssl_ct_application_data:
       stream << "Data";
       break;
-    case kTlsAckType:
+    case ssl_ct_ack:
       stream << "ACK";
       break;
     default:
@@ -300,7 +300,7 @@ class TlsRecordRecorder : public TlsRecordFilter {
   TlsRecordRecorder(const std::shared_ptr<TlsAgent>& a)
       : TlsRecordFilter(a),
         filter_(false),
-        ct_(content_handshake),  // dummy (<optional> is C++14)
+        ct_(ssl_ct_handshake),  // dummy (<optional> is C++14)
         records_() {}
   virtual PacketFilter::Action FilterRecord(const TlsRecordHeader& header,
                                             const DataBuffer& input,
@@ -504,6 +504,22 @@ class TlsClientHelloVersionChanger : public TlsHandshakeFilter {
 
  private:
   std::weak_ptr<TlsAgent> server_;
+};
+
+// Damage a record.
+class TlsRecordLastByteDamager : public TlsRecordFilter {
+ public:
+  TlsRecordLastByteDamager(const std::shared_ptr<TlsAgent>& a)
+      : TlsRecordFilter(a) {}
+
+ protected:
+  PacketFilter::Action FilterRecord(const TlsRecordHeader& header,
+                                    const DataBuffer& data,
+                                    DataBuffer* changed) override {
+    *changed = data;
+    changed->data()[changed->len() - 1]++;
+    return CHANGE;
+  }
 };
 
 // This class selectively drops complete writes.  This relies on the fact that

@@ -12,6 +12,7 @@ import os.path
 import re
 from ply import lex
 from ply import yacc
+from collections import namedtuple
 
 """A type conforms to the following pattern:
 
@@ -20,7 +21,7 @@ from ply import yacc
 
     def nativeType(self, calltype):
         'returns a string representation of the native type
-        calltype must be 'in', 'out', or 'inout'
+        calltype must be 'in', 'out', 'inout', or 'element'
 
 Interface members const/method/attribute conform to the following pattern:
 
@@ -52,7 +53,8 @@ def attlistToIDL(attlist):
     attlist.sort(cmp=lambda a, b: cmp(a[0], b[0]))
 
     return '[%s] ' % ','.join(["%s%s" % (name, value is not None and '(%s)' % value or '')
-                              for name, value, aloc in attlist])
+                               for name, value, aloc in attlist])
+
 
 _paramsHardcode = {
     2: ('array', 'shared', 'iid_is', 'size_is', 'retval'),
@@ -130,8 +132,12 @@ class Builtin(object):
         return self.nativename.endswith('*')
 
     def nativeType(self, calltype, shared=False, const=False):
+        if self.name in ["string", "wstring"] and calltype == 'element':
+            raise IDLError("Use string class types for string Array elements", self.location)
+
         if const:
-            print >>sys.stderr, IDLError("[const] doesn't make sense on builtin types.", self.location, warning=True)
+            print >>sys.stderr, IDLError(
+                "[const] doesn't make sense on builtin types.", self.location, warning=True)
             const = 'const '
         elif calltype == 'in' and self.isPointer():
             const = 'const '
@@ -142,7 +148,7 @@ class Builtin(object):
         else:
             const = ''
         return "%s%s %s" % (const, self.nativename,
-                            calltype != 'in' and '*' or '')
+                            '*' if 'out' in calltype else '')
 
     def rustType(self, calltype, shared=False, const=False):
         # We want to rewrite any *mut pointers to *const pointers if constness
@@ -153,6 +159,7 @@ class Builtin(object):
             rustname = self.rustname.replace("*mut", "*const")
 
         return "%s%s" % (calltype != 'in' and '*mut ' or '', rustname)
+
 
 builtinNames = [
     Builtin('boolean', 'bool', 'bool'),
@@ -220,6 +227,7 @@ class Location(object):
 class NameMap(object):
     """Map of name -> object. Each object must have a .name and .location property.
     Setting the same name twice throws an error."""
+
     def __init__(self):
         self._d = {}
 
@@ -236,7 +244,8 @@ class NameMap(object):
 
     def set(self, object):
         if object.name in builtinMap:
-            raise IDLError("name '%s' is a builtin and cannot be redeclared" % (object.name), object.location)
+            raise IDLError("name '%s' is a builtin and cannot be redeclared" %
+                           (object.name), object.location)
         if object.name.startswith("_"):
             object.name = object.name[1:]
         if object.name in self._d:
@@ -248,7 +257,8 @@ class NameMap(object):
             elif isinstance(old, Interface) and isinstance(object, Forward):
                 pass
             else:
-                raise IDLError("name '%s' specified twice. Previous location: %s" % (object.name, self._d[object.name].location), object.location)
+                raise IDLError("name '%s' specified twice. Previous location: %s" %
+                               (object.name, self._d[object.name].location), object.location)
         else:
             self._d[object.name] = object
 
@@ -260,7 +270,11 @@ class NameMap(object):
 
 
 class RustNoncompat(Exception):
-    """Thie exception is raised when a particular type or function cannot be safely exposed to rust code"""
+    """
+    This exception is raised when a particular type or function cannot be safely exposed to
+    rust code
+    """
+
     def __init__(self, reason):
         self.reason = reason
 
@@ -311,6 +325,7 @@ class Include(object):
 
 class IDL(object):
     def __init__(self, productions):
+        self.hasSequence = False
         self.productions = productions
         self.deps = []
 
@@ -318,10 +333,19 @@ class IDL(object):
         self.namemap.set(object)
 
     def getName(self, id, location):
+        if id.name == 'Array':
+            if id.params is None or len(id.params) != 1:
+                raise IDLError("Array takes exactly 1 parameter", location)
+            self.hasSequence = True
+            return Array(self.getName(id.params[0], location), location)
+
+        if id.params is not None:
+            raise IDLError("Generic type '%s' unrecognized" % id.name, location)
+
         try:
-            return self.namemap[id]
+            return self.namemap[id.name]
         except KeyError:
-            raise IDLError("type '%s' not found" % id, location)
+            raise IDLError("type '%s' not found" % id.name, location)
 
     def hasName(self, id):
         return id in self.namemap
@@ -344,6 +368,8 @@ class IDL(object):
         for p in self.productions:
             if p.kind == 'include':
                 yield p
+        if self.hasSequence:
+            yield Include("nsTArray.h", BuiltinLocation)
 
     def needsJSTypes(self):
         for p in self.productions:
@@ -386,12 +412,14 @@ class Typedef(object):
         parent.setName(self)
         self.realtype = parent.getName(self.type, self.location)
 
+        if not isinstance(self.realtype, (Builtin, Native, Typedef)):
+            raise IDLError("Unsupported typedef target type", self.location)
+
     def isScriptable(self):
         return self.realtype.isScriptable()
 
     def nativeType(self, calltype):
-        return "%s %s" % (self.name,
-                          calltype != 'in' and '*' or '')
+        return "%s %s" % (self.name, '*' if 'out' in calltype else '')
 
     def rustType(self, calltype):
         return "%s%s" % (calltype != 'in' and '*mut ' or '',
@@ -430,8 +458,9 @@ class Forward(object):
         return True
 
     def nativeType(self, calltype):
-        return "%s %s" % (self.name,
-                          calltype != 'in' and '* *' or '*')
+        if calltype == 'element':
+            return 'RefPtr<%s>' % self.name
+        return "%s *%s" % (self.name, '*' if 'out' in calltype else '')
 
     def rustType(self, calltype):
         if rustBlacklistedForward(self.name):
@@ -449,26 +478,17 @@ class Native(object):
     modifier = None
     specialtype = None
 
+    # A tuple type here means that a custom value is used for each calltype:
+    #   (in, out/inout, array element) respectively.
+    # A `None` here means that the written type should be used as-is.
     specialtypes = {
         'nsid': None,
-        'domstring': 'nsAString',
-        'utf8string': 'nsACString',
-        'cstring': 'nsACString',
-        'astring': 'nsAString',
-        'jsval': 'JS::Value'
-        }
-
-    # Mappings from C++ native name types to rust native names. Types which
-    # aren't listed here are incompatible with rust code.
-    rust_nativenames = {
-        'void': "libc::c_void",
-        'char': "u8",
-        'char16_t': "u16",
-        'nsID': "nsID",
-        'nsIID': "nsIID",
-        'nsCID': "nsCID",
-        'nsAString': "::nsstring::nsAString",
-        'nsACString': "::nsstring::nsACString",
+        'domstring': ('const nsAString&', 'nsAString&', 'nsString'),
+        'utf8string': ('const nsACString&', 'nsACString&', 'nsCString'),
+        'cstring': ('const nsACString&', 'nsACString&', 'nsCString'),
+        'astring': ('const nsAString&', 'nsAString&', 'nsString'),
+        'jsval': ('JS::HandleValue', 'JS::MutableHandleValue', 'JS::Value'),
+        'promise': '::mozilla::dom::Promise',
     }
 
     def __init__(self, name, nativename, attlist, location):
@@ -505,6 +525,9 @@ class Native(object):
         if self.specialtype is None:
             return False
 
+        if self.specialtype == 'promise':
+            return self.modifier == 'ptr'
+
         if self.specialtype == 'nsid':
             return self.modifier is not None
 
@@ -519,47 +542,75 @@ class Native(object):
     def nativeType(self, calltype, const=False, shared=False):
         if shared:
             if calltype != 'out':
-                raise IDLError("[shared] only applies to out parameters.")
+                raise IDLError("[shared] only applies to out parameters.", self.location)
             const = True
 
-        if self.specialtype is not None and calltype == 'in':
+        if isinstance(self.nativename, tuple):
+            if calltype == 'in':
+                return self.nativename[0] + ' '
+            elif 'out' in calltype:
+                return self.nativename[1] + ' '
+            else:
+                return self.nativename[2] + ' '
+
+        # 'in' nsid parameters should be made 'const'
+        if self.specialtype == 'nsid' and calltype == 'in':
             const = True
 
-        if self.specialtype == 'jsval':
-            if calltype == 'out' or calltype == 'inout':
-                return "JS::MutableHandleValue "
-            return "JS::HandleValue "
+        if calltype == 'element':
+            if self.isRef(calltype):
+                raise IDLError("[ref] qualified type unsupported in Array<T>", self.location)
+
+            # Promises should be held in RefPtr<T> in Array<T>s
+            if self.specialtype == 'promise':
+                return 'RefPtr<mozilla::dom::Promise>'
+
+            # We don't support nsIDPtr, in Array<T> currently, although
+            # this or support for Array<nsID> will be needed to replace
+            # [array] completely.
+            if self.specialtype == 'nsid':
+                raise IDLError("Array<nsIDPtr> not yet supported. "
+                               "File an XPConnect bug if you need it.", self.location)
 
         if self.isRef(calltype):
-            m = '& '
-        elif self.isPtr(calltype):
-            m = '*' + ((self.modifier == 'ptr' and calltype != 'in') and '*' or '')
+            m = '& '  # [ref] is always passed with a single indirection
         else:
-            m = calltype != 'in' and '*' or ''
+            m = '* ' if 'out' in calltype else ''
+            if self.isPtr(calltype):
+                m += '* '
         return "%s%s %s" % (const and 'const ' or '', self.nativename, m)
 
     def rustType(self, calltype, const=False, shared=False):
-        if shared:
-            if calltype != 'out':
-                raise IDLError("[shared] only applies to out parameters.")
-            const = True
+        # For the most part, 'native' types don't make sense in rust, as they
+        # are native C++ types. However, we can support a few types here, as
+        # they're important.
+        #
+        # NOTE: This code doesn't try to perfectly match C++ constness, as
+        # constness doesn't affect ABI, and raw pointers are already unsafe.
 
-        if self.specialtype is not None and calltype == 'in':
-            const = True
+        if self.modifier not in ['ptr', 'ref']:
+            raise RustNoncompat('Rust only supports [ref] / [ptr] native types')
 
-        if self.nativename not in self.rust_nativenames:
-            raise RustNoncompat("native type %s is unsupported" % self.nativename)
-        name = self.rust_nativenames[self.nativename]
+        prefix = '*mut ' if 'out' in calltype else '*const '
+        if 'out' in calltype and self.modifier == 'ptr':
+            prefix += '*mut '
 
-        if self.isRef(calltype):
-            m = const and '&' or '&mut '
-        elif self.isPtr(calltype):
-            m = (const and '*const ' or '*mut ')
-            if self.modifier == 'ptr' and calltype != 'in':
-                m += '*mut '
-        else:
-            m = calltype != 'in' and '*mut ' or ''
-        return "%s%s" % (m, name)
+        if self.specialtype == 'nsid':
+            return prefix + self.nativename
+        if self.specialtype in ['cstring', 'utf8string']:
+            if 'element' in calltype:
+                return '::nsstring::nsCString'
+            return prefix + '::nsstring::nsACString'
+        if self.specialtype in ['astring', 'domstring']:
+            if 'element' in calltype:
+                return '::nsstring::nsString'
+            return prefix + '::nsstring::nsAString'
+        if self.nativename == 'void':
+            return prefix + 'libc::c_void'
+
+        if self.specialtype:
+            raise RustNoncompat("specialtype %s unsupported" % self.specialtype)
+        raise RustNoncompat("native type %s unsupported" % self.nativename)
 
     def __str__(self):
         return "native %s(%s)\n" % (self.name, self.nativename)
@@ -599,11 +650,13 @@ class WebIDL(object):
         return True  # All DOM objects are script exposed.
 
     def nativeType(self, calltype):
-        return "%s %s" % (self.native, calltype != 'in' and '* *' or '*')
+        if calltype == 'element':
+            return 'RefPtr<%s>' % self.native
+        return "%s *%s" % (self.native, '*' if 'out' in calltype else '')
 
     def rustType(self, calltype):
         # Just expose the type as a void* - we can't do any better.
-        return "%s*const libc::c_void" % (calltype != 'in' and '*mut ' or '')
+        return "%s*const libc::c_void" % ('*mut ' if 'out' in calltype else '')
 
     def __str__(self):
         return "webidl %s\n" % self.name
@@ -648,31 +701,39 @@ class Interface(object):
                 if hasattr(member, 'doccomments'):
                     member.doccomments[0:0] = self.doccomments
                     break
-            self.doccomments = parent.getName(self.name, None).doccomments
+            self.doccomments = parent.getName(TypeId(self.name), None).doccomments
 
         if self.attributes.function:
             has_method = False
             for member in self.members:
                 if member.kind is 'method':
                     if has_method:
-                        raise IDLError("interface '%s' has multiple methods, but marked 'function'" % self.name, self.location)
+                        raise IDLError(
+                            "interface '%s' has multiple methods, but marked 'function'" %
+                            self.name, self.location)
                     else:
                         has_method = True
 
         parent.setName(self)
         if self.base is not None:
-            realbase = parent.getName(self.base, self.location)
+            realbase = parent.getName(TypeId(self.base), self.location)
             if realbase.kind != 'interface':
-                raise IDLError("interface '%s' inherits from non-interface type '%s'" % (self.name, self.base), self.location)
+                raise IDLError("interface '%s' inherits from non-interface type '%s'" %
+                               (self.name, self.base), self.location)
 
             if self.attributes.scriptable and not realbase.attributes.scriptable:
-                raise IDLError("interface '%s' is scriptable but derives from non-scriptable '%s'" % (self.name, self.base), self.location, warning=True)
+                raise IDLError("interface '%s' is scriptable but derives from "
+                               "non-scriptable '%s'" %
+                               (self.name, self.base), self.location, warning=True)
 
-            if self.attributes.scriptable and realbase.attributes.builtinclass and not self.attributes.builtinclass:
-                raise IDLError("interface '%s' is not builtinclass but derives from builtinclass '%s'" % (self.name, self.base), self.location)
+            if (self.attributes.scriptable and realbase.attributes.builtinclass and
+                not self.attributes.builtinclass):
+                raise IDLError("interface '%s' is not builtinclass but derives from "
+                               "builtinclass '%s'" %
+                               (self.name, self.base), self.location)
 
             if realbase.implicit_builtinclass:
-                self.implicit_builtinclass = True # Inherit implicit builtinclass from base
+                self.implicit_builtinclass = True  # Inherit implicit builtinclass from base
 
         for member in self.members:
             member.resolve(self)
@@ -691,12 +752,13 @@ class Interface(object):
         return True
 
     def nativeType(self, calltype, const=False):
-        return "%s%s %s" % (const and 'const ' or '',
-                            self.name,
-                            calltype != 'in' and '* *' or '*')
+        if calltype == 'element':
+            return 'RefPtr<%s>' % self.name
+        return "%s%s *%s" % ('const ' if const else '', self.name,
+                             '*' if 'out' in calltype else '')
 
-    def rustType(self, calltype):
-        return "%s*const %s" % (calltype != 'in' and '*mut ' or '',
+    def rustType(self, calltype, const=False):
+        return "%s*const %s" % ('*mut ' if 'out' in calltype else '',
                                 self.name)
 
     def __str__(self):
@@ -715,9 +777,9 @@ class Interface(object):
         # The constant may be in a base class
         iface = self
         while name not in iface.namemap and iface is not None:
-            iface = self.idl.getName(self.base, self.location)
+            iface = self.idl.getName(TypeId(self.base), self.location)
         if iface is None:
-            raise IDLError("cannot find symbol '%s'" % name)
+            raise IDLError("cannot find symbol '%s'" % name, self.location)
         c = iface.namemap.get(name, location)
         if c.kind != 'const':
             raise IDLError("symbol '%s' is not a constant", c.location)
@@ -726,7 +788,7 @@ class Interface(object):
 
     def needsJSTypes(self):
         for m in self.members:
-            if m.kind == "attribute" and m.type == "jsval":
+            if m.kind == "attribute" and m.type == TypeId("jsval"):
                 return True
             if m.kind == "method" and m.needsJSTypes():
                 return True
@@ -736,7 +798,7 @@ class Interface(object):
         ''' Returns the number of entries in the vtable for this interface. '''
         total = sum(member.count() for member in self.members)
         if self.base is not None:
-            realbase = self.idl.getName(self.base, self.location)
+            realbase = self.idl.getName(TypeId(self.base), self.location)
             total += realbase.countEntries()
         return total
 
@@ -748,8 +810,6 @@ class InterfaceAttributes(object):
     function = False
     noscript = False
     main_process_scriptable_only = False
-    shim = None
-    shimfile = None
 
     def setuuid(self, value):
         self.uuid = value.lower()
@@ -769,12 +829,6 @@ class InterfaceAttributes(object):
     def setmain_process_scriptable_only(self):
         self.main_process_scriptable_only = True
 
-    def setshim(self, value):
-        self.shim = value
-
-    def setshimfile(self, value):
-        self.shimfile = value
-
     actions = {
         'uuid':       (True, setuuid),
         'scriptable': (False, setscriptable),
@@ -783,9 +837,7 @@ class InterfaceAttributes(object):
         'noscript':   (False, setnoscript),
         'object':     (False, lambda self: True),
         'main_process_scriptable_only': (False, setmain_process_scriptable_only),
-        'shim':    (True, setshim),
-        'shimfile': (True, setshimfile),
-        }
+    }
 
     def __init__(self, attlist, location):
         def badattribute(self):
@@ -821,10 +873,6 @@ class InterfaceAttributes(object):
             l.append("\tfunction\n")
         if self.main_process_scriptable_only:
             l.append("\tmain_process_scriptable_only\n")
-        if self.shim:
-            l.append("\tshim: %s\n" % self.shim)
-        if self.shimfile:
-            l.append("\tshimfile: %s\n" % self.shimfile)
         return "".join(l)
 
 
@@ -845,7 +893,8 @@ class ConstMember(object):
         while isinstance(basetype, Typedef):
             basetype = basetype.realtype
         if not isinstance(basetype, Builtin) or not basetype.maybeConst:
-            raise IDLError("const may only be a short or long type, not %s" % self.type, self.location)
+            raise IDLError("const may only be a short or long type, not %s" %
+                           self.type, self.location)
 
         self.basetype = basetype
 
@@ -863,6 +912,7 @@ class Attribute(object):
     kind = 'attribute'
     noscript = False
     readonly = False
+    symbol = False
     implicit_jscontext = False
     nostdcall = False
     must_use = False
@@ -914,6 +964,8 @@ class Attribute(object):
 
                 if name == 'noscript':
                     self.noscript = True
+                elif name == 'symbol':
+                    self.symbol = True
                 elif name == 'implicit_jscontext':
                     self.implicit_jscontext = True
                 elif name == 'nostdcall':
@@ -936,8 +988,11 @@ class Attribute(object):
                 getBuiltinOrNativeTypeName(self.realtype) != '[domstring]'):
             raise IDLError("'Undefined' attribute can only be used on DOMString",
                            self.location)
-        if self.infallible and not self.realtype.kind == 'builtin':
-            raise IDLError('[infallible] only works on builtin types '
+        if self.infallible and self.realtype.kind not in ['builtin',
+                                                          'interface',
+                                                          'forward',
+                                                          'webidl']:
+            raise IDLError('[infallible] only works on interfaces, domobjects, and builtin types '
                            '(numbers, booleans, and raw char types)',
                            self.location)
         if self.infallible and not iface.attributes.builtinclass:
@@ -967,6 +1022,7 @@ class Method(object):
     kind = 'method'
     noscript = False
     notxpcom = False
+    symbol = False
     binaryname = None
     implicit_jscontext = False
     nostdcall = False
@@ -998,6 +1054,8 @@ class Method(object):
                 self.noscript = True
             elif name == 'notxpcom':
                 self.notxpcom = True
+            elif name == 'symbol':
+                self.symbol = True
             elif name == 'implicit_jscontext':
                 self.implicit_jscontext = True
             elif name == 'optional_argc':
@@ -1020,16 +1078,19 @@ class Method(object):
             p.resolve(self)
         for p in self.params:
             if p.retval and p != self.params[-1]:
-                raise IDLError("'retval' parameter '%s' is not the last parameter" % p.name, self.location)
+                raise IDLError("'retval' parameter '%s' is not the last parameter" %
+                               p.name, self.location)
             if p.size_is:
                 found_size_param = False
                 for size_param in self.params:
                     if p.size_is == size_param.name:
                         found_size_param = True
                         if getBuiltinOrNativeTypeName(size_param.realtype) != 'unsigned long':
-                            raise IDLError("is_size parameter must have type 'unsigned long'", self.location)
+                            raise IDLError(
+                                "is_size parameter must have type 'unsigned long'", self.location)
                 if not found_size_param:
-                    raise IDLError("could not find is_size parameter '%s'" % p.size_is, self.location)
+                    raise IDLError("could not find is_size parameter '%s'" %
+                                   p.size_is, self.location)
 
     def isScriptable(self):
         if not self.iface.attributes.scriptable:
@@ -1055,7 +1116,7 @@ class Method(object):
     def needsJSTypes(self):
         if self.implicit_jscontext:
             return True
-        if self.type == "jsval":
+        if self.type == TypeId("jsval"):
             return True
         for p in self.params:
             t = p.realtype
@@ -1101,7 +1162,8 @@ class Param(object):
                 if value is None:
                     raise IDLError("'Null' must specify a parameter", aloc)
                 if value not in ('Empty', 'Null', 'Stringify'):
-                    raise IDLError("'Null' parameter value must be 'Empty', 'Null', or 'Stringify'",
+                    raise IDLError("'Null' parameter value must be 'Empty', 'Null', "
+                                   "or 'Stringify'",
                                    aloc)
                 self.null = value
             elif name == 'Undefined':
@@ -1136,7 +1198,7 @@ class Param(object):
     def resolve(self, method):
         self.realtype = method.iface.idl.getName(self.type, self.location)
         if self.array:
-            self.realtype = Array(self.realtype)
+            self.realtype = LegacyArray(self.realtype)
         if (self.null is not None and
                 getBuiltinOrNativeTypeName(self.realtype) != '[domstring]'):
             raise IDLError("'Null' attribute can only be used on DOMString",
@@ -1155,9 +1217,9 @@ class Param(object):
 
         try:
             return self.realtype.nativeType(self.paramtype, **kwargs)
-        except IDLError, e:
+        except IDLError as e:
             raise IDLError(e.message, self.location)
-        except TypeError, e:
+        except TypeError as e:
             raise IDLError("Unexpected parameter attribute", self.location)
 
     def rustType(self):
@@ -1169,9 +1231,9 @@ class Param(object):
 
         try:
             return self.realtype.rustType(self.paramtype, **kwargs)
-        except IDLError, e:
+        except IDLError as e:
             raise IDLError(e.message, self.location)
-        except TypeError, e:
+        except TypeError as e:
             raise IDLError("Unexpected parameter attribute", self.location)
 
     def toIDL(self):
@@ -1181,20 +1243,80 @@ class Param(object):
                                self.name)
 
 
-class Array(object):
+class LegacyArray(object):
     def __init__(self, basetype):
         self.type = basetype
+        self.location = self.type.location
 
     def isScriptable(self):
         return self.type.isScriptable()
 
     def nativeType(self, calltype, const=False):
-        return "%s%s*" % (const and 'const ' or '',
-                          self.type.nativeType(calltype))
+        if 'element' in calltype:
+            raise IDLError("nested [array] unsupported", self.location)
+
+        # For legacy reasons, we have to add a 'const ' to builtin pointer array
+        # types. (`[array] in string` and `[array] in wstring` parameters)
+        if calltype == 'in' and isinstance(self.type, Builtin) and self.type.isPointer():
+            const = True
+
+        return "%s%s*%s" % ('const ' if const else '',
+                            self.type.nativeType('legacyelement'),
+                            '*' if 'out' in calltype else '')
 
     def rustType(self, calltype, const=False):
-        return "%s %s" % (const and '*const' or '*mut',
-                          self.type.rustType(calltype))
+        return "%s%s%s" % ('*mut ' if 'out' in calltype else '',
+                           '*const ' if const else '*mut ',
+                           self.type.rustType('legacyelement'))
+
+
+class Array(object):
+    kind = 'array'
+
+    def __init__(self, type, location):
+        self.type = type
+        self.location = location
+
+    @property
+    def name(self):
+        return "Array<%s>" % self.type.name
+
+    def resolve(self, idl):
+        idl.getName(self.type, self.location)
+
+    def isScriptable(self):
+        return self.type.isScriptable()
+
+    def nativeType(self, calltype):
+        if calltype == 'legacyelement':
+            raise IDLError("[array] Array<T> is unsupported", self.location)
+
+        base = 'nsTArray<%s>' % self.type.nativeType('element')
+        if 'out' in calltype:
+            return '%s& ' % base
+        elif 'in' == calltype:
+            return 'const %s& ' % base
+        else:
+            return base
+
+    def rustType(self, calltype):
+        # NOTE: To add Rust support, ensure 'element' is handled correctly in
+        # all rustType callees.
+        raise RustNoncompat("Array<...> types")
+
+
+TypeId = namedtuple('TypeId', 'name params')
+
+
+# Make str(TypeId) produce a nicer value
+TypeId.__str__ = lambda self: \
+    "%s<%s>" % (self.name, ', '.join(str(p) for p in self.params)) \
+    if self.params is not None \
+    else self.name
+
+
+# Allow skipping 'params' in TypeId(..)
+TypeId.__new__.__defaults__ = (None,)
 
 
 class IDLParser(object):
@@ -1210,7 +1332,7 @@ class IDLParser(object):
         'native': 'NATIVE',
         'typedef': 'TYPEDEF',
         'webidl': 'WEBIDL',
-        }
+    }
 
     tokens = [
         'IDENTIFIER',
@@ -1222,7 +1344,7 @@ class IDLParser(object):
         'LSHIFT',
         'RSHIFT',
         'NATIVEID',
-        ]
+    ]
 
     tokens.extend(keywords.values())
 
@@ -1237,7 +1359,7 @@ class IDLParser(object):
     t_LSHIFT = r'<<'
     t_RSHIFT = r'>>'
 
-    literals = '"(){}[],;:=|+-*'
+    literals = '"(){}[]<>,;:=|+-*'
 
     t_ignore = ' \t'
 
@@ -1255,7 +1377,7 @@ class IDLParser(object):
     t_IID.__doc__ = r'%(c)s{8}-%(c)s{4}-%(c)s{4}-%(c)s{4}-%(c)s{12}' % {'c': hexchar}
 
     def t_IDENTIFIER(self, t):
-        r'(unsigned\ long\ long|unsigned\ short|unsigned\ long|long\ long)(?!_?[A-Za-z][A-Za-z_0-9])|_?[A-Za-z][A-Za-z_0-9]*'
+        r'(unsigned\ long\ long|unsigned\ short|unsigned\ long|long\ long)(?!_?[A-Za-z][A-Za-z_0-9])|_?[A-Za-z][A-Za-z_0-9]*'  # NOQA: E501
         t.type = self.keywords.get(t.value, 'IDENTIFIER')
         return t
 
@@ -1330,7 +1452,7 @@ class IDLParser(object):
         p[0].insert(0, p[1])
 
     def p_typedef(self, p):
-        """typedef : TYPEDEF IDENTIFIER IDENTIFIER ';'"""
+        """typedef : TYPEDEF type IDENTIFIER ';'"""
         p[0] = Typedef(type=p[2],
                        name=p[3],
                        location=self.getLocation(p, 1),
@@ -1397,7 +1519,7 @@ class IDLParser(object):
             doccomments.extend(atts['doccomments'])
         doccomments.extend(p.slice[2].doccomments)
 
-        l = lambda: self.getLocation(p, 2)
+        def loc(): return self.getLocation(p, 2)
 
         if body is None:
             # forward-declared interface... must not have attributes!
@@ -1407,14 +1529,14 @@ class IDLParser(object):
 
             if base is not None:
                 raise IDLError("Forward-declared interface must not have a base",
-                               l())
-            p[0] = Forward(name=name, location=l(), doccomments=doccomments)
+                               loc())
+            p[0] = Forward(name=name, location=loc(), doccomments=doccomments)
         else:
             p[0] = Interface(name=name,
                              attlist=attlist,
                              base=base,
                              members=body,
-                             location=l(),
+                             location=loc(),
                              doccomments=doccomments)
 
     def p_ifacebody(self, p):
@@ -1443,7 +1565,7 @@ class IDLParser(object):
         p[0] = CDATA(p[1], self.getLocation(p, 1))
 
     def p_member_const(self, p):
-        """member : CONST IDENTIFIER IDENTIFIER '=' number ';' """
+        """member : CONST type IDENTIFIER '=' number ';' """
         p[0] = ConstMember(type=p[2], name=p[3],
                            value=p[5], location=self.getLocation(p, 1),
                            doccomments=p.slice[1].doccomments)
@@ -1505,7 +1627,7 @@ class IDLParser(object):
         p[0] = lambda i: n1(i) | n2(i)
 
     def p_member_att(self, p):
-        """member : attributes optreadonly ATTRIBUTE IDENTIFIER IDENTIFIER ';'"""
+        """member : attributes optreadonly ATTRIBUTE type IDENTIFIER ';'"""
         if 'doccomments' in p[1]:
             doccomments = p[1]['doccomments']
         elif p[2] is not None:
@@ -1521,7 +1643,7 @@ class IDLParser(object):
                          doccomments=doccomments)
 
     def p_member_method(self, p):
-        """member : attributes IDENTIFIER IDENTIFIER '(' paramlist ')' raises ';'"""
+        """member : attributes type IDENTIFIER '(' paramlist ')' raises ';'"""
         if 'doccomments' in p[1]:
             doccomments = p[1]['doccomments']
         else:
@@ -1554,7 +1676,7 @@ class IDLParser(object):
         p[0].insert(0, p[2])
 
     def p_param(self, p):
-        """param : attributes paramtype IDENTIFIER IDENTIFIER"""
+        """param : attributes paramtype type IDENTIFIER"""
         p[0] = Param(paramtype=p[2],
                      type=p[3],
                      name=p[4],
@@ -1592,9 +1714,30 @@ class IDLParser(object):
         p[0] = list(p[3])
         p[0].insert(0, p[1])
 
+    def p_type_id(self, p):
+        """type : IDENTIFIER"""
+        p[0] = TypeId(name=p[1])
+        p.slice[0].doccomments = p.slice[1].doccomments
+
+    def p_type_generic(self, p):
+        """type : IDENTIFIER '<' typelist '>'"""
+        p[0] = TypeId(name=p[1], params=p[3])
+        p.slice[0].doccomments = p.slice[1].doccomments
+
+    def p_typelist(self, p):
+        """typelist : type"""
+        p[0] = [p[1]]
+
+    def p_typelist_continue(self, p):
+        """typelist : type ',' typelist"""
+        p[0] = list(p[3])
+        p[0].insert(0, p[1])
+
     def p_error(self, t):
         if not t:
-            raise IDLError("Syntax Error at end of file. Possibly due to missing semicolon(;), braces(}) or both", None)
+            raise IDLError(
+                "Syntax Error at end of file. Possibly due to missing semicolon(;), braces(}) "
+                "or both", None)
         else:
             location = Location(self.lexer, t.lineno, t.lexpos)
             raise IDLError("invalid syntax", location)
@@ -1634,8 +1777,9 @@ class IDLParser(object):
     def getLocation(self, p, i):
         return Location(self.lexer, p.lineno(i), p.lexpos(i))
 
+
 if __name__ == '__main__':
     p = IDLParser()
     for f in sys.argv[1:]:
-        print "Parsing %s" % f
+        print("Parsing %s" % f)
         p.parse(open(f).read(), filename=f)

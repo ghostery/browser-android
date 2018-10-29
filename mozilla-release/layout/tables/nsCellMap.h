@@ -193,8 +193,7 @@ public:
                         nsCellMap& aCellMap,
                         uint32_t   aRowGroupStart,
                         uint32_t   aYPos,
-                        uint32_t   aXPos,
-                        bool       aIsBEndIEnd = false);
+                        uint32_t   aXPos);
 
   void SetBCBorderEdge(mozilla::LogicalSide aEdge,
                        nsCellMap&    aCellMap,
@@ -560,10 +559,11 @@ class nsCellMapColumnIterator
 public:
   nsCellMapColumnIterator(const nsTableCellMap* aMap, int32_t aCol) :
     mMap(aMap), mCurMap(aMap->mFirstMap), mCurMapStart(0),
-    mCurMapRow(0), mCol(aCol), mFoundCells(0)
+    mCurMapRow(0), mCol(aCol), mFoundCells(0),
+    mCurMapContentRowCount(0), mCurMapRelevantRowCount(0)
   {
-    NS_PRECONDITION(aMap, "Must have map");
-    NS_PRECONDITION(mCol < aMap->GetColCount(), "Invalid column");
+    MOZ_ASSERT(aMap, "Must have map");
+    MOZ_ASSERT(mCol < aMap->GetColCount(), "Invalid column");
     mOrigCells = aMap->GetNumCellsOriginatingInCol(mCol);
     if (mCurMap) {
       mCurMapContentRowCount = mCurMap->GetRowCount();

@@ -52,19 +52,6 @@
 
 using namespace mozilla;
 
-#ifdef XP_MACOSX
-cpu_type_t pref_cpu_types[2] = {
-#if defined(__i386__)
-  CPU_TYPE_X86,
-#elif defined(__x86_64__)
-  CPU_TYPE_X86_64,
-#elif defined(__ppc__)
-  CPU_TYPE_POWERPC,
-#endif
-  CPU_TYPE_ANY
-};
-#endif
-
 //-------------------------------------------------------------------//
 // nsIProcess implementation
 //-------------------------------------------------------------------//
@@ -379,9 +366,6 @@ nsProcess::CopyArgsAndRunProcess(bool aBlocking, const char** aArgs,
   // Add one to the aCount for the program name and one for null termination.
   char** my_argv = nullptr;
   my_argv = (char**)moz_xmalloc(sizeof(char*) * (aCount + 2));
-  if (!my_argv) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
 
   my_argv[0] = ToNewUTF8String(mTargetPath);
 
@@ -421,9 +405,6 @@ nsProcess::CopyArgsAndRunProcessw(bool aBlocking, const char16_t** aArgs,
   // Add one to the aCount for the program name and one for null termination.
   char** my_argv = nullptr;
   my_argv = (char**)moz_xmalloc(sizeof(char*) * (aCount + 2));
-  if (!my_argv) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
 
   my_argv[0] = ToNewUTF8String(mTargetPath);
 
@@ -548,29 +529,11 @@ nsProcess::RunProcess(bool aBlocking, char** aMyArgv, nsIObserver* aObserver,
 
   mPid = GetProcessId(mProcess);
 #elif defined(XP_MACOSX)
-  // Initialize spawn attributes.
-  posix_spawnattr_t spawnattr;
-  if (posix_spawnattr_init(&spawnattr) != 0) {
-    return NS_ERROR_FAILURE;
-  }
-
-  // Set spawn attributes.
-  size_t attr_count = ArrayLength(pref_cpu_types);
-  size_t attr_ocount = 0;
-  if (posix_spawnattr_setbinpref_np(&spawnattr, attr_count, pref_cpu_types,
-                                    &attr_ocount) != 0 ||
-      attr_ocount != attr_count) {
-    posix_spawnattr_destroy(&spawnattr);
-    return NS_ERROR_FAILURE;
-  }
-
   // Note: |aMyArgv| is already null-terminated as required by posix_spawnp.
   pid_t newPid = 0;
-  int result = posix_spawnp(&newPid, aMyArgv[0], nullptr, &spawnattr, aMyArgv,
+  int result = posix_spawnp(&newPid, aMyArgv[0], nullptr, nullptr, aMyArgv,
                             *_NSGetEnviron());
   mPid = static_cast<int32_t>(newPid);
-
-  posix_spawnattr_destroy(&spawnattr);
 
   if (result != 0) {
     return NS_ERROR_FAILURE;

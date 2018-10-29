@@ -63,6 +63,39 @@ protected:
   virtual mozilla::ipc::IPCResult
   RecvFlushPendingFileDeletions() override;
 
+  virtual PBackgroundSDBConnectionParent*
+  AllocPBackgroundSDBConnectionParent(const PrincipalInfo& aPrincipalInfo)
+                                      override;
+
+  virtual mozilla::ipc::IPCResult
+  RecvPBackgroundSDBConnectionConstructor(
+                                         PBackgroundSDBConnectionParent* aActor,
+                                         const PrincipalInfo& aPrincipalInfo)
+                                         override;
+
+  virtual bool
+  DeallocPBackgroundSDBConnectionParent(PBackgroundSDBConnectionParent* aActor)
+                                        override;
+
+  virtual PBackgroundLocalStorageCacheParent*
+  AllocPBackgroundLocalStorageCacheParent(const PrincipalInfo& aPrincipalInfo,
+                                          const nsCString& aOriginKey,
+                                          const uint32_t& aPrivateBrowsingId)
+                                          override;
+
+  virtual mozilla::ipc::IPCResult
+  RecvPBackgroundLocalStorageCacheConstructor(
+                                     PBackgroundLocalStorageCacheParent* aActor,
+                                     const PrincipalInfo& aPrincipalInfo,
+                                     const nsCString& aOriginKey,
+                                     const uint32_t& aPrivateBrowsingId)
+                                     override;
+
+  virtual bool
+  DeallocPBackgroundLocalStorageCacheParent(
+                                     PBackgroundLocalStorageCacheParent* aActor)
+                                     override;
+
   virtual PBackgroundStorageParent*
   AllocPBackgroundStorageParent(const nsString& aProfilePath) override;
 
@@ -72,14 +105,6 @@ protected:
 
   virtual bool
   DeallocPBackgroundStorageParent(PBackgroundStorageParent* aActor) override;
-
-  virtual mozilla::ipc::IPCResult
-  RecvBroadcastLocalStorageChange(const nsString& aDocumentURI,
-                                  const nsString& aKey,
-                                  const nsString& aOldValue,
-                                  const nsString& aNewValue,
-                                  const PrincipalInfo& aPrincipalInfo,
-                                  const bool& aIsPrivate) override;
 
   virtual PPendingIPCBlobParent*
   AllocPPendingIPCBlobParent(const IPCBlob& aBlob) override;
@@ -287,6 +312,35 @@ protected:
 
   virtual mozilla::ipc::IPCResult
   RecvStorageActivity(const PrincipalInfo& aPrincipalInfo) override;
+
+  virtual PServiceWorkerParent*
+  AllocPServiceWorkerParent(const IPCServiceWorkerDescriptor&) override;
+
+  virtual bool
+  DeallocPServiceWorkerParent(PServiceWorkerParent*) override;
+
+  virtual mozilla::ipc::IPCResult
+  RecvPServiceWorkerConstructor(PServiceWorkerParent* aActor,
+                                const IPCServiceWorkerDescriptor& aDescriptor) override;
+
+  virtual PServiceWorkerContainerParent*
+  AllocPServiceWorkerContainerParent() override;
+
+  virtual bool
+  DeallocPServiceWorkerContainerParent(PServiceWorkerContainerParent*) override;
+
+  virtual mozilla::ipc::IPCResult
+  RecvPServiceWorkerContainerConstructor(PServiceWorkerContainerParent* aActor) override;
+
+  virtual PServiceWorkerRegistrationParent*
+  AllocPServiceWorkerRegistrationParent(const IPCServiceWorkerRegistrationDescriptor&) override;
+
+  virtual bool
+  DeallocPServiceWorkerRegistrationParent(PServiceWorkerRegistrationParent*) override;
+
+  virtual mozilla::ipc::IPCResult
+  RecvPServiceWorkerRegistrationConstructor(PServiceWorkerRegistrationParent* aActor,
+                                            const IPCServiceWorkerRegistrationDescriptor& aDescriptor) override;
 };
 
 } // namespace ipc

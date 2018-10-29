@@ -77,12 +77,21 @@ FFmpegDataDecoder<LIBAV_VER>::InitDecoder()
     mCodecContext->extradata_size = mExtraData->Length();
     // FFmpeg may use SIMD instructions to access the data which reads the
     // data in 32 bytes block. Must ensure we have enough data to read.
+    uint32_t padding_size =
 #if LIBAVCODEC_VERSION_MAJOR >= 58
-    mExtraData->AppendElements(AV_INPUT_BUFFER_PADDING_SIZE);
+      AV_INPUT_BUFFER_PADDING_SIZE;
 #else
-    mExtraData->AppendElements(FF_INPUT_BUFFER_PADDING_SIZE);
+      FF_INPUT_BUFFER_PADDING_SIZE;
 #endif
-    mCodecContext->extradata = mExtraData->Elements();
+    mCodecContext->extradata = static_cast<uint8_t*>(
+      mLib->av_malloc(mExtraData->Length() + padding_size));
+    if (!mCodecContext->extradata) {
+      return MediaResult(NS_ERROR_OUT_OF_MEMORY,
+                        RESULT_DETAIL("Couldn't init ffmpeg extradata"));
+    }
+    memcpy(mCodecContext->extradata,
+           mExtraData->Elements(),
+           mExtraData->Length());
   } else {
     mCodecContext->extradata_size = 0;
   }
@@ -134,7 +143,7 @@ FFmpegDataDecoder<LIBAV_VER>::ProcessDecode(MediaRawData* aSample)
   if (NS_FAILED(rv)) {
     return DecodePromise::CreateAndReject(rv, __func__);
   }
-  return DecodePromise::CreateAndResolve(Move(results), __func__);
+  return DecodePromise::CreateAndResolve(std::move(results), __func__);
 }
 
 MediaResult
@@ -202,7 +211,7 @@ FFmpegDataDecoder<LIBAV_VER>::ProcessDrain()
   while (NS_SUCCEEDED(DoDecode(empty, &gotFrame, results)) &&
          gotFrame) {
   }
-  return DecodePromise::CreateAndResolve(Move(results), __func__);
+  return DecodePromise::CreateAndResolve(std::move(results), __func__);
 }
 
 RefPtr<MediaDataDecoder::FlushPromise>
@@ -225,6 +234,9 @@ FFmpegDataDecoder<LIBAV_VER>::ProcessShutdown()
   StaticMutexAutoLock mon(sMonitor);
 
   if (mCodecContext) {
+    if (mCodecContext->extradata) {
+      mLib->av_freep(&mCodecContext->extradata);
+    }
     mLib->avcodec_close(mCodecContext);
     mLib->av_freep(&mCodecContext);
 #if LIBAVCODEC_VERSION_MAJOR >= 55

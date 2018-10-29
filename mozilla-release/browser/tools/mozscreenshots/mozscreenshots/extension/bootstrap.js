@@ -6,9 +6,7 @@
 
 "use strict";
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/Timer.jsm");
 
 ChromeUtils.defineModuleGetter(this, "TestRunner",
@@ -22,7 +20,7 @@ async function install(data, reason) {
 
   let addon = await AddonManager.getAddonByID(data.id);
   if (addon) {
-    addon.userDisabled = false;
+    await addon.enable();
   }
 }
 

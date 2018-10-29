@@ -65,9 +65,6 @@ class OptimizationInfo
     // Toggles whether native scripts get inlined.
     bool inlineNative_;
 
-    // Toggles whether eager unboxing of SIMD is used.
-    bool eagerSimdUnbox_;
-
     // Toggles whether global value numbering is used.
     bool gvn_;
 
@@ -149,7 +146,35 @@ class OptimizationInfo
     // as a multiplication of inliningWarmUpThreshold.
     uint32_t inliningRecompileThresholdFactor_;
 
-    OptimizationInfo()
+    constexpr OptimizationInfo()
+      : level_(OptimizationLevel::Normal),
+        eaa_(false),
+        ama_(false),
+        edgeCaseAnalysis_(false),
+        eliminateRedundantChecks_(false),
+        inlineInterpreted_(false),
+        inlineNative_(false),
+        gvn_(false),
+        licm_(false),
+        rangeAnalysis_(false),
+        loopUnrolling_(false),
+        reordering_(false),
+        autoTruncate_(false),
+        sincos_(false),
+        sink_(false),
+        registerAllocator_(RegisterAllocator_Backtracking),
+        inlineMaxBytecodePerCallSiteHelperThread_(0),
+        inlineMaxBytecodePerCallSiteMainThread_(0),
+        inlineMaxCalleeInlinedBytecodeLength_(0),
+        inlineMaxTotalBytecodeLength_(0),
+        inliningMaxCallerBytecodeLength_(0),
+        maxInlineDepth_(0),
+        scalarReplacement_(false),
+        smallFunctionMaxInlineDepth_(0),
+        compilerWarmUpThreshold_(0),
+        compilerSmallFunctionWarmUpThreshold_(0),
+        inliningWarmUpThresholdFactor_(0.0),
+        inliningRecompileThresholdFactor_(0)
     { }
 
     void initNormalOptimizationInfo();
@@ -168,10 +193,6 @@ class OptimizationInfo
     }
 
     uint32_t compilerWarmUpThreshold(JSScript* script, jsbytecode* pc = nullptr) const;
-
-    bool eagerSimdUnboxEnabled() const {
-        return eagerSimdUnbox_ && !JitOptions.disableEagerSimdUnbox;
-    }
 
     bool gvnEnabled() const {
         return gvn_ && !JitOptions.disableGvn;
@@ -287,7 +308,7 @@ class OptimizationLevelInfo
     OptimizationLevel levelForScript(JSScript* script, jsbytecode* pc = nullptr) const;
 };
 
-extern OptimizationLevelInfo IonOptimizations;
+extern const OptimizationLevelInfo IonOptimizations;
 
 } // namespace jit
 } // namespace js

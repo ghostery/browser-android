@@ -5,12 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/dom/MessageListenerManager.h"
+#include "mozilla/dom/MessageBroadcaster.h"
 
 namespace mozilla {
 namespace dom {
 
 MessageListenerManager::MessageListenerManager(ipc::MessageManagerCallback* aCallback,
-                                               ChromeMessageBroadcaster* aParentManager,
+                                               MessageBroadcaster* aParentManager,
                                                ipc::MessageManagerFlags aFlags)
   : nsFrameMessageManager(aCallback, aFlags),
     mParentManager(aParentManager)

@@ -95,7 +95,7 @@ add_task(function visits_query() {
 
 add_task(function bookmarks_query() {
   let [query, options] = newQueryWithOptions();
-  query.setFolders([PlacesUtils.unfiledBookmarksFolderId], 1);
+  query.setParents([PlacesUtils.bookmarks.unfiledGuid], 1);
   testQueryContents(query, options, function(root) {
     compareArrayToResult([gTestData[0], gTestData[1], gTestData[2]], root);
     for (let i = 0; i < root.childCount; i++) {
@@ -156,7 +156,7 @@ add_task(async function pages_searchterm_is_tag_query() {
     await PlacesUtils.bookmarks.insert({
       parentGuid: PlacesUtils.bookmarks.unfiledGuid,
       url: uri,
-      title: data.title
+      title: data.title,
     });
     PlacesUtils.tagging.tagURI(uri, ["test-tag"]);
     compareArrayToResult([data], root);
@@ -177,7 +177,7 @@ add_task(async function visits_searchterm_is_tag_query() {
     await PlacesUtils.bookmarks.insert({
       parentGuid: PlacesUtils.bookmarks.unfiledGuid,
       url: uri,
-      title: data.title
+      title: data.title,
     });
     PlacesUtils.tagging.tagURI(uri, ["test-tag"]);
     compareArrayToResult([data], root);

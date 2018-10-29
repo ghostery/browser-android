@@ -11,9 +11,8 @@ const {AppProjects} = require("devtools/client/webide/modules/app-projects");
 const TabStore = require("devtools/client/webide/modules/tab-store");
 const {AppValidator} = require("devtools/client/webide/modules/app-validator");
 const {ConnectionManager, Connection} = require("devtools/shared/client/connection-manager");
-const {getDeviceFront} = require("devtools/shared/fronts/device");
-const {getPreferenceFront} = require("devtools/shared/fronts/preference");
-const {RuntimeScanners, RuntimeTypes} = require("devtools/client/webide/modules/runtimes");
+const {RuntimeScanners} = require("devtools/client/webide/modules/runtimes");
+const {RuntimeTypes} = require("devtools/client/webide/modules/runtime-types");
 const {NetUtil} = require("resource://gre/modules/NetUtil.jsm");
 const Telemetry = require("devtools/client/shared/telemetry");
 
@@ -32,7 +31,7 @@ var AppManager = exports.AppManager = {
     }
     this._initialized = true;
 
-    let port = Services.prefs.getIntPref("devtools.debugger.remote-port");
+    const port = Services.prefs.getIntPref("devtools.debugger.remote-port");
     this.connection = ConnectionManager.createConnection("localhost", port);
     this.onConnectionChanged = this.onConnectionChanged.bind(this);
     this.connection.on(Connection.Events.STATUS_CHANGED, this.onConnectionChanged);
@@ -126,7 +125,7 @@ var AppManager = exports.AppManager = {
   },
 
   reportError: function(l10nProperty, ...l10nArgs) {
-    let win = Services.wm.getMostRecentWindow("devtools:webide");
+    const win = Services.wm.getMostRecentWindow("devtools:webide");
     if (win) {
       win.UI.reportError(l10nProperty, ...l10nArgs);
     } else {
@@ -140,7 +139,7 @@ var AppManager = exports.AppManager = {
     }
   },
 
-  onConnectionChanged: function() {
+  onConnectionChanged: async function() {
     console.log("Connection status changed: " + this.connection.status);
 
     if (this.connection.status == Connection.Status.DISCONNECTED) {
@@ -149,12 +148,21 @@ var AppManager = exports.AppManager = {
 
     if (!this.connected) {
       this._listTabsResponse = null;
+      this.deviceFront = null;
+      this.preferenceFront = null;
     } else {
-      this.connection.client.listTabs().then((response) => {
-        this._listTabsResponse = response;
-        this._recordRuntimeInfo();
-        this.update("runtime-global-actors");
+      const response = await this.connection.client.listTabs();
+      // RootClient.getRoot request was introduced in FF59, but RootClient.getFront
+      // expects it to work. Override its root form with the listTabs results (which is
+      // an equivalent) in orfer to fix RootClient.getFront.
+      Object.defineProperty(this.connection.client.mainRoot, "rootForm", {
+        value: response
       });
+      this._listTabsResponse = response;
+      this.deviceFront = await this.connection.client.mainRoot.getFront("device");
+      this.preferenceFront = await this.connection.client.mainRoot.getFront("preference");
+      this._recordRuntimeInfo();
+      this.update("runtime-global-actors");
     }
 
     this.update("connection");
@@ -178,7 +186,7 @@ var AppManager = exports.AppManager = {
       return true;
     }
 
-    let app = this._getProjectFront(this.selectedProject);
+    const app = this._getProjectFront(this.selectedProject);
     return app && app.running;
   },
 
@@ -206,8 +214,8 @@ var AppManager = exports.AppManager = {
     if (this.selectedProject.type !== "tab") {
       return;
     }
-    let tab = this.selectedProject.app = this.tabStore.selectedTab;
-    let uri = NetUtil.newURI(tab.url);
+    const tab = this.selectedProject.app = this.tabStore.selectedTab;
+    const uri = NetUtil.newURI(tab.url);
     // Wanted to use nsIFaviconService here, but it only works for visited
     // tabs, so that's no help for any remote tabs.  Maybe some favicon wizard
     // knows how to get high-res favicons easily, or we could offer actor
@@ -241,7 +249,7 @@ var AppManager = exports.AppManager = {
 
   getTarget: function() {
     if (this.selectedProject.type == "mainProcess") {
-      // Fx >=39 exposes a ChromeActor to debug the main process
+      // Fx >=39 exposes a ParentProcessTargetActor to debug the main process
       if (this.connection.client.mainRoot.traits.allowChromeProcess) {
         return this.connection.client.getProcess()
                    .then(aResponse => {
@@ -252,12 +260,12 @@ var AppManager = exports.AppManager = {
                      });
                    });
       }
-        // Fx <39 exposes tab actors on the root actor
+      // Fx <39 exposes chrome target actors on the root actor
       return TargetFactory.forRemoteTab({
           form: this._listTabsResponse,
           client: this.connection.client,
           chrome: true,
-          isTabActor: false
+          isBrowsingContext: false
       });
     }
 
@@ -265,7 +273,7 @@ var AppManager = exports.AppManager = {
       return this.tabStore.getTargetForTab();
     }
 
-    let app = this._getProjectFront(this.selectedProject);
+    const app = this._getProjectFront(this.selectedProject);
     if (!app) {
       return Promise.reject("Can't find app front for selected project");
     }
@@ -273,7 +281,7 @@ var AppManager = exports.AppManager = {
     return (async function() {
       // Once we asked the app to launch, the app isn't necessary completely loaded.
       // launch request only ask the app to launch and immediatly returns.
-      // We have to keep trying to get app tab actors required to create its target.
+      // We have to keep trying to get app target actors required to create its target.
 
       for (let i = 0; i < 10; i++) {
         try {
@@ -307,7 +315,7 @@ var AppManager = exports.AppManager = {
   },
 
   _getProjectFront: function(project) {
-    let manifest = this.getProjectManifestURL(project);
+    const manifest = this.getProjectManifestURL(project);
     if (manifest && this._appsFront) {
       return this._appsFront.apps.get(manifest);
     }
@@ -317,11 +325,11 @@ var AppManager = exports.AppManager = {
   _selectedProject: null,
   set selectedProject(project) {
     // A regular comparison doesn't work as we recreate a new object every time
-    let prev = this._selectedProject;
+    const prev = this._selectedProject;
     if (!prev && !project) {
       return;
     } else if (prev && project && prev.type === project.type) {
-      let type = project.type;
+      const type = project.type;
       if (type === "runtimeApp") {
         if (prev.app.manifestURL === project.app.manifestURL) {
           return;
@@ -372,7 +380,7 @@ var AppManager = exports.AppManager = {
   },
 
   async removeSelectedProject() {
-    let location = this.selectedProject.location;
+    const location = this.selectedProject.location;
     AppManager.selectedProject = null;
     // If the user cancels the removeProject operation, don't remove the project
     if (AppManager.selectedProject != null) {
@@ -405,11 +413,11 @@ var AppManager = exports.AppManager = {
       return Promise.resolve();
     }
 
-    let deferred = new Promise((resolve, reject) => {
+    const deferred = new Promise((resolve, reject) => {
       this.disconnectRuntime().then(() => {
         this.selectedRuntime = runtime;
 
-        let onConnectedOrDisconnected = () => {
+        const onConnectedOrDisconnected = () => {
           this.connection.off(Connection.Events.CONNECTED, onConnectedOrDisconnected);
           this.connection.off(Connection.Events.DISCONNECTED, onConnectedOrDisconnected);
           if (this.connected) {
@@ -434,11 +442,12 @@ var AppManager = exports.AppManager = {
     });
 
     // Record connection result in telemetry
-    let logResult = result => {
-      this._telemetry.log("DEVTOOLS_WEBIDE_CONNECTION_RESULT", result);
+    const logResult = result => {
+      this._telemetry.getHistogramById("DEVTOOLS_WEBIDE_CONNECTION_RESULT")
+                     .add(result);
       if (runtime.type) {
-        this._telemetry.log("DEVTOOLS_WEBIDE_" + runtime.type +
-                            "_CONNECTION_RESULT", result);
+        this._telemetry.getHistogramById(
+          `DEVTOOLS_WEBIDE_${runtime.type}_CONNECTION_RESULT`).add(result);
       }
     };
     deferred.then(() => logResult(true), () => logResult(false));
@@ -446,9 +455,9 @@ var AppManager = exports.AppManager = {
     // If successful, record connection time in telemetry
     deferred.then(() => {
       const timerId = "DEVTOOLS_WEBIDE_CONNECTION_TIME_SECONDS";
-      this._telemetry.startTimer(timerId);
+      this._telemetry.start(timerId, this);
       this.connection.once(Connection.Events.STATUS_CHANGED, () => {
-        this._telemetry.stopTimer(timerId);
+        this._telemetry.finish(timerId, this);
       });
     }).catch(() => {
       // Empty rejection handler to silence uncaught rejection warnings
@@ -463,31 +472,38 @@ var AppManager = exports.AppManager = {
     if (!this.connected) {
       return;
     }
-    let runtime = this.selectedRuntime;
-    this._telemetry.logKeyed("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_TYPE",
-                             runtime.type || "UNKNOWN", true);
-    this._telemetry.logKeyed("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_ID",
-                             runtime.id || "unknown", true);
+    const runtime = this.selectedRuntime;
+    this._telemetry
+        .getKeyedHistogramById("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_TYPE")
+        .add(runtime.type || "UNKNOWN", true);
+    this._telemetry
+        .getKeyedHistogramById("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_ID")
+        .add(runtime.id || "unknown", true);
     if (!this.deviceFront) {
       this.update("runtime-telemetry");
       return;
     }
-    let d = await this.deviceFront.getDescription();
-    this._telemetry.logKeyed("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_PROCESSOR",
-                             d.processor, true);
-    this._telemetry.logKeyed("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_OS",
-                             d.os, true);
-    this._telemetry.logKeyed("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_PLATFORM_VERSION",
-                             d.platformversion, true);
-    this._telemetry.logKeyed("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_APP_TYPE",
-                             d.apptype, true);
-    this._telemetry.logKeyed("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_VERSION",
-                             d.version, true);
+    const d = await this.deviceFront.getDescription();
+    this._telemetry
+      .getKeyedHistogramById("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_PROCESSOR")
+      .add(d.processor, true);
+    this._telemetry
+      .getKeyedHistogramById("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_OS")
+      .add(d.os, true);
+    this._telemetry
+      .getKeyedHistogramById("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_PLATFORM_VERSION")
+      .add(d.platformversion, true);
+    this._telemetry
+        .getKeyedHistogramById("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_APP_TYPE")
+        .add(d.apptype, true);
+    this._telemetry
+        .getKeyedHistogramById("DEVTOOLS_WEBIDE_CONNECTED_RUNTIME_VERSION")
+        .add(d.version, true);
     this.update("runtime-telemetry");
   },
 
   isMainProcessDebuggable: function() {
-    // Fx <39 exposes chrome tab actors on RootActor
+    // Fx <39 exposes chrome target actors on RootActor
     // Fx >=39 exposes a dedicated actor via getProcess request
     return this.connection.client &&
            this.connection.client.mainRoot &&
@@ -498,20 +514,6 @@ var AppManager = exports.AppManager = {
 
   get listTabsForm() {
     return this._listTabsResponse;
-  },
-
-  get deviceFront() {
-    if (!this._listTabsResponse) {
-      return null;
-    }
-    return getDeviceFront(this.connection.client, this._listTabsResponse);
-  },
-
-  get preferenceFront() {
-    if (!this._listTabsResponse) {
-      return null;
-    }
-    return getPreferenceFront(this.connection.client, this._listTabsResponse);
   },
 
   disconnectRuntime: function() {
@@ -529,7 +531,7 @@ var AppManager = exports.AppManager = {
     if (this.selectedProject && this.selectedProject.type != "runtimeApp") {
       return Promise.reject("attempting to launch a non-runtime app");
     }
-    let app = this._getProjectFront(this.selectedProject);
+    const app = this._getProjectFront(this.selectedProject);
     return app.launch();
   },
 
@@ -537,7 +539,7 @@ var AppManager = exports.AppManager = {
     if (this.selectedProject && this.selectedProject.type != "runtimeApp") {
       return Promise.reject("attempting to launch / reload a non-runtime app");
     }
-    let app = this._getProjectFront(this.selectedProject);
+    const app = this._getProjectFront(this.selectedProject);
     if (!app.running) {
       return app.launch();
     }
@@ -549,7 +551,7 @@ var AppManager = exports.AppManager = {
   },
 
   installAndRunProject: function() {
-    let project = this.selectedProject;
+    const project = this.selectedProject;
 
     if (!project || (project.type != "packaged" && project.type != "hosted")) {
       console.error("Can't install project. Unknown type of project.");
@@ -567,7 +569,7 @@ var AppManager = exports.AppManager = {
     }
 
     return (async function() {
-      let self = AppManager;
+      const self = AppManager;
 
       // Validate project
       await self.validateAndUpdateProject(project);
@@ -583,7 +585,7 @@ var AppManager = exports.AppManager = {
 
       let response;
       if (project.type == "packaged") {
-        let packageDir = project.location;
+        const packageDir = project.location;
         console.log("Installing app from " + packageDir);
 
         response = await self._appsFront.installPackaged(packageDir,
@@ -597,10 +599,10 @@ var AppManager = exports.AppManager = {
       }
 
       if (project.type == "hosted") {
-        let manifestURLObject = Services.io.newURI(project.location);
-        let origin = Services.io.newURI(manifestURLObject.prePath);
-        let appId = origin.host;
-        let metadata = {
+        const manifestURLObject = Services.io.newURI(project.location);
+        const origin = Services.io.newURI(manifestURLObject.prePath);
+        const appId = origin.host;
+        const metadata = {
           origin: origin.spec,
           manifestURL: project.location
         };
@@ -615,9 +617,9 @@ var AppManager = exports.AppManager = {
         return;
       }
 
-      let {app} = response;
+      const {app} = response;
       if (!app.running) {
-        let deferred = new Promise(resolve => {
+        const deferred = new Promise(resolve => {
           self.on("app-manager-update", function onUpdate(what) {
             if (what == "project-started") {
               self.off("app-manager-update", onUpdate);
@@ -634,7 +636,7 @@ var AppManager = exports.AppManager = {
   },
 
   stopRunningApp: function() {
-    let app = this._getProjectFront(this.selectedProject);
+    const app = this._getProjectFront(this.selectedProject);
     return app.close();
   },
 
@@ -646,8 +648,8 @@ var AppManager = exports.AppManager = {
     }
 
     return (async function() {
-      let packageDir = project.location;
-      let validation = new AppValidator({
+      const packageDir = project.location;
+      const validation = new AppValidator({
         type: project.type,
         // Build process may place the manifest in a non-root directory
         location: packageDir
@@ -656,10 +658,10 @@ var AppManager = exports.AppManager = {
       await validation.validate();
 
       if (validation.manifest) {
-        let manifest = validation.manifest;
+        const manifest = validation.manifest;
         let iconPath;
         if (manifest.icons) {
-          let size = Object.keys(manifest.icons).sort((a, b) => b - a)[0];
+          const size = Object.keys(manifest.icons).sort((a, b) => b - a)[0];
           if (size) {
             iconPath = manifest.icons[size];
           }
@@ -667,12 +669,12 @@ var AppManager = exports.AppManager = {
         if (!iconPath) {
           project.icon = AppManager.DEFAULT_PROJECT_ICON;
         } else if (project.type == "hosted") {
-          let manifestURL = Services.io.newURI(project.location);
-          let origin = Services.io.newURI(manifestURL.prePath);
+          const manifestURL = Services.io.newURI(project.location);
+          const origin = Services.io.newURI(manifestURL.prePath);
           project.icon = Services.io.newURI(iconPath, null, origin).spec;
         } else if (project.type == "packaged") {
-          let projectFolder = FileUtils.File(packageDir);
-          let folderURI = Services.io.newFileURI(projectFolder).spec;
+          const projectFolder = FileUtils.File(packageDir);
+          const folderURI = Services.io.newFileURI(projectFolder).spec;
           project.icon = folderURI + iconPath.replace(/^\/|\\/, "");
         }
         project.manifest = validation.manifest;
@@ -735,11 +737,11 @@ var AppManager = exports.AppManager = {
   },
 
   _rebuildRuntimeList: function() {
-    let runtimes = RuntimeScanners.listRuntimes();
+    const runtimes = RuntimeScanners.listRuntimes();
     this._clearRuntimeList();
 
     // Reorganize runtimes by type
-    for (let runtime of runtimes) {
+    for (const runtime of runtimes) {
       switch (runtime.type) {
         case RuntimeTypes.USB:
           this.runtimeList.usb.push(runtime);
@@ -767,11 +769,11 @@ var AppManager = exports.AppManager = {
       project.manifest = {};
     }
 
-    let folder = project.location;
-    let manifestPath = OS.Path.join(folder, "manifest.webapp");
-    let text = JSON.stringify(project.manifest, null, 2);
-    let encoder = new TextEncoder();
-    let array = encoder.encode(text);
+    const folder = project.location;
+    const manifestPath = OS.Path.join(folder, "manifest.webapp");
+    const text = JSON.stringify(project.manifest, null, 2);
+    const encoder = new TextEncoder();
+    const array = encoder.encode(text);
     return OS.File.writeAtomic(manifestPath, array, {tmpPath: manifestPath + ".tmp"});
   },
 };

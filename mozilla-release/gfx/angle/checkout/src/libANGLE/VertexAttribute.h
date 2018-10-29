@@ -37,7 +37,17 @@ class VertexBinding final : angle::NonCopyable
     void setOffset(GLintptr offsetIn) { mOffset = offsetIn; }
 
     const BindingPointer<Buffer> &getBuffer() const { return mBuffer; }
-    void setBuffer(const gl::Context *context, Buffer *bufferIn) { mBuffer.set(context, bufferIn); }
+    void setBuffer(const gl::Context *context, Buffer *bufferIn, bool containerIsBound);
+
+    void onContainerBindingChanged(const Context *context, bool bound) const;
+
+    GLuint64 getCachedBufferSizeMinusOffset() const
+    {
+        return mCachedBufferSizeMinusOffset;
+    }
+
+    // Called from VertexArray.
+    void updateCachedBufferSizeMinusOffset();
 
   private:
     GLuint mStride;
@@ -45,6 +55,9 @@ class VertexBinding final : angle::NonCopyable
     GLintptr mOffset;
 
     BindingPointer<Buffer> mBuffer;
+
+    // This is kept in sync by the VertexArray. It is used to optimize draw call validation.
+    GLuint64 mCachedBufferSizeMinusOffset;
 };
 
 //
@@ -55,6 +68,9 @@ struct VertexAttribute final : private angle::NonCopyable
     explicit VertexAttribute(GLuint bindingIndex);
     VertexAttribute(VertexAttribute &&attrib);
     VertexAttribute &operator=(VertexAttribute &&attrib);
+
+    // Called from VertexArray.
+    void updateCachedSizePlusRelativeOffset();
 
     bool enabled;  // For glEnable/DisableVertexAttribArray
     GLenum type;
@@ -67,6 +83,9 @@ struct VertexAttribute final : private angle::NonCopyable
 
     GLuint vertexAttribArrayStride;  // ONLY for queries of VERTEX_ATTRIB_ARRAY_STRIDE
     GLuint bindingIndex;
+
+    // This is kept in sync by the VertexArray. It is used to optimize draw call validation.
+    GLuint64 cachedSizePlusRelativeOffset;
 };
 
 size_t ComputeVertexAttributeTypeSize(const VertexAttribute &attrib);

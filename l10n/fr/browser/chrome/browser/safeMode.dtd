@@ -11,6 +11,8 @@
 <!ENTITY safeModeDescription3.label   "Le mode sans échec est un mode particulier de &brandShortName; pouvant être utilisé pour résoudre des problèmes.">
 <!ENTITY safeModeDescription4.label   "Vos modules et paramètres personnalisés seront temporairement désactivés.">
 
+<!ENTITY safeModeDescription5.label   "Vos modules et paramètres personnalisés seront temporairement désactivés, et certaines fonctionnalités de &brandShortName; pourraient se comporter différemment.">
+
 <!ENTITY refreshProfileInstead.label  "Vous pouvez également quitter le mode sans échec et lancer la réparation automatique de &brandShortName;.">
 
 <!-- LOCALIZATION NOTE (autoSafeModeDescription3.label): Shown on the safe mode dialog after multiple startup crashes. See also chrome/global/resetProfile.dtd -->

@@ -88,6 +88,15 @@ static const nsRoleMapEntry sWAIRoleMaps[] =
     eLandmark,
     kNoReqStates
   },
+  { // blockquote
+    &nsGkAtoms::blockquote,
+    roles::BLOCKQUOTE,
+    kUseMapRole,
+    eNoValue,
+    eNoAction,
+    eNoLiveAttr,
+    kGenericAccType,
+  },
   { // button
     &nsGkAtoms::button,
     roles::PUSHBUTTON,
@@ -98,6 +107,15 @@ static const nsRoleMapEntry sWAIRoleMaps[] =
     eButton,
     kNoReqStates
     // eARIAPressed is auto applied on any button
+  },
+  { // caption
+    &nsGkAtoms::caption,
+    roles::CAPTION,
+    kUseMapRole,
+    eNoValue,
+    eNoAction,
+    eNoLiveAttr,
+    kGenericAccType,
   },
   { // cell
     &nsGkAtoms::cell,
@@ -897,6 +915,15 @@ static const nsRoleMapEntry sWAIRoleMaps[] =
     eARIASelectable,
     eARIACheckedMixed
   },
+  { // paragraph
+    &nsGkAtoms::paragraph,
+    roles::PARAGRAPH,
+    kUseMapRole,
+    eNoValue,
+    eNoAction,
+    eNoLiveAttr,
+    kGenericAccType,
+  },
   { // presentation
     &nsGkAtoms::presentation,
     roles::NOTHING,
@@ -1106,7 +1133,8 @@ static const nsRoleMapEntry sWAIRoleMaps[] =
     eNoLiveAttr,
     eSelect,
     states::HORIZONTAL,
-    eARIAOrientation
+    eARIAOrientation,
+    eARIAMultiSelectable
   },
   { // tabpanel
     &nsGkAtoms::tabpanel,
@@ -1404,12 +1432,10 @@ aria::AttrCharacteristicsFor(nsAtom* aAtom)
 bool
 aria::HasDefinedARIAHidden(nsIContent* aContent)
 {
-  return aContent &&
-    nsAccUtils::HasDefinedARIAToken(aContent, nsGkAtoms::aria_hidden) &&
-    !aContent->AsElement()->AttrValueIs(kNameSpaceID_None,
-                                        nsGkAtoms::aria_hidden,
-                                        nsGkAtoms::_false,
-                                        eCaseMatters);
+  return aContent && aContent->IsElement() &&
+    aContent->AsElement()->AttrValueIs(kNameSpaceID_None,
+                                       nsGkAtoms::aria_hidden,
+                                       nsGkAtoms::_true, eCaseMatters);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

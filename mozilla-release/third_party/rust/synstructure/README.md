@@ -1,6 +1,9 @@
 # synstructure
 
-[![Documentation](https://docs.rs/synstructure/badge.svg)](https://docs.rs/synstructure) [![Build Status](https://travis-ci.org/mystor/synstructure.svg?branch=master)](https://travis-ci.org/mystor/synstructure)
+[![Latest Version](https://img.shields.io/crates/v/synstructure.svg)](https://crates.io/crates/synstructure)
+[![Documentation](https://docs.rs/synstructure/badge.svg)](https://docs.rs/synstructure)
+[![Build Status](https://travis-ci.org/mystor/synstructure.svg?branch=master)](https://travis-ci.org/mystor/synstructure)
+[![Rustc Version 1.15+](https://img.shields.io/badge/rustc-1.15+-lightgray.svg)](https://blog.rust-lang.org/2017/02/02/Rust-1.15.html)
 
 > NOTE: What follows is an exerpt from the module level documentation. For full
 > details read the docs on [docs.rs](https://docs.rs/synstructure/)
@@ -29,8 +32,9 @@ impl WalkFields for i32 {
 extern crate synstructure;
 #[macro_use]
 extern crate quote;
+extern crate proc_macro2;
 
-fn walkfields_derive(s: synstructure::Structure) -> quote::Tokens {
+fn walkfields_derive(s: synstructure::Structure) -> proc_macro2::TokenStream {
     let body = s.each(|bi| quote!{
         walk(#bi)
     });
@@ -96,8 +100,9 @@ impl Interest for i32 {
 extern crate synstructure;
 #[macro_use]
 extern crate quote;
+extern crate proc_macro2;
 
-fn interest_derive(mut s: synstructure::Structure) -> quote::Tokens {
+fn interest_derive(mut s: synstructure::Structure) -> proc_macro2::TokenStream {
     let body = s.fold(false, |acc, bi| quote!{
         #acc || example_traits::Interest::interesting(#bi)
     });

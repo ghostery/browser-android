@@ -435,8 +435,7 @@ nsBaseWidget::CreateChild(const LayoutDeviceIntRect& aRect,
   if (aInitData && aInitData->mWindowType == eWindowType_popup) {
     widget = AllocateChildPopupWidget();
   } else {
-    static NS_DEFINE_IID(kCChildCID, NS_CHILD_CID);
-    widget = do_CreateInstance(kCChildCID);
+    widget = nsIWidget::CreateChildWindow();
   }
 
   if (widget &&
@@ -972,7 +971,7 @@ void nsBaseWidget::ConfigureAPZCTreeManager()
           aInputBlockId,
           aPreventDefault));
       });
-  mAPZEventState = new APZEventState(this, mozilla::Move(callback));
+  mAPZEventState = new APZEventState(this, std::move(callback));
 
   mSetAllowedTouchBehaviorCallback = [treeManager](uint64_t aInputBlockId,
                                                    const nsTArray<TouchBehaviorFlags>& aFlags)
@@ -1083,8 +1082,7 @@ nsBaseWidget::ProcessUntransformedAPZEvent(WidgetInputEvent* aEvent,
   if (mAPZC && !InputAPZContext::WasRoutedToChildProcess() && aInputBlockId) {
     // EventStateManager did not route the event into the child process.
     // It's safe to communicate to APZ that the event has been processed.
-    // TODO: Eventually we'll be able to move the SendSetTargetAPZCNotification
-    // call into APZEventState::Process*Event() as well.
+    UniquePtr<DisplayportSetListener> postLayerization;
     if (WidgetTouchEvent* touchEvent = aEvent->AsTouchEvent()) {
       if (touchEvent->mMessage == eTouchStart) {
         if (gfxPrefs::TouchActionEnabled()) {
@@ -1092,14 +1090,14 @@ nsBaseWidget::ProcessUntransformedAPZEvent(WidgetInputEvent* aEvent,
               GetDocument(), *(original->AsTouchEvent()), aInputBlockId,
               mSetAllowedTouchBehaviorCallback);
         }
-        APZCCallbackHelper::SendSetTargetAPZCNotification(this, GetDocument(),
+        postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(this, GetDocument(),
             *(original->AsTouchEvent()), aGuid, aInputBlockId);
       }
       mAPZEventState->ProcessTouchEvent(*touchEvent, aGuid, aInputBlockId,
           aApzResponse, status);
     } else if (WidgetWheelEvent* wheelEvent = aEvent->AsWheelEvent()) {
       MOZ_ASSERT(wheelEvent->mFlags.mHandledByAPZ);
-      APZCCallbackHelper::SendSetTargetAPZCNotification(this, GetDocument(),
+      postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(this, GetDocument(),
           *(original->AsWheelEvent()), aGuid, aInputBlockId);
       if (wheelEvent->mCanTriggerSwipe) {
         ReportSwipeStarted(aInputBlockId, wheelEvent->TriggersSwipe());
@@ -1107,9 +1105,12 @@ nsBaseWidget::ProcessUntransformedAPZEvent(WidgetInputEvent* aEvent,
       mAPZEventState->ProcessWheelEvent(*wheelEvent, aGuid, aInputBlockId);
     } else if (WidgetMouseEvent* mouseEvent = aEvent->AsMouseEvent()) {
       MOZ_ASSERT(mouseEvent->mFlags.mHandledByAPZ);
-      APZCCallbackHelper::SendSetTargetAPZCNotification(this, GetDocument(),
+      postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(this, GetDocument(),
           *(original->AsMouseEvent()), aGuid, aInputBlockId);
       mAPZEventState->ProcessMouseEvent(*mouseEvent, aGuid, aInputBlockId);
+    }
+    if (postLayerization && postLayerization->Register()) {
+      Unused << postLayerization.release();
     }
   }
 
@@ -1323,6 +1324,12 @@ nsBaseWidget::CreateCompositorSession(int aWidth,
     bool enableAL = gfx::gfxConfig::IsEnabled(gfx::Feature::ADVANCED_LAYERS);
     options.SetUseAdvancedLayers(enableAL);
 
+#ifdef MOZ_WIDGET_ANDROID
+    if (!GetNativeData(NS_JAVA_SURFACE)) {
+      options.SetInitiallyPaused(true);
+    }
+#endif
+
     RefPtr<LayerManager> lm;
     if (options.UseWebRender()) {
       lm = new WebRenderLayerManager(this);
@@ -1520,6 +1527,9 @@ CompositorBridgeChild* nsBaseWidget::GetRemoteRenderer()
 already_AddRefed<gfx::DrawTarget>
 nsBaseWidget::StartRemoteDrawing()
 {
+  if (recordreplay::IsRecordingOrReplaying()) {
+    return recordreplay::child::DrawTargetForRemoteDrawing(mBounds.Size());
+  }
   return nullptr;
 }
 
@@ -1822,18 +1832,6 @@ nsBaseWidget::NotifyWindowDestroyed()
 }
 
 void
-nsBaseWidget::NotifySizeMoveDone()
-{
-  if (!mWidgetListener || mWidgetListener->GetXULWindow())
-    return;
-
-  nsIPresShell* presShell = mWidgetListener->GetPresShell();
-  if (presShell) {
-    presShell->WindowSizeMoveDone();
-  }
-}
-
-void
 nsBaseWidget::NotifyWindowMoved(int32_t aX, int32_t aY)
 {
   if (mWidgetListener) {
@@ -1846,27 +1844,34 @@ nsBaseWidget::NotifyWindowMoved(int32_t aX, int32_t aY)
 }
 
 void
-nsBaseWidget::NotifySysColorChanged()
+nsBaseWidget::NotifyPresShell(NotificationFunc aNotificationFunc)
 {
-  if (!mWidgetListener || mWidgetListener->GetXULWindow())
+  if (!mWidgetListener) {
     return;
+  }
 
   nsIPresShell* presShell = mWidgetListener->GetPresShell();
   if (presShell) {
-    presShell->SysColorChanged();
+    (presShell->*aNotificationFunc)();
   }
+}
+
+void
+nsBaseWidget::NotifySizeMoveDone()
+{
+  NotifyPresShell(&nsIPresShell::WindowSizeMoveDone);
+}
+
+void
+nsBaseWidget::NotifySysColorChanged()
+{
+  NotifyPresShell(&nsIPresShell::SysColorChanged);
 }
 
 void
 nsBaseWidget::NotifyThemeChanged()
 {
-  if (!mWidgetListener || mWidgetListener->GetXULWindow())
-    return;
-
-  nsIPresShell* presShell = mWidgetListener->GetPresShell();
-  if (presShell) {
-    presShell->ThemeChanged();
-  }
+  NotifyPresShell(&nsIPresShell::ThemeChanged);
 }
 
 void
@@ -1923,6 +1928,22 @@ nsBaseWidget::EnsureTextEventDispatcher()
     return;
   }
   mTextEventDispatcher = new TextEventDispatcher(this);
+}
+
+nsIWidget::NativeIMEContext
+nsBaseWidget::GetNativeIMEContext()
+{
+  if (mTextEventDispatcher && mTextEventDispatcher->GetPseudoIMEContext()) {
+    // If we already have a TextEventDispatcher and it's working with
+    // a TextInputProcessor, we need to return pseudo IME context since
+    // TextCompositionArray::IndexOf(nsIWidget*) should return a composition
+    // on the pseudo IME context in such case.
+    NativeIMEContext pseudoIMEContext;
+    pseudoIMEContext.InitWithRawNativeIMEContext(
+                       mTextEventDispatcher->GetPseudoIMEContext());
+    return pseudoIMEContext;
+  }
+  return NativeIMEContext(this);
 }
 
 nsIWidget::TextEventDispatcher*
@@ -2265,7 +2286,8 @@ void
 nsBaseWidget::RegisterPluginWindowForRemoteUpdates()
 {
 #if !defined(XP_WIN) && !defined(MOZ_WIDGET_GTK)
-  NS_NOTREACHED("nsBaseWidget::RegisterPluginWindowForRemoteUpdates not implemented!");
+  MOZ_ASSERT_UNREACHABLE("nsBaseWidget::RegisterPluginWindowForRemoteUpdates "
+                         "not implemented!");
   return;
 #else
   MOZ_ASSERT(NS_IsMainThread());
@@ -2283,7 +2305,8 @@ void
 nsBaseWidget::UnregisterPluginWindowForRemoteUpdates()
 {
 #if !defined(XP_WIN) && !defined(MOZ_WIDGET_GTK)
-  NS_NOTREACHED("nsBaseWidget::UnregisterPluginWindowForRemoteUpdates not implemented!");
+  MOZ_ASSERT_UNREACHABLE("nsBaseWidget::UnregisterPluginWindowForRemoteUpdates "
+                         "not implemented!");
   return;
 #else
   MOZ_ASSERT(NS_IsMainThread());
@@ -2314,7 +2337,8 @@ nsIWidget*
 nsIWidget::LookupRegisteredPluginWindow(uintptr_t aWindowID)
 {
 #if !defined(XP_WIN) && !defined(MOZ_WIDGET_GTK)
-  NS_NOTREACHED("nsBaseWidget::LookupRegisteredPluginWindow not implemented!");
+  MOZ_ASSERT_UNREACHABLE("nsBaseWidget::LookupRegisteredPluginWindow "
+                         "not implemented!");
   return nullptr;
 #else
   MOZ_ASSERT(NS_IsMainThread());
@@ -2329,7 +2353,8 @@ nsIWidget::UpdateRegisteredPluginWindowVisibility(uintptr_t aOwnerWidget,
                                                   nsTArray<uintptr_t>& aPluginIds)
 {
 #if !defined(XP_WIN) && !defined(MOZ_WIDGET_GTK)
-  NS_NOTREACHED("nsBaseWidget::UpdateRegisteredPluginWindowVisibility not implemented!");
+  MOZ_ASSERT_UNREACHABLE("nsBaseWidget::UpdateRegisteredPluginWindowVisibility"
+                         " not implemented!");
   return;
 #else
   MOZ_ASSERT(NS_IsMainThread());
@@ -2428,12 +2453,6 @@ nsBaseWidget::DefaultFillScrollCapture(DrawTarget* aSnapshotDrawTarget)
   aSnapshotDrawTarget->Flush();
 }
 #endif
-
-nsIWidget::NativeIMEContext
-nsIWidget::GetNativeIMEContext()
-{
-  return NativeIMEContext(this);
-}
 
 const IMENotificationRequests&
 nsIWidget::IMENotificationRequestsRef()
@@ -3273,11 +3292,8 @@ case _value: eventName.AssignLiteral(_name) ; break
 
   default:
     {
-      char buf[32];
-
-      SprintfLiteral(buf,"UNKNOWN: %d",aGuiEvent->mMessage);
-
-      CopyASCIItoUTF16(buf, eventName);
+    eventName.AssignLiteral("UNKNOWN: ");
+    eventName.AppendInt(aGuiEvent->mMessage);
     }
     break;
   }
@@ -3381,7 +3397,10 @@ debug_RegisterPrefCallbacks()
 
     if (obs) {
       // Register callbacks for when these change
-      Preferences::AddStrongObserver(obs, debug_PrefValues[i].name);
+      nsCString name;
+      name.AssignLiteral(debug_PrefValues[i].name,
+                         strlen(debug_PrefValues[i].name));
+      Preferences::AddStrongObserver(obs, name);
     }
   }
 }

@@ -50,7 +50,7 @@ function test() {
     version: "2.2",
     isCompatible: false,
     blocklistState: Ci.nsIBlocklistService.STATE_SOFTBLOCKED,
-    userDisabled: false
+    userDisabled: false,
   }, {
     id: "addon2@tests.mozilla.org",
     name: "Test add-on 2",
@@ -58,7 +58,7 @@ function test() {
     version: "3.1.5",
     isCompatible: true,
     blocklistState: Ci.nsIBlocklistService.STATE_NOT_BLOCKED,
-    userDisabled: false
+    userDisabled: false,
   }, {
     id: "addon3@tests.mozilla.org",
     name: "Test add-on 3",
@@ -66,7 +66,7 @@ function test() {
     version: "1.2b1",
     isCompatible: false,
     blocklistState: Ci.nsIBlocklistService.STATE_BLOCKED,
-    userDisabled: true
+    userDisabled: true,
   }]);
 
   run_next_test();
@@ -544,9 +544,9 @@ async function bug_601442_test_elements(visible) {
   let aManager = await wait_for_view_load(gManagerWindow);
   var button = aManager.document.getElementById("discover-button-install");
   if (visible)
-    ok(!is_hidden(button), "Discover button should be visible!");
+    ok(!BrowserTestUtils.is_hidden(button), "Discover button should be visible!");
   else
-    ok(is_hidden(button), "Discover button should not be visible!");
+    ok(BrowserTestUtils.is_hidden(button), "Discover button should not be visible!");
 
   close_manager(gManagerWindow, run_next_test);
 }

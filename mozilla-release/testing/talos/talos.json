@@ -1,5 +1,8 @@
 {
     "suites": {
+        "bcv-e10s": {
+            "tests": ["basic_compositor_video"]
+        },
         "chromez-e10s": {
             "tests": ["about_preferences_basic", "tresize"]
         },
@@ -10,7 +13,10 @@
             "tests": ["tart_flex", "ts_paint_flex"]
         },
         "other-e10s": {
-            "tests": ["a11yr", "ts_paint", "tpaint", "sessionrestore", "sessionrestore_many_windows", "sessionrestore_no_auto_restore", "tabpaint", "cpstartup"]
+            "tests": ["a11yr", "ts_paint", "tpaint", "sessionrestore", "sessionrestore_no_auto_restore", "tabpaint", "cpstartup"]
+        },
+        "sessionrestore-many-windows-e10s": {
+            "tests": ["sessionrestore_many_windows"]
         },
         "g1-e10s": {
             "tests": ["tp5o_scroll", "glterrain"],
@@ -28,7 +34,7 @@
             "tests": ["dromaeo_dom"]
         },
         "g4-e10s": {
-            "tests": ["basic_compositor_video", "glvideo", "displaylist_mutate", "rasterflood_svg", "rasterflood_gradient"]
+            "tests": ["glvideo", "displaylist_mutate", "rasterflood_svg", "rasterflood_gradient"]
         },
         "g5-e10s": {
             "tests": ["ts_paint_webext", "tp5o_webext"],

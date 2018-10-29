@@ -210,4 +210,14 @@ public class ViewUtil {
         return (int) (dp * metrics.density + 0.5f);
     }
     /* Cliqz end */
+
+    /**
+     * Get if the resolved layout direction is <em>right to left</em> or <em>left to right</em>.
+     * @param view View to get layout direction for
+     * @return <code>true</code> if the horizontal layout direction of this view is from <em>right to left</em><br>
+     *     <code>false</code> if the horizontal layout direction of this view is from <em>left to right</em>
+     */
+    public static boolean isLayoutRtl(final View view) {
+        return ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL;
+    }
 }

@@ -36,7 +36,7 @@
 <!ENTITY community.middle2          ", uma ">
 <!-- LOCALIZATION NOTE (community.creditsLink): This is a link title that links to about:credits. -->
 <!ENTITY community.creditsLink      "comunidade global">
-<!ENTITY community.end3             " que trabalha unida para manter a Web aberta, pública e acessível à todos.">
+<!ENTITY community.end3             " que trabalha unida para manter a Web aberta, pública e acessível a todos.">
 
 <!ENTITY helpus.start               "Quer ajudar? ">
 <!-- LOCALIZATION NOTE (helpus.donateLink): This is a link title that links to https://donate.mozilla.org/?utm_source=firefox&utm_medium=referral&utm_campaign=firefox_about&utm_content=firefox_about. -->

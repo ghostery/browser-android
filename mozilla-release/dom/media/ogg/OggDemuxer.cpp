@@ -325,7 +325,7 @@ OggDemuxer::ReadHeaders(TrackInfo::TrackType aType,
 
     // Local OggCodecState needs to decode headers in order to process
     // packet granulepos -> time mappings, etc.
-    if (!aState->DecodeHeader(Move(packet))) {
+    if (!aState->DecodeHeader(std::move(packet))) {
       OGG_DEBUG("Failed to decode ogg header packet; deactivating stream %" PRIu32, aState->mSerial);
       aState->Deactivate();
       return false;
@@ -538,8 +538,7 @@ OggDemuxer::ReadMetadata()
           NS_WARNING("Opus decoding disabled."
                      " See media.opus.enabled in about:config");
         }
-      } else if (StaticPrefs::MediaOggFlacEnabled() &&
-                 s->GetType() == OggCodecState::TYPE_FLAC &&
+      } else if (s->GetType() == OggCodecState::TYPE_FLAC &&
                  ReadHeaders(TrackInfo::kAudioTrack, s)) {
         if (!mFlacState) {
           SetupTarget(&mFlacState, s);
@@ -729,7 +728,7 @@ OggDemuxer::ReadOggChain(const media::TimeUnit& aLastEndTime)
     if (mTimedMetadataEvent) {
       mTimedMetadataEvent->Notify(
         TimedMetadata(mDecodedAudioDuration,
-                      Move(tags),
+                      std::move(tags),
                       nsAutoPtr<MediaInfo>(new MediaInfo(mInfo))));
     }
     // Setup a new TrackInfo so that the MediaFormatReader will flush the
@@ -1136,7 +1135,7 @@ OggDemuxer::SeekInternal(TrackInfo::TrackType aType, const TimeUnit& aTarget)
     }
   }
   // Re-add all packet into the codec state in order.
-  state->PushFront(Move(tempPackets));
+  state->PushFront(std::move(tempPackets));
 
   return NS_OK;
 }
@@ -1422,7 +1421,7 @@ OggTrackDemuxer::SkipToNextRandomAccessPoint(const TimeUnit& aTimeThreshold)
     return SkipAccessPointPromise::CreateAndResolve(parsed, __func__);
   } else {
     SkipFailureHolder failure(NS_ERROR_DOM_MEDIA_END_OF_STREAM, parsed);
-    return SkipAccessPointPromise::CreateAndReject(Move(failure), __func__);
+    return SkipAccessPointPromise::CreateAndReject(std::move(failure), __func__);
   }
 }
 

@@ -7,7 +7,6 @@
 var EXPORTED_SYMBOLS = ["AddressesEngine", "CreditCardsEngine"];
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://services-sync/engines.js");
 ChromeUtils.import("resource://services-sync/record.js");
 ChromeUtils.import("resource://services-sync/util.js");
@@ -332,6 +331,12 @@ FormAutofillEngine.prototype = {
     await formAutofillStorage.initialize();
     this._store.storage.resetSync();
   },
+
+  async _wipeClient() {
+    await formAutofillStorage.initialize();
+    this._store.storage.removeAll({sourceSync: true});
+  },
+
 };
 
 // The concrete engines

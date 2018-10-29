@@ -49,7 +49,7 @@ add_task(async function one() {
     await hiddenPromise;
     let engine = await enginePromise;
     let feedbackText = await feedbackPromise;
-    Assert.equal(feedbackText, "Added Search Engine");
+    Assert.equal(feedbackText, "Search engine added!");
 
     // Open the panel again.
     await promisePageActionPanelOpen();
@@ -118,7 +118,7 @@ add_task(async function many() {
     let bodyID = viewID + "-body";
     let body = document.getElementById(bodyID);
     Assert.deepEqual(
-      Array.map(body.childNodes, n => n.label),
+      Array.map(body.children, n => n.label),
       [
         "page_action_menu_add_search_engine_0",
         "page_action_menu_add_search_engine_1",
@@ -132,13 +132,13 @@ add_task(async function many() {
       promiseEngine("engine-added", "page_action_menu_add_search_engine_0");
     let hiddenPromise = promisePageActionPanelHidden();
     let feedbackPromise = promiseFeedbackPanelShownAndHidden();
-    EventUtils.synthesizeMouseAtCenter(body.childNodes[0], {});
+    EventUtils.synthesizeMouseAtCenter(body.children[0], {});
     await hiddenPromise;
     let engines = [];
     let engine = await enginePromise;
     engines.push(engine);
     let feedbackText = await feedbackPromise;
-    Assert.equal(feedbackText, "Added Search Engine", "Feedback text");
+    Assert.equal(feedbackText, "Search engine added!", "Feedback text");
 
     // Open the panel and show the subview again.  The installed engine should
     // be gone.
@@ -147,7 +147,7 @@ add_task(async function many() {
     EventUtils.synthesizeMouseAtCenter(button, {});
     await viewPromise;
     Assert.deepEqual(
-      Array.map(body.childNodes, n => n.label),
+      Array.map(body.children, n => n.label),
       [
         "page_action_menu_add_search_engine_1",
         "page_action_menu_add_search_engine_2",
@@ -160,12 +160,12 @@ add_task(async function many() {
       promiseEngine("engine-added", "page_action_menu_add_search_engine_1");
     hiddenPromise = promisePageActionPanelHidden();
     feedbackPromise = promiseFeedbackPanelShownAndHidden();
-    EventUtils.synthesizeMouseAtCenter(body.childNodes[0], {});
+    EventUtils.synthesizeMouseAtCenter(body.children[0], {});
     await hiddenPromise;
     engine = await enginePromise;
     engines.push(engine);
     feedbackText = await feedbackPromise;
-    Assert.equal(feedbackText, "Added Search Engine", "Feedback text");
+    Assert.equal(feedbackText, "Search engine added!", "Feedback text");
 
     // Open the panel again.  This time the action button should show the one
     // remaining engine.
@@ -191,7 +191,7 @@ add_task(async function many() {
     engine = await enginePromise;
     engines.push(engine);
     feedbackText = await feedbackPromise;
-    Assert.equal(feedbackText, "Added Search Engine", "Feedback text");
+    Assert.equal(feedbackText, "Search engine added!", "Feedback text");
 
     // All engines are installed at this point.  Open the panel and make sure
     // the action is gone.
@@ -250,7 +250,7 @@ add_task(async function many() {
     await viewPromise;
     body = document.getElementById(bodyID);
     Assert.deepEqual(
-      Array.map(body.childNodes, n => n.label),
+      Array.map(body.children, n => n.label),
       [
         "page_action_menu_add_search_engine_0",
         "page_action_menu_add_search_engine_1",
@@ -272,7 +272,7 @@ add_task(async function many() {
     EventUtils.synthesizeMouseAtCenter(button, {});
     await viewPromise;
     Assert.deepEqual(
-      Array.map(body.childNodes, n => n.label),
+      Array.map(body.children, n => n.label),
       [
         "page_action_menu_add_search_engine_0",
         "page_action_menu_add_search_engine_1",
@@ -310,7 +310,7 @@ add_task(async function urlbarOne() {
     EventUtils.synthesizeMouseAtCenter(button, {});
     let engine = await enginePromise;
     let feedbackText = await feedbackPromise;
-    Assert.equal(feedbackText, "Added Search Engine");
+    Assert.equal(feedbackText, "Search engine added!");
 
     // The action should be gone.
     actions = PageActions.actionsInUrlbar(window);
@@ -366,9 +366,9 @@ add_task(async function urlbarMany() {
     let viewID =
        BrowserPageActions._panelViewNodeIDForActionID("addSearchEngine", true);
     Assert.equal(view.id, viewID, "View ID");
-    let body = view.firstChild;
+    let body = view.firstElementChild;
     Assert.deepEqual(
-      Array.map(body.childNodes, n => n.label),
+      Array.map(body.children, n => n.label),
       [
         "page_action_menu_add_search_engine_0",
         "page_action_menu_add_search_engine_1",
@@ -383,20 +383,20 @@ add_task(async function urlbarMany() {
     let hiddenPromise =
       promisePanelHidden(BrowserPageActions.activatedActionPanelNode);
     let feedbackPromise = promiseFeedbackPanelShownAndHidden();
-    EventUtils.synthesizeMouseAtCenter(body.childNodes[0], {});
+    EventUtils.synthesizeMouseAtCenter(body.children[0], {});
     await hiddenPromise;
     let engines = [];
     let engine = await enginePromise;
     engines.push(engine);
     let feedbackText = await feedbackPromise;
-    Assert.equal(feedbackText, "Added Search Engine", "Feedback text");
+    Assert.equal(feedbackText, "Search engine added!", "Feedback text");
 
     // Open the panel again.  The installed engine should be gone.
     EventUtils.synthesizeMouseAtCenter(button, {});
     view = await waitForActivatedActionPanel();
-    body = view.firstChild;
+    body = view.firstElementChild;
     Assert.deepEqual(
-      Array.map(body.childNodes, n => n.label),
+      Array.map(body.children, n => n.label),
       [
         "page_action_menu_add_search_engine_1",
         "page_action_menu_add_search_engine_2",
@@ -410,12 +410,12 @@ add_task(async function urlbarMany() {
     hiddenPromise =
       promisePanelHidden(BrowserPageActions.activatedActionPanelNode);
     feedbackPromise = promiseFeedbackPanelShownAndHidden();
-    EventUtils.synthesizeMouseAtCenter(body.childNodes[0], {});
+    EventUtils.synthesizeMouseAtCenter(body.children[0], {});
     await hiddenPromise;
     engine = await enginePromise;
     engines.push(engine);
     feedbackText = await feedbackPromise;
-    Assert.equal(feedbackText, "Added Search Engine", "Feedback text");
+    Assert.equal(feedbackText, "Search engine added!", "Feedback text");
 
     // Now there's only one engine left, so clicking the button should simply
     // install it instead of opening the activated-action panel.
@@ -426,7 +426,7 @@ add_task(async function urlbarMany() {
     engine = await enginePromise;
     engines.push(engine);
     feedbackText = await feedbackPromise;
-    Assert.equal(feedbackText, "Added Search Engine", "Feedback text");
+    Assert.equal(feedbackText, "Search engine added!", "Feedback text");
 
     // All engines are installed at this point.  The action should be gone.
     actions = PageActions.actionsInUrlbar(window);
@@ -459,9 +459,9 @@ add_task(async function urlbarMany() {
     // present now that there are two offered engines again.
     EventUtils.synthesizeMouseAtCenter(button, {});
     view = await waitForActivatedActionPanel();
-    body = view.firstChild;
+    body = view.firstElementChild;
     Assert.deepEqual(
-      Array.map(body.childNodes, n => n.label),
+      Array.map(body.children, n => n.label),
       [
         "page_action_menu_add_search_engine_0",
         "page_action_menu_add_search_engine_1",
@@ -484,9 +484,9 @@ add_task(async function urlbarMany() {
     // Open the panel again and check the subview.
     EventUtils.synthesizeMouseAtCenter(button, {});
     view = await waitForActivatedActionPanel();
-    body = view.firstChild;
+    body = view.firstElementChild;
     Assert.deepEqual(
-      Array.map(body.childNodes, n => n.label),
+      Array.map(body.children, n => n.label),
       [
         "page_action_menu_add_search_engine_0",
         "page_action_menu_add_search_engine_1",
@@ -521,10 +521,10 @@ function promiseEngine(expectedData, expectedEngineName) {
 
 function promiseFeedbackPanelShownAndHidden() {
   info("Waiting for feedback panel popupshown");
-  return BrowserTestUtils.waitForEvent(BrowserPageActionFeedback.panelNode, "popupshown").then(() => {
+  return BrowserTestUtils.waitForEvent(ConfirmationHint._panel, "popupshown").then(() => {
     info("Got feedback panel popupshown. Now waiting for popuphidden");
-    return BrowserTestUtils.waitForEvent(BrowserPageActionFeedback.panelNode, "popuphidden")
-          .then(() => BrowserPageActionFeedback.feedbackLabel.textContent);
+    return BrowserTestUtils.waitForEvent(ConfirmationHint._panel, "popuphidden")
+          .then(() => ConfirmationHint._message.textContent);
   });
 }
 

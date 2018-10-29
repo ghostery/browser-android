@@ -37,7 +37,7 @@ var testData = [
   { isVisit: true,
     uri: "http://notbookmarked.com/",
     title: "",
-    isInQuery: false }
+    isInQuery: false },
 ];
 
 
@@ -47,7 +47,7 @@ add_task(async function test_onlyBookmarked() {
 
   // Query
   var query = PlacesUtils.history.getNewQuery();
-  query.setFolders([PlacesUtils.toolbarFolderId], 1);
+  query.setParents([PlacesUtils.bookmarks.toolbarGuid], 1);
   query.onlyBookmarked = true;
 
   // query options
@@ -82,7 +82,7 @@ add_task(async function test_onlyBookmarked() {
       title: "",
       parentGuid: PlacesUtils.bookmarks.menuGuid,
       index: PlacesUtils.bookmarks.DEFAULT_INDEX,
-      isInQuery: false }
+      isInQuery: false },
   ];
 
   await task_populateDB(liveUpdateTestData); // add to the db

@@ -8,13 +8,13 @@
 
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/DebugOnly.h"
-#include "mozilla/PodOperations.h"
 #include "mozilla/Sprintf.h"
 #include "mozilla/TimeStamp.h"
 
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <type_traits>
 
 #include "jsutil.h"
 
@@ -32,7 +32,6 @@ using namespace js::gcstats;
 
 using mozilla::DebugOnly;
 using mozilla::EnumeratedArray;
-using mozilla::PodZero;
 using mozilla::TimeStamp;
 using mozilla::TimeDuration;
 
@@ -96,6 +95,30 @@ js::gcstats::ExplainAbortReason(gc::AbortReason reason)
           MOZ_CRASH("bad GC abort reason");
 #undef SWITCH_REASON
     }
+}
+
+static FILE*
+MaybeOpenFileFromEnv(const char* env)
+{
+    FILE *file;
+    const char* value = getenv(env);
+
+    if (!value)
+        return nullptr;
+
+    if (strcmp(value, "none") == 0) {
+        file = nullptr;
+    } else if (strcmp(value, "stdout") == 0) {
+        file = stdout;
+    } else if (strcmp(value, "stderr") == 0) {
+        file = stderr;
+    } else {
+        file = fopen(value, "a");
+        if (!file)
+            MOZ_CRASH("Failed to open log file.");
+    }
+
+    return file;
 }
 
 struct PhaseKindInfo
@@ -414,24 +437,36 @@ Statistics::formatDetailedDescription() const
   HeapSize: %.3f MiB\n\
   Chunk Delta (magnitude): %+d  (%d)\n\
   Arenas Relocated: %.3f MiB\n\
+  Trigger: %s\n\
 ";
+
+    char thresholdBuffer[100] = "n/a";
+    if (thresholdTriggered) {
+        SprintfLiteral(thresholdBuffer, "%.3f MiB of %.3f MiB threshold\n",
+                       triggerAmount / 1024.0 / 1024.0,
+                       triggerThreshold / 1024.0 / 1024.0);
+    }
+
     char buffer[1024];
-    SprintfLiteral(buffer, format,
-                   ExplainInvocationKind(gckind),
-                   ExplainReason(slices_[0].reason),
-                   nonincremental() ? "no - " : "yes",
-                   nonincremental() ? ExplainAbortReason(nonincrementalReason_) : "",
-                   zoneStats.collectedZoneCount, zoneStats.zoneCount, zoneStats.sweptZoneCount,
-                   zoneStats.collectedCompartmentCount, zoneStats.compartmentCount,
-                   zoneStats.sweptCompartmentCount,
-                   getCount(STAT_MINOR_GC),
-                   getCount(STAT_STOREBUFFER_OVERFLOW),
-                   mmu20 * 100., mmu50 * 100.,
-                   t(sccTotal), t(sccLongest),
-                   double(preBytes) / bytesPerMiB,
-                   getCount(STAT_NEW_CHUNK) - getCount(STAT_DESTROY_CHUNK),
-                   getCount(STAT_NEW_CHUNK) + getCount(STAT_DESTROY_CHUNK),
-                   double(ArenaSize * getCount(STAT_ARENA_RELOCATED)) / bytesPerMiB);
+    SprintfLiteral(
+        buffer, format,
+        ExplainInvocationKind(gckind),
+        ExplainReason(slices_[0].reason),
+        nonincremental() ? "no - " : "yes",
+        nonincremental() ? ExplainAbortReason(nonincrementalReason_) : "",
+        zoneStats.collectedZoneCount, zoneStats.zoneCount, zoneStats.sweptZoneCount,
+        zoneStats.collectedCompartmentCount, zoneStats.compartmentCount,
+        zoneStats.sweptCompartmentCount,
+        getCount(STAT_MINOR_GC),
+        getCount(STAT_STOREBUFFER_OVERFLOW),
+        mmu20 * 100., mmu50 * 100.,
+        t(sccTotal), t(sccLongest),
+        double(preBytes) / bytesPerMiB,
+        getCount(STAT_NEW_CHUNK) - getCount(STAT_DESTROY_CHUNK),
+        getCount(STAT_NEW_CHUNK) + getCount(STAT_DESTROY_CHUNK),
+        double(ArenaSize * getCount(STAT_ARENA_RELOCATED)) / bytesPerMiB,
+        thresholdBuffer);
+
     return DuplicateString(buffer);
 }
 
@@ -551,6 +586,24 @@ Statistics::renderNurseryJson(JSRuntime* rt) const
     rt->gc.nursery().renderProfileJSON(json);
     return UniqueChars(printer.release());
 }
+
+#ifdef DEBUG
+void
+Statistics::writeLogMessage(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    if (gcDebugFile) {
+        TimeDuration sinceStart = TimeStamp::Now() -
+            TimeStamp::ProcessCreation();
+        fprintf(gcDebugFile, "%12.3f: ", sinceStart.ToMicroseconds());
+        vfprintf(gcDebugFile, fmt, args);
+        fprintf(gcDebugFile, "\n");
+        fflush(gcDebugFile);
+    }
+    va_end(args);
+}
+#endif
 
 UniqueChars
 Statistics::renderJsonMessage(uint64_t timestamp, bool includeSlices) const
@@ -696,12 +749,17 @@ Statistics::formatJsonPhaseTimes(const PhaseTimeTable& phaseTimes, JSONPrinter& 
 
 Statistics::Statistics(JSRuntime* rt)
   : runtime(rt),
-    fp(nullptr),
+    gcTimerFile(nullptr),
+    gcDebugFile(nullptr),
     nonincrementalReason_(gc::AbortReason::None),
+    allocsSinceMinorGC({0, 0}),
     preBytes(0),
     thresholdTriggered(false),
     triggerAmount(0.0),
     triggerThreshold(0.0),
+    startingMinorGCNumber(0),
+    startingMajorGCNumber(0),
+    startingSliceNumber(0),
     maxPauseInInterval(0),
     sliceCallback(nullptr),
     nurseryCollectionCallback(nullptr),
@@ -711,27 +769,34 @@ Statistics::Statistics(JSRuntime* rt)
 {
     for (auto& count : counts)
         count = 0;
-    PodZero(&totalTimes_);
+
+#ifdef DEBUG
+    for (const auto& duration : totalTimes_) {
+#if defined(XP_WIN) || defined(XP_MACOSX) || (defined(XP_UNIX) && !defined(__clang__))
+        // build-linux64-asan/debug and static-analysis-linux64-st-an/debug
+        // currently use an STL that lacks std::is_trivially_constructible.
+        // This #ifdef probably isn't as precise as it could be, but given
+        // |totalTimes_| contains |TimeDuration| defined platform-independently
+        // it's not worth the trouble to nail down a more exact condition.
+        using ElementType = typename mozilla::RemoveReference<decltype(duration)>::Type;
+        static_assert(!std::is_trivially_constructible<ElementType>::value,
+                      "Statistics::Statistics will only initialize "
+                      "totalTimes_'s elements if their default constructor is "
+                      "non-trivial");
+#endif // mess'o'tests
+        MOZ_ASSERT(duration.IsZero(),
+                   "totalTimes_ default-initialization should have "
+                   "default-initialized every element of totalTimes_ to zero");
+    }
+#endif
 
     MOZ_ALWAYS_TRUE(phaseStack.reserve(MAX_PHASE_NESTING));
     MOZ_ALWAYS_TRUE(suspendedPhases.reserve(MAX_SUSPENDED_PHASES));
 
-    const char* env = getenv("MOZ_GCTIMER");
-    if (env) {
-        if (strcmp(env, "none") == 0) {
-            fp = nullptr;
-        } else if (strcmp(env, "stdout") == 0) {
-            fp = stdout;
-        } else if (strcmp(env, "stderr") == 0) {
-            fp = stderr;
-        } else {
-            fp = fopen(env, "a");
-            if (!fp)
-                MOZ_CRASH("Failed to open MOZ_GCTIMER log file.");
-        }
-    }
+    gcTimerFile = MaybeOpenFileFromEnv("MOZ_GCTIMER");
+    gcDebugFile = MaybeOpenFileFromEnv("JS_GC_DEBUG");
 
-    env = getenv("JS_GC_PROFILE");
+    const char* env = getenv("JS_GC_PROFILE");
     if (env) {
         if (0 == strcmp(env, "help")) {
             fprintf(stderr, "JS_GC_PROFILE=N\n"
@@ -745,8 +810,10 @@ Statistics::Statistics(JSRuntime* rt)
 
 Statistics::~Statistics()
 {
-    if (fp && fp != stdout && fp != stderr)
-        fclose(fp);
+    if (gcTimerFile && gcTimerFile != stdout && gcTimerFile != stderr)
+        fclose(gcTimerFile);
+    if (gcDebugFile && gcDebugFile != stdout && gcDebugFile != stderr)
+        fclose(gcDebugFile);
 }
 
 /* static */ bool
@@ -900,16 +967,16 @@ void
 Statistics::printStats()
 {
     if (aborted) {
-        fprintf(fp, "OOM during GC statistics collection. The report is unavailable for this GC.\n");
+        fprintf(gcTimerFile, "OOM during GC statistics collection. The report is unavailable for this GC.\n");
     } else {
         UniqueChars msg = formatDetailedMessage();
         if (msg) {
             double secSinceStart =
                 (slices_[0].start - TimeStamp::ProcessCreation()).ToSeconds();
-            fprintf(fp, "GC(T+%.3fs) %s\n", secSinceStart, msg.get());
+            fprintf(gcTimerFile, "GC(T+%.3fs) %s\n", secSinceStart, msg.get());
         }
     }
-    fflush(fp);
+    fflush(gcTimerFile);
 }
 
 void
@@ -980,6 +1047,8 @@ Statistics::endNurseryCollection(JS::gcreason::Reason reason)
                                      JS::GCNurseryProgress::GC_NURSERY_COLLECTION_END,
                                      reason);
     }
+
+    allocsSinceMinorGC = {0, 0};
 }
 
 void
@@ -997,7 +1066,7 @@ Statistics::beginSlice(const ZoneGCStats& zoneStats, JSGCInvocationKind gckind,
 
     if (!slices_.emplaceBack(budget,
                              reason,
-                             TimeStamp::Now(),
+                             ReallyNow(),
                              GetPageFaultCount(),
                              runtime->gc.state()))
     {
@@ -1017,6 +1086,8 @@ Statistics::beginSlice(const ZoneGCStats& zoneStats, JSGCInvocationKind gckind,
             (*sliceCallback)(cx, JS::GC_CYCLE_BEGIN, desc);
         (*sliceCallback)(cx, JS::GC_SLICE_BEGIN, desc);
     }
+
+    writeLogMessage("begin slice");
 }
 
 void
@@ -1027,10 +1098,11 @@ Statistics::endSlice()
 
     if (!aborted) {
         auto& slice = slices_.back();
-        slice.end = TimeStamp::Now();
+        slice.end = ReallyNow();
         slice.endFaults = GetPageFaultCount();
         slice.finalState = runtime->gc.state();
 
+        writeLogMessage("end slice");
         TimeDuration sliceTime = slice.end - slice.start;
         runtime->addTelemetry(JS_TELEMETRY_GC_SLICE_MS, t(sliceTime));
         runtime->addTelemetry(JS_TELEMETRY_GC_RESET, slice.wasReset());
@@ -1068,7 +1140,7 @@ Statistics::endSlice()
 
     bool last = !runtime->gc.isIncrementalGCInProgress();
     if (last) {
-        if (fp)
+        if (gcTimerFile)
             printStats();
 
         if (!aborted)
@@ -1098,13 +1170,19 @@ Statistics::endSlice()
         // Clear the timers at the end of a GC, preserving the data for PhaseKind::MUTATOR.
         auto mutatorStartTime = phaseStartTimes[Phase::MUTATOR];
         auto mutatorTime = phaseTimes[Phase::MUTATOR];
+
         for (mozilla::TimeStamp& t : phaseStartTimes)
             t = TimeStamp();
 #ifdef DEBUG
         for (mozilla::TimeStamp& t : phaseEndTimes)
             t = TimeStamp();
 #endif
-        PodZero(&phaseTimes);
+
+        for (TimeDuration& duration : phaseTimes) {
+            duration = TimeDuration();
+            MOZ_ASSERT(duration.IsZero());
+        }
+
         phaseStartTimes[Phase::MUTATOR] = mutatorStartTime;
         phaseTimes[Phase::MUTATOR] = mutatorTime;
     }
@@ -1183,7 +1261,7 @@ Statistics::resumePhases()
     {
         Phase resumePhase = suspendedPhases.popCopy();
         if (resumePhase == Phase::MUTATOR)
-            timedGCTime += TimeStamp::Now() - timedGCStart;
+            timedGCTime += ReallyNow() - timedGCStart;
         recordPhaseBegin(resumePhase);
     }
 }
@@ -1214,7 +1292,7 @@ Statistics::recordPhaseBegin(Phase phase)
     Phase current = currentPhase();
     MOZ_ASSERT(phases[phase].parent == current);
 
-    TimeStamp now = TimeStamp::Now();
+    TimeStamp now = ReallyNow();
 
     if (current != Phase::NONE) {
         MOZ_ASSERT(now >= phaseStartTimes[currentPhase()], "Inconsistent time data; see bug 1400153");
@@ -1226,6 +1304,7 @@ Statistics::recordPhaseBegin(Phase phase)
 
     phaseStack.infallibleAppend(phase);
     phaseStartTimes[phase] = now;
+    writeLogMessage("begin: %s", phases[phase].path);
 }
 
 void
@@ -1235,7 +1314,7 @@ Statistics::recordPhaseEnd(Phase phase)
 
     MOZ_ASSERT(phaseStartTimes[phase]);
 
-    TimeStamp now = TimeStamp::Now();
+    TimeStamp now = ReallyNow();
 
     // Make sure this phase ends after it starts.
     MOZ_ASSERT(now >= phaseStartTimes[phase], "Inconsistent time data; see bug 1400153");
@@ -1275,6 +1354,7 @@ Statistics::recordPhaseEnd(Phase phase)
 
 #ifdef DEBUG
     phaseEndTimes[phase] = now;
+    writeLogMessage("end: %s", phases[phase].path);
 #endif
 }
 
@@ -1318,7 +1398,7 @@ Statistics::recordParallelPhase(PhaseKind phaseKind, TimeDuration duration)
 TimeStamp
 Statistics::beginSCC()
 {
-    return TimeStamp::Now();
+    return ReallyNow();
 }
 
 void
@@ -1327,7 +1407,7 @@ Statistics::endSCC(unsigned scc, TimeStamp start)
     if (scc >= sccTimes.length() && !sccTimes.resize(scc + 1))
         return;
 
-    sccTimes[scc] += TimeStamp::Now() - start;
+    sccTimes[scc] += ReallyNow() - start;
 }
 
 /*
@@ -1452,4 +1532,3 @@ Statistics::printTotalProfileTimes()
         printProfileTimes(totalTimes_);
     }
 }
-

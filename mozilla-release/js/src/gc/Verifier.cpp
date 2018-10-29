@@ -184,7 +184,6 @@ gc::GCRuntime::startVerifyPreBarriers()
         return;
 
     if (IsIncrementalGCUnsafe(rt) != AbortReason::None ||
-        cx->keepAtoms ||
         rt->hasHelperThreadZones())
     {
         return;
@@ -213,16 +212,13 @@ gc::GCRuntime::startVerifyPreBarriers()
     trc->edgeptr = (char*)trc->root;
     trc->term = trc->edgeptr + size;
 
-    if (!trc->nodemap.init())
-        goto oom;
-
     /* Create the root node. */
     trc->curnode = MakeNode(trc, nullptr, JS::TraceKind(0));
 
     incrementalState = State::MarkRoots;
 
     /* Make all the roots be edges emanating from the root node. */
-    traceRuntime(trc, prep.session());
+    traceRuntime(trc, prep);
 
     VerifyNode* node;
     node = trc->curnode;
@@ -360,7 +356,6 @@ gc::GCRuntime::endVerifyPreBarriers()
 
     if (!compartmentCreated &&
         IsIncrementalGCUnsafe(rt) == AbortReason::None &&
-        !rt->mainContextFromOwnThread()->keepAtoms &&
         !rt->hasHelperThreadZones())
     {
         CheckEdgeTracer cetrc(rt);
@@ -411,6 +406,8 @@ gc::GCRuntime::verifyPreBarriers()
 void
 gc::VerifyBarriers(JSRuntime* rt, VerifierType type)
 {
+    if (GCRuntime::temporaryAbortIfWasmGc(rt->mainContextFromOwnThread()))
+        return;
     if (type == PreBarrierVerifier)
         rt->gc.verifyPreBarriers();
 }
@@ -458,7 +455,6 @@ class HeapCheckTracerBase : public JS::CallbackTracer
 {
   public:
     explicit HeapCheckTracerBase(JSRuntime* rt, WeakMapTraceKind weakTraceKind);
-    bool init();
     bool traceHeap(AutoTraceSession& session);
     virtual void checkCell(Cell* cell) = 0;
 
@@ -503,12 +499,6 @@ HeapCheckTracerBase::HeapCheckTracerBase(JSRuntime* rt, WeakMapTraceKind weakTra
 #ifdef DEBUG
     setCheckEdges(false);
 #endif
-}
-
-bool
-HeapCheckTracerBase::init()
-{
-    return visited.init();
 }
 
 void
@@ -614,15 +604,21 @@ HeapCheckTracerBase::dumpCellPath()
 class CheckHeapTracer final : public HeapCheckTracerBase
 {
   public:
-    explicit CheckHeapTracer(JSRuntime* rt);
+    enum GCType {
+        Moving,
+        NonMoving
+    };
+
+    explicit CheckHeapTracer(JSRuntime* rt, GCType type);
     void check(AutoTraceSession& session);
 
   private:
     void checkCell(Cell* cell) override;
+    GCType gcType;
 };
 
-CheckHeapTracer::CheckHeapTracer(JSRuntime* rt)
-  : HeapCheckTracerBase(rt, TraceWeakMapKeysValues)
+CheckHeapTracer::CheckHeapTracer(JSRuntime* rt, GCType type)
+  : HeapCheckTracerBase(rt, TraceWeakMapKeysValues), gcType(type)
 {}
 
 inline static bool
@@ -634,7 +630,11 @@ IsValidGCThingPointer(Cell* cell)
 void
 CheckHeapTracer::checkCell(Cell* cell)
 {
-    if (!IsValidGCThingPointer(cell) || !IsGCThingValidAfterMovingGC(cell)) {
+    // Moving
+    if (!IsValidGCThingPointer(cell) ||
+        ((gcType == GCType::Moving) && !IsGCThingValidAfterMovingGC(cell)) ||
+        ((gcType == GCType::NonMoving) && cell->isForwarded()))
+    {
         failures++;
         fprintf(stderr, "Bad pointer %p\n", cell);
         dumpCellPath();
@@ -655,10 +655,16 @@ CheckHeapTracer::check(AutoTraceSession& session)
 void
 js::gc::CheckHeapAfterGC(JSRuntime* rt)
 {
-    AutoTraceSession session(rt, JS::HeapState::Tracing);
-    CheckHeapTracer tracer(rt);
-    if (tracer.init())
-        tracer.check(session);
+    AutoTraceSession session(rt);
+    CheckHeapTracer::GCType gcType;
+
+    if (rt->gc.nursery().isEmpty())
+        gcType = CheckHeapTracer::GCType::Moving;
+    else
+        gcType = CheckHeapTracer::GCType::NonMoving;
+
+    CheckHeapTracer tracer(rt, gcType);
+    tracer.check(session);
 }
 
 #endif /* JSGC_HASH_TABLE_CHECKS */
@@ -718,16 +724,14 @@ CheckGrayMarkingTracer::check(AutoTraceSession& session)
 JS_FRIEND_API(bool)
 js::CheckGrayMarkingState(JSRuntime* rt)
 {
-    MOZ_ASSERT(!JS::CurrentThreadIsHeapCollecting());
+    MOZ_ASSERT(!JS::RuntimeHeapIsCollecting());
     MOZ_ASSERT(!rt->gc.isIncrementalGCInProgress());
     if (!rt->gc.areGrayBitsValid())
         return true;
 
     gcstats::AutoPhase ap(rt->gc.stats(), gcstats::PhaseKind::TRACE_HEAP);
-    AutoTraceSession session(rt, JS::HeapState::Tracing);
+    AutoTraceSession session(rt);
     CheckGrayMarkingTracer tracer(rt);
-    if (!tracer.init())
-        return true; // Ignore failure
 
     return tracer.check(session);
 }

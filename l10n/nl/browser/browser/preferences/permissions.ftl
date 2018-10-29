@@ -66,7 +66,7 @@ permissions-invalid-uri-label = Voer een geldige hostnaam in
 permissions-exceptions-tracking-protection-window =
     .title = Uitzonderingen - Bescherming tegen volgen
     .style = { permissions-window.style }
-permissions-exceptions-tracking-protection-desc = U hebt Niet volgen uitgeschakeld op deze websites.
+permissions-exceptions-tracking-protection-desc = U hebt Bescherming tegen volgen uitgeschakeld op deze websites.
 
 ## Exceptions - Cookies
 
@@ -102,6 +102,11 @@ permissions-exceptions-autoplay-media-window =
     .title = Websites met toestemming - Automatisch afspelen
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc = U kunt opgeven welke websites toestemming hebben om automatisch media-elementen af te spelen. Typ het exacte adres van de website die u toestemming wilt geven en klik vervolgens op Toestaan.
+
+permissions-exceptions-autoplay-media-window2 =
+    .title = Uitzonderingen - Automatisch afspelen
+    .style = { permissions-window.style }
+permissions-exceptions-autoplay-media-desc2 = U kunt opgeven welke websites altijd of nooit toestemming hebben om automatisch media met geluid af te spelen. Typ het adres van de website die u wilt beheren en klik vervolgens op Blokkeren of Toestaan.
 
 ## Site Permissions - Notifications
 

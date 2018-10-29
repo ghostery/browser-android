@@ -7,17 +7,28 @@
 #ifndef mozilla_dom_DocumentOrShadowRoot_h__
 #define mozilla_dom_DocumentOrShadowRoot_h__
 
+#include "mozilla/dom/NameSpaceConstants.h"
+#include "nsClassHashtable.h"
+#include "nsContentListDeclarations.h"
 #include "nsTArray.h"
 #include "nsIdentifierMapEntry.h"
 
 class nsContentList;
+class nsCycleCollectionTraversalCallback;
+class nsIDocument;
 class nsINode;
+class nsIRadioVisitor;
+class nsWindowSizes;
 
 namespace mozilla {
 class StyleSheet;
 
 namespace dom {
 
+class Element;
+class DocumentOrShadowRoot;
+class HTMLInputElement;
+struct nsRadioGroupStruct;
 class StyleSheetList;
 class ShadowRoot;
 
@@ -39,6 +50,11 @@ class DocumentOrShadowRoot
 public:
   explicit DocumentOrShadowRoot(nsIDocument&);
   explicit DocumentOrShadowRoot(mozilla::dom::ShadowRoot&);
+
+  // Unusual argument naming is because of cycle collection macros.
+  static void Traverse(DocumentOrShadowRoot* tmp,
+                       nsCycleCollectionTraversalCallback &cb);
+  static void Unlink(DocumentOrShadowRoot* tmp);
 
   nsINode& AsNode()
   {
@@ -63,21 +79,6 @@ public:
   int32_t IndexOfSheet(const StyleSheet& aSheet) const
   {
     return mStyleSheets.IndexOf(&aSheet);
-  }
-
-  void InsertSheetAt(size_t aIndex, StyleSheet& aSheet)
-  {
-    mStyleSheets.InsertElementAt(aIndex, &aSheet);
-  }
-
-  void RemoveSheet(StyleSheet& aSheet)
-  {
-    mStyleSheets.RemoveElement(&aSheet);
-  }
-
-  void AppendStyleSheet(StyleSheet& aSheet)
-  {
-    mStyleSheets.AppendElement(&aSheet);
   }
 
   StyleSheetList& EnsureDOMStyleSheets();
@@ -111,7 +112,7 @@ public:
   already_AddRefed<nsContentList>
   GetElementsByClassName(const nsAString& aClasses);
 
-  ~DocumentOrShadowRoot() = default;
+  ~DocumentOrShadowRoot();
 
   Element* GetPointerLockElement();
   Element* GetFullscreenElement();
@@ -121,7 +122,7 @@ public:
                          nsTArray<RefPtr<mozilla::dom::Element>>& aElements);
 
   /**
-   * Helper for nsIDOMDocument::elementFromPoint implementation that allows
+   * Helper for elementFromPoint implementation that allows
    * ignoring the scroll frame and/or avoiding layout flushes.
    *
    * @see nsIDOMWindowUtils::elementFromPoint
@@ -139,7 +140,98 @@ public:
   void ElementsFromPointHelper(float aX, float aY, uint32_t aFlags,
                                nsTArray<RefPtr<mozilla::dom::Element>>& aElements);
 
+  /**
+   * This gets fired when the element that an id refers to changes.
+   * This fires at difficult times. It is generally not safe to do anything
+   * which could modify the DOM in any way. Use
+   * nsContentUtils::AddScriptRunner.
+   * @return true to keep the callback in the callback set, false
+   * to remove it.
+   */
+  typedef bool (* IDTargetObserver)(Element* aOldElement,
+                                    Element* aNewelement, void* aData);
+
+  /**
+   * Add an IDTargetObserver for a specific ID. The IDTargetObserver
+   * will be fired whenever the content associated with the ID changes
+   * in the future. If aForImage is true, mozSetImageElement can override
+   * what content is associated with the ID. In that case the IDTargetObserver
+   * will be notified at those times when the result of LookupImageElement
+   * changes.
+   * At most one (aObserver, aData, aForImage) triple can be
+   * registered for each ID.
+   * @return the content currently associated with the ID.
+   */
+  Element* AddIDTargetObserver(nsAtom* aID, IDTargetObserver aObserver,
+                               void* aData, bool aForImage);
+
+  /**
+   * Remove the (aObserver, aData, aForImage) triple for a specific ID, if
+   * registered.
+   */
+  void RemoveIDTargetObserver(nsAtom* aID, IDTargetObserver aObserver,
+                              void* aData, bool aForImage);
+
+  /**
+   * Lookup an image element using its associated ID, which is usually provided
+   * by |-moz-element()|. Similar to GetElementById, with the difference that
+   * elements set using mozSetImageElement have higher priority.
+   * @param aId the ID associated the element we want to lookup
+   * @return the element associated with |aId|
+   */
+  Element* LookupImageElement(const nsAString& aElementId);
+
+  /**
+   * Check that aId is not empty and log a message to the console
+   * service if it is.
+   * @returns true if aId looks correct, false otherwise.
+   */
+  inline bool CheckGetElementByIdArg(const nsAString& aId)
+  {
+    if (aId.IsEmpty()) {
+      ReportEmptyGetElementByIdArg();
+      return false;
+    }
+    return true;
+  }
+
+  void ReportEmptyGetElementByIdArg();
+
+  // nsIRadioGroupContainer
+  NS_IMETHOD WalkRadioGroup(const nsAString& aName,
+                            nsIRadioVisitor* aVisitor,
+                            bool aFlushContent);
+  void SetCurrentRadioButton(const nsAString& aName,
+                             HTMLInputElement* aRadio);
+  HTMLInputElement* GetCurrentRadioButton(const nsAString& aName);
+  nsresult GetNextRadioButton(const nsAString& aName,
+                              const bool aPrevious,
+                              HTMLInputElement* aFocusedRadio,
+                              HTMLInputElement** aRadioOut);
+  void AddToRadioGroup(const nsAString& aName,
+                       HTMLInputElement* aRadio);
+  void RemoveFromRadioGroup(const nsAString& aName,
+                            HTMLInputElement* aRadio);
+  uint32_t GetRequiredRadioCount(const nsAString& aName) const;
+  void RadioRequiredWillChange(const nsAString& aName,
+                                       bool aRequiredAdded);
+  bool GetValueMissingState(const nsAString& aName) const;
+  void SetValueMissingState(const nsAString& aName, bool aValue);
+
+  // for radio group
+  nsRadioGroupStruct* GetRadioGroup(const nsAString& aName) const;
+  nsRadioGroupStruct* GetOrCreateRadioGroup(const nsAString& aName);
+
 protected:
+  // Returns the reference to the sheet, if found in mStyleSheets.
+  already_AddRefed<StyleSheet> RemoveSheet(StyleSheet& aSheet);
+  void InsertSheetAt(size_t aIndex, StyleSheet& aSheet);
+
+  void AddSizeOfExcludingThis(nsWindowSizes&) const;
+  void AddSizeOfOwnedSheetArrayExcludingThis(
+      nsWindowSizes&,
+      const nsTArray<RefPtr<StyleSheet>>&) const;
+
   nsIContent* Retarget(nsIContent* aContent) const;
 
   /**
@@ -161,6 +253,8 @@ protected:
    *    new ones for IDs.
    */
   nsTHashtable<nsIdentifierMapEntry> mIdentifierMap;
+
+  nsClassHashtable<nsStringHashKey, nsRadioGroupStruct> mRadioGroups;
 
   nsINode& mAsNode;
   const Kind mKind;

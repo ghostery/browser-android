@@ -30,7 +30,7 @@ using namespace mozilla::dom;
 
 static const char* kPrefSVGDisabled = "svg.disabled";
 static const char* kPrefMathMLDisabled = "mathml.disabled";
-static const char* kObservedPrefs[] = {
+static const char* kObservedNSPrefs[] = {
   kPrefMathMLDisabled,
   kPrefSVGDisabled,
   nullptr
@@ -63,10 +63,11 @@ bool nsNameSpaceManager::Init()
   rv = AddDisabledNameSpace(dont_AddRef(uri), id); \
   NS_ENSURE_SUCCESS(rv, false)
 
-  mozilla::Preferences::AddStrongObservers(this, kObservedPrefs);
-  mMathMLDisabled = mozilla::Preferences::GetBool(kPrefMathMLDisabled);
-  mSVGDisabled = mozilla::Preferences::GetBool(kPrefSVGDisabled);
+  mozilla::Preferences::RegisterCallbacks(
+    PREF_CHANGE_METHOD(nsNameSpaceManager::PrefChanged),
+    kObservedNSPrefs, this);
 
+  PrefChanged(nullptr);
 
   // Need to be ordered according to ID.
   MOZ_ASSERT(mURIArray.IsEmpty());
@@ -126,7 +127,7 @@ nsNameSpaceManager::RegisterNameSpace(already_AddRefed<nsAtom> aURI,
 nsresult
 nsNameSpaceManager::GetNameSpaceURI(int32_t aNameSpaceID, nsAString& aURI)
 {
-  NS_PRECONDITION(aNameSpaceID >= 0, "Bogus namespace ID");
+  MOZ_ASSERT(aNameSpaceID >= 0, "Bogus namespace ID");
 
   // We have historically treated GetNameSpaceURI calls for kNameSpaceID_None
   // as erroneous.
@@ -186,13 +187,13 @@ NS_NewElement(Element** aResult,
 {
   RefPtr<mozilla::dom::NodeInfo> ni = aNodeInfo;
   int32_t ns = ni->NamespaceID();
+  RefPtr<nsAtom> isAtom = aIs ? NS_AtomizeMainThread(*aIs) : nullptr;
   if (ns == kNameSpaceID_XHTML) {
-    RefPtr<nsAtom> isAtom = aIs ? NS_Atomize(*aIs) : nullptr;
     return NS_NewHTMLElement(aResult, ni.forget(), aFromParser, isAtom);
   }
 #ifdef MOZ_XUL
   if (ns == kNameSpaceID_XUL) {
-    return NS_NewXULElement(aResult, ni.forget(), aFromParser);
+    return NS_NewXULElement(aResult, ni.forget(), aFromParser, isAtom);
   }
 #endif
   if (ns == kNameSpaceID_MathML) {
@@ -273,16 +274,9 @@ nsNameSpaceManager::AddDisabledNameSpace(already_AddRefed<nsAtom> aURI,
   return NS_OK;
 }
 
-// nsISupports
-NS_IMPL_ISUPPORTS(nsNameSpaceManager,
-                  nsIObserver)
-
-// nsIObserver
-NS_IMETHODIMP
-nsNameSpaceManager::Observe(nsISupports* aObject, const char* aTopic,
-                            const char16_t* aMessage)
+void
+nsNameSpaceManager::PrefChanged(const char* aPref)
 {
   mMathMLDisabled = mozilla::Preferences::GetBool(kPrefMathMLDisabled);
   mSVGDisabled = mozilla::Preferences::GetBool(kPrefSVGDisabled);
-  return NS_OK;
 }

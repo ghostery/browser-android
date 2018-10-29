@@ -11,6 +11,7 @@
 #include "mozilla/Move.h"
 #include "mozilla/TypeTraits.h"
 
+#include "jit/JitcodeMap.h"
 #include "jit/JitFrames.h"
 #include "jit/LIR.h"
 #include "jit/MacroAssembler.h"
@@ -37,17 +38,6 @@ class OutOfLineTruncateSlow;
 struct ReciprocalMulConstants {
     int64_t multiplier;
     int32_t shiftAmount;
-};
-
-// This should be nested in CodeGeneratorShared, but it is used in
-// optimization tracking implementation and nested classes cannot be
-// forward-declared.
-struct NativeToTrackedOptimizations
-{
-    // [startOffset, endOffset]
-    CodeOffset startOffset;
-    CodeOffset endOffset;
-    const TrackedOptimizations* optimizations;
 };
 
 class CodeGeneratorShared : public LElementVisitor
@@ -77,8 +67,6 @@ class CodeGeneratorShared : public LElementVisitor
 
     // Label for the common return path.
     NonAssertingLabel returnLabel_;
-
-    FallbackICStubSpace stubSpace_;
 
     js::Vector<SafepointIndex, 0, SystemAllocPolicy> safepointIndices_;
     js::Vector<OsiIndex, 0, SystemAllocPolicy> osiIndices_;
@@ -110,13 +98,6 @@ class CodeGeneratorShared : public LElementVisitor
     js::Vector<PatchableTLEvent, 0, SystemAllocPolicy> patchableTLEvents_;
     js::Vector<CodeOffset, 0, SystemAllocPolicy> patchableTLScripts_;
 #endif
-
-  public:
-    struct NativeToBytecode {
-        CodeOffset nativeOffset;
-        InlineScriptTree* tree;
-        jsbytecode* pc;
-    };
 
   protected:
     js::Vector<NativeToBytecode, 0, SystemAllocPolicy> nativeToBytecodeList_;
@@ -190,11 +171,6 @@ class CodeGeneratorShared : public LElementVisitor
     // constant header present for every Ion frame, used for pre-determined
     // spills.
     int32_t frameDepth_;
-
-    // In some cases, we force stack alignment to platform boundaries, see
-    // also CodeGeneratorShared constructor. This value records the adjustment
-    // we've done.
-    int32_t frameInitialAdjustment_;
 
     // Frame class this frame's size falls into (see IonFrame.h).
     FrameSizeClass frameClass_;
@@ -334,7 +310,7 @@ class CodeGeneratorShared : public LElementVisitor
     void emitTruncateDouble(FloatRegister src, Register dest, MTruncateToInt32* mir);
     void emitTruncateFloat32(FloatRegister src, Register dest, MTruncateToInt32* mir);
 
-    void emitPreBarrier(Register base, const LAllocation* index, int32_t offsetAdjustment);
+    void emitPreBarrier(Register elements, const LAllocation* index, int32_t offsetAdjustment);
     void emitPreBarrier(Address address);
 
     // We don't emit code for trivial blocks, so if we want to branch to the
@@ -653,8 +629,8 @@ class ArgSeq<HeadType, TailTypes...> : public ArgSeq<TailTypes...>
   public:
     template <typename ProvidedHead, typename... ProvidedTail>
     explicit ArgSeq(ProvidedHead&& head, ProvidedTail&&... tail)
-      : ArgSeq<TailTypes...>(mozilla::Forward<ProvidedTail>(tail)...),
-        head_(mozilla::Forward<ProvidedHead>(head))
+      : ArgSeq<TailTypes...>(std::forward<ProvidedTail>(tail)...),
+        head_(std::forward<ProvidedHead>(head))
     { }
 
     // Arguments are pushed in reverse order, from last argument to first
@@ -669,7 +645,7 @@ template <typename... ArgTypes>
 inline ArgSeq<ArgTypes...>
 ArgList(ArgTypes&&... args)
 {
-    return ArgSeq<ArgTypes...>(mozilla::Forward<ArgTypes>(args)...);
+    return ArgSeq<ArgTypes...>(std::forward<ArgTypes>(args)...);
 }
 
 // Store wrappers, to generate the right move of data after the VM call.

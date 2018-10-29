@@ -8,6 +8,8 @@ this.event = {};
 "use strict";
 /* global content, is */
 
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+
 ChromeUtils.import("chrome://marionette/content/element.js");
 
 const dblclickTimer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
@@ -26,8 +28,7 @@ function getDOMWindowUtils(win) {
   }
 
   // this assumes we are operating in chrome space
-  return win.QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindowUtils);
+  return win.windowUtils;
 }
 
 event.MouseEvents = {
@@ -212,7 +213,7 @@ event.parseModifiers_ = function(modifiers) {
     mval |= Ci.nsIDOMWindowUtils.MODIFIER_META;
   }
   if (modifiers.accelKey) {
-    if (navigator.platform.includes("Mac")) {
+    if (Services.appinfo.OS === "Darwin") {
       mval |= Ci.nsIDOMWindowUtils.MODIFIER_META;
     } else {
       mval |= Ci.nsIDOMWindowUtils.MODIFIER_CONTROL;
@@ -650,7 +651,7 @@ function emulateToActivateModifiers_(TIP, keyEvent, win = window) {
       {key: "OS",         attr: "osKey"},
       {key: "Shift",      attr: "shiftKey"},
       {key: "Symbol",     attr: "symbolKey"},
-      {key: isMac_(win) ? "Meta" : "Control", attr: "accelKey"},
+      {key: Services.appinfo.OS === "Darwin" ? "Meta" : "Control", attr: "accelKey"},
     ],
     lockable: [
       {key: "CapsLock",   attr: "capsLockKey"},
@@ -718,15 +719,6 @@ function emulateToInactivateModifiers_(TIP, modifiers, win = window) {
     TIP.keyup(event,
         TIP.KEY_NON_PRINTABLE_KEY | TIP.KEY_DONT_DISPATCH_MODIFIER_KEY_EVENT);
   }
-}
-
-function isMac_(win = window) {
-  if (win) {
-    try {
-      return win.navigator.platform.indexOf("Mac") > -1;
-    } catch (ex) {}
-  }
-  return navigator.platform.indexOf("Mac") > -1;
 }
 
 /* eslint-disable */

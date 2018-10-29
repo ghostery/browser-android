@@ -5,7 +5,7 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/dom/ContentBridgeParent.h"
-#include "mozilla/dom/ChromeMessageSender.h"
+#include "mozilla/dom/ProcessMessageManager.h"
 #include "mozilla/dom/TabParent.h"
 #include "mozilla/jsipc/CrossProcessObjectWrappers.h"
 #include "nsXULAppAPI.h"
@@ -23,7 +23,8 @@ NS_IMPL_ISUPPORTS(ContentBridgeParent,
                   nsIObserver)
 
 ContentBridgeParent::ContentBridgeParent()
-  : mIsForJSPlugin(false)
+  : mIsForBrowser(false)
+  , mIsForJSPlugin(false)
 {}
 
 ContentBridgeParent::~ContentBridgeParent()
@@ -78,7 +79,7 @@ ContentBridgeParent::RecvSyncMessage(const nsString& aMsg,
                                      const IPC::Principal& aPrincipal,
                                      nsTArray<StructuredCloneData>* aRetvals)
 {
-  return nsIContentParent::RecvSyncMessage(aMsg, aData, Move(aCpows),
+  return nsIContentParent::RecvSyncMessage(aMsg, aData, std::move(aCpows),
                                            aPrincipal, aRetvals);
 }
 
@@ -88,7 +89,7 @@ ContentBridgeParent::RecvAsyncMessage(const nsString& aMsg,
                                       const IPC::Principal& aPrincipal,
                                       const ClonedMessageData& aData)
 {
-  return nsIContentParent::RecvAsyncMessage(aMsg, Move(aCpows),
+  return nsIContentParent::RecvAsyncMessage(aMsg, std::move(aCpows),
                                             aPrincipal, aData);
 }
 

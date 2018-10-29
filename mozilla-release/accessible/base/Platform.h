@@ -102,6 +102,22 @@ void ProxyShowHideEvent(ProxyAccessible* aTarget, ProxyAccessible* aParent,
                         bool aInsert, bool aFromUser);
 void ProxySelectionEvent(ProxyAccessible* aTarget, ProxyAccessible* aWidget,
                          uint32_t aType);
+
+#if defined(ANDROID)
+void ProxyVirtualCursorChangeEvent(ProxyAccessible* aTarget,
+                                   ProxyAccessible* aOldPosition,
+                                   int32_t aOldStartOffset,
+                                   int32_t aOldEndOffset,
+                                   ProxyAccessible* aNewPosition,
+                                   int32_t aNewStartOffset,
+                                   int32_t aNewEndOffset,
+                                   int16_t aReason, int16_t aBoundaryType,
+                                   bool aFromUser);
+
+void ProxyScrollingEvent(ProxyAccessible* aTarget,
+                         uint32_t aScrollX, uint32_t aScrollY,
+                         uint32_t aMaxScrollX, uint32_t aMaxScrollY);
+#endif
 } // namespace a11y
 } // namespace mozilla
 

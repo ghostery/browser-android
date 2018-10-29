@@ -7,7 +7,6 @@
 <!ENTITY sanitizePrefs2.column.width "17em">
 <!ENTITY sanitizeDialog2.width "34em">
 <!ENTITY sanitizeDialog2.title "Cancella cronologia recente">
-<!ENTITY clearDataSettings3.label "Alla chiusura di &brandShortName; eliminare automaticamente">
 <!ENTITY clearDataSettings4.label "Alla chiusura di &brandShortName; eliminare automaticamente">
 <!ENTITY clearTimeDuration.label "Intervallo di tempo da cancellare: ">
 <!ENTITY clearTimeDuration.accesskey "n">

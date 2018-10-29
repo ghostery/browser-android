@@ -16,7 +16,7 @@
 #include "vm/ArrayBufferObject.h"
 #include "vm/ErrorObject.h"
 #include "vm/JSFunction.h"
-#include "vm/RegExpStatics.h"
+#include "vm/Realm.h"
 #include "vm/Runtime.h"
 
 namespace js {
@@ -24,9 +24,7 @@ namespace js {
 class Debugger;
 class TypedObjectModuleObject;
 class LexicalEnvironmentObject;
-
-class SimdTypeDescr;
-enum class SimdType;
+class RegExpStatics;
 
 /*
  * Global object slots are reserved as follows:
@@ -105,7 +103,6 @@ class GlobalObject : public NativeObject
         DEBUGGERS,
         INTRINSICS,
         FOR_OF_PIC_CHAIN,
-        MODULE_RESOLVE_HOOK,
         WINDOW_PROXY,
 
         /* Total reserved-slot count for global objects. */
@@ -261,7 +258,7 @@ class GlobalObject : public NativeObject
   public:
     static GlobalObject*
     new_(JSContext* cx, const Class* clasp, JSPrincipals* principals,
-         JS::OnNewGlobalHookOption hookOption, const JS::CompartmentOptions& options);
+         JS::OnNewGlobalHookOption hookOption, const JS::RealmOptions& options);
 
     /*
      * Create a constructor function with the specified name and length using
@@ -450,17 +447,6 @@ class GlobalObject : public NativeObject
         return getOrCreateObject(cx, global, APPLICATION_SLOTS + JSProto_TypedObject,
                                  initTypedObjectModule);
     }
-
-    static JSObject*
-    getOrCreateSimdGlobalObject(JSContext* cx, Handle<GlobalObject*> global) {
-        return getOrCreateObject(cx, global, APPLICATION_SLOTS + JSProto_SIMD, initSimdObject);
-    }
-
-    // Get the type descriptor for one of the SIMD types.
-    // simdType is one of the JS_SIMDTYPEREPR_* constants.
-    // Implemented in builtin/SIMD.cpp.
-    static SimdTypeDescr*
-    getOrCreateSimdTypeDescr(JSContext* cx, Handle<GlobalObject*> global, SimdType simdType);
 
     TypedObjectModuleObject& getTypedObjectModule() const;
 
@@ -692,7 +678,7 @@ class GlobalObject : public NativeObject
         if (!holder)
             return false;
 
-        if (Shape* shape = holder->lookupPure(name)) {
+        if (Shape* shape = holder->lookup(cx, name)) {
             vp.set(holder->getSlot(shape->slot()));
             *exists = true;
         } else {
@@ -740,7 +726,8 @@ class GlobalObject : public NativeObject
 
     static JSObject* getOrCreateThrowTypeError(JSContext* cx, Handle<GlobalObject*> global);
 
-    static bool isRuntimeCodeGenEnabled(JSContext* cx, Handle<GlobalObject*> global);
+    static bool isRuntimeCodeGenEnabled(JSContext* cx, HandleValue code,
+                                        Handle<GlobalObject*> global);
 
     static bool getOrCreateEval(JSContext* cx, Handle<GlobalObject*> global,
                                 MutableHandleObject eval);
@@ -779,10 +766,6 @@ class GlobalObject : public NativeObject
     // Implemented in builtin/TypedObject.cpp
     static bool initTypedObjectModule(JSContext* cx, Handle<GlobalObject*> global);
 
-    // Implemented in builtin/SIMD.cpp
-    static bool initSimdObject(JSContext* cx, Handle<GlobalObject*> global);
-    static bool initSimdType(JSContext* cx, Handle<GlobalObject*> global, SimdType simdType);
-
     static bool initStandardClasses(JSContext* cx, Handle<GlobalObject*> global);
     static bool initSelfHostingBuiltins(JSContext* cx, Handle<GlobalObject*> global,
                                         const JSFunctionSpec* builtins);
@@ -819,19 +802,6 @@ class GlobalObject : public NativeObject
     }
     void setWindowProxy(JSObject* windowProxy) {
         setReservedSlot(WINDOW_PROXY, ObjectValue(*windowProxy));
-    }
-
-    void setModuleResolveHook(HandleFunction hook) {
-        MOZ_ASSERT(hook);
-        setSlot(MODULE_RESOLVE_HOOK, ObjectValue(*hook));
-    }
-
-    JSFunction* moduleResolveHook() {
-        Value value = getSlotRef(MODULE_RESOLVE_HOOK);
-        if (value.isUndefined())
-            return nullptr;
-
-        return &value.toObject().as<JSFunction>();
     }
 
     // A class used in place of a prototype during off-thread parsing.

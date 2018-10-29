@@ -44,8 +44,6 @@ EXPORTS.mozilla += [
     'CPUUsageWatcher.h',
     'DeadlockDetector.h',
     'EventQueue.h',
-    'HangAnnotations.h',
-    'HangMonitor.h',
     'IdleTaskRunner.h',
     'LazyIdleThread.h',
     'MainThreadIdlePeriod.h',
@@ -82,8 +80,6 @@ UNIFIED_SOURCES += [
     'CooperativeThreadPool.cpp',
     'CPUUsageWatcher.cpp',
     'EventQueue.cpp',
-    'HangAnnotations.cpp',
-    'HangMonitor.cpp',
     'InputEventStatistics.cpp',
     'LabeledEventQueue.cpp',
     'LazyIdleThread.cpp',
@@ -123,3 +119,6 @@ LOCAL_INCLUDES += [
 FINAL_LIBRARY = 'xul'
 
 include('/ipc/chromium/chromium-config.mozbuild')
+
+if CONFIG['CC_TYPE'] == 'clang-cl':
+    AllowCompilerWarnings()  # workaround for bug 1090497

@@ -12,6 +12,35 @@
 namespace mozilla {
 namespace dom {
 
+namespace {
+
+void
+GetURLSpecFromChannel(nsITimedChannel* aChannel, nsAString& aSpec)
+{
+  aSpec.AssignLiteral("document");
+
+  nsCOMPtr<nsIChannel> channel = do_QueryInterface(aChannel);
+  if (!channel) {
+    return;
+  }
+
+  nsCOMPtr<nsIURI> uri;
+  nsresult rv = channel->GetURI(getter_AddRefs(uri));
+  if (NS_WARN_IF(NS_FAILED(rv)) || !uri) {
+    return;
+  }
+
+  nsAutoCString spec;
+  rv = uri->GetSpec(spec);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return;
+  }
+
+  aSpec = NS_ConvertUTF8toUTF16(spec);
+}
+
+} // anonymous
+
 NS_IMPL_CYCLE_COLLECTION_CLASS(PerformanceMainThread)
 
 NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(PerformanceMainThread,
@@ -46,12 +75,14 @@ NS_INTERFACE_MAP_END_INHERITING(Performance)
 
 PerformanceMainThread::PerformanceMainThread(nsPIDOMWindowInner* aWindow,
                                              nsDOMNavigationTiming* aDOMTiming,
-                                             nsITimedChannel* aChannel)
-  : Performance(aWindow)
+                                             nsITimedChannel* aChannel,
+                                             bool aPrincipal)
+  : Performance(aWindow, aPrincipal)
   , mDOMTiming(aDOMTiming)
   , mChannel(aChannel)
 {
   MOZ_ASSERT(aWindow, "Parent window object should be provided");
+  CreateNavigationTimingEntry();
 }
 
 PerformanceMainThread::~PerformanceMainThread()
@@ -130,7 +161,7 @@ PerformanceMainThread::AddEntry(nsIHttpChannel* channel,
   // The PerformanceResourceTiming object will use the PerformanceTimingData
   // object to get all the required timings.
   RefPtr<PerformanceResourceTiming> performanceEntry =
-    new PerformanceResourceTiming(Move(performanceTimingData), this,
+    new PerformanceResourceTiming(std::move(performanceTimingData), this,
                                   entryName);
 
   performanceEntry->SetInitiatorType(initiatorType);
@@ -281,35 +312,42 @@ PerformanceMainThread::CreationTime() const
 }
 
 void
-PerformanceMainThread::EnsureDocEntry()
+PerformanceMainThread::CreateNavigationTimingEntry()
 {
-  if (!mDocEntry && nsContentUtils::IsPerformanceNavigationTimingEnabled()) {
-
-    UniquePtr<PerformanceTimingData> timing(
-      new PerformanceTimingData(mChannel, nullptr, 0));
-
-    nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(mChannel);
-    if (httpChannel) {
-      timing->SetPropertiesFromHttpChannel(httpChannel);
-    }
-
-    mDocEntry = new PerformanceNavigationTiming(Move(timing), this);
-  }
-}
-
-void
-PerformanceMainThread::CreateDocumentEntry(nsITimedChannel* aChannel)
-{
-  MOZ_ASSERT(aChannel);
   MOZ_ASSERT(!mDocEntry, "mDocEntry should be null.");
 
   if (!nsContentUtils::IsPerformanceNavigationTimingEnabled()) {
     return;
   }
 
+  nsAutoString name;
+  GetURLSpecFromChannel(mChannel, name);
+
   UniquePtr<PerformanceTimingData> timing(
-      new PerformanceTimingData(aChannel, nullptr, 0));
-  mDocEntry = new PerformanceNavigationTiming(Move(timing), this);
+    new PerformanceTimingData(mChannel, nullptr, 0));
+
+  nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(mChannel);
+  if (httpChannel) {
+    timing->SetPropertiesFromHttpChannel(httpChannel, mChannel);
+  }
+
+  mDocEntry = new PerformanceNavigationTiming(std::move(timing), this, name);
+}
+
+void
+PerformanceMainThread::QueueNavigationTimingEntry()
+{
+  if (!mDocEntry) {
+    return;
+  }
+
+  // Let's update some values.
+  nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(mChannel);
+  if (httpChannel) {
+    mDocEntry->UpdatePropertiesFromHttpChannel(httpChannel, mChannel);
+  }
+
+  QueueEntry(mDocEntry);
 }
 
 void
@@ -324,7 +362,6 @@ PerformanceMainThread::GetEntries(nsTArray<RefPtr<PerformanceEntry>>& aRetval)
   aRetval = mResourceEntries;
   aRetval.AppendElements(mUserEntries);
 
-  EnsureDocEntry();
   if (mDocEntry) {
     aRetval.AppendElement(mDocEntry);
   }
@@ -344,7 +381,7 @@ PerformanceMainThread::GetEntriesByType(const nsAString& aEntryType,
 
   if (aEntryType.EqualsLiteral("navigation")) {
     aRetval.Clear();
-    EnsureDocEntry();
+
     if (mDocEntry) {
       aRetval.AppendElement(mDocEntry);
     }
@@ -365,16 +402,14 @@ PerformanceMainThread::GetEntriesByName(const nsAString& aName,
     return;
   }
 
-  if (aName.EqualsLiteral("document")) {
-    aRetval.Clear();
-    EnsureDocEntry();
-    if (mDocEntry) {
-      aRetval.AppendElement(mDocEntry);
-    }
+  Performance::GetEntriesByName(aName, aEntryType, aRetval);
+
+  // The navigation entry is the first one. If it exists and the name matches,
+  // let put it in front.
+  if (mDocEntry && mDocEntry->GetName().Equals(aName)) {
+    aRetval.InsertElementAt(0, mDocEntry);
     return;
   }
-
-  Performance::GetEntriesByName(aName, aEntryType, aRetval);
 }
 
 } // dom namespace

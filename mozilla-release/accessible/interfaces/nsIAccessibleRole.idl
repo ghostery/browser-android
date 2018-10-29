@@ -194,8 +194,8 @@ interface nsIAccessibleRole : nsISupports
   const unsigned long ROLE_ROW = 28;
 
   /**
-   * Represents a cell within a table. It is used for html:td,
-   * xul:tree cell and xul:listcell. Also, see ROLE_TABLE.
+   * Represents a cell within a table. It is used for html:td and xul:tree cell.
+   * Also, see ROLE_TABLE.
    */
   const unsigned long ROLE_CELL = 29;
 
@@ -1014,4 +1014,22 @@ interface nsIAccessibleRole : nsISupports
    * choices. It is used for ARIA's combobox role. See also ROLE_COMBOBOX.
    */
   const unsigned long ROLE_EDITCOMBOBOX = 174;
+
+  /**
+   * A section of content that is quoted from another source.
+   */
+  const unsigned long ROLE_BLOCKQUOTE = 175;
+
+  /**
+   * Content previously deleted or proposed for deletion, e.g. in revision
+   * history or a content view providing suggestions from reviewers.
+   */
+  const unsigned long ROLE_CONTENT_DELETION = 176;
+
+  /**
+   * Content previously inserted or proposed for insertion, e.g. in revision
+   * history or a content view providing suggestions from reviewers.
+   */
+  const unsigned long ROLE_CONTENT_INSERTION = 177;
+
 };

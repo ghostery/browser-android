@@ -18,6 +18,8 @@
 #include "mozilla/dom/ContentParent.h"
 #include "mozilla/ipc/MessageChannel.h"
 #include "mozilla/ipc/Transport.h"
+#include "mozilla/recordreplay/ChildIPC.h"
+#include "mozilla/recordreplay/ParentIPC.h"
 #include "mozilla/StaticMutex.h"
 #include "mozilla/SystemGroup.h"
 #include "mozilla/Unused.h"
@@ -209,7 +211,7 @@ bool DuplicateHandle(HANDLE aSourceHandle,
                                                 aTargetProcessId));
   if (!targetProcess) {
     CrashReporter::AnnotateCrashReport(
-      NS_LITERAL_CSTRING("IPCTransportFailureReason"),
+      CrashReporter::Annotation::IPCTransportFailureReason,
       NS_LITERAL_CSTRING("Failed to open target process."));
     return false;
   }
@@ -231,20 +233,18 @@ AnnotateSystemError()
 #endif
   if (error) {
     CrashReporter::AnnotateCrashReport(
-      NS_LITERAL_CSTRING("IPCSystemError"),
+      CrashReporter::Annotation::IPCSystemError,
       nsPrintfCString("%" PRId64, error));
   }
 }
 
 #if defined(XP_MACOSX)
 void
-AnnotateCrashReportWithErrno(const char* tag, int error)
+AnnotateCrashReportWithErrno(CrashReporter::Annotation tag, int error)
 {
-  CrashReporter::AnnotateCrashReport(
-    nsCString(tag),
-    nsPrintfCString("%d", error));
+  CrashReporter::AnnotateCrashReport(tag, error);
 }
-#endif
+#endif // defined(XP_MACOSX)
 
 void
 LogMessageForProtocol(const char* aTopLevelProtocol, base::ProcessId aOtherPid,
@@ -288,8 +288,9 @@ FatalError(const char* aMsg, bool aIsParent)
     // this process if we're off the main thread.
     formattedMessage.AppendLiteral("\". Intentionally crashing.");
     NS_ERROR(formattedMessage.get());
-    CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("IPCFatalErrorMsg"),
-                                       nsDependentCString(aMsg));
+    CrashReporter::AnnotateCrashReport(
+      CrashReporter::Annotation::IPCFatalErrorMsg,
+      nsDependentCString(aMsg));
     AnnotateSystemError();
 #ifndef FUZZING
     MOZ_CRASH("IPC FatalError in the parent process!");
@@ -311,7 +312,9 @@ LogicError(const char* aMsg)
 void
 ActorIdReadError(const char* aActorDescription)
 {
+#ifndef FUZZING
   MOZ_CRASH_UNSAFE_PRINTF("Error deserializing id for %s", aActorDescription);
+#endif
 }
 
 void
@@ -355,15 +358,15 @@ SentinelReadError(const char* aClassName)
 }
 
 bool
-StateTransition(bool aIsDelete, State* aNext)
+StateTransition(bool aIsDelete, LivenessState* aNext)
 {
   switch (*aNext) {
-    case State::Null:
+    case LivenessState::Null:
       if (aIsDelete) {
-        *aNext = State::Dead;
+        *aNext = LivenessState::Dead;
       }
       break;
-    case State::Dead:
+    case LivenessState::Dead:
       return false;
     default:
       return false;
@@ -374,19 +377,19 @@ StateTransition(bool aIsDelete, State* aNext)
 bool
 ReEntrantDeleteStateTransition(bool aIsDelete,
                                bool aIsDeleteReply,
-                               ReEntrantDeleteState* aNext)
+                               ReEntrantDeleteLivenessState* aNext)
 {
   switch (*aNext) {
-    case ReEntrantDeleteState::Null:
+    case ReEntrantDeleteLivenessState::Null:
       if (aIsDelete) {
-        *aNext = ReEntrantDeleteState::Dying;
+        *aNext = ReEntrantDeleteLivenessState::Dying;
       }
       break;
-    case ReEntrantDeleteState::Dead:
+    case ReEntrantDeleteLivenessState::Dead:
       return false;
-    case ReEntrantDeleteState::Dying:
+    case ReEntrantDeleteLivenessState::Dying:
       if (aIsDeleteReply) {
-        *aNext = ReEntrantDeleteState::Dead;
+        *aNext = ReEntrantDeleteLivenessState::Dead;
       }
       break;
     default:
@@ -669,17 +672,21 @@ IProtocol::ManagedState::GetActorEventTarget(IProtocol* aActor)
   return mProtocol->Manager()->GetActorEventTarget(aActor);
 }
 
-IToplevelProtocol::IToplevelProtocol(const char* aName, ProtocolId aProtoId, Side aSide)
- : IProtocol(aSide, MakeUnique<ToplevelState>(aName, this, aSide)),
-   mMonitor("mozilla.ipc.IToplevelProtocol.mMonitor"),
-   mProtocolId(aProtoId),
-   mOtherPid(mozilla::ipc::kInvalidProcessId),
-   mOtherPidState(ProcessIdState::eUnstarted)
+IToplevelProtocol::IToplevelProtocol(const char* aName,
+                                     ProtocolId aProtoId,
+                                     Side aSide)
+  : IProtocol(aSide, MakeUnique<ToplevelState>(aName, this, aSide))
+  , mMonitor("mozilla.ipc.IToplevelProtocol.mMonitor")
+  , mProtocolId(aProtoId)
+  , mOtherPid(mozilla::ipc::kInvalidProcessId)
+  , mOtherPidState(ProcessIdState::eUnstarted)
+  , mIsMainThreadProtocol(false)
 {
 }
 
 IToplevelProtocol::~IToplevelProtocol()
 {
+  mState = nullptr;
   if (mTrans) {
     RefPtr<DeleteTask<Transport>> task = new DeleteTask<Transport>(mTrans.release());
     XRE_GetIOMessageLoop()->PostTask(task.forget());
@@ -718,7 +725,15 @@ IToplevelProtocol::SetOtherProcessId(base::ProcessId aOtherPid,
                                      ProcessIdState aState)
 {
   MonitorAutoLock lock(mMonitor);
-  mOtherPid = aOtherPid;
+  // When recording an execution, all communication we do is forwarded from
+  // the middleman to the parent process, so use its pid instead of the
+  // middleman's pid.
+  if (recordreplay::IsRecordingOrReplaying() &&
+      aOtherPid == recordreplay::child::MiddlemanProcessId()) {
+    mOtherPid = recordreplay::child::ParentProcessId();
+  } else {
+    mOtherPid = aOtherPid;
+  }
   mOtherPidState = aState;
   lock.NotifyAll();
 }
@@ -1061,13 +1076,13 @@ IToplevelProtocol::ToplevelState::ReplaceEventTargetForActor(
 const MessageChannel*
 IToplevelProtocol::ToplevelState::GetIPCChannel() const
 {
-  return &mChannel;
+  return ProtocolState::mChannel ? ProtocolState::mChannel : &mChannel;
 }
 
 MessageChannel*
 IToplevelProtocol::ToplevelState::GetIPCChannel()
 {
-  return &mChannel;
+  return ProtocolState::mChannel ? ProtocolState::mChannel : &mChannel;
 }
 
 } // namespace ipc

@@ -29,14 +29,10 @@ namespace wasm {
 struct ScriptedCaller
 {
     UniqueChars filename;
+    bool filenameIsURL;
     unsigned line;
-    unsigned column;
-};
 
-struct ResponseURLs
-{
-    UniqueChars baseURL;
-    UniqueChars sourceMapURL;
+    ScriptedCaller() : filenameIsURL(false), line(0) {}
 };
 
 // Describes all the parameters that control wasm compilation.
@@ -45,7 +41,7 @@ struct CompileArgs : ShareableBase<CompileArgs>
 {
     Assumptions assumptions;
     ScriptedCaller scriptedCaller;
-    ResponseURLs responseURLs;
+    UniqueChars sourceMapURL;
     bool baselineEnabled;
     bool debugEnabled;
     bool ionEnabled;
@@ -54,8 +50,8 @@ struct CompileArgs : ShareableBase<CompileArgs>
     bool testTiering;
 
     CompileArgs(Assumptions&& assumptions, ScriptedCaller&& scriptedCaller)
-      : assumptions(Move(assumptions)),
-        scriptedCaller(Move(scriptedCaller)),
+      : assumptions(std::move(assumptions)),
+        scriptedCaller(std::move(scriptedCaller)),
         baselineEnabled(false),
         debugEnabled(false),
         ionEnabled(false),
@@ -91,10 +87,9 @@ CompileBuffer(const CompileArgs& args,
               UniqueChars* error,
               UniqueCharsVector* warnings);
 
-// Attempt to compile the second tier of the given wasm::Module, returning whether
-// tier-2 compilation succeeded and Module::finishTier2 was called.
+// Attempt to compile the second tier of the given wasm::Module.
 
-bool
+void
 CompileTier2(const CompileArgs& args, Module& module, Atomic<bool>* cancelled);
 
 // Compile the given WebAssembly module which has been broken into three

@@ -10,6 +10,7 @@ const { connect } = require("devtools/client/shared/vendor/react-redux");
 const { getObjectInspector } = require("devtools/client/webconsole/utils/object-inspector");
 const actions = require("devtools/client/webconsole/actions/index");
 const SplitBox = createFactory(require("devtools/client/shared/components/splitter/SplitBox"));
+const { l10n } = require("devtools/client/webconsole/utils/messages");
 
 const reps = require("devtools/client/shared/components/reps/reps");
 const { MODE } = reps;
@@ -48,18 +49,18 @@ class SideBar extends Component {
       return null;
     }
 
-    let {
+    const {
       grip,
       serviceContainer,
     } = this.props;
 
-    let objectInspector = getObjectInspector(grip, serviceContainer, {
+    const objectInspector = getObjectInspector(grip, serviceContainer, {
       autoExpandDepth: 1,
       mode: MODE.SHORT,
       autoFocusRoot: true,
     });
 
-    let endPanel = dom.aside({
+    const endPanel = dom.aside({
       className: "sidebar-wrapper"
     },
       dom.header({
@@ -67,6 +68,7 @@ class SideBar extends Component {
       },
         dom.button({
           className: "devtools-button sidebar-close-button",
+          title: l10n.getStr("webconsole.closeSidebarButton.tooltip"),
           onClick: this.onClickSidebarClose
         })
       ),

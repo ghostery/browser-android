@@ -8,7 +8,7 @@
 #include "ConsoleCommon.h"
 
 #include "mozilla/ClearOnShutdown.h"
-#include "NullPrincipal.h"
+#include "mozilla/NullPrincipal.h"
 
 namespace mozilla {
 namespace dom {
@@ -80,7 +80,7 @@ ConsoleUtils::ReportForServiceWorkerScopeInternal(const nsAString& aScope,
   // We don't need a proxy here.
   global = js::UncheckedUnwrap(global);
 
-  JSAutoCompartment ac(cx, global);
+  JSAutoRealm ar(cx, global);
 
   RootedDictionary<ConsoleEvent> event(cx);
 

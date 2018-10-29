@@ -23,15 +23,21 @@ const TEST_URI = `data:text/html;charset=utf-8,
 <body>bug 585991 - autocomplete popup escape key usage test</body>`;
 
 add_task(async function() {
-  let { jsterm } = await openNewTabAndConsole(TEST_URI);
+  // Run test with legacy JsTerm
+  await pushPref("devtools.webconsole.jsterm.codeMirror", false);
+  await performTests();
+  // And then run it with the CodeMirror-powered one.
+  await pushPref("devtools.webconsole.jsterm.codeMirror", true);
+  await performTests();
+});
+
+async function performTests() {
+  const { jsterm } = await openNewTabAndConsole(TEST_URI);
   info("web console opened");
 
-  const {
-    autocompletePopup: popup,
-    completeNode,
-  } = jsterm;
+  const { autocompletePopup: popup } = jsterm;
 
-  let onPopUpOpen = popup.once("popup-opened");
+  const onPopUpOpen = popup.once("popup-opened");
 
   info("wait for completion: window.foo.");
   jsterm.setInputValue("window.foo");
@@ -50,5 +56,5 @@ add_task(async function() {
 
   ok(!popup.isOpen, "popup is not open after VK_ESCAPE");
   is(jsterm.getInputValue(), "window.foo.", "completion was cancelled");
-  ok(!completeNode.value, "completeNode is empty");
-});
+  ok(!getJsTermCompletionValue(jsterm), "completeNode is empty");
+}

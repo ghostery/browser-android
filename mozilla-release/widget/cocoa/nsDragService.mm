@@ -19,7 +19,7 @@
 #include "nsPrimitiveHelpers.h"
 #include "nsLinebreakConverter.h"
 #include "nsIMacUtils.h"
-#include "nsIDOMNode.h"
+#include "nsINode.h"
 #include "nsRect.h"
 #include "nsPoint.h"
 #include "nsIIOService.h"
@@ -65,8 +65,8 @@ nsDragService::~nsDragService()
 }
 
 NSImage*
-nsDragService::ConstructDragImage(nsIDOMNode* aDOMNode,
-                                  nsIScriptableRegion* aRegion,
+nsDragService::ConstructDragImage(nsINode* aDOMNode,
+                                  const Maybe<CSSIntRegion>& aRegion,
                                   NSPoint* aDragPoint)
 {
   NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NIL;
@@ -107,8 +107,8 @@ nsDragService::ConstructDragImage(nsIDOMNode* aDOMNode,
 }
 
 NSImage*
-nsDragService::ConstructDragImage(nsIDOMNode* aDOMNode,
-                                  nsIScriptableRegion* aRegion,
+nsDragService::ConstructDragImage(nsINode* aDOMNode,
+                                  const Maybe<CSSIntRegion>& aRegion,
                                   CSSIntPoint aPoint,
                                   LayoutDeviceIntRect* aDragRect)
  {
@@ -284,7 +284,7 @@ nsDragService::GetFilePath(NSPasteboardItem* item)
 
 nsresult
 nsDragService::InvokeDragSessionImpl(nsIArray* aTransferableArray,
-                                     nsIScriptableRegion* aDragRgn,
+                                     const Maybe<CSSIntRegion>& aRegion,
                                      uint32_t aActionType)
 {
   NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NSRESULT;
@@ -326,6 +326,9 @@ nsDragService::InvokeDragSessionImpl(nsIArray* aTransferableArray,
         return NS_ERROR_FAILURE;
       }
 
+      // Assign a principal:
+      currentTransferable->SetRequestingPrincipal(mSourceNode->NodePrincipal());
+
       // Transform the transferable to an NSDictionary
       NSDictionary* pasteboardOutputDict =
         nsClipboard::PasteboardDictFromTransferable(currentTransferable);
@@ -344,7 +347,7 @@ nsDragService::InvokeDragSessionImpl(nsIArray* aTransferableArray,
   [pbItem setDataProvider:mNativeDragView forTypes:types];
 
   NSPoint draggingPoint;
-  NSImage* image = ConstructDragImage(mSourceNode, aDragRgn, &draggingPoint);
+  NSImage* image = ConstructDragImage(mSourceNode, aRegion, &draggingPoint);
 
   NSRect localDragRect = image.alignmentRect;
   localDragRect.origin.x = draggingPoint.x;
@@ -665,7 +668,7 @@ nsDragService::GetNumDropItems(uint32_t* aNumItems)
 }
 
 NS_IMETHODIMP
-nsDragService::UpdateDragImage(nsIDOMNode* aImage, int32_t aImageX, int32_t aImageY)
+nsDragService::UpdateDragImage(nsINode* aImage, int32_t aImageX, int32_t aImageY)
 {
   nsBaseDragService::UpdateDragImage(aImage, aImageX, aImageY);
   mDragImageChanged = true;
@@ -712,7 +715,7 @@ nsDragService::DragMovedWithView(NSDraggingSession* aSession, NSPoint aPoint)
 
         // Create a new image; if one isn't returned don't change the current one.
         LayoutDeviceIntRect newRect;
-        NSImage* image = ConstructDragImage(mSourceNode, nullptr, screenPoint, &newRect);
+        NSImage* image = ConstructDragImage(mSourceNode, Nothing(), screenPoint, &newRect);
         if (image) {
           NSRect draggingRect = nsCocoaUtils::GeckoRectToCocoaRectDevPix(newRect, scaleFactor);
           [draggingItem setDraggingFrame:draggingRect contents:image];

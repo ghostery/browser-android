@@ -8,7 +8,11 @@
 <!ENTITY loadError.label "페이지 읽기 오류">
 <!ENTITY retry.label "재시도">
 <!ENTITY returnToPreviousPage.label "뒤로">
+<!ENTITY returnToPreviousPage1.label "뒤로(권장)">
 <!ENTITY advanced.label "고급">
+
+<!ENTITY continue2.label "더보기…">
+<!ENTITY moreInformation.label "상세 정보">
 
 <!-- Specific error messages -->
 
@@ -146,10 +150,31 @@
 ">
 
 <!ENTITY certerror.longpagetitle1 "연결이 안전하지 않음">
-<!-- Localization note (certerror.introPara) - The text content of the span tag
+<!ENTITY certerror.longpagetitle2 "경고: 보안 위험 가능성">
+<!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "<span class='hostname'/>의 소유자가 웹사이트를 적절히 설정하지 않았습니다. 정보가 도난당하는 것을 막기 위해서 &brandShortName;가 웹사이트에 연결하지 않았습니다.">
+
+<!ENTITY certerror.introPara2 "&brandShortName;가 잠재적인 보안 위협을 감지하고 <span class='hostname'/>로 진행하지 않았습니다. 사이트를 방문하면 공격자가 비밀번호나 이메일, 신용카드와 같은 정보를 탈취할 수 있습니다.">
+
+<!ENTITY certerror.expiredCert.secondPara "많은 경우에 컴퓨터의 시각이 잘 못 설정되어 있어서 &brandShortName;가 보안 연결을 하지 못해서 이런 현상이 생깁니다.">
+
+<!ENTITY certerror.whatCanYouDoAboutItTitle "어떠한 처리를 해야 하나요?">
+
+<!ENTITY certerror.unknownIssuer.whatCanYouDoAboutIt "
+<p>이러한 문제는 대부분 웹사이트와 관련이 있고 사용자가 할 수 있는 일은 없습니다.</p>
+<p>회사 네트워크를 사용하고 있고 바이러스 백신 프로그램을 사용하고 있다면 지원부서에 지원을 요청할 수 있습니다. 웹사이트의 관리자에게 문제에 대해 알려줄 수 있습니다.</p>
+">
+
+<!ENTITY certerror.expiredCert.whatCanYouDoAboutIt2 "
+<p>컴퓨터의 시계가 <span id='wrongSystemTime_systemDate2'/>로 설정되어 있습니다. 컴퓨터 설정에서 현재의 날짜와 시각, 시간대로 되어있는지 확인하고 <span class='hostname'/> 사이트를 새로고침 하세요.</p>
+<p>시계가 맞게 설정되어 있다면 웹사이트의 설정이 잘 못 되었을 수 있고 이 경우 사용자가 할 수 있는 일은 없습니다. 웹사이트의 관리자에게 문제에 대해 알려줄 수 있습니다.</p>
+">
+
+<!ENTITY certerror.badCertDomain.whatCanYouDoAboutIt "
+<p>이러한 문제는 대부분 웹사이트와 관련이 있고 사용자가 할 수 있는 일은 없습니다. 웹사이트의 관리자에게 문제에 대해 알려줄 수 있습니다.</p>
+">
 
 <!ENTITY sharedLongDesc "
 <ul>
@@ -171,6 +196,8 @@ was trying to connect. -->
 
 <!ENTITY securityOverride.exceptionButtonLabel "예외 추가…">
 
+<!ENTITY securityOverride.exceptionButton1Label "위험을 감수하고 계속">
+
 <!ENTITY errorReporting.automatic2 "오류 보고서를 보내면 멜웨어 사이트를 차단하거나 그 오류를 분석하는데 도움이 됩니다.">
 <!ENTITY errorReporting.learnMore "더 알아보기…">
 
@@ -189,9 +216,11 @@ was trying to connect. -->
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>사용자 컴퓨터의 시계가 맞지 않기 때문에 보안 연결을 할 수 없어서 &brandShortName;가 <span id='wrongSystemTimeWithoutReference_URL'/>에 연결하지 않았습니다.</p> <p><span id='wrongSystemTimeWithoutReference_systemDate'/>로 설정되어 있습니다. 올바른 날짜와 시간을 설정해 주세요.</p>">
 
 <!ENTITY certerror.pagetitle1  "안전하지 않은 연결">
+<!ENTITY certerror.pagetitle2  "경고: 보안 위험 가능성">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "이 사이트는 &brandShortName;가 안전한 경우에만 
 연결함을 명시하기 위해서 HTTP Strict Transport Security (HSTS)를 사용합니다.
 그래서 이 인증서에 예외를 추가할 수 없습니다.">
+<!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "<span class='hostname'></span> 사이트는 HTTP Strict Transport Security (HSTS)라는 보안 정책을 가지고 있어서 &brandShortName;가 보안 접속만 할 수 있습니다. 사이트 방문을 위해서 예외를 설정할 수 없습니다.">
 <!ENTITY certerror.copyToClipboard.label "클립보드에 텍스트 복사">
 
 <!ENTITY inadequateSecurityError.title "연결이 안전하지 않음">
@@ -200,6 +229,9 @@ was trying to connect. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span>이 오래되어서 공격에 안전하지 않은 보안 기술을 사용하고 있습니다. 사용자가 안전하다고 여길 수 있는 정보를 공격자가 쉽게 탈취할 수 있습니다. 사용자가 사이트에 방문하기 위해서는 웹사이트 관리자가 서버를 고쳐야 합니다.</p><p>오류 코드: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "차단된 페이지">
+
+<!ENTITY clockSkewError.title "컴퓨터의 시각이 올바르지 않음">
+<!ENTITY clockSkewError.longDesc "컴퓨터 시각이 <span id='wrongSystemTime_systemDate1'/>으로 되어 있어서 &brandShortName;가 안전하게 연결을 할 수 없습니다. <span class='hostname'></span> 방문을 위해서 컴퓨터의 시각을 현재 날짜, 시각, 시간대로 맞추고 <span class='hostname'></span> 사이트를 새로고침해 주세요.">
 
 <!ENTITY prefReset.longDesc "네트워크 보안 설정 때문에 이러한 현상이 발생한 것으로 보입니다. 기본 설정으로 되돌리겠습니까?">
 <!ENTITY prefReset.label "기본 설정으로 되돌리기">

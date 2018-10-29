@@ -115,7 +115,7 @@ public:
       nsString(aServiceWorkerRegistrationScope),
     };
 
-    mStrings.AppendElement(Move(strings));
+    mStrings.AppendElement(std::move(strings));
     return NS_OK;
   }
 
@@ -424,6 +424,13 @@ public:
   {
     mNotification->ReleaseObject();
   }
+
+  nsresult
+  Cancel() override
+  {
+    mNotification->ReleaseObject();
+    return NS_OK;
+  }
 };
 
 // Create one whenever you require ownership of the notification. Use with
@@ -517,7 +524,7 @@ public:
   NotificationTask(const char* aName, UniquePtr<NotificationRef> aRef,
                    NotificationAction aAction)
     : Runnable(aName)
-    , mNotificationRef(Move(aRef)), mAction(aAction)
+    , mNotificationRef(std::move(aRef)), mAction(aAction)
   {}
 
   NS_IMETHOD
@@ -856,7 +863,7 @@ public:
   NS_DECL_NSIOBSERVER
 
   explicit MainThreadNotificationObserver(UniquePtr<NotificationRef> aRef)
-    : mNotificationRef(Move(aRef))
+    : mNotificationRef(std::move(aRef))
   {
     AssertIsOnMainThread();
   }
@@ -923,21 +930,14 @@ Notification::Notification(nsIGlobalObject* aGlobal, const nsAString& aID,
                            const nsAString& aTag, const nsAString& aIconUrl,
                            bool aRequireInteraction,
                            const NotificationBehavior& aBehavior)
-  : DOMEventTargetHelper(),
+  : DOMEventTargetHelper(aGlobal),
     mWorkerPrivate(nullptr), mObserver(nullptr),
     mID(aID), mTitle(aTitle), mBody(aBody), mDir(aDir), mLang(aLang),
     mTag(aTag), mIconUrl(aIconUrl), mRequireInteraction(aRequireInteraction),
     mBehavior(aBehavior), mData(JS::NullValue()),
     mIsClosed(false), mIsStored(false), mTaskCount(0)
 {
-  if (NS_IsMainThread()) {
-    // We can only call this on the main thread because
-    // Event::SetEventType() called down the call chain when dispatching events
-    // using DOMEventTargetHelper::DispatchTrustedEvent() will assume the event
-    // is a main thread event if it has a valid owner. It will then attempt to
-    // fetch the atom for the event name which asserts main thread only.
-    BindToOwner(aGlobal);
-  } else {
+  if (!NS_IsMainThread()) {
     mWorkerPrivate = GetCurrentThreadWorkerPrivate();
     MOZ_ASSERT(mWorkerPrivate);
   }
@@ -1207,7 +1207,7 @@ public:
   NS_DECL_NSIOBSERVER
 
   explicit WorkerNotificationObserver(UniquePtr<NotificationRef> aRef)
-    : MainThreadNotificationObserver(Move(aRef))
+    : MainThreadNotificationObserver(std::move(aRef))
   {
     AssertIsOnMainThread();
     MOZ_ASSERT(mNotificationRef->GetNotification()->mWorkerPrivate);
@@ -1678,10 +1678,10 @@ Notification::ShowInternal()
       MOZ_ASSERT(!mWorkerPrivate->IsServiceWorker());
       // Keep a pointer so that the feature can tell the observer not to release
       // the notification.
-      mObserver = new WorkerNotificationObserver(Move(ownership));
+      mObserver = new WorkerNotificationObserver(std::move(ownership));
       observer = mObserver;
     } else {
-      observer = new MainThreadNotificationObserver(Move(ownership));
+      observer = new MainThreadNotificationObserver(std::move(ownership));
     }
   } else {
     isPersistent = true;
@@ -1826,7 +1826,7 @@ Notification::GetPermission(nsIGlobalObject* aGlobal, ErrorResult& aRv)
     MOZ_ASSERT(worker);
     RefPtr<GetPermissionRunnable> r =
       new GetPermissionRunnable(worker);
-    r->Dispatch(Terminating, aRv);
+    r->Dispatch(Canceling, aRv);
     if (aRv.Failed()) {
       return NotificationPermission::Denied;
     }
@@ -2030,7 +2030,7 @@ public:
                           const nsTArray<NotificationStrings>&& aStrings)
     : NotificationWorkerRunnable(aWorkerPrivate)
     , mPromiseProxy(aPromiseProxy)
-    , mStrings(Move(aStrings))
+    , mStrings(std::move(aStrings))
   {
   }
 
@@ -2096,7 +2096,7 @@ public:
     RefPtr<WorkerGetResultRunnable> r =
       new WorkerGetResultRunnable(proxy->GetWorkerPrivate(),
                                   proxy,
-                                  Move(mStrings));
+                                  std::move(mStrings));
 
     r->Dispatch();
     return NS_OK;
@@ -2198,7 +2198,7 @@ Notification::WorkerGet(WorkerPrivate* aWorkerPrivate,
 JSObject*
 Notification::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return mozilla::dom::NotificationBinding::Wrap(aCx, this, aGivenProto);
+  return mozilla::dom::Notification_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 void
@@ -2211,7 +2211,7 @@ Notification::Close()
   }
 
   nsCOMPtr<nsIRunnable> closeNotificationTask =
-    new NotificationTask("Notification::Close", Move(ref),
+    new NotificationTask("Notification::Close", std::move(ref),
                          NotificationTask::eClose);
   nsresult rv = DispatchToMainThread(closeNotificationTask.forget());
 
@@ -2582,7 +2582,7 @@ Notification::ShowPersistentNotification(JSContext* aCx,
     worker->AssertIsOnWorkerThread();
     RefPtr<CheckLoadRunnable> loadChecker =
       new CheckLoadRunnable(worker, NS_ConvertUTF16toUTF8(aScope));
-    loadChecker->Dispatch(Terminating, aRv);
+    loadChecker->Dispatch(Canceling, aRv);
     if (aRv.Failed()) {
       return nullptr;
     }
@@ -2659,7 +2659,7 @@ Notification::CreateAndShow(JSContext* aCx,
 
   // Queue a task to show the notification.
   nsCOMPtr<nsIRunnable> showNotificationTask =
-    new NotificationTask("Notification::CreateAndShow", Move(ref),
+    new NotificationTask("Notification::CreateAndShow", std::move(ref),
                          NotificationTask::eShow);
 
   nsresult rv =
@@ -2727,17 +2727,17 @@ nsresult
 Notification::DispatchToMainThread(already_AddRefed<nsIRunnable>&& aRunnable)
 {
   if (mWorkerPrivate) {
-    return mWorkerPrivate->DispatchToMainThread(Move(aRunnable));
+    return mWorkerPrivate->DispatchToMainThread(std::move(aRunnable));
   }
   AssertIsOnMainThread();
   if (nsCOMPtr<nsIGlobalObject> global = GetOwnerGlobal()) {
     if (nsIEventTarget* target = global->EventTargetFor(TaskCategory::Other)) {
-      return target->Dispatch(Move(aRunnable), nsIEventTarget::DISPATCH_NORMAL);
+      return target->Dispatch(std::move(aRunnable), nsIEventTarget::DISPATCH_NORMAL);
     }
   }
   nsCOMPtr<nsIEventTarget> mainTarget = GetMainThreadEventTarget();
   MOZ_ASSERT(mainTarget);
-  return mainTarget->Dispatch(Move(aRunnable), nsIEventTarget::DISPATCH_NORMAL);
+  return mainTarget->Dispatch(std::move(aRunnable), nsIEventTarget::DISPATCH_NORMAL);
 }
 
 } // namespace dom

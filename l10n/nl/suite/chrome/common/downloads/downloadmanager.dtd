@@ -88,3 +88,8 @@
 <!ENTITY cmd.copyDownloadLink.accesskey  "k">
 <!ENTITY cmd.properties.label            "Eigenschappen…">
 <!ENTITY cmd.properties.accesskey        "E">
+<!-- LOCALIZATION NOTE (cmd.unblock2.label):
+     This command is shown in the context menu when downloads are blocked.
+     -->
+<!ENTITY cmd.unblock2.label               "Download toestaan">
+<!ENTITY cmd.unblock2.accesskey           "o">

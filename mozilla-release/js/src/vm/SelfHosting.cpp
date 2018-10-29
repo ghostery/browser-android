@@ -29,7 +29,6 @@
 #include "builtin/Reflect.h"
 #include "builtin/RegExp.h"
 #include "builtin/SelfHostingDefines.h"
-#include "builtin/SIMD.h"
 #include "builtin/Stream.h"
 #include "builtin/String.h"
 #include "builtin/TypedObject.h"
@@ -39,8 +38,11 @@
 #include "gc/Policy.h"
 #include "jit/AtomicOperations.h"
 #include "jit/InlinableNatives.h"
+#include "js/AutoByteString.h"
 #include "js/CharacterEncoding.h"
+#include "js/CompilationAndEvaluation.h"
 #include "js/Date.h"
+#include "js/StableStringChars.h"
 #include "js/Wrapper.h"
 #include "util/StringBuffer.h"
 #include "vm/ArgumentsObject.h"
@@ -48,10 +50,10 @@
 #include "vm/GeneratorObject.h"
 #include "vm/Interpreter.h"
 #include "vm/Iteration.h"
-#include "vm/JSCompartment.h"
 #include "vm/JSContext.h"
 #include "vm/JSFunction.h"
 #include "vm/Printer.h"
+#include "vm/Realm.h"
 #include "vm/RegExpObject.h"
 #include "vm/StringType.h"
 #include "vm/TypedArrayObject.h"
@@ -71,6 +73,8 @@ using namespace js;
 using namespace js::selfhosted;
 
 using JS::AutoCheckCannotGC;
+using JS::AutoStableStringChars;
+using JS::CompileOptions;
 using mozilla::IsInRange;
 using mozilla::Maybe;
 
@@ -123,11 +127,11 @@ intrinsic_IsArray(JSContext* cx, unsigned argc, Value* vp)
 }
 
 static bool
-intrinsic_IsWrappedArrayConstructor(JSContext* cx, unsigned argc, Value* vp)
+intrinsic_IsCrossRealmArrayConstructor(JSContext* cx, unsigned argc, Value* vp)
 {
     CallArgs args = CallArgsFromVp(argc, vp);
     bool result = false;
-    if (!IsWrappedArrayConstructor(cx, args[0], &result))
+    if (!IsCrossRealmArrayConstructor(cx, args[0], &result))
         return false;
     args.rval().setBoolean(result);
     return true;
@@ -303,7 +307,7 @@ ThrowErrorWithType(JSContext* cx, JSExnType type, const CallArgs& args)
             UniqueChars bytes = DecompileValueGenerator(cx, JSDVG_SEARCH_STACK, val, nullptr);
             if (!bytes)
                 return;
-            errorArgs[i - 1].initBytes(Move(bytes));
+            errorArgs[i - 1].initBytes(std::move(bytes));
         }
         if (!errorArgs[i - 1])
             return;
@@ -524,14 +528,14 @@ intrinsic_DecompileArg(JSContext* cx, unsigned argc, Value* vp)
     CallArgs args = CallArgsFromVp(argc, vp);
     MOZ_ASSERT(args.length() == 2);
 
-    RootedValue value(cx, args[1]);
-    ScopedJSFreePtr<char> str(DecompileArgument(cx, args[0].toInt32(), value));
+    HandleValue value = args[1];
+    UniqueChars str = DecompileArgument(cx, args[0].toInt32(), value);
     if (!str)
         return false;
-    JSAtom* atom = Atomize(cx, str, strlen(str));
-    if (!atom)
+    JSString* result = NewStringCopyZ<CanGC>(cx, str.get());
+    if (!result)
         return false;
-    args.rval().setString(atom);
+    args.rval().setString(result);
     return true;
 }
 
@@ -650,7 +654,7 @@ intrinsic_DefineProperty(JSContext* cx, unsigned argc, Value* vp)
     if (strict && !result.checkStrict(cx, obj, id))
         return false;
 
-    args.rval().setBoolean(bool(result));
+    args.rval().setBoolean(result.reallyOk());
     return true;
 }
 
@@ -1557,6 +1561,7 @@ intrinsic_SetOverlappingTypedElements(JSContext* cx, unsigned argc, Value* vp)
     MOZ_ASSERT(args.length() == 3);
 
     Rooted<TypedArrayObject*> target(cx, &args[0].toObject().as<TypedArrayObject>());
+    cx->check(target);
     MOZ_ASSERT(!target->hasDetachedBuffer(),
                "shouldn't set elements if underlying buffer is detached");
 
@@ -1578,7 +1583,7 @@ intrinsic_SetOverlappingTypedElements(JSContext* cx, unsigned argc, Value* vp)
     Scalar::Type unsafeSrcTypeCrossCompartment = unsafeSrcCrossCompartment->type();
     size_t sourceByteLen = count * TypedArrayElemSize(unsafeSrcTypeCrossCompartment);
 
-    auto copyOfSrcData = target->zone()->make_pod_array<uint8_t>(sourceByteLen);
+    auto copyOfSrcData = cx->make_pod_array<uint8_t>(sourceByteLen);
     if (!copyOfSrcData)
         return false;
 
@@ -1764,7 +1769,7 @@ js::intrinsic_StringSplitString(JSContext* cx, unsigned argc, Value* vp)
     RootedString string(cx, args[0].toString());
     RootedString sep(cx, args[1].toString());
 
-    RootedObjectGroup group(cx, ObjectGroupCompartment::getStringSplitStringGroup(cx));
+    RootedObjectGroup group(cx, ObjectGroupRealm::getStringSplitStringGroup(cx));
     if (!group)
         return false;
 
@@ -1790,7 +1795,7 @@ intrinsic_StringSplitStringLimit(JSContext* cx, unsigned argc, Value* vp)
     uint32_t limit = uint32_t(args[2].toNumber());
     MOZ_ASSERT(limit > 0, "Zero limit case is already handled in self-hosted code.");
 
-    RootedObjectGroup group(cx, ObjectGroupCompartment::getStringSplitStringGroup(cx));
+    RootedObjectGroup group(cx, ObjectGroupRealm::getStringSplitStringGroup(cx));
     if (!group)
         return false;
 
@@ -1813,12 +1818,6 @@ CallSelfHostedNonGenericMethod(JSContext* cx, const CallArgs& args)
     MOZ_ASSERT(args.length() > 0);
     RootedPropertyName name(cx, args[args.length() - 1].toString()->asAtom().asPropertyName());
 
-    RootedValue selfHostedFun(cx);
-    if (!GlobalObject::getIntrinsicValue(cx, cx->global(), name, &selfHostedFun))
-        return false;
-
-    MOZ_ASSERT(selfHostedFun.toObject().is<JSFunction>());
-
     InvokeArgs args2(cx);
     if (!args2.init(cx, args.length() - 1))
         return false;
@@ -1826,19 +1825,21 @@ CallSelfHostedNonGenericMethod(JSContext* cx, const CallArgs& args)
     for (size_t i = 0; i < args.length() - 1; i++)
         args2[i].set(args[i]);
 
-    return js::Call(cx, selfHostedFun, args.thisv(), args2, args.rval());
+    return CallSelfHostedFunction(cx, name, args.thisv(), args2, args.rval());
 }
 
+#ifdef DEBUG
 bool
 js::CallSelfHostedFunction(JSContext* cx, const char* name, HandleValue thisv,
                            const AnyInvokeArgs& args, MutableHandleValue rval)
 {
-    RootedAtom funAtom(cx, Atomize(cx, name, strlen(name)));
+    JSAtom* funAtom = Atomize(cx, name, strlen(name));
     if (!funAtom)
         return false;
     RootedPropertyName funName(cx, funAtom->asPropertyName());
     return CallSelfHostedFunction(cx, funName, thisv, args, rval);
 }
+#endif
 
 bool
 js::CallSelfHostedFunction(JSContext* cx, HandlePropertyName name, HandleValue thisv,
@@ -1925,7 +1926,7 @@ intrinsic_RuntimeDefaultLocale(JSContext* cx, unsigned argc, Value* vp)
         return false;
     }
 
-    JSString* jslocale = JS_NewStringCopyZ(cx, locale);
+    JSString* jslocale = NewStringCopyZ<CanGC>(cx, locale);
     if (!jslocale)
         return false;
 
@@ -1999,7 +2000,7 @@ intrinsic_AddContentTelemetry(JSContext* cx, unsigned argc, Value* vp)
     MOZ_ASSERT(id < JS_TELEMETRY_END);
     MOZ_ASSERT(id >= 0);
 
-    if (!cx->compartment()->isProbablySystemCode())
+    if (!cx->realm()->isProbablySystemCode())
         cx->runtime()->addTelemetry(id, args[1].toInt32());
 
     args.rval().setUndefined();
@@ -2018,7 +2019,7 @@ intrinsic_WarnDeprecatedStringMethod(JSContext* cx, unsigned argc, Value* vp)
     MOZ_ASSERT(id < STRING_GENERICS_METHODS_LIMIT);
 
     uint32_t mask = (1 << id);
-    if (!(cx->compartment()->warnedAboutStringGenericsMethods & mask)) {
+    if (!(cx->realm()->warnedAboutStringGenericsMethods & mask)) {
         JSFlatString* name = args[1].toString()->ensureFlat(cx);
         if (!name)
             return false;
@@ -2033,7 +2034,7 @@ intrinsic_WarnDeprecatedStringMethod(JSContext* cx, unsigned argc, Value* vp)
         {
             return false;
         }
-        cx->compartment()->warnedAboutStringGenericsMethods |= mask;
+        cx->realm()->warnedAboutStringGenericsMethods |= mask;
     }
 
     args.rval().setUndefined();
@@ -2146,25 +2147,27 @@ intrinsic_HostResolveImportedModule(JSContext* cx, unsigned argc, Value* vp)
 {
     CallArgs args = CallArgsFromVp(argc, vp);
     MOZ_ASSERT(args.length() == 2);
-    MOZ_ASSERT(args[0].toObject().is<ModuleObject>());
-    MOZ_ASSERT(args[1].isString());
+    RootedModuleObject module(cx, &args[0].toObject().as<ModuleObject>());
+    RootedString specifier(cx, args[1].toString());
 
-    RootedFunction moduleResolveHook(cx, cx->global()->moduleResolveHook());
+    JS::ModuleResolveHook moduleResolveHook = cx->runtime()->moduleResolveHook;
     if (!moduleResolveHook) {
         JS_ReportErrorASCII(cx, "Module resolve hook not set");
         return false;
     }
 
-    RootedValue result(cx);
-    if (!JS_CallFunction(cx, nullptr, moduleResolveHook, args, &result))
+    RootedScript script(cx, module->script());
+    RootedScript result(cx);
+    result = moduleResolveHook(cx, script, specifier);
+    if (!result)
         return false;
 
-    if (!result.isObject() || !result.toObject().is<ModuleObject>()) {
-        JS_ReportErrorASCII(cx, "Module resolve hook did not return Module object");
+    if (!result->module()) {
+        JS_ReportErrorASCII(cx, "Module resolve hook did not return a module script");
         return false;
     }
 
-    args.rval().set(result);
+    args.rval().setObject(*result->module());
     return true;
 }
 
@@ -2406,25 +2409,12 @@ static const JSFunctionSpec intrinsic_functions[] = {
 
     JS_FN("std_TypedArray_buffer",               js::TypedArray_bufferGetter,  1,0),
 
-    JS_FN("std_SIMD_Int8x16_extractLane",        simd_int8x16_extractLane,     2,0),
-    JS_FN("std_SIMD_Int16x8_extractLane",        simd_int16x8_extractLane,     2,0),
-    JS_INLINABLE_FN("std_SIMD_Int32x4_extractLane",   simd_int32x4_extractLane,  2,0, SimdInt32x4_extractLane),
-    JS_FN("std_SIMD_Uint8x16_extractLane",       simd_uint8x16_extractLane,    2,0),
-    JS_FN("std_SIMD_Uint16x8_extractLane",       simd_uint16x8_extractLane,    2,0),
-    JS_FN("std_SIMD_Uint32x4_extractLane",       simd_uint32x4_extractLane,    2,0),
-    JS_INLINABLE_FN("std_SIMD_Float32x4_extractLane", simd_float32x4_extractLane,2,0, SimdFloat32x4_extractLane),
-    JS_FN("std_SIMD_Float64x2_extractLane",      simd_float64x2_extractLane,   2,0),
-    JS_FN("std_SIMD_Bool8x16_extractLane",       simd_bool8x16_extractLane,    2,0),
-    JS_FN("std_SIMD_Bool16x8_extractLane",       simd_bool16x8_extractLane,    2,0),
-    JS_FN("std_SIMD_Bool32x4_extractLane",       simd_bool32x4_extractLane,    2,0),
-    JS_FN("std_SIMD_Bool64x2_extractLane",       simd_bool64x2_extractLane,    2,0),
-
     // Helper funtions after this point.
     JS_INLINABLE_FN("ToObject",      intrinsic_ToObject,                1,0, IntrinsicToObject),
     JS_INLINABLE_FN("IsObject",      intrinsic_IsObject,                1,0, IntrinsicIsObject),
     JS_INLINABLE_FN("IsArray",       intrinsic_IsArray,                 1,0, ArrayIsArray),
-    JS_INLINABLE_FN("IsWrappedArrayConstructor", intrinsic_IsWrappedArrayConstructor, 1,0,
-                    IntrinsicIsWrappedArrayConstructor),
+    JS_INLINABLE_FN("IsCrossRealmArrayConstructor", intrinsic_IsCrossRealmArrayConstructor, 1,0,
+                    IntrinsicIsCrossRealmArrayConstructor),
     JS_INLINABLE_FN("ToInteger",     intrinsic_ToInteger,               1,0, IntrinsicToInteger),
     JS_INLINABLE_FN("ToString",      intrinsic_ToString,                1,0, IntrinsicToString),
     JS_FN("ToSource",                intrinsic_ToSource,                1,0),
@@ -2455,6 +2445,7 @@ static const JSFunctionSpec intrinsic_functions[] = {
     JS_FN("_DefineDataProperty",     intrinsic_DefineDataProperty,      4,0),
     JS_FN("_DefineProperty",         intrinsic_DefineProperty,          6,0),
     JS_FN("CopyDataPropertiesOrGetOwnKeys", intrinsic_CopyDataPropertiesOrGetOwnKeys, 3,0),
+    JS_INLINABLE_FN("SameValue",     js::obj_is,                        2,0, ObjectIs),
 
     JS_INLINABLE_FN("_IsConstructing", intrinsic_IsConstructing,        0,0,
                     IntrinsicIsConstructing),
@@ -2615,7 +2606,6 @@ static const JSFunctionSpec intrinsic_functions[] = {
     JS_FN("TypedObjectTypeDescr",           js::TypedObjectTypeDescr, 1, 0),
     JS_FN("ClampToUint8",                   js::ClampToUint8, 1, 0),
     JS_FN("GetTypedObjectModule",           js::GetTypedObjectModule, 0, 0),
-    JS_FN("GetSimdTypeDescr",               js::GetSimdTypeDescr, 1, 0),
 
     JS_INLINABLE_FN("ObjectIsTypeDescr"    ,          js::ObjectIsTypeDescr, 1, 0,
                     IntrinsicObjectIsTypeDescr),
@@ -2788,14 +2778,14 @@ GlobalObject*
 JSRuntime::createSelfHostingGlobal(JSContext* cx)
 {
     MOZ_ASSERT(!cx->isExceptionPending());
-    MOZ_ASSERT(!cx->runtime()->isAtomsCompartment(cx->compartment()));
+    MOZ_ASSERT(!cx->realm());
 
-    JS::CompartmentOptions options;
-    options.creationOptions().setNewZone();
+    JS::RealmOptions options;
+    options.creationOptions().setNewCompartmentAndZone();
     options.behaviors().setDiscardSource(true);
 
-    JSCompartment* compartment = NewCompartment(cx, nullptr, options);
-    if (!compartment)
+    Realm* realm = NewRealm(cx, nullptr, options);
+    if (!realm)
         return nullptr;
 
     static const ClassOps shgClassOps = {
@@ -2810,14 +2800,13 @@ JSRuntime::createSelfHostingGlobal(JSContext* cx)
         &shgClassOps
     };
 
-    AutoCompartmentUnchecked ac(cx, compartment);
+    AutoRealmUnchecked ar(cx, realm);
     Rooted<GlobalObject*> shg(cx, GlobalObject::createInternal(cx, &shgClass));
     if (!shg)
         return nullptr;
 
     cx->runtime()->selfHostingGlobal_ = shg;
-    compartment->isSelfHosting = true;
-    compartment->setIsSystem(true);
+    realm->setIsSelfHostingRealm();
 
     if (!GlobalObject::initSelfHostingBuiltins(cx, shg, intrinsic_functions))
         return nullptr;
@@ -2909,8 +2898,8 @@ VerifyGlobalNames(JSContext* cx, Handle<GlobalObject*> shg)
 
     if (nameMissing) {
         RootedValue value(cx, IdToValue(id));
-        return ReportValueErrorFlags(cx, JSREPORT_ERROR, JSMSG_NO_SUCH_SELF_HOSTED_PROP,
-                                     JSDVG_IGNORE_STACK, value, nullptr, nullptr, nullptr);
+        ReportValueError(cx, JSMSG_NO_SUCH_SELF_HOSTED_PROP, JSDVG_IGNORE_STACK, value, nullptr);
+        return false;
     }
 #endif // DEBUG
 
@@ -2937,7 +2926,7 @@ JSRuntime::initSelfHosting(JSContext* cx)
     if (!shg)
         return false;
 
-    JSAutoCompartment ac(cx, shg);
+    JSAutoRealm ar(cx, shg);
 
     /*
      * Set a temporary error reporter printing to stderr because it is too
@@ -2958,14 +2947,14 @@ JSRuntime::initSelfHosting(JSContext* cx)
 
     const unsigned char* compressed = compressedSources;
     uint32_t compressedLen = GetCompressedSize();
-    ScopedJSFreePtr<char> src(selfHostingGlobal_->zone()->pod_malloc<char>(srcLen));
+    auto src = cx->make_pod_array<char>(srcLen);
     if (!src || !DecompressString(compressed, compressedLen,
                                   reinterpret_cast<unsigned char*>(src.get()), srcLen))
     {
         return false;
     }
 
-    if (!Evaluate(cx, options, src, srcLen, &rv))
+    if (!Evaluate(cx, options, src.get(), srcLen, &rv))
         return false;
 
     if (!VerifyGlobalNames(cx, shg))
@@ -2985,12 +2974,6 @@ JSRuntime::traceSelfHostingGlobal(JSTracer* trc)
 {
     if (selfHostingGlobal_ && !parentRuntime)
         TraceRoot(trc, const_cast<NativeObject**>(&selfHostingGlobal_.ref()), "self-hosting global");
-}
-
-bool
-JSRuntime::isSelfHostingCompartment(JSCompartment* comp) const
-{
-    return selfHostingGlobal_->compartment() == comp;
 }
 
 bool
@@ -3141,7 +3124,7 @@ CloneObject(JSContext* cx, HandleNativeObject selfHostedObject)
             Handle<GlobalObject*> global = cx->global();
             Rooted<LexicalEnvironmentObject*> globalLexical(cx, &global->lexicalEnvironment());
             RootedScope emptyGlobalScope(cx, &global->emptyGlobalScope());
-            MOZ_ASSERT(!CanReuseScriptForClone(cx->compartment(), selfHostedFunction, global));
+            MOZ_ASSERT(!CanReuseScriptForClone(cx->realm(), selfHostedFunction, global));
             clone = CloneFunctionAndScript(cx, selfHostedFunction, globalLexical, emptyGlobalScope,
                                            kind);
             // To be able to re-lazify the cloned function, its name in the
@@ -3333,18 +3316,6 @@ JSRuntime::assertSelfHostedFunctionHasCanonicalName(JSContext* cx, HandlePropert
     MOZ_ASSERT(selfHostedFun);
     MOZ_ASSERT(selfHostedFun->getExtendedSlot(HAS_SELFHOSTED_CANONICAL_NAME_SLOT).toBoolean());
 #endif
-}
-
-JSFunction*
-js::SelfHostedFunction(JSContext* cx, HandlePropertyName propName)
-{
-    RootedValue func(cx);
-    if (!GlobalObject::getIntrinsicValue(cx, cx->global(), propName, &func))
-        return nullptr;
-
-    MOZ_ASSERT(func.isObject());
-    MOZ_ASSERT(func.toObject().is<JSFunction>());
-    return &func.toObject().as<JSFunction>();
 }
 
 bool

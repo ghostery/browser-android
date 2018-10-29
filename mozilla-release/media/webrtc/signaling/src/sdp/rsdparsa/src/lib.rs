@@ -1,6 +1,15 @@
 #![cfg_attr(feature="clippy", feature(plugin))]
 
+#[macro_use]
+extern crate log;
+#[cfg(feature="serialize")]
+#[macro_use]
+extern crate serde_derive;
+#[cfg(feature="serialize")]
+extern crate serde;
+
 use std::net::IpAddr;
+use std::str::FromStr;
 use std::fmt;
 
 pub mod attribute_type;
@@ -9,14 +18,17 @@ pub mod media_type;
 pub mod network;
 pub mod unsupported_types;
 
-use attribute_type::{SdpAttribute, parse_attribute};
+use attribute_type::{SdpAttribute, SdpSingleDirection, SdpAttributeType, parse_attribute,
+                     SdpAttributeSimulcastVersion, SdpAttributeRid};
 use error::{SdpParserInternalError, SdpParserError};
-use media_type::{SdpMedia, SdpMediaLine, parse_media, parse_media_vector};
+use media_type::{SdpMedia, SdpMediaLine, parse_media, parse_media_vector, SdpProtocolValue,
+                 SdpMediaValue, SdpFormatList};
 use network::{parse_addrtype, parse_nettype, parse_unicast_addr};
 use unsupported_types::{parse_email, parse_information, parse_key, parse_phone, parse_repeat,
                         parse_uri, parse_zone};
 
 #[derive(Clone)]
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub enum SdpBandwidth {
     As(u32),
     Ct(u32),
@@ -25,6 +37,7 @@ pub enum SdpBandwidth {
 }
 
 #[derive(Clone)]
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub struct SdpConnection {
     pub addr: IpAddr,
     pub ttl: Option<u8>,
@@ -32,6 +45,7 @@ pub struct SdpConnection {
 }
 
 #[derive(Clone)]
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub struct SdpOrigin {
     pub username: String,
     pub session_id: u64,
@@ -51,11 +65,13 @@ impl fmt::Display for SdpOrigin {
 }
 
 #[derive(Clone)]
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub struct SdpTiming {
     pub start: u64,
     pub stop: u64,
 }
 
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub enum SdpType {
     Attribute(SdpAttribute),
     Bandwidth(SdpBandwidth),
@@ -74,11 +90,13 @@ pub enum SdpType {
     Zone(String),
 }
 
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub struct SdpLine {
     pub line_number: usize,
     pub sdp_type: SdpType,
 }
 
+#[cfg_attr(feature="serialize", derive(Serialize))]
 pub struct SdpSession {
     pub version: u64,
     pub origin: SdpOrigin,
@@ -88,6 +106,7 @@ pub struct SdpSession {
     pub timing: Option<SdpTiming>,
     pub attribute: Vec<SdpAttribute>,
     pub media: Vec<SdpMedia>,
+    pub warnings: Vec<SdpParserError>
     // unsupported values:
     // information: Option<String>,
     // uri: Option<String>,
@@ -109,6 +128,7 @@ impl SdpSession {
             timing: None,
             attribute: Vec::new(),
             media: Vec::new(),
+            warnings: Vec::new(),
         }
     }
 
@@ -120,7 +140,7 @@ impl SdpSession {
         &self.origin
     }
 
-    pub fn get_session(&self) -> &String {
+    pub fn get_session(&self) -> &str {
         &self.session
     }
 
@@ -152,32 +172,37 @@ impl SdpSession {
         self.media.extend(v)
     }
 
-    pub fn has_timing(&self) -> bool {
-        self.timing.is_some()
+    pub fn get_attribute(&self, t: SdpAttributeType) -> Option<&SdpAttribute> {
+       self.attribute.iter().filter(|a| SdpAttributeType::from(*a) == t).next()
     }
 
-    pub fn has_attributes(&self) -> bool {
-        !self.attribute.is_empty()
-    }
+    pub fn add_media(&mut self, media_type: SdpMediaValue, direction: SdpAttribute, port: u32,
+                     protocol: SdpProtocolValue, addr: String)
+                     -> Result<(),SdpParserInternalError> {
+       let mut media = SdpMedia::new(SdpMediaLine {
+           media: media_type,
+           port,
+           port_count: 1,
+           proto: protocol,
+           formats: SdpFormatList::Integers(Vec::new()),
+       });
 
-    // FIXME this is a temporary hack until we re-oranize the SdpAttribute enum
-    // so that we can build a generic has_attribute(X) function
-    fn has_extmap_attribute(&self) -> bool {
-        for attribute in &self.attribute {
-            if let &SdpAttribute::Extmap(_) = attribute {
-                return true;
-            }
-        }
-        false
-    }
+       media.add_attribute(&direction)?;
 
-    pub fn has_media(&self) -> bool {
-        !self.media.is_empty()
+       media.set_connection(&SdpConnection {
+           addr: IpAddr::from_str(addr.as_str())?,
+           ttl: None,
+           amount: None,
+       })?;
+
+       self.media.push(media);
+
+       Ok(())
     }
 }
 
 fn parse_session(value: &str) -> Result<SdpType, SdpParserInternalError> {
-    println!("session: {}", value);
+    trace!("session: {}", value);
     Ok(SdpType::Session(String::from(value)))
 }
 
@@ -193,7 +218,7 @@ fn parse_version(value: &str) -> Result<SdpType, SdpParserInternalError> {
         return Err(SdpParserInternalError::Generic(format!("version type contains unsupported value {}",
                                                            ver)));
     };
-    println!("version: {}", ver);
+    trace!("version: {}", ver);
     Ok(SdpType::Version(ver))
 }
 
@@ -265,7 +290,7 @@ fn parse_origin(value: &str) -> Result<SdpType, SdpParserInternalError> {
         session_version,
         unicast_addr,
     };
-    println!("{}", o);
+    trace!("origin: {}", o);
     Ok(SdpType::Origin(o))
 }
 
@@ -327,7 +352,7 @@ fn parse_connection(value: &str) -> Result<SdpType, SdpParserInternalError> {
                                                        .to_string()));
     }
     let c = SdpConnection { addr, ttl, amount };
-    println!("connection: {}", c.addr);
+    trace!("connection: {}", c.addr);
     Ok(SdpType::Connection(c))
 }
 
@@ -382,7 +407,7 @@ fn parse_bandwidth(value: &str) -> Result<SdpType, SdpParserInternalError> {
         "TIAS" => SdpBandwidth::Tias(bandwidth),
         _ => SdpBandwidth::Unknown(String::from(bv[0]), bandwidth),
     };
-    println!("bandwidth: {}, {}", bv[0], bandwidth);
+    trace!("bandwidth: {}, {}", bv[0], bandwidth);
     Ok(SdpType::Bandwidth(bw))
 }
 
@@ -413,7 +438,7 @@ fn parse_timing(value: &str) -> Result<SdpType, SdpParserInternalError> {
     let start = tv[0].parse::<u64>()?;
     let stop = tv[1].parse::<u64>()?;
     let t = SdpTiming { start, stop };
-    println!("timing: {}, {}", t.start, t.stop);
+    trace!("timing: {}, {}", t.start, t.stop);
     Ok(SdpType::Timing(t))
 }
 
@@ -518,6 +543,7 @@ fn parse_sdp_line(line: &str, line_number: usize) -> Result<SdpLine, SdpParserEr
         .map_err(|e| match e {
                      SdpParserInternalError::Generic(..) |
                      SdpParserInternalError::Integer(..) |
+                     SdpParserInternalError::Float(..) |
                      SdpParserInternalError::Address(..) => {
                          SdpParserError::Line {
                              error: e,
@@ -585,30 +611,122 @@ fn test_parse_sdp_line_invalid_a_line() {
 }
 
 fn sanity_check_sdp_session(session: &SdpSession) -> Result<(), SdpParserError> {
-    if !session.has_timing() {
+    let make_error = |x: &str| SdpParserError::Sequence {
+        message: x.to_string(),
+        line_number: 0,
+    };
+
+    if !session.timing.is_some() {
         return Err(SdpParserError::Sequence {
                        message: "Missing timing type".to_string(),
                        line_number: 0,
                    });
     }
 
-    if !session.has_media() {
+    if session.media.is_empty() {
         return Err(SdpParserError::Sequence {
-                       message: "Missing media setion".to_string(),
+                       message: "Missing media section".to_string(),
                        line_number: 0,
                    });
     }
 
-    // Check that extmaps are not defined on session and media level
-    if session.has_extmap_attribute() {
+    if session.get_connection().is_none() {
         for msection in &session.media {
-            if msection.has_extmap_attribute() {
+            if msection.get_connection().is_none() {
+                return Err(SdpParserError::Sequence {
+                    message: "Each media section must define a connection
+                              if it is not defined on session level".to_string(),
+                    line_number: 0,
+                });
+            }
+        }
+    }
+
+    // Check that extmaps are not defined on session and media level
+    if session.get_attribute(SdpAttributeType::Extmap).is_some() {
+        for msection in &session.media {
+            if msection.get_attribute(SdpAttributeType::Extmap).is_some() {
                 return Err(SdpParserError::Sequence {
                                message: "Extmap can't be define at session and media level"
                                    .to_string(),
                                line_number: 0,
                            });
             }
+        }
+    }
+
+    for msection in &session.media {
+        if msection.get_attribute(SdpAttributeType::Sendonly).is_some() {
+            if let Some(&SdpAttribute::Simulcast(ref x)) = msection.get_attribute(SdpAttributeType::Simulcast) {
+                if x.receive.len() > 0 {
+                    return Err(SdpParserError::Sequence {
+                        message: "Simulcast can't define receive parameters for sendonly".to_string(),
+                        line_number: 0,
+                    });
+                }
+            }
+        }
+        if msection.get_attribute(SdpAttributeType::Recvonly).is_some() {
+            if let Some(&SdpAttribute::Simulcast(ref x)) = msection.get_attribute(SdpAttributeType::Simulcast) {
+                if x.send.len() > 0 {
+                    return Err(SdpParserError::Sequence {
+                        message: "Simulcast can't define send parameters for recvonly".to_string(),
+                        line_number: 0,
+                    });
+                }
+            }
+        }
+
+        let rids:Vec<&SdpAttributeRid> = msection.get_attributes().iter().filter_map(|attr| {
+                                                      match attr {
+                                                          &SdpAttribute::Rid(ref rid) => Some(rid),
+                                                          _ => None,
+                                                         }
+                                                  }).collect();
+        let recv_rids:Vec<&str> = rids.iter().filter_map(|rid| {
+          match rid.direction {
+              SdpSingleDirection::Recv => Some(rid.id.as_str()),
+              _ => None,
+          }
+        }).collect();
+        let send_rids:Vec<&str> = rids.iter().filter_map(|rid| {
+          match rid.direction {
+              SdpSingleDirection::Send => Some(rid.id.as_str()),
+              _ => None,
+          }
+        }).collect();
+
+
+        for rid_format in rids.iter().flat_map(|rid| &rid.formats) {
+            match msection.get_formats() {
+                &SdpFormatList::Integers(ref int_fmt) => {
+                    if !int_fmt.contains(&(*rid_format as u32))  {
+                        return Err(make_error("Rid pts must be declared in the media section"));
+                    }
+                },
+                &SdpFormatList::Strings(ref str_fmt) => {
+                    if !str_fmt.contains(&rid_format.to_string())  {
+                        return Err(make_error("Rid pts must be declared in the media section"));
+                    }
+                }
+            }
+        }
+
+        if let Some(&SdpAttribute::Simulcast(ref simulcast)) =
+                                            msection.get_attribute(SdpAttributeType::Simulcast) {
+            let check_defined_rids = |simulcast_version_list: &Vec<SdpAttributeSimulcastVersion>,
+                                      rid_ids: &[&str]| -> Result<(),SdpParserError> {
+                for simulcast_rid in simulcast_version_list.iter().flat_map(|x| &x.ids) {
+                    if !rid_ids.contains(&simulcast_rid.id.as_str()) {
+                        return Err(make_error(
+                                       "Simulcast RIDs must be defined in any rid attribute"));
+                    }
+                }
+                Ok(())
+            };
+
+            check_defined_rids(&simulcast.receive, &recv_rids)?;
+            check_defined_rids(&simulcast.send, &send_rids)?;
         }
     }
 
@@ -619,9 +737,17 @@ fn sanity_check_sdp_session(session: &SdpSession) -> Result<(), SdpParserError> 
 fn create_dummy_sdp_session() -> SdpSession {
     let origin = parse_origin("mozilla 506705521068071134 0 IN IP4 0.0.0.0");
     assert!(origin.is_ok());
-    let sdp_session;
+    let connection = parse_connection("IN IP4 198.51.100.7");
+    assert!(connection.is_ok());
+    let mut sdp_session;
     if let SdpType::Origin(o) = origin.unwrap() {
         sdp_session = SdpSession::new(0, o, "-".to_string());
+
+        if let Ok(SdpType::Connection(c)) = connection {
+            sdp_session.connection = Some(c);
+        } else {
+            panic!("Sdp type is not Connection")
+        }
     } else {
         panic!("SdpType is not Origin");
     }
@@ -674,7 +800,7 @@ fn test_sanity_check_sdp_session_extmap() {
     }
     let ret = sdp_session.add_attribute(&extmap);
     assert!(ret.is_ok());
-    assert!(sdp_session.has_extmap_attribute());
+    assert!(sdp_session.get_attribute(SdpAttributeType::Extmap).is_some());
 
     assert!(sanity_check_sdp_session(&sdp_session).is_ok());
 
@@ -688,7 +814,7 @@ fn test_sanity_check_sdp_session_extmap() {
     }
     let mut second_media = create_dummy_media_section();
     assert!(second_media.add_attribute(&mextmap).is_ok());
-    assert!(second_media.has_extmap_attribute());
+    assert!(second_media.get_attribute(SdpAttributeType::Extmap).is_some());
 
     sdp_session.extend_media(vec![second_media]);
     assert!(sdp_session.media.len() == 2);
@@ -781,7 +907,7 @@ fn parse_sdp_vector(lines: &[SdpLine]) -> Result<SdpSession, SdpParserError> {
             SdpType::Uri(_) |
             SdpType::Zone(_) => (),
         };
-        if sdp_session.has_media() {
+        if !sdp_session.media.is_empty() {
             break;
         };
     }
@@ -856,18 +982,23 @@ pub fn parse_sdp(sdp: &str, fail_on_warning: bool) -> Result<SdpSession, SdpPars
             }
         };
     }
-    for warning in warnings {
-        if fail_on_warning {
-            return Err(warning);
-        } else {
-            println!("Warning: {}", warning);
-        };
+
+    if fail_on_warning && (warnings.len() > 0) {
+        return Err(warnings[0].clone());
     }
+
     // We just return the last of the errors here
     if let Some(e) = errors.pop() {
         return Err(e);
     };
-    let session = parse_sdp_vector(&sdp_lines)?;
+
+    let mut session = parse_sdp_vector(&sdp_lines)?;
+    session.warnings = warnings;
+
+    for warning in &session.warnings {
+        warn!("Warning: {}", &warning);
+    }
+
     Ok(session)
 }
 
@@ -908,6 +1039,7 @@ fn test_parse_sdp_unsupported_warning() {
     assert!(parse_sdp("v=0\r\n
 o=- 0 0 IN IP4 0.0.0.0\r\n
 s=-\r\n
+c=IN IP4 198.51.100.7\r\n
 t=0 0\r\n
 m=audio 0 UDP/TLS/RTP/SAVPF 0\r\n
 a=unsupported\r\n",

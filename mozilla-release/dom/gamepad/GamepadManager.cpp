@@ -22,7 +22,6 @@
 #include "nsAutoPtr.h"
 #include "nsContentUtils.h"
 #include "nsGlobalWindow.h"
-#include "nsIDOMDocument.h"
 #include "nsIDOMWindow.h"
 #include "nsIObserver.h"
 #include "nsIObserverService.h"
@@ -212,8 +211,15 @@ GamepadManager::GetGamepad(uint32_t aIndex) const
   return nullptr;
 }
 
+already_AddRefed<Gamepad>
+GamepadManager::GetGamepad(uint32_t aGamepadId, GamepadServiceType aServiceType) const
+{
+  return GetGamepad(GetGamepadIndexWithServiceType(aGamepadId, aServiceType));
+}
+
+
 uint32_t GamepadManager::GetGamepadIndexWithServiceType(uint32_t aIndex,
-                                                        GamepadServiceType aServiceType)
+                                                        GamepadServiceType aServiceType) const
 {
   uint32_t newIndex = 0;
 

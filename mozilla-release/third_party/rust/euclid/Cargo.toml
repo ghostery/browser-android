@@ -12,7 +12,7 @@
 
 [package]
 name = "euclid"
-version = "0.17.2"
+version = "0.19.0"
 authors = ["The Servo Project Developers"]
 description = "Geometry primitives"
 documentation = "https://docs.rs/euclid/"
@@ -21,15 +21,14 @@ categories = ["science"]
 license = "MIT / Apache-2.0"
 repository = "https://github.com/servo/euclid"
 [dependencies.num-traits]
-version = "0.1.32"
-default-features = false
+version = "0.2"
 
 [dependencies.serde]
 version = "1.0"
 features = ["serde_derive"]
 optional = true
 [dev-dependencies.rand]
-version = "0.3.7"
+version = "0.4"
 
 [dev-dependencies.serde_test]
 version = "1.0"

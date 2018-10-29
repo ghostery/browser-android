@@ -27,7 +27,7 @@
 <!-- LOCALIZATION NOTE (debuggerUI.blackBoxMessage.unBlackBoxButton): This is
   - the text displayed in the button to stop black boxing the currently selected
   - source. -->
-<!ENTITY debuggerUI.blackBoxMessage.unBlackBoxButton "停止对此资源进行黑盒测试">
+<!ENTITY debuggerUI.blackBoxMessage.unBlackBoxButton "停止对此资源黑盒测试">
 
 <!-- LOCALIZATION NOTE (debuggerUI.optsButton.tooltip): This is the tooltip for
   -  the button that opens up an options context menu for the debugger UI. -->
@@ -126,7 +126,7 @@
 <!ENTITY debuggerUI.searchToken.key       "F">
 <!ENTITY debuggerUI.searchToken.accesskey "F">
 
-<!-- LOCALIZATION NOTE (debuggerUI.searchLine): This is the text that appears
+<!-- LOCALIZATION NOTE (debuggerUI.searchGoToLine): This is the text that appears
   -  in the source editor's context menu for the line search operation. -->
 <!ENTITY debuggerUI.searchGoToLine           "跳至某行…">
 <!ENTITY debuggerUI.searchGoToLine.key       "L">
@@ -159,7 +159,7 @@
 <!ENTITY debuggerUI.seMenuCondBreak     "添加条件断点">
 <!ENTITY debuggerUI.seMenuCondBreak.key "B">
 
-<!-- LOCALIZATION NOTE (debuggerUI.seMenuBreak): This is the text that
+<!-- LOCALIZATION NOTE (debuggerUI.seEditMenuCondBreak): This is the text that
   -  appears in the source editor context menu for editing a breakpoint. -->
 <!ENTITY debuggerUI.seEditMenuCondBreak     "编辑条件断点">
 <!ENTITY debuggerUI.seEditMenuCondBreak.key "B">
@@ -183,7 +183,7 @@
 <!ENTITY debuggerUI.addWatch            "添加监视表达式">
 <!ENTITY debuggerUI.addWatch.accesskey  "E">
 
-<!-- LOCALIZATION NOTE (debuggerUI.removeWatch): This is the text that
+<!-- LOCALIZATION NOTE (debuggerUI.removeAllWatch): This is the text that
   -  appears in the watch expressions context menu for removing all expressions. -->
 <!ENTITY debuggerUI.removeAllWatch           "移除所有监视表达式">
 <!ENTITY debuggerUI.removeAllWatch.key       "E">

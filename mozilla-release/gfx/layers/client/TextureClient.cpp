@@ -45,9 +45,7 @@
 #endif
 #ifdef MOZ_X11
 #include "mozilla/layers/TextureClientX11.h"
-#ifdef GL_PROVIDER_GLX
 #include "GLXLibrary.h"
-#endif
 #endif
 
 #ifdef XP_MACOSX
@@ -662,7 +660,9 @@ TextureClient::UpdateFromSurface(gfx::SourceSurface* aSurface)
 
 
 already_AddRefed<TextureClient>
-TextureClient::CreateSimilar(LayersBackend aLayersBackend, TextureFlags aFlags, TextureAllocationFlags aAllocFlags) const
+TextureClient::CreateSimilar(LayersBackend aLayersBackend,
+                             TextureFlags aFlags,
+                             TextureAllocationFlags aAllocFlags) const
 {
   MOZ_ASSERT(IsValid());
 
@@ -672,7 +672,10 @@ TextureClient::CreateSimilar(LayersBackend aLayersBackend, TextureFlags aFlags, 
   }
 
   LockActor();
-  TextureData* data = mData->CreateSimilar(mAllocator, aLayersBackend, aFlags, aAllocFlags);
+  TextureData* data = mData->CreateSimilar(mAllocator,
+                                           aLayersBackend,
+                                           aFlags,
+                                           aAllocFlags);
   UnlockActor();
 
   if (!data) {
@@ -1062,6 +1065,10 @@ TextureClient::CreateForDrawing(KnowsCompositor* aAllocator,
                                 TextureAllocationFlags aAllocFlags)
 {
   LayersBackend layersBackend = aAllocator->GetCompositorBackendType();
+  if (aAllocator->SupportsTextureDirectMapping() &&
+      std::max(aSize.width, aSize.height) <= aAllocator->GetMaxTextureSize()) {
+    aAllocFlags = TextureAllocationFlags(aAllocFlags | ALLOC_ALLOW_DIRECT_MAPPING);
+  }
   return TextureClient::CreateForDrawing(aAllocator->GetTextureForwarder(),
                                          aFormat, aSize,
                                          layersBackend,
@@ -1127,7 +1134,6 @@ TextureClient::CreateForDrawing(TextureForwarder* aAllocator,
   {
     data = X11TextureData::Create(aSize, aFormat, aTextureFlags, aAllocator);
   }
-#ifdef GL_PROVIDER_GLX
   if (!data && aLayersBackend == LayersBackend::LAYERS_OPENGL &&
       type == gfxSurfaceType::Xlib &&
       aFormat != SurfaceFormat::A8 &&
@@ -1135,7 +1141,6 @@ TextureClient::CreateForDrawing(TextureForwarder* aAllocator,
   {
     data = X11TextureData::Create(aSize, aFormat, aTextureFlags, aAllocator);
   }
-#endif
 #endif
 
 #ifdef XP_MACOSX
@@ -1230,6 +1235,16 @@ TextureClient::CreateForRawBufferAccess(KnowsCompositor* aAllocator,
                                         TextureFlags aTextureFlags,
                                         TextureAllocationFlags aAllocFlags)
 {
+  // If we exceed the max texture size for the GPU, then just fall back to no
+  // texture direct mapping. If it becomes a problem we can implement tiling
+  // logic inside DirectMapTextureSource to allow this.
+  bool supportsTextureDirectMapping = aAllocator->SupportsTextureDirectMapping() &&
+    std::max(aSize.width, aSize.height) <= aAllocator->GetMaxTextureSize();
+  if (supportsTextureDirectMapping) {
+    aAllocFlags = TextureAllocationFlags(aAllocFlags | ALLOC_ALLOW_DIRECT_MAPPING);
+  } else {
+    aAllocFlags = TextureAllocationFlags(aAllocFlags & ~ALLOC_ALLOW_DIRECT_MAPPING);
+  }
   return CreateForRawBufferAccess(aAllocator->GetTextureForwarder(),
                                   aFormat, aSize, aMoz2DBackend,
                                   aAllocator->GetCompositorBackendType(),
@@ -1308,28 +1323,6 @@ TextureClient::CreateForYCbCr(KnowsCompositor* aAllocator,
                                       aCbCrSize, aCbCrStride,
                                       aStereoMode, aYUVColorSpace,
                                       aBitDepth, aTextureFlags);
-  if (!data) {
-    return nullptr;
-  }
-
-  return MakeAndAddRef<TextureClient>(data, aTextureFlags,
-                                      aAllocator->GetTextureForwarder());
-}
-
-// static
-already_AddRefed<TextureClient>
-TextureClient::CreateForYCbCrWithBufferSize(KnowsCompositor* aAllocator,
-                                            size_t aSize,
-                                            YUVColorSpace aYUVColorSpace,
-                                            uint32_t aBitDepth,
-                                            TextureFlags aTextureFlags)
-{
-  if (!aAllocator || !aAllocator->GetLayersIPCActor()->IPCOpen()) {
-    return nullptr;
-  }
-
-  TextureData* data = BufferTextureData::CreateForYCbCrWithBufferSize(
-    aAllocator, aSize, aYUVColorSpace, aBitDepth, aTextureFlags);
   if (!data) {
     return nullptr;
   }
@@ -1456,7 +1449,7 @@ TextureClient::GPUVideoDesc(SurfaceDescriptorGPUVideo* const aOutDesc)
   MOZ_RELEASE_ASSERT(mData);
   mData->GetSubDescriptor(&subDesc);
 
-  *aOutDesc = SurfaceDescriptorGPUVideo(handle, Move(subDesc));
+  *aOutDesc = SurfaceDescriptorGPUVideo(handle, std::move(subDesc));
 }
 
 class MemoryTextureReadLock : public NonBlockingTextureReadLock {
@@ -1477,7 +1470,7 @@ public:
 
   virtual bool Serialize(ReadLockDescriptor& aOutput, base::ProcessId aOther) override;
 
-  int32_t mReadCount;
+  Atomic<int32_t> mReadCount;
 };
 
 // The cross-prcess implementation of TextureReadLock.
@@ -1658,14 +1651,14 @@ MemoryTextureReadLock::ReadLock()
 {
   NS_ASSERT_OWNINGTHREAD(MemoryTextureReadLock);
 
-  PR_ATOMIC_INCREMENT(&mReadCount);
+  ++mReadCount;
   return true;
 }
 
 int32_t
 MemoryTextureReadLock::ReadUnlock()
 {
-  int32_t readCount = PR_ATOMIC_DECREMENT(&mReadCount);
+  int32_t readCount = --mReadCount;
   MOZ_ASSERT(readCount >= 0);
 
   return readCount;
@@ -1782,7 +1775,7 @@ TextureClient::AddPaintThreadRef()
 void
 TextureClient::DropPaintThreadRef()
 {
-  MOZ_RELEASE_ASSERT(PaintThread::IsOnPaintThread());
+  MOZ_RELEASE_ASSERT(PaintThread::Get()->IsOnPaintWorkerThread());
   MOZ_RELEASE_ASSERT(mPaintThreadRefs >= 1);
   mPaintThreadRefs -= 1;
 }

@@ -8,11 +8,11 @@
  */
 
 add_task(async function() {
-  let { tab, monitor } = await initNetMonitor(PARAMS_URL);
+  const { tab, monitor } = await initNetMonitor(PARAMS_URL);
   info("Starting test... ");
 
-  let { document, store, windowRequire } = monitor.panelWin;
-  let Actions = windowRequire("devtools/client/netmonitor/src/actions/index");
+  const { document, store, windowRequire } = monitor.panelWin;
+  const Actions = windowRequire("devtools/client/netmonitor/src/actions/index");
 
   store.dispatch(Actions.batchEnable(false));
 
@@ -48,9 +48,16 @@ add_task(async function() {
   await testCopyUrlParams(5, "a=b");
   await testCopyPostDataHidden(5, false);
   await testCopyPostData(5, "?foo=bar");
+  await testCopyRequestDataLabel(5, "POST");
 
   await testCopyUrlParamsHidden(6, true);
   await testCopyPostDataHidden(6, true);
+
+  await testCopyPostDataHidden(7, false);
+  await testCopyRequestDataLabel(7, "PATCH");
+
+  await testCopyPostDataHidden(8, false);
+  await testCopyRequestDataLabel(8, "PUT");
 
   return teardown(monitor);
 
@@ -59,7 +66,7 @@ add_task(async function() {
       document.querySelectorAll(".request-list-item")[index]);
     EventUtils.sendMouseEvent({ type: "contextmenu" },
       document.querySelectorAll(".request-list-item")[index]);
-    let copyUrlParamsNode = monitor.panelWin.parent.document
+    const copyUrlParamsNode = monitor.panelWin.parent.document
       .querySelector("#request-list-context-copy-url-params");
     is(!!copyUrlParamsNode, !hidden,
       "The \"Copy URL Parameters\" context menu item should" + (hidden ? " " : " not ") +
@@ -83,20 +90,31 @@ add_task(async function() {
       document.querySelectorAll(".request-list-item")[index]);
     EventUtils.sendMouseEvent({ type: "contextmenu" },
       document.querySelectorAll(".request-list-item")[index]);
-    let copyPostDataNode = monitor.panelWin.parent.document
+    const copyPostDataNode = monitor.panelWin.parent.document
       .querySelector("#request-list-context-copy-post-data");
     is(!!copyPostDataNode, !hidden,
       "The \"Copy POST Data\" context menu item should" + (hidden ? " " : " not ") +
         "be hidden.");
   }
 
+  function testCopyRequestDataLabel(index, method) {
+    EventUtils.sendMouseEvent({ type: "mousedown" },
+      document.querySelectorAll(".request-list-item")[index]);
+    EventUtils.sendMouseEvent({ type: "contextmenu" },
+      document.querySelectorAll(".request-list-item")[index]);
+    const copyPostDataNode = monitor.panelWin.parent.document
+      .querySelector("#request-list-context-copy-post-data");
+    is(copyPostDataNode.attributes.label.value, "Copy " + method + " Data",
+      "The \"Copy Data\" context menu item should have label - Copy " + method + " Data");
+  }
+
   async function testCopyPostData(index, postData) {
     // Wait for formDataSections and requestPostData state are ready in redux store
     // since copyPostData API needs to read these state.
     await waitUntil(() => {
-      let { requests } = store.getState().requests;
-      let actIDs = [...requests.keys()];
-      let { formDataSections, requestPostData } = requests.get(actIDs[index]);
+      const { requests } = store.getState().requests;
+      const actIDs = [...requests.keys()];
+      const { formDataSections, requestPostData } = requests.get(actIDs[index]);
       return formDataSections && requestPostData;
     });
     EventUtils.sendMouseEvent({ type: "mousedown" },

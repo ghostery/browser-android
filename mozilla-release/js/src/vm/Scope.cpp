@@ -6,9 +6,15 @@
 
 #include "vm/Scope.h"
 
+#include "mozilla/ScopeExit.h"
+
+#include <memory>
+#include <new>
+
 #include "builtin/ModuleObject.h"
 #include "gc/Allocator.h"
 #include "gc/FreeOp.h"
+#include "js/AutoByteString.h"
 #include "util/StringBuffer.h"
 #include "vm/EnvironmentObject.h"
 #include "vm/JSScript.h"
@@ -20,7 +26,6 @@
 using namespace js;
 
 using mozilla::Maybe;
-using mozilla::Move;
 
 const char*
 js::BindingKindString(BindingKind kind)
@@ -140,36 +145,26 @@ CreateEnvironmentShape(JSContext* cx, BindingIter& bi, const Class* cls,
 
 template <typename ConcreteScope>
 static UniquePtr<typename ConcreteScope::Data>
-CopyScopeData(JSContext* cx, Handle<typename ConcreteScope::Data*> data)
+CopyScopeData(JSContext* cx, typename ConcreteScope::Data* data)
 {
     // Make sure the binding names are marked in the context's zone, if we are
     // copying data from another zone.
-    BindingName* names = nullptr;
-    uint32_t length = 0;
-    ConcreteScope::getDataNamesAndLength(data, &names, &length);
+    BindingName* names = data->trailingNames.start();
+    uint32_t length = data->length;
     for (size_t i = 0; i < length; i++) {
         if (JSAtom* name = names[i].name())
             cx->markAtom(name);
     }
 
-    size_t dataSize = ConcreteScope::sizeOfData(data->length);
-    size_t headerSize = sizeof(typename ConcreteScope::Data);
-    MOZ_ASSERT(dataSize >= headerSize);
-    size_t extraSize = dataSize - headerSize;
-
-    uint8_t* copyBytes = cx->zone()->pod_malloc<uint8_t>(dataSize);
-    if (!copyBytes) {
-        ReportOutOfMemory(cx);
+    size_t size = SizeOfData<typename ConcreteScope::Data>(data->length);
+    void* bytes = cx->pod_malloc<char>(size);
+    if (!bytes)
         return nullptr;
-    }
 
-    auto dataCopy = reinterpret_cast<typename ConcreteScope::Data*>(copyBytes);
-    new (dataCopy) typename ConcreteScope::Data(*data);
+    auto* dataCopy = new (bytes) typename ConcreteScope::Data(*data);
 
-    uint8_t* extra = reinterpret_cast<uint8_t*>(data.get()) + headerSize;
-    uint8_t* extraCopy = copyBytes + headerSize;
+    std::uninitialized_copy_n(names, length, dataCopy->trailingNames.start());
 
-    mozilla::PodCopy<uint8_t>(extraCopy, extra, extraSize);
     return UniquePtr<typename ConcreteScope::Data>(dataCopy);
 }
 
@@ -204,14 +199,16 @@ template <typename ConcreteScope>
 static UniquePtr<typename ConcreteScope::Data>
 NewEmptyScopeData(JSContext* cx, uint32_t length = 0)
 {
-    uint8_t* bytes = cx->zone()->pod_calloc<uint8_t>(ConcreteScope::sizeOfData(length));
-    if (!bytes)
-        ReportOutOfMemory(cx);
+    size_t dataSize = SizeOfData<typename ConcreteScope::Data>(length);
+    uint8_t* bytes = cx->pod_malloc<uint8_t>(dataSize);
     auto data = reinterpret_cast<typename ConcreteScope::Data*>(bytes);
     if (data)
-        new (data) typename ConcreteScope::Data();
+        new (data) typename ConcreteScope::Data(length);
     return UniquePtr<typename ConcreteScope::Data>(data);
 }
+
+static constexpr size_t HasAtomMask = 1;
+static constexpr size_t HasAtomShift = 1;
 
 static XDRResult
 XDRBindingName(XDRState<XDR_ENCODE>* xdr, BindingName* bindingName)
@@ -221,7 +218,9 @@ XDRBindingName(XDRState<XDR_ENCODE>* xdr, BindingName* bindingName)
     RootedAtom atom(cx, bindingName->name());
     bool hasAtom = !!atom;
 
-    uint8_t u8 = uint8_t(hasAtom << 1) | uint8_t(bindingName->closedOver());
+    uint8_t flags = bindingName->flagsForXDR();
+    MOZ_ASSERT(((flags << HasAtomShift) >> HasAtomShift) == flags);
+    uint8_t u8 = (flags << HasAtomShift) | uint8_t(hasAtom);
     MOZ_TRY(xdr->codeUint8(&u8));
 
     if (hasAtom)
@@ -238,14 +237,13 @@ XDRBindingName(XDRState<XDR_DECODE>* xdr, BindingName* bindingName)
     uint8_t u8;
     MOZ_TRY(xdr->codeUint8(&u8));
 
-    bool closedOver = u8 & 1;
-    bool hasAtom = u8 >> 1;
-
+    bool hasAtom = u8 & HasAtomMask;
     RootedAtom atom(cx);
     if (hasAtom)
         MOZ_TRY(XDRAtom(xdr, &atom));
 
-    *bindingName = BindingName(atom, closedOver);
+    uint8_t flags = u8 >> HasAtomShift;
+    *bindingName = BindingName::fromXDR(atom, flags);
 
     return Ok();
 }
@@ -290,7 +288,7 @@ Scope::XDRSizedBindingNames(XDRState<mode>* xdr, Handle<ConcreteScope*> scope,
     });
 
     for (uint32_t i = 0; i < length; i++)
-        MOZ_TRY(XDRBindingName(xdr, &data->names[i]));
+        MOZ_TRY(XDRBindingName(xdr, &data->trailingNames[i]));
 
     dataGuard.release();
     return Ok();
@@ -305,10 +303,10 @@ Scope::create(JSContext* cx, ScopeKind kind, HandleScope enclosing, HandleShape 
     return scope;
 }
 
-template <typename T, typename D>
-/* static */ Scope*
+template <typename ConcreteScope>
+/* static */ ConcreteScope*
 Scope::create(JSContext* cx, ScopeKind kind, HandleScope enclosing,
-              HandleShape envShape, mozilla::UniquePtr<T, D> data)
+              HandleShape envShape, MutableHandle<UniquePtr<typename ConcreteScope::Data>> data)
 {
     Scope* scope = create(cx, kind, enclosing, envShape);
     if (!scope)
@@ -317,9 +315,17 @@ Scope::create(JSContext* cx, ScopeKind kind, HandleScope enclosing,
     // It is an invariant that all Scopes that have data (currently, all
     // ScopeKinds except With) must have non-null data.
     MOZ_ASSERT(data);
-    scope->initData(Move(data));
+    scope->initData<ConcreteScope>(data);
 
-    return scope;
+    return &scope->as<ConcreteScope>();
+}
+
+template <typename ConcreteScope>
+inline void
+Scope::initData(MutableHandle<UniquePtr<typename ConcreteScope::Data>> data)
+{
+    MOZ_ASSERT(!data_);
+    data_ = data.get().release();
 }
 
 uint32_t
@@ -381,11 +387,11 @@ Scope::clone(JSContext* cx, HandleScope scope, HandleScope enclosing)
 
       case ScopeKind::FunctionBodyVar:
       case ScopeKind::ParameterExpressionVar: {
-        Rooted<VarScope::Data*> original(cx, &scope->as<VarScope>().data());
-        UniquePtr<VarScope::Data> dataClone = CopyScopeData<VarScope>(cx, original);
+        Rooted<UniquePtr<VarScope::Data>> dataClone(cx);
+        dataClone = CopyScopeData<VarScope>(cx, &scope->as<VarScope>().data());
         if (!dataClone)
             return nullptr;
-        return create(cx, scope->kind_, enclosing, envShape, Move(dataClone));
+        return create<VarScope>(cx, scope->kind_, enclosing, envShape, &dataClone);
       }
 
       case ScopeKind::Lexical:
@@ -393,23 +399,23 @@ Scope::clone(JSContext* cx, HandleScope scope, HandleScope enclosing)
       case ScopeKind::Catch:
       case ScopeKind::NamedLambda:
       case ScopeKind::StrictNamedLambda: {
-        Rooted<LexicalScope::Data*> original(cx, &scope->as<LexicalScope>().data());
-        UniquePtr<LexicalScope::Data> dataClone = CopyScopeData<LexicalScope>(cx, original);
+        Rooted<UniquePtr<LexicalScope::Data>> dataClone(cx);
+        dataClone = CopyScopeData<LexicalScope>(cx, &scope->as<LexicalScope>().data());
         if (!dataClone)
             return nullptr;
-        return create(cx, scope->kind_, enclosing, envShape, Move(dataClone));
+        return create<LexicalScope>(cx, scope->kind_, enclosing, envShape, &dataClone);
       }
 
       case ScopeKind::With:
-        return create(cx, scope->kind_, enclosing, envShape);
+          return create(cx, scope->kind_, enclosing, envShape);
 
       case ScopeKind::Eval:
       case ScopeKind::StrictEval: {
-        Rooted<EvalScope::Data*> original(cx, &scope->as<EvalScope>().data());
-        UniquePtr<EvalScope::Data> dataClone = CopyScopeData<EvalScope>(cx, original);
+        Rooted<UniquePtr<EvalScope::Data>> dataClone(cx);
+        dataClone = CopyScopeData<EvalScope>(cx, &scope->as<EvalScope>().data());
         if (!dataClone)
             return nullptr;
-        return create(cx, scope->kind_, enclosing, envShape, Move(dataClone));
+        return create<EvalScope>(cx, scope->kind_, enclosing, envShape, &dataClone);
       }
 
       case ScopeKind::Global:
@@ -438,8 +444,8 @@ Scope::finalize(FreeOp* fop)
     if (data_) {
         // We don't need to call the destructors for any GCPtrs in Data because
         // this only happens during a GC.
-        fop->free_(reinterpret_cast<void*>(data_));
-        data_ = 0;
+        fop->free_(data_);
+        data_ = nullptr;
     }
 }
 
@@ -447,7 +453,7 @@ size_t
 Scope::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const
 {
     if (data_)
-        return mallocSizeOf(reinterpret_cast<void*>(data_));
+        return mallocSizeOf(data_);
     return 0;
 }
 
@@ -554,11 +560,12 @@ LexicalScope::createWithData(JSContext* cx, ScopeKind kind, MutableHandle<Unique
         return nullptr;
     }
 
-    Scope* scope = Scope::create(cx, kind, enclosing, envShape, Move(data.get()));
+    auto scope = Scope::create<LexicalScope>(cx, kind, enclosing, envShape, data);
     if (!scope)
         return nullptr;
-    MOZ_ASSERT(scope->as<LexicalScope>().firstFrameSlot() == firstFrameSlot);
-    return &scope->as<LexicalScope>();
+
+    MOZ_ASSERT(scope->firstFrameSlot() == firstFrameSlot);
+    return scope;
 }
 
 /* static */ Shape*
@@ -656,43 +663,33 @@ FunctionScope::createWithData(JSContext* cx, MutableHandle<UniquePtr<Data>> data
 
     // FunctionScope::Data has GCManagedDeletePolicy because it contains a
     // GCPtr. Destruction of |data| below may trigger calls into the GC.
-    Rooted<FunctionScope*> funScope(cx);
 
+    RootedShape envShape(cx);
+
+    BindingIter bi(*data, hasParameterExprs);
+    uint32_t shapeFlags = FunctionScopeEnvShapeFlags(hasParameterExprs);
+    if (!PrepareScopeData<FunctionScope>(cx, bi, data, &CallObject::class_, shapeFlags,
+                                         &envShape))
     {
-        RootedShape envShape(cx);
-
-        BindingIter bi(*data, hasParameterExprs);
-        uint32_t shapeFlags = FunctionScopeEnvShapeFlags(hasParameterExprs);
-        if (!PrepareScopeData<FunctionScope>(cx, bi, data, &CallObject::class_, shapeFlags,
-                                             &envShape))
-        {
-            return nullptr;
-        }
-
-        data->hasParameterExprs = hasParameterExprs;
-        data->canonicalFunction.init(fun);
-
-        // An environment may be needed regardless of existence of any closed over
-        // bindings:
-        //   - Extensible scopes (i.e., due to direct eval)
-        //   - Needing a home object
-        //   - Being a derived class constructor
-        //   - Being a generator
-        if (!envShape && needsEnvironment) {
-            envShape = getEmptyEnvironmentShape(cx, hasParameterExprs);
-            if (!envShape)
-                return nullptr;
-        }
-
-        Scope* scope = Scope::create(cx, ScopeKind::Function, enclosing, envShape);
-        if (!scope)
-            return nullptr;
-
-        funScope = &scope->as<FunctionScope>();
-        funScope->initData(Move(data.get()));
+        return nullptr;
     }
 
-    return funScope;
+    data->hasParameterExprs = hasParameterExprs;
+    data->canonicalFunction.init(fun);
+
+    // An environment may be needed regardless of existence of any closed over
+    // bindings:
+    //   - Extensible scopes (i.e., due to direct eval)
+    //   - Needing a home object
+    //   - Being a derived class constructor
+    //   - Being a generator
+    if (!envShape && needsEnvironment) {
+        envShape = getEmptyEnvironmentShape(cx, hasParameterExprs);
+        if (!envShape)
+            return nullptr;
+    }
+
+    return Scope::create<FunctionScope>(cx, ScopeKind::Function, enclosing, envShape, data);
 }
 
 JSScript*
@@ -725,32 +722,22 @@ FunctionScope::clone(JSContext* cx, Handle<FunctionScope*> scope, HandleFunction
 
     // FunctionScope::Data has GCManagedDeletePolicy because it contains a
     // GCPtr. Destruction of |dataClone| below may trigger calls into the GC.
-    Rooted<FunctionScope*> funScopeClone(cx);
 
-    {
-        RootedShape envShape(cx);
-        if (scope->environmentShape()) {
-            envShape = scope->maybeCloneEnvironmentShape(cx);
-            if (!envShape)
-                return nullptr;
-        }
-
-        Rooted<Data*> dataOriginal(cx, &scope->as<FunctionScope>().data());
-        Rooted<UniquePtr<Data>> dataClone(cx, CopyScopeData<FunctionScope>(cx, dataOriginal));
-        if (!dataClone)
+    RootedShape envShape(cx);
+    if (scope->environmentShape()) {
+        envShape = scope->maybeCloneEnvironmentShape(cx);
+        if (!envShape)
             return nullptr;
-
-        dataClone->canonicalFunction.init(fun);
-
-        Scope* scopeClone = Scope::create(cx, scope->kind(), enclosing, envShape);
-        if (!scopeClone)
-            return nullptr;
-
-        funScopeClone = &scopeClone->as<FunctionScope>();
-        funScopeClone->initData(Move(dataClone.get()));
     }
 
-    return funScopeClone;
+    Rooted<Data*> dataOriginal(cx, &scope->as<FunctionScope>().data());
+    Rooted<UniquePtr<Data>> dataClone(cx, CopyScopeData<FunctionScope>(cx, dataOriginal));
+    if (!dataClone)
+        return nullptr;
+
+    dataClone->canonicalFunction.init(fun);
+
+    return Scope::create<FunctionScope>(cx, scope->kind(), enclosing, envShape, &dataClone);
 }
 
 template <XDRMode mode>
@@ -862,10 +849,7 @@ VarScope::createWithData(JSContext* cx, ScopeKind kind, MutableHandle<UniquePtr<
             return nullptr;
     }
 
-    Scope* scope = Scope::create(cx, kind, enclosing, envShape, Move(data.get()));
-    if (!scope)
-        return nullptr;
-    return &scope->as<VarScope>();
+    return Scope::create<VarScope>(cx, kind, enclosing, envShape, data);
 }
 
 /* static */ Shape*
@@ -959,10 +943,7 @@ GlobalScope::createWithData(JSContext* cx, ScopeKind kind, MutableHandle<UniqueP
     // global lexical scope and the global object or non-syntactic objects
     // created by embedding, all of which are not only extensible but may
     // have names on them deleted.
-    Scope* scope = Scope::create(cx, kind, nullptr, nullptr, Move(data.get()));
-    if (!scope)
-        return nullptr;
-    return &scope->as<GlobalScope>();
+    return Scope::create<GlobalScope>(cx, kind, nullptr, nullptr, data);
 }
 
 /* static */ GlobalScope*
@@ -973,10 +954,7 @@ GlobalScope::clone(JSContext* cx, Handle<GlobalScope*> scope, ScopeKind kind)
     if (!dataClone)
         return nullptr;
 
-    Scope* scopeClone = Scope::create(cx, kind, nullptr, nullptr, Move(dataClone.get()));
-    if (!scopeClone)
-        return nullptr;
-    return &scopeClone->as<GlobalScope>();
+    return Scope::create<GlobalScope>(cx, kind, nullptr, nullptr, &dataClone);
 }
 
 template <XDRMode mode>
@@ -994,13 +972,11 @@ GlobalScope::XDR(XDRState<mode>* xdr, ScopeKind kind, MutableHandleScope scope)
         if (mode == XDR_DECODE)
             uniqueData.emplace(cx, data);
 
-        MOZ_TRY(xdr->codeUint32(&data->varStart));
         MOZ_TRY(xdr->codeUint32(&data->letStart));
         MOZ_TRY(xdr->codeUint32(&data->constStart));
 
         if (mode == XDR_DECODE) {
             if (!data->length) {
-                MOZ_ASSERT(!data->varStart);
                 MOZ_ASSERT(!data->letStart);
                 MOZ_ASSERT(!data->constStart);
             }
@@ -1070,10 +1046,7 @@ EvalScope::createWithData(JSContext* cx, ScopeKind scopeKind, MutableHandle<Uniq
             return nullptr;
     }
 
-    Scope* scope = Scope::create(cx, scopeKind, enclosing, envShape, Move(data.get()));
-    if (!scope)
-        return nullptr;
-    return &scope->as<EvalScope>();
+    return Scope::create<EvalScope>(cx, scopeKind, enclosing, envShape, data);
 }
 
 /* static */ Scope*
@@ -1169,37 +1142,27 @@ ModuleScope::createWithData(JSContext* cx, MutableHandle<UniquePtr<Data>> data,
 
     // ModuleScope::Data has GCManagedDeletePolicy because it contains a
     // GCPtr. Destruction of |copy| below may trigger calls into the GC.
-    Rooted<ModuleScope*> moduleScope(cx);
 
+    // The data that's passed in is from the frontend and is LifoAlloc'd.
+    // Copy it now that we're creating a permanent VM scope.
+    RootedShape envShape(cx);
+    BindingIter bi(*data);
+    if (!PrepareScopeData<ModuleScope>(cx, bi, data, &ModuleEnvironmentObject::class_,
+                                       ModuleScopeEnvShapeFlags, &envShape))
     {
-        // The data that's passed in is from the frontend and is LifoAlloc'd.
-        // Copy it now that we're creating a permanent VM scope.
-        RootedShape envShape(cx);
-        BindingIter bi(*data);
-        if (!PrepareScopeData<ModuleScope>(cx, bi, data, &ModuleEnvironmentObject::class_,
-                                           ModuleScopeEnvShapeFlags, &envShape))
-        {
-            return nullptr;
-        }
-
-        // Modules always need an environment object for now.
-        if (!envShape) {
-            envShape = getEmptyEnvironmentShape(cx);
-            if (!envShape)
-                return nullptr;
-        }
-
-        Scope* scope = Scope::create(cx, ScopeKind::Module, enclosing, envShape);
-        if (!scope)
-            return nullptr;
-
-        data->module.init(module);
-
-        moduleScope = &scope->as<ModuleScope>();
-        moduleScope->initData(Move(data.get()));
+        return nullptr;
     }
 
-    return moduleScope;
+    // Modules always need an environment object for now.
+    if (!envShape) {
+        envShape = getEmptyEnvironmentShape(cx);
+        if (!envShape)
+            return nullptr;
+    }
+
+    data->module.init(module);
+
+    return Scope::create<ModuleScope>(cx, ScopeKind::Module, enclosing, envShape, data);
 }
 
 /* static */ Shape*
@@ -1237,54 +1200,46 @@ WasmInstanceScope::create(JSContext* cx, WasmInstanceObject* instance)
 {
     // WasmInstanceScope::Data has GCManagedDeletePolicy because it contains a
     // GCPtr. Destruction of |data| below may trigger calls into the GC.
-    Rooted<WasmInstanceScope*> wasmInstanceScope(cx);
 
-    {
-        size_t namesCount = 0;
-        if (instance->instance().memory()) {
-            namesCount++;
-        }
-        size_t globalsStart = namesCount;
-        size_t globalsCount = instance->instance().metadata().globals.length();
-        namesCount += globalsCount;
-
-        Rooted<UniquePtr<Data>> data(cx, NewEmptyScopeData<WasmInstanceScope>(cx, namesCount));
-        if (!data)
-            return nullptr;
-
-        size_t nameIndex = 0;
-        if (instance->instance().memory()) {
-            RootedAtom name(cx, GenerateWasmName(cx, "memory", /* index = */ 0));
-            if (!name)
-                return nullptr;
-            data->names[nameIndex] = BindingName(name, false);
-            nameIndex++;
-        }
-        for (size_t i = 0; i < globalsCount; i++) {
-            RootedAtom name(cx, GenerateWasmName(cx, "global", i));
-            if (!name)
-                return nullptr;
-            data->names[nameIndex] = BindingName(name, false);
-            nameIndex++;
-        }
-        MOZ_ASSERT(nameIndex == namesCount);
-
-        data->instance.init(instance);
-        data->memoriesStart = 0;
-        data->globalsStart = globalsStart;
-        data->length = namesCount;
-
-        Rooted<Scope*> enclosingScope(cx, &cx->global()->emptyGlobalScope());
-
-        Scope* scope = Scope::create(cx, ScopeKind::WasmInstance, enclosingScope, /* envShape = */ nullptr);
-        if (!scope)
-            return nullptr;
-
-        wasmInstanceScope = &scope->as<WasmInstanceScope>();
-        wasmInstanceScope->initData(Move(data.get()));
+    size_t namesCount = 0;
+    if (instance->instance().memory()) {
+        namesCount++;
     }
+    size_t globalsStart = namesCount;
+    size_t globalsCount = instance->instance().metadata().globals.length();
+    namesCount += globalsCount;
 
-    return wasmInstanceScope;
+    Rooted<UniquePtr<Data>> data(cx, NewEmptyScopeData<WasmInstanceScope>(cx, namesCount));
+    if (!data)
+        return nullptr;
+
+    size_t nameIndex = 0;
+    RootedAtom name(cx);
+    if (instance->instance().memory()) {
+        name = GenerateWasmName(cx, "memory", /* index = */ 0);
+        if (!name)
+            return nullptr;
+        new (&data->trailingNames[nameIndex]) BindingName(name, false);
+        nameIndex++;
+    }
+    for (size_t i = 0; i < globalsCount; i++) {
+        name = GenerateWasmName(cx, "global", i);
+        if (!name)
+            return nullptr;
+        new (&data->trailingNames[nameIndex]) BindingName(name, false);
+        nameIndex++;
+    }
+    MOZ_ASSERT(nameIndex == namesCount);
+
+    data->instance.init(instance);
+    data->memoriesStart = 0;
+    data->globalsStart = globalsStart;
+    data->length = namesCount;
+
+    Rooted<Scope*> enclosingScope(cx, &cx->global()->emptyGlobalScope());
+
+    return Scope::create<WasmInstanceScope>(cx, ScopeKind::WasmInstance, enclosingScope,
+                                            /* envShape = */ nullptr, &data);
 }
 
 /* static */ Shape*
@@ -1321,21 +1276,16 @@ WasmFunctionScope::create(JSContext* cx, HandleScope enclosing, uint32_t funcInd
 
     data->funcIndex = funcIndex;
     data->length = namesCount;
+    RootedAtom name(cx);
     for (size_t i = 0; i < namesCount; i++) {
-        RootedAtom name(cx, GenerateWasmName(cx, "var", i));
+        name = GenerateWasmName(cx, "var", i);
         if (!name)
             return nullptr;
-        data->names[i] = BindingName(name, false);
+        new (&data->trailingNames[i]) BindingName(name, false);
     }
 
-    Scope* scope = Scope::create(cx, ScopeKind::WasmFunction, enclosing, /* envShape = */ nullptr);
-    if (!scope)
-        return nullptr;
-
-    wasmFunctionScope = &scope->as<WasmFunctionScope>();
-    wasmFunctionScope->initData(Move(data.get()));
-
-    return wasmFunctionScope;
+    return Scope::create<WasmFunctionScope>(cx, ScopeKind::WasmFunction, enclosing,
+                                            /* envShape = */ nullptr, &data);
 }
 
 /* static */ Shape*
@@ -1417,22 +1367,21 @@ BindingIter::init(LexicalScope::Data& data, uint32_t firstFrameSlot, uint8_t fla
     if (flags & IsNamedLambda) {
         // Named lambda binding is weird. Normal BindingKind ordering rules
         // don't apply.
-        init(0, 0, 0, 0, 0, 0,
+        init(0, 0, 0, 0, 0,
              CanHaveEnvironmentSlots | flags,
              firstFrameSlot, JSSLOT_FREE(&LexicalEnvironmentObject::class_),
-             data.names, data.length);
+             data.trailingNames.start(), data.length);
     } else {
         //            imports - [0, 0)
         // positional formals - [0, 0)
         //      other formals - [0, 0)
-        //    top-level funcs - [0, 0)
         //               vars - [0, 0)
         //               lets - [0, data.constStart)
         //             consts - [data.constStart, data.length)
-        init(0, 0, 0, 0, 0, data.constStart,
+        init(0, 0, 0, 0, data.constStart,
              CanHaveFrameSlots | CanHaveEnvironmentSlots | flags,
              firstFrameSlot, JSSLOT_FREE(&LexicalEnvironmentObject::class_),
-             data.names, data.length);
+             data.trailingNames.start(), data.length);
     }
 }
 
@@ -1446,14 +1395,13 @@ BindingIter::init(FunctionScope::Data& data, uint8_t flags)
     //            imports - [0, 0)
     // positional formals - [0, data.nonPositionalFormalStart)
     //      other formals - [data.nonPositionalParamStart, data.varStart)
-    //    top-level funcs - [data.varStart, data.varStart)
     //               vars - [data.varStart, data.length)
     //               lets - [data.length, data.length)
     //             consts - [data.length, data.length)
-    init(0, data.nonPositionalFormalStart, data.varStart, data.varStart, data.length, data.length,
+    init(0, data.nonPositionalFormalStart, data.varStart, data.length, data.length,
          flags,
          0, JSSLOT_FREE(&CallObject::class_),
-         data.names, data.length);
+         data.trailingNames.start(), data.length);
 }
 
 void
@@ -1462,14 +1410,13 @@ BindingIter::init(VarScope::Data& data, uint32_t firstFrameSlot)
     //            imports - [0, 0)
     // positional formals - [0, 0)
     //      other formals - [0, 0)
-    //    top-level funcs - [0, 0)
     //               vars - [0, data.length)
     //               lets - [data.length, data.length)
     //             consts - [data.length, data.length)
-    init(0, 0, 0, 0, data.length, data.length,
+    init(0, 0, 0, data.length, data.length,
          CanHaveFrameSlots | CanHaveEnvironmentSlots,
          firstFrameSlot, JSSLOT_FREE(&VarEnvironmentObject::class_),
-         data.names, data.length);
+         data.trailingNames.start(), data.length);
 }
 
 void
@@ -1478,14 +1425,13 @@ BindingIter::init(GlobalScope::Data& data)
     //            imports - [0, 0)
     // positional formals - [0, 0)
     //      other formals - [0, 0)
-    //    top-level funcs - [0, data.varStart)
-    //               vars - [data.varStart, data.letStart)
+    //               vars - [0, data.letStart)
     //               lets - [data.letStart, data.constStart)
     //             consts - [data.constStart, data.length)
-    init(0, 0, 0, data.varStart, data.letStart, data.constStart,
+    init(0, 0, 0, data.letStart, data.constStart,
          CannotHaveSlots,
          UINT32_MAX, UINT32_MAX,
-         data.names, data.length);
+         data.trailingNames.start(), data.length);
 }
 
 void
@@ -1507,13 +1453,12 @@ BindingIter::init(EvalScope::Data& data, bool strict)
     //            imports - [0, 0)
     // positional formals - [0, 0)
     //      other formals - [0, 0)
-    //    top-level funcs - [0, data.varStart)
-    //               vars - [data.varStart, data.length)
+    //               vars - [0, data.length)
     //               lets - [data.length, data.length)
     //             consts - [data.length, data.length)
-    init(0, 0, 0, data.varStart, data.length, data.length,
+    init(0, 0, 0, data.length, data.length,
          flags, firstFrameSlot, firstEnvironmentSlot,
-         data.names, data.length);
+         data.trailingNames.start(), data.length);
 }
 
 void
@@ -1522,14 +1467,13 @@ BindingIter::init(ModuleScope::Data& data)
     //            imports - [0, data.varStart)
     // positional formals - [data.varStart, data.varStart)
     //      other formals - [data.varStart, data.varStart)
-    //    top-level funcs - [data.varStart, data.varStart)
     //               vars - [data.varStart, data.letStart)
     //               lets - [data.letStart, data.constStart)
     //             consts - [data.constStart, data.length)
-    init(data.varStart, data.varStart, data.varStart, data.varStart, data.letStart, data.constStart,
+    init(data.varStart, data.varStart, data.varStart, data.letStart, data.constStart,
          CanHaveFrameSlots | CanHaveEnvironmentSlots,
          0, JSSLOT_FREE(&ModuleEnvironmentObject::class_),
-         data.names, data.length);
+         data.trailingNames.start(), data.length);
 }
 
 void
@@ -1538,14 +1482,13 @@ BindingIter::init(WasmInstanceScope::Data& data)
     //            imports - [0, 0)
     // positional formals - [0, 0)
     //      other formals - [0, 0)
-    //    top-level funcs - [0, 0)
     //               vars - [0, data.length)
     //               lets - [data.length, data.length)
     //             consts - [data.length, data.length)
-    init(0, 0, 0, 0, data.length, data.length,
+    init(0, 0, 0, data.length, data.length,
          CanHaveFrameSlots | CanHaveEnvironmentSlots,
          UINT32_MAX, UINT32_MAX,
-         data.names, data.length);
+         data.trailingNames.start(), data.length);
 }
 
 void
@@ -1554,14 +1497,13 @@ BindingIter::init(WasmFunctionScope::Data& data)
     //            imports - [0, 0)
     // positional formals - [0, 0)
     //      other formals - [0, 0)
-    //    top-level funcs - [0, 0)
     //               vars - [0, data.length)
     //               lets - [data.length, data.length)
     //             consts - [data.length, data.length)
-    init(0, 0, 0, 0, data.length, data.length,
+    init(0, 0, 0, data.length, data.length,
          CanHaveFrameSlots | CanHaveEnvironmentSlots,
          UINT32_MAX, UINT32_MAX,
-         data.names, data.length);
+         data.trailingNames.start(), data.length);
 }
 
 PositionalFormalParameterIter::PositionalFormalParameterIter(JSScript* script)

@@ -62,9 +62,10 @@ public:
   InfallibleTArray<AnimData>& GetAnimationData() { return mAnimationData; }
   AnimationArray& GetAnimations() { return mAnimations; }
   bool ApplyPendingUpdatesForThisTransaction();
-  bool HasOpacityAnimation() const;
   bool HasTransformAnimation() const;
 
+  // In case of continuation, |aFrame| must be the first or the last
+  // continuation frame, otherwise this function might return Nothing().
   static Maybe<uint64_t> GetGenerationFromFrame(nsIFrame* aFrame,
                                                 DisplayItemType aDisplayItemKey);
 

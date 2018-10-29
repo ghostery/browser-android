@@ -35,6 +35,8 @@
 #include "nsLayoutUtils.h"
 #include "mozilla/Attributes.h"
 #include "nsUnicodeProperties.h"
+#include "mozilla/layers/WebRenderLayerManager.h"
+#include "TextDrawTarget.h"
 
 #ifdef ACCESSIBILITY
 #include "nsAccessibilityService.h"
@@ -308,6 +310,12 @@ public:
   void PaintTextToContext(gfxContext* aCtx,
                           nsPoint aOffset,
                           const nscolor* aColor);
+
+  virtual bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
+                                       mozilla::wr::IpcResourceUpdateQueue& aResources,
+                                       const StackingContextHelper& aSc,
+                                       mozilla::layers::WebRenderLayerManager* aManager,
+                                       nsDisplayListBuilder* aDisplayListBuilder) override;
 };
 
 static void
@@ -331,7 +339,7 @@ nsDisplayXULTextBox::Paint(nsDisplayListBuilder* aBuilder,
   nsRect drawRect = static_cast<nsTextBoxFrame*>(mFrame)->mTextDrawRect +
                     ToReferenceFrame();
   nsLayoutUtils::PaintTextShadow(mFrame, aCtx,
-                                 drawRect, mVisibleRect,
+                                 drawRect, GetPaintRect(),
                                  mFrame->StyleColor()->mColor,
                                  PaintTextShadowCallback,
                                  (void*)this);
@@ -345,7 +353,37 @@ nsDisplayXULTextBox::PaintTextToContext(gfxContext* aCtx,
                                         const nscolor* aColor)
 {
   static_cast<nsTextBoxFrame*>(mFrame)->
-    PaintTitle(*aCtx, mVisibleRect, ToReferenceFrame() + aOffset, aColor);
+    PaintTitle(*aCtx, GetPaintRect(), ToReferenceFrame() + aOffset, aColor);
+}
+
+bool
+nsDisplayXULTextBox::CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
+                                             mozilla::wr::IpcResourceUpdateQueue& aResources,
+                                             const StackingContextHelper& aSc,
+                                             mozilla::layers::WebRenderLayerManager* aManager,
+                                             nsDisplayListBuilder* aDisplayListBuilder)
+{
+
+  bool snap = false;
+  auto bounds = GetBounds(aDisplayListBuilder, &snap);
+
+  if (bounds.IsEmpty()) {
+    return true;
+  }
+
+
+  auto appUnitsPerDevPixel = Frame()->PresContext()->AppUnitsPerDevPixel();
+  gfx::Point deviceOffset = LayoutDevicePoint::FromAppUnits(
+      bounds.TopLeft(), appUnitsPerDevPixel).ToUnknownPoint();
+
+  RefPtr<mozilla::layout::TextDrawTarget> textDrawer = 
+      new mozilla::layout::TextDrawTarget(aBuilder, aResources, aSc, aManager, this, bounds);
+  RefPtr<gfxContext> captureCtx = gfxContext::CreateOrNull(textDrawer, deviceOffset);
+
+  Paint(aDisplayListBuilder, captureCtx);
+  textDrawer->TerminateShadows();
+
+  return !textDrawer->HasUnsupportedFeatures();
 }
 
 nsRect
@@ -427,8 +465,7 @@ nsTextBoxFrame::DrawText(gfxContext&         aRenderingContext,
         if (aOverrideColor) {
           color = *aOverrideColor;
         } else {
-          color = context->StyleColor()->
-            CalcComplexColor(styleText->mTextDecorationColor);
+          color = styleText->mTextDecorationColor.CalcColor(context);
         }
         uint8_t style = styleText->mTextDecorationStyle;
 
@@ -839,7 +876,7 @@ nsTextBoxFrame::UpdateAccessTitle()
     /*
      * Note that if you change appending access key label spec,
      * you need to maintain same logic in following methods. See bug 324159.
-     * toolkit/content/commonDialog.js (setLabelForNode)
+     * toolkit/components/prompts/src/CommonDialog.jsm (setLabelForNode)
      * toolkit/content/widgets/text.xml (formatAccessKey)
      */
     int32_t menuAccessKey;
@@ -860,6 +897,11 @@ nsTextBoxFrame::UpdateAccessTitle()
     if (mTitle.IsEmpty()) {
         mTitle = accessKeyLabel;
         return;
+    }
+
+    if (StringEndsWith(mTitle, accessKeyLabel)) {
+      // Never append another "(X)" if the title already ends with "(X)".
+      return;
     }
 
     const nsDependentString& kEllipsis = nsContentUtils::GetLocalizedEllipsis();

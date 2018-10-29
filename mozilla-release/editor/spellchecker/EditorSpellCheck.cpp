@@ -18,6 +18,7 @@
 #include "mozilla/TextServicesDocument.h" // for TextServicesDocument
 #include "nsAString.h"                  // for nsAString::IsEmpty, etc
 #include "nsComponentManagerUtils.h"    // for do_CreateInstance
+#include "nsComposeTxtSrvFilter.h"
 #include "nsDebug.h"                    // for NS_ENSURE_TRUE, etc
 #include "nsDependentSubstring.h"       // for Substring
 #include "nsError.h"                    // for NS_ERROR_NOT_INITIALIZED, etc
@@ -26,7 +27,6 @@
 #include "nsIDocument.h"                // for nsIDocument
 #include "nsIEditor.h"                  // for nsIEditor
 #include "nsILoadContext.h"
-#include "nsISelection.h"               // for nsISelection
 #include "nsISupportsBase.h"            // for nsISupports
 #include "nsISupportsUtils.h"           // for NS_ADDREF
 #include "nsITextServicesFilter.h"      // for nsITextServicesFilter
@@ -405,12 +405,11 @@ EditorSpellCheck::InitSpellChecker(nsIEditor* aEditor,
     // Find out if the section is collapsed or not.
     // If it isn't, we want to spellcheck just the selection.
 
-    nsCOMPtr<nsISelection> domSelection;
-    aEditor->GetSelection(getter_AddRefs(domSelection));
-    if (NS_WARN_IF(!domSelection)) {
+    RefPtr<Selection> selection;
+    aEditor->GetSelection(getter_AddRefs(selection));
+    if (NS_WARN_IF(!selection)) {
       return NS_ERROR_FAILURE;
     }
-    RefPtr<Selection> selection = domSelection->AsSelection();
 
     if (selection->RangeCount()) {
       RefPtr<nsRange> range = selection->GetRangeAt(0);
@@ -586,8 +585,6 @@ EditorSpellCheck::GetDictionaryList(char16_t*** aDictionaryList,
 
     tmpPtr = (char16_t **)moz_xmalloc(sizeof(char16_t *));
 
-    NS_ENSURE_TRUE(tmpPtr, NS_ERROR_OUT_OF_MEMORY);
-
     *tmpPtr          = 0;
     *aDictionaryList = tmpPtr;
     *aCount          = 0;
@@ -596,8 +593,6 @@ EditorSpellCheck::GetDictionaryList(char16_t*** aDictionaryList,
   }
 
   tmpPtr = (char16_t **)moz_xmalloc(sizeof(char16_t *) * dictList.Length());
-
-  NS_ENSURE_TRUE(tmpPtr, NS_ERROR_OUT_OF_MEMORY);
 
   *aDictionaryList = tmpPtr;
   *aCount          = dictList.Length();
@@ -696,7 +691,7 @@ EditorSpellCheck::UninitSpellChecker()
 NS_IMETHODIMP
 EditorSpellCheck::SetFilter(nsITextServicesFilter *aFilter)
 {
-  mTxtSrvFilter = aFilter;
+  mTxtSrvFilter = reinterpret_cast<nsComposeTxtSrvFilter*>(aFilter);
   return NS_OK;
 }
 

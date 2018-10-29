@@ -38,7 +38,7 @@ MockFxAccountsClient.prototype = {
   __proto__: FxAccountsClient.prototype,
   accountStatus() {
     return Promise.resolve(true);
-  }
+  },
 };
 
 function MockFxAccounts() {
@@ -49,7 +49,7 @@ function MockFxAccounts() {
       return this._now_is;
     },
 
-    fxAccountsClient: new MockFxAccountsClient()
+    fxAccountsClient: new MockFxAccountsClient(),
   });
   fxa.internal.currentAccountState.getCertificate = function(data, keyPair, mustBeValidUntil) {
     this.cert = {
@@ -110,13 +110,13 @@ add_task(async function test_initialializeWithAuthErrorAndDeletedAccount() {
       accountStatus() {
         accountStatusCalled = true;
         return Promise.resolve(false);
-      }
+      },
     };
 
     let mockFxAClient = new AuthErrorMockFxAClient();
     browseridManager._fxaService.internal._fxAccountsClient = mockFxAClient;
 
-    await Assert.rejects(browseridManager._ensureValidToken(),
+    await Assert.rejects(browseridManager._ensureValidToken(), AuthenticationError,
                          "should reject due to an auth error");
 
     Assert.ok(signCertificateCalled);
@@ -256,7 +256,8 @@ add_task(async function test_ensureLoggedIn() {
   let fxa = globalBrowseridManager._fxaService;
   let signedInUser = fxa.internal.currentAccountState.storageManager.accountData;
   fxa.internal.currentAccountState.storageManager.accountData = null;
-  await Assert.rejects(globalBrowseridManager._ensureValidToken(true), "expecting rejection due to no user");
+  await Assert.rejects(globalBrowseridManager._ensureValidToken(true),
+    /Can't possibly get keys; User is not signed in/, "expecting rejection due to no user");
   // Restore the logged in user to what it was.
   fxa.internal.currentAccountState.storageManager.accountData = signedInUser;
   Status.login = LOGIN_FAILED_LOGIN_REJECTED;
@@ -331,6 +332,7 @@ add_task(async function test_getTokenErrors() {
   let browseridManager = Service.identity;
 
   await Assert.rejects(browseridManager._ensureValidToken(),
+                       AuthenticationError,
                        "should reject due to 401");
   Assert.equal(Status.login, LOGIN_FAILED_LOGIN_REJECTED, "login was rejected");
 
@@ -346,6 +348,7 @@ add_task(async function test_getTokenErrors() {
   });
   browseridManager = Service.identity;
   await Assert.rejects(browseridManager._ensureValidToken(),
+                       TokenServerClientServerError,
                        "should reject due to non-JSON response");
   Assert.equal(Status.login, LOGIN_FAILED_NETWORK_ERROR, "login state is LOGIN_FAILED_NETWORK_ERROR");
 });
@@ -370,7 +373,7 @@ add_task(async function test_refreshCertificateOn401() {
     __proto__: FxAccountsClient.prototype,
     signCertificate() {
       ++getCertCount;
-    }
+    },
   };
 
   let mockFxAClient = new CheckSignMockFxAClient();
@@ -397,7 +400,7 @@ add_task(async function test_refreshCertificateOn401() {
         api_endpoint: "http://example.com/",
         uid:          "uid",
         duration:     300,
-      })
+      }),
     };
   });
 
@@ -430,6 +433,7 @@ add_task(async function test_getTokenErrorWithRetry() {
   let browseridManager = Service.identity;
 
   await Assert.rejects(browseridManager._ensureValidToken(),
+                       TokenServerClientServerError,
                        "should reject due to 503");
 
   // The observer should have fired - check it got the value in the response.
@@ -448,6 +452,7 @@ add_task(async function test_getTokenErrorWithRetry() {
   browseridManager = Service.identity;
 
   await Assert.rejects(browseridManager._ensureValidToken(),
+                       TokenServerClientServerError,
                        "should reject due to no token in response");
 
   // The observer should have fired - check it got the value in the response.
@@ -482,6 +487,7 @@ add_task(async function test_getKeysErrorWithBackoff() {
 
   let browseridManager = Service.identity;
   await Assert.rejects(browseridManager._ensureValidToken(),
+                       TokenServerClientServerError,
                        "should reject due to 503");
 
   // The observer should have fired - check it got the value in the response.
@@ -518,6 +524,7 @@ add_task(async function test_getKeysErrorWithRetry() {
 
   let browseridManager = Service.identity;
   await Assert.rejects(browseridManager._ensureValidToken(),
+                       TokenServerClientServerError,
                        "should reject due to 503");
 
   // The observer should have fired - check it got the value in the response.
@@ -726,7 +733,7 @@ async function initializeIdentityWithHAWKResponseFactory(config, cbGetResponse) 
         this.response = cbGetResponse("get", null, this._uri, this._credentials, this._extra);
       }
       return this.response;
-    }
+    },
   };
 
   // The hawk client.
@@ -760,6 +767,8 @@ async function initializeIdentityWithHAWKResponseFactory(config, cbGetResponse) 
   globalBrowseridManager._fxaService = fxa;
   globalBrowseridManager._signedInUser = await fxa.getSignedInUser();
   await Assert.rejects(globalBrowseridManager._ensureValidToken(true),
+                       // TODO: Ideally this should have a specific check for an error.
+                       () => true,
                        "expecting rejection due to hawk error");
 }
 
@@ -785,7 +794,7 @@ function mockTokenServer(func) {
     async get() {
       this.response = func();
       return this.response;
-    }
+    },
   };
   // The mocked TokenServer client which will get the response.
   function MockTSC() { }

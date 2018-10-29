@@ -63,13 +63,13 @@ FramebufferImpl *Context9::createFramebuffer(const gl::FramebufferState &data)
 
 TextureImpl *Context9::createTexture(const gl::TextureState &state)
 {
-    switch (state.getTarget())
+    switch (state.getType())
     {
-        case GL_TEXTURE_2D:
+        case gl::TextureType::_2D:
             return new TextureD3D_2D(state, mRenderer);
-        case GL_TEXTURE_CUBE_MAP:
+        case gl::TextureType::CubeMap:
             return new TextureD3D_Cube(state, mRenderer);
-        case GL_TEXTURE_EXTERNAL_OES:
+        case gl::TextureType::External:
             return new TextureD3D_External(state, mRenderer);
         default:
             UNREACHABLE();
@@ -92,7 +92,7 @@ VertexArrayImpl *Context9::createVertexArray(const gl::VertexArrayState &data)
     return new VertexArray9(data);
 }
 
-QueryImpl *Context9::createQuery(GLenum type)
+QueryImpl *Context9::createQuery(gl::QueryType type)
 {
     return new Query9(mRenderer, type);
 }

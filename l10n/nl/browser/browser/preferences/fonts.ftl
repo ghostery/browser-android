@@ -4,6 +4,7 @@
 
 fonts-window =
     .title = Lettertypen
+
 fonts-window-close =
     .key = w
 
@@ -11,6 +12,7 @@ fonts-window-close =
 
 fonts-langgroup-header = Lettertypen voor
     .accesskey = L
+
 fonts-langgroup-arabic =
     .label = Arabisch
 fonts-langgroup-armenian =
@@ -75,24 +77,33 @@ fonts-langgroup-other =
 
 fonts-proportional-header = Proportioneel
     .accesskey = P
+
 fonts-default-serif =
     .label = Met schreef
 fonts-default-sans-serif =
     .label = Schreefloos
+
 fonts-proportional-size = Grootte
     .accesskey = G
+
 fonts-serif = Met schreef
     .accesskey = s
+
 fonts-sans-serif = Schreefloos
     .accesskey = c
+
 fonts-monospace = Monospace
     .accesskey = M
+
 fonts-monospace-size = Grootte
     .accesskey = o
+
 fonts-minsize = Minimale lettergrootte
     .accesskey = n
+
 fonts-minsize-none =
     .label = Geen
+
 fonts-allow-own =
     .label = Pagina’s toestaan om hun eigen lettertypen te kiezen, in plaats van uw selecties hierboven
     .accesskey = e
@@ -104,8 +115,10 @@ fonts-allow-own =
 
 fonts-languages-fallback-header = Tekstcodering voor legacy-inhoud
 fonts-languages-fallback-desc = Deze tekstcodering wordt gebruikt voor legacy-inhoud die geen eigen codering kan aangeven.
+
 fonts-languages-fallback-label = Terugvaltekstcodering
     .accesskey = T
+
 fonts-languages-fallback-name-auto =
     .label = Standaard voor huidige landinstelling
 fonts-languages-fallback-name-arabic =
@@ -138,9 +151,11 @@ fonts-languages-fallback-name-vietnamese =
     .label = Vietnamees
 fonts-languages-fallback-name-other =
     .label = Anders (incl. West-Europees)
+
 fonts-very-large-warning-title = Grote minimale lettergrootte
 fonts-very-large-warning-message = U hebt een zeer grote minimale lettergrootte geselecteerd (meer dan 24 pixels). Dit kan het moeilijk of onmogelijk maken om belangrijke configuratiepagina’s als deze te gebruiken.
 fonts-very-large-warning-accept = Mijn wijzigingen toch behouden
+
 # Variables:
 #   $name {string, "Arial"} - Name of the default font
 fonts-label-default =
