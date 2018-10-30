@@ -19,14 +19,12 @@ add_task(async function() {
         );
       });
       let textBox = document.getAnonymousElementByAttribute(gURLBar,
-        "anonid", "textbox-input-box");
-      let cxmenu = document.getAnonymousElementByAttribute(textBox,
-        "anonid", "input-box-contextmenu");
+        "anonid", "moz-input-box");
+      let cxmenu = textBox.menupopup;
       let cxmenuPromise = BrowserTestUtils.waitForEvent(cxmenu, "popupshown");
       EventUtils.synthesizeMouseAtCenter(gURLBar, {type: "contextmenu", button: 2});
       await cxmenuPromise;
-      let menuitem = document.getAnonymousElementByAttribute(textBox,
-        "anonid", "paste-and-go");
+      let menuitem = textBox.getMenuItem("paste-and-go");
       let browserLoadedPromise = BrowserTestUtils.browserLoaded(browser, false, url.replace(/\n/g, ""));
       EventUtils.synthesizeMouseAtCenter(menuitem, {});
       // Using toSource in order to get the newlines escaped:
@@ -35,4 +33,31 @@ add_task(async function() {
       ok(true, "Successfully loaded " + url);
     });
   }
+});
+
+add_task(async function() {
+  const url = "http://example.com/4\u2028";
+  await BrowserTestUtils.withNewTab("about:blank", async function(browser) {
+    gURLBar.focus();
+    await new Promise((resolve, reject) => {
+      waitForClipboard(url, function() {
+        clipboardHelper.copyString(url);
+      }, resolve,
+        () => reject(new Error(`Failed to copy string '${url}' to clipboard`))
+      );
+    });
+    let textBox = document.getAnonymousElementByAttribute(gURLBar,
+      "anonid", "moz-input-box");
+    let cxmenu = textBox.menupopup;
+    let cxmenuPromise = BrowserTestUtils.waitForEvent(cxmenu, "popupshown");
+    EventUtils.synthesizeMouseAtCenter(gURLBar, {type: "contextmenu", button: 2});
+    await cxmenuPromise;
+    let menuitem = textBox.getMenuItem("paste-and-go");
+    let browserLoadedPromise = BrowserTestUtils.browserLoaded(browser, false, url.replace(/\u2028/g, ""));
+    EventUtils.synthesizeMouseAtCenter(menuitem, {});
+    // Using toSource in order to get the newlines escaped:
+    info("Paste and go, loading " + url.toSource());
+    await browserLoadedPromise;
+    ok(true, "Successfully loaded " + url);
+  });
 });

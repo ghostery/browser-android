@@ -9,15 +9,6 @@
  * Tab previews utility, produces thumbnails
  */
 var tabPreviews = {
-  init: function tabPreviews_init() {
-    if (this._selectedTab)
-      return;
-    this._selectedTab = gBrowser.selectedTab;
-
-    gBrowser.tabContainer.addEventListener("TabSelect", this);
-    gBrowser.tabContainer.addEventListener("SSTabRestored", this);
-  },
-
   get aspectRatio() {
     let { PageThumbUtils } = ChromeUtils.import("resource://gre/modules/PageThumbUtils.jsm", {});
     let [ width, height ] = PageThumbUtils.getThumbnailSize(window);
@@ -70,33 +61,6 @@ var tabPreviews = {
     });
     return canvas;
   },
-
-  handleEvent: function tabPreviews_handleEvent(event) {
-    switch (event.type) {
-      case "TabSelect":
-        if (this._selectedTab &&
-            this._selectedTab.parentNode &&
-            !this._pendingUpdate) {
-          // Generate a thumbnail for the tab that was selected.
-          // The timeout keeps the UI snappy and prevents us from generating thumbnails
-          // for tabs that will be closed. During that timeout, don't generate other
-          // thumbnails in case multiple TabSelect events occur fast in succession.
-          this._pendingUpdate = true;
-          setTimeout(function(self, aTab) {
-            self._pendingUpdate = false;
-            if (aTab.parentNode &&
-                !aTab.hasAttribute("busy") &&
-                !aTab.hasAttribute("pending"))
-              self.capture(aTab, true);
-          }, 2000, this, this._selectedTab);
-        }
-        this._selectedTab = event.target;
-        break;
-      case "SSTabRestored":
-        this.capture(event.target, true);
-        break;
-    }
-  }
 };
 
 var tabPreviewPanelHelper = {
@@ -136,28 +100,35 @@ var tabPreviewPanelHelper = {
       gBrowser.selectedTab = host.tabToSelect;
       host.tabToSelect = null;
     }
-  }
+  },
 };
 
 /**
  * Ctrl-Tab panel
  */
 var ctrlTab = {
+  maxTabPreviews: 6,
   get panel() {
     delete this.panel;
     return this.panel = document.getElementById("ctrlTab-panel");
   },
   get showAllButton() {
     delete this.showAllButton;
-    return this.showAllButton = document.getElementById("ctrlTab-showAll");
+    let button = this.makePreview(true);
+    button.setAttribute("id", "ctrlTab-showAll");
+    document.getElementById("ctrlTab-showAll-container").appendChild(button);
+    return this.showAllButton = button;
   },
   get previews() {
     delete this.previews;
+    let previewsContainer = document.getElementById("ctrlTab-previews");
+    for (let i = 0; i < this.maxTabPreviews; i++) {
+      previewsContainer.appendChild(this.makePreview(false));
+    }
+    // Ensure that showAllButton is in the document before returning the single
+    // node list that includes both the previews and the button.
+    this.showAllButton;
     return this.previews = this.panel.getElementsByClassName("ctrlTab-preview");
-  },
-  get maxTabPreviews() {
-    delete this.maxTabPreviews;
-    return this.maxTabPreviews = this.previews.length - 1;
   },
   get canvasWidth() {
     delete this.canvasWidth;
@@ -199,8 +170,6 @@ var ctrlTab = {
 
   init: function ctrlTab_init() {
     if (!this._recentlyUsedTabs) {
-      tabPreviews.init();
-
       this._initRecentlyUsedTabs();
       this._init(true);
     }
@@ -213,7 +182,7 @@ var ctrlTab = {
     }
   },
 
-  prefName: "browser.ctrlTab.previews",
+  prefName: "browser.ctrlTab.recentlyUsedOrder",
   readPref: function ctrlTab_readPref() {
     var enable =
       Services.prefs.getBoolPref(this.prefName) &&
@@ -228,14 +197,66 @@ var ctrlTab = {
     this.readPref();
   },
 
+  makePreview: function ctrlTab_makePreview(aIsShowAllButton) {
+    let preview = document.createXULElement("button");
+    preview.setAttribute("class", "ctrlTab-preview");
+    preview.setAttribute("pack", "center");
+    if (!aIsShowAllButton) {
+      preview.setAttribute("flex", "1");
+    }
+    preview.addEventListener("mouseover", () => this._mouseOverFocus(preview));
+    preview.addEventListener("command", () => this.pick(preview));
+    preview.addEventListener("click", event => {
+      if (event.button == 1) {
+        this.remove(preview);
+      } else if (AppConstants.platform == "macosx" && event.button == 2) {
+        // Control+click is a right click on OS X
+        this.pick(preview);
+      }
+    });
+
+    let previewInner = document.createXULElement("vbox");
+    previewInner.setAttribute("class", "ctrlTab-preview-inner");
+    preview.appendChild(previewInner);
+
+    if (!aIsShowAllButton) {
+      let canvasWidth = this.canvasWidth;
+      let canvasHeight = this.canvasHeight;
+
+      let canvas = preview._canvas = document.createXULElement("hbox");
+      canvas.setAttribute("class", "ctrlTab-canvas");
+      canvas.setAttribute("width", canvasWidth);
+      canvas.style.minWidth = canvasWidth + "px";
+      canvas.style.maxWidth = canvasWidth + "px";
+      canvas.style.minHeight = canvasHeight + "px";
+      canvas.style.maxHeight = canvasHeight + "px";
+      previewInner.appendChild(canvas);
+
+      let faviconContainer = document.createXULElement("hbox");
+      faviconContainer.setAttribute("class", "ctrlTab-favicon-container");
+      previewInner.appendChild(faviconContainer);
+
+      let favicon = preview._favicon = document.createXULElement("image");
+      favicon.setAttribute("class", "ctrlTab-favicon");
+      faviconContainer.appendChild(favicon);
+    }
+
+    let label = preview._label = document.createXULElement("label");
+    label.setAttribute("class", "ctrlTab-label plain");
+    label.setAttribute("crop", "end");
+    previewInner.appendChild(label);
+
+    return preview;
+  },
+
   updatePreviews: function ctrlTab_updatePreviews() {
     for (let i = 0; i < this.previews.length; i++)
       this.updatePreview(this.previews[i], this.tabList[i]);
 
     var showAllLabel = gNavigatorBundle.getString("ctrlTab.listAllTabs.label");
-    this.showAllButton.label =
-      PluralForm.get(this.tabCount, showAllLabel).replace("#1", this.tabCount);
-    this.showAllButton.hidden = !allTabs.canOpen;
+    this.showAllButton._label.setAttribute("value",
+      PluralForm.get(this.tabCount, showAllLabel).replace("#1", this.tabCount));
+    this.showAllButton.hidden = !gTabsPanel.canOpen;
   },
 
   updatePreview: function ctrlTab_updatePreview(aPreview, aTab) {
@@ -244,30 +265,25 @@ var ctrlTab = {
 
     aPreview._tab = aTab;
 
-    if (aPreview.firstChild)
-      aPreview.firstChild.remove();
+    if (aPreview._canvas.firstElementChild) {
+      aPreview._canvas.firstElementChild.remove();
+    }
+
     if (aTab) {
-      let canvasWidth = this.canvasWidth;
-      let canvasHeight = this.canvasHeight;
-      aPreview.appendChild(tabPreviews.get(aTab));
-      aPreview.setAttribute("label", aTab.label);
+      aPreview._canvas.appendChild(tabPreviews.get(aTab));
+      aPreview._label.setAttribute("value", aTab.label);
       aPreview.setAttribute("tooltiptext", aTab.label);
-      aPreview.setAttribute("canvaswidth", canvasWidth);
-      aPreview.setAttribute("canvasstyle",
-                            "max-width:" + canvasWidth + "px;" +
-                            "min-width:" + canvasWidth + "px;" +
-                            "max-height:" + canvasHeight + "px;" +
-                            "min-height:" + canvasHeight + "px;");
-      if (aTab.image)
-        aPreview.setAttribute("image", aTab.image);
-      else
-        aPreview.removeAttribute("image");
+      if (aTab.image) {
+        aPreview._favicon.setAttribute("src", aTab.image);
+      } else {
+        aPreview._favicon.removeAttribute("src");
+      }
       aPreview.hidden = false;
     } else {
       aPreview.hidden = true;
-      aPreview.removeAttribute("label");
+      aPreview._label.removeAttribute("value");
       aPreview.removeAttribute("tooltiptext");
-      aPreview.removeAttribute("image");
+      aPreview._favicon.removeAttribute("src");
     }
   },
 
@@ -411,48 +427,52 @@ var ctrlTab = {
     }
   },
 
-  onKeyPress: function ctrlTab_onKeyPress(event) {
-    var isOpen = this.isOpen;
-
-    if (isOpen) {
-      event.preventDefault();
-      event.stopPropagation();
+  onKeyDown(event) {
+    if (event.keyCode != event.DOM_VK_TAB ||
+        !event.ctrlKey ||
+        event.altKey ||
+        event.metaKey) {
+      return;
     }
 
-    switch (event.keyCode) {
-      case event.DOM_VK_TAB:
-        if (event.ctrlKey && !event.altKey && !event.metaKey) {
-          if (isOpen) {
-            this.advanceFocus(!event.shiftKey);
-          } else if (!event.shiftKey) {
-            event.preventDefault();
-            event.stopPropagation();
-            let tabs = gBrowser.visibleTabs;
-            if (tabs.length > 2) {
-              this.open();
-            } else if (tabs.length == 2) {
-              let index = tabs[0].selected ? 1 : 0;
-              gBrowser.selectedTab = tabs[index];
-            }
-          }
-        }
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (this.isOpen) {
+      this.advanceFocus(!event.shiftKey);
+    } else if (!event.shiftKey) {
+      let tabs = gBrowser.visibleTabs;
+      if (tabs.length > 2) {
+        this.open();
+      } else if (tabs.length == 2) {
+        let index = tabs[0].selected ? 1 : 0;
+        gBrowser.selectedTab = tabs[index];
+      }
+    }
+  },
+
+  onKeyPress(event) {
+    if (!this.isOpen ||
+        !event.ctrlKey) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.keyCode == event.DOM_VK_DELETE) {
+      this.remove(this.selected);
+      return;
+    }
+
+    switch (event.charCode) {
+      case this.keys.close:
+        this.remove(this.selected);
         break;
-      default:
-        if (isOpen && event.ctrlKey) {
-          if (event.keyCode == event.DOM_VK_DELETE) {
-            this.remove(this.selected);
-            break;
-          }
-          switch (event.charCode) {
-            case this.keys.close:
-              this.remove(this.selected);
-              break;
-            case this.keys.find:
-            case this.keys.selectAll:
-              this.showAllTabs();
-              break;
-          }
-        }
+      case this.keys.find:
+      case this.keys.selectAll:
+        this.showAllTabs();
+        break;
     }
   },
 
@@ -507,6 +527,9 @@ var ctrlTab = {
         if (this.isOpen)
           this.removeClosingTabFromUI(event.target);
         break;
+      case "keydown":
+        this.onKeyDown(event);
+        break;
       case "keypress":
         this.onKeyPress(event);
         break;
@@ -516,7 +539,7 @@ var ctrlTab = {
         break;
       case "popupshowing":
         if (event.target.id == "menu_viewPopup")
-          document.getElementById("menu_showAllTabs").hidden = !allTabs.canOpen;
+          document.getElementById("menu_showAllTabs").hidden = !gTabsPanel.canOpen;
         break;
     }
   },
@@ -552,6 +575,11 @@ var ctrlTab = {
     tabContainer[toggleEventListener]("TabSelect", this);
     tabContainer[toggleEventListener]("TabClose", this);
 
+    if (enable) {
+      Services.els.addSystemEventListener(document, "keydown", this, false);
+    } else {
+      Services.els.removeSystemEventListener(document, "keydown", this, false);
+    }
     document[toggleEventListener]("keypress", this);
     gBrowser.tabbox.handleCtrlTab = !enable;
 
@@ -572,29 +600,5 @@ var ctrlTab = {
       key_showAllTabs.removeAttribute("disabled");
     else
       key_showAllTabs.setAttribute("disabled", "true");
-  }
-};
-
-
-/**
- * All Tabs menu
- */
-var allTabs = {
-  get toolbarButton() {
-    return document.getElementById("alltabs-button");
   },
-
-  get canOpen() {
-    return isElementVisible(this.toolbarButton);
-  },
-
-  open: function allTabs_open() {
-    if (this.canOpen) {
-      // Without setTimeout, the menupopup won't stay open when invoking
-      // "View > Show All Tabs" and the menu bar auto-hides.
-      setTimeout(() => {
-        this.toolbarButton.open = true;
-      }, 0);
-    }
-  }
 };

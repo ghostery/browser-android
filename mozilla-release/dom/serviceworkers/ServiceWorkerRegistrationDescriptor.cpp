@@ -27,11 +27,12 @@ ServiceWorkerRegistrationDescriptor::NewestInternal() const
   } else if (mData->active().type() != OptionalIPCServiceWorkerDescriptor::Tvoid_t) {
     result.emplace(mData->active().get_IPCServiceWorkerDescriptor());
   }
-  return Move(result);
+  return result;
 }
 
 ServiceWorkerRegistrationDescriptor::ServiceWorkerRegistrationDescriptor(
                                     uint64_t aId,
+                                    uint64_t aVersion,
                                     nsIPrincipal* aPrincipal,
                                     const nsACString& aScope,
                                     ServiceWorkerUpdateViaCache aUpdateViaCache)
@@ -41,6 +42,7 @@ ServiceWorkerRegistrationDescriptor::ServiceWorkerRegistrationDescriptor(
     PrincipalToPrincipalInfo(aPrincipal, &mData->principalInfo()));
 
   mData->id() = aId;
+  mData->version() = aVersion;
   mData->scope() = aScope;
   mData->updateViaCache() = aUpdateViaCache;
   mData->installing() = void_t();
@@ -50,10 +52,12 @@ ServiceWorkerRegistrationDescriptor::ServiceWorkerRegistrationDescriptor(
 
 ServiceWorkerRegistrationDescriptor::ServiceWorkerRegistrationDescriptor(
                                     uint64_t aId,
+                                    uint64_t aVersion,
                                     const mozilla::ipc::PrincipalInfo& aPrincipalInfo,
                                     const nsACString& aScope,
                                     ServiceWorkerUpdateViaCache aUpdateViaCache)
   : mData(MakeUnique<IPCServiceWorkerRegistrationDescriptor>(aId,
+                                                             aVersion,
                                                              aPrincipalInfo,
                                                              nsCString(aScope),
                                                              aUpdateViaCache,
@@ -90,7 +94,7 @@ ServiceWorkerRegistrationDescriptor::operator=(const ServiceWorkerRegistrationDe
 }
 
 ServiceWorkerRegistrationDescriptor::ServiceWorkerRegistrationDescriptor(ServiceWorkerRegistrationDescriptor&& aRight)
-  : mData(Move(aRight.mData))
+  : mData(std::move(aRight.mData))
 {
   MOZ_DIAGNOSTIC_ASSERT(IsValid());
 }
@@ -99,7 +103,7 @@ ServiceWorkerRegistrationDescriptor&
 ServiceWorkerRegistrationDescriptor::operator=(ServiceWorkerRegistrationDescriptor&& aRight)
 {
   mData.reset();
-  mData = Move(aRight.mData);
+  mData = std::move(aRight.mData);
   MOZ_DIAGNOSTIC_ASSERT(IsValid());
   return *this;
 }
@@ -121,6 +125,12 @@ ServiceWorkerRegistrationDescriptor::Id() const
   return mData->id();
 }
 
+uint64_t
+ServiceWorkerRegistrationDescriptor::Version() const
+{
+  return mData->version();
+}
+
 ServiceWorkerUpdateViaCache
 ServiceWorkerRegistrationDescriptor::UpdateViaCache() const
 {
@@ -138,7 +148,7 @@ ServiceWorkerRegistrationDescriptor::GetPrincipal() const
 {
   AssertIsOnMainThread();
   nsCOMPtr<nsIPrincipal> ref =  PrincipalInfoToPrincipal(mData->principalInfo());
-  return Move(ref);
+  return ref;
 }
 
 const nsCString&
@@ -157,7 +167,7 @@ ServiceWorkerRegistrationDescriptor::GetInstalling() const
       mData->installing().get_IPCServiceWorkerDescriptor()));
   }
 
-  return Move(result);
+  return result;
 }
 
 Maybe<ServiceWorkerDescriptor>
@@ -170,7 +180,7 @@ ServiceWorkerRegistrationDescriptor::GetWaiting() const
       mData->waiting().get_IPCServiceWorkerDescriptor()));
   }
 
-  return Move(result);
+  return result;
 }
 
 Maybe<ServiceWorkerDescriptor>
@@ -183,7 +193,7 @@ ServiceWorkerRegistrationDescriptor::GetActive() const
       mData->active().get_IPCServiceWorkerDescriptor()));
   }
 
-  return Move(result);
+  return result;
 }
 
 Maybe<ServiceWorkerDescriptor>
@@ -194,7 +204,18 @@ ServiceWorkerRegistrationDescriptor::Newest() const
   if (newest.isSome()) {
     result.emplace(ServiceWorkerDescriptor(newest.ref()));
   }
-  return Move(result);
+  return result;
+}
+
+bool
+ServiceWorkerRegistrationDescriptor::HasWorker(const ServiceWorkerDescriptor& aDescriptor) const
+{
+  Maybe<ServiceWorkerDescriptor> installing = GetInstalling();
+  Maybe<ServiceWorkerDescriptor> waiting = GetWaiting();
+  Maybe<ServiceWorkerDescriptor> active = GetActive();
+  return (installing.isSome() && installing.ref().Matches(aDescriptor)) ||
+         (waiting.isSome() && waiting.ref().Matches(aDescriptor)) ||
+         (active.isSome() && active.ref().Matches(aDescriptor));
 }
 
 namespace {
@@ -259,18 +280,21 @@ ServiceWorkerRegistrationDescriptor::SetWorkers(ServiceWorkerInfo* aInstalling,
                                                 ServiceWorkerInfo* aActive)
 {
   if (aInstalling) {
+    aInstalling->SetRegistrationVersion(Version());
     mData->installing() = aInstalling->Descriptor().ToIPC();
   } else {
     mData->installing() = void_t();
   }
 
   if (aWaiting) {
+    aWaiting->SetRegistrationVersion(Version());
     mData->waiting() = aWaiting->Descriptor().ToIPC();
   } else {
     mData->waiting() = void_t();
   }
 
   if (aActive) {
+    aActive->SetRegistrationVersion(Version());
     mData->active() = aActive->Descriptor().ToIPC();
   } else {
     mData->active() = void_t();
@@ -280,14 +304,10 @@ ServiceWorkerRegistrationDescriptor::SetWorkers(ServiceWorkerInfo* aInstalling,
 }
 
 void
-ServiceWorkerRegistrationDescriptor::SetWorkers(const OptionalIPCServiceWorkerDescriptor& aInstalling,
-                                                const OptionalIPCServiceWorkerDescriptor& aWaiting,
-                                                const OptionalIPCServiceWorkerDescriptor& aActive)
+ServiceWorkerRegistrationDescriptor::SetVersion(uint64_t aVersion)
 {
-  mData->installing() = aInstalling;
-  mData->waiting() = aWaiting;
-  mData->active() = aActive;
-  MOZ_DIAGNOSTIC_ASSERT(IsValid());
+  MOZ_DIAGNOSTIC_ASSERT(aVersion > mData->version());
+  mData->version() = aVersion;
 }
 
 const IPCServiceWorkerRegistrationDescriptor&

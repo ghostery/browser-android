@@ -6,6 +6,7 @@
 // Tests for the FxA push service.
 
 /* eslint-disable no-shadow */
+/* eslint-disable mozilla/use-chromeutils-generateqi */
 
 ChromeUtils.import("resource://gre/modules/FxAccountsCommon.js");
 ChromeUtils.import("resource://gre/modules/Log.jsm");
@@ -28,24 +29,24 @@ let mockPushService = {
   subscriptionChangeTopic: this.pushService.subscriptionChangeTopic,
   subscribe(scope, principal, cb) {
     cb(Cr.NS_OK, {
-      endpoint: MOCK_ENDPOINT
+      endpoint: MOCK_ENDPOINT,
     });
   },
   unsubscribe(scope, principal, cb) {
     cb(Cr.NS_OK, true);
-  }
+  },
 };
 
 let mockFxAccounts = {
   checkVerificationStatus() {},
-  updateDeviceRegistration() {}
+  updateDeviceRegistration() {},
 };
 
 let mockLog = {
   trace() {},
   debug() {},
   warn() {},
-  error() {}
+  error() {},
 };
 
 
@@ -68,7 +69,7 @@ add_task(async function registerPushEndpointFailure() {
   let failPushService = Object.assign(mockPushService, {
     subscribe(scope, principal, cb) {
       cb(Cr.NS_ERROR_ABORT);
-    }
+    },
   });
 
   let pushService = new FxAccountsPushService({
@@ -94,7 +95,7 @@ add_task(async function unsubscribeFailure() {
   let failPushService = Object.assign(mockPushService, {
     unsubscribe(scope, principal, cb) {
       cb(Cr.NS_ERROR_ABORT);
-    }
+    },
   });
 
   let pushService = new FxAccountsPushService({
@@ -113,12 +114,12 @@ add_test(function observeLogout() {
         // logout means we unsubscribe
         run_next_test();
       }
-    }
+    },
   });
 
   let pushService = new FxAccountsPushService({
     pushService: mockPushService,
-    log: customLog
+    log: customLog,
   });
 
   pushService.observe(null, ONLOGOUT_NOTIFICATION);
@@ -128,13 +129,13 @@ add_test(function observePushTopicVerify() {
   let emptyMsg = {
     QueryInterface() {
       return this;
-    }
+    },
   };
   let customAccounts = Object.assign(mockFxAccounts, {
     checkVerificationStatus() {
       // checking verification status on push messages without data
       run_next_test();
-    }
+    },
   });
 
   let pushService = new FxAccountsPushService({
@@ -151,13 +152,13 @@ add_test(function observePushTopicDeviceConnected() {
       json: () => ({
         command: ON_DEVICE_CONNECTED_NOTIFICATION,
         data: {
-          deviceName: "My phone"
-        }
-      })
+          deviceName: "My phone",
+        },
+      }),
     },
     QueryInterface() {
       return this;
-    }
+    },
   };
   let obs = (subject, topic, data) => {
     Services.obs.removeObserver(obs, topic);
@@ -180,13 +181,13 @@ add_task(async function observePushTopicDeviceDisconnected_current_device() {
       json: () => ({
         command: ON_DEVICE_DISCONNECTED_NOTIFICATION,
         data: {
-          id: deviceId
-        }
-      })
+          id: deviceId,
+        },
+      }),
     },
     QueryInterface() {
       return this;
-    }
+    },
   };
 
   let signoutCalled = false;
@@ -196,12 +197,12 @@ add_task(async function observePushTopicDeviceDisconnected_current_device() {
       return {
         async getUserAccountData() {
           return {device: {id: deviceId}};
-        }
+        },
       };
     },
     signOut() {
       signoutCalled = true;
-    }
+    },
   });
 
   const deviceDisconnectedNotificationObserved = new Promise(resolve => {
@@ -230,13 +231,13 @@ add_task(async function observePushTopicDeviceDisconnected_another_device() {
       json: () => ({
         command: ON_DEVICE_DISCONNECTED_NOTIFICATION,
         data: {
-          id: deviceId
-        }
-      })
+          id: deviceId,
+        },
+      }),
     },
     QueryInterface() {
       return this;
-    }
+    },
   };
 
   let signoutCalled = false;
@@ -246,12 +247,12 @@ add_task(async function observePushTopicDeviceDisconnected_another_device() {
       return {
         async getUserAccountData() {
           return {device: {id: "thelocaldevice"}};
-        }
+        },
       };
     },
     signOut() {
       signoutCalled = true;
-    }
+    },
   });
 
   const deviceDisconnectedNotificationObserved = new Promise(resolve => {
@@ -280,19 +281,19 @@ add_test(function observePushTopicAccountDestroyed() {
       json: () => ({
         command: ON_ACCOUNT_DESTROYED_NOTIFICATION,
         data: {
-          uid
-        }
-      })
+          uid,
+        },
+      }),
     },
     QueryInterface() {
       return this;
-    }
+    },
   };
   let customAccounts = Object.assign(mockFxAccounts, {
     handleAccountDestroyed() {
       // checking verification status on push messages without data
       run_next_test();
-    }
+    },
   });
 
   let pushService = new FxAccountsPushService({
@@ -314,13 +315,13 @@ add_test(function observePushTopicVerifyLogin() {
         data: {
           body,
           title,
-          url
-        }
-      })
+          url,
+        },
+      }),
     },
     QueryInterface() {
       return this;
-    }
+    },
   };
   let obs = (subject, topic, data) => {
     Services.obs.removeObserver(obs, topic);
@@ -341,12 +342,12 @@ add_test(function observePushTopicProfileUpdated() {
   let msg = {
     data: {
       json: () => ({
-        command: ON_PROFILE_UPDATED_NOTIFICATION
-      })
+        command: ON_PROFILE_UPDATED_NOTIFICATION,
+      }),
     },
     QueryInterface() {
       return this;
-    }
+    },
   };
   let obs = (subject, topic, data) => {
     Services.obs.removeObserver(obs, topic);
@@ -366,12 +367,12 @@ add_test(function observePushTopicPasswordChanged() {
   let msg = {
     data: {
       json: () => ({
-        command: ON_PASSWORD_CHANGED_NOTIFICATION
-      })
+        command: ON_PASSWORD_CHANGED_NOTIFICATION,
+      }),
     },
     QueryInterface() {
       return this;
-    }
+    },
   };
 
   let pushService = new FxAccountsPushService({
@@ -389,16 +390,16 @@ add_test(function observePushTopicPasswordReset() {
   let msg = {
     data: {
       json: () => ({
-        command: ON_PASSWORD_RESET_NOTIFICATION
-      })
+        command: ON_PASSWORD_RESET_NOTIFICATION,
+      }),
     },
     QueryInterface() {
       return this;
-    }
+    },
   };
 
   let pushService = new FxAccountsPushService({
-    pushService: mockPushService
+    pushService: mockPushService,
   });
 
   pushService._onPasswordChanged = function() {
@@ -408,24 +409,27 @@ add_test(function observePushTopicPasswordReset() {
   pushService.observe(msg, mockPushService.pushTopic, FXA_PUSH_SCOPE_ACCOUNT_UPDATE);
 });
 
-add_task(async function messagesTickle() {
+add_task(async function commandReceived() {
   let msg = {
     data: {
       json: () => ({
-        topic: "sendtab"
-      })
+        command: "fxaccounts:command_received",
+        data: {
+          url: "https://api.accounts.firefox.com/auth/v1/account/device/commands?index=42&limit=1",
+        },
+      }),
     },
     QueryInterface() {
       return this;
-    }
+    },
   };
 
   let fxAccountsMock = {};
   const promiseConsumeRemoteMessagesCalled = new Promise(res => {
-    fxAccountsMock.messages = {
-      consumeRemoteMessages() {
+    fxAccountsMock.commands = {
+      consumeRemoteCommand() {
         res();
-      }
+      },
     };
   });
 
@@ -443,7 +447,7 @@ add_test(function observeSubscriptionChangeTopic() {
     updateDeviceRegistration() {
       // subscription change means updating the device registration
       run_next_test();
-    }
+    },
   });
 
   let pushService = new FxAccountsPushService({

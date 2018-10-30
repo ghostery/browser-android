@@ -29,19 +29,21 @@ namespace jit {
 class MacroAssembler;
 struct Register;
 class Label;
+enum class FrameType;
 } // namespace jit
 
 namespace wasm {
 
 class Code;
 class CodeRange;
-class ModuleSegment;
 class DebugFrame;
+class FuncTypeIdDesc;
 class Instance;
-class SigIdDesc;
-struct Frame;
-struct FuncOffsets;
+class ModuleSegment;
+
 struct CallableOffsets;
+struct FuncOffsets;
+struct Frame;
 
 // Iterates over a linear group of wasm frames of a single wasm JitActivation,
 // called synchronously from C++ in the wasm thread. It will stop at the first
@@ -54,6 +56,7 @@ class WasmFrameIter
 {
   public:
     enum class Unwind { True, False };
+    static constexpr uint32_t ColumnBit = 1u << 31;
 
   private:
     jit::JitActivation* activation_;
@@ -62,6 +65,7 @@ class WasmFrameIter
     unsigned lineOrBytecode_;
     Frame* fp_;
     uint8_t* unwoundIonCallerFP_;
+    jit::FrameType unwoundIonFrameType_;
     Unwind unwind_;
     void** unwoundAddressOfReturnAddress_;
 
@@ -79,11 +83,14 @@ class WasmFrameIter
     bool mutedErrors() const;
     JSAtom* functionDisplayAtom() const;
     unsigned lineOrBytecode() const;
+    uint32_t funcIndex() const;
+    unsigned computeLine(uint32_t* column) const;
     const CodeRange* codeRange() const { return codeRange_; }
     Instance* instance() const;
     void** unwoundAddressOfReturnAddress() const;
     bool debugEnabled() const;
     DebugFrame* debugFrame() const;
+    jit::FrameType unwoundIonFrameType() const;
     uint8_t* unwoundIonCallerFP() const { return unwoundIonCallerFP_; }
 };
 
@@ -95,10 +102,6 @@ enum class SymbolicAddress;
 // function that is used for better display in the profiler.
 class ExitReason
 {
-    uint32_t payload_;
-
-    ExitReason() {}
-
   public:
     enum class Fixed : uint32_t
     {
@@ -110,6 +113,13 @@ class ExitReason
         Trap,            // call to trap handler
         DebugTrap        // call to debug trap handler
     };
+
+  private:
+    uint32_t payload_;
+
+    ExitReason() : ExitReason(Fixed::None) {}
+
+  public:
 
     MOZ_IMPLICIT ExitReason(Fixed exitReason)
       : payload_(0x0 | (uint32_t(exitReason) << 1))
@@ -212,7 +222,7 @@ void
 GenerateJitEntryPrologue(jit::MacroAssembler& masm, Offsets* offsets);
 
 void
-GenerateFunctionPrologue(jit::MacroAssembler& masm, const SigIdDesc& sigId,
+GenerateFunctionPrologue(jit::MacroAssembler& masm, const FuncTypeIdDesc& funcTypeId,
                          const mozilla::Maybe<uint32_t>& tier1FuncIndex,
                          FuncOffsets* offsets);
 void
@@ -256,6 +266,19 @@ typedef JS::ProfilingFrameIterator::RegisterState RegisterState;
 bool
 StartUnwinding(const RegisterState& registers, UnwindState* unwindState,
                bool* unwoundCaller);
+
+// Bit set as the lowest bit of a frame pointer, used in two different mutually
+// exclusive situations:
+// - either it's a low bit tag in a FramePointer value read from the
+// Frame::callerFP of an inner wasm frame. This indicates the previous call
+// frame has been set up by a JIT caller that directly called into a wasm
+// function's body. This is only stored in Frame::callerFP for a wasm frame
+// called from JIT code, and thus it can not appear in a JitActivation's
+// exitFP.
+// - or it's the low big tag set when exiting wasm code in JitActivation's
+// exitFP.
+
+constexpr uintptr_t ExitOrJitEntryFPTag = 0x1;
 
 } // namespace wasm
 } // namespace js

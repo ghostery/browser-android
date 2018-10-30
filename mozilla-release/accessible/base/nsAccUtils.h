@@ -65,13 +65,13 @@ public:
   /**
    * Get default value of the level for the given accessible.
    */
-  static int32_t GetDefaultLevel(Accessible* aAcc);
+  static int32_t GetDefaultLevel(const Accessible* aAcc);
 
   /**
    * Return ARIA level value or the default one if ARIA is missed for the
    * given accessible.
    */
-  static int32_t GetARIAOrDefaultLevel(Accessible* aAccessible);
+  static int32_t GetARIAOrDefaultLevel(const Accessible* aAccessible);
 
   /**
    * Compute group level for nsIDOMXULContainerItemElement node.
@@ -138,10 +138,26 @@ public:
   static Accessible* TableFor(Accessible* aRow);
 
   /**
+   * Return true if the DOM node of a given accessible has a given attribute
+   * with a value of "true".
+   */
+  static bool IsDOMAttrTrue(const Accessible* aAccessible, nsAtom* aAttr);
+  
+  /**
    * Return true if the DOM node of given accessible has aria-selected="true"
    * attribute.
    */
-  static bool IsARIASelected(Accessible* aAccessible);
+  static inline bool IsARIASelected(const Accessible* aAccessible) {
+    return IsDOMAttrTrue(aAccessible, nsGkAtoms::aria_selected);
+  }
+
+  /**
+   * Return true if the DOM node of given accessible has
+   * aria-multiselectable="true" attribute.
+   */
+  static inline bool IsARIAMultiSelectable(const Accessible* aAccessible) {
+    return IsDOMAttrTrue(aAccessible, nsGkAtoms::aria_multiselectable);
+  }
 
   /**
    * Converts the given coordinates to coordinates relative screen.

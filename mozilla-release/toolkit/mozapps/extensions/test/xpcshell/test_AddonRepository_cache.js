@@ -85,7 +85,7 @@ const PREF_ADDON0_CACHE_ENABLED = "extensions." + ADDON_IDS[0] + ".getAddons.cac
 const PREF_ADDON1_CACHE_ENABLED = "extensions." + ADDON_IDS[1] + ".getAddons.cache.enabled";
 
 // Properties of an individual add-on that should be checked
-// Note: size and updateDate are checked separately
+// Note: updateDate is checked separately
 const ADDON_PROPERTIES = ["id", "type", "name", "version", "creator",
                           "developers", "translators", "contributors",
                           "description", "fullDescription",
@@ -95,11 +95,10 @@ const ADDON_PROPERTIES = ["id", "type", "name", "version", "creator",
                           "averageRating", "reviewCount",
                           "reviewURL", "weeklyDownloads", "sourceURI"];
 
-// The size and updateDate properties are annoying to test for XPI add-ons.
+// The updateDate property is annoying to test for XPI add-ons.
 // However, since we only care about whether the repository value vs. the
 // XPI value is used, we can just test if the property value matches
 // the repository value
-const REPOSITORY_SIZE       = 9;
 const REPOSITORY_UPDATEDATE = 9;
 
 // Get the URI of a subfile locating directly in the folder of
@@ -119,14 +118,14 @@ const REPOSITORY_ADDONS = [{
   version:                "2.1",
   creator:                {
                             name: "Repo Add-on 1 - Creator",
-                            url:  BASE_URL + "/repo/1/creator.html"
+                            url:  BASE_URL + "/repo/1/creator.html",
                           },
   developers:             [{
                             name: "Repo Add-on 1 - First Developer",
-                            url:  BASE_URL + "/repo/1/firstDeveloper.html"
+                            url:  BASE_URL + "/repo/1/firstDeveloper.html",
                           }, {
                             name: "Repo Add-on 1 - Second Developer",
-                            url:  BASE_URL + "/repo/1/secondDeveloper.html"
+                            url:  BASE_URL + "/repo/1/secondDeveloper.html",
                           }],
   description:            "Repo Add-on 1 - Description\nSecond line",
   fullDescription:        "Repo Add-on 1 - Full Description & some extra",
@@ -139,7 +138,7 @@ const REPOSITORY_ADDONS = [{
   reviewCount:            1111,
   reviewURL:              BASE_URL + "/repo/1/review.html",
   weeklyDownloads:        3331,
-  sourceURI:              BASE_URL + "/repo/1/install.xpi"
+  sourceURI:              BASE_URL + "/repo/1/install.xpi",
 }, {
   id:                     ADDON_IDS[1],
   type:                   "theme",
@@ -147,14 +146,14 @@ const REPOSITORY_ADDONS = [{
   version:                "2.2",
   creator:                {
                             name: "Repo Add-on 2 - Creator",
-                            url:  BASE_URL + "/repo/2/creator.html"
+                            url:  BASE_URL + "/repo/2/creator.html",
                           },
   developers:             [{
                             name: "Repo Add-on 2 - First Developer",
-                            url:  BASE_URL + "/repo/2/firstDeveloper.html"
+                            url:  BASE_URL + "/repo/2/firstDeveloper.html",
                           }, {
                             name: "Repo Add-on 2 - Second Developer",
-                            url:  BASE_URL + "/repo/2/secondDeveloper.html"
+                            url:  BASE_URL + "/repo/2/secondDeveloper.html",
                           }],
   description:            "Repo Add-on 2 - Description",
   fullDescription:        "Repo Add-on 2 - Full Description",
@@ -163,11 +162,11 @@ const REPOSITORY_ADDONS = [{
   screenshots:            [{
                             url:          BASE_URL + "/repo/2/firstFull.png",
                             thumbnailURL: BASE_URL + "/repo/2/firstThumbnail.png",
-                            caption:      "Repo Add-on 2 - First Caption"
+                            caption:      "Repo Add-on 2 - First Caption",
                           }, {
                             url:          BASE_URL + "/repo/2/secondFull.png",
                             thumbnailURL: BASE_URL + "/repo/2/secondThumbnail.png",
-                            caption:      "Repo Add-on 2 - Second Caption"
+                            caption:      "Repo Add-on 2 - Second Caption",
                           }],
   homepageURL:            BASE_URL + "/repo/2/homepage.html",
   supportURL:             BASE_URL + "/repo/2/support.html",
@@ -187,12 +186,12 @@ const REPOSITORY_ADDONS = [{
   screenshots:            [{
                             url:          BASE_URL + "/repo/3/firstFull.png",
                             thumbnailURL: BASE_URL + "/repo/3/firstThumbnail.png",
-                            caption:      "Repo Add-on 3 - First Caption"
+                            caption:      "Repo Add-on 3 - First Caption",
                           }, {
                             url:          BASE_URL + "/repo/3/secondFull.png",
                             thumbnailURL: BASE_URL + "/repo/3/secondThumbnail.png",
-                            caption:      "Repo Add-on 3 - Second Caption"
-                          }]
+                            caption:      "Repo Add-on 3 - Second Caption",
+                          }],
 }];
 
 
@@ -215,14 +214,14 @@ const WITHOUT_CACHE = [{
   homepageURL:            BASE_URL + "/xpi/1/homepage.html",
   optionsURL:             BASE_URL + "/xpi/1/options.html",
   aboutURL:               BASE_URL + "/xpi/1/about.html",
-  sourceURI:              NetUtil.newURI(ADDON_FILES[0]).spec
+  sourceURI:              NetUtil.newURI(ADDON_FILES[0]).spec,
 }, {
   id:                     ADDON_IDS[1],
   type:                   "theme",
   name:                   "XPI Add-on 2",
   version:                "1.2",
   sourceURI:              NetUtil.newURI(ADDON_FILES[1]).spec,
-  icons:                  {}
+  icons:                  {},
 }, {
   id:                     ADDON_IDS[2],
   type:                   "theme",
@@ -235,7 +234,7 @@ const WITHOUT_CACHE = [{
     return { "32": get_subfile_uri(ADDON_IDS[2], "icon.png") };
   },
   screenshots:            [{ get url() { return get_subfile_uri(ADDON_IDS[2], "preview.png"); } }],
-  sourceURI:              NetUtil.newURI(ADDON_FILES[2]).spec
+  sourceURI:              NetUtil.newURI(ADDON_FILES[2]).spec,
 }];
 
 
@@ -247,7 +246,7 @@ const WITH_CACHE = [{
   version:                "1.1",
   creator:                {
                             name: "Repo Add-on 1 - Creator",
-                            url:  BASE_URL + "/repo/1/creator.html"
+                            url:  BASE_URL + "/repo/1/creator.html",
                           },
   developers:             [{ name: "XPI Add-on 1 - First Developer" },
                            { name: "XPI Add-on 1 - Second Developer" }],
@@ -281,14 +280,14 @@ const WITH_CACHE = [{
   version:                "1.2",
   creator:                {
                             name: "Repo Add-on 2 - Creator",
-                            url:  BASE_URL + "/repo/2/creator.html"
+                            url:  BASE_URL + "/repo/2/creator.html",
                           },
   developers:             [{
                             name: "Repo Add-on 2 - First Developer",
-                            url:  BASE_URL + "/repo/2/firstDeveloper.html"
+                            url:  BASE_URL + "/repo/2/firstDeveloper.html",
                           }, {
                             name: "Repo Add-on 2 - Second Developer",
-                            url:  BASE_URL + "/repo/2/secondDeveloper.html"
+                            url:  BASE_URL + "/repo/2/secondDeveloper.html",
                           }],
   description:            "Repo Add-on 2 - Description",
   fullDescription:        "Repo Add-on 2 - Full Description",
@@ -298,11 +297,11 @@ const WITH_CACHE = [{
   screenshots:            [{
                             url:          BASE_URL + "/repo/2/firstFull.png",
                             thumbnailURL: BASE_URL + "/repo/2/firstThumbnail.png",
-                            caption:      "Repo Add-on 2 - First Caption"
+                            caption:      "Repo Add-on 2 - First Caption",
                           }, {
                             url:          BASE_URL + "/repo/2/secondFull.png",
                             thumbnailURL: BASE_URL + "/repo/2/secondThumbnail.png",
-                            caption:      "Repo Add-on 2 - Second Caption"
+                            caption:      "Repo Add-on 2 - Second Caption",
                           }],
   homepageURL:            BASE_URL + "/repo/2/homepage.html",
   supportURL:             BASE_URL + "/repo/2/support.html",
@@ -315,7 +314,7 @@ const WITH_CACHE = [{
   weeklyDownloads:        3332,
   dailyUsers:             4442,
   sourceURI:              NetUtil.newURI(ADDON_FILES[1]).spec,
-  repositoryStatus:       9
+  repositoryStatus:       9,
 }, {
   id:                     ADDON_IDS[2],
   type:                   "theme",
@@ -330,13 +329,13 @@ const WITH_CACHE = [{
   screenshots:            [{
                             url:          BASE_URL + "/repo/3/firstFull.png",
                             thumbnailURL: BASE_URL + "/repo/3/firstThumbnail.png",
-                            caption:      "Repo Add-on 3 - First Caption"
+                            caption:      "Repo Add-on 3 - First Caption",
                           }, {
                             url:          BASE_URL + "/repo/3/secondFull.png",
                             thumbnailURL: BASE_URL + "/repo/3/secondThumbnail.png",
-                            caption:      "Repo Add-on 3 - Second Caption"
+                            caption:      "Repo Add-on 3 - Second Caption",
                           }],
-  sourceURI:              NetUtil.newURI(ADDON_FILES[2]).spec
+  sourceURI:              NetUtil.newURI(ADDON_FILES[2]).spec,
 }];
 
 // Expected add-ons when using cache
@@ -347,7 +346,7 @@ const WITH_EXTENSION_CACHE = [{
   version:                "1.1",
   creator:                {
                             name: "Repo Add-on 1 - Creator",
-                            url:  BASE_URL + "/repo/1/creator.html"
+                            url:  BASE_URL + "/repo/1/creator.html",
                           },
   developers:             [{ name: "XPI Add-on 1 - First Developer" },
                            { name: "XPI Add-on 1 - Second Developer" }],
@@ -380,7 +379,7 @@ const WITH_EXTENSION_CACHE = [{
   name:                   "XPI Add-on 2",
   version:                "1.2",
   sourceURI:              NetUtil.newURI(ADDON_FILES[1]).spec,
-  icons:                  {}
+  icons:                  {},
 }, {
   id:                     ADDON_IDS[2],
   type:                   "theme",
@@ -393,7 +392,7 @@ const WITH_EXTENSION_CACHE = [{
     return { "32": get_subfile_uri(ADDON_IDS[2], "icon.png") };
   },
   screenshots:            [{ get url() { return get_subfile_uri(ADDON_IDS[2], "preview.png"); } }],
-  sourceURI:              NetUtil.newURI(ADDON_FILES[2]).spec
+  sourceURI:              NetUtil.newURI(ADDON_FILES[2]).spec,
 }];
 
 var gDBFile = gProfD.clone();
@@ -415,12 +414,9 @@ function check_results(aActualAddons, aExpectedAddons, aFromRepository) {
 
   do_check_addons(aActualAddons, aExpectedAddons, ADDON_PROPERTIES);
 
-  // Separately test size and updateDate (they should only be equal to the
-  // REPOSITORY values if they are from the repository)
+  // Separately test updateDate (it should only be equal to the
+  // REPOSITORY values if it is from the repository)
   aActualAddons.forEach(function(aActualAddon) {
-    if (aActualAddon.size)
-      Assert.equal(aActualAddon.size === REPOSITORY_SIZE, aFromRepository);
-
     if (aActualAddon.updateDate) {
       let time = aActualAddon.updateDate.getTime();
       Assert.equal(time === 1000 * REPOSITORY_UPDATEDATE, aFromRepository);
@@ -489,7 +485,7 @@ add_task(async function setup() {
   // Setup for test
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9");
 
-  startupManager();
+  await promiseStartupManager();
 
   // Install XPI add-ons
   await promiseInstallAllFiles(ADDON_FILES);

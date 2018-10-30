@@ -21,7 +21,6 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/d3d/IndexBuffer.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/dxgi_support_table.h"
@@ -958,6 +957,20 @@ size_t GetMaximumComputeImageUniforms(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+size_t GetMaximumCombinedShaderOutputResources(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        // TODO(jiawei.shao@intel.com): Get a more accurate limit. For now using the minimum
+        // requirement for GLES 3.1.
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return 4;
+        default:
+            return 0;
+    }
+}
+
 int GetMinimumTexelOffset(D3D_FEATURE_LEVEL featureLevel)
 {
     switch (featureLevel)
@@ -1357,10 +1370,11 @@ void GenerateCaps(ID3D11Device *device,
         caps->maxVertexUniformVectors -= 1;
     }
     caps->maxVertexUniformComponents = caps->maxVertexUniformVectors * 4;
-    caps->maxVertexUniformBlocks = static_cast<GLuint>(GetMaximumVertexUniformBlocks(featureLevel));
+    caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] =
+        static_cast<GLuint>(GetMaximumVertexUniformBlocks(featureLevel));
     caps->maxVertexOutputComponents =
         static_cast<GLuint>(GetMaximumVertexOutputVectors(featureLevel)) * 4;
-    caps->maxVertexTextureImageUnits =
+    caps->maxShaderTextureImageUnits[gl::ShaderType::Vertex] =
         static_cast<GLuint>(GetMaximumVertexTextureUnits(featureLevel));
 
     // Vertex Attribute Bindings are emulated on D3D11.
@@ -1375,11 +1389,12 @@ void GenerateCaps(ID3D11Device *device,
     caps->maxFragmentUniformVectors =
         static_cast<GLuint>(GetMaximumPixelUniformVectors(featureLevel));
     caps->maxFragmentUniformComponents = caps->maxFragmentUniformVectors * 4;
-    caps->maxFragmentUniformBlocks =
+    caps->maxShaderUniformBlocks[gl::ShaderType::Fragment] =
         static_cast<GLuint>(GetMaximumPixelUniformBlocks(featureLevel));
     caps->maxFragmentInputComponents =
         static_cast<GLuint>(GetMaximumPixelInputVectors(featureLevel)) * 4;
-    caps->maxTextureImageUnits  = static_cast<GLuint>(GetMaximumPixelTextureUnits(featureLevel));
+    caps->maxShaderTextureImageUnits[gl::ShaderType::Fragment] =
+        static_cast<GLuint>(GetMaximumPixelTextureUnits(featureLevel));
     caps->minProgramTexelOffset = GetMinimumTexelOffset(featureLevel);
     caps->maxProgramTexelOffset = GetMaximumTexelOffset(featureLevel);
 
@@ -1390,16 +1405,19 @@ void GenerateCaps(ID3D11Device *device,
         static_cast<GLuint>(GetMaxComputeWorkGroupInvocations(featureLevel));
     caps->maxComputeUniformComponents =
         static_cast<GLuint>(GetMaximumComputeUniformVectors(featureLevel)) * 4;
-    caps->maxComputeUniformBlocks =
+    caps->maxShaderUniformBlocks[gl::ShaderType::Compute] =
         static_cast<GLuint>(GetMaximumComputeUniformBlocks(featureLevel));
-    caps->maxComputeTextureImageUnits =
+    caps->maxShaderTextureImageUnits[gl::ShaderType::Compute] =
         static_cast<GLuint>(GetMaximumComputeTextureUnits(featureLevel));
     caps->maxImageUnits = static_cast<GLuint>(GetMaximumImageUnits(featureLevel));
     caps->maxComputeImageUniforms =
         static_cast<GLuint>(GetMaximumComputeImageUniforms(featureLevel));
+    caps->maxCombinedShaderOutputResources =
+        static_cast<GLuint>(GetMaximumCombinedShaderOutputResources(featureLevel));
 
     // Aggregate shader limits
-    caps->maxUniformBufferBindings = caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks;
+    caps->maxUniformBufferBindings = caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] +
+                                     caps->maxShaderUniformBlocks[gl::ShaderType::Fragment];
     caps->maxUniformBlockSize = GetMaximumConstantBufferSize(featureLevel);
 
     // TODO(oetuaho): Get a more accurate limit. For now using the minimum requirement for GLES 3.1.
@@ -1411,18 +1429,24 @@ void GenerateCaps(ID3D11Device *device,
     // we still keep the same alignment as 11.1 for consistency.
     caps->uniformBufferOffsetAlignment = 256;
 
-    caps->maxCombinedUniformBlocks = caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks;
-    caps->maxCombinedVertexUniformComponents = (static_cast<GLint64>(caps->maxVertexUniformBlocks) * static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +
-                                               static_cast<GLint64>(caps->maxVertexUniformComponents);
-    caps->maxCombinedFragmentUniformComponents = (static_cast<GLint64>(caps->maxFragmentUniformBlocks) * static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +
-                                                 static_cast<GLint64>(caps->maxFragmentUniformComponents);
-    caps->maxCombinedComputeUniformComponents =
-        static_cast<GLuint>(caps->maxComputeUniformBlocks * (caps->maxUniformBlockSize / 4) +
-                            caps->maxComputeUniformComponents);
+    caps->maxCombinedUniformBlocks = caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] +
+                                     caps->maxShaderUniformBlocks[gl::ShaderType::Fragment];
+    caps->maxCombinedVertexUniformComponents =
+        (static_cast<GLint64>(caps->maxShaderUniformBlocks[gl::ShaderType::Vertex]) *
+         static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +
+        static_cast<GLint64>(caps->maxVertexUniformComponents);
+    caps->maxCombinedFragmentUniformComponents =
+        (static_cast<GLint64>(caps->maxShaderUniformBlocks[gl::ShaderType::Fragment]) *
+         static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +
+        static_cast<GLint64>(caps->maxFragmentUniformComponents);
+    caps->maxCombinedComputeUniformComponents = static_cast<GLuint>(
+        caps->maxShaderUniformBlocks[gl::ShaderType::Compute] * (caps->maxUniformBlockSize / 4) +
+        caps->maxComputeUniformComponents);
     caps->maxVaryingComponents =
         static_cast<GLuint>(GetMaximumVertexOutputVectors(featureLevel)) * 4;
     caps->maxVaryingVectors            = static_cast<GLuint>(GetMaximumVertexOutputVectors(featureLevel));
-    caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxTextureImageUnits;
+    caps->maxCombinedTextureImageUnits = caps->maxShaderTextureImageUnits[gl::ShaderType::Vertex] +
+                                         caps->maxShaderTextureImageUnits[gl::ShaderType::Fragment];
 
     // Transform feedback limits
     caps->maxTransformFeedbackInterleavedComponents =
@@ -1853,19 +1877,19 @@ UINT ConvertMaxAnisotropy(float maxAnisotropy, D3D_FEATURE_LEVEL featureLevel)
     return static_cast<UINT>(std::min(maxAnisotropy, d3d11_gl::GetMaximumAnisotropy(featureLevel)));
 }
 
-D3D11_QUERY ConvertQueryType(GLenum queryType)
+D3D11_QUERY ConvertQueryType(gl::QueryType type)
 {
-    switch (queryType)
+    switch (type)
     {
-        case GL_ANY_SAMPLES_PASSED_EXT:
-        case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
+        case gl::QueryType::AnySamples:
+        case gl::QueryType::AnySamplesConservative:
             return D3D11_QUERY_OCCLUSION;
-        case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
+        case gl::QueryType::TransformFeedbackPrimitivesWritten:
             return D3D11_QUERY_SO_STATISTICS;
-        case GL_TIME_ELAPSED_EXT:
+        case gl::QueryType::TimeElapsed:
             // Two internal queries are also created for begin/end timestamps
             return D3D11_QUERY_TIMESTAMP_DISJOINT;
-        case GL_COMMANDS_COMPLETED_CHROMIUM:
+        case gl::QueryType::CommandsCompleted:
             return D3D11_QUERY_EVENT;
         default:
             UNREACHABLE();
@@ -2358,57 +2382,15 @@ bool UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled, GLenu
     return (!primitiveRestartFixedIndexEnabled && type == GL_UNSIGNED_SHORT);
 }
 
-bool IsStreamingIndexData(const gl::Context *context, GLenum srcType)
-{
-    const auto &glState = context->getGLState();
-    gl::Buffer *glBuffer = glState.getVertexArray()->getElementArrayBuffer().get();
-
-    // Case 1: the indices are passed by pointer, which forces the streaming of index data
-    if (glBuffer == nullptr)
-    {
-        return true;
-    }
-
-    bool primitiveRestartWorkaround =
-        UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), srcType);
-
-    BufferD3D *buffer    = GetImplAs<BufferD3D>(glBuffer);
-    const GLenum dstType = (srcType == GL_UNSIGNED_INT || primitiveRestartWorkaround)
-                               ? GL_UNSIGNED_INT
-                               : GL_UNSIGNED_SHORT;
-
-    // Case 2a: the buffer can be used directly
-    if (buffer->supportsDirectBinding() && dstType == srcType)
-    {
-        return false;
-    }
-
-    // Case 2b: use a static translated copy or fall back to streaming
-    StaticIndexBufferInterface *staticBuffer = buffer->getStaticIndexBuffer();
-    if (staticBuffer == nullptr)
-    {
-        return true;
-    }
-
-    if ((staticBuffer->getBufferSize() == 0) || (staticBuffer->getIndexType() != dstType))
-    {
-        return true;
-    }
-
-    return false;
-}
-
 IndexStorageType ClassifyIndexStorage(const gl::State &glState,
                                       const gl::Buffer *elementArrayBuffer,
                                       GLenum elementType,
                                       GLenum destElementType,
-                                      unsigned int offset,
-                                      bool *needsTranslation)
+                                      unsigned int offset)
 {
     // No buffer bound means we are streaming from a client pointer.
     if (!elementArrayBuffer || !IsOffsetAligned(elementType, offset))
     {
-        *needsTranslation = true;
         return IndexStorageType::Dynamic;
     }
 
@@ -2416,7 +2398,6 @@ IndexStorageType ClassifyIndexStorage(const gl::State &glState,
     BufferD3D *bufferD3D = GetImplAs<BufferD3D>(elementArrayBuffer);
     if (bufferD3D->supportsDirectBinding() && destElementType == elementType)
     {
-        *needsTranslation = false;
         return IndexStorageType::Direct;
     }
 
@@ -2424,15 +2405,10 @@ IndexStorageType ClassifyIndexStorage(const gl::State &glState,
     StaticIndexBufferInterface *staticBuffer = bufferD3D->getStaticIndexBuffer();
     if (staticBuffer != nullptr)
     {
-        // Need to re-translate the static data if has never been used, or changed type.
-        *needsTranslation =
-            (staticBuffer->getBufferSize() == 0 || staticBuffer->getIndexType() != destElementType);
         return IndexStorageType::Static;
     }
 
     // Static buffer not available, fall back to streaming.
-    *needsTranslation = true;
     return IndexStorageType::Dynamic;
 }
-
 }  // namespace rx

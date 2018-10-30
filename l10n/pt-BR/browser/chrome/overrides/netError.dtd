@@ -8,7 +8,11 @@
 <!ENTITY loadError.label "Problemas ao carregar a página">
 <!ENTITY retry.label "Tentar de novo">
 <!ENTITY returnToPreviousPage.label "Voltar">
+<!ENTITY returnToPreviousPage1.label "Voltar (recomendado)">
 <!ENTITY advanced.label "Avançado">
+
+<!ENTITY continue2.label "Mais…">
+<!ENTITY moreInformation.label "Mais informações">
 
 <!-- Specific error messages -->
 
@@ -18,7 +22,7 @@
 <!ENTITY deniedPortAccess.title "Endereço restrito">
 <!ENTITY deniedPortAccess.longDesc "">
 
-<!ENTITY dnsNotFound.pageTitle "Servidor Não Encontrado">
+<!ENTITY dnsNotFound.pageTitle "Servidor não encontrado">
 <!-- Localization note (dnsNotFound.title1) - "Hmm" is a sound made when considering or puzzling over something. You don't have to include it in your translation if your language does not have a written word like this. -->
 <!ENTITY dnsNotFound.title1 "Hmm. Estamos tendo problemas para encontrar este site.">
 <!ENTITY dnsNotFound.longDesc1 "<strong>Se este endereço estiver correto, aqui estão outras coisas que você pode tentar:</strong>
@@ -60,10 +64,12 @@
 <!ENTITY notCached.title "Documento expirado">
 <!ENTITY notCached.longDesc "<p>O documento solicitado não está disponível na cache do &brandShortName;.</p><ul><li> Como uma precaução de segurança, o &brandShortName; não re-solicita automaticamente documentos sensíveis. </li><li>Clique em tentar novamente para re-solicitar o documento no site.</li></ul>">
 
-<!ENTITY netOffline.title "Modo offline">
-<!ENTITY netOffline.longDesc2 "<ul>
-  <li>Pressione &quot;Tentar de novo&quot; para sair do modo off-line e recarregar a página.</li>
-</ul>">
+<!ENTITY netOffline.title "Modo desconectado">
+<!ENTITY netOffline.longDesc2 "
+<ul>
+  <li>Pressione &quot;Tente novamente&quot; para mudar para modo conectado e recarregar a página.</li>
+</ul>
+">
 
 <!ENTITY contentEncodingError.title "Erro na codificação do conteúdo">
 <!ENTITY contentEncodingError.longDesc "<ul> 
@@ -121,10 +127,31 @@ instalado.</li>
 </ul>">
 
 <!ENTITY certerror.longpagetitle1 "Sua conexão não é segura">
-<!-- Localization note (certerror.introPara) - The text content of the span tag
+<!ENTITY certerror.longpagetitle2 "Alerta: Potencial risco de segurança à frente">
+<!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "O proprietário do <span class='hostname'/> configurou este site incorretamente. Para proteger suas informações de serem roubadas, o &brandShortName; não se conectou a ele.">
+
+<!ENTITY certerror.introPara2 "O &brandShortName; detectou uma potencial ameaça de segurança e não continuou para <span class='hostname'/>. Se você visitar este site, atacantes poderão roubar suas informações como senhas, endereço de e-mail e detalhes de cartão de crédito.">
+
+<!ENTITY certerror.expiredCert.secondPara "É mais provável que este problema seja devido ao relógio do seu computador estar com a hora errada, o que pode impedir que o &brandShortName; se conecte com segurança.">
+
+<!ENTITY certerror.whatCanYouDoAboutItTitle "O que você pode fazer a respeito?">
+
+<!ENTITY certerror.unknownIssuer.whatCanYouDoAboutIt "
+<p>É mais provável que o problema seja no site, não há nada que você possa fazer para resolver.</p>
+<p>Se estiver em uma rede corporativa ou usando um antivírus, você pode pedir ajuda às equipes de suporte. Também pode notificar o administrador do site.</p>
+">
+
+<!ENTITY certerror.expiredCert.whatCanYouDoAboutIt2 "
+<p>O relógio do seu computador está definido para <span id='wrongSystemTime_systemDate2'/>. Certifique-se de que seu computador está definido para a data, hora e fuso horário corretos nas configurações do sistema, e atualize <span class='hostname'/>.</p>
+<p>Se o seu relógio já está definido para a hora correta, o site deve estar configurado incorretamente e não há nada que você possa fazer para resolver o problema. Notifique o problema para o administrador do site.</p>
+">
+
+<!ENTITY certerror.badCertDomain.whatCanYouDoAboutIt "
+<p>É mais provável que o problema seja no site, não há nada que você possa fazer para resolver. Você pode notificar o administrador do site.</p>
+">
 
 <!ENTITY sharedLongDesc "<ul> 
 <li>Este site pode estar temporariamente fora do ar ou sobrecarregado. Tente de novo 
@@ -144,6 +171,8 @@ de que o &brandShortName; esteja autorizado a acessar a web.</li>
 
 <!ENTITY securityOverride.exceptionButtonLabel "Adicionar exceção…">
 
+<!ENTITY securityOverride.exceptionButton1Label "Aceitar o risco e continuar">
+
 <!ENTITY errorReporting.automatic2 "Relatar erros como este para ajudar a Mozilla a identificar e bloquear sites maliciosos">
 <!ENTITY errorReporting.learnMore "Saiba mais…">
 
@@ -162,18 +191,23 @@ de que o &brandShortName; esteja autorizado a acessar a web.</li>
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>&brandShortName; não se conectou ao domínio <span id='wrongSystemTimeWithoutReference_URL'/> porque o relógio do seu computador parece estar errado e isso impede uma conexão segura.</p> <p>O seu relógio marca <span id='wrongSystemTimeWithoutReference_systemDate'/>. Para corrigir este problema, ajuste suas configurações de data e hora.</p>">
 
 <!ENTITY certerror.pagetitle1  "Conexão insegura">
+<!ENTITY certerror.pagetitle2  "Alerta: Potencial risco de segurança à frente">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Este site usa HTTP
 Strict Transport Security (HSTS) para especificar que o &brandShortName; só pode se conectar
 a ele com segurança. Como resultado, não é possível adicionar uma exceção para este
 certificado.">
+<!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "<span class='hostname'></span> tem uma política de segurança chamada HTTP Strict Transport Security (HSTS), que significa que o &brandShortName; só pode se conectar a ele com segurança. Você não pode adicionar uma exceção para visitar este site.">
 <!ENTITY certerror.copyToClipboard.label "Copiar texto para a área de transferência">
 
 <!ENTITY inadequateSecurityError.title "Sua conexão não é segura">
 <!-- LOCALIZATION NOTE (inadequateSecurityError.longDesc) - Do not translate
      "NS_ERROR_NET_INADEQUATE_SECURITY". -->
-<!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> usa uma tecnologia de segurança que está ultrapassada e vulnerável a ataques. Um cracker poderia facilmente coletar informações enquanto você acreditava estar seguro. O administrador do website precisa consertar essa brecha no servidor antes de você poder visitar esse site.</p><p>Código de Erro: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
+<!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> usa uma tecnologia de segurança que está ultrapassada e vulnerável a ataques. Um invasor poderia facilmente coletar informações que você acreditava estar seguras. O administrador do site precisa consertar o servidor antes de você poder visitar o site.</p><p>Código de erro: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Página bloqueada">
+
+<!ENTITY clockSkewError.title "O relógio do seu computador está errado">
+<!ENTITY clockSkewError.longDesc "A hora exibida pelo seu computador é <span id='wrongSystemTime_systemDate1'/>, o que impede que o &brandShortName; se conecte de maneira segura. Para visitar <span class='hostname'></span>, ajuste o relógio do seu computador nas configurações do sistema para a data, hora e fuso horário atuais, e atualize <span class='hostname'></span>.">
 
 <!ENTITY prefReset.longDesc "Parece que suas configurações de segurança de rede podem estar causando isso. Você quer restaurar as configurações padrão?">
 <!ENTITY prefReset.label "Restaurar configurações padrão">

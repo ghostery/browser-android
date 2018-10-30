@@ -431,7 +431,8 @@ class FirefoxProfile(Profile):
     """Specialized Profile subclass for Firefox"""
 
     preferences = {  # Don't automatically update the application
-        'app.update.enabled': False,
+        'app.update.disabledForTesting': True,
+        'security.turn_off_all_security_so_that_viruses_can_take_over_this_computer': True,
         # Don't restore the last open set of tabs if the browser has crashed
         'browser.sessionstore.resume_from_crash': False,
         # Don't check for the default web browser during startup
@@ -496,8 +497,8 @@ class ChromeProfile(BaseProfile):
 
         @classmethod
         def is_addon(self, addon):
-            # TODO Implement this properly
-            return os.path.exists(addon)
+            # Don't include testing/profiles on Google Chrome
+            return False
 
     def __init__(self, **kwargs):
         super(ChromeProfile, self).__init__(**kwargs)

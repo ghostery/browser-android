@@ -15,7 +15,7 @@ extern crate core_graphics;
 extern crate crossbeam;
 #[cfg(target_os = "windows")]
 extern crate dwrote;
-#[cfg(feature = "logging")]
+#[cfg(feature = "env_logger")]
 extern crate env_logger;
 extern crate euclid;
 #[cfg(any(target_os = "linux", target_os = "macos"))]
@@ -37,6 +37,7 @@ extern crate serde;
 extern crate serde_json;
 extern crate time;
 extern crate webrender;
+extern crate winit;
 extern crate yaml_rust;
 
 mod angle;
@@ -61,7 +62,7 @@ mod cgfont_to_data;
 
 use binary_frame_reader::BinaryFrameReader;
 use gleam::gl;
-use glutin::{GlContext, VirtualKeyCode};
+use glutin::GlContext;
 use perf::PerfHarness;
 use png::save_flipped;
 use rawtest::RawtestHarness;
@@ -78,13 +79,13 @@ use std::rc::Rc;
 use std::sync::mpsc::{channel, Sender, Receiver};
 use webrender::DebugFlags;
 use webrender::api::*;
+use winit::dpi::{LogicalPosition, LogicalSize};
+use winit::VirtualKeyCode;
 use wrench::{Wrench, WrenchThing};
 use yaml_frame_reader::YamlFrameReader;
 
 lazy_static! {
     static ref PLATFORM_DEFAULT_FACE_NAME: String = String::from("Arial");
-    static ref WHITE_COLOR: ColorF = ColorF::new(1.0, 1.0, 1.0, 1.0);
-    static ref BLACK_COLOR: ColorF = ColorF::new(0.0, 0.0, 0.0, 1.0);
 }
 
 pub static mut CURRENT_FRAME_NUMBER: u32 = 0;
@@ -163,7 +164,7 @@ impl HeadlessContext {
 
 pub enum WindowWrapper {
     Window(glutin::GlWindow, Rc<gl::Gl>),
-    Angle(glutin::Window, angle::Context, Rc<gl::Gl>),
+    Angle(winit::Window, angle::Context, Rc<gl::Gl>),
     Headless(HeadlessContext, Rc<gl::Gl>),
 }
 
@@ -179,37 +180,36 @@ impl WindowWrapper {
     }
 
     fn get_inner_size(&self) -> DeviceUintSize {
-        //HACK: `winit` needs to figure out its hidpi story...
-        #[cfg(target_os = "macos")]
-        fn inner_size(window: &glutin::Window) -> (u32, u32) {
-            let (w, h) = window.get_inner_size().unwrap();
-            let factor = window.hidpi_factor();
-            ((w as f32 * factor) as _, (h as f32 * factor) as _)
+        fn inner_size(window: &winit::Window) -> DeviceUintSize {
+            let size = window
+                .get_inner_size()
+                .unwrap()
+                .to_physical(window.get_hidpi_factor());
+            DeviceUintSize::new(size.width as u32, size.height as u32)
         }
-        #[cfg(not(target_os = "macos"))]
-        fn inner_size(window: &glutin::Window) -> (u32, u32) {
-            window.get_inner_size().unwrap()
-        }
-        let (w, h) = match *self {
+        match *self {
             WindowWrapper::Window(ref window, _) => inner_size(window.window()),
             WindowWrapper::Angle(ref window, ..) => inner_size(window),
-            WindowWrapper::Headless(ref context, _) => (context.width, context.height),
-        };
-        DeviceUintSize::new(w, h)
+            WindowWrapper::Headless(ref context, _) => DeviceUintSize::new(context.width, context.height),
+        }
     }
 
     fn hidpi_factor(&self) -> f32 {
         match *self {
-            WindowWrapper::Window(ref window, _) => window.hidpi_factor(),
-            WindowWrapper::Angle(ref window, ..) => window.hidpi_factor(),
+            WindowWrapper::Window(ref window, _) => window.get_hidpi_factor() as f32,
+            WindowWrapper::Angle(ref window, ..) => window.get_hidpi_factor() as f32,
             WindowWrapper::Headless(_, _) => 1.0,
         }
     }
 
     fn resize(&mut self, size: DeviceUintSize) {
         match *self {
-            WindowWrapper::Window(ref mut window, _) => window.set_inner_size(size.width, size.height),
-            WindowWrapper::Angle(ref mut window, ..) => window.set_inner_size(size.width, size.height),
+            WindowWrapper::Window(ref mut window, _) => {
+                window.set_inner_size(LogicalSize::new(size.width as f64, size.height as f64))
+            },
+            WindowWrapper::Angle(ref mut window, ..) => {
+                window.set_inner_size(LogicalSize::new(size.width as f64, size.height as f64))
+            },
             WindowWrapper::Headless(_, _) => unimplemented!(), // requites Glutin update
         }
     }
@@ -243,7 +243,7 @@ fn make_window(
     size: DeviceUintSize,
     dp_ratio: Option<f32>,
     vsync: bool,
-    events_loop: &Option<glutin::EventsLoop>,
+    events_loop: &Option<winit::EventsLoop>,
     angle: bool,
 ) -> WindowWrapper {
     let wrapper = match *events_loop {
@@ -254,10 +254,10 @@ fn make_window(
                     opengles_version: (3, 0),
                 })
                 .with_vsync(vsync);
-            let window_builder = glutin::WindowBuilder::new()
-                .with_title("WRech")
+            let window_builder = winit::WindowBuilder::new()
+                .with_title("WRench")
                 .with_multitouch()
-                .with_dimensions(size.width, size.height);
+                .with_dimensions(LogicalSize::new(size.width as f64, size.height as f64));
 
             let init = |context: &glutin::GlContext| {
                 unsafe {
@@ -349,7 +349,11 @@ impl RenderNotifier for Notifier {
         self.tx.send(NotifierEvent::ShutDown).unwrap();
     }
 
-    fn new_frame_ready(&self, _: DocumentId, _scrolled: bool, composite_needed: bool) {
+    fn new_frame_ready(&self,
+                       _: DocumentId,
+                       _scrolled: bool,
+                       composite_needed: bool,
+                       _render_time: Option<u64>) {
         if composite_needed {
             self.wake_up();
         }
@@ -361,8 +365,33 @@ fn create_notifier() -> (Box<RenderNotifier>, Receiver<NotifierEvent>) {
     (Box::new(Notifier { tx: tx }), rx)
 }
 
+fn rawtest(mut wrench: Wrench, window: &mut WindowWrapper, rx: Receiver<NotifierEvent>) {
+    RawtestHarness::new(&mut wrench, window, &rx).run();
+    wrench.shut_down(rx);
+}
+
+fn reftest<'a>(
+    mut wrench: Wrench,
+    window: &mut WindowWrapper,
+    subargs: &clap::ArgMatches<'a>,
+    rx: Receiver<NotifierEvent>
+) -> usize {
+    let dim = window.get_inner_size();
+    let base_manifest = Path::new("reftests/reftest.list");
+    let specific_reftest = subargs.value_of("REFTEST").map(|x| Path::new(x));
+    let mut reftest_options = ReftestOptions::default();
+    if let Some(allow_max_diff) = subargs.value_of("fuzz_tolerance") {
+        reftest_options.allow_max_difference = allow_max_diff.parse().unwrap_or(1);
+        reftest_options.allow_num_differences = dim.width as usize * dim.height as usize;
+    }
+    let num_failures = ReftestHarness::new(&mut wrench, window, &rx)
+        .run(base_manifest, specific_reftest, &reftest_options);
+    wrench.shut_down(rx);
+    num_failures
+}
+
 fn main() {
-    #[cfg(feature = "logging")]
+    #[cfg(feature = "env_logger")]
     env_logger::init();
 
     let args_yaml = load_yaml!("args.yaml");
@@ -397,11 +426,25 @@ fn main() {
         })
         .unwrap_or(DeviceUintSize::new(1920, 1080));
     let zoom_factor = args.value_of("zoom").map(|z| z.parse::<f32>().unwrap());
+    let chase_primitive = match args.value_of("chase") {
+        Some(s) => {
+            let mut items = s
+                .split(',')
+                .map(|s| s.parse::<f32>().unwrap())
+                .collect::<Vec<_>>();
+            let rect = LayoutRect::new(
+                LayoutPoint::new(items[0], items[1]),
+                LayoutSize::new(items[2], items[3]),
+            );
+            webrender::ChasePrimitive::LocalRect(rect)
+        },
+        None => webrender::ChasePrimitive::Nothing,
+    };
 
     let mut events_loop = if args.is_present("headless") {
         None
     } else {
-        Some(glutin::EventsLoop::new())
+        Some(winit::EventsLoop::new())
     };
 
     let mut window = make_window(
@@ -435,13 +478,18 @@ fn main() {
         args.is_present("precache"),
         args.is_present("slow_subpixel"),
         zoom_factor.unwrap_or(1.0),
+        chase_primitive,
         notifier,
     );
 
-    let mut thing = if let Some(subargs) = args.subcommand_matches("show") {
-        Box::new(YamlFrameReader::new_from_args(subargs)) as Box<WrenchThing>
-    } else if let Some(subargs) = args.subcommand_matches("replay") {
-        Box::new(BinaryFrameReader::new_from_args(subargs)) as Box<WrenchThing>
+    if let Some(window_title) = wrench.take_title() {
+        if !cfg!(windows) {
+            window.set_title(&window_title);
+        }
+    }
+
+    if let Some(subargs) = args.subcommand_matches("show") {
+        render(&mut wrench, &mut window, size, &mut events_loop, subargs);
     } else if let Some(subargs) = args.subcommand_matches("png") {
         let surface = match subargs.value_of("surface") {
             Some("screen") | None => png::ReadSurface::Screen,
@@ -450,30 +498,11 @@ fn main() {
         };
         let reader = YamlFrameReader::new_from_args(subargs);
         png::png(&mut wrench, surface, &mut window, reader, rx.unwrap());
-        wrench.renderer.deinit();
-        return;
     } else if let Some(subargs) = args.subcommand_matches("reftest") {
-        let dim = window.get_inner_size();
-        let base_manifest = Path::new("reftests/reftest.list");
-        let specific_reftest = subargs.value_of("REFTEST").map(|x| Path::new(x));
-        let mut reftest_options = ReftestOptions::default();
-        if let Some(allow_max_diff) = subargs.value_of("fuzz_tolerance") {
-            reftest_options.allow_max_difference = allow_max_diff.parse().unwrap_or(1);
-            reftest_options.allow_num_differences = dim.width as usize * dim.height as usize;
-        }
-        let rx = rx.unwrap();
-        let num_failures = ReftestHarness::new(&mut wrench, &mut window, &rx)
-            .run(base_manifest, specific_reftest, &reftest_options);
-        wrench.shut_down(rx);
-        // exit with an error code to fail on CI
-        process::exit(num_failures as _);
+        // Exit with an error code in order to ensure the CI job fails.
+        process::exit(reftest(wrench, &mut window, subargs, rx.unwrap()) as _);
     } else if let Some(_) = args.subcommand_matches("rawtest") {
-        let rx = rx.unwrap();
-        {
-            let harness = RawtestHarness::new(&mut wrench, &mut window, &rx);
-            harness.run();
-        }
-        wrench.shut_down(rx);
+        rawtest(wrench, &mut window, rx.unwrap());
         return;
     } else if let Some(subargs) = args.subcommand_matches("perf") {
         // Perf mode wants to benchmark the total cost of drawing
@@ -489,16 +518,42 @@ fn main() {
         let second_filename = subargs.value_of("second_filename").unwrap();
         perf::compare(first_filename, second_filename);
         return;
-    } else if let Some(subargs) = args.subcommand_matches("load") {
-        let path = PathBuf::from(subargs.value_of("path").unwrap());
-        let mut documents = wrench.api.load_capture(path);
+    } else {
+        panic!("Should never have gotten here! {:?}", args);
+    };
+
+    wrench.renderer.deinit();
+}
+
+fn render<'a>(
+    wrench: &mut Wrench,
+    window: &mut WindowWrapper,
+    size: DeviceUintSize,
+    events_loop: &mut Option<winit::EventsLoop>,
+    subargs: &clap::ArgMatches<'a>,
+) {
+    let input_path = subargs.value_of("INPUT").map(PathBuf::from).unwrap();
+
+    // If the input is a directory, we are looking at a capture.
+    let mut thing = if input_path.as_path().is_dir() {
+        let mut documents = wrench.api.load_capture(input_path);
         println!("loaded {:?}", documents.iter().map(|cd| cd.document_id).collect::<Vec<_>>());
         let captured = documents.swap_remove(0);
         window.resize(captured.window_size);
         wrench.document_id = captured.document_id;
         Box::new(captured) as Box<WrenchThing>
     } else {
-        panic!("Should never have gotten here! {:?}", args);
+        let extension = input_path
+            .extension()
+            .expect("Tried to render with an unknown file type.")
+            .to_str()
+            .expect("Tried to render with an unknown file type.");
+
+        match extension {
+            "yaml" => Box::new(YamlFrameReader::new_from_args(subargs)) as Box<WrenchThing>,
+            "bin" => Box::new(BinaryFrameReader::new_from_args(subargs)) as Box<WrenchThing>,
+            _ => panic!("Tried to render with an unknown file type."),
+        }
     };
 
     let mut show_help = false;
@@ -508,44 +563,38 @@ fn main() {
 
     let dim = window.get_inner_size();
     wrench.update(dim);
-    thing.do_frame(&mut wrench);
+    thing.do_frame(wrench);
 
-    let mut body = |wrench: &mut Wrench, global_event: glutin::Event| {
-        if let Some(window_title) = wrench.take_title() {
-            if !cfg!(windows) { //TODO: calling `set_title` from inside the `run_forever` loop is illegal...
-                window.set_title(&window_title);
-            }
-        }
-
+    let mut body = |wrench: &mut Wrench, global_event: winit::Event| {
         let mut do_frame = false;
         let mut do_render = false;
 
         match global_event {
-            glutin::Event::Awakened => {
+            winit::Event::Awakened => {
                 do_render = true;
             }
-            glutin::Event::WindowEvent { event, .. } => match event {
-                glutin::WindowEvent::Closed => {
-                    return glutin::ControlFlow::Break;
+            winit::Event::WindowEvent { event, .. } => match event {
+                winit::WindowEvent::CloseRequested => {
+                    return winit::ControlFlow::Break;
                 }
-                glutin::WindowEvent::Refresh |
-                glutin::WindowEvent::Focused(..) => {
+                winit::WindowEvent::Refresh |
+                winit::WindowEvent::Focused(..) => {
                     do_render = true;
                 }
-                glutin::WindowEvent::CursorMoved { position: (x, y), .. } => {
+                winit::WindowEvent::CursorMoved { position: LogicalPosition { x, y }, .. } => {
                     cursor_position = WorldPoint::new(x as f32, y as f32);
                     do_render = true;
                 }
-                glutin::WindowEvent::KeyboardInput {
-                    input: glutin::KeyboardInput {
-                        state: glutin::ElementState::Pressed,
+                winit::WindowEvent::KeyboardInput {
+                    input: winit::KeyboardInput {
+                        state: winit::ElementState::Pressed,
                         virtual_keycode: Some(vk),
                         ..
                     },
                     ..
                 } => match vk {
                     VirtualKeyCode::Escape => {
-                        return glutin::ControlFlow::Break;
+                        return winit::ControlFlow::Break;
                     }
                     VirtualKeyCode::P => {
                         wrench.renderer.toggle_debug_flags(DebugFlags::PROFILER_DBG);
@@ -567,6 +616,10 @@ fn main() {
                         wrench.renderer.toggle_debug_flags(
                             DebugFlags::GPU_TIME_QUERIES | DebugFlags::GPU_SAMPLE_QUERIES
                         );
+                        do_render = true;
+                    }
+                    VirtualKeyCode::V => {
+                        wrench.renderer.toggle_debug_flags(DebugFlags::SHOW_OVERDRAW);
                         do_render = true;
                     }
                     VirtualKeyCode::R => {
@@ -602,17 +655,30 @@ fn main() {
                         let path = PathBuf::from("../captures/wrench");
                         wrench.api.save_capture(path, CaptureBits::all());
                     }
-                    VirtualKeyCode::Up => {
+                    VirtualKeyCode::Up | VirtualKeyCode::Down => {
+                        let mut txn = Transaction::new();
+
+                        let offset = match vk {
+                            winit::VirtualKeyCode::Up => LayoutVector2D::new(0.0, 10.0),
+                            winit::VirtualKeyCode::Down => LayoutVector2D::new(0.0, -10.0),
+                            _ => unreachable!("Should not see non directional keys here.")
+                        };
+
+                        txn.scroll(ScrollLocation::Delta(offset), cursor_position);
+                        txn.generate_frame();
+                        wrench.api.send_transaction(wrench.document_id, txn);
+
+                        do_frame = true;
+                    }
+                    VirtualKeyCode::Add => {
                         let current_zoom = wrench.get_page_zoom();
                         let new_zoom_factor = ZoomFactor::new(current_zoom.get() + 0.1);
-
                         wrench.set_page_zoom(new_zoom_factor);
                         do_frame = true;
                     }
-                    VirtualKeyCode::Down => {
+                    VirtualKeyCode::Subtract => {
                         let current_zoom = wrench.get_page_zoom();
                         let new_zoom_factor = ZoomFactor::new((current_zoom.get() - 0.1).max(0.1));
-
                         wrench.set_page_zoom(new_zoom_factor);
                         do_frame = true;
                     }
@@ -634,7 +700,7 @@ fn main() {
                 }
                 _ => {}
             },
-            _ => return glutin::ControlFlow::Continue,
+            _ => return winit::ControlFlow::Continue,
         };
 
         let dim = window.get_inner_size();
@@ -660,20 +726,16 @@ fn main() {
             }
         }
 
-        glutin::ControlFlow::Continue
+        winit::ControlFlow::Continue
     };
 
-    match events_loop {
+    match *events_loop {
         None => {
-            while body(&mut wrench, glutin::Event::Awakened) == glutin::ControlFlow::Continue {}
+            while body(wrench, winit::Event::Awakened) == winit::ControlFlow::Continue {}
             let rect = DeviceUintRect::new(DeviceUintPoint::zero(), size);
             let pixels = wrench.renderer.read_pixels_rgba8(rect);
             save_flipped("screenshot.png", pixels, size);
         }
-        Some(ref mut events_loop) => {
-            events_loop.run_forever(|event| body(&mut wrench, event));
-        }
+        Some(ref mut events_loop) => events_loop.run_forever(|event| body(wrench, event)),
     }
-
-    wrench.renderer.deinit();
 }

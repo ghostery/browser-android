@@ -22,12 +22,14 @@ add_task(async function() {
   let bm = await PlacesUtils.bookmarks.insert({
     parentGuid: PlacesUtils.bookmarks.unfiledGuid,
     url,
-    title: unescaped
+    title: unescaped,
   });
   await PlacesUtils.keywords.insert({ url, keyword: unescaped, postData: unescaped });
-  let uri = Services.io.newURI(url);
-  PlacesUtils.tagging.tagURI(uri, [unescaped]);
-  await PlacesUtils.setCharsetForURI(uri, unescaped);
+  PlacesUtils.tagging.tagURI(Services.io.newURI(url), [unescaped]);
+  await PlacesUtils.history.update({
+    url,
+    annotations: new Map([[PlacesUtils.CHARSET_ANNO, unescaped]]),
+  });
   PlacesUtils.annotations.setItemAnnotation(
     await PlacesUtils.promiseItemId(bm.guid),
     DESCRIPTION_ANNO, unescaped, 0, PlacesUtils.annotations.EXPIRE_NEVER);
@@ -59,7 +61,7 @@ add_task(async function() {
   for (let current = xml; current;
     current = current.firstChild || current.nextSibling || current.parentNode.nextSibling) {
     switch (current.nodeType) {
-      case Ci.nsIDOMNode.ELEMENT_NODE:
+      case current.ELEMENT_NODE:
         for (let {name, value} of current.attributes) {
           info("Found attribute: " + name);
           // Check tags, keyword, postData and charSet.
@@ -69,7 +71,7 @@ add_task(async function() {
           }
         }
         break;
-      case Ci.nsIDOMNode.TEXT_NODE:
+      case current.TEXT_NODE:
         // Check Title and description.
         if (!current.data.startsWith("\n") && current.data.includes("test")) {
           Assert.equal(current.data.trim(), unescaped, "Text node should be complete");

@@ -5,6 +5,7 @@
 <!ENTITY downloads.title "Download">
 <!ENTITY downloadDetails.width "56ch">
 <!ENTITY downloadsSummary.minWidth2 "26ch">
+<!ENTITY downloads.width "70ch">
 <!ENTITY cmd.pause.label "Pausa">
 <!ENTITY cmd.pause.accesskey "P">
 <!ENTITY cmd.resume.label "Riprendi">

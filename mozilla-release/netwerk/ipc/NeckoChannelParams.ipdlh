@@ -21,6 +21,7 @@ using RequestHeaderTuples from "mozilla/net/PHttpChannelParams.h";
 using struct nsHttpAtom from "nsHttp.h";
 using class mozilla::net::nsHttpResponseHead from "nsHttpResponseHead.h";
 using class mozilla::TimeStamp from "mozilla/TimeStamp.h";
+using Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED from "DocumentAnalyticsTrackerFastBlocked.h";
 
 namespace mozilla {
 namespace net {
@@ -42,6 +43,8 @@ struct LoadInfoArgs
   PrincipalInfo               triggeringPrincipalInfo;
   OptionalPrincipalInfo       principalToInheritInfo;
   OptionalPrincipalInfo       sandboxedLoadingPrincipalInfo;
+  OptionalPrincipalInfo       topLevelPrincipalInfo;
+  OptionalPrincipalInfo       topLevelStorageAreaPrincipalInfo;
   OptionalURIParams           resultPrincipalURI;
   uint32_t                    securityFlags;
   uint32_t                    contentPolicyType;
@@ -51,7 +54,6 @@ struct LoadInfoArgs
   bool                        browserWouldUpgradeInsecureRequests;
   bool                        verifySignedContent;
   bool                        enforceSRI;
-  bool                        allowDocumentToBeAgnosticToCSP;
   bool                        forceAllowDataURI;
   bool                        allowInsecureRedirectToDataURI;
   bool                        skipContentPolicyCheckForWebRequest;
@@ -65,6 +67,7 @@ struct LoadInfoArgs
   bool                        initialSecurityCheckDone;
   bool                        isInThirdPartyContext;
   bool                        isDocshellReload;
+  bool                        sendCSPViolationEvents;
   OriginAttributes            originAttributes;
   RedirectHistoryEntryInfo[]  redirectChainIncludingInternalRedirects;
   RedirectHistoryEntryInfo[]  redirectChain;
@@ -104,6 +107,8 @@ struct LoadInfoArgs
   bool                        isPreflight;
   bool                        loadTriggeredFromExternal;
   bool                        serviceWorkerTaintingSynthesized;
+  bool                        documentHasUserInteracted;
+  bool                        documentHasLoaded;
 };
 
 /**
@@ -129,9 +134,47 @@ struct ParentLoadInfoForwarderArgs
   // checks can pass.
   bool allowInsecureRedirectToDataURI;
 
+  // The ServiceWorker controller that may be set in the parent when
+  // interception occurs.
+  OptionalIPCServiceWorkerDescriptor controller;
+
+  // The service worker may synthesize a Response with a particular
+  // tainting value.
+  uint32_t tainting;
+
+  // We must also note that the tainting value was explicitly set
+  // by the service worker.
+  bool serviceWorkerTaintingSynthesized;
+
+  // Tracker information, currently used by FastBlock
+  bool isTracker;
+  bool isTrackerBlocked;
+  LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED trackerBlockedReason;
+  bool documentHasUserInteracted;
+  bool documentHasLoaded;
+
   // IMPORTANT: when you add new properites here you must also update
   // LoadInfoToParentLoadInfoForwarder and MergeParentLoadInfoForwarder
   // in BackgroundUtils.cpp/.h!
+};
+
+/**
+ * This structure is used to carry selected properties of a LoadInfo
+ * object to the parent process that might have changed in the child
+ * during a redirect.  We don't want to use LoadInfoArgs for that since
+ * it's too huge and we only care about small subpart of properties
+ * anyway.
+ */
+struct ChildLoadInfoForwarderArgs
+{
+  // The reserved and initial ClientInfo values may change during a
+  // redirect if the new channel is cross-origin to the old channel.
+  OptionalIPCClientInfo reservedClientInfo;
+  OptionalIPCClientInfo initialClientInfo;
+
+  // The ServiceWorker controller may be cleared in the child during
+  // a redirect.
+  OptionalIPCServiceWorkerDescriptor controller;
 };
 
 //-----------------------------------------------------------------------------
@@ -200,6 +243,7 @@ struct HttpChannelOpenArgs
   uint32_t                    corsMode;
   uint32_t                    redirectMode;
   uint64_t                    channelId;
+  nsString                    integrityMetadata;
   uint64_t                    contentWindowId;
   nsCString                   preferredAlternativeType;
   uint64_t                    topLevelOuterContentWindowId;
@@ -210,6 +254,7 @@ struct HttpChannelOpenArgs
   TimeStamp                   handleFetchEventStart;
   TimeStamp                   handleFetchEventEnd;
   bool                        forceMainDocumentChannel;
+  TimeStamp                   navigationStartTimeStamp;
 };
 
 struct HttpChannelConnectArgs
@@ -235,6 +280,7 @@ struct FTPChannelOpenArgs
   nsCString                 entityID;
   OptionalIPCStream         uploadStream;
   OptionalLoadInfoArgs      loadInfo;
+  uint32_t                  loadFlags;
 };
 
 struct FTPChannelConnectArgs

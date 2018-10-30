@@ -13,117 +13,24 @@ use std::path::PathBuf;
 use std::u32;
 use {BuiltDisplayList, BuiltDisplayListDescriptor, ColorF, DeviceIntPoint, DeviceUintRect};
 use {DeviceUintSize, ExternalScrollId, FontInstanceKey, FontInstanceOptions};
-use {FontInstancePlatformOptions, FontKey, FontVariation, GlyphDimensions, GlyphKey, ImageData};
+use {FontInstancePlatformOptions, FontKey, FontVariation, GlyphDimensions, GlyphIndex, ImageData};
 use {ImageDescriptor, ImageKey, ItemTag, LayoutPoint, LayoutSize, LayoutTransform, LayoutVector2D};
-use {NativeFontHandle, WorldPoint};
+use {NativeFontHandle, WorldPoint, NormalizedRect};
 
 pub type TileSize = u16;
 /// Documents are rendered in the ascending order of their associated layer values.
 pub type DocumentLayer = i8;
-
-/// The resource updates for a given transaction (they must be applied in the same frame).
-#[derive(Clone, Deserialize, Serialize)]
-pub struct ResourceUpdates {
-    pub updates: Vec<ResourceUpdate>,
-}
 
 #[derive(Clone, Deserialize, Serialize)]
 pub enum ResourceUpdate {
     AddImage(AddImage),
     UpdateImage(UpdateImage),
     DeleteImage(ImageKey),
+    SetImageVisibleArea(ImageKey, NormalizedRect),
     AddFont(AddFont),
     DeleteFont(FontKey),
     AddFontInstance(AddFontInstance),
     DeleteFontInstance(FontInstanceKey),
-}
-
-impl ResourceUpdates {
-    pub fn new() -> Self {
-        ResourceUpdates {
-            updates: Vec::new(),
-        }
-    }
-
-    pub fn add_image(
-        &mut self,
-        key: ImageKey,
-        descriptor: ImageDescriptor,
-        data: ImageData,
-        tiling: Option<TileSize>,
-    ) {
-        self.updates.push(ResourceUpdate::AddImage(AddImage {
-            key,
-            descriptor,
-            data,
-            tiling,
-        }));
-    }
-
-    pub fn update_image(
-        &mut self,
-        key: ImageKey,
-        descriptor: ImageDescriptor,
-        data: ImageData,
-        dirty_rect: Option<DeviceUintRect>,
-    ) {
-        self.updates.push(ResourceUpdate::UpdateImage(UpdateImage {
-            key,
-            descriptor,
-            data,
-            dirty_rect,
-        }));
-    }
-
-    pub fn delete_image(&mut self, key: ImageKey) {
-        self.updates.push(ResourceUpdate::DeleteImage(key));
-    }
-
-    pub fn add_raw_font(&mut self, key: FontKey, bytes: Vec<u8>, index: u32) {
-        self.updates
-            .push(ResourceUpdate::AddFont(AddFont::Raw(key, bytes, index)));
-    }
-
-    pub fn add_native_font(&mut self, key: FontKey, native_handle: NativeFontHandle) {
-        self.updates
-            .push(ResourceUpdate::AddFont(AddFont::Native(key, native_handle)));
-    }
-
-    pub fn delete_font(&mut self, key: FontKey) {
-        self.updates.push(ResourceUpdate::DeleteFont(key));
-    }
-
-    pub fn add_font_instance(
-        &mut self,
-        key: FontInstanceKey,
-        font_key: FontKey,
-        glyph_size: Au,
-        options: Option<FontInstanceOptions>,
-        platform_options: Option<FontInstancePlatformOptions>,
-        variations: Vec<FontVariation>,
-    ) {
-        self.updates
-            .push(ResourceUpdate::AddFontInstance(AddFontInstance {
-                key,
-                font_key,
-                glyph_size,
-                options,
-                platform_options,
-                variations,
-            }));
-    }
-
-    pub fn delete_font_instance(&mut self, key: FontInstanceKey) {
-        self.updates.push(ResourceUpdate::DeleteFontInstance(key));
-    }
-
-    pub fn merge(&mut self, mut other: ResourceUpdates) {
-        self.updates.append(&mut other.updates);
-    }
-
-    pub fn clear(&mut self) {
-        self.updates.clear()
-    }
 }
 
 /// A Transaction is a group of commands to apply atomically to a document.
@@ -142,7 +49,7 @@ pub struct Transaction {
     payloads: Vec<Payload>,
 
     // Resource updates are applied after scene building.
-    resource_updates: ResourceUpdates,
+    pub resource_updates: Vec<ResourceUpdate>,
 
     // If true the transaction is piped through the scene building thread, if false
     // it will be applied directly on the render backend.
@@ -156,9 +63,9 @@ impl Transaction {
         Transaction {
             scene_ops: Vec::new(),
             frame_ops: Vec::new(),
-            resource_updates: ResourceUpdates::new(),
+            resource_updates: Vec::new(),
             payloads: Vec::new(),
-            use_scene_builder_thread: false, // TODO: make this true by default.
+            use_scene_builder_thread: true,
             generate_frame: false,
         }
     }
@@ -178,7 +85,7 @@ impl Transaction {
         !self.generate_frame &&
             self.scene_ops.is_empty() &&
             self.frame_ops.is_empty() &&
-            self.resource_updates.updates.is_empty()
+            self.resource_updates.is_empty()
     }
 
     pub fn update_epoch(&mut self, pipeline_id: PipelineId, epoch: Epoch) {
@@ -257,8 +164,8 @@ impl Transaction {
         self.payloads.push(Payload { epoch, pipeline_id, display_list_data });
     }
 
-    pub fn update_resources(&mut self, resources: ResourceUpdates) {
-        self.resource_updates.merge(resources);
+    pub fn update_resources(&mut self, resources: Vec<ResourceUpdate>) {
+        self.merge(resources);
     }
 
     pub fn set_window_parameters(
@@ -280,11 +187,7 @@ impl Transaction {
     ///
     /// WebRender looks for the layer closest to the user
     /// which has `ScrollPolicy::Scrollable` set.
-    pub fn scroll(
-        &mut self,
-        scroll_location: ScrollLocation,
-        cursor: WorldPoint,
-    ) {
+    pub fn scroll(&mut self, scroll_location: ScrollLocation, cursor: WorldPoint) {
         self.frame_ops.push(FrameMsg::Scroll(scroll_location, cursor));
     }
 
@@ -357,6 +260,90 @@ impl Transaction {
             self.payloads,
         )
     }
+
+    pub fn add_image(
+        &mut self,
+        key: ImageKey,
+        descriptor: ImageDescriptor,
+        data: ImageData,
+        tiling: Option<TileSize>,
+    ) {
+        self.resource_updates.push(ResourceUpdate::AddImage(AddImage {
+            key,
+            descriptor,
+            data,
+            tiling,
+        }));
+    }
+
+    pub fn update_image(
+        &mut self,
+        key: ImageKey,
+        descriptor: ImageDescriptor,
+        data: ImageData,
+        dirty_rect: Option<DeviceUintRect>,
+    ) {
+        self.resource_updates.push(ResourceUpdate::UpdateImage(UpdateImage {
+            key,
+            descriptor,
+            data,
+            dirty_rect,
+        }));
+    }
+
+    pub fn delete_image(&mut self, key: ImageKey) {
+        self.resource_updates.push(ResourceUpdate::DeleteImage(key));
+    }
+
+    pub fn set_image_visible_area(&mut self, key: ImageKey, area: NormalizedRect) {
+        self.resource_updates.push(ResourceUpdate::SetImageVisibleArea(key, area))
+    }
+
+    pub fn add_raw_font(&mut self, key: FontKey, bytes: Vec<u8>, index: u32) {
+        self.resource_updates
+            .push(ResourceUpdate::AddFont(AddFont::Raw(key, bytes, index)));
+    }
+
+    pub fn add_native_font(&mut self, key: FontKey, native_handle: NativeFontHandle) {
+        self.resource_updates
+            .push(ResourceUpdate::AddFont(AddFont::Native(key, native_handle)));
+    }
+
+    pub fn delete_font(&mut self, key: FontKey) {
+        self.resource_updates.push(ResourceUpdate::DeleteFont(key));
+    }
+
+    pub fn add_font_instance(
+        &mut self,
+        key: FontInstanceKey,
+        font_key: FontKey,
+        glyph_size: Au,
+        options: Option<FontInstanceOptions>,
+        platform_options: Option<FontInstancePlatformOptions>,
+        variations: Vec<FontVariation>,
+    ) {
+        self.resource_updates
+            .push(ResourceUpdate::AddFontInstance(AddFontInstance {
+                key,
+                font_key,
+                glyph_size,
+                options,
+                platform_options,
+                variations,
+            }));
+    }
+
+    pub fn delete_font_instance(&mut self, key: FontInstanceKey) {
+        self.resource_updates.push(ResourceUpdate::DeleteFontInstance(key));
+    }
+
+    pub fn merge(&mut self, mut other: Vec<ResourceUpdate>) {
+        self.resource_updates.append(&mut other);
+    }
+
+    pub fn clear(&mut self) {
+        self.resource_updates.clear()
+    }
 }
 
 /// Represents a transaction in the format sent through the channel.
@@ -364,7 +351,7 @@ impl Transaction {
 pub struct TransactionMsg {
     pub scene_ops: Vec<SceneMsg>,
     pub frame_ops: Vec<FrameMsg>,
-    pub resource_updates: ResourceUpdates,
+    pub resource_updates: Vec<ResourceUpdate>,
     pub generate_frame: bool,
     pub use_scene_builder_thread: bool,
 }
@@ -374,7 +361,7 @@ impl TransactionMsg {
         !self.generate_frame &&
             self.scene_ops.is_empty() &&
             self.frame_ops.is_empty() &&
-            self.resource_updates.updates.is_empty()
+            self.resource_updates.is_empty()
     }
 
     // TODO: We only need this for a few RenderApi methods which we should remove.
@@ -382,7 +369,7 @@ impl TransactionMsg {
         TransactionMsg {
             scene_ops: Vec::new(),
             frame_ops: vec![msg],
-            resource_updates: ResourceUpdates::new(),
+            resource_updates: Vec::new(),
             generate_frame: false,
             use_scene_builder_thread: false,
         }
@@ -392,7 +379,7 @@ impl TransactionMsg {
         TransactionMsg {
             scene_ops: vec![msg],
             frame_ops: Vec::new(),
-            resource_updates: ResourceUpdates::new(),
+            resource_updates: Vec::new(),
             generate_frame: false,
             use_scene_builder_thread: false,
         }
@@ -548,11 +535,12 @@ bitflags!{
     /// Mask for clearing caches in debug commands.
     #[derive(Deserialize, Serialize)]
     pub struct ClearCache: u8 {
-        const IMAGES = 0x1;
-        const GLYPHS = 0x2;
-        const GLYPH_DIMENSIONS = 0x4;
-        const RENDER_TASKS = 0x8;
-        const TEXTURE_CACHE = 0x16;
+        const IMAGES = 0b1;
+        const GLYPHS = 0b01;
+        const GLYPH_DIMENSIONS = 0b001;
+        const RENDER_TASKS = 0b0001;
+        const TEXTURE_CACHE = 0b00001;
+        const RASTERIZED_BLOBS = 0b000001;
     }
 }
 
@@ -579,6 +567,12 @@ pub enum DebugCommand {
     EnableGpuSampleQueries(bool),
     /// Configure if dual-source blending is used, if available.
     EnableDualSourceBlending(bool),
+    /// Show an indicator that moves every time a frame is rendered.
+    EnableNewFrameIndicator(bool),
+    /// Show an indicator that moves every time a scene is built.
+    EnableNewSceneIndicator(bool),
+    /// Show an overlay displaying overdraw amount.
+    EnableShowOverdraw(bool),
     /// Fetch current documents and display lists.
     FetchDocuments,
     /// Fetch current passes and batches.
@@ -602,11 +596,11 @@ pub enum DebugCommand {
 #[derive(Clone, Deserialize, Serialize)]
 pub enum ApiMsg {
     /// Add/remove/update images and fonts.
-    UpdateResources(ResourceUpdates),
+    UpdateResources(Vec<ResourceUpdate>),
     /// Gets the glyph dimensions
     GetGlyphDimensions(
         FontInstanceKey,
-        Vec<GlyphKey>,
+        Vec<GlyphIndex>,
         MsgSender<Vec<Option<GlyphDimensions>>>,
     ),
     /// Gets the glyph indices from a string
@@ -815,10 +809,10 @@ impl RenderApi {
     pub fn get_glyph_dimensions(
         &self,
         font: FontInstanceKey,
-        glyph_keys: Vec<GlyphKey>,
+        glyph_indices: Vec<GlyphIndex>,
     ) -> Vec<Option<GlyphDimensions>> {
         let (tx, rx) = channel::msg_channel().unwrap();
-        let msg = ApiMsg::GetGlyphDimensions(font, glyph_keys, tx);
+        let msg = ApiMsg::GetGlyphDimensions(font, glyph_indices, tx);
         self.api_sender.send(msg).unwrap();
         rx.recv().unwrap()
     }
@@ -839,8 +833,8 @@ impl RenderApi {
     }
 
     /// Add/remove/update resources such as images and fonts.
-    pub fn update_resources(&self, resources: ResourceUpdates) {
-        if resources.updates.is_empty() {
+    pub fn update_resources(&self, resources: Vec<ResourceUpdate>) {
+        if resources.is_empty() {
             return;
         }
         self.api_sender
@@ -984,6 +978,10 @@ impl RenderApi {
 
     /// Load a capture of the current frame state for debugging.
     pub fn load_capture(&self, path: PathBuf) -> Vec<CapturedDocument> {
+        // First flush the scene builder otherwise async scenes might clobber
+        // the capture we are about to load.
+        self.flush_scene_builder();
+
         let (tx, rx) = channel::msg_channel().unwrap();
         let msg = ApiMsg::DebugCommand(DebugCommand::LoadCapture(path, tx));
         self.send_message(msg);
@@ -1082,10 +1080,13 @@ impl<T> PropertyBindingKey<T> {
 /// A binding property can either be a specific value
 /// (the normal, non-animated case) or point to a binding location
 /// to fetch the current value from.
+/// Note that Binding has also a non-animated value, the value is
+/// used for the case where the animation is still in-delay phase
+/// (i.e. the animation doesn't produce any animation values).
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
 pub enum PropertyBinding<T> {
     Value(T),
-    Binding(PropertyBindingKey<T>),
+    Binding(PropertyBindingKey<T>, T),
 }
 
 impl<T> From<T> for PropertyBinding<T> {
@@ -1094,15 +1095,9 @@ impl<T> From<T> for PropertyBinding<T> {
     }
 }
 
-impl<T> From<PropertyBindingKey<T>> for PropertyBinding<T> {
-    fn from(key: PropertyBindingKey<T>) -> PropertyBinding<T> {
-        PropertyBinding::Binding(key)
-    }
-}
-
 /// The current value of an animated property. This is
 /// supplied by the calling code.
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq)]
 pub struct PropertyValue<T> {
     pub key: PropertyBindingKey<T>,
     pub value: T,
@@ -1111,7 +1106,7 @@ pub struct PropertyValue<T> {
 /// When using `generate_frame()`, a list of `PropertyValue` structures
 /// can optionally be supplied to provide the current value of any
 /// animated properties.
-#[derive(Clone, Deserialize, Serialize, Debug)]
+#[derive(Clone, Deserialize, Serialize, Debug, PartialEq, Default)]
 pub struct DynamicProperties {
     pub transforms: Vec<PropertyValue<LayoutTransform>>,
     pub floats: Vec<PropertyValue<f32>>,
@@ -1120,7 +1115,7 @@ pub struct DynamicProperties {
 pub trait RenderNotifier: Send {
     fn clone(&self) -> Box<RenderNotifier>;
     fn wake_up(&self);
-    fn new_frame_ready(&self, DocumentId, scrolled: bool, composite_needed: bool);
+    fn new_frame_ready(&self, DocumentId, scrolled: bool, composite_needed: bool, render_time_ns: Option<u64>);
     fn external_event(&self, _evt: ExternalEvent) {
         unimplemented!()
     }

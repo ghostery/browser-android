@@ -14,11 +14,11 @@
 #include "mozilla/gfx/Matrix.h"
 #include "mozilla/gfx/Types.h"
 #include "mozilla/gfx/Tools.h"
+#include "mozilla/gfx/Rect.h"
 #include "mozilla/PodOperations.h"
 #include "mozilla/Range.h"
 #include "mozilla/Variant.h"
 #include "Units.h"
-#include "RoundedRect.h"
 #include "nsStyleConsts.h"
 
 namespace mozilla {
@@ -28,6 +28,11 @@ class ByteBuf;
 } // namespace ipc
 
 namespace wr {
+
+// Using uintptr_t in C++ code for "size" types seems weird, so let's use a
+// better-sounding typedef. The name comes from the fact that we generally
+// have to deal with uintptr_t because that's what rust's usize maps to.
+typedef uintptr_t usize;
 
 typedef wr::WrWindowId WindowId;
 typedef wr::WrPipelineId PipelineId;
@@ -315,7 +320,7 @@ static inline wr::LayoutRect ToLayoutRect(const mozilla::LayoutDeviceRect& rect)
   return r;
 }
 
-static inline wr::LayoutRect ToLayoutRect(const gfxRect& rect)
+static inline wr::LayoutRect ToLayoutRect(const gfx::Rect& rect)
 {
   wr::LayoutRect r;
   r.origin.x = rect.X();
@@ -354,7 +359,7 @@ static inline wr::LayoutSize ToLayoutSize(const mozilla::LayoutDeviceSize& size)
   return ls;
 }
 
-static inline wr::ComplexClipRegion ToComplexClipRegion(const RoundedRect& rect)
+static inline wr::ComplexClipRegion ToComplexClipRegion(const gfx::RoundedRect& rect)
 {
   wr::ComplexClipRegion ret;
   ret.rect               = ToLayoutRect(rect.rect);
@@ -459,16 +464,6 @@ static inline wr::BorderWidths ToBorderWidths(float top, float right, float bott
   bw.bottom = bottom;
   bw.left = left;
   return bw;
-}
-
-static inline wr::NinePatchDescriptor ToNinePatchDescriptor(uint32_t width, uint32_t height,
-                                                            const wr::SideOffsets2D<uint32_t>& slice)
-{
-  NinePatchDescriptor patch;
-  patch.width = width;
-  patch.height = height;
-  patch.slice = slice;
-  return patch;
 }
 
 static inline wr::SideOffsets2D<uint32_t> ToSideOffsets2D_u32(uint32_t top, uint32_t right, uint32_t bottom, uint32_t left)
@@ -758,7 +753,7 @@ static inline wr::WrFilterOpType ToWrFilterOpType(uint32_t type) {
 // Corresponds to an "internal" webrender clip id. That is, a
 // ClipId::Clip(x,pipeline_id) maps to a WrClipId{x}. We use a struct wrapper
 // instead of a typedef so that this is a distinct type from ids generated
-// by scroll and position:sticky nodes  and the compiler will catch accidental
+// by scroll and position:sticky nodes and the compiler will catch accidental
 // conversions between them.
 struct WrClipId {
   size_t id;
@@ -766,35 +761,33 @@ struct WrClipId {
   bool operator==(const WrClipId& other) const {
     return id == other.id;
   }
+
+  bool operator!=(const WrClipId& other) const {
+    return !(*this == other);
+  }
+
+  static WrClipId RootScrollNode();
+
+  // Helper struct that allows this class to be used as a key in
+  // std::unordered_map like so:
+  //   std::unordered_map<WrClipId, ValueType, WrClipId::HashFn> myMap;
+  struct HashFn {
+    std::size_t operator()(const WrClipId& aKey) const
+    {
+      return std::hash<size_t>{}(aKey.id);
+    }
+  };
 };
 
-// Corresponds to a clip id for for a scroll frame in webrender. Similar
-// to WrClipId but a separate struct so we don't get them mixed up in C++.
-struct WrScrollId {
-  size_t id;
+// Corresponds to a clip id for a clip chain in webrender. Similar to
+// WrClipId but a separate struct so we don't get them mixed up in C++.
+struct WrClipChainId {
+  uint64_t id;
 
-  bool operator==(const WrScrollId& other) const {
+  bool operator==(const WrClipChainId& other) const {
     return id == other.id;
   }
-
-  bool operator!=(const WrScrollId& other) const {
-    return id != other.id;
-  }
-
-  static WrScrollId RootScrollNode();
 };
-
-// Corresponds to a clip id for a position:sticky clip in webrender. Similar
-// to WrClipId but a separate struct so we don't get them mixed up in C++.
-struct WrStickyId {
-  size_t id;
-
-  bool operator==(const WrStickyId& other) const {
-    return id == other.id;
-  }
-};
-
-typedef Variant<WrScrollId, WrClipId> ScrollOrClipId;
 
 enum class WebRenderError : int8_t {
   INITIALIZE = 0,
@@ -814,6 +807,12 @@ static inline wr::WrYuvColorSpace ToWrYuvColorSpace(YUVColorSpace aYUVColorSpace
       MOZ_ASSERT_UNREACHABLE("Tried to convert invalid YUVColorSpace.");
   }
   return wr::WrYuvColorSpace::Rec601;
+}
+
+static inline wr::SyntheticItalics DegreesToSyntheticItalics(float aDegrees) {
+  wr::SyntheticItalics synthetic_italics;
+  synthetic_italics.angle = int16_t(std::min(std::max(aDegrees, -89.0f), 89.0f) * 256.0f);
+  return synthetic_italics;
 }
 
 } // namespace wr

@@ -349,9 +349,17 @@ class VirtualenvMixin(object):
             os.path.join(external_tools_path, 'virtualenv', 'virtualenv.py'),
         ]
         virtualenv_options = c.get('virtualenv_options', [])
-        # Don't create symlinks. If we don't do this, permissions issues may
-        # hinder virtualenv creation or operation.
-        virtualenv_options.append('--always-copy')
+        # Creating symlinks in the virtualenv may cause issues during
+        # virtualenv creation or operation on non-Redhat derived
+        # distros. On Redhat derived distros --always-copy causes
+        # imports to fail. See
+        # https://github.com/pypa/virtualenv/issues/565. Therefore
+        # only use --alway-copy when not using Redhat.
+        if self._is_redhat():
+            self.warning("creating virtualenv without --always-copy "
+                         "due to issues on Redhat derived distros")
+        else:
+            virtualenv_options.append('--always-copy')
 
         if os.path.exists(self.query_python_path()):
             self.info("Virtualenv %s appears to already exist; skipping virtualenv creation." % self.query_python_path())
@@ -449,9 +457,6 @@ class PerfherderResourceOptionsMixin(ScriptMixin):
                              traceback.format_exc())
 
             opts.append('buildbot-%s' % instance)
-
-        # Allow configs to specify their own values.
-        opts.extend(self.config.get('perfherder_extra_options', []))
 
         return opts
 

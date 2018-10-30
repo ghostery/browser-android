@@ -14,7 +14,7 @@ Debugging/Development
 =====================
 
 Must Have Electrolysis
--------
+----------------------
 
 Web Payments `does not work without e10s <https://bugzilla.mozilla.org/show_bug.cgi?id=1365964>`_!
 
@@ -58,7 +58,7 @@ The UI talks to the DOM code via the ``nsIPaymentRequestService`` interface.
 Dialog Architecture
 ===================
 
-Privileged wrapper XHTML document (paymentDialogWrapper.xhtml) containing a remote ``<iframe mozbrowser="true" remote="true">`` containing unprivileged XHTML (paymentRequest.xhtml).
+Privileged wrapper XUL document (paymentDialogWrapper.xul) containing a remote ``<xul:browser="true" remote="true">`` containing unprivileged XHTML (paymentRequest.xhtml).
 Keeping the dialog contents unprivileged is useful since the dialog will render payment line items and shipping options that are provided by web developers and should therefore be considered untrusted.
 In order to communicate across the process boundary a privileged frame script (`paymentDialogFrameScript.js`) is loaded into the iframe to relay messages.
 This is because the unprivileged document cannot access message managers.
@@ -69,3 +69,19 @@ Instead, all communication across the privileged/unprivileged boundary is done v
 
 These events are converted to/from message manager messages of the same name to communicate to the other process.
 The purpose of `paymentDialogFrameScript.js` is to simply convert unprivileged DOM events to/from messages from the other process.
+
+Custom Elements
+---------------
+
+The Payment Request UI uses Custom Elements for the UI components.
+
+Some guidelines:
+* If you're overriding a lifecycle callback, don't forget to call that method on
+  ``super`` from the implementation to ensure that mixins and ancestor classes
+  work properly.
+* From within a custom element, don't use ``document.getElementById`` or
+  ``document.querySelector*`` because they can return elements that are outside
+  of the component, thus breaking the modularization. It can also cause problems
+  if the elements you're looking for aren't attached to the document yet. Use
+  ``querySelector*`` on ``this`` (the custom element) or one of its descendants
+  instead.

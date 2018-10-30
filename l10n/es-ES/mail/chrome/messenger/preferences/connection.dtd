@@ -44,3 +44,8 @@
 <!ENTITY autologinproxy.tooltip "Esta opción le identifica sin ningún mensaje ante los proxis cuando ha guardado credenciales para ellos. Se le preguntará en caso de que falle el inicio de sesión.">
 <!ENTITY socksRemoteDNS.label "DNS proxy al usar SOCKS v5">
 <!ENTITY socksRemoteDNS.accesskey "5">
+<!ENTITY dnsOverHttps.label "Activar DNS sobre HTTPS">
+<!ENTITY dnsOverHttps.accesskey "v">
+<!ENTITY dnsOverHttpsUrl.label "URL">
+<!ENTITY dnsOverHttpsUrl.accesskey "R">
+<!ENTITY dnsOverHttpsUrl.tooltip "URL para resolver DNS sobre HTTPS">

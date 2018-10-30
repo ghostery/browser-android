@@ -15,33 +15,38 @@ var gAppManagerDialog = {
     this.handlerInfo = window.arguments[0];
     Services.scriptloader.loadSubScript("chrome://browser/content/preferences/in-content/main.js",
       window);
-    var pane = gMainPane;
 
     const appDescElem = document.getElementById("appDescription");
     if (this.handlerInfo.type == TYPE_MAYBE_FEED) {
       document.l10n.setAttributes(appDescElem, "app-manager-handle-webfeeds");
     } else if (this.handlerInfo.wrappedHandlerInfo instanceof Ci.nsIMIMEInfo) {
       document.l10n.setAttributes(appDescElem, "app-manager-handle-file", {
-        type: pane._describeType(this.handlerInfo)
+        type: this.handlerInfo.typeDescription,
       });
     } else {
       document.l10n.setAttributes(appDescElem, "app-manager-handle-protocol", {
-        type: pane._describeType(this.handlerInfo)
+        type: this.handlerInfo.typeDescription,
       });
     }
 
     var list = document.getElementById("appList");
-    var apps = this.handlerInfo.possibleApplicationHandlers.enumerate();
-    while (apps.hasMoreElements()) {
-      let app = apps.getNext();
-      if (!pane.isValidHandlerApp(app))
+    for (let app of this.handlerInfo.possibleApplicationHandlers.enumerate()) {
+      if (!gMainPane.isValidHandlerApp(app))
         continue;
 
-      app.QueryInterface(Ci.nsIHandlerApp);
-      var item = list.appendItem(app.name);
-      item.setAttribute("image", pane._getIconURLForHandlerApp(app));
-      item.className = "listitem-iconic";
+      // Ensure the XBL binding is created eagerly.
+      // eslint-disable-next-line no-undef
+      list.appendChild(MozXULElement.parseXULToFragment("<richlistitem/>"));
+      var item = list.lastChild;
       item.app = app;
+
+      var image = document.createXULElement("image");
+      image.setAttribute("src", gMainPane._getIconURLForHandlerApp(app));
+      item.appendChild(image);
+
+      var label = document.createXULElement("label");
+      label.setAttribute("value", app.name);
+      item.appendChild(label);
     }
 
     // Triggers onSelect which populates label
@@ -51,7 +56,7 @@ var gAppManagerDialog = {
     // result will impact the size of the subdialog.
     await document.l10n.translateElements([
       appDescElem,
-      document.getElementById("appType")
+      document.getElementById("appType"),
     ]);
   },
 
@@ -75,14 +80,16 @@ var gAppManagerDialog = {
     var list = document.getElementById("appList");
     this._removed.push(list.selectedItem.app);
     var index = list.selectedIndex;
-    list.selectedItem.remove();
-    if (list.getRowCount() == 0) {
+    var element = list.selectedItem;
+    list.removeItemFromSelection(element);
+    element.remove();
+    if (list.itemCount == 0) {
       // The list is now empty, make the bottom part disappear
       document.getElementById("appDetails").hidden = true;
     } else {
       // Select the item at the same index, if we removed the last
       // item of the list, select the previous item
-      if (index == list.getRowCount())
+      if (index == list.itemCount)
         --index;
       list.selectedIndex = index;
     }
@@ -101,12 +108,10 @@ var gAppManagerDialog = {
       address = app.executable.path;
     else if (app instanceof Ci.nsIWebHandlerApp)
       address = app.uriTemplate;
-    else if (app instanceof Ci.nsIWebContentHandlerInfo)
-      address = app.uri;
     document.getElementById("appLocation").value = address;
     const l10nId = app instanceof Ci.nsILocalHandlerApp ? "app-manager-local-app-info"
                                                         : "app-manager-web-app-info";
     const appTypeElem = document.getElementById("appType");
     document.l10n.setAttributes(appTypeElem, l10nId);
-  }
+  },
 };

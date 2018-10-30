@@ -17,10 +17,12 @@
 #include "nsIURI.h"
 class nsPresContext;
 class nsIPresShell;
+class nsDocShellLoadInfo;
 namespace mozilla {
 class Encoding;
 class HTMLEditor;
 namespace dom {
+class BrowsingContext;
 class ClientSource;
 } // namespace dom
 }
@@ -61,7 +63,10 @@ interface nsICommandManager;
 interface nsICommandParams;
 interface nsILoadURIDelegate;
 native TabChildRef(already_AddRefed<nsITabChild>);
+native nsDocShellLoadInfoPtr(nsDocShellLoadInfo*);
 
+webidl BrowsingContext;
+webidl ContentFrameMessageManager;
 webidl EventTarget;
 
 [scriptable, builtinclass, uuid(049234fe-da10-478b-bc5d-bc6f9a1ba63d)]
@@ -87,34 +92,9 @@ interface nsIDocShell : nsIDocShellTreeItem
    *                     be allowed.  Use at your own risk.
    */
   [noscript]void loadURI(in nsIURI uri,
-                         in nsIDocShellLoadInfo loadInfo,
+                         in nsDocShellLoadInfoPtr loadInfo,
                          in unsigned long aLoadFlags,
                          in boolean firstParty);
-
-  /**
-   * Loads a given stream. This will give priority to loading the requested
-   * stream in the object implementing this interface. If it can't be loaded
-   * here however, the URL dispatched will go through its normal process of
-   * content loading.
-   *
-   * @param aStream         - The input stream that provides access to the data
-   *                          to be loaded.  This must be a blocking, threadsafe
-   *                          stream implementation.
-   * @param aURI            - The URI representing the stream, or null.
-   * @param aContentType    - The type (MIME) of data being loaded (empty if unknown).
-   * @param aContentCharset - The charset of the data being loaded (empty if unknown).
-   * @param aLoadInfo       - This is the extended load info for this load.  This
-   *                          most often will be null, but if you need to do
-   *                          additional setup for this load you can get a
-   *                          loadInfo object by calling createLoadInfo.  Once
-   *                          you have this object you can set the needed
-   *                          properties on it and then pass it to loadStream.
-   */
-  [noscript]void loadStream(in nsIInputStream aStream,
-                            in nsIURI aURI,
-                            in ACString aContentType,
-                            in ACString aContentCharset,
-                            in nsIDocShellLoadInfo aLoadInfo);
 
   const long INTERNAL_LOAD_FLAGS_NONE                    = 0x0;
   const long INTERNAL_LOAD_FLAGS_INHERIT_PRINCIPAL       = 0x1;
@@ -155,6 +135,13 @@ interface nsIDocShell : nsIDocShellTreeItem
    *                               When Nothing, there will be no change
    *                               When Some, the principal URI will overwrite even
    *                               with a null value.
+   * @param aKeepResultPrincipalURIIfSet - If a refresh is caused by
+   *                                       http-equiv="refresh" we want to set
+   *                                       aResultPrincipalURI, but we do not want
+   *                                       to overwrite the channel's
+   *                                       ResultPrincipalURI, if it has already
+   *                                       been set on the channel by a protocol
+   *                                       handler.
    * @param aLoadReplace         - If set LOAD_REPLACE flag will be set on the
    *                               channel. aOriginalURI is null, this argument is
    *                               ignored.
@@ -188,8 +175,6 @@ interface nsIDocShell : nsIDocShellTreeItem
    * @param aFileName            - Non-null when the link should be downloaded as
                                    the given filename.
    * @param aPostDataStream      - Post data stream (if POSTing)
-   * @param aPostDataStreamLength - Post data stream length. Use -1 if the length
-                                    of the stream is unknown.
    * @param aHeadersStream       - Stream containing "extra" request headers...
    * @param aLoadFlags           - Flags to modify load behaviour. Flags are defined
    *                               in nsIWebNavigation.
@@ -205,6 +190,7 @@ interface nsIDocShell : nsIDocShellTreeItem
   [noscript]void internalLoad(in nsIURI aURI,
                               in nsIURI aOriginalURI,
                               [const] in MaybeURI aResultPrincipalURI,
+                              in bool aKeepResultPrincipalURIIfSet,
                               in boolean aLoadReplace,
                               in nsIURI aReferrer,
                               in unsigned long aReferrerPolicy,
@@ -215,7 +201,6 @@ interface nsIDocShell : nsIDocShellTreeItem
                               in string aTypeHint,
                               in AString aFileName,
                               in nsIInputStream aPostDataStream,
-                              in long long aPostDataStreamLength,
                               in nsIInputStream aHeadersStream,
                               in unsigned long aLoadFlags,
                               in nsISHEntry aSHEntry,
@@ -233,12 +218,6 @@ interface nsIDocShell : nsIDocShellTreeItem
   [implicit_jscontext]
   void addState(in jsval aData, in DOMString aTitle,
                 in DOMString aURL, in boolean aReplace);
-
-  /**
-   * Creates a DocShellLoadInfo object that you can manipulate and then pass
-   * to loadURI.
-   */
-  void createLoadInfo(out nsIDocShellLoadInfo loadInfo);
 
   /**
    * Reset state to a new content model within the current document and the document
@@ -642,6 +621,36 @@ interface nsIDocShell : nsIDocShellTreeItem
    * loaded (or is about to load) on the page.
    */
   [infallible] readonly attribute boolean hasTrackingContentLoaded;
+
+   /**
+   * This attribute determines whether a document has Slow Tracking Content
+   * that has been blocked from loading.
+   */
+   [infallible] readonly attribute boolean hasSlowTrackingContentBlocked;
+
+   /**
+   * This attribute determines whether a document seen cookies or storage
+   * blocked due to a site permission being denied.
+   */
+   [infallible] readonly attribute boolean hasCookiesBlockedByPermission;
+
+   /**
+   * This attribute determines whether a document seen cookies or storage
+   * blocked due to a the request being made by a tracker.
+   */
+   [infallible] readonly attribute boolean hasCookiesBlockedDueToTrackers;
+
+   /**
+   * This attribute determines whether a document seen cookies or storage
+   * blocked due to cookie behavior settings blocking all cookies.
+   */
+   [infallible] readonly attribute boolean hasAllCookiesBeenBlocked;
+
+   /**
+   * This attribute determines whether a document seen cookies or storage
+   * blocked due to cookie behavior settings blocking all third-party cookies.
+   */
+   [infallible] readonly attribute boolean hasForeignCookiesBeenBlocked;
 
   /**
    * Disconnects this docshell's editor from its window, and stores the
@@ -1204,7 +1213,15 @@ interface nsIDocShell : nsIDocShellTreeItem
    */
   mozilla::HTMLEditor* GetHTMLEditor();
   nsresult SetHTMLEditor(mozilla::HTMLEditor* aHTMLEditor);
+
+  void AttachBrowsingContext(nsIDocShell* aParentDocShell);
+  void DetachBrowsingContext();
 %}
+
+  /**
+   * BrowsingContext associated with the DocShell.
+   */
+  readonly attribute BrowsingContext browsingContext;
 
   /**
    * Allowed CSS display modes. This needs to be kept in
@@ -1220,4 +1237,10 @@ interface nsIDocShell : nsIDocShellTreeItem
    * Media queries only look at the value in the top-most docshell.
    */
   attribute unsigned long displayMode;
+
+  /**
+   * The message manager for this docshell.  This does not throw, but
+   * can return null if the docshell has no message manager.
+   */
+  [infallible] readonly attribute ContentFrameMessageManager messageManager;
 };

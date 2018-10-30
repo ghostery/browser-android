@@ -74,6 +74,12 @@ public:
                     nsContainerFrame* aParent,
                     nsIFrame*         aPrevInFlow) override;
 
+  bool IsFrameOfType(uint32_t aFlags) const override
+  {
+    return nsSVGDisplayContainerFrame::IsFrameOfType(
+      aFlags & ~eSupportsContainLayoutAndPaint);
+  }
+
   virtual nsSplittableType GetSplittableType() const override;
 
 #ifdef DEBUG_FRAME_DUMP
@@ -239,6 +245,9 @@ public:
                     nsContainerFrame* aParent,
                     nsIFrame*         aPrevInFlow) override;
 #endif
+
+  virtual void BuildDisplayList(nsDisplayListBuilder*   aBuilder,
+                                const nsDisplayListSet& aLists) override;
 
 #ifdef DEBUG_FRAME_DUMP
   virtual nsresult GetFrameName(nsAString& aResult) const override {

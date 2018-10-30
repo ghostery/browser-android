@@ -6,7 +6,9 @@ extern crate serde_bytes;
 
 use font::{FontInstanceKey, FontKey, FontTemplate};
 use std::sync::Arc;
-use {DevicePoint, DeviceUintRect, IdNamespace, TileOffset, TileSize};
+use {DevicePoint, DeviceUintPoint, DeviceUintRect, DeviceUintSize};
+use {IdNamespace, TileOffset, TileSize};
+use euclid::size2;
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -57,6 +59,7 @@ pub enum ImageFormat {
     BGRA8 = 3,
     RGBAF32 = 4,
     RG8 = 5,
+    RGBAI32 = 6,
 }
 
 impl ImageFormat {
@@ -66,6 +69,7 @@ impl ImageFormat {
             ImageFormat::BGRA8 => 4,
             ImageFormat::RGBAF32 => 16,
             ImageFormat::RG8 => 2,
+            ImageFormat::RGBAI32 => 16,
         }
     }
 }
@@ -73,8 +77,7 @@ impl ImageFormat {
 #[derive(Copy, Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ImageDescriptor {
     pub format: ImageFormat,
-    pub width: u32,
-    pub height: u32,
+    pub size: DeviceUintSize,
     pub stride: Option<u32>,
     pub offset: u32,
     pub is_opaque: bool,
@@ -90,8 +93,7 @@ impl ImageDescriptor {
         allow_mipmaps: bool,
     ) -> Self {
         ImageDescriptor {
-            width,
-            height,
+            size: size2(width, height),
             format,
             stride: None,
             offset: 0,
@@ -101,19 +103,25 @@ impl ImageDescriptor {
     }
 
     pub fn compute_stride(&self) -> u32 {
-        self.stride
-            .unwrap_or(self.width * self.format.bytes_per_pixel())
+        self.stride.unwrap_or(self.size.width * self.format.bytes_per_pixel())
     }
 
     pub fn compute_total_size(&self) -> u32 {
-        self.compute_stride() * self.height
+        self.compute_stride() * self.size.height
+    }
+
+    pub fn full_rect(&self) -> DeviceUintRect {
+        DeviceUintRect::new(
+            DeviceUintPoint::zero(),
+            self.size,
+        )
     }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum ImageData {
     Raw(#[serde(with = "serde_image_data_raw")] Arc<Vec<u8>>),
-    Blob(#[serde(with = "serde_bytes")] BlobImageData),
+    Blob(#[serde(with = "serde_image_data_raw")] Arc<BlobImageData>),
     External(ExternalImageData),
 }
 
@@ -141,8 +149,8 @@ impl ImageData {
         ImageData::Raw(bytes)
     }
 
-    pub fn new_blob_image(commands: Vec<u8>) -> Self {
-        ImageData::Blob(commands)
+    pub fn new_blob_image(commands: BlobImageData) -> Self {
+        ImageData::Blob(Arc::new(commands))
     }
 
     #[inline]
@@ -166,33 +174,62 @@ impl ImageData {
     }
 }
 
+/// The resources exposed by the resource cache available for use by the blob rasterizer.
 pub trait BlobImageResources {
     fn get_font_data(&self, key: FontKey) -> &FontTemplate;
     fn get_image(&self, key: ImageKey) -> Option<(&ImageData, &ImageDescriptor)>;
 }
 
-pub trait BlobImageRenderer: Send {
-    fn add(&mut self, key: ImageKey, data: BlobImageData, tiling: Option<TileSize>);
+/// A handler on the render backend that can create rasterizer objects which will
+/// be sent to the scene builder thread to execute the rasterization.
+///
+/// The handler is responsible for collecting resources, managing/updating blob commands
+/// and creating the rasterizer objects, but isn't expected to do any rasterization itself.
+pub trait BlobImageHandler: Send {
+    /// Creates a snapshot of the current state of blob images in the handler.
+    fn create_blob_rasterizer(&mut self) -> Box<AsyncBlobImageRasterizer>;
 
-    fn update(&mut self, key: ImageKey, data: BlobImageData, dirty_rect: Option<DeviceUintRect>);
-
-    fn delete(&mut self, key: ImageKey);
-
-    fn request(
+    /// A hook to let the blob image handler update any state related to resources that
+    /// are not bundled in the blob recording itself.
+    fn prepare_resources(
         &mut self,
         services: &BlobImageResources,
-        key: BlobImageRequest,
-        descriptor: &BlobImageDescriptor,
-        dirty_rect: Option<DeviceUintRect>,
+        requests: &[BlobImageParams],
     );
 
-    fn resolve(&mut self, key: BlobImageRequest) -> BlobImageResult;
+    /// Register a blob image.
+    fn add(&mut self, key: ImageKey, data: Arc<BlobImageData>, tiling: Option<TileSize>);
 
+    /// Update an already registered blob image.
+    fn update(&mut self, key: ImageKey, data: Arc<BlobImageData>, dirty_rect: Option<DeviceUintRect>);
+
+    /// Delete an already registered blob image.
+    fn delete(&mut self, key: ImageKey);
+
+    /// A hook to let the handler clean up any state related to a font which the resource
+    /// cache is about to delete.
     fn delete_font(&mut self, key: FontKey);
 
+    /// A hook to let the handler clean up any state related to a font instance which the
+    /// resource cache is about to delete.
     fn delete_font_instance(&mut self, key: FontInstanceKey);
 
+    /// A hook to let the handler clean up any state related a given namespace before the
+    /// resource cache deletes them.
     fn clear_namespace(&mut self, namespace: IdNamespace);
+}
+
+/// A group of rasterization requests to execute synchronously on the scene builder thread.
+pub trait AsyncBlobImageRasterizer : Send {
+    fn rasterize(&mut self, requests: &[BlobImageParams]) -> Vec<(BlobImageRequest, BlobImageResult)>;
+}
+
+
+#[derive(Copy, Clone, Debug)]
+pub struct BlobImageParams {
+    pub request: BlobImageRequest,
+    pub descriptor: BlobImageDescriptor,
+    pub dirty_rect: Option<DeviceUintRect>,
 }
 
 pub type BlobImageData = Vec<u8>;
@@ -202,16 +239,14 @@ pub type BlobImageResult = Result<RasterizedBlobImage, BlobImageError>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BlobImageDescriptor {
-    pub width: u32,
-    pub height: u32,
+    pub size: DeviceUintSize,
     pub offset: DevicePoint,
     pub format: ImageFormat,
 }
 
 pub struct RasterizedBlobImage {
-    pub width: u32,
-    pub height: u32,
-    pub data: Vec<u8>,
+    pub rasterized_rect: DeviceUintRect,
+    pub data: Arc<Vec<u8>>,
 }
 
 #[derive(Clone, Debug)]
@@ -222,7 +257,7 @@ pub enum BlobImageError {
     Other(String),
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct BlobImageRequest {
     pub key: ImageKey,
     pub tile: Option<TileOffset>,

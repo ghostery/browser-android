@@ -361,11 +361,11 @@ var gSearchPane = {
 
       // Notify the user if they have chosen an existing engine/bookmark keyword
       if (eduplicate || bduplicate) {
-        let msgids = [["search-keyword-warning-title"]];
+        let msgids = [{id: "search-keyword-warning-title"}];
         if (eduplicate) {
-          msgids.push(["search-keyword-warning-engine", { name: dupName }]);
+          msgids.push({id: "search-keyword-warning-engine", args: { name: dupName }});
         } else {
-          msgids.push(["search-keyword-warning-bookmark"]);
+          msgids.push({id: "search-keyword-warning-bookmark"});
         }
 
         let [dtitle, msg] = await document.l10n.formatValues(msgids);
@@ -394,7 +394,7 @@ var gSearchPane = {
     Services.search.currentEngine =
       document.getElementById("defaultEngine").selectedItem.engine;
     ExtensionSettingsStore.setByUser(SEARCH_TYPE, SEARCH_KEY);
-  }
+  },
 };
 
 function onDragEngineStart(event) {
@@ -536,7 +536,7 @@ EngineStore.prototype = {
     this._engines.forEach(function(e) {
       e.uri = e.originalEngine.uri;
     });
-  }
+  },
 };
 
 function EngineView(aEngineStore) {
@@ -686,5 +686,5 @@ EngineView.prototype = {
   },
   performAction(action) { },
   performActionOnRow(action, index) { },
-  performActionOnCell(action, index, column) { }
+  performActionOnCell(action, index, column) { },
 };

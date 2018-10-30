@@ -11,8 +11,10 @@
 
 #include <inttypes.h>
 
-#include "gfxFontConstants.h"
 #include "X11UndefineNone.h"
+
+#include "gfxFontConstants.h"
+#include "mozilla/ServoStyleConsts.h"
 
 // XXX fold this into ComputedStyle and group by nsStyleXXX struct
 
@@ -77,13 +79,39 @@ enum class StyleClear : uint8_t {
   None = 0,
   Left,
   Right,
-  InlineStart,
-  InlineEnd,
   Both,
   // StyleClear::Line can be added to one of the other values in layout
   // so it needs to use a bit value that none of the other values can have.
+  //
+  // FIXME(emilio): Doesn't look like we do that anymore, so probably can be
+  // made a single value instead, and Max removed.
   Line = 8,
   Max = 13  // Max = (Both | Line)
+};
+
+enum class StyleColumnFill : uint8_t {
+  Balance,
+  Auto,
+};
+
+enum class StyleColumnSpan : uint8_t {
+  None,
+  All,
+};
+
+// Counters and generated content.
+enum class StyleContentType : uint8_t {
+  String = 1,
+  Image = 10,
+  Attr = 20,
+  Counter = 30,
+  Counters = 31,
+  OpenQuote = 40,
+  CloseQuote = 41,
+  NoOpenQuote = 42,
+  NoCloseQuote = 43,
+  AltContent = 50,
+  Uninitialized,
 };
 
 // Define geometry box for clip-path's reference-box, background-clip,
@@ -117,20 +145,12 @@ enum class StyleGeometryBox : uint8_t {
                          // background-clip only.
 };
 
-// fill-rule
-enum class StyleFillRule : uint8_t {
-  Nonzero,
-  Evenodd,
-};
-
 // float
 // https://developer.mozilla.org/en-US/docs/Web/CSS/float
 enum class StyleFloat : uint8_t {
   None,
   Left,
   Right,
-  InlineStart,
-  InlineEnd
 };
 
 // float-edge
@@ -146,6 +166,19 @@ enum class StyleHyphens : uint8_t {
   Auto,
 };
 
+// image-orientation
+enum class StyleImageOrientation : uint8_t {
+  None,
+  FromImage,
+};
+
+// scrollbar-width
+enum class StyleScrollbarWidth : uint8_t {
+  Auto,
+  Thin,
+  None,
+};
+
 // <shape-radius> for <basic-shape>
 enum class StyleShapeRadius : uint8_t {
   ClosestSide,
@@ -159,6 +192,7 @@ enum class StyleShapeSourceType : uint8_t {
   Image, // shape-outside only
   Shape,
   Box,
+  Path,  // SVG path function
 };
 
 // -moz-stack-sizing
@@ -231,22 +265,9 @@ enum class StyleOrient : uint8_t {
   Vertical,
 };
 
-
-// See nsStyleColor
-#define NS_STYLE_COLOR_INHERIT_FROM_BODY  2  /* Can't come from CSS directly */
-
-// See nsStyleColor
-#define NS_COLOR_CURRENTCOLOR                   -1
-#define NS_COLOR_MOZ_DEFAULT_COLOR              -2
-#define NS_COLOR_MOZ_DEFAULT_BACKGROUND_COLOR   -3
-#define NS_COLOR_MOZ_HYPERLINKTEXT              -4
-#define NS_COLOR_MOZ_VISITEDHYPERLINKTEXT       -5
-#define NS_COLOR_MOZ_ACTIVEHYPERLINKTEXT        -6
-// Only valid as paints in SVG glyphs
-#define NS_COLOR_CONTEXT_FILL                   -7
-#define NS_COLOR_CONTEXT_STROKE                 -8
-
 // See nsStyleDisplay
+//
+// These need to be in sync with WillChangeBits in box.rs.
 #define NS_STYLE_WILL_CHANGE_STACKING_CONTEXT   (1<<0)
 #define NS_STYLE_WILL_CHANGE_TRANSFORM          (1<<1)
 #define NS_STYLE_WILL_CHANGE_SCROLL             (1<<2)
@@ -254,8 +275,8 @@ enum class StyleOrient : uint8_t {
 #define NS_STYLE_WILL_CHANGE_FIXPOS_CB          (1<<4)
 #define NS_STYLE_WILL_CHANGE_ABSPOS_CB          (1<<5)
 
-// See AnimationEffectReadOnly.webidl
-// and mozilla/dom/AnimationEffectReadOnlyBinding.h
+// See AnimationEffect.webidl
+// and mozilla/dom/AnimationEffectBinding.h
 namespace dom {
 enum class PlaybackDirection : uint8_t;
 enum class FillMode : uint8_t;
@@ -269,9 +290,11 @@ enum class FillMode : uint8_t;
 #define NS_STYLE_ANIMATION_PLAY_STATE_PAUSED      1
 
 // See nsStyleImageLayers
-#define NS_STYLE_IMAGELAYER_ATTACHMENT_SCROLL        0
-#define NS_STYLE_IMAGELAYER_ATTACHMENT_FIXED         1
-#define NS_STYLE_IMAGELAYER_ATTACHMENT_LOCAL         2
+enum class StyleImageLayerAttachment : uint8_t {
+    Scroll,
+    Fixed,
+    Local
+};
 
 // A magic value that we use for our "pretend that background-clip is
 // 'padding' when we have a solid border" optimization.  This isn't
@@ -297,7 +320,6 @@ enum class StyleImageLayerRepeat : uint8_t {
   Space,
   Round
 };
-
 
 // See nsStyleImageLayers
 #define NS_STYLE_IMAGELAYER_SIZE_CONTAIN             0
@@ -356,7 +378,7 @@ enum class StyleContent : uint8_t {
   AltContent
 };
 
-// See nsStyleColor
+// See nsStyleUI
 #define NS_STYLE_CURSOR_AUTO                    1
 #define NS_STYLE_CURSOR_CROSSHAIR               2
 #define NS_STYLE_CURSOR_DEFAULT                 3    // ie: an arrow
@@ -419,64 +441,21 @@ enum class StyleContent : uint8_t {
            NS_STYLE_WRITING_MODE_SIDEWAYS_MASK)
 
 // See nsStyleDisplay
-//
-// NOTE: Order is important! If you change it, make sure to take a look at
-// the FrameConstructorDataByDisplay stuff (both the XUL and non-XUL version),
-// and ensure it's still correct!
-enum class StyleDisplay : uint8_t {
-  None = 0,
-  Block,
-  FlowRoot,
-  Inline,
-  InlineBlock,
-  ListItem,
-  Table,
-  InlineTable,
-  TableRowGroup,
-  TableColumn,
-  TableColumnGroup,
-  TableHeaderGroup,
-  TableFooterGroup,
-  TableRow,
-  TableCell,
-  TableCaption,
-  Flex,
-  InlineFlex,
-  Grid,
-  InlineGrid,
-  Ruby,
-  RubyBase,
-  RubyBaseContainer,
-  RubyText,
-  RubyTextContainer,
-  Contents,
-  WebkitBox,
-  WebkitInlineBox,
-  MozBox,
-  MozInlineBox,
-#ifdef MOZ_XUL
-  MozGrid,
-  MozInlineGrid,
-  MozGridGroup,
-  MozGridLine,
-  MozStack,
-  MozInlineStack,
-  MozDeck,
-  MozGroupbox,
-  MozPopup,
-#endif
-};
-
-// See nsStyleDisplay
-// If these are re-ordered, nsComputedDOMStyle::DoGetContain() and
-// nsCSSValue::AppendToString() must be updated.
+// If these are re-ordered, nsComputedDOMStyle::DoGetContain() must be updated.
 #define NS_STYLE_CONTAIN_NONE                   0
-#define NS_STYLE_CONTAIN_STRICT                 0x1
-#define NS_STYLE_CONTAIN_LAYOUT                 0x2
-#define NS_STYLE_CONTAIN_STYLE                  0x4
-#define NS_STYLE_CONTAIN_PAINT                  0x8
+#define NS_STYLE_CONTAIN_SIZE                   0x01
+#define NS_STYLE_CONTAIN_LAYOUT                 0x02
+#define NS_STYLE_CONTAIN_STYLE                  0x04
+#define NS_STYLE_CONTAIN_PAINT                  0x08
+#define NS_STYLE_CONTAIN_STRICT                 0x10
+#define NS_STYLE_CONTAIN_CONTENT                0x20
 // NS_STYLE_CONTAIN_ALL_BITS does not correspond to a keyword.
 #define NS_STYLE_CONTAIN_ALL_BITS               (NS_STYLE_CONTAIN_LAYOUT | \
+                                                 NS_STYLE_CONTAIN_STYLE  | \
+                                                 NS_STYLE_CONTAIN_PAINT  | \
+                                                 NS_STYLE_CONTAIN_SIZE)
+// NS_STYLE_CONTAIN_CONTENT_BITS does not correspond to a keyword.
+#define NS_STYLE_CONTAIN_CONTENT_BITS           (NS_STYLE_CONTAIN_LAYOUT | \
                                                  NS_STYLE_CONTAIN_STYLE  | \
                                                  NS_STYLE_CONTAIN_PAINT)
 
@@ -696,7 +675,7 @@ enum class StyleGridTrackBreadth : uint8_t {
 #define NS_STYLE_FRAME_SCROLL                   7
 #define NS_STYLE_FRAME_NOSCROLL                 8
 
-// See nsStyleDisplay.mOverflow
+// See nsStyleDisplay.mOverflow{X,Y}
 #define NS_STYLE_OVERFLOW_VISIBLE               0
 #define NS_STYLE_OVERFLOW_HIDDEN                1
 #define NS_STYLE_OVERFLOW_SCROLL                2
@@ -912,9 +891,6 @@ enum class StyleWhiteSpace : uint8_t {
 // See nsStyleText
 #define NS_STYLE_TEXT_COMBINE_UPRIGHT_NONE        0
 #define NS_STYLE_TEXT_COMBINE_UPRIGHT_ALL         1
-#define NS_STYLE_TEXT_COMBINE_UPRIGHT_DIGITS_2    2
-#define NS_STYLE_TEXT_COMBINE_UPRIGHT_DIGITS_3    3
-#define NS_STYLE_TEXT_COMBINE_UPRIGHT_DIGITS_4    4
 
 // See nsStyleText
 #define NS_STYLE_LINE_HEIGHT_BLOCK_HEIGHT       0
@@ -966,16 +942,6 @@ enum class StyleWhiteSpace : uint8_t {
 #define NS_STYLE_PAGE_BREAK_AVOID               2
 #define NS_STYLE_PAGE_BREAK_LEFT                3
 #define NS_STYLE_PAGE_BREAK_RIGHT               4
-
-// See nsStyleColumn
-#define NS_STYLE_COLUMN_COUNT_AUTO              0
-#define NS_STYLE_COLUMN_COUNT_UNLIMITED         (-1)
-
-#define NS_STYLE_COLUMN_FILL_AUTO               0
-#define NS_STYLE_COLUMN_FILL_BALANCE            1
-
-#define NS_STYLE_COLUMN_SPAN_NONE               0
-#define NS_STYLE_COLUMN_SPAN_ALL                1
 
 // See nsStyleUIReset
 #define NS_STYLE_IME_MODE_AUTO                  0
@@ -1108,7 +1074,7 @@ enum class StyleWhiteSpace : uint8_t {
 #define NS_STYLE_TEXT_RENDERING_OPTIMIZELEGIBILITY 2
 #define NS_STYLE_TEXT_RENDERING_GEOMETRICPRECISION 3
 
-// adjust-color
+// color-adjust
 #define NS_STYLE_COLOR_ADJUST_ECONOMY               0
 #define NS_STYLE_COLOR_ADJUST_EXACT                 1
 
@@ -1192,30 +1158,6 @@ enum class StyleOverscrollBehavior : uint8_t {
 #define NS_STYLE_SCROLL_SNAP_TYPE_NONE              0
 #define NS_STYLE_SCROLL_SNAP_TYPE_MANDATORY         1
 #define NS_STYLE_SCROLL_SNAP_TYPE_PROXIMITY         2
-
-/*****************************************************************************
- * Constants for media features.                                             *
- *****************************************************************************/
-
-// orientation
-enum class StyleOrientation : uint8_t {
-  Portrait = 0,
-  Landscape,
-};
-
-// scan
-enum class StyleScan : uint8_t {
-  Progressive = 0,
-  Interlace,
-};
-
-// display-mode
-enum class StyleDisplayMode : uint8_t {
-  Browser = 0,
-  MinimalUi,
-  Standalone,
-  Fullscreen,
-};
 
 } // namespace mozilla
 

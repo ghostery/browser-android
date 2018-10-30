@@ -36,12 +36,12 @@ public:
   }
 
   explicit COMPtrHolder(COMPtrType&& aPtr)
-    : mPtr(Forward<COMPtrType>(aPtr))
+    : mPtr(std::forward<COMPtrType>(aPtr))
   {
   }
 
   COMPtrHolder(COMPtrType&& aPtr, const ActivationContext& aActCtx)
-    : mPtr(Forward<COMPtrType>(aPtr))
+    : mPtr(std::forward<COMPtrType>(aPtr))
     , mActCtx(aActCtx)
   {
   }
@@ -58,7 +58,7 @@ public:
 
   void Set(COMPtrType&& aPtr)
   {
-    mPtr = Forward<COMPtrType>(aPtr);
+    mPtr = std::forward<COMPtrType>(aPtr);
   }
 
   void SetActCtx(const ActivationContext& aActCtx)
@@ -73,21 +73,21 @@ public:
   void PreserveStream(PreservedStreamPtr aPtr) const
   {
     MOZ_ASSERT(!mMarshaledStream);
-    mMarshaledStream = Move(aPtr);
+    mMarshaledStream = std::move(aPtr);
   }
 
   PreservedStreamPtr GetPreservedStream()
   {
-    return Move(mMarshaledStream);
+    return std::move(mMarshaledStream);
   }
 #endif // defined(MOZ_CONTENT_SANDBOX)
 
   COMPtrHolder(const COMPtrHolder& aOther) = delete;
 
   COMPtrHolder(COMPtrHolder&& aOther)
-    : mPtr(Move(aOther.mPtr))
+    : mPtr(std::move(aOther.mPtr))
 #if defined(MOZ_CONTENT_SANDBOX)
-    , mMarshaledStream(Move(aOther.mMarshaledStream))
+    , mMarshaledStream(std::move(aOther.mMarshaledStream))
 #endif // defined(MOZ_CONTENT_SANDBOX)
   {
   }
@@ -101,10 +101,10 @@ public:
   // when used as a member of an IPDL struct.
   ThisType& operator=(const ThisType& aOther)
   {
-    Set(Move(aOther.mPtr));
+    Set(std::move(aOther.mPtr));
 
 #if defined(MOZ_CONTENT_SANDBOX)
-    mMarshaledStream = Move(aOther.mMarshaledStream);
+    mMarshaledStream = std::move(aOther.mMarshaledStream);
 #endif // defined(MOZ_CONTENT_SANDBOX)
 
     return *this;
@@ -112,10 +112,10 @@ public:
 
   ThisType& operator=(ThisType&& aOther)
   {
-    Set(Move(aOther.mPtr));
+    Set(std::move(aOther.mPtr));
 
 #if defined(MOZ_CONTENT_SANDBOX)
-    mMarshaledStream = Move(aOther.mMarshaledStream);
+    mMarshaledStream = std::move(aOther.mMarshaledStream);
 #endif // defined(MOZ_CONTENT_SANDBOX)
 
     return *this;
@@ -162,7 +162,7 @@ struct ParamTraits<mozilla::mscom::COMPtrHolder<Interface, _IID>>
     const bool sIsStreamPreservationNeeded = false;
 #endif // defined(MOZ_CONTENT_SANDBOX)
 
-    paramType::EnvType env;
+    typename paramType::EnvType env;
 
     mozilla::mscom::ProxyStreamFlags flags = sIsStreamPreservationNeeded ?
          mozilla::mscom::ProxyStreamFlags::ePreservable :
@@ -206,12 +206,13 @@ struct ParamTraits<mozilla::mscom::COMPtrHolder<Interface, _IID>>
       }
     }
 
-    paramType::EnvType env;
+    typename paramType::EnvType env;
 
     mozilla::mscom::ProxyStream proxyStream(_IID, buf.get(), length, &env);
     if (!proxyStream.IsValid()) {
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("ProxyStreamValid"),
-                                         NS_LITERAL_CSTRING("false"));
+      CrashReporter::AnnotateCrashReport(
+        CrashReporter::Annotation::ProxyStreamValid,
+        NS_LITERAL_CSTRING("false"));
       return false;
     }
 
@@ -220,7 +221,7 @@ struct ParamTraits<mozilla::mscom::COMPtrHolder<Interface, _IID>>
       return false;
     }
 
-    aResult->Set(mozilla::Move(ptr));
+    aResult->Set(std::move(ptr));
     return true;
   }
 };

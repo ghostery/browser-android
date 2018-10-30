@@ -31,10 +31,13 @@ class nsRange;
 
 struct SelectionDetails
 {
-#ifdef NS_BUILD_REFCNT_LOGGING
-  SelectionDetails() {
+  SelectionDetails()
+    : mStart()
+    , mEnd()
+    , mSelectionType(mozilla::SelectionType::eInvalid) {
     MOZ_COUNT_CTOR(SelectionDetails);
   }
+#ifdef NS_BUILD_REFCNT_LOGGING
   ~SelectionDetails() {
     MOZ_COUNT_DTOR(SelectionDetails);
   }
@@ -182,6 +185,20 @@ namespace dom {
 class Selection;
 class SelectionChangeListener;
 } // namespace dom
+
+/**
+ * Constants for places that want to handle table selections.  These
+ * indicate what part of a table is being selected.
+ */
+enum class TableSelection : uint32_t {
+  None, /* Nothing being selected; not valid in all cases. */
+  Cell, /* A cell is being selected. */
+  Row,  /* A row is being selected. */
+  Column, /* A column is being selected. */
+  Table, /* A table (including cells and captions) is being selected. */
+  AllCells, /* All the cells in a table are being selected. */
+};
+
 } // namespace mozilla
 class nsIScrollableFrame;
 
@@ -222,7 +239,7 @@ public:
    *  @param aHint will tell the selection which direction geometrically to actually show the caret on.
    *         1 = end of this line 0 = beginning of this line
    */
-  /*unsafe*/
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   nsresult HandleClick(nsIContent *aNewFocus,
                        uint32_t aContentOffset,
                        uint32_t aContentEndOffset,
@@ -242,18 +259,18 @@ public:
    *   depending on information contained in aFlags
    *  @param aParentContent is the paretent of either a table or cell that user clicked or dragged the mouse in
    *  @param aContentOffset is the offset of the table or cell
-   *  @param aTarget indicates what to select (defined in nsISelectionPrivate.idl/nsISelectionPrivate.h):
-   *    TABLESELECTION_CELL      We should select a cell (content points to the cell)
-   *    TABLESELECTION_ROW       We should select a row (content points to any cell in row)
-   *    TABLESELECTION_COLUMN    We should select a row (content points to any cell in column)
-   *    TABLESELECTION_TABLE     We should select a table (content points to the table)
-   *    TABLESELECTION_ALLCELLS  We should select all cells (content points to any cell in table)
+   *  @param aTarget indicates what to select
+   *    TableSelection::Cell     We should select a cell (content points to the cell)
+   *    TableSelection::Row      We should select a row (content points to any cell in row)
+   *    TableSelection::Column   We should select a row (content points to any cell in column)
+   *    TableSelection::Table    We should select a table (content points to the table)
+   *    TableSelection::AllCells We should select all cells (content points to any cell in table)
    *  @param aMouseEvent         passed in so we can get where event occurred and what keys are pressed
    */
   /*unsafe*/
   nsresult HandleTableSelection(nsINode* aParentContent,
                                 int32_t aContentOffset,
-                                int32_t aTarget,
+                                mozilla::TableSelection aTarget,
                                 mozilla::WidgetMouseEvent* aMouseEvent);
 
   /**
@@ -343,7 +360,7 @@ public:
    *  sets the drag state to aState for resons of drag state.
    * @param aState is the new state of drag
    */
-  /*unsafe*/
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   void SetDragState(bool aState);
 
   /** GetDragState(bool *);
@@ -355,8 +372,14 @@ public:
   /**
     if we are in table cell selection mode. aka ctrl click in table cell
    */
-  bool GetTableCellSelection() const { return mSelectingTableCellMode != 0; }
-  void ClearTableCellSelection() { mSelectingTableCellMode = 0; }
+  bool GetTableCellSelection() const
+  {
+    return mSelectingTableCellMode != mozilla::TableSelection::None;
+  }
+  void ClearTableCellSelection()
+  {
+    mSelectingTableCellMode = mozilla::TableSelection::None;
+  }
 
   /** GetSelection
    * no query interface for selection. must use this method now.
@@ -501,8 +524,7 @@ public:
   /** Select All will generally be called from the nsiselectioncontroller implementations.
    *  it will select the whole doc
    */
-  /*unsafe*/
-  nsresult SelectAll();
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY nsresult SelectAll();
 
   /** Sets/Gets The display selection enum.
    */
@@ -550,8 +572,7 @@ public:
   nsIContent* GetLimiter() const { return mLimiter; }
 
   nsIContent* GetAncestorLimiter() const { return mAncestorLimiter; }
-  /*unsafe*/
-  void SetAncestorLimiter(nsIContent *aLimiter);
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY void SetAncestorLimiter(nsIContent* aLimiter);
 
   /** This will tell the frame selection that a double click has been pressed
    *  so it can track abort future drags if inside the same selection
@@ -615,6 +636,8 @@ public:
   nsFrameSelection();
 
   void StartBatchChanges();
+
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   void EndBatchChanges(int16_t aReason = nsISelectionListener::NO_REASON);
 
   /*unsafe*/
@@ -628,6 +651,7 @@ public:
 private:
   ~nsFrameSelection();
 
+  MOZ_CAN_RUN_SCRIPT
   nsresult TakeFocus(nsIContent *aNewFocus,
                      uint32_t aContentOffset,
                      uint32_t aContentEndOffset,
@@ -683,6 +707,7 @@ private:
     eVisual,
     eUsePrefStyle
   };
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   nsresult     MoveCaret(nsDirection aDirection, bool aContinueSelection,
                          nsSelectionAmount aAmount,
                          CaretMovementStyle aMovementStyle);
@@ -697,6 +722,7 @@ private:
 
   // nsFrameSelection may get deleted when calling this,
   // so remember to use nsCOMPtr when needed.
+  MOZ_CAN_RUN_SCRIPT
   nsresult     NotifySelectionListeners(mozilla::SelectionType aSelectionType);
   // Update the selection cache on repaint when the
   // selection being repainted is not empty.
@@ -707,7 +733,8 @@ private:
   nsITableCellLayout* GetCellLayout(nsIContent *aCellContent) const;
 
   nsresult SelectBlockOfCells(nsIContent *aStartNode, nsIContent *aEndNode);
-  nsresult SelectRowOrColumn(nsIContent *aCellContent, uint32_t aTarget);
+  nsresult SelectRowOrColumn(nsIContent *aCellContent,
+                             mozilla::TableSelection aTarget);
   nsresult UnselectCells(nsIContent *aTable,
                          int32_t aStartRowIndex, int32_t aStartColumnIndex,
                          int32_t aEndRowIndex, int32_t aEndColumnIndex,
@@ -741,7 +768,7 @@ private:
   nsCOMPtr<nsIContent> mEndSelectedCell;
   nsCOMPtr<nsIContent> mAppendStartSelectedCell;
   nsCOMPtr<nsIContent> mUnselectCellOnMouseUp;
-  int32_t  mSelectingTableCellMode = 0;
+  mozilla::TableSelection mSelectingTableCellMode = mozilla::TableSelection::None;
   int32_t  mSelectedCellIndex = 0;
 
   // maintain selection

@@ -17,20 +17,20 @@ const PLUGINS = [
 
   // A plugin made up of two plugin files
   new PluginTag("Flash", "A mock Flash plugin"),
-  new PluginTag("Flash", "A mock Flash plugin")
+  new PluginTag("Flash", "A mock Flash plugin"),
 ];
 
 mockPluginHost(PLUGINS);
 
 // This verifies that when the list of plugins changes the add-ons manager
 // correctly updates
-function run_test() {
+async function run_test() {
   do_test_pending();
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
 
   Services.prefs.setBoolPref("media.gmp-provider.enabled", false);
 
-  startupManager();
+  await promiseStartupManager();
   AddonManager.addAddonListener(AddonListener);
   AddonManager.addInstallListener(InstallListener);
 
@@ -94,11 +94,11 @@ async function run_test_3() {
   let test_params = {};
   test_params[id] = [
     ["onInstalling", false],
-    "onInstalled"
+    "onInstalled",
   ];
 
   prepare_test(test_params, [
-    "onExternalInstall"
+    "onExternalInstall",
   ]);
 
   Services.obs.notifyObservers(null, LIST_UPDATED_TOPIC);
@@ -128,7 +128,7 @@ async function run_test_4() {
   let test_params = {};
   test_params[id] = [
     ["onUninstalling", false],
-    "onUninstalled"
+    "onUninstalled",
   ];
 
   prepare_test(test_params);
@@ -181,15 +181,15 @@ async function run_test_6() {
   let test_params = {};
   test_params[oldTag.name + oldTag.description] = [
     ["onUninstalling", false],
-    "onUninstalled"
+    "onUninstalled",
   ];
   test_params[newTag.name + newTag.description] = [
     ["onInstalling", false],
-    "onInstalled"
+    "onInstalled",
   ];
 
   prepare_test(test_params, [
-    "onExternalInstall"
+    "onExternalInstall",
   ]);
 
   Services.obs.notifyObservers(null, LIST_UPDATED_TOPIC);
@@ -219,11 +219,11 @@ async function run_test_7() {
   let test_params = {};
   test_params[PLUGINS[0].name + PLUGINS[0].description] = [
     ["onDisabling", false],
-    "onDisabled"
+    "onDisabled",
   ];
   test_params[PLUGINS[1].name + PLUGINS[1].description] = [
     ["onEnabling", false],
-    "onEnabled"
+    "onEnabled",
   ];
 
   prepare_test(test_params);

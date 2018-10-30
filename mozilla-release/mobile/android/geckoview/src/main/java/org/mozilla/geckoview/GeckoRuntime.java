@@ -15,6 +15,7 @@ import android.util.Log;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.GeckoAppShell;
+import org.mozilla.gecko.GeckoScreenOrientation;
 import org.mozilla.gecko.GeckoThread;
 import org.mozilla.gecko.PrefsHelper;
 import org.mozilla.gecko.util.BundleEventListener;
@@ -22,7 +23,11 @@ import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.ThreadUtils;
 
+import java.io.File;
+
 public final class GeckoRuntime implements Parcelable {
+    public static final String PREF_CRASH_REPORTING_JOB_ID = "PrefGeckoCrashReportingJobId";
+
     private static final String LOGTAG = "GeckoRuntime";
     private static final boolean DEBUG = false;
 
@@ -38,13 +43,15 @@ public final class GeckoRuntime implements Parcelable {
      * @param context An application context for the default runtime.
      * @return The (static) default runtime for the context.
      */
-    public static synchronized @NonNull GeckoRuntime getDefault(
-            final @NonNull Context context) {
-        Log.d(LOGTAG, "getDefault");
+    public static synchronized @NonNull GeckoRuntime getDefault(final @NonNull Context context) {
+        ThreadUtils.assertOnUiThread();
+        if (DEBUG) {
+            Log.d(LOGTAG, "getDefault");
+        }
         if (sDefaultRuntime == null) {
             sDefaultRuntime = new GeckoRuntime();
             sDefaultRuntime.attachTo(context);
-            sDefaultRuntime.init(new GeckoRuntimeSettings());
+            sDefaultRuntime.init(context, new GeckoRuntimeSettings());
         }
 
         return sDefaultRuntime;
@@ -80,32 +87,57 @@ public final class GeckoRuntime implements Parcelable {
         }
     };
 
-    /* package */ boolean init(final @NonNull GeckoRuntimeSettings settings) {
+    /* package */ boolean init(final @NonNull Context context, final @NonNull GeckoRuntimeSettings settings) {
         if (DEBUG) {
             Log.d(LOGTAG, "init");
         }
-        final int flags = settings.getUseContentProcessHint()
-                          ? GeckoThread.FLAG_PRELOAD_CHILD
-                          : 0;
-        if (GeckoThread.initMainProcess(/* profile */ null,
-                                        settings.getArguments(),
-                                        settings.getExtras(),
-                                        flags)) {
-            if (!GeckoThread.launch()) {
-                Log.d(LOGTAG, "init failed (GeckoThread already launched)");
-                return false;
-            }
-            mSettings = settings;
-
-            // Bug 1453062 -- the EventDispatcher should really live here (or in GeckoThread)
-            EventDispatcher.getInstance().registerUiThreadListener(mEventListener, "Gecko:Exited");
-
-            mSettings.runtime = this;
-            mSettings.flush();
-            return true;
+        int flags = 0;
+        if (settings.getUseContentProcessHint()) {
+            flags |= GeckoThread.FLAG_PRELOAD_CHILD;
         }
-        Log.d(LOGTAG, "init failed (could not initiate GeckoThread)");
-        return false;
+
+        if (settings.getNativeCrashReportingEnabled()) {
+            flags |= GeckoThread.FLAG_ENABLE_NATIVE_CRASHREPORTER;
+        }
+
+        if (settings.getJavaCrashReportingEnabled()) {
+            flags |= GeckoThread.FLAG_ENABLE_JAVA_CRASHREPORTER;
+        }
+
+        if (settings.getPauseForDebuggerEnabled()) {
+            flags |= GeckoThread.FLAG_DEBUGGING;
+        }
+
+        GeckoAppShell.setDisplayDensityOverride(settings.getDisplayDensityOverride());
+        GeckoAppShell.setDisplayDpiOverride(settings.getDisplayDpiOverride());
+        GeckoAppShell.setScreenSizeOverride(settings.getScreenSizeOverride());
+
+        final int crashReportingJobId = settings.getCrashReportingServiceJobId();
+        settings.getExtras().putInt(
+                GeckoRuntimeSettings.EXTRA_CRASH_REPORTING_JOB_ID, crashReportingJobId);
+
+        if (!GeckoThread.initMainProcess(/* profile */ null, settings.getArguments(),
+                                         settings.getExtras(), flags)) {
+            Log.w(LOGTAG, "init failed (could not initiate GeckoThread)");
+            return false;
+        }
+
+        if (!GeckoThread.launch()) {
+            Log.w(LOGTAG, "init failed (GeckoThread already launched)");
+            return false;
+        }
+
+        mSettings = settings;
+
+        // Bug 1453062 -- the EventDispatcher should really live here (or in GeckoThread)
+        EventDispatcher.getInstance().registerUiThreadListener(mEventListener, "Gecko:Exited");
+
+        mSettings.runtime = this;
+        mSettings.flush();
+
+        // Initialize the system ClipboardManager by accessing it on the main thread.
+        GeckoAppShell.getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        return true;
     }
 
     /**
@@ -135,9 +167,9 @@ public final class GeckoRuntime implements Parcelable {
      * @param settings The settings for the runtime.
      * @return An initialized runtime.
      */
-    public static @NonNull GeckoRuntime create(
-        final @NonNull Context context,
-        final @NonNull GeckoRuntimeSettings settings) {
+    public static @NonNull GeckoRuntime create(final @NonNull Context context,
+                                               final @NonNull GeckoRuntimeSettings settings) {
+        ThreadUtils.assertOnUiThread();
         if (DEBUG) {
             Log.d(LOGTAG, "create " + context);
         }
@@ -145,7 +177,7 @@ public final class GeckoRuntime implements Parcelable {
         final GeckoRuntime runtime = new GeckoRuntime();
         runtime.attachTo(context);
 
-        if (!runtime.init(settings)) {
+        if (!runtime.init(context, settings)) {
             throw new IllegalStateException("Failed to initialize GeckoRuntime");
         }
 
@@ -193,8 +225,13 @@ public final class GeckoRuntime implements Parcelable {
         return mSettings;
     }
 
-    /* package */ void setPref(final String name, final Object value) {
-        PrefsHelper.setPref(name, value, /* flush */ false);
+    /* package */ void setPref(final String name, final Object value,
+                               boolean override) {
+        if (override || !GeckoAppShell.isFennec()) {
+            // Override pref on Fennec only when requested to prevent
+            // overriding of persistent prefs.
+            PrefsHelper.setPref(name, value, /* flush */ false);
+        }
     }
 
     /**
@@ -210,6 +247,32 @@ public final class GeckoRuntime implements Parcelable {
         }
         return mTelemetry;
 
+    }
+
+    /**
+     * Get the profile directory for this runtime. This is where Gecko stores
+     * internal data.
+     *
+     * @return Profile directory
+     */
+    @NonNull public File getProfileDir() {
+        return GeckoThread.getActiveProfile().getDir();
+    }
+
+    /**
+     * Notify Gecko that the screen orientation has changed.
+     */
+    public void orientationChanged() {
+        GeckoScreenOrientation.getInstance().update();
+    }
+
+    /**
+     * Notify Gecko that the screen orientation has changed.
+     * @param newOrientation The new screen orientation, as retrieved e.g. from the current
+     *                       {@link android.content.res.Configuration}.
+     */
+    public void orientationChanged(int newOrientation) {
+        GeckoScreenOrientation.getInstance().update(newOrientation);
     }
 
     @Override // Parcelable

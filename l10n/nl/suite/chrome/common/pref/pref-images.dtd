@@ -20,10 +20,3 @@
 <!ENTITY loadNoImagesRadio.accesskey    "G">
 <!ENTITY viewPermissions.label          "Toestemmingen beheren">
 <!ENTITY viewPermissions.accesskey      "T">
-<!ENTITY animLoopingTitle.label         "Geanimeerde afbeeldingen herhaald afspelen">
-<!ENTITY animLoopAsSpecified.label      "Zo vaak als opgegeven door de afbeelding">
-<!ENTITY animLoopAsSpecified.accesskey  "Z">
-<!ENTITY animLoopOnce.label             "Eenmaal">
-<!ENTITY animLoopOnce.accesskey         "E">
-<!ENTITY animLoopNever.label            "Nooit">
-<!ENTITY animLoopNever.accesskey        "N">

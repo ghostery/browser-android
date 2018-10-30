@@ -7,6 +7,7 @@
 #include "nsFilePickerProxy.h"
 #include "nsComponentManagerUtils.h"
 #include "nsIFile.h"
+#include "nsSimpleEnumerator.h"
 #include "mozilla/dom/Directory.h"
 #include "mozilla/dom/File.h"
 #include "mozilla/dom/TabChild.h"
@@ -207,7 +208,7 @@ nsFilePickerProxy::GetDomFileOrDirectory(nsISupports** aValue)
   MOZ_ASSERT(mFilesOrDirectories.Length() == 1);
 
   if (mFilesOrDirectories[0].IsFile()) {
-    nsCOMPtr<nsIDOMBlob> blob = mFilesOrDirectories[0].GetAsFile().get();
+    nsCOMPtr<nsISupports> blob = ToSupports(mFilesOrDirectories[0].GetAsFile());
     blob.forget(aValue);
     return NS_OK;
   }
@@ -220,11 +221,9 @@ nsFilePickerProxy::GetDomFileOrDirectory(nsISupports** aValue)
 
 namespace {
 
-class SimpleEnumerator final : public nsISimpleEnumerator
+class SimpleEnumerator final : public nsSimpleEnumerator
 {
 public:
-  NS_DECL_ISUPPORTS
-
   explicit
   SimpleEnumerator(const nsTArray<OwningFileOrDirectory>& aFilesOrDirectories)
     : mFilesOrDirectories(aFilesOrDirectories)
@@ -247,7 +246,7 @@ public:
     uint32_t index = mIndex++;
 
     if (mFilesOrDirectories[index].IsFile()) {
-      nsCOMPtr<nsIDOMBlob> blob = mFilesOrDirectories[index].GetAsFile().get();
+      nsCOMPtr<nsISupports> blob = ToSupports(mFilesOrDirectories[index].GetAsFile());
       blob.forget(aValue);
       return NS_OK;
     }
@@ -259,14 +258,9 @@ public:
   }
 
 private:
-  ~SimpleEnumerator()
-  {}
-
   nsTArray<mozilla::dom::OwningFileOrDirectory> mFilesOrDirectories;
   uint32_t mIndex;
 };
-
-NS_IMPL_ISUPPORTS(SimpleEnumerator, nsISimpleEnumerator)
 
 } // namespace
 

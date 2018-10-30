@@ -10,7 +10,7 @@
 #include "xpcpublic.h"
 
 #include "mozilla/BasePrincipal.h"
-#include "SystemPrincipal.h"
+#include "mozilla/SystemPrincipal.h"
 
 #include "NSSErrorsService.h"
 #include "nsITransportSecurityInfo.h"
@@ -79,25 +79,43 @@ ChannelWrapper::Get(const GlobalObject& global, nsIChannel* channel)
   return wrapper.forget();
 }
 
+already_AddRefed<ChannelWrapper>
+ChannelWrapper::GetRegisteredChannel(const GlobalObject& global, uint64_t aChannelId, const WebExtensionPolicy& aAddon, nsITabParent* aTabParent)
+{
+  nsIContentParent* contentParent = nullptr;
+  if (TabParent* parent = static_cast<TabParent*>(aTabParent)) {
+    contentParent = static_cast<nsIContentParent*>(parent->Manager());
+  }
+
+  auto& webreq = WebRequestService::GetSingleton();
+
+  nsCOMPtr<nsITraceableChannel> channel = webreq.GetTraceableChannel(aChannelId, aAddon.Id(), contentParent);
+  if (!channel) {
+    return nullptr;
+  }
+  nsCOMPtr<nsIChannel> chan(do_QueryInterface(channel));
+  return ChannelWrapper::Get(global, chan);
+}
+
 void
 ChannelWrapper::SetChannel(nsIChannel* aChannel)
 {
   detail::ChannelHolder::SetChannel(aChannel);
   ClearCachedAttributes();
-  ChannelWrapperBinding::ClearCachedFinalURIValue(this);
-  ChannelWrapperBinding::ClearCachedFinalURLValue(this);
+  ChannelWrapper_Binding::ClearCachedFinalURIValue(this);
+  ChannelWrapper_Binding::ClearCachedFinalURLValue(this);
   mFinalURLInfo.reset();
-  ChannelWrapperBinding::ClearCachedProxyInfoValue(this);
+  ChannelWrapper_Binding::ClearCachedProxyInfoValue(this);
 }
 
 void
 ChannelWrapper::ClearCachedAttributes()
 {
-  ChannelWrapperBinding::ClearCachedRemoteAddressValue(this);
-  ChannelWrapperBinding::ClearCachedStatusCodeValue(this);
-  ChannelWrapperBinding::ClearCachedStatusLineValue(this);
+  ChannelWrapper_Binding::ClearCachedRemoteAddressValue(this);
+  ChannelWrapper_Binding::ClearCachedStatusCodeValue(this);
+  ChannelWrapper_Binding::ClearCachedStatusLineValue(this);
   if (!mFiredErrorEvent) {
-    ChannelWrapperBinding::ClearCachedErrorStringValue(this);
+    ChannelWrapper_Binding::ClearCachedErrorStringValue(this);
   }
 }
 
@@ -503,13 +521,14 @@ ChannelWrapper::Matches(const dom::MozRequestFilter& aFilter,
   }
 
   if (aExtension) {
-    if (!aExtension->CanAccessURI(urlInfo)) {
+    bool isProxy = aOptions.mIsProxy && aExtension->HasPermission(nsGkAtoms::proxy);
+    // Proxies are allowed access to all urls, including restricted urls.
+    if (!aExtension->CanAccessURI(urlInfo, false, !isProxy)) {
       return false;
     }
 
     // If this isn't the proxy phase of the request, check that the extension
     // has origin permissions for origin that originated the request.
-    bool isProxy = aOptions.mIsProxy && aExtension->HasPermission(nsGkAtoms::proxy);
     if (!isProxy) {
       if (IsSystemLoad()) {
         return false;
@@ -838,7 +857,7 @@ ChannelWrapper::GetProxyInfo(dom::Nullable<MozProxyInfo>& aRetVal, ErrorResult& 
     if (NS_FAILED(rv)) {
       aRv.Throw(rv);
     } else {
-      aRetVal.SetValue(Move(result));
+      aRetVal.SetValue(std::move(result));
     }
   }
 }
@@ -897,7 +916,7 @@ ChannelWrapper::ErrorCheck()
     if (error.Length()) {
       mChannelEntry = nullptr;
       mFiredErrorEvent = true;
-      ChannelWrapperBinding::ClearCachedErrorStringValue(this);
+      ChannelWrapper_Binding::ClearCachedErrorStringValue(this);
       FireEvent(NS_LITERAL_STRING("error"));
     }
   }
@@ -1024,7 +1043,7 @@ ChannelWrapper::EventListenerRemoved(nsAtom* aType)
 JSObject*
 ChannelWrapper::WrapObject(JSContext* aCx, HandleObject aGivenProto)
 {
-  return ChannelWrapperBinding::Wrap(aCx, this, aGivenProto);
+  return ChannelWrapper_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(ChannelWrapper)

@@ -37,7 +37,7 @@
 <!ENTITY passwordDisplayCmd.label "管理存储的密码">
 <!ENTITY passwordDisplayCmd.accesskey "M">
 
-<!ENTITY passwordExpireCmd.label "注销">
+<!ENTITY passwordExpireCmd.label "退出">
 <!ENTITY passwordExpireCmd.accesskey "L">
 
 <!ENTITY downloadManagerCmd.label "下载管理器">

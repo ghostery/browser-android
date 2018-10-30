@@ -119,8 +119,7 @@ public:
   }
 
   static already_AddRefed<DataTransfer>
-  Constructor(const GlobalObject& aGlobal, const nsAString& aEventType,
-              bool aIsExternal, ErrorResult& aRv);
+  Constructor(const GlobalObject& aGlobal, ErrorResult& aRv);
 
   /**
    * The actual effect that will be used, and should always be one of the
@@ -342,7 +341,7 @@ public:
 
   // converts the data into an array of nsITransferable objects to be used for
   // drag and drop or clipboard operations.
-  already_AddRefed<nsIArray> GetTransferables(nsIDOMNode* aDragTarget);
+  already_AddRefed<nsIArray> GetTransferables(nsINode* aDragTarget);
 
   already_AddRefed<nsIArray>
   GetTransferables(nsILoadContext* aLoadContext);
@@ -420,6 +419,20 @@ public:
   already_AddRefed<DataTransfer> MozCloneForEvent(const nsAString& aEvent,
                                                   ErrorResult& aRv);
 
+  // Retrieve a list of clipboard formats supported
+  //
+  // If kFileMime is supported, then it will be placed either at
+  // index 0 or at index 1 in aResult
+  static void
+  GetExternalClipboardFormats(const int32_t& aWhichClipboard,
+                              const bool& aPlainTextOnly,
+                              nsTArray<nsCString>* aResult);
+
+  // Returns true if moz* APIs should be exposed (true for chrome code or if
+  // dom.datatransfer.moz pref is enabled).
+  // The affected moz* APIs are mozItemCount, mozTypesAt, mozClearDataAt, mozSetDataAt, mozGetDataAt
+  static bool MozAtAPIsEnabled(JSContext* cx, JSObject* obj);
+
 protected:
 
   // caches text and uri-list data formats that exist in the drag service or
@@ -443,6 +456,7 @@ protected:
                              uint32_t aIndex, nsIPrincipal* aSubjectPrincipal);
 
   friend class ContentParent;
+  friend class Clipboard;
 
   void FillAllExternalData();
 

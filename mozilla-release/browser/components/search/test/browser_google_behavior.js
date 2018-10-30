@@ -21,9 +21,9 @@ let searchEngineDetails = [{
   name: "Google",
 }];
 
-let countryCode = Services.prefs.getCharPref("browser.search.countryCode");
+let region = Services.prefs.getCharPref("browser.search.region");
 let code = "";
-switch (countryCode) {
+switch (region) {
   case "US":
     code = "firefox-b-1";
     break;
@@ -93,8 +93,8 @@ async function testSearchEngine(engineDetails) {
       run() {
         // Simulate a contextmenu search
         // FIXME: This is a bit "low-level"...
-        BrowserSearch.loadSearch("foo", false, "contextmenu");
-      }
+        BrowserSearch._loadSearch("foo", false, "contextmenu", Services.scriptSecurityManager.getSystemPrincipal());
+      },
     },
     {
       name: "keyword search",
@@ -103,7 +103,7 @@ async function testSearchEngine(engineDetails) {
         gURLBar.value = "? foo";
         gURLBar.focus();
         EventUtils.synthesizeKey("KEY_Enter");
-      }
+      },
     },
     {
       name: "keyword search with alias",
@@ -112,13 +112,15 @@ async function testSearchEngine(engineDetails) {
         gURLBar.value = `${engineDetails.alias} foo`;
         gURLBar.focus();
         EventUtils.synthesizeKey("KEY_Enter");
-      }
+      },
     },
     {
       name: "search bar search",
       searchURL: base + engineDetails.codes.submission,
+      async preTest() {
+        await gCUITestUtils.addSearchBar();
+      },
       run() {
-        Services.prefs.setBoolPref("browser.search.widget.inNavBar", true);
         let sb = BrowserSearch.searchBar;
         sb.focus();
         sb.value = "foo";
@@ -126,8 +128,8 @@ async function testSearchEngine(engineDetails) {
       },
       postTest() {
         BrowserSearch.searchBar.value = "";
-        Services.prefs.setBoolPref("browser.search.widget.inNavBar", false);
-      }
+        gCUITestUtils.removeSearchBar();
+      },
     },
     {
       name: "new tab search",
@@ -146,8 +148,8 @@ async function testSearchEngine(engineDetails) {
           input.value = "foo";
         });
         EventUtils.synthesizeKey("KEY_Enter");
-      }
-    }
+      },
+    },
   ];
 
   let tab = await BrowserTestUtils.openNewForegroundTab(gBrowser);

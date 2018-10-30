@@ -5,7 +5,6 @@
 "use strict";
 
 const { Ci } = require("chrome");
-const defer = require("devtools/shared/defer");
 const EventEmitter = require("devtools/shared/event-emitter");
 const Services = require("Services");
 
@@ -14,6 +13,7 @@ loader.lazyRequireGetter(this, "DebuggerClient",
   "devtools/shared/client/debugger-client", true);
 loader.lazyRequireGetter(this, "gDevTools",
   "devtools/client/framework/devtools", true);
+loader.lazyRequireGetter(this, "getFront", "devtools/shared/protocol", true);
 
 const targets = new WeakMap();
 const promiseTargets = new WeakMap();
@@ -54,7 +54,7 @@ const TargetFactory = exports.TargetFactory = {
   forRemoteTab: function(options) {
     let targetPromise = promiseTargets.get(options);
     if (targetPromise == null) {
-      let target = new TabTarget(options);
+      const target = new TabTarget(options);
       targetPromise = target.makeRemote().then(() => target);
       promiseTargets.set(options, targetPromise);
     }
@@ -133,12 +133,19 @@ function TabTarget(tab) {
     this._client = tab.client;
     this._chrome = tab.chrome;
   }
-  // Default isTabActor to true if not explicitly specified
-  if (typeof tab.isTabActor == "boolean") {
-    this._isTabActor = tab.isTabActor;
+  // Default isBrowsingContext to true if not explicitly specified
+  if (typeof tab.isBrowsingContext == "boolean") {
+    this._isBrowsingContext = tab.isBrowsingContext;
   } else {
-    this._isTabActor = true;
+    this._isBrowsingContext = true;
   }
+  // Cache of already created targed-scoped fronts
+  // [typeName:string => Front instance]
+  this.fronts = new Map();
+  // Temporary fix for bug #1493131 - inspector has a different life cycle
+  // than most other fronts because it is closely related to the toolbox.
+  // TODO: remove once inspector is separated from the toolbox
+  this._inspector = null;
 }
 
 exports.TabTarget = TabTarget;
@@ -188,19 +195,17 @@ TabTarget.prototype = {
                       "remote tabs.");
     }
 
-    let deferred = defer();
-
-    if (this._protocolDescription &&
-        this._protocolDescription.types[actorName]) {
-      deferred.resolve(this._protocolDescription.types[actorName]);
-    } else {
-      this.client.mainRoot.protocolDescription(description => {
-        this._protocolDescription = description;
-        deferred.resolve(description.types[actorName]);
-      });
-    }
-
-    return deferred.promise;
+    return new Promise(resolve => {
+      if (this._protocolDescription &&
+          this._protocolDescription.types[actorName]) {
+        resolve(this._protocolDescription.types[actorName]);
+      } else {
+        this.client.mainRoot.protocolDescription(description => {
+          this._protocolDescription = description;
+          resolve(description.types[actorName]);
+        });
+      }
+    });
   },
 
   /**
@@ -274,26 +279,33 @@ TabTarget.prototype = {
     return this._form;
   },
 
-  // Get a promise of the root form returned by a getRoot request. This promise
-  // is cached.
+  // Get a promise of the RootActor's form
   get root() {
-    if (!this._root) {
-      this._root = this._getRoot();
-    }
-    return this._root;
+    return this.client.mainRoot.rootForm;
   },
 
-  _getRoot: function() {
-    return new Promise((resolve, reject) => {
-      this.client.mainRoot.getRoot(response => {
-        if (response.error) {
-          reject(new Error(response.error + ": " + response.message));
-          return;
-        }
+  // Temporary fix for bug #1493131 - inspector has a different life cycle
+  // than most other fronts because it is closely related to the toolbox.
+  // TODO: remove once inspector is separated from the toolbox
+  getInspector(typeName) {
+    // the front might have been destroyed and no longer have an actor ID
+    if (this._inspector && this._inspector.actorID) {
+      return this._inspector;
+    }
+    this._inspector = getFront(this.client, "inspector", this.form);
+    return this._inspector;
+  },
 
-        resolve(response);
-      });
-    });
+  // Get a Front for a target-scoped actor.
+  // i.e. an actor served by RootActor.listTabs or RootActorActor.getTab requests
+  getFront(typeName) {
+    let front = this.fronts.get(typeName);
+    if (front) {
+      return front;
+    }
+    front = getFront(this.client, typeName, this.form);
+    this.fronts.set(typeName, front);
+    return front;
   },
 
   get client() {
@@ -308,11 +320,13 @@ TabTarget.prototype = {
     return this._chrome;
   },
 
-  // Tells us if the related actor implements TabActor interface
-  // and requires to call `attach` request before being used
-  // and `detach` during cleanup
-  get isTabActor() {
-    return this._isTabActor;
+  // Tells us if the related actor implements BrowsingContextTargetActor
+  // interface and requires to call `attach` request before being used and
+  // `detach` during cleanup.
+  // TODO: This flag is quite confusing, try to find a better way.
+  // Bug 1465635 hopes to blow up these classes entirely.
+  get isBrowsingContext() {
+    return this._isBrowsingContext;
   },
 
   get window() {
@@ -348,14 +362,15 @@ TabTarget.prototype = {
   },
 
   get isAddon() {
-    return !!(this._form && this._form.actor &&
-              this._form.actor.match(/conn\d+\.addon\d+/)) || this.isWebExtension;
+    const isLegacyAddon = !!(this._form && this._form.actor &&
+      this._form.actor.match(/conn\d+\.addon(Target)?\d+/));
+    return isLegacyAddon || this.isWebExtension;
   },
 
   get isWebExtension() {
     return !!(this._form && this._form.actor && (
-      this._form.actor.match(/conn\d+\.webExtension\d+/) ||
-      this._form.actor.match(/child\d+\/webExtension\d+/)
+      this._form.actor.match(/conn\d+\.webExtension(Target)?\d+/) ||
+      this._form.actor.match(/child\d+\/webExtension(Target)?\d+/)
     ));
   },
 
@@ -387,16 +402,27 @@ TabTarget.prototype = {
   },
 
   /**
+   * For local tabs, returns the tab's contentPrincipal, which can be used as a
+   * `triggeringPrincipal` when opening links.  However, this is a hack as it is not
+   * correct for subdocuments and it won't work for remote debugging.  Bug 1467945 hopes
+   * to devise a better approach.
+   */
+  get contentPrincipal() {
+    if (!this.isLocalTab) {
+      return null;
+    }
+    return this.tab.linkedBrowser.contentPrincipal;
+  },
+
+  /**
    * Adds remote protocol capabilities to the target, so that it can be used
    * for tools that support the Remote Debugging Protocol even for local
    * connections.
    */
   makeRemote: async function() {
     if (this._remote) {
-      return this._remote.promise;
+      return this._remote;
     }
-
-    this._remote = defer();
 
     if (this.isLocalTab) {
       // Since a remote protocol connection will be made, let's start the
@@ -418,14 +444,14 @@ TabTarget.prototype = {
       this._chrome = false;
     } else if (this._form.isWebExtension &&
           this.client.mainRoot.traits.webExtensionAddonConnect) {
-      // The addonActor form is related to a WebExtensionParentActor instance,
-      // which isn't a tab actor on its own, it is an actor living in the parent process
-      // with access to the addon metadata, it can control the addon (e.g. reloading it)
-      // and listen to the AddonManager events related to the lifecycle of the addon
-      // (e.g. when the addon is disabled or uninstalled ).
-      // To retrieve the TabActor instance, we call its "connect" method,
-      // (which fetches the TabActor form from a WebExtensionChildActor instance).
-      let {form} = await this._client.request({
+      // The addonTargetActor form is related to a WebExtensionActor instance,
+      // which isn't a target actor on its own, it is an actor living in the parent
+      // process with access to the addon metadata, it can control the addon (e.g.
+      // reloading it) and listen to the AddonManager events related to the lifecycle of
+      // the addon (e.g. when the addon is disabled or uninstalled).
+      // To retrieve the target actor instance, we call its "connect" method, (which
+      // fetches the target actor form from a WebExtensionTargetActor instance).
+      const {form} = await this._client.request({
         to: this._form.actor, type: "connect",
       });
 
@@ -436,57 +462,58 @@ TabTarget.prototype = {
 
     this._setupRemoteListeners();
 
-    let attachTab = () => {
-      this._client.attachTab(this._form.actor, (response, tabClient) => {
-        if (!tabClient) {
-          this._remote.reject("Unable to attach to the tab");
+    this._remote = new Promise((resolve, reject) => {
+      const attachTab = async () => {
+        try {
+          const [response, tabClient] = await this._client.attachTab(this._form.actor);
+          this.activeTab = tabClient;
+          this.threadActor = response.threadActor;
+        } catch (e) {
+          reject("Unable to attach to the tab: " + e);
           return;
         }
-        this.activeTab = tabClient;
-        this.threadActor = response.threadActor;
-
         attachConsole();
-      });
-    };
+      };
 
-    let onConsoleAttached = (response, consoleClient) => {
-      if (!consoleClient) {
-        this._remote.reject("Unable to attach to the console");
-        return;
+      const onConsoleAttached = ([response, consoleClient]) => {
+        this.activeConsole = consoleClient;
+
+        this._onInspectObject = packet => this.emit("inspect-object", packet);
+        this.activeConsole.on("inspectObject", this._onInspectObject);
+
+        resolve(null);
+      };
+
+      const attachConsole = () => {
+        this._client.attachConsole(this._form.consoleActor, [])
+          .then(onConsoleAttached, response => {
+            reject(
+              `Unable to attach to the console [${response.error}]: ${response.message}`);
+          });
+      };
+
+      if (this.isLocalTab) {
+        this._client.connect()
+          .then(() => this._client.getTab({tab: this.tab}))
+          .then(response => {
+            this._form = response.tab;
+            this._url = this._form.url;
+            this._title = this._form.title;
+
+            attachTab();
+          }, e => reject(e));
+      } else if (this.isBrowsingContext) {
+        // In the remote debugging case, the protocol connection will have been
+        // already initialized in the connection screen code.
+        attachTab();
+      } else {
+        // AddonActor and chrome debugging on RootActor doesn't inherit from
+        // BrowsingContextTargetActor and doesn't need to be attached.
+        attachConsole();
       }
-      this.activeConsole = consoleClient;
+    });
 
-      this._onInspectObject = packet => this.emit("inspect-object", packet);
-      this.activeConsole.on("inspectObject", this._onInspectObject);
-
-      this._remote.resolve(null);
-    };
-
-    let attachConsole = () => {
-      this._client.attachConsole(this._form.consoleActor, [], onConsoleAttached);
-    };
-
-    if (this.isLocalTab) {
-      this._client.connect()
-        .then(() => this._client.getTab({ tab: this.tab }))
-        .then(response => {
-          this._form = response.tab;
-          this._url = this._form.url;
-          this._title = this._form.title;
-
-          attachTab();
-        }, e => this._remote.reject(e));
-    } else if (this.isTabActor) {
-      // In the remote debugging case, the protocol connection will have been
-      // already initialized in the connection screen code.
-      attachTab();
-    } else {
-      // AddonActor and chrome debugging on RootActor doesn't inherits from
-      // TabActor and doesn't need to be attached.
-      attachConsole();
-    }
-
-    return this._remote.promise;
+    return this._remote;
   },
 
   /**
@@ -494,7 +521,6 @@ TabTarget.prototype = {
    */
   _setupListeners: function() {
     this.tab.addEventListener("TabClose", this);
-    this.tab.parentNode.addEventListener("TabSelect", this);
     this.tab.ownerDocument.defaultView.addEventListener("unload", this);
     this.tab.addEventListener("TabRemotenessChange", this);
   },
@@ -505,7 +531,6 @@ TabTarget.prototype = {
   _teardownListeners: function() {
     this._tab.ownerDocument.defaultView.removeEventListener("unload", this);
     this._tab.removeEventListener("TabClose", this);
-    this._tab.parentNode.removeEventListener("TabSelect", this);
     this._tab.removeEventListener("TabRemotenessChange", this);
   },
 
@@ -524,7 +549,7 @@ TabTarget.prototype = {
     this.client.addListener("tabDetached", this._onTabDetached);
 
     this._onTabNavigated = (type, packet) => {
-      let event = Object.create(null);
+      const event = Object.create(null);
       event.url = packet.url;
       event.title = packet.title;
       event.nativeConsoleAPI = packet.nativeConsoleAPI;
@@ -587,13 +612,6 @@ TabTarget.prototype = {
       case "unload":
         this.destroy();
         break;
-      case "TabSelect":
-        if (this.tab.selected) {
-          this.emit("visible", event);
-        } else {
-          this.emit("hidden", event);
-        }
-        break;
       case "TabRemotenessChange":
         this.onRemotenessChange();
         break;
@@ -614,15 +632,15 @@ TabTarget.prototype = {
     }
 
     // Save a reference to the tab as it will be nullified on destroy
-    let tab = this._tab;
-    let onToolboxDestroyed = target => {
+    const tab = this._tab;
+    const onToolboxDestroyed = target => {
       if (target != this) {
         return;
       }
       gDevTools.off("toolbox-destroyed", target);
 
       // Recreate a fresh target instance as the current one is now destroyed
-      let newTarget = TargetFactory.forTab(tab);
+      const newTarget = TargetFactory.forTab(tab);
       gDevTools.showToolbox(newTarget);
     };
     gDevTools.on("toolbox-destroyed", onToolboxDestroyed);
@@ -635,48 +653,52 @@ TabTarget.prototype = {
     // If several things call destroy then we give them all the same
     // destruction promise so we're sure to destroy only once
     if (this._destroyer) {
-      return this._destroyer.promise;
+      return this._destroyer;
     }
 
-    this._destroyer = defer();
+    this._destroyer = new Promise(async (resolve) => {
+      // Before taking any action, notify listeners that destruction is imminent.
+      this.emit("close");
 
-    // Before taking any action, notify listeners that destruction is imminent.
-    this.emit("close");
-
-    if (this._tab) {
-      this._teardownListeners();
-    }
-
-    let cleanupAndResolve = () => {
-      this._cleanup();
-      this._destroyer.resolve(null);
-    };
-    // If this target was not remoted, the promise will be resolved before the
-    // function returns.
-    if (this._tab && !this._client) {
-      cleanupAndResolve();
-    } else if (this._client) {
-      // If, on the other hand, this target was remoted, the promise will be
-      // resolved after the remote connection is closed.
-      this._teardownRemoteListeners();
-
-      if (this.isLocalTab) {
-        // We started with a local tab and created the client ourselves, so we
-        // should close it.
-        this._client.close().then(cleanupAndResolve);
-      } else if (this.activeTab) {
-        // The client was handed to us, so we are not responsible for closing
-        // it. We just need to detach from the tab, if already attached.
-        // |detach| may fail if the connection is already dead, so proceed with
-        // cleanup directly after this.
-        this.activeTab.detach();
-        cleanupAndResolve();
-      } else {
-        cleanupAndResolve();
+      for (const [, front] of this.fronts) {
+        await front.destroy();
       }
-    }
 
-    return this._destroyer.promise;
+      if (this._tab) {
+        this._teardownListeners();
+      }
+
+      const cleanupAndResolve = () => {
+        this._cleanup();
+        resolve(null);
+      };
+      // If this target was not remoted, the promise will be resolved before the
+      // function returns.
+      if (this._tab && !this._client) {
+        cleanupAndResolve();
+      } else if (this._client) {
+        // If, on the other hand, this target was remoted, the promise will be
+        // resolved after the remote connection is closed.
+        this._teardownRemoteListeners();
+
+        if (this.isLocalTab) {
+          // We started with a local tab and created the client ourselves, so we
+          // should close it.
+          this._client.close().then(cleanupAndResolve);
+        } else if (this.activeTab) {
+          // The client was handed to us, so we are not responsible for closing
+          // it. We just need to detach from the tab, if already attached.
+          // |detach| may fail if the connection is already dead, so proceed with
+          // cleanup directly after this.
+          this.activeTab.detach();
+          cleanupAndResolve();
+        } else {
+          cleanupAndResolve();
+        }
+      }
+    });
+
+    return this._destroyer;
   },
 
   /**
@@ -702,7 +724,7 @@ TabTarget.prototype = {
   },
 
   toString: function() {
-    let id = this._tab ? this._tab : (this._form && this._form.actor);
+    const id = this._tab ? this._tab : (this._form && this._form.actor);
     return `TabTarget:${id}`;
   },
 
@@ -717,7 +739,7 @@ TabTarget.prototype = {
   logErrorInPage: function(text, category) {
     if (this.activeTab && this.activeTab.traits.logInPage) {
       const errorFlag = 0;
-      let packet = {
+      const packet = {
         to: this.form.actor,
         type: "logInPage",
         flags: errorFlag,
@@ -739,7 +761,7 @@ TabTarget.prototype = {
   logWarningInPage: function(text, category) {
     if (this.activeTab && this.activeTab.traits.logInPage) {
       const warningFlag = 1;
-      let packet = {
+      const packet = {
         to: this.form.actor,
         type: "logInPage",
         flags: warningFlag,
@@ -772,7 +794,7 @@ WorkerTarget.prototype = {
     return true;
   },
 
-  get isTabActor() {
+  get isBrowsingContext() {
     return true;
   },
 
@@ -811,7 +833,7 @@ WorkerTarget.prototype = {
   },
 
   hasActor: function(name) {
-    // console is the only one actor implemented by WorkerActor
+    // console is the only one actor implemented by WorkerTargetActor
     if (name == "console") {
       return true;
     }

@@ -17,8 +17,6 @@
 using namespace mozilla;
 using media::TimeUnit;
 
-class AutoTaskQueue;
-
 #define DO_FAIL [binding]()->void { EXPECT_TRUE(false); binding->mTaskQueue->BeginShutdown(); }
 
 class MP4DemuxerBinding
@@ -51,7 +49,7 @@ public:
   {
     Function func(aFunction);
     RefPtr<MP4DemuxerBinding> binding = this;
-    mDemuxer->Init()->Then(mTaskQueue, __func__, Move(func), DO_FAIL);
+    mDemuxer->Init()->Then(mTaskQueue, __func__, std::move(func), DO_FAIL);
     mTaskQueue->AwaitShutdownAndIdle();
   }
 

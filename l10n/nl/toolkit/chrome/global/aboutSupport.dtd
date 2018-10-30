@@ -6,14 +6,14 @@
 
 <!-- LOCALIZATION NOTE (aboutSupport.pageSubtitle): don't change the 'supportLink' id. -->
 <!ENTITY aboutSupport.pageSubtitle "
-  Deze pagina bevat technische informatie die handig kan zijn als u een probleem 
+  Deze pagina bevat technische informatie die handig kan zijn als u een probleem
   probeert op te lossen. Als u antwoorden op veelgestelde vragen over &brandShortName;
   zoekt, kijk dan op onze <a id='supportLink'>ondersteuningswebsite</a>.
 ">
 
 <!ENTITY aboutSupport.crashes.title "Crashrapporten">
 <!-- LOCALIZATION NOTE (aboutSupport.crashes.id):
-This is likely the same like id.heading in crashes.dtd. -->
+This is likely the same like id.heading in aboutcrashes.ftl. -->
 <!ENTITY aboutSupport.crashes.id "Rapport-ID">
 <!ENTITY aboutSupport.crashes.sendDate "Verzonden">
 <!ENTITY aboutSupport.crashes.allReports "Alle crashrapporten">
@@ -36,15 +36,6 @@ This is likely the same like id.heading in crashes.dtd. -->
 <!ENTITY aboutSupport.featureName "Naam">
 <!ENTITY aboutSupport.featureVersion "Versie">
 <!ENTITY aboutSupport.featureId "ID">
-
-<!ENTITY aboutSupport.experimentsTitle "Experimentele functies">
-<!ENTITY aboutSupport.experimentName "Naam">
-<!ENTITY aboutSupport.experimentId "ID">
-<!ENTITY aboutSupport.experimentDescription "Beschrijving">
-<!ENTITY aboutSupport.experimentActive "Actief">
-<!ENTITY aboutSupport.experimentEndDate "Einddatum">
-<!ENTITY aboutSupport.experimentHomepage "Homepage">
-<!ENTITY aboutSupport.experimentBranch "Branch">
 
 <!ENTITY aboutSupport.appBasicsTitle "Toepassingsbasics">
 <!ENTITY aboutSupport.appBasicsName "Naam">

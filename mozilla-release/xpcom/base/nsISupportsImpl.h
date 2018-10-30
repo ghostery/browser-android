@@ -22,6 +22,7 @@
 #include <atomic>
 #include "mozilla/Attributes.h"
 #include "mozilla/Assertions.h"
+#include "mozilla/Atomics.h"
 #include "mozilla/Compiler.h"
 #include "mozilla/Likely.h"
 #include "mozilla/MacroArgs.h"
@@ -37,12 +38,6 @@ inline nsISupports*
 ToSupports(nsISupports* aSupports)
 {
   return aSupports;
-}
-
-inline nsISupports*
-ToCanonicalSupports(nsISupports* aSupports)
-{
-  return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -323,14 +318,15 @@ private:
 };
 
 namespace mozilla {
-class ThreadSafeAutoRefCnt
+template <recordreplay::Behavior Recording>
+class ThreadSafeAutoRefCntWithRecording
 {
 public:
-  ThreadSafeAutoRefCnt() : mValue(0) {}
-  explicit ThreadSafeAutoRefCnt(nsrefcnt aValue) : mValue(aValue) {}
+  ThreadSafeAutoRefCntWithRecording() : mValue(0) {}
+  explicit ThreadSafeAutoRefCntWithRecording(nsrefcnt aValue) : mValue(aValue) {}
 
-  ThreadSafeAutoRefCnt(const ThreadSafeAutoRefCnt&) = delete;
-  void operator=(const ThreadSafeAutoRefCnt&) = delete;
+  ThreadSafeAutoRefCntWithRecording(const ThreadSafeAutoRefCntWithRecording&) = delete;
+  void operator=(const ThreadSafeAutoRefCntWithRecording&) = delete;
 
   // only support prefix increment/decrement
   MOZ_ALWAYS_INLINE nsrefcnt operator++()
@@ -343,6 +339,7 @@ public:
     // first increment on that thread.  The necessary memory
     // synchronization is done by the mechanism that transfers the
     // pointer between threads.
+    detail::AutoRecordAtomicAccess<Recording> record;
     return mValue.fetch_add(1, std::memory_order_relaxed) + 1;
   }
   MOZ_ALWAYS_INLINE nsrefcnt operator--()
@@ -351,6 +348,7 @@ public:
     // release semantics so that prior writes on this thread are visible
     // to the thread that destroys the object when it reads mValue with
     // acquire semantics.
+    detail::AutoRecordAtomicAccess<Recording> record;
     nsrefcnt result = mValue.fetch_sub(1, std::memory_order_release) - 1;
     if (result == 0) {
       // We're going to destroy the object on this thread, so we need
@@ -366,6 +364,7 @@ public:
   {
     // Use release semantics since we're not sure what the caller is
     // doing.
+    detail::AutoRecordAtomicAccess<Recording> record;
     mValue.store(aValue, std::memory_order_release);
     return aValue;
   }
@@ -374,6 +373,7 @@ public:
   {
     // Use acquire semantics since we're not sure what the caller is
     // doing.
+    detail::AutoRecordAtomicAccess<Recording> record;
     return mValue.load(std::memory_order_acquire);
   }
 
@@ -383,6 +383,10 @@ private:
   nsrefcnt operator--(int) = delete;
   std::atomic<nsrefcnt> mValue;
 };
+
+typedef ThreadSafeAutoRefCntWithRecording<recordreplay::Behavior::DontPreserve>
+  ThreadSafeAutoRefCnt;
+
 } // namespace mozilla
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -404,7 +408,7 @@ protected:                                                                    \
   NS_DECL_OWNINGTHREAD                                                        \
 public:
 
-#define NS_DECL_THREADSAFE_ISUPPORTS                                          \
+#define NS_DECL_THREADSAFE_ISUPPORTS_WITH_RECORDING(_recording)               \
 public:                                                                       \
   NS_IMETHOD QueryInterface(REFNSIID aIID,                                    \
                             void** aInstancePtr) override;                    \
@@ -412,16 +416,25 @@ public:                                                                       \
   NS_IMETHOD_(MozExternalRefCountType) Release(void) override;                \
   typedef mozilla::TrueType HasThreadSafeRefCnt;                              \
 protected:                                                                    \
-  ::mozilla::ThreadSafeAutoRefCnt mRefCnt;                                    \
+  ::mozilla::ThreadSafeAutoRefCntWithRecording<_recording> mRefCnt;           \
   NS_DECL_OWNINGTHREAD                                                        \
 public:
 
+#define NS_DECL_THREADSAFE_ISUPPORTS                                          \
+  NS_DECL_THREADSAFE_ISUPPORTS_WITH_RECORDING(mozilla::recordreplay::Behavior::DontPreserve)
+
 #define NS_DECL_CYCLE_COLLECTING_ISUPPORTS                                    \
+  NS_DECL_CYCLE_COLLECTING_ISUPPORTS_META(override)
+
+#define NS_DECL_CYCLE_COLLECTING_ISUPPORTS_FINAL                              \
+  NS_DECL_CYCLE_COLLECTING_ISUPPORTS_META(final)
+
+#define NS_DECL_CYCLE_COLLECTING_ISUPPORTS_META(...)                          \
 public:                                                                       \
   NS_IMETHOD QueryInterface(REFNSIID aIID,                                    \
-                            void** aInstancePtr) override;                    \
-  NS_IMETHOD_(MozExternalRefCountType) AddRef(void) override;                 \
-  NS_IMETHOD_(MozExternalRefCountType) Release(void) override;                \
+                            void** aInstancePtr) __VA_ARGS__;                 \
+  NS_IMETHOD_(MozExternalRefCountType) AddRef(void) __VA_ARGS__;              \
+  NS_IMETHOD_(MozExternalRefCountType) Release(void) __VA_ARGS__;             \
   NS_IMETHOD_(void) DeleteCycleCollectable(void);                             \
   typedef mozilla::FalseType HasThreadSafeRefCnt;                             \
 protected:                                                                    \
@@ -681,7 +694,7 @@ NS_IMETHODIMP_(MozExternalRefCountType) _class::AddRef(void)                  \
 NS_IMETHODIMP_(MozExternalRefCountType) _class::AddRef(void)                  \
 {                                                                             \
   MOZ_ASSERT_TYPE_OK_FOR_REFCOUNTING(_class)                                  \
-  NS_PRECONDITION(_aggregator, "null aggregator");                            \
+  MOZ_ASSERT(_aggregator, "null aggregator");                                 \
   return (_aggregator)->AddRef();                                             \
 }
 
@@ -768,7 +781,7 @@ NS_IMETHODIMP_(MozExternalRefCountType) _class::Release(void)                 \
 #define NS_IMPL_RELEASE_USING_AGGREGATOR(_class, _aggregator)                 \
 NS_IMETHODIMP_(MozExternalRefCountType) _class::Release(void)                 \
 {                                                                             \
-  NS_PRECONDITION(_aggregator, "null aggregator");                            \
+  MOZ_ASSERT(_aggregator, "null aggregator");                                 \
   return (_aggregator)->Release();                                            \
 }
 
@@ -1007,6 +1020,14 @@ NS_IMETHODIMP _class::QueryInterface(REFNSIID aIID, void** aInstancePtr)      \
                                     static_cast<_implClass*>(this));          \
   else
 
+// Use this for querying to concrete class types which cannot be unambiguously
+// cast to nsISupports. See also nsQueryObject.h.
+#define NS_IMPL_QUERY_BODY_CONCRETE(_class)                                   \
+  if (aIID.Equals(NS_GET_IID(_class))) {                                      \
+    *aInstancePtr = do_AddRef(static_cast<_class*>(this)).take();             \
+    return NS_OK;                                                             \
+  } else
+
 #define NS_IMPL_QUERY_BODY_AGGREGATED(_interface, _aggregate)                 \
   if ( aIID.Equals(NS_GET_IID(_interface)) )                                  \
     foundInterface = static_cast<_interface*>(_aggregate);                    \
@@ -1080,6 +1101,8 @@ NS_IMETHODIMP _class::QueryInterface(REFNSIID aIID, void** aInstancePtr)      \
 #define NS_INTERFACE_MAP_END                    NS_IMPL_QUERY_TAIL_GUTS
 #define NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(_interface, _implClass)              \
   NS_IMPL_QUERY_BODY_AMBIGUOUS(_interface, _implClass)
+#define NS_INTERFACE_MAP_ENTRY_CONCRETE(_class)                               \
+  NS_IMPL_QUERY_BODY_CONCRETE(_class)
 #define NS_INTERFACE_MAP_END_INHERITING(_baseClass)                           \
   NS_IMPL_QUERY_TAIL_INHERITING(_baseClass)
 #define NS_INTERFACE_MAP_END_AGGREGATED(_aggregator)                          \

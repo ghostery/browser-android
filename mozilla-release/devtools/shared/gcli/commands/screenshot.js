@@ -13,6 +13,8 @@ const { getRect } = require("devtools/shared/layout/utils");
 const defer = require("devtools/shared/defer");
 const { Task } = require("devtools/shared/task");
 
+loader.lazyRequireGetter(this, "openContentLink", "devtools/client/shared/link", true);
+
 loader.lazyImporter(this, "Downloads", "resource://gre/modules/Downloads.jsm");
 loader.lazyImporter(this, "OS", "resource://gre/modules/osfile.jsm");
 loader.lazyImporter(this, "FileUtils", "resource://gre/modules/FileUtils.jsm");
@@ -160,10 +162,7 @@ exports.items = [
         root.style.cursor = "pointer";
         root.addEventListener("click", () => {
           if (imageSummary.href) {
-            let mainWindow = context.environment.chromeWindow;
-            mainWindow.openWebLinkIn(imageSummary.href, "tab", {
-              triggeringPrincipal: document.nodePrincipal,
-            });
+            openContentLink(imageSummary.href);
           } else if (imageSummary.filename) {
             const file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
             file.initWithPath(imageSummary.filename);
@@ -192,7 +191,7 @@ exports.items = [
     exec: function(args, context) {
       // Re-execute the command on the server
       const command = context.typed.replace(/^screenshot/, "screenshot_server");
-      let capture = context.updateExec(command).then(output => {
+      const capture = context.updateExec(command).then(output => {
         return output.error ? Promise.reject(output.data) : output.data;
       });
 
@@ -220,7 +219,7 @@ exports.items = [
  * This function is called to simulate camera effects
  */
 function simulateCameraEffect(document, effect) {
-  let window = document.defaultView;
+  const window = document.defaultView;
   if (effect === "shutter") {
     if (Services.prefs.getBoolPref("devtools.screenshot.audio.enabled")) {
       const audioCamera = new window.Audio("resource://devtools/client/themes/audio/shutter.wav");
@@ -301,8 +300,7 @@ function createScreenshotData(document, args) {
 
   // Only adjust for scrollbars when considering the full window
   if (!args.selector) {
-    const winUtils = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                         .getInterface(Ci.nsIDOMWindowUtils);
+    const winUtils = window.windowUtils;
     const scrollbarHeight = {};
     const scrollbarWidth = {};
     winUtils.getScrollbarSize(false, scrollbarWidth, scrollbarHeight);
@@ -375,9 +373,7 @@ function saveToClipboard(context, reply) {
       });
       const input = channel.open2();
 
-      const loadContext = context.environment.chromeWindow
-                                 .QueryInterface(Ci.nsIInterfaceRequestor)
-                                 .getInterface(Ci.nsIWebNavigation)
+      const loadContext = context.environment.chromeWindow.docShell
                                  .QueryInterface(Ci.nsILoadContext);
 
       const callback = {
@@ -479,7 +475,7 @@ function DownloadListener(win, transfer) {
   this.transfer = transfer;
 
   // For most method calls, forward to the transfer object.
-  for (let name in transfer) {
+  for (const name in transfer) {
     if (name != "QueryInterface" &&
         name != "onStateChange") {
       this[name] = (...args) => transfer[name].apply(transfer, args);
@@ -499,7 +495,7 @@ DownloadListener.prototype = {
   getInterface: function(iid) {
     if (iid.equals(Ci.nsIAuthPrompt) ||
         iid.equals(Ci.nsIAuthPrompt2)) {
-      let ww = Cc["@mozilla.org/embedcomp/window-watcher;1"]
+      const ww = Cc["@mozilla.org/embedcomp/window-watcher;1"]
                  .getService(Ci.nsIPromptFactory);
       return ww.getPrompt(this.window, iid);
     }
@@ -527,25 +523,25 @@ DownloadListener.prototype = {
  * completion.
  */
 var saveToFile = Task.async(function* (context, reply) {
-  let document = context.environment.chromeDocument;
-  let window = context.environment.chromeWindow;
+  const document = context.environment.chromeDocument;
+  const window = context.environment.chromeWindow;
 
   // Check there is a .png extension to filename
   if (!reply.filename.match(/.png$/i)) {
     reply.filename += ".png";
   }
 
-  let downloadsDir = yield Downloads.getPreferredDownloadsDirectory();
-  let downloadsDirExists = yield OS.File.exists(downloadsDir);
+  const downloadsDir = yield Downloads.getPreferredDownloadsDirectory();
+  const downloadsDirExists = yield OS.File.exists(downloadsDir);
   if (downloadsDirExists) {
     // If filename is absolute, it will override the downloads directory and
     // still be applied as expected.
     reply.filename = OS.Path.join(downloadsDir, reply.filename);
   }
 
-  let sourceURI = Services.io.newURI(reply.data);
-  let targetFile = new FileUtils.File(reply.filename);
-  let targetFileURI = Services.io.newFileURI(targetFile);
+  const sourceURI = Services.io.newURI(reply.data);
+  const targetFile = new FileUtils.File(reply.filename);
+  const targetFileURI = Services.io.newFileURI(targetFile);
 
   // Create download and track its progress.
   // This is adapted from saveURL in contentAreaUtils.js, but simplified greatly
@@ -555,15 +551,14 @@ var saveToFile = Task.async(function* (context, reply) {
   // the downloads toolbar button when the save is done.
   const nsIWBP = Ci.nsIWebBrowserPersist;
   const flags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES |
-                nsIWBP.PERSIST_FLAGS_FORCE_ALLOW_COOKIES |
                 nsIWBP.PERSIST_FLAGS_BYPASS_CACHE |
                 nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-  let isPrivate =
+  const isPrivate =
     PrivateBrowsingUtils.isContentWindowPrivate(document.defaultView);
-  let persist = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"]
+  const persist = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"]
                   .createInstance(Ci.nsIWebBrowserPersist);
   persist.persistFlags = flags;
-  let tr = Cc["@mozilla.org/transfer;1"].createInstance(Ci.nsITransfer);
+  const tr = Cc["@mozilla.org/transfer;1"].createInstance(Ci.nsITransfer);
   tr.init(sourceURI,
           targetFileURI,
           "",
@@ -572,9 +567,11 @@ var saveToFile = Task.async(function* (context, reply) {
           null,
           persist,
           isPrivate);
-  let listener = new DownloadListener(window, tr);
+  const listener = new DownloadListener(window, tr);
   persist.progressListener = listener;
+  const principal = Services.scriptSecurityManager.getSystemPrincipal();
   persist.savePrivacyAwareURI(sourceURI,
+                              principal,
                               0,
                               document.documentURIObject,
                               Ci.nsIHttpChannel.REFERRER_POLICY_UNSET,

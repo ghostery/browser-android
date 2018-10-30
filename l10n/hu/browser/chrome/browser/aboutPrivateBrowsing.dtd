@@ -2,11 +2,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!-- LOCALIZATION NOTE (aboutPrivateBrowsing.title):
-     Please ensure this exactly matches tabs.emptyPrivateTabTitle in tabbrowser.properties -->
-<!ENTITY aboutPrivateBrowsing.title                      "Privát böngészés">
-<!ENTITY aboutPrivateBrowsing.notPrivate.title           "Megnyitja a privát ablakot?">
-
 <!ENTITY aboutPrivateBrowsing.notPrivate                 "Jelenleg nem privát ablakot használ.">
 <!ENTITY privatebrowsingpage.openPrivateWindow.label     "Privát ablak megnyitása">
 <!ENTITY privatebrowsingpage.openPrivateWindow.accesskey "P">
@@ -25,6 +20,7 @@
 <!ENTITY aboutPrivateBrowsing.info.saved.after2          " a:">
 <!ENTITY aboutPrivateBrowsing.info.downloads             "letöltéseket">
 <!ENTITY aboutPrivateBrowsing.info.bookmarks             "könyvjelzőket">
+<!ENTITY aboutPrivateBrowsing.info.clipboard             "másolt szöveg">
 <!ENTITY aboutPrivateBrowsing.note.before                "A privát böngészés ">
 <!ENTITY aboutPrivateBrowsing.note.emphasize             "nem teszi névtelenné">
 <!ENTITY aboutPrivateBrowsing.note.after                 " az interneten. A munkáltatója vagy az internetszolgáltatója ettől függetlenül is tudhatja, hogy milyen oldalakat látogat meg.">
@@ -35,3 +31,6 @@
 <!ENTITY trackingProtection.title                        "Védelem követés ellen">
 <!ENTITY trackingProtection.description2                 "Egyes weboldalak követőket használnak, amelyek az interneten bárhol követhetik az Ön tevékenységét. A követés elleni védelemmel a Firefox sok követőt blokkol, amelyek böngészési szokásairól gyűjtenek adatokat.">
 <!ENTITY trackingProtection.startTour1                   "Nézze meg a működését">
+
+<!ENTITY contentBlocking.title                           "Tartalomblokkolás">
+<!ENTITY contentBlocking.description                     "Néhány weboldala követőket használ, hogy kövesse a tevékenységét az interneten. A privát ablakokban a Firefox tartalomblokkolás automatikusan blokkol számos követőt, melyek információkat gyűjtenek a böngészési tevékenységéről.">

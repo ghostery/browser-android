@@ -16,7 +16,7 @@
 <!ENTITY directoryLogin.accesskey          "e">
 <!ENTITY General.tab                       "Általános">
 <!ENTITY Offline.tab                       "Kapcsolat nélküli munka">
-<!ENTITY Advanced.tab                      "Haladó">
+<!ENTITY Advanced.tab                      "Speciális">
 <!ENTITY portNumber.label                  "Port száma: ">
 <!ENTITY portNumber.accesskey              "P">
 <!ENTITY searchFilter.label                "Keresési szűrő: ">
@@ -34,12 +34,12 @@
 <!ENTITY saslMechanism.label               "Hitelesítési módszer: ">
 <!ENTITY saslMechanism.accesskey           "m">
 <!ENTITY saslOff.label                     "Egyszerű">
-<!ENTITY saslOff.accesskey     "E">
+<!ENTITY saslOff.accesskey		   "E">
 <!ENTITY saslGSSAPI.label                  "Kerberos (GSSAPI)">
-<!ENTITY saslGSSAPI.accesskey     "K">
+<!ENTITY saslGSSAPI.accesskey		   "K">
+
 <!-- Localization note: this is here because the width of the dialog 
      is determined by the width of the base DN box; and that is likely
      to vary somewhat with the language.
 -->
-
 <!ENTITY newDirectoryWidth                 "36em">

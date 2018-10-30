@@ -53,10 +53,16 @@ var gTests = [
     pathQueryRef: "text/html;charset=utf-8,<html></html>",
     ref:     "",
     nsIURL:  false, nsINestedURI: false },
-  { spec:    "data:text/plain,hello world",
+  { spec:    "data:text/plain,hello%20world",
     scheme:  "data",
     prePath: "data:",
     pathQueryRef: "text/plain,hello%20world",
+    ref:     "",
+    nsIURL:  false, nsINestedURI: false },
+  { spec:    "data:text/plain,hello world",
+    scheme:  "data",
+    prePath: "data:",
+    pathQueryRef: "text/plain,hello world",
     ref:     "",
     nsIURL:  false, nsINestedURI: false },
   { spec:    "file:///dir/afile",
@@ -194,7 +200,7 @@ var gTests = [
   { spec:    "javascript:new Date()",
     scheme:  "javascript",
     prePath: "javascript:",
-    pathQueryRef: "new%20Date()",
+    pathQueryRef: "new Date()",
     ref:     "",
     nsIURL:  false, nsINestedURI: false },
   { spec:    "blob:123456",
@@ -332,8 +338,8 @@ function do_test_uri_basic(aTest) {
 
   // Sanity-check
   do_info("testing " + aTest.spec + " equals a clone of itself");
-  do_check_uri_eq(URI, URI.clone());
-  do_check_uri_eqExceptRef(URI, URI.cloneIgnoringRef());
+  do_check_uri_eq(URI, URI.mutate().finalize());
+  do_check_uri_eqExceptRef(URI, URI.mutate().setRef("").finalize());
   do_info("testing " + aTest.spec + " instanceof nsIURL");
   Assert.equal(URI instanceof Ci.nsIURL, aTest.nsIURL);
   do_info("testing " + aTest.spec + " instanceof nsINestedURI");
@@ -398,7 +404,7 @@ function do_test_uri_with_hash_suffix(aTest, aSuffix) {
 
   do_info("testing " + aTest.spec + " with '" + aSuffix + "' appended " +
            "equals a clone of itself");
-  do_check_uri_eq(testURI, testURI.clone());
+  do_check_uri_eq(testURI, testURI.mutate().finalize());
 
   do_info("testing " + aTest.spec +
           " doesn't equal self with '" + aSuffix + "' appended");
@@ -413,22 +419,24 @@ function do_test_uri_with_hash_suffix(aTest, aSuffix) {
 
   if (!origURI.ref) {
     // These tests fail if origURI has a ref
-    do_info("testing cloneIgnoringRef on " + testURI.spec +
+    do_info("testing setRef('') on " + testURI.spec +
             " is equal to no-ref version but not equal to ref version");
-    var cloneNoRef = testURI.cloneIgnoringRef();
+    var cloneNoRef = testURI.mutate().setRef("").finalize(); // we used to clone here.
+    do_info("cloneNoRef: " + cloneNoRef.spec + " hasRef: " + cloneNoRef.hasRef);
+    do_info("testURI: " + testURI.spec + " hasRef: " + testURI.hasRef);
     do_check_uri_eq(cloneNoRef, origURI);
     Assert.ok(!cloneNoRef.equals(testURI));
 
     do_info("testing cloneWithNewRef on " + testURI.spec +
             " with an empty ref is equal to no-ref version but not equal to ref version");
-    var cloneNewRef = testURI.cloneWithNewRef("");
+    var cloneNewRef = testURI.mutate().setRef("").finalize();
     do_check_uri_eq(cloneNewRef, origURI);
     do_check_uri_eq(cloneNewRef, cloneNoRef);
     Assert.ok(!cloneNewRef.equals(testURI));
 
     do_info("testing cloneWithNewRef on " + origURI.spec +
             " with the same new ref is equal to ref version and not equal to no-ref version");
-    cloneNewRef = origURI.cloneWithNewRef(aSuffix);
+    cloneNewRef = origURI.mutate().setRef(aSuffix).finalize();
     do_check_uri_eq(cloneNewRef, testURI);
     Assert.ok(cloneNewRef.equals(testURI));
   }
@@ -519,10 +527,96 @@ function do_test_mutate_ref(aTest, aSuffix) {
   }
 }
 
+// Check that changing nested/about URIs works correctly.
+function check_nested_mutations()
+{
+  // nsNestedAboutURI
+  let uri1 = gIoService.newURI("about:blank#");
+  let uri2 = gIoService.newURI("about:blank");
+  let uri3 = uri1.mutate().setRef("").finalize();
+  do_check_uri_eq(uri3, uri2);
+  uri3 = uri2.mutate().setRef("#").finalize();
+  do_check_uri_eq(uri3, uri1);
+
+  uri1 = gIoService.newURI("about:blank?something");
+  uri2 = gIoService.newURI("about:blank");
+  uri3 = uri1.mutate().setQuery("").finalize();
+  do_check_uri_eq(uri3, uri2);
+  uri3 = uri2.mutate().setQuery("something").finalize();
+  do_check_uri_eq(uri3, uri1);
+
+  uri1 = gIoService.newURI("about:blank?query#ref");
+  uri2 = gIoService.newURI("about:blank");
+  uri3 = uri1.mutate().setPathQueryRef("blank").finalize();
+  do_check_uri_eq(uri3, uri2);
+  uri3 = uri2.mutate().setPathQueryRef("blank?query#ref").finalize();
+  do_check_uri_eq(uri3, uri1);
+
+  // nsSimpleNestedURI
+  uri1 = gIoService.newURI("view-source:http://example.com/path#");
+  uri2 = gIoService.newURI("view-source:http://example.com/path");
+  uri3 = uri1.mutate().setRef("").finalize();
+  do_check_uri_eq(uri3, uri2);
+  uri3 = uri2.mutate().setRef("#").finalize();
+  do_check_uri_eq(uri3, uri1);
+
+  uri1 = gIoService.newURI("view-source:http://example.com/path?something");
+  uri2 = gIoService.newURI("view-source:http://example.com/path");
+  uri3 = uri1.mutate().setQuery("").finalize();
+  do_check_uri_eq(uri3, uri2);
+  uri3 = uri2.mutate().setQuery("something").finalize();
+  do_check_uri_eq(uri3, uri1);
+
+  uri1 = gIoService.newURI("view-source:http://example.com/path?query#ref");
+  uri2 = gIoService.newURI("view-source:http://example.com/path");
+  uri3 = uri1.mutate().setPathQueryRef("path").finalize();
+  do_check_uri_eq(uri3, uri2);
+  uri3 = uri2.mutate().setPathQueryRef("path?query#ref").finalize();
+  do_check_uri_eq(uri3, uri1);
+
+  uri1 = gIoService.newURI("view-source:about:blank#");
+  uri2 = gIoService.newURI("view-source:about:blank");
+  uri3 = uri1.mutate().setRef("").finalize();
+  do_check_uri_eq(uri3, uri2);
+  uri3 = uri2.mutate().setRef("#").finalize();
+  do_check_uri_eq(uri3, uri1);
+
+  uri1 = gIoService.newURI("view-source:about:blank?something");
+  uri2 = gIoService.newURI("view-source:about:blank");
+  uri3 = uri1.mutate().setQuery("").finalize();
+  do_check_uri_eq(uri3, uri2);
+  uri3 = uri2.mutate().setQuery("something").finalize();
+  do_check_uri_eq(uri3, uri1);
+
+  uri1 = gIoService.newURI("view-source:about:blank?query#ref");
+  uri2 = gIoService.newURI("view-source:about:blank");
+  uri3 = uri1.mutate().setPathQueryRef("blank").finalize();
+  do_check_uri_eq(uri3, uri2);
+  uri3 = uri2.mutate().setPathQueryRef("blank?query#ref").finalize();
+  do_check_uri_eq(uri3, uri1);
+}
+
+function check_space_escaping()
+{
+  let uri = gIoService.newURI("data:text/plain,hello%20world#space hash");
+  Assert.equal(uri.spec, "data:text/plain,hello%20world#space%20hash");
+  uri = gIoService.newURI("data:text/plain,hello%20world#space%20hash");
+  Assert.equal(uri.spec, "data:text/plain,hello%20world#space%20hash");
+  uri = gIoService.newURI("data:text/plain,hello world#space%20hash");
+  Assert.equal(uri.spec, "data:text/plain,hello world#space%20hash");
+  uri = gIoService.newURI("data:text/plain,hello world#space hash");
+  Assert.equal(uri.spec, "data:text/plain,hello world#space%20hash");
+  uri = gIoService.newURI("http://example.com/test path#test path");
+  uri = gIoService.newURI("http://example.com/test%20path#test%20path");
+}
+
 // TEST MAIN FUNCTION
 // ------------------
 function run_test()
 {
+  check_nested_mutations();
+  check_space_escaping();
+
   // UTF-8 check - From bug 622981
   // ASCII
   let base = gIoService.newURI("http://example.org/xenia?");

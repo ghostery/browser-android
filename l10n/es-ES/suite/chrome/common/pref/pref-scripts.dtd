@@ -13,9 +13,6 @@
 <!ENTITY allowWindowStatusChange.label "Cambiar el texto de la barra de estado">
 <!ENTITY allowContextmenuDisable.label "Desactivar o reemplazar menús contextuales">
 <!ENTITY allowHideStatusBar.label "Esconder la barra de estado">
-<!ENTITY enableDrmMedia.label "Activar administración digital de derechos de">
-<!ENTITY enableEmeForSuite.label "Módulos de descifrado de contenido de terceros">
-<!ENTITY enableEmeForSuite.accesskey "M">
 <!ENTITY enablePlugins.label "Activar plugins para">
 <!ENTITY enablePluginForSuite.label "Suite">
 <!ENTITY enablePluginForSuite.accesskey "u">

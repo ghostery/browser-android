@@ -16,6 +16,9 @@
 #include "base/basictypes.h"
 
 #include "jsapi.h"
+#include "js/AutoByteString.h"
+#include "js/CompilationAndEvaluation.h"
+#include "js/SourceBufferHolder.h"
 
 #include "xpcpublic.h"
 
@@ -387,7 +390,7 @@ XPCShellEnvironment::~XPCShellEnvironment()
         Rooted<JSObject*> global(cx, GetGlobalObject());
 
         {
-            JSAutoCompartment ac(cx, global);
+            JSAutoRealm ar(cx, global);
             JS_SetAllNonReservedSlotsToUndefined(cx, global);
         }
         mGlobalHolder.reset();
@@ -428,8 +431,8 @@ XPCShellEnvironment::Init()
         return false;
     }
 
-    JS::CompartmentOptions options;
-    options.creationOptions().setSystemZone();
+    JS::RealmOptions options;
+    options.creationOptions().setNewCompartmentInSystemZone();
     if (xpc::SharedMemoryEnabled())
         options.creationOptions().setSharedMemoryAndAtomicsEnabled(true);
 
@@ -448,7 +451,7 @@ XPCShellEnvironment::Init()
         NS_ERROR("Failed to get global JSObject!");
         return false;
     }
-    JSAutoCompartment ac(cx, globalObj);
+    JSAutoRealm ar(cx, globalObj);
 
     backstagePass->SetGlobalObject(globalObj);
 
@@ -487,8 +490,9 @@ XPCShellEnvironment::EvaluateString(const nsString& aString,
   JS::CompileOptions options(cx);
   options.setFileAndLine("typein", 0);
   JS::Rooted<JSScript*> script(cx);
-  if (!JS_CompileUCScript(cx, aString.get(), aString.Length(), options,
-                          &script))
+  JS::SourceBufferHolder srcBuf(aString.get(), aString.Length(),
+                                JS::SourceBufferHolder::NoOwnership);
+  if (!JS_CompileUCScript(cx, srcBuf, options, &script))
   {
      return false;
   }

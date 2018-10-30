@@ -133,8 +133,6 @@ public:
   inline nscoord EvaluateSourceSizeList(
       const RawServoSourceSizeList* aSourceSizeList) const;
 
-  void InvalidateStyleForCSSRuleChanges();
-
   void AddSizeOfIncludingThis(nsWindowSizes& aSizes) const;
   const RawServoStyleSet* RawSet() const {
     return mRawSet.get();
@@ -147,9 +145,8 @@ public:
 
   void SetAuthorStyleDisabled(bool aStyleDisabled);
 
-  void BeginUpdate();
-  nsresult EndUpdate();
-
+  // FIXME(emilio): All the callers pass Allow here, and aParentContext isn't
+  // used...
   already_AddRefed<ComputedStyle>
   ResolveStyleFor(dom::Element* aElement,
                   ComputedStyle* aParentContext,
@@ -157,7 +154,7 @@ public:
 
   // Get a CopmutedStyle for a text node (which no rules will match).
   //
-  // The returned ComputedStyle will have nsCSSAnonBoxes::mozText as its pseudo.
+  // The returned ComputedStyle will have nsCSSAnonBoxes::mozText() as its pseudo.
   //
   // (Perhaps mozText should go away and we shouldn't even create style
   // contexts for such content nodes, when text-combine-upright is not
@@ -169,9 +166,9 @@ public:
   // match).
   //
   // The returned ComputedStyle will have
-  // nsCSSAnonBoxes::firstLetterContinuation as its pseudo.
+  // nsCSSAnonBoxes::firstLetterContinuation() as its pseudo.
   //
-  // (Perhaps nsCSSAnonBoxes::firstLetterContinuation should go away and we
+  // (Perhaps nsCSSAnonBoxes::firstLetterContinuation() should go away and we
   // shouldn't even create ComputedStyles for such frames.  However, not doing
   // any rule matching for them is a first step.  And right now we do use this
   // ComputedStyle for some things)
@@ -180,10 +177,10 @@ public:
 
   // Get a ComputedStyle for a placeholder frame (which no rules will match).
   //
-  // The returned ComputedStyle will have nsCSSAnonBoxes::oofPlaceholder as
+  // The returned ComputedStyle will have nsCSSAnonBoxes::oofPlaceholder() as
   // its pseudo.
   //
-  // (Perhaps nsCSSAnonBoxes::oofPaceholder should go away and we shouldn't even
+  // (Perhaps nsCSSAnonBoxes::oofPaceholder() should go away and we shouldn't even
   // create ComputedStyle for placeholders.  However, not doing any rule
   // matching for them is a first step.)
   already_AddRefed<ComputedStyle>
@@ -258,9 +255,9 @@ public:
 
   // check whether there is ::before/::after style for an element
   already_AddRefed<ComputedStyle>
-  ProbePseudoElementStyle(dom::Element* aOriginatingElement,
+  ProbePseudoElementStyle(const dom::Element& aOriginatingElement,
                           CSSPseudoElementType aType,
-                          ComputedStyle* aParentContext);
+                          ComputedStyle* aParentStyle);
 
   /**
    * Performs a Servo traversal to compute style for all dirty nodes in the
@@ -338,10 +335,10 @@ public:
    *
    * FIXME(emilio): Is there a point in this after bug 1367904?
    */
-  inline already_AddRefed<ComputedStyle>
-    ResolveServoStyle(dom::Element* aElement);
+  inline already_AddRefed<ComputedStyle> ResolveServoStyle(const dom::Element&);
 
-  bool GetKeyframesForName(const dom::Element& aElement,
+  bool GetKeyframesForName(const dom::Element&,
+                           const ComputedStyle&,
                            nsAtom* aName,
                            const nsTimingFunction& aTimingFunction,
                            nsTArray<Keyframe>& aKeyframes);
@@ -349,7 +346,7 @@ public:
   nsTArray<ComputedKeyframeValues>
   GetComputedKeyframeValuesFor(const nsTArray<Keyframe>& aKeyframes,
                                dom::Element* aElement,
-                               const mozilla::ComputedStyle* aStyle);
+                               const ComputedStyle* aStyle);
 
   void
   GetAnimationValues(RawServoDeclarationBlock* aDeclarations,
@@ -432,8 +429,7 @@ public:
    * the modified attribute doesn't appear in an attribute selector in
    * a style sheet.
    */
-  bool MightHaveAttributeDependency(const dom::Element& aElement,
-                                    nsAtom* aAttribute) const;
+  bool MightHaveAttributeDependency(const dom::Element&, nsAtom* aAttribute) const;
 
   /**
    * Returns true if a change in event state on an element might require
@@ -443,8 +439,7 @@ public:
    * the changed state isn't depended upon by any pseudo-class selectors
    * in a style sheet.
    */
-  bool HasStateDependency(const dom::Element& aElement,
-                          EventStates aState) const;
+  bool HasStateDependency(const dom::Element&, EventStates) const;
 
   /**
    * Returns true if a change in document state might require us to restyle the
@@ -479,7 +474,7 @@ private:
   const SnapshotTable& Snapshots();
 
   /**
-   * Resolve all ServoDeclarationBlocks attached to mapped
+   * Resolve all DeclarationBlocks attached to mapped
    * presentation attributes cached on the document.
    *
    * Call this before jumping into Servo's style system.

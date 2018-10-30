@@ -15,6 +15,7 @@ const INSPECTOR_L10N =
 
 loader.lazyRequireGetter(this, "FlexboxInspector", "devtools/client/inspector/flexbox/flexbox");
 loader.lazyRequireGetter(this, "GridInspector", "devtools/client/inspector/grids/grid-inspector");
+loader.lazyRequireGetter(this, "SwatchColorPickerTooltip", "devtools/client/shared/widgets/tooltip/SwatchColorPickerTooltip");
 
 class LayoutView {
   constructor(inspector, window) {
@@ -30,27 +31,27 @@ class LayoutView {
       return;
     }
 
-    let {
-      setSelectedNode,
+    const {
       onShowBoxModelHighlighterForNode,
+      setSelectedNode,
     } = this.inspector.getCommonComponentProps();
 
-    let {
+    const {
       onHideBoxModelHighlighter,
       onShowBoxModelEditor,
       onShowBoxModelHighlighter,
       onToggleGeometryEditor,
     } = this.inspector.getPanel("boxmodel").getComponentProps();
 
-    this.flexboxInspector = new FlexboxInspector(this.inspector,
-      this.inspector.panelWin);
-    let {
+    this.flexboxInspector = new FlexboxInspector(this.inspector, this.inspector.panelWin);
+    const {
+      onSetFlexboxOverlayColor,
       onToggleFlexboxHighlighter,
+      onToggleFlexItemShown,
     } = this.flexboxInspector.getComponentProps();
 
     this.gridInspector = new GridInspector(this.inspector, this.inspector.panelWin);
-    let {
-      getSwatchColorPickerTooltip,
+    const {
       onSetGridOverlayColor,
       onShowGridOutlineHighlight,
       onToggleGridHighlighter,
@@ -59,29 +60,31 @@ class LayoutView {
       onToggleShowInfiniteLines,
     } = this.gridInspector.getComponentProps();
 
-    let layoutApp = LayoutApp({
-      getSwatchColorPickerTooltip,
-      setSelectedNode,
-      /**
-       * Shows the box model properties under the box model if true, otherwise, hidden by
-       * default.
-       */
-      showBoxModelProperties: true,
+    const layoutApp = LayoutApp({
+      getSwatchColorPickerTooltip: () => this.swatchColorPickerTooltip,
       onHideBoxModelHighlighter,
+      onSetFlexboxOverlayColor,
       onSetGridOverlayColor,
       onShowBoxModelEditor,
       onShowBoxModelHighlighter,
       onShowBoxModelHighlighterForNode,
       onShowGridOutlineHighlight,
       onToggleFlexboxHighlighter,
+      onToggleFlexItemShown,
       onToggleGeometryEditor,
       onToggleGridHighlighter,
       onToggleShowGridAreas,
       onToggleShowGridLineNumbers,
       onToggleShowInfiniteLines,
+      setSelectedNode,
+      /**
+       * Shows the box model properties under the box model if true, otherwise, hidden by
+       * default.
+       */
+      showBoxModelProperties: true,
     });
 
-    let provider = createElement(Provider, {
+    const provider = createElement(Provider, {
       id: "layoutview",
       key: "layoutview",
       store: this.store,
@@ -96,12 +99,29 @@ class LayoutView {
    * Destruction function called when the inspector is destroyed. Cleans up references.
    */
   destroy() {
+    if (this._swatchColorPickerTooltip) {
+      this._swatchColorPickerTooltip.destroy();
+      this._swatchColorPickerTooltip = null;
+    }
+
     this.flexboxInspector.destroy();
     this.gridInspector.destroy();
 
     this.document = null;
     this.inspector = null;
     this.store = null;
+  }
+
+  get swatchColorPickerTooltip() {
+    if (!this._swatchColorPickerTooltip) {
+      this._swatchColorPickerTooltip = new SwatchColorPickerTooltip(
+        this.inspector.toolbox.doc,
+        this.inspector,
+        { supportsCssColor4ColorFunction: () => false }
+      );
+    }
+
+    return this._swatchColorPickerTooltip;
   }
 }
 

@@ -10,7 +10,7 @@ ChromeUtils.import("resource://gre/modules/TelemetryTimestamps.jsm");
 ChromeUtils.import("resource://gre/modules/TelemetryController.jsm");
 ChromeUtils.import("resource://gre/modules/TelemetryArchive.jsm");
 ChromeUtils.import("resource://gre/modules/TelemetryUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+ChromeUtils.import("resource://gre/modules/TelemetrySend.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ChromeUtils.defineModuleGetter(this, "AppConstants",
@@ -128,12 +128,7 @@ function sectionalizeObject(obj) {
  * Obtain the main DOMWindow for the current context.
  */
 function getMainWindow() {
-  return window.QueryInterface(Ci.nsIInterfaceRequestor)
-               .getInterface(Ci.nsIWebNavigation)
-               .QueryInterface(Ci.nsIDocShellTreeItem)
-               .rootTreeItem
-               .QueryInterface(Ci.nsIInterfaceRequestor)
-               .getInterface(Ci.nsIDOMWindow);
+  return window.docShell.rootTreeItem.domWindow;
 }
 
 /**
@@ -206,8 +201,7 @@ var Settings = {
     }
   },
 
-  getStatusStringForSetting(setting) {
-    let enabled = Preferences.get(setting.pref, setting.defaultPrefValue);
+  getStatusString(enabled) {
     let status = bundle.GetStringFromName(enabled ? "telemetryUploadEnabled" : "telemetryUploadDisabled");
     return status;
   },
@@ -217,7 +211,7 @@ var Settings = {
    */
   render() {
     let settingsExplanation = document.getElementById("settings-explanation");
-    let uploadEnabled = this.getStatusStringForSetting(this.SETTINGS[0]);
+    let uploadEnabled = this.getStatusString(TelemetrySend.sendingEnabled());
     let extendedEnabled = Services.telemetry.canRecordExtended;
     let collectedData = bundle.GetStringFromName(extendedEnabled ? "prereleaseData" : "releaseData");
     let explanation = bundle.GetStringFromName("settingsExplanation");
@@ -327,7 +321,7 @@ var PingPicker = {
       pingName = bundle.formatStringFromName("namedPing", [pingName, pingTypeText], 2);
       pingNameSpan.textContent = pingName;
       let explanation = bundle.GetStringFromName("pingDetails");
-      fragment = BrowserUtils.getLocalizedFragment(document, explanation, pingLink, pingNameSpan, pingTypeText);
+      fragment = BrowserUtils.getLocalizedFragment(document, explanation, pingLink, pingNameSpan);
     } else {
       // Change sidebar heading text.
       controls.classList.add("hidden");
@@ -340,6 +334,7 @@ var PingPicker = {
     }
 
     let pingExplanation = document.getElementById("ping-explanation");
+    removeAllChildNodes(pingExplanation);
     pingExplanation.appendChild(fragment);
     pingExplanation.querySelector(".change-ping").addEventListener("click", (ev) => {
       document.getElementById("ping-picker").classList.remove("hidden");
@@ -378,10 +373,19 @@ var PingPicker = {
 
   _updateCurrentPingData() {
     const subsession = document.getElementById("show-subsession-data").checked;
-    const ping = TelemetryController.getCurrentPingData(subsession);
+    let ping = TelemetryController.getCurrentPingData(subsession);
     if (!ping) {
       return;
     }
+
+    // augment ping payload with event telemetry
+    let eventSnapshot = Telemetry.snapshotEvents(Telemetry.DATASET_RELEASE_CHANNEL_OPTIN, false);
+    for (let process of Object.keys(eventSnapshot)) {
+      if (process in ping.payload.processes) {
+        ping.payload.processes[process].events = eventSnapshot[process].filter(e => !e[1].startsWith("telemetry.test"));
+      }
+    }
+
     displayPingData(ping, true);
   },
 
@@ -423,7 +427,7 @@ var PingPicker = {
       const pingDate = new Date(p.timestampCreated);
       const datetimeText = new Services.intl.DateTimeFormat(undefined, {
           dateStyle: "short",
-          timeStyle: "medium"
+          timeStyle: "medium",
         }).format(pingDate);
       const pingName = `${datetimeText}, ${p.type}`;
 
@@ -821,7 +825,7 @@ var SlowSQL = {
     let colTextElement = document.createTextNode(aColText);
     colElement.appendChild(colTextElement);
     aRowElement.appendChild(colElement);
-  }
+  },
 };
 
 var StackRenderer = {
@@ -908,7 +912,7 @@ var StackRenderer = {
 
     div.appendChild(titleElement);
     div.appendChild(document.createElement("br"));
-  }
+  },
 };
 
 var RawPayloadData = {
@@ -925,7 +929,7 @@ var RawPayloadData = {
     document.getElementById("payload-json-viewer").addEventListener("click", (e) => {
       openJsonInFirefoxJsonViewer(JSON.stringify(gPingData.payload, null, 2));
     });
-  }
+  },
 };
 
 function SymbolicationRequest(aPrefix, aRenderHeader,
@@ -998,32 +1002,6 @@ function SymbolicationRequest_fetchSymbols() {
   this.symbolRequest.send(requestJSON);
 };
 
-var ChromeHangs = {
-
-  symbolRequest: null,
-
-  /**
-   * Renders raw chrome hang data
-   */
-  render: function ChromeHangs_render(chromeHangs) {
-    setHasData("chrome-hangs-section", !!chromeHangs);
-    if (!chromeHangs) {
-      return;
-    }
-
-    let stacks = chromeHangs.stacks;
-    let memoryMap = chromeHangs.memoryMap;
-    let durations = chromeHangs.durations;
-
-    StackRenderer.renderStacks("chrome-hangs", stacks, memoryMap,
-                               (index) => this.renderHangHeader(index, durations));
-  },
-
-  renderHangHeader: function ChromeHangs_renderHangHeader(aIndex, aDurations) {
-    StackRenderer.renderHeader("chrome-hangs", [aIndex + 1, aDurations[aIndex]]);
-  }
-};
-
 var CapturedStacks = {
   symbolRequest: null,
 
@@ -1051,7 +1029,7 @@ var CapturedStacks = {
     let key = captures[index][0];
     let cardinality = captures[index][2];
     StackRenderer.renderHeader("captured-stacks", [key, cardinality]);
-  }
+  },
 };
 
 var Histogram = {
@@ -1126,7 +1104,7 @@ var Histogram = {
         pretty_average: 0,
         max: 0,
         sample_count: 0,
-        sum: 0
+        sum: 0,
       };
     }
 
@@ -1142,7 +1120,7 @@ var Histogram = {
       pretty_average: average,
       max: max_value,
       sample_count,
-      sum: aHgram.sum
+      sum: aHgram.sum,
     };
 
     return result;
@@ -1226,8 +1204,7 @@ var Search = {
   // A list of ids of sections that do not support search.
   blacklist: [
     "late-writes-section",
-    "chrome-hangs-section",
-    "raw-payload-section"
+    "raw-payload-section",
   ],
 
   // Pass if: all non-empty array items match (case-sensitive)
@@ -1432,7 +1409,7 @@ var Search = {
       }
     });
     this.updateNoResults(text, noSearchResults);
-  }
+  },
 };
 
 /*
@@ -1527,7 +1504,7 @@ var GenericTable = {
 
   defaultHeadings: [
     bundle.GetStringFromName("keysHeader"),
-    bundle.GetStringFromName("valuesHeader")
+    bundle.GetStringFromName("valuesHeader"),
   ],
 
   /**
@@ -1819,7 +1796,7 @@ function displayProcessesSelector(selectedSection) {
     "keyed-scalars-section",
     "histograms-section",
     "keyed-histograms-section",
-    "events-section"
+    "events-section",
   ];
   let processes = document.getElementById("processes");
   processes.hidden = !whitelist.includes(selectedSection);
@@ -1992,30 +1969,6 @@ function setupListeners() {
     function(aEvent) {
       Settings.detachObservers();
   }, {once: true});
-
-  document.getElementById("chrome-hangs-fetch-symbols").addEventListener("click",
-    function() {
-      if (!gPingData) {
-        return;
-      }
-
-      let hangs = gPingData.payload.chromeHangs;
-      let req = new SymbolicationRequest("chrome-hangs",
-                                         ChromeHangs.renderHangHeader,
-                                         hangs.memoryMap,
-                                         hangs.stacks,
-                                         hangs.durations);
-      req.fetchSymbols();
-  });
-
-  document.getElementById("chrome-hangs-hide-symbols").addEventListener("click",
-    function() {
-      if (!gPingData) {
-        return;
-      }
-
-      ChromeHangs.render(gPingData.payload.chromeHangs);
-  });
 
   document.getElementById("captured-stacks-fetch-symbols").addEventListener("click",
     function() {
@@ -2404,9 +2357,6 @@ function displayRichPingData(ping, updatePayloadList) {
   CapturedStacks.render(payload);
 
   LateWritesSingleton.renderLateWrites(payload.lateWrites);
-
-  // Show chrome hang stacks
-  ChromeHangs.render(payload.chromeHangs);
 
   // Show simple measurements
   SimpleMeasurements.render(payload);

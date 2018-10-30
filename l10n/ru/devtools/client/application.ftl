@@ -22,14 +22,14 @@ serviceworker-worker-unregister = Отменить регистрацию
 # Text for the debug link displayed for an already started Service Worker. Clicking on the
 # link opens a new devtools toolbox for this service worker. The title attribute is only
 # displayed when the link is disabled.
-serviceworker-worker-debug = Отладка
+serviceworker-worker-debug = Отладить
     .title = Только запущенные service workers могут быть отлажены
 # Text for the start link displayed for a registered but not running Service Worker.
 # Clicking on the link will attempt to start the service worker.
 serviceworker-worker-start = Запустить
 # Text displayed for the updated time of the service worker. The <time> element will
 # display the last update time of the service worker script.
-serviceworker-worker-updated = Обновлено <time>{ DATETIME($date, month: "long", year: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric") }</time>
+serviceworker-worker-updated = Обновлён <time>{ DATETIME($date, month: "long", year: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric") }</time>
 # Text displayed next to the URL for the source of the service worker (e-g. "Source my/path/to/worker-js")
 serviceworker-worker-source = Источник
 # Text displayed next to the current status of the service worker.

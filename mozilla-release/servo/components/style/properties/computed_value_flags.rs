@@ -41,10 +41,6 @@ bitflags! {
         /// A flag used to mark styles which are a pseudo-element or under one.
         const IS_IN_PSEUDO_ELEMENT_SUBTREE = 1 << 4;
 
-        /// A flag used to mark styles which are in a display: none subtree, or
-        /// under one.
-        const IS_IN_DISPLAY_NONE_SUBTREE = 1 << 5;
-
         /// Whether this style inherits the `display` property.
         ///
         /// This is important because it may affect our optimizations to avoid
@@ -60,13 +56,10 @@ bitflags! {
         /// Whether the child explicitly inherits any reset property.
         const INHERITS_RESET_STYLE = 1 << 8;
 
-        /// A flag to mark a style which is a visited style.
-        const IS_STYLE_IF_VISITED = 1 << 9;
-
         /// Whether the style or any of the ancestors has a multicol style.
         ///
         /// Only used in Servo.
-        const CAN_BE_FRAGMENTED = 1 << 10;
+        const CAN_BE_FRAGMENTED = 1 << 9;
     }
 }
 
@@ -74,10 +67,8 @@ impl ComputedValueFlags {
     /// Flags that are unconditionally propagated to descendants.
     #[inline]
     fn inherited_flags() -> Self {
-        ComputedValueFlags::IS_STYLE_IF_VISITED |
         ComputedValueFlags::IS_RELEVANT_LINK_VISITED |
         ComputedValueFlags::CAN_BE_FRAGMENTED |
-        ComputedValueFlags::IS_IN_DISPLAY_NONE_SUBTREE |
         ComputedValueFlags::IS_IN_PSEUDO_ELEMENT_SUBTREE |
         ComputedValueFlags::HAS_TEXT_DECORATION_LINES
     }

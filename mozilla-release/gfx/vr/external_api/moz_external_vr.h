@@ -16,13 +16,20 @@
 #include "mozilla/gfx/2D.h"
 #endif // MOZILLA_INTERNAL_API
 
+#if defined(__ANDROID__)
+#include <pthread.h>
+#endif // defined(__ANDROID__)
+
 namespace mozilla {
 #ifdef MOZILLA_INTERNAL_API
 namespace dom {
   enum class GamepadHand : uint8_t;
+  enum class GamepadCapabilityFlags : uint16_t;
 }
 #endif //  MOZILLA_INTERNAL_API
 namespace gfx {
+
+static const int32_t kVRExternalVersion = 2;
 
 // We assign VR presentations to groups with a bitmask.
 // Currently, we will only display either content or chrome.
@@ -38,9 +45,15 @@ static const uint32_t kVRGroupAll = 0xffffffff;
 static const int kVRDisplayNameMaxLen = 256;
 static const int kVRControllerNameMaxLen = 256;
 static const int kVRControllerMaxCount = 16;
-static const int kVRControllerMaxTriggers = 16;
+static const int kVRControllerMaxButtons = 64;
 static const int kVRControllerMaxAxis = 16;
 static const int kVRLayerMaxCount = 8;
+
+#if defined(__ANDROID__)
+typedef uint64_t VRLayerTextureHandle;
+#else
+typedef void* VRLayerTextureHandle;
+#endif
 
 struct Point3D_POD
 {
@@ -68,6 +81,32 @@ enum class ControllerHand : uint8_t {
   Left,
   Right,
   EndGuard_
+};
+
+enum class ControllerCapabilityFlags : uint16_t {
+  Cap_None = 0,
+  /**
+   * Cap_Position is set if the Gamepad is capable of tracking its position.
+   */
+  Cap_Position = 1 << 1,
+  /**
+    * Cap_Orientation is set if the Gamepad is capable of tracking its orientation.
+    */
+  Cap_Orientation = 1 << 2,
+  /**
+   * Cap_AngularAcceleration is set if the Gamepad is capable of tracking its
+   * angular acceleration.
+   */
+  Cap_AngularAcceleration = 1 << 3,
+  /**
+   * Cap_LinearAcceleration is set if the Gamepad is capable of tracking its
+   * linear acceleration.
+   */
+  Cap_LinearAcceleration = 1 << 4,
+  /**
+   * Cap_All used for validity checking during IPC serialization
+   */
+  Cap_All = (1 << 5) - 1
 };
 
 #endif // ifndef MOZILLA_INTERNAL_API
@@ -128,20 +167,25 @@ enum class VRDisplayCapabilityFlags : uint16_t {
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(VRDisplayCapabilityFlags)
 #endif // MOZILLA_INTERNAL_API
 
-struct VRHMDSensorState {
-  int64_t inputFrameID;
-  double timestamp;
-  VRDisplayCapabilityFlags flags;
-
-  // These members will only change with inputFrameID:
+struct VRPose
+{
   float orientation[4];
   float position[3];
-  float leftViewMatrix[16];
-  float rightViewMatrix[16];
   float angularVelocity[3];
   float angularAcceleration[3];
   float linearVelocity[3];
   float linearAcceleration[3];
+};
+
+struct VRHMDSensorState {
+  uint64_t inputFrameID;
+  double timestamp;
+  VRDisplayCapabilityFlags flags;
+
+  // These members will only change with inputFrameID:
+  VRPose pose;
+  float leftViewMatrix[16];
+  float rightViewMatrix[16];
 
 #ifdef MOZILLA_INTERNAL_API
 
@@ -216,36 +260,51 @@ struct VRDisplayState
     NumEyes
   };
 
+#if defined(__ANDROID__)
+  bool shutdown;
+#endif // defined(__ANDROID__)
   char mDisplayName[kVRDisplayNameMaxLen];
   VRDisplayCapabilityFlags mCapabilityFlags;
   VRFieldOfView mEyeFOV[VRDisplayState::NumEyes];
   Point3D_POD mEyeTranslation[VRDisplayState::NumEyes];
   IntSize_POD mEyeResolution;
+  bool mSuppressFrames;
   bool mIsConnected;
   bool mIsMounted;
   FloatSize_POD mStageSize;
   // We can't use a Matrix4x4 here unless we ensure it's a POD type
   float mSittingToStandingTransform[16];
+  uint64_t mLastSubmittedFrameId;
+  bool mLastSubmittedFrameSuccessful;
+  uint32_t mPresentingGeneration;
 };
 
 struct VRControllerState
 {
-  char mControllerName[kVRControllerNameMaxLen];
+  char controllerName[kVRControllerNameMaxLen];
 #ifdef MOZILLA_INTERNAL_API
-  dom::GamepadHand mHand;
+  dom::GamepadHand hand;
 #else
-  ControllerHand mHand;
+  ControllerHand hand;
 #endif
-  uint32_t mNumButtons;
-  uint32_t mNumAxes;
-  uint32_t mNumTriggers;
-  uint32_t mNumHaptics;
+  uint32_t numButtons;
+  uint32_t numAxes;
+  uint32_t numHaptics;
   // The current button pressed bit of button mask.
-  uint64_t mButtonPressed;
+  uint64_t buttonPressed;
   // The current button touched bit of button mask.
-  uint64_t mButtonTouched;
-  float mTriggerValue[kVRControllerMaxTriggers];
-  float mAxisValue[kVRControllerMaxAxis];
+  uint64_t buttonTouched;
+  float triggerValue[kVRControllerMaxButtons];
+  float axisValue[kVRControllerMaxAxis];
+
+#ifdef MOZILLA_INTERNAL_API
+  dom::GamepadCapabilityFlags flags;
+#else
+  ControllerCapabilityFlags flags;
+#endif
+  VRPose pose;
+  bool isPositionValid;
+  bool isOrientationValid;
 };
 
 struct VRLayerEyeRect
@@ -264,23 +323,24 @@ enum class VRLayerType : uint16_t {
 
 enum class VRLayerTextureType : uint16_t {
   LayerTextureType_None = 0,
-  LayerTextureType_DirectX = 1,
-  LayerTextureType_OpenGL = 2,
-  LayerTextureType_Vulkan = 3
+  LayerTextureType_D3D10SurfaceDescriptor = 1,
+  LayerTextureType_MacIOSurface = 2,
+  LayerTextureType_GeckoSurfaceTexture = 3
 };
 
 struct VRLayer_2D_Content
 {
-  void* mTextureHandle;
+  VRLayerTextureHandle mTextureHandle;
   VRLayerTextureType mTextureType;
   uint64_t mFrameId;
 };
 
 struct VRLayer_Stereo_Immersive
 {
-  void* mTextureHandle;
+  VRLayerTextureHandle mTextureHandle;
   VRLayerTextureType mTextureType;
   uint64_t mFrameId;
+  uint64_t mInputFrameId;
   VRLayerEyeRect mLeftEyeRect;
   VRLayerEyeRect mRightEyeRect;
 };
@@ -296,11 +356,17 @@ struct VRLayerState
 
 struct VRBrowserState
 {
+#if defined(__ANDROID__)
+  bool shutdown;
+#endif // defined(__ANDROID__)
+  bool presentationActive;
+  bool navigationTransitionActive;
   VRLayerState layerState[kVRLayerMaxCount];
 };
 
 struct VRSystemState
 {
+  bool enumerationCompleted;
   VRDisplayState displayState;
   VRHMDSensorState sensorState;
   VRControllerState controllerState[kVRControllerMaxCount];
@@ -308,12 +374,25 @@ struct VRSystemState
 
 struct VRExternalShmem
 {
+  int32_t version;
+  int32_t size;
+#if defined(__ANDROID__)
+  pthread_mutex_t systemMutex;
+  pthread_mutex_t browserMutex;
+  pthread_cond_t systemCond;
+  pthread_cond_t browserCond;
+#else
   int64_t generationA;
+#endif // defined(__ANDROID__)
   VRSystemState state;
+#if !defined(__ANDROID__)
   int64_t generationB;
   int64_t browserGenerationA;
+#endif // !defined(__ANDROID__)
   VRBrowserState browserState;
+#if !defined(__ANDROID__)
   int64_t browserGenerationB;
+#endif // !defined(__ANDROID__)
 };
 
 // As we are memcpy'ing VRExternalShmem and its members around, it must be a POD type

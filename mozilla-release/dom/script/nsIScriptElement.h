@@ -32,6 +32,7 @@ public:
 
   explicit nsIScriptElement(mozilla::dom::FromParser aFromParser)
     : mLineNumber(1),
+      mColumnNumber(1),
       mAlreadyStarted(false),
       mMalformed(false),
       mDoneAddingChildren(aFromParser == mozilla::dom::NOT_FROM_PARSER ||
@@ -64,13 +65,13 @@ public:
    */
   nsIURI* GetScriptURI()
   {
-    NS_PRECONDITION(mFrozen, "Not ready for this call yet!");
+    MOZ_ASSERT(mFrozen, "Not ready for this call yet!");
     return mUri;
   }
 
   nsIPrincipal* GetScriptURITriggeringPrincipal()
   {
-    NS_PRECONDITION(mFrozen, "Not ready for this call yet!");
+    MOZ_ASSERT(mFrozen, "Not ready for this call yet!");
     return mSrcTriggeringPrincipal;
   }
 
@@ -97,7 +98,7 @@ public:
    */
   bool GetScriptIsModule()
   {
-    NS_PRECONDITION(mFrozen, "Not ready for this call yet!");
+    MOZ_ASSERT(mFrozen, "Not ready for this call yet!");
     return mIsModule;
   }
 
@@ -106,7 +107,7 @@ public:
    */
   bool GetScriptDeferred()
   {
-    NS_PRECONDITION(mFrozen, "Not ready for this call yet!");
+    MOZ_ASSERT(mFrozen, "Not ready for this call yet!");
     return mDefer;
   }
 
@@ -115,7 +116,7 @@ public:
    */
   bool GetScriptAsync()
   {
-    NS_PRECONDITION(mFrozen, "Not ready for this call yet!");
+    MOZ_ASSERT(mFrozen, "Not ready for this call yet!");
     return mAsync;
   }
 
@@ -124,7 +125,7 @@ public:
    */
   bool GetScriptExternal()
   {
-    NS_PRECONDITION(mFrozen, "Not ready for this call yet!");
+    MOZ_ASSERT(mFrozen, "Not ready for this call yet!");
     return mExternal;
   }
 
@@ -144,6 +145,16 @@ public:
   uint32_t GetScriptLineNumber()
   {
     return mLineNumber;
+  }
+
+  void SetScriptColumnNumber(uint32_t aColumnNumber)
+  {
+    mColumnNumber = aColumnNumber;
+  }
+
+  uint32_t GetScriptColumnNumber()
+  {
+    return mColumnNumber;
   }
 
   void SetIsMalformed()
@@ -296,6 +307,11 @@ protected:
    * The start line number of the script.
    */
   uint32_t mLineNumber;
+
+  /**
+   * The start column number of the script.
+   */
+  uint32_t mColumnNumber;
 
   /**
    * The "already started" flag per HTML5.

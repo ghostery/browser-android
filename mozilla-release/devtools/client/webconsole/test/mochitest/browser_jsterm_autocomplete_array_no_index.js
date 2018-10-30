@@ -16,13 +16,22 @@ const TEST_URI = `data:text/html;charset=utf-8,
 <body>bug 585991 - Autocomplete popup on array</body>`;
 
 add_task(async function() {
-  let { jsterm } = await openNewTabAndConsole(TEST_URI);
+  // Run test with legacy JsTerm
+  await pushPref("devtools.webconsole.jsterm.codeMirror", false);
+  await performTests();
+  // And then run it with the CodeMirror-powered one.
+  await pushPref("devtools.webconsole.jsterm.codeMirror", true);
+  await performTests();
+});
+
+async function performTests() {
+  const { jsterm } = await openNewTabAndConsole(TEST_URI);
 
   const {
     autocompletePopup: popup
   } = jsterm;
 
-  let onPopUpOpen = popup.once("popup-opened");
+  const onPopUpOpen = popup.once("popup-opened");
 
   info("wait for popup to show");
   jsterm.setInputValue("foo");
@@ -30,7 +39,7 @@ add_task(async function() {
 
   await onPopUpOpen;
 
-  let popupItems = popup.getItems().map(e => e.label);
+  const popupItems = popup.getItems().map(e => e.label);
   is(popupItems.includes("0"), false, "Completing on an array doesn't show numbers.");
 
   info("press Escape to close the popup");
@@ -38,4 +47,4 @@ add_task(async function() {
   EventUtils.synthesizeKey("KEY_Escape");
 
   await onPopupClose;
-});
+}

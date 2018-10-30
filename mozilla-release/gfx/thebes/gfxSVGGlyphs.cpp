@@ -6,7 +6,6 @@
 
 #include "mozilla/SVGContextPaint.h"
 #include "nsError.h"
-#include "nsIDOMDocument.h"
 #include "nsString.h"
 #include "nsIDocument.h"
 #include "nsICategoryManager.h"
@@ -16,17 +15,17 @@
 #include "nsServiceManagerUtils.h"
 #include "nsIPresShell.h"
 #include "nsNetUtil.h"
-#include "NullPrincipal.h"
 #include "nsIInputStream.h"
 #include "nsStringStream.h"
 #include "nsStreamUtils.h"
 #include "nsIPrincipal.h"
 #include "mozilla/BasePrincipal.h"
 #include "mozilla/dom/Element.h"
+#include "mozilla/dom/FontTableURIProtocolHandler.h"
 #include "mozilla/dom/SVGDocument.h"
 #include "mozilla/LoadInfo.h"
+#include "mozilla/NullPrincipal.h"
 #include "nsSVGUtils.h"
-#include "nsHostObjectProtocolHandler.h"
 #include "nsContentUtils.h"
 #include "gfxFont.h"
 #include "nsSMILAnimationController.h"
@@ -41,7 +40,7 @@ using namespace mozilla;
 
 typedef mozilla::dom::Element Element;
 
-/* static */ const Color SimpleTextContextPaint::sZero = Color();
+/* static */ const mozilla::gfx::Color SimpleTextContextPaint::sZero;
 
 gfxSVGGlyphs::gfxSVGGlyphs(hb_blob_t *aSVGTable, gfxFontEntry *aFontEntry)
     : mSVGData(aSVGTable)
@@ -138,7 +137,7 @@ gfxSVGGlyphsDocument::SetupPresentation()
 {
     nsCOMPtr<nsICategoryManager> catMan = do_GetService(NS_CATEGORYMANAGER_CONTRACTID);
     nsCString contractId;
-    nsresult rv = catMan->GetCategoryEntry("Gecko-Content-Viewers", "image/svg+xml", getter_Copies(contractId));
+    nsresult rv = catMan->GetCategoryEntry("Gecko-Content-Viewers", "image/svg+xml", contractId);
     NS_ENSURE_SUCCESS(rv, rv);
 
     nsCOMPtr<nsIDocumentLoaderFactory> docLoaderFactory =
@@ -352,17 +351,15 @@ gfxSVGGlyphsDocument::ParseDocument(const uint8_t *aBuffer, uint32_t aBufLen)
     NS_ENSURE_SUCCESS(rv, rv);
 
     nsCOMPtr<nsIURI> uri;
-    nsHostObjectProtocolHandler::GenerateURIString(NS_LITERAL_CSTRING(FONTTABLEURI_SCHEME),
-                                                   nullptr,
-                                                   mSVGGlyphsDocumentURI);
+    mozilla::dom::FontTableURIProtocolHandler::GenerateURIString(mSVGGlyphsDocumentURI);
 
     rv = NS_NewURI(getter_AddRefs(uri), mSVGGlyphsDocumentURI);
     NS_ENSURE_SUCCESS(rv, rv);
 
     nsCOMPtr<nsIPrincipal> principal = NullPrincipal::CreateWithoutOriginAttributes();
 
-    nsCOMPtr<nsIDOMDocument> domDoc;
-    rv = NS_NewDOMDocument(getter_AddRefs(domDoc),
+    nsCOMPtr<nsIDocument> document;
+    rv = NS_NewDOMDocument(getter_AddRefs(document),
                            EmptyString(),   // aNamespaceURI
                            EmptyString(),   // aQualifiedName
                            nullptr,          // aDoctype
@@ -371,11 +368,6 @@ gfxSVGGlyphsDocument::ParseDocument(const uint8_t *aBuffer, uint32_t aBufLen)
                            nullptr,          // aEventObject
                            DocumentFlavorSVG);
     NS_ENSURE_SUCCESS(rv, rv);
-
-    nsCOMPtr<nsIDocument> document(do_QueryInterface(domDoc));
-    if (!document) {
-        return NS_ERROR_FAILURE;
-    }
 
     nsCOMPtr<nsIChannel> channel;
     rv = NS_NewInputStreamChannel(getter_AddRefs(channel),

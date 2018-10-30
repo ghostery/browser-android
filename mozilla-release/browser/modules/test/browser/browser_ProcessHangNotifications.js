@@ -79,12 +79,7 @@ TestHangReport.prototype = {
     return this._hangType;
   },
 
-  QueryInterface(aIID) {
-    if (aIID.equals(Ci.nsIHangReport) ||
-        aIID.equals(Ci.nsISupports))
-      return this;
-    throw Cr.NS_NOINTERFACE;
-  },
+  QueryInterface: ChromeUtils.generateQI(["nsIHangReport"]),
 
   userCanceled() {
     this._resolver(TEST_ACTION_CANCELLED);
@@ -112,7 +107,7 @@ TestHangReport.prototype = {
 
   get scriptBrowser() {
     return this._browser;
-  }
+  },
 };
 
 // on dev edition we add a button for js debugging of hung scripts.

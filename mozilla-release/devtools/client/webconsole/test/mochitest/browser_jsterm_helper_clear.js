@@ -6,9 +6,18 @@
 const TEST_URI = "data:text/html,Test <code>clear()</code> jsterm helper";
 
 add_task(async function() {
-  let hud = await openNewTabAndConsole(TEST_URI);
+  // Run test with legacy JsTerm
+  await pushPref("devtools.webconsole.jsterm.codeMirror", false);
+  await performTests();
+  // And then run it with the CodeMirror-powered one.
+  await pushPref("devtools.webconsole.jsterm.codeMirror", true);
+  await performTests();
+});
 
-  let onMessage = waitForMessage(hud, "message");
+async function performTests() {
+  const hud = await openNewTabAndConsole(TEST_URI);
+
+  const onMessage = waitForMessage(hud, "message");
   ContentTask.spawn(gBrowser.selectedBrowser, {}, function() {
     content.wrappedJSObject.console.log("message");
   });
@@ -19,4 +28,4 @@ add_task(async function() {
   hud.jsterm.execute("clear()");
   await onCleared;
   ok(true, "Console was cleared");
-});
+}

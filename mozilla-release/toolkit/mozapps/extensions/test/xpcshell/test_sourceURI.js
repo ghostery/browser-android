@@ -19,8 +19,8 @@ var addon = {
   targetApplications: [{
     id: "xpcshell@tests.mozilla.org",
     minVersion: "1",
-    maxVersion: "1"
-  }]
+    maxVersion: "1",
+  }],
 };
 
 const profileDir = gProfD.clone();
@@ -52,11 +52,11 @@ async function run_test() {
           files: [
             {
               platform: "all",
-              url: "http://www.example.com/testaddon.xpi"
+              url: "http://www.example.com/testaddon.xpi",
             },
           ],
         },
-      }
+      },
     ],
   };
   gServer.registerPathHandler("/addons.json", (request, response) => {
@@ -78,15 +78,15 @@ async function run_test() {
   Services.prefs.setBoolPref(PREF_GETADDONS_CACHE_ENABLED, true);
 
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1");
-  writeInstallRDFForExtension(addon, profileDir);
-  startupManager();
+  await promiseWriteInstallRDFForExtension(addon, profileDir);
+  await promiseStartupManager();
 
   let a = await AddonManager.getAddonByID("addon@tests.mozilla.org");
   Assert.notEqual(a, null);
   Assert.equal(a.sourceURI, null);
 
   backgroundUpdate(async function() {
-    restartManager();
+    await promiseRestartManager();
 
     let a2 = await AddonManager.getAddonByID("addon@tests.mozilla.org");
     Assert.notEqual(a2, null);

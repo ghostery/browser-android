@@ -105,15 +105,12 @@ class Logging
         if (local == incoming) {
             JS::RootedObject obj(cx);
             obj = shared->objects_.find(id);
-            if (obj) {
-                JSAutoCompartment ac(cx, obj);
-                objDesc = js::ObjectClassName(cx, obj);
-            } else {
-                objDesc = "<dead object>";
-            }
+            obj = js::UncheckedUnwrap(obj, true);
 
+            JSAutoRealm ar(cx, obj);
+            objDesc = js::ObjectClassName(cx, obj);
             side = shared->isParent() ? "parent" : "child";
-            ptr = js::UncheckedUnwrap(obj, true);
+            ptr = obj;
         } else {
             objDesc = "<cpow>";
             side = shared->isParent() ? "child" : "parent";
@@ -168,10 +165,15 @@ class Logging
           }
           case JSVariant::TObjectVariant: {
               const ObjectVariant& ovar = value.get_ObjectVariant();
-              if (ovar.type() == ObjectVariant::TLocalObject)
-                  formatObject(incoming, true, ObjectId::deserialize(ovar.get_LocalObject().serializedId()), out);
-              else
-                  formatObject(incoming, false, ObjectId::deserialize(ovar.get_RemoteObject().serializedId()), out);
+              if (ovar.type() == ObjectVariant::TLocalObject) {
+                  Maybe<ObjectId> objId(ObjectId::deserialize(ovar.get_LocalObject().serializedId()));
+                  MOZ_RELEASE_ASSERT(objId.isSome());
+                  formatObject(incoming, true, objId.value(), out);
+              } else {
+                  Maybe<ObjectId> objId(ObjectId::deserialize(ovar.get_RemoteObject().serializedId()));
+                  MOZ_RELEASE_ASSERT(objId.isSome());
+                  formatObject(incoming, false, objId.value(), out);
+              }
               break;
           }
           case JSVariant::TSymbolVariant: {

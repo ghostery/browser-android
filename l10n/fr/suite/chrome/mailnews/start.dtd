@@ -24,6 +24,10 @@
 <!ENTITY dict_info.label
 'D’autres dictionnaires peuvent être installés depuis la section
 <a id="dictURL" href="">Dictionnaires</a> sur <a href="http://addons.mozilla.org/">&brandShortName; Add-ons</a>.'>
+<!ENTITY dict_info.label2
+'Il est possible d’installer un grand nombre de langues supplémentaires depuis la section
+<a id="dictURL" href="">dictionnaires</a> des
+<a href="https://addons.thunderbird.net/seamonkey/">modules pour SeaMonkey et Thunderbird</a>.'>
 <!ENTITY info.title "Plus d’informations">
 <!--# LOCALIZATION NOTE (info_bugs.label): the URL for <a id="releaseNotesURL"> is fetched from brand.properties -->
 <!ENTITY info_bugs.label

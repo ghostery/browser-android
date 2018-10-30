@@ -42,14 +42,18 @@ protected:
 
   virtual mozilla::ipc::IPCResult RecvGetCookieString(const URIParams& aHost,
                                                       const bool& aIsForeign,
+                                                      const bool& aIsTrackingResource,
+                                                      const bool& aFirstPartyStorageAccessGranted,
                                                       const bool& aIsSafeTopLevelNav,
                                                       const bool& aIsSameSiteForeign,
                                                       const OriginAttributes& aAttrs,
                                                       nsCString* aResult) override;
 
   virtual mozilla::ipc::IPCResult RecvSetCookieString(const URIParams& aHost,
-                                                      const URIParams& aChannelURI,
+                                                      const OptionalURIParams& aChannelURI,
                                                       const bool& aIsForeign,
+                                                      const bool& aIsTrackingResource,
+                                                      const bool& aFirstPartyStorageAccessGranted,
                                                       const nsCString& aCookieString,
                                                       const nsCString& aServerTime,
                                                       const OriginAttributes& aAttrs,
@@ -57,6 +61,8 @@ protected:
   virtual
   mozilla::ipc::IPCResult RecvPrepareCookieList(const URIParams &aHost,
                                                 const bool &aIsForeign,
+                                                const bool &aIsTackingResource,
+                                                const bool& aFirstPartyStorageAccessGranted,
                                                 const bool &aIsSafeTopLevelNav,
                                                 const bool &aIsSameSiteForeign,
                                                 const OriginAttributes &aAttrs) override;

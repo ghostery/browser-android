@@ -4,6 +4,7 @@
 "use strict";
 
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
+const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", {});
 
 const nsIPKCS11Slot = Ci.nsIPKCS11Slot;
 const nsIPKCS11Module = Ci.nsIPKCS11Module;
@@ -39,17 +40,9 @@ function doConfirm(msg) {
 }
 
 function RefreshDeviceList() {
-  let modules = secmoddb.listModules();
-  while (modules.hasMoreElements()) {
-    let module = modules.getNext().QueryInterface(nsIPKCS11Module);
-    let slotnames = [];
+  for (let module of secmoddb.listModules()) {
     let slots = module.listSlots();
-    while (slots.hasMoreElements()) {
-      let slot = slots.getNext().QueryInterface(nsIPKCS11Slot);
-      // Token names are preferred because NSS prefers lookup by token name.
-      slotnames.push(slot.tokenName ? slot.tokenName : slot.name);
-    }
-    AddModule(module.name, slotnames);
+    AddModule(module, slots);
   }
 
   // Set the text on the FIPS button.
@@ -79,25 +72,28 @@ function SetFIPSButton() {
  */
 function AddModule(module, slots) {
   var tree = document.getElementById("device_list");
-  var item  = document.createElement("treeitem");
-  var row  = document.createElement("treerow");
-  var cell = document.createElement("treecell");
-  cell.setAttribute("label", module);
+  var item  = document.createXULElement("treeitem");
+  var row  = document.createXULElement("treerow");
+  var cell = document.createXULElement("treecell");
+  cell.setAttribute("label", module.name);
   row.appendChild(cell);
   item.appendChild(row);
-  var parent = document.createElement("treechildren");
+  var parent = document.createXULElement("treechildren");
   for (let slot of slots) {
-    var child_item = document.createElement("treeitem");
-    var child_row = document.createElement("treerow");
-    var child_cell = document.createElement("treecell");
-    child_cell.setAttribute("label", slot);
+    var child_item = document.createXULElement("treeitem");
+    var child_row = document.createXULElement("treerow");
+    var child_cell = document.createXULElement("treecell");
+    child_cell.setAttribute("label", slot.name);
     child_row.appendChild(child_cell);
     child_item.appendChild(child_row);
     child_item.setAttribute("pk11kind", "slot");
+    // 'slot' is an attribute on any HTML element, hence 'slotObject' instead.
+    child_item.slotObject = slot;
     parent.appendChild(child_item);
   }
   item.appendChild(parent);
   item.setAttribute("pk11kind", "module");
+  item.module = module;
   item.setAttribute("open", "true");
   item.setAttribute("container", "true");
   tree.appendChild(item);
@@ -108,28 +104,19 @@ var selected_module;
 
 /* get the slot selected by the user (can only be one-at-a-time) */
 function getSelectedItem() {
-  var tree = document.getElementById("device_tree");
-  if (tree.currentIndex < 0) return;
-  var item = tree.contentView.getItemAtIndex(tree.currentIndex);
+  let tree = document.getElementById("device_tree");
+  if (tree.currentIndex < 0) {
+    return;
+  }
+  let item = tree.contentView.getItemAtIndex(tree.currentIndex);
   selected_slot = null;
   selected_module = null;
   if (item) {
-    var kind = item.getAttribute("pk11kind");
-    var module_name;
+    let kind = item.getAttribute("pk11kind");
     if (kind == "slot") {
-      // get the module cell for this slot cell
-      var cell = item.parentNode.parentNode.firstChild.firstChild;
-      module_name = cell.getAttribute("label");
-      var module = secmoddb.findModuleByName(module_name);
-      // get the cell for the selected row (the slot to display)
-      cell = item.firstChild.firstChild;
-      var slot_name = cell.getAttribute("label");
-      selected_slot = module.findSlotByName(slot_name);
+      selected_slot = item.slotObject;
     } else { // (kind == "module")
-      // get the cell for the selected row (the module to display)
-      cell = item.firstChild.firstChild;
-      module_name = cell.getAttribute("label");
-      selected_module = secmoddb.findModuleByName(module_name);
+      selected_module = item.module;
     }
   }
 }
@@ -270,13 +257,13 @@ function showModuleInfo() {
 // add a row to the info list, as [col1 col2] (ex.: ["status" "logged in"])
 function AddInfoRow(col1, col2, cell_id) {
   var tree = document.getElementById("info_list");
-  var item  = document.createElement("treeitem");
-  var row  = document.createElement("treerow");
-  var cell1 = document.createElement("treecell");
+  var item  = document.createXULElement("treeitem");
+  var row  = document.createXULElement("treerow");
+  var cell1 = document.createXULElement("treecell");
   cell1.setAttribute("label", col1);
   cell1.setAttribute("crop", "never");
   row.appendChild(cell1);
-  var cell2 = document.createElement("treecell");
+  var cell2 = document.createXULElement("treecell");
   cell2.setAttribute("label", col2);
   cell2.setAttribute("crop", "never");
   cell2.setAttribute("id", cell_id);
@@ -360,7 +347,9 @@ function changePassword() {
   getSelectedItem();
   let params = Cc[nsDialogParamBlock]
                  .createInstance(nsIDialogParamBlock);
-  params.SetString(1, selected_slot.tokenName);
+  let objects = Cc["@mozilla.org/array;1"].createInstance(Ci.nsIMutableArray);
+  objects.appendElement(selected_slot.getToken());
+  params.objects = objects;
   window.openDialog("changepassword.xul", "", "chrome,centerscreen,modal",
                     params);
   showSlotInfo();
@@ -372,7 +361,7 @@ function changePassword() {
 function showTokenInfo() {
   var selected_token = selected_slot.getToken();
   AddInfoRow(bundle.getString("devinfo_label"),
-             selected_token.tokenLabel, "tok_label");
+             selected_token.tokenName, "tok_label");
   AddInfoRow(bundle.getString("devinfo_manID"),
              selected_token.tokenManID, "tok_manID");
   AddInfoRow(bundle.getString("devinfo_serialnum"),

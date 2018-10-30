@@ -92,7 +92,7 @@ VRManagerParent::CreateForContent(Endpoint<PVRManagerParent>&& aEndpoint)
     "gfx::VRManagerParent::Bind",
     vmp,
     &VRManagerParent::Bind,
-    Move(aEndpoint)));
+    std::move(aEndpoint)));
 
   return true;
 }
@@ -137,7 +137,7 @@ VRManagerParent::CreateForGPUProcess(Endpoint<PVRManagerParent>&& aEndpoint)
     "gfx::VRManagerParent::Bind",
     vmp,
     &VRManagerParent::Bind,
-    Move(aEndpoint)));
+    std::move(aEndpoint)));
   return true;
 }
 
@@ -432,6 +432,22 @@ VRManagerParent::SendReplyGamepadVibrateHaptic(const uint32_t& aPromiseID)
   }
 
   return true;
+}
+
+mozilla::ipc::IPCResult
+VRManagerParent::RecvStartVRNavigation(const uint32_t& aDeviceID)
+{
+  VRManager* vm = VRManager::Get();
+  vm->StartVRNavigation(aDeviceID);
+  return IPC_OK();
+}
+
+mozilla::ipc::IPCResult
+VRManagerParent::RecvStopVRNavigation(const uint32_t& aDeviceID, const TimeDuration& aTimeout)
+{
+  VRManager* vm = VRManager::Get();
+  vm->StopVRNavigation(aDeviceID, aTimeout);
+  return IPC_OK();
 }
 
 } // namespace gfx

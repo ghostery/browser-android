@@ -124,7 +124,7 @@ PluginTag.prototype = {
   getMimeTypes(count) {
     count.value = this.mimeTypes.length;
     return this.mimeTypes;
-  }
+  },
 };
 
 // A container for the plugins handled by the fake plugin host.
@@ -140,13 +140,7 @@ var PluginHost = {
     return gInstalledPlugins.map(plugin => plugin.pluginTag);
   },
 
-  QueryInterface(iid) {
-    if (iid.equals(Ci.nsIPluginHost)
-     || iid.equals(Ci.nsISupports))
-      return this;
-
-    throw Cr.NS_ERROR_NO_INTERFACE;
-  }
+  QueryInterface: ChromeUtils.generateQI(["nsIPluginHost"]),
 };
 
 function registerFakePluginHost() {
@@ -176,13 +170,7 @@ var SysInfo = {
     return this._genuine.get(name);
   },
 
-  QueryInterface(iid) {
-    if (iid.equals(Ci.nsIPropertyBag2)
-     || iid.equals(Ci.nsISupports))
-      return this;
-
-    throw Cr.NS_ERROR_NO_INTERFACE;
-  }
+  QueryInterface: ChromeUtils.generateQI(["nsIPropertyBag2"]),
 };
 
 function registerFakeSysInfo() {
@@ -294,7 +282,7 @@ function spoofTheme(aId, aName, aDesc) {
     headerURL: "http://lwttest.invalid/a.png",
     footerURL: "http://lwttest.invalid/b.png",
     textcolor: Math.random().toString(),
-    accentcolor: Math.random().toString()
+    accentcolor: Math.random().toString(),
   };
 }
 
@@ -313,7 +301,7 @@ function spoofProfileReset() {
 
   return profileAccessor.writeTimes({
     created: PROFILE_CREATION_DATE_MS,
-    reset: PROFILE_RESET_DATE_MS
+    reset: PROFILE_RESET_DATE_MS,
   });
 }
 
@@ -412,13 +400,6 @@ function checkBuildSection(data) {
 
   // Make sure architecture is in the environment.
   Assert.ok(checkString(data.build.architecture));
-
-  if (gIsMac) {
-    let macUtils = Cc["@mozilla.org/xpcom/mac-utils;1"].getService(Ci.nsIMacUtils);
-    if (macUtils && macUtils.isUniversalBinary) {
-      Assert.ok(checkString(data.build.architecturesInBinary));
-    }
-  }
 
   Assert.equal(data.build.updaterAvailable, AppConstants.MOZ_UPDATER,
                "build.updaterAvailable must equal AppConstants.MOZ_UPDATER");
@@ -696,7 +677,7 @@ function checkSystemSection(data) {
 }
 
 function checkActiveAddon(data, partialRecord) {
-  let signedState = mozinfo.addon_signing ? "number" : "undefined";
+  let signedState = "number";
   // system add-ons have an undefined signState
   if (data.isSystem)
     signedState = "undefined";
@@ -895,6 +876,7 @@ add_task(async function setup() {
   // restarting the AddonManager.
   await AddonTestUtils.promiseShutdownManager();
   await AddonTestUtils.overrideBuiltIns({"system": []});
+  AddonTestUtils.addonStartup.remove(true);
   await AddonTestUtils.promiseStartupManager();
 
   // Register a fake plugin host for consistent flash version data.
@@ -1108,14 +1090,14 @@ add_task(async function test_addonsWatch_InterestingChange() {
 
   checkpointPromise = registerCheckpointPromise(2);
   let addon = await AddonManager.getAddonByID(ADDON_ID);
-  addon.userDisabled = true;
+  await addon.disable();
   await checkpointPromise;
   assertCheckpoint(2);
   Assert.ok(!(ADDON_ID in TelemetryEnvironment.currentEnvironment.addons.activeAddons));
 
   checkpointPromise = registerCheckpointPromise(3);
   let startupPromise = AddonTestUtils.promiseWebExtensionStartup(ADDON_ID);
-  addon.userDisabled = false;
+  await addon.enable();
   await checkpointPromise;
   assertCheckpoint(3);
   Assert.ok(ADDON_ID in TelemetryEnvironment.currentEnvironment.addons.activeAddons);
@@ -1236,7 +1218,7 @@ add_task(async function test_addonsAndPlugins() {
     hasBinaryComponents: false,
     installDay: ADDON_INSTALL_DATE,
     updateDay: ADDON_INSTALL_DATE,
-    signedState: mozinfo.addon_signing ? AddonManager.SIGNEDSTATE_PRIVILEGED : AddonManager.SIGNEDSTATE_NOT_REQUIRED,
+    signedState: AddonManager.SIGNEDSTATE_PRIVILEGED,
     isSystem: false,
     isWebExtension: true,
     multiprocessCompatible: true,
@@ -1276,7 +1258,7 @@ add_task(async function test_addonsAndPlugins() {
     hasBinaryComponents: false,
     installDay: WEBEXTENSION_ADDON_INSTALL_DATE,
     updateDay: WEBEXTENSION_ADDON_INSTALL_DATE,
-    signedState: mozinfo.addon_signing ? AddonManager.SIGNEDSTATE_PRIVILEGED : AddonManager.SIGNEDSTATE_NOT_REQUIRED,
+    signedState: AddonManager.SIGNEDSTATE_PRIVILEGED,
     isSystem: false,
     isWebExtension: true,
     multiprocessCompatible: true,
@@ -1371,7 +1353,7 @@ add_task(async function test_addonsAndPlugins() {
 
   // Uninstall the addon.
   await addon.startupPromise;
-  addon.uninstall();
+  await addon.uninstall();
 });
 
 add_task(async function test_signedAddon() {
@@ -1393,7 +1375,7 @@ add_task(async function test_signedAddon() {
     hasBinaryComponents: false,
     installDay: ADDON_INSTALL_DATE,
     updateDay: ADDON_INSTALL_DATE,
-    signedState: mozinfo.addon_signing ? AddonManager.SIGNEDSTATE_SIGNED : AddonManager.SIGNEDSTATE_NOT_REQUIRED,
+    signedState: AddonManager.SIGNEDSTATE_SIGNED,
   };
 
   let deferred = PromiseUtils.defer();
@@ -1418,7 +1400,7 @@ add_task(async function test_signedAddon() {
 
   AddonTestUtils.useRealCertChecks = false;
   await addon.startupPromise;
-  addon.uninstall();
+  await addon.uninstall();
 });
 
 add_task(async function test_addonsFieldsLimit() {
@@ -1449,7 +1431,7 @@ add_task(async function test_addonsFieldsLimit() {
                "The description string must have been limited");
 
   await addon.startupPromise;
-  addon.uninstall();
+  await addon.uninstall();
 });
 
 add_task(async function test_collectionWithbrokenAddonData() {
@@ -1478,8 +1460,7 @@ add_task(async function test_collectionWithbrokenAddonData() {
     hasBinaryComponents: false,
     installDay: ADDON_INSTALL_DATE,
     updateDay: ADDON_INSTALL_DATE,
-    signedState: mozinfo.addon_signing ? AddonManager.SIGNEDSTATE_MISSING :
-                                         AddonManager.SIGNEDSTATE_NOT_REQUIRED,
+    signedState: AddonManager.SIGNEDSTATE_MISSING,
   };
 
   let receivedNotifications = 0;
@@ -1532,7 +1513,7 @@ add_task(async function test_collectionWithbrokenAddonData() {
 
   // Uninstall the valid addon.
   await addon.startupPromise;
-  addon.uninstall();
+  await addon.uninstall();
 });
 
 add_task(async function test_defaultSearchEngine() {
@@ -1564,7 +1545,7 @@ add_task(async function test_defaultSearchEngine() {
     name: "telemetrySearchIdentifier",
     loadPath: "jar:[other]/searchTest.jar!testsearchplugin/telemetrySearchIdentifier.xml",
     origin: "default",
-    submissionURL: "http://ar.wikipedia.org/wiki/%D8%AE%D8%A7%D8%B5:%D8%A8%D8%AD%D8%AB?search=&sourceid=Mozilla-search"
+    submissionURL: "http://ar.wikipedia.org/wiki/%D8%AE%D8%A7%D8%B5:%D8%A8%D8%AD%D8%AB?search=&sourceid=Mozilla-search",
   };
   Assert.deepEqual(data.settings.defaultSearchEngineData, expectedSearchEngineData);
 
@@ -1603,7 +1584,7 @@ add_task(async function test_defaultSearchEngine() {
   const EXPECTED_SEARCH_ENGINE_DATA = {
     name: "telemetry_default",
     loadPath: "[other]addEngineWithDetails",
-    origin: "verified"
+    origin: "verified",
   };
   Assert.deepEqual(data.settings.defaultSearchEngineData, EXPECTED_SEARCH_ENGINE_DATA);
   TelemetryEnvironment.unregisterChangeListener("testWatch_SearchDefault");

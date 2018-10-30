@@ -12,6 +12,8 @@
 <!ENTITY accountTypeMail.accesskey "c">
 <!ENTITY accountTypeNews.label "Cuenta de noticias">
 <!ENTITY accountTypeNews.accesskey "n">
+<!ENTITY accountTypeMovemail.label "Archivo de correo Unix (Movemail)">
+<!ENTITY accountTypeMovemail.accesskey "A">
 <!ENTITY identityTitle.label "Identidad">
 <!ENTITY identityDesc.label "Cada cuenta tiene una identidad, que es la información que le identifica a usted ante otros cuando ellos reciben sus mensajes.">
 <!ENTITY fullnameDesc.label "Introduzca el nombre que quiere que aparezca en el campo &quot;De&quot; al enviar mensajes">

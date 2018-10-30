@@ -20,8 +20,8 @@
 
 #include "util/Text.h"
 #include "vm/BytecodeUtil.h"
-#include "vm/JSCompartment.h"
 #include "vm/JSScript.h"
+#include "vm/Realm.h"
 #include "vm/Runtime.h"
 #include "vm/Time.h"
 
@@ -63,8 +63,8 @@
 namespace js {
 namespace coverage {
 
-LCovSource::LCovSource(LifoAlloc* alloc, const char* name)
-  : name_(name),
+LCovSource::LCovSource(LifoAlloc* alloc, UniqueChars name)
+  : name_(std::move(name)),
     outFN_(alloc),
     outFNDA_(alloc),
     numFunctionsFound_(0),
@@ -80,7 +80,7 @@ LCovSource::LCovSource(LifoAlloc* alloc, const char* name)
 }
 
 LCovSource::LCovSource(LCovSource&& src)
-  : name_(src.name_),
+  : name_(std::move(src.name_)),
     outFN_(src.outFN_),
     outFNDA_(src.outFNDA_),
     numFunctionsFound_(src.numFunctionsFound_),
@@ -88,18 +88,12 @@ LCovSource::LCovSource(LCovSource&& src)
     outBRDA_(src.outBRDA_),
     numBranchesFound_(src.numBranchesFound_),
     numBranchesHit_(src.numBranchesHit_),
-    linesHit_(Move(src.linesHit_)),
+    linesHit_(std::move(src.linesHit_)),
     numLinesInstrumented_(src.numLinesInstrumented_),
     numLinesHit_(src.numLinesHit_),
     maxLineHit_(src.maxLineHit_),
     hasTopLevelScript_(src.hasTopLevelScript_)
 {
-    src.name_ = nullptr;
-}
-
-LCovSource::~LCovSource()
-{
-    js_delete(name_);
 }
 
 void
@@ -109,7 +103,7 @@ LCovSource::exportInto(GenericPrinter& out) const
     if (!hasTopLevelScript_)
         return;
 
-    out.printf("SF:%s\n", name_);
+    out.printf("SF:%s\n", name_.get());
 
     outFN_.exportInto(out);
     outFNDA_.exportInto(out);
@@ -120,7 +114,7 @@ LCovSource::exportInto(GenericPrinter& out) const
     out.printf("BRF:%zu\n", numBranchesFound_);
     out.printf("BRH:%zu\n", numBranchesHit_);
 
-    if (linesHit_.initialized()) {
+    if (!linesHit_.empty()) {
         for (size_t lineno = 1; lineno <= maxLineHit_; ++lineno) {
             if (auto p = linesHit_.lookup(lineno))
                 out.printf("DA:%zu,%" PRIu64 "\n", lineno, p->value());
@@ -146,11 +140,8 @@ LCovSource::writeScriptName(LSprinter& out, JSScript* script)
 bool
 LCovSource::writeScript(JSScript* script)
 {
-    if (!linesHit_.initialized() && !linesHit_.init())
-        return false;
-
     numFunctionsFound_++;
-    outFN_.printf("FN:%zu,", script->lineno());
+    outFN_.printf("FN:%u,", script->lineno());
     if (!writeScriptName(outFN_, script))
         return false;
     outFN_.put("\n", 1);
@@ -202,11 +193,11 @@ LCovSource::writeScript(JSScript* script)
             while (!SN_IS_TERMINATOR(sn) && snpc <= pc) {
                 SrcNoteType type = SN_TYPE(sn);
                 if (type == SRC_SETLINE)
-                    lineno = size_t(GetSrcNoteOffset(sn, 0));
+                    lineno = size_t(GetSrcNoteOffset(sn, SrcNote::SetLine::Line));
                 else if (type == SRC_NEWLINE)
                     lineno++;
                 else if (type == SRC_TABLESWITCH)
-                    tableswitchExitOffset = GetSrcNoteOffset(sn, 0);
+                    tableswitchExitOffset = GetSrcNoteOffset(sn, SrcNote::TableSwitch::EndOffset);
 
                 sn = SN_NEXT(sn);
                 snpc += SN_DELTA(sn);
@@ -455,7 +446,7 @@ LCovSource::writeScript(JSScript* script)
     return true;
 }
 
-LCovCompartment::LCovCompartment()
+LCovRealm::LCovRealm()
   : alloc_(4096),
     outTN_(&alloc_),
     sources_(nullptr)
@@ -463,8 +454,14 @@ LCovCompartment::LCovCompartment()
     MOZ_ASSERT(alloc_.isEmpty());
 }
 
+LCovRealm::~LCovRealm()
+{
+    if (sources_)
+        sources_->~LCovSourceVector();
+}
+
 void
-LCovCompartment::collectCodeCoverageInfo(JSCompartment* comp, JSScript* script, const char* name)
+LCovRealm::collectCodeCoverageInfo(JS::Realm* realm, JSScript* script, const char* name)
 {
     // Skip any operation if we already some out-of memory issues.
     if (outTN_.hadOutOfMemory())
@@ -474,7 +471,7 @@ LCovCompartment::collectCodeCoverageInfo(JSCompartment* comp, JSScript* script, 
         return;
 
     // Get the existing source LCov summary, or create a new one.
-    LCovSource* source = lookupOrAdd(comp, name);
+    LCovSource* source = lookupOrAdd(realm, name);
     if (!source)
         return;
 
@@ -486,12 +483,12 @@ LCovCompartment::collectCodeCoverageInfo(JSCompartment* comp, JSScript* script, 
 }
 
 LCovSource*
-LCovCompartment::lookupOrAdd(JSCompartment* comp, const char* name)
+LCovRealm::lookupOrAdd(JS::Realm* realm, const char* name)
 {
-    // On the first call, write the compartment name, and allocate a LCovSource
+    // On the first call, write the realm name, and allocate a LCovSource
     // vector in the LifoAlloc.
     if (!sources_) {
-        if (!writeCompartmentName(comp))
+        if (!writeRealmName(realm))
             return nullptr;
 
         LCovSourceVector* raw = alloc_.pod_malloc<LCovSourceVector>();
@@ -509,14 +506,14 @@ LCovCompartment::lookupOrAdd(JSCompartment* comp, const char* name)
         }
     }
 
-    char* source_name = js_strdup(name);
+    UniqueChars source_name = DuplicateString(name);
     if (!source_name) {
         outTN_.reportOutOfMemory();
         return nullptr;
     }
 
     // Allocate a new LCovSource for the current top-level.
-    if (!sources_->append(Move(LCovSource(&alloc_, source_name)))) {
+    if (!sources_->emplaceBack(&alloc_, std::move(source_name))) {
         outTN_.reportOutOfMemory();
         return nullptr;
     }
@@ -525,7 +522,7 @@ LCovCompartment::lookupOrAdd(JSCompartment* comp, const char* name)
 }
 
 void
-LCovCompartment::exportInto(GenericPrinter& out, bool* isEmpty) const
+LCovRealm::exportInto(GenericPrinter& out, bool* isEmpty) const
 {
     if (!sources_ || outTN_.hadOutOfMemory())
         return;
@@ -551,23 +548,24 @@ LCovCompartment::exportInto(GenericPrinter& out, bool* isEmpty) const
 }
 
 bool
-LCovCompartment::writeCompartmentName(JSCompartment* comp)
+LCovRealm::writeRealmName(JS::Realm* realm)
 {
     JSContext* cx = TlsContext.get();
 
     // lcov trace files are starting with an optional test case name, that we
-    // recycle to be a compartment name.
+    // recycle to be a realm name.
     //
     // Note: The test case name has some constraint in terms of valid character,
     // thus we escape invalid chracters with a "_" symbol in front of its
     // hexadecimal code.
     outTN_.put("TN:");
-    if (cx->runtime()->compartmentNameCallback) {
+    if (cx->runtime()->realmNameCallback) {
         char name[1024];
         {
             // Hazard analysis cannot tell that the callback does not GC.
             JS::AutoSuppressGCAnalysis nogc;
-            (*cx->runtime()->compartmentNameCallback)(cx, comp, name, sizeof(name));
+            Rooted<Realm*> rootedRealm(cx, realm);
+            (*cx->runtime()->realmNameCallback)(cx, rootedRealm, name, sizeof(name));
         }
         for (char *s = name; s < name + sizeof(name) && *s; s++) {
             if (('a' <= *s && *s <= 'z') ||
@@ -581,7 +579,7 @@ LCovCompartment::writeCompartmentName(JSCompartment* comp)
         }
         outTN_.put("\n", 1);
     } else {
-        outTN_.printf("Compartment_%p%p\n", (void*) size_t('_'), comp);
+        outTN_.printf("Realm_%p%p\n", (void*) size_t('_'), realm);
     }
 
     return !outTN_.hadOutOfMemory();
@@ -649,7 +647,7 @@ LCovRuntime::finishFile()
 }
 
 void
-LCovRuntime::writeLCovResult(LCovCompartment& comp)
+LCovRuntime::writeLCovResult(LCovRealm& realm)
 {
     if (!out_.isInitialized())
         return;
@@ -663,7 +661,7 @@ LCovRuntime::writeLCovResult(LCovCompartment& comp)
             return;
     }
 
-    comp.exportInto(out_, &isEmpty_);
+    realm.exportInto(out_, &isEmpty_);
     out_.flush();
 }
 

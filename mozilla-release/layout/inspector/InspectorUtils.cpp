@@ -17,7 +17,6 @@
 #include "nsIContentInlines.h"
 #include "nsIDocument.h"
 #include "nsIPresShell.h"
-#include "nsIDOMDocument.h"
 #include "nsIDOMWindow.h"
 #include "nsXBLBinding.h"
 #include "nsXBLPrototypeBinding.h"
@@ -31,7 +30,7 @@
 #include "mozilla/StyleSheetInlines.h"
 #include "mozilla/dom/CharacterData.h"
 #include "mozilla/dom/Element.h"
-#include "mozilla/dom/CSSLexer.h"
+#include "mozilla/dom/CSSStyleRule.h"
 #include "mozilla/dom/InspectorUtilsBinding.h"
 #include "mozilla/dom/ToJSValue.h"
 #include "nsCSSProps.h"
@@ -41,7 +40,6 @@
 #include "nsStyleUtil.h"
 #include "nsQueryObject.h"
 #include "mozilla/ServoBindings.h"
-#include "mozilla/ServoStyleRule.h"
 #include "mozilla/ServoStyleRuleMap.h"
 #include "mozilla/ServoCSSParser.h"
 #include "mozilla/dom/InspectorUtils.h"
@@ -50,8 +48,6 @@
 using namespace mozilla;
 using namespace mozilla::css;
 using namespace mozilla::dom;
-
-extern const char* const kCSSRawProperties[];
 
 namespace mozilla {
 namespace dom {
@@ -224,7 +220,7 @@ InspectorUtils::GetCSSStyleRules(GlobalObject& aGlobalObject,
 
   // Find matching rules in the table.
   for (const RawServoStyleRule* rawRule : Reversed(rawRuleList)) {
-    ServoStyleRule* rule = nullptr;
+    CSSStyleRule* rule = nullptr;
     for (ServoStyleRuleMap* map : maps) {
       rule = map->Lookup(rawRule);
       if (rule) {
@@ -234,7 +230,15 @@ InspectorUtils::GetCSSStyleRules(GlobalObject& aGlobalObject,
     if (rule) {
       aResult.AppendElement(rule);
     } else {
-      MOZ_ASSERT_UNREACHABLE("We should be able to map a raw rule to a rule");
+#ifdef DEBUG
+      nsAutoCString str;
+      fprintf(stderr, "%s\n", str.get());
+      Servo_StyleRule_Debug(rawRule, &str);
+      MOZ_CRASH_UNSAFE_PRINTF(
+        "We should be able to map a raw rule to a rule: %s\n",
+        str.get()
+      );
+#endif
     }
   }
 }
@@ -305,12 +309,6 @@ InspectorUtils::HasRulesModifiedByCSSOM(GlobalObject& aGlobal, StyleSheet& aShee
   return aSheet.HasModifiedRules();
 }
 
-/* static */ CSSLexer*
-InspectorUtils::GetCSSLexer(GlobalObject& aGlobal, const nsAString& aText)
-{
-  return new CSSLexer(aText);
-}
-
 /* static */ uint32_t
 InspectorUtils::GetSelectorCount(GlobalObject& aGlobal,
                                  BindingStyleRule& aRule)
@@ -373,8 +371,8 @@ InspectorUtils::GetCSSPropertyNames(GlobalObject& aGlobalObject,
   auto appendProperty = [enabledState, &aResult](uint32_t prop) {
     nsCSSPropertyID cssProp = nsCSSPropertyID(prop);
     if (nsCSSProps::IsEnabled(cssProp, enabledState)) {
-      nsDependentCString name(kCSSRawProperties[prop]);
-      aResult.AppendElement(NS_ConvertASCIItoUTF16(name));
+      aResult.AppendElement(NS_ConvertASCIItoUTF16(
+        nsCSSProps::GetStringValue(cssProp)));
     }
   };
 
@@ -400,13 +398,24 @@ InspectorUtils::GetCSSPropertyNames(GlobalObject& aGlobalObject,
 }
 
 /* static */ void
+InspectorUtils::GetCSSPropertyPrefs(GlobalObject& aGlobalObject,
+                                    nsTArray<PropertyPref>& aResult)
+{
+  for (const auto* src = nsCSSProps::kPropertyPrefTable;
+       src->mPropID != eCSSProperty_UNKNOWN; src++) {
+    PropertyPref& dest = *aResult.AppendElement();
+    dest.mName.Assign(NS_ConvertASCIItoUTF16(nsCSSProps::GetStringValue(src->mPropID)));
+    dest.mPref.AssignASCII(src->mPref);
+  }
+}
+
+/* static */ void
 InspectorUtils::GetSubpropertiesForCSSProperty(GlobalObject& aGlobal,
                                                const nsAString& aProperty,
                                                nsTArray<nsString>& aResult,
                                                ErrorResult& aRv)
 {
-  nsCSSPropertyID propertyID =
-    nsCSSProps::LookupProperty(aProperty, CSSEnabledState::eForAllContent);
+  nsCSSPropertyID propertyID = nsCSSProps::LookupProperty(aProperty);
 
   if (propertyID == eCSSProperty_UNKNOWN) {
     aRv.Throw(NS_ERROR_FAILURE);
@@ -618,10 +627,12 @@ InspectorUtils::GetCleanComputedStyleForElement(dom::Element* aElement,
 InspectorUtils::GetUsedFontFaces(GlobalObject& aGlobalObject,
                                  nsRange& aRange,
                                  uint32_t aMaxRanges,
+                                 bool aSkipCollapsedWhitespace,
                                  nsTArray<nsAutoPtr<InspectorFontFace>>& aResult,
                                  ErrorResult& aRv)
 {
-  nsresult rv = aRange.GetUsedFontFaces(aResult, aMaxRanges);
+  nsresult rv = aRange.GetUsedFontFaces(aResult, aMaxRanges,
+                                        aSkipCollapsedWhitespace);
   if (NS_FAILED(rv)) {
     aRv.Throw(rv);
   }
@@ -723,6 +734,27 @@ InspectorUtils::ScrollElementIntoView(GlobalObject& aGlobalObject,
                                    nsIPresShell::ScrollAxis(),
                                    nsIPresShell::ScrollAxis(),
                                    nsIPresShell::SCROLL_OVERFLOW_HIDDEN);
+}
+
+
+bool
+InspectorUtils::IsCustomElementName(GlobalObject&,
+                                    const nsAString& aName,
+                                    const nsAString& aNamespaceURI)
+{
+  if (aName.IsEmpty()) {
+    return false;
+  }
+
+  int32_t namespaceID;
+  nsContentUtils::NameSpaceManager()->RegisterNameSpace(
+    aNamespaceURI,
+    namespaceID);
+
+  RefPtr<nsAtom> nameElt = NS_Atomize(aName);
+  return nsContentUtils::IsCustomElementName(
+    nameElt,
+    namespaceID);
 }
 
 } // namespace dom

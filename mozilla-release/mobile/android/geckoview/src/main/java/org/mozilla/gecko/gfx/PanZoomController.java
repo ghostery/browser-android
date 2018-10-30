@@ -228,11 +228,6 @@ public final class PanZoomController extends JNIObject {
         } else if ((action == MotionEvent.ACTION_HOVER_MOVE) ||
                    (action == MotionEvent.ACTION_HOVER_ENTER) ||
                    (action == MotionEvent.ACTION_HOVER_EXIT)) {
-            if (event.getSource() == InputDevice.SOURCE_TOUCHSCREEN) {
-                // A hover is not possible on a touchscreen unless via accessibility
-                // and we handle that elsewhere.
-                return false;
-            }
             return handleMouseEvent(event);
         } else {
             return false;
@@ -275,13 +270,15 @@ public final class PanZoomController extends JNIObject {
             flushEventQueue();
         } else if (mAttached) {
             mAttached = false;
-            disposeNative();
             enableEventQueue();
         }
     }
 
-    @WrapForJNI(calledFrom = "ui", dispatchTo = "gecko") @Override // JNIObject
-    protected native void disposeNative();
+    @Override // JNIObject
+    protected void disposeNative() {
+        // Disposal happens in native code.
+        throw new UnsupportedOperationException();
+    }
 
     @WrapForJNI(stubName = "SetIsLongpressEnabled") // Called from test thread.
     private native void nativeSetIsLongpressEnabled(boolean isLongpressEnabled);

@@ -10,7 +10,7 @@
 <!ENTITY dateColumn.label "日期">
 <!ENTITY priorityColumn.label "优先">
 <!ENTITY tagsColumn.label "标签">
-<!ENTITY accountColumn.label "帐户">
+<!ENTITY accountColumn.label "账户">
 <!ENTITY statusColumn.label "状态">
 <!ENTITY sizeColumn.label "大小">
 <!ENTITY junkStatusColumn.label "垃圾状态">
@@ -21,8 +21,8 @@
 <!ENTITY flagColumn.label "标记">
 <!ENTITY locationColumn.label "位置">
 <!ENTITY idColumn.label "按接收时间排序">
-<!--Tooltips-->
 
+<!--Tooltips-->
 <!ENTITY columnChooser2.tooltip "选择要显示的列">
 <!ENTITY threadColumn2.tooltip "显示消息话题">
 <!ENTITY fromColumn2.tooltip "按发件人排序">

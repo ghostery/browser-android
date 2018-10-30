@@ -12,7 +12,7 @@
 #include "vm/GeneratorObject.h"
 #include "vm/GlobalObject.h"
 #include "vm/Interpreter.h"
-#include "vm/JSCompartment.h"
+#include "vm/Realm.h"
 #include "vm/SelfHosting.h"
 
 #include "vm/JSContext-inl.h"
@@ -34,17 +34,14 @@ WrappedAsyncGenerator(JSContext* cx, unsigned argc, Value* vp)
 
     RootedFunction wrapped(cx, &args.callee().as<JSFunction>());
     RootedValue unwrappedVal(cx, wrapped->getExtendedSlot(WRAPPED_ASYNC_UNWRAPPED_SLOT));
-    RootedFunction unwrapped(cx, &unwrappedVal.toObject().as<JSFunction>());
-    RootedValue thisValue(cx, args.thisv());
 
     // Step 1.
-    RootedValue generatorVal(cx);
     InvokeArgs args2(cx);
-    if (!args2.init(cx, argc))
+    if (!FillArgumentsFromArraylike(cx, args2, args))
         return false;
-    for (size_t i = 0, len = argc; i < len; i++)
-        args2[i].set(args[i]);
-    if (!Call(cx, unwrappedVal, thisValue, args2, &generatorVal))
+
+    RootedValue generatorVal(cx);
+    if (!Call(cx, unwrappedVal, args.thisv(), args2, &generatorVal))
         return false;
 
     // Step 2.
@@ -75,10 +72,9 @@ js::WrapAsyncGeneratorWithProto(JSContext* cx, HandleFunction unwrapped, HandleO
     if (!JSFunction::getLength(cx, unwrapped, &length))
         return nullptr;
 
-    RootedFunction wrapped(cx, NewFunctionWithProto(cx, WrappedAsyncGenerator, length,
-                                                    JSFunction::NATIVE_FUN, nullptr,
-                                                    funName, proto,
-                                                    AllocKind::FUNCTION_EXTENDED));
+    JSFunction* wrapped = NewFunctionWithProto(cx, WrappedAsyncGenerator, length,
+                                               JSFunction::NATIVE_FUN, nullptr, funName, proto,
+                                               AllocKind::FUNCTION_EXTENDED);
     if (!wrapped)
         return nullptr;
 
@@ -311,7 +307,7 @@ AsyncGeneratorObject::create(JSContext* cx, HandleFunction asyncGen, HandleValue
 /* static */ AsyncGeneratorRequest*
 AsyncGeneratorObject::createRequest(JSContext* cx, Handle<AsyncGeneratorObject*> asyncGenObj,
                                     CompletionKind completionKind, HandleValue completionValue,
-                                    HandleObject promise)
+                                    Handle<PromiseObject*> promise)
 {
     if (!asyncGenObj->hasCachedRequest())
         return AsyncGeneratorRequest::create(cx, completionKind, completionValue, promise);
@@ -381,7 +377,7 @@ const Class AsyncGeneratorRequest::class_ = {
 // Async Iteration proposal 11.4.3.1.
 /* static */ AsyncGeneratorRequest*
 AsyncGeneratorRequest::create(JSContext* cx, CompletionKind completionKind,
-                              HandleValue completionValue, HandleObject promise)
+                              HandleValue completionValue, Handle<PromiseObject*> promise)
 {
     AsyncGeneratorRequest* request = NewObjectWithGivenProto<AsyncGeneratorRequest>(cx, nullptr);
     if (!request)

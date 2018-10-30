@@ -22,8 +22,8 @@
 #include "vm/JSObject.h"
 #include "vm/JSScript.h"
 
-#include "vm/JSCompartment-inl.h"
 #include "vm/JSObject-inl.h"
+#include "vm/Realm-inl.h"
 
 using namespace js;
 using namespace js::jit;
@@ -154,6 +154,17 @@ CacheIRSpewer::valueProperty(const char* name, const Value& v)
     }
 
     j.endObject();
+}
+
+void
+CacheIRSpewer::opcodeProperty(const char* name, const JSOp op)
+{
+    MOZ_ASSERT(enabled());
+    JSONPrinter& j = json.ref();
+
+    j.beginStringProperty(name);
+    output.put(CodeName[op]);
+    j.endStringProperty();
 }
 
 void

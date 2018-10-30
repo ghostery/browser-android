@@ -53,8 +53,6 @@
 #include "nsThreadManager.h"
 #include "nsThreadPool.h"
 
-#include "xptinfo.h"
-
 #include "nsTimerImpl.h"
 #include "TimerThread.h"
 
@@ -105,11 +103,11 @@ extern nsresult nsStringInputStreamConstructor(nsISupports*, REFNSIID, void**);
 #include "nsSecurityConsoleMessage.h"
 #include "nsMessageLoop.h"
 #include "nss.h"
+#include "ssl.h"
 
 #include <locale.h>
 #include "mozilla/Services.h"
 #include "mozilla/Omnijar.h"
-#include "mozilla/HangMonitor.h"
 #include "mozilla/ScriptPreloader.h"
 #include "mozilla/SystemGroup.h"
 #include "mozilla/Telemetry.h"
@@ -370,7 +368,7 @@ private:
 
 NS_IMPL_ISUPPORTS(ICUReporter, nsIMemoryReporter)
 
-/* static */ template<> Atomic<size_t>
+/* static */ template<> CountingAllocatorBase<ICUReporter>::AmountType
 CountingAllocatorBase<ICUReporter>::sAmount(0);
 
 class OggReporter final
@@ -398,7 +396,7 @@ private:
 
 NS_IMPL_ISUPPORTS(OggReporter, nsIMemoryReporter)
 
-/* static */ template<> Atomic<size_t>
+/* static */ template<> CountingAllocatorBase<OggReporter>::AmountType
 CountingAllocatorBase<OggReporter>::sAmount(0);
 
 #ifdef MOZ_VPX
@@ -429,6 +427,50 @@ NS_IMPL_ISUPPORTS(VPXReporter, nsIMemoryReporter)
 /* static */ template<> Atomic<size_t>
 CountingAllocatorBase<VPXReporter>::sAmount(0);
 #endif /* MOZ_VPX */
+
+#ifdef ENABLE_BIGINT
+class GMPReporter final
+  : public nsIMemoryReporter
+  , public CountingAllocatorBase<GMPReporter>
+{
+public:
+  NS_DECL_ISUPPORTS
+
+  static void* Alloc(size_t size)
+  {
+    return CountingMalloc(size);
+  }
+
+  static void* Realloc(void* ptr, size_t oldSize, size_t newSize)
+  {
+    return CountingRealloc(ptr, newSize);
+  }
+
+  static void Free(void* ptr, size_t size)
+  {
+    return CountingFree(ptr);
+  }
+
+private:
+  NS_IMETHOD
+  CollectReports(nsIHandleReportCallback* aHandleReport, nsISupports* aData,
+                 bool aAnonymize) override
+  {
+    MOZ_COLLECT_REPORT(
+      "explicit/gmp", KIND_HEAP, UNITS_BYTES, MemoryAllocated(),
+      "Memory allocated through libgmp for BigInt arithmetic.");
+
+    return NS_OK;
+  }
+
+  ~GMPReporter() {}
+};
+
+NS_IMPL_ISUPPORTS(GMPReporter, nsIMemoryReporter)
+
+/* static */ template<> Atomic<size_t>
+CountingAllocatorBase<GMPReporter>::sAmount(0);
+#endif // ENABLE_BIGINT
 
 static bool sInitializedJS = false;
 
@@ -462,10 +504,6 @@ NS_InitXPCOM2(nsIServiceManager** aResult,
 
   // We are not shutting down
   gXPCOMShuttingDown = false;
-
-  // Initialize the available memory tracker before other threads have had a
-  // chance to start up, because the initialization is not thread-safe.
-  mozilla::AvailableMemoryTracker::Init();
 
 #ifdef XP_UNIX
   // Discover the current value of the umask, and save it where
@@ -639,6 +677,11 @@ NS_InitXPCOM2(nsIServiceManager** aResult,
                         memmove);
 #endif
 
+#ifdef ENABLE_BIGINT
+  // And for libgmp.
+  mozilla::SetGMPMemoryFunctions();
+#endif
+
   // Initialize the JS engine.
   const char* jsInitFailureReason = JS_InitWithFailureDiagnostic();
   if (jsInitFailureReason) {
@@ -673,7 +716,7 @@ NS_InitXPCOM2(nsIServiceManager** aResult,
 
   mozilla::ScriptPreloader::GetSingleton();
   mozilla::scache::StartupCache::GetSingleton();
-  mozilla::AvailableMemoryTracker::Activate();
+  mozilla::AvailableMemoryTracker::Init();
 
   // Notify observers of xpcom autoregistration start
   NS_CreateServicesFromCategory(NS_XPCOM_STARTUP_CATEGORY,
@@ -692,7 +735,6 @@ NS_InitXPCOM2(nsIServiceManager** aResult,
 
   mozilla::Telemetry::Init();
 
-  mozilla::HangMonitor::Startup();
   mozilla::BackgroundHangMonitor::Startup();
 
   const MessageLoop* const loop = MessageLoop::current();
@@ -751,7 +793,6 @@ NS_InitMinimalXPCOM()
 
   SharedThreadPool::InitStatics();
   mozilla::Telemetry::Init();
-  mozilla::HangMonitor::Startup();
   mozilla::BackgroundHangMonitor::Startup();
 
   return NS_OK;
@@ -799,11 +840,25 @@ SetICUMemoryFunctions()
   }
 }
 
+#ifdef ENABLE_BIGINT
+void
+SetGMPMemoryFunctions()
+{
+  static bool sGMPReporterInitialized = false;
+  if (!sGMPReporterInitialized) {
+    JS::SetGMPMemoryFunctions(GMPReporter::Alloc,
+                              GMPReporter::Realloc,
+                              GMPReporter::Free);
+    sGMPReporterInitialized = true;
+  }
+}
+#endif
+
 nsresult
 ShutdownXPCOM(nsIServiceManager* aServMgr)
 {
   // Make sure the hang monitor is enabled for shutdown.
-  HangMonitor::NotifyActivity();
+  BackgroundHangMonitor().NotifyActivity();
 
   if (!NS_IsMainThread()) {
     MOZ_CRASH("Shutdown on wrong thread");
@@ -876,7 +931,7 @@ ShutdownXPCOM(nsIServiceManager* aServMgr)
 
     NS_ProcessPendingEvents(thread);
 
-    HangMonitor::NotifyActivity();
+    BackgroundHangMonitor().NotifyActivity();
 
     // Late-write checks needs to find the profile directory, so it has to
     // be initialized before mozilla::services::Shutdown or (because of
@@ -983,6 +1038,7 @@ ShutdownXPCOM(nsIServiceManager* aServMgr)
   // down, any remaining objects that could be holding NSS resources (should)
   // have been released, so we can safely shut down NSS.
   if (NSS_IsInitialized()) {
+    SSL_ClearSessionCache();
     if (NSS_Shutdown() != SECSuccess) {
       // If you're seeing this crash and/or warning, some NSS resources are
       // still in use (see bugs 1417680 and 1230312).
@@ -1029,7 +1085,6 @@ ShutdownXPCOM(nsIServiceManager* aServMgr)
 
   Omnijar::CleanUp();
 
-  HangMonitor::Shutdown();
   BackgroundHangMonitor::Shutdown();
 
   delete sMainHangMonitor;

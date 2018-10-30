@@ -37,8 +37,15 @@
 #include "gc/Marking.h"
 #include "jit/Ion.h"
 #include "jit/PcScriptCache.h"
+#include "js/AutoByteString.h"
 #include "js/CharacterEncoding.h"
 #include "js/Printf.h"
+#ifdef JS_SIMULATOR_ARM64
+# include "jit/arm64/vixl/Simulator-vixl.h"
+#endif
+#ifdef JS_SIMULATOR_ARM
+# include "jit/arm/Simulator-arm.h"
+#endif
 #include "util/DoubleToString.h"
 #include "util/NativeStack.h"
 #include "util/Windows.h"
@@ -47,12 +54,13 @@
 #include "vm/HelperThreads.h"
 #include "vm/Iteration.h"
 #include "vm/JSAtom.h"
-#include "vm/JSCompartment.h"
 #include "vm/JSFunction.h"
 #include "vm/JSObject.h"
 #include "vm/JSScript.h"
+#include "vm/Realm.h"
 #include "vm/Shape.h"
 
+#include "vm/Compartment-inl.h"
 #include "vm/JSObject-inl.h"
 #include "vm/JSScript-inl.h"
 #include "vm/Stack-inl.h"
@@ -114,6 +122,10 @@ JSContext::init(ContextKind kind)
 #endif
 
         if (!wasm::EnsureSignalHandlers(this))
+            return false;
+    } else {
+        atomsZoneFreeLists_ = js_new<FreeLists>();
+        if (!atomsZoneFreeLists_)
             return false;
     }
 
@@ -256,24 +268,22 @@ ReportError(JSContext* cx, JSErrorReport* reportp, JSErrorCallback callback,
 static void
 PopulateReportBlame(JSContext* cx, JSErrorReport* report)
 {
-    JSCompartment* compartment = cx->compartment();
-    if (!compartment)
+    JS::Realm* realm = cx->realm();
+    if (!realm)
         return;
 
     /*
      * Walk stack until we find a frame that is associated with a non-builtin
      * rather than a builtin frame and which we're allowed to know about.
      */
-    NonBuiltinFrameIter iter(cx, compartment->principals());
+    NonBuiltinFrameIter iter(cx, realm->principals());
     if (iter.done())
         return;
 
     report->filename = iter.filename();
-    report->lineno = iter.computeLine(&report->column);
-    // XXX: Make the column 1-based as in other browsers, instead of 0-based
-    // which is how SpiderMonkey stores it internally. This will be
-    // unnecessary once bug 1144340 is fixed.
-    report->column++;
+    uint32_t column;
+    report->lineno = iter.computeLine(&column);
+    report->column = FixupColumnForDisplay(column);
     report->isMuted = iter.mutedErrors();
 }
 
@@ -297,6 +307,7 @@ js::ReportOutOfMemory(JSContext* cx)
      */
     fprintf(stderr, "ReportOutOfMemory called\n");
 #endif
+    mozilla::recordreplay::InvalidateRecording("OutOfMemory exception thrown");
 
     if (cx->helperThread())
         return cx->addPendingOutOfMemory();
@@ -308,7 +319,8 @@ js::ReportOutOfMemory(JSContext* cx)
     if (JS::OutOfMemoryCallback oomCallback = cx->runtime()->oomCallback)
         oomCallback(cx, cx->runtime()->oomCallbackData);
 
-    cx->setPendingException(StringValue(cx->names().outOfMemory));
+    RootedValue oomMessage(cx, StringValue(cx->names().outOfMemory));
+    cx->setPendingException(oomMessage);
 }
 
 mozilla::GenericErrorResult<OOM&>
@@ -332,6 +344,7 @@ js::ReportOverRecursed(JSContext* maybecx, unsigned errorNumber)
      */
     fprintf(stderr, "ReportOverRecursed called\n");
 #endif
+    mozilla::recordreplay::InvalidateRecording("OverRecursed exception thrown");
     if (maybecx) {
         if (!maybecx->helperThread()) {
             JS_ReportErrorNumberASCII(maybecx, GetErrorMessage, nullptr, errorNumber);
@@ -372,7 +385,7 @@ checkReportFlags(JSContext* cx, unsigned* flags)
 {
     if (JSREPORT_IS_STRICT(*flags)) {
         /* Warning/error only when JSOPTION_STRICT is set. */
-        if (!cx->compartment()->behaviors().extraWarnings(cx))
+        if (!cx->realm()->behaviors().extraWarnings(cx))
             return true;
     }
 
@@ -896,36 +909,26 @@ js::ReportIsNotDefined(JSContext* cx, HandlePropertyName name)
     ReportIsNotDefined(cx, id);
 }
 
-bool
-js::ReportIsNullOrUndefined(JSContext* cx, int spindex, HandleValue v,
-                            HandleString fallback)
+void
+js::ReportIsNullOrUndefined(JSContext* cx, int spindex, HandleValue v)
 {
-    bool ok;
+    MOZ_ASSERT(v.isNullOrUndefined());
 
-    UniqueChars bytes = DecompileValueGenerator(cx, spindex, v, fallback);
+    UniqueChars bytes = DecompileValueGenerator(cx, spindex, v, nullptr);
     if (!bytes)
-        return false;
+        return;
 
-    if (strcmp(bytes.get(), js_undefined_str) == 0 ||
-        strcmp(bytes.get(), js_null_str) == 0) {
-        ok = JS_ReportErrorFlagsAndNumberLatin1(cx, JSREPORT_ERROR,
-                                                GetErrorMessage, nullptr,
-                                                JSMSG_NO_PROPERTIES,
-                                                bytes.get());
+    if (strcmp(bytes.get(), js_undefined_str) == 0 || strcmp(bytes.get(), js_null_str) == 0) {
+        JS_ReportErrorNumberLatin1(cx, GetErrorMessage, nullptr, JSMSG_NO_PROPERTIES,
+                                   bytes.get());
     } else if (v.isUndefined()) {
-        ok = JS_ReportErrorFlagsAndNumberLatin1(cx, JSREPORT_ERROR,
-                                                GetErrorMessage, nullptr,
-                                                JSMSG_UNEXPECTED_TYPE,
-                                                bytes.get(), js_undefined_str);
+        JS_ReportErrorNumberLatin1(cx, GetErrorMessage, nullptr, JSMSG_UNEXPECTED_TYPE,
+                                   bytes.get(), js_undefined_str);
     } else {
         MOZ_ASSERT(v.isNull());
-        ok = JS_ReportErrorFlagsAndNumberLatin1(cx, JSREPORT_ERROR,
-                                                GetErrorMessage, nullptr,
-                                                JSMSG_UNEXPECTED_TYPE,
-                                                bytes.get(), js_null_str);
+        JS_ReportErrorNumberLatin1(cx, GetErrorMessage, nullptr, JSMSG_UNEXPECTED_TYPE,
+                                   bytes.get(), js_null_str);
     }
-
-    return ok;
 }
 
 void
@@ -951,18 +954,14 @@ js::ReportValueErrorFlags(JSContext* cx, unsigned flags, const unsigned errorNum
                           int spindex, HandleValue v, HandleString fallback,
                           const char* arg1, const char* arg2)
 {
-    UniqueChars bytes;
-    bool ok;
-
     MOZ_ASSERT(js_ErrorFormatString[errorNumber].argCount >= 1);
     MOZ_ASSERT(js_ErrorFormatString[errorNumber].argCount <= 3);
-    bytes = DecompileValueGenerator(cx, spindex, v, fallback);
+    UniqueChars bytes = DecompileValueGenerator(cx, spindex, v, fallback);
     if (!bytes)
         return false;
 
-    ok = JS_ReportErrorFlagsAndNumberLatin1(cx, flags, GetErrorMessage, nullptr, errorNumber,
-                                            bytes.get(), arg1, arg2);
-    return ok;
+    return JS_ReportErrorFlagsAndNumberLatin1(cx, flags, GetErrorMessage, nullptr, errorNumber,
+                                              bytes.get(), arg1, arg2);
 }
 
 JSObject*
@@ -1047,28 +1046,13 @@ InternalEnqueuePromiseJobCallback(JSContext* cx, JS::HandleObject job,
                                   JS::HandleObject incumbentGlobal, void* data)
 {
     MOZ_ASSERT(job);
-    return cx->jobQueue->append(job);
-}
-
-namespace {
-class MOZ_STACK_CLASS ReportExceptionClosure : public ScriptEnvironmentPreparer::Closure
-{
-  public:
-    explicit ReportExceptionClosure(HandleValue exn)
-        : exn_(exn)
-    {
-    }
-
-    bool operator()(JSContext* cx) override
-    {
-        cx->setPendingException(exn_);
+    JS::JobQueueMayNotBeEmpty(cx);
+    if (!cx->jobQueue->append(job)) {
+        ReportOutOfMemory(cx);
         return false;
     }
-
-  private:
-    HandleValue exn_;
-};
-} // anonymous namespace
+    return true;
+}
 
 JS_FRIEND_API(bool)
 js::UseInternalJobQueues(JSContext* cx)
@@ -1096,6 +1080,7 @@ JS_FRIEND_API(bool)
 js::EnqueueJob(JSContext* cx, JS::HandleObject job)
 {
     MOZ_ASSERT(cx->jobQueue);
+    JS::JobQueueMayNotBeEmpty(cx);
     if (!cx->jobQueue->append(job)) {
         ReportOutOfMemory(cx);
         return false;
@@ -1151,7 +1136,13 @@ js::RunJobs(JSContext* cx)
                 continue;
 
             cx->jobQueue->get()[i] = nullptr;
-            AutoCompartment ac(cx, job);
+
+            // If the next job is the last job in the job queue, allow
+            // skipping the standard job queuing behavior.
+            if (i == cx->jobQueue->length() - 1)
+                JS::JobQueueIsEmpty(cx);
+
+            AutoRealm ar(cx, &job->as<JSFunction>());
             {
                 if (!JS::Call(cx, UndefinedHandleValue, job, args, &rval)) {
                     // Nothing we can do about uncatchable exceptions.
@@ -1165,7 +1156,7 @@ js::RunJobs(JSContext* cx)
                          * have one.
                          */
                         cx->clearPendingException();
-                        ReportExceptionClosure reportExn(exn);
+                        js::ReportExceptionClosure reportExn(exn);
                         PrepareScriptEnvironmentAndInvoke(cx, cx->global(), reportExn);
                     }
                 }
@@ -1220,8 +1211,7 @@ JSContext::JSContext(JSRuntime* runtime, const JS::ContextOptions& options)
     kind_(ContextKind::HelperThread),
     helperThread_(nullptr),
     options_(options),
-    arenas_(nullptr),
-    enterCompartmentDepth_(0),
+    freeLists_(nullptr),
     jitActivation(nullptr),
     activation_(nullptr),
     profilingActivation_(nullptr),
@@ -1244,7 +1234,6 @@ JSContext::JSContext(JSRuntime* runtime, const JS::ContextOptions& options)
 #endif
     autoFlushICache_(nullptr),
     dtoaState(nullptr),
-    heapState(JS::HeapState::Idle),
     suppressGC(0),
 #ifdef DEBUG
     ionCompiling(false),
@@ -1264,7 +1253,6 @@ JSContext::JSContext(JSRuntime* runtime, const JS::ContextOptions& options)
     inUnsafeRegion(0),
     generationalDisabled(0),
     compactingDisabledCount(0),
-    keepAtoms(0),
     suppressProfilerSampling(false),
     tempLifoAlloc_((size_t)TEMP_LIFO_ALLOC_PRIMARY_CHUNK_SIZE),
     debuggerMutations(0),
@@ -1297,6 +1285,7 @@ JSContext::JSContext(JSRuntime* runtime, const JS::ContextOptions& options)
     jobQueue(nullptr),
     drainingJobQueue(false),
     stopDrainingJobQueue(false),
+    canSkipEnqueuingJobs(false),
     promiseRejectionTrackerCallback(nullptr),
     promiseRejectionTrackerCallbackData(nullptr)
 {
@@ -1319,8 +1308,6 @@ JSContext::~JSContext()
     /* Free the stuff hanging off of cx. */
     MOZ_ASSERT(!resolvingList);
 
-    js_delete(ionPcScriptCache.ref());
-
     if (dtoaState)
         DestroyDtoaState(dtoaState);
 
@@ -1335,6 +1322,8 @@ JSContext::~JSContext()
     if (traceLogger)
         DestroyTraceLogger(traceLogger);
 #endif
+
+    js_delete(atomsZoneFreeLists_.ref());
 
     MOZ_ASSERT(TlsContext.get() == this);
     TlsContext.set(nullptr);
@@ -1357,13 +1346,13 @@ JSContext::getPendingException(MutableHandleValue rval)
 {
     MOZ_ASSERT(throwing);
     rval.set(unwrappedException());
-    if (IsAtomsCompartment(compartment()))
+    if (zone()->isAtomsZone())
         return true;
     bool wasOverRecursed = overRecursed_;
     clearPendingException();
     if (!compartment()->wrap(this, rval))
         return false;
-    assertSameCompartment(this, rval);
+    this->check(rval);
     setPendingException(rval);
     overRecursed_ = wasOverRecursed;
     return true;
@@ -1478,14 +1467,22 @@ JSContext::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const
     return cycleDetectorVector().sizeOfExcludingThis(mallocSizeOf);
 }
 
+#ifdef DEBUG
+bool
+JSContext::inAtomsZone() const
+{
+    return zone_->isAtomsZone();
+}
+#endif
+
 void
 JSContext::trace(JSTracer* trc)
 {
     cycleDetectorVector().trace(trc);
     geckoProfiler().trace(trc);
 
-    if (trc->isMarkingTracer() && compartment_)
-        compartment_->mark();
+    if (trc->isMarkingTracer() && realm_)
+        realm_->mark();
 }
 
 void*
@@ -1545,7 +1542,7 @@ JS::AutoCheckRequestDepth::AutoCheckRequestDepth(JSContext* cxArg)
   : cx(cxArg->helperThread() ? nullptr : cxArg)
 {
     if (cx) {
-        MOZ_ASSERT(cx->requestDepth || JS::CurrentThreadIsHeapBusy());
+        MOZ_ASSERT(cx->requestDepth || JS::RuntimeHeapIsBusy());
         MOZ_ASSERT(CurrentThreadCanAccessRuntime(cx->runtime()));
         cx->checkRequestDepth++;
     }
@@ -1563,17 +1560,10 @@ JS::AutoCheckRequestDepth::~AutoCheckRequestDepth()
 
 #ifdef JS_CRASH_DIAGNOSTICS
 void
-CompartmentChecker::check(InterpreterFrame* fp)
-{
-    if (fp)
-        check(fp->environmentChain());
-}
-
-void
-CompartmentChecker::check(AbstractFramePtr frame)
+ContextChecks::check(AbstractFramePtr frame, int argIndex)
 {
     if (frame)
-        check(frame.environmentChain());
+        check(frame.realm(), argIndex);
 }
 #endif
 

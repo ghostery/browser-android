@@ -325,7 +325,7 @@ nsInlineFrame::Reflow(nsPresContext*          aPresContext,
     return;
   }
 
-  bool    lazilySetParentPointer = false;
+  bool lazilySetParentPointer = false;
 
    // Check for an overflow list with our prev-in-flow
   nsInlineFrame* prevInFlow = (nsInlineFrame*)GetPrevInFlow();
@@ -380,12 +380,7 @@ nsInlineFrame::Reflow(nsPresContext*          aPresContext,
   }
 #endif
   if (!(GetStateBits() & NS_FRAME_FIRST_REFLOW)) {
-    DrainFlags flags =
-      lazilySetParentPointer ? eDontReparentFrames : DrainFlags(0);
-    if (aReflowInput.mLineLayout->GetInFirstLine()) {
-      flags = DrainFlags(flags | eInFirstLine);
-    }
-    DrainSelfOverflowListInternal(flags);
+    DrainSelfOverflowListInternal(aReflowInput.mLineLayout->GetInFirstLine());
   }
 
   // Set our own reflow state (additional state above and beyond aReflowInput).
@@ -399,8 +394,7 @@ nsInlineFrame::Reflow(nsPresContext*          aPresContext,
   if (mFrames.IsEmpty()) {
     // Try to pull over one frame before starting so that we know
     // whether we have an anonymous block or not.
-    bool complete;
-    (void) PullOneFrame(aPresContext, irs, &complete);
+    Unused << PullOneFrame(aPresContext, irs);
   }
 
   ReflowFrames(aPresContext, aReflowInput, irs, aMetrics, aStatus);
@@ -436,30 +430,27 @@ nsInlineFrame::AttributeChanged(int32_t aNameSpaceID,
 }
 
 bool
-nsInlineFrame::DrainSelfOverflowListInternal(DrainFlags aFlags)
+nsInlineFrame::DrainSelfOverflowListInternal(bool aInFirstLine)
 {
   AutoFrameListPtr overflowFrames(PresContext(), StealOverflowFrames());
-  if (overflowFrames) {
-    // The frames on our own overflowlist may have been pushed by a
-    // previous lazilySetParentPointer Reflow so we need to ensure the
-    // correct parent pointer.  This is sometimes skipped by Reflow.
-    if (!(aFlags & eDontReparentFrames)) {
-      nsIFrame* firstChild = overflowFrames->FirstChild();
-      const bool doReparentSC = (aFlags & eInFirstLine);
-      RestyleManager* restyleManager = PresContext()->RestyleManager();
-      for (nsIFrame* f = firstChild; f; f = f->GetNextSibling()) {
-        f->SetParent(this);
-        if (doReparentSC) {
-          restyleManager->ReparentComputedStyleForFirstLine(f);
-          nsLayoutUtils::MarkDescendantsDirty(f);
-        }
-      }
-    }
-    bool result = !overflowFrames->IsEmpty();
-    mFrames.AppendFrames(nullptr, *overflowFrames);
-    return result;
+  if (!overflowFrames || overflowFrames->IsEmpty()) {
+    return false;
   }
-  return false;
+
+  // The frames on our own overflowlist may have been pushed by a
+  // previous lazilySetParentPointer Reflow so we need to ensure the
+  // correct parent pointer.  This is sometimes skipped by Reflow.
+  nsIFrame* firstChild = overflowFrames->FirstChild();
+  RestyleManager* restyleManager = PresContext()->RestyleManager();
+  for (nsIFrame* f = firstChild; f; f = f->GetNextSibling()) {
+    f->SetParent(this);
+    if (MOZ_UNLIKELY(aInFirstLine)) {
+      restyleManager->ReparentComputedStyleForFirstLine(f);
+      nsLayoutUtils::MarkDescendantsDirty(f);
+    }
+  }
+  mFrames.AppendFrames(nullptr, *overflowFrames);
+  return true;
 }
 
 /* virtual */ bool
@@ -468,14 +459,14 @@ nsInlineFrame::DrainSelfOverflowList()
   nsIFrame* lineContainer = nsLayoutUtils::FindNearestBlockAncestor(this);
   // Add the eInFirstLine flag if we have a ::first-line ancestor frame.
   // No need to look further than the nearest line container though.
-  DrainFlags flags = DrainFlags(0);
+  bool inFirstLine = false;
   for (nsIFrame* p = GetParent(); p != lineContainer; p = p->GetParent()) {
     if (p->IsLineFrame()) {
-      flags = DrainFlags(flags | eInFirstLine);
+      inFirstLine = true;
       break;
     }
   }
-  return DrainSelfOverflowListInternal(flags);
+  return DrainSelfOverflowListInternal(inFirstLine);
 }
 
 /* virtual */ bool
@@ -628,19 +619,14 @@ nsInlineFrame::ReflowFrames(nsPresContext* aPresContext,
   if (!done && GetNextInFlow()) {
     while (true) {
       bool reflowingFirstLetter = lineLayout->GetFirstLetterStyleOK();
-      bool isComplete;
       if (!frame) { // Could be non-null if we pulled a first-letter frame and
                     // it created a continuation, since we don't push those.
-        frame = PullOneFrame(aPresContext, irs, &isComplete);
+        frame = PullOneFrame(aPresContext, irs);
       }
 #ifdef NOISY_PUSHING
       printf("%p pulled up %p\n", this, frame);
 #endif
-      if (nullptr == frame) {
-        if (!isComplete) {
-          aStatus.Reset();
-          aStatus.SetIncomplete();
-        }
+      if (!frame) {
         break;
       }
       ReflowInlineFrame(aPresContext, aReflowInput, irs, frame, aStatus);
@@ -711,6 +697,24 @@ nsInlineFrame::ReflowFrames(nsPresContext* aPresContext,
 #endif
 }
 
+// Returns whether there's any remaining frame to pull.
+/* static */ bool
+nsInlineFrame::HasFramesToPull(nsInlineFrame* aNextInFlow)
+{
+  while (aNextInFlow) {
+    if (!aNextInFlow->mFrames.IsEmpty()) {
+      return true;
+    }
+    if (const nsFrameList* overflow = aNextInFlow->GetOverflowFrames()) {
+      if (!overflow->IsEmpty()) {
+        return true;
+      }
+    }
+    aNextInFlow = static_cast<nsInlineFrame*>(aNextInFlow->GetNextInFlow());
+  }
+  return false;
+}
+
 void
 nsInlineFrame::ReflowInlineFrame(nsPresContext* aPresContext,
                                  const ReflowInput& aReflowInput,
@@ -752,17 +756,11 @@ nsInlineFrame::ReflowInlineFrame(nsPresContext* aPresContext,
     if (nextFrame) {
       aStatus.SetIncomplete();
       PushFrames(aPresContext, nextFrame, aFrame, irs);
-    }
-    else {
+    } else {
       // We must return an incomplete status if there are more child
       // frames remaining in a next-in-flow that follows this frame.
-      nsInlineFrame* nextInFlow = static_cast<nsInlineFrame*>(GetNextInFlow());
-      while (nextInFlow) {
-        if (nextInFlow->mFrames.NotEmpty()) {
-          aStatus.SetIncomplete();
-          break;
-        }
-        nextInFlow = static_cast<nsInlineFrame*>(nextInFlow->GetNextInFlow());
+      if (HasFramesToPull(static_cast<nsInlineFrame*>(GetNextInFlow()))) {
+        aStatus.SetIncomplete();
       }
     }
     return;
@@ -777,14 +775,15 @@ nsInlineFrame::ReflowInlineFrame(nsPresContext* aPresContext,
 }
 
 nsIFrame*
-nsInlineFrame::PullOneFrame(nsPresContext* aPresContext,
-                            InlineReflowInput& irs,
-                            bool* aIsComplete)
+nsInlineFrame::PullOneFrame(nsPresContext* aPresContext, InlineReflowInput& irs)
 {
-  bool isComplete = true;
-
   nsIFrame* frame = nullptr;
   nsInlineFrame* nextInFlow = irs.mNextInFlow;
+
+#ifdef DEBUG
+  bool willPull = HasFramesToPull(nextInFlow);
+#endif
+
   while (nextInFlow) {
     frame = nextInFlow->mFrames.FirstChild();
     if (!frame) {
@@ -814,13 +813,13 @@ nsInlineFrame::PullOneFrame(nsPresContext* aPresContext,
         // The blockChildren.ContainsFrame check performed by
         // ReparentFloatsForInlineChild will be fast because frame's ancestor
         // will be the first child of its containing block.
-        ReparentFloatsForInlineChild(irs.mLineContainer, frame, false);
+        ReparentFloatsForInlineChild(irs.mLineContainer, frame, false,
+                                     ReparentingDirection::Backwards);
       }
       nextInFlow->mFrames.RemoveFirstChild();
       // nsFirstLineFrame::PullOneFrame calls ReparentComputedStyle.
 
       mFrames.InsertFrame(this, irs.mPrevFrame, frame);
-      isComplete = false;
       if (irs.mLineLayout) {
         irs.mLineLayout->SetDirtyNextLine();
       }
@@ -831,7 +830,7 @@ nsInlineFrame::PullOneFrame(nsPresContext* aPresContext,
     irs.mNextInFlow = nextInFlow;
   }
 
-  *aIsComplete = isComplete;
+  MOZ_ASSERT(!!frame == willPull);
   return frame;
 }
 
@@ -960,7 +959,7 @@ nsInlineFrame::UpdateStyleOfOwnedAnonBoxesForIBSplit(
   // ComputedStyle.
   RefPtr<ComputedStyle> newContext =
     aRestyleState.StyleSet().ResolveInheritingAnonymousBoxStyle(
-      nsCSSAnonBoxes::mozBlockInsideInlineWrapper, ourStyle);
+      nsCSSAnonBoxes::mozBlockInsideInlineWrapper(), ourStyle);
 
   // We're guaranteed that newContext only differs from the old ComputedStyle on
   // the block in things they might inherit from us.  And changehint processing
@@ -973,7 +972,7 @@ nsInlineFrame::UpdateStyleOfOwnedAnonBoxesForIBSplit(
                "Must be first continuation");
 
     MOZ_ASSERT(blockFrame->Style()->GetPseudo() ==
-               nsCSSAnonBoxes::mozBlockInsideInlineWrapper,
+               nsCSSAnonBoxes::mozBlockInsideInlineWrapper(),
                "Unexpected kind of ComputedStyle");
 
     // We don't want to just walk through using GetNextContinuationWithSameStyle
@@ -1019,13 +1018,13 @@ nsFirstLineFrame::Init(nsIContent*       aContent,
 {
   nsInlineFrame::Init(aContent, aParent, aPrevInFlow);
   if (!aPrevInFlow) {
-    MOZ_ASSERT(Style()->GetPseudo() == nsCSSPseudoElements::firstLine);
+    MOZ_ASSERT(Style()->GetPseudo() == nsCSSPseudoElements::firstLine());
     return;
   }
 
   // This frame is a continuation - fixup the computed style if aPrevInFlow
   // is the first-in-flow (the only one with a ::first-line pseudo).
-  if (aPrevInFlow->Style()->GetPseudo() == nsCSSPseudoElements::firstLine) {
+  if (aPrevInFlow->Style()->GetPseudo() == nsCSSPseudoElements::firstLine()) {
     MOZ_ASSERT(FirstInFlow() == aPrevInFlow);
     // Create a new ComputedStyle that is a child of the parent
     // ComputedStyle thus removing the ::first-line style. This way
@@ -1033,13 +1032,13 @@ nsFirstLineFrame::Init(nsIContent*       aContent,
     // of the parent frame.
     ComputedStyle* parentContext = aParent->Style();
     RefPtr<ComputedStyle> newSC = PresContext()->StyleSet()->
-      ResolveInheritingAnonymousBoxStyle(nsCSSAnonBoxes::mozLineFrame,
+      ResolveInheritingAnonymousBoxStyle(nsCSSAnonBoxes::mozLineFrame(),
                                          parentContext);
     SetComputedStyle(newSC);
   } else {
     MOZ_ASSERT(FirstInFlow() != aPrevInFlow);
     MOZ_ASSERT(aPrevInFlow->Style()->GetPseudo() ==
-                 nsCSSAnonBoxes::mozLineFrame);
+                 nsCSSAnonBoxes::mozLineFrame());
   }
 }
 
@@ -1052,10 +1051,10 @@ nsFirstLineFrame::GetFrameName(nsAString& aResult) const
 #endif
 
 nsIFrame*
-nsFirstLineFrame::PullOneFrame(nsPresContext* aPresContext, InlineReflowInput& irs,
-                               bool* aIsComplete)
+nsFirstLineFrame::PullOneFrame(nsPresContext* aPresContext,
+                               InlineReflowInput& irs)
 {
-  nsIFrame* frame = nsInlineFrame::PullOneFrame(aPresContext, irs, aIsComplete);
+  nsIFrame* frame = nsInlineFrame::PullOneFrame(aPresContext, irs);
   if (frame && !GetPrevInFlow()) {
     // We are a first-line frame. Fixup the child frames
     // style-context that we just pulled.
@@ -1106,8 +1105,7 @@ nsFirstLineFrame::Reflow(nsPresContext* aPresContext,
   if (wasEmpty) {
     // Try to pull over one frame before starting so that we know
     // whether we have an anonymous block or not.
-    bool complete;
-    PullOneFrame(aPresContext, irs, &complete);
+    PullOneFrame(aPresContext, irs);
   }
 
   if (nullptr == GetPrevInFlow()) {
@@ -1119,8 +1117,7 @@ nsFirstLineFrame::Reflow(nsPresContext* aPresContext,
     // All of this is so that text-runs reflow properly.
     irs.mPrevFrame = mFrames.LastChild();
     for (;;) {
-      bool complete;
-      nsIFrame* frame = PullOneFrame(aPresContext, irs, &complete);
+      nsIFrame* frame = PullOneFrame(aPresContext, irs);
       if (!frame) {
         break;
       }

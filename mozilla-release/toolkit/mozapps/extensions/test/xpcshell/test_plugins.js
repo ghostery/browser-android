@@ -20,7 +20,7 @@ function setTestPluginState(state) {
   throw Error("No plugin tag found for the test plugin");
 }
 
-function run_test() {
+async function run_test() {
   do_test_pending();
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
   Services.prefs.setBoolPref("plugins.click_to_play", true);
@@ -28,7 +28,7 @@ function run_test() {
 
   setTestPluginState(Ci.nsIPluginTag.STATE_CLICKTOPLAY);
 
-  startupManager();
+  await promiseStartupManager();
   AddonManager.addAddonListener(AddonListener);
   AddonManager.addInstallListener(InstallListener);
 
@@ -37,9 +37,7 @@ function run_test() {
 
 // Finds the test plugin library
 function get_test_plugin() {
-  var pluginEnum = Services.dirsvc.get("APluginsDL", Ci.nsISimpleEnumerator);
-  while (pluginEnum.hasMoreElements()) {
-    let dir = pluginEnum.getNext().QueryInterface(Ci.nsIFile);
+  for (let dir of Services.dirsvc.get("APluginsDL", Ci.nsISimpleEnumerator)) {
     let plugin = dir.clone();
     // OSX plugin
     plugin.append("npswftest.plugin");
@@ -63,19 +61,6 @@ function get_test_plugin() {
     }
   }
   return null;
-}
-
-function getFileSize(aFile) {
-  if (!aFile.isDirectory())
-    return aFile.fileSize;
-
-  let size = 0;
-  let entries = aFile.directoryEntries.QueryInterface(Ci.nsIDirectoryEnumerator);
-  let entry;
-  while ((entry = entries.nextFile))
-    size += getFileSize(entry);
-  entries.close();
-  return size;
 }
 
 function getPluginLastModifiedTime(aPluginFile) {
@@ -123,8 +108,6 @@ async function run_test_1() {
   Assert.equal(p.blocklistState, 0);
   Assert.equal(p.permissions, AddonManager.PERM_CAN_DISABLE | AddonManager.PERM_CAN_ENABLE);
   Assert.equal(p.pendingOperations, 0);
-  Assert.ok(p.size > 0);
-  Assert.equal(p.size, getFileSize(testPlugin));
   Assert.ok(p.updateDate > 0);
   Assert.ok("isCompatibleWith" in p);
   Assert.ok("findUpdates" in p);
@@ -142,11 +125,11 @@ async function run_test_2(p) {
   test[gID] = [
     ["onDisabling", false],
     "onDisabled",
-    ["onPropertyChanged", ["userDisabled"]]
+    ["onPropertyChanged", ["userDisabled"]],
   ];
   prepare_test(test);
 
-  p.userDisabled = true;
+  await p.disable();
 
   ensure_test_completed();
 
@@ -169,11 +152,11 @@ async function run_test_3(p) {
   let test = {};
   test[gID] = [
     ["onEnabling", false],
-    "onEnabled"
+    "onEnabled",
   ];
   prepare_test(test);
 
-  p.userDisabled = false;
+  await p.enable();
 
   ensure_test_completed();
 
@@ -193,7 +176,7 @@ async function run_test_3(p) {
 
 // Verify that after a restart the test plugin has the same ID
 async function run_test_4() {
-  restartManager();
+  await promiseRestartManager();
 
   let p = await AddonManager.getAddonByID(gID);
   Assert.notEqual(p, null);

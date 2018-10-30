@@ -28,14 +28,15 @@ function run_test() {
     /this is undefined/,
     "closeAllListeners should throw if createRootActor hasn't been added");
 
-  DebuggerServer.registerModule("xpcshell-test/testactors");
+  const { createRootActor } = require("xpcshell-test/testactors");
+  DebuggerServer.setRootActor(createRootActor);
 
   // Now they should work.
   DebuggerServer.createListener();
   DebuggerServer.closeAllListeners();
 
   // Make sure we got the test's root actor all set up.
-  let client1 = DebuggerServer.connectPipe();
+  const client1 = DebuggerServer.connectPipe();
   client1.hooks = {
     onPacket: function(packet1) {
       Assert.equal(packet1.from, "root");
@@ -43,7 +44,7 @@ function run_test() {
 
       // Spin up a second connection, make sure it has its own root
       // actor.
-      let client2 = DebuggerServer.connectPipe();
+      const client2 = DebuggerServer.connectPipe();
       client2.hooks = {
         onPacket: function(packet2) {
           Assert.equal(packet2.from, "root");

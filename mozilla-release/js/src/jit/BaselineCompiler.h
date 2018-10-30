@@ -217,6 +217,7 @@ namespace jit {
     _(JSOP_INITIALYIELD)       \
     _(JSOP_YIELD)              \
     _(JSOP_AWAIT)              \
+    _(JSOP_TRYSKIPAWAIT)       \
     _(JSOP_DEBUGAFTERYIELD)    \
     _(JSOP_FINALYIELDRVAL)     \
     _(JSOP_RESUME)             \
@@ -256,7 +257,8 @@ namespace jit {
     _(JSOP_OBJWITHPROTO)       \
     _(JSOP_FUNWITHPROTO)       \
     _(JSOP_CLASSCONSTRUCTOR)   \
-    _(JSOP_DERIVEDCONSTRUCTOR)
+    _(JSOP_DERIVEDCONSTRUCTOR) \
+    _(JSOP_IMPORTMETA)
 
 class BaselineCompiler : public BaselineCompilerSpecific
 {

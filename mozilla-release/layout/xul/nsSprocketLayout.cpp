@@ -301,7 +301,7 @@ nsSprocketLayout::XULLayout(nsIFrame* aBox, nsBoxLayoutState& aState)
       // If for some reason, our lists are not the same length, we guard
       // by bailing out of the loop.
       if (childBoxSize == nullptr) {
-        NS_NOTREACHED("Lists not the same length.");
+        MOZ_ASSERT_UNREACHABLE("Lists not the same length.");
         break;
       }
 
@@ -912,8 +912,8 @@ nsSprocketLayout::AlignChildren(nsIFrame* aBox,
   nsRect clientRect;
   aBox->GetXULClientRect(clientRect);
 
-  NS_PRECONDITION(!(frameState & NS_STATE_AUTO_STRETCH),
-                  "Only AlignChildren() with non-stretch alignment");
+  MOZ_ASSERT(!(frameState & NS_STATE_AUTO_STRETCH),
+             "Only AlignChildren() with non-stretch alignment");
 
   // These are only calculated if needed
   nsIFrame::Halignment halign;

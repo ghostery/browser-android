@@ -12,10 +12,11 @@ const DEFAULT_FAVICON_TAB = `data:text/html,<meta%20charset="utf-8"><title>No%20
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/Timer.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://testing-common/TestUtils.jsm");
 ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
 
-Cu.importGlobalProperties(["InspectorUtils"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["InspectorUtils"]);
 
 var Tabs = {
   init(libDir) {},
@@ -39,13 +40,21 @@ var Tabs = {
       async applyConfig() {
         fiveTabsHelper();
         let browserWindow = Services.wm.getMostRecentWindow("navigator:browser");
-        let tab = browserWindow.gBrowser.addTab(PREFS_TAB);
+        let tab = browserWindow.gBrowser.addTab(PREFS_TAB, {
+          triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
+        });
         browserWindow.gBrowser.pinTab(tab);
-        tab = browserWindow.gBrowser.addTab(CUST_TAB);
+        tab = browserWindow.gBrowser.addTab(CUST_TAB, {
+          triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
+        });
         browserWindow.gBrowser.pinTab(tab);
-        tab = browserWindow.gBrowser.addTab("about:privatebrowsing");
+        tab = browserWindow.gBrowser.addTab("about:privatebrowsing", {
+          triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
+        });
         browserWindow.gBrowser.pinTab(tab);
-        tab = browserWindow.gBrowser.addTab("about:home");
+        tab = browserWindow.gBrowser.addTab("about:home", {
+          triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
+        });
         browserWindow.gBrowser.pinTab(tab);
         browserWindow.gBrowser.selectTabAtIndex(5);
         hoverTab(browserWindow.gBrowser.tabs[2]);
@@ -103,7 +112,7 @@ var Tabs = {
          {
            inBackground: true,
            replace: true,
-           triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal()
+           triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
         });
         browserWindow.gBrowser.pinTab(browserWindow.gBrowser.tabs[1]);
         browserWindow.gBrowser.pinTab(browserWindow.gBrowser.tabs[2]);
@@ -132,7 +141,7 @@ async function allTabTitlesDisplayed(browserWindow) {
     "about:home": "New Tab",
     "about:newtab": "New Tab",
     "about:addons": "Add-ons Manager",
-    "about:privatebrowsing": "about:privatebrowsing"
+    "about:privatebrowsing": "about:privatebrowsing",
   };
   specToTitleMap[PREFS_TAB] = "browser/skin/settings.svg";
   specToTitleMap[CUST_TAB] = "browser/skin/customize.svg";
@@ -171,7 +180,7 @@ function fiveTabsHelper() {
   {
     inBackground: true,
     replace: true,
-    triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal()
+    triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
   });
   browserWindow.gBrowser.selectTabAtIndex(1);
 }

@@ -86,7 +86,7 @@
 <!ENTITY reorderAttachmentsCmd.key "x">
 <!ENTITY toggleAttachmentPaneCmd.label "Lista załączników">
 <!ENTITY toggleAttachmentPaneCmd.accesskey "a">
-<!ENTITY toggleAttachmentPaneCmd.key "a">
+<!ENTITY toggleAttachmentPaneCmd.key "m">
 <!ENTITY selectAllCmd.label "Zaznacz wszystko">
 <!ENTITY selectAllCmd.accesskey "a">
 <!ENTITY selectAllCmd.key "A">
@@ -217,7 +217,6 @@
 <!ENTITY sendlaterButton.tooltip "Wyślij tę wiadomość później">
 <!ENTITY quoteButton.tooltip "Zacytuj poprzednią wiadomość">
 <!ENTITY addressButton.tooltip "Wybierz adresata z książki adresowej">
-<!ENTITY attachButton.tooltip "Dodaj pliki do tej wiadomości">
 <!ENTITY attachButton.tooltip2 "Dodaj pliki do tej wiadomości">
 <!ENTITY spellingButton.tooltip "Sprawdź pisownię zaznaczonego fragmentu lub całej wiadomości">
 <!ENTITY saveButton.tooltip "Zapisz wiadomość jako">
@@ -313,6 +312,8 @@
 
 <!ENTITY customizeFromAddress.label "Dostosuj adres nadawcy…">
 <!ENTITY customizeFromAddress.accesskey "D">
+
+<!ENTITY aria.message.bodyName "Treść wiadomości">
 
 <!ENTITY languageStatusButton.tooltip "Język sprawdzania pisowni">
 <!ENTITY encodingStatusPanel.tooltip "Kodowanie tekstu">

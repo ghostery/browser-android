@@ -3,11 +3,9 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "附加元件管理員">
 
-<!ENTITY search.placeholder                   "搜尋所有附加元件">
-
 <!ENTITY search.placeholder2                  "在 addons.mozilla.org 搜尋">
 <!ENTITY search.buttonlabel                   "搜尋">
-<!-- LOCALIZATION NOTE (search.commandKey):
+<!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
 <!ENTITY search.commandkey                    "f">
 
@@ -16,7 +14,6 @@
 <!ENTITY listEmpty.availableUpdates.label     "找不到更新">
 <!ENTITY listEmpty.recentUpdates.label        "您最近沒有更新任何附加元件">
 <!ENTITY listEmpty.findUpdates.label          "檢查更新">
-<!ENTITY listEmpty.search.label               "找不到任何符合您搜尋條件的附加元件">
 <!ENTITY listEmpty.button.label               "取得更多有關附加元件的消息">
 <!ENTITY installAddonFromFile.label           "從檔案安裝附加元件…">
 <!ENTITY installAddonFromFile.accesskey       "I">
@@ -25,13 +22,10 @@
 <!ENTITY getThemes.description                "想要個人化您的瀏覽器嗎？">
 <!ENTITY getThemes.learnMore                  "從數以千計的佈景主題挑選一套。">
 
-<!ENTITY cmd.back.tooltip                     "回到上一頁">
-<!ENTITY cmd.forward.tooltip                  "前進下一頁">
-
 
 <!ENTITY showUnsignedExtensions.button.label  "無法驗證某些擴充套件">
 <!ENTITY showAllExtensions.button.label       "顯示所有擴充套件">
-<!ENTITY debugAddons.label                    "附加元件除錯">
+<!ENTITY debugAddons.label                    "對附加元件除錯">
 <!ENTITY debugAddons.accesskey                "B">
 
 <!-- global warnings -->
@@ -44,7 +38,6 @@
 <!ENTITY warning.updatesecurity.enable.tooltip     "啟用附加元件更新安全檢查">
 
 <!-- categories / views -->
-<!ENTITY view.search.label                    "搜尋">
 <!ENTITY view.discover.label                  "取得元件">
 <!ENTITY view.recentUpdates.label             "最近的更新">
 <!ENTITY view.availableUpdates.label          "可用的更新">
@@ -87,8 +80,6 @@
 <!ENTITY cmd.preferencesWin.accesskey         "O">
 <!ENTITY cmd.preferencesUnix.label            "偏好設定">
 <!ENTITY cmd.preferencesUnix.accesskey        "P">
-<!ENTITY cmd.about.label                      "關於">
-<!ENTITY cmd.about.accesskey                  "A">
 
 <!ENTITY cmd.enableAddon.label                "啟用">
 <!ENTITY cmd.enableAddon.accesskey            "E">
@@ -137,7 +128,6 @@
 <!ENTITY detail.lastupdated.label             "最近更新時間">
 <!ENTITY detail.creator.label                 "開發者">
 <!ENTITY detail.homepage.label                "網站首頁">
-<!ENTITY detail.numberOfDownloads.label       "下載次數">
 
 <!ENTITY detail.contributions.description     "這個元件的開發者希望您透過小小的捐獻協助其後續開發。">
 
@@ -169,23 +159,6 @@
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "暫停">
 <!ENTITY progress.cancel.tooltip              "取消">
-
-
-<!-- list sorting -->
-<!ENTITY sort.name.label                      "名稱">
-<!ENTITY sort.name.tooltip                    "以名稱排序">
-<!ENTITY sort.dateUpdated.label               "最近更新時間">
-<!ENTITY sort.dateUpdated.tooltip             "以更新日期排序">
-<!ENTITY sort.relevance.label                 "最佳結果">
-<!ENTITY sort.relevance.tooltip               "依照相關程度排序">
-<!ENTITY sort.price.label                     "價格">
-<!ENTITY sort.price.tooltip                   "以價格排序">
-
-<!ENTITY search.filter2.label                 "搜尋:">
-<!ENTITY search.filter2.installed.label       "我的附加元件">
-<!ENTITY search.filter2.installed.tooltip     "顯示已安裝的附加元件">
-<!ENTITY search.filter2.available.label       "可用的附加元件">
-<!ENTITY search.filter2.available.tooltip     "顯示可安裝的附加元件">
 
 <!ENTITY addon.homepage                       "網站首頁">
 <!ENTITY addon.details.label                  "更多資訊">
@@ -228,17 +201,6 @@
 <!ENTITY eula.accept                          "接受並安裝…">
 
 <!ENTITY settings.path.button.label           "瀏覽…">
-
-<!-- LOCALIZATION NOTE (experiment.info.label): The strings related to
-     experiments are present on the "Experiments" tab of the add-ons manager.
-     This tab won't be displayed unless an Experiment add-on is installed.
-     Install https://people.mozilla.org/~gszorc/dummy-experiment-addon.xpi
-     to cause this tab to appear. -->
-<!ENTITY experiment.info.label "這是什麼？Telemetry 會不定時安裝執行實驗內容。">
-<!ENTITY experiment.info.learnmore "更多資訊">
-<!ENTITY experiment.info.learnmore.accesskey "L">
-<!ENTITY experiment.info.changetelemetry "Telemetry 選項">
-<!ENTITY experiment.info.changetelemetry.accesskey "T">
 
 <!ENTITY setting.learnmore "更多資訊…">
 

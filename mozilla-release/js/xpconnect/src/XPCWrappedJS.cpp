@@ -183,7 +183,7 @@ NS_IMETHODIMP
 nsXPCWrappedJS::QueryInterface(REFNSIID aIID, void** aInstancePtr)
 {
     if (nullptr == aInstancePtr) {
-        NS_PRECONDITION(false, "null pointer");
+        MOZ_ASSERT(false, "null pointer");
         return NS_ERROR_NULL_POINTER;
     }
 
@@ -301,6 +301,7 @@ nsXPCWrappedJS::TraceJS(JSTracer* trc)
 {
     MOZ_ASSERT(mRefCnt >= 2 && IsValid(), "must be strongly referenced");
     JS::TraceEdge(trc, &mJSObj, "nsXPCWrappedJS::mJSObj");
+    JS::TraceEdge(trc, &mJSObjGlobal, "nsXPCWrappedJS::mJSObjGlobal");
 }
 
 NS_IMETHODIMP
@@ -318,9 +319,16 @@ nsXPCWrappedJS::GetJSObject()
     return mJSObj;
 }
 
+JSObject*
+nsXPCWrappedJS::GetJSObjectGlobal()
+{
+    return mJSObjGlobal;
+}
+
 // static
 nsresult
-nsXPCWrappedJS::GetNewOrUsed(JS::HandleObject jsObj,
+nsXPCWrappedJS::GetNewOrUsed(JSContext* cx,
+                             JS::HandleObject jsObj,
                              REFNSIID aIID,
                              nsXPCWrappedJS** wrapperResult)
 {
@@ -328,7 +336,7 @@ nsXPCWrappedJS::GetNewOrUsed(JS::HandleObject jsObj,
     MOZ_RELEASE_ASSERT(NS_IsMainThread(),
                        "nsXPCWrappedJS::GetNewOrUsed called off main thread");
 
-    AutoJSContext cx;
+    MOZ_RELEASE_ASSERT(js::GetContextCompartment(cx) == js::GetObjectCompartment(jsObj));
 
     bool allowNonScriptable = mozilla::jsipc::IsWrappedCPOW(jsObj);
     RefPtr<nsXPCWrappedJSClass> clasp = nsXPCWrappedJSClass::GetNewOrUsed(cx, aIID,
@@ -369,13 +377,17 @@ nsXPCWrappedJS::GetNewOrUsed(JS::HandleObject jsObj,
         if (!rootClasp)
             return NS_ERROR_FAILURE;
 
-        root = new nsXPCWrappedJS(cx, rootJSObj, rootClasp, nullptr, &rv);
+        // Note: rootJSObj is never a CCW because GetRootJSObject unwraps. We
+        // also rely on this in nsXPCWrappedJS::UpdateObjectPointerAfterGC.
+        RootedObject global(cx, JS::GetNonCCWObjectGlobal(rootJSObj));
+        root = new nsXPCWrappedJS(cx, rootJSObj, global, rootClasp, nullptr, &rv);
         if (NS_FAILED(rv)) {
             return rv;
         }
     }
 
-    RefPtr<nsXPCWrappedJS> wrapper = new nsXPCWrappedJS(cx, jsObj, clasp, root, &rv);
+    RootedObject global(cx, JS::CurrentGlobalOrNull(cx));
+    RefPtr<nsXPCWrappedJS> wrapper = new nsXPCWrappedJS(cx, jsObj, global, clasp, root, &rv);
     if (NS_FAILED(rv)) {
         return rv;
     }
@@ -385,14 +397,20 @@ nsXPCWrappedJS::GetNewOrUsed(JS::HandleObject jsObj,
 
 nsXPCWrappedJS::nsXPCWrappedJS(JSContext* cx,
                                JSObject* aJSObj,
+                               JSObject* aJSObjGlobal,
                                nsXPCWrappedJSClass* aClass,
                                nsXPCWrappedJS* root,
                                nsresult* rv)
     : mJSObj(aJSObj),
+      mJSObjGlobal(aJSObjGlobal),
       mClass(aClass),
       mRoot(root ? root : this),
       mNext(nullptr)
 {
+    MOZ_ASSERT(JS_IsGlobalObject(aJSObjGlobal));
+    MOZ_RELEASE_ASSERT(js::GetObjectCompartment(aJSObj) ==
+                       js::GetObjectCompartment(aJSObjGlobal));
+
     *rv = InitStub(GetClass()->GetIID());
     // Continue even in the failure case, so that our refcounting/Destroy
     // behavior works correctly.
@@ -438,7 +456,7 @@ XPCJSRuntime::RemoveWrappedJS(nsXPCWrappedJS* wrapper)
         return;
 
     // It is possible for the same JS XPCOM implementation object to be wrapped
-    // with a different interface in multiple JSCompartments. In this case, the
+    // with a different interface in multiple JS::Compartments. In this case, the
     // wrapper chain will contain references to multiple compartments. While we
     // always store single-compartment chains in the per-compartment wrapped-js
     // table, chains in the multi-compartment wrapped-js table may contain
@@ -455,7 +473,7 @@ XPCJSRuntime::RemoveWrappedJS(nsXPCWrappedJS* wrapper)
 
 #ifdef DEBUG
 static void
-NotHasWrapperAssertionCallback(JSContext* cx, void* data, JSCompartment* comp)
+NotHasWrapperAssertionCallback(JSContext* cx, void* data, JS::Compartment* comp)
 {
     auto wrapper = static_cast<nsXPCWrappedJS*>(data);
     auto xpcComp = xpc::CompartmentPrivate::Get(comp);
@@ -503,6 +521,7 @@ nsXPCWrappedJS::Unlink()
         }
 
         mJSObj = nullptr;
+        mJSObjGlobal = nullptr;
     }
 
     if (IsRootWrapper()) {
@@ -544,7 +563,7 @@ bool
 nsXPCWrappedJS::IsMultiCompartment() const
 {
     MOZ_ASSERT(IsRootWrapper());
-    JSCompartment* compartment = Compartment();
+    JS::Compartment* compartment = Compartment();
     nsXPCWrappedJS* next = mNext;
     while (next) {
         if (next->Compartment() != compartment)
@@ -614,7 +633,7 @@ nsXPCWrappedJS::CallMethod(uint16_t methodIndex,
 NS_IMETHODIMP
 nsXPCWrappedJS::GetInterfaceIID(nsIID** iid)
 {
-    NS_PRECONDITION(iid, "bad param");
+    MOZ_ASSERT(iid, "bad param");
 
     *iid = GetIID().Clone();
     return NS_OK;
@@ -640,6 +659,7 @@ nsXPCWrappedJS::SystemIsBeingShutDown()
     // if we are not currently running an incremental GC.
     MOZ_ASSERT(!IsIncrementalGCInProgress(xpc_GetSafeJSContext()));
     *mJSObj.unsafeGet() = nullptr;
+    *mJSObjGlobal.unsafeGet() = nullptr;
 
     // Notify other wrappers in the chain.
     if (mNext)
@@ -675,7 +695,8 @@ nsXPCWrappedJS::GetEnumerator(nsISimpleEnumerator * *aEnumerate)
     if (!ccx.IsValid())
         return NS_ERROR_UNEXPECTED;
 
-    return nsXPCWrappedJSClass::BuildPropertyEnumerator(ccx, GetJSObject(),
+    RootedObject scope(cx, GetJSObjectGlobal());
+    return nsXPCWrappedJSClass::BuildPropertyEnumerator(ccx, GetJSObject(), scope,
                                                         aEnumerate);
 }
 
@@ -687,8 +708,9 @@ nsXPCWrappedJS::GetProperty(const nsAString & name, nsIVariant** _retval)
     if (!ccx.IsValid())
         return NS_ERROR_UNEXPECTED;
 
+    RootedObject scope(cx, GetJSObjectGlobal());
     return nsXPCWrappedJSClass::
-        GetNamedPropertyAsVariant(ccx, GetJSObject(), name, _retval);
+        GetNamedPropertyAsVariant(ccx, GetJSObject(), scope, name, _retval);
 }
 
 /***************************************************************************/

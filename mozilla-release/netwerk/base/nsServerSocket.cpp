@@ -44,6 +44,15 @@ nsServerSocket::nsServerSocket()
   , mAttached(false)
   , mKeepWhenOffline(false)
 {
+  this->mAddr.raw.family = 0;
+  this->mAddr.inet.family = 0;
+  this->mAddr.inet.port = 0;
+  this->mAddr.inet.ip = 0;
+  this->mAddr.ipv6.family = 0;
+  this->mAddr.ipv6.port = 0;
+  this->mAddr.ipv6.flowinfo = 0;
+  this->mAddr.ipv6.scope_id = 0;
+  this->mAddr.local.family = 0;
   // we want to be able to access the STS directly, and it may not have been
   // constructed yet.  the STS constructor sets gSocketTransportService.
   if (!gSocketTransportService)
@@ -305,6 +314,29 @@ nsServerSocket::InitWithFilename(nsIFile *aPath, uint32_t aPermissions, int32_t 
     return rv;
 
   return aPath->SetPermissions(aPermissions);
+#else
+  return NS_ERROR_SOCKET_ADDRESS_NOT_SUPPORTED;
+#endif
+}
+
+NS_IMETHODIMP
+nsServerSocket::InitWithAbstractAddress(const nsACString& aName,
+                                        int32_t aBacklog)
+{
+  // Abstract socket address is supported on Linux and Android only.
+  // If not Linux, we should return error.
+#if defined(XP_LINUX)
+  // Create an abstract socket address PRNetAddr referring to the name
+  PRNetAddr addr;
+  if (aName.Length() > sizeof(addr.local.path) - 2) {
+    return NS_ERROR_FILE_NAME_TOO_LONG;
+  }
+  addr.local.family = PR_AF_LOCAL;
+  addr.local.path[0] = 0;
+  memcpy(addr.local.path + 1, aName.BeginReading(), aName.Length());
+  addr.local.path[aName.Length() + 1] = 0;
+
+  return InitWithAddress(&addr, aBacklog);
 #else
   return NS_ERROR_SOCKET_ADDRESS_NOT_SUPPORTED;
 #endif

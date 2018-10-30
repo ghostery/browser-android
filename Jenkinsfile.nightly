@@ -11,7 +11,7 @@ def matrix = [
         'arch': 'x86',
         'brand': 'cliqz',
         'channel': 'MA02',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
     ],
     'Ghostery ARM':[
         'arch': 'arm',
@@ -23,7 +23,7 @@ def matrix = [
         'arch': 'x86',
         'brand': 'ghostery',
         'channel': 'MA52',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
     ],
     'Bond ARM':[
         'arch': 'arm',
@@ -35,7 +35,7 @@ def matrix = [
         'arch': 'x86',
         'brand': 'bond',
         'channel': 'MA62',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
     ],
     'Cliqz Alpha':[
         'arch': 'arm',
@@ -138,8 +138,6 @@ def build(Map m){
                                 xargs wget --quiet -O /app/distribution/assets/distribution/extensions/firefox@ghostery.com.xpi
                             cd /app/mozilla-release
                             cp ../mozconfigs/deploy.mozconfig mozconfig
-                            export HOST_CC=$CLANG_HOME/bin/clang
-                            export HOST_CXX=$CLANG_HOME/bin/clang++
                             ./mach clobber
                             ./mach build
                             export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`

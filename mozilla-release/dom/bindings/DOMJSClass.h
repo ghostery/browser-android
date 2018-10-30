@@ -7,7 +7,9 @@
 #ifndef mozilla_dom_DOMJSClass_h
 #define mozilla_dom_DOMJSClass_h
 
+#include "jsapi.h"
 #include "jsfriendapi.h"
+#include "js/Wrapper.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/Likely.h"
@@ -42,13 +44,13 @@ namespace dom {
  *
  * Since we want [SecureContext] exposure to depend on the privileges of the
  * running code (rather than the privileges of an object's creator), this
- * function checks to see whether the given JSContext's Compartment is flagged
+ * function checks to see whether the given JSContext's Realm is flagged
  * as a Secure Context.  That allows us to make sure that system principal code
  * (which is marked as a Secure Context) can access Secure Context API on an
- * object in a different compartment, regardless of whether the other
- * compartment is a Secure Context or not.
+ * object in a different realm, regardless of whether the other realm is a
+ * Secure Context or not.
  *
- * Checking the JSContext's Compartment doesn't work for expanded principal
+ * Checking the JSContext's Realm doesn't work for expanded principal
  * globals accessing a Secure Context web page though (e.g. those used by frame
  * scripts).  To handle that we fall back to checking whether the JSObject came
  * from a Secure Context.
@@ -60,8 +62,9 @@ namespace dom {
 inline bool
 IsSecureContextOrObjectIsFromSecureContext(JSContext* aCx, JSObject* aObj)
 {
-  return JS::CompartmentCreationOptionsRef(js::GetContextCompartment(aCx)).secureContext() ||
-         JS::CompartmentCreationOptionsRef(js::GetObjectCompartment(aObj)).secureContext();
+  MOZ_ASSERT(!js::IsWrapper(aObj));
+  return JS::GetIsSecureContext(js::GetContextRealm(aCx)) ||
+         JS::GetIsSecureContext(js::GetNonCCWObjectRealm(aObj));
 }
 
 typedef bool
@@ -104,6 +107,7 @@ static const uint32_t SharedWorkerGlobalScope = 1u << 3;
 static const uint32_t ServiceWorkerGlobalScope = 1u << 4;
 static const uint32_t WorkerDebuggerGlobalScope = 1u << 5;
 static const uint32_t WorkletGlobalScope = 1u << 6;
+static const uint32_t AudioWorkletGlobalScope = 1u << 7;
 } // namespace GlobalNames
 
 struct PrefableDisablers {
@@ -118,7 +122,7 @@ struct PrefableDisablers {
     // globals; our IDL parser enforces that.  So as long as we check our
     // exposure set before checking "enabled" we will be ok.
     if (nonExposedGlobals &&
-        IsNonExposedGlobal(cx, js::GetGlobalForObjectCrossCompartment(obj),
+        IsNonExposedGlobal(cx, JS::GetNonCCWObjectGlobal(obj),
                            nonExposedGlobals)) {
       return false;
     }
@@ -128,8 +132,7 @@ struct PrefableDisablers {
     if (secureContext && !IsSecureContextOrObjectIsFromSecureContext(cx, obj)) {
       return false;
     }
-    if (enabledFunc &&
-        !enabledFunc(cx, js::GetGlobalForObjectCrossCompartment(obj))) {
+    if (enabledFunc && !enabledFunc(cx, JS::GetNonCCWObjectGlobal(obj))) {
       return false;
     }
     return true;
@@ -154,6 +157,7 @@ struct PrefableDisablers {
 template<typename T>
 struct Prefable {
   inline bool isEnabled(JSContext* cx, JS::Handle<JSObject*> obj) const {
+    MOZ_ASSERT(!js::IsWrapper(obj));
     if (MOZ_LIKELY(!disablers)) {
       return true;
     }
@@ -186,7 +190,11 @@ enum PropertyType {
 #define NUM_BITS_PROPERTY_INFO_SPEC_INDEX 16
 
 struct PropertyInfo {
-  jsid id;
+private:
+  // MSVC generates static initializers if we store a jsid here, even if
+  // PropertyInfo has a constexpr constructor. See bug 1460341 and bug 1464036.
+  uintptr_t mIdBits;
+public:
   // One of PropertyType, will be used for accessing the corresponding Duo in
   // NativePropertiesN.duos[].
   uint32_t type: NUM_BITS_PROPERTY_INFO_TYPE;
@@ -194,6 +202,14 @@ struct PropertyInfo {
   uint32_t prefIndex: NUM_BITS_PROPERTY_INFO_PREF_INDEX;
   // The index to the corresponding spec in Duo.mPrefables[prefIndex].specs[].
   uint32_t specIndex: NUM_BITS_PROPERTY_INFO_SPEC_INDEX;
+
+  void SetId(jsid aId) {
+    static_assert(sizeof(jsid) == sizeof(mIdBits), "jsid should fit in mIdBits");
+    mIdBits = JSID_BITS(aId);
+  }
+  MOZ_ALWAYS_INLINE jsid Id() const {
+    return jsid::fromRawBits(mIdBits);
+  }
 };
 
 static_assert(ePropertyTypeCount <= 1ull << NUM_BITS_PROPERTY_INFO_TYPE,

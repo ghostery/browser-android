@@ -4,6 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "mozilla/dom/PaymentRequestBinding.h"
 #include "nsArrayUtils.h"
 #include "nsIMutableArray.h"
 #include "nsISupportsPrimitives.h"
@@ -339,13 +340,15 @@ PaymentDetails::PaymentDetails(const nsAString& aId,
                                nsIArray* aDisplayItems,
                                nsIArray* aShippingOptions,
                                nsIArray* aModifiers,
-                               const nsAString& aError)
+                               const nsAString& aError,
+                               const nsAString& aShippingAddressErrors)
   : mId(aId)
   , mTotalItem(aTotalItem)
   , mDisplayItems(aDisplayItems)
   , mShippingOptions(aShippingOptions)
   , mModifiers(aModifiers)
   , mError(aError)
+  , mShippingAddressErrors(aShippingAddressErrors)
 {
 }
 
@@ -362,62 +365,57 @@ PaymentDetails::Create(const IPCPaymentDetails& aIPCDetails,
   }
 
   nsCOMPtr<nsIArray> displayItems;
-  if (aIPCDetails.displayItemsPassed()) {
-    nsCOMPtr<nsIMutableArray> items = do_CreateInstance(NS_ARRAY_CONTRACTID);
-    MOZ_ASSERT(items);
-    for (const IPCPaymentItem& displayItem : aIPCDetails.displayItems()) {
-      nsCOMPtr<nsIPaymentItem> item;
-      rv = PaymentItem::Create(displayItem, getter_AddRefs(item));
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-      }
-      rv = items->AppendElement(item);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-      }
+  nsCOMPtr<nsIMutableArray> items = do_CreateInstance(NS_ARRAY_CONTRACTID);
+  MOZ_ASSERT(items);
+  for (const IPCPaymentItem& displayItem : aIPCDetails.displayItems()) {
+    nsCOMPtr<nsIPaymentItem> item;
+    rv = PaymentItem::Create(displayItem, getter_AddRefs(item));
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return rv;
     }
-    displayItems = items.forget();
+    rv = items->AppendElement(item);
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return rv;
+    }
   }
+  displayItems = items.forget();
 
   nsCOMPtr<nsIArray> shippingOptions;
-  if (aIPCDetails.shippingOptionsPassed()) {
-    nsCOMPtr<nsIMutableArray> options = do_CreateInstance(NS_ARRAY_CONTRACTID);
-    MOZ_ASSERT(options);
-    for (const IPCPaymentShippingOption& shippingOption : aIPCDetails.shippingOptions()) {
-      nsCOMPtr<nsIPaymentShippingOption> option;
-      rv = PaymentShippingOption::Create(shippingOption, getter_AddRefs(option));
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-      }
-      rv = options->AppendElement(option);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-      }
+  nsCOMPtr<nsIMutableArray> options = do_CreateInstance(NS_ARRAY_CONTRACTID);
+  MOZ_ASSERT(options);
+  for (const IPCPaymentShippingOption& shippingOption : aIPCDetails.shippingOptions()) {
+    nsCOMPtr<nsIPaymentShippingOption> option;
+    rv = PaymentShippingOption::Create(shippingOption, getter_AddRefs(option));
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return rv;
     }
-    shippingOptions = options.forget();
+    rv = options->AppendElement(option);
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return rv;
+    }
   }
+  shippingOptions = options.forget();
 
   nsCOMPtr<nsIArray> modifiers;
-  if (aIPCDetails.modifiersPassed()) {
-    nsCOMPtr<nsIMutableArray> detailsModifiers = do_CreateInstance(NS_ARRAY_CONTRACTID);
-    MOZ_ASSERT(detailsModifiers);
-    for (const IPCPaymentDetailsModifier& modifier : aIPCDetails.modifiers()) {
-      nsCOMPtr<nsIPaymentDetailsModifier> detailsModifier;
-      rv = PaymentDetailsModifier::Create(modifier, getter_AddRefs(detailsModifier));
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-      }
-      rv = detailsModifiers->AppendElement(detailsModifier);
-      if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-      }
+  nsCOMPtr<nsIMutableArray> detailsModifiers = do_CreateInstance(NS_ARRAY_CONTRACTID);
+  MOZ_ASSERT(detailsModifiers);
+  for (const IPCPaymentDetailsModifier& modifier : aIPCDetails.modifiers()) {
+    nsCOMPtr<nsIPaymentDetailsModifier> detailsModifier;
+    rv = PaymentDetailsModifier::Create(modifier, getter_AddRefs(detailsModifier));
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return rv;
     }
-    modifiers = detailsModifiers.forget();
+    rv = detailsModifiers->AppendElement(detailsModifier);
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return rv;
+    }
   }
+  modifiers = detailsModifiers.forget();
 
   nsCOMPtr<nsIPaymentDetails> details =
     new PaymentDetails(aIPCDetails.id(), total, displayItems, shippingOptions,
-                       modifiers, aIPCDetails.error());
+                       modifiers, aIPCDetails.error(),
+                       aIPCDetails.shippingAddressErrors());
 
   details.forget(aDetails);
   return NS_OK;
@@ -475,6 +473,17 @@ PaymentDetails::GetError(nsAString& aError)
 }
 
 NS_IMETHODIMP
+PaymentDetails::GetShippingAddressErrors(JSContext* aCx, JS::MutableHandleValue aErrors)
+{
+  AddressErrors errors;
+  errors.Init(mShippingAddressErrors);
+  if (!ToJSValue(aCx, errors, aErrors)) {
+    return NS_ERROR_FAILURE;
+  }
+  return NS_OK;
+}
+
+NS_IMETHODIMP
 PaymentDetails::Update(nsIPaymentDetails* aDetails, const bool aRequestShipping)
 {
   MOZ_ASSERT(aDetails);
@@ -523,9 +532,18 @@ PaymentDetails::Update(nsIPaymentDetails* aDetails, const bool aRequestShipping)
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
+
+  aDetails->ShippingAddressErrorsJSON(mShippingAddressErrors);
   return NS_OK;
 
 }
+NS_IMETHODIMP
+PaymentDetails::ShippingAddressErrorsJSON(nsAString& aErrors)
+{
+  aErrors = mShippingAddressErrors;
+  return NS_OK;
+}
+
 /* PaymentOptions */
 
 NS_IMPL_ISUPPORTS(PaymentOptions,
@@ -610,7 +628,7 @@ PaymentRequest::PaymentRequest(const uint64_t aTabId,
                                nsIArray* aPaymentMethods,
                                nsIPaymentDetails* aPaymentDetails,
                                nsIPaymentOptions* aPaymentOptions,
-			       const nsAString& aShippingOption)
+                               const nsAString& aShippingOption)
   : mTabId(aTabId)
   , mRequestId(aRequestId)
   , mTopLevelPrincipal(aTopLevelPrincipal)
@@ -723,7 +741,6 @@ PaymentAddress::Init(const nsAString& aCountry,
                      const nsAString& aDependentLocality,
                      const nsAString& aPostalCode,
                      const nsAString& aSortingCode,
-                     const nsAString& aLanguageCode,
                      const nsAString& aOrganization,
                      const nsAString& aRecipient,
                      const nsAString& aPhone)
@@ -735,7 +752,6 @@ PaymentAddress::Init(const nsAString& aCountry,
   mDependentLocality = aDependentLocality;
   mPostalCode = aPostalCode;
   mSortingCode = aSortingCode;
-  mLanguageCode = aLanguageCode;
   mOrganization = aOrganization;
   mRecipient = aRecipient;
   mPhone = aPhone;
@@ -790,13 +806,6 @@ NS_IMETHODIMP
 PaymentAddress::GetSortingCode(nsAString& aSortingCode)
 {
   aSortingCode = mSortingCode;
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-PaymentAddress::GetLanguageCode(nsAString& aLanguageCode)
-{
-  aLanguageCode = mLanguageCode;
   return NS_OK;
 }
 

@@ -132,6 +132,7 @@ EXPORTS.mozilla.layers += [
     'client/ContentClient.h',
     'client/GPUVideoTextureClient.h',
     'client/ImageClient.h',
+    'client/MultiTiledContentClient.h',
     'client/SingleTiledContentClient.h',
     'client/TextureClient.h',
     'client/TextureClientPool.h',
@@ -207,6 +208,7 @@ EXPORTS.mozilla.layers += [
     'LayerMetricsWrapper.h',
     'LayersHelpers.h',
     'LayersTypes.h',
+    'MemoryPressureObserver.h',
     'mlgpu/LayerManagerMLGPU.h',
     'mlgpu/LayerMLGPU.h',
     'mlgpu/MemoryReportingMLGPU.h',
@@ -234,8 +236,8 @@ EXPORTS.mozilla.layers += [
     'TransactionIdAllocator.h',
     'UpdateImageHelper.h',
     'wr/AsyncImagePipelineManager.h',
+    'wr/ClipManager.h',
     'wr/IpcResourceUpdateQueue.h',
-    'wr/ScrollingLayersHelper.h',
     'wr/StackingContextHelper.h',
     'wr/WebRenderBridgeChild.h',
     'wr/WebRenderBridgeParent.h',
@@ -249,6 +251,7 @@ EXPORTS.mozilla.layers += [
     'wr/WebRenderScrollData.h',
     'wr/WebRenderScrollDataWrapper.h',
     'wr/WebRenderTextureHost.h',
+    'wr/WebRenderTextureHostWrapper.h',
     'wr/WebRenderUserData.h',
 ]
 
@@ -272,6 +275,7 @@ if CONFIG['MOZ_X11']:
 if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'cocoa':
     EXPORTS.mozilla.layers += [
         'opengl/GLManager.h',
+        'TextureSync.h',
     ]
     EXPORTS += [
         'MacIOSurfaceHelpers.h',
@@ -279,6 +283,7 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'cocoa':
     ]
     UNIFIED_SOURCES += [
         'opengl/GLManager.cpp',
+        'TextureSync.cpp',
     ]
     SOURCES += [
         'ipc/ShadowLayerUtilsMac.cpp',
@@ -339,7 +344,6 @@ UNIFIED_SOURCES += [
     'AsyncCanvasRenderer.cpp',
     'AxisPhysicsModel.cpp',
     'AxisPhysicsMSDModel.cpp',
-    'basic/BasicBorderLayer.cpp',
     'basic/BasicCanvasLayer.cpp',
     'basic/BasicColorLayer.cpp',
     'basic/BasicCompositor.cpp',
@@ -351,10 +355,8 @@ UNIFIED_SOURCES += [
     'basic/TextureHostBasic.cpp',
     'BSPTree.cpp',
     'BufferTexture.cpp',
-    'BufferUnrotate.cpp',
     'CanvasRenderer.cpp',
     'client/CanvasClient.cpp',
-    'client/ClientBorderLayer.cpp',
     'client/ClientCanvasLayer.cpp',
     'client/ClientCanvasRenderer.cpp',
     'client/ClientColorLayer.cpp',
@@ -367,6 +369,7 @@ UNIFIED_SOURCES += [
     'client/ContentClient.cpp',
     'client/GPUVideoTextureClient.cpp',
     'client/ImageClient.cpp',
+    'client/MultiTiledContentClient.cpp',
     'client/SingleTiledContentClient.cpp',
     'client/TextureClient.cpp',
     'client/TextureClientPool.cpp',
@@ -438,6 +441,7 @@ UNIFIED_SOURCES += [
     'LayerSorter.cpp',
     'LayersTypes.cpp',
     'LayerTreeInvalidation.cpp',
+    'MemoryPressureObserver.cpp',
     'mlgpu/BufferCache.cpp',
     'mlgpu/CanvasLayerMLGPU.cpp',
     'mlgpu/ContainerLayerMLGPU.cpp',
@@ -473,8 +477,8 @@ UNIFIED_SOURCES += [
     'TextureSourceProvider.cpp',
     'TextureWrapperImage.cpp',
     'wr/AsyncImagePipelineManager.cpp',
+    'wr/ClipManager.cpp',
     'wr/IpcResourceUpdateQueue.cpp',
-    'wr/ScrollingLayersHelper.cpp',
     'wr/StackingContextHelper.cpp',
     'wr/WebRenderBridgeChild.cpp',
     'wr/WebRenderBridgeParent.cpp',
@@ -485,6 +489,7 @@ UNIFIED_SOURCES += [
     'wr/WebRenderLayerManager.cpp',
     'wr/WebRenderLayersLogging.cpp',
     'wr/WebRenderScrollData.cpp',
+    'wr/WebRenderTextureHostWrapper.cpp',
     'wr/WebRenderUserData.cpp',
     # XXX here are some unified build error.
     #'wr/WebRenderTextureHost.cpp'
@@ -577,3 +582,6 @@ if CONFIG['MOZ_ENABLE_SKIA']:
   UNIFIED_SOURCES += [
     'composite/PaintCounter.cpp',
   ]
+
+if CONFIG['CC_TYPE'] == 'clang-cl':
+    AllowCompilerWarnings()  # workaround for bug 1090497

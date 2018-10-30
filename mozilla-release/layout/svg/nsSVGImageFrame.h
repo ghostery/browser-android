@@ -22,14 +22,8 @@
 #include "SVGGeometryFrame.h"
 #include "SVGImageContext.h"
 #include "mozilla/dom/SVGImageElement.h"
-#include "nsContentUtils.h"
 #include "nsIReflowCallback.h"
 #include "mozilla/Unused.h"
-
-using namespace mozilla;
-using namespace mozilla::dom;
-using namespace mozilla::gfx;
-using namespace mozilla::image;
 
 class nsSVGImageFrame;
 
@@ -50,7 +44,7 @@ private:
 };
 
 class nsSVGImageFrame final
-  : public SVGGeometryFrame
+  : public mozilla::SVGGeometryFrame
   , public nsIReflowCallback
 {
   friend nsIFrame*
@@ -110,9 +104,9 @@ public:
   void SetForceSyncDecoding(bool aForce) { mForceSyncDecoding = aForce; }
 
 private:
-  gfx::Matrix GetRasterImageTransform(int32_t aNativeWidth,
-                                      int32_t aNativeHeight);
-  gfx::Matrix GetVectorImageTransform();
+  mozilla::gfx::Matrix GetRasterImageTransform(int32_t aNativeWidth,
+                                               int32_t aNativeHeight);
+  mozilla::gfx::Matrix GetVectorImageTransform();
   bool TransformContextForPainting(gfxContext* aGfxContext,
                                    const gfxMatrix& aTransform);
 

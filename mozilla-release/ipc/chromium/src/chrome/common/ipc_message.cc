@@ -100,7 +100,7 @@ Message::Message(const char* data, int data_len)
   MOZ_COUNT_CTOR(IPC::Message);
 }
 
-Message::Message(Message&& other) : Pickle(mozilla::Move(other)) {
+Message::Message(Message&& other) : Pickle(std::move(other)) {
   MOZ_COUNT_CTOR(IPC::Message);
 #if defined(OS_POSIX)
   file_descriptor_set_ = other.file_descriptor_set_.forget();
@@ -138,13 +138,23 @@ Message::ForInterruptDispatchError()
 }
 
 Message& Message::operator=(Message&& other) {
-  *static_cast<Pickle*>(this) = mozilla::Move(other);
+  *static_cast<Pickle*>(this) = std::move(other);
 #if defined(OS_POSIX)
   file_descriptor_set_.swap(other.file_descriptor_set_);
 #endif
   return *this;
 }
 
+void Message::CopyFrom(const Message& other) {
+  Pickle::CopyFrom(other);
+#if defined(OS_POSIX)
+  MOZ_ASSERT(!file_descriptor_set_);
+  if (other.file_descriptor_set_) {
+    file_descriptor_set_ = new FileDescriptorSet;
+    file_descriptor_set_->CopyFrom(*other.file_descriptor_set_);
+  }
+#endif
+}
 
 #if defined(OS_POSIX)
 bool Message::WriteFileDescriptor(const base::FileDescriptor& descriptor) {

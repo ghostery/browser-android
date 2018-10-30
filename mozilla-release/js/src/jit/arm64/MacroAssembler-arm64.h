@@ -24,18 +24,18 @@ using vixl::MemOperand;
 
 struct ImmShiftedTag : public ImmWord
 {
-    ImmShiftedTag(JSValueShiftedTag shtag)
+    explicit ImmShiftedTag(JSValueShiftedTag shtag)
       : ImmWord((uintptr_t)shtag)
     { }
 
-    ImmShiftedTag(JSValueType type)
+    explicit ImmShiftedTag(JSValueType type)
       : ImmWord(uintptr_t(JSValueShiftedTag(JSVAL_TYPE_TO_SHIFTED_TAG(type))))
     { }
 };
 
 struct ImmTag : public Imm32
 {
-    ImmTag(JSValueTag tag)
+    explicit ImmTag(JSValueTag tag)
       : Imm32(tag)
     { }
 };
@@ -400,37 +400,33 @@ class MacroAssemblerCompat : public vixl::MacroAssembler
     void splitTag(Register src, Register dest) {
         ubfx(ARMRegister(dest, 64), ARMRegister(src, 64), JSVAL_TAG_SHIFT, (64 - JSVAL_TAG_SHIFT));
     }
-    Register extractTag(const Address& address, Register scratch) {
+    MOZ_MUST_USE Register extractTag(const Address& address, Register scratch) {
         loadPtr(address, scratch);
         splitTag(scratch, scratch);
         return scratch;
     }
-    Register extractTag(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractTag(const ValueOperand& value, Register scratch) {
         splitTag(value.valueReg(), scratch);
         return scratch;
     }
-    Register extractObject(const Address& address, Register scratch) {
+    MOZ_MUST_USE Register extractObject(const Address& address, Register scratch) {
         loadPtr(address, scratch);
         unboxObject(scratch, scratch);
         return scratch;
     }
-    Register extractObject(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractObject(const ValueOperand& value, Register scratch) {
         unboxObject(value, scratch);
         return scratch;
     }
-    Register extractString(const ValueOperand& value, Register scratch) {
-        unboxString(value, scratch);
-        return scratch;
-    }
-    Register extractSymbol(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractSymbol(const ValueOperand& value, Register scratch) {
         unboxSymbol(value, scratch);
         return scratch;
     }
-    Register extractInt32(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractInt32(const ValueOperand& value, Register scratch) {
         unboxInt32(value, scratch);
         return scratch;
     }
-    Register extractBoolean(const ValueOperand& value, Register scratch) {
+    MOZ_MUST_USE Register extractBoolean(const ValueOperand& value, Register scratch) {
         unboxBoolean(value, scratch);
         return scratch;
     }
@@ -680,7 +676,7 @@ class MacroAssemblerCompat : public vixl::MacroAssembler
     void jump(TrampolinePtr code) {
         syncStackPtr();
         BufferOffset loc = b(-1, LabelDoc()); // The jump target will be patched by executableCopy().
-        addPendingJump(loc, ImmPtr(code.value), Relocation::HARDCODED);
+        addPendingJump(loc, ImmPtr(code.value), RelocationKind::HARDCODED);
     }
     void jump(RepatchLabel* label) {
         MOZ_CRASH("jump (repatchlabel)");
@@ -924,44 +920,6 @@ class MacroAssemblerCompat : public vixl::MacroAssembler
     void store64(Register64 src, Address address) {
         storePtr(src.reg, address);
     }
-
-    // SIMD.
-    void loadInt32x1(const Address& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadInt32x1(const BaseIndex& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadInt32x2(const Address& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadInt32x2(const BaseIndex& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadInt32x3(const Address& src, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadInt32x3(const BaseIndex& src, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadInt32x4(const Address& src, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void storeInt32x1(FloatRegister src, const Address& dest) { MOZ_CRASH("NYI"); }
-    void storeInt32x1(FloatRegister src, const BaseIndex& dest) { MOZ_CRASH("NYI"); }
-    void storeInt32x2(FloatRegister src, const Address& dest) { MOZ_CRASH("NYI"); }
-    void storeInt32x2(FloatRegister src, const BaseIndex& dest) { MOZ_CRASH("NYI"); }
-    void storeInt32x3(FloatRegister src, const Address& dest) { MOZ_CRASH("NYI"); }
-    void storeInt32x3(FloatRegister src, const BaseIndex& dest) { MOZ_CRASH("NYI"); }
-    void storeInt32x4(FloatRegister src, const Address& dest) { MOZ_CRASH("NYI"); }
-    void loadAlignedSimd128Int(const Address& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadAlignedSimd128Int(const BaseIndex& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void storeAlignedSimd128Int(FloatRegister src, const Address& addr) { MOZ_CRASH("NYI"); }
-    void storeAlignedSimd128Int(FloatRegister src, const BaseIndex& addr) { MOZ_CRASH("NYI"); }
-    void loadUnalignedSimd128Int(const Address& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadUnalignedSimd128Int(const BaseIndex& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void storeUnalignedSimd128Int(FloatRegister dest, const Address& addr) { MOZ_CRASH("NYI"); }
-    void storeUnalignedSimd128Int(FloatRegister dest, const BaseIndex& addr) { MOZ_CRASH("NYI"); }
-
-    void loadFloat32x3(const Address& src, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadFloat32x3(const BaseIndex& src, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadFloat32x4(const Address& src, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void storeFloat32x4(FloatRegister src, const Address& addr) { MOZ_CRASH("NYI"); }
-
-    void loadAlignedSimd128Float(const Address& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadAlignedSimd128Float(const BaseIndex& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void storeAlignedSimd128Float(FloatRegister src, const Address& addr) { MOZ_CRASH("NYI"); }
-    void storeAlignedSimd128Float(FloatRegister src, const BaseIndex& addr) { MOZ_CRASH("NYI"); }
-    void loadUnalignedSimd128Float(const Address& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void loadUnalignedSimd128Float(const BaseIndex& addr, FloatRegister dest) { MOZ_CRASH("NYI"); }
-    void storeUnalignedSimd128Float(FloatRegister dest, const Address& addr) { MOZ_CRASH("NYI"); }
-    void storeUnalignedSimd128Float(FloatRegister dest, const BaseIndex& addr) { MOZ_CRASH("NYI"); }
 
     // StackPointer manipulation.
     inline void addToStackPtr(Register src);
@@ -1272,7 +1230,7 @@ class MacroAssemblerCompat : public vixl::MacroAssembler
     void branch(JitCode* target) {
         syncStackPtr();
         BufferOffset loc = b(-1, LabelDoc()); // The jump target will be patched by executableCopy().
-        addPendingJump(loc, ImmPtr(target->raw()), Relocation::JITCODE);
+        addPendingJump(loc, ImmPtr(target->raw()), RelocationKind::JITCODE);
     }
 
     CodeOffsetJump jumpWithPatch(RepatchLabel* label)
@@ -1938,7 +1896,7 @@ class MacroAssemblerCompat : public vixl::MacroAssembler
                 nop();
         }
 
-        addPendingJump(loadOffset, ImmPtr(target->raw()), Relocation::JITCODE);
+        addPendingJump(loadOffset, ImmPtr(target->raw()), RelocationKind::JITCODE);
         CodeOffset ret(offset.getOffset());
         return ret;
     }
@@ -2051,7 +2009,7 @@ class MacroAssemblerCompat : public vixl::MacroAssembler
 
   protected:
     bool buildOOLFakeExitFrame(void* fakeReturnAddr) {
-        uint32_t descriptor = MakeFrameDescriptor(framePushed(), JitFrame_IonJS,
+        uint32_t descriptor = MakeFrameDescriptor(framePushed(), FrameType::IonJS,
                                                   ExitFrameLayout::Size());
         Push(Imm32(descriptor));
         Push(ImmPtr(fakeReturnAddr));

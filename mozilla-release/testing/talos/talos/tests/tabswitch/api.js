@@ -4,7 +4,7 @@
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/RemotePageManager.jsm");
+ChromeUtils.import("resource://gre/modules/remotepagemanager/RemotePageManagerParent.jsm");
 
 let context = {};
 let TalosParentProfiler;
@@ -160,9 +160,7 @@ function forceGC(win, browser) {
   // something into TalosPowers instead.
   browser.messageManager.loadFrameScript("chrome://pageloader/content/talos-content.js", false);
 
-  win.QueryInterface(Ci.nsIInterfaceRequestor)
-     .getInterface(Ci.nsIDOMWindowUtils)
-     .garbageCollect();
+  win.windowUtils.garbageCollect();
 
   return new Promise((resolve) => {
     let mm = browser.messageManager;
@@ -240,7 +238,14 @@ async function test(window) {
   }
 
   for (let tab of tabs) {
+    // Moving a tab causes expensive style/layout computations on the tab bar
+    // that are delayed using requestAnimationFrame, so wait for an animation
+    // frame callback + one tick to ensure we aren't measuring the time it
+    // takes to move a tab.
     gBrowser.moveTabTo(tab, 1);
+    await new Promise(resolve => win.requestAnimationFrame(resolve));
+    await new Promise(resolve => Services.tm.dispatchToMainThread(resolve));
+
     await forceGC(win, tab.linkedBrowser);
     TalosParentProfiler.resume("start: " + tab.linkedBrowser.currentURI.spec);
     let time = await switchToTab(tab);
@@ -313,13 +318,13 @@ this.tps = class extends ExtensionAPI {
   getAPI(context) {
     return {
       tps: {
-        setup({ frameScriptPath }) {
+        setup({ processScriptPath }) {
           const AboutNewTabService = Cc["@mozilla.org/browser/aboutnewtab-service;1"]
                                        .getService(Ci.nsIAboutNewTabService);
           AboutNewTabService.newTabURL = "about:blank";
 
-          const frameScriptURL = context.extension.baseURI.resolve(frameScriptPath);
-          Services.ppmm.loadFrameScript(frameScriptURL, true);
+          const processScriptURL = context.extension.baseURI.resolve(processScriptPath);
+          Services.ppmm.loadProcessScript(processScriptURL, true);
           remotePage = new RemotePages("about:tabswitch");
           remotePage.addMessageListener("tabswitch-do-test", function doTest(msg) {
             test(msg.target.browser.ownerGlobal);

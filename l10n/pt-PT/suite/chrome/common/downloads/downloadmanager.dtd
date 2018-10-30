@@ -88,3 +88,9 @@
 <!ENTITY cmd.copyDownloadLink.accesskey  "l">
 <!ENTITY cmd.properties.label            "Propriedades…">
 <!ENTITY cmd.properties.accesskey        "s">
+<!-- LOCALIZATION NOTE (cmd.unblock2.label):
+     This command is shown in the context menu when downloads are blocked.
+     -->
+<!ENTITY cmd.unblock2.label               "Permitir transferência">
+<!ENTITY cmd.unblock2.accesskey           "e">
+

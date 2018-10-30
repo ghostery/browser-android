@@ -9,8 +9,8 @@ use bezier::Bezier;
 use context::SharedStyleContext;
 use dom::{OpaqueNode, TElement};
 use font_metrics::FontMetricsProvider;
-use properties::{self, CascadeFlags, ComputedValues, LonghandId};
-use properties::animated_properties::{AnimatedProperty, TransitionProperty};
+use properties::{self, CascadeMode, ComputedValues, LonghandId};
+use properties::animated_properties::AnimatedProperty;
 use properties::longhands::animation_direction::computed_value::single_value::T as AnimationDirection;
 use properties::longhands::animation_play_state::computed_value::single_value::T as AnimationPlayState;
 use rule_tree::CascadeLevel;
@@ -20,6 +20,7 @@ use std::sync::mpsc::Sender;
 use stylesheets::keyframes_rule::{KeyframesAnimation, KeyframesStep, KeyframesStepValue};
 use timer::Timer;
 use values::computed::Time;
+use values::computed::box_::TransitionProperty;
 use values::computed::transform::TimingFunction;
 use values::generics::box_::AnimationIterationCount;
 use values::generics::transform::{StepPosition, TimingFunction as GenericTimingFunction};
@@ -303,7 +304,8 @@ impl PropertyAnimation {
         let duration = box_style.transition_duration_mod(transition_index);
 
         match transition_property {
-            TransitionProperty::Unsupported(_) => result,
+            TransitionProperty::Custom(..) |
+            TransitionProperty::Unsupported(..) => result,
             TransitionProperty::Shorthand(ref shorthand_id) => shorthand_id
                 .longhands()
                 .filter_map(|longhand| {
@@ -502,9 +504,8 @@ where
                 Some(previous_style),
                 Some(previous_style),
                 Some(previous_style),
-                /* visited_style = */ None,
                 font_metrics_provider,
-                CascadeFlags::empty(),
+                CascadeMode::Unvisited { visited_rules: None },
                 context.quirks_mode(),
                 /* rule_cache = */ None,
                 &mut Default::default(),

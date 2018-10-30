@@ -16,7 +16,7 @@ add_task(async function test() {
   await promiseBrowserLoaded(win.gBrowser.selectedBrowser);
 
   // Open a second tab and close the first one.
-  let tab = win.gBrowser.addTab("about:mozilla");
+  let tab = BrowserTestUtils.addTab(win.gBrowser, "about:mozilla");
   await promiseBrowserLoaded(tab.linkedBrowser);
   await TabStateFlusher.flush(tab.linkedBrowser);
   await promiseRemoveTabAndSessionState(win.gBrowser.tabs[0]);
@@ -37,8 +37,10 @@ add_task(async function test() {
 
   // Make sure we're not allowed to modify state data.
   Assert.throws(() => ss.setWindowState(win, {}),
+    /Window is not tracked/,
     "we're not allowed to modify state data anymore");
   Assert.throws(() => ss.setWindowValue(win, "foo", "baz"),
+    /Window is not tracked/,
     "we're not allowed to modify state data anymore");
 });
 

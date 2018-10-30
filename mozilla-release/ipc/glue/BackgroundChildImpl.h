@@ -70,6 +70,25 @@ protected:
   DeallocPBackgroundIndexedDBUtilsChild(PBackgroundIndexedDBUtilsChild* aActor)
                                         override;
 
+  virtual PBackgroundSDBConnectionChild*
+  AllocPBackgroundSDBConnectionChild(const PrincipalInfo& aPrincipalInfo)
+                                     override;
+
+  virtual bool
+  DeallocPBackgroundSDBConnectionChild(PBackgroundSDBConnectionChild* aActor)
+                                       override;
+
+  virtual PBackgroundLocalStorageCacheChild*
+  AllocPBackgroundLocalStorageCacheChild(const PrincipalInfo& aPrincipalInfo,
+                                         const nsCString& aOriginKey,
+                                         const uint32_t& aPrivateBrowsingId)
+                                         override;
+
+  virtual bool
+  DeallocPBackgroundLocalStorageCacheChild(
+                                       PBackgroundLocalStorageCacheChild* aActor)
+                                       override;
+
   virtual PBackgroundStorageChild*
   AllocPBackgroundStorageChild(const nsString& aProfilePath) override;
 
@@ -227,14 +246,6 @@ protected:
   virtual bool
   DeallocPHttpBackgroundChannelChild(PHttpBackgroundChannelChild* aActor) override;
 
-  virtual mozilla::ipc::IPCResult
-  RecvDispatchLocalStorageChange(const nsString& aDocumentURI,
-                                 const nsString& aKey,
-                                 const nsString& aOldValue,
-                                 const nsString& aNewValue,
-                                 const PrincipalInfo& aPrincipalInfo,
-                                 const bool& aIsPrivate) override;
-
   bool
   GetMessageSchedulerGroups(const Message& aMsg, SchedulerGroupSet& aGroups) override;
 
@@ -244,6 +255,24 @@ protected:
 
   virtual PMIDIManagerChild* AllocPMIDIManagerChild() override;
   virtual bool DeallocPMIDIManagerChild(PMIDIManagerChild*) override;
+
+  virtual PServiceWorkerChild*
+  AllocPServiceWorkerChild(const IPCServiceWorkerDescriptor&) override;
+
+  virtual bool
+  DeallocPServiceWorkerChild(PServiceWorkerChild*) override;
+
+  virtual PServiceWorkerContainerChild*
+  AllocPServiceWorkerContainerChild() override;
+
+  virtual bool
+  DeallocPServiceWorkerContainerChild(PServiceWorkerContainerChild*) override;
+
+  virtual PServiceWorkerRegistrationChild*
+  AllocPServiceWorkerRegistrationChild(const IPCServiceWorkerRegistrationDescriptor&) override;
+
+  virtual bool
+  DeallocPServiceWorkerRegistrationChild(PServiceWorkerRegistrationChild*) override;
 };
 
 class BackgroundChildImpl::ThreadLocal final

@@ -9,7 +9,6 @@
 
 var EXPORTED_SYMBOLS = ["HistoryEntry", "DumpHistory"];
 
-ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/PlacesUtils.jsm");
 ChromeUtils.import("resource://gre/modules/PlacesSyncUtils.jsm");
 ChromeUtils.import("resource://tps/logger.jsm");
@@ -55,7 +54,7 @@ var HistoryEntry = {
       "and 'uri' properties");
     let place = {
       url: item.uri,
-      visits: []
+      visits: [],
     };
     for (let visit of item.visits) {
       let date = new Date(Math.round(msSinceEpoch + visit.date * 60 * 60 * 1000));
@@ -86,8 +85,10 @@ var HistoryEntry = {
       for (let itemvisit of item.visits) {
         // Note: in microseconds.
         let expectedDate = itemvisit.date * 60 * 60 * 1000 * 1000 + msSinceEpoch * 1000;
-        if (visit.type == itemvisit.type && visit.date == expectedDate) {
-          itemvisit.found = true;
+        if (visit.type == itemvisit.type) {
+          if (itemvisit.date === undefined || visit.date == expectedDate) {
+            itemvisit.found = true;
+          }
         }
       }
     }
@@ -120,11 +121,11 @@ var HistoryEntry = {
         Logger.log("Warning: Removed 0 history visits for uri " + item.uri);
       }
     } else if ("host" in item) {
-      await PlacesUtils.history.removePagesFromHost(item.host, false);
+      await PlacesUtils.history.removeByFilter({ host: item.host });
     } else if ("begin" in item && "end" in item) {
       let filter = {
         beginDate: new Date(msSinceEpoch + (item.begin * 60 * 60 * 1000)),
-        endDate: new Date(msSinceEpoch + (item.end * 60 * 60 * 1000))
+        endDate: new Date(msSinceEpoch + (item.end * 60 * 60 * 1000)),
       };
       let removedAny = await PlacesUtils.history.removeVisitsByFilter(filter);
       if (!removedAny) {

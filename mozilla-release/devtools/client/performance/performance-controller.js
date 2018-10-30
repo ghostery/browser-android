@@ -34,16 +34,15 @@ Object.defineProperty(this, "EVENTS", {
    DevToolsUtils, system */
 var React = require("devtools/client/shared/vendor/react");
 var ReactDOM = require("devtools/client/shared/vendor/react-dom");
-var Waterfall = React.createFactory(require("devtools/client/performance/components/waterfall"));
-var JITOptimizationsView = React.createFactory(require("devtools/client/performance/components/jit-optimizations"));
-var RecordingControls = React.createFactory(require("devtools/client/performance/components/recording-controls"));
-var RecordingButton = React.createFactory(require("devtools/client/performance/components/recording-button"));
-var RecordingList = React.createFactory(require("devtools/client/performance/components/recording-list"));
-var RecordingListItem = React.createFactory(require("devtools/client/performance/components/recording-list-item"));
+var Waterfall = React.createFactory(require("devtools/client/performance/components/Waterfall"));
+var JITOptimizationsView = React.createFactory(require("devtools/client/performance/components/JITOptimizations"));
+var RecordingControls = React.createFactory(require("devtools/client/performance/components/RecordingControls"));
+var RecordingButton = React.createFactory(require("devtools/client/performance/components/RecordingButton"));
+var RecordingList = React.createFactory(require("devtools/client/performance/components/RecordingList"));
+var RecordingListItem = React.createFactory(require("devtools/client/performance/components/RecordingListItem"));
 
 var Services = require("Services");
 var promise = require("promise");
-const defer = require("devtools/shared/defer");
 var EventEmitter = require("devtools/shared/event-emitter");
 var DevToolsUtils = require("devtools/shared/DevToolsUtils");
 var flags = require("devtools/shared/flags");
@@ -161,7 +160,6 @@ var PerformanceController = {
    * Remove events handled by the PerformanceController
    */
   destroy: function() {
-    this._telemetry.destroy();
     this._prefs.off("pref-changed", this._onPrefChanged);
     this._prefs.unregisterObserver();
 
@@ -176,6 +174,8 @@ var PerformanceController = {
 
     this._prefObserver.off("devtools.theme", this._onThemeChanged);
     this._prefObserver.destroy();
+
+    this._telemetry.destroy();
   },
 
   /**
@@ -251,11 +251,12 @@ var PerformanceController = {
    * @return Promise:boolean
    */
   async canCurrentlyRecord() {
-    let hasActor = await gTarget.hasActor("performance");
+    const hasActor = await gTarget.hasActor("performance");
     if (!hasActor) {
       return true;
     }
-    let actorCanCheck = await gTarget.actorHasMethod("performance", "canCurrentlyRecord");
+    const actorCanCheck =
+      await gTarget.actorHasMethod("performance", "canCurrentlyRecord");
     if (!actorCanCheck) {
       return true;
     }
@@ -266,7 +267,7 @@ var PerformanceController = {
    * Starts recording with the PerformanceFront.
    */
   async startRecording() {
-    let options = {
+    const options = {
       withMarkers: true,
       withTicks: this.getOption("enable-framerate"),
       withMemory: this.getOption("enable-memory"),
@@ -279,7 +280,7 @@ var PerformanceController = {
       sampleFrequency: this.getPref("profiler-sample-frequency")
     };
 
-    let recordingStarted = await gFront.startRecording(options);
+    const recordingStarted = await gFront.startRecording(options);
 
     // In some cases, like when the target has a private browsing tab,
     // recording is not currently supported because of the profiler module.
@@ -296,7 +297,7 @@ var PerformanceController = {
    * Stops recording with the PerformanceFront.
    */
   async stopRecording() {
-    let recording = this.getLatestManualRecording();
+    const recording = this.getLatestManualRecording();
     await gFront.stopRecording(recording);
     this.emit(EVENTS.BACKEND_READY_AFTER_RECORDING_STOP);
   },
@@ -322,7 +323,7 @@ var PerformanceController = {
    */
   async clearRecordings() {
     for (let i = this._recordings.length - 1; i >= 0; i--) {
-      let model = this._recordings[i];
+      const model = this._recordings[i];
       if (!model.isConsole() && model.isRecording()) {
         await this.stopRecording();
       }
@@ -355,7 +356,7 @@ var PerformanceController = {
    *        The file to import the data from.
    */
   async importRecording(file) {
-    let recording = await gFront.importRecording(file);
+    const recording = await gFront.importRecording(file);
     this._addRecordingIfUnknown(recording);
 
     this.emit(EVENTS.RECORDING_IMPORTED, recording);
@@ -388,7 +389,7 @@ var PerformanceController = {
    */
   getLatestManualRecording: function() {
     for (let i = this._recordings.length - 1; i >= 0; i--) {
-      let model = this._recordings[i];
+      const model = this._recordings[i];
       if (!model.isConsole() && !model.isImported()) {
         return this._recordings[i];
       }
@@ -416,7 +417,7 @@ var PerformanceController = {
    * Called when the developer tools theme changes.
    */
   _onThemeChanged: function() {
-    let newValue = Services.prefs.getCharPref("devtools.theme");
+    const newValue = Services.prefs.getCharPref("devtools.theme");
     this.emit(EVENTS.THEME_CHANGED, newValue);
   },
 
@@ -486,12 +487,12 @@ var PerformanceController = {
       return true;
     }
 
-    let recording = this.getCurrentRecording();
+    const recording = this.getCurrentRecording();
     if (!recording) {
       return false;
     }
 
-    let config = recording.getConfiguration();
+    const config = recording.getConfiguration();
     return [].concat(features).every(f => config[f]);
   },
 
@@ -504,7 +505,7 @@ var PerformanceController = {
    * @param {Array<PerformanceRecordingFront>} recordings
    */
   populateWithRecordings: function(recordings = []) {
-    for (let recording of recordings) {
+    for (const recording of recordings) {
       PerformanceController._addRecordingIfUnknown(recording);
     }
     this.emit(EVENTS.RECORDINGS_SEEDED);
@@ -527,7 +528,7 @@ var PerformanceController = {
     }
     // This is only checked on tool startup -- requires a restart if
     // e10s subsequently enabled.
-    let enabled = this._e10s;
+    const enabled = this._e10s;
     return { enabled };
   },
 
@@ -540,14 +541,14 @@ var PerformanceController = {
    * @return {Promise}
    */
   async waitForStateChangeOnRecording(recording, expectedState) {
-    let deferred = defer();
-    this.on(EVENTS.RECORDING_STATE_CHANGE, function handler(state, model) {
-      if (state === expectedState && model === recording) {
-        this.off(EVENTS.RECORDING_STATE_CHANGE, handler);
-        deferred.resolve();
-      }
+    await new Promise(resolve => {
+      this.on(EVENTS.RECORDING_STATE_CHANGE, function handler(state, model) {
+        if (state === expectedState && model === recording) {
+          this.off(EVENTS.RECORDING_STATE_CHANGE, handler);
+          resolve();
+        }
+      });
     });
-    await deferred.promise;
   },
 
   /**
@@ -556,7 +557,7 @@ var PerformanceController = {
    * if e10s is not possible on the platform. If e10s is on, no attribute is set.
    */
   _setMultiprocessAttributes: function() {
-    let { enabled } = this.getMultiprocessStatus();
+    const { enabled } = this.getMultiprocessStatus();
     if (!enabled) {
       $("#performance-view").setAttribute("e10s", "disabled");
     }

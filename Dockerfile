@@ -1,9 +1,12 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER Sharath Ganesh Pai <sharath@cliqz.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 #Install the required packages. 1st Set is for FF and the 2nd for Ruby and FastLane.
 RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository universe && \
     apt-get update && \
     apt-get install -y \
         autoconf2.13 \
@@ -11,6 +14,7 @@ RUN dpkg --add-architecture i386 && \
         ccache \
         curl \
         git \
+        clang \
         language-pack-en \
         libncurses5:i386 \
         libstdc++6:i386 \
@@ -78,19 +82,20 @@ RUN set -eux; \
     cargo --version; \
     rustc --version; \
     rustup self update; \
-    rustup toolchain install 1.28.0-x86_64-unknown-linux-gnu; \
-    rustup default 1.28.0-x86_64-unknown-linux-gnu; \
+    rustup toolchain install 1.29.2-x86_64-unknown-linux-gnu; \
+    rustup default 1.29.2-x86_64-unknown-linux-gnu; \
     rustup target add i686-linux-android; \
-    rustup target add armv7-linux-androideabi
+    rustup target add armv7-linux-androideabi; \
+    cargo install cbindgen
 
 # Change to User Jenkins and Set Environment Variables
 USER jenkins
 ENV ANDROID_HOME /home/jenkins/.mozbuild/android-sdk-linux
-ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r15c
-ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.9.3-linux-x64/bin:$PATH"
+ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r18-beta1
+ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.11.4-linux-x64/bin:$PATH"
 ENV NVM_DIR /home/jenkins/nvm
-ENV NODE_VERSION 8.9.3
-ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04/
+ENV NODE_VERSION 8.11.4
+# ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04/
 SHELL ["/bin/bash", "-l", "-c"]
 
 # Install nvm with node and npm
@@ -118,17 +123,17 @@ RUN mkdir -p $ANDROID_HOME; \
 #Install Android NDK
 RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
     cd /home/jenkins/.mozbuild/android-ndk-linux; \
-    wget --output-document=ndk.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-ndk/android-ndk-r15c-linux-x86_64.zip'; \
+    wget --output-document=ndk.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-ndk/android-ndk-r18-beta1-linux-x86_64.zip'; \
     unzip ndk.zip; \
     rm -r ndk.zip;
 
 #Install CLang
-RUN mkdir -p /home/jenkins/clang; \
-    cd /home/jenkins/clang; \
-    wget --output-document=clang.tar.xz --quiet "https://repository.cliqz.com/dist/android/artifacts/clang/clang%2Bllvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"; \
-    tar xf clang.tar.xz; \
-    echo 'export PATH=$CLANG_HOME/bin:$PATH' >> ~/.bashrc; \
-    echo 'export LD_LIBRARY_PATH=$CLANG_HOME/lib:LD_LIBRARY_PATH' >> ~/.bashrc
+# RUN mkdir -p /home/jenkins/clang; \
+#     cd /home/jenkins/clang; \
+#     wget --output-document=clang.tar.xz --quiet "https://repository.cliqz.com/dist/android/artifacts/clang/clang%2Bllvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"; \
+#     tar xf clang.tar.xz; \
+#     echo 'export PATH=$CLANG_HOME/bin:$PATH' >> ~/.bashrc; \
+#     echo 'export LD_LIBRARY_PATH=$CLANG_HOME/lib:LD_LIBRARY_PATH' >> ~/.bashrc
 
 #Installation of 'yarn'; 'appium' & 'wd' for Integration Tests
 RUN npm install --global \
@@ -137,10 +142,19 @@ RUN npm install --global \
     wd
 
 #Install Ruby and Fastlane
-RUN gpg2 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
-    curl -sSL https://get.rvm.io | bash -s stable --ruby=2.4.1 --autolibs=read-fail
-RUN rvm reload && \
-gem install fastlane --version 2.87.0
+RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \
+               7D2BAF1CF37B13E2069D6956105BD0E739499BDB; do \
+        for server in "hkp://keys.gnupg.net" \
+                         "hkp://p80.pool.sks-keyservers.net:80" \
+                         "pgp.mit.edu" \
+                         "hkp://keyserver.ubuntu.com:80"; do \
+            gpg2 --keyserver "${server}" --recv-keys "${key}" || echo "Trying new server..."; \
+        done; \
+    done
+RUN curl -sSL https://get.rvm.io | bash -s stable --ruby=2.5.1 --autolibs=read-fail && \
+    source /home/jenkins/.rvm/scripts/rvm \
+    rvm reload && \
+    gem install fastlane --version 2.107.0
 
 #Install AWS CLI
 RUN pip install awscli --upgrade --user

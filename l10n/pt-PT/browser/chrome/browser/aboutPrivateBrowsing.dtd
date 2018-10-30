@@ -2,11 +2,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!-- LOCALIZATION NOTE (aboutPrivateBrowsing.title):
-     Please ensure this exactly matches tabs.emptyPrivateTabTitle in tabbrowser.properties -->
-<!ENTITY aboutPrivateBrowsing.title                      "Navegação privada">
-<!ENTITY aboutPrivateBrowsing.notPrivate.title           "Abrir uma janela privada?">
-
 <!ENTITY aboutPrivateBrowsing.notPrivate                 "Atualmente, não está numa janela privada.">
 <!ENTITY privatebrowsingpage.openPrivateWindow.label     "Abrir uma janela privada">
 <!ENTITY privatebrowsingpage.openPrivateWindow.accesskey "p">
@@ -25,6 +20,7 @@
 <!ENTITY aboutPrivateBrowsing.info.saved.after2          ":">
 <!ENTITY aboutPrivateBrowsing.info.downloads             "transferências">
 <!ENTITY aboutPrivateBrowsing.info.bookmarks             "marcadores">
+<!ENTITY aboutPrivateBrowsing.info.clipboard             "texto copiado">
 <!ENTITY aboutPrivateBrowsing.note.before                "A Navegação privada ">
 <!ENTITY aboutPrivateBrowsing.note.emphasize             "não lhe dá anonimato">
 <!ENTITY aboutPrivateBrowsing.note.after                 " na Internet. O seu empregador ou fornecedor do serviço de Internet ainda podem saber quais as páginas que visita.">
@@ -35,3 +31,6 @@
 <!ENTITY trackingProtection.title                        "Proteção contra monitorização">
 <!ENTITY trackingProtection.description2                 "Alguns websites utilizam trackers que podem monitorizar a sua atividade na Internet. Com a Proteção contra monitorização, o Firefox irá bloquear vários trackers que podem recolher informação relacionada com o seu comportamento de navegação.">
 <!ENTITY trackingProtection.startTour1                   "Ver como funciona">
+
+<!ENTITY contentBlocking.title                           "Bloqueio de conteúdo">
+<!ENTITY contentBlocking.description                     "Alguns websites utilizam trackers que podem monitorizar a sua atividade pela Internet. Nas janelas privadas o Bloqueio de conteúdo do Firefox bloqueia automaticamente muitos trackers que podem recolher informação acerca do seu comportamento de navegação.">

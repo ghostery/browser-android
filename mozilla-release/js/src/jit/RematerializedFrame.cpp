@@ -6,6 +6,8 @@
 
 #include "jit/RematerializedFrame.h"
 
+#include <utility>
+
 #include "jit/JitFrames.h"
 #include "vm/ArgumentsObject.h"
 #include "vm/Debugger.h"
@@ -34,13 +36,16 @@ RematerializedFrame::RematerializedFrame(JSContext* cx, uint8_t* top, unsigned n
                                          InlineFrameIterator& iter, MaybeReadFallback& fallback)
   : prevUpToDate_(false),
     isDebuggee_(iter.script()->isDebuggee()),
+    hasInitialEnv_(false),
     isConstructing_(iter.isConstructing()),
     hasCachedSavedFrame_(false),
     top_(top),
     pc_(iter.pc()),
     frameNo_(iter.frameNo()),
     numActualArgs_(numActualArgs),
-    script_(iter.script())
+    script_(iter.script()),
+    envChain_(nullptr),
+    argsObj_(nullptr)
 {
     if (iter.isFunctionFrame())
         callee_ = iter.callee(fallback);
@@ -68,10 +73,7 @@ RematerializedFrame::New(JSContext* cx, uint8_t* top, InlineFrameIterator& iter,
     if (extraSlots > 0)
         extraSlots -= 1;
 
-    size_t numBytes = sizeof(RematerializedFrame) + (extraSlots * sizeof(Value));
-    MOZ_ASSERT(numBytes >= sizeof(RematerializedFrame));
-
-    void* buf = cx->pod_calloc<uint8_t>(numBytes);
+    RematerializedFrame* buf = cx->pod_calloc_with_extra<RematerializedFrame, Value>(extraSlots);
     if (!buf)
         return nullptr;
 
@@ -103,7 +105,7 @@ RematerializedFrame::RematerializeInlineFrames(JSContext* cx, uint8_t* top,
         ++iter;
     }
 
-    frames = Move(tempFrames.get());
+    frames = std::move(tempFrames.get());
     return true;
 }
 
@@ -172,7 +174,7 @@ RematerializedFrame::dump()
         fprintf(stderr, "  global frame, no callee\n");
     }
 
-    fprintf(stderr, "  file %s line %zu offset %zu\n",
+    fprintf(stderr, "  file %s line %u offset %zu\n",
             script()->filename(), script()->lineno(),
             script()->pcToOffset(pc()));
 

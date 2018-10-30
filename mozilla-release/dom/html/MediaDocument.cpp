@@ -23,23 +23,30 @@
 #include "nsServiceManagerUtils.h"
 #include "nsIPrincipal.h"
 #include "nsIMultiPartChannel.h"
+#include "nsProxyRelease.h"
 
 namespace mozilla {
 namespace dom {
 
 MediaDocumentStreamListener::MediaDocumentStreamListener(MediaDocument *aDocument)
+  : mDocument(aDocument)
 {
-  mDocument = aDocument;
 }
 
 MediaDocumentStreamListener::~MediaDocumentStreamListener()
 {
+  if (mDocument && !NS_IsMainThread()) {
+    nsCOMPtr<nsIEventTarget> mainTarget(do_GetMainThread());
+    NS_ProxyRelease("MediaDocumentStreamListener::mDocument",
+                    mainTarget, mDocument.forget());
+  }
 }
 
 
 NS_IMPL_ISUPPORTS(MediaDocumentStreamListener,
                   nsIRequestObserver,
-                  nsIStreamListener)
+                  nsIStreamListener,
+                  nsIThreadRetargetableStreamListener)
 
 
 void
@@ -99,6 +106,17 @@ MediaDocumentStreamListener::OnDataAvailable(nsIRequest* request,
   return NS_OK;
 }
 
+NS_IMETHODIMP
+MediaDocumentStreamListener::CheckListenerChain()
+{
+  nsCOMPtr<nsIThreadRetargetableStreamListener> retargetable =
+    do_QueryInterface(mNextStream);
+  if (retargetable) {
+    return retargetable->CheckListenerChain();
+  }
+  return NS_ERROR_NO_INTERFACE;
+}
+
 // default format names for MediaDocument.
 const char* const MediaDocument::sFormatNames[4] =
 {
@@ -110,7 +128,7 @@ const char* const MediaDocument::sFormatNames[4] =
 
 MediaDocument::MediaDocument()
     : nsHTMLDocument(),
-      mDocumentElementInserted(false)
+      mDidInitialDocumentSetup(false)
 {
 }
 MediaDocument::~MediaDocument()
@@ -187,21 +205,21 @@ MediaDocument::StartDocumentLoad(const char*         aCommand,
 }
 
 void
-MediaDocument::BecomeInteractive()
+MediaDocument::InitialSetupDone()
 {
-  // Even though our readyState code isn't really reliable, here we pretend
-  // that it is and conclude that we are restoring from the b/f cache if
-  // GetReadyStateEnum() == nsIDocument::READYSTATE_COMPLETE.
-  if (GetReadyStateEnum() != nsIDocument::READYSTATE_COMPLETE) {
-    MOZ_ASSERT(GetReadyStateEnum() == nsIDocument::READYSTATE_LOADING,
-               "Bad readyState");
-    SetReadyStateInternal(nsIDocument::READYSTATE_INTERACTIVE);
-  }
+  MOZ_ASSERT(GetReadyStateEnum() == nsIDocument::READYSTATE_LOADING,
+             "Bad readyState: we should still be doing our initial load");
+  mDidInitialDocumentSetup = true;
+  nsContentUtils::AddScriptRunner(
+    new nsDocElementCreatedNotificationRunner(this));
+  SetReadyStateInternal(nsIDocument::READYSTATE_INTERACTIVE);
 }
 
 nsresult
 MediaDocument::CreateSyntheticDocument()
 {
+  MOZ_ASSERT(!InitialSetupHasBeenDone());
+
   // Synthesize an empty html document
   nsresult rv;
 
@@ -416,17 +434,6 @@ MediaDocument::UpdateTitleAndCharset(const nsACString& aTypeStr,
     IgnoredErrorResult ignored;
     SetTitle(titleWithStatus, ignored);
   }
-}
-
-void
-MediaDocument::SetScriptGlobalObject(nsIScriptGlobalObject* aGlobalObject)
-{
-    nsHTMLDocument::SetScriptGlobalObject(aGlobalObject);
-    if (!mDocumentElementInserted && aGlobalObject) {
-        mDocumentElementInserted = true;
-        nsContentUtils::AddScriptRunner(
-            new nsDocElementCreatedNotificationRunner(this));
-    }
 }
 
 } // namespace dom

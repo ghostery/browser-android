@@ -17,7 +17,7 @@
 
 #include "builtin/Array.h"
 #include "util/StringBuffer.h"
-#include "vm/JSCompartment.h"
+#include "vm/Realm.h"
 
 #include "vm/NativeObject-inl.h"
 
@@ -289,10 +289,8 @@ JSONParser<CharT>::readNumber()
         }
 
         double d;
-        const CharT* dummy;
-        if (!GetPrefixInteger(cx, digitStart.get(), current.get(), 10, &dummy, &d))
+        if (!GetFullInteger(cx, digitStart.get(), current.get(), 10, &d))
             return token(OOM);
-        MOZ_ASSERT(current == dummy);
         return numberToken(negative ? -d : d);
     }
 
@@ -335,10 +333,8 @@ JSONParser<CharT>::readNumber()
     }
 
     double d;
-    const CharT* finish;
-    if (!js_strtod(cx, digitStart.get(), current.get(), &finish, &d))
+    if (!FullStringToDouble(cx, digitStart.get(), current.get(), &d))
         return token(OOM);
-    MOZ_ASSERT(current == finish);
     return numberToken(negative ? -d : d);
 }
 
@@ -726,8 +722,10 @@ JSONParser<CharT>::parse(MutableHandleValue vp)
                     if (!elements)
                         return false;
                 }
-                if (!stack.append(elements))
+                if (!stack.append(elements)) {
+                    js_delete(elements);
                     return false;
+                }
 
                 token = advance();
                 if (token == ArrayClose) {
@@ -748,8 +746,10 @@ JSONParser<CharT>::parse(MutableHandleValue vp)
                     if (!properties)
                         return false;
                 }
-                if (!stack.append(properties))
+                if (!stack.append(properties)) {
+                    js_delete(properties);
                     return false;
+                }
 
                 token = advanceAfterObjectOpen();
                 if (token == ObjectClose) {

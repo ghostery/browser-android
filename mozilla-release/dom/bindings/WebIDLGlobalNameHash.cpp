@@ -11,6 +11,7 @@
 #include "js/Wrapper.h"
 #include "jsapi.h"
 #include "jsfriendapi.h"
+#include "mozilla/ArrayUtils.h"
 #include "mozilla/ErrorResult.h"
 #include "mozilla/HashFunctions.h"
 #include "mozilla/Maybe.h"
@@ -92,7 +93,7 @@ struct WebIDLNameTableEntry : public PLDHashEntryHdr
     const char* name = WebIDLGlobalNameHash::sNames + mNameOffset;
 
     if (aKey->mLatin1String) {
-      return PodEqual(aKey->mLatin1String, name, aKey->mLength);
+      return ArrayEqual(aKey->mLatin1String, name, aKey->mLength);
     }
 
     return nsCharTraits<char16_t>::compareASCII(aKey->mTwoBytesString, name,
@@ -308,7 +309,7 @@ WebIDLGlobalNameHash::DefineIfEnabled(JSContext* aCx,
   if (xpc::WrapperFactory::IsXrayWrapper(aObj)) {
     JS::Rooted<JSObject*> constructor(aCx);
     {
-      JSAutoCompartment ac(aCx, global);
+      JSAutoRealm ar(aCx, global);
       constructor = FindNamedConstructorForXray(aCx, aId, entry);
     }
     if (NS_WARN_IF(!constructor)) {

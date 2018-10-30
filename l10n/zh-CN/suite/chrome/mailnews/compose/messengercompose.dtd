@@ -1,8 +1,8 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!--LOCALIZATION NOTE messengercompose.dtd Main UI for message composition -->
 
+<!--LOCALIZATION NOTE messengercompose.dtd Main UI for message composition -->
 <!ENTITY msgComposeWindow.title "Compose页：(无主题)">
 
 <!ENTITY fromAddr.label "发件人:">
@@ -11,10 +11,10 @@
 <!ENTITY subject.accesskey "S">
 <!ENTITY attachments.label "附件：">
 <!ENTITY attachments.accesskey "c">
+
 <!-- menu items:  the . means that the menu item isn't implemented yet -->
+
 <!-- File menu items -->
-
-
 <!ENTITY saveCmd.label "保存">
 <!ENTITY saveCmd.accesskey "S">
 <!ENTITY saveAsCmd.label "另存为">
@@ -40,25 +40,25 @@
 <!ENTITY sendLaterCmd.label "以后发送">
 <!ENTITY sendLaterCmd.keycode "VK_RETURN">
 <!ENTITY sendLaterCmd.accesskey "L">
-<!-- Edit menu items -->
 
+<!-- Edit menu items -->
 <!ENTITY editRewrapCmd.label "重新排版">
 <!ENTITY editRewrapCmd.key "R">
 <!ENTITY editRewrapCmd.accesskey  "w">
-<!ENTITY accountManagerCmd.label "邮件和新闻组帐户设置…">
+<!ENTITY accountManagerCmd.label "邮件和新闻组账户设置…">
 <!ENTITY accountManagerCmd.accesskey "M">
-<!-- View menu items -->
 
+<!-- View menu items -->
 <!ENTITY showComposeToolbarCmd.label "邮件工具栏">
 <!ENTITY showComposeToolbarCmd.accesskey "o">
 <!ENTITY showFormatToolbarCmd.label "格式化工具栏">
 <!ENTITY showFormatToolbarCmd.accesskey "F">
-<!-- Format menu items -->
 
+<!-- Format menu items -->
 <!ENTITY formatMenu.label "格式">
 <!ENTITY formatMenu.accesskey "o">
-<!-- Options menu items -->
 
+<!-- Options menu items -->
 <!ENTITY optionsMenu.label "选项">
 <!ENTITY optionsMenu.accesskey "p">
 
@@ -100,18 +100,18 @@
 <!ENTITY fileCarbonCopyCmd.label "复制至">
 <!ENTITY fileCarbonCopyCmd.accesskey "d">
 <!ENTITY fileHereMenu.label "移动至此处">
+
 <!--LOCALIZATION NOTE Toolbar items Don't change any "chrome://" URLs -->
 <!-- Toolbar items -->
-
 <!ENTITY sendButton.label "发送">
 <!ENTITY addressButton.label "地址">
 <!ENTITY attachButton.label "附加">
 <!ENTITY spellingButton.label "拼写检查">
 <!ENTITY saveButton.label "保存">
 <!ENTITY stopButton.label "停止">
+
 <!--tooltips-->
 <!-- We already inherit &menuBar.tooltip and &mailToolbar.tooltip from messenger.dtd -->
-
 <!ENTITY addressBar.tooltip "地址栏">
 <!ENTITY formatToolbar.tooltip "格式化工具栏">
 <!ENTITY sendButton.tooltip "现在发送此消息"> 
@@ -120,8 +120,8 @@
 <!ENTITY attachButton.tooltip "添加附件"> 
 <!ENTITY saveButton.tooltip "保存此消息"> 
 <!ENTITY stopButton.tooltip "停止当前的传输"> 
-<!-- context menu items -->
 
+<!-- context menu items -->
 <!ENTITY openAttachment.label "打开">
 <!ENTITY openAttachment.accesskey "O">
 <!ENTITY renameAttachment.label "重命名…">

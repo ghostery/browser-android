@@ -2,8 +2,6 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
 
-ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
-
 // This verifies that duplicate plugins are coalesced and maintain their ID
 // across restarts.
 
@@ -20,61 +18,61 @@ var PLUGINS = [{
   version: "1",
   blocklisted: false,
   enabledState: Ci.nsIPluginTag.STATE_ENABLED,
-  filename: "/home/mozilla/.plugins/dupplugin1.so"
+  filename: "/home/mozilla/.plugins/dupplugin1.so",
 }, {
   name: "Duplicate Plugin 1",
   description: "A duplicate plugin",
   version: "1",
   blocklisted: false,
   enabledState: Ci.nsIPluginTag.STATE_ENABLED,
-  filename: "/usr/lib/plugins/dupplugin1.so"
+  filename: "/usr/lib/plugins/dupplugin1.so",
 }, {
   name: "Duplicate Plugin 2",
   description: "Another duplicate plugin",
   version: "1",
   blocklisted: false,
   enabledState: Ci.nsIPluginTag.STATE_ENABLED,
-  filename: "/home/mozilla/.plugins/dupplugin2.so"
+  filename: "/home/mozilla/.plugins/dupplugin2.so",
 }, {
   name: "Duplicate Plugin 2",
   description: "Another duplicate plugin",
   version: "1",
   blocklisted: false,
   enabledState: Ci.nsIPluginTag.STATE_ENABLED,
-  filename: "/usr/lib/plugins/dupplugin2.so"
+  filename: "/usr/lib/plugins/dupplugin2.so",
 }, {
   name: "Non-duplicate Plugin", // 3
   description: "Not a duplicate plugin",
   version: "1",
   blocklisted: false,
   enabledState: Ci.nsIPluginTag.STATE_ENABLED,
-  filename: "/home/mozilla/.plugins/dupplugin3.so"
+  filename: "/home/mozilla/.plugins/dupplugin3.so",
 }, {
   name: "Non-duplicate Plugin", // 4
   description: "Not a duplicate because the descriptions are different",
   version: "1",
   blocklisted: false,
   enabledState: Ci.nsIPluginTag.STATE_ENABLED,
-  filename: "/usr/lib/plugins/dupplugin4.so"
+  filename: "/usr/lib/plugins/dupplugin4.so",
 }, {
   name: "Another Non-duplicate Plugin", // 5
   description: "Not a duplicate plugin",
   version: "1",
   blocklisted: false,
   enabledState: Ci.nsIPluginTag.STATE_ENABLED,
-  filename: "/home/mozilla/.plugins/dupplugin5.so"
+  filename: "/home/mozilla/.plugins/dupplugin5.so",
 }].map(opts => new MockPlugin(opts));
 
 mockPluginHost(PLUGINS);
 
 var gPluginIDs = [null, null, null, null, null];
 
-function run_test() {
+async function run_test() {
   do_test_pending();
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
   Services.prefs.setBoolPref("media.gmp-provider.enabled", false);
 
-  startupManager();
+  await promiseStartupManager();
 
   run_test_1();
 }
@@ -118,7 +116,7 @@ async function run_test_1() {
 async function run_test_2() {
   let p = await AddonManager.getAddonByID(gPluginIDs[0]);
   Assert.ok(!p.userDisabled);
-  p.userDisabled = true;
+  await p.disable();
   Assert.ok(PLUGINS[0].disabled);
   Assert.ok(PLUGINS[1].disabled);
 
@@ -127,7 +125,7 @@ async function run_test_2() {
 
 // Test that IDs persist across restart
 async function run_test_3() {
-  restartManager();
+  await promiseRestartManager();
 
   let p = await AddonManager.getAddonByID(gPluginIDs[0]);
   Assert.notEqual(p, null);
@@ -136,7 +134,7 @@ async function run_test_3() {
 
   // Reorder the plugins and restart again
   [PLUGINS[0], PLUGINS[1]] = [PLUGINS[1], PLUGINS[0]];
-  restartManager();
+  await promiseRestartManager();
 
   let p_2 = await AddonManager.getAddonByID(gPluginIDs[0]);
   Assert.notEqual(p_2, null);

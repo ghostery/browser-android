@@ -8,7 +8,7 @@ async function run_test() {
   do_test_pending();
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
 
-  writeInstallRDFForExtension({
+  await promiseWriteInstallRDFForExtension({
     id: "addon1@tests.mozilla.org",
     version: "1.0",
     name: "Test 1",
@@ -16,22 +16,22 @@ async function run_test() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "0.1",
-      maxVersion: "0.2"
-    }]
+      maxVersion: "0.2",
+    }],
   }, profileDir);
 
-  startupManager();
+  await promiseStartupManager();
 
   AddonManager.strictCompatibility = false;
 
   let aAddon = await AddonManager.getAddonByID("addon1@tests.mozilla.org");
   Assert.notEqual(aAddon, null);
-  aAddon.userDisabled = true;
+  await aAddon.disable();
   executeSoon(run_test_1);
 }
 
 async function run_test_1() {
-  restartManager();
+  await promiseRestartManager();
   let aAddon = await AddonManager.getAddonByID("addon1@tests.mozilla.org");
   Assert.notEqual(aAddon, null);
   Assert.ok(aAddon.userDisabled);
@@ -40,8 +40,8 @@ async function run_test_1() {
 
   prepare_test({
     "addon1@tests.mozilla.org": [
-      ["onPropertyChanged", ["appDisabled"]]
-    ]
+      ["onPropertyChanged", ["appDisabled"]],
+    ],
   }, [], run_test_2);
 
   AddonManager.strictCompatibility = true;
@@ -56,8 +56,8 @@ async function run_test_2() {
 
   prepare_test({
     "addon1@tests.mozilla.org": [
-      ["onPropertyChanged", ["appDisabled"]]
-    ]
+      ["onPropertyChanged", ["appDisabled"]],
+    ],
   }, [], callback_soon(do_test_finished));
 
   AddonManager.strictCompatibility = false;

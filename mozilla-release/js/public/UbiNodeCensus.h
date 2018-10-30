@@ -30,6 +30,8 @@
 //       - objects with a specific [[Class]] *
 //     - strings
 //     - scripts
+//     - DOM nodes
+//       - nsINodes with a specific name (found in nsINode::NodeName()) *
 //     - all other Node types
 //       - nodes with a specific ubi::Node::typeName *
 //
@@ -47,7 +49,8 @@
 //    {
 //      by: "coarseType",
 //      objects: { by: "objectClass" },
-//      other:    { by: "internalType" }
+//      other:    { by: "internalType" },
+//      domNode: { by: "descriptiveType" }
 //    }
 //
 // we would build the following tree of CountType subclasses:
@@ -58,6 +61,8 @@
 //      scripts: SimpleCount
 //      strings: SimpleCount
 //      other: ByUbinodeType
+//        each type: SimpleCount
+//      domNode: ByDomObjectClass
 //        each type: SimpleCount
 //
 // The interior nodes are all breakdown types that categorize nodes according to
@@ -185,7 +190,7 @@ class RootedCount : JS::CustomAutoRooter {
   public:
     RootedCount(JSContext* cx, CountBasePtr&& count)
         : CustomAutoRooter(cx),
-          count(Move(count))
+          count(std::move(count))
           { }
     CountBase* operator->() const { return count.get(); }
     explicit operator bool() const { return count.get(); }
@@ -199,11 +204,8 @@ struct Census {
     // is an element of the set. If the targetZones set is empty, then nodes in
     // all zones are considered.
     JS::ZoneSet targetZones;
-    Zone* atomsZone;
 
-    explicit Census(JSContext* cx) : cx(cx), atomsZone(nullptr) { }
-
-    MOZ_MUST_USE JS_PUBLIC_API(bool) init();
+    explicit Census(JSContext* cx) : cx(cx) { }
 };
 
 // A BreadthFirst handler type that conducts a census, using a CountBase to

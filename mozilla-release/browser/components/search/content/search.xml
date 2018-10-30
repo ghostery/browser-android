@@ -17,10 +17,6 @@
           xmlns:xbl="http://www.mozilla.org/xbl">
 
   <binding id="searchbar">
-    <resources>
-      <stylesheet src="chrome://browser/content/search/searchbarBindings.css"/>
-      <stylesheet src="chrome://browser/skin/searchbar.css"/>
-    </resources>
     <content>
       <xul:stringbundle src="chrome://browser/locale/search.properties"
                         anonid="searchbar-stringbundle"/>
@@ -71,6 +67,7 @@
           return;
 
         Services.obs.addObserver(this, "browser-search-engine-modified");
+        Services.obs.addObserver(this, "browser-search-service");
 
         this._initialized = true;
 
@@ -105,7 +102,7 @@
             oneOffButtons.textbox = this.textbox;
             oneOffButtons.popup = this.textbox.popup;
           }
-        }, {capturing: true, once: true});
+        }, {capture: true, once: true});
       ]]></constructor>
 
       <destructor><![CDATA[
@@ -118,6 +115,7 @@
           this._initialized = false;
 
           Services.obs.removeObserver(this, "browser-search-engine-modified");
+          Services.obs.removeObserver(this, "browser-search-service");
         }
 
         // Make sure to break the cycle from _textbox to us. Otherwise we leak
@@ -187,7 +185,8 @@
         <parameter name="aTopic"/>
         <parameter name="aVerb"/>
         <body><![CDATA[
-          if (aTopic == "browser-search-engine-modified") {
+          if (aTopic == "browser-search-engine-modified" ||
+              (aTopic == "browser-search-service" && aVerb == "init-complete")) {
             // Make sure the engine list is refetched next time it's needed
             this._engines = null;
 
@@ -282,8 +281,10 @@
               where += "-background";
           } else {
             var newTabPref = Services.prefs.getBoolPref("browser.search.openintab");
-            if (((aEvent instanceof KeyboardEvent) && aEvent.altKey) ^ newTabPref)
+            if (((aEvent instanceof KeyboardEvent && aEvent.altKey) ^ newTabPref) &&
+                !isTabEmpty(gBrowser.selectedTab)) {
               where = "tab";
+            }
             if ((aEvent instanceof MouseEvent) &&
                 (aEvent.button == 1 || aEvent.getModifierState("Accel"))) {
               where = "tab";
@@ -381,7 +382,7 @@
           const details = {
             isOneOff: aOneOff,
             isSuggestion: (!aOneOff && telemetrySearchDetails),
-            selection: telemetrySearchDetails
+            selection: telemetrySearchDetails,
           };
           BrowserSearch.recordSearchInTelemetry(engine, "searchbar", details);
           // null parameter below specifies HTML response for search
@@ -406,7 +407,7 @@
         } else if (target.classList.contains("addengine-item")) {
           // Select the installed engine if the installation succeeds
           var installCallback = {
-            onSuccess: engine => this.currentEngine = engine
+            onSuccess: engine => this.currentEngine = engine,
           };
           Services.search.addEngine(target.getAttribute("uri"), null,
                                     target.getAttribute("src"), false,
@@ -502,12 +503,14 @@
           this.setAttribute("clickSelectsAll", true);
 
         var textBox = document.getAnonymousElementByAttribute(this,
-                                              "anonid", "textbox-input-box");
-        var cxmenu = document.getAnonymousElementByAttribute(textBox,
-                                          "anonid", "input-box-contextmenu");
+                                              "anonid", "moz-input-box");
+
+        // Force the Custom Element to upgrade until Bug 1470242 handles this:
+        customElements.upgrade(textBox);
+        var cxmenu = textBox.menupopup;
         cxmenu.addEventListener("popupshowing",
                                 () => { this.initContextMenu(cxmenu); },
-                                {capturing: true, once: true});
+                                {capture: true, once: true});
 
         this.setAttribute("aria-owns", this.popup.id);
         document.getBindingParent(this)._textboxInitialized = true;
@@ -527,31 +530,29 @@
       <method name="initContextMenu">
         <parameter name="aMenu"/>
         <body><![CDATA[
-          const kXULNS =
-            "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
           let stringBundle = document.getBindingParent(this)._stringBundle;
 
           let pasteAndSearch, suggestMenuItem;
           let element, label, akey;
 
-          element = document.createElementNS(kXULNS, "menuseparator");
+          element = document.createXULElement("menuseparator");
           aMenu.appendChild(element);
 
-          let insertLocation = aMenu.firstChild;
-          while (insertLocation.nextSibling &&
+          let insertLocation = aMenu.firstElementChild;
+          while (insertLocation.nextElementSibling &&
                  insertLocation.getAttribute("cmd") != "cmd_paste")
-            insertLocation = insertLocation.nextSibling;
+            insertLocation = insertLocation.nextElementSibling;
           if (insertLocation) {
-            element = document.createElementNS(kXULNS, "menuitem");
+            element = document.createXULElement("menuitem");
             label = stringBundle.getString("cmd_pasteAndSearch");
             element.setAttribute("label", label);
             element.setAttribute("anonid", "paste-and-search");
             element.setAttribute("oncommand", "BrowserSearch.pasteAndSearch(event)");
-            aMenu.insertBefore(element, insertLocation.nextSibling);
+            aMenu.insertBefore(element, insertLocation.nextElementSibling);
             pasteAndSearch = element;
           }
 
-          element = document.createElementNS(kXULNS, "menuitem");
+          element = document.createXULElement("menuitem");
           label = stringBundle.getString("cmd_clearHistory");
           akey = stringBundle.getString("cmd_clearHistory_accesskey");
           element.setAttribute("label", label);
@@ -559,7 +560,7 @@
           element.setAttribute("cmd", "cmd_clearhistory");
           aMenu.appendChild(element);
 
-          element = document.createElementNS(kXULNS, "menuitem");
+          element = document.createXULElement("menuitem");
           label = stringBundle.getString("cmd_showSuggestions");
           akey = stringBundle.getString("cmd_showSuggestions_accesskey");
           element.setAttribute("anonid", "toggle-suggest-item");
@@ -789,7 +790,7 @@
             default:
               // do nothing with unrecognized command
           }
-        }
+        },
       })]]></field>
     </implementation>
 
@@ -843,10 +844,6 @@
   </binding>
 
   <binding id="browser-search-autocomplete-result-popup" extends="chrome://global/content/bindings/autocomplete.xml#autocomplete-rich-result-popup">
-    <resources>
-      <stylesheet src="chrome://browser/content/search/searchbarBindings.css"/>
-      <stylesheet src="chrome://browser/skin/searchbar.css"/>
-    </resources>
     <content ignorekeys="true" level="top" consumeoutsideclicks="never">
       <xul:hbox anonid="searchbar-engine" xbl:inherits="showonlysettings"
                 class="search-panel-header search-panel-current-engine">
@@ -883,7 +880,7 @@
           if (popupForSearchBar) {
             searchBar.telemetrySearchDetails = {
               index: this.selectedIndex,
-              kind: "mouse"
+              kind: "mouse",
             };
           }
 
@@ -994,8 +991,7 @@
       <handler event="popupshowing"><![CDATA[
         // Force the panel to have the width of the searchbar rather than
         // the width of the textfield.
-        let DOMUtils = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                             .getInterface(Ci.nsIDOMWindowUtils);
+        let DOMUtils = window.windowUtils;
         let textboxRect = DOMUtils.getBoundsWithoutFlushing(this.mInput);
         let inputRect = DOMUtils.getBoundsWithoutFlushing(this.mInput.inputField);
 
@@ -1296,6 +1292,10 @@
       <field name="_contextEngine">null</field>
 
       <constructor><![CDATA[
+        // Force the <deck> Custom Element to be constructed. This can be removed
+        // once Bug 1470242 makes this happen behind the scenes.
+        customElements.upgrade(this.header);
+
         // Prevent popup events from the context menu from reaching the autocomplete
         // binding (or other listeners).
         let menu = document.getAnonymousElementByAttribute(this, "anonid", "search-one-offs-context-menu");
@@ -1314,6 +1314,7 @@
         // Add weak referenced observers to invalidate our cached list of engines.
         Services.prefs.addObserver("browser.search.hiddenOneOffs", this, true);
         Services.obs.addObserver(this, "browser-search-engine-modified", true);
+        Services.obs.addObserver(this, "browser-search-service", true);
 
         // Rebuild the buttons when the theme changes.  See bug 1357800 for
         // details.  Summary: On Linux, switching between themes can cause a row
@@ -1359,8 +1360,6 @@
 
       <method name="showSettings">
         <body><![CDATA[
-          BrowserUITelemetry.countSearchSettingsEvent(this.telemetryOrigin);
-
           openPreferences("paneSearch", {origin: "contentSearch"});
 
           // If the preference tab was already selected, the panel doesn't
@@ -1385,9 +1384,9 @@
           if (this.selectedButton && !isOneOffSelected)
             this.selectedButton = null;
           if (this.query) {
-            groupText = headerSearchText.previousSibling.value +
+            groupText = headerSearchText.previousElementSibling.value +
                         '"' + headerSearchText.value + '"' +
-                        headerSearchText.nextSibling.value;
+                        headerSearchText.nextElementSibling.value;
             if (!isOneOffSelected)
               this.header.selectedIndex = 1;
           } else {
@@ -1442,8 +1441,7 @@
           if (this._textbox) {
             // We can't get a reliable value for the popup width without flushing,
             // but the popup width won't change if the textbox width doesn't.
-            let DOMUtils = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                                 .getInterface(Ci.nsIDOMWindowUtils);
+            let DOMUtils = window.windowUtils;
             let textboxWidth =
               DOMUtils.getBoundsWithoutFlushing(this._textbox).width;
             // We can return early if neither the list of engines nor the panel
@@ -1455,12 +1453,12 @@
           }
 
           // Finally, build the list of one-off buttons.
-          while (this.buttons.firstChild != this.settingsButtonCompact)
-            this.buttons.firstChild.remove();
+          while (this.buttons.firstElementChild != this.settingsButtonCompact)
+            this.buttons.firstElementChild.remove();
           // Remove the trailing empty text node introduced by the binding's
           // content markup above.
-          if (this.settingsButtonCompact.nextSibling)
-            this.settingsButtonCompact.nextSibling.remove();
+          if (this.settingsButtonCompact.nextElementSibling)
+            this.settingsButtonCompact.nextElementSibling.remove();
 
           let engines = this.engines;
           let oneOffCount = engines.length;
@@ -1482,9 +1480,7 @@
           // This is likely because the clientWidth getter rounds the value, but
           // the panel's border width is not an integer.
           // As a workaround, decrement the width if the scale is not an integer.
-          let scale = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                            .getInterface(Ci.nsIDOMWindowUtils)
-                            .screenPixelsPerCSSPixel;
+          let scale = window.windowUtils.screenPixelsPerCSSPixel;
           if (Math.floor(scale) != scale) {
             --panelWidth;
           }
@@ -1510,13 +1506,10 @@
           this.settingsButton.id = origin + "-anon-search-settings";
           this.settingsButtonCompact.id = origin + "-anon-search-settings-compact";
 
-          const kXULNS =
-            "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
-
           let dummyItems = enginesPerRow - (oneOffCount % enginesPerRow || enginesPerRow);
           for (let i = 0; i < engines.length; ++i) {
             let engine = engines[i];
-            let button = document.createElementNS(kXULNS, "button");
+            let button = document.createXULElement("button");
             button.id = this._buttonIDForEngine(engine);
             let uri = "chrome://browser/skin/search-engine-placeholder.png";
             if (engine.iconURI) {
@@ -1542,7 +1535,7 @@
 
           let hasDummyItems = !!dummyItems;
           while (dummyItems) {
-            let button = document.createElementNS(kXULNS, "button");
+            let button = document.createXULElement("button");
             button.setAttribute("class", "searchbar-engine-one-off-item dummy last-row");
             button.setAttribute("width", buttonWidth);
 
@@ -1562,7 +1555,7 @@
               // width of the last dummy item by the remainder.
               let remainder = panelWidth - (enginesPerRow * buttonWidth);
               let width = remainder + buttonWidth;
-              let lastDummyItem = this.settingsButtonCompact.previousSibling;
+              let lastDummyItem = this.settingsButtonCompact.previousElementSibling;
               lastDummyItem.setAttribute("width", width);
             }
           }
@@ -1591,15 +1584,12 @@
           return;
         }
 
-        const kXULNS =
-          "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
-
         let engines = gBrowser.selectedBrowser.engines;
         let tooManyEngines = engines.length > this._addEngineMenuThreshold;
 
         if (tooManyEngines) {
           // Make the top-level menu button.
-          let button = document.createElementNS(kXULNS, "toolbarbutton");
+          let button = document.createXULElement("toolbarbutton");
           list.appendChild(button);
           button.classList.add("addengine-item", "badged-button");
           button.setAttribute("anonid", "addengine-menu-button");
@@ -1618,7 +1608,7 @@
           }
 
           // Now make the button's child menupopup.
-          list = document.createElementNS(kXULNS, "menupopup");
+          list = document.createXULElement("menupopup");
           button.appendChild(list);
           list.setAttribute("anonid", "addengine-menu");
           list.setAttribute("position", "topright topleft");
@@ -1645,7 +1635,7 @@
         // handling for free inside menupopups.
         let eltType = tooManyEngines ? "menuitem" : "toolbarbutton";
         for (let engine of engines) {
-          let button = document.createElementNS(kXULNS, eltType);
+          let button = document.createXULElement(eltType);
           button.classList.add("addengine-item");
           if (!tooManyEngines) {
             button.classList.add("badged-button");
@@ -1743,7 +1733,7 @@
         <parameter name="aIncludeNonEngineButtons"/>
         <body><![CDATA[
           let buttons = [];
-          for (let oneOff = this.buttons.firstChild; oneOff; oneOff = oneOff.nextSibling) {
+          for (let oneOff = this.buttons.firstElementChild; oneOff; oneOff = oneOff.nextElementSibling) {
             // oneOff may be a text node since the list xul:description contains
             // whitespace and the compact settings button.  See the markup
             // above.  _rebuild removes text nodes, but it may not have been
@@ -1757,7 +1747,7 @@
           }
 
           if (aIncludeNonEngineButtons) {
-            for (let addEngine = this.addEngines.firstChild; addEngine; addEngine = addEngine.nextSibling) {
+            for (let addEngine = this.addEngines.firstElementChild; addEngine; addEngine = addEngine.nextElementSibling) {
               buttons.push(addEngine);
             }
             buttons.push(this.compact ? this.settingsButtonCompact : this.settingsButton);
@@ -1785,8 +1775,10 @@
             }
           } else {
             var newTabPref = Services.prefs.getBoolPref("browser.search.openintab");
-            if (((aEvent instanceof KeyboardEvent) && aEvent.altKey) ^ newTabPref)
+            if (((aEvent instanceof KeyboardEvent && aEvent.altKey) ^ newTabPref) &&
+                !isTabEmpty(gBrowser.selectedTab)) {
               where = "tab";
+            }
             if ((aEvent instanceof MouseEvent) &&
                 (aEvent.button == 1 || aEvent.getModifierState("Accel"))) {
               where = "tab";
@@ -2268,7 +2260,7 @@
               prompt.QueryInterface(Ci.nsIWritablePropertyBag2);
               prompt.setPropertyAsBool("allowTabModal", true);
               prompt.alert(title, text);
-            }
+            },
           };
           Services.search.addEngine(target.getAttribute("uri"), null,
                                     target.getAttribute("image"), false,

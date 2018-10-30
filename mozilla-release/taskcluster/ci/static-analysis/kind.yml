@@ -9,6 +9,7 @@ kind-dependencies:
 
 transforms:
     - taskgraph.transforms.build_attrs:transforms
+    - taskgraph.transforms.build_lints:transforms
     - taskgraph.transforms.use_toolchains:transforms
     - taskgraph.transforms.job:transforms
     - taskgraph.transforms.task:transforms
@@ -22,52 +23,6 @@ job-defaults:
         tier: 1
 
 jobs:
-    linux64-st-an/debug:
-        description: "Linux64 Debug Static Analysis"
-        index:
-            job-name: linux64-st-an-debug
-        treeherder:
-            platform: linux64/debug
-        worker-type: aws-provisioner-v1/gecko-{level}-b-linux
-        worker:
-            max-run-time: 36000
-        run:
-            using: mozharness
-            actions: [build]
-            config:
-                - builds/releng_base_firefox.py
-                - builds/releng_sub_linux_configs/64_stat_and_debug.py
-            script: "mozharness/scripts/fx_desktop_build.py"
-            tooltool-downloads: public
-            keep-artifacts: false
-        toolchains:
-            - linux64-clang
-            - linux64-rust
-            - linux64-sccache
-
-    linux64-st-an/opt:
-        description: "Linux64 Opt Static Analysis"
-        index:
-            job-name: linux64-st-an-opt
-        treeherder:
-            platform: linux64/opt
-        worker-type: aws-provisioner-v1/gecko-{level}-b-linux
-        worker:
-            max-run-time: 36000
-        run:
-            using: mozharness
-            actions: [build]
-            config:
-                - builds/releng_base_firefox.py
-                - builds/releng_sub_linux_configs/64_stat_and_opt.py
-            script: "mozharness/scripts/fx_desktop_build.py"
-            tooltool-downloads: public
-            keep-artifacts: false
-        toolchains:
-            - linux64-clang
-            - linux64-rust
-            - linux64-sccache
-
     win32-st-an/debug:
         description: "Win32 Static Analysis Debug (clang-cl)"
         index:
@@ -82,6 +37,7 @@ jobs:
             max-run-time: 7200
             env:
                 TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win32/releng.manifest"
+                PERFHERDER_EXTRA_OPTIONS: static-analysis
         run:
             using: mozharness
             options: [append-env-variables-from-configs]
@@ -94,7 +50,9 @@ jobs:
         toolchains:
             - win32-clang-cl-st-an
             - win32-rust
+            - win64-cbindgen
             - win64-sccache
+            - win64-node
 
     win32-st-an/opt:
         description: "Win32 Static Analysis Opt (clang-cl)"
@@ -110,6 +68,7 @@ jobs:
             max-run-time: 7200
             env:
                 TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win32/releng.manifest"
+                PERFHERDER_EXTRA_OPTIONS: static-analysis
         run:
             using: mozharness
             options: [append-env-variables-from-configs]
@@ -122,7 +81,9 @@ jobs:
         toolchains:
             - win32-clang-cl-st-an
             - win32-rust
+            - win64-cbindgen
             - win64-sccache
+            - win64-node
 
     win64-st-an/debug:
         description: "Win64 Static Analysis Debug (clang-cl)"
@@ -138,6 +99,7 @@ jobs:
             max-run-time: 7200
             env:
                 TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win64/releng.manifest"
+                PERFHERDER_EXTRA_OPTIONS: static-analysis
         run:
             using: mozharness
             options: [append-env-variables-from-configs]
@@ -150,7 +112,9 @@ jobs:
         toolchains:
             - win64-clang-cl-st-an
             - win64-rust
+            - win64-cbindgen
             - win64-sccache
+            - win64-node
 
     win64-st-an/opt:
         description: "Win64 Static Analysis Opt (clang-cl)"
@@ -166,6 +130,7 @@ jobs:
             max-run-time: 7200
             env:
                 TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win64/releng.manifest"
+                PERFHERDER_EXTRA_OPTIONS: static-analysis
         run:
             using: mozharness
             options: [append-env-variables-from-configs]
@@ -178,4 +143,6 @@ jobs:
         toolchains:
             - win64-clang-cl-st-an
             - win64-rust
+            - win64-cbindgen
             - win64-sccache
+            - win64-node

@@ -332,12 +332,12 @@ SurfaceFactory::NewTexClient(const gfx::IntSize& size)
         StopRecycling(cur);
     }
 
-    UniquePtr<SharedSurface> surf = Move(CreateShared(size));
+    UniquePtr<SharedSurface> surf = CreateShared(size);
     if (!surf)
         return nullptr;
 
     RefPtr<layers::SharedSurfaceTextureClient> ret;
-    ret = layers::SharedSurfaceTextureClient::Create(Move(surf), this, mAllocator, mFlags);
+    ret = layers::SharedSurfaceTextureClient::Create(std::move(surf), this, mAllocator, mFlags);
 
     StartRecycling(ret);
 
@@ -403,10 +403,6 @@ SurfaceFactory::Recycle(layers::SharedSurfaceTextureClient* texClient)
 ScopedReadbackFB::ScopedReadbackFB(SharedSurface* src)
     : mGL(src->mGL)
     , mAutoFB(mGL)
-    , mTempFB(0)
-    , mTempTex(0)
-    , mSurfToUnlock(nullptr)
-    , mSurfToLock(nullptr)
 {
     switch (src->mAttachType) {
     case AttachmentType::GLRenderbuffer:

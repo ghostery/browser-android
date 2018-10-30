@@ -4,7 +4,8 @@
 "use strict";
 
 function run_test() {
-  DebuggerServer.registerModule("xpcshell-test/testactors-no-bulk");
+  const { createRootActor } = require("xpcshell-test/testactors-no-bulk");
+  DebuggerServer.setRootActor(createRootActor);
   // Allow incoming connections.
   DebuggerServer.init();
 
@@ -20,9 +21,9 @@ function run_test() {
 /** * Tests ***/
 
 var test_bulk_send_error = async function(transportFactory) {
-  let transport = await transportFactory();
+  const transport = await transportFactory();
 
-  let client = new DebuggerClient(transport);
+  const client = new DebuggerClient(transport);
   return client.connect().then(([app, traits]) => {
     Assert.ok(!traits.bulk);
 

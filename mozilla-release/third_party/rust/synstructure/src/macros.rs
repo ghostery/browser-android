@@ -4,7 +4,6 @@
 
 // Re-exports used by the decl_derive! and test_derive!
 pub use syn::{parse_str, parse, DeriveInput};
-pub use quote::Tokens;
 pub use proc_macro::TokenStream as TokenStream;
 pub use proc_macro2::TokenStream as TokenStream2;
 
@@ -16,8 +15,9 @@ pub use proc_macro2::TokenStream as TokenStream2;
 ///
 /// ```
 /// # extern crate quote;
+/// # extern crate proc_macro2;
 /// # extern crate synstructure;
-/// fn derive(input: synstructure::Structure) -> quote::Tokens {
+/// fn derive(input: synstructure::Structure) -> proc_macro2::TokenStream {
 ///     unimplemented!()
 /// }
 /// ```
@@ -27,9 +27,10 @@ pub use proc_macro2::TokenStream as TokenStream2;
 /// ### Without Attributes
 /// ```
 /// # #[macro_use] extern crate quote;
+/// # extern crate proc_macro2;
 /// # extern crate synstructure;
 /// # fn main() {}
-/// fn derive_interesting(_input: synstructure::Structure) -> quote::Tokens {
+/// fn derive_interesting(_input: synstructure::Structure) -> proc_macro2::TokenStream {
 ///     quote! { ... }
 /// }
 ///
@@ -41,9 +42,10 @@ pub use proc_macro2::TokenStream as TokenStream2;
 /// ### With Attributes
 /// ```
 /// # #[macro_use] extern crate quote;
+/// # extern crate proc_macro2;
 /// # extern crate synstructure;
 /// # fn main() {}
-/// fn derive_interesting(_input: synstructure::Structure) -> quote::Tokens {
+/// fn derive_interesting(_input: synstructure::Structure) -> proc_macro2::TokenStream {
 ///     quote! { ... }
 /// }
 ///
@@ -84,8 +86,9 @@ macro_rules! decl_derive {
 ///
 /// ```
 /// # #[macro_use] extern crate quote;
+/// # extern crate proc_macro2;
 /// # #[macro_use] extern crate synstructure;
-/// fn test_derive_example(_s: synstructure::Structure) -> quote::Tokens {
+/// fn test_derive_example(_s: synstructure::Structure) -> proc_macro2::TokenStream {
 ///     quote! { const YOUR_OUTPUT: &'static str = "here"; }
 /// }
 ///
@@ -126,10 +129,24 @@ macro_rules! test_derive {
             let expected = stringify!( $($o)* )
                 .parse::<$crate::macros::TokenStream2>()
                 .expect("output should be a valid TokenStream");
-            let mut expected_toks = $crate::macros::Tokens::new();
-            expected_toks.append_all(expected);
+            let mut expected_toks = $crate::macros::TokenStream2::from(expected);
+            if res.to_string() != expected_toks.to_string() {
+                panic!("\
+test_derive failed:
+expected:
+```
+{}
+```
 
-            assert_eq!(res, expected_toks)
+got:
+```
+{}
+```\n",
+                    $crate::unpretty_print(&expected_toks),
+                    $crate::unpretty_print(&res),
+                );
+            }
+            // assert_eq!(res, expected_toks)
         }
     };
 }
@@ -160,10 +177,12 @@ macro_rules! test_derive {
 /// # Example
 ///
 /// ```
+/// extern crate syn;
 /// #[macro_use]
 /// extern crate quote;
 /// #[macro_use]
 /// extern crate synstructure;
+/// extern crate proc_macro2;
 /// # const _IGNORE: &'static str = stringify! {
 /// decl_derive!([Interest] => derive_interest);
 /// # };
@@ -181,7 +200,8 @@ macro_rules! test_derive {
 ///         // filtering out fields which should be ignored by all methods and for
 ///         // the purposes of binding type parameters.
 ///         filter(s) {
-///             s.filter(|bi| bi.ast().ident != Some("a".into()));
+///             s.filter(|bi| bi.ast().ident != Some(syn::Ident::new("a",
+///                 proc_macro2::Span::call_site())));
 ///         }
 ///
 ///         // This is an implementation of a method in the implemented crate. The
@@ -237,12 +257,12 @@ macro_rules! simple_derive {
     (
         $iname:ident impl $path:path { $($rest:tt)* }
     ) => {
-        simple_derive!(@I [$iname, $path] { $($rest)* } [] []);
+        simple_derive!(__I [$iname, $path] { $($rest)* } [] []);
     };
 
     // Adding a filter block
     (
-        @I $opt:tt {
+        __I $opt:tt {
             filter($s:ident) {
                 $($body:tt)*
             }
@@ -250,7 +270,7 @@ macro_rules! simple_derive {
         } [$($done:tt)*] [$($filter:tt)*]
     ) => {
         simple_derive!(
-            @I $opt { $($rest)* } [$($done)*] [
+            __I $opt { $($rest)* } [$($done)*] [
                 $($filter)*
                 [
                     st_name = $s,
@@ -264,7 +284,7 @@ macro_rules! simple_derive {
 
     // &self bound method
     (
-        @I $opt:tt {
+        __I $opt:tt {
             fn $fn_name:ident (&self as $s:ident $($params:tt)*) $(-> $t:ty)* {
                 $($body:tt)*
             }
@@ -272,7 +292,7 @@ macro_rules! simple_derive {
         } [$($done:tt)*] [$($filter:tt)*]
     ) => {
         simple_derive!(
-            @I $opt { $($rest)* } [
+            __I $opt { $($rest)* } [
                 $($done)*
                 [
                     st_name = $s,
@@ -291,7 +311,7 @@ macro_rules! simple_derive {
 
     // &mut self bound method
     (
-        @I $opt:tt {
+        __I $opt:tt {
             fn $fn_name:ident (&mut self as $s:ident $($params:tt)*) $(-> $t:ty)* {
                 $($body:tt)*
             }
@@ -299,7 +319,7 @@ macro_rules! simple_derive {
         } [$($done:tt)*] [$($filter:tt)*]
     ) => {
         simple_derive!(
-            @I $opt { $($rest)* } [
+            __I $opt { $($rest)* } [
                 $($done)*
                 [
                     st_name = $s,
@@ -318,7 +338,7 @@ macro_rules! simple_derive {
 
     // self bound method
     (
-        @I $opt:tt {
+        __I $opt:tt {
             fn $fn_name:ident (self as $s:ident $($params:tt)*) $(-> $t:ty)* {
                 $($body:tt)*
             }
@@ -326,7 +346,7 @@ macro_rules! simple_derive {
         } [$($done:tt)*] [$($filter:tt)*]
     ) => {
         simple_derive!(
-            @I $opt { $($rest)* } [
+            __I $opt { $($rest)* } [
                 $($done)*
                 [
                     st_name = $s,
@@ -347,7 +367,7 @@ macro_rules! simple_derive {
 
     // codegen after data collection
     (
-        @I [$iname:ident, $path:path] {} [$(
+        __I [$iname:ident, $path:path] {} [$(
             [
                 st_name = $st_name:ident,
                 bind_style = $bind_style:ident,
@@ -362,7 +382,7 @@ macro_rules! simple_derive {
             ]
         )*]
     ) => {
-        fn $iname(mut st: $crate::Structure) -> $crate::macros::Tokens {
+        fn $iname(mut st: $crate::Structure) -> $crate::macros::TokenStream2 {
             let _ = &mut st; // Silence the unused mut warning
 
             // Filter/transform the `Structure` object before cloning it for

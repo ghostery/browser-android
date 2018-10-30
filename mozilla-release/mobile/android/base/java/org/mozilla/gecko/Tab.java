@@ -444,6 +444,7 @@ public class Tab {
         }
 
         mRunningIconRequest = mIconRequestBuilder
+                .setPrivateMode(isPrivate())
                 .build()
                 .execute(new IconCallback() {
                     @Override

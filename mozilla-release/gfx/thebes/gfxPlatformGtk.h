@@ -97,7 +97,7 @@ public:
 
     bool AccelerateLayersByDefault() override;
 
-#ifdef GL_PROVIDER_GLX
+#ifdef MOZ_X11
     already_AddRefed<mozilla::gfx::VsyncSource> CreateHardwareVsyncSource() override;
 #endif
 
@@ -106,6 +106,21 @@ public:
       return mCompositorDisplay;
     }
 #endif // MOZ_X11
+
+#ifdef MOZ_WAYLAND
+    void SetWaylandLastVsync(uint32_t aVsyncTimestamp) {
+      mWaylandLastVsyncTimestamp = aVsyncTimestamp;
+    }
+    int64_t GetWaylandLastVsync() {
+      return mWaylandLastVsyncTimestamp;
+    }
+    void SetWaylandFrameDelay(int64_t aFrameDelay) {
+      mWaylandFrameDelay = aFrameDelay;
+    }
+    int64_t GetWaylandFrameDelay() {
+      return mWaylandFrameDelay;
+    }
+#endif
 
 protected:
     bool CheckVariationFontSupport() override;
@@ -118,6 +133,10 @@ private:
 
 #ifdef MOZ_X11
     Display* mCompositorDisplay;
+#endif
+#ifdef MOZ_WAYLAND
+    int64_t  mWaylandLastVsyncTimestamp;
+    int64_t  mWaylandFrameDelay;
 #endif
 };
 

@@ -6,12 +6,12 @@
 
 <!-- LOCALIZATION NOTE: The title is intended to be apologetic and disarming, expressing dismay
      and regret that we are unable to restore the session for the user -->
-<!ENTITY restorepage.errorTitle2    "Desculpe. Estamos tendo problemas ao restaurar suas páginas.">
+<!ENTITY restorepage.errorTitle2    "Desculpe, estamos tendo problemas ao restaurar suas páginas.">
 <!ENTITY restorepage.problemDesc2   "Estamos tendo problemas para restaurar a sua última sessão. Selecione Restaurar Sessão para tentar novamente.">
-<!ENTITY restorepage.tryThis2       "Ainda não foi possível restaurar sua sessão? Às vezes uma aba está causando o problema. Veja as abas anteriores, desmarque as abas que você não precisa recuperar, e depois restaure.">
+<!ENTITY restorepage.tryThis2       "Ainda não conseguiu restaurar sua sessão? Às vezes uma aba pode estar causando o problema. Veja as abas que estavam abertas, desmarque as abas que você não precisa recuperar e depois restaure.">
 
-<!ENTITY restorepage.hideTabs       "Ocultar aba anterior">
-<!ENTITY restorepage.showTabs       "Exibir aba anterior">
+<!ENTITY restorepage.hideTabs       "Ocultar abas anteriores">
+<!ENTITY restorepage.showTabs       "Exibir abas anteriores">
 
 <!ENTITY restorepage.tryagainButton2 "Restaurar sessão">
 <!ENTITY restorepage.restore.access2 "R">

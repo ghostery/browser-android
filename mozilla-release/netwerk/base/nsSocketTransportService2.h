@@ -185,6 +185,10 @@ private:
         // or 0 (zero) when it has already timed out.  Returns NS_SOCKET_POLL_TIMEOUT
         // when there is no timeout set on the socket.
         PRIntervalTime TimeoutIn(PRIntervalTime now) const;
+        // When a socket timeout is reset and later set again, it may happen
+        // that mPollStartEpoch is not reset in between.  We have to manually
+        // call this on every iteration over sockets to ensure the epoch reset.
+        void MaybeResetEpoch();
     };
 
     SocketContext *mActiveList;                   /* mListSize entries */
@@ -237,7 +241,8 @@ private:
 
     // Preference Monitor for SendBufferSize and Keepalive prefs.
     nsresult    UpdatePrefs();
-    void        UpdateSendBufferPref(nsIPrefBranch *);
+    static void PrefCallback(const char* aPref, nsSocketTransportService* aSelf);
+    void        UpdateSendBufferPref();
     int32_t     mSendBufferSize;
     // Number of seconds of connection is idle before first keepalive ping.
     int32_t     mKeepaliveIdleTimeS;
@@ -247,11 +252,22 @@ private:
     int32_t     mKeepaliveProbeCount;
     // True if TCP keepalive is enabled globally.
     bool        mKeepaliveEnabledPref;
+    // Timeout of pollable event signalling.
+    TimeDuration mPollableEventTimeout;
 
     Atomic<bool>                    mServingPendingQueue;
     Atomic<int32_t, Relaxed>        mMaxTimePerPollIter;
     Atomic<bool, Relaxed>           mTelemetryEnabledPref;
     Atomic<PRIntervalTime, Relaxed> mMaxTimeForPrClosePref;
+    // Timestamp of the last network link change event, tracked
+    // also on child processes.
+    Atomic<PRIntervalTime, Relaxed> mLastNetworkLinkChangeTime;
+    // Preference for how long we do busy wait after network link
+    // change has been detected.
+    Atomic<PRIntervalTime, Relaxed> mNetworkLinkChangeBusyWaitPeriod;
+    // Preference for the value of timeout for poll() we use during
+    // the network link change event period.
+    Atomic<PRIntervalTime, Relaxed> mNetworkLinkChangeBusyWaitTimeout;
 
     // Between a computer going to sleep and waking up the PR_*** telemetry
     // will be corrupted - so do not record it.
@@ -285,6 +301,8 @@ private:
     void StartPolling();
     void EndPolling();
 #endif
+
+    void TryRepairPollableEvent();
 };
 
 extern nsSocketTransportService *gSocketTransportService;

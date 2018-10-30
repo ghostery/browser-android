@@ -4,19 +4,29 @@
 
 "use strict";
 
-// Test that the font-inspector also display fonts when a text node is selected.
+// Test that selecting a text node invokes the font editor on its parent node.
 
-const TEST_URI = URL_ROOT + "browser_fontinspector.html";
+const TEST_URI = URL_ROOT + "doc_browser_fontinspector.html";
 
 add_task(async function() {
-  let { inspector, view } = await openFontInspectorForURL(TEST_URI);
-  let viewDoc = view.document;
+  await pushPref("devtools.inspector.fonteditor.enabled", true);
+  const { inspector, view } = await openFontInspectorForURL(TEST_URI);
+  const viewDoc = view.document;
 
-  info("Selecting the first text-node first-child of <body>");
-  let bodyNode = await getNodeFront("body", inspector);
-  let { nodes } = await inspector.walker.children(bodyNode);
+  info("Select the first text node of <body>");
+  const bodyNode = await getNodeFront("body", inspector);
+  const { nodes } = await inspector.walker.children(bodyNode);
+  const onInspectorUpdated = inspector.once("fontinspector-updated");
   await selectNode(nodes[0], inspector);
 
-  let lis = getUsedFontsEls(viewDoc);
-  is(lis.length, 1, "Font inspector shows 1 font");
+  info("Waiting for font editor to render");
+  await onInspectorUpdated;
+
+  const textFonts = getUsedFontsEls(viewDoc);
+
+  info("Select the <body> element");
+  await selectNode("body", inspector);
+
+  const parentFonts = getUsedFontsEls(viewDoc);
+  is(textFonts.length, parentFonts.length, "Font inspector shows same number of fonts");
 });

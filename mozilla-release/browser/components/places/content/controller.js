@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/* import-globals-from ../../../base/content/utilityOverlay.js */
 /* import-globals-from ../PlacesUIUtils.jsm */
-/* import-globals-from ../../../../toolkit/content/globalOverlay.js */
 /* import-globals-from ../../../../toolkit/components/places/PlacesUtils.jsm */
 /* import-globals-from ../../../../toolkit/components/places/PlacesTransactions.jsm */
 
@@ -58,7 +58,7 @@ PlacesInsertionPoint.prototype = {
 
   get isTag() {
     return typeof(this.tagName) == "string";
-  }
+  },
 };
 
 /**
@@ -89,7 +89,7 @@ PlacesController.prototype = {
   disableUserActions: false,
 
   QueryInterface: ChromeUtils.generateQI([
-    Ci.nsIClipboardOwner
+    Ci.nsIClipboardOwner,
   ]),
 
   // nsIClipboardOwner
@@ -273,12 +273,9 @@ PlacesController.prototype = {
       let node = this._view.selectedNode;
       PlacesUIUtils.showBookmarkDialog({ action: "add",
                                          type: "bookmark",
-                                         hiddenRows: [ "description",
-                                                        "keyword",
-                                                        "location",
-                                                        "loadInSidebar" ],
+                                         hiddenRows: [ "keyword", "location" ],
                                          uri: Services.io.newURI(node.uri),
-                                         title: node.title
+                                         title: node.title,
                                        }, window.top);
       break;
     }
@@ -567,8 +564,8 @@ PlacesController.prototype = {
     var separator = null;
     var visibleItemsBeforeSep = false;
     var usableItemCount = 0;
-    for (var i = 0; i < aPopup.childNodes.length; ++i) {
-      var item = aPopup.childNodes[i];
+    for (var i = 0; i < aPopup.children.length; ++i) {
+      var item = aPopup.children[i];
       if (item.getAttribute("ignoreitem") == "true") {
         continue;
       }
@@ -652,7 +649,7 @@ PlacesController.prototype = {
 
     PlacesUIUtils.showBookmarkDialog({ action: "edit",
                                        node,
-                                       hiddenRows: [ "folderPicker" ]
+                                       hiddenRows: [ "folderPicker" ],
                                      }, window.top);
   },
 
@@ -701,7 +698,7 @@ PlacesController.prototype = {
       PlacesUIUtils.showBookmarkDialog({ action: "add",
                                          type: aType,
                                          defaultInsertionPoint: ip,
-                                         hiddenRows: [ "folderPicker" ]
+                                         hiddenRows: [ "folderPicker" ],
                                        }, window.top);
     if (bookmarkGuid) {
       this._view.selectItems([bookmarkGuid], false);
@@ -813,14 +810,15 @@ PlacesController.prototype = {
         // child of the "Tags" query in the library, in all other places we
         // must only remove the query node.
         let tag = node.title;
-        let URIs = PlacesUtils.tagging.getURIsForTag(tag);
-        transactions.push(PlacesTransactions.Untag({ tag, urls: URIs }));
+        let urls = new Set();
+        await PlacesUtils.bookmarks.fetch({tags: [tag]}, b => urls.add(b.url));
+        transactions.push(PlacesTransactions.Untag({ tag, urls: Array.from(urls) }));
       } else if (PlacesUtils.nodeIsURI(node) &&
                  PlacesUtils.nodeIsQuery(node.parent) &&
                  PlacesUtils.asQuery(node.parent).queryOptions.queryType ==
                    Ci.nsINavHistoryQueryOptions.QUERY_TYPE_HISTORY) {
         // This is a uri node inside an history query.
-        PlacesUtils.history.remove(node.uri).catch(Cu.reportError);
+        await PlacesUtils.history.remove(node.uri).catch(Cu.reportError);
         // History deletes are not undoable, so we don't have a transaction.
       } else if (node.itemId == -1 &&
                  PlacesUtils.nodeIsQuery(node) &&
@@ -829,7 +827,7 @@ PlacesController.prototype = {
         // This is a dynamically generated history query, like queries
         // grouped by site, time or both.  Dynamically generated queries don't
         // have an itemId even if they are descendants of a bookmark.
-        this._removeHistoryContainer(node);
+        await this._removeHistoryContainer(node).catch(Cu.reportError);
         // History deletes are not undoable, so we don't have a transaction.
       } else {
         // This is a common bookmark item.
@@ -869,7 +867,7 @@ PlacesController.prototype = {
    *
    * @note history deletes are not undoable.
    */
-  _removeRowsFromHistory: function PC__removeRowsFromHistory() {
+  async _removeRowsFromHistory() {
     let nodes = this._view.selectedNodes;
     let URIs = new Set();
     for (let i = 0; i < nodes.length; ++i) {
@@ -879,11 +877,13 @@ PlacesController.prototype = {
       } else if (PlacesUtils.nodeIsQuery(node) &&
                PlacesUtils.asQuery(node).queryOptions.queryType ==
                  Ci.nsINavHistoryQueryOptions.QUERY_TYPE_HISTORY) {
-        this._removeHistoryContainer(node);
+        await this._removeHistoryContainer(node).catch(Cu.reportError);
       }
     }
 
-    PlacesUtils.history.remove([...URIs]).catch(Cu.reportError);
+    if (URIs.size) {
+      await PlacesUtils.history.remove([...URIs]);
+    }
   },
 
   /**
@@ -893,12 +893,16 @@ PlacesController.prototype = {
    *
    * @note history deletes are not undoable.
    */
-  _removeHistoryContainer: function PC__removeHistoryContainer(aContainerNode) {
+  async _removeHistoryContainer(aContainerNode) {
     if (PlacesUtils.nodeIsHost(aContainerNode)) {
-      // Site container.
-      PlacesUtils.history.removePagesFromHost(aContainerNode.title, true);
+      // This is a site container.
+      // Check if it's the container for local files (don't be fooled by the
+      // bogus string name, this is "(local files)").
+      let host = "." + (aContainerNode.title == PlacesUtils.getString("localhost") ?
+                          "" : aContainerNode.title);
+      await PlacesUtils.history.removeByFilter({host});
     } else if (PlacesUtils.nodeIsDay(aContainerNode)) {
-      // Day container.
+      // This is a day container.
       let query = aContainerNode.query;
       let beginTime = query.beginTime;
       let endTime = query.endTime;
@@ -908,7 +912,10 @@ PlacesController.prototype = {
       // removePagesByTimeframe includes both extremes, while date containers
       // exclude the lower extreme.  So, if we would not exclude it, we would
       // end up removing more history than requested.
-      PlacesUtils.history.removePagesByTimeframe(beginTime + 1, endTime);
+      await PlacesUtils.history.removeByFilter({
+        beginDate: PlacesUtils.toDate(beginTime + 1000),
+        endDate: PlacesUtils.toDate(endTime),
+      });
     }
   },
 
@@ -928,12 +935,13 @@ PlacesController.prototype = {
       if (queryType == Ci.nsINavHistoryQueryOptions.QUERY_TYPE_BOOKMARKS) {
         await this._removeRowsFromBookmarks();
       } else if (queryType == Ci.nsINavHistoryQueryOptions.QUERY_TYPE_HISTORY) {
-        this._removeRowsFromHistory();
+        await this._removeRowsFromHistory();
       } else {
         throw new Error("implement support for QUERY_TYPE_UNIFIED");
       }
-    } else
+    } else {
       throw new Error("unexpected root");
+    }
   },
 
   /**
@@ -1086,7 +1094,7 @@ PlacesController.prototype = {
 
     if (hasData) {
       this.clipboard.setData(xferable,
-                             this.cutNodes.length > 0 ? this : null,
+                             aAction == "cut" ? this : null,
                              Ci.nsIClipboard.kGlobalClipboard);
     }
   },
@@ -1423,7 +1431,7 @@ var PlacesControllerDragHelper = {
         nodes.push({
           uri: spec,
           title: data.label,
-          type: PlacesUtils.TYPE_X_MOZ_URL
+          type: PlacesUtils.TYPE_X_MOZ_URL,
         });
       } else {
         throw new Error("bogus data was passed as a tab");

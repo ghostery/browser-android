@@ -25,6 +25,6 @@
 <!ENTITY for.placeholder                     "Naam of e-mailadres">
 <!ENTITY addressMessageTo.label              "Bericht adresseren aan:">
 
-<!-- Tooltips items -->  
+<!-- Tooltips items -->
 <!ENTITY addressPickerNewButton.tooltip      "Een nieuwe adresboekkaart creëren">
 <!ENTITY addressPickerEditButton.tooltip     "De geselecteerde kaart bewerken">

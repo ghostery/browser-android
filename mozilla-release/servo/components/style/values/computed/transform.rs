@@ -42,6 +42,7 @@ impl TransformOrigin {
 
 /// computed value of matrix3d()
 pub type Matrix3D = generic::Matrix3D<Number>;
+
 /// computed value of matrix()
 pub type Matrix = generic::Matrix<Number>;
 
@@ -151,6 +152,27 @@ impl TransformOperation {
             _ => unreachable!(),
         }
     }
+
+    /// Convert to a Rotate3D.
+    ///
+    /// Must be called on a Rotate function.
+    pub fn to_rotate_3d(&self) -> Self {
+        match *self {
+            generic::TransformOperation::Rotate3D(..) => self.clone(),
+            generic::TransformOperation::RotateZ(ref angle) |
+            generic::TransformOperation::Rotate(ref angle) => {
+                generic::TransformOperation::Rotate3D(0., 0., 1., angle.clone())
+            }
+            generic::TransformOperation::RotateX(ref angle) => {
+                generic::TransformOperation::Rotate3D(1., 0., 0., angle.clone())
+            }
+            generic::TransformOperation::RotateY(ref angle) => {
+                generic::TransformOperation::Rotate3D(0., 1., 0., angle.clone())
+            }
+            _ => unreachable!(),
+        }
+    }
+
     /// Convert to a Scale3D.
     ///
     /// Must be called on a Scale function

@@ -19,7 +19,9 @@
 #include "GeckoProfiler.h"
 #include "jsapi.h"
 #include "jsfriendapi.h"
+#include "js/AutoByteString.h"
 #include "js/Conversions.h"
+#include "js/StableStringChars.h"
 #include "nsString.h"
 
 class nsIScriptContext;
@@ -43,10 +45,6 @@ public:
   static bool GetCallingLocation(JSContext* aContext, nsAString& aFilename,
                                  uint32_t* aLineno = nullptr,
                                  uint32_t* aColumn = nullptr);
-
-  static nsIScriptGlobalObject *GetStaticScriptGlobal(JSObject* aObj);
-
-  static nsIScriptContext *GetStaticScriptContext(JSObject* aObj);
 
   /**
    * Retrieve the inner window ID based on the given JSContext.
@@ -77,8 +75,8 @@ public:
 
     JSContext* mCx;
 
-    // Handles switching to our global's compartment.
-    JSAutoCompartment mCompartment;
+    // Handles switching to our global's realm.
+    JSAutoRealm mRealm;
 
     // Set to a valid handle if a return value is expected.
     JS::Rooted<JS::Value> mRetValue;
@@ -158,7 +156,7 @@ public:
     // thread before starting the execution of the script.
     //
     // The compiled script would be returned in the |aScript| out-param.
-    MOZ_MUST_USE nsresult JoinAndExec(void **aOffThreadToken,
+    MOZ_MUST_USE nsresult JoinAndExec(JS::OffThreadToken** aOffThreadToken,
                                       JS::MutableHandle<JSScript*> aScript);
 
     // Compile a script contained in a SourceBuffer, and execute it.
@@ -178,24 +176,32 @@ public:
     // After getting a notification that an off-thread decoding terminated, this
     // function will get the result of the decoder by moving it to the main
     // thread before starting the execution of the script.
-    MOZ_MUST_USE nsresult DecodeJoinAndExec(void **aOffThreadToken);
+    MOZ_MUST_USE nsresult DecodeJoinAndExec(JS::OffThreadToken** aOffThreadToken);
+
+    MOZ_MUST_USE nsresult DecodeBinASTJoinAndExec(JS::OffThreadToken** aOffThreadToken,
+                                                  JS::MutableHandle<JSScript*> aScript);
+
+    // Decode a BinAST encoded script contained in a buffer, and execute it.
+    nsresult DecodeBinASTAndExec(JS::CompileOptions& aCompileOptions,
+                                 const uint8_t* aBuf, size_t aLength,
+                                 JS::MutableHandle<JSScript*> aScript);
   };
 
   static nsresult CompileModule(JSContext* aCx,
                                 JS::SourceBufferHolder& aSrcBuf,
                                 JS::Handle<JSObject*> aEvaluationGlobal,
                                 JS::CompileOptions &aCompileOptions,
-                                JS::MutableHandle<JSObject*> aModule);
+                                JS::MutableHandle<JSScript*> aScript);
 
   static nsresult InitModuleSourceElement(JSContext* aCx,
-                                          JS::Handle<JSObject*> aModule,
+                                          JS::Handle<JSScript*> aScript,
                                           nsIScriptElement* aElement);
 
   static nsresult ModuleInstantiate(JSContext* aCx,
-                                    JS::Handle<JSObject*> aModule);
+                                    JS::Handle<JSScript*> aScript);
 
   static nsresult ModuleEvaluate(JSContext* aCx,
-                                 JS::Handle<JSObject*> aModule);
+                                 JS::Handle<JSScript*> aScript);
 
   // Returns false if an exception got thrown on aCx.  Passing a null
   // aElement is allowed; that wil produce an empty aScopeChain.
@@ -221,7 +227,7 @@ template<typename T>
 inline bool
 AssignJSString(JSContext *cx, T &dest, JSString *s)
 {
-  size_t len = js::GetStringLength(s);
+  size_t len = JS::GetStringLength(s);
   static_assert(js::MaxStringLength < (1 << 28),
                 "Shouldn't overflow here or in SetCapacity");
   if (MOZ_UNLIKELY(!dest.SetLength(len, mozilla::fallible))) {

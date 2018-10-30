@@ -45,3 +45,8 @@
 <!ENTITY  autologinproxy.tooltip        "勾選此選項後，若您已將密碼儲存起來，連線時就不會再詢問您密碼。驗證失敗後才會再向您詢問。">
 <!ENTITY  socksRemoteDNS.label          "使用 SOCKS v5 時也代理 DNS 查詢">
 <!ENTITY  socksRemoteDNS.accesskey      "d">
+<!ENTITY  dnsOverHttps.label            "開啟 DNS over HTTPS">
+<!ENTITY  dnsOverHttps.accesskey        "b">
+<!ENTITY  dnsOverHttpsUrl.label         "網址">
+<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
+<!ENTITY  dnsOverHttpsUrl.tooltip       "用來解析 DNS 的 HTTPS 網址">

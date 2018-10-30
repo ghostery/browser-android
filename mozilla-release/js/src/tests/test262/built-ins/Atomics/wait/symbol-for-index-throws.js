@@ -9,42 +9,56 @@ description: >
 info: |
   Atomics.wait( typedArray, index, value, timeout )
 
-  3.Let v be ? ToInt32(value).
-    ...
-      1.Let number be ? ToNumber(argument).
-        Symbol --> Throw a TypeError exception.
-features: [ Atomics, SharedArrayBuffer, TypedArray, Symbol, Symbol.toPrimitive]
+  2. Let i be ? ValidateAtomicAccess(typedArray, index).
+
+  ValidateAtomicAccess( typedArray, requestIndex )
+
+  2. Let accessIndex be ? ToIndex(requestIndex).
+
+  ToIndex ( value )
+
+  2. Else,
+    a. Let integerIndex be ? ToInteger(value).
+
+  ToInteger(value)
+
+  1. Let number be ? ToNumber(argument).
+
+    Symbol --> Throw a TypeError exception.
+
+features: [Atomics, SharedArrayBuffer, Symbol, Symbol.toPrimitive, TypedArray]
 ---*/
 
-var sab = new SharedArrayBuffer(1024);
-var int32Array = new Int32Array(sab);
+const i32a = new Int32Array(
+  new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT * 4)
+);
 
-var poisoned = {
+const poisonedValueOf = {
   valueOf: function() {
-    throw new Test262Error("should not evaluate this code");
+    throw new Test262Error('should not evaluate this code');
   }
 };
 
-var poisonedWithString = {
-  get valueOf() { throw "should not evaluate this code"; }
-};
-
-var poisonedToPrimitive = {
-  get [Symbol.ToPrimitive]() {
-    throw new Test262Error('passing a poisoned object using @@ToPrimitive');
+const poisonedToPrimitive = {
+  [Symbol.toPrimitive]: function() {
+    throw new Test262Error('should not evaluate this code');
   }
 };
+
+assert.throws(Test262Error, function() {
+  Atomics.wait(i32a, poisonedValueOf, poisonedValueOf, poisonedValueOf);
+}, '`Atomics.wait(i32a, poisonedValueOf, poisonedValueOf, poisonedValueOf)` throws Test262Error');
+
+assert.throws(Test262Error, function() {
+  Atomics.wait(i32a, poisonedToPrimitive, poisonedToPrimitive, poisonedToPrimitive);
+}, '`Atomics.wait(i32a, poisonedToPrimitive, poisonedToPrimitive, poisonedToPrimitive)` throws Test262Error');
 
 assert.throws(TypeError, function() {
-  Atomics.wait(int32Array, Symbol('foo'), poisonedWithString, poisonedWithString)
-}, 'Symbol');
+  Atomics.wait(i32a, Symbol('foo'), poisonedValueOf, poisonedValueOf);
+}, '`Atomics.wait(i32a, Symbol(\'foo\'), poisonedValueOf, poisonedValueOf)` throws TypeError');
 
-assert.throws(Test262Error, function() {
-  Atomics.wait(int32Array, poisoned, poisonedWithString, poisonedWithString)
-}, 'passing a poisoned object using valueOf');
-
-assert.throws(Test262Error, function() {
-  Atomics.wait(int32Array, poisoned, poisonedToPrimitive, poisonedToPrimitive);
-}, 'passing a poisoned object using @@ToPrimitive');
+assert.throws(TypeError, function() {
+  Atomics.wait(i32a, Symbol('foo'), poisonedToPrimitive, poisonedToPrimitive);
+}, '`Atomics.wait(i32a, Symbol(\'foo\'), poisonedToPrimitive, poisonedToPrimitive)` throws TypeError');
 
 reportCompare(0, 0);

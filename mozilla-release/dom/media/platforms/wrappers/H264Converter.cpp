@@ -229,7 +229,14 @@ H264Converter::IsHardwareAccelerated(nsACString& aFailureReason) const
   if (mDecoder) {
     return mDecoder->IsHardwareAccelerated(aFailureReason);
   }
+#ifdef MOZ_APPLEMEDIA
+  // On mac, we can assume H264 is hardware accelerated for now.
+  // This allows MediaCapabilities to report that playback will be smooth.
+  // Which will always be.
+  return true;
+#else
   return MediaDataDecoder::IsHardwareAccelerated(aFailureReason);
+#endif
 }
 
 void
@@ -409,7 +416,7 @@ MediaResult
 H264Converter::CheckForSPSChange(MediaRawData* aSample)
 {
   RefPtr<MediaByteBuffer> extra_data =
-    H264::ExtractExtraData(aSample);
+    aSample->mKeyframe ? H264::ExtractExtraData(aSample) : nullptr;
   if (!H264::HasSPS(extra_data)) {
     MOZ_ASSERT(mCanRecycleDecoder.isSome());
     if (!*mCanRecycleDecoder) {
@@ -423,14 +430,12 @@ H264Converter::CheckForSPSChange(MediaRawData* aSample)
     // This scenario can only occur on Android with devices that can recycle a
     // decoder.
     if (!H264::HasSPS(aSample->mExtraData) ||
-        H264::CompareExtraData(aSample->mExtraData,
-                                            mOriginalExtraData)) {
+        H264::CompareExtraData(aSample->mExtraData, mOriginalExtraData)) {
       return NS_OK;
     }
     extra_data = mOriginalExtraData = aSample->mExtraData;
   }
-  if (H264::CompareExtraData(extra_data,
-                                          mCurrentConfig.mExtraData)) {
+  if (H264::CompareExtraData(extra_data, mCurrentConfig.mExtraData)) {
     return NS_OK;
   }
 

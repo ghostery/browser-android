@@ -5,7 +5,6 @@
 "use strict";
 
 ChromeUtils.import("resource://normandy/actions/BaseAction.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.defineModuleGetter(this, "TelemetryEnvironment", "resource://gre/modules/TelemetryEnvironment.jsm");
 ChromeUtils.defineModuleGetter(this, "PreferenceRollouts", "resource://normandy/lib/PreferenceRollouts.jsm");
 ChromeUtils.defineModuleGetter(this, "PrefUtils", "resource://normandy/lib/PrefUtils.jsm");
@@ -24,8 +23,7 @@ class PreferenceRollbackAction extends BaseAction {
     const rollout = await PreferenceRollouts.get(rolloutSlug);
 
     if (!rollout) {
-      TelemetryEvents.sendEvent("unenrollFailed", "preference_rollback", rolloutSlug, {"reason": "rollout missing"});
-      this.log.info(`Cannot rollback ${rolloutSlug}: no rollout found with that slug`);
+      this.log.debug(`Rollback ${rolloutSlug} not applicable, skipping`);
       return;
     }
 

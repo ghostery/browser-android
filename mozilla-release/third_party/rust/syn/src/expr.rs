@@ -7,14 +7,14 @@
 // except according to those terms.
 
 use super::*;
-use punctuated::Punctuated;
 use proc_macro2::{Span, TokenStream};
+use punctuated::Punctuated;
 #[cfg(feature = "extra-traits")]
 use std::hash::{Hash, Hasher};
-#[cfg(feature = "extra-traits")]
-use tt::TokenStreamHelper;
 #[cfg(feature = "full")]
 use std::mem;
+#[cfg(feature = "extra-traits")]
+use tt::TokenStreamHelper;
 
 ast_enum_of_structs! {
     /// A Rust expression.
@@ -363,7 +363,7 @@ ast_enum_of_structs! {
         /// field (`obj.0`).
         ///
         /// *This type is available if Syn is built with the `"full"` feature.*
-        pub Field(ExprField #full {
+        pub Field(ExprField {
             pub attrs: Vec<Attribute>,
             pub base: Box<Expr>,
             pub dot_token: Token![.],
@@ -637,7 +637,7 @@ ast_struct! {
 
 impl From<usize> for Index {
     fn from(index: usize) -> Index {
-        assert!(index < std::u32::MAX as usize);
+        assert!(index < u32::max_value() as usize);
         Index {
             index: index as u32,
             span: Span::call_site(),
@@ -1020,13 +1020,13 @@ pub mod parsing {
     #[cfg(feature = "full")]
     use path::parsing::ty_no_eq_after;
 
-    #[cfg(feature = "full")]
-    use proc_macro2::TokenStream;
-    use synom::Synom;
     use buffer::Cursor;
     #[cfg(feature = "full")]
     use parse_error;
+    #[cfg(feature = "full")]
+    use proc_macro2::TokenStream;
     use synom::PResult;
+    use synom::Synom;
 
     // When we're parsing expressions which occur before blocks, like in an if
     // statement's condition, we cannot parse a struct literal.
@@ -1391,21 +1391,23 @@ pub mod parsing {
     #[cfg(feature = "full")]
     named!(unary_expr(allow_struct: bool, allow_block: bool) -> Expr, alt!(
         do_parse!(
+            attrs: many0!(Attribute::parse_outer) >>
             op: syn!(UnOp) >>
             expr: call!(unary_expr, allow_struct, true) >>
             (ExprUnary {
-                attrs: Vec::new(),
+                attrs: attrs,
                 op: op,
                 expr: Box::new(expr),
             }.into())
         )
         |
         do_parse!(
+            attrs: many0!(Attribute::parse_outer) >>
             and: punct!(&) >>
             mutability: option!(keyword!(mut)) >>
             expr: call!(unary_expr, allow_struct, true) >>
             (ExprReference {
-                attrs: Vec::new(),
+                attrs: attrs,
                 and_token: and,
                 mutability: mutability,
                 expr: Box::new(expr),
@@ -1413,10 +1415,11 @@ pub mod parsing {
         )
         |
         do_parse!(
+            attrs: many0!(Attribute::parse_outer) >>
             box_: keyword!(box) >>
             expr: call!(unary_expr, allow_struct, true) >>
             (ExprBox {
-                attrs: Vec::new(),
+                attrs: attrs,
                 box_token: box_,
                 expr: Box::new(expr),
             }.into())
@@ -1441,6 +1444,20 @@ pub mod parsing {
         call!(trailer_expr, allow_struct, allow_block)
     ));
 
+    #[cfg(feature = "full")]
+    fn take_outer(attrs: &mut Vec<Attribute>) -> Vec<Attribute> {
+        let mut outer = Vec::new();
+        let mut inner = Vec::new();
+        for attr in mem::replace(attrs, Vec::new()) {
+            match attr.style {
+                AttrStyle::Outer => outer.push(attr),
+                AttrStyle::Inner(_) => inner.push(attr),
+            }
+        }
+        *attrs = inner;
+        outer
+    }
+
     // <atom> (..<args>) ...
     // <atom> . <ident> (..<args>) ...
     // <atom> . <ident> ...
@@ -1450,6 +1467,12 @@ pub mod parsing {
     #[cfg(feature = "full")]
     named!(trailer_expr(allow_struct: bool, allow_block: bool) -> Expr, do_parse!(
         mut e: call!(atom_expr, allow_struct, allow_block) >>
+        outer_attrs: value!({
+            let mut attrs = e.replace_attrs(Vec::new());
+            let outer_attrs = take_outer(&mut attrs);
+            e.replace_attrs(attrs);
+            outer_attrs
+        }) >>
         many0!(alt!(
             tap!(args: and_call => {
                 let (paren, args) = args;
@@ -1495,7 +1518,12 @@ pub mod parsing {
                 }.into();
             })
         )) >>
-        (e)
+        ({
+            let mut attrs = outer_attrs;
+            attrs.extend(e.replace_attrs(Vec::new()));
+            e.replace_attrs(attrs);
+            e
+        })
     ));
 
     // XXX: Duplication == ugly
@@ -1509,6 +1537,16 @@ pub mod parsing {
                     func: Box::new(e),
                     paren_token: args.0,
                     args: args.1,
+                }.into();
+            })
+            |
+            tap!(field: and_field => {
+                let (token, member) = field;
+                e = ExprField {
+                    attrs: Vec::new(),
+                    base: Box::new(e),
+                    dot_token: token,
+                    member: member,
                 }.into();
             })
             |
@@ -1531,6 +1569,9 @@ pub mod parsing {
         syn!(ExprGroup) => { Expr::Group } // must be placed first
         |
         syn!(ExprLit) => { Expr::Lit } // must be before expr_struct
+        |
+        // must be before ExprStruct
+        call!(unstable_async_block) => { Expr::Verbatim }
         |
         // must be before expr_path
         cond_reduce!(allow_struct, syn!(ExprStruct)) => { Expr::Struct }
@@ -1573,6 +1614,8 @@ pub mod parsing {
         |
         cond_reduce!(allow_block, syn!(ExprBlock)) => { Expr::Block }
         |
+        call!(unstable_labeled_block) => { Expr::Verbatim }
+        |
         // NOTE: This is the prefix-form of range
         call!(expr_range, allow_struct)
         |
@@ -1591,35 +1634,55 @@ pub mod parsing {
     ));
 
     #[cfg(feature = "full")]
-    named!(expr_nosemi -> Expr, map!(alt!(
-        syn!(ExprIf) => { Expr::If }
-        |
-        syn!(ExprIfLet) => { Expr::IfLet }
-        |
-        syn!(ExprWhile) => { Expr::While }
-        |
-        syn!(ExprWhileLet) => { Expr::WhileLet }
-        |
-        syn!(ExprForLoop) => { Expr::ForLoop }
-        |
-        syn!(ExprLoop) => { Expr::Loop }
-        |
-        syn!(ExprMatch) => { Expr::Match }
-        |
-        syn!(ExprCatch) => { Expr::Catch }
-        |
-        syn!(ExprYield) => { Expr::Yield }
-        |
-        syn!(ExprUnsafe) => { Expr::Unsafe }
-        |
-        syn!(ExprBlock) => { Expr::Block }
-    ), Expr::from));
+    named!(expr_nosemi -> Expr, do_parse!(
+        nosemi: alt!(
+            syn!(ExprIf) => { Expr::If }
+            |
+            syn!(ExprIfLet) => { Expr::IfLet }
+            |
+            syn!(ExprWhile) => { Expr::While }
+            |
+            syn!(ExprWhileLet) => { Expr::WhileLet }
+            |
+            syn!(ExprForLoop) => { Expr::ForLoop }
+            |
+            syn!(ExprLoop) => { Expr::Loop }
+            |
+            syn!(ExprMatch) => { Expr::Match }
+            |
+            syn!(ExprCatch) => { Expr::Catch }
+            |
+            syn!(ExprYield) => { Expr::Yield }
+            |
+            syn!(ExprUnsafe) => { Expr::Unsafe }
+            |
+            syn!(ExprBlock) => { Expr::Block }
+            |
+            call!(unstable_labeled_block) => { Expr::Verbatim }
+        ) >>
+        // If the next token is a `.` or a `?` it is special-cased to parse
+        // as an expression instead of a blockexpression.
+        not!(punct!(.)) >>
+        not!(punct!(?)) >>
+        (nosemi)
+    ));
 
     impl Synom for ExprLit {
+        #[cfg(not(feature = "full"))]
         named!(parse -> Self, do_parse!(
             lit: syn!(Lit) >>
             (ExprLit {
                 attrs: Vec::new(),
+                lit: lit,
+            })
+        ));
+
+        #[cfg(feature = "full")]
+        named!(parse -> Self, do_parse!(
+            attrs: many0!(Attribute::parse_outer) >>
+            lit: syn!(Lit) >>
+            (ExprLit {
+                attrs: attrs,
                 lit: lit,
             })
         ));
@@ -1632,9 +1695,10 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprMacro {
         named!(parse -> Self, do_parse!(
+            attrs: many0!(Attribute::parse_outer) >>
             mac: syn!(Macro) >>
             (ExprMacro {
-                attrs: Vec::new(),
+                attrs: attrs,
                 mac: mac,
             })
         ));
@@ -1661,12 +1725,31 @@ pub mod parsing {
     }
 
     impl Synom for ExprParen {
+        #[cfg(not(feature = "full"))]
         named!(parse -> Self, do_parse!(
             e: parens!(syn!(Expr)) >>
             (ExprParen {
                 attrs: Vec::new(),
                 paren_token: e.0,
                 expr: Box::new(e.1),
+            })
+        ));
+
+        #[cfg(feature = "full")]
+        named!(parse -> Self, do_parse!(
+            outer_attrs: many0!(Attribute::parse_outer) >>
+            e: parens!(tuple!(
+                many0!(Attribute::parse_inner),
+                syn!(Expr),
+            )) >>
+            (ExprParen {
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((e.1).0);
+                    attrs
+                },
+                paren_token: e.0,
+                expr: Box::new((e.1).1),
             })
         ));
 
@@ -1678,11 +1761,19 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprArray {
         named!(parse -> Self, do_parse!(
-            elems: brackets!(Punctuated::parse_terminated) >>
+            outer_attrs: many0!(Attribute::parse_outer) >>
+            elems: brackets!(tuple!(
+                many0!(Attribute::parse_inner),
+                call!(Punctuated::parse_terminated),
+            )) >>
             (ExprArray {
-                attrs: Vec::new(),
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((elems.1).0);
+                    attrs
+                },
                 bracket_token: elems.0,
-                elems: elems.1,
+                elems: (elems.1).1,
             })
         ));
 
@@ -1692,7 +1783,8 @@ pub mod parsing {
     }
 
     named!(and_call -> (token::Paren, Punctuated<Expr, Token![,]>),
-           parens!(Punctuated::parse_terminated));
+        parens!(Punctuated::parse_terminated)
+    );
 
     #[cfg(feature = "full")]
     named!(and_method_call -> ExprMethodCall, do_parse!(
@@ -1702,7 +1794,7 @@ pub mod parsing {
             punct!(::),
             punct!(<),
             call!(Punctuated::parse_terminated),
-            punct!(>)
+            punct!(>),
         )) >>
         args: parens!(Punctuated::parse_terminated) >>
         ({
@@ -1710,7 +1802,7 @@ pub mod parsing {
                 attrs: Vec::new(),
                 // this expr will get overwritten after being returned
                 receiver: Box::new(Expr::Verbatim(ExprVerbatim {
-                    tts: TokenStream::empty(),
+                    tts: TokenStream::new(),
                 })),
 
                 method: method,
@@ -1740,10 +1832,18 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprTuple {
         named!(parse -> Self, do_parse!(
-            elems: parens!(Punctuated::parse_terminated) >>
+            outer_attrs: many0!(Attribute::parse_outer) >>
+            elems: parens!(tuple!(
+                many0!(Attribute::parse_inner),
+                call!(Punctuated::parse_terminated),
+            )) >>
             (ExprTuple {
-                attrs: Vec::new(),
-                elems: elems.1,
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((elems.1).0);
+                    attrs
+                },
+                elems: (elems.1).1,
                 paren_token: elems.0,
             })
         ));
@@ -1832,20 +1932,31 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprForLoop {
         named!(parse -> Self, do_parse!(
+            outer_attrs: many0!(Attribute::parse_outer) >>
             label: option!(syn!(Label)) >>
             for_: keyword!(for) >>
             pat: syn!(Pat) >>
             in_: keyword!(in) >>
             expr: expr_no_struct >>
-            loop_block: syn!(Block) >>
+            block: braces!(tuple!(
+                many0!(Attribute::parse_inner),
+                call!(Block::parse_within),
+            )) >>
             (ExprForLoop {
-                attrs: Vec::new(),
-                for_token: for_,
-                in_token: in_,
-                pat: Box::new(pat),
-                expr: Box::new(expr),
-                body: loop_block,
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((block.1).0);
+                    attrs
+                },
                 label: label,
+                for_token: for_,
+                pat: Box::new(pat),
+                in_token: in_,
+                expr: Box::new(expr),
+                body: Block {
+                    brace_token: block.0,
+                    stmts: (block.1).1,
+                },
             })
         ));
 
@@ -1857,14 +1968,25 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprLoop {
         named!(parse -> Self, do_parse!(
+            outer_attrs: many0!(Attribute::parse_outer) >>
             label: option!(syn!(Label)) >>
             loop_: keyword!(loop) >>
-            loop_block: syn!(Block) >>
+            block: braces!(tuple!(
+                many0!(Attribute::parse_inner),
+                call!(Block::parse_within),
+            )) >>
             (ExprLoop {
-                attrs: Vec::new(),
-                loop_token: loop_,
-                body: loop_block,
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((block.1).0);
+                    attrs
+                },
                 label: label,
+                loop_token: loop_,
+                body: Block {
+                    brace_token: block.0,
+                    stmts: (block.1).1,
+                },
             })
         ));
 
@@ -1876,15 +1998,23 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprMatch {
         named!(parse -> Self, do_parse!(
+            outer_attrs: many0!(Attribute::parse_outer) >>
             match_: keyword!(match) >>
             obj: expr_no_struct >>
-            res: braces!(many0!(Arm::parse)) >>
+            braced_content: braces!(tuple!(
+                many0!(Attribute::parse_inner),
+                many0!(syn!(Arm)),
+            )) >>
             (ExprMatch {
-                attrs: Vec::new(),
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((braced_content.1).0);
+                    attrs
+                },
                 expr: Box::new(obj),
                 match_token: match_,
-                brace_token: res.0,
-                arms: res.1,
+                brace_token: braced_content.0,
+                arms: (braced_content.1).1,
             })
         ));
 
@@ -1968,7 +2098,10 @@ pub mod parsing {
 
     #[cfg(feature = "full")]
     named!(expr_closure(allow_struct: bool) -> Expr, do_parse!(
-        movability: option!(keyword!(static)) >>
+        begin: call!(verbatim::grab_cursor) >>
+        attrs: many0!(Attribute::parse_outer) >>
+        asyncness: option!(keyword!(async)) >>
+        movability: option!(cond_reduce!(asyncness.is_none(), keyword!(static))) >>
         capture: option!(keyword!(move)) >>
         or1: punct!(|) >>
         inputs: call!(Punctuated::parse_terminated_with, fn_arg) >>
@@ -1978,25 +2111,51 @@ pub mod parsing {
                 arrow: punct!(->) >>
                 ty: syn!(Type) >>
                 body: syn!(Block) >>
-                (ReturnType::Type(arrow, Box::new(ty)),
-                 Expr::Block(ExprBlock {
-                     attrs: Vec::new(),
-                    block: body,
-                }))
+                (
+                    ReturnType::Type(arrow, Box::new(ty)),
+                    Expr::Block(ExprBlock {
+                        attrs: Vec::new(),
+                        block: body,
+                    },
+                ))
             )
             |
             map!(ambiguous_expr!(allow_struct), |e| (ReturnType::Default, e))
         ) >>
-        (ExprClosure {
-            attrs: Vec::new(),
-            movability: movability,
-            capture: capture,
-            or1_token: or1,
-            inputs: inputs,
-            or2_token: or2,
-            output: ret_and_body.0,
-            body: Box::new(ret_and_body.1),
-        }.into())
+        end: call!(verbatim::grab_cursor) >>
+        ({
+            if asyncness.is_some() {
+                // TODO: include asyncness in ExprClosure
+                // https://github.com/dtolnay/syn/issues/396
+                Expr::Verbatim(ExprVerbatim {
+                    tts: verbatim::token_range(begin..end),
+                })
+            } else {
+                Expr::Closure(ExprClosure {
+                    attrs: attrs,
+                    movability: movability,
+                    capture: capture,
+                    or1_token: or1,
+                    inputs: inputs,
+                    or2_token: or2,
+                    output: ret_and_body.0,
+                    body: Box::new(ret_and_body.1),
+                })
+            }
+        })
+    ));
+
+    #[cfg(feature = "full")]
+    named!(unstable_async_block -> ExprVerbatim, do_parse!(
+        begin: call!(verbatim::grab_cursor) >>
+        many0!(Attribute::parse_outer) >>
+        keyword!(async) >>
+        option!(keyword!(move)) >>
+        syn!(Block) >>
+        end: call!(verbatim::grab_cursor) >>
+        (ExprVerbatim {
+            tts: verbatim::token_range(begin..end),
+        })
     ));
 
     #[cfg(feature = "full")]
@@ -2019,16 +2178,27 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprWhile {
         named!(parse -> Self, do_parse!(
+            outer_attrs: many0!(Attribute::parse_outer) >>
             label: option!(syn!(Label)) >>
             while_: keyword!(while) >>
             cond: expr_no_struct >>
-            while_block: syn!(Block) >>
+            block: braces!(tuple!(
+                many0!(Attribute::parse_inner),
+                call!(Block::parse_within),
+            )) >>
             (ExprWhile {
-                attrs: Vec::new(),
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((block.1).0);
+                    attrs
+                },
+                label: label,
                 while_token: while_,
                 cond: Box::new(cond),
-                body: while_block,
-                label: label,
+                body: Block {
+                    brace_token: block.0,
+                    stmts: (block.1).1,
+                },
             })
         ));
 
@@ -2040,22 +2210,33 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprWhileLet {
         named!(parse -> Self, do_parse!(
+            outer_attrs: many0!(Attribute::parse_outer) >>
             label: option!(syn!(Label)) >>
             while_: keyword!(while) >>
             let_: keyword!(let) >>
             pats: call!(Punctuated::parse_separated_nonempty) >>
             eq: punct!(=) >>
             value: expr_no_struct >>
-            while_block: syn!(Block) >>
+            block: braces!(tuple!(
+                many0!(Attribute::parse_inner),
+                call!(Block::parse_within),
+            )) >>
             (ExprWhileLet {
-                attrs: Vec::new(),
-                eq_token: eq,
-                let_token: let_,
-                while_token: while_,
-                pats: pats,
-                expr: Box::new(value),
-                body: while_block,
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((block.1).0);
+                    attrs
+                },
                 label: label,
+                while_token: while_,
+                let_token: let_,
+                pats: pats,
+                eq_token: eq,
+                expr: Box::new(value),
+                body: Block {
+                    brace_token: block.0,
+                    stmts: (block.1).1,
+                },
             })
         ));
 
@@ -2083,10 +2264,11 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprContinue {
         named!(parse -> Self, do_parse!(
+            attrs: many0!(Attribute::parse_outer) >>
             cont: keyword!(continue) >>
             label: option!(syn!(Lifetime)) >>
             (ExprContinue {
-                attrs: Vec::new(),
+                attrs: attrs,
                 continue_token: cont,
                 label: label,
             })
@@ -2099,13 +2281,14 @@ pub mod parsing {
 
     #[cfg(feature = "full")]
     named!(expr_break(allow_struct: bool) -> Expr, do_parse!(
+        attrs: many0!(Attribute::parse_outer) >>
         break_: keyword!(break) >>
         label: option!(syn!(Lifetime)) >>
         // We can't allow blocks after a `break` expression when we wouldn't
         // allow structs, as this expression is ambiguous.
         val: opt_ambiguous_expr!(allow_struct) >>
         (ExprBreak {
-            attrs: Vec::new(),
+            attrs: attrs,
             label: label,
             expr: val.map(Box::new),
             break_token: break_,
@@ -2114,6 +2297,7 @@ pub mod parsing {
 
     #[cfg(feature = "full")]
     named!(expr_ret(allow_struct: bool) -> Expr, do_parse!(
+        attrs: many0!(Attribute::parse_outer) >>
         return_: keyword!(return) >>
         // NOTE: return is greedy and eats blocks after it even when in a
         // position where structs are not allowed, such as in if statement
@@ -2122,7 +2306,7 @@ pub mod parsing {
         // if return { println!("A") } {} // Prints "A"
         ret_value: option!(ambiguous_expr!(allow_struct)) >>
         (ExprReturn {
-            attrs: Vec::new(),
+            attrs: attrs,
             expr: ret_value.map(Box::new),
             return_token: return_,
         }.into())
@@ -2131,24 +2315,30 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprStruct {
         named!(parse -> Self, do_parse!(
+            outer_attrs: many0!(Attribute::parse_outer) >>
             path: syn!(Path) >>
             data: braces!(do_parse!(
+                inner_attrs: many0!(Attribute::parse_inner) >>
                 fields: call!(Punctuated::parse_terminated) >>
                 base: option!(cond!(fields.empty_or_trailing(), do_parse!(
                     dots: punct!(..) >>
                     base: syn!(Expr) >>
                     (dots, base)
                 ))) >>
-                (fields, base)
+                (inner_attrs, fields, base)
             )) >>
             ({
-                let (brace, (fields, base)) = data;
+                let (brace, (inner_attrs, fields, base)) = data;
                 let (dots, rest) = match base.and_then(|b| b) {
                     Some((dots, base)) => (Some(dots), Some(base)),
                     None => (None, None),
                 };
                 ExprStruct {
-                    attrs: Vec::new(),
+                    attrs: {
+                        let mut attrs = outer_attrs;
+                        attrs.extend(inner_attrs);
+                        attrs
+                    },
                     brace_token: brace,
                     path: path,
                     fields: fields,
@@ -2171,7 +2361,7 @@ pub mod parsing {
                 tuple!(syn!(Member), map!(punct!(:), Some), syn!(Expr))
                 |
                 map!(syn!(Ident), |name| (
-                    Member::Named(name),
+                    Member::Named(name.clone()),
                     None,
                     Expr::Path(ExprPath {
                         attrs: Vec::new(),
@@ -2196,18 +2386,23 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprRepeat {
         named!(parse -> Self, do_parse!(
-            data: brackets!(do_parse!(
-                value: syn!(Expr) >>
-                semi: punct!(;) >>
-                times: syn!(Expr) >>
-                (value, semi, times)
+            outer_attrs: many0!(Attribute::parse_outer) >>
+            data: brackets!(tuple!(
+                many0!(Attribute::parse_inner),
+                syn!(Expr),
+                punct!(;),
+                syn!(Expr),
             )) >>
             (ExprRepeat {
-                attrs: Vec::new(),
-                expr: Box::new((data.1).0),
-                len: Box::new((data.1).2),
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((data.1).0);
+                    attrs
+                },
+                expr: Box::new((data.1).1),
+                len: Box::new((data.1).3),
                 bracket_token: data.0,
-                semi_token: (data.1).1,
+                semi_token: (data.1).2,
             })
         ));
 
@@ -2236,10 +2431,21 @@ pub mod parsing {
     #[cfg(feature = "full")]
     impl Synom for ExprBlock {
         named!(parse -> Self, do_parse!(
-            b: syn!(Block) >>
+            outer_attrs: many0!(Attribute::parse_outer) >>
+            block: braces!(tuple!(
+                many0!(Attribute::parse_inner),
+                call!(Block::parse_within),
+            )) >>
             (ExprBlock {
-                attrs: Vec::new(),
-                block: b,
+                attrs: {
+                    let mut attrs = outer_attrs;
+                    attrs.extend((block.1).0);
+                    attrs
+                },
+                block: Block {
+                    brace_token: block.0,
+                    stmts: (block.1).1,
+                },
             })
         ));
 
@@ -2247,6 +2453,21 @@ pub mod parsing {
             Some("block: `{ .. }`")
         }
     }
+
+    #[cfg(feature = "full")]
+    named!(unstable_labeled_block -> ExprVerbatim, do_parse!(
+        begin: call!(verbatim::grab_cursor) >>
+        many0!(Attribute::parse_outer) >>
+        syn!(Label) >>
+        braces!(tuple!(
+            many0!(Attribute::parse_inner),
+            call!(Block::parse_within),
+        )) >>
+        end: call!(verbatim::grab_cursor) >>
+        (ExprVerbatim {
+            tts: verbatim::token_range(begin..end),
+        })
+    ));
 
     #[cfg(feature = "full")]
     named!(expr_range(allow_struct: bool) -> Expr, do_parse!(
@@ -2278,10 +2499,22 @@ pub mod parsing {
     }
 
     impl Synom for ExprPath {
+        #[cfg(not(feature = "full"))]
         named!(parse -> Self, do_parse!(
             pair: qpath >>
             (ExprPath {
                 attrs: Vec::new(),
+                qself: pair.0,
+                path: pair.1,
+            })
+        ));
+
+        #[cfg(feature = "full")]
+        named!(parse -> Self, do_parse!(
+            attrs: many0!(Attribute::parse_outer) >>
+            pair: qpath >>
+            (ExprPath {
+                attrs: attrs,
                 qself: pair.0,
                 path: pair.1,
             })
@@ -2292,7 +2525,6 @@ pub mod parsing {
         }
     }
 
-    #[cfg(feature = "full")]
     named!(and_field -> (Token![.], Member), tuple!(punct!(.), syn!(Member)));
 
     named!(and_index -> (token::Bracket, Expr), brackets!(syn!(Expr)));
@@ -2403,14 +2635,11 @@ pub mod parsing {
 
     #[cfg(feature = "full")]
     named!(stmt_blockexpr -> Stmt, do_parse!(
-        attrs: many0!(Attribute::parse_outer) >>
+        mut attrs: many0!(Attribute::parse_outer) >>
         mut e: expr_nosemi >>
-        // If the next token is a `.` or a `?` it is special-cased to parse as
-        // an expression instead of a blockexpression.
-        not!(punct!(.)) >>
-        not!(punct!(?)) >>
         semi: option!(punct!(;)) >>
         ({
+            attrs.extend(e.replace_attrs(Vec::new()));
             e.replace_attrs(attrs);
             if let Some(semi) = semi {
                 Stmt::Semi(e, semi)
@@ -2422,10 +2651,11 @@ pub mod parsing {
 
     #[cfg(feature = "full")]
     named!(stmt_expr -> Stmt, do_parse!(
-        attrs: many0!(Attribute::parse_outer) >>
+        mut attrs: many0!(Attribute::parse_outer) >>
         mut e: syn!(Expr) >>
         semi: punct!(;) >>
         ({
+            attrs.extend(e.replace_attrs(Vec::new()));
             e.replace_attrs(attrs);
             Stmt::Semi(e, semi)
         })
@@ -2580,7 +2810,7 @@ pub mod parsing {
                     let mut pat: Pat = PatIdent {
                         by_ref: by_ref,
                         mutability: mutability,
-                        ident: ident,
+                        ident: ident.clone(),
                         subpat: None,
                     }.into();
                     if let Some(boxed) = boxed {
@@ -2604,7 +2834,6 @@ pub mod parsing {
         }
     }
 
-    #[cfg(feature = "full")]
     impl Synom for Member {
         named!(parse -> Self, alt!(
             syn!(Ident) => { Member::Named }
@@ -2617,7 +2846,6 @@ pub mod parsing {
         }
     }
 
-    #[cfg(feature = "full")]
     impl Synom for Index {
         named!(parse -> Self, do_parse!(
             lit: syn!(LitInt) >>
@@ -2818,13 +3046,13 @@ mod printing {
     use super::*;
     #[cfg(feature = "full")]
     use attr::FilterAttrs;
-    use quote::{ToTokens, Tokens};
-    use proc_macro2::Literal;
+    use proc_macro2::{Literal, TokenStream};
+    use quote::{ToTokens, TokenStreamExt};
 
     // If the given expression is a bare `ExprStruct`, wraps it in parenthesis
-    // before appending it to `Tokens`.
+    // before appending it to `TokenStream`.
     #[cfg(feature = "full")]
-    fn wrap_bare_struct(tokens: &mut Tokens, e: &Expr) {
+    fn wrap_bare_struct(tokens: &mut TokenStream, e: &Expr) {
         if let Expr::Struct(_) = *e {
             token::Paren::default().surround(tokens, |tokens| {
                 e.to_tokens(tokens);
@@ -2835,17 +3063,25 @@ mod printing {
     }
 
     #[cfg(feature = "full")]
-    fn attrs_to_tokens(attrs: &[Attribute], tokens: &mut Tokens) {
+    fn outer_attrs_to_tokens(attrs: &[Attribute], tokens: &mut TokenStream) {
         tokens.append_all(attrs.outer());
     }
 
+    #[cfg(feature = "full")]
+    fn inner_attrs_to_tokens(attrs: &[Attribute], tokens: &mut TokenStream) {
+        tokens.append_all(attrs.inner());
+    }
+
     #[cfg(not(feature = "full"))]
-    fn attrs_to_tokens(_attrs: &[Attribute], _tokens: &mut Tokens) {}
+    fn outer_attrs_to_tokens(_attrs: &[Attribute], _tokens: &mut TokenStream) {}
+
+    #[cfg(not(feature = "full"))]
+    fn inner_attrs_to_tokens(_attrs: &[Attribute], _tokens: &mut TokenStream) {}
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprBox {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.box_token.to_tokens(tokens);
             self.expr.to_tokens(tokens);
         }
@@ -2853,8 +3089,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprInPlace {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.place.to_tokens(tokens);
             self.arrow_token.to_tokens(tokens);
             self.value.to_tokens(tokens);
@@ -2863,17 +3099,18 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprArray {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.bracket_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
                 self.elems.to_tokens(tokens);
             })
         }
     }
 
     impl ToTokens for ExprCall {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.func.to_tokens(tokens);
             self.paren_token.surround(tokens, |tokens| {
                 self.args.to_tokens(tokens);
@@ -2883,8 +3120,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprMethodCall {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.receiver.to_tokens(tokens);
             self.dot_token.to_tokens(tokens);
             self.method.to_tokens(tokens);
@@ -2897,7 +3134,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for MethodTurbofish {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.colon2_token.to_tokens(tokens);
             self.lt_token.to_tokens(tokens);
             self.args.to_tokens(tokens);
@@ -2907,7 +3144,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for GenericMethodArgument {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             match *self {
                 GenericMethodArgument::Type(ref t) => t.to_tokens(tokens),
                 GenericMethodArgument::Const(ref c) => c.to_tokens(tokens),
@@ -2917,9 +3154,10 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprTuple {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.paren_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
                 self.elems.to_tokens(tokens);
                 // If we only have one argument, we need a trailing comma to
                 // distinguish ExprTuple from ExprParen.
@@ -2931,8 +3169,8 @@ mod printing {
     }
 
     impl ToTokens for ExprBinary {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.left.to_tokens(tokens);
             self.op.to_tokens(tokens);
             self.right.to_tokens(tokens);
@@ -2940,23 +3178,23 @@ mod printing {
     }
 
     impl ToTokens for ExprUnary {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.op.to_tokens(tokens);
             self.expr.to_tokens(tokens);
         }
     }
 
     impl ToTokens for ExprLit {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.lit.to_tokens(tokens);
         }
     }
 
     impl ToTokens for ExprCast {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.expr.to_tokens(tokens);
             self.as_token.to_tokens(tokens);
             self.ty.to_tokens(tokens);
@@ -2965,8 +3203,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprType {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.expr.to_tokens(tokens);
             self.colon_token.to_tokens(tokens);
             self.ty.to_tokens(tokens);
@@ -2974,7 +3212,7 @@ mod printing {
     }
 
     #[cfg(feature = "full")]
-    fn maybe_wrap_else(tokens: &mut Tokens, else_: &Option<(Token![else], Box<Expr>)>) {
+    fn maybe_wrap_else(tokens: &mut TokenStream, else_: &Option<(Token![else], Box<Expr>)>) {
         if let Some((ref else_token, ref else_)) = *else_ {
             else_token.to_tokens(tokens);
 
@@ -2995,8 +3233,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprIf {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.if_token.to_tokens(tokens);
             wrap_bare_struct(tokens, &self.cond);
             self.then_branch.to_tokens(tokens);
@@ -3006,8 +3244,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprIfLet {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.if_token.to_tokens(tokens);
             self.let_token.to_tokens(tokens);
             self.pats.to_tokens(tokens);
@@ -3020,59 +3258,72 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprWhile {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.label.to_tokens(tokens);
             self.while_token.to_tokens(tokens);
             wrap_bare_struct(tokens, &self.cond);
-            self.body.to_tokens(tokens);
+            self.body.brace_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
+                tokens.append_all(&self.body.stmts);
+            });
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprWhileLet {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.label.to_tokens(tokens);
             self.while_token.to_tokens(tokens);
             self.let_token.to_tokens(tokens);
             self.pats.to_tokens(tokens);
             self.eq_token.to_tokens(tokens);
             wrap_bare_struct(tokens, &self.expr);
-            self.body.to_tokens(tokens);
+            self.body.brace_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
+                tokens.append_all(&self.body.stmts);
+            });
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprForLoop {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.label.to_tokens(tokens);
             self.for_token.to_tokens(tokens);
             self.pat.to_tokens(tokens);
             self.in_token.to_tokens(tokens);
             wrap_bare_struct(tokens, &self.expr);
-            self.body.to_tokens(tokens);
+            self.body.brace_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
+                tokens.append_all(&self.body.stmts);
+            });
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprLoop {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.label.to_tokens(tokens);
             self.loop_token.to_tokens(tokens);
-            self.body.to_tokens(tokens);
+            self.body.brace_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
+                tokens.append_all(&self.body.stmts);
+            });
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprMatch {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.match_token.to_tokens(tokens);
             wrap_bare_struct(tokens, &self.expr);
             self.brace_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
                 for (i, arm) in self.arms.iter().enumerate() {
                     arm.to_tokens(tokens);
                     // Ensure that we have a comma after a non-block arm, except
@@ -3088,8 +3339,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprCatch {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.do_token.to_tokens(tokens);
             self.catch_token.to_tokens(tokens);
             self.block.to_tokens(tokens);
@@ -3098,8 +3349,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprYield {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.yield_token.to_tokens(tokens);
             self.expr.to_tokens(tokens);
         }
@@ -3107,8 +3358,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprClosure {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.movability.to_tokens(tokens);
             self.capture.to_tokens(tokens);
             self.or1_token.to_tokens(tokens);
@@ -3133,8 +3384,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprUnsafe {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.unsafe_token.to_tokens(tokens);
             self.block.to_tokens(tokens);
         }
@@ -3142,16 +3393,19 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprBlock {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
-            self.block.to_tokens(tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
+            self.block.brace_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
+                tokens.append_all(&self.block.stmts);
+            });
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprAssign {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.left.to_tokens(tokens);
             self.eq_token.to_tokens(tokens);
             self.right.to_tokens(tokens);
@@ -3160,18 +3414,17 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprAssignOp {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.left.to_tokens(tokens);
             self.op.to_tokens(tokens);
             self.right.to_tokens(tokens);
         }
     }
 
-    #[cfg(feature = "full")]
     impl ToTokens for ExprField {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.base.to_tokens(tokens);
             self.dot_token.to_tokens(tokens);
             self.member.to_tokens(tokens);
@@ -3179,16 +3432,16 @@ mod printing {
     }
 
     impl ToTokens for Member {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             match *self {
-                Member::Named(ident) => ident.to_tokens(tokens),
+                Member::Named(ref ident) => ident.to_tokens(tokens),
                 Member::Unnamed(ref index) => index.to_tokens(tokens),
             }
         }
     }
 
     impl ToTokens for Index {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             let mut lit = Literal::i64_unsuffixed(i64::from(self.index));
             lit.set_span(self.span);
             tokens.append(lit);
@@ -3196,8 +3449,8 @@ mod printing {
     }
 
     impl ToTokens for ExprIndex {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.expr.to_tokens(tokens);
             self.bracket_token.surround(tokens, |tokens| {
                 self.index.to_tokens(tokens);
@@ -3207,8 +3460,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprRange {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.from.to_tokens(tokens);
             match self.limits {
                 RangeLimits::HalfOpen(ref t) => t.to_tokens(tokens),
@@ -3219,16 +3472,16 @@ mod printing {
     }
 
     impl ToTokens for ExprPath {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             ::PathTokens(&self.qself, &self.path).to_tokens(tokens)
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprReference {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.and_token.to_tokens(tokens);
             self.mutability.to_tokens(tokens);
             self.expr.to_tokens(tokens);
@@ -3237,8 +3490,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprBreak {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.break_token.to_tokens(tokens);
             self.label.to_tokens(tokens);
             self.expr.to_tokens(tokens);
@@ -3247,8 +3500,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprContinue {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.continue_token.to_tokens(tokens);
             self.label.to_tokens(tokens);
         }
@@ -3256,8 +3509,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprReturn {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.return_token.to_tokens(tokens);
             self.expr.to_tokens(tokens);
         }
@@ -3265,18 +3518,19 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprMacro {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.mac.to_tokens(tokens);
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprStruct {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.path.to_tokens(tokens);
             self.brace_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
                 self.fields.to_tokens(tokens);
                 if self.rest.is_some() {
                     TokensOrDefault(&self.dot2_token).to_tokens(tokens);
@@ -3288,9 +3542,10 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprRepeat {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.bracket_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
                 self.expr.to_tokens(tokens);
                 self.semi_token.to_tokens(tokens);
                 self.len.to_tokens(tokens);
@@ -3300,8 +3555,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprGroup {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.group_token.surround(tokens, |tokens| {
                 self.expr.to_tokens(tokens);
             });
@@ -3309,9 +3564,10 @@ mod printing {
     }
 
     impl ToTokens for ExprParen {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            attrs_to_tokens(&self.attrs, tokens);
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.paren_token.surround(tokens, |tokens| {
+                inner_attrs_to_tokens(&self.attrs, tokens);
                 self.expr.to_tokens(tokens);
             });
         }
@@ -3319,22 +3575,22 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for ExprTry {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.expr.to_tokens(tokens);
             self.question_token.to_tokens(tokens);
         }
     }
 
     impl ToTokens for ExprVerbatim {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.tts.to_tokens(tokens);
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for Label {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.name.to_tokens(tokens);
             self.colon_token.to_tokens(tokens);
         }
@@ -3342,8 +3598,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for FieldValue {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.member.to_tokens(tokens);
             if let Some(ref colon_token) = self.colon_token {
                 colon_token.to_tokens(tokens);
@@ -3354,7 +3610,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for Arm {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             tokens.append_all(&self.attrs);
             self.leading_vert.to_tokens(tokens);
             self.pats.to_tokens(tokens);
@@ -3370,14 +3626,14 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for PatWild {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.underscore_token.to_tokens(tokens);
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for PatIdent {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.by_ref.to_tokens(tokens);
             self.mutability.to_tokens(tokens);
             self.ident.to_tokens(tokens);
@@ -3390,7 +3646,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for PatStruct {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.path.to_tokens(tokens);
             self.brace_token.surround(tokens, |tokens| {
                 self.fields.to_tokens(tokens);
@@ -3405,7 +3661,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for PatTupleStruct {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.path.to_tokens(tokens);
             self.pat.to_tokens(tokens);
         }
@@ -3413,14 +3669,14 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for PatPath {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             ::PathTokens(&self.qself, &self.path).to_tokens(tokens);
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for PatTuple {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.paren_token.surround(tokens, |tokens| {
                 self.front.to_tokens(tokens);
                 if let Some(ref dot2_token) = self.dot2_token {
@@ -3442,7 +3698,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for PatBox {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.box_token.to_tokens(tokens);
             self.pat.to_tokens(tokens);
         }
@@ -3450,7 +3706,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for PatRef {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.and_token.to_tokens(tokens);
             self.mutability.to_tokens(tokens);
             self.pat.to_tokens(tokens);
@@ -3459,14 +3715,14 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for PatLit {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.expr.to_tokens(tokens);
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for PatRange {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.lo.to_tokens(tokens);
             match self.limits {
                 RangeLimits::HalfOpen(ref t) => t.to_tokens(tokens),
@@ -3478,7 +3734,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for PatSlice {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             // XXX: This is a mess, and it will be so easy to screw it up. How
             // do we make this correct itself better?
             self.bracket_token.surround(tokens, |tokens| {
@@ -3513,21 +3769,21 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for PatMacro {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.mac.to_tokens(tokens);
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for PatVerbatim {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.tts.to_tokens(tokens);
         }
     }
 
     #[cfg(feature = "full")]
     impl ToTokens for FieldPat {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             if let Some(ref colon_token) = self.colon_token {
                 self.member.to_tokens(tokens);
                 colon_token.to_tokens(tokens);
@@ -3538,7 +3794,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for Block {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             self.brace_token.surround(tokens, |tokens| {
                 tokens.append_all(&self.stmts);
             });
@@ -3547,7 +3803,7 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for Stmt {
-        fn to_tokens(&self, tokens: &mut Tokens) {
+        fn to_tokens(&self, tokens: &mut TokenStream) {
             match *self {
                 Stmt::Local(ref local) => local.to_tokens(tokens),
                 Stmt::Item(ref item) => item.to_tokens(tokens),
@@ -3562,8 +3818,8 @@ mod printing {
 
     #[cfg(feature = "full")]
     impl ToTokens for Local {
-        fn to_tokens(&self, tokens: &mut Tokens) {
-            tokens.append_all(self.attrs.outer());
+        fn to_tokens(&self, tokens: &mut TokenStream) {
+            outer_attrs_to_tokens(&self.attrs, tokens);
             self.let_token.to_tokens(tokens);
             self.pats.to_tokens(tokens);
             if let Some((ref colon_token, ref ty)) = self.ty {

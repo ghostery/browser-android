@@ -69,8 +69,9 @@ TransceiverImpl::TransceiverImpl(
       mMainThread.get(),
       mStsThread.get(),
       IsVideo(),
-      mSendTrack,
       mConduit);
+
+  mTransmitPipeline->SetTrack(mSendTrack);
 }
 
 TransceiverImpl::~TransceiverImpl() = default;
@@ -124,7 +125,7 @@ TransceiverImpl::UpdateSinkIdentity(const dom::MediaStreamTrack* aTrack,
                                     nsIPrincipal* aPrincipal,
                                     const PeerIdentity* aSinkIdentity)
 {
-  if (!(mJsepTransceiver->mJsDirection & sdp::kSend)) {
+  if (mJsepTransceiver->IsStopped()) {
     return NS_OK;
   }
 
@@ -158,7 +159,7 @@ TransceiverImpl::UpdateSendTrack(dom::MediaStreamTrack* aSendTrack)
   MOZ_MTLOG(ML_DEBUG, mPCHandle << "[" << mMid << "]: " << __FUNCTION__ <<
                       "(" << aSendTrack << ")");
   mSendTrack = aSendTrack;
-  return mTransmitPipeline->ReplaceTrack(mSendTrack);
+  return mTransmitPipeline->SetTrack(mSendTrack);
 }
 
 nsresult
@@ -177,10 +178,8 @@ TransceiverImpl::UpdateTransport(PeerConnectionMedia& aTransportManager)
   ASSERT_ON_THREAD(mMainThread);
   nsAutoPtr<MediaPipelineFilter> filter;
 
-  mRtpFlow = aTransportManager.GetTransportFlow(
-      mJsepTransceiver->GetTransportLevel(), false);
-  mRtcpFlow = aTransportManager.GetTransportFlow(
-      mJsepTransceiver->GetTransportLevel(), true);
+  mRtpFlow = aTransportManager.GetTransportFlow(GetTransportId(), false);
+  mRtcpFlow = aTransportManager.GetTransportFlow(GetTransportId(), true);
 
   if (mJsepTransceiver->HasBundleLevel() &&
       mJsepTransceiver->mRecvTrack.GetNegotiatedDetails()) {
@@ -240,7 +239,7 @@ TransceiverImpl::UpdateConduit()
   }
 
   mConduit->SetLocalCNAME(mJsepTransceiver->mSendTrack.GetCNAME().c_str());
-  mConduit->SetLocalMID(mJsepTransceiver->mTransport->mTransportId);
+  mConduit->SetLocalMID(mMid);
 
   nsresult rv;
 
@@ -362,6 +361,12 @@ TransceiverImpl::SyncWithJS(dom::RTCRtpTransceiver& aJsTransceiver,
 {
   MOZ_MTLOG(ML_DEBUG, mPCHandle << "[" << mMid << "]: " << __FUNCTION__
                       << " Syncing with JS transceiver");
+
+  if (!mTransmitPipeline) {
+    // Shutdown_m has already been called, probably due to pc.close(). Just
+    // nod and smile.
+    return;
+  }
 
   // Update stopped, both ways, since either JSEP or JS can stop these
   if (mJsepTransceiver->IsStopped()) {
@@ -602,7 +607,7 @@ bool
 TransceiverImpl::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto,
                             JS::MutableHandle<JSObject*> aReflector)
 {
-  return dom::TransceiverImplBinding::Wrap(aCx, this, aGivenProto, aReflector);
+  return dom::TransceiverImpl_Binding::Wrap(aCx, this, aGivenProto, aReflector);
 }
 
 already_AddRefed<dom::MediaStreamTrack>
@@ -925,6 +930,12 @@ TransceiverImpl::UpdateVideoConduit()
       return rv;
     }
 
+    if (configs.values.empty()) {
+      MOZ_MTLOG(ML_INFO, mPCHandle << "[" << mMid << "]: " << __FUNCTION__ <<
+                          " No codecs were negotiated (send).");
+      return NS_OK;
+    }
+
     auto error = conduit->ConfigureSendMediaCodec(configs.values[0]);
     if (error) {
       MOZ_MTLOG(ML_ERROR, mPCHandle << "[" << mMid << "]: " << __FUNCTION__ <<
@@ -998,10 +1009,8 @@ TransceiverImpl::UpdateConduitRtpExtmap(const JsepTrackNegotiatedDetails& aDetai
 void
 TransceiverImpl::Stop()
 {
-  mTransmitPipeline->Stop();
-  mTransmitPipeline->DetachMedia();
-  mReceivePipeline->Stop();
-  mReceivePipeline->DetachMedia();
+  mTransmitPipeline->Shutdown_m();
+  mReceivePipeline->Shutdown_m();
   // Make sure that stats queries stop working on this transceiver.
   UpdateSendTrack(nullptr);
   mHaveStartedReceiving = false;

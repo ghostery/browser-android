@@ -16,8 +16,6 @@
 <!ENTITY editBookmarkOverlay.tags.label                      "Labels:">
 <!ENTITY editBookmarkOverlay.tags.accesskey                  "a">
 <!ENTITY editBookmarkOverlay.tagsEmptyDesc.label             "Scheid labels met komma’s">
-<!ENTITY editBookmarkOverlay.description.label               "Beschrijving:">
-<!ENTITY editBookmarkOverlay.description.accesskey           "c">
 <!ENTITY editBookmarkOverlay.keyword.label                   "Sleutelwoord:">
 <!ENTITY editBookmarkOverlay.keyword.accesskey               "S">
 <!ENTITY editBookmarkOverlay.tagsExpanderDown.tooltip        "Alle labels tonen">
@@ -25,4 +23,4 @@
 <!ENTITY editBookmarkOverlay.loadInSidebar.accesskey         "D">
 <!ENTITY editBookmarkOverlay.choose.label                    "Kiezen…">
 <!ENTITY editBookmarkOverlay.newFolderButton.label           "Nieuwe map">
-<!ENTITY editBookmarkOverlay.newFolderButton.accesskey       "e">
+<!ENTITY editBookmarkOverlay.newFolderButton.accesskey       "m">

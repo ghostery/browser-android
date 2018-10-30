@@ -19,8 +19,6 @@
 <!ENTITY useHtml.accesskey "T">
 <!ENTITY autoQuote.label "Podczas tworzenia odpowiedzi automatycznie cytuj oryginalną wiadomość">
 <!ENTITY autoQuote.accesskey "P">
-<!ENTITY then.label "a następnie">
-<!ENTITY then.accesskey "a">
 <!ENTITY quoting.label "podczas cytowania">
 <!ENTITY quoting.accesskey "c">
 <!ENTITY aboveQuote.label "rozpocznij odpowiedź powyżej cytowanego tekstu">

@@ -356,6 +356,7 @@ public:
   explicit ImageContainerListener(ImageContainer* aImageContainer);
 
   void NotifyComposite(const ImageCompositeNotification& aNotification);
+  void NotifyDropped(uint32_t aDropped);
   void ClearImageContainer();
   void DropImageClient();
 private:
@@ -559,6 +560,10 @@ public:
 
   const gfx::IntSize& GetScaleHint() const { return mScaleHint; }
 
+  void SetTransformHint(const gfx::Matrix& aTransformHint) { mTransformHint = aTransformHint; }
+
+  const gfx::Matrix& GetTransformHint() const { return mTransformHint; }
+
   void SetImageFactory(ImageFactory *aFactory)
   {
     RecursiveMutexAutoLock lock(mRecursiveMutex);
@@ -609,11 +614,11 @@ public:
    */
   uint32_t GetDroppedImageCount()
   {
-    RecursiveMutexAutoLock lock(mRecursiveMutex);
     return mDroppedImageCount;
   }
 
   void NotifyComposite(const ImageCompositeNotification& aNotification);
+  void NotifyDropped(uint32_t aDropped);
 
   ImageContainerListener* GetImageContainerListener()
   {
@@ -671,8 +676,8 @@ private:
   // See GetPaintDelay. Accessed only with mRecursiveMutex held.
   TimeDuration mPaintDelay;
 
-  // See GetDroppedImageCount. Accessed only with mRecursiveMutex held.
-  uint32_t mDroppedImageCount;
+  // See GetDroppedImageCount.
+  mozilla::Atomic<uint32_t> mDroppedImageCount;
 
   // This is the image factory used by this container, layer managers using
   // this container can set an alternative image factory that will be used to
@@ -680,6 +685,8 @@ private:
   RefPtr<ImageFactory> mImageFactory;
 
   gfx::IntSize mScaleHint;
+
+  gfx::Matrix mTransformHint;
 
   RefPtr<BufferRecycleBin> mRecycleBin;
 
@@ -695,9 +702,7 @@ private:
   bool mIsAsync;
   CompositableHandle mAsyncContainerHandle;
 
-  nsTArray<FrameID> mFrameIDsNotYetComposited;
-  // ProducerID for last current image(s), including the frames in
-  // mFrameIDsNotYetComposited
+  // ProducerID for last current image(s)
   ProducerID mCurrentProducerID;
 
   RefPtr<ImageContainerListener> mNotifyCompositeListener;

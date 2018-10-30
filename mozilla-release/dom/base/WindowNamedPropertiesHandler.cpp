@@ -104,8 +104,7 @@ WindowNamedPropertiesHandler::getOwnPropDescriptor(JSContext* aCx,
   }
 
   // Grab the DOM window.
-  JS::Rooted<JSObject*> global(aCx, JS_GetGlobalForObject(aCx, aProxy));
-  nsGlobalWindowInner* win = xpc::WindowOrNull(global);
+  nsGlobalWindowInner* win = xpc::WindowGlobalOrNull(aProxy);
   if (win->Length() > 0) {
     nsCOMPtr<nsPIDOMWindowOuter> childWin = win->GetChildWindow(str);
     if (childWin && ShouldExposeChildWindow(str, childWin)) {
@@ -113,7 +112,7 @@ WindowNamedPropertiesHandler::getOwnPropDescriptor(JSContext* aCx,
       // global scope is still allowed, since |var| only looks up |own|
       // properties. But unqualified shadowing will fail, per-spec.
       JS::Rooted<JS::Value> v(aCx);
-      if (!WrapObject(aCx, childWin, &v)) {
+      if (!ToJSValue(aCx, nsGlobalWindowOuter::Cast(childWin), &v)) {
         return false;
       }
       FillPropertyDescriptor(aDesc, aProxy, 0, v);
@@ -128,27 +127,25 @@ WindowNamedPropertiesHandler::getOwnPropDescriptor(JSContext* aCx,
   }
   nsHTMLDocument* document = static_cast<nsHTMLDocument*>(htmlDoc.get());
 
+  JS::Rooted<JS::Value> v(aCx);
   Element* element = document->GetElementById(str);
   if (element) {
-    JS::Rooted<JS::Value> v(aCx);
-    if (!WrapObject(aCx, element, &v)) {
+    if (!ToJSValue(aCx, element, &v)) {
       return false;
     }
     FillPropertyDescriptor(aDesc, aProxy, 0, v);
     return true;
   }
 
-  nsWrapperCache* cache;
-  nsISupports* result = document->ResolveName(str, &cache);
-  if (!result) {
-    return true;
-  }
-
-  JS::Rooted<JS::Value> v(aCx);
-  if (!WrapObject(aCx, result, cache, nullptr, &v)) {
+  ErrorResult rv;
+  bool found = document->ResolveName(aCx, str, &v, rv);
+  if (rv.MaybeSetPendingException(aCx)) {
     return false;
   }
-  FillPropertyDescriptor(aDesc, aProxy, 0, v);
+
+  if (found) {
+    FillPropertyDescriptor(aDesc, aProxy, 0, v);
+  }
   return true;
 }
 
@@ -177,12 +174,12 @@ WindowNamedPropertiesHandler::ownPropNames(JSContext* aCx,
   }
 
   // Grab the DOM window.
-  nsGlobalWindowInner* win = xpc::WindowOrNull(JS_GetGlobalForObject(aCx, aProxy));
+  nsGlobalWindowInner* win = xpc::WindowGlobalOrNull(aProxy);
   nsTArray<nsString> names;
   // The names live on the outer window, which might be null
   nsGlobalWindowOuter* outer = win->GetOuterWindowInternal();
   if (outer) {
-    nsDOMWindowList* childWindows = outer->GetWindowList();
+    nsDOMWindowList* childWindows = outer->GetFrames();
     if (childWindows) {
       uint32_t length = childWindows->GetLength();
       for (uint32_t i = 0; i < length; ++i) {
@@ -248,7 +245,7 @@ static const DOMIfaceAndProtoJSClass WindowNamedPropertiesClass = {
   0,
   &sEmptyNativePropertyHooks,
   "[object WindowProperties]",
-  EventTargetBinding::GetProtoObject
+  EventTarget_Binding::GetProtoObject
 };
 
 // static

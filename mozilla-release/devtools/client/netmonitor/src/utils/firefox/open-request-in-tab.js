@@ -14,7 +14,7 @@
 
 "use strict";
 
-let { Cc, Ci } = require("chrome");
+const { Cc, Ci } = require("chrome");
 const Services = require("Services");
 const { gDevTools } = require("devtools/client/framework/devtools");
 
@@ -22,23 +22,30 @@ const { gDevTools } = require("devtools/client/framework/devtools");
  * Opens given request in a new tab.
  */
 function openRequestInTab(url, requestPostData) {
-  let win = Services.wm.getMostRecentWindow(gDevTools.chromeWindowType);
-  let rawData = requestPostData ? requestPostData.postData : null;
+  const win = Services.wm.getMostRecentWindow(gDevTools.chromeWindowType);
+  const rawData = requestPostData ? requestPostData.postData : null;
   let postData;
 
   if (rawData && rawData.text) {
-    let stringStream = getInputStreamFromString(rawData.text);
+    const stringStream = getInputStreamFromString(rawData.text);
     postData = Cc["@mozilla.org/network/mime-input-stream;1"]
       .createInstance(Ci.nsIMIMEInputStream);
     postData.addHeader("Content-Type", "application/x-www-form-urlencoded");
     postData.setData(stringStream);
   }
-
-  win.gBrowser.selectedTab = win.gBrowser.addTab(url, null, null, postData);
+  const userContextId = win.gBrowser.contentPrincipal.userContextId;
+  win.gBrowser.selectedTab = win.gBrowser.addWebTab(url, {
+    // TODO this should be using the original request principal
+    triggeringPrincipal: Services.scriptSecurityManager.createNullPrincipal({
+      userContextId,
+    }),
+    userContextId,
+    postData,
+  });
 }
 
 function getInputStreamFromString(data) {
-  let stringStream = Cc["@mozilla.org/io/string-input-stream;1"]
+  const stringStream = Cc["@mozilla.org/io/string-input-stream;1"]
     .createInstance(Ci.nsIStringInputStream);
   stringStream.data = data;
   return stringStream;

@@ -175,7 +175,6 @@
 <!ENTITY calendar.context.attendance.menu.label       "Uczestnictwo" >
 <!ENTITY calendar.context.attendance.menu.accesskey   "c" >
 <!ENTITY calendar.context.attendance.occurrence.label "To wystąpienie" >
-<!ENTITY calendar.context.attendance.all.label        "Wszystkie wystąpienia" >
 
 <!ENTITY calendar.context.attendance.all2.label "Ukończ serię">
 <!ENTITY calendar.context.attendance.send.label "Wyślij powiadomienie teraz">

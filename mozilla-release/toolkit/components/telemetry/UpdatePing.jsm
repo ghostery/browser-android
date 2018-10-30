@@ -8,7 +8,6 @@
 ChromeUtils.import("resource://gre/modules/Log.jsm", this);
 ChromeUtils.import("resource://gre/modules/Services.jsm", this);
 ChromeUtils.import("resource://gre/modules/TelemetryUtils.jsm", this);
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", this);
 
 ChromeUtils.defineModuleGetter(this, "TelemetryController",
                                "resource://gre/modules/TelemetryController.jsm");
@@ -25,6 +24,8 @@ var EXPORTED_SYMBOLS = ["UpdatePing"];
  * ping.
  */
 var UpdatePing = {
+  _enabled: false,
+
   earlyInit() {
     this._log = Log.repository.getLoggerWithMessagePrefix(LOGGER_NAME, "UpdatePing::");
     this._enabled = Services.prefs.getBoolPref(TelemetryUtils.Preferences.UpdatePing, false);
@@ -62,6 +63,10 @@ var UpdatePing = {
    * @param {String} aPreviousBuildId The browser build id we updated from.
    */
   handleUpdateSuccess(aPreviousVersion, aPreviousBuildId) {
+    if (!this._enabled) {
+      return;
+    }
+
     this._log.trace("handleUpdateSuccess");
 
     // An update could potentially change the update channel. Moreover,
@@ -99,7 +104,7 @@ var UpdatePing = {
    */
   _handleUpdateReady(aUpdateState) {
     const ALLOWED_STATES = [
-      "applied", "applied-service", "pending", "pending-service", "pending-elevate"
+      "applied", "applied-service", "pending", "pending-service", "pending-elevate",
     ];
     if (!ALLOWED_STATES.includes(aUpdateState)) {
       this._log.trace("Unexpected update state: " + aUpdateState);

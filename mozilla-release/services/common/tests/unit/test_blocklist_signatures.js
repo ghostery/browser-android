@@ -79,9 +79,9 @@ add_task(async function test_check_signatures() {
           signature_encoding: "rs_base64url",
           signature,
           hash_algorithm: "sha384",
-          ref: "1yryrnmzou5rf31ou80znpnq8n"
-        }
-      }
+          ref: "1yryrnmzou5rf31ou80znpnq8n",
+        },
+      },
     };
   }
 
@@ -90,10 +90,10 @@ add_task(async function test_check_signatures() {
       comment,
       sampleHeaders: [
         "Content-Type: application/json; charset=UTF-8",
-        `ETag: \"${eTag}\"`
+        `ETag: \"${eTag}\"`,
       ],
       status: {status: 200, statusText: "OK"},
-      responseBody: JSON.stringify(body)
+      responseBody: JSON.stringify(body),
     };
   }
 
@@ -163,13 +163,13 @@ add_task(async function test_check_signatures() {
       created: "2016-01-18T14:43:37Z",
       name: "GlobalSign certs",
       who: ".",
-      why: "."
+      why: ".",
     },
     enabled: true,
     id: "97fbf7c4-3ef2-f54f-0029-1ba6540c63ea",
     issuerName: "MHExKDAmBgNVBAMTH0dsb2JhbFNpZ24gUm9vdFNpZ24gUGFydG5lcnMgQ0ExHTAbBgNVBAsTFFJvb3RTaWduIFBhcnRuZXJzIENBMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMQswCQYDVQQGEwJCRQ==",
     last_modified: 2000,
-    serialNumber: "BAAAAAABA/A35EU="
+    serialNumber: "BAAAAAABA/A35EU=",
   };
 
   const RECORD2 = {
@@ -178,13 +178,13 @@ add_task(async function test_check_signatures() {
       created: "2016-01-18T14:48:11Z",
       name: "GlobalSign certs",
       who: ".",
-      why: "."
+      why: ".",
     },
     enabled: true,
     id: "e3bd531e-1ee4-7407-27ce-6fdc9cecbbdc",
     issuerName: "MIGBMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTElMCMGA1UECxMcUHJpbWFyeSBPYmplY3QgUHVibGlzaGluZyBDQTEwMC4GA1UEAxMnR2xvYmFsU2lnbiBQcmltYXJ5IE9iamVjdCBQdWJsaXNoaW5nIENB",
     last_modified: 3000,
-    serialNumber: "BAAAAAABI54PryQ="
+    serialNumber: "BAAAAAABI54PryQ=",
   };
 
   const RECORD3 = {
@@ -193,13 +193,13 @@ add_task(async function test_check_signatures() {
       created: "2016-01-18T14:48:11Z",
       name: "GlobalSign certs",
       who: ".",
-      why: "."
+      why: ".",
     },
     enabled: true,
     id: "c7c49b69-a4ab-418e-92a9-e1961459aa7f",
     issuerName: "MIGBMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTElMCMGA1UECxMcUHJpbWFyeSBPYmplY3QgUHVibGlzaGluZyBDQTEwMC4GA1UEAxMnR2xvYmFsU2lnbiBQcmltYXJ5IE9iamVjdCBQdWJsaXNoaW5nIENB",
     last_modified: 4000,
-    serialNumber: "BAAAAAABI54PryQ="
+    serialNumber: "BAAAAAABI54PryQ=",
   };
 
   const RECORD1_DELETION = {
@@ -219,10 +219,10 @@ add_task(async function test_check_signatures() {
   const RESPONSE_CERT_CHAIN = {
     comment: "RESPONSE_CERT_CHAIN",
     sampleHeaders: [
-      "Content-Type: text/plain; charset=UTF-8"
+      "Content-Type: text/plain; charset=UTF-8",
     ],
     status: {status: 200, statusText: "OK"},
-    responseBody: getCertChain()
+    responseBody: getCertChain(),
   };
 
   // A server settings response. This is used in each sync.
@@ -232,19 +232,19 @@ add_task(async function test_check_signatures() {
       "Access-Control-Allow-Origin: *",
       "Access-Control-Expose-Headers: Retry-After, Content-Length, Alert, Backoff",
       "Content-Type: application/json; charset=UTF-8",
-      "Server: waitress"
+      "Server: waitress",
     ],
     status: {status: 200, statusText: "OK"},
     responseBody: JSON.stringify({
       "settings": {
-        "batch_max_requests": 25
+        "batch_max_requests": 25,
       },
       "url": `http://localhost:${port}/v1/`,
       "documentation": "https://kinto.readthedocs.org/",
       "version": "1.5.1",
       "commit": "cbc6f58",
-      "hello": "kinto"
-    })
+      "hello": "kinto",
+    }),
   };
 
   // This is the initial, empty state of the collection. This is only used
@@ -253,14 +253,27 @@ add_task(async function test_check_signatures() {
     comment: "RESPONSE_EMPTY_INITIAL",
     sampleHeaders: [
       "Content-Type: application/json; charset=UTF-8",
-      "ETag: \"1000\""
+      "ETag: \"1000\"",
     ],
     status: {status: 200, statusText: "OK"},
-    responseBody: JSON.stringify({"data": []})
+    responseBody: JSON.stringify({"data": []}),
   };
 
   const RESPONSE_BODY_META_EMPTY_SIG = makeMetaResponseBody(1000,
     "vxuAg5rDCB-1pul4a91vqSBQRXJG_j7WOYUTswxRSMltdYmbhLRH8R8brQ9YKuNDF56F-w6pn4HWxb076qgKPwgcEBtUeZAO_RtaHXRkRUUgVzAr86yQL4-aJTbv3D6u");
+
+  const RESPONSE_META_NO_SIG = {
+    sampleHeaders: [
+      "Content-Type: application/json; charset=UTF-8",
+      `ETag: \"123456\"`,
+    ],
+    status: {status: 200, statusText: "OK"},
+    responseBody: JSON.stringify({
+      data: {
+        last_modified: 123456,
+      },
+    }),
+  };
 
   // The collection metadata containing the signature for the empty
   // collection.
@@ -275,7 +288,7 @@ add_task(async function test_check_signatures() {
     "GET:/v1/buckets/blocklists/collections/certificates/records?_sort=-last_modified":
       [RESPONSE_EMPTY_INITIAL],
     "GET:/v1/buckets/blocklists/collections/certificates?":
-      [RESPONSE_META_EMPTY_SIG]
+      [RESPONSE_META_EMPTY_SIG],
   };
 
   // .. and use this map to register handlers for each path
@@ -303,10 +316,10 @@ add_task(async function test_check_signatures() {
     comment: "RESPONSE_TWO_ADDED",
     sampleHeaders: [
         "Content-Type: application/json; charset=UTF-8",
-        "ETag: \"3000\""
+        "ETag: \"3000\"",
     ],
     status: {status: 200, statusText: "OK"},
-    responseBody: JSON.stringify({"data": [RECORD2, RECORD1]})
+    responseBody: JSON.stringify({"data": [RECORD2, RECORD1]}),
   };
 
   const RESPONSE_BODY_META_TWO_ITEMS_SIG = makeMetaResponseBody(3000,
@@ -321,7 +334,7 @@ add_task(async function test_check_signatures() {
     "GET:/v1/buckets/blocklists/collections/certificates/records?_sort=-last_modified&_since=1000":
       [RESPONSE_TWO_ADDED],
     "GET:/v1/buckets/blocklists/collections/certificates?":
-      [RESPONSE_META_TWO_ITEMS_SIG]
+      [RESPONSE_META_TWO_ITEMS_SIG],
   };
   registerHandlers(twoItemsResponses);
   await OneCRLBlocklistClient.maybeSync(3000, startTime);
@@ -335,10 +348,10 @@ add_task(async function test_check_signatures() {
     comment: "RESPONSE_ONE_ADDED_ONE_REMOVED ",
     sampleHeaders: [
       "Content-Type: application/json; charset=UTF-8",
-      "ETag: \"4000\""
+      "ETag: \"4000\"",
     ],
     status: {status: 200, statusText: "OK"},
-    responseBody: JSON.stringify({"data": [RECORD3, RECORD1_DELETION]})
+    responseBody: JSON.stringify({"data": [RECORD3, RECORD1_DELETION]}),
   };
 
   const RESPONSE_BODY_META_THREE_ITEMS_SIG = makeMetaResponseBody(4000,
@@ -353,7 +366,7 @@ add_task(async function test_check_signatures() {
     "GET:/v1/buckets/blocklists/collections/certificates/records?_sort=-last_modified&_since=3000":
       [RESPONSE_ONE_ADDED_ONE_REMOVED],
     "GET:/v1/buckets/blocklists/collections/certificates?":
-      [RESPONSE_META_THREE_ITEMS_SIG]
+      [RESPONSE_META_THREE_ITEMS_SIG],
   };
   registerHandlers(oneAddedOneRemovedResponses);
   await OneCRLBlocklistClient.maybeSync(4000, startTime);
@@ -365,17 +378,17 @@ add_task(async function test_check_signatures() {
     comment: "RESPONSE_EMPTY_NO_UPDATE ",
     sampleHeaders: [
       "Content-Type: application/json; charset=UTF-8",
-      "ETag: \"4000\""
+      "ETag: \"4000\"",
     ],
     status: {status: 200, statusText: "OK"},
-    responseBody: JSON.stringify({"data": []})
+    responseBody: JSON.stringify({"data": []}),
   };
 
   const noOpResponses = {
     "GET:/v1/buckets/blocklists/collections/certificates/records?_sort=-last_modified&_since=4000":
       [RESPONSE_EMPTY_NO_UPDATE],
     "GET:/v1/buckets/blocklists/collections/certificates?":
-      [RESPONSE_META_THREE_ITEMS_SIG]
+      [RESPONSE_META_THREE_ITEMS_SIG],
   };
   registerHandlers(noOpResponses);
   await OneCRLBlocklistClient.maybeSync(4100, startTime);
@@ -389,20 +402,20 @@ add_task(async function test_check_signatures() {
     comment: "RESPONSE_COMPLETE_INITIAL ",
     sampleHeaders: [
       "Content-Type: application/json; charset=UTF-8",
-      "ETag: \"4000\""
+      "ETag: \"4000\"",
     ],
     status: {status: 200, statusText: "OK"},
-    responseBody: JSON.stringify({"data": [RECORD2, RECORD3]})
+    responseBody: JSON.stringify({"data": [RECORD2, RECORD3]}),
   };
 
   const RESPONSE_COMPLETE_INITIAL_SORTED_BY_ID = {
     comment: "RESPONSE_COMPLETE_INITIAL ",
     sampleHeaders: [
       "Content-Type: application/json; charset=UTF-8",
-      "ETag: \"4000\""
+      "ETag: \"4000\"",
     ],
     status: {status: 200, statusText: "OK"},
-    responseBody: JSON.stringify({"data": [RECORD3, RECORD2]})
+    responseBody: JSON.stringify({"data": [RECORD3, RECORD2]}),
   };
 
   const RESPONSE_BODY_META_BAD_SIG = makeMetaResponseBody(4000,
@@ -429,26 +442,23 @@ add_task(async function test_check_signatures() {
     // The next request is for the full collection sorted by id. This will be
     // checked against the valid signature - so the sync should succeed.
     "GET:/v1/buckets/blocklists/collections/certificates/records?_sort=id":
-      [RESPONSE_COMPLETE_INITIAL_SORTED_BY_ID]
+      [RESPONSE_COMPLETE_INITIAL_SORTED_BY_ID],
   };
 
   registerHandlers(badSigGoodSigResponses);
 
   startHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
 
-  let retrySyncData;
-  OneCRLBlocklistClient.on("sync", ({ data }) => { retrySyncData = data; });
+  let syncEventSent = false;
+  OneCRLBlocklistClient.on("sync", ({ data }) => { syncEventSent = true; });
 
   await OneCRLBlocklistClient.maybeSync(5000, startTime);
 
   endHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
 
-  // since we only fixed the signature, and no data was changed, the sync result
-  // will be called with empty lists of created/updated/deleted.
-  equal(retrySyncData.current.length, 2);
-  equal(retrySyncData.created.length, 0);
-  equal(retrySyncData.updated.length, 0);
-  equal(retrySyncData.deleted.length, 0);
+  // since we only fixed the signature, and no data was changed, the sync event
+  // was not sent.
+  equal(syncEventSent, false);
 
   // ensure that the failure count is incremented for a succesful sync with an
   // (initial) bad signature - only SERVICES_SETTINGS_SYNC_SIG_FAIL should
@@ -480,17 +490,14 @@ add_task(async function test_check_signatures() {
 
   registerHandlers(badSigGoodOldResponses);
 
-  let oldChangesData;
-  OneCRLBlocklistClient.on("sync", ({ data }) => { oldChangesData = data; });
+  syncEventSent = false;
+  OneCRLBlocklistClient.on("sync", ({ data }) => { syncEventSent = true; });
 
   await OneCRLBlocklistClient.maybeSync(5000, startTime);
 
-  // Local data was unchanged, since it was never than the one returned by the server.
-  equal(oldChangesData.current.length, 2);
-  equal(oldChangesData.created.length, 0);
-  equal(oldChangesData.updated.length, 0);
-  equal(oldChangesData.deleted.length, 0);
-
+  // Local data was unchanged, since it was never than the one returned by the server,
+  // thus the sync event is not sent.
+  equal(syncEventSent, false);
 
   const badLocalContentGoodSigResponses = {
     // In this test, we deliberately serve a bad signature initially. The
@@ -505,7 +512,7 @@ add_task(async function test_check_signatures() {
     // The next request is for the full collection sorted by id. This will be
     // checked against the valid signature - so the sync should succeed.
     "GET:/v1/buckets/blocklists/collections/certificates/records?_sort=id":
-      [RESPONSE_COMPLETE_INITIAL_SORTED_BY_ID]
+      [RESPONSE_COMPLETE_INITIAL_SORTED_BY_ID],
   };
 
   registerHandlers(badLocalContentGoodSigResponses);
@@ -547,7 +554,7 @@ add_task(async function test_check_signatures() {
     // The next request is for the full collection sorted by id. This will be
     // checked against the valid signature - so the sync should succeed.
     "GET:/v1/buckets/blocklists/collections/certificates/records?_sort=id":
-      [RESPONSE_COMPLETE_INITIAL_SORTED_BY_ID]
+      [RESPONSE_COMPLETE_INITIAL_SORTED_BY_ID],
   };
 
   startHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
@@ -562,6 +569,31 @@ add_task(async function test_check_signatures() {
   // Ensure that the failure is reflected in the accumulated telemetry:
   endHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
   expectedIncrements = {[UptakeTelemetry.STATUS.SIGNATURE_RETRY_ERROR]: 1};
+  checkUptakeTelemetry(startHistogram, endHistogram, expectedIncrements);
+
+
+  const missingSigResponses = {
+    // In this test, we deliberately serve metadata without the signature attribute.
+    // As if the collection was not signed.
+    "GET:/v1/buckets/blocklists/collections/certificates?":
+      [RESPONSE_META_NO_SIG],
+  };
+
+  startHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
+  registerHandlers(missingSigResponses);
+  try {
+    await OneCRLBlocklistClient.maybeSync(6000, startTime);
+    do_throw("Sync should fail (the signature is missing)");
+  } catch (e) {
+    await checkRecordCount(OneCRLBlocklistClient, 2);
+  }
+
+  // Ensure that the failure is reflected in the accumulated telemetry:
+  endHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
+  expectedIncrements = {
+    [UptakeTelemetry.STATUS.SIGNATURE_ERROR]: 1,
+    [UptakeTelemetry.STATUS.SIGNATURE_RETRY_ERROR]: 0,  // Not retried since missing.
+  };
   checkUptakeTelemetry(startHistogram, endHistogram, expectedIncrements);
 });
 

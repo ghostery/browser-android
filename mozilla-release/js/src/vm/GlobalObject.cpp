@@ -11,6 +11,9 @@
 #include "jsfriendapi.h"
 
 #include "builtin/AtomicsObject.h"
+#ifdef ENABLE_BIGINT
+#include "builtin/BigInt.h"
+#endif
 #include "builtin/DataViewObject.h"
 #include "builtin/Eval.h"
 #include "builtin/MapObject.h"
@@ -34,10 +37,10 @@
 #include "vm/RegExpStatics.h"
 #include "vm/RegExpStaticsObject.h"
 
-#include "vm/JSCompartment-inl.h"
 #include "vm/JSObject-inl.h"
 #include "vm/JSScript-inl.h"
 #include "vm/NativeObject-inl.h"
+#include "vm/Realm-inl.h"
 
 using namespace js;
 
@@ -112,7 +115,7 @@ GlobalObject::skipDeselectedConstructor(JSContext* cx, JSProtoKey key)
       // Return true if the given constructor has been disabled at run-time.
       case JSProto_Atomics:
       case JSProto_SharedArrayBuffer:
-        return !cx->compartment()->creationOptions().getSharedMemoryAndAtomicsEnabled();
+        return !cx->realm()->creationOptions().getSharedMemoryAndAtomicsEnabled();
       default:
         return false;
     }
@@ -343,10 +346,10 @@ GlobalObject::resolveOffThreadConstructor(JSContext* cx,
         return false;
     }
 
-    if ((key == JSProto_Object || key == JSProto_Function || key == JSProto_Array) &&
-        !JSObject::setNewGroupUnknown(cx, placeholder->getClass(), placeholder))
-    {
-        return false;
+    if (key == JSProto_Object || key == JSProto_Function || key == JSProto_Array) {
+        ObjectGroupRealm& realm = ObjectGroupRealm::getForNewObject(cx);
+        if (!JSObject::setNewGroupUnknown(cx, realm, placeholder->getClass(), placeholder))
+            return false;
     }
 
     global->setPrototype(key, ObjectValue(*placeholder));
@@ -485,7 +488,7 @@ GlobalObject::createInternal(JSContext* cx, const Class* clasp)
         return nullptr;
     global->setReservedSlot(EMPTY_GLOBAL_SCOPE, PrivateGCThingValue(emptyGlobalScope));
 
-    cx->compartment()->initGlobal(*global);
+    cx->realm()->initGlobal(*global);
 
     if (!JSObject::setQualifiedVarObj(cx, global))
         return nullptr;
@@ -498,18 +501,18 @@ GlobalObject::createInternal(JSContext* cx, const Class* clasp)
 /* static */ GlobalObject*
 GlobalObject::new_(JSContext* cx, const Class* clasp, JSPrincipals* principals,
                    JS::OnNewGlobalHookOption hookOption,
-                   const JS::CompartmentOptions& options)
+                   const JS::RealmOptions& options)
 {
     MOZ_ASSERT(!cx->isExceptionPending());
-    MOZ_ASSERT(!cx->runtime()->isAtomsCompartment(cx->compartment()));
+    MOZ_ASSERT_IF(cx->zone(), !cx->zone()->isAtomsZone());
 
-    JSCompartment* compartment = NewCompartment(cx, principals, options);
-    if (!compartment)
+    Realm* realm = NewRealm(cx, principals, options);
+    if (!realm)
         return nullptr;
 
     Rooted<GlobalObject*> global(cx);
     {
-        AutoCompartmentUnchecked ac(cx, compartment);
+        AutoRealmUnchecked ar(cx, realm);
         global = GlobalObject::createInternal(cx, clasp);
         if (!global)
             return nullptr;
@@ -676,17 +679,23 @@ GlobalObject::initSelfHostingBuiltins(JSContext* cx, Handle<GlobalObject*> globa
 }
 
 /* static */ bool
-GlobalObject::isRuntimeCodeGenEnabled(JSContext* cx, Handle<GlobalObject*> global)
+GlobalObject::isRuntimeCodeGenEnabled(JSContext* cx, HandleValue code,
+                                      Handle<GlobalObject*> global)
 {
     HeapSlot& v = global->getSlotRef(RUNTIME_CODEGEN_ENABLED);
     if (v.isUndefined()) {
         /*
          * If there are callbacks, make sure that the CSP callback is installed
-         * and that it permits runtime code generation, then cache the result.
+         * and that it permits runtime code generation.
          */
         JSCSPEvalChecker allows = cx->runtime()->securityCallbacks->contentSecurityPolicyAllows;
-        Value boolValue = BooleanValue(!allows || allows(cx));
-        v.set(global, HeapSlot::Slot, RUNTIME_CODEGEN_ENABLED, boolValue);
+        if (allows)
+          return allows(cx, code);
+
+        // Let's cache the result only if the contentSecurityPolicyAllows callback is not set. In
+        // this way, contentSecurityPolicyAllows callback is executed each time, with the current
+        // HandleValue code.
+        v.set(global, HeapSlot::Slot, RUNTIME_CODEGEN_ENABLED, JS::TrueValue());
     }
     return !v.isFalse();
 }
@@ -807,7 +816,7 @@ GlobalObject::getDebuggers() const
 /* static */ GlobalObject::DebuggerVector*
 GlobalObject::getOrCreateDebuggers(JSContext* cx, Handle<GlobalObject*> global)
 {
-    assertSameCompartment(cx, global);
+    cx->check(global);
     DebuggerVector* debuggers = global->getDebuggers();
     if (debuggers)
         return debuggers;
@@ -826,7 +835,7 @@ GlobalObject::getOrCreateDebuggers(JSContext* cx, Handle<GlobalObject*> global)
 /* static */ NativeObject*
 GlobalObject::getOrCreateForOfPICObject(JSContext* cx, Handle<GlobalObject*> global)
 {
-    assertSameCompartment(cx, global);
+    cx->check(global);
     NativeObject* forOfPIC = global->getForOfPICObject();
     if (forOfPIC)
         return forOfPIC;

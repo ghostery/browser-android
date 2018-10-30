@@ -67,7 +67,6 @@
 <!ENTITY col.url.label "Indirizzo">
 <!ENTITY col.mostrecentvisit.label "Visita più recente">
 <!ENTITY col.visitcount.label "Numero visite">
-<!ENTITY col.description.label "Descrizione">
 <!ENTITY col.dateadded.label "Data inserimento">
 <!ENTITY col.lastmodified.label "Ultima modifica">
 <!ENTITY historySearch.placeholder "Cerca nella cronologia">
@@ -76,7 +75,7 @@
 <!ENTITY maintenance.label "Importa e salva">
 <!ENTITY maintenance.accesskey "m">
 <!ENTITY maintenance.tooltip "Importa e salva i segnalibri">
-<!ENTITY backButton.tooltip "Vai indietro">
+<!ENTITY backButton.tooltip "Torna indietro">
 <!ENTITY forwardButton.tooltip "Vai avanti">
 <!ENTITY detailsPane.more.label "Altri dati">
 <!ENTITY detailsPane.more.accesskey "a">

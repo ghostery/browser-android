@@ -65,11 +65,11 @@ def attributeParamlist(a, getter):
     return ", ".join(l)
 
 
-def attributeAsNative(a, getter, declType = 'NS_IMETHOD'):
-        params = {'returntype': attributeReturnType(a, declType),
-                  'binaryname': attributeNativeName(a, getter),
-                  'paramlist': attributeParamlist(a, getter)}
-        return "%(returntype)s %(binaryname)s(%(paramlist)s)" % params
+def attributeAsNative(a, getter, declType='NS_IMETHOD'):
+    params = {'returntype': attributeReturnType(a, declType),
+              'binaryname': attributeNativeName(a, getter),
+              'paramlist': attributeParamlist(a, getter)}
+    return "%(returntype)s %(binaryname)s(%(paramlist)s)" % params
 
 
 def methodNativeName(m):
@@ -92,7 +92,7 @@ def methodReturnType(m, macro):
     return ret
 
 
-def methodAsNative(m, declType = 'NS_IMETHOD'):
+def methodAsNative(m, declType='NS_IMETHOD'):
     return "%s %s(%s)" % (methodReturnType(m, declType),
                           methodNativeName(m),
                           paramlistAsNative(m))
@@ -134,6 +134,15 @@ def paramlistAsNative(m, empty='void'):
     return ", ".join(l)
 
 
+def memberCanRunScript(member):
+    # This can only happen if the member is scriptable and its interface is not builtinclass.
+    return member.isScriptable() and not member.iface.attributes.builtinclass
+
+
+def runScriptAnnotation(member):
+    return "JS_HAZ_CAN_RUN_SCRIPT " if memberCanRunScript(member) else ""
+
+
 def paramAsNative(p):
     default_spec = ''
     if p.default_value:
@@ -159,6 +168,7 @@ def paramlistNames(m):
         return ''
     return ', '.join(names)
 
+
 header = """/*
  * DO NOT EDIT.  THIS FILE IS GENERATED FROM %(filename)s
  */
@@ -178,8 +188,13 @@ jsvalue_include = """
 """
 
 infallible_includes = """
+#include "mozilla/AlreadyAddRefed.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/DebugOnly.h"
+"""
+
+can_run_script_includes = """
+#include "js/GCAnnotations.h"
 """
 
 header_end = """/* For IDL files that don't want to include root IDL files. */
@@ -217,11 +232,22 @@ def print_header(idl, fd, filename):
         fd.write(jsvalue_include)
 
     # Include some extra files if any attributes are infallible.
-    for iface in [p for p in idl.productions if p.kind == 'interface']:
-        for attr in [m for m in iface.members if isinstance(m, xpidl.Attribute)]:
+    interfaces = [p for p in idl.productions if p.kind == 'interface']
+    wroteRunScriptIncludes = False
+    for iface in interfaces:
+        attrs = [m for m in iface.members if isinstance(m, xpidl.Attribute)]
+        for attr in attrs:
             if attr.infallible:
                 fd.write(infallible_includes)
                 break
+
+        if not wroteRunScriptIncludes:
+            methods = [m for m in iface.members if isinstance(m, xpidl.Method)]
+            for member in itertools.chain(attrs, methods):
+                if memberCanRunScript(member):
+                    fd.write(can_run_script_includes)
+                    wroteRunScriptIncludes = True
+                    break
 
     fd.write('\n')
     fd.write(header_end)
@@ -299,20 +325,33 @@ iface_nonvirtual = """
 iface_forward = """
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object. */
-#define NS_FORWARD_%(macroname)s(_to) """
+#define NS_FORWARD_%(macroname)s(_to) """  # NOQA: E501
 
 iface_forward_safe = """
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
-#define NS_FORWARD_SAFE_%(macroname)s(_to) """
+#define NS_FORWARD_SAFE_%(macroname)s(_to) """  # NOQA: E501
 
-attr_infallible_tmpl = """\
+attr_builtin_infallible_tmpl = """\
   inline %(realtype)s%(nativename)s(%(args)s)
   {
     %(realtype)sresult;
     mozilla::DebugOnly<nsresult> rv = %(nativename)s(%(argnames)s&result);
     MOZ_ASSERT(NS_SUCCEEDED(rv));
     return result;
+  }
+"""
+
+# NOTE: We don't use RefPtr::forget here because we don't want to need the
+# definition of %(realtype)s in scope, which we would need for the
+# AddRef/Release calls.
+attr_refcnt_infallible_tmpl = """\
+  inline already_AddRefed<%(realtype)s>%(nativename)s(%(args)s)
+  {
+    %(realtype)s* result = nullptr;
+    mozilla::DebugOnly<nsresult> rv = %(nativename)s(%(argnames)s&result);
+    MOZ_ASSERT(NS_SUCCEEDED(rv));
+    return already_AddRefed<%(realtype)s>(result);
   }
 """
 
@@ -323,6 +362,7 @@ def write_interface(iface, fd):
 
     # Confirm that no names of methods will overload in this interface
     names = set()
+
     def record_name(name):
         if name in names:
             raise Exception("Unexpected overloaded virtual method %s in interface %s"
@@ -354,23 +394,33 @@ def write_interface(iface, fd):
         printComments(fd, m.doccomments, '  ')
 
         fd.write("  /* %s */\n" % m.toIDL())
-        fd.write("  %s = 0;\n\n" % methodAsNative(m))
+        fd.write("  %s%s = 0;\n\n" % (runScriptAnnotation(m),
+                                      methodAsNative(m)))
 
     def write_attr_decl(a):
         printComments(fd, a.doccomments, '  ')
 
         fd.write("  /* %s */\n" % a.toIDL())
 
-        fd.write("  %s = 0;\n" % attributeAsNative(a, True))
+        fd.write("  %s%s = 0;\n" % (runScriptAnnotation(a),
+                                    attributeAsNative(a, True)))
         if a.infallible:
-            fd.write(attr_infallible_tmpl %
-                     {'realtype': a.realtype.nativeType('in'),
-                      'nativename': attributeNativeName(a, getter=True),
-                      'args': '' if not a.implicit_jscontext else 'JSContext* cx',
-                      'argnames': '' if not a.implicit_jscontext else 'cx, '})
+            realtype = a.realtype.nativeType('in')
+            tmpl = attr_builtin_infallible_tmpl
+
+            if a.realtype.kind != 'builtin':
+                assert realtype.endswith(' *'), "bad infallible type"
+                tmpl = attr_refcnt_infallible_tmpl
+                realtype = realtype[:-2]  # strip trailing pointer
+
+            fd.write(tmpl % {'realtype': realtype,
+                             'nativename': attributeNativeName(a, getter=True),
+                             'args': '' if not a.implicit_jscontext else 'JSContext* cx',
+                             'argnames': '' if not a.implicit_jscontext else 'cx, '})
 
         if not a.readonly:
-            fd.write("  %s = 0;\n" % attributeAsNative(a, False))
+            fd.write("  %s%s = 0;\n" % (runScriptAnnotation(a),
+                                        attributeAsNative(a, False)))
         fd.write("\n")
 
     defname = iface.name.upper()
@@ -432,7 +482,8 @@ def write_interface(iface, fd):
         for member in iface.members:
             if isinstance(member, xpidl.Attribute):
                 if member.infallible:
-                    fd.write("\\\n  using %s::%s; " % (iface.name, attributeNativeName(member, True)))
+                    fd.write("\\\n  using %s::%s; " %
+                             (iface.name, attributeNativeName(member, True)))
                 fd.write("\\\n  %s%s; " % (attributeAsNative(member, True, declType), suffix))
                 if not member.readonly:
                     fd.write("\\\n  %s%s; " % (attributeAsNative(member, False, declType), suffix))
@@ -440,12 +491,12 @@ def write_interface(iface, fd):
                 fd.write("\\\n  %s%s; " % (methodAsNative(member, declType), suffix))
         if len(iface.members) == 0:
             fd.write('\\\n  /* no methods! */')
-        elif not member.kind in ('attribute', 'method'):
+        elif member.kind not in ('attribute', 'method'):
             fd.write('\\')
 
-    writeDeclaration(fd, iface, True);
+    writeDeclaration(fd, iface, True)
     fd.write(iface_nonvirtual % names)
-    writeDeclaration(fd, iface, False);
+    writeDeclaration(fd, iface, False)
     fd.write(iface_forward % names)
 
     def emitTemplate(forward_infallible, tmpl, tmpl_notxpcom=None):
@@ -454,7 +505,8 @@ def write_interface(iface, fd):
         for member in iface.members:
             if isinstance(member, xpidl.Attribute):
                 if forward_infallible and member.infallible:
-                    fd.write("\\\n  using %s::%s; " % (iface.name, attributeNativeName(member, True)))
+                    fd.write("\\\n  using %s::%s; " %
+                             (iface.name, attributeNativeName(member, True)))
                 fd.write(tmpl % {'asNative': attributeAsNative(member, True),
                                  'nativeName': attributeNativeName(member, True),
                                  'paramList': attributeParamNames(member)})
@@ -473,7 +525,7 @@ def write_interface(iface, fd):
                                      'paramList': paramlistNames(member)})
         if len(iface.members) == 0:
             fd.write('\\\n  /* no methods! */')
-        elif not member.kind in ('attribute', 'method'):
+        elif member.kind not in ('attribute', 'method'):
             fd.write('\\')
 
     emitTemplate(True,
@@ -485,7 +537,7 @@ def write_interface(iface, fd):
     # sensible default error return.  Instead, the caller will have to
     # implement them.
     emitTemplate(False,
-                 "\\\n  %(asNative)s override { return !_to ? NS_ERROR_NULL_POINTER : _to->%(nativeName)s(%(paramList)s); } ",
+                 "\\\n  %(asNative)s override { return !_to ? NS_ERROR_NULL_POINTER : _to->%(nativeName)s(%(paramList)s); } ",  # NOQA: E501
                  "\\\n  %(asNative)s override; ")
 
     fd.write('\n\n')
@@ -504,7 +556,8 @@ def main(outputfile):
             os.remove(filename)
 
     # Instantiate the parser.
-    p = xpidl.IDLParser(outputdir=cachedir)
+    xpidl.IDLParser(outputdir=cachedir)
+
 
 if __name__ == '__main__':
     main(None)

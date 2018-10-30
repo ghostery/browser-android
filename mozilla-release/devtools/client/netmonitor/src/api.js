@@ -12,6 +12,9 @@ const { configureStore } = require("./create-store");
 const { EVENTS } = require("./constants");
 const Actions = require("./actions/index");
 
+// Telemetry
+const Telemetry = require("devtools/client/shared/telemetry");
+
 const {
   getDisplayedRequestById,
   getSortedRequests
@@ -30,8 +33,11 @@ function NetMonitorAPI() {
   // Connector to the backend.
   this.connector = new Connector();
 
+  // Telemetry
+  this.telemetry = new Telemetry();
+
   // Configure store/state object.
-  this.store = configureStore(this.connector);
+  this.store = configureStore(this.connector, this.telemetry);
 
   // List of listeners for `devtools.network.onRequestFinished` WebExt API
   this._requestFinishedListeners = new Set();
@@ -99,10 +105,10 @@ NetMonitorAPI.prototype = {
    * Support for `devtools.network.getHAR` (get collected data as HAR)
    */
   async getHar() {
-    let { HarExporter } = require("devtools/client/netmonitor/src/har/har-exporter");
-    let state = this.store.getState();
+    const { HarExporter } = require("devtools/client/netmonitor/src/har/har-exporter");
+    const state = this.store.getState();
 
-    let options = {
+    const options = {
       connector: this.connector,
       items: getSortedRequests(state),
     };
@@ -119,25 +125,25 @@ NetMonitorAPI.prototype = {
       return;
     }
 
-    let { HarExporter } = require("devtools/client/netmonitor/src/har/har-exporter");
+    const { HarExporter } = require("devtools/client/netmonitor/src/har/har-exporter");
 
-    let connector = await this.getHarExportConnector();
-    let request = getDisplayedRequestById(this.store.getState(), requestId);
+    const connector = await this.getHarExportConnector();
+    const request = getDisplayedRequestById(this.store.getState(), requestId);
     if (!request) {
       console.error("HAR: request not found " + requestId);
       return;
     }
 
-    let options = {
+    const options = {
       connector,
       includeResponseBodies: false,
       items: [request],
     };
 
-    let har = await HarExporter.getHar(options);
+    const har = await HarExporter.getHar(options);
 
     // There is page so remove the page reference.
-    let harEntry = har.log.entries[0];
+    const harEntry = har.log.entries[0];
     delete harEntry.pageref;
 
     this._requestFinishedListeners.forEach(listener => listener({
@@ -178,6 +184,9 @@ NetMonitorAPI.prototype = {
    */
   async getHarExportConnector() {
     if (this.harExportConnector) {
+      // Ensure waiting for connectBackend completion to prevent "this.connector is null"
+      // exceptions if getHarExportConnector is called twice during its initialization.
+      await this.harExportConnectorReady;
       return this.harExportConnector;
     }
 
@@ -189,7 +198,9 @@ NetMonitorAPI.prototype = {
     };
 
     this.harExportConnector = new Connector();
-    await this.connectBackend(this.harExportConnector, connection);
+    this.harExportConnectorReady =
+      this.connectBackend(this.harExportConnector, connection);
+    await this.harExportConnectorReady;
     return this.harExportConnector;
   },
 };

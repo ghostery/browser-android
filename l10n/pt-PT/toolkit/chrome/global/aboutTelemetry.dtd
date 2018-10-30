@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY aboutTelemetry.pingDataSource "Fonte de datos de ping:">
+<!ENTITY aboutTelemetry.pingDataSource "Fonte de dados de ping:">
 <!ENTITY aboutTelemetry.showCurrentPingData "Dados de ping atuais">
 <!ENTITY aboutTelemetry.showArchivedPingData "Dados de ping arquivados">
 <!ENTITY aboutTelemetry.showSubsessionData "Mostrar dados de sub-sessão">
@@ -12,7 +12,6 @@
 <!ENTITY aboutTelemetry.optionGroupToday "Hoje">
 <!ENTITY aboutTelemetry.optionGroupYesterday "Ontem">
 <!ENTITY aboutTelemetry.optionGroupOlder "Antigo">
-<!ENTITY aboutTelemetry.payloadChoiceHeader "Payload">
 <!-- LOCALIZATION NOTE(aboutTelemetry.previousPing, aboutTelemetry.nextPing):
 	These strings are displayed when selecting Archived pings, and they’re
 	used to move to the next or previous ping. -->
@@ -37,9 +36,7 @@
 <!ENTITY aboutTelemetry.keyedHistogramsSection "Histogramas legendados">
 <!ENTITY aboutTelemetry.eventsSection "Eventos">
 <!ENTITY aboutTelemetry.simpleMeasurementsSection "Medições simples">
-<!ENTITY aboutTelemetry.telemetryLogSection "Registo de telemetria">
 <!ENTITY aboutTelemetry.slowSqlSection "Instruções SQL lentas">
-<!ENTITY aboutTelemetry.chromeHangsSection "Bloqueios do navegador">
 <!ENTITY aboutTelemetry.addonDetailsSection "Detalhes de extras">
 <!ENTITY aboutTelemetry.capturedStacksSection "Stacks capturadas">
 <!ENTITY aboutTelemetry.lateWritesSection "Escritas atrasadas">

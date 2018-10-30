@@ -6,7 +6,6 @@
  */
 
 interface MozTreeView;
-interface nsIScriptableRegion;
 
 dictionary TreeCellInfo {
     long row = 0;
@@ -56,11 +55,6 @@ interface TreeBoxObject : BoxObject {
   readonly attribute long horizontalPosition;
 
   /**
-   * Return the region for the visible parts of the selection, in device pixels
-   */
-  readonly attribute nsIScriptableRegion selectionRegion;
-
-  /**
    * Get the index of the first visible row.
    */
   long getFirstVisibleRow();
@@ -83,6 +77,7 @@ interface TreeBoxObject : BoxObject {
   /**
    * Ensures that a given cell in the tree is visible.
    */
+  [Throws]
   void ensureCellIsVisible(long row, TreeColumn? col);
 
   /**
@@ -106,23 +101,6 @@ interface TreeBoxObject : BoxObject {
   void scrollByPages(long numPages);
 
   /**
-   * Scrolls such that a given cell is visible (if possible)
-   * at the top left corner of the visible view.
-   */
-  void scrollToCell(long row, TreeColumn? col);
-
-  /**
-   * Scrolls horizontally so that the specified column is
-   * at the left of the view (if possible).
-   */
-  void scrollToColumn(TreeColumn? col);
-
-  /**
-   * Scroll to a specific horizontal pixel position.
-   */
-  void scrollToHorizontalPosition(long horizontalPosition);
-
-  /**
    * Invalidation methods for fine-grained painting control.
    */
   void invalidate();
@@ -130,7 +108,6 @@ interface TreeBoxObject : BoxObject {
   void invalidateRow(long index);
   void invalidateCell(long row, TreeColumn? col);
   void invalidateRange(long startIndex, long endIndex);
-  void invalidateColumnRange(long startIndex, long endIndex, TreeColumn? col);
 
   /**
    * A hit test that can tell you what row the mouse is over.

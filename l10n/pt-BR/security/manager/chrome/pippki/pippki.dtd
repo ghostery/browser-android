@@ -46,5 +46,5 @@
 
 <!-- Strings for protectedAuth dialog -->
 <!ENTITY protectedAuth.title "Autenticação protegida por token">
-<!ENTITY protectedAuth.msg "Por favor, autentique-se com o token. O modo de autenticação depende do tipo do seu token.">
+<!ENTITY protectedAuth.msg "Autentique-se com o token. O modo de autenticação depende do tipo do seu token.">
 <!ENTITY protectedAuth.tokenName.label "Token:">

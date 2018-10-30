@@ -11,6 +11,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   ExtensionTestCommon: "resource://testing-common/ExtensionTestCommon.jsm",
   NetUtil: "resource://gre/modules/NetUtil.jsm",
   Services: "resource://gre/modules/Services.jsm",
+  PerTestCoverageUtils: "resource://testing-common/PerTestCoverageUtils.jsm",
 });
 
 this.SpecialPowersError = function(aMsg) {
@@ -180,7 +181,7 @@ SpecialPowersObserverAPI.prototype = {
 
     var crashDumpFiles = [];
     while (entries.hasMoreElements()) {
-      var file = entries.getNext().QueryInterface(Ci.nsIFile);
+      var file = entries.nextFile;
       var path = String(file.path);
       if (path.match(/\.(dmp|extra)$/) && !aToIgnore[path]) {
         crashDumpFiles.push(path);
@@ -195,7 +196,7 @@ SpecialPowersObserverAPI.prototype = {
     if (crashDumpDir.exists()) {
       let entries = crashDumpDir.directoryEntries;
       while (entries.hasMoreElements()) {
-        let file = entries.getNext().QueryInterface(Ci.nsIFile);
+        let file = entries.nextFile;
         if (file.isFile()) {
           file.remove(false);
           removed = true;
@@ -259,17 +260,10 @@ SpecialPowersObserverAPI.prototype = {
     const serviceMarker = "service,";
 
     // First create observers from the category manager.
-    let cm =
-      Cc["@mozilla.org/categorymanager;1"].getService(Ci.nsICategoryManager);
-    let enumerator = cm.enumerateCategory(topic);
 
     let observers = [];
 
-    while (enumerator.hasMoreElements()) {
-      let entry =
-        enumerator.getNext().QueryInterface(Ci.nsISupportsCString).data;
-      let contractID = cm.getCategoryEntry(topic, entry);
-
+    for (let {value: contractID} of Services.catMan.enumerateCategory(topic)) {
       let factoryFunction;
       if (contractID.substring(0, serviceMarker.length) == serviceMarker) {
         contractID = contractID.substring(serviceMarker.length);
@@ -288,14 +282,11 @@ SpecialPowersObserverAPI.prototype = {
     }
 
     // Next enumerate the registered observers.
-    enumerator = Services.obs.enumerateObservers(topic);
-    while (enumerator.hasMoreElements()) {
-      try {
-        let observer = enumerator.getNext().QueryInterface(Ci.nsIObserver);
-        if (!observers.includes(observer)) {
-          observers.push(observer);
-        }
-      } catch (e) { }
+    for (let observer of Services.obs.enumerateObservers(topic)) {
+      if (observer instanceof Ci.nsIObserver &&
+          !observers.includes(observer)) {
+        observers.push(observer);
+      }
     }
 
     observers.forEach(function(observer) {
@@ -501,7 +492,7 @@ SpecialPowersObserverAPI.prototype = {
         Object.defineProperty(sb, "assert", {
           get() {
             let scope = Cu.createObjectIn(sb);
-            Services.scriptloader.loadSubScript("chrome://specialpowers/content/Assert.jsm",
+            Services.scriptloader.loadSubScript("resource://specialpowers/Assert.jsm",
                                                 scope);
 
             let assert = new scope.Assert(reporter);
@@ -554,16 +545,16 @@ SpecialPowersObserverAPI.prototype = {
       }
 
       case "SPRequestDumpCoverageCounters": {
-        let codeCoverage = Cc["@mozilla.org/tools/code-coverage;1"].
-                           getService(Ci.nsICodeCoverage);
-        codeCoverage.dumpCounters();
+        PerTestCoverageUtils.afterTest().then(() =>
+          this._sendReply(aMessage, "SPRequestDumpCoverageCounters", {})
+        );
         return undefined; // See comment at the beginning of this function.
       }
 
       case "SPRequestResetCoverageCounters": {
-        let codeCoverage = Cc["@mozilla.org/tools/code-coverage;1"].
-                           getService(Ci.nsICodeCoverage);
-        codeCoverage.resetCounters();
+        PerTestCoverageUtils.beforeTest().then(() =>
+          this._sendReply(aMessage, "SPRequestResetCoverageCounters", {})
+        );
         return undefined; // See comment at the beginning of this function.
       }
 
@@ -640,7 +631,10 @@ SpecialPowersObserverAPI.prototype = {
         let id = aMessage.data.id;
         let extension = this._extensions.get(id);
         this._extensions.delete(id);
-        let done = () => this._sendReply(aMessage, "SPExtensionMessage", {id, type: "extensionUnloaded", args: []});
+        let done = async () => {
+          await extension._uninstallPromise;
+          this._sendReply(aMessage, "SPExtensionMessage", {id, type: "extensionUnloaded", args: []});
+        };
         extension.shutdown().then(done, done);
         return undefined;
       }

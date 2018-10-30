@@ -13,5 +13,6 @@
 <!ENTITY useSmallIcons.label      "Маленькие значки">
 <!ENTITY restoreDefaultSet.label  "Восстановить по умолчанию">
 <!ENTITY addNewToolbar.label      "Добавить панель">
+<!ENTITY showTitlebar.label       "Показать панель заголовка">
 <!ENTITY saveChanges.label        "Готово">
 <!ENTITY undoChanges.label        "Отменить изменения">

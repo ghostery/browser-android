@@ -17,6 +17,8 @@
 #include "builtin/intl/ScopedICUObject.h"
 #include "builtin/intl/SharedIntlData.h"
 #include "gc/FreeOp.h"
+#include "js/AutoByteString.h"
+#include "js/StableStringChars.h"
 #include "js/TypeDecls.h"
 #include "vm/GlobalObject.h"
 #include "vm/JSContext.h"
@@ -26,6 +28,8 @@
 #include "vm/JSObject-inl.h"
 
 using namespace js;
+
+using JS::AutoStableStringChars;
 
 using js::intl::GetAvailableLocales;
 using js::intl::IcuLocale;
@@ -240,7 +244,13 @@ js::intl_availableCollations(JSContext* cx, unsigned argc, Value* vp)
             continue;
 
         // ICU returns old-style keyword values; map them to BCP 47 equivalents.
-        JSString* jscollation = JS_NewStringCopyZ(cx, uloc_toUnicodeLocaleType("co", collation));
+        collation = uloc_toUnicodeLocaleType("co", collation);
+        if (!collation) {
+            ReportInternalError(cx);
+            return false;
+        }
+
+        JSString* jscollation = NewStringCopyZ<CanGC>(cx, collation);
         if (!jscollation)
             return false;
         element = StringValue(jscollation);

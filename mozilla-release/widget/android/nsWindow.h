@@ -79,6 +79,7 @@ public:
     class NativePtr final
     {
         friend WindowPtr<Impl>;
+        friend nsWindow;
 
         static const char sName[];
 
@@ -86,11 +87,11 @@ public:
         Impl* mImpl;
         mozilla::Mutex mImplLock;
 
-    public:
-        class Locked;
-
         NativePtr() : mPtr(nullptr), mImpl(nullptr), mImplLock(sName) {}
         ~NativePtr() { MOZ_ASSERT(!mPtr); }
+
+    public:
+        class Locked;
 
         operator Impl*() const
         {
@@ -100,9 +101,11 @@ public:
 
         Impl* operator->() const { return operator Impl*(); }
 
-        template<class Instance, typename... Args>
-        void Attach(Instance aInstance, nsWindow* aWindow, Args&&... aArgs);
-        void Detach();
+        template<class Cls, typename... Args>
+        void Attach(const mozilla::jni::LocalRef<Cls>& aInstance,
+                    nsWindow* aWindow, Args&&... aArgs);
+        template<class Cls, typename T>
+        void Detach(const mozilla::jni::Ref<Cls, T>& aInstance);
     };
 
     template<class Impl>
@@ -229,8 +232,7 @@ public:
     virtual void ConstrainPosition(bool aAllowSlop,
                                    int32_t *aX,
                                    int32_t *aY) override;
-    virtual void Move(double aX,
-                      double aY) override;
+    virtual void Move(double aX, double aY) override;
     virtual void Resize(double aWidth,
                         double aHeight,
                         bool   aRepaint) override;
@@ -269,7 +271,6 @@ public:
                                  const InputContextAction& aAction) override;
     virtual InputContext GetInputContext() override;
 
-    void SetSelectionDragState(bool aState);
     LayerManager* GetLayerManager(PLayerTransactionChild* aShadowManager = nullptr,
                                   LayersBackend aBackendHint = mozilla::layers::LayersBackend::LAYERS_NONE,
                                   LayerManagerPersistence aPersistence = LAYER_MANAGER_CURRENT) override;
@@ -341,7 +342,7 @@ protected:
     static void LogWindow(nsWindow *win, int index, int indent);
 
 private:
-    void CreateLayerManager(int aCompositorWidth, int aCompositorHeight);
+    void CreateLayerManager();
     void RedrawAll();
 
     mozilla::layers::LayersId GetRootLayerId() const;

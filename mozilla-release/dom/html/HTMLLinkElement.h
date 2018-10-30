@@ -43,14 +43,12 @@ public:
                      EventChainPostVisitor& aVisitor) override;
 
   // nsINode
-  virtual nsresult Clone(mozilla::dom::NodeInfo* aNodeInfo, nsINode** aResult,
-                         bool aPreallocateChildren) const override;
+  virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
   virtual JSObject* WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
 
   // nsIContent
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent,
-                              bool aCompileEventHandlers) override;
+                              nsIContent* aBindingParent) override;
   virtual void UnbindFromTree(bool aDeep = true,
                               bool aNullParent = true) override;
   virtual nsresult BeforeSetAttr(int32_t aNameSpaceID, nsAtom* aName,
@@ -189,12 +187,11 @@ public:
   {
     GetEnumAttr(nsGkAtoms::referrerpolicy, EmptyCString().get(), aReferrer);
   }
-  mozilla::net::ReferrerPolicy GetLinkReferrerPolicy() override
-  {
-    return GetReferrerPolicyAsEnum();
-  }
 
-  virtual CORSMode GetCORSMode() const override;
+  CORSMode GetCORSMode() const
+  {
+    return AttrValueToCORSMode(GetParsedAttr(nsGkAtoms::crossorigin));
+  }
 
   void NodeInfoChanged(nsIDocument* aOldDoc) final
   {
@@ -208,13 +205,8 @@ protected:
   virtual ~HTMLLinkElement();
 
   // nsStyleLinkElement
-  already_AddRefed<nsIURI>
-    GetStyleSheetURL(bool* aIsInline, nsIPrincipal** aTriggeringPrincipal) final;
+  Maybe<SheetInfo> GetStyleSheetInfo() final;
 
-  void GetStyleSheetInfo(nsAString& aTitle,
-                         nsAString& aType,
-                         nsAString& aMedia,
-                         bool* aIsAlternate) final;
 protected:
   RefPtr<nsDOMTokenList> mRelList;
 };

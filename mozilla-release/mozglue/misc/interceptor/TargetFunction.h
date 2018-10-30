@@ -12,6 +12,7 @@
 #include "mozilla/Maybe.h"
 #include "mozilla/Tuple.h"
 #include "mozilla/Types.h"
+#include "mozilla/Unused.h"
 #include "mozilla/Vector.h"
 
 #include <memory>
@@ -66,7 +67,7 @@ class MOZ_STACK_CLASS WritableTargetFunction final
 
     AutoProtect(AutoProtect&& aOther)
       : mMMPolicy(aOther.mMMPolicy)
-      , mProtects(Move(aOther.mProtects))
+      , mProtects(std::move(aOther.mProtects))
     {
       aOther.mProtects.clear();
     }
@@ -140,9 +141,9 @@ public:
     , mNumBytes(aOther.mNumBytes)
     , mOffset(aOther.mOffset)
     , mStartWriteOffset(aOther.mStartWriteOffset)
-    , mLocalBytes(Move(aOther.mLocalBytes))
+    , mLocalBytes(std::move(aOther.mLocalBytes))
     , mAccumulatedStatus(aOther.mAccumulatedStatus)
-    , mProtect(Move(aOther.mProtect))
+    , mProtect(std::move(aOther.mProtect))
   {
     aOther.mAccumulatedStatus = false;
   }
@@ -177,6 +178,9 @@ public:
     }
 
     mMMPolicy.FlushInstructionCache();
+
+    mStartWriteOffset += mLocalBytes.length();
+
     mLocalBytes.clear();
     return true;
   }
@@ -227,6 +231,53 @@ public:
 
     mOffset += sizeof(uint16_t);
   }
+
+#if defined(_M_IX86)
+private:
+  template <typename T>
+  bool CommitAndWriteShortInternal(const T& aMMPolicy, void* aDest, uint16_t aValue);
+
+  template <>
+  bool CommitAndWriteShortInternal<MMPolicyInProcess>(const MMPolicyInProcess& aMMPolicy,
+                                                      void* aDest, uint16_t aValue)
+  {
+    return aMMPolicy.WriteAtomic(aDest, aValue);
+  }
+
+  template <>
+  bool CommitAndWriteShortInternal<MMPolicyOutOfProcess>(const MMPolicyOutOfProcess& aMMPolicy,
+                                                         void* aDest, uint16_t aValue)
+  {
+    return aMMPolicy.Write(aDest, &aValue, sizeof(uint16_t));
+  }
+
+public:
+  /**
+   * Commits any dirty writes, and then writes a short, atomically if possible.
+   * This call may succeed in both inproc and outproc cases, but atomicity
+   * is only guaranteed in the inproc case.
+   */
+  bool CommitAndWriteShort(const uint16_t aValue)
+  {
+    // First, commit everything that has been written until now
+    if (!Commit()) {
+      return false;
+    }
+
+    // Now immediately write the short, atomically if inproc
+    bool ok = CommitAndWriteShortInternal(mMMPolicy,
+                                          reinterpret_cast<void*>(mFunc +
+                                                                  mStartWriteOffset),
+                                          aValue);
+    if (!ok) {
+      return false;
+    }
+
+    mMMPolicy.FlushInstructionCache();
+    mStartWriteOffset += sizeof(uint16_t);
+    return true;
+  }
+#endif // defined(_M_IX86)
 
   void WriteDisp32(const uintptr_t aAbsTarget)
   {
@@ -310,7 +361,7 @@ private:
   // needs to touch the heap.
 #if defined(_M_IX86)
   static const size_t kInlineStorage = 16;
-#elif defined(_M_X64)
+#elif defined(_M_X64) || defined(_M_ARM64)
   static const size_t kInlineStorage = 32;
 #endif
   Vector<uint8_t, kInlineStorage> mLocalBytes;
@@ -416,7 +467,7 @@ public:
 
   ReadOnlyTargetBytes(ReadOnlyTargetBytes&& aOther)
     : mMMPolicy(aOther.mMMPolicy)
-    , mLocalBytes(Move(aOther.mLocalBytes))
+    , mLocalBytes(std::move(aOther.mLocalBytes))
     , mBase(aOther.mBase)
   {
   }
@@ -425,7 +476,7 @@ public:
     : mMMPolicy(aOther.mMMPolicy)
     , mBase(aOther.mBase)
   {
-    mLocalBytes.appendAll(aOther.mLocalBytes);
+    Unused << mLocalBytes.appendAll(aOther.mLocalBytes);
   }
 
   ReadOnlyTargetBytes(const ReadOnlyTargetBytes& aOther,
@@ -437,8 +488,8 @@ public:
       return;
     }
 
-    mLocalBytes.append(aOther.mLocalBytes.begin() + aOffsetFromOther,
-                       aOther.mLocalBytes.end());
+    Unused << mLocalBytes.append(aOther.mLocalBytes.begin() + aOffsetFromOther,
+                                 aOther.mLocalBytes.end());
   }
 
   void EnsureLimit(uint32_t aDesiredLimit)
@@ -535,7 +586,7 @@ private:
   // needs to touch the heap.
 #if defined(_M_IX86)
   static const size_t kInlineStorage = 16;
-#elif defined(_M_X64)
+#elif defined(_M_X64) || defined(_M_ARM64)
   static const size_t kInlineStorage = 32;
 #endif
 
@@ -558,13 +609,13 @@ class MOZ_STACK_CLASS ReadOnlyTargetFunction final
 
     static Type Make(const MMPolicyInProcess& aMMPolicy, const void* aFunc)
     {
-      return Move(TargetBytesPtr(aMMPolicy, aFunc));
+      return std::move(TargetBytesPtr(aMMPolicy, aFunc));
     }
 
     static Type CopyFromOffset(const TargetBytesPtr& aOther,
                                const uint32_t aOffsetFromOther)
     {
-      return Move(TargetBytesPtr(aOther, aOffsetFromOther));
+      return std::move(TargetBytesPtr(aOther, aOffsetFromOther));
     }
 
     ReadOnlyTargetBytes<MMPolicyInProcess>* operator->()
@@ -573,7 +624,7 @@ class MOZ_STACK_CLASS ReadOnlyTargetFunction final
     }
 
     TargetBytesPtr(TargetBytesPtr&& aOther)
-      : mTargetBytes(Move(aOther.mTargetBytes))
+      : mTargetBytes(std::move(aOther.mTargetBytes))
     {
     }
 
@@ -608,14 +659,14 @@ class MOZ_STACK_CLASS ReadOnlyTargetFunction final
 
     static Type Make(const MMPolicyOutOfProcess& aMMPolicy, const void* aFunc)
     {
-      return Move(std::make_shared<ReadOnlyTargetBytes<MMPolicyOutOfProcess>>(
+      return std::move(std::make_shared<ReadOnlyTargetBytes<MMPolicyOutOfProcess>>(
                     aMMPolicy, aFunc));
     }
 
     static Type CopyFromOffset(const Type& aOther,
                                const uint32_t aOffsetFromOther)
     {
-      return Move(std::make_shared<ReadOnlyTargetBytes<MMPolicyOutOfProcess>>(
+      return std::move(std::make_shared<ReadOnlyTargetBytes<MMPolicyOutOfProcess>>(
                     *aOther, aOffsetFromOther));
     }
   };
@@ -623,6 +674,13 @@ class MOZ_STACK_CLASS ReadOnlyTargetFunction final
 public:
   ReadOnlyTargetFunction(const MMPolicy& aMMPolicy, const void* aFunc)
     : mTargetBytes(TargetBytesPtr<MMPolicy>::Make(aMMPolicy, aFunc))
+    , mOffset(0)
+  {
+  }
+
+  ReadOnlyTargetFunction(const MMPolicy& aMMPolicy, FARPROC aFunc)
+    : mTargetBytes(TargetBytesPtr<MMPolicy>::Make(aMMPolicy,
+        reinterpret_cast<const void*>(aFunc)))
     , mOffset(0)
   {
   }
@@ -635,7 +693,7 @@ public:
   }
 
   ReadOnlyTargetFunction(ReadOnlyTargetFunction&& aOther)
-    : mTargetBytes(Move(aOther.mTargetBytes))
+    : mTargetBytes(std::move(aOther.mTargetBytes))
     , mOffset(aOther.mOffset)
   {
   }
@@ -743,15 +801,15 @@ public:
       mTargetBytes->GetBase() + aOffset,
       effectiveLength);
 
-    return Move(result);
+    return std::move(result);
   }
 
 private:
   template <typename T>
   struct ChasePointerHelper
   {
-    template <typename MMPolicy>
-    static T Result(const MMPolicy&, T aValue)
+    template <typename MMPolicy_>
+    static T Result(const MMPolicy_&, T aValue)
     {
       return aValue;
     }
@@ -760,11 +818,11 @@ private:
   template <typename T>
   struct ChasePointerHelper<T*>
   {
-    template <typename MMPolicy>
-    static auto Result(const MMPolicy& aPolicy, T* aValue)
+    template <typename MMPolicy_>
+    static auto Result(const MMPolicy_& aPolicy, T* aValue)
     {
-      ReadOnlyTargetFunction<MMPolicy> ptr(aPolicy, aValue);
-      return ptr.ChasePointer<T>();
+      ReadOnlyTargetFunction<MMPolicy_> ptr(aPolicy, aValue);
+      return ptr.template ChasePointer<T>();
     }
   };
 
@@ -774,7 +832,7 @@ public:
   auto ChasePointer()
   {
     mTargetBytes->EnsureLimit(mOffset + sizeof(T));
-    const typename RemoveCV<T>::Type result = *reinterpret_cast<const RemoveCV<T>::Type*>(mTargetBytes->GetLocalBytes() + mOffset);
+    const typename RemoveCV<T>::Type result = *reinterpret_cast<const typename RemoveCV<T>::Type*>(mTargetBytes->GetLocalBytes() + mOffset);
     return ChasePointerHelper<typename RemoveCV<T>::Type>::Result(mTargetBytes->GetMMPolicy(), result);
   }
 

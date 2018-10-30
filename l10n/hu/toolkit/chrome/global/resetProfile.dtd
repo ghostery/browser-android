@@ -9,7 +9,7 @@
 <!ENTITY refreshProfile.dialog.items.label2  "A böngésző beállításai az alapértékre állnak vissza">
 <!ENTITY refreshProfile.dialog.button.label  "&brandShortName; felfrissítése">
 
-<!ENTITY refreshProfile.title                "Tuningolja a &brandShortName;ot">
+<!ENTITY refreshProfile.title                "Tuningolja a &brandShortName; böngészőt">
 <!ENTITY refreshProfile.button.label         "&brandShortName; felfrissítése…">
 
 <!ENTITY refreshProfile.cleaning.description "Majdnem kész…">

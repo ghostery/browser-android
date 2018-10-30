@@ -16,7 +16,7 @@
 <!ENTITY accountTypeMail.label "Conta de e-mail">
 <!ENTITY accountTypeMail.accesskey "E">
 <!ENTITY accountTypeNews.label "Conta de grupo de notícias">
-<!ENTITY accountTypeNews.accesskey "N">
+<!ENTITY accountTypeNews.accesskey "n">
 
 <!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
 <!ENTITY accountTypeMovemail.label "Unix Mailspool (Movemail)">

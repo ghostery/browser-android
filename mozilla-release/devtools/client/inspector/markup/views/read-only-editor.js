@@ -21,7 +21,7 @@ function ReadOnlyEditor(container, node) {
     this.elt.classList.add("comment", "doctype");
     this.tag.textContent = node.doctypeString;
   } else if (node.isShadowRoot) {
-    this.tag.textContent = "#shadow-root";
+    this.tag.textContent = `#shadow-root (${node.shadowRootMode})`;
   } else {
     this.tag.textContent = node.nodeName;
   }
@@ -32,7 +32,7 @@ function ReadOnlyEditor(container, node) {
 
 ReadOnlyEditor.prototype = {
   buildMarkup: function() {
-    let doc = this.markup.doc;
+    const doc = this.markup.doc;
 
     this.elt = doc.createElement("span");
     this.elt.classList.add("editor");

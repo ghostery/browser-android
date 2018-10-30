@@ -110,7 +110,8 @@ class TypedObjectPrediction {
                              jsid id,
                              size_t* fieldOffset,
                              TypedObjectPrediction* out,
-                             size_t* index) const;
+                             size_t* index,
+                             bool* isMutable) const;
 
   public:
 
@@ -118,7 +119,8 @@ class TypedObjectPrediction {
     // Constructing a prediction. Generally, you start with an empty
     // prediction and invoke addDescr() repeatedly.
 
-    TypedObjectPrediction() {
+    TypedObjectPrediction()
+      : data_() {
         kind_ = Empty;
     }
 
@@ -164,11 +166,10 @@ class TypedObjectPrediction {
     //////////////////////////////////////////////////////////////////////
     // Simple operations
     //
-    // Only valid when |kind()| is Scalar, Reference, or Simd (as appropriate).
+    // Only valid when |kind()| is Scalar or Reference.
 
-    ScalarTypeDescr::Type scalarType() const;
-    ReferenceTypeDescr::Type referenceType() const;
-    SimdType simdType() const;
+    Scalar::Type scalarType() const;
+    ReferenceType referenceType() const;
 
     ///////////////////////////////////////////////////////////////////////////
     // Queries valid only for arrays.
@@ -192,7 +193,8 @@ class TypedObjectPrediction {
     bool hasFieldNamed(jsid id,
                        size_t* fieldOffset,
                        TypedObjectPrediction* fieldType,
-                       size_t* fieldIndex) const;
+                       size_t* fieldIndex,
+                       bool* fieldMutable) const;
 };
 
 } // namespace jit

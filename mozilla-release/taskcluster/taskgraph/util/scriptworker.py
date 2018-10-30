@@ -46,7 +46,9 @@ SIGNING_SCOPE_ALIAS_TO_PROJECT = [[
     'all-release-branches', set([
         'mozilla-beta',
         'mozilla-release',
+        'mozilla-esr60',
         'comm-beta',
+        'comm-esr60',
     ])
 ]]
 
@@ -76,12 +78,16 @@ BEETMOVER_SCOPE_ALIAS_TO_PROJECT = [[
         'mozilla-central',
         'mozilla-beta',
         'mozilla-release',
+        'mozilla-esr60',
         'comm-central',
     ])
 ], [
     'all-release-branches', set([
         'mozilla-beta',
         'mozilla-release',
+        'mozilla-esr60',
+        'comm-beta',
+        'comm-esr60',
     ])
 ]]
 
@@ -91,16 +97,13 @@ Used for both `BEETMOVER_SCOPE_ALIAS_TO_TARGET_TASK` and `get_release_build_numb
 """
 BEETMOVER_CANDIDATES_TARGET_TASKS = set([
     'promote_fennec',
-    'promote_firefox',
-    'promote_devedition',
+    'promote_desktop',
 ])
 BEETMOVER_PUSH_TARGET_TASKS = set([
     'push_fennec',
     'ship_fennec',
-    'push_firefox',
-    'ship_firefox',
-    'push_devedition',
-    'ship_devedition',
+    'push_desktop',
+    'ship_desktop',
 ])
 BEETMOVER_RELEASE_TARGET_TASKS = BEETMOVER_CANDIDATES_TARGET_TASKS | BEETMOVER_PUSH_TARGET_TASKS
 
@@ -173,10 +176,16 @@ BALROG_SCOPE_ALIAS_TO_PROJECT = [[
 ], [
     'beta', set([
         'mozilla-beta',
+        'comm-beta',
     ])
 ], [
     'release', set([
         'mozilla-release',
+    ])
+], [
+    'esr60', set([
+        'mozilla-esr60',
+        'comm-esr60',
     ])
 ], [
     'esr', set([
@@ -192,6 +201,7 @@ BALROG_SERVER_SCOPES = {
     'beta': 'balrog:server:beta',
     'release': 'balrog:server:release',
     'esr': 'balrog:server:esr',
+    'esr60': 'balrog:server:esr',
     'default': 'balrog:server:dep',
 }
 
@@ -425,6 +435,7 @@ def get_release_config(config):
                                                  'release-secondary-update-verify-config',
                                                  'release-balrog-submit-toplevel',
                                                  'release-secondary-balrog-submit-toplevel',
+                                                 'release-mark-as-started'
                                                  ):
         partial_updates = json.loads(partial_updates)
         release_config['partial_versions'] = ', '.join([
@@ -445,7 +456,7 @@ def get_release_config(config):
 def get_signing_cert_scope_per_platform(build_platform, is_nightly, config):
     if 'devedition' in build_platform:
         return get_devedition_signing_cert_scope(config)
-    elif is_nightly or build_platform in ('firefox-source', 'fennec-source'):
+    elif is_nightly or build_platform in ('firefox-source', 'fennec-source', 'thunderbird-source'):
         return get_signing_cert_scope(config)
     else:
         return add_scope_prefix(config, 'signing:cert:dep-signing')

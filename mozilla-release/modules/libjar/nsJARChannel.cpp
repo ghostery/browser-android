@@ -464,16 +464,7 @@ nsJARChannel::OpenLocalFile()
         return rv;
     }
 
-    // clone mJarURI
-    nsCOMPtr<nsIURI> clonedURI;
-    rv = mJarURI->Clone(getter_AddRefs(clonedURI));
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-    }
-    nsCOMPtr<nsIJARURI> clonedJarURI = do_QueryInterface(clonedURI, &rv);
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-        return rv;
-    }
+    nsCOMPtr<nsIJARURI> localJARURI = mJarURI;
 
     nsAutoCString jarEntry(mJarEntry);
     nsAutoCString innerJarEntry(mInnerJarEntry);
@@ -484,7 +475,7 @@ nsJARChannel::OpenLocalFile()
                                    [self,
                                    jarCache,
                                    clonedFile,
-                                   clonedJarURI,
+                                   localJARURI,
                                    jarEntry,
                                    innerJarEntry] () mutable {
 
@@ -492,12 +483,9 @@ nsJARChannel::OpenLocalFile()
         nsresult rv = CreateLocalJarInput(jarCache,
                                           clonedFile,
                                           innerJarEntry,
-                                          clonedJarURI,
+                                          localJARURI,
                                           jarEntry,
                                           getter_AddRefs(input));
-
-        NS_ReleaseOnMainThreadSystemGroup("nsJARChannel::clonedJarURI",
-                                          clonedJarURI.forget());
 
         nsCOMPtr<nsIRunnable> target;
         if (NS_SUCCEEDED(rv)) {
@@ -805,7 +793,7 @@ nsJARChannel::SetNotificationCallbacks(nsIInterfaceRequestor *aCallbacks)
 NS_IMETHODIMP
 nsJARChannel::GetSecurityInfo(nsISupports **aSecurityInfo)
 {
-    NS_PRECONDITION(aSecurityInfo, "Null out param");
+    MOZ_ASSERT(aSecurityInfo, "Null out param");
     NS_IF_ADDREF(*aSecurityInfo = mSecurityInfo);
     return NS_OK;
 }
@@ -943,7 +931,7 @@ nsJARChannel::Open(nsIInputStream **stream)
 
     // If mJarFile was not set by LookupFile, we can't open a channel.
     if (!mJarFile) {
-        NS_NOTREACHED("only file-backed jars are supported");
+        MOZ_ASSERT_UNREACHABLE("only file-backed jars are supported");
         return NS_ERROR_NOT_IMPLEMENTED;
     }
 
@@ -1134,6 +1122,25 @@ nsJARChannel::OnStartRequest(nsIRequest *req, nsISupports *ctx)
     mRequest = req;
     nsresult rv = mListener->OnStartRequest(this, mListenerContext);
     mRequest = nullptr;
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    // Restrict loadable content types.
+    nsAutoCString contentType;
+    GetContentType(contentType);
+    auto contentPolicyType = mLoadInfo->GetExternalContentPolicyType();
+    if (contentType.Equals(APPLICATION_HTTP_INDEX_FORMAT) &&
+        contentPolicyType != nsIContentPolicy::TYPE_DOCUMENT &&
+        contentPolicyType != nsIContentPolicy::TYPE_FETCH) {
+      return NS_ERROR_CORRUPTED_CONTENT;
+    }
+    if (contentPolicyType == nsIContentPolicy::TYPE_STYLESHEET &&
+        !contentType.EqualsLiteral(TEXT_CSS)) {
+      return NS_ERROR_CORRUPTED_CONTENT;
+    }
+    if (contentPolicyType == nsIContentPolicy::TYPE_SCRIPT &&
+        !nsContentUtils::IsJavascriptMIMEType(NS_ConvertUTF8toUTF16(contentType))) {
+      return NS_ERROR_CORRUPTED_CONTENT;
+    }
 
     return rv;
 }

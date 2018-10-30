@@ -10,6 +10,8 @@
 #define frontend_Parser_h
 
 /*
+ * [SMDOC] JS Parser
+ *
  * JS parsers capable of generating ASTs from source text.
  *
  * A parser embeds token stream information, then gets and matches tokens to
@@ -179,7 +181,6 @@
 #include "frontend/SharedContext.h"
 #include "frontend/SyntaxParseHandler.h"
 #include "frontend/TokenStream.h"
-#include "vm/Iteration.h"
 
 namespace js {
 
@@ -247,7 +248,10 @@ enum AwaitHandling : uint8_t { AwaitIsName, AwaitIsKeyword, AwaitIsModuleKeyword
 template <class ParseHandler, typename CharT>
 class AutoAwaitIsKeyword;
 
-class ParserBase
+template <class ParseHandler, typename CharT>
+class AutoInParametersOfAsyncFunction;
+
+class MOZ_STACK_CLASS ParserBase
   : public StrictModeGetter,
     private JS::AutoGCRooter
 {
@@ -276,6 +280,8 @@ class ParserBase
 
     ScriptSource*       ss;
 
+    RootedScriptSourceObject sourceObject;
+
     /* Root atoms and objects allocated for the parsed tree. */
     AutoKeepAtoms       keepAtoms;
 
@@ -293,15 +299,29 @@ class ParserBase
 
     /* AwaitHandling */ uint8_t awaitHandling_:2;
 
+    bool inParametersOfAsyncFunction_:1;
+
+    /* ParseGoal */ uint8_t parseGoal_:1;
+
   public:
     bool awaitIsKeyword() const {
       return awaitHandling_ != AwaitIsName;
     }
 
-    template<class, typename> friend class AutoAwaitIsKeyword;
+    bool inParametersOfAsyncFunction() const {
+        return inParametersOfAsyncFunction_;
+    }
 
-    ParserBase(JSContext* cx, LifoAlloc& alloc, const ReadOnlyCompileOptions& options,
-               bool foldConstants, UsedNameTracker& usedNames);
+    ParseGoal parseGoal() const {
+        return ParseGoal(parseGoal_);
+    }
+
+    template<class, typename> friend class AutoAwaitIsKeyword;
+    template<class, typename> friend class AutoInParametersOfAsyncFunction;
+
+    ParserBase(JSContext* cx, LifoAlloc& alloc, const JS::ReadOnlyCompileOptions& options,
+               bool foldConstants, UsedNameTracker& usedNames,
+               ScriptSourceObject* sourceObject, ParseGoal parseGoal);
     ~ParserBase();
 
     bool checkOptions();
@@ -322,7 +342,7 @@ class ParserBase
         return pc->sc()->setLocalStrictMode(strict);
     }
 
-    const ReadOnlyCompileOptions& options() const {
+    const JS::ReadOnlyCompileOptions& options() const {
         return anyChars.options();
     }
 
@@ -433,7 +453,7 @@ enum FunctionCallBehavior {
 };
 
 template <class ParseHandler>
-class PerHandlerParser
+class MOZ_STACK_CLASS PerHandlerParser
   : public ParserBase
 {
   private:
@@ -456,16 +476,33 @@ class PerHandlerParser
     //
     // |internalSyntaxParser_| is really a |Parser<SyntaxParseHandler, CharT>*|
     // where |CharT| varies per |Parser<ParseHandler, CharT>|.  But this
-    // template class doesn't have access to |CharT|, so we store a |void*|
-    // here, then intermediate all access to this field through accessors in
-    // |GeneralParser<ParseHandler, CharT>| that impose the real type on this
-    // field.
+    // template class doesn't know |CharT|, so we store a |void*| here and make
+    // |GeneralParser<ParseHandler, CharT>::getSyntaxParser| impose the real type.
     void* internalSyntaxParser_;
 
+  private:
+    // NOTE: The argument ordering here is deliberately different from the
+    //       public constructor so that typos calling the public constructor
+    //       are less likely to select this overload.
+    PerHandlerParser(JSContext* cx, LifoAlloc& alloc, const JS::ReadOnlyCompileOptions& options,
+                     bool foldConstants, UsedNameTracker& usedNames, LazyScript* lazyOuterFunction,
+                     ScriptSourceObject* sourceObject, ParseGoal parseGoal,
+                     void* internalSyntaxParser);
+
   protected:
-    PerHandlerParser(JSContext* cx, LifoAlloc& alloc, const ReadOnlyCompileOptions& options,
+    template<typename CharT>
+    PerHandlerParser(JSContext* cx, LifoAlloc& alloc, const JS::ReadOnlyCompileOptions& options,
                      bool foldConstants, UsedNameTracker& usedNames,
-                     LazyScript* lazyOuterFunction);
+                     GeneralParser<SyntaxParseHandler, CharT>* syntaxParser,
+                     LazyScript* lazyOuterFunction, ScriptSourceObject* sourceObject,
+                     ParseGoal parseGoal)
+      : PerHandlerParser(cx, alloc, options, foldConstants, usedNames, lazyOuterFunction,
+                         sourceObject, parseGoal,
+                         // JSOPTION_EXTRA_WARNINGS adds extra warnings not
+                         // generated when functions are parsed lazily.
+                         // ("use strict" doesn't inhibit lazy parsing.)
+                         static_cast<void*>(options.extraWarningsOption ? nullptr : syntaxParser))
+    {}
 
     static Node null() { return ParseHandler::null(); }
 
@@ -541,8 +578,12 @@ class PerHandlerParser
     bool isValidSimpleAssignmentTarget(Node node,
                                        FunctionCallBehavior behavior = ForbidAssignmentToFunctionCalls);
 
-    Node newPropertyAccess(Node expr, PropertyName* key, uint32_t end) {
-        return handler.newPropertyAccess(expr, key, end);
+    Node newPropertyName(PropertyName* key, const TokenPos& pos) {
+        return handler.newPropertyName(key, pos);
+    }
+
+    Node newPropertyAccess(Node expr, Node key) {
+        return handler.newPropertyAccess(expr, key);
     }
 
     FunctionBox* newFunctionBox(Node fn, JSFunction* fun, uint32_t toStringStart,
@@ -636,7 +677,7 @@ template <class ParseHandler, typename CharT>
 class Parser;
 
 template <class ParseHandler, typename CharT>
-class GeneralParser
+class MOZ_STACK_CLASS GeneralParser
   : public PerHandlerParser<ParseHandler>
 {
   public:
@@ -658,6 +699,8 @@ class GeneralParser
 
     using Base::alloc;
     using Base::awaitIsKeyword;
+    using Base::inParametersOfAsyncFunction;
+    using Base::parseGoal;
 #if DEBUG
     using Base::checkOptionsCalled;
 #endif
@@ -846,30 +889,24 @@ class GeneralParser
         void transferErrorsTo(PossibleError* other);
     };
 
-  private:
-    // DO NOT USE THE syntaxParser_ FIELD DIRECTLY.  Use the accessors defined
-    // below to access this field per its actual type.
-    using Base::internalSyntaxParser_;
-
   protected:
     SyntaxParser* getSyntaxParser() const {
-        return reinterpret_cast<SyntaxParser*>(internalSyntaxParser_);
-    }
-
-    void setSyntaxParser(SyntaxParser* syntaxParser) {
-        internalSyntaxParser_ = syntaxParser;
+        return reinterpret_cast<SyntaxParser*>(Base::internalSyntaxParser_);
     }
 
   public:
     TokenStream tokenStream;
 
   public:
-    GeneralParser(JSContext* cx, LifoAlloc& alloc, const ReadOnlyCompileOptions& options,
+    GeneralParser(JSContext* cx, LifoAlloc& alloc, const JS::ReadOnlyCompileOptions& options,
                   const CharT* chars, size_t length, bool foldConstants,
                   UsedNameTracker& usedNames, SyntaxParser* syntaxParser,
-                  LazyScript* lazyOuterFunction);
+                  LazyScript* lazyOuterFunction,
+                  ScriptSourceObject* sourceObject,
+                  ParseGoal parseGoal);
 
     inline void setAwaitHandling(AwaitHandling awaitHandling);
+    inline void setInParametersOfAsyncFunction(bool inParameters);
 
     /*
      * Parse a top-level JS script.
@@ -1008,6 +1045,7 @@ class GeneralParser
     Node lexicalDeclaration(YieldHandling yieldHandling, DeclarationKind kind);
 
     inline Node importDeclaration();
+    Node importDeclarationOrImportMeta(YieldHandling yieldHandling);
 
     Node exportFrom(uint32_t begin, Node specList);
     Node exportBatch(uint32_t begin);
@@ -1107,6 +1145,8 @@ class GeneralParser
 
     bool tryNewTarget(Node& newTarget);
 
+    Node importMeta();
+
     Node methodDefinition(uint32_t toStringStart, PropertyType propType, HandleAtom funName);
 
     /*
@@ -1130,7 +1170,7 @@ class GeneralParser
 
     Node condition(InHandling inHandling, YieldHandling yieldHandling);
 
-    bool argumentList(YieldHandling yieldHandling, Node listNode, bool* isSpread,
+    Node argumentList(YieldHandling yieldHandling, bool* isSpread,
                       PossibleError* possibleError = nullptr);
     Node destructuringDeclaration(DeclarationKind kind, YieldHandling yieldHandling,
                                   TokenKind tt);
@@ -1248,7 +1288,7 @@ class GeneralParser
 };
 
 template <typename CharT>
-class Parser<SyntaxParseHandler, CharT> final
+class MOZ_STACK_CLASS Parser<SyntaxParseHandler, CharT> final
   : public GeneralParser<SyntaxParseHandler, CharT>
 {
     using Base = GeneralParser<SyntaxParseHandler, CharT>;
@@ -1326,6 +1366,7 @@ class Parser<SyntaxParseHandler, CharT> final
     // Functions present in both Parser<ParseHandler, CharT> specializations.
 
     inline void setAwaitHandling(AwaitHandling awaitHandling);
+    inline void setInParametersOfAsyncFunction(bool inParameters);
 
     Node newRegExp();
 
@@ -1358,7 +1399,7 @@ class Parser<SyntaxParseHandler, CharT> final
 };
 
 template <typename CharT>
-class Parser<FullParseHandler, CharT> final
+class MOZ_STACK_CLASS Parser<FullParseHandler, CharT> final
   : public GeneralParser<FullParseHandler, CharT>
 {
     using Base = GeneralParser<FullParseHandler, CharT>;
@@ -1429,7 +1470,6 @@ class Parser<FullParseHandler, CharT> final
     using Base::abortIfSyntaxParser;
     using Base::disableSyntaxParser;
     using Base::getSyntaxParser;
-    using Base::setSyntaxParser;
 
   public:
     // Functions with multiple overloads of different visibility.  We can't
@@ -1444,6 +1484,9 @@ class Parser<FullParseHandler, CharT> final
 
     friend class AutoAwaitIsKeyword<SyntaxParseHandler, CharT>;
     inline void setAwaitHandling(AwaitHandling awaitHandling);
+
+    friend class AutoInParametersOfAsyncFunction<SyntaxParseHandler, CharT>;
+    inline void setInParametersOfAsyncFunction(bool inParameters);
 
     Node newRegExp();
 
@@ -1581,6 +1624,27 @@ class MOZ_STACK_CLASS AutoAwaitIsKeyword
 
     ~AutoAwaitIsKeyword() {
         parser_->setAwaitHandling(oldAwaitHandling_);
+    }
+};
+
+template <class ParseHandler, typename CharT>
+class MOZ_STACK_CLASS AutoInParametersOfAsyncFunction
+{
+    using GeneralParser = frontend::GeneralParser<ParseHandler, CharT>;
+
+  private:
+    GeneralParser* parser_;
+    bool oldInParametersOfAsyncFunction_;
+
+  public:
+    AutoInParametersOfAsyncFunction(GeneralParser* parser, bool inParameters) {
+        parser_ = parser;
+        oldInParametersOfAsyncFunction_ = parser_->inParametersOfAsyncFunction_;
+        parser_->setInParametersOfAsyncFunction(inParameters);
+    }
+
+    ~AutoInParametersOfAsyncFunction() {
+        parser_->setInParametersOfAsyncFunction(oldInParametersOfAsyncFunction_);
     }
 };
 

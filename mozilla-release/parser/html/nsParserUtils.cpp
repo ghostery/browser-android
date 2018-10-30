@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "nsParserUtils.h"
-#include "NullPrincipal.h"
+#include "mozilla/NullPrincipal.h"
 #include "mozilla/dom/DocumentFragment.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/ScriptLoader.h"
@@ -19,8 +19,6 @@
 #include "nsIComponentManager.h"
 #include "nsIContent.h"
 #include "nsIContentSink.h"
-#include "nsIDOMDocument.h"
-#include "nsIDOMNode.h"
 #include "nsIDTD.h"
 #include "nsIDocument.h"
 #include "nsIDocumentEncoder.h"
@@ -68,9 +66,10 @@ nsParserUtils::Sanitize(const nsAString& aFromStr,
 {
   nsCOMPtr<nsIURI> uri;
   NS_NewURI(getter_AddRefs(uri), "about:blank");
-  nsCOMPtr<nsIPrincipal> principal = NullPrincipal::CreateWithoutOriginAttributes();
-  nsCOMPtr<nsIDOMDocument> domDocument;
-  nsresult rv = NS_NewDOMDocument(getter_AddRefs(domDocument),
+  nsCOMPtr<nsIPrincipal> principal =
+    mozilla::NullPrincipal::CreateWithoutOriginAttributes();
+  nsCOMPtr<nsIDocument> document;
+  nsresult rv = NS_NewDOMDocument(getter_AddRefs(document),
                                   EmptyString(),
                                   EmptyString(),
                                   nullptr,
@@ -82,7 +81,6 @@ nsParserUtils::Sanitize(const nsAString& aFromStr,
                                   DocumentFlavorHTML);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsCOMPtr<nsIDocument> document = do_QueryInterface(domDocument);
   rv = nsContentUtils::ParseDocumentHTML(aFromStr, document, false);
   NS_ENSURE_SUCCESS(rv, rv);
 

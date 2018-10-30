@@ -15,8 +15,6 @@
 
 <script src="head.js"></script>
 <script class="testbody" type="text/javascript">
-/* import-globals-from classifierHelper.js */
-
 const MALWARE_LIST = "test-malware-simple";
 const MALWARE_HOST1 = "malware.example.com/";
 const MALWARE_HOST2 = "test1.example.com/";
@@ -92,7 +90,7 @@ function reset() {
 function updateUnusedUrl() {
   var testData  = [
     { url: UNUSED_MALWARE_HOST,  db: MALWARE_LIST },
-    { url: UNUSED_UNWANTED_HOST, db: UNWANTED_LIST }
+    { url: UNUSED_UNWANTED_HOST, db: UNWANTED_LIST },
   ];
 
   return classifierHelper.addUrlToDB(testData)
@@ -117,7 +115,7 @@ function update(prefix = false) {
     { url: MALWARE_HOST1,  db: MALWARE_LIST,  len: length },
     { url: MALWARE_HOST2,  db: MALWARE_LIST,  len: length },
     { url: UNWANTED_HOST1, db: UNWANTED_LIST, len: length },
-    { url: UNWANTED_HOST2, db: UNWANTED_LIST, len: length }
+    { url: UNWANTED_HOST2, db: UNWANTED_LIST, len: length },
   ];
 
   return classifierHelper.addUrlToDB(testData)

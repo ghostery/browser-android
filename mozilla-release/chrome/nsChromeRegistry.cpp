@@ -16,10 +16,9 @@
 #include "nsQueryObject.h"
 
 #include "mozilla/dom/URL.h"
+#include "nsDOMWindowList.h"
 #include "nsIConsoleService.h"
 #include "nsIDocument.h"
-#include "nsIDOMDocument.h"
-#include "nsIDOMWindowCollection.h"
 #include "nsIDOMWindow.h"
 #include "nsIObserverService.h"
 #include "nsIPresShell.h"
@@ -109,9 +108,6 @@ NS_INTERFACE_MAP_BEGIN(nsChromeRegistry)
   NS_INTERFACE_MAP_ENTRY(nsIChromeRegistry)
   NS_INTERFACE_MAP_ENTRY(nsIXULChromeRegistry)
   NS_INTERFACE_MAP_ENTRY(nsIToolkitChromeRegistry)
-#ifdef MOZ_XUL
-  NS_INTERFACE_MAP_ENTRY(nsIXULOverlayProvider)
-#endif
   NS_INTERFACE_MAP_ENTRY(nsIObserver)
   NS_INTERFACE_MAP_ENTRY(nsISupportsWeakReference)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIChromeRegistry)
@@ -382,14 +378,10 @@ nsChromeRegistry::FlushSkinCaches()
 nsresult nsChromeRegistry::RefreshWindow(nsPIDOMWindowOuter* aWindow)
 {
   // Deal with our subframes first.
-  nsCOMPtr<nsIDOMWindowCollection> frames = aWindow->GetFrames();
-  uint32_t length;
-  frames->GetLength(&length);
-  uint32_t j;
-  for (j = 0; j < length; j++) {
-    nsCOMPtr<mozIDOMWindowProxy> childWin;
-    frames->Item(j, getter_AddRefs(childWin));
-    nsCOMPtr<nsPIDOMWindowOuter> piWindow = nsPIDOMWindowOuter::From(childWin);
+  nsDOMWindowList* frames = aWindow->GetFrames();
+  uint32_t length = frames->GetLength();
+  for (uint32_t j = 0; j < length; j++) {
+    nsCOMPtr<nsPIDOMWindowOuter> piWindow = frames->IndexedGetter(j);
     RefreshWindow(piWindow);
   }
 
@@ -478,47 +470,6 @@ nsChromeRegistry::FlushAllCaches()
 
   obsSvc->NotifyObservers((nsIChromeRegistry*) this,
                           NS_CHROME_FLUSH_TOPIC, nullptr);
-}
-
-// xxxbsmedberg Move me to nsIWindowMediator
-NS_IMETHODIMP
-nsChromeRegistry::ReloadChrome()
-{
-  FlushAllCaches();
-  // Do a reload of all top level windows.
-  nsresult rv = NS_OK;
-
-  // Get the window mediator
-  nsCOMPtr<nsIWindowMediator> windowMediator
-    (do_GetService(NS_WINDOWMEDIATOR_CONTRACTID));
-  if (windowMediator) {
-    nsCOMPtr<nsISimpleEnumerator> windowEnumerator;
-
-    rv = windowMediator->GetEnumerator(nullptr, getter_AddRefs(windowEnumerator));
-    if (NS_SUCCEEDED(rv)) {
-      // Get each dom window
-      bool more;
-      rv = windowEnumerator->HasMoreElements(&more);
-      if (NS_FAILED(rv)) return rv;
-      while (more) {
-        nsCOMPtr<nsISupports> protoWindow;
-        rv = windowEnumerator->GetNext(getter_AddRefs(protoWindow));
-        if (NS_SUCCEEDED(rv)) {
-          nsCOMPtr<nsPIDOMWindowOuter> domWindow = do_QueryInterface(protoWindow);
-          if (domWindow) {
-            Location* location = domWindow->GetLocation();
-            if (location) {
-              rv = location->Reload(false);
-              if (NS_FAILED(rv)) return rv;
-            }
-          }
-        }
-        rv = windowEnumerator->HasMoreElements(&more);
-        if (NS_FAILED(rv)) return rv;
-      }
-    }
-  }
-  return rv;
 }
 
 NS_IMETHODIMP

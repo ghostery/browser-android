@@ -45,38 +45,38 @@ function test_socket_conn_drops_after_too_long_header() {
 }
 
 var test_helper = async function(payload) {
-  let AuthenticatorType = DebuggerServer.Authenticators.get("PROMPT");
-  let authenticator = new AuthenticatorType.Server();
+  const AuthenticatorType = DebuggerServer.Authenticators.get("PROMPT");
+  const authenticator = new AuthenticatorType.Server();
   authenticator.allowConnection = () => {
     return DebuggerServer.AuthenticationResult.ALLOW;
   };
 
-  let listener = DebuggerServer.createListener();
+  const listener = DebuggerServer.createListener();
   listener.portOrPath = -1;
   listener.authenticator = authenticator;
   listener.open();
 
-  let transport = await DebuggerClient.socketConnect({
+  const transport = await DebuggerClient.socketConnect({
     host: "127.0.0.1",
     port: listener.port
   });
-  let closedDeferred = defer();
-  transport.hooks = {
-    onPacket: function(packet) {
-      this.onPacket = function() {
-        do_throw(new Error("This connection should be dropped."));
-        transport.close();
-      };
+  return new Promise((resolve) => {
+    transport.hooks = {
+      onPacket: function(packet) {
+        this.onPacket = function() {
+          do_throw(new Error("This connection should be dropped."));
+          transport.close();
+        };
 
-      // Inject the payload directly into the stream.
-      transport._outgoing.push(new RawPacket(transport, payload));
-      transport._flushOutgoing();
-    },
-    onClosed: function(status) {
-      Assert.ok(true);
-      closedDeferred.resolve();
-    },
-  };
-  transport.ready();
-  return closedDeferred.promise;
+        // Inject the payload directly into the stream.
+        transport._outgoing.push(new RawPacket(transport, payload));
+        transport._flushOutgoing();
+      },
+      onClosed: function(status) {
+        Assert.ok(true);
+        resolve();
+      },
+    };
+    transport.ready();
+  });
 };

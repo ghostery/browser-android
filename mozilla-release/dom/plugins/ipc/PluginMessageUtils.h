@@ -23,7 +23,6 @@
 #include "nsString.h"
 #include "nsTArray.h"
 #include "mozilla/Logging.h"
-#include "nsExceptionHandler.h"
 #include "nsHashKeys.h"
 
 #ifdef XP_MACOSX
@@ -108,6 +107,12 @@ struct NPAudioDeviceChangeDetailsIPC
   int32_t flow;
   int32_t role;
   std::wstring defaultDevice;
+};
+
+struct NPAudioDeviceStateChangedIPC
+{
+  std::wstring device;
+  uint32_t state;
 };
 
 #ifdef XP_WIN
@@ -652,6 +657,35 @@ struct ParamTraits<mozilla::plugins::NPAudioDeviceChangeDetailsIPC>
   }
 };
 
+
+template <>
+struct ParamTraits<mozilla::plugins::NPAudioDeviceStateChangedIPC>
+{
+  typedef mozilla::plugins::NPAudioDeviceStateChangedIPC paramType;
+
+  static void Write(Message* aMsg, const paramType& aParam)
+  {
+    WriteParam(aMsg, aParam.device);
+    WriteParam(aMsg, aParam.state);
+  }
+
+  static bool Read(const Message* aMsg, PickleIterator* aIter, paramType* aResult)
+  {
+    int32_t state;
+    std::wstring device;
+    if (ReadParam(aMsg, aIter, &device) && ReadParam(aMsg, aIter, &state)) {
+      aResult->device = device;
+      aResult->state = state;
+      return true;
+    }
+    return false;
+  }
+
+  static void Log(const paramType& aParam, std::wstring* aLog)
+  {
+    aLog->append(StringPrintf(L"[%S,%d]", aParam.device.c_str(), aParam.state));
+  }
+};
 } /* namespace IPC */
 
 

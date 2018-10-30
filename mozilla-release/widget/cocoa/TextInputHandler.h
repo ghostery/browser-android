@@ -224,6 +224,7 @@ public:
   }
 
   bool IsForRTLLanguage();
+  bool IsForJapaneseLanguage();
   bool IsInitializedByCurrentInputSource();
 
   enum {
@@ -269,12 +270,17 @@ public:
    *                              if caller sets null to this, this method will
    *                              compute the character to be input from
    *                              characters of aNativeKeyEvent.
+   * @param aIndexOfKeypress      Index of the eKeyPress event.  If a key
+   *                              inputs 2 or more characters, eKeyPress events
+   *                              are dispatched for each character.  This is
+   *                              0 for the first eKeyPress event.
    * @param aKeyEvent             The result -- a Gecko key event initialized
    *                              from the native key event.  This must be
    *                              eKeyPress event.
    */
   void WillDispatchKeyboardEvent(NSEvent* aNativeKeyEvent,
                                  const nsAString* aInsertString,
+                                 uint32_t aIndexOfKeypress,
                                  WidgetKeyboardEvent& aKeyEvent);
 
   /**
@@ -608,7 +614,7 @@ protected:
 
     void Set(NSEvent* aNativeKeyEvent, uint32_t aUniqueId = 0)
     {
-      NS_PRECONDITION(aNativeKeyEvent, "aNativeKeyEvent must not be NULL");
+      MOZ_ASSERT(aNativeKeyEvent, "aNativeKeyEvent must not be NULL");
       Clear();
       mKeyEvent = [aNativeKeyEvent retain];
       mUniqueId = aUniqueId;
@@ -1088,6 +1094,10 @@ public:
   bool IsIMEOpened();
   bool IsIMEEnabled() { return mIsIMEEnabled; }
   bool IsASCIICapableOnly() { return mIsASCIICapableOnly; }
+  bool IsEditableContent() const
+  {
+    return mIsIMEEnabled || mIsASCIICapableOnly;
+  }
   bool IgnoreIMECommit() { return mIgnoreIMECommit; }
 
   void CommitIMEComposition();

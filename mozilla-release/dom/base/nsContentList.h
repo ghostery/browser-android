@@ -27,6 +27,7 @@
 #include "nsWrapperCache.h"
 #include "nsHashKeys.h"
 #include "mozilla/HashFunctions.h"
+#include "mozilla/MemoryReporting.h"
 #include "mozilla/dom/NameSpaceConstants.h"
 
 namespace mozilla {
@@ -93,6 +94,11 @@ public:
   }
 
   virtual void LastRelease() {}
+
+  // Memory reporting.  For now, subclasses of nsBaseContentList don't really
+  // need to report any members that are not part of the object itself, so we
+  // don't need to make this virtual.
+  size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
 
 protected:
   virtual ~nsBaseContentList();
@@ -387,8 +393,8 @@ public:
     // most common namespace id is kNameSpaceID_Unknown.  So check the
     // string first.  Cases in which whether our root's ownerDocument
     // is HTML changes are extremely rare, so check those last.
-    NS_PRECONDITION(mXMLMatchAtom,
-                    "How did we get here with a null match atom on our list?");
+    MOZ_ASSERT(mXMLMatchAtom,
+               "How did we get here with a null match atom on our list?");
     return
       mXMLMatchAtom->Equals(aKey.mTagname) &&
       mRootNode == aKey.mRootNode &&
@@ -433,8 +439,11 @@ protected:
    *
    * @param aNeededLength the length the list should have when we are
    *        done (unless it exhausts the document)
+   * @param aExpectedElementsIfDirty is for debugging only to
+   *        assert that mElements has expected number of entries.
    */
-  virtual void PopulateSelf(uint32_t aNeededLength);
+  virtual void PopulateSelf(uint32_t aNeededLength,
+                            uint32_t aExpectedElementsIfDirty = 0);
 
   /**
    * @param  aContainer a content node which must be a descendant of
@@ -572,11 +581,11 @@ public:
       mString == aKey->mString;
   }
 
-#ifdef DEBUG
   enum ContentListType {
     eNodeList,
     eHTMLCollection
   };
+#ifdef DEBUG
   ContentListType mType;
 #endif
 
@@ -585,8 +594,12 @@ protected:
                                    nsContentListMatchFunc aFunc,
                                    nsContentListDestroyFunc aDestroyFunc,
                                    nsFuncStringContentListDataAllocator aDataAllocator,
-                                   const nsAString& aString) :
+                                   const nsAString& aString,
+                                   mozilla::DebugOnly<ContentListType> aType) :
     nsContentList(aRootNode, aFunc, aDestroyFunc, nullptr),
+#ifdef DEBUG
+    mType(aType),
+#endif
     mString(aString)
   {
     mData = (*aDataAllocator)(aRootNode, &mString);
@@ -611,11 +624,8 @@ public:
                                    nsFuncStringContentListDataAllocator aDataAllocator,
                                    const nsAString& aString)
     : nsCacheableFuncStringContentList(aRootNode, aFunc, aDestroyFunc,
-                                       aDataAllocator, aString)
+                                       aDataAllocator, aString, eNodeList)
   {
-#ifdef DEBUG
-    mType = eNodeList;
-#endif
   }
 
   NS_DECL_NSIMUTATIONOBSERVER_ATTRIBUTECHANGED
@@ -637,11 +647,8 @@ public:
                                       nsFuncStringContentListDataAllocator aDataAllocator,
                                       const nsAString& aString)
     : nsCacheableFuncStringContentList(aRootNode, aFunc, aDestroyFunc,
-                                       aDataAllocator, aString)
+                                       aDataAllocator, aString, eHTMLCollection)
   {
-#ifdef DEBUG
-    mType = eHTMLCollection;
-#endif
   }
 
   virtual JSObject* WrapObject(JSContext *cx, JS::Handle<JSObject*> aGivenProto) override;
@@ -684,7 +691,10 @@ private:
   *
   * @param aNeededLength The list of length should have when we are
   *                      done (unless it exhausts the document).
+  * @param aExpectedElementsIfDirty is for debugging only to
+  *        assert that mElements has expected number of entries.
   */
-  void PopulateSelf(uint32_t aNeededLength) override;
+  void PopulateSelf(uint32_t aNeededLength,
+                    uint32_t aExpectedElementsIfDirty = 0) override;
 };
 #endif // nsContentList_h___

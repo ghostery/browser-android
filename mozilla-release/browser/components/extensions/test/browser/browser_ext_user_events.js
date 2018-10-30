@@ -19,7 +19,7 @@ function promisePopupNotificationShown(name) {
       ok(PopupNotifications.isPanelOpen, "notification panel open");
 
       PopupNotifications.panel.removeEventListener("popupshown", popupshown);
-      resolve(PopupNotifications.panel.firstChild);
+      resolve(PopupNotifications.panel.firstElementChild);
     }
 
     PopupNotifications.panel.addEventListener("popupshown", popupshown);
@@ -47,21 +47,31 @@ add_task(async function testSources() {
 
       browser.pageAction.onClicked.addListener(() => request("bookmarks"));
       browser.browserAction.onClicked.addListener(() => request("tabs"));
-
-      browser.contextMenus.create({
-        id: "menu",
-        title: "test user events",
-        contexts: ["page"],
-      });
-      browser.contextMenus.onClicked.addListener(() => request("webNavigation"));
+      browser.commands.onCommand.addListener(() => request("downloads"));
 
       browser.test.onMessage.addListener(msg => {
+        if (msg === "contextMenus.update") {
+          browser.contextMenus.onClicked.addListener(() => request("webNavigation"));
+          browser.contextMenus.update("menu", {
+            title: "test user events in onClicked",
+            onclick: null,
+          }, () => browser.test.sendMessage("contextMenus.update-done"));
+        }
         if (msg === "openOptionsPage") {
           browser.runtime.openOptionsPage();
         }
       });
 
-      browser.test.sendMessage("actions-ready");
+      browser.contextMenus.create({
+        id: "menu",
+        title: "test user events in onclick",
+        contexts: ["page"],
+        onclick() {
+          request("cookies");
+        },
+      }, () => {
+        browser.test.sendMessage("actions-ready");
+      });
     },
 
     files: {
@@ -81,7 +91,10 @@ add_task(async function testSources() {
         addEventListener("load", async () => {
           let link = document.getElementById("link");
           link.onclick = async event => {
+            link.onclick = null;
             event.preventDefault();
+
+            browser.test.log("Calling permission.request from options page.");
 
             try {
               let result = await browser.permissions.request({
@@ -98,12 +111,12 @@ add_task(async function testSources() {
           // we don't really have a reliable way to detect this from the
           // options page side, and synthetic click events won't work
           // until it is.
-          for (let i = 0; i < 10; i++) {
+          do {
+            browser.test.log("Waiting for the options browser to be visible...");
             await new Promise(resolve => setTimeout(resolve, 0));
-          }
-
-          synthesizeMouseAtCenter(link, {});
-        }, {once: true});
+            synthesizeMouseAtCenter(link, {});
+          } while (link.onclick !== null);
+        });
       },
     },
 
@@ -111,9 +124,17 @@ add_task(async function testSources() {
       browser_action: {default_title: "test"},
       page_action: {default_title: "test"},
       permissions: ["contextMenus"],
-      optional_permissions: ["bookmarks", "tabs", "webNavigation", "webRequest"],
+      optional_permissions: ["bookmarks", "tabs", "webNavigation", "webRequest",
+                             "cookies", "downloads"],
       options_ui: {page: "options.html"},
       content_security_policy: "script-src 'self' https://example.com; object-src 'none';",
+      commands: {
+        command: {
+          suggested_key: {
+            "default": "Alt+Shift+J",
+          },
+        },
+      },
     },
 
     useAddonManager: "temporary",
@@ -153,15 +174,29 @@ add_task(async function testSources() {
   gBrowser.selectedTab = tab;
 
   let menu = await openContextMenu("body");
-  let items = menu.getElementsByAttribute("label", "test user events");
+  let items = menu.getElementsByAttribute("label", "test user events in onclick");
   is(items.length, 1, "Found context menu item");
   EventUtils.synthesizeMouseAtCenter(items[0], {});
-  await check("context menu click");
+  await check("context menu in onclick");
 
-  extension.sendMessage("openOptionsPage");
+  extension.sendMessage("contextMenus.update");
+  await extension.awaitMessage("contextMenus.update-done");
+  menu = await openContextMenu("body");
+  items = menu.getElementsByAttribute("label", "test user events in onClicked");
+  is(items.length, 1, "Found context menu item again");
+  EventUtils.synthesizeMouseAtCenter(items[0], {});
+  await check("context menu in onClicked");
+
+  EventUtils.synthesizeKey("j", {altKey: true, shiftKey: true});
   promisePopupNotificationShown("addon-webext-permissions").then(panel => {
     panel.button.click();
   });
+  await check("commands shortcut");
+
+  promisePopupNotificationShown("addon-webext-permissions").then(panel => {
+    panel.button.click();
+  });
+  extension.sendMessage("openOptionsPage");
   await check("options page link click");
 
   await BrowserTestUtils.removeTab(gBrowser.selectedTab);

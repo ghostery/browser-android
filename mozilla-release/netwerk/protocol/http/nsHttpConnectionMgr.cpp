@@ -464,7 +464,14 @@ nsHttpConnectionMgr::DoShiftReloadConnectionCleanup(nsHttpConnectionInfo *aCI)
 class SpeculativeConnectArgs : public ARefBase
 {
 public:
-    SpeculativeConnectArgs() { mOverridesOK = false; }
+    SpeculativeConnectArgs()
+        : mParallelSpeculativeConnectLimit(0)
+        , mIgnoreIdle(false)
+        , mIsFromPredictor(false)
+        , mAllow1918(false)
+    {
+        mOverridesOK = false;
+    }
     NS_INLINE_DECL_THREADSAFE_REFCOUNTING(SpeculativeConnectArgs, override)
 
 public: // intentional!
@@ -1122,7 +1129,7 @@ nsHttpConnectionMgr::PreparePendingQForDispatching(
 
     // Append elements in |remainingPendingQ| to |pendingQ|. The order in
     // |pendingQ| is like: [focusedWindowTrans...nonFocusedWindowTrans].
-    pendingQ.AppendElements(Move(remainingPendingQ));
+    pendingQ.AppendElements(std::move(remainingPendingQ));
 }
 
 bool
@@ -2956,7 +2963,7 @@ nsHttpConnectionMgr::OnMsgUpdateParam(int32_t inParam, ARefBase *)
         mThrottleMaxTime = TimeDuration::FromMilliseconds(value);
         break;
     default:
-        NS_NOTREACHED("unexpected parameter name");
+        MOZ_ASSERT_UNREACHABLE("unexpected parameter name");
     }
 }
 
@@ -4059,6 +4066,10 @@ nsHalfOpenSocket::SetupStreams(nsISocketTransport **transport,
     if (mCaps & NS_HTTP_REFRESH_DNS)
         tmpFlags = nsISocketTransport::BYPASS_CACHE;
 
+    if (mCaps & NS_HTTP_DISABLE_TRR) {
+        tmpFlags = nsISocketTransport::DISABLE_TRR;
+    }
+
     if (mCaps & NS_HTTP_LOAD_ANONYMOUS)
         tmpFlags |= nsISocketTransport::ANONYMOUS_CONNECT;
 
@@ -4117,10 +4128,6 @@ nsHalfOpenSocket::SetupStreams(nsISocketTransport **transport,
     }
 
     socketTransport->SetQoSBits(gHttpHandler->GetQoSBits());
-
-    if (!ci->GetNetworkInterfaceId().IsEmpty()) {
-        socketTransport->SetNetworkInterfaceId(ci->GetNetworkInterfaceId());
-    }
 
     rv = socketTransport->SetEventSink(this, nullptr);
     NS_ENSURE_SUCCESS(rv, rv);
@@ -5114,7 +5121,7 @@ nsHttpConnectionMgr::nsHalfOpenSocket::OnTransportStatus(nsITransport *trans,
         if (NS_SUCCEEDED(rv) && !addressSet.IsEmpty()) {
             for (uint32_t i = 0; i < addressSet.Length(); ++i) {
                 nsCString *newKey = mEnt->mCoalescingKeys.AppendElement(nsCString());
-                newKey->SetCapacity(kIPv6CStrBufSize + 26);
+                newKey->SetLength(kIPv6CStrBufSize + 26);
                 NetAddrToString(&addressSet[i], newKey->BeginWriting(), kIPv6CStrBufSize);
                 newKey->SetLength(strlen(newKey->BeginReading()));
                 if (mEnt->mConnInfo->GetAnonymous()) {

@@ -9,9 +9,9 @@
 #include "gc/FreeOp.h"
 #include "gc/Marking.h"
 #include "vm/GlobalObject.h"
-#include "vm/JSCompartment.h"
 #include "vm/JSContext.h"
 #include "vm/JSObject.h"
+#include "vm/Realm.h"
 #include "vm/SelfHosting.h"
 
 #include "vm/JSObject-inl.h"
@@ -281,7 +281,7 @@ const Class ForOfPIC::class_ = {
 /* static */ NativeObject*
 js::ForOfPIC::createForOfPICObject(JSContext* cx, Handle<GlobalObject*> global)
 {
-    assertSameCompartment(cx, global);
+    cx->check(global);
     NativeObject* obj = NewNativeObjectWithGivenProto(cx, &ForOfPIC::class_, nullptr);
     if (!obj)
         return nullptr;

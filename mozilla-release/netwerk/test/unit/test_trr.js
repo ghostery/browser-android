@@ -58,6 +58,7 @@ function resetTRRPrefs() {
   prefs.clearUserPref("network.trr.bootstrapAddress");
   prefs.clearUserPref("network.trr.blacklist-duration");
   prefs.clearUserPref("network.trr.request-timeout");
+  prefs.clearUserPref("network.trr.disable-ECS");
 }
 
 registerCleanupFunction(() => {
@@ -199,7 +200,7 @@ function test3()
   prefs.setCharPref("network.trr.uri", "https://foo.example.com:" + h2Port + "/dns-auth");
   prefs.setCharPref("network.trr.credentials", "user:password");
   test_answer = "127.0.0.1";
-  listen = dns.asyncResolve("auth.example.com", 0, listenerFine, mainThread, defaultOriginAttributes);
+  listen = dns.asyncResolve("bar.example.com", 0, listenerFine, mainThread, defaultOriginAttributes);
 }
 
 // verify failing credentials in DOH request
@@ -258,6 +259,19 @@ function test8()
   listen = dns.asyncResolve("rfc1918.example.com", 0, listenerFine, mainThread, defaultOriginAttributes);
 }
 
+// use GET and disable ECS (makes a larger request)
+// verify URI template cutoff
+function test8b()
+{
+  prefs.setIntPref("network.trr.mode", 3); // TRR-only
+  prefs.setCharPref("network.trr.uri", "https://foo.example.com:" + h2Port + "/dns-ecs{?dns}");
+  prefs.clearUserPref("network.trr.allow-rfc1918");
+  prefs.setBoolPref("network.trr.useGET", true);
+  prefs.setBoolPref("network.trr.disable-ECS", true);
+  test_answer = "5.5.5.5";
+  listen = dns.asyncResolve("ecs.example.com", 0, listenerFine, mainThread, defaultOriginAttributes);
+}
+
 // use GET
 function test9()
 {
@@ -265,6 +279,7 @@ function test9()
   prefs.setCharPref("network.trr.uri", "https://foo.example.com:" + h2Port + "/dns-get");
   prefs.clearUserPref("network.trr.allow-rfc1918");
   prefs.setBoolPref("network.trr.useGET", true);
+  prefs.setBoolPref("network.trr.disable-ECS", false);
   test_answer = "1.2.3.4";
   listen = dns.asyncResolve("get.example.com", 0, listenerFine, mainThread, defaultOriginAttributes);
 }
@@ -275,6 +290,7 @@ function test10()
 {
   prefs.setIntPref("network.trr.mode", 3); // TRR-only
   prefs.clearUserPref("network.trr.useGET");
+  prefs.clearUserPref("network.trr.disable-ECS");
   prefs.setCharPref("network.trr.uri", "https://foo.example.com:" + h2Port + "/dns-confirm");
   prefs.setCharPref("network.trr.confirmationNS", "confirm.example.com");
   test_loops = 100; // set for test10b
@@ -284,7 +300,8 @@ function test10()
   } catch (e) {
     // NS_ERROR_UNKNOWN_HOST exception is expected
     do_test_finished();
-    run_dns_tests();
+    do_timeout(200, run_dns_tests);
+    //run_dns_tests();
   }
 }
 
@@ -403,10 +420,28 @@ function test20()
 // TRR-shadow and a CNAME loop
 function test21()
 {
-  prefs.setIntPref("network.trr.mode", 4); // TRR-first
+  prefs.setIntPref("network.trr.mode", 4); // shadow
   prefs.setCharPref("network.trr.uri", "https://foo.example.com:" + h2Port + "/dns-cname-loop");
   test_answer = "127.0.0.1";
   listen = dns.asyncResolve("test21.example.com", 0, listenerFine, mainThread, defaultOriginAttributes);
+}
+
+// verify that basic A record name mismatch gets rejected. Gets the same DOH
+// response back as test1
+function test22()
+{
+  prefs.setIntPref("network.trr.mode", 3); // TRR-only to avoid native fallback
+  prefs.setCharPref("network.trr.uri", "https://foo.example.com:" + h2Port + "/dns");
+  listen = dns.asyncResolve("mismatch.example.com", 0, listenerFails, mainThread, defaultOriginAttributes);
+}
+
+// TRR-only, with a CNAME response with a bundled A record for that CNAME!
+function test23()
+{
+  prefs.setIntPref("network.trr.mode", 3); // TRR-only
+  prefs.setCharPref("network.trr.uri", "https://foo.example.com:" + h2Port + "/dns-cname-a");
+  test_answer = "9.8.7.6";
+  listen = dns.asyncResolve("cname-a.example.com", 0, listenerFine, mainThread, defaultOriginAttributes);
 }
 
 var tests = [ test1,
@@ -419,6 +454,7 @@ var tests = [ test1,
               test6,
               test7,
               test8,
+              test8b,
               test9,
               test10,
               test10b,
@@ -433,6 +469,8 @@ var tests = [ test1,
               test19,
               test20,
               test21,
+              test22,
+              test23,
               testsDone
             ];
 

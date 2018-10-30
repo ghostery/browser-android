@@ -13,20 +13,16 @@
 <!ENTITY helpTroubleshootingInfo.accesskey "D">
 <!ENTITY helpSafeMode.label     "Reiniciar com extensões desativadas…">
 <!ENTITY helpSafeMode.accesskey "R">
-<!ENTITY releaseCmd2.label "Notas da versão">
+<!ENTITY releaseCmd2.label "Notas do lançamento">
 <!ENTITY releaseCmd2.accesskey "N">
 <!ENTITY whatsNewCmd.label "Novidades">
 <!ENTITY whatsNewCmd.accesskey "o">
-<!ENTITY openHelp.label "Conteúdo da ajuda">
-<!ENTITY openHelp.accesskey "u">
+<!ENTITY openHelp.label "Conteúdos de ajuda">
+<!ENTITY openHelp.accesskey "A">
 <!ENTITY openHelp.commandkey "VK_F1">
-<!ENTITY openHelpMac.label "Ajuda do &brandShortName;">
 <!ENTITY openHelpMac2.label "Ajuda do &brandFullName;">
 <!ENTITY openHelpMac2.commandkey   "?">
 <!ENTITY openHelpMac2.modifiers    "accel">
-
-<!ENTITY aboutMenuCmd.label "Sobre o &brandShortName;">
-<!ENTITY aboutMenuCmd.accesskey "S">
 
 <!ENTITY aboutMenuCmd2.label "Sobre o &brandFullName;">
 <!ENTITY aboutMenuCmd2.accesskey "A">

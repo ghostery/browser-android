@@ -9,20 +9,24 @@ const {
 } = require("../actions/index");
 
 const INITIAL_FONT_DATA = {
+  // All fonts on the current page.
+  allFonts: [],
+  // Fonts used on the selected element.
   fonts: [],
-  otherFonts: []
+  // Fonts on the current page not used on the selected element.
+  otherFonts: [],
 };
 
-let reducers = {
+const reducers = {
 
-  [UPDATE_FONTS](_, { fonts, otherFonts }) {
-    return { fonts, otherFonts };
+  [UPDATE_FONTS](_, { fonts, otherFonts, allFonts }) {
+    return { fonts, otherFonts, allFonts };
   },
 
 };
 
 module.exports = function(fontData = INITIAL_FONT_DATA, action) {
-  let reducer = reducers[action.type];
+  const reducer = reducers[action.type];
   if (!reducer) {
     return fontData;
   }

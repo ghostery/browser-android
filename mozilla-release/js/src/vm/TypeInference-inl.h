@@ -118,7 +118,7 @@ TypeSet::ObjectKey::singleton()
     return res;
 }
 
-inline JSCompartment*
+inline JS::Compartment*
 TypeSet::ObjectKey::maybeCompartment()
 {
     if (isSingleton())
@@ -190,6 +190,10 @@ PrimitiveTypeFlag(JSValueType type)
         return TYPE_FLAG_STRING;
       case JSVAL_TYPE_SYMBOL:
         return TYPE_FLAG_SYMBOL;
+#ifdef ENABLE_BIGINT
+      case JSVAL_TYPE_BIGINT:
+        return TYPE_FLAG_BIGINT;
+#endif
       case JSVAL_TYPE_MAGIC:
         return TYPE_FLAG_LAZYARGS;
       default:
@@ -215,6 +219,10 @@ TypeFlagPrimitive(TypeFlags flags)
         return JSVAL_TYPE_STRING;
       case TYPE_FLAG_SYMBOL:
         return JSVAL_TYPE_SYMBOL;
+#ifdef ENABLE_BIGINT
+      case TYPE_FLAG_BIGINT:
+        return JSVAL_TYPE_BIGINT;
+#endif
       case TYPE_FLAG_LAZYARGS:
         return JSVAL_TYPE_MAGIC;
       default:
@@ -628,7 +636,7 @@ TypeScript::MonitorAssign(JSContext* cx, HandleObject obj, jsid id)
 /* static */ inline void
 TypeScript::SetThis(JSContext* cx, JSScript* script, TypeSet::Type type)
 {
-    assertSameCompartment(cx, script, type);
+    cx->check(script, type);
 
     AutoSweepTypeScript sweep(script);
     StackTypeSet* types = ThisTypes(script);
@@ -653,7 +661,7 @@ TypeScript::SetThis(JSContext* cx, JSScript* script, const js::Value& value)
 /* static */ inline void
 TypeScript::SetArgument(JSContext* cx, JSScript* script, unsigned arg, TypeSet::Type type)
 {
-    assertSameCompartment(cx, script, type);
+    cx->check(script, type);
 
     AutoSweepTypeScript sweep(script);
     StackTypeSet* types = ArgTypes(script, arg);
@@ -928,7 +936,7 @@ TypeSet::Type::trace(JSTracer* trc)
     }
 }
 
-inline JSCompartment*
+inline JS::Compartment*
 TypeSet::Type::maybeCompartment()
 {
     if (isSingletonUnchecked())

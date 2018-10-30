@@ -157,13 +157,6 @@ LayerManagerMLGPU::CreateImageLayer()
   return MakeAndAddRef<ImageLayerMLGPU>(this);
 }
 
-already_AddRefed<BorderLayer>
-LayerManagerMLGPU::CreateBorderLayer()
-{
-  MOZ_ASSERT_UNREACHABLE("Not yet implemented");
-  return nullptr;
-}
-
 already_AddRefed<CanvasLayer>
 LayerManagerMLGPU::CreateCanvasLayer()
 {
@@ -303,7 +296,7 @@ LayerManagerMLGPU::Composite()
 
   // Now that we have the final invalid region, give it to the swap chain which
   // will tell us if we still need to render.
-  if (!mSwapChain->ApplyNewInvalidRegion(Move(mInvalidRegion), diagnosticRect)) {
+  if (!mSwapChain->ApplyNewInvalidRegion(std::move(mInvalidRegion), diagnosticRect)) {
     return;
   }
 
@@ -483,7 +476,7 @@ LayerManagerMLGPU::ComputeInvalidRegion()
     mInvalidRegion = mTargetRect;
     mNextFrameInvalidRegion.OrWith(changed);
   } else {
-    mInvalidRegion = Move(mNextFrameInvalidRegion);
+    mInvalidRegion = std::move(mNextFrameInvalidRegion);
     mInvalidRegion.OrWith(changed);
   }
 }

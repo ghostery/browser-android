@@ -36,80 +36,11 @@ using namespace mozilla::dom;
 using namespace mozilla::a11y;
 
 ////////////////////////////////////////////////////////////////////////////////
-// HTMLCheckboxAccessible
-////////////////////////////////////////////////////////////////////////////////
-
-role
-HTMLCheckboxAccessible::NativeRole()
-{
-  return roles::CHECKBUTTON;
-}
-
-uint8_t
-HTMLCheckboxAccessible::ActionCount()
-{
-  return 1;
-}
-
-void
-HTMLCheckboxAccessible::ActionNameAt(uint8_t aIndex, nsAString& aName)
-{
-  if (aIndex == eAction_Click) {    // 0 is the magic value for default action
-    uint64_t state = NativeState();
-    if (state & states::CHECKED)
-      aName.AssignLiteral("uncheck");
-    else if (state & states::MIXED)
-      aName.AssignLiteral("cycle");
-    else
-      aName.AssignLiteral("check");
-  }
-}
-
-bool
-HTMLCheckboxAccessible::DoAction(uint8_t aIndex)
-{
-  if (aIndex != 0)
-    return false;
-
-  DoCommand();
-  return true;
-}
-
-uint64_t
-HTMLCheckboxAccessible::NativeState()
-{
-  uint64_t state = LeafAccessible::NativeState();
-
-  state |= states::CHECKABLE;
-  HTMLInputElement* input = HTMLInputElement::FromNode(mContent);
-  if (!input)
-    return state;
-
-  if (input->Indeterminate())
-    return state | states::MIXED;
-
-  if (input->Checked())
-    return state | states::CHECKED;
-
-  return state;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// HTMLCheckboxAccessible: Widgets
-
-bool
-HTMLCheckboxAccessible::IsWidget() const
-{
-  return true;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 // HTMLRadioButtonAccessible
 ////////////////////////////////////////////////////////////////////////////////
 
 uint64_t
-HTMLRadioButtonAccessible::NativeState()
+HTMLRadioButtonAccessible::NativeState() const
 {
   uint64_t state = AccessibleWrap::NativeState();
 
@@ -180,7 +111,7 @@ HTMLButtonAccessible::
 }
 
 uint8_t
-HTMLButtonAccessible::ActionCount()
+HTMLButtonAccessible::ActionCount() const
 {
   return 1;
 }
@@ -193,7 +124,7 @@ HTMLButtonAccessible::ActionNameAt(uint8_t aIndex, nsAString& aName)
 }
 
 bool
-HTMLButtonAccessible::DoAction(uint8_t aIndex)
+HTMLButtonAccessible::DoAction(uint8_t aIndex) const
 {
   if (aIndex != eAction_Click)
     return false;
@@ -222,7 +153,7 @@ HTMLButtonAccessible::State()
 }
 
 uint64_t
-HTMLButtonAccessible::NativeState()
+HTMLButtonAccessible::NativeState() const
 {
   uint64_t state = HyperTextAccessibleWrap::NativeState();
 
@@ -234,13 +165,13 @@ HTMLButtonAccessible::NativeState()
 }
 
 role
-HTMLButtonAccessible::NativeRole()
+HTMLButtonAccessible::NativeRole() const
 {
   return roles::PUSHBUTTON;
 }
 
 ENameValueFlag
-HTMLButtonAccessible::NativeName(nsString& aName)
+HTMLButtonAccessible::NativeName(nsString& aName) const
 {
   // No need to check @value attribute for buttons since this attribute results
   // in native anonymous text node and the name is calculated from subtree.
@@ -289,7 +220,7 @@ HTMLTextFieldAccessible::
 }
 
 role
-HTMLTextFieldAccessible::NativeRole()
+HTMLTextFieldAccessible::NativeRole() const
 {
   if (mType == eHTMLTextPasswordFieldType) {
     return roles::PASSWORD_TEXT;
@@ -307,7 +238,14 @@ HTMLTextFieldAccessible::NativeAttributes()
   // Expose type for text input elements as it gives some useful context,
   // especially for mobile.
   nsAutoString type;
-  if (mContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::type, type)) {
+  // In the case of this element being part of a binding, the binding's
+  // parent's type should have precedence. For example an input[type=number]
+  // has an embedded anonymous input[type=text] (along with spinner buttons).
+  // In that case, we would want to take the input type from the parent
+  // and not the anonymous content.
+  nsIContent* widgetElm = BindingParent();
+  if ((widgetElm && widgetElm->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::type, type)) ||
+      mContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::type, type)) {
     nsAccUtils::SetAccAttr(attributes, nsGkAtoms::textInputType, type);
     if (!ARIARoleMap() && type.EqualsLiteral("search")) {
       nsAccUtils::SetAccAttr(attributes, nsGkAtoms::xmlroles,
@@ -319,14 +257,14 @@ HTMLTextFieldAccessible::NativeAttributes()
 }
 
 ENameValueFlag
-HTMLTextFieldAccessible::NativeName(nsString& aName)
+HTMLTextFieldAccessible::NativeName(nsString& aName) const
 {
   ENameValueFlag nameFlag = Accessible::NativeName(aName);
   if (!aName.IsEmpty())
     return nameFlag;
 
   // If part of compound of XUL widget then grab a name from XUL widget element.
-  nsIContent* widgetElm = XULWidgetElm();
+  nsIContent* widgetElm = BindingParent();
   if (widgetElm)
     XULElmName(mDoc, widgetElm, aName);
 
@@ -339,7 +277,7 @@ HTMLTextFieldAccessible::NativeName(nsString& aName)
 }
 
 void
-HTMLTextFieldAccessible::Value(nsString& aValue)
+HTMLTextFieldAccessible::Value(nsString& aValue) const
 {
   aValue.Truncate();
   if (NativeState() & states::PROTECTED)    // Don't return password text!
@@ -367,13 +305,13 @@ HTMLTextFieldAccessible::ApplyARIAState(uint64_t* aState) const
 
   // If part of compound of XUL widget then pick up ARIA stuff from XUL widget
   // element.
-  nsIContent* widgetElm = XULWidgetElm();
+  nsIContent* widgetElm = BindingParent();
   if (widgetElm)
     aria::MapToState(aria::eARIAAutoComplete, widgetElm->AsElement(), aState);
 }
 
 uint64_t
-HTMLTextFieldAccessible::NativeState()
+HTMLTextFieldAccessible::NativeState() const
 {
   uint64_t state = HyperTextAccessibleWrap::NativeState();
 
@@ -412,7 +350,7 @@ HTMLTextFieldAccessible::NativeState()
     return state | states::SUPPORTS_AUTOCOMPLETION | states::HASPOPUP;
 
   // Ordinal XUL textboxes don't support autocomplete.
-  if (!XULWidgetElm() && Preferences::GetBool("browser.formfill.enable")) {
+  if (!BindingParent() && Preferences::GetBool("browser.formfill.enable")) {
     // Check to see if autocompletion is allowed on this input. We don't expose
     // it for password fields even though the entire password can be remembered
     // for a page if the user asks it to be. However, the kind of autocomplete
@@ -438,7 +376,7 @@ HTMLTextFieldAccessible::NativeState()
 }
 
 uint8_t
-HTMLTextFieldAccessible::ActionCount()
+HTMLTextFieldAccessible::ActionCount() const
 {
   return 1;
 }
@@ -451,7 +389,7 @@ HTMLTextFieldAccessible::ActionNameAt(uint8_t aIndex, nsAString& aName)
 }
 
 bool
-HTMLTextFieldAccessible::DoAction(uint8_t aIndex)
+HTMLTextFieldAccessible::DoAction(uint8_t aIndex) const
 {
   if (aIndex != 0)
     return false;
@@ -503,7 +441,7 @@ HTMLFileInputAccessible(nsIContent* aContent, DocAccessible* aDoc) :
 }
 
 role
-HTMLFileInputAccessible::NativeRole()
+HTMLFileInputAccessible::NativeRole() const
 {
   // JAWS wants a text container, others don't mind. No specific role in
   // AT APIs.
@@ -543,13 +481,13 @@ HTMLFileInputAccessible::HandleAccEvent(AccEvent* aEvent)
 ////////////////////////////////////////////////////////////////////////////////
 
 role
-HTMLSpinnerAccessible::NativeRole()
+HTMLSpinnerAccessible::NativeRole() const
 {
   return roles::SPINBUTTON;
 }
 
 void
-HTMLSpinnerAccessible::Value(nsString& aValue)
+HTMLSpinnerAccessible::Value(nsString& aValue) const
 {
   AccessibleWrap::Value(aValue);
   if (!aValue.IsEmpty())
@@ -615,7 +553,7 @@ HTMLSpinnerAccessible::SetCurValue(double aValue)
 ////////////////////////////////////////////////////////////////////////////////
 
 role
-HTMLRangeAccessible::NativeRole()
+HTMLRangeAccessible::NativeRole() const
 {
   return roles::SLIDER;
 }
@@ -627,7 +565,7 @@ HTMLRangeAccessible::IsWidget() const
 }
 
 void
-HTMLRangeAccessible::Value(nsString& aValue)
+HTMLRangeAccessible::Value(nsString& aValue) const
 {
   LeafAccessible::Value(aValue);
   if (!aValue.IsEmpty())
@@ -699,7 +637,7 @@ HTMLGroupboxAccessible::
 }
 
 role
-HTMLGroupboxAccessible::NativeRole()
+HTMLGroupboxAccessible::NativeRole() const
 {
   return roles::GROUPING;
 }
@@ -720,7 +658,7 @@ HTMLGroupboxAccessible::GetLegend() const
 }
 
 ENameValueFlag
-HTMLGroupboxAccessible::NativeName(nsString& aName)
+HTMLGroupboxAccessible::NativeName(nsString& aName) const
 {
   ENameValueFlag nameFlag = Accessible::NativeName(aName);
   if (!aName.IsEmpty())
@@ -734,7 +672,7 @@ HTMLGroupboxAccessible::NativeName(nsString& aName)
 }
 
 Relation
-HTMLGroupboxAccessible::RelationByType(RelationType aType)
+HTMLGroupboxAccessible::RelationByType(RelationType aType) const
 {
   Relation rel = HyperTextAccessibleWrap::RelationByType(aType);
     // No override for label, so use <legend> for this <fieldset>
@@ -755,7 +693,7 @@ HTMLLegendAccessible::
 }
 
 Relation
-HTMLLegendAccessible::RelationByType(RelationType aType)
+HTMLLegendAccessible::RelationByType(RelationType aType) const
 {
   Relation rel = HyperTextAccessibleWrap::RelationByType(aType);
   if (aType != RelationType::LABEL_FOR)
@@ -779,7 +717,7 @@ HTMLFigureAccessible::
 }
 
 ENameValueFlag
-HTMLFigureAccessible::NativeName(nsString& aName)
+HTMLFigureAccessible::NativeName(nsString& aName) const
 {
   ENameValueFlag nameFlag = HyperTextAccessibleWrap::NativeName(aName);
   if (!aName.IsEmpty())
@@ -793,7 +731,7 @@ HTMLFigureAccessible::NativeName(nsString& aName)
 }
 
 Relation
-HTMLFigureAccessible::RelationByType(RelationType aType)
+HTMLFigureAccessible::RelationByType(RelationType aType) const
 {
   Relation rel = HyperTextAccessibleWrap::RelationByType(aType);
   if (aType == RelationType::LABELLED_BY)
@@ -827,7 +765,7 @@ HTMLFigcaptionAccessible::
 }
 
 Relation
-HTMLFigcaptionAccessible::RelationByType(RelationType aType)
+HTMLFigcaptionAccessible::RelationByType(RelationType aType) const
 {
   Relation rel = HyperTextAccessibleWrap::RelationByType(aType);
   if (aType != RelationType::LABEL_FOR)

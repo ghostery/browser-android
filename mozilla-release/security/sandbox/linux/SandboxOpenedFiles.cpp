@@ -9,6 +9,7 @@
 #include "mozilla/Move.h"
 #include "SandboxLogging.h"
 
+#include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -17,7 +18,7 @@ namespace mozilla {
 // The default move constructor almost works, but Atomic isn't
 // move-constructable and the fd needs some special handling.
 SandboxOpenedFile::SandboxOpenedFile(SandboxOpenedFile&& aMoved)
-: mPath(Move(aMoved.mPath))
+: mPath(std::move(aMoved.mPath))
 , mMaybeFd(aMoved.TakeDesc())
 , mDup(aMoved.mDup)
 , mExpectError(aMoved.mExpectError)
@@ -38,7 +39,7 @@ SandboxOpenedFile::SandboxOpenedFile(const char* aPath, bool aDup)
 int
 SandboxOpenedFile::GetDesc() const
 {
-  int fd = -1;
+  int fd;
   if (mDup) {
     fd = mMaybeFd;
     if (fd >= 0) {

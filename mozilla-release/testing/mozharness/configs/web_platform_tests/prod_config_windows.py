@@ -6,7 +6,6 @@
 
 # This is a template config file for web-platform-tests test.
 
-import os
 import sys
 
 config = {
@@ -14,9 +13,9 @@ config = {
         "--prefs-root=%(test_path)s/prefs",
         "--processes=1",
         "--config=%(test_path)s/wptrunner.ini",
-        "--ca-cert-path=%(test_path)s/certs/cacert.pem",
-        "--host-key-path=%(test_path)s/certs/web-platform.test.key",
-        "--host-cert-path=%(test_path)s/certs/web-platform.test.pem",
+        "--ca-cert-path=%(test_path)s/tests/tools/certs/cacert.pem",
+        "--host-key-path=%(test_path)s/tests/tools/certs/web-platform.test.key",
+        "--host-cert-path=%(test_path)s/tests/tools/certs/web-platform.test.pem",
         "--certutil-binary=%(test_install_path)s/bin/certutil",
     ],
 
@@ -24,14 +23,6 @@ config = {
         'python': sys.executable,
         'hg': 'c:/mozilla-build/hg/hg',
     },
-
-    "buildbot_json_path": "buildprops.json",
-
-    "default_blob_upload_servers": [
-         "https://blobupload.elasticbeanstalk.com",
-    ],
-
-    "blob_uploader_auth_file" : os.path.join(os.getcwd(), "oauth.txt"),
 
     "download_minidump_stackwalk": True,
 

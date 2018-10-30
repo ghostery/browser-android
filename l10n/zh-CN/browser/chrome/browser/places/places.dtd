@@ -52,7 +52,7 @@
 <!ENTITY cmd.open_private_window.accesskey "P">
 <!ENTITY cmd.open_tab.label              "新建标签页打开">
 <!ENTITY cmd.open_tab.accesskey          "w">
-<!ENTITY cmd.open_all_in_tabs.label      "以标签页打开书签组">
+<!ENTITY cmd.open_all_in_tabs.label      "全部打开">
 <!ENTITY cmd.open_all_in_tabs.accesskey  "O">
 
 <!ENTITY cmd.properties.label      "属性">
@@ -78,7 +78,6 @@
 <!ENTITY col.url.label           "网址">
 <!ENTITY col.mostrecentvisit.label "上次访问">
 <!ENTITY col.visitcount.label    "访问次数">
-<!ENTITY col.description.label   "描述">
 <!ENTITY col.dateadded.label     "添加日期">
 <!ENTITY col.lastmodified.label  "修改日期">
 
@@ -99,6 +98,7 @@
 <!ENTITY detailsPane.more.accesskey "e">
 <!ENTITY detailsPane.less.label "简明">
 <!ENTITY detailsPane.less.accesskey "e">
+
 <!ENTITY detailsPane.selectAnItemText.description "选择一个条目来查看或编辑其属性">
 
 <!ENTITY view.label               "查看">

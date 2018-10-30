@@ -95,7 +95,7 @@ function checkAllowedAddon(addon) {
   return allowedTypes.includes(addon.type);
 }
 
-class AddonListener extends ExtensionUtils.EventEmitter {
+class AddonListener extends ExtensionCommon.EventEmitter {
   constructor() {
     super();
     AddonManager.addAddonListener(this);
@@ -187,6 +187,28 @@ this.management = class extends ExtensionAPI {
           });
         },
 
+        async install({url, hash}) {
+          let listener = {
+            onDownloadEnded(install) {
+              if (install.addon.appDisabled || install.addon.type !== "theme") {
+                install.cancel();
+                return false;
+              }
+            },
+          };
+
+          let install = await AddonManager.getInstallForURL(url, "application/x-xpinstall", hash);
+          install.addListener(listener);
+          try {
+            await install.install();
+          } catch (e) {
+            Cu.reportError(e);
+            throw new ExtensionError("Incompatible addon");
+          }
+          await install.addon.enable();
+          return {id: install.addon.id};
+        },
+
         async getSelf() {
           let addon = await AddonManager.getAddonByID(extension.id);
           return getExtensionInfoForAddon(extension, addon);
@@ -227,7 +249,11 @@ this.management = class extends ExtensionAPI {
           if (addon.isSystem) {
             throw new ExtensionError("setEnabled cannot be used with a system addon");
           }
-          addon.userDisabled = !enabled;
+          if (enabled) {
+            await addon.enable();
+          } else {
+            await addon.disable();
+          }
         },
 
         onDisabled: new EventManager({

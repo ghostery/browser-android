@@ -16,6 +16,9 @@ class nsITimer;
 class nsGlobalWindowInner;
 
 namespace mozilla {
+
+class PerformanceCounter;
+
 namespace dom {
 
 class OrderedTimeoutIterator;
@@ -111,6 +114,8 @@ public:
   nsIEventTarget*
   EventTarget();
 
+  bool BudgetThrottlingEnabled(bool aIsBackground) const;
+
   static const uint32_t InvalidFiringId;
 
 private:
@@ -149,8 +154,7 @@ private:
   void UpdateBudget(const TimeStamp& aNow,
                     const TimeDuration& aDuration = TimeDuration());
 
-  bool BudgetThrottlingEnabled(bool aIsBackground) const;
-
+  mozilla::PerformanceCounter* GetPerformanceCounter();
 private:
   struct Timeouts {
     explicit Timeouts(const TimeoutManager& aManager)

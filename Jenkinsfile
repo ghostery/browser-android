@@ -3,12 +3,12 @@
 def matrix = [
     'cliqz':[
         'bundleid': 'com.cliqz.browser',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
         'test': false,
     ],
     'ghostery':[
         'bundleid': 'com.ghostery.android.ghostery',
-        'target': 'i386-linux-android',
+        'target': 'i686-linux-android',
         'test': true,
     ],
     'cliqz-alpha':[

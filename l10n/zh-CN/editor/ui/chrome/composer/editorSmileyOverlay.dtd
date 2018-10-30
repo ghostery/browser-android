@@ -1,8 +1,8 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- Smiley Menu items -->
 
+<!-- Smiley Menu items -->
 <!ENTITY insertSmiley.label "笑脸">
 <!ENTITY insertSmiley.accesskey "S">
 
@@ -26,7 +26,7 @@
 <!ENTITY smiley6Cmd.tooltip "插入窘迫的脸">
 <!ENTITY smiley7Cmd.label "迟疑">
 <!ENTITY smiley7Cmd.accesskey "U">
-<!ENTITY smiley7Cmd.tooltip "插入迟疑的脸">
+<!ENTITY smiley7Cmd.tooltip "插入迟疑表情">
 <!ENTITY smiley8Cmd.label "惊讶">
 <!ENTITY smiley8Cmd.accesskey "p">
 <!ENTITY smiley8Cmd.tooltip "插入惊讶的脸">
@@ -55,4 +55,3 @@
 <!ENTITY smiley16Cmd.accesskey "a">
 <!ENTITY smiley16Cmd.tooltip "插入缄默的脸">
 <!ENTITY SmileButton.tooltip "插入一个笑脸">
-

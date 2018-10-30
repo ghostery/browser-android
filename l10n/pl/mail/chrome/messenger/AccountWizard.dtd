@@ -13,6 +13,9 @@
 <!ENTITY accountTypeMail.accesskey "p">
 <!ENTITY accountTypeNews.label "Konto grup dyskusyjnych">
 <!ENTITY accountTypeNews.accesskey "g">
+<!ENTITY accountTypeMovemail.label "Skrzynka systemu UNIX (Movemail)">
+<!ENTITY accountTypeMovemail.accesskey "U">
+
 <!ENTITY identityTitle.label "Tożsamość">
 <!ENTITY identityDesc.label "Poniższe dane określają tożsamość posiadacza konta i umożliwiają odbiorcom wiadomości identyfikację nadawcy.">
 <!ENTITY fullnameDesc.label "Wprowadź imię, nazwisko lub pseudonim, który będzie używany w polu „Od:” wysyłanych wiadomości">

@@ -80,8 +80,6 @@
 <!ENTITY cmd.preferencesWin.accesskey         "O">
 <!ENTITY cmd.preferencesUnix.label            "Voorkeuren">
 <!ENTITY cmd.preferencesUnix.accesskey        "V">
-<!ENTITY cmd.about.label                      "Over">
-<!ENTITY cmd.about.accesskey                  "O">
 
 <!ENTITY cmd.enableAddon.label                "Inschakelen">
 <!ENTITY cmd.enableAddon.accesskey            "I">
@@ -125,7 +123,7 @@
   aan uw wensen aan te passen.">
 <!ENTITY discover.footer                      "Wanneer u met het internet bent verbonden, toont dit paneel u een aantal
   van de beste en meest populaire add-ons die u kunt uitproberen.">
-  
+
 <!-- detail view -->
 <!ENTITY detail.version.label                 "Versie">
 <!ENTITY detail.lastupdated.label             "Laatst bijgewerkt">
@@ -162,13 +160,6 @@
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "Pauzeren">
 <!ENTITY progress.cancel.tooltip              "Annuleren">
-
-
-<!-- list sorting -->
-<!ENTITY sort.name.label                      "Naam">
-<!ENTITY sort.name.tooltip                    "Sorteren op naam">
-<!ENTITY sort.dateUpdated.label               "Laatst bijgewerkt">
-<!ENTITY sort.dateUpdated.tooltip             "Sorteren op updatedatum">
 
 <!ENTITY addon.homepage                       "Homepage">
 <!ENTITY addon.details.label                  "Meer">
@@ -211,17 +202,6 @@
 <!ENTITY eula.accept                          "Accepteren en installeren…">
 
 <!ENTITY settings.path.button.label           "Bladeren…">
-
-<!-- LOCALIZATION NOTE (experiment.info.label): The strings related to
-     experiments are present on the "Experiments" tab of the add-ons manager.
-     This tab won't be displayed unless an Experiment add-on is installed.
-     Install https://people.mozilla.org/~gszorc/dummy-experiment-addon.xpi
-     to cause this tab to appear. -->
-<!ENTITY experiment.info.label "Wat is dit? Telemetry kan af en toe experimenten installeren en uitvoeren.">
-<!ENTITY experiment.info.learnmore "Meer info">
-<!ENTITY experiment.info.learnmore.accesskey "M">
-<!ENTITY experiment.info.changetelemetry "Telemetry-instellingen">
-<!ENTITY experiment.info.changetelemetry.accesskey "T">
 
 <!ENTITY setting.learnmore "Meer info…">
 

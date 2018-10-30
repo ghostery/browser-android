@@ -27,7 +27,7 @@ add_task(async function() {
   await doc.l10n.ready;
 
   let [ msg ] = await doc.l10n.formatMessages([
-    ["category-general"],
+    {id: "category-general"},
   ]);
 
   let elem = doc.querySelector(
@@ -36,8 +36,8 @@ add_task(async function() {
   Assert.deepEqual(msg, {
     value: null,
     attributes: [
-      {name: "tooltiptext", value: elem.getAttribute("tooltiptext")}
-    ]
+      {name: "tooltiptext", value: elem.getAttribute("tooltiptext")},
+    ],
   });
 
   BrowserTestUtils.removeTab(gBrowser.selectedTab);

@@ -9,7 +9,7 @@
 #include "mozilla/ChangeStyleTransaction.h"
 #include "mozilla/HTMLEditor.h"
 #include "mozilla/Preferences.h"
-#include "mozilla/DeclarationBlockInlines.h"
+#include "mozilla/DeclarationBlock.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/mozalloc.h"
 #include "nsAString.h"
@@ -65,7 +65,7 @@ void ProcessDefaultValue(const nsAString* aInputString,
                          const char* aPrependString,
                          const char* aAppendString)
 {
-  CopyASCIItoUTF16(aDefaultValueString, aOutputString);
+  CopyASCIItoUTF16(MakeStringSpan(aDefaultValueString), aOutputString);
 }
 
 static
@@ -92,11 +92,11 @@ void ProcessExtendedValue(const nsAString* aInputString,
   aOutputString.Truncate();
   if (aInputString) {
     if (aPrependString) {
-      AppendASCIItoUTF16(aPrependString, aOutputString);
+      AppendASCIItoUTF16(MakeStringSpan(aPrependString), aOutputString);
     }
     aOutputString.Append(*aInputString);
     if (aAppendString) {
-      AppendASCIItoUTF16(aAppendString, aOutputString);
+      AppendASCIItoUTF16(MakeStringSpan(aAppendString), aOutputString);
     }
   }
 }
@@ -538,8 +538,7 @@ CSSEditUtils::GetCSSInlinePropertyBase(nsINode* aNode,
   }
 
   nsCSSPropertyID prop =
-    nsCSSProps::LookupProperty(nsDependentAtomString(aProperty),
-                               CSSEnabledState::eForAllContent);
+    nsCSSProps::LookupProperty(nsDependentAtomString(aProperty));
   MOZ_ASSERT(prop != eCSSProperty_UNKNOWN);
 
   decl->GetPropertyValueByID(prop, aValue);
@@ -556,11 +555,8 @@ CSSEditUtils::GetComputedStyle(Element* aElement)
   nsIDocument* doc = aElement->GetComposedDoc();
   NS_ENSURE_TRUE(doc, nullptr);
 
-  nsIPresShell* presShell = doc->GetShell();
-  NS_ENSURE_TRUE(presShell, nullptr);
-
   RefPtr<nsComputedDOMStyle> style =
-    NS_NewComputedDOMStyle(aElement, EmptyString(), presShell);
+    NS_NewComputedDOMStyle(aElement, EmptyString(), doc);
 
   return style.forget();
 }
@@ -640,10 +636,6 @@ CSSEditUtils::GetDefaultLengthUnit(nsAString& aLengthUnit)
     aLengthUnit.AssignLiteral("px");
   }
 }
-
-// Unfortunately, CSSStyleDeclaration::GetPropertyCSSValue is not yet
-// implemented... We need then a way to determine the number part and the unit
-// from aString, aString being the result of a GetPropertyValue query...
 
 // static
 void

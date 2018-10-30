@@ -4,8 +4,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef AccessibleCaretEventHub_h
-#define AccessibleCaretEventHub_h
+#ifndef mozilla_AccessibleCaretEventHub_h
+#define mozilla_AccessibleCaretEventHub_h
 
 #include "mozilla/EventForwards.h"
 #include "mozilla/UniquePtr.h"
@@ -15,13 +15,13 @@
 #include "nsIFrame.h"
 #include "nsIReflowObserver.h"
 #include "nsIScrollObserver.h"
-#include "nsISelectionListener.h"
 #include "nsPoint.h"
 #include "mozilla/RefPtr.h"
 #include "nsWeakReference.h"
 
 class nsIPresShell;
 class nsITimer;
+class nsIDocument;
 
 namespace mozilla {
 class AccessibleCaretManager;
@@ -63,7 +63,6 @@ class WidgetTouchEvent;
 class AccessibleCaretEventHub
   : public nsIReflowObserver
   , public nsIScrollObserver
-  , public nsISelectionListener
   , public nsSupportsWeakReference
 {
 public:
@@ -81,21 +80,15 @@ public:
   NS_DECL_ISUPPORTS
 
   // nsIReflowObserver
-  MOZ_CAN_RUN_SCRIPT
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   NS_IMETHOD Reflow(DOMHighResTimeStamp start,
                     DOMHighResTimeStamp end) final;
-  MOZ_CAN_RUN_SCRIPT
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   NS_IMETHOD ReflowInterruptible(DOMHighResTimeStamp start,
                                  DOMHighResTimeStamp end) final;
 
-  // nsISelectionListener
-  MOZ_CAN_RUN_SCRIPT
-  NS_IMETHOD NotifySelectionChanged(nsIDOMDocument* doc,
-                                    nsISelection* sel,
-                                    int16_t reason) final;
-
   // Override nsIScrollObserver methods.
-  MOZ_CAN_RUN_SCRIPT
+  MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual void ScrollPositionChanged() override;
   MOZ_CAN_RUN_SCRIPT
   virtual void AsyncPanZoomStarted() override;
@@ -105,6 +98,11 @@ public:
   // Base state
   class State;
   State* GetState() const;
+
+  MOZ_CAN_RUN_SCRIPT
+  void OnSelectionChange(nsIDocument* aDocument,
+                         dom::Selection* aSelection,
+                         int16_t aReason);
 
 protected:
   virtual ~AccessibleCaretEventHub() = default;
@@ -229,7 +227,7 @@ public:
   virtual void OnBlur(AccessibleCaretEventHub* aContext,
                       bool aIsLeavingDocument) {}
   virtual void OnSelectionChanged(AccessibleCaretEventHub* aContext,
-                                  nsIDOMDocument* aDoc, nsISelection* aSel,
+                                  nsIDocument* aDoc, dom::Selection* aSel,
                                   int16_t aReason) {}
   virtual void OnReflow(AccessibleCaretEventHub* aContext) {}
   virtual void Enter(AccessibleCaretEventHub* aContext) {}
@@ -243,4 +241,4 @@ public:
 
 } // namespace mozilla
 
-#endif // AccessibleCaretEventHub_h
+#endif // mozilla_AccessibleCaretEventHub_h

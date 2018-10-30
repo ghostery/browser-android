@@ -106,25 +106,6 @@ inline void MOZ_PretendNoReturn()
 #endif
 
 /**
- * NS_PRECONDITION is a synonym for NS_ASSERTION.
- */
-#define NS_PRECONDITION(expr, str) NS_ASSERTION(expr, str)
-
-/**
- * This macros triggers a program failure if executed. It indicates that
- * an attempt was made to execute a codepath which should not be reachable.
- */
-#ifdef DEBUG
-#define NS_NOTREACHED(str)                                    \
-  do {                                                        \
-    NS_DebugBreak(NS_DEBUG_ASSERTION, str, "Not Reached", __FILE__, __LINE__); \
-    MOZ_PretendNoReturn();                                    \
-  } while(0)
-#else
-#define NS_NOTREACHED(str)             do { /* nothing */ } while(0)
-#endif
-
-/**
  * Log an error message.
  */
 #ifdef DEBUG

@@ -77,7 +77,7 @@ Selection.prototype = {
     let detached = false;
     let parentNode = null;
 
-    for (let m of mutations) {
+    for (const m of mutations) {
       if (!attributeChange && m.type == "attributes") {
         attributeChange = true;
       }
@@ -135,7 +135,7 @@ Selection.prototype = {
     this.reason = reason;
 
     // If an inlineTextChild text node is being set, then set it's parent instead.
-    let parentNode = nodeFront && nodeFront.parentNode();
+    const parentNode = nodeFront && nodeFront.parentNode();
     if (nodeFront && parentNode && parentNode.inlineTextChild === nodeFront) {
       nodeFront = parentNode;
     }
@@ -173,13 +173,13 @@ Selection.prototype = {
       if (node === this._walker.rootNode) {
         return true;
       }
-      node = node.parentNode();
+      node = node.parentOrHost();
     }
     return false;
   },
 
   isHTMLNode: function() {
-    let xhtmlNs = "http://www.w3.org/1999/xhtml";
+    const xhtmlNs = "http://www.w3.org/1999/xhtml";
     return this.isNode() && this.nodeFront.namespaceURI == xhtmlNs;
   },
 
@@ -265,5 +265,9 @@ Selection.prototype = {
 
   isSlotted: function() {
     return this._isSlotted;
+  },
+
+  isShadowRootNode: function() {
+    return this.isNode() && this.nodeFront.isShadowRoot;
   },
 };

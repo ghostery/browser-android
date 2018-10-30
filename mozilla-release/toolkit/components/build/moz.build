@@ -28,6 +28,7 @@ LOCAL_INCLUDES += [
     '../reputationservice',
     '../startup',
     '../statusfilter',
+    '../telemetry',
     '../typeaheadfind',
     '../url-classifier',
 ]
@@ -36,3 +37,6 @@ if not CONFIG['MOZ_DISABLE_PARENTAL_CONTROLS']:
     LOCAL_INCLUDES += [
         '../parentalcontrols',
     ]
+
+if CONFIG['CC_TYPE'] == 'clang-cl':
+    AllowCompilerWarnings()  # workaround for bug 1090497

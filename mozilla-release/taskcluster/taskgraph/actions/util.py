@@ -10,14 +10,21 @@ import copy
 import logging
 import requests
 import os
+import re
 
 from requests.exceptions import HTTPError
 
 from taskgraph import create
-from taskgraph.decision import write_artifact
+from taskgraph.decision import read_artifact, write_artifact
 from taskgraph.taskgraph import TaskGraph
 from taskgraph.optimize import optimize_task_graph
-from taskgraph.util.taskcluster import get_session, find_task_id, get_artifact, list_tasks
+from taskgraph.util.taskcluster import (
+    get_session,
+    find_task_id,
+    get_artifact,
+    list_tasks,
+    parse_time,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -111,14 +118,25 @@ def update_parent(task, graph):
 
 
 def create_tasks(to_run, full_task_graph, label_to_taskid,
-                 params, decision_task_id=None, suffix=''):
+                 params, decision_task_id=None, suffix='', modifier=lambda t: t):
     """Create new tasks.  The task definition will have {relative-datestamp':
     '..'} rendered just like in a decision task.  Action callbacks should use
     this function to create new tasks,
     allowing easy debugging with `mach taskgraph action-callback --test`.
     This builds up all required tasks to run in order to run the tasks requested.
 
-    If you wish to create the tasks in a new group, leave out decision_task_id."""
+    Optionally this function takes a `modifier` function that is passed in each
+    task before it is put into a new graph. It should return a valid task. Note
+    that this is passed _all_ tasks in the graph, not just the set in to_run. You
+    may want to skip modifying tasks not in your to_run list.
+
+    If `suffix` is given, then it is used to give unique names to the resulting
+    artifacts.  If you call this function multiple times in the same action,
+    pass a different suffix each time to avoid overwriting artifacts.
+
+    If you wish to create the tasks in a new group, leave out decision_task_id.
+
+    Returns an updated label_to_taskid containing the new tasks"""
     if suffix != '':
         suffix = '-{}'.format(suffix)
     to_run = set(to_run)
@@ -129,7 +147,7 @@ def create_tasks(to_run, full_task_graph, label_to_taskid,
 
     target_graph = full_task_graph.graph.transitive_closure(to_run)
     target_task_graph = TaskGraph(
-        {l: full_task_graph[l] for l in target_graph.nodes},
+        {l: modifier(full_task_graph[l]) for l in target_graph.nodes},
         target_graph)
     target_task_graph.for_each_task(update_parent)
     optimized_task_graph, label_to_taskid = optimize_task_graph(target_task_graph,
@@ -140,3 +158,43 @@ def create_tasks(to_run, full_task_graph, label_to_taskid,
     write_artifact('label-to-taskid{}.json'.format(suffix), label_to_taskid)
     write_artifact('to-run{}.json'.format(suffix), list(to_run))
     create.create_tasks(optimized_task_graph, label_to_taskid, params, decision_task_id)
+    return label_to_taskid
+
+
+def combine_task_graph_files(suffixes):
+    """Combine task-graph-{suffix}.json files into a single task-graph.json file.
+
+    Since Chain of Trust verification requires a task-graph.json file that
+    contains all children tasks, we can combine the various task-graph-0.json
+    type files into a master task-graph.json file at the end."""
+    all = {}
+    for suffix in suffixes:
+        all.update(read_artifact('task-graph-{}.json'.format(suffix)))
+    write_artifact('task-graph.json', all)
+
+
+def relativize_datestamps(task_def):
+    """
+    Given a task definition as received from the queue, convert all datestamps
+    to {relative_datestamp: ..} format, with the task creation time as "now".
+    The result is useful for handing to ``create_task``.
+    """
+    base = parse_time(task_def['created'])
+    # borrowed from https://github.com/epoberezkin/ajv/blob/master/lib/compile/formats.js
+    ts_pattern = re.compile(
+        r'^\d\d\d\d-[0-1]\d-[0-3]\d[t\s]'
+        r'(?:[0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(?:\.\d+)?'
+        r'(?:z|[+-]\d\d:\d\d)$', re.I)
+
+    def recurse(value):
+        if isinstance(value, basestring):
+            if ts_pattern.match(value):
+                value = parse_time(value)
+                diff = value - base
+                return {'relative-datestamp': '{} seconds'.format(int(diff.total_seconds()))}
+        if isinstance(value, list):
+            return [recurse(e) for e in value]
+        if isinstance(value, dict):
+            return {k: recurse(v) for k, v in value.items()}
+        return value
+    return recurse(task_def)

@@ -15,7 +15,7 @@ const ITEM_URL = "http://test.mozilla.org/";
 const TAG_NAME = "testTag";
 
 function validateResults() {
-  let toolbar = PlacesUtils.getFolderContents(PlacesUtils.toolbarFolderId).root;
+  let toolbar = PlacesUtils.getFolderContents(PlacesUtils.bookmarks.toolbarGuid).root;
   // test for our bookmark
   Assert.equal(toolbar.childCount, 1);
   for (var i = 0; i < toolbar.childCount; i++) {
@@ -44,7 +44,7 @@ add_task(async function() {
   // create a tag
   PlacesUtils.tagging.tagURI(Services.io.newURI(ITEM_URL), [TAG_NAME]);
   // get tag folder id
-  let tagRoot = PlacesUtils.getFolderContents(PlacesUtils.tagsFolderId).root;
+  let tagRoot = PlacesUtils.getFolderContents(PlacesUtils.bookmarks.tagsGuid).root;
   Assert.equal(tagRoot.childCount, 1);
   let tagItemGuid = PlacesUtils.asContainer(tagRoot.getChild(0)).bookmarkGuid;
   tagRoot.containerOpen = false;
@@ -65,22 +65,22 @@ add_task(async function() {
   // support inserting invalid items into the tag folder.
   await insert({
     parentGuid: tagItemGuid,
-    type: PlacesUtils.bookmarks.TYPE_SEPARATOR
+    type: PlacesUtils.bookmarks.TYPE_SEPARATOR,
   });
   await insert({
     parentGuid: tagItemGuid,
-    type: PlacesUtils.bookmarks.TYPE_FOLDER
+    type: PlacesUtils.bookmarks.TYPE_FOLDER,
   });
 
   // add a separator and a folder inside tag root
   await PlacesUtils.bookmarks.insert({
     parentGuid: PlacesUtils.bookmarks.tagsGuid,
-    type: PlacesUtils.bookmarks.TYPE_SEPARATOR
+    type: PlacesUtils.bookmarks.TYPE_SEPARATOR,
   });
   await PlacesUtils.bookmarks.insert({
     parentGuid: PlacesUtils.bookmarks.tagsGuid,
     title: "test tags root folder",
-    type: PlacesUtils.bookmarks.TYPE_FOLDER
+    type: PlacesUtils.bookmarks.TYPE_FOLDER,
   });
 
   // sanity

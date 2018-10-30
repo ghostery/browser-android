@@ -26,15 +26,43 @@ using namespace js::jit;
 using mozilla::DebugOnly;
 using mozilla::Maybe;
 
-const char* js::jit::CacheKindNames[] = {
+const char* const js::jit::CacheKindNames[] = {
 #define DEFINE_KIND(kind) #kind,
     CACHE_IR_KINDS(DEFINE_KIND)
 #undef DEFINE_KIND
 };
 
 void
-CacheIRWriter::assertSameCompartment(JSObject* obj) {
-    assertSameCompartmentDebugOnly(cx_, obj);
+CacheIRWriter::assertSameCompartment(JSObject* obj)
+{
+    cx_->debugOnlyCheck(obj);
+}
+
+StubField
+CacheIRWriter::readStubFieldForIon(uint32_t offset, StubField::Type type) const
+{
+    size_t index = 0;
+    size_t currentOffset = 0;
+
+    // If we've seen an offset earlier than this before, we know we can start the search
+    // there at least, otherwise, we start the search from the beginning.
+    if (lastOffset_ < offset) {
+        currentOffset = lastOffset_;
+        index = lastIndex_;
+    }
+
+    while (currentOffset != offset) {
+        currentOffset += StubField::sizeInBytes(stubFields_[index].type());
+        index++;
+        MOZ_ASSERT(index < stubFields_.length());
+    }
+
+    MOZ_ASSERT(stubFields_[index].type() == type);
+
+    lastOffset_ = currentOffset;
+    lastIndex_ = index;
+
+    return stubFields_[index];
 }
 
 IRGenerator::IRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, CacheKind cacheKind,
@@ -233,6 +261,8 @@ GetPropIRGenerator::tryAttachStub()
             if (tryAttachDenseElement(obj, objId, index, indexId))
                 return true;
             if (tryAttachDenseElementHole(obj, objId, index, indexId))
+                return true;
+            if (tryAttachUnboxedElementHole(obj, objId, index, indexId))
                 return true;
             if (tryAttachArgumentsObjectArg(obj, objId, indexId))
                 return true;
@@ -476,7 +506,7 @@ IsCacheableNoProperty(JSContext* cx, JSObject* obj, JSObject* holder, Shape* sha
     // If we're doing a name lookup, we have to throw a ReferenceError. If
     // extra warnings are enabled, we may have to report a warning.
     // Note that Ion does not generate idempotent caches for JSOP_GETBOUNDNAME.
-    if ((pc && *pc == JSOP_GETBOUNDNAME) || cx->compartment()->behaviors().extraWarnings(cx))
+    if ((pc && *pc == JSOP_GETBOUNDNAME) || cx->realm()->behaviors().extraWarnings(cx))
         return false;
 
     return CheckHasNoSuchProperty(cx, obj, id);
@@ -623,7 +653,7 @@ GeneratePrototypeGuards(CacheIRWriter& writer, JSObject* obj, JSObject* holder, 
     // [[GetOwnProperty]] has no definition of the target property.
     //
     //
-    // Shape Teleporting Optimization
+    // [SMDOC] Shape Teleporting Optimization
     // ------------------------------
     //
     // Starting with the assumption (and guideline to developers) that mutating
@@ -770,12 +800,17 @@ ShapeGuardProtoChain(CacheIRWriter& writer, JSObject* obj, ObjOperandId objId)
         bool guardProto = obj->hasUncacheableProto();
 
         obj = obj->staticPrototype();
-        if (!obj)
+        if (!obj && !guardProto)
             return;
 
         objId = writer.loadProto(objId);
+
         if (guardProto)
             writer.guardSpecificObject(objId, obj);
+
+        if (!obj)
+            return;
+
         writer.guardShape(objId, obj->as<NativeObject>().shape());
     }
 }
@@ -1096,6 +1131,8 @@ GetPropIRGenerator::tryAttachCrossCompartmentWrapper(HandleObject obj, ObjOperan
 
     RootedObject unwrapped(cx_, Wrapper::wrappedObject(obj));
     MOZ_ASSERT(unwrapped == UnwrapOneChecked(obj));
+    MOZ_ASSERT(!IsCrossCompartmentWrapper(unwrapped),
+               "CCWs must not wrap other CCWs");
 
     // If we allowed different zones we would have to wrap strings.
     if (unwrapped->compartment()->zone() != cx_->compartment()->zone())
@@ -1104,24 +1141,26 @@ GetPropIRGenerator::tryAttachCrossCompartmentWrapper(HandleObject obj, ObjOperan
     // Take the unwrapped object's global, and wrap in a
     // this-compartment wrapper. This is what will be stored in the IC
     // keep the compartment alive.
-    RootedObject wrappedTargetGlobal(cx_, &unwrapped->global());
-    if (!cx_->compartment()->wrap(cx_, &wrappedTargetGlobal))
+    RootedObject wrappedTargetGlobal(cx_, &unwrapped->nonCCWGlobal());
+    if (!cx_->compartment()->wrap(cx_, &wrappedTargetGlobal)) {
+        cx_->clearPendingException();
         return false;
+    }
 
     bool isWindowProxy = false;
     RootedShape shape(cx_);
     RootedNativeObject holder(cx_);
 
-    // Enter compartment of target since some checks have side-effects
+    // Enter realm of target since some checks have side-effects
     // such as de-lazifying type info.
     {
-        AutoCompartment ac(cx_, unwrapped);
+        AutoRealm ar(cx_, unwrapped);
 
         // The first CCW for iframes is almost always wrapping another WindowProxy
         // so we optimize for that case as well.
         isWindowProxy = IsWindowProxy(unwrapped);
         if (isWindowProxy) {
-            MOZ_ASSERT(ToWindowIfWindowProxy(unwrapped) == unwrapped->compartment()->maybeGlobal());
+            MOZ_ASSERT(ToWindowIfWindowProxy(unwrapped) == &unwrapped->nonCCWGlobal());
             unwrapped = cx_->global();
             MOZ_ASSERT(unwrapped);
         }
@@ -1206,7 +1245,7 @@ GetPropIRGenerator::tryAttachXrayCrossCompartmentWrapper(HandleObject obj, ObjOp
     if (!info || !info->isCrossCompartmentXray(GetProxyHandler(obj)))
         return false;
 
-    if (!info->globalHasExclusiveExpandos(cx_->global()))
+    if (!info->compartmentHasExclusiveExpandos(obj))
         return false;
 
     RootedObject target(cx_, UncheckedUnwrap(obj));
@@ -1602,7 +1641,7 @@ GetPropIRGenerator::tryAttachTypedObject(HandleObject obj, ObjOperandId objId, H
     if (!obj->is<TypedObject>())
         return false;
 
-    if (!cx_->runtime()->jitSupportsFloatingPoint || cx_->compartment()->detachedTypedObjects)
+    if (!cx_->runtime()->jitSupportsFloatingPoint || cx_->zone()->detachedTypedObjects)
         return false;
 
     TypedObject* typedObj = &obj->as<TypedObject>();
@@ -1634,8 +1673,8 @@ GetPropIRGenerator::tryAttachTypedObject(HandleObject obj, ObjOperandId objId, H
         Scalar::Type type = ScalarTypeFromSimpleTypeDescrKey(typeDescr);
         monitorLoad = type == Scalar::Uint32;
     } else {
-        ReferenceTypeDescr::Type type = ReferenceTypeFromSimpleTypeDescrKey(typeDescr);
-        monitorLoad = type != ReferenceTypeDescr::TYPE_STRING;
+        ReferenceType type = ReferenceTypeFromSimpleTypeDescrKey(typeDescr);
+        monitorLoad = type != ReferenceType::TYPE_STRING;
     }
 
     if (monitorLoad)
@@ -2068,7 +2107,7 @@ GetPropIRGenerator::tryAttachTypedElement(HandleObject obj, ObjOperandId objId,
 
     // Don't attach typed object stubs if the underlying storage could be
     // detached, as the stub will always bail out.
-    if (IsPrimitiveArrayTypedObject(obj) && cx_->compartment()->detachedTypedObjects)
+    if (IsPrimitiveArrayTypedObject(obj) && cx_->zone()->detachedTypedObjects)
         return false;
 
     TypedThingLayout layout = GetTypedThingLayout(obj->getClass());
@@ -2090,6 +2129,46 @@ GetPropIRGenerator::tryAttachTypedElement(HandleObject obj, ObjOperandId objId,
         writer.returnFromIC();
 
     trackAttached("TypedElement");
+    return true;
+}
+
+bool
+GetPropIRGenerator::tryAttachUnboxedElementHole(HandleObject obj, ObjOperandId objId,
+                                                uint32_t index, Int32OperandId indexId)
+{
+    if (!obj->is<UnboxedPlainObject>())
+        return false;
+
+    // Only support unboxed objects with no elements (i.e. no expando)
+    UnboxedExpandoObject* expando = obj->as<UnboxedPlainObject>().maybeExpando();
+    if (expando)
+        return false;
+
+    if (JSObject* proto = obj->staticPrototype()) {
+        // Start the check at the first object on the [[Prototype]],
+        // which must be native now.
+        if (!proto->isNative())
+            return false;
+
+        if (proto->as<NativeObject>().getDenseInitializedLength() != 0)
+            return false;
+
+        if (!CanAttachDenseElementHole(&proto->as<NativeObject>(), false))
+            return false;
+    }
+
+    // Guard on the group and prevent expandos from appearing.
+    Maybe<ObjOperandId> tempId;
+    TestMatchingReceiver(writer, obj, objId, &tempId);
+
+    // Guard that the prototype chain has no elements.
+    GeneratePrototypeHoleGuards(writer, obj, objId);
+
+    writer.loadUndefinedResult();
+    // No monitor: We know undefined must be in the typeset already.
+    writer.returnFromIC();
+
+    trackAttached("UnboxedElementHole");
     return true;
 }
 
@@ -3254,7 +3333,7 @@ SetPropIRGenerator::tryAttachTypedObjectProperty(HandleObject obj, ObjOperandId 
     if (!obj->is<TypedObject>())
         return false;
 
-    if (!cx_->runtime()->jitSupportsFloatingPoint || cx_->compartment()->detachedTypedObjects)
+    if (!cx_->runtime()->jitSupportsFloatingPoint || cx_->zone()->detachedTypedObjects)
         return false;
 
     if (!obj->as<TypedObject>().typeDescr().is<StructTypeDescr>())
@@ -3290,14 +3369,14 @@ SetPropIRGenerator::tryAttachTypedObjectProperty(HandleObject obj, ObjOperandId 
 
     // For reference types, guard on the RHS type first, so that
     // StoreTypedObjectReferenceProperty is infallible.
-    ReferenceTypeDescr::Type type = fieldDescr->as<ReferenceTypeDescr>().type();
+    ReferenceType type = fieldDescr->as<ReferenceTypeDescr>().type();
     switch (type) {
-      case ReferenceTypeDescr::TYPE_ANY:
+      case ReferenceType::TYPE_ANY:
         break;
-      case ReferenceTypeDescr::TYPE_OBJECT:
+      case ReferenceType::TYPE_OBJECT:
         writer.guardIsObjectOrNull(rhsId);
         break;
-      case ReferenceTypeDescr::TYPE_STRING:
+      case ReferenceType::TYPE_STRING:
         writer.guardType(rhsId, JSVAL_TYPE_STRING);
         break;
     }
@@ -3496,6 +3575,13 @@ SetPropIRGenerator::tryAttachSetDenseElement(HandleObject obj, ObjOperandId objI
     if (!nobj->containsDenseElement(index) || nobj->getElementsHeader()->isFrozen())
         return false;
 
+    // Don't optimize INITELEM (DefineProperty) on non-extensible objects: when
+    // the elements are sealed, we have to throw an exception. Note that we have
+    // to check !isExtensible instead of denseElementsAreSealed because sealing
+    // a (non-extensible) object does not necessarily trigger a Shape change.
+    if (IsPropertyInitOp(JSOp(*pc_)) && !nobj->isExtensible())
+        return false;
+
     if (typeCheckInfo_.needsTypeBarrier())
         writer.guardGroupForTypeBarrier(objId, nobj->group());
     TestMatchingNativeReceiver(writer, nobj, objId);
@@ -3511,13 +3597,13 @@ SetPropIRGenerator::tryAttachSetDenseElement(HandleObject obj, ObjOperandId objI
 }
 
 static bool
-CanAttachAddElement(JSObject* obj, bool isInit)
+CanAttachAddElement(NativeObject* obj, bool isInit)
 {
     // Make sure the objects on the prototype don't have any indexed properties
     // or that such properties can't appear without a shape change.
     do {
         // The first two checks are also relevant to the receiver object.
-        if (obj->isNative() && obj->as<NativeObject>().isIndexed())
+        if (obj->isIndexed())
             return false;
 
         const Class* clasp = obj->getClass();
@@ -3542,10 +3628,25 @@ CanAttachAddElement(JSObject* obj, bool isInit)
         if (!proto->isNative())
             return false;
 
-        if (proto->as<NativeObject>().denseElementsAreFrozen())
+        // TypedArrayObjects [[Set]] has special behavior.
+        if (proto->is<TypedArrayObject>())
             return false;
 
-        obj = proto;
+        // We have to make sure the proto has no non-writable (frozen) elements
+        // because we're not allowed to shadow them. There are a few cases to
+        // consider:
+        //
+        // * If the proto is extensible, its Shape will change when it's made
+        //   non-extensible.
+        //
+        // * If the proto is already non-extensible, no new elements will be
+        //   added, so if there are no elements now it doesn't matter if the
+        //   object is frozen later on.
+        NativeObject* nproto = &proto->as<NativeObject>();
+        if (!nproto->isExtensible() && nproto->getDenseInitializedLength() > 0)
+            return false;
+
+        obj = nproto;
     } while (true);
 
     return true;
@@ -3566,7 +3667,7 @@ SetPropIRGenerator::tryAttachSetDenseElementHole(HandleObject obj, ObjOperandId 
         return false;
 
     NativeObject* nobj = &obj->as<NativeObject>();
-    if (!nobj->nonProxyIsExtensible())
+    if (!nobj->isExtensible())
         return false;
 
     MOZ_ASSERT(!nobj->getElementsHeader()->isFrozen(),
@@ -3637,9 +3738,8 @@ SetPropIRGenerator::tryAttachSetTypedElement(HandleObject obj, ObjOperandId objI
             return false;
 
         // Don't attach stubs if the underlying storage for typed objects
-        // in the compartment could be detached, as the stub will always
-        // bail out.
-        if (cx_->compartment()->detachedTypedObjects)
+        // in the zone could be detached, as the stub will always bail out.
+        if (cx_->zone()->detachedTypedObjects)
             return false;
     }
 
@@ -3932,8 +4032,6 @@ SetPropIRGenerator::tryAttachWindowProxy(HandleObject obj, ObjOperandId objId, H
 bool
 SetPropIRGenerator::tryAttachAddSlotStub(HandleObjectGroup oldGroup, HandleShape oldShape)
 {
-    AutoAssertNoPendingException aanpe(cx_);
-
     ValOperandId objValId(writer.setInputOperandId(0));
     ValOperandId rhsValId;
     if (cacheKind_ == CacheKind::SetProp) {
@@ -4289,9 +4387,12 @@ GetIteratorIRGenerator::tryAttachStub()
     RootedObject obj(cx_, &val_.toObject());
 
     ObjOperandId objId = writer.guardIsObject(valId);
-    if (tryAttachNativeIterator(objId, obj))
-        return true;
+    if (tryAttachNativeIterator(objId, obj)) {
+      trackAttached("GetIterator");
+      return true;
+    }
 
+    trackAttached(IRGenerator::NotAttached);
     return false;
 }
 
@@ -4320,11 +4421,21 @@ GetIteratorIRGenerator::tryAttachNativeIterator(ObjOperandId objId, HandleObject
     GeneratePrototypeHoleGuards(writer, obj, objId);
 
     ObjOperandId iterId =
-        writer.guardAndGetIterator(objId, iterobj, &cx_->compartment()->enumerators);
+        writer.guardAndGetIterator(objId, iterobj, &ObjectRealm::get(obj).enumerators);
     writer.loadObjectResult(iterId);
     writer.returnFromIC();
 
     return true;
+}
+
+void
+GetIteratorIRGenerator::trackAttached(const char* name)
+{
+#ifdef JS_CACHEIR_SPEW
+    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
+        sp.valueProperty("val", val_);
+    }
+#endif
 }
 
 CallIRGenerator::CallIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, JSOp op,
@@ -4354,11 +4465,10 @@ CallIRGenerator::tryAttachStringSplit()
         return false;
 
     // Get the object group to use for this location.
-    RootedObjectGroup group(cx_, ObjectGroupCompartment::getStringSplitStringGroup(cx_));
+    RootedObjectGroup group(cx_, ObjectGroupRealm::getStringSplitStringGroup(cx_));
     if (!group)
         return false;
 
-    AutoAssertNoPendingException aanpe(cx_);
     Int32OperandId argcId(writer.setInputOperandId(0));
 
     // Ensure argc == 1.
@@ -4416,7 +4526,7 @@ CallIRGenerator::tryAttachArrayPush()
         return false;
 
     // Check for other indexed properties or class hooks.
-    if (!CanAttachAddElement(thisobj, /* isInit = */ false))
+    if (!CanAttachAddElement(thisarray, /* isInit = */ false))
         return false;
 
     // Can't add new elements to arrays with non-writable length.
@@ -4424,7 +4534,7 @@ CallIRGenerator::tryAttachArrayPush()
         return false;
 
     // Check that array is extensible.
-    if (!thisarray->nonProxyIsExtensible())
+    if (!thisarray->isExtensible())
         return false;
 
     MOZ_ASSERT(!thisarray->getElementsHeader()->isFrozen(),
@@ -4434,7 +4544,6 @@ CallIRGenerator::tryAttachArrayPush()
     // After this point, we can generate code fine.
 
     // Generate code.
-    AutoAssertNoPendingException aanpe(cx_);
     Int32OperandId argcId(writer.setInputOperandId(0));
 
     // Ensure argc == 1.
@@ -4513,7 +4622,6 @@ CallIRGenerator::tryAttachArrayJoin()
     // hole check manually.
 
     // Generate code.
-    AutoAssertNoPendingException aanpe(cx_);
     Int32OperandId argcId(writer.setInputOperandId(0));
 
     // if 0 arguments:
@@ -4562,6 +4670,8 @@ CallIRGenerator::tryAttachArrayJoin()
 bool
 CallIRGenerator::tryAttachStub()
 {
+    AutoAssertNoPendingException aanpe(cx_);
+
     // Only optimize on JSOP_CALL or JSOP_CALL_IGNORES_RV.  No fancy business for now.
     if ((op_ != JSOP_CALL) && (op_ != JSOP_CALL_IGNORES_RV))
         return false;
@@ -4624,8 +4734,8 @@ jit::NewWrapperWithObjectShape(JSContext* cx, HandleNativeObject obj)
 
     RootedObject wrapper(cx);
     {
-        AutoCompartment ac(cx, obj);
-        wrapper = NewObjectWithClassProto(cx, &shapeContainerClass, nullptr);
+        AutoRealm ar(cx, obj);
+        wrapper = NewBuiltinClassInstance(cx, &shapeContainerClass);
         if (!obj)
             return nullptr;
         wrapper->as<NativeObject>().setSlot(SHAPE_CONTAINER_SLOT, PrivateGCThingValue(obj->lastProperty()));
@@ -4731,6 +4841,174 @@ CompareIRGenerator::tryAttachStrictDifferentTypes(ValOperandId lhsId, ValOperand
 }
 
 bool
+CompareIRGenerator::tryAttachInt32(ValOperandId lhsId, ValOperandId rhsId)
+{
+    if ((!lhsVal_.isInt32() && !lhsVal_.isBoolean()) ||
+        (!rhsVal_.isInt32() && !rhsVal_.isBoolean()))
+    {
+        return false;
+    }
+
+    Int32OperandId lhsIntId = lhsVal_.isBoolean() ? writer.guardIsBoolean(lhsId)
+                                                  : writer.guardIsInt32(lhsId);
+    Int32OperandId rhsIntId = rhsVal_.isBoolean() ? writer.guardIsBoolean(rhsId)
+                                                  : writer.guardIsInt32(rhsId);
+
+    // Strictly different types should have been handed by
+    // tryAttachStrictDifferentTypes
+    MOZ_ASSERT_IF(op_ == JSOP_STRICTEQ || op_ == JSOP_STRICTNE,
+                  lhsVal_.isInt32() == rhsVal_.isInt32());
+
+    writer.compareInt32Result(op_, lhsIntId, rhsIntId);
+    writer.returnFromIC();
+
+    trackAttached(lhsVal_.isBoolean() ? "Boolean" : "Int32");
+    return true;
+}
+
+bool
+CompareIRGenerator::tryAttachNumber(ValOperandId lhsId, ValOperandId rhsId)
+{
+    if (!cx_->runtime()->jitSupportsFloatingPoint)
+        return false;
+
+    if (!lhsVal_.isNumber() || !rhsVal_.isNumber())
+        return false;
+
+    writer.guardIsNumber(lhsId);
+    writer.guardIsNumber(rhsId);
+    writer.compareDoubleResult(op_, lhsId, rhsId);
+    writer.returnFromIC();
+
+    trackAttached("Number");
+    return true;
+}
+
+bool
+CompareIRGenerator::tryAttachObjectUndefined(ValOperandId lhsId, ValOperandId rhsId)
+{
+    if (!(lhsVal_.isNullOrUndefined() && rhsVal_.isObject()) &&
+        !(rhsVal_.isNullOrUndefined() && lhsVal_.isObject()))
+        return false;
+
+    if (op_ != JSOP_EQ && op_ != JSOP_NE)
+        return false;
+
+    ValOperandId obj = rhsVal_.isObject() ? rhsId : lhsId;
+    ValOperandId undefOrNull = rhsVal_.isObject() ? lhsId : rhsId;
+
+    writer.guardIsNullOrUndefined(undefOrNull);
+    ObjOperandId objOperand = writer.guardIsObject(obj);
+    writer.compareObjectUndefinedNullResult(op_, objOperand);
+    writer.returnFromIC();
+
+    trackAttached("ObjectUndefined");
+    return true;
+}
+
+// Handle NumberUndefined comparisons
+bool
+CompareIRGenerator::tryAttachNumberUndefined(ValOperandId lhsId, ValOperandId rhsId)
+{
+    if (!(lhsVal_.isUndefined() && rhsVal_.isNumber()) &&
+        !(rhsVal_.isUndefined() && lhsVal_.isNumber()))
+    {
+        return false;
+    }
+
+    lhsVal_.isNumber() ? writer.guardIsNumber(lhsId) : writer.guardIsUndefined(lhsId);
+    rhsVal_.isNumber() ? writer.guardIsNumber(rhsId) : writer.guardIsUndefined(rhsId);
+
+    // Comparing a number with undefined will always be true for NE/STRICTNE,
+    // and always be false for other compare ops.
+    writer.loadBooleanResult(op_ == JSOP_NE || op_ == JSOP_STRICTNE);
+    writer.returnFromIC();
+
+    trackAttached("NumberUndefined");
+    return true;
+}
+
+// Handle Primitive x {undefined,null} equality comparisons
+bool
+CompareIRGenerator::tryAttachPrimitiveUndefined(ValOperandId lhsId, ValOperandId rhsId)
+{
+    MOZ_ASSERT(IsEqualityOp(op_));
+
+    // The set of primitive cases we want to handle here (excluding null, undefined)
+    auto isPrimitive = [](HandleValue& x) {
+        return x.isString() || x.isSymbol() || x.isBoolean() || x.isNumber();
+    };
+
+    if (!(lhsVal_.isNullOrUndefined() && isPrimitive(rhsVal_)) &&
+        !(rhsVal_.isNullOrUndefined() && isPrimitive(lhsVal_)))
+    {
+        return false;
+    }
+
+    auto guardPrimitive = [&](HandleValue v, ValOperandId id) {
+        if (v.isNumber()) {
+            writer.guardIsNumber(id);
+            return;
+        }
+        switch (v.extractNonDoubleType()) {
+          case JSVAL_TYPE_BOOLEAN:
+            writer.guardIsBoolean(id);
+            return;
+          case JSVAL_TYPE_SYMBOL:
+            writer.guardIsSymbol(id);
+            return;
+          case JSVAL_TYPE_STRING:
+            writer.guardIsString(id);
+            return;
+          default:
+            MOZ_CRASH("unexpected type");
+            return;
+        }
+    };
+
+    isPrimitive(lhsVal_) ? guardPrimitive(lhsVal_, lhsId)
+                         : writer.guardIsNullOrUndefined(lhsId);
+    isPrimitive(rhsVal_) ? guardPrimitive(rhsVal_, rhsId)
+                         : writer.guardIsNullOrUndefined(rhsId);
+
+    // Comparing a primitive with undefined/null will always be true for NE/STRICTNE,
+    // and always be false for other compare ops.
+    writer.loadBooleanResult(op_ == JSOP_NE || op_ == JSOP_STRICTNE);
+    writer.returnFromIC();
+
+    trackAttached("PrimitiveUndefined");
+    return true;
+}
+
+// Handle {null/undefined} x {null,undefined} equality comparisons
+bool
+CompareIRGenerator::tryAttachNullUndefined(ValOperandId lhsId, ValOperandId rhsId)
+{
+    if (!lhsVal_.isNullOrUndefined() || !rhsVal_.isNullOrUndefined())
+        return false;
+
+    if (op_ == JSOP_EQ || op_ == JSOP_NE) {
+        writer.guardIsNullOrUndefined(lhsId);
+        writer.guardIsNullOrUndefined(rhsId);
+        // Sloppy equality means we actually only care about the op:
+        writer.loadBooleanResult(op_ == JSOP_EQ);
+        trackAttached("SloppyNullUndefined");
+    } else {
+        // Strict equality only hits this branch, and only in the
+        // undef {!,=}==  undef and null {!,=}== null cases.
+        // The other cases should have hit compareStrictlyDifferentTypes.
+        MOZ_ASSERT(lhsVal_.isNull() == rhsVal_.isNull());
+        lhsVal_.isNull() ? writer.guardIsNull(lhsId) : writer.guardIsUndefined(lhsId);
+        rhsVal_.isNull() ? writer.guardIsNull(rhsId) : writer.guardIsUndefined(rhsId);
+        writer.loadBooleanResult(op_ == JSOP_STRICTEQ);
+        trackAttached("StrictNullUndefinedEquality");
+    }
+
+    writer.returnFromIC();
+    return true;
+}
+
+bool
 CompareIRGenerator::tryAttachStub()
 {
     MOZ_ASSERT(cacheKind_ == CacheKind::Compare);
@@ -4740,9 +5018,21 @@ CompareIRGenerator::tryAttachStub()
 
     AutoAssertNoPendingException aanpe(cx_);
 
-    ValOperandId lhsId(writer.setInputOperandId(0));
-    ValOperandId rhsId(writer.setInputOperandId(1));
+    constexpr uint8_t lhsIndex = 0;
+    constexpr uint8_t rhsIndex = 1;
 
+    static_assert(lhsIndex == 0 && rhsIndex == 1,
+        "Indexes relied upon by baseline inspector");
+
+    ValOperandId lhsId(writer.setInputOperandId(lhsIndex));
+    ValOperandId rhsId(writer.setInputOperandId(rhsIndex));
+
+    // For sloppy equality ops, there are cases this IC does not handle:
+    // - {Symbol} x {Null, Undefined, String, Bool, Number}.
+    // - {String} x {Null, Undefined, Symbol, Bool, Number}. Bug 1467907 will add support
+    //   for {String} x {Int32}.
+    // - {Bool} x {Double}.
+    // - {Object} x {String, Symbol, Bool, Number}.
     if (IsEqualityOp(op_)) {
         if (tryAttachString(lhsId, rhsId))
             return true;
@@ -4750,12 +5040,38 @@ CompareIRGenerator::tryAttachStub()
             return true;
         if (tryAttachSymbol(lhsId, rhsId))
             return true;
+
+        // Handle the special case of Object compared to null/undefined.
+        // This is special due to the IsHTMLDDA internal slot semantic,
+        if (tryAttachObjectUndefined(lhsId, rhsId))
+            return true;
+
+        // This covers -strict- equality/inequality using a type tag check, so catches all
+        // different type pairs outside of Numbers, which cannot be checked on tags alone.
         if (tryAttachStrictDifferentTypes(lhsId, rhsId))
             return true;
 
-        trackAttached(IRGenerator::NotAttached);
-        return false;
+        // These checks should come after tryAttachStrictDifferentTypes since it handles
+        // strict inequality with a more generic IC.
+        if (tryAttachPrimitiveUndefined(lhsId, rhsId))
+            return true;
+
+        if (tryAttachNullUndefined(lhsId, rhsId))
+            return true;
     }
+
+    // This should preceed the Int32/Number cases to allow
+    // them to not concern themselves with handling undefined
+    // or null.
+    if (tryAttachNumberUndefined(lhsId, rhsId))
+        return true;
+
+    // We want these to be last, to allow us to bypass the
+    // strictly-different-types cases in the below attachment code
+    if (tryAttachInt32(lhsId, rhsId))
+        return true;
+    if (tryAttachNumber(lhsId, rhsId))
+        return true;
 
     trackAttached(IRGenerator::NotAttached);
     return false;
@@ -4768,6 +5084,7 @@ CompareIRGenerator::trackAttached(const char* name)
     if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
         sp.valueProperty("lhs", lhsVal_);
         sp.valueProperty("rhs", rhsVal_);
+        sp.opcodeProperty("op", op_);
     }
 #endif
 }
@@ -4913,11 +5230,13 @@ GetIntrinsicIRGenerator::trackAttached(const char* name)
 bool
 GetIntrinsicIRGenerator::tryAttachStub()
 {
+    AutoAssertNoPendingException aanpe(cx_);
     writer.loadValueResult(val_);
     writer.returnFromIC();
     trackAttached("GetIntrinsic");
     return true;
 }
+
 UnaryArithIRGenerator::UnaryArithIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, ICState::Mode mode,
                                              JSOp op, HandleValue val, HandleValue res)
   : IRGenerator(cx, script, pc, CacheKind::UnaryArith, mode),
@@ -4932,6 +5251,7 @@ UnaryArithIRGenerator::trackAttached(const char* name)
 #ifdef JS_CACHEIR_SPEW
     if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
         sp.valueProperty("val", val_);
+        sp.valueProperty("res", res_);
     }
 #endif
 }
@@ -4939,6 +5259,7 @@ UnaryArithIRGenerator::trackAttached(const char* name)
 bool
 UnaryArithIRGenerator::tryAttachStub()
 {
+    AutoAssertNoPendingException aanpe(cx_);
     if (tryAttachInt32())
         return true;
     if (tryAttachNumber())
@@ -4981,7 +5302,7 @@ UnaryArithIRGenerator::tryAttachNumber()
         return false;
 
     ValOperandId valId(writer.setInputOperandId(0));
-    writer.guardType(valId, JSVAL_TYPE_DOUBLE);
+    writer.guardIsNumber(valId);
     Int32OperandId truncatedId;
     switch (op_) {
       case JSOP_BITNOT:
@@ -4998,5 +5319,407 @@ UnaryArithIRGenerator::tryAttachNumber()
     }
 
     writer.returnFromIC();
+    return true;
+}
+
+BinaryArithIRGenerator::BinaryArithIRGenerator(JSContext* cx, HandleScript script, jsbytecode* pc, ICState::Mode mode,
+                                               JSOp op, HandleValue lhs, HandleValue rhs, HandleValue res)
+  : IRGenerator(cx, script, pc, CacheKind::BinaryArith, mode),
+    op_(op),
+    lhs_(lhs),
+    rhs_(rhs),
+    res_(res)
+{ }
+
+void
+BinaryArithIRGenerator::trackAttached(const char* name)
+{
+#ifdef JS_CACHEIR_SPEW
+    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
+        sp.opcodeProperty("op", op_);
+        sp.valueProperty("rhs", rhs_);
+        sp.valueProperty("lhs", lhs_);
+    }
+#endif
+}
+
+bool
+BinaryArithIRGenerator::tryAttachStub()
+{
+    AutoAssertNoPendingException aanpe(cx_);
+    // Attempt common case first
+    if (tryAttachInt32())
+        return true;
+    if (tryAttachBooleanWithInt32())
+        return true;
+    if (tryAttachDoubleWithInt32())
+        return true;
+
+    // This attempt must come after tryAttachDoubleWithInt32
+    // and tryAttachInt32, as it will attach for those cases
+    if (tryAttachDouble())
+        return true;
+
+
+    if (tryAttachStringConcat())
+        return true;
+    if (tryAttachStringObjectConcat())
+        return true;
+
+
+    trackAttached(IRGenerator::NotAttached);
+    return false;
+}
+
+bool
+BinaryArithIRGenerator::tryAttachDoubleWithInt32()
+{
+    // ONLY bit-wise
+    if (op_ != JSOP_BITOR && op_ != JSOP_BITXOR && op_ != JSOP_BITAND)
+        return false;
+
+    // Check guard conditions
+    if ((!(lhs_.isInt32()  && rhs_.isDouble()) &&
+         !(lhs_.isDouble() && rhs_.isInt32())))
+        return false;
+
+    // output always int
+    MOZ_ASSERT(res_.isInt32());
+
+    ValOperandId lhsId(writer.setInputOperandId(0));
+    ValOperandId rhsId(writer.setInputOperandId(1));
+
+
+    // Operations below commute, so we don't care about ordering.
+    Int32OperandId IntId = writer.guardIsInt32(lhs_.isInt32() ? lhsId : rhsId);
+    writer.guardType(lhs_.isDouble() ? lhsId : rhsId, JSVAL_TYPE_DOUBLE);
+    Int32OperandId truncatedId = writer.truncateDoubleToUInt32(lhs_.isDouble() ? lhsId : rhsId);
+    switch (op_) {
+      case JSOP_BITOR:
+        writer.int32BitOrResult(IntId, truncatedId);
+        trackAttached("BinaryArith.Int32Double.BitOr");
+        break;
+      case JSOP_BITXOR:
+        writer.int32BitXOrResult(IntId, truncatedId);
+        trackAttached("BinaryArith.Int32Double.BitXOr");
+        break;
+      case JSOP_BITAND:
+        writer.int32BitAndResult(IntId, truncatedId);
+        trackAttached("BinaryArith.Int32Double.BitAnd");
+        break;
+      default:
+        MOZ_CRASH("Unhandled op in tryAttachDoubleWithInt32");
+    }
+
+    writer.returnFromIC();
+    return true;
+}
+
+bool
+BinaryArithIRGenerator::tryAttachDouble()
+{
+    // Check valid opcodes
+    if (op_ != JSOP_ADD && op_ != JSOP_SUB &&
+        op_ != JSOP_MUL && op_ != JSOP_DIV &&
+        op_ != JSOP_MOD)
+        return false;
+
+    // Check guard conditions
+    if (!lhs_.isNumber() || !rhs_.isNumber())
+        return false;
+
+    if (!cx_->runtime()->jitSupportsFloatingPoint)
+        return false;
+
+    ValOperandId lhsId(writer.setInputOperandId(0));
+    ValOperandId rhsId(writer.setInputOperandId(1));
+
+    writer.guardIsNumber(lhsId);
+    writer.guardIsNumber(rhsId);
+
+    switch (op_) {
+       case JSOP_ADD:
+        writer.doubleAddResult(lhsId, rhsId);
+        trackAttached("BinaryArith.Double.Add");
+        break;
+      case JSOP_SUB:
+        writer.doubleSubResult(lhsId, rhsId);
+        trackAttached("BinaryArith.Double.Sub");
+        break;
+      case JSOP_MUL:
+        writer.doubleMulResult(lhsId, rhsId);
+        trackAttached("BinaryArith.Double.Mul");
+        break;
+      case JSOP_DIV:
+        writer.doubleDivResult(lhsId, rhsId);
+        trackAttached("BinaryArith.Double.Div");
+        break;
+      case JSOP_MOD:
+        writer.doubleModResult(lhsId, rhsId);
+        trackAttached("BinaryArith.Double.Mod");
+        break;
+      default:
+        MOZ_CRASH("Unhandled Op");
+    }
+    writer.returnFromIC();
+    return true;
+}
+
+bool
+BinaryArithIRGenerator::tryAttachInt32()
+{
+    // Check guard conditions
+    if (!lhs_.isInt32() || !rhs_.isInt32())
+        return false;
+
+    // These ICs will failure() if result can't be encoded in an Int32:
+    // If sample result is not Int32, we should avoid IC.
+    if (!res_.isInt32())
+        return false;
+
+    // Unsupported OP
+    if (op_ == JSOP_POW)
+        return false;
+
+    ValOperandId lhsId(writer.setInputOperandId(0));
+    ValOperandId rhsId(writer.setInputOperandId(1));
+
+    Int32OperandId lhsIntId = writer.guardIsInt32(lhsId);
+    Int32OperandId rhsIntId = writer.guardIsInt32(rhsId);
+
+    switch (op_) {
+      case JSOP_ADD:
+        writer.int32AddResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.Add");
+        break;
+      case JSOP_SUB:
+        writer.int32SubResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.Sub");
+        break;
+      case JSOP_MUL:
+        writer.int32MulResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.Mul");
+        break;
+      case JSOP_DIV:
+        writer.int32DivResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.Div");
+        break;
+      case JSOP_MOD:
+        writer.int32ModResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.Mod");
+        break;
+      case JSOP_BITOR:
+        writer.int32BitOrResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.BitOr");
+        break;
+      case JSOP_BITXOR:
+        writer.int32BitXOrResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.BitXOr");
+        break;
+      case JSOP_BITAND:
+        writer.int32BitAndResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.BitAnd");
+        break;
+      case JSOP_LSH:
+        writer.int32LeftShiftResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.LeftShift");
+        break;
+      case JSOP_RSH:
+        writer.int32RightShiftResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.Int32.RightShift");
+        break;
+      case JSOP_URSH:
+        writer.int32URightShiftResult(lhsIntId, rhsIntId, res_.isDouble());
+        trackAttached("BinaryArith.Int32.UnsignedRightShift");
+        break;
+      default:
+        MOZ_CRASH("Unhandled op in tryAttachInt32");
+    }
+
+    writer.returnFromIC();
+    return true;
+}
+
+bool
+BinaryArithIRGenerator::tryAttachStringConcat()
+{
+    // Only Addition
+    if (op_ != JSOP_ADD)
+        return false;
+
+    // Check guards
+    if (!lhs_.isString() || !rhs_.isString())
+        return false;
+
+    ValOperandId lhsId(writer.setInputOperandId(0));
+    ValOperandId rhsId(writer.setInputOperandId(1));
+
+    StringOperandId lhsStrId = writer.guardIsString(lhsId);
+    StringOperandId rhsStrId = writer.guardIsString(rhsId);
+
+    writer.callStringConcatResult(lhsStrId, rhsStrId);
+
+    writer.returnFromIC();
+    trackAttached("BinaryArith.StringConcat");
+    return true;
+}
+
+bool
+BinaryArithIRGenerator::tryAttachStringObjectConcat()
+{
+    // Only Addition
+    if (op_ != JSOP_ADD)
+        return false;
+
+    // Check Guards
+    if (!(lhs_.isObject() && rhs_.isString()) &&
+        !(lhs_.isString() && rhs_.isObject()))
+        return false;
+
+    ValOperandId lhsId(writer.setInputOperandId(0));
+    ValOperandId rhsId(writer.setInputOperandId(1));
+
+    // This guard is actually overly tight, as the runtime
+    // helper can handle lhs or rhs being a string, so long
+    // as the other is an object.
+    if (lhs_.isString()) {
+        writer.guardIsString(lhsId);
+        writer.guardIsObject(rhsId);
+    } else {
+        writer.guardIsObject(lhsId);
+        writer.guardIsString(rhsId);
+    }
+
+    writer.callStringObjectConcatResult(lhsId, rhsId);
+
+    writer.returnFromIC();
+    trackAttached("BinaryArith.StringObjectConcat");
+    return true;
+}
+
+bool
+BinaryArithIRGenerator::tryAttachBooleanWithInt32()
+{
+    // Check operation
+    if (op_ != JSOP_ADD && op_ != JSOP_SUB &&
+        op_ != JSOP_BITOR && op_ != JSOP_BITAND &&
+        op_ != JSOP_BITXOR && op_ != JSOP_MUL && op_ != JSOP_DIV)
+        return false;
+
+    // Check guards
+    if (!(lhs_.isBoolean() && (rhs_.isBoolean() || rhs_.isInt32())) &&
+        !(rhs_.isBoolean() && (lhs_.isBoolean() || lhs_.isInt32())))
+        return false;
+
+
+    ValOperandId lhsId(writer.setInputOperandId(0));
+    ValOperandId rhsId(writer.setInputOperandId(1));
+
+    Int32OperandId lhsIntId = (lhs_.isBoolean() ? writer.guardIsBoolean(lhsId)
+                                                : writer.guardIsInt32(lhsId));
+    Int32OperandId rhsIntId = (rhs_.isBoolean() ? writer.guardIsBoolean(rhsId)
+                                                : writer.guardIsInt32(rhsId));
+
+    switch (op_) {
+      case JSOP_ADD:
+        writer.int32AddResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.BooleanInt32.Add");
+        break;
+      case JSOP_SUB:
+        writer.int32SubResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.BooleanInt32.Sub");
+        break;
+      case JSOP_MUL:
+        writer.int32MulResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.BooleanInt32.Mul");
+        break;
+      case JSOP_DIV:
+        writer.int32DivResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.BooleanInt32.Div");
+        break;
+      case JSOP_BITOR:
+        writer.int32BitOrResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.BooleanInt32.BitOr");
+        break;
+      case JSOP_BITXOR:
+        writer.int32BitXOrResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.BooleanInt32.BitXOr");
+        break;
+      case JSOP_BITAND:
+        writer.int32BitAndResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.BooleanInt32.BitAnd");
+        break;
+      case JSOP_LSH:
+        writer.int32LeftShiftResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.BooleanInt32.LeftShift");
+        break;
+      case JSOP_RSH:
+        writer.int32RightShiftResult(lhsIntId, rhsIntId);
+        trackAttached("BinaryArith.BooleanInt32.RightShift");
+        break;
+      case JSOP_URSH:
+        writer.int32URightShiftResult(lhsIntId, rhsIntId, res_.isDouble());
+        trackAttached("BinaryArith.BooleanInt32.UnsignedRightShift");
+        break;
+      default:
+        MOZ_CRASH("Unhandled op in tryAttachInt32");
+    }
+
+    writer.returnFromIC();
+    return true;
+}
+
+NewObjectIRGenerator::NewObjectIRGenerator(JSContext* cx, HandleScript script,
+                                           jsbytecode* pc, ICState::Mode mode, JSOp op,
+                                           HandleObject templateObj)
+  : IRGenerator(cx, script, pc, CacheKind::NewObject, mode),
+#ifdef JS_CACHEIR_SPEW
+    op_(op),
+#endif
+    templateObject_(templateObj)
+{
+    MOZ_ASSERT(templateObject_);
+}
+
+void
+NewObjectIRGenerator::trackAttached(const char* name)
+{
+#ifdef JS_CACHEIR_SPEW
+    if (const CacheIRSpewer::Guard& sp = CacheIRSpewer::Guard(*this, name)) {
+        sp.opcodeProperty("op", op_);
+    }
+#endif
+}
+
+bool
+NewObjectIRGenerator::tryAttachStub()
+{
+    AutoAssertNoPendingException aanpe(cx_);
+    if (!templateObject_->is<UnboxedPlainObject>() &&
+        templateObject_->as<PlainObject>().hasDynamicSlots())
+    {
+        trackAttached(IRGenerator::NotAttached);
+        return false;
+    }
+
+    // Don't attach stub if group is pretenured, as the stub
+    // won't succeed.
+    AutoSweepObjectGroup sweep(templateObject_->group());
+    if (templateObject_->group()->shouldPreTenure(sweep)) {
+        trackAttached(IRGenerator::NotAttached);
+        return false;
+    }
+    // Stub doesn't support metadata builder
+    if (cx_->realm()->hasAllocationMetadataBuilder()) {
+        trackAttached(IRGenerator::NotAttached);
+        return false;
+    }
+
+    writer.guardNoAllocationMetadataBuilder();
+    writer.guardObjectGroupNotPretenured(templateObject_->group());
+    writer.loadNewObjectFromTemplateResult(templateObject_);
+    writer.returnFromIC();
+
+    trackAttached("NewObjectWithTemplate");
     return true;
 }

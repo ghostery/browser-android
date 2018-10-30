@@ -545,22 +545,22 @@ add_task(async function test_dynamicScalars_registration() {
       "data": {
         "missing_kind": {
           keyed: false,
-          record_on_release: true
+          record_on_release: true,
         },
       },
       "evaluation": /missing 'kind'/,
-      "description": "Registration must fail if required fields are missing"
+      "description": "Registration must fail if required fields are missing",
     },
     {
       "category": "telemetry.test",
       "data": {
         "invalid_collection": {
           kind: Ci.nsITelemetry.SCALAR_TYPE_COUNT,
-          record_on_release: "opt-in"
+          record_on_release: "opt-in",
         },
       },
       "evaluation": /Invalid 'record_on_release'/,
-      "description": "Registration must fail if 'record_on_release' is of the wrong type"
+      "description": "Registration must fail if 'record_on_release' is of the wrong type",
     },
     {
       "category": "telemetry.test",
@@ -570,7 +570,7 @@ add_task(async function test_dynamicScalars_registration() {
         },
       },
       "evaluation": /Invalid or missing 'kind'/,
-      "description": "Registration must fail if 'kind' is of the wrong type"
+      "description": "Registration must fail if 'kind' is of the wrong type",
     },
     {
       "category": "telemetry.test",
@@ -581,7 +581,7 @@ add_task(async function test_dynamicScalars_registration() {
         },
       },
       "evaluation": /Invalid 'expired'/,
-      "description": "Registration must fail if 'expired' is of the wrong type"
+      "description": "Registration must fail if 'expired' is of the wrong type",
     },
     {
       "category": "telemetry.test",
@@ -589,14 +589,14 @@ add_task(async function test_dynamicScalars_registration() {
         "valid_scalar": {
           kind: Ci.nsITelemetry.SCALAR_TYPE_COUNT,
           keyed: false,
-          record_on_release: true
+          record_on_release: true,
         },
         "invalid_scalar": {
           expired: false,
         },
       },
       "evaluation": /Invalid or missing 'kind'/,
-      "description": "No scalar must be registered if the batch contains an invalid one"
+      "description": "No scalar must be registered if the batch contains an invalid one",
     },
   ];
 
@@ -613,7 +613,7 @@ add_task(async function test_dynamicScalars_doubleRegistration() {
   Telemetry.registerScalars("telemetry.test.dynamic", {
     "double_registration_1": {
       kind: Ci.nsITelemetry.SCALAR_TYPE_COUNT,
-      record_on_release: true
+      record_on_release: true,
     },
   });
 
@@ -625,11 +625,11 @@ add_task(async function test_dynamicScalars_doubleRegistration() {
   Telemetry.registerScalars("telemetry.test.dynamic", {
     "double_registration_1": {
       kind: Ci.nsITelemetry.SCALAR_TYPE_COUNT,
-      record_on_release: true
+      record_on_release: true,
     },
     "double_registration_2": {
       kind: Ci.nsITelemetry.SCALAR_TYPE_COUNT,
-      record_on_release: true
+      record_on_release: true,
     },
   });
 
@@ -652,7 +652,7 @@ add_task(async function test_dynamicScalars_doubleRegistration() {
     "double_registration_2": {
       kind: Ci.nsITelemetry.SCALAR_TYPE_COUNT,
       record_on_release: true,
-      expired: true
+      expired: true,
     },
   });
 
@@ -674,21 +674,21 @@ add_task(async function test_dynamicScalars_recording() {
   Telemetry.registerScalars("telemetry.test.dynamic", {
     "record_optout": {
       kind: Ci.nsITelemetry.SCALAR_TYPE_COUNT,
-      record_on_release: true
+      record_on_release: true,
     },
     "record_keyed": {
       kind: Ci.nsITelemetry.SCALAR_TYPE_COUNT,
       keyed: true,
-      record_on_release: true
+      record_on_release: true,
     },
     "record_optin": {
       kind: Ci.nsITelemetry.SCALAR_TYPE_BOOLEAN,
-      record_on_release: false
+      record_on_release: false,
     },
     "record_expired": {
       kind: Ci.nsITelemetry.SCALAR_TYPE_STRING,
       expired: true,
-      record_on_release: true
+      record_on_release: true,
     },
   });
 
@@ -734,4 +734,135 @@ add_task(async function test_dynamicScalars_recording() {
             "Dynamic opt-in scalars must be recorded.");
   Assert.equal(scalars["telemetry.test.dynamic.record_optin"], true,
                "The recorded scalar must contain the right value.");
+});
+
+add_task({
+  skip_if: () => gIsAndroid,
+},
+async function test_productSpecificScalar() {
+  const DEFAULT_PRODUCT_SCALAR = "telemetry.test.default_products";
+  const DESKTOP_ONLY_SCALAR = "telemetry.test.desktop_only";
+  const MULTIPRODUCT_SCALAR = "telemetry.test.multiproduct";
+  const MOBILE_ONLY_SCALAR = "telemetry.test.mobile_only";
+  const MOBILE_ONLY_KEYED_SCALAR = "telemetry.test.keyed_mobile_only";
+
+  Telemetry.clearScalars();
+
+  // Try to set the desktop scalars
+  let expectedValue = 11714;
+  Telemetry.scalarAdd(DEFAULT_PRODUCT_SCALAR, expectedValue);
+  Telemetry.scalarAdd(DESKTOP_ONLY_SCALAR, expectedValue);
+  Telemetry.scalarAdd(MULTIPRODUCT_SCALAR, expectedValue);
+
+  // Try to set the mobile-only scalar to some value. We will not be recording the value,
+  // but we shouldn't throw.
+  let expectedKey = "some_key";
+  Telemetry.scalarSet(MOBILE_ONLY_SCALAR, 11715);
+  Telemetry.scalarSetMaximum(MOBILE_ONLY_SCALAR, 11715);
+  Telemetry.keyedScalarAdd(MOBILE_ONLY_KEYED_SCALAR, expectedKey, 11715);
+  Telemetry.keyedScalarSet(MOBILE_ONLY_KEYED_SCALAR, expectedKey, 11715);
+  Telemetry.keyedScalarSetMaximum(MOBILE_ONLY_KEYED_SCALAR, expectedKey, 11715);
+
+  // Get a snapshot of the scalars.
+  const scalars =
+    getParentProcessScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN);
+  const keyedScalars =
+    getParentProcessScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN, true);
+
+  Assert.equal(scalars[DEFAULT_PRODUCT_SCALAR], expectedValue, "The default platfomrs scalar must contain the right value");
+  Assert.equal(scalars[DESKTOP_ONLY_SCALAR], expectedValue, "The desktop-only scalar must contain the right value");
+  Assert.equal(scalars[MULTIPRODUCT_SCALAR], expectedValue, "The multiproduct scalar must contain the right value");
+
+  Assert.ok(!(MOBILE_ONLY_SCALAR in scalars), "The mobile-only scalar must not be persisted.");
+  Assert.ok(!(MOBILE_ONLY_KEYED_SCALAR in keyedScalars),
+            "The mobile-only keyed scalar must not be persisted.");
+});
+
+add_task({
+  skip_if: () => !gIsAndroid,
+},
+async function test_mobileSpecificScalar() {
+  const DEFAULT_PRODUCT_SCALAR = "telemetry.test.default_products";
+  const DESKTOP_ONLY_SCALAR = "telemetry.test.desktop_only";
+  const DESKTOP_ONLY_KEYED_SCALAR = "telemetry.test.keyed_desktop_only";
+  const MULTIPRODUCT_SCALAR = "telemetry.test.multiproduct";
+  const MOBILE_ONLY_SCALAR = "telemetry.test.mobile_only";
+  const MOBILE_ONLY_KEYED_SCALAR = "telemetry.test.keyed_mobile_only";
+
+  Telemetry.clearScalars();
+
+  // Try to set the mobile and multiproduct scalars
+  let expectedValue = 11714;
+  let expectedKey = "some_key";
+  Telemetry.scalarAdd(DEFAULT_PRODUCT_SCALAR, expectedValue);
+  Telemetry.scalarAdd(MOBILE_ONLY_SCALAR, expectedValue);
+  Telemetry.keyedScalarSet(MOBILE_ONLY_KEYED_SCALAR, expectedKey, expectedValue);
+  Telemetry.scalarAdd(MULTIPRODUCT_SCALAR, expectedValue);
+
+  // Try to set the desktop-only scalar to some value. We will not be recording the value,
+  // but we shouldn't throw.
+  Telemetry.scalarSet(DESKTOP_ONLY_SCALAR, 11715);
+  Telemetry.scalarSetMaximum(DESKTOP_ONLY_SCALAR, 11715);
+  Telemetry.keyedScalarAdd(DESKTOP_ONLY_KEYED_SCALAR, expectedKey, 11715);
+  Telemetry.keyedScalarSet(DESKTOP_ONLY_KEYED_SCALAR, expectedKey, 11715);
+  Telemetry.keyedScalarSetMaximum(DESKTOP_ONLY_KEYED_SCALAR, expectedKey, 11715);
+
+  // Get a snapshot of the scalars.
+  const scalars =
+    getParentProcessScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN);
+  const keyedScalars =
+    getParentProcessScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN, true);
+
+  Assert.equal(scalars[DEFAULT_PRODUCT_SCALAR], expectedValue, "The default products scalar must contain the right value");
+  Assert.equal(scalars[MOBILE_ONLY_SCALAR], expectedValue, "The mobile-only scalar must contain the right value");
+  Assert.equal(keyedScalars[MOBILE_ONLY_KEYED_SCALAR][expectedKey], expectedValue, "The mobile-only keyed scalar must contain the right value");
+  Assert.equal(scalars[MULTIPRODUCT_SCALAR], expectedValue, "The multiproduct scalar must contain the right value");
+
+  Assert.ok(!(DESKTOP_ONLY_SCALAR in scalars), "The desktop-only scalar must not be persisted.");
+  Assert.ok(!(DESKTOP_ONLY_KEYED_SCALAR in keyedScalars),
+            "The desktop-only keyed scalar must not be persisted.");
+});
+
+add_task({
+  skip_if: () => !gIsAndroid,
+},
+async function test_geckoviewSpecificScalar() {
+  const DEFAULT_PRODUCT_SCALAR = "telemetry.test.default_products";
+  const DESKTOP_ONLY_SCALAR = "telemetry.test.desktop_only";
+  const MULTIPRODUCT_SCALAR = "telemetry.test.multiproduct";
+  const MOBILE_ONLY_SCALAR = "telemetry.test.mobile_only";
+  const GECKOVIEW_ONLY_SCALAR = "telemetry.test.geckoview_only";
+
+  Telemetry.clearScalars();
+
+  // Fake a geckoview-like environment
+  Services.prefs.setBoolPref("toolkit.telemetry.isGeckoViewMode", true);
+  Telemetry.resetCurrentProduct();
+
+  // Try to set the mobile and multiproduct scalars
+  let expectedValue = 11714;
+  Telemetry.scalarAdd(GECKOVIEW_ONLY_SCALAR, expectedValue);
+  Telemetry.scalarAdd(MOBILE_ONLY_SCALAR, expectedValue);
+  Telemetry.scalarAdd(MULTIPRODUCT_SCALAR, expectedValue);
+  Telemetry.scalarSet(DEFAULT_PRODUCT_SCALAR, expectedValue);
+
+  // Try to set the desktop-only scalar to some value. We will not be recording the value,
+  // but we shouldn't throw.
+  Telemetry.scalarSet(DESKTOP_ONLY_SCALAR, 11715);
+  Telemetry.scalarSetMaximum(DESKTOP_ONLY_SCALAR, 11715);
+
+  // Get a snapshot of the scalars.
+  const scalars =
+    getParentProcessScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN);
+
+  Assert.equal(scalars[GECKOVIEW_ONLY_SCALAR], expectedValue, "The geckoview-only scalar must contain the right value");
+  Assert.equal(scalars[MOBILE_ONLY_SCALAR], expectedValue, "The mobile-only scalar must contain the right value");
+  Assert.equal(scalars[MULTIPRODUCT_SCALAR], expectedValue, "The multiproduct scalar must contain the right value");
+  Assert.equal(scalars[DEFAULT_PRODUCT_SCALAR], expectedValue, "The default products scalar must contain the right value");
+
+  Assert.ok(!(DESKTOP_ONLY_SCALAR in scalars), "The desktop-only scalar must not be persisted.");
+
+  // Reset to original environment
+  Services.prefs.clearUserPref("toolkit.telemetry.isGeckoViewMode");
+  Telemetry.resetCurrentProduct();
 });

@@ -51,17 +51,20 @@ function hasArrayIndex(str) {
  *
  *            {
  *              state: STATE_NORMAL|STATE_QUOTE|STATE_DQUOTE,
- *              startPos: index of where the last statement begins
+ *              lastStatement: the last statement in the string
  *            }
  */
 function findCompletionBeginning(str) {
-  let bodyStack = [];
+  const bodyStack = [];
 
   let state = STATE_NORMAL;
   let start = 0;
   let c;
-  for (let i = 0; i < str.length; i++) {
-    c = str[i];
+
+  // Use an array in order to handle character with a length > 2 (e.g. 😎).
+  const characters = Array.from(str);
+  for (let i = 0; i < characters.length; i++) {
+    c = characters[i];
 
     switch (state) {
       // Normal JS state.
@@ -73,7 +76,33 @@ function findCompletionBeginning(str) {
         } else if (c == ";") {
           start = i + 1;
         } else if (c == " ") {
-          start = i + 1;
+          const before = characters.slice(0, i);
+          const after = characters.slice(i + 1);
+          const trimmedBefore = Array.from(before.join("").trimRight());
+          const trimmedAfter = Array.from(after.join("").trimLeft());
+
+          const nextNonSpaceChar = trimmedAfter[0];
+          const nextNonSpaceCharIndex = after.indexOf(nextNonSpaceChar);
+          const previousNonSpaceChar = trimmedBefore[trimmedBefore.length - 1];
+
+          // If the previous meaningful char was a dot and there is no meaningful char
+          // after, we can break out of the loop.
+          if (previousNonSpaceChar === "." && !nextNonSpaceChar) {
+            break;
+          }
+
+          if (nextNonSpaceChar) {
+            // If the previous char wasn't a dot, and the next one isn't a dot either,
+            // update the start pos.
+            if (previousNonSpaceChar !== "." && nextNonSpaceChar !== ".") {
+              start = i + nextNonSpaceCharIndex;
+            }
+            // Let's jump to handle the next non-space char.
+            i = i + nextNonSpaceCharIndex;
+          } else {
+            // There's only spaces after that, so we can break out of the loop.
+            break;
+          }
         } else if (OPEN_BODY.includes(c)) {
           bodyStack.push({
             token: c,
@@ -81,7 +110,7 @@ function findCompletionBeginning(str) {
           });
           start = i + 1;
         } else if (CLOSE_BODY.includes(c)) {
-          let last = bodyStack.pop();
+          const last = bodyStack.pop();
           if (!last || OPEN_CLOSE_BODY[last.token] != c) {
             return {
               err: "syntax error"
@@ -125,7 +154,7 @@ function findCompletionBeginning(str) {
 
   return {
     state: state,
-    startPos: start
+    lastStatement: characters.slice(start).join("")
   };
 }
 
@@ -151,7 +180,7 @@ function findCompletionBeginning(str) {
  *          If no completion valued could be computed, null is returned,
  *          otherwise a object with the following form is returned:
  *            {
- *              matches: [ string, string, string ],
+ *              matches: Set<string>
  *              matchProp: Last part of the inputValue that was used to find
  *                         the matches-strings.
  *            }
@@ -165,21 +194,21 @@ function JSPropertyProvider(dbgObject, anEnvironment, inputValue, cursor) {
 
   // Analyse the inputValue and find the beginning of the last part that
   // should be completed.
-  let beginning = findCompletionBeginning(inputValue);
+  const {err, state, lastStatement} = findCompletionBeginning(inputValue);
 
   // There was an error analysing the string.
-  if (beginning.err) {
+  if (err) {
     return null;
   }
 
   // If the current state is not STATE_NORMAL, then we are inside of an string
   // which means that no completion is possible.
-  if (beginning.state != STATE_NORMAL) {
+  if (state != STATE_NORMAL) {
     return null;
   }
 
-  let completionPart = inputValue.substring(beginning.startPos);
-  let lastDot = completionPart.lastIndexOf(".");
+  const completionPart = lastStatement;
+  const lastDot = completionPart.lastIndexOf(".");
 
   // Don't complete on just an empty string.
   if (completionPart.trim() == "") {
@@ -191,17 +220,17 @@ function JSPropertyProvider(dbgObject, anEnvironment, inputValue, cursor) {
   // Don't run this is a worker, migrating to acorn should allow this
   // to run in a worker - Bug 1217198.
   if (!isWorker && lastDot > 0) {
-    let parser = new Parser();
+    const parser = new Parser();
     parser.logExceptions = false;
-    let syntaxTree = parser.get(completionPart.slice(0, lastDot));
-    let lastTree = syntaxTree.getLastSyntaxTree();
-    let lastBody = lastTree && lastTree.AST.body[lastTree.AST.body.length - 1];
+    const syntaxTree = parser.get(completionPart.slice(0, lastDot));
+    const lastTree = syntaxTree.getLastSyntaxTree();
+    const lastBody = lastTree && lastTree.AST.body[lastTree.AST.body.length - 1];
 
     // Finding the last expression since we've sliced up until the dot.
     // If there were parse errors this won't exist.
     if (lastBody) {
-      let expression = lastBody.expression;
-      let matchProp = completionPart.slice(lastDot + 1);
+      const expression = lastBody.expression;
+      const matchProp = completionPart.slice(lastDot + 1).trimLeft();
       if (expression.type === "ArrayExpression") {
         return getMatchedProps(Array.prototype, matchProp);
       } else if (expression.type === "Literal" &&
@@ -212,19 +241,19 @@ function JSPropertyProvider(dbgObject, anEnvironment, inputValue, cursor) {
   }
 
   // We are completing a variable / a property lookup.
-  let properties = completionPart.split(".");
-  let matchProp = properties.pop().trimLeft();
+  const properties = completionPart.split(".");
+  const matchProp = properties.pop().trimLeft();
   let obj = dbgObject;
 
   // The first property must be found in the environment of the paused debugger
   // or of the global lexical scope.
-  let env = anEnvironment || obj.asEnvironment();
+  const env = anEnvironment || obj.asEnvironment();
 
   if (properties.length === 0) {
     return getMatchedPropsInEnvironment(env, matchProp);
   }
 
-  let firstProp = properties.shift().trim();
+  const firstProp = properties.shift().trim();
   if (firstProp === "this") {
     // Special case for 'this' - try to get the Object from the Environment.
     // No problem if it throws, we will just not autocomplete.
@@ -246,7 +275,7 @@ function JSPropertyProvider(dbgObject, anEnvironment, inputValue, cursor) {
   // We get the rest of the properties recursively starting from the
   // Debugger.Object that wraps the first property
   for (let i = 0; i < properties.length; i++) {
-    let prop = properties[i].trim();
+    const prop = properties[i].trim();
     if (!prop) {
       return null;
     }
@@ -288,7 +317,7 @@ function JSPropertyProvider(dbgObject, anEnvironment, inputValue, cursor) {
  */
 function getArrayMemberProperty(obj, env, prop) {
   // First get the array.
-  let propWithoutIndices = prop.substr(0, prop.indexOf("["));
+  const propWithoutIndices = prop.substr(0, prop.indexOf("["));
 
   if (env) {
     obj = getVariableInEnvironment(env, propWithoutIndices);
@@ -302,11 +331,11 @@ function getArrayMemberProperty(obj, env, prop) {
 
   // Then traverse the list of indices to get the actual element.
   let result;
-  let arrayIndicesRegex = /\[[^\]]*\]/g;
+  const arrayIndicesRegex = /\[[^\]]*\]/g;
   while ((result = arrayIndicesRegex.exec(prop)) !== null) {
-    let indexWithBrackets = result[0];
-    let indexAsText = indexWithBrackets.substr(1, indexWithBrackets.length - 2);
-    let index = parseInt(indexAsText, 10);
+    const indexWithBrackets = result[0];
+    const indexAsText = indexWithBrackets.substr(1, indexWithBrackets.length - 2);
+    const index = parseInt(indexAsText, 10);
 
     if (isNaN(index)) {
       return null;
@@ -378,21 +407,29 @@ function getMatchedProps(obj, match) {
  * Get all properties in the given object (and its parent prototype chain) that
  * match a given prefix.
  *
- * @param mixed obj
+ * @param {Mixed} obj
  *        Object whose properties we want to filter.
- * @param string match
+ * @param {string} match
  *        Filter for properties that match this string.
- * @return object
- *         Object that contains the matchProp and the list of names.
+ * @returns {object} which holds the following properties:
+ *            - {string} matchProp.
+ *            - {Set} matches: List of matched properties.
  */
 function getMatchedPropsImpl(obj, match, {chainIterator, getProperties}) {
-  let matches = new Set();
+  const matches = new Set();
   let numProps = 0;
 
+  const insensitiveMatching = match && match[0].toUpperCase() !== match[0];
+  const propertyMatches = prop => {
+    return insensitiveMatching
+      ? prop.toLocaleLowerCase().startsWith(match.toLocaleLowerCase())
+      : prop.startsWith(match);
+  };
+
   // We need to go up the prototype chain.
-  let iter = chainIterator(obj);
+  const iter = chainIterator(obj);
   for (obj of iter) {
-    let props = getProperties(obj);
+    const props = getProperties(obj);
     if (!props) {
       continue;
     }
@@ -407,8 +444,8 @@ function getMatchedPropsImpl(obj, match, {chainIterator, getProperties}) {
     }
 
     for (let i = 0; i < props.length; i++) {
-      let prop = props[i];
-      if (prop.indexOf(match) != 0) {
+      const prop = props[i];
+      if (!propertyMatches(prop)) {
         continue;
       }
       if (prop.indexOf("-") > -1) {
@@ -430,7 +467,7 @@ function getMatchedPropsImpl(obj, match, {chainIterator, getProperties}) {
 
   return {
     matchProp: match,
-    matches: [...matches],
+    matches,
   };
 }
 
@@ -448,9 +485,9 @@ function getMatchedPropsImpl(obj, match, {chainIterator, getProperties}) {
  */
 function getExactMatchImpl(obj, name, {chainIterator, getProperty}) {
   // We need to go up the prototype chain.
-  let iter = chainIterator(obj);
+  const iter = chainIterator(obj);
   for (obj of iter) {
-    let prop = getProperty(obj, name, obj);
+    const prop = getProperty(obj, name, obj);
     if (prop) {
       return prop.value;
     }
@@ -523,7 +560,7 @@ var DebuggerEnvironmentSupport = {
   },
 
   getProperties: function(obj) {
-    let names = obj.names();
+    const names = obj.names();
 
     // Include 'this' in results (in sorted order)
     for (let i = 0; i < names.length; i++) {

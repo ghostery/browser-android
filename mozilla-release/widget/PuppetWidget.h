@@ -27,6 +27,7 @@
 #include "mozilla/ContentCache.h"
 #include "mozilla/EventForwards.h"
 #include "mozilla/TextEventDispatcherListener.h"
+#include "mozilla/layers/MemoryPressureObserver.h"
 
 namespace mozilla {
 
@@ -40,6 +41,7 @@ struct AutoCacheNativeKeyCommands;
 
 class PuppetWidget : public nsBaseWidget
                    , public TextEventDispatcherListener
+                   , public layers::MemoryPressureListener
 {
   typedef mozilla::CSSRect CSSRect;
   typedef mozilla::dom::TabChild TabChild;
@@ -287,6 +289,7 @@ public:
 
   virtual void SetCandidateWindowForPlugin(
                  const CandidateWindowPosition& aPosition) override;
+  virtual void EnableIMEForPlugin(bool aEnable) override;
 
   virtual void ZoomToRect(const uint32_t& aPresShellId,
                           const FrameMetrics::ViewID& aViewId,
@@ -308,6 +311,12 @@ public:
                  const bool aIsVertical,
                  const LayoutDeviceIntPoint& aPoint) override;
 
+  nsresult SetSystemFont(const nsCString& aFontName) override;
+  nsresult GetSystemFont(nsCString& aFontName) override;
+
+  nsresult SetPrefersReducedMotionOverrideForTest(bool aValue) override;
+  nsresult ResetPrefersReducedMotionOverrideForTest() override;
+
   // TextEventDispatcherListener
   using nsBaseWidget::NotifyIME;
   NS_IMETHOD NotifyIME(TextEventDispatcher* aTextEventDispatcher,
@@ -321,6 +330,7 @@ public:
                       uint32_t aIndexOfKeypress,
                       void* aData) override;
 
+  virtual void OnMemoryPressure(layers::MemoryPressureReason aWhy) override;
 private:
   nsresult Paint();
 
@@ -343,6 +353,10 @@ private:
 
   nsIWidgetListener* GetCurrentWidgetListener();
 
+  // When this widget caches input context and currently managed by
+  // IMEStateManager, the cache is valid.
+  bool HaveValidInputContextCache() const;
+
   class PaintTask : public Runnable {
   public:
     NS_DECL_NSIRUNNABLE
@@ -352,18 +366,6 @@ private:
   private:
     PuppetWidget* mWidget;
   };
-
-  class MemoryPressureObserver : public nsIObserver {
-  public:
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSIOBSERVER
-    explicit MemoryPressureObserver(PuppetWidget* aWidget) : mWidget(aWidget) {}
-    void Remove();
-  private:
-    virtual ~MemoryPressureObserver() {}
-    PuppetWidget* mWidget;
-  };
-  friend class MemoryPressureObserver;
 
   // TabChild normally holds a strong reference to this PuppetWidget
   // or its root ancestor, but each PuppetWidget also needs a
@@ -377,7 +379,7 @@ private:
   RefPtr<PuppetWidget> mChild;
   LayoutDeviceIntRegion mDirtyRegion;
   nsRevocableEventPtr<PaintTask> mPaintTask;
-  RefPtr<MemoryPressureObserver> mMemoryPressureObserver;
+  RefPtr<layers::MemoryPressureObserver> mMemoryPressureObserver;
   // XXX/cjones: keeping this around until we teach LayerManager to do
   // retained-content-only transactions
   RefPtr<DrawTarget> mDrawTarget;

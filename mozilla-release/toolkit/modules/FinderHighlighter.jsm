@@ -56,35 +56,35 @@ const kModalStyles = {
     ["position", "absolute"],
     ["white-space", "nowrap"],
     ["will-change", "transform"],
-    ["z-index", 2]
+    ["z-index", 2],
   ],
   outlineNodeDebug: [ ["z-index", 2147483647] ],
   outlineText: [
     ["margin", "0 !important"],
     ["padding", "0 !important"],
-    ["vertical-align", "top !important"]
+    ["vertical-align", "top !important"],
   ],
   maskNode: [
     ["background", "rgba(0,0,0,.25)"],
     ["pointer-events", "none"],
     ["position", "absolute"],
-    ["z-index", 1]
+    ["z-index", 1],
   ],
   maskNodeTransition: [
-    ["transition", "background .2s ease-in"]
+    ["transition", "background .2s ease-in"],
   ],
   maskNodeDebug: [
     ["z-index", 2147483646],
     ["top", 0],
-    ["left", 0]
+    ["left", 0],
   ],
-  maskNodeBrightText: [ ["background", "rgba(255,255,255,.25)"] ]
+  maskNodeBrightText: [ ["background", "rgba(255,255,255,.25)"] ],
 };
 const kModalOutlineAnim = {
   "keyframes": [
     { transform: "scaleX(1) scaleY(1)" },
     { transform: "scaleX(1.5) scaleY(1.5)", offset: .5, easing: "ease-in" },
-    { transform: "scaleX(1) scaleY(1)" }
+    { transform: "scaleX(1) scaleY(1)" },
   ],
   duration: 50,
 };
@@ -123,7 +123,7 @@ function mockAnonymousContentNode(domNode) {
     },
     setCutoutRectsForElement(id, rects) {
       // no-op for now.
-    }
+    },
   };
 }
 
@@ -174,7 +174,7 @@ FinderHighlighter.prototype = {
         lastWindowDimensions: { width: 0, height: 0 },
         modalHighlightRectsMap: new Map(),
         previousRangeRectsAndTexts: { rectList: [], textList: [] },
-        repaintSchedulerState: kRepaintSchedulerStopped
+        repaintSchedulerState: kRepaintSchedulerStopped,
       });
     }
     return gWindows.get(window);
@@ -225,7 +225,7 @@ FinderHighlighter.prototype = {
         finder: this.finder,
         listener: this,
         useCache: true,
-        window
+        window,
       };
       if (this.iterator.isAlreadyRunning(params) ||
           (this._modal && this.iterator._areParamsEqual(params, dict.lastIteratorParams))) {
@@ -274,7 +274,7 @@ FinderHighlighter.prototype = {
    * Add a range to the find selection, i.e. highlight it, and if it's inside an
    * editable node, track it.
    *
-   * @param {nsIDOMRange} range Range object to be highlighted
+   * @param {Range} range Range object to be highlighted
    */
   highlightRange(range) {
     let node = range.startContainer;
@@ -331,7 +331,7 @@ FinderHighlighter.prototype = {
    *
    * @param {nsIDOMWindow} window    The dimmed background will overlay this window.
    *                                 Optional, defaults to the finder window.
-   * @param {nsIDOMRange}  skipRange A range that should not be removed from the
+   * @param {Range}        skipRange A range that should not be removed from the
    *                                 find selection.
    * @param {Event}        event     When called from an event handler, this will
    *                                 be the triggering event.
@@ -520,7 +520,7 @@ FinderHighlighter.prototype = {
    * controller. Optionally skips a specific range.
    *
    * @param  {nsISelectionController} controller
-   * @param  {nsIDOMRange}            restoreRange
+   * @param  {Range}                  restoreRange
    */
   _clearSelection(controller, restoreRange = null) {
     if (!controller)
@@ -543,8 +543,7 @@ FinderHighlighter.prototype = {
    */
   _getDWU(window = null) {
     return (window || this.finder._getWindow())
-      .QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindowUtils);
+      .windowUtils;
   },
 
   /**
@@ -635,7 +634,7 @@ FinderHighlighter.prototype = {
     let paddingOffset = [parseInt(style.paddingLeft, 10) || 0, parseInt(style.paddingTop, 10) || 0];
     return frameData.offset = {
       x: borderOffset[0] + paddingOffset[0],
-      y: borderOffset[1] + paddingOffset[1]
+      y: borderOffset[1] + paddingOffset[1],
     };
   },
 
@@ -671,7 +670,7 @@ FinderHighlighter.prototype = {
    * Utility; get all available font styles as applied to the content of a given
    * range. The CSS properties we look for can be found in `kFontPropsCSS`.
    *
-   * @param  {nsIDOMRange} range Range to fetch style info from.
+   * @param  {Range} range Range to fetch style info from.
    * @return {Object} Dictionary consisting of the styles that were found.
    */
   _getRangeFontStyle(range) {
@@ -787,7 +786,7 @@ FinderHighlighter.prototype = {
    * (i)frames and elements that have their overflow styles set to 'auto' or
    * 'scroll'.
    *
-   * @param  {nsIDOMRange} range Range that be enclosed in a dynamic container
+   * @param  {Range} range Range that be enclosed in a dynamic container
    * @return {Boolean}
    */
   _isInDynamicContainer(range) {
@@ -822,10 +821,10 @@ FinderHighlighter.prototype = {
    * Read and store the rectangles that encompass the entire region of a range
    * for use by the drawing function of the highlighter.
    *
-   * @param  {nsIDOMRange} range  Range to fetch the rectangles from
-   * @param  {Object}      [dict] Dictionary of properties belonging to
-   *                              the currently active window
-   * @return {Set}         Set of rects that were found for the range
+   * @param  {Range}  range  Range to fetch the rectangles from
+   * @param  {Object} [dict] Dictionary of properties belonging to
+   *                         the currently active window
+   * @return {Set}    Set of rects that were found for the range
    */
   _getRangeRectsAndTexts(range, dict = null) {
     let window = range.startContainer.ownerGlobal;
@@ -862,14 +861,14 @@ FinderHighlighter.prototype = {
    * for use by the drawing function of the highlighter and store them in the
    * cache.
    *
-   * @param  {nsIDOMRange} range            Range to fetch the rectangles from
-   * @param  {Boolean}     [checkIfDynamic] Whether we should check if the range
-   *                                        is dynamic as per the rules in
-   *                                        `_isInDynamicContainer()`. Optional,
-   *                                        defaults to `true`
-   * @param  {Object}      [dict]           Dictionary of properties belonging to
-   *                                        the currently active window
-   * @return {Set}         Set of rects that were found for the range
+   * @param  {Range}   range            Range to fetch the rectangles from
+   * @param  {Boolean} [checkIfDynamic] Whether we should check if the range
+   *                                    is dynamic as per the rules in
+   *                                    `_isInDynamicContainer()`. Optional,
+   *                                    defaults to `true`
+   * @param  {Object}  [dict]           Dictionary of properties belonging to
+   *                                    the currently active window
+   * @return {Set}     Set of rects that were found for the range
    */
   _updateRangeRects(range, checkIfDynamic = true, dict = null) {
     let window = range.startContainer.ownerGlobal;
@@ -993,7 +992,7 @@ FinderHighlighter.prototype = {
         ["top", rect.top + "px"],
         ["left", rect.left + "px"],
         ["height", rect.height + "px"],
-        ["width", rect.width + "px"]
+        ["width", rect.width + "px"],
       ], borderStyles, kDebug ? kModalStyles.outlineNodeDebug : []);
       fontStyle.lineHeight = rect.height + "px";
       let textStyle = this._getStyleString(kModalStyles.outlineText) + "; " +
@@ -1081,7 +1080,7 @@ FinderHighlighter.prototype = {
    * Add a range to the list of ranges to highlight on, or cut out of, the dimmed
    * background.
    *
-   * @param {nsIDOMRange}  range  Range object that should be inspected
+   * @param {Range}        range  Range object that should be inspected
    * @param {nsIDOMWindow} window Window object, whose DOM tree is being traversed
    */
   _modalHighlight(range, controller, window) {
@@ -1361,7 +1360,7 @@ FinderHighlighter.prototype = {
           dict.repaintSchedulerState = kRepaintSchedulerRunning;
           this._scheduleRepaintOfMask(window);
         }
-      }
+      },
     ];
     let target = this.iterator._getDocShell(window).chromeEventHandler;
     target.addEventListener("MozAfterPaint", dict.highlightListeners[0]);
@@ -1397,7 +1396,7 @@ FinderHighlighter.prototype = {
   /**
    * For a given node returns its editable parent or null if there is none.
    * It's enough to check if node is a text node and its parent's parent is
-   * instance of nsIDOMNSEditableElement.
+   * an input or textarea.
    *
    * @param node the node we want to check
    * @returns the first node in the parent chain that is editable,
@@ -1405,7 +1404,8 @@ FinderHighlighter.prototype = {
    */
   _getEditableNode(node) {
     if (node.nodeType === node.TEXT_NODE && node.parentNode && node.parentNode.parentNode &&
-        node.parentNode.parentNode instanceof Ci.nsIDOMNSEditableElement) {
+        (ChromeUtils.getClassName(node.parentNode.parentNode) === "HTMLInputElement" ||
+         ChromeUtils.getClassName(node.parentNode.parentNode) === "HTMLTextAreaElement")) {
       return node.parentNode.parentNode;
     }
     return null;
@@ -1707,7 +1707,7 @@ FinderHighlighter.prototype = {
 
       // Unimplemented
       notifyDocumentCreated() {},
-      notifyDocumentStateChanged(aDirty) {}
+      notifyDocumentStateChanged(aDirty) {},
     };
-  }
+  },
 };

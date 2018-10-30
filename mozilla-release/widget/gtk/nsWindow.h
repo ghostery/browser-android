@@ -66,6 +66,21 @@ extern mozilla::LazyLogModule gWidgetDrawLog;
 
 #endif /* MOZ_LOGGING */
 
+#ifdef MOZ_WAYLAND
+class nsWaylandDragContext;
+
+gboolean
+WindowDragMotionHandler(GtkWidget *aWidget, GdkDragContext *aDragContext,
+                        nsWaylandDragContext *aWaylandDragContext,
+                        gint aX, gint aY, guint aTime);
+gboolean
+WindowDragDropHandler(GtkWidget *aWidget, GdkDragContext *aDragContext,
+                      nsWaylandDragContext *aWaylandDragContext, gint aX, gint aY,
+                      guint aTime);
+void
+WindowDragLeaveHandler(GtkWidget *aWidget);
+#endif
+
 class gfxPattern;
 
 namespace mozilla {
@@ -116,8 +131,7 @@ public:
                                          int32_t *aX,
                                          int32_t *aY) override;
     virtual void       SetSizeConstraints(const SizeConstraints& aConstraints) override;
-    virtual void       Move(double aX,
-                            double aY) override;
+    virtual void       Move(double aX, double aY) override;
     virtual void       Show             (bool aState) override;
     virtual void       Resize           (double aWidth,
                                          double aHeight,
@@ -400,6 +414,9 @@ public:
 
     virtual bool WidgetTypeSupportsAcceleration() override;
 
+    nsresult SetSystemFont(const nsCString& aFontName) override;
+    nsresult GetSystemFont(nsCString& aFontName) override;
+
     typedef enum { CSD_SUPPORT_SYSTEM,    // CSD including shadows
                    CSD_SUPPORT_CLIENT,    // CSD without shadows
                    CSD_SUPPORT_NONE,      // WM does not support CSD at all
@@ -477,7 +494,6 @@ private:
                                    gint* aRootX, gint* aRootY);
     void               ClearCachedResources();
     nsIWidgetListener* GetListener();
-    bool               IsComposited() const;
 
     void               UpdateClientOffsetForCSDWindow();
 
@@ -595,6 +611,9 @@ private:
     // full translucency at this time; each pixel is either fully opaque
     // or fully transparent.
     gchar*       mTransparencyBitmap;
+    // True when we're on compositing window manager and this
+    // window is using visual with alpha channel.
+    bool         mHasAlphaVisual;
 
     // all of our DND stuff
     void   InitDragEvent(mozilla::WidgetDragEvent& aEvent);

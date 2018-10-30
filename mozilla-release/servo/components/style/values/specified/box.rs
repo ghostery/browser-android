@@ -6,10 +6,12 @@
 
 use Atom;
 use cssparser::Parser;
+use custom_properties::Name as CustomPropertyName;
 use parser::{Parse, ParserContext};
+use properties::{LonghandId, ShorthandId, PropertyId, PropertyFlags, PropertyDeclarationId};
 use selectors::parser::SelectorParseErrorKind;
 use std::fmt::{self, Write};
-use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
+use style_traits::{CssWriter, KeywordsCollectFn, ParseError, StyleParseErrorKind, SpecifiedValueInfo, ToCss};
 use values::{CustomIdent, KeyframesName};
 use values::generics::box_::AnimationIterationCount as GenericAnimationIterationCount;
 use values::generics::box_::Perspective as GenericPerspective;
@@ -17,32 +19,69 @@ use values::generics::box_::VerticalAlign as GenericVerticalAlign;
 use values::specified::{AllowQuirks, Number};
 use values::specified::length::{LengthOrPercentage, NonNegativeLength};
 
-#[allow(missing_docs)]
-#[derive(Clone, Copy, Debug, Eq, Hash, MallocSizeOf, Parse, PartialEq,
-         SpecifiedValueInfo, ToComputedValue, ToCss)]
-#[cfg_attr(feature = "servo", derive(Deserialize, Serialize))]
+fn in_ua_or_chrome_sheet(context: &ParserContext) -> bool {
+    use stylesheets::Origin;
+    context.stylesheet_origin == Origin::UserAgent ||
+    context.chrome_rules_enabled()
+}
+
+#[cfg(feature = "gecko")]
+fn moz_display_values_enabled(context: &ParserContext) -> bool {
+    use gecko_bindings::structs;
+    in_ua_or_chrome_sheet(context) ||
+    unsafe {
+        structs::StaticPrefs_sVarCache_layout_css_xul_display_values_content_enabled
+    }
+}
+
+#[cfg(feature = "gecko")]
+fn moz_box_display_values_enabled(context: &ParserContext) -> bool {
+    use gecko_bindings::structs;
+    in_ua_or_chrome_sheet(context) ||
+    unsafe {
+        structs::StaticPrefs_sVarCache_layout_css_xul_box_display_values_content_enabled
+    }
+}
+
 /// Defines an element’s display type, which consists of
 /// the two basic qualities of how an element generates boxes
 /// <https://drafts.csswg.org/css-display/#propdef-display>
+///
+///
+/// NOTE(emilio): Order is important in Gecko!
+///
+/// If you change it, make sure to take a look at the
+/// FrameConstructionDataByDisplay stuff (both the XUL and non-XUL version), and
+/// ensure it's still correct!
+///
+/// Also, when you change this from Gecko you may need to regenerate the
+/// C++-side bindings (see components/style/cbindgen.toml).
+#[allow(missing_docs)]
+#[derive(Clone, Copy, Debug, Eq, FromPrimitive, Hash, MallocSizeOf, Parse,
+         PartialEq, SpecifiedValueInfo, ToComputedValue, ToCss)]
+#[cfg_attr(feature = "servo", derive(Deserialize, Serialize))]
+#[repr(u8)]
 pub enum Display {
-    Inline,
+    None = 0,
     Block,
+    #[cfg(feature = "gecko")]
+    FlowRoot,
+    Inline,
     InlineBlock,
+    ListItem,
     Table,
     InlineTable,
     TableRowGroup,
+    TableColumn,
+    TableColumnGroup,
     TableHeaderGroup,
     TableFooterGroup,
     TableRow,
-    TableColumnGroup,
-    TableColumn,
     TableCell,
     TableCaption,
-    ListItem,
-    None,
-    #[css(aliases = "-webkit-flex")]
+    #[parse(aliases = "-webkit-flex")]
     Flex,
-    #[css(aliases = "-webkit-inline-flex")]
+    #[parse(aliases = "-webkit-inline-flex")]
     InlineFlex,
     #[cfg(feature = "gecko")]
     Grid,
@@ -61,33 +100,42 @@ pub enum Display {
     #[cfg(feature = "gecko")]
     Contents,
     #[cfg(feature = "gecko")]
-    FlowRoot,
-    #[cfg(feature = "gecko")]
     WebkitBox,
     #[cfg(feature = "gecko")]
     WebkitInlineBox,
     #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_box_display_values_enabled")]
     MozBox,
     #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_box_display_values_enabled")]
     MozInlineBox,
     #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_display_values_enabled")]
     MozGrid,
     #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_display_values_enabled")]
     MozInlineGrid,
     #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_display_values_enabled")]
     MozGridGroup,
     #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_display_values_enabled")]
     MozGridLine,
     #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_display_values_enabled")]
     MozStack,
     #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_display_values_enabled")]
     MozInlineStack,
     #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_display_values_enabled")]
     MozDeck,
     #[cfg(feature = "gecko")]
-    MozPopup,
-    #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_display_values_enabled")]
     MozGroupbox,
+    #[cfg(feature = "gecko")]
+    #[parse(condition = "moz_display_values_enabled")]
+    MozPopup,
 }
 
 impl Display {
@@ -212,6 +260,8 @@ impl Display {
             Display::Table => Display::InlineTable,
             Display::Flex => Display::InlineFlex,
             Display::Grid => Display::InlineGrid,
+            // XXX bug 1105868 this should probably be InlineListItem:
+            Display::ListItem => Display::Inline,
             Display::MozBox => Display::MozInlineBox,
             Display::MozStack => Display::MozInlineStack,
             Display::WebkitBox => Display::WebkitInlineBox,
@@ -380,7 +430,15 @@ pub enum WillChange {
     Auto,
     /// <custom-ident>
     #[css(comma)]
-    AnimateableFeatures(#[css(iterable)] Box<[CustomIdent]>),
+    AnimateableFeatures {
+        /// The features that are supposed to change.
+        #[css(iterable)]
+        features: Box<[CustomIdent]>,
+        /// A bitfield with the kind of change that the value will create, based
+        /// on the above field.
+        #[css(skip)]
+        bits: WillChangeBits,
+    },
 }
 
 impl WillChange {
@@ -391,10 +449,68 @@ impl WillChange {
     }
 }
 
+bitflags! {
+    /// The change bits that we care about.
+    ///
+    /// These need to be in sync with NS_STYLE_WILL_CHANGE_*.
+    #[derive(MallocSizeOf, SpecifiedValueInfo, ToComputedValue)]
+    pub struct WillChangeBits: u8 {
+        /// Whether the stacking context will change.
+        const STACKING_CONTEXT = 1 << 0;
+        /// Whether `transform` will change.
+        const TRANSFORM = 1 << 1;
+        /// Whether `scroll-position` will change.
+        const SCROLL = 1 << 2;
+        /// Whether `opacity` will change.
+        const OPACITY = 1 << 3;
+        /// Fixed pos containing block.
+        const FIXPOS_CB = 1 << 4;
+        /// Abs pos containing block.
+        const ABSPOS_CB = 1 << 5;
+    }
+}
+
+fn change_bits_for_longhand(longhand: LonghandId) -> WillChangeBits {
+    let mut flags = match longhand {
+        LonghandId::Opacity => WillChangeBits::OPACITY,
+        LonghandId::Transform => WillChangeBits::TRANSFORM,
+        _ => WillChangeBits::empty(),
+    };
+
+    let property_flags = longhand.flags();
+    if property_flags.contains(PropertyFlags::CREATES_STACKING_CONTEXT) {
+        flags |= WillChangeBits::STACKING_CONTEXT;
+    }
+    if property_flags.contains(PropertyFlags::FIXPOS_CB) {
+        flags |= WillChangeBits::FIXPOS_CB;
+    }
+    if property_flags.contains(PropertyFlags::ABSPOS_CB) {
+        flags |= WillChangeBits::ABSPOS_CB;
+    }
+    flags
+}
+
+fn change_bits_for_maybe_property(ident: &str, context: &ParserContext) -> WillChangeBits {
+    let id = match PropertyId::parse_ignoring_rule_type(ident, context) {
+        Ok(id) => id,
+        Err(..) => return WillChangeBits::empty(),
+    };
+
+    match id.as_shorthand() {
+        Ok(shorthand) => {
+            shorthand.longhands().fold(WillChangeBits::empty(), |flags, p| {
+                flags | change_bits_for_longhand(p)
+            })
+        }
+        Err(PropertyDeclarationId::Longhand(longhand)) => change_bits_for_longhand(longhand),
+        Err(PropertyDeclarationId::Custom(..)) => WillChangeBits::empty(),
+    }
+}
+
 impl Parse for WillChange {
     /// auto | <animateable-feature>#
     fn parse<'i, 't>(
-        _context: &ParserContext,
+        context: &ParserContext,
         input: &mut Parser<'i, 't>,
     ) -> Result<WillChange, ParseError<'i>> {
         if input
@@ -404,18 +520,28 @@ impl Parse for WillChange {
             return Ok(WillChange::Auto);
         }
 
+        let mut bits = WillChangeBits::empty();
         let custom_idents = input.parse_comma_separated(|i| {
             let location = i.current_source_location();
-            CustomIdent::from_ident(
+            let parser_ident = i.expect_ident()?;
+            let ident = CustomIdent::from_ident(
                 location,
-                i.expect_ident()?,
+                parser_ident,
                 &["will-change", "none", "all", "auto"],
-            )
+            )?;
+
+            if ident.0 == atom!("scroll-position") {
+                bits |= WillChangeBits::SCROLL;
+            } else {
+                bits |= change_bits_for_maybe_property(&parser_ident, context);
+            }
+            Ok(ident)
         })?;
 
-        Ok(WillChange::AnimateableFeatures(
-            custom_idents.into_boxed_slice(),
-        ))
+        Ok(WillChange::AnimateableFeatures {
+            features: custom_idents.into_boxed_slice(),
+            bits,
+        })
     }
 }
 
@@ -523,19 +649,25 @@ pub fn assert_touch_action_matches() {
 
 bitflags! {
     #[derive(MallocSizeOf, SpecifiedValueInfo, ToComputedValue)]
-    #[value_info(other_values = "none,strict,layout,style,paint")]
+    #[value_info(other_values = "none,strict,content,size,layout,style,paint")]
     /// Constants for contain: https://drafts.csswg.org/css-contain/#contain-property
     pub struct Contain: u8 {
+        /// 'size' variant, turns on size containment
+        const SIZE = 0x01;
         /// `layout` variant, turns on layout containment
-        const LAYOUT = 0x01;
+        const LAYOUT = 0x02;
         /// `style` variant, turns on style containment
-        const STYLE = 0x02;
+        const STYLE = 0x04;
         /// `paint` variant, turns on paint containment
-        const PAINT = 0x04;
+        const PAINT = 0x08;
         /// `strict` variant, turns on all types of containment
-        const STRICT = 0x8;
+        const STRICT = 0x10;
+        /// 'content' variant, turns on style, layout, and paint containment
+        const CONTENT = 0x20;
         /// variant with all the bits that contain: strict turns on
-        const STRICT_BITS = Contain::LAYOUT.bits | Contain::STYLE.bits | Contain::PAINT.bits;
+        const STRICT_BITS = Contain::LAYOUT.bits | Contain::STYLE.bits | Contain::PAINT.bits | Contain::SIZE.bits;
+        /// variant with all the bits that contain: content turns on
+        const CONTENT_BITS = Contain::STYLE.bits | Contain::LAYOUT.bits | Contain::PAINT.bits;
     }
 }
 
@@ -550,6 +682,9 @@ impl ToCss for Contain {
         if self.contains(Contain::STRICT) {
             return dest.write_str("strict");
         }
+        if self.contains(Contain::CONTENT) {
+            return dest.write_str("content");
+        }
 
         let mut has_any = false;
         macro_rules! maybe_write_value {
@@ -563,6 +698,7 @@ impl ToCss for Contain {
                 }
             };
         }
+        maybe_write_value!(Contain::SIZE => "size");
         maybe_write_value!(Contain::LAYOUT => "layout");
         maybe_write_value!(Contain::STYLE => "style");
         maybe_write_value!(Contain::PAINT => "paint");
@@ -581,10 +717,12 @@ impl Parse for Contain {
         let mut result = Contain::empty();
         while let Ok(name) = input.try(|i| i.expect_ident_cloned()) {
             let flag = match_ignore_ascii_case! { &name,
+                "size" => Some(Contain::SIZE),
                 "layout" => Some(Contain::LAYOUT),
                 "style" => Some(Contain::STYLE),
                 "paint" => Some(Contain::PAINT),
                 "strict" if result.is_empty() => return Ok(Contain::STRICT | Contain::STRICT_BITS),
+                "content" if result.is_empty() => return Ok(Contain::CONTENT | Contain::CONTENT_BITS),
                 "none" if result.is_empty() => return Ok(result),
                 _ => None
             };
@@ -622,4 +760,390 @@ impl Parse for Perspective {
             input,
         )?))
     }
+}
+
+/// A given transition property, that is either `All`, a longhand or shorthand
+/// property, or an unsupported or custom property.
+#[derive(Clone, Debug, Eq, Hash, MallocSizeOf, PartialEq, ToComputedValue)]
+pub enum TransitionProperty {
+    /// A shorthand.
+    Shorthand(ShorthandId),
+    /// A longhand transitionable property.
+    Longhand(LonghandId),
+    /// A custom property.
+    Custom(CustomPropertyName),
+    /// Unrecognized property which could be any non-transitionable, custom property, or
+    /// unknown property.
+    Unsupported(CustomIdent),
+}
+
+impl ToCss for TransitionProperty {
+    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
+    where
+        W: Write,
+    {
+        use values::serialize_atom_name;
+        match *self {
+            TransitionProperty::Shorthand(ref s) => s.to_css(dest),
+            TransitionProperty::Longhand(ref l) => l.to_css(dest),
+            TransitionProperty::Custom(ref name) => {
+                dest.write_str("--")?;
+                serialize_atom_name(name, dest)
+            }
+            TransitionProperty::Unsupported(ref i) => i.to_css(dest),
+        }
+    }
+}
+
+impl Parse for TransitionProperty {
+    fn parse<'i, 't>(
+        context: &ParserContext,
+        input: &mut Parser<'i, 't>,
+    ) -> Result<Self, ParseError<'i>> {
+        let location = input.current_source_location();
+        let ident = input.expect_ident()?;
+
+        let id = match PropertyId::parse_ignoring_rule_type(&ident, context) {
+            Ok(id) => id,
+            Err(..) => return Ok(TransitionProperty::Unsupported(
+                CustomIdent::from_ident(location, ident, &["none"])?,
+            )),
+        };
+
+        Ok(match id.as_shorthand() {
+            Ok(s) => TransitionProperty::Shorthand(s),
+            Err(longhand_or_custom) => {
+                match longhand_or_custom {
+                    PropertyDeclarationId::Longhand(id) => TransitionProperty::Longhand(id),
+                    PropertyDeclarationId::Custom(custom) => {
+                        TransitionProperty::Custom(custom.clone())
+                    }
+                }
+            }
+        })
+    }
+}
+
+impl SpecifiedValueInfo for TransitionProperty {
+    fn collect_completion_keywords(f: KeywordsCollectFn) {
+        // `transition-property` can actually accept all properties and
+        // arbitrary identifiers, but `all` is a special one we'd like
+        // to list.
+        f(&["all"]);
+    }
+}
+
+impl TransitionProperty {
+    /// Returns `all`.
+    #[inline]
+    pub fn all() -> Self {
+        TransitionProperty::Shorthand(ShorthandId::All)
+    }
+
+    /// Convert TransitionProperty to nsCSSPropertyID.
+    #[cfg(feature = "gecko")]
+    pub fn to_nscsspropertyid(&self) -> Result<::gecko_bindings::structs::nsCSSPropertyID, ()> {
+        Ok(match *self {
+            TransitionProperty::Shorthand(ShorthandId::All) => {
+                ::gecko_bindings::structs::nsCSSPropertyID::eCSSPropertyExtra_all_properties
+            }
+            TransitionProperty::Shorthand(ref id) => id.to_nscsspropertyid(),
+            TransitionProperty::Longhand(ref id) => id.to_nscsspropertyid(),
+            TransitionProperty::Custom(..) |
+            TransitionProperty::Unsupported(..) => return Err(()),
+        })
+    }
+}
+
+#[allow(missing_docs)]
+#[cfg_attr(feature = "servo", derive(Deserialize, Serialize))]
+#[derive(Clone, Copy, Debug, Eq, Hash, MallocSizeOf, Parse, PartialEq,
+         SpecifiedValueInfo, ToCss)]
+/// https://drafts.csswg.org/css-box/#propdef-float
+pub enum Float {
+    Left,
+    Right,
+    None,
+    // https://drafts.csswg.org/css-logical-props/#float-clear
+    InlineStart,
+    InlineEnd
+}
+
+#[allow(missing_docs)]
+#[cfg_attr(feature = "servo", derive(Deserialize, Serialize))]
+#[derive(Clone, Copy, Debug, Eq, Hash, MallocSizeOf, Parse, PartialEq,
+         SpecifiedValueInfo, ToCss)]
+/// https://drafts.csswg.org/css-box/#propdef-clear
+pub enum Clear {
+    None,
+    Left,
+    Right,
+    Both,
+    // https://drafts.csswg.org/css-logical-props/#float-clear
+    InlineStart,
+    InlineEnd
+}
+
+/// https://drafts.csswg.org/css-ui/#propdef-resize
+#[allow(missing_docs)]
+#[cfg_attr(feature = "servo", derive(Deserialize, Serialize))]
+#[derive(Clone, Copy, Debug, Eq, Hash, MallocSizeOf, Parse, PartialEq,
+         SpecifiedValueInfo, ToCss)]
+pub enum Resize {
+    None,
+    Both,
+    Horizontal,
+    Vertical,
+    // https://drafts.csswg.org/css-logical-1/#resize
+    Inline,
+    Block,
+}
+
+/// The value for the `appearance` property.
+///
+/// https://developer.mozilla.org/en-US/docs/Web/CSS/-moz-appearance
+///
+/// NOTE(emilio): When changing this you may want to regenerate the C++ bindings
+/// (see components/style/cbindgen.toml)
+#[allow(missing_docs)]
+#[derive(Clone, Copy, Debug, Eq, Hash, MallocSizeOf, Parse, PartialEq,
+         SpecifiedValueInfo, ToCss, ToComputedValue)]
+#[repr(u8)]
+pub enum Appearance {
+    /// No appearance at all.
+    None,
+    /// A typical dialog button.
+    Button,
+    /// Various arrows that go in buttons
+    ButtonArrowDown,
+    ButtonArrowNext,
+    ButtonArrowPrevious,
+    ButtonArrowUp,
+    /// A rectangular button that contains complex content
+    /// like images (e.g. HTML <button> elements)
+    ButtonBevel,
+    /// The focus outline box inside of a button.
+    ButtonFocus,
+    /// The caret of a text area
+    Caret,
+    /// A dual toolbar button (e.g., a Back button with a dropdown)
+    Dualbutton,
+    /// A groupbox.
+    Groupbox,
+    /// A inner-spin button.
+    InnerSpinButton,
+    /// List boxes.
+    Listbox,
+    /// A listbox item.
+    Listitem,
+    /// Menu Bar background
+    Menubar,
+    /// <menu> and <menuitem> appearances
+    Menuitem,
+    Checkmenuitem,
+    Radiomenuitem,
+    /// For text on non-iconic menuitems only
+    Menuitemtext,
+    /// A dropdown list.
+    Menulist,
+    /// The dropdown button(s) that open up a dropdown list.
+    MenulistButton,
+    /// The text part of a dropdown list, to left of button.
+    MenulistText,
+    /// An editable textfield with a dropdown list (a combobox).
+    MenulistTextfield,
+    /// Menu Popup background.
+    Menupopup,
+    /// menu checkbox/radio appearances
+    Menucheckbox,
+    Menuradio,
+    Menuseparator,
+    Menuarrow,
+    /// An image in the menu gutter, like in bookmarks or history.
+    Menuimage,
+    /// A horizontal meter bar.
+    Meterbar,
+    /// The meter bar's meter indicator.
+    Meterchunk,
+    /// The "arrowed" part of the dropdown button that open up a dropdown list.
+    #[parse(condition = "in_ua_or_chrome_sheet")]
+    MozMenulistButton,
+    /// For HTML's <input type=number>
+    NumberInput,
+    /// A horizontal progress bar.
+    Progressbar,
+    /// The progress bar's progress indicator
+    Progresschunk,
+    /// A vertical progress bar.
+    ProgressbarVertical,
+    /// A vertical progress chunk.
+    ProgresschunkVertical,
+    /// A checkbox element.
+    Checkbox,
+    /// A radio element within a radio group.
+    Radio,
+    /// A generic container that always repaints on state changes. This is a
+    /// hack to make XUL checkboxes and radio buttons work.
+    CheckboxContainer,
+    RadioContainer,
+    /// The label part of a checkbox or radio button, used for painting a focus
+    /// outline.
+    CheckboxLabel,
+    RadioLabel,
+    /// nsRangeFrame and its subparts
+    Range,
+    RangeThumb,
+    /// The resizer background area in a status bar for the resizer widget in
+    /// the corner of a window.
+    Resizerpanel,
+    /// The resizer itself.
+    Resizer,
+    /// A slider.
+    ScaleHorizontal,
+    ScaleVertical,
+    /// A slider's thumb.
+    ScalethumbHorizontal,
+    ScalethumbVertical,
+    /// If the platform supports it, the left/right chunks of the slider thumb.
+    Scalethumbstart,
+    Scalethumbend,
+    /// The ticks for a slider.
+    Scalethumbtick,
+    /// A scrollbar.
+    Scrollbar,
+    /// A small scrollbar.
+    ScrollbarSmall,
+    /// The scrollbar slider
+    ScrollbarHorizontal,
+    ScrollbarVertical,
+    /// A scrollbar button (up/down/left/right).
+    /// Keep these in order (some code casts these values to `int` in order to
+    /// compare them against each other).
+    ScrollbarbuttonUp,
+    ScrollbarbuttonDown,
+    ScrollbarbuttonLeft,
+    ScrollbarbuttonRight,
+    /// The scrollbar thumb.
+    ScrollbarthumbHorizontal,
+    ScrollbarthumbVertical,
+    /// The scrollbar track.
+    ScrollbartrackHorizontal,
+    ScrollbartrackVertical,
+    /// The scroll corner
+    Scrollcorner,
+    /// A searchfield.
+    Searchfield,
+    /// A separator.  Can be horizontal or vertical.
+    Separator,
+    /// A spin control (up/down control for time/date pickers).
+    Spinner,
+    /// The up button of a spin control.
+    SpinnerUpbutton,
+    /// The down button of a spin control.
+    SpinnerDownbutton,
+    /// The textfield of a spin control
+    SpinnerTextfield,
+    /// A splitter.  Can be horizontal or vertical.
+    Splitter,
+    /// A status bar in a main application window.
+    Statusbar,
+    /// A single pane of a status bar.
+    Statusbarpanel,
+    /// A single tab in a tab widget.
+    Tab,
+    /// A single pane (inside the tabpanels container).
+    Tabpanel,
+    /// The tab panels container.
+    Tabpanels,
+    /// The tabs scroll arrows (left/right).
+    TabScrollArrowBack,
+    TabScrollArrowForward,
+    /// A textfield or text area.
+    Textfield,
+    /// A multiline text field.
+    TextfieldMultiline,
+    /// A toolbar in an application window.
+    Toolbar,
+    /// A single toolbar button (with no associated dropdown).
+    Toolbarbutton,
+    /// The dropdown portion of a toolbar button
+    ToolbarbuttonDropdown,
+    /// The gripper for a toolbar.
+    Toolbargripper,
+    /// The toolbox that contains the toolbars.
+    Toolbox,
+    /// A tooltip.
+    Tooltip,
+    /// A listbox or tree widget header
+    Treeheader,
+    /// An individual header cell
+    Treeheadercell,
+    /// The sort arrow for a header.
+    Treeheadersortarrow,
+    /// A tree item.
+    Treeitem,
+    /// A tree widget branch line
+    Treeline,
+    /// A tree widget twisty.
+    Treetwisty,
+    /// Open tree widget twisty.
+    Treetwistyopen,
+    /// A tree widget.
+    Treeview,
+    /// Window and dialog backgrounds.
+    Window,
+    Dialog,
+
+    /// Vista Rebars.
+    MozWinCommunicationsToolbox,
+    MozWinMediaToolbox,
+    MozWinBrowsertabbarToolbox,
+    /// Vista glass.
+    MozWinGlass,
+    MozWinBorderlessGlass,
+    /// -moz-apperance style used in setting proper glass margins.
+    MozWinExcludeGlass,
+
+    /// Titlebar elements on the Mac.
+    MozMacFullscreenButton,
+    /// Mac help button.
+    MozMacHelpButton,
+
+    /// Windows themed window frame elements.
+    MozWindowButtonBox,
+    MozWindowButtonBoxMaximized,
+    MozWindowButtonClose,
+    MozWindowButtonMaximize,
+    MozWindowButtonMinimize,
+    MozWindowButtonRestore,
+    MozWindowFrameBottom,
+    MozWindowFrameLeft,
+    MozWindowFrameRight,
+    MozWindowTitlebar,
+    MozWindowTitlebarMaximized,
+
+    MozGtkInfoBar,
+    MozMacActiveSourceListSelection,
+    MozMacDisclosureButtonClosed,
+    MozMacDisclosureButtonOpen,
+    MozMacSourceList,
+    MozMacSourceListSelection,
+    MozMacVibrancyDark,
+    MozMacVibrancyLight,
+    MozMacVibrantTitlebarDark,
+    MozMacVibrantTitlebarLight,
+
+    /// A non-disappearing scrollbar.
+    #[css(skip)]
+    ScrollbarNonDisappearing,
+
+    /// A themed focus outline (for outline:auto).
+    ///
+    /// This isn't exposed to CSS at all, just here for convenience.
+    #[css(skip)]
+    FocusOutline,
+
+    /// A dummy variant that should be last to let the GTK widget do hackery.
+    #[css(skip)]
+    Count,
 }

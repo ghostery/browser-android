@@ -7,7 +7,7 @@
 [OverrideBuiltins]
 interface HTMLDocument : Document {
            [SetterThrows]
-           attribute DOMString? domain;
+           attribute DOMString domain;
            [Throws]
            attribute DOMString cookie;
   // DOM tree accessors
@@ -73,4 +73,7 @@ partial interface HTMLDocument {
    */
   [ChromeOnly, Pure]
   readonly attribute NodeList blockedTrackingNodes;
+
+  [ChromeOnly]
+  void userInteractionForTesting();
 };

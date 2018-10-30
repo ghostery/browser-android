@@ -54,16 +54,6 @@ TEST(Atoms, 16vs8)
   }
 }
 
-TEST(Atoms, BufferSharing)
-{
-  nsString unique;
-  unique.AssignLiteral("this is a unique string !@#$");
-
-  RefPtr<nsAtom> atom = NS_Atomize(unique);
-
-  EXPECT_EQ(unique.get(), atom->GetUTF16String());
-}
-
 TEST(Atoms, Null)
 {
   nsAutoString str(NS_LITERAL_STRING("string with a \0 char"));
@@ -92,7 +82,8 @@ TEST(Atoms, Invalid)
 
     EXPECT_EQ(count, NS_GetNumberOfAtoms());
   }
-
+#ifndef DEBUG
+// Don't run this test in debug builds as that intentionally asserts.
   for (unsigned int i = 0; i < ArrayLength(Invalid8Strings); ++i) {
     nsrefcnt count = NS_GetNumberOfAtoms();
 
@@ -106,15 +97,15 @@ TEST(Atoms, Invalid)
     EXPECT_EQ(count, NS_GetNumberOfAtoms());
   }
 
-// Don't run this test in debug builds as that intentionally asserts.
-#ifndef DEBUG
-  RefPtr<nsAtom> emptyAtom = NS_Atomize("");
-
   for (unsigned int i = 0; i < ArrayLength(Malformed8Strings); ++i) {
     nsrefcnt count = NS_GetNumberOfAtoms();
 
-    RefPtr<nsAtom> atom8 = NS_Atomize(Malformed8Strings[i]);
-    EXPECT_EQ(atom8, emptyAtom);
+    {
+      RefPtr<nsAtom> atom8 = NS_Atomize(Malformed8Strings[i].m8);
+      RefPtr<nsAtom> atom16 = NS_Atomize(Malformed8Strings[i].m16);
+      EXPECT_EQ(atom8, atom16);
+    }
+
     EXPECT_EQ(count, NS_GetNumberOfAtoms());
   }
 #endif

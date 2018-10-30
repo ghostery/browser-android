@@ -6,7 +6,7 @@
 <!ENTITY  history.title             "Updategeschiedenis">
 <!ENTITY  history2.intro            "De volgende updates zijn geïnstalleerd">
 <!ENTITY  closebutton.label         "Sluiten">
-                                     
+
 <!ENTITY  noupdates.label           "Er zijn nog geen updates geïnstalleerd">
 
 <!ENTITY  name.header               "Updatenaam">

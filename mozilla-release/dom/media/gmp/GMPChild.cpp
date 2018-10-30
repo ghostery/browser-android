@@ -464,8 +464,8 @@ GMPChild::MakeCDMHostVerificationPaths()
                             NS_LITERAL_CSTRING(".sig"));
 #endif
     paths.AppendElement(
-      MakePair(Move(filePath),
-               Move(sigFilePath)));
+      MakePair(std::move(filePath),
+               std::move(sigFilePath)));
   } else {
     // Without successfully determining plugin-container's path, we can't
     // determine libxul's or Firefox's. So give up.
@@ -494,8 +494,8 @@ GMPChild::MakeCDMHostVerificationPaths()
                               NS_LITERAL_CSTRING(".sig"));
     }
     paths.AppendElement(
-      MakePair(Move(filePath),
-               Move(sigFilePath)));
+      MakePair(std::move(filePath),
+               std::move(sigFilePath)));
   }
 #else
   // Note: re-using 'path' var here, as on Windows/Linux we assume Firefox
@@ -533,8 +533,8 @@ GMPChild::MakeCDMHostVerificationPaths()
                             NS_LITERAL_CSTRING(".sig"));
 #endif
     paths.AppendElement(
-      MakePair(Move(filePath),
-               Move(sigFilePath)));
+      MakePair(std::move(filePath),
+               std::move(sigFilePath)));
   }
 
   return paths;
@@ -560,8 +560,9 @@ GMPChild::AnswerStartPlugin(const nsString& aAdapter)
 
   nsCString libPath;
   if (!GetUTF8LibPath(libPath)) {
-    CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("GMPLibraryPath"),
-                                       NS_ConvertUTF16toUTF8(mPluginPath));
+    CrashReporter::AnnotateCrashReport(
+      CrashReporter::Annotation::GMPLibraryPath,
+      NS_ConvertUTF16toUTF8(mPluginPath));
 
 #ifdef XP_WIN
     return IPC_FAIL(
@@ -606,7 +607,7 @@ GMPChild::AnswerStartPlugin(const nsString& aAdapter)
   if (isChromium) {
     auto&& paths = MakeCDMHostVerificationPaths();
     GMP_LOG("%s CDM host paths=%s", __func__, ToCString(paths).get());
-    adapter = new ChromiumCDMAdapter(Move(paths));
+    adapter = new ChromiumCDMAdapter(std::move(paths));
   }
 
   if (!mGMPLoader->Load(libPath.get(),
@@ -615,8 +616,9 @@ GMPChild::AnswerStartPlugin(const nsString& aAdapter)
                         adapter)) {
     NS_WARNING("Failed to load GMP");
     delete platformAPI;
-    CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("GMPLibraryPath"),
-                                       NS_ConvertUTF16toUTF8(mPluginPath));
+    CrashReporter::AnnotateCrashReport(
+      CrashReporter::Annotation::GMPLibraryPath,
+      NS_ConvertUTF16toUTF8(mPluginPath));
 
 #ifdef XP_WIN
     return IPC_FAIL(

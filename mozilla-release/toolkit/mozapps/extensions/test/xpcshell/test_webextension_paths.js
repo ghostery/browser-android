@@ -5,7 +5,7 @@ add_task(async function setup() {
   profileDir.append("extensions");
 
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
-  startupManager();
+  await promiseStartupManager();
 });
 
 // When installing an unpacked addon we derive the ID from the
@@ -22,9 +22,9 @@ add_task(async function test_bad_unpacked_path() {
 
     browser_specific_settings: {
       gecko: {
-        id: MANIFEST_ID
-      }
-    }
+        id: MANIFEST_ID,
+      },
+    },
   };
 
   const directories = [

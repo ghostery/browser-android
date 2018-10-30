@@ -11,7 +11,7 @@
 <!ENTITY searchPrefs.accesskey "C">
 <!ENTITY focusSearch.key "r">
 <!ENTITY focusSearch2.key "f">
-<!ENTITY prefColumn.label "Nome Parametro">
+<!ENTITY prefColumn.label "Nome parametro">
 <!ENTITY lockColumn.label "Stato">
 <!ENTITY typeColumn.label "Tipo">
 <!ENTITY valueColumn.label "Valore">

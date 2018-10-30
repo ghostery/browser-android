@@ -80,8 +80,6 @@
 <!ENTITY cmd.preferencesWin.accesskey         "O">
 <!ENTITY cmd.preferencesUnix.label            "首选项">
 <!ENTITY cmd.preferencesUnix.accesskey        "P">
-<!ENTITY cmd.about.label                      "关于">
-<!ENTITY cmd.about.accesskey                  "A">
 
 <!ENTITY cmd.enableAddon.label                "启用">
 <!ENTITY cmd.enableAddon.accesskey            "E">
@@ -160,16 +158,9 @@
 <!ENTITY progress.pause.tooltip               "暂停">
 <!ENTITY progress.cancel.tooltip              "取消">
 
-
-<!-- list sorting -->
-<!ENTITY sort.name.label                      "名称">
-<!ENTITY sort.name.tooltip                    "按名称排列">
-<!ENTITY sort.dateUpdated.label               "上次更新">
-<!ENTITY sort.dateUpdated.tooltip             "按最后更新日期排列">
-
 <!ENTITY addon.homepage                       "主页">
 <!ENTITY addon.details.label                  "更多信息">
-<!ENTITY addon.details.tooltip                "显示关于此附加组件的详情">
+<!ENTITY addon.details.tooltip                "显示此附加组件的详细信息">
 <!ENTITY addon.unknownDate                    "未知">
 <!-- LOCALIZATION NOTE (addon.legacy.label): This appears in a badge next
      to the add-on name for extensions that are not webextensions, which
@@ -208,17 +199,6 @@
 <!ENTITY eula.accept                          "接受并安装…">
 
 <!ENTITY settings.path.button.label           "浏览…">
-
-<!-- LOCALIZATION NOTE (experiment.info.label): The strings related to
-     experiments are present on the "Experiments" tab of the add-ons manager.
-     This tab won't be displayed unless an Experiment add-on is installed.
-     Install https://people.mozilla.org/~gszorc/dummy-experiment-addon.xpi
-     to cause this tab to appear. -->
-<!ENTITY experiment.info.label "想问这是什么？“遥测”会不时地安装和运行一些实验项目。">
-<!ENTITY experiment.info.learnmore "详细了解">
-<!ENTITY experiment.info.learnmore.accesskey "L">
-<!ENTITY experiment.info.changetelemetry "遥测设置">
-<!ENTITY experiment.info.changetelemetry.accesskey "T">
 
 <!ENTITY setting.learnmore "详细了解…">
 

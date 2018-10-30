@@ -34,6 +34,8 @@
 #include "vm/SymbolType.h"
 
 /*
+ * [SMDOC] Shapes
+ *
  * In isolation, a Shape represents a property that exists in one or more
  * objects; it has an id, flags, etc. (But it doesn't represent the property's
  * value.)  However, Shapes are always stored in linked linear sequence of
@@ -388,11 +390,6 @@ class MOZ_RAII AutoKeepShapeTables
 };
 
 /*
- * Use the reserved attribute bit to mean shadowability.
- */
-#define JSPROP_SHADOWABLE       JSPROP_INTERNAL_USE_BIT
-
-/*
  * Shapes encode information about both a property lineage *and* a particular
  * property. This information is split across the Shape and the BaseShape
  * at shape->base(). Both Shape and BaseShape can be either owned or unowned
@@ -451,7 +448,6 @@ class BaseShape : public gc::TenuredCell
     friend class Shape;
     friend struct StackBaseShape;
     friend struct StackShape;
-    friend void gc::MergeCompartments(JSCompartment* source, JSCompartment* target);
 
     enum Flag {
         /* Owned by the referring shape. */
@@ -500,11 +496,6 @@ class BaseShape : public gc::TenuredCell
 
     /* For owned BaseShapes, the shape's shape table. */
     ShapeTable*      table_;
-
-#if JS_BITS_PER_WORD == 32
-    // Ensure sizeof(BaseShape) is a multiple of gc::CellAlignBytes.
-    uint32_t padding_;
-#endif
 
     BaseShape(const BaseShape& base) = delete;
     BaseShape& operator=(const BaseShape& other) = delete;
@@ -672,17 +663,25 @@ HashId(jsid id)
     return mozilla::HashGeneric(JSID_BITS(id));
 }
 
+} // namespace js
+
+namespace mozilla {
+
 template <>
 struct DefaultHasher<jsid>
 {
     typedef jsid Lookup;
     static HashNumber hash(jsid id) {
-        return HashId(id);
+        return js::HashId(id);
     }
     static bool match(jsid id1, jsid id2) {
         return id1 == id2;
     }
 };
+
+} // namespace mozilla
+
+namespace js {
 
 using BaseShapeSet = JS::WeakCache<JS::GCHashSet<ReadBarriered<UnownedBaseShape*>,
                                                  StackBaseShape,
@@ -846,7 +845,8 @@ class Shape : public gc::TenuredCell
         }
 
         if (!inDictionary() && kids.isHash())
-            info->shapesMallocHeapTreeKids += kids.toHash()->sizeOfIncludingThis(mallocSizeOf);
+            info->shapesMallocHeapTreeKids +=
+                kids.toHash()->shallowSizeOfIncludingThis(mallocSizeOf);
     }
 
     bool isAccessorShape() const {
@@ -1079,8 +1079,6 @@ class Shape : public gc::TenuredCell
         return (attrs & (JSPROP_SETTER | JSPROP_GETTER)) != 0;
     }
 
-    bool hasShadowable() const { return attrs & JSPROP_SHADOWABLE; }
-
     uint32_t entryCount() {
         JS::AutoCheckCannotGC nogc;
         if (ShapeTable* table = maybeTable(nogc))
@@ -1216,9 +1214,6 @@ class MOZ_RAII AutoRooterGetterSetter
   public:
     inline AutoRooterGetterSetter(JSContext* cx, uint8_t attrs,
                                   GetterOp* pgetter, SetterOp* psetter
-                                  MOZ_GUARD_OBJECT_NOTIFIER_PARAM);
-    inline AutoRooterGetterSetter(JSContext* cx, uint8_t attrs,
-                                  JSNative* pgetter, JSNative* psetter
                                   MOZ_GUARD_OBJECT_NOTIFIER_PARAM);
 
   private:
@@ -1535,7 +1530,8 @@ Shape::Shape(const StackShape& other, uint32_t nfixed)
     immutableFlags(other.immutableFlags),
     attrs(other.attrs),
     mutableFlags(other.mutableFlags),
-    parent(nullptr)
+    parent(nullptr),
+    listp(nullptr)
 {
     setNumFixedSlots(nfixed);
 
@@ -1569,7 +1565,8 @@ Shape::Shape(UnownedBaseShape* base, uint32_t nfixed)
     immutableFlags(SHAPE_INVALID_SLOT | (nfixed << FIXED_SLOTS_SHIFT)),
     attrs(0),
     mutableFlags(0),
-    parent(nullptr)
+    parent(nullptr),
+    listp(nullptr)
 {
     MOZ_ASSERT(base);
     kids.setNull();

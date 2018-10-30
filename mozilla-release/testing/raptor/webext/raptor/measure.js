@@ -40,31 +40,38 @@ function contentHandler() {
 }
 
 function setup(settings) {
-  if (settings.measure !== undefined) {
-    if (settings.measure.fnbpaint !== undefined) {
-      getFNBPaint = settings.measure.fnbpaint;
-      if (getFNBPaint) {
-        console.log("will be measuring fnbpaint");
-        measureFNBPaint();
-      }
-    }
-    if (settings.measure.fcp !== undefined) {
-      getFCP = settings.measure.fcp;
-      if (getFCP) {
-        console.log("will be measuring first-contentful-paint");
-        measureFirstContentfulPaint();
-      }
-    }
-    if (settings.measure.hero !== undefined) {
-      if (settings.measure.hero.length !== 0) {
-        getHero = true;
-        heroesToCapture = settings.measure.hero;
-        console.log("hero elements to measure: " + heroesToCapture);
-        measureHero();
-      }
-    }
-  } else {
+  if (settings.type != "pageload") {
+    return;
+  }
+
+  if (settings.measure == undefined) {
     console.log("abort: 'measure' key not found in test settings");
+    return;
+  }
+
+  if (settings.measure.fnbpaint !== undefined) {
+    getFNBPaint = settings.measure.fnbpaint;
+    if (getFNBPaint) {
+      console.log("will be measuring fnbpaint");
+      measureFNBPaint();
+    }
+  }
+
+  if (settings.measure.fcp !== undefined) {
+    getFCP = settings.measure.fcp;
+    if (getFCP) {
+      console.log("will be measuring first-contentful-paint");
+      measureFirstContentfulPaint();
+    }
+  }
+
+  if (settings.measure.hero !== undefined) {
+    if (settings.measure.hero.length !== 0) {
+      getHero = true;
+      heroesToCapture = settings.measure.hero;
+      console.log("hero elements to measure: " + heroesToCapture);
+      measureHero();
+    }
   }
 }
 
@@ -86,7 +93,7 @@ function measureHero() {
                          startMark = startMeasure,
                          endMark = heroFound);
         var perfResult = perfData.getEntriesByName(resultType);
-        var _result = perfResult[0].duration;
+        var _result = Math.round(perfResult[0].duration);
         var resultType = "hero:" + heroFound;
         sendResult(resultType, _result);
         perfData.clearMarks();

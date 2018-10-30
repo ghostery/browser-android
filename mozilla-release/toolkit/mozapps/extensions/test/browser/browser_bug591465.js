@@ -22,54 +22,46 @@ var gLWTheme = {
                 homepageURL: "http://mochi.test:8888/data/index.html",
                 headerURL: "http://mochi.test:8888/data/header.png",
                 previewURL: "http://mochi.test:8888/data/preview.png",
-                iconURL: "http://mochi.test:8888/data/icon.png"
+                iconURL: "http://mochi.test:8888/data/icon.png",
               };
 
 
-async function test() {
-  waitForExplicitFinish();
-
+add_task(async function setup() {
   gProvider = new MockProvider();
 
   gProvider.createAddons([{
     id: "addon1@tests.mozilla.org",
     name: "addon 1",
-    version: "1.0"
+    version: "1.0",
   }, {
     id: "addon2@tests.mozilla.org",
     name: "addon 2",
     version: "1.0",
-    _userDisabled: true
+    _userDisabled: true,
   }, {
     id: "theme1@tests.mozilla.org",
     name: "theme 1",
     version: "1.0",
-    type: "theme"
+    type: "theme",
   }, {
     id: "theme2@tests.mozilla.org",
     name: "theme 2",
     version: "1.0",
     type: "theme",
-    _userDisabled: true
+    _userDisabled: true,
    }, {
     id: "theme3@tests.mozilla.org",
     name: "theme 3",
     version: "1.0",
     type: "theme",
-    permissions: 0
+    permissions: 0,
   }]);
 
 
   let aWindow = await open_manager("addons://list/extension");
   gManagerWindow = aWindow;
   gContextMenu = aWindow.document.getElementById("addonitem-popup");
-  run_next_test();
-}
-
-
-function end_test() {
-  close_manager(gManagerWindow, finish);
-}
+});
 
 
 function check_contextmenu(aIsTheme, aIsEnabled, aIsRemote, aIsDetails, aIsSingleItemCase) {
@@ -142,10 +134,10 @@ add_test(function() {
   EventUtils.synthesizeMouse(el, 4, 4, { type: "contextmenu", button: 2 }, gManagerWindow);
 });
 
-add_test(function() {
+add_test(async function() {
   var el = get_addon_element(gManagerWindow, "addon1@tests.mozilla.org");
   isnot(el, null, "Should have found addon element");
-  el.mAddon.userDisabled = true;
+  await el.mAddon.disable();
 
   gContextMenu.addEventListener("popupshown", function() {
     check_contextmenu(false, false, false, false, false);
@@ -160,10 +152,10 @@ add_test(function() {
   EventUtils.synthesizeMouse(el, 4, 4, { type: "contextmenu", button: 2 }, gManagerWindow);
 });
 
-add_test(function() {
+add_test(async function() {
   var el = get_addon_element(gManagerWindow, "addon1@tests.mozilla.org");
   isnot(el, null, "Should have found addon element");
-  el.mAddon.userDisabled = false;
+  await el.mAddon.enable();
 
   gContextMenu.addEventListener("popupshown", function() {
     check_contextmenu(false, true, false, false, false);
@@ -391,4 +383,9 @@ add_test(async function() {
   var el = gManagerWindow.document.querySelector("#detail-view .detail-view-container");
   EventUtils.synthesizeMouse(el, 4, 4, { }, gManagerWindow);
   EventUtils.synthesizeMouse(el, 4, 4, { type: "contextmenu", button: 2 }, gManagerWindow);
+});
+
+
+add_task(function end_test() {
+  return close_manager(gManagerWindow, finish);
 });

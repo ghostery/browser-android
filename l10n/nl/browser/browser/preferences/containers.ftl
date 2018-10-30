@@ -10,8 +10,10 @@ containers-window-new =
 containers-window-update =
     .title = Voorkeuren van container { $name }
     .style = width: 45em
+
 containers-window-close =
     .key = w
+
 # This is a term to store style to be applied
 # on the three labels in the containers add/edit dialog:
 #   - name
@@ -22,20 +24,26 @@ containers-window-close =
 # of the three messages ensures that all three labels
 # will be aligned correctly.
 -containers-labels-style = min-width: 4rem
+
 containers-name-label = Naam
     .accesskey = N
     .style = { -containers-labels-style }
+
 containers-name-text =
     .placeholder = Voer een containernaam in
+
 containers-icon-label = Pictogram
     .accesskey = P
     .style = { -containers-labels-style }
+
 containers-color-label = Kleur
     .accesskey = K
     .style = { -containers-labels-style }
+
 containers-button-done =
     .label = Gereed
     .accesskey = G
+
 containers-color-blue =
     .label = Blauw
 containers-color-turquoise =
@@ -52,6 +60,7 @@ containers-color-pink =
     .label = Roze
 containers-color-purple =
     .label = Paars
+
 containers-icon-fingerprint =
     .label = Vingerafdruk
 containers-icon-briefcase =

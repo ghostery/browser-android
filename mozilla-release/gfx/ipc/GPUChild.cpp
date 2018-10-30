@@ -8,6 +8,7 @@
 #include "gfxPrefs.h"
 #include "GPUProcessHost.h"
 #include "GPUProcessManager.h"
+#include "VRProcessManager.h"
 #include "mozilla/Telemetry.h"
 #include "mozilla/TelemetryIPC.h"
 #include "mozilla/dom/CheckerboardReportService.h"
@@ -110,6 +111,12 @@ GPUChild::EnsureGPUReady()
   return true;
 }
 
+base::ProcessHandle
+GPUChild::GetChildProcessHandle()
+{
+  return mHost->GetChildProcessHandle();
+}
+
 PAPZInputBridgeChild*
 GPUChild::AllocPAPZInputBridgeChild(const LayersId& aLayersId)
 {
@@ -166,6 +173,24 @@ GPUChild::RecvInitCrashReporter(Shmem&& aShmem, const NativeThreadId& aThreadId)
     GeckoProcessType_GPU,
     aShmem,
     aThreadId);
+
+  return IPC_OK();
+}
+
+mozilla::ipc::IPCResult
+GPUChild::RecvCreateVRProcess()
+{
+  // Make sure create VR process at the main process
+  MOZ_ASSERT(XRE_IsParentProcess());
+  if (gfxPrefs::VRProcessEnabled()) {
+    VRProcessManager::Initialize();
+    VRProcessManager* vr = VRProcessManager::Get();
+    MOZ_ASSERT(vr, "VRProcessManager must be initialized first.");
+
+    if (vr) {
+      vr->LaunchVRProcess();
+    }
+  }
 
   return IPC_OK();
 }
@@ -323,7 +348,7 @@ class DeferredDeleteGPUChild : public Runnable
 public:
   explicit DeferredDeleteGPUChild(UniquePtr<GPUChild>&& aChild)
     : Runnable("gfx::DeferredDeleteGPUChild")
-    , mChild(Move(aChild))
+    , mChild(std::move(aChild))
   {
   }
 
@@ -338,7 +363,7 @@ private:
 /* static */ void
 GPUChild::Destroy(UniquePtr<GPUChild>&& aChild)
 {
-  NS_DispatchToMainThread(new DeferredDeleteGPUChild(Move(aChild)));
+  NS_DispatchToMainThread(new DeferredDeleteGPUChild(std::move(aChild)));
 }
 
 } // namespace gfx

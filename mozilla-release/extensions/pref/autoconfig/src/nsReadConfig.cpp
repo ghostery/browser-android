@@ -4,10 +4,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "nsReadConfig.h"
+#include "nsJSConfigTriggers.h"
+
 #include "nsAppDirectoryServiceDefs.h"
 #include "nsIAppStartup.h"
+#include "nsContentUtils.h"
 #include "nsDirectoryServiceDefs.h"
-#include "nsIAutoConfig.h"
 #include "nsIComponentManager.h"
 #include "nsIFile.h"
 #include "nsIObserverService.h"
@@ -22,18 +24,13 @@
 #include "nsCRT.h"
 #include "nspr.h"
 #include "nsXULAppAPI.h"
-#include "nsContentUtils.h"
+
+extern bool sandboxEnabled;
 
 extern mozilla::LazyLogModule MCD;
 
-extern nsresult EvaluateAdminConfigScript(const char *js_buffer, size_t length,
-                                          const char *filename,
-                                          bool bGlobalContext,
-                                          bool bCallbacks,
-                                          bool skipFirstLine);
-extern nsresult CentralizedAdminPrefManagerInit();
+extern nsresult CentralizedAdminPrefManagerInit(bool aSandboxEnabled);
 extern nsresult CentralizedAdminPrefManagerFinish();
-
 
 static nsresult DisplayError(void)
 {
@@ -99,13 +96,23 @@ NS_IMETHODIMP nsReadConfig::Observe(nsISupports *aSubject, const char *aTopic, c
 
     if (!nsCRT::strcmp(aTopic, NS_PREFSERVICE_READ_TOPIC_ID)) {
         rv = readConfigFile();
+        // Don't show error alerts if the sandbox is enabled, just show
+        // sandbox warning.
         if (NS_FAILED(rv)) {
-            rv = DisplayError();
-            if (NS_FAILED(rv)) {
-                nsCOMPtr<nsIAppStartup> appStartup =
-                    do_GetService(NS_APPSTARTUP_CONTRACTID);
-                if (appStartup)
-                    appStartup->Quit(nsIAppStartup::eAttemptQuit);
+            if (sandboxEnabled) {
+                nsContentUtils::ReportToConsoleNonLocalized(
+                NS_LITERAL_STRING("Autoconfig is sandboxed by default. See https://support.mozilla.org/products/firefox-enterprise for more information."),
+                nsIScriptError::warningFlag,
+                NS_LITERAL_CSTRING("autoconfig"),
+                nullptr);
+            } else {
+                rv = DisplayError();
+                if (NS_FAILED(rv)) {
+                    nsCOMPtr<nsIAppStartup> appStartup =
+                        do_GetService(NS_APPSTARTUP_CONTRACTID);
+                    if (appStartup)
+                        appStartup->Quit(nsIAppStartup::eAttemptQuit);
+                }
             }
         }
     }
@@ -136,15 +143,20 @@ nsresult nsReadConfig::readConfigFile()
     if (NS_FAILED(rv))
         return rv;
 
-    // This preference is set in the all.js or all-ns.js (depending whether
-    // running mozilla or netscp6)
+    NS_NAMED_LITERAL_CSTRING(channel, NS_STRINGIFY(MOZ_UPDATE_CHANNEL));
+
+    bool sandboxEnabled = channel.EqualsLiteral("beta") || channel.EqualsLiteral("release");
+
+    mozilla::Unused << defaultPrefBranch->GetBoolPref("general.config.sandbox_enabled",
+                                             &sandboxEnabled);
 
     rv = defaultPrefBranch->GetCharPref("general.config.filename",
                                         lockFileName);
 
-    MOZ_LOG(MCD, LogLevel::Debug, ("general.config.filename = %s\n", lockFileName.get()));
     if (NS_FAILED(rv))
         return rv;
+
+    MOZ_LOG(MCD, LogLevel::Debug, ("general.config.filename = %s\n", lockFileName.get()));
 
     for (size_t index = 0, len = mozilla::ArrayLength(gBlockedConfigs); index < len;
          ++index) {
@@ -159,7 +171,7 @@ nsresult nsReadConfig::readConfigFile()
     if (!mRead) {
         // Initiate the new JS Context for Preference management
 
-        rv = CentralizedAdminPrefManagerInit();
+        rv = CentralizedAdminPrefManagerInit(sandboxEnabled);
         if (NS_FAILED(rv))
             return rv;
 
@@ -220,14 +232,14 @@ nsresult nsReadConfig::readConfigFile()
     if (NS_SUCCEEDED(rv) && !urlName.IsEmpty()) {
 
         // Instantiating nsAutoConfig object if the pref is present
-        mAutoConfig = do_CreateInstance(NS_AUTOCONFIG_CONTRACTID, &rv);
-        if (NS_FAILED(rv))
-            return NS_ERROR_OUT_OF_MEMORY;
+        mAutoConfig = new nsAutoConfig();
 
-        rv = mAutoConfig->SetConfigURL(urlName.get());
-        if (NS_FAILED(rv))
-            return NS_ERROR_FAILURE;
+        rv = mAutoConfig->Init();
+        if (NS_WARN_IF(NS_FAILED(rv))) {
+            return rv;
+        }
 
+        mAutoConfig->SetConfigURL(urlName.get());
     }
 
     return NS_OK;
@@ -301,7 +313,8 @@ nsresult nsReadConfig::openAndEvaluateJSFile(const char *aFileName, int32_t obsc
         }
         rv = EvaluateAdminConfigScript(buf, amt, aFileName,
                                        false, true,
-                                       isEncoded ? true:false);
+                                       isEncoded,
+                                       !isBinDir);
     }
     inStr->Close();
     free(buf);

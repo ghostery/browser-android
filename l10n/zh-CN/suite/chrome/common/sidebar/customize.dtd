@@ -1,10 +1,10 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- extracted from ./customize.xul -->
+
 <!-- LOCALIZATION NOTE  sidebar.customize.title.label: Do NOT localize the term "&sidebarName;"  -->
-
-
 <!ENTITY sidebar.customize.title.label          "自定义&sidebarName;">
 <!-- LOCALIZATION NOTE  sidebar.customize.current.label: Do NOT localize the term "&sidebarName;"  -->
 <!ENTITY sidebar.customize.current.label        "&sidebarName; 中的标签页：">
@@ -23,5 +23,5 @@
 <!ENTITY sidebar.customize.up.accesskey         "U">
 <!ENTITY sidebar.customize.down.label           "下移">
 <!ENTITY sidebar.customize.down.accesskey       "D">
-<!ENTITY sidebar.more.label                     "查找更多标签…">
+<!ENTITY sidebar.more.label                     "查找更多标签页…">
 <!ENTITY sidebar.more.accesskey                 "F">

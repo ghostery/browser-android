@@ -6,6 +6,8 @@ do-not-track-description = „Do Not Track” jelzés küldése a webhelyeknek, 
 do-not-track-learn-more = További információk
 do-not-track-option-default =
     .label = Csak, ha követésvédelmet használ
+do-not-track-option-default-content-blocking =
+    .label = Csak a { -brand-short-name } az észlelt követők blokkolására van beállítva
 do-not-track-option-always =
     .label = Mindig
 pref-page =
@@ -14,14 +16,6 @@ pref-page =
             [windows] Beállítások
            *[other] Beállítások
         }
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 15.4em
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
 #
@@ -98,6 +92,9 @@ extension-controlled-privacy-containers = A(z) <img data-l10n-name="icon"/> { $n
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = A(z) <img data-l10n-name="icon"/> { $name } kiegészítő vezérli a követés elleni védelmet.
+# This string is shown to notify the user that their content blocking "All Detected Trackers"
+# preferences are being controlled by an extension.
+extension-controlled-websites-content-blocking-all-trackers = Egy kiegészítő, a(z) <img data-l10n-name="icon"/>{ $name }, vezérli ezt a beállítást.
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = A(z) <img data-l10n-name="icon"/> { $name } kiegészítő vezérli, hogy a { -brand-short-name } hogy kapcsolódik az internethez
@@ -137,20 +134,11 @@ is-not-default = A { -brand-short-name } nem az alapértelmezett böngésző
 set-as-my-default-browser =
     .label = Beállítás alapértelmezettként…
     .accesskey = a
-startup-page = A { -brand-short-name } indításakor
-    .accesskey = s
-startup-user-homepage =
-    .label = Kezdőlap megjelenítése
-startup-blank-page =
-    .label = Üres oldal megjelenítése
-startup-prev-session =
-    .label = A legutóbbi ablakok és lapok megjelenítése
 startup-restore-previous-session =
     .label = Előző munkamenet helyreállítása
     .accesskey = h
 disable-extension =
     .label = Kiterjesztés letiltása
-home-page-header = Kezdőlap
 tabs-group-header = Lapok
 ctrl-tab-recently-used-order =
     .label = A Ctrl+Tab a legutóbbi használat sorrendjében lépked körbe a lapokon
@@ -219,6 +207,12 @@ choose-language-description = Az oldalak megjelenítésére előnyben részesít
 choose-button =
     .label = Tallózás…
     .accesskey = T
+choose-browser-language-description = Válassza ki a { -brand-short-name }ban megjelenített menük, üzenetek és értesítések nyelvét.
+manage-browser-languages-button =
+    .label = Alternatívák beállítása…
+    .accesskey = A
+confirm-browser-language-change-description = A { -brand-short-name } újraindítása a változtatások alkalmazásához
+confirm-browser-language-change-button = Alkalmaz és újraindítás
 translate-web-pages =
     .label = Webtartalom fordítása
     .accesskey = f
@@ -270,7 +264,6 @@ play-drm-content =
 play-drm-content-learn-more = További tudnivalók
 update-application-title = { -brand-short-name } frissítések
 update-application-description = Tartsa naprakészen a { -brand-short-name }ot a legjobb teljesítmény, stabilitás és biztonság érdekében.
-update-application-info = Verzió{ $version } <a>Újdonságok</a>
 update-application-version = Verzió{ $version } <a data-l10n-name="learn-more">Újdonságok</a>
 update-history =
     .label = Frissítési előzmények megjelenítése…
@@ -306,7 +299,6 @@ performance-allow-hw-accel =
 performance-limit-content-process-option = Tartalom folyamatok korlátja
     .accesskey = k
 performance-limit-content-process-enabled-desc = A további tartalom folyamatok növelhetik a teljesítményt, ha több lapot használ, de több memóriát is használnak.
-performance-limit-content-process-disabled-desc = A tartalom folyamatok számának módosítása csak többfolyamatos { -brand-short-name } esetén lehetséges. <a>Ismerje meg, hogyan lehet ellenőrizni, hogy a többfolyamatos működés engedélyezve van-e</a>
 performance-limit-content-process-blocked-desc = A tartalom folyamatok számának módosítása csak többfolyamatos { -brand-short-name } esetén lehetséges. <a data-l10n-name="learn-more">Ismerje meg, hogyan lehet ellenőrizni, hogy a többfolyamatos működés engedélyezve van-e</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
@@ -335,6 +327,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Hálózati proxy
+network-settings-title = Hálózati beállítások
 network-proxy-connection-description = Állítsa be hogy a { -brand-short-name } hogyan kapcsolódik az internethez.
 network-proxy-connection-learn-more = További tudnivalók
 network-proxy-connection-settings =
@@ -377,9 +370,6 @@ use-current-pages =
 choose-bookmark =
     .label = Könyvjelző használata…
     .accesskey = n
-restore-default =
-    .label = Alapértelmezés
-    .accesskey = p
 
 ## Search Section
 
@@ -576,9 +566,6 @@ history-dontremember-description = A { -brand-short-name } ugyanazokat a beáll�
 history-private-browsing-permanent =
     .label = Mindig a privát böngészési módot használja
     .accesskey = p
-history-remember-option =
-    .label = Böngészési és letöltési előzmények megőrzése
-    .accesskey = l
 history-remember-browser-option =
     .label = Böngészési és letöltési előzmények megőrzése
     .accesskey = b
@@ -602,7 +589,7 @@ sitedata-total-size-calculating = Az oldaladatok és a gyorsítótár méreténe
 # Variables:
 #   $value (Number) - Value of the unit (for example: 4.6, 500)
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
-sitedata-total-size = A tárolt sütik, oldaladatok és a gyorsítótár jelenleg { $value } { $unit } területet foglal el a lemezen.
+sitedata-total-size = A tárolt sütik, oldaladatok és a gyorsítótár jelenleg { $value } { $unit } területet foglalnak el a lemezen.
 sitedata-learn-more = További tudnivalók
 sitedata-accept-cookies-option =
     .label = Sütik és oldaladatok elfogadása a webhelyektől (ajánlott)
@@ -613,9 +600,9 @@ sitedata-block-cookies-option =
 sitedata-keep-until = Sütik megtartása
     .accesskey = m
 sitedata-keep-until-expire =
-    .label = Lejárnak
+    .label = Amíg le nem járnak
 sitedata-keep-until-closed =
-    .label = A { -brand-short-name } zárolva van
+    .label = A { -brand-short-name } bezárásáig
 sitedata-accept-third-party-desc = Harmadik féltől származó sütik és oldaladatok elfogadása
     .accesskey = f
 sitedata-accept-third-party-always-option =
@@ -624,6 +611,26 @@ sitedata-accept-third-party-visited-option =
     .label = Meglátogatottól
 sitedata-accept-third-party-never-option =
     .label = Soha
+sitedata-allow-cookies-option =
+    .label = Sütik és oldaladatok elfogadása
+    .accesskey = e
+sitedata-disallow-cookies-option =
+    .label = Sütik és oldaladatok blokkolása
+    .accesskey = b
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = Blokkolt típus
+    .accesskey = B
+sitedata-block-trackers-option-recommended =
+    .label = Harmadik féltől származó követők (ajánlott)
+sitedata-block-trackers-option =
+    .label = Harmadik féltől származó követők
+sitedata-block-unvisited-option =
+    .label = Nem megtekintett oldalak sütijei
+sitedata-block-all-third-party-option =
+    .label = Összes harmadik féltől származó süti (egyes weboldalak eltörhetnek)
+sitedata-block-all-option =
+    .label = Összes süti (egyes weboldalak el fognak törni)
 sitedata-clear =
     .label = Adatok törlése…
     .accesskey = t
@@ -633,6 +640,10 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = Kivételek…
     .accesskey = K
+# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
+# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
+# Cookies and Site Data section.
+sitedata-warning-your-settings-prevent-changes = A Tartalomblokkolási beállítások megakadályozzák, hogy módosítson a Sütik és oldaladatok beállításain.
 
 ## Privacy Section - Address Bar
 
@@ -648,6 +659,63 @@ addressbar-locbar-openpage-option =
     .label = Nyitott lapok
     .accesskey = N
 addressbar-suggestions-settings = Keresőszolgáltatás-javaslatok beállításainak módosítása
+
+## Privacy Section - Content Blocking
+
+content-blocking-header = Tartalomblokkolás
+content-blocking-desc = Az olyan harmadik féltől származó tartalom blokkolása, mint a hirdetések vagy kódok, melyek lelassíthatják a böngészését, és követketik a weben. Szabja testre a beállításait a védelem és a teljesítmény közti legjobb egyensúly érdekében.
+content-blocking-learn-more = További tudnivalók
+content-blocking-restore-defaults =
+    .label = Alapértelmezések visszaállítása
+    .accesskey = v
+content-blocking-toggle-on =
+    .tooltiptext = Tartalomblokkolás kikapcsolása
+content-blocking-toggle-off =
+    .tooltiptext = Tartalomblokkolás bekapcsolása
+content-blocking-toggle-label-on = BE
+    .accesskey = B
+content-blocking-toggle-label-off = KI
+    .accesskey = K
+content-blocking-category-label = Válassza ki, mit szeretne blokkolni
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-slow-loading-trackers-label =
+    .label = Lassan betöltő követők
+    .accesskey = L
+content-blocking-fastblock-new-description = Csak azon követők blokkolása, melyek megakadályozzák az oldalak gyors betöltését.
+content-blocking-tracking-protection-all-detected-trackers-label =
+    .label = Összes észlelt követő
+    .accesskey = k
+content-blocking-tracking-protection-new-description = Összes ismert követő blokkolása. (Megakadályozhatja néhány oldal betöltését.)
+content-blocking-tracking-protection-option-always =
+    .label = Mindig
+    .accesskey = M
+content-blocking-tracking-protection-option-private =
+    .label = Csak privát ablakokban
+    .accesskey = p
+content-blocking-tracking-protection-change-block-list = Blokkolási lista módosítása
+content-blocking-third-party-cookies-label =
+    .label = Harmadik féltől származó sütik
+    .accesskey = s
+content-blocking-reject-trackers-description = Összes harmadik féltől származó süti, vagy csak a követők által beállítottak blokkolása.
+# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
+# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
+# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
+# the UI.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = A Sütik és oldaladatok beállításai megakadályozzák, hogy módosítsa a Harmadik féltől származó sütik beállításait.
+content-blocking-change-cookie-settings =
+    .label = Sütibeállítások módosítása
+    .accesskey = S
+content-blocking-reject-trackers-block-trackers-option-recommended =
+    .label = Követők (ajánlott)
+    .accesskey = K
+content-blocking-reject-trackers-block-trackers-option =
+    .label = Követők
+    .accesskey = K
+content-blocking-reject-trackers-all-third-parties-option =
+    .label = Összes harmadik féltől származó süti (egyes weboldalak eltörhetnek)
+    .accesskey = e
 
 ## Privacy Section - Tracking
 
@@ -700,9 +768,17 @@ permissions-notification-pause =
 permissions-block-autoplay-media =
     .label = Webhelyek blokkolása, hogy automatikusan ne játszhassanak le médiát hanggal.
     .accesskey = b
+permissions-block-autoplay-media-menu = Automatikus hanglejátszás a weboldalakon
 permissions-block-autoplay-media-exceptions =
     .label = Kivételek…
     .accesskey = K
+autoplay-option-ask =
+    .label = Rákérdezés mindig
+autoplay-option-allow =
+    .label = Automatikus lejátszás engedélyezése
+autoplay-option-dont =
+    .label = Automatikus lejátszás letiltása
+permissions-autoplay-link = További tudnivalók
 permissions-block-popups =
     .label = Felugró ablakok tiltása
     .accesskey = F
@@ -726,7 +802,7 @@ collection-header = { -brand-short-name } adatgyűjtés és felhasználás
 collection-description = Arra törekszünk, hogy választást biztosítsunk, és csak azt gyűjtsük, amire szükségünk a van a { -brand-short-name } fejlesztéséhez, mindenki számára. Mindig engedélyt kérünk, mielőtt személyes információkat fogadunk.
 collection-privacy-notice = Adatvédelmi nyilatkozat
 collection-health-report =
-    .label = Engedélyezés, hogy a { -brand-short-name } műszaki és interakciós adatokat küldjön a Mozillának
+    .label = Engedélyezés, hogy a { -brand-short-name } műszaki és interakciós adatokat küldjön a { -vendor-short-name } számára
     .accesskey = E
 collection-health-report-link = További tudnivalók
 collection-studies =

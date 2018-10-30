@@ -7,6 +7,8 @@
 #ifndef mozilla_Queue_h
 #define mozilla_Queue_h
 
+#include "mozilla/MemoryReporting.h"
+
 namespace mozilla {
 
 // A queue implements a singly linked list of pages, each of which contains some
@@ -51,7 +53,7 @@ public:
     }
 
     T& eltLocation = mTail->mEvents[mOffsetTail];
-    eltLocation = Move(aElement);
+    eltLocation = std::move(aElement);
     ++mOffsetTail;
 
     return eltLocation;
@@ -68,7 +70,7 @@ public:
 
     MOZ_ASSERT(mOffsetHead < ItemsPerPage);
     MOZ_ASSERT_IF(mHead == mTail, mOffsetHead <= mOffsetTail);
-    T result = Move(mHead->mEvents[mOffsetHead++]);
+    T result = std::move(mHead->mEvents[mOffsetHead++]);
 
     MOZ_ASSERT(mOffsetHead <= ItemsPerPage);
 
@@ -153,6 +155,22 @@ public:
     MOZ_ASSERT(count >= 0);
 
     return count;
+  }
+
+  size_t ShallowSizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const
+  {
+    size_t n = 0;
+    if (mHead) {
+      for (Page* page = mHead; page != mTail; page = page->mNext) {
+        n += aMallocSizeOf(page);
+      }
+    }
+    return n;
+  }
+
+  size_t ShallowSizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const
+  {
+    return aMallocSizeOf(this) + ShallowSizeOfExcludingThis(aMallocSizeOf);
   }
 
 private:

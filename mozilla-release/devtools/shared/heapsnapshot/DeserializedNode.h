@@ -70,6 +70,8 @@ struct DeserializedNode {
   const char*         jsObjectClassName;
   // A borrowed reference to a string owned by this node's owning HeapSnapshot.
   const char*         scriptFilename;
+  // A borrowed reference to a string owned by this node's owning HeapSnapshot.
+  const char16_t*     descriptiveTypeName;
   // A weak pointer to this node's owning `HeapSnapshot`. Safe without
   // AddRef'ing because this node's lifetime is equal to that of its owner.
   HeapSnapshot*       owner;
@@ -82,15 +84,17 @@ struct DeserializedNode {
                    const Maybe<StackFrameId>& allocationStack,
                    const char* className,
                    const char* filename,
+                   const char16_t* descriptiveName,
                    HeapSnapshot& owner)
     : id(id)
     , coarseType(coarseType)
     , typeName(typeName)
     , size(size)
-    , edges(Move(edges))
+    , edges(std::move(edges))
     , allocationStack(allocationStack)
     , jsObjectClassName(className)
     , scriptFilename(filename)
+    , descriptiveTypeName(descriptiveName)
     , owner(&owner)
   { }
   virtual ~DeserializedNode() { }
@@ -100,10 +104,11 @@ struct DeserializedNode {
     , coarseType(rhs.coarseType)
     , typeName(rhs.typeName)
     , size(rhs.size)
-    , edges(Move(rhs.edges))
+    , edges(std::move(rhs.edges))
     , allocationStack(rhs.allocationStack)
     , jsObjectClassName(rhs.jsObjectClassName)
     , scriptFilename(rhs.scriptFilename)
+    , descriptiveTypeName(rhs.descriptiveTypeName)
     , owner(rhs.owner)
   { }
 
@@ -111,7 +116,7 @@ struct DeserializedNode {
   {
     MOZ_ASSERT(&rhs != this);
     this->~DeserializedNode();
-    new(this) DeserializedNode(Move(rhs));
+    new(this) DeserializedNode(std::move(rhs));
     return *this;
   }
 
@@ -132,6 +137,7 @@ protected:
     , allocationStack(Nothing())
     , jsObjectClassName(nullptr)
     , scriptFilename(nullptr)
+    , descriptiveTypeName(nullptr)
     , owner(nullptr)
   { }
 
@@ -259,6 +265,7 @@ public:
   Node::Size size(mozilla::MallocSizeOf mallocSizeof) const override;
   const char* jsObjectClassName() const override { return get().jsObjectClassName; }
   const char* scriptFilename() const final { return get().scriptFilename; }
+  const char16_t* descriptiveTypeName() const override { return get().descriptiveTypeName; }
 
   bool hasAllocationStack() const override { return get().allocationStack.isSome(); }
   StackFrame allocationStack() const override;

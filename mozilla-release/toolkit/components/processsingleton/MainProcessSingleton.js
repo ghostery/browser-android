@@ -22,8 +22,7 @@ MainProcessSingleton.prototype = {
     engineURL = NetUtil.newURI(engineURL, null, pageURL);
 
     let iconURL;
-    let tabbrowser = browser.getTabBrowser();
-    if (browser.mIconURL && (!tabbrowser || tabbrowser.shouldLoadFavIcon(pageURL)))
+    if (browser.mIconURL && browser.mIconURL.startsWith("data:"))
       iconURL = NetUtil.newURI(browser.mIconURL);
 
     try {
@@ -32,9 +31,6 @@ MainProcessSingleton.prototype = {
 
       if (!isWeb.includes(engineURL.scheme))
         throw "Unsupported search engine URL: " + engineURL.spec;
-
-      if (iconURL && !isWeb.includes(iconURL.scheme))
-        throw "Unsupported search icon URL: " + iconURL.spec;
 
       if (Services.policies &&
           !Services.policies.isAllowed("installSearchEngine")) {
@@ -64,12 +60,13 @@ MainProcessSingleton.prototype = {
   observe(subject, topic, data) {
     switch (topic) {
     case "app-startup": {
+      ChromeUtils.import("resource://gre/modules/CustomElementsListener.jsm", null);
       Services.obs.addObserver(this, "xpcom-shutdown");
 
       // Load this script early so that console.* is initialized
       // before other frame scripts.
-      Services.mm.loadFrameScript("chrome://global/content/browser-content.js", true);
-      Services.ppmm.loadProcessScript("chrome://global/content/process-content.js", true);
+      Services.mm.loadFrameScript("chrome://global/content/browser-content.js", true, true);
+      Services.ppmm.loadProcessScript("chrome://global/content/process-content.js", true, true);
       Services.mm.addMessageListener("Search:AddEngine", this.addSearchEngine);
       Services.ppmm.loadProcessScript("resource:///modules/ContentObservers.js", true);
       break;

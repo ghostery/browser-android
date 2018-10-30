@@ -38,6 +38,10 @@
 <!ENTITY bookmarksToolbar.tooltip         "Barre d’outils des marque-pages">
 <!ENTITY navigationToolbar.tooltip        "Barre de navigation">
 
+<!ENTITY editBookmark.done.label "Terminer">
+<!ENTITY editBookmark.cancel.label "Annuler">
+<!ENTITY editBookmark.removeBookmark.accessKey "S">
+
 <!-- Toolbar items --> 
 <!ENTITY backButton.label             "Précédent">
 <!ENTITY backButton.tooltip           "Reculer d’une page">

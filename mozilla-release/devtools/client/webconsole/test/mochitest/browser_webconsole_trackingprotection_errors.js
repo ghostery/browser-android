@@ -24,11 +24,11 @@ add_task(async function testMessagesAppear() {
   await UrlClassifierTestUtils.addTestTrackers();
   await pushPref("privacy.trackingprotection.enabled", true);
 
-  let hud = await openNewTabAndConsole(TEST_URI);
+  const hud = await openNewTabAndConsole(TEST_URI);
 
-  let message = await waitFor(() => findMessage(hud,
+  const message = await waitFor(() => findMessage(hud,
     "The resource at \u201chttp://tracking.example.com/\u201d was " +
-    "blocked because tracking protection is enabled"));
+    "blocked because content blocking is enabled"));
 
   await testClickOpenNewTab(hud, message);
 });
@@ -37,7 +37,7 @@ async function testClickOpenNewTab(hud, message) {
   info("Clicking on the Learn More link");
 
   const learnMoreLink = message.querySelector(".learn-more-link");
-  let linkSimulation = await simulateLinkClick(learnMoreLink);
+  const linkSimulation = await simulateLinkClick(learnMoreLink);
   checkLink({
     ...linkSimulation,
     expectedLink: LEARN_MORE_URI,

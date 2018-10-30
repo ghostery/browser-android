@@ -47,7 +47,7 @@ var EXPORTED_SYMBOLS = ["pktApi"];
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 
-Cu.importGlobalProperties(["XMLHttpRequest"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["XMLHttpRequest"]);
 
 var pktApi = (function() {
 
@@ -155,10 +155,8 @@ var pktApi = (function() {
      *  The return format: { cookieName:cookieValue, cookieName:cookieValue, ... }
     */
     function getCookiesFromPocket() {
-        var pocketCookies = Services.cookies.getCookiesFromHost(pocketSiteHost, {});
         var cookies = {};
-        while (pocketCookies.hasMoreElements()) {
-            var cookie = pocketCookies.getNext().QueryInterface(Ci.nsICookie2);
+        for (let cookie of Services.cookies.getCookiesFromHost(pocketSiteHost, {})) {
             cookies[cookie.name] = cookie.value;
         }
         return cookies;
@@ -330,7 +328,7 @@ var pktApi = (function() {
         var sendData = {
             access_token: accessToken,
             url,
-            since: since ? since : 0
+            since: since ? since : 0,
         };
 
         if (options.title) {
@@ -341,7 +339,6 @@ var pktApi = (function() {
             path: "/firefox/save",
             data: sendData,
             success(data) {
-
                 // Update premium status, tags and since
                 var tags = data.tags;
                 if ((typeof tags !== "undefined") && Array.isArray(tags)) {
@@ -359,11 +356,60 @@ var pktApi = (function() {
                 // Save since value for further requests
                 setSetting("latestSince", data.since);
 
+                // Define variant for ho2
+                if (data.flags) {
+                    var showHo2 = (Services.locale.getAppLocaleAsLangTag() === "en-US") ? data.flags.show_ffx_mobile_prompt : "control";
+                    setSetting("test.ho2", showHo2);
+                }
+                data.ho2 = getSetting("test.ho2");
+
                 if (options.success) {
                     options.success.apply(options, Array.apply(null, arguments));
                 }
             },
-            error: options.error
+            error: options.error,
+        });
+    }
+
+    /**
+     * Get a preview for saved URL
+     * @param {string} url     URL of the link
+     * @param {Object | undefined} options Can provide a `success` callback and an `error` callback.
+     * @return {Boolean} Returns Boolean whether the api call started sucessfully
+     */
+    function getArticleInfo(url, options) {
+        return apiRequest({
+            path: "/getItemPreview",
+            data: {
+                access_token: getAccessToken(),
+                url,
+            },
+            success(data) {
+                if (options.success) {
+                    options.success.apply(options, Array.apply(null, arguments));
+                }
+            },
+            error: options.error,
+        });
+    }
+
+    /**
+     * Request a email for mobile apps
+     * @param {Object | undefined} options Can provide a `success` callback and an `error` callback.
+     * @return {Boolean} Returns Boolean whether the api call started sucessfully
+     */
+    function getMobileDownload(options) {
+        return apiRequest({
+            path: "/firefox/get-app",
+            data: {
+                access_token: getAccessToken(),
+            },
+            success(data) {
+                if (options.success) {
+                    options.success.apply(options, Array.apply(null, arguments));
+                }
+            },
+            error: options.error,
         });
     }
 
@@ -378,7 +424,7 @@ var pktApi = (function() {
     function deleteItem(itemId, options) {
         var action = {
             action: "delete",
-            item_id: itemId
+            item_id: itemId,
         };
         return sendAction(action, options);
     }
@@ -394,7 +440,7 @@ var pktApi = (function() {
     function archiveItem(itemId, options) {
         var action = {
             action: "archive",
-            item_id: itemId
+            item_id: itemId,
         };
         return sendAction(action, options);
     }
@@ -430,10 +476,10 @@ var pktApi = (function() {
             path: "/send",
             data: {
                 access_token: getAccessToken(),
-                actions: JSON.stringify(actions)
+                actions: JSON.stringify(actions),
             },
             success: options.success,
-            error: options.error
+            error: options.error,
         });
     }
 
@@ -483,7 +529,7 @@ var pktApi = (function() {
         // Tags add action
         var action = {
             action: "tags_add",
-            tags
+            tags,
         };
         action = extend(action, actionPart);
 
@@ -502,7 +548,7 @@ var pktApi = (function() {
                 var tagToSave = tags[i].trim();
                 var newUsedTagObject = {
                     "tag": tagToSave,
-                    "timestamp": new Date().getTime()
+                    "timestamp": new Date().getTime(),
                 };
                 usedTags[tagToSave] = newUsedTagObject;
             }
@@ -610,7 +656,7 @@ var pktApi = (function() {
             path: "/getSuggestedTags",
             data,
             success: options.success,
-            error: options.error
+            error: options.error,
         });
     }
 
@@ -624,7 +670,7 @@ var pktApi = (function() {
             path: "/firefox/get",
             data: requestData,
             success: options.success,
-            error: options.error
+            error: options.error,
         });
     }
 
@@ -632,7 +678,7 @@ var pktApi = (function() {
      * Helper function to get current signup AB group the user is in
      */
     function getSignupPanelTabTestVariant() {
-        return getMultipleTestOption("panelSignUp", {control: 1, v1: 8, v2: 1 });
+        return getMultipleTestOption("panelSignUp", {control: 1, v1: 0, v2: 0 });
     }
 
     function getMultipleTestOption(testName, testOptions) {
@@ -676,5 +722,7 @@ var pktApi = (function() {
         getSuggestedTagsForURL,
         getSignupPanelTabTestVariant,
         retrieve,
+        getArticleInfo,
+        getMobileDownload,
     };
 }());

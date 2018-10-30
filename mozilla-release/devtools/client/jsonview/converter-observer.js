@@ -53,14 +53,14 @@ const CONTENT_SNIFFER_CATEGORY = "net-content-sniffers";
 function JsonViewSniffer() {}
 
 JsonViewSniffer.prototype = {
-  QueryInterface: XPCOMUtils.generateQI([Ci.nsIContentSniffer]),
+  QueryInterface: ChromeUtils.generateQI([Ci.nsIContentSniffer]),
 
   get wrappedJSObject() {
     return this;
   },
 
   isTopLevelLoad: function(request) {
-    let loadInfo = request.loadInfo;
+    const loadInfo = request.loadInfo;
     if (loadInfo && loadInfo.isTopLevelLoad) {
       return (request.loadFlags & Ci.nsIChannel.LOAD_DOCUMENT_URI);
     }
@@ -175,9 +175,7 @@ ConverterObserver.prototype = {
         JSON_SNIFFER_CLASS_DESCRIPTION,
         JSON_SNIFFER_CONTRACT_ID,
         JsonSnifferFactory);
-      const categoryManager = Cc["@mozilla.org/categorymanager;1"]
-        .getService(Ci.nsICategoryManager);
-      categoryManager.addCategoryEntry(CONTENT_SNIFFER_CATEGORY, JSON_VIEW_TYPE,
+      Services.catMan.addCategoryEntry(CONTENT_SNIFFER_CATEGORY, JSON_VIEW_TYPE,
         JSON_SNIFFER_CONTRACT_ID, false, false);
     }
 
@@ -194,9 +192,7 @@ ConverterObserver.prototype = {
 
     if (registrar.isCIDRegistered(JSON_SNIFFER_CLASS_ID)) {
       registrar.unregisterFactory(JSON_SNIFFER_CLASS_ID, JsonSnifferFactory);
-      const categoryManager = Cc["@mozilla.org/categorymanager;1"]
-        .getService(Ci.nsICategoryManager);
-      categoryManager.deleteCategoryEntry(CONTENT_SNIFFER_CATEGORY,
+      Services.catMan.deleteCategoryEntry(CONTENT_SNIFFER_CATEGORY,
         JSON_VIEW_TYPE, false);
     }
 

@@ -70,21 +70,18 @@ public class LayerSession {
         private void onCompositorDetached() {
             // Clear out any pending calls on the UI thread.
             LayerSession.this.onCompositorDetached();
-            disposeNative();
+        }
+
+        @Override protected void disposeNative() {
+            // Disposal happens in native code.
+            throw new UnsupportedOperationException();
         }
 
         @WrapForJNI(calledFrom = "ui", dispatchTo = "gecko")
-        @Override protected native void disposeNative();
-
-        @WrapForJNI(calledFrom = "any", dispatchTo = "gecko")
         public native void attachNPZC(PanZoomController npzc);
 
         @WrapForJNI(calledFrom = "ui", dispatchTo = "gecko")
         public native void onBoundsChanged(int left, int top, int width, int height);
-
-        // Gecko thread creates compositor; blocks UI thread.
-        @WrapForJNI(calledFrom = "ui", dispatchTo = "proxy")
-        public native void createCompositor(int width, int height, Object surface);
 
         // Gecko thread pauses compositor; blocks UI thread.
         @WrapForJNI(calledFrom = "ui", dispatchTo = "current")
@@ -144,13 +141,6 @@ public class LayerSession {
         private void updateOverscrollOffset(final float x, final float y) {
             LayerSession.this.updateOverscrollOffset(x, y);
         }
-
-        @WrapForJNI(calledFrom = "ui")
-        private void onSelectionCaretDrag(final boolean dragging) {
-            // Active SelectionCaretDrag requires DynamicToolbarAnimator to be pinned to
-            // avoid unwanted scroll interactions.
-            LayerSession.this.onSelectionCaretDrag(dragging);
-        }
     }
 
     protected final Compositor mCompositor = new Compositor();
@@ -163,7 +153,6 @@ public class LayerSession {
     private CompositorController mController;
 
     private boolean mAttachedCompositor;
-    private boolean mCalledCreateCompositor;
     private boolean mCompositorReady;
     private Surface mSurface;
 
@@ -361,6 +350,8 @@ public class LayerSession {
             // Leave mSurface alone because we'll need it later for onCompositorReady.
             onSurfaceChanged(mSurface, mWidth, mHeight);
         }
+
+        mCompositor.sendToolbarAnimatorMessage(IS_COMPOSITOR_CONTROLLER_OPEN);
     }
 
     /* package */ void onCompositorDetached() {
@@ -373,7 +364,6 @@ public class LayerSession {
         }
 
         mAttachedCompositor = false;
-        mCalledCreateCompositor = false;
         mCompositorReady = false;
     }
 
@@ -494,14 +484,22 @@ public class LayerSession {
         mOverscroll.setDistance(y, OverscrollEdgeEffect.AXIS_Y);
     }
 
-    /* package */ void onSelectionCaretDrag(final boolean dragging) {
+    protected boolean mShouldPinOnScreen;
+
+    protected void setShouldPinOnScreen(final boolean pinned) {
         if (DEBUG) {
             ThreadUtils.assertOnUiThread();
         }
 
         if (mToolbar != null) {
-            mToolbar.setPinned(dragging, DynamicToolbarAnimator.PinReason.CARET_DRAG);
+            mToolbar.setPinned(pinned, DynamicToolbarAnimator.PinReason.CARET_DRAG);
         }
+        mShouldPinOnScreen = pinned;
+    }
+
+    /* package */ boolean shouldPinOnScreen() {
+        ThreadUtils.assertOnUiThread();
+        return mShouldPinOnScreen;
     }
 
     /* package */ void onMetricsChanged(final float scrollX, final float scrollY,
@@ -550,12 +548,6 @@ public class LayerSession {
             mCompositor.syncResumeResizeCompositor(width, height, surface);
             onWindowBoundsChanged();
             return;
-        }
-
-        if (mAttachedCompositor && !mCalledCreateCompositor) {
-            mCompositor.createCompositor(width, height, surface);
-            mCompositor.sendToolbarAnimatorMessage(IS_COMPOSITOR_CONTROLLER_OPEN);
-            mCalledCreateCompositor = true;
         }
 
         // We have a valid surface but we're not attached or the compositor

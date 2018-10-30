@@ -16,6 +16,7 @@
 #include "mozilla/Assertions.h"
 #include "mozilla/SchedulerGroup.h"
 #include "mozilla/dom/ClientManagerActors.h"
+#include "mozilla/dom/PBackgroundSDBConnectionChild.h"
 #include "mozilla/dom/PFileSystemRequestChild.h"
 #include "mozilla/dom/FileSystemTaskBase.h"
 #include "mozilla/dom/asmjscache/AsmJSCache.h"
@@ -31,6 +32,7 @@
 #include "mozilla/dom/GamepadTestChannelChild.h"
 #include "mozilla/dom/LocalStorage.h"
 #include "mozilla/dom/MessagePortChild.h"
+#include "mozilla/dom/ServiceWorkerActors.h"
 #include "mozilla/dom/ServiceWorkerManagerChild.h"
 #include "mozilla/dom/TabChild.h"
 #include "mozilla/dom/TabGroup.h"
@@ -86,6 +88,9 @@ using mozilla::dom::cache::PCacheChild;
 using mozilla::dom::cache::PCacheStorageChild;
 using mozilla::dom::cache::PCacheStreamControlChild;
 using mozilla::dom::LocalStorage;
+using mozilla::dom::PServiceWorkerChild;
+using mozilla::dom::PServiceWorkerContainerChild;
+using mozilla::dom::PServiceWorkerRegistrationChild;
 using mozilla::dom::StorageDBChild;
 
 using mozilla::dom::WebAuthnTransactionChild;
@@ -208,6 +213,44 @@ BackgroundChildImpl::AllocPBackgroundIndexedDBUtilsChild()
 bool
 BackgroundChildImpl::DeallocPBackgroundIndexedDBUtilsChild(
                                          PBackgroundIndexedDBUtilsChild* aActor)
+{
+  MOZ_ASSERT(aActor);
+
+  delete aActor;
+  return true;
+}
+
+BackgroundChildImpl::PBackgroundLocalStorageCacheChild*
+BackgroundChildImpl::AllocPBackgroundLocalStorageCacheChild(
+                                            const PrincipalInfo& aPrincipalInfo,
+                                            const nsCString& aOriginKey,
+                                            const uint32_t& aPrivateBrowsingId)
+{
+  MOZ_CRASH("PBackgroundLocalStorageChild actors should be manually "
+            "constructed!");
+}
+
+bool
+BackgroundChildImpl::DeallocPBackgroundLocalStorageCacheChild(
+                                      PBackgroundLocalStorageCacheChild* aActor)
+{
+  MOZ_ASSERT(aActor);
+
+  delete aActor;
+  return true;
+}
+
+BackgroundChildImpl::PBackgroundSDBConnectionChild*
+BackgroundChildImpl::AllocPBackgroundSDBConnectionChild(
+                                            const PrincipalInfo& aPrincipalInfo)
+{
+  MOZ_CRASH("PBackgroundSDBConnectionChild actor should be manually "
+            "constructed!");
+}
+
+bool
+BackgroundChildImpl::DeallocPBackgroundSDBConnectionChild(
+                                          PBackgroundSDBConnectionChild* aActor)
 {
   MOZ_ASSERT(aActor);
 
@@ -377,6 +420,7 @@ BackgroundChildImpl::DeallocPCamerasChild(camera::PCamerasChild *aActor)
   RefPtr<camera::CamerasChild> child =
       dont_AddRef(static_cast<camera::CamerasChild*>(aActor));
   MOZ_ASSERT(aActor);
+  camera::Shutdown();
 #endif
   return true;
 }
@@ -675,30 +719,40 @@ BackgroundChildImpl::DeallocPHttpBackgroundChannelChild(PHttpBackgroundChannelCh
   return true;
 }
 
-mozilla::ipc::IPCResult
-BackgroundChildImpl::RecvDispatchLocalStorageChange(
-                                            const nsString& aDocumentURI,
-                                            const nsString& aKey,
-                                            const nsString& aOldValue,
-                                            const nsString& aNewValue,
-                                            const PrincipalInfo& aPrincipalInfo,
-                                            const bool& aIsPrivate)
+PServiceWorkerChild*
+BackgroundChildImpl::AllocPServiceWorkerChild(const IPCServiceWorkerDescriptor&)
 {
-  if (!NS_IsMainThread()) {
-    return IPC_OK();
-  }
+  return dom::AllocServiceWorkerChild();
+}
 
-  nsresult rv;
-  nsCOMPtr<nsIPrincipal> principal =
-    PrincipalInfoToPrincipal(aPrincipalInfo, &rv);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return IPC_FAIL_NO_REASON(this);
-  }
+bool
+BackgroundChildImpl::DeallocPServiceWorkerChild(PServiceWorkerChild* aActor)
+{
+  return dom::DeallocServiceWorkerChild(aActor);
+}
 
-  LocalStorage::DispatchStorageEvent(aDocumentURI, aKey, aOldValue, aNewValue,
-                                     principal, aIsPrivate, nullptr, true);
+PServiceWorkerContainerChild*
+BackgroundChildImpl::AllocPServiceWorkerContainerChild()
+{
+  return dom::AllocServiceWorkerContainerChild();
+}
 
-  return IPC_OK();
+bool
+BackgroundChildImpl::DeallocPServiceWorkerContainerChild(PServiceWorkerContainerChild* aActor)
+{
+  return dom::DeallocServiceWorkerContainerChild(aActor);
+}
+
+PServiceWorkerRegistrationChild*
+BackgroundChildImpl::AllocPServiceWorkerRegistrationChild(const IPCServiceWorkerRegistrationDescriptor&)
+{
+  return dom::AllocServiceWorkerRegistrationChild();
+}
+
+bool
+BackgroundChildImpl::DeallocPServiceWorkerRegistrationChild(PServiceWorkerRegistrationChild* aActor)
+{
+  return dom::DeallocServiceWorkerRegistrationChild(aActor);
 }
 
 bool

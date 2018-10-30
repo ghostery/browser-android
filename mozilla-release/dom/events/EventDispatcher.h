@@ -9,7 +9,9 @@
 #define mozilla_EventDispatcher_h_
 
 #include "mozilla/dom/BindingDeclarations.h"
+#include "mozilla/dom/Touch.h"
 #include "mozilla/EventForwards.h"
+#include "mozilla/Maybe.h"
 #include "nsCOMPtr.h"
 #include "nsTArray.h"
 
@@ -126,9 +128,11 @@ public:
     , mMayHaveListenerManager(true)
     , mWantsPreHandleEvent(false)
     , mRootOfClosedTree(false)
+    , mItemInShadowTree(false)
     , mParentIsSlotInClosedTree(false)
     , mParentIsChromeHandler(false)
     , mRelatedTargetRetargetedInCurrentScope(false)
+    , mIgnoreBecauseOfShadowDOM(false)
     , mParentTarget(nullptr)
     , mEventTargetAtParent(nullptr)
     , mRetargetedRelatedTarget(nullptr)
@@ -147,14 +151,17 @@ public:
     mMayHaveListenerManager = true;
     mWantsPreHandleEvent = false;
     mRootOfClosedTree = false;
+    mItemInShadowTree = false;
     mParentIsSlotInClosedTree = false;
     mParentIsChromeHandler = false;
     // Note, we don't clear mRelatedTargetRetargetedInCurrentScope explicitly,
     // since it is used during event path creation to indicate whether
     // relatedTarget may need to be retargeted.
+    mIgnoreBecauseOfShadowDOM = false;
     mParentTarget = nullptr;
     mEventTargetAtParent = nullptr;
     mRetargetedRelatedTarget = nullptr;
+    mRetargetedTouchTargets.reset();
   }
 
   dom::EventTarget* GetParentTarget()
@@ -170,9 +177,10 @@ public:
     }
   }
 
-  void IgnoreCurrentTarget()
+  void IgnoreCurrentTargetBecauseOfShadowDOMRetargeting()
   {
     mCanHandle = false;
+    mIgnoreBecauseOfShadowDOM = true;
     SetParentTarget(nullptr, false);
     mEventTargetAtParent = nullptr;
   }
@@ -235,6 +243,12 @@ public:
   bool mRootOfClosedTree;
 
   /**
+   * If target is node and its root is a shadow root.
+   * https://dom.spec.whatwg.org/#event-path-item-in-shadow-tree
+   */
+  bool mItemInShadowTree;
+
+  /**
    * True if mParentTarget is HTMLSlotElement in a closed shadow tree and the
    * current target is assigned to that slot.
    */
@@ -251,6 +265,12 @@ public:
    * event path creation crosses shadow boundary.
    */
   bool mRelatedTargetRetargetedInCurrentScope;
+
+  /**
+   * True if Shadow DOM relatedTarget retargeting causes the current item
+   * to not show up in the event path.
+   */
+  bool mIgnoreBecauseOfShadowDOM;
 private:
   /**
    * Parent item in the event target chain.
@@ -269,6 +289,13 @@ public:
    * to a new EventTarget.
    */
   dom::EventTarget* mRetargetedRelatedTarget;
+
+  /**
+   * If mEvent is a WidgetTouchEvent and its mTouches needs retargeting,
+   * set the targets to this array. The array should contain one entry per
+   * each object in WidgetTouchEvent::mTouches.
+   */
+  mozilla::Maybe<nsTArray<RefPtr<dom::EventTarget>>> mRetargetedTouchTargets;
 
   /**
    * Set to the value of mEvent->mTarget of the previous scope in case of

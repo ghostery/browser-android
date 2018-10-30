@@ -16,9 +16,7 @@
 #include "TreeWalker.h"
 #include "XULMenuAccessible.h"
 
-#include "nsIDOMNSEditableElement.h"
 #include "nsIDOMXULButtonElement.h"
-#include "nsIDOMXULCheckboxElement.h"
 #include "nsIDOMXULMenuListElement.h"
 #include "nsIDOMXULSelectCntrlItemEl.h"
 #include "nsIEditor.h"
@@ -56,7 +54,7 @@ XULButtonAccessible::~XULButtonAccessible()
 // XULButtonAccessible: nsIAccessible
 
 uint8_t
-XULButtonAccessible::ActionCount()
+XULButtonAccessible::ActionCount() const
 {
   return 1;
 }
@@ -69,7 +67,7 @@ XULButtonAccessible::ActionNameAt(uint8_t aIndex, nsAString& aName)
 }
 
 bool
-XULButtonAccessible::DoAction(uint8_t aIndex)
+XULButtonAccessible::DoAction(uint8_t aIndex) const
 {
   if (aIndex != 0)
     return false;
@@ -82,13 +80,13 @@ XULButtonAccessible::DoAction(uint8_t aIndex)
 // XULButtonAccessible: Accessible
 
 role
-XULButtonAccessible::NativeRole()
+XULButtonAccessible::NativeRole() const
 {
   return roles::PUSHBUTTON;
 }
 
 uint64_t
-XULButtonAccessible::NativeState()
+XULButtonAccessible::NativeState() const
 {
   // Possible states: focused, focusable, unavailable(disabled).
 
@@ -159,25 +157,9 @@ bool
 XULButtonAccessible::IsAcceptableChild(nsIContent* aEl) const
 {
   // In general XUL button has not accessible children. Nevertheless menu
-  // buttons can have button (@type="menu-button") and popup accessibles
-  // (@type="menu-button", @type="menu" or columnpicker.
-
-  // Get an accessible for menupopup or popup elements.
-  if (aEl->IsXULElement(nsGkAtoms::menupopup) ||
-      aEl->IsXULElement(nsGkAtoms::popup)) {
-    return true;
-  }
-
-  // Button and toolbarbutton are real buttons. Get an accessible
-  // for it. Ignore dropmarker button which is placed as a last child.
-  if ((!aEl->IsXULElement(nsGkAtoms::button) &&
-       !aEl->IsXULElement(nsGkAtoms::toolbarbutton)) ||
-      aEl->IsXULElement(nsGkAtoms::dropMarker)) {
-    return false;
-  }
-
-  return mContent->AsElement()->AttrValueIs(kNameSpaceID_None, nsGkAtoms::type,
-                                            nsGkAtoms::menuButton, eCaseMatters);
+  // buttons can have popup accessibles (@type="menu" or columnpicker).
+  return aEl->IsXULElement(nsGkAtoms::menupopup) ||
+         aEl->IsXULElement(nsGkAtoms::popup);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,12 +168,8 @@ XULButtonAccessible::IsAcceptableChild(nsIContent* aEl) const
 bool
 XULButtonAccessible::ContainsMenu() const
 {
-  static Element::AttrValuesArray strings[] =
-    {&nsGkAtoms::menu, &nsGkAtoms::menuButton, nullptr};
-
-  return mContent->AsElement()->FindAttrValueIn(kNameSpaceID_None,
-                                                nsGkAtoms::type,
-                                                strings, eCaseMatters) >= 0;
+  return mContent->AsElement()->AttrValueIs(kNameSpaceID_None, nsGkAtoms::type,
+                                            nsGkAtoms::menu, eCaseMatters);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -205,7 +183,7 @@ XULDropmarkerAccessible::
 }
 
 uint8_t
-XULDropmarkerAccessible::ActionCount()
+XULDropmarkerAccessible::ActionCount() const
 {
   return 1;
 }
@@ -254,7 +232,7 @@ XULDropmarkerAccessible::ActionNameAt(uint8_t aIndex, nsAString& aName)
 }
 
 bool
-XULDropmarkerAccessible::DoAction(uint8_t index)
+XULDropmarkerAccessible::DoAction(uint8_t index) const
 {
   if (index == eAction_Click) {
     DropmarkerOpen(true); // Reverse the open attribute
@@ -264,82 +242,17 @@ XULDropmarkerAccessible::DoAction(uint8_t index)
 }
 
 role
-XULDropmarkerAccessible::NativeRole()
+XULDropmarkerAccessible::NativeRole() const
 {
   return roles::PUSHBUTTON;
 }
 
 uint64_t
-XULDropmarkerAccessible::NativeState()
+XULDropmarkerAccessible::NativeState() const
 {
   return DropmarkerOpen(false) ? states::PRESSED : 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// XULCheckboxAccessible
-////////////////////////////////////////////////////////////////////////////////
-
-XULCheckboxAccessible::
-  XULCheckboxAccessible(nsIContent* aContent, DocAccessible* aDoc) :
-  LeafAccessible(aContent, aDoc)
-{
-}
-
-role
-XULCheckboxAccessible::NativeRole()
-{
-  return roles::CHECKBUTTON;
-}
-
-uint8_t
-XULCheckboxAccessible::ActionCount()
-{
-  return 1;
-}
-
-void
-XULCheckboxAccessible::ActionNameAt(uint8_t aIndex, nsAString& aName)
-{
-  if (aIndex == eAction_Click) {
-    if (NativeState() & states::CHECKED)
-      aName.AssignLiteral("uncheck");
-    else
-      aName.AssignLiteral("check");
-  }
-}
-
-bool
-XULCheckboxAccessible::DoAction(uint8_t aIndex)
-{
-  if (aIndex != eAction_Click)
-    return false;
-
-  DoCommand();
-  return true;
-}
-
-uint64_t
-XULCheckboxAccessible::NativeState()
-{
-  // Possible states: focused, focusable, unavailable(disabled), checked
-  // Get focus and disable status from base class
-  uint64_t state = LeafAccessible::NativeState();
-
-  state |= states::CHECKABLE;
-
-  // Determine Checked state
-  nsCOMPtr<nsIDOMXULCheckboxElement> xulCheckboxElement =
-    do_QueryInterface(mContent);
-  if (xulCheckboxElement) {
-    bool checked = false;
-    xulCheckboxElement->GetChecked(&checked);
-    if (checked) {
-      state |= states::CHECKED;
-    }
-  }
-
-  return state;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // XULGroupboxAccessible
@@ -352,13 +265,13 @@ XULGroupboxAccessible::
 }
 
 role
-XULGroupboxAccessible::NativeRole()
+XULGroupboxAccessible::NativeRole() const
 {
   return roles::GROUPING;
 }
 
 ENameValueFlag
-XULGroupboxAccessible::NativeName(nsString& aName)
+XULGroupboxAccessible::NativeName(nsString& aName) const
 {
   // XXX: we use the first related accessible only.
   Accessible* label =
@@ -370,7 +283,7 @@ XULGroupboxAccessible::NativeName(nsString& aName)
 }
 
 Relation
-XULGroupboxAccessible::RelationByType(RelationType aType)
+XULGroupboxAccessible::RelationByType(RelationType aType) const
 {
   Relation rel = AccessibleWrap::RelationByType(aType);
   if (aType != RelationType::LABELLED_BY)
@@ -408,7 +321,7 @@ XULRadioButtonAccessible::
 }
 
 uint64_t
-XULRadioButtonAccessible::NativeState()
+XULRadioButtonAccessible::NativeState() const
 {
   uint64_t state = LeafAccessible::NativeState();
   state |= states::CHECKABLE;
@@ -462,7 +375,7 @@ XULRadioGroupAccessible::
 }
 
 role
-XULRadioGroupAccessible::NativeRole()
+XULRadioGroupAccessible::NativeRole() const
 {
   return roles::RADIO_GROUP;
 }
@@ -509,7 +422,7 @@ XULStatusBarAccessible::
 }
 
 role
-XULStatusBarAccessible::NativeRole()
+XULStatusBarAccessible::NativeRole() const
 {
   return roles::STATUSBAR;
 }
@@ -578,13 +491,13 @@ XULToolbarAccessible::
 }
 
 role
-XULToolbarAccessible::NativeRole()
+XULToolbarAccessible::NativeRole() const
 {
   return roles::TOOLBAR;
 }
 
 ENameValueFlag
-XULToolbarAccessible::NativeName(nsString& aName)
+XULToolbarAccessible::NativeName(nsString& aName) const
 {
   if (mContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::toolbarname, aName))
     aName.CompressWhitespace();
@@ -604,13 +517,13 @@ XULToolbarSeparatorAccessible::
 }
 
 role
-XULToolbarSeparatorAccessible::NativeRole()
+XULToolbarSeparatorAccessible::NativeRole() const
 {
   return roles::SEPARATOR;
 }
 
 uint64_t
-XULToolbarSeparatorAccessible::NativeState()
+XULToolbarSeparatorAccessible::NativeState() const
 {
   return 0;
 }

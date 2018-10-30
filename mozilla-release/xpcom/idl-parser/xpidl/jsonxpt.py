@@ -7,8 +7,6 @@
 
 """Generate a json XPT typelib for an IDL file"""
 
-import os
-import sys
 import xpidl
 import json
 import itertools
@@ -45,6 +43,7 @@ TypeMap = {
     'utf8string':         'TD_UTF8STRING',
     'cstring':            'TD_CSTRING',
     'jsval':              'TD_JSVAL',
+    'promise':            'TD_PROMISE',
 }
 
 
@@ -57,17 +56,25 @@ def get_type(type, calltype, iid_is=None, size_is=None):
         type = type.realtype
 
     if isinstance(type, xpidl.Builtin):
-        ret = { 'tag': TypeMap[type.name] }
+        ret = {'tag': TypeMap[type.name]}
         if type.name in ['string', 'wstring'] and size_is is not None:
             ret['tag'] += '_SIZE_IS'
             ret['size_is'] = size_is
         return ret
 
     if isinstance(type, xpidl.Array):
-        # NB: For an Array<T> we pass down the iid_is to get the type of T.
+        # NB: For a Array<T> we pass down the iid_is to get the type of T.
         #     This allows Arrays of InterfaceIs types to work.
         return {
             'tag': 'TD_ARRAY',
+            'element': get_type(type.type, calltype, iid_is),
+        }
+
+    if isinstance(type, xpidl.LegacyArray):
+        # NB: For a Legacy [array] T we pass down iid_is to get the type of T.
+        #     This allows [array] of InterfaceIs types to work.
+        return {
+            'tag': 'TD_LEGACY_ARRAY',
             'size_is': size_is,
             'element': get_type(type.type, calltype, iid_is),
         }
@@ -97,7 +104,7 @@ def get_type(type, calltype, iid_is=None, size_is=None):
                 'iid_is': iid_is,
             }
         else:
-            return { 'tag': 'TD_VOID' }
+            return {'tag': 'TD_VOID'}
 
     raise Exception("Unknown type!")
 
@@ -114,7 +121,8 @@ def mk_param(type, in_=0, out=0, optional=0):
 
 
 def mk_method(name, params, getter=0, setter=0, notxpcom=0,
-              hidden=0, optargc=0, context=0, hasretval=0):
+              hidden=0, optargc=0, context=0, hasretval=0,
+              symbol=0):
     return {
         'name': name,
         # NOTE: We don't include any return value information here, as we'll
@@ -131,6 +139,7 @@ def mk_method(name, params, getter=0, setter=0, notxpcom=0,
             ('optargc', optargc),
             ('jscontext', context),
             ('hasretval', hasretval),
+            ('symbol', symbol),
         ),
     }
 
@@ -155,7 +164,7 @@ def build_interface(iface):
         consts.append({
             'name': c.name,
             'type': get_type(c.basetype, ''),
-            'value': c.getValue(), # All of our consts are numbers
+            'value': c.getValue(),  # All of our consts are numbers
         })
 
     def build_method(m):
@@ -179,19 +188,21 @@ def build_interface(iface):
         methods.append(mk_method(
             m.name, params, notxpcom=m.notxpcom, hidden=m.noscript,
             optargc=m.optional_argc, context=m.implicit_jscontext,
-            hasretval=hasretval))
+            hasretval=hasretval, symbol=m.symbol))
 
     def build_attr(a):
         # Write the getter
         param = mk_param(get_type(a.realtype, 'out'), out=1)
         methods.append(mk_method(a.name, [param], getter=1, hidden=a.noscript,
-                                 context=a.implicit_jscontext, hasretval=1))
+                                 context=a.implicit_jscontext, hasretval=1,
+                                 symbol=a.symbol))
 
         # And maybe the setter
         if not a.readonly:
             param = mk_param(get_type(a.realtype, 'in'), in_=1)
             methods.append(mk_method(a.name, [param], setter=1, hidden=a.noscript,
-                                     context=a.implicit_jscontext))
+                                     context=a.implicit_jscontext,
+                                     symbol=a.symbol))
 
     for member in iface.members:
         if isinstance(member, xpidl.ConstMember):
@@ -205,16 +216,12 @@ def build_interface(iface):
         else:
             raise Exception("Unexpected interface member: %s" % member)
 
-    assert iface.attributes.shim is not None or iface.attributes.shimfile is None
-
     return {
         'name': iface.name,
         'uuid': iface.attributes.uuid,
         'methods': methods,
         'consts': consts,
         'parent': iface.base,
-        'shim': iface.attributes.shim,
-        'shimfile': iface.attributes.shimfile,
         'flags': flags(
             ('scriptable', iface.attributes.scriptable),
             ('function', iface.attributes.function),
@@ -228,23 +235,20 @@ def build_interface(iface):
 # functions, but are exported so that if we need to do something more
 # complex in them in the future we can.
 
-# Given a parsed IDL file, generate and return the typelib for that file.
 def build_typelib(idl):
-    def exported(p):
-        if p.kind != 'interface':
-            return False
-        # Only export scriptable or shim interfaces
-        return p.attributes.scriptable or p.attributes.shim
+    """Given a parsed IDL file, generate and return the typelib"""
+    return [build_interface(p) for p in idl.productions
+            if p.kind == 'interface' and p.attributes.scriptable]
 
-    return [build_interface(p) for p in idl.productions if exported(p)]
 
-# Link a list of typelibs together into a single typelib
 def link(typelibs):
+    """Link a list of typelibs together into a single typelib"""
     linked = list(itertools.chain.from_iterable(typelibs))
     assert len(set(iface['name'] for iface in linked)) == len(linked), \
         "Multiple typelibs containing the same interface were linked together"
     return linked
 
-# Write the typelib into the fd file
+
 def write(typelib, fd):
+    """Write typelib into fd"""
     json.dump(typelib, fd, indent=2)

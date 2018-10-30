@@ -185,11 +185,16 @@ AccVCChangeEvent::
   AccVCChangeEvent(Accessible* aAccessible,
                    Accessible* aOldAccessible,
                    int32_t aOldStart, int32_t aOldEnd,
-                   int16_t aReason, EIsFromUserInput aIsFromUserInput) :
+                   Accessible* aNewAccessible,
+                   int32_t aNewStart, int32_t aNewEnd,
+                   int16_t aReason, int16_t aBoundaryType,
+                   EIsFromUserInput aIsFromUserInput) :
     AccEvent(::nsIAccessibleEvent::EVENT_VIRTUALCURSOR_CHANGED, aAccessible,
              aIsFromUserInput),
-    mOldAccessible(aOldAccessible), mOldStart(aOldStart), mOldEnd(aOldEnd),
-    mReason(aReason)
+    mOldAccessible(aOldAccessible), mNewAccessible(aNewAccessible),
+    mOldStart(aOldStart), mNewStart(aNewStart),
+    mOldEnd(aOldEnd),  mNewEnd(aNewEnd),
+    mReason(aReason), mBoundaryType(aBoundaryType)
 {
 }
 
@@ -199,7 +204,6 @@ a11y::MakeXPCEvent(AccEvent* aEvent)
   DocAccessible* doc = aEvent->Document();
   Accessible* acc = aEvent->GetAccessible();
   nsINode* node = acc->GetNode();
-  nsIDOMNode* domNode = node ? node->AsDOMNode() : nullptr;
   bool fromUser = aEvent->IsFromUserInput();
   uint32_t type = aEvent->GetEventType();
   uint32_t eventGroup = aEvent->GetEventGroups();
@@ -210,7 +214,7 @@ a11y::MakeXPCEvent(AccEvent* aEvent)
     bool extra = false;
     uint32_t state = nsAccUtils::To32States(sc->GetState(), &extra);
     xpEvent = new xpcAccStateChangeEvent(type, ToXPC(acc), ToXPCDocument(doc),
-                                         domNode, fromUser,
+                                         node, fromUser,
                                          state, extra, sc->IsStateEnabled());
     return xpEvent.forget();
   }
@@ -220,7 +224,7 @@ a11y::MakeXPCEvent(AccEvent* aEvent)
     nsString text;
     tc->GetModifiedText(text);
     xpEvent = new xpcAccTextChangeEvent(type, ToXPC(acc), ToXPCDocument(doc),
-                                        domNode, fromUser,
+                                        node, fromUser,
                                         tc->GetStartOffset(), tc->GetLength(),
                                         tc->IsTextInserted(), text);
     return xpEvent.forget();
@@ -229,7 +233,7 @@ a11y::MakeXPCEvent(AccEvent* aEvent)
   if (eventGroup & (1 << AccEvent::eHideEvent)) {
     AccHideEvent* hideEvent = downcast_accEvent(aEvent);
     xpEvent = new xpcAccHideEvent(type, ToXPC(acc), ToXPCDocument(doc),
-                                  domNode, fromUser,
+                                  node, fromUser,
                                   ToXPC(hideEvent->TargetParent()),
                                   ToXPC(hideEvent->TargetNextSibling()),
                                   ToXPC(hideEvent->TargetPrevSibling()));
@@ -239,7 +243,7 @@ a11y::MakeXPCEvent(AccEvent* aEvent)
   if (eventGroup & (1 << AccEvent::eCaretMoveEvent)) {
     AccCaretMoveEvent* cm = downcast_accEvent(aEvent);
     xpEvent = new xpcAccCaretMoveEvent(type, ToXPC(acc), ToXPCDocument(doc),
-                                       domNode, fromUser,
+                                       node, fromUser,
                                        cm->GetCaretOffset());
     return xpEvent.forget();
   }
@@ -248,11 +252,15 @@ a11y::MakeXPCEvent(AccEvent* aEvent)
     AccVCChangeEvent* vcc = downcast_accEvent(aEvent);
     xpEvent = new xpcAccVirtualCursorChangeEvent(type,
                                                  ToXPC(acc), ToXPCDocument(doc),
-                                                 domNode, fromUser,
+                                                 node, fromUser,
                                                  ToXPC(vcc->OldAccessible()),
                                                  vcc->OldStartOffset(),
                                                  vcc->OldEndOffset(),
-                                                 vcc->Reason());
+                                                 ToXPC(vcc->NewAccessible()),
+                                                 vcc->NewStartOffset(),
+                                                 vcc->NewEndOffset(),
+                                                 vcc->Reason(),
+                                                 vcc->BoundaryType());
     return xpEvent.forget();
   }
 
@@ -262,12 +270,19 @@ a11y::MakeXPCEvent(AccEvent* aEvent)
     oac->GetAttribute()->ToString(attribute);
     xpEvent = new xpcAccObjectAttributeChangedEvent(type,
                                                     ToXPC(acc),
-                                                    ToXPCDocument(doc), domNode,
+                                                    ToXPCDocument(doc), node,
                                                     fromUser,
                                                     attribute);
     return xpEvent.forget();
   }
 
-  xpEvent = new xpcAccEvent(type, ToXPC(acc), ToXPCDocument(doc), domNode, fromUser);
+  if (eventGroup & (1 << AccEvent::eScrollingEvent)) {
+    AccScrollingEvent* sa = downcast_accEvent(aEvent);
+    xpEvent = new xpcAccScrollingEvent(type, ToXPC(acc), ToXPCDocument(doc), node,
+                                       fromUser, sa->ScrollX(), sa->ScrollY(),
+                                       sa->MaxScrollX(), sa->MaxScrollY());
+  }
+
+  xpEvent = new xpcAccEvent(type, ToXPC(acc), ToXPCDocument(doc), node, fromUser);
   return xpEvent.forget();
   }

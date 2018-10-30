@@ -19,13 +19,16 @@ const ADDONS = {
       targetApplications: [{
         id: "xpcshell@tests.mozilla.org",
         minVersion: "1",
-        maxVersion: "1"
-      }]
+        maxVersion: "1",
+      }],
     },
     expected: {
       strictCompatibility: false,
     },
-    compatible: [true,  true,  true,  true],
+    compatible: {
+      nonStrict: true,
+      strict: true,
+    },
   },
 
   // Incompatible in strict compatibility mode
@@ -38,13 +41,16 @@ const ADDONS = {
       targetApplications: [{
         id: "xpcshell@tests.mozilla.org",
         minVersion: "0.7",
-        maxVersion: "0.8"
-      }]
+        maxVersion: "0.8",
+      }],
     },
     expected: {
       strictCompatibility: false,
     },
-    compatible: [false, true,  false, true],
+    compatible: {
+      nonStrict: true,
+      strict: false,
+    },
   },
 
   // Opt-in to strict compatibility - always incompatible
@@ -58,13 +64,16 @@ const ADDONS = {
       targetApplications: [{
         id: "xpcshell@tests.mozilla.org",
         minVersion: "0.8",
-        maxVersion: "0.9"
-      }]
+        maxVersion: "0.9",
+      }],
     },
     expected: {
       strictCompatibility: true,
     },
-    compatible: [false, false, false, false],
+    compatible: {
+      nonStrict: false,
+      strict: false,
+    },
   },
 
   // Addon from the future - would be marked as compatibile-by-default,
@@ -78,13 +87,16 @@ const ADDONS = {
       targetApplications: [{
         id: "xpcshell@tests.mozilla.org",
         minVersion: "3",
-        maxVersion: "5"
-      }]
+        maxVersion: "5",
+      }],
     },
     expected: {
       strictCompatibility: false,
     },
-    compatible: [false, false, false, false],
+    compatible: {
+      nonStrict: false,
+      strict: false,
+    },
   },
 
   // Extremely old addon - maxVersion is less than the minimum compat version
@@ -98,16 +110,19 @@ const ADDONS = {
       targetApplications: [{
         id: "xpcshell@tests.mozilla.org",
         minVersion: "0.1",
-        maxVersion: "0.2"
-      }]
+        maxVersion: "0.2",
+      }],
     },
     expected: {
       strictCompatibility: false,
     },
-    compatible: [false, true,  false, false],
+    compatible: {
+      nonStrict: true,
+      strict: false,
+    },
   },
 
-  // Dictionary - incompatible in strict compatibility mode
+  // Dictionary - compatible even in strict compatibility mode
   "addon7@tests.mozilla.org": {
     "install.rdf": {
       id: "addon7@tests.mozilla.org",
@@ -117,13 +132,16 @@ const ADDONS = {
       targetApplications: [{
         id: "xpcshell@tests.mozilla.org",
         minVersion: "0.8",
-        maxVersion: "0.9"
-      }]
+        maxVersion: "0.9",
+      }],
     },
     expected: {
       strictCompatibility: false,
     },
-    compatible: [false, true,  false, true],
+    compatible: {
+      nonStrict: true,
+      strict: true,
+    },
   },
 };
 
@@ -151,40 +169,26 @@ add_task(async function setup() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
 
   for (let addon of Object.values(ADDONS)) {
-    writeInstallRDFForExtension(addon["install.rdf"], profileDir);
+    await promiseWriteInstallRDFForExtension(addon["install.rdf"], profileDir);
   }
 
-  Services.prefs.setCharPref(PREF_EM_MIN_COMPAT_APP_VERSION, "0.1");
-
   await promiseStartupManager();
-});
-
-add_task(async function test_0() {
-  // Should default to enabling strict compat.
-  await checkCompatStatus(true, 0);
 });
 
 add_task(async function test_1() {
   info("Test 1");
   Services.prefs.setBoolPref(PREF_EM_STRICT_COMPATIBILITY, false);
-  await checkCompatStatus(false, 1);
+  await checkCompatStatus(false, "nonStrict");
   await promiseRestartManager();
-  await checkCompatStatus(false, 1);
+  await checkCompatStatus(false, "nonStrict");
 });
 
 add_task(async function test_2() {
   info("Test 2");
   Services.prefs.setBoolPref(PREF_EM_STRICT_COMPATIBILITY, true);
-  await checkCompatStatus(true, 2);
+  await checkCompatStatus(true, "strict");
   await promiseRestartManager();
-  await checkCompatStatus(true, 2);
-});
-
-add_task(async function test_3() {
-  info("Test 3");
-  Services.prefs.setBoolPref(PREF_EM_STRICT_COMPATIBILITY, false);
-  Services.prefs.setCharPref(PREF_EM_MIN_COMPAT_APP_VERSION, "0.4");
-  await checkCompatStatus(false, 3);
+  await checkCompatStatus(true, "strict");
 });
 
 const CHECK_COMPAT_ADDONS = {
@@ -198,8 +202,8 @@ const CHECK_COMPAT_ADDONS = {
       targetApplications: [{
         id: "unknown@tests.mozilla.org",
         minVersion: "1",
-        maxVersion: "1"
-      }]
+        maxVersion: "1",
+      }],
     },
     compatible: false,
     canOverride: false,
@@ -216,8 +220,8 @@ const CHECK_COMPAT_ADDONS = {
       targetApplications: [{
         id: "toolkit@mozilla.org",
         minVersion: "1",
-        maxVersion: "1"
-      }]
+        maxVersion: "1",
+      }],
     },
     compatible: false,
     canOverride: true,
@@ -233,8 +237,8 @@ const CHECK_COMPAT_ADDONS = {
       targetApplications: [{
         id: "toolkit@mozilla.org",
         minVersion: "1",
-        maxVersion: "2"
-      }]
+        maxVersion: "2",
+      }],
     },
     compatible: true,
   },
@@ -249,8 +253,8 @@ const CHECK_COMPAT_ADDONS = {
       targetApplications: [{
         id: "xpcshell@tests.mozilla.org",
         minVersion: "1",
-        maxVersion: "3"
-      }]
+        maxVersion: "3",
+      }],
     },
     compatible: true,
   },
@@ -280,7 +284,7 @@ add_task(async function setupCheckCompat() {
                 {version: "2.2.3", platformVersion: "2"});
 
   for (let addon of Object.values(CHECK_COMPAT_ADDONS)) {
-    writeInstallRDFForExtension(addon["install.rdf"], profileDir);
+    await promiseWriteInstallRDFForExtension(addon["install.rdf"], profileDir);
   }
   await promiseRestartManager("2.2.3");
 });

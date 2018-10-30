@@ -38,6 +38,7 @@ import urlparse
 import hashlib
 import zlib
 if os.name == 'nt':
+    import locale
     try:
         import win32file
         import win32api
@@ -53,6 +54,7 @@ except ImportError:
 
 from io import BytesIO
 
+import mozinfo
 from mozprocess import ProcessHandler
 from mozharness.base.config import BaseConfig
 from mozharness.base.log import SimpleFileLogger, MultiFileLogger, \
@@ -116,6 +118,17 @@ class PlatformMixin(object):
             return True
         if sys.platform.startswith("linux"):
             return True
+
+    def _is_redhat(self):
+        """ check if the current operating system is a Redhat derived Linux distribution.
+
+        Returns:
+            bool: True if the current platform is a Redhat Linux distro, False otherwise
+        """
+        if not self._is_linux():
+            return False
+        re_redhat_distro = re.compile('Redhat|Fedora|CentOS|Oracle')
+        return re_redhat_distro.match(mozinfo.linux_distro) is not None
 
     def _is_64_bit(self):
         if self._is_darwin():
@@ -1229,6 +1242,13 @@ class ScriptMixin(PlatformMixin):
         for k in purge_env:
             if k in env:
                 del env[k]
+        if os.name == 'nt':
+            pref_encoding = locale.getpreferredencoding()
+            for k, v in env.iteritems():
+                # When run locally on Windows machines, some environment
+                # variables may be unicode.
+                if isinstance(v, unicode):
+                    env[k] = v.encode(pref_encoding)
         if set_self_env:
             self.env = env
         return env
@@ -1271,7 +1291,7 @@ class ScriptMixin(PlatformMixin):
             repl_dict.update(dirs)
         if isinstance(exe, dict):
             found = False
-            # allow for searchable paths of the buildbot exe
+            # allow for searchable paths of the exe
             for name, path in exe.iteritems():
                 if isinstance(path, list) or isinstance(path, tuple):
                     path = [x % repl_dict for x in path]
@@ -1383,7 +1403,11 @@ class ScriptMixin(PlatformMixin):
                 self.info("Using partial env: %s" % pprint.pformat(partial_env))
                 env = self.query_env(partial_env=partial_env)
         else:
-            self.info("Using env: %s" % pprint.pformat(env))
+            if hasattr(self, 'previous_env') and env == self.previous_env:
+                self.info("Using env: (same as previous command)")
+            else:
+                self.info("Using env: %s" % pprint.pformat(env))
+                self.previous_env = env
 
         if output_parser is None:
             parser = OutputParser(config=self.config, log_obj=self.log_obj,
@@ -1569,7 +1593,7 @@ class ScriptMixin(PlatformMixin):
             shell = False
 
         p = subprocess.Popen(command, shell=shell, stdout=tmp_stdout,
-                             cwd=cwd, stderr=tmp_stderr, env=env)
+                             cwd=cwd, stderr=tmp_stderr, env=env, bufsize=0)
         # XXX: changed from self.debug to self.log due to this error:
         #      TypeError: debug() takes exactly 1 argument (2 given)
         self.log("Temporary files: %s and %s" % (tmp_stdout_filename, tmp_stderr_filename), level=DEBUG)
@@ -1865,7 +1889,7 @@ class BaseScript(ScriptMixin, LogMixin, object):
         # easy-to-write-hard-to-debug writable config.
         #
         # To allow for other, script-specific configurations
-        # (e.g., buildbot props json parsing), before locking,
+        # (e.g., props json parsing), before locking,
         # call self._pre_config_lock().  If needed, this method can
         # alter self.config.
         self._pre_config_lock(rw_config)
@@ -2198,17 +2222,6 @@ class BaseScript(ScriptMixin, LogMixin, object):
         # TODO write to a summary-only log?
         # Summaries need a lot more love.
         self.log(message, level=level)
-
-    def add_failure(self, key, message="%(key)s failed.", level=ERROR,
-                    increment_return_code=True):
-        if key not in self.failures:
-            self.failures.append(key)
-            self.add_summary(message % {'key': key}, level=level)
-            if increment_return_code:
-                self.return_code += 1
-
-    def query_failure(self, key):
-        return key in self.failures
 
     def summarize_success_count(self, success_count, total_count,
                                 message="%d of %d successful.",

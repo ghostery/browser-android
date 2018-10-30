@@ -153,17 +153,6 @@ AnimationInfo::ApplyPendingUpdatesForThisTransaction()
 }
 
 bool
-AnimationInfo::HasOpacityAnimation() const
-{
-  for (uint32_t i = 0; i < mAnimations.Length(); i++) {
-    if (mAnimations[i].property() == eCSSProperty_opacity) {
-      return true;
-    }
-  }
-  return false;
-}
-
-bool
 AnimationInfo::HasTransformAnimation() const
 {
   for (uint32_t i = 0; i < mAnimations.Length(); i++) {
@@ -178,12 +167,21 @@ AnimationInfo::HasTransformAnimation() const
 AnimationInfo::GetGenerationFromFrame(nsIFrame* aFrame,
                                       DisplayItemType aDisplayItemKey)
 {
+  MOZ_ASSERT(aFrame->IsPrimaryFrame() ||
+             nsLayoutUtils::IsFirstContinuationOrIBSplitSibling(aFrame));
+
   layers::Layer* layer =
     FrameLayerBuilder::GetDedicatedLayer(aFrame, aDisplayItemKey);
   if (layer) {
     return Some(layer->GetAnimationInfo().GetAnimationGeneration());
   }
 
+  // In case of continuation, KeyframeEffectReadOnly uses its first frame,
+  // whereas nsDisplayItem uses its last continuation, so we have to use the
+  // last continuation frame here.
+  if (nsLayoutUtils::IsFirstContinuationOrIBSplitSibling(aFrame)) {
+    aFrame = nsLayoutUtils::LastContinuationOrIBSplitSibling(aFrame);
+  }
   RefPtr<WebRenderAnimationData> animationData =
       GetWebRenderUserData<WebRenderAnimationData>(aFrame, (uint32_t)aDisplayItemKey);
   if (animationData) {

@@ -179,9 +179,11 @@ nsresult nsJSThunk::EvaluateScript(nsIChannel *aChannel,
         bool allowsInlineScript = true;
         rv = csp->GetAllowsInline(nsIContentPolicy::TYPE_SCRIPT,
                                   EmptyString(), // aNonce
-                                  true,         // aParserCreated
-                                  nullptr, // aContent
+                                  true,          // aParserCreated
+                                  nullptr,       // aElement,
+                                  EmptyString(), // aContent
                                   0,             // aLineNumber
+                                  0,             // aColumnNumber
                                   &allowsInlineScript);
 
         //return early if inline scripts are not allowed
@@ -1288,7 +1290,7 @@ NS_INTERFACE_MAP_END_INHERITING(mozilla::net::nsSimpleURI)
 NS_IMETHODIMP
 nsJSURI::Read(nsIObjectInputStream *aStream)
 {
-    NS_NOTREACHED("Use nsIURIMutator.read() instead");
+    MOZ_ASSERT_UNREACHABLE("Use nsIURIMutator.read() instead");
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -1376,16 +1378,7 @@ nsJSURI::Deserialize(const mozilla::ipc::URIParams& aParams)
 nsJSURI::StartClone(mozilla::net::nsSimpleURI::RefHandlingEnum refHandlingMode,
                     const nsACString& newRef)
 {
-    nsCOMPtr<nsIURI> baseClone;
-    if (mBaseURI) {
-      // Note: We preserve ref on *base* URI, regardless of ref handling mode.
-      nsresult rv = mBaseURI->Clone(getter_AddRefs(baseClone));
-      if (NS_FAILED(rv)) {
-        return nullptr;
-      }
-    }
-
-    nsJSURI* url = new nsJSURI(baseClone);
+    nsJSURI* url = new nsJSURI(mBaseURI);
     SetRefOnClone(url, refHandlingMode, newRef);
     return url;
 }
@@ -1415,7 +1408,7 @@ nsJSURI::EqualsInternal(nsIURI* aOther,
                         bool* aResult)
 {
     NS_ENSURE_ARG_POINTER(aOther);
-    NS_PRECONDITION(aResult, "null pointer for outparam");
+    MOZ_ASSERT(aResult, "null pointer for outparam");
 
     RefPtr<nsJSURI> otherJSURI;
     nsresult rv = aOther->QueryInterface(kJSURICID,

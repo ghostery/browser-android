@@ -12,10 +12,14 @@ info: |
     This property has the attributes { [[Writable]]: false, [[Enumerable]]:
     false, [[Configurable]]: true }.
 includes: [propertyHelper.js]
-features: [Atomics, Symbol.toStringTag]
+features: [Atomics, Symbol, Symbol.toStringTag]
 ---*/
 
-assert.sameValue(Atomics[Symbol.toStringTag], 'Atomics');
+assert.sameValue(
+  Atomics[Symbol.toStringTag],
+  'Atomics',
+  'The value of Atomics[Symbol.toStringTag] is "Atomics"'
+);
 
 verifyNotEnumerable(Atomics, Symbol.toStringTag);
 verifyNotWritable(Atomics, Symbol.toStringTag);

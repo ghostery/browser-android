@@ -4,8 +4,11 @@
 
 "use strict";
 
-let {FormAutofillParent} = ChromeUtils.import("resource://formautofill/FormAutofillParent.jsm", {});
-ChromeUtils.import("resource://formautofill/FormAutofillStorage.jsm");
+let FormAutofillParent;
+
+add_task(async function setup() {
+  ({FormAutofillParent} = ChromeUtils.import("resource://formautofill/FormAutofillParent.jsm", {}));
+});
 
 add_task(async function test_profileSavedFieldNames_init() {
   let formAutofillParent = new FormAutofillParent();
@@ -25,8 +28,8 @@ add_task(async function test_profileSavedFieldNames_observe() {
   await formAutofillParent.init();
 
   // profile changed => Need to trigger updateValidFields
-  ["add", "update", "remove", "reconcile"].forEach(event => {
-    formAutofillParent.observe(null, "formautofill-storage-changed", "add");
+  ["add", "update", "remove", "reconcile", "removeAll"].forEach(event => {
+    formAutofillParent.observe(null, "formautofill-storage-changed", event);
     Assert.equal(formAutofillParent._updateSavedFieldNames.called, true);
   });
 

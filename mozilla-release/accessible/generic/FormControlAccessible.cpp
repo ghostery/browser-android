@@ -6,10 +6,10 @@
 // NOTE: alphabetically ordered
 
 #include "FormControlAccessible.h"
-#include "Role.h"
 
+#include "mozilla/dom/HTMLInputElement.h"
 #include "mozilla/FloatingPoint.h"
-#include "nsIDOMXULControlElement.h"
+#include "Role.h"
 
 using namespace mozilla::a11y;
 
@@ -25,14 +25,14 @@ template class mozilla::a11y::ProgressMeterAccessible<100>;
 
 template<int Max>
 role
-ProgressMeterAccessible<Max>::NativeRole()
+ProgressMeterAccessible<Max>::NativeRole() const
 {
   return roles::PROGRESSBAR;
 }
 
 template<int Max>
 uint64_t
-ProgressMeterAccessible<Max>::NativeState()
+ProgressMeterAccessible<Max>::NativeState() const
 {
   uint64_t state = LeafAccessible::NativeState();
 
@@ -61,7 +61,7 @@ ProgressMeterAccessible<Max>::IsWidget() const
 
 template<int Max>
 void
-ProgressMeterAccessible<Max>::Value(nsString& aValue)
+ProgressMeterAccessible<Max>::Value(nsString& aValue) const
 {
   LeafAccessible::Value(aValue);
   if (!aValue.IsEmpty())
@@ -142,6 +142,84 @@ ProgressMeterAccessible<Max>::SetCurValue(double aValue)
   return false; // progress meters are readonly.
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// CheckboxAccessible
+////////////////////////////////////////////////////////////////////////////////
+
+role
+CheckboxAccessible::NativeRole() const
+{
+  return roles::CHECKBUTTON;
+}
+
+uint8_t
+CheckboxAccessible::ActionCount() const
+{
+  return 1;
+}
+
+void
+CheckboxAccessible::ActionNameAt(uint8_t aIndex, nsAString& aName)
+{
+  if (aIndex == eAction_Click) {
+    uint64_t state = NativeState();
+    if (state & states::CHECKED) {
+      aName.AssignLiteral("uncheck");
+    } else if (state & states::MIXED) {
+      aName.AssignLiteral("cycle");
+    } else {
+      aName.AssignLiteral("check");
+    }
+  }
+}
+
+bool
+CheckboxAccessible::DoAction(uint8_t aIndex) const
+{
+  if (aIndex != eAction_Click) {
+    return false;
+  }
+  DoCommand();
+  return true;
+}
+
+uint64_t
+CheckboxAccessible::NativeState() const
+{
+  uint64_t state = LeafAccessible::NativeState();
+
+  state |= states::CHECKABLE;
+  dom::HTMLInputElement* input = dom::HTMLInputElement::FromNode(mContent);
+  if (input) { // HTML:input@type="checkbox"
+    if (input->Indeterminate()) {
+      return state | states::MIXED;
+    }
+
+    if (input->Checked()) {
+      return state | states::CHECKED;
+    }
+
+  } else if (mContent->AsElement()->AttrValueIs(kNameSpaceID_None,
+                                                nsGkAtoms::checked,
+                                                nsGkAtoms::_true,
+                                                eCaseMatters)) { // XUL checkbox
+    return state | states::CHECKED;
+  }
+
+  return state;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// CheckboxAccessible: Widgets
+
+bool
+CheckboxAccessible::IsWidget() const
+{
+  return true;
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // RadioButtonAccessible
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +231,7 @@ RadioButtonAccessible::
 }
 
 uint8_t
-RadioButtonAccessible::ActionCount()
+RadioButtonAccessible::ActionCount() const
 {
   return 1;
 }
@@ -166,7 +244,7 @@ RadioButtonAccessible::ActionNameAt(uint8_t aIndex, nsAString& aName)
 }
 
 bool
-RadioButtonAccessible::DoAction(uint8_t aIndex)
+RadioButtonAccessible::DoAction(uint8_t aIndex) const
 {
   if (aIndex != eAction_Click)
     return false;
@@ -176,7 +254,7 @@ RadioButtonAccessible::DoAction(uint8_t aIndex)
 }
 
 role
-RadioButtonAccessible::NativeRole()
+RadioButtonAccessible::NativeRole() const
 {
   return roles::RADIOBUTTON;
 }

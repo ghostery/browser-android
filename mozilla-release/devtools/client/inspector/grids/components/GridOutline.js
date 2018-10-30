@@ -58,22 +58,22 @@ class GridOutline extends PureComponent {
     this.getGridAreaName = this.getGridAreaName.bind(this);
     this.getHeight = this.getHeight.bind(this);
     this.getTotalWidthAndHeight = this.getTotalWidthAndHeight.bind(this);
+    this.onHighlightCell = this.onHighlightCell.bind(this);
     this.renderCannotShowOutlineText = this.renderCannotShowOutlineText.bind(this);
     this.renderGrid = this.renderGrid.bind(this);
     this.renderGridCell = this.renderGridCell.bind(this);
     this.renderGridOutline = this.renderGridOutline.bind(this);
     this.renderGridOutlineBorder = this.renderGridOutlineBorder.bind(this);
     this.renderOutline = this.renderOutline.bind(this);
-    this.onHighlightCell = this.onHighlightCell.bind(this);
   }
 
   componentWillReceiveProps({ grids }) {
-    let selectedGrid = grids.find(grid => grid.highlighted);
+    const selectedGrid = grids.find(grid => grid.highlighted);
 
     // Store the height of the grid container in the component state to prevent overflow
     // issues. We want to store the width of the grid container as well so that the
     // viewbox is only the calculated width of the grid outline.
-    let { width, height } = selectedGrid && selectedGrid.gridFragments.length
+    const { width, height } = selectedGrid && selectedGrid.gridFragments.length
                             ? this.getTotalWidthAndHeight(selectedGrid)
                             : { width: 0, height: 0 };
     let showOutline;
@@ -195,17 +195,16 @@ class GridOutline extends PureComponent {
    * Displays a message text "Cannot show outline for this grid".
    */
   renderCannotShowOutlineText() {
-    return dom.div(
-      {
-        className: "grid-outline-text"
-      },
-      dom.span(
-        {
-          className: "grid-outline-text-icon",
-          title: getStr("layout.cannotShowGridOutline.title")
-        }
-      ),
-      getStr("layout.cannotShowGridOutline")
+    return (
+      dom.div({ className: "grid-outline-text" },
+        dom.span(
+          {
+            className: "grid-outline-text-icon",
+            title: getStr("layout.cannotShowGridOutline.title")
+          }
+        ),
+        getStr("layout.cannotShowGridOutline")
+      )
     );
   }
 
@@ -218,7 +217,7 @@ class GridOutline extends PureComponent {
   renderGrid(grid) {
     // TODO: We are drawing the first fragment since only one is currently being stored.
     // In the future we will need to iterate over all fragments of a grid.
-    let gridFragmentIndex = 0;
+    const gridFragmentIndex = 0;
     const { id, color, gridFragments } = grid;
     const { rows, cols, areas } = gridFragments[gridFragmentIndex];
 
@@ -251,10 +250,10 @@ class GridOutline extends PureComponent {
     }
 
     // Transform the cells as needed to match the grid container's writing mode.
-    let cellGroupStyle = {};
-    let writingModeMatrix = getWritingModeMatrix(this.state, grid);
+    const cellGroupStyle = {};
+    const writingModeMatrix = getWritingModeMatrix(this.state, grid);
     cellGroupStyle.transform = getCSSMatrixTransform(writingModeMatrix);
-    let cellGroup = dom.g(
+    const cellGroup = dom.g(
       {
         id: "grid-cell-group",
         style: cellGroupStyle,
@@ -296,8 +295,8 @@ class GridOutline extends PureComponent {
    */
   renderGridCell(id, gridFragmentIndex, x, y, rowNumber, columnNumber, color,
     gridAreaName, width, height) {
-    return dom.rect(
-      {
+    return (
+      dom.rect({
         key: `${id}-${rowNumber}-${columnNumber}`,
         className: "grid-outline-cell",
         "data-grid-area-name": gridAreaName,
@@ -312,33 +311,35 @@ class GridOutline extends PureComponent {
         fill: "none",
         onMouseEnter: this.onHighlightCell,
         onMouseLeave: this.onHighlightCell,
-      }
+      })
     );
   }
 
   renderGridOutline(grid) {
-    let { color } = grid;
+    const { color } = grid;
 
-    return dom.g(
-      {
-        id: "grid-outline-group",
-        className: "grid-outline-group",
-        style: { color }
-      },
-      this.renderGrid(grid)
+    return (
+      dom.g(
+        {
+          id: "grid-outline-group",
+          className: "grid-outline-group",
+          style: { color }
+        },
+        this.renderGrid(grid)
+      )
     );
   }
 
   renderGridOutlineBorder(borderWidth, borderHeight, color) {
-    return dom.rect(
-      {
+    return (
+      dom.rect({
         key: "border",
         className: "grid-outline-border",
         x: 0,
         y: 0,
         width: borderWidth,
         height: borderHeight
-      }
+      })
     );
   }
 

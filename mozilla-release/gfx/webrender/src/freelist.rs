@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 use std::marker::PhantomData;
-use util::recycle_vec;
 
 // TODO(gw): Add an occupied list head, for fast
 //           iteration of the occupied list to implement
@@ -52,6 +51,7 @@ pub struct WeakFreeListHandle<M> {
     _marker: PhantomData<M>,
 }
 
+#[derive(Debug)]
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
 struct Slot<T> {
@@ -60,6 +60,7 @@ struct Slot<T> {
     value: Option<T>,
 }
 
+#[derive(Debug)]
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
 pub struct FreeList<T, M> {
@@ -78,15 +79,6 @@ impl<T, M> FreeList<T, M> {
     pub fn new() -> Self {
         FreeList {
             slots: Vec::new(),
-            free_list_head: None,
-            active_count: 0,
-            _marker: PhantomData,
-        }
-    }
-
-    pub fn recycle(self) -> FreeList<T, M> {
-        FreeList {
-            slots: recycle_vec(self.slots),
             free_list_head: None,
             active_count: 0,
             _marker: PhantomData,

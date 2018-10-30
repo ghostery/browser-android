@@ -29,12 +29,10 @@ class SharedMessagePortMessage;
 class StrongWorkerRef;
 
 class MessagePort final : public DOMEventTargetHelper
-                        , public nsIObserver
 {
   friend class PostMessageRunnable;
 
 public:
-  NS_DECL_NSIOBSERVER
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(MessagePort,
                                            DOMEventTargetHelper)
@@ -91,9 +89,6 @@ public:
   void Closed();
 
 private:
-  explicit MessagePort(nsIGlobalObject* aGlobal);
-  ~MessagePort();
-
   enum State {
     // When a port is created by a MessageChannel it is entangled with the
     // other. They both run on the same thread, same event loop and the
@@ -139,9 +134,13 @@ private:
     eStateDisentangledForClose
   };
 
+  explicit MessagePort(nsIGlobalObject* aGlobal, State aState);
+  ~MessagePort();
+
+  void DisconnectFromOwner() override;
+
   void Initialize(const nsID& aUUID, const nsID& aDestinationUUID,
-                  uint32_t aSequenceID, bool mNeutered, State aState,
-                  ErrorResult& aRv);
+                  uint32_t aSequenceID, bool aNeutered, ErrorResult& aRv);
 
   bool ConnectToPBackground();
 
@@ -179,8 +178,6 @@ private:
   nsTArray<RefPtr<SharedMessagePortMessage>> mMessagesForTheOtherPort;
 
   nsAutoPtr<MessagePortIdentifier> mIdentifier;
-
-  uint64_t mInnerID;
 
   State mState;
 

@@ -114,6 +114,10 @@ class Layer;
 class LayerManager;
 } // namespace layers
 
+namespace dom {
+class Selection;
+} // namespace dom
+
 } // namespace mozilla
 
 /**
@@ -351,6 +355,10 @@ public:
   // completion of a first-letter.
   bool FirstLetterComplete() const { return mFirstLetterComplete; }
   void SetFirstLetterComplete() { mFirstLetterComplete = true; }
+
+#ifdef DEBUG
+  nsCString ToString() const;
+#endif
 
 private:
   StyleClear mBreakType;
@@ -776,6 +784,7 @@ public:
   void SetComputedStyle(ComputedStyle* aStyle)
   {
     if (aStyle != mComputedStyle) {
+      MOZ_DIAGNOSTIC_ASSERT(PresShell() == aStyle->PresContextForFrame()->PresShell());
       RefPtr<ComputedStyle> oldComputedStyle = mComputedStyle.forget();
       mComputedStyle = aStyle;
       DidSetComputedStyle(oldComputedStyle);
@@ -791,6 +800,7 @@ public:
   void SetComputedStyleWithoutNotification(ComputedStyle* aStyle)
   {
     if (aStyle != mComputedStyle) {
+      MOZ_DIAGNOSTIC_ASSERT(PresShell() == aStyle->PresContextForFrame()->PresShell());
       mComputedStyle = aStyle;
     }
   }
@@ -1405,6 +1415,7 @@ public:
   bool GetMarginBoxBorderRadii(nscoord aRadii[8]) const;
   bool GetPaddingBoxBorderRadii(nscoord aRadii[8]) const;
   bool GetContentBoxBorderRadii(nscoord aRadii[8]) const;
+  bool GetBoxBorderRadii(nscoord aRadii[8], nsMargin aOffset, bool aIsOutset) const;
   bool GetShapeBoxBorderRadii(nscoord aRadii[8]) const;
 
   /**
@@ -1679,12 +1690,13 @@ public:
     return IsThemed(StyleDisplay(), aTransparencyState);
   }
   bool IsThemed(const nsStyleDisplay* aDisp,
-                  nsITheme::Transparency* aTransparencyState = nullptr) const {
-    nsIFrame* mutable_this = const_cast<nsIFrame*>(this);
-    if (!aDisp->mAppearance)
+                nsITheme::Transparency* aTransparencyState = nullptr) const {
+    if (!aDisp->HasAppearance()) {
       return false;
+    }
+    nsIFrame* mutable_this = const_cast<nsIFrame*>(this);
     nsPresContext* pc = PresContext();
-    nsITheme *theme = pc->GetTheme();
+    nsITheme* theme = pc->GetTheme();
     if(!theme ||
        !theme->ThemeSupportsWidget(pc, mutable_this, aDisp->mAppearance))
       return false;
@@ -2179,7 +2191,7 @@ public:
     const nsLineList_iterator* mLine;
 
     // The line container. Private, to ensure we always use SetLineContainer
-    // to update it (so that we have a chance to store the mLineContainerWM).
+    // to update it.
     //
     // Note that nsContainerFrame::DoInlineIntrinsicISize will clear the
     // |mLine| and |mLineContainer| fields when following a next-in-flow link,
@@ -2192,9 +2204,6 @@ public:
     void SetLineContainer(nsIFrame* aLineContainer)
     {
       mLineContainer = aLineContainer;
-      if (mLineContainer) {
-        mLineContainerWM = mLineContainer->GetWritingMode();
-      }
     }
     nsIFrame* LineContainer() const { return mLineContainer; }
 
@@ -2214,10 +2223,6 @@ public:
     // should be true at the beginning of a block, after hard breaks
     // and when the last text ended with whitespace.
     bool mSkipWhitespace;
-
-    // Writing mode of the line container (stored here so that we don't
-    // lose track of it if the mLineContainer field is reset).
-    mozilla::WritingMode mLineContainerWM;
 
     // Floats encountered in the lines.
     class FloatInfo {
@@ -2821,7 +2826,7 @@ public:
   };
   Matrix4x4Flagged GetTransformMatrix(const nsIFrame* aStopAtAncestor,
                                       nsIFrame **aOutAncestor,
-                                      uint32_t aFlags = 0);
+                                      uint32_t aFlags = 0) const;
 
   /**
    * Bit-flags to pass to IsFrameOfType()
@@ -2857,6 +2862,11 @@ public:
     // inline-block sizing characteristics (like form controls).
     eReplacedSizing =                   1 << 16,
 
+    // Does this frame class support 'contain: layout' and
+    // 'contain:paint' (supporting one is equivalent to supporting the
+    // other).
+    eSupportsContainLayoutAndPaint =    1 << 17,
+
     // These are to allow nsFrame::Init to assert that IsFrameOfType
     // implementations all call the base class method.  They are only
     // meaningful in DEBUG builds.
@@ -2873,11 +2883,13 @@ public:
    */
   virtual bool IsFrameOfType(uint32_t aFlags) const
   {
+    return !(aFlags & ~(
 #ifdef DEBUG
-    return !(aFlags & ~(nsIFrame::eDEBUGAllFrames | nsIFrame::eSupportsCSSTransforms));
-#else
-    return !(aFlags & ~nsIFrame::eSupportsCSSTransforms);
+                        nsIFrame::eDEBUGAllFrames |
 #endif
+                        nsIFrame::eSupportsCSSTransforms |
+                        nsIFrame::eSupportsContainLayoutAndPaint
+                        ));
   }
 
   /**
@@ -3487,27 +3499,19 @@ public:
    * Overridable function to determine whether this frame should be considered
    * "in" the given non-null aSelection for visibility purposes.
    */
-  virtual bool IsVisibleInSelection(nsISelection* aSelection);
-
-  /**
-   * Determines if this frame has a container effect that requires
-   * it to paint as a visually atomic unit.
-   */
-  bool IsVisuallyAtomic(mozilla::EffectSet* aEffectSet,
-                        const nsStyleDisplay* aStyleDisplay,
-                        const nsStyleEffects* aStyleEffects);
+  virtual bool IsVisibleInSelection(mozilla::dom::Selection* aSelection);
 
   /**
    * Determines if this frame is a stacking context.
    *
    * @param aIsPositioned The precomputed result of IsAbsPosContainingBlock
    * on the StyleDisplay().
-   * @param aIsVisuallyAtomic The precomputed result of IsVisuallyAtomic.
    */
-  bool IsStackingContext(const nsStyleDisplay* aStyleDisplay,
+  bool IsStackingContext(mozilla::EffectSet* aEffectSet,
+                         const nsStyleDisplay* aStyleDisplay,
                          const nsStylePosition* aStylePosition,
-                         bool aIsPositioned,
-                         bool aIsVisuallyAtomic);
+                         const nsStyleEffects* aStyleEffects,
+                         bool aIsPositioned);
   bool IsStackingContext();
 
   virtual bool HonorPrintBackgroundSettings() { return true; }
@@ -3998,14 +4002,6 @@ public:
     return !HasAllStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_IS_NONDISPLAY);
   }
 
-  /**
-   * Returns the content node within the anonymous content that this frame
-   * generated and which corresponds to the specified pseudo-element type,
-   * or nullptr if there is no such anonymous content.
-   */
-  virtual mozilla::dom::Element*
-  GetPseudoElement(mozilla::CSSPseudoElementType aType);
-
   /*
    * @param aStyleDisplay:  If the caller has this->StyleDisplay(), providing
    *   it here will improve performance.
@@ -4021,7 +4017,7 @@ public:
   /**
    * Returns true if the frame is scrolled out of view.
    */
-  bool IsScrolledOutOfView();
+  bool IsScrolledOutOfView() const;
 
   /**
    * Computes a 2D matrix from the -moz-window-transform and
@@ -4777,6 +4773,25 @@ nsFrameList::FrameLinkEnumerator::Next()
   Enumerator::Next();
 }
 
+template<typename Predicate>
+inline void
+nsFrameList::FrameLinkEnumerator::Find(Predicate&& aPredicate)
+{
+  static_assert(
+    std::is_same<typename mozilla::FunctionTypeTraits<Predicate>::ReturnType,
+                 bool>::value &&
+    mozilla::FunctionTypeTraits<Predicate>::arity == 1 &&
+    std::is_same<typename mozilla::FunctionTypeTraits<Predicate>::template ParameterType<0>,
+                 nsIFrame*>::value,
+    "aPredicate should be of this function signature: bool(nsIFrame*)");
+
+  for (; !AtEnd(); Next()) {
+    if (aPredicate(mFrame)) {
+      return;
+    }
+  }
+}
+
 // Operators of nsFrameList::Iterator
 // ---------------------------------------------------
 
@@ -4805,7 +4820,7 @@ template<bool IsLessThanOrEqual(nsIFrame*, nsIFrame*)>
 /* static */ nsIFrame*
 nsIFrame::SortedMerge(nsIFrame *aLeft, nsIFrame *aRight)
 {
-  NS_PRECONDITION(aLeft && aRight, "SortedMerge must have non-empty lists");
+  MOZ_ASSERT(aLeft && aRight, "SortedMerge must have non-empty lists");
 
   nsIFrame *result;
   // Unroll first iteration to avoid null-check 'result' inside the loop.
@@ -4853,7 +4868,7 @@ template<bool IsLessThanOrEqual(nsIFrame*, nsIFrame*)>
 /* static */ nsIFrame*
 nsIFrame::MergeSort(nsIFrame *aSource)
 {
-  NS_PRECONDITION(aSource, "MergeSort null arg");
+  MOZ_ASSERT(aSource, "MergeSort null arg");
 
   nsIFrame *sorted[32] = { nullptr };
   nsIFrame **fill = &sorted[0];

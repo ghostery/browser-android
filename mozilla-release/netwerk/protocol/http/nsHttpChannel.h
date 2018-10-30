@@ -50,7 +50,7 @@ public:
   virtual MOZ_MUST_USE nsresult
   ReportSecurityMessage(const nsAString& aMessageTag,
                         const nsAString& aMessageCategory) = 0;
-  virtual nsresult LogBlockedCORSRequest(const nsAString& aMessage) = 0;
+  virtual nsresult LogBlockedCORSRequest(const nsAString& aMessage, const nsACString& aCategory) = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -73,7 +73,6 @@ class nsHttpChannel final : public HttpBaseChannel
                           , public nsICacheEntryOpenCallback
                           , public nsITransportEventSink
                           , public nsIProtocolProxyCallback
-                          , public nsIInputAvailableCallback
                           , public nsIHttpAuthenticableChannel
                           , public nsIApplicationCacheChannel
                           , public nsIAsyncVerifyRedirectCallback
@@ -97,7 +96,6 @@ public:
     NS_DECL_NSICACHEENTRYOPENCALLBACK
     NS_DECL_NSITRANSPORTEVENTSINK
     NS_DECL_NSIPROTOCOLPROXYCALLBACK
-    NS_DECL_NSIINPUTAVAILABLECALLBACK
     NS_DECL_NSIPROXIEDCHANNEL
     NS_DECL_NSIAPPLICATIONCACHECONTAINER
     NS_DECL_NSIAPPLICATIONCACHECHANNEL
@@ -163,6 +161,9 @@ public:
     // nsIHttpChannelInternal
     NS_IMETHOD SetupFallbackChannel(const char *aFallbackKey) override;
     NS_IMETHOD SetChannelIsForDownload(bool aChannelIsForDownload) override;
+    NS_IMETHOD GetNavigationStartTimeStamp(TimeStamp* aTimeStamp) override;
+    NS_IMETHOD SetNavigationStartTimeStamp(TimeStamp aTimeStamp) override;
+    NS_IMETHOD CancelForTrackingProtection() override;
     // nsISupportsPriority
     NS_IMETHOD SetPriority(int32_t value) override;
     // nsIClassOfService
@@ -192,7 +193,7 @@ public:
     MOZ_MUST_USE nsresult
     AddSecurityMessage(const nsAString& aMessageTag,
                        const nsAString& aMessageCategory) override;
-    NS_IMETHOD LogBlockedCORSRequest(const nsAString& aMessage) override;
+    NS_IMETHOD LogBlockedCORSRequest(const nsAString& aMessage, const nsACString& aCategory) override;
 
     void SetWarningReporter(HttpChannelSecurityWarningReporter *aReporter);
     HttpChannelSecurityWarningReporter* GetWarningReporter();
@@ -259,7 +260,6 @@ public: /* internal necko use only */
       uint32_t mKeep : 2;
     };
 
-    NS_IMETHOD GetResponseSynthesized(bool* aSynthesized) override;
     bool AwaitingCacheCallbacks();
     void SetCouldBeSynthesized();
 
@@ -285,6 +285,9 @@ private:
     typedef nsresult (nsHttpChannel::*nsContinueRedirectionFunc)(nsresult result);
 
     bool     RequestIsConditional();
+    void HandleContinueCancelledByTrackingProtection();
+    nsresult CancelInternal(nsresult status);
+    void ContinueCancelledByTrackingProtection();
 
     // Connections will only be established in this function.
     // (including DNS prefetch and speculative connection.)
@@ -296,10 +299,10 @@ private:
     // is required, this funciton will just return NS_OK and BeginConnectActual()
     // will be called when callback. See Bug 1325054 for more information.
     nsresult BeginConnect();
-    void     HandleBeginConnectContinue();
-    MOZ_MUST_USE nsresult BeginConnectContinue();
     MOZ_MUST_USE nsresult ContinueBeginConnectWithResult();
     void     ContinueBeginConnect();
+    MOZ_MUST_USE nsresult PrepareToConnect();
+    void HandleOnBeforeConnect();
     MOZ_MUST_USE nsresult OnBeforeConnect();
     void     OnBeforeConnectContinue();
     MOZ_MUST_USE nsresult Connect();
@@ -398,8 +401,6 @@ private:
     MOZ_MUST_USE nsresult StartRedirectChannelToHttps();
     MOZ_MUST_USE nsresult ContinueAsyncRedirectChannelToURI(nsresult rv);
     MOZ_MUST_USE nsresult OpenRedirectChannel(nsresult rv);
-
-    void DetermineContentLength();
 
     /**
      * A function that takes care of reading STS and PKP headers and enforcing
@@ -627,6 +628,11 @@ private:
     // the next authentication request can be sent on a whole new connection
     uint32_t                          mAuthConnectionRestartable : 1;
 
+    // True if the channel classifier has marked the channel to be cancelled
+    // due to the tracking protection rules, but the asynchronous cancellation
+    // process hasn't finished yet.
+    uint32_t                          mTrackingProtectionCancellationPending : 1;
+
     nsTArray<nsContinueRedirectionFunc> mRedirectFuncStack;
 
     // Needed for accurate DNS timing
@@ -659,6 +665,9 @@ private:
     nsresult AsyncOpenOnTailUnblock();
     // Called on untail when tailed because of being a tracking resource.
     nsresult ConnectOnTailUnblock();
+
+    // Check if current channel should be canceled by FastBlock rules.
+    bool CheckFastBlocked();
 
     nsCString mUsername;
 
@@ -709,12 +718,16 @@ private:
     // the same time.
     mozilla::Mutex mRCWNLock;
 
+    TimeStamp mNavigationStartTimeStamp;
+
 protected:
     virtual void DoNotifyListenerCleanup() override;
 
     // Override ReleaseListeners() because mChannelClassifier only exists
     // in nsHttpChannel and it will be released in ReleaseListeners().
     virtual void ReleaseListeners() override;
+
+    virtual void DoAsyncAbort(nsresult aStatus) override;
 
 private: // cache telemetry
     bool mDidReval;

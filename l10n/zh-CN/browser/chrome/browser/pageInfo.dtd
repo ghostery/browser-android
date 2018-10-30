@@ -20,7 +20,7 @@
 <!ENTITY  generalType           "类型：">
 <!ENTITY  generalMode           "渲染模式：">
 <!ENTITY  generalSize           "大小：">
-<!ENTITY  generalReferrer       "引用URL：">
+<!ENTITY  generalReferrer       "来源网址：">
 <!ENTITY  generalSource         "缓存来源：">
 <!ENTITY  generalModified       "修改时间：">
 <!ENTITY  generalEncoding2      "文字编码：">
@@ -46,19 +46,10 @@
 
 <!ENTITY  feedTab               "收取点">
 <!ENTITY  feedTab.accesskey     "F">
-<!ENTITY  feedSubscribe         "订阅">
-<!ENTITY  feedSubscribe.accesskey "u">
 
 <!ENTITY  permTab               "权限">
 <!ENTITY  permTab.accesskey     "P">
-<!ENTITY  permUseDefault        "使用默认设置">
-<!ENTITY  permAskAlways         "总是询问">
-<!ENTITY  permAllow             "允许">
-<!ENTITY  permAllowSession      "在这次浏览期间允许">
-<!ENTITY  permHide              "隐藏">
-<!ENTITY  permBlock             "阻止">
 <!ENTITY  permissionsFor        "权限，对于:">
-<!ENTITY  permPlugins           "激活插件">
 
 <!ENTITY  securityTab           "安全">
 <!ENTITY  securityTab.accesskey "S">
@@ -75,9 +66,6 @@
 
 <!ENTITY  securityView.privacy.header                   "隐私和历史记录">
 <!ENTITY  securityView.privacy.history                  "我之前访问过该网站吗？ ">
-<!ENTITY  securityView.privacy.cookies                  "此网站在我的计算机上存储了 Cookie 信息吗？ ">
-<!ENTITY  securityView.privacy.viewCookies              "查看 Cookie">
-<!ENTITY  securityView.privacy.viewCookies.accessKey    "k">
 <!ENTITY  securityView.privacy.siteData                 "此网站在我的计算机上存储了信息吗？">
 <!ENTITY  securityView.privacy.clearSiteData            "清除 Cookie 和网站数据">
 <!ENTITY  securityView.privacy.clearSiteData.accessKey  "C">

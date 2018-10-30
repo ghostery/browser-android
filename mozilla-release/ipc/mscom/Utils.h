@@ -11,6 +11,7 @@
 #include "nsString.h"
 #endif // defined(MOZILLA_INTERNAL_API)
 
+#include "mozilla/Attributes.h"
 #include <guiddef.h>
 
 struct IStream;
@@ -19,6 +20,7 @@ struct IUnknown;
 namespace mozilla {
 namespace mscom {
 
+bool IsCOMInitializedOnCurrentThread();
 bool IsCurrentThreadMTA();
 bool IsProxy(IUnknown* aUnknown);
 bool IsValidGUID(REFGUID aCheckGuid);
@@ -62,6 +64,40 @@ bool IsInterfaceEqualToOrInheritedFrom(REFIID aInterface, REFIID aFrom,
 #endif // defined(MOZILLA_INTERNAL_API)
 
 #endif // defined(ACCESSIBILITY)
+
+/**
+ * Execute cleanup code when going out of scope if a condition is met.
+ * This is useful when, for example, particular cleanup needs to be performed
+ * whenever a call returns a failure HRESULT.
+ * Both the condition and cleanup code are provided as functions (usually
+ * lambdas).
+ */
+template <typename CondFnT, typename ExeFnT>
+class MOZ_RAII ExecuteWhen final
+{
+public:
+  ExecuteWhen(CondFnT& aCondFn, ExeFnT& aExeFn)
+    : mCondFn(aCondFn)
+    , mExeFn(aExeFn)
+  {
+  }
+
+  ~ExecuteWhen()
+  {
+    if (mCondFn()) {
+      mExeFn();
+    }
+  }
+
+  ExecuteWhen(const ExecuteWhen&) = delete;
+  ExecuteWhen(ExecuteWhen&&) = delete;
+  ExecuteWhen& operator=(const ExecuteWhen&) = delete;
+  ExecuteWhen& operator=(ExecuteWhen&&) = delete;
+
+private:
+  CondFnT&  mCondFn;
+  ExeFnT&   mExeFn;
+};
 
 } // namespace mscom
 } // namespace mozilla
