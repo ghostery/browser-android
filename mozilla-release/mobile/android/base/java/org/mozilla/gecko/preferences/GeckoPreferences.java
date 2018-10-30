@@ -155,6 +155,9 @@ public class GeckoPreferences
     public static final String PREFS_AUTO_COMPLETE = "pref.search.auto.completion";
     public static final String PREFS_OFFRZ_LAST_SIGNATURE = NON_PREF_PREFIX + "offrz.last.signature";
     private static final String PREFS_CLEAR_PRIVATE_DATA = NON_PREF_PREFIX + "privacy.clear";
+
+    public static final String PREFS_SPLASH_SCREEN_TIMEOUT = "pref.splash_screen.timeout";
+
     // private static final String PREFS_CLEAR_PRIVATE_DATA_EXIT = NON_PREF_PREFIX + "history.clear_on_exit";
     /* Cliqz end */
     private static final String PREFS_SCREEN_ADVANCED = NON_PREF_PREFIX + "advanced_screen";
@@ -1063,6 +1066,11 @@ public class GeckoPreferences
                             return true;
                         }
                     });
+                } else if (PREFS_SPLASH_SCREEN_TIMEOUT.equals(key) &&
+                        !BuildConfig.DEBUG && !BuildConfig.APPLICATION_ID.contains("alpha")) {
+                    preferences.removePreference(pref);
+                    i--;
+                    continue;
                 }
                 /* Cliqz end */
 

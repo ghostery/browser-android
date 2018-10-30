@@ -214,6 +214,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
@@ -989,6 +990,8 @@ public class BrowserApp extends GeckoApp
         final View ghosty = mGhosterySplashScreen.findViewById(R.id.ghosty);
         final Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulsate);
         ghosty.startAnimation(pulse);
+        final int splashTimeout = Integer.valueOf(sharedPreferences.getString(GeckoPreferences.PREFS_SPLASH_SCREEN_TIMEOUT,
+                 getResources().getString(R.string.splash_screen_timeout_default)));
         mGhosterySplashScreen.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -997,7 +1000,7 @@ public class BrowserApp extends GeckoApp
                     enterEditingMode();
                 }
             }
-        }, 4000);
+        }, TimeUnit.SECONDS.toMillis(splashTimeout));
         /*Cliqz End*/
     }
 

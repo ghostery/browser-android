@@ -217,7 +217,9 @@
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Wi-Fi debugging requires your device to have a QR code reader app installed.">
 <!ENTITY pref_remember_signons2 "Remember logins">
 <!ENTITY pref_manage_logins "Manage logins">
-
+<!-- Cliqz start -->
+<!ENTITY pref_splash_screen_timeout "Set &brandShortName; splash screen timeout (in seconds)">
+<!-- Cliqz end -->
 <!ENTITY pref_category_home "Home">
 <!ENTITY pref_category_home_summary "Customize your homepage">
 <!ENTITY pref_category_home_panels "Panels">
