@@ -1302,6 +1302,14 @@ $(GHOSTERY_XPI_PATH): $(FEATURES_PATH)
 cliqz_sys_addons: $(CLIQZ_XPI_PATH) $(GHOSTERY_XPI_PATH)
 	echo cliqz_sys_addons in `pwd`
 
+# Remake 'built_in_addons.json'
+remake_built_in_addons:
+	$(PYTHON) -c \
+	'import os, json; \
+	listing = json.load(open("$(topobjdir)/toolkit/mozapps/extensions/built_in_addons.json", "r")); \
+	listing["system"] = [os.path.splitext(it)[0] for it in sorted(os.listdir("$(FEATURES_PATH)"))]; \
+	json.dump(listing, open("$(topobjdir)/toolkit/mozapps/extensions/built_in_addons.json", "w"))'
+
 # Cliqz end
 
 chrome::

@@ -32,6 +32,7 @@ include $(topsrcdir)/config/rules.mk
 
 # Cliqz start
 libs:: cliqz_sys_addons
+tools:: remake_built_in_addons
 # Cliqz end
 
 # Override the Java settings with some specific android settings

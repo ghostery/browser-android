@@ -33,8 +33,6 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                     # LLVM and CLANG
                     ac_add_options --with-libclang-path=$CLANG_HOME/lib/
                     ac_add_options --with-clang-path=$CLANG_HOME/bin/clang
-                    HOST_CC=$CLANG_HOME/bin/clang
-                    HOST_CXX=$CLANG_HOME/bin/clang++
                 '''
                 sh '''#!/bin/bash -l
                     set -e
