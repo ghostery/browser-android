@@ -62,10 +62,7 @@
                               android:layout_height="@dimen/home_banner_height"
                               android:layout_gravity="bottom"/>
 
-                    <ViewStub android:id="@+id/firstrun_pager_stub"
-                              android:layout="@layout/firstrun_animation_container"
-                              android:layout_width="match_parent"
-                              android:layout_height="match_parent"/>
+                    <!-- Cliqz firstrun pager removed -->
 
                 </FrameLayout>
 
@@ -197,7 +194,11 @@
 
         </view>
     <!-- Cliqz Start -->
-        <include layout="@layout/cliqz_intro_pager" />
+        <ViewStub
+            android:layout_width="match_parent"
+            android:id="@+id/firstrun_pager_stub"
+            android:layout_height="match_parent"
+            android:layout="@layout/cliqz_intro_pager" />
 
         <include layout="@layout/ghostery_splash_screen" />
 
