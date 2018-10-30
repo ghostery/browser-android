@@ -44,8 +44,8 @@
 <!ENTITY aboutNetworking.dnsLookupTableColumn  "IP">
 <!ENTITY aboutNetworking.rcwn                  "RCWN 统计">
 <!ENTITY aboutNetworking.rcwnStatus            "RCWN 状态">
-<!ENTITY aboutNetworking.rcwnCacheWonCount     "缓存较快数">
-<!ENTITY aboutNetworking.rcwnNetWonCount       "网络较快数">
+<!ENTITY aboutNetworking.rcwnCacheWonCount     "缓存领先次数">
+<!ENTITY aboutNetworking.rcwnNetWonCount       "网络领先次数">
 <!ENTITY aboutNetworking.totalNetworkRequests  "总网络请求数">
 <!ENTITY aboutNetworking.rcwnOperation         "缓存操作">
 <!ENTITY aboutNetworking.rcwnPerfOpen          "打开">
@@ -54,6 +54,6 @@
 <!ENTITY aboutNetworking.rcwnPerfEntryOpen     "打开项">
 <!ENTITY aboutNetworking.rcwnAvgShort          "短操作平均">
 <!ENTITY aboutNetworking.rcwnAvgLong           "长操作平均">
-<!ENTITY aboutNetworking.rcwnStddevLong        "长操作标准偏差">
+<!ENTITY aboutNetworking.rcwnStddevLong        "长操作标准差">
 <!ENTITY aboutNetworking.rcwnCacheSlow         "缓存较慢次数">
 <!ENTITY aboutNetworking.rcwnCacheNotSlow      "缓存非慢次数">

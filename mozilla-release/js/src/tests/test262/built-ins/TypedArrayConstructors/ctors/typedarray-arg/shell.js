@@ -1,5 +1,5 @@
 // file: detachArrayBuffer.js
-// Copyright (C) 2017 Ecma International.  All rights reserved.
+// Copyright (C) 2016 the V8 project authors.  All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
 /*---
 description: |
@@ -76,6 +76,9 @@ var typedArrayConstructors = [
   Uint8Array,
   Uint8ClampedArray
 ];
+
+var floatArrayConstructors = typedArrayConstructors.slice(0, 2);
+var intArrayConstructors = typedArrayConstructors.slice(2, 7);
 
 /**
  * The %TypedArray% intrinsic constructor function.

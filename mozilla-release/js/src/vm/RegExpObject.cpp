@@ -21,6 +21,8 @@
 #include "irregexp/RegExpBytecode.h"
 #endif
 #include "irregexp/RegExpParser.h"
+#include "jit/VMFunctions.h"
+#include "js/StableStringChars.h"
 #include "util/StringBuffer.h"
 #include "vm/MatchPairs.h"
 #include "vm/RegExpStatics.h"
@@ -40,7 +42,9 @@ using namespace js;
 using mozilla::ArrayLength;
 using mozilla::DebugOnly;
 using mozilla::PodCopy;
+using JS::AutoStableStringChars;
 using js::frontend::TokenStream;
+using JS::CompileOptions;
 
 using JS::AutoCheckCannotGC;
 
@@ -144,12 +148,12 @@ IsMarkingTrace(JSTracer* trc)
     // Determine whether tracing is happening during normal marking.  We need to
     // test all the following conditions, since:
     //
-    //   1. During TraceRuntime, CurrentThreadIsHeapBusy() is true, but the
+    //   1. During TraceRuntime, RuntimeHeapIsBusy() is true, but the
     //      tracer might not be a marking tracer.
     //   2. When a write barrier executes, IsMarkingTracer is true, but
-    //      CurrentThreadIsHeapBusy() will be false.
+    //      RuntimeHeapIsBusy() will be false.
 
-    return JS::CurrentThreadIsHeapCollecting() && trc->isMarkingTracer();
+    return JS::RuntimeHeapIsCollecting() && trc->isMarkingTracer();
 }
 
 void
@@ -284,7 +288,7 @@ RegExpObject::createShared(JSContext* cx, Handle<RegExpObject*> regexp)
 {
     MOZ_ASSERT(!regexp->hasShared());
     RootedAtom source(cx, regexp->getSource());
-    RegExpShared* shared = cx->zone()->regExps.get(cx, source, regexp->getFlags());
+    RegExpShared* shared = cx->zone()->regExps().get(cx, source, regexp->getFlags());
     if (!shared)
         return nullptr;
 
@@ -323,13 +327,13 @@ RegExpObject::initAndZeroLastIndex(JSAtom* source, RegExpFlag flags, JSContext* 
 }
 
 static MOZ_ALWAYS_INLINE bool
-IsLineTerminator(const JS::Latin1Char c)
+IsRegExpLineTerminator(const JS::Latin1Char c)
 {
     return c == '\n' || c == '\r';
 }
 
 static MOZ_ALWAYS_INLINE bool
-IsLineTerminator(const char16_t c)
+IsRegExpLineTerminator(const char16_t c)
 {
     return c == '\n' || c == '\r' || c == 0x2028 || c == 0x2029;
 }
@@ -421,7 +425,7 @@ EscapeRegExpPattern(StringBuffer& sb, const CharT* oldChars, size_t oldLen)
             }
         }
 
-        if (IsLineTerminator(ch)) {
+        if (IsRegExpLineTerminator(ch)) {
             // There's LineTerminator that needs escaping.
             if (sb.empty()) {
                 // This is the first char we've seen that needs escaping,
@@ -1040,7 +1044,7 @@ RegExpShared::compile(JSContext* cx, MutableHandleRegExpShared re, HandleAtom pa
         // compilation.jitCode (to ensure no purging happens between adding the
         // tables and setting the JIT code).
         for (size_t i = 0; i < tables.length(); i++) {
-            if (!re->addTable(Move(tables[i])))
+            if (!re->addTable(std::move(tables[i])))
                 return false;
         }
         compilation.jitCode = code.jitCode;
@@ -1208,16 +1212,16 @@ RegExpShared::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf)
     return n;
 }
 
-/* RegExpCompartment */
+/* RegExpRealm */
 
-RegExpCompartment::RegExpCompartment()
+RegExpRealm::RegExpRealm()
   : matchResultTemplateObject_(nullptr),
     optimizableRegExpPrototypeShape_(nullptr),
     optimizableRegExpInstanceShape_(nullptr)
 {}
 
 ArrayObject*
-RegExpCompartment::createMatchResultTemplateObject(JSContext* cx)
+RegExpRealm::createMatchResultTemplateObject(JSContext* cx)
 {
     MOZ_ASSERT(!matchResultTemplateObject_);
 
@@ -1229,7 +1233,8 @@ RegExpCompartment::createMatchResultTemplateObject(JSContext* cx)
 
     // Create a new group for the template.
     Rooted<TaggedProto> proto(cx, templateObject->taggedProto());
-    ObjectGroup* group = ObjectGroupCompartment::makeGroup(cx, templateObject->getClass(), proto);
+    ObjectGroup* group = ObjectGroupRealm::makeGroup(cx, templateObject->realm(),
+                                                     templateObject->getClass(), proto);
     if (!group)
         return matchResultTemplateObject_; // = nullptr
     templateObject->setGroup(group);
@@ -1249,9 +1254,9 @@ RegExpCompartment::createMatchResultTemplateObject(JSContext* cx)
 
     // Make sure that the properties are in the right slots.
     DebugOnly<Shape*> shape = templateObject->lastProperty();
-    MOZ_ASSERT(shape->previous()->slot() == 0 &&
+    MOZ_ASSERT(shape->previous()->slot() == MatchResultObjectIndexSlot &&
                shape->previous()->propidRef() == NameToId(cx->names().index));
-    MOZ_ASSERT(shape->slot() == 1 &&
+    MOZ_ASSERT(shape->slot() == MatchResultObjectInputSlot &&
                shape->propidRef() == NameToId(cx->names().input));
 
     // Make sure type information reflects the indexed properties which might
@@ -1264,17 +1269,8 @@ RegExpCompartment::createMatchResultTemplateObject(JSContext* cx)
     return matchResultTemplateObject_;
 }
 
-bool
-RegExpZone::init()
-{
-    if (!set_.init(0))
-        return false;
-
-    return true;
-}
-
 void
-RegExpCompartment::sweep()
+RegExpRealm::sweep()
 {
     if (matchResultTemplateObject_ &&
         IsAboutToBeFinalized(&matchResultTemplateObject_))
@@ -1420,11 +1416,10 @@ js::ParseRegExpFlags(JSContext* cx, JSString* flagStr, RegExpFlag* flagsOut)
 
     if (!ok) {
         TwoByteChars range(&invalidFlag, 1);
-        UniqueChars utf8(JS::CharsToNewUTF8CharsZ(nullptr, range).c_str());
+        UniqueChars utf8(JS::CharsToNewUTF8CharsZ(cx, range).c_str());
         if (!utf8)
             return false;
-        JS_ReportErrorFlagsAndNumberUTF8(cx, JSREPORT_ERROR, GetErrorMessage, nullptr,
-                                         JSMSG_BAD_REGEXP_FLAG, utf8.get());
+        JS_ReportErrorNumberUTF8(cx, GetErrorMessage, nullptr, JSMSG_BAD_REGEXP_FLAG, utf8.get());
         return false;
     }
 

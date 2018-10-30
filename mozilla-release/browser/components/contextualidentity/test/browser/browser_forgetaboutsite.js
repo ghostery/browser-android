@@ -89,12 +89,7 @@ function OpenCacheEntry(key, where, flags, lci) {
     CacheListener.prototype = {
       _appCache: null,
 
-      QueryInterface(iid) {
-        if (iid.equals(Ci.nsICacheEntryOpenCallback) ||
-            iid.equals(Ci.nsISupports))
-          return this;
-        throw Cr.NS_ERROR_NO_INTERFACE;
-      },
+      QueryInterface: ChromeUtils.generateQI(["nsICacheEntryOpenCallback"]),
 
       onCacheEntryCheck(entry, appCache) {
         return Ci.nsICacheEntryOpenCallback.ENTRY_WANTED;
@@ -107,7 +102,7 @@ function OpenCacheEntry(key, where, flags, lci) {
       run() {
         let storage = getCacheStorage(where, lci, this._appCache);
         storage.asyncOpenURI(key, "", flags, this);
-      }
+      },
     };
 
     (new CacheListener()).run();
@@ -211,7 +206,7 @@ async function test_image_cache_cleared() {
   gHits = 0;
 
   // Forget the site.
-  await ForgetAboutSite.removeDataFromDomain("localhost:" + gHttpServer.identity.primaryPort + "/");
+  await ForgetAboutSite.removeDataFromDomain("localhost");
 
   // Load again.
   for (let userContextId of Object.keys(USER_CONTEXTS)) {
@@ -310,7 +305,7 @@ async function test_storage_cleared() {
 add_task(async function setup() {
   // Make sure userContext is enabled.
   await SpecialPowers.pushPrefEnv({"set": [
-    ["privacy.userContext.enabled", true]
+    ["privacy.userContext.enabled", true],
   ]});
 
   // Create a http server for the image cache test.

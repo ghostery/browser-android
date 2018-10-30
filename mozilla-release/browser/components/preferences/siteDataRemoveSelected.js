@@ -8,18 +8,15 @@
 let gSiteDataRemoveSelected = {
 
   init() {
-    let bundlePreferences = document.getElementById("bundlePreferences");
-    let acceptBtn = document.getElementById("SiteDataRemoveSelectedDialog")
-                            .getButton("accept");
-    acceptBtn.label = bundlePreferences.getString("acceptRemove");
-
     let hosts = window.arguments[0].hosts;
     hosts.sort();
     let list = document.getElementById("removalList");
     let fragment = document.createDocumentFragment();
     for (let host of hosts) {
-      let listItem = document.createElement("listitem");
-      listItem.setAttribute("label", host);
+      let listItem = document.createXULElement("richlistitem");
+      let label = document.createXULElement("label");
+      label.setAttribute("value", host);
+      listItem.appendChild(label);
       fragment.appendChild(listItem);
     }
     list.appendChild(fragment);

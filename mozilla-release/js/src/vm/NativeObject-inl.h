@@ -23,11 +23,17 @@
 
 namespace js {
 
+inline uint32_t
+NativeObject::numFixedSlotsMaybeForwarded() const
+{
+    return gc::MaybeForwarded(lastProperty())->numFixedSlots();
+}
+
 inline uint8_t*
 NativeObject::fixedData(size_t nslots) const
 {
     MOZ_ASSERT(ClassCanHaveFixedData(getClass()));
-    MOZ_ASSERT(nslots == numFixedSlots() + (hasPrivate() ? 1 : 0));
+    MOZ_ASSERT(nslots == numFixedSlotsMaybeForwarded() + (hasPrivate() ? 1 : 0));
     return reinterpret_cast<uint8_t*>(&fixedSlots()[nslots]);
 }
 
@@ -68,13 +74,19 @@ NativeObject::clearShouldConvertDoubleElements()
 }
 
 inline void
-NativeObject::setDenseElementWithType(JSContext* cx, uint32_t index, const Value& val)
+NativeObject::addDenseElementType(JSContext* cx, uint32_t index, const Value& val)
 {
     // Avoid a slow AddTypePropertyId call if the type is the same as the type
     // of the previous element.
     TypeSet::Type thisType = TypeSet::GetValueType(val);
     if (index == 0 || TypeSet::GetValueType(elements_[index - 1]) != thisType)
         AddTypePropertyId(cx, this, JSID_VOID, thisType);
+}
+
+inline void
+NativeObject::setDenseElementWithType(JSContext* cx, uint32_t index, const Value& val)
+{
+    addDenseElementType(cx, index, val);
     setDenseElementMaybeConvertDouble(index, val);
 }
 
@@ -82,10 +94,9 @@ inline void
 NativeObject::initDenseElementWithType(JSContext* cx, uint32_t index, const Value& val)
 {
     MOZ_ASSERT(!shouldConvertDoubleElements());
-    if (val.isMagic(JS_ELEMENTS_HOLE))
-        markDenseElementsNotPacked(cx);
-    else
-        AddTypePropertyId(cx, this, JSID_VOID, val);
+    MOZ_ASSERT(!val.isMagic(JS_ELEMENTS_HOLE));
+
+    addDenseElementType(cx, index, val);
     initDenseElement(index, val);
 }
 
@@ -96,13 +107,13 @@ NativeObject::setDenseElementHole(JSContext* cx, uint32_t index)
     setDenseElement(index, MagicValue(JS_ELEMENTS_HOLE));
 }
 
-/* static */ inline void
-NativeObject::removeDenseElementForSparseIndex(JSContext* cx,
-                                               HandleNativeObject obj, uint32_t index)
+inline void
+NativeObject::removeDenseElementForSparseIndex(JSContext* cx, uint32_t index)
 {
-    MarkObjectGroupFlags(cx, obj, OBJECT_FLAG_NON_PACKED | OBJECT_FLAG_SPARSE_INDEXES);
-    if (obj->containsDenseElement(index))
-        obj->setDenseElementUnchecked(index, MagicValue(JS_ELEMENTS_HOLE));
+    MOZ_ASSERT(containsPure(INT_TO_JSID(index)));
+    MarkObjectGroupFlags(cx, this, OBJECT_FLAG_NON_PACKED | OBJECT_FLAG_SPARSE_INDEXES);
+    if (containsDenseElement(index))
+        setDenseElement(index, MagicValue(JS_ELEMENTS_HOLE));
 }
 
 inline bool
@@ -123,12 +134,11 @@ NativeObject::elementsRangeWriteBarrierPost(uint32_t start, uint32_t count)
 {
     for (size_t i = 0; i < count; i++) {
         const Value& v = elements_[start + i];
-        if ((v.isObject() || v.isString()) && IsInsideNursery(v.toGCThing())) {
-            JSRuntime* rt = runtimeFromMainThread();
-            rt->gc.storeBuffer().putSlot(this, HeapSlot::Element,
-                                         unshiftedIndex(start + i),
-                                         count - i);
-            return;
+        if (v.isGCThing()) {
+            if (gc::StoreBuffer* sb = v.toGCThing()->storeBuffer()) {
+                sb->putSlot(this, HeapSlot::Element, unshiftedIndex(start + i), count - i);
+                return;
+            }
         }
     }
 }
@@ -138,7 +148,7 @@ NativeObject::copyDenseElements(uint32_t dstStart, const Value* src, uint32_t co
 {
     MOZ_ASSERT(dstStart + count <= getDenseCapacity());
     MOZ_ASSERT(!denseElementsAreCopyOnWrite());
-    MOZ_ASSERT(!denseElementsAreFrozen());
+    MOZ_ASSERT(isExtensible());
     MOZ_ASSERT_IF(count > 0, src != nullptr);
 #ifdef DEBUG
     for (uint32_t i = 0; i < count; ++i)
@@ -175,7 +185,7 @@ NativeObject::initDenseElements(const Value* src, uint32_t count)
     MOZ_ASSERT(getDenseInitializedLength() == 0);
     MOZ_ASSERT(count <= getDenseCapacity());
     MOZ_ASSERT(!denseElementsAreCopyOnWrite());
-    MOZ_ASSERT(!denseElementsAreFrozen());
+    MOZ_ASSERT(isExtensible());
 
     setDenseInitializedLength(count);
 
@@ -191,11 +201,12 @@ NativeObject::initDenseElements(const Value* src, uint32_t count)
 inline bool
 NativeObject::tryShiftDenseElements(uint32_t count)
 {
+    MOZ_ASSERT(isExtensible());
+
     ObjectElements* header = getElementsHeader();
     if (header->initializedLength == count ||
         count > ObjectElements::MaxShiftedElements ||
         header->isCopyOnWrite() ||
-        header->isFrozen() ||
         header->hasNonwritableArrayLength())
     {
         return false;
@@ -208,6 +219,8 @@ NativeObject::tryShiftDenseElements(uint32_t count)
 inline void
 NativeObject::shiftDenseElementsUnchecked(uint32_t count)
 {
+    MOZ_ASSERT(isExtensible());
+
     ObjectElements* header = getElementsHeader();
     MOZ_ASSERT(count > 0);
     MOZ_ASSERT(count < header->initializedLength);
@@ -231,7 +244,7 @@ NativeObject::moveDenseElements(uint32_t dstStart, uint32_t srcStart, uint32_t c
     MOZ_ASSERT(dstStart + count <= getDenseCapacity());
     MOZ_ASSERT(srcStart + count <= getDenseInitializedLength());
     MOZ_ASSERT(!denseElementsAreCopyOnWrite());
-    MOZ_ASSERT(!denseElementsAreFrozen());
+    MOZ_ASSERT(isExtensible());
 
     /*
      * Using memmove here would skip write barriers. Also, we need to consider
@@ -272,7 +285,7 @@ NativeObject::moveDenseElementsNoPreBarrier(uint32_t dstStart, uint32_t srcStart
     MOZ_ASSERT(dstStart + count <= getDenseCapacity());
     MOZ_ASSERT(srcStart + count <= getDenseCapacity());
     MOZ_ASSERT(!denseElementsAreCopyOnWrite());
-    MOZ_ASSERT(!denseElementsAreFrozen());
+    MOZ_ASSERT(isExtensible());
 
     memmove(elements_ + dstStart, elements_ + srcStart, count * sizeof(HeapSlot));
     elementsRangeWriteBarrierPost(dstStart, count);
@@ -284,7 +297,7 @@ NativeObject::reverseDenseElementsNoPreBarrier(uint32_t length)
     MOZ_ASSERT(!shadowZone()->needsIncrementalBarrier());
 
     MOZ_ASSERT(!denseElementsAreCopyOnWrite());
-    MOZ_ASSERT(!denseElementsAreFrozen());
+    MOZ_ASSERT(isExtensible());
 
     MOZ_ASSERT(length > 1);
     MOZ_ASSERT(length <= getDenseInitializedLength());
@@ -309,6 +322,7 @@ NativeObject::ensureDenseInitializedLengthNoPackedCheck(uint32_t index, uint32_t
 {
     MOZ_ASSERT(!denseElementsAreCopyOnWrite());
     MOZ_ASSERT(!denseElementsAreFrozen());
+    MOZ_ASSERT(isExtensible() || (containsDenseElement(index) && extra == 1));
 
     /*
      * Ensure that the array's contents have been initialized up to index, and
@@ -319,6 +333,7 @@ NativeObject::ensureDenseInitializedLengthNoPackedCheck(uint32_t index, uint32_t
     uint32_t& initlen = getElementsHeader()->initializedLength;
 
     if (initlen < index + extra) {
+        MOZ_ASSERT(isExtensible());
         uint32_t numShifted = getElementsHeader()->numShiftedElements();
         size_t offset = initlen;
         for (HeapSlot* sp = elements_ + initlen;
@@ -334,6 +349,8 @@ NativeObject::ensureDenseInitializedLengthNoPackedCheck(uint32_t index, uint32_t
 inline void
 NativeObject::ensureDenseInitializedLength(JSContext* cx, uint32_t index, uint32_t extra)
 {
+    MOZ_ASSERT(isExtensible());
+
     if (writeToIndexWouldMarkNotPacked(index))
         markDenseElementsNotPacked(cx);
     ensureDenseInitializedLengthNoPackedCheck(index, extra);
@@ -344,17 +361,7 @@ NativeObject::extendDenseElements(JSContext* cx,
                                   uint32_t requiredCapacity, uint32_t extra)
 {
     MOZ_ASSERT(!denseElementsAreCopyOnWrite());
-    MOZ_ASSERT(!denseElementsAreFrozen());
-
-    /*
-     * Don't grow elements for non-extensible objects. Dense elements can be
-     * added/written with no extensible checks as long as there is capacity
-     * for them.
-     */
-    if (!nonProxyIsExtensible()) {
-        MOZ_ASSERT(getDenseCapacity() == 0);
-        return DenseElementResult::Incomplete;
-    }
+    MOZ_ASSERT(isExtensible());
 
     /*
      * Don't grow elements for objects which already have sparse indexes.
@@ -383,6 +390,7 @@ inline DenseElementResult
 NativeObject::ensureDenseElements(JSContext* cx, uint32_t index, uint32_t extra)
 {
     MOZ_ASSERT(isNative());
+    MOZ_ASSERT(isExtensible() || (containsDenseElement(index) && extra == 1));
 
     if (writeToIndexWouldMarkNotPacked(index))
         markDenseElementsNotPacked(cx);
@@ -429,7 +437,7 @@ NativeObject::setOrExtendDenseElements(JSContext* cx, uint32_t start, const Valu
                                        uint32_t count,
                                        ShouldUpdateTypes updateTypes)
 {
-    if (denseElementsAreFrozen())
+    if (!isExtensible())
         return DenseElementResult::Incomplete;
 
     if (is<ArrayObject>() &&
@@ -533,6 +541,7 @@ NativeObject::create(JSContext* cx, js::gc::AllocKind kind, js::gc::InitialHeap 
 
     const js::Class* clasp = group->clasp();
     MOZ_ASSERT(clasp->isNative());
+    MOZ_ASSERT(!clasp->isJSFunction(), "should use JSFunction::create");
 
     size_t nDynamicSlots = dynamicSlotsCount(shape->numFixedSlots(), shape->slotSpan(), clasp);
 
@@ -554,26 +563,12 @@ NativeObject::create(JSContext* cx, js::gc::AllocKind kind, js::gc::InitialHeap 
     if (size_t span = shape->slotSpan())
         nobj->initializeSlotRange(0, span);
 
-    // JSFunction's fixed slots expect POD-style initialization.
-    if (clasp->isJSFunction()) {
-        MOZ_ASSERT(kind == js::gc::AllocKind::FUNCTION ||
-                   kind == js::gc::AllocKind::FUNCTION_EXTENDED);
-        size_t size =
-            kind == js::gc::AllocKind::FUNCTION ? sizeof(JSFunction) : sizeof(js::FunctionExtended);
-        memset(nobj->as<JSFunction>().fixedSlots(), 0, size - sizeof(js::NativeObject));
-        if (kind == js::gc::AllocKind::FUNCTION_EXTENDED) {
-            // SetNewObjectMetadata may gc, which will be unhappy if flags &
-            // EXTENDED doesn't match the arena's AllocKind.
-            nobj->as<JSFunction>().setFlags(JSFunction::EXTENDED);
-        }
-    }
-
     if (clasp->shouldDelayMetadataBuilder())
-        cx->compartment()->setObjectPendingMetadata(cx, nobj);
+        cx->realm()->setObjectPendingMetadata(cx, nobj);
     else
         nobj = SetNewObjectMetadata(cx, nobj);
 
-    js::gc::TraceCreateObject(nobj);
+    js::gc::gcTracer.traceCreateObject(nobj);
 
     return nobj;
 }
@@ -683,6 +678,12 @@ NativeObject::allocKindForTenure() const
     if (!CanBeFinalizedInBackground(kind, getClass()))
         return kind;
     return GetBackgroundAllocKind(kind);
+}
+
+inline js::GlobalObject&
+NativeObject::global() const
+{
+    return nonCCWGlobal();
 }
 
 inline js::gc::AllocKind
@@ -795,6 +796,7 @@ CallResolveOp(JSContext* cx, HandleNativeObject obj, HandleId id,
     *recursedp = false;
 
     bool resolved = false;
+    AutoRealm ar(cx, obj);
     if (!obj->getClass()->getResolve()(cx, obj, id, &resolved))
         return false;
 
@@ -977,8 +979,9 @@ ThrowIfNotConstructing(JSContext *cx, const CallArgs &args, const char *builtinN
 {
     if (args.isConstructing())
         return true;
-    return JS_ReportErrorFlagsAndNumberASCII(cx, JSREPORT_ERROR, GetErrorMessage, nullptr,
-                                             JSMSG_BUILTIN_CTOR_NO_NEW, builtinName);
+    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BUILTIN_CTOR_NO_NEW,
+                              builtinName);
+    return false;
 }
 
 inline bool

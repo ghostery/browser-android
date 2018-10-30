@@ -2,17 +2,13 @@
 # Add MOZILLA_OFFICIAL flag to proguard the artifacts
 MOZILLA_OFFICIAL=1
 
-# Android Targets: 'i386-linux-android' or 'arm-linux-androideabi'
+# Android Targets: 'i686-linux-android' or 'arm-linux-androideabi'
 ac_add_options --enable-application=mobile/android
 ac_add_options --target=$ANDROID_TARGET
 
 # With the following Android SDK and NDK:
 ac_add_options --with-android-sdk=$ANDROID_HOME
 ac_add_options --with-android-ndk=$ANDROID_NDK_HOME
-
-# LLVM and CLANG
-ac_add_options --with-libclang-path=$CLANG_HOME/lib/
-ac_add_options --with-clang-path=$CLANG_HOME/bin/clang
 
 # Available Brands: 'cliqz', 'cliqz-alpha', 'ghostery' & 'ghostery-alpha'
 # Write build artifacts to:

@@ -11,10 +11,10 @@
 #include "nsContentUtils.h"
 #include "nsIHttpHeaderVisitor.h"
 #include "nsContentSecurityManager.h"
-#include "NullPrincipal.h"
 #include "nsServiceManagerUtils.h"
 #include "nsIInputStreamChannel.h"
 #include "mozilla/DebugOnly.h"
+#include "mozilla/NullPrincipal.h"
 
 NS_IMPL_ADDREF(nsViewSourceChannel)
 NS_IMPL_RELEASE(nsViewSourceChannel)
@@ -67,7 +67,8 @@ nsViewSourceChannel::Init(nsIURI* uri)
     // Until then we follow the principal of least privilege and use
     // nullPrincipal as the loadingPrincipal and the least permissive
     // securityflag.
-    nsCOMPtr<nsIPrincipal> nullPrincipal = NullPrincipal::CreateWithoutOriginAttributes();
+    nsCOMPtr<nsIPrincipal> nullPrincipal =
+      mozilla::NullPrincipal::CreateWithoutOriginAttributes();
 
     rv = pService->NewChannel2(path,
                                nullptr, // aOriginCharset
@@ -203,11 +204,7 @@ nsViewSourceChannel::BuildViewSourceURI(nsIURI * aURI, nsIURI ** aResult)
         return rv;
     }
 
-    return NS_NewURI(aResult,
-                     /* XXX Gross hack -- NS_NewURI goes into an infinite loop on
-                     non-flat specs.  See bug 136980 */
-                     nsAutoCString(NS_LITERAL_CSTRING("view-source:") + spec),
-                     nullptr);
+    return NS_NewURI(aResult, NS_LITERAL_CSTRING("view-source:") + spec);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -837,6 +834,20 @@ nsViewSourceChannel::GetIsTrackingResource(bool* aIsTrackingResource)
 }
 
 NS_IMETHODIMP
+nsViewSourceChannel::GetIsThirdPartyTrackingResource(bool* aIsTrackingResource)
+{
+  return !mHttpChannel ? NS_ERROR_NULL_POINTER :
+      mHttpChannel->GetIsThirdPartyTrackingResource(aIsTrackingResource);
+}
+
+NS_IMETHODIMP
+nsViewSourceChannel::OverrideTrackingFlagsForDocumentCookieAccessor(nsIHttpChannel* aDocumentChannel)
+{
+  return !mHttpChannel ? NS_ERROR_NULL_POINTER :
+      mHttpChannel->OverrideTrackingFlagsForDocumentCookieAccessor(aDocumentChannel);
+}
+
+NS_IMETHODIMP
 nsViewSourceChannel::GetRequestMethod(nsACString & aRequestMethod)
 {
     return !mHttpChannel ? NS_ERROR_NULL_POINTER :
@@ -1126,11 +1137,12 @@ nsViewSourceChannel::SetAltDataForChild(bool aIsForChild)
 }
 
 NS_IMETHODIMP
-nsViewSourceChannel::LogBlockedCORSRequest(const nsAString& aMessage)
+nsViewSourceChannel::LogBlockedCORSRequest(const nsAString& aMessage,
+                                           const nsACString& aCategory)
 {
   if (!mHttpChannel) {
     NS_WARNING("nsViewSourceChannel::LogBlockedCORSRequest mHttpChannel is null");
     return NS_ERROR_UNEXPECTED;
   }
-  return mHttpChannel->LogBlockedCORSRequest(aMessage);
+  return mHttpChannel->LogBlockedCORSRequest(aMessage, aCategory);
 }

@@ -21,6 +21,7 @@ class App extends Component {
       addAnimationsCurrentTimeListener: PropTypes.func.isRequired,
       animations: PropTypes.arrayOf(PropTypes.object).isRequired,
       detailVisibility: PropTypes.bool.isRequired,
+      direction: PropTypes.string.isRequired,
       emitEventForTest: PropTypes.func.isRequired,
       getAnimatedPropertyMap: PropTypes.func.isRequired,
       getAnimationsCurrentTime: PropTypes.func.isRequired,
@@ -54,6 +55,7 @@ class App extends Component {
       addAnimationsCurrentTimeListener,
       animations,
       detailVisibility,
+      direction,
       emitEventForTest,
       getAnimatedPropertyMap,
       getAnimationsCurrentTime,
@@ -92,6 +94,7 @@ class App extends Component {
             rewindAnimationsCurrentTime,
             setAnimationsPlaybackRate,
             setAnimationsPlayState,
+            timeScale,
           }
         ),
         SplitBox({
@@ -117,6 +120,7 @@ class App extends Component {
             {
               addAnimationsCurrentTimeListener,
               animations,
+              direction,
               emitEventForTest,
               getAnimatedPropertyMap,
               getNodeFromActor,

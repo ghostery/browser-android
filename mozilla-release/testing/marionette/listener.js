@@ -7,16 +7,19 @@
 
 "use strict";
 
-const winUtil = content.QueryInterface(Ci.nsIInterfaceRequestor)
-    .getInterface(Ci.nsIDOMWindowUtils);
+const winUtil = content.windowUtils;
 
 ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Log.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ChromeUtils.import("chrome://marionette/content/accessibility.js");
 ChromeUtils.import("chrome://marionette/content/action.js");
 ChromeUtils.import("chrome://marionette/content/atom.js");
+const {
+  Capabilities,
+  PageLoadStrategy,
+} = ChromeUtils.import("chrome://marionette/content/capabilities.js", {});
 ChromeUtils.import("chrome://marionette/content/capture.js");
 const {
   element,
@@ -29,22 +32,23 @@ const {
   InvalidSelectorError,
   NoSuchElementError,
   NoSuchFrameError,
-  pprint,
   TimeoutError,
   UnknownError,
 } = ChromeUtils.import("chrome://marionette/content/error.js", {});
 ChromeUtils.import("chrome://marionette/content/evaluate.js");
 ChromeUtils.import("chrome://marionette/content/event.js");
 const {ContentEventObserverService} = ChromeUtils.import("chrome://marionette/content/dom.js", {});
-const {truncate} = ChromeUtils.import("chrome://marionette/content/format.js", {});
+const {pprint, truncate} = ChromeUtils.import("chrome://marionette/content/format.js", {});
 ChromeUtils.import("chrome://marionette/content/interaction.js");
 ChromeUtils.import("chrome://marionette/content/legacyaction.js");
+const {Log} = ChromeUtils.import("chrome://marionette/content/log.js", {});
 ChromeUtils.import("chrome://marionette/content/navigate.js");
 ChromeUtils.import("chrome://marionette/content/proxy.js");
-ChromeUtils.import("chrome://marionette/content/session.js");
 
-Cu.importGlobalProperties(["URL"]);
+XPCOMUtils.defineLazyGetter(this, "logger", () => Log.getWithPrefix(outerWindowID));
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
+let {outerWindowID} = winUtil;
 let curContainer = {frame: content, shadowRoot: null};
 
 // Listen for click event to indicate one click has happened, so actions
@@ -68,7 +72,7 @@ const SUPPORTED_STRATEGIES = new Set([
 Object.defineProperty(this, "capabilities", {
   get() {
     let payload = sendSyncMessage("Marionette:WebDriver:GetCapabilities");
-    return session.Capabilities.fromJSON(payload[0]);
+    return Capabilities.fromJSON(payload[0]);
   },
   configurable: true,
 });
@@ -77,14 +81,6 @@ let legacyactions = new legacyaction.Chain();
 
 // last touch for each fingerId
 let multiLast = {};
-
-// TODO: Log.jsm is not e10s compatible (see https://bugzil.la/1411513),
-// query the main process for the current log level
-const logger = Log.repository.getLogger("Marionette");
-if (logger.ownAppenders.length == 0) {
-  logger.level = sendSyncMessage("Marionette:GetLogLevel");
-  logger.addAppender(new Log.DumpAppender());
-}
 
 // sandbox storage and name of the current sandbox
 const sandboxes = new Sandboxes(() => curContainer.frame);
@@ -284,8 +280,7 @@ const loadListener = {
         // is also treaded specifically here, because it gets temporary
         // loaded for new content processes, and we only want to rely on
         // complete loads for it.
-        } else if ((capabilities.get("pageLoadStrategy") ===
-            session.PageLoadStrategy.Eager &&
+        } else if ((capabilities.get("pageLoadStrategy") === PageLoadStrategy.Eager &&
             documentURI != "about:blank") ||
             /about:blocked\?/.exec(documentURI)) {
           this.stop();
@@ -347,10 +342,9 @@ const loadListener = {
   observe(subject, topic) {
     const win = curContainer.frame;
     const winID = subject.QueryInterface(Ci.nsISupportsPRUint64).data;
-    const curWinID = win.QueryInterface(Ci.nsIInterfaceRequestor)
-        .getInterface(Ci.nsIDOMWindowUtils).outerWindowID;
+    const curWinID = win.windowUtils.outerWindowID;
 
-    logger.debug(`Received observer notification ${topic} for ${winID}`);
+    logger.debug(`Received observer notification ${topic}`);
 
     switch (topic) {
       // In the case when the currently selected frame is closed,
@@ -403,8 +397,7 @@ const loadListener = {
 
     // Only wait if the page load strategy is not `none`
     loadEventExpected = loadEventExpected &&
-        (capabilities.get("pageLoadStrategy") !==
-        session.PageLoadStrategy.None);
+        (capabilities.get("pageLoadStrategy") !== PageLoadStrategy.None);
 
     if (loadEventExpected) {
       let startTime = new Date().getTime();
@@ -444,8 +437,7 @@ const loadListener = {
  * an ID, we start the listeners. Otherwise, nothing happens.
  */
 function registerSelf() {
-  let {outerWindowID} = winUtil;
-  logger.debug(`Register listener.js for window ${outerWindowID}`);
+  logger.debug("Frame script loaded");
 
   sandboxes.clear();
   curContainer = {
@@ -462,6 +454,7 @@ function registerSelf() {
   }
 
   if (reply[0].outerWindowID === outerWindowID) {
+    logger.debug("Frame script registered");
     startListeners();
     sendAsyncMessage("Marionette:ListenersAttached", {outerWindowID});
   }
@@ -628,10 +621,10 @@ function deleteSession() {
  *     JSON serialisable object to accompany the message.  Defaults to
  *     an empty dictionary.
  */
-function sendToServer(uuid, data = undefined) {
+let sendToServer = (uuid, data = undefined) => {
   let channel = new proxy.AsyncMessageChannel(sendAsyncMessage.bind(this));
   channel.reply(uuid, data);
-}
+};
 
 /**
  * Send asynchronous reply with value to chrome.
@@ -686,9 +679,7 @@ function emitTouchEvent(type, touch) {
       `${touch.clientY}) relative to the viewport`);
 
   const win = curContainer.frame;
-  let docShell = win.QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIWebNavigation)
-      .QueryInterface(Ci.nsIDocShell);
+  let docShell = win.docShell;
   if (docShell.asyncPanZoomEnabled && legacyactions.scrolling) {
     let ev = {
       index: 0,
@@ -709,9 +700,7 @@ function emitTouchEvent(type, touch) {
 
   // we get here if we're not in asyncPacZoomEnabled land, or if we're
   // the main process
-  let domWindowUtils = win.QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindowUtils);
-  domWindowUtils.sendTouchEvent(
+  win.windowUtils.sendTouchEvent(
       type,
       [touch.identifier],
       [touch.clientX],
@@ -799,6 +788,8 @@ async function releaseActions() {
       action.inputsToCancel.reverse(), 0, curContainer.frame);
   action.inputsToCancel.length = 0;
   action.inputStateMap.clear();
+
+  event.DoubleClickTracker.resetClick();
 }
 
 /**
@@ -1149,10 +1140,6 @@ async function findElementContent(strategy, selector, opts = {}) {
   }
 
   opts.all = false;
-  if (opts.startNode) {
-    opts.startNode = opts.startNode;
-  }
-
   let el = await element.find(curContainer, strategy, selector, opts);
   return seenEls.add(el);
 }
@@ -1331,7 +1318,7 @@ function clearElement(el) {
 
 /** Switch the current context to the specified host's Shadow DOM. */
 function switchToShadowRoot(el) {
-  if (!el) {
+  if (!element.isElement(el)) {
     // If no host element is passed, attempt to find a parent shadow
     // root or, if none found, unset the current shadow root
     if (curContainer.shadowRoot) {
@@ -1578,12 +1565,10 @@ function flushRendering() {
   let content = curContainer.frame;
   let anyPendingPaintsGeneratedInDescendants = false;
 
-  let windowUtils = content.QueryInterface(Ci.nsIInterfaceRequestor)
-    .getInterface(Ci.nsIDOMWindowUtils);
+  let windowUtils = content.windowUtils;
 
   function flushWindow(win) {
-    let utils = win.QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindowUtils);
+    let utils = win.windowUtils;
     let afterPaintWasPending = utils.isMozAfterPaintPending;
 
     let root = win.document.documentElement;
@@ -1592,7 +1577,7 @@ function flushRendering() {
         // Flush pending restyles and reflows for this window
         root.getBoundingClientRect();
       } catch (e) {
-        logger.warning(`flushWindow failed: ${e}`);
+        logger.error("flushWindow failed", e);
       }
     }
 
@@ -1608,7 +1593,8 @@ function flushRendering() {
 
   if (anyPendingPaintsGeneratedInDescendants &&
       !windowUtils.isMozAfterPaintPending) {
-    logger.error("Internal error: descendant frame generated a MozAfterPaint event, but the root document doesn't have one!");
+    logger.error("Descendant frame generated a MozAfterPaint event, " +
+        "but the root document doesn't have one!");
   }
 
   logger.debug(`flushRendering ${windowUtils.isMozAfterPaintPending}`);
@@ -1619,9 +1605,7 @@ async function reftestWait(url, remote) {
   let win = curContainer.frame;
   let document = curContainer.frame.document;
 
-  let windowUtils = content.QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindowUtils);
-
+  let windowUtils = content.windowUtils;
 
   let reftestWait = false;
 

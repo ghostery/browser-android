@@ -4,6 +4,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+// See the comment at the top of mfbt/HashTable.h for a comparison between
+// PLDHashTable and mozilla::HashTable.
+
 #ifndef nsTHashtable_h__
 #define nsTHashtable_h__
 
@@ -132,7 +135,7 @@ public:
   EntryType* GetEntry(KeyType aKey) const
   {
     return static_cast<EntryType*>(
-      const_cast<PLDHashTable*>(&mTable)->Search(EntryType::KeyToPointer(aKey)));
+      mTable.Search(EntryType::KeyToPointer(aKey)));
   }
 
   /**
@@ -398,7 +401,7 @@ FixedSizeEntryMover(PLDHashTable*,
 
 template<class EntryType>
 nsTHashtable<EntryType>::nsTHashtable(nsTHashtable<EntryType>&& aOther)
-  : mTable(mozilla::Move(aOther.mTable))
+  : mTable(std::move(aOther.mTable))
 {
 }
 
@@ -452,7 +455,7 @@ nsTHashtable<EntryType>::s_CopyEntry(PLDHashTable* aTable,
   EntryType* fromEntry =
     const_cast<EntryType*>(static_cast<const EntryType*>(aFrom));
 
-  new (mozilla::KnownNotNull, aTo) EntryType(mozilla::Move(*fromEntry));
+  new (mozilla::KnownNotNull, aTo) EntryType(std::move(*fromEntry));
 
   fromEntry->~EntryType();
 }
@@ -619,7 +622,7 @@ public:
     typedef nsTHashtable::Base::Iterator Base;
 
     explicit Iterator(nsTHashtable* aTable) : Base(aTable) {}
-    Iterator(Iterator&& aOther) : Base(mozilla::Move(aOther)) {}
+    Iterator(Iterator&& aOther) : Base(std::move(aOther)) {}
     ~Iterator() = default;
 
     EntryType* Get() const { return reinterpret_cast<EntryType*>(Base::Get()); }

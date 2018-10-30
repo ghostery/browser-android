@@ -379,7 +379,7 @@ AudioChannelService::GetMediaConfig(nsPIDOMWindowOuter* aWindow) const
       break;
     }
 
-    window = do_QueryInterface(win);
+    window = win;
 
     // If there is no parent, or we are the toplevel we don't continue.
   } while (window && window != aWindow);
@@ -791,25 +791,9 @@ AudioChannelService::AudioChannelWindow::RemoveAgent(AudioChannelAgent* aAgent)
 void
 AudioChannelService::AudioChannelWindow::NotifyMediaBlockStop(nsPIDOMWindowOuter* aWindow)
 {
-  // Can't use raw pointer for lamba variable capturing, use smart ptr.
-  nsCOMPtr<nsPIDOMWindowOuter> window = aWindow;
-  NS_DispatchToCurrentThread(NS_NewRunnableFunction(
-    "dom::AudioChannelService::AudioChannelWindow::NotifyMediaBlockStop",
-    [window]() -> void {
-      nsCOMPtr<nsIObserverService> observerService =
-        services::GetObserverService();
-      if (NS_WARN_IF(!observerService)) {
-        return;
-      }
-
-      observerService->NotifyObservers(ToSupports(window),
-                                       "audio-playback",
-                                       u"mediaBlockStop");
-    })
-  );
-
   if (mShouldSendActiveMediaBlockStopEvent) {
     mShouldSendActiveMediaBlockStopEvent = false;
+    nsCOMPtr<nsPIDOMWindowOuter> window = aWindow;
     NS_DispatchToCurrentThread(NS_NewRunnableFunction(
       "dom::AudioChannelService::AudioChannelWindow::NotifyMediaBlockStop",
       [window]() -> void {

@@ -35,7 +35,7 @@ const CUSTOM_SEND = L10N.getStr("netmonitor.custom.send");
 /*
  * Custom request panel component
  * A network request editor which simply provide edit and resend interface
- * for netowrk development.
+ * for network development.
  */
 class CustomRequestPanel extends Component {
   static get propTypes() {
@@ -49,7 +49,7 @@ class CustomRequestPanel extends Component {
   }
 
   componentDidMount() {
-    let { request, connector } = this.props;
+    const { request, connector } = this.props;
     fetchNetworkUpdatePacket(connector.requestData, request, [
       "requestHeaders",
       "responseHeaders",
@@ -58,7 +58,7 @@ class CustomRequestPanel extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let { request, connector } = nextProps;
+    const { request, connector } = nextProps;
     fetchNetworkUpdatePacket(connector.requestData, request, [
       "requestHeaders",
       "responseHeaders",
@@ -74,13 +74,13 @@ class CustomRequestPanel extends Component {
    * @return {array} array of headers info {name, value}
    */
   parseRequestText(text, namereg, divider) {
-    let regex = new RegExp(`(${namereg})\\${divider}\\s*(.+)`);
-    let pairs = [];
+    const regex = new RegExp(`(${namereg})\\${divider}\\s*(.+)`);
+    const pairs = [];
 
-    for (let line of text.split("\n")) {
-      let matches = regex.exec(line);
+    for (const line of text.split("\n")) {
+      const matches = regex.exec(line);
       if (matches) {
-        let [, name, value] = matches;
+        const [, name, value] = matches;
         pairs.push({ name, value });
       }
     }
@@ -100,18 +100,11 @@ class CustomRequestPanel extends Component {
 
     switch (evt.target.id) {
       case "custom-headers-value":
-        let customHeadersValue = val || "";
-        // Parse text representation of multiple HTTP headers
-        let headersArray = this.parseRequestText(customHeadersValue, "\\S+?", ":");
-        // Remove temp customHeadersValue while query string is parsable
-        if (customHeadersValue === "" ||
-          headersArray.length === customHeadersValue.split("\n").length) {
-          customHeadersValue = null;
-        }
         data = {
           requestHeaders: {
-            customHeadersValue,
-            headers: headersArray,
+            customHeadersValue: val || "",
+            // Parse text representation of multiple HTTP headers
+            headers: this.parseRequestText(val, "\\S+?", ":")
           },
         };
         break;
@@ -128,12 +121,12 @@ class CustomRequestPanel extends Component {
       case "custom-query-value":
         let customQueryValue = val || "";
         // Parse readable text list of a query string
-        let queryArray = customQueryValue ?
+        const queryArray = customQueryValue ?
           this.parseRequestText(customQueryValue, ".+?", "=") : [];
         // Write out a list of query params into a query string
-        let queryString = queryArray.map(
+        const queryString = queryArray.map(
           ({ name, value }) => name + "=" + value).join("&");
-        let url = queryString ? [request.url.split("?")[0], queryString].join("?") :
+        const url = queryString ? [request.url.split("?")[0], queryString].join("?") :
           request.url.split("?")[0];
         // Remove temp customQueryValue while query string is parsable
         if (customQueryValue === "" ||
@@ -161,13 +154,13 @@ class CustomRequestPanel extends Component {
   }
 
   render() {
-    let {
+    const {
       removeSelectedCustomRequest,
       request = {},
       sendCustomRequest,
       updateRequest,
     } = this.props;
-    let {
+    const {
       method,
       customQueryValue,
       requestHeaders,
@@ -180,13 +173,13 @@ class CustomRequestPanel extends Component {
       headers = requestHeaders.customHeadersValue ?
         requestHeaders.customHeadersValue : writeHeaderText(requestHeaders.headers);
     }
-    let queryArray = url ? parseQueryString(getUrlQuery(url)) : [];
+    const queryArray = url ? parseQueryString(getUrlQuery(url)) : [];
     let params = customQueryValue;
     if (!params) {
       params = queryArray ?
         queryArray.map(({ name, value }) => name + "=" + value).join("\n") : "";
     }
-    let postData = requestPostData && requestPostData.postData.text ?
+    const postData = requestPostData && requestPostData.postData.text ?
       requestPostData.postData.text : "";
 
     return (

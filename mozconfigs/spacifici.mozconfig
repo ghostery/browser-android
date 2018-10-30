@@ -1,0 +1,25 @@
+# Stefano's developing mozconfig file, do not use this for production
+
+CLIQZ_DEBUG=1
+mk_add_options GIT=/usr/bin/git
+
+# Branding
+ac_add_options --with-branding=mobile/android/branding/ghostery-alpha
+# ac_add_options --with-branding=mobile/android/branding/cliqz
+
+# Build Firefox for Android Artifact Mode:
+ac_add_options --with-android-min-sdk=21
+ac_add_options --enable-application=mobile/android
+ac_add_options --target=i686-linux-android
+# ac_add_options --target=arm-linux-androideabi
+ac_add_options --enable-artifact-builds
+
+# With the following Android SDK:
+ac_add_options --with-android-sdk="/home/stefano/opt/android-sdk"
+# ac_add_options --with-android-ndk="/home/stefano/opt/android-ndk-r18-beta1"
+
+# Write build artifacts to:
+mk_add_options MOZ_OBJDIR="$topsrcdir/../objdir-frontend"
+
+# l10n support
+ac_add_options --with-l10n-base="$topsrcdir/../l10n"

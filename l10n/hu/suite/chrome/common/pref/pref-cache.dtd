@@ -1,10 +1,10 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- extracted from content/pref-cache.xul -->
+
 <!--LOCALIZATION NOTE : FILE Cache prefs dialog -->
-
-
 <!ENTITY pref.cache.title                "Gyorsítótár">
 <!ENTITY pref.cache.caption              "Gyorsítótár mérete">
 <!ENTITY cachePara                       "A gyorsítótár a gyakran látogatott weboldalakról tart egy másolatot a lemezen. Ez csökkenti az internetkapcsolat idejét. (Az oldal legfrissebb változata a 'Frissítés' gombbal tölthető be.)">
@@ -18,7 +18,7 @@
 <!ENTITY clearDiskCache.accesskey        "o">
 <!ENTITY chooseDiskCacheFolder.label     "Mappa választása…">
 <!ENTITY chooseDiskCacheFolder.accesskey "v">
-<!ENTITY diskCacheFolderExplanation      "A gyorsítótár fájljai a megadott mappa „Cache” alkönyvtárában fognak elhelyezkedni. A változások érvénybe lépéséhez újra kell indítani a &brandShortName; programot.">
+<!ENTITY diskCacheFolderExplanation      "A gyorsítótár fájljai a megadott mappa „Cache” alkönyvtárában fognak elhelyezkedni. A változások érvénybe lépéséhez újra kell indítani a &brandShortName; böngészőt.">
 <!ENTITY docCache.label                  "A gyorsítótárban található változat összehasonlítása a hálózaton találhatóval:">
 <!ENTITY docCache.accesskey              "r">
 <!ENTITY checkOncePerSession.label       "Munkamenetenként">

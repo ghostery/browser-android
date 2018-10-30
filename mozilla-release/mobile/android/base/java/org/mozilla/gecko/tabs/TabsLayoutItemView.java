@@ -4,18 +4,6 @@
 
 package org.mozilla.gecko.tabs;
 
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.Tab;
-import org.mozilla.gecko.Tabs;
-import org.mozilla.gecko.icons.IconResponse;
-import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
-import org.mozilla.gecko.widget.FaviconView;
-import org.mozilla.gecko.widget.HoverDelegateWithReset;
-import org.mozilla.gecko.widget.TabThumbnailWrapper;
-import org.mozilla.gecko.widget.TouchDelegateWithReset;
-import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
-import org.mozilla.gecko.widget.themed.ThemedRelativeLayout;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -35,6 +23,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.Tab;
+import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
+import org.mozilla.gecko.icons.IconResponse;
+import org.mozilla.gecko.icons.Icons;
+import org.mozilla.gecko.util.ViewUtil;
+import org.mozilla.gecko.widget.FaviconView;
+import org.mozilla.gecko.widget.HoverDelegateWithReset;
+import org.mozilla.gecko.widget.TabThumbnailWrapper;
+import org.mozilla.gecko.widget.TouchDelegateWithReset;
+import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
+import org.mozilla.gecko.widget.themed.ThemedRelativeLayout;
 
 import java.util.concurrent.Future;
 
@@ -141,7 +143,7 @@ public class TabsLayoutItemView extends LinearLayout
     }
 
     private Rect getHitRectRelatively(int targetHitArea) {
-        final boolean isRtl = ViewUtils.isLayoutRtl(this);
+        final boolean isRtl = ViewUtil.isLayoutRtl(this);
         final Rect hitRect = new Rect();
         hitRect.top = 0;
         hitRect.right = isRtl ? targetHitArea : getWidth();
@@ -216,6 +218,7 @@ public class TabsLayoutItemView extends LinearLayout
 
              mOngoingIconLoad = Icons.with(appContext)
                                        .pageUrl(url)
+                                       .setPrivateMode(tab.isPrivate())
                                        .skipNetwork()
                                        .targetSize(iconSize)
                                        .textSize(textSize)

@@ -34,7 +34,6 @@
 #include "nsINode.h"
 #include "nsIObserverService.h"
 #include "nsIPresShell.h"
-#include "nsISelection.h"
 #include "nsISupports.h"
 #include "nsPresContext.h"
 
@@ -845,7 +844,7 @@ IMEStateManager::OnClickInEditor(nsPresContext* aPresContext,
   }
 
   InputContextAction::Cause cause =
-    aMouseEvent->inputSource == MouseEventBinding::MOZ_SOURCE_TOUCH ?
+    aMouseEvent->inputSource == MouseEvent_Binding::MOZ_SOURCE_TOUCH ?
       InputContextAction::CAUSE_TOUCH : InputContextAction::CAUSE_MOUSE;
 
   InputContextAction action(cause, InputContextAction::FOCUS_NOT_CHANGED);
@@ -1949,7 +1948,7 @@ IMEStateManager::CreateIMEContentObserver(EditorBase* aEditorBase)
 
 // static
 nsresult
-IMEStateManager::GetFocusSelectionAndRoot(nsISelection** aSelection,
+IMEStateManager::GetFocusSelectionAndRoot(Selection** aSelection,
                                           nsIContent** aRootContent)
 {
   if (!sActiveIMEContentObserver) {

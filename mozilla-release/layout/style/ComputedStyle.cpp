@@ -43,27 +43,6 @@ namespace mozilla {
 
 //----------------------------------------------------------------------
 
-#ifdef DEBUG
-
-// Check that the style struct IDs are in the same order as they are
-// in nsStyleStructList.h, since when we set up the IDs, we include
-// the inherited and reset structs spearately from nsStyleStructList.h
-enum DebugStyleStruct {
-#define STYLE_STRUCT(name) eDebugStyleStruct_##name,
-#include "nsStyleStructList.h"
-#undef STYLE_STRUCT
-};
-
-#define STYLE_STRUCT(name)                                    \
-  static_assert(static_cast<int>(eDebugStyleStruct_##name) == \
-                  static_cast<int>(eStyleStruct_##name),      \
-                "Style struct IDs are not declared in order?");
-#include "nsStyleStructList.h"
-#undef STYLE_STRUCT
-
-#endif
-
-
 ComputedStyle::ComputedStyle(nsPresContext* aPresContext,
                              nsAtom* aPseudoTag,
                              CSSPseudoElementType aPseudoType,
@@ -71,37 +50,24 @@ ComputedStyle::ComputedStyle(nsPresContext* aPresContext,
   : mPresContext(aPresContext)
   , mSource(aComputedValues)
   , mPseudoTag(aPseudoTag)
-  , mBits(((uint64_t)aPseudoType) << NS_STYLE_CONTEXT_TYPE_SHIFT)
+  , mBits(static_cast<Bit>(Servo_ComputedValues_GetStyleBits(this)))
+  , mPseudoType(aPseudoType)
 {
-  AddStyleBit(Servo_ComputedValues_GetStyleBits(this));
   MOZ_ASSERT(ComputedData());
-
-  // This check has to be done "backward", because if it were written the
-  // more natural way it wouldn't fail even when it needed to.
-  static_assert((UINT64_MAX >> NS_STYLE_CONTEXT_TYPE_SHIFT) >=
-                 static_cast<CSSPseudoElementTypeBase>(
-                   CSSPseudoElementType::MAX),
-                "pseudo element bits no longer fit in a uint64_t");
-
-#define eStyleStruct_LastItem (nsStyleStructID_Length - 1)
-  static_assert(NS_STYLE_INHERIT_MASK & NS_STYLE_INHERIT_BIT(LastItem),
-                "NS_STYLE_INHERIT_MASK must be bigger, and other bits shifted");
-#undef eStyleStruct_LastItem
 }
 
 nsChangeHint
 ComputedStyle::CalcStyleDifference(ComputedStyle* aNewContext,
                                    uint32_t* aEqualStructs)
 {
-  AUTO_PROFILER_LABEL("ComputedStyle::CalcStyleDifference", CSS);
-
-  static_assert(nsStyleStructID_Length <= 32,
+  MOZ_ASSERT(aNewContext);
+  AUTO_PROFILER_LABEL("ComputedStyle::CalcStyleDifference", LAYOUT);
+  static_assert(StyleStructConstants::kStyleStructCount <= 32,
                 "aEqualStructs is not big enough");
 
   *aEqualStructs = 0;
 
   nsChangeHint hint = nsChangeHint(0);
-  NS_ENSURE_TRUE(aNewContext, hint);
   // We must always ensure that we populate the structs on the new style
   // context that are filled in on the old context, so that if we get
   // two style changes in succession, the second of which causes a real
@@ -124,6 +90,8 @@ ComputedStyle::CalcStyleDifference(ComputedStyle* aNewContext,
   // FIXME(emilio): Reintroduce that optimization either for all kind of structs
   // after bug 1368290 with a weak parent pointer from text, or just for reset
   // structs.
+#define STYLE_STRUCT_BIT(name_) \
+  StyleStructConstants::BitFor(StyleStructID::name_)
 #define PEEK(struct_) \
    ComputedData()->GetStyle##struct_()
 
@@ -132,24 +100,24 @@ ComputedStyle::CalcStyleDifference(ComputedStyle* aNewContext,
   PR_BEGIN_MACRO                                                              \
     const nsStyle##struct_* this##struct_ = PEEK(struct_);                    \
     if (this##struct_) {                                                      \
-      structsFound |= NS_STYLE_INHERIT_BIT(struct_);                          \
+      structsFound |= STYLE_STRUCT_BIT(struct_);                              \
                                                                               \
       const nsStyle##struct_* other##struct_ =                                \
         aNewContext->ThreadsafeStyle##struct_();                              \
       if (this##struct_ == other##struct_) {                                  \
         /* The very same struct, so we know that there will be no */          \
         /* differences.                                           */          \
-        *aEqualStructs |= NS_STYLE_INHERIT_BIT(struct_);                      \
+        *aEqualStructs |= STYLE_STRUCT_BIT(struct_);                          \
       } else {                                                                \
         nsChangeHint difference =                                             \
           this##struct_->CalcDifference(*other##struct_ EXPAND extra_args_);  \
         hint |= difference;                                                   \
         if (!difference) {                                                    \
-          *aEqualStructs |= NS_STYLE_INHERIT_BIT(struct_);                    \
+          *aEqualStructs |= STYLE_STRUCT_BIT(struct_);                        \
         }                                                                     \
       }                                                                       \
     } else {                                                                  \
-      *aEqualStructs |= NS_STYLE_INHERIT_BIT(struct_);                        \
+      *aEqualStructs |= STYLE_STRUCT_BIT(struct_);                            \
     }                                                                         \
     styleStructCount++;                                                       \
   PR_END_MACRO
@@ -163,7 +131,7 @@ ComputedStyle::CalcStyleDifference(ComputedStyle* aNewContext,
   DO_STRUCT_DIFFERENCE(XUL);
   DO_STRUCT_DIFFERENCE(Column);
   DO_STRUCT_DIFFERENCE(Content);
-  DO_STRUCT_DIFFERENCE(UserInterface);
+  DO_STRUCT_DIFFERENCE(UI);
   DO_STRUCT_DIFFERENCE(Visibility);
   DO_STRUCT_DIFFERENCE(Outline);
   DO_STRUCT_DIFFERENCE(TableBorder);
@@ -187,12 +155,12 @@ ComputedStyle::CalcStyleDifference(ComputedStyle* aNewContext,
 #undef DO_STRUCT_DIFFERENCE_WITH_ARGS
 #undef EXPAND
 
-  MOZ_ASSERT(styleStructCount == nsStyleStructID_Length,
+  MOZ_ASSERT(styleStructCount == StyleStructConstants::kStyleStructCount,
              "missing a call to DO_STRUCT_DIFFERENCE");
 
 #ifdef DEBUG
   #define STYLE_STRUCT(name_)                                             \
-    MOZ_ASSERT(!!(structsFound & NS_STYLE_INHERIT_BIT(name_)) ==          \
+    MOZ_ASSERT(!!(structsFound & STYLE_STRUCT_BIT(name_)) ==              \
                (PEEK(name_) != nullptr),                                  \
                "PeekStyleData results must not change in the middle of "  \
                "difference calculation.");
@@ -222,7 +190,7 @@ ComputedStyle::CalcStyleDifference(ComputedStyle* aNewContext,
     // One style has a style-if-visited and the other doesn't.
     // Presume a difference.
 #define STYLE_STRUCT(name_, fields_) \
-    *aEqualStructs &= ~NS_STYLE_INHERIT_BIT(name_);
+    *aEqualStructs &= ~STYLE_STRUCT_BIT(name_);
 #include "nsCSSVisitedDependentPropList.h"
 #undef STYLE_STRUCT
     hint |= nsChangeHint_RepaintFrame;
@@ -243,13 +211,14 @@ ComputedStyle::CalcStyleDifference(ComputedStyle* aNewContext,
       const nsStyle##name_* otherVisStruct =                            \
         otherVis->ThreadsafeStyle##name_();                             \
       if (MOZ_FOR_EACH_SEPARATED(STYLE_FIELD, (||), (), fields_)) {     \
-        *aEqualStructs &= ~NS_STYLE_INHERIT_BIT(name_);                 \
+        *aEqualStructs &= ~STYLE_STRUCT_BIT(name_);                     \
         change = true;                                                  \
       }                                                                 \
     }
 #include "nsCSSVisitedDependentPropList.h"
 #undef STYLE_STRUCT
 #undef STYLE_FIELD
+#undef STYLE_STRUCT_BIT
 
     if (change) {
       hint |= nsChangeHint_RepaintFrame;
@@ -263,21 +232,43 @@ ComputedStyle::CalcStyleDifference(ComputedStyle* aNewContext,
     // only need to return the hint if the overall computation of
     // whether we establish a containing block has changed.
 
-    // This depends on data in nsStyleDisplay, nsStyleEffects and
-    // nsStyleSVGReset, so we do it here.
+    // This depends on data in nsStyleDisplay and nsStyleEffects, so we do it
+    // here
 
     // Note that it's perhaps good for this test to be last because it
     // doesn't use Peek* functions to get the structs on the old
     // context.  But this isn't a big concern because these struct
     // getters should be called during frame construction anyway.
-    if (ThreadsafeStyleDisplay()->IsAbsPosContainingBlockForAppropriateFrame(this) ==
-        aNewContext->ThreadsafeStyleDisplay()->
-          IsAbsPosContainingBlockForAppropriateFrame(aNewContext) &&
-        ThreadsafeStyleDisplay()->IsFixedPosContainingBlockForAppropriateFrame(this) ==
-        aNewContext->ThreadsafeStyleDisplay()->
-          IsFixedPosContainingBlockForAppropriateFrame(aNewContext)) {
+    const nsStyleDisplay* oldDisp = ThreadsafeStyleDisplay();
+    const nsStyleDisplay* newDisp = aNewContext->ThreadsafeStyleDisplay();
+    bool isFixedCB;
+    if (oldDisp->IsAbsPosContainingBlockForNonSVGTextFrames() ==
+        newDisp->IsAbsPosContainingBlockForNonSVGTextFrames() &&
+        (isFixedCB =
+           oldDisp->IsFixedPosContainingBlockForNonSVGTextFrames(*this)) ==
+        newDisp->IsFixedPosContainingBlockForNonSVGTextFrames(*aNewContext) &&
+        // transform-supporting frames are a subcategory of non-SVG-text
+        // frames, so no need to test this if isFixedCB is true (both
+        // before and after the change)
+        (isFixedCB ||
+         oldDisp->IsFixedPosContainingBlockForTransformSupportingFrames() ==
+         newDisp->IsFixedPosContainingBlockForTransformSupportingFrames()) &&
+        // contain-layout-and-paint-supporting frames are a subset of
+        // non-SVG-text frames, so no need to test this if isFixedCB is true
+        // (both before and after the change).
+        //
+        // Note, however, that neither of these last two sets is a
+        // subset of the other, because table frames support contain:
+        // layout/paint but not transforms (which are instead inherited
+        // to the table wrapper), and quite a few frame types support
+        // transforms but not contain: layout/paint (e.g., table rows
+        // and row groups, many SVG frames).
+        (isFixedCB ||
+         oldDisp->IsFixedPosContainingBlockForContainLayoutAndPaintSupportingFrames() ==
+         newDisp->IsFixedPosContainingBlockForContainLayoutAndPaintSupportingFrames())) {
       // While some styles that cause the frame to be a containing block
-      // has changed, the overall result hasn't.
+      // has changed, the overall result cannot have changed (no matter
+      // what the frame type is).
       hint &= ~nsChangeHint_UpdateContainingBlock;
     }
   }
@@ -341,14 +332,14 @@ ExtractColor(ComputedStyle* aStyle, const nscolor& aColor)
 static nscolor
 ExtractColor(ComputedStyle* aStyle, const StyleComplexColor& aColor)
 {
-  return aStyle->StyleColor()->CalcComplexColor(aColor);
+  return aColor.CalcColor(aStyle);
 }
 
 static nscolor
 ExtractColor(ComputedStyle* aStyle, const nsStyleSVGPaint& aPaintServer)
 {
   return aPaintServer.Type() == eStyleSVGPaintType_Color
-    ? aPaintServer.GetColor() : NS_RGBA(0, 0, 0, 0);
+    ? aPaintServer.GetColor(aStyle) : NS_RGBA(0, 0, 0, 0);
 }
 
 #define STYLE_FIELD(struct_, field_) aField == &struct_::field_ ||
@@ -399,11 +390,11 @@ ComputedStyle::CombineVisitedColors(nscolor *aColors, bool aLinkIsVisited)
 
 #ifdef DEBUG
 /* static */ const char*
-ComputedStyle::StructName(nsStyleStructID aSID)
+ComputedStyle::StructName(StyleStructID aSID)
 {
   switch (aSID) {
 #define STYLE_STRUCT(name_)     \
-    case eStyleStruct_##name_:  \
+    case StyleStructID::name_:  \
       return #name_;
 #include "nsStyleStructList.h"
 #undef STYLE_STRUCT
@@ -412,19 +403,15 @@ ComputedStyle::StructName(nsStyleStructID aSID)
   }
 }
 
-/* static */ bool
-ComputedStyle::LookupStruct(const nsACString& aName, nsStyleStructID& aResult)
+/* static */ Maybe<StyleStructID>
+ComputedStyle::LookupStruct(const nsACString& aName)
 {
-  if (false)
-    ;
 #define STYLE_STRUCT(name_)             \
-  else if (aName.EqualsLiteral(#name_)) \
-    aResult = eStyleStruct_##name_;
+  if (aName.EqualsLiteral(#name_)) \
+    return Some(StyleStructID::name_);
 #include "nsStyleStructList.h"
 #undef STYLE_STRUCT
-  else
-    return false;
-  return true;
+  return Nothing();
 }
 #endif // DEBUG
 

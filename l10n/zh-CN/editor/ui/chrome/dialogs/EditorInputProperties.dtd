@@ -9,7 +9,7 @@
 <!ENTITY InputType.accesskey "T">
 <!ENTITY text.value "文本">
 <!ENTITY password.value "密码">
-<!ENTITY checkbox.value "检查框">
+<!ENTITY checkbox.value "复选框">
 <!ENTITY radio.value "单选按钮">
 <!ENTITY submit.value "提交按钮">
 <!ENTITY reset.value "重置按钮">

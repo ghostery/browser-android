@@ -9,8 +9,13 @@
 #include "GLContext.h"                  // for GLContext
 #include "GLScreenBuffer.h"             // for GLScreenBuffer
 #include "SharedSurfaceGL.h"            // for SurfaceFactory_GLTexture, etc
+#include "gfxUtils.h"
+#include "mozilla/gfx/2D.h"
 #include "mozilla/layers/AsyncCanvasRenderer.h"
 #include "mozilla/layers/TextureClientSharedSurface.h"
+#include "mozilla/layers/CompositableForwarder.h"
+
+using namespace mozilla::gfx;
 
 namespace mozilla {
 namespace layers {
@@ -65,14 +70,14 @@ ShareableCanvasRenderer::Initialize(const CanvasInitializeData& aData)
   if (mGLFrontbuffer) {
     // We're using a source other than the one in the default screen.
     // (SkiaGL)
-    mFactory = Move(factory);
+    mFactory = std::move(factory);
     if (!mFactory) {
       // Absolutely must have a factory here, so create a basic one
       mFactory = MakeUnique<gl::SurfaceFactory_Basic>(mGLContext, caps, mFlags);
     }
   } else {
     if (factory)
-      screen->Morph(Move(factory));
+      screen->Morph(std::move(factory));
   }
 }
 

@@ -7,13 +7,13 @@ use context::QuirksMode;
 use cssparser::{Parser, ParserInput, RuleListParser};
 use error_reporting::{ContextualParseError, ParseErrorReporter};
 use fallible::FallibleVec;
-use fnv::FnvHashMap;
+use fxhash::FxHashMap;
 use invalidation::media_queries::{MediaListKey, ToMediaListKey};
 #[cfg(feature = "gecko")]
 use malloc_size_of::{MallocSizeOfOps, MallocUnconditionalShallowSizeOf};
 use media_queries::{Device, MediaList};
 use parking_lot::RwLock;
-use parser::{ParserContext, ParserErrorContext};
+use parser::ParserContext;
 use servo_arc::Arc;
 use shared_lock::{DeepCloneParams, DeepCloneWithLock, Locked, SharedRwLock, SharedRwLockReadGuard};
 use std::mem;
@@ -24,6 +24,7 @@ use stylesheets::loader::StylesheetLoader;
 use stylesheets::rule_parser::{State, TopLevelRuleParser};
 use stylesheets::rules_iterator::{EffectiveRules, EffectiveRulesIterator};
 use stylesheets::rules_iterator::{NestedRuleIterationCondition, RulesIterator};
+use use_counters::UseCounters;
 
 /// This structure holds the user-agent and user stylesheets.
 pub struct UserAgentStylesheets {
@@ -42,7 +43,7 @@ pub struct UserAgentStylesheets {
 #[allow(missing_docs)]
 pub struct Namespaces {
     pub default: Option<Namespace>,
-    pub prefixes: FnvHashMap<Prefix, Namespace>,
+    pub prefixes: FxHashMap<Prefix, Namespace>,
 }
 
 /// The contents of a given stylesheet. This effectively maps to a
@@ -69,15 +70,16 @@ pub struct StylesheetContents {
 impl StylesheetContents {
     /// Parse a given CSS string, with a given url-data, origin, and
     /// quirks mode.
-    pub fn from_str<R: ParseErrorReporter>(
+    pub fn from_str(
         css: &str,
         url_data: UrlExtraData,
         origin: Origin,
         shared_lock: &SharedRwLock,
         stylesheet_loader: Option<&StylesheetLoader>,
-        error_reporter: &R,
+        error_reporter: Option<&ParseErrorReporter>,
         quirks_mode: QuirksMode,
         line_number_offset: u32,
+        use_counters: Option<&UseCounters>,
     ) -> Self {
         let namespaces = RwLock::new(Namespaces::default());
         let (rules, source_map_url, source_url) = Stylesheet::parse_rules(
@@ -90,6 +92,7 @@ impl StylesheetContents {
             error_reporter,
             quirks_mode,
             line_number_offset,
+            use_counters,
         );
 
         Self {
@@ -137,7 +140,7 @@ impl DeepCloneWithLock for StylesheetContents {
             url_data: RwLock::new((*self.url_data.read()).clone()),
             namespaces: RwLock::new((*self.namespaces.read()).clone()),
             source_map_url: RwLock::new((*self.source_map_url.read()).clone()),
-            source_url: RwLock::new((*self.source_map_url.read()).clone()),
+            source_url: RwLock::new((*self.source_url.read()).clone()),
         }
     }
 }
@@ -176,7 +179,7 @@ macro_rules! rule_filter {
 }
 
 /// A trait to represent a given stylesheet in a document.
-pub trait StylesheetInDocument {
+pub trait StylesheetInDocument : ::std::fmt::Debug {
     /// Get the stylesheet origin.
     fn origin(&self, guard: &SharedRwLockReadGuard) -> Origin;
 
@@ -263,7 +266,7 @@ impl StylesheetInDocument for Stylesheet {
 
 /// A simple wrapper over an `Arc<Stylesheet>`, with pointer comparison, and
 /// suitable for its use in a `StylesheetSet`.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 #[cfg_attr(feature = "servo", derive(MallocSizeOf))]
 pub struct DocumentStyleSheet(
     #[cfg_attr(feature = "servo", ignore_malloc_size_of = "Arc")] pub Arc<Stylesheet>,
@@ -306,18 +309,18 @@ impl StylesheetInDocument for DocumentStyleSheet {
 
 impl Stylesheet {
     /// Updates an empty stylesheet from a given string of text.
-    pub fn update_from_str<R>(
+    pub fn update_from_str(
         existing: &Stylesheet,
         css: &str,
         url_data: UrlExtraData,
         stylesheet_loader: Option<&StylesheetLoader>,
-        error_reporter: &R,
+        error_reporter: Option<&ParseErrorReporter>,
         line_number_offset: u32,
-    ) where
-        R: ParseErrorReporter,
-    {
+    ) {
         let namespaces = RwLock::new(Namespaces::default());
-        let (rules, source_map_url, source_url) = Stylesheet::parse_rules(
+
+        // FIXME: Consider adding use counters to Servo?
+        let (rules, source_map_url, source_url) = Self::parse_rules(
             css,
             &url_data,
             existing.contents.origin,
@@ -327,6 +330,7 @@ impl Stylesheet {
             error_reporter,
             existing.contents.quirks_mode,
             line_number_offset,
+            /* use_counters = */ None,
         );
 
         *existing.contents.url_data.write() = url_data;
@@ -342,34 +346,41 @@ impl Stylesheet {
         *existing.contents.source_url.write() = source_url;
     }
 
-    fn parse_rules<R: ParseErrorReporter>(
+    fn parse_rules(
         css: &str,
         url_data: &UrlExtraData,
         origin: Origin,
         namespaces: &mut Namespaces,
         shared_lock: &SharedRwLock,
         stylesheet_loader: Option<&StylesheetLoader>,
-        error_reporter: &R,
+        error_reporter: Option<&ParseErrorReporter>,
         quirks_mode: QuirksMode,
         line_number_offset: u32,
+        use_counters: Option<&UseCounters>,
     ) -> (Vec<CssRule>, Option<String>, Option<String>) {
         let mut rules = Vec::new();
         let mut input = ParserInput::new_with_line_number_offset(css, line_number_offset);
         let mut input = Parser::new(&mut input);
 
-        let context = ParserContext::new(origin, url_data, None, ParsingMode::DEFAULT, quirks_mode);
-
-        let error_context = ParserErrorContext { error_reporter };
+        let context = ParserContext::new(
+            origin,
+            url_data,
+            None,
+            ParsingMode::DEFAULT,
+            quirks_mode,
+            error_reporter,
+            use_counters,
+        );
 
         let rule_parser = TopLevelRuleParser {
             stylesheet_origin: origin,
-            shared_lock: shared_lock,
+            shared_lock,
             loader: stylesheet_loader,
-            context: context,
-            error_context: error_context,
+            context,
             state: State::Start,
-            had_hierarchy_error: false,
-            namespaces: namespaces,
+            dom_error: None,
+            insert_rule_context: None,
+            namespaces,
         };
 
         {
@@ -389,7 +400,6 @@ impl Stylesheet {
                         let location = error.location;
                         let error = ContextualParseError::InvalidRule(slice, error);
                         iter.parser.context.log_css_error(
-                            &iter.parser.error_context,
                             location,
                             error,
                         );
@@ -408,17 +418,18 @@ impl Stylesheet {
     ///
     /// Effectively creates a new stylesheet and forwards the hard work to
     /// `Stylesheet::update_from_str`.
-    pub fn from_str<R: ParseErrorReporter>(
+    pub fn from_str(
         css: &str,
         url_data: UrlExtraData,
         origin: Origin,
         media: Arc<Locked<MediaList>>,
         shared_lock: SharedRwLock,
         stylesheet_loader: Option<&StylesheetLoader>,
-        error_reporter: &R,
+        error_reporter: Option<&ParseErrorReporter>,
         quirks_mode: QuirksMode,
         line_number_offset: u32,
-    ) -> Stylesheet {
+    ) -> Self {
+        // FIXME: Consider adding use counters to Servo?
         let contents = StylesheetContents::from_str(
             css,
             url_data,
@@ -428,6 +439,7 @@ impl Stylesheet {
             error_reporter,
             quirks_mode,
             line_number_offset,
+            /* use_counters = */ None,
         );
 
         Stylesheet {

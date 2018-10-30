@@ -225,7 +225,7 @@ BlockReflowInput::ComputeBlockAvailSpace(nsIFrame* aFrame,
 {
 #ifdef REALLY_NOISY_REFLOW
   printf("CBAS frame=%p has floats %d\n",
-         aFrame, aFloatAvailableSpace.mHasFloats);
+         aFrame, aFloatAvailableSpace.HasFloats());
 #endif
   WritingMode wm = mReflowInput.GetWritingMode();
   aResult.BStart(wm) = mBCoord;
@@ -253,7 +253,7 @@ BlockReflowInput::ComputeBlockAvailSpace(nsIFrame* aFrame,
                  !aBlockAvoidsFloats,
                "unexpected replaced width");
   if (!aBlockAvoidsFloats) {
-    if (aFloatAvailableSpace.mHasFloats) {
+    if (aFloatAvailableSpace.HasFloats()) {
       // Use the float-edge property to determine how the child block
       // will interact with the float.
       const nsStyleBorder* borderStyle = aFrame->StyleBorder();
@@ -301,7 +301,7 @@ bool
 BlockReflowInput::ReplacedBlockFitsInAvailSpace(nsIFrame* aReplacedBlock,
                             const nsFlowAreaRect& aFloatAvailableSpace) const
 {
-  if (!aFloatAvailableSpace.mHasFloats) {
+  if (!aFloatAvailableSpace.HasFloats()) {
     // If there aren't any floats here, then we always fit.
     // We check this before calling ISizeToClearPastFloats, which is
     // somewhat expensive.
@@ -355,7 +355,7 @@ BlockReflowInput::GetFloatAvailableSpaceWithState(
     nsFrame::IndentBy(stdout, nsBlockFrame::gNoiseIndent);
     printf("%s: band=%d,%d,%d,%d hasfloats=%d\n", __func__,
            result.mRect.IStart(wm), result.mRect.BStart(wm),
-           result.mRect.ISize(wm), result.mRect.BSize(wm), result.mHasFloats);
+           result.mRect.ISize(wm), result.mRect.BSize(wm), result.HasFloats());
   }
 #endif
   return result;
@@ -390,7 +390,7 @@ BlockReflowInput::GetFloatAvailableSpaceForBSize(
     nsFrame::IndentBy(stdout, nsBlockFrame::gNoiseIndent);
     printf("%s: space=%d,%d,%d,%d hasfloats=%d\n", __func__,
            result.mRect.IStart(wm), result.mRect.BStart(wm),
-           result.mRect.ISize(wm), result.mRect.BSize(wm), result.mHasFloats);
+           result.mRect.ISize(wm), result.mRect.BSize(wm), result.HasFloats());
   }
 #endif
   return result;
@@ -484,7 +484,7 @@ BlockReflowInput::RecoverFloats(nsLineList::iterator aLine,
 {
   WritingMode wm = mReflowInput.GetWritingMode();
   if (aLine->HasFloats()) {
-    // Place the floats into the space-manager again. Also slide
+    // Place the floats into the float manager again. Also slide
     // them, just like the regular frames on the line.
     nsFloatCache* fc = aLine->GetFirstFloat();
     while (fc) {
@@ -567,10 +567,10 @@ BlockReflowInput::AddFloat(nsLineLayout*       aLineLayout,
                              nsIFrame*           aFloat,
                              nscoord             aAvailableISize)
 {
-  NS_PRECONDITION(aLineLayout, "must have line layout");
-  NS_PRECONDITION(mBlock->LinesEnd() != mCurrentLine, "null ptr");
-  NS_PRECONDITION(aFloat->GetStateBits() & NS_FRAME_OUT_OF_FLOW,
-                  "aFloat must be an out-of-flow frame");
+  MOZ_ASSERT(aLineLayout, "must have line layout");
+  MOZ_ASSERT(mBlock->LinesEnd() != mCurrentLine, "null ptr");
+  MOZ_ASSERT(aFloat->GetStateBits() & NS_FRAME_OUT_OF_FLOW,
+             "aFloat must be an out-of-flow frame");
 
   MOZ_ASSERT(aFloat->GetParent(), "float must have parent");
   MOZ_ASSERT(aFloat->GetParent()->IsFrameOfType(nsIFrame::eBlockFrame),
@@ -669,7 +669,7 @@ BlockReflowInput::CanPlaceFloat(nscoord aFloatISize,
   // its inline size fits in the space remaining after prior floats have
   // been placed.
   // FIXME: We should allow overflow by up to half a pixel here (bug 21193).
-  return !aFloatAvailableSpace.mHasFloats ||
+  return !aFloatAvailableSpace.HasFloats() ||
     aFloatAvailableSpace.mRect.ISize(mReflowInput.GetWritingMode()) >=
       aFloatISize;
 }
@@ -742,7 +742,7 @@ BlockReflowInput::FlowAndPlaceFloat(nsIFrame* aFloat)
   // when floats are inserted before it.
   if (StyleClear::None != floatDisplay->mBreakType) {
     // XXXldb Does this handle vertical margins correctly?
-    mBCoord = ClearFloats(mBCoord, floatDisplay->PhysicalBreakType(wm));
+    mBCoord = ClearFloats(mBCoord, floatDisplay->mBreakType);
   }
   // Get the band of available space with respect to margin box.
   nsFlowAreaRect floatAvailableSpace =
@@ -785,7 +785,7 @@ BlockReflowInput::FlowAndPlaceFloat(nsIFrame* aFloat)
   // Find a place to place the float. The CSS2 spec doesn't want
   // floats overlapping each other or sticking out of the containing
   // block if possible (CSS2 spec section 9.5.1, see the rule list).
-  StyleFloat floatStyle = floatDisplay->PhysicalFloats(wm);
+  StyleFloat floatStyle = floatDisplay->mFloat;
   MOZ_ASSERT(StyleFloat::Left == floatStyle || StyleFloat::Right == floatStyle,
              "Invalid float type!");
 
@@ -1045,8 +1045,7 @@ BlockReflowInput::PushFloatPastBreak(nsIFrame *aFloat)
   //    must have their tops below the top of this float)
   //  * don't waste much time trying to reflow this float again until
   //    after the break
-  StyleFloat floatStyle =
-    aFloat->StyleDisplay()->PhysicalFloats(mReflowInput.GetWritingMode());
+  StyleFloat floatStyle = aFloat->StyleDisplay()->mFloat;
   if (floatStyle == StyleFloat::Left) {
     FloatManager()->SetPushedLeftFloatPastBreak();
   } else {
@@ -1066,10 +1065,10 @@ BlockReflowInput::PushFloatPastBreak(nsIFrame *aFloat)
  * Place below-current-line floats.
  */
 void
-BlockReflowInput::PlaceBelowCurrentLineFloats(nsFloatCacheFreeList& aList,
-                                                nsLineBox* aLine)
+BlockReflowInput::PlaceBelowCurrentLineFloats(nsLineBox* aLine)
 {
-  nsFloatCache* fc = aList.Head();
+  MOZ_ASSERT(mBelowCurrentLineFloats.NotEmpty());
+  nsFloatCache* fc = mBelowCurrentLineFloats.Head();
   while (fc) {
 #ifdef DEBUG
     if (nsBlockFrame::gNoisyReflow) {
@@ -1083,12 +1082,13 @@ BlockReflowInput::PlaceBelowCurrentLineFloats(nsFloatCacheFreeList& aList,
     bool placed = FlowAndPlaceFloat(fc->mFloat);
     nsFloatCache *next = fc->Next();
     if (!placed) {
-      aList.Remove(fc);
+      mBelowCurrentLineFloats.Remove(fc);
       delete fc;
       aLine->SetHadFloatPushed();
     }
     fc = next;
   }
+  aLine->AppendFloats(mBelowCurrentLineFloats);
 }
 
 nscoord
@@ -1143,4 +1143,3 @@ BlockReflowInput::ClearFloats(nscoord aBCoord, StyleClear aBreakType,
 
   return newBCoord;
 }
-

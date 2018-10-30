@@ -32,10 +32,6 @@ const gCertificateDialogs = {
     // We don't test anything that calls this method yet.
     ok(false, "getPKCS12FilePassword() should not have been called");
   },
-  viewCert: (ctx, cert) => {
-    // This shouldn't be called for import methods.
-    ok(false, "viewCert() should not have been called");
-  },
 
   QueryInterface: ChromeUtils.generateQI([Ci.nsICertificateDialogs])
 };
@@ -69,9 +65,7 @@ function getCertAsByteArray(certPath) {
 }
 
 function commonFindCertBy(propertyName, value) {
-  let certEnumerator = gCertDB.getCerts().getEnumerator();
-  while (certEnumerator.hasMoreElements()) {
-    let cert = certEnumerator.getNext().QueryInterface(Ci.nsIX509Cert);
+  for (let cert of gCertDB.getCerts().getEnumerator()) {
     if (cert[propertyName] == value) {
       return cert;
     }
@@ -125,6 +119,11 @@ function run_test() {
   let emailArray = getCertAsByteArray("test_certDB_import/emailEE.pem");
   gCertDB.importEmailCertificate(emailArray, emailArray.length,
                                  gInterfaceRequestor);
-  notEqual(findCertByEmailAddress(TEST_EMAIL_ADDRESS), null,
-           "E-mail cert should now be found in the database");
+  let emailCert = findCertByEmailAddress(TEST_EMAIL_ADDRESS);
+  notEqual(emailCert, null, "E-mail cert should now be found in the database");
+  let bundle =
+    Services.strings.createBundle("chrome://pipnss/locale/pipnss.properties");
+  equal(emailCert.tokenName,
+        bundle.GetStringFromName("PrivateTokenDescription"),
+        "cert's tokenName should be the expected localized value");
 }

@@ -5,6 +5,7 @@
 
 package org.mozilla.gecko;
 
+import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.SparseArray;
@@ -78,14 +79,7 @@ public class GeckoJavaSampler {
                 mSamplePos = 0;
 
                 // Find the main thread
-                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-                for (Thread t : threadSet) {
-                    if (t.getName().compareToIgnoreCase("main") == 0) {
-                        sMainThread = t;
-                        break;
-                    }
-                }
-
+                sMainThread = Looper.getMainLooper().getThread();
                 if (sMainThread == null) {
                     Log.e(LOGTAG, "Main thread not found");
                     return;
@@ -193,19 +187,27 @@ public class GeckoJavaSampler {
 
     @WrapForJNI
     public static void stop() {
+        Thread samplingThread;
+
         synchronized (GeckoJavaSampler.class) {
             if (sSamplingThread == null) {
                 return;
             }
 
             sSamplingRunnable.mStopSampler = true;
+            samplingThread = sSamplingThread;
+            sSamplingThread = null;
+            sSamplingRunnable = null;
+        }
+
+        boolean retry = true;
+        while (retry) {
             try {
-                sSamplingThread.join();
+                samplingThread.join();
+                retry = false;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            sSamplingThread = null;
-            sSamplingRunnable = null;
         }
     }
 }

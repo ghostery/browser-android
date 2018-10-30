@@ -23,7 +23,6 @@ use super::generics::grid::{TrackList as GenericTrackList, TrackSize as GenericT
 use values::serialize_atom_identifier;
 use values::specified::calc::CalcNode;
 
-pub use properties::animated_properties::TransitionProperty;
 pub use self::angle::Angle;
 #[cfg(feature = "gecko")]
 pub use self::align::{AlignContent, AlignItems, AlignSelf, ContentDistribution};
@@ -39,8 +38,9 @@ pub use self::font::{FontFamily, FontLanguageOverride, FontStyle, FontVariantEas
 pub use self::font::{FontFeatureSettings, FontVariantLigatures, FontVariantNumeric};
 pub use self::font::{MozScriptLevel, MozScriptMinSize, MozScriptSizeMultiplier, XLang, XTextZoom};
 pub use self::box_::{AnimationIterationCount, AnimationName, Contain, Display};
-pub use self::box_::{OverflowClipBox, OverscrollBehavior, Perspective};
-pub use self::box_::{ScrollSnapType, TouchAction, VerticalAlign, WillChange};
+pub use self::box_::{Appearance, Clear, Float};
+pub use self::box_::{OverflowClipBox, OverscrollBehavior, Perspective, Resize};
+pub use self::box_::{ScrollSnapType, TouchAction, TransitionProperty, VerticalAlign, WillChange};
 pub use self::color::{Color, ColorPropertyValue, RGBAColor};
 pub use self::counters::{Content, ContentItem, CounterIncrement, CounterReset};
 pub use self::effects::{BoxShadow, Filter, SimpleShadow};
@@ -49,7 +49,6 @@ pub use self::flex::FlexBasis;
 pub use self::gecko::ScrollSnapPoint;
 pub use self::image::{ColorStop, EndingShape as GradientEndingShape, Gradient};
 pub use self::image::{GradientItem, GradientKind, Image, ImageLayer, MozImageRect};
-pub use self::inherited_box::ImageOrientation;
 pub use self::length::{AbsoluteLength, CalcLengthOrPercentage, CharacterWidth};
 pub use self::length::{FontRelativeLength, Length, LengthOrNumber};
 pub use self::length::{LengthOrPercentage, LengthOrPercentageOrAuto};
@@ -59,17 +58,17 @@ pub use self::length::{NonNegativeLengthOrPercentage, NonNegativeLengthOrPercent
 pub use self::list::Quotes;
 #[cfg(feature = "gecko")]
 pub use self::list::ListStyleType;
+pub use self::motion::OffsetPath;
 pub use self::outline::OutlineStyle;
 pub use self::rect::LengthOrNumberRect;
+pub use self::resolution::Resolution;
 pub use self::percentage::Percentage;
-pub use self::pointing::{CaretColor, Cursor};
-#[cfg(feature = "gecko")]
-pub use self::pointing::CursorImage;
 pub use self::position::{GridAutoFlow, GridTemplateAreas, Position};
 pub use self::position::{PositionComponent, ZIndex};
 pub use self::svg::{SVGLength, SVGOpacity, SVGPaint, SVGPaintKind};
 pub use self::svg::{SVGPaintOrder, SVGStrokeDashArray, SVGWidth};
 pub use self::svg::MozContextProperties;
+pub use self::svg_path::SVGPathData;
 pub use self::table::XSpan;
 pub use self::text::{InitialLetter, LetterSpacing, LineHeight, MozTabSize, TextAlign};
 pub use self::text::{TextEmphasisPosition, TextEmphasisStyle};
@@ -77,7 +76,9 @@ pub use self::text::{TextAlignKeyword, TextDecorationLine, TextOverflow, WordSpa
 pub use self::time::Time;
 pub use self::transform::{Rotate, Scale, TimingFunction, Transform};
 pub use self::transform::{TransformOrigin, TransformStyle, Translate};
-pub use self::ui::MozForceBrokenImageIcon;
+pub use self::ui::{ColorOrAuto, Cursor, MozForceBrokenImageIcon};
+#[cfg(feature = "gecko")]
+pub use self::ui::CursorImage;
 pub use super::generics::grid::GridTemplateComponent as GenericGridTemplateComponent;
 
 #[cfg(feature = "gecko")]
@@ -99,16 +100,17 @@ pub mod font;
 pub mod gecko;
 pub mod grid;
 pub mod image;
-pub mod inherited_box;
 pub mod length;
 pub mod list;
+pub mod motion;
 pub mod outline;
 pub mod percentage;
-pub mod pointing;
 pub mod position;
 pub mod rect;
+pub mod resolution;
 pub mod source_size_list;
 pub mod svg;
+pub mod svg_path;
 pub mod table;
 pub mod text;
 pub mod time;

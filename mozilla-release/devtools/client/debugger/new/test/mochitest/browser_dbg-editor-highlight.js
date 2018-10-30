@@ -7,14 +7,17 @@
 
 add_task(async function() {
   const dbg = await initDebugger("doc-scripts.html");
-  const { selectors: { getSource }, getState } = dbg;
+  const {
+    selectors: { getSource },
+    getState
+  } = dbg;
   const sourceUrl = EXAMPLE_URL + "long.js";
 
   // The source itself doesn't even exist yet, and using
   // `selectSourceURL` will set a pending request to load this source
   // and highlight a specific line.
 
-  await selectSource(dbg, sourceUrl, 66)
+  await selectSource(dbg, sourceUrl, 66);
 
   // TODO: revisit highlighting lines when the debugger opens
   // assertHighlightLocation(dbg, "long.js", 66);
@@ -37,7 +40,7 @@ add_task(async function() {
   // Make sure the source is in the loading state, wait for it to be
   // fully loaded, and check the highlighted line.
   const simple1 = findSource(dbg, "simple1.js");
-  is(getSource(getState(), simple1.id).get("loadedState"), "loading");
+  is(getSource(getState(), simple1.id).loadedState, "loading");
 
   await waitForSelectedSource(dbg, "simple1.js");
   ok(getSource(getState(), simple1.id).text);

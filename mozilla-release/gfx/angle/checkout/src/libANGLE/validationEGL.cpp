@@ -25,28 +25,28 @@ namespace egl
 {
 namespace
 {
-size_t GetMaximumMipLevel(const gl::Context *context, GLenum target)
+size_t GetMaximumMipLevel(const gl::Context *context, gl::TextureType type)
 {
     const gl::Caps &caps = context->getCaps();
 
     size_t maxDimension = 0;
-    switch (target)
+    switch (type)
     {
-        case GL_TEXTURE_2D:
+        case gl::TextureType::_2D:
+        case gl::TextureType::_2DArray:
+        case gl::TextureType::_2DMultisample:
             maxDimension = caps.max2DTextureSize;
             break;
-        case GL_TEXTURE_RECTANGLE_ANGLE:
+        case gl::TextureType::Rectangle:
             maxDimension = caps.maxRectangleTextureSize;
             break;
-        case GL_TEXTURE_CUBE_MAP:
+        case gl::TextureType::CubeMap:
             maxDimension = caps.maxCubeMapTextureSize;
             break;
-        case GL_TEXTURE_3D:
+        case gl::TextureType::_3D:
             maxDimension = caps.max3DTextureSize;
             break;
-        case GL_TEXTURE_2D_ARRAY:
-            maxDimension = caps.max2DTextureSize;
-            break;
+
         default:
             UNREACHABLE();
     }
@@ -56,13 +56,12 @@ size_t GetMaximumMipLevel(const gl::Context *context, GLenum target)
 
 bool TextureHasNonZeroMipLevelsSpecified(const gl::Context *context, const gl::Texture *texture)
 {
-    size_t maxMip = GetMaximumMipLevel(context, texture->getTarget());
+    size_t maxMip = GetMaximumMipLevel(context, texture->getType());
     for (size_t level = 1; level < maxMip; level++)
     {
-        if (texture->getTarget() == GL_TEXTURE_CUBE_MAP)
+        if (texture->getType() == gl::TextureType::CubeMap)
         {
-            for (GLenum face = gl::FirstCubeMapTextureTarget; face <= gl::LastCubeMapTextureTarget;
-                 face++)
+            for (gl::TextureTarget face : gl::AllCubeFaceTextureTargets())
             {
                 if (texture->getFormat(face, level).valid())
                 {
@@ -72,7 +71,8 @@ bool TextureHasNonZeroMipLevelsSpecified(const gl::Context *context, const gl::T
         }
         else
         {
-            if (texture->getFormat(texture->getTarget(), level).valid())
+            if (texture->getFormat(gl::NonCubeTextureTypeToTarget(texture->getType()), level)
+                    .valid())
             {
                 return true;
             }
@@ -84,8 +84,8 @@ bool TextureHasNonZeroMipLevelsSpecified(const gl::Context *context, const gl::T
 
 bool CubeTextureHasUnspecifiedLevel0Face(const gl::Texture *texture)
 {
-    ASSERT(texture->getTarget() == GL_TEXTURE_CUBE_MAP);
-    for (GLenum face = gl::FirstCubeMapTextureTarget; face <= gl::LastCubeMapTextureTarget; face++)
+    ASSERT(texture->getType() == gl::TextureType::CubeMap);
+    for (gl::TextureTarget face : gl::AllCubeFaceTextureTargets())
     {
         if (!texture->getFormat(face, 0).valid())
         {
@@ -304,6 +304,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
         Optional<EGLAttrib> majorVersion;
         Optional<EGLAttrib> minorVersion;
         Optional<EGLAttrib> deviceType;
+        Optional<EGLAttrib> eglHandle;
 
         for (const auto &curAttrib : attribMap)
         {
@@ -400,6 +401,13 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                     }
                     break;
 
+                case EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE:
+                    if (value != EGL_DONT_CARE)
+                    {
+                        eglHandle = value;
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -459,6 +467,13 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                 return EglBadAttribute() << "EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE currently "
                                             "only supports Vulkan 1.0.";
             }
+        }
+
+        if (eglHandle.valid() && platformType != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE &&
+            platformType != EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)
+        {
+            return EglBadAttribute() << "EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE requires a "
+                                        "device type of EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE.";
         }
     }
     else if (platform == EGL_PLATFORM_DEVICE_EXT)
@@ -734,6 +749,20 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
               if (value != EGL_TRUE && value != EGL_FALSE)
               {
                   return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                                              "either EGL_TRUE or EGL_FALSE.";
+              }
+              break;
+
+          case EGL_EXTENSIONS_ENABLED_ANGLE:
+              if (!display->getExtensions().createContextExtensionsEnabled)
+              {
+                  return EglBadAttribute()
+                         << "Attribute EGL_EXTENSIONS_ENABLED_ANGLE "
+                            "requires EGL_ANGLE_create_context_extensions_enabled.";
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return EglBadAttribute() << "EGL_EXTENSIONS_ENABLED_ANGLE must be "
                                               "either EGL_TRUE or EGL_FALSE.";
               }
               break;
@@ -1256,7 +1285,7 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
     return NoError();
 }
 
-Error ValidateMakeCurrent(Display *display, EGLSurface draw, EGLSurface read, gl::Context *context)
+Error ValidateMakeCurrent(Display *display, Surface *draw, Surface *read, gl::Context *context)
 {
     if (context == EGL_NO_CONTEXT && (draw != EGL_NO_SURFACE || read != EGL_NO_SURFACE))
     {
@@ -1307,37 +1336,31 @@ Error ValidateMakeCurrent(Display *display, EGLSurface draw, EGLSurface read, gl
         ANGLE_TRY(ValidateContext(display, context));
     }
 
-    if (display->isInitialized() && display->testDeviceLost())
+    if (display->isInitialized() && display->isDeviceLost())
     {
         return EglContextLost();
     }
 
-    Surface *drawSurface = static_cast<Surface *>(draw);
     if (draw != EGL_NO_SURFACE)
     {
-        ANGLE_TRY(ValidateSurface(display, drawSurface));
+        ANGLE_TRY(ValidateSurface(display, draw));
     }
 
-    Surface *readSurface = static_cast<Surface *>(read);
     if (read != EGL_NO_SURFACE)
     {
-        ANGLE_TRY(ValidateSurface(display, readSurface));
-    }
-
-    if (readSurface)
-    {
-        ANGLE_TRY(ValidateCompatibleConfigs(display, readSurface->getConfig(), readSurface,
-                                            context->getConfig(), readSurface->getType()));
+        ANGLE_TRY(ValidateSurface(display, read));
+        ANGLE_TRY(ValidateCompatibleConfigs(display, read->getConfig(), read, context->getConfig(),
+                                            read->getType()));
     }
 
     if (draw != read)
     {
         UNIMPLEMENTED();  // FIXME
 
-        if (drawSurface)
+        if (draw)
         {
-            ANGLE_TRY(ValidateCompatibleConfigs(display, drawSurface->getConfig(), drawSurface,
-                                                context->getConfig(), drawSurface->getType()));
+            ANGLE_TRY(ValidateCompatibleConfigs(display, draw->getConfig(), draw,
+                                                context->getConfig(), draw->getType()));
         }
     }
     return NoError();
@@ -1479,7 +1502,7 @@ Error ValidateCreateImageKHR(const Display *display,
 
             const gl::Texture *texture =
                 context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
-            if (texture == nullptr || texture->getTarget() != GL_TEXTURE_2D)
+            if (texture == nullptr || texture->getType() != gl::TextureType::_2D)
             {
                 return EglBadParameter() << "target is not a 2D texture.";
             }
@@ -1490,8 +1513,8 @@ Error ValidateCreateImageKHR(const Display *display,
             }
 
             EGLAttrib level = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
-            if (texture->getWidth(GL_TEXTURE_2D, static_cast<size_t>(level)) == 0 ||
-                texture->getHeight(GL_TEXTURE_2D, static_cast<size_t>(level)) == 0)
+            if (texture->getWidth(gl::TextureTarget::_2D, static_cast<size_t>(level)) == 0 ||
+                texture->getHeight(gl::TextureTarget::_2D, static_cast<size_t>(level)) == 0)
             {
                 return EglBadParameter()
                        << "target 2D texture does not have a valid size at specified level.";
@@ -1521,7 +1544,7 @@ Error ValidateCreateImageKHR(const Display *display,
 
             const gl::Texture *texture =
                 context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
-            if (texture == nullptr || texture->getTarget() != GL_TEXTURE_CUBE_MAP)
+            if (texture == nullptr || texture->getType() != gl::TextureType::CubeMap)
             {
                 return EglBadParameter() << "target is not a cubemap texture.";
             }
@@ -1532,7 +1555,7 @@ Error ValidateCreateImageKHR(const Display *display,
             }
 
             EGLAttrib level    = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
-            GLenum cubeMapFace = egl_gl::EGLCubeMapTargetToGLCubeMapTarget(target);
+            gl::TextureTarget cubeMapFace = egl_gl::EGLCubeMapTargetToCubeMapTarget(target);
             if (texture->getWidth(cubeMapFace, static_cast<size_t>(level)) == 0 ||
                 texture->getHeight(cubeMapFace, static_cast<size_t>(level)) == 0)
             {
@@ -1566,7 +1589,7 @@ Error ValidateCreateImageKHR(const Display *display,
 
             const gl::Texture *texture =
                 context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
-            if (texture == nullptr || texture->getTarget() != GL_TEXTURE_3D)
+            if (texture == nullptr || texture->getType() != gl::TextureType::_3D)
             {
                 return EglBadParameter() << "target is not a 3D texture.";
             }
@@ -1578,16 +1601,16 @@ Error ValidateCreateImageKHR(const Display *display,
 
             EGLAttrib level   = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
             EGLAttrib zOffset = attributes.get(EGL_GL_TEXTURE_ZOFFSET_KHR, 0);
-            if (texture->getWidth(GL_TEXTURE_3D, static_cast<size_t>(level)) == 0 ||
-                texture->getHeight(GL_TEXTURE_3D, static_cast<size_t>(level)) == 0 ||
-                texture->getDepth(GL_TEXTURE_3D, static_cast<size_t>(level)) == 0)
+            if (texture->getWidth(gl::TextureTarget::_3D, static_cast<size_t>(level)) == 0 ||
+                texture->getHeight(gl::TextureTarget::_3D, static_cast<size_t>(level)) == 0 ||
+                texture->getDepth(gl::TextureTarget::_3D, static_cast<size_t>(level)) == 0)
             {
                 return EglBadParameter()
                        << "target 3D texture does not have a valid size at specified level.";
             }
 
             if (static_cast<size_t>(zOffset) >=
-                texture->getDepth(GL_TEXTURE_3D, static_cast<size_t>(level)))
+                texture->getDepth(gl::TextureTarget::_3D, static_cast<size_t>(level)))
             {
                 return EglBadParameter() << "target 3D texture does not have enough layers "
                                             "for the specified Z offset at the specified "
@@ -1821,7 +1844,7 @@ Error ValidateStreamConsumerGLTextureExternalKHR(const Display *display,
     }
 
     // Lookup the texture and ensure it is correct
-    gl::Texture *texture = context->getGLState().getTargetTexture(GL_TEXTURE_EXTERNAL_OES);
+    gl::Texture *texture = context->getGLState().getTargetTexture(gl::TextureType::External);
     if (texture == nullptr || texture->getId() == 0)
     {
         return EglBadAccess() << "No external texture bound";
@@ -2026,7 +2049,7 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
         }
 
         // Lookup the texture and ensure it is correct
-        gl::Texture *texture = context->getGLState().getTargetTexture(GL_TEXTURE_EXTERNAL_OES);
+        gl::Texture *texture = context->getGLState().getTargetTexture(gl::TextureType::External);
         if (texture == nullptr || texture->getId() == 0)
         {
             return EglBadAccess() << "No external texture bound";
@@ -2061,7 +2084,7 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
             if (plane[i] != EGL_NONE)
             {
                 gl::Texture *texture = context->getGLState().getSamplerTexture(
-                    static_cast<unsigned int>(plane[i]), GL_TEXTURE_EXTERNAL_OES);
+                    static_cast<unsigned int>(plane[i]), gl::TextureType::External);
                 if (texture == nullptr || texture->getId() == 0)
                 {
                     return EglBadAccess()

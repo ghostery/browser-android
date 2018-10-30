@@ -16,16 +16,17 @@
 #include "gc/Policy.h"
 #include "gc/PublicIterators.h"
 #include "js/HashTable.h"
+#include "js/UniquePtr.h"
 #include "util/Text.h"
 #include "vm/JSAtom.h"
 #include "vm/JSContext.h"
 #include "vm/JSObject.h"
 
 #include "vm/Caches-inl.h"
-#include "vm/JSCompartment-inl.h"
 #include "vm/JSContext-inl.h"
 #include "vm/JSObject-inl.h"
 #include "vm/NativeObject-inl.h"
+#include "vm/Realm-inl.h"
 
 using namespace js;
 using namespace js::gc;
@@ -541,6 +542,21 @@ Shape::updateDictionaryTable(ShapeTable* table, ShapeTable::Entry* entry,
     parent->handoffTableTo(this);
 }
 
+static void
+AssertValidPropertyOp(NativeObject* obj, GetterOp getter, SetterOp setter, unsigned attrs)
+{
+    // We only support PropertyOp accessors on ArrayObject and ArgumentsObject
+    // and we don't want to add more of these properties (bug 1404885).
+
+#ifdef DEBUG
+    if ((getter && !(attrs & JSPROP_GETTER)) ||
+        (setter && !(attrs & JSPROP_SETTER)))
+    {
+        MOZ_ASSERT(obj->is<ArrayObject>() || obj->is<ArgumentsObject>());
+    }
+#endif
+}
+
 /* static */ Shape*
 NativeObject::addAccessorPropertyInternal(JSContext* cx,
                                           HandleNativeObject obj, HandleId id,
@@ -550,6 +566,8 @@ NativeObject::addAccessorPropertyInternal(JSContext* cx,
 {
     AutoCheckShapeConsistency check(obj);
     AutoRooterGetterSetter gsRoot(cx, attrs, &getter, &setter);
+
+    AssertValidPropertyOp(obj, getter, setter, attrs);
 
     if (!maybeConvertToOrGrowDictionaryForAdd(cx, obj, id, &table, &entry, keep))
         return nullptr;
@@ -881,7 +899,8 @@ NativeObject::putDataProperty(JSContext* cx, HandleNativeObject obj, HandleId id
         }
 
         if (!shape) {
-            MOZ_ASSERT(obj->nonProxyIsExtensible(),
+            MOZ_ASSERT(obj->isExtensible() ||
+                       (JSID_IS_INT(id) && obj->containsDenseElement(JSID_TO_INT(id))),
                        "Can't add new property to non-extensible object");
             return addDataPropertyInternal(cx, obj, id, SHAPE_INVALID_SLOT, attrs, table, entry,
                                            keep);
@@ -971,6 +990,7 @@ NativeObject::putAccessorProperty(JSContext* cx, HandleNativeObject obj, HandleI
 
     AutoCheckShapeConsistency check(obj);
     AssertValidArrayIndex(obj, id);
+    AssertValidPropertyOp(obj, getter, setter, attrs);
 
     AutoRooterGetterSetter gsRoot(cx, attrs, &getter, &setter);
 
@@ -987,7 +1007,8 @@ NativeObject::putAccessorProperty(JSContext* cx, HandleNativeObject obj, HandleI
         }
 
         if (!shape) {
-            MOZ_ASSERT(obj->nonProxyIsExtensible(),
+            MOZ_ASSERT(obj->isExtensible() ||
+                       (JSID_IS_INT(id) && obj->containsDenseElement(JSID_TO_INT(id))),
                        "Can't add new property to non-extensible object");
             return addAccessorPropertyInternal(cx, obj, id, getter, setter, attrs, table, entry,
                                                keep);
@@ -1424,11 +1445,6 @@ BaseShape::getUnowned(JSContext* cx, StackBaseShape& base)
 {
     auto& table = cx->zone()->baseShapes();
 
-    if (!table.initialized() && !table.init()) {
-        ReportOutOfMemory(cx);
-        return nullptr;
-    }
-
     auto p = MakeDependentAddPtr(cx, table, base);
     if (p)
         return *p;
@@ -1511,9 +1527,6 @@ BaseShape::canSkipMarkingShapeTable(Shape* lastShape)
 void
 Zone::checkBaseShapeTableAfterMovingGC()
 {
-    if (!baseShapes().initialized())
-        return;
-
     for (auto r = baseShapes().all(); !r.empty(); r.popFront()) {
         UnownedBaseShape* base = r.front().unbarrieredGet();
         CheckGCThingAfterMovingGC(base);
@@ -1550,9 +1563,6 @@ InitialShapeEntry::InitialShapeEntry(Shape* shape, const Lookup::ShapeProto& pro
 void
 Zone::checkInitialShapesTableAfterMovingGC()
 {
-    if (!initialShapes().initialized())
-        return;
-
     /*
      * Assert that the postbarriers have worked and that nothing is left in
      * initialShapes that points into the nursery, and that the hash table
@@ -1608,15 +1618,13 @@ ShapeHasher::match(const Key k, const Lookup& l)
 static KidsHash*
 HashChildren(Shape* kid1, Shape* kid2)
 {
-    KidsHash* hash = js_new<KidsHash>();
-    if (!hash || !hash->init(2)) {
-        js_delete(hash);
+    auto hash = MakeUnique<KidsHash>();
+    if (!hash || !hash->reserve(2))
         return nullptr;
-    }
 
     hash->putNewInfallible(StackShape(kid1), kid1);
     hash->putNewInfallible(StackShape(kid2), kid2);
-    return hash;
+    return hash.release();
 }
 
 bool
@@ -2019,10 +2027,12 @@ Shape::dumpSubtree(int level, js::GenericPrinter& out) const
 #endif
 
 static bool
-IsOriginalProto(GlobalObject* global, JSProtoKey key, JSObject& proto)
+IsOriginalProto(GlobalObject* global, JSProtoKey key, NativeObject& proto)
 {
     if (global->getPrototype(key) != ObjectValue(proto))
         return false;
+
+    MOZ_ASSERT(&proto.global() == global);
 
     if (key == JSProto_Object) {
         MOZ_ASSERT(proto.staticPrototypeIsImmutable(),
@@ -2049,10 +2059,9 @@ IsOriginalProto(GlobalObject* global, JSProtoKey key, JSObject& proto)
 static JSProtoKey
 GetInitialShapeProtoKey(TaggedProto proto, JSContext* cx)
 {
-    if (proto.isObject() && proto.toObject()->hasStaticPrototype()) {
+    if (proto.isObject() && proto.toObject()->isNative()) {
         GlobalObject* global = cx->global();
-        JSObject& obj = *proto.toObject();
-        MOZ_ASSERT(global == &obj.global());
+        NativeObject& obj = proto.toObject()->as<NativeObject>();
 
         if (IsOriginalProto(global, JSProto_Object, obj))
             return JSProto_Object;
@@ -2073,11 +2082,6 @@ EmptyShape::getInitialShape(JSContext* cx, const Class* clasp, TaggedProto proto
     MOZ_ASSERT_IF(proto.isObject(), cx->isInsideCurrentCompartment(proto.toObject()));
 
     auto& table = cx->zone()->initialShapes();
-
-    if (!table.initialized() && !table.init()) {
-        ReportOutOfMemory(cx);
-        return nullptr;
-    }
 
     using Lookup = InitialShapeEntry::Lookup;
     auto protoPointer = MakeDependentAddPtr(cx, table,
@@ -2158,8 +2162,8 @@ NewObjectCache::invalidateEntriesForShape(JSContext* cx, HandleShape shape, Hand
     }
 
     EntryIndex entry;
-    for (CompartmentsInZoneIter comp(shape->zone()); !comp.done(); comp.next()) {
-        if (GlobalObject* global = comp->unsafeUnbarrieredMaybeGlobal()) {
+    for (RealmsInZoneIter realm(shape->zone()); !realm.done(); realm.next()) {
+        if (GlobalObject* global = realm->unsafeUnbarrieredMaybeGlobal()) {
             if (lookupGlobal(clasp, global, kind, &entry))
                 PodZero(&entries[entry]);
         }
@@ -2228,9 +2232,6 @@ EmptyShape::insertInitialShape(JSContext* cx, HandleShape shape, HandleObject pr
 void
 Zone::fixupInitialShapeTable()
 {
-    if (!initialShapes().initialized())
-        return;
-
     for (InitialShapeSet::Enum e(initialShapes()); !e.empty(); e.popFront()) {
         // The shape may have been moved, but we can update that in place.
         Shape* shape = e.front().shape.unbarrieredGet();
@@ -2273,7 +2274,7 @@ JS::ubi::Concrete<js::Shape>::size(mozilla::MallocSizeOf mallocSizeOf) const
         size += table->sizeOfIncludingThis(mallocSizeOf);
 
     if (!get().inDictionary() && get().kids.isHash())
-        size += get().kids.toHash()->sizeOfIncludingThis(mallocSizeOf);
+        size += get().kids.toHash()->shallowSizeOfIncludingThis(mallocSizeOf);
 
     return size;
 }

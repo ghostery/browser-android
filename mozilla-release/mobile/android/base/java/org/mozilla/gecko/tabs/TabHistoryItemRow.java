@@ -40,7 +40,7 @@ public class TabHistoryItemRow extends RelativeLayout {
     }
 
     // Update the views with historic page detail.
-    public void update(final TabHistoryPage historyPage, boolean isFirstElement, boolean isLastElement) {
+    public void update(final TabHistoryPage historyPage, boolean isFirstElement, boolean isLastElement, boolean isPrivate) {
         ThreadUtils.assertOnUiThread();
 
         timeLineTop.setVisibility(isFirstElement ? View.INVISIBLE : View.VISIBLE);
@@ -64,6 +64,7 @@ public class TabHistoryItemRow extends RelativeLayout {
         /* Cliqz Start */
         /* ongoingIconLoad = Icons.with(getContext())
                 .pageUrl(historyPage.getUrl())
+                .setPrivateMode(isPrivate)
                 .skipNetwork()
                 .build()
                 .execute(favicon.createIconCallback()); */

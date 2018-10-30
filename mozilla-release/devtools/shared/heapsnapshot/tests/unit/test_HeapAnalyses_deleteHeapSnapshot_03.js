@@ -10,19 +10,20 @@ const breakdown = {
   scripts: { by: "count", count: true, bytes: true },
   strings: { by: "count", count: true, bytes: true },
   other: { by: "count", count: true, bytes: true },
+  domNode: { by: "count", count: true, bytes: true },
 };
 
 async function createSnapshotAndDominatorTree(client) {
-  let snapshotFilePath = saveNewHeapSnapshot();
+  const snapshotFilePath = saveNewHeapSnapshot();
   await client.readHeapSnapshot(snapshotFilePath);
-  let dominatorTreeId = await client.computeDominatorTree(snapshotFilePath);
+  const dominatorTreeId = await client.computeDominatorTree(snapshotFilePath);
   return { dominatorTreeId, snapshotFilePath };
 }
 
 add_task(async function() {
   const client = new HeapAnalysesClient();
 
-  let savedSnapshots = [
+  const savedSnapshots = [
     await createSnapshotAndDominatorTree(client),
     await createSnapshotAndDominatorTree(client),
     await createSnapshotAndDominatorTree(client)

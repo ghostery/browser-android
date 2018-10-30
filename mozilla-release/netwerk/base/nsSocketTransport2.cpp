@@ -20,7 +20,7 @@
 #include "nsCOMPtr.h"
 #include "plstr.h"
 #include "prerr.h"
-#include "NetworkActivityMonitor.h"
+#include "IOActivityMonitor.h"
 #include "NSSErrorsService.h"
 #include "mozilla/dom/ToJSValue.h"
 #include "mozilla/net/NeckoChild.h"
@@ -794,6 +794,10 @@ nsSocketTransport::nsSocketTransport()
     , mFirstRetryError(NS_OK)
     , mDoNotRetryToConnect(false)
 {
+    this->mNetAddr.raw.family = 0;
+    this->mNetAddr.inet = {};
+    this->mSelfAddr.raw.family = 0;
+    this->mSelfAddr.inet = {};
     SOCKET_LOG(("creating nsSocketTransport @%p\n", this));
 
     mTimeouts[TIMEOUT_CONNECT]    = UINT16_MAX; // no timeout
@@ -924,18 +928,34 @@ nsSocketTransport::Init(const char **types, uint32_t typeCount,
 nsresult
 nsSocketTransport::InitWithFilename(const char *filename)
 {
-    size_t filenameLength = strlen(filename);
+    return InitWithName(filename, strlen(filename));
+}
 
-    if (filenameLength > sizeof(mNetAddr.local.path) - 1)
+nsresult
+nsSocketTransport::InitWithName(const char *name, size_t length)
+{
+    if (length > sizeof(mNetAddr.local.path) - 1) {
         return NS_ERROR_FILE_NAME_TOO_LONG;
+    }
 
-    mHost.Assign(filename);
+    if (!name[0] && length > 1) {
+        // name is abstract address name that is supported on Linux only
+#if defined(XP_LINUX)
+        mHost.Assign(name + 1, length - 1);
+#else
+        return NS_ERROR_SOCKET_ADDRESS_NOT_SUPPORTED;
+#endif
+    } else {
+        // The name isn't abstract socket address.  So this is Unix domain
+        // socket that has file path.
+        mHost.Assign(name, length);
+    }
     mPort = 0;
     mTypeCount = 0;
 
     mNetAddr.local.family = AF_LOCAL;
-    memcpy(mNetAddr.local.path, filename, filenameLength);
-    mNetAddr.local.path[filenameLength] = '\0';
+    memcpy(mNetAddr.local.path, name, length);
+    mNetAddr.local.path[length] = '\0';
     mNetAddrIsSet = true;
 
     return NS_OK;
@@ -1116,9 +1136,9 @@ nsSocketTransport::ResolveHost()
         SOCKET_LOG(("nsSocketTransport %p origin %s doing dns for %s\n",
                     this, mOriginHost.get(), SocketHost().get()));
     }
-    rv = dns->AsyncResolveExtendedNative(SocketHost(), dnsFlags, mNetworkInterfaceId,
-                                         this, nullptr, mOriginAttributes,
-                                         getter_AddRefs(mDNSRequest));
+    rv = dns->AsyncResolveNative(SocketHost(), dnsFlags,
+                                 this, nullptr, mOriginAttributes,
+                                 getter_AddRefs(mDNSRequest));
     if (NS_SUCCEEDED(rv)) {
         SOCKET_LOG(("  advancing to STATE_RESOLVING\n"));
         mState = STATE_RESOLVING;
@@ -1161,7 +1181,7 @@ nsSocketTransport::BuildSocket(PRFileDesc *&fd, bool &proxyTransparent, bool &us
         uint32_t    controlFlags = 0;
 
         uint32_t i;
-        for (i=0; i<mTypeCount; ++i) {
+        for (i = 0; i < mTypeCount; ++i) {
             nsCOMPtr<nsISocketProvider> provider;
 
             SOCKET_LOG(("  pushing io layer [%u:%s]\n", i, mTypes[i]));
@@ -1190,22 +1210,40 @@ nsSocketTransport::BuildSocket(PRFileDesc *&fd, bool &proxyTransparent, bool &us
                 // if this is the first type, we'll want the
                 // service to allocate a new socket
 
+                // Most layers _ESPECIALLY_ PSM want the origin name here as they
+                // will use it for secure checks, etc.. and any connection management
+                // differences between the origin name and the routed name can be
+                // taken care of via DNS. However, SOCKS is a special case as there is
+                // no DNS. in the case of SOCKS and PSM the PSM is a separate layer
+                // and receives the origin name.
+                const char *socketProviderHost = host;
+                int32_t socketProviderPort = port;
+                if (mProxyTransparentResolvesHost &&
+                    (!strcmp(mTypes[0], "socks") || !strcmp(mTypes[0], "socks4"))) {
+                    SOCKET_LOG(("SOCKS %d Host/Route override: %s:%d -> %s:%d\n",
+                                mHttpsProxy,
+                                socketProviderHost, socketProviderPort,
+                                mHost.get(), mPort));
+                    socketProviderHost = mHost.get();
+                    socketProviderPort = mPort;
+                }
+
                 // when https proxying we want to just connect to the proxy as if
                 // it were the end host (i.e. expect the proxy's cert)
 
                 rv = provider->NewSocket(mNetAddr.raw.family,
-                                         mHttpsProxy ? mProxyHost.get() : host,
-                                         mHttpsProxy ? mProxyPort : port,
+                                         mHttpsProxy ? mProxyHost.get() : socketProviderHost,
+                                         mHttpsProxy ? mProxyPort : socketProviderPort,
                                          proxyInfo, mOriginAttributes,
                                          controlFlags, mTlsFlags, &fd,
                                          getter_AddRefs(secinfo));
 
                 if (NS_SUCCEEDED(rv) && !fd) {
-                    NS_NOTREACHED("NewSocket succeeded but failed to create a PRFileDesc");
+                    MOZ_ASSERT_UNREACHABLE("NewSocket succeeded but failed to "
+                                           "create a PRFileDesc");
                     rv = NS_ERROR_UNEXPECTED;
                 }
-            }
-            else {
+            } else {
                 // the socket has already been allocated,
                 // so we just want the service to add itself
                 // to the stack (such as pushing an io layer)
@@ -1236,9 +1274,8 @@ nsSocketTransport::BuildSocket(PRFileDesc *&fd, bool &proxyTransparent, bool &us
                     secCtrl->SetNotificationCallbacks(callbacks);
                 // remember if socket type is SSL so we can ProxyStartSSL if need be.
                 usingSSL = isSSL;
-            }
-            else if ((strcmp(mTypes[i], "socks") == 0) ||
-                     (strcmp(mTypes[i], "socks4") == 0)) {
+            } else if ((strcmp(mTypes[i], "socks") == 0) ||
+                       (strcmp(mTypes[i], "socks4") == 0)) {
                 // since socks is transparent, any layers above
                 // it do not have to worry about proxy stuff
                 proxyInfo = nullptr;
@@ -1307,7 +1344,7 @@ nsSocketTransport::InitiateSocket()
         IsIPAddrLocal(&mNetAddr)) {
         if (SOCKET_LOG_ENABLED()) {
             nsAutoCString netAddrCString;
-            netAddrCString.SetCapacity(kIPv6CStrBufSize);
+            netAddrCString.SetLength(kIPv6CStrBufSize);
             if (!NetAddrToString(&mNetAddr,
                                  netAddrCString.BeginWriting(),
                                  kIPv6CStrBufSize))
@@ -1366,8 +1403,8 @@ nsSocketTransport::InitiateSocket()
         return rv;
     }
 
-    // Attach network activity monitor
-    NetworkActivityMonitor::AttachIOLayer(fd);
+    // create proxy via IOActivityMonitor
+    IOActivityMonitor::MonitorSocket(fd);
 
     PRStatus status;
 
@@ -2671,22 +2708,6 @@ NS_IMETHODIMP
 nsSocketTransport::GetPort(int32_t *port)
 {
     *port = (int32_t) SocketPort();
-    return NS_OK;
-}
-
-NS_IMETHODIMP
-nsSocketTransport::GetNetworkInterfaceId(nsACString &aNetworkInterfaceId)
-{
-    MOZ_ASSERT(OnSocketThread(), "not on socket thread");
-    aNetworkInterfaceId = mNetworkInterfaceId;
-    return NS_OK;
-}
-
-NS_IMETHODIMP
-nsSocketTransport::SetNetworkInterfaceId(const nsACString &aNetworkInterfaceId)
-{
-    MOZ_ASSERT(OnSocketThread(), "not on socket thread");
-    mNetworkInterfaceId = aNetworkInterfaceId;
     return NS_OK;
 }
 

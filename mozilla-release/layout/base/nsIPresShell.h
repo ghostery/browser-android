@@ -63,9 +63,7 @@ class nsFrameSelection;
 class nsFrameManager;
 class nsILayoutHistoryState;
 class nsIReflowCallback;
-class nsIDOMNode;
 class nsCSSFrameConstructor;
-class nsISelection;
 template<class E> class nsCOMArray;
 class AutoWeakFrame;
 class WeakFrame;
@@ -292,26 +290,11 @@ public:
   void SetAuthorStyleDisabled(bool aDisabled);
   bool GetAuthorStyleDisabled() const;
 
-  /*
-   * Called when stylesheets are added/removed/enabled/disabled to
-   * recompute style and clear other cached data as needed.  This will
-   * not reconstruct style synchronously; if you need to do that, call
-   * FlushPendingNotifications to flush out style reresolves.
-   *
-   * This handles the the addition and removal of the various types of
-   * style rules that can be in CSS style sheets, such as @font-face
-   * rules and @counter-style rules.
-   *
-   * It requires that StyleSheetAdded, StyleSheetRemoved,
-   * StyleSheetApplicableStateChanged, StyleRuleAdded, StyleRuleRemoved,
-   * or StyleRuleChanged has been called on the style sheets that have
-   * changed.
-   *
-   * // XXXbz why do we have this on the interface anyway?  The only consumer
-   * is calling AddOverrideStyleSheet/RemoveOverrideStyleSheet, and I think
-   * those should just handle reconstructing style data...
+  /**
+   * Needs to be called any time the applicable style can has changed, in order
+   * to schedule a style flush and setup all the relevant state.
    */
-  void RestyleForCSSRuleChanges();
+  void ApplicableStylesChanged();
 
   /**
    * Update the style set somehow to take into account changed prefs which
@@ -519,6 +502,8 @@ public:
   virtual void CancelAllPendingReflows() = 0;
 
   virtual void NotifyCounterStylesAreDirty() = 0;
+
+  bool FrameIsAncestorOfDirtyRoot(nsIFrame* aFrame) const;
 
   /**
    * Destroy the frames for aElement, and reconstruct them asynchronously if
@@ -1176,8 +1161,8 @@ public:
    * function in a similar manner as RenderSelection.
    */
   virtual already_AddRefed<mozilla::gfx::SourceSurface>
-  RenderNode(nsIDOMNode* aNode,
-             nsIntRegion* aRegion,
+  RenderNode(nsINode* aNode,
+             const mozilla::Maybe<mozilla::CSSIntRegion>& aRegion,
              const mozilla::LayoutDeviceIntPoint aPoint,
              mozilla::LayoutDeviceIntRect* aScreenRect,
              uint32_t aFlags) = 0;
@@ -1522,6 +1507,22 @@ public:
   virtual bool IsVisible() = 0;
   void DispatchSynthMouseMove(mozilla::WidgetGUIEvent* aEvent);
 
+  /* Temporarily ignore the Displayport for better paint performance. We
+   * trigger a repaint once suppression is disabled. Without that
+   * the displayport may get left at the suppressed size for an extended
+   * period of time and result in unnecessary checkerboarding (see bug
+   * 1255054). */
+  virtual void SuppressDisplayport(bool aEnabled) = 0;
+
+  /* Whether or not displayport suppression should be turned on. Note that
+   * this only affects the return value of |IsDisplayportSuppressed()|, and
+   * doesn't change the value of the internal counter.
+   */
+  virtual void RespectDisplayportSuppression(bool aEnabled) = 0;
+
+  /* Whether or not the displayport is currently suppressed. */
+  virtual bool IsDisplayportSuppressed() = 0;
+
   virtual void AddSizeOfIncludingThis(nsWindowSizes& aWindowSizes) const = 0;
 
   /**
@@ -1633,15 +1634,15 @@ protected:
   bool DetermineFontSizeInflationState();
 
   void RecordAlloc(void* aPtr) {
-#ifdef DEBUG
-    MOZ_ASSERT(!mAllocatedPointers.Contains(aPtr));
+#ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
+    MOZ_DIAGNOSTIC_ASSERT(!mAllocatedPointers.Contains(aPtr));
     mAllocatedPointers.PutEntry(aPtr);
 #endif
   }
 
   void RecordFree(void* aPtr) {
-#ifdef DEBUG
-    MOZ_ASSERT(mAllocatedPointers.Contains(aPtr));
+#ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
+    MOZ_DIAGNOSTIC_ASSERT(mAllocatedPointers.Contains(aPtr));
     mAllocatedPointers.RemoveEntry(aPtr);
 #endif
   }
@@ -1659,14 +1660,24 @@ public:
   // clears that capture.
   static void ClearMouseCapture(nsIFrame* aFrame);
 
-  void SetScrollPositionClampingScrollPortSize(nscoord aWidth, nscoord aHeight);
-  bool IsScrollPositionClampingScrollPortSizeSet() {
-    return mScrollPositionClampingScrollPortSizeSet;
+  void SetVisualViewportSize(nscoord aWidth, nscoord aHeight);
+  bool IsVisualViewportSizeSet() {
+    return mVisualViewportSizeSet;
   }
-  nsSize GetScrollPositionClampingScrollPortSize() {
-    NS_ASSERTION(mScrollPositionClampingScrollPortSizeSet, "asking for scroll port when its not set?");
-    return mScrollPositionClampingScrollPortSize;
+  nsSize GetVisualViewportSize() {
+    NS_ASSERTION(mVisualViewportSizeSet, "asking for visual viewport size when its not set?");
+    return mVisualViewportSize;
   }
+
+  void SetVisualViewportOffset(const nsPoint& aScrollOffset) {
+    mVisualViewportOffset = aScrollOffset;
+  }
+
+  nsPoint GetVisualViewportOffset() const {
+    return mVisualViewportOffset;
+  }
+
+  nsPoint GetVisualViewportOffsetRelativeToLayoutViewport() const;
 
   virtual void WindowSizeMoveDone() = 0;
   virtual void SysColorChanged() = 0;
@@ -1733,7 +1744,9 @@ protected:
 
 #ifdef DEBUG
   nsIFrame*                 mDrawEventTargetFrame;
+#endif
 
+#ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
   // We track allocated pointers in a debug-only hashtable to assert against
   // missing/double frees.
   nsTHashtable<nsPtrHashKey<void>> mAllocatedPointers;
@@ -1742,13 +1755,18 @@ protected:
   // Count of the number of times this presshell has been painted to a window.
   uint64_t                  mPaintCount;
 
-  nsSize                    mScrollPositionClampingScrollPortSize;
+  nsSize                    mVisualViewportSize;
+
+  nsPoint                   mVisualViewportOffset;
 
   // A list of stack weak frames. This is a pointer to the last item in the list.
   AutoWeakFrame*            mAutoWeakFrames;
 
   // A hash table of heap allocated weak frames.
   nsTHashtable<nsPtrHashKey<WeakFrame>> mWeakFrames;
+
+  // Reflow roots that need to be reflowed.
+  nsTArray<nsIFrame*> mDirtyRoots;
 
 #ifdef MOZ_GECKO_PROFILER
   // These two fields capture call stacks of any changes that require a restyle
@@ -1797,7 +1815,7 @@ protected:
 
   // Whether the most recent interruptible reflow was actually interrupted:
   bool                      mWasLastReflowInterrupted : 1;
-  bool                      mScrollPositionClampingScrollPortSizeSet : 1;
+  bool                      mVisualViewportSizeSet : 1;
 
   // True if a layout flush might not be a no-op
   bool mNeedLayoutFlush : 1;
@@ -1832,9 +1850,6 @@ protected:
   bool mFontSizeInflationForceEnabled;
   bool mFontSizeInflationDisabledInMasterProcess;
   bool mFontSizeInflationEnabled;
-
-  // Dirty bit indicating that mFontSizeInflationEnabled needs to be recomputed.
-  bool mFontSizeInflationEnabledIsDirty;
 
   bool mPaintingIsFrozen;
 

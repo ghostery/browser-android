@@ -5,11 +5,11 @@
 sync-disconnect-dialog =
     .title = Desconectar { -sync-brand-short-name }?
     .style = width: 36em; min-height: 35em;
-sync-disconnect-heading = Você deseja remover os dados de navegação desse computador? Seu dados de { -sync-brand-name } ainda continuarão em sua conta.
+sync-disconnect-heading = Deseja remover também os dados de navegação desse computador? Seus dados do { -sync-brand-name } ainda continuarão em sua conta.
 sync-disconnect-remove-sync-caption = Remover dados de { -sync-brand-name }
 sync-disconnect-remove-sync-data = Favoritos, histórico, senhas, etc.
 sync-disconnect-remove-other-caption = Remover outros dados privados
-sync-disconnect-remove-other-data = Cookies, cache, dados de site off-line, etc.
+sync-disconnect-remove-other-data = Cookies, cache, dados locais de sites, etc.
 # Shown while the disconnect is in progress
 sync-disconnect-disconnecting = Desconectando...
 sync-disconnect-cancel =

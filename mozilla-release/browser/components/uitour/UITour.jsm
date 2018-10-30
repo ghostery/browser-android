@@ -12,10 +12,8 @@ ChromeUtils.import("resource://gre/modules/TelemetryController.jsm");
 ChromeUtils.import("resource://gre/modules/Timer.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-Cu.importGlobalProperties(["URL"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
-ChromeUtils.defineModuleGetter(this, "BrowserUITelemetry",
-  "resource:///modules/BrowserUITelemetry.jsm");
 ChromeUtils.defineModuleGetter(this, "CustomizableUI",
   "resource:///modules/CustomizableUI.jsm");
 ChromeUtils.defineModuleGetter(this, "FxAccounts",
@@ -32,14 +30,11 @@ ChromeUtils.defineModuleGetter(this, "ReaderParent",
   "resource:///modules/ReaderParent.jsm");
 ChromeUtils.defineModuleGetter(this, "ResetProfile",
   "resource://gre/modules/ResetProfile.jsm");
-ChromeUtils.defineModuleGetter(this, "UITelemetry",
-  "resource://gre/modules/UITelemetry.jsm");
 ChromeUtils.defineModuleGetter(this, "UpdateUtils",
   "resource://gre/modules/UpdateUtils.jsm");
 
 // See LOG_LEVELS in Console.jsm. Common examples: "All", "Info", "Warn", & "Error".
 const PREF_LOG_LEVEL      = "browser.uitour.loglevel";
-const PREF_SEENPAGEIDS    = "browser.uitour.seenPageIDs";
 
 const BACKGROUND_PAGE_ACTIONS_ALLOWED = new Set([
   "forceShowReaderIcon",
@@ -54,17 +49,6 @@ const BACKGROUND_PAGE_ACTIONS_ALLOWED = new Set([
   "setTreatmentTag",
 ]);
 const MAX_BUTTONS         = 4;
-
-const BUCKET_NAME         = "UITour";
-const BUCKET_TIMESTEPS    = [
-  1 * 60 * 1000, // Until 1 minute after tab is closed/inactive.
-  3 * 60 * 1000, // Until 3 minutes after tab is closed/inactive.
-  10 * 60 * 1000, // Until 10 minutes after tab is closed/inactive.
-  60 * 60 * 1000, // Until 1 hour after tab is closed/inactive.
-];
-
-// Time after which seen Page IDs expire.
-const SEENPAGEID_EXPIRY  = 8 * 7 * 24 * 60 * 60 * 1000; // 8 weeks.
 
 // Prefix for any target matching a search engine.
 const TARGET_SEARCHENGINE_PREFIX = "searchEngine-";
@@ -81,11 +65,6 @@ XPCOMUtils.defineLazyGetter(this, "log", () => {
 
 var UITour = {
   url: null,
-  seenPageIDs: null,
-  // This map is not persisted and is used for
-  // building the content source of a potential tour.
-  pageIDsForSession: new Map(),
-  pageIDSourceBrowsers: new WeakMap(),
   /* Map from browser chrome windows to a Set of <browser>s in which a tour is open (both visible and hidden) */
   tourBrowsersByWindow: new WeakMap(),
   // Menus opened by api users explictly through `Mozilla.UITour.showMenu` call
@@ -208,14 +187,19 @@ var UITour = {
       },
     }],
     ["trackingProtection", {
-      query: "#tracking-protection-icon",
+      query: (aDocument) => {
+        if (Services.prefs.getBoolPref("toolkit.cosmeticAnimations.enabled", false)) {
+          return aDocument.getElementById("tracking-protection-icon-animatable-box");
+        }
+        return aDocument.getElementById("tracking-protection-icon");
+      },
     }],
     ["urlbar",      {
       query: "#urlbar",
       widgetName: "urlbar-container",
     }],
     ["pageActionButton", {
-      query: "#pageActionButton"
+      query: "#pageActionButton",
     }],
     ["pageAction-bookmark", {
       query: (aDocument) => {
@@ -256,19 +240,13 @@ var UITour = {
         return aDocument.getElementById("pageAction-urlbar-screenshots") ||
                aDocument.getElementById("pageAction-panel-screenshots");
       },
-    }]
+    }],
   ]),
 
   init() {
     log.debug("Initializing UITour");
     // Lazy getter is initialized here so it can be replicated any time
     // in a test.
-    delete this.seenPageIDs;
-    Object.defineProperty(this, "seenPageIDs", {
-      get: this.restoreSeenPageIDs.bind(this),
-      configurable: true,
-    });
-
     delete this.url;
     XPCOMUtils.defineLazyGetter(this, "url", function() {
       return Services.urlFormatter.formatURLPref("browser.uitour.url");
@@ -286,60 +264,6 @@ var UITour = {
       listener[method] = () => this.clearAvailableTargetsCache();
       return listener;
     }, {}));
-  },
-
-  restoreSeenPageIDs() {
-    delete this.seenPageIDs;
-
-    if (UITelemetry.enabled) {
-      let dateThreshold = Date.now() - SEENPAGEID_EXPIRY;
-
-      try {
-        let data = Services.prefs.getCharPref(PREF_SEENPAGEIDS);
-        data = new Map(JSON.parse(data));
-
-        for (let [pageID, details] of data) {
-
-          if (typeof pageID != "string" ||
-              typeof details != "object" ||
-              typeof details.lastSeen != "number" ||
-              details.lastSeen < dateThreshold) {
-
-            data.delete(pageID);
-          }
-        }
-
-        this.seenPageIDs = data;
-      } catch (e) {}
-    }
-
-    if (!this.seenPageIDs)
-      this.seenPageIDs = new Map();
-
-    this.persistSeenIDs();
-
-    return this.seenPageIDs;
-  },
-
-  addSeenPageID(aPageID) {
-    if (!UITelemetry.enabled)
-      return;
-
-    this.seenPageIDs.set(aPageID, {
-      lastSeen: Date.now(),
-    });
-
-    this.persistSeenIDs();
-  },
-
-  persistSeenIDs() {
-    if (this.seenPageIDs.size === 0) {
-      Services.prefs.clearUserPref(PREF_SEENPAGEIDS);
-      return;
-    }
-
-    Services.prefs.setCharPref(PREF_SEENPAGEIDS,
-                               JSON.stringify([...this.seenPageIDs]));
   },
 
   onPageEvent(aMessage, aEvent) {
@@ -384,30 +308,6 @@ var UITour = {
 
     switch (action) {
       case "registerPageID": {
-        if (typeof data.pageID != "string") {
-          log.warn("registerPageID: pageID must be a string");
-          break;
-        }
-
-        this.pageIDsForSession.set(data.pageID, {lastSeen: Date.now()});
-
-        // The rest is only relevant if Telemetry is enabled.
-        if (!UITelemetry.enabled) {
-          log.debug("registerPageID: Telemetry disabled, not doing anything");
-          break;
-        }
-
-        // We don't want to allow BrowserUITelemetry.BUCKET_SEPARATOR in the
-        // pageID, as it could make parsing the telemetry bucket name difficult.
-        if (data.pageID.includes(BrowserUITelemetry.BUCKET_SEPARATOR)) {
-          log.warn("registerPageID: Invalid page ID specified");
-          break;
-        }
-
-        this.addSeenPageID(data.pageID);
-        this.pageIDSourceBrowsers.set(browser, data.pageID);
-        this.setTelemetryBucket(data.pageID);
-
         break;
       }
 
@@ -752,9 +652,7 @@ var UITour = {
       // The browser message manager is disconnected when the <browser> is
       // destroyed and we want to teardown at that point.
       case "message-manager-close": {
-        let winEnum = Services.wm.getEnumerator("navigator:browser");
-        while (winEnum.hasMoreElements()) {
-          let window = winEnum.getNext();
+        for (let window of Services.wm.getEnumerator("navigator:browser")) {
           if (window.closed)
             continue;
 
@@ -823,37 +721,11 @@ var UITour = {
     return true;
   },
 
-  setTelemetryBucket(aPageID) {
-    let bucket = BUCKET_NAME + BrowserUITelemetry.BUCKET_SEPARATOR + aPageID;
-    BrowserUITelemetry.setBucket(bucket);
-  },
-
-  setExpiringTelemetryBucket(aPageID, aType) {
-    let bucket = BUCKET_NAME + BrowserUITelemetry.BUCKET_SEPARATOR + aPageID +
-                 BrowserUITelemetry.BUCKET_SEPARATOR + aType;
-
-    BrowserUITelemetry.setExpiringBucket(bucket,
-                                         BUCKET_TIMESTEPS);
-  },
-
-  // This is registered with UITelemetry by BrowserUITelemetry, so that UITour
-  // can remain lazy-loaded on-demand.
-  getTelemetry() {
-    return {
-      seenPageIDs: [...this.seenPageIDs.keys()],
-    };
-  },
-
   /**
    * Tear down a tour from a tab e.g. upon switching/closing tabs.
    */
   async teardownTourForBrowser(aWindow, aBrowser, aTourPageClosing = false) {
     log.debug("teardownTourForBrowser: aBrowser = ", aBrowser, aTourPageClosing);
-
-    if (this.pageIDSourceBrowsers.has(aBrowser)) {
-      let pageID = this.pageIDSourceBrowsers.get(aBrowser);
-      this.setExpiringTelemetryBucket(pageID, aTourPageClosing ? "closed" : "inactive");
-    }
 
     let openTourBrowsers = this.tourBrowsersByWindow.get(aWindow);
     if (aTourPageClosing && openTourBrowsers) {
@@ -870,8 +742,8 @@ var UITour = {
         events: [
           [ "popuphidden", this.onPanelHidden ],
           [ "popuphiding", this.onAppMenuHiding ],
-          [ "ViewShowing", this.onAppMenuSubviewShowing ]
-        ]
+          [ "ViewShowing", this.onAppMenuSubviewShowing ],
+        ],
       },
       {
         name: "pageActionPanel",
@@ -879,16 +751,16 @@ var UITour = {
         events: [
           [ "popuphidden", this.onPanelHidden ],
           [ "popuphiding", this.onPageActionPanelHiding ],
-          [ "ViewShowing", this.onPageActionPanelSubviewShowing ]
-        ]
+          [ "ViewShowing", this.onPageActionPanelSubviewShowing ],
+        ],
       },
       {
         name: "controlCenter",
         node: aWindow.gIdentityHandler._identityPopup,
         events: [
           [ "popuphidden", this.onPanelHidden ],
-          [ "popuphiding", this.onControlCenterHiding ]
-        ]
+          [ "popuphiding", this.onControlCenterHiding ],
+        ],
       },
     ];
     for (let panel of panels) {
@@ -920,16 +792,6 @@ var UITour = {
     log.debug("teardownTourForWindow");
     aWindow.gBrowser.tabContainer.removeEventListener("TabSelect", this);
     aWindow.removeEventListener("SSWindowClosing", this);
-
-    let openTourBrowsers = this.tourBrowsersByWindow.get(aWindow);
-    if (openTourBrowsers) {
-      for (let browser of openTourBrowsers) {
-        if (this.pageIDSourceBrowsers.has(browser)) {
-          let pageID = this.pageIDSourceBrowsers.get(browser);
-          this.setExpiringTelemetryBucket(pageID, "closed");
-        }
-      }
-    }
 
     this.tourBrowsersByWindow.delete(aWindow);
   },
@@ -1278,7 +1140,7 @@ var UITour = {
 
       for (let button of aButtons) {
         let isButton = button.style != "text";
-        let el = document.createElement(isButton ? "button" : "label");
+        let el = document.createXULElement(isButton ? "button" : "label");
         el.setAttribute(isButton ? "label" : "value", button.label);
 
         if (isButton) {
@@ -1396,7 +1258,7 @@ var UITour = {
 
     if (aMenuName == "appMenu" || aMenuName == "pageActionPanel") {
       let menu = {
-        onPanelHidden: this.onPanelHidden
+        onPanelHidden: this.onPanelHidden,
       };
       if (aMenuName == "appMenu") {
         menu.node = aWindow.PanelUI.panel;
@@ -1500,7 +1362,11 @@ var UITour = {
   },
 
   showNewTab(aWindow, aBrowser) {
-    aWindow.openLinkIn("about:newtab", "current", {targetBrowser: aBrowser});
+    let url = "about:newtab";
+    aWindow.openLinkIn(url, "current", {
+      targetBrowser: aBrowser,
+      triggeringPrincipal: Services.scriptSecurityManager.createCodebasePrincipal(Services.io.newURI(url), {}),
+    });
     aWindow.gURLBar.focus();
   },
 
@@ -1597,7 +1463,7 @@ var UITour = {
             data = {
               searchEngineIdentifier: Services.search.defaultEngine.identifier,
               engines: engines.filter((engine) => engine.identifier)
-                              .map((engine) => TARGET_SEARCHENGINE_PREFIX + engine.identifier)
+                              .map((engine) => TARGET_SEARCHENGINE_PREFIX + engine.identifier),
             };
           } else {
             data = {engines: [], searchEngineIdentifier: ""};
@@ -1815,9 +1681,7 @@ var UITour = {
   },
 
   notify(eventName, params) {
-    let winEnum = Services.wm.getEnumerator("navigator:browser");
-    while (winEnum.hasMoreElements()) {
-      let window = winEnum.getNext();
+    for (let window of Services.wm.getEnumerator("navigator:browser")) {
       if (window.closed)
         continue;
 
@@ -1885,5 +1749,5 @@ const UITourHealthReport = {
         addClientId: true,
         addEnvironment: true,
       });
-  }
+  },
 };

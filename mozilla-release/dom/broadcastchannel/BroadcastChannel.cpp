@@ -20,6 +20,7 @@
 #include "nsContentUtils.h"
 
 #include "nsIBFCacheEntry.h"
+#include "nsICookieService.h"
 #include "nsIDocument.h"
 #include "nsISupportsPrimitives.h"
 
@@ -72,12 +73,14 @@ class InitializeRunnable final : public WorkerMainThreadRunnable
 {
 public:
   InitializeRunnable(ThreadSafeWorkerRef* aWorkerRef, nsACString& aOrigin,
-                     PrincipalInfo& aPrincipalInfo, ErrorResult& aRv)
+                     PrincipalInfo& aPrincipalInfo, bool* aThirdPartyWindow,
+                     ErrorResult& aRv)
     : WorkerMainThreadRunnable(aWorkerRef->Private(),
                                NS_LITERAL_CSTRING("BroadcastChannel :: Initialize"))
     , mWorkerRef(aWorkerRef)
     , mOrigin(aOrigin)
     , mPrincipalInfo(aPrincipalInfo)
+    , mThirdPartyWindow(aThirdPartyWindow)
     , mRv(aRv)
   {
     MOZ_ASSERT(mWorkerRef);
@@ -115,6 +118,9 @@ public:
       return true;
     }
 
+    *mThirdPartyWindow =
+      nsContentUtils::IsThirdPartyWindowOrChannel(window, nullptr, nullptr);
+
     return true;
   }
 
@@ -122,6 +128,7 @@ private:
   RefPtr<ThreadSafeWorkerRef> mWorkerRef;
   nsACString& mOrigin;
   PrincipalInfo& mPrincipalInfo;
+  bool* mThirdPartyWindow;
   ErrorResult& mRv;
 };
 
@@ -259,7 +266,7 @@ BroadcastChannel::~BroadcastChannel()
 JSObject*
 BroadcastChannel::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return BroadcastChannelBinding::Wrap(aCx, this, aGivenProto);
+  return BroadcastChannel_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 /* static */ already_AddRefed<BroadcastChannel>
@@ -299,6 +306,14 @@ BroadcastChannel::Constructor(const GlobalObject& aGlobal,
     if (NS_WARN_IF(aRv.Failed())) {
       return nullptr;
     }
+
+    if (nsContentUtils::IsThirdPartyWindowOrChannel(window, nullptr,
+                                                    nullptr) &&
+        nsContentUtils::StorageAllowedForWindow(window) !=
+          nsContentUtils::StorageAccess::eAllow) {
+      aRv.Throw(NS_ERROR_DOM_SECURITY_ERR);
+      return nullptr;
+    }
   } else {
     JSContext* cx = aGlobal.Context();
 
@@ -317,14 +332,22 @@ BroadcastChannel::Constructor(const GlobalObject& aGlobal,
 
     RefPtr<ThreadSafeWorkerRef> tsr = new ThreadSafeWorkerRef(workerRef);
 
+    bool thirdPartyWindow = false;
+
     RefPtr<InitializeRunnable> runnable =
-      new InitializeRunnable(tsr, origin, principalInfo, aRv);
+      new InitializeRunnable(tsr, origin, principalInfo, &thirdPartyWindow,
+                             aRv);
     runnable->Dispatch(Canceling, aRv);
     if (aRv.Failed()) {
       return nullptr;
     }
 
-    bc->mWorkerRef = Move(workerRef);
+    if (thirdPartyWindow && !workerPrivate->IsStorageAllowed()) {
+      aRv.Throw(NS_ERROR_DOM_SECURITY_ERR);
+      return nullptr;
+    }
+
+    bc->mWorkerRef = std::move(workerRef);
   }
 
   // Register this component to PBackground.

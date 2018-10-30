@@ -11,6 +11,8 @@
 #include "mozilla/LinkedList.h"
 #include "mozilla/MemoryReporting.h"
 
+#include <utility>
+
 #include "js/AllocPolicy.h"
 #include "js/HashTable.h"
 #include "js/TypeDecls.h"
@@ -19,11 +21,6 @@
 #include "vm/TraceLoggingGraph.h"
 #include "vm/TraceLoggingTypes.h"
 
-
-namespace JS {
-class ReadOnlyCompileOptions;
-} // namespace JS
-
 namespace js {
 
 namespace jit {
@@ -31,7 +28,7 @@ namespace jit {
 } // namespace jit
 
 /*
- * Tracelogging overview.
+ * [SMDOC] Tracelogging overview.
  *
  * Tracelogging makes it possible to trace the occurrence of a single event
  * and/or the start and stop of an event. This is implemented with as low
@@ -131,7 +128,7 @@ class TraceLoggerEvent {
     {}
     explicit TraceLoggerEvent(TraceLoggerTextId textId);
     TraceLoggerEvent(TraceLoggerTextId type, JSScript* script);
-    TraceLoggerEvent(TraceLoggerTextId type, const char* filename, size_t line, size_t column);
+    TraceLoggerEvent(TraceLoggerTextId type, const char* filename, uint32_t line, uint32_t column);
     explicit TraceLoggerEvent(const char* text);
     TraceLoggerEvent(const TraceLoggerEvent& event);
     TraceLoggerEvent& operator=(const TraceLoggerEvent& other);
@@ -154,7 +151,7 @@ class TraceLoggerEvent {
     TraceLoggerEvent() {}
     explicit TraceLoggerEvent(TraceLoggerTextId textId) {}
     TraceLoggerEvent(TraceLoggerTextId type, JSScript* script) {}
-    TraceLoggerEvent(TraceLoggerTextId type, const char* filename, size_t line, size_t column) {}
+    TraceLoggerEvent(TraceLoggerTextId type, const char* filename, uint32_t line, uint32_t column) {}
     explicit TraceLoggerEvent(const char* text) {}
     TraceLoggerEvent(const TraceLoggerEvent& event) {}
     TraceLoggerEvent& operator=(const TraceLoggerEvent& other) { return *this; };
@@ -185,9 +182,9 @@ class TraceLoggerEventPayload {
     mozilla::Atomic<uint32_t> pointerCount_;
 
   public:
-    TraceLoggerEventPayload(uint32_t textId, char* string)
+    TraceLoggerEventPayload(uint32_t textId, UniqueChars string)
       : textId_(textId),
-        string_(string),
+        string_(std::move(string)),
         uses_(0)
     { }
 
@@ -380,7 +377,8 @@ class TraceLoggerThreadState
     bool enabledTextIds[TraceLogger_Last];
     bool mainThreadEnabled;
     bool helperThreadEnabled;
-    bool graphSpewingEnabled;
+    bool graphEnabled;
+    bool graphFileEnabled;
     bool spewErrors;
     mozilla::LinkedList<TraceLoggerThread> threadLoggers;
 
@@ -407,7 +405,8 @@ class TraceLoggerThreadState
 #endif
         mainThreadEnabled(false),
         helperThreadEnabled(false),
-        graphSpewingEnabled(false),
+        graphEnabled(false),
+        graphFileEnabled(false),
         spewErrors(false),
         nextTextId(TraceLogger_Last),
         startupTime(0),
@@ -442,13 +441,16 @@ class TraceLoggerThreadState
     // Note: it is not allowed to use them in logTimestamp.
     TraceLoggerEventPayload* getOrCreateEventPayload(const char* text);
     TraceLoggerEventPayload* getOrCreateEventPayload(JSScript* script);
-    TraceLoggerEventPayload* getOrCreateEventPayload(const char* filename, size_t lineno,
-                                                     size_t colno, const void* p);
+    TraceLoggerEventPayload* getOrCreateEventPayload(const char* filename, uint32_t lineno,
+                                                     uint32_t colno, const void* p);
 
     size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
     size_t sizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) {
         return mallocSizeOf(this) + sizeOfExcludingThis(mallocSizeOf);
     }
+
+    bool IsGraphFileEnabled()  { return graphFileEnabled; }
+    bool IsGraphEnabled()      { return graphEnabled;  }
 #endif
 };
 
@@ -573,7 +575,8 @@ class MOZ_RAII AutoTraceLog
                  const TraceLoggerEvent& event MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
       : logger(logger),
         isEvent(true),
-        executed(false)
+        executed(false),
+        prev(nullptr)
     {
         MOZ_GUARD_OBJECT_NOTIFIER_INIT;
         payload.event = &event;
@@ -588,7 +591,8 @@ class MOZ_RAII AutoTraceLog
     AutoTraceLog(TraceLoggerThread* logger, TraceLoggerTextId id MOZ_GUARD_OBJECT_NOTIFIER_PARAM)
       : logger(logger),
         isEvent(false),
-        executed(false)
+        executed(false),
+        prev(nullptr)
     {
         MOZ_GUARD_OBJECT_NOTIFIER_INIT;
         payload.id = id;

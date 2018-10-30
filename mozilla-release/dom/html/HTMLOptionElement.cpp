@@ -11,7 +11,6 @@
 #include "nsStyleConsts.h"
 #include "nsIFormControl.h"
 #include "nsIForm.h"
-#include "nsIDOMNode.h"
 #include "nsISelectControlFrame.h"
 
 // Notify/query select frame for selected state
@@ -271,12 +270,10 @@ HTMLOptionElement::SetText(const nsAString& aText, ErrorResult& aRv)
 
 nsresult
 HTMLOptionElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent,
-                              bool aCompileEventHandlers)
+                              nsIContent* aBindingParent)
 {
   nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent,
-                                                 aCompileEventHandlers);
+                                                 aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Our new parent might change :disabled/:enabled state.
@@ -391,9 +388,9 @@ HTMLOptionElement::Option(const GlobalObject& aGlobal,
 }
 
 nsresult
-HTMLOptionElement::CopyInnerTo(Element* aDest, bool aPreallocateChildren)
+HTMLOptionElement::CopyInnerTo(Element* aDest)
 {
-  nsresult rv = nsGenericHTMLElement::CopyInnerTo(aDest, aPreallocateChildren);
+  nsresult rv = nsGenericHTMLElement::CopyInnerTo(aDest);
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (aDest->OwnerDoc()->IsStaticDocument()) {
@@ -405,7 +402,7 @@ HTMLOptionElement::CopyInnerTo(Element* aDest, bool aPreallocateChildren)
 JSObject*
 HTMLOptionElement::WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return HTMLOptionElementBinding::Wrap(aCx, this, aGivenProto);
+  return HTMLOptionElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 } // namespace dom

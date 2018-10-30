@@ -19,6 +19,7 @@
 #include "mozilla/Logging.h"
 #include "mozilla/media/MediaUtils.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/StaticPtr.h"
 #include "mozilla/TaskQueue.h"
 #include "mozilla/Unused.h"
@@ -27,6 +28,7 @@
 #include "OggWriter.h"
 #include "OpusTrackEncoder.h"
 #include "TimeUnits.h"
+#include "Tracing.h"
 
 #ifdef MOZ_WEBM_ENCODER
 #include "VP8TrackEncoder.h"
@@ -89,6 +91,7 @@ public:
                            StreamTime aTrackOffset,
                            const MediaSegment& aQueuedMedia) override
   {
+    TRACE_COMMENT("Encoder %p", mEncoder.get());
     MOZ_ASSERT(mEncoder);
     MOZ_ASSERT(mEncoderThread);
 
@@ -137,6 +140,7 @@ public:
                                StreamTime aTrackOffset,
                                const MediaSegment& aMedia) override
   {
+    TRACE_COMMENT("Encoder %p", mEncoder.get());
     MOZ_ASSERT(mEncoder);
     MOZ_ASSERT(mEncoderThread);
 
@@ -153,7 +157,7 @@ public:
       mEncoderThread->Dispatch(
         NewRunnableMethod<StoreCopyPassByRRef<AudioSegment>>(
           "mozilla::AudioTrackEncoder::AppendAudioSegment",
-          mEncoder, &AudioTrackEncoder::AppendAudioSegment, Move(copy)));
+          mEncoder, &AudioTrackEncoder::AppendAudioSegment, std::move(copy)));
     MOZ_DIAGNOSTIC_ASSERT(NS_SUCCEEDED(rv));
     Unused << rv;
   }
@@ -249,6 +253,7 @@ public:
                            StreamTime aTrackOffset,
                            const MediaSegment& aQueuedMedia) override
   {
+    TRACE_COMMENT("Encoder %p", mEncoder.get());
     MOZ_ASSERT(mEncoder);
     MOZ_ASSERT(mEncoderThread);
 
@@ -291,6 +296,7 @@ public:
 
   void SetCurrentFrames(const VideoSegment& aMedia) override
   {
+    TRACE_COMMENT("Encoder %p", mEncoder.get());
     MOZ_ASSERT(mEncoder);
     MOZ_ASSERT(mEncoderThread);
 
@@ -305,7 +311,7 @@ public:
       mEncoderThread->Dispatch(
         NewRunnableMethod<StoreCopyPassByRRef<VideoSegment>>(
           "mozilla::VideoTrackEncoder::AppendVideoSegment",
-          mEncoder, &VideoTrackEncoder::AppendVideoSegment, Move(copy)));
+          mEncoder, &VideoTrackEncoder::AppendVideoSegment, std::move(copy)));
     MOZ_DIAGNOSTIC_ASSERT(NS_SUCCEEDED(rv));
     Unused << rv;
   }
@@ -453,7 +459,7 @@ MediaEncoder::MediaEncoder(TaskQueue* aEncoderThread,
                            VideoTrackEncoder* aVideoEncoder,
                            const nsAString& aMIMEType)
   : mEncoderThread(aEncoderThread)
-  , mWriter(Move(aWriter))
+  , mWriter(std::move(aWriter))
   , mAudioEncoder(aAudioEncoder)
   , mVideoEncoder(aVideoEncoder)
   , mEncoderListener(MakeAndAddRef<EncoderListener>(mEncoderThread, this))
@@ -735,7 +741,7 @@ MediaEncoder::CreateEncoder(TaskQueue* aEncoderThread,
     }
   }
   return MakeAndAddRef<MediaEncoder>(aEncoderThread,
-                                     Move(writer),
+                                     std::move(writer),
                                      audioEncoder,
                                      videoEncoder,
                                      mimeType);
@@ -1052,7 +1058,7 @@ MediaEncoder::Stop()
 bool
 MediaEncoder::IsWebMEncoderEnabled()
 {
-  return Preferences::GetBool("media.encoder.webm.enabled");
+  return StaticPrefs::MediaEncoderWebMEnabled();
 }
 #endif
 

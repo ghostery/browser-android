@@ -42,16 +42,12 @@ public:
   // nsINode
   virtual nsresult InsertChildBefore(nsIContent* aKid, nsIContent* aBeforeThis,
                                      bool aNotify) override;
-  virtual nsresult InsertChildAt_Deprecated(nsIContent* aKid, uint32_t aIndex,
-                                            bool aNotify) override;
-  virtual void RemoveChildAt_Deprecated(uint32_t aIndex, bool aNotify) override;
   virtual void RemoveChildNode(nsIContent* aKid, bool aNotify) override;
 
   // nsIContent
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
 
-  virtual nsresult Clone(mozilla::dom::NodeInfo *aNodeInfo, nsINode **aResult,
-                         bool aPreallocateChildren) const override;
+  virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 private:
   void UpdateActiveChild()
   { mActiveChild = FindActiveChild(); }

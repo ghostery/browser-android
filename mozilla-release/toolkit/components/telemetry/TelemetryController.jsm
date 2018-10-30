@@ -40,7 +40,7 @@ const NEWPROFILE_PING_DEFAULT_DELAY = 30 * 60 * 1000;
 
 // Ping types.
 const PING_TYPE_MAIN = "main";
-const PING_TYPE_DELETION = "deletion";
+const PING_TYPE_OPTOUT = "optout";
 
 // Session ping reasons.
 const REASON_GATHER_PAYLOAD = "gather-payload";
@@ -55,7 +55,6 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   AsyncShutdown: "resource://gre/modules/AsyncShutdown.jsm",
   TelemetryStorage: "resource://gre/modules/TelemetryStorage.jsm",
   TelemetryEnvironment: "resource://gre/modules/TelemetryEnvironment.jsm",
-  UpdateUtils: "resource://gre/modules/UpdateUtils.jsm",
   TelemetryArchive: "resource://gre/modules/TelemetryArchive.jsm",
   TelemetrySession: "resource://gre/modules/TelemetrySession.jsm",
   TelemetrySend: "resource://gre/modules/TelemetrySend.jsm",
@@ -63,6 +62,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   TelemetryModules: "resource://gre/modules/TelemetryModules.jsm",
   UpdatePing: "resource://gre/modules/UpdatePing.jsm",
   TelemetryHealthPing: "resource://gre/modules/TelemetryHealthPing.jsm",
+  TelemetryEventPing: "resource://gre/modules/TelemetryEventPing.jsm",
   OS: "resource://gre/modules/osfile.jsm",
 });
 
@@ -111,13 +111,6 @@ var Policy = {
 var EXPORTED_SYMBOLS = ["TelemetryController"];
 
 var TelemetryController = Object.freeze({
-  /**
-   * Used only for testing purposes.
-   */
-  testAssemblePing(aType, aPayload, aOptions) {
-    return Impl.assemblePing(aType, aPayload, aOptions);
-  },
-
   /**
    * Used only for testing purposes.
    */
@@ -324,7 +317,7 @@ var Impl = {
 
     let updateChannel = null;
     try {
-      updateChannel = UpdateUtils.getUpdateChannel(false);
+      updateChannel = Utils.getUpdateChannel();
     } catch (e) {
       this._log.trace("_getApplicationSection - Unable to get update channel.", e);
     }
@@ -665,6 +658,16 @@ var Impl = {
         // Load the ClientID.
         this._clientID = await ClientID.getClientID();
 
+        // Fix-up a canary client ID if detected.
+        const uploadEnabled = Services.prefs.getBoolPref(TelemetryUtils.Preferences.FhrUploadEnabled, false);
+        if (uploadEnabled && this._clientID == Utils.knownClientID) {
+            this._log.trace("Upload enabled, but got canary client ID. Resetting.");
+            this._clientID = await ClientID.resetClientID();
+        } else if (!uploadEnabled && this._clientID != Utils.knownClientID) {
+            this._log.trace("Upload disabled, but got a valid client ID. Setting canary client ID.");
+            this._clientID = await ClientID.setClientID(TelemetryUtils.knownClientID);
+        }
+
         await TelemetrySend.setup(this._testMode);
 
         // Perform TelemetrySession delayed init.
@@ -686,8 +689,14 @@ var Impl = {
         // in the future.
         TelemetryStorage.removeFHRDatabase();
 
-        // Report the modules loaded in the Firefox process.
-        TelemetryModules.start();
+        // The init sequence is forced to run on shutdown for short sessions and
+        // we don't want to start TelemetryModules as the timer registration will fail.
+        if (!this._shuttingDown) {
+          // Report the modules loaded in the Firefox process.
+          TelemetryModules.start();
+        }
+
+        TelemetryEventPing.startup();
 
         this._delayedInitTaskDeferred.resolve();
       } catch (e) {
@@ -728,8 +737,6 @@ var Impl = {
       return;
     }
 
-    this._shuttingDown = true;
-
     Services.prefs.removeObserver(PREF_BRANCH_LOG, configureLogging);
     this._detachObservers();
 
@@ -740,6 +747,8 @@ var Impl = {
       }
 
       UpdatePing.shutdown();
+
+      TelemetryEventPing.shutdown();
 
       // Stop the datachoices infobar display.
       TelemetryReportingPolicy.shutdown();
@@ -772,6 +781,8 @@ var Impl = {
   shutdown() {
     this._log.trace("shutdown");
 
+    this._shuttingDown = true;
+
     // We can be in one the following states here:
     // 1) setupTelemetry was never called
     // or it was called and
@@ -781,7 +792,6 @@ var Impl = {
 
     // This handles 1).
     if (!this._initStarted) {
-      this._shuttingDown = true;
       this._shutDown = true;
       return Promise.resolve();
     }
@@ -841,28 +851,49 @@ var Impl = {
 
   /**
    * Called whenever the FHR Upload preference changes (e.g. when user disables FHR from
-   * the preferences panel), this triggers sending the deletion ping.
+   * the preferences panel), this triggers sending the optout ping.
    */
   _onUploadPrefChange() {
     const uploadEnabled = Services.prefs.getBoolPref(TelemetryUtils.Preferences.FhrUploadEnabled, false);
     if (uploadEnabled) {
-      // There's nothing we should do if we are enabling upload.
+      this._log.trace("_onUploadPrefChange - upload was enabled again. Resetting client ID");
+
+      // Delete cached client ID immediately, so other usage is forced to refetch it.
+      this._clientID = null;
+
+      // Generate a new client ID and make sure this module uses the new version
+      let p = ClientID.resetClientID().then(id => {
+        this._clientID = id;
+        Telemetry.scalarSet("telemetry.data_upload_optin", true);
+      });
+
+      this._shutdownBarrier.client.addBlocker(
+        "TelemetryController: resetting client ID after data upload was enabled", p);
+
       return;
     }
 
     let p = (async () => {
       try {
-        // Clear the current pings.
+        // 1. Cancel the current pings.
+        // 2. Clear unpersisted pings
         await TelemetrySend.clearCurrentPings();
 
-        // Remove all the pending pings, but not the deletion ping.
+        // 3. Remove all pending pings
+        await TelemetryStorage.removeAppDataPings();
         await TelemetryStorage.runRemovePendingPingsTask();
       } catch (e) {
         this._log.error("_onUploadPrefChange - error clearing pending pings", e);
       } finally {
-        // Always send the deletion ping.
-        this._log.trace("_onUploadPrefChange - Sending deletion ping.");
-        this.submitExternalPing(PING_TYPE_DELETION, {}, { addClientId: true });
+        // 4. Reset session and subsession counter
+        TelemetrySession.resetSubsessionCounter();
+
+        // 5. Set ClientID to a known value
+        this._clientID = await ClientID.setClientID(TelemetryUtils.knownClientID);
+
+        // 6. Send the optout ping.
+        this._log.trace("_onUploadPrefChange - Sending optout ping.");
+        this.submitExternalPing(PING_TYPE_OPTOUT, {}, { addClientId: false });
       }
     })();
 
@@ -874,7 +905,7 @@ var Impl = {
 
   _attachObservers() {
     if (IS_UNIFIED_TELEMETRY) {
-      // Watch the FHR upload setting to trigger deletion pings.
+      // Watch the FHR upload setting to trigger optout pings.
       Services.prefs.addObserver(TelemetryUtils.Preferences.FhrUploadEnabled, this, true);
     }
   },

@@ -20,6 +20,7 @@ uint64_t LayerMLGPU::sFrameKey = 0;
 LayerMLGPU::LayerMLGPU(LayerManagerMLGPU* aManager)
  : HostLayer(aManager),
    mFrameKey(0),
+   mComputedOpacity(0.0),
    mPrepared(false)
 {
 }
@@ -78,7 +79,7 @@ LayerMLGPU::AssignToView(FrameBuilder* aBuilder,
                          RenderViewMLGPU* aView,
                          Maybe<gfx::Polygon>&& aGeometry)
 {
-  AddBoundsToView(aBuilder, aView, Move(aGeometry));
+  AddBoundsToView(aBuilder, aView, std::move(aGeometry));
 }
 
 void
@@ -87,7 +88,7 @@ LayerMLGPU::AddBoundsToView(FrameBuilder* aBuilder,
                             Maybe<gfx::Polygon>&& aGeometry)
 {
   IntRect bounds = GetClippedBoundingBox(aView, aGeometry);
-  aView->AddItem(this, bounds, Move(aGeometry));
+  aView->AddItem(this, bounds, std::move(aGeometry));
 }
 
 IntRect
@@ -128,7 +129,7 @@ LayerMLGPU::IsContentOpaque()
 void
 LayerMLGPU::SetRenderRegion(LayerIntRegion&& aRegion)
 {
-  mRenderRegion = Move(aRegion);
+  mRenderRegion = std::move(aRegion);
 }
 
 void

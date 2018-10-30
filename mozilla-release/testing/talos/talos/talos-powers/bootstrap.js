@@ -7,6 +7,8 @@ ChromeUtils.defineModuleGetter(this, "Services",
   "resource://gre/modules/Services.jsm");
 ChromeUtils.defineModuleGetter(this, "OS",
   "resource://gre/modules/osfile.jsm");
+ChromeUtils.defineModuleGetter(this, "BrowserWindowTracker",
+  "resource:///modules/BrowserWindowTracker.jsm");
 
 Cu.importGlobalProperties(["TextEncoder"]);
 
@@ -212,22 +214,38 @@ TalosPowersService.prototype = {
     }
   },
 
-  forceQuit(messageData) {
+  async forceQuit(messageData) {
     if (messageData && messageData.waitForSafeBrowsing) {
       let SafeBrowsing = ChromeUtils.import("resource://gre/modules/SafeBrowsing.jsm", {}).SafeBrowsing;
 
-      let whenDone = () => {
-        this.forceQuit();
-      };
-      SafeBrowsing.addMozEntriesFinishedPromise.then(whenDone, whenDone);
       // Speed things up in case nobody else called this:
       SafeBrowsing.init();
-      return;
+
+      try {
+        await SafeBrowsing.addMozEntriesFinishedPromise;
+      } catch (e) {
+        // We don't care if things go wrong here - let's just shut down.
+      }
     }
 
-    let enumerator = Services.wm.getEnumerator(null);
-    while (enumerator.hasMoreElements()) {
-      let domWindow = enumerator.getNext();
+    // Check to see if the top-most browser window still needs to fire its
+    // idle tasks notification. If so, we'll wait for it before shutting
+    // down, since some caching that can influence future runs in this profile
+    // keys off of that notification.
+    let topWin = BrowserWindowTracker.getTopWindow();
+    if (topWin &&
+        topWin.gBrowserInit &&
+        !topWin.gBrowserInit.idleTasksFinished) {
+      await new Promise(resolve => {
+        let obs = (subject, topic, data) => {
+          Services.obs.removeObserver(obs, "browser-idle-startup-tasks-finished");
+          resolve();
+        };
+        Services.obs.addObserver(obs, "browser-idle-startup-tasks-finished");
+      });
+    }
+
+    for (let domWindow of Services.wm.getEnumerator(null)) {
       domWindow.close();
     }
 
@@ -280,17 +298,13 @@ TalosPowersService.prototype = {
 
     // arg: ignored. return: handle (number) for use with stopFrameTimeRecording
     startFrameTimeRecording(arg, callback, win) {
-      var rv = win.QueryInterface(Ci.nsIInterfaceRequestor)
-                  .getInterface(Ci.nsIDOMWindowUtils)
-                  .startFrameTimeRecording();
+      var rv = win.windowUtils.startFrameTimeRecording();
       callback(rv);
     },
 
     // arg: handle from startFrameTimeRecording. return: array with composition intervals
     stopFrameTimeRecording(arg, callback, win) {
-      var rv = win.QueryInterface(Ci.nsIInterfaceRequestor)
-                  .getInterface(Ci.nsIDOMWindowUtils)
-                  .stopFrameTimeRecording(arg);
+      var rv = win.windowUtils.stopFrameTimeRecording(arg);
       callback(rv);
     },
 
@@ -305,6 +319,14 @@ TalosPowersService.prototype = {
       let codeCoverage = Cc["@mozilla.org/tools/code-coverage;1"].
                          getService(Ci.nsICodeCoverage);
       codeCoverage.resetCounters();
+      callback();
+    },
+
+    dumpAboutSupport(arg, callback, win) {
+      ChromeUtils.import("resource://gre/modules/Troubleshoot.jsm");
+      Troubleshoot.snapshot(function(snapshot) {
+        dump("about:support\t" + JSON.stringify(snapshot));
+      });
       callback();
     },
   },

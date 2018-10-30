@@ -2,6 +2,16 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
 
+const ADDONS = {
+  test_bootstrap1_1: {
+    "install.rdf": {
+      "id": "bootstrap1@tests.mozilla.org",
+      "name": "Test Bootstrap 1",
+    },
+    "bootstrap.js": BOOTSTRAP_MONITOR_BOOTSTRAP_JS,
+  },
+};
+
 add_task(async function setup() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9.2");
   await promiseStartupManager();
@@ -14,7 +24,7 @@ add_task(async function() {
 
   await OS.File.makeDir(trashDir, {
     from: profileDir,
-    ignoreExisting: true
+    ignoreExisting: true,
   });
 
   let trashDirExists = await OS.File.exists(trashDir);
@@ -34,13 +44,13 @@ add_task(async function() {
         AddonManager.removeInstallListener(listener);
         ok(true, "extension installation should not have failed");
         resolve();
-      }
+      },
     };
 
     AddonManager.addInstallListener(listener);
   });
 
-  await promiseInstallAllFiles([do_get_addon("test_bootstrap1_1")]);
+  await AddonTestUtils.promiseInstallXPI(ADDONS.test_bootstrap1_1);
 
   // The testFile should still exist at this point because we have not
   // yet closed the file handle and as a result, Windows cannot remove it.

@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 
 services = []
+
+
 def service(name, iface, contractid):
     """Define a convenient service getter"""
     services.append((name, iface, contractid))
+
 
 service('ChromeRegistryService', 'nsIChromeRegistry',
         "@mozilla.org/chrome/chrome-registry;1")
 service('ToolkitChromeRegistryService', 'nsIToolkitChromeRegistry',
         "@mozilla.org/chrome/chrome-registry;1")
 service('XULChromeRegistryService', 'nsIXULChromeRegistry',
-        "@mozilla.org/chrome/chrome-registry;1")
-service('XULOverlayProviderService', 'nsIXULOverlayProvider',
         "@mozilla.org/chrome/chrome-registry;1")
 service('IOService', 'nsIIOService',
         "@mozilla.org/network/io-service;1")
@@ -43,6 +44,8 @@ service('ActivityDistributor', 'nsIHttpActivityDistributor',
         "@mozilla.org/network/http-activity-distributor;1")
 service('HistoryService', 'mozilla::IHistory',
         "@mozilla.org/browser/history;1")
+service('ThirdPartyUtil', 'mozIThirdPartyUtil',
+        "@mozilla.org/thirdpartyutil;1")
 
 # The definition file needs access to the definitions of the particular
 # interfaces. If you add a new interface here, make sure the necessary includes
@@ -50,6 +53,7 @@ service('HistoryService', 'mozilla::IHistory',
 CPP_INCLUDES = """
 #include "mozilla/Likely.h"
 #include "mozilla/Services.h"
+#include "mozIThirdPartyUtil.h"
 #include "nsComponentManager.h"
 #include "nsIObserverService.h"
 #include "nsNetCID.h"
@@ -60,7 +64,6 @@ CPP_INCLUDES = """
 #include "nsIChromeRegistry.h"
 #include "nsIStringBundle.h"
 #include "nsIToolkitChromeRegistry.h"
-#include "nsIXULOverlayProvider.h"
 #include "IHistory.h"
 #include "nsIXPConnect.h"
 #include "nsIPermissionManager.h"
@@ -83,6 +86,7 @@ CPP_INCLUDES = """
 # service getters in both rust and C++ code.
 #
 # XXX(nika): would it be a good idea to unify Services.jsm into here too?
+
 
 def services_h(output):
     output.write("""\
@@ -130,9 +134,9 @@ Get%(name)s()
 } // namespace mozilla
 #endif // defined(MOZILLA_INTERNAL_API)
 """ % {
-    'name': name,
-    'type': iface,
-})
+            'name': name,
+            'type': iface,
+        })
 
     output.write("#endif // !defined(mozilla_Services_h)\n")
 
@@ -167,10 +171,10 @@ XPCOMService_Get%(name)s()
 }
 } // extern "C"
 """ % {
-    'name': name,
-    'type': iface,
-    'contractid': contractid,
-})
+            'name': name,
+            'type': iface,
+            'contractid': contractid,
+        })
 
     output.write("""
 /**
@@ -208,6 +212,6 @@ pub fn get_%(name)s() -> Option<RefPtr<::interfaces::%(type)s>> {
     unsafe { RefPtr::from_raw_dont_addref(XPCOMService_Get%(name)s()) }
 }
 """ % {
-    'name': name,
-    'type': iface,
-})
+            'name': name,
+            'type': iface,
+        })

@@ -8,7 +8,7 @@ ac_add_options --with-branding=mobile/android/branding/ghostery-alpha
 
 # Build Firefox for Android Artifact Mode:
 ac_add_options --enable-application=mobile/android
-#ac_add_options --target=i386-linux-android
+#ac_add_options --target=i686-linux-android
 ac_add_options --target=arm-linux-androideabi
 ac_add_options --enable-artifact-builds
 

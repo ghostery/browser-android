@@ -8,6 +8,7 @@
 #define GFX_FRAMEMETRICS_H
 
 #include <stdint.h>                     // for uint8_t, uint32_t, uint64_t
+#include <map>
 #include "Units.h"                      // for CSSRect, CSSPixel, etc
 #include "mozilla/DefineEnum.h"         // for MOZ_DEFINE_ENUM
 #include "mozilla/HashFunctions.h"      // for HashGeneric
@@ -196,12 +197,25 @@ public:
     return mCompositionBounds.Size() / GetZoom();
   }
 
-  CSSRect CalculateCompositedRectInCssPixels() const
+  /*
+   * Calculate the composition bounds of this frame in the CSS pixels of
+   * the content surrounding the scroll frame. (This can be thought of as
+   * "parent CSS" pixels).
+   * Note that it does not make to ask for the composition bounds in the
+   * CSS pixels of the scrolled content (that is, regular CSS pixels),
+   * because the origin of the composition bounds is not meaningful in that
+   * coordinate space. (The size is, use CalculateCompositedSizeInCssPixels()
+   * for that.)
+   */
+  CSSRect CalculateCompositionBoundsInCssPixelsOfSurroundingContent() const
   {
     if (GetZoom() == CSSToParentLayerScale2D(0, 0)) {
       return CSSRect();  // avoid division by zero
     }
-    return mCompositionBounds / GetZoom();
+    // The CSS pixels of the scrolled content and the CSS pixels of the
+    // surrounding content only differ if the scrolled content is rendered
+    // at a higher resolution, and the difference is the resolution.
+    return mCompositionBounds / GetZoom() * CSSToCSSScale{mPresShellResolution};
   }
 
   CSSSize CalculateBoundedCompositedSizeInCssPixels() const
@@ -467,6 +481,11 @@ public:
     return mViewport;
   }
 
+  CSSRect GetVisualViewport() const
+  {
+    return CSSRect(mScrollOffset, CalculateCompositedSizeInCssPixels());
+  }
+
   void SetExtraResolution(const ScreenToLayerScale2D& aExtraResolution)
   {
     mExtraResolution = aExtraResolution;
@@ -494,7 +513,7 @@ public:
   // contents start at rightside also cause their horizontal scrollbars, if any,
   // initially start at rightside. So we can also learn about the initial side
   // of the horizontal scrollbar for the frame by calling this function.
-  bool IsHorizontalContentRightToLeft() {
+  bool IsHorizontalContentRightToLeft() const {
     return mScrollableRect.x < 0;
   }
 
@@ -511,6 +530,23 @@ public:
   bool IsScrollInfoLayer() const {
     return mIsScrollInfoLayer;
   }
+
+  // Determine if the visual viewport is outside of the layout viewport and
+  // adjust the x,y-offset in mViewport accordingly. This is necessary to
+  // allow APZ to async-scroll the layout viewport.
+  //
+  // This is a no-op if mIsRootContent is false.
+  void RecalculateViewportOffset();
+
+  // Helper function for RecalculateViewportOffset(). Exposed so that
+  // APZC can perform the operation on other copies of the layout
+  // and visual viewport rects (e.g. the "effective" ones used to implement
+  // the frame delay).
+  // Modifies |aLayoutViewport| to continue enclosing |aVisualViewport|
+  // if possible.
+  static void KeepLayoutViewportEnclosingVisualViewport(
+      const CSSRect& aVisualViewport,
+      CSSRect& aLayoutViewport);
 
 private:
   // A unique ID assigned to each scrollable frame.
@@ -875,7 +911,7 @@ public:
   const FrameMetrics& GetMetrics() const { return mMetrics; }
 
   void SetSnapInfo(ScrollSnapInfo&& aSnapInfo) {
-    mSnapInfo = Move(aSnapInfo);
+    mSnapInfo = std::move(aSnapInfo);
   }
   const ScrollSnapInfo& GetSnapInfo() const { return mSnapInfo; }
 
@@ -1233,6 +1269,8 @@ struct ZoomConstraints {
 
 
 typedef Maybe<ZoomConstraints> MaybeZoomConstraints;
+
+typedef std::map<FrameMetrics::ViewID,ScrollUpdateInfo> ScrollUpdatesMap;
 
 } // namespace layers
 } // namespace mozilla

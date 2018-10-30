@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import atexit
 import re
 import yaml
 import itertools
@@ -9,6 +10,7 @@ import string
 import shared_telemetry_utils as utils
 
 from shared_telemetry_utils import ParserError
+atexit.register(ParserError.exit_func)
 
 MAX_CATEGORY_NAME_LENGTH = 30
 MAX_METHOD_NAME_LENGTH = 20
@@ -121,6 +123,7 @@ def type_check_event_fields(identifier, name, definition):
         'release_channel_collection': AtomicTypeChecker(basestring),
         'expiry_version': AtomicTypeChecker(basestring),
         'extra_keys': DictTypeChecker(basestring, basestring),
+        'products': ListTypeChecker(basestring),
     }
     ALL_FIELDS = REQUIRED_FIELDS.copy()
     ALL_FIELDS.update(OPTIONAL_FIELDS)
@@ -167,14 +170,15 @@ class EventData:
         type_check_event_fields(self.identifier, name, definition)
 
         # Check method & object string patterns.
-        for method in self.methods:
-            string_check(self.identifier, field='methods', value=method,
-                         min_length=1, max_length=MAX_METHOD_NAME_LENGTH,
-                         regex=IDENTIFIER_PATTERN)
-        for obj in self.objects:
-            string_check(self.identifier, field='objects', value=obj,
-                         min_length=1, max_length=MAX_OBJECT_NAME_LENGTH,
-                         regex=IDENTIFIER_PATTERN)
+        if strict_type_checks:
+            for method in self.methods:
+                string_check(self.identifier, field='methods', value=method,
+                             min_length=1, max_length=MAX_METHOD_NAME_LENGTH,
+                             regex=IDENTIFIER_PATTERN)
+            for obj in self.objects:
+                string_check(self.identifier, field='objects', value=obj,
+                             min_length=1, max_length=MAX_OBJECT_NAME_LENGTH,
+                             regex=IDENTIFIER_PATTERN)
 
         # Check release_channel_collection
         rcc_key = 'release_channel_collection'
@@ -190,6 +194,13 @@ class EventData:
             if not utils.is_valid_process_name(proc):
                 ParserError(self.identifier + ': Unknown value in record_in_processes: ' +
                             proc).handle_later()
+
+        # Check products.
+        products = definition.get('products', [])
+        for product in products:
+            if not utils.is_valid_product(product):
+                ParserError(self.identifier + ': Unknown value in products: ' +
+                            product).handle_later()
 
         # Check extra_keys.
         extra_keys = definition.get('extra_keys', {})
@@ -249,6 +260,16 @@ class EventData:
     def record_in_processes_enum(self):
         """Get the non-empty list of flags representing the processes to record data in"""
         return [utils.process_name_to_enum(p) for p in self.record_in_processes]
+
+    @property
+    def products(self):
+        """Get the non-empty list of products to record data on"""
+        return self._definition.get('products', ["all"])
+
+    @property
+    def products_enum(self):
+        """Get the non-empty list of flags representing products to record data on"""
+        return [utils.product_name_to_enum(p) for p in self.products]
 
     @property
     def expiry_version(self):

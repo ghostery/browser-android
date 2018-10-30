@@ -19,7 +19,7 @@ namespace dom {
 JSObject*
 SVGScriptElement::WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return SVGScriptElementBinding::Wrap(aCx, this, aGivenProto);
+  return SVGScriptElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 nsSVGElement::StringInfo SVGScriptElement::sStringInfo[2] =
@@ -32,7 +32,6 @@ nsSVGElement::StringInfo SVGScriptElement::sStringInfo[2] =
 // nsISupports methods
 
 NS_IMPL_ISUPPORTS_INHERITED(SVGScriptElement, SVGScriptElementBase,
-                            nsIDOMNode,
                             nsIScriptLoaderObserver,
                             nsIScriptElement, nsIMutationObserver)
 
@@ -52,11 +51,10 @@ SVGScriptElement::~SVGScriptElement()
 }
 
 //----------------------------------------------------------------------
-// nsIDOMNode methods
+// nsINode methods
 
 nsresult
-SVGScriptElement::Clone(mozilla::dom::NodeInfo *aNodeInfo, nsINode **aResult,
-                        bool aPreallocateChildren) const
+SVGScriptElement::Clone(dom::NodeInfo* aNodeInfo, nsINode** aResult) const
 {
   *aResult = nullptr;
 
@@ -65,7 +63,7 @@ SVGScriptElement::Clone(mozilla::dom::NodeInfo *aNodeInfo, nsINode **aResult,
 
   nsCOMPtr<nsINode> kungFuDeathGrip = it;
   nsresult rv1 = it->Init();
-  nsresult rv2 = const_cast<SVGScriptElement*>(this)->CopyInnerTo(it, aPreallocateChildren);
+  nsresult rv2 = const_cast<SVGScriptElement*>(this)->CopyInnerTo(it);
   NS_ENSURE_SUCCESS(rv1, rv1);
   NS_ENSURE_SUCCESS(rv2, rv2);
 
@@ -169,7 +167,7 @@ SVGScriptElement::FreezeExecutionAttrs(nsIDocument* aOwnerDoc)
           NS_LITERAL_CSTRING("SVG"), OwnerDoc(),
           nsContentUtils::eDOM_PROPERTIES, "ScriptSourceInvalidUri",
           params, ArrayLength(params), nullptr,
-          EmptyString(), GetScriptLineNumber());
+          EmptyString(), GetScriptLineNumber(), GetScriptColumnNumber());
       }
     } else {
       const char16_t* params[] = { isHref ? u"href" : u"xlink:href" };
@@ -178,7 +176,7 @@ SVGScriptElement::FreezeExecutionAttrs(nsIDocument* aOwnerDoc)
         NS_LITERAL_CSTRING("SVG"), OwnerDoc(),
         nsContentUtils::eDOM_PROPERTIES, "ScriptSourceEmpty",
         params, ArrayLength(params), nullptr,
-        EmptyString(), GetScriptLineNumber());
+        EmptyString(), GetScriptLineNumber(), GetScriptColumnNumber());
     }
 
     // At this point mUri will be null for invalid URLs.
@@ -215,12 +213,10 @@ SVGScriptElement::GetStringInfo()
 
 nsresult
 SVGScriptElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                             nsIContent* aBindingParent,
-                             bool aCompileEventHandlers)
+                             nsIContent* aBindingParent)
 {
   nsresult rv = SVGScriptElementBase::BindToTree(aDocument, aParent,
-                                                 aBindingParent,
-                                                 aCompileEventHandlers);
+                                                 aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (aDocument) {

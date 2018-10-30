@@ -243,11 +243,12 @@ this._telemetry.setEventRecordingEnabled("devtools.main", true);
 // telemetry event using:
 // this._telemetry.recordEvent(category, method, object, value, extra) e.g.
 this._telemetry.recordEvent("devtools.main", "open", "tools", null, {
-  entrypoint: "ContextMenu",
-  first_panel: "Inspector",
-  host: "bottom",
-  splitconsole: false,
-  width: 1024
+  "entrypoint": "ContextMenu",
+  "first_panel": "Inspector",
+  "host": "bottom",
+  "splitconsole": false,
+  "width": 1024,
+  "session_id": this.toolbox.sessionId
 });
 
 // If your "extra" properties are in different code paths you will need to
@@ -264,9 +265,10 @@ this._telemetry.addEventProperty(
 // signature of the event and needs to be sent with all properties.
 
 // Create the pending event using
-// this._telemetry.preparePendingEvent(category, method, object, value, expectedPropertyNames) e.g.
+// this._telemetry.preparePendingEvent(category, method, object, value,
+// expectedPropertyNames) e.g.
 this._telemetry.preparePendingEvent("devtools.main", "open", "tools", null,
-  ["entrypoint", "first_panel", "host", "splitconsole", "width"]
+  ["entrypoint", "first_panel", "host", "splitconsole", "width", "session_id"]
 );
 
 // Use the category, method, object, value combinations above to add each
@@ -340,7 +342,7 @@ const { Toolbox } = require("devtools/client/framework/toolbox");
 const URL = "data:text/html;charset=utf8,browser_toolbox_telemetry_close.js";
 const OPTOUT = Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTOUT;
 const { SIDE, BOTTOM } = Toolbox.HostType;
-const DATA = [
+const TELEMETRY_DATA = [
   {
     timestamp: null,
     category: "devtools.main",
@@ -348,7 +350,7 @@ const DATA = [
     object: "tools",
     value: null,
     extra: {
-      host: "side",
+      host: "right",
       width: "1440"
     }
   },
@@ -396,9 +398,9 @@ function checkResults() {
                                                  event[4] === null
   );
 
-  for (let i in DATA) {
+  for (const i in TELEMETRY_DATA) {
     const [ timestamp, category, method, object, value, extra ] = events[i];
-    const expected = DATA[i];
+    const expected = TELEMETRY_DATA[i];
 
     // ignore timestamp
     ok(timestamp > 0, "timestamp is greater than 0");

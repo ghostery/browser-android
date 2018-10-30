@@ -41,7 +41,7 @@ TestBulkActor.prototype = {
       length: length
     }).then(({copyFrom}) => {
       // We'll just echo back the same thing
-      let pipe = new Pipe(true, true, 0, 0, null);
+      const pipe = new Pipe(true, true, 0, 0, null);
       copyTo(pipe.outputStream).then(() => {
         pipe.outputStream.close();
       });
@@ -71,10 +71,10 @@ TestBulkActor.prototype = {
   jsonReply: function({length, copyTo}) {
     Assert.equal(length, really_long().length);
 
-    let outputFile = getTestTempFile("bulk-output", true);
+    const outputFile = getTestTempFile("bulk-output", true);
     outputFile.create(Ci.nsIFile.NORMAL_FILE_TYPE, parseInt("666", 8));
 
-    let output = FileUtils.openSafeFileOutputStream(outputFile);
+    const output = FileUtils.openSafeFileOutputStream(outputFile);
 
     return copyTo(output).then(() => {
       FileUtils.closeSafeFileOutputStream(output);
@@ -93,7 +93,10 @@ TestBulkActor.prototype.requestTypes = {
 };
 
 function add_test_bulk_actor() {
-  DebuggerServer.addGlobalActor(TestBulkActor);
+  DebuggerServer.addGlobalActor({
+    constructorName: "TestBulkActor",
+    constructorFun: TestBulkActor,
+  }, "testBulk");
 }
 
 /** * Reply Handlers ***/
@@ -102,31 +105,31 @@ var replyHandlers = {
 
   json: function(request) {
     // Receive JSON reply from server
-    let replyDeferred = defer();
-    request.on("json-reply", (reply) => {
-      Assert.ok(reply.allDone);
-      replyDeferred.resolve();
+    return new Promise((resolve) => {
+      request.on("json-reply", (reply) => {
+        Assert.ok(reply.allDone);
+        resolve();
+      });
     });
-    return replyDeferred.promise;
   },
 
   bulk: function(request) {
     // Receive bulk data reply from server
-    let replyDeferred = defer();
-    request.on("bulk-reply", ({length, copyTo}) => {
-      Assert.equal(length, really_long().length);
+    return new Promise((resolve) => {
+      request.on("bulk-reply", ({length, copyTo}) => {
+        Assert.equal(length, really_long().length);
 
-      let outputFile = getTestTempFile("bulk-output", true);
-      outputFile.create(Ci.nsIFile.NORMAL_FILE_TYPE, parseInt("666", 8));
+        const outputFile = getTestTempFile("bulk-output", true);
+        outputFile.create(Ci.nsIFile.NORMAL_FILE_TYPE, parseInt("666", 8));
 
-      let output = FileUtils.openSafeFileOutputStream(outputFile);
+        const output = FileUtils.openSafeFileOutputStream(outputFile);
 
-      copyTo(output).then(() => {
-        FileUtils.closeSafeFileOutputStream(output);
-        replyDeferred.resolve(verify_files());
+        copyTo(output).then(() => {
+          FileUtils.closeSafeFileOutputStream(output);
+          resolve(verify_files());
+        });
       });
     });
-    return replyDeferred.promise;
   }
 
 };
@@ -138,16 +141,27 @@ var test_bulk_request_cs = async function(transportFactory, actorType, replyType
   cleanup_files();
   writeTestTempFile("bulk-input", really_long());
 
-  let clientDeferred = defer();
-  let serverDeferred = defer();
-  let bulkCopyDeferred = defer();
+  let clientResolve;
+  const clientDeferred = new Promise((resolve) => {
+    clientResolve = resolve;
+  });
 
-  let transport = await transportFactory();
+  let serverResolve;
+  const serverDeferred = new Promise((resolve) => {
+    serverResolve = resolve;
+  });
 
-  let client = new DebuggerClient(transport);
+  let bulkCopyResolve;
+  const bulkCopyDeferred = new Promise((resolve) => {
+    bulkCopyResolve = resolve;
+  });
+
+  const transport = await transportFactory();
+
+  const client = new DebuggerClient(transport);
   client.connect().then(([app, traits]) => {
     Assert.equal(traits.bulk, true);
-    client.listTabs().then(clientDeferred.resolve);
+    client.listTabs().then(clientResolve);
   });
 
   function bulkSendReadyCallback({copyFrom}) {
@@ -157,13 +171,13 @@ var test_bulk_request_cs = async function(transportFactory, actorType, replyType
     }, input => {
       copyFrom(input).then(() => {
         input.close();
-        bulkCopyDeferred.resolve();
+        bulkCopyResolve();
       });
     });
   }
 
-  clientDeferred.promise.then(response => {
-    let request = client.startBulkRequest({
+  clientDeferred.then(response => {
+    const request = client.startBulkRequest({
       actor: response.testBulk,
       type: actorType,
       length: really_long().length
@@ -181,14 +195,14 @@ var test_bulk_request_cs = async function(transportFactory, actorType, replyType
 
   DebuggerServer.on("connectionchange", type => {
     if (type === "closed") {
-      serverDeferred.resolve();
+      serverResolve();
     }
   });
 
-  return promise.all([
-    clientDeferred.promise,
-    bulkCopyDeferred.promise,
-    serverDeferred.promise
+  return Promise.all([
+    clientDeferred,
+    bulkCopyDeferred,
+    serverDeferred
   ]);
 };
 
@@ -197,19 +211,26 @@ var test_json_request_cs = async function(transportFactory, actorType, replyType
   cleanup_files();
   writeTestTempFile("bulk-input", really_long());
 
-  let clientDeferred = defer();
-  let serverDeferred = defer();
-
-  let transport = await transportFactory();
-
-  let client = new DebuggerClient(transport);
-  client.connect((app, traits) => {
-    Assert.equal(traits.bulk, true);
-    client.listTabs().then(clientDeferred.resolve);
+  let clientResolve;
+  const clientDeferred = new Promise((resolve) => {
+    clientResolve = resolve;
   });
 
-  clientDeferred.promise.then(response => {
-    let request = client.request({
+  let serverResolve;
+  const serverDeferred = new Promise((resolve) => {
+    serverResolve = resolve;
+  });
+
+  const transport = await transportFactory();
+
+  const client = new DebuggerClient(transport);
+  client.connect((app, traits) => {
+    Assert.equal(traits.bulk, true);
+    client.listTabs().then(clientResolve);
+  });
+
+  clientDeferred.then(response => {
+    const request = client.request({
       to: response.testBulk,
       type: actorType
     });
@@ -223,50 +244,49 @@ var test_json_request_cs = async function(transportFactory, actorType, replyType
 
   DebuggerServer.on("connectionchange", type => {
     if (type === "closed") {
-      serverDeferred.resolve();
+      serverResolve();
     }
   });
 
-  return promise.all([
-    clientDeferred.promise,
-    serverDeferred.promise
+  return Promise.all([
+    clientDeferred,
+    serverDeferred
   ]);
 };
 
 /** * Test Utils ***/
 
 function verify_files() {
-  let reallyLong = really_long();
+  const reallyLong = really_long();
 
-  let inputFile = getTestTempFile("bulk-input");
-  let outputFile = getTestTempFile("bulk-output");
+  const inputFile = getTestTempFile("bulk-input");
+  const outputFile = getTestTempFile("bulk-output");
 
   Assert.equal(inputFile.fileSize, reallyLong.length);
   Assert.equal(outputFile.fileSize, reallyLong.length);
 
   // Ensure output file contents actually match
-  let compareDeferred = defer();
-  NetUtil.asyncFetch({
-    uri: NetUtil.newURI(getTestTempFile("bulk-output")),
-    loadUsingSystemPrincipal: true
-  }, input => {
-    let outputData = NetUtil.readInputStreamToString(input, reallyLong.length);
-      // Avoid do_check_eq here so we don't log the contents
-    Assert.ok(outputData === reallyLong);
-    input.close();
-    compareDeferred.resolve();
-  });
-
-  return compareDeferred.promise.then(cleanup_files);
+  return new Promise((resolve) => {
+    NetUtil.asyncFetch({
+      uri: NetUtil.newURI(getTestTempFile("bulk-output")),
+      loadUsingSystemPrincipal: true
+    }, input => {
+      const outputData = NetUtil.readInputStreamToString(input, reallyLong.length);
+        // Avoid do_check_eq here so we don't log the contents
+      Assert.ok(outputData === reallyLong);
+      input.close();
+      resolve();
+    });
+  }).then(cleanup_files);
 }
 
 function cleanup_files() {
-  let inputFile = getTestTempFile("bulk-input", true);
+  const inputFile = getTestTempFile("bulk-input", true);
   if (inputFile.exists()) {
     inputFile.remove(false);
   }
 
-  let outputFile = getTestTempFile("bulk-output", true);
+  const outputFile = getTestTempFile("bulk-output", true);
   if (outputFile.exists()) {
     outputFile.remove(false);
   }

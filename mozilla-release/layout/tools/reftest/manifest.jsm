@@ -189,12 +189,12 @@ function ReadManifest(aURL, aFilter)
                 if (!AddPrefSettings(m[1], m[2], m[3], sandbox, testPrefSettings, refPrefSettings)) {
                     throw "Error in pref value in manifest file " + aURL.spec + " line " + lineNo;
                 }
-            } else if ((m = item.match(/^fuzzy\((\d+)(-\d+)?,(\d+)(-\d+)?\)$/))) {
+            } else if ((m = item.match(/^fuzzy\((\d+)-(\d+),(\d+)-(\d+)\)$/))) {
               cond = false;
               expected_status = EXPECTED_FUZZY;
               fuzzy_delta = ExtractRange(m, 1);
               fuzzy_pixels = ExtractRange(m, 3);
-            } else if ((m = item.match(/^fuzzy-if\((.*?),(\d+)(-\d+)?,(\d+)(-\d+)?\)$/))) {
+            } else if ((m = item.match(/^fuzzy-if\((.*?),(\d+)-(\d+),(\d+)-(\d+)\)$/))) {
               cond = false;
               if (Cu.evalInSandbox("(" + m[1] + ")", sandbox)) {
                 expected_status = EXPECTED_FUZZY;
@@ -322,16 +322,14 @@ function ReadManifest(aURL, aFilter)
             if (g.compareRetainedDisplayLists) {
                 type = TYPE_REFTEST_EQUAL;
 
-                // We expect twice as many assertion failures when running in
-                // styloVsGecko mode because we run each test twice: once in
-                // Stylo mode and once in Gecko mode.
+                // We expect twice as many assertion failures when comparing
+                // tests because we run each test twice.
                 minAsserts *= 2;
                 maxAsserts *= 2;
 
-                // Skip the test if it is expected to fail in both Stylo and
-                // Gecko modes. It would unexpectedly "pass" in styloVsGecko
-                // mode when comparing the two failures, which is not a useful
-                // result.
+                // Skip the test if it is expected to fail in both modes.
+                // It would unexpectedly "pass" in comparison mode mode when
+                // comparing the two failures, which is not a useful result.
                 if (expected_status === EXPECTED_FAIL ||
                     expected_status === EXPECTED_RANDOM) {
                     expected_status = EXPECTED_DEATH;
@@ -482,9 +480,6 @@ let retainedDisplayListsEnabled = prefs.getBoolPref("layout.display-list.retain"
 sandbox.retainedDisplayLists = retainedDisplayListsEnabled && !g.compareRetainedDisplayLists;
 sandbox.compareRetainedDisplayLists = g.compareRetainedDisplayLists;
 
-// TODO(emilio): Remove the remaining reftest expectations that mention stylo.
-sandbox.stylo = true;
-
     sandbox.skiaPdf = false;
 
 #ifdef RELEASE_OR_BETA
@@ -532,7 +527,7 @@ sandbox.stylo = true;
     sandbox.browserIsRemote = g.browserIsRemote;
 
     try {
-        sandbox.asyncPan = g.containingWindow.document.docShell.asyncPanZoomEnabled;
+        sandbox.asyncPan = g.containingWindow.docShell.asyncPanZoomEnabled;
     } catch (e) {
         sandbox.asyncPan = false;
     }
@@ -594,16 +589,10 @@ function AddPrefSettings(aWhere, aPrefName, aPrefValExpression, aSandbox, aTestP
     return true;
 }
 
-function ExtractRange(matches, startIndex, defaultMin = 0) {
-    if (matches[startIndex + 1] === undefined) {
-        return {
-            min: defaultMin,
-            max: Number(matches[startIndex])
-        };
-    }
+function ExtractRange(matches, startIndex) {
     return {
         min: Number(matches[startIndex]),
-        max: Number(matches[startIndex + 1].substring(1))
+        max: Number(matches[startIndex + 1])
     };
 }
 
@@ -672,9 +661,9 @@ function AddTestItem(aTest, aFilter) {
     var globalFilter = aFilter[0];
     var manifestFilter = aFilter[1];
     var invertManifest = aFilter[2];
-    if ((globalFilter && !globalFilter.test(url1.spec)) ||
-        (manifestFilter &&
-         !(invertManifest ^ manifestFilter.test(url1.spec))))
+    if (globalFilter && !globalFilter.test(url1.spec))
+        return;
+    if (manifestFilter && !(invertManifest ^ manifestFilter.test(url1.spec)))
         return;
     if (g.focusFilterMode == FOCUS_FILTER_NEEDS_FOCUS_TESTS &&
         !aTest.needsFocus)
@@ -688,4 +677,10 @@ function AddTestItem(aTest, aFilter) {
     else
         aTest.identifier = url1.spec;
     g.urls.push(aTest);
+    // Periodically log progress to avoid no-output timeout on slow platforms.
+    // No-output timeouts during manifest parsing have been a problem for
+    // jsreftests on Android/debug. Any logging resets the no-output timer,
+    // even debug logging which is normally not displayed.
+    if ((g.urls.length % 5000) == 0)
+        g.logger.debug(g.urls.length + " tests found...");
 }

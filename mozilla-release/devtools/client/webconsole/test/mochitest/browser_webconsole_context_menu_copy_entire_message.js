@@ -17,8 +17,9 @@ const PREF_MESSAGE_TIMESTAMP = "devtools.webconsole.timestampMessages";
 
 const TEST_URI = `data:text/html;charset=utf-8,<script>
   window.logStuff = function () {
-    console.log("simple text message");
+    console.log("simple " +  "text message");
     function wrapper() {
+      console.log(new Error("error object"));
       console.trace();
     }
     wrapper();
@@ -29,13 +30,13 @@ const TEST_URI = `data:text/html;charset=utf-8,<script>
 // different log messages.
 
 add_task(async function() {
-  let observer = new PrefObserver("");
+  const observer = new PrefObserver("");
   let onPrefUpdated = observer.once(PREF_MESSAGE_TIMESTAMP, () => {});
   Services.prefs.setBoolPref(PREF_MESSAGE_TIMESTAMP, true);
   await onPrefUpdated;
 
-  let hud = await openNewTabAndConsole(TEST_URI);
-  hud.jsterm.clearOutput();
+  const hud = await openNewTabAndConsole(TEST_URI);
+  hud.ui.clearOutput();
 
   info("Call the log function defined in the test page");
   await ContentTask.spawn(gBrowser.selectedBrowser, null, () => {
@@ -49,7 +50,7 @@ add_task(async function() {
 
   info("Check copied text for simple log message");
   let lines = clipboardText.split("\n");
-  ok(lines.length, 2, "There are 2 lines in the copied text");
+  is(lines.length, 2, "There are 2 lines in the copied text");
   is(lines[1], "", "The last line is an empty new line");
   ok(LOG_FORMAT_WITH_TIMESTAMP.test(lines[0]),
     "Log line has the right format:\n" + lines[0]);
@@ -61,7 +62,7 @@ add_task(async function() {
 
   info("Check copied text for stack trace message");
   lines = clipboardText.split("\n");
-  ok(lines.length, 4, "There are 4 lines in the copied text");
+  is(lines.length, 4, "There are 4 lines in the copied text");
   is(lines[3], "", "The last line is an empty new line");
   ok(LOG_FORMAT_WITH_TIMESTAMP.test(lines[0]),
     "Log line has the right format:\n" + lines[0]);
@@ -81,7 +82,7 @@ add_task(async function() {
 
   info("Check copied text for simple log message");
   lines = clipboardText.split("\n");
-  ok(lines.length, 2, "There are 2 lines in the copied text");
+  is(lines.length, 2, "There are 2 lines in the copied text");
   is(lines[1], "", "The last line is an empty new line");
   ok(LOG_FORMAT_WITHOUT_TIMESTAMP.test(lines[0]),
     "Log line has the right format:\n" + lines[0]);
@@ -93,12 +94,23 @@ add_task(async function() {
 
   info("Check copied text for stack trace message");
   lines = clipboardText.split("\n");
-  ok(lines.length, 4, "There are 4 lines in the copied text");
+  is(lines.length, 4, "There are 4 lines in the copied text");
   is(lines[3], "", "The last line is an empty new line");
   ok(LOG_FORMAT_WITHOUT_TIMESTAMP.test(lines[0]),
     "Log line has the right format:\n" + lines[0]);
   ok(TRACE_FORMAT.test(lines[1]), "Stacktrace line has the right format:\n" + lines[1]);
   ok(TRACE_FORMAT.test(lines[2]), "Stacktrace line has the right format:\n" + lines[2]);
+
+  info("Test copy menu item for the error message");
+  message = await waitFor(() => findMessage(hud, "Error:"));
+  clipboardText = await copyMessageContent(hud, message);
+  ok(true, "Clipboard text was found and saved");
+  lines = clipboardText.split("\n");
+  is(lines[0], `Error: "error object"`, "Error object first line has expected text");
+  ok(lines[1].startsWith(`\twrapper data:text/html`),
+    "Error stacktrace first line starts with expected value");
+  ok(lines[2].startsWith(`\tlogStuff data:text/html`),
+    "Error stacktrace second line starts with expected value");
 
   observer.destroy();
   Services.prefs.clearUserPref(PREF_MESSAGE_TIMESTAMP);
@@ -109,8 +121,8 @@ add_task(async function() {
  * menu item.
  */
 async function copyMessageContent(hud, message) {
-  let menuPopup = await openContextMenu(hud, message);
-  let copyMenuItem = menuPopup.querySelector("#console-menu-copy");
+  const menuPopup = await openContextMenu(hud, message);
+  const copyMenuItem = menuPopup.querySelector("#console-menu-copy");
   ok(copyMenuItem, "copy menu item is enabled");
 
   let clipboardText;

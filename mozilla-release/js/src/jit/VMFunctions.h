@@ -25,6 +25,12 @@ class GeneratorObject;
 class RegExpObject;
 class TypedArrayObject;
 
+namespace gc {
+
+struct Cell;
+
+}
+
 namespace jit {
 
 enum DataType : uint8_t {
@@ -72,7 +78,9 @@ struct VMFunction
     // Address of the C function.
     void* wrapped;
 
-#ifdef JS_TRACE_LOGGING
+#if defined(JS_JITSPEW) || defined(JS_TRACE_LOGGING)
+    // Informative name of the wrapped function. The name should not be present
+    // in release builds in order to save memory.
     const char* name_;
 #endif
 
@@ -167,7 +175,7 @@ struct VMFunction
         return ((argumentPassedInFloatRegs >> explicitArg) & 1) == 1;
     }
 
-#ifdef JS_TRACE_LOGGING
+#if defined(JS_JITSPEW) || defined(JS_TRACE_LOGGING)
     const char* name() const {
         return name_;
     }
@@ -246,7 +254,7 @@ struct VMFunction
                uint8_t extraValuesToPop = 0, MaybeTailCall expectTailCall = NonTailCall)
       : next(nullptr),
         wrapped(wrapped),
-#ifdef JS_TRACE_LOGGING
+#if defined(JS_JITSPEW) || defined(JS_TRACE_LOGGING)
         name_(name),
 #endif
         argumentRootTypes(argRootTypes),
@@ -263,7 +271,7 @@ struct VMFunction
     VMFunction(const VMFunction& o)
       : next(functions),
         wrapped(o.wrapped),
-#ifdef JS_TRACE_LOGGING
+#if defined(JS_JITSPEW) || defined(JS_TRACE_LOGGING)
         name_(o.name_),
 #endif
         argumentRootTypes(o.argumentRootTypes),
@@ -744,8 +752,8 @@ CreateThis(JSContext* cx, HandleObject callee, HandleObject newTarget, MutableHa
 
 void GetDynamicName(JSContext* cx, JSObject* scopeChain, JSString* str, Value* vp);
 
-void PostWriteBarrier(JSRuntime* rt, JSObject* obj);
-void PostGlobalWriteBarrier(JSRuntime* rt, JSObject* obj);
+void PostWriteBarrier(JSRuntime* rt, js::gc::Cell* cell);
+void PostGlobalWriteBarrier(JSRuntime* rt, GlobalObject* obj);
 
 enum class IndexInBounds { Yes, Maybe };
 
@@ -777,7 +785,7 @@ MOZ_MUST_USE bool
 InterpretResume(JSContext* cx, HandleObject obj, HandleValue val, HandlePropertyName kind,
                 MutableHandleValue rval);
 MOZ_MUST_USE bool
-DebugAfterYield(JSContext* cx, BaselineFrame* frame);
+DebugAfterYield(JSContext* cx, BaselineFrame* frame, jsbytecode* pc, bool* mustReturn);
 MOZ_MUST_USE bool
 GeneratorThrowOrReturn(JSContext* cx, BaselineFrame* frame, Handle<GeneratorObject*> genObj,
                        HandleValue arg, uint32_t resumeKind);
@@ -886,9 +894,6 @@ MOZ_MUST_USE bool
 ThrowRuntimeLexicalError(JSContext* cx, unsigned errorNumber);
 
 MOZ_MUST_USE bool
-ThrowReadOnlyError(JSContext* cx, HandleObject obj, int32_t index);
-
-MOZ_MUST_USE bool
 BaselineThrowUninitializedThis(JSContext* cx, BaselineFrame* frame);
 
 MOZ_MUST_USE bool
@@ -948,7 +953,35 @@ GetPrototypeOf(JSContext* cx, HandleObject target, MutableHandleValue rval);
 void
 CloseIteratorFromIon(JSContext* cx, JSObject* obj);
 
+bool
+DoConcatStringObject(JSContext* cx, HandleValue lhs, HandleValue rhs,
+                     MutableHandleValue res);
+
+// Wrapper for js::TrySkipAwait.
+// If the await operation can be skipped and the resolution value for `val` can
+// be acquired, stored the resolved value to `resolved`.  Otherwise, stores
+// the JS_CANNOT_SKIP_AWAIT magic value to `resolved`.
+MOZ_MUST_USE bool
+TrySkipAwait(JSContext* cx, HandleValue val, MutableHandleValue resolved);
+
+// VMFunctions shared by JITs
+extern const VMFunction SetArrayLengthInfo;
 extern const VMFunction SetObjectElementInfo;
+
+extern const VMFunction StringsEqualInfo;
+extern const VMFunction StringsNotEqualInfo;
+extern const VMFunction ConcatStringsInfo;
+extern const VMFunction StringSplitHelperInfo;
+
+extern const VMFunction ProxyGetPropertyInfo;
+extern const VMFunction ProxyGetPropertyByValueInfo;
+extern const VMFunction ProxySetPropertyInfo;
+extern const VMFunction ProxySetPropertyByValueInfo;
+extern const VMFunction ProxyHasInfo;
+extern const VMFunction ProxyHasOwnInfo;
+
+// TailCall VMFunctions
+extern const VMFunction DoConcatStringObjectInfo;
 
 } // namespace jit
 } // namespace js

@@ -9,7 +9,7 @@ ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/Timer.jsm");
 
-Cu.importGlobalProperties(["Element"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["Element"]);
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   AppConstants: "resource://gre/modules/AppConstants.jsm",
@@ -163,9 +163,9 @@ let InternalFaviconLoader = {
     });
   },
 
-  loadFavicon(browser, principal, uri, requestContextID) {
+  loadFavicon(browser, principal, pageURI, uri, expiration, iconURI) {
     this.ensureInitialized();
-    let win = browser.ownerGlobal;
+    let {ownerGlobal: win, innerWindowID} = browser;
     if (!gFaviconLoadDataMap.has(win)) {
       gFaviconLoadDataMap.set(win, []);
       let unloadHandler = event => {
@@ -179,16 +179,20 @@ let InternalFaviconLoader = {
       win.addEventListener("unload", unloadHandler, true);
     }
 
-    let {innerWindowID, currentURI} = browser;
-
     // First we do the actual setAndFetch call:
     let loadType = PrivateBrowsingUtils.isWindowPrivate(win)
       ? PlacesUtils.favicons.FAVICON_LOAD_PRIVATE
       : PlacesUtils.favicons.FAVICON_LOAD_NON_PRIVATE;
     let callback = this._makeCompletionCallback(win, innerWindowID);
-    let request = PlacesUtils.favicons.setAndFetchFaviconForPage(currentURI, uri, false,
-                                                                 loadType, callback, principal,
-                                                                 requestContextID);
+
+    if (iconURI && iconURI.schemeIs("data")) {
+      expiration = PlacesUtils.toPRTime(expiration);
+      PlacesUtils.favicons.replaceFaviconDataFromDataURL(uri, iconURI.spec,
+                                                         expiration, principal);
+    }
+
+    let request = PlacesUtils.favicons.setAndFetchFaviconForPage(
+      pageURI, uri, false, loadType, callback, principal);
 
     // Now register the result so we can cancel it if/when necessary.
     if (!request) {
@@ -209,8 +213,7 @@ let InternalFaviconLoader = {
 };
 
 var PlacesUIUtils = {
-  LOAD_IN_SIDEBAR_ANNO: "bookmarkProperties/loadInSidebar",
-  DESCRIPTION_ANNO: "bookmarkProperties/description",
+  LAST_USED_FOLDERS_META_KEY: "bookmarks/lastusedfolders",
 
   /**
    * Makes a URI from a spec, and do fixup
@@ -306,15 +309,18 @@ var PlacesUIUtils = {
 
   /**
    * set and fetch a favicon. Can only be used from the parent process.
-   * @param browser   {Browser}   The XUL browser element for which we're fetching a favicon.
-   * @param principal {Principal} The loading principal to use for the fetch.
-   * @param uri       {URI}       The URI to fetch.
+   * @param browser    {Browser}   The XUL browser element for which we're fetching a favicon.
+   * @param principal  {Principal} The loading principal to use for the fetch.
+   * @pram pageURI     {URI}       The page URI associated to this favicon load.
+   * @param uri        {URI}       The URI to fetch.
+   * @param expiration {Number}    An optional expiration time.
+   * @param iconURI    {URI}       An optional data: URI holding the icon's data.
    */
-  loadFavicon(browser, principal, uri, requestContextID) {
+  loadFavicon(browser, principal, pageURI, uri, expiration = 0, iconURI = null) {
     if (gInContentProcess) {
       throw new Error("Can't track loads from within the child process!");
     }
-    InternalFaviconLoader.loadFavicon(browser, principal, uri, requestContextID);
+    InternalFaviconLoader.loadFavicon(browser, principal, pageURI, uri, expiration, iconURI);
   },
 
   /**
@@ -453,6 +459,32 @@ var PlacesUIUtils = {
   },
 
   /**
+   * Sets the character-set for a page. The character set will not be saved
+   * if the window is determined to be a private browsing window.
+   *
+   * @param {string|URL|nsIURI} url The URL of the page to set the charset on.
+   * @param {String} charset character-set value.
+   * @param {window} window The window that the charset is being set from.
+   * @return {Promise}
+   */
+  async setCharsetForPage(url, charset, window) {
+    if (PrivateBrowsingUtils.isWindowPrivate(window)) {
+      return;
+    }
+
+    // UTF-8 is the default. If we are passed the value then set it to null,
+    // to ensure any charset is removed from the database.
+    if (charset.toLowerCase() == "utf-8") {
+      charset = null;
+    }
+
+    await PlacesUtils.history.update({
+      url,
+      annotations: new Map([[PlacesUtils.CHARSET_ANNO, charset]]),
+    });
+  },
+
+  /**
    * Allows opening of javascript/data URI only if the given node is
    * bookmarked (see bug 224521).
    * @param aURINode
@@ -478,38 +510,6 @@ var PlacesUIUtils = {
       return false;
     }
     return true;
-  },
-
-  /**
-   * Get the description associated with a document, as specified in a <META>
-   * element.
-   * @param   doc
-   *          A DOM Document to get a description for
-   * @return A description string if a META element was discovered with a
-   *         "description" or "httpequiv" attribute, empty string otherwise.
-   */
-  getDescriptionFromDocument: function PUIU_getDescriptionFromDocument(doc) {
-    var metaElements = doc.getElementsByTagName("META");
-    for (var i = 0; i < metaElements.length; ++i) {
-      if (metaElements[i].name.toLowerCase() == "description" ||
-          metaElements[i].httpEquiv.toLowerCase() == "description") {
-        return metaElements[i].content;
-      }
-    }
-    return "";
-  },
-
-  /**
-   * Retrieve the description of an item
-   * @param aItemId
-   *        item identifier
-   * @return the description of the given item, or an empty string if it is
-   * not set.
-   */
-  getItemDescription: function PUIU_getItemDescription(aItemId) {
-    if (PlacesUtils.annotations.itemHasAnnotation(aItemId, this.DESCRIPTION_ANNO))
-      return PlacesUtils.annotations.getItemAnnotation(aItemId, this.DESCRIPTION_ANNO);
-    return "";
   },
 
   /**
@@ -604,13 +604,7 @@ var PlacesUIUtils = {
     if (!aItemsToOpen.length)
       return;
 
-    // Prefer the caller window if it's a browser window, otherwise use
-    // the top browser window.
-    var browserWindow = null;
-    browserWindow =
-      aWindow && aWindow.document.documentElement.getAttribute("windowtype") == "navigator:browser" ?
-      aWindow : BrowserWindowTracker.getTopWindow();
-
+    let browserWindow = getBrowserWindow(aWindow);
     var urls = [];
     let skipMarking = browserWindow && PrivateBrowsingUtils.isWindowPrivate(browserWindow);
     for (let item of aItemsToOpen) {
@@ -636,7 +630,7 @@ var PlacesUIUtils = {
                   createInstance(Ci.nsIMutableArray);
       args.appendElement(uriList);
       browserWindow = Services.ww.openWindow(aWindow,
-                                             "chrome://browser/content/browser.xul",
+                                             AppConstants.BROWSER_CHROME_URL,
                                              null, "chrome,dialog=no,all", args);
       return;
     }
@@ -694,8 +688,8 @@ var PlacesUIUtils = {
   },
 
   /**
-   * Loads the node's URL in the appropriate tab or window or as a web
-   * panel given the user's preference specified by modifier keys tracked by a
+   * Loads the node's URL in the appropriate tab or window given the
+   * user's preference specified by modifier keys tracked by a
    * DOM mouse/key event.
    * @param   aNode
    *          An uri result node.
@@ -707,10 +701,16 @@ var PlacesUIUtils = {
   function PUIU_openNodeWithEvent(aNode, aEvent) {
     let window = aEvent.target.ownerGlobal;
 
+    let browserWindow = getBrowserWindow(window);
+
     let where = window.whereToOpenLink(aEvent, false, true);
-    if (where == "current" && this.loadBookmarksInTabs &&
-        PlacesUtils.nodeIsBookmark(aNode) && !aNode.uri.startsWith("javascript:")) {
-      where = "tab";
+    if (this.loadBookmarksInTabs && PlacesUtils.nodeIsBookmark(aNode)) {
+      if (where == "current" && !aNode.uri.startsWith("javascript:")) {
+        where = "tab";
+      }
+      if (where == "tab" && browserWindow.isTabEmpty(browserWindow.gBrowser.selectedTab)) {
+        where = "current";
+      }
     }
 
     this._openNodeIn(aNode, where, window);
@@ -721,8 +721,7 @@ var PlacesUIUtils = {
   },
 
   /**
-   * Loads the node's URL in the appropriate tab or window or as a
-   * web panel.
+   * Loads the node's URL in the appropriate tab or window.
    * see also openUILinkIn
    */
   openNodeIn: function PUIU_openNodeIn(aNode, aWhere, aView, aPrivate) {
@@ -742,22 +741,11 @@ var PlacesUIUtils = {
           this.markPageAsTyped(aNode.uri);
       }
 
-      // Check whether the node is a bookmark which should be opened as
-      // a web panel
-      if (aWhere == "current" && isBookmark) {
-        if (PlacesUtils.annotations
-                       .itemHasAnnotation(aNode.itemId, this.LOAD_IN_SIDEBAR_ANNO)) {
-          let browserWin = BrowserWindowTracker.getTopWindow();
-          if (browserWin) {
-            browserWin.openWebPanel(aNode.title, aNode.uri);
-            return;
-          }
-        }
-      }
-
+      const isJavaScriptURL = aNode.uri.startsWith("javascript:");
       aWindow.openTrustedLinkIn(aNode.uri, aWhere, {
-        allowPopups: aNode.uri.startsWith("javascript:"),
+        allowPopups: isJavaScriptURL,
         inBackground: this.loadBookmarksInBackground,
+        allowInheritPrincipal: isJavaScriptURL && aWhere == "current",
         private: aPrivate,
       });
     }
@@ -855,7 +843,7 @@ var PlacesUIUtils = {
     let parent = {
       itemId: await PlacesUtils.promiseItemId(aFetchInfo.parentGuid),
       bookmarkGuid: aFetchInfo.parentGuid,
-      type: Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER
+      type: Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER,
     };
 
     return Object.freeze({
@@ -883,7 +871,7 @@ var PlacesUIUtils = {
 
       get parent() {
         return parent;
-      }
+      },
     });
   },
 
@@ -943,7 +931,7 @@ var PlacesUIUtils = {
     } else {
       let insertionIndex = await insertionPoint.getIndex();
       itemsCount = items.length;
-      transactions = await getTransactionsForTransferItems(
+      transactions = getTransactionsForTransferItems(
         items, insertionIndex, insertionPoint.guid, !doCopy);
     }
 
@@ -963,10 +951,8 @@ var PlacesUIUtils = {
       // If we're not a tag, then we need to get the ids of the items to select.
       batchingItem = async () => {
         for (let transaction of transactions) {
-          let guid = await transaction.transact();
-          if (guid) {
-            guidsToSelect.push(guid);
-          }
+          let result = await transaction.transact();
+          guidsToSelect = guidsToSelect.concat(result);
         }
       };
     }
@@ -1064,7 +1050,7 @@ var PlacesUIUtils = {
     if (win.top.XULBrowserWindow) {
       win.top.XULBrowserWindow.setOverLink(url, null);
     }
-  }
+  },
 };
 
 // These are lazy getters to avoid importing PlacesUtils immediately.
@@ -1104,7 +1090,7 @@ XPCOMUtils.defineLazyPreferenceGetter(PlacesUIUtils, "openInTabClosesMenu",
  */
 function canMoveUnwrappedNode(unwrappedNode) {
   if ((unwrappedNode.concreteGuid && PlacesUtils.isRootItem(unwrappedNode.concreteGuid)) ||
-      unwrappedNode.id <= 0 || PlacesUtils.isRootItem(unwrappedNode.id)) {
+      (unwrappedNode.guid && PlacesUtils.isRootItem(unwrappedNode.guid))) {
     return false;
   }
 
@@ -1156,8 +1142,8 @@ function getResultForBatching(viewOrElement) {
  *                         copy them.
  * @return {Array} Returns an array of created PlacesTransactions.
  */
-async function getTransactionsForTransferItems(items, insertionIndex,
-                                               insertionParentGuid, doMove) {
+function getTransactionsForTransferItems(items, insertionIndex,
+                                         insertionParentGuid, doMove) {
   let canMove = true;
   for (let item of items) {
     if (!PlacesUIUtils.SUPPORTED_FLAVORS.includes(item.type)) {
@@ -1189,57 +1175,17 @@ async function getTransactionsForTransferItems(items, insertionIndex,
     doMove = false;
   }
 
-  return doMove ? getTransactionsForMove(items, insertionIndex, insertionParentGuid) :
-                  getTransactionsForCopy(items, insertionIndex, insertionParentGuid);
-}
-
-/**
- * Processes a set of transfer items and returns an array of transactions.
- *
- * @param {Array} items A list of unwrapped nodes to get transactions for.
- * @param {Integer} insertionIndex The requested index for insertion.
- * @param {String} insertionParentGuid The guid of the parent folder to insert
- *                                     or move the items to.
- * @return {Array} Returns an array of created PlacesTransactions.
- */
-async function getTransactionsForMove(items, insertionIndex,
-                                      insertionParentGuid) {
-  let transactions = [];
-  let index = insertionIndex;
-
-  for (let item of items) {
-    if (index != -1 && item.itemGuid) {
-      // Note: we use the parent from the existing bookmark as the sidebar
-      // gives us an unwrapped.parent that is actually a query and not the real
-      // parent.
-      let existingBookmark = await PlacesUtils.bookmarks.fetch(item.itemGuid);
-
-      // If we're dropping on the same folder, then we may need to adjust
-      // the index to insert at the correct place.
-      if (existingBookmark && insertionParentGuid == existingBookmark.parentGuid) {
-        if (index > existingBookmark.index) {
-          // If we're dragging down, we need to go one lower to insert at
-          // the real point as moving the element changes the index of
-          // everything below by 1.
-          index--;
-        } else if (index == existingBookmark.index) {
-          // This isn't moving so we skip it.
-          continue;
-        }
-      }
-    }
-
-    transactions.push(PlacesTransactions.Move({
-      guid: item.itemGuid,
-      newIndex: index,
+  if (doMove) {
+    // Move is simple, we pass the transaction a list of GUIDs and where to move
+    // them to.
+    return [PlacesTransactions.Move({
+      guids: items.map(item => item.itemGuid),
       newParentGuid: insertionParentGuid,
-    }));
-
-    if (index != -1 && item.itemGuid) {
-      index++;
-    }
+      newIndex: insertionIndex,
+    })];
   }
-  return transactions;
+
+  return getTransactionsForCopy(items, insertionIndex, insertionParentGuid);
 }
 
 /**
@@ -1251,8 +1197,8 @@ async function getTransactionsForMove(items, insertionIndex,
  *                                     or move the items to.
  * @return {Array} Returns an array of created PlacesTransactions.
  */
-async function getTransactionsForCopy(items, insertionIndex,
-                                      insertionParentGuid) {
+function getTransactionsForCopy(items, insertionIndex,
+                                insertionParentGuid) {
   let transactions = [];
   let index = insertionIndex;
 
@@ -1299,4 +1245,11 @@ async function getTransactionsForCopy(items, insertionIndex,
     }
   }
   return transactions;
+}
+
+function getBrowserWindow(aWindow) {
+  // Prefer the caller window if it's a browser window, otherwise use
+  // the top browser window.
+  return aWindow && aWindow.document.documentElement.getAttribute("windowtype") == "navigator:browser" ?
+    aWindow : BrowserWindowTracker.getTopWindow();
 }

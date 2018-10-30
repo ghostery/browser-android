@@ -15,8 +15,6 @@
 #include "nsThreadUtils.h"
 #include "nsHttpTransaction.h"
 #include "NullHttpTransaction.h"
-#include "nsISSLStatusProvider.h"
-#include "nsISSLStatus.h"
 #include "nsISSLSocketControl.h"
 #include "nsIWellKnownOpportunisticUtils.h"
 
@@ -46,6 +44,12 @@ SchemeIsHTTPS(const nsACString &originScheme, bool &outIsHTTPS)
   return NS_OK;
 }
 
+bool
+AltSvcMapping::AcceptableProxy(nsProxyInfo *proxyInfo)
+{
+  return !proxyInfo || proxyInfo->IsDirect() || proxyInfo->IsSOCKS();
+}
+
 void
 AltSvcMapping::ProcessHeader(const nsCString &buf, const nsCString &originScheme,
                              const nsCString &originHost, int32_t originPort,
@@ -59,7 +63,7 @@ AltSvcMapping::ProcessHeader(const nsCString &buf, const nsCString &originScheme
     return;
   }
 
-  if (proxyInfo && !proxyInfo->IsDirect()) {
+  if (!AcceptableProxy(proxyInfo)) {
     LOG(("AltSvcMapping::ProcessHeader ignoring due to proxy\n"));
     return;
   }
@@ -485,9 +489,9 @@ private:
     }
 
     // insist on >= http/2
-    uint32_t version = mConnection->Version();
-    LOG(("AltSvcTransaction::MaybeValidate() %p version %d\n", this, version));
-    if (version != HTTP_VERSION_2) {
+    HttpVersion version = mConnection->Version();
+    LOG(("AltSvcTransaction::MaybeValidate() %p version %d\n", this, static_cast<int32_t>(version)));
+    if (version != HttpVersion::v2_0) {
       LOG(("AltSvcTransaction::MaybeValidate %p Failed due to protocol version", this));
       return;
     }
@@ -731,15 +735,15 @@ TransactionObserver::Complete(nsHttpTransaction *aTrans, nsresult reason)
   if (!conn) {
     return;
   }
-  uint32_t version = conn->Version();
+  HttpVersion version = conn->Version();
   mVersionOK = (((reason == NS_BASE_STREAM_CLOSED) || (reason == NS_OK)) &&
-                conn->Version() == HTTP_VERSION_2);
+                conn->Version() == HttpVersion::v2_0);
 
   nsCOMPtr<nsISupports> secInfo;
   conn->GetSecurityInfo(getter_AddRefs(secInfo));
   nsCOMPtr<nsISSLSocketControl> socketControl = do_QueryInterface(secInfo);
   LOG(("TransactionObserver::Complete version %u socketControl %p\n",
-       version, socketControl.get()));
+       static_cast<int32_t>(version), socketControl.get()));
   if (!socketControl) {
     return;
   }
@@ -765,13 +769,18 @@ TransactionObserver::OnDataAvailable(nsIRequest *aRequest, nsISupports *aContext
                                      nsIInputStream *aStream, uint64_t aOffset, uint32_t aCount)
 {
   MOZ_ASSERT(NS_IsMainThread());
-  uint64_t newLen = aCount + mWKResponse.Length();
+  uint32_t oldLen = mWKResponse.Length();
+  uint64_t newLen = aCount + oldLen;
   if (newLen < MAX_WK) {
-    char *startByte =  reinterpret_cast<char *>(mWKResponse.BeginWriting()) + mWKResponse.Length();
+    nsresult rv;
+    auto handle = mWKResponse.BulkWrite(newLen, oldLen, false, rv);
+    if (NS_FAILED(rv)) {
+      return rv;
+    }
     uint32_t amtRead;
-    if (NS_SUCCEEDED(aStream->Read(startByte, aCount, &amtRead))) {
-      MOZ_ASSERT(mWKResponse.Length() + amtRead < MAX_WK);
-      mWKResponse.SetLength(mWKResponse.Length() + amtRead);
+    if (NS_SUCCEEDED(aStream->Read(handle.Elements() + oldLen, aCount, &amtRead))) {
+      MOZ_ASSERT(oldLen + amtRead <= newLen);
+      handle.Finish(oldLen + amtRead, false);
       LOG(("TransactionObserver onDataAvailable %p read %d of .wk [%d]\n",
            this, amtRead, mWKResponse.Length()));
     } else {

@@ -198,11 +198,6 @@ var ignoreFunctions = {
     // FIXME!
     "NS_DebugBreak": true,
 
-    // These are a little overzealous -- these destructors *can* GC if they end
-    // up wrapping a pending exception. See bug 898815 for the heavyweight fix.
-    "void js::AutoCompartment::~AutoCompartment(int32)" : true,
-    "void JSAutoCompartment::~JSAutoCompartment(int32)" : true,
-
     // Similar to heap snapshot mock classes, and GTests below. This posts a
     // synchronous runnable when a GTest fails, and we are pretty sure that the
     // particular runnable it posts can't even GC, but the analysis isn't
@@ -322,19 +317,10 @@ function extraRootedGCThings()
 function extraRootedPointers()
 {
     return [
-        'ModuleValidator',
-        'JSErrorResult',
-        'WrappableJSErrorResult',
-
         // These are not actually rooted, but are only used in the context of
         // AutoKeepAtoms.
         'js::frontend::TokenStream',
         'js::frontend::TokenStreamAnyChars',
-
-        'mozilla::ErrorResult',
-        'mozilla::IgnoredErrorResult',
-        'mozilla::IgnoreErrors',
-        'mozilla::dom::binding_detail::FastErrorResult',
     ];
 }
 
@@ -345,7 +331,7 @@ function isRootedGCPointerTypeName(name)
     if (name.startsWith('MaybeRooted<'))
         return /\(js::AllowGC\)1u>::RootType/.test(name);
 
-    return name.startsWith('Rooted') || name.startsWith('PersistentRooted');
+    return false;
 }
 
 function isUnsafeStorage(typeName)
@@ -402,6 +388,10 @@ function isOverridableField(initialCSU, csu, field)
     if (field == "GetIsMainThread")
         return false;
     if (field == "GetThreadFromPRThread")
+        return false;
+    if (field == "ConstructUbiNode")
+        return false;
+    if (initialCSU == 'nsIXPCScriptable' && field == "GetScriptableFlags")
         return false;
     if (initialCSU == 'nsIXPConnectJSObjectHolder' && field == 'GetJSObject')
         return false;

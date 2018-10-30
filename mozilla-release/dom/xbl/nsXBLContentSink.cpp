@@ -9,7 +9,6 @@
 #include "nsXBLContentSink.h"
 #include "nsIDocument.h"
 #include "nsBindingManager.h"
-#include "nsIDOMNode.h"
 #include "nsGkAtoms.h"
 #include "nsNameSpaceManager.h"
 #include "nsIURI.h"
@@ -170,7 +169,7 @@ nsXBLContentSink::ReportError(const char16_t* aErrorText,
                               nsIScriptError *aError,
                               bool *_retval)
 {
-  NS_PRECONDITION(aError && aSourceText && aErrorText, "Check arguments!!!");
+  MOZ_ASSERT(aError && aSourceText && aErrorText, "Check arguments!!!");
 
   // XXX FIXME This function overrides and calls on
   // nsXMLContentSink::ReportError, and probably should die.  See bug 347826.
@@ -248,10 +247,11 @@ NS_IMETHODIMP
 nsXBLContentSink::HandleStartElement(const char16_t *aName,
                                      const char16_t **aAtts,
                                      uint32_t aAttsCount,
-                                     uint32_t aLineNumber)
+                                     uint32_t aLineNumber,
+                                     uint32_t aColumnNumber)
 {
   nsresult rv = nsXMLContentSink::HandleStartElement(aName, aAtts, aAttsCount,
-                                                     aLineNumber);
+                                                     aLineNumber, aColumnNumber);
   if (NS_FAILED(rv))
     return rv;
 
@@ -851,7 +851,8 @@ nsXBLContentSink::ConstructParameter(const char16_t **aAtts)
 
 nsresult
 nsXBLContentSink::CreateElement(const char16_t** aAtts, uint32_t aAttsCount,
-                                mozilla::dom::NodeInfo* aNodeInfo, uint32_t aLineNumber,
+                                mozilla::dom::NodeInfo* aNodeInfo,
+                                uint32_t aLineNumber, uint32_t aColumnNumber,
                                 nsIContent** aResult, bool* aAppendContent,
                                 FromParser aFromParser)
 {
@@ -859,7 +860,7 @@ nsXBLContentSink::CreateElement(const char16_t** aAtts, uint32_t aAttsCount,
   if (!aNodeInfo->NamespaceEquals(kNameSpaceID_XUL)) {
 #endif
     return nsXMLContentSink::CreateElement(aAtts, aAttsCount, aNodeInfo,
-                                           aLineNumber, aResult,
+                                           aLineNumber, aColumnNumber, aResult,
                                            aAppendContent, aFromParser);
 #ifdef MOZ_XUL
   }

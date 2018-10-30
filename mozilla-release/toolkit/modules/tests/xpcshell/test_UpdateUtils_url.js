@@ -56,7 +56,7 @@ function getServicePack() {
       {wServicePackMinor: WORD},
       {wSuiteMask: WORD},
       {wProductType: BYTE},
-      {wReserved: BYTE}
+      {wReserved: BYTE},
       ]);
 
   let kernel32 = ctypes.open("kernel32");
@@ -102,7 +102,7 @@ function getProcArchitecture() {
       {dwProcessorType: DWORD},
       {dwAllocationGranularity: DWORD},
       {wProcessorLevel: WORD},
-      {wProcessorRevision: WORD}
+      {wProcessorRevision: WORD},
       ]);
 
   let kernel32 = ctypes.open("kernel32");
@@ -201,17 +201,7 @@ add_task(async function test_build_target() {
     do_throw("nsIXULAppInfo:XPCOMABI not defined\n");
   }
 
-  if (AppConstants.platform == "macosx") {
-    // Mac universal build should report a different ABI than either macppc
-    // or mactel. This is necessary since nsUpdateService.js will set the ABI to
-    // Universal-gcc3 for Mac universal builds.
-    let macutils = Cc["@mozilla.org/xpcom/mac-utils;1"].
-                   getService(Ci.nsIMacUtils);
-
-    if (macutils.isUniversalBinary) {
-      abi += "-u-" + macutils.architecturesInBinary;
-    }
-  } else if (AppConstants.platform == "win") {
+  if (AppConstants.platform == "win") {
     // Windows build should report the CPU architecture that it's running on.
     abi += "-" + getProcArchitecture();
   }

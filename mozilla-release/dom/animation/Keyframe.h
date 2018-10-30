@@ -10,15 +10,13 @@
 #include "nsCSSPropertyID.h"
 #include "nsCSSValue.h"
 #include "nsTArray.h"
+#include "mozilla/dom/BaseKeyframeTypesBinding.h" // CompositeOperationOrAuto
 #include "mozilla/ComputedTimingFunction.h"
 #include "mozilla/Maybe.h"
 #include "mozilla/RefPtr.h"
 
 struct RawServoDeclarationBlock;
 namespace mozilla {
-namespace dom {
-enum class CompositeOperation : uint8_t;
-}
 
 /**
  * A property-value pair specified on a keyframe.
@@ -29,7 +27,7 @@ struct PropertyValuePair
     : mProperty(aProperty) { }
   PropertyValuePair(nsCSSPropertyID aProperty,
                     RefPtr<RawServoDeclarationBlock>&& aValue)
-    : mProperty(aProperty), mServoDeclarationBlock(Move(aValue))
+    : mProperty(aProperty), mServoDeclarationBlock(std::move(aValue))
   {
     MOZ_ASSERT(mServoDeclarationBlock, "Should be valid property value");
   }
@@ -70,7 +68,7 @@ struct Keyframe
   Keyframe(const Keyframe& aOther) = default;
   Keyframe(Keyframe&& aOther)
   {
-    *this = Move(aOther);
+    *this = std::move(aOther);
   }
 
   Keyframe& operator=(const Keyframe& aOther) = default;
@@ -78,9 +76,9 @@ struct Keyframe
   {
     mOffset         = aOther.mOffset;
     mComputedOffset = aOther.mComputedOffset;
-    mTimingFunction = Move(aOther.mTimingFunction);
-    mComposite      = Move(aOther.mComposite);
-    mPropertyValues = Move(aOther.mPropertyValues);
+    mTimingFunction = std::move(aOther.mTimingFunction);
+    mComposite      = std::move(aOther.mComposite);
+    mPropertyValues = std::move(aOther.mPropertyValues);
     return *this;
   }
 
@@ -89,7 +87,8 @@ struct Keyframe
   double                        mComputedOffset = kComputedOffsetNotSet;
   Maybe<ComputedTimingFunction> mTimingFunction; // Nothing() here means
                                                  // "linear"
-  Maybe<dom::CompositeOperation> mComposite;
+  dom::CompositeOperationOrAuto mComposite =
+                                  dom::CompositeOperationOrAuto::Auto;
   nsTArray<PropertyValuePair>   mPropertyValues;
 };
 

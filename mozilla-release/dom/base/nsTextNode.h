@@ -13,7 +13,6 @@
 
 #include "mozilla/Attributes.h"
 #include "mozilla/dom/Text.h"
-#include "nsIDOMNode.h"
 #include "nsDebug.h"
 
 class nsNodeInfoManager;
@@ -21,8 +20,7 @@ class nsNodeInfoManager;
 /**
  * Class used to implement DOM text nodes
  */
-class nsTextNode : public mozilla::dom::Text,
-                   public nsIDOMNode
+class nsTextNode : public mozilla::dom::Text
 {
 private:
   void Init()
@@ -55,15 +53,12 @@ public:
                   bool aCloneText) const override;
 
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent,
-                              bool aCompileEventHandlers) override;
+                              nsIContent* aBindingParent) override;
   virtual void UnbindFromTree(bool aDeep = true,
                               bool aNullParent = true) override;
 
   nsresult AppendTextForNormalize(const char16_t* aBuffer, uint32_t aLength,
                                   bool aNotify, nsIContent* aNextSibling);
-
-  virtual nsIDOMNode* AsDOMNode() override { return this; }
 
   // Need to have a copy here because including nsDocument.h in this file will
   // fail to build on Windows.

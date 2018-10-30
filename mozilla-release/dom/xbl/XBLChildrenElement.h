@@ -7,7 +7,6 @@
 #ifndef nsXBLChildrenElement_h___
 #define nsXBLChildrenElement_h___
 
-#include "nsIDOMNode.h"
 #include "nsINodeList.h"
 #include "nsBindingManager.h"
 #include "mozilla/dom/nsXMLElement.h"
@@ -30,13 +29,10 @@ public:
   }
 
   // nsISupports
-  NS_DECL_ISUPPORTS_INHERITED
+  NS_INLINE_DECL_REFCOUNTING_INHERITED(XBLChildrenElement, nsXMLElement)
 
   // nsINode interface methods
-  virtual nsresult Clone(mozilla::dom::NodeInfo* aNodeInfo, nsINode** aResult,
-                         bool aPreallocateChildren) const override;
-
-  virtual nsIDOMNode* AsDOMNode() override { return this; }
+  virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   void AppendInsertedChild(nsIContent* aChild, bool aNotify)
   {
@@ -77,7 +73,9 @@ public:
   void ClearInsertedChildren()
   {
     for (auto* child : mInsertedChildren) {
-      child->SetXBLInsertionPoint(nullptr);
+      if (child->GetXBLInsertionPoint() == this) {
+        child->SetXBLInsertionPoint(nullptr);
+      }
     }
     mInsertedChildren.Clear();
 

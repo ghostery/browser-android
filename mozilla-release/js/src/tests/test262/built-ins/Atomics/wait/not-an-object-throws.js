@@ -11,27 +11,41 @@ info: |
   1.Let buffer be ? ValidateSharedIntegerTypedArray(typedArray, true).
     ...
     2. if Type(typedArray) is not Object, throw a TypeError exception
-features: [ Atomics, Symbol ]
+features: [Atomics, Symbol]
 ---*/
 
 var poisoned = {
   valueOf: function() {
-    throw new Test262Error("should not evaluate this code");
+    throw new Test262Error('should not evaluate this code');
   }
 };
 
-assert.throws(TypeError, function() { Atomics.wait(null,poisoned,poisoned,poisoned) }, 'null');
+assert.throws(TypeError, function() {
+  Atomics.wait(null, poisoned, poisoned, poisoned);
+}, '`Atomics.wait(null, poisoned, poisoned, poisoned)` throws TypeError');
 
-assert.throws(TypeError, function() { Atomics.wait(undefined,poisoned,poisoned,poisoned) }, 'undefined');
+assert.throws(TypeError, function() {
+  Atomics.wait(undefined, poisoned, poisoned, poisoned);
+}, '`Atomics.wait(undefined, poisoned, poisoned, poisoned)` throws TypeError');
 
-assert.throws(TypeError, function() { Atomics.wait(true,poisoned,poisoned,poisoned) }, 'true');
+assert.throws(TypeError, function() {
+  Atomics.wait(true, poisoned, poisoned, poisoned);
+}, '`Atomics.wait(true, poisoned, poisoned, poisoned)` throws TypeError');
 
-assert.throws(TypeError, function() { Atomics.wait(false,poisoned,poisoned,poisoned) }, 'false');
+assert.throws(TypeError, function() {
+  Atomics.wait(false, poisoned, poisoned, poisoned);
+}, '`Atomics.wait(false, poisoned, poisoned, poisoned)` throws TypeError');
 
-assert.throws(TypeError, function() { Atomics.wait('***string***',poisoned,poisoned,poisoned) }, 'String');
+assert.throws(TypeError, function() {
+  Atomics.wait('***string***', poisoned, poisoned, poisoned);
+}, '`Atomics.wait(\'***string***\', poisoned, poisoned, poisoned)` throws TypeError');
 
-assert.throws(TypeError, function() { Atomics.wait(Number.NEGATIVE_INFINITY,poisoned,poisoned,poisoned) }, '-Infinity');
+assert.throws(TypeError, function() {
+  Atomics.wait(Number.NEGATIVE_INFINITY, poisoned, poisoned, poisoned);
+}, '`Atomics.wait(Number.NEGATIVE_INFINITY, poisoned, poisoned, poisoned)` throws TypeError');
 
-assert.throws(TypeError, function() { Atomics.wait(Symbol('***symbol***'),poisoned,poisoned,poisoned) }, 'Symbol');
+assert.throws(TypeError, function() {
+  Atomics.wait(Symbol('***symbol***'), poisoned, poisoned, poisoned);
+}, '`Atomics.wait(Symbol(\'***symbol***\'), poisoned, poisoned, poisoned)` throws TypeError');
 
 reportCompare(0, 0);

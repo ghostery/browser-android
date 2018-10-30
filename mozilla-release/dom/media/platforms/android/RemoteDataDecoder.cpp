@@ -146,8 +146,8 @@ public:
           img, !!(flags & MediaCodec::BUFFER_FLAG_SYNC_FRAME),
           TimeUnit::FromMicroseconds(presentationTimeUs));
 
-        v->SetListener(Move(releaseSample));
-        mDecoder->UpdateOutputStatus(Move(v));
+        v->SetListener(std::move(releaseSample));
+        mDecoder->UpdateOutputStatus(std::move(v));
       }
 
       if (isEOS) {
@@ -208,14 +208,23 @@ public:
     }
     mIsCodecSupportAdaptivePlayback =
       mJavaDecoder->IsAdaptivePlaybackSupported();
+    mIsHardwareAccelerated =
+      mJavaDecoder->IsHardwareAccelerated();
     return InitPromise::CreateAndResolve(TrackInfo::kVideoTrack, __func__);
   }
 
   RefPtr<MediaDataDecoder::FlushPromise> Flush() override
   {
-    mInputInfos.Clear();
-    mSeekTarget.reset();
-    return RemoteDataDecoder::Flush();
+    RefPtr<RemoteVideoDecoder> self = this;
+    return RemoteDataDecoder::Flush()->Then(
+      mTaskQueue,
+      __func__,
+      [self](const FlushPromise::ResolveOrRejectValue& aValue) {
+        self->mInputInfos.Clear();
+        self->mSeekTarget.reset();
+        self->mLatestOutputTime.reset();
+        return FlushPromise::CreateAndResolveOrReject(aValue, __func__);
+      });
   }
 
   RefPtr<MediaDataDecoder::DecodePromise> Decode(MediaRawData* aSample) override
@@ -238,29 +247,52 @@ public:
 
   void SetSeekThreshold(const TimeUnit& aTime) override
   {
-    mSeekTarget = Some(aTime);
+    RefPtr<RemoteVideoDecoder> self = this;
+    nsCOMPtr<nsIRunnable> runnable = NS_NewRunnableFunction(
+      "RemoteVideoDecoder::SetSeekThreshold",
+      [self, aTime]() { self->mSeekTarget = Some(aTime); });
+    nsresult rv = mTaskQueue->Dispatch(runnable.forget());
+    MOZ_DIAGNOSTIC_ASSERT(NS_SUCCEEDED(rv));
+    Unused << rv;
   }
 
   bool IsUsefulData(const RefPtr<MediaData>& aSample) override
   {
     AssertOnTaskQueue();
-    if (!mSeekTarget) {
-      return true;
+
+    if (mLatestOutputTime && aSample->mTime < mLatestOutputTime.value()) {
+      return false;
     }
-    if (aSample->GetEndTime() > mSeekTarget.value()) {
-      mSeekTarget.reset();
-      return true;
+
+    const TimeUnit endTime = aSample->GetEndTime();
+    if (mSeekTarget && endTime <= mSeekTarget.value()) {
+      return false;
     }
-    return false;
+
+    mSeekTarget.reset();
+    mLatestOutputTime = Some(endTime);
+    return true;
+  }
+
+  bool IsHardwareAccelerated(nsACString& aFailureReason) const override
+  {
+    return mIsHardwareAccelerated;
   }
 
 private:
   const VideoInfo mConfig;
   GeckoSurface::GlobalRef mSurface;
   AndroidSurfaceTextureHandle mSurfaceHandle;
-  SimpleMap<InputInfo> mInputInfos;
+  // Only accessed on reader's task queue.
   bool mIsCodecSupportAdaptivePlayback = false;
+  // Can be accessed on any thread, but only written on during init.
+  bool mIsHardwareAccelerated = false;
+  // Accessed on mTaskQueue, reader's TaskQueue and Java callback tread.
+  // SimpleMap however is thread-safe, so it's okay to do so.
+  SimpleMap<InputInfo> mInputInfos;
+  // Only accessed on the TaskQueue.
   Maybe<TimeUnit> mSeekTarget;
+  Maybe<TimeUnit> mLatestOutputTime;
 };
 
 class RemoteAudioDecoder : public RemoteDataDecoder
@@ -366,9 +398,9 @@ private:
         RefPtr<AudioData> data = new AudioData(
           0, TimeUnit::FromMicroseconds(presentationTimeUs),
           FramesToTimeUnit(numFrames, mOutputSampleRate), numFrames,
-          Move(audio), mOutputChannels, mOutputSampleRate);
+          std::move(audio), mOutputChannels, mOutputSampleRate);
 
-        mDecoder->UpdateOutputStatus(Move(data));
+        mDecoder->UpdateOutputStatus(std::move(data));
       }
 
       if ((flags & MediaCodec::BUFFER_FLAG_END_OF_STREAM) != 0) {
@@ -434,8 +466,8 @@ RemoteDataDecoder::CreateVideoDecoder(const CreateDecoderParams& aParams,
   MediaFormat::LocalRef format;
   NS_ENSURE_SUCCESS(
     MediaFormat::CreateVideoFormat(TranslateMimeType(config.mMimeType),
-                                   config.mDisplay.width,
-                                   config.mDisplay.height,
+                                   config.mImage.width,
+                                   config.mImage.height,
                                    &format),
     nullptr);
 
@@ -671,7 +703,7 @@ RemoteDataDecoder::UpdateOutputStatus(RefPtr<MediaData>&& aSample)
         NewRunnableMethod<const RefPtr<MediaData>>("RemoteDataDecoder::UpdateOutputStatus",
                                                    this,
                                                    &RemoteDataDecoder::UpdateOutputStatus,
-                                                   Move(aSample)));
+                                                   std::move(aSample)));
     MOZ_DIAGNOSTIC_ASSERT(NS_SUCCEEDED(rv));
     Unused << rv;
     return;
@@ -681,7 +713,7 @@ RemoteDataDecoder::UpdateOutputStatus(RefPtr<MediaData>&& aSample)
     return;
   }
   if (IsUsefulData(aSample)) {
-    mDecodedData.AppendElement(Move(aSample));
+    mDecodedData.AppendElement(std::move(aSample));
   }
   ReturnDecodedData();
 }

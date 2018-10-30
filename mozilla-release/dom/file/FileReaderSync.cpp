@@ -47,7 +47,7 @@ FileReaderSync::WrapObject(JSContext* aCx,
                            JS::Handle<JSObject*> aGivenProto,
                            JS::MutableHandle<JSObject*> aReflector)
 {
-  return FileReaderSyncBinding::Wrap(aCx, this, aGivenProto, aReflector);
+  return FileReaderSync_Binding::Wrap(aCx, this, aGivenProto, aReflector);
 }
 
 void
@@ -62,7 +62,8 @@ FileReaderSync::ReadAsArrayBuffer(JSContext* aCx,
     return;
   }
 
-  UniquePtr<char[], JS::FreePolicy> bufferData(js_pod_malloc<char>(blobSize));
+  UniquePtr<char[], JS::FreePolicy> bufferData(
+    js_pod_arena_malloc<char>(js::ArrayBufferContentsArena, blobSize));
   if (!bufferData) {
     aRv.Throw(NS_ERROR_OUT_OF_MEMORY);
     return;
@@ -443,7 +444,7 @@ FileReaderSync::SyncRead(nsIInputStream* aStream, char* aBuffer,
   WorkerPrivate* workerPrivate = GetCurrentThreadWorkerPrivate();
   MOZ_ASSERT(workerPrivate);
 
-  AutoSyncLoopHolder syncLoop(workerPrivate, Terminating);
+  AutoSyncLoopHolder syncLoop(workerPrivate, Canceling);
 
   nsCOMPtr<nsIEventTarget> syncLoopTarget = syncLoop.GetEventTarget();
   if (!syncLoopTarget) {
@@ -476,7 +477,7 @@ FileReaderSync::ConvertAsyncToSyncStream(uint64_t aStreamSize,
                                          already_AddRefed<nsIInputStream> aAsyncStream,
                                          nsIInputStream** aSyncStream)
 {
-  nsCOMPtr<nsIInputStream> asyncInputStream = Move(aAsyncStream);
+  nsCOMPtr<nsIInputStream> asyncInputStream = std::move(aAsyncStream);
 
   // If the stream is not async, we just need it to be bufferable.
   nsCOMPtr<nsIAsyncInputStream> asyncStream = do_QueryInterface(asyncInputStream);
@@ -500,7 +501,7 @@ FileReaderSync::ConvertAsyncToSyncStream(uint64_t aStreamSize,
     return NS_ERROR_FAILURE;
   }
 
-  rv = NS_NewCStringInputStream(aSyncStream, Move(buffer));
+  rv = NS_NewCStringInputStream(aSyncStream, std::move(buffer));
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }

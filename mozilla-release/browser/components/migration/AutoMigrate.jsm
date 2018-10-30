@@ -45,7 +45,7 @@ XPCOMUtils.defineLazyGetter(this, "gBrandBundle", function() {
   return Services.strings.createBundle(kBrandBundle);
 });
 
-Cu.importGlobalProperties(["URL"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
 XPCOMUtils.defineLazyGetter(this, "kUndoStateFullPath", function() {
   return OS.Path.join(OS.Constants.Path.profileDir, "initialMigrationMetadata.jsonlz4");
@@ -276,9 +276,7 @@ const AutoMigrate = {
   },
 
   _removeNotificationBars() {
-    let browserWindows = Services.wm.getEnumerator("navigator:browser");
-    while (browserWindows.hasMoreElements()) {
-      let win = browserWindows.getNext();
+    for (let win of Services.wm.getEnumerator("navigator:browser")) {
       if (!win.closed) {
         for (let browser of win.gBrowser.browsers) {
           let nb = win.gBrowser.getNotificationBox(browser);

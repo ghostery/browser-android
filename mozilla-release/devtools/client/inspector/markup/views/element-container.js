@@ -34,6 +34,16 @@ function MarkupElementContainer(markupView, node) {
   MarkupContainer.prototype.initialize.call(this, markupView, node,
     "elementcontainer");
 
+  this.onFlexboxHighlighterChange = this.onFlexboxHighlighterChange.bind(this);
+  this.onGridHighlighterChange = this.onGridHighlighterChange.bind(this);
+
+  this.markup.highlighters.on("flexbox-highlighter-hidden",
+    this.onFlexboxHighlighterChange);
+  this.markup.highlighters.on("flexbox-highlighter-shown",
+    this.onFlexboxHighlighterChange);
+  this.markup.highlighters.on("grid-highlighter-hidden", this.onGridHighlighterChange);
+  this.markup.highlighters.on("grid-highlighter-shown", this.onGridHighlighterChange);
+
   if (node.nodeType === nodeConstants.ELEMENT_NODE) {
     this.editor = new ElementEditor(this, node);
   } else {
@@ -44,6 +54,17 @@ function MarkupElementContainer(markupView, node) {
 }
 
 MarkupElementContainer.prototype = extend(MarkupContainer.prototype, {
+  destroy: function() {
+    this.markup.highlighters.off("flexbox-highlighter-hidden",
+      this.onFlexboxHighlighterChange);
+    this.markup.highlighters.off("flexbox-highlighter-shown",
+      this.onFlexboxHighlighterChange);
+    this.markup.highlighters.off("grid-highlighter-hidden", this.onGridHighlighterChange);
+    this.markup.highlighters.off("grid-highlighter-shown", this.onGridHighlighterChange);
+
+    MarkupContainer.prototype.destroy.call(this);
+  },
+
   onContainerClick: function(event) {
     if (!event.target.hasAttribute("data-event")) {
       return;
@@ -52,14 +73,39 @@ MarkupElementContainer.prototype = extend(MarkupContainer.prototype, {
     this._buildEventTooltipContent(event.target);
   },
 
-  async _buildEventTooltipContent(target) {
-    let tooltip = this.markup.eventDetailsTooltip;
+  /**
+   * Handler for "flexbox-highlighter-hidden" and "flexbox-highlighter-shown" event
+   * emitted from the HighlightersOverlay. Toggles the active state of the display badge
+   * if it matches the highlighted flex container node.
+   */
+  onFlexboxHighlighterChange: function() {
+    if (!this.editor._displayBadge) {
+      return;
+    }
+    this.editor._displayBadge.classList.toggle("active",
+      this.markup.highlighters.flexboxHighlighterShown === this.node);
+  },
 
+  /**
+   * Handler for "grid-highlighter-hidden" and "grid-highlighter-shown" event emitted from
+   * the HighlightersOverlay. Toggles the active state of the display badge if it matches
+   * the highlighted grid node.
+   */
+  onGridHighlighterChange: function() {
+    if (!this.editor._displayBadge) {
+      return;
+    }
+    this.editor._displayBadge.classList.toggle("active",
+      this.markup.highlighters.gridHighlighterShown === this.node);
+  },
+
+  async _buildEventTooltipContent(target) {
+    const tooltip = this.markup.eventDetailsTooltip;
     await tooltip.hide();
 
-    let listenerInfo = await this.node.getEventListenerInfo();
+    const listenerInfo = await this.node.getEventListenerInfo();
 
-    let toolbox = this.markup.toolbox;
+    const toolbox = this.markup.toolbox;
 
     setEventTooltip(tooltip, listenerInfo, toolbox);
     // Disable the image preview tooltip while we display the event details
@@ -67,7 +113,20 @@ MarkupElementContainer.prototype = extend(MarkupContainer.prototype, {
     tooltip.once("hidden", () => {
       // Enable the image preview tooltip after closing the event details
       this.markup._enableImagePreviewTooltip();
+
+      // Allow clicks on the event badge to display the event popup again
+      // (but allow the currently queued click event to run first).
+      this.markup.win.setTimeout(() => {
+        if (this.editor._eventBadge) {
+          this.editor._eventBadge.style.pointerEvents = "auto";
+        }
+      }, 0);
     });
+
+    // Prevent clicks on the event badge to display the event popup again.
+    if (this.editor._eventBadge) {
+      this.editor._eventBadge.style.pointerEvents = "none";
+    }
     tooltip.show(target);
   },
 
@@ -96,9 +155,9 @@ MarkupElementContainer.prototype = extend(MarkupContainer.prototype, {
 
     // Fetch the preview from the server.
     this.tooltipDataPromise = (async function() {
-      let maxDim = Services.prefs.getIntPref(PREVIEW_MAX_DIM_PREF);
-      let preview = await this.node.getImageData(maxDim);
-      let data = await preview.data.string();
+      const maxDim = Services.prefs.getIntPref(PREVIEW_MAX_DIM_PREF);
+      const preview = await this.node.getImageData(maxDim);
+      const data = await preview.data.string();
 
       // Clear the pending preview request. We can't reuse the results later as
       // the preview contents might have changed.
@@ -127,16 +186,16 @@ MarkupElementContainer.prototype = extend(MarkupContainer.prototype, {
     // If the Element has an src attribute, the tooltip is shown when hovering
     // over the src url. If not, the tooltip is shown when hovering over the tag
     // name.
-    let src = this.editor.getAttributeElement("src");
-    let expectedTarget = src ? src.querySelector(".link") : this.editor.tag;
+    const src = this.editor.getAttributeElement("src");
+    const expectedTarget = src ? src.querySelector(".link") : this.editor.tag;
     if (target !== expectedTarget) {
       return false;
     }
 
     try {
-      let { data, size } = await this._getPreview();
+      const { data, size } = await this._getPreview();
       // The preview is ready.
-      let options = {
+      const options = {
         naturalWidth: size.naturalWidth,
         naturalHeight: size.naturalHeight,
         maxDim: Services.prefs.getIntPref(PREVIEW_MAX_DIM_PREF)
@@ -189,8 +248,8 @@ MarkupElementContainer.prototype = extend(MarkupContainer.prototype, {
    * This is an undoable action.
    */
   removeAttribute: function(attrName) {
-    let doMods = this.editor._startModifyingAttributes();
-    let undoMods = this.editor._startModifyingAttributes();
+    const doMods = this.editor._startModifyingAttributes();
+    const undoMods = this.editor._startModifyingAttributes();
     this.editor._saveAttribute(attrName, undoMods);
     doMods.removeAttribute(attrName);
     this.undo.do(() => {

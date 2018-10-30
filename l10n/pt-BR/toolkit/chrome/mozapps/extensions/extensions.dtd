@@ -31,11 +31,11 @@
 <!-- global warnings -->
 <!ENTITY warning.safemode.label                    "Todos as extensões foram desabilitadas pelo modo seguro.">
 <!ENTITY warning.checkcompatibility.label          "A verificação de compatibilidade está desabilitada. Pode ter complementos incompatíveis.">
-<!ENTITY warning.checkcompatibility.enable.label   "Habilitar">
-<!ENTITY warning.checkcompatibility.enable.tooltip "Habilitar verificação de compatibilidade de extensões">
+<!ENTITY warning.checkcompatibility.enable.label   "Ativar">
+<!ENTITY warning.checkcompatibility.enable.tooltip "Ativar verificação de compatibilidade de extensões">
 <!ENTITY warning.updatesecurity.label              "A verificação de segurança da conexão está desativada. Atualizações de complementos podem comprometer seu computador.">
-<!ENTITY warning.updatesecurity.enable.label       "Habilitar">
-<!ENTITY warning.updatesecurity.enable.tooltip     "Habilitar verificação de segurança da conexão de atualização">
+<!ENTITY warning.updatesecurity.enable.label       "Ativar">
+<!ENTITY warning.updatesecurity.enable.tooltip     "Ativar verificação de segurança da atualização de extensões">
 
 <!-- categories / views -->
 <!ENTITY view.discover.label                  "Adicionar">
@@ -80,10 +80,8 @@
 <!ENTITY cmd.preferencesWin.accesskey         "O">
 <!ENTITY cmd.preferencesUnix.label            "Preferências">
 <!ENTITY cmd.preferencesUnix.accesskey        "P">
-<!ENTITY cmd.about.label                      "Sobre">
-<!ENTITY cmd.about.accesskey                  "S">
 
-<!ENTITY cmd.enableAddon.label                "Habilitar">
+<!ENTITY cmd.enableAddon.label                "Ativar">
 <!ENTITY cmd.enableAddon.accesskey            "H">
 <!ENTITY cmd.disableAddon.label               "Desativar">
 <!ENTITY cmd.disableAddon.accesskey           "D">
@@ -163,13 +161,6 @@ funcionalidades ou estilos extras. Experimente um painel que otimiza seu tempo, 
 <!ENTITY progress.pause.tooltip               "Pausa">
 <!ENTITY progress.cancel.tooltip              "Cancelar">
 
-
-<!-- list sorting -->
-<!ENTITY sort.name.label                      "Nome">
-<!ENTITY sort.name.tooltip                    "Ordenar pelo nome">
-<!ENTITY sort.dateUpdated.label               "Última atualização">
-<!ENTITY sort.dateUpdated.tooltip             "Ordenar pela data de atualização">
-
 <!ENTITY addon.homepage                       "Visitar o site">
 <!ENTITY addon.details.label                  "Mais">
 <!ENTITY addon.details.tooltip                "Mostrar mais detalhes sobre estas extensões">
@@ -211,17 +202,6 @@ funcionalidades ou estilos extras. Experimente um painel que otimiza seu tempo, 
 <!ENTITY eula.accept                          "Aceitar e instalar…">
 
 <!ENTITY settings.path.button.label           "Procurar…">
-
-<!-- LOCALIZATION NOTE (experiment.info.label): The strings related to
-     experiments are present on the "Experiments" tab of the add-ons manager.
-     This tab won't be displayed unless an Experiment add-on is installed.
-     Install https://people.mozilla.org/~gszorc/dummy-experiment-addon.xpi
-     to cause this tab to appear. -->
-<!ENTITY experiment.info.label "O que é isso? A telemetria pode ocasionalmente instalar e executar experimentos.">
-<!ENTITY experiment.info.learnmore "Saiba mais">
-<!ENTITY experiment.info.learnmore.accesskey "S">
-<!ENTITY experiment.info.changetelemetry "Configurações da telemetria">
-<!ENTITY experiment.info.changetelemetry.accesskey "C">
 
 <!ENTITY setting.learnmore "Saiba mais…">
 

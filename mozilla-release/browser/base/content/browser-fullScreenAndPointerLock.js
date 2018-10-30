@@ -221,7 +221,7 @@ var PointerlockFsWarning = {
       break;
     }
     }
-  }
+  },
 };
 
 var PointerLock = {
@@ -242,7 +242,7 @@ var PointerLock = {
         break;
       }
     }
-  }
+  },
 };
 
 var FullScreen = {
@@ -395,7 +395,7 @@ var FullScreen = {
     let browser = aMessage.target;
     switch (aMessage.name) {
       case "DOMFullscreen:Request": {
-        this._windowUtils.remoteFrameFullscreenChanged(browser);
+        window.windowUtils.remoteFrameFullscreenChanged(browser);
         break;
       }
       case "DOMFullscreen:NewOrigin": {
@@ -406,7 +406,7 @@ var FullScreen = {
         break;
       }
       case "DOMFullscreen:Exit": {
-        this._windowUtils.remoteFrameFullscreenReverted();
+        window.windowUtils.remoteFrameFullscreenReverted();
         break;
       }
       case "DOMFullscreen:Painted": {
@@ -459,9 +459,7 @@ var FullScreen = {
       gFindBar.close(true);
     }
 
-    // Exit DOM full-screen mode upon open, close, or change tab.
-    gBrowser.tabContainer.addEventListener("TabOpen", this.exitDomFullScreen);
-    gBrowser.tabContainer.addEventListener("TabClose", this.exitDomFullScreen);
+    // Exit DOM full-screen mode when switching to a different tab.
     gBrowser.tabContainer.addEventListener("TabSelect", this.exitDomFullScreen);
 
     // Add listener to detect when the fullscreen window is re-focused.
@@ -484,8 +482,6 @@ var FullScreen = {
           .broadcastAsyncMessage("DOMFullscreen:CleanUp");
 
     PointerlockFsWarning.close();
-    gBrowser.tabContainer.removeEventListener("TabOpen", this.exitDomFullScreen);
-    gBrowser.tabContainer.removeEventListener("TabClose", this.exitDomFullScreen);
     gBrowser.tabContainer.removeEventListener("TabSelect", this.exitDomFullScreen);
     window.removeEventListener("activate", this);
 
@@ -494,11 +490,6 @@ var FullScreen = {
 
   _isRemoteBrowser(aBrowser) {
     return gMultiProcessBrowser && aBrowser.getAttribute("remote") == "true";
-  },
-
-  get _windowUtils() {
-    return window.QueryInterface(Ci.nsIInterfaceRequestor)
-                 .getInterface(Ci.nsIDOMWindowUtils);
   },
 
   getMouseTargetRect() {
@@ -595,7 +586,7 @@ var FullScreen = {
         top: rect.top + 50,
         bottom: rect.bottom,
         left: rect.left,
-        right: rect.right
+        right: rect.right,
       };
       MousePosTracker.addListener(this);
     }
@@ -675,7 +666,7 @@ var FullScreen = {
       navbar.appendChild(fullscreenctls);
     }
     fullscreenctls.hidden = !aEnterFS;
-  }
+  },
 };
 XPCOMUtils.defineLazyGetter(FullScreen, "useLionFullScreen", function() {
   // We'll only use OS X Lion full screen if we're

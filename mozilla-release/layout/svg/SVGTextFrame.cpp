@@ -25,11 +25,11 @@
 #include "nsCaret.h"
 #include "nsContentUtils.h"
 #include "nsGkAtoms.h"
-#include "nsISelection.h"
 #include "nsQuickSort.h"
 #include "SVGObserverUtils.h"
 #include "nsSVGOuterSVGFrame.h"
 #include "nsSVGPaintServerFrame.h"
+#include "mozilla/dom/Selection.h"
 #include "mozilla/dom/SVGRect.h"
 #include "mozilla/dom/SVGTextContentElementBinding.h"
 #include "nsSVGIntegrationUtils.h"
@@ -53,7 +53,7 @@
 
 using namespace mozilla;
 using namespace mozilla::dom;
-using namespace mozilla::dom::SVGTextContentElementBinding;
+using namespace mozilla::dom::SVGTextContentElement_Binding;
 using namespace mozilla::gfx;
 using namespace mozilla::image;
 
@@ -350,7 +350,7 @@ GetBaselinePosition(nsTextFrame* aFrame,
     case NS_STYLE_DOMINANT_BASELINE_MIDDLE:
       return aFrame->GetLogicalBaseline(writingMode) -
         SVGContentUtils::GetFontXHeight(aFrame) / 2.0 *
-        aFrame->PresContext()->AppUnitsPerCSSPixel() * aFontSizeScaleFactor;
+        AppUnitsPerCSSPixel() * aFontSizeScaleFactor;
 
     case NS_STYLE_DOMINANT_BASELINE_TEXT_AFTER_EDGE:
     case NS_STYLE_DOMINANT_BASELINE_IDEOGRAPHIC:
@@ -362,7 +362,7 @@ GetBaselinePosition(nsTextFrame* aFrame,
       return (metrics.mAscent + metrics.mDescent) / 2.0;
   }
 
-  NS_NOTREACHED("unexpected dominant-baseline value");
+  MOZ_ASSERT_UNREACHABLE("unexpected dominant-baseline value");
   return aFrame->GetLogicalBaseline(writingMode);
 }
 
@@ -419,7 +419,7 @@ TruncateTo(nsTArray<T>& aArrayToTruncate, const nsTArray<U>& aReferenceArray)
 static SVGTextFrame*
 FrameIfAnonymousChildReflowed(SVGTextFrame* aFrame)
 {
-  NS_PRECONDITION(aFrame, "aFrame must not be null");
+  MOZ_ASSERT(aFrame, "aFrame must not be null");
   nsIFrame* kid = aFrame->PrincipalChildList().FirstChild();
   if (NS_SUBTREE_DIRTY(kid)) {
     MOZ_ASSERT(false, "should have already reflowed the anonymous block child");
@@ -888,7 +888,7 @@ TextRenderedRun::GetTransformFromRunUserSpaceToFrameUserSpace(
 
   // Translate by the horizontal distance into the text frame this
   // rendered run is.
-  gfxFloat appPerCssPx = nsPresContext::AppUnitsPerCSSPixel();
+  gfxFloat appPerCssPx = AppUnitsPerCSSPixel();
   gfxPoint t = IsVertical() ? gfxPoint(0, start / appPerCssPx)
                             : gfxPoint(start / appPerCssPx, 0);
   return m.PreTranslate(t);
@@ -1333,8 +1333,9 @@ GetUndisplayedCharactersBeforeFrame(nsTextFrame* aFrame)
   TextNodeCorrespondence* correspondence =
     static_cast<TextNodeCorrespondence*>(value);
   if (!correspondence) {
-    NS_NOTREACHED("expected a TextNodeCorrespondenceProperty on nsTextFrame "
-                  "used for SVG text");
+    // FIXME bug 903785
+    NS_ERROR("expected a TextNodeCorrespondenceProperty on nsTextFrame "
+             "used for SVG text");
     return 0;
   }
   return correspondence->mUndisplayedCharacters;
@@ -1475,8 +1476,8 @@ TextNodeCorrespondenceRecorder::TraverseAndRecord(nsIFrame* aFrame)
     NS_ASSERTION(mNodeCharIndex == 0, "incorrect tracking of undisplayed "
                                       "characters in text nodes");
     if (!mNodeIterator.Current()) {
-      NS_NOTREACHED("incorrect tracking of correspondence between text frames "
-                    "and text nodes");
+      MOZ_ASSERT_UNREACHABLE("incorrect tracking of correspondence between "
+                             "text frames and text nodes");
     } else {
       // Each whole nsTextNode we find before we get to the text node for the
       // first text frame must be undisplayed.
@@ -1560,7 +1561,7 @@ public:
    * Constructs a TextFrameIterator for the specified SVGTextFrame
    * with an optional frame subtree to restrict iterated text frames to.
    */
-  explicit TextFrameIterator(SVGTextFrame* aRoot, nsIFrame* aSubtree = nullptr)
+  explicit TextFrameIterator(SVGTextFrame* aRoot, const nsIFrame* aSubtree = nullptr)
     : mRootFrame(aRoot),
       mSubtree(aSubtree),
       mCurrentFrame(aRoot),
@@ -1699,7 +1700,7 @@ private:
   /**
    * The frame for the subtree we are also interested in tracking.
    */
-  nsIFrame* mSubtree;
+  const nsIFrame* mSubtree;
 
   /**
    * The current value of the iterator.
@@ -1873,7 +1874,7 @@ public:
    */
   explicit TextRenderedRunIterator(SVGTextFrame* aSVGTextFrame,
                                    RenderedRunFilter aFilter = eAllFrames,
-                                   nsIFrame* aSubtree = nullptr)
+                                   const nsIFrame* aSubtree = nullptr)
     : mFrameIterator(FrameIfAnonymousChildReflowed(aSVGTextFrame), aSubtree),
       mFilter(aFilter),
       mTextElementCharIndex(0),
@@ -2439,10 +2440,12 @@ CharIterator::CharIterator(SVGTextFrame* aSVGTextFrame,
     mFrameForTrimCheck(nullptr),
     mTrimmedOffset(0),
     mTrimmedLength(0),
+    mTextRun(nullptr),
     mTextElementCharIndex(0),
     mGlyphStartTextElementCharIndex(0),
-    mLengthAdjustScaleFactor(aSVGTextFrame->mLengthAdjustScaleFactor)
-  , mPostReflow(aPostReflow)
+    mGlyphUndisplayedCharacters(0),
+    mLengthAdjustScaleFactor(aSVGTextFrame->mLengthAdjustScaleFactor),
+    mPostReflow(aPostReflow)
 {
   if (!AtEnd()) {
     mSkipCharsIterator = TextFrame()->EnsureTextRun(nsTextFrame::eInflated);
@@ -2772,7 +2775,8 @@ public:
       mContext(aContext),
       mFrame(aFrame),
       mCanvasTM(aCanvasTM),
-      mImgParams(aImgParams)
+      mImgParams(aImgParams),
+      mColor(0)
   {
   }
 
@@ -3107,7 +3111,7 @@ nsDisplaySVGText::HitTest(nsDisplayListBuilder* aBuilder, const nsRect& aRect,
 
   gfxPoint userSpacePt =
     gfxPoint(userSpacePtInAppUnits.x, userSpacePtInAppUnits.y) /
-      frame->PresContext()->AppUnitsPerCSSPixel();
+      AppUnitsPerCSSPixel();
 
   nsIFrame* target = frame->GetFrameForPoint(userSpacePt);
   if (target) {
@@ -3521,14 +3525,12 @@ SVGTextFrame::NotifySVGChanged(uint32_t aFlags)
 static int32_t
 GetCaretOffset(nsCaret* aCaret)
 {
-  nsCOMPtr<nsISelection> selection = aCaret->GetSelection();
+  RefPtr<Selection> selection = aCaret->GetSelection();
   if (!selection) {
     return -1;
   }
 
-  int32_t offset = -1;
-  selection->GetAnchorOffset(&offset);
-  return offset;
+  return selection->AnchorOffset();
 }
 
 /**
@@ -3810,7 +3812,7 @@ SVGTextFrame::ReflowSVG()
     mRect.SetEmpty();
   } else {
     mRect =
-      nsLayoutUtils::RoundGfxRectToAppRect(r.ToThebesRect(), nsPresContext::AppUnitsPerCSSPixel());
+      nsLayoutUtils::RoundGfxRectToAppRect(r.ToThebesRect(), AppUnitsPerCSSPixel());
 
     // Due to rounding issues when we have a transform applied, we sometimes
     // don't include an additional row of pixels.  For now, just inflate our
@@ -3871,7 +3873,7 @@ SVGTextFrame::GetBBoxContribution(const Matrix &aToBBoxUserspace,
   SVGBBox bbox;
 
   if (aFlags & nsSVGUtils::eForGetClientRects) {
-    Rect rect = NSRectToRect(mRect, PresContext()->AppUnitsPerCSSPixel());
+    Rect rect = NSRectToRect(mRect, AppUnitsPerCSSPixel());
     if (!rect.IsEmpty()) {
       bbox = aToBBoxUserspace.TransformBounds(rect);
     }
@@ -4883,7 +4885,7 @@ ShiftAnchoredChunk(nsTArray<CharPosition>& aCharPositions,
       shift -= aVisIEndEdge;
       break;
     default:
-      NS_NOTREACHED("unexpected value for aAnchorSide");
+      MOZ_ASSERT_UNREACHABLE("unexpected value for aAnchorSide");
   }
 
   if (shift != 0.0) {
@@ -5681,7 +5683,7 @@ SVGTextFrame::TransformFramePointToTextChild(const Point& aPoint,
   // account when transforming the point from the ancestor frame down
   // to this one.
   float cssPxPerDevPx = nsPresContext::AppUnitsToFloatCSSPixels(presContext->AppUnitsPerDevPixel());
-  float factor = nsPresContext::AppUnitsPerCSSPixel();
+  float factor = AppUnitsPerCSSPixel();
   Point framePosition(NSAppUnitsToFloatPixels(mRect.x, factor),
                       NSAppUnitsToFloatPixels(mRect.y, factor));
   Point pointInUserSpace = aPoint * cssPxPerDevPx + framePosition;
@@ -5744,7 +5746,7 @@ SVGTextFrame::TransformFramePointToTextChild(const Point& aPoint,
  */
 gfxRect
 SVGTextFrame::TransformFrameRectFromTextChild(const nsRect& aRect,
-                                              nsIFrame* aChildFrame)
+                                              const nsIFrame* aChildFrame)
 {
   NS_ASSERTION(aChildFrame &&
                nsLayoutUtils::GetClosestFrameOfType
@@ -5788,7 +5790,7 @@ SVGTextFrame::TransformFrameRectFromTextChild(const nsRect& aRect,
 
   // Subtract the mRect offset from the result, as our user space for
   // this frame is relative to the top-left of mRect.
-  float factor = nsPresContext::AppUnitsPerCSSPixel();
+  float factor = AppUnitsPerCSSPixel();
   gfxPoint framePosition(NSAppUnitsToFloatPixels(mRect.x, factor),
                          NSAppUnitsToFloatPixels(mRect.y, factor));
 

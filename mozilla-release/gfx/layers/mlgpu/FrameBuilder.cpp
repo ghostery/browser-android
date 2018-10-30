@@ -66,12 +66,17 @@ FrameBuilder::Build()
 
   mWidgetRenderView = new RenderViewMLGPU(this, target, region);
 
+  // Traverse the layer tree and compute visible region for intermediate surfaces
+  if (ContainerLayerMLGPU* root = mRoot->AsLayerMLGPU()->AsContainerLayerMLGPU()) {
+    root->ComputeIntermediateSurfaceBounds();
+  }
+
   // Traverse the layer tree and assign each layer to tiles.
   {
     Maybe<gfx::Polygon> geometry;
     RenderTargetIntRect clip(0, 0, target->GetSize().width, target->GetSize().height);
 
-    AssignLayer(mRoot->GetLayer(), mWidgetRenderView, clip, Move(geometry));
+    AssignLayer(mRoot->GetLayer(), mWidgetRenderView, clip, std::move(geometry));
   }
 
   // Build the default mask buffer.
@@ -139,7 +144,7 @@ FrameBuilder::AssignLayer(Layer* aLayer,
 
   // Finally, assign the layer to a rendering batch in the current render
   // target.
-  layer->AssignToView(this, aView, Move(aGeometry));
+  layer->AssignToView(this, aView, std::move(aGeometry));
 }
 
 bool
@@ -224,10 +229,10 @@ FrameBuilder::ProcessChildList(ContainerLayer* aContainer,
     } else if (aParentGeometry) {
       geometry = aParentGeometry;
     } else if (entry.geometry) {
-      geometry = Move(entry.geometry);
+      geometry = std::move(entry.geometry);
     }
 
-    AssignLayer(child, aView, clip, Move(geometry));
+    AssignLayer(child, aView, clip, std::move(geometry));
   }
 }
 

@@ -123,11 +123,11 @@ function pemToBase64(pem) {
             .replace(/[\r\n]/g, "");
 }
 
-function build_cert_chain(certNames) {
+function build_cert_chain(certNames, testDirectory = "bad_certs") {
   let certList = Cc["@mozilla.org/security/x509certlist;1"]
                    .createInstance(Ci.nsIX509CertList);
   certNames.forEach(function(certName) {
-    let cert = constructCertFromFile("bad_certs/" + certName + ".pem");
+    let cert = constructCertFromFile(`${testDirectory}/${certName}.pem`);
     certList.addCert(cert);
   });
   return certList;
@@ -712,13 +712,7 @@ FakeSSLStatus.prototype = {
   getInterface(aIID) {
     return this.QueryInterface(aIID);
   },
-  QueryInterface(aIID) {
-    if (aIID.equals(Ci.nsISSLStatus) ||
-        aIID.equals(Ci.nsISupports)) {
-      return this;
-    }
-    throw new Error(Cr.NS_ERROR_NO_INTERFACE);
-  },
+  QueryInterface: ChromeUtils.generateQI(["nsISSLStatus"]),
 };
 
 // Utility functions for adding tests relating to certificate error overrides
@@ -726,8 +720,7 @@ FakeSSLStatus.prototype = {
 // Helper function for add_cert_override_test. Probably doesn't need to be
 // called directly.
 function add_cert_override(aHost, aExpectedBits, aSecurityInfo) {
-  let sslstatus = aSecurityInfo.QueryInterface(Ci.nsISSLStatusProvider)
-                               .SSLStatus;
+  let sslstatus = aSecurityInfo.SSLStatus;
   let bits =
     (sslstatus.isUntrusted ? Ci.nsICertOverrideService.ERROR_UNTRUSTED : 0) |
     (sslstatus.isDomainMismatch ? Ci.nsICertOverrideService.ERROR_MISMATCH : 0) |
@@ -755,8 +748,7 @@ function add_cert_override_test(aHost, aExpectedBits, aExpectedError,
               Ci.nsIWebProgressListener.STATE_CERT_USER_OVERRIDDEN,
               "Cert override flag should be set on the security state");
     if (aExpectedSSLStatus) {
-      let sslstatus = aSecurityInfo.QueryInterface(Ci.nsISSLStatusProvider)
-                                  .SSLStatus;
+      let sslstatus = aSecurityInfo.SSLStatus;
       if (aExpectedSSLStatus.failedCertChain) {
         ok(aExpectedSSLStatus.failedCertChain.equals(sslstatus.failedCertChain));
       }
@@ -769,8 +761,7 @@ function add_cert_override_test(aHost, aExpectedBits, aExpectedError,
 // SSLStatus set on it. In this case, the error was not overridable anyway, so
 // we consider it a success.
 function attempt_adding_cert_override(aHost, aExpectedBits, aSecurityInfo) {
-  let sslstatus = aSecurityInfo.QueryInterface(Ci.nsISSLStatusProvider)
-                               .SSLStatus;
+  let sslstatus = aSecurityInfo.SSLStatus;
   if (sslstatus) {
     let bits =
       (sslstatus.isUntrusted ? Ci.nsICertOverrideService.ERROR_UNTRUSTED : 0) |

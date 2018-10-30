@@ -74,7 +74,7 @@ BufferRecycleBin::RecycleBuffer(UniquePtr<uint8_t[]> aBuffer, uint32_t aSize)
     mRecycledBuffers.Clear();
   }
   mRecycledBufferSize = aSize;
-  mRecycledBuffers.AppendElement(Move(aBuffer));
+  mRecycledBuffers.AppendElement(std::move(aBuffer));
 }
 
 UniquePtr<uint8_t[]>
@@ -87,7 +87,7 @@ BufferRecycleBin::GetBuffer(uint32_t aSize)
   }
 
   uint32_t last = mRecycledBuffers.Length() - 1;
-  UniquePtr<uint8_t[]> result = Move(mRecycledBuffers[last]);
+  UniquePtr<uint8_t[]> result = std::move(mRecycledBuffers[last]);
   mRecycledBuffers.RemoveElementAt(last);
   return result;
 }
@@ -118,6 +118,15 @@ ImageContainerListener::NotifyComposite(const ImageCompositeNotification& aNotif
   MutexAutoLock lock(mLock);
   if (mImageContainer) {
     mImageContainer->NotifyComposite(aNotification);
+  }
+}
+
+void
+ImageContainerListener::NotifyDropped(uint32_t aDropped)
+{
+  MutexAutoLock lock(mLock);
+  if (mImageContainer) {
+    mImageContainer->NotifyDropped(aDropped);
   }
 }
 
@@ -258,29 +267,7 @@ ImageContainer::SetCurrentImageInternal(const nsTArray<NonOwningImage>& aImages)
                  mCurrentImages[0].mFrameID <= aImages[0].mFrameID,
                  "frame IDs shouldn't go backwards");
     if (aImages[0].mProducerID != mCurrentProducerID) {
-      mFrameIDsNotYetComposited.Clear();
       mCurrentProducerID = aImages[0].mProducerID;
-    } else if (!aImages[0].mTimeStamp.IsNull()) {
-      // Check for expired frames
-      for (auto& img : mCurrentImages) {
-        if (img.mProducerID != aImages[0].mProducerID ||
-            img.mTimeStamp.IsNull() ||
-            img.mTimeStamp >= aImages[0].mTimeStamp) {
-          break;
-        }
-        if (!img.mComposited && !img.mTimeStamp.IsNull() &&
-            img.mFrameID != aImages[0].mFrameID) {
-          mFrameIDsNotYetComposited.AppendElement(img.mFrameID);
-        }
-      }
-
-      // Remove really old frames, assuming they'll never be composited.
-      const uint32_t maxFrames = 100;
-      if (mFrameIDsNotYetComposited.Length() > maxFrames) {
-        uint32_t dropFrames = mFrameIDsNotYetComposited.Length() - maxFrames;
-        mDroppedImageCount += dropFrames;
-        mFrameIDsNotYetComposited.RemoveElementsAt(0, dropFrames);
-      }
     }
   }
 
@@ -303,7 +290,7 @@ ImageContainer::SetCurrentImageInternal(const nsTArray<NonOwningImage>& aImages)
     img->mTimeStamp = aImages[i].mTimeStamp;
     img->mFrameID = aImages[i].mFrameID;
     img->mProducerID = aImages[i].mProducerID;
-    for (auto& oldImg : mCurrentImages) {
+    for (const auto& oldImg : mCurrentImages) {
       if (oldImg.mFrameID == img->mFrameID &&
           oldImg.mProducerID == img->mProducerID) {
         img->mComposited = oldImg.mComposited;
@@ -439,17 +426,6 @@ ImageContainer::NotifyComposite(const ImageCompositeNotification& aNotification)
   ++mPaintCount;
 
   if (aNotification.producerID() == mCurrentProducerID) {
-    uint32_t i;
-    for (i = 0; i < mFrameIDsNotYetComposited.Length(); ++i) {
-      if (mFrameIDsNotYetComposited[i] <= aNotification.frameID()) {
-        if (mFrameIDsNotYetComposited[i] < aNotification.frameID()) {
-          ++mDroppedImageCount;
-        }
-      } else {
-        break;
-      }
-    }
-    mFrameIDsNotYetComposited.RemoveElementsAt(0, i);
     for (auto& img : mCurrentImages) {
       if (img.mFrameID == aNotification.frameID()) {
         img.mComposited = true;
@@ -458,9 +434,15 @@ ImageContainer::NotifyComposite(const ImageCompositeNotification& aNotification)
   }
 
   if (!aNotification.imageTimeStamp().IsNull()) {
-    mPaintDelay = aNotification.firstCompositeTimeStamp() -
-        aNotification.imageTimeStamp();
+    mPaintDelay =
+      aNotification.firstCompositeTimeStamp() - aNotification.imageTimeStamp();
   }
+}
+
+void
+ImageContainer::NotifyDropped(uint32_t aDropped)
+{
+  mDroppedImageCount += aDropped;
 }
 
 #ifdef XP_WIN
@@ -472,26 +454,13 @@ ImageContainer::GetD3D11YCbCrRecycleAllocator(KnowsCompositor* aAllocator)
     return mD3D11YCbCrRecycleAllocator;
   }
 
-  RefPtr<ID3D11Device> device = gfx::DeviceManagerDx::Get()->GetContentDevice();
-  if (!device) {
-    device = gfx::DeviceManagerDx::Get()->GetCompositorDevice();
-  }
-
-  if (!device || !aAllocator->SupportsD3D11()) {
+  if (!aAllocator->SupportsD3D11() ||
+      !gfx::DeviceManagerDx::Get()->GetImageDevice()) {
     return nullptr;
   }
-
-  RefPtr<ID3D10Multithread> multi;
-  HRESULT hr =
-    device->QueryInterface((ID3D10Multithread**)getter_AddRefs(multi));
-  if (FAILED(hr) || !multi) {
-    gfxWarning() << "Multithread safety interface not supported. " << hr;
-    return nullptr;
-  }
-  multi->SetMultithreadProtected(TRUE);
 
   mD3D11YCbCrRecycleAllocator =
-    new D3D11YCbCrRecycleAllocator(aAllocator, device);
+    new D3D11YCbCrRecycleAllocator(aAllocator);
   return mD3D11YCbCrRecycleAllocator;
 }
 #endif
@@ -506,7 +475,7 @@ PlanarYCbCrImage::PlanarYCbCrImage()
 RecyclingPlanarYCbCrImage::~RecyclingPlanarYCbCrImage()
 {
   if (mBuffer) {
-    mRecycleBin->RecycleBuffer(Move(mBuffer), mBufferSize);
+    mRecycleBin->RecycleBuffer(std::move(mBuffer), mBufferSize);
   }
 }
 

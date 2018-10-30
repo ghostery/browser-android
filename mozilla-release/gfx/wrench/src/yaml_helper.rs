@@ -34,7 +34,6 @@ pub trait YamlHelper {
     fn as_glyph_raster_space(&self) -> Option<GlyphRasterSpace>;
     fn as_clip_mode(&self) -> Option<ClipMode>;
     fn as_mix_blend_mode(&self) -> Option<MixBlendMode>;
-    fn as_scroll_policy(&self) -> Option<ScrollPolicy>;
     fn as_filter_op(&self) -> Option<FilterOp>;
     fn as_vec_filter_op(&self) -> Option<Vec<FilterOp>>;
 }
@@ -121,8 +120,6 @@ define_string_enum!(
         Luminosity = "luminosity"
     ]
 );
-
-define_string_enum!(ScrollPolicy, [Scrollable = "scrollable", Fixed = "fixed"]);
 
 define_string_enum!(
     LineOrientation,
@@ -540,10 +537,6 @@ impl YamlHelper for Yaml {
         self.as_str().and_then(|x| StringEnum::from_str(x))
     }
 
-    fn as_scroll_policy(&self) -> Option<ScrollPolicy> {
-        self.as_str().and_then(|x| StringEnum::from_str(x))
-    }
-
     fn as_clip_mode(&self) -> Option<ClipMode> {
         self.as_str().and_then(|x| StringEnum::from_str(x))
     }
@@ -551,6 +544,9 @@ impl YamlHelper for Yaml {
     fn as_filter_op(&self) -> Option<FilterOp> {
         if let Some(s) = self.as_str() {
             match parse_function(s) {
+                ("identity", _, _) => {
+                    Some(FilterOp::Identity)
+                }
                 ("blur", ref args, _) if args.len() == 1 => {
                     Some(FilterOp::Blur(args[0].parse().unwrap()))
                 }

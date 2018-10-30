@@ -5,10 +5,10 @@
 
 var EXPORTED_SYMBOLS = ["PlacesUtils"];
 
-Cu.importGlobalProperties(["URL"]);
-
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
+
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   Services: "resource://gre/modules/Services.jsm",
@@ -88,7 +88,7 @@ async function notifyKeywordChange(url, keyword, source) {
                                          bookmark.type,
                                          bookmark.parentId,
                                          bookmark.guid, bookmark.parentGuid,
-                                         "", source
+                                         "", source,
                                        ]);
   }
 }
@@ -115,7 +115,7 @@ function getAnnotationsForItem(aItemId) {
       name,
       flags: flags.value,
       expires: exp.value,
-      value: value.value
+      value: value.value,
     });
   }
   return annos;
@@ -252,7 +252,8 @@ const BOOKMARK_VALIDATORS = Object.freeze({
   keyword: simpleValidateFunc(v => (typeof(v) == "string") && v.length),
   charset: simpleValidateFunc(v => (typeof(v) == "string") && v.length),
   postData: simpleValidateFunc(v => (typeof(v) == "string") && v.length),
-  tags: simpleValidateFunc(v => Array.isArray(v) && v.length),
+  tags: simpleValidateFunc(v => Array.isArray(v) && v.length &&
+                                v.every(item => item && typeof item == "string")),
 });
 
 // Sync bookmark records can contain additional properties.
@@ -261,13 +262,13 @@ const SYNC_BOOKMARK_VALIDATORS = Object.freeze({
   recordId: simpleValidateFunc(v => typeof v == "string" && (
                                 (PlacesSyncUtils.bookmarks.ROOTS.includes(v) || PlacesUtils.isValidGuid(v)))),
   parentRecordId: v => SYNC_BOOKMARK_VALIDATORS.recordId(v),
-  // Sync uses kinds instead of types, which distinguish between livemarks,
-  // queries, and smart bookmarks.
+  // Sync uses kinds instead of types, which distinguish between livemarks and
+  // queries.
   kind: simpleValidateFunc(v => typeof v == "string" &&
                                 Object.values(PlacesSyncUtils.bookmarks.KINDS).includes(v)),
   query: simpleValidateFunc(v => v === null || (typeof v == "string" && v)),
   folder: simpleValidateFunc(v => typeof v == "string" && v &&
-                                  v.length <= Ci.nsITaggingService.MAX_TAG_LENGTH),
+                                  v.length <= PlacesUtils.bookmarks.MAX_TAG_LENGTH),
   tags: v => {
     if (v === null) {
       return [];
@@ -277,15 +278,13 @@ const SYNC_BOOKMARK_VALIDATORS = Object.freeze({
     }
     for (let tag of v) {
       if (typeof tag != "string" || !tag ||
-          tag.length > Ci.nsITaggingService.MAX_TAG_LENGTH) {
+          tag.length > PlacesUtils.bookmarks.MAX_TAG_LENGTH) {
         throw new Error(`Invalid tag: ${tag}`);
       }
     }
     return v;
   },
   keyword: simpleValidateFunc(v => v === null || typeof v == "string"),
-  description: simpleValidateFunc(v => v === null || typeof v == "string"),
-  loadInSidebar: simpleValidateFunc(v => v === true || v === false),
   dateAdded: simpleValidateFunc(v => typeof v === "number"
     && v > PlacesSyncUtils.bookmarks.EARLIEST_BOOKMARK_TIMESTAMP),
   feed: v => v === null ? v : BOOKMARK_VALIDATORS.url(v),
@@ -324,7 +323,6 @@ var PlacesUtils = {
 
   LMANNO_FEEDURI: "livemark/feedURI",
   LMANNO_SITEURI: "livemark/siteURI",
-  READ_ONLY_ANNO: "placesInternal/READ_ONLY",
   CHARSET_ANNO: "URIProperties/characterSet",
   // Deprecated: This is only used for supporting import from older datasets.
   MOBILE_ROOT_ANNO: "mobile/bookmarksRoot",
@@ -341,6 +339,7 @@ var PlacesUtils = {
   TOPIC_BOOKMARKS_RESTORE_FAILED: "bookmarks-restore-failed",
 
   ACTION_SCHEME: "moz-action:",
+  observers: PlacesObservers,
 
   /**
     * GUIDs associated with virtual queries that are used for displaying the
@@ -493,7 +492,7 @@ var PlacesUtils = {
       let [, type, params] = url.match(MOZ_ACTION_REGEX);
       let action = {
         type,
-        params: JSON.parse(params)
+        params: JSON.parse(params),
       };
       for (let key in action.params) {
         action.params[key] = decodeURIComponent(action.params[key]);
@@ -858,7 +857,7 @@ var PlacesUtils = {
       if (PlacesUtils.nodeIsFolder(node) &&
           node.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER_SHORTCUT &&
           asQuery(node).queryOptions.excludeItems) {
-        let folderRoot = PlacesUtils.getFolderContents(node.itemId, false, true).root;
+        let folderRoot = PlacesUtils.getFolderContents(node.bookmarkGuid, false, true).root;
         try {
           return gatherDataFunc(folderRoot);
         } finally {
@@ -1063,16 +1062,16 @@ var PlacesUtils = {
       throw new TypeError(`title property of PageInfo object: ${pageInfo.title} must be a string if provided`);
     }
 
-    if (typeof pageInfo.description === "string" || pageInfo.description === null) {
+    if ("description" in pageInfo && (typeof pageInfo.description === "string" || pageInfo.description === null)) {
       info.description = pageInfo.description ? pageInfo.description.slice(0, DB_DESCRIPTION_LENGTH_MAX) : null;
     } else if (pageInfo.description !== undefined) {
       throw new TypeError(`description property of pageInfo object: ${pageInfo.description} must be either a string or null if provided`);
     }
 
-    if (pageInfo.previewImageURL || pageInfo.previewImageURL === null) {
+    if ("previewImageURL" in pageInfo) {
       let previewImageURL = pageInfo.previewImageURL;
 
-      if (previewImageURL === null) {
+      if (!previewImageURL) {
         info.previewImageURL = null;
       } else if (typeof(previewImageURL) === "string" && previewImageURL.length <= DB_URL_LENGTH_MAX) {
         info.previewImageURL = new URL(previewImageURL);
@@ -1083,6 +1082,32 @@ var PlacesUtils = {
       } else {
         throw new TypeError("previewImageURL property of pageInfo object: ${previewImageURL} is invalid");
       }
+    }
+
+    if (pageInfo.annotations) {
+      if (typeof pageInfo.annotations != "object" ||
+          pageInfo.annotations.constructor.name != "Map") {
+        throw new TypeError("annotations must be a Map");
+      }
+
+      if (pageInfo.annotations.size == 0) {
+        throw new TypeError("there must be at least one annotation");
+      }
+
+      for (let [key, value] of pageInfo.annotations.entries()) {
+        if (typeof key != "string") {
+          throw new TypeError("all annotation keys must be strings");
+        }
+        if (typeof value != "string" &&
+            typeof value != "number" &&
+            typeof value != "boolean" &&
+            value !== null &&
+            value !== undefined) {
+          throw new TypeError("all annotation values must be Boolean, Numbers or Strings");
+        }
+      }
+
+      info.annotations = pageInfo.annotations;
     }
 
     if (!validateVisits) {
@@ -1146,7 +1171,7 @@ var PlacesUtils = {
 
   /**
    * Generates a nsINavHistoryResult for the contents of a folder.
-   * @param   folderId
+   * @param   aFolderGuid
    *          The folder to open
    * @param   [optional] excludeItems
    *          True to hide all items (individual bookmarks). This is used on
@@ -1158,13 +1183,12 @@ var PlacesUtils = {
    * @returns A nsINavHistoryResult containing the contents of the
    *          folder. The result.root is guaranteed to be open.
    */
-  getFolderContents:
-  function PU_getFolderContents(aFolderId, aExcludeItems, aExpandQueries) {
-    if (typeof aFolderId !== "number") {
-      throw new Error("aFolderId should be a number.");
+  getFolderContents(aFolderGuid, aExcludeItems, aExpandQueries) {
+    if (!this.isValidGuid(aFolderGuid)) {
+      throw new Error("aFolderGuid should be a valid GUID.");
     }
     var query = this.history.getNewQuery();
-    query.setFolders([aFolderId], 1);
+    query.setParents([aFolderGuid], 1);
     var options = this.history.getNewQueryOptions();
     options.excludeItems = aExcludeItems;
     options.expandQueries = aExpandQueries;
@@ -1254,37 +1278,19 @@ var PlacesUtils = {
     return this.tagsFolderId = this.bookmarks.tagsFolder;
   },
 
-  get unfiledBookmarksFolderId() {
-    delete this.unfiledBookmarksFolderId;
-    return this.unfiledBookmarksFolderId = this.bookmarks.unfiledBookmarksFolder;
-  },
-
-  get mobileFolderId() {
-    delete this.mobileFolderId;
-    return this.mobileFolderId = this.bookmarks.mobileFolder;
-  },
-
   /**
    * Checks if item is a root.
    *
-   * @param {Number|String} guid The guid or id of the item to look for.
+   * @param {String} guid The guid of the item to look for.
    * @returns {Boolean} true if guid is a root, false otherwise.
    */
   isRootItem(guid) {
-    if (typeof guid === "string") {
-      return guid == PlacesUtils.bookmarks.menuGuid ||
-             guid == PlacesUtils.bookmarks.toolbarGuid ||
-             guid == PlacesUtils.bookmarks.unfiledGuid ||
-             guid == PlacesUtils.bookmarks.tagsGuid ||
-             guid == PlacesUtils.bookmarks.rootGuid ||
-             guid == PlacesUtils.bookmarks.mobileGuid;
-    }
-    return guid == PlacesUtils.bookmarksMenuFolderId ||
-           guid == PlacesUtils.toolbarFolderId ||
-           guid == PlacesUtils.unfiledBookmarksFolderId ||
-           guid == PlacesUtils.tagsFolderId ||
-           guid == PlacesUtils.placesRootId ||
-           guid == PlacesUtils.mobileFolderId;
+    return guid == PlacesUtils.bookmarks.menuGuid ||
+           guid == PlacesUtils.bookmarks.toolbarGuid ||
+           guid == PlacesUtils.bookmarks.unfiledGuid ||
+           guid == PlacesUtils.bookmarks.tagsGuid ||
+           guid == PlacesUtils.bookmarks.rootGuid ||
+           guid == PlacesUtils.bookmarks.mobileGuid;
   },
 
   /**
@@ -1458,51 +1464,6 @@ var PlacesUtils = {
     }
     let db = await gAsyncDBWrapperPromised;
     return db.executeBeforeShutdown(name, task);
-  },
-
-  /**
-   * Sets the character-set for a URI.
-   *
-   * @param {nsIURI} aURI
-   * @param {String} aCharset character-set value.
-   * @return {Promise}
-   */
-  setCharsetForURI: function PU_setCharsetForURI(aURI, aCharset) {
-    return new Promise(resolve => {
-      // Delaying to catch issues with asynchronous behavior while waiting
-      // to implement asynchronous annotations in bug 699844.
-      Services.tm.dispatchToMainThread(function() {
-        if (aCharset && aCharset.length > 0) {
-          PlacesUtils.annotations.setPageAnnotation(
-            aURI, PlacesUtils.CHARSET_ANNO, aCharset, 0,
-            Ci.nsIAnnotationService.EXPIRE_NEVER);
-        } else {
-          PlacesUtils.annotations.removePageAnnotation(
-            aURI, PlacesUtils.CHARSET_ANNO);
-        }
-        resolve();
-      });
-    });
-  },
-
-  /**
-   * Gets the last saved character-set for a URI.
-   *
-   * @param aURI nsIURI
-   * @return {Promise}
-   * @resolve a character-set or null.
-   */
-  getCharsetForURI: function PU_getCharsetForURI(aURI) {
-    return new Promise(resolve => {
-      Services.tm.dispatchToMainThread(function() {
-        let charset = null;
-        try {
-          charset = PlacesUtils.annotations.getPageAnnotation(aURI,
-                                                              PlacesUtils.CHARSET_ANNO);
-        } catch (ex) { }
-        resolve(charset);
-      });
-    });
   },
 
   /**
@@ -1715,15 +1676,15 @@ var PlacesUtils = {
         case PlacesUtils.bookmarks.TYPE_FOLDER:
           item.type = PlacesUtils.TYPE_X_MOZ_PLACE_CONTAINER;
           // Mark root folders.
-          if (itemId == PlacesUtils.placesRootId)
+          if (item.guid == PlacesUtils.bookmarks.rootGuid)
             item.root = "placesRoot";
-          else if (itemId == PlacesUtils.bookmarksMenuFolderId)
+          else if (item.guid == PlacesUtils.bookmarks.menuGuid)
             item.root = "bookmarksMenuFolder";
-          else if (itemId == PlacesUtils.unfiledBookmarksFolderId)
+          else if (item.guid == PlacesUtils.bookmarks.unfiledGuid)
             item.root = "unfiledBookmarksFolder";
-          else if (itemId == PlacesUtils.toolbarFolderId)
+          else if (item.guid == PlacesUtils.bookmarks.toolbarGuid)
             item.root = "toolbarFolder";
-          else if (itemId == PlacesUtils.mobileFolderId)
+          else if (item.guid == PlacesUtils.bookmarks.mobileGuid)
             item.root = "mobileFolder";
           break;
         case PlacesUtils.bookmarks.TYPE_SEPARATOR:
@@ -1847,14 +1808,12 @@ var PlacesUtils = {
     }
 
     return rootItem;
-  }
+  },
 };
 
 XPCOMUtils.defineLazyGetter(PlacesUtils, "history", function() {
   let hs = Cc["@mozilla.org/browser/nav-history-service;1"]
-             .getService(Ci.nsINavHistoryService)
-             .QueryInterface(Ci.nsIBrowserHistory)
-             .QueryInterface(Ci.nsPIPlacesDatabase);
+             .getService(Ci.nsINavHistoryService);
   return Object.freeze(new Proxy(hs, {
     get(target, name) {
       let property, object;
@@ -1869,21 +1828,13 @@ XPCOMUtils.defineLazyGetter(PlacesUtils, "history", function() {
         return property.bind(object);
       }
       return property;
-    }
+    },
   }));
 });
 
-if (AppConstants.MOZ_APP_NAME != "firefox") {
-  // TODO (bug 1458865): This is deprecated and should not be used. We'll
-  // remove it once comm-central stops using it.
-  XPCOMUtils.defineLazyServiceGetter(PlacesUtils, "asyncHistory",
-                                    "@mozilla.org/browser/history;1",
-                                    "mozIAsyncHistory");
-}
-
 XPCOMUtils.defineLazyServiceGetter(PlacesUtils, "favicons",
                                    "@mozilla.org/browser/favicon-service;1",
-                                   "mozIAsyncFavicons");
+                                   "nsIFaviconService");
 
 XPCOMUtils.defineLazyServiceGetter(this, "bmsvc",
                                    "@mozilla.org/browser/nav-bookmarks-service;1",
@@ -1891,7 +1842,7 @@ XPCOMUtils.defineLazyServiceGetter(this, "bmsvc",
 XPCOMUtils.defineLazyGetter(PlacesUtils, "bookmarks", () => {
   return Object.freeze(new Proxy(Bookmarks, {
     get: (target, name) => Bookmarks.hasOwnProperty(name) ? Bookmarks[name]
-                                                          : bmsvc[name]
+                                                          : bmsvc[name],
   }));
 });
 
@@ -1972,7 +1923,7 @@ function setupDbForShutdown(conn, name) {
 XPCOMUtils.defineLazyGetter(this, "gAsyncDBConnPromised",
   () => Sqlite.cloneStorageConnection({
     connection: PlacesUtils.history.DBConnection,
-    readOnly:   true
+    readOnly:   true,
   }).then(conn => {
       setupDbForShutdown(conn, "PlacesUtils read-only connection");
       return conn;
@@ -2000,18 +1951,25 @@ XPCOMUtils.defineLazyGetter(this, "gAsyncDBWrapperPromised",
  */
 PlacesUtils.metadata = {
   cache: new Map(),
+  jsonPrefix: "data:application/json;base64,",
 
   /**
    * Returns the value associated with a metadata key.
    *
    * @param  {String} key
    *         The metadata key to look up.
-   * @return {*}
-   *         The value associated with the key, or `null` if not set.
+   * @param  {String|Object|Array} defaultValue
+   *         Optional. The default value to return if the value is not present,
+   *         or cannot be parsed.
+   * @resolves {*}
+   *         The value associated with the key, or the defaultValue if there is one.
+   * @rejects
+   *         Rejected if the value is not found or it cannot be parsed
+   *         and there is no defaultValue.
    */
-  get(key) {
+  get(key, defaultValue) {
     return PlacesUtils.withConnectionWrapper("PlacesUtils.metadata.get",
-      db => this.getWithConnection(db, key));
+      db => this.getWithConnection(db, key, defaultValue));
   },
 
   /**
@@ -2038,7 +1996,7 @@ PlacesUtils.metadata = {
       db => this.deleteWithConnection(db, ...keys));
   },
 
-  async getWithConnection(db, key) {
+  async getWithConnection(db, key, defaultValue) {
     key = this.canonicalizeKey(key);
     if (this.cache.has(key)) {
       return this.cache.get(key);
@@ -2051,8 +2009,26 @@ PlacesUtils.metadata = {
       let row = rows[0];
       let rawValue = row.getResultByName("value");
       // Convert blobs back to `Uint8Array`s.
-      value = row.getTypeOfIndex(0) == row.VALUE_TYPE_BLOB ?
-              new Uint8Array(rawValue) : rawValue;
+      if (row.getTypeOfIndex(0) == row.VALUE_TYPE_BLOB) {
+        value = new Uint8Array(rawValue);
+      } else if (typeof rawValue == "string" &&
+                 rawValue.startsWith(this.jsonPrefix)) {
+        try {
+          value = JSON.parse(this._base64Decode(rawValue.substr(this.jsonPrefix.length)));
+        } catch (ex) {
+          if (defaultValue !== undefined) {
+            value = defaultValue;
+          } else {
+            throw ex;
+          }
+        }
+      } else {
+        value = rawValue;
+      }
+    } else if (defaultValue !== undefined) {
+      value = defaultValue;
+    } else {
+      throw new Error(`No data stored for key ${key}`);
     }
     this.cache.set(key, value);
     return value;
@@ -2063,12 +2039,18 @@ PlacesUtils.metadata = {
       await this.deleteWithConnection(db, key);
       return;
     }
+
+    let cacheValue = value;
+    if (typeof value == "object" && ChromeUtils.getClassName(value) != "Uint8Array") {
+      value = this.jsonPrefix + this._base64Encode(JSON.stringify(value));
+    }
+
     key = this.canonicalizeKey(key);
     await db.executeCached(`
       REPLACE INTO moz_meta (key, value)
       VALUES (:key, :value)`,
       { key, value });
-    this.cache.set(key, value);
+    this.cache.set(key, cacheValue);
   },
 
   async deleteWithConnection(db, ...keys) {
@@ -2090,6 +2072,17 @@ PlacesUtils.metadata = {
       throw new TypeError("Invalid metadata key: " + key);
     }
     return key.toLowerCase();
+  },
+
+  _base64Encode(str) {
+    return ChromeUtils.base64URLEncode(
+      new TextEncoder("utf-8").encode(str),
+      {pad: true});
+  },
+
+  _base64Decode(str) {
+    return new TextDecoder("utf-8").decode(
+      ChromeUtils.base64URLDecode(str, {padding: "require"}));
   },
 };
 
@@ -2252,7 +2245,7 @@ PlacesUtils.keywords = {
                               GENERATE_GUID()))
               `, { url: url.href, rev_host: PlacesUtils.getReversedHost(url),
                    frecency: url.protocol == "place:" ? 0 : -1 });
-            await db.executeCached("DELETE FROM moz_updatehostsinsert_temp");
+            await db.executeCached("DELETE FROM moz_updateoriginsinsert_temp");
 
             // A new keyword could be assigned to an url that already has one,
             // then we must replace the old keyword with the new one.
@@ -2300,7 +2293,7 @@ PlacesUtils.keywords = {
     if (typeof(keywordOrEntry) == "string") {
       keywordOrEntry = {
         keyword: keywordOrEntry,
-        source: Ci.nsINavBookmarksService.SOURCE_DEFAULT
+        source: Ci.nsINavBookmarksService.SOURCE_DEFAULT,
       };
     }
 
@@ -2463,7 +2456,12 @@ PlacesUtils.keywords = {
           FROM moz_places h
           JOIN moz_keywords k ON k.place_id = h.id
           GROUP BY h.id
-          HAVING h.foreign_count = COUNT(*)`);
+          HAVING h.foreign_count = count(*) +
+            (SELECT count(*)
+             FROM moz_bookmarks b
+             JOIN moz_bookmarks p ON b.parent = p.id
+             WHERE p.parent = :tags_root AND b.fk = h.id)
+          `, { tags_root: PlacesUtils.tagsFolderId });
         for (let row of rows) {
           placeInfosToRemove.push({
             placeId: row.getResultByName("id"),
@@ -2701,5 +2699,5 @@ var GuidHelper = {
         PlacesUtils.bookmarks.removeObserver(this.observer);
       });
     }
-  }
+  },
 };

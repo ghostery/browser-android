@@ -19,7 +19,6 @@
 #include "nsIDocShell.h"
 #include "nsIDocumentLoader.h"
 #include "nsIDOMWindow.h"
-#include "nsIDOMOfflineResourceList.h"
 #include "nsIDocument.h"
 #include "nsIObserverService.h"
 #include "nsIURL.h"
@@ -101,7 +100,7 @@ public:
                                 nsIURI *aManifestURI,
                                 nsIURI *aDocumentURI,
                                 nsIPrincipal* aLoadingPrincipal,
-                                nsIDOMDocument *aDocument)
+                                nsIDocument *aDocument)
         : mService(aService)
         , mManifestURI(aManifestURI)
         , mDocumentURI(aDocumentURI)
@@ -138,7 +137,7 @@ nsOfflineCachePendingUpdate::OnProgressChange(nsIWebProgress *aProgress,
                                               int32_t curTotalProgress,
                                               int32_t maxTotalProgress)
 {
-    NS_NOTREACHED("notification excluded in AddProgressListener(...)");
+    MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
     return NS_OK;
 }
 
@@ -151,7 +150,7 @@ nsOfflineCachePendingUpdate::OnStateChange(nsIWebProgress* aWebProgress,
     if (mDidReleaseThis) {
         return NS_OK;
     }
-    nsCOMPtr<nsIDOMDocument> updateDoc = do_QueryReferent(mDocument);
+    nsCOMPtr<nsIDocument> updateDoc = do_QueryReferent(mDocument);
     if (!updateDoc) {
         // The document that scheduled this update has gone away,
         // we don't need to listen anymore.
@@ -207,7 +206,7 @@ nsOfflineCachePendingUpdate::OnLocationChange(nsIWebProgress* aWebProgress,
                                               nsIURI *location,
                                               uint32_t aFlags)
 {
-    NS_NOTREACHED("notification excluded in AddProgressListener(...)");
+    MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
     return NS_OK;
 }
 
@@ -217,7 +216,7 @@ nsOfflineCachePendingUpdate::OnStatusChange(nsIWebProgress* aWebProgress,
                                             nsresult aStatus,
                                             const char16_t* aMessage)
 {
-    NS_NOTREACHED("notification excluded in AddProgressListener(...)");
+    MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
     return NS_OK;
 }
 
@@ -226,7 +225,7 @@ nsOfflineCachePendingUpdate::OnSecurityChange(nsIWebProgress *aWebProgress,
                                               nsIRequest *aRequest,
                                               uint32_t state)
 {
-    NS_NOTREACHED("notification excluded in AddProgressListener(...)");
+    MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
     return NS_OK;
 }
 
@@ -344,13 +343,12 @@ NS_IMETHODIMP
 nsOfflineCacheUpdateService::ScheduleOnDocumentStop(nsIURI *aManifestURI,
                                                     nsIURI *aDocumentURI,
                                                     nsIPrincipal* aLoadingPrincipal,
-                                                    nsIDOMDocument *aDocument)
+                                                    nsIDocument *aDocument)
 {
     LOG(("nsOfflineCacheUpdateService::ScheduleOnDocumentStop [%p, manifestURI=%p, documentURI=%p doc=%p]",
          this, aManifestURI, aDocumentURI, aDocument));
 
-    nsCOMPtr<nsIDocument> doc = do_QueryInterface(aDocument);
-    nsCOMPtr<nsIWebProgress> progress = do_QueryInterface(doc->GetContainer());
+    nsCOMPtr<nsIWebProgress> progress = do_QueryInterface(aDocument->GetContainer());
     NS_ENSURE_TRUE(progress, NS_ERROR_INVALID_ARG);
 
     // Proceed with cache update
@@ -488,7 +486,7 @@ nsresult
 nsOfflineCacheUpdateService::Schedule(nsIURI *aManifestURI,
                                       nsIURI *aDocumentURI,
                                       nsIPrincipal* aLoadingPrincipal,
-                                      nsIDOMDocument *aDocument,
+                                      nsIDocument *aDocument,
                                       nsPIDOMWindowInner* aWindow,
                                       nsIFile* aCustomProfileDir,
                                       nsIOfflineCacheUpdate **aUpdate)
@@ -504,11 +502,10 @@ nsOfflineCacheUpdateService::Schedule(nsIURI *aManifestURI,
     nsresult rv;
 
     if (aWindow) {
-      // Ensure there is window.applicationCache object that is
-      // responsible for association of the new applicationCache
-      // with the corresponding document.  Just ignore the result.
-      nsCOMPtr<nsIDOMOfflineResourceList> appCacheWindowObject =
-          aWindow->GetApplicationCache();
+        // Ensure there is window.applicationCache object that is
+        // responsible for association of the new applicationCache
+        // with the corresponding document.  Just ignore the result.
+        aWindow->GetApplicationCache();
     }
 
     rv = update->Init(aManifestURI, aDocumentURI, aLoadingPrincipal, aDocument,

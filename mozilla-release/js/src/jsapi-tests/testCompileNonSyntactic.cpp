@@ -3,21 +3,23 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "gc/GCInternals.h"
+#include "js/CompilationAndEvaluation.h"
+#include "js/SourceBufferHolder.h"
 #include "jsapi-tests/tests.h"
 #include "vm/Monitor.h"
 #include "vm/MutexIDs.h"
 
-
 using namespace JS;
 using js::AutoLockMonitor;
 
-struct OffThreadTask {
+struct OffThreadTask
+{
     OffThreadTask()
       : monitor(js::mutexid::ShellOffThreadState),
         token(nullptr)
     {}
 
-    void* waitUntilDone(JSContext* cx)
+    OffThreadToken* waitUntilDone(JSContext* cx)
     {
         if (OffThreadParsingMustWaitForGC(cx->runtime()))
             js::gc::FinishGC(cx);
@@ -26,12 +28,12 @@ struct OffThreadTask {
         while (!token) {
             alm.wait();
         }
-        void* result = token;
+        OffThreadToken* result = token;
         token = nullptr;
         return result;
     }
 
-    void markDone(void* tokenArg)
+    void markDone(JS::OffThreadToken* tokenArg)
     {
         AutoLockMonitor alm(monitor);
         token = tokenArg;
@@ -39,14 +41,14 @@ struct OffThreadTask {
     }
 
     static void
-    OffThreadCallback(void* token, void* context)
+    OffThreadCallback(OffThreadToken* token, void* context)
     {
         auto self = static_cast<OffThreadTask*>(context);
         self->markDone(token);
     }
 
     js::Monitor monitor;
-    void* token;
+    OffThreadToken* token;
 };
 
 
@@ -69,7 +71,7 @@ testCompile(bool nonSyntactic)
                   "Source buffers must be same length");
 
 
-    SourceBufferHolder buf(src_16, length, SourceBufferHolder::NoOwnership);
+    JS::SourceBufferHolder buf(src_16, length, JS::SourceBufferHolder::NoOwnership);
 
     JS::CompileOptions options(cx);
     options.setNonSyntacticScope(nonSyntactic);
@@ -85,8 +87,11 @@ testCompile(bool nonSyntactic)
     CHECK(CompileForNonSyntacticScope(cx, options, src, length, &script));
     CHECK_EQUAL(script->hasNonSyntacticScope(), true);
 
-    CHECK(CompileForNonSyntacticScope(cx, options, src_16, length, &script));
-    CHECK_EQUAL(script->hasNonSyntacticScope(), true);
+    {
+        JS::SourceBufferHolder srcBuf(src_16, length, JS::SourceBufferHolder::NoOwnership);
+        CHECK(CompileForNonSyntacticScope(cx, options, srcBuf, &script));
+        CHECK_EQUAL(script->hasNonSyntacticScope(), true);
+    }
 
 
     CHECK(Compile(cx, options, buf, &script));
@@ -95,16 +100,19 @@ testCompile(bool nonSyntactic)
     CHECK(Compile(cx, options, src, length, &script));
     CHECK_EQUAL(script->hasNonSyntacticScope(), nonSyntactic);
 
-    CHECK(Compile(cx, options, src_16, length, &script));
-    CHECK_EQUAL(script->hasNonSyntacticScope(), nonSyntactic);
+    {
+        JS::SourceBufferHolder srcBuf(src_16, length, JS::SourceBufferHolder::NoOwnership);
+        CHECK(Compile(cx, options, srcBuf, &script));
+        CHECK_EQUAL(script->hasNonSyntacticScope(), nonSyntactic);
+    }
 
 
     options.forceAsync = true;
     OffThreadTask task;
-    void* token;
+    OffThreadToken* token;
 
-    CHECK(CompileOffThread(cx, options, src_16, length,
-                           task.OffThreadCallback, &task));
+    JS::SourceBufferHolder srcBuf(src_16, length, JS::SourceBufferHolder::NoOwnership);
+    CHECK(CompileOffThread(cx, options, srcBuf, task.OffThreadCallback, &task));
     CHECK(token = task.waitUntilDone(cx));
     CHECK(script = FinishOffThreadScript(cx, token));
     CHECK_EQUAL(script->hasNonSyntacticScope(), nonSyntactic);

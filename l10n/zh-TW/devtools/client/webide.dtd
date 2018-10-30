@@ -36,8 +36,6 @@
 <!ENTITY runtimeMenu_takeScreenshot_accesskey "S">
 <!ENTITY runtimeMenu_showDetails_label "Runtime 資訊">
 <!ENTITY runtimeMenu_showDetails_accesskey "E">
-<!ENTITY runtimeMenu_showMonitor_label "監控">
-<!ENTITY runtimeMenu_showMonitor_accesskey "M">
 <!ENTITY runtimeMenu_showDevicePrefs_label "裝置偏好設定">
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "D">
 <!ENTITY runtimeMenu_showSettings_label "裝置設定">
@@ -45,8 +43,6 @@
 
 <!ENTITY viewMenu_label "檢視">
 <!ENTITY viewMenu_accesskey "V">
-<!ENTITY viewMenu_toggleEditor_label "切換編輯器">
-<!ENTITY viewMenu_toggleEditor_accesskey "E">
 <!ENTITY viewMenu_zoomin_label "放大">
 <!ENTITY viewMenu_zoomin_accesskey "I">
 <!ENTITY viewMenu_zoomout_label "縮小">
@@ -66,8 +62,6 @@
 <!ENTITY key_play "R">
 <!-- show toolbox -->
 <!ENTITY key_toggleToolbox "VK_F12">
-<!-- toggle sidebar -->
-<!ENTITY key_toggleEditor "B">
 <!-- zoom -->
 <!ENTITY key_zoomin "+">
 <!ENTITY key_zoomin2 "=">
@@ -79,10 +73,9 @@
 <!ENTITY projectPanel_tabs "分頁">
 <!ENTITY runtimePanel_usb "USB 裝置">
 <!ENTITY runtimePanel_wifi "Wi-Fi 裝置">
-<!ENTITY runtimePanel_simulator "模擬器">
 <!ENTITY runtimePanel_other "其他">
-<!ENTITY runtimePanel_installsimulator "安裝模擬器">
 <!ENTITY runtimePanel_noadbhelper "安裝 ADB Helper">
+<!ENTITY runtimePanel_noadbextension "安裝 ADB 擴充套件">
 <!ENTITY runtimePanel_nousbdevice "看不到您的裝置嗎？">
 <!ENTITY runtimePanel_refreshDevices_label "重新整理裝置">
 
@@ -94,7 +87,6 @@
 <!ENTITY details_location "位置">
 <!ENTITY details_manifestURL "應用程式 ID">
 <!ENTITY details_removeProject_button "移除專案">
-<!ENTITY details_showPrepackageLog_button "顯示封裝前紀錄">
 
 <!-- New App -->
 <!ENTITY newAppWindowTitle "新增應用程式">
@@ -123,21 +115,6 @@
 <!ENTITY prefs_options_rememberlastproject_tooltip "在 WebIDE 啟動時還原先前的專案">
 <!ENTITY prefs_options_templatesurl "範本網址">
 <!ENTITY prefs_options_templatesurl_tooltip "可用範本索引">
-<!ENTITY prefs_options_showeditor "顯示編輯器">
-<!ENTITY prefs_options_showeditor_tooltip "顯示內部編輯器">
-<!ENTITY prefs_options_tabsize "Tab 大小">
-<!ENTITY prefs_options_expandtab "Soft tab">
-<!ENTITY prefs_options_expandtab_tooltip "使用空白而不使用 tab 符號">
-<!ENTITY prefs_options_detectindentation "自動縮排">
-<!ENTITY prefs_options_detectindentation_tooltip "依照原始內容猜測縮排長度">
-<!ENTITY prefs_options_autocomplete "自動完成">
-<!ENTITY prefs_options_autocomplete_tooltip "啟用程式碼自動完成">
-<!ENTITY prefs_options_autoclosebrackets "自動關閉括號">
-<!ENTITY prefs_options_autoclosebrackets_tooltip "自動插入結尾括號">
-<!ENTITY prefs_options_keybindings "Keybinding">
-<!ENTITY prefs_options_keybindings_default "預設">
-<!ENTITY prefs_options_autosavefiles "自動儲存檔案">
-<!ENTITY prefs_options_autosavefiles_tooltip "執行專案前自動儲存已編輯的檔案">
 
 <!-- Runtime Details -->
 <!ENTITY runtimedetails_title "Runtime 資訊">
@@ -169,10 +146,6 @@
 <!ENTITY devicesetting_newtext "設定值">
 <!ENTITY devicesetting_addnew "新增設定值">
 
-<!-- Monitor -->
-<!ENTITY monitor_title "監控">
-<!ENTITY monitor_help "說明">
-
 <!-- WiFi Authentication -->
 <!-- LOCALIZATION NOTE (wifi_auth_header): The header displayed on the dialog
      that instructs the user to transfer an authentication token to the
@@ -194,19 +167,3 @@
 
 <!-- Logs panel -->
 <!ENTITY logs_title "封裝前指令紀錄">
-
-<!-- Simulator Options -->
-<!ENTITY simulator_title "模擬器選項">
-<!ENTITY simulator_remove "刪除模擬器">
-<!ENTITY simulator_reset "回復為預設值">
-<!ENTITY simulator_name "名稱">
-<!ENTITY simulator_software "軟體">
-<!ENTITY simulator_version "版本">
-<!ENTITY simulator_profile "設定檔">
-<!ENTITY simulator_hardware "硬體">
-<!ENTITY simulator_device "裝置">
-<!ENTITY simulator_screenSize "畫面">
-<!ENTITY simulator_pixelRatio "像素比例">
-<!ENTITY simulator_tv_data "電視模擬">
-<!ENTITY simulator_tv_data_open "設定資料">
-<!ENTITY simulator_tv_data_open_button "開啟設定目錄…">

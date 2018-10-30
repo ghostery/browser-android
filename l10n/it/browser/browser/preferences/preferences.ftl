@@ -6,6 +6,8 @@ do-not-track-description = Invia ai siti web un segnale “Do Not Track” per c
 do-not-track-learn-more = Ulteriori informazioni
 do-not-track-option-default =
     .label = Solo quando è attiva la protezione antitracciamento
+do-not-track-option-default-content-blocking =
+    .label = Solo quando { -brand-short-name } è impostato per bloccare gli elementi traccianti rilevati
 do-not-track-option-always =
     .label = Sempre
 pref-page =
@@ -14,14 +16,6 @@ pref-page =
             [windows] Opzioni
            *[other] Preferenze
         }
-# This is used to determine the width of the search field in about:preferences,
-# in order to make the entire placeholder string visible
-#
-# Notice: The value of the `.style` attribute is a CSS string, and the `width`
-# is the name of the CSS property. It is intended only to adjust the element's width.
-# Do not translate.
-search-input =
-    .style = width: 16em
 # This is used to determine the width of the search field in about:preferences,
 # in order to make the entire placeholder string visible
 #
@@ -98,6 +92,7 @@ extension-controlled-privacy-containers = Le schede contenitore sono necessarie 
 # This string is shown to notify the user that their tracking protection preferences
 # are being controlled by an extension.
 extension-controlled-websites-tracking-protection-mode = La protezione antitracciamento è attualmente gestita da un’estensione (<img data-l10n-name="icon"/> { $name }).
+extension-controlled-websites-content-blocking-all-trackers = Questa impostazione è attualmente gestita da un’estensione (<img data-l10n-name="icon"/> { $name }).
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
 extension-controlled-proxy-config = Le impostazioni di <img data-l10n-name="icon"/> { $name } relative alla connessione a Internet sono attualmente gestite da un’estensione ({ -brand-short-name }).
@@ -137,20 +132,11 @@ is-not-default = { -brand-short-name } non è il browser predefinito
 set-as-my-default-browser =
     .label = Imposta come browser predefinito…
     .accesskey = o
-startup-page = Quando si avvia { -brand-short-name }
-    .accesskey = Q
-startup-user-homepage =
-    .label = Mostra la pagina iniziale
-startup-blank-page =
-    .label = Mostra una pagina vuota
-startup-prev-session =
-    .label = Mostra le finestre e le schede dell’ultima sessione
 startup-restore-previous-session =
     .label = Ripristina la sessione precedente
     .accesskey = R
 disable-extension =
     .label = Disattiva estensione
-home-page-header = Pagina iniziale
 tabs-group-header = Schede
 ctrl-tab-recently-used-order =
     .label = Scorri le schede con Ctrl+Tab ordinandole in base all’utilizzo più recente
@@ -215,10 +201,18 @@ colors-settings =
     .label = Colori…
     .accesskey = r
 language-header = Lingua
-choose-language-description = Scelta della lingua in cui verranno visualizzate le pagine web
+choose-language-description = Scegli la lingua in cui visualizzare le pagine web
 choose-button =
     .label = Scegli…
     .accesskey = g
+
+choose-browser-language-description = Scegli le lingue in cui visualizzare menu, messaggi e notifiche di { -brand-short-name }.
+confirm-browser-language-change-description = Riavviare { -brand-short-name } per applicare queste modifiche
+manage-browser-languages-button =
+  .label = Imposta alternative…
+  .accesskey = l
+confirm-browser-language-change-button = Applica e riavvia
+
 translate-web-pages =
     .label = Traduci contenuti web
     .accesskey = T
@@ -270,7 +264,6 @@ play-drm-content =
 play-drm-content-learn-more = Ulteriori informazioni
 update-application-title = Aggiornamenti di { -brand-short-name }
 update-application-description = Mantieni { -brand-short-name } aggiornato per garantire il massimo in termini di prestazioni, stabilità e sicurezza.
-update-application-info = Versione { $version } <a>Novità</a>
 update-application-version = Versione { $version } <a data-l10n-name="learn-more">Novità</a>
 update-history =
     .label = Mostra cronologia aggiornamenti…
@@ -306,7 +299,6 @@ performance-allow-hw-accel =
 performance-limit-content-process-option = Numero massimo di processi per i contenuti
     .accesskey = o
 performance-limit-content-process-enabled-desc = Un numero maggiore di processi per la gestione dei contenuti può migliorare le prestazioni quando si utilizzano molte schede, comportando però un maggiore utilizzo di memoria.
-performance-limit-content-process-disabled-desc = È possibile modificare il numero di processi per i contenuti solo se è attiva la modalità multiprocesso di { -brand-short-name }. <a>Scopri come verificare se la modalità multiprocesso è attiva</a>
 performance-limit-content-process-blocked-desc = È possibile modificare il numero di processi per i contenuti solo se è attiva la modalità multiprocesso di { -brand-short-name }. <a data-l10n-name="learn-more">Scopri come verificare se la modalità multiprocesso è attiva</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
@@ -335,6 +327,7 @@ browsing-search-on-start-typing =
 ## General Section - Proxy
 
 network-proxy-title = Server proxy
+network-settings-title = Impostazioni di rete
 network-proxy-connection-description = Determina come { -brand-short-name } si collega a Internet.
 network-proxy-connection-learn-more = Ulteriori informazioni
 network-proxy-connection-settings =
@@ -377,9 +370,6 @@ use-current-pages =
 choose-bookmark =
     .label = Usa un segnalibro…
     .accesskey = b
-restore-default =
-    .label = Ripristina la pagina predefinita
-    .accesskey = f
 
 ## Search Section
 
@@ -435,7 +425,7 @@ containers-add-button =
 containers-preferences-button =
     .label = Preferenze
 containers-remove-button =
-    .label = Elimina
+    .label = Rimuovi
 
 ## Sync Section - Signed out
 
@@ -472,7 +462,7 @@ sync-resend-verification =
     .label = Invia di nuovo email di verifica
     .accesskey = n
 sync-remove-account =
-    .label = Elimina account
+    .label = Rimuovi account
     .accesskey = n
 sync-sign-in =
     .label = Accedi
@@ -535,6 +525,7 @@ privacy-header = Privacy del browser
 ## Privacy Section - Forms
 
 forms-header = Moduli e password
+logins-header = Accessi e password
 forms-ask-to-save-logins =
     .label = Chiedi se salvare le credenziali di accesso ai siti web
     .accesskey = C
@@ -576,9 +567,6 @@ history-dontremember-description = Verranno utilizzate le stesse impostazioni de
 history-private-browsing-permanent =
     .label = Utilizza sempre la modalità Navigazione anonima
     .accesskey = U
-history-remember-option =
-    .label = Conserva la cronologia di navigazione e dei download
-    .accesskey = d
 history-remember-browser-option =
     .label = Conserva la cronologia di navigazione e dei download
     .accesskey = d
@@ -608,7 +596,7 @@ sitedata-accept-cookies-option =
     .label = Accetta cookie e dati dai siti web (consigliato)
     .accesskey = k
 sitedata-block-cookies-option =
-    .label = Blocca cookie e dati dei siti web (potrebbe causare malfunzionamenti in alcuni siti)
+    .label = Blocca cookie e dati dei siti web (alcuni siti potrebbero non funzionare correttamente)
     .accesskey = B
 sitedata-keep-until = Conservali fino
     .accesskey = v
@@ -624,6 +612,31 @@ sitedata-accept-third-party-visited-option =
     .label = dai siti visitati
 sitedata-accept-third-party-never-option =
     .label = mai
+
+sitedata-allow-cookies-option =
+    .label = Accetta cookie e dati dei siti web
+    .accesskey = A
+
+sitedata-disallow-cookies-option =
+    .label = Blocca cookie e dati dei siti web
+    .accesskey = B
+
+# This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
+# The list items are the strings named sitedata-block-*-option*.
+sitedata-block-desc = Contenuti bloccati:
+    .accesskey = C
+
+sitedata-block-trackers-option-recommended =
+    .label = elementi traccianti di terze parti (consigliato)
+sitedata-block-trackers-option =
+    .label = elementi traccianti di terze parti
+sitedata-block-unvisited-option =
+    .label = cookie da siti web non visitati
+sitedata-block-all-third-party-option =
+    .label = tutti i cookie di terze parti (alcuni siti potrebbero non funzionare correttamente)
+sitedata-block-all-option =
+    .label = tutti i cookie (alcuni siti non funzioneranno correttamente)
+
 sitedata-clear =
     .label = Elimina dati…
     .accesskey = i
@@ -633,6 +646,7 @@ sitedata-settings =
 sitedata-cookies-exceptions =
     .label = Eccezioni…
     .accesskey = z
+sitedata-warning-your-settings-prevent-changes = Le impostazioni in Blocco contenuti impediscono modifiche alla sezione Cookie e dati dei siti web.
 
 ## Privacy Section - Address Bar
 
@@ -649,6 +663,67 @@ addressbar-locbar-openpage-option =
     .accesskey = d
 addressbar-suggestions-settings = Modifica le impostazioni relative ai suggerimenti dei motori di ricerca
 
+## Privacy Section - Content Blocking
+
+content-blocking-header = Blocco contenuti
+
+content-blocking-desc = Blocca contenuti di terze parti, come pubblicità o codice, in grado di rallentare la navigazione e tracciare i tuoi spostamenti sul Web. Personalizza le impostazioni per ottenere il perfetto equilibrio tra protezione e velocità.
+
+content-blocking-learn-more = Ulteriori informazioni
+content-blocking-restore-defaults =
+  .label = Ripristina predefiniti
+  .accesskey = R
+
+content-blocking-toggle-on =
+  .tooltiptext = Disattiva il blocco contenuti
+content-blocking-toggle-off =
+  .tooltiptext = Attiva il blocco contenuti
+
+content-blocking-toggle-label-on = ATTIVO
+  .accesskey = A
+content-blocking-toggle-label-off = DISATTIVATO
+  .accesskey = D
+
+content-blocking-category-label = Scegli che cosa bloccare
+
+# "Slow" in this instance means "slow to load on the network".
+# FastBlock is a feature that blocks requests to tracking sites if they
+# have not finished loading after a certain threshold of seconds.
+content-blocking-fastblock-slow-loading-trackers-label =
+  .label = Elementi traccianti lenti a caricarsi
+  .accesskey = m
+content-blocking-fastblock-new-description = Blocca solo gli elementi traccianti che impediscono alla pagina di caricarsi velocemente.
+
+content-blocking-tracking-protection-all-detected-trackers-label =
+  .label = Tutti gli elementi traccianti rilevati
+  .accesskey = T
+content-blocking-tracking-protection-new-description = Blocca tutti gli elementi traccianti conosciuti (alcune pagine web potrebbero non caricarsi correttamente).
+content-blocking-tracking-protection-option-always =
+  .label = Sempre
+  .accesskey = S
+content-blocking-tracking-protection-option-private =
+  .label = Solo in navigazione anonima
+  .accesskey = a
+content-blocking-tracking-protection-change-block-list = Cambia elenco per blocco contenuti
+
+content-blocking-third-party-cookies-label =
+  .label = Cookie di terze parti
+  .accesskey = C
+content-blocking-reject-trackers-description = Blocca tutti i cookie di terze parti o solo quelli impostati da elementi traccianti.
+content-blocking-reject-trackers-warning-your-settings-prevent-changes = Le impostazioni in Cookie e dati dei siti web impediscono modifiche alla sezione Cookie di terze parti.
+content-blocking-change-cookie-settings =
+  .label = Cambia impostazioni per i cookie
+  .accesskey = m
+content-blocking-reject-trackers-block-trackers-option-recommended =
+  .label = Elementi traccianti (consigliato)
+  .accesskey = E
+content-blocking-reject-trackers-block-trackers-option =
+  .label = Elementi traccianti
+  .accesskey = E
+content-blocking-reject-trackers-all-third-parties-option =
+  .label = Tutti i cookie di terze parti (alcuni siti potrebbero non funzionare correttamente)
+  .accesskey = z
+
 ## Privacy Section - Tracking
 
 tracking-header = Protezione antitracciamento
@@ -658,8 +733,8 @@ tracking-mode-always =
     .label = Sempre
     .accesskey = p
 tracking-mode-private =
-    .label = Solo in finestre anonime
-    .accesskey = f
+    .label = Solo in navigazione anonima
+    .accesskey = m
 tracking-mode-never =
     .label = Mai
     .accesskey = a
@@ -697,9 +772,19 @@ permissions-notification-link = Ulteriori informazioni
 permissions-notification-pause =
     .label = Sospendi notifiche fino al riavvio di { -brand-short-name }
     .accesskey = n
+permissions-block-autoplay-media-menu = Per i siti web che cercano di riprodurre automaticamente contenuti sonori:
 permissions-block-autoplay-media =
-    .label = Impedisci ai siti web di riprodurre automaticamente contenuti multimediali con audio
+    .label = Impedisci ai siti web di riprodurre automaticamente contenuti sonori
     .accesskey = m
+autoplay-option-ask =
+    .label = chiedi sempre
+autoplay-option-allow =
+    .label = consenti riproduzione
+autoplay-option-dont =
+    .label = non riprodurre
+
+permissions-autoplay-link = Ulteriori informazioni
+
 permissions-block-autoplay-media-exceptions =
     .label = Eccezioni…
     .accesskey = E
@@ -770,7 +855,7 @@ certs-select-auto-option =
     .label = Selezionane uno automaticamente
     .accesskey = S
 certs-select-ask-option =
-    .label = Chiedi ogni volta
+    .label = Chiedi sempre
     .accesskey = h
 certs-enable-ocsp =
     .label = Interroga risponditori OCSP per confermare la validità attuale dei certificati

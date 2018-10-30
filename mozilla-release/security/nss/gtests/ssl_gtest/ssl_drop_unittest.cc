@@ -123,7 +123,7 @@ class TlsDropDatagram13 : public TlsConnectDatagram13,
 
     void Init(const std::shared_ptr<TlsAgent>& agent) {
       records_ = std::make_shared<TlsRecordRecorder>(agent);
-      ack_ = std::make_shared<TlsRecordRecorder>(agent, content_ack);
+      ack_ = std::make_shared<TlsRecordRecorder>(agent, ssl_ct_ack);
       ack_->EnableDecryption();
       drop_ = std::make_shared<SelectiveRecordDropFilter>(agent, 0, false);
       chain_ = std::make_shared<ChainedPacketFilter>(
@@ -670,7 +670,7 @@ TEST_P(TlsDropDatagram13, SendOutOfOrderAppWithHandshakeKey) {
   ASSERT_NE(nullptr, spec.get());
   ASSERT_EQ(2, spec->epoch());
   ASSERT_TRUE(client_->SendEncryptedRecord(spec, 0x0002000000000002,
-                                           kTlsApplicationDataType,
+                                           ssl_ct_application_data,
                                            DataBuffer(buf, sizeof(buf))));
 
   // Now have the server consume the bogus message.
@@ -696,7 +696,7 @@ TEST_P(TlsDropDatagram13, SendOutOfOrderHsNonsenseWithHandshakeKey) {
   ASSERT_NE(nullptr, spec.get());
   ASSERT_EQ(2, spec->epoch());
   ASSERT_TRUE(client_->SendEncryptedRecord(spec, 0x0002000000000002,
-                                           kTlsHandshakeType,
+                                           ssl_ct_handshake,
                                            DataBuffer(buf, sizeof(buf))));
   server_->Handshake();
   EXPECT_EQ(2UL, server_filters_.ack_->count());
@@ -882,6 +882,45 @@ TEST_P(TlsConnectDatagram12Plus, MissAWindowAndOne) {
 
   EXPECT_EQ(SECSuccess, SSLInt_AdvanceWriteSeqByAWindow(client_->ssl_fd(), 1));
   SendReceive();
+}
+
+// This filter replaces the first record it sees with junk application data.
+class TlsReplaceFirstRecordWithJunk : public TlsRecordFilter {
+ public:
+  TlsReplaceFirstRecordWithJunk(const std::shared_ptr<TlsAgent>& a)
+      : TlsRecordFilter(a), replaced_(false) {}
+
+ protected:
+  PacketFilter::Action FilterRecord(const TlsRecordHeader& header,
+                                    const DataBuffer& record, size_t* offset,
+                                    DataBuffer* output) override {
+    if (replaced_) {
+      return KEEP;
+    }
+    replaced_ = true;
+    TlsRecordHeader out_header(header.variant(), header.version(),
+                               ssl_ct_application_data,
+                               header.sequence_number());
+
+    static const uint8_t junk[] = {1, 2, 3, 4};
+    *offset = out_header.Write(output, *offset, DataBuffer(junk, sizeof(junk)));
+    return CHANGE;
+  }
+
+ private:
+  bool replaced_;
+};
+
+// DTLS needs to discard application_data that it receives prior to handshake
+// completion, not generate an error.
+TEST_P(TlsConnectDatagram, ReplaceFirstServerRecordWithApplicationData) {
+  MakeTlsFilter<TlsReplaceFirstRecordWithJunk>(server_);
+  Connect();
+}
+
+TEST_P(TlsConnectDatagram, ReplaceFirstClientRecordWithApplicationData) {
+  MakeTlsFilter<TlsReplaceFirstRecordWithJunk>(client_);
+  Connect();
 }
 
 INSTANTIATE_TEST_CASE_P(Datagram12Plus, TlsConnectDatagram12Plus,

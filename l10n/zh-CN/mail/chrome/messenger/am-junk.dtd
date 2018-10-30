@@ -4,7 +4,7 @@
 
 <!ENTITY junkSettings.label "垃圾邮件设置">
 <!ENTITY trainingDescription.label "如要启用，您必须使用工具栏的 垃圾邮件 按钮标记相应邮件以训练 &brandShortName; 来辨识垃圾邮件。您需要标识垃圾邮件以及非垃圾邮件。之后 &brandShortName; 就能自动辨别垃圾邮件。">
-<!ENTITY level.label "对此帐户启用智能垃圾邮件控制">
+<!ENTITY level.label "对此账户启用智能垃圾邮件控制">
 <!ENTITY level.accesskey "E">
 
 <!ENTITY move.label "将垃圾消息移动至:">

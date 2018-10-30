@@ -81,7 +81,6 @@
 #include "XULFormControlAccessible.h"
 #include "XULListboxAccessibleWrap.h"
 #include "XULMenuAccessibleWrap.h"
-#include "XULSliderAccessible.h"
 #include "XULTabAccessible.h"
 #include "XULTreeGridAccessibleWrap.h"
 #endif
@@ -220,11 +219,20 @@ New_HTMLListitem(Element* aElement, Accessible* aContext)
   return nullptr;
 }
 
+template<typename AccClass>
 static Accessible*
-New_HTMLDefinition(Element* aElement, Accessible* aContext)
+New_HTMLDtOrDd(Element* aElement, Accessible* aContext)
 {
-  if (aContext->IsList())
-    return new HyperTextAccessibleWrap(aElement, aContext->Document());
+  nsIContent* parent = aContext->GetContent();
+  if (parent->IsHTMLElement(nsGkAtoms::div)) {
+    // It is conforming in HTML to use a div to group dt/dd elements.
+    parent = parent->GetParent();
+  }
+
+  if (parent && parent->IsHTMLElement(nsGkAtoms::dl)) {
+    return new AccClass(aElement, aContext->Document());
+  }
+
   return nullptr;
 }
 
@@ -235,7 +243,7 @@ static Accessible* New_HTMLInput(Element* aElement, Accessible* aContext)
 {
   if (aElement->AttrValueIs(kNameSpaceID_None, nsGkAtoms::type,
                            nsGkAtoms::checkbox, eIgnoreCase)) {
-    return new HTMLCheckboxAccessible(aElement, aContext->Document());
+    return new CheckboxAccessible(aElement, aContext->Document());
   }
   if (aElement->AttrValueIs(kNameSpaceID_None, nsGkAtoms::type,
                            nsGkAtoms::radio, eIgnoreCase)) {
@@ -272,23 +280,6 @@ New_HTMLTableRowAccessible(Element* aElement, Accessible* aContext)
 static Accessible*
 New_HTMLTableCellAccessible(Element* aElement, Accessible* aContext)
   { return new HTMLTableCellAccessible(aElement, aContext->Document()); }
-
-static Accessible*
-New_HTMLTableHeaderCell(Element* aElement, Accessible* aContext)
-{
-  if (aContext->IsTableRow() && aContext->GetContent() == aElement->GetParent())
-    return new HTMLTableHeaderCellAccessibleWrap(aElement, aContext->Document());
-  return nullptr;
-}
-
-static Accessible*
-New_HTMLTableHeaderCellIfScope(Element* aElement, Accessible* aContext)
-{
-  if (aContext->IsTableRow() && aContext->GetContent() == aElement->GetParent() &&
-      aElement->HasAttr(kNameSpaceID_None, nsGkAtoms::scope))
-    return new HTMLTableHeaderCellAccessibleWrap(aElement, aContext->Document());
-  return nullptr;
-}
 
 /**
  * Cached value of the PREF_ACCESSIBILITY_FORCE_DISABLED preference.
@@ -422,8 +413,9 @@ NS_IMETHODIMP
 nsAccessibilityService::Observe(nsISupports *aSubject, const char *aTopic,
                          const char16_t *aData)
 {
-  if (!nsCRT::strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID))
+  if (!nsCRT::strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
     Shutdown();
+  }
 
   return NS_OK;
 }
@@ -794,7 +786,7 @@ void
 nsAccessibilityService::GetStringRole(uint32_t aRole, nsAString& aString)
 {
 #define ROLE(geckoRole, stringRole, atkRole, \
-             macRole, msaaRole, ia2Role, nameRule) \
+             macRole, msaaRole, ia2Role, androidClass, nameRule) \
   case roles::geckoRole: \
     aString.AssignLiteral(stringRole); \
     return;
@@ -1066,11 +1058,33 @@ nsAccessibilityService::CreateAccessible(nsINode* aNode,
     return nullptr;
 
   nsIContent* content = aNode->AsContent();
-  nsIFrame* frame = content->GetPrimaryFrame();
+  if (aria::HasDefinedARIAHidden(content)) {
+    if (aIsSubtreeHidden) {
+      *aIsSubtreeHidden = true;
+    }
+    return nullptr;
+  }
 
   // Check frame and its visibility. Note, hidden frame allows visible
   // elements in subtree.
+  nsIFrame* frame = content->GetPrimaryFrame();
   if (!frame || !frame->StyleVisibility()->IsVisible()) {
+    // display:contents element doesn't have a frame, but retains the semantics.
+    // All its children are unaffected.
+    if (content->IsElement() && content->AsElement()->IsDisplayContents()) {
+      const HTMLMarkupMapInfo* markupMap =
+        mHTMLMarkupMap.Get(content->NodeInfo()->NameAtom());
+      if (markupMap && markupMap->new_func) {
+        RefPtr<Accessible> newAcc =
+          markupMap->new_func(content->AsElement(), aContext);
+        if (newAcc) {
+          document->BindToDocument(newAcc, aria::GetRoleMap(content->AsElement()));
+        }
+        return newAcc;
+      }
+      return nullptr;
+    }
+
     if (aIsSubtreeHidden && !frame)
       *aIsSubtreeHidden = true;
 
@@ -1381,7 +1395,7 @@ nsAccessibilityService::Init()
   gApplicationAccessible->Init();
 
   CrashReporter::
-    AnnotateCrashReport(NS_LITERAL_CSTRING("Accessibility"),
+    AnnotateCrashReport(CrashReporter::Annotation::Accessibility,
                         NS_LITERAL_CSTRING("Active"));
 
 #ifdef XP_WIN
@@ -1480,7 +1494,7 @@ nsAccessibilityService::CreateAccessibleByFrameType(nsIFrame* aFrame,
       }
       break;
     case eHTMLCheckboxType:
-      newAcc = new HTMLCheckboxAccessible(aContent, document);
+      newAcc = new CheckboxAccessible(aContent, document);
       break;
     case eHTMLComboboxType:
       newAcc = new HTMLComboboxAccessible(aContent, document);
@@ -1663,17 +1677,16 @@ nsAccessibilityService::RemoveNativeRootAccessible(Accessible* aAccessible)
 }
 
 bool
-nsAccessibilityService::HasAccessible(nsIDOMNode* aDOMNode)
+nsAccessibilityService::HasAccessible(nsINode* aDOMNode)
 {
-  nsCOMPtr<nsINode> node(do_QueryInterface(aDOMNode));
-  if (!node)
+  if (!aDOMNode)
     return false;
 
-  DocAccessible* document = GetDocAccessible(node->OwnerDoc());
+  DocAccessible* document = GetDocAccessible(aDOMNode->OwnerDoc());
   if (!document)
     return false;
 
-  return document->HasAccessible(node);
+  return document->HasAccessible(aDOMNode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

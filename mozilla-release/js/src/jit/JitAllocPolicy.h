@@ -12,6 +12,8 @@
 #include "mozilla/OperatorNewExtensions.h"
 #include "mozilla/TypeTraits.h"
 
+#include <utility>
+
 #include "ds/LifoAlloc.h"
 #include "jit/InlineList.h"
 #include "jit/Ion.h"
@@ -122,7 +124,8 @@ class JitAllocPolicy
     T* pod_realloc(T* ptr, size_t oldSize, size_t newSize) {
         return maybe_pod_realloc<T>(ptr, oldSize, newSize);
     }
-    void free_(void* p) {
+    template <typename T>
+    void free_(T* p, size_t numElems = 0) {
     }
     void reportAllocOverflow() const {
     }
@@ -189,11 +192,13 @@ class TempObjectPool
         MOZ_ASSERT(freed_.empty());
         alloc_ = &alloc;
     }
-    T* allocate() {
+    template <typename... Args>
+    T* allocate(Args&&... args) {
         MOZ_ASSERT(alloc_);
         if (freed_.empty())
-            return new(alloc_->fallible()) T();
-        return freed_.popFront();
+            return new (alloc_->fallible()) T(std::forward<Args>(args)...);
+        T* res = freed_.popFront();
+        return new (res) T(std::forward<Args>(args)...);
     }
     void free(T* obj) {
         freed_.pushFront(obj);

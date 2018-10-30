@@ -27,8 +27,7 @@ const TRANSITION_DOWNLOAD = PlacesUtils.history.TRANSITION_DOWNLOAD;
  */
 function fieldForUrl(aURI, aFieldName, aCallback) {
   let url = aURI instanceof Ci.nsIURI ? aURI.spec : aURI;
-  let stmt = PlacesUtils.history.QueryInterface(Ci.nsPIPlacesDatabase)
-                                .DBConnection.createAsyncStatement(
+  let stmt = PlacesUtils.history.DBConnection.createAsyncStatement(
     `SELECT ${aFieldName} FROM moz_places WHERE url_hash = hash(:page_url) AND url = :page_url`
   );
   stmt.params.page_url = url;
@@ -45,7 +44,7 @@ function fieldForUrl(aURI, aFieldName, aCallback) {
       if (aReason != Ci.mozIStorageStatementCallback.REASON_FINISHED)
          ok(false, "The statement should properly succeed");
       aCallback(this._value);
-    }
+    },
   });
   stmt.finalize();
 }
@@ -78,7 +77,6 @@ function NavHistoryObserver() {}
 NavHistoryObserver.prototype = {
   onBeginUpdateBatch() {},
   onEndUpdateBatch() {},
-  onVisits() {},
   onTitleChanged() {},
   onDeleteURI() {},
   onClearHistory() {},
@@ -86,7 +84,7 @@ NavHistoryObserver.prototype = {
   onDeleteVisits() {},
   QueryInterface: ChromeUtils.generateQI([
     Ci.nsINavHistoryObserver,
-  ])
+  ]),
 };
 
 function whenNewWindowLoaded(aOptions, aCallback) {

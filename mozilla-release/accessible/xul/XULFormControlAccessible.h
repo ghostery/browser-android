@@ -36,13 +36,13 @@ public:
   NS_INLINE_DECL_REFCOUNTING_INHERITED(XULButtonAccessible, AccessibleWrap)
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual uint64_t NativeState() override;
+  virtual mozilla::a11y::role NativeRole() const override;
+  virtual uint64_t NativeState() const override;
 
   // ActionAccessible
-  virtual uint8_t ActionCount() override;
+  virtual uint8_t ActionCount() const override;
   virtual void ActionNameAt(uint8_t aIndex, nsAString& aName) override;
-  virtual bool DoAction(uint8_t aIndex) override;
+  virtual bool DoAction(uint8_t aIndex) const override;
 
   // Widgets
   virtual bool IsWidget() const override;
@@ -59,26 +59,6 @@ protected:
   bool ContainsMenu() const;
 };
 
-
-/**
- * Used for XUL checkbox element.
- */
-class XULCheckboxAccessible : public LeafAccessible
-{
-public:
-  enum { eAction_Click = 0 };
-  XULCheckboxAccessible(nsIContent* aContent, DocAccessible* aDoc);
-
-  // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual uint64_t NativeState() override;
-
-  // ActionAccessible
-  virtual uint8_t ActionCount() override;
-  virtual void ActionNameAt(uint8_t aIndex, nsAString& aName) override;
-  virtual bool DoAction(uint8_t aIndex) override;
-};
-
 /**
  * Used for XUL dropmarker element.
  */
@@ -89,13 +69,13 @@ public:
   XULDropmarkerAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual uint64_t NativeState() override;
+  virtual mozilla::a11y::role NativeRole() const override;
+  virtual uint64_t NativeState() const override;
 
   // ActionAccessible
-  virtual uint8_t ActionCount() override;
+  virtual uint8_t ActionCount() const override;
   virtual void ActionNameAt(uint8_t aIndex, nsAString& aName) override;
-  virtual bool DoAction(uint8_t aIndex) override;
+  virtual bool DoAction(uint8_t aIndex) const override;
 
 private:
   bool DropmarkerOpen(bool aToggleOpen) const;
@@ -110,12 +90,12 @@ public:
   XULGroupboxAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual Relation RelationByType(RelationType aType) override;
+  virtual mozilla::a11y::role NativeRole() const override;
+  virtual Relation RelationByType(RelationType aType) const override;
 
 protected:
   // Accessible
-  virtual ENameValueFlag NativeName(nsString& aName) override;
+  virtual ENameValueFlag NativeName(nsString& aName) const override;
 };
 
 /**
@@ -128,7 +108,7 @@ public:
   XULRadioButtonAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual uint64_t NativeState() override;
+  virtual uint64_t NativeState() const override;
   virtual uint64_t NativeInteractiveState() const override;
 
   // Widgets
@@ -144,7 +124,7 @@ public:
   XULRadioGroupAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
+  virtual mozilla::a11y::role NativeRole() const override;
   virtual uint64_t NativeInteractiveState() const override;
 
   // Widgets
@@ -162,7 +142,7 @@ public:
   XULStatusBarAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
+  virtual mozilla::a11y::role NativeRole() const override;
 };
 
 /**
@@ -190,11 +170,11 @@ public:
   XULToolbarAccessible(nsIContent* aContent, DocAccessible* aDoc);
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
+  virtual mozilla::a11y::role NativeRole() const override;
 
 protected:
   // Accessible
-  virtual ENameValueFlag NativeName(nsString& aName) override;
+  virtual ENameValueFlag NativeName(nsString& aName) const override;
 };
 
 /**
@@ -207,8 +187,8 @@ public:
                                 DocAccessible* aDoc);
 
   // Accessible
-  virtual mozilla::a11y::role NativeRole() override;
-  virtual uint64_t NativeState() override;
+  virtual mozilla::a11y::role NativeRole() const override;
+  virtual uint64_t NativeState() const override;
 };
 
 } // namespace a11y

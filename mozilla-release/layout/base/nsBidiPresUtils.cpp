@@ -156,6 +156,7 @@ struct MOZ_STACK_CLASS BidiParagraphData
     , mRequiresBidi(false)
     , mParaLevel(nsBidiPresUtils::BidiLevelFromStyle(aBlockFrame->Style()))
     , mPrevContent(nullptr)
+    , mPrevFrame(nullptr)
 #ifdef DEBUG
     , mCurrentBlock(aBlockFrame)
 #endif
@@ -627,8 +628,8 @@ CreateContinuation(nsIFrame*  aFrame,
                    nsIFrame** aNewFrame,
                    bool       aIsFluid)
 {
-  NS_PRECONDITION(aNewFrame, "null OUT ptr");
-  NS_PRECONDITION(aFrame, "null ptr");
+  MOZ_ASSERT(aNewFrame, "null OUT ptr");
+  MOZ_ASSERT(aFrame, "null ptr");
 
   *aNewFrame = nullptr;
 
@@ -1867,8 +1868,8 @@ nsBidiPresUtils::EnsureBidiContinuation(nsIFrame*       aFrame,
                                         int32_t         aStart,
                                         int32_t         aEnd)
 {
-  NS_PRECONDITION(aNewFrame, "null OUT ptr");
-  NS_PRECONDITION(aFrame, "aFrame is null");
+  MOZ_ASSERT(aNewFrame, "null OUT ptr");
+  MOZ_ASSERT(aFrame, "aFrame is null");
 
   aFrame->AdjustOffsetsForBidi(aStart, aEnd);
   return CreateContinuation(aFrame, aNewFrame, false);
@@ -2309,6 +2310,8 @@ public:
     , mTextRunConstructionDrawTarget(aTextRunConstructionDrawTarget)
     , mFontMetrics(aFontMetrics)
     , mPt(aPt)
+    , mText(nullptr)
+    , mLength(0)
   {}
 
   ~nsIRenderingContextBidiProcessor()

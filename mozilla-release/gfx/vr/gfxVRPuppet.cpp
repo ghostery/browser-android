@@ -50,11 +50,11 @@ static const uint32_t kNumPuppetAxis = 3;
 static const uint32_t kNumPuppetHaptcs = 1;
 
 VRDisplayPuppet::VRDisplayPuppet()
- : VRDisplayHost(VRDeviceType::Puppet)
+ : VRDisplayLocal(VRDeviceType::Puppet)
  , mIsPresenting(false)
  , mSensorState{}
 {
-  MOZ_COUNT_CTOR_INHERITED(VRDisplayPuppet, VRDisplayHost);
+  MOZ_COUNT_CTOR_INHERITED(VRDisplayPuppet, VRDisplayLocal);
 
   VRDisplayState& state = mDisplayInfo.mDisplayState;
   strncpy(state.mDisplayName, "Puppet HMD", kVRDisplayNameMaxLen);
@@ -104,26 +104,26 @@ VRDisplayPuppet::VRDisplayPuppet()
   gfx::Quaternion rot;
 
   mSensorState.flags |= VRDisplayCapabilityFlags::Cap_Orientation;
-  mSensorState.orientation[0] = rot.x;
-  mSensorState.orientation[1] = rot.y;
-  mSensorState.orientation[2] = rot.z;
-  mSensorState.orientation[3] = rot.w;
-  mSensorState.angularVelocity[0] = 0.0f;
-  mSensorState.angularVelocity[1] = 0.0f;
-  mSensorState.angularVelocity[2] = 0.0f;
+  mSensorState.pose.orientation[0] = rot.x;
+  mSensorState.pose.orientation[1] = rot.y;
+  mSensorState.pose.orientation[2] = rot.z;
+  mSensorState.pose.orientation[3] = rot.w;
+  mSensorState.pose.angularVelocity[0] = 0.0f;
+  mSensorState.pose.angularVelocity[1] = 0.0f;
+  mSensorState.pose.angularVelocity[2] = 0.0f;
 
   mSensorState.flags |= VRDisplayCapabilityFlags::Cap_Position;
-  mSensorState.position[0] = 0.0f;
-  mSensorState.position[1] = 0.0f;
-  mSensorState.position[2] = 0.0f;
-  mSensorState.linearVelocity[0] = 0.0f;
-  mSensorState.linearVelocity[1] = 0.0f;
-  mSensorState.linearVelocity[2] = 0.0f;
+  mSensorState.pose.position[0] = 0.0f;
+  mSensorState.pose.position[1] = 0.0f;
+  mSensorState.pose.position[2] = 0.0f;
+  mSensorState.pose.linearVelocity[0] = 0.0f;
+  mSensorState.pose.linearVelocity[1] = 0.0f;
+  mSensorState.pose.linearVelocity[2] = 0.0f;
 }
 
 VRDisplayPuppet::~VRDisplayPuppet()
 {
-  MOZ_COUNT_DTOR_INHERITED(VRDisplayPuppet, VRDisplayHost);
+  MOZ_COUNT_DTOR_INHERITED(VRDisplayPuppet, VRDisplayLocal);
 }
 
 void
@@ -558,12 +558,12 @@ VRDisplayPuppet::SubmitFrame(MacIOSurface* aMacIOSurface,
   return false;
 }
 
-#elif defined(MOZ_ANDROID_GOOGLE_VR)
+#elif defined(MOZ_WIDGET_ANDROID)
 
 bool
-VRDisplayPuppet::SubmitFrame(const mozilla::layers::EGLImageDescriptor* aDescriptor,
-                           const gfx::Rect& aLeftEyeRect,
-                           const gfx::Rect& aRightEyeRect)
+VRDisplayPuppet::SubmitFrame(const mozilla::layers::SurfaceTextureDescriptor& aDescriptor,
+                             const gfx::Rect& aLeftEyeRect,
+                             const gfx::Rect& aRightEyeRect)
 {
   MOZ_ASSERT(mSubmitThread->GetThread() == NS_GetCurrentThread());
   return false;
@@ -585,10 +585,10 @@ VRControllerPuppet::VRControllerPuppet(dom::GamepadHand aHand, uint32_t aDisplay
 {
   MOZ_COUNT_CTOR_INHERITED(VRControllerPuppet, VRControllerHost);
   VRControllerState& state = mControllerInfo.mControllerState;
-  strncpy(state.mControllerName, "Puppet Gamepad", kVRControllerNameMaxLen);
-  state.mNumButtons = kNumPuppetButtonMask;
-  state.mNumAxes = kNumPuppetAxis;
-  state.mNumHaptics = kNumPuppetHaptcs;
+  strncpy(state.controllerName, "Puppet Gamepad", kVRControllerNameMaxLen);
+  state.numButtons = kNumPuppetButtonMask;
+  state.numAxes = kNumPuppetAxis;
+  state.numHaptics = kNumPuppetHaptcs;
 }
 
 VRControllerPuppet::~VRControllerPuppet()
@@ -672,13 +672,13 @@ VRControllerPuppet::GetPoseMoveState()
 float
 VRControllerPuppet::GetAxisMove(uint32_t aAxis)
 {
-  return mControllerInfo.mControllerState.mAxisValue[aAxis];
+  return mControllerInfo.mControllerState.axisValue[aAxis];
 }
 
 void
 VRControllerPuppet::SetAxisMove(uint32_t aAxis, float aValue)
 {
-  mControllerInfo.mControllerState.mAxisValue[aAxis] = aValue;
+  mControllerInfo.mControllerState.axisValue[aAxis] = aValue;
 }
 
 VRSystemManagerPuppet::VRSystemManagerPuppet()

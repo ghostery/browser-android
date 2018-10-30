@@ -24,6 +24,8 @@ class nsAtom;
 class nsIWidget;
 
 namespace mozilla {
+class ComputedStyle;
+enum class StyleAppearance : uint8_t;
 namespace layers {
 class StackingContextHelper;
 class WebRenderLayerManager;
@@ -55,6 +57,10 @@ class IpcResourceUpdateQueue;
  * the constants in nsThemeConstants.h).
  */
 class nsITheme: public nsISupports {
+protected:
+  using LayoutDeviceIntMargin = mozilla::LayoutDeviceIntMargin;
+  using WidgetType = mozilla::StyleAppearance;
+
 public:
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_ITHEME_IID)
 
@@ -68,9 +74,17 @@ public:
    */
   NS_IMETHOD DrawWidgetBackground(gfxContext* aContext,
                                   nsIFrame* aFrame,
-                                  uint8_t aWidgetType,
+                                  WidgetType aWidgetType,
                                   const nsRect& aRect,
                                   const nsRect& aDirtyRect) = 0;
+
+  /**
+   * Get the used color of the given widget when it's specified as auto.
+   * It's currently only used for scrollbar-*-color properties.
+   */
+  virtual nscolor GetWidgetAutoColor(mozilla::ComputedStyle* aStyle,
+                                     WidgetType aWidgetType)
+  { return NS_RGB(0, 0, 0); }
 
   /**
    * Create WebRender commands for the theme background.
@@ -83,16 +97,15 @@ public:
                                                 const mozilla::layers::StackingContextHelper& aSc,
                                                 mozilla::layers::WebRenderLayerManager* aManager,
                                                 nsIFrame* aFrame,
-                                                uint8_t aWidgetType,
+                                                WidgetType aWidgetType,
                                                 const nsRect& aRect) { return false; }
 
   /**
-   * Get the computed CSS border for the widget, in pixels.
+   * Return the border for the widget, in device pixels.
    */
-  NS_IMETHOD GetWidgetBorder(nsDeviceContext* aContext, 
-                             nsIFrame* aFrame,
-                             uint8_t aWidgetType,
-                             nsIntMargin* aResult)=0;
+  virtual MOZ_MUST_USE LayoutDeviceIntMargin GetWidgetBorder(nsDeviceContext* aContext,
+                                                             nsIFrame* aFrame,
+                                                             WidgetType aWidgetType) = 0;
 
   /**
    * This method can return false to indicate that the CSS padding
@@ -104,9 +117,9 @@ public:
    * the computed padding and potentially the size.
    */
   virtual bool GetWidgetPadding(nsDeviceContext* aContext,
-                                  nsIFrame* aFrame,
-                                  uint8_t aWidgetType,
-                                  nsIntMargin* aResult) = 0;
+                                nsIFrame* aFrame,
+                                WidgetType aWidgetType,
+                                LayoutDeviceIntMargin* aResult) = 0;
 
   /**
    * On entry, *aResult is positioned at 0,0 and sized to the new size
@@ -123,9 +136,9 @@ public:
    * scrollable overflow.)
    */
   virtual bool GetWidgetOverflow(nsDeviceContext* aContext,
-                                   nsIFrame* aFrame,
-                                   uint8_t aWidgetType,
-                                   /*INOUT*/ nsRect* aOverflowRect)
+                                 nsIFrame* aFrame,
+                                 WidgetType aWidgetType,
+                                 /*INOUT*/ nsRect* aOverflowRect)
   { return false; }
 
   /**
@@ -136,7 +149,7 @@ public:
    */
   NS_IMETHOD GetMinimumWidgetSize(nsPresContext* aPresContext,
                                   nsIFrame* aFrame,
-                                  uint8_t aWidgetType,
+                                  WidgetType aWidgetType,
                                   mozilla::LayoutDeviceIntSize* aResult,
                                   bool* aIsOverridable)=0;
 
@@ -150,7 +163,7 @@ public:
   /**
    * Returns what we know about the transparency of the widget.
    */
-  virtual Transparency GetWidgetTransparency(nsIFrame* aFrame, uint8_t aWidgetType)
+  virtual Transparency GetWidgetTransparency(nsIFrame* aFrame, WidgetType aWidgetType)
   { return eUnknownTransparency; }
 
   /**
@@ -158,17 +171,16 @@ public:
    * change should trigger a repaint.  Call with null |aAttribute| (and
    * null |aOldValue|) for content state changes.
    */
-  NS_IMETHOD WidgetStateChanged(nsIFrame* aFrame, uint8_t aWidgetType, 
+  NS_IMETHOD WidgetStateChanged(nsIFrame* aFrame, WidgetType aWidgetType,
                                 nsAtom* aAttribute, bool* aShouldRepaint,
                                 const nsAttrValue* aOldValue)=0;
 
   NS_IMETHOD ThemeChanged()=0;
 
-  virtual bool WidgetAppearanceDependsOnWindowFocus(uint8_t aWidgetType)
+  virtual bool WidgetAppearanceDependsOnWindowFocus(WidgetType aWidgetType)
   { return false; }
 
-  virtual bool NeedToClearBackgroundBehindWidget(nsIFrame* aFrame,
-                                                 uint8_t aWidgetType)
+  virtual bool NeedToClearBackgroundBehindWidget(nsIFrame* aFrame, WidgetType aWidgetType)
   { return false; }
 
   /**
@@ -195,33 +207,27 @@ public:
    * not be included in the ThemeGeometry array.
    */
   virtual ThemeGeometryType ThemeGeometryTypeForWidget(nsIFrame* aFrame,
-                                                       uint8_t aWidgetType)
+                                                       WidgetType aWidgetType)
   { return eThemeGeometryTypeUnknown; }
 
   /**
    * Can the nsITheme implementation handle this widget?
    */
   virtual bool ThemeSupportsWidget(nsPresContext* aPresContext,
-                                     nsIFrame* aFrame,
-                                     uint8_t aWidgetType)=0;
+                                   nsIFrame* aFrame,
+                                   WidgetType aWidgetType) = 0;
 
-  virtual bool WidgetIsContainer(uint8_t aWidgetType)=0;
+  virtual bool WidgetIsContainer(WidgetType aWidgetType) = 0;
 
   /**
    * Does the nsITheme implementation draw its own focus ring for this widget?
    */
-  virtual bool ThemeDrawsFocusForWidget(uint8_t aWidgetType)=0;
+  virtual bool ThemeDrawsFocusForWidget(WidgetType aWidgetType) = 0;
   
   /**
     * Should we insert a dropmarker inside of combobox button?
    */
-  virtual bool ThemeNeedsComboboxDropmarker()=0;
-
-  /**
-   * Should we hide scrollbars?
-   */
-  virtual bool ShouldHideScrollbars()
-  { return false; }
+  virtual bool ThemeNeedsComboboxDropmarker() = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsITheme, NS_ITHEME_IID)

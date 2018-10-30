@@ -2,67 +2,96 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#define EPSILON     0.0001
-
 flat varying vec4 vTransformBounds;
 
 #ifdef WR_VERTEX_SHADER
+
+#define VECS_PER_TRANSFORM   8
+uniform HIGHP_SAMPLER_FLOAT sampler2D sTransformPalette;
 
 void init_transform_vs(vec4 local_bounds) {
     vTransformBounds = local_bounds;
 }
 
+struct Transform {
+    mat4 m;
+    mat4 inv_m;
+    bool is_axis_aligned;
+};
+
+Transform fetch_transform(int id) {
+    Transform transform;
+
+    transform.is_axis_aligned = (id >> 24) == 0;
+    int index = id & 0x00ffffff;
+
+    // Create a UV base coord for each 8 texels.
+    // This is required because trying to use an offset
+    // of more than 8 texels doesn't work on some versions
+    // of OSX.
+    ivec2 uv = get_fetch_uv(index, VECS_PER_TRANSFORM);
+    ivec2 uv0 = ivec2(uv.x + 0, uv.y);
+
+    transform.m[0] = TEXEL_FETCH(sTransformPalette, uv0, 0, ivec2(0, 0));
+    transform.m[1] = TEXEL_FETCH(sTransformPalette, uv0, 0, ivec2(1, 0));
+    transform.m[2] = TEXEL_FETCH(sTransformPalette, uv0, 0, ivec2(2, 0));
+    transform.m[3] = TEXEL_FETCH(sTransformPalette, uv0, 0, ivec2(3, 0));
+
+    transform.inv_m[0] = TEXEL_FETCH(sTransformPalette, uv0, 0, ivec2(4, 0));
+    transform.inv_m[1] = TEXEL_FETCH(sTransformPalette, uv0, 0, ivec2(5, 0));
+    transform.inv_m[2] = TEXEL_FETCH(sTransformPalette, uv0, 0, ivec2(6, 0));
+    transform.inv_m[3] = TEXEL_FETCH(sTransformPalette, uv0, 0, ivec2(7, 0));
+
+    return transform;
+}
+
+// Return the intersection of the plane (set up by "normal" and "point")
+// with the ray (set up by "ray_origin" and "ray_dir"),
+// writing the resulting scaler into "t".
+bool ray_plane(vec3 normal, vec3 pt, vec3 ray_origin, vec3 ray_dir, out float t)
+{
+    float denom = dot(normal, ray_dir);
+    if (abs(denom) > 1e-6) {
+        vec3 d = pt - ray_origin;
+        t = dot(d, normal) / denom;
+        return t >= 0.0;
+    }
+
+    return false;
+}
+
+// Apply the inverse transform "inv_transform"
+// to the reference point "ref" in CSS space,
+// producing a local point on a Transform plane,
+// set by a base point "a" and a normal "n".
+vec4 untransform(vec2 ref, vec3 n, vec3 a, mat4 inv_transform) {
+    vec3 p = vec3(ref, -10000.0);
+    vec3 d = vec3(0, 0, 1.0);
+
+    float t = 0.0;
+    // get an intersection of the Transform plane with Z axis vector,
+    // originated from the "ref" point
+    ray_plane(n, a, p, d, t);
+    float z = p.z + d.z * t; // Z of the visible point on the Transform
+
+    vec4 r = inv_transform * vec4(ref, z, 1.0);
+    return r;
+}
+
+// Given a CSS space position, transform it back into the Transform space.
+vec4 get_node_pos(vec2 pos, Transform transform) {
+    // get a point on the scroll node plane
+    vec4 ah = transform.m * vec4(0.0, 0.0, 0.0, 1.0);
+    vec3 a = ah.xyz / ah.w;
+
+    // get the normal to the scroll node plane
+    vec3 n = transpose(mat3(transform.inv_m)) * vec3(0.0, 0.0, 1.0);
+    return untransform(pos, n, a, transform.inv_m);
+}
+
 #endif //WR_VERTEX_SHADER
 
 #ifdef WR_FRAGMENT_SHADER
-
-/// Find the appropriate half range to apply the AA approximation over.
-/// This range represents a coefficient to go from one CSS pixel to half a device pixel.
-float compute_aa_range(vec2 position) {
-    // The constant factor is chosen to compensate for the fact that length(fw) is equal
-    // to sqrt(2) times the device pixel ratio in the typical case. 0.5/sqrt(2) = 0.35355.
-    //
-    // This coefficient is chosen to ensure that any sample 0.5 pixels or more inside of
-    // the shape has no anti-aliasing applied to it (since pixels are sampled at their center,
-    // such a pixel (axis aligned) is fully inside the border). We need this so that antialiased
-    // curves properly connect with non-antialiased vertical or horizontal lines, among other things.
-    //
-    // Lines over a half-pixel away from the pixel center *can* intersect with the pixel square;
-    // indeed, unless they are horizontal or vertical, they are guaranteed to. However, choosing
-    // a nonzero area for such pixels causes noticeable artifacts at the junction between an anti-
-    // aliased corner and a straight edge.
-    //
-    // We may want to adjust this constant in specific scenarios (for example keep the principled
-    // value for straight edges where we want pixel-perfect equivalence with non antialiased lines
-    // when axis aligned, while selecting a larger and smoother aa range on curves).
-    return 0.35355 * length(fwidth(position));
-}
-
-/// Return the blending coefficient for distance antialiasing.
-///
-/// 0.0 means inside the shape, 1.0 means outside.
-///
-/// This cubic polynomial approximates the area of a 1x1 pixel square under a
-/// line, given the signed Euclidean distance from the center of the square to
-/// that line. Calculating the *exact* area would require taking into account
-/// not only this distance but also the angle of the line. However, in
-/// practice, this complexity is not required, as the area is roughly the same
-/// regardless of the angle.
-///
-/// The coefficients of this polynomial were determined through least-squares
-/// regression and are accurate to within 2.16% of the total area of the pixel
-/// square 95% of the time, with a maximum error of 3.53%.
-///
-/// See the comments in `compute_aa_range()` for more information on the
-/// cutoff values of -0.5 and 0.5.
-float distance_aa(float aa_range, float signed_distance) {
-    float dist = 0.5 * signed_distance / aa_range;
-    if (dist <= -0.5 + EPSILON)
-        return 1.0;
-    if (dist >= 0.5 - EPSILON)
-        return 0.0;
-    return 0.5 + dist * (0.8431027 * dist * dist - 1.14453603);
-}
 
 float signed_distance_rect(vec2 pos, vec2 p0, vec2 p1) {
     vec2 d = max(p0 - pos, pos - p1);

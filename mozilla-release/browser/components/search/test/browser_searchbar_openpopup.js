@@ -1,9 +1,6 @@
 // Tests that the suggestion popup appears at the right times in response to
 // focus and user events (mouse, keyboard, drop).
 
-ChromeUtils.import("resource://testing-common/CustomizableUITestUtils.jsm", this);
-let gCUITestUtils = new CustomizableUITestUtils(window);
-
 // Instead of loading EventUtils.js into the test scope in browser-test.js for all tests,
 // we only need EventUtils.js for a few files which is why we are using loadSubScript.
 var EventUtils = {};
@@ -15,8 +12,7 @@ const kValues = ["long text", "long text 2", "long text 3"];
 const isWindows = Services.appinfo.OS == "WINNT";
 const mouseDown = isWindows ? 2 : 1;
 const mouseUp = isWindows ? 4 : 2;
-const utils = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                    .getInterface(Ci.nsIDOMWindowUtils);
+const utils = window.windowUtils;
 const scale = utils.screenPixelsPerCSSPixel;
 
 function synthesizeNativeMouseClick(aElement) {
@@ -63,11 +59,10 @@ let searchIcon;
 let goButton;
 
 add_task(async function init() {
-  await SpecialPowers.pushPrefEnv({ set: [
-    ["browser.search.widget.inNavBar", true],
-  ]});
-
-  searchbar = document.getElementById("searchbar");
+  searchbar = await gCUITestUtils.addSearchBar();
+  registerCleanupFunction(() => {
+    gCUITestUtils.removeSearchBar();
+  });
   textbox = searchbar._textbox;
   searchIcon = document.getAnonymousElementByAttribute(
     searchbar, "anonid", "searchbar-search-button"
@@ -94,20 +89,8 @@ add_task(async function init() {
                                              value};
                                    });
     searchbar.FormHistory.update(addOps, {
-      handleCompletion() {
-        registerCleanupFunction(() => {
-          info("removing search history values: " + kValues);
-          let removeOps =
-            kValues.map(value => {
- return {op: "remove",
-                                           fieldname: "searchbar-history",
-                                           value};
-                                 });
-          searchbar.FormHistory.update(removeOps);
-        });
-        resolve();
-      },
-      handleError: reject
+      handleCompletion: resolve,
+      handleError: reject,
     });
   });
 });
@@ -217,7 +200,7 @@ add_no_popup_task(async function right_click_doesnt_open_popup() {
   gURLBar.focus();
   textbox.value = "foo";
 
-  let contextPopup = document.getAnonymousElementByAttribute(textbox.inputField.parentNode, "anonid", "input-box-contextmenu");
+  let contextPopup = textbox.inputField.parentNode.menupopup;
   let promise = promiseEvent(contextPopup, "popupshown");
   context_click(textbox);
   await promise;
@@ -319,9 +302,7 @@ add_task(async function contextmenu_closes_popup() {
 
   await promise;
 
-  let contextPopup =
-    document.getAnonymousElementByAttribute(textbox.inputField.parentNode,
-                                            "anonid", "input-box-contextmenu");
+  let contextPopup = textbox.inputField.parentNode.menupopup;
   promise = promiseEvent(contextPopup, "popuphidden");
   contextPopup.hidePopup();
   await promise;
@@ -583,4 +564,12 @@ add_task(async function dont_open_in_customization() {
 
   await endCustomizing();
   textbox.value = "";
+});
+
+add_task(async function cleanup() {
+  info("removing search history values: " + kValues);
+  let removeOps = kValues.map(value => {
+    return {op: "remove", fieldname: "searchbar-history", value};
+  });
+  searchbar.FormHistory.update(removeOps);
 });

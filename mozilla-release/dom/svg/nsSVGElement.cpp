@@ -53,13 +53,12 @@
 #include "mozilla/dom/MutationEventBinding.h"
 #include "mozilla/dom/SVGElementBinding.h"
 #include "mozilla/DeclarationBlock.h"
-#include "mozilla/DeclarationBlockInlines.h"
 #include "mozilla/Unused.h"
 #include "mozilla/RestyleManager.h"
 
 using namespace mozilla;
 using namespace mozilla::dom;
-using namespace mozilla::dom::SVGUnitTypesBinding;
+using namespace mozilla::dom::SVGUnitTypes_Binding;
 
 // This is needed to ensure correct handling of calls to the
 // vararg-list methods in this file:
@@ -103,7 +102,7 @@ nsSVGElement::~nsSVGElement()
 JSObject*
 nsSVGElement::WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return SVGElementBinding::Wrap(aCx, this, aGivenProto);
+  return SVGElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 //----------------------------------------------------------------------
@@ -229,12 +228,6 @@ nsSVGElement::Init()
 }
 
 //----------------------------------------------------------------------
-// nsISupports methods
-
-NS_IMPL_ISUPPORTS_INHERITED(nsSVGElement, nsSVGElementBase,
-                            nsIDOMNode)
-
-//----------------------------------------------------------------------
 // Implementation
 
 //----------------------------------------------------------------------
@@ -242,18 +235,16 @@ NS_IMPL_ISUPPORTS_INHERITED(nsSVGElement, nsSVGElementBase,
 
 nsresult
 nsSVGElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                         nsIContent* aBindingParent,
-                         bool aCompileEventHandlers)
+                         nsIContent* aBindingParent)
 {
   nsresult rv = nsSVGElementBase::BindToTree(aDocument, aParent,
-                                             aBindingParent,
-                                             aCompileEventHandlers);
+                                             aBindingParent);
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (!MayHaveStyle()) {
     return NS_OK;
   }
-  const nsAttrValue* oldVal = mAttrsAndChildren.GetAttr(nsGkAtoms::style);
+  const nsAttrValue* oldVal = mAttrs.GetAttr(nsGkAtoms::style);
 
   if (oldVal && oldVal->Type() == nsAttrValue::eCSSDeclaration) {
     // we need to force a reparse because the baseURI of the document
@@ -270,8 +261,7 @@ nsSVGElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
     // Don't bother going through SetInlineStyleDeclaration; we don't
     // want to fire off mutation events or document notifications anyway
     bool oldValueSet;
-    rv = mAttrsAndChildren.SetAndSwapAttr(nsGkAtoms::style, attrValue,
-                                          &oldValueSet);
+    rv = mAttrs.SetAndSwapAttr(nsGkAtoms::style, attrValue, &oldValueSet);
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -289,9 +279,9 @@ nsSVGElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
   // need to be very careful because some nsAttrValues used by SVG point to
   // member data of SVG elements and if an nsAttrValue outlives the SVG element
   // whose data it points to (by virtue of being stored in
-  // mAttrsAndChildren->mMappedAttributes, meaning it's shared between
+  // mAttrs->mMappedAttributes, meaning it's shared between
   // elements), the pointer will dangle. See bug 724680.
-  MOZ_ASSERT(!mAttrsAndChildren.HasMappedAttrs(),
+  MOZ_ASSERT(!mAttrs.HasMappedAttrs(),
              "Unexpected use of nsMappedAttributes within SVG");
 
   // If this is an svg presentation attribute we need to map it into
@@ -678,7 +668,7 @@ nsSVGElement::UnsetAttrInternal(int32_t aNamespaceID, nsAtom* aName,
       EventListenerManager* manager = GetExistingListenerManager();
       if (manager) {
         nsAtom* eventName = GetEventNameForAttr(aName);
-        manager->RemoveEventHandler(eventName, EmptyString());
+        manager->RemoveEventHandler(eventName);
       }
       return;
     }
@@ -1194,13 +1184,12 @@ MappedAttrParser::ParseMappedAttrValue(nsAtom* aMappedAttrName,
                                        const nsAString& aMappedAttrValue)
 {
   if (!mDecl) {
-    mDecl = new ServoDeclarationBlock();
+    mDecl = new DeclarationBlock();
   }
 
   // Get the nsCSSPropertyID ID for our mapped attribute.
   nsCSSPropertyID propertyID =
-    nsCSSProps::LookupProperty(nsDependentAtomString(aMappedAttrName),
-                               CSSEnabledState::eForAllContent);
+    nsCSSProps::LookupProperty(nsDependentAtomString(aMappedAttrName));
   if (propertyID != eCSSProperty_UNKNOWN) {
     bool changed = false; // outparam for ParseProperty.
     NS_ConvertUTF16toUTF8 value(aMappedAttrValue);
@@ -1208,8 +1197,9 @@ MappedAttrParser::ParseMappedAttrValue(nsAtom* aMappedAttrName,
     RefPtr<URLExtraData> data = new URLExtraData(mBaseURI, mDocURI,
                                                  mElement->NodePrincipal());
     changed = Servo_DeclarationBlock_SetPropertyById(
-      mDecl->AsServo()->Raw(), propertyID, &value, false, data,
-      ParsingMode::AllowUnitlessLength, mElement->OwnerDoc()->GetCompatibilityMode(), mLoader);
+      mDecl->Raw(), propertyID, &value, false, data,
+      ParsingMode::AllowUnitlessLength,
+      mElement->OwnerDoc()->GetCompatibilityMode(), mLoader, { });
 
     if (changed) {
       // The normal reporting of use counters by the nsCSSParser won't happen
@@ -1237,7 +1227,7 @@ MappedAttrParser::ParseMappedAttrValue(nsAtom* aMappedAttrName,
   if (aMappedAttrName == nsGkAtoms::lang) {
     propertyID = eCSSProperty__x_lang;
     RefPtr<nsAtom> atom = NS_Atomize(aMappedAttrValue);
-    Servo_DeclarationBlock_SetIdentStringValue(mDecl->AsServo()->Raw(), propertyID, atom);
+    Servo_DeclarationBlock_SetIdentStringValue(mDecl->Raw(), propertyID, atom);
   }
 }
 
@@ -1258,7 +1248,7 @@ nsSVGElement::UpdateContentDeclarationBlock()
   NS_ASSERTION(!mContentDeclarationBlock,
                "we already have a content declaration block");
 
-  uint32_t attrCount = mAttrsAndChildren.AttrCount();
+  uint32_t attrCount = mAttrs.AttrCount();
   if (!attrCount) {
     // nothing to do
     return;
@@ -1269,7 +1259,7 @@ nsSVGElement::UpdateContentDeclarationBlock()
                                     GetBaseURI(), this);
 
   for (uint32_t i = 0; i < attrCount; ++i) {
-    const nsAttrName* attrName = mAttrsAndChildren.AttrNameAt(i);
+    const nsAttrName* attrName = mAttrs.AttrNameAt(i);
     if (!attrName->IsAtom() || !IsAttributeMapped(attrName->Atom()))
       continue;
 
@@ -1302,7 +1292,7 @@ nsSVGElement::UpdateContentDeclarationBlock()
     }
 
     nsAutoString value;
-    mAttrsAndChildren.AttrAt(i)->ToString(value);
+    mAttrs.AttrAt(i)->ToString(value);
     mappedAttrParser.ParseMappedAttrValue(attrName->Atom(), value);
   }
   mContentDeclarationBlock = mappedAttrParser.GetDeclarationBlock();
@@ -1383,8 +1373,8 @@ nsSVGElement::WillChangeValue(nsAtom* aName)
   }
 
   uint8_t modType = attrValue
-                  ? static_cast<uint8_t>(MutationEventBinding::MODIFICATION)
-                  : static_cast<uint8_t>(MutationEventBinding::ADDITION);
+                  ? static_cast<uint8_t>(MutationEvent_Binding::MODIFICATION)
+                  : static_cast<uint8_t>(MutationEvent_Binding::ADDITION);
   nsNodeUtils::AttributeWillChange(this, kNameSpaceID_None, aName, modType,
                                    nullptr);
 
@@ -1429,12 +1419,11 @@ nsSVGElement::DidChangeValue(nsAtom* aName,
                                          NS_EVENT_BITS_MUTATION_ATTRMODIFIED,
                                          this);
   uint8_t modType = HasAttr(kNameSpaceID_None, aName)
-                  ? static_cast<uint8_t>(MutationEventBinding::MODIFICATION)
-                  : static_cast<uint8_t>(MutationEventBinding::ADDITION);
+                  ? static_cast<uint8_t>(MutationEvent_Binding::MODIFICATION)
+                  : static_cast<uint8_t>(MutationEvent_Binding::ADDITION);
 
   nsIDocument* document = GetComposedDoc();
-  mozAutoDocUpdate updateBatch(document, UPDATE_CONTENT_MODEL,
-                               kNotifyDocumentObservers);
+  mozAutoDocUpdate updateBatch(document, kNotifyDocumentObservers);
   // XXX Really, the fourth argument to SetAttrAndNotify should be null if
   // aEmptyOrOldValue does not represent the actual previous value of the
   // attribute, but currently SVG elements do not even use the old attribute
@@ -1454,7 +1443,7 @@ nsSVGElement::MaybeSerializeAttrBeforeRemoval(nsAtom* aName, bool aNotify)
     return;
   }
 
-  const nsAttrValue* attrValue = mAttrsAndChildren.GetAttr(aName);
+  const nsAttrValue* attrValue = mAttrs.GetAttr(aName);
   if (!attrValue)
     return;
 
@@ -1462,7 +1451,7 @@ nsSVGElement::MaybeSerializeAttrBeforeRemoval(nsAtom* aName, bool aNotify)
   attrValue->ToString(serializedValue);
   nsAttrValue oldAttrValue(serializedValue);
   bool oldValueSet;
-  mAttrsAndChildren.SetAndSwapAttr(aName, oldAttrValue, &oldValueSet);
+  mAttrs.SetAndSwapAttr(aName, oldAttrValue, &oldValueSet);
 }
 
 /* static */
@@ -1565,7 +1554,7 @@ nsSVGElement::DidAnimateLength(uint8_t aAttrEnum)
     LengthAttributesInfo info = GetLengthInfo();
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mLengthInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -1602,12 +1591,12 @@ nsSVGElement::GetAnimatedLengthValues(float *aFirst, ...)
   while (f && i < info.mLengthCount) {
     uint8_t type = info.mLengths[i].GetSpecifiedUnitType();
     if (!ctx) {
-      if (type != SVGLengthBinding::SVG_LENGTHTYPE_NUMBER &&
-          type != SVGLengthBinding::SVG_LENGTHTYPE_PX)
+      if (type != SVGLength_Binding::SVG_LENGTHTYPE_NUMBER &&
+          type != SVGLength_Binding::SVG_LENGTHTYPE_PX)
         ctx = GetCtx();
     }
-    if (type == SVGLengthBinding::SVG_LENGTHTYPE_EMS ||
-        type == SVGLengthBinding::SVG_LENGTHTYPE_EXS)
+    if (type == SVGLength_Binding::SVG_LENGTHTYPE_EMS ||
+        type == SVGLength_Binding::SVG_LENGTHTYPE_EXS)
       *f = info.mLengths[i++].GetAnimValue(this);
     else
       *f = info.mLengths[i++].GetAnimValue(ctx);
@@ -1662,7 +1651,7 @@ nsSVGElement::DidAnimateLengthList(uint8_t aAttrEnum)
     LengthListAttributesInfo info = GetLengthListInfo();
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mLengthListInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -1696,7 +1685,7 @@ nsSVGElement::GetAnimatedLengthList(uint8_t aAttrEnum)
   if (aAttrEnum < info.mLengthListCount) {
     return &(info.mLengthLists[aAttrEnum]);
   }
-  NS_NOTREACHED("Bad attrEnum");
+  MOZ_ASSERT_UNREACHABLE("Bad attrEnum");
   return nullptr;
 }
 
@@ -1750,7 +1739,7 @@ nsSVGElement::DidAnimateNumberList(uint8_t aAttrEnum)
 
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mNumberListInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -1811,7 +1800,7 @@ nsSVGElement::DidAnimatePointList()
   if (frame) {
     frame->AttributeChanged(kNameSpaceID_None,
                             GetPointListAttrName(),
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -1848,7 +1837,7 @@ nsSVGElement::DidAnimatePathSegList()
   if (frame) {
     frame->AttributeChanged(kNameSpaceID_None,
                             GetPathDataAttrName(),
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -1890,7 +1879,7 @@ nsSVGElement::DidAnimateNumber(uint8_t aAttrEnum)
     NumberAttributesInfo info = GetNumberInfo();
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mNumberInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -1961,7 +1950,7 @@ nsSVGElement::DidAnimateNumberPair(uint8_t aAttrEnum)
     NumberPairAttributesInfo info = GetNumberPairInfo();
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mNumberPairInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -2003,7 +1992,7 @@ nsSVGElement::DidAnimateInteger(uint8_t aAttrEnum)
     IntegerAttributesInfo info = GetIntegerInfo();
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mIntegerInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -2075,7 +2064,7 @@ nsSVGElement::DidAnimateIntegerPair(uint8_t aAttrEnum)
     IntegerPairAttributesInfo info = GetIntegerPairInfo();
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mIntegerPairInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -2124,7 +2113,7 @@ nsSVGElement::DidAnimateAngle(uint8_t aAttrEnum)
     AngleAttributesInfo info = GetAngleInfo();
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mAngleInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -2164,7 +2153,7 @@ nsSVGElement::DidAnimateBoolean(uint8_t aAttrEnum)
     BooleanAttributesInfo info = GetBooleanInfo();
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mBooleanInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -2211,7 +2200,7 @@ nsSVGElement::DidAnimateEnum(uint8_t aAttrEnum)
     EnumAttributesInfo info = GetEnumInfo();
     frame->AttributeChanged(kNameSpaceID_None,
                             *info.mEnumInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -2248,7 +2237,7 @@ nsSVGElement::DidAnimateViewBox()
   if (frame) {
     frame->AttributeChanged(kNameSpaceID_None,
                             nsGkAtoms::viewBox,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -2288,7 +2277,7 @@ nsSVGElement::DidAnimatePreserveAspectRatio()
   if (frame) {
     frame->AttributeChanged(kNameSpaceID_None,
                             nsGkAtoms::preserveAspectRatio,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -2389,7 +2378,7 @@ nsSVGElement::DidAnimateString(uint8_t aAttrEnum)
     StringAttributesInfo info = GetStringInfo();
     frame->AttributeChanged(info.mStringInfo[aAttrEnum].mNamespaceID,
                             *info.mStringInfo[aAttrEnum].mName,
-                            MutationEventBinding::SMIL);
+                            MutationEvent_Binding::SMIL);
   }
 }
 
@@ -2405,7 +2394,7 @@ nsSVGElement::WillChangeStringList(bool aIsConditionalProcessingAttribute,
 {
   nsAtom* name;
   if (aIsConditionalProcessingAttribute) {
-    nsCOMPtr<SVGTests> tests(do_QueryInterface(static_cast<nsIDOMNode*>(this)));
+    nsCOMPtr<SVGTests> tests(do_QueryInterface(this));
     name = tests->GetAttrName(aAttrEnum);
   } else {
     name = *GetStringListInfo().mStringListInfo[aAttrEnum].mName;
@@ -2467,9 +2456,9 @@ nsSVGElement::ReportAttributeParseFailure(nsIDocument* aDocument,
 void
 nsSVGElement::RecompileScriptEventListeners()
 {
-  int32_t i, count = mAttrsAndChildren.AttrCount();
+  int32_t i, count = mAttrs.AttrCount();
   for (i = 0; i < count; ++i) {
-    const nsAttrName *name = mAttrsAndChildren.AttrNameAt(i);
+    const nsAttrName *name = mAttrs.AttrNameAt(i);
 
     // Eventlistenener-attributes are always in the null namespace
     if (!name->IsAtom()) {

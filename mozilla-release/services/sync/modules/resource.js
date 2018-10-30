@@ -10,7 +10,7 @@ ChromeUtils.import("resource://services-common/observers.js");
 ChromeUtils.import("resource://services-common/utils.js");
 ChromeUtils.import("resource://services-sync/util.js");
 const {setTimeout, clearTimeout} = ChromeUtils.import("resource://gre/modules/Timer.jsm", {});
-Cu.importGlobalProperties(["fetch"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["fetch", "Headers", "Request"]);
 /* global AbortController */
 
 /*
@@ -117,12 +117,16 @@ Resource.prototype = {
 
     if (this._log.level <= Log.Level.Trace) {
       for (const [k, v] of headers) {
-        if (k == "authorization") {
+        if (k == "authorization" || k == "x-client-state") {
           this._log.trace(`HTTP Header ${k}: ***** (suppressed)`);
         } else {
           this._log.trace(`HTTP Header ${k}: ${v}`);
         }
       }
+    }
+
+    if (!headers.has("accept")) {
+      headers.append("accept", "application/json;q=0.9,*/*;q=0.2");
     }
 
     return headers;
@@ -141,7 +145,7 @@ Resource.prototype = {
       headers,
       method,
       signal,
-      mozErrors: true // Return nsresult error codes instead of a generic
+      mozErrors: true, // Return nsresult error codes instead of a generic
                       // NetworkError when fetch rejects.
     };
 
@@ -269,5 +273,5 @@ Resource.prototype = {
 
   delete() {
     return this._doRequest("DELETE");
-  }
+  },
 };

@@ -5,7 +5,7 @@
 <!--LOCALIZATION NOTE : FILE The Appearance > Content prefs dialog.  -->
 
 <!ENTITY pref.content.title                     "Tartalom">
-<!ENTITY pref.content.description               "Ezek a beállítások a webhely és a szöveges tartalom megjelenését befolyásolják a &brandShortName; programban.">
+<!ENTITY pref.content.description               "Ezek a beállítások a webhely és a szöveges tartalom megjelenését befolyásolják a &brandShortName; böngészőben.">
 
 <!ENTITY siteIcons.label                        "Webhely ikonok">
 <!ENTITY useSiteIcons.label                     "Webhely ikonok megjelenítése">

@@ -1,16 +1,15 @@
-/* -*- indent-tabs-mode: nil; js-indent-level: 2 -*- */
-/* vim: set ft=javascript ts=2 et sw=2 tw=80: */
 /* Any copyright is dedicated to the Public Domain.
  * http://creativecommons.org/publicdomain/zero/1.0/ */
 
-function TestActor1(aConnection, aTab)
-{
+"use strict";
+
+function TestActor1(aConnection, aTab) {
   this.conn = aConnection;
   this.tab = aTab;
 }
 
 TestActor1.prototype = {
-  actorPrefix: "test_one",
+  actorPrefix: "testOne",
 
   grip: function TA1_grip() {
     return { actor: this.actorID,
@@ -25,9 +24,4 @@ TestActor1.prototype = {
 TestActor1.prototype.requestTypes = {
   "ping": TestActor1.prototype.onPing
 };
-
-DebuggerServer.removeTabActor(TestActor1);
-DebuggerServer.removeGlobalActor(TestActor1);
-
-DebuggerServer.addTabActor(TestActor1, "testTabActor1");
-DebuggerServer.addGlobalActor(TestActor1, "testGlobalActor1");
+exports.TestActor1 = TestActor1;

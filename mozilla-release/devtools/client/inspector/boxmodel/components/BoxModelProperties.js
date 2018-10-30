@@ -9,7 +9,7 @@ const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 const { LocalizationHelper } = require("devtools/shared/l10n");
 
-const ComputedProperty = createFactory(require("./ComputedProperty"));
+const ComputedProperty = createFactory(require("devtools/client/inspector/layout/components/ComputedProperty"));
 
 const Types = require("../types");
 
@@ -20,9 +20,9 @@ class BoxModelProperties extends PureComponent {
   static get propTypes() {
     return {
       boxModel: PropTypes.shape(Types.boxModel).isRequired,
-      setSelectedNode: PropTypes.func.isRequired,
       onHideBoxModelHighlighter: PropTypes.func.isRequired,
       onShowBoxModelHighlighterForNode: PropTypes.func.isRequired,
+      setSelectedNode: PropTypes.func.isRequired,
     };
   }
 
@@ -49,7 +49,7 @@ class BoxModelProperties extends PureComponent {
    * - referenceElementType {String}
    */
   getReferenceElement(propertyName) {
-    let value = this.props.boxModel.layout[propertyName];
+    const value = this.props.boxModel.layout[propertyName];
 
     if (propertyName === "position" &&
         value !== "static" && value !== "fixed" &&
@@ -71,44 +71,41 @@ class BoxModelProperties extends PureComponent {
   }
 
   render() {
-    let {
+    const {
       boxModel,
-      setSelectedNode,
       onHideBoxModelHighlighter,
       onShowBoxModelHighlighterForNode,
+      setSelectedNode,
     } = this.props;
-    let { layout } = boxModel;
+    const { layout } = boxModel;
 
-    let layoutInfo = ["box-sizing", "display", "float",
-                      "line-height", "position", "z-index"];
+    const layoutInfo = ["box-sizing", "display", "float",
+                        "line-height", "position", "z-index"];
 
     const properties = layoutInfo.map(info => {
-      let { referenceElement, referenceElementType } = this.getReferenceElement(info);
+      const { referenceElement, referenceElementType } = this.getReferenceElement(info);
 
       return ComputedProperty({
-        name: info,
         key: info,
-        value: layout[info],
+        name: info,
+        onHideBoxModelHighlighter,
+        onShowBoxModelHighlighterForNode,
         referenceElement,
         referenceElementType,
         setSelectedNode,
-        onHideBoxModelHighlighter,
-        onShowBoxModelHighlighterForNode,
+        value: layout[info],
       });
     });
 
-    return dom.div(
-      {
-        className: "boxmodel-properties",
-      },
+    return dom.div({ className: "layout-properties" },
       dom.div(
         {
-          className: "boxmodel-properties-header",
+          className: "layout-properties-header",
           onDoubleClick: this.onToggleExpander,
         },
         dom.span(
           {
-            className: "boxmodel-properties-expander theme-twisty",
+            className: "layout-properties-expander theme-twisty",
             open: this.state.isOpen,
             onClick: this.onToggleExpander,
           }
@@ -117,7 +114,7 @@ class BoxModelProperties extends PureComponent {
       ),
       dom.div(
         {
-          className: "boxmodel-properties-wrapper devtools-monospace",
+          className: "layout-properties-wrapper devtools-monospace",
           hidden: !this.state.isOpen,
           tabIndex: 0,
         },

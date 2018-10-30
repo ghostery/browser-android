@@ -6,12 +6,39 @@ ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
 ChromeUtils.import("resource:///modules/SitePermissions.jsm");
 
-function Permission(principal, type, capability, capabilityString) {
+const sitePermissionsL10n = {
+  "desktop-notification": {
+    window: "permissions-site-notification-window",
+    description: "permissions-site-notification-desc",
+    disableLabel: "permissions-site-notification-disable-label",
+    disableDescription: "permissions-site-notification-disable-desc",
+  },
+  "geo": {
+    window: "permissions-site-location-window",
+    description: "permissions-site-location-desc",
+    disableLabel: "permissions-site-location-disable-label",
+    disableDescription: "permissions-site-location-disable-desc",
+  },
+  "camera": {
+    window: "permissions-site-camera-window",
+    description: "permissions-site-camera-desc",
+    disableLabel: "permissions-site-camera-disable-label",
+    disableDescription: "permissions-site-camera-disable-desc",
+  },
+  "microphone": {
+    window: "permissions-site-microphone-window",
+    description: "permissions-site-microphone-desc",
+    disableLabel: "permissions-site-microphone-disable-label",
+    disableDescription: "permissions-site-microphone-disable-desc",
+  },
+};
+
+function Permission(principal, type, capability, l10nId) {
   this.principal = principal;
   this.origin = principal.origin;
   this.type = type;
   this.capability = capability;
-  this.capabilityString = capabilityString;
+  this.l10nId = l10nId;
 }
 
 const PERMISSION_STATES = [SitePermissions.ALLOW, SitePermissions.BLOCK, SitePermissions.PROMPT];
@@ -23,7 +50,6 @@ var gSitePermissionsManager = {
   _permissionsToChange: new Map(),
   _permissionsToDelete: new Map(),
   _list: null,
-  _bundle: null,
   _removeButton: null,
   _removeAllButton: null,
   _searchBox: null,
@@ -33,16 +59,15 @@ var gSitePermissionsManager = {
 
   onLoad() {
     let params = window.arguments[0];
-    this.init(params);
+    document.mozSubdialogReady = this.init(params);
   },
 
-  init(params) {
+  async init(params) {
     if (!this._isObserving) {
       Services.obs.addObserver(this, "perm-changed");
       this._isObserving = true;
     }
 
-    this._bundle = document.getElementById("bundlePreferences");
     this._type = params.permissionType;
     this._list = document.getElementById("permissionsBox");
     this._removeButton = document.getElementById("removePermission");
@@ -50,16 +75,21 @@ var gSitePermissionsManager = {
     this._searchBox = document.getElementById("searchBox");
     this._checkbox = document.getElementById("permissionsDisableCheckbox");
 
-    let permissionsText = document.getElementById("permissionsText");
-    permissionsText.textContent = params.introText;
-
-
-
-    this._checkbox.setAttribute("label", params.disablePermissionsLabel);
     let permissionsDisableDescription = document.getElementById("permissionsDisableDescription");
-    permissionsDisableDescription.appendChild(document.createTextNode(params.disablePermissionsDescription));
+    let permissionsText = document.getElementById("permissionsText");
 
-    document.title = params.windowTitle;
+    let l10n = sitePermissionsL10n[this._type];
+    document.l10n.setAttributes(permissionsText, l10n.description);
+    document.l10n.setAttributes(this._checkbox, l10n.disableLabel);
+    document.l10n.setAttributes(permissionsDisableDescription, l10n.disableDescription);
+    document.l10n.setAttributes(document.documentElement, l10n.window);
+
+    await document.l10n.translateElements([
+      permissionsText,
+      this._checkbox,
+      permissionsDisableDescription,
+      document.documentElement,
+    ]);
 
     // Initialize the checkbox state.
     this._defaultPermissionStatePrefName = "permissions.default." + this._type;
@@ -75,6 +105,10 @@ var gSitePermissionsManager = {
       this._checkbox.checked = true;
     } else {
       this._checkbox.checked = false;
+    }
+
+    if (Services.prefs.prefIsLocked(this._defaultPermissionStatePrefName)) {
+      this._checkbox.disabled = true;
     }
 
     this._loadPermissions();
@@ -106,7 +140,7 @@ var gSitePermissionsManager = {
     } else if (data == "changed") {
       let p = this._permissions.get(permission.principal.origin);
       p.capability = permission.capability;
-      p.capabilityString = this._getCapabilityString(permission.capability);
+      p.l10nId = this._getCapabilityString(permission.capability);
       this._handleCapabilityChange(p);
       this.buildPermissionsList();
     } else if (data == "deleted") {
@@ -125,25 +159,26 @@ var gSitePermissionsManager = {
     let stringKey = null;
     switch (capability) {
     case Services.perms.ALLOW_ACTION:
-      stringKey = "can";
+      stringKey = "permissions-capabilities-allow";
       break;
     case Services.perms.DENY_ACTION:
-      stringKey = "cannot";
+      stringKey = "permissions-capabilities-block";
       break;
     case Services.perms.PROMPT_ACTION:
-      stringKey = "prompt";
+      stringKey = "permissions-capabilities-prompt";
       break;
+    default:
+      throw new Error(`Unknown capability: ${capability}`);
     }
-    return this._bundle.getString(stringKey);
+    return stringKey;
   },
 
   _addPermissionToList(perm) {
     // Ignore unrelated permission types and permissions with unknown states.
     if (perm.type !== this._type || !PERMISSION_STATES.includes(perm.capability))
       return;
-    let capabilityString = this._getCapabilityString(perm.capability);
-    let p = new Permission(perm.principal, perm.type, perm.capability,
-                           capabilityString);
+    let l10nId = this._getCapabilityString(perm.capability);
+    let p = new Permission(perm.principal, perm.type, perm.capability, l10nId);
     this._permissions.set(p.origin, p);
   },
 
@@ -157,29 +192,27 @@ var gSitePermissionsManager = {
 
   _loadPermissions() {
     // load permissions into a table.
-    let enumerator = Services.perms.enumerator;
-    while (enumerator.hasMoreElements()) {
-      let nextPermission = enumerator.getNext().QueryInterface(Ci.nsIPermission);
+    for (let nextPermission of Services.perms.enumerator) {
       this._addPermissionToList(nextPermission);
     }
   },
 
   _createPermissionListItem(permission) {
-    let richlistitem = document.createElement("richlistitem");
+    let richlistitem = document.createXULElement("richlistitem");
     richlistitem.setAttribute("origin", permission.origin);
-    let row = document.createElement("hbox");
+    let row = document.createXULElement("hbox");
     row.setAttribute("flex", "1");
 
-    let hbox = document.createElement("hbox");
-    let website = document.createElement("label");
+    let hbox = document.createXULElement("hbox");
+    let website = document.createXULElement("label");
     website.setAttribute("value", permission.origin);
     website.setAttribute("width", "50");
     hbox.setAttribute("class", "website-name");
     hbox.setAttribute("flex", "3");
     hbox.appendChild(website);
 
-    let menulist = document.createElement("menulist");
-    let menupopup = document.createElement("menupopup");
+    let menulist = document.createXULElement("menulist");
+    let menupopup = document.createXULElement("menupopup");
     menulist.setAttribute("flex", "1");
     menulist.setAttribute("width", "50");
     menulist.setAttribute("class", "website-status");
@@ -195,8 +228,8 @@ var gSitePermissionsManager = {
       } else if (state == SitePermissions.UNKNOWN) {
         continue;
       }
-      let m = document.createElement("menuitem");
-      m.setAttribute("label", this._getCapabilityString(state));
+      let m = document.createXULElement("menuitem");
+      document.l10n.setAttributes(m, this._getCapabilityString(state));
       m.setAttribute("value", state);
       menupopup.appendChild(m);
     }
@@ -209,7 +242,7 @@ var gSitePermissionsManager = {
     row.appendChild(hbox);
     row.appendChild(menulist);
     richlistitem.appendChild(row);
-    this._list.appendChild(richlistitem);
+    return richlistitem;
   },
 
   onWindowKeyPress(event) {
@@ -268,7 +301,7 @@ var gSitePermissionsManager = {
     if (p.capability == capability)
       return;
     p.capability = capability;
-    p.capabilityString = this._getCapabilityString(capability);
+    p.l10nId = this._getCapabilityString(capability);
     this._permissionsToChange.set(p.origin, p);
 
     // enable "remove all" button as needed
@@ -306,24 +339,29 @@ var gSitePermissionsManager = {
     for (let item of oldItems) {
       item.remove();
     }
+    let frag = document.createDocumentFragment();
 
-    // Sort permissions.
-    let sortedPermissions = this._sortPermissions(sortCol);
+    let permissions = Array.from(this._permissions.values());
 
     let keyword = this._searchBox.value.toLowerCase().trim();
-    for (let permission of sortedPermissions) {
+    for (let permission of permissions) {
       if (keyword && !permission.origin.includes(keyword)) {
         continue;
       }
 
-      this._createPermissionListItem(permission);
+      let richlistitem = this._createPermissionListItem(permission);
+      frag.appendChild(richlistitem);
     }
+
+    // Sort permissions.
+    this._sortPermissions(this._list, frag, sortCol);
+
+    this._list.appendChild(frag);
 
     this._setRemoveButtonState();
   },
 
-  _sortPermissions(column) {
-    let permissions = Array.from(this._permissions.values());
+  _sortPermissions(list, frag, column) {
     let sortDirection;
 
     if (!column) {
@@ -338,24 +376,34 @@ var gSitePermissionsManager = {
     switch (column.id) {
       case "siteCol":
         sortFunc = (a, b) => {
-          return a.origin.localeCompare(b.origin);
+          return comp.compare(a.getAttribute("origin"), b.getAttribute("origin"));
         };
         break;
 
       case "statusCol":
         sortFunc = (a, b) => {
-          return a.capabilityString.localeCompare(b.capabilityString);
+          return parseInt(a.querySelector("menulist").value) >
+            parseInt(b.querySelector("menulist").value);
         };
         break;
     }
 
+    let comp = new Services.intl.Collator(undefined, {
+      usage: "sort",
+    });
+
+    let items = Array.from(frag.querySelectorAll("richlistitem"));
+
     if (sortDirection === "descending") {
-      permissions.sort((a, b) => sortFunc(b, a));
+      items.sort((a, b) => sortFunc(b, a));
     } else {
-      permissions.sort(sortFunc);
+      items.sort(sortFunc);
     }
 
-    let cols = this._list.querySelectorAll("treecol");
+    // Re-append items in the correct order:
+    items.forEach(item => frag.appendChild(item));
+
+    let cols = list.querySelectorAll("treecol");
     cols.forEach(c => {
       c.removeAttribute("data-isCurrentSortCol");
       c.removeAttribute("sortDirection");
@@ -363,7 +411,5 @@ var gSitePermissionsManager = {
     column.setAttribute("data-isCurrentSortCol", "true");
     column.setAttribute("sortDirection", sortDirection);
     column.setAttribute("data-last-sortDirection", sortDirection);
-
-    return permissions;
   },
 };

@@ -306,17 +306,17 @@ add_test(function test_coordinates() {
   deepEqual({x: 10, y: 10}, element.coordinates(domEl, 10, 10));
   deepEqual({x: -5, y: -5}, element.coordinates(domEl, -5, -5));
 
-  Assert.throws(() => element.coordinates(null));
+  Assert.throws(() => element.coordinates(null), /node is null/);
 
-  Assert.throws(() => element.coordinates(domEl, "string", undefined));
-  Assert.throws(() => element.coordinates(domEl, undefined, "string"));
-  Assert.throws(() => element.coordinates(domEl, "string", "string"));
-  Assert.throws(() => element.coordinates(domEl, {}, undefined));
-  Assert.throws(() => element.coordinates(domEl, undefined, {}));
-  Assert.throws(() => element.coordinates(domEl, {}, {}));
-  Assert.throws(() => element.coordinates(domEl, [], undefined));
-  Assert.throws(() => element.coordinates(domEl, undefined, []));
-  Assert.throws(() => element.coordinates(domEl, [], []));
+  Assert.throws(() => element.coordinates(domEl, "string", undefined), /Offset must be a number/);
+  Assert.throws(() => element.coordinates(domEl, undefined, "string"), /Offset must be a number/);
+  Assert.throws(() => element.coordinates(domEl, "string", "string"), /Offset must be a number/);
+  Assert.throws(() => element.coordinates(domEl, {}, undefined), /Offset must be a number/);
+  Assert.throws(() => element.coordinates(domEl, undefined, {}), /Offset must be a number/);
+  Assert.throws(() => element.coordinates(domEl, {}, {}), /Offset must be a number/);
+  Assert.throws(() => element.coordinates(domEl, [], undefined), /Offset must be a number/);
+  Assert.throws(() => element.coordinates(domEl, undefined, []), /Offset must be a number/);
+  Assert.throws(() => element.coordinates(domEl, [], []), /Offset must be a number/);
 
   run_next_test();
 });
@@ -326,7 +326,7 @@ add_test(function test_WebElement_ctor() {
   equal(el.uuid, "foo");
 
   for (let t of [42, true, [], {}, null, undefined]) {
-    Assert.throws(() => new WebElement(t));
+    Assert.throws(() => new WebElement(t), /to be a string/);
   }
 
   run_next_test();
@@ -358,37 +358,15 @@ add_test(function test_WebElement_from() {
 });
 
 add_test(function test_WebElement_fromJSON_ContentWebElement() {
-  const {Identifier, LegacyIdentifier} = ContentWebElement;
+  const {Identifier} = ContentWebElement;
 
-  let refNew = {[Identifier]: "foo"};
-  let webElNew = WebElement.fromJSON(refNew);
-  ok(webElNew instanceof ContentWebElement);
-  equal(webElNew.uuid, "foo");
-
-  let refOld = {[LegacyIdentifier]: "foo"};
-  let webElOld = WebElement.fromJSON(refOld);
-  ok(webElOld instanceof ContentWebElement);
-  equal(webElOld.uuid, "foo");
-
-  ok(webElNew.is(webElOld));
-  ok(webElOld.is(webElNew));
-
-  let refBoth = {
-    [Identifier]: "foo",
-    [LegacyIdentifier]: "foo",
-  };
-  let webElBoth = WebElement.fromJSON(refBoth);
-  ok(webElBoth instanceof ContentWebElement);
-  equal(webElBoth.uuid, "foo");
-
-  ok(webElBoth.is(webElNew));
-  ok(webElBoth.is(webElOld));
-  ok(webElNew.is(webElBoth));
-  ok(webElOld.is(webElBoth));
+  let ref = {[Identifier]: "foo"};
+  let webEl = WebElement.fromJSON(ref);
+  ok(webEl instanceof ContentWebElement);
+  equal(webEl.uuid, "foo");
 
   let identifierPrecedence = {
     [Identifier]: "identifier-uuid",
-    [LegacyIdentifier]: "legacyidentifier-uuid",
   };
   let precedenceEl = WebElement.fromJSON(identifierPrecedence);
   ok(precedenceEl instanceof ContentWebElement);
@@ -450,7 +428,6 @@ add_test(function test_WebElement_isReference() {
   }
 
   ok(WebElement.isReference({[ContentWebElement.Identifier]: "foo"}));
-  ok(WebElement.isReference({[ContentWebElement.LegacyIdentifier]: "foo"}));
   ok(WebElement.isReference({[ContentWebWindow.Identifier]: "foo"}));
   ok(WebElement.isReference({[ContentWebFrame.Identifier]: "foo"}));
   ok(WebElement.isReference({[ChromeWebElement.Identifier]: "foo"}));
@@ -464,37 +441,23 @@ add_test(function test_WebElement_generateUUID() {
 });
 
 add_test(function test_ContentWebElement_toJSON() {
-  const {Identifier, LegacyIdentifier} = ContentWebElement;
+  const {Identifier} = ContentWebElement;
 
   let el = new ContentWebElement("foo");
   let json = el.toJSON();
 
   ok(Identifier in json);
-  ok(LegacyIdentifier in json);
   equal(json[Identifier], "foo");
-  equal(json[LegacyIdentifier], "foo");
 
   run_next_test();
 });
 
 add_test(function test_ContentWebElement_fromJSON() {
-  const {Identifier, LegacyIdentifier} = ContentWebElement;
+  const {Identifier} = ContentWebElement;
 
-  let newEl = ContentWebElement.fromJSON({[Identifier]: "foo"});
-  ok(newEl instanceof ContentWebElement);
-  equal(newEl.uuid, "foo");
-
-  let oldEl = ContentWebElement.fromJSON({[LegacyIdentifier]: "foo"});
-  ok(oldEl instanceof ContentWebElement);
-  equal(oldEl.uuid, "foo");
-
-  let bothRef = {
-    [Identifier]: "identifier-uuid",
-    [LegacyIdentifier]: "legacyidentifier-foo",
-  };
-  let bothEl = ContentWebElement.fromJSON(bothRef);
-  ok(bothEl instanceof ContentWebElement);
-  equal(bothEl.uuid, "identifier-uuid");
+  let el = ContentWebElement.fromJSON({[Identifier]: "foo"});
+  ok(el instanceof ContentWebElement);
+  equal(el.uuid, "foo");
 
   Assert.throws(() => ContentWebElement.fromJSON({}), InvalidArgumentError);
 

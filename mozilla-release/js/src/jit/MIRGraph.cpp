@@ -17,11 +17,11 @@ using namespace js;
 using namespace js::jit;
 using mozilla::Swap;
 
-MIRGenerator::MIRGenerator(CompileCompartment* compartment, const JitCompileOptions& options,
+MIRGenerator::MIRGenerator(CompileRealm* realm, const JitCompileOptions& options,
                            TempAllocator* alloc, MIRGraph* graph, const CompileInfo* info,
                            const OptimizationInfo* optimizationInfo)
-  : compartment(compartment),
-    runtime(compartment ? compartment->runtime() : nullptr),
+  : realm(realm),
+    runtime(realm ? realm->runtime() : nullptr),
     info_(info),
     optimizationInfo_(optimizationInfo),
     alloc_(alloc),
@@ -32,48 +32,15 @@ MIRGenerator::MIRGenerator(CompileCompartment* compartment, const JitCompileOpti
     wasmMaxStackArgBytes_(0),
     needsOverrecursedCheck_(false),
     needsStaticStackAlignment_(false),
-    usesSimd_(false),
-    cachedUsesSimd_(false),
     modifiesFrameArguments_(false),
     instrumentedProfiling_(false),
     instrumentedProfilingIsCached_(false),
     safeForMinorGC_(true),
-    stringsCanBeInNursery_(compartment ? compartment->zone()->canNurseryAllocateStrings() : false),
+    stringsCanBeInNursery_(realm ? realm->zone()->canNurseryAllocateStrings() : false),
     minWasmHeapLength_(0),
     options(options),
     gs_(alloc)
 { }
-
-bool
-MIRGenerator::usesSimd()
-{
-    if (cachedUsesSimd_)
-        return usesSimd_;
-
-    cachedUsesSimd_ = true;
-    for (ReversePostorderIterator block = graph_->rpoBegin(),
-                                  end   = graph_->rpoEnd();
-         block != end;
-         block++)
-    {
-        // It's fine to use MInstructionIterator here because we don't have to
-        // worry about Phis, since any reachable phi (or phi cycle) will have at
-        // least one instruction as an input.
-        for (MInstructionIterator inst = block->begin(); inst != block->end(); inst++) {
-            // Instructions that have SIMD inputs but not a SIMD type are fine
-            // to ignore, as their inputs are also reached at some point. By
-            // induction, at least one instruction with a SIMD type is reached
-            // at some point.
-            if (IsSimdType(inst->type())) {
-                MOZ_ASSERT(SupportsSimd);
-                usesSimd_ = true;
-                return true;
-            }
-        }
-    }
-    usesSimd_ = false;
-    return false;
-}
 
 mozilla::GenericErrorResult<AbortReason>
 MIRGenerator::abort(AbortReason r)
@@ -100,14 +67,14 @@ MIRGenerator::abort(AbortReason r)
             break;
         }
     }
-    return Err(mozilla::Move(r));
+    return Err(std::move(r));
 }
 
 mozilla::GenericErrorResult<AbortReason>
 MIRGenerator::abortFmt(AbortReason r, const char* message, va_list ap)
 {
     JitSpewVA(JitSpew_IonAbort, message, ap);
-    return Err(mozilla::Move(r));
+    return Err(std::move(r));
 }
 
 mozilla::GenericErrorResult<AbortReason>
@@ -489,6 +456,8 @@ MBasicBlock::MBasicBlock(MIRGraph& graph, const CompileInfo& info, BytecodeSite*
     info_(info),
     predecessors_(graph.alloc()),
     stackPosition_(info_.firstStackSlot()),
+    id_(0),
+    domIndex_(0),
     numDominated_(0),
     pc_(site->pc()),
     lir_(nullptr),

@@ -9,17 +9,17 @@
 
 DEF_TEST(DoesCrossCompartmentBoundaries, {
     // Create a new global to get a new compartment.
-    JS::CompartmentOptions options;
+    JS::RealmOptions options;
     JS::RootedObject newGlobal(cx, JS_NewGlobalObject(cx,
                                                       getGlobalClass(),
                                                       nullptr,
                                                       JS::FireOnNewGlobalHook,
                                                       options));
     ASSERT_TRUE(newGlobal);
-    JSCompartment* newCompartment = nullptr;
+    JS::Compartment* newCompartment = nullptr;
     {
-      JSAutoCompartment ac(cx, newGlobal);
-      ASSERT_TRUE(JS_InitStandardClasses(cx, newGlobal));
+      JSAutoRealm ar(cx, newGlobal);
+      ASSERT_TRUE(JS::InitRealmStandardClasses(cx));
       newCompartment = js::GetContextCompartment(cx);
     }
     ASSERT_TRUE(newCompartment);
@@ -27,7 +27,6 @@ DEF_TEST(DoesCrossCompartmentBoundaries, {
 
     // Our set of target compartments is both the old and new compartments.
     JS::CompartmentSet targetCompartments;
-    ASSERT_TRUE(targetCompartments.init());
     ASSERT_TRUE(targetCompartments.put(compartment));
     ASSERT_TRUE(targetCompartments.put(newCompartment));
 

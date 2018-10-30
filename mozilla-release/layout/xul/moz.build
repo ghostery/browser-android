@@ -5,7 +5,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 with Files('**'):
-    BUG_COMPONENT = ('Core', 'XP Toolkit/Widgets: XUL')
+    BUG_COMPONENT = ('Core', 'XUL')
 
 with Files('*Menu*'):
     BUG_COMPONENT = ('Core', 'XP Toolkit/Widgets: Menus')
@@ -17,8 +17,6 @@ if CONFIG['ENABLE_TESTS']:
 
 XPIDL_SOURCES += [
     'nsIBoxObject.idl',
-    'nsIListBoxObject.idl',
-    'nsISliderListener.idl',
 ]
 
 XPIDL_MODULE = 'layout_xul'
@@ -27,15 +25,13 @@ EXPORTS += [
     'nsBox.h',
     'nsIScrollbarMediator.h',
     'nsPIBoxObject.h',
-    'nsPIListBoxObject.h',
     'nsXULPopupManager.h',
+    'nsXULTooltipListener.h',
 ]
 
 EXPORTS.mozilla.dom += [
     'BoxObject.h',
-    'ListBoxObject.h',
     'MenuBoxObject.h',
-    'ScrollBoxObject.h',
 ]
 
 UNIFIED_SOURCES += [
@@ -49,7 +45,6 @@ UNIFIED_SOURCES += [
     'nsRootBoxFrame.cpp',
     'nsScrollbarButtonFrame.cpp',
     'nsScrollbarFrame.cpp',
-    'nsScrollBoxFrame.cpp',
     'nsSliderFrame.cpp',
     'nsSprocketLayout.cpp',
     'nsStackFrame.cpp',
@@ -59,16 +54,12 @@ UNIFIED_SOURCES += [
 
 if CONFIG['MOZ_XUL']:
     UNIFIED_SOURCES += [
-        'ListBoxObject.cpp',
         'MenuBoxObject.cpp',
         'nsDeckFrame.cpp',
         'nsDocElementBoxFrame.cpp',
         'nsGroupBoxFrame.cpp',
         'nsImageBoxFrame.cpp',
         'nsLeafBoxFrame.cpp',
-        'nsListBoxBodyFrame.cpp',
-        'nsListBoxLayout.cpp',
-        'nsListItemFrame.cpp',
         'nsMenuBarFrame.cpp',
         'nsMenuBarListener.cpp',
         'nsMenuFrame.cpp',
@@ -81,7 +72,6 @@ if CONFIG['MOZ_XUL']:
         'nsTitleBarFrame.cpp',
         'nsXULLabelFrame.cpp',
         'nsXULPopupManager.cpp',
-        'ScrollBoxObject.cpp',
     ]
 
 if CONFIG['MOZ_XUL']:

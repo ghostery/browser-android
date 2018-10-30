@@ -18,7 +18,7 @@
 class nsITimer;
 class nsSliderFrame;
 
-nsIFrame* NS_NewSliderFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
+nsIFrame* NS_NewSliderFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
 
 class nsSliderMediator final : public nsIDOMEventListener
 {
@@ -162,7 +162,7 @@ private:
   void DragThumb(bool aGrabMouseEvents);
   void AddListener();
   void RemoveListener();
-  bool isDraggingThumb();
+  bool isDraggingThumb() const;
 
   void SuppressDisplayport();
   void UnsuppressDisplayport();

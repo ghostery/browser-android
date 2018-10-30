@@ -8,7 +8,6 @@ DISABLE_SCREEN_SAVER = False
 ADJUST_MOUSE_AND_SCREEN = False
 #####
 config = {
-    "buildbot_json_path": "buildprops.json",
     "virtualenv_modules": ['six==1.10.0', 'vcversioner==2.16.0.0'],
     ###
     "installer_path": INSTALLER_PATH,
@@ -21,7 +20,6 @@ config = {
         "cppunittest": "runcppunittests.py",
         "gtest": "rungtests.py",
         "jittest": "jit_test.py",
-        "mozbase": "test.py",
         "mozmill": "runtestlist.py",
     },
     "minimum_tests_zip_dirs": [
@@ -73,14 +71,6 @@ config = {
             ],
             "run_filename": "runtests.py",
             "testsdir": "mochitest"
-        },
-        "mozbase": {
-            "options": [
-                "-b",
-                "%(binary_path)s"
-            ],
-            "run_filename": "test.py",
-            "testsdir": "mozbase"
         },
         "mozmill": {
             "options": [
@@ -147,7 +137,11 @@ config = {
         "browser-chrome-addons": ["--flavor=browser", "--chunk-by-runtime", "--tag=addons"],
         "browser-chrome-screenshots": ["--flavor=browser", "--subsuite=screenshots"],
         "browser-chrome-instrumentation": ["--flavor=browser"],
-        "mochitest-gl": ["--subsuite=webgl"],
+        "mochitest-webgl1-core": ["--subsuite=webgl1-core"],
+        "mochitest-webgl1-ext": ["--subsuite=webgl1-ext"],
+        "mochitest-webgl2-core": ["--subsuite=webgl2-core"],
+        "mochitest-webgl2-ext": ["--subsuite=webgl2-ext"],
+        "mochitest-webgl2-deqp": ["--subsuite=webgl2-deqp"],
         "mochitest-devtools-chrome": ["--flavor=browser", "--subsuite=devtools"],
         "mochitest-devtools-chrome-chunked": ["--flavor=browser", "--subsuite=devtools", "--chunk-by-runtime"],
         "a11y": ["--flavor=a11y"],
@@ -191,9 +185,6 @@ config = {
         "jittest": [],
         "jittest-chunked": []
     },
-    "all_mozbase_suites": {
-        "mozbase": []
-    },
     "run_cmd_checks_enabled": True,
     "preflight_run_cmd_suites": [
         # NOTE 'enabled' is only here while we have unconsolidated configs
@@ -219,18 +210,12 @@ config = {
     ],
     "vcs_output_timeout": 1000,
     "minidump_save_path": "%(abs_work_dir)s/../minidumps",
-    "buildbot_max_log_size": 52428800,
-    "default_blob_upload_servers": [
-        "https://blobupload.elasticbeanstalk.com",
-    ],
     "unstructured_flavors": {"xpcshell": [],
-                            "gtest": [],
-                            "mozmill": [],
-                            "cppunittest": [],
-                            "jittest": [],
-                            "mozbase": [],
-                            },
-    "blob_uploader_auth_file": os.path.join(os.getcwd(), "oauth.txt"),
+                             "gtest": [],
+                             "mozmill": [],
+                             "cppunittest": [],
+                             "jittest": [],
+                             },
     "download_minidump_stackwalk": True,
     "minidump_stackwalk_path": "macosx64-minidump_stackwalk",
     "minidump_tooltool_manifest_path": "config/tooltool-manifests/macosx64/releng.manifest",

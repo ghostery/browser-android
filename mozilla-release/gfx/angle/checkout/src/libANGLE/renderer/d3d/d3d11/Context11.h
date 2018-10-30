@@ -45,7 +45,7 @@ class Context11 : public ContextImpl
     VertexArrayImpl *createVertexArray(const gl::VertexArrayState &data) override;
 
     // Query and Fence creation
-    QueryImpl *createQuery(GLenum type) override;
+    QueryImpl *createQuery(gl::QueryType type) override;
     FenceNVImpl *createFenceNV() override;
     SyncImpl *createSync() override;
 
@@ -149,7 +149,8 @@ class Context11 : public ContextImpl
     gl::Error triggerDrawCallProgramRecompilation(const gl::Context *context, GLenum drawMode);
 
   private:
-    gl::Error prepareForDrawCall(const gl::Context *context, GLenum drawMode);
+    gl::Error prepareForDrawCall(const gl::Context *context,
+                                 const gl::DrawCallParams &drawCallParams);
 
     Renderer11 *mRenderer;
 };

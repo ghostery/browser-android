@@ -9,12 +9,15 @@ const oneOffsContainer =
   document.getAnonymousElementByAttribute(searchPopup, "anonid",
                                           "search-one-off-buttons");
 
-add_task(async function test() {
-  await SpecialPowers.pushPrefEnv({ set: [
-    ["browser.search.widget.inNavBar", true],
-  ]});
+add_task(async function test_setup() {
+  await gCUITestUtils.addSearchBar();
+  registerCleanupFunction(() => {
+    gCUITestUtils.removeSearchBar();
+  });
+});
 
-  let searchbar = document.getElementById("searchbar");
+add_task(async function test() {
+  let searchbar = BrowserSearch.searchBar;
 
   let rootDir = getRootDirectory(gTestPath);
   let url = rootDir + "tooManyEnginesOffered.html";
@@ -34,7 +37,7 @@ add_task(async function test() {
   Assert.equal(menuButton.type, "menu", "A menu button");
 
   // Mouse over the menu button to open it.
-  let buttonPopup = menuButton.firstChild;
+  let buttonPopup = menuButton.firstElementChild;
   promise = promiseEvent(buttonPopup, "popupshown");
   EventUtils.synthesizeMouse(menuButton, 5, 5, { type: "mousemove" });
   await promise;
@@ -42,9 +45,9 @@ add_task(async function test() {
   Assert.ok(menuButton.open, "Submenu should be open");
 
   // Check the engines inside the submenu.
-  Assert.equal(buttonPopup.childNodes.length, 6, "Expected number of engines");
-  for (let i = 0; i < buttonPopup.childNodes.length; i++) {
-    let item = buttonPopup.childNodes[i];
+  Assert.equal(buttonPopup.children.length, 6, "Expected number of engines");
+  for (let i = 0; i < buttonPopup.children.length; i++) {
+    let item = buttonPopup.children[i];
     Assert.equal(item.getAttribute("title"), "engine" + (i + 1),
                  "Expected engine title");
   }
@@ -86,7 +89,7 @@ function getOpenSearchItems() {
   let addEngineList =
     document.getAnonymousElementByAttribute(oneOffsContainer, "anonid",
                                             "add-engines");
-  for (let item = addEngineList.firstChild; item; item = item.nextSibling)
+  for (let item = addEngineList.firstElementChild; item; item = item.nextElementSibling)
     os.push(item);
 
   return os;

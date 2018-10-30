@@ -8,11 +8,8 @@
 <!ENTITY blocklist.softblocked       "Dla zachowania bezpieczeństwa zaleca się ponowne uruchomienie z wyłączeniem tych dodatków.">
 <!ENTITY blocklist.hardblocked       "Dodatki te obarczone są wysokim ryzykiem problemów ze stabilnością i bezpieczeństwem, ale do ich całkowitego wyłączenia wymagane jest ponowne uruchomienie programu.">
 <!ENTITY blocklist.softandhard       "Dodatki obarczone wysokim ryzykiem problemów ze stabilnością i bezpieczeństwem zostały zablokowane. Pozostałe obarczone są mniejszym ryzykiem, ale zaleca się ponowne uruchomienie programu z ich wyłączeniem.">
-<!ENTITY blocklist.moreinfo          "Więcej informacji">
-
+<!ENTITY blocklist.moreinfo "Więcej informacji">
 <!ENTITY blocklist.accept.label      "Uruchom ponownie program &brandShortName;">
 <!ENTITY blocklist.accept.accesskey  "U">
-
 <!ENTITY blocklist.blocked.label     "Zablokowany">
 <!ENTITY blocklist.checkbox.label    "Wyłącz">
-

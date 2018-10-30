@@ -52,23 +52,11 @@ AutoCompleteInput.prototype = {
     invalidate() {},
 
     // nsISupports implementation
-    QueryInterface(iid) {
-      if (iid.equals(Ci.nsISupports) ||
-          iid.equals(Ci.nsIAutoCompletePopup))
-        return this;
-
-      throw Cr.NS_ERROR_NO_INTERFACE;
-    }
+    QueryInterface: ChromeUtils.generateQI(["nsIAutoCompletePopup"]),
   },
 
   // nsISupports implementation
-  QueryInterface(iid) {
-    if (iid.equals(Ci.nsISupports) ||
-        iid.equals(Ci.nsIAutoCompleteInput))
-      return this;
-
-    throw Cr.NS_ERROR_NO_INTERFACE;
-  }
+  QueryInterface: ChromeUtils.generateQI(["nsIAutoCompleteInput"]),
 };
 
 async function ensure_results(uris, searchTerm) {
@@ -131,7 +119,7 @@ async function setBookmark(aURI) {
   await PlacesUtils.bookmarks.insert({
     parentGuid: PlacesUtils.bookmarks.menuGuid,
     url: aURI,
-    title: "bleh"
+    title: "bleh",
   });
 }
 
@@ -260,7 +248,7 @@ async function() {
   await setBookmark(uri3);
   await setBookmark(uri4);
   await ensure_results([uri4, uri3], "a");
-}
+},
 ];
 
 add_task(async function test_frecency() {

@@ -26,6 +26,10 @@ die geavanceerde detectie van ongewenste berichten en andere handige functies on
 'Diverse extra talen kunnen worden geïnstalleerd vanaf de sectie
 <a id="dictURL" href="">woordenboeken</a> op
 <a href="https://addons.mozilla.org/seamonkey/">Mozilla Add-ons</a>.'>
+<!ENTITY dict_info.label2
+'Diverse extra talen kunnen worden geïnstalleerd vanaf de sectie
+<a id="dictURL" href="">woordenboeken</a> op
+<a href="https://addons.thunderbird.net/seamonkey/">SeaMonkey en Thunderbird Add-ons</a>.'>
 <!ENTITY info.title "Meer informatie">
 <!--# LOCALIZATION NOTE (info_bugs.label): the URL for <a id="releaseNotesURL"> is fetched from brand.properties -->
 <!ENTITY info_bugs.label

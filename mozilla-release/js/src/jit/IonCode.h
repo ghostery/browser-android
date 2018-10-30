@@ -9,7 +9,6 @@
 
 #include "mozilla/Atomics.h"
 #include "mozilla/MemoryReporting.h"
-#include "mozilla/PodOperations.h"
 
 #include "jstypes.h"
 
@@ -27,7 +26,6 @@ namespace jit {
 
 class MacroAssembler;
 class IonBuilder;
-class IonICEntry;
 class JitCode;
 
 typedef Vector<JSObject*, 4, JitAllocPolicy> ObjectVector;
@@ -69,10 +67,7 @@ class JitCode : public gc::TenuredCell
     bool hasBytecodeMap_ : 1;         // Whether the code object has been registered with
                                       // native=>bytecode mapping tables.
 
-    JitCode()
-      : code_(nullptr),
-        pool_(nullptr)
-    { }
+    JitCode() = delete;
     JitCode(uint8_t* code, uint32_t bufferSize, uint32_t headerSize, ExecutablePool* pool,
             CodeKind kind)
       : code_(code),
@@ -262,10 +257,6 @@ struct IonScript
     uint32_t constantTable_;
     uint32_t constantEntries_;
 
-    // List of entries to the shared stub.
-    uint32_t sharedStubList_;
-    uint32_t sharedStubEntries_;
-
     // Number of references from invalidation records.
     uint32_t invalidationCount_;
 
@@ -278,9 +269,6 @@ struct IonScript
     // Number of times we tried to enter this script via OSR but failed due to
     // a LOOPENTRY pc other than osrPc_.
     uint32_t osrPcMismatchCounter_;
-
-    // Allocated space for fallback stubs.
-    FallbackICStubSpace fallbackStubSpace_;
 
     // TraceLogger events that are baked into the IonScript.
     TraceLoggerEventVector traceLoggerEvents_;
@@ -327,12 +315,6 @@ struct IonScript
     // Do not call directly, use IonScript::New. This is public for cx->new_.
     explicit IonScript(IonCompilationId compilationId);
 
-    ~IonScript() {
-        // The contents of the fallback stub space are removed and freed
-        // separately after the next minor GC. See IonScript::Destroy.
-        MOZ_ASSERT(fallbackStubSpace_.isEmpty());
-    }
-
     static IonScript* New(JSContext* cx, IonCompilationId compilationId,
                           uint32_t frameSlots, uint32_t argumentSlots, uint32_t frameSize,
                           size_t snapshotsListSize, size_t snapshotsRVATableSize,
@@ -340,7 +322,7 @@ struct IonScript
                           size_t constants, size_t safepointIndexEntries,
                           size_t osiIndexEntries, size_t icEntries,
                           size_t runtimeSize, size_t safepointsSize,
-                          size_t sharedStubEntries, OptimizationLevel optimizationLevel);
+                          OptimizationLevel optimizationLevel);
     static void Trace(JSTracer* trc, IonScript* script);
     static void Destroy(FreeOp* fop, IonScript* script);
 
@@ -429,7 +411,7 @@ struct IonScript
     }
     MOZ_MUST_USE bool addTraceLoggerEvent(TraceLoggerEvent& event) {
         MOZ_ASSERT(event.hasTextId());
-        return traceLoggerEvents_.append(mozilla::Move(event));
+        return traceLoggerEvents_.append(std::move(event));
     }
     const uint8_t* snapshots() const {
         return reinterpret_cast<const uint8_t*>(this) + snapshots_;
@@ -495,12 +477,6 @@ struct IonScript
     size_t numICs() const {
         return icEntries_;
     }
-    IonICEntry* sharedStubList() {
-        return (IonICEntry*) &bottomBuffer()[sharedStubList_];
-    }
-    size_t numSharedStubs() const {
-        return sharedStubEntries_;
-    }
     size_t runtimeSize() const {
         return runtimeSize_;
     }
@@ -558,12 +534,6 @@ struct IonScript
     void clearRecompiling() {
         recompiling_ = false;
     }
-
-    FallbackICStubSpace* fallbackStubSpace() {
-        return &fallbackStubSpace_;
-    }
-    void adoptFallbackStubs(FallbackICStubSpace* stubSpace);
-    void purgeOptimizedStubs(Zone* zone);
 
     enum ShouldIncreaseAge {
         IncreaseAge = true,
@@ -677,17 +647,14 @@ struct IonScriptCounts
 {
   private:
     // Any previous invalidated compilation(s) for the script.
-    IonScriptCounts* previous_;
+    IonScriptCounts* previous_ = nullptr;
 
     // Information about basic blocks in this script.
-    size_t numBlocks_;
-    IonBlockCounts* blocks_;
+    size_t numBlocks_ = 0;
+    IonBlockCounts* blocks_ = nullptr;
 
   public:
-
-    IonScriptCounts() {
-        mozilla::PodZero(this);
-    }
+    IonScriptCounts() = default;
 
     ~IonScriptCounts() {
         for (size_t i = 0; i < numBlocks_; i++)

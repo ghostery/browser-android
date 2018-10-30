@@ -46,7 +46,7 @@ async function initTab(tabX, startToolbox) {
 
 async function checkCacheStateForAllTabs(states) {
   for (let i = 0; i < tabs.length; i++) {
-    let tab = tabs[i];
+    const tab = tabs[i];
     await checkCacheEnabled(tab, states[i]);
   }
 }
@@ -56,17 +56,17 @@ async function checkCacheEnabled(tabX, expected) {
 
   await reloadTab(tabX);
 
-  let oldGuid = await ContentTask.spawn(gBrowser.selectedBrowser, {}, function() {
-    let doc = content.document;
-    let h1 = doc.querySelector("h1");
+  const oldGuid = await ContentTask.spawn(gBrowser.selectedBrowser, {}, function() {
+    const doc = content.document;
+    const h1 = doc.querySelector("h1");
     return h1.textContent;
   });
 
   await reloadTab(tabX);
 
-  let guid = await ContentTask.spawn(gBrowser.selectedBrowser, {}, function() {
-    let doc = content.document;
-    let h1 = doc.querySelector("h1");
+  const guid = await ContentTask.spawn(gBrowser.selectedBrowser, {}, function() {
+    const doc = content.document;
+    const h1 = doc.querySelector("h1");
     return h1.textContent;
   });
 
@@ -80,8 +80,8 @@ async function checkCacheEnabled(tabX, expected) {
 async function setDisableCacheCheckboxChecked(tabX, state) {
   gBrowser.selectedTab = tabX.tab;
 
-  let panel = tabX.toolbox.getCurrentPanel();
-  let cbx = panel.panelDoc.getElementById("devtools-disable-cache");
+  const panel = tabX.toolbox.getCurrentPanel();
+  const cbx = panel.panelDoc.getElementById("devtools-disable-cache");
 
   if (cbx.checked !== state) {
     info("Setting disable cache checkbox to " + state + " for " + tabX.title);
@@ -94,23 +94,21 @@ async function setDisableCacheCheckboxChecked(tabX, state) {
 }
 
 function reloadTab(tabX) {
-  let def = defer();
-  let browser = gBrowser.selectedBrowser;
+  const browser = gBrowser.selectedBrowser;
 
-  BrowserTestUtils.browserLoaded(browser).then(function() {
+  const reloadTabPromise = BrowserTestUtils.browserLoaded(browser).then(function() {
     info("Reloaded tab " + tabX.title);
-    def.resolve();
   });
 
   info("Reloading tab " + tabX.title);
-  let mm = loadFrameScriptUtils();
+  const mm = loadFrameScriptUtils();
   mm.sendAsyncMessage("devtools:test:reload");
 
-  return def.promise;
+  return reloadTabPromise;
 }
 
 async function destroyTab(tabX) {
-  let toolbox = gDevTools.getToolbox(tabX.target);
+  const toolbox = gDevTools.getToolbox(tabX.target);
 
   let onceDestroyed = promise.resolve();
   if (toolbox) {
@@ -126,7 +124,7 @@ async function destroyTab(tabX) {
 }
 
 async function finishUp() {
-  for (let tab of tabs) {
+  for (const tab of tabs) {
     await destroyTab(tab);
   }
 

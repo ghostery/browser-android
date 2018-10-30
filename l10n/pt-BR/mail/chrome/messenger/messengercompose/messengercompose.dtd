@@ -247,7 +247,6 @@
 <!ENTITY sendlaterButton.tooltip "Enviar esta mensagem mais tarde">
 <!ENTITY quoteButton.tooltip "Citar a mensagem anterior">
 <!ENTITY addressButton.tooltip "Selecionar destinatários no catálogo de endereços">
-<!ENTITY attachButton.tooltip "Anexar arquivos">
 <!ENTITY attachButton.tooltip2 "Adicionar um anexo">
 <!ENTITY spellingButton.tooltip "Verificar ortografia da seleção ou de toda a mensagem">
 <!ENTITY saveButton.tooltip "Salvar a mensagem na pasta “Rascunhos”">
@@ -275,7 +274,6 @@
      and it must be the same as toggleAttachmentPaneCmd.key, otherwise it won't
      work, as the shortcut key functionality supersedes the access key. -->
 <!ENTITY attachments.accesskey "n">
-
 <!ENTITY attachmentBucketHeader.tooltip "Painel de anexos">
 <!ENTITY attachmentBucketCloseButton.tooltip "Ocultar o painel de anexos">
 
@@ -360,6 +358,9 @@
 <!-- Identity popup customize menuitem -->
 <!ENTITY customizeFromAddress.label "Personalizar endereço do remetente...">
 <!ENTITY customizeFromAddress.accesskey "a">
+
+<!-- Accessibility name for the document -->
+<!ENTITY aria.message.bodyName "Corpo da mensagem">
 
 <!-- Status Bar -->
 <!ENTITY languageStatusButton.tooltip "Idioma da verificação ortográfica">

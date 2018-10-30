@@ -137,12 +137,14 @@ struct EnumSerializer {
   static bool Read(const Message* aMsg, PickleIterator* aIter, paramType* aResult) {
     uintParamType value;
     if (!ReadParam(aMsg, aIter, &value)) {
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("IPCReadErrorReason"),
-                                         NS_LITERAL_CSTRING("Bad iter"));
+      CrashReporter::AnnotateCrashReport(
+        CrashReporter::Annotation::IPCReadErrorReason,
+        NS_LITERAL_CSTRING("Bad iter"));
       return false;
     } else if (!EnumValidator::IsLegalValue(paramType(value))) {
-      CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("IPCReadErrorReason"),
-                                         NS_LITERAL_CSTRING("Illegal value"));
+      CrashReporter::AnnotateCrashReport(
+        CrashReporter::Annotation::IPCReadErrorReason,
+        NS_LITERAL_CSTRING("Illegal value"));
       return false;
     }
     *aResult = paramType(value);
@@ -882,7 +884,7 @@ struct ParamTraits<JSStructuredCloneData>
       return false;
     }
 
-    *aResult = JSStructuredCloneData(Move(out), JS::StructuredCloneScope::DifferentProcess);
+    *aResult = JSStructuredCloneData(std::move(out), JS::StructuredCloneScope::DifferentProcess);
 
     return true;
   }
@@ -942,7 +944,7 @@ struct ParamTraits<mozilla::Maybe<T>>
       if (!ReadParam(msg, iter, &tmp)) {
         return false;
       }
-      *result = mozilla::Some(mozilla::Move(tmp));
+      *result = mozilla::Some(std::move(tmp));
     } else {
       *result = mozilla::Nothing();
     }

@@ -17,7 +17,7 @@ using namespace mozilla;
 using namespace mozilla::dom;
 
 FormData::FormData(nsISupports* aOwner)
-  : HTMLFormSubmission(UTF_8_ENCODING, nullptr)
+  : HTMLFormSubmission(nullptr, EmptyString(), UTF_8_ENCODING, nullptr)
   , mOwner(aOwner)
 {
 }
@@ -101,10 +101,9 @@ NS_INTERFACE_MAP_END
 nsresult
 FormData::GetEncodedSubmission(nsIURI* aURI,
                                nsIInputStream** aPostDataStream,
-                               int64_t* aPostDataStreamLength,
                                nsCOMPtr<nsIURI>& aOutURI)
 {
-  NS_NOTREACHED("Shouldn't call FormData::GetEncodedSubmission");
+  MOZ_ASSERT_UNREACHABLE("Shouldn't call FormData::GetEncodedSubmission");
   return NS_OK;
 }
 
@@ -329,7 +328,7 @@ FormData::SetNameDirectoryPair(FormDataTuple* aData,
 /* virtual */ JSObject*
 FormData::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return FormDataBinding::Wrap(aCx, this, aGivenProto);
+  return FormData_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 /* static */ already_AddRefed<FormData>
@@ -351,7 +350,7 @@ nsresult
 FormData::GetSendInfo(nsIInputStream** aBody, uint64_t* aContentLength,
                       nsACString& aContentTypeWithCharset, nsACString& aCharset) const
 {
-  FSMultipartFormData fs(UTF_8_ENCODING, nullptr);
+  FSMultipartFormData fs(nullptr, EmptyString(), UTF_8_ENCODING, nullptr);
 
   for (uint32_t i = 0; i < mFormData.Length(); ++i) {
     if (mFormData[i].wasNullBlob) {

@@ -17,8 +17,8 @@ const DevToolsUtils = require("devtools/shared/DevToolsUtils");
  *        The object actor.
  */
 const SymbolIteratorActor  = protocol.ActorClassWithSpec(symbolIteratorSpec, {
-  initialize(objectActor) {
-    protocol.Actor.prototype.initialize.call(this);
+  initialize(objectActor, conn) {
+    protocol.Actor.prototype.initialize.call(this, conn);
 
     let symbols = [];
     if (DevToolsUtils.isSafeDebuggerObject(objectActor.obj)) {
@@ -51,7 +51,7 @@ const SymbolIteratorActor  = protocol.ActorClassWithSpec(symbolIteratorSpec, {
   },
 
   slice({ start, count }) {
-    let ownSymbols = [];
+    const ownSymbols = [];
     for (let i = start, m = start + count; i < m; i++) {
       ownSymbols.push(this.iterator.symbolDescription(i));
     }

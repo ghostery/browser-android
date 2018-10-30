@@ -3,16 +3,20 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "nsJSConfigTriggers.h"
+
 #include "jsapi.h"
 #include "nsIXPConnect.h"
 #include "nsCOMPtr.h"
 #include "nsIServiceManager.h"
 #include "nsIComponentManager.h"
 #include "nsString.h"
+#include "nsIPrefBranch.h"
 #include "nsIPrefService.h"
 #include "nspr.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/Maybe.h"
+#include "mozilla/NullPrincipal.h"
 #include "nsContentUtils.h"
 #include "nsIScriptSecurityManager.h"
 #include "nsJSPrincipals.h"
@@ -21,19 +25,24 @@
 
 extern mozilla::LazyLogModule MCD;
 using mozilla::AutoSafeJSContext;
+using mozilla::NullPrincipal;
 using mozilla::dom::AutoJSAPI;
 
 //*****************************************************************************
 
+static JS::PersistentRooted<JSObject *> autoconfigSystemSb;
 static JS::PersistentRooted<JSObject *> autoconfigSb;
+static bool sandboxEnabled;
 
-nsresult CentralizedAdminPrefManagerInit()
+nsresult CentralizedAdminPrefManagerInit(bool aSandboxEnabled)
 {
     nsresult rv;
 
     // If the sandbox is already created, no need to create it again.
     if (autoconfigSb.initialized())
         return NS_OK;
+
+    sandboxEnabled = aSandboxEnabled;
 
     // Grab XPConnect.
     nsCOMPtr<nsIXPConnect> xpc = do_GetService(nsIXPConnect::GetCID(), &rv);
@@ -54,7 +63,26 @@ nsresult CentralizedAdminPrefManagerInit()
 
     // Unwrap, store and root the sandbox.
     NS_ENSURE_STATE(sandbox);
+    autoconfigSystemSb.init(cx, js::UncheckedUnwrap(sandbox));
+
+
+    // Create an unprivileged sandbox.
+    principal = NullPrincipal::CreateWithoutOriginAttributes();
+    rv = xpc->CreateSandbox(cx, principal, sandbox.address());
+    NS_ENSURE_SUCCESS(rv, rv);
+
     autoconfigSb.init(cx, js::UncheckedUnwrap(sandbox));
+
+
+    // Define gSandbox on system sandbox.
+    JSAutoRealm ar(cx, autoconfigSystemSb);
+
+    JS::Rooted<JS::Value> value(cx, JS::ObjectValue(*sandbox));
+
+    if (!JS_WrapValue(cx, &value) ||
+        !JS_DefineProperty(cx, autoconfigSystemSb, "gSandbox", value, JSPROP_ENUMERATE)) {
+      return NS_ERROR_FAILURE;
+    }
 
     return NS_OK;
 }
@@ -64,14 +92,30 @@ nsresult CentralizedAdminPrefManagerFinish()
     if (autoconfigSb.initialized()) {
         AutoSafeJSContext cx;
         autoconfigSb.reset();
+        autoconfigSystemSb.reset();
         JS_MaybeGC(cx);
     }
     return NS_OK;
 }
 
 nsresult EvaluateAdminConfigScript(const char *js_buffer, size_t length,
-                                   const char *filename, bool bGlobalContext,
-                                   bool bCallbacks, bool skipFirstLine)
+                                   const char *filename, bool globalContext,
+                                   bool callbacks, bool skipFirstLine,
+                                   bool isPrivileged)
+{
+    if (!sandboxEnabled) {
+        isPrivileged = true;
+    }
+    return EvaluateAdminConfigScript(isPrivileged ? autoconfigSystemSb : autoconfigSb,
+                                     js_buffer, length, filename,
+                                     globalContext, callbacks, skipFirstLine);
+
+}
+
+nsresult EvaluateAdminConfigScript(JS::HandleObject sandbox,
+                                   const char *js_buffer, size_t length,
+                                   const char *filename, bool globalContext,
+                                   bool callbacks, bool skipFirstLine)
 {
     nsresult rv = NS_OK;
 
@@ -104,7 +148,7 @@ nsresult EvaluateAdminConfigScript(const char *js_buffer, size_t length,
     }
 
     AutoJSAPI jsapi;
-    if (!jsapi.Init(autoconfigSb)) {
+    if (!jsapi.Init(sandbox)) {
         return NS_ERROR_UNEXPECTED;
     }
     JSContext* cx = jsapi.cx();
@@ -125,12 +169,15 @@ nsresult EvaluateAdminConfigScript(const char *js_buffer, size_t length,
         /* If the length is 0, the conversion failed. Fallback to ASCII */
         convertedScript = NS_ConvertASCIItoUTF16(script);
     }
-    JS::Rooted<JS::Value> value(cx, JS::BooleanValue(isUTF8));
-    if (!JS_DefineProperty(cx, autoconfigSb, "gIsUTF8", value, JSPROP_ENUMERATE)) {
-        return NS_ERROR_UNEXPECTED;
+    {
+        JSAutoRealm ar(cx, autoconfigSystemSb);
+        JS::Rooted<JS::Value> value(cx, JS::BooleanValue(isUTF8));
+        if (!JS_DefineProperty(cx, autoconfigSystemSb, "gIsUTF8", value, JSPROP_ENUMERATE)) {
+            return NS_ERROR_UNEXPECTED;
+        }
     }
     rv = xpc->EvalInSandboxObject(convertedScript, filename, cx,
-                                  autoconfigSb, &v);
+                                  sandbox, &v);
     NS_ENSURE_SUCCESS(rv, rv);
 
     return NS_OK;

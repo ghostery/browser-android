@@ -46,6 +46,8 @@ for var in ('MOZ_APP_NAME', 'MOZ_APP_BASENAME', 'MOZ_APP_DISPLAYNAME',
 
 DEFINES['NS_NO_XPCOM'] = True
 
+DisableStlWrapping()
+
 if CONFIG['MOZ_MAINTENANCE_SERVICE']:
     DEFINES['MOZ_MAINTENANCE_SERVICE'] = CONFIG['MOZ_MAINTENANCE_SERVICE']
 
@@ -107,6 +109,10 @@ FINAL_TARGET_FILES += [
     'TestAUSReadStrings1.ini',
     'TestAUSReadStrings2.ini',
     'TestAUSReadStrings3.ini',
+]
+
+FINAL_TARGET_PP_FILES += [
+    'data/xpcshellConstantsPP.js',
 ]
 
 with Files("browser/browser_TelemetryUpdatePing.js"):

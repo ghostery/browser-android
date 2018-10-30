@@ -11,14 +11,18 @@ unset CC
 unset CXX
 unset HOST_CC
 unset HOST_CXX
+unset LINKER
 unset RUSTC
 unset CARGO
 unset RUSTDOC
+unset RUSTFMT
+unset CBINDGEN
 unset MAKECAB
 unset TOOLCHAIN_PREFIX
 unset BINDGEN_CFLAGS
 unset LLVM_CONFIG
 unset WIN64_LINK
 unset WIN64_LIB
+unset ENABLE_CLANG_PLUGIN
 
 unset MOZ_STDCXX_COMPAT

@@ -5,15 +5,6 @@
 
 package org.mozilla.gecko.tabqueue;
 
-import org.mozilla.gecko.AppConstants;
-import org.mozilla.gecko.EventDispatcher;
-import org.mozilla.gecko.GeckoProfile;
-import org.mozilla.gecko.GeckoSharedPrefs;
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.preferences.GeckoPreferences;
-import org.mozilla.gecko.util.GeckoBundle;
-import org.mozilla.gecko.util.ThreadUtils;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -30,6 +21,15 @@ import android.view.WindowManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.mozilla.gecko.AppConstants;
+import org.mozilla.gecko.EventDispatcher;
+import org.mozilla.gecko.GeckoProfile;
+import org.mozilla.gecko.GeckoSharedPrefs;
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.notifications.NotificationHelper;
+import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,9 @@ public class TabQueueHelper {
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
                 1, 1,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                AppConstants.Versions.preO ?
+                        WindowManager.LayoutParams.TYPE_PHONE :
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
 
@@ -218,6 +220,7 @@ public class TabQueueHelper {
      * @param context
      * @param tabsQueued
      */
+    @SuppressWarnings("NewApi")
     public static void showNotification(final Context context, final int tabsQueued, final List<String> urls) {
         ThreadUtils.assertNotOnUiThread();
 
@@ -250,6 +253,11 @@ public class TabQueueHelper {
                                                      .setColor(ContextCompat.getColor(context, R.color.fennec_ui_accent))
                                                      .setNumber(tabsQueued)
                                                      .setContentIntent(pendingIntent);
+
+        if (!AppConstants.Versions.preO) {
+            builder.setChannelId(NotificationHelper.getInstance(context)
+                    .getNotificationChannel(NotificationHelper.Channel.DEFAULT).getId());
+        }
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(TabQueueHelper.TAB_QUEUE_NOTIFICATION_ID, builder.build());

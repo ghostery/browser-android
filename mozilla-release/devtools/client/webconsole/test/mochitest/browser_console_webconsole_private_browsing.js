@@ -31,7 +31,7 @@ add_task(async function() {
   const privateWindow = await openNewBrowserWindow({ private: true });
   ok(PrivateBrowsingUtils.isWindowPrivate(privateWindow), "window is private");
   const privateBrowser = privateWindow.gBrowser;
-  privateBrowser.selectedTab = privateBrowser.addTab(PRIVATE_TEST_URI);
+  privateBrowser.selectedTab = BrowserTestUtils.addTab(privateBrowser, PRIVATE_TEST_URI);
   const privateTab = privateBrowser.selectedTab;
 
   info("private tab opened");
@@ -85,7 +85,7 @@ add_task(async function() {
   ok(true, "Messages are displayed as expected");
 
   info("close the private window and check if private messages are removed");
-  const onPrivateMessagesCleared = hud.jsterm.once("private-messages-cleared");
+  const onPrivateMessagesCleared = hud.ui.once("private-messages-cleared");
   privateWindow.BrowserTryToCloseWindow();
   await onPrivateMessagesCleared;
 

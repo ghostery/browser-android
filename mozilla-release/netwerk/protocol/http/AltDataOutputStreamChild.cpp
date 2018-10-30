@@ -9,7 +9,7 @@ NS_IMPL_ADDREF(AltDataOutputStreamChild)
 
 NS_IMETHODIMP_(MozExternalRefCountType) AltDataOutputStreamChild::Release()
 {
-  NS_PRECONDITION(0 != mRefCnt, "dup release");
+  MOZ_ASSERT(0 != mRefCnt, "dup release");
   MOZ_ASSERT(NS_IsMainThread(), "Main thread only");
   --mRefCnt;
   NS_LOG_RELEASE(this, mRefCnt, "AltDataOutputStreamChild");
@@ -59,7 +59,7 @@ AltDataOutputStreamChild::ReleaseIPDLReference()
 }
 
 bool
-AltDataOutputStreamChild::WriteDataInChunks(const nsCString& data)
+AltDataOutputStreamChild::WriteDataInChunks(const nsDependentCSubstring& data)
 {
   const uint32_t kChunkSize = 128*1024;
   uint32_t next = std::min(data.Length(), kChunkSize);
@@ -110,7 +110,7 @@ AltDataOutputStreamChild::Write(const char * aBuf, uint32_t aCount, uint32_t *_r
   if (NS_FAILED(mError)) {
     return mError;
   }
-  if (WriteDataInChunks(nsCString(aBuf, aCount))) {
+  if (WriteDataInChunks(nsDependentCSubstring(aBuf, aCount))) {
     *_retval = aCount;
     return NS_OK;
   }

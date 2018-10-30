@@ -41,7 +41,7 @@
 
 <!ENTITY sync.label "Szinkronizálás">
 
-<!ENTITY advance.label "Haladó">
+<!ENTITY advance.label "Speciális">
 <!ENTITY scriptsAndWindows.label "Parancsfájlok és bővítmények">
 <!ENTITY keynav.label "Navigálás a billentyűzettel">
 <!ENTITY findAsYouType.label "Gépelőkeresés">

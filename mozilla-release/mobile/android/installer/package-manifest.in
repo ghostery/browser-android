@@ -22,6 +22,7 @@
 #endif
 @BINPATH@/dictionaries/*
 @BINPATH@/hyphenation/*
+@BINPATH@/localization/*
 
 [assets destdir="assets/@ANDROID_CPU_ARCH@"]
 #ifndef MOZ_STATIC_JS
@@ -87,6 +88,8 @@
 @BINPATH@/application.ini
 @BINPATH@/platform.ini
 @BINPATH@/blocklist.xml
+@BINPATH@/defaults/settings/blocklists/addons.json
+@BINPATH@/defaults/settings/blocklists/certificates.json
 
 ; [Components]
 @BINPATH@/components/components.manifest
@@ -156,6 +159,9 @@
 #endif
 #endif
 
+@BINPATH@/components/ClearDataService.manifest
+@BINPATH@/components/ClearDataService.js
+
 @BINPATH@/components/nsUpdateTimerManager.manifest
 @BINPATH@/components/nsUpdateTimerManager.js
 
@@ -182,6 +188,8 @@
 @BINPATH@/components/nsINIProcessor.manifest
 @BINPATH@/components/nsINIProcessor.js
 @BINPATH@/components/servicesComponents.manifest
+@BINPATH@/components/servicesSettings.manifest
+@BINPATH@/components/RemoteSettingsComponents.js
 
 #ifndef MOZ_GECKOVIEW_JAR
 @BINPATH@/components/TelemetryStartup.js
@@ -232,18 +240,18 @@
 @BINPATH@/components/mozIntl.manifest
 @BINPATH@/components/mozIntl.js
 
+@BINPATH@/components/mozDOMLocalization.js
+@BINPATH@/components/mozDOMLocalization.manifest
+
 ; Modules
 @BINPATH@/modules/*
+@BINPATH@/actors/*
 
 ; Safe Browsing
 @BINPATH@/components/nsURLClassifier.manifest
 @BINPATH@/components/nsUrlClassifierHashCompleter.js
 @BINPATH@/components/nsUrlClassifierListManager.js
 @BINPATH@/components/nsUrlClassifierLib.js
-
-; Private Browsing
-@BINPATH@/components/PrivateBrowsing.manifest
-@BINPATH@/components/PrivateBrowsingTrackingProtectionWhitelist.js
 
 ; Security Reports
 @BINPATH@/components/SecurityReporter.manifest
@@ -365,7 +373,6 @@
 @BINPATH@/components/PresentationRequestUIGlue.js
 @BINPATH@/components/PromptService.js
 @BINPATH@/components/SessionStore.js
-@BINPATH@/components/Snippets.js
 @BINPATH@/components/XPIDialogService.js
 #endif
 
@@ -384,7 +391,7 @@
 
 ; NOTE: This must match the config checks in
 ; /toolkit/components/backgroundhangmonitor/moz.build.
-#if defined(NIGHTLY_BUILD) && !defined(MOZ_DEBUG) && !defined(MOZ_TSAN)
+#if defined(NIGHTLY_BUILD) && !defined(MOZ_DEBUG) && !defined(MOZ_TSAN) && !defined(MOZ_ASAN)
 @BINPATH@/components/BHRTelemetryService.js
 @BINPATH@/components/BHRTelemetryService.manifest
 #endif

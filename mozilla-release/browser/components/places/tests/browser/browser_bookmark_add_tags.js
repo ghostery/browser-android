@@ -29,7 +29,7 @@ add_task(async function test_add_bookmark_tags_from_bookmarkProperties() {
   let tab = await BrowserTestUtils.openNewForegroundTab({
     gBrowser,
     opening: TEST_URL,
-    waitForStateStop: true
+    waitForStateStop: true,
   });
 
   // Cleanup.
@@ -43,7 +43,7 @@ add_task(async function test_add_bookmark_tags_from_bookmarkProperties() {
   await hideBookmarksPanel(async () => {
     // Click the bookmark star to bookmark the page.
     await clickBookmarkStar();
-    Assert.equal(bookmarkPanelTitle.value, gNavigatorBundle.getString("editBookmarkPanel.pageBookmarkedTitle"), "Bookmark title is correct");
+    Assert.equal(bookmarkPanelTitle.value, gNavigatorBundle.getString("editBookmarkPanel.newBookmarkTitle"), "Bookmark title is correct");
     Assert.equal(bookmarkStar.getAttribute("starred"), "true", "Page is starred");
   });
 
@@ -88,7 +88,7 @@ add_task(async function test_add_bookmark_tags_from_library() {
   // Add a bookmark.
   await PlacesUtils.bookmarks.insert({
     url: uri,
-    parentGuid: PlacesUtils.bookmarks.unfiledGuid
+    parentGuid: PlacesUtils.bookmarks.unfiledGuid,
   });
 
   // Open the Library on "UnfiledBookmarks".
@@ -127,7 +127,7 @@ add_task(async function test_add_bookmark_tags_from_sidebar() {
   let bookmarks = await PlacesUtils.bookmarks.insert({
     parentGuid: PlacesUtils.bookmarks.unfiledGuid,
     url: TEST_URL,
-    title: "Bookmark Title"
+    title: "Bookmark Title",
   });
 
   await withSidebarTree("bookmarks", async function(tree) {

@@ -18,6 +18,7 @@
 #include "mozilla/FloatingPoint.h"
 #include "mozilla/MathAlgorithms.h"
 #include "mozilla/Preferences.h"
+#include "mozilla/StaticPrefs.h"
 #include "mozilla/StaticPtr.h"
 #include "mozilla/Telemetry.h"
 #include "Visibility.h"
@@ -592,7 +593,7 @@ MediaDecoder::OnMetadataUpdate(TimedMetadata&& aMetadata)
   MetadataLoaded(MakeUnique<MediaInfo>(*aMetadata.mInfo),
                  UniquePtr<MetadataTags>(aMetadata.mTags.forget()),
                  MediaDecoderEventVisibility::Observable);
-  FirstFrameLoaded(Move(aMetadata.mInfo),
+  FirstFrameLoaded(std::move(aMetadata.mInfo),
                    MediaDecoderEventVisibility::Observable);
 }
 
@@ -618,7 +619,7 @@ MediaDecoder::MetadataLoaded(UniquePtr<MediaInfo> aInfo,
   // our new size.
   if (aEventVisibility != MediaDecoderEventVisibility::Suppressed) {
     mFiredMetadataLoaded = true;
-    GetOwner()->MetadataLoaded(mInfo, Move(aTags));
+    GetOwner()->MetadataLoaded(mInfo, std::move(aTags));
   }
   // Invalidate() will end up calling GetOwner()->UpdateMediaSize with the last
   // dimensions retrieved from the video frame container. The video frame
@@ -1265,25 +1266,25 @@ MediaDecoder::SetCDMProxy(CDMProxy* aProxy)
 bool
 MediaDecoder::IsOpusEnabled()
 {
-  return Preferences::GetBool("media.opus.enabled");
+  return StaticPrefs::MediaOpusEnabled();
 }
 
 bool
 MediaDecoder::IsOggEnabled()
 {
-  return Preferences::GetBool("media.ogg.enabled");
+  return StaticPrefs::MediaOggEnabled();
 }
 
 bool
 MediaDecoder::IsWaveEnabled()
 {
-  return Preferences::GetBool("media.wave.enabled");
+  return StaticPrefs::MediaWaveEnabled();
 }
 
 bool
 MediaDecoder::IsWebMEnabled()
 {
-  return Preferences::GetBool("media.webm.enabled");
+  return StaticPrefs::MediaWebMEnabled();
 }
 
 NS_IMETHODIMP

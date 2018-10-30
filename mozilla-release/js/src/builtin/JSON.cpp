@@ -15,7 +15,11 @@
 #include "jsutil.h"
 
 #include "builtin/Array.h"
+#ifdef ENABLE_BIGINT
+#include "builtin/BigInt.h"
+#endif
 #include "builtin/String.h"
+#include "js/StableStringChars.h"
 #include "util/StringBuffer.h"
 #include "vm/Interpreter.h"
 #include "vm/JSAtom.h"
@@ -34,6 +38,8 @@ using namespace js::gc;
 using mozilla::IsFinite;
 using mozilla::Maybe;
 using mozilla::RangedPtr;
+
+using JS::AutoStableStringChars;
 
 const Class js::JSONClass = {
     js_JSON_str,
@@ -291,6 +297,12 @@ PreprocessValue(JSContext* cx, HandleObject holder, KeyType key, MutableHandleVa
             if (!Unbox(cx, obj, vp))
                 return false;
         }
+#ifdef ENABLE_BIGINT
+        else if (cls == ESClass::BigInt) {
+            if (!Unbox(cx, obj, vp))
+                return false;
+        }
+#endif
     }
 
     return true;
@@ -587,6 +599,14 @@ Str(JSContext* cx, const Value& v, StringifyContext* scx)
         return NumberValueToStringBuffer(cx, v, scx->sb);
     }
 
+#ifdef ENABLE_BIGINT
+    /* Step 10 in the BigInt proposal. */
+    if (v.isBigInt()) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BIGINT_NOT_SERIALIZABLE);
+        return false;
+    }
+#endif
+
     /* Step 10. */
     MOZ_ASSERT(v.isObject());
     RootedObject obj(cx, &v.toObject());
@@ -644,9 +664,7 @@ js::Stringify(JSContext* cx, MutableHandleValue vp, JSObject* replacer_, const V
             // is passed in.  If we end up having to add elements past this
             // size, the set will naturally resize to accommodate them.
             const uint32_t MaxInitialSize = 32;
-            Rooted<GCHashSet<jsid>> idSet(cx, GCHashSet<jsid>(cx));
-            if (!idSet.init(Min(len, MaxInitialSize)))
-                return false;
+            Rooted<GCHashSet<jsid>> idSet(cx, GCHashSet<jsid>(cx, Min(len, MaxInitialSize)));
 
             /* Step 4b(iii)(4). */
             uint32_t k = 0;
@@ -661,37 +679,19 @@ js::Stringify(JSContext* cx, MutableHandleValue vp, JSObject* replacer_, const V
                 if (!GetElement(cx, replacer, k, &item))
                     return false;
 
-                RootedId id(cx);
+                /* Step 4b(iii)(5)(c-g). */
+                if (!item.isNumber() && !item.isString()) {
+                    ESClass cls;
+                    if (!GetClassOfValue(cx, item, &cls))
+                        return false;
 
-                /* Step 4b(iii)(5)(c-f). */
-                if (item.isNumber()) {
-                    /* Step 4b(iii)(5)(e). */
-                    int32_t n;
-                    if (ValueFitsInInt32(item, &n) && INT_FITS_IN_JSID(n)) {
-                        id = INT_TO_JSID(n);
-                    } else {
-                        if (!ValueToId<CanGC>(cx, item, &id))
-                            return false;
-                    }
-                } else {
-                    bool shouldAdd = item.isString();
-                    if (!shouldAdd) {
-                        ESClass cls;
-                        if (!GetClassOfValue(cx, item, &cls))
-                            return false;
-
-                        shouldAdd = cls == ESClass::String || cls == ESClass::Number;
-                    }
-
-                    if (shouldAdd) {
-                        /* Step 4b(iii)(5)(f). */
-                        if (!ValueToId<CanGC>(cx, item, &id))
-                            return false;
-                    } else {
-                        /* Step 4b(iii)(5)(g). */
+                    if (cls != ESClass::String && cls != ESClass::Number)
                         continue;
-                    }
                 }
+
+                RootedId id(cx);
+                if (!ValueToId<CanGC>(cx, item, &id))
+                    return false;
 
                 /* Step 4b(iii)(5)(g). */
                 auto p = idSet.lookupForAdd(id);

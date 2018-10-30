@@ -34,9 +34,27 @@ vec3 bilerp(vec3 a, vec3 b, vec3 c, vec3 d, float s, float t) {
     return mix(x, y, s);
 }
 
+struct SplitCompositeInstance {
+    int render_task_index;
+    int src_task_index;
+    int polygons_address;
+    float z;
+};
+
+SplitCompositeInstance fetch_composite_instance() {
+    SplitCompositeInstance ci;
+
+    ci.render_task_index = aData.x;
+    ci.src_task_index = aData.y;
+    ci.polygons_address = aData.z;
+    ci.z = float(aData.w);
+
+    return ci;
+}
+
 void main(void) {
-    CompositeInstance ci = fetch_composite_instance();
-    SplitGeometry geometry = fetch_split_geometry(ci.user_data0);
+    SplitCompositeInstance ci = fetch_composite_instance();
+    SplitGeometry geometry = fetch_split_geometry(ci.polygons_address);
     PictureTask src_task = fetch_picture_task(ci.src_task_index);
     PictureTask dest_task = fetch_picture_task(ci.render_task_index);
 

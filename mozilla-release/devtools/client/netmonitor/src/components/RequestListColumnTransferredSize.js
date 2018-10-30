@@ -15,6 +15,7 @@ const { div } = dom;
 const SIZE_CACHED = L10N.getStr("networkMenu.sizeCached");
 const SIZE_SERVICE_WORKER = L10N.getStr("networkMenu.sizeServiceWorker");
 const SIZE_UNAVAILABLE = L10N.getStr("networkMenu.sizeUnavailable");
+const SIZE_UNAVAILABLE_TITLE = L10N.getStr("networkMenu.sizeUnavailable.title");
 const UPDATED_TRANSFERRED_PROPS = [
   "transferredSize",
   "fromCache",
@@ -33,7 +34,7 @@ class RequestListColumnTransferredSize extends Component {
   }
 
   render() {
-    let { fromCache, fromServiceWorker, status, transferredSize } = this.props.item;
+    const { fromCache, fromServiceWorker, status, transferredSize } = this.props.item;
     let text;
 
     if (fromCache || status === "304") {
@@ -46,8 +47,10 @@ class RequestListColumnTransferredSize extends Component {
       text = SIZE_UNAVAILABLE;
     }
 
+    const title = text == SIZE_UNAVAILABLE ? SIZE_UNAVAILABLE_TITLE : text;
+
     return (
-      div({ className: "requests-list-column requests-list-transferred", title: text },
+      div({ className: "requests-list-column requests-list-transferred", title: title },
         text
       )
     );

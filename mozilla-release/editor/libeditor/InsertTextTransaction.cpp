@@ -52,9 +52,7 @@ NS_IMPL_CYCLE_COLLECTION_INHERITED(InsertTextTransaction, EditTransactionBase,
 NS_IMPL_ADDREF_INHERITED(InsertTextTransaction, EditTransactionBase)
 NS_IMPL_RELEASE_INHERITED(InsertTextTransaction, EditTransactionBase)
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(InsertTextTransaction)
-  if (aIID.Equals(NS_GET_IID(InsertTextTransaction))) {
-    foundInterface = static_cast<nsITransaction*>(this);
-  } else
+  NS_INTERFACE_MAP_ENTRY_CONCRETE(InsertTextTransaction)
 NS_INTERFACE_MAP_END_INHERITING(EditTransactionBase)
 
 
@@ -72,7 +70,7 @@ InsertTextTransaction::DoTransaction()
   }
 
   // Only set selection to insertion point if editor gives permission
-  if (mEditorBase->GetShouldTxnSetSelection()) {
+  if (mEditorBase->AllowsTransactionsToChangeSelection()) {
     RefPtr<Selection> selection = mEditorBase->GetSelection();
     if (NS_WARN_IF(!selection)) {
       return NS_ERROR_FAILURE;
@@ -84,6 +82,8 @@ InsertTextTransaction::DoTransaction()
   } else {
     // Do nothing - DOM Range gravity will adjust selection
   }
+  // XXX Other transactions do not do this but its callers do.
+  //     Why do this transaction do this by itself?
   mEditorBase->RangeUpdaterRef().
                  SelAdjInsertText(*mTextNode, mOffset, mStringToInsert);
 

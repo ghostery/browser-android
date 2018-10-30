@@ -51,6 +51,10 @@
 #undef compress
 #include "mozilla/Compression.h"
 
+// Undo the damage done by X11
+#ifdef Status
+#  undef Status
+#endif
 // Protocol buffer (generated automatically)
 #include "protobuf/LayerScopePacket.pb.h"
 
@@ -476,7 +480,7 @@ public:
           mContextAddress(reinterpret_cast<intptr_t>(cx)),
           mDatasize(0),
           mIsMask(aIsMask),
-          mPacket(Move(aPacket))
+          mPacket(std::move(aPacket))
     {
         // pre-packing
         // DataSourceSurface may have locked buffer,
@@ -580,7 +584,7 @@ class DebugGLLayersData final: public DebugGLData {
 public:
     explicit DebugGLLayersData(UniquePtr<Packet> aPacket)
         : DebugGLData(Packet::LAYERS),
-          mPacket(Move(aPacket))
+          mPacket(std::move(aPacket))
     { }
 
     virtual bool Write() override {
@@ -1002,7 +1006,7 @@ SenderHelper::SendTextureSource(GLContext* aGLContext,
                                                          shaderConfig, aFlipY);
     gLayerScopeManager.GetSocketManager()->AppendDebugData(
         new DebugGLTextureData(aGLContext, aLayerRef, textureTarget,
-                               texID, img, aIsMask, Move(aPacket)));
+                               texID, img, aIsMask, std::move(aPacket)));
 
     sSentTextureIds.push_back(texID);
     gLayerScopeManager.CurrentSession().mTexIDs.push_back(texID);
@@ -1021,7 +1025,7 @@ SenderHelper::SetAndSendTexture(GLContext* aGLContext,
     texturePacket->set_mpremultiplied(aEffect->mPremultiplied);
     DumpFilter(texturePacket, aEffect->mSamplingFilter);
     DumpRect(texturePacket->mutable_mtexturecoords(), aEffect->mTextureCoords);
-    SendTextureSource(aGLContext, aLayerRef, aSource, false, false, Move(packet));
+    SendTextureSource(aGLContext, aLayerRef, aSource, false, false, std::move(packet));
 }
 
 void
@@ -1058,7 +1062,7 @@ SenderHelper::SendMaskEffect(GLContext* aGLContext,
         mask->mutable_mmasktransform()->add_m(*element++);
     }
 
-    SendTextureSource(aGLContext, aLayerRef, source, false, true, Move(packet));
+    SendTextureSource(aGLContext, aLayerRef, source, false, true, std::move(packet));
 }
 
 void
@@ -1742,7 +1746,7 @@ LayerScope::SendLayerDump(UniquePtr<Packet> aPacket)
         return;
     }
     gLayerScopeManager.GetSocketManager()->AppendDebugData(
-        new DebugGLLayersData(Move(aPacket)));
+        new DebugGLLayersData(std::move(aPacket)));
 }
 
 /*static*/

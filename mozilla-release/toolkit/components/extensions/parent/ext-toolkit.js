@@ -5,21 +5,21 @@
 /* exported getCookieStoreIdForTab, getCookieStoreIdForContainer,
             getContainerForCookieStoreId,
             isValidCookieStoreId, isContainerCookieStoreId,
-            EventManager, InputEventManager */
+            EventManager, URL */
 /* global getCookieStoreIdForTab:false, getCookieStoreIdForContainer:false,
           getContainerForCookieStoreId: false,
           isValidCookieStoreId:false, isContainerCookieStoreId:false,
           isDefaultCookieStoreId: false, isPrivateCookieStoreId:false,
-          EventManager: false, InputEventManager: false */
+          EventManager: false */
 
 ChromeUtils.defineModuleGetter(this, "ContextualIdentityService",
                                "resource://gre/modules/ContextualIdentityService.jsm");
 
-Cu.importGlobalProperties(["URL"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
 ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
 
-global.EventEmitter = ExtensionUtils.EventEmitter;
+global.EventEmitter = ExtensionCommon.EventEmitter;
 global.EventManager = ExtensionCommon.EventManager;
 
 /* globals DEFAULT_STORE, PRIVATE_STORE, CONTAINER_STORE */
@@ -74,13 +74,3 @@ global.isValidCookieStoreId = function(storeId) {
          isPrivateCookieStoreId(storeId) ||
          isContainerCookieStoreId(storeId);
 };
-
-function makeStartupPromise(event) {
-  return ExtensionUtils.promiseObserved(event).then(() => {});
-}
-
-// browserPaintedPromise and browserStartupPromise are promises that
-// resolve after the first browser window is painted and after browser
-// windows have been restored, respectively.
-global.browserPaintedPromise = makeStartupPromise("browser-delayed-startup-finished");
-global.browserStartupPromise = makeStartupPromise("sessionstore-windows-restored");

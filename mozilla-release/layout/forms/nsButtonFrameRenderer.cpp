@@ -30,6 +30,7 @@ using namespace mozilla::image;
 using namespace mozilla::layers;
 
 nsButtonFrameRenderer::nsButtonFrameRenderer()
+  : mFrame(nullptr)
 {
   MOZ_COUNT_CTOR(nsButtonFrameRenderer);
 }
@@ -113,7 +114,7 @@ nsDisplayButtonBoxShadowOuter::Paint(nsDisplayListBuilder* aBuilder,
   nsRect frameRect = nsRect(ToReferenceFrame(), mFrame->GetSize());
 
   nsCSSRendering::PaintBoxShadowOuter(mFrame->PresContext(), *aCtx, mFrame,
-                                      frameRect, mVisibleRect);
+                                      frameRect, GetPaintRect());
 }
 
 bool
@@ -155,7 +156,7 @@ nsDisplayButtonBoxShadowOuter::CreateWebRenderCommands(
   wr::LayoutRect deviceBoxRect = wr::ToRoundedLayoutRect(deviceBox);
 
   LayoutDeviceRect clipRect =
-    LayoutDeviceRect::FromAppUnits(mVisibleRect, appUnitsPerDevPixel);
+    LayoutDeviceRect::FromAppUnits(GetPaintRect(), appUnitsPerDevPixel);
   wr::LayoutRect deviceClipRect = wr::ToRoundedLayoutRect(clipRect);
 
   bool hasBorderRadius;
@@ -319,7 +320,7 @@ nsDisplayButtonBorder::Paint(nsDisplayListBuilder* aBuilder,
 
   // draw the border and background inside the focus and outline borders
   ImgDrawResult result =
-    mBFR->PaintBorder(aBuilder, pc, *aCtx, mVisibleRect, r);
+    mBFR->PaintBorder(aBuilder, pc, *aCtx, GetPaintRect(), r);
 
   nsDisplayItemGenericImageGeometry::UpdateDrawResult(this, result);
 }
@@ -396,7 +397,7 @@ void nsDisplayButtonForeground::Paint(nsDisplayListBuilder* aBuilder,
 
     // Draw the -moz-focus-inner border
     ImgDrawResult result =
-      mBFR->PaintInnerFocusBorder(aBuilder, presContext, *aCtx, mVisibleRect, r);
+      mBFR->PaintInnerFocusBorder(aBuilder, presContext, *aCtx, GetPaintRect(), r);
 
     nsDisplayItemGenericImageGeometry::UpdateDrawResult(this, result);
   }
@@ -417,7 +418,7 @@ nsDisplayButtonForeground::CreateWebRenderCommands(mozilla::wr::DisplayListBuild
       !presContext->GetTheme()->ThemeDrawsFocusForWidget(disp->mAppearance)) {
     nsRect r = nsRect(ToReferenceFrame(), mFrame->GetSize());
     br = mBFR->CreateInnerFocusBorderRenderer(aDisplayListBuilder, presContext, nullptr,
-                                              mVisibleRect, r, &borderIsEmpty);
+                                              GetPaintRect(), r, &borderIsEmpty);
   }
 
   if (!br) {
@@ -574,7 +575,7 @@ nsButtonFrameRenderer::ReResolveStyles(nsPresContext* aPresContext)
 
   // get styles assigned to -moz-focus-inner (ie dotted border on Windows)
   mInnerFocusStyle =
-    styleSet->ProbePseudoElementStyle(mFrame->GetContent()->AsElement(),
+    styleSet->ProbePseudoElementStyle(*mFrame->GetContent()->AsElement(),
                                       CSSPseudoElementType::mozFocusInner,
                                       context);
 }

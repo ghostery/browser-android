@@ -18,9 +18,9 @@
 <!ENTITY replyTo.placeholder "A levél címzettjei erre a másik címre válaszolhatnak">
 <!ENTITY organization.label "Szervezet:">
 <!ENTITY organization.accesskey "S">
-<!ENTITY signatureText.label "Signature text:">
+<!ENTITY signatureText.label "Aláírás szövege:">
 <!ENTITY signatureText.accesskey "x">
-<!ENTITY signatureHtml.label "Use HTML">
+<!ENTITY signatureHtml.label "HTML használata">
 <!ENTITY signatureHtml.accesskey "L">
 <!ENTITY signatureFile.label "Attach the signature from a file instead:">
 <!ENTITY signatureFile.accesskey "t">

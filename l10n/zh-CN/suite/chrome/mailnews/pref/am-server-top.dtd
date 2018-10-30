@@ -84,7 +84,7 @@
 <!ENTITY browseNewsrc.label "浏览…">
 <!ENTITY browseNewsrc.accesskey "e">
 
-<!ENTITY accountTitle.label "帐户设置">
+<!ENTITY accountTitle.label "账户设置">
 <!ENTITY accountSettingsDesc.label "如下为特殊账户。它未和任何标识关联。">
 <!ENTITY storeType.label "消息存储方式：">
 <!ENTITY storeType.accesskey "T">

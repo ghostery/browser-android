@@ -30,18 +30,17 @@ var FormAssistant = {
   _onPopupResponse: function(currentElement, message) {
     switch (message.action) {
       case "autocomplete": {
-        let editableElement = currentElement.QueryInterface(Ci.nsIDOMNSEditableElement);
         this._doingAutocomplete = true;
 
         // If we have an active composition string, commit it before sending
         // the autocomplete event with the text that will replace it.
         try {
-          if (editableElement.editor.composing) {
-            editableElement.editor.forceCompositionEnd();
+          if (currentElement.editor.composing) {
+            currentElement.editor.forceCompositionEnd();
           }
         } catch (e) {}
 
-        editableElement.setUserInput(message.value);
+        currentElement.setUserInput(message.value);
 
         let event = currentElement.ownerDocument.createEvent("Events");
         event.initEvent("DOMAutoComplete", true, true);
@@ -95,7 +94,7 @@ var FormAssistant = {
     }
 
     // Ignore this notificaiton if the current tab doesn't contain the invalid element
-    let currentElement = aInvalidElements.queryElementAt(0, Ci.nsISupports);
+    let currentElement = aInvalidElements[0];
     let focused = this.focusedElement;
     if (focused && focused.ownerGlobal.top !== currentElement.ownerGlobal.top) {
         return;
@@ -379,9 +378,17 @@ var FormAssistant = {
       scrollY += rect.top + parseInt(top);
     }
 
+    // The rect computed above is relative to the origin of the viewport frame,
+    // i.e. the layout viewport origin, but the consumer of the
+    // FormAssist::AutoCompleteResult messaage expects a rect relative to
+    // the visual viewport origin, so translate between the two.
+    let offsetX = {}, offsetY = {};
+    aElement.ownerGlobal.windowUtils
+        .getVisualViewportOffsetRelativeToLayoutViewport(offsetX, offsetY);
+
     return {
-      x: r.left + scrollX,
-      y: r.top + scrollY,
+      x: r.left + scrollX - offsetX.value,
+      y: r.top + scrollY - offsetY.value,
       w: r.width,
       h: r.height,
     };

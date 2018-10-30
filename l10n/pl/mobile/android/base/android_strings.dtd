@@ -27,11 +27,6 @@
 <!ENTITY firstrun_button_next "Dalej">
 
 <!ENTITY firstrun_tabqueue_title "Odnośniki">
-<!ENTITY firstrun_tabqueue_message_off "Włącz kolejkę kart">
-<!ENTITY firstrun_tabqueue_subtext_off "Otwieraj odnośniki z innych aplikacji dopiero po włączeniu przeglądarki &brandShortName;.">
-
-<!ENTITY firstrun_tabqueue_message_on "Sukces!">
-<!ENTITY firstrun_tabqueue_subtext_on "Zawsze można wyłączyć kolejkę kart w sekcji „&pref_category_general;” ustawień.">
 
 <!ENTITY firstrun_readerview_title "Artykuły">
 <!ENTITY firstrun_readerview_message "Popraw czytelność">
@@ -149,11 +144,10 @@
 <!ENTITY pref_category_search_restore_defaults "Przywróć wyszukiwarki">
 <!ENTITY pref_search_restore_defaults "Przywróć domyślne">
 <!ENTITY pref_search_restore_defaults_summary "Przywróć domyślne">
-<!ENTITY pref_search_hint2 "Rada: Możesz dodać każdą witrynę do swojej listy wyszukiwarek, przytrzymując na niej pole wyszukiwania, a następnie dotykając ikony &formatI;.">
+<!ENTITY pref_search_hint2 "Rada: możesz dodać każdą witrynę do swojej listy wyszukiwarek, przytrzymując na niej pole wyszukiwania, a następnie dotykając ikony &formatI;.">
 <!ENTITY pref_category_advanced "Zaawansowane">
 <!ENTITY pref_category_advanced_summary3 "Przywracanie kart, oszczędzanie danych, narzędzia dla programistów">
 <!ENTITY pref_category_notifications "Powiadomienia">
-<!ENTITY pref_category_notifications_summary "Powiadomienia ze stron i o nowych funkcjach">
 <!ENTITY pref_category_notifications_summary2 "Nowe funkcje, porady o programie">
 <!ENTITY pref_developer_remotedebugging_usb "Zdalne debugowanie przez USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Zdalne debugowanie przez Wi-Fi">
@@ -265,6 +259,8 @@
 
 <!ENTITY pref_media_autoplay_enabled "Automatyczne odtwarzanie">
 <!ENTITY pref_media_autoplay_enabled_summary "Kontroluje, czy strony mogą automatycznie odtwarzać filmy i inne treści">
+<!ENTITY pref_media_autoplay_allow "Włączone">
+<!ENTITY pref_media_autoplay_block "Blokowanie">
 <!ENTITY pref_zoom_force_enabled "Można powiększać każdą stronę">
 <!ENTITY pref_zoom_force_enabled_summary "Umożliwia powiększanie dowolnej strony">
 <!ENTITY pref_voice_input "Sterowanie głosowe">
@@ -327,6 +323,7 @@
 <!ENTITY datareporting_crashreporter_title_short "Awarie">
 <!ENTITY datareporting_wifi_title2 "Usługi lokalizacji organizacji &vendorShortName;">
 <!ENTITY datareporting_wifi_geolocation_summary4 "Pomóż organizacji &vendorShortName; mapować świat! Udostępniaj przybliżone informacje o lokalizacji urządzenia poprzez Wi-Fi i dane sieci komórkowej, aby pomóc ulepszać usługi geolokalizacyjne.">
+<!ENTITY datareporting_stumbler_notification_title "Usługi lokalizacji organizacji &vendorShortName; są uruchomione">
 
 <!ENTITY pref_update_autodownload3 "Automatyczne aktualizacje">
 <!ENTITY pref_update_autodownload_wifi "Tylko przez Wi-Fi">
@@ -454,7 +451,7 @@
 <!ENTITY home_closed_tabs_number "Karty: &formatD;">
 <!ENTITY home_closed_tabs_one "Karty: 1">
 <!ENTITY home_most_recent_empty "Tutaj pojawiają się ostatnio odwiedzone witryny.">
-<!ENTITY home_most_recent_emptyhint2 "Psst: W &formatS1;nowej karcie prywatnej&formatS2; historia nie jest zachowywana.">
+<!ENTITY home_most_recent_emptyhint2 "Psst: w &formatS1;nowej karcie prywatnej&formatS2; historia nie jest zachowywana.">
 
 <!ENTITY home_default_empty "Nie znaleziono treści do wyświetlenia na tym panelu.">
 
@@ -631,3 +628,16 @@
 <!ENTITY pwa_add_to_launcher_badge2 "Dodaj do ekranu głównego">
 <!ENTITY pwa_continue_to_website "Wróć do strony">
 <!ENTITY pwa_onboarding_sumo "Można łatwo dodać tę stronę do ekranu głównego, aby mieć do niej bezpośredni dostęp i używać jej jak aplikację.">
+
+<!ENTITY pip_play_button_title "Odtwórz">
+<!ENTITY pip_play_button_description "Wznów odtwarzanie">
+<!ENTITY pip_pause_button_title "Wstrzymaj">
+<!ENTITY pip_pause_button_description "Wstrzymaj odtwarzanie">
+
+<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY mls_notification_channel "Usługi lokalizacji organizacji &vendorShortName;">
+<!ENTITY download_notification_channel "Pobrane pliki">
+<!ENTITY media_notification_channel "Odtwarzanie multimediów">
+<!ENTITY leanplum_default_notifications_channel "Powiadomienia programu &brandShortName;">
+<!ENTITY updater_notification_channel "Aktualizacje aplikacji">
+<!ENTITY synced_tabs_notification_channel "Zsynchronizowane karty">

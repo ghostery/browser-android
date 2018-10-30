@@ -37,7 +37,11 @@ def write_extra_table(events, output, string_table):
     extra_table = []
     extra_count = 0
 
+    print("#if defined(_MSC_VER) && !defined(__clang__)", file=output)
     print("const uint32_t %s[] = {" % table_name, file=output)
+    print("#else", file=output)
+    print("constexpr uint32_t %s[] = {" % table_name, file=output)
+    print("#endif", file=output)
 
     for e in events:
         extra_index = 0
@@ -68,7 +72,12 @@ def write_extra_table(events, output, string_table):
 def write_common_event_table(events, output, string_table, extra_table):
     table_name = "gCommonEventInfo"
 
+    print("#if defined(_MSC_VER) && !defined(__clang__)", file=output)
     print("const CommonEventInfo %s[] = {" % table_name, file=output)
+    print("#else", file=output)
+    print("constexpr CommonEventInfo %s[] = {" % table_name, file=output)
+    print("#endif", file=output)
+
     for e, extras in zip(events, extra_table):
         # Write a comment to make the file human-readable.
         print("  // category: %s" % e.category, file=output)
@@ -76,13 +85,14 @@ def write_common_event_table(events, output, string_table, extra_table):
         print("  // objects: [%s]" % ", ".join(e.objects), file=output)
 
         # Write the common info structure
-        print("  {%d, %d, %d, %d, %s, %s}," %
+        print("  {%d, %d, %d, %d, %s, %s, %s }," %
               (string_table.stringIndex(e.category),
                string_table.stringIndex(e.expiry_version),
                extras[0],  # extra keys index
                extras[1],  # extra keys count
                e.dataset,
-               " | ".join(e.record_in_processes_enum)),
+               " | ".join(e.record_in_processes_enum),
+               " | ".join(e.products_enum)),
               file=output)
 
     print("};", file=output)
@@ -92,7 +102,12 @@ def write_common_event_table(events, output, string_table, extra_table):
 
 def write_event_table(events, output, string_table):
     table_name = "gEventInfo"
+
+    print("#if defined(_MSC_VER) && !defined(__clang__)", file=output)
     print("const EventInfo %s[] = {" % table_name, file=output)
+    print("#else", file=output)
+    print("constexpr EventInfo %s[] = {" % table_name, file=output)
+    print("#endif", file=output)
 
     for common_info_index, e in enumerate(events):
         for method_name, object_name in itertools.product(e.methods, e.objects):

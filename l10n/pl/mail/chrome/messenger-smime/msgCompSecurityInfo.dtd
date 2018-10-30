@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY title.label "Zabezpieczenia wiadomości">
-<!ENTITY subject.plaintextWarning "Uwaga: Temat wiadomości nigdy nie zostanie zaszyfrowany.">
+<!ENTITY subject.plaintextWarning "Uwaga: temat wiadomości nigdy nie zostanie zaszyfrowany.">
 <!ENTITY status.heading "Wiadomość zostanie zabezpieczona w następujący sposób:">
 <!ENTITY status.signed "Podpisano cyfrowo:">
 <!ENTITY status.encrypted "Zaszyfrowano:">

@@ -12,7 +12,7 @@ ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Timer.jsm");
 
 var log = Cu.reportError;
-Cu.importGlobalProperties(["XMLHttpRequest"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["XMLHttpRequest"]);
 
 XPCOMUtils.defineLazyGetter(this, "converter", function() {
   let conv = Cc["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Ci.nsIScriptableUnicodeConverter);
@@ -202,7 +202,7 @@ var SimpleServiceDiscovery = {
 
       let service = {
         location: fixedDevice.location,
-        target: fixedDevice.target
+        target: fixedDevice.target,
       };
 
       // We don't assume the fixed target is ready. We still need to ping it.

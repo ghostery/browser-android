@@ -14,13 +14,13 @@
 // Note that this test is based on the tab ordinal is fixed.
 // i.e. After changed by Bug 1226272, this test might fail.
 
-let { Toolbox } = require("devtools/client/framework/toolbox");
+const { Toolbox } = require("devtools/client/framework/toolbox");
 
 add_task(async function() {
-  let tab = await addTab("about:blank");
+  const tab = await addTab("about:blank");
 
   info("Open devtools on the Storage in a sidebar.");
-  let toolbox = await openToolboxForTab(tab, "storage", Toolbox.HostType.BOTTOM);
+  const toolbox = await openToolboxForTab(tab, "storage", Toolbox.HostType.BOTTOM);
 
   const win = getWindow(toolbox);
   const { outerWidth: originalWindowWidth, outerHeight: originalWindowHeight } = win;
@@ -34,11 +34,11 @@ add_task(async function() {
   info("Wait until the tools menu button is available");
   await waitUntil(() => toolbox.doc.querySelector(".tools-chevron-menu"));
 
-  let toolsMenuButton = toolbox.doc.querySelector(".tools-chevron-menu");
+  const toolsMenuButton = toolbox.doc.querySelector(".tools-chevron-menu");
   ok(toolsMenuButton, "The tools menu button is displayed");
 
   info("Confirm that selected tab is not hidden.");
-  let storageButton = toolbox.doc.querySelector("#toolbox-tab-storage");
+  const storageButton = toolbox.doc.querySelector("#toolbox-tab-storage");
   ok(storageButton, "The storage tab is on toolbox.");
 
   // Reset window size for 2nd test.
@@ -46,16 +46,16 @@ add_task(async function() {
 });
 
 add_task(async function() {
-  let tab = await addTab("about:blank");
+  const tab = await addTab("about:blank");
 
   info("Open devtools on the Storage in a sidebar.");
-  let toolbox = await openToolboxForTab(tab, "storage", Toolbox.HostType.BOTTOM);
+  const toolbox = await openToolboxForTab(tab, "storage", Toolbox.HostType.BOTTOM);
 
   info("Resize devtools window to a width that should trigger an overflow");
   await resizeWindow(toolbox, 800);
 
   info("Regist a new tab");
-  let onRegistered = toolbox.once("tool-registered");
+  const onRegistered = toolbox.once("tool-registered");
   gDevTools.registerTool({
     id: "test-tools",
     label: "Test Tools",
@@ -66,31 +66,25 @@ add_task(async function() {
   await onRegistered;
 
   info("Open the tools menu button.");
-  let popup = await openChevronMenu(toolbox);
+  await openChevronMenu(toolbox);
 
   info("The registered new tool tab should be in the tools menu.");
   let testToolsButton = toolbox.doc.querySelector("#tools-chevron-menupopup-test-tools");
   ok(testToolsButton, "The tools menu has a registered new tool button.");
 
-  info("Closing the tools-chevron-menupopup popup");
-  let onPopupHidden = once(popup, "popuphidden");
-  popup.hidePopup();
-  await onPopupHidden;
+  await closeChevronMenu(toolbox);
 
   info("Unregistering test-tools");
-  let onUnregistered = toolbox.once("tool-unregistered");
+  const onUnregistered = toolbox.once("tool-unregistered");
   gDevTools.unregisterTool("test-tools");
   await onUnregistered;
 
   info("Open the tools menu button.");
-  popup = await openChevronMenu(toolbox);
+  await openChevronMenu(toolbox);
 
   info("An unregistered new tool tab should not be in the tools menu.");
   testToolsButton = toolbox.doc.querySelector("#tools-chevron-menupopup-test-tools");
   ok(!testToolsButton, "The tools menu doesn't have a unregistered new tool button.");
 
-  info("Closing the tools-chevron-menupopup popup");
-  onPopupHidden = once(popup, "popuphidden");
-  popup.hidePopup();
-  await onPopupHidden;
+  await closeChevronMenu(toolbox);
 });

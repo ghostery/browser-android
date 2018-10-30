@@ -4,7 +4,6 @@
 
 from __future__ import absolute_import
 
-import sys
 from setuptools import setup, find_packages
 
 PACKAGE_NAME = 'mozrunner'
@@ -15,7 +14,7 @@ desc = """Reliable start/stop/configuration of Mozilla Applications (Firefox, Th
 deps = [
     'mozdevice>=1.*',
     'mozfile==1.*',
-    'mozinfo>=0.7,<1',
+    'mozinfo>=0.7,<2',
     'mozlog==3.*',
     'mozprocess>=0.23,<1',
     'mozprofile>=1.1.0,<2',
@@ -24,8 +23,6 @@ deps = [
 
 EXTRAS_REQUIRE = {'crash': ['mozcrash >= 1.0']}
 
-# we only support python 2 right now
-assert sys.version_info[0] == 2
 
 setup(name=PACKAGE_NAME,
       version=PACKAGE_VERSION,

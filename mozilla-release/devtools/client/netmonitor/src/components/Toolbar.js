@@ -9,7 +9,6 @@ const { Component, createFactory } = require("devtools/client/shared/vendor/reac
 const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 const { connect } = require("devtools/client/shared/redux/visibility-handler-connect");
-
 const Actions = require("../actions/index");
 const { FILTER_SEARCH_DELAY, FILTER_TAGS } = require("../constants");
 const {
@@ -28,6 +27,7 @@ const {
 const LEARN_MORE_URL = getFilterBoxURL();
 
 // Components
+const NetworkThrottlingMenu = createFactory(require("devtools/client/shared/components/throttling/NetworkThrottlingMenu"));
 const SearchBox = createFactory(require("devtools/client/shared/components/SearchBox"));
 
 const { button, div, input, label, span } = dom;
@@ -53,12 +53,11 @@ const DISABLE_CACHE_TOOLTIP = L10N.getStr("netmonitor.toolbar.disableCache.toolt
 const DISABLE_CACHE_LABEL = L10N.getStr("netmonitor.toolbar.disableCache.label");
 
 // Menu
-loader.lazyRequireGetter(this, "showMenu", "devtools/client/netmonitor/src/utils/menu", true);
+loader.lazyRequireGetter(this, "showMenu", "devtools/client/shared/components/menu/utils", true);
 loader.lazyRequireGetter(this, "HarMenuUtils", "devtools/client/netmonitor/src/har/har-menu-utils", true);
 
 // Throttling
 const Types = require("devtools/client/shared/components/throttling/types");
-const NetworkThrottlingSelector = createFactory(require("devtools/client/shared/components/throttling/NetworkThrottlingSelector"));
 const { changeNetworkThrottling } = require("devtools/client/shared/components/throttling/actions");
 
 /**
@@ -156,7 +155,7 @@ class Toolbar extends Component {
   }
 
   onSearchBoxFocus() {
-    let { connector, filteredRequests } = this.props;
+    const { connector, filteredRequests } = this.props;
 
     // Fetch responseCookies & responseHeaders for building autocomplete list
     filteredRequests.forEach((request) => {
@@ -193,7 +192,7 @@ class Toolbar extends Component {
   renderToggleRecordingButton(recording, toggleRecording) {
     // Calculate class-list for toggle recording button.
     // The button has two states: pause/play.
-    let toggleRecordingButtonClass = [
+    const toggleRecordingButtonClass = [
       "devtools-button",
       "requests-list-pause-button",
       recording ? "devtools-pause-icon" : "devtools-play-icon",
@@ -213,8 +212,8 @@ class Toolbar extends Component {
    */
   renderFilterButtons(requestFilterTypes) {
     // Render list of filter-buttons.
-    let buttons = Object.entries(requestFilterTypes).map(([type, checked]) => {
-      let classList = ["devtools-button", `requests-list-filter-${type}-button`];
+    const buttons = Object.entries(requestFilterTypes).map(([type, checked]) => {
+      const classList = ["devtools-button", `requests-list-filter-${type}-button`];
       checked && classList.push("checked");
 
       return (
@@ -279,16 +278,15 @@ class Toolbar extends Component {
   }
 
   /**
-   * Render network throttling selector button.
+   * Render network throttling menu button.
    */
-  renderThrottlingSelector() {
-    let {
+  renderThrottlingMenu() {
+    const {
       networkThrottling,
       onChangeNetworkThrottling,
     } = this.props;
 
-    return NetworkThrottlingSelector({
-      className: "devtools-button",
+    return NetworkThrottlingMenu({
       networkThrottling,
       onChangeNetworkThrottling,
     });
@@ -301,11 +299,14 @@ class Toolbar extends Component {
     return button({
       id: "devtools-har-button",
       title: TOOLBAR_HAR_BUTTON,
-      className: "devtools-button devtools-har-button",
+      className: "devtools-button devtools-dropdown-button",
       onClick: evt => {
         this.showHarMenu(evt.target);
       },
-    });
+    },
+    dom.span({className: "title"},
+      "HAR")
+    );
   }
 
   showHarMenu(menuButton) {
@@ -316,7 +317,7 @@ class Toolbar extends Component {
       openSplitConsole,
     } = this.props;
 
-    let menuItems = [];
+    const menuItems = [];
 
     menuItems.push({
       id: "request-list-context-import-har",
@@ -368,7 +369,7 @@ class Toolbar extends Component {
   }
 
   render() {
-    let {
+    const {
       toggleRecording,
       clearRequests,
       requestFilterTypes,
@@ -397,7 +398,7 @@ class Toolbar extends Component {
           this.renderPersistlogCheckbox(persistentLogsEnabled, togglePersistentLogs),
           this.renderCacheCheckbox(browserCacheDisabled, toggleBrowserCache),
           this.renderSeparator(),
-          this.renderThrottlingSelector(),
+          this.renderThrottlingMenu(),
           this.renderHarButton(),
         )
       )
@@ -413,7 +414,7 @@ class Toolbar extends Component {
           this.renderPersistlogCheckbox(persistentLogsEnabled, togglePersistentLogs),
           this.renderCacheCheckbox(browserCacheDisabled, toggleBrowserCache),
           this.renderSeparator(),
-          this.renderThrottlingSelector(),
+          this.renderThrottlingMenu(),
           this.renderHarButton(),
         ),
         span({ className: "devtools-toolbar-group devtools-toolbar-two-rows-2" },

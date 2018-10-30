@@ -5,6 +5,7 @@ const PREF_PERMISSION_FAKE = "media.navigator.permission.fake";
 const PREF_AUDIO_LOOPBACK = "media.audio_loopback_dev";
 const PREF_VIDEO_LOOPBACK = "media.video_loopback_dev";
 const PREF_FAKE_STREAMS = "media.navigator.streams.fake";
+const PREF_FOCUS_SOURCE = "media.getusermedia.window.focus_source.enabled";
 const CONTENT_SCRIPT_HELPER = getRootDirectory(gTestPath) + "get_user_media_content_script.js";
 
 const STATE_CAPTURE_ENABLED = Ci.nsIMediaManagerService.STATE_CAPTURE_ENABLED;
@@ -51,7 +52,6 @@ function promiseWindow(url) {
   info("expecting a " + url + " window");
   return new Promise(resolve => {
     Services.obs.addObserver(function obs(win) {
-      win.QueryInterface(Ci.nsIDOMWindow);
       win.addEventListener("load", function() {
         if (win.location.href !== url) {
           info("ignoring a window with this url: " + win.location.href);
@@ -110,11 +110,9 @@ async function assertWebRTCIndicatorStatus(expected) {
   is(ui.showMicrophoneIndicator, expectAudio, "microphone global indicator as expected");
   is(ui.showScreenSharingIndicator, expectScreen, "screen global indicator as expected");
 
-  let windows = Services.wm.getEnumerator("navigator:browser");
-  while (windows.hasMoreElements()) {
-    let win = windows.getNext();
+  for (let win of Services.wm.getEnumerator("navigator:browser")) {
     let menu = win.document.getElementById("tabSharingMenu");
-    is(menu && !menu.hidden, !!expected, "WebRTC menu should be " + expectedState);
+    is(!!menu && !menu.hidden, !!expected, "WebRTC menu should be " + expectedState);
   }
 
   if (!("nsISystemStatusBar" in Ci)) {
@@ -431,7 +429,7 @@ async function reloadAndAssertClosedStreams() {
   info("reloading the web page");
   let promises = [
     promiseObserverCalled("recording-device-events"),
-    promiseObserverCalled("recording-window-ended")
+    promiseObserverCalled("recording-window-ended"),
   ];
   await ContentTask.spawn(gBrowser.selectedBrowser, null,
                           "() => content.location.reload()");
@@ -574,7 +572,8 @@ async function runTests(tests, options = {}) {
     [PREF_PERMISSION_FAKE, true],
     [PREF_AUDIO_LOOPBACK, ""],
     [PREF_VIDEO_LOOPBACK, ""],
-    [PREF_FAKE_STREAMS, true]
+    [PREF_FAKE_STREAMS, true],
+    [PREF_FOCUS_SOURCE, false],
   ];
   await SpecialPowers.pushPrefEnv({"set": prefs});
 

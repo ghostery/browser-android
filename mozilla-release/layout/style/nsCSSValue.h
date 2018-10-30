@@ -105,11 +105,13 @@ protected:
   // Construct with a base URI; this will create the actual URI lazily from
   // aString and aExtraData.
   URLValueData(ServoRawOffsetArc<RustString> aString,
-               already_AddRefed<URLExtraData> aExtraData);
+               already_AddRefed<URLExtraData> aExtraData,
+               CORSMode aCORSMode);
   // Construct with the actual URI.
   URLValueData(already_AddRefed<nsIURI> aURI,
                ServoRawOffsetArc<RustString> aString,
-               already_AddRefed<URLExtraData> aExtraData);
+               already_AddRefed<URLExtraData> aExtraData,
+               CORSMode aCORSMode);
 
 public:
   // Returns true iff all fields of the two URLValueData objects are equal.
@@ -187,16 +189,11 @@ protected:
   // confused by the non-standard-layout packing of the variable up into
   // URLValueData.
   bool mLoadedImage = false;
-  CORSMode mCORSMode = CORSMode::CORS_NONE;
+  const CORSMode mCORSMode;
 
   virtual ~URLValueData();
 
   size_t SizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
-
-public:
-  void SetCORSMode(CORSMode aCORSMode) {
-    mCORSMode = aCORSMode;
-  }
 
 private:
   URLValueData(const URLValueData& aOther) = delete;
@@ -209,7 +206,7 @@ struct URLValue final : public URLValueData
 {
   URLValue(ServoRawOffsetArc<RustString> aString,
            already_AddRefed<URLExtraData> aExtraData)
-    : URLValueData(aString, Move(aExtraData))
+    : URLValueData(aString, std::move(aExtraData), CORSMode::CORS_NONE)
   { }
 
   URLValue(const URLValue&) = delete;
@@ -379,7 +376,6 @@ enum nsCSSUnit {
   eCSSUnit_Calc_Divided = 35,     // (nsCSSValue::Array*) / within calc
 
   eCSSUnit_URL          = 40,     // (nsCSSValue::URL*) value
-  eCSSUnit_Image        = 41,     // (nsCSSValue::Image*) value
   eCSSUnit_GridTemplateAreas   = 44,   // (GridTemplateAreasValue*)
                                        // for grid-template-areas
 
@@ -618,10 +614,8 @@ public:
 
   nsIURI* GetURLValue() const
   {
-    MOZ_ASSERT(mUnit == eCSSUnit_URL || mUnit == eCSSUnit_Image,
-               "not a URL value");
-    return mUnit == eCSSUnit_URL ?
-      mValue.mURL->GetURI() : mValue.mImage->GetURI();
+    MOZ_ASSERT(mUnit == eCSSUnit_URL, "not a URL value");
+    return mValue.mURL->GetURI();
   }
 
   nsCSSValueSharedList* GetSharedListValue() const
@@ -675,12 +669,6 @@ public:
     return mValue.mURL;
   }
 
-  mozilla::css::ImageValue* GetImageStructValue() const
-  {
-    MOZ_ASSERT(mUnit == eCSSUnit_Image, "not an Image value");
-    return mValue.mImage;
-  }
-
   mozilla::css::GridTemplateAreasValue* GetGridTemplateAreas() const
   {
     MOZ_ASSERT(mUnit == eCSSUnit_GridTemplateAreas,
@@ -731,7 +719,6 @@ public:
   void SetIntegerCoordValue(nscoord aCoord);
   void SetArrayValue(nsCSSValue::Array* aArray, nsCSSUnit aUnit);
   void SetURLValue(mozilla::css::URLValue* aURI);
-  void SetImageValue(mozilla::css::ImageValue* aImage);
   void SetGridTemplateAreas(mozilla::css::GridTemplateAreasValue* aValue);
   void SetFontFamilyListValue(already_AddRefed<mozilla::SharedFontList> aFontListValue);
   void SetFontStretch(mozilla::FontStretch aStretch);
@@ -804,7 +791,6 @@ protected:
     nsAtom* MOZ_OWNING_REF mAtom;
     Array* MOZ_OWNING_REF mArray;
     mozilla::css::URLValue* MOZ_OWNING_REF mURL;
-    mozilla::css::ImageValue* MOZ_OWNING_REF mImage;
     mozilla::css::GridTemplateAreasValue* MOZ_OWNING_REF mGridTemplateAreas;
     nsCSSValuePair_heap* MOZ_OWNING_REF mPair;
     nsCSSValueList_heap* MOZ_OWNING_REF mList;

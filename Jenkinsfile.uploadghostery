@@ -15,7 +15,7 @@ node('master') {
     baseImage.inside() {
         try {
             stage('Build and Signs APKS') {
-                withEnv(['ANDROID_TARGET=i386-linux-android', 'BRAND=ghostery', 'CLIQZ_CHANNEL=MA50']) {
+                withEnv(['ANDROID_TARGET=i686-linux-android', 'BRAND=ghostery', 'CLIQZ_CHANNEL=MA50']) {
                     sh '''#!/bin/bash -l
                         set -e
                         set -x
@@ -27,8 +27,6 @@ node('master') {
                             xargs wget --quiet -O distribution/assets/distribution/extensions/firefox@ghostery.com.xpi
                         cd mozilla-release
                         cp ../mozconfigs/deploy.mozconfig mozconfig
-                        export HOST_CC=$CLANG_HOME/bin/clang
-                        export HOST_CXX=$CLANG_HOME/bin/clang++
                         ./mach clobber
                         ./mach build
                         export MOZ_CHROME_MULTILOCALE="de fr ru"
@@ -73,8 +71,6 @@ node('master') {
                             xargs wget --quiet -O distribution/assets/distribution/extensions/firefox@ghostery.com.xpi
                         cd mozilla-release
                         cp ../mozconfigs/deploy.mozconfig mozconfig
-                        export HOST_CC=$CLANG_HOME/bin/clang
-                        export HOST_CXX=$CLANG_HOME/bin/clang++
                         ./mach clobber
                         ./mach build
                         export MOZ_CHROME_MULTILOCALE="de fr ru"

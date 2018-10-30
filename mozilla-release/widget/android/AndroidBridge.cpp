@@ -30,7 +30,6 @@
 #include "nsPresContext.h"
 #include "nsIDocShell.h"
 #include "nsPIDOMWindow.h"
-#include "mozilla/dom/ScreenOrientation.h"
 #include "nsIDOMWindowUtils.h"
 #include "mozilla/ClearOnShutdown.h"
 #include "nsPrintfCString.h"
@@ -323,23 +322,6 @@ AndroidBridge::GetClipboardText(nsAString& aText)
 }
 
 int
-AndroidBridge::GetDPI()
-{
-    static int sDPI = 0;
-    if (sDPI)
-        return sDPI;
-
-    const int DEFAULT_DPI = 160;
-
-    sDPI = GeckoAppShell::GetDpi();
-    if (!sDPI) {
-        return DEFAULT_DPI;
-    }
-
-    return sDPI;
-}
-
-int
 AndroidBridge::GetScreenDepth()
 {
     ALOG_BRIDGE("%s", __PRETTY_FUNCTION__);
@@ -358,6 +340,7 @@ AndroidBridge::GetScreenDepth()
 
     return sDepth;
 }
+
 void
 AndroidBridge::Vibrate(const nsTArray<uint32_t>& aPattern)
 {
@@ -750,9 +733,9 @@ AndroidBridge::GetScreenOrientation()
     int16_t orientation = GeckoAppShell::GetScreenOrientation();
 
     if (!orientation)
-        return dom::eScreenOrientation_None;
+        return hal::eScreenOrientation_None;
 
-    return static_cast<dom::ScreenOrientationInternal>(orientation);
+    return static_cast<hal::ScreenOrientation>(orientation);
 }
 
 uint16_t

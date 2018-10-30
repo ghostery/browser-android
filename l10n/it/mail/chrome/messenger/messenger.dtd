@@ -36,6 +36,12 @@
 <!ENTITY newFeedAccountCmd.accesskey "d">
 <!ENTITY newIMContactCmd.label "Contatto di Chat…">
 <!ENTITY newIMContactCmd.accesskey "h">
+<!ENTITY  newMessageCmd2.key "N">
+<!ENTITY  newMessageCmd.key "M">
+<!ENTITY  newMessageCmd.label "Messaggio">
+<!ENTITY  newMessageCmd.accesskey "m">
+<!ENTITY  newContactCmd.label "Contatto rubrica…">
+<!ENTITY  newContactCmd.accesskey "C">
 <!ENTITY openMessageFileCmd.label "Apri messaggio salvato…">
 <!ENTITY openMessageFileCmd.accesskey "A">
 <!ENTITY saveAsMenu.label "Salva come">
@@ -201,9 +207,9 @@
 <!ENTITY sortByUnreadCmd.accesskey "L">
 <!ENTITY sortByOrderReceivedCmd.label "Ordine di ricezione">
 <!ENTITY sortByOrderReceivedCmd.accesskey "r">
-<!ENTITY sortAscending.label "Ascendente">
+<!ENTITY sortAscending.label "Crescente">
 <!ENTITY sortAscending.accesskey "n">
-<!ENTITY sortDescending.label "Discendente">
+<!ENTITY sortDescending.label "Decrescente">
 <!ENTITY sortDescending.accesskey "c">
 <!ENTITY sortThreaded.label "Visualizzazione ad albero">
 <!ENTITY sortThreaded.accesskey "b">
@@ -509,8 +515,6 @@
 <!ENTITY devToolboxCmd.label "Cassetta degli strumenti di sviluppo">
 <!ENTITY devToolboxCmd.accesskey "C">
 <!ENTITY devToolboxCmd.commandkey "i">
-<!ENTITY addonDebugCmd.label "Add-on Debugger">
-<!ENTITY addonDebugCmd.accesskey "A">
 <!ENTITY debugAddonsCmd.label "Componenti aggiuntivi di debug">
 <!ENTITY debugAddonsCmd.accesskey "m">
 <!ENTITY tabsDebugCmd.label "Tab di debug del contenuto">
@@ -645,6 +649,7 @@
 <!-- Folder Pane Context Menu -->
 <!ENTITY folderContextGetMessages.label "Scarica messaggi">
 <!ENTITY folderContextGetMessages.accesskey "c">
+<!ENTITY folderContextMarkAllFoldersRead.label "Marca tutte le cartelle come lette">
 <!ENTITY folderContextPauseAllUpdates.label "Metti in pausa tutti gli aggiornamenti">
 <!ENTITY folderContextPauseUpdates.label "Metti in pausa gli aggiornamenti">
 <!ENTITY folderContextPauseUpdates.accesskey "A">
@@ -870,7 +875,7 @@
   -->
 <!ENTITY quickSearchCmd.key "k">
 <!-- LOCALIZATION NOTE (search.label.base1):
-      This is the base of the empty text for the global search box. We replace
+     This is the base of the empty text for the global search box. We replace
      #1 with the contents of the appropriate search.keyLabel.* value for the
      platform.
      The goal is to convey to the user that typing in the box will allow them

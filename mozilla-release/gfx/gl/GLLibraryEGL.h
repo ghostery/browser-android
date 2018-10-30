@@ -57,15 +57,11 @@ void AfterEGLCall(const char* funcName);
 
 class GLLibraryEGL
 {
+protected:
+    ~GLLibraryEGL() {}
+
 public:
-    GLLibraryEGL()
-        : mSymbols{nullptr}
-        , mInitialized(false)
-        , mEGLLibrary(nullptr)
-        , mEGLDisplay(EGL_NO_DISPLAY)
-        , mIsANGLE(false)
-        , mIsWARP(false)
-    { }
+    NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GLLibraryEGL)
 
     void InitClientExtensions();
     void InitDisplayExtensions();
@@ -75,7 +71,7 @@ public:
      * IsExtensionSupported.  The results of this are cached, and as
      * such it's safe to use this even in performance critical code.
      * If you add to this array, remember to add to the string names
-     * in GLContext.cpp.
+     * in GLLibraryEGL.cpp.
      */
     enum EGLExtensions {
         KHR_image_base,
@@ -99,6 +95,8 @@ public:
         ANGLE_stream_producer_d3d_texture,
         ANGLE_device_creation,
         ANGLE_device_creation_d3d11,
+        KHR_surfaceless_context,
+        KHR_create_context_no_error,
         Extensions_Max
     };
 
@@ -365,7 +363,13 @@ public:
 
     bool ReadbackEGLImage(EGLImage image, gfx::DataSourceSurface* out_surface);
 
-    bool EnsureInitialized(bool forceAccel, nsACString* const out_failureId);
+    inline static GLLibraryEGL* Get() {
+        return sEGLLibrary;
+    }
+
+    static bool EnsureInitialized(bool forceAccel, nsACString* const out_failureId);
+
+    void Shutdown();
 
     void DumpEGLConfig(EGLConfig cfg);
     void DumpEGLConfigs();
@@ -485,25 +489,26 @@ private:
                                                         const EGLAttrib* attrib_list);
         EGLBoolean (GLAPIENTRY * fReleaseDeviceANGLE) (EGLDeviceEXT device);
 
-    } mSymbols;
+    } mSymbols = {};
 
 private:
+    bool DoEnsureInitialized(bool forceAccel, nsACString* const out_failureId);
     EGLDisplay CreateDisplay(bool forceAccel,
                              const nsCOMPtr<nsIGfxInfo>& gfxInfo,
                              nsACString* const out_failureId);
 
-    bool mInitialized;
-    PRLibrary* mEGLLibrary;
-    EGLDisplay mEGLDisplay;
+    bool mInitialized = false;
+    PRLibrary* mEGLLibrary = nullptr;
+    EGLDisplay mEGLDisplay = EGL_NO_DISPLAY;
     RefPtr<GLContext> mReadbackGL;
 
-    bool mIsANGLE;
-    bool mIsWARP;
+    bool mIsANGLE = false;
+    bool mIsWARP = false;
     static StaticMutex sMutex;
+    static StaticRefPtr<GLLibraryEGL> sEGLLibrary;
 };
 
-extern GLLibraryEGL sEGLLibrary;
-#define EGL_DISPLAY()        sEGLLibrary.Display()
+#define EGL_DISPLAY()        GLLibraryEGL::Get()->Display()
 
 } /* namespace gl */
 } /* namespace mozilla */

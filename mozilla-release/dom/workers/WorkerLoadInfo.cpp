@@ -94,6 +94,7 @@ WorkerLoadInfo::WorkerLoadInfo()
   , mXHRParamsAllowed(false)
   , mPrincipalIsSystem(false)
   , mStorageAllowed(false)
+  , mFirstPartyStorageAccessGranted(false)
   , mServiceWorkersTestingInWindow(false)
 {
   MOZ_COUNT_CTOR(WorkerLoadInfo);
@@ -154,6 +155,7 @@ WorkerLoadInfo::StealFrom(WorkerLoadInfo& aOther)
   mXHRParamsAllowed = aOther.mXHRParamsAllowed;
   mPrincipalIsSystem = aOther.mPrincipalIsSystem;
   mStorageAllowed = aOther.mStorageAllowed;
+  mFirstPartyStorageAccessGranted = aOther.mFirstPartyStorageAccessGranted;
   mServiceWorkersTestingInWindow = aOther.mServiceWorkersTestingInWindow;
   mOriginAttributes = aOther.mOriginAttributes;
   mParentController = aOther.mParentController;
@@ -174,16 +176,6 @@ WorkerLoadInfo::SetPrincipalOnMainThread(nsIPrincipal* aPrincipal,
 
   if (mCSP) {
     mCSP->GetAllowsEval(&mReportCSPViolations, &mEvalAllowed);
-    // Set ReferrerPolicy
-    bool hasReferrerPolicy = false;
-    uint32_t rp = mozilla::net::RP_Unset;
-
-    rv = mCSP->GetReferrerPolicy(&rp, &hasReferrerPolicy);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    if (hasReferrerPolicy) {
-      mReferrerPolicy = static_cast<net::ReferrerPolicy>(rp);
-    }
   } else {
     mEvalAllowed = true;
     mReportCSPViolations = false;

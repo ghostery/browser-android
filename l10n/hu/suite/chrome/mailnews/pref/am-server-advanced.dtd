@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY serverAdvanced.label "Haladó postafiók-beállítások">
+<!ENTITY serverAdvanced.label "Speciális postafiók-beállítások">
 <!-- LOCALIZATION NOTE (serverDirectory.label): DONT_TRANSLATE "IMAP" -->
 <!ENTITY serverDirectory.label "IMAP-kiszolgáló könyvtár:">
 <!ENTITY serverDirectory.accesskey "d">

@@ -10,7 +10,6 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/dom/BorrowedAttrInfo.h"
 #include "mozilla/dom/FragmentOrElement.h"
-#include "nsIDOMNode.h"
 #include "nsStringFwd.h"
 
 class nsAtom;
@@ -22,8 +21,7 @@ namespace dom {
 
 class Element;
 
-class DocumentFragment : public FragmentOrElement,
-                         public nsIDOMNode
+class DocumentFragment : public FragmentOrElement
 {
 private:
   void Init()
@@ -45,7 +43,7 @@ public:
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(DocumentFragment, FragmentOrElement)
 
-  explicit DocumentFragment(already_AddRefed<mozilla::dom::NodeInfo>& aNodeInfo)
+  explicit DocumentFragment(already_AddRefed<dom::NodeInfo>& aNodeInfo)
     : FragmentOrElement(aNodeInfo), mHost(nullptr)
   {
     Init();
@@ -65,11 +63,9 @@ public:
 
   virtual bool IsNodeOfType(uint32_t aFlags) const override;
 
-  virtual nsIDOMNode* AsDOMNode() override { return this; }
-
-  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent,
-                              bool aCompileEventHandlers) override
+  nsresult BindToTree(nsIDocument* aDocument,
+                      nsIContent* aParent,
+                      nsIContent* aBindingParent) override
   {
     NS_ASSERTION(false, "Trying to bind a fragment to a tree");
     return NS_ERROR_NOT_IMPLEMENTED;
@@ -102,8 +98,7 @@ protected:
   {
   }
 
-  nsresult Clone(mozilla::dom::NodeInfo *aNodeInfo, nsINode **aResult,
-                 bool aPreallocateChildren) const override;
+  nsresult Clone(dom::NodeInfo* aNodeInfo, nsINode** aResult) const override;
   RefPtr<Element> mHost;
 };
 

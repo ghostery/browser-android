@@ -108,6 +108,7 @@ public:
   explicit TRR(AHostResolver *aResolver, bool aPB)
     : mozilla::Runnable("TRR")
     , mHostResolver(aResolver)
+    , mType(TRRTYPE_A)
     , mBodySize(0)
     , mFailed(false)
     , mPB(aPB)
@@ -141,11 +142,19 @@ public:
 private:
   ~TRR() = default;
   nsresult SendHTTPRequest();
-  nsresult DohEncode(nsCString &target);
+  nsresult DohEncode(nsCString &target, bool aDisableECS);
   nsresult PassQName(unsigned int &index);
-  nsresult DohDecode();
+  nsresult GetQname(nsAutoCString &aQname, unsigned int &aIndex);
+  nsresult DohDecode(nsCString &aHost);
   nsresult ReturnData();
-  nsresult FailData();
+
+  // FailData() must be called to signal that the asynch TRR resolve is
+  // completed. For failed name resolves ("no such host"), the 'error' it
+  // passses on in its argument must be NS_ERROR_UNKNOWN_HOST. Other errors
+  // (if host was blacklisted, there as a bad content-type received, etc)
+  // other error codes must be used. This distinction is important for the
+  // subsequent logic to separate the error reasons.
+  nsresult FailData(nsresult error);
   nsresult DohDecodeQuery(const nsCString &query,
                           nsCString &host, enum TrrType &type);
   nsresult ReceivePush(nsIHttpChannel *pushed, nsHostRecord *pushedRec);

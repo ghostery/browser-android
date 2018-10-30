@@ -20,7 +20,7 @@
 var EXPORTED_SYMBOLS = ["ExtensionControlledPopup"];
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
+ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ChromeUtils.defineModuleGetter(this, "AddonManager",
@@ -32,7 +32,9 @@ ChromeUtils.defineModuleGetter(this, "CustomizableUI",
 ChromeUtils.defineModuleGetter(this, "ExtensionSettingsStore",
                                "resource://gre/modules/ExtensionSettingsStore.jsm");
 
-let {makeWidgetId} = ExtensionUtils;
+let {
+  makeWidgetId,
+} = ExtensionCommon;
 
 XPCOMUtils.defineLazyGetter(this, "strBundle", function() {
   return Services.strings.createBundle("chrome://global/locale/extensions.properties");
@@ -146,8 +148,14 @@ class ExtensionControlledPopup {
     // multiple observer events in quick succession.
     this.removeObserver();
 
+    let targetWindow;
+    // Some notifications (e.g. browser-open-newtab-start) do not have a window subject.
+    if (subject && subject.document) {
+      targetWindow = subject;
+    }
+
     // Do this work in an idle callback to avoid interfering with new tab performance tracking.
-    this.topWindow.requestIdleCallback(() => this.open(subject));
+    this.topWindow.requestIdleCallback(() => this.open(targetWindow));
   }
 
   removeObserver() {
@@ -212,7 +220,6 @@ class ExtensionControlledPopup {
     // Setup the command handler.
     let handleCommand = async (event) => {
       panel.hidePopup();
-
       if (event.originalTarget.getAttribute("anonid") == "button") {
         // Main action is to keep changes.
         await this.setConfirmation(extensionId);
@@ -221,7 +228,7 @@ class ExtensionControlledPopup {
         if (this.beforeDisableAddon) {
           await this.beforeDisableAddon(this, win);
         }
-        addon.userDisabled = true;
+        await addon.disable();
       }
 
       // If the page this is appearing on is the New Tab page then the URL bar may
@@ -263,7 +270,7 @@ class ExtensionControlledPopup {
   getAddonDetails(doc, addon) {
     const defaultIcon = "chrome://mozapps/skin/extensions/extensionGeneric.svg";
 
-    let image = doc.createElement("image");
+    let image = doc.createXULElement("image");
     image.setAttribute("src", addon.iconURL || defaultIcon);
     image.classList.add("extension-controlled-icon");
 
@@ -288,7 +295,7 @@ class ExtensionControlledPopup {
         BrowserUtils.getLocalizedFragment(doc, message, addonDetails));
     }
 
-    let link = doc.createElement("label");
+    let link = doc.createXULElement("label");
     link.setAttribute("class", "learnMore text-link");
     link.href = Services.urlFormatter.formatURLPref("app.support.baseURL") + this.learnMoreLink;
     link.textContent = strBundle.GetStringFromName(this.learnMoreMessageId);

@@ -35,13 +35,13 @@ XULColumAccessible::
 }
 
 role
-XULColumAccessible::NativeRole()
+XULColumAccessible::NativeRole() const
 {
   return roles::LIST;
 }
 
 uint64_t
-XULColumAccessible::NativeState()
+XULColumAccessible::NativeState() const
 {
   return states::READONLY;
 }
@@ -58,19 +58,19 @@ XULColumnItemAccessible::
 }
 
 role
-XULColumnItemAccessible::NativeRole()
+XULColumnItemAccessible::NativeRole() const
 {
   return roles::COLUMNHEADER;
 }
 
 uint64_t
-XULColumnItemAccessible::NativeState()
+XULColumnItemAccessible::NativeState() const
 {
   return states::READONLY;
 }
 
 uint8_t
-XULColumnItemAccessible::ActionCount()
+XULColumnItemAccessible::ActionCount() const
 {
   return 1;
 }
@@ -83,7 +83,7 @@ XULColumnItemAccessible::ActionNameAt(uint8_t aIndex, nsAString& aName)
 }
 
 bool
-XULColumnItemAccessible::DoAction(uint8_t aIndex)
+XULColumnItemAccessible::DoAction(uint8_t aIndex) const
 {
   if (aIndex != eAction_Click)
     return false;
@@ -116,7 +116,7 @@ XULListboxAccessible::
 // XULListboxAccessible: Accessible
 
 uint64_t
-XULListboxAccessible::NativeState()
+XULListboxAccessible::NativeState() const
 {
   // As a XULListboxAccessible we can have the following states:
   //   FOCUSED, READONLY, FOCUSABLE
@@ -138,7 +138,7 @@ XULListboxAccessible::NativeState()
   * Our value is the label of our ( first ) selected child.
   */
 void
-XULListboxAccessible::Value(nsString& aValue)
+XULListboxAccessible::Value(nsString& aValue) const
 {
   aValue.Truncate();
 
@@ -152,7 +152,7 @@ XULListboxAccessible::Value(nsString& aValue)
 }
 
 role
-XULListboxAccessible::NativeRole()
+XULListboxAccessible::NativeRole() const
 {
   // A richlistbox is used with the new autocomplete URL bar, and has a parent
   // popup <panel>.
@@ -166,29 +166,9 @@ XULListboxAccessible::NativeRole()
 // XULListboxAccessible: Table
 
 uint32_t
-XULListboxAccessible::ColCount()
+XULListboxAccessible::ColCount() const
 {
-  nsIContent* headContent = nullptr;
-  for (nsIContent* childContent = mContent->GetFirstChild(); childContent;
-       childContent = childContent->GetNextSibling()) {
-    if (childContent->NodeInfo()->Equals(nsGkAtoms::listcols,
-                                         kNameSpaceID_XUL)) {
-      headContent = childContent;
-    }
-  }
-  if (!headContent)
-    return 0;
-
-  uint32_t columnCount = 0;
-  for (nsIContent* childContent = headContent->GetFirstChild(); childContent;
-       childContent = childContent->GetNextSibling()) {
-    if (childContent->NodeInfo()->Equals(nsGkAtoms::listcol,
-                                         kNameSpaceID_XUL)) {
-      columnCount++;
-    }
-  }
-
-  return columnCount;
+  return 0;
 }
 
 uint32_t
@@ -501,15 +481,11 @@ XULListboxAccessible::ContainerWidget() const
     nsCOMPtr<nsIDOMXULMenuListElement> menuListElm =
       do_QueryInterface(mContent->GetParent());
     if (menuListElm) {
-      nsCOMPtr<nsIDOMNode> inputElm;
+      RefPtr<mozilla::dom::Element> inputElm;
       menuListElm->GetInputField(getter_AddRefs(inputElm));
       if (inputElm) {
-        nsCOMPtr<nsINode> inputNode = do_QueryInterface(inputElm);
-        if (inputNode) {
-          Accessible* input =
-            mDoc->GetAccessible(inputNode);
+          Accessible* input = mDoc->GetAccessible(inputElm);
           return input ? input->ContainerWidget() : nullptr;
-        }
       }
     }
   }
@@ -573,26 +549,16 @@ XULListitemAccessible::Description(nsString& aDesc)
 // XULListitemAccessible: Accessible
 
 /**
-  * If there is a Listcell as a child ( not anonymous ) use it, otherwise
-  *   default to getting the name from GetXULName
-  */
+ * Get the name from GetXULName.
+ */
 ENameValueFlag
-XULListitemAccessible::NativeName(nsString& aName)
+XULListitemAccessible::NativeName(nsString& aName) const
 {
-  nsIContent* childContent = mContent->GetFirstChild();
-  if (childContent) {
-    if (childContent->NodeInfo()->Equals(nsGkAtoms::listcell,
-                                         kNameSpaceID_XUL)) {
-      childContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::label, aName);
-      return eNameOK;
-    }
-  }
-
   return Accessible::NativeName(aName);
 }
 
 role
-XULListitemAccessible::NativeRole()
+XULListitemAccessible::NativeRole() const
 {
   Accessible* list = GetListAccessible();
   if (!list) {
@@ -613,7 +579,7 @@ XULListitemAccessible::NativeRole()
 }
 
 uint64_t
-XULListitemAccessible::NativeState()
+XULListitemAccessible::NativeState() const
 {
   if (mIsCheckbox)
     return XULMenuitemAccessible::NativeState();
@@ -662,147 +628,4 @@ Accessible*
 XULListitemAccessible::ContainerWidget() const
 {
   return Parent();
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// XULListCellAccessible
-////////////////////////////////////////////////////////////////////////////////
-
-XULListCellAccessible::
-  XULListCellAccessible(nsIContent* aContent, DocAccessible* aDoc) :
-  HyperTextAccessibleWrap(aContent, aDoc)
-{
-  mGenericTypes |= eTableCell;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// nsISupports
-
-////////////////////////////////////////////////////////////////////////////////
-// XULListCellAccessible: TableCell
-
-TableAccessible*
-XULListCellAccessible::Table() const
-{
-  Accessible* thisRow = Parent();
-  if (!thisRow || thisRow->Role() != roles::ROW)
-    return nullptr;
-
-  Accessible* table = thisRow->Parent();
-  if (!table || table->Role() != roles::TABLE)
-    return nullptr;
-
-  return table->AsTable();
-}
-
-uint32_t
-XULListCellAccessible::ColIdx() const
-{
-  Accessible* row = Parent();
-  if (!row)
-    return 0;
-
-  int32_t indexInRow = IndexInParent();
-  uint32_t colIdx = 0;
-  for (int32_t idx = 0; idx < indexInRow; idx++) {
-    Accessible* cell = row->GetChildAt(idx);
-    roles::Role role = cell->Role();
-    if (role == roles::CELL || role == roles::GRID_CELL ||
-        role == roles::ROWHEADER || role == roles::COLUMNHEADER)
-      colIdx++;
-  }
-
-  return colIdx;
-}
-
-uint32_t
-XULListCellAccessible::RowIdx() const
-{
-  Accessible* row = Parent();
-  if (!row)
-    return 0;
-
-  Accessible* table = row->Parent();
-  if (!table)
-    return 0;
-
-  int32_t indexInTable = row->IndexInParent();
-  uint32_t rowIdx = 0;
-  for (int32_t idx = 0; idx < indexInTable; idx++) {
-    row = table->GetChildAt(idx);
-    if (row->Role() == roles::ROW)
-      rowIdx++;
-  }
-
-  return rowIdx;
-}
-
-void
-XULListCellAccessible::ColHeaderCells(nsTArray<Accessible*>* aCells)
-{
-  TableAccessible* table = Table();
-  NS_ASSERTION(table, "cell not in a table!");
-  if (!table)
-    return;
-
-  // Get column header cell from XUL listhead.
-  Accessible* list = nullptr;
-
-  Accessible* tableAcc = table->AsAccessible();
-  uint32_t tableChildCount = tableAcc->ChildCount();
-  for (uint32_t childIdx = 0; childIdx < tableChildCount; childIdx++) {
-    Accessible* child = tableAcc->GetChildAt(childIdx);
-    if (child->Role() == roles::LIST) {
-      list = child;
-      break;
-    }
-  }
-
-  if (list) {
-    Accessible* headerCell = list->GetChildAt(ColIdx());
-    if (headerCell) {
-      aCells->AppendElement(headerCell);
-      return;
-    }
-  }
-
-  // No column header cell from XUL markup, try to get it from ARIA markup.
-  TableCellAccessible::ColHeaderCells(aCells);
-}
-
-bool
-XULListCellAccessible::Selected()
-{
-  TableAccessible* table = Table();
-  NS_ENSURE_TRUE(table, false); // we expect to be in a listbox (table)
-
-  return table->IsRowSelected(RowIdx());
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// XULListCellAccessible. Accessible implementation
-
-role
-XULListCellAccessible::NativeRole()
-{
-  return roles::CELL;
-}
-
-already_AddRefed<nsIPersistentProperties>
-XULListCellAccessible::NativeAttributes()
-{
-  nsCOMPtr<nsIPersistentProperties> attributes =
-    HyperTextAccessibleWrap::NativeAttributes();
-
-  // "table-cell-index" attribute
-  TableAccessible* table = Table();
-  if (!table) // we expect to be in a listbox (table)
-    return attributes.forget();
-
-  nsAutoString stringIdx;
-  stringIdx.AppendInt(table->CellIndexAt(RowIdx(), ColIdx()));
-  nsAccUtils::SetAccAttr(attributes, nsGkAtoms::tableCellIndex, stringIdx);
-
-  return attributes.forget();
 }

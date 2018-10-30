@@ -137,11 +137,11 @@ add_task(async function copyURLFromPanel() {
     EventUtils.synthesizeMouseAtCenter(copyURLButton, {});
     await hiddenPromise;
 
-    let feedbackPanel = document.getElementById("pageActionFeedback");
+    let feedbackPanel = document.getElementById("confirmation-hint");
     let feedbackShownPromise = BrowserTestUtils.waitForEvent(feedbackPanel, "popupshown");
     await feedbackShownPromise;
     Assert.equal(feedbackPanel.anchorNode.id, "pageActionButton", "Feedback menu should be anchored on the main Page Action button");
-    let feedbackHiddenPromise = promisePanelHidden("pageActionFeedback");
+    let feedbackHiddenPromise = promisePanelHidden("confirmation-hint");
     await feedbackHiddenPromise;
 
     action.pinnedToUrlbar = false;
@@ -160,13 +160,13 @@ add_task(async function copyURLFromURLBar() {
 
     let copyURLButton =
       document.getElementById("pageAction-urlbar-copyURL");
-    let feedbackShownPromise = promisePanelShown("pageActionFeedback");
+    let feedbackShownPromise = promisePanelShown("confirmation-hint");
     EventUtils.synthesizeMouseAtCenter(copyURLButton, {});
 
     await feedbackShownPromise;
-    let panel = document.getElementById("pageActionFeedback");
+    let panel = document.getElementById("confirmation-hint");
     Assert.equal(panel.anchorNode.id, "pageAction-urlbar-copyURL", "Feedback menu should be anchored on the main URL bar button");
-    let feedbackHiddenPromise = promisePanelHidden("pageActionFeedback");
+    let feedbackHiddenPromise = promisePanelHidden("confirmation-hint");
     await feedbackHiddenPromise;
 
     action.pinnedToUrlbar = false;
@@ -235,14 +235,14 @@ add_task(async function sendToDevice_syncNotReady_other_states() {
         attrs: {
           label: "Account Not Verified",
         },
-        disabled: true
+        disabled: true,
       },
       null,
       {
         attrs: {
           label: "Verify Your Account...",
         },
-      }
+      },
     ];
     checkSendToDeviceItems(expectedItems);
 
@@ -320,7 +320,7 @@ add_task(async function sendToDevice_syncNotReady_configured() {
               clientId: client.id,
               label: client.name,
               clientType: client.type,
-              tooltiptext: gSync.formatLastSyncDate(new Date(lastModifiedFixture * 1000))
+              tooltiptext: gSync.formatLastSyncDate(new Date(lastModifiedFixture * 1000)),
             },
           });
         }
@@ -328,8 +328,8 @@ add_task(async function sendToDevice_syncNotReady_configured() {
           null,
           {
             attrs: {
-              label: "Send to All Devices"
-            }
+              label: "Send to All Devices",
+            },
           }
         );
         checkSendToDeviceItems(expectedItems);
@@ -373,19 +373,19 @@ add_task(async function sendToDevice_notSignedIn() {
         attrs: {
           label: "Not Connected to Sync",
         },
-        disabled: true
+        disabled: true,
       },
       null,
       {
         attrs: {
-          label: "Sign in to Sync..."
+          label: "Sign in to Sync...",
         },
       },
       {
         attrs: {
-          label: "Learn About Sending Tabs..."
+          label: "Learn About Sending Tabs...",
         },
-      }
+      },
     ];
     checkSendToDeviceItems(expectedItems);
 
@@ -435,19 +435,19 @@ add_task(async function sendToDevice_noDevices() {
         attrs: {
           label: "No Devices Connected",
         },
-        disabled: true
+        disabled: true,
       },
       null,
       {
         attrs: {
-          label: "Connect Another Device..."
-        }
+          label: "Connect Another Device...",
+        },
       },
       {
         attrs: {
-          label: "Learn About Sending Tabs..."
-        }
-      }
+          label: "Learn About Sending Tabs...",
+        },
+      },
     ];
     checkSendToDeviceItems(expectedItems);
 
@@ -512,8 +512,8 @@ add_task(async function sendToDevice_devices() {
       null,
       {
         attrs: {
-          label: "Send to All Devices"
-        }
+          label: "Send to All Devices",
+        },
       }
     );
     checkSendToDeviceItems(expectedItems);
@@ -583,8 +583,8 @@ add_task(async function sendToDevice_inUrlbar() {
       null,
       {
         attrs: {
-          label: "Send to All Devices"
-        }
+          label: "Send to All Devices",
+        },
       }
     );
     checkSendToDeviceItems(expectedItems, true);
@@ -598,8 +598,7 @@ add_task(async function sendToDevice_inUrlbar() {
     Assert.notEqual(deviceMenuItem, null);
 
     // For good measure, wait until it's visible.
-    let dwu = window.QueryInterface(Ci.nsIInterfaceRequestor)
-                    .getInterface(Ci.nsIDOMWindowUtils);
+    let dwu = window.windowUtils;
     await BrowserTestUtils.waitForCondition(() => {
       let bounds = dwu.getBoundsWithoutFlushing(deviceMenuItem);
       return bounds.height > 0 && bounds.width > 0;
@@ -617,13 +616,13 @@ add_task(async function sendToDevice_inUrlbar() {
     // And then the "Sent!" notification panel should open and close by itself
     // after a moment.
     info("Waiting for the Sent! notification panel to open");
-    await promisePanelShown(BrowserPageActionFeedback.panelNode.id);
+    await promisePanelShown(ConfirmationHint._panel.id);
     Assert.equal(
-      BrowserPageActionFeedback.panelNode.anchorNode.id,
+      ConfirmationHint._panel.anchorNode.id,
       urlbarButton.id
     );
     info("Waiting for the Sent! notification panel to close");
-    await promisePanelHidden(BrowserPageActionFeedback.panelNode.id);
+    await promisePanelHidden(ConfirmationHint._panel.id);
 
     // Remove Send to Device from the urlbar.
     action.pinnedToUrlbar = false;
@@ -756,10 +755,10 @@ function checkSendToDeviceItems(expectedItems, forUrlbar = false) {
     BrowserPageActions._panelViewNodeIDForActionID("sendToDevice", forUrlbar) +
     "-body";
   let body = document.getElementById(bodyID);
-  Assert.equal(body.childNodes.length, expectedItems.length);
+  Assert.equal(body.children.length, expectedItems.length);
   for (let i = 0; i < expectedItems.length; i++) {
     let expected = expectedItems[i];
-    let actual = body.childNodes[i];
+    let actual = body.children[i];
     if (!expected) {
       Assert.equal(actual.localName, "toolbarseparator");
       continue;
@@ -793,7 +792,7 @@ function checkSendToDeviceItems(expectedItems, forUrlbar = false) {
 
 function collectContextMenuItems() {
   let contextMenu = document.getElementById("pageActionContextMenu");
-  return Array.filter(contextMenu.childNodes, node => {
+  return Array.filter(contextMenu.children, node => {
     return window.getComputedStyle(node).visibility == "visible";
   });
 }

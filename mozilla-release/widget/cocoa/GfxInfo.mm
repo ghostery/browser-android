@@ -283,21 +283,12 @@ GfxInfo::AddCrashReportAnnotations()
   GetAdapterDriverVersion(driverVersion);
   CopyUTF16toUTF8(driverVersion, narrowDriverVersion);
 
-  CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("AdapterVendorID"),
+  CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::AdapterVendorID,
                                      narrowVendorID);
-  CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("AdapterDeviceID"),
+  CrashReporter::AnnotateCrashReport(CrashReporter::Annotation::AdapterDeviceID,
                                      narrowDeviceID);
-  CrashReporter::AnnotateCrashReport(NS_LITERAL_CSTRING("AdapterDriverVersion"),
-                                     narrowDriverVersion);
-  /* Add an App Note for now so that we get the data immediately. These
-   * can go away after we store the above in the socorro db */
-  nsAutoCString note;
-  /* AppendPrintf only supports 32 character strings, mrghh. */
-  note.AppendLiteral("AdapterVendorID: ");
-  note.Append(narrowVendorID);
-  note.AppendLiteral(", AdapterDeviceID: ");
-  note.Append(narrowDeviceID);
-  CrashReporter::AppendAppNotesToCrashReport(note);
+  CrashReporter::AnnotateCrashReport(
+    CrashReporter::Annotation::AdapterDriverVersion, narrowDriverVersion);
 }
 
 // We don't support checking driver versions on Mac.
@@ -309,7 +300,7 @@ GfxInfo::AddCrashReportAnnotations()
 const nsTArray<GfxDriverInfo>&
 GfxInfo::GetGfxDriverInfo()
 {
-  if (!mDriverInfo->Length()) {
+  if (!sDriverInfo->Length()) {
     IMPLEMENT_MAC_DRIVER_BLOCKLIST(OperatingSystem::OSX,
       (nsAString&) GfxDriverInfo::GetDeviceVendor(VendorATI), GfxDriverInfo::allDevices,
       nsIGfxInfo::FEATURE_WEBGL_MSAA, nsIGfxInfo::FEATURE_BLOCKED_OS_VERSION, "FEATURE_FAILURE_MAC_ATI_NO_MSAA");
@@ -320,7 +311,7 @@ GfxInfo::GetGfxDriverInfo()
       (nsAString&) GfxDriverInfo::GetDeviceVendor(VendorNVIDIA), (GfxDeviceFamily*) GfxDriverInfo::GetDeviceFamily(Geforce7300GT),
       nsIGfxInfo::FEATURE_WEBGL_OPENGL, nsIGfxInfo::FEATURE_BLOCKED_DEVICE, "FEATURE_FAILURE_MAC_7300_NO_WEBGL");
   }
-  return *mDriverInfo;
+  return *sDriverInfo;
 }
 
 nsresult
@@ -338,7 +329,7 @@ GfxInfo::GetFeatureStatusImpl(int32_t aFeature,
   if (aOS)
     *aOS = os;
 
-  if (mShutdownOccurred) {
+  if (sShutdownOccurred) {
     return NS_OK;
   }
 

@@ -9,7 +9,7 @@
 <!ENTITY addonAction.disable                    "Desactivar">
 <!ENTITY addonAction.uninstall                  "Desinstalar">
 <!ENTITY addonAction.undo                       "Deshacer">
-<!ENTITY addonAction.update                     "Actuaizar">
+<!ENTITY addonAction.update                     "Actualizar">
 
 <!ENTITY addonUnsigned.message                  "Este complemento no se ha podido verificar por &brandShortName;.">
 <!ENTITY addonUnsigned.learnMore                "Saber más">

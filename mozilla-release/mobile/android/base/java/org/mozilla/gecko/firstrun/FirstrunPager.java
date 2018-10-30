@@ -64,15 +64,16 @@ public class FirstrunPager extends RtlViewPager {
         super.addView(child, index, params);
     }
 
-    public void load(Context appContext, FragmentManager fm, final FirstrunAnimationContainer.OnFinishListener onFinishListener) {
+    public void load(Context appContext, FragmentManager fm, final boolean useLocalValues,
+                     final FirstrunAnimationContainer.OnFinishListener onFinishListener) {
         final List<FirstrunPagerConfig.FirstrunPanelConfig> panels;
 
-        if (Restrictions.isRestrictedProfile(context)) {
-            panels = FirstrunPagerConfig.getRestricted();
-        } else if (FirefoxAccounts.firefoxAccountsExist(context)) {
-            panels = FirstrunPagerConfig.forFxAUser(appContext);
+        if (Restrictions.isRestrictedProfile(appContext)) {
+            panels = FirstrunPagerConfig.getRestricted(appContext);
+        } else if (FirefoxAccounts.firefoxAccountsExist(appContext)) {
+            panels = FirstrunPagerConfig.forFxAUser(appContext, useLocalValues);
         } else {
-            panels = FirstrunPagerConfig.getDefault(appContext);
+            panels = FirstrunPagerConfig.getDefault(appContext, useLocalValues);
         }
 
         setAdapter(new ViewPagerAdapter(fm, panels));
@@ -177,7 +178,7 @@ public class FirstrunPager extends RtlViewPager {
         @Override
         public CharSequence getPageTitle(int i) {
             // Unused now that we use TabMenuStrip.
-            return context.getString(panels.get(i).getTitleRes()).toUpperCase();
+            return panels.get(i).getTitle().toUpperCase();
         }
     }
 }

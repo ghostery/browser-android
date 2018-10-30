@@ -10,8 +10,10 @@
 #include "js/GCHashTable.h"
 #include "js/TypeDecls.h"
 #include "mozilla/Attributes.h"
+#include "mozilla/CycleCollectedJSContext.h" // for MicroTaskRunnable
 #include "mozilla/ErrorResult.h"
 #include "mozilla/dom/BindingDeclarations.h"
+#include "mozilla/dom/CustomElementRegistryBinding.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/FunctionBinding.h"
 #include "mozilla/dom/WebComponentsBinding.h"
@@ -39,6 +41,8 @@ struct LifecycleCallbackArgs
   nsString oldValue;
   nsString newValue;
   nsString namespaceURI;
+
+  size_t SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const;
 };
 
 struct LifecycleAdoptedCallbackArgs
@@ -54,6 +58,7 @@ public:
                         nsIDocument::ElementCallbackType aCallbackType,
                         CallbackFunction* aCallback);
   void Traverse(nsCycleCollectionTraversalCallback& aCb) const;
+  size_t SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const;
   void Call();
   void SetArgs(LifecycleCallbackArgs& aArgs)
   {
@@ -128,7 +133,14 @@ struct CustomElementData
 
   void Traverse(nsCycleCollectionTraversalCallback& aCb) const;
   void Unlink();
+  size_t SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const;
 
+  nsAtom* GetIs(Element* aElement)
+  {
+    // If mType isn't the same as name atom, this is a customized built-in
+    // element, which has 'is' value set.
+    return aElement->NodeInfo()->NameAtom() == mType ? nullptr : mType.get();
+  }
 private:
   virtual ~CustomElementData() {}
 
@@ -149,9 +161,10 @@ struct CustomElementDefinition
 
   CustomElementDefinition(nsAtom* aType,
                           nsAtom* aLocalName,
+                          int32_t aNamespaceID,
                           Function* aConstructor,
                           nsTArray<RefPtr<nsAtom>>&& aObservedAttributes,
-                          mozilla::dom::LifecycleCallbacks* aCallbacks);
+                          UniquePtr<LifecycleCallbacks>&& aCallbacks);
 
   // The type (name) for this custom element, for <button is="x-foo"> or <x-foo>
   // this would be x-foo.
@@ -160,6 +173,9 @@ struct CustomElementDefinition
   // The localname to (e.g. <button is=type> -- this would be button).
   RefPtr<nsAtom> mLocalName;
 
+  // The namespace for this custom element
+  int32_t mNamespaceID;
+
   // The custom element constructor.
   RefPtr<CustomElementConstructor> mConstructor;
 
@@ -167,10 +183,22 @@ struct CustomElementDefinition
   nsTArray<RefPtr<nsAtom>> mObservedAttributes;
 
   // The lifecycle callbacks to call for this custom element.
-  UniquePtr<mozilla::dom::LifecycleCallbacks> mCallbacks;
+  UniquePtr<LifecycleCallbacks> mCallbacks;
 
   // A construction stack. Use nullptr to represent an "already constructed marker".
   nsTArray<RefPtr<Element>> mConstructionStack;
+
+  // See step 6.1.10 of https://dom.spec.whatwg.org/#concept-create-element
+  // which set up the prefix after a custom element is created. However, In Gecko,
+  // the prefix isn't allowed to be changed in NodeInfo, so we store the prefix
+  // information here and propagate to where NodeInfo is assigned to a custom
+  // element instead.
+  nsTArray<RefPtr<nsAtom>> mPrefixStack;
+
+  // This basically is used for distinguishing the custom element constructor
+  // is invoked from document.createElement or directly from JS, i.e.
+  // `new CustomElementConstructor()`.
+  uint32_t mConstructionDepth = 0;
 
   bool IsCustomBuiltIn()
   {
@@ -195,9 +223,8 @@ class CustomElementReaction
 public:
   virtual ~CustomElementReaction() = default;
   virtual void Invoke(Element* aElement, ErrorResult& aRv) = 0;
-  virtual void Traverse(nsCycleCollectionTraversalCallback& aCb) const
-  {
-  }
+  virtual void Traverse(nsCycleCollectionTraversalCallback& aCb) const = 0;
+  virtual size_t SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const = 0;
 
   bool IsUpgradeReaction()
   {
@@ -225,8 +252,9 @@ public:
   // before the reactions in its reaction queue are invoked.
   // The element reaction queues are stored in CustomElementData.
   // We need to lookup ElementReactionQueueMap again to get relevant reaction queue.
-  // The choice of 1 for the auto size here is based on gut feeling.
-  typedef AutoTArray<RefPtr<Element>, 1> ElementQueue;
+  // The choice of 3 for the auto size here is based on running Custom Elements
+  // wpt tests.
+  typedef AutoTArray<RefPtr<Element>, 3> ElementQueue;
 
   /**
    * Enqueue a custom element upgrade reaction
@@ -366,12 +394,33 @@ public:
 
   explicit CustomElementRegistry(nsPIDOMWindowInner* aWindow);
 
+private:
+  class RunCustomElementCreationCallback : public mozilla::Runnable
+  {
+  public:
+    NS_DECL_NSIRUNNABLE
+    explicit RunCustomElementCreationCallback(CustomElementRegistry* aRegistry,
+                                              nsAtom* aAtom,
+                                              CustomElementCreationCallback* aCallback)
+      : mozilla::Runnable("CustomElementRegistry::RunCustomElementCreationCallback")
+      , mRegistry(aRegistry)
+      , mAtom(aAtom)
+      , mCallback(aCallback)
+    {
+    }
+    private:
+      RefPtr<CustomElementRegistry> mRegistry;
+      RefPtr<nsAtom> mAtom;
+      RefPtr<CustomElementCreationCallback> mCallback;
+  };
+
+public:
   /**
    * Looking up a custom element definition.
    * https://html.spec.whatwg.org/#look-up-a-custom-element-definition
    */
   CustomElementDefinition* LookupCustomElementDefinition(
-    nsAtom* aNameAtom, nsAtom* aTypeAtom) const;
+    nsAtom* aNameAtom, int32_t aNameSpaceID, nsAtom* aTypeAtom);
 
   CustomElementDefinition* LookupCustomElementDefinition(
     JSContext* aCx, JSObject *aConstructor) const;
@@ -389,6 +438,20 @@ public:
   static void Upgrade(Element* aElement, CustomElementDefinition* aDefinition, ErrorResult& aRv);
 
   /**
+   * To allow native code to call methods of chrome-implemented custom elements,
+   * a helper method may be defined in the custom element called
+   * 'getCustomInterfaceCallback'. This method takes an IID and returns an
+   * object which implements an XPCOM interface. If there is no
+   * getCustomInterfaceCallback or the callback doesn't return an object,
+   * QueryInterface is called on aElement to see if this interface is
+   * implemented directly.
+   *
+   * This returns null if aElement is not from a chrome document.
+   */
+  static already_AddRefed<nsISupports> CallGetCustomInterface(
+    Element* aElement, const nsIID& aIID);
+
+  /**
    * Registers an unresolved custom element that is a candidate for
    * upgrade. |aTypeName| is the name of the custom element type, if it is not
    * provided, then element name is used. |aTypeName| should be provided
@@ -404,6 +467,38 @@ public:
    */
   void UnregisterUnresolvedElement(Element* aElement,
                                    nsAtom* aTypeName = nullptr);
+
+  /**
+   * Register an element to be upgraded when the custom element creation
+   * callback is executed.
+   *
+   * To be used when LookupCustomElementDefinition() didn't return a definition,
+   * but with the callback scheduled to be run.
+   */
+  inline void RegisterCallbackUpgradeElement(Element* aElement,
+                                             nsAtom* aTypeName = nullptr)
+  {
+    if (mElementCreationCallbacksUpgradeCandidatesMap.IsEmpty()) {
+      return;
+    }
+
+    RefPtr<nsAtom> typeName = aTypeName;
+    if (!typeName) {
+      typeName = aElement->NodeInfo()->NameAtom();
+    }
+
+    nsTHashtable<nsRefPtrHashKey<nsIWeakReference>>* elements =
+      mElementCreationCallbacksUpgradeCandidatesMap.Get(typeName);
+
+    // If there isn't a table, there won't be a definition added by the callback.
+    if (!elements) {
+      return;
+    }
+
+    nsWeakPtr elem = do_GetWeakReference(aElement);
+    elements->PutEntry(elem);
+  }
+
 private:
   ~CustomElementRegistry();
 
@@ -419,6 +514,8 @@ private:
 
   typedef nsRefPtrHashtable<nsRefPtrHashKey<nsAtom>, CustomElementDefinition>
     DefinitionMap;
+  typedef nsRefPtrHashtable<nsRefPtrHashKey<nsAtom>, CustomElementCreationCallback>
+    ElementCreationCallbackMap;
   typedef nsClassHashtable<nsRefPtrHashKey<nsAtom>,
                            nsTHashtable<nsRefPtrHashKey<nsIWeakReference>>>
     CandidateMap;
@@ -431,6 +528,11 @@ private:
   // Custom prototypes are stored in the compartment where definition was
   // defined.
   DefinitionMap mCustomDefinitions;
+
+  // Hashtable for chrome-only callbacks that is called *before* we return
+  // a CustomElementDefinition, when the typeAtom matches.
+  // The callbacks are registered with the setElementCreationCallback method.
+  ElementCreationCallbackMap mElementCreationCallbacks;
 
   // Hashtable for looking up definitions by using constructor as key.
   // Custom elements' name are stored here and we need to lookup
@@ -445,6 +547,10 @@ private:
   // namespace id and local name to a list of elements to upgrade if that
   // element is registered as a custom element.
   CandidateMap mCandidatesMap;
+
+  // If an element creation callback is found, the nsTHashtable for the
+  // type is created here, and elements will later be upgraded.
+  CandidateMap mElementCreationCallbacksUpgradeCandidatesMap;
 
   nsCOMPtr<nsPIDOMWindowInner> mWindow;
 
@@ -470,6 +576,8 @@ private:
       CustomElementRegistry* mRegistry;
   };
 
+  int32_t InferNamespace(JSContext* aCx, JS::Handle<JSObject*> constructor);
+
 public:
   nsISupports* GetParentObject() const;
 
@@ -477,13 +585,20 @@ public:
 
   virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
 
-  void Define(const nsAString& aName, Function& aFunctionConstructor,
+  void Define(JSContext* aCx, const nsAString& aName,
+              Function& aFunctionConstructor,
               const ElementDefinitionOptions& aOptions, ErrorResult& aRv);
 
   void Get(JSContext* cx, const nsAString& name,
            JS::MutableHandle<JS::Value> aRetVal);
 
   already_AddRefed<Promise> WhenDefined(const nsAString& aName, ErrorResult& aRv);
+
+  // Chrome-only method that give JS an opportunity to only load the custom
+  // element definition script when needed.
+  void SetElementCreationCallback(const nsAString& aName, CustomElementCreationCallback& aCallback, ErrorResult& aRv);
+
+  void Upgrade(nsINode& aRoot);
 };
 
 class MOZ_RAII AutoCEReaction final {

@@ -109,6 +109,8 @@ pub enum SpecificDisplayItem {
     Iframe(IframeDisplayItem),
     PushStackingContext(PushStackingContextDisplayItem),
     PopStackingContext,
+    PushReferenceFrame(PushReferenceFrameDisplayListItem),
+    PopReferenceFrame,
     SetGradientStops,
     PushShadow(Shadow),
     PopAllShadows,
@@ -138,6 +140,8 @@ pub enum CompletelySpecificDisplayItem {
     Iframe(IframeDisplayItem),
     PushStackingContext(PushStackingContextDisplayItem, Vec<FilterOp>),
     PopStackingContext,
+    PushReferenceFrame(PushReferenceFrameDisplayListItem),
+    PopReferenceFrame,
     SetGradientStops(Vec<GradientStop>),
     PushShadow(Shadow),
     PopAllShadows,
@@ -259,6 +263,18 @@ pub struct NormalBorder {
     pub radius: BorderRadius,
 }
 
+impl NormalBorder {
+    // Construct a border based upon self with color
+    pub fn with_color(&self, color: ColorF) -> Self {
+        let mut b = *self;
+        b.left.color = color;
+        b.right.color = color;
+        b.top.color = color;
+        b.bottom.color = color;
+        b
+    }
+}
+
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
 pub enum RepeatMode {
@@ -268,44 +284,55 @@ pub enum RepeatMode {
     Space,
 }
 
-#[repr(C)]
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
-pub struct NinePatchDescriptor {
+pub enum NinePatchBorderSource {
+    Image(ImageKey),
+    Gradient(Gradient),
+    RadialGradient(RadialGradient),
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+pub struct NinePatchBorder {
+    /// Describes what to use as the 9-patch source image. If this is an image,
+    /// it will be stretched to fill the size given by width x height.
+    pub source: NinePatchBorderSource,
+
+    /// The width of the 9-part image.
     pub width: u32,
+
+    /// The height of the 9-part image.
     pub height: u32,
+
+    /// Distances from each edge where the image should be sliced up. These
+    /// values are in 9-part-image space (the same space as width and height),
+    /// and the resulting image parts will be used to fill the corresponding
+    /// parts of the border as given by the border widths. This can lead to
+    /// stretching.
+    /// Slices can be overlapping. In that case, the same pixels from the
+    /// 9-part image will show up in multiple parts of the resulting border.
     pub slice: SideOffsets2D<u32>,
-}
 
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
-pub struct ImageBorder {
-    pub image_key: ImageKey,
-    pub patch: NinePatchDescriptor,
-    /// Controls whether the center of the 9 patch image is
-    /// rendered or ignored.
+    /// Controls whether the center of the 9 patch image is rendered or
+    /// ignored. The center is never rendered if the slices are overlapping.
     pub fill: bool,
-    pub outset: SideOffsets2D<f32>,
+
+    /// Determines what happens if the horizontal side parts of the 9-part
+    /// image have a different size than the horizontal parts of the border.
     pub repeat_horizontal: RepeatMode,
+
+    /// Determines what happens if the vertical side parts of the 9-part
+    /// image have a different size than the vertical parts of the border.
     pub repeat_vertical: RepeatMode,
-}
 
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
-pub struct GradientBorder {
-    pub gradient: Gradient,
-    pub outset: SideOffsets2D<f32>,
-}
-
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
-pub struct RadialGradientBorder {
-    pub gradient: RadialGradient,
+    /// The outset for the border.
+    /// TODO(mrobinson): This should be removed and handled by the client.
     pub outset: SideOffsets2D<f32>,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
 pub enum BorderDetails {
     Normal(NormalBorder),
-    Image(ImageBorder),
-    Gradient(GradientBorder),
-    RadialGradient(RadialGradientBorder),
+    NinePatch(NinePatchBorder),
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
@@ -347,7 +374,7 @@ pub struct BorderSide {
 }
 
 #[repr(u32)]
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Hash, Eq)]
 pub enum BorderStyle {
     None = 0,
     Solid = 1,
@@ -359,6 +386,12 @@ pub enum BorderStyle {
     Ridge = 7,
     Inset = 8,
     Outset = 9,
+}
+
+impl BorderStyle {
+    pub fn is_hidden(&self) -> bool {
+        *self == BorderStyle::Hidden || *self == BorderStyle::None
+    }
 }
 
 #[repr(u32)]
@@ -438,28 +471,30 @@ pub struct RadialGradientDisplayItem {
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+pub struct PushReferenceFrameDisplayListItem {
+    pub reference_frame: ReferenceFrame,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+pub struct ReferenceFrame {
+    pub transform: Option<PropertyBinding<LayoutTransform>>,
+    pub perspective: Option<LayoutTransform>,
+    pub id: ClipId,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PushStackingContextDisplayItem {
     pub stacking_context: StackingContext,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
 pub struct StackingContext {
-    pub scroll_policy: ScrollPolicy,
-    pub transform: Option<PropertyBinding<LayoutTransform>>,
     pub transform_style: TransformStyle,
-    pub perspective: Option<LayoutTransform>,
     pub mix_blend_mode: MixBlendMode,
-    pub reference_frame_id: Option<ClipId>,
     pub clip_node_id: Option<ClipId>,
     pub glyph_raster_space: GlyphRasterSpace,
 } // IMPLICIT: filters: Vec<FilterOp>
 
-#[repr(u32)]
-#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
-pub enum ScrollPolicy {
-    Scrollable = 0,
-    Fixed = 1,
-}
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -508,6 +543,9 @@ pub enum MixBlendMode {
 
 #[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
 pub enum FilterOp {
+    /// Filter that does no transformation of the colors, needed for
+    /// debug purposes only.
+    Identity,
     Blur(f32),
     Brightness(f32),
     Contrast(f32),
@@ -525,6 +563,7 @@ pub enum FilterOp {
 pub struct IframeDisplayItem {
     pub clip_id: ClipId,
     pub pipeline_id: PipelineId,
+    pub ignore_missing_pipeline: bool,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
@@ -534,6 +573,7 @@ pub struct ImageDisplayItem {
     pub tile_spacing: LayoutSize,
     pub image_rendering: ImageRendering,
     pub alpha_type: AlphaType,
+    pub color: ColorF,
 }
 
 #[repr(u32)]
@@ -782,6 +822,7 @@ pub struct ClipChainId(pub u64, pub PipelineId);
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum ClipId {
+    Spatial(usize, PipelineId),
     Clip(usize, PipelineId),
     ClipChain(ClipChainId),
 }
@@ -791,15 +832,16 @@ const ROOT_SCROLL_NODE_CLIP_ID: usize = 1;
 
 impl ClipId {
     pub fn root_scroll_node(pipeline_id: PipelineId) -> ClipId {
-        ClipId::Clip(ROOT_SCROLL_NODE_CLIP_ID, pipeline_id)
+        ClipId::Spatial(ROOT_SCROLL_NODE_CLIP_ID, pipeline_id)
     }
 
     pub fn root_reference_frame(pipeline_id: PipelineId) -> ClipId {
-        ClipId::Clip(ROOT_REFERENCE_FRAME_CLIP_ID, pipeline_id)
+        ClipId::Spatial(ROOT_REFERENCE_FRAME_CLIP_ID, pipeline_id)
     }
 
     pub fn pipeline_id(&self) -> PipelineId {
         match *self {
+            ClipId::Spatial(_, pipeline_id) |
             ClipId::Clip(_, pipeline_id) |
             ClipId::ClipChain(ClipChainId(_, pipeline_id)) => pipeline_id,
         }
@@ -807,7 +849,14 @@ impl ClipId {
 
     pub fn is_root_scroll_node(&self) -> bool {
         match *self {
-            ClipId::Clip(1, _) => true,
+            ClipId::Spatial(ROOT_SCROLL_NODE_CLIP_ID, _) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_root_reference_frame(&self) -> bool {
+        match *self {
+            ClipId::Spatial(ROOT_REFERENCE_FRAME_CLIP_ID, _) => true,
             _ => false,
         }
     }

@@ -17,7 +17,7 @@
 
 #include "openvr.h"
 #include "gfxVR.h"
-#include "VRDisplayHost.h"
+#include "VRDisplayLocal.h"
 
 #if defined(XP_MACOSX)
 class MacIOSurface;
@@ -28,7 +28,7 @@ class VRThread;
 
 namespace impl {
 
-class VRDisplayOpenVR : public VRDisplayHost
+class VRDisplayOpenVR : public VRDisplayLocal
 {
 public:
   void ZeroSensor() override;
@@ -70,11 +70,11 @@ protected:
 
   void UpdateStageParameters();
   void UpdateEyeParameters(gfx::Matrix4x4* aHeadToEyeTransforms = nullptr);
-  bool SubmitFrame(void* aTextureHandle,
-                   ::vr::ETextureType aTextureType,
-                   const IntSize& aSize,
-                   const gfx::Rect& aLeftEyeRect,
-                   const gfx::Rect& aRightEyeRect);
+  bool SubmitFrameOpenVRHandle(void* aTextureHandle,
+                               ::vr::ETextureType aTextureType,
+                               const IntSize& aSize,
+                               const gfx::Rect& aLeftEyeRect,
+                               const gfx::Rect& aRightEyeRect);
 };
 
 class VRControllerOpenVR : public VRControllerHost
@@ -146,16 +146,16 @@ protected:
   VRSystemManagerOpenVR();
 
 private:
-  void HandleButtonPress(uint32_t aControllerIdx,
+  bool HandleButtonPress(uint32_t aControllerIdx,
                          uint32_t aButton,
                          uint64_t aButtonMask,
                          uint64_t aButtonPressed,
                          uint64_t aButtonTouched);
-  void HandleTriggerPress(uint32_t aControllerIdx,
+  bool HandleTriggerPress(uint32_t aControllerIdx,
                           uint32_t aButton,
                           uint32_t aTrigger,
                           float aValue);
-  void HandleAxisMove(uint32_t aControllerIdx, uint32_t aAxis,
+  bool HandleAxisMove(uint32_t aControllerIdx, uint32_t aAxis,
                       float aValue);
   void HandlePoseTracking(uint32_t aControllerIdx,
                           const dom::GamepadPoseState& aPose,
@@ -170,6 +170,7 @@ private:
   RefPtr<impl::VRDisplayOpenVR> mOpenVRHMD;
   nsTArray<RefPtr<impl::VRControllerOpenVR>> mOpenVRController;
   ::vr::IVRSystem *mVRSystem;
+  bool mRuntimeCheckFailed;
   bool mIsWindowsMR;
 };
 

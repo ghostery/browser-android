@@ -73,7 +73,7 @@ nsAccUtils::SetAccGroupAttrs(nsIPersistentProperties *aAttributes,
 }
 
 int32_t
-nsAccUtils::GetDefaultLevel(Accessible* aAccessible)
+nsAccUtils::GetDefaultLevel(const Accessible* aAccessible)
 {
   roles::Role role = aAccessible->Role();
 
@@ -92,7 +92,7 @@ nsAccUtils::GetDefaultLevel(Accessible* aAccessible)
 }
 
 int32_t
-nsAccUtils::GetARIAOrDefaultLevel(Accessible* aAccessible)
+nsAccUtils::GetARIAOrDefaultLevel(const Accessible* aAccessible)
 {
   int32_t level = 0;
   nsCoreUtils::GetUIntAttr(aAccessible->GetContent(),
@@ -244,13 +244,11 @@ nsAccUtils::GetSelectableContainer(Accessible* aAccessible, uint64_t aState)
 }
 
 bool
-nsAccUtils::IsARIASelected(Accessible* aAccessible)
+nsAccUtils::IsDOMAttrTrue(const Accessible* aAccessible, nsAtom* aAttr)
 {
-  if (!aAccessible->GetContent()->IsElement())
-    return false;
-  return aAccessible->GetContent()->AsElement()->
-    AttrValueIs(kNameSpaceID_None, nsGkAtoms::aria_selected,
-                nsGkAtoms::_true, eCaseMatters);
+  dom::Element* el = aAccessible->Elm();
+  return el && el->AttrValueIs(kNameSpaceID_None, aAttr, nsGkAtoms::_true,
+                               eCaseMatters);
 }
 
 Accessible*
@@ -320,7 +318,7 @@ nsAccUtils::ConvertToScreenCoords(int32_t aX, int32_t aY,
     }
 
     default:
-      NS_NOTREACHED("invalid coord type!");
+      MOZ_ASSERT_UNREACHABLE("invalid coord type!");
   }
 
   return coords;
@@ -352,7 +350,7 @@ nsAccUtils::ConvertScreenCoordsTo(int32_t *aX, int32_t *aY,
     }
 
     default:
-    NS_NOTREACHED("invalid coord type!");
+      MOZ_ASSERT_UNREACHABLE("invalid coord type!");
   }
 }
 

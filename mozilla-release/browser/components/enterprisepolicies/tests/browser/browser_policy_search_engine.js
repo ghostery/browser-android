@@ -2,21 +2,29 @@
  * http://creativecommons.org/publicdomain/zero/1.0/ */
 "use strict";
 
+ChromeUtils.import("resource://testing-common/CustomizableUITestUtils.jsm", this);
+let gCUITestUtils = new CustomizableUITestUtils(window);
+
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("browser.policies.runonce.setDefaultSearchEngine");
   Services.prefs.clearUserPref("browser.policies.runOncePerModification.addSearchEngines");
 });
 
+add_task(async function test_setup() {
+  await gCUITestUtils.addSearchBar();
+  registerCleanupFunction(() => {
+    gCUITestUtils.removeSearchBar();
+  });
+});
+
 // |shouldWork| should be true if opensearch is expected to work and false if
 // it is not.
 async function test_opensearch(shouldWork) {
-  await SpecialPowers.pushPrefEnv({ set: [
-    ["browser.search.widget.inNavBar", true],
-  ]});
+  let searchBar = BrowserSearch.searchBar;
+
   let rootDir = getRootDirectory(gTestPath);
   let tab = await BrowserTestUtils.openNewForegroundTab(gBrowser, rootDir + "opensearch.html");
   let searchPopup = document.getElementById("PopupSearchAutoComplete");
-  let searchBar = document.getElementById("searchbar");
   let promiseSearchPopupShown = BrowserTestUtils.waitForEvent(searchPopup, "popupshown");
   let searchBarButton = document.getAnonymousElementByAttribute(searchBar,
                                                                 "anonid",
@@ -30,12 +38,12 @@ async function test_opensearch(shouldWork) {
                                                                   "anonid",
                                                                   "add-engines");
   if (shouldWork) {
-    ok(engineListElement.firstChild,
+    ok(engineListElement.firstElementChild,
        "There should be search engines available to add");
     ok(searchBar.getAttribute("addengines"),
        "Search bar should have addengines attribute");
   } else {
-    is(engineListElement.firstChild, null,
+    is(engineListElement.firstElementChild, null,
        "There should be no search engines available to add");
     ok(!searchBar.getAttribute("addengines"),
        "Search bar should not have addengines attribute");
@@ -57,12 +65,12 @@ add_task(async function test_install_and_set_default() {
         "Add": [
           {
             "Name": "MozSearch",
-            "URLTemplate": "http://example.com/?q={searchTerms}"
-          }
+            "URLTemplate": "http://example.com/?q={searchTerms}",
+          },
         ],
-        "Default": "MozSearch"
-      }
-    }
+        "Default": "MozSearch",
+      },
+    },
   });
 
   // If this passes, it means that the new search engine was properly installed
@@ -89,13 +97,13 @@ add_task(async function test_install_and_set_default_prevent_installs() {
         "Add": [
           {
             "Name": "MozSearch",
-            "URLTemplate": "http://example.com/?q={searchTerms}"
-          }
+            "URLTemplate": "http://example.com/?q={searchTerms}",
+          },
         ],
         "Default": "MozSearch",
-        "PreventInstalls": true
-      }
-    }
+        "PreventInstalls": true,
+      },
+    },
   });
 
   is(Services.search.currentEngine.name, "MozSearch",
@@ -110,7 +118,7 @@ add_task(async function test_opensearch_works() {
   // Clear out policies so we can test with no policies applied
   await setupPolicyEngineWithJson({
     "policies": {
-    }
+    },
   });
   // Ensure that opensearch works before we make sure that it can be properly
   // disabled
@@ -121,9 +129,9 @@ add_task(async function setup_prevent_installs() {
   await setupPolicyEngineWithJson({
     "policies": {
       "SearchEngines": {
-        "PreventInstalls": true
-      }
-    }
+        "PreventInstalls": true,
+      },
+    },
   });
 });
 
@@ -183,4 +191,48 @@ add_task(async function test_AddSearchProvider() {
      "Engine should not have been added successfully.");
   is(mockPrompter.promptCount, 1,
      "Should have alerted the user of an error when installing new search engine");
+});
+
+add_task(async function test_install_and_remove() {
+  let iconURL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
+
+  is(Services.search.getEngineByName("Foo"), null,
+     "Engine \"Foo\" should not be present when test starts");
+
+  await setupPolicyEngineWithJson({
+  "policies": {
+      "SearchEngines": {
+        "Add": [
+          {
+            "Name": "Foo",
+            "URLTemplate": "http://example.com/?q={searchTerms}",
+            "IconURL": iconURL,
+          },
+        ],
+      },
+    },
+  });
+
+  // If this passes, it means that the new search engine was properly installed
+
+  let engine = Services.search.getEngineByName("Foo");
+  isnot(engine, null,
+     "Specified search engine should be installed");
+
+  is(engine.wrappedJSObject.iconURI.spec, iconURL,
+     "Icon should be present");
+
+  await setupPolicyEngineWithJson({
+  "policies": {
+      "SearchEngines": {
+        "Remove": ["Foo"],
+      },
+    },
+  });
+
+  // If this passes, it means that the specified engine was properly removed
+  is(Services.search.getEngineByName("Foo"), null,
+     "Specified search engine should not be installed");
+
+  EnterprisePolicyTesting.resetRunOnceState();
 });

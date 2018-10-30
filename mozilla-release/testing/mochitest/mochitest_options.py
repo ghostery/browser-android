@@ -512,6 +512,11 @@ class MochitestArguments(ArgumentContainer):
           "default": None,
           "help": "Arguments to pass to the debugger.",
           }],
+        [["--save-recordings"],
+         {"dest": "recordingPath",
+          "default": None,
+          "help": "Directory to save Web Replay recordings in.",
+          }],
         [["--valgrind"],
          {"default": None,
           "help": "Valgrind binary to run tests with. Program name or path.",
@@ -753,7 +758,18 @@ class MochitestArguments(ArgumentContainer):
                     options.testingModulesDir = p
                     break
 
+        # Paths to specialpowers and mochijar from the tests archive.
+        options.stagedAddons = [
+            os.path.join(here, 'extensions', 'specialpowers'),
+            os.path.join(here, 'mochijar'),
+        ]
         if build_obj:
+            objdir_xpi_stage = os.path.join(build_obj.distdir, 'xpi-stage')
+            if os.path.isdir(objdir_xpi_stage):
+                options.stagedAddons = [
+                    os.path.join(objdir_xpi_stage, 'specialpowers'),
+                    os.path.join(objdir_xpi_stage, 'mochijar'),
+                ]
             plugins_dir = os.path.join(build_obj.distdir, 'plugins')
             if os.path.isdir(plugins_dir) and plugins_dir not in options.extraProfileFiles:
                 options.extraProfileFiles.append(plugins_dir)
@@ -904,6 +920,13 @@ class AndroidArguments(ArgumentContainer):
 
         if build_obj:
             options.log_mach = '-'
+
+            objdir_xpi_stage = os.path.join(build_obj.distdir, 'xpi-stage')
+            if os.path.isdir(objdir_xpi_stage):
+                options.extensionsToInstall = [
+                    os.path.join(objdir_xpi_stage, 'mochijar'),
+                    os.path.join(objdir_xpi_stage, 'specialpowers'),
+                ]
 
         if options.remoteWebServer is None:
             if os.name != "nt":

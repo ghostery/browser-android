@@ -25,7 +25,16 @@ JSObject*
 DOMRectReadOnly::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
   MOZ_ASSERT(mParent);
-  return DOMRectReadOnlyBinding::Wrap(aCx, this, aGivenProto);
+  return DOMRectReadOnly_Binding::Wrap(aCx, this, aGivenProto);
+}
+
+already_AddRefed<DOMRectReadOnly>
+DOMRectReadOnly::Constructor(const GlobalObject& aGlobal, double aX, double aY,
+                             double aWidth, double aHeight, ErrorResult& aRv)
+{
+  RefPtr<DOMRectReadOnly> obj =
+    new DOMRectReadOnly(aGlobal.GetAsSupports(), aX, aY, aWidth, aHeight);
+  return obj.forget();
 }
 
 // -----------------------------------------------------------------------------
@@ -34,20 +43,12 @@ JSObject*
 DOMRect::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
 {
   MOZ_ASSERT(mParent);
-  return DOMRectBinding::Wrap(aCx, this, aGivenProto);
-}
-
-already_AddRefed<DOMRect>
-DOMRect::Constructor(const GlobalObject& aGlobal, ErrorResult& aRV)
-{
-  RefPtr<DOMRect> obj =
-    new DOMRect(aGlobal.GetAsSupports(), 0.0, 0.0, 0.0, 0.0);
-  return obj.forget();
+  return DOMRect_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 already_AddRefed<DOMRect>
 DOMRect::Constructor(const GlobalObject& aGlobal, double aX, double aY,
-                     double aWidth, double aHeight, ErrorResult& aRV)
+                     double aWidth, double aHeight, ErrorResult& aRv)
 {
   RefPtr<DOMRect> obj =
     new DOMRect(aGlobal.GetAsSupports(), aX, aY, aWidth, aHeight);
@@ -70,7 +71,7 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(DOMRectList)
 JSObject*
 DOMRectList::WrapObject(JSContext *cx, JS::Handle<JSObject*> aGivenProto)
 {
-  return mozilla::dom::DOMRectListBinding::Wrap(cx, this, aGivenProto);
+  return mozilla::dom::DOMRectList_Binding::Wrap(cx, this, aGivenProto);
 }
 
 static double
@@ -86,7 +87,7 @@ DOMRect::SetLayoutRect(const nsRect& aLayoutRect)
   // Round to the nearest 1/scale units. We choose scale so it can be represented
   // exactly by machine floating point.
   double scaleInv = 1/scale;
-  double t2pScaled = scale/nsPresContext::AppUnitsPerCSSPixel();
+  double t2pScaled = scale/AppUnitsPerCSSPixel();
   double x = RoundFloat(aLayoutRect.x*t2pScaled)*scaleInv;
   double y = RoundFloat(aLayoutRect.y*t2pScaled)*scaleInv;
   SetRect(x, y, RoundFloat(aLayoutRect.XMost()*t2pScaled)*scaleInv - x,

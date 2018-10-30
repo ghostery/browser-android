@@ -22,7 +22,7 @@ from mochitest_options import MochitestArgumentParser
 
 from manifestparser import TestManifest
 from manifestparser.filters import chunk_by_slice
-from mozdevice import ADBAndroid
+from mozdevice import ADBAndroid, ADBTimeoutError
 import mozfile
 import mozinfo
 
@@ -239,8 +239,6 @@ class RobocopTestRunner(MochitestDesktop):
 
         self.options.extensionsToExclude.extend([
             'mochikit@mozilla.org',
-            'workerbootstrap-test@mozilla.org.xpi',
-            'indexedDB-test@mozilla.org.xpi',
         ])
 
         manifest = MochitestDesktop.buildProfile(self, self.options)
@@ -343,6 +341,8 @@ class RobocopTestRunner(MochitestDesktop):
                 else:
                     self.log.info("  %s: %s" % (category, devinfo[category]))
             self.log.info("Test root: %s" % self.device.test_root)
+        except ADBTimeoutError:
+            raise
         except Exception as e:
             self.log.warning("Error getting device information: %s" % str(e))
 

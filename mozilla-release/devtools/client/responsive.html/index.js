@@ -13,7 +13,6 @@ const { require } = BrowserLoader({
   window
 });
 const Telemetry = require("devtools/client/shared/telemetry");
-const { loadAgentSheet } = require("./utils/css");
 
 const { createFactory, createElement } =
   require("devtools/client/shared/vendor/react");
@@ -21,7 +20,7 @@ const ReactDOM = require("devtools/client/shared/vendor/react-dom");
 const { Provider } = require("devtools/client/shared/vendor/react-redux");
 
 const message = require("./utils/message");
-const App = createFactory(require("./app"));
+const App = createFactory(require("./components/App"));
 const Store = require("./store");
 const { loadDevices } = require("./actions/devices");
 const { changeDisplayPixelRatio } = require("./actions/display-pixel-ratio");
@@ -32,22 +31,17 @@ const { addViewport, resizeViewport } = require("./actions/viewports");
 // Exposed for use by tests
 window.require = require;
 
-let bootstrap = {
+const bootstrap = {
 
   telemetry: new Telemetry(),
 
   store: null,
 
   async init() {
-    // Load a special UA stylesheet to reset certain styles such as dropdown
-    // lists.
-    loadAgentSheet(
-      window,
-      "resource://devtools/client/responsive.html/responsive-ua.css"
-    );
     this.telemetry.toolOpened("responsive");
-    let store = this.store = Store();
-    let provider = createElement(Provider, { store }, App());
+
+    const store = this.store = Store();
+    const provider = createElement(Provider, { store }, App());
     ReactDOM.render(provider, document.querySelector("#root"));
     message.post(window, "init:done");
   },
@@ -105,8 +99,8 @@ Object.defineProperty(window, "store", {
 // better synchronized with any overrides that might be applied.  Also, reading a single
 // value like this makes less sense with multiple viewports.
 function onDevicePixelRatioChange() {
-  let dpr = window.devicePixelRatio;
-  let mql = window.matchMedia(`(resolution: ${dpr}dppx)`);
+  const dpr = window.devicePixelRatio;
+  const mql = window.matchMedia(`(resolution: ${dpr}dppx)`);
 
   function listener() {
     bootstrap.dispatch(changeDisplayPixelRatio(window.devicePixelRatio));
@@ -120,12 +114,12 @@ function onDevicePixelRatioChange() {
 /**
  * Called by manager.js to add the initial viewport based on the original page.
  */
-window.addInitialViewport = contentURI => {
+window.addInitialViewport = ({ uri, userContextId }) => {
   try {
     onDevicePixelRatioChange();
-    bootstrap.dispatch(changeLocation(contentURI));
+    bootstrap.dispatch(changeLocation(uri));
     bootstrap.dispatch(changeDisplayPixelRatio(window.devicePixelRatio));
-    bootstrap.dispatch(addViewport());
+    bootstrap.dispatch(addViewport(userContextId));
   } catch (e) {
     console.error(e);
   }
@@ -135,7 +129,12 @@ window.addInitialViewport = contentURI => {
  * Called by manager.js when tests want to check the viewport size.
  */
 window.getViewportSize = () => {
-  let { width, height } = bootstrap.store.getState().viewports[0];
+  const { viewports } = bootstrap.store.getState();
+  if (!viewports.length) {
+    return null;
+  }
+
+  const { width, height } = viewports[0];
   return { width, height };
 };
 
@@ -157,7 +156,7 @@ window.setViewportSize = ({ width, height }) => {
  * to the message manager without pulling the frame loader.
  */
 window.getViewportBrowser = () => {
-  let browser = document.querySelector("iframe.browser");
+  const browser = document.querySelector("iframe.browser");
   if (!browser.messageManager) {
     Object.defineProperty(browser, "messageManager", {
       get() {

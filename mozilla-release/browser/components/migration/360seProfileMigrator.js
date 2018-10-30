@@ -5,7 +5,6 @@
 "use strict";
 
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
 ChromeUtils.import("resource://gre/modules/osfile.jsm");
@@ -16,7 +15,7 @@ ChromeUtils.defineModuleGetter(this, "PlacesUtils",
 ChromeUtils.defineModuleGetter(this, "Sqlite",
                                "resource://gre/modules/Sqlite.jsm");
 
-Cu.importGlobalProperties(["URL"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["URL"]);
 
 const kBookmarksFileName = "360sefav.db";
 

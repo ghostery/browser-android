@@ -139,17 +139,12 @@ function buildBareUpdate(chunks, hashSize) {
  */
 function doSimpleUpdate(updateText, success, failure) {
   var listener = {
-    QueryInterface(iid) {
-      if (iid.equals(Ci.nsISupports) ||
-          iid.equals(Ci.nsIUrlClassifierUpdateObserver))
-        return this;
-      throw Cr.NS_ERROR_NO_INTERFACE;
-    },
+    QueryInterface: ChromeUtils.generateQI(["nsIUrlClassifierUpdateObserver"]),
 
     updateUrlRequested(url) { },
     streamFinished(status) { },
     updateError(errorCode) { failure(errorCode); },
-    updateSuccess(requestedTimeout) { success(requestedTimeout); }
+    updateSuccess(requestedTimeout) { success(requestedTimeout); },
   };
 
   dbservice.beginUpdate(listener, allTables);
@@ -164,17 +159,12 @@ function doSimpleUpdate(updateText, success, failure) {
  */
 function doErrorUpdate(tables, success, failure) {
   var listener = {
-    QueryInterface(iid) {
-      if (iid.equals(Ci.nsISupports) ||
-          iid.equals(Ci.nsIUrlClassifierUpdateObserver))
-        return this;
-      throw Cr.NS_ERROR_NO_INTERFACE;
-    },
+    QueryInterface: ChromeUtils.generateQI(["nsIUrlClassifierUpdateObserver"]),
 
     updateUrlRequested(url) { },
     streamFinished(status) { },
     updateError(errorCode) { success(errorCode); },
-    updateSuccess(requestedTimeout) { failure(requestedTimeout); }
+    updateSuccess(requestedTimeout) { failure(requestedTimeout); },
   };
 
   dbservice.beginUpdate(listener, tables, null);
@@ -285,7 +275,7 @@ subsExist(urls, cb) {
 
 urlExistInMultipleTables(data, cb) {
   this.checkTables(data.url, data.tables, cb);
-}
+},
 
 };
 
@@ -361,15 +351,10 @@ function Timer(delay, cb) {
 }
 
 Timer.prototype = {
-QueryInterface(iid) {
-    if (!iid.equals(Ci.nsISupports) && !iid.equals(Ci.nsITimerCallback)) {
-      throw Cr.NS_ERROR_NO_INTERFACE;
-    }
-    return this;
-  },
+QueryInterface: ChromeUtils.generateQI(["nsITimerCallback"]),
 notify(timer) {
     this.cb();
-  }
+  },
 };
 
 // LFSRgenerator is a 32-bit linear feedback shift register random number

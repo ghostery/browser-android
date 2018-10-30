@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "nsCOMPtr.h"
-#include "nsIRootBox.h"
 #include "nsIPresShell.h"
 #include "nsIContent.h"
 #include "nsNameSpaceManager.h"
@@ -31,7 +30,7 @@ NS_NewXULPopupElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
 JSObject*
 XULPopupElement::WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto)
 {
-  return XULPopupElementBinding::Wrap(aCx, this, aGivenProto);
+  return XULPopupElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 nsIFrame*
@@ -213,7 +212,7 @@ XULPopupElement::GetState(nsString& aState)
       case ePopupClosed:
         break;
       default:
-        NS_NOTREACHED("Bad popup state");
+        MOZ_ASSERT_UNREACHABLE("Bad popup state");
         break;
     }
   }
@@ -226,16 +225,16 @@ XULPopupElement::GetTriggerNode() const
   return nsMenuPopupFrame::GetTriggerContent(menuPopupFrame);
 }
 
+// FIXME(emilio): should probably be renamed to GetAnchorElement?
 Element*
 XULPopupElement::GetAnchorNode() const
 {
-  nsMenuPopupFrame *menuPopupFrame = do_QueryFrame(GetPrimaryFrame());
+  nsMenuPopupFrame* menuPopupFrame = do_QueryFrame(GetPrimaryFrame());
   if (!menuPopupFrame) {
     return nullptr;
   }
 
-  nsIContent* anchor = menuPopupFrame->GetAnchor();
-  return anchor && anchor->IsElement() ? anchor->AsElement() : nullptr;
+  return Element::FromNodeOrNull(menuPopupFrame->GetAnchor());
 }
 
 already_AddRefed<DOMRect>

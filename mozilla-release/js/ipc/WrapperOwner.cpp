@@ -16,7 +16,7 @@
 #include "WrapperFactory.h"
 
 #include "nsIDocShellTreeItem.h"
-#include "nsIDOMDocument.h"
+#include "nsIDocument.h"
 
 using namespace js;
 using namespace JS;
@@ -118,8 +118,6 @@ class CPOWProxyHandler : public BaseProxyHandler
     virtual bool call(JSContext* cx, HandleObject proxy, const CallArgs& args) const override;
     virtual bool construct(JSContext* cx, HandleObject proxy, const CallArgs& args) const override;
 
-    virtual bool getPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
-                                       MutableHandle<PropertyDescriptor> desc) const override;
     virtual bool hasOwn(JSContext* cx, HandleObject proxy, HandleId id, bool* bp) const override;
     virtual bool getOwnEnumerablePropertyKeys(JSContext* cx, HandleObject proxy,
                                               AutoIdVector& props) const override;
@@ -159,36 +157,6 @@ const CPOWProxyHandler CPOWProxyHandler::singleton;
         CPOWTimer timer(cx);                                            \
         return owner->call args;                                        \
     }
-
-bool
-CPOWProxyHandler::getPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
-                                        MutableHandle<PropertyDescriptor> desc) const
-{
-    FORWARD(getPropertyDescriptor, (cx, proxy, id, desc), false);
-}
-
-bool
-WrapperOwner::getPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
-                                    MutableHandle<PropertyDescriptor> desc)
-{
-    ObjectId objId = idOf(proxy);
-
-    JSIDVariant idVar;
-    if (!toJSIDVariant(cx, id, &idVar))
-        return false;
-
-    ReturnStatus status;
-    PPropertyDescriptor result;
-    if (!SendGetPropertyDescriptor(objId, idVar, &status, &result))
-        return ipcfail(cx);
-
-    LOG_STACK();
-
-    if (!ok(cx, status))
-        return false;
-
-    return toDescriptor(cx, result, desc);
-}
 
 bool
 CPOWProxyHandler::getOwnPropertyDescriptor(JSContext* cx, HandleObject proxy, HandleId id,
@@ -939,15 +907,6 @@ WrapperOwner::updatePointer(JSObject* obj, const JSObject* old)
 }
 
 bool
-WrapperOwner::init()
-{
-    if (!JavaScriptShared::init())
-        return false;
-
-    return true;
-}
-
-bool
 WrapperOwner::getPropertyKeys(JSContext* cx, HandleObject proxy, uint32_t flags, AutoIdVector& props)
 {
     ObjectId objId = idOf(proxy);
@@ -1110,7 +1069,7 @@ GetRemoteObjectTag(JS::Handle<JSObject*> obj)
         if (treeItem)
             return NS_LITERAL_CSTRING("ContentDocShellTreeItem");
 
-        nsCOMPtr<nsIDOMDocument> doc(do_QueryInterface(supports));
+        nsCOMPtr<nsIDocument> doc(do_QueryInterface(supports));
         if (doc)
             return NS_LITERAL_CSTRING("ContentDocument");
     }
@@ -1181,13 +1140,18 @@ WrapperOwner::fromObjectVariant(JSContext* cx, const ObjectVariant& objVar)
 JSObject*
 WrapperOwner::fromRemoteObjectVariant(JSContext* cx, const RemoteObject& objVar)
 {
-    ObjectId objId = ObjectId::deserialize(objVar.serializedId());
+    Maybe<ObjectId> maybeObjId(ObjectId::deserialize(objVar.serializedId()));
+    if (maybeObjId.isNothing()) {
+        return nullptr;
+    }
+
+    ObjectId objId = maybeObjId.value();
     RootedObject obj(cx, findCPOWById(objId));
     if (!obj) {
 
         // All CPOWs live in the privileged junk scope.
         RootedObject junkScope(cx, xpc::PrivilegedJunkScope());
-        JSAutoCompartment ac(cx, junkScope);
+        JSAutoRealm ar(cx, junkScope);
         RootedValue v(cx, UndefinedValue());
         // We need to setLazyProto for the getPrototype/getPrototypeIfOrdinary
         // hooks.
@@ -1227,8 +1191,11 @@ WrapperOwner::fromRemoteObjectVariant(JSContext* cx, const RemoteObject& objVar)
 JSObject*
 WrapperOwner::fromLocalObjectVariant(JSContext* cx, const LocalObject& objVar)
 {
-    ObjectId id = ObjectId::deserialize(objVar.serializedId());
-    Rooted<JSObject*> obj(cx, findObjectById(cx, id));
+    Maybe<ObjectId> id(ObjectId::deserialize(objVar.serializedId()));
+    if (id.isNothing()) {
+        return nullptr;
+    }
+    Rooted<JSObject*> obj(cx, findObjectById(cx, id.value()));
     if (!obj)
         return nullptr;
     if (!JS_WrapObject(cx, &obj))

@@ -33,7 +33,7 @@ const TEST_DATA = [
     selector: "#grid",
     before: {
       textContent: "grid",
-      display: "inline-block"
+      visible: true
     },
     changeStyle: async function(testActor) {
       await testActor.eval(`
@@ -42,16 +42,31 @@ const TEST_DATA = [
       `);
     },
     after: {
-      textContent: "block",
-      display: "none"
+      visible: false
+    }
+  },
+  {
+    desc: "Reusing the 'grid' node, updating the display to 'grid again",
+    selector: "#grid",
+    before: {
+      visible: false
+    },
+    changeStyle: async function(testActor) {
+      await testActor.eval(`
+        let node = document.getElementById("grid");
+        node.style.display = "grid";
+      `);
+    },
+    after: {
+      textContent: "grid",
+      visible: true
     }
   },
   {
     desc: "Showing a 'grid' node by changing its style property",
     selector: "#block",
     before: {
-      textContent: "block",
-      display: "none"
+      visible: false
     },
     changeStyle: async function(testActor) {
       await testActor.eval(`
@@ -61,15 +76,14 @@ const TEST_DATA = [
     },
     after: {
       textContent: "grid",
-      display: "inline-block"
+      visible: true
     }
   },
   {
     desc: "Showing a 'flex' node by removing its hidden attribute",
     selector: "#flex",
     before: {
-      textContent: "none",
-      display: "none"
+      visible: false
     },
     changeStyle: async function(testActor) {
       await testActor.eval(`
@@ -78,16 +92,16 @@ const TEST_DATA = [
     },
     after: {
       textContent: "flex",
-      display: "inline-block"
+      visible: true
     }
   }
 ];
 
 add_task(async function() {
-  let {inspector, testActor} = await openInspectorForURL("data:text/html;charset=utf-8," +
-    encodeURIComponent(TEST_URI));
+  const {inspector, testActor} = await openInspectorForURL(
+    "data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI));
 
-  for (let data of TEST_DATA) {
+  for (const data of TEST_DATA) {
     info("Running test case: " + data.desc);
     await runTestData(inspector, testActor, data);
   }
@@ -96,24 +110,26 @@ add_task(async function() {
 async function runTestData(inspector, testActor,
                       {selector, before, changeStyle, after}) {
   await selectNode(selector, inspector);
-  let container = await getContainerForSelector(selector, inspector);
-  let displayNode = container.elt.querySelector(".markupview-display-badge");
+  const container = await getContainerForSelector(selector, inspector);
 
-  is(displayNode.textContent, before.textContent,
-    `Got the correct before display type for ${selector}: ${displayNode.textContent}`);
-  is(displayNode.style.display, before.display,
-    `Got the correct before display style for ${selector}: ${displayNode.style.display}`);
+  const beforeBadge = container.elt.querySelector(".markup-badge[data-display]");
+  is(!!beforeBadge, before.visible,
+    `Display badge is visible as expected for ${selector}: ${before.visible}`);
+  if (before.visible) {
+    is(beforeBadge.textContent, before.textContent,
+      `Got the correct before display type for ${selector}: ${beforeBadge.textContent}`);
+  }
 
   info("Listening for the display-change event");
-  let onDisplayChanged = inspector.markup.walker.once("display-change");
+  const onDisplayChanged = inspector.markup.walker.once("display-change");
   info("Making style changes");
   await changeStyle(testActor);
-  let nodes = await onDisplayChanged;
+  const nodes = await onDisplayChanged;
 
   info("Verifying that the list of changed nodes include our container");
   ok(nodes.length, "The display-change event was received with a nodes");
   let foundContainer = false;
-  for (let node of nodes) {
+  for (const node of nodes) {
     if (getContainerForNodeFront(node, inspector) === container) {
       foundContainer = true;
       break;
@@ -121,9 +137,12 @@ async function runTestData(inspector, testActor,
   }
   ok(foundContainer, "Container is part of the list of changed nodes");
 
-  is(displayNode.textContent, after.textContent,
-    `Got the correct after display type for ${selector}: ${displayNode.textContent}`);
-  is(displayNode.style.display, after.display,
-    `Got the correct after display style for ${selector}: ${displayNode.style.display}`);
+  const afterBadge = container.elt.querySelector(".markup-badge[data-display]");
+  is(!!afterBadge, after.visible,
+    `Display badge is visible as expected for ${selector}: ${after.visible}`);
+  if (after.visible) {
+    is(afterBadge.textContent, after.textContent,
+      `Got the correct after display type for ${selector}: ${afterBadge.textContent}`);
+  }
 }
 

@@ -26,7 +26,6 @@
 #include "nsViewManager.h"
 #include "nsIContentInlines.h"
 #include "nsIDOMEventListener.h"
-#include "nsIDOMNode.h"
 #include "nsISelectControlFrame.h"
 #include "nsContentUtils.h"
 #include "mozilla/dom/Event.h"
@@ -40,7 +39,7 @@
 #include "nsLayoutUtils.h"
 #include "nsDisplayList.h"
 #include "nsITheme.h"
-#include "nsThemeConstants.h"
+#include "nsStyleConsts.h"
 #include "mozilla/Likely.h"
 #include <algorithm>
 #include "nsTextNode.h"
@@ -762,7 +761,7 @@ bool
 nsComboboxControlFrame::HasDropDownButton() const
 {
   const nsStyleDisplay* disp = StyleDisplay();
-  return disp->mAppearance == NS_THEME_MENULIST &&
+  return disp->mAppearance == StyleAppearance::Menulist &&
     (!IsThemed(disp) ||
      PresContext()->GetTheme()->ThemeNeedsComboboxDropmarker());
 }
@@ -1061,7 +1060,7 @@ nsComboboxControlFrame::HandleRedisplayTextEvent()
   // Redirect frame insertions during this method (see GetContentInsertionFrame())
   // so that any reframing that the frame constructor forces upon us is inserted
   // into the correct parent (mDisplayFrame). See bug 282607.
-  NS_PRECONDITION(!mInRedisplayText, "Nested RedisplayText");
+  MOZ_ASSERT(!mInRedisplayText, "Nested RedisplayText");
   mInRedisplayText = true;
   mRedisplayTextEvent.Forget();
 
@@ -1395,7 +1394,7 @@ nsComboboxControlFrame::CreateFrameForDisplayNode()
   // create the ComputedStyle for the anonymous block frame and text frame
   RefPtr<ComputedStyle> computedStyle;
   computedStyle = styleSet->
-    ResolveInheritingAnonymousBoxStyle(nsCSSAnonBoxes::mozDisplayComboboxControlFrame,
+    ResolveInheritingAnonymousBoxStyle(nsCSSAnonBoxes::mozDisplayComboboxControlFrame(),
                                        mComputedStyle);
 
   RefPtr<ComputedStyle> textComputedStyle;
@@ -1679,8 +1678,8 @@ void nsComboboxControlFrame::FireValueChangeEvent()
 {
   // Fire ValueChange event to indicate data value of combo box has changed
   nsContentUtils::AddScriptRunner(
-    new AsyncEventDispatcher(mContent, NS_LITERAL_STRING("ValueChange"), true,
-                             false));
+    new AsyncEventDispatcher(mContent, NS_LITERAL_STRING("ValueChange"),
+                             CanBubble::eYes, ChromeOnlyDispatch::eNo));
 }
 
 void

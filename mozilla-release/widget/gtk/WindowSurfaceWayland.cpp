@@ -151,8 +151,9 @@ static nsWaylandDisplay* WaylandDisplayGet(wl_display *aDisplay);
 static void WaylandDisplayRelease(wl_display *aDisplay);
 static void WaylandDisplayLoop(wl_display *aDisplay);
 
-// TODO: is the 60pfs loop correct?
-#define EVENT_LOOP_DELAY (1000/60)
+// TODO: Bug 1467125 - We need to integrate wl_display_dispatch_queue_pending() with
+// compositor event loop.
+#define EVENT_LOOP_DELAY (1000/240)
 
 // Get WaylandDisplay for given wl_display and actual calling thread.
 static nsWaylandDisplay*
@@ -304,6 +305,7 @@ nsWaylandDisplay::nsWaylandDisplay(wl_display *aDisplay)
   : mThreadId(PR_GetCurrentThread())
   // gfx::SurfaceFormat::B8G8R8A8 is a basic Wayland format
   // and is always present.
+  // TODO: Provide also format without alpha (Bug 1470126).
   , mFormat(gfx::SurfaceFormat::B8G8R8A8)
   , mShm(nullptr)
   , mDisplay(aDisplay)
@@ -522,7 +524,7 @@ WindowBackBuffer::Detach()
 }
 
 bool
-WindowBackBuffer::SetImageDataFromBackBuffer(
+WindowBackBuffer::SetImageDataFromBuffer(
   class WindowBackBuffer* aSourceBuffer)
 {
   if (!IsMatchingSize(aSourceBuffer)) {
@@ -535,11 +537,9 @@ WindowBackBuffer::SetImageDataFromBackBuffer(
 }
 
 already_AddRefed<gfx::DrawTarget>
-WindowBackBuffer::Lock(const LayoutDeviceIntRegion& aRegion)
+WindowBackBuffer::Lock()
 {
-  gfx::IntRect bounds = aRegion.GetBounds().ToUnknownRect();
-  gfx::IntSize lockSize(bounds.XMost(), bounds.YMost());
-
+  gfx::IntSize lockSize(mWidth, mHeight);
   return gfxPlatform::CreateDrawTargetForData(static_cast<unsigned char*>(mShmPool.GetImageData()),
                                               lockSize,
                                               BUFFER_BPP * mWidth,
@@ -551,6 +551,8 @@ frame_callback_handler(void *data, struct wl_callback *callback, uint32_t time)
 {
   auto surface = reinterpret_cast<WindowSurfaceWayland*>(data);
   surface->FrameCallbackHandler();
+
+  gfxPlatformGtk::GetPlatform()->SetWaylandLastVsync(time);
 }
 
 static const struct wl_callback_listener frame_listener = {
@@ -560,25 +562,39 @@ static const struct wl_callback_listener frame_listener = {
 WindowSurfaceWayland::WindowSurfaceWayland(nsWindow *aWindow)
   : mWindow(aWindow)
   , mWaylandDisplay(WaylandDisplayGet(aWindow->GetWaylandDisplay()))
-  , mFrontBuffer(nullptr)
-  , mBackBuffer(nullptr)
+  , mWaylandBuffer(nullptr)
+  , mBackupBuffer(nullptr)
   , mFrameCallback(nullptr)
-  , mFrameCallbackSurface(nullptr)
+  , mLastCommittedSurface(nullptr)
   , mDisplayThreadMessageLoop(MessageLoop::current())
-  , mDelayedCommit(false)
-  , mFullScreenDamage(false)
+  , mDelayedCommitHandle(nullptr)
+  , mDrawToWaylandBufferDirectly(true)
+  , mPendingCommit(false)
+  , mWaylandBufferFullScreenDamage(false)
   , mIsMainThread(NS_IsMainThread())
+  , mNeedScaleFactorUpdate(true)
 {
 }
 
 WindowSurfaceWayland::~WindowSurfaceWayland()
 {
-  delete mFrontBuffer;
-  delete mBackBuffer;
+  if (mPendingCommit) {
+    NS_WARNING("Deleted WindowSurfaceWayland with a pending commit!");
+  }
+
+  if (mDelayedCommitHandle) {
+    // Delete reference to this to prevent WaylandBufferDelayCommitHandler()
+    // operate on released this. mDelayedCommitHandle itself will
+    // be released at WaylandBufferDelayCommitHandler().
+    *mDelayedCommitHandle = nullptr;
+  }
 
   if (mFrameCallback) {
     wl_callback_destroy(mFrameCallback);
   }
+
+  delete mWaylandBuffer;
+  delete mBackupBuffer;
 
   if (!mIsMainThread) {
     // We can be destroyed from main thread even though we was created/used
@@ -593,80 +609,259 @@ WindowSurfaceWayland::~WindowSurfaceWayland()
   }
 }
 
-void
-WindowSurfaceWayland::UpdateScaleFactor()
-{
-  wl_surface* waylandSurface = mWindow->GetWaylandSurface();
-  if (waylandSurface) {
-    wl_surface_set_buffer_scale(waylandSurface, mWindow->GdkScaleFactor());
-  }
-}
-
 WindowBackBuffer*
-WindowSurfaceWayland::GetBufferToDraw(int aWidth, int aHeight)
+WindowSurfaceWayland::GetWaylandBufferToDraw(int aWidth, int aHeight)
 {
-  if (!mFrontBuffer) {
-    mFrontBuffer = new WindowBackBuffer(mWaylandDisplay, aWidth, aHeight);
-    mBackBuffer = new WindowBackBuffer(mWaylandDisplay, aWidth, aHeight);
-    return mFrontBuffer;
+  if (!mWaylandBuffer) {
+    mWaylandBuffer = new WindowBackBuffer(mWaylandDisplay, aWidth, aHeight);
+    mBackupBuffer = new WindowBackBuffer(mWaylandDisplay, aWidth, aHeight);
+    return mWaylandBuffer;
   }
 
-  if (!mFrontBuffer->IsAttached()) {
-    if (!mFrontBuffer->IsMatchingSize(aWidth, aHeight)) {
-      mFrontBuffer->Resize(aWidth, aHeight);
+  if (!mWaylandBuffer->IsAttached()) {
+    if (!mWaylandBuffer->IsMatchingSize(aWidth, aHeight)) {
+      mWaylandBuffer->Resize(aWidth, aHeight);
       // There's a chance that scale factor has been changed
       // when buffer size changed
-      UpdateScaleFactor();
+      mNeedScaleFactorUpdate = true;
     }
-    return mFrontBuffer;
+    return mWaylandBuffer;
   }
 
   // Front buffer is used by compositor, draw to back buffer
-  if (mBackBuffer->IsAttached()) {
+  if (mBackupBuffer->IsAttached()) {
     NS_WARNING("No drawing buffer available");
     return nullptr;
   }
 
-  MOZ_ASSERT(!mDelayedCommit,
+  MOZ_ASSERT(!mPendingCommit,
              "Uncommitted buffer switch, screen artifacts ahead.");
 
-  WindowBackBuffer *tmp = mFrontBuffer;
-  mFrontBuffer = mBackBuffer;
-  mBackBuffer = tmp;
+  WindowBackBuffer *tmp = mWaylandBuffer;
+  mWaylandBuffer = mBackupBuffer;
+  mBackupBuffer = tmp;
 
-  if (mBackBuffer->IsMatchingSize(aWidth, aHeight)) {
+  if (mBackupBuffer->IsMatchingSize(aWidth, aHeight)) {
     // Former front buffer has the same size as a requested one.
     // Gecko may expect a content already drawn on screen so copy
     // existing data to the new buffer.
-    mFrontBuffer->SetImageDataFromBackBuffer(mBackBuffer);
+    mWaylandBuffer->SetImageDataFromBuffer(mBackupBuffer);
     // When buffer switches we need to damage whole screen
     // (https://bugzilla.redhat.com/show_bug.cgi?id=1418260)
-    mFullScreenDamage = true;
+    mWaylandBufferFullScreenDamage = true;
   } else {
     // Former buffer has different size from the new request. Only resize
     // the new buffer and leave gecko to render new whole content.
-    mFrontBuffer->Resize(aWidth, aHeight);
+    mWaylandBuffer->Resize(aWidth, aHeight);
   }
 
-  return mFrontBuffer;
+  return mWaylandBuffer;
 }
 
+already_AddRefed<gfx::DrawTarget>
+WindowSurfaceWayland::LockWaylandBuffer(int aWidth, int aHeight)
+{
+  WindowBackBuffer* buffer = GetWaylandBufferToDraw(aWidth, aHeight);
+  if (buffer) {
+    return buffer->Lock();
+  }
+
+  NS_WARNING("WindowSurfaceWayland::LockWaylandBuffer(): No buffer available");
+  return nullptr;
+}
+
+already_AddRefed<gfx::DrawTarget>
+WindowSurfaceWayland::LockImageSurface(const gfx::IntSize& aLockSize)
+{
+  if (!mImageSurface || mImageSurface->CairoStatus() ||
+      !(aLockSize <= mImageSurface->GetSize())) {
+    mImageSurface = new gfxImageSurface(aLockSize,
+        SurfaceFormatToImageFormat(mWaylandDisplay->GetSurfaceFormat()));
+    if (mImageSurface->CairoStatus()) {
+      return nullptr;
+    }
+  }
+
+  return gfxPlatform::CreateDrawTargetForData(mImageSurface->Data(),
+                                              mImageSurface->GetSize(),
+                                              mImageSurface->Stride(),
+                                              mWaylandDisplay->GetSurfaceFormat());
+}
+
+/*
+  There are some situations which can happen here:
+
+  A) Lock() is called to whole surface. In that case we don't need
+     to clip/buffer the drawing and we can return wl_buffer directly
+     for drawing.
+       - mWaylandBuffer is available - that's an ideal situation.
+       - mWaylandBuffer is locked by compositor - flip buffers and draw.
+          - if we can't flip buffers - go B)
+
+  B) Lock() is requested for part(s) of screen. We need to provide temporary
+     surface to draw into and copy result (clipped) to target wl_surface.
+ */
 already_AddRefed<gfx::DrawTarget>
 WindowSurfaceWayland::Lock(const LayoutDeviceIntRegion& aRegion)
 {
   MOZ_ASSERT(mIsMainThread == NS_IsMainThread());
 
-  // We allocate back buffer to widget size but return only
-  // portion requested by aRegion.
-  LayoutDeviceIntRect rect = mWindow->GetBounds();
-  WindowBackBuffer* buffer = GetBufferToDraw(rect.width,
-                                             rect.height);
-  if (!buffer) {
-    NS_WARNING("No drawing buffer available");
-    return nullptr;
+  LayoutDeviceIntRect screenRect = mWindow->GetBounds();
+  gfx::IntRect bounds = aRegion.GetBounds().ToUnknownRect();
+  gfx::IntSize lockSize(bounds.XMost(), bounds.YMost());
+
+  // Are we asked for entire nsWindow to draw?
+  mDrawToWaylandBufferDirectly = (aRegion.GetNumRects() == 1 &&
+                              bounds.x == 0 && bounds.y == 0 &&
+                              lockSize.width == screenRect.width &&
+                              lockSize.height == screenRect.height);
+
+  if (mDrawToWaylandBufferDirectly) {
+    RefPtr<gfx::DrawTarget> dt = LockWaylandBuffer(screenRect.width,
+                                                   screenRect.height);
+    if (dt) {
+      return dt.forget();
+    }
+
+    // We don't have any front buffer available. Try indirect drawing
+    // to mImageSurface which is mirrored to front buffer at commit.
+    mDrawToWaylandBufferDirectly = false;
   }
 
-  return buffer->Lock(aRegion);
+  return LockImageSurface(lockSize);
+}
+
+bool
+WindowSurfaceWayland::CommitImageSurfaceToWaylandBuffer(const LayoutDeviceIntRegion& aRegion)
+{
+  MOZ_ASSERT(!mDrawToWaylandBufferDirectly);
+
+  LayoutDeviceIntRect screenRect = mWindow->GetBounds();
+  gfx::IntRect bounds = aRegion.GetBounds().ToUnknownRect();
+
+  gfx::Rect rect(bounds);
+  if (rect.IsEmpty()) {
+    return false;
+  }
+
+  RefPtr<gfx::DrawTarget> dt = LockWaylandBuffer(screenRect.width,
+                                                 screenRect.height);
+  RefPtr<gfx::SourceSurface> surf =
+    gfx::Factory::CreateSourceSurfaceForCairoSurface(mImageSurface->CairoSurface(),
+                                                     mImageSurface->GetSize(),
+                                                     mImageSurface->Format());
+  if (!dt || !surf) {
+    return false;
+  }
+
+  uint32_t numRects = aRegion.GetNumRects();
+  if (numRects != 1) {
+    AutoTArray<IntRect, 32> rects;
+    rects.SetCapacity(numRects);
+    for (auto iter = aRegion.RectIter(); !iter.Done(); iter.Next()) {
+      rects.AppendElement(iter.Get().ToUnknownRect());
+    }
+    dt->PushDeviceSpaceClipRects(rects.Elements(), rects.Length());
+  }
+
+  dt->DrawSurface(surf, rect, rect);
+
+  if (numRects != 1) {
+    dt->PopClip();
+  }
+
+  return true;
+}
+
+static void
+WaylandBufferDelayCommitHandler(WindowSurfaceWayland **aSurface)
+{
+  if (*aSurface) {
+    (*aSurface)->DelayedCommitHandler();
+  } else {
+    // Referenced WindowSurfaceWayland is already deleted.
+    // Do nothing but just release the mDelayedCommitHandle allocated at
+    // WindowSurfaceWayland::CommitWaylandBuffer().
+    free(aSurface);
+  }
+}
+
+void
+WindowSurfaceWayland::CommitWaylandBuffer()
+{
+  MOZ_ASSERT(mPendingCommit, "Committing empty surface!");
+
+  wl_surface* waylandSurface = mWindow->GetWaylandSurface();
+  if (!waylandSurface) {
+    // Target window is not created yet - delay the commit. This can happen only
+    // when the window is newly created and there's no active
+    // frame callback pending.
+    MOZ_ASSERT(!mFrameCallback || waylandSurface != mLastCommittedSurface,
+      "Missing wayland surface at frame callback!");
+
+    // Do nothing if there's already mDelayedCommitHandle pending.
+    if (!mDelayedCommitHandle) {
+      mDelayedCommitHandle = static_cast<WindowSurfaceWayland**>(
+        moz_xmalloc(sizeof(*mDelayedCommitHandle)));
+      *mDelayedCommitHandle = this;
+
+      MessageLoop::current()->PostDelayedTask(
+        NewRunnableFunction("WaylandBackBufferCommit",
+                            &WaylandBufferDelayCommitHandler,
+                            mDelayedCommitHandle),
+        EVENT_LOOP_DELAY);
+    }
+    return;
+  }
+  wl_proxy_set_queue((struct wl_proxy *)waylandSurface,
+                     mWaylandDisplay->GetEventQueue());
+
+  // We have an active frame callback request so handle it.
+  if (mFrameCallback) {
+    if (waylandSurface == mLastCommittedSurface) {
+      // We have an active frame callback pending from our recent surface.
+      // It means we should defer the commit to FrameCallbackHandler().
+      return;
+    }
+    // If our stored wl_surface does not match the actual one it means the frame
+    // callback is no longer active and we should release it.
+    wl_callback_destroy(mFrameCallback);
+    mFrameCallback = nullptr;
+    mLastCommittedSurface = nullptr;
+  }
+
+  if (mWaylandBufferFullScreenDamage) {
+    LayoutDeviceIntRect rect = mWindow->GetBounds();
+    wl_surface_damage(waylandSurface, 0, 0, rect.width, rect.height);
+    mWaylandBufferFullScreenDamage = false;
+  } else {
+    gint scaleFactor = mWindow->GdkScaleFactor();
+    for (auto iter = mWaylandBufferDamage.RectIter(); !iter.Done(); iter.Next()) {
+      const mozilla::LayoutDeviceIntRect &r = iter.Get();
+      // We need to remove the scale factor because the wl_surface_damage
+      // also multiplies by current  scale factor.
+      wl_surface_damage(waylandSurface, r.x/scaleFactor, r.y/scaleFactor,
+                        r.width/scaleFactor, r.height/scaleFactor);
+    }
+  }
+
+  // Clear all back buffer damage as we're committing
+  // all requested regions.
+  mWaylandBufferDamage.SetEmpty();
+
+  mFrameCallback = wl_surface_frame(waylandSurface);
+  wl_callback_add_listener(mFrameCallback, &frame_listener, this);
+
+  if (mNeedScaleFactorUpdate || mLastCommittedSurface != waylandSurface) {
+    wl_surface_set_buffer_scale(waylandSurface, mWindow->GdkScaleFactor());
+    mNeedScaleFactorUpdate = false;
+  }
+
+  mWaylandBuffer->Attach(waylandSurface);
+  mLastCommittedSurface = waylandSurface;
+
+  // There's no pending commit, all changes are sent to compositor.
+  mPendingCommit = false;
 }
 
 void
@@ -674,81 +869,49 @@ WindowSurfaceWayland::Commit(const LayoutDeviceIntRegion& aInvalidRegion)
 {
   MOZ_ASSERT(mIsMainThread == NS_IsMainThread());
 
-  wl_surface* waylandSurface = mWindow->GetWaylandSurface();
-  if (!waylandSurface) {
-    // Target window is already destroyed - don't bother to render there.
-    return;
-  }
-  wl_proxy_set_queue((struct wl_proxy *)waylandSurface,
-                     mWaylandDisplay->GetEventQueue());
-
-  if (mFullScreenDamage) {
-    LayoutDeviceIntRect rect = mWindow->GetBounds();
-    wl_surface_damage(waylandSurface, 0, 0, rect.width, rect.height);
-    mFullScreenDamage = false;
-  } else {
-    for (auto iter = aInvalidRegion.RectIter(); !iter.Done(); iter.Next()) {
-      const mozilla::LayoutDeviceIntRect &r = iter.Get();
-      wl_surface_damage(waylandSurface, r.x, r.y, r.width, r.height);
-    }
+  // We have new content at mImageSurface - copy data to mWaylandBuffer first.
+  if (!mDrawToWaylandBufferDirectly) {
+    CommitImageSurfaceToWaylandBuffer(aInvalidRegion);
   }
 
-  // Frame callback is always connected to actual wl_surface. When the surface
-  // is unmapped/deleted the frame callback is never called. Unfortunatelly
-  // we don't know if the frame callback is not going to be called.
-  // But our mozcontainer code deletes wl_surface when the GdkWindow is hidden
-  // creates a new one when is visible.
-  if (mFrameCallback && mFrameCallbackSurface == waylandSurface) {
-    // Do nothing here - we have a valid wl_surface and the buffer will be
-    // commited to compositor in next frame callback event.
-    mDelayedCommit = true;
-    return;
-  } else  {
-    if (mFrameCallback) {
-      // Delete frame callback connected to obsoleted wl_surface.
-      wl_callback_destroy(mFrameCallback);
-    }
-
-    mFrameCallback = wl_surface_frame(waylandSurface);
-    wl_callback_add_listener(mFrameCallback, &frame_listener, this);
-    mFrameCallbackSurface = waylandSurface;
-
-    // There's no pending frame callback so we can draw immediately
-    // and create frame callback for possible subsequent drawing.
-    mFrontBuffer->Attach(waylandSurface);
-    mDelayedCommit = false;
+  // If we're not at fullscreen damage add drawing area from aInvalidRegion
+  if (!mWaylandBufferFullScreenDamage) {
+    mWaylandBufferDamage.OrWith(aInvalidRegion);
   }
+
+  // We're ready to commit.
+  mPendingCommit = true;
+  CommitWaylandBuffer();
 }
 
 void
 WindowSurfaceWayland::FrameCallbackHandler()
 {
   MOZ_ASSERT(mIsMainThread == NS_IsMainThread());
+  MOZ_ASSERT(mFrameCallback != nullptr,
+             "FrameCallbackHandler() called without valid frame callback!");
+  MOZ_ASSERT(mLastCommittedSurface != nullptr,
+             "FrameCallbackHandler() called without valid wl_surface!");
 
-  if (mFrameCallback) {
-    wl_callback_destroy(mFrameCallback);
-    mFrameCallback = nullptr;
-    mFrameCallbackSurface = nullptr;
+  wl_callback_destroy(mFrameCallback);
+  mFrameCallback = nullptr;
+
+  if (mPendingCommit) {
+    CommitWaylandBuffer();
   }
+}
 
-  if (mDelayedCommit) {
-    wl_surface* waylandSurface = mWindow->GetWaylandSurface();
-    if (!waylandSurface) {
-      // Target window is already destroyed - don't bother to render there.
-      NS_WARNING("No drawing buffer available");
-      return;
-    }
-    wl_proxy_set_queue((struct wl_proxy *)waylandSurface,
-                       mWaylandDisplay->GetEventQueue());
+void
+WindowSurfaceWayland::DelayedCommitHandler()
+{
+  MOZ_ASSERT(mDelayedCommitHandle != nullptr, "Missing mDelayedCommitHandle!");
 
-    // Send pending surface to compositor and register frame callback
-    // for possible subsequent drawing.
-    mFrameCallback = wl_surface_frame(waylandSurface);
-    wl_callback_add_listener(mFrameCallback, &frame_listener, this);
-    mFrameCallbackSurface = waylandSurface;
+  *mDelayedCommitHandle = nullptr;
+  free(mDelayedCommitHandle);
+  mDelayedCommitHandle = nullptr;
 
-    mFrontBuffer->Attach(waylandSurface);
-    mDelayedCommit = false;
+  if (mPendingCommit) {
+    CommitWaylandBuffer();
   }
 }
 

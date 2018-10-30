@@ -38,7 +38,6 @@ exports.ORDERED_PROPS = [
   "value",
   "DOMNode",
   "description",
-  "help",
   "keyboardShortcut",
   "childCount",
   "indexInParent",
@@ -52,7 +51,6 @@ exports.ACCESSIBLE_EVENTS = [
   "actions-change",
   "attributes-change",
   "description-change",
-  "help-change",
   "name-change",
   "reorder",
   "shortcut-change",
@@ -65,3 +63,7 @@ exports.ACCESSIBLE_EVENTS = [
 // Telemetry name constants.
 exports.A11Y_SERVICE_DURATION = "DEVTOOLS_ACCESSIBILITY_SERVICE_TIME_ACTIVE_SECONDS";
 exports.A11Y_SERVICE_ENABLED_COUNT = "devtools.accessibility.service_enabled_count";
+
+// URL constants
+exports.A11Y_LEARN_MORE_LINK =
+  "https://developer.mozilla.org/docs/Tools/Accessibility_inspector";

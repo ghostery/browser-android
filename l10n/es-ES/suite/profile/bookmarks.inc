@@ -37,19 +37,19 @@
 #define extend_seamonkey Extender SeaMonkey
 
 # LOCALIZATION NOTE (seamonkey_addons):
-# link title for https://en-US.add-ons.mozilla.com/en-US/seamonkey/
+# link title for https://addons.thunderbird.net/en-US/seamonkey/
 #define seamonkey_addons Complementos para SeaMonkey
 
 # LOCALIZATION NOTE (seamonkey_themes):
-# link title for https://en-US.add-ons.mozilla.com/en-US/seamonkey/themes
+# link title for https://addons.thunderbird.net/en-US/seamonkey/themes
 #define seamonkey_themes Temas para SeaMonkey
 
 # LOCALIZATION NOTE (seamonkey_dictionaries):
-# link title for https://en-US.add-ons.mozilla.com/en-US/seamonkey/dictionaries
+# link title for https://addons.thunderbird.net/en-US/seamonkey/dictionaries
 #define seamonkey_dictionaries Diccionarios para corrección ortográfica
 
 # LOCALIZATION NOTE (seamonkey_plugins):
-# link title for https://en-US.add-ons.mozilla.com/en-US/seamonkey/plugins
+# link title for https://addons.thunderbird.net/en-US/seamonkey/plugins
 #define seamonkey_plugins Plugins para SeaMonkey
 
 # LOCALIZATION NOTE (mozdev):

@@ -2,9 +2,10 @@
 const LEGACY_PREF = "extensions.legacy.enabled";
 
 createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1");
-startupManager();
 
 add_task(async function test_disable() {
+  await promiseStartupManager();
+
   let legacy = [
     {
       id: "bootstrap@tests.mozilla.org",
@@ -32,7 +33,7 @@ add_task(async function test_disable() {
       name: "Test Dictionary",
       version: "1.0",
       type: "64",
-    }
+    },
   ];
 
   function makeXPI(info) {
@@ -44,7 +45,7 @@ add_task(async function test_disable() {
       targetApplications: [{
         id: "xpcshell@tests.mozilla.org",
         minVersion: "1",
-        maxVersion: "1"
+        maxVersion: "1",
       }],
     }));
   }
@@ -105,12 +106,12 @@ add_task(async function test_disable() {
   addons = await AddonManager.getAddonsByIDs(nonLegacy.map(a => a.id));
   for (let addon of addons) {
     Assert.equal(addon.appDisabled, false);
-    addon.uninstall();
+    await addon.uninstall();
   }
   addons = await AddonManager.getAddonsByIDs(legacy.map(a => a.id));
   for (let addon of addons) {
     Assert.equal(addon.appDisabled, true);
-    addon.uninstall();
+    await addon.uninstall();
   }
 
   Services.prefs.clearUserPref(LEGACY_PREF);

@@ -32,7 +32,6 @@
 class nsIURI;
 class nsSubDocumentFrame;
 class nsView;
-class nsInProcessTabChildGlobal;
 class AutoResetInShow;
 class AutoResetInFrameSwap;
 class nsITabParent;
@@ -51,8 +50,10 @@ class OriginAttributes;
 namespace dom {
 class ChromeMessageSender;
 class ContentParent;
+class InProcessTabChildMessageManager;
 class MessageSender;
 class PBrowserParent;
+class ProcessMessageManager;
 class Promise;
 class TabParent;
 class MutableTabContext;
@@ -105,7 +106,10 @@ public:
   void DestroyDocShell();
   void DestroyComplete();
   nsIDocShell* GetExistingDocShell() { return mDocShell; }
-  mozilla::dom::EventTarget* GetTabChildGlobalAsEventTarget();
+  mozilla::dom::InProcessTabChildMessageManager* GetTabChildMessageManager() const
+  {
+    return mChildMessageManager;
+  }
   nsresult CreateStaticClone(nsFrameLoader* aDest);
   nsresult UpdatePositionAndSize(nsSubDocumentFrame *aIFrame);
 
@@ -333,11 +337,11 @@ public:
   // Properly retrieves documentSize of any subdocument type.
   nsresult GetWindowDimensions(nsIntRect& aRect);
 
-  virtual mozilla::dom::ChromeMessageSender* GetProcessMessageManager() const override;
+  virtual mozilla::dom::ProcessMessageManager* GetProcessMessageManager() const override;
 
   // public because a callback needs these.
   RefPtr<mozilla::dom::ChromeMessageSender> mMessageManager;
-  RefPtr<nsInProcessTabChildGlobal> mChildMessageManager;
+  RefPtr<mozilla::dom::InProcessTabChildMessageManager> mChildMessageManager;
 
   virtual JSObject* WrapObject(JSContext* cx, JS::Handle<JSObject*> aGivenProto) override;
 
@@ -510,8 +514,6 @@ private:
   bool mClipSubdocument : 1;
   bool mClampScrollPosition : 1;
   bool mObservingOwnerContent : 1;
-
-  bool mFreshProcess : 1;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsFrameLoader, NS_FRAMELOADER_IID)

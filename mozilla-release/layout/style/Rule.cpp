@@ -9,6 +9,7 @@
 #include "Rule.h"
 
 #include "mozilla/css/GroupRule.h"
+#include "mozilla/dom/DocumentOrShadowRoot.h"
 #include "nsCCUncollectableMarker.h"
 #include "nsIDocument.h"
 #include "nsWrapperCacheInlines.h"
@@ -47,12 +48,12 @@ Rule::IsKnownLive() const
     return false;
   }
 
-  if (!sheet->IsOwnedByDocument()) {
+  if (!sheet->IsKeptAliveByDocument()) {
     return false;
   }
 
   return nsCCUncollectableMarker::InGeneration(
-    sheet->GetAssociatedDocument()->GetMarkedCCGeneration());
+    GetComposedDoc()->GetMarkedCCGeneration());
 }
 
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_BEGIN(Rule)
@@ -72,12 +73,9 @@ NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_THIS_BEGIN(Rule)
 NS_IMPL_CYCLE_COLLECTION_CAN_SKIP_THIS_END
 
 /* virtual */ void
-Rule::SetStyleSheet(StyleSheet* aSheet)
+Rule::DropSheetReference()
 {
-  // We don't reference count this up reference. The style sheet
-  // will tell us when it's going away or when we're detached from
-  // it.
-  mSheet = aSheet;
+  mSheet = nullptr;
 }
 
 void

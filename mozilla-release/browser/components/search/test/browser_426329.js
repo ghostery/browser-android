@@ -48,7 +48,7 @@ function countEntries(name, value) {
                           if (!reason) {
                             resolve(count);
                           }
-                        }
+                        },
                       });
   });
 }
@@ -124,9 +124,10 @@ async function prepareTest() {
 }
 
 add_task(async function testSetup() {
-  await SpecialPowers.pushPrefEnv({ set: [
-    ["browser.search.widget.inNavBar", true],
-  ]});
+  await gCUITestUtils.addSearchBar();
+  registerCleanupFunction(() => {
+    gCUITestUtils.removeSearchBar();
+  });
 });
 
 add_task(async function testSetupEngine() {

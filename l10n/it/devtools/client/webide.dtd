@@ -38,6 +38,8 @@
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "z">
 <!ENTITY runtimeMenu_showSettings_label "Impostazioni dispositivo">
 <!ENTITY runtimeMenu_showSettings_accesskey "I">
+<!ENTITY runtimeMenu_showPerformancePanel_label "Prestazioni">
+<!ENTITY runtimeMenu_showPerformancePanel_accesskey "P">
 <!ENTITY viewMenu_label "Visualizza">
 <!ENTITY viewMenu_accesskey "V">
 <!ENTITY viewMenu_zoomin_label "Aumenta zoom">

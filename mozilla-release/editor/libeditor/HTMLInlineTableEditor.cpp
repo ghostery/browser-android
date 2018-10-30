@@ -28,14 +28,14 @@ namespace mozilla {
 NS_IMETHODIMP
 HTMLEditor::SetInlineTableEditingEnabled(bool aIsEnabled)
 {
-  mIsInlineTableEditingEnabled = aIsEnabled;
+  EnableInlineTableEditor(aIsEnabled);
   return NS_OK;
 }
 
 NS_IMETHODIMP
 HTMLEditor::GetInlineTableEditingEnabled(bool* aIsEnabled)
 {
-  *aIsEnabled = mIsInlineTableEditingEnabled;
+  *aIsEnabled = IsInlineTableEditorEnabled();
   return NS_OK;
 }
 
@@ -88,10 +88,13 @@ HTMLEditor::ShowInlineTableEditingUI(Element* aCell)
   AddMouseClickListener(mAddRowAfterButton);
 
   mInlineEditedCell = aCell;
+
+  mHasShownInlineTableEditor = true;
+
   return RefreshInlineTableEditingUI();
 }
 
-nsresult
+void
 HTMLEditor::HideInlineTableEditingUI()
 {
   mInlineEditedCell = nullptr;
@@ -109,14 +112,23 @@ HTMLEditor::HideInlineTableEditingUI()
   // are no document observers to notify, but we still want to
   // UnbindFromTree.
 
-  DeleteRefToAnonymousNode(Move(mAddColumnBeforeButton), ps);
-  DeleteRefToAnonymousNode(Move(mRemoveColumnButton), ps);
-  DeleteRefToAnonymousNode(Move(mAddColumnAfterButton), ps);
-  DeleteRefToAnonymousNode(Move(mAddRowBeforeButton), ps);
-  DeleteRefToAnonymousNode(Move(mRemoveRowButton), ps);
-  DeleteRefToAnonymousNode(Move(mAddRowAfterButton), ps);
+  // Calling DeleteRefToAnonymousNode() may cause showing the UI again.
+  // Therefore, we should forget all anonymous contents first.
+  // Otherwise, we could leak the old content because of overwritten by
+  // ShowInlineTableEditingUI().
+  ManualNACPtr addColumnBeforeButton(std::move(mAddColumnBeforeButton));
+  ManualNACPtr removeColumnButton(std::move(mRemoveColumnButton));
+  ManualNACPtr addColumnAfterButton(std::move(mAddColumnAfterButton));
+  ManualNACPtr addRowBeforeButton(std::move(mAddRowBeforeButton));
+  ManualNACPtr removeRowButton(std::move(mRemoveRowButton));
+  ManualNACPtr addRowAfterButton(std::move(mAddRowAfterButton));
 
-  return NS_OK;
+  DeleteRefToAnonymousNode(std::move(addColumnBeforeButton), ps);
+  DeleteRefToAnonymousNode(std::move(removeColumnButton), ps);
+  DeleteRefToAnonymousNode(std::move(addColumnAfterButton), ps);
+  DeleteRefToAnonymousNode(std::move(addRowBeforeButton), ps);
+  DeleteRefToAnonymousNode(std::move(removeRowButton), ps);
+  DeleteRefToAnonymousNode(std::move(addRowAfterButton), ps);
 }
 
 nsresult
@@ -158,6 +170,8 @@ HTMLEditor::DoInlineTableEditingAction(const Element& aElement)
   } else {
     return NS_OK;
   }
+
+  ++mInlineTableEditorUsedCount;
 
   // InsertTableRow might causes reframe
   if (Destroyed()) {

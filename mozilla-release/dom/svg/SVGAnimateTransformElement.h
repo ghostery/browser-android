@@ -30,9 +30,8 @@ protected:
   virtual JSObject* WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto) override;
 
 public:
-  // nsIDOMNode specializations
-  virtual nsresult Clone(mozilla::dom::NodeInfo *aNodeInfo, nsINode **aResult,
-                         bool aPreallocateChildren) const override;
+  // nsINode specializations
+  virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // Element specializations
   virtual bool ParseAttribute(int32_t aNamespaceID,

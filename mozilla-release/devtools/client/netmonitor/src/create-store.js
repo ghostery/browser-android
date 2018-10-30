@@ -13,6 +13,7 @@ const prefs = require("./middleware/prefs");
 const thunk = require("./middleware/thunk");
 const recording = require("./middleware/recording");
 const throttling = require("./middleware/throttling");
+const eventTelemetry = require("./middleware/event-telemetry");
 
 // Reducers
 const rootReducer = require("./reducers/index");
@@ -25,7 +26,7 @@ const { UI, Columns } = require("./reducers/ui");
 /**
  * Configure state and middleware for the Network monitor tool.
  */
-function configureStore(connector) {
+function configureStore(connector, telemetry) {
   // Prepare initial state.
   const initialState = {
     filters: new Filters({
@@ -40,12 +41,13 @@ function configureStore(connector) {
   };
 
   // Prepare middleware.
-  let middleware = applyMiddleware(
+  const middleware = applyMiddleware(
     thunk,
     prefs,
     batching,
     recording(connector),
     throttling(connector),
+    eventTelemetry(connector, telemetry),
   );
 
   return createStore(rootReducer, initialState, middleware);
@@ -57,11 +59,11 @@ function configureStore(connector) {
  * Get column state from preferences.
  */
 function getColumnState() {
-  let columns = Columns();
-  let visibleColumns = getPref("devtools.netmonitor.visibleColumns");
+  const columns = Columns();
+  const visibleColumns = getPref("devtools.netmonitor.visibleColumns");
 
   const state = {};
-  for (let col in columns) {
+  for (const col in columns) {
     state[col] = visibleColumns.includes(col);
   }
 
@@ -72,8 +74,8 @@ function getColumnState() {
  * Get filter state from preferences.
  */
 function getFilterState() {
-  let activeFilters = {};
-  let filters = getPref("devtools.netmonitor.filters");
+  const activeFilters = {};
+  const filters = getPref("devtools.netmonitor.filters");
   filters.forEach((filter) => {
     activeFilters[filter] = true;
   });

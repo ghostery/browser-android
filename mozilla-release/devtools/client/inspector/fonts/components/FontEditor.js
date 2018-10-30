@@ -9,91 +9,165 @@ const dom = require("devtools/client/shared/vendor/react-dom-factories");
 const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 
 const FontAxis = createFactory(require("./FontAxis"));
-const FontMeta = createFactory(require("./FontMeta"));
+const FontName = createFactory(require("./FontName"));
+const FontSize = createFactory(require("./FontSize"));
+const FontStyle = createFactory(require("./FontStyle"));
+const FontWeight = createFactory(require("./FontWeight"));
+const LineHeight = createFactory(require("./LineHeight"));
 
 const { getStr } = require("../utils/l10n");
 const Types = require("../types");
+
+// Maximum number of font families to be shown by default. Any others will be hidden
+// under a collapsed <details> element with a toggle to reveal them.
+const MAX_FONTS = 3;
 
 class FontEditor extends PureComponent {
   static get propTypes() {
     return {
       fontEditor: PropTypes.shape(Types.fontEditor).isRequired,
-      onAxisUpdate: PropTypes.func.isRequired,
       onInstanceChange: PropTypes.func.isRequired,
+      onPropertyChange: PropTypes.func.isRequired,
+      onToggleFontHighlight: PropTypes.func.isRequired,
     };
   }
 
   /**
-   * Naive implementation to get increment step for variable font axis that ensures
-   * a wide spectrum of precision based on range of values between min and max.
-   *
-   * @param  {Number|String} min
-   *         Minumum value for range.
-   * @param  {Number|String} max
-   *         Maximum value for range.
-   * @return {String}
-   *         Step value used in range input for font axis.
-   */
-  getAxisStep(min, max) {
-    let step = 1;
-    let delta = parseInt(max, 10) - parseInt(min, 10);
-
-    if (delta <= 1) {
-      step = 0.001;
-    } else if (delta <= 10) {
-      step = 0.01;
-    } else if (delta <= 100) {
-      step = 0.1;
-    }
-
-    return step.toString();
-  }
-
-  /**
-   * Get an array of FontAxis components for of the given variable font axis instances.
-   * If an axis is defined in the fontEditor store, use its value, else use the default.
+   * Get an array of FontAxis components with editing controls for of the given variable
+   * font axes. If no axes were given, return null.
+   * If an axis' value was declared on the font-variation-settings CSS property or was
+   * changed using the font editor, use that value, otherwise use the axis default.
    *
    * @param  {Array} fontAxes
    *         Array of font axis instances
    * @param  {Object} editedAxes
-   *         Object with axes and values edited by the user or predefined in the CSS
+   *         Object with axes and values edited by the user or defined in the CSS
    *         declaration for font-variation-settings.
-   * @return {Array}
-  *          Array of FontAxis components
+   * @return {Array|null}
    */
   renderAxes(fontAxes = [], editedAxes) {
+    if (!fontAxes.length) {
+      return null;
+    }
+
     return fontAxes.map(axis => {
       return FontAxis({
-        min: axis.minValue,
-        max: axis.maxValue,
+        key: axis.tag,
+        axis,
+        onChange: this.props.onPropertyChange,
+        minLabel: true,
+        maxLabel: true,
         value: editedAxes[axis.tag] || axis.defaultValue,
-        step: this.getAxisStep(axis.minValue, axis.maxValue),
-        label: axis.name,
-        name: axis.tag,
-        onChange: this.props.onAxisUpdate,
-        showInput: true
       });
     });
   }
 
-  renderFontFamily(font) {
+  /**
+   * Render fonts used on the selected node grouped by font-family.
+   *
+   * @param {Array} fonts
+   *        Fonts used on selected node.
+   * @return {DOMNode}
+   */
+  renderUsedFonts(fonts) {
+    if (!fonts.length) {
+      return null;
+    }
+
+    // Group fonts by family name.
+    const fontGroups = fonts.reduce((acc, font) => {
+      const family = font.CSSFamilyName.toString();
+      acc[family] = acc[family] || [];
+      acc[family].push(font);
+      return acc;
+    }, {});
+
+    const renderedFontGroups = Object.keys(fontGroups).map(family => {
+      return this.renderFontGroup(family, fontGroups[family]);
+    });
+
+    const topFontsList = renderedFontGroups.slice(0, MAX_FONTS);
+    const moreFontsList = renderedFontGroups.slice(MAX_FONTS, renderedFontGroups.length);
+
+    const moreFonts = !moreFontsList.length
+      ? null
+      : dom.details({},
+          dom.summary({},
+            dom.span({ className: "label-open" }, getStr("fontinspector.showMore")),
+            dom.span({ className: "label-close" }, getStr("fontinspector.showLess"))
+          ),
+          moreFontsList
+        );
+
     return dom.label(
       {
-        className: "font-control font-control-family",
+        className: "font-control font-control-used-fonts",
       },
       dom.span(
         {
           className: "font-control-label",
         },
-        getStr("fontinspector.fontFamilyLabel")
+        getStr("fontinspector.usedFontsLabel")
       ),
       dom.div(
         {
           className: "font-control-box",
         },
-        FontMeta({ font })
+        topFontsList,
+        moreFonts
       )
     );
+  }
+
+  renderFontGroup(family, fonts = []) {
+    const group = fonts.map(font => {
+      return FontName({
+        font,
+        onToggleFontHighlight: this.props.onToggleFontHighlight,
+      });
+    });
+
+    return dom.div(
+      {
+        className: "font-group"
+      },
+      dom.div(
+        {
+          className: "font-family-name"
+        },
+        family),
+      group
+    );
+  }
+
+  renderFontSize(value) {
+    return value !== null && FontSize({
+      key: `${this.props.fontEditor.id}:font-size`,
+      onChange: this.props.onPropertyChange,
+      value,
+    });
+  }
+
+  renderLineHeight(value) {
+    return value !== null && LineHeight({
+      key: `${this.props.fontEditor.id}:line-height`,
+      onChange: this.props.onPropertyChange,
+      value,
+    });
+  }
+
+  renderFontStyle(value) {
+    return value && FontStyle({
+      onChange: this.props.onPropertyChange,
+      value,
+    });
+  }
+
+  renderFontWeight(value) {
+    return value !== null && FontWeight({
+      onChange: this.props.onPropertyChange,
+      value,
+    });
   }
 
   /**
@@ -132,7 +206,7 @@ class FontEditor extends PureComponent {
     // Generate the dropdown.
     const instanceSelect = dom.select(
       {
-        className: "font-control-input",
+        className: "font-control-input font-value-select",
         onChange: (e) => {
           const instance = fontInstances.find(inst => e.target.value === inst.name);
           instance && this.props.onInstanceChange(instance.name, instance.values);
@@ -155,34 +229,58 @@ class FontEditor extends PureComponent {
     );
   }
 
-  // Placeholder for non-variable font UI.
-  // Bug https://bugzilla.mozilla.org/show_bug.cgi?id=1450695
-  renderPlaceholder() {
-    return dom.div({}, "No fonts with variation axes apply to this element.");
+  renderWarning(warning) {
+    return dom.div(
+      {
+        id: "font-editor"
+      },
+      dom.div(
+        {
+          className: "devtools-sidepanel-no-result"
+        },
+        warning
+      )
+    );
   }
 
   render() {
-    const { fonts, axes, instance } = this.props.fontEditor;
-    // For MVP use ony first font to show axes if available.
-    // Future implementations will allow switching between multiple fonts.
+    const { fontEditor } = this.props;
+    const { fonts, axes, instance, properties, warning } = fontEditor;
+    // Pick the first font to show editor controls regardless of how many fonts are used.
     const font = fonts[0];
-    const fontAxes = (font && font.variationAxes) ? font.variationAxes : null;
-    const fontInstances = (font && font.variationInstances.length) ?
-      font.variationInstances
-      :
-      null;
+    const hasFontAxes = font && font.variationAxes;
+    const hasFontInstances = font && font.variationInstances
+      && font.variationInstances.length > 0;
+    const hasSlantOrItalicAxis = hasFontAxes && font.variationAxes.find(axis => {
+      return axis.tag === "slnt" || axis.tag === "ital";
+    });
+    const hasWeightAxis = hasFontAxes && font.variationAxes.find(axis => {
+      return axis.tag === "wght";
+    });
+
+    // Show the empty state with a warning message when a used font was not found.
+    if (!font) {
+      return this.renderWarning(warning);
+    }
 
     return dom.div(
       {
-        className: "theme-sidebar inspector-tabpanel",
-        id: "sidebar-panel-fontinspector"
+        id: "font-editor"
       },
-      this.renderFontFamily(font),
-      fontInstances && this.renderInstances(fontInstances, instance),
-      fontAxes ?
-        this.renderAxes(fontAxes, axes)
-        :
-        this.renderPlaceholder()
+      // Always render UI for used fonts.
+      this.renderUsedFonts(fonts),
+      // Render UI for font variation instances if they are defined.
+      hasFontInstances && this.renderInstances(font.variationInstances, instance),
+      // Always render UI for font size.
+      this.renderFontSize(properties["font-size"]),
+      // Always render UI for line height.
+      this.renderLineHeight(properties["line-height"]),
+      // Render UI for font weight if no "wght" registered axis is defined.
+      !hasWeightAxis && this.renderFontWeight(properties["font-weight"]),
+      // Render UI for font style if no "slnt" or "ital" registered axis is defined.
+      !hasSlantOrItalicAxis && this.renderFontStyle(properties["font-style"]),
+      // Render UI for each variable font axis if any are defined.
+      hasFontAxes && this.renderAxes(font.variationAxes, axes)
     );
   }
 }

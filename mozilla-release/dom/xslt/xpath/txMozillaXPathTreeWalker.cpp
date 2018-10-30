@@ -5,8 +5,6 @@
 
 #include "txXPathTreeWalker.h"
 #include "nsAtom.h"
-#include "nsIAttribute.h"
-#include "nsIDOMDocument.h"
 #include "nsINode.h"
 #include "nsPrintfCString.h"
 #include "nsReadableUtils.h"
@@ -639,12 +637,10 @@ txXPathNativeNode::createXPathNode(nsINode* aNode, bool aKeepRootAlive)
 {
     uint16_t nodeType = aNode->NodeType();
     if (nodeType == nsINode::ATTRIBUTE_NODE) {
-        nsCOMPtr<nsIAttribute> attr = do_QueryInterface(aNode);
-        NS_ASSERTION(attr, "doesn't implement nsIAttribute");
+        auto* attr = static_cast<Attr*>(aNode);
 
-        mozilla::dom::NodeInfo *nodeInfo = attr->NodeInfo();
-        mozilla::dom::Element* parent =
-          static_cast<Attr*>(attr.get())->GetElement();
+        NodeInfo* nodeInfo = attr->NodeInfo();
+        Element* parent = attr->GetElement();
         if (!parent) {
             return nullptr;
         }
@@ -682,10 +678,9 @@ txXPathNativeNode::createXPathNode(nsINode* aNode, bool aKeepRootAlive)
 
 /* static */
 txXPathNode*
-txXPathNativeNode::createXPathNode(nsIDOMDocument* aDocument)
+txXPathNativeNode::createXPathNode(nsIDocument* aDocument)
 {
-    nsCOMPtr<nsIDocument> document = do_QueryInterface(aDocument);
-    return new txXPathNode(document);
+    return new txXPathNode(aDocument);
 }
 
 /* static */

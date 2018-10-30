@@ -1174,17 +1174,18 @@ ssl3_ProcessSessionTicketCommon(sslSocket *ss, const SECItem *ticket,
                                   &decryptedTicket.len,
                                   decryptedTicket.len);
     if (rv != SECSuccess) {
-        SECITEM_ZfreeItem(&decryptedTicket, PR_FALSE);
-
-        /* Fail with no ticket if we're not a recipient. Otherwise
-         * it's a hard failure. */
-        if (PORT_GetError() != SEC_ERROR_NOT_A_RECIPIENT) {
-            SSL3_SendAlert(ss, alert_fatal, illegal_parameter);
-            return SECFailure;
+        /* Ignore decryption failure if we are doing TLS 1.3; that
+         * means the server rejects the client's resumption
+         * attempt. In TLS 1.2, however, it's a hard failure, unless
+         * it's just because we're not the recipient of the ticket. */
+        if (ss->version >= SSL_LIBRARY_VERSION_TLS_1_3 ||
+            PORT_GetError() == SEC_ERROR_NOT_A_RECIPIENT) {
+            SECITEM_ZfreeItem(&decryptedTicket, PR_FALSE);
+            return SECSuccess;
         }
 
-        /* We didn't have the right key, so pretend we don't have a
-         * ticket. */
+        SSL3_SendAlert(ss, alert_fatal, illegal_parameter);
+        goto loser;
     }
 
     rv = ssl_ParseSessionTicket(ss, &decryptedTicket, &parsedTicket);
@@ -1866,5 +1867,69 @@ ssl_HandleSupportedGroupsXtn(const sslSocket *ss, TLSExtensionData *xtnData,
     /* Remember that we negotiated this extension. */
     xtnData->negotiated[xtnData->numNegotiated++] = ssl_supported_groups_xtn;
 
+    return SECSuccess;
+}
+
+SECStatus
+ssl_HandleRecordSizeLimitXtn(const sslSocket *ss, TLSExtensionData *xtnData,
+                             SECItem *data)
+{
+    SECStatus rv;
+    PRUint32 limit;
+    PRUint32 maxLimit = (ss->version >= SSL_LIBRARY_VERSION_TLS_1_3)
+                            ? (MAX_FRAGMENT_LENGTH + 1)
+                            : MAX_FRAGMENT_LENGTH;
+
+    rv = ssl3_ExtConsumeHandshakeNumber(ss, &limit, 2, &data->data, &data->len);
+    if (rv != SECSuccess) {
+        return SECFailure;
+    }
+    if (data->len != 0 || limit < 64) {
+        ssl3_ExtSendAlert(ss, alert_fatal, illegal_parameter);
+        PORT_SetError(SSL_ERROR_RX_MALFORMED_HANDSHAKE);
+        return SECFailure;
+    }
+
+    if (ss->sec.isServer) {
+        rv = ssl3_RegisterExtensionSender(ss, xtnData, ssl_record_size_limit_xtn,
+                                          &ssl_SendRecordSizeLimitXtn);
+        if (rv != SECSuccess) {
+            return SECFailure; /* error already set. */
+        }
+    } else if (limit > maxLimit) {
+        /* The client can sensibly check the maximum. */
+        ssl3_ExtSendAlert(ss, alert_fatal, illegal_parameter);
+        PORT_SetError(SSL_ERROR_RX_MALFORMED_HANDSHAKE);
+        return SECFailure;
+    }
+
+    /* We can't enforce the maximum on a server. But we do need to ensure
+     * that we don't apply a limit that is too large. */
+    xtnData->recordSizeLimit = PR_MIN(maxLimit, limit);
+    xtnData->negotiated[xtnData->numNegotiated++] = ssl_record_size_limit_xtn;
+    return SECSuccess;
+}
+
+SECStatus
+ssl_SendRecordSizeLimitXtn(const sslSocket *ss, TLSExtensionData *xtnData,
+                           sslBuffer *buf, PRBool *added)
+{
+    PRUint32 maxLimit;
+    if (ss->sec.isServer) {
+        maxLimit = (ss->version >= SSL_LIBRARY_VERSION_TLS_1_3)
+                       ? (MAX_FRAGMENT_LENGTH + 1)
+                       : MAX_FRAGMENT_LENGTH;
+    } else {
+        maxLimit = (ss->vrange.max >= SSL_LIBRARY_VERSION_TLS_1_3)
+                       ? (MAX_FRAGMENT_LENGTH + 1)
+                       : MAX_FRAGMENT_LENGTH;
+    }
+    PRUint32 limit = PR_MIN(ss->opt.recordSizeLimit, maxLimit);
+    SECStatus rv = sslBuffer_AppendNumber(buf, limit, 2);
+    if (rv != SECSuccess) {
+        return SECFailure;
+    }
+
+    *added = PR_TRUE;
     return SECSuccess;
 }

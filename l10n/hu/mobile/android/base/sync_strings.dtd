@@ -58,7 +58,7 @@
 <!ENTITY fxaccount_status_sync_server 'Sync kiszolgáló'>
 <!ENTITY fxaccount_status_needs_verification2 'Fiókját ellenőrizni kell. Koppintson az ellenőrző e-mail újraküldéséhez.'>
 <!ENTITY fxaccount_status_needs_credentials 'Nem sikerült kapcsolódni. Koppintson a bejelentkezéshez.'>
-<!ENTITY fxaccount_status_needs_upgrade 'Frissíteni kell a &brandShortName;ot a bejelentkezéshez.'>
+<!ENTITY fxaccount_status_needs_upgrade 'Frissíteni kell a &brandShortName; böngészőt a bejelentkezéshez.'>
 <!ENTITY fxaccount_status_needs_master_sync_automatically_enabled 'A &syncBrand.shortName.label; be van állítva, de nem szinkronizál automatikusan. Állítsa át az „Adatok automatikus szinkronizálása” beállítást az Android beállítások &gt; Adathasználat alatt.'>
 <!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 'A &syncBrand.shortName.label; be van állítva, de nem szinkronizál automatikusan. Állítsa át az „Adatok automatikus szinkronizálása” beállítást az Android beállítások &gt; Fiókok alatt.'>
 <!ENTITY fxaccount_status_needs_finish_migrating 'Koppintson a bejelentkezéshez az új Firefox fiókjába.'>

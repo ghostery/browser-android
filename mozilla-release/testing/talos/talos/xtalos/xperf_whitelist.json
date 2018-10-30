@@ -14,6 +14,9 @@
   "c:\\$mft": {
     "ignore": true
   },
+  "z:\\$mft": {
+    "ignore": true
+  },
   "c:\\$secure": {
     "ignore": true
   },
@@ -400,12 +403,6 @@
     "maxcount": 16,
     "minbytes": 0,
     "maxbytes": 196936
-  },
-  "{profile}\\localstore.rdf": {
-    "mincount": 2,
-    "maxcount": 2,
-    "minbytes": 8192,
-    "maxbytes": 8192
   },
   "{profile}\\permissions.sqlite": {
     "mincount": 14,

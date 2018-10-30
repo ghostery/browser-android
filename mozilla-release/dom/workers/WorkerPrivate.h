@@ -45,6 +45,7 @@ class MessagePortIdentifier;
 class PerformanceStorage;
 class SharedWorker;
 class WorkerControlRunnable;
+class WorkerCSPEventListener;
 class WorkerDebugger;
 class WorkerDebuggerGlobalScope;
 class WorkerErrorReport;
@@ -173,12 +174,6 @@ public:
   }
 
   bool
-  Terminate()
-  {
-    return Notify(Terminating);
-  }
-
-  bool
   Close();
 
   // The passed principal must be the Worker principal in case of a
@@ -247,7 +242,7 @@ public:
     MOZ_ASSERT(mDefaultLocale,
                "the default locale must have been successfully set for anyone "
                "to be trying to adopt it");
-    return Move(mDefaultLocale);
+    return std::move(mDefaultLocale);
   }
 
   void
@@ -267,6 +262,9 @@ public:
 
   bool
   ThawInternal();
+
+  void
+  PropagateFirstPartyStorageAccessGrantedInternal();
 
   void
   TraverseTimeouts(nsCycleCollectionTraversalCallback& aCallback);
@@ -320,6 +318,9 @@ public:
 
   static void
   ReportErrorToConsole(const char* aMessage);
+
+  static void
+  ReportErrorToConsole(const char* aMessage, const nsTArray<nsString>& aParams);
 
   int32_t
   SetTimeout(JSContext* aCx, nsIScriptTimeoutHandler* aHandler,
@@ -547,6 +548,9 @@ public:
   bool
   EnsureClientSource();
 
+  bool
+  EnsureCSPEventListener();
+
   void
   EnsurePerformanceStorage();
 
@@ -580,7 +584,7 @@ public:
     AssertIsOnParentThread();
 
     MutexAutoLock lock(mMutex);
-    return mParentStatus < Terminating;
+    return mParentStatus < Canceling;
   }
 
   WorkerStatus
@@ -671,11 +675,11 @@ public:
   }
 
   void
-  CopyJSCompartmentOptions(JS::CompartmentOptions& aOptions)
+  CopyJSRealmOptions(JS::RealmOptions& aOptions)
   {
     mozilla::MutexAutoLock lock(mMutex);
-    aOptions = IsChromeWorker() ? mJSSettings.chrome.compartmentOptions
-                                : mJSSettings.content.compartmentOptions;
+    aOptions = IsChromeWorker() ? mJSSettings.chrome.realmOptions
+                                : mJSSettings.content.realmOptions;
   }
 
   // The ability to be a chrome worker is orthogonal to the type of
@@ -1027,7 +1031,8 @@ public:
   bool
   IsStorageAllowed() const
   {
-    return mLoadInfo.mStorageAllowed;
+    AssertIsOnWorkerThread();
+    return mLoadInfo.mStorageAllowed || mLoadInfo.mFirstPartyStorageAccessGranted;
   }
 
   const OriginAttributes&
@@ -1043,26 +1048,19 @@ public:
     return mLoadInfo.mServiceWorkersTestingInWindow;
   }
 
-  // This is used to handle importScripts(). When the worker is first loaded
-  // and executed, it happens in a sync loop. At this point it sets
-  // mLoadingWorkerScript to true. importScripts() calls that occur during the
-  // execution run in nested sync loops and so this continues to return true,
-  // leading to these scripts being cached offline.
-  // mLoadingWorkerScript is set to false when the top level loop ends.
-  // importScripts() in function calls or event handlers are always fetched
-  // from the network.
+  // Determine if the worker is currently loading its top level script.
   bool
-  LoadScriptAsPartOfLoadingServiceWorkerScript()
+  IsLoadingWorkerScript() const
   {
-    MOZ_ASSERT(IsServiceWorker());
     return mLoadingWorkerScript;
   }
 
+  // Called by ScriptLoader to track when this worker is loading its
+  // top level script.
   void
   SetLoadingWorkerScript(bool aLoadingWorkerScript)
   {
     // any thread
-    MOZ_ASSERT(IsServiceWorker());
     mLoadingWorkerScript = aLoadingWorkerScript;
   }
 
@@ -1104,6 +1102,9 @@ public:
 
   bool
   Thaw(nsPIDOMWindowInner* aWindow);
+
+  void
+  PropagateFirstPartyStorageAccessGranted();
 
   void
   EnableDebugger();
@@ -1219,7 +1220,7 @@ private:
       status = mStatus;
     }
 
-    if (status < Terminating) {
+    if (status < Canceling) {
       return true;
     }
 
@@ -1335,9 +1336,8 @@ private:
   // 1. GC/CC - When the worker is in idle state (busycount == 0), it allows to
   //    traverse the 'hidden' mParentEventTargetRef pointer. This is the exposed
   //    Worker webidl object. Doing this, CC will be able to detect a cycle and
-  //    Unlink is called. In Unlink, Worker calls Terminate().
-  // 2. Worker::Terminate() is called - the shutdown procedure starts
-  //    immediately.
+  //    Unlink is called. In Unlink, Worker calls Cancel().
+  // 2. Worker::Cancel() is called - the shutdown procedure starts immediately.
   // 3. WorkerScope::Close() is called - Similar to point 2.
   // 4. xpcom-shutdown notification - We call Kill().
   RefPtr<Worker> mParentEventTargetRef;
@@ -1402,6 +1402,8 @@ private:
   nsCOMPtr<nsIRunnable> mLoadFailedRunnable;
 
   RefPtr<PerformanceStorage> mPerformanceStorage;
+
+  RefPtr<WorkerCSPEventListener> mCSPEventListener;
 
   // Only used for top level workers.
   nsTArray<nsCOMPtr<nsIRunnable>> mQueuedRunnables;

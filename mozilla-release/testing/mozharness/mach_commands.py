@@ -47,8 +47,7 @@ class MozharnessRunner(MozbuildObject):
 
         self.config = {
             "__defaults__": {
-                "config": ["--no-read-buildbot-config",
-                           "--download-symbols", "ondemand",
+                "config": ["--download-symbols", "ondemand",
                            "--installer-url", self.installer_url,
                            "--test-packages-url", self.test_packages_url]
             },
@@ -117,11 +116,6 @@ class MozharnessRunner(MozbuildObject):
                 "script": "desktop_unittest.py",
                 "config": desktop_unittest_config + [
                     "--jittest-suite", "jittest"]
-            },
-            "mozbase": {
-                "script": "desktop_unittest.py",
-                "config": desktop_unittest_config + [
-                    "--mozbase-suite", "mozbase"]
             },
             "marionette": {
                 "script": "marionette.py",

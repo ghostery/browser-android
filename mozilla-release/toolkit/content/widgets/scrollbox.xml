@@ -9,35 +9,25 @@
    xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
    xmlns:xbl="http://www.mozilla.org/xbl">
 
-  <binding id="scrollbox-base" extends="chrome://global/content/bindings/general.xml#basecontrol">
-    <resources>
-      <stylesheet src="chrome://global/skin/scrollbox.css"/>
-    </resources>
-  </binding>
-
-  <binding id="scrollbox" extends="chrome://global/content/bindings/scrollbox.xml#scrollbox-base">
+  <binding id="scrollbox" extends="chrome://global/content/bindings/general.xml#basecontrol">
     <content>
       <xul:box class="box-inherit scrollbox-innerbox" xbl:inherits="orient,align,pack,dir" flex="1">
         <children/>
       </xul:box>
     </content>
-
-    <implementation>
-      <method name="scrollByIndex">
-        <parameter name="index"/>
-        <body>
-          this.boxObject.scrollByIndex(index);
-        </body>
-      </method>
-    </implementation>
   </binding>
 
-  <binding id="arrowscrollbox" extends="chrome://global/content/bindings/scrollbox.xml#scrollbox-base">
+  <binding id="arrowscrollbox" extends="chrome://global/content/bindings/general.xml#basecontrol">
+    <resources>
+      <stylesheet src="chrome://global/skin/scrollbox.css"/>
+    </resources>
+
     <content>
-      <xul:autorepeatbutton class="autorepeatbutton-up"
-                            anonid="scrollbutton-up"
-                            xbl:inherits="orient,collapsed=notoverflowing,disabled=scrolledtostart"
-                            oncommand="_autorepeatbuttonScroll(event);"/>
+      <xul:toolbarbutton class="scrollbutton-up"
+                         anonid="scrollbutton-up"
+                         xbl:inherits="orient,collapsed=notoverflowing,disabled=scrolledtostart"
+                         onmouseover="_startScroll(-1);"
+                         onmouseout="_stopScroll();"/>
       <xul:spacer class="arrowscrollbox-overflow-start-indicator"
                   xbl:inherits="collapsed=scrolledtostart"/>
       <xul:scrollbox class="arrowscrollbox-scrollbox"
@@ -48,10 +38,11 @@
       </xul:scrollbox>
       <xul:spacer class="arrowscrollbox-overflow-end-indicator"
                   xbl:inherits="collapsed=scrolledtoend"/>
-      <xul:autorepeatbutton class="autorepeatbutton-down"
-                            anonid="scrollbutton-down"
-                            xbl:inherits="orient,collapsed=notoverflowing,disabled=scrolledtoend"
-                            oncommand="_autorepeatbuttonScroll(event);"/>
+      <xul:toolbarbutton class="scrollbutton-down"
+                         anonid="scrollbutton-down"
+                         xbl:inherits="orient,collapsed=notoverflowing,disabled=scrolledtoend"
+                         onmouseover="_startScroll(1);"
+                         onmouseout="_stopScroll();"/>
     </content>
 
     <implementation>
@@ -64,6 +55,14 @@
         this.setAttribute("notoverflowing", "true");
         this._updateScrollButtonsDisabledState();
       ]]></constructor>
+
+      <destructor><![CDATA[
+        // Release timer to avoid reference cycles.
+        if (this._scrollTimer) {
+          this._scrollTimer.cancel();
+          this._scrollTimer = null;
+        }
+      ]]></destructor>
 
       <field name="_scrollbox">
         document.getAnonymousElementByAttribute(this, "anonid", "scrollbox");
@@ -107,13 +106,9 @@
         ]]></setter>
       </property>
 
-      <field name="_scrollBoxObject">null</field>
       <property name="scrollBoxObject" readonly="true">
         <getter><![CDATA[
-          if (!this._scrollBoxObject) {
-            this._scrollBoxObject = this._scrollbox.boxObject;
-          }
-          return this._scrollBoxObject;
+          return this._scrollbox.boxObject;
         ]]></getter>
       </property>
 
@@ -167,20 +162,11 @@
         document.defaultView.getComputedStyle(this._scrollbox).direction == "rtl";
       ]]></field>
 
-      <field name="_scrollTarget">null</field>
-
       <method name="_boundsWithoutFlushing">
         <parameter name="element"/>
         <body><![CDATA[
           if (!("_DOMWindowUtils" in this)) {
-            try {
-              this._DOMWindowUtils =
-                window.QueryInterface(Ci.nsIInterfaceRequestor)
-                      .getInterface(Ci.nsIDOMWindowUtils);
-            } catch (e) {
-              // Can't access nsIDOMWindowUtils if we're unprivileged.
-              this._DOMWindowUtils = null;
-            }
+            this._DOMWindowUtils = window.windowUtils;
           }
 
           return this._DOMWindowUtils ?
@@ -205,6 +191,7 @@
         ]]></body>
       </method>
 
+      <field name="_ensureElementIsVisibleAnimationFrame">0</field>
       <method name="ensureElementIsVisible">
         <parameter name="element"/>
         <parameter name="aInstant"/>
@@ -212,7 +199,13 @@
           if (!this._canScrollToElement(element))
             return;
 
-          element.scrollIntoView({ behavior: aInstant ? "instant" : "auto" });
+          if (this._ensureElementIsVisibleAnimationFrame) {
+            window.cancelAnimationFrame(this._ensureElementIsVisibleAnimationFrame);
+          }
+          this._ensureElementIsVisibleAnimationFrame = window.requestAnimationFrame(() => {
+            element.scrollIntoView({ behavior: aInstant ? "instant" : "auto" });
+            this._ensureElementIsVisibleAnimationFrame = 0;
+          });
         ]]></body>
       </method>
 
@@ -222,16 +215,6 @@
         <body><![CDATA[
           if (index == 0)
             return;
-
-          // Each scrollByIndex call is expected to scroll the given number of
-          // items. If a previous call is still in progress because of smooth
-          // scrolling, we need to complete it before starting a new one.
-          if (this._scrollTarget) {
-            let elements = this._getScrollableElements();
-            if (this._scrollTarget != elements[0] &&
-                this._scrollTarget != elements[elements.length - 1])
-              this.ensureElementIsVisible(this._scrollTarget, true);
-          }
 
           var rect = this.scrollClientRect;
           var [start, end] = this._startEndProps;
@@ -246,13 +229,13 @@
           while (index < 0 && nextElement) {
             if (this._canScrollToElement(nextElement))
               targetElement = nextElement;
-            nextElement = nextElement.previousSibling;
+            nextElement = nextElement.previousElementSibling;
             index++;
           }
           while (index > 0 && nextElement) {
             if (this._canScrollToElement(nextElement))
               targetElement = nextElement;
-            nextElement = nextElement.nextSibling;
+            nextElement = nextElement.nextElementSibling;
             index--;
           }
           if (!targetElement)
@@ -264,11 +247,11 @@
 
       <method name="_getScrollableElements">
         <body><![CDATA[
-          var nodes = this.childNodes;
+          var nodes = this.children;
           if (nodes.length == 1 &&
               nodes[0].localName == "children" &&
               nodes[0].namespaceURI == "http://www.mozilla.org/xbl") {
-            nodes = document.getBindingParent(this).childNodes;
+            nodes = document.getBindingParent(this).children;
           }
 
           return Array.filter(nodes, this._canScrollToElement, this);
@@ -322,16 +305,35 @@
         ]]></body>
       </method>
 
-      <method name="_autorepeatbuttonScroll">
-        <parameter name="event"/>
+      <method name="_startScroll">
+        <parameter name="index"/>
         <body><![CDATA[
-          var dir = event.originalTarget == this._scrollButtonUp ? -1 : 1;
-          if (this._isRTLScrollbox)
-            dir *= -1;
+          if (this._isRTLScrollbox) {
+            index *= -1;
+          }
 
-          this.scrollByPixels(this.scrollIncrement * dir);
+          if (!this._scrollTimer) {
+            this._scrollTimer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
+          } else {
+            this._scrollTimer.cancel();
+          }
 
-          event.stopPropagation();
+          let callback = () => this.scrollByPixels(this.scrollIncrement * index);
+
+          // Use the same REPEAT_DELAY as "nsRepeatService.h".
+          let scrollDelay = /Mac/.test(navigator.platform) ? 25 : 50;
+
+          this._scrollTimer.initWithCallback(callback, scrollDelay,
+                                             Ci.nsITimer.TYPE_REPEATING_SLACK);
+          callback();
+        ]]>
+        </body>
+      </method>
+
+      <method name="_stopScroll">
+        <body><![CDATA[
+          if (this._scrollTimer)
+            this._scrollTimer.cancel();
         ]]></body>
       </method>
 
@@ -543,9 +545,7 @@
       <handler event="overflow" phase="capturing"><![CDATA[
         // Ignore overflow events:
         // - from nested scrollable elements
-        // - when the window is tiny initially
-        if (event.target != this ||
-            window.outerWidth <= 1) {
+        if (event.target != this) {
           return;
         }
 
@@ -577,12 +577,6 @@
         this._direction = 0;
       ]]></handler>
     </handlers>
-  </binding>
-
-  <binding id="autorepeatbutton" extends="chrome://global/content/bindings/scrollbox.xml#scrollbox-base">
-    <content repeat="hover">
-      <xul:image class="autorepeatbutton-icon"/>
-    </content>
   </binding>
 
   <binding id="arrowscrollbox-clicktoscroll" extends="chrome://global/content/bindings/scrollbox.xml#arrowscrollbox">
@@ -664,7 +658,7 @@
           const scrollDelta = 0.5 * timePassed * scrollIndex;
           this.scrollbox.scrollByPixels(scrollDelta, true);
           this.requestHandle = window.requestAnimationFrame(this.sample.bind(this));
-        }
+        },
       })]]></field>
 
       <method name="_startScroll">
@@ -764,8 +758,8 @@
             // so don't scroll too far
             if (targetElement)
               targetElement = scrollBack ?
-                              targetElement.nextSibling :
-                              targetElement.previousSibling;
+                              targetElement.nextElementSibling :
+                              targetElement.previousElementSibling;
           }
 
           if (!targetElement) {

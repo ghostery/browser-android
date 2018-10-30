@@ -17,6 +17,7 @@ For users
    :maxdepth: 1
 
    TraceLogs.md
+   CrashReports.md
 
 
 For developers
@@ -24,4 +25,5 @@ For developers
 .. toctree::
    :maxdepth: 1
 
+   Building.md
    Releasing.md

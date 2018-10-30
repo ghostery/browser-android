@@ -99,6 +99,7 @@ struct nsWebBrowserPersist::URIData
     nsCOMPtr<nsIURI> mFile;
     nsCOMPtr<nsIURI> mDataPath;
     nsCOMPtr<nsIURI> mRelativeDocumentURI;
+    nsCOMPtr<nsIPrincipal> mTriggeringPrincipal;
     nsCString mRelativePathToData;
     nsCString mCharset;
 
@@ -413,18 +414,20 @@ NS_IMETHODIMP nsWebBrowserPersist::SetProgressListener(
 }
 
 NS_IMETHODIMP nsWebBrowserPersist::SaveURI(
-    nsIURI *aURI, uint32_t aCacheKey,
+    nsIURI *aURI, nsIPrincipal *aPrincipal, uint32_t aCacheKey,
     nsIURI *aReferrer, uint32_t aReferrerPolicy,
     nsIInputStream *aPostData, const char *aExtraHeaders,
     nsISupports *aFile, nsILoadContext* aPrivacyContext)
 {
-    return SavePrivacyAwareURI(aURI, aCacheKey, aReferrer, aReferrerPolicy,
-                               aPostData, aExtraHeaders, aFile,
-                               aPrivacyContext && aPrivacyContext->UsePrivateBrowsing());
+    bool isPrivate =
+      aPrivacyContext && aPrivacyContext->UsePrivateBrowsing();
+    return SavePrivacyAwareURI(aURI, aPrincipal, aCacheKey,
+                               aReferrer, aReferrerPolicy,
+                               aPostData, aExtraHeaders, aFile, isPrivate);
 }
 
 NS_IMETHODIMP nsWebBrowserPersist::SavePrivacyAwareURI(
-    nsIURI *aURI, uint32_t aCacheKey,
+    nsIURI *aURI, nsIPrincipal *aPrincipal, uint32_t aCacheKey,
     nsIURI *aReferrer, uint32_t aReferrerPolicy,
     nsIInputStream *aPostData, const char *aExtraHeaders,
     nsISupports *aFile, bool aIsPrivate)
@@ -439,8 +442,10 @@ NS_IMETHODIMP nsWebBrowserPersist::SavePrivacyAwareURI(
 
     // SaveURI doesn't like broken uris.
     mPersistFlags |= PERSIST_FLAGS_FAIL_ON_BROKEN_LINKS;
-    rv = SaveURIInternal(aURI, aCacheKey, aReferrer, aReferrerPolicy,
-                         aPostData, aExtraHeaders, fileAsURI, false, aIsPrivate);
+    rv = SaveURIInternal(aURI, aPrincipal, aCacheKey,
+                         aReferrer, aReferrerPolicy,
+                         aPostData, aExtraHeaders, fileAsURI,
+                         false, aIsPrivate);
     return NS_FAILED(rv) ? rv : NS_OK;
 }
 
@@ -599,6 +604,7 @@ nsWebBrowserPersist::SerializeNextFile()
     }
 
     if (urisToPersist > 0) {
+        NS_ENSURE_SUCCESS_VOID(rv);
         // Persist each file in the uri map. The document(s)
         // will be saved after the last one of these is saved.
         for (auto iter = mURIMap.Iter(); !iter.Done(); iter.Next()) {
@@ -607,8 +613,6 @@ nsWebBrowserPersist::SerializeNextFile()
             if (!data->mNeedsPersisting || data->mSaved) {
                 continue;
             }
-
-            nsresult rv;
 
             // Create a URI from the key.
             nsCOMPtr<nsIURI> uri;
@@ -619,11 +623,7 @@ nsWebBrowserPersist::SerializeNextFile()
             }
 
             // Make a URI to save the data to.
-            nsCOMPtr<nsIURI> fileAsURI;
-            rv = data->mDataPath->Clone(getter_AddRefs(fileAsURI));
-            if (NS_WARN_IF(NS_FAILED(rv))) {
-                break;
-            }
+            nsCOMPtr<nsIURI> fileAsURI = data->mDataPath;
             rv = AppendPathToURI(fileAsURI, data->mFilename, fileAsURI);
             if (NS_WARN_IF(NS_FAILED(rv))) {
                 break;
@@ -631,7 +631,7 @@ nsWebBrowserPersist::SerializeNextFile()
 
             // The Referrer Policy doesn't matter here since the referrer is
             // nullptr.
-            rv = SaveURIInternal(uri, 0, nullptr,
+            rv = SaveURIInternal(uri, data->mTriggeringPrincipal, 0, nullptr,
                                  mozilla::net::RP_Unset, nullptr, nullptr,
                                  fileAsURI, true, mIsPrivate);
             // If SaveURIInternal fails, then it will have called EndDownload,
@@ -1328,13 +1328,15 @@ nsWebBrowserPersist::AppendPathToURI(nsIURI *aURI, const nsAString & aPath, nsCO
 }
 
 nsresult nsWebBrowserPersist::SaveURIInternal(
-    nsIURI *aURI, uint32_t aCacheKey, nsIURI *aReferrer,
+    nsIURI *aURI, nsIPrincipal* aTriggeringPrincipal,
+    uint32_t aCacheKey, nsIURI *aReferrer,
     uint32_t aReferrerPolicy, nsIInputStream *aPostData,
     const char *aExtraHeaders, nsIURI *aFile,
     bool aCalcFileExt, bool aIsPrivate)
 {
     NS_ENSURE_ARG_POINTER(aURI);
     NS_ENSURE_ARG_POINTER(aFile);
+    NS_ENSURE_ARG_POINTER(aTriggeringPrincipal);
 
     nsresult rv = NS_OK;
 
@@ -1354,7 +1356,7 @@ nsresult nsWebBrowserPersist::SaveURIInternal(
     nsCOMPtr<nsIChannel> inputChannel;
     rv = NS_NewChannel(getter_AddRefs(inputChannel),
                        aURI,
-                       nsContentUtils::GetSystemPrincipal(),
+                       aTriggeringPrincipal,
                        nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
                        nsIContentPolicy::TYPE_OTHER,
                        nullptr,  // aPerformanceStorage
@@ -1381,16 +1383,6 @@ nsresult nsWebBrowserPersist::SaveURIInternal(
         if (encodedChannel)
         {
             encodedChannel->SetApplyConversion(false);
-        }
-    }
-
-    if (mPersistFlags & PERSIST_FLAGS_FORCE_ALLOW_COOKIES)
-    {
-        nsCOMPtr<nsIHttpChannelInternal> httpChannelInternal =
-                do_QueryInterface(inputChannel);
-        if (httpChannelInternal) {
-            rv = httpChannelInternal->SetThirdPartyFlags(nsIHttpChannelInternal::THIRD_PARTY_FORCE_ALLOW);
-            MOZ_ASSERT(NS_SUCCEEDED(rv));
         }
     }
 
@@ -1542,7 +1534,7 @@ nsWebBrowserPersist::GetExtensionForContentType(const char16_t *aContentType, ch
     }
 
     nsAutoCString contentType;
-    LossyCopyUTF16toASCII(aContentType, contentType);
+    LossyCopyUTF16toASCII(MakeStringSpan(aContentType), contentType);
     nsAutoCString ext;
     rv = mMIMEService->GetPrimaryExtension(contentType, EmptyCString(), ext);
     if (NS_SUCCEEDED(rv))
@@ -1716,7 +1708,7 @@ NS_IMETHODIMP
 nsWebBrowserPersist::OnWalk::VisitResource(nsIWebBrowserPersistDocument* aDoc,
                                            const nsACString& aURI)
 {
-    return mParent->StoreURI(nsAutoCString(aURI).get());
+    return mParent->StoreURI(nsAutoCString(aURI).get(), aDoc);
 }
 
 NS_IMETHODIMP
@@ -1727,14 +1719,14 @@ nsWebBrowserPersist::OnWalk::VisitDocument(nsIWebBrowserPersistDocument* aDoc,
     nsAutoCString uriSpec;
     nsresult rv = aSubDoc->GetDocumentURI(uriSpec);
     NS_ENSURE_SUCCESS(rv, rv);
-    rv = mParent->StoreURI(uriSpec.get(), false, &data);
+    rv = mParent->StoreURI(uriSpec.get(), aDoc, false, &data);
     NS_ENSURE_SUCCESS(rv, rv);
     if (!data) {
         // If the URI scheme isn't persistable, then don't persist.
         return NS_OK;
     }
     data->mIsSubFrame = true;
-    return mParent->SaveSubframeContent(aSubDoc, uriSpec, data);
+    return mParent->SaveSubframeContent(aSubDoc, aDoc, uriSpec, data);
 }
 
 
@@ -1799,7 +1791,7 @@ nsWebBrowserPersist::FinishSaveDocumentInternal(nsIURI* aFile,
           "nsWebBrowserPersist::FinishSaveDocumentInternal",
           this,
           saveMethod,
-          mozilla::Move(toWalk));
+          std::move(toWalk));
         NS_DispatchToCurrentThread(saveLater);
     } else {
         // Done walking DOMs; on to the serialization phase.
@@ -1886,43 +1878,31 @@ void nsWebBrowserPersist::CleanupLocalFiles()
                 // recursed through to ensure they are actually empty.
 
                 bool isEmptyDirectory = true;
-                nsCOMArray<nsISimpleEnumerator> dirStack;
+                nsCOMArray<nsIDirectoryEnumerator> dirStack;
                 int32_t stackSize = 0;
 
                 // Push the top level enum onto the stack
-                nsCOMPtr<nsISimpleEnumerator> pos;
+                nsCOMPtr<nsIDirectoryEnumerator> pos;
                 if (NS_SUCCEEDED(file->GetDirectoryEntries(getter_AddRefs(pos))))
                     dirStack.AppendObject(pos);
 
                 while (isEmptyDirectory && (stackSize = dirStack.Count()))
                 {
                     // Pop the last element
-                    nsCOMPtr<nsISimpleEnumerator> curPos;
+                    nsCOMPtr<nsIDirectoryEnumerator> curPos;
                     curPos = dirStack[stackSize-1];
                     dirStack.RemoveObjectAt(stackSize - 1);
 
-                    // Test if the enumerator has any more files in it
-                    bool hasMoreElements = false;
-                    curPos->HasMoreElements(&hasMoreElements);
-                    if (!hasMoreElements)
+                    nsCOMPtr<nsIFile> child;
+                    if (NS_FAILED(curPos->GetNextFile(getter_AddRefs(child))) || !child)
                     {
                         continue;
                     }
 
-                    // Child files automatically make this code drop out,
-                    // while child dirs keep the loop going.
-                    nsCOMPtr<nsISupports> child;
-                    curPos->GetNext(getter_AddRefs(child));
-                    NS_ASSERTION(child, "No child element, but hasMoreElements says otherwise");
-                    if (!child)
-                        continue;
-                    nsCOMPtr<nsIFile> childAsFile = do_QueryInterface(child);
-                    NS_ASSERTION(childAsFile, "This should be a file but isn't");
-
                     bool childIsSymlink = false;
-                    childAsFile->IsSymlink(&childIsSymlink);
+                    child->IsSymlink(&childIsSymlink);
                     bool childIsDir = false;
-                    childAsFile->IsDirectory(&childIsDir);
+                    child->IsDirectory(&childIsDir);
                     if (!childIsDir || childIsSymlink)
                     {
                         // Some kind of file or symlink which means dir
@@ -1931,8 +1911,8 @@ void nsWebBrowserPersist::CleanupLocalFiles()
                         break;
                     }
                     // Push parent enumerator followed by child enumerator
-                    nsCOMPtr<nsISimpleEnumerator> childPos;
-                    childAsFile->GetDirectoryEntries(getter_AddRefs(childPos));
+                    nsCOMPtr<nsIDirectoryEnumerator> childPos;
+                    child->GetDirectoryEntries(getter_AddRefs(childPos));
                     dirStack.AppendObject(curPos);
                     if (childPos)
                         dirStack.AppendObject(childPos);
@@ -2480,7 +2460,8 @@ nsWebBrowserPersist::CalcTotalProgress()
 
 nsresult
 nsWebBrowserPersist::StoreURI(
-    const char *aURI, bool aNeedsPersisting, URIData **aData)
+    const char *aURI, nsIWebBrowserPersistDocument *aDoc,
+    bool aNeedsPersisting, URIData **aData)
 {
     NS_ENSURE_ARG_POINTER(aURI);
 
@@ -2491,12 +2472,13 @@ nsWebBrowserPersist::StoreURI(
                             mCurrentBaseURI);
     NS_ENSURE_SUCCESS(rv, rv);
 
-    return StoreURI(uri, aNeedsPersisting, aData);
+    return StoreURI(uri, aDoc, aNeedsPersisting, aData);
 }
 
 nsresult
 nsWebBrowserPersist::StoreURI(
-    nsIURI *aURI, bool aNeedsPersisting, URIData **aData)
+    nsIURI *aURI, nsIWebBrowserPersistDocument *aDoc,
+    bool aNeedsPersisting, URIData **aData)
 {
     NS_ENSURE_ARG_POINTER(aURI);
     if (aData)
@@ -2521,7 +2503,7 @@ nsWebBrowserPersist::StoreURI(
     }
 
     URIData *data = nullptr;
-    MakeAndStoreLocalFilenameInURIMap(aURI, aNeedsPersisting, &data);
+    MakeAndStoreLocalFilenameInURIMap(aURI, aDoc, aNeedsPersisting, &data);
     if (aData)
     {
         *aData = data;
@@ -2540,11 +2522,9 @@ nsWebBrowserPersist::URIData::GetLocalURI(nsIURI *targetBaseURI, nsCString& aSpe
     nsresult rv;
     nsCOMPtr<nsIURI> fileAsURI;
     if (mFile) {
-        rv = mFile->Clone(getter_AddRefs(fileAsURI));
-        NS_ENSURE_SUCCESS(rv, rv);
+        fileAsURI = mFile;
     } else {
-        rv = mDataPath->Clone(getter_AddRefs(fileAsURI));
-        NS_ENSURE_SUCCESS(rv, rv);
+        fileAsURI = mDataPath;
         rv = AppendPathToURI(fileAsURI, mFilename, fileAsURI);
         NS_ENSURE_SUCCESS(rv, rv);
     }
@@ -2628,6 +2608,7 @@ nsWebBrowserPersist::DocumentEncoderExists(const char *aContentType)
 nsresult
 nsWebBrowserPersist::SaveSubframeContent(
     nsIWebBrowserPersistDocument *aFrameContent,
+    nsIWebBrowserPersistDocument *aParentDocument,
     const nsCString& aURISpec,
     URIData *aData)
 {
@@ -2667,16 +2648,12 @@ nsWebBrowserPersist::SaveSubframeContent(
     filenameWithExt.Append(aData->mSubFrameExt);
 
     // Work out the path for the subframe
-    nsCOMPtr<nsIURI> frameURI;
-    rv = mCurrentDataPath->Clone(getter_AddRefs(frameURI));
-    NS_ENSURE_SUCCESS(rv, rv);
+    nsCOMPtr<nsIURI> frameURI = mCurrentDataPath;
     rv = AppendPathToURI(frameURI, filenameWithExt, frameURI);
     NS_ENSURE_SUCCESS(rv, rv);
 
     // Work out the path for the subframe data
-    nsCOMPtr<nsIURI> frameDataURI;
-    rv = mCurrentDataPath->Clone(getter_AddRefs(frameDataURI));
-    NS_ENSURE_SUCCESS(rv, rv);
+    nsCOMPtr<nsIURI> frameDataURI = mCurrentDataPath;
     nsAutoString newFrameDataPath(aData->mFilename);
 
     // Append _data
@@ -2703,9 +2680,9 @@ nsWebBrowserPersist::SaveSubframeContent(
         toWalk->mDocument = aFrameContent;
         toWalk->mFile = frameURI;
         toWalk->mDataPath = frameDataURI;
-        mWalkStack.AppendElement(mozilla::Move(toWalk));
+        mWalkStack.AppendElement(std::move(toWalk));
     } else {
-        rv = StoreURI(aURISpec.get());
+        rv = StoreURI(aURISpec.get(), aParentDocument);
     }
     NS_ENSURE_SUCCESS(rv, rv);
 
@@ -2739,7 +2716,7 @@ nsWebBrowserPersist::CreateChannelFromURI(nsIURI *aURI, nsIChannel **aChannel)
 // we store the current location as the key (absolutized version of domnode's attribute's value)
 nsresult
 nsWebBrowserPersist::MakeAndStoreLocalFilenameInURIMap(
-    nsIURI *aURI, bool aNeedsPersisting, URIData **aData)
+    nsIURI *aURI, nsIWebBrowserPersistDocument *aDoc, bool aNeedsPersisting, URIData **aData)
 {
     NS_ENSURE_ARG_POINTER(aURI);
 
@@ -2781,6 +2758,8 @@ nsWebBrowserPersist::MakeAndStoreLocalFilenameInURIMap(
     data->mRelativePathToData = mCurrentRelativePathToData;
     data->mRelativeDocumentURI = mTargetBaseURI;
     data->mCharset = mCurrentCharset;
+
+    aDoc->GetPrincipal(getter_AddRefs(data->mTriggeringPrincipal));
 
     if (aNeedsPersisting)
         mCurrentThingsToPersist++;

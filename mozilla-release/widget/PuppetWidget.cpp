@@ -93,6 +93,9 @@ PuppetWidget::PuppetWidget(TabChild* aTabChild)
   , mDefaultScale(-1)
   , mCursorHotspotX(0)
   , mCursorHotspotY(0)
+  , mEnabled(false)
+  , mVisible(false)
+  , mNeedIMEStateInit(false)
   , mIgnoreCompositionEvents(false)
 {
   // Setting 'Unknown' means "not yet cached".
@@ -136,11 +139,7 @@ PuppetWidget::InfallibleCreate(nsIWidget* aParent,
   else {
     Resize(mBounds.X(), mBounds.Y(), mBounds.Width(), mBounds.Height(), false);
   }
-  nsCOMPtr<nsIObserverService> obs = mozilla::services::GetObserverService();
-  if (obs) {
-    mMemoryPressureObserver = new MemoryPressureObserver(this);
-    obs->AddObserver(mMemoryPressureObserver, "memory-pressure", false);
-  }
+  mMemoryPressureObserver = MemoryPressureObserver::Create(this);
 }
 
 nsresult
@@ -190,9 +189,9 @@ PuppetWidget::Destroy()
   Base::Destroy();
   mPaintTask.Revoke();
   if (mMemoryPressureObserver) {
-    mMemoryPressureObserver->Remove();
+    mMemoryPressureObserver->Unregister();
+    mMemoryPressureObserver = nullptr;
   }
-  mMemoryPressureObserver = nullptr;
   mChild = nullptr;
   if (mLayerManager) {
     mLayerManager->Destroy();
@@ -748,6 +747,15 @@ PuppetWidget::DefaultProcOfPluginEvent(const WidgetPluginEvent& aEvent)
   mTabChild->SendDefaultProcOfPluginEvent(aEvent);
 }
 
+// When this widget caches input context and currently managed by
+// IMEStateManager, the cache is valid.
+bool
+PuppetWidget::HaveValidInputContextCache() const
+{
+  return (mInputContext.mIMEState.mEnabled != IMEState::UNKNOWN &&
+          IMEStateManager::GetWidgetForActiveInputContext() == this);
+}
+
 void
 PuppetWidget::SetInputContext(const InputContext& aContext,
                               const InputContextAction& aAction)
@@ -760,14 +768,7 @@ PuppetWidget::SetInputContext(const InputContext& aContext,
   if (!mTabChild) {
     return;
   }
-  mTabChild->SendSetInputContext(aContext.mIMEState.mEnabled,
-                                 aContext.mIMEState.mOpen,
-                                 aContext.mHTMLInputType,
-                                 aContext.mHTMLInputInputmode,
-                                 aContext.mActionHint,
-                                 aContext.mInPrivateBrowsing,
-                                 aAction.mCause,
-                                 aAction.mFocusChange);
+  mTabChild->SendSetInputContext(aContext, aAction);
 }
 
 InputContext
@@ -776,11 +777,9 @@ PuppetWidget::GetInputContext()
   // XXX Currently, we don't support retrieving IME open state from child
   //     process.
 
-  // When this widget caches input context and currently managed by
-  // IMEStateManager, the cache is valid.  Only in this case, we can
-  // avoid to use synchronous IPC.
-  if (mInputContext.mIMEState.mEnabled != IMEState::UNKNOWN &&
-      IMEStateManager::GetWidgetForActiveInputContext() == this) {
+  // If the cache of input context is valid, we can avoid to use synchronous
+  // IPC.
+  if (HaveValidInputContextCache()) {
     return mInputContext;
   }
 
@@ -791,11 +790,7 @@ PuppetWidget::GetInputContext()
   // chrome widget is set to new context.
   InputContext context;
   if (mTabChild) {
-    IMEState::Enabled enabled;
-    IMEState::Open open;
-    mTabChild->SendGetInputContext(&enabled, &open);
-    context.mIMEState.mEnabled = enabled;
-    context.mIMEState.mOpen = open;
+    mTabChild->SendGetInputContext(&context.mIMEState);
   }
   return context;
 }
@@ -1138,35 +1133,15 @@ PuppetWidget::PaintNowIfNeeded()
   }
 }
 
-NS_IMPL_ISUPPORTS(PuppetWidget::MemoryPressureObserver, nsIObserver)
-
-NS_IMETHODIMP
-PuppetWidget::MemoryPressureObserver::Observe(nsISupports* aSubject,
-                                              const char* aTopic,
-                                              const char16_t* aData)
-{
-  if (!mWidget) {
-    return NS_OK;
-  }
-
-  if (strcmp("memory-pressure", aTopic) == 0 &&
-      !NS_LITERAL_STRING("lowering-priority").Equals(aData)) {
-    if (!mWidget->mVisible && mWidget->mLayerManager &&
-        XRE_IsContentProcess()) {
-      mWidget->mLayerManager->ClearCachedResources();
-    }
-  }
-  return NS_OK;
-}
-
 void
-PuppetWidget::MemoryPressureObserver::Remove()
+PuppetWidget::OnMemoryPressure(layers::MemoryPressureReason aWhy)
 {
-  nsCOMPtr<nsIObserverService> obs = mozilla::services::GetObserverService();
-  if (obs) {
-    obs->RemoveObserver(this, "memory-pressure");
+  if (aWhy != MemoryPressureReason::LOW_MEMORY_ONGOING &&
+      !mVisible &&
+      mLayerManager &&
+      XRE_IsContentProcess()) {
+    mLayerManager->ClearCachedResources();
   }
-  mWidget = nullptr;
 }
 
 bool
@@ -1402,6 +1377,25 @@ PuppetWidget::SetCandidateWindowForPlugin(
 }
 
 void
+PuppetWidget::EnableIMEForPlugin(bool aEnable)
+{
+  if (!mTabChild) {
+    return;
+  }
+
+  // If current IME state isn't plugin, we ignore this call.
+  if (NS_WARN_IF(HaveValidInputContextCache() &&
+                 mInputContext.mIMEState.mEnabled != IMEState::UNKNOWN &&
+                 mInputContext.mIMEState.mEnabled != IMEState::PLUGIN)) {
+    return;
+  }
+
+  // We don't have valid state in cache or state is plugin, so delegate to
+  // chrome process.
+  mTabChild->SendEnableIMEForPlugin(aEnable);
+}
+
+void
 PuppetWidget::ZoomToRect(const uint32_t& aPresShellId,
                          const FrameMetrics::ViewID& aViewId,
                          const CSSRect& aRect,
@@ -1551,6 +1545,49 @@ PuppetWidget::WillDispatchKeyboardEvent(
                 void* aData)
 {
   MOZ_ASSERT(aTextEventDispatcher == mTextEventDispatcher);
+}
+
+nsresult
+PuppetWidget::SetSystemFont(const nsCString& aFontName)
+{
+  if (!mTabChild) {
+    return NS_ERROR_FAILURE;
+  }
+
+  mTabChild->SendSetSystemFont(aFontName);
+  return NS_OK;
+}
+
+nsresult
+PuppetWidget::GetSystemFont(nsCString& aFontName)
+{
+  if (!mTabChild) {
+    return NS_ERROR_FAILURE;
+  }
+  mTabChild->SendGetSystemFont(&aFontName);
+  return NS_OK;
+}
+
+nsresult
+PuppetWidget::SetPrefersReducedMotionOverrideForTest(bool aValue)
+{
+  if (!mTabChild) {
+    return NS_ERROR_FAILURE;
+  }
+
+  mTabChild->SendSetPrefersReducedMotionOverrideForTest(aValue);
+  return NS_OK;
+}
+
+nsresult
+PuppetWidget::ResetPrefersReducedMotionOverrideForTest()
+{
+  if (!mTabChild) {
+    return NS_ERROR_FAILURE;
+  }
+
+  mTabChild->SendResetPrefersReducedMotionOverrideForTest();
+  return NS_OK;
 }
 
 } // namespace widget

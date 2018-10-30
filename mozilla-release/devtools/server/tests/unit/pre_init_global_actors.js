@@ -18,5 +18,4 @@ PreInitGlobalActor.prototype = {
 PreInitGlobalActor.prototype.requestTypes = {
   "ping": PreInitGlobalActor.prototype.onPing,
 };
-
-DebuggerServer.addGlobalActor(PreInitGlobalActor, "preInitGlobalActor");
+exports.PreInitGlobalActor = PreInitGlobalActor;

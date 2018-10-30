@@ -10,12 +10,15 @@
 #include "mozilla/dom/ServiceWorkerRegistrationDescriptor.h"
 #include "nsTArray.h"
 
+class nsIURI;
+
 namespace mozilla {
 
-class ErrorResult;
+class CopyableErrorResult;
 
 namespace dom {
 
+class ClientInfo;
 class ServiceWorkerRegistrationData;
 class ServiceWorkerRegistrationDescriptor;
 
@@ -24,6 +27,18 @@ typedef MozPromise<ServiceWorkerRegistrationDescriptor, CopyableErrorResult, fal
 
 typedef MozPromise<nsTArray<ServiceWorkerRegistrationDescriptor>, CopyableErrorResult, false>
         ServiceWorkerRegistrationListPromise;
+
+typedef std::function<void (const ServiceWorkerRegistrationDescriptor&)>
+        ServiceWorkerRegistrationCallback;
+
+typedef std::function<void (const nsTArray<ServiceWorkerRegistrationDescriptor>&)>
+        ServiceWorkerRegistrationListCallback;
+
+typedef std::function<void (bool)>
+        ServiceWorkerBoolCallback;
+
+typedef std::function<void (ErrorResult&)>
+        ServiceWorkerFailureCallback;
 
 bool
 ServiceWorkerParentInterceptEnabled();

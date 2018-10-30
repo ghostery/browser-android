@@ -46,19 +46,10 @@
 
 <!ENTITY  feedTab               "Flux">
 <!ENTITY  feedTab.accesskey     "F">
-<!ENTITY  feedSubscribe         "S’abonner">
-<!ENTITY  feedSubscribe.accesskey "S">
 
 <!ENTITY  permTab               "Permissions">
 <!ENTITY  permTab.accesskey     "P">
-<!ENTITY  permUseDefault        "Permissions par défaut">
-<!ENTITY  permAskAlways         "Toujours demander">
-<!ENTITY  permAllow             "Autoriser">
-<!ENTITY  permAllowSession      "Autoriser pour la session">
-<!ENTITY  permHide              "Masquer">
-<!ENTITY  permBlock             "Bloquer">
 <!ENTITY  permissionsFor        "Permissions pour :">
-<!ENTITY  permPlugins           "Activer les plugins">
 
 <!ENTITY  securityTab           "Sécurité">
 <!ENTITY  securityTab.accesskey "S">
@@ -75,10 +66,7 @@
 
 <!ENTITY  securityView.privacy.header                   "Vie privée et historique">
 <!ENTITY  securityView.privacy.history                  "Ai-je déjà visité ce site web auparavant ?">
-<!ENTITY  securityView.privacy.cookies                  "Ce site web collecte-t-il des informations (cookies) sur mon ordinateur ?">
-<!ENTITY  securityView.privacy.viewCookies              "Voir les cookies">
-<!ENTITY  securityView.privacy.viewCookies.accessKey    "k">
-<!ENTITY  securityView.privacy.siteData                 "Ce site web collecte-t-il des informations sur mon ordinateur ?">
+<!ENTITY  securityView.privacy.siteData                 "Ce site web conserve-t-il des informations sur mon ordinateur ?">
 <!ENTITY  securityView.privacy.clearSiteData            "Effacer les cookies et les données de sites">
 <!ENTITY  securityView.privacy.clearSiteData.accessKey  "E">
 <!ENTITY  securityView.privacy.passwords                "Ai-je un mot de passe enregistré pour ce site web ?">

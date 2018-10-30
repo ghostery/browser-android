@@ -18,7 +18,7 @@ namespace ubi {
 JS_PUBLIC_API(BackEdge::Ptr)
 BackEdge::clone() const
 {
-    BackEdge::Ptr clone(js_new<BackEdge>());
+    auto clone = js::MakeUnique<BackEdge>();
     if (!clone)
         return nullptr;
 
@@ -28,7 +28,7 @@ BackEdge::clone() const
         if (!clone->name_)
             return nullptr;
     }
-    return mozilla::Move(clone);
+    return clone;
 }
 
 #ifdef DEBUG
@@ -54,10 +54,10 @@ dumpPaths(JSContext* cx, Node node, uint32_t maxNumPaths /* = 10 */)
     MOZ_ASSERT(rootList.init());
 
     NodeSet targets;
-    bool ok = targets.init() && targets.putNew(node);
+    bool ok = targets.putNew(node);
     MOZ_ASSERT(ok);
 
-    auto paths = ShortestPaths::Create(cx, nogc.ref(), maxNumPaths, &rootList, mozilla::Move(targets));
+    auto paths = ShortestPaths::Create(cx, nogc.ref(), maxNumPaths, &rootList, std::move(targets));
     MOZ_ASSERT(paths.isSome());
 
     int i = 0;

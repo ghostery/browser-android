@@ -12,8 +12,10 @@
 #include "ipc/IPCMessageUtils.h"
 #include "mozilla/dom/BindingUtils.h"
 #include "mozilla/dom/BlobBinding.h"
-#include "mozilla/dom/IPCBlobUtils.h"
+#include "mozilla/dom/DOMTypes.h"
 #include "mozilla/dom/File.h"
+#include "mozilla/dom/IPCBlobUtils.h"
+#include "mozilla/ipc/BackgroundParent.h"
 #include "mozilla/ipc/IPCStreamUtils.h"
 #include "nsContentUtils.h"
 #include "nsJSEnvironment.h"
@@ -21,9 +23,16 @@
 #include "StructuredCloneTags.h"
 #include "jsapi.h"
 
+using namespace mozilla::ipc;
+
 namespace mozilla {
 namespace dom {
 namespace ipc {
+
+using mozilla::ipc::AutoIPCStream;
+using mozilla::ipc::IPCStream;
+using mozilla::ipc::PBackgroundChild;
+using mozilla::ipc::PBackgroundParent;
 
 StructuredCloneData::StructuredCloneData()
   : StructuredCloneData(StructuredCloneHolder::TransferringSupported)
@@ -32,7 +41,7 @@ StructuredCloneData::StructuredCloneData()
 StructuredCloneData::StructuredCloneData(StructuredCloneData&& aOther)
   : StructuredCloneData(StructuredCloneHolder::TransferringSupported)
 {
-  *this = Move(aOther);
+  *this = std::move(aOther);
 }
 
 StructuredCloneData::StructuredCloneData(TransferringSupport aSupportsTransferring)
@@ -49,9 +58,10 @@ StructuredCloneData::~StructuredCloneData()
 StructuredCloneData&
 StructuredCloneData::operator=(StructuredCloneData&& aOther)
 {
-  mExternalData = Move(aOther.mExternalData);
-  mSharedData = Move(aOther.mSharedData);
-  mIPCStreams = Move(aOther.mIPCStreams);
+  mBlobImplArray = std::move(aOther.mBlobImplArray);
+  mExternalData = std::move(aOther.mExternalData);
+  mSharedData = std::move(aOther.mSharedData);
+  mIPCStreams = std::move(aOther.mIPCStreams);
   mInitialized = aOther.mInitialized;
 
   return *this;
@@ -97,7 +107,7 @@ StructuredCloneData::Read(JSContext* aCx,
 {
   MOZ_ASSERT(mInitialized);
 
-  nsIGlobalObject *global = xpc::NativeGlobal(JS::CurrentGlobalOrNull(aCx));
+  nsIGlobalObject* global = xpc::CurrentNativeGlobal(aCx);
   MOZ_ASSERT(global);
 
   ReadFromBuffer(global, aCx, Data(), aValue, aRv);
@@ -129,7 +139,7 @@ StructuredCloneData::Write(JSContext* aCx,
   mBuffer->abandon();
   mBuffer->steal(&data);
   mBuffer = nullptr;
-  mSharedData = new SharedJSAllocatedData(Move(data));
+  mSharedData = new SharedJSAllocatedData(std::move(data));
   mInitialized = true;
 }
 
@@ -375,7 +385,7 @@ void
 StructuredCloneData::CopyFromClonedMessageDataForBackgroundParent(const ClonedMessageData& aClonedData)
 {
   MOZ_ASSERT(IsOnBackgroundThread());
-  UnpackClonedMessageData<BorrowMemory, Parent>(aClonedData, *this);
+  UnpackClonedMessageData<CopyMemory, Parent>(aClonedData, *this);
 }
 
 void
@@ -427,7 +437,7 @@ StructuredCloneData::ReadIPCParams(const IPC::Message* aMsg,
   if (!ReadParam(aMsg, aIter, &data)) {
     return false;
   }
-  mSharedData = new SharedJSAllocatedData(Move(data));
+  mSharedData = new SharedJSAllocatedData(std::move(data));
   mInitialized = true;
   return true;
 }
@@ -458,9 +468,15 @@ bool
 StructuredCloneData::StealExternalData(JSStructuredCloneData& aData)
 {
   MOZ_ASSERT(!mInitialized);
-  mSharedData = new SharedJSAllocatedData(Move(aData));
+  mSharedData = new SharedJSAllocatedData(std::move(aData));
   mInitialized = true;
   return true;
+}
+
+already_AddRefed<SharedJSAllocatedData>
+StructuredCloneData::TakeSharedData()
+{
+  return mSharedData.forget();
 }
 
 } // namespace ipc

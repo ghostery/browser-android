@@ -12,7 +12,7 @@ function promiseObserve(name, checkFn) {
   });
 }
 
-var conn = PlacesUtils.history.QueryInterface(Ci.nsPIPlacesDatabase).DBConnection;
+var conn = PlacesUtils.history.DBConnection;
 
 /**
  * Gets a single column value from either the places or historyvisits table.
@@ -43,7 +43,7 @@ add_task(async function() {
     "http://example.com/tests/toolkit/components/places/tests/browser/begin.html",
     "http://example.com/tests/toolkit/components/places/tests/browser/redirect_twice.sjs",
     "http://example.com/tests/toolkit/components/places/tests/browser/redirect_once.sjs",
-    "http://example.com/tests/toolkit/components/places/tests/browser/final.html"
+    "http://example.com/tests/toolkit/components/places/tests/browser/final.html",
   ];
   var currentIndex = 0;
 

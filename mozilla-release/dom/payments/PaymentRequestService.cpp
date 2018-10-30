@@ -8,6 +8,7 @@
 #include "PaymentRequestData.h"
 #include "PaymentRequestService.h"
 #include "BasicCardPayment.h"
+#include "nsSimpleEnumerator.h"
 
 namespace mozilla {
 namespace dom {
@@ -16,21 +17,24 @@ StaticRefPtr<PaymentRequestService> gPaymentService;
 
 namespace {
 
-class PaymentRequestEnumerator final : public nsISimpleEnumerator
+class PaymentRequestEnumerator final : public nsSimpleEnumerator
 {
 public:
-  NS_DECL_ISUPPORTS
   NS_DECL_NSISIMPLEENUMERATOR
 
   PaymentRequestEnumerator()
     : mIndex(0)
   {}
+
+  const nsID& DefaultInterface() override
+  {
+    return NS_GET_IID(nsIPaymentRequest);
+  }
+
 private:
-  ~PaymentRequestEnumerator() = default;
+  ~PaymentRequestEnumerator() override = default;
   uint32_t mIndex;
 };
-
-NS_IMPL_ISUPPORTS(PaymentRequestEnumerator, nsISimpleEnumerator)
 
 NS_IMETHODIMP
 PaymentRequestEnumerator::HasMoreElements(bool* aReturn)
@@ -57,12 +61,8 @@ PaymentRequestEnumerator::GetNext(nsISupports** aItem)
   if (NS_WARN_IF(!request)) {
     return NS_ERROR_FAILURE;
   }
-  nsCOMPtr<nsISupports> item = do_QueryInterface(request);
-  if (NS_WARN_IF(!item)) {
-    return NS_ERROR_FAILURE;
-  }
   mIndex++;
-  item.forget(aItem);
+  request.forget(aItem);
   return NS_OK;
 }
 
@@ -177,6 +177,10 @@ PaymentRequestService::LaunchUIAction(const nsAString& aRequestId, uint32_t aAct
       rv = uiService->UpdatePayment(aRequestId);
       break;
     }
+    case nsIPaymentActionRequest::CLOSE_ACTION: {
+      rv = uiService->ClosePayment(aRequestId);
+      break;
+    }
     default : {
       return NS_ERROR_FAILURE;
     }
@@ -270,17 +274,13 @@ PaymentRequestService::RequestPayment(nsIPaymentActionRequest* aRequest)
       nsCOMPtr<nsIPaymentCanMakeActionResponse> canMakeResponse =
         do_CreateInstance(NS_PAYMENT_CANMAKE_ACTION_RESPONSE_CONTRACT_ID);
       MOZ_ASSERT(canMakeResponse);
-      if (CanMakePayment(requestId)) {
-        rv = canMakeResponse->Init(requestId, true);
-      } else {
-        rv = canMakeResponse->Init(requestId, false);
-      }
+
+      rv = canMakeResponse->Init(requestId, CanMakePayment(requestId));
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
-      nsCOMPtr<nsIPaymentActionResponse> response = do_QueryInterface(canMakeResponse);
-      MOZ_ASSERT(response);
-      rv = RespondPayment(response);
+
+      rv = RespondPayment(canMakeResponse.get());
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return rv;
       }
@@ -304,9 +304,7 @@ PaymentRequestService::RequestPayment(nsIPaymentActionRequest* aRequest)
                                 EmptyString(),
                                 EmptyString(),
                                 EmptyString());
-        nsCOMPtr<nsIPaymentActionResponse> response = do_QueryInterface(showResponse);
-        MOZ_ASSERT(response);
-        rv = RespondPayment(response);
+        rv = RespondPayment(showResponse.get());
         if (NS_WARN_IF(NS_FAILED(rv))) {
           return rv;
         }
@@ -388,6 +386,22 @@ PaymentRequestService::RequestPayment(nsIPaymentActionRequest* aRequest)
       }
       break;
     }
+    case nsIPaymentActionRequest::CLOSE_ACTION: {
+      nsCOMPtr<nsIPaymentRequest> payment;
+      rv = GetPaymentRequestById(requestId, getter_AddRefs(payment));
+      if (NS_WARN_IF(NS_FAILED(rv))) {
+        return rv;
+      }
+      rv = LaunchUIAction(requestId, type);
+      if (NS_WARN_IF(NS_FAILED(rv))) {
+        return rv;
+      }
+      if (mShowingRequest == payment) {
+        mShowingRequest = nullptr;
+      }
+      mRequestQueue.RemoveElement(payment);
+      break;
+    }
     default: {
       return NS_ERROR_FAILURE;
     }
@@ -407,6 +421,10 @@ PaymentRequestService::RespondPayment(nsIPaymentActionResponse* aResponse)
   rv = GetPaymentRequestById(requestId, getter_AddRefs(request));
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
+  }
+
+  if (!request) {
+    return NS_ERROR_FAILURE;
   }
 
   nsCOMPtr<nsIPaymentActionCallback> callback;

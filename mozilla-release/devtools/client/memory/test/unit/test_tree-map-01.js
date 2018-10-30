@@ -7,7 +7,7 @@ const { drawBox } = require("devtools/client/memory/components/tree-map/draw");
 
 add_task(async function() {
   let fillRectValues, strokeRectValues;
-  let ctx = {
+  const ctx = {
     fillRect: (...args) => {
       fillRectValues = args;
     },
@@ -15,7 +15,7 @@ add_task(async function() {
       strokeRectValues = args;
     }
   };
-  let node = {
+  const node = {
     x: 20,
     y: 30,
     dx: 50,
@@ -23,17 +23,17 @@ add_task(async function() {
     type: "other",
     depth: 2
   };
-  let padding = [10, 10];
-  let borderWidth = () => 1;
-  let dragZoom = {
+  const padding = [10, 10];
+  const borderWidth = () => 1;
+  const dragZoom = {
     offsetX: 0,
     offsetY: 0,
     zoom: 0
   };
   drawBox(ctx, node, borderWidth, dragZoom, padding);
   ok(true, JSON.stringify([ctx, fillRectValues, strokeRectValues]));
-  equal(ctx.fillStyle, "hsl(210,60%,70%)", "The fillStyle is set");
-  equal(ctx.strokeStyle, "hsl(210,60%,35%)", "The strokeStyle is set");
+  equal(ctx.fillStyle, "hsl(204,60%,70%)", "The fillStyle is set");
+  equal(ctx.strokeStyle, "hsl(204,60%,35%)", "The strokeStyle is set");
   equal(ctx.lineWidth, 1, "The lineWidth is set");
   deepEqual(fillRectValues, [10.5, 20.5, 49, 69], "Draws a filled rectangle");
   deepEqual(strokeRectValues, [10.5, 20.5, 49, 69], "Draws a stroked rectangle");

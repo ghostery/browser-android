@@ -73,6 +73,9 @@ enum RendererClass
     RENDERER_D3D9
 };
 
+// Check if the device is lost every 10 failures to get the query data
+constexpr unsigned int kPollingD3DDeviceLostCheckFrequency = 10;
+
 // Useful for unit testing
 class BufferFactoryD3D : angle::NonCopyable
 {
@@ -92,7 +95,7 @@ class BufferFactoryD3D : angle::NonCopyable
     virtual gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(
         const gl::VertexAttribute &attrib,
         const gl::VertexBinding &binding,
-        GLsizei count,
+        size_t count,
         GLsizei instances) const = 0;
 };
 
@@ -158,8 +161,8 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
                                     GLenum destFormat,
                                     const gl::Offset &destOffset,
                                     TextureStorage *storage,
-                                    GLenum target,
-                                    GLint level) = 0;
+                                    gl::TextureTarget target,
+                                    GLint level)    = 0;
     virtual gl::Error copyImage3D(const gl::Context *context,
                                   const gl::Framebuffer *framebuffer,
                                   const gl::Rectangle &sourceRect,
@@ -183,7 +186,7 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
                                   GLenum destType,
                                   const gl::Offset &destOffset,
                                   TextureStorage *storage,
-                                  GLenum destTarget,
+                                  gl::TextureTarget destTarget,
                                   GLint destLevel,
                                   bool unpackFlipY,
                                   bool unpackPremultiplyAlpha,
@@ -303,7 +306,7 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
     angle::WorkerThreadPool *getWorkerThreadPool();
 
     gl::Error getIncompleteTexture(const gl::Context *context,
-                                   GLenum type,
+                                   gl::TextureType type,
                                    gl::Texture **textureOut);
 
     Serial generateSerial();

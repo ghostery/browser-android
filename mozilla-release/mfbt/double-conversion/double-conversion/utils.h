@@ -68,7 +68,7 @@ inline void abort_noreturn() { MOZ_CRASH(); }
 // disabled.)
 // On Linux,x86 89255e-22 != Div_double(89255.0/1e22)
 #if defined(_M_X64) || defined(__x86_64__) || \
-    defined(__ARMEL__) || defined(__avr32__) || \
+    defined(__ARMEL__) || defined(__avr32__) || defined(_M_ARM) || defined(_M_ARM64) || \
     defined(__hppa__) || defined(__ia64__) || \
     defined(__mips__) || \
     defined(__powerpc__) || defined(__ppc__) || defined(__ppc64__) || \
@@ -79,7 +79,8 @@ inline void abort_noreturn() { MOZ_CRASH(); }
     defined(__AARCH64EL__) || defined(__aarch64__) || \
     defined(__riscv)
 #define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
-#elif defined(__mc68000__)
+#elif defined(__mc68000__) || \
+    defined(__pnacl__) || defined(__native_client__)
 #undef DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS
 #elif defined(_M_IX86) || defined(__i386__) || defined(__i386)
 #if defined(_WIN32)
@@ -90,12 +91,6 @@ inline void abort_noreturn() { MOZ_CRASH(); }
 #endif  // _WIN32
 #else
 #error Target architecture was not detected as supported by Double-Conversion.
-#endif
-
-#if defined(__GNUC__)
-#define DOUBLE_CONVERSION_UNUSED __attribute__((unused))
-#else
-#define DOUBLE_CONVERSION_UNUSED
 #endif
 
 #if defined(_WIN32) && !defined(__MINGW32__)
@@ -324,8 +319,12 @@ template <class Dest, class Source>
 inline Dest BitCast(const Source& source) {
   // Compile time assertion: sizeof(Dest) == sizeof(Source)
   // A compile error here means your Dest and Source have different sizes.
-  DOUBLE_CONVERSION_UNUSED
-      typedef char VerifySizesAreEqual[sizeof(Dest) == sizeof(Source) ? 1 : -1];
+#if __cplusplus >= 201103L
+  static_assert(sizeof(Dest) == sizeof(Source),
+                "source and destination size mismatch");
+#else
+  typedef char VerifySizesAreEqual[sizeof(Dest) == sizeof(Source) ? 1 : -1];
+#endif
 
   Dest dest;
   memmove(&dest, &source, sizeof(dest));

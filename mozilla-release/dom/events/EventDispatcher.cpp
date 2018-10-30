@@ -12,6 +12,7 @@
 #include "nsIContentInlines.h"
 #include "nsIDocument.h"
 #include "nsINode.h"
+#include "nsIScriptObjectPrincipal.h"
 #include "nsPIDOMWindow.h"
 #include "AnimationEvent.h"
 #include "BeforeUnloadEvent.h"
@@ -104,22 +105,23 @@ static bool IsEventTargetChrome(EventTarget* aEventTarget,
   }
 
   nsIDocument* doc = nullptr;
-  nsCOMPtr<nsINode> node = do_QueryInterface(aEventTarget);
-  if (node) {
+  if (nsCOMPtr<nsINode> node = do_QueryInterface(aEventTarget)) {
     doc = node->OwnerDoc();
-  } else {
-    nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(aEventTarget);
-    if (!window) {
-      return false;
-    }
+  } else if (nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(aEventTarget)) {
     doc = window->GetExtantDoc();
   }
 
   // nsContentUtils::IsChromeDoc is null-safe.
-  bool isChrome = nsContentUtils::IsChromeDoc(doc);
-  if (aDocument && doc) {
-    nsCOMPtr<nsIDocument> retVal = doc;
-    retVal.swap(*aDocument);
+  bool isChrome = false;
+  if (doc) {
+    isChrome = nsContentUtils::IsChromeDoc(doc);
+    if (aDocument) {
+      nsCOMPtr<nsIDocument> retVal = doc;
+      retVal.swap(*aDocument);
+    }
+  } else if (nsCOMPtr<nsIScriptObjectPrincipal> sop =
+              do_QueryInterface(aEventTarget->GetOwnerGlobal())) {
+    isChrome = nsContentUtils::IsSystemPrincipal(sop->GetPrincipal());
   }
   return isChrome;
 }
@@ -134,6 +136,12 @@ public:
   EventTargetChainItem()
     : mItemFlags(0)
   {
+    MOZ_COUNT_CTOR(EventTargetChainItem);
+  }
+
+  ~EventTargetChainItem()
+  {
+    MOZ_COUNT_DTOR(EventTargetChainItem);
   }
 
   static EventTargetChainItem* Create(nsTArray<EventTargetChainItem>& aChain,
@@ -142,7 +150,10 @@ public:
   {
     // The last item which can handle the event must be aChild.
     MOZ_ASSERT(GetLastCanHandleEventTarget(aChain) == aChild);
-    return new (aChain.AppendElement()) EventTargetChainItem(aTarget);
+    MOZ_ASSERT(!aTarget || aTarget == aTarget->GetTargetForEventTargetChain());
+    EventTargetChainItem* etci = aChain.AppendElement();
+    etci->mTarget = aTarget;
+    return etci;
   }
 
   static void DestroyLast(nsTArray<EventTargetChainItem>& aChain,
@@ -211,6 +222,57 @@ public:
     mRetargetedRelatedTarget = aTarget;
   }
 
+  void SetRetargetedTouchTarget(Maybe<nsTArray<RefPtr<EventTarget>>>&& aTargets)
+  {
+    mRetargetedTouchTargets = std::move(aTargets);
+  }
+
+  bool HasRetargetTouchTargets()
+  {
+    return mRetargetedTouchTargets.isSome() || mInitialTargetTouches.isSome();
+  }
+
+  void RetargetTouchTargets(WidgetTouchEvent* aTouchEvent, Event* aDOMEvent)
+  {
+    MOZ_ASSERT(HasRetargetTouchTargets());
+    MOZ_ASSERT(aTouchEvent,
+               "mRetargetedTouchTargets should be empty when dispatching non-touch events.");
+
+    if (mRetargetedTouchTargets.isSome()) {
+      WidgetTouchEvent::TouchArray& touches = aTouchEvent->mTouches;
+      MOZ_ASSERT(!touches.Length() ||
+                 touches.Length() == mRetargetedTouchTargets->Length());
+      for (uint32_t i = 0; i < touches.Length(); ++i) {
+        touches[i]->mTarget = mRetargetedTouchTargets->ElementAt(i);
+      }
+    }
+
+    if (aDOMEvent) {
+      // The number of touch objects in targetTouches list may change depending
+      // on the retargeting.
+      TouchEvent* touchDOMEvent = static_cast<TouchEvent*>(aDOMEvent);
+      TouchList* targetTouches = touchDOMEvent->GetExistingTargetTouches();
+      if (targetTouches) {
+        targetTouches->Clear();
+        if (mInitialTargetTouches.isSome()) {
+          for (uint32_t i = 0; i < mInitialTargetTouches->Length(); ++i) {
+            Touch* touch = mInitialTargetTouches->ElementAt(i);
+            if (touch) {
+              touch->mTarget = touch->mOriginalTarget;
+            }
+            targetTouches->Append(touch);
+          }
+        }
+      }
+    }
+  }
+
+  void SetInitialTargetTouches(Maybe<nsTArray<RefPtr<dom::Touch>>>&&
+                                 aInitialTargetTouches)
+  {
+    mInitialTargetTouches = std::move(aInitialTargetTouches);
+  }
+
   void SetForceContentDispatch(bool aForce)
   {
     mFlags.mForceContentDispatch = aForce;
@@ -259,6 +321,16 @@ public:
   bool IsRootOfClosedTree()
   {
     return mFlags.mRootOfClosedTree;
+  }
+
+  void SetItemInShadowTree(bool aSet)
+  {
+    mFlags.mItemInShadowTree = aSet;
+  }
+
+  bool IsItemInShadowTree()
+  {
+    return mFlags.mItemInShadowTree;
   }
 
   void SetIsSlotInClosedTree(bool aSet)
@@ -348,7 +420,8 @@ public:
       mManager->HandleEvent(aVisitor.mPresContext, aVisitor.mEvent,
                             &aVisitor.mDOMEvent,
                             CurrentTarget(),
-                            &aVisitor.mEventStatus);
+                            &aVisitor.mEventStatus,
+                            IsItemInShadowTree());
       NS_ASSERTION(aVisitor.mEvent->mCurrentTarget == nullptr,
                    "CurrentTarget should be null!");
     }
@@ -360,8 +433,10 @@ public:
   void PostHandleEvent(EventChainPostVisitor& aVisitor);
 
 private:
-  nsCOMPtr<EventTarget>             mTarget;
-  nsCOMPtr<EventTarget>             mRetargetedRelatedTarget;
+  nsCOMPtr<EventTarget> mTarget;
+  nsCOMPtr<EventTarget> mRetargetedRelatedTarget;
+  Maybe<nsTArray<RefPtr<EventTarget>>> mRetargetedTouchTargets;
+  Maybe<nsTArray<RefPtr<dom::Touch>>> mInitialTargetTouches;
 
   class EventTargetChainFlags
   {
@@ -381,6 +456,7 @@ private:
     bool mWantsPreHandleEvent : 1;
     bool mPreHandleEventOnly : 1;
     bool mRootOfClosedTree : 1;
+    bool mItemInShadowTree : 1;
     bool mIsSlotInClosedTree : 1;
     bool mIsChromeHandler : 1;
   private:
@@ -412,13 +488,6 @@ private:
   }
 };
 
-EventTargetChainItem::EventTargetChainItem(EventTarget* aTarget)
-  : mTarget(aTarget)
-  , mItemFlags(0)
-{
-  MOZ_ASSERT(!aTarget || mTarget == aTarget->GetTargetForEventTargetChain());
-}
-
 void
 EventTargetChainItem::GetEventTargetParent(EventChainPreVisitor& aVisitor)
 {
@@ -430,7 +499,9 @@ EventTargetChainItem::GetEventTargetParent(EventChainPreVisitor& aVisitor)
   SetWantsPreHandleEvent(aVisitor.mWantsPreHandleEvent);
   SetPreHandleEventOnly(aVisitor.mWantsPreHandleEvent && !aVisitor.mCanHandle);
   SetRootOfClosedTree(aVisitor.mRootOfClosedTree);
+  SetItemInShadowTree(aVisitor.mItemInShadowTree);
   SetRetargetedRelatedTarget(aVisitor.mRetargetedRelatedTarget);
+  SetRetargetedTouchTarget(std::move(aVisitor.mRetargetedTouchTargets));
   mItemFlags = aVisitor.mItemFlags;
   mItemData = aVisitor.mItemData;
 }
@@ -464,6 +535,20 @@ EventTargetChainItem::HandleEventTargetChain(
   // Save the target so that it can be restored later.
   nsCOMPtr<EventTarget> firstTarget = aVisitor.mEvent->mTarget;
   nsCOMPtr<EventTarget> firstRelatedTarget = aVisitor.mEvent->mRelatedTarget;
+  Maybe<AutoTArray<nsCOMPtr<EventTarget>, 10>> firstTouchTargets;
+  WidgetTouchEvent* touchEvent = nullptr;
+  if (aVisitor.mEvent->mClass == eTouchEventClass) {
+    touchEvent = aVisitor.mEvent->AsTouchEvent();
+    if (!aVisitor.mEvent->mFlags.mInSystemGroup) {
+      firstTouchTargets.emplace();
+      WidgetTouchEvent* touchEvent = aVisitor.mEvent->AsTouchEvent();
+      WidgetTouchEvent::TouchArray& touches = touchEvent->mTouches;
+      for (uint32_t i = 0; i < touches.Length(); ++i) {
+        firstTouchTargets->AppendElement(touches[i]->mTarget);
+      }
+    }
+  }
+
   uint32_t chainLength = aChain.Length();
   uint32_t firstCanHandleEventTargetIdx =
     EventTargetChainItem::GetFirstCanHandleEventTargetIdx(aChain);
@@ -517,11 +602,35 @@ EventTargetChainItem::HandleEventTargetChain(
           aVisitor.mEvent->mOriginalRelatedTarget;
       }
     }
+
+    if (item.HasRetargetTouchTargets()) {
+      bool found = false;
+      for (uint32_t j = i; j > 0; --j) {
+        uint32_t childIndex = j - 1;
+        if (aChain[childIndex].HasRetargetTouchTargets()) {
+          found = true;
+          aChain[childIndex].RetargetTouchTargets(touchEvent,
+                                                  aVisitor.mDOMEvent);
+          break;
+        }
+      }
+      if (!found) {
+        WidgetTouchEvent::TouchArray& touches = touchEvent->mTouches;
+        for (uint32_t i = 0; i < touches.Length(); ++i) {
+          touches[i]->mTarget = touches[i]->mOriginalTarget;
+        }
+      }
+    }
   }
 
   // Target
   aVisitor.mEvent->mFlags.mInBubblingPhase = true;
   EventTargetChainItem& targetItem = aChain[firstCanHandleEventTargetIdx];
+  // Need to explicitly retarget touch targets so that initial targets get set
+  // properly in case nothing else retargeted touches.
+  if (targetItem.HasRetargetTouchTargets()) {
+    targetItem.RetargetTouchTargets(touchEvent, aVisitor.mDOMEvent);
+  }
   if (!aVisitor.mEvent->PropagationStopped() &&
       (!aVisitor.mEvent->mFlags.mNoContentDispatch ||
        targetItem.ForceContentDispatch())) {
@@ -553,6 +662,10 @@ EventTargetChainItem::HandleEventTargetChain(
       aVisitor.mEvent->mRelatedTarget = relatedTarget;
     }
 
+    if (item.HasRetargetTouchTargets()) {
+      item.RetargetTouchTargets(touchEvent, aVisitor.mDOMEvent);
+    }
+
     if (aVisitor.mEvent->mFlags.mBubbles || newTarget) {
       if ((!aVisitor.mEvent->mFlags.mNoContentDispatch ||
            item.ForceContentDispatch()) &&
@@ -576,6 +689,12 @@ EventTargetChainItem::HandleEventTargetChain(
     // Setting back the original target of the event.
     aVisitor.mEvent->mTarget = aVisitor.mEvent->mOriginalTarget;
     aVisitor.mEvent->mRelatedTarget = aVisitor.mEvent->mOriginalRelatedTarget;
+    if (firstTouchTargets) {
+      WidgetTouchEvent::TouchArray& touches = touchEvent->mTouches;
+      for (uint32_t i = 0; i < touches.Length(); ++i) {
+        touches[i]->mTarget = touches[i]->mOriginalTarget;
+      }
+    }
 
     // Special handling if PresShell (or some other caller)
     // used a callback object.
@@ -587,6 +706,13 @@ EventTargetChainItem::HandleEventTargetChain(
     // Setting back the target which was used also for default event group.
     aVisitor.mEvent->mTarget = firstTarget;
     aVisitor.mEvent->mRelatedTarget = firstRelatedTarget;
+    if (firstTouchTargets) {
+      WidgetTouchEvent::TouchArray& touches = touchEvent->mTouches;
+      for (uint32_t i = 0; i < firstTouchTargets->Length(); ++i) {
+        touches[i]->mTarget = firstTouchTargets->ElementAt(i);
+      }
+    }
+
     aVisitor.mEvent->mFlags.mInSystemGroup = true;
     HandleEventTargetChain(aChain,
                            aVisitor,
@@ -649,6 +775,10 @@ MayRetargetToChromeIfCanNotHandleEvent(
     EventTargetChainItem* chromeTargetEtci =
       EventTargetChainItemForChromeTarget(aChain, aContent, aChildEtci);
     if (chromeTargetEtci) {
+      // If we propagate to chrome, need to ensure we mark
+      // EventTargetChainItem to be chrome handler so that event.composedPath()
+      // can return the right value.
+      chromeTargetEtci->SetIsChromeHandler(true);
       chromeTargetEtci->GetEventTargetParent(aPreVisitor);
       return chromeTargetEtci;
     }
@@ -685,7 +815,7 @@ EventDispatcher::Dispatch(nsISupports* aTarget,
                           EventDispatchingCallback* aCallback,
                           nsTArray<EventTarget*>* aTargets)
 {
-  AUTO_PROFILER_LABEL("EventDispatcher::Dispatch", EVENTS);
+  AUTO_PROFILER_LABEL("EventDispatcher::Dispatch", OTHER);
 
   NS_ASSERTION(aEvent, "Trying to dispatch without WidgetEvent!");
   NS_ENSURE_TRUE(!aEvent->mFlags.mIsBeingDispatched,
@@ -758,7 +888,7 @@ EventDispatcher::Dispatch(nsISupports* aTarget,
 
       // Set the target to be the original dispatch target,
       aEvent->mTarget = target;
-      // but use chrome event handler or TabChildGlobal for event target chain.
+      // but use chrome event handler or TabChildMessageManager for event target chain.
       target = piTarget;
     } else if (NS_WARN_IF(!doc)) {
       return NS_ERROR_UNEXPECTED;
@@ -886,8 +1016,24 @@ EventDispatcher::Dispatch(nsISupports* aTarget,
   } else {
     // At least the original target can handle the event.
     // Setting the retarget to the |target| simplifies retargeting code.
-    nsCOMPtr<EventTarget> t = do_QueryInterface(aEvent->mTarget);
+    nsCOMPtr<EventTarget> t = aEvent->mTarget;
     targetEtci->SetNewTarget(t);
+    // In order to not change the targetTouches array passed to TouchEvents
+    // when dispatching events from JS, we need to store the initial Touch
+    // objects on the list.
+    if (aEvent->mClass == eTouchEventClass && aDOMEvent) {
+      TouchEvent* touchEvent = static_cast<TouchEvent*>(aDOMEvent);
+      TouchList* targetTouches = touchEvent->GetExistingTargetTouches();
+      if (targetTouches) {
+        Maybe<nsTArray<RefPtr<dom::Touch>>> initialTargetTouches;
+        initialTargetTouches.emplace();
+        for (uint32_t i = 0; i < targetTouches->Length(); ++i) {
+          initialTargetTouches->AppendElement(targetTouches->Item(i));
+        }
+        targetEtci->SetInitialTargetTouches(std::move(initialTargetTouches));
+        targetTouches->Clear();
+      }
+    }
     EventTargetChainItem* topEtci = targetEtci;
     targetEtci = nullptr;
     while (preVisitor.GetParentTarget()) {
@@ -921,6 +1067,7 @@ EventDispatcher::Dispatch(nsISupports* aTarget,
         preVisitor.mTargetInKnownToBeHandledScope = preVisitor.mEvent->mTarget;
         topEtci = parentEtci;
       } else {
+        bool ignoreBecauseOfShadowDOM = preVisitor.mIgnoreBecauseOfShadowDOM;
         nsCOMPtr<nsINode> disabledTarget = do_QueryInterface(parentTarget);
         parentEtci = MayRetargetToChromeIfCanNotHandleEvent(chain,
                                                             preVisitor,
@@ -931,7 +1078,11 @@ EventDispatcher::Dispatch(nsISupports* aTarget,
           preVisitor.mTargetInKnownToBeHandledScope = preVisitor.mEvent->mTarget;
           EventTargetChainItem* item =
             EventTargetChainItem::GetFirstCanHandleEventTarget(chain);
-          item->SetNewTarget(parentTarget);
+          if (!ignoreBecauseOfShadowDOM) {
+            // If we ignored the target because of Shadow DOM retargeting, we
+            // shouldn't treat the target to be in the event path at all.
+            item->SetNewTarget(parentTarget);
+          }
           topEtci = parentEtci;
           continue;
         }

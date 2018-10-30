@@ -13,11 +13,10 @@
 #include "jsexn.h"
 #include "jsfriendapi.h"
 
+#include "vm/GlobalObject.h"
 #include "vm/JSContext.h"
 
 #include "vm/JSContext-inl.h"
-
-using mozilla::Move;
 
 using JS::HandleObject;
 using JS::HandleValue;
@@ -56,6 +55,13 @@ js::CompileError::throwError(JSContext* cx)
 }
 
 bool
+js::ReportExceptionClosure::operator()(JSContext* cx)
+{
+    cx->setPendingException(exn_);
+    return false;
+}
+
+bool
 js::ReportCompileWarning(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErrorNotes> notes,
                          unsigned flags, unsigned errorNumber, va_list args)
 {
@@ -67,7 +73,7 @@ js::ReportCompileWarning(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSEr
     if (cx->helperThread() && !cx->addPendingCompileError(&err))
         return false;
 
-    err->notes = Move(notes);
+    err->notes = std::move(notes);
     err->flags = flags;
     err->errorNumber = errorNumber;
 
@@ -76,7 +82,7 @@ js::ReportCompileWarning(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSEr
     err->column = metadata.columnNumber;
     err->isMuted = metadata.isMuted;
 
-    if (UniqueTwoByteChars lineOfContext = Move(metadata.lineOfContext))
+    if (UniqueTwoByteChars lineOfContext = std::move(metadata.lineOfContext))
         err->initOwnedLinebuf(lineOfContext.release(), metadata.lineLength, metadata.tokenOffset);
 
     if (!ExpandErrorArgumentsVA(cx, GetErrorMessage, nullptr, errorNumber,
@@ -103,7 +109,7 @@ js::ReportCompileError(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErro
     if (cx->helperThread() && !cx->addPendingCompileError(&err))
         return;
 
-    err->notes = Move(notes);
+    err->notes = std::move(notes);
     err->flags = flags;
     err->errorNumber = errorNumber;
 
@@ -112,7 +118,7 @@ js::ReportCompileError(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErro
     err->column = metadata.columnNumber;
     err->isMuted = metadata.isMuted;
 
-    if (UniqueTwoByteChars lineOfContext = Move(metadata.lineOfContext))
+    if (UniqueTwoByteChars lineOfContext = std::move(metadata.lineOfContext))
         err->initOwnedLinebuf(lineOfContext.release(), metadata.lineLength, metadata.tokenOffset);
 
     if (!ExpandErrorArgumentsVA(cx, GetErrorMessage, nullptr, errorNumber,
@@ -125,31 +131,8 @@ js::ReportCompileError(JSContext* cx, ErrorMetadata&& metadata, UniquePtr<JSErro
         err->throwError(cx);
 }
 
-namespace {
-
-class MOZ_STACK_CLASS ReportExceptionClosure
-  : public js::ScriptEnvironmentPreparer::Closure
-{
-  public:
-    explicit ReportExceptionClosure(HandleValue& exn)
-      : exn_(exn)
-    {
-    }
-
-    bool operator()(JSContext* cx) override
-    {
-        cx->setPendingException(exn_);
-        return false;
-    }
-
-  private:
-    HandleValue& exn_;
-};
-
-} // anonymous namespace
-
 void
-js::ReportErrorToGlobal(JSContext* cx, HandleObject global, HandleValue error)
+js::ReportErrorToGlobal(JSContext* cx, Handle<GlobalObject*> global, HandleValue error)
 {
     MOZ_ASSERT(!cx->isExceptionPending());
 #ifdef DEBUG
@@ -158,6 +141,6 @@ js::ReportErrorToGlobal(JSContext* cx, HandleObject global, HandleValue error)
         AssertSameCompartment(global, &error.toObject());
     }
 #endif // DEBUG
-    ReportExceptionClosure report(error);
+    js::ReportExceptionClosure report(error);
     PrepareScriptEnvironmentAndInvoke(cx, global, report);
 }

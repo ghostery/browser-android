@@ -20,6 +20,7 @@ const PARSE_ERROR_NO_ARTICLE = 3;
 // names so that rules in aboutReader.css can match them.
 const CLASSES_TO_PRESERVE = [
   "caption",
+  "emoji",
   "hidden",
   "invisble",
   "sr-only",
@@ -27,12 +28,13 @@ const CLASSES_TO_PRESERVE = [
   "visuallyhidden",
   "wp-caption",
   "wp-caption-text",
+  "wp-smiley",
 ];
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-Cu.importGlobalProperties(["XMLHttpRequest", "XMLSerializer"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["XMLHttpRequest", "XMLSerializer"]);
 
 ChromeUtils.defineModuleGetter(this, "CommonUtils", "resource://services-common/utils.js");
 ChromeUtils.defineModuleGetter(this, "EventDispatcher", "resource://gre/modules/Messaging.jsm");
@@ -96,9 +98,6 @@ var ReaderMode = {
    * if not, append the about:reader page in the history instead.
    */
   enterReaderMode(docShell, win) {
-    Services.telemetry.recordEvent("savant", "readermode", "on", null,
-                                  { subcategory: "feature" });
-
     let url = win.document.location.href;
     let readerURL = "about:reader?url=" + encodeURIComponent(url);
     let webNav = docShell.QueryInterface(Ci.nsIWebNavigation);
@@ -120,8 +119,6 @@ var ReaderMode = {
    * if not, append the original page in the history instead.
    */
   leaveReaderMode(docShell, win) {
-    Services.telemetry.recordEvent("savant", "readermode", "off", null,
-                                  { subcategory: "feature" });
     let url = win.document.location.href;
     let originalURL = this.getOriginalUrl(url);
     let webNav = docShell.QueryInterface(Ci.nsIWebNavigation);
@@ -144,8 +141,7 @@ var ReaderMode = {
       Cu.reportError(e);
       return;
     }
-    let flags =  webNav.LOAD_FLAGS_DISALLOW_INHERIT_PRINCIPAL |
-      webNav.LOAD_FLAGS_DISALLOW_INHERIT_OWNER;
+    let flags = webNav.LOAD_FLAGS_DISALLOW_INHERIT_PRINCIPAL;
     webNav.loadURI(originalURL, flags, referrerURI, null, null, principal);
   },
 
@@ -222,7 +218,7 @@ var ReaderMode = {
     // We pass in a helper function to determine if a node is visible, because
     // it uses gecko APIs that the engine-agnostic readability code can't rely
     // upon.
-    return new Readability(uri, doc).isProbablyReaderable(this.isNodeVisible.bind(this, utils));
+    return new Readability(doc).isProbablyReaderable(this.isNodeVisible.bind(this, utils));
   },
 
   isNodeVisible(utils, node) {
@@ -231,7 +227,7 @@ var ReaderMode = {
   },
 
   getUtilsForWin(win) {
-    return win.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIDOMWindowUtils);
+    return win.windowUtils;
   },
 
   /**
@@ -483,7 +479,7 @@ var ReaderMode = {
       host: doc.baseURIObject.host,
       prePath: doc.baseURIObject.prePath,
       scheme: doc.baseURIObject.scheme,
-      pathBase: Services.io.newURI(".", null, doc.baseURIObject).spec
+      pathBase: Services.io.newURI(".", null, doc.baseURIObject).spec,
     };
 
     let serializer = new XMLSerializer();

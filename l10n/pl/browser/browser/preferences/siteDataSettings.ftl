@@ -44,9 +44,6 @@ site-data-remove-shown =
 
 site-data-removing-window =
     .title = { site-data-removing-header }
-site-data-removing-dialog =
-    .title = { site-data-removing-header }
-    .buttonlabelaccept = Usuń
 site-data-removing-header = Usuwanie ciasteczek i danych stron
 site-data-removing-desc = Usunięcie ciasteczek i danych stron może spowodować wylogowanie z niektórych witryn. Czy wprowadzić zmiany?
 site-data-removing-table = Ciasteczka i dane stron następujących witryn zostaną usunięte:

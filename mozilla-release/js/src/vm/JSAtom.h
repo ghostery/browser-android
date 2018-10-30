@@ -39,16 +39,13 @@ FOR_EACH_COMMON_PROPERTYNAME(DECLARE_CONST_CHAR_STR)
 
 namespace js {
 
-class AutoLockForExclusiveAccess;
+class AutoAccessAtomsZone;
 
 /*
  * Atom tracing and garbage collection hooks.
  */
 void
-TraceAtoms(JSTracer* trc, AutoLockForExclusiveAccess& lock);
-
-void
-TracePermanentAtoms(JSTracer* trc);
+TraceAtoms(JSTracer* trc, const AutoAccessAtomsZone& access);
 
 void
 TraceWellKnownSymbols(JSTracer* trc);
@@ -88,10 +85,6 @@ ToAtom(JSContext* cx, typename MaybeRooted<JS::Value, allowGC>::HandleType v);
 
 extern JS::Handle<PropertyName*>
 ClassName(JSProtoKey key, JSContext* cx);
-
-namespace gc {
-void MergeAtomsAddedWhileSweeping(JSRuntime* rt);
-} // namespace gc
 
 #ifdef DEBUG
 

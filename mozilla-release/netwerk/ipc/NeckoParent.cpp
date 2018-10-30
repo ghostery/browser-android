@@ -8,6 +8,7 @@
 #include "necko-config.h"
 #include "nsHttp.h"
 #include "mozilla/BasePrincipal.h"
+#include "mozilla/ContentPrincipal.h"
 #include "mozilla/ipc/IPCStreamUtils.h"
 #include "mozilla/net/ExtensionProtocolHandler.h"
 #include "mozilla/net/NeckoParent.h"
@@ -44,7 +45,6 @@
 #include "SerializedLoadContext.h"
 #include "nsAuthInformationHolder.h"
 #include "nsIAuthPromptCallback.h"
-#include "ContentPrincipal.h"
 #include "nsINetworkPredictor.h"
 #include "nsINetworkPredictorVerifier.h"
 #include "nsISpeculativeConnect.h"
@@ -649,8 +649,7 @@ NeckoParent::DeallocPUDPSocketParent(PUDPSocketParent* actor)
 PDNSRequestParent*
 NeckoParent::AllocPDNSRequestParent(const nsCString& aHost,
                                     const OriginAttributes& aOriginAttributes,
-                                    const uint32_t& aFlags,
-                                    const nsCString& aNetworkInterface)
+                                    const uint32_t& aFlags)
 {
   DNSRequestParent *p = new DNSRequestParent();
   p->AddRef();
@@ -661,13 +660,11 @@ mozilla::ipc::IPCResult
 NeckoParent::RecvPDNSRequestConstructor(PDNSRequestParent* aActor,
                                         const nsCString& aHost,
                                         const OriginAttributes& aOriginAttributes,
-                                        const uint32_t& aFlags,
-                                        const nsCString& aNetworkInterface)
+                                        const uint32_t& aFlags)
 {
   static_cast<DNSRequestParent*>(aActor)->DoAsyncResolve(aHost,
                                                          aOriginAttributes,
-                                                         aFlags,
-                                                         aNetworkInterface);
+                                                         aFlags);
   return IPC_OK();
 }
 

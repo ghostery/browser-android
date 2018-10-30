@@ -42,17 +42,17 @@ if [ ! -d "${CLIQZ_BRAND_FOLDER}" ]; then
     exit 1
 fi
 
-CLIQZ_ARCH="${2:-i386-linux-android}"
+CLIQZ_ARCH="${2:-i686-linux-android}"
 case "${CLIQZ_ARCH}" in
     "arm")
         CLIQZ_ARCH="arm-linux-androideabi"
         ;;
     "arm-linux-androideabi")
         ;;
-    "i386" | "x86")
-        CLIQZ_ARCH="i386-linux-android"
+    "i386" | "x86" | "i686")
+        CLIQZ_ARCH="i686-linux-android"
         ;;
-    "i386-linux-android")
+    "i686-linux-android")
         ;;
     *)
         >&2 echo "Unsopported arch ${CLIQZ_ARCH}"

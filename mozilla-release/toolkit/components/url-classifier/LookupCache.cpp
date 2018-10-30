@@ -67,7 +67,7 @@ void CStringToHexString(const nsACString& aIn, nsACString& aOut)
 
 LookupCache::LookupCache(const nsACString& aTableName,
                          const nsACString& aProvider,
-                         nsIFile* aRootStoreDir)
+                         nsCOMPtr<nsIFile>& aRootStoreDir)
   : mPrimed(false)
   , mTableName(aTableName)
   , mProvider(aProvider)
@@ -87,7 +87,7 @@ LookupCache::Open()
 }
 
 nsresult
-LookupCache::UpdateRootDirHandle(nsIFile* aNewRootStoreDirectory)
+LookupCache::UpdateRootDirHandle(nsCOMPtr<nsIFile>& aNewRootStoreDirectory)
 {
   nsresult rv;
 
@@ -243,7 +243,7 @@ LookupCache::ClearAll()
 }
 
 void
-LookupCache::GetCacheInfo(nsIUrlClassifierCacheInfo** aCache)
+LookupCache::GetCacheInfo(nsIUrlClassifierCacheInfo** aCache) const
 {
   MOZ_ASSERT(aCache);
 
@@ -280,7 +280,7 @@ LookupCache::GetCacheInfo(nsIUrlClassifierCacheInfo** aCache)
     info->entries.AppendElement(static_cast<nsIUrlClassifierCacheEntry*>(entry));
   }
 
-  NS_ADDREF(*aCache = info);
+  info.forget(aCache);
 }
 
 /* static */ bool
@@ -508,7 +508,7 @@ nsCString GetFormattedTimeString(int64_t aCurTimeSec)
 }
 
 void
-LookupCache::DumpCache()
+LookupCache::DumpCache() const
 {
   if (!LOG_ENABLED()) {
     return;
@@ -600,7 +600,7 @@ LookupCacheV2::Has(const Completion& aCompletion,
 }
 
 bool
-LookupCacheV2::IsEmpty()
+LookupCacheV2::IsEmpty() const
 {
   bool isEmpty;
   mPrefixSet->IsEmpty(&isEmpty);
@@ -646,8 +646,8 @@ LookupCacheV2::GetPrefixes(FallibleTArray<uint32_t>& aAddPrefixes)
 }
 
 void
-LookupCacheV2::AddGethashResultToCache(AddCompleteArray& aAddCompletes,
-                                       MissPrefixArray& aMissPrefixes,
+LookupCacheV2::AddGethashResultToCache(const AddCompleteArray& aAddCompletes,
+                                       const MissPrefixArray& aMissPrefixes,
                                        int64_t aExpirySec)
 {
   int64_t defaultExpirySec = PR_Now() / PR_USEC_PER_SEC + V2_CACHE_DURATION_SEC;
@@ -704,19 +704,19 @@ LookupCacheV2::ClearPrefixes()
 }
 
 nsresult
-LookupCacheV2::StoreToFile(nsIFile* aFile)
+LookupCacheV2::StoreToFile(nsCOMPtr<nsIFile>& aFile)
 {
   return mPrefixSet->StoreToFile(aFile);
 }
 
 nsresult
-LookupCacheV2::LoadFromFile(nsIFile* aFile)
+LookupCacheV2::LoadFromFile(nsCOMPtr<nsIFile>& aFile)
 {
   return mPrefixSet->LoadFromFile(aFile);
 }
 
 size_t
-LookupCacheV2::SizeOfPrefixSet()
+LookupCacheV2::SizeOfPrefixSet() const
 {
   return mPrefixSet->SizeOfIncludingThis(moz_malloc_size_of);
 }
@@ -778,7 +778,7 @@ LookupCacheV2::ConstructPrefixSet(AddPrefixArray& aAddPrefixes)
 
 #if defined(DEBUG)
 void
-LookupCacheV2::DumpCompletions()
+LookupCacheV2::DumpCompletions() const
 {
   if (!LOG_ENABLED())
     return;

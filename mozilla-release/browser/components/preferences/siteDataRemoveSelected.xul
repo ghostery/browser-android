@@ -11,8 +11,8 @@
 <dialog id="SiteDataRemoveSelectedDialog"
         windowtype="Browser:SiteDataRemoveSelected"
         width="500"
-        data-l10n-id="site-data-removing-window"
-        data-l10n-attrs="title"
+        data-l10n-id="site-data-removing-dialog"
+        data-l10n-attrs="title, buttonlabelaccept"
         onload="gSiteDataRemoveSelected.init();"
         ondialogaccept="gSiteDataRemoveSelected.ondialogaccept(); return true;"
         ondialogcancel="gSiteDataRemoveSelected.ondialogcancel(); return true;"
@@ -23,11 +23,8 @@
 
   <script src="chrome://browser/content/preferences/siteDataRemoveSelected.js"/>
 
-  <stringbundle id="bundlePreferences"
-                src="chrome://browser/locale/preferences/preferences.properties"/>
-
-  <vbox id="contentContainer">
-    <hbox flex="1">
+  <vbox id="contentContainer" flex="1">
+    <hbox>
       <vbox>
         <image class="question-icon"/>
       </vbox>
@@ -44,13 +41,11 @@
       </vbox>
     </hbox>
 
-    <separator />
+    <separator/>
 
-    <vbox flex="1">
-      <label data-l10n-id="site-data-removing-table"/>
-      <separator class="thin"/>
-      <listbox id="removalList"/>
-    </vbox>
+    <label data-l10n-id="site-data-removing-table"/>
+    <separator class="thin"/>
+    <richlistbox id="removalList" class="theme-listbox" flex="1"/>
   </vbox>
 
 </dialog>

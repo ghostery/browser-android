@@ -12,6 +12,13 @@ ChromeUtils.import("resource://gre/modules/osfile.jsm");
 ChromeUtils.defineModuleGetter(this, "CrashSubmit",
   "resource://gre/modules/CrashSubmit.jsm");
 
+document.addEventListener("DOMContentLoaded", function() {
+  populateReportList();
+  document.getElementById("clear-reports").addEventListener("click", function() {
+    clearReports().then(null, Cu.reportError);
+  });
+});
+
 const buildID = Services.appinfo.appBuildID;
 
 function submitPendingReport(event) {
@@ -79,12 +86,12 @@ function populateReportList() {
     dateFormatter = {
       format(date) {
         return date.toLocaleDateString();
-      }
+      },
     };
     timeFormatter = {
       format(date) {
         return date.toLocaleTimeString();
-      }
+      },
     };
   }
   var reportURI = Services.io.newURI(reportURL);
@@ -123,12 +130,11 @@ function populateReportList() {
 }
 
 var clearReports = async function() {
-  let bundle = Services.strings.createBundle("chrome://global/locale/crashes.properties");
-
-  if (!Services.
-         prompt.confirm(window,
-                        bundle.GetStringFromName("deleteconfirm.title"),
-                        bundle.GetStringFromName("deleteconfirm.description"))) {
+  const [title, description] = await document.l10n.formatValues([
+    {id: "delete-confirm-title"},
+    {id: "delete-confirm-description"},
+  ]);
+  if (!Services.prompt.confirm(window, title, description)) {
     return;
   }
 

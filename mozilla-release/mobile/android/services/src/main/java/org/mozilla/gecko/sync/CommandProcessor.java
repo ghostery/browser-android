@@ -9,11 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v4.app.JobIntentService;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.mozilla.gecko.JobIdsConstants;
 import org.mozilla.gecko.background.common.log.Logger;
 import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.fxa.authenticator.AndroidFxAccount;
@@ -21,8 +23,8 @@ import org.mozilla.gecko.sync.repositories.NullCursorException;
 import org.mozilla.gecko.sync.repositories.android.ClientsDatabaseAccessor;
 import org.mozilla.gecko.sync.repositories.domain.ClientRecord;
 import org.mozilla.gecko.sync.telemetry.TelemetryEventCollector;
+import org.mozilla.gecko.util.StringUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -267,10 +269,10 @@ public class CommandProcessor {
       extra.put("flowID", command.flowID);
     }
     try {
-      extra.put("deviceID", Utils.byte2Hex(Utils.sha256(clientID.concat(hashedFxAUID).getBytes("UTF-8"))));
-    } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+      extra.put("deviceID", Utils.byte2Hex(Utils.sha256(clientID.concat(hashedFxAUID).getBytes(StringUtils.UTF_8))));
+    } catch (NoSuchAlgorithmException e) {
       // Should not happen.
-      Log.e(LOG_TAG, "Either UTF-8 or SHA-256 are not supported", e);
+      Log.e(LOG_TAG, "SHA-256 is not supported", e);
     }
 
     TelemetryEventCollector.recordEvent(context, "sendcommand", command.commandType, null, extra);
@@ -311,10 +313,12 @@ public class CommandProcessor {
     }
 
     final Intent sendTabNotificationIntent = new Intent();
-    sendTabNotificationIntent.setClassName(context, BrowserContract.TAB_RECEIVED_SERVICE_CLASS_NAME);
     sendTabNotificationIntent.setData(Uri.parse(uri));
     sendTabNotificationIntent.putExtra(Intent.EXTRA_TITLE, title);
     sendTabNotificationIntent.putExtra(BrowserContract.EXTRA_CLIENT_GUID, clientId);
-    final ComponentName componentName = context.startService(sendTabNotificationIntent);
+    final ComponentName componentName = new ComponentName(context, BrowserContract.TAB_RECEIVED_SERVICE_CLASS_NAME);
+    final int tabReceivedServiceJobId = JobIdsConstants.getIdForTabReceivedJob();
+
+    JobIntentService.enqueueWork(context, componentName, tabReceivedServiceJobId, sendTabNotificationIntent);
   }
 }

@@ -9,6 +9,8 @@
 #include "MainThreadUtils.h"
 #include "mozilla/Assertions.h"
 #include "mozilla/BasePrincipal.h"
+#include "mozilla/ContentPrincipal.h"
+#include "mozilla/NullPrincipal.h"
 #include "mozilla/ipc/PBackgroundSharedTypes.h"
 #include "mozilla/ipc/URIUtils.h"
 #include "mozilla/net/NeckoChannelParams.h"
@@ -17,8 +19,6 @@
 #include "nsIURI.h"
 #include "nsNetUtil.h"
 #include "mozilla/LoadInfo.h"
-#include "ContentPrincipal.h"
-#include "NullPrincipal.h"
 #include "nsContentUtils.h"
 #include "nsString.h"
 #include "nsTArray.h"
@@ -208,7 +208,7 @@ PrincipalToPrincipalInfo(nsIPrincipal* aPrincipal,
 
     *aPrincipalInfo =
       ExpandedPrincipalInfo(aPrincipal->OriginAttributesRef(),
-                            Move(whitelistInfo));
+                            std::move(whitelistInfo));
     return NS_OK;
   }
 
@@ -339,6 +339,24 @@ LoadInfoToLoadInfoArgs(nsILoadInfo *aLoadInfo,
     sandboxedLoadingPrincipalInfo = sandboxedLoadingPrincipalInfoTemp;
   }
 
+  OptionalPrincipalInfo topLevelPrincipalInfo = mozilla::void_t();
+  if (aLoadInfo->TopLevelPrincipal()) {
+    PrincipalInfo topLevelPrincipalInfoTemp;
+    rv = PrincipalToPrincipalInfo(aLoadInfo->TopLevelPrincipal(),
+                                  &topLevelPrincipalInfoTemp);
+    NS_ENSURE_SUCCESS(rv, rv);
+    topLevelPrincipalInfo = topLevelPrincipalInfoTemp;
+  }
+
+  OptionalPrincipalInfo topLevelStorageAreaPrincipalInfo = mozilla::void_t();
+  if (aLoadInfo->TopLevelStorageAreaPrincipal()) {
+    PrincipalInfo topLevelStorageAreaPrincipalInfoTemp;
+    rv = PrincipalToPrincipalInfo(aLoadInfo->TopLevelStorageAreaPrincipal(),
+                                  &topLevelStorageAreaPrincipalInfoTemp);
+    NS_ENSURE_SUCCESS(rv, rv);
+    topLevelStorageAreaPrincipalInfo = topLevelStorageAreaPrincipalInfoTemp;
+  }
+
   OptionalURIParams optionalResultPrincipalURI = mozilla::void_t();
   nsCOMPtr<nsIURI> resultPrincipalURI;
   Unused << aLoadInfo->GetResultPrincipalURI(getter_AddRefs(resultPrincipalURI));
@@ -399,6 +417,8 @@ LoadInfoToLoadInfoArgs(nsILoadInfo *aLoadInfo,
       triggeringPrincipalInfo,
       principalToInheritInfo,
       sandboxedLoadingPrincipalInfo,
+      topLevelPrincipalInfo,
+      topLevelStorageAreaPrincipalInfo,
       optionalResultPrincipalURI,
       aLoadInfo->GetSecurityFlags(),
       aLoadInfo->InternalContentPolicyType(),
@@ -408,7 +428,6 @@ LoadInfoToLoadInfoArgs(nsILoadInfo *aLoadInfo,
       aLoadInfo->GetBrowserWouldUpgradeInsecureRequests(),
       aLoadInfo->GetVerifySignedContent(),
       aLoadInfo->GetEnforceSRI(),
-      aLoadInfo->GetAllowDocumentToBeAgnosticToCSP(),
       aLoadInfo->GetForceAllowDataURI(),
       aLoadInfo->GetAllowInsecureRedirectToDataURI(),
       aLoadInfo->GetSkipContentPolicyCheckForWebRequest(),
@@ -422,6 +441,7 @@ LoadInfoToLoadInfoArgs(nsILoadInfo *aLoadInfo,
       aLoadInfo->GetInitialSecurityCheckDone(),
       aLoadInfo->GetIsInThirdPartyContext(),
       aLoadInfo->GetIsDocshellReload(),
+      aLoadInfo->GetSendCSPViolationEvents(),
       aLoadInfo->GetOriginAttributes(),
       redirectChainIncludingInternalRedirects,
       redirectChain,
@@ -435,7 +455,9 @@ LoadInfoToLoadInfoArgs(nsILoadInfo *aLoadInfo,
       aLoadInfo->GetForcePreflight(),
       aLoadInfo->GetIsPreflight(),
       aLoadInfo->GetLoadTriggeredFromExternal(),
-      aLoadInfo->GetServiceWorkerTaintingSynthesized()
+      aLoadInfo->GetServiceWorkerTaintingSynthesized(),
+      aLoadInfo->GetDocumentHasUserInteracted(),
+      aLoadInfo->GetDocumentHasLoaded()
       );
 
   return NS_OK;
@@ -475,6 +497,20 @@ LoadInfoArgsToLoadInfo(const OptionalLoadInfoArgs& aOptionalLoadInfoArgs,
   if (loadInfoArgs.sandboxedLoadingPrincipalInfo().type() != OptionalPrincipalInfo::Tvoid_t) {
     sandboxedLoadingPrincipal =
       PrincipalInfoToPrincipal(loadInfoArgs.sandboxedLoadingPrincipalInfo(), &rv);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+
+  nsCOMPtr<nsIPrincipal> topLevelPrincipal;
+  if (loadInfoArgs.topLevelPrincipalInfo().type() != OptionalPrincipalInfo::Tvoid_t) {
+    topLevelPrincipal =
+      PrincipalInfoToPrincipal(loadInfoArgs.topLevelPrincipalInfo(), &rv);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+
+  nsCOMPtr<nsIPrincipal> topLevelStorageAreaPrincipal;
+  if (loadInfoArgs.topLevelStorageAreaPrincipalInfo().type() != OptionalPrincipalInfo::Tvoid_t) {
+    topLevelStorageAreaPrincipal =
+      PrincipalInfoToPrincipal(loadInfoArgs.topLevelStorageAreaPrincipalInfo(), &rv);
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -544,6 +580,8 @@ LoadInfoArgsToLoadInfo(const OptionalLoadInfoArgs& aOptionalLoadInfoArgs,
                           triggeringPrincipal,
                           principalToInherit,
                           sandboxedLoadingPrincipal,
+                          topLevelPrincipal,
+                          topLevelStorageAreaPrincipal,
                           resultPrincipalURI,
                           clientInfo,
                           reservedClientInfo,
@@ -557,7 +595,6 @@ LoadInfoArgsToLoadInfo(const OptionalLoadInfoArgs& aOptionalLoadInfoArgs,
                           loadInfoArgs.browserWouldUpgradeInsecureRequests(),
                           loadInfoArgs.verifySignedContent(),
                           loadInfoArgs.enforceSRI(),
-                          loadInfoArgs.allowDocumentToBeAgnosticToCSP(),
                           loadInfoArgs.forceAllowDataURI(),
                           loadInfoArgs.allowInsecureRedirectToDataURI(),
                           loadInfoArgs.skipContentPolicyCheckForWebRequest(),
@@ -571,16 +608,19 @@ LoadInfoArgsToLoadInfo(const OptionalLoadInfoArgs& aOptionalLoadInfoArgs,
                           loadInfoArgs.initialSecurityCheckDone(),
                           loadInfoArgs.isInThirdPartyContext(),
                           loadInfoArgs.isDocshellReload(),
+                          loadInfoArgs.sendCSPViolationEvents(),
                           loadInfoArgs.originAttributes(),
                           redirectChainIncludingInternalRedirects,
                           redirectChain,
-                          Move(ancestorPrincipals),
+                          std::move(ancestorPrincipals),
                           loadInfoArgs.ancestorOuterWindowIDs(),
                           loadInfoArgs.corsUnsafeHeaders(),
                           loadInfoArgs.forcePreflight(),
                           loadInfoArgs.isPreflight(),
                           loadInfoArgs.loadTriggeredFromExternal(),
-                          loadInfoArgs.serviceWorkerTaintingSynthesized()
+                          loadInfoArgs.serviceWorkerTaintingSynthesized(),
+                          loadInfoArgs.documentHasUserInteracted(),
+                          loadInfoArgs.documentHasLoaded()
                           );
 
    loadInfo.forget(outLoadInfo);
@@ -589,19 +629,49 @@ LoadInfoArgsToLoadInfo(const OptionalLoadInfoArgs& aOptionalLoadInfoArgs,
 
 void
 LoadInfoToParentLoadInfoForwarder(nsILoadInfo* aLoadInfo,
-                                  ParentLoadInfoForwarderArgs* outLoadInfoChildForwardArgs)
+                                  ParentLoadInfoForwarderArgs* aForwarderArgsOut)
 {
   if (!aLoadInfo) {
+    *aForwarderArgsOut = ParentLoadInfoForwarderArgs(false, void_t(),
+                                                     nsILoadInfo::TAINTING_BASIC,
+                                                     false, // serviceWorkerTaintingSynthesized
+                                                     false, // isTracker
+                                                     false, // isTrackerBlocked
+                                                     mozilla::Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED::all, // trackerBlockedReason
+                                                     false, // documentHasUserInteracted
+                                                     false  // documentHasLoaded
+                                                    );
     return;
   }
 
-  *outLoadInfoChildForwardArgs = ParentLoadInfoForwarderArgs(
-    aLoadInfo->GetAllowInsecureRedirectToDataURI()
+  OptionalIPCServiceWorkerDescriptor ipcController = void_t();
+  Maybe<ServiceWorkerDescriptor> controller(aLoadInfo->GetController());
+  if (controller.isSome()) {
+    ipcController = controller.ref().ToIPC();
+  }
+
+  uint32_t tainting = nsILoadInfo::TAINTING_BASIC;
+  Unused << aLoadInfo->GetTainting(&tainting);
+
+  mozilla::Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED label =
+    mozilla::Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED::all;
+  Unused << aLoadInfo->GetTrackerBlockedReason(&label);
+
+  *aForwarderArgsOut = ParentLoadInfoForwarderArgs(
+    aLoadInfo->GetAllowInsecureRedirectToDataURI(),
+    ipcController,
+    tainting,
+    aLoadInfo->GetServiceWorkerTaintingSynthesized(),
+    aLoadInfo->GetIsTracker(),
+    aLoadInfo->GetIsTrackerBlocked(),
+    label,
+    aLoadInfo->GetDocumentHasUserInteracted(),
+    aLoadInfo->GetDocumentHasLoaded()
   );
 }
 
 nsresult
-MergeParentLoadInfoForwarder(ParentLoadInfoForwarderArgs const& outLoadInfoChildForwardArgs,
+MergeParentLoadInfoForwarder(ParentLoadInfoForwarderArgs const& aForwarderArgs,
                              nsILoadInfo* aLoadInfo)
 {
   if (!aLoadInfo) {
@@ -611,8 +681,118 @@ MergeParentLoadInfoForwarder(ParentLoadInfoForwarderArgs const& outLoadInfoChild
   nsresult rv;
 
   rv = aLoadInfo->SetAllowInsecureRedirectToDataURI(
-    outLoadInfoChildForwardArgs.allowInsecureRedirectToDataURI());
+    aForwarderArgs.allowInsecureRedirectToDataURI());
   NS_ENSURE_SUCCESS(rv, rv);
+
+  aLoadInfo->ClearController();
+  auto& controller = aForwarderArgs.controller();
+  if (controller.type() != OptionalIPCServiceWorkerDescriptor::Tvoid_t) {
+    aLoadInfo->SetController(
+      ServiceWorkerDescriptor(controller.get_IPCServiceWorkerDescriptor()));
+  }
+
+  if (aForwarderArgs.serviceWorkerTaintingSynthesized()) {
+    aLoadInfo->SynthesizeServiceWorkerTainting(
+      static_cast<LoadTainting>(aForwarderArgs.tainting()));
+  } else {
+    aLoadInfo->MaybeIncreaseTainting(aForwarderArgs.tainting());
+  }
+
+  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetIsTracker(aForwarderArgs.isTracker()));
+  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetIsTrackerBlocked(aForwarderArgs.isTrackerBlocked()));
+  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetTrackerBlockedReason(aForwarderArgs.trackerBlockedReason()));
+  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetDocumentHasUserInteracted(aForwarderArgs.documentHasUserInteracted()));
+  MOZ_ALWAYS_SUCCEEDS(aLoadInfo->SetDocumentHasLoaded(aForwarderArgs.documentHasLoaded()));
+
+  return NS_OK;
+}
+
+void
+LoadInfoToChildLoadInfoForwarder(nsILoadInfo* aLoadInfo,
+                                 ChildLoadInfoForwarderArgs* aForwarderArgsOut)
+{
+  if (!aLoadInfo) {
+    *aForwarderArgsOut = ChildLoadInfoForwarderArgs(void_t(), void_t(),
+                                                    void_t());
+    return;
+  }
+
+  OptionalIPCClientInfo ipcReserved = void_t();
+  Maybe<ClientInfo> reserved(aLoadInfo->GetReservedClientInfo());
+  if (reserved.isSome()) {
+    ipcReserved = reserved.ref().ToIPC();
+  }
+
+  OptionalIPCClientInfo ipcInitial = void_t();
+  Maybe<ClientInfo> initial(aLoadInfo->GetInitialClientInfo());
+  if (initial.isSome()) {
+    ipcInitial = initial.ref().ToIPC();
+  }
+
+  OptionalIPCServiceWorkerDescriptor ipcController = void_t();
+  Maybe<ServiceWorkerDescriptor> controller(aLoadInfo->GetController());
+  if (controller.isSome()) {
+    ipcController = controller.ref().ToIPC();
+  }
+
+  *aForwarderArgsOut = ChildLoadInfoForwarderArgs(
+    ipcReserved,
+    ipcInitial,
+    ipcController
+  );
+}
+
+nsresult
+MergeChildLoadInfoForwarder(const ChildLoadInfoForwarderArgs& aForwarderArgs,
+                            nsILoadInfo* aLoadInfo)
+{
+  if (!aLoadInfo) {
+    return NS_OK;
+  }
+
+  Maybe<ClientInfo> reservedClientInfo;
+  auto& ipcReserved = aForwarderArgs.reservedClientInfo();
+  if (ipcReserved.type() != OptionalIPCClientInfo::Tvoid_t) {
+    reservedClientInfo.emplace(ClientInfo(ipcReserved.get_IPCClientInfo()));
+  }
+
+  Maybe<ClientInfo> initialClientInfo;
+  auto& ipcInitial = aForwarderArgs.initialClientInfo();
+  if (ipcInitial.type() != OptionalIPCClientInfo::Tvoid_t) {
+    initialClientInfo.emplace(ClientInfo(ipcInitial.get_IPCClientInfo()));
+  }
+
+  // There should only be at most one reserved or initial ClientInfo.
+  if (NS_WARN_IF(reservedClientInfo.isSome() && initialClientInfo.isSome())) {
+    return NS_ERROR_FAILURE;
+  }
+
+  // If we received no reserved or initial ClientInfo, then we must not
+  // already have one set.  There are no use cases where this should
+  // happen and we don't have a way to clear the current value.
+  if (NS_WARN_IF(reservedClientInfo.isNothing() &&
+                 initialClientInfo.isNothing() &&
+                 (aLoadInfo->GetReservedClientInfo().isSome() ||
+                  aLoadInfo->GetInitialClientInfo().isSome()))) {
+    return NS_ERROR_FAILURE;
+  }
+
+  if (reservedClientInfo.isSome()) {
+    // We need to override here instead of simply set the value.  This
+    // allows us to change the reserved client.  This is necessary when
+    // the ClientChannelHelper created a new reserved client in the
+    // child-side of the redirect.
+    aLoadInfo->OverrideReservedClientInfoInParent(reservedClientInfo.ref());
+  } else if (initialClientInfo.isSome()) {
+    aLoadInfo->SetInitialClientInfo(initialClientInfo.ref());
+  }
+
+  aLoadInfo->ClearController();
+  auto& controller = aForwarderArgs.controller();
+  if (controller.type() != OptionalIPCServiceWorkerDescriptor::Tvoid_t) {
+    aLoadInfo->SetController(
+      ServiceWorkerDescriptor(controller.get_IPCServiceWorkerDescriptor()));
+  }
 
   return NS_OK;
 }

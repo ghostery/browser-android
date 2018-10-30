@@ -21,6 +21,7 @@
 #include "mozilla/dom/File.h"
 #include "mozilla/Services.h"
 #include "WidgetUtils.h"
+#include "nsSimpleEnumerator.h"
 #include "nsThreadUtils.h"
 
 #include "nsBaseFilePicker.h"
@@ -53,8 +54,8 @@ LocalFileToDirectoryOrBlob(nsPIDOMWindowInner* aWindow,
     return NS_OK;
   }
 
-  nsCOMPtr<nsIDOMBlob> blob = File::CreateFromFile(aWindow, aFile);
-  blob.forget(aResult);
+  RefPtr<File> file = File::CreateFromFile(aWindow, aFile);
+  file.forget(aResult);
   return NS_OK;
 }
 
@@ -100,11 +101,9 @@ private:
   RefPtr<nsIFilePickerShownCallback> mCallback;
 };
 
-class nsBaseFilePickerEnumerator : public nsISimpleEnumerator
+class nsBaseFilePickerEnumerator : public nsSimpleEnumerator
 {
 public:
-  NS_DECL_ISUPPORTS
-
   nsBaseFilePickerEnumerator(nsPIDOMWindowOuter* aParent,
                              nsISimpleEnumerator* iterator,
                              int16_t aMode)
@@ -112,6 +111,8 @@ public:
     , mParent(aParent->GetCurrentInnerWindow())
     , mMode(aMode)
   {}
+
+  const nsID& DefaultInterface() override { return NS_GET_IID(nsIFile); }
 
   NS_IMETHOD
   GetNext(nsISupports** aResult) override
@@ -141,17 +142,11 @@ public:
     return mIterator->HasMoreElements(aResult);
   }
 
-protected:
-  virtual ~nsBaseFilePickerEnumerator()
-  {}
-
 private:
   nsCOMPtr<nsISimpleEnumerator> mIterator;
   nsCOMPtr<nsPIDOMWindowInner> mParent;
   int16_t mMode;
 };
-
-NS_IMPL_ISUPPORTS(nsBaseFilePickerEnumerator, nsISimpleEnumerator)
 
 nsBaseFilePicker::nsBaseFilePicker()
   : mAddToRecentDocs(true)
@@ -169,7 +164,7 @@ NS_IMETHODIMP nsBaseFilePicker::Init(mozIDOMWindowProxy* aParent,
                                      const nsAString& aTitle,
                                      int16_t aMode)
 {
-  NS_PRECONDITION(aParent, "Null parent passed to filepicker, no file "
+  MOZ_ASSERT(aParent, "Null parent passed to filepicker, no file "
                   "picker for you!");
 
   mParent = nsPIDOMWindowOuter::From(aParent);
@@ -290,7 +285,7 @@ NS_IMETHODIMP nsBaseFilePicker::GetFiles(nsISimpleEnumerator **aFiles)
 
   files.AppendObject(file);
 
-  return NS_NewArrayEnumerator(aFiles, files);
+  return NS_NewArrayEnumerator(aFiles, files, NS_GET_IID(nsIFile));
 }
 
 // Set the display directory
@@ -429,4 +424,3 @@ nsBaseFilePicker::GetDomFileOrDirectoryEnumerator(nsISimpleEnumerator** aValue)
   retIter.forget(aValue);
   return NS_OK;
 }
-

@@ -178,8 +178,6 @@
 <!ENTITY calendar.context.attendance.menu.label                 "Partecipazione">
 <!ENTITY calendar.context.attendance.menu.accesskey             "P">
 <!ENTITY calendar.context.attendance.occurrence.label           "Questa occorrenza">
-<!ENTITY calendar.context.attendance.all.label        "Tutte le occorrenze" >
-
 <!ENTITY calendar.context.attendance.all2.label                 "Serie completa">
 <!ENTITY calendar.context.attendance.send.label                 "Invia una notifica ora">
 <!ENTITY calendar.context.attendance.send.accesskey             "v">
@@ -324,7 +322,7 @@
 
 <!-- Calendar Alarm Dialog -->
 
-<!ENTITY calendar.alarm.location.label              "Luogo:" >
+<!ENTITY calendar.alarm.location.label              "Indirizzo:" >
 <!ENTITY calendar.alarm.details.label               "Dettagli…" >
 
 <!ENTITY calendar.alarm.snoozefor.label             "Snooze per" >
@@ -358,7 +356,7 @@
 <!ENTITY calendarproperties.caldav.label                   "CalDAV">
 <!ENTITY calendarproperties.wcap.label                     "Sun Java System Calendar Server (WCAP)">
 <!ENTITY calendarproperties.format.label                   "Formato:">
-<!ENTITY calendarproperties.location.label                 "Luogo:">
+<!ENTITY calendarproperties.location.label                 "Indirizzo:">
 <!ENTITY calendarproperties.refreshInterval.label          "Aggiorna calendario:">
 <!ENTITY calendarproperties.refreshInterval.manual.label   "Manualmente">
 <!ENTITY calendarproperties.name.label                     "Nome:">

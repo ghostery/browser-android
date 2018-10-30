@@ -6,6 +6,7 @@
 
 const {Cc, Ci, Cu} = require("chrome");
 
+loader.lazyRequireGetter(this, "isShadowRoot", "devtools/shared/layout/utils", true);
 loader.lazyRequireGetter(this, "nodeFilterConstants", "devtools/shared/dom-node-filter-constants");
 loader.lazyRequireGetter(this, "standardTreeWalkerFilter", "devtools/server/actors/inspector/utils", true);
 
@@ -73,11 +74,22 @@ DocumentWalker.prototype = {
   },
 
   parentNode: function() {
+    if (isShadowRoot(this.currentNode)) {
+      this.currentNode = this.currentNode.host;
+      return this.currentNode;
+    }
+
+    const parentNode = this.currentNode.parentNode;
+    // deep-tree-walker currently does not return shadowRoot elements as parentNodes.
+    if (parentNode && isShadowRoot(parentNode)) {
+      this.currentNode = parentNode;
+      return this.currentNode;
+    }
     return this.walker.parentNode();
   },
 
   nextNode: function() {
-    let node = this.walker.currentNode;
+    const node = this.walker.currentNode;
     if (!node) {
       return null;
     }
@@ -91,7 +103,7 @@ DocumentWalker.prototype = {
   },
 
   firstChild: function() {
-    let node = this.walker.currentNode;
+    const node = this.walker.currentNode;
     if (!node) {
       return null;
     }
@@ -105,7 +117,7 @@ DocumentWalker.prototype = {
   },
 
   lastChild: function() {
-    let node = this.walker.currentNode;
+    const node = this.walker.currentNode;
     if (!node) {
       return null;
     }
@@ -137,7 +149,7 @@ DocumentWalker.prototype = {
   getStartingNode: function(node, skipTo) {
     // Keep a reference on the starting node in case we can't find a node compatible with
     // the filter.
-    let startingNode = node;
+    const startingNode = node;
 
     if (skipTo === SKIP_TO_PARENT) {
       while (node && this.isSkippedNode(node)) {

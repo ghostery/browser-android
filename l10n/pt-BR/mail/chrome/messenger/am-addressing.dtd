@@ -25,9 +25,6 @@
 <!ENTITY useHtml.accesskey                    "H">
 <!ENTITY autoQuote.label                      "Ao responder, citar a mensagem original">
 <!ENTITY autoQuote.accesskey                  "A">
-<!-- LOCALIZATION NOTE (then.label): This will concatenate with the 4 strings that follow. -->
-<!ENTITY then.label                           "E então:">
-<!ENTITY then.accesskey                       "E">
 <!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY quoting.label                        "Ao citar,">
 <!ENTITY quoting.accesskey                    "c">
@@ -37,10 +34,10 @@
 <!ENTITY place.label                          "Inserir a assinatura no:">
 <!ENTITY place.accesskey                      "I">
 <!ENTITY belowText.label                      "Fim da mensagem (recomendado)">
-<!ENTITY aboveText.label                      "Início da mensagem">
-<!ENTITY includeSigOnReply.label              "Ao responder, incluir assinatura">
+<!ENTITY aboveText.label                      "abaixo da minha resposta (acima da citação)">
+<!ENTITY includeSigOnReply.label              "Incluir a assinatura nas respostas">
 <!ENTITY includeSigOnReply.accesskey          "o">
-<!ENTITY includeSigOnForward.label            "Ao encaminhar, incluir assinatura">
+<!ENTITY includeSigOnForward.label            "Incluir a assinatura nos encaminhamentos">
 <!ENTITY includeSigOnForward.accesskey        "n">
 
 <!ENTITY globalComposingPrefs.label           "Preferências globais de edição…">

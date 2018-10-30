@@ -133,9 +133,8 @@ private:
     nsresult RecheckCaptivePortalIfLocalRedirect(nsIChannel* newChan);
 
     // Prefs wrangling
-    void PrefsChanged(nsIPrefBranch *prefs, const char *pref = nullptr);
-    void GetPrefBranch(nsIPrefBranch **);
-    void ParsePortList(nsIPrefBranch *prefBranch, const char *pref, bool remove);
+    void PrefsChanged(const char *pref = nullptr);
+    void ParsePortList(const char *pref, bool remove);
 
     nsresult InitializeSocketTransportService();
     nsresult InitializeNetworkLinkService();
@@ -148,7 +147,7 @@ private:
     nsresult NewChannelFromURIWithProxyFlagsInternal(nsIURI* aURI,
                                                     nsIURI* aProxyURI,
                                                     uint32_t aProxyFlags,
-                                                    nsIDOMNode* aLoadingNode,
+                                                    nsINode* aLoadingNode,
                                                     nsIPrincipal* aLoadingPrincipal,
                                                     nsIPrincipal* aTriggeringPrincipal,
                                                     const mozilla::Maybe<mozilla::dom::ClientInfo>& aLoadingClientInfo,

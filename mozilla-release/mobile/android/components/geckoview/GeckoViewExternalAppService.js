@@ -8,7 +8,7 @@ ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/GeckoViewUtils.jsm");
 
 /* global debug:false, warn:false */
-GeckoViewUtils.initLogging("GeckoView.ExternalAppService", this);
+GeckoViewUtils.initLogging("ExternalAppService", this);
 
 ChromeUtils.defineModuleGetter(this, "EventDispatcher",
   "resource://gre/modules/Messaging.jsm");
@@ -26,12 +26,20 @@ ExternalAppService.prototype = {
     debug `doContent: uri=${channel.URI.displaySpec}
                       contentType=${channel.contentType}`;
 
+    let filename = null;
+    try {
+      filename = channel.contentDispositionFilename;
+    } catch (e) {
+      // This throws NS_ERROR_NOT_AVAILABLE if there is not
+      // Content-disposition header.
+    }
+
     GeckoViewUtils.getDispatcherForWindow(context).sendRequest({
       type: "GeckoView:ExternalResponse",
       uri: channel.URI.displaySpec,
       contentType: channel.contentType,
       contentLength: channel.contentLength,
-      filename: channel.contentDispositionFilename
+      filename: filename
     });
 
     request.cancel(Cr.NS_ERROR_ABORT);

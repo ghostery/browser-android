@@ -7,12 +7,12 @@
 var EXPORTED_SYMBOLS = [ "YandexTranslator" ];
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/Log.jsm");
 ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 ChromeUtils.import("resource://services-common/async.js");
 ChromeUtils.import("resource://gre/modules/Http.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-Cu.importGlobalProperties(["XMLHttpRequest"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["XMLHttpRequest"]);
 
 // The maximum amount of net data allowed per request on Bing's API.
 const MAX_REQUEST_DATA = 5000; // Documentation says 10000 but anywhere
@@ -167,7 +167,7 @@ this.YandexTranslator.prototype = {
     if (--this._pendingRequests == 0) {
       if (this._partialSuccess) {
         this._onFinishedDeferred.resolve({
-          characterCount: this._translatedCharacterCount
+          characterCount: this._translatedCharacterCount,
         });
       } else {
         let error = this._serviceUnavailable ? "unavailable" : "failure";
@@ -251,7 +251,7 @@ this.YandexTranslator.prototype = {
         return {
           data: output,
           finished: false,
-          lastIndex: i
+          lastIndex: i,
         };
       }
 
@@ -263,9 +263,9 @@ this.YandexTranslator.prototype = {
     return {
       data: output,
       finished: true,
-      lastIndex: 0
+      lastIndex: 0,
     };
-  }
+  },
 };
 
 /**
@@ -317,7 +317,7 @@ YandexRequest.prototype = {
           onError(e, responseText, xhr) {
             reject(xhr);
           },
-          postData: params
+          postData: params,
         };
 
         // Fire the request.
@@ -325,7 +325,7 @@ YandexRequest.prototype = {
 
       });
     })();
-  }
+  },
 };
 
 /**

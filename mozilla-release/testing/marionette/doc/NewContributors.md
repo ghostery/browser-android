@@ -92,11 +92,11 @@ Getting the code, running tests
 
        * These are the same tests that you ran with `./mach
          marionette test`, but they are testing the Firefox Nightly
-         that you just installed.  (`./mach marionette tests`
+         that you just installed.  (`./mach marionette test`
          just calls code in runtests.py).
 
      * Configure Mercurial with helpful extensions for Mozilla
-       development by running `./mach mercurial-setup`.
+       development by running `./mach vcs-setup`.
 
        * It should install extensions like firefox-trees and set
          you up to be able to use MozReview, our code-review tool.
@@ -105,8 +105,8 @@ Getting the code, running tests
          you respond with 'No'.
 
 [mach]: https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/mach
-[Marionette]: ../README.md
-[Running Marionette tests]: https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/Running_Tests
+[Marionette]: index.html
+[Running Marionette tests]: PythonTests.html
 [latest results on Treeherder]: https://treeherder.mozilla.org/#/jobs?repo=mozilla-inbound&filter-job_type_symbol=Mn
 [Firefox Nightly]: https://nightly.mozilla.org/
 [virtualenv]: https://www.dabapps.com/blog/introduction-to-pip-and-virtualenv-python/
@@ -117,21 +117,7 @@ Getting the code, running tests
 Work on bugs and get code review
 --------------------------------
 
-Once you've completed the above basics, find a bug to work on
-at [Bugs Ahoy](https://www.joshmatthews.net/bugsahoy/?automation=1). If
-you don't find any, ask :whimboo, :maja_zf
-or :ato in #ateam for a good first bug to work on.
-
-To work on the bug that is suggested to you and push a patch up
-for review, follow the [Firefox Workflow] in hg.
-
-After testing your code locally, you will push your patch to be
-reviewed in MozReview.  To set up MozReview, see this [configuration]
-page.  (Note: the only kind of account you need for MozReview is
-Bugzilla (not LDAP) and you can only use HTTPS, not SSH.)
-
-[Firefox Workflow]: https://mozilla-version-control-tools.readthedocs.org/en/latest/hgmozilla/firefoxworkflow.html
-[configuration]: https://mozilla-version-control-tools.readthedocs.org/en/latest/mozreview/install-mercurial.html#configuring-mercurial-to-use-mozreview
+See <Patches.md> on how to submit patches.
 
 
 Resources
@@ -160,8 +146,8 @@ Resources
     * Textbook about general open source practices: [Practical
       Open Source Software Exploration]
 
-  * If you'd rather use git instead of hg, see git workflow for
-    Gecko development and/or [this blog post by :ato].
+  * If you'd rather use git instead of hg, see [git workflow for
+    Gecko development] and/or [this blog post by :ato].
 
 [searchfox]: https://searchfox.org/mozilla-central/source/testing/marionette/
 [guide for new contributors]: https://ateam-bootcamp.readthedocs.org/en/latest/guide/index.html#new-contributor-guide
@@ -170,3 +156,4 @@ Resources
 [Practical Open Source Software Exploration]: https://quaid.fedorapeople.org/TOS/Practical_Open_Source_Software_Exploration/html/index.html
 [git workflow for Gecko development]: https://github.com/glandium/git-cinnabar/wiki/Mozilla:-A-git-workflow-for-Gecko-development
 [this blog post by :ato]: https://sny.no/2016/03/geckogit
+[git workflow for Gecko development]: https://github.com/glandium/git-cinnabar/wiki/Mozilla:-A-git-workflow-for-Gecko-development

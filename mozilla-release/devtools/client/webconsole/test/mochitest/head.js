@@ -43,10 +43,10 @@ registerCleanupFunction(async function() {
   Services.prefs.getChildList("devtools.webconsole.filter").forEach(pref => {
     Services.prefs.clearUserPref(pref);
   });
-  let browserConsole = HUDService.getBrowserConsole();
+  const browserConsole = HUDService.getBrowserConsole();
   if (browserConsole) {
     if (browserConsole.jsterm) {
-      browserConsole.jsterm.clearOutput(true);
+      browserConsole.jsterm.hud.clearOutput(true);
     }
     await HUDService.toggleBrowserConsole();
   }
@@ -64,13 +64,13 @@ registerCleanupFunction(async function() {
  *         Resolves to the toolbox.
  */
 async function openNewTabAndConsole(url, clearJstermHistory = true) {
-  let toolbox = await openNewTabAndToolbox(url, "webconsole");
-  let hud = toolbox.getCurrentPanel().hud;
+  const toolbox = await openNewTabAndToolbox(url, "webconsole");
+  const hud = toolbox.getCurrentPanel().hud;
   hud.jsterm._lazyVariablesView = false;
 
   if (clearJstermHistory) {
     // Clearing history that might have been set in previous tests.
-    await hud.jsterm.clearHistory();
+    await hud.ui.consoleOutput.dispatchClearHistory();
   }
 
   return hud;
@@ -84,7 +84,7 @@ async function openNewTabAndConsole(url, clearJstermHistory = true) {
  * @param object hud
  */
 function logAllStoreChanges(hud) {
-  const store = hud.ui.newConsoleOutput.getStore();
+  const store = hud.ui.consoleOutput.getStore();
   // Adding logging each time the store is modified in order to check
   // the store state in case of failure.
   store.subscribe(() => {
@@ -110,13 +110,13 @@ function waitForMessages({ hud, messages }) {
     const matchedMessages = [];
     hud.ui.on("new-messages",
       function messagesReceived(newMessages) {
-        for (let message of messages) {
+        for (const message of messages) {
           if (message.matched) {
             continue;
           }
 
-          for (let newMessage of newMessages) {
-            let messageBody = newMessage.node.querySelector(".message-body");
+          for (const newMessage of newMessages) {
+            const messageBody = newMessage.node.querySelector(".message-body");
             if (messageBody.textContent.includes(message.text)) {
               matchedMessages.push(newMessage);
               message.matched = true;
@@ -149,13 +149,13 @@ function waitForMessages({ hud, messages }) {
 function waitForRepeatedMessage(hud, text, repeat) {
   return waitFor(() => {
     // Wait for a message matching the provided text.
-    let node = findMessage(hud, text);
+    const node = findMessage(hud, text);
     if (!node) {
       return false;
     }
 
     // Check if there is a repeat node with the expected count.
-    let repeatNode = node.querySelector(".message-repeats");
+    const repeatNode = node.querySelector(".message-repeats");
     if (repeatNode && parseInt(repeatNode.textContent, 10) === repeat) {
       return node;
     }
@@ -240,10 +240,10 @@ function findMessages(hud, text, selector = ".message") {
  * @return promise
  */
 async function openContextMenu(hud, element) {
-  let onConsoleMenuOpened = hud.ui.newConsoleOutput.once("menu-open");
+  const onConsoleMenuOpened = hud.ui.consoleOutput.once("menu-open");
   synthesizeContextMenuEvent(element);
   await onConsoleMenuOpened;
-  const doc = hud.ui.newConsoleOutput.owner.chromeWindow.document;
+  const doc = hud.ui.consoleOutput.owner.chromeWindow.document;
   return doc.getElementById("webconsole-menu");
 }
 
@@ -256,13 +256,13 @@ async function openContextMenu(hud, element) {
  * @return promise
  */
 function hideContextMenu(hud) {
-  const doc = hud.ui.newConsoleOutput.owner.chromeWindow.document;
-  let popup = doc.getElementById("webconsole-menu");
+  const doc = hud.ui.consoleOutput.owner.chromeWindow.document;
+  const popup = doc.getElementById("webconsole-menu");
   if (!popup) {
     return Promise.resolve();
   }
 
-  let onPopupHidden = once(popup, "popuphidden");
+  const onPopupHidden = once(popup, "popuphidden");
   popup.hidePopup();
   return onPopupHidden;
 }
@@ -305,8 +305,8 @@ function waitForNodeMutation(node, observeConfig = {}) {
  */
 async function testOpenInDebugger(hud, toolbox, text) {
   info(`Finding message for open-in-debugger test; text is "${text}"`);
-  let messageNode = await waitFor(() => findMessage(hud, text));
-  let frameLinkNode = messageNode.querySelector(".message-location .frame-link");
+  const messageNode = await waitFor(() => findMessage(hud, text));
+  const frameLinkNode = messageNode.querySelector(".message-location .frame-link");
   ok(frameLinkNode, "The message does have a location link");
   await checkClickOnNode(hud, toolbox, frameLinkNode);
 }
@@ -317,22 +317,22 @@ async function testOpenInDebugger(hud, toolbox, text) {
 async function checkClickOnNode(hud, toolbox, frameLinkNode) {
   info("checking click on node location");
 
-  let url = frameLinkNode.getAttribute("data-url");
+  const url = frameLinkNode.getAttribute("data-url");
   ok(url, `source url found ("${url}")`);
 
-  let line = frameLinkNode.getAttribute("data-line");
+  const line = frameLinkNode.getAttribute("data-line");
   ok(line, `source line found ("${line}")`);
 
-  let onSourceInDebuggerOpened = once(hud.ui, "source-in-debugger-opened");
+  const onSourceInDebuggerOpened = once(hud.ui, "source-in-debugger-opened");
 
   EventUtils.sendMouseEvent({ type: "click" },
     frameLinkNode.querySelector(".frame-link-filename"));
 
   await onSourceInDebuggerOpened;
 
-  let dbg = toolbox.getPanel("jsdebugger");
+  const dbg = toolbox.getPanel("jsdebugger");
   is(
-    dbg._selectors.getSelectedSource(dbg._getState()).get("url"),
+    dbg._selectors.getSelectedSource(dbg._getState()).url,
     url,
     "expected source url"
   );
@@ -347,48 +347,157 @@ function hasFocus(node) {
 }
 
 /**
- * Set the value of the JsTerm and its caret position, and fire a completion request.
+ * Set the value of the JsTerm and its caret position, and wait for the autocompletion
+ * to be updated.
  *
  * @param {JsTerm} jsterm
  * @param {String} value : The value to set the jsterm to.
- * @param {Integer} caretIndexOffset : A number that will be added to value.length
- *                  when setting the caret. A negative number will place the caret
- *                  in (end - offset) position. Default to 0 (caret set at the end)
- * @param {Integer} completionType : One of the following jsterm property
- *                   - COMPLETE_FORWARD
- *                   - COMPLETE_BACKWARD
- *                   - COMPLETE_HINT_ONLY
- *                   - COMPLETE_PAGEUP
- *                   - COMPLETE_PAGEDOWN
- *                  Will default to COMPLETE_HINT_ONLY.
+ * @param {Integer} caretPosition : The index where to place the cursor. A negative
+ *                  number will place the caret at (value.length - offset) position.
+ *                  Default to value.length (caret set at the end).
  * @returns {Promise} resolves when the jsterm is completed.
  */
-function jstermSetValueAndComplete(jsterm, value, caretIndexOffset = 0, completionType) {
-  const {inputNode} = jsterm;
-  inputNode.value = value;
-  let index = value.length + caretIndexOffset;
-  inputNode.setSelectionRange(index, index);
+async function setInputValueForAutocompletion(
+  jsterm,
+  value,
+  caretPosition = value.length,
+) {
+  jsterm.setInputValue("");
+  jsterm.focus();
 
-  return jstermComplete(jsterm, completionType);
+  const updated = jsterm.once("autocomplete-updated");
+  EventUtils.sendString(value);
+  await updated;
+
+  if (caretPosition < 0) {
+    caretPosition = value.length + caretPosition;
+  }
+
+  if (Number.isInteger(caretPosition)) {
+    if (jsterm.inputNode) {
+      const {inputNode} = jsterm;
+      inputNode.value = value;
+      inputNode.setSelectionRange(caretPosition, caretPosition);
+    }
+
+    if (jsterm.editor) {
+      jsterm.editor.setCursor(jsterm.editor.getPosition(caretPosition));
+    }
+  }
 }
 
 /**
- * Fires a completion request on the jsterm with the specified completionType
+ * Checks if the jsterm has the expected completion value.
  *
  * @param {JsTerm} jsterm
- * @param {Integer} completionType : One of the following jsterm property
- *                   - COMPLETE_FORWARD
- *                   - COMPLETE_BACKWARD
- *                   - COMPLETE_HINT_ONLY
- *                   - COMPLETE_PAGEUP
- *                   - COMPLETE_PAGEDOWN
- *                  Will default to COMPLETE_HINT_ONLY.
- * @returns {Promise} resolves when the jsterm is completed.
+ * @param {String} expectedValue
+ * @param {String} assertionInfo: Description of the assertion passed to `is`.
  */
-function jstermComplete(jsterm, completionType = jsterm.COMPLETE_HINT_ONLY) {
-  const updated = jsterm.once("autocomplete-updated");
-  jsterm.complete(completionType);
-  return updated;
+function checkJsTermCompletionValue(jsterm, expectedValue, assertionInfo) {
+  const completionValue = getJsTermCompletionValue(jsterm);
+  if (completionValue === null) {
+    ok(false, "Couldn't retrieve the completion value");
+  }
+
+  info(`Expects "${expectedValue}", is "${completionValue}"`);
+
+  if (jsterm.completeNode) {
+    is(completionValue, expectedValue, assertionInfo);
+  } else {
+    // CodeMirror jsterm doesn't need to add prefix-spaces.
+    is(completionValue, expectedValue.trim(), assertionInfo);
+  }
+}
+
+/**
+ * Checks if the cursor on jsterm is at the expected position.
+ *
+ * @param {JsTerm} jsterm
+ * @param {Integer} expectedCursorIndex
+ * @param {String} assertionInfo: Description of the assertion passed to `is`.
+ */
+function checkJsTermCursor(jsterm, expectedCursorIndex, assertionInfo) {
+  if (jsterm.inputNode) {
+    const {selectionStart, selectionEnd} = jsterm.inputNode;
+    is(selectionStart, expectedCursorIndex, assertionInfo);
+    ok(selectionStart === selectionEnd);
+  } else {
+    is(jsterm.editor.getCursor().ch, expectedCursorIndex, assertionInfo);
+  }
+}
+
+/**
+ * Checks the jsterm value and the cursor position given an expected string containing
+ * a "|" to indicate the expected cursor position.
+ *
+ * @param {JsTerm} jsterm
+ * @param {String} expectedStringWithCursor:
+ *                  String with a "|" to indicate the expected cursor position.
+ *                  For example, this is how you assert an empty value with the focus "|",
+ *                  and this indicates the value should be "test" and the cursor at the
+ *                  end of the input: "test|".
+ * @param {String} assertionInfo: Description of the assertion passed to `is`.
+ */
+function checkJsTermValueAndCursor(jsterm, expectedStringWithCursor, assertionInfo) {
+  info(`Checking jsterm state: \n${expectedStringWithCursor}`);
+  if (!expectedStringWithCursor.includes("|")) {
+    ok(false,
+      `expectedStringWithCursor must contain a "|" char to indicate cursor position`);
+  }
+
+  const inputValue = expectedStringWithCursor.replace("|", "");
+  is(jsterm.getInputValue(), inputValue, "jsterm has expected value");
+  if (jsterm.inputNode) {
+    is(jsterm.inputNode.selectionStart, jsterm.inputNode.selectionEnd);
+    is(jsterm.inputNode.selectionStart, expectedStringWithCursor.indexOf("|"),
+      assertionInfo);
+  } else {
+    const lines = expectedStringWithCursor.split("\n");
+    const lineWithCursor = lines.findIndex(line => line.includes("|"));
+    const {ch, line} = jsterm.editor.getCursor();
+    is(line, lineWithCursor, assertionInfo + " - correct line");
+    is(ch, lines[lineWithCursor].indexOf("|"), assertionInfo + " - correct ch");
+  }
+}
+
+/**
+ * Returns the jsterm completion value, whether there's CodeMirror enabled or not.
+ *
+ * @param {JsTerm} jsterm
+ * @returns {String}
+ */
+function getJsTermCompletionValue(jsterm) {
+  if (jsterm.completeNode) {
+    return jsterm.completeNode.value;
+  }
+
+  if (jsterm.editor) {
+    return jsterm.editor.getAutoCompletionText();
+  }
+
+  return null;
+}
+
+/**
+ * Returns a boolean indicating if the jsterm is focused, whether there's CodeMirror
+ * enabled or not.
+ *
+ * @param {JsTerm} jsterm
+ * @returns {Boolean}
+ */
+function isJstermFocused(jsterm) {
+  const document = jsterm.outputNode.ownerDocument;
+  const documentIsFocused = document.hasFocus();
+
+  if (jsterm.inputNode) {
+    return document.activeElement == jsterm.inputNode && documentIsFocused;
+  }
+
+  if (jsterm.editor) {
+    return documentIsFocused && jsterm.editor.hasFocus();
+  }
+
+  return false;
 }
 
 /**
@@ -410,9 +519,9 @@ async function openDebugger(options = {}) {
     options.tab = gBrowser.selectedTab;
   }
 
-  let target = TargetFactory.forTab(options.tab);
+  const target = TargetFactory.forTab(options.tab);
   let toolbox = gDevTools.getToolbox(target);
-  let dbgPanelAlreadyOpen = toolbox && toolbox.getPanel("jsdebugger");
+  const dbgPanelAlreadyOpen = toolbox && toolbox.getPanel("jsdebugger");
   if (dbgPanelAlreadyOpen) {
     await toolbox.selectTool("jsdebugger");
 
@@ -424,7 +533,7 @@ async function openDebugger(options = {}) {
   }
 
   toolbox = await gDevTools.showToolbox(target, "jsdebugger");
-  let panel = toolbox.getCurrentPanel();
+  const panel = toolbox.getCurrentPanel();
 
   // Do not clear VariableView lazily so it doesn't disturb test ending.
   panel._view.Variables.lazyEmpty = false;
@@ -454,7 +563,7 @@ async function openInspector(options = {}) {
  *         A promise that is resolved with the console hud once the web console is open.
  */
 async function openConsole(tab) {
-  let target = TargetFactory.forTab(tab || gBrowser.selectedTab);
+  const target = TargetFactory.forTab(tab || gBrowser.selectedTab);
   const toolbox = await gDevTools.showToolbox(target, "webconsole");
   return toolbox.getCurrentPanel().hud;
 }
@@ -469,8 +578,8 @@ async function openConsole(tab) {
  *         A promise that is resolved once the web console is closed.
  */
 async function closeConsole(tab = gBrowser.selectedTab) {
-  let target = TargetFactory.forTab(tab);
-  let toolbox = gDevTools.getToolbox(target);
+  const target = TargetFactory.forTab(tab);
+  const toolbox = gDevTools.getToolbox(target);
   if (toolbox) {
     await toolbox.destroy();
   }
@@ -495,16 +604,19 @@ async function closeConsole(tab = gBrowser.selectedTab) {
  *            or null(if event not fired)
  */
 function simulateLinkClick(element, clickEventProps) {
+  const browserWindow = Services.wm.getMostRecentWindow(gDevTools.chromeWindowType);
+
   // Override LinkIn methods to prevent navigating.
-  let oldOpenTrustedLinkIn = window.openTrustedLinkIn;
-  let oldOpenWebLinkIn = window.openWebLinkIn;
+  const oldOpenTrustedLinkIn = browserWindow.openTrustedLinkIn;
+  const oldOpenWebLinkIn = browserWindow.openWebLinkIn;
 
   const onOpenLink = new Promise((resolve) => {
-    window.openWebLinkIn = window.openTrustedLinkIn = function(link, where) {
-      window.openTrustedLinkIn = oldOpenTrustedLinkIn;
-      window.openWebLinkIn = oldOpenWebLinkIn;
+    const openLinkIn = function(link, where) {
+      browserWindow.openTrustedLinkIn = oldOpenTrustedLinkIn;
+      browserWindow.openWebLinkIn = oldOpenWebLinkIn;
       resolve({link: link, where});
     };
+    browserWindow.openWebLinkIn = browserWindow.openTrustedLinkIn = openLinkIn;
     if (clickEventProps) {
       // Click on the link using the event properties.
       element.dispatchEvent(clickEventProps);
@@ -519,8 +631,8 @@ function simulateLinkClick(element, clickEventProps) {
   let timeoutId;
   const onTimeout = new Promise(function(resolve) {
     timeoutId = setTimeout(() => {
-      window.openTrustedLinkIn = oldOpenTrustedLinkIn;
-      window.openWebLinkIn = oldOpenWebLinkIn;
+      browserWindow.openTrustedLinkIn = oldOpenTrustedLinkIn;
+      browserWindow.openWebLinkIn = oldOpenWebLinkIn;
       timeoutId = null;
       resolve({link: null, where: null});
     }, 1000);
@@ -543,7 +655,7 @@ function simulateLinkClick(element, clickEventProps) {
  *          A Promise that resolves when the window is ready.
  */
 function openNewBrowserWindow(options) {
-  let win = OpenBrowserWindow(options);
+  const win = OpenBrowserWindow(options);
   return new Promise(resolve => {
     Services.obs.addObserver(function observer(subject, topic) {
       if (win == subject) {
@@ -568,23 +680,24 @@ async function openMessageInNetmonitor(toolbox, hud, url, urlInConsole) {
   // By default urlInConsole should be the same as the complete url.
   urlInConsole = urlInConsole || url;
 
-  let message = await waitFor(() => findMessage(hud, urlInConsole));
+  const message = await waitFor(() => findMessage(hud, urlInConsole));
 
-  let onNetmonitorSelected = toolbox.once("netmonitor-selected", (event, panel) => {
+  const onNetmonitorSelected = toolbox.once("netmonitor-selected", (event, panel) => {
     return panel;
   });
 
-  let menuPopup = await openContextMenu(hud, message);
-  let openInNetMenuItem = menuPopup.querySelector("#console-menu-open-in-network-panel");
+  const menuPopup = await openContextMenu(hud, message);
+  const openInNetMenuItem =
+    menuPopup.querySelector("#console-menu-open-in-network-panel");
   ok(openInNetMenuItem, "open in network panel item is enabled");
   openInNetMenuItem.click();
 
   const {panelWin} = await onNetmonitorSelected;
   ok(true, "The netmonitor panel is selected when clicking on the network message");
 
-  let { store, windowRequire } = panelWin;
-  let nmActions = windowRequire("devtools/client/netmonitor/src/actions/index");
-  let { getSelectedRequest } =
+  const { store, windowRequire } = panelWin;
+  const nmActions = windowRequire("devtools/client/netmonitor/src/actions/index");
+  const { getSelectedRequest } =
     windowRequire("devtools/client/netmonitor/src/selectors/index");
 
   store.dispatch(nmActions.batchEnable(false));
@@ -598,13 +711,13 @@ async function openMessageInNetmonitor(toolbox, hud, url, urlInConsole) {
 }
 
 function selectNode(hud, node) {
-  let outputContainer = hud.ui.outputNode.querySelector(".webconsole-output");
+  const outputContainer = hud.ui.outputNode.querySelector(".webconsole-output");
 
   // We must first blur the input or else we can't select anything.
   outputContainer.ownerDocument.activeElement.blur();
 
-  let selection = outputContainer.ownerDocument.getSelection();
-  let range = document.createRange();
+  const selection = outputContainer.ownerDocument.getSelection();
+  const range = document.createRange();
   range.selectNodeContents(node);
   selection.removeAllRanges();
   selection.addRange(range);
@@ -618,7 +731,7 @@ async function waitForBrowserConsole() {
       Services.obs.removeObserver(observer, "web-console-created");
       subject.QueryInterface(Ci.nsISupportsString);
 
-      let hud = HUDService.getBrowserConsole();
+      const hud = HUDService.getBrowserConsole();
       ok(hud, "browser console is open");
       is(subject.data, hud.hudId, "notification hudId is correct");
 
@@ -637,14 +750,14 @@ async function getFilterState(hud) {
   const buttons = filterBar.querySelectorAll("button");
   const result = { };
 
-  for (let button of buttons) {
-    let classes = new Set(button.classList.values());
-    let checked = classes.has("checked");
+  for (const button of buttons) {
+    const classes = new Set(button.classList.values());
+    const checked = classes.has("checked");
 
     classes.delete("devtools-button");
     classes.delete("checked");
 
-    let category = classes.values().next().value;
+    const category = classes.values().next().value;
 
     result[category] = checked;
   }
@@ -672,9 +785,9 @@ async function getFilterState(hud) {
 async function setFilterState(hud, settings) {
   const filterBar = await setFilterBarVisible(hud, true);
 
-  for (let category in settings) {
-    let setActive = settings[category];
-    let button = filterBar.querySelector(`.${category}`);
+  for (const category in settings) {
+    const setActive = settings[category];
+    const button = filterBar.querySelector(`.${category}`);
 
     if (!button) {
       ok(false, `setFilterState() called with a category of ${category}, ` +
@@ -683,7 +796,7 @@ async function setFilterState(hud, settings) {
 
     info(`Setting the ${category} category to ${setActive ? "checked" : "disabled"}`);
 
-    let isChecked = button.classList.contains("checked");
+    const isChecked = button.classList.contains("checked");
 
     if (setActive !== isChecked) {
       button.click();
@@ -747,6 +860,6 @@ async function setFilterBarVisible(hud, state) {
 async function resetFilters(hud) {
   info("Resetting filters to their default state");
 
-  const store = hud.ui.newConsoleOutput.getStore();
+  const store = hud.ui.consoleOutput.getStore();
   store.dispatch(wcActions.filtersClear());
 }

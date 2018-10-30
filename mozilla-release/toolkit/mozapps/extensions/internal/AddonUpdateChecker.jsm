@@ -17,7 +17,6 @@ const TOOLKIT_ID            = "toolkit@mozilla.org";
 const PREF_UPDATE_REQUIREBUILTINCERTS = "extensions.update.requireBuiltInCerts";
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ChromeUtils.defineModuleGetter(this, "AddonManager",
                                "resource://gre/modules/AddonManager.jsm");
@@ -32,7 +31,7 @@ ChromeUtils.defineModuleGetter(this, "CertUtils",
 ChromeUtils.defineModuleGetter(this, "ServiceRequest",
                                "resource://gre/modules/ServiceRequest.jsm");
 ChromeUtils.defineModuleGetter(this, "UpdateRDFConverter",
-                               "resource://gre/modules/addons/UpdateRDFConverter.jsm");
+                               "resource://gre/modules/addons/RDFManifestConverter.jsm");
 
 ChromeUtils.import("resource://gre/modules/Log.jsm");
 const LOGGER_ID = "addons.update-checker";
@@ -40,6 +39,8 @@ const LOGGER_ID = "addons.update-checker";
 // Create a new logger for use by the Addons Update Checker
 // (Requires AddonManager.jsm)
 var logger = Log.repository.getLogger(LOGGER_ID);
+
+const updateTypeHistogram = Services.telemetry.getHistogramById("EXTENSION_UPDATE_TYPE");
 
 /**
  * Sanitizes the update URL in an update item, as returned by
@@ -295,8 +296,11 @@ UpdateParser.prototype = {
                     "and support will soon be removed");
 
         json = UpdateRDFConverter.convertToJSON(request);
+        updateTypeHistogram.add("RDF");
+        Services.telemetry.keyedScalarAdd("extensions.updates.rdf", this.id, 1);
       } else {
         json = JSON.parse(data);
+        updateTypeHistogram.add("JSON");
       }
     } catch (e) {
       logger.warn("onUpdateCheckComplete failed to determine manifest type");
@@ -385,7 +389,7 @@ UpdateParser.prototype = {
     this.request = null;
     this._doneAt = new Error("UP_cancel");
     this.notifyError(AddonManager.ERROR_CANCELLED);
-  }
+  },
 };
 
 /**
@@ -537,5 +541,5 @@ var AddonUpdateChecker = {
    */
   checkForUpdates(aId, aUrl, aObserver) {
     return new UpdateParser(aId, aUrl, aObserver);
-  }
+  },
 };

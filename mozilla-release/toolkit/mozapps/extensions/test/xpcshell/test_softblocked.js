@@ -4,7 +4,6 @@
 
 const URI_EXTENSION_BLOCKLIST_DIALOG = "chrome://mozapps/content/extensions/blocklist.xul";
 
-ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
 
 // Allow insecure updates
@@ -32,13 +31,7 @@ var WindowWatcher = {
     Services.obs.notifyObservers(null, "addon-blocklist-closed");
   },
 
-  QueryInterface(iid) {
-    if (iid.equals(Ci.nsIWindowWatcher)
-     || iid.equals(Ci.nsISupports))
-      return this;
-
-    throw Cr.NS_ERROR_NO_INTERFACE;
-  }
+  QueryInterface: ChromeUtils.generateQI(["nsIWindowWatcher"]),
 };
 
 MockRegistrar.register("@mozilla.org/embedcomp/window-watcher;1", WindowWatcher);
@@ -69,7 +62,7 @@ function run_test() {
 // Tests that an appDisabled add-on that becomes softBlocked remains disabled
 // when becoming appEnabled
 add_task(async function() {
-  writeInstallRDFForExtension({
+  await promiseWriteInstallRDFForExtension({
     id: "softblock1@tests.mozilla.org",
     version: "1.0",
     name: "Softblocked add-on",
@@ -77,16 +70,16 @@ add_task(async function() {
     targetApplications: [{
       id: "xpcshell@tests.mozilla.org",
       minVersion: "2",
-      maxVersion: "3"
-    }]
+      maxVersion: "3",
+    }],
   }, profileDir);
 
-  startupManager();
+  await promiseStartupManager();
 
   let s1 = await promiseAddonByID("softblock1@tests.mozilla.org");
 
   // Make sure to mark it as previously enabled.
-  s1.userDisabled = false;
+  await s1.enable();
 
   Assert.ok(!s1.softDisabled);
   Assert.ok(s1.appDisabled);

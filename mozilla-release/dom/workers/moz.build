@@ -50,6 +50,7 @@ UNIFIED_SOURCES += [
     'ScriptLoader.cpp',
     'SharedWorker.cpp',
     'Worker.cpp',
+    'WorkerCSPEventListener.cpp',
     'WorkerDebugger.cpp',
     'WorkerDebuggerManager.cpp',
     'WorkerError.cpp',
@@ -80,10 +81,6 @@ LOCAL_INCLUDES += [
 include('/ipc/chromium/chromium-config.mozbuild')
 
 FINAL_LIBRARY = 'xul'
-
-TEST_DIRS += [
-    'test/extensions/bootstrap',
-]
 
 MOCHITEST_MANIFESTS += [
     'test/mochitest.ini',

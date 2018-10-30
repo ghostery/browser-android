@@ -17,6 +17,5 @@
 <!ENTITY showHideTooltips.accesskey "M">
 <!ENTITY pref.locales.title "Idioma de la interfaz de usuario">
 <!ENTITY selectLocale.label "Seleccione el idioma del texto que aparece en las cajas de diálogo, menús, barras de herramientas y etiquetas de botones:">
-<!ENTITY restartOnLangChange.label "Las preferencias de idioma tendrán efecto cuando reinicie &brandShortName;.">
 <!ENTITY dateTimeFormatting.label "Formato de fecha y hora">
 <!ENTITY restartOnLocaleChange.label "Las preferencias de idioma y formato tendrán efecto cuando reinicie &brandShortName;.">

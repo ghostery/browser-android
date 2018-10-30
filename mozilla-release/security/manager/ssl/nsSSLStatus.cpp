@@ -345,9 +345,6 @@ NS_IMETHODIMP
 nsSSLStatus::GetClassID(nsCID** aClassID)
 {
   *aClassID = (nsCID*) moz_xmalloc(sizeof(nsCID));
-  if (!*aClassID) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
   return GetClassIDNoAlloc(*aClassID);
 }
 
@@ -400,7 +397,7 @@ nsresult
 nsSSLStatus::SetSucceededCertChain(UniqueCERTCertList aCertList)
 {
   // nsNSSCertList takes ownership of certList
-  mSucceededCertChain = new nsNSSCertList(Move(aCertList));
+  mSucceededCertChain = new nsNSSCertList(std::move(aCertList));
 
   return NS_OK;
 }

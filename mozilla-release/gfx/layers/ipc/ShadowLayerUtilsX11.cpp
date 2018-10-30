@@ -74,11 +74,9 @@ SurfaceDescriptorX11::SurfaceDescriptorX11(gfxXlibSurface* aSurf,
     mFormat = cairo_xlib_surface_get_visual(aSurf->CairoSurface())->visualid;
   }
 
-#ifdef GL_PROVIDER_GLX
   if (aForwardGLX) {
     mGLXPixmap = aSurf->GetGLXPixmap();
   }
-#endif
 }
 
 SurfaceDescriptorX11::SurfaceDescriptorX11(Drawable aDrawable, XID aFormatID,
@@ -93,6 +91,9 @@ already_AddRefed<gfxXlibSurface>
 SurfaceDescriptorX11::OpenForeign() const
 {
   Display* display = DefaultXDisplay();
+  if (!display) {
+    return nullptr;
+  }
   Screen* screen = DefaultScreenOfDisplay(display);
 
   RefPtr<gfxXlibSurface> surf;
@@ -109,10 +110,8 @@ SurfaceDescriptorX11::OpenForeign() const
     surf = new gfxXlibSurface(display, mId, visual, mSize);
   }
 
-#ifdef GL_PROVIDER_GLX
   if (mGLXPixmap)
     surf->BindGLXPixmap(mGLXPixmap);
-#endif
 
   return surf->CairoStatus() ? nullptr : surf.forget();
 }

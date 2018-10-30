@@ -5,7 +5,6 @@
 #include "mozilla/HTMLEditor.h"
 
 #include "mozilla/Attributes.h"
-#include "mozilla/dom/CSSPrimitiveValueBinding.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/EventTarget.h"
 #include "mozilla/mozalloc.h"
@@ -41,7 +40,6 @@
 #include "nsROCSSPrimitiveValue.h"
 
 class nsIDOMEventListener;
-class nsISelection;
 
 namespace mozilla {
 
@@ -117,8 +115,9 @@ ElementDeletionObserver::ParentChainChanged(nsIContent* aContent)
     // We're staying in the same document, just rebind the native anonymous
     // node so that the subtree root points to the right object etc.
     mNativeAnonNode->UnbindFromTree();
-    mNativeAnonNode->BindToTree(mObservedNode->GetUncomposedDoc(), mObservedNode,
-                                mObservedNode, true);
+    mNativeAnonNode->BindToTree(mObservedNode->GetUncomposedDoc(),
+                                mObservedNode,
+                                mObservedNode);
   }
 }
 
@@ -196,7 +195,7 @@ HTMLEditor::CreateAnonymousElement(nsAtom* aTag,
     // establish parenthood of the element
     newContentRaw->SetIsNativeAnonymousRoot();
     nsresult rv =
-      newContentRaw->BindToTree(doc, &aParentContent, &aParentContent, true);
+      newContentRaw->BindToTree(doc, &aParentContent, &aParentContent);
     if (NS_FAILED(rv)) {
       newContentRaw->UnbindFromTree();
       return nullptr;
@@ -232,7 +231,7 @@ HTMLEditor::CreateAnonymousElement(nsAtom* aTag,
   // display the element
   ps->PostRecreateFramesFor(newContent);
 
-  return Move(newContent);
+  return newContent;
 }
 
 // Removes event listener and calls DeleteRefToAnonymousNode.
@@ -246,7 +245,7 @@ HTMLEditor::RemoveListenerAndDeleteRef(const nsAString& aEvent,
   if (aElement) {
     aElement->RemoveEventListener(aEvent, aListener, aUseCapture);
   }
-  DeleteRefToAnonymousNode(Move(aElement), aShell);
+  DeleteRefToAnonymousNode(std::move(aElement), aShell);
 }
 
 // Deletes all references to an anonymous element
@@ -272,44 +271,88 @@ HTMLEditor::DeleteRefToAnonymousNode(ManualNACPtr aContent,
   // Need to check whether aShell has been destroyed (but not yet deleted).
   // See bug 338129.
   if (aContent->IsInComposedDoc() && aShell && !aShell->IsDestroying()) {
-    // Call BeginUpdate() so that the nsCSSFrameConstructor/PresShell
-    // knows we're messing with the frame tree.
-    //
-    // FIXME(emilio): Shouldn't this use the document update mechanism instead?
-    // Also, is it really needed? This is NAC anyway.
-    nsCOMPtr<nsIDocument> document = GetDocument();
-    if (document) {
-      aShell->BeginUpdate(document, UPDATE_CONTENT_MODEL);
-    }
-
     MOZ_ASSERT(aContent->IsRootOfAnonymousSubtree());
     MOZ_ASSERT(!aContent->GetPreviousSibling(), "NAC has no siblings");
 
     // FIXME(emilio): This is the only caller to PresShell::ContentRemoved that
     // passes NAC into it. This is not great!
     aShell->ContentRemoved(aContent, nullptr);
-
-    if (document) {
-      aShell->EndUpdate(document, UPDATE_CONTENT_MODEL);
-    }
   }
 
   // The ManualNACPtr destructor will invoke UnbindFromTree.
 }
 
-// The following method is mostly called by a selection listener. When a
-// selection change is notified, the method is called to check if resizing
-// handles, a grabber and/or inline table editing UI need to be displayed
-// or refreshed
-NS_IMETHODIMP
-HTMLEditor::CheckSelectionStateForAnonymousButtons(nsISelection* aSelection)
+void
+HTMLEditor::HideAnonymousEditingUIs()
 {
-  NS_ENSURE_ARG_POINTER(aSelection);
+  if (mAbsolutelyPositionedObject) {
+    HideGrabber();
+    NS_ASSERTION(!mAbsolutelyPositionedObject, "HideGrabber failed");
+  }
+  if (mInlineEditedCell) {
+    HideInlineTableEditingUI();
+    NS_ASSERTION(!mInlineEditedCell, "HideInlineTableEditingUI failed");
+  }
+  if (mResizedObject) {
+    DebugOnly<nsresult> rv = HideResizers();
+    NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "HideResizers() failed");
+    NS_ASSERTION(!mResizedObject, "HideResizers failed");
+  }
+}
+
+void
+HTMLEditor::HideAnonymousEditingUIsIfUnnecessary()
+{
+  // XXX Perhaps, this is wrong approach to hide multiple UIs because
+  //     hiding one UI may causes overwriting existing UI with newly
+  //     created one.  In such case, we will leak ovewritten UI.
+  if (!IsAbsolutePositionEditorEnabled() && mAbsolutelyPositionedObject) {
+    // XXX If we're moving something, we need to cancel or commit the
+    //     operation now.
+    HideGrabber();
+    NS_ASSERTION(!mAbsolutelyPositionedObject, "HideGrabber failed");
+  }
+  if (!IsInlineTableEditorEnabled() && mInlineEditedCell) {
+    // XXX If we're resizing a table element, we need to cancel or commit the
+    //     operation now.
+    HideInlineTableEditingUI();
+    NS_ASSERTION(!mInlineEditedCell, "HideInlineTableEditingUI failed");
+  }
+  if (!IsObjectResizerEnabled() && mResizedObject) {
+    // XXX If we're resizing something, we need to cancel or commit the
+    //     operation now.
+    DebugOnly<nsresult> rv = HideResizers();
+    NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "HideResizers() failed");
+    NS_ASSERTION(!mResizedObject, "HideResizers failed");
+  }
+}
+
+NS_IMETHODIMP
+HTMLEditor::CheckSelectionStateForAnonymousButtons(Selection* aSelection)
+{
+  if (NS_WARN_IF(!aSelection)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+  nsresult rv = RefereshEditingUI(*aSelection);
+  if (NS_WARN_IF(NS_FAILED(rv))) {
+    return rv;
+  }
+  return NS_OK;
+}
+
+nsresult
+HTMLEditor::RefereshEditingUI(Selection& aSelection)
+{
+  // First, we need to remove unnecessary editing UI now since some of them
+  // may be disabled while them are visible.
+  HideAnonymousEditingUIsIfUnnecessary();
 
   // early way out if all contextual UI extensions are disabled
-  NS_ENSURE_TRUE(mIsObjectResizingEnabled ||
-      mIsAbsolutelyPositioningEnabled ||
-      mIsInlineTableEditingEnabled, NS_OK);
+  if (!IsObjectResizerEnabled() &&
+      !IsAbsolutePositionEditorEnabled() &&
+      !IsInlineTableEditorEnabled()) {
+    return NS_OK;
+  }
 
   // Don't change selection state if we're moving.
   if (mIsMoving) {
@@ -317,8 +360,10 @@ HTMLEditor::CheckSelectionStateForAnonymousButtons(nsISelection* aSelection)
   }
 
   // let's get the containing element of the selection
-  RefPtr<Element> focusElement = GetSelectionContainer();
-  NS_ENSURE_TRUE(focusElement, NS_OK);
+  RefPtr<Element> focusElement = GetSelectionContainerElement(aSelection);
+  if (NS_WARN_IF(!focusElement)) {
+    return NS_OK;
+  }
 
   // If we're not in a document, don't try to add resizers
   if (!focusElement->IsInUncomposedDoc()) {
@@ -329,20 +374,21 @@ HTMLEditor::CheckSelectionStateForAnonymousButtons(nsISelection* aSelection)
   nsAtom* focusTagAtom = focusElement->NodeInfo()->NameAtom();
 
   RefPtr<Element> absPosElement;
-  if (mIsAbsolutelyPositioningEnabled) {
+  if (IsAbsolutePositionEditorEnabled()) {
     // Absolute Positioning support is enabled, is the selection contained
     // in an absolutely positioned element ?
     absPosElement = GetAbsolutelyPositionedSelectionContainer();
   }
 
   RefPtr<Element> cellElement;
-  if (mIsObjectResizingEnabled || mIsInlineTableEditingEnabled) {
+  if (IsObjectResizerEnabled() || IsInlineTableEditorEnabled()) {
     // Resizing or Inline Table Editing is enabled, we need to check if the
     // selection is contained in a table cell
-    cellElement = GetElementOrParentByTagName(NS_LITERAL_STRING("td"), nullptr);
+    cellElement =
+      GetElementOrParentByTagNameAtSelection(aSelection, *nsGkAtoms::td);
   }
 
-  if (mIsObjectResizingEnabled && cellElement) {
+  if (IsObjectResizerEnabled() && cellElement) {
     // we are here because Resizing is enabled AND selection is contained in
     // a cell
 
@@ -350,6 +396,9 @@ HTMLEditor::CheckSelectionStateForAnonymousButtons(nsISelection* aSelection)
     if (nsGkAtoms::img != focusTagAtom) {
       // the element container of the selection is not an image, so we'll show
       // the resizers around the table
+      // XXX There may be a bug.  cellElement may be not in <table> in invalid
+      //     tree.  So, perhaps, GetEnclosingTable() returns nullptr, we should
+      //     not set focusTagAtom to nsGkAtoms::table.
       focusElement = GetEnclosingTable(cellElement);
       focusTagAtom = nsGkAtoms::table;
     }
@@ -369,31 +418,37 @@ HTMLEditor::CheckSelectionStateForAnonymousButtons(nsISelection* aSelection)
   // content which means a DOMAttrModified handler may cause arbitrary
   // side effects while this code runs (bug 420439).
 
-  if (mIsAbsolutelyPositioningEnabled && mAbsolutelyPositionedObject &&
+  if (IsAbsolutePositionEditorEnabled() && mAbsolutelyPositionedObject &&
       absPosElement != mAbsolutelyPositionedObject) {
     HideGrabber();
     NS_ASSERTION(!mAbsolutelyPositionedObject, "HideGrabber failed");
   }
 
-  if (mIsObjectResizingEnabled && mResizedObject &&
+  if (IsObjectResizerEnabled() && mResizedObject &&
       mResizedObject != focusElement) {
+    // Perhaps, even if HideResizers() failed, we should try to hide inline
+    // table editing UI.  However, it returns error only when we cannot do
+    // anything.  So, it's okay for now.
     nsresult rv = HideResizers();
-    NS_ENSURE_SUCCESS(rv, rv);
+    if (NS_WARN_IF(NS_FAILED(rv))) {
+      return rv;
+    }
     NS_ASSERTION(!mResizedObject, "HideResizers failed");
   }
 
-  if (mIsInlineTableEditingEnabled && mInlineEditedCell &&
+  if (IsInlineTableEditorEnabled() && mInlineEditedCell &&
       mInlineEditedCell != cellElement) {
-    nsresult rv = HideInlineTableEditingUI();
-    NS_ENSURE_SUCCESS(rv, rv);
+    // XXX HideInlineTableEditingUI() won't return error.  Should be change it
+    //     void later.
+    HideInlineTableEditingUI();
     NS_ASSERTION(!mInlineEditedCell, "HideInlineTableEditingUI failed");
   }
 
   // now, let's display all contextual UI for good
   nsIContent* hostContent = GetActiveEditingHost();
 
-  if (mIsObjectResizingEnabled && focusElement &&
-      IsModifiableNode(focusElement) && focusElement != hostContent) {
+  if (IsObjectResizerEnabled() && focusElement &&
+      IsModifiableNode(*focusElement) && focusElement != hostContent) {
     if (nsGkAtoms::img == focusTagAtom) {
       mResizedObjectIsAnImage = true;
     }
@@ -410,8 +465,8 @@ HTMLEditor::CheckSelectionStateForAnonymousButtons(nsISelection* aSelection)
     }
   }
 
-  if (mIsAbsolutelyPositioningEnabled && absPosElement &&
-      IsModifiableNode(absPosElement) && absPosElement != hostContent) {
+  if (IsAbsolutePositionEditorEnabled() && absPosElement &&
+      IsModifiableNode(*absPosElement) && absPosElement != hostContent) {
     if (mAbsolutelyPositionedObject) {
       nsresult rv = RefreshGrabber();
       if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -425,8 +480,8 @@ HTMLEditor::CheckSelectionStateForAnonymousButtons(nsISelection* aSelection)
     }
   }
 
-  if (mIsInlineTableEditingEnabled && cellElement &&
-      IsModifiableNode(cellElement) && cellElement != hostContent) {
+  if (IsInlineTableEditorEnabled() && cellElement &&
+      IsModifiableNode(*cellElement) && cellElement != hostContent) {
     if (mInlineEditedCell) {
       nsresult rv = RefreshInlineTableEditingUI();
       if (NS_WARN_IF(NS_FAILED(rv))) {

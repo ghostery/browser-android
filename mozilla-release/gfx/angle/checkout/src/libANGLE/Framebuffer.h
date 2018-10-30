@@ -18,8 +18,8 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/Observer.h"
 #include "libANGLE/RefCountObject.h"
-#include "libANGLE/signal_utils.h"
 
 namespace rx
 {
@@ -40,14 +40,13 @@ namespace gl
 class Context;
 class ContextState;
 class Framebuffer;
+class ImageIndex;
 class Renderbuffer;
 class State;
 class Texture;
 class TextureCapsMap;
-class ValidationContext;
 struct Caps;
 struct Extensions;
-struct ImageIndex;
 struct Rectangle;
 
 class FramebufferState final : angle::NonCopyable
@@ -90,6 +89,7 @@ class FramebufferState final : angle::NonCopyable
     GLint getDefaultHeight() const { return mDefaultHeight; };
     GLint getDefaultSamples() const { return mDefaultSamples; };
     bool getDefaultFixedSampleLocations() const { return mDefaultFixedSampleLocations; };
+    GLint getDefaultLayers() const { return mDefaultLayers; }
 
     bool hasDepth() const;
     bool hasStencil() const;
@@ -121,6 +121,7 @@ class FramebufferState final : angle::NonCopyable
     GLint mDefaultHeight;
     GLint mDefaultSamples;
     bool mDefaultFixedSampleLocations;
+    GLint mDefaultLayers;
 
     // It's necessary to store all this extra state so we can restore attachments
     // when DEPTH_STENCIL/DEPTH/STENCIL is unbound in WebGL 1.
@@ -133,7 +134,7 @@ class FramebufferState final : angle::NonCopyable
     angle::BitSet<IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS + 2> mResourceNeedsInit;
 };
 
-class Framebuffer final : public LabeledObject, public angle::ObserverInterface
+class Framebuffer final : public angle::ObserverInterface, public LabeledObject
 {
   public:
     // Constructor to build application-defined framebuffers
@@ -145,7 +146,6 @@ class Framebuffer final : public LabeledObject, public angle::ObserverInterface
 
     ~Framebuffer() override;
     void onDestroy(const Context *context);
-    void destroyDefault(const egl::Display *display);
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
@@ -217,31 +217,28 @@ class Framebuffer final : public LabeledObject, public angle::ObserverInterface
     // This method calls checkStatus.
     int getSamples(const Context *context);
 
-    Error getSamplePosition(size_t index, GLfloat *xy) const;
+    Error getSamplePosition(const Context *context, size_t index, GLfloat *xy) const;
 
     GLint getDefaultWidth() const;
     GLint getDefaultHeight() const;
     GLint getDefaultSamples() const;
     bool getDefaultFixedSampleLocations() const;
+    GLint getDefaultLayers() const;
     void setDefaultWidth(GLint defaultWidth);
     void setDefaultHeight(GLint defaultHeight);
     void setDefaultSamples(GLint defaultSamples);
     void setDefaultFixedSampleLocations(bool defaultFixedSampleLocations);
+    void setDefaultLayers(GLint defaultLayers);
 
     void invalidateCompletenessCache();
 
     GLenum checkStatus(const Context *context);
 
-    // TODO(jmadill): Remove this kludge.
-    GLenum checkStatus(const ValidationContext *context);
-    int getSamples(const ValidationContext *context);
-
     // For when we don't want to check completeness in getSamples().
     int getCachedSamples(const Context *context);
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
-    bool complete(const Context *context);
-    bool cachedComplete() const;
+    bool isComplete(const Context *context);
 
     bool hasValidDepthStencil() const;
 
@@ -271,8 +268,10 @@ class Framebuffer final : public LabeledObject, public angle::ObserverInterface
                         GLfloat depth,
                         GLint stencil);
 
-    GLenum getImplementationColorReadFormat(const Context *context) const;
-    GLenum getImplementationColorReadType(const Context *context) const;
+    // These two methods call syncState() internally.
+    Error getImplementationColorReadFormat(const Context *context, GLenum *formatOut);
+    Error getImplementationColorReadType(const Context *context, GLenum *typeOut);
+
     Error readPixels(const Context *context,
                      const Rectangle &area,
                      GLenum format,
@@ -298,6 +297,7 @@ class Framebuffer final : public LabeledObject, public angle::ObserverInterface
         DIRTY_BIT_DEFAULT_HEIGHT,
         DIRTY_BIT_DEFAULT_SAMPLES,
         DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS,
+        DIRTY_BIT_DEFAULT_LAYERS,
         DIRTY_BIT_UNKNOWN,
         DIRTY_BIT_MAX = DIRTY_BIT_UNKNOWN
     };
@@ -305,7 +305,7 @@ class Framebuffer final : public LabeledObject, public angle::ObserverInterface
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
-    void syncState(const Context *context);
+    Error syncState(const Context *context);
 
     // Observer implementation
     void onSubjectStateChange(const Context *context,
@@ -317,6 +317,10 @@ class Framebuffer final : public LabeledObject, public angle::ObserverInterface
                                       GLint copyTextureLevel,
                                       GLint copyTextureLayer) const;
 
+    Error ensureClearAttachmentsInitialized(const Context *context, GLbitfield mask);
+    Error ensureClearBufferAttachmentsInitialized(const Context *context,
+                                                  GLenum buffer,
+                                                  GLint drawbuffer);
     Error ensureDrawAttachmentsInitialized(const Context *context);
     Error ensureReadAttachmentInitialized(const Context *context, GLbitfield blitMask);
     Box getDimensions() const;
@@ -330,7 +334,7 @@ class Framebuffer final : public LabeledObject, public angle::ObserverInterface
                                   GLenum matchType,
                                   GLuint matchId,
                                   size_t dirtyBit);
-    GLenum checkStatusImpl(const Context *context);
+    GLenum checkStatusWithGLFrontEnd(const Context *context);
     void setAttachment(const Context *context,
                        GLenum type,
                        GLenum binding,
@@ -390,6 +394,10 @@ class Framebuffer final : public LabeledObject, public angle::ObserverInterface
     angle::ObserverBinding mDirtyStencilAttachmentBinding;
 
     DirtyBits mDirtyBits;
+
+    // The dirty bits guard is checked when we get a dependent state change message. We verify that
+    // we don't set a dirty bit that isn't already set, when inside the dirty bits syncState.
+    Optional<DirtyBits> mDirtyBitsGuard;
 
     // A cache of attached textures for quick validation of feedback loops.
     mutable Optional<std::set<const FramebufferAttachmentObject *>> mAttachedTextures;

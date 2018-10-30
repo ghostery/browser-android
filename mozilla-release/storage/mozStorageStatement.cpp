@@ -111,6 +111,8 @@ static StatementClassInfo sStatementClassInfo;
 Statement::Statement()
 : StorageBaseStatementInternal()
 , mDBStatement(nullptr)
+, mParamCount(0)
+, mResultColumnCount(0)
 , mColumnNames()
 , mExecuting(false)
 {
@@ -554,7 +556,7 @@ Statement::Execute()
 NS_IMETHODIMP
 Statement::ExecuteStep(bool *_moreResults)
 {
-  AUTO_PROFILER_LABEL("Statement::ExecuteStep", STORAGE);
+  AUTO_PROFILER_LABEL("Statement::ExecuteStep", OTHER);
 
   if (!mDBStatement)
     return NS_ERROR_NOT_INITIALIZED;
@@ -781,8 +783,7 @@ Statement::GetBlob(uint32_t aIndex,
   int size = ::sqlite3_column_bytes(mDBStatement, aIndex);
   void *blob = nullptr;
   if (size) {
-    blob = nsMemory::Clone(::sqlite3_column_blob(mDBStatement, aIndex), size);
-    NS_ENSURE_TRUE(blob, NS_ERROR_OUT_OF_MEMORY);
+    blob = moz_xmemdup(::sqlite3_column_blob(mDBStatement, aIndex), size);
   }
 
   *_blob = static_cast<uint8_t *>(blob);

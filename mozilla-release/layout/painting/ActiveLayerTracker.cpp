@@ -50,6 +50,7 @@ public:
     ACTIVITY_BACKGROUND_POSITION,
 
     ACTIVITY_SCALE,
+    ACTIVITY_TRIGGERED_REPAINT,
 
     // keep as last item
     ACTIVITY_COUNT
@@ -248,22 +249,30 @@ static void
 IncrementScaleRestyleCountIfNeeded(nsIFrame* aFrame, LayerActivity* aActivity)
 {
   const nsStyleDisplay* display = aFrame->StyleDisplay();
-  RefPtr<nsCSSValueSharedList> transformList = display->GetCombinedTransform();
-  if (!transformList) {
+  if (!display->mSpecifiedTransform &&
+      !display->HasIndividualTransform() &&
+      !(display->mMotion && display->mMotion->HasPath())) {
     // The transform was removed.
     aActivity->mPreviousTransformScale = Nothing();
-    IncrementMutationCount(&aActivity->mRestyleCounts[LayerActivity::ACTIVITY_SCALE]);
+    IncrementMutationCount(
+      &aActivity->mRestyleCounts[LayerActivity::ACTIVITY_SCALE]);
     return;
   }
 
   // Compute the new scale due to the CSS transform property.
   bool dummyBool;
   nsStyleTransformMatrix::TransformReferenceBox refBox(aFrame);
-  Matrix4x4 transform =
-    nsStyleTransformMatrix::ReadTransforms(transformList->mHead,
-                                           refBox,
-                                           nsPresContext::AppUnitsPerCSSPixel(),
-                                           &dummyBool);
+  Matrix4x4 transform = nsStyleTransformMatrix::ReadTransforms(
+      display->mIndividualTransform
+        ? display->mIndividualTransform->mHead
+        : nullptr,
+      nsLayoutUtils::ResolveMotionPath(aFrame),
+      display->mSpecifiedTransform
+        ? display->mSpecifiedTransform->mHead
+        : nullptr,
+      refBox,
+      AppUnitsPerCSSPixel(),
+      &dummyBool);
   Matrix transform2D;
   if (!transform.Is2D(&transform2D)) {
     // We don't attempt to handle 3D transforms; just assume the scale changed.
@@ -370,6 +379,19 @@ ActiveLayerTracker::NotifyInlineStyleRuleModified(nsIFrame* aFrame,
   }
 }
 
+/* static */ void
+ActiveLayerTracker::NotifyNeedsRepaint(nsIFrame* aFrame)
+{
+  LayerActivity* layerActivity = GetLayerActivityForUpdate(aFrame);
+  if (IsPresContextInScriptAnimationCallback(aFrame->PresContext())) {
+    // This is mirroring NotifyInlineStyleRuleModified's NotifyAnimated logic. Just max out
+    // the restyle count if we're in an animation callback.
+    layerActivity->mRestyleCounts[LayerActivity::ACTIVITY_TRIGGERED_REPAINT] = 0xFF;
+  } else {
+    IncrementMutationCount(&layerActivity->mRestyleCounts[LayerActivity::ACTIVITY_TRIGGERED_REPAINT]);
+  }
+}
+
 /* static */ bool
 ActiveLayerTracker::IsStyleMaybeAnimated(nsIFrame* aFrame, nsCSSPropertyID aProperty)
 {
@@ -427,7 +449,15 @@ ActiveLayerTracker::IsStyleAnimated(nsDisplayListBuilder* aBuilder,
   if (layerActivity) {
     LayerActivity::ActivityIndex activityIndex = LayerActivity::GetActivityIndexForProperty(aProperty);
     if (layerActivity->mRestyleCounts[activityIndex] >= 2) {
-      return true;
+      // If the frame needs to be repainted frequently, we probably don't get
+      // much from treating the property as animated, *unless* this frame's
+      // 'scale' (which includes the bounds changes of a rotation) is changing.
+      // Marking a scaling transform as animating allows us to avoid resizing
+      // the texture, even if we have to repaint the contents of that texture.
+      if (layerActivity->mRestyleCounts[LayerActivity::ACTIVITY_TRIGGERED_REPAINT] < 2 ||
+          (aProperty == eCSSProperty_transform && IsScaleSubjectToAnimation(aFrame))) {
+        return true;
+      }
     }
     if (CheckScrollInducedActivity(layerActivity, activityIndex, aBuilder)) {
       return true;
@@ -436,11 +466,7 @@ ActiveLayerTracker::IsStyleAnimated(nsDisplayListBuilder* aBuilder,
   if (aProperty == eCSSProperty_transform && aFrame->Combines3DTransformWithAncestors()) {
     return IsStyleAnimated(aBuilder, aFrame->GetParent(), aProperty);
   }
-  if (aBuilder) {
-    return nsLayoutUtils::HasEffectiveAnimation(aFrame, aProperty);
-  } else {
-    return nsLayoutUtils::MayHaveEffectiveAnimation(aFrame, aProperty);
-  }
+  return nsLayoutUtils::HasEffectiveAnimation(aFrame, aProperty);
 }
 
 /* static */ bool

@@ -6,16 +6,19 @@
 package org.mozilla.geckoview.test.util
 
 import org.mozilla.geckoview.GeckoResponse
+import org.mozilla.geckoview.GeckoResult
 import org.mozilla.geckoview.GeckoSession
 
+import android.view.inputmethod.CursorAnchorInfo
+import android.view.inputmethod.ExtractedText
+import android.view.inputmethod.ExtractedTextRequest
+
 class Callbacks private constructor() {
-    object Default : All {
-    }
+    object Default : All
 
     interface All : ContentDelegate, NavigationDelegate, PermissionDelegate, ProgressDelegate,
-                    PromptDelegate, ScrollDelegate, SelectionActionDelegate,
-                    TrackingProtectionDelegate {
-    }
+                    PromptDelegate, ScrollDelegate, SelectionActionDelegate, TextInputDelegate,
+                    TrackingProtectionDelegate
 
     interface ContentDelegate : GeckoSession.ContentDelegate {
         override fun onTitleChange(session: GeckoSession, title: String) {
@@ -35,6 +38,9 @@ class Callbacks private constructor() {
 
         override fun onExternalResponse(session: GeckoSession, response: GeckoSession.WebResponseInfo) {
         }
+
+        override fun onCrash(session: GeckoSession) {
+        }
     }
 
     interface NavigationDelegate : GeckoSession.NavigationDelegate {
@@ -48,13 +54,17 @@ class Callbacks private constructor() {
         }
 
         override fun onLoadRequest(session: GeckoSession, uri: String, where: Int,
-                                   flags: Int,
-                                   response: GeckoResponse<Boolean>) {
-            response.respond(false)
+                                   flags: Int): GeckoResult<Boolean>? {
+            return null
         }
 
-        override fun onNewSession(session: GeckoSession, uri: String, response: GeckoResponse<GeckoSession>) {
-            response.respond(null)
+        override fun onNewSession(session: GeckoSession, uri: String): GeckoResult<GeckoSession>? {
+            return null
+        }
+
+        override fun onLoadError(session: GeckoSession, uri: String?,
+                                 category: Int, error: Int): GeckoResult<String>? {
+            return null
         }
     }
 
@@ -63,7 +73,7 @@ class Callbacks private constructor() {
             callback.reject()
         }
 
-        override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, access: String, callback: GeckoSession.PermissionDelegate.Callback) {
+        override fun onContentPermissionRequest(session: GeckoSession, uri: String, type: Int, access: String?, callback: GeckoSession.PermissionDelegate.Callback) {
             callback.reject()
         }
 
@@ -77,6 +87,9 @@ class Callbacks private constructor() {
         }
 
         override fun onPageStop(session: GeckoSession, success: Boolean) {
+        }
+
+        override fun onProgressChange(session: GeckoSession, progress: Int) {
         }
 
         override fun onSecurityChange(session: GeckoSession, securityInfo: GeckoSession.ProgressDelegate.SecurityInformation) {
@@ -115,6 +128,10 @@ class Callbacks private constructor() {
         override fun onFilePrompt(session: GeckoSession, title: String, type: Int, mimeTypes: Array<out String>, callback: GeckoSession.PromptDelegate.FileCallback) {
             callback.dismiss()
         }
+
+        override fun onPopupRequest(session: GeckoSession, targetUri: String): GeckoResult<Boolean>? {
+            return null
+        }
     }
 
     interface ScrollDelegate : GeckoSession.ScrollDelegate {
@@ -132,6 +149,29 @@ class Callbacks private constructor() {
         }
 
         override fun onHideAction(session: GeckoSession, reason: Int) {
+        }
+    }
+
+    interface TextInputDelegate : GeckoSession.TextInputDelegate {
+        override fun restartInput(session: GeckoSession, reason: Int) {
+        }
+
+        override fun showSoftInput(session: GeckoSession) {
+        }
+
+        override fun hideSoftInput(session: GeckoSession) {
+        }
+
+        override fun updateSelection(session: GeckoSession, selStart: Int, selEnd: Int, compositionStart: Int, compositionEnd: Int) {
+        }
+
+        override fun updateExtractedText(session: GeckoSession, request: ExtractedTextRequest, text: ExtractedText) {
+        }
+
+        override fun updateCursorAnchorInfo(session: GeckoSession, info: CursorAnchorInfo) {
+        }
+
+        override fun notifyAutoFill(session: GeckoSession, notification: Int, virtualId: Int) {
         }
     }
 }

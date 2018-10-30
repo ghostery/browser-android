@@ -45,9 +45,9 @@ RendererOGL::RendererOGL(RefPtr<RenderThread>&& aThread,
                          UniquePtr<RenderCompositor> aCompositor,
                          wr::WindowId aWindowId,
                          wr::Renderer* aRenderer,
-                         layers::CompositorBridgeParentBase* aBridge)
+                         layers::CompositorBridgeParent* aBridge)
   : mThread(aThread)
-  , mCompositor(Move(aCompositor))
+  , mCompositor(std::move(aCompositor))
   , mRenderer(aRenderer)
   , mBridge(aBridge)
   , mWindowId(aWindowId)
@@ -93,6 +93,12 @@ RendererOGL::Update()
   if (gl()->MakeCurrent()) {
     wr_renderer_update(mRenderer);
   }
+}
+
+static void
+DoNotifyWebRenderContextPurge(layers::CompositorBridgeParent* aBridge)
+{
+  aBridge->NotifyWebRenderContextPurge();
 }
 
 bool
@@ -150,6 +156,18 @@ RendererOGL::UpdateAndRender(bool aReadback)
   mFrameStartTime = TimeStamp();
 #endif
 
+  gl::GLContext* gl = mCompositor->gl();
+  if (gl->IsSupported(gl::GLFeature::robustness)) {
+    GLenum resetStatus = gl->fGetGraphicsResetStatus();
+    if (resetStatus == LOCAL_GL_PURGED_CONTEXT_RESET_NV) {
+      layers::CompositorThreadHolder::Loop()->PostTask(NewRunnableFunction(
+        "DoNotifyWebRenderContextPurgeRunnable",
+        &DoNotifyWebRenderContextPurge,
+        mBridge
+      ));
+    }
+  }
+
   // TODO: Flush pending actions such as texture deletions/unlocks and
   //       textureHosts recycling.
 
@@ -204,7 +222,7 @@ RendererOGL::GetRenderTexture(wr::WrExternalImageId aExternalImageId)
 }
 
 static void
-DoNotifyWebRenderError(layers::CompositorBridgeParentBase* aBridge, WebRenderError aError)
+DoNotifyWebRenderError(layers::CompositorBridgeParent* aBridge, WebRenderError aError)
 {
   aBridge->NotifyWebRenderError(aError);
 }

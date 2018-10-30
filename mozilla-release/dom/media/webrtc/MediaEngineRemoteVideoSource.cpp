@@ -12,6 +12,7 @@
 #include "mozilla/ErrorNames.h"
 #include "mozilla/RefPtr.h"
 #include "nsIPrefService.h"
+#include "Tracing.h"
 #include "VideoFrameUtils.h"
 #include "VideoUtils.h"
 #include "webrtc/common_video/include/video_frame_buffer.h"
@@ -104,7 +105,7 @@ MediaEngineRemoteVideoSource::SetName(nsString aName)
   LOG((__PRETTY_FUNCTION__));
   AssertIsOnOwningThread();
 
-  mDeviceName = Move(aName);
+  mDeviceName = std::move(aName);
   bool hasFacingMode = false;
   VideoFacingModeEnum facingMode = VideoFacingModeEnum::User;
 
@@ -343,6 +344,18 @@ MediaEngineRemoteVideoSource::Start(const RefPtr<const AllocationHandle>& aHandl
 }
 
 nsresult
+MediaEngineRemoteVideoSource::FocusOnSelectedSource(const RefPtr<const AllocationHandle>& aHandle)
+{
+  LOG((__PRETTY_FUNCTION__));
+  AssertIsOnOwningThread();
+
+  int result;
+  result = camera::GetChildAndCall(&camera::CamerasChild::FocusOnSelectedSource,
+                                   mCapEngine, mCaptureIndex);
+  return result == 0 ? NS_OK : NS_ERROR_FAILURE;
+}
+
+nsresult
 MediaEngineRemoteVideoSource::Stop(const RefPtr<const AllocationHandle>& aHandle)
 {
   LOG((__PRETTY_FUNCTION__));
@@ -474,6 +487,8 @@ MediaEngineRemoteVideoSource::Pull(const RefPtr<const AllocationHandle>& aHandle
                                    StreamTime aDesiredTime,
                                    const PrincipalHandle& aPrincipalHandle)
 {
+  TRACE_AUDIO_CALLBACK_COMMENT("SourceMediaStream %p track %i",
+                               aStream.get(), aTrackID);
   MutexAutoLock lock(mMutex);
   if (mState == kReleased) {
     // We end the track before deallocating, so this is safe.
@@ -946,7 +961,7 @@ MediaEngineRemoteVideoSource::ChooseCapability(
         continue;
       }
       LogCapability("Hardcoded capability", cap, 0);
-      candidateSet.AppendElement(CapabilityCandidate(Move(cap)));
+      candidateSet.AppendElement(CapabilityCandidate(std::move(cap)));
     }
   }
 
@@ -983,7 +998,7 @@ MediaEngineRemoteVideoSource::ChooseCapability(
       }
     }
     if (!candidateSet.Length()) {
-      candidateSet.AppendElements(Move(rejects));
+      candidateSet.AppendElements(std::move(rejects));
     }
   }
   MOZ_ASSERT(candidateSet.Length(),

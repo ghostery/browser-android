@@ -4,8 +4,10 @@
 
 <!ENTITY startpage.title "Bem-vindo(a) ao correio e listas de notícias do &brandShortName;">
 <!--# LOCALIZATION NOTE (headline.label): the URL for <a id="vendorURL"> is fetched from brand.properties -->
-<!ENTITY headline.label 'Bem-vindo(a) ao correio e listas de notícias do <a id="vendorURL" href="">&brandShortName;</a>!'>
-<!ENTITY description.label "O &brandShortName; é uma aplicação open-source de correio e de grupos de notícias, com suporte a deteção avançada de lixo eletrónico e outras funcionalidade úteis.">
+<!ENTITY headline.label
+'Bem-vindo(a) ao correio e listas de notícias do <a id="vendorURL" href="">&brandShortName;</a>!'>
+<!ENTITY description.label
+"O &brandShortName; é uma aplicação open-source de correio e de grupos de notícias, com suporte a deteção avançada de lixo eletrónico e outras funcionalidade úteis.">
 <!ENTITY features.title "Funcionalidades">
 <!ENTITY feat_multiacc.label "Suporte para múltiplas contas">
 <!ENTITY feat_junk.label "Deteção de lixo eletrónico">
@@ -14,11 +16,18 @@
 <!ENTITY feat_htmlmsg.label "Suporte de mensagens HTML">
 <!ENTITY feat_abook.label "Livro de endereços">
 <!ENTITY feat_tags.label "Etiquetas e vistas do correio personalizáveis">
-<!ENTITY feat_integration.label "elevada integração com a suite &brandShortName;">
+<!ENTITY feat_integration.label
+"elevada integração com a suite &brandShortName;">
 <!ENTITY dict.title "Dicionários">
 <!ENTITY dict_intro.label "Os dicionários são usados para verificar a escrita nas suas mensagens.">
 <!--# LOCALIZATION NOTE (dict_info.label): the URL for <a id="dictURL"> is fetched from brand.properties -->
-<!ENTITY dict_info.label 'Muitos idiomas adicionais podem ser instalados a partir da secção de <a id="dictURL" href="">dicionários</a> em <a href="https://addons.mozilla.org/seamonkey/">Extras da Mozilla</a>.'>
+<!ENTITY dict_info.label
+'Muitos idiomas adicionais podem ser instalados a partir da secção de <a id="dictURL" href="">dicionários</a> em <a href="https://addons.mozilla.org/seamonkey/">Extras da Mozilla</a>.'>
+<!ENTITY dict_info.label2
+'Muitos idiomas adicionais podem ser instalados a partir da secção
+<a id="dictURL" href="">dicionários</a> nos
+<a href="https://addons.thunderbird.net/seamonkey/">extras do SeaMonkey e Thunderbird</a>.'>
 <!ENTITY info.title "Mais informação">
 <!--# LOCALIZATION NOTE (info_bugs.label): the URL for <a id="releaseNotesURL"> is fetched from brand.properties -->
-<!ENTITY info_bugs.label '<a href="https://developer.mozilla.org/docs/Mozilla/Projects/MailNews">Nós</a> agradecemos os relatórios de bugs e pedidos de funcionalidades, mas por favor leia as <a id="releaseNotesURL" href="">notas de lançamento</a> e consulte o <a href="https://bugzilla.mozilla.org/query.cgi">Bugzilla</a> primeiro.'>
+<!ENTITY info_bugs.label
+'<a href="https://developer.mozilla.org/docs/Mozilla/Projects/MailNews">Nós</a> agradecemos os relatórios de bugs e pedidos de funcionalidades, mas por favor leia as <a id="releaseNotesURL" href="">notas de lançamento</a> e consulte o <a href="https://bugzilla.mozilla.org/query.cgi">Bugzilla</a> primeiro.'>

@@ -10,7 +10,6 @@
 #include "mozilla/Attributes.h"
 #include "mozilla/dom/Element.h"
 #include "nsMappedAttributeElement.h"
-#include "nsIDOMNode.h"
 #include "Link.h"
 #include "mozilla/dom/DOMRect.h"
 
@@ -27,7 +26,6 @@ class EventChainPreVisitor;
  * The base class for MathML elements.
  */
 class nsMathMLElement final : public nsMathMLElementBase,
-                              public nsIDOMNode,
                               public mozilla::dom::Link
 {
 public:
@@ -38,8 +36,7 @@ public:
   NS_DECL_ISUPPORTS_INHERITED
 
   nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                      nsIContent* aBindingParent,
-                      bool aCompileEventHandlers) override;
+                      nsIContent* aBindingParent) override;
   virtual void UnbindFromTree(bool aDeep = true,
                               bool aNullParent = true) override;
 
@@ -68,13 +65,12 @@ public:
                                 nsIDocument*    aDocument);
 
   static void MapMathMLAttributesInto(const nsMappedAttributes* aAttributes,
-                                      mozilla::GenericSpecifiedValues* aGenericData);
+                                      mozilla::MappedDeclarations&);
 
   void GetEventTargetParent(mozilla::EventChainPreVisitor& aVisitor) override;
   virtual nsresult PostHandleEvent(
                      mozilla::EventChainPostVisitor& aVisitor) override;
-  nsresult Clone(mozilla::dom::NodeInfo* aNodeInfo, nsINode** aResult,
-                 bool aPreallocateChildren) const override;
+  nsresult Clone(mozilla::dom::NodeInfo*, nsINode** aResult) const override;
   virtual mozilla::EventStates IntrinsicState() const override;
   virtual bool IsNodeOfType(uint32_t aFlags) const override;
 
@@ -89,8 +85,6 @@ public:
   virtual bool IsLink(nsIURI** aURI) const override;
   virtual void GetLinkTarget(nsAString& aTarget) override;
   virtual already_AddRefed<nsIURI> GetHrefURI() const override;
-
-  virtual nsIDOMNode* AsDOMNode() override { return this; }
 
   virtual void NodeInfoChanged(nsIDocument* aOldDoc) override
   {

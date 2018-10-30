@@ -91,7 +91,19 @@ CollectProfileOrEmptyString(bool aIsShuttingDown)
 mozilla::ipc::IPCResult
 ProfilerChild::RecvGatherProfile(GatherProfileResolver&& aResolve)
 {
-  aResolve(CollectProfileOrEmptyString(/* aIsShuttingDown */ false));
+  mozilla::ipc::Shmem shmem;
+  profiler_get_profile_json_into_lazily_allocated_buffer(
+    [&](size_t allocationSize) -> char* {
+      if (AllocShmem(allocationSize,
+                     mozilla::ipc::Shmem::SharedMemory::TYPE_BASIC,
+                     &shmem)) {
+        return shmem.get<char>();
+      }
+      return nullptr;
+    },
+    /* aSinceTime */ 0,
+    /* aIsShuttingDown */ false);
+  aResolve(std::move(shmem));
   return IPC_OK();
 }
 

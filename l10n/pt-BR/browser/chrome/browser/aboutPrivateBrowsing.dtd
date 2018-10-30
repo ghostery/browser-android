@@ -20,6 +20,7 @@
 <!ENTITY aboutPrivateBrowsing.info.saved.after2          " seus:">
 <!ENTITY aboutPrivateBrowsing.info.downloads             "downloads">
 <!ENTITY aboutPrivateBrowsing.info.bookmarks             "favoritos">
+<!ENTITY aboutPrivateBrowsing.info.clipboard             "texto copiado">
 <!ENTITY aboutPrivateBrowsing.note.before                "A navegação privativa ">
 <!ENTITY aboutPrivateBrowsing.note.emphasize             "não o torna anônimo">
 <!ENTITY aboutPrivateBrowsing.note.after                 " na internet. Seu empregador ou provedor de acesso à internet ainda podem saber quais páginas visita.">
@@ -30,3 +31,6 @@
 <!ENTITY trackingProtection.title                        "Proteção contra rastreamento">
 <!ENTITY trackingProtection.description2                 "Alguns sites usam rastreadores que podem monitorar sua atividade na Internet. Com a proteção contra rastreamento do Firefox muitos destes rastreadores serão bloqueados.">
 <!ENTITY trackingProtection.startTour1                   "Ver como funciona">
+
+<!ENTITY contentBlocking.title                           "Bloqueio de conteúdo">
+<!ENTITY contentBlocking.description                     "Alguns sites usam rastreadores que podem monitorar sua atividade pela Internet. Nas janelas privativas, o bloqueio de conteúdo do Firefox bloqueia automaticamente muitos rastreadores que podem coletar informação sobre seu comportamento de navegação.">

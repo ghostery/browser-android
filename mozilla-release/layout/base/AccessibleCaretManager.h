@@ -22,6 +22,7 @@
 
 class nsFrameSelection;
 class nsIContent;
+class nsIDocument;
 class nsIPresShell;
 struct nsPoint;
 
@@ -105,8 +106,8 @@ public:
 
   // Handle NotifySelectionChanged event from nsISelectionListener.
   MOZ_CAN_RUN_SCRIPT
-  virtual nsresult OnSelectionChanged(nsIDOMDocument* aDoc,
-                                      nsISelection* aSel,
+  virtual nsresult OnSelectionChanged(nsIDocument* aDoc,
+                                      dom::Selection* aSel,
                                       int16_t aReason);
   // Handle key event.
   MOZ_CAN_RUN_SCRIPT
@@ -314,7 +315,7 @@ protected:
   // or not show the carets when the selection is updated, as we want to hide
   // the carets for mouse-triggered selection changes but show them for other
   // input types such as touch.
-  uint16_t mLastInputSource = dom::MouseEventBinding::MOZ_SOURCE_UNKNOWN;
+  uint16_t mLastInputSource = dom::MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
 
   // Set to true in OnScrollStart() and set to false in OnScrollEnd().
   bool mIsScrollStarted = false;
@@ -330,10 +331,6 @@ protected:
   // AppUnit.h.
   static const int32_t kBoundaryAppUnits = 61;
 
-  // Preference to show selection bars at the two ends in selection mode. The
-  // selection bar is always disabled in cursor mode.
-  static bool sSelectionBarEnabled;
-
   // Preference to allow smarter selection of phone numbers,
   // when user long presses text to start.
   static bool sExtendSelectionForPhoneNumber;
@@ -348,10 +345,19 @@ protected:
   // carets become tilt only when they are overlapping.
   static bool sCaretsAlwaysTilt;
 
-  // By default, javascript content selection changes closes AccessibleCarets and
-  // UI interactions. Optionally, we can try to maintain the active UI, keeping
-  // carets and ActionBar available.
-  static bool sCaretsScriptUpdates;
+  enum ScriptUpdateMode : int32_t {
+    // By default, always hide carets for selection changes due to JS calls.
+    kScriptAlwaysHide,
+    // Update any visible carets for selection changes due to JS calls,
+    // but don't show carets if carets are hidden.
+    kScriptUpdateVisible,
+    // Always show carets for selection changes due to JS calls.
+    kScriptAlwaysShow
+  };
+
+  // Preference to indicate how to update carets for selection changes due to
+  // JS calls, as one of the ScriptUpdateMode constants.
+  static int32_t sCaretsScriptUpdates;
 
   // Preference to allow one caret to be dragged across the other caret without
   // any limitation. When set to false, one caret cannot be dragged across the

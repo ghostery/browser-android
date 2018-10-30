@@ -9,6 +9,7 @@
 
 #include "IpdlTuple.h"
 #include "base/process.h"
+#include "mozilla/Atomics.h"
 
 #if defined(XP_WIN)
 #include "nsWindowsDllInterceptor.h"
@@ -96,12 +97,19 @@ typedef bool(ShouldHookFunc)(int aQuirks);
 template<FunctionHookId functionId, typename FunctionType>
 class BasicFunctionHook : public FunctionHook
 {
+#if defined(XP_WIN)
+  using FuncHookType = WindowsDllInterceptor::FuncHookType<FunctionType*>;
+#endif // defined(XP_WIN)
+
 public:
   BasicFunctionHook(const char* aModuleName,
                     const char* aFunctionName, FunctionType* aOldFunction,
-                    FunctionType* aNewFunction) :
-    mOldFunction(aOldFunction), mIsHooked(false), mModuleName(aModuleName),
-    mFunctionName(aFunctionName), mNewFunction(aNewFunction)
+                    FunctionType* aNewFunction)
+    : mOldFunction(aOldFunction)
+    , mRegistration(UNREGISTERED)
+    , mModuleName(aModuleName)
+    , mFunctionName(aFunctionName)
+    , mNewFunction(aNewFunction)
   {
     MOZ_ASSERT(mOldFunction);
     MOZ_ASSERT(mNewFunction);
@@ -128,9 +136,13 @@ protected:
   // Once the function is hooked, this field will take the value of a pointer to
   // a function that performs the old behavior.  Before that, it is a pointer to
   // the original function.
-  FunctionType* mOldFunction;
-  // True if we have already hooked the function.
-  bool mIsHooked;
+  Atomic<FunctionType*> mOldFunction;
+#if defined(XP_WIN)
+  FuncHookType mStub;
+#endif // defined(XP_WIN)
+
+  enum RegistrationStatus { UNREGISTERED, FAILED, SUCCEEDED };
+  RegistrationStatus mRegistration;
 
   // The name of the module containing the function to hook.  E.g. "user32.dll".
   const nsCString mModuleName;
@@ -153,10 +165,14 @@ BasicFunctionHook<functionId, FunctionType>::Register(int aQuirks)
 {
   MOZ_RELEASE_ASSERT(XRE_IsPluginProcess());
 
-  // If we have already hooked or if quirks tell us not to then don't hook.
-  if (mIsHooked || !mShouldHook(aQuirks)) {
+  // If we have already attempted to hook this function or if quirks tell us
+  // not to then don't hook.
+  if (mRegistration != UNREGISTERED || !mShouldHook(aQuirks)) {
     return true;
   }
+
+  bool isHooked = false;
+  mRegistration = FAILED;
 
 #if defined(XP_WIN)
   WindowsDllInterceptor* dllInterceptor =
@@ -165,16 +181,21 @@ BasicFunctionHook<functionId, FunctionType>::Register(int aQuirks)
     return false;
   }
 
-  mIsHooked =
-    dllInterceptor->AddHook(mFunctionName.Data(), reinterpret_cast<intptr_t>(mNewFunction),
-                            reinterpret_cast<void**>(&mOldFunction));
+  isHooked = mStub.Set(*dllInterceptor, mFunctionName.Data(), mNewFunction);
 #endif
+
+  if (isHooked) {
+#if defined(XP_WIN)
+    mOldFunction = mStub.GetStub();
+#endif
+    mRegistration = SUCCEEDED;
+  }
 
   HOOK_LOG(LogLevel::Debug,
            ("Registering to intercept function '%s' : '%s'", mFunctionName.Data(),
-            SuccessMsg(mIsHooked)));
+            SuccessMsg(isHooked)));
 
-  return mIsHooked;
+  return isHooked;
 }
 
 }

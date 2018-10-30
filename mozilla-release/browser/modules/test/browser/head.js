@@ -53,7 +53,7 @@ function checkKeyedScalar(scalars, scalarName, key, expectedValue) {
             scalarName + " must be recorded.");
   Assert.ok(key in scalars[scalarName],
             scalarName + " must contain the '" + key + "' key.");
-  Assert.ok(scalars[scalarName][key], expectedValue,
+  Assert.equal(scalars[scalarName][key], expectedValue,
             scalarName + "['" + key + "'] must contain the expected value");
 }
 
@@ -169,7 +169,7 @@ function checkEvents(events, expectedEvents) {
  */
 function makeMockPermissionRequest(browser) {
   let type = {
-    options: [],
+    options: Cc["@mozilla.org/array;1"].createInstance(Ci.nsIArray),
     QueryInterface: ChromeUtils.generateQI([Ci.nsIContentPermissionType]),
   };
   let types = Cc["@mozilla.org/array;1"].createInstance(Ci.nsIMutableArray);

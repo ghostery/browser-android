@@ -9,6 +9,7 @@
 #include "nsAutoPtr.h"
 #include "nsIChannel.h"
 #include "nsIContentSecurityPolicy.h"
+#include "nsICookieService.h"
 #include "nsIDocument.h"
 #include "nsIDOMChromeWindow.h"
 #include "nsIEffectiveTLDService.h"
@@ -28,7 +29,9 @@
 #include "mozilla/ipc/BackgroundChild.h"
 #include "GeckoProfiler.h"
 #include "jsfriendapi.h"
+#include "js/LocaleSensitive.h"
 #include "mozilla/AbstractThread.h"
+#include "mozilla/AntiTrackingCommon.h"
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/AsyncEventDispatcher.h"
 #include "mozilla/Atomics.h"
@@ -53,6 +56,7 @@
 #include "mozilla/Preferences.h"
 #include "mozilla/dom/Navigator.h"
 #include "mozilla/Monitor.h"
+#include "mozilla/StaticPrefs.h"
 #include "nsContentUtils.h"
 #include "nsCycleCollector.h"
 #include "nsDOMJSUtils.h"
@@ -69,6 +73,7 @@
 #include "Principal.h"
 #include "SharedWorker.h"
 #include "WorkerDebuggerManager.h"
+#include "WorkerError.h"
 #include "WorkerLoadInfo.h"
 #include "WorkerPrivate.h"
 #include "WorkerRunnable.h"
@@ -308,9 +313,7 @@ LoadContextOptions(const char* aPrefName, void* /* aClosure */)
                 .setFuzzing(GetWorkerPref<bool>(NS_LITERAL_CSTRING("fuzzing.enabled")))
 #endif
                 .setStreams(GetWorkerPref<bool>(NS_LITERAL_CSTRING("streams")))
-                .setExtraWarnings(GetWorkerPref<bool>(NS_LITERAL_CSTRING("strict")))
-                .setArrayProtoValues(GetWorkerPref<bool>(
-                      NS_LITERAL_CSTRING("array_prototype_values")));
+                .setExtraWarnings(GetWorkerPref<bool>(NS_LITERAL_CSTRING("strict")));
 
   nsCOMPtr<nsIXULRuntime> xr = do_GetService("@mozilla.org/xre/runtime;1");
   if (xr) {
@@ -576,6 +579,13 @@ InterruptCallback(JSContext* aCx)
   WorkerPrivate* worker = GetWorkerPrivateFromContext(aCx);
   MOZ_ASSERT(worker);
 
+  // As with the main thread, the interrupt callback is triggered
+  // non-deterministically when recording/replaying, so return early to avoid
+  // performing any recorded events.
+  if (recordreplay::IsRecordingOrReplaying()) {
+    return true;
+  }
+
   // Now is a good time to turn on profiling if it's pending.
   PROFILER_JS_INTERRUPT_CALLBACK();
 
@@ -586,14 +596,21 @@ class LogViolationDetailsRunnable final : public WorkerMainThreadRunnable
 {
   nsString mFileName;
   uint32_t mLineNum;
+  uint32_t mColumnNum;
+  nsString mScriptSample;
 
 public:
   LogViolationDetailsRunnable(WorkerPrivate* aWorker,
                               const nsString& aFileName,
-                              uint32_t aLineNum)
+                              uint32_t aLineNum,
+                              uint32_t aColumnNum,
+                              const nsAString& aScriptSample)
     : WorkerMainThreadRunnable(aWorker,
                                NS_LITERAL_CSTRING("RuntimeService :: LogViolationDetails"))
-    , mFileName(aFileName), mLineNum(aLineNum)
+    , mFileName(aFileName)
+    , mLineNum(aLineNum)
+    , mColumnNum(aColumnNum)
+    , mScriptSample(aScriptSample)
   {
     MOZ_ASSERT(aWorker);
   }
@@ -605,24 +622,38 @@ private:
 };
 
 bool
-ContentSecurityPolicyAllows(JSContext* aCx)
+ContentSecurityPolicyAllows(JSContext* aCx, JS::HandleValue aValue)
 {
   WorkerPrivate* worker = GetWorkerPrivateFromContext(aCx);
   worker->AssertIsOnWorkerThread();
 
   if (worker->GetReportCSPViolations()) {
+    JS::Rooted<JSString*> jsString(aCx, JS::ToString(aCx, aValue));
+    if (NS_WARN_IF(!jsString)) {
+      JS_ClearPendingException(aCx);
+      return false;
+    }
+
+    nsAutoJSString scriptSample;
+    if (NS_WARN_IF(!scriptSample.init(aCx, jsString))) {
+      JS_ClearPendingException(aCx);
+      return false;
+    }
+
     nsString fileName;
     uint32_t lineNum = 0;
+    uint32_t columnNum = 0;
 
     JS::AutoFilename file;
-    if (JS::DescribeScriptedCaller(aCx, &file, &lineNum) && file.get()) {
+    if (JS::DescribeScriptedCaller(aCx, &file, &lineNum, &columnNum) && file.get()) {
       fileName = NS_ConvertUTF8toUTF16(file.get());
     } else {
       MOZ_ASSERT(!JS_IsExceptionPending(aCx));
     }
 
     RefPtr<LogViolationDetailsRunnable> runnable =
-        new LogViolationDetailsRunnable(worker, fileName, lineNum);
+        new LogViolationDetailsRunnable(worker, fileName, lineNum, columnNum,
+                                        scriptSample);
 
     ErrorResult rv;
     runnable->Dispatch(Killing, rv);
@@ -820,50 +851,6 @@ ConsumeStream(JSContext* aCx,
   return FetchUtil::StreamResponseToJS(aCx, aObj, aMimeType, aConsumer, worker);
 }
 
-class WorkerJSContext;
-
-class WorkerThreadContextPrivate : private PerThreadAtomCache
-{
-  friend class WorkerJSContext;
-
-  WorkerPrivate* mWorkerPrivate;
-
-public:
-  // This can't return null, but we can't lose the "Get" prefix in the name or
-  // it will be ambiguous with the WorkerPrivate class name.
-  WorkerPrivate*
-  GetWorkerPrivate() const
-  {
-    MOZ_ASSERT(!NS_IsMainThread());
-    MOZ_ASSERT(mWorkerPrivate);
-
-    return mWorkerPrivate;
-  }
-
-private:
-  explicit
-  WorkerThreadContextPrivate(WorkerPrivate* aWorkerPrivate)
-    : mWorkerPrivate(aWorkerPrivate)
-  {
-    MOZ_ASSERT(!NS_IsMainThread());
-
-    // Zero out the base class members.
-    memset(this, 0, sizeof(PerThreadAtomCache));
-
-    MOZ_ASSERT(mWorkerPrivate);
-  }
-
-  ~WorkerThreadContextPrivate()
-  {
-    MOZ_ASSERT(!NS_IsMainThread());
-  }
-
-  WorkerThreadContextPrivate(const WorkerThreadContextPrivate&) = delete;
-
-  WorkerThreadContextPrivate&
-  operator=(const WorkerThreadContextPrivate&) = delete;
-};
-
 bool
 InitJSContextForWorker(WorkerPrivate* aWorkerPrivate, JSContext* aWorkerCx)
 {
@@ -944,7 +931,8 @@ Wrap(JSContext *cx, JS::HandleObject existing, JS::HandleObject obj)
     MOZ_CRASH("There should be no edges from the debuggee to the debugger.");
   }
 
-  JSObject* originGlobal = js::GetGlobalForObjectCrossCompartment(obj);
+  // Note: the JS engine unwraps CCWs before calling this callback.
+  JSObject* originGlobal = JS::GetNonCCWObjectGlobal(obj);
 
   const js::Wrapper* wrapper = nullptr;
   if (IsWorkerDebuggerGlobal(originGlobal) ||
@@ -1045,7 +1033,11 @@ private:
   WorkerPrivate* mWorkerPrivate;
 };
 
-class MOZ_STACK_CLASS WorkerJSContext final : public mozilla::CycleCollectedJSContext
+} // anonymous namespace
+
+} // workerinternals namespace
+
+class WorkerJSContext final : public mozilla::CycleCollectedJSContext
 {
 public:
   // The heap size passed here doesn't matter, we will change it later in the
@@ -1069,9 +1061,6 @@ public:
       return;   // Initialize() must have failed
     }
 
-    delete static_cast<WorkerThreadContextPrivate*>(JS_GetContextPrivate(cx));
-    JS_SetContextPrivate(cx, nullptr);
-
     // The worker global should be unrooted and the shutdown cycle collection
     // should break all remaining cycles. The superclass destructor will run
     // the GC one final time and finalize any JSObjects that were participating
@@ -1082,6 +1071,8 @@ public:
     // we don't try to CC again.
     mWorkerPrivate = nullptr;
   }
+
+  WorkerJSContext* GetAsWorkerJSContext() override { return this; }
 
   CycleCollectedJSRuntime* CreateRuntime(JSContext* aCx) override
   {
@@ -1099,8 +1090,6 @@ public:
      }
 
     JSContext* cx = Context();
-
-    JS_SetContextPrivate(cx, new WorkerThreadContextPrivate(mWorkerPrivate));
 
     js::SetPreserveWrapperCallback(cx, PreserveWrapper);
     JS_InitDestroyPrincipalsCallback(cx, DestroyWorkerPrincipals);
@@ -1140,6 +1129,7 @@ public:
       microTaskQueue = &GetDebuggerMicroTaskQueue();
     }
 
+    JS::JobQueueMayNotBeEmpty(cx);
     microTaskQueue->push(runnable.forget());
   }
 
@@ -1148,9 +1138,18 @@ public:
     return mWorkerPrivate->UsesSystemPrincipal();
   }
 
+  WorkerPrivate* GetWorkerPrivate() const
+  {
+    return mWorkerPrivate;
+  }
+
 private:
   WorkerPrivate* mWorkerPrivate;
 };
+
+namespace workerinternals {
+
+namespace {
 
 class WorkerThreadPrimaryRunnable final : public Runnable
 {
@@ -1422,7 +1421,7 @@ RuntimeService::RegisterWorker(WorkerPrivate* aWorkerPrivate)
       UniquePtr<SharedWorkerInfo> sharedWorkerInfo(
         new SharedWorkerInfo(aWorkerPrivate, sharedWorkerScriptSpec,
                              aWorkerPrivate->WorkerName()));
-      domainInfo->mSharedWorkerInfos.AppendElement(Move(sharedWorkerInfo));
+      domainInfo->mSharedWorkerInfos.AppendElement(std::move(sharedWorkerInfo));
     }
   }
 
@@ -2267,6 +2266,23 @@ RuntimeService::ResumeWorkersForWindow(nsPIDOMWindowInner* aWindow)
   }
 }
 
+void
+RuntimeService::PropagateFirstPartyStorageAccessGranted(nsPIDOMWindowInner* aWindow)
+{
+  AssertIsOnMainThread();
+  MOZ_ASSERT(aWindow);
+  MOZ_ASSERT(StaticPrefs::network_cookie_cookieBehavior() ==
+               nsICookieService::BEHAVIOR_REJECT_TRACKER &&
+             AntiTrackingCommon::ShouldHonorContentBlockingCookieRestrictions());
+
+  nsTArray<WorkerPrivate*> workers;
+  GetWorkersForWindow(aWindow, workers);
+
+  for (uint32_t index = 0; index < workers.Length(); index++) {
+    workers[index]->PropagateFirstPartyStorageAccessGranted();
+  }
+}
+
 nsresult
 RuntimeService::CreateSharedWorker(const GlobalObject& aGlobal,
                                    const nsAString& aScriptURL,
@@ -2375,13 +2391,13 @@ RuntimeService::CreateSharedWorkerFromLoadInfo(JSContext* aCx,
 
     created = true;
   } else {
-    // Check whether the secure context state matches.  The current compartment
-    // of aCx is the compartment of the SharedWorker constructor that was
-    // invoked, which is the compartment of the document that will be hooked up
-    // to the worker, so that's what we want to check.
+    // Check whether the secure context state matches.  The current realm
+    // of aCx is the realm of the SharedWorker constructor that was invoked,
+    // which is the realm of the document that will be hooked up to the worker,
+    // so that's what we want to check.
     shouldAttachToWorkerPrivate =
       workerPrivate->IsSecureContext() ==
-        JS_GetIsSecureContext(js::GetContextCompartment(aCx));
+        JS::GetIsSecureContext(js::GetContextRealm(aCx));
 
     // If we're attaching to an existing SharedWorker private, then we
     // must update the overriden load group to account for our document's
@@ -2406,7 +2422,9 @@ RuntimeService::CreateSharedWorkerFromLoadInfo(JSContext* aCx,
     // We're done here.  Just queue up our error event and return our
     // dead-on-arrival SharedWorker.
     RefPtr<AsyncEventDispatcher> errorEvent =
-      new AsyncEventDispatcher(sharedWorker, NS_LITERAL_STRING("error"), false);
+      new AsyncEventDispatcher(sharedWorker,
+                               NS_LITERAL_STRING("error"),
+                               CanBubble::eNo);
     errorEvent->PostDOMEvent();
     sharedWorker.forget(aSharedWorker);
     return NS_OK;
@@ -2596,7 +2614,7 @@ RuntimeService::ClampedHardwareConcurrency() const
     }
     uint32_t clampedValue = std::min(uint32_t(numberOfProcessors),
                                      gMaxHardwareConcurrency);
-    clampedHardwareConcurrency.compareExchange(0, clampedValue);
+    Unused << clampedHardwareConcurrency.compareExchange(0, clampedValue);
   }
 
   return clampedHardwareConcurrency;
@@ -2639,7 +2657,7 @@ RuntimeService::Observe(nsISupports* aSubject, const char* aTopic,
     return NS_OK;
   }
 
-  NS_NOTREACHED("Unknown observer topic!");
+  MOZ_ASSERT_UNREACHABLE("Unknown observer topic!");
   return NS_OK;
 }
 
@@ -2650,11 +2668,10 @@ LogViolationDetailsRunnable::MainThreadRun()
 
   nsIContentSecurityPolicy* csp = mWorkerPrivate->GetCSP();
   if (csp) {
-    NS_NAMED_LITERAL_STRING(scriptSample,
-        "Call to eval() or related function blocked by CSP.");
     if (mWorkerPrivate->GetReportCSPViolations()) {
       csp->LogViolationDetails(nsIContentSecurityPolicy::VIOLATION_TYPE_EVAL,
-                               mFileName, scriptSample, mLineNum,
+                               nullptr, // triggering element
+                               mFileName, mScriptSample, mLineNum, mColumnNum,
                                EmptyString(), EmptyString());
     }
   }
@@ -2673,10 +2690,10 @@ WorkerThreadPrimaryRunnable::Run()
   // Note: GetOrCreateForCurrentThread() must be called prior to
   //       mWorkerPrivate->SetThread() in order to avoid accidentally consuming
   //       worker messages here.
+  bool ipcReady = true;
   if (NS_WARN_IF(!BackgroundChild::GetOrCreateForCurrentThread())) {
-    // XXX need to fire an error at parent.
-    // Failed in creating BackgroundChild: probably in shutdown. Continue to run
-    // without BackgroundChild created.
+    // Let's report the error only after SetThread().
+    ipcReady = false;
   }
 
   class MOZ_STACK_CLASS SetThreadHelper final
@@ -2715,20 +2732,24 @@ WorkerThreadPrimaryRunnable::Run()
 
   mWorkerPrivate->AssertIsOnWorkerThread();
 
+  if (!ipcReady) {
+    WorkerErrorReport::CreateAndDispatchGenericErrorRunnableToParent(mWorkerPrivate);
+    return NS_ERROR_FAILURE;
+  }
+
   {
     nsCycleCollector_startup();
 
-    WorkerJSContext context(mWorkerPrivate);
-    nsresult rv = context.Initialize(mParentRuntime);
+    auto context = MakeUnique<WorkerJSContext>(mWorkerPrivate);
+    nsresult rv = context->Initialize(mParentRuntime);
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
 
-    JSContext* cx = context.Context();
+    JSContext* cx = context->Context();
 
     if (!InitJSContextForWorker(mWorkerPrivate, cx)) {
-      // XXX need to fire an error at parent.
-      NS_ERROR("Failed to create context!");
+      WorkerErrorReport::CreateAndDispatchGenericErrorRunnableToParent(mWorkerPrivate);
       return NS_ERROR_FAILURE;
     }
 
@@ -2861,19 +2882,38 @@ ResumeWorkersForWindow(nsPIDOMWindowInner* aWindow)
   }
 }
 
+void
+PropagateFirstPartyStorageAccessGrantedToWorkers(nsPIDOMWindowInner* aWindow)
+{
+  AssertIsOnMainThread();
+  MOZ_ASSERT(StaticPrefs::network_cookie_cookieBehavior() ==
+               nsICookieService::BEHAVIOR_REJECT_TRACKER &&
+             AntiTrackingCommon::ShouldHonorContentBlockingCookieRestrictions());
+
+  RuntimeService* runtime = RuntimeService::GetService();
+  if (runtime) {
+    runtime->PropagateFirstPartyStorageAccessGranted(aWindow);
+  }
+}
+
 WorkerPrivate*
 GetWorkerPrivateFromContext(JSContext* aCx)
 {
   MOZ_ASSERT(!NS_IsMainThread());
   MOZ_ASSERT(aCx);
 
-  void* cxPrivate = JS_GetContextPrivate(aCx);
-  if (!cxPrivate) {
+  CycleCollectedJSContext* ccjscx = CycleCollectedJSContext::GetFor(aCx);
+  if (!ccjscx) {
     return nullptr;
   }
 
-  return
-    static_cast<WorkerThreadContextPrivate*>(cxPrivate)->GetWorkerPrivate();
+  WorkerJSContext* workerjscx = ccjscx->GetAsWorkerJSContext();
+  // GetWorkerPrivateFromContext is called only for worker contexts.  The
+  // context private is cleared early in ~CycleCollectedJSContext() and so
+  // GetFor() returns null above if called after ccjscx is no longer a
+  // WorkerJSContext.
+  MOZ_ASSERT(workerjscx);
+  return workerjscx->GetWorkerPrivate();
 }
 
 WorkerPrivate*
@@ -2886,14 +2926,15 @@ GetCurrentThreadWorkerPrivate()
     return nullptr;
   }
 
-  JSContext* cx = ccjscx->Context();
-  MOZ_ASSERT(cx);
+  WorkerJSContext* workerjscx = ccjscx->GetAsWorkerJSContext();
+  // Although GetCurrentThreadWorkerPrivate() is called only for worker
+  // threads, the ccjscx will no longer be a WorkerJSContext if called from
+  // stable state events during ~CycleCollectedJSContext().
+  if (!workerjscx) {
+    return nullptr;
+  }
 
-  // Note that we can return nullptr if the nsCycleCollector_shutdown() in
-  // ~WorkerJSContext() triggers any calls to GetCurrentThreadWorkerPrivate().
-  // At this stage CycleCollectedJSContext::Get() will still return a context,
-  // but the context private has already been cleared.
-  return GetWorkerPrivateFromContext(cx);
+  return workerjscx->GetWorkerPrivate();
 }
 
 bool

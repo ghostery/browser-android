@@ -25,6 +25,10 @@
 <!ENTITY dict_info.label
 'Sok további nyelv telepíthető a <a href="https://addons.mozilla.org/seamonkey/">Mozilla kiegészítők</a>
 oldal <a id="dictURL" href="">szótárak</a> részéről.'>
+<!ENTITY dict_info.label2
+'Számos további nyelv telepíthető a
+<a id="dictURL" href="">szótárok</a> szakaszban a
+<a href="https://addons.thunderbird.net/seamonkey/">SeaMonkey és Thunderbird kiegészítők</a> oldalon.'>
 <!ENTITY info.title "További tudnivalók">
 <!--# LOCALIZATION NOTE (info_bugs.label): the URL for <a id="releaseNotesURL"> is fetched from brand.properties -->
 <!ENTITY info_bugs.label

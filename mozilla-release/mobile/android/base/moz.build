@@ -116,6 +116,7 @@ GENERATED_FILES += [
     'AndroidManifest.xml',
     'generated/preprocessed/org/mozilla/gecko/AdjustConstants.java',
     'generated/preprocessed/org/mozilla/gecko/AppConstants.java',
+    'generated/preprocessed/org/mozilla/gecko/CrashReporterConstants.java',
     'generated/preprocessed/org/mozilla/gecko/MmaConstants.java',
 ]
 x = GENERATED_FILES['generated/preprocessed/org/mozilla/gecko/AdjustConstants.java']
@@ -131,6 +132,11 @@ z = GENERATED_FILES['AndroidManifest.xml']
 z.script = 'generate_build_config.py:generate_android_manifest'
 z.inputs += ['AndroidManifest.xml.in']
 
+# Generate CrashReporterConstants.java
+crash_reporter_constants = GENERATED_FILES['generated/preprocessed/org/mozilla/gecko/CrashReporterConstants.java']
+crash_reporter_constants.script = '/toolkit/crashreporter/generate_crash_reporter_sources.py:emit_class'
+crash_reporter_constants.inputs += ['/toolkit/crashreporter/CrashAnnotations.yaml']
+
 # Regular builds invoke `libs` targets that localize files with no AB_CD set
 # into the default resources (res/{values,raw}).
 #
@@ -145,23 +151,6 @@ z.inputs += ['AndroidManifest.xml.in']
 # mobile/android/base (for regular builds) and in mobile/android/locales (for
 # multi-locale builds and single-locale repacks).  Make target magic ensures
 # that res/{values,raw}-AB-rCD is not written for regular en-US builds.
-
-for f in ['res/raw/browsersearch.json',
-          'res/raw{AB_rCD}/browsersearch.json']:
-    LOCALIZED_GENERATED_FILES += [f]
-    browsersearch = LOCALIZED_GENERATED_FILES[f]
-    browsersearch.script = '/python/mozbuild/mozbuild/action/generate_browsersearch.py'
-    browsersearch.inputs = [
-        # The `locales/en-US/` in this path will be rewritten to the
-        # locale-specific path.
-        '/mobile/locales/en-US/chrome/region.properties',
-    ]
-    browsersearch.flags += [
-        '--verbose',
-        '--fallback',
-        # The `locales/en-US` in this path will not be rewritten.
-        TOPSRCDIR + '/mobile/locales/en-US/chrome/region.properties',
-    ]
 
 for f in ['res/raw/suggestedsites.json',
           'res/raw{AB_rCD}/suggestedsites.json']:
@@ -212,11 +201,11 @@ GENERATED_FILES[t].inputs += [
     '!AndroidManifest.xml',
     '!generated/preprocessed/org/mozilla/gecko/AdjustConstants.java',
     '!generated/preprocessed/org/mozilla/gecko/AppConstants.java',
+    '!generated/preprocessed/org/mozilla/gecko/CrashReporterConstants.java',
     '!generated/preprocessed/org/mozilla/gecko/MmaConstants.java',
     # These all depend on AB_CD, which isn't captured in this definition.  Due
     # to subtle RecursiveMake details, everything works out.  In the future we
     # can try to express the APKs themselves as LOCALIZED_GENERATED_FILES.
-    '!res/raw/browsersearch.json',
     '!res/raw/suggestedsites.json',
     '!res/values/strings.xml',
 ]

@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* Generated with cbindgen:0.6.0 */
+/* Generated with cbindgen:0.6.2 */
 
 /* DO NOT MODIFY THIS MANUALLY! This file was generated using cbindgen.
  * To generate this file:
@@ -16,6 +16,10 @@
 
 namespace mozilla {
 namespace wr {
+
+static const uint32_t MAX_CACHED_PROGRAM_COUNT = 15;
+
+static const uint64_t MAX_LOAD_TIME_MS = 400;
 
 enum class BorderStyle : uint32_t {
   None = 0,
@@ -89,6 +93,7 @@ enum class ImageFormat : uint32_t {
   BGRA8 = 3,
   RGBAF32 = 4,
   RG8 = 5,
+  RGBAI32 = 6,
 
   Sentinel /* this must be last for serialization purposes. */
 };
@@ -147,10 +152,10 @@ enum class RepeatMode : uint32_t {
   Sentinel /* this must be last for serialization purposes. */
 };
 
-enum class SubpixelDirection : uint32_t {
-  None = 0,
-  Horizontal,
-  Vertical,
+enum class TelemetryProbe {
+  SceneBuildTime = 0,
+  SceneSwapTime = 1,
+  RenderTime = 2,
 
   Sentinel /* this must be last for serialization purposes. */
 };
@@ -222,12 +227,12 @@ struct DocumentHandle;
 // Geometry in a stacking context's local coordinate space (logical pixels).
 struct LayoutPixel;
 
+// Coordinates in normalized space (between zero and one).
+struct NormalizedCoordinates;
+
 // The renderer is responsible for submitting to the GPU the work prepared by the
 // RenderBackend.
 struct Renderer;
-
-// The resource updates for a given transaction (they must be applied in the same frame).
-struct ResourceUpdates;
 
 // Offset in number of tiles.
 struct Tiles;
@@ -235,9 +240,9 @@ struct Tiles;
 // A Transaction is a group of commands to apply atomically to a document.
 //
 // This mechanism ensures that:
-//  - no other message can be interleaved between two commands that need to be applied together.
-//  - no redundant work is performed if two commands in the same transaction cause the scene or
-//    the frame to be rebuilt.
+// - no other message can be interleaved between two commands that need to be applied together.
+// - no redundant work is performed if two commands in the same transaction cause the scene or
+// the frame to be rebuilt.
 struct Transaction;
 
 // The default unit.
@@ -399,14 +404,17 @@ struct BuiltDisplayListDescriptor {
   uint64_t builder_finish_time;
   // The third IPC time stamp: just before sending
   uint64_t send_start_time;
-  // The amount of clips ids assigned while building this display list.
-  uintptr_t total_clip_ids;
+  // The amount of clipping nodes created while building this display list.
+  uintptr_t total_clip_nodes;
+  // The amount of spatial nodes created while building this display list.
+  uintptr_t total_spatial_nodes;
 
   bool operator==(const BuiltDisplayListDescriptor& aOther) const {
     return builder_start_time == aOther.builder_start_time &&
            builder_finish_time == aOther.builder_finish_time &&
            send_start_time == aOther.send_start_time &&
-           total_clip_ids == aOther.total_clip_ids;
+           total_clip_nodes == aOther.total_clip_nodes &&
+           total_spatial_nodes == aOther.total_spatial_nodes;
   }
 };
 
@@ -581,18 +589,6 @@ struct BorderSide {
   }
 };
 
-using LayoutPoint = TypedPoint2D<float, LayoutPixel>;
-
-struct GradientStop {
-  float offset;
-  ColorF color;
-
-  bool operator==(const GradientStop& aOther) const {
-    return offset == aOther.offset &&
-           color == aOther.color;
-  }
-};
-
 template<typename T, typename U>
 struct TypedSideOffsets2D {
   T top;
@@ -612,15 +608,15 @@ struct TypedSideOffsets2D {
 template<typename T>
 using SideOffsets2D = TypedSideOffsets2D<T, UnknownUnit>;
 
-struct NinePatchDescriptor {
-  uint32_t width;
-  uint32_t height;
-  SideOffsets2D<uint32_t> slice;
+using LayoutPoint = TypedPoint2D<float, LayoutPixel>;
 
-  bool operator==(const NinePatchDescriptor& aOther) const {
-    return width == aOther.width &&
-           height == aOther.height &&
-           slice == aOther.slice;
+struct GradientStop {
+  float offset;
+  ColorF color;
+
+  bool operator==(const GradientStop& aOther) const {
+    return offset == aOther.offset &&
+           color == aOther.color;
   }
 };
 
@@ -719,8 +715,7 @@ union GlyphRasterSpace {
     float _0;
 
     bool operator==(const Local_Body& aOther) const {
-      return tag == aOther.tag &&
-             _0 == aOther._0;
+      return _0 == aOther._0;
     }
   };
 
@@ -748,6 +743,16 @@ union GlyphRasterSpace {
 
   bool IsScreen() const {
     return tag == Tag::Screen;
+  }
+
+  bool operator==(const GlyphRasterSpace& aOther) const {
+    if (tag != aOther.tag) {
+      return false;
+    }
+    switch (tag) {
+      case Tag::Local: return local == aOther.local;
+      default: return true;
+    }
   }
 };
 
@@ -898,29 +903,39 @@ struct ColorU {
   }
 };
 
+struct SyntheticItalics {
+  int16_t angle;
+
+  bool operator==(const SyntheticItalics& aOther) const {
+    return angle == aOther.angle;
+  }
+};
+
 struct FontInstanceOptions {
   FontRenderMode render_mode;
-  SubpixelDirection subpx_dir;
   FontInstanceFlags flags;
   // When bg_color.a is != 0 and render_mode is FontRenderMode::Subpixel,
   // the text will be rendered with bg_color.r/g/b as an opaque estimated
   // background color.
   ColorU bg_color;
+  SyntheticItalics synthetic_italics;
 
   bool operator==(const FontInstanceOptions& aOther) const {
     return render_mode == aOther.render_mode &&
-           subpx_dir == aOther.subpx_dir &&
            flags == aOther.flags &&
-           bg_color == aOther.bg_color;
+           bg_color == aOther.bg_color &&
+           synthetic_italics == aOther.synthetic_italics;
   }
 };
 
 #if defined(XP_WIN)
 struct FontInstancePlatformOptions {
-  uint32_t unused;
+  uint16_t gamma;
+  uint16_t contrast;
 
   bool operator==(const FontInstancePlatformOptions& aOther) const {
-    return unused == aOther.unused;
+    return gamma == aOther.gamma &&
+           contrast == aOther.contrast;
   }
 };
 #endif
@@ -947,6 +962,8 @@ struct FontInstancePlatformOptions {
 };
 #endif
 
+using NormalizedRect = TypedRect<float, NormalizedCoordinates>;
+
 struct WrTransformProperty {
   uint64_t id;
   LayoutTransform transform;
@@ -963,13 +980,6 @@ struct WrOpacityProperty {
 };
 
 extern "C" {
-
-/* DO NOT MODIFY THIS MANUALLY! This file was generated using cbindgen.
- * To generate this file:
- *   1. Get the latest cbindgen using `cargo install --force cbindgen`
- *      a. Alternatively, you can clone `https://github.com/eqrion/cbindgen` and use a tagged release
- *   2. Run `rustup run nightly cbindgen toolkit/library/rust/ --lockfile Cargo.lock --crate webrender_bindings -o gfx/webrender_bindings/webrender_ffi_generated.h`
- */
 
 extern void AddFontData(WrFontKey aKey,
                         const uint8_t *aData,
@@ -1025,6 +1035,13 @@ extern bool is_in_main_thread();
 
 extern bool is_in_render_thread();
 
+extern void record_telemetry_time(TelemetryProbe aProbe,
+                                  uint64_t aTimeNs);
+
+WR_INLINE
+bool remove_program_binary_disk_cache(const nsAString *aProfPath)
+WR_FUNC;
+
 WR_INLINE
 const VecU8 *wr_add_ref_arc(const ArcVecU8 *aArc)
 WR_FUNC;
@@ -1034,6 +1051,10 @@ void wr_api_capture(DocumentHandle *aDh,
                     const char *aPath,
                     uint32_t aBitsRaw)
 WR_FUNC;
+
+WR_INLINE
+void wr_api_clear_all_caches(DocumentHandle *aDh)
+WR_DESTRUCTOR_SAFE_FUNC;
 
 WR_INLINE
 void wr_api_clone(DocumentHandle *aDh,
@@ -1079,13 +1100,18 @@ bool wr_api_hit_test(DocumentHandle *aDh,
 WR_FUNC;
 
 WR_INLINE
+void wr_api_notify_memory_pressure(DocumentHandle *aDh)
+WR_FUNC;
+
+WR_INLINE
 void wr_api_send_external_event(DocumentHandle *aDh,
                                 uintptr_t aEvt)
 WR_DESTRUCTOR_SAFE_FUNC;
 
 WR_INLINE
 void wr_api_send_transaction(DocumentHandle *aDh,
-                             Transaction *aTransaction)
+                             Transaction *aTransaction,
+                             bool aIsAsync)
 WR_FUNC;
 
 WR_INLINE
@@ -1110,8 +1136,7 @@ WR_FUNC;
 
 WR_INLINE
 uintptr_t wr_dp_define_clip(WrState *aState,
-                            const uintptr_t *aAncestorScrollId,
-                            const uintptr_t *aAncestorClipId,
+                            const uintptr_t *aParentId,
                             LayoutRect aClipRect,
                             const ComplexClipRegion *aComplex,
                             uintptr_t aComplexCount,
@@ -1119,10 +1144,16 @@ uintptr_t wr_dp_define_clip(WrState *aState,
 WR_FUNC;
 
 WR_INLINE
+uint64_t wr_dp_define_clipchain(WrState *aState,
+                                const uint64_t *aParentClipchainId,
+                                const uintptr_t *aClips,
+                                uintptr_t aClipsCount)
+WR_FUNC;
+
+WR_INLINE
 uintptr_t wr_dp_define_scroll_layer(WrState *aState,
                                     uint64_t aScrollId,
-                                    const uintptr_t *aAncestorScrollId,
-                                    const uintptr_t *aAncestorClipId,
+                                    const uintptr_t *aParentId,
                                     LayoutRect aContentRect,
                                     LayoutRect aClipRect)
 WR_FUNC;
@@ -1156,7 +1187,8 @@ void wr_dp_pop_scroll_layer(WrState *aState)
 WR_FUNC;
 
 WR_INLINE
-void wr_dp_pop_stacking_context(WrState *aState)
+void wr_dp_pop_stacking_context(WrState *aState,
+                                bool aIsReferenceFrame)
 WR_FUNC;
 
 WR_INLINE
@@ -1178,6 +1210,9 @@ void wr_dp_push_border_gradient(WrState *aState,
                                 LayoutRect aClip,
                                 bool aIsBackfaceVisible,
                                 BorderWidths aWidths,
+                                uint32_t aWidth,
+                                uint32_t aHeight,
+                                SideOffsets2D<uint32_t> aSlice,
                                 LayoutPoint aStartPoint,
                                 LayoutPoint aEndPoint,
                                 const GradientStop *aStops,
@@ -1193,7 +1228,9 @@ void wr_dp_push_border_image(WrState *aState,
                              bool aIsBackfaceVisible,
                              BorderWidths aWidths,
                              WrImageKey aImage,
-                             NinePatchDescriptor aPatch,
+                             uint32_t aWidth,
+                             uint32_t aHeight,
+                             SideOffsets2D<uint32_t> aSlice,
                              SideOffsets2D<float> aOutset,
                              RepeatMode aRepeatHorizontal,
                              RepeatMode aRepeatVertical)
@@ -1240,14 +1277,15 @@ WR_FUNC;
 WR_INLINE
 void wr_dp_push_clip_and_scroll_info(WrState *aState,
                                      uintptr_t aScrollId,
-                                     const uintptr_t *aClipId)
+                                     const uint64_t *aClipChainId)
 WR_FUNC;
 
 WR_INLINE
 void wr_dp_push_iframe(WrState *aState,
                        LayoutRect aRect,
                        bool aIsBackfaceVisible,
-                       WrPipelineId aPipelineId)
+                       WrPipelineId aPipelineId,
+                       bool aIgnoreMissingPipeline)
 WR_FUNC;
 
 WR_INLINE
@@ -1259,7 +1297,8 @@ void wr_dp_push_image(WrState *aState,
                       LayoutSize aTileSpacing,
                       ImageRendering aImageRendering,
                       WrImageKey aKey,
-                      bool aPremultipliedAlpha)
+                      bool aPremultipliedAlpha,
+                      ColorF aColor)
 WR_FUNC;
 
 WR_INLINE
@@ -1335,7 +1374,9 @@ void wr_dp_push_stacking_context(WrState *aState,
                                  const WrFilterOp *aFilters,
                                  uintptr_t aFilterCount,
                                  bool aIsBackfaceVisible,
-                                 GlyphRasterSpace aGlyphRasterSpace)
+                                 GlyphRasterSpace aGlyphRasterSpace,
+                                 bool *aOutIsReferenceFrame,
+                                 uintptr_t *aOutReferenceFrameId)
 WR_FUNC;
 
 WR_INLINE
@@ -1395,7 +1436,10 @@ void wr_dp_save(WrState *aState)
 WR_FUNC;
 
 WR_INLINE
-void wr_dump_display_list(WrState *aState)
+uintptr_t wr_dump_display_list(WrState *aState,
+                               uintptr_t aIndent,
+                               const uintptr_t *aStart,
+                               const uintptr_t *aEnd)
 WR_FUNC;
 
 extern bool wr_moz2d_render_cb(ByteSlice aBlob,
@@ -1425,7 +1469,8 @@ void wr_program_cache_delete(WrProgramCache *aProgramCache)
 WR_DESTRUCTOR_SAFE_FUNC;
 
 WR_INLINE
-WrProgramCache *wr_program_cache_new()
+WrProgramCache *wr_program_cache_new(const nsAString *aProfPath,
+                                     WrThreadPool *aThreadPool)
 WR_FUNC;
 
 WR_INLINE
@@ -1480,14 +1525,14 @@ void wr_renderer_update_program_cache(Renderer *aRenderer,
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_add_blob_image(ResourceUpdates *aResources,
+void wr_resource_updates_add_blob_image(Transaction *aTxn,
                                         WrImageKey aImageKey,
                                         const WrImageDescriptor *aDescriptor,
                                         WrVecU8 *aBytes)
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_add_external_image(ResourceUpdates *aResources,
+void wr_resource_updates_add_external_image(Transaction *aTxn,
                                             WrImageKey aImageKey,
                                             const WrImageDescriptor *aDescriptor,
                                             WrExternalImageId aExternalImageId,
@@ -1496,14 +1541,14 @@ void wr_resource_updates_add_external_image(ResourceUpdates *aResources,
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_add_font_descriptor(ResourceUpdates *aResources,
+void wr_resource_updates_add_font_descriptor(Transaction *aTxn,
                                              WrFontKey aKey,
                                              WrVecU8 *aBytes,
                                              uint32_t aIndex)
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_add_font_instance(ResourceUpdates *aResources,
+void wr_resource_updates_add_font_instance(Transaction *aTxn,
                                            WrFontInstanceKey aKey,
                                            WrFontKey aFontKey,
                                            float aGlyphSize,
@@ -1513,48 +1558,46 @@ void wr_resource_updates_add_font_instance(ResourceUpdates *aResources,
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_add_image(ResourceUpdates *aResources,
+void wr_resource_updates_add_image(Transaction *aTxn,
                                    WrImageKey aImageKey,
                                    const WrImageDescriptor *aDescriptor,
                                    WrVecU8 *aBytes)
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_add_raw_font(ResourceUpdates *aResources,
+void wr_resource_updates_add_raw_font(Transaction *aTxn,
                                       WrFontKey aKey,
                                       WrVecU8 *aBytes,
                                       uint32_t aIndex)
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_clear(ResourceUpdates *aResources)
+void wr_resource_updates_clear(Transaction *aTxn)
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_delete(ResourceUpdates *aUpdates)
-WR_DESTRUCTOR_SAFE_FUNC;
-
-WR_INLINE
-void wr_resource_updates_delete_font(ResourceUpdates *aResources,
+void wr_resource_updates_delete_font(Transaction *aTxn,
                                      WrFontKey aKey)
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_delete_font_instance(ResourceUpdates *aResources,
+void wr_resource_updates_delete_font_instance(Transaction *aTxn,
                                               WrFontInstanceKey aKey)
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_delete_image(ResourceUpdates *aResources,
+void wr_resource_updates_delete_image(Transaction *aTxn,
                                       WrImageKey aKey)
 WR_FUNC;
 
 WR_INLINE
-ResourceUpdates *wr_resource_updates_new()
+void wr_resource_updates_set_image_visible_area(Transaction *aTxn,
+                                                WrImageKey aKey,
+                                                const NormalizedRect *aArea)
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_update_blob_image(ResourceUpdates *aResources,
+void wr_resource_updates_update_blob_image(Transaction *aTxn,
                                            WrImageKey aImageKey,
                                            const WrImageDescriptor *aDescriptor,
                                            WrVecU8 *aBytes,
@@ -1562,7 +1605,7 @@ void wr_resource_updates_update_blob_image(ResourceUpdates *aResources,
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_update_external_image(ResourceUpdates *aResources,
+void wr_resource_updates_update_external_image(Transaction *aTxn,
                                                WrImageKey aKey,
                                                const WrImageDescriptor *aDescriptor,
                                                WrExternalImageId aExternalImageId,
@@ -1571,7 +1614,17 @@ void wr_resource_updates_update_external_image(ResourceUpdates *aResources,
 WR_FUNC;
 
 WR_INLINE
-void wr_resource_updates_update_image(ResourceUpdates *aResources,
+void wr_resource_updates_update_external_image_with_dirty_rect(Transaction *aTxn,
+                                                               WrImageKey aKey,
+                                                               const WrImageDescriptor *aDescriptor,
+                                                               WrExternalImageId aExternalImageId,
+                                                               WrExternalImageBufferType aImageType,
+                                                               uint8_t aChannelIndex,
+                                                               DeviceUintRect aDirtyRect)
+WR_FUNC;
+
+WR_INLINE
+void wr_resource_updates_update_image(Transaction *aTxn,
                                       WrImageKey aKey,
                                       const WrImageDescriptor *aDescriptor,
                                       WrVecU8 *aBytes)
@@ -1581,14 +1634,12 @@ WR_INLINE
 uintptr_t wr_root_scroll_node_id()
 WR_FUNC;
 
+extern void wr_schedule_render(WrWindowId aWindowId);
+
 WR_INLINE
 void wr_set_item_tag(WrState *aState,
                      uint64_t aScrollId,
                      uint16_t aHitInfo)
-WR_FUNC;
-
-WR_INLINE
-void wr_shutdown_log_for_gpu_process()
 WR_FUNC;
 
 WR_INLINE
@@ -1687,8 +1738,7 @@ void wr_transaction_update_epoch(Transaction *aTxn,
 WR_FUNC;
 
 WR_INLINE
-void wr_transaction_update_resources(Transaction *aTxn,
-                                     ResourceUpdates *aResourceUpdates)
+void wr_try_load_shader_from_disk(WrProgramCache *aProgramCache)
 WR_FUNC;
 
 WR_INLINE
@@ -1715,10 +1765,3 @@ WR_FUNC;
 
 } // namespace wr
 } // namespace mozilla
-
-/* DO NOT MODIFY THIS MANUALLY! This file was generated using cbindgen.
- * To generate this file:
- *   1. Get the latest cbindgen using `cargo install --force cbindgen`
- *      a. Alternatively, you can clone `https://github.com/eqrion/cbindgen` and use a tagged release
- *   2. Run `rustup run nightly cbindgen toolkit/library/rust/ --lockfile Cargo.lock --crate webrender_bindings -o gfx/webrender_bindings/webrender_ffi_generated.h`
- */

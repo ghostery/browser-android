@@ -1,10 +1,10 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- extracted from content/pref-proxies.xul -->
+
 <!--LOCALIZATION NOTE : FILE The Proxies preferences dialog -->
-
-
 <!ENTITY  pref.proxies.title            "Proxyk">
 <!ENTITY  pref.proxies.desc             "A proxy egy hálózati szolgáltatás, amely szűri és felgyorsítja az internetkapcsolatot.">
 <!ENTITY  proxyTitle.label              "Proxy beállítása az internet eléréséhez">
@@ -24,7 +24,7 @@
 <!ENTITY  http.accesskey                "P">
 <!ENTITY  port.label                    "Port:">
 <!ENTITY  HTTPPort.accesskey            "o">
-<!ENTITY  advanced.label                "Haladó…">
+<!ENTITY  advanced.label                "Speciális…">
 <!ENTITY  advanced.accesskey            "a">
 <!ENTITY  noproxy.label                 "Nincs proxy a következőhöz:">
 <!ENTITY  noproxy.accesskey             "N">

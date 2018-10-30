@@ -9,16 +9,20 @@
 /* import-globals-from shared-head.js */
 /* import-globals-from ../mochitest/common.js */
 
-/* exported EVENT_REORDER, EVENT_SHOW, EVENT_TEXT_INSERTED, EVENT_TEXT_REMOVED,
+/* exported EVENT_REORDER, EVENT_SCROLLING, EVENT_SCROLLING_END, EVENT_SHOW,
+            EVENT_TEXT_INSERTED, EVENT_TEXT_REMOVED,
             EVENT_DOCUMENT_LOAD_COMPLETE, EVENT_HIDE, EVENT_TEXT_CARET_MOVED,
             EVENT_DESCRIPTION_CHANGE, EVENT_NAME_CHANGE, EVENT_STATE_CHANGE,
             EVENT_VALUE_CHANGE, EVENT_TEXT_VALUE_CHANGE, EVENT_FOCUS,
-            EVENT_DOCUMENT_RELOAD, UnexpectedEvents, contentSpawnMutation,
-            waitForEvent, waitForEvents, waitForOrderedEvents */
+            EVENT_DOCUMENT_RELOAD, EVENT_VIRTUALCURSOR_CHANGED,
+            UnexpectedEvents, contentSpawnMutation, waitForEvent, waitForEvents,
+            waitForOrderedEvents */
 
 const EVENT_DOCUMENT_LOAD_COMPLETE = nsIAccessibleEvent.EVENT_DOCUMENT_LOAD_COMPLETE;
 const EVENT_HIDE = nsIAccessibleEvent.EVENT_HIDE;
 const EVENT_REORDER = nsIAccessibleEvent.EVENT_REORDER;
+const EVENT_SCROLLING = nsIAccessibleEvent.EVENT_SCROLLING;
+const EVENT_SCROLLING_END = nsIAccessibleEvent.EVENT_SCROLLING_END;
 const EVENT_SHOW = nsIAccessibleEvent.EVENT_SHOW;
 const EVENT_STATE_CHANGE = nsIAccessibleEvent.EVENT_STATE_CHANGE;
 const EVENT_TEXT_CARET_MOVED = nsIAccessibleEvent.EVENT_TEXT_CARET_MOVED;
@@ -30,6 +34,7 @@ const EVENT_VALUE_CHANGE = nsIAccessibleEvent.EVENT_VALUE_CHANGE;
 const EVENT_TEXT_VALUE_CHANGE = nsIAccessibleEvent.EVENT_TEXT_VALUE_CHANGE;
 const EVENT_FOCUS = nsIAccessibleEvent.EVENT_FOCUS;
 const EVENT_DOCUMENT_RELOAD = nsIAccessibleEvent.EVENT_DOCUMENT_RELOAD;
+const EVENT_VIRTUALCURSOR_CHANGED = nsIAccessibleEvent.EVENT_VIRTUALCURSOR_CHANGED;
 
 /**
  * Describe an event in string format.
@@ -198,8 +203,7 @@ async function contentSpawnMutation(browser, waitFor, func, args = null) {
     // 100ms is an arbitrary positive number to advance the clock.
     // We don't need to advance the clock for a11y mutations, but other
     // tick listeners may depend on an advancing clock with each refresh.
-    content.QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindowUtils).advanceTimeAndRefresh(100);
+    content.windowUtils.advanceTimeAndRefresh(100);
   }
 
   // This stops the refreh driver from doing its regular ticks, and leaves
@@ -218,8 +222,7 @@ async function contentSpawnMutation(browser, waitFor, func, args = null) {
 
   // Go back to normal refresh driver ticks.
   await ContentTask.spawn(browser, null, function() {
-    content.QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindowUtils).restoreNormalRefresh();
+    content.windowUtils.restoreNormalRefresh();
   });
 
   return events;

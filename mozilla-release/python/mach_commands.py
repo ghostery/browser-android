@@ -9,6 +9,7 @@ import logging
 import os
 import sys
 import tempfile
+from multiprocessing import cpu_count
 
 from concurrent.futures import (
     ThreadPoolExecutor,
@@ -29,6 +30,8 @@ from mach.decorators import (
     CommandProvider,
     Command,
 )
+
+here = os.path.abspath(os.path.dirname(__file__))
 
 
 @CommandProvider
@@ -65,10 +68,16 @@ class MachCommands(MachCommandBase):
                      default=False,
                      action='store_true',
                      help='Verbose output.')
+    @CommandArgument('--python',
+                     default='2.7',
+                     help='Version of Python for Pipenv to use. When given a '
+                          'Python version, Pipenv will automatically scan your '
+                          'system for a Python that matches that given version.')
     @CommandArgument('-j', '--jobs',
-                     default=1,
+                     default=None,
                      type=int,
-                     help='Number of concurrent jobs to run. Default is 1.')
+                     help='Number of concurrent jobs to run. Default is the number of CPUs '
+                          'in the system.')
     @CommandArgument('--subsuite',
                      default=None,
                      help=('Python subsuite to run. If not specified, all subsuites are run. '
@@ -90,9 +99,10 @@ class MachCommands(MachCommandBase):
                          test_objects=None,
                          subsuite=None,
                          verbose=False,
-                         jobs=1,
+                         jobs=None,
+                         python=None,
                          **kwargs):
-        self._activate_virtualenv()
+        self.activate_pipenv(pipfile=None, populate=True, python=python)
 
         if test_objects is None:
             from moztest.resolve import TestResolver
@@ -114,7 +124,11 @@ class MachCommands(MachCommandBase):
         elif subsuite:
             filters.append(mpf.subsuite(subsuite))
 
-        tests = mp.active_tests(filters=filters, disabled=False, **mozinfo.info)
+        tests = mp.active_tests(
+            filters=filters,
+            disabled=False,
+            python=self.virtualenv_manager.version_info[0],
+            **mozinfo.info)
 
         if not tests:
             submsg = "for subsuite '{}' ".format(subsuite) if subsuite else ""
@@ -131,7 +145,7 @@ class MachCommands(MachCommandBase):
             else:
                 parallel.append(test)
 
-        self.jobs = jobs
+        self.jobs = jobs or cpu_count()
         self.terminate = False
         self.verbose = verbose
 

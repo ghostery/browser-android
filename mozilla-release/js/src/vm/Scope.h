@@ -8,7 +8,12 @@
 #define vm_Scope_h
 
 #include "mozilla/Maybe.h"
+#include "mozilla/TypeTraits.h"
 #include "mozilla/Variant.h"
+
+#include <stddef.h>
+
+#include "jsutil.h"
 
 #include "gc/DeletePolicy.h"
 #include "gc/Heap.h"
@@ -21,6 +26,7 @@
 
 namespace js {
 
+class BaseScopeData;
 class ModuleObject;
 class Scope;
 
@@ -102,21 +108,47 @@ const char* ScopeKindString(ScopeKind kind);
 
 class BindingName
 {
-    // A JSAtom* with its low bit used as a tag for whether it is closed over
-    // (i.e., exists in the environment shape).
+    // A JSAtom* with its low bit used as a tag for the:
+    //  * whether it is closed over (i.e., exists in the environment shape)
+    //  * whether it is a top-level function binding in global or eval scope,
+    //    instead of var binding (both are in the same range in Scope data)
     uintptr_t bits_;
 
     static const uintptr_t ClosedOverFlag = 0x1;
-    static const uintptr_t FlagMask = 0x1;
+    // TODO: We should reuse this bit for let vs class distinction to
+    //       show the better redeclaration error message (bug 1428672).
+    static const uintptr_t TopLevelFunctionFlag = 0x2;
+    static const uintptr_t FlagMask = 0x3;
 
   public:
     BindingName()
       : bits_(0)
     { }
 
-    BindingName(JSAtom* name, bool closedOver)
-      : bits_(uintptr_t(name) | (closedOver ? ClosedOverFlag : 0x0))
+    BindingName(JSAtom* name, bool closedOver, bool isTopLevelFunction = false)
+      : bits_(uintptr_t(name) |
+              (closedOver ? ClosedOverFlag : 0x0) |
+              (isTopLevelFunction? TopLevelFunctionFlag : 0x0))
     { }
+
+  private:
+    // For fromXDR.
+    BindingName(JSAtom* name, uint8_t flags)
+      : bits_(uintptr_t(name) | flags)
+    {
+        static_assert(FlagMask < alignof(JSAtom),
+                      "Flags should fit into unused bits of JSAtom pointer");
+        MOZ_ASSERT((flags & FlagMask) == flags);
+    }
+
+  public:
+    static BindingName fromXDR(JSAtom* name, uint8_t flags) {
+        return BindingName(name, flags);
+    }
+
+    uint8_t flagsForXDR() const {
+        return static_cast<uint8_t>(bits_ & FlagMask);
+    }
 
     JSAtom* name() const {
         return reinterpret_cast<JSAtom*>(bits_ & ~FlagMask);
@@ -126,7 +158,58 @@ class BindingName
         return bits_ & ClosedOverFlag;
     }
 
+  private:
+    friend class BindingIter;
+    // This method should be called only for binding names in `vars` range in
+    // BindingIter.
+    bool isTopLevelFunction() const {
+        return bits_ & TopLevelFunctionFlag;
+    }
+
+  public:
     void trace(JSTracer* trc);
+};
+
+/**
+ * The various {Global,Module,...}Scope::Data classes consist of always-present
+ * bits, then a trailing array of BindingNames.  The various Data classes all
+ * end in a TrailingNamesArray that contains sized/aligned space for *one*
+ * BindingName.  Data instances that contain N BindingNames, are then allocated
+ * in sizeof(Data) + (space for (N - 1) BindingNames).  Because this class's
+ * |data_| field is properly sized/aligned, the N-BindingName array can start
+ * at |data_|.
+ *
+ * This is concededly a very low-level representation, but we want to only
+ * allocate once for data+bindings both, and this does so approximately as
+ * elegantly as C++ allows.
+ */
+class TrailingNamesArray
+{
+  private:
+    alignas(BindingName) unsigned char data_[sizeof(BindingName)];
+
+  private:
+    // Some versions of GCC treat it as a -Wstrict-aliasing violation (ergo a
+    // -Werror compile error) to reinterpret_cast<> |data_| to |T*|, even
+    // through |void*|.  Placing the latter cast in these separate functions
+    // breaks the chain such that affected GCC versions no longer warn/error.
+    void* ptr() {
+        return data_;
+    }
+
+  public:
+    // Explicitly ensure no one accidentally allocates scope data without
+    // poisoning its trailing names.
+    TrailingNamesArray() = delete;
+
+    explicit TrailingNamesArray(size_t nameCount) {
+        if (nameCount)
+            JS_POISON(&data_, 0xCC, sizeof(BindingName) * nameCount, MemCheckKind::MakeUndefined);
+    }
+
+    BindingName* start() { return reinterpret_cast<BindingName*>(ptr()); }
+
+    BindingName& operator[](size_t i) { return start()[i]; }
 };
 
 class BindingLocation
@@ -222,41 +305,32 @@ class Scope : public js::gc::TenuredCell
 {
     friend class GCMarker;
 
-    // The kind determines data_.
-    //
-    // The memory here must be fully initialized, since otherwise the magic_
-    // value for gc::RelocationOverlay will land in the padding and may be
-    // stale.
-    union {
-        ScopeKind kind_;
-        uintptr_t paddedKind_;
-    };
-
     // The enclosing scope or nullptr.
     GCPtrScope enclosing_;
+
+    // The kind determines data_.
+    ScopeKind kind_;
 
     // If there are any aliased bindings, the shape for the
     // EnvironmentObject. Otherwise nullptr.
     GCPtrShape environmentShape_;
 
   protected:
-    uintptr_t data_;
+    BaseScopeData* data_;
 
     Scope(ScopeKind kind, Scope* enclosing, Shape* environmentShape)
       : enclosing_(enclosing),
+        kind_(kind),
         environmentShape_(environmentShape),
-        data_(0)
-    {
-        paddedKind_ = 0;
-        kind_ = kind;
-    }
+        data_(nullptr) { }
 
     static Scope* create(JSContext* cx, ScopeKind kind, HandleScope enclosing,
                          HandleShape envShape);
 
-    template <typename T, typename D>
-    static Scope* create(JSContext* cx, ScopeKind kind, HandleScope enclosing,
-                         HandleShape envShape, mozilla::UniquePtr<T, D> data);
+    template <typename ConcreteScope>
+    static ConcreteScope* create(JSContext* cx, ScopeKind kind, HandleScope enclosing,
+                                 HandleShape envShape,
+                                 MutableHandle<UniquePtr<typename ConcreteScope::Data>> data);
 
     template <typename ConcreteScope, XDRMode mode>
     static XDRResult XDRSizedBindingNames(XDRState<mode>* xdr, Handle<ConcreteScope*> scope,
@@ -264,11 +338,8 @@ class Scope : public js::gc::TenuredCell
 
     Shape* maybeCloneEnvironmentShape(JSContext* cx);
 
-    template <typename T, typename D>
-    void initData(mozilla::UniquePtr<T, D> data) {
-        MOZ_ASSERT(!data_);
-        data_ = reinterpret_cast<uintptr_t>(data.release());
-    }
+    template <typename ConcreteScope>
+    void initData(MutableHandle<UniquePtr<typename ConcreteScope::Data>> data);
 
   public:
     static const JS::TraceKind TraceKind = JS::TraceKind::Scope;
@@ -344,6 +415,31 @@ class Scope : public js::gc::TenuredCell
     void dump();
 };
 
+/** Empty base class for scope Data classes to inherit from. */
+class BaseScopeData
+{};
+
+/*
+ * Scope for a top level script: either a global (classic) script or a module
+ * script.
+ */
+class TopLevelScopeData : public BaseScopeData
+{
+  public:
+    // Private data for use by the embedding.
+    void* privateData = nullptr;
+};
+
+template<class Data>
+inline size_t
+SizeOfData(uint32_t numBindings)
+{
+    static_assert(mozilla::IsBaseOf<BaseScopeData, Data>::value,
+                  "Data must be the correct sort of data, i.e. it must "
+                  "inherit from BaseScopeData");
+    return sizeof(Data) + (numBindings ? numBindings - 1 : 0) * sizeof(BindingName);
+}
+
 //
 // A lexical scope that holds let and const bindings. There are 4 kinds of
 // LexicalScopes.
@@ -373,34 +469,28 @@ class LexicalScope : public Scope
   public:
     // Data is public because it is created by the frontend. See
     // Parser<FullParseHandler>::newLexicalScopeData.
-    struct Data
+    struct Data : public BaseScopeData
     {
         // Bindings are sorted by kind in both frames and environments.
         //
         //   lets - [0, constStart)
         // consts - [constStart, length)
-        uint32_t constStart;
-        uint32_t length;
+        uint32_t constStart = 0;
+        uint32_t length = 0;
 
         // Frame slots [0, nextFrameSlot) are live when this is the innermost
         // scope.
-        uint32_t nextFrameSlot;
+        uint32_t nextFrameSlot = 0;
 
         // The array of tagged JSAtom* names, allocated beyond the end of the
         // struct.
-        BindingName names[1];
+        TrailingNamesArray trailingNames;
+
+        explicit Data(size_t nameCount) : trailingNames(nameCount) {}
+        Data() = delete;
 
         void trace(JSTracer* trc);
     };
-
-    static size_t sizeOfData(uint32_t length) {
-        return sizeof(Data) + (length ? length - 1 : 0) * sizeof(BindingName);
-    }
-
-    static void getDataNamesAndLength(Data* data, BindingName** names, uint32_t* length) {
-        *names = data->names;
-        *length = data->length;
-    }
 
     static LexicalScope* create(JSContext* cx, ScopeKind kind, Handle<Data*> data,
                                 uint32_t firstFrameSlot, HandleScope enclosing);
@@ -415,11 +505,11 @@ class LexicalScope : public Scope
                                         uint32_t firstFrameSlot, HandleScope enclosing);
 
     Data& data() {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
     const Data& data() const {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
     static uint32_t nextFrameSlot(Scope* start);
@@ -476,16 +566,16 @@ class FunctionScope : public Scope
   public:
     // Data is public because it is created by the
     // frontend. See Parser<FullParseHandler>::newFunctionScopeData.
-    struct Data
+    struct Data : public BaseScopeData
     {
         // The canonical function of the scope, as during a scope walk we
         // often query properties of the JSFunction (e.g., is the function an
         // arrow).
-        GCPtrFunction canonicalFunction;
+        GCPtrFunction canonicalFunction = {};
 
         // If parameter expressions are present, parameters act like lexical
         // bindings.
-        bool hasParameterExprs;
+        bool hasParameterExprs = false;
 
         // Bindings are sorted by kind in both frames and environments.
         //
@@ -497,33 +587,41 @@ class FunctionScope : public Scope
         // or having defaults will have a nullptr name in the name array to
         // advance the argument slot.
         //
+        // Rest parameter binding is also included in positional formals.
+        // This also becomes nullptr if destructuring.
+        //
+        // The number of positional formals is equal to function.length if
+        // there's no rest, function.length+1 otherwise.
+        //
+        // Destructuring parameters and destructuring rest are included in
+        // "other formals" below.
+        //
+        // "vars" contains the following:
+        //   * function's top level vars if !script()->hasParameterExprs()
+        //   * special internal names (arguments, .this, .generator) if
+        //     they're used.
+        //
         // positional formals - [0, nonPositionalFormalStart)
         //      other formals - [nonPositionalParamStart, varStart)
         //               vars - [varStart, length)
-        uint16_t nonPositionalFormalStart;
-        uint16_t varStart;
-        uint32_t length;
+        uint16_t nonPositionalFormalStart = 0;
+        uint16_t varStart = 0;
+        uint32_t length = 0;
 
         // Frame slots [0, nextFrameSlot) are live when this is the innermost
         // scope.
-        uint32_t nextFrameSlot;
+        uint32_t nextFrameSlot = 0;
 
         // The array of tagged JSAtom* names, allocated beyond the end of the
         // struct.
-        BindingName names[1];
+        TrailingNamesArray trailingNames;
+
+        explicit Data(size_t nameCount) : trailingNames(nameCount) {}
+        Data() = delete;
 
         void trace(JSTracer* trc);
         Zone* zone() const;
     };
-
-    static size_t sizeOfData(uint32_t length) {
-        return sizeof(Data) + (length ? length - 1 : 0) * sizeof(BindingName);
-    }
-
-    static void getDataNamesAndLength(Data* data, BindingName** names, uint32_t* length) {
-        *names = data->names;
-        *length = data->length;
-    }
 
     static FunctionScope* create(JSContext* cx, Handle<Data*> data,
                                  bool hasParameterExprs, bool needsEnvironment,
@@ -542,11 +640,11 @@ class FunctionScope : public Scope
                                          HandleFunction fun, HandleScope enclosing);
 
     Data& data() {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
     const Data& data() const {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
   public:
@@ -601,30 +699,24 @@ class VarScope : public Scope
   public:
     // Data is public because it is created by the
     // frontend. See Parser<FullParseHandler>::newVarScopeData.
-    struct Data
+    struct Data : public BaseScopeData
     {
         // All bindings are vars.
-        uint32_t length;
+        uint32_t length = 0;
 
         // Frame slots [firstFrameSlot(), nextFrameSlot) are live when this is
         // the innermost scope.
-        uint32_t nextFrameSlot;
+        uint32_t nextFrameSlot = 0;
 
         // The array of tagged JSAtom* names, allocated beyond the end of the
         // struct.
-        BindingName names[1];
+        TrailingNamesArray trailingNames;
+
+        explicit Data(size_t nameCount) : trailingNames(nameCount) {}
+        Data() = delete;
 
         void trace(JSTracer* trc);
     };
-
-    static size_t sizeOfData(uint32_t length) {
-        return sizeof(Data) + (length ? length - 1 : 0) * sizeof(BindingName);
-    }
-
-    static void getDataNamesAndLength(Data* data, BindingName** names, uint32_t* length) {
-        *names = data->names;
-        *length = data->length;
-    }
 
     static VarScope* create(JSContext* cx, ScopeKind kind, Handle<Data*> data,
                             uint32_t firstFrameSlot, bool needsEnvironment,
@@ -640,11 +732,11 @@ class VarScope : public Scope
                                     HandleScope enclosing);
 
     Data& data() {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
     const Data& data() const {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
   public:
@@ -691,34 +783,28 @@ class GlobalScope : public Scope
   public:
     // Data is public because it is created by the frontend. See
     // Parser<FullParseHandler>::newGlobalScopeData.
-    struct Data
+    struct Data : public TopLevelScopeData
     {
         // Bindings are sorted by kind.
+        // `vars` includes top-level functions which is distinguished by a bit
+        // on the BindingName.
         //
-        // top-level funcs - [0, varStart)
-        //            vars - [varStart, letStart)
+        //            vars - [0, letStart)
         //            lets - [letStart, constStart)
         //          consts - [constStart, length)
-        uint32_t varStart;
-        uint32_t letStart;
-        uint32_t constStart;
-        uint32_t length;
+        uint32_t letStart = 0;
+        uint32_t constStart = 0;
+        uint32_t length = 0;
 
         // The array of tagged JSAtom* names, allocated beyond the end of the
         // struct.
-        BindingName names[1];
+        TrailingNamesArray trailingNames;
+
+        explicit Data(size_t nameCount) : trailingNames(nameCount) {}
+        Data() = delete;
 
         void trace(JSTracer* trc);
     };
-
-    static size_t sizeOfData(uint32_t length) {
-        return sizeof(Data) + (length ? length - 1 : 0) * sizeof(BindingName);
-    }
-
-    static void getDataNamesAndLength(Data* data, BindingName** names, uint32_t* length) {
-        *names = data->names;
-        *length = data->length;
-    }
 
     static GlobalScope* create(JSContext* cx, ScopeKind kind, Handle<Data*> data);
 
@@ -736,11 +822,11 @@ class GlobalScope : public Scope
                                        MutableHandle<UniquePtr<Data>> data);
 
     Data& data() {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
     const Data& data() const {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
   public:
@@ -750,6 +836,14 @@ class GlobalScope : public Scope
 
     bool hasBindings() const {
         return data().length > 0;
+    }
+
+    void setTopLevelPrivate(void* value) {
+        data().privateData = value;
+    }
+
+    void* topLevelPrivate() const {
+        return data().privateData;
     }
 };
 
@@ -793,37 +887,31 @@ class EvalScope : public Scope
   public:
     // Data is public because it is created by the frontend. See
     // Parser<FullParseHandler>::newEvalScopeData.
-    struct Data
+    struct Data : public BaseScopeData
     {
         // All bindings in an eval script are 'var' bindings. The implicit
         // lexical scope around the eval is present regardless of strictness
-        // and is its own LexicalScope. However, we need to track top-level
-        // functions specially for redeclaration checks.
+        // and is its own LexicalScope.
+        // `vars` includes top-level functions which is distinguished by a bit
+        // on the BindingName.
         //
-        // top-level funcs - [0, varStart)
-        //            vars - [varStart, length)
-        uint32_t varStart;
-        uint32_t length;
+        //            vars - [0, length)
+        uint32_t varStart = 0;
+        uint32_t length = 0;
 
         // Frame slots [0, nextFrameSlot) are live when this is the innermost
         // scope.
-        uint32_t nextFrameSlot;
+        uint32_t nextFrameSlot = 0;
 
         // The array of tagged JSAtom* names, allocated beyond the end of the
         // struct.
-        BindingName names[1];
+        TrailingNamesArray trailingNames;
+
+        explicit Data(size_t nameCount) : trailingNames(nameCount) {}
+        Data() = delete;
 
         void trace(JSTracer* trc);
     };
-
-    static size_t sizeOfData(uint32_t length) {
-        return sizeof(Data) + (length ? length - 1 : 0) * sizeof(BindingName);
-    }
-
-    static void getDataNamesAndLength(Data* data, BindingName** names, uint32_t* length) {
-        *names = data->names;
-        *length = data->length;
-    }
 
     static EvalScope* create(JSContext* cx, ScopeKind kind, Handle<Data*> data,
                              HandleScope enclosing);
@@ -837,11 +925,11 @@ class EvalScope : public Scope
                                      HandleScope enclosing);
 
     Data& data() {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
     const Data& data() const {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
   public:
@@ -895,10 +983,10 @@ class ModuleScope : public Scope
   public:
     // Data is public because it is created by the frontend. See
     // Parser<FullParseHandler>::newModuleScopeData.
-    struct Data
+    struct Data : public TopLevelScopeData
     {
         // The module of the scope.
-        GCPtr<ModuleObject*> module;
+        GCPtr<ModuleObject*> module = {};
 
         // Bindings are sorted by kind.
         //
@@ -906,31 +994,25 @@ class ModuleScope : public Scope
         //    vars - [varStart, letStart)
         //    lets - [letStart, constStart)
         //  consts - [constStart, length)
-        uint32_t varStart;
-        uint32_t letStart;
-        uint32_t constStart;
-        uint32_t length;
+        uint32_t varStart = 0;
+        uint32_t letStart = 0;
+        uint32_t constStart = 0;
+        uint32_t length = 0;
 
         // Frame slots [0, nextFrameSlot) are live when this is the innermost
         // scope.
-        uint32_t nextFrameSlot;
+        uint32_t nextFrameSlot = 0;
 
         // The array of tagged JSAtom* names, allocated beyond the end of the
         // struct.
-        BindingName names[1];
+        TrailingNamesArray trailingNames;
+
+        explicit Data(size_t nameCount) : trailingNames(nameCount) {}
+        Data() = delete;
 
         void trace(JSTracer* trc);
         Zone* zone() const;
     };
-
-    static size_t sizeOfData(uint32_t length) {
-        return sizeof(Data) + (length ? length - 1 : 0) * sizeof(BindingName);
-    }
-
-    static void getDataNamesAndLength(Data* data, BindingName** names, uint32_t* length) {
-        *names = data->names;
-        *length = data->length;
-    }
 
     static ModuleScope* create(JSContext* cx, Handle<Data*> data,
                                Handle<ModuleObject*> module, HandleScope enclosing);
@@ -940,11 +1022,11 @@ class ModuleScope : public Scope
                                        Handle<ModuleObject*> module, HandleScope enclosing);
 
     Data& data() {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
     const Data& data() const {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
   public:
@@ -958,6 +1040,14 @@ class ModuleScope : public Scope
 
     JSScript* script() const;
 
+    void setTopLevelPrivate(void* value) {
+        data().privateData = value;
+    }
+
+    void* topLevelPrivate() const {
+        return data().privateData;
+    }
+
     static Shape* getEmptyEnvironmentShape(JSContext* cx);
 };
 
@@ -968,34 +1058,33 @@ class WasmInstanceScope : public Scope
     static const ScopeKind classScopeKind_ = ScopeKind::WasmInstance;
 
   public:
-    struct Data
+    struct Data : public BaseScopeData
     {
-        uint32_t memoriesStart;
-        uint32_t globalsStart;
-        uint32_t length;
-        uint32_t nextFrameSlot;
+        uint32_t memoriesStart = 0;
+        uint32_t globalsStart = 0;
+        uint32_t length = 0;
+        uint32_t nextFrameSlot = 0;
 
         // The wasm instance of the scope.
-        GCPtr<WasmInstanceObject*> instance;
+        GCPtr<WasmInstanceObject*> instance = {};
 
-        BindingName names[1];
+        TrailingNamesArray trailingNames;
+
+        explicit Data(size_t nameCount) : trailingNames(nameCount) {}
+        Data() = delete;
 
         void trace(JSTracer* trc);
     };
 
     static WasmInstanceScope* create(JSContext* cx, WasmInstanceObject* instance);
 
-    static size_t sizeOfData(uint32_t length) {
-        return sizeof(Data) + (length ? length - 1 : 0) * sizeof(BindingName);
-    }
-
   private:
     Data& data() {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
     const Data& data() const {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
   public:
@@ -1028,30 +1117,29 @@ class WasmFunctionScope : public Scope
     static const ScopeKind classScopeKind_ = ScopeKind::WasmFunction;
 
   public:
-    struct Data
+    struct Data : public BaseScopeData
     {
-        uint32_t length;
-        uint32_t nextFrameSlot;
-        uint32_t funcIndex;
+        uint32_t length = 0;
+        uint32_t nextFrameSlot = 0;
+        uint32_t funcIndex = 0;
 
-        BindingName names[1];
+        TrailingNamesArray trailingNames;
+
+        explicit Data(size_t nameCount) : trailingNames(nameCount) {}
+        Data() = delete;
 
         void trace(JSTracer* trc);
     };
 
     static WasmFunctionScope* create(JSContext* cx, HandleScope enclosing, uint32_t funcIndex);
 
-    static size_t sizeOfData(uint32_t length) {
-        return sizeof(Data) + (length ? length - 1 : 0) * sizeof(BindingName);
-    }
-
   private:
     Data& data() {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
     const Data& data() const {
-        return *reinterpret_cast<Data*>(data_);
+        return *static_cast<Data*>(data_);
     }
 
   public:
@@ -1084,8 +1172,7 @@ class BindingIter
     //
     //            imports - [0, positionalFormalStart)
     // positional formals - [positionalFormalStart, nonPositionalFormalStart)
-    //      other formals - [nonPositionalParamStart, topLevelFunctionStart)
-    //    top-level funcs - [topLevelFunctionStart, varStart)
+    //      other formals - [nonPositionalParamStart, varStart)
     //               vars - [varStart, letStart)
     //               lets - [letStart, constStart)
     //             consts - [constStart, length)
@@ -1095,7 +1182,6 @@ class BindingIter
     //            imports - name
     // positional formals - argument slot
     //      other formals - frame slot
-    //    top-level funcs - frame slot
     //               vars - frame slot
     //               lets - frame slot
     //             consts - frame slot
@@ -1105,13 +1191,11 @@ class BindingIter
     //            imports - name
     // positional formals - environment slot or name
     //      other formals - environment slot or name
-    //    top-level funcs - environment slot or name
     //               vars - environment slot or name
     //               lets - environment slot or name
     //             consts - environment slot or name
     MOZ_INIT_OUTSIDE_CTOR uint32_t positionalFormalStart_;
     MOZ_INIT_OUTSIDE_CTOR uint32_t nonPositionalFormalStart_;
-    MOZ_INIT_OUTSIDE_CTOR uint32_t topLevelFunctionStart_;
     MOZ_INIT_OUTSIDE_CTOR uint32_t varStart_;
     MOZ_INIT_OUTSIDE_CTOR uint32_t letStart_;
     MOZ_INIT_OUTSIDE_CTOR uint32_t constStart_;
@@ -1143,14 +1227,12 @@ class BindingIter
     MOZ_INIT_OUTSIDE_CTOR BindingName* names_;
 
     void init(uint32_t positionalFormalStart, uint32_t nonPositionalFormalStart,
-              uint32_t topLevelFunctionStart, uint32_t varStart,
-              uint32_t letStart, uint32_t constStart,
+              uint32_t varStart, uint32_t letStart, uint32_t constStart,
               uint8_t flags, uint32_t firstFrameSlot, uint32_t firstEnvironmentSlot,
               BindingName* names, uint32_t length)
     {
         positionalFormalStart_ = positionalFormalStart;
         nonPositionalFormalStart_ = nonPositionalFormalStart;
-        topLevelFunctionStart_ = topLevelFunctionStart;
         varStart_ = varStart;
         letStart_ = letStart;
         constStart_ = constStart;
@@ -1317,7 +1399,7 @@ class BindingIter
         MOZ_ASSERT(!done());
         if (index_ < positionalFormalStart_)
             return BindingKind::Import;
-        if (index_ < topLevelFunctionStart_) {
+        if (index_ < varStart_) {
             // When the parameter list has expressions, the parameters act
             // like lexical bindings and have TDZ.
             if (hasFormalParameterExprs())
@@ -1335,7 +1417,9 @@ class BindingIter
 
     bool isTopLevelFunction() const {
         MOZ_ASSERT(!done());
-        return index_ >= topLevelFunctionStart_ && index_ < varStart_;
+        bool result = names_[index_].isTopLevelFunction();
+        MOZ_ASSERT_IF(result, kind() == BindingKind::Var);
+        return result;
     }
 
     bool hasArgumentSlot() const {

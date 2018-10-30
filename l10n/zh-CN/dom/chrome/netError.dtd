@@ -23,7 +23,7 @@
 <!ENTITY fileAccessDenied.longDesc "<ul><li>文件可能已被移走、移除，或者没有访问该文件的权限。</li></ul>">
 
 <!ENTITY generic.title "无法完成请求">
-<!ENTITY generic.longDesc "<p>暂无关于此问题或错误的详细解释信息。</p>">
+<!ENTITY generic.longDesc "<p>暂无此问题或错误的详细解释信息。</p>">
 
 <!ENTITY malformedURI.title "不正确的网址">
 <!ENTITY malformedURI.longDesc "<p>无法识别这种格式的网址。请检查网址是否有误再重试。</p>">

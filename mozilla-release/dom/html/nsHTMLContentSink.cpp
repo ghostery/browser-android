@@ -36,7 +36,6 @@
 
 #include "nsGenericHTMLElement.h"
 
-#include "nsIDOMDocument.h"
 #include "nsIScriptElement.h"
 
 #include "nsIComponentManager.h"
@@ -85,7 +84,7 @@ nsGenericHTMLElement*
 NS_NewHTMLNOTUSEDElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo,
                          FromParser aFromParser)
 {
-  NS_NOTREACHED("The element ctor should never be called");
+  MOZ_ASSERT_UNREACHABLE("The element ctor should never be called");
   return nullptr;
 }
 
@@ -132,6 +131,7 @@ public:
   virtual void SetDocumentCharset(NotNull<const Encoding*> aEncoding) override;
   virtual nsISupports *GetTarget() override;
   virtual bool IsScriptExecuting() override;
+  virtual void ContinueInterruptedParsingAsync() override;
 
   // nsIHTMLContentSink
   NS_IMETHOD OpenContainer(ElementType aNodeType) override;
@@ -176,6 +176,9 @@ protected:
   void NotifyInsert(nsIContent* aContent,
                     nsIContent* aChildContent);
   void NotifyRootInsertion();
+
+private:
+  void ContinueInterruptedParsingIfEnabled();
 };
 
 class SinkContext
@@ -249,7 +252,7 @@ CreateHTMLElement(uint32_t aNodeType,
   NS_ASSERTION(cb != NS_NewHTMLNOTUSEDElement,
                "Don't know how to construct tag element!");
 
-  RefPtr<nsGenericHTMLElement> result = cb(Move(aNodeInfo), aFromParser);
+  RefPtr<nsGenericHTMLElement> result = cb(std::move(aNodeInfo), aFromParser);
 
   return result.forget();
 }
@@ -494,8 +497,7 @@ SinkContext::FlushTags()
   mSink->mUpdatesInNotification = 0;
   {
     // Scope so we call EndUpdate before we decrease mInNotification
-    mozAutoDocUpdate updateBatch(mSink->mDocument, UPDATE_CONTENT_MODEL,
-                                 true);
+    mozAutoDocUpdate updateBatch(mSink->mDocument, true);
     mSink->mBeganUpdate = true;
 
     // Start from the base of the stack (growing downward) and do
@@ -785,7 +787,7 @@ HTMLContentSink::DidBuildModel(bool aTerminated)
 NS_IMETHODIMP
 HTMLContentSink::SetParser(nsParserBase* aParser)
 {
-  NS_PRECONDITION(aParser, "Should have a parser here!");
+  MOZ_ASSERT(aParser, "Should have a parser here!");
   mParser = aParser;
   return NS_OK;
 }
@@ -956,7 +958,7 @@ HTMLContentSink::NotifyInsert(nsIContent* aContent,
 
   {
     // Scope so we call EndUpdate before we decrease mInNotification
-    MOZ_AUTO_DOC_UPDATE(mDocument, UPDATE_CONTENT_MODEL, !mBeganUpdate);
+    MOZ_AUTO_DOC_UPDATE(mDocument, !mBeganUpdate);
     nsNodeUtils::ContentInserted(NODE_FROM(aContent, mDocument),
                                  aChildContent);
     mLastNotificationTime = PR_Now();
@@ -968,7 +970,7 @@ HTMLContentSink::NotifyInsert(nsIContent* aContent,
 void
 HTMLContentSink::NotifyRootInsertion()
 {
-  NS_PRECONDITION(!mNotifiedRootInsertion, "Double-notifying on root?");
+  MOZ_ASSERT(!mNotifiedRootInsertion, "Double-notifying on root?");
   NS_ASSERTION(!mLayoutStarted,
                "How did we start layout without notifying on root?");
   // Now make sure to notify that we have now inserted our root.  If
@@ -1048,4 +1050,24 @@ bool
 HTMLContentSink::IsScriptExecuting()
 {
   return IsScriptExecutingImpl();
+}
+
+void
+HTMLContentSink::ContinueInterruptedParsingIfEnabled()
+{
+  if (mParser && mParser->IsParserEnabled()) {
+    static_cast<nsIParser*>(mParser.get())->ContinueInterruptedParsing();
+  }
+}
+
+void
+HTMLContentSink::ContinueInterruptedParsingAsync()
+{
+  nsCOMPtr<nsIRunnable> ev =
+    NewRunnableMethod("HTMLContentSink::ContinueInterruptedParsingIfEnabled",
+                      this,
+                      &HTMLContentSink::ContinueInterruptedParsingIfEnabled);
+
+  nsCOMPtr<nsIDocument> doc = do_QueryInterface(mHTMLDocument);
+  doc->Dispatch(mozilla::TaskCategory::Other, ev.forget());
 }

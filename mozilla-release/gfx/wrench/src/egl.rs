@@ -15,6 +15,7 @@ use glutin::PixelFormatRequirements;
 use glutin::ReleaseBehavior;
 use glutin::Robustness;
 use glutin::Api;
+use winit::dpi::PhysicalSize;
 
 use std::ffi::{CStr, CString};
 use std::os::raw::c_int;
@@ -54,7 +55,7 @@ impl Context {
         let display = unsafe { egl::GetDisplay(ptr::null_mut()) };
 
         if display.is_null() {
-            return Err(CreationError::OsError("Could not create EGL display object".to_string()));
+            return Err(CreationError::PlatformSpecific("Could not create EGL display object".to_string()));
         }
 
         let egl_version = unsafe {
@@ -206,7 +207,7 @@ impl GlContext for Context {
     }
 
     #[inline]
-    fn resize(&self, _: u32, _: u32) {}
+    fn resize(&self, _: PhysicalSize) {}
 }
 
 unsafe impl Send for Context {}

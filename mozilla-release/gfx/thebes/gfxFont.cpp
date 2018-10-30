@@ -46,6 +46,10 @@
 #include "GreekCasing.h"
 
 #include "cairo.h"
+#ifdef XP_WIN
+#include "cairo-win32.h"
+#include "gfxWindowsPlatform.h"
+#endif
 
 #include "harfbuzz/hb.h"
 #include "harfbuzz/hb-ot.h"
@@ -138,7 +142,7 @@ gfxFontCache::Observer::Observe(nsISupports *aSubject,
             fontCache->FlushShapedWordCaches();
         }
     } else {
-        NS_NOTREACHED("unexpected notification topic");
+        MOZ_ASSERT_UNREACHABLE("unexpected notification topic");
     }
     return NS_OK;
 }
@@ -751,6 +755,45 @@ gfxShapedText::AdjustAdvancesForSyntheticBold(float aSynBoldOffset,
     }
 }
 
+float
+gfxFont::AngleForSyntheticOblique() const
+{
+    // If the style doesn't call for italic/oblique, or if the face already
+    // provides it, no synthetic style should be added.
+    if (mStyle.style == FontSlantStyle::Normal() ||
+        !mStyle.allowSyntheticStyle ||
+        !mFontEntry->IsUpright()) {
+        return 0.0f;
+    }
+
+    // If style calls for italic, and face doesn't support it, use default
+    // oblique angle as a simulation.
+    if (mStyle.style.IsItalic()) {
+        return mFontEntry->SupportsItalic() ? 0.0f : FontSlantStyle::kDefaultAngle;
+    }
+
+    // Default or custom oblique angle
+    return mStyle.style.ObliqueAngle();
+}
+
+float
+gfxFont::SkewForSyntheticOblique() const
+{
+    // Precomputed value of tan(kDefaultAngle), the default italic/oblique slant;
+    // avoids calling tan() at runtime except for custom oblique values.
+    static const float kTanDefaultAngle =
+        tan(FontSlantStyle::kDefaultAngle * (M_PI / 180.0));
+
+    float angle = AngleForSyntheticOblique();
+    if (angle == 0.0f) {
+        return 0.0f;
+    } else if (angle == FontSlantStyle::kDefaultAngle) {
+        return kTanDefaultAngle;
+    } else {
+        return tan(angle * (M_PI / 180.0));
+    }
+}
+
 void
 gfxFont::RunMetrics::CombineWith(const RunMetrics& aOther, bool aOtherIsOnLeft)
 {
@@ -778,6 +821,7 @@ gfxFont::gfxFont(const RefPtr<UnscaledFont>& aUnscaledFont,
     mAntialiasOption(anAAOption),
     mIsValid(true),
     mApplySyntheticBold(false),
+    mKerningEnabled(false),
     mMathInitialized(false)
 {
 #ifdef DEBUG_TEXT_RUN_STORAGE_METRICS
@@ -1601,6 +1645,19 @@ gfxFont::HasFeatureSet(uint32_t aFeature, bool& aFeatureOn)
     return featureSet;
 }
 
+void
+gfxFont::InitializeScaledFont()
+{
+    if (!mAzureScaledFont) {
+        return;
+    }
+
+    float angle = AngleForSyntheticOblique();
+    if (angle != 0.0f) {
+        mAzureScaledFont->SetSyntheticObliqueAngle(angle);
+    }
+}
+
 /**
  * A helper function in case we need to do any rounding or other
  * processing here.
@@ -1981,7 +2038,8 @@ gfxFont::DrawOneGlyph(uint32_t aGlyphID, const gfx::Point& aPt,
 
         gfxContextMatrixAutoSaveRestore matrixRestore;
 
-        if (fontParams.needsOblique && fontParams.isVerticalFont && !textDrawer) {
+        if (fontParams.obliqueSkew != 0.0f &&
+            fontParams.isVerticalFont && !textDrawer) {
             // We have to flush each glyph individually when doing
             // synthetic-oblique for vertical-upright text, because
             // the skew transform needs to be applied to a separate
@@ -1991,7 +2049,7 @@ gfxFont::DrawOneGlyph(uint32_t aGlyphID, const gfx::Point& aPt,
             gfx::Matrix mat =
                 runParams.context->CurrentMatrix().
                 PreTranslate(devPt).
-                PreMultiply(gfx::Matrix(1, 0, -OBLIQUE_SKEW_FACTOR, 1, 0, 0)).
+                PreMultiply(gfx::Matrix(1, 0, -fontParams.obliqueSkew, 1, 0, 0)).
                 PreTranslate(-devPt);
             runParams.context->SetMatrix(mat);
         }
@@ -2011,6 +2069,7 @@ gfxFont::DrawOneGlyph(uint32_t aGlyphID, const gfx::Point& aPt,
         }
 
         if (fontParams.haveColorGlyphs &&
+            !gfxPlatform::GetPlatform()->HasNativeColrFontSupport() &&
             RenderColorGlyph(runParams.dt, runParams.context,
                              fontParams.scaledFont,
                              fontParams.drawOptions,
@@ -2031,7 +2090,8 @@ gfxFont::DrawOneGlyph(uint32_t aGlyphID, const gfx::Point& aPt,
             aBuffer.OutputGlyph(aGlyphID, devPt);
         }
 
-        if (fontParams.needsOblique && fontParams.isVerticalFont && !textDrawer) {
+        if (fontParams.obliqueSkew != 0.0f &&
+            fontParams.isVerticalFont && !textDrawer) {
             aBuffer.Flush();
         }
     } else {
@@ -2082,12 +2142,13 @@ gfxFont::DrawMissingGlyph(const TextRunDrawParams&            aRunParams,
         // of the drawTarget's transform, we need to undo
         // this before drawing the hexbox. (Bug 983985)
         gfxContextMatrixAutoSaveRestore matrixRestore;
-        if (aFontParams.needsOblique && !aFontParams.isVerticalFont && !textDrawer) {
+        if (aFontParams.obliqueSkew != 0.0f &&
+            !aFontParams.isVerticalFont && !textDrawer) {
             matrixRestore.SetContext(aRunParams.context);
             gfx::Matrix mat =
                 aRunParams.context->CurrentMatrix().
                 PreTranslate(pt).
-                PreMultiply(gfx::Matrix(1, 0, OBLIQUE_SKEW_FACTOR, 1, 0, 0)).
+                PreMultiply(gfx::Matrix(1, 0, aFontParams.obliqueSkew, 1, 0, 0)).
                 PreTranslate(-pt);
             aRunParams.context->SetMatrix(mat);
         }
@@ -2166,7 +2227,7 @@ gfxFont::Draw(const gfxTextRun *aTextRun, uint32_t aStart, uint32_t aEnd,
 
     auto* textDrawer = aRunParams.context->GetTextDrawer();
 
-    fontParams.needsOblique = IsSyntheticOblique();
+    fontParams.obliqueSkew = SkewForSyntheticOblique();
     fontParams.haveSVGGlyphs = GetFontEntry()->TryGetSVGData(this);
     fontParams.haveColorGlyphs = GetFontEntry()->TryGetColorGlyphs();
     fontParams.contextPaint = aRunParams.runContextPaint;
@@ -2274,27 +2335,21 @@ gfxFont::Draw(const gfxTextRun *aTextRun, uint32_t aStart, uint32_t aEnd,
         }
     }
 
-    if (fontParams.needsOblique) {
-        if (textDrawer) {
-            glyphFlagsRestore.Save(textDrawer);
-            textDrawer->SetWRGlyphFlags(textDrawer->GetWRGlyphFlags() |
-                                        wr::FontInstanceFlags::SYNTHETIC_ITALICS);
-        } else if (!fontParams.isVerticalFont) {
-            // Adjust matrix for synthetic-oblique, except if we're doing vertical-
-            // upright text, in which case this will be handled for each glyph
-            // individually in DrawOneGlyph.
-            if (!matrixRestore.HasMatrix()) {
-                matrixRestore.SetContext(aRunParams.context);
-            }
-            gfx::Point p(aPt->x * aRunParams.devPerApp,
-                         aPt->y * aRunParams.devPerApp);
-            gfx::Matrix mat =
-                aRunParams.context->CurrentMatrix().
-                PreTranslate(p).
-                PreMultiply(gfx::Matrix(1, 0, -OBLIQUE_SKEW_FACTOR, 1, 0, 0)).
-                PreTranslate(-p);
-            aRunParams.context->SetMatrix(mat);
+    if (fontParams.obliqueSkew != 0.0f && !fontParams.isVerticalFont && !textDrawer) {
+        // Adjust matrix for synthetic-oblique, except if we're doing vertical-
+        // upright text, in which case this will be handled for each glyph
+        // individually in DrawOneGlyph.
+        if (!matrixRestore.HasMatrix()) {
+            matrixRestore.SetContext(aRunParams.context);
         }
+        gfx::Point p(aPt->x * aRunParams.devPerApp,
+                     aPt->y * aRunParams.devPerApp);
+        gfx::Matrix mat =
+            aRunParams.context->CurrentMatrix().
+            PreTranslate(p).
+            PreMultiply(gfx::Matrix(1, 0, -fontParams.obliqueSkew, 1, 0, 0)).
+            PreTranslate(-p);
+        aRunParams.context->SetMatrix(mat);
     }
 
     RefPtr<SVGContextPaint> contextPaint;
@@ -2350,7 +2405,8 @@ gfxFont::Draw(const gfxTextRun *aTextRun, uint32_t aStart, uint32_t aEnd,
         GlyphBufferAzure buffer(aRunParams, fontParams);
         if (fontParams.haveSVGGlyphs || fontParams.haveColorGlyphs ||
             fontParams.extraStrikes ||
-            (fontParams.needsOblique && fontParams.isVerticalFont && !textDrawer)) {
+            (fontParams.obliqueSkew != 0.0f &&
+             fontParams.isVerticalFont && !textDrawer)) {
             if (aRunParams.spacing) {
                 emittedGlyphs =
                     DrawGlyphs<FontComplexityT::ComplexFont,
@@ -2523,7 +2579,7 @@ gfxFont::Measure(const gfxTextRun *aTextRun,
     if (aBoundingBoxType == TIGHT_HINTED_OUTLINE_EXTENTS &&
         mAntialiasOption != kAntialiasNone) {
         if (!mNonAAFont) {
-            mNonAAFont = Move(CopyWithAntialiasOption(kAntialiasNone));
+            mNonAAFont = CopyWithAntialiasOption(kAntialiasNone);
         }
         // if font subclass doesn't implement CopyWithAntialiasOption(),
         // it will return null and we'll proceed to use the existing font
@@ -2678,14 +2734,18 @@ gfxFont::Measure(const gfxTextRun *aTextRun,
     // If the font may be rendered with a fake-italic effect, we need to allow
     // for the top-right of the glyphs being skewed to the right, and the
     // bottom-left being skewed further left.
-    if (mStyle.style != FontSlantStyle::Normal() &&
-        mFontEntry->IsUpright() &&
-        mStyle.allowSyntheticStyle) {
+    gfx::Float obliqueSkew = SkewForSyntheticOblique();
+    if (obliqueSkew != 0.0f) {
         gfxFloat extendLeftEdge =
-            ceil(OBLIQUE_SKEW_FACTOR * metrics.mBoundingBox.YMost());
+            obliqueSkew < 0.0f
+                ? ceil(-obliqueSkew * -metrics.mBoundingBox.Y())
+                : ceil(obliqueSkew * metrics.mBoundingBox.YMost());
         gfxFloat extendRightEdge =
-            ceil(OBLIQUE_SKEW_FACTOR * -metrics.mBoundingBox.Y());
-        metrics.mBoundingBox.SetWidth(metrics.mBoundingBox.Width() + extendLeftEdge + extendRightEdge);
+            obliqueSkew < 0.0f
+                ? ceil(-obliqueSkew * metrics.mBoundingBox.YMost())
+                : ceil(obliqueSkew * -metrics.mBoundingBox.Y());
+        metrics.mBoundingBox.SetWidth(metrics.mBoundingBox.Width() +
+                                      extendLeftEdge + extendRightEdge);
         metrics.mBoundingBox.MoveByX(-extendLeftEdge);
     }
 
@@ -3330,7 +3390,7 @@ gfxFont::InitFakeSmallCapsRun(DrawTarget     *aDrawTarget,
                               const char16_t *aText,
                               uint32_t        aOffset,
                               uint32_t        aLength,
-                              uint8_t         aMatchType,
+                              gfxTextRange::MatchType aMatchType,
                               gfx::ShapedTextFlags aOrientation,
                               Script          aScript,
                               bool            aSyntheticLower,
@@ -3505,7 +3565,7 @@ gfxFont::InitFakeSmallCapsRun(DrawTarget     *aDrawTarget,
                               const uint8_t  *aText,
                               uint32_t        aOffset,
                               uint32_t        aLength,
-                              uint8_t         aMatchType,
+                              gfxTextRange::MatchType aMatchType,
                               gfx::ShapedTextFlags aOrientation,
                               Script          aScript,
                               bool            aSyntheticLower,
@@ -4040,7 +4100,7 @@ gfxFont::CreateVerticalMetrics()
     metrics->xHeight = metrics->emHeight / 2;
     metrics->capHeight = metrics->maxAscent;
 
-    return Move(metrics);
+    return std::move(metrics);
 }
 
 gfxFloat
@@ -4177,23 +4237,24 @@ gfxFontStyle::gfxFontStyle(FontSlantStyle aStyle,
 PLDHashNumber
 gfxFontStyle::Hash() const
 {
-    return mozilla::HashGeneric(systemFont, style.ForHash(),
-                                stretch.ForHash(), weight.ForHash(),
-                                size, sizeAdjust,
-                                nsRefPtrHashKey<nsAtom>::HashKey(language));
-    /* XXX
-    return (style + (systemFont << 7) + (weight.ForHash() << 8) +
-            uint32_t(size*1000) + int32_t(sizeAdjust*1000)) ^
-            nsRefPtrHashKey<nsAtom>::HashKey(language);
-    */
+    uint32_t hash =
+        variationSettings.IsEmpty()
+            ? 0
+            : mozilla::HashBytes(variationSettings.Elements(),
+                                 variationSettings.Length() *
+                                     sizeof(gfxFontVariation));
+    return mozilla::AddToHash(hash, systemFont, style.ForHash(),
+                              stretch.ForHash(), weight.ForHash(),
+                              size, int32_t(sizeAdjust * 1000.0f),
+                              nsRefPtrHashKey<nsAtom>::HashKey(language));
 }
 
 void
 gfxFontStyle::AdjustForSubSuperscript(int32_t aAppUnitsPerDevPixel)
 {
-    NS_PRECONDITION(variantSubSuper != NS_FONT_VARIANT_POSITION_NORMAL &&
-                    baselineOffset == 0,
-                    "can't adjust this style for sub/superscript");
+    MOZ_ASSERT(variantSubSuper != NS_FONT_VARIANT_POSITION_NORMAL &&
+               baselineOffset == 0,
+               "can't adjust this style for sub/superscript");
 
     // calculate the baseline offset (before changing the size)
     if (variantSubSuper == NS_FONT_VARIANT_POSITION_SUPER) {

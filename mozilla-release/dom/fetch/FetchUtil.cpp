@@ -305,7 +305,7 @@ public:
 
     explicit Destroyer(already_AddRefed<WorkerStreamOwner>&& aDoomed)
       : CancelableRunnable("WorkerStreamOwner::Destroyer")
-      , mDoomed(Move(aDoomed))
+      , mDoomed(std::move(aDoomed))
     {}
 
     NS_IMETHOD
@@ -356,7 +356,7 @@ class JSStreamConsumer final : public nsIInputStreamCallback
                    nsIGlobalObject* aGlobal,
                    JS::StreamConsumer* aConsumer)
    : mOwningEventTarget(aGlobal->EventTargetFor(TaskCategory::Other))
-   , mWorkerStreamOwner(Move(aWorkerStreamOwner))
+   , mWorkerStreamOwner(std::move(aWorkerStreamOwner))
    , mConsumer(aConsumer)
    , mConsumerAborted(false)
   {
@@ -446,7 +446,7 @@ public:
         return false;
       }
 
-      consumer = new JSStreamConsumer(Move(owner), aGlobal, aConsumer);
+      consumer = new JSStreamConsumer(std::move(owner), aGlobal, aConsumer);
     } else {
       RefPtr<WindowStreamOwner> owner =
         WindowStreamOwner::Create(asyncStream, aGlobal);
@@ -601,7 +601,7 @@ FetchUtil::StreamResponseToJS(JSContext* aCx,
     return ThrowException(aCx, JSMSG_ERROR_CONSUMING_RESPONSE);
   }
 
-  nsIGlobalObject* global = xpc::NativeGlobal(aObj);
+  nsIGlobalObject* global = xpc::NativeGlobal(js::UncheckedUnwrap(aObj));
 
   if (!JSStreamConsumer::Start(body, aConsumer, global, aMaybeWorker)) {
     return ThrowException(aCx, JSMSG_OUT_OF_MEMORY);

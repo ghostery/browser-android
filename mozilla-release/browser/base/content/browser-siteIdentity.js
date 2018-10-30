@@ -46,12 +46,6 @@ var gIdentityHandler = {
   _state: 0,
 
   /**
-   * This flag gets set if the identity popup was opened by a keypress,
-   * to be able to focus it on the popupshown event.
-   */
-  _popupTriggeredByKeyboard: false,
-
-  /**
    * RegExp used to decide if an about url should be shown as being part of
    * the browser UI.
    */
@@ -149,7 +143,7 @@ var gIdentityHandler = {
   get _identityPopupMixedContentLearnMore() {
     delete this._identityPopupMixedContentLearnMore;
     return this._identityPopupMixedContentLearnMore =
-      document.getElementById("identity-popup-mcb-learn-more");
+      [...document.querySelectorAll(".identity-popup-mcb-learn-more")];
   },
   get _identityPopupInsecureLoginFormsLearnMore() {
     delete this._identityPopupInsecureLoginFormsLearnMore;
@@ -201,6 +195,10 @@ var gIdentityHandler = {
     delete this._popupExpander;
     return this._popupExpander = document.getElementById("identity-popup-security-expander");
   },
+  get _clearSiteDataFooter() {
+    delete this._clearSiteDataFooter;
+    return this._clearSiteDataFooter = document.getElementById("identity-popup-clear-sitedata-footer");
+  },
   get _permissionAnchors() {
     delete this._permissionAnchors;
     let permissionAnchors = {};
@@ -208,6 +206,43 @@ var gIdentityHandler = {
       permissionAnchors[anchor.getAttribute("data-permission-id")] = anchor;
     }
     return this._permissionAnchors = permissionAnchors;
+  },
+
+  /**
+   * Handles clicks on the "Clear Cookies and Site Data" button.
+   */
+  async clearSiteData(event) {
+    if (!this._uriHasHost) {
+      return;
+    }
+
+    let host = this._uri.host;
+
+    // Site data could have changed while the identity popup was open,
+    // reload again to be sure.
+    await SiteDataManager.updateSites();
+
+    let baseDomain = SiteDataManager.getBaseDomainFromHost(host);
+    let siteData = await SiteDataManager.getSites(baseDomain);
+
+    // Hide the popup before showing the removal prompt, to
+    // avoid a pretty ugly transition. Also hide it even
+    // if the update resulted in no site data, to keep the
+    // illusion that clicking the button had an effect.
+    PanelMultiView.hidePopup(this._identityPopup);
+
+    if (siteData && siteData.length) {
+      let hosts = siteData.map(site => site.host);
+      if (SiteDataManager.promptSiteDataRemoval(window, hosts)) {
+        SiteDataManager.remove(hosts);
+      }
+    }
+
+    event.stopPropagation();
+  },
+
+  openPermissionPreferences() {
+    openPreferences("privacy-permissions", { origin: "identityPopup-permissions-PreferencesButton" });
   },
 
   /**
@@ -312,12 +347,8 @@ var gIdentityHandler = {
     // Firstly, populate the state properties required to display the UI. See
     // the documentation of the individual properties for details.
     this.setURI(uri);
-    this._sslStatus = gBrowser.securityUI
-                              .QueryInterface(Ci.nsISSLStatusProvider)
-                              .SSLStatus;
-    if (this._sslStatus) {
-      this._sslStatus.QueryInterface(Ci.nsISSLStatus);
-    }
+    this._sslStatus = gBrowser.securityUI.secInfo &&
+                      gBrowser.securityUI.secInfo.SSLStatus;
 
     // Then, update the user interface with the available data.
     this.refreshIdentityBlock();
@@ -578,10 +609,25 @@ var gIdentityHandler = {
    * applicable
    */
   refreshIdentityPopup() {
+    // Update cookies and site data information and show the
+    // "Clear Site Data" button if the site is storing local data.
+    this._clearSiteDataFooter.hidden = true;
+    if (this._uriHasHost) {
+      let host = this._uri.host;
+      SiteDataManager.updateSites().then(async () => {
+        let baseDomain = SiteDataManager.getBaseDomainFromHost(host);
+        let siteData = await SiteDataManager.getSites(baseDomain);
+
+        if (siteData && siteData.length) {
+          this._clearSiteDataFooter.hidden = false;
+        }
+      });
+    }
+
     // Update "Learn More" for Mixed Content Blocking and Insecure Login Forms.
     let baseURL = Services.urlFormatter.formatURLPref("app.support.baseURL");
-    this._identityPopupMixedContentLearnMore
-        .setAttribute("href", baseURL + "mixed-content");
+    this._identityPopupMixedContentLearnMore.forEach(
+      e => e.setAttribute("href", baseURL + "mixed-content"));
     this._identityPopupInsecureLoginFormsLearnMore
         .setAttribute("href", baseURL + "insecure-password");
 
@@ -775,7 +821,14 @@ var gIdentityHandler = {
       return;
     }
 
-    this._popupTriggeredByKeyboard = event.type == "keypress";
+    // Move focus to the next available element in the identity popup.
+    // This is required by role=alertdialog and fixes an issue where
+    // an already open panel would steal focus from the identity popup.
+    if (event.type == "keypress") {
+      let panelView = PanelView.forNode(this._identityPopupMainView);
+      this._identityPopupMainView.addEventListener("ViewShown", () => panelView.focusFirstNavigableElement(),
+        {once: true});
+    }
 
     // Make sure that the display:none style we set in xul is removed now that
     // the popup is actually needed
@@ -797,13 +850,6 @@ var gIdentityHandler = {
 
   onPopupShown(event) {
     if (event.target == this._identityPopup) {
-      if (this._popupTriggeredByKeyboard) {
-        // Move focus to the next available element in the identity popup.
-        // This is required by role=alertdialog and fixes an issue where
-        // an already open panel would steal focus from the identity popup.
-        document.commandDispatcher.advanceFocusIntoSubtree(this._identityPopup);
-      }
-
       window.addEventListener("focus", this, true);
     }
   },
@@ -930,11 +976,12 @@ var gIdentityHandler = {
   },
 
   _createPermissionItem(aPermission) {
-    let container = document.createElement("hbox");
+    let container = document.createXULElement("hbox");
     container.setAttribute("class", "identity-popup-permission-item");
     container.setAttribute("align", "center");
+    container.setAttribute("role", "group");
 
-    let img = document.createElement("image");
+    let img = document.createXULElement("image");
     img.classList.add("identity-popup-permission-icon");
     if (aPermission.id == "plugin:flash") {
       img.classList.add("plugin-icon");
@@ -961,24 +1008,28 @@ var gIdentityHandler = {
       });
     }
 
-    let nameLabel = document.createElement("label");
+    let nameLabel = document.createXULElement("label");
     nameLabel.setAttribute("flex", "1");
     nameLabel.setAttribute("class", "identity-popup-permission-label");
     nameLabel.textContent = SitePermissions.getPermissionLabel(aPermission.id);
+    let nameLabelId = "identity-popup-permission-label-" + aPermission.id;
+    nameLabel.setAttribute("id", nameLabelId);
 
-    let isPolicyPermission = aPermission.scope == SitePermissions.SCOPE_POLICY;
+    let isPolicyPermission = [
+      SitePermissions.SCOPE_POLICY, SitePermissions.SCOPE_GLOBAL,
+    ].includes(aPermission.scope);
 
     if (aPermission.id == "popup" && !isPolicyPermission) {
-      let menulist = document.createElement("menulist");
-      let menupopup = document.createElement("menupopup");
-      let block = document.createElement("vbox");
+      let menulist = document.createXULElement("menulist");
+      let menupopup = document.createXULElement("menupopup");
+      let block = document.createXULElement("vbox");
       block.setAttribute("id", "identity-popup-popup-container");
       menulist.setAttribute("sizetopopup", "none");
       menulist.setAttribute("class", "identity-popup-popup-menulist");
       menulist.setAttribute("id", "identity-popup-popup-menulist");
 
       for (let state of SitePermissions.getAvailableStates(aPermission.id)) {
-        let menuitem = document.createElement("menuitem");
+        let menuitem = document.createXULElement("menuitem");
         // We need to correctly display the default/unknown state, which has its
         // own integer value (0) but represents one of the other states.
         if (state == SitePermissions.getDefault(aPermission.id)) {
@@ -1000,20 +1051,25 @@ var gIdentityHandler = {
 
       // Avoiding listening to the "select" event on purpose. See Bug 1404262.
       menulist.addEventListener("command", () => {
-        SitePermissions.set(gBrowser.currentURI, "popup", menulist.selectedItem.value);
+        SitePermissions.set(gBrowser.currentURI,
+                            aPermission.id,
+                            menulist.selectedItem.value);
       });
 
       container.appendChild(img);
       container.appendChild(nameLabel);
       container.appendChild(menulist);
+      container.setAttribute("aria-labelledby", nameLabelId);
       block.appendChild(container);
 
       return block;
     }
 
-    let stateLabel = document.createElement("label");
+    let stateLabel = document.createXULElement("label");
     stateLabel.setAttribute("flex", "1");
     stateLabel.setAttribute("class", "identity-popup-permission-state-label");
+    let stateLabelId = "identity-popup-permission-state-label-" + aPermission.id;
+    stateLabel.setAttribute("id", stateLabelId);
     let {state, scope} = aPermission;
     // If the user did not permanently allow this device but it is currently
     // used, set the variables to display a "temporarily allowed" info.
@@ -1026,15 +1082,16 @@ var gIdentityHandler = {
     container.appendChild(img);
     container.appendChild(nameLabel);
     container.appendChild(stateLabel);
+    container.setAttribute("aria-labelledby", nameLabelId + " " + stateLabelId);
 
     /* We return the permission item here without a remove button if the permission is a
-       SCOPE_POLICY permission. Policy permissions cannot be removed/changed for the duration
-       of the browser session. */
+       SCOPE_POLICY or SCOPE_GLOBAL permission. Policy permissions cannot be
+       removed/changed for the duration of the browser session. */
     if (isPolicyPermission) {
       return container;
     }
 
-    let button = document.createElement("button");
+    let button = document.createXULElement("button");
     button.setAttribute("class", "identity-popup-permission-remove-button");
     let tooltiptext = gNavigatorBundle.getString("permissions.remove.tooltip");
     button.setAttribute("tooltiptext", tooltiptext);
@@ -1081,15 +1138,15 @@ var gIdentityHandler = {
   },
 
   _createBlockedPopupIndicator() {
-    let indicator = document.createElement("hbox");
+    let indicator = document.createXULElement("hbox");
     indicator.setAttribute("class", "identity-popup-permission-item");
     indicator.setAttribute("align", "center");
     indicator.setAttribute("id", "blocked-popup-indicator-item");
 
-    let icon = document.createElement("image");
+    let icon = document.createXULElement("image");
     icon.setAttribute("class", "popup-subitem identity-popup-permission-icon");
 
-    let text = document.createElement("label");
+    let text = document.createXULElement("label");
     text.setAttribute("flex", "1");
     text.setAttribute("class", "identity-popup-permission-label text-link");
 

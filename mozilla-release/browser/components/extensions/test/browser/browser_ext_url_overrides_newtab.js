@@ -309,10 +309,11 @@ add_task(async function test_new_tab_restore_settings() {
   // Click the Restore Changes button.
   let addonDisabled = waitForAddonDisabled(addon);
   let popupHidden = promisePopupHidden(panel);
+  let locationChanged = BrowserTestUtils.waitForLocationChange(gBrowser, "about:newtab");
   clickRestoreSettings(notification);
   await popupHidden;
   await addonDisabled;
-  await BrowserTestUtils.waitForLocationChange(gBrowser, "about:newtab");
+  await locationChanged;
 
   // Ensure panel is closed, settings haven't changed and add-on is disabled.
   ok(panel.getAttribute("panelopen") != "true",
@@ -350,7 +351,7 @@ add_task(async function test_new_tab_restore_settings() {
     };
     AddonManager.addAddonListener(listener);
   });
-  addon.userDisabled = false;
+  await addon.enable();
   BrowserTestUtils.removeTab(gBrowser.selectedTab);
   await addonEnabled;
   await extension.unload();
@@ -435,10 +436,11 @@ add_task(async function test_new_tab_restore_settings_multiple() {
 
   addonDisabled = waitForAddonDisabled(addonOne);
   popupHidden = promisePopupHidden(panel);
+  let locationChanged = BrowserTestUtils.waitForLocationChange(gBrowser, "about:newtab");
   clickRestoreSettings(notification);
   await popupHidden;
   await addonDisabled;
-  await BrowserTestUtils.waitForLocationChange(gBrowser, "about:newtab");
+  await locationChanged;
 
   ok(panel.getAttribute("panelopen") != "true",
      "The notification panel is closed after restoring the second time");
@@ -468,8 +470,8 @@ add_task(async function test_new_tab_restore_settings_multiple() {
   // ExtensionSettingsStore for now. See bug 1408226.
   let addonsEnabled = Promise.all([
     waitForAddonEnabled(addonOne), waitForAddonEnabled(addonTwo)]);
-  addonOne.userDisabled = false;
-  addonTwo.userDisabled = false;
+  await addonOne.enable();
+  await addonTwo.enable();
   await addonsEnabled;
   await extensionOne.unload();
   await extensionTwo.unload();

@@ -11,16 +11,28 @@
 const TEST_URI = "data:text/html;charset=utf8,<p>test code completion";
 
 add_task(async function() {
-  let hud = await openNewTabAndConsole(TEST_URI);
+  // Only run test with legacy JsTerm
+  await pushPref("devtools.webconsole.jsterm.codeMirror", false);
 
-  let jsterm = hud.jsterm;
-  let input = jsterm.inputNode;
+  const {jsterm} = await openNewTabAndConsole(TEST_URI);
+  const input = jsterm.inputNode;
 
   info("Test that the console input is not treated as a live region");
   ok(!isElementInLiveRegion(input), "Console input is not treated as a live region");
 
+  info("Test the console input has no aria-activedescendant attribute");
+  ok(!input.hasAttribute("aria-activedescendant"), "no aria-activedescendant");
+
   info("Type 'd' to open the autocomplete popup");
-  await autocomplete(jsterm, "d");
+  const {autocompletePopup} = jsterm;
+  const onPopupOpen = autocompletePopup.once("popup-opened");
+  EventUtils.sendString("d");
+  await onPopupOpen;
+  ok(autocompletePopup.isOpen && autocompletePopup.itemCount > 0,
+    "Autocomplete popup is open and contains suggestions");
+
+  info("Test the console input has an aria-activedescendant attribute");
+  ok(input.hasAttribute("aria-activedescendant"), "aria-activedescendant");
 
   // Add listeners for focus and blur events.
   let wasBlurred = false;
@@ -39,26 +51,17 @@ add_task(async function() {
   });
 
   info("Close the autocomplete popup by simulating a TAB key event");
-  let onPopupClosed = jsterm.autocompletePopup.once("popup-closed");
+  const onPopupClosed = jsterm.autocompletePopup.once("popup-closed");
   EventUtils.synthesizeKey("KEY_Tab");
 
   info("Wait for the autocomplete popup to be closed");
   await onPopupClosed;
 
   ok(wasFocused, "jsterm input received a focus event");
+
+  info("Test the console input has no aria-activedescendant attribute no more");
+  ok(!input.hasAttribute("aria-activedescendant"), "no aria-activedescendant");
 });
-
-async function autocomplete(jsterm, value) {
-  let popup = jsterm.autocompletePopup;
-
-  await new Promise(resolve => {
-    jsterm.setInputValue(value);
-    jsterm.complete(jsterm.COMPLETE_HINT_ONLY, resolve);
-  });
-
-  ok(popup.isOpen && popup.itemCount > 0,
-    "Autocomplete popup is open and contains suggestions");
-}
 
 function isElementInLiveRegion(element) {
   if (!element) {

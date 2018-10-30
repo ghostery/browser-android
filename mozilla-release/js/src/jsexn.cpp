@@ -14,6 +14,7 @@
 #include "mozilla/Sprintf.h"
 
 #include <string.h>
+#include <utility>
 
 #include "jsapi.h"
 #include "jsnum.h"
@@ -22,7 +23,9 @@
 
 #include "gc/FreeOp.h"
 #include "gc/Marking.h"
+#include "js/AutoByteString.h"
 #include "js/CharacterEncoding.h"
+#include "js/UniquePtr.h"
 #include "js/Wrapper.h"
 #include "util/StringBuffer.h"
 #include "vm/ErrorObject.h"
@@ -252,7 +255,7 @@ CopyExtraData(JSContext* cx, uint8_t** cursor, JSErrorReport* copy, JSErrorRepor
         auto copiedNotes = report->notes->copy(cx);
         if (!copiedNotes)
             return false;
-        copy->notes = Move(copiedNotes);
+        copy->notes = std::move(copiedNotes);
     } else {
         copy->notes.reset(nullptr);
     }
@@ -267,7 +270,7 @@ CopyExtraData(JSContext* cx, uint8_t** cursor, JSErrorNotes::Note* copy, JSError
 }
 
 template <typename T>
-static T*
+static UniquePtr<T>
 CopyErrorHelper(JSContext* cx, T* report)
 {
     /*
@@ -298,7 +301,7 @@ CopyErrorHelper(JSContext* cx, T* report)
     if (!cursor)
         return nullptr;
 
-    T* copy = new (cursor) T();
+    UniquePtr<T> copy(new (cursor) T());
     cursor += sizeof(T);
 
     if (report->message()) {
@@ -313,13 +316,10 @@ CopyErrorHelper(JSContext* cx, T* report)
         cursor += filenameSize;
     }
 
-    if (!CopyExtraData(cx, &cursor, copy, report)) {
-        /* js_delete calls destructor for T and js_free for pod_calloc. */
-        js_delete(copy);
+    if (!CopyExtraData(cx, &cursor, copy.get(), report))
         return nullptr;
-    }
 
-    MOZ_ASSERT(cursor == (uint8_t*)copy + mallocSize);
+    MOZ_ASSERT(cursor == (uint8_t*)copy.get() + mallocSize);
 
     /* Copy non-pointer members. */
     copy->lineno = report->lineno;
@@ -329,13 +329,13 @@ CopyErrorHelper(JSContext* cx, T* report)
     return copy;
 }
 
-JSErrorNotes::Note*
+UniquePtr<JSErrorNotes::Note>
 js::CopyErrorNote(JSContext* cx, JSErrorNotes::Note* note)
 {
     return CopyErrorHelper(cx, note);
 }
 
-JSErrorReport*
+UniquePtr<JSErrorReport>
 js::CopyErrorReport(JSContext* cx, JSErrorReport* report)
 {
     return CopyErrorHelper(cx, report);
@@ -380,7 +380,7 @@ js::ComputeStackString(JSContext* cx)
         return nullptr;
 
     RootedString str(cx);
-    if (!BuildStackString(cx, stack, &str))
+    if (!BuildStackString(cx, cx->realm()->principals(), stack, &str))
         return nullptr;
 
     return str.get();
@@ -427,6 +427,19 @@ JS::ExceptionStackOrNull(HandleObject objArg)
     return obj->as<ErrorObject>().stack();
 }
 
+JS_PUBLIC_API(uint64_t)
+JS::ExceptionTimeWarpTarget(JS::HandleValue value)
+{
+    if (!value.isObject())
+        return 0;
+
+    JSObject* obj = CheckedUnwrap(&value.toObject());
+    if (!obj || !obj->is<ErrorObject>())
+        return 0;
+
+    return obj->as<ErrorObject>().timeWarpTarget();
+}
+
 bool
 Error(JSContext* cx, unsigned argc, Value* vp)
 {
@@ -446,7 +459,7 @@ Error(JSContext* cx, unsigned argc, Value* vp)
     }
 
     /* Find the scripted caller, but only ones we're allowed to know about. */
-    NonBuiltinFrameIter iter(cx, cx->compartment()->principals());
+    NonBuiltinFrameIter iter(cx, cx->realm()->principals());
 
     /* Set the 'fileName' property. */
     RootedString fileName(cx);
@@ -469,10 +482,7 @@ Error(JSContext* cx, unsigned argc, Value* vp)
             return false;
     } else {
         lineNumber = iter.done() ? 0 : iter.computeLine(&columnNumber);
-        // XXX: Make the column 1-based as in other browsers, instead of 0-based
-        // which is how SpiderMonkey stores it internally. This will be
-        // unnecessary once bug 1144340 is fixed.
-        ++columnNumber;
+        columnNumber = FixupColumnForDisplay(columnNumber);
     }
 
     RootedObject stack(cx);
@@ -641,10 +651,10 @@ js::ErrorToException(JSContext* cx, JSErrorReport* reportp,
     MOZ_ASSERT(reportp);
     MOZ_ASSERT(!JSREPORT_IS_WARNING(reportp->flags));
 
-    // We cannot throw a proper object inside the self-hosting compartment, as
-    // we cannot construct the Error constructor without self-hosted code. Just
+    // We cannot throw a proper object inside the self-hosting realm, as we
+    // cannot construct the Error constructor without self-hosted code. Just
     // print the error to stderr to help debugging.
-    if (cx->runtime()->isSelfHostingCompartment(cx->compartment())) {
+    if (cx->realm()->isSelfHostingRealm()) {
         PrintError(cx, stderr, JS::ConstUTF8CharsZ(), reportp, true);
         return;
     }
@@ -689,17 +699,18 @@ js::ErrorToException(JSContext* cx, JSErrorReport* reportp,
     if (!CaptureStack(cx, &stack))
         return;
 
-    js::ScopedJSFreePtr<JSErrorReport> report(CopyErrorReport(cx, reportp));
+    UniquePtr<JSErrorReport> report = CopyErrorReport(cx, reportp);
     if (!report)
         return;
 
-    RootedObject errObject(cx, ErrorObject::create(cx, exnType, stack, fileName,
-                                                   lineNumber, columnNumber, &report, messageStr));
+    ErrorObject* errObject = ErrorObject::create(cx, exnType, stack, fileName, lineNumber,
+                                                 columnNumber, std::move(report), messageStr);
     if (!errObject)
         return;
 
     // Throw it.
-    cx->setPendingException(ObjectValue(*errObject));
+    RootedValue errValue(cx, ObjectValue(*errObject));
+    cx->setPendingException(errValue);
 
     // Flag the error report passed in to indicate an exception was raised.
     reportp->flags |= JSREPORT_EXCEPTION;
@@ -970,14 +981,12 @@ ErrorReport::populateUncaughtExceptionReportUTF8VA(JSContext* cx, va_list ap)
     // XXXbz this assumes the stack we have right now is still
     // related to our exception object.  It would be better if we
     // could accept a passed-in stack of some sort instead.
-    NonBuiltinFrameIter iter(cx, cx->compartment()->principals());
+    NonBuiltinFrameIter iter(cx, cx->realm()->principals());
     if (!iter.done()) {
         ownedReport.filename = iter.filename();
-        ownedReport.lineno = iter.computeLine(&ownedReport.column);
-        // XXX: Make the column 1-based as in other browsers, instead of 0-based
-        // which is how SpiderMonkey stores it internally. This will be
-        // unnecessary once bug 1144340 is fixed.
-        ++ownedReport.column;
+        uint32_t column;
+        ownedReport.lineno = iter.computeLine(&column);
+        ownedReport.column = FixupColumnForDisplay(column);
         ownedReport.isMuted = iter.mutedErrors();
     }
 
@@ -995,7 +1004,7 @@ ErrorReport::populateUncaughtExceptionReportUTF8VA(JSContext* cx, va_list ap)
 JSObject*
 js::CopyErrorObject(JSContext* cx, Handle<ErrorObject*> err)
 {
-    js::ScopedJSFreePtr<JSErrorReport> copyReport;
+    UniquePtr<JSErrorReport> copyReport;
     if (JSErrorReport* errorReport = err->getErrorReport()) {
         copyReport = CopyErrorReport(cx, errorReport);
         if (!copyReport)
@@ -1017,7 +1026,7 @@ js::CopyErrorObject(JSContext* cx, Handle<ErrorObject*> err)
 
     // Create the Error object.
     return ErrorObject::create(cx, errorType, stack, fileName,
-                               lineNumber, columnNumber, &copyReport, message);
+                               lineNumber, columnNumber, std::move(copyReport), message);
 }
 
 JS_PUBLIC_API(bool)
@@ -1025,16 +1034,18 @@ JS::CreateError(JSContext* cx, JSExnType type, HandleObject stack, HandleString 
                     uint32_t lineNumber, uint32_t columnNumber, JSErrorReport* report,
                     HandleString message, MutableHandleValue rval)
 {
-    assertSameCompartment(cx, stack, fileName, message);
+    cx->check(stack, fileName, message);
     AssertObjectIsSavedFrameOrWrapper(cx, stack);
 
-    js::ScopedJSFreePtr<JSErrorReport> rep;
-    if (report)
+    js::UniquePtr<JSErrorReport> rep;
+    if (report) {
         rep = CopyErrorReport(cx, report);
+        if (!rep)
+            return false;
+    }
 
-    RootedObject obj(cx,
-        js::ErrorObject::create(cx, type, stack, fileName,
-                                lineNumber, columnNumber, &rep, message));
+    JSObject* obj = js::ErrorObject::create(cx, type, stack, fileName, lineNumber, columnNumber,
+                                            std::move(rep), message);
     if (!obj)
         return false;
 
@@ -1097,7 +1108,7 @@ js::GetInternalError(JSContext* cx, unsigned errorNumber, MutableHandleValue err
 {
     FixedInvokeArgs<1> args(cx);
     args[0].set(Int32Value(errorNumber));
-    return CallSelfHostedFunction(cx, "GetInternalError", NullHandleValue, args, error);
+    return CallSelfHostedFunction(cx, cx->names().GetInternalError, NullHandleValue, args, error);
 }
 
 bool
@@ -1105,5 +1116,5 @@ js::GetTypeError(JSContext* cx, unsigned errorNumber, MutableHandleValue error)
 {
     FixedInvokeArgs<1> args(cx);
     args[0].set(Int32Value(errorNumber));
-    return CallSelfHostedFunction(cx, "GetTypeError", NullHandleValue, args, error);
+    return CallSelfHostedFunction(cx, cx->names().GetTypeError, NullHandleValue, args, error);
 }

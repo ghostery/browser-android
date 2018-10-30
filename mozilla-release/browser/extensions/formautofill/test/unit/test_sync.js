@@ -13,8 +13,11 @@ ChromeUtils.import("resource://services-sync/service.js");
 ChromeUtils.import("resource://services-sync/constants.js");
 ChromeUtils.import("resource://testing-common/services/sync/utils.js");
 
-let {sanitizeStorageObject, AutofillRecord, AddressesEngine} =
-  ChromeUtils.import("resource://formautofill/FormAutofillSync.jsm", {});
+let sanitizeStorageObject, AutofillRecord, AddressesEngine;
+add_task(async function() {
+  ({sanitizeStorageObject, AutofillRecord, AddressesEngine} =
+    ChromeUtils.import("resource://formautofill/FormAutofillSync.jsm", {}));
+});
 
 
 Services.prefs.setCharPref("extensions.formautofill.loglevel", "Trace");
@@ -703,6 +706,28 @@ add_task(async function test_reconcile_both_modified_conflict() {
       forkedPayload.id);
     strictEqual(changeCounter, 0,
       "Forked record should be marked as syncing");
+  } finally {
+    await cleanup(server);
+  }
+});
+
+add_task(async function test_wipe() {
+  let {profileStorage, server, engine} = await setup();
+  try {
+    let guid = profileStorage.addresses.add(TEST_PROFILE_1);
+
+    expectLocalProfiles(profileStorage, [{guid}]);
+
+    let promiseObserved = promiseOneObserver("formautofill-storage-changed");
+
+    await engine._wipeClient();
+
+    let {subject, data} = await promiseObserved;
+    Assert.equal(subject.wrappedJSObject.sourceSync, true, "it should be noted this came from sync");
+    Assert.equal(subject.wrappedJSObject.collectionName, "addresses", "got the correct collection");
+    Assert.equal(data, "removeAll", "a removeAll should be noted");
+
+    expectLocalProfiles(profileStorage, []);
   } finally {
     await cleanup(server);
   }

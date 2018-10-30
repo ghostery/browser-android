@@ -10,7 +10,7 @@ ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.defineModuleGetter(this, "Log", "resource://gre/modules/Log.jsm");
 ChromeUtils.defineModuleGetter(this, "UpdateUtils", "resource://gre/modules/UpdateUtils.jsm");
 
-Cu.importGlobalProperties(["fetch", "URL"]);
+XPCOMUtils.defineLazyGlobalGetters(this, ["fetch", "URL"]);
 
 var EXPORTED_SYMBOLS = ["BrowserErrorReporter"];
 
@@ -22,6 +22,7 @@ const PREF_PROJECT_ID = "browser.chrome.errorReporter.projectId";
 const PREF_PUBLIC_KEY = "browser.chrome.errorReporter.publicKey";
 const PREF_SAMPLE_RATE = "browser.chrome.errorReporter.sampleRate";
 const PREF_SUBMIT_URL = "browser.chrome.errorReporter.submitUrl";
+const RECENT_BUILD_AGE = 1000 * 60 * 60 * 24 * 7; // 7 days
 const SDK_NAME = "firefox-error-reporter";
 const SDK_VERSION = "1.0.0";
 const TELEMETRY_ERROR_COLLECTED = "browser.errors.collected_count";
@@ -64,6 +65,7 @@ const TELEMETRY_REPORTED_PATTERNS = new Set([
 // In case of a conflict, the first matching rate by insertion order is used.
 const MODULE_SAMPLE_RATES = new Map([
   [/^(?:chrome|resource):\/\/devtools/, 1],
+  [/^moz-extension:\/\//, 0],
 ]);
 
 /**
@@ -83,16 +85,33 @@ const MODULE_SAMPLE_RATES = new Map([
  * traces; see bug 1426482 for privacy review and server-side mitigation.
  */
 class BrowserErrorReporter {
+  /**
+   * Generate a Date object corresponding to the date in the appBuildId.
+   */
+  static getAppBuildIdDate() {
+    const appBuildId = Services.appinfo.appBuildID;
+    const buildYear = Number.parseInt(appBuildId.slice(0, 4));
+    // Date constructor uses 0-indexed months
+    const buildMonth = Number.parseInt(appBuildId.slice(4, 6)) - 1;
+    const buildDay = Number.parseInt(appBuildId.slice(6, 8));
+    return new Date(buildYear, buildMonth, buildDay);
+  }
+
   constructor(options = {}) {
     // Test arguments for mocks and changing behavior
-    this.fetch = options.fetch || defaultFetch;
-    this.chromeOnly = options.chromeOnly !== undefined ? options.chromeOnly : true;
-    this.registerListener = (
-      options.registerListener || (() => Services.console.registerListener(this))
-    );
-    this.unregisterListener = (
-      options.unregisterListener || (() => Services.console.unregisterListener(this))
-    );
+    const defaultOptions = {
+      fetch: defaultFetch,
+      now: null,
+      chromeOnly: true,
+      sampleRates: MODULE_SAMPLE_RATES,
+      registerListener: () => Services.console.registerListener(this),
+      unregisterListener: () => Services.console.unregisterListener(this),
+    };
+    for (const [key, defaultValue] of Object.entries(defaultOptions)) {
+      this[key] = key in options ? options[key] : defaultValue;
+    }
+
+    XPCOMUtils.defineLazyGetter(this, "appBuildIdDate", BrowserErrorReporter.getAppBuildIdDate);
 
     // Values that don't change between error reports.
     this.requestBodyTemplate = {
@@ -137,6 +156,24 @@ class BrowserErrorReporter {
       "0.0",
       this.handleSampleRatePrefChanged.bind(this),
     );
+
+    // Prefix mappings for the mangleFilePaths transform.
+    this.manglePrefixes = options.manglePrefixes || {
+      greDir: Services.dirsvc.get("GreD", Ci.nsIFile),
+      profileDir: Services.dirsvc.get("ProfD", Ci.nsIFile),
+    };
+    // File paths are encoded by nsIURI, so let's do the same for the prefixes
+    // we're comparing them to.
+    for (const [name, prefixFile] of Object.entries(this.manglePrefixes)) {
+      let filePath = Services.io.newFileURI(prefixFile).filePath;
+
+      // filePath might not have a trailing slash in some cases
+      if (!filePath.endsWith("/")) {
+        filePath += "/";
+      }
+
+      this.manglePrefixes[name] = filePath;
+    }
   }
 
   /**
@@ -198,13 +235,20 @@ class BrowserErrorReporter {
     return "FILTERED";
   }
 
-  async observe(message) {
-    try {
-      message.QueryInterface(Ci.nsIScriptError);
-    } catch (err) {
-      return; // Not an error
-    }
+  isRecentBuild() {
+    // The local clock is not reliable, but this method doesn't need to be
+    // perfect.
+    const now = this.now || new Date();
+    return (now - this.appBuildIdDate) <= RECENT_BUILD_AGE;
+  }
 
+  observe(message) {
+    if (message instanceof Ci.nsIScriptError) {
+      ChromeUtils.idleDispatch(() => this.handleMessage(message));
+    }
+  }
+
+  async handleMessage(message) {
     const isWarning = message.flags & message.warningFlag;
     const isFromChrome = REPORTED_CATEGORIES.has(message.category);
     if ((this.chromeOnly && !isFromChrome) || isWarning) {
@@ -221,9 +265,15 @@ class BrowserErrorReporter {
       Services.telemetry.keyedScalarAdd(TELEMETRY_ERROR_COLLECTED_FILENAME, key.slice(0, 69), 1);
     }
 
+    // We do not collect errors on non-Nightly channels, just telemetry.
+    // Also, old builds should not send errors to Sentry
+    if (!AppConstants.NIGHTLY_BUILD || !this.isRecentBuild()) {
+      return;
+    }
+
     // Sample the amount of errors we send out
     let sampleRate = Number.parseFloat(this.sampleRatePref);
-    for (const [regex, rate] of MODULE_SAMPLE_RATES) {
+    for (const [regex, rate] of this.sampleRates) {
       if (message.sourceName.match(regex)) {
         sampleRate = rate;
         break;
@@ -248,6 +298,7 @@ class BrowserErrorReporter {
       addStacktrace,
       addModule,
       mangleExtensionUrls,
+      this.mangleFilePaths.bind(this),
       tagExtensionErrors,
     ];
     for (const transform of transforms) {
@@ -268,14 +319,49 @@ class BrowserErrorReporter {
         },
         // Sentry throws an auth error without a referrer specified.
         referrer: "https://fake.mozilla.org",
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBody),
       });
       Services.telemetry.scalarAdd(TELEMETRY_ERROR_REPORTED, 1);
-      this.logger.debug("Sent error successfully.");
+      this.logger.debug(`Sent error "${message.errorMessage}" successfully.`);
     } catch (error) {
       Services.telemetry.scalarAdd(TELEMETRY_ERROR_REPORTED_FAIL, 1);
-      this.logger.warn(`Failed to send error: ${error}`);
+      this.logger.warn(`Failed to send error "${message.errorMessage}": ${error}`);
     }
+  }
+
+  /**
+   * Alters file: and jar: paths to remove leading file paths that may contain
+   * user-identifying or platform-specific paths.
+   *
+   * prefixes is a mapping of replacementName -> filePath, where filePath is a
+   * path on the filesystem that should be replaced, and replacementName is the
+   * text that will replace it.
+   */
+  mangleFilePaths(message, exceptionValue) {
+    exceptionValue.module = this._transformFilePath(exceptionValue.module);
+    for (const frame of exceptionValue.stacktrace.frames) {
+      frame.module = this._transformFilePath(frame.module);
+    }
+  }
+
+  _transformFilePath(path) {
+    try {
+      const uri = Services.io.newURI(path);
+      if (uri.schemeIs("jar")) {
+        return uri.filePath;
+      }
+      if (uri.schemeIs("file")) {
+        for (const [name, prefix] of Object.entries(this.manglePrefixes)) {
+          if (uri.filePath.startsWith(prefix)) {
+            return uri.filePath.replace(prefix, `[${name}]/`);
+          }
+        }
+
+        return "[UNKNOWN_LOCAL_FILEPATH]";
+      }
+    } catch (err) {}
+
+    return path;
   }
 }
 
@@ -367,10 +453,9 @@ function mangleExtensionUrls(message, exceptionValue) {
       return string;
     }
 
-    let re = new RegExp(`${anchored ? "^" : ""}moz-extension://([^/]+)/`, "g");
-
+    const re = new RegExp(`${anchored ? "^" : ""}moz-extension://([^/]+)/`, "g");
     return string.replace(re, (m0, m1) => {
-      let id = extensions.has(m1) ? extensions.get(m1).id : m1;
+      const id = extensions.has(m1) ? extensions.get(m1).id : m1;
       return `moz-extension://${id}/`;
     });
   }

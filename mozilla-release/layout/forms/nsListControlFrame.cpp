@@ -137,7 +137,7 @@ void
 nsListControlFrame::DestroyFrom(nsIFrame* aDestructRoot, PostDestroyData& aPostDestroyData)
 {
   // get the receiver interface from the browser button's content node
-  ENSURE_TRUE(mContent);
+  NS_ENSURE_TRUE_VOID(mContent);
 
   // Clear the frame pointer on our event listener, just in case the
   // event listener can outlive the frame.
@@ -158,8 +158,9 @@ nsListControlFrame::DestroyFrom(nsIFrame* aDestructRoot, PostDestroyData& aPostD
   if (ShouldFireDropDownEvent()) {
     nsContentUtils::AddScriptRunner(
       new AsyncEventDispatcher(mContent,
-                               NS_LITERAL_STRING("mozhidedropdown"), true,
-                               true));
+                               NS_LITERAL_STRING("mozhidedropdown"),
+                               CanBubble::eYes,
+                               ChromeOnlyDispatch::eYes));
   }
 
   nsCheckboxRadioFrame::RegUnRegAccessKey(static_cast<nsIFrame*>(this), false);
@@ -368,8 +369,8 @@ nsListControlFrame::Reflow(nsPresContext*           aPresContext,
                            nsReflowStatus&          aStatus)
 {
   MOZ_ASSERT(aStatus.IsEmpty(), "Caller should pass a fresh reflow status!");
-  NS_PRECONDITION(aReflowInput.ComputedISize() != NS_UNCONSTRAINEDSIZE,
-                  "Must have a computed inline size");
+  NS_WARNING_ASSERTION(aReflowInput.ComputedISize() != NS_UNCONSTRAINEDSIZE,
+                       "Must have a computed inline size");
 
   SchedulePaint();
 
@@ -503,8 +504,8 @@ nsListControlFrame::ReflowAsDropdown(nsPresContext*           aPresContext,
                                      const ReflowInput& aReflowInput,
                                      nsReflowStatus&          aStatus)
 {
-  NS_PRECONDITION(aReflowInput.ComputedBSize() == NS_UNCONSTRAINEDSIZE,
-                  "We should not have a computed block size here!");
+  MOZ_ASSERT(aReflowInput.ComputedBSize() == NS_UNCONSTRAINEDSIZE,
+             "We should not have a computed block size here!");
 
   mMightNeedSecondPass = NS_SUBTREE_DIRTY(this) ||
     aReflowInput.ShouldReflowAllKids();
@@ -621,17 +622,17 @@ nsListControlFrame::ReflowAsDropdown(nsPresContext*           aPresContext,
   nsHTMLScrollFrame::Reflow(aPresContext, aDesiredSize, state, aStatus);
 }
 
-ScrollbarStyles
-nsListControlFrame::GetScrollbarStyles() const
+ScrollStyles
+nsListControlFrame::GetScrollStyles() const
 {
   // We can't express this in the style system yet; when we can, this can go away
-  // and GetScrollbarStyles can be devirtualized
+  // and GetScrollStyles can be devirtualized
   int32_t style = IsInDropDownMode() ? NS_STYLE_OVERFLOW_AUTO
                                      : NS_STYLE_OVERFLOW_SCROLL;
   if (GetWritingMode().IsVertical()) {
-    return ScrollbarStyles(style, NS_STYLE_OVERFLOW_HIDDEN);
+    return ScrollStyles(style, NS_STYLE_OVERFLOW_HIDDEN);
   } else {
-    return ScrollbarStyles(NS_STYLE_OVERFLOW_HIDDEN, style);
+    return ScrollStyles(NS_STYLE_OVERFLOW_HIDDEN, style);
   }
 }
 
@@ -1174,14 +1175,10 @@ nsListControlFrame::GetNumberOfOptions()
 //----------------------------------------------------------------------
 bool nsListControlFrame::CheckIfAllFramesHere()
 {
-  // Get the number of optgroups and options
-  //int32_t numContentItems = 0;
-  nsCOMPtr<nsIDOMNode> node(do_QueryInterface(mContent));
-  if (node) {
-    // XXX Need to find a fail proff way to determine that
-    // all the frames are there
-    mIsAllFramesHere = true;//NS_OK == CountAllChild(node, numContentItems);
-  }
+  // XXX Need to find a fail proof way to determine that
+  // all the frames are there
+  mIsAllFramesHere = true;
+
   // now make sure we have a frame each piece of content
 
   return mIsAllFramesHere;
@@ -1243,7 +1240,7 @@ DecrementAndClamp(int32_t aSelectionIndex, int32_t aLength)
 NS_IMETHODIMP
 nsListControlFrame::RemoveOption(int32_t aIndex)
 {
-  NS_PRECONDITION(aIndex >= 0, "negative <option> index");
+  MOZ_ASSERT(aIndex >= 0, "negative <option> index");
 
   // Need to reset if we're a dropdown
   if (IsInDropDownMode()) {
@@ -1391,12 +1388,14 @@ nsListControlFrame::FireOnInputAndOnChange()
   nsCOMPtr<nsIContent> content = mContent;
   // Dispatch the input event.
   nsContentUtils::DispatchTrustedEvent(content->OwnerDoc(), content,
-                                       NS_LITERAL_STRING("input"), true,
-                                       false);
+                                       NS_LITERAL_STRING("input"),
+                                       CanBubble::eYes,
+                                       Cancelable::eNo);
   // Dispatch the change event.
   nsContentUtils::DispatchTrustedEvent(content->OwnerDoc(), content,
-                                       NS_LITERAL_STRING("change"), true,
-                                       false);
+                                       NS_LITERAL_STRING("change"),
+                                       CanBubble::eYes,
+                                       Cancelable::eNo);
 }
 
 NS_IMETHODIMP
@@ -1581,8 +1580,8 @@ nscoord
 nsListControlFrame::CalcIntrinsicBSize(nscoord aBSizeOfARow,
                                        int32_t aNumberOfOptions)
 {
-  NS_PRECONDITION(!IsInDropDownMode(),
-                  "Shouldn't be in dropdown mode when we call this");
+  MOZ_ASSERT(!IsInDropDownMode(),
+             "Shouldn't be in dropdown mode when we call this");
 
   dom::HTMLSelectElement* select =
     dom::HTMLSelectElement::FromNodeOrNull(mContent);
@@ -1789,7 +1788,8 @@ FireShowDropDownEvent(nsIContent* aContent, bool aShow, bool aIsSourceTouchEvent
       eventName = NS_LITERAL_STRING("mozhidedropdown");
     }
     nsContentUtils::DispatchChromeEvent(aContent->OwnerDoc(), aContent,
-                                        eventName, true, false);
+                                        eventName, CanBubble::eYes,
+                                        Cancelable::eNo);
     return true;
   }
 
@@ -1855,7 +1855,7 @@ nsListControlFrame::MouseDown(dom::Event* aMouseEvent)
       }
 
       uint16_t inputSource = mouseEvent->MozInputSource();
-      bool isSourceTouchEvent = inputSource == MouseEventBinding::MOZ_SOURCE_TOUCH;
+      bool isSourceTouchEvent = inputSource == MouseEvent_Binding::MOZ_SOURCE_TOUCH;
       if (FireShowDropDownEvent(mContent, !mComboboxFrame->IsDroppedDownOrHasParentPopup(),
                                 isSourceTouchEvent)) {
         return NS_OK;

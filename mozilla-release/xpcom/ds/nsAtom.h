@@ -9,8 +9,7 @@
 
 #include "nsISupportsImpl.h"
 #include "nsString.h"
-#include "nsStringBuffer.h"
-#include "mozilla/HashFunctions.h"
+#include "mozilla/UniquePtr.h"
 
 namespace mozilla {
 struct AtomsSizes;
@@ -104,10 +103,10 @@ public:
 
 protected:
   // Used by nsStaticAtom.
-  constexpr nsAtom(const char16_t* aStr, uint32_t aLength)
+  constexpr nsAtom(const char16_t* aStr, uint32_t aLength, uint32_t aHash)
     : mLength(aLength)
     , mKind(static_cast<uint32_t>(nsAtom::AtomKind::Static))
-    , mHash(mozilla::ConstExprHashString(aStr))
+    , mHash(aHash)
   {}
 
   // Used by nsDynamicAtom.
@@ -138,9 +137,14 @@ public:
   MozExternalRefCountType AddRef() = delete;
   MozExternalRefCountType Release() = delete;
 
+  // The static atom's precomputed hash value is an argument here, but it
+  // must be the same as would be computed by mozilla::HashString(aStr),
+  // which is what we use when atomizing strings. We compute this hash in
+  // Atom.py and assert in nsAtomTable::RegisterStaticAtoms that the two
+  // hashes match.
   constexpr nsStaticAtom(const char16_t* aStr, uint32_t aLength,
-                         uint32_t aStringOffset)
-    : nsAtom(aStr, aLength)
+                         uint32_t aHash, uint32_t aStringOffset)
+    : nsAtom(aStr, aLength, aHash)
     , mStringOffset(aStringOffset)
   {}
 
@@ -155,7 +159,7 @@ public:
 
 private:
   // This is an offset to the string chars, which must be at a lower address in
-  // memory. This should be achieved by using the macros in nsStaticAtom.h.
+  // memory.
   uint32_t mStringOffset;
 };
 
@@ -167,17 +171,14 @@ public:
   MozExternalRefCountType AddRef();
   MozExternalRefCountType Release();
 
-  ~nsDynamicAtom();
-
-  const char16_t* String() const { return mString; }
-
-  // The caller must *not* mutate the string buffer, otherwise all hell will
-  // break loose.
-  nsStringBuffer* GetStringBuffer() const
+  const char16_t* String() const
   {
-    // See the comment on |mString|'s declaration.
-    MOZ_ASSERT(IsDynamic());
-    return nsStringBuffer::FromData(const_cast<char16_t*>(mString));
+    return reinterpret_cast<const char16_t*>(this + 1);
+  }
+
+  static nsDynamicAtom* FromChars(char16_t* chars)
+  {
+    return reinterpret_cast<nsDynamicAtom*>(chars) - 1;
   }
 
 private:
@@ -186,16 +187,21 @@ private:
   // XXX: we'd like to remove nsHtml5AtomEntry. See bug 1392185.
   friend class nsHtml5AtomEntry;
 
-  // Construction is done by |friend|s.
-  // The first constructor is for dynamic normal atoms, the second is for
-  // dynamic HTML5 atoms.
+  // These shouldn't be used directly, even by friend classes. The
+  // Create()/Destroy() methods use them.
+  static nsDynamicAtom* CreateInner(const nsAString& aString, uint32_t aHash);
   nsDynamicAtom(const nsAString& aString, uint32_t aHash);
-  explicit nsDynamicAtom(const nsAString& aString);
+  ~nsDynamicAtom() {}
+
+  // Creation/destruction is done by friend classes. The first Create() is for
+  // dynamic normal atoms, the second is for dynamic HTML5 atoms.
+  static nsDynamicAtom* Create(const nsAString& aString, uint32_t aHash);
+  static nsDynamicAtom* Create(const nsAString& aString);
+  static void Destroy(nsDynamicAtom* aAtom);
 
   mozilla::ThreadSafeAutoRefCnt mRefCnt;
-  // Note: this points to the chars in an nsStringBuffer, which is obtained
-  // with nsStringBuffer::FromData(mString).
-  const char16_t* const mString;
+
+  // The atom's chars are stored at the end of the struct.
 };
 
 // The four forms of NS_Atomize (for use with |RefPtr<nsAtom>|) return the
@@ -232,9 +238,6 @@ nsrefcnt NS_GetNumberOfAtoms();
 // Return a pointer for a static atom for the string or null if there's no
 // static atom for this string.
 nsStaticAtom* NS_GetStaticAtom(const nsAString& aUTF16String);
-
-// Record that all static atoms have been inserted.
-void NS_SetStaticAtomsDone();
 
 class nsAtomString : public nsString
 {

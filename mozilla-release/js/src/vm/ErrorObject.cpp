@@ -9,11 +9,15 @@
 
 #include "mozilla/Range.h"
 
+#include <utility>
+
 #include "jsexn.h"
 
+#include "js/AutoByteString.h"
 #include "js/CallArgs.h"
 #include "js/CharacterEncoding.h"
 #include "vm/GlobalObject.h"
+#include "vm/SelfHosting.h"
 #include "vm/StringType.h"
 
 #include "vm/JSObject-inl.h"
@@ -37,12 +41,12 @@ js::ErrorObject::assignInitialShape(JSContext* cx, Handle<ErrorObject*> obj)
 
 /* static */ bool
 js::ErrorObject::init(JSContext* cx, Handle<ErrorObject*> obj, JSExnType type,
-                      ScopedJSFreePtr<JSErrorReport>* errorReport, HandleString fileName,
+                      UniquePtr<JSErrorReport> errorReport, HandleString fileName,
                       HandleObject stack, uint32_t lineNumber, uint32_t columnNumber,
                       HandleString message)
 {
     AssertObjectIsSavedFrameOrWrapper(cx, stack);
-    assertSameCompartment(cx, obj, stack);
+    cx->check(obj, stack);
 
     // Null out early in case of error, for exn_finalize's sake.
     obj->initReservedSlot(ERROR_REPORT_SLOT, PrivateValue(nullptr));
@@ -71,7 +75,7 @@ js::ErrorObject::init(JSContext* cx, Handle<ErrorObject*> obj, JSExnType type,
 
     MOZ_ASSERT(JSEXN_ERR <= type && type < JSEXN_LIMIT);
 
-    JSErrorReport* report = errorReport ? errorReport->forget() : nullptr;
+    JSErrorReport* report = errorReport.release();
     obj->initReservedSlot(EXNTYPE_SLOT, Int32Value(type));
     obj->initReservedSlot(STACK_SLOT, ObjectOrNullValue(stack));
     obj->setReservedSlot(ERROR_REPORT_SLOT, PrivateValue(report));
@@ -81,13 +85,23 @@ js::ErrorObject::init(JSContext* cx, Handle<ErrorObject*> obj, JSExnType type,
     if (message)
         obj->setSlotWithType(cx, messageShape, StringValue(message));
 
+    // When recording/replaying and running on the main thread, get a counter
+    // which the devtools can use to warp to this point in the future.
+    if (mozilla::recordreplay::IsRecordingOrReplaying() && !cx->runtime()->parentRuntime) {
+        uint64_t timeWarpTarget = mozilla::recordreplay::NewTimeWarpTarget();
+
+        // Make sure we don't truncate the time warp target by storing it as a double.
+        MOZ_RELEASE_ASSERT(timeWarpTarget < uint64_t(DOUBLE_INTEGRAL_PRECISION_LIMIT));
+        obj->initReservedSlot(TIME_WARP_SLOT, DoubleValue(timeWarpTarget));
+    }
+
     return true;
 }
 
 /* static */ ErrorObject*
 js::ErrorObject::create(JSContext* cx, JSExnType errorType, HandleObject stack,
                         HandleString fileName, uint32_t lineNumber, uint32_t columnNumber,
-                        ScopedJSFreePtr<JSErrorReport>* report, HandleString message,
+                        UniquePtr<JSErrorReport> report, HandleString message,
                         HandleObject protoArg /* = nullptr */)
 {
     AssertObjectIsSavedFrameOrWrapper(cx, stack);
@@ -108,7 +122,7 @@ js::ErrorObject::create(JSContext* cx, JSExnType errorType, HandleObject stack,
         errObject = &obj->as<ErrorObject>();
     }
 
-    if (!ErrorObject::init(cx, errObject, errorType, report, fileName, stack,
+    if (!ErrorObject::init(cx, errObject, errorType, std::move(report), fileName, stack,
                            lineNumber, columnNumber, message))
     {
         return nullptr;
@@ -155,11 +169,11 @@ js::ErrorObject::getOrCreateErrorReport(JSContext* cx)
     report.initOwnedMessage(utf8.release());
 
     // Cache and return.
-    JSErrorReport* copy = CopyErrorReport(cx, &report);
+    UniquePtr<JSErrorReport> copy = CopyErrorReport(cx, &report);
     if (!copy)
         return nullptr;
-    setReservedSlot(ERROR_REPORT_SLOT, PrivateValue(copy));
-    return copy;
+    setReservedSlot(ERROR_REPORT_SLOT, PrivateValue(copy.get()));
+    return copy.release();
 }
 
 static bool
@@ -233,25 +247,28 @@ js::ErrorObject::getStack_impl(JSContext* cx, const CallArgs& args)
         return true;
     }
 
+    // Do frame filtering based on the ErrorObject's principals. This ensures we
+    // don't see chrome frames when chrome code accesses .stack over Xrays.
+    JSPrincipals* principals = obj->as<ErrorObject>().realm()->principals();
+
     RootedObject savedFrameObj(cx, obj->as<ErrorObject>().stack());
     RootedString stackString(cx);
-    if (!BuildStackString(cx, savedFrameObj, &stackString))
+    if (!BuildStackString(cx, principals, savedFrameObj, &stackString))
         return false;
 
     if (cx->runtime()->stackFormat() == js::StackFormat::V8) {
         // When emulating V8 stack frames, we also need to prepend the
         // stringified Error to the stack string.
         HandlePropertyName name = cx->names().ErrorToStringWithTrailingNewline;
-        RootedValue val(cx);
-        if (!GlobalObject::getSelfHostedFunction(cx, cx->global(), name, name, 0, &val))
-            return false;
-
+        FixedInvokeArgs<0> args2(cx);
         RootedValue rval(cx);
-        if (!js::Call(cx, val, args.thisv(), &rval))
+        if (!CallSelfHostedFunction(cx, name, args.thisv(), args2, &rval))
             return false;
 
-        if (!rval.isString())
-            return false;
+        if (!rval.isString()) {
+            args.rval().setString(cx->runtime()->emptyString);
+            return true;
+        }
 
         RootedString stringified(cx, rval.toString());
         stackString = ConcatStrings<CanGC>(cx, stringified, stackString);

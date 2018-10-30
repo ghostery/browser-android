@@ -15,10 +15,9 @@
 <!ENTITY chat.label                   "聊天">
 <!ENTITY movemail.label               "Movemail">
 
-<!ENTITY accountsSectionHdr.label     "帐户">
+<!ENTITY accountsSectionHdr.label     "账户">
 <!ENTITY subscribeImapFolders.label   "管理文件夹订阅">
-<!ENTITY settingsLink.label           "帐户设置">
-<!ENTITY setupNewAcctLink.label       "设置账户">
+<!ENTITY settingsLink.label           "账户设置">
 <!ENTITY setupNewAcct.label           "设置账户">
 
 <!ENTITY advFeaturesSectionHdr.label  "高级功能">

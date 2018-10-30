@@ -26,10 +26,6 @@
 #include "gfxDWriteFonts.h"
 #endif
 
-// Useful for debugging, it dumps the Gecko display list *before* we try to
-// build WR commands from it, and dumps the WR display list after building it.
-#define DUMP_LISTS 0
-
 namespace mozilla {
 
 using namespace gfx;
@@ -168,6 +164,8 @@ WebRenderLayerManager::BeginTransaction()
     return false;
   }
 
+  mTransactionStart = TimeStamp::Now();
+
   // Increment the paint sequence number even if test logging isn't
   // enabled in this process; it may be enabled in the parent process,
   // and the parent process expects unique sequence numbers.
@@ -194,15 +192,9 @@ WebRenderLayerManager::EndEmptyTransaction(EndTransactionFlags aFlags)
   // Since we don't do repeat transactions right now, just set the time
   mAnimationReadyTime = TimeStamp::Now();
 
-  // With the WebRenderLayerManager we reject attempts to set most kind of
-  // "pending data" for empty transactions. Any place that attempts to update
-  // transforms or scroll offset, for example, will get failure return values
-  // back, and will fall back to a full transaction. Therefore the only piece
-  // of "pending" information we need to send in an empty transaction are the
-  // APZ focus state and canvases's CompositableOperations.
-
   if (aFlags & EndTransactionFlags::END_NO_COMPOSITE && 
-      !mWebRenderCommandBuilder.NeedsEmptyTransaction()) {
+      !mWebRenderCommandBuilder.NeedsEmptyTransaction() &&
+      mPendingScrollUpdates.empty()) {
     MOZ_ASSERT(!mTarget);
     WrBridge()->SendSetFocusTarget(mFocusTarget);
     return true;
@@ -214,7 +206,7 @@ WebRenderLayerManager::EndEmptyTransaction(EndTransactionFlags aFlags)
   mWebRenderCommandBuilder.EmptyTransaction();
 
   mLatestTransactionId = mTransactionIdAllocator->GetTransactionId(/*aThrottle*/ true);
-  TimeStamp transactionStart = mTransactionIdAllocator->GetTransactionStart();
+  TimeStamp refreshStart = mTransactionIdAllocator->GetTransactionStart();
 
   // Skip the synchronization for buffer since we also skip the painting during
   // device-reset status.
@@ -225,7 +217,11 @@ WebRenderLayerManager::EndEmptyTransaction(EndTransactionFlags aFlags)
     }
   }
 
-  WrBridge()->EndEmptyTransaction(mFocusTarget, mLatestTransactionId, transactionStart);
+  WrBridge()->EndEmptyTransaction(mFocusTarget, mPendingScrollUpdates,
+      mPaintSequenceNumber, mLatestTransactionId, refreshStart, mTransactionStart);
+  ClearPendingScrollInfoUpdate();
+
+  mTransactionStart = TimeStamp();
 
   MakeSnapshotIfRequired(size);
   return true;
@@ -244,17 +240,10 @@ WebRenderLayerManager::EndTransaction(DrawPaintedLayerCallback aCallback,
 void
 WebRenderLayerManager::EndTransactionWithoutLayer(nsDisplayList* aDisplayList,
                                                   nsDisplayListBuilder* aDisplayListBuilder,
-                                                  const nsTArray<wr::WrFilterOp>& aFilters)
+                                                  const nsTArray<wr::WrFilterOp>& aFilters,
+                                                  WebRenderBackgroundData* aBackground)
 {
-  MOZ_ASSERT(aDisplayList && aDisplayListBuilder);
-
   AUTO_PROFILER_TRACING("Paint", "RenderLayers");
-
-#if DUMP_LISTS
-  // Useful for debugging, it dumps the display list *before* we try to build
-  // WR commands from it
-  if (XRE_IsContentProcess()) nsFrame::PrintDisplayList(aDisplayListBuilder, *aDisplayList);
-#endif
 
 #ifdef XP_WIN
   gfxDWriteFont::UpdateClearTypeUsage();
@@ -269,19 +258,44 @@ WebRenderLayerManager::EndTransactionWithoutLayer(nsDisplayList* aDisplayList,
   wr::LayoutSize contentSize { (float)size.width, (float)size.height };
   wr::DisplayListBuilder builder(WrBridge()->GetPipeline(), contentSize, mLastDisplayListSize);
   wr::IpcResourceUpdateQueue resourceUpdates(WrBridge());
+  wr::usize builderDumpIndex = 0;
+  bool dumpEnabled = mWebRenderCommandBuilder.ShouldDumpDisplayList();
+  if (dumpEnabled) {
+    printf_stderr("-- WebRender display list build --\n");
+  }
 
-  mWebRenderCommandBuilder.BuildWebRenderCommands(builder,
-                                                  resourceUpdates,
-                                                  aDisplayList,
-                                                  aDisplayListBuilder,
-                                                  mScrollData,
-                                                  contentSize,
-                                                  aFilters);
+  if (aDisplayList) {
+    MOZ_ASSERT(aDisplayListBuilder && !aBackground);
+    // Record the time spent "layerizing". WR doesn't actually layerize but
+    // generating the WR display list is the closest equivalent
+    PaintTelemetry::AutoRecord record(PaintTelemetry::Metric::Layerization);
+
+    mWebRenderCommandBuilder.BuildWebRenderCommands(builder,
+                                                    resourceUpdates,
+                                                    aDisplayList,
+                                                    aDisplayListBuilder,
+                                                    mScrollData,
+                                                    contentSize,
+                                                    aFilters);
+    builderDumpIndex = mWebRenderCommandBuilder.GetBuilderDumpIndex();
+  } else {
+    // ViewToPaint does not have frame yet, then render only background clolor.
+    MOZ_ASSERT(!aDisplayListBuilder && aBackground);
+    aBackground->AddWebRenderCommands(builder);
+    if (dumpEnabled) {
+      printf_stderr("(no display list; background only)\n");
+      builderDumpIndex = builder.Dump(/*indent*/ 1, Some(builderDumpIndex), Nothing());
+    }
+  }
 
   DiscardCompositorAnimations();
 
   mWidget->AddWindowOverlayWebRenderCommands(WrBridge(), builder, resourceUpdates);
   mWindowOverlayChanged = false;
+  if (dumpEnabled) {
+    printf_stderr("(window overlay)\n");
+    Unused << builder.Dump(/*indent*/ 1, Some(builderDumpIndex), Nothing());
+  }
 
   if (AsyncPanZoomEnabled()) {
     mScrollData.SetFocusTarget(mFocusTarget);
@@ -293,9 +307,13 @@ WebRenderLayerManager::EndTransactionWithoutLayer(nsDisplayList* aDisplayList,
     }
     mScrollData.SetPaintSequenceNumber(mPaintSequenceNumber);
   }
+  // Since we're sending a full mScrollData that will include the new scroll
+  // offsets, and we can throw away the pending scroll updates we had kept for
+  // an empty transaction.
+  ClearPendingScrollInfoUpdate();
 
   mLatestTransactionId = mTransactionIdAllocator->GetTransactionId(/*aThrottle*/ true);
-  TimeStamp transactionStart = mTransactionIdAllocator->GetTransactionStart();
+  TimeStamp refreshStart = mTransactionIdAllocator->GetTransactionStart();
 
   for (const auto& key : mImageKeysToDelete) {
     resourceUpdates.DeleteImage(key);
@@ -313,10 +331,6 @@ WebRenderLayerManager::EndTransactionWithoutLayer(nsDisplayList* aDisplayList,
     }
   }
 
-#if DUMP_LISTS
-  if (XRE_IsContentProcess()) builder.Dump();
-#endif
-
   wr::BuiltDisplayList dl;
   builder.Finalize(contentSize, dl);
   mLastDisplayListSize = dl.dl.inner.capacity;
@@ -324,8 +338,10 @@ WebRenderLayerManager::EndTransactionWithoutLayer(nsDisplayList* aDisplayList,
   {
     AUTO_PROFILER_TRACING("Paint", "ForwardDPTransaction");
     WrBridge()->EndTransaction(contentSize, dl, resourceUpdates, size.ToUnknownSize(),
-                               mLatestTransactionId, mScrollData, transactionStart);
+                               mLatestTransactionId, mScrollData, refreshStart, mTransactionStart);
   }
+
+  mTransactionStart = TimeStamp();
 
   MakeSnapshotIfRequired(size);
   mNeedsComposite = false;
@@ -464,10 +480,10 @@ WebRenderLayerManager::DiscardLocalImages()
 }
 
 void
-WebRenderLayerManager::SetLayerObserverEpoch(uint64_t aLayerObserverEpoch)
+WebRenderLayerManager::SetLayersObserverEpoch(LayersObserverEpoch aEpoch)
 {
   if (WrBridge()->IPCOpen()) {
-    WrBridge()->SendSetLayerObserverEpoch(aLayerObserverEpoch);
+    WrBridge()->SendSetLayersObserverEpoch(aEpoch);
   }
 }
 
@@ -570,6 +586,12 @@ WebRenderLayerManager::SetTransactionIdAllocator(TransactionIdAllocator* aAlloca
   mTransactionIdAllocator = aAllocator;
 }
 
+TransactionId
+WebRenderLayerManager::GetLastTransactionId()
+{
+  return mLatestTransactionId;
+}
+
 void
 WebRenderLayerManager::AddDidCompositeObserver(DidCompositeObserver* aObserver)
 {
@@ -593,7 +615,10 @@ WebRenderLayerManager::FlushRendering()
   }
   MOZ_ASSERT(mWidget);
 
-  if (mWidget->SynchronouslyRepaintOnResize() || gfxPrefs::LayersForceSynchronousResize()) {
+  // When DirectComposition and compositor window are used, we do not need to do sync FlushRendering.
+  if (WrBridge()->GetCompositorUseDComp()) {
+    cBridge->SendFlushRenderingAsync();
+  } else if (mWidget->SynchronouslyRepaintOnResize() || gfxPrefs::LayersForceSynchronousResize()) {
     cBridge->SendFlushRendering();
   } else {
     cBridge->SendFlushRenderingAsync();
@@ -626,15 +651,6 @@ WebRenderLayerManager::SetRoot(Layer* aLayer)
 {
   // This should never get called
   MOZ_ASSERT(false);
-}
-
-bool
-WebRenderLayerManager::SetPendingScrollUpdateForNextTransaction(FrameMetrics::ViewID aScrollId,
-                                                                const ScrollUpdateInfo& aUpdateInfo)
-{
-  // If we ever support changing the scroll position in an "empty transactions"
-  // properly in WR we can fill this in. Covered by bug 1382259.
-  return false;
 }
 
 already_AddRefed<PersistentBufferProvider>
