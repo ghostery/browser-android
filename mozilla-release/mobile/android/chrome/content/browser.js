@@ -1927,6 +1927,9 @@ var BrowserApp = {
         break;
 
       case "Tab:Load": {
+        /* Cliqz start */
+        Cliqz.initUI(data.isPrivate);
+        /* Cliqz end */
         let url = data.url;
         let flags = Ci.nsIWebNavigation.LOAD_FLAGS_ALLOW_THIRD_PARTY_FIXUP
                   | Ci.nsIWebNavigation.LOAD_FLAGS_FIXUP_SCHEME_TYPOS;
@@ -6461,11 +6464,17 @@ var Cliqz = {
         args: [value]
       });
     });
+  },
 
-    window.addEventListener("UIReady", function(aEvent) {
-      // force search init
-      Cliqz.Search;
-    }, {once: true});
+  initUI: function (isPrivate) {
+    if (!this.Search) {
+      // Search is not yet created
+      this.Search = this._createBrowserForExtension('android@cliqz.com');
+    }
+    if (!this.UILoaded) {
+      // cards.html is not yet loaded
+      this.preloadUI(isPrivate);
+    }
   },
 
   READY_STATUS: {
@@ -6536,17 +6545,33 @@ var Cliqz = {
     // return a tab look-alike object to get handled properly by ActivityObserver
     return {
       browser,
-      load: function(path) {
-        const uuid = UUIDMap.get(id);
-
-        browser.loadURI("moz-extension://" + uuid + "/" + path);
-      },
       setActive(active) {
         active ? this.browser.focus() : this.browser.blur();
         this.browser.docShellIsActive = active;
       },
       getActive() { return this.browser.docShellIsActive; }
     }
+  },
+
+  preloadUI: function(isPrivate) {
+    const height = window.screen.availHeight - 80;
+    const color = isPrivate ? '#0080b1' : '#00AEF0';
+    const style = `<style>html { background-image: linear-gradient(${color}, #000000); height: ${height}; }</style>`;
+    const meta = '<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">';
+    this.Search.browser.loadURI(`data:text/html;charset=US-ASCII,${encodeURIComponent(style + meta)}`);
+  },
+
+  loadCardsUI: function() {
+    if (this.UILoaded) {
+      return;
+    }
+    this.UILoaded = true;
+    const id = 'android@cliqz.com';
+    const uuid = UUIDMap.get(id);
+    const path = 'modules/mobile-cards/cards.html';
+    this.cardsUI = this._createBrowserForExtension(id);
+    this.cardsUI.browser.loadURI("moz-extension://" + uuid + "/" + path);
+    this.cardsUI.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
   },
 
   _searchExtensionListener(msg) {
@@ -6583,6 +6608,7 @@ var Cliqz = {
       case "getInstallDate":
         return Services.prefs.getCharPref("android.not_a_preference.browser.install.date", "16917");
       case "ready":
+        this.loadCardsUI();
         this._syncSearchPrefs();
         this._handleExtensionReady("android@cliqz.com");
         break;
@@ -6590,6 +6616,16 @@ var Cliqz = {
         GlobalEventDispatcher.sendRequest({
           type: "Search:Idle"
         });
+        break;
+      case "renderReady":
+        if (BrowserApp.deck.selectedPanel === this.Search.browser) {
+          this.overlayPanel(this.cardsUI.browser);
+        }
+        this.Search.browser = this.cardsUI.browser;
+        if (this.lastQueuedQuery) {
+          this.messageSearchExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.lastQueuedQuery = "";
+        }
         break;
       default:
         console.log("unexpected message", msg);
@@ -6678,25 +6714,6 @@ var Cliqz = {
     return this._ghostery;
   },
 
-  get Search() {
-    if (!this._search) {
-      this._search = this._createBrowserForExtension('android@cliqz.com');
-      const loadExtension = (retry) => {
-        try {
-          this._search.load('modules/mobile-cards/cards.html');
-          this._search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
-        } catch (e) {
-          console.log(`Retry ${retry} loading cards`, e, retry);
-          retry && setTimeout(loadExtension.bind(this), 200, retry - 1);
-        }
-      }
-      // retry 100 times to load the cards
-      setTimeout(loadExtension.bind(this), 0, 100);
-    }
-
-    return this._search;
-  },
-
   overlayPanel: function(panel) {
     /* Cliqz start */
     var currentPanel = BrowserApp.deck.selectedPanel;
@@ -6772,8 +6789,11 @@ var Cliqz = {
         this.messageSearchExtension({ module: "search", action: "stopSearch", args: []});
         break;
       case "Search:Search":
-        let q = data.q || "";
-        this.messageSearchExtension({ module: "search", action: "startSearch", args: [q]});
+        this.lastQueuedQuery = data.q || "";
+        if (this.UILoaded) {
+          this.messageSearchExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.lastQueuedQuery = "";
+        }
         break;
       case "Search:Show":
         this.overlayPanel(this.Search.browser);
