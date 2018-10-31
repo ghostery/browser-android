@@ -1307,7 +1307,7 @@ remake_built_in_addons:
 	$(PYTHON) -c \
 	'import os, json; \
 	listing = json.load(open("$(topobjdir)/toolkit/mozapps/extensions/built_in_addons.json", "r")); \
-	listing["system"] = [os.path.splitext(it)[0] for it in sorted(os.listdir("$(FEATURES_PATH)"))]; \
+	listing["system"] = [it.replace(".xpi", "") for it in sorted(os.listdir("$(FEATURES_PATH)"))]; \
 	json.dump(listing, open("$(topobjdir)/toolkit/mozapps/extensions/built_in_addons.json", "w"))'
 
 # Cliqz end
