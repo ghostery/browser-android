@@ -7,13 +7,19 @@ package org.mozilla.gecko.firstrun;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.StrictMode;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewStub;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.GeckoThread;
@@ -24,6 +30,7 @@ import org.mozilla.gecko.annotation.RobocopTarget;
 import org.mozilla.gecko.distribution.Distribution;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.mozglue.SafeIntent;
+import org.mozilla.gecko.onboarding.CliqzIntroPagerAdapter;
 import org.mozilla.gecko.switchboard.SwitchBoard;
 import org.mozilla.gecko.util.NetworkUtils;
 import org.mozilla.gecko.util.ThreadUtils;
@@ -52,7 +59,9 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
     private WeakReference<AppCompatActivity> activityRef;
     private OnboardingListener listener;
     private SafeIntent activityStartingIntent;
-    private FirstrunAnimationContainer firstrunAnimationContainer;
+    /* Cliqz start */
+    private LinearLayout mCliqzInfroHolder;
+    /* Cliqz end */
     private Runnable showOnboarding;
     private boolean onboardingIsPreparing;
     private boolean abortOnboarding;
@@ -179,8 +188,9 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
 
         if (isOnboardingVisible()) {
             onboardingIsPreparing = false;
-            firstrunAnimationContainer.registerOnFinishListener(null);
-            firstrunAnimationContainer.hide();
+            /* Cliqz start */
+            mCliqzInfroHolder.setVisibility(View.GONE);
+            /* Cliqz end */
             return true;
         }
 
@@ -188,7 +198,7 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
     }
 
     private boolean isOnboardingVisible() {
-        return firstrunAnimationContainer != null && firstrunAnimationContainer.isVisible();
+        return mCliqzInfroHolder != null && mCliqzInfroHolder.getVisibility() == View.VISIBLE;
     }
 
     /**
@@ -246,9 +256,10 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
 
         onboardingIsPreparing = false;
 
-        if (firstrunAnimationContainer == null) {
+        /* Cliqz start */
+        if (mCliqzInfroHolder == null) {
             final ViewStub firstrunPagerStub = (ViewStub) activity.findViewById(R.id.firstrun_pager_stub);
-            firstrunAnimationContainer = (FirstrunAnimationContainer) firstrunPagerStub.inflate();
+            mCliqzInfroHolder = (LinearLayout) firstrunPagerStub.inflate();
         }
 
         if (DEBUG) {
@@ -258,15 +269,22 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
                             .append(" values");
             Log.d(LOGTAG, logMessage.toString());
         }
+        final ViewPager cliqzIntroPager = (ViewPager) mCliqzInfroHolder.findViewById(R.id.cliqz_intro_pager);
+        final TabLayout tabLayout = (TabLayout) mCliqzInfroHolder.findViewById(R.id.cliqz_intro_tab_dots);
+        cliqzIntroPager.setAdapter(new CliqzIntroPagerAdapter(cliqzIntroPager.getContext()));
+        tabLayout.setupWithViewPager(cliqzIntroPager);
 
-        firstrunAnimationContainer.load
-                (activity.getApplicationContext(), activity.getSupportFragmentManager(), useLocalValues);
-        firstrunAnimationContainer.registerOnFinishListener(new FirstrunAnimationContainer.OnFinishListener() {
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        final Button startBrowsing = (Button) mCliqzInfroHolder.findViewById(R.id.start_browsing);
+        startBrowsing.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFinish() {
-                listener.onFinishedOnboarding(firstrunAnimationContainer.showBrowserHint());
+            public void onClick(View v) {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                mCliqzInfroHolder.setVisibility(View.GONE);
             }
         });
+        /* Cliqz end */
 
         listener.onOnboardingScreensVisible();
         saveOnboardingShownStatus();
