@@ -125,17 +125,6 @@ def build(Map m){
                         sh '''#!/bin/bash -l
                             set -e
                             set -x
-                            mkdir -p /app/distribution/assets/distribution/extensions
-                            if [[ $BRAND = *"ghostery"* ]]; then
-                                ext="ghostery"
-                            else
-                                ext="cliqz"
-                            fi
-                            cat /app/mozilla-release/config/search.txt | \
-                                grep $ext |cut -d= -f2 | \
-                                xargs wget --quiet -O /app/distribution/assets/distribution/extensions/android@cliqz.com.xpi
-                            cat /app/mozilla-release/config/privacy.txt | \
-                                xargs wget --quiet -O /app/distribution/assets/distribution/extensions/firefox@ghostery.com.xpi
                             cd /app/mozilla-release
                             cp ../mozconfigs/deploy.mozconfig mozconfig
                             ./mach clobber
@@ -286,7 +275,7 @@ stage('Send email') {
         Issues Transtioned ${transitionIssueList}""".stripIndent()
     emailext(
         to: 'project-bond@cliqz.com',
-        subject: 'BOND - Build # $BUILD_NUMBER',
+        subject: 'BOND » nightly - Build # $BUILD_NUMBER',
         body: bodytxtBond
     )
 }
