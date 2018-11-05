@@ -14,7 +14,6 @@ RUN dpkg --add-architecture i386 && \
         ccache \
         curl \
         git \
-        clang \
         language-pack-en \
         libncurses5:i386 \
         libstdc++6:i386 \
@@ -128,12 +127,12 @@ RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
     rm -r ndk.zip;
 
 #Install CLang
-# RUN mkdir -p /home/jenkins/clang; \
-#     cd /home/jenkins/clang; \
-#     wget --output-document=clang.tar.xz --quiet "https://repository.cliqz.com/dist/android/artifacts/clang/clang%2Bllvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"; \
-#     tar xf clang.tar.xz; \
-#     echo 'export PATH=$CLANG_HOME/bin:$PATH' >> ~/.bashrc; \
-#     echo 'export LD_LIBRARY_PATH=$CLANG_HOME/lib:LD_LIBRARY_PATH' >> ~/.bashrc
+RUN mkdir -p /home/jenkins/clang; \
+    cd /home/jenkins/clang; \
+    wget --output-document=clang.tar.xz --quiet "http://releases.llvm.org/6.0.1/clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz"; \
+    tar xf clang.tar.xz; \
+    echo 'export PATH=$CLANG_HOME/bin:$PATH' >> ~/.bashrc; \
+    echo 'export LD_LIBRARY_PATH=$CLANG_HOME/lib:LD_LIBRARY_PATH' >> ~/.bashrc
 
 #Installation of 'yarn'; 'appium' & 'wd' for Integration Tests
 RUN npm install --global \
