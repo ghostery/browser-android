@@ -102,7 +102,7 @@ extensions.registerModules({
     ],
   },
   history: {
-    url: "chrome://browser/content/ext-history.js",
+    url: "chrome://geckoview/content/ext-history.js",
     schema: "chrome://geckoview/content/schemas/history.json",
     scopes: ["addon_parent"],
     paths: [
