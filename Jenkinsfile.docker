@@ -42,7 +42,7 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                     # With the following Android SDK and NDK:
                     ac_add_options --with-android-sdk=/home/jenkins/.mozbuild/android-sdk-linux
                     ac_add_options --with-adjust-sdk-keyfile="$topsrcdir/mobile/android/base/adjust-sdk-sandbox.token"
-                    ac_add_options --with-android-ndk=/home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r18-beta1
+                    ac_add_options --with-android-ndk=/home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r18b
                     # Write build artifacts to:
                     mk_add_options MOZ_OBJDIR=./objdir-frontend-android/
                 '''
