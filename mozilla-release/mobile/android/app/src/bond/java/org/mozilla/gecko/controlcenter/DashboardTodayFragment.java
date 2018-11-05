@@ -17,14 +17,15 @@ import java.util.List;
  * Copyright © Cliqz 2018
  */
 
-public class BondFragment extends ControlCenterFragment {
+public class DashboardTodayFragment extends ControlCenterFragment {
 
     private RecyclerView mDashBoardListView;
     private DashboardAdapter mDashboardAdapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.bond_dashboard_fragment, container, false);
+        final View view = inflater.inflate(R.layout.bond_dashboard_today_fragment, container,
+                false);
         mDashBoardListView = (RecyclerView) view.findViewById(R.id.dash_board_list_view);
         mDashboardAdapter = new DashboardAdapter(getContext());
         mDashBoardListView.setAdapter(mDashboardAdapter);
@@ -35,7 +36,7 @@ public class BondFragment extends ControlCenterFragment {
 
     @Override
     public String getTitle(Context context) {
-        return context.getString(R.string.dashboard_title);
+        return context.getString(R.string.bond_dashboard_today_title);
     }
 
     @Override
@@ -58,16 +59,22 @@ public class BondFragment extends ControlCenterFragment {
     public void addDummyData() {
         List<DashboardItemEntity> dashboardItems = new ArrayList<>();
         dashboardItems.add(new DashboardItemEntity("255","MIN",R.drawable.ic_time_circle,"Time Saved",
-                "That you can spend with your friends"));
+                "That you can spend with your friends", -1));
         dashboardItems.add(new DashboardItemEntity("4732","",R.drawable.ic_ad_blocking_shiel,
                 "Ads Blocked",
-                "That you can enjoy surfing without ads"));
+                "That you can enjoy surfing without ads", -1));
         dashboardItems.add(new DashboardItemEntity("251","MB",-1,"Data Saved","more that" +
-                "enough to watch another video"));
+                "enough to watch another video", -1));
         dashboardItems.add(new DashboardItemEntity("255","MIN",R.drawable.ic_battery,"Battery Saved",
-                "so that you can enjoy your phone a little longer"));
+                "so that you can enjoy your phone a little longer", -1));
         dashboardItems.add(new DashboardItemEntity("","",R.drawable.ic_anti_phishing_hook,"Phishing protection",
-                "so that you can swim freely with our browser"));
+                "so that you can swim freely with our browser", -1));
+        mDashboardAdapter.addItems(dashboardItems);
+        dashboardItems.add(new DashboardItemEntity("4000","\n\tCOMPANIES",R.drawable
+                .ic_eye,"Tracker Companies blocked",
+                "...companies with most trackers: Google, Amaozn, Facebook,...", -1));
+        dashboardItems.add(new DashboardItemEntity("261","EUR",-1,"Money saved",
+                "...how much is your time worth per h", 60));
         mDashboardAdapter.addItems(dashboardItems);
     }
 }
