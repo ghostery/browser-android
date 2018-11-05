@@ -11,7 +11,9 @@ public class ControlCenterPagerAdapter extends BaseControlCenterPagerAdapter{
 
     @Override
     public void init(BaseControlCenterPagerAdapter.ControlCenterCallbacks controlCenterCallbacks) {
-        final BondFragment bondFragment = new BondFragment();
-        mFragmentList.add(bondFragment);
+        final DashboardTodayFragment dashboardTodayFragment = new DashboardTodayFragment();
+        final DashboardWeekFragment dashboardWeekFragment = new DashboardWeekFragment();
+        mFragmentList.add(dashboardTodayFragment);
+        mFragmentList.add(dashboardWeekFragment);
     }
 }

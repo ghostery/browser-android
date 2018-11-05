@@ -305,4 +305,5 @@
         "Add-on was not installed as &formatS1; is already integrated in your browser.">
 
 <!-- Cliqz Bond -->
-<!ENTITY dashboard_title "Dashboard">
+<!ENTITY bond_dashboard_today_title "TODAY">
+<!ENTITY bond_dashboard_week_title "LAST 7 Days">
