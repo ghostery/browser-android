@@ -1443,6 +1443,14 @@ var BrowserApp = {
       // a fullscreen transition.
       return;
     }
+    /* Cliqz start */
+    // this is a counter action to overlaying cliqz panel whenever urlbar is selected in the following PR:
+    // https://github.com/ghostery/browser-android/pull/383/files#diff-2b905fad033b1c02f370bed0beea6363R1662
+    // this change puts the correct browser on top whenever a tab is selected to fix the following issue:
+    // https://cliqztix.atlassian.net/browse/AB2-612
+    Cliqz.overlayPanel(aTab.browser);
+    /* Cliqz end */
+
     this.selectedTab = aTab;
 
     let evt = document.createEvent("UIEvents");
