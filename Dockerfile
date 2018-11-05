@@ -94,7 +94,9 @@ ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r18b
 ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.11.4-linux-x64/bin:$PATH"
 ENV NVM_DIR /home/jenkins/nvm
 ENV NODE_VERSION 8.11.4
-# ENV CLANG_HOME /home/jenkins/clang/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-16.04/
+ENV CLANG_HOME /home/jenkins/clang/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04/
+ENV HOST_CC $CLANG_HOME/bin/clang
+ENV HOST_CXX $CLANG_HOME/bin/clang++
 SHELL ["/bin/bash", "-l", "-c"]
 
 # Install nvm with node and npm
@@ -129,7 +131,7 @@ RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
 #Install CLang
 RUN mkdir -p /home/jenkins/clang; \
     cd /home/jenkins/clang; \
-    wget --output-document=clang.tar.xz --quiet "http://releases.llvm.org/6.0.1/clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz"; \
+    wget --output-document=clang.tar.xz --quiet "http://releases.llvm.org/7.0.0/clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"; \
     tar xf clang.tar.xz; \
     echo 'export PATH=$CLANG_HOME/bin:$PATH' >> ~/.bashrc; \
     echo 'export LD_LIBRARY_PATH=$CLANG_HOME/lib:LD_LIBRARY_PATH' >> ~/.bashrc
