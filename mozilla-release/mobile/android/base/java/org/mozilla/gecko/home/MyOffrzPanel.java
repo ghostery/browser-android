@@ -73,8 +73,6 @@ public class MyOffrzPanel extends HomeFragment {
 
     ViewGroup onboardingVG , emptyOffersOuterContainer, offersContainer;
 
-    ImageView onboardingIcon;
-
     TextView onboardingText;
 
     ProgressBar progressBar;
@@ -101,7 +99,6 @@ public class MyOffrzPanel extends HomeFragment {
         offersContainer = (ViewGroup) view.findViewById(R.id.offers_container);
         offersOuterContainer = view.findViewById(R.id.offers_outer_container);
         myOffrzDeactivateView = view.findViewById(R.id.myoffrz_deactivate_view);
-        onboardingIcon = (ImageView) view.findViewById(R.id.onboarding_feature_icon_iv);
         onboardingText = (TextView) view.findViewById(R.id.onboarding_feature_description_tv);
         learnMoreOnBoarding = (Button) view.findViewById(R.id.learn_more_btn);
         progressBar = (ProgressBar) view.findViewById(R.id.offers_loading_pb);
