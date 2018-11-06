@@ -7010,7 +7010,6 @@ var Distribution = {
   pendingAddonInstalls: new Set(),
 
   installDistroAddons: Task.async(function* () {
-    /* Cliqz start */
     const PREF_ADDONS_INSTALLED = "distribution.addonsInstalled";
     try {
       let installed = Services.prefs.getBoolPref(PREF_ADDONS_INSTALLED);
@@ -7018,12 +7017,8 @@ var Distribution = {
         return;
       }
     } catch (e) {
-      // Nothing to do here. I do not like this mechanism but this is what
-      // Mozillians had.
-    } finally {
       Services.prefs.setBoolPref(PREF_ADDONS_INSTALLED, true);
     }
-    /* Cliqz end */
 
     let distroPath;
     try {
