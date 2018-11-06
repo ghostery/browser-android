@@ -83,7 +83,10 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (curItem.getIconResId() != -1) {
                 final Drawable drawable = VectorDrawableCompat.create(mContext.getResources(), curItem
                         .getIconResId(), null);
+                viewHolder.itemIconView.setVisibility(View.VISIBLE);
                 viewHolder.itemIconView.setImageDrawable(drawable);
+            } else {
+                viewHolder.itemIconView.setVisibility(View.GONE);
             }
 
             if(curItem.getMeasurementValue().isEmpty()) { // no measurement value
@@ -176,6 +179,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     void addItems(List<DashboardItemEntity> items) {
+        mDashboardItems.clear();
         mDashboardItems.addAll(items);
         notifyDataSetChanged();
     }
