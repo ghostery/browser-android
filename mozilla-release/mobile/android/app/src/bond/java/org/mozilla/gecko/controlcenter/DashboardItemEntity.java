@@ -10,13 +10,15 @@ public class DashboardItemEntity {
     private int iconResId;
     private String title;
     private String content;
+    private int optionValue;
 
-    public DashboardItemEntity(String measurementValue, String measurementUnit, int iconResId, String title, String content) {
+    public DashboardItemEntity(String measurementValue, String measurementUnit, int iconResId, String title, String content, int optionValue) {
         this.measurementValue = measurementValue;
         this.measurementUnit = measurementUnit;
         this.iconResId = iconResId;
         this.title = title;
         this.content = content;
+        this.optionValue = optionValue;
     }
 
     public String getMeasurementValue() {
@@ -57,5 +59,13 @@ public class DashboardItemEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getOptionValue() {
+        return optionValue;
+    }
+
+    public void setOptionValue(int optionValue) {
+        this.optionValue = optionValue;
     }
 }

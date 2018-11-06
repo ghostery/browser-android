@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.util.GeckoBundle;
@@ -31,6 +32,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Context mContext;
     private List<DashboardItemEntity> mDashboardItems;
     private enum ItemType {ONE_VIEW, TWO_VIEWS}
+    private final int MIN_MONEY_BAR_VALUE = 5;
 
     public DashboardAdapter(Context context) {
         mContext = context;
@@ -125,6 +127,37 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             viewHolder.itemTitleView.setText(curItem.getTitle());
             viewHolder.itemContentView.setText(curItem.getContent());
+
+            if(curItem.getOptionValue() == -1) {
+                viewHolder.itemMoneyBarView.setVisibility(View.GONE);
+                viewHolder.itemMoneyBarValueView.setVisibility(View.GONE);
+            } else {
+                viewHolder.itemMoneyBarView.setVisibility(View.VISIBLE);
+                final int curMoneyValue = curItem.getOptionValue() + MIN_MONEY_BAR_VALUE;
+                viewHolder.itemMoneyBarView.setProgress(curMoneyValue);
+                viewHolder.itemMoneyBarValueView.setText(String.valueOf(curItem.getOptionValue() +
+                        MIN_MONEY_BAR_VALUE).concat("€"));
+
+                viewHolder.itemMoneyBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        viewHolder.itemMoneyBarValueView.setText(String.valueOf(progress +
+                                MIN_MONEY_BAR_VALUE).concat(" €"));
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+
+                viewHolder.itemMoneyBarValueView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -152,6 +185,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public TextView itemMeasurementView;
         public TextView itemTitleView;
         public TextView itemContentView;
+        public SeekBar itemMoneyBarView;
+        public TextView itemMoneyBarValueView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -159,6 +194,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             itemMeasurementView = (TextView) itemView.findViewById(R.id.item_measurement);
             itemTitleView = (TextView) itemView.findViewById(R.id.item_title);
             itemContentView = (TextView) itemView.findViewById(R.id.item_content);
+            itemMoneyBarView = (SeekBar) itemView.findViewById(R.id.item_money_bar);
+            itemMoneyBarValueView = (TextView) itemView.findViewById(R.id.item_money_bar_value);
         }
     }
 
