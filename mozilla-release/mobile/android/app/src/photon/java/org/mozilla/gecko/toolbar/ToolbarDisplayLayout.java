@@ -523,35 +523,40 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     }
     /* Cliqz start */
     // update TitleBar width depend on displayed icons
-    void updateTitleBarWidth(){
+    void updateTitleBarWidth() {
         final Resources resources = getContext().getResources();
         final WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         final DisplayMetrics metrics = new DisplayMetrics();
         if (wm != null) {
             wm.getDefaultDisplay().getMetrics(metrics);
         }
-        final int buttonWidth = (int)resources.getDimension(R.dimen.page_action_button_width);
+        final int buttonWidth = (int) resources.getDimension(R.dimen.page_action_button_width);
 
-        final int actionsLayoutWidth = mPageActionLayout.getPageActionListSize()* buttonWidth;
+        final int actionsLayoutWidth = mPageActionLayout.getPageActionListSize() * buttonWidth;
         // 3 icons on the right {3 dot menu, tab icons, ghostry icon} + left security icon +
         // padding right
         final BrowserToolbar parent = (BrowserToolbar) getParent();
+        parent.post(new Runnable() {
+            @Override
+            public void run() {
+                int toolBarbuttonsWidth = parent.ghostyButton.getWidth() +
+                        parent.tabsButton.getWidth() + parent.menuButton.getWidth() +
+                        mSiteSecurity.getWidth() + (int) resources.getDimension(R.dimen.myoffrz_padding_8);
+                if (HardwareUtils.isTablet()) {
+                    // add 4 icons back button, forward button,  refresh icon and bookmark icon
+                    final BrowserToolbarTablet tabletParent = (BrowserToolbarTablet) getParent();
+                    toolBarbuttonsWidth += tabletParent.backButton.getWidth() +
+                            tabletParent.forwardButton.getWidth() +
+                            tabletParent.menuButtonMarginView.getWidth() +
+                            tabletParent.actionItemBar.getWidth() +
+                            (int) resources.getDimension(R.dimen.padding_16);
+                }
 
-        int toolBarbuttonsWidth = parent.ghostyButton.getWidth()+ parent.tabsButton.getWidth() +
-                parent.menuButton.getWidth() + mSiteSecurity.getWidth() + (int) resources.getDimension(R.dimen
-                .myoffrz_padding_8);
-        if(HardwareUtils.isTablet()){
-            // add 4 icons back button, forward button,  refresh icon and bookmark icon
-            final BrowserToolbarTablet tabletParent = (BrowserToolbarTablet) getParent();
-            toolBarbuttonsWidth += tabletParent.backButton.getWidth() + tabletParent
-                    .forwardButton.getWidth() + tabletParent.menuButtonMarginView.getWidth() +
-                    tabletParent.actionItemBar.getWidth() + (int) resources.getDimension(R.dimen
-                    .padding_16);
-        }
-
-        final int buttonsWidth = toolBarbuttonsWidth + actionsLayoutWidth;
-        final int titleBarWidth = metrics.widthPixels - buttonsWidth;
-        mTitle.setWidth(titleBarWidth);
+                final int buttonsWidth = toolBarbuttonsWidth + actionsLayoutWidth;
+                final int titleBarWidth = metrics.widthPixels - buttonsWidth;
+                mTitle.setWidth(titleBarWidth);
+            }
+        });
     }
     /* Cliqz end */
 

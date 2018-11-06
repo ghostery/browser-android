@@ -549,8 +549,8 @@ public class PageActionLayout extends ThemedLinearLayout
 
     /* Cliqz start */
     // accessed in @ToolbarDisplayLayout.java based on Actions list size we modify the urlBar width
-    public int getPageActionListSize(){
-        return mPageActionList.size();
+    public int getPageActionListSize() {
+        return mPageActionList != null ? mPageActionList.size() : 0;
     }
 
     public void setOnPageActionClickedListener(PageActionClickListener listener) {
