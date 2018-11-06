@@ -1,5 +1,6 @@
 <!-- Copyright © Cliqz 2018-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="96dp"
     android:height="48dp"
     android:viewportHeight="39.0"
@@ -22,8 +23,22 @@
     <path
         android:fillType="evenOdd"
         android:pathData="M11.23,6.83L62.92,6.83C65.4,6.83 67.41,8.88 67.41,11.42L67.41,27.49C67.41,30.03 65.4,32.09 62.92,32.09L11.23,32.09C8.75,32.09 6.74,30.03 6.74,27.49L6.74,11.42C6.74,8.88 8.75,6.83 11.23,6.83Z"
-        android:strokeColor="#FF00AEF0"
-        android:fillColor="#FF11F4FF"
+        android:strokeColor="#00000000"
         android:strokeWidth="1">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="24.27306951606862"
+                android:endY="19.460000038146973"
+                android:startX="67.41000366210938"
+                android:startY="19.460000038146973"
+                android:type="linear">
+                <item
+                    android:color="#FF11F4FF"
+                    android:offset="0.0" />
+                <item
+                    android:color="#FF00AEF0"
+                    android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
     </path>
 </vector>
