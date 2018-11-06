@@ -74,7 +74,7 @@ public class DashboardTodayFragment extends ControlCenterFragment {
                 .ic_eye,"Tracker Companies blocked",
                 "...companies with most trackers: Google, Amaozn, Facebook,...", -1));
         dashboardItems.add(new DashboardItemEntity("261","EUR",-1,"Money saved",
-                "...how much is your time worth per h", 60));
+                "...how much is your time worth per h", 25));
         mDashboardAdapter.addItems(dashboardItems);
     }
 }
