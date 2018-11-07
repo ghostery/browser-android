@@ -1,8 +1,6 @@
 package org.mozilla.gecko.controlcenter;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -171,12 +169,11 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         final String trackerName = childGeckoBundle.getString("name");
         final String trackerId = childGeckoBundle.getString("id");
         final boolean isBlocked = childGeckoBundle.getBoolean("blocked");
+
         final TextView trackerNameTextView = (TextView) convertView.findViewById(R.id.tracker_name);
         final ImageView trackerCheckBox = (ImageView) convertView.findViewById(R.id.cb_block_tracker);
-        final View blockButton = convertView.findViewById(R.id.block_button);
-        final TextView blockButtonText = (TextView) convertView.findViewById(R.id.block_button_text);
-        blockButton.setX(parent.getWidth());
         final View infoButton = convertView.findViewById(R.id.info_icon);
+
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,26 +181,15 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
                 Tabs.getInstance().loadUrlInTab("https://whotracks.me/trackers/" + trackerName.toLowerCase().replace(" ", "_") + ".html");
             }
         });
+
         if (isBlocked) {
             trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_checked_block);
-            blockButtonText.setText(R.string.cc_unblock);
         } else {
             trackerCheckBox.setImageResource(R.drawable.cc_ic_cb_unchecked);
-            blockButtonText.setText(R.string.cc_block);
         }
         trackerNameTextView.setText(trackerName);
-        final ObjectAnimator animation = ObjectAnimator.ofFloat(blockButton, "translationX",
-                parent.getWidth() - mContext.getResources()
-                        .getDimension(R.dimen.ghostery_list_item_action_button_width));
-        animation.setDuration(400);
+
         trackerCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyDataSetChanged();
-                animation.start();
-            }
-        });
-        blockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final GeckoBundle selectedAppIds = data.getBundle("data").getBundle("blocking")
@@ -222,10 +208,10 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
                 EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
                 mControlCenterCallbacks.controlCenterSettingsChanged();
                 childGeckoBundle.putBoolean("blocked",!isBlocked);
-                final GeckoBundle[] siteTrackerCategories = data.getBundle("data")
-                        .getBundle("summary").getBundleArray("categories");
+                final GeckoBundle[] siteTrackerCategories =
+                        GeckoBundleUtils.safeGetBundleArray(data, "data/summary/categories");
                 for (GeckoBundle category : siteTrackerCategories) {
-                    final GeckoBundle[] trackers = category.getBundleArray("trackers");
+                    final GeckoBundle[] trackers = GeckoBundleUtils.safeGetBundleArray(category, "trackers");
                     for (GeckoBundle tracker : trackers) {
                         if (tracker.getInt("id") == Integer.valueOf(trackerId)) {
                             tracker.putBoolean("blocked", !isBlocked);
