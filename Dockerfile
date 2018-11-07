@@ -91,7 +91,7 @@ ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r18b
 ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.11.4-linux-x64/bin:$PATH"
 ENV NVM_DIR /home/jenkins/nvm
 ENV NODE_VERSION 8.11.4
-ENV CLANG_HOME /home/jenkins/clang/clang
+ENV CLANG_HOME /home/jenkins/clang
 ENV HOST_CC $CLANG_HOME/bin/clang
 ENV HOST_CXX $CLANG_HOME/bin/clang++
 SHELL ["/bin/bash", "-l", "-c"]
