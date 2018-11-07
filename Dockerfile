@@ -121,7 +121,7 @@ RUN mkdir -p $ANDROID_HOME; \
 #Install Android NDK
 RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
     cd /home/jenkins/.mozbuild/android-ndk-linux; \
-    wget --output-document=ndk.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-ndk/android-ndk-r18b-linux-x86_64.zip'; \
+    wget --output-document=ndk.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-ndk/android-ndk-r18-beta1-linux-x86_64.zip'; \
     unzip ndk.zip; \
     rm -r ndk.zip;
 
