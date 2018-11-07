@@ -975,6 +975,13 @@
   <!-- Cliqz Bond -->
   <string name="bond_dashboard_today_title">&bond_dashboard_today_title;</string>
   <string name="bond_dashboard_week_title">&bond_dashboard_week_title;</string>
+  <string name="bond_dashboard_contols_pause">&bond_dashboard_contols_pause;</string>
+  <string name="bond_dashboard_contols_start">&bond_dashboard_contols_start;</string>
+  <string name="bond_dashboard_contols_vpn">&bond_dashboard_contols_vpn;</string>
+  <string name="bond_dashboard_contols_clear">&bond_dashboard_contols_clear;</string>
+  <string name="bond_dashboard_contols_on">&bond_dashboard_contols_on;</string>
+  <string name="bond_dashboard_contols_off">&bond_dashboard_contols_off;</string>
+  <string name="bond_dashboard_ultimate_protection">&bond_dashboard_ultimate_protection;</string>
   <!-- Cliqz end -->
 
 </resources>

@@ -83,6 +83,11 @@ public class SiteTrackersFragment extends ControlCenterFragment implements View.
     }
 
     @Override
+    public void refreshUIComponent(int id, boolean optionValue) {
+
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.block_all:

@@ -47,6 +47,10 @@ public abstract class BaseControlCenterPagerAdapter extends FragmentPagerAdapter
         mFragmentList.get(position).refreshUI();
     }
 
+    public void updateViewComponent(int position,int id, boolean optionValue) {
+        mFragmentList.get(position).refreshUIComponent(id,optionValue);
+    }
+
     abstract void init(ControlCenterCallbacks controlCenterCallbacks);
 
     public interface ControlCenterCallbacks {

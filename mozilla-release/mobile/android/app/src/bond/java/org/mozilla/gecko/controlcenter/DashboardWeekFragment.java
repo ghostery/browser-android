@@ -3,17 +3,12 @@ package org.mozilla.gecko.controlcenter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.util.GeckoBundle;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Copyright © Cliqz 2018
@@ -39,5 +34,10 @@ public class DashboardWeekFragment extends ControlCenterFragment {
 
     @Override
     public void refreshUI() {
+    }
+
+    @Override
+    public void refreshUIComponent(int id, boolean optionValue) {
+
     }
 }

@@ -15,4 +15,6 @@ public abstract class ControlCenterFragment extends Fragment {
     public abstract void updateUI(GeckoBundle data);
 
     public abstract void refreshUI();
+
+    public abstract void refreshUIComponent(int id, boolean optionValue);
 }

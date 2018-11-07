@@ -307,3 +307,10 @@
 <!-- Cliqz Bond -->
 <!ENTITY bond_dashboard_today_title "TODAY">
 <!ENTITY bond_dashboard_week_title "LAST 7 Days">
+<!ENTITY bond_dashboard_contols_pause "Pause">
+<!ENTITY bond_dashboard_contols_start "Start">
+<!ENTITY bond_dashboard_contols_vpn "VPN">
+<!ENTITY bond_dashboard_contols_clear "Clear">
+<!ENTITY bond_dashboard_contols_on "ON">
+<!ENTITY bond_dashboard_contols_off "OFF">
+<!ENTITY bond_dashboard_ultimate_protection "ULTIMATE PROTECTION:">

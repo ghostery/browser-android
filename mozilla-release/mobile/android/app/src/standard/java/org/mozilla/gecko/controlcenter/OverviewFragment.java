@@ -356,6 +356,11 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     }
 
     @Override
+    public void refreshUIComponent(int id, boolean optionValue) {
+
+    }
+
+    @Override
     public void onClick(View v) {
         if (controlCenterSettingsData == null) {
             return;
