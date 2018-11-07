@@ -358,4 +358,5 @@
     <!-- Intro -->
     <color name="cliqz_intro_text_color">@android:color/white</color>
     <!-- Cliqz end -->
+
 </resources>

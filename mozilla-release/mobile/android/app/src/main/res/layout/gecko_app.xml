@@ -75,6 +75,12 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
+                    <ViewStub
+                        android:id="@+id/bond_dashboard_controls"
+                        android:layout="@layout/bond_dashboard_controls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
                     <org.mozilla.gecko.widget.themed.ThemedTabLayout
                         android:id="@+id/control_center_tab_layout"
                         android:layout_width="match_parent"

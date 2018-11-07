@@ -8,4 +8,6 @@
     <dimen name="dashboard_measurement_unit_size">10sp</dimen>
     <dimen name="dashboard_item_title_size">14sp</dimen>
     <dimen name="dashboard_item_content_size">12sp</dimen>
+    <dimen name="dashboard_state_text_size">20sp</dimen>
+    <dimen name="dashboard_controls_title_size">16sp</dimen>
 </resources>

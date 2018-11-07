@@ -185,4 +185,8 @@ public class ThemedTabLayout extends android.support.design.widget.TabLayout
             setPrivateMode(tab.isPrivate());
         }
     }
+//
+//    public void setStyle() {
+//
+//    }
 }

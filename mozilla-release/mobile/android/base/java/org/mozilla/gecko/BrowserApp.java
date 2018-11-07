@@ -37,12 +37,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -144,7 +142,6 @@ import org.mozilla.gecko.menu.GeckoMenuItem;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationHelper;
-import org.mozilla.gecko.onboarding.CliqzIntroPagerAdapter;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.Countries;
@@ -217,6 +214,7 @@ import java.util.regex.Pattern;
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
 import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
+import static org.mozilla.gecko.util.ViewUtil.getVectorDrawable;
 
 public class BrowserApp extends GeckoApp
                         implements ActionModePresenter,
@@ -313,6 +311,9 @@ public class BrowserApp extends GeckoApp
 
     // Minimum app launches until we show the dialog to set default browser.
     private static final int MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT = 3;
+    private TextView stateButtonBondDashboard;
+    private TextView vpnButtonBondDashboard;
+    private TextView clearButtonBondDashboard;
     /* Cliqz End */
 
     public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
@@ -858,6 +859,10 @@ public class BrowserApp extends GeckoApp
         final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
+
+        if(BuildConfig.FLAVOR_skin.equals("bond")) {
+            initBondControlButtons();
+        }
         /*Cliqz end*/
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
@@ -4787,5 +4792,61 @@ public class BrowserApp extends GeckoApp
         return (mCliqzIntroPagerHolder == null || mCliqzIntroPagerHolder.getVisibility() != View.VISIBLE) &&
                 super.setRequestedOrientationForCurrentActivity(requestedActivityInfoOrientation);
     }
+
+    public void initBondControlButtons() {
+        final View bondDashboardControlsView = ((ViewStub) findViewById(R.id
+                .bond_dashboard_controls)).inflate();
+        stateButtonBondDashboard = (TextView) bondDashboardControlsView.findViewById
+                (R.id.bond_dashboard_state_button);
+        vpnButtonBondDashboard = (TextView) bondDashboardControlsView.findViewById(R.id
+                .bond_dashboard_vpn_button);
+        clearButtonBondDashboard = (TextView) bondDashboardControlsView.findViewById(R.id
+                .bond_dashboard_clear_button);
+
+        stateButtonBondDashboard.setTag(true); //@todo real state, maybe from preference
+        vpnButtonBondDashboard.setTag(true); //@todo real state, maybe from preference
+
+        stateButtonBondDashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final boolean changedState = !(boolean)v.getTag();
+                v.setTag(changedState);
+                bondDashboardStateChange(changedState);
+            }
+        });
+
+        vpnButtonBondDashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideControlCenter();
+            }
+        });
+
+        clearButtonBondDashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mControlCenterPagerAdapter.updateViewComponent(0,R.id
+                        .bond_dashboard_clear_button,false);
+            }
+        });
+
+    }
+
+    public void bondDashboardStateChange(boolean isEnabled) {
+        final int stateDrawbaleId;
+        final int stateTextId;
+        if(isEnabled) {
+            stateDrawbaleId = R.drawable.ic_bond_pause;
+            stateTextId = R.string.bond_dashboard_contols_pause;
+        } else {
+            stateDrawbaleId = R.drawable.ic_bond_start;
+            stateTextId = R.string.bond_dashboard_contols_start;
+        }
+        stateButtonBondDashboard.setCompoundDrawablesWithIntrinsicBounds(null,getVectorDrawable
+                        (this,stateDrawbaleId),null, null);
+        stateButtonBondDashboard.setText(getString(stateTextId));
+        mControlCenterPagerAdapter.updateViewComponent(0,R.id.bond_dashboard_state_button,isEnabled);
+    }
+
     /* Cliqz end */
 }

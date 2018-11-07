@@ -246,6 +246,7 @@ android {
                 srcDir "${topsrcdir}/mobile/android/app/src/photon/java" //need to include the sources in the photon folder
             }
             res {
+                srcDir "${topsrcdir}/mobile/android/app/src/bond/res"
                 srcDir "${topsrcdir}/mobile/android/app/src/photon/res" //need to include the sources in the photon folder
             }
         }

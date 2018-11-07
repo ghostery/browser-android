@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright © Cliqz 2018-->
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dash_board_list_view"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    android:padding="@dimen/padding_20" />
+    android:orientation="vertical"
+    android:padding="@dimen/padding_20">
+
+    <TextView
+        android:id="@+id/dashboard_state_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_16"
+        android:textAlignment="center"
+        android:textColor="@color/general_blue_color"
+        android:textSize="@dimen/dashboard_state_text_size"
+        tools:text="@string/bond_dashboard_ultimate_protection" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dash_board_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/dashboard_state_text" />
+
+    <View
+        android:id="@+id/dashboard_disable_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/dashboard_state_text"
+        android:background="@color/dark_transparent_overlay"
+        android:visibility="gone" />
+
+</RelativeLayout>

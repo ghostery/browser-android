@@ -33,6 +33,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private List<DashboardItemEntity> mDashboardItems;
     private enum ItemType {ONE_VIEW, TWO_VIEWS}
     private final int MIN_MONEY_BAR_VALUE = 5;
+    public static final int AVERAGE_MONEY_BAR_VALUE = 5;
 
     public DashboardAdapter(Context context) {
         mContext = context;
@@ -229,5 +230,14 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             item.itemMeasurementView = (TextView) view.findViewById(R.id.item_measurement);
             item.itemIconView = (ImageView) view.findViewById(R.id.item_icon);
         }
+    }
+
+    public void resetData() {
+        for(int i = 0;i < mDashboardItems.size(); i++) {
+            if(!mDashboardItems.get(i).getMeasurementValue().equals("")) {
+                mDashboardItems.get(i).setMeasurementValue("0");
+            }
+        }
+        notifyDataSetChanged();
     }
 }
