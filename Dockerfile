@@ -8,7 +8,7 @@ RUN dpkg --add-architecture i386 && \
     apt-get install -y software-properties-common && \
     add-apt-repository universe && \
     apt-get update && \
-    apt-get install -y \FF
+    apt-get install -y \
         autoconf2.13 \
         build-essential \
         ccache \
