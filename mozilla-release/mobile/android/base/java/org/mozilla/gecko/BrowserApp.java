@@ -3964,11 +3964,13 @@ public class BrowserApp extends GeckoApp
         }
 
         // Action providers are available only ICS+.
+        /* Cliqz Start o/
         GeckoMenuItem share = (GeckoMenuItem) mMenu.findItem(R.id.share);
 
         GeckoActionProvider provider = GeckoActionProvider.getForType(GeckoActionProvider.DEFAULT_MIME_TYPE, this);
 
         share.setActionProvider(provider);
+        /o Cliqz End */
 
         return true;
     }
