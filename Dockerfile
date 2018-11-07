@@ -87,7 +87,7 @@ RUN set -eux; \
 # Change to User Jenkins and Set Environment Variables
 USER jenkins
 ENV ANDROID_HOME /home/jenkins/.mozbuild/android-sdk-linux
-ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r18-beta1
+ENV ANDROID_NDK_HOME /home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r16b
 ENV PATH "/home/jenkins/.local/bin:/home/jenkins/node-v8.11.4-linux-x64/bin:$PATH"
 ENV NVM_DIR /home/jenkins/nvm
 ENV NODE_VERSION 8.11.4
@@ -121,7 +121,7 @@ RUN mkdir -p $ANDROID_HOME; \
 #Install Android NDK
 RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
     cd /home/jenkins/.mozbuild/android-ndk-linux; \
-    wget --output-document=ndk.zip --quiet 'https://repository.cliqz.com/dist/android/artifacts/android-ndk/android-ndk-r18-beta1-linux-x86_64.zip'; \
+    wget --output-document=ndk.zip --quiet 'https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip'; \
     unzip ndk.zip; \
     rm -r ndk.zip;
 
