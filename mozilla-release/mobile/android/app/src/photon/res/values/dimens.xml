@@ -322,6 +322,7 @@
 
     <!-- bond -->
     <dimen name="bond_dashboard_controls_title_size">16sp</dimen>
+    <dimen name="tabs_layout_title_text_size">12sp</dimen>
     <!-- Cliqz end -->
 
 </resources>

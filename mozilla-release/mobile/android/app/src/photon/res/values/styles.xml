@@ -5,8 +5,7 @@
 
 <resources
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:gecko="http://schemas.android.com/apk/res-auto">
+        xmlns:tools="http://schemas.android.com/tools">
 
     <!--
         Base application styles. This could be overridden in other res/values-XXX/themes.xml.
@@ -1068,7 +1067,7 @@
 
     <!--Cliqz Start-->
     <style name="TabLayoutStyle" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/tabs_layout_title_text_size</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
@@ -1117,6 +1116,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">0.33</item>
     </style>
+
+    <!--<style name="tab_layout_style">-->
+        <!--<item name="tabTextAppearance">@style/TabLayoutStyle</item>-->
+        <!--<item name="android:background">@drawable/url_bar_bg</item>-->
+        <!--<item name="tabSelectedTextColor">@android:color/white</item>-->
+        <!--<item name="tabIndicatorColor">@android:color/white</item>-->
+    <!--</style>-->
     <!--Cliqz End-->
 
 </resources>
