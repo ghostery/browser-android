@@ -33,6 +33,7 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -97,6 +98,7 @@ import org.mozilla.gecko.anolysis.ControlCenterMetrics;
 import org.mozilla.gecko.antiphishing.AntiPhishing;
 import org.mozilla.gecko.antiphishing.AntiPhishingDialog;
 import org.mozilla.gecko.antiphishing.AntiPhishingUtils;
+import org.mozilla.gecko.authentication.TestClass;
 import org.mozilla.gecko.bookmarks.BookmarkEditFragment;
 import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
@@ -201,6 +203,8 @@ import org.mozilla.geckoview.GeckoSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -209,11 +213,15 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
-import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
+import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.ViewUtil.getVectorDrawable;
 
 public class BrowserApp extends GeckoApp
@@ -3996,7 +4004,8 @@ public class BrowserApp extends GeckoApp
         }
 
         if (itemId == R.id.new_tab) {
-            addTab();
+            //addTab();
+            new TestClass().test();
             return true;
         }
 

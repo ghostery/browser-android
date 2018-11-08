@@ -1,0 +1,55 @@
+// Service definition for bond server
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "org.mozilla.gecko";
+option java_outer_classname = "BondServerProto";
+
+service BondV1 {
+  rpc RegisterDevice(UserAuth) returns (Response);
+  rpc ResendActivationEmail(UserAuth) returns (Response);
+  rpc IsDeviceActivated(UserAuth) returns (Response);
+  rpc GetSubscriptions(UserAuth) returns (Subscriptions);
+  rpc GetVpnCredentials(UserAuth) returns (VpnResponse);
+}
+
+// General enume to hold error codes, common to the whole service
+enum ErrorCode {
+  UNDEFINED = 0;
+  USERNAME_FORMAT_INVALID = 1;
+  USERNAME_TAKEN = 2;
+  PASSWORD_INSECURE = 3;
+  CREDENTIALS_INVALID = 4;
+  CREDENTIALS_FAILED = 5;
+  CREDENTIALS_EXPIRED = 6;
+  INTERNAL = 7;
+  UNAUTHORIZED = 8;
+  EMAIL_UNCONFIRMED = 9;
+}
+
+message Error {
+  ErrorCode code = 1;
+  string msg = 2;
+  // user facing message if any, localised in <lang>:<value>
+  map <string, string> usermsg = 3;
+}
+
+message Response {
+  repeated Error error = 1;
+  string msg = 2;
+};
+
+message UserAuth {
+  string username = 1;
+  string password = 2;
+}
+
+message VpnResponse {
+  repeated Error error = 1;
+  string username = 2;
+  string password = 3;
+}
+
+message Subscriptions {
+  repeated Error error = 1;
+  repeated string name = 2;
+}
