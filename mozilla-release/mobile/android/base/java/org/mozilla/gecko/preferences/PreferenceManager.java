@@ -34,6 +34,11 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.PREFS_MYOFFRZ_ONBOARDING_ENABLED, value).apply();
     }
 
+    public boolean isMyOffrzOnboardingEnabled() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_MYOFFRZ_ONBOARDING_ENABLED,
+                true);
+    }
+
     public void setTelemetryEnabled(boolean value) {
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
         editor.putBoolean(GeckoPreferences.CLIQZ_TELEMETRY_ENABLED, value).apply();
