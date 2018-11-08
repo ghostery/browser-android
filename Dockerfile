@@ -82,7 +82,7 @@ RUN set -eux; \
     rustup default 1.29.2-x86_64-unknown-linux-gnu; \
     rustup target add i686-linux-android; \
     rustup target add armv7-linux-androideabi; \
-    cargo install cbindgen
+    cargo install cbindgen --vers="0.6.6" --force
 
 # Change to User Jenkins and Set Environment Variables
 USER jenkins
