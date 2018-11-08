@@ -11,7 +11,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
@@ -40,9 +39,6 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import static android.support.v4.content.ContextCompat.getDrawable;
-import static android.view.View.GONE;
-
 /**
  * Cliqz 2018
  * This file is derived from @{@link TopSitesPanel}.java
@@ -59,7 +55,7 @@ public class MyOffrzPanel extends HomeFragment {
     private static final String TEMPLATE_PICTURE_KEY = "picture_url";
     private static final String TEMPLATE_CONDITIONS = "conditions";
     // TODO: Also the fallback shlud depend on branding
-    private static final String ERROR_URL_FALLBAK = "http://ghostery.com";
+    private static final String ERROR_URL_FALLBACK = "http://ghostery.com";
     private static final String CALL_TO_ACTION_KEY = "call_to_action";
     private static final String CALL_TO_ACTION_TEXT_KEY = "text";
     private static final String CALL_TO_ACTION_URL_KEY = "url";
@@ -142,10 +138,12 @@ public class MyOffrzPanel extends HomeFragment {
         updateLayouts();
     }
 
-    private void updateLayouts(){
-        myOffrzDeactivateView.setVisibility(GONE);
-        onboardingVG.setVisibility(View.VISIBLE);
-        for(int i = 0 ; i < offersContainer.getChildCount();i++){
+    private void updateLayouts() {
+        myOffrzDeactivateView.setVisibility(View.GONE);
+        if (mPreferenceManager.isMyOffrzOnboardingEnabled()) {
+            onboardingVG.setVisibility(View.VISIBLE);
+        }
+        for (int i = 0 ; i < offersContainer.getChildCount(); i++) {
             View curChild = offersContainer.getChildAt(i);
             if (curChild.getId() == R.id.offer_card){
                 curChild.findViewById(R.id.terms_and_conditions_btn).setClickable(true);
@@ -161,7 +159,7 @@ public class MyOffrzPanel extends HomeFragment {
     }
 
     private void closeOnboarding() {
-        onboardingVG.setVisibility(GONE);
+        onboardingVG.setVisibility(View.GONE);
         mPreferenceManager.setMyOffrzOnboardingEnabled(false);
     }
 
@@ -176,7 +174,7 @@ public class MyOffrzPanel extends HomeFragment {
 
         @Override
         public void onLoadFinished(Loader<JSONObject> loader, JSONObject data) {
-            progressBar.setVisibility(GONE);
+            progressBar.setVisibility(View.GONE);
             if (data == null) {
                 // display an error message here
                 offersOuterContainer.setVisibility(View.INVISIBLE);
@@ -184,7 +182,7 @@ public class MyOffrzPanel extends HomeFragment {
                 return;
             }
             offersOuterContainer.setVisibility(View.VISIBLE);
-            emptyOffersOuterContainer.setVisibility(GONE);
+            emptyOffersOuterContainer.setVisibility(View.GONE);
 
             // Remove all previous offers if needed
             final List<View> toBeRemoved = new LinkedList<>();
@@ -219,34 +217,34 @@ public class MyOffrzPanel extends HomeFragment {
             }
 
             holder.title.setText(templateData.optString(TEMPLATE_TITLE_KEY, ERROR_FALLBACK));
-            holder.setOfferUrl(callToActionData.optString(CALL_TO_ACTION_URL_KEY, ERROR_URL_FALLBAK));
+            holder.setOfferUrl(callToActionData.optString(CALL_TO_ACTION_URL_KEY, ERROR_URL_FALLBACK));
             holder.goToOffer
                     .setText(callToActionData.optString(CALL_TO_ACTION_TEXT_KEY, ERROR_FALLBACK));
             if (!templateData.has(TEMPLATE_CODE_KEY)) {
-                holder.tapCodeToCopy.setVisibility(GONE);
-                holder.copyCode.setVisibility(GONE);
+                holder.tapCodeToCopy.setVisibility(View.GONE);
+                holder.copyCode.setVisibility(View.GONE);
             } else {
                 final String code = templateData.optString(TEMPLATE_CODE_KEY, ERROR_FALLBACK);
                 holder.copyCode.setText(code);
                 holder.setCode(code);
             }
             if (!templateData.has(TEMPLATE_DESCRIPTION_KEY)) {
-                holder.description.setVisibility(GONE);
+                holder.description.setVisibility(View.GONE);
             } else {
                 holder.description.setText(templateData.optString(TEMPLATE_DESCRIPTION_KEY, ERROR_FALLBACK));
             }
 
             if (!templateData.has(TEMPLATE_PICTURE_KEY)) {
-                holder.image.setVisibility(GONE);
+                holder.image.setVisibility(View.GONE);
             } else {
                 Picasso.with(getContext())
-                        .load(Uri.parse(templateData.optString(TEMPLATE_PICTURE_KEY, ERROR_URL_FALLBAK)))
+                        .load(Uri.parse(templateData.optString(TEMPLATE_PICTURE_KEY, ERROR_URL_FALLBACK)))
                         .into(holder.image);
             }
 
             if (!templateData.has(TEMPLATE_CONDITIONS)) {
-                holder.termsAndConditions.setVisibility(GONE);
-                holder.termsAndConditionsButton.setVisibility(GONE);
+                holder.termsAndConditions.setVisibility(View.GONE);
+                holder.termsAndConditionsButton.setVisibility(View.GONE);
             } else {
                 holder.termsAndConditions.setText(templateData.optString(TEMPLATE_CONDITIONS, ERROR_FALLBACK));
             }
@@ -328,11 +326,11 @@ public class MyOffrzPanel extends HomeFragment {
             termsAndConditionsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (termsAndConditions.getVisibility() == GONE) {
+                    if (termsAndConditions.getVisibility() == View.GONE) {
                         termsAndConditions.setVisibility(View.VISIBLE);
                         termsAndConditionsButton.setSelected(true);
                     } else {
-                        termsAndConditions.setVisibility(GONE);
+                        termsAndConditions.setVisibility(View.GONE);
                         termsAndConditionsButton.setSelected(false);
                     }
                 }
