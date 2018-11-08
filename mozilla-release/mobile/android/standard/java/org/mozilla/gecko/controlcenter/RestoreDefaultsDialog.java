@@ -54,7 +54,7 @@ public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
                 evd.dispatch("Privacy:SetInfo", geckoBundle);
 
                 final GeckoBundle updatePolicyBundle = new GeckoBundle();
-                updatePolicyBundle.putString("blockingPolicy", "UPDATE_BLOCK_RECOMMENDED");
+                updatePolicyBundle.putString("blockingPolicy", "BLOCKING_POLICY_RECOMMENDED");
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
