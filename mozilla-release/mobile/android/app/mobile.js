@@ -917,4 +917,6 @@ pref("general.useragent.override.google.de", "Mozilla/5.0 (Linux; Android 8.0.0;
 
 /* Cliqz start */
 pref("media.autoplay.enabled", false);
+// Prevent mozaddonmanager on AMO
+pref("privacy.resistFingerprinting.block_mozAddonManager", true); 
 /* Cliqz end */
