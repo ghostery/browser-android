@@ -358,8 +358,10 @@
   <string name="datareporting_notification_summary">&datareporting_notification_summary;</string>
   <string name="datareporting_notification_ticker_text">&datareporting_notification_ticker_text;</string>
 
-  <string name="datareporting_telemetry_title">&datareporting_telemetry_title;</string>
-  <string name="datareporting_telemetry_summary">&datareporting_telemetry_summary;</string>
+  <!-- Cliqz Start -->
+  <string name="datareporting_telemetry_title">&datareporting_telemetry_title2;</string>
+  <string name="datareporting_telemetry_summary">&datareporting_telemetry_summary2;</string>
+  <!-- Cliqz End -->
   <string name="datareporting_fhr_title">&datareporting_fhr_title;</string>
   <string name="datareporting_fhr_summary2">&datareporting_fhr_summary2;</string>
   <string name="datareporting_crashreporter_title_short">&datareporting_crashreporter_title_short;</string>
