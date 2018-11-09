@@ -13,10 +13,9 @@ import android.widget.TextView;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.util.GeckoBundle;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mozilla.gecko.controlcenter.DashboardAdapter.AVERAGE_MONEY_BAR_VALUE;
 
 /**
  * Copyright © Cliqz 2018
@@ -118,8 +117,10 @@ public class DashboardTodayFragment extends ControlCenterFragment {
         dashboardItems.add(new DashboardItemEntity("4000","\n\tCOMPANIES",R.drawable
                 .ic_eye,"Tracker Companies blocked",
                 "...companies with most trackers: Google, Amaozn, Facebook,...", -1));
+        /* @todo unhide the money item
         dashboardItems.add(new DashboardItemEntity("261","EUR",-1,"Money saved",
                 "...how much is your time worth per h", AVERAGE_MONEY_BAR_VALUE));
+        */
         mDashboardAdapter.addItems(dashboardItems);
     }
 }
