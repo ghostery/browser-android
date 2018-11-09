@@ -1040,7 +1040,7 @@ public class BrowserApp extends GeckoApp
         super.onConfigurationChanged(newConfig);
         hideControlCenter();
         final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mControlCenterContainer.getLayoutParams();
-        if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             final DisplayMetrics displayMetrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             final int width = displayMetrics.widthPixels;
