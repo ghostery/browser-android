@@ -301,7 +301,8 @@
     <!-- Control Center -->
     <dimen name="ghostery_list_item_action_button_width">90dp</dimen>
     <dimen name="ghostery_overview_button_width">225dp</dimen>
-    <dimen name="ghostery_cc_donut_text_size">18sp</dimen>
+    <dimen name="ghostery_cc_donut_number_size">32sp</dimen>
+    <dimen name="ghostery_cc_donut_text_size">16sp</dimen>
 
     <!-- History and bookmarks view -->
     <dimen name="ghostery_history_icon_width">48dp</dimen>
