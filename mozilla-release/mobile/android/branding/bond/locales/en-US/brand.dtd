@@ -2,14 +2,14 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY  brandShortName  "Cliqz">
-<!ENTITY  vendorShortName "Cliqz">
-<!ENTITY  vendorName      "Cliqz GmbH">
-<!ENTITY  brandFullName   "Cliqz Browser">
-<!ENTITY  brandMyOffrz    "Cliqz Offers">
+<!ENTITY  brandShortName  "Lumen">
+<!ENTITY  vendorShortName "Lumen">
+<!ENTITY  vendorName      "Lumen GmbH">
+<!ENTITY  brandFullName   "Lumen Browser">
+<!ENTITY  brandMyOffrz    "Lumen Offers">
 <!ENTITY  brandPocket     "Pocket">
-<!ENTITY  firstrun_urlbar_subtext "Cliqz - A fast and private browser. Made in Germany">
-<!ENTITY  pref_new_tab_category "Cliqz Tab">
+<!ENTITY  firstrun_urlbar_subtext "Lumen - A fast and private browser. Made in Germany">
+<!ENTITY  pref_new_tab_category "Lumen Tab">
 <!ENTITY  pref_human_web_url "https://cliqz.com/whycliqz/human-web">
 <!ENTITY  pref_help_faq_url "https://cliqz.com/support">
 <!ENTITY  pref_myoffrz_url "https://cliqz.com/myoffrz">
