@@ -1193,7 +1193,7 @@ public abstract class GeckoApp extends GeckoActivity
                     // If there's a session restore, we add a new start tab.
                     final Tab selectedTab = Tabs.getInstance().getSelectedTab();
                     if (selectedTab != null && !AboutPages.isAboutHome(selectedTab.getURL())) {
-                        Tabs.getInstance().addTab();
+                        Tabs.getInstance().addTab(Tabs.LOADURL_START_EDITING);
                     }
                     /* Cliqz End */
                 }
