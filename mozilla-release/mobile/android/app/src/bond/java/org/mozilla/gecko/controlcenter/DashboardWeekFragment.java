@@ -19,8 +19,7 @@ public class DashboardWeekFragment extends ControlCenterFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.bond_dashboard_week_fragment, container, false);
-        return view;
+        return inflater.inflate(R.layout.bond_dashboard_week_fragment, container, false);
     }
 
     @Override

@@ -26,7 +26,6 @@ import java.util.List;
 /**
  * Copyright © Cliqz 2018
  */
-
 public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
@@ -45,11 +44,11 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (viewType == ItemType.ONE_VIEW.ordinal()) {
             final View view = LayoutInflater.from(mContext).inflate(R.layout.dashboard_item1,
                     parent, false);
-            return new ViewHolder(view);
+            return new ItemViewHolder(view);
         } else {
             final View view = LayoutInflater.from(mContext).inflate(R.layout.dashboard_item2,
                     parent, false);
-            return new ViewHolder2(view);
+            return new TwoItemsViewHolder(view);
         }
     }
 
@@ -73,28 +72,29 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder.getItemViewType() == ItemType.TWO_VIEWS.ordinal()) {
-            final ViewHolder2 viewHolder = (ViewHolder2) holder;
+            final TwoItemsViewHolder viewHolder = (TwoItemsViewHolder) holder;
             setTwoItemsRowValues(viewHolder.leftItem, mDashboardItems.get(position));
             setTwoItemsRowValues(viewHolder.rightItem, mDashboardItems.get(position + 1));
         } else {
-            final ViewHolder viewHolder = (ViewHolder) holder;
+            final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
             // +1 because first 2 items is combined in 1 item
             final DashboardItemEntity curItem = mDashboardItems.get(position + 1);
 
             if (curItem.getIconResId() != -1) {
                 final Drawable drawable = VectorDrawableCompat.create(mContext.getResources(), curItem
                         .getIconResId(), null);
-                viewHolder.itemIconView.setVisibility(View.VISIBLE);
-                viewHolder.itemIconView.setImageDrawable(drawable);
+                itemViewHolder.itemIconView.setVisibility(View.VISIBLE);
+                itemViewHolder.itemIconView.setImageDrawable(drawable);
             } else {
-                viewHolder.itemIconView.setVisibility(View.GONE);
+                itemViewHolder.itemIconView.setVisibility(View.GONE);
             }
 
             if(curItem.getMeasurementValue().isEmpty()) { // no measurement value
-                viewHolder.itemMeasurementView.setVisibility(View.GONE);
+                itemViewHolder.itemMeasurementView.setVisibility(View.GONE);
             } else {
-                viewHolder.itemMeasurementView.setVisibility(View.VISIBLE);
-                Spannable spannableValue, spannableUnit;
+                itemViewHolder.itemMeasurementView.setVisibility(View.VISIBLE);
+                final Spannable spannableValue = new SpannableString(curItem.getMeasurementValue());
+                final Spannable spannableUnit = new SpannableString(curItem.getMeasurementUnit());
                 String separator;
                 if (curItem.getIconResId() != -1) { //measurement value exist with  icon
                     final int valueTextSize = (int)mContext.getResources()
@@ -102,50 +102,45 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     final int unitTextSize = (int)mContext.getResources()
                             .getDimension(R.dimen.dashboard_measurement_unit_size);
 
-                    spannableValue = new SpannableString(curItem.getMeasurementValue());
                     spannableValue.setSpan(new AbsoluteSizeSpan(valueTextSize), 0,
                             curItem.getMeasurementValue().length(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    spannableUnit = new SpannableString(curItem.getMeasurementUnit());
                     spannableUnit.setSpan(new AbsoluteSizeSpan(unitTextSize), 0,
                             curItem.getMeasurementUnit().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    viewHolder.itemMeasurementView.setTypeface(Typeface.SANS_SERIF);
+                    itemViewHolder.itemMeasurementView.setTypeface(Typeface.SANS_SERIF);
                     separator = "";
                 } else { //measurement value exist with no icon
                     final int valueTextSize = (int)mContext.getResources()
                             .getDimension(R.dimen.dashboard_measurement_value_size_large);
 
-                    viewHolder.itemMeasurementView.setVisibility(View.VISIBLE);
-                    spannableValue = new SpannableString(curItem.getMeasurementValue());
                     spannableValue.setSpan(new TypefaceSpan(mContext.getString(R.string.roboto_light))
                             , 0, curItem.getMeasurementValue().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    spannableUnit = new SpannableString(curItem.getMeasurementUnit());
                     spannableUnit.setSpan(new TypefaceSpan(mContext.getString(R.string.roboto_medium))
                             , 0, curItem.getMeasurementUnit().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    viewHolder.itemMeasurementView.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueTextSize);
+                    itemViewHolder.itemMeasurementView.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueTextSize);
                     separator = "\n";
                 }
-                viewHolder.itemMeasurementView.setText(TextUtils.concat(spannableValue,separator,spannableUnit));
+                itemViewHolder.itemMeasurementView.setText(TextUtils.concat(spannableValue,separator,spannableUnit));
             }
-            viewHolder.itemTitleView.setText(curItem.getTitle());
-            viewHolder.itemContentView.setText(curItem.getContent());
+            itemViewHolder.itemTitleView.setText(curItem.getTitle());
+            itemViewHolder.itemContentView.setText(curItem.getContent());
 
             if(curItem.getOptionValue() == -1) {
-                viewHolder.itemMoneyBarView.setVisibility(View.GONE);
-                viewHolder.itemMoneyBarValueView.setVisibility(View.GONE);
+                itemViewHolder.itemMoneyBarView.setVisibility(View.GONE);
+                itemViewHolder.itemMoneyBarValueView.setVisibility(View.GONE);
             } else {
-                viewHolder.itemMoneyBarView.setVisibility(View.VISIBLE);
+                itemViewHolder.itemMoneyBarView.setVisibility(View.VISIBLE);
                 final int curMoneyValue = curItem.getOptionValue() + MIN_MONEY_BAR_VALUE;
-                viewHolder.itemMoneyBarView.setProgress(curMoneyValue);
-                viewHolder.itemMoneyBarValueView.setText(String.valueOf(curItem.getOptionValue() +
+                itemViewHolder.itemMoneyBarView.setProgress(curMoneyValue);
+                itemViewHolder.itemMoneyBarValueView.setText(String.valueOf(curItem.getOptionValue() +
                         MIN_MONEY_BAR_VALUE).concat("€"));
 
-                viewHolder.itemMoneyBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                itemViewHolder.itemMoneyBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        viewHolder.itemMoneyBarValueView.setText(String.valueOf(progress +
+                        itemViewHolder.itemMoneyBarValueView.setText(String.valueOf(progress +
                                 MIN_MONEY_BAR_VALUE).concat(" €"));
                     }
 
@@ -160,7 +155,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     }
                 });
 
-                viewHolder.itemMoneyBarValueView.setVisibility(View.VISIBLE);
+                itemViewHolder.itemMoneyBarValueView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -179,13 +174,13 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // @TODO fetch the data and fill the list
     }
 
-    void addItems(List<DashboardItemEntity> items) {
+    public void addItems(List<DashboardItemEntity> items) {
         mDashboardItems.clear();
         mDashboardItems.addAll(items);
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
         public ImageView itemIconView;
         public TextView itemMeasurementView;
         public TextView itemTitleView;
@@ -193,7 +188,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public SeekBar itemMoneyBarView;
         public TextView itemMoneyBarValueView;
 
-        public ViewHolder(View itemView) {
+        public ItemViewHolder(View itemView) {
             super(itemView);
             itemIconView = (ImageView) itemView.findViewById(R.id.item_icon);
             itemMeasurementView = (TextView) itemView.findViewById(R.id.item_measurement);
@@ -204,31 +199,31 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public class ItemStructure {
+    private class ItemStructure {
         public ImageView itemIconView;
         public TextView itemMeasurementView;
         public TextView itemTitleView;
         public TextView itemContentView;
     }
 
-    public class ViewHolder2 extends RecyclerView.ViewHolder {
+    private class TwoItemsViewHolder extends RecyclerView.ViewHolder {
         final ItemStructure leftItem, rightItem;
 
-        public ViewHolder2(View itemView) {
+        public TwoItemsViewHolder(View itemView) {
             super(itemView);
-            leftItem = new ItemStructure();
             final View leftView = itemView.findViewById(R.id.left_item);
-            findViews(leftView, leftItem);
-            rightItem = new ItemStructure();
+            leftItem = findViews(leftView);
             final View rightView = itemView.findViewById(R.id.right_item);
-            findViews(rightView, rightItem);
+            rightItem = findViews(rightView);
         }
 
-        public void findViews(View view, ItemStructure item) {
+        private ItemStructure findViews(View view) {
+            final ItemStructure item = new ItemStructure();
             item.itemTitleView = (TextView) view.findViewById(R.id.item_title);
             item.itemContentView = (TextView) view.findViewById(R.id.item_content);
             item.itemMeasurementView = (TextView) view.findViewById(R.id.item_measurement);
             item.itemIconView = (ImageView) view.findViewById(R.id.item_icon);
+            return item;
         }
     }
 

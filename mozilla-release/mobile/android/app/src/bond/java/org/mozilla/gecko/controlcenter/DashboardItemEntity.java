@@ -3,7 +3,6 @@ package org.mozilla.gecko.controlcenter;
 /**
  * Copyright © Cliqz 2018
  */
-
 public class DashboardItemEntity {
     private String measurementValue;
     private String measurementUnit;

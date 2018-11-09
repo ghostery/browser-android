@@ -1109,20 +1109,13 @@
     </style>
 
     <style name="bond_dashboard_controls_title">
-        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/bond_dashboard_controls_title_size</item>
         <item name="android:textColor">@color/general_blue_color</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">0.33</item>
     </style>
-
-    <!--<style name="tab_layout_style">-->
-        <!--<item name="tabTextAppearance">@style/TabLayoutStyle</item>-->
-        <!--<item name="android:background">@drawable/url_bar_bg</item>-->
-        <!--<item name="tabSelectedTextColor">@android:color/white</item>-->
-        <!--<item name="tabIndicatorColor">@android:color/white</item>-->
-    <!--</style>-->
     <!--Cliqz End-->
 
 </resources>

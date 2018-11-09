@@ -113,7 +113,7 @@ android {
     project.configureProductFlavors.delegate = it
     project.configureProductFlavors()
 
-    flavorDimensions "audience", "geckoBinaries", "minApi", "skin", "paid"
+    flavorDimensions "audience", "geckoBinaries", "minApi", "skin", "features"
 
     productFlavors {
         // Since Firefox 57, the mobile user interface has followed the Photon design.
@@ -127,17 +127,16 @@ android {
         /* Cliqz start */
         //Photon is the only flavour, which doesnt make sense. But we cant remove it because it has a
         //separate source set which is included by the build system. Merging main and photon source set
-        //will take some refactoring. For now we branch standard and premium from photon
+        //will take some refactoring. For now we branch standard and bond from photon
         bond {
-            dimension "paid"
+            dimension "features"
             versionCode 5
         }
 
         standard {
-            dimension "paid"
-            versionCode 5 //version code can be same as premium because its a different app and package name is different
+            dimension "features"
+            versionCode 5
         }
-
         /* Cliqz end */
     }
 

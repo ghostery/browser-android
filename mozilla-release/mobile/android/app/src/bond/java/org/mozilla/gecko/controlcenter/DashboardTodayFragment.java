@@ -20,7 +20,6 @@ import java.util.List;
 /**
  * Copyright © Cliqz 2018
  */
-
 public class DashboardTodayFragment extends ControlCenterFragment {
 
     private RecyclerView mDashBoardListView;
@@ -65,8 +64,8 @@ public class DashboardTodayFragment extends ControlCenterFragment {
 
         mDashboardStateTextView.setTextColor(ContextCompat.getColor(getContext(),stateTextColorId));
         mDashboardStateTextView.setText(stateText);
-
     }
+
     @Override
     public String getTitle(Context context) {
         return context.getString(R.string.bond_dashboard_today_title);
@@ -101,7 +100,7 @@ public class DashboardTodayFragment extends ControlCenterFragment {
 
     // @Todo should be removed
     public void addDummyData() {
-        List<DashboardItemEntity> dashboardItems = new ArrayList<>();
+        final List<DashboardItemEntity> dashboardItems = new ArrayList<>();
         dashboardItems.add(new DashboardItemEntity("255","MIN",R.drawable.ic_time_circle,"Time Saved",
                 "That you can spend with your friends", -1));
         dashboardItems.add(new DashboardItemEntity("4732","",R.drawable.ic_ad_blocking_shiel,

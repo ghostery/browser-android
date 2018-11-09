@@ -311,9 +311,9 @@ public class BrowserApp extends GeckoApp
 
     // Minimum app launches until we show the dialog to set default browser.
     private static final int MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT = 3;
-    private TextView stateButtonBondDashboard;
-    private TextView vpnButtonBondDashboard;
-    private TextView clearButtonBondDashboard;
+    private TextView mStateButtonBondDashboard;
+    private TextView mVpnButtonBondDashboard;
+    private TextView mClearButtonBondDashboard;
     /* Cliqz End */
 
     public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
@@ -860,7 +860,7 @@ public class BrowserApp extends GeckoApp
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
 
-        if(BuildConfig.FLAVOR_skin.equals("photon") && BuildConfig.FLAVOR_paid.equals("bond")) {
+        if(BuildConfig.FLAVOR_skin.equals("photon") && BuildConfig.FLAVOR_features.equals("bond")) {
             initBondControlButtons();
         }
         /*Cliqz end*/
@@ -4796,17 +4796,17 @@ public class BrowserApp extends GeckoApp
     public void initBondControlButtons() {
         final View bondDashboardControlsView = ((ViewStub) findViewById(R.id
                 .bond_dashboard_controls)).inflate();
-        stateButtonBondDashboard = (TextView) bondDashboardControlsView.findViewById
+        mStateButtonBondDashboard = (TextView) bondDashboardControlsView.findViewById
                 (R.id.bond_dashboard_state_button);
-        vpnButtonBondDashboard = (TextView) bondDashboardControlsView.findViewById(R.id
+        mVpnButtonBondDashboard = (TextView) bondDashboardControlsView.findViewById(R.id
                 .bond_dashboard_vpn_button);
-        clearButtonBondDashboard = (TextView) bondDashboardControlsView.findViewById(R.id
+        mClearButtonBondDashboard = (TextView) bondDashboardControlsView.findViewById(R.id
                 .bond_dashboard_clear_button);
 
-        stateButtonBondDashboard.setTag(true); //@todo real state, maybe from preference
-        vpnButtonBondDashboard.setTag(true); //@todo real state, maybe from preference
+        mStateButtonBondDashboard.setTag(true); //@todo real state, maybe from preference
+        mVpnButtonBondDashboard.setTag(true); //@todo real state, maybe from preference
 
-        stateButtonBondDashboard.setOnClickListener(new View.OnClickListener() {
+        mStateButtonBondDashboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final boolean changedState = !(boolean)v.getTag();
@@ -4815,14 +4815,14 @@ public class BrowserApp extends GeckoApp
             }
         });
 
-        vpnButtonBondDashboard.setOnClickListener(new View.OnClickListener() {
+        mVpnButtonBondDashboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideControlCenter();
             }
         });
 
-        clearButtonBondDashboard.setOnClickListener(new View.OnClickListener() {
+        mClearButtonBondDashboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mControlCenterPagerAdapter.updateViewComponent(0,R.id
@@ -4842,9 +4842,9 @@ public class BrowserApp extends GeckoApp
             stateDrawbaleId = R.drawable.ic_bond_start;
             stateTextId = R.string.bond_dashboard_contols_start;
         }
-        stateButtonBondDashboard.setCompoundDrawablesWithIntrinsicBounds(null,getVectorDrawable
+        mStateButtonBondDashboard.setCompoundDrawablesWithIntrinsicBounds(null,getVectorDrawable
                         (this,stateDrawbaleId),null, null);
-        stateButtonBondDashboard.setText(getString(stateTextId));
+        mStateButtonBondDashboard.setText(getString(stateTextId));
         mControlCenterPagerAdapter.updateViewComponent(0,R.id.bond_dashboard_state_button,isEnabled);
     }
 
