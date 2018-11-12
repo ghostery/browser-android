@@ -1031,12 +1031,13 @@ public class BrowserApp extends GeckoApp
         /*Cliqz End*/
     }
 
+    /* Cliqz Start */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         hideControlCenter();
         final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mControlCenterContainer.getLayoutParams();
-        if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             final DisplayMetrics displayMetrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             final int width = displayMetrics.widthPixels;
@@ -1048,7 +1049,6 @@ public class BrowserApp extends GeckoApp
         mControlCenterContainer.setLayoutParams(params);
     }
 
-    /* Cliqz Start */
     private void maybeShowSetDefaultBrowserDialog(SharedPreferences sharedPreferences,
                                                   final Context context) {
         int appLaunchCount = sharedPreferences.getInt(GeckoPreferences.PREFS_APP_LAUNCH_COUNT, 0);
