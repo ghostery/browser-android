@@ -320,9 +320,6 @@
     <dimen name="cliqz_intro_content_size">14sp</dimen>
     <dimen name="cliqz_intro_radio_button_height">50dp</dimen>
 
-    <!-- bond -->
-    <dimen name="bond_dashboard_controls_title_size">16sp</dimen>
-    <dimen name="tabs_layout_title_text_size">12sp</dimen>
     <!-- Cliqz end -->
 
 </resources>

@@ -860,7 +860,7 @@ public class BrowserApp extends GeckoApp
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
 
-        if(BuildConfig.FLAVOR_skin.equals("photon") && BuildConfig.FLAVOR_features.equals("bond")) {
+        if(BuildConfig.FLAVOR_skin.equals("bond")) {
             initBondControlButtons();
         }
         /*Cliqz end*/

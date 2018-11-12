@@ -48,25 +48,23 @@ def gradle_android_build_config():
         else:
             return s
 
-    def variant(productFlavors, publishFlavor,buildType):
+    def variant(productFlavors, buildType):
         return namespace(
             productFlavors=productFlavors,
-            publishFlavor=publishFlavor,
             buildType=buildType,
-            # Like 'OfficialWithoutGeckoBinariesPhotonBondDebug'
-            name = ''.join(capitalize(t) for t in chain(productFlavors, publishFlavor,(buildType,)))
+            # Like 'OfficialWithoutGeckoBinariesPhotonDebug'
+            name = ''.join(capitalize(t) for t in chain(productFlavors, (buildType, )))
         )
 
     return namespace(
         app=namespace(
-            variant=variant(('official', 'withoutGeckoBinaries', 'noMinApi', 'photon'), 'bond',
-            'debug'),
+            variant=variant(('official', 'withoutGeckoBinaries', 'noMinApi', 'photon'), 'debug'),
         ),
         geckoview=namespace(
-            variant=variant(('official', 'withGeckoBinaries', 'noMinApi'), '', 'debug'),
+            variant=variant(('official', 'withGeckoBinaries', 'noMinApi'), 'debug'),
         ),
         geckoview_example=namespace(
-            variant=variant(('official', 'withGeckoBinaries', 'noMinApi'), '', 'debug'),
+            variant=variant(('official', 'withGeckoBinaries', 'noMinApi'), 'debug'),
         ),
     )
 

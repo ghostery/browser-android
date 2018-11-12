@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018-->
+<resources>
+    <dimen name="tabs_layout_title_text_size">16sp</dimen>
+    <dimen name="bond_dashboard_controls_title_size">16sp</dimen>
+</resources>

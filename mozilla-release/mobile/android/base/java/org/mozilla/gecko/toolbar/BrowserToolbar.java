@@ -1070,7 +1070,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
     @Override
     public void toggleControlCenter() {
-        if((BuildConfig.FLAVOR_skin.equals("photon") && BuildConfig.FLAVOR_features.equals("bond")) ||
+        if((BuildConfig.FLAVOR_skin.equals("bond")) ||
                 urlDisplayLayout.isTitleSet()) {
             activity.toggleControlCenter();
         } else {

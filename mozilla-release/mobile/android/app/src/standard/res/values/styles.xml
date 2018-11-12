@@ -4,9 +4,9 @@
 
     <style name="tab_layout_style">
     <item name="tabTextAppearance">@style/TabLayoutStyle</item>
-    <item name="android:background">@android:color/black</item>
-    <item name="tabSelectedTextColor">@color/general_blue_color</item>
-    <item name="tabIndicatorColor">@color/general_blue_color</item>
+    <item name="android:background">@color/general_blue_color</item>
+    <item name="tabSelectedTextColor">@android:color/white</item>
+    <item name="tabIndicatorColor">@android:color/white</item>
     </style>
 
 </resources>
