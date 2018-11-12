@@ -46,11 +46,15 @@
 <!ENTITY default_browser_dialog_cancel "CANCEL">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "Send usage data">
+<!ENTITY datareporting_telemetry_summary2 "Help us improve your browsing experience. We collect strictly anonymous usage data. At no occasion is any PII collected.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
+<!ENTITY pref_category_human_web_summary "Contribute anonymous information related to trackers, websites, and search queries to improve our private quick-search, anti-tracking, anti-phishing technologies.">
 <!ENTITY pref_what_is_human_web "What is Human Web?">
 <!ENTITY pref_enable_human_web "Enable Human Web">
-<!ENTITY pref_category_human_web_summary "What, Enable">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->

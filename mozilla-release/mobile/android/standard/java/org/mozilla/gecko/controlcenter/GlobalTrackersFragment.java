@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
@@ -74,10 +73,10 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.block_all:
-                dispatchAndRefresh("UPDATE_BLOCK_ALL");
+                dispatchAndRefresh("BLOCKING_POLICY_EVERYTHING");
                 return true;
             case R.id.unblock_all:
-                dispatchAndRefresh("UPDATE_BLOCK_NONE");
+                dispatchAndRefresh("BLOCKING_POLICY_RECOMMENDED");
                 return true;
             case R.id.reset_settings:
                 RestoreDefaultsDialog.show(getContext(), mControlCenterCallbacks, new RestoreDefaultsDialog.RestoreDialogCallbacks() {
