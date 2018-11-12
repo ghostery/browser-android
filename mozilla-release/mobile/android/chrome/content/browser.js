@@ -6814,14 +6814,13 @@ var Cliqz = {
         break;
       case "Privacy:SetBlockingPolicy":
         // blocking policy should be one of:
-        // 'UPDATE_BLOCK_ALL'
-        // 'UPDATE_BLOCK_NONE'
-        // 'UPDATE_BLOCK_RECOMMENDED'
-        // 'UPDATE_BLOCK_ADS'
+        // 'BLOCKING_POLICY_EVERYTHING'
+        // 'BLOCKING_POLICY_NOTHING'
+        // 'BLOCKING_POLICY_RECOMMENDED'
         let blockingPolicy = data.blockingPolicy;
         this.messagePrivacyExtension({
           origin: 'ghostery-hub',
-          name: 'updateBlocking',
+          name: 'SET_BLOCKING_POLICY',
           message: blockingPolicy
         });
     }
@@ -7010,7 +7009,6 @@ var Distribution = {
   pendingAddonInstalls: new Set(),
 
   installDistroAddons: Task.async(function* () {
-    /* Cliqz start */
     const PREF_ADDONS_INSTALLED = "distribution.addonsInstalled";
     try {
       let installed = Services.prefs.getBoolPref(PREF_ADDONS_INSTALLED);
@@ -7018,12 +7016,8 @@ var Distribution = {
         return;
       }
     } catch (e) {
-      // Nothing to do here. I do not like this mechanism but this is what
-      // Mozillians had.
-    } finally {
       Services.prefs.setBoolPref(PREF_ADDONS_INSTALLED, true);
     }
-    /* Cliqz end */
 
     let distroPath;
     try {
