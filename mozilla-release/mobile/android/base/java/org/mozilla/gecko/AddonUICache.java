@@ -112,6 +112,11 @@ public class AddonUICache implements BundleEventListener {
     public void handleMessage(String event, GeckoBundle message, EventCallback callback) {
         switch (event) {
             case "Menu:Add":
+                /* Cliqz Start */
+                if (message.getString("name").equalsIgnoreCase("Ghostery")) {
+                    return;
+                }
+                /* Cliqz End */
                 final MenuItemInfo info = new MenuItemInfo();
                 info.label = message.getString("name");
                 if (TextUtils.isEmpty(info.label)) {
