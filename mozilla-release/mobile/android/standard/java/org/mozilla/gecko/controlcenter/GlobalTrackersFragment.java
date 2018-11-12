@@ -73,10 +73,10 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.block_all:
-                dispatchAndRefresh("UPDATE_BLOCK_ALL");
+                dispatchAndRefresh("BLOCKING_POLICY_EVERYTHING");
                 return true;
             case R.id.unblock_all:
-                dispatchAndRefresh("UPDATE_BLOCK_NONE");
+                dispatchAndRefresh("BLOCKING_POLICY_RECOMMENDED");
                 return true;
             case R.id.reset_settings:
                 RestoreDefaultsDialog.show(getContext(), mControlCenterCallbacks, new RestoreDefaultsDialog.RestoreDialogCallbacks() {
