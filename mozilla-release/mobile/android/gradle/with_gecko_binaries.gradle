@@ -49,8 +49,20 @@ ext.configureVariantWithGeckoBinaries = { variant ->
     // to read the "MOZ_APP_NAME" to define the app name if not "geckoview".
     def appName = mozconfig.substs.get("MOZ_APP_NAME", "fennec")
     def omnijar_dir = "geckoview".equals(project.name) ? "geckoview" : appName
-    /* Cliqz end */
     def distDir = "${topobjdir}/dist/${omnijar_dir}"
+
+    def syncFeaturesFromDistDir =task("syncFeaturesFromDistDirFor${variant.name.capitalize()}", type: Sync) {
+        onlyIf {
+            if (source.empty) {
+                throw new StopExecutionException("Features not found in ${distDir}/features.  Have you built and packaged?")
+            }
+            return true
+        }
+
+        into("${project.buildDir}/moz.build/src/${variant.name}/assets/features")
+        from("${distDir}/features")
+    }
+    /* Cliqz end */
 
     def syncOmnijarFromDistDir = task("syncOmnijarFromDistDirFor${variant.name.capitalize()}", type: Sync) {
         onlyIf {
@@ -104,6 +116,7 @@ ext.configureVariantWithGeckoBinaries = { variant ->
 
     def assetGenTask = tasks.findByName("generate${variant.name.capitalize()}Assets")
     if ((variant.productFlavors*.name).contains('withGeckoBinaries')) {
+        assetGenTask.dependsOn syncFeaturesFromDistDir
         assetGenTask.dependsOn syncOmnijarFromDistDir
         assetGenTask.dependsOn syncLibsFromDistDir
         assetGenTask.dependsOn syncAssetsFromDistDir
