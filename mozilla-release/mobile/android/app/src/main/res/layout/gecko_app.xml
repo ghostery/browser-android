@@ -204,6 +204,12 @@
 
         <include layout="@layout/ghostery_splash_screen" />
 
+        <ViewStub
+            android:id="@+id/bond_login_screen_stub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/bond_login_screen"/>
+
     </FrameLayout>
     <!-- Cliqz End -->
     <FrameLayout android:id="@+id/tab_history_panel"

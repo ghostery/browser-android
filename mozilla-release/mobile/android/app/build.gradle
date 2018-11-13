@@ -148,7 +148,6 @@ android {
             }
 
             java {
-                print("#### ${protobuf.generatedFilesBaseDir}")
                 srcDir "${topsrcdir}/mobile/android/base/java"
                 srcDir "${topsrcdir}/mobile/android/services/src/main/java"
 
@@ -278,10 +277,6 @@ android {
             maxParallelForks 1
         }
     }
-    packagingOptions {
-        exclude 'META-INF/INDEX.LIST'
-        exclude 'META-INF/io.netty.versions.properties'
-    }
 }
 
 dependencies {
@@ -340,14 +335,12 @@ dependencies {
     implementation 'io.grpc:grpc-okhttp:1.15.0'
     implementation 'io.grpc:grpc-protobuf-lite:1.15.0'
     implementation 'io.grpc:grpc-stub:1.15.0'
-    implementation "io.grpc:grpc-netty:1.15.0"
     implementation 'javax.annotation:javax.annotation-api:1.3.1'
-    // Used for TLS in HelloWorldServerTls
-    implementation "io.netty:netty-tcnative-boringssl-static:2.0.7.Final"
     /*Cliqz End*/
 
 }
 
+/* Cliqz start*/
 protobuf {
     protoc { artifact = 'com.google.protobuf:protoc:3.5.1-1' }
     plugins {
@@ -368,6 +361,7 @@ protobuf {
         ofFlavor('bond')
     }
 }
+/* Cliqz end */
 
 // TODO: (bug 1261486): This impl is not robust -
 // we just wanted to land something.

@@ -13,6 +13,8 @@ import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
  */
 public class PreferenceManager {
 
+    private static final String PREF_EMAIL_ID = "preferences.email.id";
+
     private final SharedPreferences mAppSharedPreferences;
     private static PreferenceManager preferenceManager = null;
     private Context mContext;
@@ -52,6 +54,11 @@ public class PreferenceManager {
     public void setBlockNewTrackers(boolean value) {
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
         editor.putBoolean(GeckoPreferences.PREFS_GHOSTERY_BLOCK_NEW_TRACKERS, value).apply();
+    }
+
+    public void setEmailId(String emailId) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putString(PREF_EMAIL_ID, emailId).apply();
     }
 
     public boolean isTelemetryEnabled() {
@@ -107,5 +114,9 @@ public class PreferenceManager {
 
     public boolean isBackgroundEnabled() {
         return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED,true);
+    }
+
+    public String getEmailId() {
+        return mAppSharedPreferences.getString(PREF_EMAIL_ID, "");
     }
 }
