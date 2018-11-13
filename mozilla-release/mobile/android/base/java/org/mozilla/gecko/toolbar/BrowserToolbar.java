@@ -23,8 +23,6 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -33,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import org.mozilla.gecko.BrowserApp;
+import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.Clipboard;
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.GeckoSharedPrefs;
@@ -45,7 +44,6 @@ import org.mozilla.gecko.TouchEventInterceptor;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.PropertyAnimator.PropertyAnimationListener;
 import org.mozilla.gecko.animation.ViewHelper;
-import org.mozilla.gecko.home.HomePager;
 import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.lwt.LightweightThemeDrawable;
 import org.mozilla.gecko.menu.GeckoMenu;
@@ -1072,7 +1070,8 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
     @Override
     public void toggleControlCenter() {
-        if(urlDisplayLayout.isTitleSet()) {
+        if((BuildConfig.FLAVOR_skin.equals("bond")) ||
+                urlDisplayLayout.isTitleSet()) {
             activity.toggleControlCenter();
         } else {
             activity.hideControlCenter();

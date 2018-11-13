@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018-->
+<resources>
+    <string name="roboto_light">sans-serif-light</string>
+    <string name="roboto_medium">sans-serif-medium</string>
+    <string name="roboto_regular">sans-serif</string>
+</resources>

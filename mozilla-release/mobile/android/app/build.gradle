@@ -127,7 +127,7 @@ android {
         /* Cliqz start */
         //Photon is the only flavour, which doesnt make sense. But we cant remove it because it has a
         //separate source set which is included by the build system. Merging main and photon source set
-        //will take some refactoring. For now we branch standard and premium from photon
+        //will take some refactoring. For now we branch standard and bond from photon
         bond {
             dimension "skin"
             versionCode 5
@@ -135,7 +135,7 @@ android {
 
         standard {
             dimension "skin"
-            versionCode 5 //version code can be same as premium because its a different app and package name is different
+            versionCode 5
         }
         /* Cliqz end */
     }
@@ -234,28 +234,32 @@ android {
         }
 
         /* Cliqz start */
-        //photon should contain some implementation of CC. We take the implementation from standard version
         photon {
             java {
-                srcDir "${topsrcdir}/mobile/android/standard/java"
+                srcDir "${topsrcdir}/mobile/android/app/src/standard/java"
+            }
+            res {
+                srcDir "${topsrcdir}/mobile/android/app/src/standard/res"
             }
         }
         bond {
             java {
-                srcDir "${topsrcdir}/mobile/android/bond/java"
-                srcDir "${topsrcdir}/mobile/android/app/src/photon/java" //need to include the sources in the photon folder
+                srcDir "${topsrcdir}/mobile/android/app/src/bond/java"
+                srcDir "${topsrcdir}/mobile/android/app/src/photon/java"
             }
             res {
-                srcDir "${topsrcdir}/mobile/android/app/src/photon/res" //need to include the sources in the photon folder
+                srcDir "${topsrcdir}/mobile/android/app/src/bond/res"
+                srcDir "${topsrcdir}/mobile/android/app/src/photon/res"
             }
         }
         standard {
             java {
-                srcDir "${topsrcdir}/mobile/android/standard/java"
-                srcDir "${topsrcdir}/mobile/android/app/src/photon/java" //need to include the sources in the photon folder
+                srcDir "${topsrcdir}/mobile/android/app/src/standard/java"
+                srcDir "${topsrcdir}/mobile/android/app/src/photon/java"
             }
             res {
-                srcDir "${topsrcdir}/mobile/android/app/src/photon/res" //need to include the sources in the photon folder
+                srcDir "${topsrcdir}/mobile/android/app/src/standard/res"
+                srcDir "${topsrcdir}/mobile/android/app/src/photon/res"
             }
         }
         /* Cliqz end */

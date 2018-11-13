@@ -46,11 +46,15 @@
 <!ENTITY default_browser_dialog_cancel "CANCEL">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "Send usage data">
+<!ENTITY datareporting_telemetry_summary2 "Help us improve your browsing experience. We collect strictly anonymous usage data. At no occasion is any PII collected.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
+<!ENTITY pref_category_human_web_summary "Contribute anonymous information related to trackers, websites, and search queries to improve our private quick-search, anti-tracking, anti-phishing technologies.">
 <!ENTITY pref_what_is_human_web "What is Human Web?">
 <!ENTITY pref_enable_human_web "Enable Human Web">
-<!ENTITY pref_category_human_web_summary "What, Enable">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
@@ -299,3 +303,14 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Already available!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "Add-on was not installed as &formatS1; is already integrated in your browser.">
+
+<!-- Cliqz Bond -->
+<!ENTITY bond_dashboard_today_title "TODAY">
+<!ENTITY bond_dashboard_week_title "LAST 7 Days">
+<!ENTITY bond_dashboard_contols_pause "Pause">
+<!ENTITY bond_dashboard_contols_start "Start">
+<!ENTITY bond_dashboard_contols_vpn "VPN">
+<!ENTITY bond_dashboard_contols_clear "Clear">
+<!ENTITY bond_dashboard_contols_on "ON">
+<!ENTITY bond_dashboard_contols_off "OFF">
+<!ENTITY bond_dashboard_ultimate_protection "ULTIMATE PROTECTION:">

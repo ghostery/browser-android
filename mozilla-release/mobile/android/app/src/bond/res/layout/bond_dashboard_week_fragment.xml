@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018-->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/dashboard_item_title"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:gravity="center"
+    android:padding="@dimen/padding_20"
+    android:text="Last 7 days measurement" />

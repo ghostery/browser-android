@@ -281,6 +281,7 @@
     <dimen name="padding_16">16dp</dimen>
     <dimen name="padding_10">10dp</dimen>
     <dimen name="padding_5">5dp</dimen>
+    <dimen name="padding_20">20dp</dimen>
 
     <!-- news -->
     <dimen name="news_favicon_size">@dimen/icon_size</dimen>
@@ -296,7 +297,7 @@
     <dimen name="myoffrz_padding_8">8dp</dimen>
     <dimen name="myoffrz_padding_16">16dp</dimen>
     <dimen name="myoffrz_padding_5">@dimen/padding_5</dimen>
-    <dimen name="myoffrz_padding_20">20dp</dimen>
+    <dimen name="myoffrz_padding_20">@dimen/padding_20</dimen>
 
     <!-- Control Center -->
     <dimen name="ghostery_list_item_action_button_width">90dp</dimen>
@@ -318,6 +319,7 @@
     <dimen name="cliqz_intro_title_size">27sp</dimen>
     <dimen name="cliqz_intro_content_size">14sp</dimen>
     <dimen name="cliqz_intro_radio_button_height">50dp</dimen>
+
     <!-- Cliqz end -->
 
 </resources>

@@ -5,11 +5,13 @@
 package org.mozilla.gecko.util;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v4.view.ViewCompat;
@@ -219,5 +221,9 @@ public class ViewUtil {
      */
     public static boolean isLayoutRtl(final View view) {
         return ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL;
+    }
+
+    public static Drawable getVectorDrawable(Context context, int id) {
+        return VectorDrawableCompat.create(context.getResources(),id, null);
     }
 }

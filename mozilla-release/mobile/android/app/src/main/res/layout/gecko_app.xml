@@ -75,15 +75,18 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
+                    <ViewStub
+                        android:id="@+id/bond_dashboard_controls"
+                        android:layout="@layout/bond_dashboard_controls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
                     <org.mozilla.gecko.widget.themed.ThemedTabLayout
                         android:id="@+id/control_center_tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:elevation="2dp"
-                        gecko:tabTextAppearance="@style/TabLayoutStyle"
-                        android:background="@drawable/url_bar_bg"
-                        gecko:tabSelectedTextColor="@android:color/white"
-                        gecko:tabIndicatorColor="@android:color/white"
+                        style="@style/tab_layout_style"
                         gecko:tabMode="fixed"/>
 
 
@@ -95,7 +98,6 @@
 
                 </LinearLayout>
                 <!--Cliqz End-->
-
 
                 <View android:id="@+id/doorhanger_overlay"
                       android:layout_width="match_parent"
