@@ -300,7 +300,42 @@ public class BrowserApp extends GeckoApp
     private View mGhosterySplashScreen;
     private byte[] mCCDataHash = null;
     private GeckoBundle mControlCenterTrackingData;
+    private ViewPager mControlCenterPager;
+    private View mControlCenterContainer;
+    private ControlCenterPagerAdapter mControlCenterPagerAdapter;
+    private PreferenceManager mPreferenceManager;
+    private LinearLayout mCliqzQuerySuggestionsContainer;
+    private String mLastUrl = "";
+    private AntiPhishingDialog antiPhishingDialog;
+    private AntiPhishing antiPhishing;
+    private static final int SUGGESTIONS_LIMIT = 3;
+    private static final Pattern FILTER =
+            Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
+    private static final int SUGGESTIONS_TV_PADDING = 20;
+    private static final int FONT_SIZE = 18;
+
+    // Minimum app launches until we show the dialog to set default browser.
+    private static final int MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT = 3;
+    /* Cliqz End */
+
+    public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
+
+    // When the static action bar is shown, only the real toolbar chrome should be
+    // shown when the toolbar is visible. Causing the toolbar animator to also
+    // show the snapshot causes the content to shift under the users finger.
+    // See: Bug 1358554
+    private boolean mShowingToolbarChromeForActionBar;
+
+    private SafeIntent safeStartingIntent;
+    private Intent startingIntentAfterPip;
+    private boolean isInAutomation;
+
+    // The types of guest mode dialogs we show.
+    public static enum GuestModeDialog {
+        ENTERING,
+        LEAVING
     }
+
 
     private PropertyAnimator mMainLayoutAnimator;
 
@@ -4772,7 +4807,7 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public boolean setRequestedOrientationForCurrentActivity(int requestedActivityInfoOrientation) {
-        return (mCliqzIntroPagerHolder == null || mCliqzIntroPagerHolder.getVisibility() != View.VISIBLE) &&
+        return !isOnboardingVisible &&
                 super.setRequestedOrientationForCurrentActivity(requestedActivityInfoOrientation);
     }
     /* Cliqz end */
