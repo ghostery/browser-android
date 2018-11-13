@@ -73,7 +73,7 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
         boolean succeedReadFromCache = false;
         final File cachedFile = getTopNewsCacheFile();
         mDataTimestamp = cachedFile.lastModified();
-        if(isCacheExpired()) {
+        if(!isCacheExpired()) {
             try {
                 response  = FileUtils.readStringFromFile(cachedFile);
                 succeedReadFromCache = true;
@@ -88,6 +88,7 @@ public class TopNewsLoader extends AsyncTaskLoader<List<TopNews>> {
                         CONTENT_TYPE_JSON, NEWS_PAYLOAD);
                 if (response != null && response.equals(mData)) {
                     FileUtils.writeStringToFile(cachedFile, response);
+                    mDataTimestamp = cachedFile.lastModified();
                 } else if (response == null) {
                     response = FileUtils.readStringFromFile(cachedFile);
                 }
