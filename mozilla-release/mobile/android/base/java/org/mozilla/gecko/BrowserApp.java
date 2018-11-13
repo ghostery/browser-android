@@ -1249,6 +1249,8 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public void onPause() {
+        dismissTabHistoryFragment();
+
         super.onPause();
         if (mIsAbortingAppLaunch) {
             return;
@@ -3477,10 +3479,7 @@ public class BrowserApp extends GeckoApp
             return false;
 
         // Hide the tab history panel when hardware menu button is pressed.
-        TabHistoryFragment frag = (TabHistoryFragment) getSupportFragmentManager().findFragmentByTag(TAB_HISTORY_FRAGMENT_TAG);
-        if (frag != null) {
-            frag.dismiss();
-        }
+        dismissTabHistoryFragment();
 
         if (!GeckoThread.isRunning()) {
             aMenu.findItem(R.id.settings).setEnabled(false);
@@ -4549,6 +4548,13 @@ public class BrowserApp extends GeckoApp
     public void onFinishedOnboarding(final boolean showBrowserHint) {
         if (showBrowserHint && !Tabs.hasHomepage(this)) {
             enterEditingMode();
+        }
+    }
+
+    private void dismissTabHistoryFragment() {
+        TabHistoryFragment frag = (TabHistoryFragment) getSupportFragmentManager().findFragmentByTag(TAB_HISTORY_FRAGMENT_TAG);
+        if (frag != null) {
+            frag.dismiss();
         }
     }
 
