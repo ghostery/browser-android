@@ -5,11 +5,21 @@ option java_package = "org.mozilla.gecko";
 option java_outer_classname = "BondServerProto";
 
 service BondV1 {
-  rpc RegisterDevice(UserAuth) returns (Response);
+  rpc RegisterDevice(RegisterDeviceRequest) returns (Response);
+  rpc GetDevices(UserAuth) returns (GetDevicesResponse);
+  rpc UnregisterDevice(UnregisterDeviceRequest) returns (Response);
   rpc ResendActivationEmail(UserAuth) returns (Response);
   rpc IsDeviceActivated(UserAuth) returns (Response);
+  rpc RequestDelete(UserAuth) returns (Response);
+
+  // Subscription management
   rpc GetSubscriptions(UserAuth) returns (Subscriptions);
-  rpc GetVpnCredentials(UserAuth) returns (VpnResponse);
+  rpc Subscribe(SubscribeRequest) returns (Response);
+  rpc Unsubscribe(UnsubscribeRequest) returns (Response);
+
+  // Getting premium content
+  rpc GetOVPNConfig(UserAuth) returns (OVPNResponse);
+  rpc GetIPSecCreds(UserAuth) returns (IPSecResponse);
 }
 
 // General enume to hold error codes, common to the whole service
@@ -24,6 +34,13 @@ enum ErrorCode {
   INTERNAL = 7;
   UNAUTHORIZED = 8;
   EMAIL_UNCONFIRMED = 9;
+  NOT_SUBSCRIBED = 10;
+}
+
+enum SubscriptionType {
+  TRIAL = 0;
+  TRIAL_CODE = 1;
+  PREMIUM_MONTHLY = 2;
 }
 
 message Error {
@@ -43,13 +60,68 @@ message UserAuth {
   string password = 2;
 }
 
-message VpnResponse {
+message RegisterDeviceRequest {
+  UserAuth auth = 1;
+  string description = 2;
+}
+
+message UnregisterDeviceRequest {
+  UserAuth auth = 1;
+  int64 deviceId = 2;
+}
+
+message Device {
+  int64 id = 1;
+  string description = 2;
+  bool activated = 3;
+}
+
+message GetDevicesResponse {
   repeated Error error = 1;
+  repeated Device devices = 2;
+  int64 requesterId = 3;
+}
+
+message OVPNResponse {
+  repeated Error error = 1;
+  map <string, OVPNConfig> config = 2;
+}
+
+message OVPNConfig {
+  string config = 1;
   string username = 2;
   string password = 3;
 }
 
+message IPSecResponse {
+  repeated Error error = 1;
+  map <string, IPSecConfig> config = 2;
+}
+
+message IPSecConfig {
+  string secret = 1;
+  string username = 2;
+  string password = 3;
+}
+
+message Subscription {
+  SubscriptionType type = 1;
+  int64 expires = 2;
+  int64 id = 3;
+}
+
 message Subscriptions {
   repeated Error error = 1;
-  repeated string name = 2;
+  repeated Subscription subscriptions = 2;
+}
+
+message SubscribeRequest {
+  UserAuth auth = 1;
+  string token = 2;
+  SubscriptionType type = 3;
+}
+
+message UnsubscribeRequest {
+  UserAuth auth = 1;
+  Subscription subscription = 3;
 }

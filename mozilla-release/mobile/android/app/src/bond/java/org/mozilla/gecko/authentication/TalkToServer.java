@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import org.mozilla.gecko.BondV1Grpc;
 import org.mozilla.gecko.Error;
 import org.mozilla.gecko.ErrorCode;
+import org.mozilla.gecko.RegisterDeviceRequest;
 import org.mozilla.gecko.Response;
 import org.mozilla.gecko.UserAuth;
 
@@ -33,30 +34,33 @@ public class TalkToServer extends AsyncTask<Void, Void, Response> {
     static final int WAIT_FOR_ACTIVATION = 3;
     private ManagedChannel mChannel;
     private ServerCallbacks mServerCallbacks;
-    private UserAuth mUserAuth;
+    private RegisterDeviceRequest mRegisterDeviceRequest;
     private int mWhichCase;
 
     TalkToServer(ServerCallbacks serverCallbacks, int whichCase, String emailId, String secretKey) {
         mServerCallbacks = serverCallbacks;
         mWhichCase = whichCase;
-        mUserAuth = UserAuth.newBuilder().setUsername(emailId)
+        final UserAuth userAuth = UserAuth.newBuilder().setUsername(emailId)
                 .setPassword(secretKey).build();
+
+        mRegisterDeviceRequest = RegisterDeviceRequest.newBuilder().setAuth(userAuth)
+                .setDescription("mobile-android").build();
     }
 
     @Override
     protected Response doInBackground(Void... voids) {
         try {
-            mChannel = ManagedChannelBuilder.forAddress(HOST, PORT)
-                    .build();
+            mChannel = ManagedChannelBuilder.forAddress(HOST, PORT).build();
             BondV1Grpc.BondV1BlockingStub stub = BondV1Grpc.newBlockingStub(mChannel);
             switch (mWhichCase) {
                 case REGISTER_DEVICE:
-                    return stub.registerDevice(mUserAuth);
+                    return stub.registerDevice(mRegisterDeviceRequest);
                 case IS_DEVICE_ACTIVE:
                 case WAIT_FOR_ACTIVATION:
-                    return stub.isDeviceActivated(mUserAuth);
+                    return stub.isDeviceActivated(mRegisterDeviceRequest.getAuth());
+                default:
+                    return stub.registerDevice(mRegisterDeviceRequest);
             }
-            return stub.registerDevice(mUserAuth);
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
