@@ -97,6 +97,7 @@ import org.mozilla.gecko.anolysis.ControlCenterMetrics;
 import org.mozilla.gecko.antiphishing.AntiPhishing;
 import org.mozilla.gecko.antiphishing.AntiPhishingDialog;
 import org.mozilla.gecko.antiphishing.AntiPhishingUtils;
+import org.mozilla.gecko.authentication.LoginHelper;
 import org.mozilla.gecko.bookmarks.BookmarkEditFragment;
 import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
@@ -212,8 +213,8 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
-import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
+import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.ViewUtil.getVectorDrawable;
 
 public class BrowserApp extends GeckoApp
@@ -1032,6 +1033,10 @@ public class BrowserApp extends GeckoApp
                 mGhosterySplashScreen.setVisibility(View.GONE);
             }
         }, 4000);
+        if (BuildConfig.FLAVOR_skin.equals("bond")) {
+            final LoginHelper loginHelper = new LoginHelper(this);
+            loginHelper.loginOrRegister();
+        }
         /*Cliqz End*/
     }
 

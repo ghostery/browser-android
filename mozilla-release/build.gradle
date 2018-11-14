@@ -62,6 +62,9 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.1.0'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        /* Cliqz start */
+        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.5"
+        /* Cliqz end */
     }
 }
 
@@ -113,10 +116,12 @@ afterEvaluate {
                     "-Xlint:-serial",
                     // Classfile, because javac has a bug with MethodParameters attributes
                     // with Java 7. https://bugs.openjdk.java.net/browse/JDK-8190452
-                    "-Xlint:-classfile",
+                    "-Xlint:-classfile"]
+                    /* cliqz start o/
                     // Turn all remaining warnings into errors,
                     // unless marked by @SuppressWarnings.
                     "-Werror"]
+                    /o cliqz end*/
             }
             if (project.name == 'app') {
                 tasks.withType(JavaCompile) {
