@@ -326,6 +326,7 @@ public class BrowserApp extends GeckoApp
     private SafeIntent safeStartingIntent;
     private Intent startingIntentAfterPip;
     private boolean isInAutomation;
+    private boolean hideHomeContainer;
 
     // The types of guest mode dialogs we show.
     public static enum GuestModeDialog {
@@ -880,8 +881,8 @@ public class BrowserApp extends GeckoApp
             /* Cliqz start */
             "Search:GetHistory",
             "Search:OpenLink",
-            "Privacy:Count",
             "Search:Idle",
+            "Privacy:Count",
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
@@ -1748,9 +1749,9 @@ public class BrowserApp extends GeckoApp
             /* Cliqz start */
             "Search:GetHistory",
             "Search:OpenLink",
+            "Search:Idle",
             "Privacy:Count",
             "Privacy:Info",
-            "Search:Idle",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
             null);
@@ -1948,6 +1949,7 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Gecko:DelayedStartup":
+                hideHomeContainer = true;
                 EventDispatcher.getInstance().unregisterUiThreadListener(this, "Gecko:DelayedStartup");
 
                 // Force tabs panel inflation once the initial pageload is finished.
@@ -3296,7 +3298,9 @@ public class BrowserApp extends GeckoApp
             // Prevent overdraw by hiding the underlying web content and HomePager View
             hideWebContent();
         }
-        mHomeScreenContainer.setVisibility(View.INVISIBLE);
+        if (hideHomeContainer) {
+            mHomeScreenContainer.setVisibility(View.INVISIBLE);
+        }
 
         final FragmentManager fm = getSupportFragmentManager();
 
