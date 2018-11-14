@@ -18,7 +18,6 @@ import io.grpc.ManagedChannelBuilder;
 /**
  * Copyright © Cliqz 2018
  */
-
 public class TalkToServer extends AsyncTask<Void, Void, Response> {
 
     public interface ServerCallbacks {
@@ -26,6 +25,8 @@ public class TalkToServer extends AsyncTask<Void, Void, Response> {
     }
 
     private static final String LOGTAG = TalkToServer.class.getSimpleName();
+    private static final String HOST = "ambassador.dev.k8s.eu-central-1.clyqz.com";
+    private static final int PORT = 443;
     //different endpoints that can be called on the server
     static final int REGISTER_DEVICE = 1;
     static final int IS_DEVICE_ACTIVE = 2;
@@ -44,10 +45,8 @@ public class TalkToServer extends AsyncTask<Void, Void, Response> {
 
     @Override
     protected Response doInBackground(Void... voids) {
-        final String host = "ambassador.dev.k8s.eu-central-1.clyqz.com";
-        final int port = 443;
         try {
-            mChannel = ManagedChannelBuilder.forAddress(host, port)
+            mChannel = ManagedChannelBuilder.forAddress(HOST, PORT)
                     .build();
             BondV1Grpc.BondV1BlockingStub stub = BondV1Grpc.newBlockingStub(mChannel);
             switch (mWhichCase) {

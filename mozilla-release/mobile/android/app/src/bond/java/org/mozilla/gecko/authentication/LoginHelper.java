@@ -23,7 +23,6 @@ import java.util.TimerTask;
 /**
  * Copyright © Cliqz 2018
  */
-//TODO remove logs
 public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCallbacks {
 
     private static final String LOGTAG = LoginHelper.class.getSimpleName();
@@ -49,11 +48,10 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
     public void loginOrRegister() {
         final String emailId = mPreferenceManager.getEmailId();
         if (emailId.isEmpty()) {
-            Log.d(LOGTAG, "no email found showing login screen");
+            //no email id found show login screen
             showLoginScreen();
         } else {
             //check if device is activated
-            Log.d(LOGTAG, "email id found. checking if device is registered");
             checkDeviceRegistered(emailId);
         }
     }
@@ -63,10 +61,8 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
         final String emailId = mEmailInputField.getText().toString();
         if (emailId.isEmpty()) {
             //TODO check for valid email format
-            Log.d(LOGTAG, "please enter email");
         } else {
             //register device
-            Log.d(LOGTAG, "registering device");
             mPreferenceManager.setEmailId(emailId);
             registerDevice(emailId);
         }
@@ -77,31 +73,34 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
         switch (whichCase) {
             case TalkToServer.IS_DEVICE_ACTIVE:
                 if (serverResponse.getErrorCount() > 0) {
+                    Log.e(LOGTAG, "Device not activated yet");
+                    Log.e(LOGTAG, serverResponse.getErrorList().toString());
+                    //device is not activated
+                    //show "loginscreen" or probably "waiting for activation screen" ?
                     showLoginScreen();
-                    Log.d(LOGTAG, "Device is not registered. Showing login screen");
-                    Log.d(LOGTAG, serverResponse.getErrorList().toString());
                 } else {
                     //login successful
-                    Log.d(LOGTAG, "login successful");
+                    //TODO show welcome screen, if first login
                 }
                 break;
             case TalkToServer.REGISTER_DEVICE:
                 if (serverResponse.getErrorCount() > 0) {
-                    Log.d(LOGTAG, "error registering device");
-                    Log.d(LOGTAG, serverResponse.getErrorList().toString());
+                    Log.e(LOGTAG, "Error registering device.");
+                    Log.e(LOGTAG, serverResponse.getErrorList().toString());
                 } else {
-                    Log.d(LOGTAG, "starting polling server for activation");
+                    //start polling until user activates device
                     pollServerForActivation();
                 }
                 break;
             case TalkToServer.WAIT_FOR_ACTIVATION:
                 if (serverResponse.getErrorCount() > 0) {
-                    Log.d(LOGTAG, "device is still not active");
+                    Log.e(LOGTAG, "device is still not active");
                 } else {
-                    Log.d(LOGTAG, "registration successful. hiding login screen");
+                    //device activated. hide login screen
                     mTimer.cancel();
                     mProgressBar.setVisibility(View.GONE);
                     mLoginScreenStub.setVisibility(View.GONE);
+                    //TODO show welome screen if first login
                 }
                 break;
         }
@@ -130,6 +129,7 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
                 });
             }
         };
+        //we should define a limit for how long we keep polling
         mTimer.schedule(doAsynchronousTask, 0, POLL_INTERVAL); //execute in every 10secs
         mProgressBar.setVisibility(View.VISIBLE);
     }
