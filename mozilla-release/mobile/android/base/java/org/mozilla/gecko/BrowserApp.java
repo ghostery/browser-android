@@ -37,12 +37,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -145,7 +143,6 @@ import org.mozilla.gecko.menu.GeckoMenuItem;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationHelper;
-import org.mozilla.gecko.onboarding.CliqzIntroPagerAdapter;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.Countries;
@@ -306,8 +303,11 @@ public class BrowserApp extends GeckoApp
     private PreferenceManager mPreferenceManager;
     private LinearLayout mCliqzQuerySuggestionsContainer;
     private String mLastUrl = "";
-    private AntiPhishingDialog antiPhishingDialog;
-    private AntiPhishing antiPhishing;
+    private AntiPhishingDialog mAntiPhishingDialog;
+    private AntiPhishing mAntiPhishing;
+
+    private boolean mHideHomeContainer = false;
+
     private static final int SUGGESTIONS_LIMIT = 3;
     private static final Pattern FILTER =
             Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
@@ -335,7 +335,6 @@ public class BrowserApp extends GeckoApp
         ENTERING,
         LEAVING
     }
-
 
     private PropertyAnimator mMainLayoutAnimator;
 
@@ -474,7 +473,7 @@ public class BrowserApp extends GeckoApp
             case TITLE:
                 if (!tab.getURL().equals(mLastUrl)) {
                     mLastUrl = tab.getURL();
-                    antiPhishing.processUrl(tab.getURL(), this);
+                    mAntiPhishing.processUrl(tab.getURL(), this);
                 }
                 break;
             /* Cliqz End */
@@ -882,9 +881,9 @@ public class BrowserApp extends GeckoApp
             "NotificationSettings:FeatureTipsStatusUpdated",
             /* Cliqz start */
             "Search:GetHistory",
+            "Search:Idle",
             "Search:OpenLink",
             "Privacy:Count",
-            "Search:Idle",
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
@@ -1013,8 +1012,8 @@ public class BrowserApp extends GeckoApp
             }
         }
 
-        antiPhishing = new AntiPhishing();
-        antiPhishingDialog = new AntiPhishingDialog(BrowserApp.this);
+        mAntiPhishing = new AntiPhishing();
+        mAntiPhishingDialog = new AntiPhishingDialog(BrowserApp.this);
 
         if (AppConstants.Versions.feature24Plus) {
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
@@ -1755,10 +1754,10 @@ public class BrowserApp extends GeckoApp
             "NotificationSettings:FeatureTipsStatusUpdated",
             /* Cliqz start */
             "Search:GetHistory",
+            "Search:Idle",
             "Search:OpenLink",
             "Privacy:Count",
             "Privacy:Info",
-            "Search:Idle",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
             null);
@@ -1956,6 +1955,9 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Gecko:DelayedStartup":
+                /* Cliqz Start */
+                mHideHomeContainer = true;
+                /* Cliqz End */
                 EventDispatcher.getInstance().unregisterUiThreadListener(this, "Gecko:DelayedStartup");
 
                 // Force tabs panel inflation once the initial pageload is finished.
@@ -3309,7 +3311,9 @@ public class BrowserApp extends GeckoApp
             // Prevent overdraw by hiding the underlying web content and HomePager View
             hideWebContent();
         }
-        mHomeScreenContainer.setVisibility(View.INVISIBLE);
+        if (mHideHomeContainer) {
+            mHomeScreenContainer.setVisibility(View.INVISIBLE);
+        }
 
         final FragmentManager fm = getSupportFragmentManager();
 
@@ -4781,9 +4785,9 @@ public class BrowserApp extends GeckoApp
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (!url.equals(mLastUrl) || antiPhishingDialog.isShowing()) { return; }
-                antiPhishingDialog.setUrl(AntiPhishingUtils.getDomain(url));
-                antiPhishingDialog.show();
+                if (!url.equals(mLastUrl) || mAntiPhishingDialog.isShowing()) { return; }
+                mAntiPhishingDialog.setUrl(AntiPhishingUtils.getDomain(url));
+                mAntiPhishingDialog.show();
             }
         });
     }
