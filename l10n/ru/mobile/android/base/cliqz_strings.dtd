@@ -155,6 +155,7 @@
 <!ENTITY cc_reset_changes_dialog_title "Сбросить все изменения?">
 <!ENTITY cc_reset_changes_dialog_message "Все предыдущие изменения по сайту и глобальным трекерам будут сброшены.">
 <!ENTITY cc_reset "СБРОСИТЬ">
+<!ENTITY cc_reload_page_snackbar_text "Страница обновится для применения изменений">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Поиск">
@@ -290,7 +291,7 @@
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Предупреждение: подозрительный веб-сайт! ">
-<!ENTITY antiphishing_message "&brandShortName; заблокировал доступ к &formatS1;, потому что сайт был представлен как фишинговый сайт. Фишинговые сайты маскируются под другие сайты, которым Вы доверяете, чтобы обмануть Вас и получить доступ к конфиденциальной информации, например логинам и паролям. ">
+<!ENTITY antiphishing_message "&brandShortName; заблокировала доступ к &formatS1;, поскольку сообщалось, что это фишинговый веб-сайт. Фишинговые сайты маскируются под другие сайты, которым вы можете доверять, чтобы заставить вас раскрыть свой логин, пароль или другую конфиденциальную информацию.">
 <!ENTITY antiphishing_walk_away "Вернуться на безопасный сайт">
 <!ENTITY antiphishing_ignore_danger "Продолжить несмотря на предупреждение">
 
