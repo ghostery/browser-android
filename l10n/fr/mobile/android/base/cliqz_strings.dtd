@@ -139,8 +139,8 @@
 <!ENTITY cc_blocked "Bloqué">
 <!ENTITY cc_num_blocked "&formatD; BLOQUÉ">
 <!ENTITY cc_tracker_info "Info mouchard">
-<!ENTITY cc_block_all "Tout bloquer">
-<!ENTITY cc_unblock_all "Tout débloquer">
+<!ENTITY cc_block_all "Bloquer tout">
+<!ENTITY cc_unblock_all "Débloquer tout">
 <!ENTITY cc_block "Bloquer">
 <!ENTITY cc_unblock "Débloquer">
 <!ENTITY cc_trust "Se fier">
@@ -155,6 +155,7 @@
 <!ENTITY cc_reset_changes_dialog_title "Réinitialiser les changements ?">
 <!ENTITY cc_reset_changes_dialog_message "Toutes les modifications précédentes et les mouchards locaux seront réinitialisés.">
 <!ENTITY cc_reset "RÉINITIALISER">
+<!ENTITY cc_reload_page_snackbar_text "Les modifications s\'appliqueront dès l\'actualisation de la page">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Rechercher">
@@ -290,11 +291,11 @@
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Attention: site malveillant !">
-<!ENTITY antiphishing_message "&brandShortName; a bloqué l\'accés à &formatS1; car il a été reporté comme un site malveillant. Les sites malveillants se déguisent en sites sûrs afin de subtiliser vos identifiants, mots de passe ou toutes autres données sensibles.">
+<!ENTITY antiphishing_message "&brandShortName; a bloqué l\'accès à &formatS1; parce que le site a été signalé comme faisant du hameçonnage. Les sites d’hameçonnage calquent les sites de confiance et tentent de te soutirer tes informations de connexion, ton mot de passe ou diverses données sensibles.">
 <!ENTITY antiphishing_walk_away "Retourner au site sûr">
 <!ENTITY antiphishing_ignore_danger "Continuer malgré l\'avertissement">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "Déjà disponible !">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "Ce module complémentaire n\'a pas été installé car &formatS1; est déjà intégré à votre navigateur.">
+        "Ce module complémentaire n\'a pas été installé car $formatS1; est déjà intégré à votre navigateur.">

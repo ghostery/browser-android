@@ -155,7 +155,7 @@
 <!ENTITY cc_reset_changes_dialog_title "Alle Änderungen zurücksetzen?">
 <!ENTITY cc_reset_changes_dialog_message "Alle früheren Änderungen an globalen und Website-Trackern werden zurückgesetzt.">
 <!ENTITY cc_reset "ZURÜCKSETZEN">
-<!ENTITY cc_reload_page_snackbar_text "Aktualisiere Seite, um Änderungen zu übernehmen">
+<!ENTITY cc_reload_page_snackbar_text "Die Seite wird aktualisiert, damit die Änderungen wirksam werden">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Suche">
@@ -281,8 +281,8 @@
 <!ENTITY ghostery_onboarding_contextual_button "Jetzt zeigen">
 
 <!-- Ghost Tab -->
-<!ENTITY new_ghost_tab_opened "Neuer Ghost Tab geöffnet">
-<!ENTITY new_ghost_tab "Neuer Ghost Tab">
+<!ENTITY new_ghost_tab_opened "Neuer Ghost-Tab geöffnet">
+<!ENTITY new_ghost_tab "Neuer Ghost-Tab">
 <!ENTITY close_ghost_tabs "Ghost Tabs schließen">
 <!ENTITY contextmenu_open_ghost_tab "In Ghost Tab öffnen">
 <!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &formatS1;neuen Ghost Tabs&formatS2; wird dein Verlauf nicht gespeichert.">
@@ -291,7 +291,7 @@
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Warnung: betrügerische Website!">
-<!ENTITY antiphishing_message "&brandShortName; hat den Zugang zu &formatS1; gesperrt, weil sie als Phishing-Website gemeldet wurde.\nPhishing-Websites geben sich als andere, vertrauenswürdige Websites aus, um dich zu verleiten, Anmeldedaten, Passwörter oder andere wichtige Informationen preiszugeben.">
+<!ENTITY antiphishing_message "&brandShortName; hat den Zugang zu &formatS1; gesperrt, weil sie als Phishing-Website gemeldet wurde. Phishing-Websites geben sich als andere, vertrauenswürdige Websites aus, um Sie zu verleiten, Anmeldedaten, Passwörter oder andere wichtige Informationen preiszugeben.">
 <!ENTITY antiphishing_walk_away "Zurück zu sicherer Seite">
 <!ENTITY antiphishing_ignore_danger "Trotz Warnung fortfahren">
 
