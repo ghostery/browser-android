@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright © Cliqz 2018-->
 <resources>
+    <style name="required_items">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
     <style name="dashboard_measurement_value">
         <item name="android:fontFamily">@string/roboto_regular</item>
         <item name="android:textColor">@color/dashboard_text_blue</item>
@@ -9,11 +13,9 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="dashboard_item">
-        <item name="android:textAlignment">center</item>
+    <style name="dashboard_item" parent="required_items">
+        <item name="android:gravity">center</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="dashboard_item_title" parent="dashboard_item">
@@ -38,6 +40,52 @@
         <item name="android:background">@android:color/black</item>
         <item name="tabSelectedTextColor">@color/general_blue_color</item>
         <item name="tabIndicatorColor">@color/general_blue_color</item>
+    </style>
+
+    <style name="login_app_name" parent="dashboard_item">
+        <item name="android:fontFamily">@string/roboto_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    
+    <style name="login_description" parent="dashboard_item">
+        <item name="android:fontFamily">@string/roboto_light</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="login_error_message" parent="dashboard_item">
+        <item name="android:fontFamily">@string/roboto_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/login_error_message</item>
+    </style>
+
+    <style name="login_input" parent="required_items">
+        <item name="android:layout_margin">@dimen/padding_16</item>
+        <item name="android:textColor">@color/login_input_text</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/login_input_bg</item>
+        <item name="android:padding">@dimen/padding_16</item>
+        <item name="android:paddingTop">@dimen/padding_5</item>
+        <item name="android:paddingRight">@dimen/padding_16</item>
+        <item name="android:paddingBottom">@dimen/padding_5</item>
+        <item name="android:textColorHint">@color/login_input_text</item>
+    </style>
+
+    <style name="login_continue_button" parent="dashboard_item">
+        <item name="android:fontFamily">@string/roboto_light</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/login_continue_button_bg</item>
+        <item name="android:layout_margin">@dimen/padding_16</item>
+    </style>
+
+    <style name="login_resend_button" parent="login_continue_button">
+        <item name="android:background">@drawable/login_input_bg</item>
+    </style>
+
+    <style name="login_footer_text" parent="dashboard_item">
+        <item name="android:fontFamily">@string/roboto_regular</item>
+        <item name="android:textColor">@color/login_input_text</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:layout_marginTop">@dimen/padding_10</item>
     </style>
 
 </resources>

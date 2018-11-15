@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/login_icon"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:contentDescription="logo"
+        android:scaleType="center"
+        tools:src="@mipmap/lumen_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/login_title"
+            style="@style/login_app_name"
+            android:layout_marginTop="60dp"
+            tools:text="@string/brandShortName" />
+
+        <TextView
+            android:id="@+id/login_description"
+            style="@style/login_description"
+            android:layout_marginTop="10dp"
+            android:lines="2"
+            tools:text="@string/lumen_login_description" />
+
+        <TextView
+            android:id="@+id/login_error_message"
+            style="@style/login_error_message"
+            android:layout_marginTop="10dp"
+            android:lines="2"
+            tools:text="@string/lumen_login_error_message" />
+
+        <EditText
+            android:id="@+id/login_input_field"
+            style="@style/login_input"
+            android:visibility="gone"
+            tools:hint="@string/login_input_hint"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/login_resend_button"
+            style="@style/login_resend_button"
+
+            android:text="@string/resend_activation_code"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+
+        <Button
+            android:id="@+id/login_continue_button"
+            style="@style/login_continue_button"
+            android:text="@string/login_continue_button" />
+
+        <TextView
+            android:id="@+id/login_footer_text"
+            style="@style/login_footer_text"
+            android:text="@string/login_footer"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
+</LinearLayout>

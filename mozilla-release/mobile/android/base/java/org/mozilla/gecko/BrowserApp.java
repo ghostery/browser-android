@@ -1035,7 +1035,7 @@ public class BrowserApp extends GeckoApp
         }, 4000);
         if (BuildConfig.FLAVOR_skin.equals("bond")) {
             final LoginHelper loginHelper = new LoginHelper(this);
-            loginHelper.loginOrRegister();
+            loginHelper.start();
         }
         /*Cliqz End*/
     }

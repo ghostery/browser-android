@@ -22,22 +22,21 @@ import io.grpc.ManagedChannelBuilder;
 public class TalkToServer extends AsyncTask<Void, Void, Response> {
 
     public interface ServerCallbacks {
-        void onServerReplied(Response serverResponse, int whichCase);
+        void onServerReplied(Response serverResponse, Cases whichCase);
     }
 
     private static final String LOGTAG = TalkToServer.class.getSimpleName();
     private static final String HOST = "ambassador.dev.k8s.eu-central-1.clyqz.com";
     private static final int PORT = 443;
     //different endpoints that can be called on the server
-    static final int REGISTER_DEVICE = 1;
-    static final int IS_DEVICE_ACTIVE = 2;
-    static final int WAIT_FOR_ACTIVATION = 3;
+    public enum Cases {REGISTER_DEVICE, IS_DEVICE_ACTIVATED, WAIT_FOR_ACTIVATION,
+        RESEND_ACTIVATION};
     private ManagedChannel mChannel;
     private ServerCallbacks mServerCallbacks;
     private RegisterDeviceRequest mRegisterDeviceRequest;
     private int mWhichCase;
 
-    TalkToServer(ServerCallbacks serverCallbacks, int whichCase, String emailId, String secretKey) {
+    TalkToServer(ServerCallbacks serverCallbacks, Cases whichCase, String emailId, String secretKey) {
         mServerCallbacks = serverCallbacks;
         mWhichCase = whichCase;
         final UserAuth userAuth = UserAuth.newBuilder().setUsername(emailId)
@@ -55,9 +54,11 @@ public class TalkToServer extends AsyncTask<Void, Void, Response> {
             switch (mWhichCase) {
                 case REGISTER_DEVICE:
                     return stub.registerDevice(mRegisterDeviceRequest);
-                case IS_DEVICE_ACTIVE:
+                case IS_DEVICE_ACTIVATED:
                 case WAIT_FOR_ACTIVATION:
                     return stub.isDeviceActivated(mRegisterDeviceRequest.getAuth());
+                case RESEND_ACTIVATION:
+                    return stub.resendActivationEmail(mRegisterDeviceRequest.getAuth());
                 default:
                     return stub.registerDevice(mRegisterDeviceRequest);
             }
@@ -66,7 +67,7 @@ public class TalkToServer extends AsyncTask<Void, Void, Response> {
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             pw.flush();
-            return Response.newBuilder().addError(Error.newBuilder().setCode(ErrorCode.UNDEFINED)).build();
+            return Response.newBuilder().addError(Error.newBuilder().setCode(ErrorCode.NO_INTERNET_CONNECTION)).build();
         }
     }
 

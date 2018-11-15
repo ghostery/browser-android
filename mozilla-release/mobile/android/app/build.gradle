@@ -30,6 +30,9 @@ android {
         buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
     }
     signingConfigs {
         if (System.getenv('CERT_PATH') && System.getenv('CERT_PASS')) {
@@ -92,7 +95,7 @@ android {
 
         def isDebuggable = (!mozconfig.substs.MOZILLA_OFFICIAL) || (mozconfig.substs.NIGHTLY_BUILD && mozconfig.substs.MOZ_DEBUG)
         debug {
-            debuggable isDebuggable 
+            debuggable isDebuggable
             multiDexKeepProguard file("${topsrcdir}/mobile/android/config/proguard/debug-robocop-keeps.cfg")
         }
         release {
@@ -123,6 +126,11 @@ android {
             dimension "skin"
             /* Cliqz start */
             versionCode 5
+            externalNativeBuild {
+                cmake {
+                    arguments "-DFLAVOR=PHOTON"
+                }
+            }
             /* Cliqz end */
         }
         /* Cliqz start */
@@ -132,6 +140,11 @@ android {
         bond {
             dimension "skin"
             versionCode 5
+            externalNativeBuild {
+                cmake {
+                    arguments "-DFLAVOR=BOND"
+                }
+            }
         }
 
         standard {
@@ -139,6 +152,10 @@ android {
             versionCode 5
         }
         /* Cliqz end */
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
     }
 
     sourceSets {
@@ -252,6 +269,15 @@ android {
                 srcDir "${topsrcdir}/mobile/android/app/src/bond/res"
                 srcDir "${topsrcdir}/mobile/android/app/src/photon/res"
             }
+            assets {
+                srcDir "${topsrcdir}/mobile/build/ovpnassets"
+            }
+            jniLibs {
+                srcDir "${topsrcdir}/mobile/android/app/src/bond/jniLibs"
+            }
+            proto {
+                srcDir "${topsrcdir}/mobile/android/app/src/bond/proto"
+            }
         }
         standard {
             java {
@@ -337,7 +363,6 @@ dependencies {
     bondImplementation 'io.grpc:grpc-stub:1.15.0'
     bondImplementation 'javax.annotation:javax.annotation-api:1.3.1'
     /*Cliqz End*/
-
 }
 
 /* Cliqz start*/
@@ -514,7 +539,6 @@ android.applicationVariants.all { variant ->
         effort = "max"         // Using more memory and time to find issues is acceptable in automation
         reportLevel = "high"   // For now we only care about high priority bugs. After we have fixed
                                // the issues with medium/low priority we can lower the report level here.
-        
         classes = files("$project.buildDir/intermediates/classes")
         source = variant.javaCompile.source
         classpath = variant.javaCompile.classpath
