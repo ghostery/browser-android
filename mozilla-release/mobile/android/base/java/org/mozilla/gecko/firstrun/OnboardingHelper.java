@@ -254,6 +254,12 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
         onboardingIsPreparing = false;
 
         /* Cliqz start */
+        final View inflatedGeckoAppView = activity.findViewById(R.id.inflated_gecko_app_view);
+        inflatedGeckoAppView.setVisibility(View.VISIBLE);
+
+        final View ghosterySplashScreen = activity.findViewById(R.id.ghostery_splash_screen);
+        ghosterySplashScreen.setVisibility(View.GONE);
+
         if (mCliqzInfroHolder == null) {
             final ViewStub firstrunPagerStub = (ViewStub) activity.findViewById(R.id.firstrun_pager_stub);
             mCliqzInfroHolder = (LinearLayout) firstrunPagerStub.inflate();
@@ -266,9 +272,6 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
                             .append(" values");
             Log.d(LOGTAG, logMessage.toString());
         }
-
-        View ghosterySplashScreen = activity.findViewById(R.id.ghostery_splash_screen);
-        ghosterySplashScreen.setVisibility(View.GONE);
 
         final ViewPager cliqzIntroPager = (ViewPager) mCliqzInfroHolder.findViewById(R.id.cliqz_intro_pager);
         final TabLayout tabLayout = (TabLayout) mCliqzInfroHolder.findViewById(R.id.cliqz_intro_tab_dots);

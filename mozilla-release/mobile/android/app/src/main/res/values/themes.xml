@@ -83,7 +83,9 @@
     <style name="Gecko.App" parent="GeckoAppBase">
         <item name="android:gridViewStyle">@style/Widget.GridView</item>
         <item name="android:spinnerStyle">@style/Widget.Spinner</item>
-        <item name="android:windowBackground">@android:color/white</item>
+        <!-- Cliqz Start -->
+        <item name="android:windowBackground">@color/general_blue_color</item>
+        <!-- Cliqz End -->
         <item name="bookmarksListViewStyle">@style/Widget.BookmarksListView</item>
         <item name="geckoMenuListViewStyle">@style/Widget.GeckoMenuListView</item>
         <item name="homeListViewStyle">@style/Widget.HomeListView</item>
