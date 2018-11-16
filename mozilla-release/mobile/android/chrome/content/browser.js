@@ -1935,9 +1935,6 @@ var BrowserApp = {
         break;
 
       case "Tab:Load": {
-        /* Cliqz start */
-        Cliqz.initUI(data.isPrivate);
-        /* Cliqz end */
         let url = data.url;
         let flags = Ci.nsIWebNavigation.LOAD_FLAGS_ALLOW_THIRD_PARTY_FIXUP
                   | Ci.nsIWebNavigation.LOAD_FLAGS_FIXUP_SCHEME_TYPOS;
@@ -6472,17 +6469,7 @@ var Cliqz = {
         args: [value]
       });
     });
-  },
 
-  initUI: function (isPrivate) {
-    if (!this.Search) {
-      // Search is not yet created
-      this.Search = this._createBrowserForExtension('android@cliqz.com');
-    }
-    if (!this.UILoaded) {
-      // cards.html is not yet loaded
-      this.preloadUI(isPrivate);
-    }
   },
 
   READY_STATUS: {
@@ -6561,25 +6548,17 @@ var Cliqz = {
     }
   },
 
-  preloadUI: function(isPrivate) {
-    const height = window.screen.availHeight - 80;
-    const color = isPrivate ? '#0080b1' : '#00AEF0';
-    const style = `<style>html { background-image: linear-gradient(${color}, #000000); height: ${height}; }</style>`;
-    const meta = '<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">';
-    this.Search.browser.loadURI(`data:text/html;charset=US-ASCII,${encodeURIComponent(style + meta)}`);
-  },
-
   loadCardsUI: function() {
-    if (this.UILoaded) {
+    if (this.Search) {
       return;
     }
-    this.UILoaded = true;
+
     const id = 'android@cliqz.com';
     const uuid = UUIDMap.get(id);
     const path = 'modules/mobile-cards/cards.html';
-    this.cardsUI = this._createBrowserForExtension(id);
-    this.cardsUI.browser.loadURI("moz-extension://" + uuid + "/" + path);
-    this.cardsUI.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
+    this.Search = this._createBrowserForExtension(id);
+    this.Search.browser.loadURI("moz-extension://" + uuid + "/" + path);
+    this.Search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
   },
 
   _searchExtensionListener(msg) {
@@ -6626,10 +6605,13 @@ var Cliqz = {
         });
         break;
       case "renderReady":
-        if (BrowserApp.deck.selectedPanel === this.Search.browser) {
-          this.overlayPanel(this.cardsUI.browser);
+        if (!this.searchIsReady) {
+          GlobalEventDispatcher.sendRequest({
+            type: "Search:Ready"
+          });
+          this.searchIsReady = true;
         }
-        this.Search.browser = this.cardsUI.browser;
+
         if (this.lastQueuedQuery) {
           this.messageSearchExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
           this.lastQueuedQuery = "";
@@ -6798,15 +6780,14 @@ var Cliqz = {
         break;
       case "Search:Search":
         this.lastQueuedQuery = data.q || "";
-        if (this.UILoaded) {
+        if (this.searchIsReady) {
           this.messageSearchExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
           this.lastQueuedQuery = "";
         }
         break;
       case "Search:Show":
-        this.overlayPanel(this.Search.browser);
+        this.Search && this.overlayPanel(this.Search.browser);
         break;
-
       case "Privacy:GetInfo":
         this.messagePrivacyExtension({ name: "getAndroidPanelData" });
         break;

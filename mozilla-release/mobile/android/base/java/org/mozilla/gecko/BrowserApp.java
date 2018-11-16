@@ -329,6 +329,8 @@ public class BrowserApp extends GeckoApp
     private SafeIntent safeStartingIntent;
     private Intent startingIntentAfterPip;
     private boolean isInAutomation;
+    private boolean mSearchIsReady = false;
+    private boolean mUserDidSearch = false;
 
     // The types of guest mode dialogs we show.
     public static enum GuestModeDialog {
@@ -885,6 +887,7 @@ public class BrowserApp extends GeckoApp
             "Search:OpenLink",
             "Privacy:Count",
             "Search:Idle",
+            "Search:Ready",
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
@@ -1759,6 +1762,7 @@ public class BrowserApp extends GeckoApp
             "Privacy:Count",
             "Privacy:Info",
             "Search:Idle",
+            "Search:Ready",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
             null);
@@ -2373,6 +2377,13 @@ public class BrowserApp extends GeckoApp
                 mGhosterySplashScreen.setVisibility(View.GONE);
                 if (!isOnboardingVisible) {
                     enterEditingMode();
+                }
+                break;
+            case "Search:Ready":
+                mSearchIsReady = true;
+                if (mUserDidSearch) {
+                    showCliqzSearch();
+                    mHomeScreenContainer.setVisibility(View.INVISIBLE);
                 }
                 break;
             case "Search:QuerySuggestions":
@@ -3309,7 +3320,10 @@ public class BrowserApp extends GeckoApp
             // Prevent overdraw by hiding the underlying web content and HomePager View
             hideWebContent();
         }
-        mHomeScreenContainer.setVisibility(View.INVISIBLE);
+        mUserDidSearch = true;
+        if (mSearchIsReady) {
+            mHomeScreenContainer.setVisibility(View.INVISIBLE);
+        }
 
         final FragmentManager fm = getSupportFragmentManager();
 
