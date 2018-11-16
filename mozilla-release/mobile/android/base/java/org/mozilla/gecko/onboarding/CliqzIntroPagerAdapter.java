@@ -96,13 +96,13 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
             final GeckoBundle bundle = new GeckoBundle();
             switch (view.getId()) {
                 case R.id.radio1:
-                    bundle.putString("blockingPolicy", "BLOCKING_POLICY_NOTHING");
+                    bundle.putString("blockingPolicy", "UPDATE_BLOCK_NONE");
                     break;
                 case R.id.radio2:
-                    bundle.putString("blockingPolicy", "BLOCKING_POLICY_RECOMMENDED");
+                    bundle.putString("blockingPolicy", "UPDATE_BLOCK_RECOMMENDED");
                     break;
                 case R.id.radio3:
-                    bundle.putString("blockingPolicy", "BLOCKING_POLICY_EVERYTHING");
+                    bundle.putString("blockingPolicy", "UPDATE_BLOCK_ALL");
                     break;
             }
             EventDispatcher.getInstance().dispatch("Privacy:SetBlockingPolicy", bundle);

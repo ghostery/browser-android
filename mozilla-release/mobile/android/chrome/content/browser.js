@@ -6822,13 +6822,14 @@ var Cliqz = {
         break;
       case "Privacy:SetBlockingPolicy":
         // blocking policy should be one of:
-        // 'BLOCKING_POLICY_EVERYTHING'
-        // 'BLOCKING_POLICY_NOTHING'
-        // 'BLOCKING_POLICY_RECOMMENDED'
+        // 'UPDATE_BLOCK_ALL'
+        // 'UPDATE_BLOCK_NONE'
+        // 'UPDATE_BLOCK_RECOMMENDED'
+        // 'UPDATE_BLOCK_ADS'
         let blockingPolicy = data.blockingPolicy;
         this.messagePrivacyExtension({
           origin: 'ghostery-hub',
-          name: 'SET_BLOCKING_POLICY',
+          name: 'updateBlocking',
           message: blockingPolicy
         });
     }
