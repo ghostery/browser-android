@@ -3103,7 +3103,14 @@ public class BrowserApp extends GeckoApp
         // This must be called before the dynamic toolbar is set visible because it calls
         // FormAssistPopup.onMetricsChanged, which queues a runnable that undoes the effect of hide.
         // With hide first, onMetricsChanged will return early instead.
-        mFormAssistPopup.hide();
+
+        /* Cliqz start */
+        // add this because at the first run we delay the initialization after the splash screen
+        if(mFormAssistPopup != null) {
+            mFormAssistPopup.hide();
+        }
+        /* Cliqz end */
+
         mFindInPageBar.hide();
 
         // Refresh toolbar height to possibly restore the toolbar padding
