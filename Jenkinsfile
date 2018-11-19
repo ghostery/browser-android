@@ -9,7 +9,7 @@ def matrix = [
     'ghostery':[
         'bundleid': 'com.ghostery.android.ghostery',
         'target': 'i686-linux-android',
-        'test': false,
+        'test': true,
     ],
     'cliqz-alpha':[
         'bundleid': 'com.cliqz.browser.alpha',
@@ -96,9 +96,9 @@ def build(Map m){
                         try {
                             stage('Checkout Autobots') {
                                 dir('autobots'){
-                                    git branch:'version2.0',
-                                    credentialsId: 'cliqz-ci',
-                                    url: 'https://github.com/cliqz/autobots.git'
+                                    git branch:'master',
+                                    credentialsId: 'cliqz-oss-ci',
+                                    url: 'https://github.com/cliqz-oss/cliqz-mobile-tests.git'
                                 }
                             }
                             timeout(10) {
