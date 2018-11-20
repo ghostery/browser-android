@@ -1,41 +1,17 @@
 #!/bin/env groovy
 @Library('cliqz-shared-library@v1.2') _
 def matrix = [
-    'Cliqz ARM':[
+    'Bond ARM':[
         'arch': 'arm',
-        'brand': 'cliqz',
-        'channel': 'MA02',
+        'brand': 'bond',
+        'channel': 'MA62',
         'target': 'arm-linux-androideabi',
     ],
-    'Cliqz X86':[
+    'Bond X86':[
         'arch': 'x86',
-        'brand': 'cliqz',
-        'channel': 'MA02',
+        'brand': 'bond',
+        'channel': 'MA62',
         'target': 'i686-linux-android',
-    ],
-    'Ghostery ARM':[
-        'arch': 'arm',
-        'brand': 'ghostery',
-        'channel': 'MA52',
-        'target': 'arm-linux-androideabi',
-    ],
-    'Ghostery X86':[
-        'arch': 'x86',
-        'brand': 'ghostery',
-        'channel': 'MA52',
-        'target': 'i686-linux-android',
-    ],
-    'Cliqz Alpha':[
-        'arch': 'arm',
-        'brand': 'cliqz-alpha',
-        'channel': 'MA02',
-        'target': 'arm-linux-androideabi',
-    ],
-    'Ghostery Alpha':[
-        'arch': 'arm',
-        'brand': 'ghostery-alpha',
-        'channel': 'MA52',
-        'target': 'arm-linux-androideabi',
     ],
 ]
 def baseImage
@@ -49,7 +25,7 @@ node ('master'){
     }
     id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
     baseImageName ="browser-f/android:${dockerTag}"
-    codeImageName ="browser-f/android:nightlycode"
+    codeImageName ="browser-f/android:bondcode"
     baseImage = stage('Build base image') {
         docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
     }
@@ -111,8 +87,6 @@ def build(Map m){
                             cp ../mozconfigs/deploy.mozconfig mozconfig
                             ./mach clobber
                             ./mach build
-                            rm -f /app/mozilla-release/objdir-frontend-android/$BRAND/dist/bin/defaults/pref/mobile-l10n.js
-                            cp /app/mozilla-release/mobile/android/installer/mobile-l10n.js /app/mozilla-release/objdir-frontend-android/$BRAND/dist/bin/defaults/pref/mobile-l10n.js
                             export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                             for AB_CD in $MOZ_CHROME_MULTILOCALE; do
                                 ./mach build chrome-$AB_CD
@@ -130,11 +104,11 @@ def build(Map m){
                                 cd /app/mozilla-release
                                 export MOZ_CHROME_MULTILOCALE=`ls -1 '../l10n/'|paste -s -d ' '`
                                 export AB_CD=multi
-                                ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                                ./gradlew assembleOfficialWithGeckoBinariesNoMinApiBondRelease
                             """
                         }
                         apk = sh(returnStdout: true,
-                            script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
+                            script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiBond/release && \
                             find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                     }
                 }
@@ -148,10 +122,10 @@ def build(Map m){
                         ]
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
-                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiBond/release/${apk}"
                         def fileName = "${brandname}_Nightly-${env.BUILD_NUMBER}_${getId()}"
                         try {
-                            zip archive: true, dir: "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release", glob: '', zipFile: "${flavorname}-build.zip"
+                            zip archive: true, dir: "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiBond/release", glob: '', zipFile: "${flavorname}-build.zip"
                         } catch(e) {
                             print e
                         }
@@ -234,21 +208,17 @@ stage('JIRA'){
 stage('Send email') {
     def projectName  = '$PROJECT_NAME'
     def changesSinceLastSuccess = getChangeString(passedBuilds)
-    def bodytxt = """
+    def bodytxtBond = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
-        Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz_Nightly-${env.BUILD_NUMBER}_${id}.apk
-        Cliqz X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz/cliqz_Nightly-${env.BUILD_NUMBER}_${id}_x86.apk
-        Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/cliqz-alpha/cliqz-alpha_Nightly-${env.BUILD_NUMBER}_${id}.apk
-        Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/ghostery_Nightly-${env.BUILD_NUMBER}_${id}.apk
-        Ghostery X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery/ghostery_Nightly-${env.BUILD_NUMBER}_${id}_x86.apk
-        Ghostery-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/ghostery-alpha/ghostery-alpha_Nightly-${env.BUILD_NUMBER}_${id}.apk
+        Bond apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/bond_Nightly-${env.BUILD_NUMBER}_${id}.apk
+        Bond X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/bond_Nightly-${env.BUILD_NUMBER}_${id}_x86.apk
         ${changesSinceLastSuccess}
         Issues Transtioned ${transitionIssueList}""".stripIndent()
     emailext(
-        to: 'androiddev@cliqz.com',
-        subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
-        body: bodytxt
+        to: 'project-bond@cliqz.com',
+        subject: 'BOND » nightly - Build # $BUILD_NUMBER',
+        body: bodytxtBond
     )
 }
 
