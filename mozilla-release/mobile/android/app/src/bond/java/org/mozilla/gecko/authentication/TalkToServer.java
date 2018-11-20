@@ -2,6 +2,8 @@ package org.mozilla.gecko.authentication;
 
 import android.os.AsyncTask;
 
+import com.google.protobuf.GeneratedMessageLite;
+
 import org.mozilla.gecko.BondV1Grpc;
 import org.mozilla.gecko.Error;
 import org.mozilla.gecko.ErrorCode;
@@ -19,10 +21,10 @@ import io.grpc.ManagedChannelBuilder;
 /**
  * Copyright © Cliqz 2018
  */
-public class TalkToServer extends AsyncTask<Void, Void, Response> {
+public class TalkToServer extends AsyncTask<Void, Void, GeneratedMessageLite> {
 
     public interface ServerCallbacks {
-        void onServerReplied(Response serverResponse, Cases whichCase);
+        void onServerReplied(GeneratedMessageLite serverResponse, GeneratedMessageLite whichCase);
     }
 
     private static final String LOGTAG = TalkToServer.class.getSimpleName();
@@ -34,7 +36,7 @@ public class TalkToServer extends AsyncTask<Void, Void, Response> {
     private ManagedChannel mChannel;
     private ServerCallbacks mServerCallbacks;
     private RegisterDeviceRequest mRegisterDeviceRequest;
-    private int mWhichCase;
+    private Cases mWhichCase;
 
     TalkToServer(ServerCallbacks serverCallbacks, Cases whichCase, String emailId, String secretKey) {
         mServerCallbacks = serverCallbacks;
@@ -47,7 +49,7 @@ public class TalkToServer extends AsyncTask<Void, Void, Response> {
     }
 
     @Override
-    protected Response doInBackground(Void... voids) {
+    protected GeneratedMessageLite doInBackground(Void... voids) {
         try {
             mChannel = ManagedChannelBuilder.forAddress(HOST, PORT).build();
             BondV1Grpc.BondV1BlockingStub stub = BondV1Grpc.newBlockingStub(mChannel);
@@ -72,7 +74,7 @@ public class TalkToServer extends AsyncTask<Void, Void, Response> {
     }
 
     @Override
-    protected void onPostExecute(Response result) {
+    protected void onPostExecute(GeneratedMessageLite result) {
         try {
             if (mChannel != null) {
                 mChannel.shutdown().awaitTermination(1, TimeUnit.SECONDS);

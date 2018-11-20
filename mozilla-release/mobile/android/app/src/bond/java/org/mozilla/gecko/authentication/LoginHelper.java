@@ -15,9 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import org.mozilla.gecko.Error;
 import org.mozilla.gecko.ErrorCode;
+import com.google.protobuf.GeneratedMessageLite;
+import org.mozilla.gecko.IsDeviceActivatedResponse;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Response;
 import org.mozilla.gecko.Utils;
@@ -100,11 +101,11 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
     }
 
     @Override
-    public void onServerReplied(Response serverResponse, TalkToServer.Cases whichCase) {
+    public void onServerReplied(GeneratedMessageLite serverResponse, TalkToServer.Cases whichCase) {
         switch (whichCase) {
             case IS_DEVICE_ACTIVATED:
-                if (serverResponse.getErrorCount() > 0) {
-                    if (serverResponse.getErrorList().get(0).getCode() == ErrorCode.NO_INTERNET_CONNECTION) {
+                if (((IsDeviceActivatedResponse)serverResponse).getErrorCount() > 0) {
+                    if (((IsDeviceActivatedResponse)serverResponse).getErrorList().get(0).getCode() == ErrorCode.NO_INTERNET_CONNECTION) {
                         showLoginScreen();
                         mLoginInputField.setText(mEmailId);
                         mErrorMessageTextView.setText(mActivity.getString(R.string.error_no_internet_connection));
@@ -118,9 +119,9 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
                 }
                 break;
             case REGISTER_DEVICE:
-                if (serverResponse.getErrorCount() > 0) {
+                if (((Response)serverResponse).getErrorCount() > 0) {
                     Log.e(LOGTAG, "Error registering device.");
-                    final Error error = serverResponse.getErrorList().get(0);
+                    final Error error = ((Response)serverResponse).getErrorList().get(0);
                     Log.e(LOGTAG, error.getMsg());
 
                     if (error.getCode() == ErrorCode.DEVICE_EXISTS) {
@@ -135,7 +136,7 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
                 }
                 break;
             case RESEND_ACTIVATION:
-                if (serverResponse.getErrorCount() > 0) {
+                if (((Response)serverResponse).getErrorCount() > 0) {
                     Log.e(LOGTAG, "can't resend the activation again");
                     if (serverResponse.getErrorList().get(0).getCode() == ErrorCode
                             .NO_INTERNET_CONNECTION) {
@@ -148,7 +149,7 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
                 }
                 break;
             case WAIT_FOR_ACTIVATION:
-                if (serverResponse.getErrorCount() > 0) {
+                if (((IsDeviceActivatedResponse)serverResponse).getErrorCount() > 0) {
                     Log.e(LOGTAG, "device is still not active");
                 } else {
                     mTimer.cancel();
