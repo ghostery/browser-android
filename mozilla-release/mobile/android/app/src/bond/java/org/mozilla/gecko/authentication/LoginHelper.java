@@ -2,23 +2,33 @@ package org.mozilla.gecko.authentication;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-
+import android.widget.TextView;
+import org.mozilla.gecko.Error;
+import org.mozilla.gecko.ErrorCode;
+import com.google.protobuf.GeneratedMessageLite;
+import org.mozilla.gecko.IsDeviceActivatedResponse;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Response;
+import org.mozilla.gecko.Utils;
 import org.mozilla.gecko.preferences.PreferenceManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * Copyright © Cliqz 2018
@@ -29,14 +39,23 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
     private static final long POLL_INTERVAL = 10 * 1000; //10 seconds
 
     private Activity mActivity;
-    private Button mContinueButton;
-    private EditText mEmailInputField;
     private ViewStub mLoginScreenStub;
+    private ImageView mLoginIcon;
+    private TextView mLoginTitle;
+    private TextView mLoginDescription;
+    private TextView mErrorMessageTextView;
+    private EditText mLoginInputField;
+    private Button mContinueButton;
+    private Button mResendButton;
+    private TextView mFooterTextView;
+
     private String mSecretKey;
     private PreferenceManager mPreferenceManager;
     private Timer mTimer;
-    private ProgressBar mProgressBar;
+    private String mEmailId;
+    private LoginStatus mLoginState = LoginStatus.REGISTRATION;
 
+    ;
     @SuppressLint("HardwareIds")
     public LoginHelper(AppCompatActivity activity) {
         mActivity = activity;
@@ -45,77 +64,117 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
         mPreferenceManager = PreferenceManager.getInstance(activity.getBaseContext());
     }
 
-    public void loginOrRegister() {
-        final String emailId = mPreferenceManager.getEmailId();
-        if (emailId.isEmpty()) {
-            //no email id found show login screen
+    public void start() {
+        if (!autoLogin()) {
             showLoginScreen();
-        } else {
-            //check if device is activated
-            checkDeviceRegistered(emailId);
         }
+    }
+
+    private boolean autoLogin() {
+        mEmailId = mPreferenceManager.getEmailId();
+        if (!mEmailId.isEmpty()) {
+            checkDeviceActivated();
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void onClick(View view) {
-        final String emailId = mEmailInputField.getText().toString();
-        if (emailId.isEmpty()) {
-            //TODO check for valid email format
-        } else {
-            //register device
-            mPreferenceManager.setEmailId(emailId);
-            registerDevice(emailId);
+        if (view.getId() == R.id.login_continue_button) {
+            switch (mLoginState) {
+                case REGISTRATION:
+                    mEmailId = mLoginInputField.getText().toString();
+                    if (!Utils.validateEmail(mEmailId)) {
+                        mErrorMessageTextView.setText(mActivity.getString(R.string
+                                .error_invalid_email));
+                    } else {
+                        registerDevice();
+                    }
+                    break;
+                case WELCOME:
+                    hideLoginScreen();
+            }
+        } else if (view.getId() == R.id.login_resend_button) {
+            resendActivation();
         }
     }
 
     @Override
-    public void onServerReplied(Response serverResponse, int whichCase) {
+    public void onServerReplied(GeneratedMessageLite serverResponse, TalkToServer.Cases whichCase) {
         switch (whichCase) {
-            case TalkToServer.IS_DEVICE_ACTIVE:
-                if (serverResponse.getErrorCount() > 0) {
-                    Log.e(LOGTAG, "Device not activated yet");
-                    Log.e(LOGTAG, serverResponse.getErrorList().toString());
-                    //device is not activated
-                    //show "loginscreen" or probably "waiting for activation screen" ?
-                    showLoginScreen();
+            case IS_DEVICE_ACTIVATED:
+                if (((IsDeviceActivatedResponse)serverResponse).getErrorCount() > 0) {
+                    if (((IsDeviceActivatedResponse)serverResponse).getErrorList().get(0).getCode() == ErrorCode.NO_INTERNET_CONNECTION) {
+                        showLoginScreen();
+                        mLoginInputField.setText(mEmailId);
+                        mErrorMessageTextView.setText(mActivity.getString(R.string.error_no_internet_connection));
+                    } else {
+                        Log.e(LOGTAG, "Device not activated yet");
+                        initViews();
+                        showActivationScreen();
+                    }
                 } else {
-                    //login successful
-                    //TODO show welcome screen, if first login
+                    saveEmailId();
                 }
                 break;
-            case TalkToServer.REGISTER_DEVICE:
-                if (serverResponse.getErrorCount() > 0) {
+            case REGISTER_DEVICE:
+                if (((Response)serverResponse).getErrorCount() > 0) {
                     Log.e(LOGTAG, "Error registering device.");
-                    Log.e(LOGTAG, serverResponse.getErrorList().toString());
+                    final Error error = ((Response)serverResponse).getErrorList().get(0);
+                    Log.e(LOGTAG, error.getMsg());
+
+                    if (error.getCode() == ErrorCode.DEVICE_EXISTS) {
+                        showActivationScreen();
+                    } else if (error.getCode() == ErrorCode.NO_INTERNET_CONNECTION) {
+                        mErrorMessageTextView.setText(mActivity.getString(R.string
+                                .error_no_internet_connection));
+                    }
                 } else {
-                    //start polling until user activates device
-                    pollServerForActivation();
+                    saveEmailId();
+                    showActivationScreen();
                 }
                 break;
-            case TalkToServer.WAIT_FOR_ACTIVATION:
-                if (serverResponse.getErrorCount() > 0) {
+            case RESEND_ACTIVATION:
+                if (((Response)serverResponse).getErrorCount() > 0) {
+                    Log.e(LOGTAG, "can't resend the activation again");
+                    if (serverResponse.getErrorList().get(0).getCode() == ErrorCode
+                            .NO_INTERNET_CONNECTION) {
+                        mErrorMessageTextView.setText(mActivity.getString(R.string
+                                .error_no_internet_connection));
+                    } else {
+                        mErrorMessageTextView.setText(mActivity.getString(R.string
+                                .error_resend_activation));
+                    }
+                }
+                break;
+            case WAIT_FOR_ACTIVATION:
+                if (((IsDeviceActivatedResponse)serverResponse).getErrorCount() > 0) {
                     Log.e(LOGTAG, "device is still not active");
                 } else {
-                    //device activated. hide login screen
                     mTimer.cancel();
-                    mProgressBar.setVisibility(View.GONE);
-                    mLoginScreenStub.setVisibility(View.GONE);
-                    //TODO show welome screen if first login
+                    saveEmailId();
+                    showWelcomeScreen();
                 }
                 break;
         }
     }
 
-    private void checkDeviceRegistered(String emailId) {
-        new TalkToServer(this, TalkToServer.IS_DEVICE_ACTIVE, emailId, mSecretKey).execute();
+    private void checkDeviceActivated() {
+        new TalkToServer(this, TalkToServer.Cases.IS_DEVICE_ACTIVATED, mEmailId, mSecretKey).execute();
     }
 
-    private void registerDevice(String emailId) {
-        new TalkToServer(this, TalkToServer.REGISTER_DEVICE, emailId, mSecretKey).execute();
+    private void registerDevice() {
+        new TalkToServer(this, TalkToServer.Cases.REGISTER_DEVICE, mEmailId, mSecretKey).execute();
+    }
+
+    private void resendActivation() {
+        new TalkToServer(LoginHelper.this,
+                TalkToServer.Cases.RESEND_ACTIVATION, mEmailId, mSecretKey)
+                .execute();
     }
 
     private void pollServerForActivation() {
-        final String emailID = mPreferenceManager.getEmailId();
         final Handler handler = new Handler();
         mTimer = new Timer();
         final TimerTask doAsynchronousTask = new TimerTask() {
@@ -124,22 +183,75 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
                 handler.post(new Runnable() {
                     public void run() {
                         new TalkToServer(LoginHelper.this,
-                                TalkToServer.WAIT_FOR_ACTIVATION, emailID, mSecretKey).execute();
+                                TalkToServer.Cases.WAIT_FOR_ACTIVATION, mEmailId, mSecretKey)
+                                .execute();
                     }
                 });
             }
         };
         //we should define a limit for how long we keep polling
         mTimer.schedule(doAsynchronousTask, 0, POLL_INTERVAL); //execute in every 10secs
-        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void initViews() {
+        mLoginScreenStub = mActivity.findViewById(R.id.bond_login_screen_stub);
+        mLoginScreenStub.setLayoutResource(R.layout.bond_login_screen);
+        final LinearLayout loginScreenView = (LinearLayout) mLoginScreenStub.inflate();
+        mLoginIcon = (ImageView) loginScreenView.findViewById(R.id.login_icon);
+        mLoginTitle = (TextView) loginScreenView.findViewById(R.id.login_title);
+        mLoginDescription = (TextView) loginScreenView.findViewById(R.id.login_description);
+        mErrorMessageTextView = (TextView) loginScreenView.findViewById(R.id.login_error_message);
+        mLoginInputField = loginScreenView.findViewById(R.id.login_input_field);
+        mContinueButton = loginScreenView.findViewById(R.id.login_continue_button);
+        mContinueButton.setOnClickListener(this);
+        mResendButton = loginScreenView.findViewById(R.id.login_resend_button);
+        mResendButton.setOnClickListener(this);
+        mFooterTextView = (TextView) loginScreenView.findViewById(R.id.login_footer_text);
+    }
+
+    private void setViewsValues(LoginStatus loginState, int iconId, int titleId, int descriptionId,
+                                int inputFieldHintId, int inputFieldVisibility, int resendVisibility
+            , int footerTextId, int footerTextVisibility) {
+        mLoginState = loginState;
+        final Drawable drawable = VectorDrawableCompat.create(mActivity.getResources(), iconId, null);
+        mLoginIcon.setImageDrawable(drawable);
+        mLoginTitle.setText(mActivity.getString(titleId));
+        mLoginDescription.setText(mActivity.getString(descriptionId));
+        mLoginInputField.setVisibility(inputFieldVisibility);
+        if (inputFieldVisibility == VISIBLE) {
+            mLoginInputField.setHint(mActivity.getString(inputFieldHintId));
+        }
+        mResendButton.setVisibility(resendVisibility);
+        mFooterTextView.setVisibility(footerTextVisibility);
     }
 
     private void showLoginScreen() {
-        mLoginScreenStub = mActivity.findViewById(R.id.bond_login_screen_stub);
-        final LinearLayout loginScreenView = (LinearLayout) mLoginScreenStub.inflate();
-        mContinueButton = loginScreenView.findViewById(R.id.bond_continue_button);
-        mContinueButton.setOnClickListener(this);
-        mEmailInputField = loginScreenView.findViewById(R.id.bond_email_input_field);
-        mProgressBar = loginScreenView.findViewById(R.id.progress_bar);
+        initViews();
+        setViewsValues(LoginStatus.REGISTRATION, R.mipmap.lumen_logo, R.string.browserName, R.string
+                .login_description, R.string.login_input_hint, VISIBLE, GONE, R.string
+                .login_footer, VISIBLE);
     }
+
+    private void showActivationScreen() {
+        setViewsValues(LoginStatus.ACTIVATION, R.drawable.login_circle, R.string
+                        .login_activation_title, R.string.login_activation_description, -1, GONE, VISIBLE,
+                -1, GONE);
+        pollServerForActivation();
+    }
+
+    private void showWelcomeScreen() {
+        setViewsValues(LoginStatus.WELCOME, R.drawable.login_welcome, R.string.login_welcome_title,
+                R.string.login_welcome_description, -1, GONE, GONE, -1, GONE);
+    }
+
+    private void hideLoginScreen() {
+        mLoginScreenStub.setVisibility(View.GONE);
+    }
+
+    private void saveEmailId() {
+        mPreferenceManager.setEmailId(mEmailId);
+    }
+
+    private enum LoginStatus {REGISTRATION, ACTIVATION, WELCOME}
+
 }

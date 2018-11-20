@@ -982,6 +982,20 @@
   <string name="bond_dashboard_contols_on">&bond_dashboard_contols_on;</string>
   <string name="bond_dashboard_contols_off">&bond_dashboard_contols_off;</string>
   <string name="bond_dashboard_ultimate_protection">&bond_dashboard_ultimate_protection;</string>
+  <string name="login_description">&login_description;</string>
+  <string name="login_input_hint">&login_input_hint;</string>
+  <string name="login_continue_button">&login_continue_button;</string>
+  <string name="login_footer">&login_footer;</string>
+  <string name="error_invalid_email">&error_invalid_email;</string>
+  <string name="resend_activation_code">&resend_activation_code;</string>
+  <string name="login_promotion_code_hint">&login_promotion_code_hint;</string>
+  <string name="login_activation_title">&login_activation_title;</string>
+  <string name="login_activation_description">&login_activation_description;</string>
+  <string name="login_welcome_title">&login_welcome_title;</string>
+  <string name="login_welcome_description">&login_welcome_description;</string>
+  <string name="browserName">&browserName;</string>
+  <string name="error_no_internet_connection">&error_no_internet_connection;</string>
+  <string name="error_resend_activation">&error_resend_activation;</string>
   <!-- Cliqz end -->
 
 </resources>

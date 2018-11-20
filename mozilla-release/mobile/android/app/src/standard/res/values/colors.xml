@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright © Cliqz 2018-->
 <resources>
-    <color name="dashboard_text_blue">#07E6FE</color>
     <color name="login_error_message">#EDBABE</color>
     <color name="login_input_text">#3073DB</color>
     <color name="login_continue_button">#2B66C2</color>

@@ -314,3 +314,19 @@
 <!ENTITY bond_dashboard_contols_on "ON">
 <!ENTITY bond_dashboard_contols_off "OFF">
 <!ENTITY bond_dashboard_ultimate_protection "ULTIMATE PROTECTION:">
+<!ENTITY login_description "A browser tailored tp you smart and safe\n (2lines)">
+<!ENTITY login_input_hint "Enter your Email">
+<!ENTITY login_continue_button "CONTINUE">
+<!ENTITY login_footer "here a footer text in \n(2 lines)">
+<!ENTITY error_invalid_email "The email you entered is not valid">
+<!ENTITY resend_activation_code "RESEND ACTIVATION LINK">
+<!ENTITY login_promotion_code_hint "Enter Promotion Code">
+<!ENTITY login_activation_title "ALOMOST READY...">
+<!ENTITY login_activation_description
+    "Activation link sent to your email.\nCheck your mailbox to confirm your account.">
+<!ENTITY login_welcome_title "WELCOME IN LUMEN!">
+<!ENTITY login_welcome_description
+    "Your free 2-weeks trial starts now!\nUpgrade your account anytime in the settings.">
+<!ENTITY browserName "&brandFullName;">
+<!ENTITY error_no_internet_connection "No Internet Connection">
+<!ENTITY error_resend_activation "Can't resend the activation link">

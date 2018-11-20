@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright © Cliqz 2018-->
 <resources>
-
     <style name="tab_layout_style">
     <item name="tabTextAppearance">@style/TabLayoutStyle</item>
     <item name="android:background">@color/general_blue_color</item>
     <item name="tabSelectedTextColor">@android:color/white</item>
     <item name="tabIndicatorColor">@android:color/white</item>
     </style>
-
 </resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="40dp"></corners>
+    <stroke
+        android:width="2dp"
+        android:color="@color/login_input_text"></stroke>
+</shape>

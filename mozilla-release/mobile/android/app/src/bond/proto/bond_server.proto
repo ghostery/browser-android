@@ -35,6 +35,9 @@ enum ErrorCode {
   UNAUTHORIZED = 8;
   EMAIL_UNCONFIRMED = 9;
   NOT_SUBSCRIBED = 10;
+  DEVICE_EXISTS = 11;
+  DEVICE_ACTIVATED = 12;
+  NO_INTERNET_CONNECTION = 13;
 }
 
 enum SubscriptionType {

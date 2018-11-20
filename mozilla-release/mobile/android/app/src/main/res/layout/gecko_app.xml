@@ -207,8 +207,7 @@
         <ViewStub
             android:id="@+id/bond_login_screen_stub"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout="@layout/bond_login_screen"/>
+            android:layout_height="match_parent" />
 
     </FrameLayout>
     <!-- Cliqz End -->
