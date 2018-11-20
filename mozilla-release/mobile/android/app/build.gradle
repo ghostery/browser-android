@@ -30,9 +30,6 @@ android {
         buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-        ndk {
-            abiFilters "armeabi-v7a", "x86"
-        }
     }
     signingConfigs {
         if (System.getenv('CERT_PATH') && System.getenv('CERT_PASS')) {
@@ -126,11 +123,6 @@ android {
             dimension "skin"
             /* Cliqz start */
             versionCode 5
-            externalNativeBuild {
-                cmake {
-                    arguments "-DFLAVOR=PHOTON"
-                }
-            }
             /* Cliqz end */
         }
         /* Cliqz start */
@@ -140,11 +132,6 @@ android {
         bond {
             dimension "skin"
             versionCode 5
-            externalNativeBuild {
-                cmake {
-                    arguments "-DFLAVOR=BOND"
-                }
-            }
         }
 
         standard {
@@ -152,10 +139,6 @@ android {
             versionCode 5
         }
         /* Cliqz end */
-    }
-
-    dexOptions {
-        javaMaxHeapSize "4g"
     }
 
     sourceSets {
@@ -268,12 +251,6 @@ android {
             res {
                 srcDir "${topsrcdir}/mobile/android/app/src/bond/res"
                 srcDir "${topsrcdir}/mobile/android/app/src/photon/res"
-            }
-            assets {
-                srcDir "${topsrcdir}/mobile/build/ovpnassets"
-            }
-            jniLibs {
-                srcDir "${topsrcdir}/mobile/android/app/src/bond/jniLibs"
             }
             proto {
                 srcDir "${topsrcdir}/mobile/android/app/src/bond/proto"
