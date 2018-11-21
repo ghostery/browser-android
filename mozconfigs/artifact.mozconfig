@@ -16,6 +16,9 @@ ac_add_options --with-branding=mobile/android/branding/cliqz
 ac_add_options --with-libclang-path=$CLANG_HOME/lib/
 ac_add_options --with-clang-path=$CLANG_HOME/bin/clang
 
+ac_add_options --enable-optimize
+ac_add_options --disable-debug
+
 # MOZ Settings
 export MOZ_AUTOMATION_BUILD_SYMBOLS=1
 export MOZ_AUTOMATION_L10N_CHECK=0
@@ -25,4 +28,5 @@ export MOZ_AUTOMATION_UPDATE_PACKAGING=0
 export MOZ_AUTOMATION_PACKAGE_GENERATED_SOURCES=1
 export MOZ_AUTOMATION_UPLOAD=0
 export MOZ_SIMPLE_PACKAGE_NAME=target
+export MOZ_TELEMETRY_REPORTING=1
 export MOZILLA_OFFICIAL=1
