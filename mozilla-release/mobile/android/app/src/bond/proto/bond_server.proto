@@ -9,11 +9,11 @@ service BondV1 {
   rpc GetDevices(UserAuth) returns (GetDevicesResponse);
   rpc UnregisterDevice(UnregisterDeviceRequest) returns (Response);
   rpc ResendActivationEmail(UserAuth) returns (Response);
-  rpc IsDeviceActivated(UserAuth) returns (Response);
+  rpc IsDeviceActivated(UserAuth) returns (IsDeviceActivatedResponse);
   rpc RequestDelete(UserAuth) returns (Response);
 
   // Subscription management
-  rpc GetSubscriptions(UserAuth) returns (Subscriptions);
+  rpc GetSubscription(UserAuth) returns (GetSubscriptionResponse);
   rpc Subscribe(SubscribeRequest) returns (Response);
   rpc Unsubscribe(UnsubscribeRequest) returns (Response);
 
@@ -41,9 +41,10 @@ enum ErrorCode {
 }
 
 enum SubscriptionType {
-  TRIAL = 0;
-  TRIAL_CODE = 1;
-  PREMIUM_MONTHLY = 2;
+  BASIC = 0;
+  TRIAL = 1;
+  TRIAL_CODE = 2;
+  PREMIUM_MONTHLY = 3;
 }
 
 message Error {
@@ -70,6 +71,11 @@ message RegisterDeviceRequest {
 
 message UnregisterDeviceRequest {
   UserAuth auth = 1;
+  int64 deviceId = 2;
+}
+
+message IsDeviceActivatedResponse {
+  repeated Error error = 1;
   int64 deviceId = 2;
 }
 
@@ -113,9 +119,9 @@ message Subscription {
   int64 id = 3;
 }
 
-message Subscriptions {
+message GetSubscriptionResponse {
   repeated Error error = 1;
-  repeated Subscription subscriptions = 2;
+  Subscription subscription = 2;
 }
 
 message SubscribeRequest {

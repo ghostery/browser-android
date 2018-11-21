@@ -15,9 +15,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.protobuf.GeneratedMessageLite;
+
 import org.mozilla.gecko.Error;
 import org.mozilla.gecko.ErrorCode;
-import com.google.protobuf.GeneratedMessageLite;
 import org.mozilla.gecko.IsDeviceActivatedResponse;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Response;
@@ -138,7 +140,7 @@ public class LoginHelper implements View.OnClickListener, TalkToServer.ServerCal
             case RESEND_ACTIVATION:
                 if (((Response)serverResponse).getErrorCount() > 0) {
                     Log.e(LOGTAG, "can't resend the activation again");
-                    if (serverResponse.getErrorList().get(0).getCode() == ErrorCode
+                    if (((Response)serverResponse).getErrorList().get(0).getCode() == ErrorCode
                             .NO_INTERNET_CONNECTION) {
                         mErrorMessageTextView.setText(mActivity.getString(R.string
                                 .error_no_internet_connection));

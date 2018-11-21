@@ -24,7 +24,7 @@ import io.grpc.ManagedChannelBuilder;
 public class TalkToServer extends AsyncTask<Void, Void, GeneratedMessageLite> {
 
     public interface ServerCallbacks {
-        void onServerReplied(GeneratedMessageLite serverResponse, GeneratedMessageLite whichCase);
+        void onServerReplied(GeneratedMessageLite serverResponse, Cases whichCase);
     }
 
     private static final String LOGTAG = TalkToServer.class.getSimpleName();
