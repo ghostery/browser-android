@@ -2002,6 +2002,9 @@ var BrowserApp = {
 
       case "Tab:Selected":
         this._handleTabSelected(this.getTabForId(data.id));
+        let isPrivate = PrivateBrowsingUtils.isBrowserPrivate(this.selectedTab.browser);
+        const theme = isPrivate ? 'dark' : 'light';
+        Cliqz.messageSearchExtension( { module: "mobile-cards", action: "changeTheme", args: [theme]});
         break;
 
       case "Tab:Closed": {
