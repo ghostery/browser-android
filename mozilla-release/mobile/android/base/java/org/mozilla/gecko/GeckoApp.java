@@ -196,7 +196,6 @@ public abstract class GeckoApp extends GeckoActivity
     private boolean foregrounded = false;
 
     /* Cliqz Start */
-    protected boolean isOnboardingVisible = false;
     protected View mGhosterySplashScreen;
     protected View inflatedGeckoAppView;
     /* Cliqz end */
@@ -1077,6 +1076,7 @@ public abstract class GeckoApp extends GeckoActivity
         }
         super.onCreate(savedInstanceState);
 
+        /* Cliqz Start */
         GeckoScreenOrientation.getInstance().update(getResources().getConfiguration().orientation);
         setContentView(getLayout());
         // Splash screen runs at most for 4 seconds.
@@ -1084,6 +1084,9 @@ public abstract class GeckoApp extends GeckoActivity
         final View ghosty = mGhosterySplashScreen.findViewById(R.id.ghosty);
         final Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulsate);
         ghosty.startAnimation(pulse);
+
+        final SharedPreferences sharedPreferences = getSharedPreferences(GeckoSharedPrefs.APP_PREFS_NAME, 0);
+        final int splashTimeout = Integer.valueOf(sharedPreferences.getString(GeckoPreferences.PREFS_SPLASH_SCREEN_TIMEOUT, "4"));
         mGhosterySplashScreen.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1092,11 +1095,13 @@ public abstract class GeckoApp extends GeckoActivity
                 addOnGlobalLayoutListener();
                 mGhosterySplashScreen.setVisibility(View.GONE);
             }
-        }, 4000);
+        }, TimeUnit.SECONDS.toMillis(splashTimeout));
 
         ViewStub geckoAppStub = (ViewStub) findViewById(R.id.gecko_app_view_stub);
         inflatedGeckoAppView = geckoAppStub.inflate();
         inflatedGeckoAppView.setVisibility(View.GONE);
+        /* Cliqz End */
+
         // Set up Gecko layout.
         mRootLayout = (RelativeLayout) findViewById(R.id.root_layout);
         mGeckoLayout = (RelativeLayout) findViewById(R.id.gecko_layout);

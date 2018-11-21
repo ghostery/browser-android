@@ -2355,9 +2355,6 @@ public class BrowserApp extends GeckoApp
             case "Search:Idle":
                 inflatedGeckoAppView.setVisibility(View.VISIBLE);
                 mGhosterySplashScreen.setVisibility(View.GONE);
-                if (!isOnboardingVisible) {
-                    enterEditingMode();
-                }
                 break;
             case "Search:Ready":
                 mSearchIsReady = true;
@@ -4543,16 +4540,10 @@ public class BrowserApp extends GeckoApp
         }
 
         splashScreen.show(OnboardingHelper.DELAY_SHOW_DEFAULT_ONBOARDING);
-        /* Cliqz Start */
-        isOnboardingVisible = true;
-        /* Cliqz End */
     }
 
     @Override
     public void onOnboardingScreensVisible() {
-        /* Cliqz Start */
-        isOnboardingVisible = true;
-        /* Cliqz End */
         mHomeScreenContainer.setVisibility(View.VISIBLE);
 
         if (HardwareUtils.isTablet()) {
@@ -4568,10 +4559,7 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public void onFinishedOnboarding(final boolean showBrowserHint) {
-        /* Cliqz Start */
         enterEditingMode();
-        isOnboardingVisible = false;
-        /* Cliqz End */
     }
 
     private void dismissTabHistoryFragment() {
@@ -4808,8 +4796,7 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public boolean setRequestedOrientationForCurrentActivity(int requestedActivityInfoOrientation) {
-        return !isOnboardingVisible &&
-                super.setRequestedOrientationForCurrentActivity(requestedActivityInfoOrientation);
+        return super.setRequestedOrientationForCurrentActivity(requestedActivityInfoOrientation);
     }
     /* Cliqz end */
 }
