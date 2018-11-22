@@ -6557,6 +6557,14 @@ var Cliqz = {
         GlobalEventDispatcher.sendRequest({
           type: "Search:OpenLink"
         });
+
+        // telemetry
+        GlobalEventDispatcher.sendRequest({
+          type: "Search:Keyword",
+          identifier: 'cliqz',
+          name: 'cliqz'
+        });
+
         break;
       case "autocomplete": // args [data as string]
         GlobalEventDispatcher.sendRequest({

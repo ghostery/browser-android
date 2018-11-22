@@ -3096,15 +3096,20 @@ public class BrowserApp extends GeckoApp
             return;
         }
 
+        final SharedPreferences sharedPrefs = GeckoSharedPrefs.forProfile(this);
+
         // If the URL doesn't look like a search query, just load it.
         if (!StringUtils.isSearchQuery(url, true)) {
             Tabs.getInstance().loadUrl(url, Tabs.LOADURL_USER_ENTERED);
             Telemetry.sendUIEvent(TelemetryContract.Event.LOAD_URL, TelemetryContract.Method.ACTIONBAR, "user");
+
+            final int count = sharedPrefs.getInt(GeckoApp.PREFS_LANDING_COUNT, 0);
+            sharedPrefs.edit().putInt(GeckoApp.PREFS_LANDING_COUNT, count + 1).apply();
+
             return;
         }
 
         // Otherwise, check for a bookmark keyword.
-        final SharedPreferences sharedPrefs = GeckoSharedPrefs.forProfile(this);
         final BrowserDB db = BrowserDB.from(getProfile());
         ThreadUtils.postToBackgroundThread(new Runnable() {
             @Override
