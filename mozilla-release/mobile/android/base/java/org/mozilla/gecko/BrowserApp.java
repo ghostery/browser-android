@@ -2355,8 +2355,11 @@ public class BrowserApp extends GeckoApp
             case "Search:Idle":
                 inflatedGeckoAppView.setVisibility(View.VISIBLE);
                 mGhosterySplashScreen.setVisibility(View.GONE);
-                if (!isOnboardingVisible) {
-                    enterEditingMode();
+                if (!isOnboardingVisible && !mShouldRestore) {
+                    final PropertyAnimator animator = new PropertyAnimator(250);
+                    animator.setUseHardwareLayer(false);
+                    showHomePagerWithAnimator(null, null, animator);
+                    animator.start();
                 }
                 break;
             case "Search:Ready":
@@ -4573,8 +4576,8 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public void onFinishedOnboarding(final boolean showBrowserHint) {
-        /* Cliqz Start */
         enterEditingMode();
+        /* Cliqz Start */
         isOnboardingVisible = false;
         /* Cliqz End */
     }
