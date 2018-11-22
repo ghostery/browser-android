@@ -84,6 +84,7 @@ public class BookmarksPanel extends HomeFragment implements BookmarkEditFragment
 
     @Override
     public void restoreData(@NonNull Bundle data) {
+        /* Cliqz Start o/
         final ArrayList<FolderInfo> stack = data.getParcelableArrayList("parentStack");
         if (stack == null) {
             return;
@@ -94,6 +95,7 @@ public class BookmarksPanel extends HomeFragment implements BookmarkEditFragment
         } else {
             mListAdapter.restoreData(stack);
         }
+        /o Cliqz End */
     }
 
     @Override
