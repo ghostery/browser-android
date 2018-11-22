@@ -111,6 +111,10 @@ public class TelemetryCorePingBuilder extends TelemetryPingBuilder {
             final int count = prefs.getInt(GeckoApp.PREFS_FLASH_USAGE, 0);
             payload.put(FLASH_USAGE, count);
             prefs.edit().putInt(GeckoApp.PREFS_FLASH_USAGE, 0).apply();
+
+            final int landingCount = prefs.getInt(GeckoApp.PREFS_LANDING_COUNT, 0);
+            payload.put("landings", landingCount);
+            prefs.edit().remove(GeckoApp.PREFS_LANDING_COUNT).apply();
         }
     }
 
