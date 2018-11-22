@@ -185,6 +185,7 @@
 
   <!-- Cliqz start -->
   <string name="pref_splash_screen_timeout">&pref_splash_screen_timeout;</string>
+  <string name="splash_screen_timeout_default">"4"</string>
   <!-- Cliqz end -->
 
   <string name="pref_category_home">&pref_category_home;</string>

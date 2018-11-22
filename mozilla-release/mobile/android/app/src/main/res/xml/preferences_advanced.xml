@@ -67,7 +67,7 @@
         <EditTextPreference android:key="pref.splash_screen.timeout"
             android:inputType="number"
             android:maxLength="2"
-            android:defaultValue="4"
+            android:defaultValue="@string/splash_screen_timeout_default"
             android:title="@string/pref_splash_screen_timeout" />
         <!-- Cliqz end -->
 
