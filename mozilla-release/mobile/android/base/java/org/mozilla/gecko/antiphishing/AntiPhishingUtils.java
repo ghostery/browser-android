@@ -52,7 +52,7 @@ public final class AntiPhishingUtils {
 
 
     public static @NonNull String getDomain(@Nullable String url) {
-        if (url == null) {
+        if (url == null || !url.startsWith("http")) {
             return "";
         }
         try {
