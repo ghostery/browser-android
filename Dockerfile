@@ -113,7 +113,8 @@ RUN mkdir -p $ANDROID_HOME; \
     unzip sdktools.zip; \
     rm -r sdktools.zip; \
     (while (true); do echo y; sleep 2; done) | \
-      tools/bin/sdkmanager  --package_file=/home/jenkins/android-packages.txt;
+      tools/bin/sdkmanager  --package_file=/home/jenkins/android-packages.txt; \
+    mkdir -p $ANDROID_HOME/ndk-bundle/toolchains/mips64el-linux-android/prebuilt/linux-x86_64
 
 #Install Android NDK
 RUN mkdir -p /home/jenkins/.mozbuild/android-ndk-linux; \
