@@ -5,6 +5,7 @@
 package org.mozilla.gecko;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,11 @@ public final class GeckoSharedPrefs {
     private static final String LOGTAG = "GeckoSharedPrefs";
 
     // Increment it to trigger a new migration
-    public static final int PREFS_VERSION = 2;
+    /* Cliqz start */
+    // We need to migrate cliqz.telemetry.enabled to toolkit.telemetry.enabled
+    public static final int PREFS_VERSION = 3;
+    /* Cliqz end */
+
 
     // Name for app-scoped prefs
     public static final String APP_PREFS_NAME = "GeckoApp";
@@ -77,6 +82,8 @@ public final class GeckoSharedPrefs {
         "allowContact",
         "contactEmail"
     };
+    public static final String CLIQZ_TELEMETRY_ENABLED = "cliqz.telemetry.enabled";
+    public static final String TOOLKIT_TELEMETRY_ENABLED = "toolkit.telemetry.enabled";
 
     // For optimizing the migration check in subsequent get() calls
     private static volatile boolean migrationDone;
@@ -234,6 +241,12 @@ public final class GeckoSharedPrefs {
                     profileKeys = Arrays.asList(PROFILE_MIGRATIONS_1_TO_2);
                     migrateCrashReporterSettings(appPrefs, appEditor, crashEditor, profileKeys);
                     break;
+                /* Cliqz start */
+                case 3:
+                    profileKeys = Collections.emptyList();
+                    migrateTelemetrySettings(appPrefs, appEditor);
+                    break;
+                /* Cliqz end */
             }
         }
 
@@ -249,6 +262,17 @@ public final class GeckoSharedPrefs {
 
         Log.d(LOGTAG, "All keys have been migrated");
     }
+
+    /* Cliqz start */
+    private static void migrateTelemetrySettings(SharedPreferences appPrefs, Editor appEditor) {
+        if (!appPrefs.contains(CLIQZ_TELEMETRY_ENABLED)) {
+            return;
+        }
+        final boolean isTelemetryEnabled = appPrefs.getBoolean(CLIQZ_TELEMETRY_ENABLED, true);
+        PrefsHelper.setPref(TOOLKIT_TELEMETRY_ENABLED, isTelemetryEnabled);
+        appEditor.remove(CLIQZ_TELEMETRY_ENABLED);
+    }
+    /*Cliqz end */
 
     /**
      * Moves all preferences stored in PreferenceManager's default prefs

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import org.mozilla.gecko.GeckoSharedPrefs;
+import org.mozilla.gecko.PrefsHelper;
 
 import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
 
@@ -39,11 +40,6 @@ public class PreferenceManager {
                 true);
     }
 
-    public void setTelemetryEnabled(boolean value) {
-        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
-        editor.putBoolean(GeckoPreferences.CLIQZ_TELEMETRY_ENABLED, value).apply();
-    }
-
     public void setGhosteryAutoUpdate(boolean value) {
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
         editor.putBoolean(GeckoPreferences.PREFS_GHOSTERY_AUTO_UPDATE, value).apply();
@@ -57,10 +53,6 @@ public class PreferenceManager {
     public void setBlockNewTrackers(boolean value) {
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
         editor.putBoolean(GeckoPreferences.PREFS_GHOSTERY_BLOCK_NEW_TRACKERS, value).apply();
-    }
-
-    public boolean isTelemetryEnabled() {
-        return mAppSharedPreferences.getBoolean(GeckoPreferences.CLIQZ_TELEMETRY_ENABLED, false);
     }
 
     public boolean isGhosteryAutoUpdateEnabled() {

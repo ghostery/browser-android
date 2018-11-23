@@ -137,7 +137,6 @@ public class GeckoPreferences
     private static final String PREFS_DATA_REPORTING_PREFERENCES = NON_PREF_PREFIX + "datareporting.preferences";
     // TODO: What is this? Should we just use the Firefox preference and just disable Mozilla telemetry?
     private static final String PREFS_TELEMETRY_ENABLED = "toolkit.telemetry.enabled";
-    public static final String CLIQZ_TELEMETRY_ENABLED = "cliqz.telemetry.enabled";
     /* Cliqz start */
     // private static final String PREFS_CRASHREPORTER_ENABLED = "datareporting.crashreporter.submitEnabled";
     private static final String PREFS_MENU_CHAR_ENCODING = "browser.menu.showCharacterEncoding";
@@ -752,8 +751,12 @@ public class GeckoPreferences
                     }
                 /* Cliqz start */
                 } else if (PREFS_TELEMETRY_ENABLED.equals(key)) {
-                    final PreferenceManager preferenceManager = PreferenceManager.getInstance((getApplicationContext()));
-                    ((CheckBoxPreference)pref).setChecked(preferenceManager.isTelemetryEnabled());
+                    PrefsHelper.getPref(PREFS_TELEMETRY_ENABLED, new PrefsHelper.PrefHandlerBase() {
+                        @Override
+                        public void prefValue(String prefName, boolean value) {
+                            ((CheckBoxPreference)pref).setChecked(value);
+                        }
+                    });
                     pref.setOnPreferenceChangeListener(this);
                 /* Cliqz Block Comment start o/
                 } else if (PREFS_TELEMETRY_ENABLED.equals(key)) {
@@ -1331,9 +1334,8 @@ public class GeckoPreferences
         }
 
         /* Cliqz Start */
-        if (CLIQZ_TELEMETRY_ENABLED.equals(prefName)) {
-            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-            preferenceManager.setTelemetryEnabled((boolean)newValue);
+        if (PREFS_TELEMETRY_ENABLED.equals(prefName)) {
+            PrefsHelper.setPref(PREFS_TELEMETRY_ENABLED, (Boolean) newValue);
             return true;
         }
         if (PREFS_GHOSTERY_AUTO_UPDATE.equals(prefName)) {
