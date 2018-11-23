@@ -882,7 +882,6 @@ public class BrowserApp extends GeckoApp
             "Sanitize:OpenTabs",
             "NotificationSettings:FeatureTipsStatusUpdated",
             /* Cliqz start */
-            "Search:GetHistory",
             "Search:OpenLink",
             "Privacy:Count",
             "Search:Idle",
@@ -905,6 +904,9 @@ public class BrowserApp extends GeckoApp
             "Website:AppInstalled",
             "Website:AppInstallFailed",
             "Website:Metadata",
+            /* Cliqz start */
+            "Search:GetHistory",
+            /* Cliqz end */
             null);
 
         getAppEventDispatcher().registerUiThreadListener(this, "Prompt:ShowTop");
@@ -1739,7 +1741,6 @@ public class BrowserApp extends GeckoApp
             "Sanitize:OpenTabs",
             "NotificationSettings:FeatureTipsStatusUpdated",
             /* Cliqz start */
-            "Search:GetHistory",
             "Search:OpenLink",
             "Privacy:Count",
             "Privacy:Info",
@@ -1762,6 +1763,9 @@ public class BrowserApp extends GeckoApp
             "Website:AppInstalled",
             "Website:AppInstallFailed",
             "Website:Metadata",
+            /* Cliqz start */
+            "Search:GetHistory",
+            /* Cliqz end */
             null);
 
         getAppEventDispatcher().unregisterUiThreadListener(this, "Prompt:ShowTop");

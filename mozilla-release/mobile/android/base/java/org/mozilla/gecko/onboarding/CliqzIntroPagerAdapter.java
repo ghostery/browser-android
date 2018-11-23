@@ -24,6 +24,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.mozilla.gecko.EventDispatcher;
+import org.mozilla.gecko.PrefsHelper;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.CustomLinkMovementMethod;
@@ -36,6 +37,8 @@ import org.mozilla.gecko.util.GeckoBundle;
  * fragments
  */
 public class CliqzIntroPagerAdapter extends PagerAdapter {
+
+    private static final String PREFS_TELEMETRY_ENABLED = "toolkit.telemetry.enabled";
 
     private interface CustomPageAction {
         void onInflated(@NonNull ViewGroup layout);
@@ -66,7 +69,7 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             final Context context = compoundButton.getContext().getApplicationContext();
             final PreferenceManager preferenceManager = PreferenceManager.getInstance(context);
-            preferenceManager.setTelemetryEnabled(b);
+            PrefsHelper.setPref(PREFS_TELEMETRY_ENABLED, b);
             preferenceManager.setHumanWebEnabled(b);
         }
     }
