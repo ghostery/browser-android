@@ -73,8 +73,6 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.webkit.URLUtil;
 import android.widget.Button;
@@ -2357,8 +2355,6 @@ public class BrowserApp extends GeckoApp
                 mPreferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
                 break;
             case "Search:Idle":
-                inflatedGeckoAppView.setVisibility(View.VISIBLE);
-                mGhosterySplashScreen.setVisibility(View.GONE);
                 break;
             case "Search:Ready":
                 mSearchIsReady = true;
@@ -4405,7 +4401,7 @@ public class BrowserApp extends GeckoApp
     }
 
     @Override
-    public int getLayout() { return R.layout.gecko_app_splash_screen; }
+    public int getLayout() { return R.layout.gecko_app; }
 
     @Override
     public View getDoorhangerOverlay() {
