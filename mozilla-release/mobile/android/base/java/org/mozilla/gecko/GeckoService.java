@@ -6,10 +6,12 @@
 package org.mozilla.gecko;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.Service;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Handler;
@@ -186,6 +188,19 @@ public class GeckoService extends Service {
         if (DEBUG) {
             Log.d(LOGTAG, "Handling " + intent.getAction());
         }
+
+        /* Cliqz start */
+        // Temporary foreground fix to update libraries due to Android Oreo (26+) changes
+        if (INTENT_ACTION_LOAD_LIBS.equals(intent.getAction()) &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            final Notification notification = new Notification.Builder(this)
+                    .setContentTitle("Upgrading libraries")
+                    .setContentText(AppConstants.MOZ_APP_BASENAME + " is updating")
+                    .setSmallIcon(R.drawable.icon)
+                    .build();
+            startForeground(startId, notification);
+        }
+        /* Cliqz end */
 
         if (!initGecko(intent)) {
             stopSelf(startId);

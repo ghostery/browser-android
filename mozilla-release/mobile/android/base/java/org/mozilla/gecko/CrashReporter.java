@@ -333,6 +333,12 @@ public class CrashReporter extends AppCompatActivity
                 final String path = section.getStringProperty("Path");
                 final boolean isRelative = (section.getIntProperty("IsRelative") == 1);
 
+                /* Cliqz start */
+                // Weird case scenario in which the crash reporter enters a loop
+                if (path == null) {
+                    continue;
+                }
+                /* Cliqz end */
                 if ((isRelative && path.equals(profileDir.getName())) ||
                     path.equals(profileDir.getPath())) {
                     profileName = section.getStringProperty("Name");

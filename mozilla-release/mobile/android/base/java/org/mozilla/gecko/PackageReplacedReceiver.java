@@ -8,8 +8,7 @@ package org.mozilla.gecko;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import org.mozilla.gecko.GeckoService;
+import android.os.Build;
 
 /**
  * This broadcast receiver receives ACTION_MY_PACKAGE_REPLACED broadcasts and
@@ -26,6 +25,12 @@ public class PackageReplacedReceiver extends BroadcastReceiver {
         }
 
         // Load new Gecko libs to extract them to cache.
-        context.startService(GeckoService.getIntentToLoadLibs(context));
+        /* Cliqz start */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(GeckoService.getIntentToLoadLibs(context));
+        } else {
+            context.startService(GeckoService.getIntentToLoadLibs(context));
+        }
+        /* Cliqz end */
     }
 }
