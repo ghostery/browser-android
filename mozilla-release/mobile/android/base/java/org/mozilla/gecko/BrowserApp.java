@@ -295,8 +295,6 @@ public class BrowserApp extends GeckoApp
     private TabHistoryController tabHistoryController;
 
     /* Cliqz Start */
-    private byte[] mCCDataHash = null;
-    private GeckoBundle mControlCenterTrackingData;
     private ViewPager mControlCenterPager;
     private View mControlCenterContainer;
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
@@ -2343,9 +2341,6 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Privacy:Info":
-                mCCDataHash = ControlCenterUtils.getCCDataHash(message);
-                mControlCenterTrackingData = message;
-                mControlCenterPagerAdapter.setTrackingData(message);
                 //sync preferences with the ghostery extension just for safety
                 final boolean isAutoUpdateEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/enable_autoupdate");
                 final boolean areFirstPartyTrackersEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/ignore_first_party");
@@ -4599,16 +4594,14 @@ public class BrowserApp extends GeckoApp
 
     public void toggleControlCenter() {
         if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
-            if (mCCDataHash != null) {
-                final byte[] newCCDataHash = ControlCenterUtils.getCCDataHash(mControlCenterTrackingData);
-                if (!MessageDigest.isEqual(mCCDataHash, newCCDataHash)) {
-                    showReloadingTabSnackbar();
-                }
+            if (mControlCenterPagerAdapter.isDataChanged()) {
+                showReloadingTabSnackbar();
             }
             mControlCenterContainer.setVisibility(View.GONE);
             mDynamicToolbar.setPinned(false, PinReason.DISABLED);
         } else {
             mControlCenterPagerAdapter.setTrackingData(new GeckoBundle());
+            mControlCenterPagerAdapter.unInitialize();
             mControlCenterContainer.setVisibility(View.VISIBLE);
             mControlCenterPager.setCurrentItem(0);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
@@ -4632,18 +4625,16 @@ public class BrowserApp extends GeckoApp
                 tab.doReload(true);
             }
         }, 1000);
-        final SnackbarBuilder.SnackbarCallback allowCallback = new SnackbarBuilder.SnackbarCallback() {
-            @Override
-            public void onClick(View v) {
-                tab.doReload(true);
-            }
-        };
-
         SnackbarBuilder.builder(this)
                 .message(R.string.cc_reload_page_snackbar_text)
                 .duration(2500)
                 .action(R.string.reload)
-                .callback(allowCallback)
+                .callback(new SnackbarBuilder.SnackbarCallback() {
+                    @Override
+                    public void onClick(View v) {
+                        tab.doReload(true);
+                    }
+                })
                 .buildAndShow();
     }
 
