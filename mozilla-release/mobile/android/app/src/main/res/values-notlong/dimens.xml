@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018 -->
+<resources>
+    <dimen name="cliqz_intro_title_size">13sp</dimen>
+    <dimen name="cliqz_intro_content_size">8sp</dimen>
+    <dimen name="cliqz_intro_radio_button_height">25dp</dimen>
+</resources>

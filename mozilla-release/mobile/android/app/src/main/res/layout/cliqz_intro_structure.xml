@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Copyright © Cliqz 2018-->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2018-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="16dp"
-        android:layout_weight="0.4"
+        android:layout_weight="10"
         android:contentDescription="@string/onboarding_introduction"
         android:scaleType="fitCenter"
         tools:src="@drawable/cliqz_intro_ic_first_screen" />
@@ -21,9 +22,11 @@
     <LinearLayout
         android:id="@+id/content_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="@integer/cliqz_intro_content_weight"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="10dp" />
+        android:padding="10dp"
+        tools:background="@color/disabled_grey"/>
 
 </LinearLayout>
