@@ -605,7 +605,9 @@ pref("media.autoplay.ask-permission", false);
 // Set Fennec to block autoplay by default.
 pref("media.autoplay.default", 1); // 0=Allowed, 1=Blocked, 2=Prompt
 #else
-pref("media.autoplay.default", 0); // 0=Allowed, 1=Blocked, 2=Prompt
+/* Cliqz start - disable autoplay by defaul */
+pref("media.autoplay.default", 1); // 0=Allowed, 1=Blocked, 2=Prompt
+/* Cliqz end */
 pref("media.autoplay.enabled.user-gestures-needed", false);
 pref("media.autoplay.ask-permission", false);
 #endif
