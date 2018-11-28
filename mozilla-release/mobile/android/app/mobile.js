@@ -427,7 +427,7 @@ pref("dom.ipc.plugins.enabled", false);
 // product URLs
 // The breakpad report server to link to in about:crashes
 #if APP_NAME == ghostery
-pref("breakpad.reportURL", "https://reports.ghostery.com/report/index/");
+pref("breakpad.reportURL", "https://reports.ghostery.net/report/index/");
 #elif APP_NAME == cliqz
 pref("breakpad.reportURL", "https://reports.cliqz.com/report/index/");
 #else

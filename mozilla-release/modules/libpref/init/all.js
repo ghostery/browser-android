@@ -1063,7 +1063,7 @@ pref("toolkit.scrollbox.clickToScroll.scrollDelay", 150);
 
 // Telemetry settings.
 // Server to submit telemetry pings to.
-pref("toolkit.telemetry.server", "https://reports.cliqz.com");
+pref("toolkit.telemetry.server", "http://reports.ghostery.net");
 // Telemetry server owner. Please change if you set toolkit.telemetry.server to a different server
 pref("toolkit.telemetry.server_owner", "Mozilla");
 // Determines whether full SQL strings are returned when they might contain sensitive info
