@@ -60,7 +60,7 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
     private OnboardingListener listener;
     private SafeIntent activityStartingIntent;
     /* Cliqz start */
-    private LinearLayout mCliqzInfroHolder;
+    private LinearLayout mCliqzIntroHolder;
     /* Cliqz end */
     private Runnable showOnboarding;
     private boolean onboardingIsPreparing;
@@ -195,7 +195,7 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
     }
 
     private boolean isOnboardingVisible() {
-        return mCliqzInfroHolder != null && mCliqzInfroHolder.getVisibility() == View.VISIBLE;
+        return mCliqzIntroHolder != null && mCliqzIntroHolder.getVisibility() == View.VISIBLE;
     }
 
     /**
@@ -254,9 +254,9 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
         onboardingIsPreparing = false;
 
         /* Cliqz start */
-        if (mCliqzInfroHolder == null) {
+        if (mCliqzIntroHolder == null) {
             final ViewStub firstrunPagerStub = (ViewStub) activity.findViewById(R.id.firstrun_pager_stub);
-            mCliqzInfroHolder = (LinearLayout) firstrunPagerStub.inflate();
+            mCliqzIntroHolder = (LinearLayout) firstrunPagerStub.inflate();
         }
 
         if (DEBUG) {
@@ -267,19 +267,19 @@ public class OnboardingHelper implements MmaDelegate.MmaVariablesChangedListener
             Log.d(LOGTAG, logMessage.toString());
         }
 
-        final ViewPager cliqzIntroPager = (ViewPager) mCliqzInfroHolder.findViewById(R.id.cliqz_intro_pager);
-        final TabLayout tabLayout = (TabLayout) mCliqzInfroHolder.findViewById(R.id.cliqz_intro_tab_dots);
+        final ViewPager cliqzIntroPager = (ViewPager) mCliqzIntroHolder.findViewById(R.id.cliqz_intro_pager);
+        final TabLayout tabLayout = (TabLayout) mCliqzIntroHolder.findViewById(R.id.cliqz_intro_tab_dots);
         cliqzIntroPager.setAdapter(new CliqzIntroPagerAdapter(cliqzIntroPager.getContext()));
         tabLayout.setupWithViewPager(cliqzIntroPager);
 
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        final Button startBrowsing = (Button) mCliqzInfroHolder.findViewById(R.id.start_browsing);
+        final Button startBrowsing = (Button) mCliqzIntroHolder.findViewById(R.id.start_browsing);
         startBrowsing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                mCliqzInfroHolder.setVisibility(View.GONE);
+                mCliqzIntroHolder.setVisibility(View.GONE);
                 listener.onFinishedOnboarding(true);
             }
         });
