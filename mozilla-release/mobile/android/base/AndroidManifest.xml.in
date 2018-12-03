@@ -40,6 +40,9 @@
 #ifdef MOZ_NATIVE_DEVICES
         <service android:name="org.mozilla.gecko.RemotePresentationService" android:exported="false"/>
 #endif
+        <!-- Cliqz start -->
+        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+        <!-- Cliqz end -->
 
         <!-- This activity handles all incoming Intents and dispatches them to other activities. -->
         <activity android:name="org.mozilla.gecko.LauncherActivity"

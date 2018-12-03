@@ -1,0 +1,13 @@
+{
+  "name": "freshtab-native",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start"
+  },
+  "devDependencies": {
+    "react-native": "0.56.1"
+  },
+  "dependencies": {
+    "react": "^16.6.3"
+  }
+}
