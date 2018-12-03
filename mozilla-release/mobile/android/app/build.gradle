@@ -91,15 +91,22 @@ android {
 
         def isDebuggable = (!mozconfig.substs.MOZILLA_OFFICIAL) || (mozconfig.substs.NIGHTLY_BUILD && mozconfig.substs.MOZ_DEBUG)
         debug {
-            debuggable isDebuggable 
+            debuggable isDebuggable
             multiDexKeepProguard file("${topsrcdir}/mobile/android/config/proguard/debug-robocop-keeps.cfg")
+            ndk {
+               abiFilters "armeabi-v7a"
+            }
         }
         release {
             debuggable isDebuggable
             if (System.getenv('CERT_PATH') && System.getenv('CERT_PASS')){
                 signingConfig signingConfigs.release
             }
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
         }
+
     }
     // The "audience" flavour dimension distinguishes between _local_ builds (intended for
     // development) and _official_ builds (intended for testing in automation and to ship in one of
@@ -282,6 +289,7 @@ dependencies {
     implementation "com.android.support:design:$support_library_version"
     implementation "com.android.support:customtabs:$support_library_version"
     implementation "com.android.support:palette-v7:$support_library_version"
+    implementation "com.facebook.react:react-native:0.56.1"
 
     // We always include support for multidexing even when we don't enable it at runtime.
     // We could conditionally include support, but we'd need
@@ -482,7 +490,7 @@ android.applicationVariants.all { variant ->
         effort = "max"         // Using more memory and time to find issues is acceptable in automation
         reportLevel = "high"   // For now we only care about high priority bugs. After we have fixed
                                // the issues with medium/low priority we can lower the report level here.
-        
+
         classes = files("$project.buildDir/intermediates/classes")
         source = variant.javaCompile.source
         classpath = variant.javaCompile.classpath

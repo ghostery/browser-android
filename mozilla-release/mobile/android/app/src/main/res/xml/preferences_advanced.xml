@@ -69,10 +69,14 @@
             android:maxLength="2"
             android:defaultValue="4"
             android:title="@string/pref_splash_screen_timeout" />
+        <SwitchPreference android:key="pref.freshtab.enabled"
+                          android:title="Enable Freshtab" />
         <!-- Cliqz end -->
 
         <SwitchPreference android:key="devtools.remote.usb.enabled"
                           android:title="@string/pref_developer_remotedebugging_usb" />
+
+
 
         <!-- Cliqz start +->
         <SwitchPreference android:key="devtools.remote.wifi.enabled"

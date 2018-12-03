@@ -1,0 +1,14 @@
+{
+  "name": "freshtab-native",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "build-android": "node node_modules/react-native/local-cli/cli.js bundle --platform android --entry-file index.js --bundle-output ../mozilla-release/mobile/android/app/src/main/assets/index.android.bundle"
+  },
+  "devDependencies": {
+    "react-native": "0.56.1"
+  },
+  "dependencies": {
+    "react": "^16.6.3"
+  }
+}

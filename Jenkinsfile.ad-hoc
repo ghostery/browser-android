@@ -3,6 +3,7 @@
 
 properties([
     parameters([
+        string(name: 'BRANCH', defaultValue: 'master', description: 'Branch name to build'),
         booleanParam(name: 'CLIQZ_ARM', defaultValue: false, description: 'Builds the Cliqz branded `arm` build.'),
         booleanParam(name: 'CLIQZ_X86', defaultValue: false, description: 'Builds the Cliqz branded `x86` build.'),
         booleanParam(name: 'GHOSTERY_ARM', defaultValue: false, description: 'Builds the Ghostery branded `arm` build.'),
@@ -92,7 +93,7 @@ def baseImage
 def codeImage
 def id
 node ('master'){
-    def dockerTag = "" 
+    def dockerTag = ""
     stage('Checkout') {
         checkout scm
         dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
@@ -156,6 +157,17 @@ def build(Map m){
                                 """
                             }
                         }
+
+                    stage('Build Freshtab') {
+                        sh '''#!/bin/bash -l
+                            set -e
+                            set -x
+                            cd freshtab
+                            npm ci
+                            npm run build-android
+                        '''
+                    }
+
                     stage("Build APK: ${flavorname}") {
                         withEnv([
                             "ANDROID_TARGET=${androidtarget}",
@@ -203,7 +215,7 @@ def build(Map m){
                                 usernameVariable: 'AWS_ACCESS_KEY_ID',
                             ]
                         ]) {
-                            def s3Path = "s3://repository.cliqz.com/dist/android/adhoc/${brandname}"
+                            def s3Path = "s3://repository.cliqz.com/dist/android/adhoc/${params.BRANCH}/${brandname}"
                             def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release/${apk}"
                             def fileName = "${brandname}_${env.BUILD_NUMBER}_${getId()}"
                             try {
@@ -265,67 +277,68 @@ stage('Send email') {
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
         """
+    def baseUrl = "http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/${params.BRANCH}"
     def bodytxtBond = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
         """
     if (params.CLIQZ_ARM) {
         bodytxt = """${bodytxt}
-            Cliqz apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/cliqz/cliqz_${env.BUILD_NUMBER}_${id}.apk
+            Cliqz apk Uploaded to: ${baseUrl}/cliqz/cliqz_${env.BUILD_NUMBER}_${id}.apk
         """
         sendMail = true
     }
     if (params.CLIQZ_X86) {
         bodytxt = """${bodytxt}
-            Cliqz X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/cliqz/cliqz_${env.BUILD_NUMBER}_${id}_x86.apk
+            Cliqz X86 apk Uploaded to: ${baseUrl}/cliqz/cliqz_${env.BUILD_NUMBER}_${id}_x86.apk
         """
         sendMail = true
     }
     if (params.GHOSTERY_ARM) {
         bodytxt = """${bodytxt}
-            Ghostery apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/ghostery/ghostery_${env.BUILD_NUMBER}_${id}.apk
+            Ghostery apk Uploaded to: ${baseUrl}/ghostery/ghostery_${env.BUILD_NUMBER}_${id}.apk
         """
         sendMail = true
     }
     if (params.GHOSTERY_X86) {
         bodytxt = """${bodytxt}
-            Ghostery X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/ghostery/ghostery_${env.BUILD_NUMBER}_${id}_x86.apk
+            Ghostery X86 apk Uploaded to: ${baseUrl}/ghostery/ghostery_${env.BUILD_NUMBER}_${id}_x86.apk
         """
         sendMail = true
     }
     if (params.CLIQZ_ALPHA_ARM) {
         bodytxt = """${bodytxt}
-            Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/cliqz-alpha/cliqz-alpha_${env.BUILD_NUMBER}_${id}.apk
+            Cliqz-Alpha apk Uploaded to: ${baseUrl}/cliqz-alpha/cliqz-alpha_${env.BUILD_NUMBER}_${id}.apk
         """
         sendMail = true
     }
     if (params.CLIQZ_ALPHA_X86) {
         bodytxt = """${bodytxt}
-            Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/cliqz-alpha/cliqz-alpha_${env.BUILD_NUMBER}_${id}_x86.apk
+            Cliqz-Alpha apk Uploaded to: ${baseUrl}/cliqz-alpha/cliqz-alpha_${env.BUILD_NUMBER}_${id}_x86.apk
         """
         sendMail = true
     }
     if (params.GHOSTERY_ALPHA_ARM) {
         bodytxt = """${bodytxt}
-            Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/ghostery-alpha/ghostery-alpha_${env.BUILD_NUMBER}_${id}.apk
+            Cliqz-Alpha apk Uploaded to: ${baseUrl}/ghostery-alpha/ghostery-alpha_${env.BUILD_NUMBER}_${id}.apk
         """
         sendMail = true
     }
     if (params.GHOSTERY_ALPHA_X86) {
         bodytxt = """${bodytxt}
-            Cliqz-Alpha apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/ghostery-alpha/ghostery-alpha_${env.BUILD_NUMBER}_${id}_x86.apk
+            Cliqz-Alpha apk Uploaded to: ${baseUrl}/ghostery-alpha/ghostery-alpha_${env.BUILD_NUMBER}_${id}_x86.apk
         """
         sendMail = true
     }
     if (params.BOND_ARM) {
         bodytxtBond = """${bodytxtBond}
-            Bond apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/bond/bond_${env.BUILD_NUMBER}_${id}.apk
+            Bond apk Uploaded to: ${baseUrl}/bond/bond_${env.BUILD_NUMBER}_${id}.apk
         """
         bondMail = true
     }
     if (params.BOND_X86) {
         bodytxtBond = """${bodytxtBond}
-            Bond X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/bond/bond_${env.BUILD_NUMBER}_${id}_x86.apk
+            Bond X86 apk Uploaded to: ${baseUrl}/bond/bond_${env.BUILD_NUMBER}_${id}_x86.apk
         """
         bondMail = true
     }

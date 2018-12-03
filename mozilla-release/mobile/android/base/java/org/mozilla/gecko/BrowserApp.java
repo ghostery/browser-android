@@ -200,6 +200,14 @@ import org.mozilla.gecko.widget.SplashScreen;
 import org.mozilla.gecko.widget.themed.ThemedTabLayout;
 import org.mozilla.geckoview.GeckoSession;
 
+/* Cliqz start */
+import com.facebook.react.ReactRootView;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.shell.MainReactPackage;
+import com.facebook.react.common.LifecycleState;
+import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+/* Cliqz end */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -234,6 +242,7 @@ public class BrowserApp extends GeckoApp
                                    TabsPanel.TabsLayoutChangeListener,
                                    View.OnKeyListener,
                                    /* Cliqz Start */
+                                   DefaultHardwareBackBtnHandler,
                                    BaseControlCenterPagerAdapter.ControlCenterCallbacks,
                                    AntiPhishing.AntiPhishingCallback,
                                    AntiPhishingDialog.AntiPhishingDialogActionListener,
@@ -311,6 +320,9 @@ public class BrowserApp extends GeckoApp
 
     // Minimum app launches until we show the dialog to set default browser.
     private static final int MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT = 3;
+
+    private ReactInstanceManager mReactInstanceManager;
+    private ReactRootView mReactRootView;
     /* Cliqz End */
 
     public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
@@ -684,6 +696,13 @@ public class BrowserApp extends GeckoApp
                 keyCode == KeyEvent.KEYCODE_BACK) {
             ThreadUtils.getUiHandler().removeCallbacks(mCheckLongPress);
         }
+
+        /* Cliqz start */
+        if (keyCode == KeyEvent.KEYCODE_MENU && mReactInstanceManager != null) {
+            mReactInstanceManager.showDevOptionsDialog();
+            return true;
+        }
+        /* Cliqz end */
 
         if (AndroidGamepadManager.handleKeyEvent(event)) {
             return true;
@@ -1222,6 +1241,22 @@ public class BrowserApp extends GeckoApp
     public void onResume() {
         super.onResume();
 
+        /* Cliqz start */
+        if (isFreshtabEnabled()) {
+            if (mReactRootView == null) {
+                initializeFreshtab();
+            }
+        } else {
+            if (mReactRootView != null) {
+                mHomeScreenContainer.removeView(mReactRootView);
+            }
+        }
+
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onHostResume(this, this);
+        }
+        /* Cliqz end */
+
         if (mIsAbortingAppLaunch) {
             return;
         }
@@ -1243,6 +1278,13 @@ public class BrowserApp extends GeckoApp
         dismissTabHistoryFragment();
 
         super.onPause();
+
+        /* Cliqz start */
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onHostPause(this);
+        }
+        /* Cliqz end */
+
         if (mIsAbortingAppLaunch) {
             return;
         }
@@ -1673,6 +1715,15 @@ public class BrowserApp extends GeckoApp
             super.onDestroy();
             return;
         }
+
+        /* Cliqz start */
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onHostDestroy(this);
+        }
+        if (mReactRootView != null) {
+            mReactRootView.unmountReactApplication();
+        }
+        /* Cliqz end */
 
         if (mProgressView != null) {
             mProgressView.setDynamicToolbar(null);
@@ -3519,6 +3570,11 @@ public class BrowserApp extends GeckoApp
         final MenuItem findInPage = aMenu.findItem(R.id.find_in_page);
         final MenuItem desktopMode = aMenu.findItem(R.id.desktop_mode);
         final MenuItem clearHistory = aMenu.findItem(R.id.clear_history);
+        final MenuItem reactDebuggingTools = aMenu.findItem(R.id.react);
+
+        if (!isFreshtabEnabled()) {
+            reactDebuggingTools.setVisible(false);
+        }
         /* Cliqz End */
 
         // Only show the "Quit" menu item on pre-ICS, television devices,
@@ -4007,6 +4063,13 @@ public class BrowserApp extends GeckoApp
             addTab();
             return true;
         }
+
+        /* Cliqz start */
+        if (itemId == R.id.react && mReactInstanceManager != null) {
+            mReactInstanceManager.showDevOptionsDialog();
+            return true;
+        }
+        /* Cliqz end */
 
         if (itemId == R.id.new_private_tab) {
             addPrivateTab();
@@ -4793,6 +4856,33 @@ public class BrowserApp extends GeckoApp
     @Override
     public boolean setRequestedOrientationForCurrentActivity(int requestedActivityInfoOrientation) {
         return super.setRequestedOrientationForCurrentActivity(requestedActivityInfoOrientation);
+    }
+
+    private boolean isAlphaBuild() {
+        return BuildConfig.APPLICATION_ID.contains("alpha");
+    }
+
+    private boolean isFreshtabEnabled() {
+        return isAlphaBuild() && GeckoSharedPrefs.forApp(this).getBoolean(GeckoPreferences.PREFS_FRESHTAB_ENABLED, false);
+    }
+
+    private void initializeFreshtab() {
+        if (mReactRootView == null) {
+            mReactRootView = new ReactRootView(this);
+            mReactInstanceManager = ReactInstanceManager.builder().setApplication(getApplication())
+                    .setBundleAssetName("index.android.bundle").setJSMainModulePath("index")
+                    .addPackage(new MainReactPackage()).setUseDeveloperSupport(true)
+                    .setInitialLifecycleState(LifecycleState.RESUMED).build();
+            // The string here (e.g. "MyReactNativeApp") has to match
+            // the string in AppRegistry.registerComponent() in index.js
+            mReactRootView.startReactApplication(mReactInstanceManager, "MyReactNativeApp", null);
+        }
+        mHomeScreenContainer.addView(mReactRootView);
+    }
+
+    @Override
+    public void invokeDefaultOnBackPressed() {
+        super.onBackPressed();
     }
     /* Cliqz end */
 }

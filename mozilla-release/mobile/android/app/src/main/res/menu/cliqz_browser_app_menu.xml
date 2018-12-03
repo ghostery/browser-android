@@ -89,4 +89,9 @@
     <item
         android:id="@+id/clear_history"
         android:title="@string/home_clear_history_button" />
+
+    <!-- Cliqz start -->
+    <item android:id="@+id/react"
+          android:title="Freshtab debug" />
+    <!-- Cliqz end -->
 </menu>
