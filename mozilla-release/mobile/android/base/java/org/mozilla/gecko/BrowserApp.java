@@ -73,8 +73,6 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.webkit.URLUtil;
 import android.widget.Button;
@@ -297,8 +295,6 @@ public class BrowserApp extends GeckoApp
     private TabHistoryController tabHistoryController;
 
     /* Cliqz Start */
-    private byte[] mCCDataHash = null;
-    private GeckoBundle mControlCenterTrackingData;
     private ViewPager mControlCenterPager;
     private View mControlCenterContainer;
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
@@ -2345,9 +2341,6 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Privacy:Info":
-                mCCDataHash = ControlCenterUtils.getCCDataHash(message);
-                mControlCenterTrackingData = message;
-                mControlCenterPagerAdapter.setTrackingData(message);
                 //sync preferences with the ghostery extension just for safety
                 final boolean isAutoUpdateEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/enable_autoupdate");
                 final boolean areFirstPartyTrackersEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/ignore_first_party");
@@ -2357,8 +2350,6 @@ public class BrowserApp extends GeckoApp
                 mPreferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
                 break;
             case "Search:Idle":
-                inflatedGeckoAppView.setVisibility(View.VISIBLE);
-                mGhosterySplashScreen.setVisibility(View.GONE);
                 break;
             case "Search:Ready":
                 mSearchIsReady = true;
@@ -2834,20 +2825,20 @@ public class BrowserApp extends GeckoApp
             return;
         }
 
-        final SharedPreferences sharedPrefs = GeckoSharedPrefs.forProfile(this);
-
         // If the URL doesn't look like a search query, just load it.
         if (!StringUtils.isSearchQuery(url, true)) {
             Tabs.getInstance().loadUrl(url, Tabs.LOADURL_USER_ENTERED);
             Telemetry.sendUIEvent(TelemetryContract.Event.LOAD_URL, TelemetryContract.Method.ACTIONBAR, "user");
 
-            final int count = sharedPrefs.getInt(GeckoApp.PREFS_LANDING_COUNT, 0);
-            sharedPrefs.edit().putInt(GeckoApp.PREFS_LANDING_COUNT, count + 1).apply();
+            final SharedPreferences appPrefs = GeckoSharedPrefs.forApp(this);
+            final int count = appPrefs.getInt(GeckoApp.PREFS_LANDING_COUNT, 0);
+            appPrefs.edit().putInt(GeckoApp.PREFS_LANDING_COUNT, count + 1).apply();
 
             return;
         }
 
         // Otherwise, check for a bookmark keyword.
+        final SharedPreferences sharedPrefs = GeckoSharedPrefs.forProfile(this);
         final BrowserDB db = BrowserDB.from(getProfile());
         ThreadUtils.postToBackgroundThread(new Runnable() {
             @Override
@@ -4405,7 +4396,7 @@ public class BrowserApp extends GeckoApp
     }
 
     @Override
-    public int getLayout() { return R.layout.gecko_app_splash_screen; }
+    public int getLayout() { return R.layout.gecko_app; }
 
     @Override
     public View getDoorhangerOverlay() {
@@ -4603,16 +4594,14 @@ public class BrowserApp extends GeckoApp
 
     public void toggleControlCenter() {
         if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
-            if (mCCDataHash != null) {
-                final byte[] newCCDataHash = ControlCenterUtils.getCCDataHash(mControlCenterTrackingData);
-                if (!MessageDigest.isEqual(mCCDataHash, newCCDataHash)) {
-                    showReloadingTabSnackbar();
-                }
+            if (mControlCenterPagerAdapter.isDataChanged()) {
+                showReloadingTabSnackbar();
             }
             mControlCenterContainer.setVisibility(View.GONE);
             mDynamicToolbar.setPinned(false, PinReason.DISABLED);
         } else {
             mControlCenterPagerAdapter.setTrackingData(new GeckoBundle());
+            mControlCenterPagerAdapter.unInitialize();
             mControlCenterContainer.setVisibility(View.VISIBLE);
             mControlCenterPager.setCurrentItem(0);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
@@ -4636,18 +4625,16 @@ public class BrowserApp extends GeckoApp
                 tab.doReload(true);
             }
         }, 1000);
-        final SnackbarBuilder.SnackbarCallback allowCallback = new SnackbarBuilder.SnackbarCallback() {
-            @Override
-            public void onClick(View v) {
-                tab.doReload(true);
-            }
-        };
-
         SnackbarBuilder.builder(this)
                 .message(R.string.cc_reload_page_snackbar_text)
                 .duration(2500)
                 .action(R.string.reload)
-                .callback(allowCallback)
+                .callback(new SnackbarBuilder.SnackbarCallback() {
+                    @Override
+                    public void onClick(View v) {
+                        tab.doReload(true);
+                    }
+                })
                 .buildAndShow();
     }
 

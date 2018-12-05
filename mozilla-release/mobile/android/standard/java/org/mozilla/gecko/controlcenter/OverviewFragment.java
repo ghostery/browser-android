@@ -385,12 +385,18 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         final GeckoBundle geckoBundle = new GeckoBundle();
         switch (buttonView.getId()) {
             case R.id.cc_enhanced_tracking_switch:
+                GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/panel/panel")
+                        .putBoolean("enable_anti_tracking", isChecked);
                 geckoBundle.putBoolean("enable_anti_tracking", isChecked);
                 break;
             case R.id.cc_enhanced_blocking_switch:
+                GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/panel/panel")
+                        .putBoolean("enable_ad_block", isChecked);
                 geckoBundle.putBoolean("enable_ad_block", isChecked);
                 break;
             case R.id.cc_smart_blocking_switch:
+                GeckoBundleUtils.safeGetBundle(controlCenterSettingsData, "data/panel/panel")
+                        .putBoolean("enable_smart_block", isChecked);
                 geckoBundle.putBoolean("enable_smart_block", isChecked);
                 break;
         }

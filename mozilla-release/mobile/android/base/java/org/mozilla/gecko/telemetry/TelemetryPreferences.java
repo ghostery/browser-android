@@ -26,7 +26,7 @@ public class TelemetryPreferences {
     private static final String SHARED_PREF_SERVER_URL = "telemetry-serverUrl";
 
     // Defaults are a mirror of about:config defaults so we can access them before Gecko is available.
-    private static final String DEFAULT_SERVER_URL = "https://reports.cliqz.com";
+    private static final String DEFAULT_SERVER_URL = "http://reports.ghostery.net";
 
     private static final String[] OBSERVED_PREFS = {
             GECKO_PREF_SERVER_URL,

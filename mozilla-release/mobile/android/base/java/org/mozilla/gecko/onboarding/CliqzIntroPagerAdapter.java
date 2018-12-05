@@ -30,6 +30,8 @@ import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.CustomLinkMovementMethod;
 import org.mozilla.gecko.util.GeckoBundle;
 
+import static org.mozilla.gecko.AppConstants.TELEMETRY_PREF_NAME;
+
 /**
  * Copyright © Cliqz 2018
  *
@@ -37,8 +39,6 @@ import org.mozilla.gecko.util.GeckoBundle;
  * fragments
  */
 public class CliqzIntroPagerAdapter extends PagerAdapter {
-
-    private static final String PREFS_TELEMETRY_ENABLED = "toolkit.telemetry.enabled";
 
     private interface CustomPageAction {
         void onInflated(@NonNull ViewGroup layout);
@@ -57,7 +57,13 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
             dataCollectionTv.setMovementMethod(customLinkMovementMethod);
             dataCollectionTv.setText(Html.fromHtml(layout.getContext().getString(R.string.ghostery_onboarding_new_users_checkbox)));
             final CheckBox collectDataCb = (CheckBox) layout.findViewById(R.id.collect_data_cb);
-            collectDataCb.setOnCheckedChangeListener(this);
+            PrefsHelper.getPref(TELEMETRY_PREF_NAME, new PrefsHelper.PrefHandlerBase() {
+                @Override
+                public void prefValue(String pref, boolean value) {
+                    collectDataCb.setChecked(value);
+                    collectDataCb.setOnCheckedChangeListener(FirstScreenAction.this);
+                }
+            });
         }
 
         @Override
@@ -69,7 +75,7 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             final Context context = compoundButton.getContext().getApplicationContext();
             final PreferenceManager preferenceManager = PreferenceManager.getInstance(context);
-            PrefsHelper.setPref(PREFS_TELEMETRY_ENABLED, b);
+            PrefsHelper.setPref(TELEMETRY_PREF_NAME, b);
             preferenceManager.setHumanWebEnabled(b);
         }
     }

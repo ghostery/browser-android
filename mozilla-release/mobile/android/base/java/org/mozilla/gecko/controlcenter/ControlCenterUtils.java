@@ -22,6 +22,7 @@ public class ControlCenterUtils {
         } catch (NoSuchAlgorithmException e) {
             return new byte[0];
         }
+
         m.update(getByteArray(GeckoBundleUtils.safeGetStringArray(geckoBundle,
                 "data/summary/site_blacklist")));
         m.update(getByteArray(GeckoBundleUtils.safeGetStringArray(geckoBundle,
@@ -34,20 +35,42 @@ public class ControlCenterUtils {
                 "data/panel/panel/enable_ad_block") ? 1 : 0)});
         m.update(new byte[]{(byte) (GeckoBundleUtils.safeGetBoolean(geckoBundle,
                 "data/panel/panel/enable_anti_tracking") ? 1 : 0)});
-        final GeckoBundle[] categories = GeckoBundleUtils.safeGetBundleArray(geckoBundle,
+
+        final GeckoBundle[] summaryCategories = GeckoBundleUtils.safeGetBundleArray(geckoBundle,
                 "data/summary/categories");
-        if (categories != null) {
-            for (GeckoBundle category : categories) {
+        if (summaryCategories != null) {
+            for (GeckoBundle category : summaryCategories) {
                 final GeckoBundle[] trackers = category.getBundleArray("trackers");
                 if (trackers != null) {
                     for (GeckoBundle tracker : trackers) {
                         m.update(new byte[]{(byte) (tracker.getBoolean("blocked") ? 1 : 0)});
                         m.update(new byte[]{(byte) (tracker.getBoolean("ss_allowed") ? 1 : 0)});
                         m.update(new byte[]{(byte) (tracker.getBoolean("ss_blocked") ? 1 : 0)});
+
+                        final GeckoBundle[] sources = tracker.getBundleArray("sources");
+                        if (sources != null) {
+                            for (GeckoBundle source : sources) {
+                                m.update(new byte[]{(byte) (source.getBoolean("blocked") ? 1 : 0)});
+                            }
+                        }
                     }
                 }
             }
         }
+
+        final GeckoBundle[] settingsCategories = GeckoBundleUtils.safeGetBundleArray(geckoBundle,
+                "data/settings/categories");
+        if (settingsCategories != null) {
+            for (GeckoBundle category : settingsCategories) {
+                final GeckoBundle[] trackers = category.getBundleArray("trackers");
+                if (trackers != null) {
+                    for (GeckoBundle tracker : trackers) {
+                        m.update(new byte[]{(byte) (tracker.getBoolean("blocked") ? 1 : 0)});
+                    }
+                }
+            }
+        }
+
         return m.digest();
     }
 

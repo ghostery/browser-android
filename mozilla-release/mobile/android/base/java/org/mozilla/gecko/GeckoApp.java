@@ -19,7 +19,6 @@ import org.mozilla.gecko.menu.GeckoMenuInflater;
 import org.mozilla.gecko.menu.MenuPanel;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.notifications.NotificationHelper;
-import org.mozilla.gecko.tabs.TabsPanel;
 import org.mozilla.gecko.util.IntentUtils;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.mozglue.GeckoLoader;
@@ -79,11 +78,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -197,9 +193,8 @@ public abstract class GeckoApp extends GeckoActivity
     private boolean foregrounded = false;
 
     /* Cliqz Start */
-    protected View mGhosterySplashScreen;
-    protected View inflatedGeckoAppView;
-    /* Cliqz end */
+    protected boolean isOnboardingVisible = false;
+    /* Cliqz End */
 
     private static final class LastSessionParser extends SessionParser {
         private JSONArray tabs;
@@ -1075,33 +1070,10 @@ public abstract class GeckoApp extends GeckoActivity
             // Bug 896992 - This intent has already been handled; reset the intent.
             setIntent(new Intent(Intent.ACTION_MAIN));
         }
+
         super.onCreate(savedInstanceState);
 
-        /* Cliqz Start */
-        GeckoScreenOrientation.getInstance().update(getResources().getConfiguration().orientation);
         setContentView(getLayout());
-        // Splash screen runs at most for 4 seconds.
-        mGhosterySplashScreen = findViewById(R.id.ghostery_splash_screen);
-        final View ghosty = mGhosterySplashScreen.findViewById(R.id.ghosty);
-        final Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulsate);
-        ghosty.startAnimation(pulse);
-
-        final SharedPreferences sharedPreferences = getSharedPreferences(GeckoSharedPrefs.APP_PREFS_NAME, 0);
-        final int splashTimeout = Integer.valueOf(sharedPreferences.getString(GeckoPreferences.PREFS_SPLASH_SCREEN_TIMEOUT, "4"));
-        mGhosterySplashScreen.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                inflatedGeckoAppView.setVisibility(View.VISIBLE);
-                // Use global layout state change to kick off additional initialization
-                addOnGlobalLayoutListener();
-                mGhosterySplashScreen.setVisibility(View.GONE);
-            }
-        }, TimeUnit.SECONDS.toMillis(splashTimeout));
-
-        ViewStub geckoAppStub = (ViewStub) findViewById(R.id.gecko_app_view_stub);
-        inflatedGeckoAppView = geckoAppStub.inflate();
-        inflatedGeckoAppView.setVisibility(View.GONE);
-        /* Cliqz End */
 
         // Set up Gecko layout.
         mRootLayout = (RelativeLayout) findViewById(R.id.root_layout);
@@ -1143,6 +1115,9 @@ public abstract class GeckoApp extends GeckoActivity
 
         Tabs.getInstance().attachToContext(this, mLayerView, getAppEventDispatcher());
         Tabs.registerOnTabsChangedListener(this);
+
+        // Use global layout state change to kick off additional initialization
+        mMainLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
         mTextSelection = TextSelection.Factory.create(mLayerView, getTextSelectPresenter());
         mTextSelection.create();
@@ -1219,13 +1194,6 @@ public abstract class GeckoApp extends GeckoActivity
                             }
                         }
                     }
-                    /* Cliqz Start */
-                    // If there's a session restore, we add a new start tab.
-                    final Tab selectedTab = Tabs.getInstance().getSelectedTab();
-                    if (selectedTab != null && !AboutPages.isAboutHome(selectedTab.getURL())) {
-                        Tabs.getInstance().addTab();
-                    }
-                    /* Cliqz End */
                 }
 
                 synchronized (GeckoApp.this) {
@@ -1306,10 +1274,6 @@ public abstract class GeckoApp extends GeckoActivity
                 BrowserLocaleManager.storeAndNotifyOSLocale(getSharedPreferencesForProfile(), osLocale);
             }
         });
-    }
-
-    public void addOnGlobalLayoutListener() {
-        mMainLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
     @Override

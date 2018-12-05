@@ -25,18 +25,6 @@ def matrix = [
         'channel': 'MA52',
         'target': 'i686-linux-android',
     ],
-    'Bond ARM':[
-        'arch': 'arm',
-        'brand': 'bond',
-        'channel': 'MA62',
-        'target': 'arm-linux-androideabi',
-    ],
-    'Bond X86':[
-        'arch': 'x86',
-        'brand': 'bond',
-        'channel': 'MA62',
-        'target': 'i686-linux-android',
-    ],
     'Cliqz Alpha':[
         'arch': 'arm',
         'brand': 'cliqz-alpha',
