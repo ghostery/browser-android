@@ -169,6 +169,8 @@ def build(Map m){
                                 cp ../mozconfigs/deploy.mozconfig mozconfig
                                 ./mach clobber
                                 ./mach build
+                                rm -f /app/mozilla-release/objdir-frontend-android/$BRAND/dist/bin/defaults/pref/mobile-l10n.js
+                                cp /app/mozilla-release/mobile/android/installer/mobile-l10n.js /app/mozilla-release/objdir-frontend-android/$BRAND/dist/bin/defaults/pref/mobile-l10n.js
                                 export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                                 for AB_CD in $MOZ_CHROME_MULTILOCALE; do
                                     ./mach build chrome-$AB_CD
