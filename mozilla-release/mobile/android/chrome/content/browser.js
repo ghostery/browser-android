@@ -6539,6 +6539,9 @@ var Cliqz = {
     browser.setAttribute("messagemanagergroup", "browsers");
     browser.setAttribute("contentsource", id);
     BrowserApp.deck.appendChild(browser);
+    if (Cliqz.panelOnTop === id) {
+      Cliqz.overlayPanel(browser);
+    }
 
     // return a tab look-alike object to get handled properly by ActivityObserver
     return {
@@ -6717,6 +6720,7 @@ var Cliqz = {
 
   overlayPanel: function(panel) {
     /* Cliqz start */
+    Cliqz.panelOnTop = panel.getAttribute('contentsource');
     var currentPanel = BrowserApp.deck.selectedPanel;
     if (currentPanel === panel && panel.hasAttribute("primary")) {
       // already visible
@@ -6797,6 +6801,7 @@ var Cliqz = {
         }
         break;
       case "Search:Show":
+        this.panelOnTop = "android@cliqz.com"; // save the state before search is initialized
         this.Search && this.overlayPanel(this.Search.browser);
         break;
       case "Privacy:GetInfo":
