@@ -333,6 +333,9 @@ public class CrashReporterActivity extends AppCompatActivity
                 final String path = section.getStringProperty("Path");
                 final boolean isRelative = (section.getIntProperty("IsRelative") == 1);
 
+                if (path == null) {
+                    continue;
+                }
                 if ((isRelative && path.equals(profileDir.getName())) ||
                     path.equals(profileDir.getPath())) {
                     profileName = section.getStringProperty("Name");
