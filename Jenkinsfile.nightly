@@ -76,11 +76,7 @@ def build(Map m){
     def nodeLabel = 'master'
     def getId = m.getId
     def apk = ""
-    def gradleflavor = ""
-    if (brandname=="bond"){
-        gradleflavor = "Bond"
-    } else {
-        gradleflavor = "Photon"
+    def gradleflavor = "Photon"
     }
     return {
         node(nodeLabel){
@@ -255,18 +251,6 @@ stage('Send email') {
         to: 'androiddev@cliqz.com',
         subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
         body: bodytxt
-    )
-    def bodytxtBond = """
-        ${projectName} - Build # ${env.BUILD_NUMBER}
-        Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
-        Bond apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/bond_Nightly-${env.BUILD_NUMBER}_${id}.apk
-        Bond X86 apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/bond/bond_Nightly-${env.BUILD_NUMBER}_${id}_x86.apk
-        ${changesSinceLastSuccess}
-        Issues Transtioned ${transitionIssueList}""".stripIndent()
-    emailext(
-        to: 'project-bond@cliqz.com',
-        subject: 'BOND » nightly - Build # $BUILD_NUMBER',
-        body: bodytxtBond
     )
 }
 
