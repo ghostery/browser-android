@@ -29,6 +29,7 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.CustomLinkMovementMethod;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.ThreadUtils;
 
 import static org.mozilla.gecko.AppConstants.TELEMETRY_PREF_NAME;
 
@@ -46,7 +47,10 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
 
     private static class FirstScreenAction implements CustomPageAction,
             CustomLinkMovementMethod.OnOpenLinkCallBack,
-            CheckBox.OnCheckedChangeListener {
+            CheckBox.OnCheckedChangeListener,
+            PrefsHelper.PrefHandler {
+
+        private CheckBox mCollectDataCb;
 
         @Override
         public void onInflated(@NonNull ViewGroup layout) {
@@ -56,20 +60,12 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
             customLinkMovementMethod.init(CustomLinkMovementMethod.OPEN_IN_CUSTOM_TAB);
             dataCollectionTv.setMovementMethod(customLinkMovementMethod);
             dataCollectionTv.setText(Html.fromHtml(layout.getContext().getString(R.string.ghostery_onboarding_new_users_checkbox)));
-            final CheckBox collectDataCb = (CheckBox) layout.findViewById(R.id.collect_data_cb);
-            PrefsHelper.getPref(TELEMETRY_PREF_NAME, new PrefsHelper.PrefHandlerBase() {
-                @Override
-                public void prefValue(String pref, boolean value) {
-                    collectDataCb.setChecked(value);
-                    collectDataCb.setOnCheckedChangeListener(FirstScreenAction.this);
-                }
-            });
+            mCollectDataCb = (CheckBox) layout.findViewById(R.id.collect_data_cb);
+            PrefsHelper.getPref(TELEMETRY_PREF_NAME, this);
         }
 
         @Override
-        public void OnOpenLinkLoaded() {
-
-        }
+        public void OnOpenLinkLoaded() {}
 
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -78,6 +74,29 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
             PrefsHelper.setPref(TELEMETRY_PREF_NAME, b);
             preferenceManager.setHumanWebEnabled(b);
         }
+
+        @Override
+        public void prefValue(String pref, final boolean value) {
+            if (pref == null || !pref.equals(TELEMETRY_PREF_NAME) || mCollectDataCb == null) {
+                return;
+            }
+            ThreadUtils.postToUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mCollectDataCb.setChecked(value);
+                    mCollectDataCb.setOnCheckedChangeListener(FirstScreenAction.this);
+                }
+            });
+        }
+
+        @Override
+        public void prefValue(String pref, int value) {}
+
+        @Override
+        public void prefValue(String pref, String value) {}
+
+        @Override
+        public void finish() {}
     }
 
     private static class SecondScreenAction implements CustomPageAction, RadioButton.OnClickListener {
