@@ -4871,7 +4871,7 @@ public class BrowserApp extends GeckoApp
             mReactRootView = new ReactRootView(this);
             mReactInstanceManager = ReactInstanceManager.builder().setApplication(getApplication())
                     .setBundleAssetName("index.android.bundle").setJSMainModulePath("index")
-                    .addPackage(new MainReactPackage()).setUseDeveloperSupport(true)
+                    .addPackage(new MainReactPackage()).setUseDeveloperSupport(BuildConfig.DEBUG)
                     .setInitialLifecycleState(LifecycleState.RESUMED).build();
             // The string here (e.g. "MyReactNativeApp") has to match
             // the string in AppRegistry.registerComponent() in index.js
