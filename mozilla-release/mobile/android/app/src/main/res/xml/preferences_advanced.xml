@@ -76,8 +76,6 @@
         <SwitchPreference android:key="devtools.remote.usb.enabled"
                           android:title="@string/pref_developer_remotedebugging_usb" />
 
-
-
         <!-- Cliqz start +->
         <SwitchPreference android:key="devtools.remote.wifi.enabled"
                           android:title="@string/pref_developer_remotedebugging_wifi" />

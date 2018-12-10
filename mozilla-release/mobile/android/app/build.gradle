@@ -21,6 +21,10 @@ android {
 
         /* Cliqz start */
         versionCode 116
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
         /* Cliqz end */
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
         testApplicationId 'org.mozilla.roboexample.test'
@@ -93,17 +97,11 @@ android {
         debug {
             debuggable isDebuggable
             multiDexKeepProguard file("${topsrcdir}/mobile/android/config/proguard/debug-robocop-keeps.cfg")
-            ndk {
-               abiFilters "armeabi-v7a"
-            }
         }
         release {
             debuggable isDebuggable
             if (System.getenv('CERT_PATH') && System.getenv('CERT_PASS')){
                 signingConfig signingConfigs.release
-            }
-            ndk {
-                abiFilters "armeabi-v7a"
             }
         }
 
@@ -289,7 +287,9 @@ dependencies {
     implementation "com.android.support:design:$support_library_version"
     implementation "com.android.support:customtabs:$support_library_version"
     implementation "com.android.support:palette-v7:$support_library_version"
+    // cliqz-start
     implementation "com.facebook.react:react-native:0.56.1"
+    // cliqz-end
 
     // We always include support for multidexing even when we don't enable it at runtime.
     // We could conditionally include support, but we'd need
