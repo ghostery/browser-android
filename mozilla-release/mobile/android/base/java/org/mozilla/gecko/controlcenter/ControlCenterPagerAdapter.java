@@ -62,15 +62,13 @@ public class ControlCenterPagerAdapter extends FragmentPagerAdapter
         mFragmentList.add(siteTrackersFragment);
         mFragmentList.add(globalTrackersFragment);
     }
-    
-    @Override
+
     public void setTrackingData(final GeckoBundle message) {
         for (ControlCenterFragment fragment : mFragmentList) {
             fragment.updateUI(message);
         }
     }
 
-    @Override
     public void updateCurrentView(int position) {
         mFragmentList.get(position).refreshUI();
     }
