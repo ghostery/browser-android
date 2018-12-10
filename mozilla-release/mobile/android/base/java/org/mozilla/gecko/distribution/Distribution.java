@@ -499,13 +499,9 @@ public class Distribution {
         // if we have a value for cliqzVersionCode we need to remove the
         // extensions from the profile in order to use the system addons
         // packaged inside the browser itself
-        final int lastCliqzVersion = settings.getInt("cliqzVersionCode", 0);
-        if (lastCliqzVersion != 0) {
-            settings.edit().remove("cliqzVersionCode").apply();
-            final GeckoProfile profile = GeckoThread.getActiveProfile();
-            profile.deleteFileFromProfileDir("extensions/firefox@ghostery.com.xpi");
-            profile.deleteFileFromProfileDir("extensions/android@cliqz.com.xpi");
-        }
+        final GeckoProfile profile = GeckoThread.getActiveProfile();
+        profile.deleteFileFromProfileDir("extensions/firefox@ghostery.com.xpi");
+        profile.deleteFileFromProfileDir("extensions/android@cliqz.com.xpi");
         /* Cliqz end */
         if (this.state == STATE_NONE) {
             runReadyQueue();
