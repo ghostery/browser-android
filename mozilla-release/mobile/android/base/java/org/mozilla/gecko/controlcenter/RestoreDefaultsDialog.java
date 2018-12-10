@@ -24,7 +24,8 @@ public class RestoreDefaultsDialog implements DialogInterface.OnClickListener{
         void onRestore();
     }
 
-    public static void show(Context context, RestoreDialogCallbacks restoreDialogCallbacks) {
+    public static void show(Context context,
+                            RestoreDialogCallbacks restoreDialogCallbacks) {
         final RestoreDefaultsDialog restoreDefaultsDialog = new RestoreDefaultsDialog();
         restoreDefaultsDialog.restoreDialogCallbacks = restoreDialogCallbacks;
         new AlertDialog.Builder(context, R.style.Cliqz_AlertDialogTheme)
