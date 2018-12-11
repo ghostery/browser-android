@@ -41,7 +41,7 @@ def matrix = [
 def baseImage
 def codeImage
 def id
-node ('master'){
+node ('docker'){
     def dockerTag = "" 
     stage('Checkout') {
         checkout scm
@@ -73,7 +73,7 @@ def build(Map m){
     def cliqzchannel = m.channel
     def androidtarget = m.target
     def getImageName = m.getImageName
-    def nodeLabel = 'master'
+    def nodeLabel = 'docker'
     def getId = m.getId
     def apk = ""
     return {
