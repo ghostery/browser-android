@@ -94,8 +94,8 @@ def build(Map m){
                     }
                     if (test == true){
                         try {
-                            stage('Checkout Autobots') {
-                                dir('autobots'){
+                            stage('Checkout Mobile Tests') {
+                                dir('cliqz-mobile-tests'){
                                     git branch:'master',
                                     credentialsId: 'cliqz-oss-ci',
                                     url: 'https://github.com/cliqz-oss/cliqz-mobile-tests.git'
@@ -156,7 +156,7 @@ def build(Map m){
                                                 set -e
                                                 export app=$PWD/mozilla-release/objdir-frontend-android/$FLAVOR/dist/$APP
                                                 $ANDROID_HOME/platform-tools/adb install $app
-                                                cd autobots
+                                                cd cliqz-mobile-tests
                                                 appium --log $FLAVOR-appium.log &
                                                 echo $! > appium.pid
                                                 sleep 10
@@ -164,8 +164,6 @@ def build(Map m){
                                                 source ~/venv/bin/activate
                                                 chmod 0755 requirements.txt
                                                 pip install -r requirements.txt
-                                                $ANDROID_HOME/platform-tools/adb forward tcp:6000 localfilesystem:/data/data/${appPackage}/firefox-debugger-socket
-                                                $ANDROID_HOME/platform-tools/adb forward --list
                                                 python testRunner.py || true
                                                 $ANDROID_HOME/platform-tools/adb uninstall ${appPackage}
                                                 sleep 10
@@ -190,8 +188,7 @@ def build(Map m){
                 sh '''#!/bin/bash
                     rm -f mozilla-release/mozconfig
                     rm -rf mozilla-release/objdir-frontend-android
-                    rm -rf autobots
-                    rm -f screenshots.zip
+                    rm -rf cliqz-mobile-tests
                 '''
             }
         }
@@ -290,23 +287,11 @@ def withGenymotion(
     }
 }
 
-def cloneRepoViaSSH(String repoLink, String args) {
-    sh """#!/bin/bash -l
-        set -x
-        set -e
-        mkdir -p ~/.ssh
-        cp $SSH_KEY ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-        git clone ${args} ${repoLink}
-    """
-}
-
 def archiveTestResults(String flavorName) {
     try {
-        archiveArtifacts allowEmptyArchive: true, artifacts: 'autobots/*.log'
-        junit 'autobots/test-reports/*.xml'
-        zip archive: true, dir: 'autobots/screenshots', glob: '', zipFile: "${flavorName}-screenshots.zip"
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'cliqz-mobile-tests/*.log'
+        junit 'cliqz-mobile-tests/test-reports/*.xml'
+        zip archive: true, dir: 'cliqz-mobile-tests/screenshots', glob: '', zipFile: "${flavorName}-screenshots.zip"
     } catch(e) {
         print e
     }

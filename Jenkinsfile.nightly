@@ -49,7 +49,7 @@ node ('master'){
     }
     id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
     baseImageName ="browser-f/android:${dockerTag}"
-    codeImageName ="browser-f/android:code"
+    codeImageName ="browser-f/android:nightlycode"
     baseImage = stage('Build base image') {
         docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
     }
@@ -76,7 +76,6 @@ def build(Map m){
     def nodeLabel = 'master'
     def getId = m.getId
     def apk = ""
-    def gradleflavor = "Photon"
     return {
         node(nodeLabel){
             getImageName().inside() {
@@ -131,11 +130,11 @@ def build(Map m){
                                 cd /app/mozilla-release
                                 export MOZ_CHROME_MULTILOCALE=`ls -1 '../l10n/'|paste -s -d ' '`
                                 export AB_CD=multi
-                                ./gradlew assembleOfficialWithGeckoBinariesNoMinApi${gradleflavor}Release
+                                ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
                             """
                         }
                         apk = sh(returnStdout: true,
-                            script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release && \
+                            script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
                             find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                     }
                 }
@@ -149,10 +148,10 @@ def build(Map m){
                         ]
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
-                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release/${apk}"
+                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
                         def fileName = "${brandname}_Nightly-${env.BUILD_NUMBER}_${getId()}"
                         try {
-                            zip archive: true, dir: "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release", glob: '', zipFile: "${flavorname}-build.zip"
+                            zip archive: true, dir: "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release", glob: '', zipFile: "${flavorname}-build.zip"
                         } catch(e) {
                             print e
                         }
