@@ -2113,23 +2113,15 @@ public class LocalBrowserDB extends BrowserDB {
                     .append(History.IS_DELETED).append(" = 0 AND ")
                     .append(History.URL).append(" NOT LIKE ?");
             argumentsList.add("moz-extension://%");
-            final String[] terms = query.split(" ");
-            String j = " AND (";
-            for (int i = 0; i < Math.min(terms.length, CLIQZ_MAX_HISTORY_TERMS); i++) {
-                selectionBuilder
-                        .append(j)
-                        .append(History.URL)
-                        .append(" LIKE ? OR ")
-                        .append(History.TITLE)
-                        .append(" LIKE ?");
-                j = " OR ";
-                final String likeTerm = "%" + terms[i].replaceAll("([%_\\\\])", "\\\\$1") + "%";
-                argumentsList.add(likeTerm);
-                argumentsList.add(likeTerm);
-            }
-            if (terms.length > 0) {
-                selectionBuilder.append(")");
-            }
+            selectionBuilder
+                    .append(" AND (")
+                    .append(History.URL)
+                    .append(" LIKE ? OR ")
+                    .append(History.TITLE)
+                    .append(" LIKE ?)");
+            final String escapedQuery = DatabaseUtils.sqlEscapeString(query);
+            argumentsList.add("%" + escapedQuery + "%");
+            argumentsList.add("%" + escapedQuery + "%");
             selection = selectionBuilder.append(" COLLATE NOCASE").toString();
             final String[] conv = new String[argumentsList.size()];
             selectionArgs = argumentsList.toArray(conv);
