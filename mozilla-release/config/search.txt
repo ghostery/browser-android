@@ -1,2 +1,2 @@
-ghostery=http://cdn2.cliqz.com/update/edge/ghostery-android/v3.31/3.31.2.6036e53.zip
-cliqz=http://cdn2.cliqz.com/update/edge/cliqz-android/v3.31/3.31.2.6036e53.zip
+ghostery=http://cdn2.cliqz.com/update/edge/ghostery-android/v3.31/3.31.2.956c70f.zip
+cliqz=http://cdn2.cliqz.com/update/edge/cliqz-android/v3.31/3.31.2.956c70f.zip
