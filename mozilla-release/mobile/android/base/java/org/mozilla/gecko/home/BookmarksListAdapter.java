@@ -27,10 +27,13 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
     private static final int VIEW_TYPE_BOOKMARK_ITEM = 0;
     private static final int VIEW_TYPE_FOLDER = 1;
     private static final int VIEW_TYPE_SCREENSHOT = 2;
+    /* Cliqz Start */
+    private static final int VIEW_TYPE_FOLDER_TITLE = 3;
 
-    private static final int[] VIEW_TYPES = new int[] { VIEW_TYPE_BOOKMARK_ITEM, VIEW_TYPE_FOLDER, VIEW_TYPE_SCREENSHOT };
+    private static final int[] VIEW_TYPES = new int[] { VIEW_TYPE_BOOKMARK_ITEM, VIEW_TYPE_FOLDER, VIEW_TYPE_SCREENSHOT, VIEW_TYPE_FOLDER_TITLE };
     private static final int[] LAYOUT_TYPES =
-            new int[] { R.layout.bookmark_item_row, R.layout.bookmark_folder_row, R.layout.bookmark_screenshot_row };
+            new int[] { R.layout.bookmark_item_row, R.layout.bookmark_folder_row, R.layout.bookmark_screenshot_row, R.layout.bookmark_folder_title_view };
+    /* Cliqz End */
 
     public enum RefreshType implements Parcelable {
         PARENT,
@@ -240,17 +243,17 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        /* Cliqz Start o/
         // The position also reflects the opened child folder row.
         if (isShowingChildFolder()) {
             if (position == 0) {
-                return VIEW_TYPE_FOLDER;
+                /* Cliqz Start */
+                return VIEW_TYPE_FOLDER_TITLE;
+                /* Cliqz End */
             }
 
             // Accounting for the folder view.
             position--;
         }
-        /o Cliqz End */
 
         if (openFolderType == FolderType.SCREENSHOTS) {
             return VIEW_TYPE_SCREENSHOT;
@@ -313,20 +316,17 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
         return (mParentStack.peek().id != Bookmarks.FIXED_ROOT_ID);
     }
 
-    /* Cliqz Start o/
     @Override
     public int getCount() {
         return super.getCount() + (isShowingChildFolder() ? 1 : 0);
     }
-    /o Cliqz End */
 
     @Override
     public void bindView(View view, Context context, int position) {
         final int viewType = getItemViewType(position);
 
-        /* Cliqz Start */
-        final Cursor cursor = getCursor(position);
-        /*if (isShowingChildFolder()) {
+        final Cursor cursor;
+        if (isShowingChildFolder()) {
             if (position == 0) {
                 cursor = null;
             } else {
@@ -336,8 +336,7 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
             }
         } else {
             cursor = getCursor(position);
-        }*/
-        /* Cliqz End */
+        }
 
         if (viewType == VIEW_TYPE_SCREENSHOT) {
             ((BookmarkScreenshotRow) view).updateFromCursor(cursor);
@@ -345,12 +344,12 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
             final TwoLinePageRow row = (TwoLinePageRow) view;
             row.updateFromCursor(cursor);
         } else {
-            final BookmarkFolderView row = (BookmarkFolderView) view;
+            /* Cliqz Start */
             if (cursor == null) {
-                final Resources res = context.getResources();
-                row.update(res.getString(R.string.home_move_back_to_filter, mParentStack.get(1).title), -1);
-                row.setState(FolderState.PARENT);
+                final BookmarkFolderTitleView row = (BookmarkFolderTitleView) view;
+                row.setTitle(mParentStack.get(0).title);
             } else {
+                final BookmarkFolderView row = (BookmarkFolderView) view;
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(Bookmarks._ID));
 
                 row.update(getFolderTitle(context, cursor), id);
@@ -361,6 +360,7 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
                     row.setState(FolderState.FOLDER);
                 }
             }
+            /* Cliqz End */
         }
     }
 }
