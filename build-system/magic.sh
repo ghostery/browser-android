@@ -31,6 +31,6 @@ case $i in
     ;;
 esac
 done
-source ${SCRIPT_PATH}/envs.sh
-source ${SCRIPT_PATH}/mozconfig.sh
-source ${SCRIPT_PATH}/build.sh
+. ${SCRIPT_PATH}/envs.sh
+. ${SCRIPT_PATH}/mozconfig.sh
+. ${SCRIPT_PATH}/build.sh
