@@ -9,7 +9,11 @@ import java.util.concurrent.Future;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -17,6 +21,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -37,13 +42,17 @@ import org.mozilla.gecko.widget.themed.ThemedTextView;
 public class TwoLinePageRow extends ThemedLinearLayout
                             implements Tabs.OnTabsChangedListener {
 
-    protected static final int NO_ICON = 0;
+    /* Cliqz Start */
+    protected static final Drawable NO_ICON = null;
+    /* Cliqz End */
 
     private final ThemedTextView mTitle;
     private final ThemedTextView mUrl;
     private final ImageView mStatusIcon;
 
-    private int mSwitchToTabIconId;
+    /* Cliqz Start */
+    private Drawable mSwitchToTabIcon;
+    /* Cliqz End */
 
     /* Cliqz Start */
     private final ImageView mFavicon;
@@ -66,15 +75,15 @@ public class TwoLinePageRow extends ThemedLinearLayout
     public TwoLinePageRow(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setGravity(Gravity.CENTER_VERTICAL);
-
         LayoutInflater.from(context).inflate(R.layout.two_line_page_row, this);
 
         mTitle = (ThemedTextView) findViewById(R.id.title);
         mUrl = (ThemedTextView) findViewById(R.id.url);
         mStatusIcon = (ImageView) findViewById(R.id.status_icon_bookmark);
 
-        mSwitchToTabIconId = NO_ICON;
+        /* Cliqz Start */
+        mSwitchToTabIcon = NO_ICON;
+        /* Cliqz End */
         mShowIcons = true;
         /* Cliqz Start */
         mFavicon = (ImageView) findViewById(R.id.icon);
@@ -160,14 +169,16 @@ public class TwoLinePageRow extends ThemedLinearLayout
         return mPageUrl;
     }
 
-    protected void setSwitchToTabIcon(int iconId) {
-        if (mSwitchToTabIconId == iconId) {
+    /* Cliqz Start */
+    protected void setSwitchToTabIcon(Drawable icon) {
+        if (mSwitchToTabIcon == icon) {
             return;
         }
 
-        mSwitchToTabIconId = iconId;
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(mUrl, mSwitchToTabIconId, 0, 0, 0);
+        mSwitchToTabIcon = icon;
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(mUrl, mSwitchToTabIcon, null, null, null);
     }
+    /* Cliqz End */
 
     private void updateStatusIcon(boolean isBookmark, boolean isReaderItem) {
         if (isReaderItem) {
@@ -218,7 +229,12 @@ public class TwoLinePageRow extends ThemedLinearLayout
             setSwitchToTabIcon(NO_ICON);
         } else {
             setUrl(R.string.switch_to_tab);
-            setSwitchToTabIcon(R.drawable.ic_url_bar_tab);
+            /* Cliqz Start */
+            Drawable wrappedDrawable = DrawableCompat.wrap(
+                    getResources().getDrawable(R.drawable.ic_url_bar_tab));
+            DrawableCompat.setTint(wrappedDrawable, getResources().getColor(android.R.color.white));
+            setSwitchToTabIcon(wrappedDrawable);
+            /* Cliqz End */
         }
     }
 
