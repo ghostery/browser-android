@@ -23,10 +23,22 @@
 <!ENTITY  reloadTab.accesskey                "R">
 <!ENTITY  reloadAllTabs.label                "Recarregar todos os separadores">
 <!ENTITY  reloadAllTabs.accesskey            "a">
+<!ENTITY  selectAllTabs.label                "Selecionar todos os separadores">
+<!ENTITY  selectAllTabs.accesskey            "S">
 <!-- LOCALIZATION NOTE (duplicateTab.label): This is a command to duplicate
 a tab (i.e. it is a verb, not adjective). -->
 <!ENTITY  duplicateTab.label                 "Duplicar separador">
+<!-- LOCALIZATION NOTE (duplicateTab.accesskey, duplicateTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
 <!ENTITY  duplicateTab.accesskey             "D">
+<!ENTITY  closeTabOptions.label              "Opções de fecho de separadores">
+<!ENTITY  closeTabOptions.accesskey          "O">
+<!-- LOCALIZATION NOTE (duplicateTabs.label): This is a command to duplicate
+a tab (i.e. it is a verb, not adjective). -->
+<!ENTITY  duplicateTabs.label                "Duplicar separadores">
+<!-- LOCALIZATION NOTE (duplicateTab.accesskey, duplicateTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
+<!ENTITY  duplicateTabs.accesskey            "D">
 <!-- LOCALIZATION NOTE (closeTabsToTheEnd.label): This should indicate the
 direction in which tabs are closed, i.e. locales that use RTL mode should say
 left instead of right. -->
@@ -38,20 +50,30 @@ left instead of right. -->
 <!ENTITY  closeSelectedTabs.label            "Fechar separadores selecionados">
 <!ENTITY  closeSelectedTabs.accesskey        "s">
 
+<!ENTITY  closeTabs.label                    "Fechar separadores">
+<!ENTITY  closeTabs.accesskey                "s">
 <!ENTITY  pinSelectedTabs.label              "Afixar separadores">
-<!-- Pin Tab and Pin Selected Tabs have the same accesskey
-but will never be visible at the same time. -->
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
 <!ENTITY  pinSelectedTabs.accesskey          "A">
 <!ENTITY  unpinSelectedTabs.label            "Desafixar separadores">
-<!-- Unpin Tab and Unpin Selected Tabs have the same accesskey
-but will never be visible at the same time. -->
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
 <!ENTITY  unpinSelectedTabs.accesskey        "d">
 <!-- Reload Tab and Reload Selected Tabs have the same accesskey
 but will never be visible at the same time. -->
 <!ENTITY  reloadSelectedTabs.label           "Recarregar separadores selecionados">
 <!ENTITY  reloadSelectedTabs.accesskey       "R">
+<!-- LOCALIZATION NOTE(reloadTab.label, reloadTabs.label): have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  reloadTabs.label                   "Recarregar separadores">
+<!ENTITY  reloadTabs.accesskey               "R">
 <!ENTITY  bookmarkSelectedTabs.label         "Adicionar separadores aos marcadores…">
-<!ENTITY  bookmarkSelectedTabs.accesskey     "c">
+<!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
+<!ENTITY  bookmarkSelectedTabs.accesskey     "m">
 
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
@@ -59,8 +81,14 @@ left edge of the tabstrip. Really we just want the string to express the idea
 that this is a lightweight and reversible action that keeps your tab where you
 can reach it easily. -->
 <!ENTITY  pinTab.label                       "Fixar separador">
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
 <!ENTITY  pinTab.accesskey                   "p">
 <!ENTITY  unpinTab.label                     "Desafixar separador">
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
 <!ENTITY  unpinTab.accesskey                 "r">
 <!ENTITY  sendTabToDevice.label              "Enviar separador para dispositivo">
 <!ENTITY  sendTabToDevice.accesskey          "d">
@@ -68,12 +96,26 @@ can reach it easily. -->
 <!ENTITY  sendPageToDevice.accesskey         "d">
 <!ENTITY  sendLinkToDevice.label             "Enviar ligação para dispositivo">
 <!ENTITY  sendLinkToDevice.accesskey         "d">
+<!-- LOCALIZATION NOTE (moveTabOptions.label and moveSelectedTabOptions.label):
+These two items have the same accesskey but will never be visible at the same time. -->
+<!ENTITY  moveTabOptions.label               "Mover separador">
+<!ENTITY  moveTabOptions.accesskey           "v">
+<!ENTITY  moveSelectedTabOptions.label       "Mover separadores">
+<!ENTITY  moveSelectedTabOptions.accesskey   "v">
+<!ENTITY  moveToStart.label                  "Mover para o início">
+<!ENTITY  moveToStart.accesskey              "i">
+<!ENTITY  moveToEnd.label                    "Mover para o fim">
+<!ENTITY  moveToEnd.accesskey                "f">
 <!ENTITY  moveToNewWindow.label              "Mover para nova janela">
 <!ENTITY  moveToNewWindow.accesskey          "j">
 <!ENTITY  reopenInContainer.label            "Reabrir no contentor">
 <!ENTITY  reopenInContainer.accesskey        "e">
 <!ENTITY  bookmarkAllTabs.label              "Adicionar todos os separadores aos marcadores…">
 <!ENTITY  bookmarkAllTabs.accesskey          "t">
+<!ENTITY  bookmarkTab.label                  "Adicionar separador aos marcadores">
+<!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
+<!ENTITY  bookmarkTab.accesskey              "m">
 <!ENTITY  undoCloseTab.label                 "Reabrir separador fechado">
 <!ENTITY  undoCloseTab.accesskey             "b">
 <!ENTITY  closeTab.label                     "Fechar separador">
@@ -100,6 +142,8 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY printCmd.accesskey "p">
 <!ENTITY printCmd.commandkey "p">
 
+<!ENTITY taskManagerCmd.label "Gestor de tarefas">
+
 <!ENTITY goOfflineCmd.label "Trabalhar offline">
 <!ENTITY goOfflineCmd.accesskey "o">
 
@@ -114,6 +158,29 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "a">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Adicionar todos os separadores aos marcadores…">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "t">
+
+<!ENTITY toolbarContextMenu.reloadSelectedTab.label "Recarregar separador selecionado">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
+toolbarContextMenu.reloadSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.reloadSelectedTab.accesskey "R">
+<!ENTITY toolbarContextMenu.reloadSelectedTabs.label "Recarregar separadores selecionados">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
+toolbarContextMenu.reloadSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.reloadSelectedTabs.accesskey "R">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTab.label "Adicionar separador selecionado aos marcadores…">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.bookmarkSelectedTab.accesskey,
+toolbarContextMenu.bookmarkSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.bookmarkSelectedTab.accesskey "s">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.label "Adicionar separadores selecionados aos marcadores…">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.bookmarkSelectedTab.accesskey,
+toolbarContextMenu.bookmarkSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.accesskey "s">
+<!ENTITY toolbarContextMenu.selectAllTabs.label "Selecionar todos os separadores">
+<!ENTITY toolbarContextMenu.selectAllTabs.accesskey "S">
 <!ENTITY toolbarContextMenu.undoCloseTab.label "Reabrir separador fechado">
 <!ENTITY toolbarContextMenu.undoCloseTab.accesskey "b">
 
@@ -199,6 +266,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY subscribeToPageMenupopup.label "Subscrever esta página">
 <!ENTITY subscribeToPageMenuitem.label "Subscrever esta página…">
+
 <!ENTITY addCurPagesCmd.label "Adicionar todos os separadores aos marcadores…">
 <!ENTITY showAllBookmarks2.label "Mostrar todos os marcadores">
 <!ENTITY recentBookmarks.label "Marcadores recentes">
@@ -532,7 +600,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY changeSearchSettings.button  "Alterar definições de pesquisa">
 <!ENTITY changeSearchSettings.tooltip "Alterar definições de pesquisa">
 
-<!ENTITY searchInNewTab.label         "Pesquisar em novo separador">
+<!ENTITY searchInNewTab.label         "Pesquisar num novo separador">
 <!ENTITY searchInNewTab.accesskey     "P">
 <!ENTITY searchSetAsDefault.label     "Definir como motor de pesquisa predefinido">
 <!ENTITY searchSetAsDefault.accesskey "d">
@@ -545,9 +613,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY openLinkInPrivateWindowCmd.accesskey "p">
 <!ENTITY openLinkCmdInCurrent.label     "Abrir ligação">
 <!ENTITY openLinkCmdInCurrent.accesskey "A">
-<!ENTITY openFrameCmdInTab.label      "Abrir frame em novo separador">
+<!ENTITY openFrameCmdInTab.label      "Abrir frame num novo separador">
 <!ENTITY openFrameCmdInTab.accesskey  "s">
-<!ENTITY openFrameCmd.label           "Abrir frame em nova janela">
+<!ENTITY openFrameCmd.label           "Abrir frame numa nova janela">
 <!ENTITY openFrameCmd.accesskey       "j">
 <!ENTITY openLinkCmdInContainerTab.label "Abrir ligação num novo separador contentor">
 <!ENTITY openLinkCmdInContainerTab.accesskey "b">
@@ -557,9 +625,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY reloadFrameCmd.label         "Recarregar frame">
 <!ENTITY reloadFrameCmd.accesskey     "R">
 <!ENTITY viewPartialSourceForSelectionCmd.label "Ver fonte da seleção">
-<!ENTITY viewPartialSourceForMathMLCmd.label    "Ver fonte MathML">
-<!-- LOCALIZATION NOTE (viewPartialSourceCmd.accesskey): This accesskey is used for both
-         viewPartialSourceForSelectionCmd.label and viewPartialSourceForMathMLCmd.label -->
 <!ENTITY viewPartialSourceCmd.accesskey "e">
 <!ENTITY viewPageSourceCmd.label      "Ver fonte da página">
 <!ENTITY viewPageSourceCmd.accesskey  "V">
@@ -776,7 +841,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      Remove Bookmark buttons. -->
 <!ENTITY editBookmark.panel.width                    "23em">
 <!ENTITY editBookmark.done.label                     "Feito">
-
 <!ENTITY editBookmark.showForNewBookmarks.label       "Mostrar o editor ao guardar">
 <!ENTITY editBookmark.showForNewBookmarks.accesskey   "s">
 
@@ -784,6 +848,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      This is the header of the security subview in the Site Identity panel. -->
 <!ENTITY identity.securityView.label "Segurança do site">
 
+<!ENTITY identity.connection "Ligação">
 <!ENTITY identity.connectionSecure "Ligação segura">
 <!ENTITY identity.connectionNotSecure "Ligação não segura">
 <!ENTITY identity.connectionFile "Esta página está armazenada no seu computador.">
@@ -856,9 +921,9 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY syncedTabs.context.open.accesskey                   "A">
 <!ENTITY syncedTabs.context.openInNewTab.label               "Abrir num novo separador">
 <!ENTITY syncedTabs.context.openInNewTab.accesskey           "s">
-<!ENTITY syncedTabs.context.openInNewWindow.label            "Abrir ligação em nova janela">
+<!ENTITY syncedTabs.context.openInNewWindow.label            "Abrir ligação numa nova janela">
 <!ENTITY syncedTabs.context.openInNewWindow.accesskey        "j">
-<!ENTITY syncedTabs.context.openInNewPrivateWindow.label     "Abrir ligação em nova janela privada">
+<!ENTITY syncedTabs.context.openInNewPrivateWindow.label     "Abrir ligação numa nova janela privada">
 <!ENTITY syncedTabs.context.openInNewPrivateWindow.accesskey "p">
 <!ENTITY syncedTabs.context.bookmarkSingleTab.label          "Adicionar este separador aos marcadores…">
 <!ENTITY syncedTabs.context.bookmarkSingleTab.accesskey      "C">
@@ -926,9 +991,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.audioCapture.label "O áudio do separador será partilhado.">
 <!ENTITY getUserMedia.allWindowsShared.message "Serão partilhadas todas as janelas visíveis no seu ecrã.">
 
-<!ENTITY trackingProtection.on "Proteção contra monitorização: LIGADA">
-<!ENTITY trackingProtection.off "Proteção contra monitorização: DESLIGADA">
-
 <!ENTITY contentBlocking.title "Bloqueio de conteúdo">
 <!ENTITY contentBlocking.detected "Conteúdo bloqueável detetado neste site.">
 <!ENTITY contentBlocking.notDetected "Não foi detetado conteúdo bloqueável nesta página.">
@@ -943,6 +1005,11 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      a positive thing. It forms the end of the (imaginary) sentence
      "Slow-Loading Trackers [are] Blocked"-->
 <!ENTITY contentBlocking.fastBlock.blocked.label "Bloqueados">
+<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.blocking.label):
+     This label signals that this type of content blocking is turned
+     ON, so this is a positive thing. It forms the verb in (imaginary) sentence
+     "Firefox is blocking Slow-Loading Trackers"-->
+<!ENTITY contentBlocking.fastBlock.blocking.label "A bloquear">
 <!-- LOCALIZATION NOTE (contentBlocking.fastBlock.add.label):
      This is displayed as a link to preferences, where the user can add
      this specific type of content blocking. When this text is shown
@@ -950,12 +1017,25 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.fastBlock.add.label "Adicionar bloqueio…">
 
 <!ENTITY contentBlocking.trackingProtection2.label "Todos os trackers detetados">
+
+<!ENTITY contentBlocking.trackingProtection3.label "Trackers">
+<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.allowed.label):
+     This label signals that this type of content blocking is turned
+     OFF and is not blocking tracker content, so this is not
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Trackers [are] Allowed"-->
+<!ENTITY contentBlocking.trackingProtection.allowed.label "Permitidos">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
      This label signals that this type of content blocking is turned
      ON and is successfully blocking tracker content, so this is
      a positive thing. It forms the end of the (imaginary) sentence
      "Trackers [are] Blocked"-->
 <!ENTITY contentBlocking.trackingProtection.blocked.label "Bloqueados">
+<!-- LOCALIZATION NOTE (contentBlocking.tranckingProtection.blocking.label):
+     This label signals that this type of content blocking is turned
+     ON, so this is a positive thing. It forms the verb in the (imaginary) sentence
+     "Firefox is blocking Trackers"-->
+<!ENTITY contentBlocking.trackingProtection.blocking.label "A bloquear">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.add.label):
      This is displayed as a link to preferences, where the user can add
      this specific type of content blocking. When this text is shown
@@ -963,17 +1043,29 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.trackingProtection.add.label "Adicionar bloqueio…">
 
 <!ENTITY contentBlocking.3rdPartyCookies.label "Cookies de terceiros">
+<!ENTITY contentBlocking.3rdPartyCookies.trackers.label "Cookies de tracking">
 <!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.blocked.label):
      This label signals that this type of content blocking is turned
      ON and is successfully blocking third-party cookies, so this is
      a positive thing. It forms the end of the (imaginary) sentence
      "Third-Party Cookies [are] Blocked"-->
 <!ENTITY contentBlocking.3rdPartyCookies.blocked.label "Bloqueados">
+<!-- LOCALIZATION NOTE (contentBlocking.tranckingProtection.blocking.label):
+     This label signals that this type of content blocking is turned
+     ON, so this is a positive thing. It forms the verb in the (imaginary) sentence
+     "Firefox is blocking Third-Party Cookies"-->
+<!ENTITY contentBlocking.3rdPartyCookies.blocking.label "A bloquear">
 <!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.add.label):
      This is displayed as a link to preferences, where the user can add
      this specific type of content blocking. When this text is shown
      the type of content blocking is currently not enabled. -->
 <!ENTITY contentBlocking.3rdPartyCookies.add.label "Adicionar bloqueio…">
+
+<!ENTITY contentBlocking.manageSettings.label "Gerir bloqueio de conteúdo">
+<!ENTITY contentBlocking.manageSettings.accesskey "G">
+
+<!ENTITY contentBlocking.trackersView.label "Trackers">
+<!ENTITY contentBlocking.trackersView.strictInfo.label "Para bloquear todos os trackers, defina o bloqueio de conteúdo como “Estrito”.">
 
 <!ENTITY contentBlocking.openBreakageReportView2.label "Reportar um problema">
 <!ENTITY contentBlocking.breakageReportView.label "Reportar problemas">
@@ -986,32 +1078,32 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY trackingProtection.title "Proteção contra monitorização">
 <!ENTITY trackingProtection.tooltip "Abrir preferências da proteção contra monitorização">
-<!ENTITY trackingProtection.detectedBlocked4 "O &brandShortName; está a bloquear partes desta página que podem monitorizar a sua navegação.">
-<!ENTITY trackingProtection.detectedNotBlocked5 "O &brandShortName; detetou elementos que podem monitorizar a sua navegação.">
-<!ENTITY trackingProtection.detectedException "O &brandShortName; detetou elementos que podem monitorizar a sua navegação. Tem a proteção desativada para este site.">
-<!ENTITY trackingProtection.notDetected5 "Não foram detetados elementos de monitorização nesta página.">
-<!ENTITY trackingProtection.notDetectedException "Não foram detetados elementos de monitorização nesta página. Tem a proteção desativada para este site.">
-
-<!ENTITY trackingProtection.reloadRequired2 "Ativou a Proteção contra monitorização. Recarregue esta página para bloquear todos os trackers.">
 
 <!-- LOCALIZATION NOTE (trackingProtection.unblock3.label, trackingProtection.unblock3.accesskey):
      The associated button with this label and accesskey is only shown when opening the control
      center while looking at a site with trackers in NON-private browsing mode. -->
-<!ENTITY trackingProtection.unblock3.label "Desativar para este site">
-<!ENTITY trackingProtection.unblock3.accesskey "D">
 <!ENTITY trackingProtection.unblock4.label "Desativar bloqueio para este site">
 <!ENTITY trackingProtection.unblock4.accesskey "D">
 <!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate3.label, trackingProtection.unblockPrivate3.accesskey):
      The associated button with this label and accesskey is only shown when opening the control
      center while looking at a site with trackers in PRIVATE browsing mode. -->
-<!ENTITY trackingProtection.unblockPrivate3.label "Desativar para esta sessão">
-<!ENTITY trackingProtection.unblockPrivate3.accesskey "D">
-<!ENTITY trackingProtection.block4.label "Ativar para este site">
-<!ENTITY trackingProtection.block4.accesskey "e">
 <!ENTITY trackingProtection.unblockPrivate4.label "Desativar bloqueio temporariamente">
 <!ENTITY trackingProtection.unblockPrivate4.accesskey "D">
 <!ENTITY trackingProtection.block5.label "Ativar bloqueio para este site">
 <!ENTITY trackingProtection.block5.accesskey "e">
+
+<!-- LOCALIZATION NOTE (trackingProtection.unblock5.label, trackingProtection.unblock5.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in NON-private browsing mode. -->
+<!ENTITY trackingProtection.unblock5.label "Desligar bloqueio para este site">
+<!ENTITY trackingProtection.unblock5.accesskey "t">
+<!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate6.label, trackingProtection.unblockPrivate6.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in PRIVATE browsing mode. -->
+<!ENTITY trackingProtection.unblockPrivate5.label "Desligar bloqueio temporariamente">
+<!ENTITY trackingProtection.unblockPrivate5.accesskey "t">
+<!ENTITY trackingProtection.block6.label "Ligar bloqueio para este site">
+<!ENTITY trackingProtection.block6.accesskey "t">
 <!ENTITY trackingProtection.reload2.label "Recarregar página">
 <!ENTITY trackingProtection.reload2.accesskey "R">
 
@@ -1117,7 +1209,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY sendToDevice.syncNotReady.label "A sincronizar dispositivos…">
 
 <!ENTITY pageAction.shareUrl.label "Partilhar">
-
 <!ENTITY pageAction.shareMore.label "Mais…">
 
 <!ENTITY libraryButton.tooltip "Ver histórico, marcadores guardados, e mais">

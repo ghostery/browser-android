@@ -20,6 +20,10 @@
 <!ENTITY font.accesskey				"n">
 <!ENTITY size.label				"サイズ:">
 <!ENTITY size.accesskey				"z">
+<!ENTITY fontSize.label				"サイズ:">
+<!ENTITY fontSize.accesskey			"z">
+<!ENTITY useReaderDefaults.label		"既定の色を使用">
+<!ENTITY useReaderDefaults.accesskey		"d">
 <!ENTITY fontColor.label			"文字色:">
 <!ENTITY fontColor.accesskey			"T">
 <!ENTITY bgColor.label				"背景色:">
@@ -54,7 +58,7 @@
 <!ENTITY directoriesNone.label			"なし">
 <!ENTITY editDirectories.label			"LDAP サーバーの編集...">
 <!ENTITY editDirectories.accesskey		"E">
-<!ENTITY showAsDefault.label			"アドレス帳ウィンドウの既定起動時ディレクトリー:">
+<!ENTITY showAsDefault.label			"アドレス帳ウィンドウの初期表示ディレクトリー:">
 <!ENTITY showAsDefault.accesskey		"S">
 <!ENTITY showAsDefaultLast.label		"最後に使用したディレクトリー">
 

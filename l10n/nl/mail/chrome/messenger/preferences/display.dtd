@@ -27,7 +27,7 @@
 <!ENTITY convertEmoticons.accesskey    "E">
 
 <!-- labels -->
-<!ENTITY displayTagsText.label     "Labels kunnen worden gebruikt voor het categoriseren van uw berichten.">
+<!ENTITY displayTagsText.label     "Labels kunnen worden gebruikt voor het categoriseren en prioriteren van uw berichten.">
 <!ENTITY newTagButton.label        "Nieuw…">
 <!ENTITY newTagButton.accesskey    "N">
 <!ENTITY editTagButton1.label      "Bewerken…">

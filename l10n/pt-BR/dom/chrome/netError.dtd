@@ -94,3 +94,6 @@
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> usa uma tecnologia de segurança que está ultrapassada e vulnerável a ataques. Um invasor poderia facilmente coletar informações que você acreditava estar seguras. O administrador do site precisa consertar o servidor antes de você poder acessar o site.</p><p>Código de erro: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Página bloqueada">
+
+<!ENTITY networkProtocolError.title "Erro de protocolo de rede">
+<!ENTITY networkProtocolError.longDesc "<p>A página que você está tentando ver não pode ser exibida porque foi detectado um erro no protocolo de rede.</p><ul><li>Entre em contato com o dono do site para informar este problema.</li></ul>">

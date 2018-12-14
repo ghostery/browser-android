@@ -22,7 +22,7 @@
 
 <!ENTITY openTabs.label "Abrir separadores em vez de janelas">
 
-<!ENTITY openManagers.label "Abrir em novo separador em vez de nova janela">
+<!ENTITY openManagers.label "Abrir num novo separador em vez de nova janela">
 <!ENTITY openDataManager.label "Gestor de dados">
 <!ENTITY openDataManager.accesskey "d">
 <!ENTITY openAddOnsManager.label "Gestor de extras">

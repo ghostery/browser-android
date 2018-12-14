@@ -3,7 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!-- LOCALIZATION NOTE the term "url-classifier" should not be translated. -->
-<!ENTITY aboutUrlClassifier.pageTitle                   "Informação acerca do url-classifier">
 <!ENTITY aboutUrlClassifier.title                       "Informação do classificador de URL">
 <!ENTITY aboutUrlClassifier.providerTitle               "Fornecedor">
 <!ENTITY aboutUrlClassifier.provider                    "Fornecedor">
@@ -29,6 +28,6 @@
 <!ENTITY aboutUrlClassifier.debugFileBtn                "Definir ficheiro de registo">
 <!ENTITY aboutUrlClassifier.debugJSLogChk               "Definir registo JS">
 <!ENTITY aboutUrlClassifier.debugSBModules              "Módulos de registo do Safe Browsing">
-<!ENTITY aboutUrlClassifier.debugModules                "Módulos de registo atuais">
+<!ENTITY aboutUrlClassifier.debugModules                "Módulos de registo atual">
 <!ENTITY aboutUrlClassifier.debugSBJSModules            "Registo JS do Safe Browsing">
 <!ENTITY aboutUrlClassifier.debugFile                   "Ficheiro de registo atual">

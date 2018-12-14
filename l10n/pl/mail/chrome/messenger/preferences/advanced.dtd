@@ -56,8 +56,6 @@
 <!ENTITY updateAuto.accesskey "I">
 <!ENTITY updateCheck.label "Sprawdzaj dostępność aktualizacji, ale wymagaj potwierdzenia ich instalacji">
 <!ENTITY updateCheck.accesskey "S">
-<!ENTITY updateManual.label "Nie sprawdzaj dostępności aktualizacji (niezalecane: zagrożenie bezpieczeństwa)">
-<!ENTITY updateManual.accesskey "N">
 <!ENTITY updateHistory.label "Wyświetl historię aktualizacji">
 <!ENTITY updateHistory.accesskey "W">
 <!ENTITY useService.label "Używaj usługi instalowania aktualizacji działającej w tle">

@@ -10,7 +10,7 @@
 <!ENTITY autoCompleteMatchHistory.accesskey    "a">
 <!ENTITY autoCompleteMatchBookmarks.label      "Sugerir automaticamente websites dos Marcadores">
 <!ENTITY autoCompleteMatchBookmarks.accesskey  "M">
-<!ENTITY autoCompleteAutoFill.label            "Conclusão automática com a melhor opção">
+<!ENTITY autoCompleteAutoFill.label            "Preencher automaticamente com a melhor correspondência">
 <!ENTITY autoCompleteAutoFill.accesskey        "u">
 <!ENTITY autoCompleteShowPopup.label           "Mostrar lista com os resultados">
 <!ENTITY autoCompleteShowPopup.accesskey       "s">

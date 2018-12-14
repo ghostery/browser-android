@@ -41,3 +41,5 @@
 <!ENTITY allowHWAccel.accesskey                 "e">
 <!ENTITY blockAutoRefresh.label                 "Figyelmeztetés, ha a webhely átirányítja vagy frissíti az oldalt">
 <!ENTITY blockAutoRefresh.accesskey             "F">
+
+<!ENTITY showZoomStatusPanel.label              "Nagyítási vezérlőelemek megjelenítése az állapotsorban">

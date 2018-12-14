@@ -33,7 +33,7 @@
 <!ENTITY aboutNetworking.logging               "Registos">
 <!ENTITY aboutNetworking.logTutorial           "Consulte <a href='https://developer.mozilla.org/docs/Mozilla/Debugging/HTTP_logging'>HTTP Logging</a> para instruções sobre como utilizar esta ferramenta.">
 <!ENTITY aboutNetworking.currentLogFile        "Ficheiro de registo atual:">
-<!ENTITY aboutNetworking.currentLogModules     "Módulos de registo atuais:">
+<!ENTITY aboutNetworking.currentLogModules     "Módulos de registo atual:">
 <!ENTITY aboutNetworking.setLogFile            "Definir ficheiro de registo">
 <!ENTITY aboutNetworking.setLogModules         "Definir módulos de registo">
 <!ENTITY aboutNetworking.startLogging          "Começar a registar">

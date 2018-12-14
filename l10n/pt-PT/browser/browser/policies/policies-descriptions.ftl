@@ -17,7 +17,8 @@ policy-BlockAboutConfig = Bloquear acesso  à página about:config.
 policy-BlockAboutProfiles = Bloquear acesso  à página about:profiles.
 policy-BlockAboutSupport = Bloquear acesso  à página about:support.
 policy-Bookmarks = Criar marcadores na barra de ferramentas de marcadores, menus de marcadores ou uma pasta especificada dentro dos mesmos.
-policy-Certificates = Se devem ou não ser utilizadas credenciais incorporadas. De momento esta política é exclusiva do Windows.
+policy-Certificates = Se devem ou não ser utilizadas credenciais integradas. De momento esta política é exclusiva do Windows.
+policy-CertificatesDescription = Adicionar certificados ou utilizar certificados integrados.
 policy-Cookies = Permitir ou negar que os sites definam cookies.
 policy-DisableAppUpdate = Impedir o navegador de ser atualizado.
 policy-DisableBuiltinPDFViewer = Desativar o PDF.js, o leitor de PDF incorporado no { -brand-short-name }.
@@ -42,6 +43,7 @@ policy-DisableSystemAddonUpdate = Impedir o navegador de instalar e atualizar ex
 policy-DisableTelemetry = Desligar a Telemetria.
 policy-DisplayBookmarksToolbar = Mostrar a Barra ferramentas de marcadores por predefinição.
 policy-DisplayMenuBar = Mostrar a Barra de menu por predefinição.
+policy-DNSOverHTTPS = Configurar DNS por HTTPS.
 policy-DontCheckDefaultBrowser = Desativar verificação por navegador predefinido no arranque.
 # “lock” means that the user won’t be able to change this setting
 policy-EnableTrackingProtection = Ativar ou desativar o Bloqueio de conteúdo e bloqueá-lo opcionalmente.
@@ -62,9 +64,12 @@ policy-OverridePostUpdatePage = Substituir a página "Novidades" pós-atualizaç
 policy-Permissions = Configurar permissões para a câmara, microfone, localização e notificações.
 policy-PopupBlocking = Permitir certos websites de mostrar popups por predefinição.
 policy-Proxy = Configurar definições proxy.
+policy-RequestedLocales = Definir a lista de idiomas solicitados para a aplicação por ordem de preferência.
 policy-SanitizeOnShutdown = Limpar todos os dados de navegação ao desligar.
 policy-SearchBar = Definir a localização predefinida da barra de pesquisa. O utilizador ainda tem permissão para a personalizar.
 policy-SearchEngines = Configurar as definições de motor de pesquisa. Esta política é apenas disponível na versão Extended Support Release (ESR).
+# For more information, see https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/PKCS11/Module_Installation
+policy-SecurityDevices = Instalar módulos PKCS #11.
 # “format” refers to the format used for the value of this policy. See also:
 # https://github.com/mozilla/policy-templates/blob/master/README.md#websitefilter-machine-only
 policy-WebsiteFilter = Bloquear websites de serem visitados. Veja a documentação para mais detalhes sobre o formato.

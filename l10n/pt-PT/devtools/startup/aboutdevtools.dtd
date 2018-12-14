@@ -38,11 +38,6 @@
 <!ENTITY  aboutDevtools.enable.keyShortcutMessage
           "Ativou um atalho das ferramentas de programador. Se foi um engano, pode fechar este separador.">
 
-<!-- LOCALIZATION NOTE (aboutDevtools.enable.menuMessage): Message displayed when users
-  -  clicked on a "Enable Developer Tools" menu item. -->
-<!ENTITY  aboutDevtools.enable.menuMessage
-          "Examine, edite e depure HTML, CSS, e JavaScript com ferramentas como o Inspetor e Depurador.">
-
 <!-- LOCALIZATION NOTE (aboutDevtools.enable.menuMessage2): Message displayed when users
   -  clicked on a "Enable Developer Tools" menu item. -->
 <!ENTITY  aboutDevtools.enable.menuMessage2
@@ -59,8 +54,6 @@
 <!ENTITY  aboutDevtools.enable.learnMoreLink "Saber mais acerca das ferramentas de programador">
 
 <!ENTITY  aboutDevtools.enable.enableButton "Ativar ferramentas de programador">
-<!ENTITY  aboutDevtools.enable.closeButton "Fechar esta página">
-
 <!ENTITY  aboutDevtools.enable.closeButton2 "Fechar este separador">
 
 <!ENTITY  aboutDevtools.welcome.title "Bem-vindo(a) às ferramentas de programador do Firefox!">
@@ -69,7 +62,7 @@
 <!-- LOCALIZATION NOTE (aboutDevtools.newsletter.message): Subscribe form message.
   -  The newsletter is only available in english at the moment.
   -  See Bug 1415273 for support of additional languages.-->
-<!ENTITY  aboutDevtools.newsletter.message "Obtenha noticias de programador, truque e recursos enviados diretamente para a sua caixa de entrada.">
+<!ENTITY  aboutDevtools.newsletter.message "Obtenha noticias de programador, truques e recursos enviados diretamente para a sua caixa de entrada.">
 <!ENTITY  aboutDevtools.newsletter.email.placeholder "Email">
 <!ENTITY  aboutDevtools.newsletter.privacy.label "Estou bem com a Mozilla manusear a minha informação como explicado nesta <a class='external' href='https://www.mozilla.org/privacy/'>Política de privacidade</a>.">
 <!ENTITY  aboutDevtools.newsletter.subscribeButton "Subscrever">

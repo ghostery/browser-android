@@ -59,8 +59,8 @@
       <input id='searchtext' type='search'></input>
       <button id='searchbutton'>搜尋</button>
     </div>
-   <li>請確定您用的是斜線 (例:
-      <strong>/</strong>)。</li>
+   <li>請確定您用的是斜線（例:
+      <strong>/</strong>）。</li>
 </ul>
 ">
 
@@ -191,3 +191,6 @@ netError.xhtml) because it exposes functionality specific to firefox. -->
 <!-- LOCALIZATION NOTE (inadequateSecurityError.longDesc) - Do not translate
      "NS_ERROR_NET_INADEQUATE_SECURITY". -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> 使用過時的安全性技術，容易遭受攻擊。攻擊者可以簡單地得知您認為安全的資訊。網站管理員修正伺服器設定後您才能連線至此網站。</p><p>錯誤代碼: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
+
+<!ENTITY networkProtocolError.title "網路通訊協定錯誤">
+<!ENTITY networkProtocolError.longDesc "<p>因為偵測到網路通訊協定中的問題，無法顯示您嘗試檢視的頁面。</p><ul><li>請聯絡網站管理員來解決這個問題。</li></ul>">

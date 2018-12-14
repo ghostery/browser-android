@@ -4,6 +4,8 @@
 <!ENTITY addons.windowTitle                   "Kiegészítőkezelő">
 
 <!ENTITY search.placeholder2                  "Keresés az addons.mozilla.org oldalon">
+
+<!ENTITY search.placeholder3                  "Keresés itt: addons.mozilla.org">
 <!ENTITY search.buttonlabel                   "Keresés">
 <!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
@@ -41,6 +43,10 @@
 <!ENTITY view.discover.label                  "Kiegészítők letöltése">
 <!ENTITY view.recentUpdates.label             "Legutóbbi frissítések">
 <!ENTITY view.availableUpdates.label          "Elérhető frissítések">
+
+<!ENTITY helpButton.label                      "Kiegészítő támogatás">
+<!ENTITY preferencesWin.label                  "&brandShortName; beállítások">
+<!ENTITY preferencesUnix.label                 "&brandShortName; beállítások">
 
 <!-- addon updates -->
 <!ENTITY updates.checkForUpdates.label        "Frissítések keresése">
@@ -220,7 +226,7 @@
 <!ENTITY pluginDeprecation.description "Hiányzik valami? Néhány bővítményt már nem támogat a &brandShortName;.">
 <!ENTITY pluginDeprecation.learnMore "További tudnivalók.">
 
-<!ENTITY legacyWarning.showLegacy "Örökölt kiegészítők megjelenítése">
-<!ENTITY legacyExtensions.title "Örökölt kiegészítők">
+<!ENTITY legacyWarning.showLegacy "Hagyományos kiegészítők megjelenítése">
+<!ENTITY legacyExtensions.title "Hagyományos kiegészítők">
 <!ENTITY legacyExtensions.description "Ezek a kiegészítők nem felelnek meg a &brandShortName; aktuális elvárásainak, emiatt le lettek tiltva.">
 <!ENTITY legacyExtensions.learnMore "További tudnivalók a kiegészítők módosulásáról">

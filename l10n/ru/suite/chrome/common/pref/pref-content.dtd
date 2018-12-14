@@ -41,3 +41,5 @@
 <!ENTITY allowHWAccel.accesskey                 "м">
 <!ENTITY blockAutoRefresh.label                 "Предупреждать при попытке веб-сайтов перенаправить или перезагрузить страницу">
 <!ENTITY blockAutoRefresh.accesskey             "ж">
+
+<!ENTITY showZoomStatusPanel.label              "Показывать управление масштабом в строке состояния">

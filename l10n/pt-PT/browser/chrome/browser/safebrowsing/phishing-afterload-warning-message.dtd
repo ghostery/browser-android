@@ -19,7 +19,7 @@
 <!ENTITY safeb.palm.advisory.desc2 "Aconselhamento providenciado por <a id='advisory_provider'/>">
 
 
-<!ENTITY safeb.blocked.malwarePage.title2 "Visitar este website poderá danificar o seu computador.">
+<!ENTITY safeb.blocked.malwarePage.title2 "Visitar este website pode prejudicar o seu computador">
 <!ENTITY safeb.blocked.malwarePage.shortDesc2 "O &brandShortName; bloqueou esta página porque poderia tentar instalar software malicioso que poderia furtar ou apagar informação pessoal do seu computador.">
 
 <!-- Localization note (safeb.blocked.malwarePage.errorDesc.override, safeb.blocked.malwarePage.errorDesc.noOverride, safeb.blocked.malwarePage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->

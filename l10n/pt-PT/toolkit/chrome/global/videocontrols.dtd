@@ -11,6 +11,10 @@
 <!ENTITY castingButton.castingLabel "Lançar para o ecrã">
 <!ENTITY closedCaption.off "Desligado">
 
+<!-- LOCALIZATION NOTE (volumeScrubber.label): This label is exposed to
+     accessibility software to clarify what the slider is for. -->
+<!ENTITY volumeScrubber.label "Controlo de deslize de volume">
+
 <!ENTITY stats.media "Multimédia">
 <!ENTITY stats.size "Tamanho">
 <!ENTITY stats.activity "Atividade">
@@ -47,3 +51,4 @@ unknown duration video, #1 would be "5:00" and the string which is surrounded by
 <span> would be deleted, result string would be "5:00".
 -->
 <!ENTITY positionAndDuration.nameFormat "#1<span> / #2</span>">
+

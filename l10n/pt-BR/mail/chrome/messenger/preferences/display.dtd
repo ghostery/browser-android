@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY itemFormatting.label             "Formatação">
-<!ENTITY itemTags.label                   "Tags">
+<!ENTITY itemTags.label                   "Etiquetas">
 <!ENTITY itemAdvanced.label               "Avançado">
 
 <!ENTITY style.label                      "Estilo:">
@@ -27,8 +27,8 @@
 <!ENTITY convertEmoticons.accesskey    "R">
 
 <!-- labels -->
-<!ENTITY displayTagsText.label     "As tags podem ser usadas para organizar suas mensagens.">
-<!ENTITY newTagButton.label        "Novo…">
+<!ENTITY displayTagsText.label     "Etiquetas podem ser usadas para organizar e priorizar suas mensagens.">
+<!ENTITY newTagButton.label        "Nova…">
 <!ENTITY newTagButton.accesskey    "N">
 <!ENTITY editTagButton1.label      "Editar…">
 <!ENTITY editTagButton1.accesskey  "E">

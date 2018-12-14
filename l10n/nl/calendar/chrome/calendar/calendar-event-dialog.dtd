@@ -206,7 +206,7 @@
 <!ENTITY event.calendar.label                             "Agenda:" >
 <!ENTITY event.calendar.accesskey                         "d">
 <!ENTITY event.attendees.label                            "Genodigden:" >
-<!ENTITY event.attendees.accesskey                        "e" >
+<!ENTITY event.attendees.accesskey                        "e">
 <!ENTITY event.alldayevent.label                          "De hele dag" >
 <!ENTITY event.alldayevent.accesskey                      "h">
 <!ENTITY event.from.label                                 "Begin:" >
@@ -240,7 +240,7 @@
 <!ENTITY event.attachments.popup.removeAll.label          "Alle verwijderen" >
 <!ENTITY event.attachments.popup.removeAll.accesskey      "A" >
 <!ENTITY event.attachments.popup.attachPage.label         "Webpagina koppelen…" >
-<!ENTITY event.attachments.popup.attachPage.accesskey     "W">
+<!ENTITY event.attachments.popup.attachPage.accesskey     "W" >
 <!ENTITY event.url.label                                  "Bijbehorende koppeling:" >
 <!ENTITY event.priority2.label                            "Prioriteit:">
 
@@ -286,7 +286,7 @@
 <!ENTITY event.recurrence.pattern.every.weekday.label   "Elke weekdag" >
 
 <!ENTITY event.recurrence.pattern.weekly.every.label    "Elke" >
-<!ENTITY repeat.units.weeks.both                        "we(e)k(en)">
+<!ENTITY repeat.units.weeks.both                        "we(e)k(en)" >
 <!ENTITY event.recurrence.on.label                      "Op:" >
 
 <!ENTITY event.recurrence.pattern.monthly.every.label   "Elke" >
@@ -304,7 +304,7 @@
 <!ENTITY event.recurrence.pattern.monthly.week.4.label  "woensdag" >
 <!ENTITY event.recurrence.pattern.monthly.week.5.label  "donderdag" >
 <!ENTITY event.recurrence.pattern.monthly.week.6.label  "vrijdag" >
-<!ENTITY event.recurrence.pattern.monthly.week.7.label  "zaterdag">
+<!ENTITY event.recurrence.pattern.monthly.week.7.label  "zaterdag" >
 <!ENTITY event.recurrence.repeat.dayofmonth.label       "dag van de maand">
 <!ENTITY event.recurrence.repeat.recur.label            "Herhalen op dag(en)">
 

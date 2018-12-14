@@ -11,9 +11,6 @@
 <!ENTITY  prefWindow.titleWin     "Beállítások">
 <!ENTITY  prefWindow.titleGNOME   "A &brandShortName; beállításai">
 <!ENTITY  prefWindow.titleMAC     "Beállítások">
-<!ENTITY  prefWindow.styleWindows "width: 55em; min-height: 38.5em;">
-<!ENTITY  prefWindow.styleMac     "width: 55em;">
-<!ENTITY  prefWindow.styleGNOME   "width: 57em; min-height: 38em;">
 
 <!ENTITY paneGeneral.title        "Általános">
 <!ENTITY paneDisplay.title        "Megjelenítés">
@@ -22,8 +19,11 @@
 <!ENTITY paneAttachments.title    "Mellékletek">
 <!ENTITY panePrivacy.title        "Adatvédelem">
 <!ENTITY paneSecurity.title       "Biztonság">
+<!ENTITY paneLightning.title      "Naptár">
 <!ENTITY paneAdvanced.title       "Speciális">
 <!ENTITY paneAccount.title        "Postafiókok">
+
+<!ENTITY addonsButton.label       "Bővítmények és témák">
 
 <!ENTITY okButton.title           "OK">
 <!ENTITY okButton.accesskey       "O">

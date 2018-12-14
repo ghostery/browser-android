@@ -41,6 +41,9 @@
 <!ENTITY runtimeMenu_showSettings_label "Definições do dispositivo">
 <!ENTITY runtimeMenu_showSettings_accesskey "s">
 
+<!ENTITY runtimeMenu_showPerformancePanel_label "Desempenho">
+<!ENTITY runtimeMenu_showPerformancePanel_accesskey "p">
+
 <!ENTITY viewMenu_label "Ver">
 <!ENTITY viewMenu_accesskey "V">
 <!ENTITY viewMenu_zoomin_label "Ampliar">
@@ -75,7 +78,6 @@
 <!ENTITY runtimePanel_wifi "Dispositivos Wi-Fi">
 <!ENTITY runtimePanel_other "Outros">
 <!ENTITY runtimePanel_noadbhelper "Instalar ADB Helper">
-<!ENTITY runtimePanel_noadbextension "Instalar a extensão ADB">
 <!ENTITY runtimePanel_nousbdevice "Não vê o seu dispositivo?">
 <!ENTITY runtimePanel_refreshDevices_label "Atualizar dispositivos">
 

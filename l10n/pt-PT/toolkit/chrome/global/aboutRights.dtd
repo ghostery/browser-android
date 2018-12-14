@@ -60,7 +60,7 @@
 <!-- safe browsing points for branded builds -->
 <!ENTITY rights.safebrowsing-a "SafeBrowsing: ">
 <!ENTITY rights.safebrowsing-b "Não é recomendado desativar a funcionalidade de Navegação segura pois pode resultar em que vá para sites inseguros.  Se desejar desativar completamente a funcionalidade, siga estes passos:">
-<!ENTITY rights.safebrowsing-term1 "Abrir preferências da aplicação">
+<!ENTITY rights.safebrowsing-term1 "Abrir as preferências da aplicação">
 <!ENTITY rights.safebrowsing-term2 "Selecione a seleção de segurança">
 <!ENTITY rights2.safebrowsing-term3 "Desmarque a opção para &quot;&enableSafeBrowsing.label;&quot;">
 <!ENTITY rights.safebrowsing-term4 "A navegação segura está agora desativada">

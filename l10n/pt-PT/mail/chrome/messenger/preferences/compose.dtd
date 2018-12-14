@@ -20,6 +20,10 @@
 <!ENTITY font.accesskey                       "l">
 <!ENTITY size.label                           "Tamanho:">
 <!ENTITY size.accesskey                       "h">
+<!ENTITY fontSize.label                       "Tamanho:">
+<!ENTITY fontSize.accesskey                   "z">
+<!ENTITY useReaderDefaults.label              "Utilizar as cores predefinidas do leitor">
+<!ENTITY useReaderDefaults.accesskey          "d">
 <!ENTITY fontColor.label                      "Cor do texto:">
 <!ENTITY fontColor.accesskey                  "t">
 <!ENTITY bgColor.label                        "Cor de fundo:">

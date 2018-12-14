@@ -40,7 +40,7 @@
 <!ENTITY event.attendees.notifyundisclosed.tooltip   "Esta opção envia um email de convite por participante. Cada convite contém apenas o participante destinatário para que as identidades dos participantes não sejam divulgadas.">
 <!ENTITY event.attendees.disallowcounter.label       "Anular o contador">
 <!ENTITY event.attendees.disallowcounter.accesskey   "a">
-<!ENTITY event.attendees.disallowcounter.tooltip     "Indicar que você não aceitará sugestões">
+<!ENTITY event.attendees.disallowcounter.tooltip     "Indica que você não aceitará contrapropostas">
 
 <!-- Keyboard Shortcuts -->
 <!ENTITY event.dialog.new.event.key2              "I">
@@ -203,8 +203,8 @@
 <!ENTITY event.categories.label                           "Categoria:">
 <!ENTITY event.categories.accesskey                       "g">
 <!ENTITY event.categories.textbox.label                   "Adicionar uma nova categoria" >
-<!ENTITY event.calendar.label                             "Calendário:" >
-<!ENTITY event.calendar.accesskey                         "C">
+<!ENTITY event.calendar.label                             "Agenda:" >
+<!ENTITY event.calendar.accesskey                         "A">
 <!ENTITY event.attendees.label                            "Participantes:" >
 <!ENTITY event.attendees.accesskey                        "P">
 <!ENTITY event.alldayevent.label                          "Dia inteiro" >
@@ -398,7 +398,7 @@
 <!-- Read-Only dialog -->
 <!ENTITY read.only.general.label         "Geral">
 <!ENTITY read.only.title.label           "Título:">
-<!ENTITY read.only.calendar.label        "Calendário:">
+<!ENTITY read.only.calendar.label        "Agenda:">
 <!ENTITY read.only.event.start.label     "Data inicial:">
 <!ENTITY read.only.task.start.label      "Data inicial:">
 <!ENTITY read.only.event.end.label       "Data final:">
@@ -407,11 +407,6 @@
 <!ENTITY read.only.location.label        "Local:">
 <!ENTITY read.only.category.label        "Categoria:">
 <!ENTITY read.only.organizer.label       "Organizador:">
-<!ENTITY read.only.reply.label           "Responder:">
-<!ENTITY read.only.accept.label          "Vou participar">
-<!ENTITY read.only.decline.label         "Não vou participar">
-<!ENTITY read.only.tentative.label       "Talvez participe">
-<!ENTITY read.only.needs.action.label    "Confirmarei depois">
 <!ENTITY read.only.reminder.label        "Lembrete:">
 <!ENTITY read.only.attachments.label     "Anexos:">
 <!ENTITY read.only.attendees.label       "Participantes">
@@ -429,5 +424,5 @@
 <!ENTITY summary.dialog.decline.tooltiptext     "Recusar o convite">
 <!ENTITY summary.dialog.dontsend.label          "Não enviar uma resposta">
 <!ENTITY summary.dialog.dontsend.tooltiptext    "Altere o seu estado de participação sem enviar uma resposta ao organizador e fechar a janela">
-<!ENTITY summary.dialog.send.label              "Enviar a resposta agora">
+<!ENTITY summary.dialog.send.label              "Enviar uma resposta agora">
 <!ENTITY summary.dialog.send.tooltiptext        "Envia uma resposta ao organizador e fecha a janela">

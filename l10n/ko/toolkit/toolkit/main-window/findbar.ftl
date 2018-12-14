@@ -14,7 +14,15 @@ findbar-find-button-close =
 findbar-highlight-all =
     .label = 모두 강조 표시
     .accesskey = a
-    .tooltiptext = 일치하는 모든 부분을 강조 표시합니다.
+    .tooltiptext = 일치하는 모든 부분을 강조 표시
+findbar-highlight-all2 =
+    .label = 모두 강조 표시
+    .accesskey =
+        { PLATFORM() ->
+            [macos] I
+           *[other] a
+        }
+    .tooltiptext = 일치하는 모든 부분을 강조 표시
 findbar-case-sensitive =
     .label = 대문자/소문자 구분
     .accesskey = c

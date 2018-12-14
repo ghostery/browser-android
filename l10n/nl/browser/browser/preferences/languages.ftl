@@ -2,10 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-languages-window =
-    .title = Talen
-    .style = width: 34em
-
 webpage-languages-window =
     .title = Taalinstellingen voor webpagina’s
     .style = width: 40em

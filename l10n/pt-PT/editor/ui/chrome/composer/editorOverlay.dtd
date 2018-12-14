@@ -50,7 +50,7 @@
 <!-- Used just in context popup. -->
 <!ENTITY createLinkCmd.label "Criar ligação…">
 <!ENTITY createLinkCmd.accesskey "C">
-<!ENTITY editLinkCmd.label "Editar ligação em novo compositor">
+<!ENTITY editLinkCmd.label "Editar ligação num novo compositor">
 <!ENTITY editLinkCmd.accesskey "i">
 
 <!-- Font Face SubMenu -->

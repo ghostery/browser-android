@@ -15,7 +15,7 @@
 <!ENTITY newWindow.label "Nova janela">
 <!ENTITY newTab.label "Novo separador">
 <!ENTITY currentTab.label "Separador da navegação atual">
-<!ENTITY editNewWindow.label "Nova janela de mensagem">
+<!ENTITY editNewWindow.label "Nova janela de composição">
 <!ENTITY open.label "Abrir">
 <!ENTITY caption.label "Abrir localização Web">
 <!ENTITY openWhere.label "Abrir em:">

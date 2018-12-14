@@ -15,7 +15,7 @@
 <!ENTITY openLinkCmdInPrivateWindow.accesskey "d">
 <!ENTITY openLinkInWindowCmd.label    "Abrir">
 <!ENTITY openLinkInWindowCmd.accesskey "b">
-<!ENTITY openFrameCmd.label           "Abrir frame em nova janela">
+<!ENTITY openFrameCmd.label           "Abrir frame numa nova janela">
 <!ENTITY openFrameCmd.accesskey       "j">
 <!ENTITY openFrameCmdInTab.label      "Abrir frame num novo separador">
 <!ENTITY openFrameCmdInTab.accesskey  "s">
@@ -128,7 +128,7 @@ items are mutually exclusive. -->
 <!ENTITY mediaHideControls.label      "Ocultar controlos multimédia">
 <!ENTITY mediaHideControls.accesskey  "a">
 <!ENTITY videoFullScreen.label        "Ecrã completo">
-<!ENTITY videoFullScreen.accesskey    "F">
+<!ENTITY videoFullScreen.accesskey    "E">
 <!ENTITY videoSaveImage.label         "Guardar captura como…">
 <!ENTITY videoSaveImage.accesskey     "a">
 <!ENTITY videoShowStats.label         "Mostrar estatísticas">

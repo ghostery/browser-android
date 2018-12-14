@@ -86,3 +86,6 @@
 <!ENTITY blockedByPolicyTemp.title "Strona zablokowana">
 <!ENTITY blockedByPolicyTemp.longDesc "<p>Dostęp do tej strony zablokował administrator.</p>">
 <!ENTITY blockedByPolicy.title "Zablokowana strona">
+
+<!ENTITY networkProtocolError.title "Błąd protokołu sieciowego">
+<!ENTITY networkProtocolError.longDesc "<p>Żądana strona nie może zostać wyświetlona, ponieważ wykryto błąd w protokole sieciowym.</p><ul><li>Proszę poinformować właścicieli witryny o tym problemie.</li></ul>">

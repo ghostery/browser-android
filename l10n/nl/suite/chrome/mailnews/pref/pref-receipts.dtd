@@ -13,7 +13,7 @@
 <!ENTITY moveToSent.label              "Deze naar mijn map ‘Verzonden’ verplaatsen">
 <!ENTITY moveToSent.accesskey          "v">
 <!ENTITY requestMDN.label              "Als ik een verzoek voor een leesbevestiging ontvang:">
-<!ENTITY returnSome.label              "In de volgende gevallen een leesbevestiging sturen">
+<!ENTITY returnSome.label              "Leesbevestigingen bij sommige berichten toestaan">
 <!ENTITY returnSome.accesskey          "o">
 <!ENTITY never.label                   "Nooit een leesbevestiging sturen">
 <!ENTITY never.accesskey               "s">

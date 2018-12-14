@@ -86,8 +86,8 @@
 <!ENTITY toggleAttachmentPaneCmd.accesskey "j">
 <!ENTITY toggleAttachmentPaneCmd.key "m">
 <!ENTITY selectAllCmd.label "Seleccionar todo">
-<!ENTITY selectAllCmd.key "A">
 <!ENTITY selectAllCmd.accesskey "t">
+<!ENTITY selectAllCmd.key "A">
 <!ENTITY findBarCmd.label "Buscar…">
 <!ENTITY findBarCmd.accesskey "B">
 <!ENTITY findBarCmd.key "F">

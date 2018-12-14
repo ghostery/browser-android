@@ -84,3 +84,6 @@
 <!ENTITY viewCertificate.accesskey   "м">
 <!ENTITY viewCertManager.label       "Открыть окно управления сертификатами">
 <!ENTITY viewCertManager.accesskey   "ы">
+
+<!ENTITY zoomIn.tooltiptext          "Больше">
+<!ENTITY zoomOut.tooltiptext         "Меньше">

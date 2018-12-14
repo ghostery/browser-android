@@ -88,3 +88,6 @@
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> olyan biztonsági technológiát használ, amely elavult, és sérülékeny a támadásokkal szemben. Egy támadó könnyen felfedhet olyan információkat, amelyeket biztonságosnak gondol. A weboldal rendszergazdájának ki kell javítania a kiszolgálót, mielőtt meglátogathatja az oldalt.</p><p>Hibakód: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Blokkolt oldal">
+
+<!ENTITY networkProtocolError.title "Hálózati protokoll hiba">
+<!ENTITY networkProtocolError.longDesc "<p>A megtekinteni kívánt oldal nem jeleníthető meg, mert hiba történt a hálózati protokollban.</p><ul><li>Lépjen kapcsolatba a webhely üzemeltetőjével, és értesítse a problémáról.</li></ul>">

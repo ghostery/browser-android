@@ -210,6 +210,11 @@
 <!ENTITY pref_feature_tips_notification "Porady o programie i funkcjach">
 <!ENTITY pref_feature_tips_notification_summary "Więcej informacji o przeglądarce &brandShortName; i innych programach od organizacji &vendorShortName;">
 
+<!ENTITY pref_feature_tips_notification_enabling_hint "Włącz">
+
+<!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; → &pref_category_datareporting; → &datareporting_fhr_title;">
+<!ENTITY pref_feature_tips_notification_enabling_hint2 "(Aby móc włączyć tę opcję, &pref_feature_tips_notification_enabling_path; musi być włączone).">
+
 <!ENTITY pref_category_experimental "Funkcje eksperymentalne">
 
 <!ENTITY pref_custom_tabs2 "Niestandardowe karty">
@@ -258,7 +263,6 @@
 <!ENTITY pref_use_system_font_size_summary "Skalowanie stron zgodnie z rozmiarem czcionki systemu">
 
 <!ENTITY pref_media_autoplay_enabled "Automatyczne odtwarzanie">
-<!ENTITY pref_media_autoplay_enabled_summary "Kontroluje, czy strony mogą automatycznie odtwarzać filmy i inne treści">
 <!ENTITY pref_media_autoplay_allow "Włączone">
 <!ENTITY pref_media_autoplay_block "Blokowanie">
 <!ENTITY pref_zoom_force_enabled "Można powiększać każdą stronę">
@@ -587,9 +591,6 @@
 
 <!ENTITY corrupt_apk "Nie można otworzyć przeglądarki &brandShortName;. Proszę zainstalować ją ponownie.">
 
-<!ENTITY eol_notification_title2 "&brandShortName; nie będzie już aktualizowany">
-<!ENTITY eol_notification_summary "Stuknij, aby dowiedzieć się więcej">
-
 <!ENTITY whatsnew_notification_title "&brandShortName; jest aktualny">
 <!ENTITY whatsnew_notification_summary "Nowości w tej wersji">
 
@@ -635,9 +636,13 @@
 <!ENTITY pip_pause_button_description "Wstrzymaj odtwarzanie">
 
 <!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY default_notification_channel2 "Przeglądarka">
 <!ENTITY mls_notification_channel "Usługi lokalizacji organizacji &vendorShortName;">
 <!ENTITY download_notification_channel "Pobrane pliki">
 <!ENTITY media_notification_channel "Odtwarzanie multimediów">
+<!ENTITY media_notification_channel2 "Dźwięk i obraz">
 <!ENTITY leanplum_default_notifications_channel "Powiadomienia programu &brandShortName;">
+<!ENTITY leanplum_default_notifications_channel2 "Porady i wskazówki organizacji &vendorShortName;">
 <!ENTITY updater_notification_channel "Aktualizacje aplikacji">
 <!ENTITY synced_tabs_notification_channel "Zsynchronizowane karty">
+<!ENTITY site_notifications_channel "Powiadomienia witryn">

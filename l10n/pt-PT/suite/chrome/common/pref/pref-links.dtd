@@ -17,7 +17,7 @@
 <!ENTITY newWindowGroupTab.accesskey "t">
 <!ENTITY externalGroupTab.accesskey "a">
 
-<!ENTITY openWindow.label "Em nova janela">
+<!ENTITY openWindow.label "Numa nova janela">
 <!ENTITY newWindowGroupWindow.accesskey "w">
 <!ENTITY externalGroupWindow.accesskey "o">
 

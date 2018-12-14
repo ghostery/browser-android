@@ -84,3 +84,6 @@
 <!ENTITY viewCertificate.accesskey   "C">
 <!ENTITY viewCertManager.label       "開啟憑證管理員">
 <!ENTITY viewCertManager.accesskey   "M">
+
+<!ENTITY zoomIn.tooltiptext          "放大">
+<!ENTITY zoomOut.tooltiptext         "縮小">

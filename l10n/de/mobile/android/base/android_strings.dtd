@@ -299,6 +299,12 @@
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "Weitere Informationen über &brandShortName; und andere Produkte von &vendorShortName;">
 
+<!-- Localization note (pref_feature_tips_notification_enabling_hint):
+     Describe the action the user should do to enable this preference
+     Will be used in the context "<Turn on> ... to enable this feature" -->
+<!ENTITY pref_feature_tips_notification_enabling_hint "Zusätzlich notwendige Aktivierung:">
+
+
 <!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
      for experimental features. -->
 <!ENTITY pref_category_experimental "Experimentelle Funktionen">
@@ -912,3 +918,6 @@ Picture-in-picture mini window -->
 <!ENTITY leanplum_default_notifications_channel "&brandShortName;-Push-Benachrichtigungen">
 <!ENTITY updater_notification_channel "App-Updates">
 <!ENTITY synced_tabs_notification_channel "Synchronisierte Tabs">
+<!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by
+web sites through the HTML Notifications API. -->
+<!ENTITY site_notifications_channel "Website-Benachrichtigungen">

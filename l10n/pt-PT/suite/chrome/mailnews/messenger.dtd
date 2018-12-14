@@ -367,9 +367,9 @@
 <!ENTITY markAsNotPhishCmd.key "p">
 <!ENTITY openFeedMessage.label "Abrir mensagem da fonte">
 <!ENTITY openFeedMessage.accesskey "o">
-<!ENTITY openFeedWebPageInWindow.label "Página Web em nova janela">
+<!ENTITY openFeedWebPageInWindow.label "Página Web numa nova janela">
 <!ENTITY openFeedWebPageInWindow.accesskey "w">
-<!ENTITY openFeedSummaryInWindow.label "Resumo em nova janela">
+<!ENTITY openFeedSummaryInWindow.label "Resumo numa nova janela">
 <!ENTITY openFeedSummaryInWindow.accesskey "s">
 <!ENTITY openFeedWebPageInMP.label "Alternar página Web e resumo no painel de mensagens">
 <!ENTITY openFeedWebPageInMP.accesskey "t">
@@ -455,7 +455,7 @@
 <!ENTITY statusText.label "Feito">
 
 <!-- Thread Pane Context Menu -->
-<!ENTITY contextOpenNewWindow.label "Abrir mensagem em nova janela">
+<!ENTITY contextOpenNewWindow.label "Abrir mensagem numa nova janela">
 <!ENTITY contextOpenNewWindow.accesskey "A">
 <!ENTITY contextOpenNewTab.label "Abrir mensagem num novo separador">
 <!ENTITY contextOpenNewTab.accesskey "s">
@@ -493,7 +493,7 @@
 <!-- Folder Pane Context Menu -->
 <!ENTITY folderContextGetMessages.label "Obter mensagens da conta">
 <!ENTITY folderContextGetMessages.accesskey "O">
-<!ENTITY folderContextOpenNewWindow.label "Abrir em nova janela de correio">
+<!ENTITY folderContextOpenNewWindow.label "Abrir numa nova janela de correio">
 <!ENTITY folderContextOpenNewWindow.accesskey "j">
 <!ENTITY folderContextOpenNewTab.label "Abrir num novo separador">
 <!ENTITY folderContextOpenNewTab.accesskey "s">

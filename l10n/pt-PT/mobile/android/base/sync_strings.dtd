@@ -72,7 +72,7 @@
 <!-- Localization note: Only affects background syncing, user initiated
      syncs will still be done regardless of the connection -->
 <!ENTITY fxaccount_pref_sync_use_metered_summary2 'Impedir o &brandShortName; de sincronizar através de uma rede móvel ou de tráfego limitado'>
-<!ENTITY fxaccount_status_legal 'Legal' >
+<!ENTITY fxaccount_status_legal 'Informações legais' >
 <!-- Localization note: when tapped, the following two strings link to
      external web pages.  Compare fxaccount_policy_{linktos,linkprivacy}:
      these strings are separated to accommodate languages that decline

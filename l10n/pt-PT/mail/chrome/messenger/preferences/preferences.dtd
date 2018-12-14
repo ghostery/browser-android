@@ -11,9 +11,6 @@
 <!ENTITY  prefWindow.titleWin     "Opções">
 <!ENTITY  prefWindow.titleGNOME   "Preferências do &brandShortName;">
 <!ENTITY  prefWindow.titleMAC     "Preferências">
-<!ENTITY  prefWindow.styleWindows "width: 54em; min-height: 38.5em;">
-<!ENTITY  prefWindow.styleMac     "width: 54em;">
-<!ENTITY  prefWindow.styleGNOME   "width: 54em; min-height: 38em;">
 
 <!ENTITY paneGeneral.title        "Geral">
 <!ENTITY paneDisplay.title        "Exibição">
@@ -22,8 +19,11 @@
 <!ENTITY paneAttachments.title    "Anexos">
 <!ENTITY panePrivacy.title        "Privacidade">
 <!ENTITY paneSecurity.title       "Segurança">
+<!ENTITY paneLightning.title      "Calendário">
 <!ENTITY paneAdvanced.title       "Avançadas">
 <!ENTITY paneAccount.title        "Contas">
+
+<!ENTITY addonsButton.label       "Extensões e temas">
 
 <!ENTITY okButton.title           "OK">
 <!ENTITY okButton.accesskey       "O">

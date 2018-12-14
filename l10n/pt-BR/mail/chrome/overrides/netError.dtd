@@ -163,3 +163,6 @@ functionality specific to thunderbird. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> usa tecnologia de segurança obsoleta e vulnerável a ataques. Um atacante pode facilmente revelar informações que você acredita estarem seguras. O administrador do website precisa corrigir o servidor antes que você possa visitar o site.</p><p>Error code: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Página bloqueada">
+
+<!ENTITY networkProtocolError.title "Erro de protocolo de rede">
+<!ENTITY networkProtocolError.longDesc "<p>A página que você está tentando ver não pôde ser exibida porque foi detectado um erro no protocolo de rede.</p><ul><li>Entre em contato com o responsável pelo site para informar este problema.</li></ul>">

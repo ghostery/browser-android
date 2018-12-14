@@ -41,6 +41,9 @@
 <!ENTITY runtimeMenu_showSettings_label "裝置設定">
 <!ENTITY runtimeMenu_showSettings_accesskey "s">
 
+<!ENTITY runtimeMenu_showPerformancePanel_label "效能">
+<!ENTITY runtimeMenu_showPerformancePanel_accesskey "p">
+
 <!ENTITY viewMenu_label "檢視">
 <!ENTITY viewMenu_accesskey "V">
 <!ENTITY viewMenu_zoomin_label "放大">
@@ -75,7 +78,6 @@
 <!ENTITY runtimePanel_wifi "Wi-Fi 裝置">
 <!ENTITY runtimePanel_other "其他">
 <!ENTITY runtimePanel_noadbhelper "安裝 ADB Helper">
-<!ENTITY runtimePanel_noadbextension "安裝 ADB 擴充套件">
 <!ENTITY runtimePanel_nousbdevice "看不到您的裝置嗎？">
 <!ENTITY runtimePanel_refreshDevices_label "重新整理裝置">
 

@@ -19,8 +19,6 @@
 <!ENTITY editBookmarkOverlay.keyword.label "Parola chiave:">
 <!ENTITY editBookmarkOverlay.keyword.accesskey "P">
 <!ENTITY editBookmarkOverlay.tagsExpanderDown.tooltip "Visualizza tutte le etichette">
-<!ENTITY editBookmarkOverlay.loadInSidebar.label "Carica questo segnalibro nella barra laterale">
-<!ENTITY editBookmarkOverlay.loadInSidebar.accesskey "C">
 <!ENTITY editBookmarkOverlay.choose.label "Scegli…">
 <!ENTITY editBookmarkOverlay.newFolderButton.label "Nuova cartella">
 <!ENTITY editBookmarkOverlay.newFolderButton.accesskey "o">

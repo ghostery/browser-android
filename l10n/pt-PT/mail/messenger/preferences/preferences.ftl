@@ -8,3 +8,7 @@ manage-messenger-languages-button =
     .accesskey = l
 confirm-messenger-language-change-description = Reiniciar o { -brand-short-name } para aplicar estas alterações
 confirm-messenger-language-change-button = Aplicar e reiniciar
+update-pref-write-failure-title = Falha na escrita
+# Variables:
+#   $path (String) - Path to the configuration file
+update-pref-write-failure-message = Não foi possível guardar a preferência. Não foi possível escrever no ficheiro: { $path }

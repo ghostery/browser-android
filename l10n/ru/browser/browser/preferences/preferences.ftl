@@ -53,6 +53,7 @@ pane-sync-title = Аккаунт Firefox
 category-sync =
     .tooltiptext = { pane-sync-title }
 help-button-label = Поддержка { -brand-short-name }
+addons-button-label = Расширения и темы
 focus-search =
     .key = f
 close-button =
@@ -83,6 +84,9 @@ extension-controlled-homepage-override = Расширение <img data-l10n-nam
 # This string is shown to notify the user that their new tab page
 # is being controlled by an extension.
 extension-controlled-new-tab-url = Расширение <img data-l10n-name="icon"/> { $name } контролирует вашу страницу новой вкладки.
+# This string is shown to notify the user that their notifications permission
+# is being controlled by an extension.
+extension-controlled-web-notifications = Расширение <img data-l10n-name="icon"/> { $name } контролирует этот параметр.
 # This string is shown to notify the user that the default search engine
 # is being controlled by an extension.
 extension-controlled-default-search = Расширение <img data-l10n-name="icon"/> { $name } установило вашу поисковую систему по умолчанию.
@@ -123,9 +127,9 @@ startup-header = Запуск
 # since this setting is only exposed in Firefox Developer Edition
 separate-profile-mode =
     .label = Разрешить одновременный запуск { -brand-short-name } и Firefox
-use-firefox-sync = Совет: При этом используются отдельные профили. Используйте Синхронизацию для обмена между ними данными.
-get-started-not-logged-in = Войти в Синхронизацию…
-get-started-configured = Открыть настройки Синхронизации
+use-firefox-sync = Совет: При этом используются отдельные профили. Используйте { -sync-brand-short-name[accusative] } для обмена между ними данными.
+get-started-not-logged-in = Войти в { -sync-brand-short-name[accusative] }…
+get-started-configured = Открыть настройки { -sync-brand-short-name[genitive] }
 always-check-default =
     .label = Всегда проверять, является ли { -brand-short-name } вашим браузером по умолчанию
     .accesskey = а
@@ -149,6 +153,9 @@ open-new-link-as-tabs =
 warn-on-close-multiple-tabs =
     .label = Предупреждать при закрытии нескольких вкладок
     .accesskey = д
+warn-on-quit-close-multiple-tabs =
+    .label = Предупреждать при выходе и закрытии нескольких вкладок
+    .accesskey = ж
 warn-on-open-many-tabs =
     .label = Предупреждать, когда открытие нескольких вкладок может замедлить { -brand-short-name }
     .accesskey = р
@@ -287,6 +294,10 @@ update-application-use-service =
 update-enable-search-update =
     .label = Автоматически обновлять поисковые системы
     .accesskey = л
+update-pref-write-failure-title = Ошибка записи
+# Variables:
+#   $path (String) - Path to the configuration file
+update-pref-write-failure-message = Не удалось сохранить настройку. Не удалось произвести запись в файл: { $path }
 
 ## General Section - Performance
 
@@ -326,10 +337,13 @@ browsing-use-cursor-navigation =
 browsing-search-on-start-typing =
     .label = Искать текст на странице по мере его набора
     .accesskey = а
+browsing-cfr-recommendations =
+    .label = Рекомендовать расширения при просмотре
+    .accesskey = к
+browsing-cfr-recommendations-learn-more = Подробнее
 
 ## General Section - Proxy
 
-network-proxy-title = Прокси-сервер
 network-settings-title = Параметры сети
 network-proxy-connection-description = Настроить, как { -brand-short-name } соединяется с Интернетом.
 network-proxy-connection-learn-more = Подробнее
@@ -434,7 +448,7 @@ containers-remove-button =
 
 sync-signedout-caption = Возьмите свой Интернет с собой
 sync-signedout-description = Синхронизируйте свои закладки, историю, вкладки, пароли, дополнения и настройки на всех ваших устройствах.
-sync-signedout-account-title = Соединитесь с Аккаунтом Firefox
+sync-signedout-account-title = Соединитесь с { -fxaccount-brand-name[instrumental] }
 sync-signedout-account-create = Нет аккаунта? Давайте его создадим
     .accesskey = е
 sync-signedout-account-signin =
@@ -528,6 +542,7 @@ privacy-header = Приватность браузера
 ## Privacy Section - Forms
 
 forms-header = Формы и Пароли
+logins-header = Логины и пароли
 forms-ask-to-save-logins =
     .label = Запрашивать сохранение логинов и паролей для веб-сайтов
     .accesskey = ш
@@ -594,26 +609,15 @@ sitedata-total-size-calculating = Вычисление объема данных
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
 sitedata-total-size = Ваши сохранённые куки, данные сайтов и кэш сейчас занимают на диске { $value } { $unit }.
 sitedata-learn-more = Подробнее
-sitedata-accept-cookies-option =
-    .label = Принимать куки и данные сайтов с веб-сайтов (рекомендуется)
-    .accesskey = и
-sitedata-block-cookies-option =
-    .label = Блокировать куки и данные сайтов (может нарушить работу веб-сайтов)
-    .accesskey = л
 sitedata-keep-until = Хранить их
     .accesskey = ь
 sitedata-keep-until-expire =
     .label = до истечения срока их действия
 sitedata-keep-until-closed =
     .label = до закрытия { -brand-short-name }
-sitedata-accept-third-party-desc = Принимать куки и данные сайтов со сторонних веб-сайтов
-    .accesskey = н
-sitedata-accept-third-party-always-option =
-    .label = Всегда
-sitedata-accept-third-party-visited-option =
-    .label = С посещённых
-sitedata-accept-third-party-never-option =
-    .label = Никогда
+sitedata-delete-on-close =
+    .label = Удалять куки и данные сайтов при закрытии { -brand-short-name }
+    .accesskey = д
 sitedata-allow-cookies-option =
     .label = Принимать куки и данные сайтов
     .accesskey = и
@@ -647,6 +651,9 @@ sitedata-cookies-exceptions =
 # in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
 # Cookies and Site Data section.
 sitedata-warning-your-settings-prevent-changes = Ваши настройки в Блокировке содержимого не дают произвести изменения настроек в Куки и данные сайтов.
+sitedata-cookies-permissions =
+    .label = Управление разрешениями…
+    .accesskey = п
 
 ## Privacy Section - Address Bar
 
@@ -667,6 +674,7 @@ addressbar-suggestions-settings = Изменить настройки для п�
 
 content-blocking-header = Блокировка содержимого
 content-blocking-desc = Блокирует стороннее содержимое, такое как реклама или код, которое может замедлить просмотр страниц и отслеживать вас в Интернете. Установите свои настройки, чтобы обеспечить наилучший баланс защиты и производительности.
+content-blocking-description = Блокирует стороннее содержимое, отслеживающее вас в Интернете. Контролируйте, что из вашей онлайн-активности хранится и пересылается между сайтами.
 content-blocking-learn-more = Подробнее
 content-blocking-restore-defaults =
     .label = Восстановить по умолчанию
@@ -687,6 +695,28 @@ content-blocking-fastblock-slow-loading-trackers-label =
     .label = Медленные трекеры
     .accesskey = н
 content-blocking-fastblock-new-description = Блокировать только трекеры, не дающие страницам быстро загружаться.
+content-blocking-setting-standard =
+    .label = Стандартная
+    .accesskey = н
+content-blocking-setting-strict =
+    .label = Строгая
+    .accesskey = о
+content-blocking-setting-custom =
+    .label = Персональная
+    .accesskey = а
+content-blocking-standard-desc = Обеспечивает наилучший баланс защиты и производительности. Разрешает некоторые трекеры для корректной работы веб-сайтов.
+content-blocking-strict-desc = Блокирует все трекеры, известные { -brand-short-name }. Может вызывать проблемы с некоторыми веб-сайтами.
+content-blocking-custom-desc = Выберите, что блокировать.
+content-blocking-private-trackers = Все известные трекеры в приватных окнах
+content-blocking-third-party-cookies = Куки сторонних трекеров
+content-blocking-all-windows-trackers = Все известных трекеры во всех окнах
+content-blocking-all-third-party-cookies = Все сторонние куки
+content-blocking-warning-title = Осторожно!
+content-blocking-warning-desc = Блокировка куков и трекеров может вызывать проблемы с некоторыми веб-сайтами. Можно легко отключить блокировку для сайтов, которым вы доверяете.
+content-blocking-learn-how = Подробнее
+content-blocking-tracking-protection-trackers-label =
+    .label = Трекеры
+    .accesskey = к
 content-blocking-tracking-protection-all-detected-trackers-label =
     .label = Все обнаруженные трекеры
     .accesskey = е
@@ -711,7 +741,7 @@ content-blocking-change-cookie-settings =
     .label = Изменить параметры куков
     .accesskey = м
 content-blocking-reject-trackers-block-trackers-option-recommended =
-    .label = Трекеры (рекомендуемые)
+    .label = Трекеры (рекомендуется)
     .accesskey = ы
 content-blocking-reject-trackers-block-trackers-option =
     .label = Все трекеры
@@ -719,6 +749,9 @@ content-blocking-reject-trackers-block-trackers-option =
 content-blocking-reject-trackers-all-third-parties-option =
     .label = Все сторонние куки (может нарушить работу веб-сайтов)
     .accesskey = о
+content-blocking-cookies-label =
+    .label = Куки
+    .accesskey = и
 
 ## Privacy Section - Tracking
 
@@ -734,16 +767,15 @@ tracking-mode-private =
 tracking-mode-never =
     .label = Никогда
     .accesskey = а
-# This string is displayed if privacy.trackingprotection.ui.enabled is set to false.
-# This currently happens on the release and beta channel.
-tracking-pbm-label = Использовать защиту от отслеживания в приватном просмотре для блокировки известных трекеров
-    .accesskey = о
 tracking-exceptions =
     .label = Исключения…
     .accesskey = л
 tracking-change-block-list =
     .label = Сменить список блокировки…
     .accesskey = м
+tracking-manage-exceptions =
+    .label = Управление исключениями…
+    .accesskey = е
 
 ## Privacy Section - Permissions
 
@@ -860,3 +892,36 @@ certs-view =
 certs-devices =
     .label = Устройства защиты…
     .accesskey = т
+space-alert-learn-more-button =
+    .label = Подробнее
+    .accesskey = о
+space-alert-over-5gb-pref-button =
+    .label =
+        { PLATFORM() ->
+            [windows] Открыть настройки
+           *[other] Открыть настройки
+        }
+    .accesskey =
+        { PLATFORM() ->
+            [windows] ы
+           *[other] ы
+        }
+space-alert-over-5gb-message =
+    { PLATFORM() ->
+        [windows] У { -brand-short-name } заканчивается место на диске. Содержимое веб-сайтов может отображаться неправильно. Вы можете удалить сохранённые данные через Настройки > Приватность и Защита > Куки и данные сайтов.
+       *[other] У { -brand-short-name } заканчивается место на диске. Содержимое веб-сайтов может отображаться неправильно. Вы можете удалить сохранённые данные через Настройки > Приватность и Защита > Куки и данные сайтов.
+    }
+space-alert-under-5gb-ok-button =
+    .label = OK, понятно
+    .accesskey = я
+space-alert-under-5gb-message = У { -brand-short-name } заканчивается место на диске. Содержимое веб-сайтов может отображаться неправильно. Щёлкните «Подробнее», чтобы оптимизировать использование вашего диска для улучшения веб-сёрфинга.
+
+## The following strings are used in the Download section of settings
+
+desktop-folder-name = Рабочий стол
+downloads-folder-name = Загрузки
+choose-download-folder-title = Выберите папку для загрузок:
+# Variables:
+#   $service-name (String) - Name of a cloud storage provider like Dropbox, Google Drive, etc...
+save-files-to-cloud-storage =
+    .label = Сохранять файлы в { $service-name }

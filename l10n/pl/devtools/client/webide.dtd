@@ -42,6 +42,8 @@
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "U">
 <!ENTITY runtimeMenu_showSettings_label "Ustawienia urządzenia">
 <!ENTITY runtimeMenu_showSettings_accesskey "a">
+<!ENTITY runtimeMenu_showPerformancePanel_label "Wydajność">
+<!ENTITY runtimeMenu_showPerformancePanel_accesskey "W">
 
 <!ENTITY viewMenu_label "Widok">
 <!ENTITY viewMenu_accesskey "W">
@@ -71,6 +73,7 @@
 <!ENTITY runtimePanel_wifi "Urządzenia Wi-Fi">
 <!ENTITY runtimePanel_other "Inne">
 <!ENTITY runtimePanel_noadbhelper "Zainstaluj dodatek ADB Helper">
+<!ENTITY runtimePanel_noadbextension "Zainstaluj rozszerzenie ADB Helper">
 <!ENTITY runtimePanel_nousbdevice "Niewidoczne urządzenie?">
 <!ENTITY runtimePanel_refreshDevices_label "Odśwież listę urządzeń">
 

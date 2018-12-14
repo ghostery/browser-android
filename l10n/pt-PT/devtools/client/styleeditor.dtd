@@ -64,4 +64,8 @@
 
 <!-- LOCALIZATION NOTE (openLinkNewTab.label): This is the text for the
      context menu item that opens a stylesheet in a new tab -->
-<!ENTITY openLinkNewTab.label     "Abrir ligação em novo separador">
+<!ENTITY openLinkNewTab.label     "Abrir ligação num novo separador">
+
+<!-- LOCALIZATION NOTE (copyUrl.label): This is the text for the
+     context menu item that copies a stylesheet's URL -->
+<!ENTITY copyUrl.label            "Copiar URL">

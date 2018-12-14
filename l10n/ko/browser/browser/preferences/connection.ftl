@@ -73,3 +73,13 @@ connection-dns-over-https =
 connection-dns-over-https-url = URL
     .accesskey = R
     .tooltiptext = HTTPS를 통한 DNS를 처리하는 URL
+# Variables:
+#   $url (String) - URL for the DNS over HTTPS provider
+connection-dns-over-https-url-default =
+    .label = 기본값 사용({ $url })
+    .accesskey = U
+    .tooltiptext = HTTPS에서 DNS 해석을 위해 기본 URL을 사용
+connection-dns-over-https-url-custom =
+    .label = 사용자 정의
+    .accesskey = C
+    .tooltiptext = HTTPS에서 DNS 해석을 위한 선호하는 URL 입력

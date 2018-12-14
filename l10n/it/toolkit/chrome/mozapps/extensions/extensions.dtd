@@ -4,6 +4,7 @@
 
 <!ENTITY addons.windowTitle "Gestione componenti aggiuntivi">
 <!ENTITY search.placeholder2 "Cerca in addons.mozilla.org">
+<!ENTITY search.placeholder3 "Cerca in addons.mozilla.org">
 <!ENTITY search.buttonlabel "Cerca">
 <!ENTITY search.commandkey "f">
 <!ENTITY loading.label "Caricamento…">
@@ -31,6 +32,9 @@
 <!ENTITY view.discover.label "Esplora">
 <!ENTITY view.recentUpdates.label "Aggiornamenti recenti">
 <!ENTITY view.availableUpdates.label "Aggiornamenti disponibili">
+<!ENTITY helpButton.label "Supporto componenti aggiuntivi">
+<!ENTITY preferencesWin.label "Opzioni di &brandShortName;">
+<!ENTITY preferencesUnix.label "Preferenze di &brandShortName;">
 <!ENTITY updates.checkForUpdates.label "Controlla aggiornamenti">
 <!ENTITY updates.checkForUpdates.accesskey "C">
 <!ENTITY updates.viewUpdates.label "Visualizza aggiornamenti recenti">

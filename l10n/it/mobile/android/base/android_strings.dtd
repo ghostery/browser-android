@@ -176,6 +176,9 @@
 <!ENTITY pref_whats_new_notification_summary "Visualizza informazioni sulle nuove caratteristiche dopo un aggiornamento">
 <!ENTITY pref_feature_tips_notification "Suggerimenti relativi a prodotti e caratteristiche">
 <!ENTITY pref_feature_tips_notification_summary "Informazioni relative all’utilizzo di &brandShortName; e altri prodotti di &vendorShortName;">
+<!ENTITY pref_feature_tips_notification_enabling_hint "Attiva">
+<!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
+<!ENTITY pref_feature_tips_notification_enabling_hint2 "(Per attivare questa opzione, &pref_feature_tips_notification_enabling_path; deve essere già attivo.)">
 <!ENTITY pref_category_experimental "Caratteristiche sperimentali">
 <!ENTITY pref_custom_tabs2 "Schede personalizzate">
 <!ENTITY pref_custom_tabs_summary4 "Consenti alle app di aprire contenuti web in schede personalizzate">
@@ -215,7 +218,6 @@
 <!ENTITY pref_use_system_font_size "Utilizza dim. caratteri di sistema">
 <!ENTITY pref_use_system_font_size_summary "Ridimensiona i contenuti web in base alle dimensioni dei caratteri di sistema">
 <!ENTITY pref_media_autoplay_enabled "Consenti riproduz. automatica">
-<!ENTITY pref_media_autoplay_enabled_summary "Determina se i siti web possono riprodurre automaticamente video e altri contenuti multimediali">
 <!ENTITY pref_media_autoplay_allow "Consenti riproduz. automatica">
 <!ENTITY pref_media_autoplay_block "Blocca riproduz. automatica">
 <!ENTITY pref_zoom_force_enabled "Consenti sempre zoom">
@@ -478,8 +480,6 @@
 <!ENTITY bookmarks_restricted_webmaker "Impara il Web: Mozilla Webmaker">
 <!ENTITY unsupported_sdk_version "Siamo spiacenti, questa versione di &brandShortName; non è compatibile con questo dispositivo (&formatS1;, &formatS2;). È necessario scaricare la versione corretta.">
 <!ENTITY corrupt_apk "Impossibile aprire &brandShortName;. Reinstallarlo e riprovare.">
-<!ENTITY eol_notification_title2 "&brandShortName; non verrà più aggiornato">
-<!ENTITY eol_notification_summary "Tocca per ulteriori informazioni">
 <!ENTITY whatsnew_notification_title "&brandShortName; è aggiornato">
 <!ENTITY whatsnew_notification_summary "Scopri le novità in questa versione">
 <!ENTITY promotion_add_page_shortcut "Agg. scorciatoia alla pagina">
@@ -513,9 +513,13 @@
 <!ENTITY pip_pause_button_title "Pausa">
 <!ENTITY pip_pause_button_description "Metti in pausa riproduzione">
 <!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY default_notification_channel2 "Browser">
 <!ENTITY mls_notification_channel "Georilevazione di &vendorShortName;">
 <!ENTITY download_notification_channel "Download">
 <!ENTITY media_notification_channel "Riproduzione file multimediali">
+<!ENTITY media_notification_channel2 "Audio e video">
 <!ENTITY leanplum_default_notifications_channel "Notifiche push di &brandShortName;">
+<!ENTITY leanplum_default_notifications_channel2 "Consigli e suggerimenti da &vendorShortName;">
 <!ENTITY updater_notification_channel "Aggiornamenti app">
 <!ENTITY synced_tabs_notification_channel "Schede sincronizzate">
+<!ENTITY site_notifications_channel "Notifiche siti">

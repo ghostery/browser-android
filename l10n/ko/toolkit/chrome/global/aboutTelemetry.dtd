@@ -32,9 +32,6 @@
 <!ENTITY aboutTelemetry.optionGroupOlder "
 이전
 ">
-<!ENTITY aboutTelemetry.payloadChoiceHeader "
-  페이로드
-">
 <!-- LOCALIZATION NOTE(aboutTelemetry.previousPing, aboutTelemetry.nextPing):
 	These strings are displayed when selecting Archived pings, and they’re
 	used to move to the next or previous ping. -->
@@ -48,6 +45,8 @@
 <!ENTITY aboutTelemetry.firefoxDataDoc "<a>Firefox Data Documentation</a>에 데이터 도구를 다루는 방법이 나와 있습니다.">
 <!ENTITY aboutTelemetry.telemetryClientDoc "<a>Firefox Telemetry client documentation</a>에 개요와 API 문서, 데이터 참조가 포함되어 있습니다.">
 <!ENTITY aboutTelemetry.telemetryDashboard "<a>Telemetry dashboards</a>를 이용하여 Telemetry를 통해 Mozilla가 수신한 데이터를 시각화 할 수 있습니다.">
+
+<!ENTITY aboutTelemetry.telemetryProbeDictionary "<a>Probe Dictionary</a> 는 Telemetry 에 의해 수집된 조사 내용에 대한 상세 정보와 설명을 제공합니다.">
 
 <!ENTITY aboutTelemetry.showInFirefoxJsonViewer "JSON 뷰어에서 열기">
 
@@ -79,14 +78,8 @@
 <!ENTITY aboutTelemetry.simpleMeasurementsSection "
   단순 측정
 ">
-<!ENTITY aboutTelemetry.telemetryLogSection "
-  수집 기능 로그
-">
 <!ENTITY aboutTelemetry.slowSqlSection "
   느린 SQL 문
-">
-<!ENTITY aboutTelemetry.chromeHangsSection "
-  브라우저 중단
 ">
 <!ENTITY aboutTelemetry.addonDetailsSection "
   부가 기능 상세

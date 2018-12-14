@@ -5,7 +5,7 @@
 <!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd">
 %brandDTD;
 
-<!ENTITY loadError.label "Ocorreu um erro ao carregar a página">
+<!ENTITY loadError.label "Problema ao carregar página">
 <!ENTITY retry.label "Tente novamente">
 
 <!-- Specific error messages -->
@@ -101,3 +101,6 @@ functionality specific to thunderbird. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> utiliza tecnologia de segurança que está desatualizada e vulnerável a ataques. Um atacante pode facilmente revelar informação que pensou estar segura. O administrador do website precisa de corrigir o servidor primeiro antes que possa visitar o site. </p><p>Código de erro: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Página bloqueada">
+
+<!ENTITY networkProtocolError.title "Erro de protocolo de rede">
+<!ENTITY networkProtocolError.longDesc "<p>A página que está a tentar ver não pode ser mostrada porque um erro de protocolo de rede foi detetado.</p><ul><li>Por favor contacte os proprietários do website para os informar deste problema.</li></ul>">

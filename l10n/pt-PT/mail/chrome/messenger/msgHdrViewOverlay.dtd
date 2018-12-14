@@ -56,9 +56,9 @@
 <!ENTITY otherActionsButton.tooltip "Mais ações">
 <!ENTITY otherActionsOpenConversation1.label "Abrir na conversa">
 <!ENTITY otherActionsOpenConversation1.accesskey "c">
-<!ENTITY otherActionsOpenInNewWindow1.label "Abrir em nova janela">
+<!ENTITY otherActionsOpenInNewWindow1.label "Abrir numa nova janela">
 <!ENTITY otherActionsOpenInNewWindow1.accesskey "j">
-<!ENTITY otherActionsOpenInNewTab1.label "Abrir em novo separador">
+<!ENTITY otherActionsOpenInNewTab1.label "Abrir num novo separador">
 <!ENTITY otherActionsOpenInNewTab1.accesskey "s">
 <!ENTITY markAsReadMenuItem1.label "Marcar como lida">
 <!ENTITY markAsReadMenuItem1.accesskey "M">

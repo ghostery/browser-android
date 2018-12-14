@@ -4,7 +4,7 @@
 
 <!-- Window title -->
 <!-- LOCALIZATION NOTE  (editorWindow.titlemodifier): DONT_TRANSLATE -->
-<!ENTITY editorWindow.titlemodifier "Composer"> 
+<!ENTITY editorWindow.titlemodifier "Composer">
 <!ENTITY editorWindow.titlemodifiermenuseparator " - ">
 
 <!-- Menu items:  the . means that the menu item isn't implemented yet -->
@@ -47,7 +47,7 @@
 <!ENTITY NormalMode.label "Modo de edição normal">
 <!ENTITY NormalMode.accesskey "N">
 <!ENTITY NormalMode.tooltip "Mostrar bordas nas tabelas e âncoras nomeadas">
-<!ENTITY AllTagsModeTab.label "Etiquetas HTML">
+<!ENTITY AllTagsModeTab.label "Tags HTML">
 <!ENTITY AllTagsMode.label "Tags HTML">
 <!ENTITY AllTagsMode.accesskey "a">
 <!ENTITY AllTagsMode.tooltip "Exibir ícones para todas as tags HTML">

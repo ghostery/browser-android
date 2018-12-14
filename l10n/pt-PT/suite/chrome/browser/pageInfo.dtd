@@ -19,7 +19,7 @@
 <!ENTITY  copyLinks.accesskey       "l">
 <!ENTITY  openInNewTab.label        "Abrir num novo separador">
 <!ENTITY  openInNewTab.accesskey    "s">
-<!ENTITY  openInNewWindow.label     "Abrir em nova janela">
+<!ENTITY  openInNewWindow.label     "Abrir numa nova janela">
 <!ENTITY  openInNewWindow.accesskey "j">
 
 <!ENTITY  generalTab            "Geral">

@@ -38,7 +38,7 @@
 <!ENTITY netOffline.longDesc2 "<p>O navegador está no modo offline e não consegue estabelecer ligação ao objeto solicitado.</p><ul><li>O computador tem uma rede ativa?</li><li>Pressione &quot;Tentar novamente&quot; para trocar para o modo online e recarregar a página.</li></ul>">
 
 <!ENTITY contentEncodingError.title "Erro de Codificação de Conteúdo">
-<!ENTITY contentEncodingError.longDesc "<p>A página que está a tentar ver não pode ser apresentada porque utiliza uma forma de compressão inválida ou não suportada.</p><ul><li>Por favor, contacte os proprietários do website para os informar deste problema.</li></ul>">
+<!ENTITY contentEncodingError.longDesc "<p>A página que está a tentar ver não pode ser mostrar porque utiliza uma forma de compressão inválida ou não suportada.</p><ul><li>Por favor contacte os proprietários do website para os informar deste problema.</li></ul>">
 
 <!ENTITY unsafeContentType.title "Tipo de ficheiro inseguro">
 <!ENTITY unsafeContentType.longDesc "<ul> <li>Por favor, informe os proprietários do website do problema.</li> </ul>">
@@ -65,7 +65,7 @@
 <!ENTITY unknownSocketType.longDesc "<p>O site respondeu ao pedido de rede de uma forma inesperada e o navegador não pode continuar.</p>">
 
 <!ENTITY nssFailure2.title "A ligação segura falhou">
-<!ENTITY nssFailure2.longDesc2 "<p>A página que está a tentar ver não pode ser mostrada porque não foi possível verificar a autenticidade da informação recebida.</p><ul><li>Por favor, contacte os proprietários do website para os informar deste problema.</li></ul>">
+<!ENTITY nssFailure2.longDesc2 "<p>A página que está a tentar ver não pode ser mostrada porque não foi possível verificar a autenticidade da informação recebida.</p><ul><li>Por favor contacte os proprietários do website para os informar deste problema.</li></ul>">
 
 <!ENTITY nssBadCert.title "A ligação segura falhou">
 <!ENTITY nssBadCert.longDesc2 "<ul> <li>Este pode ser um problema com a configuração do servidor, ou pode ser alguém a tentar fazer-se passar pelo servidor.</li> <li>Se se ligou a este servidor no passado, o erro pode ser temporário e pode tentar mais tarde.</li> </ul>">
@@ -80,7 +80,7 @@
 <!ENTITY cspBlocked.longDesc "<p>O navegador impediu o carregamento desta página desta forma porque a página tem uma política de segurança de conteúdo que não o permite.</p>">
 
 <!ENTITY corruptedContentErrorv2.title "Erro de conteúdo corrompido">
-<!ENTITY corruptedContentErrorv2.longDesc "<p>A página que está a tentar ver não pode ser apresentada porque foi detetado um erro na transmissão de dados.</p><ul><li>Por favor contacte os proprietários do website para os informar sobre este problema.</li></ul>">
+<!ENTITY corruptedContentErrorv2.longDesc "<p>A página que está a tentar ver não pode ser mostrada porque foi detetado um erro na transmissão de dados.</p><ul><li>Por favor contacte os proprietários do website para os informar deste problema.</li></ul>">
 
 <!ENTITY remoteXUL.title "XUL remoto">
 <!ENTITY remoteXUL.longDesc "<p><ul><li>Por favor, contacte os responsáveis do website para os informar sobre este problema.</li></ul></p>">
@@ -91,3 +91,6 @@
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> utiliza tecnologia de segurança que está desatualizada e vulnerável a ataques. Um atacante pode facilmente revelar informação que pensou estar segura. O administrador do website precisa de corrigir o servidor primeiro antes que possa visitar o site. </p><p>Código de erro: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Página bloqueada">
+
+<!ENTITY networkProtocolError.title "Erro de protocolo de rede">
+<!ENTITY networkProtocolError.longDesc "<p>A página que está a tentar ver não pode ser mostrada porque um erro de protocolo de rede foi detetado.</p><ul><li>Por favor contacte os proprietários do website para os informar deste problema.</li></ul>">

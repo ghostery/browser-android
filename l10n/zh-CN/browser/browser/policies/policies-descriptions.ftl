@@ -18,6 +18,7 @@ policy-BlockAboutProfiles = 阻止访问 about:profiles 页面。
 policy-BlockAboutSupport = 阻止访问 about:support 页面。
 policy-Bookmarks = 在书签工具栏，书签菜单或特定文件夹中创建书签。
 policy-Certificates = 是否使用内置的证书。此策略目前仅适用于 Windows。
+policy-CertificatesDescription = 添加证书或使用内置的证书。
 policy-Cookies = 允许或拒绝网站设置 Cookie。
 policy-DisableAppUpdate = 阻止浏览器更新。
 policy-DisableBuiltinPDFViewer = 禁用 { -brand-short-name } 内置的 PDF 阅读器 PDF.js。
@@ -42,6 +43,7 @@ policy-DisableSystemAddonUpdate = 阻止浏览器安装或更新“系统附加�
 policy-DisableTelemetry = 关闭“遥测”组件。
 policy-DisplayBookmarksToolbar = 默认显示书签工具栏。
 policy-DisplayMenuBar = 默认显示菜单栏。
+policy-DNSOverHTTPS = 配置基于 HTTPS 的 DNS。
 policy-DontCheckDefaultBrowser = 禁用启动时的默认浏览器检查。
 # “lock” means that the user won’t be able to change this setting
 policy-EnableTrackingProtection = 启用或禁用内容拦截，并可选择锁定该功能。
@@ -62,9 +64,12 @@ policy-OverridePostUpdatePage = 覆盖更新后的“新版变化”页面。如
 policy-Permissions = 配置摄像头、麦克风、位置和通知的权限。
 policy-PopupBlocking = 默认允许特定网站显示弹出式窗口。
 policy-Proxy = 配置代理设置
+policy-RequestedLocales = 设置应用程序表明语言区域偏好的语言区域请求列表。
 policy-SanitizeOnShutdown = 关闭浏览器时清除所有浏览数据。
 policy-SearchBar = 设置搜索栏的默认位置，用户仍可自定义。
 policy-SearchEngines = 配置搜索引擎设置。此策略仅适用于延长支持版（ESR）。
+# For more information, see https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/PKCS11/Module_Installation
+policy-SecurityDevices = 安装 PKCS #11 模块。
 # “format” refers to the format used for the value of this policy. See also:
 # https://github.com/mozilla/policy-templates/blob/master/README.md#websitefilter-machine-only
 policy-WebsiteFilter = 阻止访问某些网站。参阅文档了解该格式的更多详情。

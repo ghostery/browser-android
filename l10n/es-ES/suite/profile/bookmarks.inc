@@ -18,21 +18,9 @@
 # link title for http://www.seamonkey-project.org/ (in normal bookmarks)
 #define seamonkey_long El Proyecto SeaMonkey
 
-# LOCALIZATION NOTE (mozilla_org):
-# link title for http://www.mozilla.org/ (in the personal toolbar)
-#define mozilla_org mozilla.org
-
 # LOCALIZATION NOTE (mozilla_org_long):
 # link title for http://www.mozilla.org/ (in normal bookmarks)
 #define mozilla_org_long La Organización Mozilla
-
-# LOCALIZATION NOTE (mozilla_projects):
-# link title for http://www.mozilla.org/projects/
-#define mozilla_projects Proyectos Mozilla
-
-# LOCALIZATION NOTE (mozilla_about):
-# link title for http://www.mozilla.org/about/
-#define mozilla_about Acerca de Mozilla
 
 #define extend_seamonkey Extender SeaMonkey
 

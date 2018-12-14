@@ -13,7 +13,7 @@
 <!ENTITY requestMDN.label              "Als ik een verzoek voor een leesbevestiging ontvang:">
 <!ENTITY never.label                   "Nooit een leesbevestiging sturen">
 <!ENTITY never.accesskey               "s">
-<!ENTITY returnSome.label              "In de volgende gevallen een leesbevestiging sturen">
+<!ENTITY returnSome.label              "Leesbevestigingen bij sommige berichten toestaan">
 <!ENTITY returnSome.accesskey          "o">
 <!ENTITY notInToCc.label               "Als ik niet in de Aan of Cc van het bericht sta:">
 <!ENTITY notInToCc.accesskey           "n">
