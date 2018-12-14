@@ -149,10 +149,10 @@ RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \
             gpg2 --keyserver "${server}" --recv-keys "${key}" || echo "Trying new server..."; \
         done; \
     done
-RUN curl -sSL https://get.rvm.io | bash -s stable --ruby=2.5.3 --autolibs=read-fail && \
+RUN curl -sSL https://get.rvm.io | bash -s stable --ruby=2.4.3 --autolibs=read-fail && \
     source /home/jenkins/.rvm/scripts/rvm \
     rvm reload && \
-    gem install fastlane --version 2.108.0
+    gem install fastlane --version 2.111.0
 
 #Install AWS CLI
 RUN pip install awscli --upgrade --user
