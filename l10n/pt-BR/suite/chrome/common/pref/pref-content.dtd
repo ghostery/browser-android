@@ -41,3 +41,5 @@
 <!ENTITY allowHWAccel.accesskey                 "e">
 <!ENTITY blockAutoRefresh.label                 "Alertar se sites tentarem redirecionar ou recarregar a página">
 <!ENTITY blockAutoRefresh.accesskey             "A">
+
+<!ENTITY showZoomStatusPanel.label              "Mostrar controles de zoom na barra de status">

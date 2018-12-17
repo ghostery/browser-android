@@ -11,6 +11,10 @@
 <!ENTITY castingButton.castingLabel "화면으로 출력">
 <!ENTITY closedCaption.off "끔">
 
+<!-- LOCALIZATION NOTE (volumeScrubber.label): This label is exposed to
+     accessibility software to clarify what the slider is for. -->
+<!ENTITY volumeScrubber.label "음량 조절바">
+
 <!ENTITY stats.media "미디어">
 <!ENTITY stats.size "크기">
 <!ENTITY stats.activity "활동">
@@ -47,3 +51,4 @@ unknown duration video, #1 would be "5:00" and the string which is surrounded by
 <span> would be deleted, result string would be "5:00".
 -->
 <!ENTITY positionAndDuration.nameFormat "#1<span> / #2</span>">
+

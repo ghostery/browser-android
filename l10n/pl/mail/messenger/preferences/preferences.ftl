@@ -8,3 +8,7 @@ manage-messenger-languages-button =
   .accesskey = U
 confirm-messenger-language-change-description = Uruchom ponownie, aby zastosować te zmiany
 confirm-messenger-language-change-button = Zastosuj i uruchom ponownie
+
+update-pref-write-failure-title = Niepowodzenie zapisu
+
+update-pref-write-failure-message = Nie można zapisać preferencji. Nie można zapisać do pliku: { $path }

@@ -47,4 +47,4 @@
 <!ENTITY alreadyDefaultText             "A &brandShortName; már be van állítva alapértelmezett böngészőnek.">
 <!ENTITY defaultPendingText             "A &brandShortName; lesz beállítva alapértelmezett böngészőnek, miután az OK gombra kattint.">
 <!ENTITY wasMadeDefaultText             "A &brandShortName; lett az alapértelmezett böngésző.">
-<!ENTITY makeDefaultText                "&brandShortName; beállítása alapértelmezett böngészőnek.">
+<!ENTITY makeDefaultText                "A &brandShortName; beállítása alapértelmezett böngészőnek.">

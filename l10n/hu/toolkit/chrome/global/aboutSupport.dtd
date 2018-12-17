@@ -9,13 +9,13 @@
 
 <!ENTITY aboutSupport.crashes.title "Hibajelentések">
 <!-- LOCALIZATION NOTE (aboutSupport.crashes.id):
-This is likely the same like id.heading in crashes.dtd. -->
+This is likely the same like id.heading in aboutcrashes.ftl. -->
 <!ENTITY aboutSupport.crashes.id "Jelentésazonosító">
 <!ENTITY aboutSupport.crashes.sendDate "Elküldve">
 <!ENTITY aboutSupport.crashes.allReports "Minden hibajelentés">
 <!ENTITY aboutSupport.crashes.noConfig "Ez az alkalmazás nincs a hibajelentések megjelenítésére beállítva.">
 
-<!ENTITY aboutSupport.extensionsTitle "Kiterjesztések">
+<!ENTITY aboutSupport.extensionsTitle "Kiegészítők">
 <!ENTITY aboutSupport.extensionName "Név">
 <!ENTITY aboutSupport.extensionEnabled "Engedélyezve">
 <!ENTITY aboutSupport.extensionVersion "Verzió">
@@ -32,15 +32,6 @@ This is likely the same like id.heading in crashes.dtd. -->
 <!ENTITY aboutSupport.featureName "Név">
 <!ENTITY aboutSupport.featureVersion "Verzió">
 <!ENTITY aboutSupport.featureId "Azonosító">
-
-<!ENTITY aboutSupport.experimentsTitle "Kísérleti funkciók">
-<!ENTITY aboutSupport.experimentName "Név">
-<!ENTITY aboutSupport.experimentId "Azonosító">
-<!ENTITY aboutSupport.experimentDescription "Leírás">
-<!ENTITY aboutSupport.experimentActive "Aktív">
-<!ENTITY aboutSupport.experimentEndDate "Záró dátum">
-<!ENTITY aboutSupport.experimentHomepage "Honlap">
-<!ENTITY aboutSupport.experimentBranch "Ág">
 
 <!ENTITY aboutSupport.appBasicsTitle "Alkalmazás alapadatai">
 <!ENTITY aboutSupport.appBasicsName "Név">

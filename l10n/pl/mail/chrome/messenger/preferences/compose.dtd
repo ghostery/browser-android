@@ -20,6 +20,10 @@
 <!ENTITY font.accesskey "C">
 <!ENTITY size.label "Rozmiar:">
 <!ENTITY size.accesskey "R">
+<!ENTITY fontSize.label "Rozmiar:">
+<!ENTITY fontSize.accesskey "R">
+<!ENTITY useReaderDefaults.label "Używaj domyślnych kolorów czytelnika">
+<!ENTITY useReaderDefaults.accesskey "d">
 <!ENTITY fontColor.label "Kolor tekstu:">
 <!ENTITY fontColor.accesskey "K">
 <!ENTITY bgColor.label "Kolor tła:">

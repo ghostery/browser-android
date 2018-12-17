@@ -12,7 +12,6 @@
 <!ENTITY aboutTelemetry.optionGroupToday "今天">
 <!ENTITY aboutTelemetry.optionGroupYesterday "昨天">
 <!ENTITY aboutTelemetry.optionGroupOlder "較舊">
-<!ENTITY aboutTelemetry.payloadChoiceHeader "酬載">
 <!-- LOCALIZATION NOTE(aboutTelemetry.previousPing, aboutTelemetry.nextPing):
 	These strings are displayed when selecting Archived pings, and they’re
 	used to move to the next or previous ping. -->
@@ -25,6 +24,8 @@
 <!ENTITY aboutTelemetry.telemetryClientDoc "<a>Firefox Telemetry 客戶端文件</a>當中包含資料收集概念、API 文件以及資料格式的參考資料。">
 <!ENTITY aboutTelemetry.telemetryDashboard "<a>Telemetry 儀表板</a>讓您可將 Mozilla 透過 Telemetry 收集到的資料以視覺化的方式呈現。
 ">
+
+<!ENTITY aboutTelemetry.telemetryProbeDictionary "<a>Probe Dictionary</a> 當中提供 Telemetry 所收集的探測資料的詳細資訊與說明。">
 
 <!ENTITY aboutTelemetry.showInFirefoxJsonViewer "
 用 JSON 檢視器開啟">
@@ -39,9 +40,7 @@
 <!ENTITY aboutTelemetry.keyedHistogramsSection "Keyed Histograms">
 <!ENTITY aboutTelemetry.eventsSection "事件">
 <!ENTITY aboutTelemetry.simpleMeasurementsSection "簡易測量">
-<!ENTITY aboutTelemetry.telemetryLogSection "Telemetry 紀錄">
 <!ENTITY aboutTelemetry.slowSqlSection "慢速的 SQL 陳述句">
-<!ENTITY aboutTelemetry.chromeHangsSection "瀏覽器停滯">
 <!ENTITY aboutTelemetry.addonDetailsSection "附加元件詳情">
 <!ENTITY aboutTelemetry.capturedStacksSection "捕捉到的堆疊">
 <!ENTITY aboutTelemetry.lateWritesSection "慢速寫入">

@@ -28,8 +28,7 @@
 
 <!ENTITY  details.link                    "Szczegóły">
 
-<!ENTITY  error.title                     "Aktualizacja się nie powiodła">
-
+<!ENTITY error.title "Aktualizacja nie powiodła się">
 <!ENTITY error.label "Pojawiły się problemy podczas sprawdzania, pobierania lub instalacji aktualizacji. Program &brandShortName; nie mógł zostać uaktualniony, ponieważ:">
 
 <!ENTITY  errorManual.label               "Można dokonać ręcznej aktualizacji programu &brandShortName; poprzez otwarcie tego odnośnika i pobranie najnowszej wersji:">

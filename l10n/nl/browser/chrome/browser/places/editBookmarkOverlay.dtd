@@ -19,8 +19,6 @@
 <!ENTITY editBookmarkOverlay.keyword.label                   "Sleutelwoord:">
 <!ENTITY editBookmarkOverlay.keyword.accesskey               "S">
 <!ENTITY editBookmarkOverlay.tagsExpanderDown.tooltip        "Alle labels tonen">
-<!ENTITY editBookmarkOverlay.loadInSidebar.label             "Deze bladwijzer in de zijbalk laden">
-<!ENTITY editBookmarkOverlay.loadInSidebar.accesskey         "D">
 <!ENTITY editBookmarkOverlay.choose.label                    "Kiezen…">
 <!ENTITY editBookmarkOverlay.newFolderButton.label           "Nieuwe map">
 <!ENTITY editBookmarkOverlay.newFolderButton.accesskey       "m">

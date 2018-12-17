@@ -24,6 +24,8 @@
 <!ENTITY aboutTelemetry.telemetryClientDoc "De <a>Firefox Telemetry-clientdocumentatie</a> bevat definities voor concepten, API-documentatie en gegevensverwijzingen.">
 <!ENTITY aboutTelemetry.telemetryDashboard "Met de <a>Telemetry-dashboards</a> kunt u de gegevens visualiseren die Mozilla via Telemetry ontvangt.">
 
+<!ENTITY aboutTelemetry.telemetryProbeDictionary "De <a>Probe Dictionary</a> biedt details en beschrijvingen voor de probes die door Telemetry worden verzameld.">
+
 <!ENTITY aboutTelemetry.showInFirefoxJsonViewer "Openen in de JSON-viewer">
 
 <!ENTITY aboutTelemetry.homeSection "Start">

@@ -16,8 +16,6 @@
 <!ENTITY clearTimeDuration.today "oggi">
 <!ENTITY clearTimeDuration.everything "tutto">
 <!ENTITY clearTimeDuration.suffix "">
-<!ENTITY detailsProgressiveDisclosure.label "Dettagli">
-<!ENTITY detailsProgressiveDisclosure.accesskey "e">
 <!ENTITY historySection.label "Cronologia">
 <!ENTITY dataSection.label "Dati">
 <!ENTITY itemHistoryAndDownloads.label "Cronologia navigazione e download">
@@ -28,7 +26,7 @@
 <!ENTITY itemCookies.accesskey "o">
 <!ENTITY itemCache.label "Cache">
 <!ENTITY itemCache.accesskey "h">
-<!ENTITY itemOfflineApps.label "Dati non in linea dei siti web ">
+<!ENTITY itemOfflineApps.label "Dati non in linea dei siti web">
 <!ENTITY itemOfflineApps.accesskey "w">
 <!ENTITY itemActiveLogins.label "Accessi effettuati">
 <!ENTITY itemActiveLogins.accesskey "A">

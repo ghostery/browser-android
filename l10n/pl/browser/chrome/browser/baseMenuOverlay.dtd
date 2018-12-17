@@ -10,8 +10,6 @@
 
 <!ENTITY helpMenu.label           "Pomoc" >
 <!ENTITY helpMenu.accesskey       "c" >
-<!-- LOCALIZATION NOTE some localizations of Windows (ex:french, german) use "?"
-                       for the help button in the menubar but Gnome does not.   -->
 <!ENTITY helpMenuWin.label	  "Pomoc" >
 <!ENTITY helpMenuWin.accesskey	  "c" >
 <!ENTITY aboutProduct2.label "O programie &brandShorterName;">
@@ -32,7 +30,7 @@
 <!ENTITY helpTroubleshootingInfo.accesskey  "n">
 <!ENTITY helpFeedbackPage.label      "Prześlij swoją opinię…">
 <!ENTITY helpFeedbackPage.accesskey  "e">
-<!ENTITY helpShowTour2.label "Przewodnik po programie &brandShorterName;">
+<!ENTITY helpShowTour2.label "Przewodnik po programie">
 <!ENTITY helpShowTour2.accesskey "r">
 
 <!ENTITY preferencesCmdMac.label        "Preferencje…">
@@ -40,7 +38,7 @@
 
 <!ENTITY servicesMenuMac.label          "Usługi">
 
-<!ENTITY hideThisAppCmdMac2.label "Ukryj &brandShorterName;">
+<!ENTITY hideThisAppCmdMac2.label "Ukryj program">
 <!ENTITY hideThisAppCmdMac2.commandkey "H">
 
 <!ENTITY hideOtherAppsCmdMac.label      "Ukryj pozostałe">

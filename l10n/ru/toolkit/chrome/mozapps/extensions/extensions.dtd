@@ -3,11 +3,11 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "Управление дополнениями">
 
-<!ENTITY search.placeholder                   "Поиск среди дополнений">
-
 <!ENTITY search.placeholder2                  "Поиск на addons.mozilla.org">
+
+<!ENTITY search.placeholder3                  "Поиск на addons.mozilla.org">
 <!ENTITY search.buttonlabel                   "Поиск">
-<!-- LOCALIZATION NOTE (search.commandKey):
+<!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
 <!ENTITY search.commandkey                    "f">
 
@@ -16,7 +16,6 @@
 <!ENTITY listEmpty.availableUpdates.label     "Обновлений не найдено">
 <!ENTITY listEmpty.recentUpdates.label        "В последнее время вы не обновляли никаких дополнений">
 <!ENTITY listEmpty.findUpdates.label          "Проверить наличие обновлений">
-<!ENTITY listEmpty.search.label               "Ни одного подходящего дополнения не найдено">
 <!ENTITY listEmpty.button.label               "Узнать больше о дополнениях">
 <!ENTITY installAddonFromFile.label           "Установить дополнение из файла…">
 <!ENTITY installAddonFromFile.accesskey       "а">
@@ -24,9 +23,6 @@
 
 <!ENTITY getThemes.description                "Хотите настроить под себя свой браузер?">
 <!ENTITY getThemes.learnMore                  "Выберите нужные вам темы">
-
-<!ENTITY cmd.back.tooltip                     "На предыдущую страницу">
-<!ENTITY cmd.forward.tooltip                  "На следующую страницу">
 
 
 <!ENTITY showUnsignedExtensions.button.label  "Некоторые расширения не могут быть проверены">
@@ -44,10 +40,13 @@
 <!ENTITY warning.updatesecurity.enable.tooltip     "Включить проверку безопасного обновления дополнений">
 
 <!-- categories / views -->
-<!ENTITY view.search.label                    "Поиск">
 <!ENTITY view.discover.label                  "Получить дополнения">
 <!ENTITY view.recentUpdates.label             "Недавние обновления">
 <!ENTITY view.availableUpdates.label          "Доступные обновления">
+
+<!ENTITY helpButton.label                      "Поддержка дополнений">
+<!ENTITY preferencesWin.label                  "Настройки &brandShortName;">
+<!ENTITY preferencesUnix.label                 "Настройки &brandShortName;">
 
 <!-- addon updates -->
 <!ENTITY updates.checkForUpdates.label        "Проверить наличие обновлений">
@@ -87,8 +86,6 @@
 <!ENTITY cmd.preferencesWin.accesskey         "с">
 <!ENTITY cmd.preferencesUnix.label            "Настройки">
 <!ENTITY cmd.preferencesUnix.accesskey        "с">
-<!ENTITY cmd.about.label                      "О дополнении">
-<!ENTITY cmd.about.accesskey                  "О">
 
 <!ENTITY cmd.enableAddon.label                "Включить">
 <!ENTITY cmd.enableAddon.accesskey            "ч">
@@ -135,7 +132,6 @@
 <!ENTITY detail.lastupdated.label             "Последнее обновление">
 <!ENTITY detail.creator.label                 "Разработчик">
 <!ENTITY detail.homepage.label                "Домашняя страница">
-<!ENTITY detail.numberOfDownloads.label       "Загрузок">
 
 <!ENTITY detail.contributions.description     "Разработчик этого дополнения просит вас помочь поддержать его дальнейшее развитие, внеся небольшое пожертвование.">
 
@@ -167,23 +163,6 @@
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "Приостановить">
 <!ENTITY progress.cancel.tooltip              "Отмена">
-
-
-<!-- list sorting -->
-<!ENTITY sort.name.label                      "Имя">
-<!ENTITY sort.name.tooltip                    "Сортировать по имени">
-<!ENTITY sort.dateUpdated.label               "Последнее обновление">
-<!ENTITY sort.dateUpdated.tooltip             "Сортировать по дате обновления">
-<!ENTITY sort.relevance.label                 "Лучшее совпадение">
-<!ENTITY sort.relevance.tooltip               "Сортировать по релевантности">
-<!ENTITY sort.price.label                     "Цена">
-<!ENTITY sort.price.tooltip                   "Сортировать по цене">
-
-<!ENTITY search.filter2.label                 "Поиск среди:">
-<!ENTITY search.filter2.installed.label       "Моих дополнений">
-<!ENTITY search.filter2.installed.tooltip     "Показать установленные дополнения">
-<!ENTITY search.filter2.available.label       "Доступных дополнений">
-<!ENTITY search.filter2.available.tooltip     "Показать дополнения доступные для установки">
 
 <!ENTITY addon.homepage                       "Домашняя страница">
 <!ENTITY addon.details.label                  "Подробнее">
@@ -226,17 +205,6 @@
 <!ENTITY eula.accept                          "Принять и установить…">
 
 <!ENTITY settings.path.button.label           "Обзор…">
-
-<!-- LOCALIZATION NOTE (experiment.info.label): The strings related to
-     experiments are present on the "Experiments" tab of the add-ons manager.
-     This tab won't be displayed unless an Experiment add-on is installed.
-     Install https://people.mozilla.org/~gszorc/dummy-experiment-addon.xpi
-     to cause this tab to appear. -->
-<!ENTITY experiment.info.label "Что это? Телеметрия может время от времени устанавливать и проводить эксперименты.">
-<!ENTITY experiment.info.learnmore "Подробнее">
-<!ENTITY experiment.info.learnmore.accesskey "б">
-<!ENTITY experiment.info.changetelemetry "Параметры телеметрии">
-<!ENTITY experiment.info.changetelemetry.accesskey "а">
 
 <!ENTITY setting.learnmore "Подробнее…">
 

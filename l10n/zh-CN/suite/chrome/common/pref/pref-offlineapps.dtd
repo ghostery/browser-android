@@ -2,8 +2,8 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!-- extracted from content/pref-offlineapps.xul -->
-<!--LOCALIZATION NOTE : FILE Offline Apps prefs dialog -->
 
+<!--LOCALIZATION NOTE : FILE Offline Apps prefs dialog -->
 <!ENTITY pref.offlineapps.title             "离线网页应用程序">
 <!ENTITY pref.offlineCache.caption          "离线 Web 内容和用户数据">
 
@@ -16,7 +16,7 @@
 <!ENTITY offlineExplicit.accesskey          "O">
 <!ENTITY offlineNotifyAsk.label             "网站想要存储数据供离线使用时通知我">
 <!ENTITY offlineNotifyAsk.accesskey         "N">
-<!ENTITY offlineNotifyPermissions.label     "权限管理">
+<!ENTITY offlineNotifyPermissions.label     "管理权限">
 <!ENTITY offlineNotifyPermissions.accesskey "P">
 
 <!ENTITY offlineAppsUsage.label             "下列网站正在使用离线存储：">

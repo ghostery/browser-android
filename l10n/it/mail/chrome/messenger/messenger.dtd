@@ -443,6 +443,9 @@
 <!ENTITY openConversationCmd.label "Apri nella conversazione">
 <!ENTITY openConversationCmd.accesskey "z">
 <!ENTITY openConversationCmd.key "o">
+<!ENTITY openInConversationCmd.label "Apri nella conversazione">
+<!ENTITY openInConversationCmd.accesskey "s">
+<!ENTITY openInConversationCmd.key "o">
 <!ENTITY openAttachmentListCmd.label "Allegati">
 <!ENTITY openAttachmentListCmd.accesskey "l">
 <!ENTITY openFeedMessage1.label "Quando si aprono messaggi di feed">

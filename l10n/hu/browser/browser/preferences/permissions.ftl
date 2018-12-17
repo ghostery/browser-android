@@ -42,6 +42,14 @@ permissions-capabilities-block =
     .label = Tiltás
 permissions-capabilities-prompt =
     .label = Rákérdezés mindig
+permissions-capabilities-listitem-allow =
+    .value = Engedélyezés
+permissions-capabilities-listitem-block =
+    .value = Tiltás
+permissions-capabilities-listitem-allow-first-party =
+    .value = Csak első fél engedélyezése
+permissions-capabilities-listitem-allow-session =
+    .value = Engedélyezés a munkamenetben
 
 ## Invalid Hostname Dialog
 
@@ -54,6 +62,10 @@ permissions-exceptions-tracking-protection-window =
     .title = Kivételek - követés elleni védelem
     .style = { permissions-window.style }
 permissions-exceptions-tracking-protection-desc = Kikapcsolta a követés elleni védelmet ezeken a weboldalakon.
+permissions-exceptions-content-blocking-window =
+    .title = Kivételek – Tartalomblokkolás
+    .style = { permissions-window.style }
+permissions-exceptions-content-blocking-desc = Letiltotta a tartalomblokkolást ezeken az oldalakon.
 
 ## Exceptions - Cookies
 
@@ -85,10 +97,6 @@ permissions-exceptions-addons-desc = Megadhatja azokat a webhelyeket, amelyekrő
 
 ## Exceptions - Autoplay Media
 
-permissions-exceptions-autoplay-media-window =
-    .title = Engedélyezett webhelyek – Automatikus lejátszás
-    .style = { permissions-window.style }
-permissions-exceptions-autoplay-media-desc = Megadhatja, hogy mely weboldalak játszhatnak le automatikusan médiaelemeket. Írja be az engedélyezendő webhely pontos címét, és kattintson az Engedélyezés gombra.
 permissions-exceptions-autoplay-media-window2 =
     .title = Kivételek – Automatikus lejátszás
     .style = { permissions-window.style }

@@ -8,5 +8,5 @@
 <!ENTITY providerUninstall.cancel.label                    "Manter complemento">
 <!ENTITY providerUninstall.cancel.accesskey                "M">
 <!ENTITY providerUninstall.preName.label                   "Você solicitou desinstalar ou desabilitar:">
-<!ENTITY providerUninstall.postName.label                  "Isto fará com que os calendários abaixo sejam desabilitados.">
-<!ENTITY providerUninstall.reinstallNote.label             "A menos que você pretenda reinstalar este provedor, você pode cancelar inscrição dos calendários deste provedor.">
+<!ENTITY providerUninstall.postName.label                  "Isto fará com que as agendas abaixo sejam desativadas.">
+<!ENTITY providerUninstall.reinstallNote.label             "A menos que pretenda reinstalar este provedor, você pode cancelar a inscrição nas agendas deste provedor.">

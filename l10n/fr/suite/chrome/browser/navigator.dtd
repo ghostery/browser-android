@@ -84,3 +84,6 @@
 <!ENTITY viewCertificate.accesskey   "C">
 <!ENTITY viewCertManager.label       "Ouvrir le gestionnaire de certificats">
 <!ENTITY viewCertManager.accesskey   "g">
+
+<!ENTITY zoomIn.tooltiptext          "Zoom avant">
+<!ENTITY zoomOut.tooltiptext         "Zoom arrière">

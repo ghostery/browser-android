@@ -96,14 +96,14 @@
      include messages with at least one tag on them.
      -->
 <!ENTITY quickFilterBar.tags.label
-         "Tags">
+         "Etiquetas">
 
 <!-- LOCALIZATION NOTE (quickFilterBar.tags.tooltip):
      The tooltip for the filter button that causes us to filter results to only
      include messages with at least one tag on them.
      -->
 <!ENTITY quickFilterBar.tags.tooltip
-         "Exibir somente mensagens que possuam tags">
+         "Exibir somente mensagens com etiquetas">
 
 <!-- LOCALIZATION NOTE (quickFilterBar.attachment.label):
      The label for the filter button that causes us to filter results to only
@@ -184,17 +184,17 @@
 <!-- LOCALIZATION NOTE (quickFilterBar.booleanMode.tooltip):
      Tooltip of the Any of / All of tagging mode selector.
      -->
-<!ENTITY quickFilterBar.booleanMode.tooltip "Modo de filtros de tags">
+<!ENTITY quickFilterBar.booleanMode.tooltip "Modo de filtragem de etiquetas">
 
 <!-- LOCALIZATION NOTE (quickFilterBar.booleanModeAny.label):
      Tooltip of the Any of / All of tagging mode selector.
      -->
-<!ENTITY quickFilterBar.booleanModeAny.label "Qualquer um">
+<!ENTITY quickFilterBar.booleanModeAny.label "Qualquer">
 
 <!-- LOCALIZATION NOTE (quickFilterBar.booleanModeAny.tooltip):
      Tooltip of the Any of / All of tagging mode selector.
      -->
-<!ENTITY quickFilterBar.booleanModeAny.tooltip "Ao menos um dos rótulos selecionados devem corresponder">
+<!ENTITY quickFilterBar.booleanModeAny.tooltip "Pelo menos um dos critérios de etiqueta selecionado deve corresponder">
 
 <!-- LOCALIZATION NOTE (quickFilterBar.booleanModeAll.label):
      Tooltip of the Any of / All of tagging mode selector.
@@ -204,7 +204,7 @@
 <!-- LOCALIZATION NOTE (quickFilterBar.booleanModeAll.tooltip):
      Tooltip of the Any of / All of tagging mode selector.
      -->
-<!ENTITY quickFilterBar.booleanModeAll.tooltip "Todos os rótulos selecionados devem ser corresponder">
+<!ENTITY quickFilterBar.booleanModeAll.tooltip "Todos os critérios de etiqueta selecionados devem corresponder">
 
 <!-- LOCALIZATION NOTE (quickFilterBar.textbox.idealWidth):
      The number of pixels for the ideal width of the quick filter box textbox.

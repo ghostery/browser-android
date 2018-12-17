@@ -14,5 +14,6 @@
 <!ENTITY restoreDefaultSet.label  "기본 설정 복원">
 <!ENTITY addNewToolbar.label      "새 도구 모음 추가">
 <!ENTITY showTitlebar.label       "제목 표시줄 표시">
+<!ENTITY extraDragSpace.label     "드래그 영역 추가">
 <!ENTITY saveChanges.label        "완료">
 <!ENTITY undoChanges.label        "변경사항 취소">

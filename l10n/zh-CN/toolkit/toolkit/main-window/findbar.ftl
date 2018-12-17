@@ -15,6 +15,14 @@ findbar-highlight-all =
     .label = 高亮全部
     .accesskey = A
     .tooltiptext = 高亮显示语句在页面中的所有位置
+findbar-highlight-all2 =
+    .label = 高亮全部
+    .accesskey =
+        { PLATFORM() ->
+            [macos] l
+           *[other] a
+        }
+    .tooltiptext = 高亮显示语句在页面中的所有位置
 findbar-case-sensitive =
     .label = 区分大小写
     .accesskey = c

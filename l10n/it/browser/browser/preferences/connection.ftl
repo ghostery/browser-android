@@ -73,3 +73,15 @@ connection-dns-over-https =
 connection-dns-over-https-url = URL
     .accesskey = U
     .tooltiptext = Indirizzo per risolvere richieste DNS over HTTPS
+
+# Variables:
+#   $url (String) - URL for the DNS over HTTPS provider
+connection-dns-over-https-url-default =
+    .label = Utilizza predefinito ({ $url })
+    .accesskey = U
+    .tooltiptext = Utilizza l’indirizzo predefinito per risolvere richieste DNS over HTTPS
+
+connection-dns-over-https-url-custom =
+    .label = Personalizzato
+    .accesskey = P
+    .tooltiptext = Inserisci l’indirizzo da utilizzare per risolvere richieste DNS over HTTPS

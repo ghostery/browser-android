@@ -36,17 +36,16 @@
 <!ENTITY runtimeMenu_takeScreenshot_accesskey "ш">
 <!ENTITY runtimeMenu_showDetails_label "Сведения о Runtime">
 <!ENTITY runtimeMenu_showDetails_accesskey "я">
-<!ENTITY runtimeMenu_showMonitor_label "Мониторинг">
-<!ENTITY runtimeMenu_showMonitor_accesskey "н">
 <!ENTITY runtimeMenu_showDevicePrefs_label "Настройки устройства">
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "й">
 <!ENTITY runtimeMenu_showSettings_label "Параметры устройства">
 <!ENTITY runtimeMenu_showSettings_accesskey "а">
 
+<!ENTITY runtimeMenu_showPerformancePanel_label "Производительность">
+<!ENTITY runtimeMenu_showPerformancePanel_accesskey "ь">
+
 <!ENTITY viewMenu_label "Вид">
 <!ENTITY viewMenu_accesskey "и">
-<!ENTITY viewMenu_toggleEditor_label "Переключить редактор">
-<!ENTITY viewMenu_toggleEditor_accesskey "е">
 <!ENTITY viewMenu_zoomin_label "Увеличить масштаб">
 <!ENTITY viewMenu_zoomin_accesskey "в">
 <!ENTITY viewMenu_zoomout_label "Уменьшить масштаб">
@@ -66,8 +65,6 @@
 <!ENTITY key_play "R">
 <!-- show toolbox -->
 <!ENTITY key_toggleToolbox "VK_F12">
-<!-- toggle sidebar -->
-<!ENTITY key_toggleEditor "B">
 <!-- zoom -->
 <!ENTITY key_zoomin "+">
 <!ENTITY key_zoomin2 "=">
@@ -79,9 +76,7 @@
 <!ENTITY projectPanel_tabs "Вкладки">
 <!ENTITY runtimePanel_usb "USB устройства">
 <!ENTITY runtimePanel_wifi "Wi-Fi устройства">
-<!ENTITY runtimePanel_simulator "Симуляторы">
 <!ENTITY runtimePanel_other "Другие">
-<!ENTITY runtimePanel_installsimulator "Установить Симулятор">
 <!ENTITY runtimePanel_noadbhelper "Установить ADB Helper">
 <!ENTITY runtimePanel_nousbdevice "Не видите ваше устройство?">
 <!ENTITY runtimePanel_refreshDevices_label "Обновить список устройств">
@@ -94,7 +89,6 @@
 <!ENTITY details_location "Расположение">
 <!ENTITY details_manifestURL "ID приложения">
 <!ENTITY details_removeProject_button "Удалить проект">
-<!ENTITY details_showPrepackageLog_button "Показать лог предупаковки">
 
 <!-- New App -->
 <!ENTITY newAppWindowTitle "Новое приложение">
@@ -123,21 +117,6 @@
 <!ENTITY prefs_options_rememberlastproject_tooltip "Восстанавливать последний проект при запуске WebIDE">
 <!ENTITY prefs_options_templatesurl "URL шаблонов">
 <!ENTITY prefs_options_templatesurl_tooltip "Индекс доступных шаблонов">
-<!ENTITY prefs_options_showeditor "Отображать редактор">
-<!ENTITY prefs_options_showeditor_tooltip "Отображать внутренний редактор">
-<!ENTITY prefs_options_tabsize "Ширина табуляции">
-<!ENTITY prefs_options_expandtab "Мягкая табуляция">
-<!ENTITY prefs_options_expandtab_tooltip "Использовать пробелы вместо символа табуляции">
-<!ENTITY prefs_options_detectindentation "Автоотступы">
-<!ENTITY prefs_options_detectindentation_tooltip "Угадывать стиль отступов на основе содержимого исходников">
-<!ENTITY prefs_options_autocomplete "Автодополнение">
-<!ENTITY prefs_options_autocomplete_tooltip "Включить автодополнение кода">
-<!ENTITY prefs_options_autoclosebrackets "Автозакрытие скобок">
-<!ENTITY prefs_options_autoclosebrackets_tooltip "Автоматически вставлять закрывающие скобки">
-<!ENTITY prefs_options_keybindings "Сочетания клавиш">
-<!ENTITY prefs_options_keybindings_default "По умолчанию">
-<!ENTITY prefs_options_autosavefiles "Автосохранение файлов">
-<!ENTITY prefs_options_autosavefiles_tooltip "Автоматически сохранять отредактированные файлы перед запуском проекта">
 
 <!-- Runtime Details -->
 <!ENTITY runtimedetails_title "Сведения о Runtime">
@@ -169,10 +148,6 @@
 <!ENTITY devicesetting_newtext "Установка значения">
 <!ENTITY devicesetting_addnew "Добавить новый параметр">
 
-<!-- Monitor -->
-<!ENTITY monitor_title "Мониторинг">
-<!ENTITY monitor_help "Справка">
-
 <!-- WiFi Authentication -->
 <!-- LOCALIZATION NOTE (wifi_auth_header): The header displayed on the dialog
      that instructs the user to transfer an authentication token to the
@@ -194,19 +169,3 @@
 
 <!-- Logs panel -->
 <!ENTITY logs_title "Логи команд предупаковки">
-
-<!-- Simulator Options -->
-<!ENTITY simulator_title "Настройки симулятора">
-<!ENTITY simulator_remove "Удалить симулятор">
-<!ENTITY simulator_reset "По умолчанию">
-<!ENTITY simulator_name "Имя">
-<!ENTITY simulator_software "Программное обеспечение">
-<!ENTITY simulator_version "Версия">
-<!ENTITY simulator_profile "Профиль">
-<!ENTITY simulator_hardware "Аппаратное обеспечение">
-<!ENTITY simulator_device "Устройство">
-<!ENTITY simulator_screenSize "Экран">
-<!ENTITY simulator_pixelRatio "Соотношение пикселей">
-<!ENTITY simulator_tv_data "Симуляция ТВ">
-<!ENTITY simulator_tv_data_open "Данные конфигурации">
-<!ENTITY simulator_tv_data_open_button "Открыть каталог конфигурации…">

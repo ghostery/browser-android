@@ -14,5 +14,6 @@
 <!ENTITY restoreDefaultSet.label  "Alapértelmezett készlet visszaállítása">
 <!ENTITY addNewToolbar.label      "Új eszköztár hozzáadása">
 <!ENTITY showTitlebar.label       "Címsor megjelenítése">
+<!ENTITY extraDragSpace.label     "Húzási terület hozzáadása">
 <!ENTITY saveChanges.label        "Kész">
 <!ENTITY undoChanges.label        "Visszavonás">

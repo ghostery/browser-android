@@ -50,6 +50,7 @@
 #include "prenv.h"
 #include "ScopedGLHelpers.h"
 #include "VRManagerChild.h"
+#include "mozilla/layers/ImageBridgeChild.h"
 #include "mozilla/layers/TextureClientSharedSurface.h"
 #include "mozilla/layers/WebRenderUserData.h"
 #include "mozilla/layers/WebRenderCanvasRenderer.h"
@@ -62,6 +63,7 @@
 #include "WebGLContextLossHandler.h"
 #include "WebGLContextUtils.h"
 #include "WebGLExtensions.h"
+#include "WebGLFormats.h"
 #include "WebGLFramebuffer.h"
 #include "WebGLMemoryTracker.h"
 #include "WebGLObjectModel.h"
@@ -80,10 +82,6 @@
 
 #ifdef XP_WIN
 #include "WGLLibrary.h"
-#endif
-
-#if defined(MOZ_WIDGET_ANDROID)
-#include "mozilla/layers/ImageBridgeChild.h"
 #endif
 
 // Generated
@@ -142,11 +140,8 @@ WebGLContext::WebGLContext()
     mOptionsFrozen = false;
     mDisableExtensions = false;
     mIsMesa = false;
-    mEmitContextLostErrorOnce = false;
     mWebGLError = 0;
-    mUnderlyingGLError = 0;
-
-    mContextLostErrorSet = false;
+    mVRReady = false;
 
     mViewportX = 0;
     mViewportY = 0;
@@ -167,7 +162,6 @@ WebGLContext::WebGLContext()
     mLastLossWasSimulated = false;
     mLoseContextOnMemoryPressure = false;
     mCanLoseContextInForeground = true;
-    mRestoreWhenVisible = false;
 
     mAlreadyGeneratedWarnings = 0;
     mAlreadyWarnedAboutFakeVertexAttrib0 = false;
@@ -273,15 +267,6 @@ WebGLContext::DestroyResourcesAndContext()
 
     //////
 
-    mFakeBlack_2D_0000       = nullptr;
-    mFakeBlack_2D_0001       = nullptr;
-    mFakeBlack_CubeMap_0000  = nullptr;
-    mFakeBlack_CubeMap_0001  = nullptr;
-    mFakeBlack_3D_0000       = nullptr;
-    mFakeBlack_3D_0001       = nullptr;
-    mFakeBlack_2D_Array_0000 = nullptr;
-    mFakeBlack_2D_Array_0001 = nullptr;
-
     if (mFakeVertexAttrib0BufferObject) {
         gl->fDeleteBuffers(1, &mFakeVertexAttrib0BufferObject);
         mFakeVertexAttrib0BufferObject = 0;
@@ -326,19 +311,6 @@ WebGLContext::Invalidate()
 
     mInvalidated = true;
     mCanvasElement->InvalidateCanvasContent(nullptr);
-}
-
-void
-WebGLContext::OnVisibilityChange()
-{
-    if (gl) // Context not lost.
-        return;
-
-    if (!mRestoreWhenVisible || mLastLossWasSimulated) {
-        return;
-    }
-
-    ForceRestoreContext();
 }
 
 void
@@ -415,7 +387,7 @@ WebGLContext::SetContextOptions(JSContext* cx, JS::Handle<JS::Value> options,
         nsCString blocklistId;
         if (IsFeatureInBlacklist(gfxInfo, nsIGfxInfo::FEATURE_WEBGL_MSAA, &blocklistId)) {
             GenerateWarning("Disallowing antialiased backbuffers due to blacklisting.");
-            mOptions.antialias = false;
+            newOpts.antialias = false;
         }
     }
 
@@ -892,7 +864,7 @@ WebGLContext::SetDimensions(int32_t signedWidth, int32_t signedHeight)
                 Telemetry::Accumulate(Telemetry::CANVAS_WEBGL_FAILURE_ID, cur.key);
             }
 
-            text.AppendASCII("\n* ");
+            text.AppendLiteral("\n* ");
             text.Append(cur.info);
         }
         failureId = NS_LITERAL_CSTRING("FEATURE_FAILURE_REASON");
@@ -1269,6 +1241,7 @@ WebGLContext::InitializeCanvasRenderer(nsDisplayListBuilder* aBuilder,
 
     aRenderer->Initialize(data);
     aRenderer->SetDirty();
+    mVRReady = true;
     return true;
 }
 
@@ -1340,81 +1313,59 @@ WebGLContext::GetContextAttributes(dom::Nullable<dom::WebGLContextAttributes>& r
     result.mPowerPreference = mOptions.powerPreference;
 }
 
-void
-WebGLContext::ForceClearFramebufferWithDefaultValues(const GLbitfield clearBits,
-                                                     const bool fakeNoAlpha) const
+// -
+
+namespace webgl {
+
+ScopedPrepForResourceClear::ScopedPrepForResourceClear(const WebGLContext& webgl_)
+    : webgl(webgl_)
 {
-    const bool initializeColorBuffer = bool(clearBits & LOCAL_GL_COLOR_BUFFER_BIT);
-    const bool initializeDepthBuffer = bool(clearBits & LOCAL_GL_DEPTH_BUFFER_BIT);
-    const bool initializeStencilBuffer = bool(clearBits & LOCAL_GL_STENCIL_BUFFER_BIT);
+    const auto& gl = webgl.gl;
 
-    // Fun GL fact: No need to worry about the viewport here, glViewport is just
-    // setting up a coordinates transformation, it doesn't affect glClear at all.
-    AssertCachedGlobalState();
-
-    // Prepare GL state for clearing.
-    if (mScissorTestEnabled) {
+    if (webgl.mScissorTestEnabled) {
         gl->fDisable(LOCAL_GL_SCISSOR_TEST);
     }
-
-    if (initializeColorBuffer) {
-        DoColorMask(0x0f);
-
-        if (fakeNoAlpha) {
-            gl->fClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        } else {
-            gl->fClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        }
-    }
-
-    if (initializeDepthBuffer) {
-        gl->fDepthMask(1);
-        gl->fClearDepth(1.0f);
-    }
-
-    if (initializeStencilBuffer) {
-        // "The clear operation always uses the front stencil write mask
-        //  when clearing the stencil buffer."
-        gl->fStencilMaskSeparate(LOCAL_GL_FRONT, 0xffffffff);
-        gl->fStencilMaskSeparate(LOCAL_GL_BACK,  0xffffffff);
-        gl->fClearStencil(0);
-    }
-
-    if (mRasterizerDiscardEnabled) {
+    if (webgl.mRasterizerDiscardEnabled) {
         gl->fDisable(LOCAL_GL_RASTERIZER_DISCARD);
     }
 
-    // Do the clear!
-    gl->fClear(clearBits);
+    // "The clear operation always uses the front stencil write mask
+    //  when clearing the stencil buffer."
+    webgl.DoColorMask(0x0f);
+    gl->fDepthMask(true);
+    gl->fStencilMaskSeparate(LOCAL_GL_FRONT, 0xffffffff);
 
-    // And reset!
-    if (mScissorTestEnabled) {
+    gl->fClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    gl->fClearDepth(1.0f); // Depth formats are always cleared to 1.0f, not 0.0f.
+    gl->fClearStencil(0);
+}
+
+ScopedPrepForResourceClear::~ScopedPrepForResourceClear()
+{
+    const auto& gl = webgl.gl;
+
+    if (webgl.mScissorTestEnabled) {
         gl->fEnable(LOCAL_GL_SCISSOR_TEST);
     }
-
-    if (mRasterizerDiscardEnabled) {
+    if (webgl.mRasterizerDiscardEnabled) {
         gl->fEnable(LOCAL_GL_RASTERIZER_DISCARD);
     }
 
-    // Restore GL state after clearing.
-    if (initializeColorBuffer) {
-        gl->fClearColor(mColorClearValue[0],
-                        mColorClearValue[1],
-                        mColorClearValue[2],
-                        mColorClearValue[3]);
-    }
+    // DoColorMask() is lazy.
+    gl->fDepthMask(webgl.mDepthWriteMask);
+    gl->fStencilMaskSeparate(LOCAL_GL_FRONT, webgl.mStencilWriteMaskFront);
 
-    if (initializeDepthBuffer) {
-        gl->fDepthMask(mDepthWriteMask);
-        gl->fClearDepth(mDepthClearValue);
-    }
-
-    if (initializeStencilBuffer) {
-        gl->fStencilMaskSeparate(LOCAL_GL_FRONT, mStencilWriteMaskFront);
-        gl->fStencilMaskSeparate(LOCAL_GL_BACK,  mStencilWriteMaskBack);
-        gl->fClearStencil(mStencilClearValue);
-    }
+    gl->fClearColor(webgl.mColorClearValue[0],
+                    webgl.mColorClearValue[1],
+                    webgl.mColorClearValue[2],
+                    webgl.mColorClearValue[3]);
+    gl->fClearDepth(webgl.mDepthClearValue);
+    gl->fClearStencil(webgl.mStencilClearValue);
 }
+
+} // namespace webgl
+
+// -
 
 void
 WebGLContext::OnEndOfFrame() const
@@ -1562,23 +1513,8 @@ static bool
 CheckContextLost(GLContext* gl, bool* const out_isGuilty)
 {
     MOZ_ASSERT(gl);
-    MOZ_ASSERT(out_isGuilty);
 
-    bool isEGL = gl->GetContextType() == gl::GLContextType::EGL;
-
-    GLenum resetStatus = LOCAL_GL_NO_ERROR;
-    if (gl->IsSupported(GLFeature::robustness)) {
-        gl->MakeCurrent();
-        resetStatus = gl->fGetGraphicsResetStatus();
-    } else if (isEGL) {
-        // Simulate a ARB_robustness guilty context loss for when we
-        // get an EGL_CONTEXT_LOST error. It may not actually be guilty,
-        // but we can't make any distinction.
-        if (!gl->MakeCurrent(true) && gl->IsContextLost()) {
-            resetStatus = LOCAL_GL_UNKNOWN_CONTEXT_RESET_ARB;
-        }
-    }
-
+    const auto resetStatus = gl->fGetGraphicsResetStatus();
     if (resetStatus == LOCAL_GL_NO_ERROR) {
         *out_isGuilty = false;
         return false;
@@ -1588,6 +1524,7 @@ CheckContextLost(GLContext* gl, bool* const out_isGuilty)
     bool isGuilty = true;
     switch (resetStatus) {
     case LOCAL_GL_INNOCENT_CONTEXT_RESET_ARB:
+    case LOCAL_GL_PURGED_CONTEXT_RESET_NV:
         // Either nothing wrong, or not our fault.
         isGuilty = false;
         break;
@@ -1598,11 +1535,13 @@ CheckContextLost(GLContext* gl, bool* const out_isGuilty)
     case LOCAL_GL_UNKNOWN_CONTEXT_RESET_ARB:
         NS_WARNING("WebGL content on the page might have caused the graphics"
                    " card to reset");
-        // If we can't tell, assume guilty.
+        // If we can't tell, assume not-guilty.
+        // Todo: Implement max number of "unknown" resets per document or time.
+        isGuilty = false;
         break;
     default:
-        MOZ_ASSERT(false, "Unreachable.");
-        // If we do get here, let's pretend to be guilty as an escape plan.
+        gfxCriticalError() << "Unexpected glGetGraphicsResetStatus: "
+                           << gfx::hexa(resetStatus);
         break;
     }
 
@@ -1612,15 +1551,6 @@ CheckContextLost(GLContext* gl, bool* const out_isGuilty)
     }
 
     *out_isGuilty = isGuilty;
-    return true;
-}
-
-bool
-WebGLContext::TryToRestoreContext()
-{
-    if (NS_FAILED(SetDimensions(mRequestedSize.width, mRequestedSize.height)))
-        return false;
-
     return true;
 }
 
@@ -1752,10 +1682,6 @@ WebGLContext::UpdateContextLossStatus()
         if (mLastLossWasSimulated)
             return;
 
-        // Restore when the app is visible
-        if (mRestoreWhenVisible)
-            return;
-
         ForceRestoreContext();
         return;
     }
@@ -1763,16 +1689,18 @@ WebGLContext::UpdateContextLossStatus()
     if (mContextStatus == ContextStatus::LostAwaitingRestore) {
         // Context is lost, but we should try to restore it.
 
+        if (mAllowContextRestore) {
+            if (NS_FAILED(SetDimensions(mRequestedSize.width,
+                                        mRequestedSize.height)))
+            {
+                // Assume broken forever.
+                mAllowContextRestore = false;
+            }
+        }
         if (!mAllowContextRestore) {
             // We might decide this after thinking we'd be OK restoring
             // the context, so downgrade.
             mContextStatus = ContextStatus::Lost;
-            return;
-        }
-
-        if (!TryToRestoreContext()) {
-            // Failed to restore. Try again later.
-            mContextLossHandler.RunTimer();
             return;
         }
 
@@ -1795,7 +1723,6 @@ WebGLContext::UpdateContextLossStatus()
             mOffscreenCanvas->DispatchEvent(*event);
         }
 
-        mEmitContextLostErrorOnce = true;
         return;
     }
 }
@@ -1806,7 +1733,7 @@ WebGLContext::ForceLoseContext(bool simulateLosing)
     printf_stderr("WebGL(%p)::ForceLoseContext\n", this);
     MOZ_ASSERT(gl);
     mContextStatus = ContextStatus::LostAwaitingEvent;
-    mContextLostErrorSet = false;
+    mWebGLError = LOCAL_GL_CONTEXT_LOST_WEBGL;
 
     // Burn it all!
     DestroyResourcesAndContext();
@@ -1913,12 +1840,17 @@ WebGLContext::ValidateAndInitFB(const WebGLFramebuffer* const fb)
         return false;
 
     if (mDefaultFB_IsInvalid) {
+        // Clear it!
         gl->fBindFramebuffer(LOCAL_GL_FRAMEBUFFER, mDefaultFB->mFB);
+        const webgl::ScopedPrepForResourceClear scopedPrep(*this);
+        if (!mOptions.alpha) {
+            gl->fClearColor(0, 0, 0, 1);
+        }
         const GLbitfield bits = LOCAL_GL_COLOR_BUFFER_BIT |
                                 LOCAL_GL_DEPTH_BUFFER_BIT |
                                 LOCAL_GL_STENCIL_BUFFER_BIT;
-        const bool fakeNoAlpha = !mOptions.alpha;
-        ForceClearFramebufferWithDefaultValues(bits, fakeNoAlpha);
+        gl->fClear(bits);
+
         mDefaultFB_IsInvalid = false;
     }
     return true;
@@ -2036,8 +1968,8 @@ ScopedDrawCallWrapper::ScopedDrawCallWrapper(WebGLContext& webgl)
         driverStencilTest &= !mWebGL.mNeedsFakeNoStencil;
     } else {
         if (mWebGL.mNeedsFakeNoStencil_UserFBs &&
-            fb->DepthAttachment().IsDefined() &&
-            !fb->StencilAttachment().IsDefined())
+            fb->DepthAttachment().HasAttachment() &&
+            !fb->StencilAttachment().HasAttachment())
         {
             driverStencilTest = false;
         }
@@ -2097,7 +2029,7 @@ IndexedBufferBinding::ByteCount() const
 
 ////////////////////////////////////////
 
-ScopedUnpackReset::ScopedUnpackReset(WebGLContext* webgl)
+ScopedUnpackReset::ScopedUnpackReset(const WebGLContext* const webgl)
     : ScopedGLWrapper<ScopedUnpackReset>(webgl->gl)
     , mWebGL(webgl)
 {
@@ -2306,7 +2238,9 @@ WebGLContext::GetVRFrame()
 {
     if (!gl)
         return nullptr;
-    
+
+    EnsureVRReady();
+
     // Create a custom GLScreenBuffer for VR.
     if (!mVRScreen) {
         auto caps = gl->Screen()->mCaps;
@@ -2343,6 +2277,7 @@ WebGLContext::GetVRFrame()
 already_AddRefed<layers::SharedSurfaceTextureClient>
 WebGLContext::GetVRFrame()
 {
+  EnsureVRReady();
   /**
    * Swap buffers as though composition has occurred.
    * We will then share the resulting front buffer to be submitted to the VR
@@ -2366,6 +2301,35 @@ WebGLContext::GetVRFrame()
 }
 
 #endif  // ifdefined(MOZ_WIDGET_ANDROID)
+
+void
+WebGLContext::EnsureVRReady()
+{
+    if (mVRReady) {
+        return;
+    }
+
+    // Make not composited canvases work with WebVR. See bug #1492554
+    // WebGLContext::InitializeCanvasRenderer is only called when the 2D compositor renders a WebGL canvas
+    // for the first time. This causes canvases not added to the DOM not to work properly with WebVR.
+    // Here we mimic what InitializeCanvasRenderer does internally as a workaround.
+    const auto imageBridge = ImageBridgeChild::GetSingleton();
+    if (imageBridge) {
+        const auto caps = gl->Screen()->mCaps;
+        auto flags = TextureFlags::ORIGIN_BOTTOM_LEFT;
+        if (!IsPremultAlpha() && mOptions.alpha) {
+            flags |= TextureFlags::NON_PREMULTIPLIED;
+        }
+        auto factory = gl::GLScreenBuffer::CreateFactory(gl, caps, imageBridge.get(), flags);
+        gl->Screen()->Morph(std::move(factory));
+#if defined(MOZ_WIDGET_ANDROID)
+        // On Android we are using a different GLScreenBuffer for WebVR, so we need a resize here because
+        // PresentScreenBuffer() may not be called for the gl->Screen() after we set the new factory.
+        gl->Screen()->Resize(DrawingBufferSize());
+#endif
+        mVRReady = true;
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 

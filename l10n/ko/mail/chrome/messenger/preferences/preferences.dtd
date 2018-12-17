@@ -11,9 +11,6 @@
 <!ENTITY  prefWindow.titleWin     "설정">
 <!ENTITY  prefWindow.titleGNOME   "&brandShortName; 환경 설정">
 <!ENTITY  prefWindow.titleMAC     "환경설정">
-<!ENTITY  prefWindow.styleWindows "width: 44em; min-height: 38.5em;">
-<!ENTITY  prefWindow.styleMac     "width: 47em;">
-<!ENTITY  prefWindow.styleGNOME   "width: 42em; min-height: 38em;">
 
 <!ENTITY paneGeneral.title        "일반">
 <!ENTITY paneDisplay.title        "표시">
@@ -22,8 +19,11 @@
 <!ENTITY paneAttachments.title    "첨부">
 <!ENTITY panePrivacy.title        "개인정보">
 <!ENTITY paneSecurity.title       "보안">
+<!ENTITY paneLightning.title      "캘린더">
 <!ENTITY paneAdvanced.title       "고급">
 <!ENTITY paneAccount.title        "계정">
+
+<!ENTITY addonsButton.label       "확장기능과 테마">
 
 <!ENTITY okButton.title           "확인">
 <!ENTITY okButton.accesskey       "O">

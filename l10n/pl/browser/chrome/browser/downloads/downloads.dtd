@@ -5,7 +5,7 @@
 <!ENTITY downloads.title "Pobierane pliki">
 <!ENTITY downloadDetails.width "50ch">
 <!ENTITY downloadsSummary.minWidth2 "30ch">
-
+<!ENTITY downloads.width "60ch">
 <!ENTITY cmd.pause.label                  "Wstrzymaj">
 <!ENTITY cmd.pause.accesskey              "W">
 <!ENTITY cmd.resume.label                 "Wznów">

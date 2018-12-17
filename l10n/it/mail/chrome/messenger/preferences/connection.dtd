@@ -45,3 +45,8 @@
 <!ENTITY  autologinproxy.tooltip        "Questa opzione permette di autenticarsi direttamente con un proxy se ci sono delle credenziali salvate. Verranno chieste nuovamente se l'autenticazione dovesse fallire.">
 <!ENTITY  socksRemoteDNS.label          "DNS proxy per SOCKS v5">
 <!ENTITY  socksRemoteDNS.accesskey      "d">
+<!ENTITY  dnsOverHttps.label            "Abilita DNS su HTTPS">
+<!ENTITY  dnsOverHttps.accesskey        "b">
+<!ENTITY  dnsOverHttpsUrl.label         "URL">
+<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
+<!ENTITY  dnsOverHttpsUrl.tooltip       "URL per la risoluzione di DNS su HTTPS">

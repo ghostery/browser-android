@@ -41,3 +41,5 @@
 <!ENTITY allowHWAccel.accesskey                 "e">
 <!ENTITY blockAutoRefresh.label                 "当网站尝试重定向或者重新载入页面时发出警告">
 <!ENTITY blockAutoRefresh.accesskey             "W">
+
+<!ENTITY showZoomStatusPanel.label              "在状态栏显示缩放控件">

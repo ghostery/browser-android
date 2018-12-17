@@ -291,6 +291,18 @@
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "Tudjon meg többet a &brandShortName; és más &vendorShortName; termékek használatáról">
 
+<!-- Localization note (pref_feature_tips_notification_enabling_hint):
+     Describe the action the user should do to enable this preference
+     Will be used in the context "<Turn on> ... to enable this feature" -->
+<!ENTITY pref_feature_tips_notification_enabling_hint "Bekapcsolás">
+
+<!-- Localization note (pref_feature_tips_notification_enabling_path):
+     Nothing to translate. Simple concatenation of already localized strings. Result is used below. -->
+<!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
+<!-- Localization note (pref_feature_tips_notification_enabling_hint):
+     Describe the action the user should do to enable this preference. -->
+<!ENTITY pref_feature_tips_notification_enabling_hint2 "(A beállítás engedélyezéséhez már engedélyezve kell lennie a &pref_feature_tips_notification_enabling_path; beállításnak.)">
+
 <!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
      for experimental features. -->
 <!ENTITY pref_category_experimental "Kísérleti funkciók">
@@ -363,7 +375,6 @@
 <!ENTITY pref_use_system_font_size_summary "A webes tartalom méretezése a rendszer betűmérete alapján">
 
 <!ENTITY pref_media_autoplay_enabled "Automatikus lejátszás">
-<!ENTITY pref_media_autoplay_enabled_summary "A webhelyek automatikusan lejátszhatnak-e videókat és más médiatartalmakat">
 <!ENTITY pref_media_autoplay_allow "Automatikus lejátszás engedélyezése">
 <!ENTITY pref_media_autoplay_block "Automatikus lejátszás blokkolása">
 <!ENTITY pref_zoom_force_enabled "Nagyítás engedélyezése mindig">
@@ -828,9 +839,6 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- LOCALIZATION NOTE(corrupt_apk): This notification is shown if corruption has been detected on startup and the user has to reinstall Firefox -->
 <!ENTITY corrupt_apk "A &brandShortName; nem nyitható meg. Telepítse újra, és próbálja újra.">
 
-<!ENTITY eol_notification_title2 "A &brandShortName; nem fog többé frissülni">
-<!ENTITY eol_notification_summary "Koppintson további információkért">
-
 <!-- LOCALIZATION NOTE (whatsnew_notification_title, whatsnew_notification_summary): These strings
      are used for a system notification that's shown to users after the app updates. -->
 <!ENTITY whatsnew_notification_title "A &brandShortName; naprakész">
@@ -897,10 +905,19 @@ Picture-in-picture mini window -->
 
 <!-- Notification channels names -->
 <!ENTITY default_notification_channel "&brandShortName;">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel2 "Böngésző">
 <!ENTITY mls_notification_channel "&vendorShortName; földrajzihely-szolgáltatás">
 <!ENTITY download_notification_channel "Letöltések">
 <!ENTITY media_notification_channel "Médialejátszás">
 <!-- These push notifications come without a specific channel and/or name from Leanplum -->
 <!ENTITY leanplum_default_notifications_channel "&brandShortName; leküldéses értesítések">
+<!ENTITY media_notification_channel2 "Hang és videó">
+<!-- These push notifications come without a specific channel and/or name from Leanplum -->
+<!ENTITY leanplum_default_notifications_channel2 "&vendorShortName; tippek és trükkök">
 <!ENTITY updater_notification_channel "Alkalmazásfrissítések">
 <!ENTITY synced_tabs_notification_channel "Szinkronizált lapok">
+<!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by
+web sites through the HTML Notifications API. -->
+<!ENTITY site_notifications_channel "Oldalértesítések">

@@ -50,3 +50,9 @@
 <!ENTITY  dnsOverHttpsUrl.label         "URL">
 <!ENTITY  dnsOverHttpsUrl.accesskey     "R">
 <!ENTITY  dnsOverHttpsUrl.tooltip       "URL для разрешения DNS через HTTPS">
+<!ENTITY  dnsOverHttpsUrlDefault.label     "Использовать URL по умолчанию">
+<!ENTITY  dnsOverHttpsUrlDefault.accesskey "п">
+<!ENTITY  dnsOverHttpsUrlDefault.tooltip   "Использовать URL по умолчанию для разрешения DNS через HTTPS">
+<!ENTITY  dnsOverHttpsUrlCustom.label      "Другой URL">
+<!ENTITY  dnsOverHttpsUrlCustom.accesskey  "о">
+<!ENTITY  dnsOverHttpsUrlCustom.tooltip    "Введите свой URL для разрешения DNS через HTTPS">

@@ -4,6 +4,8 @@
 <!ENTITY addons.windowTitle                   "附加元件管理員">
 
 <!ENTITY search.placeholder2                  "在 addons.mozilla.org 搜尋">
+
+<!ENTITY search.placeholder3                  "在 addons.mozilla.org 搜尋">
 <!ENTITY search.buttonlabel                   "搜尋">
 <!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
@@ -42,6 +44,10 @@
 <!ENTITY view.recentUpdates.label             "最近的更新">
 <!ENTITY view.availableUpdates.label          "可用的更新">
 
+<!ENTITY helpButton.label                      "附加元件支援">
+<!ENTITY preferencesWin.label                  "&brandShortName; 選項">
+<!ENTITY preferencesUnix.label                 "&brandShortName; 偏好設定">
+
 <!-- addon updates -->
 <!ENTITY updates.checkForUpdates.label        "檢查更新">
 <!ENTITY updates.checkForUpdates.accesskey    "C">
@@ -63,7 +69,7 @@
 <!ENTITY updates.resetUpdatesToManual.label          "將所有附加元件設定成手動更新">
 <!ENTITY updates.resetUpdatesToManual.accesskey      "R">
 <!ENTITY updates.updating.label               "正在更新附加元件">
-<!ENTITY updates.installed.label              "您的附加元件已被更新。">
+<!ENTITY updates.installed.label              "已更新您的附加元件。">
 <!ENTITY updates.downloaded.label             "已下載您的附加元件更新。">
 <!ENTITY updates.restart.label                "立刻重新啟動以完成安裝">
 <!ENTITY updates.noneFound.label              "找不到更新">
@@ -204,7 +210,7 @@
 
 <!ENTITY setting.learnmore "更多資訊…">
 
-<!ENTITY disabledUnsigned.heading "某些附加元件已被停用">
+<!ENTITY disabledUnsigned.heading "已停用某些附加元件">
 <!-- LOCALIZATION NOTE (disabledUnsigned.description.start, disabledUnsigned.description.findAddonsLink, disabledUnsigned.description.end):
      These entities form a sentence, with
      disabledUnsigned.description.findAddonsLink being a link to an external site. -->

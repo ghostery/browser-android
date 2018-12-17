@@ -291,6 +291,18 @@
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "了解 &brandShortName; 与其他 &vendorShortName; 产品的更多信息">
 
+<!-- Localization note (pref_feature_tips_notification_enabling_hint):
+     Describe the action the user should do to enable this preference
+     Will be used in the context "<Turn on> ... to enable this feature" -->
+<!ENTITY pref_feature_tips_notification_enabling_hint "开启">
+
+<!-- Localization note (pref_feature_tips_notification_enabling_path):
+     Nothing to translate. Simple concatenation of already localized strings. Result is used below. -->
+<!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
+<!-- Localization note (pref_feature_tips_notification_enabling_hint):
+     Describe the action the user should do to enable this preference. -->
+<!ENTITY pref_feature_tips_notification_enabling_hint2 "（要启用此选项，须先启用&pref_feature_tips_notification_enabling_path;）">
+
 <!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
      for experimental features. -->
 <!ENTITY pref_category_experimental "实验性功能">
@@ -363,7 +375,6 @@
 <!ENTITY pref_use_system_font_size_summary "根据系统的字体大小缩放 Web 内容">
 
 <!ENTITY pref_media_autoplay_enabled "允许自动播放">
-<!ENTITY pref_media_autoplay_enabled_summary "控制网站是否能够自动播放影片或其他媒体内容">
 <!ENTITY pref_media_autoplay_allow "允许自动播放">
 <!ENTITY pref_media_autoplay_block "屏蔽自动播放">
 <!ENTITY pref_zoom_force_enabled "总是启用缩放">
@@ -828,9 +839,6 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- LOCALIZATION NOTE(corrupt_apk): This notification is shown if corruption has been detected on startup and the user has to reinstall Firefox -->
 <!ENTITY corrupt_apk "无法打开 &brandShortName;。请重新安装并重试。">
 
-<!ENTITY eol_notification_title2 "&brandShortName; 将不再更新">
-<!ENTITY eol_notification_summary "点按以详细了解">
-
 <!-- LOCALIZATION NOTE (whatsnew_notification_title, whatsnew_notification_summary): These strings
      are used for a system notification that's shown to users after the app updates. -->
 <!ENTITY whatsnew_notification_title "&brandShortName; 已是最新版本">
@@ -897,10 +905,19 @@ Picture-in-picture mini window -->
 
 <!-- Notification channels names -->
 <!ENTITY default_notification_channel "&brandShortName;">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel2 "浏览器">
 <!ENTITY mls_notification_channel "&vendorShortName; 位置服务">
 <!ENTITY download_notification_channel "下载">
 <!ENTITY media_notification_channel "媒体播放">
 <!-- These push notifications come without a specific channel and/or name from Leanplum -->
 <!ENTITY leanplum_default_notifications_channel "&brandShortName; 推送通知">
+<!ENTITY media_notification_channel2 "声音和视频">
+<!-- These push notifications come without a specific channel and/or name from Leanplum -->
+<!ENTITY leanplum_default_notifications_channel2 "&vendorShortName; 使用技巧">
 <!ENTITY updater_notification_channel "应用程序更新">
 <!ENTITY synced_tabs_notification_channel "受同步的标签页">
+<!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by
+web sites through the HTML Notifications API. -->
+<!ENTITY site_notifications_channel "网站通知">

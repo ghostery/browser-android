@@ -21,6 +21,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -40,10 +41,13 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.util.Linkify;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,6 +66,7 @@ import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.BrowserLocaleManager;
 import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.EventDispatcher;
+import org.mozilla.gecko.Experiments;
 import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.GeckoProfile;
 import org.mozilla.gecko.GeckoSharedPrefs;
@@ -79,6 +84,7 @@ import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.restrictions.Restrictable;
 import org.mozilla.gecko.restrictions.Restrictions;
+import org.mozilla.gecko.switchboard.SwitchBoard;
 import org.mozilla.gecko.tabqueue.TabQueueHelper;
 import org.mozilla.gecko.tabqueue.TabQueuePrompt;
 import org.mozilla.gecko.updater.UpdateServiceHelper;
@@ -166,6 +172,7 @@ public class GeckoPreferences
     public static final String PREFS_HISTORY_SAVED_SEARCH = NON_PREF_PREFIX + "search.search_history.enabled";
     private static final String PREFS_FAQ_LINK = NON_PREF_PREFIX + "faq.link";
     private static final String PREFS_FEEDBACK_LINK = NON_PREF_PREFIX + "feedback.link";
+    private static final String PREFS_SCREEN_NOTIFICATIONS = NON_PREF_PREFIX + "notifications_screen";
     /* Cliqz start o/    public static final String PREFS_NOTIFICATIONS_WHATS_NEW = NON_PREF_PREFIX + "notifications.whats_new"; /o Cliqz end */
     public static final String PREFS_NOTIFICATIONS_FEATURES_TIPS = NON_PREF_PREFIX + "notifications.features.tips";
     public static final String PREFS_APP_UPDATE_LAST_BUILD_ID = "app.update.last_build_id";
@@ -532,6 +539,9 @@ public class GeckoPreferences
                 } else if (header.id == R.id.pref_header_clear_private_data
                            && !Restrictions.isAllowed(this, Restrictable.CLEAR_HISTORY)) {
                     iterator.remove();
+                } else if (header.id == R.id.pref_header_notifications
+                        && !haveNotificationsPreferences(this)) {
+                    iterator.remove();
                 }
             }
 
@@ -735,6 +745,11 @@ public class GeckoPreferences
                     preferences.removePreference(pref);
                     i--;
                     continue;
+                } else if (PREFS_SCREEN_NOTIFICATIONS.equals(key) &&
+                        !haveNotificationsPreferences(getApplicationContext())) {
+                    preferences.removePreference(pref);
+                    i--;
+                    continue;
                 }
                 setupPreferences((PreferenceGroup) pref, prefs);
             } else {
@@ -915,6 +930,12 @@ public class GeckoPreferences
                         i--;
                         continue;
                     }
+                } else if (PREFS_NOTIFICATIONS_WHATS_NEW.equals(key)) {
+                    if (!SwitchBoard.isInExperiment(this, Experiments.WHATSNEW_NOTIFICATION)) {
+                        preferences.removePreference(pref);
+                        i--;
+                        continue;
+                    }
                 /o Cliqz Commend Block end */
                 } else if (PREFS_NOTIFICATIONS_FEATURES_TIPS.equals(key)) {
                     final boolean isLeanplumAvailable = MmaDelegate.isMmaExperimentEnabled(this);
@@ -930,6 +951,27 @@ public class GeckoPreferences
                     if (!isHealthReportEnabled) {
                         ((SwitchPreference) pref).setChecked(isHealthReportEnabled);
                         pref.setEnabled(isHealthReportEnabled);
+
+                        // Instruct the user on how to enable Health Report
+                        final String RIGHT_CHEVRON_SPACE_PADDED = " > ";
+                        final StringBuilder healthReportSettingPath = new StringBuilder()
+                                .append(getString(R.string.pref_category_privacy_short))
+                                .append(RIGHT_CHEVRON_SPACE_PADDED)
+                                .append(getString(R.string.pref_category_datareporting))
+                                .append(RIGHT_CHEVRON_SPACE_PADDED)
+                                .append(getString(R.string.datareporting_fhr_title));
+                        final SpannableString boldSettingsLocation = new SpannableString(healthReportSettingPath);
+                        boldSettingsLocation.setSpan(new StyleSpan(Typeface.BOLD),
+                                0, healthReportSettingPath.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+
+                        final SpannableStringBuilder summaryTextBuilder = new SpannableStringBuilder()
+                                .append(getString(R.string.pref_feature_tips_notification_summary))
+                                .append("\n\n")
+                                .append(getString(R.string.pref_feature_tips_notification_enabling_hint))
+                                .append(" ")
+                                .append(boldSettingsLocation);
+
+                        pref.setSummary(summaryTextBuilder);
                     }
                 } else if(PREFS_SHOW_HINTS.equals(key) && !BuildConfig.DEBUG) {
                     // remove show hints in production
@@ -1854,6 +1896,12 @@ public class GeckoPreferences
     }
 
     /* Cliqz start */
+    private static boolean haveNotificationsPreferences(@NonNull Context context) {
+        /* return SwitchBoard.isInExperiment(context, Experiments.WHATSNEW_NOTIFICATION) ||
+                MmaDelegate.isMmaExperimentEnabled(context); */
+        return false;
+    }
+
     // navigate to opened Tab after Link Clicked in dialog.
     @Override
     public void OnOpenLinkLoaded() {

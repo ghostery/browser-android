@@ -7,8 +7,8 @@
 <!ENTITY gdata.privacy.default.label "Padrão do Google">
 <!ENTITY gdata.privacy.default.accesskey "P">
 
-<!ENTITY gdata.migration.title "Migrar calendários somente leitura">
-<!ENTITY gdata.migration.description "O provedor do Google Calendar detectou que você possui calendários capazes apenas de acessar o Google Calendar no modo somente leitura. Se desejar atualizar algum destes calendários, favor selecioná-los abaixo">
+<!ENTITY gdata.migration.title "Migrar agendas somente leitura">
+<!ENTITY gdata.migration.description "O provedor do Google Calendar detectou que você possui agendas capazes apenas de acessar o Google Calendar no modo somente leitura. Se deseja atualizar algumas dessas agendas, selecione-as abaixo">
 <!ENTITY gdata.migration.upgrade.label "Atualizar">
 <!ENTITY gdata.migration.upgrade.accesskey "A">
 <!ENTITY gdata.migration.showagain.label "Checar sempre ">
@@ -17,6 +17,6 @@
 <!ENTITY gdata.reminder.action.sms.label "Enviar mensagem de texto">
 
 <!ENTITY gdata.wizard.session.description "Por favor, escolha uma sessão existente ou digite seu endereço de e-mail para criar uma nova sessão. Você só precisa de uma sessão por conta.">
-<!ENTITY gdata.wizard.calendars.description "Por favor, selecione os calendários e listas de tarefas que você gostaria de inscrever-se.">
+<!ENTITY gdata.wizard.calendars.description "Selecione as agendas e listas de tarefas que você deseja se inscrever.">
 
-<!ENTITY gdata.wizard.nextstep.description "Por favor, avance para o próximo passo para configurar seus calendários.">
+<!ENTITY gdata.wizard.nextstep.description "Avance para o próximo passo para configurar suas agendas.">
