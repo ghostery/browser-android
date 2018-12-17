@@ -18,69 +18,17 @@ node('us-east-1 && ubuntu && docker && !gpu') {
         }
     }
     docker.image("141047255820.dkr.ecr.us-east-1.amazonaws.com/${baseImageName}").inside {
-        try {
-            stage('Download cache') {
-                withCredentials([[
-                        $class: 'AmazonWebServicesCredentialsBinding',
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                        credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b',
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                    def s3Path = "s3://repository.cliqz.com/dist/android/cache"
-                    def cachePath = ".gradle/caches"
-                    sh """#!/bin/bash -l
-                        pip install awscli --upgrade --user
-                        cd
-                        aws s3 cp --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath} --recursive
-                    """
-                }
-            }
-            stage('Build APK') {
-                writeFile file: 'mozconfig.txt', text: '''
-                    # Build Firefox for Android:
-                    ac_add_options --enable-application=mobile/android
-                    ac_add_options --target=arm-linux-androideabi
-                    # With the following Android SDK and NDK:
-                    ac_add_options --with-android-sdk=/home/jenkins/.mozbuild/android-sdk-linux
-                    ac_add_options --with-adjust-sdk-keyfile="$topsrcdir/mobile/android/base/adjust-sdk-sandbox.token"
-                    ac_add_options --with-android-ndk=/home/jenkins/.mozbuild/android-ndk-linux/android-ndk-r18b
-                    # Write build artifacts to:
-                    mk_add_options MOZ_OBJDIR=./objdir-frontend-android/
-                '''
-                sh '''#!/bin/bash -l
-                    set -e
-                    set -x
-                    export GRADLE_MAVEN_REPOSITORIES="https://dl.google.com/dl/android/maven2/","https://jcenter.bintray.com/"
-                    cd mozilla-release
-                    cp ../mozconfig.txt mozconfig
-                    ./mach build
-                '''
-            }
-            stage('Upload cache') {
-                withCredentials([
-                        [
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]
-                    ]) {
-                        def s3Path = "s3://repository.cliqz.com/dist/android/cache"
-                        def cachePath = ".gradle/caches"
-                        sh """#!/bin/bash -l
-                            cd
-                            aws s3 rm $s3Path --recursive
-                            aws s3 cp ${cachePath} $s3Path --recursive
-                        """
-                    }
-            }
-        }
-        finally {
-            stage('Clean Up') {
-                sh '''#!/bin/bash -l
-                    rm -f mozilla-release/mozconfig
-                    rm -rf mozilla-release/objdir-frontend-android
-                '''
-            }
+        stage('Check All Versions') {
+            sh '''#!/bin/bash -l
+                set -e
+                set -x
+                python --version
+                ruby --version
+                appium --version
+                pip --version
+                adb version
+                sdkmanager --list
+            '''
         }
     }
 }
