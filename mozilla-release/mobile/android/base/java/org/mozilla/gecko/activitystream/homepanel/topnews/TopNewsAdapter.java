@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
-import org.mozilla.gecko.activitystream.homepanel.stream.TopNewsRow;
 import org.mozilla.gecko.home.HomePager;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
@@ -23,33 +23,44 @@ import java.util.List;
 /**
  * Copyright © Cliqz 2018
  */
-public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements RecyclerViewClickSupport.OnItemClickListener {
+public class TopNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements RecyclerViewClickSupport.OnItemClickListener {
+
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_NEWS = 1;
+
+    // Number of items to show in the 'Top News' list when the list is collapsed.
+    private static final int COLLAPSED_NUM_NEWS_COUNT = 0;
 
     private final Context context;
     private final HomePager.OnUrlOpenListener onUrlOpenListener;
-    private List<TopNews> topNews;
+    private final PreferenceManager preferenceManager;
+
+    private final List<TopNews> topNews;
     private int numShowedNews = 0;
+    private boolean isNewsExpanded;
 
     public TopNewsAdapter(Context context, final HomePager.OnUrlOpenListener onUrlOpenListener) {
         this.context = context;
         this.onUrlOpenListener = onUrlOpenListener;
+        this.preferenceManager = PreferenceManager.getInstance(context);
         topNews = new ArrayList<>();
-    }
-
-    public int getTopNewsCount() {
-        return topNews.size();
-    }
-
-    public void setNumShowedNews(int numShowedNews) {
-        this.numShowedNews = numShowedNews;
     }
 
     @Override
     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-        final TopNews newsCard = topNews.get(position);
-
-        onUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(newsCard.getUrl()), EnumSet.noneOf
-                (HomePager.OnUrlOpenListener.Flags.class));
+        if (position == 0) {
+            final RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+            if (viewHolder != null) {
+                isNewsExpanded = !isNewsExpanded;
+                ((TopNewsHeader)viewHolder).toggleHeaderText(isNewsExpanded);
+                toggleNews();
+            }
+        } else {
+            final TopNews newsCard = topNews.get(position);
+            onUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(newsCard.getUrl()), EnumSet.noneOf
+                    (HomePager.OnUrlOpenListener.Flags.class));
+        }
     }
 
     public void clear() {
@@ -58,14 +69,7 @@ public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements
     }
 
     public void add(List<TopNews> data) {
-        final SharedPreferences preferences = GeckoSharedPrefs.forProfile(context);
-        final boolean isNewsExpanded = preferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_EXPANDED,
-                TopNewsRow.PREFS_DEFAULT_NEWS_VIEW_EXPANDED);
-        if (isNewsExpanded) {
-            numShowedNews = data.size();
-        } else {
-            numShowedNews = Math.min(TopNewsRow.COLLAPSED_NUM_NEWS_COUNT, data.size());
-        }
+        numShowedNews = isNewsExpanded ? data.size() : Math.min(COLLAPSED_NUM_NEWS_COUNT, data.size());
         topNews.addAll(data);
         notifyDataSetChanged();
     }
@@ -75,21 +79,56 @@ public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsCard> implements
         add(data);
     }
 
-    @Override
-    public void onBindViewHolder(TopNewsCard holder, int position) {
-        holder.bind(topNews.get(position));
+    private void toggleNews() {
+        final int changedCount = topNews.size() - COLLAPSED_NUM_NEWS_COUNT;
+        if (isNewsExpanded) {
+            this.numShowedNews = topNews.size();
+            if (changedCount > 0) {
+                notifyItemRangeInserted(COLLAPSED_NUM_NEWS_COUNT + 1, changedCount);
+            }
+        } else {
+            this.numShowedNews = Math.min(topNews.size(), COLLAPSED_NUM_NEWS_COUNT);
+            if (changedCount > 0) {
+                notifyItemRangeRemoved(COLLAPSED_NUM_NEWS_COUNT + 1, changedCount);
+            }
+        }
+        preferenceManager.setNewsViewExpanded(isNewsExpanded);
     }
 
     @Override
-    public TopNewsCard onCreateViewHolder(ViewGroup parent, int viewType) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder.getItemViewType() == TYPE_NEWS) {
+            ((TopNewsCard)holder).bind(topNews.get(position - 1));
+        } else if (holder.getItemViewType() == TYPE_HEADER) {
+            final TopNewsHeader topNewsHeader = ((TopNewsHeader) holder);
+            topNewsHeader.toggleHeaderText(isNewsExpanded);
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(context);
-        final View card = inflater.inflate(R.layout.activity_stream_news_card,
-                parent, false);
-        return new TopNewsCard(card);
+        final View view;
+        if (viewType == TYPE_HEADER) {
+            isNewsExpanded = preferenceManager.isNewsViewExpanded();
+            view = inflater.inflate(R.layout.activity_stream_news_header, parent, false);
+            return new TopNewsHeader(view);
+        } else if (viewType == TYPE_NEWS) {
+            view = inflater.inflate(R.layout.activity_stream_news_card, parent, false);
+            return new TopNewsCard(view);
+        }
+        throw new RuntimeException("Incorrect view type " + viewType);
     }
 
     @Override
     public int getItemCount() {
-        return numShowedNews;
+        // Accounting for the header view.
+        return numShowedNews + 1;
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == 0 ? TYPE_HEADER : TYPE_NEWS;
+    }
+
 }

@@ -235,6 +235,8 @@ public class GeckoPreferences
     public static final String PREFS_CLIQZ_TAB_NEWS_ENABLED = "pref.cliqz.tab.news.enabled";
     // should the 'Top News' list be collapsed or expanded. 'true' for expanded.
     public static final String PREFS_CLIQZ_TAB_NEWS_EXPANDED = "pref.cliqz.tab.news.expanded";
+    // By default, the 'Top News' list is not expanded i.e. it does not show any news row items.
+    public static final boolean PREFS_DEFAULT_NEWS_VIEW_EXPANDED = false;
 
     // add Subscriptions key and dialog for reset it
     // private static final String PREFS_RESET_SUBSCRIPTIONS = NON_PREF_PREFIX + "reset.subscription";
