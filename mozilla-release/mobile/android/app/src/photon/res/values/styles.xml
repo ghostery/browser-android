@@ -1108,6 +1108,27 @@
         <item name="android:textSize">@dimen/cliqz_intro_content_size</item>
         <item name="android:buttonTint">@color/cliqz_intro_text_color</item>
     </style>
+
+    <style name="CliqzEmptyLayoutTextTitle">
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">1.2</item>
+        <item name="android:shadowDy">1.2</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CliqzEmptyLayoutTextDescription">
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <!--Cliqz End-->
 
 </resources>
