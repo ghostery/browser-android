@@ -48,8 +48,8 @@ ext.configureVariantWithGeckoBinaries = { variant ->
     // non-existing folder. We fixed this by inverting the expression below and using the mozconfig
     // to read the "MOZ_APP_NAME" to define the app name if not "geckoview".
     def appName = mozconfig.substs.get("MOZ_APP_NAME", "fennec")
-    def omnijarDir = "geckoview".equals(project.name) ? "geckoview" : appName
-    def distDir = "${topobjdir}/dist/${omnijarDir}"
+    def omnijarDir = { "${topobjdir}/dist/${it}" }("app".equals(project.name) ? appName : "geckoview")
+    def distDir = "${topobjdir}/dist/${appName}"
 
     def syncFeaturesFromDistDir =task("syncFeaturesFromDistDirFor${variant.name.capitalize()}", type: Sync) {
         onlyIf {
