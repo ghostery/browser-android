@@ -19,6 +19,7 @@ RUN apt-get update && \
     libssl-dev \
     libtool \
     libyaml-dev \
+    openssh-client \
     pkg-config \
     python-pip \
     python-virtualenv \
@@ -33,6 +34,12 @@ ENV SHELL=/bin/bash
 ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${PATH}
 RUN getent group $GID || groupadd jenkins --gid $GID && \
     useradd --create-home --shell /bin/bash jenkins --uid $UID --gid $GID
+
+# Add extra dependencies to the maven cache
+RUN mkdir -p /sdk/android-gradle-dependencies/jcenter/com/github/PhilJay/MPAndroidChart/v3.0.2/ && \
+    cd /sdk/android-gradle-dependencies/jcenter/com/github/PhilJay/MPAndroidChart/v3.0.2/ && \
+    wget https://jitpack.io/com/github/PhilJay/MPAndroidChart/v3.0.2/MPAndroidChart-v3.0.2.pom && \
+    wget https://jitpack.io/com/github/PhilJay/MPAndroidChart/v3.0.2/MPAndroidChart-v3.0.2.jar
 
 USER jenkins
 SHELL ["/bin/bash", "-l", "-c"]
