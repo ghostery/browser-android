@@ -2002,7 +2002,7 @@ var BrowserApp = {
         this._handleTabSelected(this.getTabForId(data.id));
         let isPrivate = PrivateBrowsingUtils.isBrowserPrivate(this.selectedTab.browser);
         const theme = isPrivate ? 'dark' : 'light';
-        Cliqz.messageSearchExtension( { module: "mobile-cards", action: "changeTheme", args: [theme]});
+        Cliqz.messageExtension( { module: "mobile-cards", action: "changeTheme", args: [theme]});
         break;
 
       case "Tab:Closed": {
@@ -6240,9 +6240,6 @@ var ActivityObserver = {
     if (Cliqz.Search.browser && Cliqz.Search.browser.getAttribute("primary")) {
       // Search view is on top
       tab = Cliqz.Search;
-    } else if (Cliqz.Ghostery.browser && Cliqz.Ghostery.browser.getAttribute("primary")) {
-      // Ghostery view is on top
-      tab = Cliqz.Ghostery;
     } else {
       // Browser tab is on top
       tab = BrowserApp.selectedTab;
@@ -6491,11 +6488,9 @@ var Cliqz = {
     this.callbacks = Object.create(null);
     this.messageId = 1;
     this.extensionsMessageQueue = {
-      "android@cliqz.com": [],
       "firefox@ghostery.com": []
     };
     this.extensionsReady = {
-      "android@cliqz.com": this.READY_STATUS.NOT_READY,
       "firefox@ghostery.com": this.READY_STATUS.NOT_READY,
     };
 
@@ -6518,7 +6513,7 @@ var Cliqz = {
 
     Services.prefs.addObserver('pref.search.regional', () => {
       const value = Services.prefs.getCharPref('pref.search.regional');
-      this.messageSearchExtension({
+      this.messageExtension({
         module: "search",
         action: "setBackendCountry",
         args: [value]
@@ -6528,7 +6523,7 @@ var Cliqz = {
     Services.prefs.addObserver("pref.search.block.adult.content", () => {
       const value = Services.prefs.getBoolPref("pref.search.block.adult.content");
       const key = value ? "conservative" : "liberal";
-      this.messageSearchExtension({
+      this.messageExtension({
         module: "search",
         action: "setAdultFilter",
         args: [key]
@@ -6537,7 +6532,7 @@ var Cliqz = {
 
     Services.prefs.addObserver("pref.search.query.suggestions", () => {
       const value = Services.prefs.getBoolPref("pref.search.query.suggestions");
-      this.messageSearchExtension({
+      this.messageExtension({
         module: "search",
         action: "setQuerySuggestions",
         args: [value]
@@ -6552,7 +6547,12 @@ var Cliqz = {
     READY: 2
   },
 
-  _messageExtension(id, msg, opts = {}) {
+  messageExtension(msg, opts = {}) {
+    const id = "firefox@ghostery.com";
+    opts.senderOptions = {
+      contextId: "mobile-cards",
+    }
+    msg.source = "ANDROID_BROWSER";
     if (this.extensionsReady[id] === this.READY_STATUS.NOT_READY) {
       this.extensionsMessageQueue[id].push({
         msg: Object.assign({}, msg),
@@ -6590,19 +6590,6 @@ var Cliqz = {
     return promise;
   },
 
-  messagePrivacyExtension(msg) {
-    return Cliqz._messageExtension("firefox@ghostery.com", msg);
-  },
-
-  messageSearchExtension(msg) {
-    msg.source = "ANDROID_BROWSER";
-    return Cliqz._messageExtension("android@cliqz.com", msg, {
-      senderOptions: {
-        contextId: "mobile-cards",
-      },
-    });
-  },
-
   _createBrowserForExtension: function (id) {
     const browser = document.createElement("browser");
 
@@ -6630,9 +6617,9 @@ var Cliqz = {
       return;
     }
 
-    const id = 'android@cliqz.com';
+    const id = 'firefox@ghostery.com';
     const uuid = UUIDMap.get(id);
-    const path = 'modules/mobile-cards/cards.html';
+    const path = 'cliqz/mobile-cards/cards.html';
     this.Search = this._createBrowserForExtension(id);
     this.Search.browser.loadURI("moz-extension://" + uuid + "/" + path);
     this.Search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
@@ -6682,7 +6669,7 @@ var Cliqz = {
       case "ready":
         this.loadCardsUI();
         this._syncSearchPrefs();
-        this._handleExtensionReady("android@cliqz.com");
+        this._handleExtensionReady("firefox@ghostery.com");
         break;
       case "idle":
         GlobalEventDispatcher.sendRequest({
@@ -6698,7 +6685,7 @@ var Cliqz = {
         }
 
         if (this.lastQueuedQuery) {
-          this.messageSearchExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
           this.lastQueuedQuery = "";
         }
         break;
@@ -6709,7 +6696,6 @@ var Cliqz = {
 
   _privacyExtensionListener(msg) {
     console.log("Dispaching event from the privacy extension to native", msg);
-    this._handleExtensionReady("firefox@ghostery.com");
     switch (msg.action) {
       case "setIcon":
         var count = Number.parseInt(msg.payload.text);
@@ -6741,7 +6727,7 @@ var Cliqz = {
     this.extensionsReady[id] = this.READY_STATUS.READY;
     const queue = this.extensionsMessageQueue[id];
     this.extensionsMessageQueue[id] = [];
-    queue.forEach(obj => this._messageExtension(id, obj.msg, obj.opts));
+    queue.forEach(obj => this.messageExtension(obj.msg, obj.opts));
   },
 
   _extensionListener(ev) {
@@ -6763,11 +6749,8 @@ var Cliqz = {
       let response;
       let sendCallback;
       if (data.recipient.extensionId === "firefox@ghostery.com") {
-        response = this._privacyExtensionListener(msg);
-        sendCallback = this.messagePrivacyExtension;
-      } else if (data.recipient.extensionId === "android@cliqz.com") {
-        response = this._searchExtensionListener(msg);
-        sendCallback = this.messageSearchExtension;
+        response = this._privacyExtensionListener(msg) || this._searchExtensionListener(msg);
+        sendCallback = this.messageExtension;
       }
       if ("requestId" in msg && sendCallback) {
         sendCallback({
@@ -6776,17 +6759,6 @@ var Cliqz = {
         });
       }
     }
-  },
-
-  get Ghostery() {
-    if (!this._ghostery) {
-      this._ghostery = this._createBrowserForExtension("firefox@ghostery.com");
-      this._ghostery.loadTab = function(tab) {
-        this.load("app/templates/panel_android_ui.html?tabId=" + tab)
-      }.bind(this._ghostery);
-    }
-
-    return this._ghostery;
   },
 
   overlayPanel: function(panel) {
@@ -6838,7 +6810,7 @@ var Cliqz = {
     messages.push(["setQuerySuggestions", Services.prefs.getBoolPref("pref.search.query.suggestions")]);
 
     messages.forEach((msg) => {
-      this.messageSearchExtension({
+      this.messageExtension({
         module: "search",
         action: msg[0],
         args: [ msg[1] ]
@@ -6851,42 +6823,35 @@ var Cliqz = {
     switch(event) {
       case "Search:Analysis":
         const { data: msg = {}, immediate = false, schema = "" } = data;
-        this.messageSearchExtension({
+        this.messageExtension({
           module: "anolysis",
           action: "handleTelemetrySignal",
           args: [msg, immediate, schema]
         });
         break;
       case "Search:Backends":
-        this.messageSearchExtension({ module: 'search', action: "getBackendCountries" })
+        this.messageExtension({ module: 'search', action: "getBackendCountries" })
         break;
       case "Search:Hide":
         this.hidePanel(this.Search.browser);
-        this.messageSearchExtension({ module: "search", action: "stopSearch", args: []});
+        this.messageExtension({ module: "search", action: "stopSearch", args: []});
         break;
       case "Search:Search":
         this.lastQueuedQuery = data.q || "";
         if (this.searchIsReady) {
-          this.messageSearchExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
           this.lastQueuedQuery = "";
         }
         break;
       case "Search:Show":
-        this.panelOnTop = "android@cliqz.com"; // save the state before search is initialized
+        this.panelOnTop = "firefox@ghostery.com"; // save the state before search is initialized
         this.Search && this.overlayPanel(this.Search.browser);
         break;
       case "Privacy:GetInfo":
-        this.messagePrivacyExtension({ name: "getAndroidPanelData" });
-        break;
-      case "Privacy:Hide":
-        this.hidePanel(this.Ghostery.browser);
+        this.messageExtension({ name: "getAndroidPanelData" });
         break;
       case "Privacy:SetInfo":
-        this.messagePrivacyExtension({ name: "setPanelData", message: data });
-        break;
-      case "Privacy:Show":
-        this.overlayPanel(this.Ghostery.browser);
-        this.Ghostery.loadTab(BrowserApp.selectedTab.id);
+        this.messageExtension({ name: "setPanelData", message: data });
         break;
       case "Privacy:SetBlockingPolicy":
         // blocking policy should be one of:
@@ -6895,7 +6860,7 @@ var Cliqz = {
         // 'UPDATE_BLOCK_RECOMMENDED'
         // 'UPDATE_BLOCK_ADS'
         let blockingPolicy = data.blockingPolicy;
-        this.messagePrivacyExtension({
+        this.messageExtension({
           origin: 'ghostery-hub',
           name: 'updateBlocking',
           message: blockingPolicy

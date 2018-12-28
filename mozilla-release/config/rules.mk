@@ -1306,16 +1306,12 @@ FEATURES_PATH = $(DIST)/bin/features
 $(FEATURES_PATH):
 	mkdir -p $(FEATURES_PATH)
 
-CLIQZ_XPI_PATH = $(FEATURES_PATH)/android@cliqz.com.xpi
-$(CLIQZ_XPI_PATH): $(FEATURES_PATH)
-	wget -O $(CLIQZ_XPI_PATH) $(CLIQZ_SEARCH_LINK)
-
 GHOSTERY_XPI_PATH = $(FEATURES_PATH)/firefox@ghostery.com.xpi
 $(GHOSTERY_XPI_PATH): $(FEATURES_PATH)
 	wget -O $(GHOSTERY_XPI_PATH) $(CLIQZ_PRIVACY_LINK)
 
 # Package Cliqz stuff
-cliqz_sys_addons: $(CLIQZ_XPI_PATH) $(GHOSTERY_XPI_PATH)
+cliqz_sys_addons: $(GHOSTERY_XPI_PATH)
 	echo cliqz_sys_addons in `pwd`
 
 # Remake 'built_in_addons.json'
