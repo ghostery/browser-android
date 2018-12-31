@@ -6429,6 +6429,8 @@ var Cliqz = {
     };
 
     GlobalEventDispatcher.registerListener(this, [
+      "Cards:CallBackgroundAction",
+
       "Search:Hide",
       "Search:Search",
       "Search:Show",
@@ -6678,6 +6680,13 @@ var Cliqz = {
     const msg = data.data.deserialize(this);
     const callback = this.callbacks[msg.requestId];
 
+    if (msg.action === 'renderResults') {
+      GlobalEventDispatcher.sendRequest({
+        type: "Search:renderResults",
+        data: msg.args[0]
+      });
+    }
+
     if (msg.target !== "ANDROID_BROWSER") {
       return;
     }
@@ -6771,9 +6780,26 @@ var Cliqz = {
     });
   },
 
-  onEvent: function(event, data, callback) {
+  onEvent: function(event, data, callbacks) {
+    let onSuccess = () => {};
+    let onError = () => {};
+    if (callbacks) {
+      onSuccess = callbacks.onSuccess;
+      onError = callbacks.onError;
+    }
     // event cases should be sorted in alphabitical order
     switch(event) {
+      case "Cards:CallBackgroundAction":
+        this.messageSearchExtension({
+          module: data.module,
+          action: data.action,
+          args: data.args
+        }).then(response => {
+          onSuccess(response);
+        }).catch(error => {
+          onError(error);
+        });
+        break;
       case "Search:Analysis":
         const { data: msg = {}, immediate = false, schema = "" } = data;
         this.messageSearchExtension({
@@ -6797,7 +6823,7 @@ var Cliqz = {
         }
         break;
       case "Search:Show":
-        this.Search && this.overlayPanel(this.Search.browser);
+        // this.Search && this.overlayPanel(this.Search.browser);
         break;
       case "Privacy:GetInfo":
         this.messagePrivacyExtension({ name: "getAndroidPanelData" });

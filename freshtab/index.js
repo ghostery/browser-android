@@ -1,11 +1,30 @@
 import React from 'react';
-import {AppRegistry, StyleSheet, Text, View} from 'react-native';
+import {AppRegistry, StyleSheet, Text, View, DeviceEventEmitter, } from 'react-native';
+import SearchUI from 'browser-core/build/modules/mobile-cards/SearchUI';
+import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
+import Cliqz from './cliqz';
 
 class HelloWorld extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { results: [] };
+    this.cliqz = new Cliqz();
+  }
+
+
+  componentWillMount() {
+    DeviceEventEmitter.addListener(
+      'search:renderResults',
+      (results) => this.setState({ results })
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.hello}>Hello World.</Text>
+        <CliqzProvider value={this.cliqz}>
+          <SearchUI results={this.state.results} theme="dark" />
+        </CliqzProvider>
       </View>
     );
   }
