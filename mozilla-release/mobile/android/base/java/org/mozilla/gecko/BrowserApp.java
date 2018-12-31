@@ -201,11 +201,16 @@ import org.mozilla.gecko.widget.themed.ThemedTabLayout;
 import org.mozilla.geckoview.GeckoSession;
 
 /* Cliqz start */
+import com.cliqz.react.BridgePackage;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.facebook.react.bridge.Arguments;
 /* Cliqz end */
 
 import java.io.File;
@@ -323,6 +328,7 @@ public class BrowserApp extends GeckoApp
 
     private ReactInstanceManager mReactInstanceManager;
     private ReactRootView mReactRootView;
+    private ReactContext mReactContext;
     /* Cliqz End */
 
     public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
@@ -901,6 +907,7 @@ public class BrowserApp extends GeckoApp
             "Privacy:Count",
             "Search:Idle",
             "Search:Ready",
+            "Search:renderResults",
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
@@ -3357,7 +3364,7 @@ public class BrowserApp extends GeckoApp
         }
         mUserDidSearch = true;
         if (mSearchIsReady) {
-            mHomeScreenContainer.setVisibility(View.INVISIBLE);
+//            mHomeScreenContainer.setVisibility(View.INVISIBLE);
         }
 
         final FragmentManager fm = getSupportFragmentManager();
@@ -4871,6 +4878,7 @@ public class BrowserApp extends GeckoApp
             mReactRootView = new ReactRootView(this);
             mReactInstanceManager = ReactInstanceManager.builder().setApplication(getApplication())
                     .setBundleAssetName("index.android.bundle").setJSMainModulePath("index")
+                    .addPackage(new BridgePackage())
                     .addPackage(new MainReactPackage()).setUseDeveloperSupport(BuildConfig.DEBUG)
                     .setInitialLifecycleState(LifecycleState.RESUMED).build();
             // The string here (e.g. "MyReactNativeApp") has to match
@@ -4878,6 +4886,7 @@ public class BrowserApp extends GeckoApp
             mReactRootView.startReactApplication(mReactInstanceManager, "MyReactNativeApp", null);
         }
         mHomeScreenContainer.addView(mReactRootView);
+        mReactContext = mReactInstanceManager.getCurrentReactContext();
     }
 
     @Override
