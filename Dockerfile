@@ -34,6 +34,12 @@ ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sd
 RUN getent group $GID || groupadd jenkins --gid $GID && \
     useradd --create-home --shell /bin/bash jenkins --uid $UID --gid $GID
 
+# Add extra dependencies to the maven cache
+RUN mkdir -p /sdk/android-gradle-dependencies/jcenter/com/github/PhilJay/MPAndroidChart/v3.0.2/ && \
+    cd /sdk/android-gradle-dependencies/jcenter/com/github/PhilJay/MPAndroidChart/v3.0.2/ && \
+    wget https://jitpack.io/com/github/PhilJay/MPAndroidChart/v3.0.2/MPAndroidChart-v3.0.2.pom && \
+    wget https://jitpack.io/com/github/PhilJay/MPAndroidChart/v3.0.2/MPAndroidChart-v3.0.2.jar
+
 USER jenkins
 SHELL ["/bin/bash", "-l", "-c"]
 
