@@ -7,7 +7,7 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/ghostery-ios/master/latest.tgz",
+    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/ghostery-ios/master/1.33.0.1b411.5549fc5.tgz",
     "react": "^16.6.3",
     "react-native": "0.56.1",
     "react-native-snap-carousel": "^3.7.5",
