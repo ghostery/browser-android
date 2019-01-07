@@ -4881,9 +4881,7 @@ public class BrowserApp extends GeckoApp
                     .addPackage(new BridgePackage())
                     .addPackage(new MainReactPackage()).setUseDeveloperSupport(BuildConfig.DEBUG)
                     .setInitialLifecycleState(LifecycleState.RESUMED).build();
-            // The string here (e.g. "MyReactNativeApp") has to match
-            // the string in AppRegistry.registerComponent() in index.js
-            mReactRootView.startReactApplication(mReactInstanceManager, "MyReactNativeApp", null);
+            mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
         }
         mHomeScreenContainer.addView(mReactRootView);
         mReactContext = mReactInstanceManager.getCurrentReactContext();

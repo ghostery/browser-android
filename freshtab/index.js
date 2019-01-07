@@ -4,13 +4,12 @@ import SearchUI from 'browser-core/build/modules/mobile-cards/SearchUI';
 import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
 import Cliqz from './cliqz';
 
-class HelloWorld extends React.Component {
+class BrowserCoreApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = { results: [] };
     this.cliqz = new Cliqz();
   }
-
 
   componentWillMount() {
     DeviceEventEmitter.addListener(
@@ -42,4 +41,4 @@ var styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('MyReactNativeApp', () => HelloWorld);
+AppRegistry.registerComponent('BrowserCoreApp', () => BrowserCoreApp);
