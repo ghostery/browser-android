@@ -19,6 +19,7 @@ RUN apt-get update && \
     libssl-dev \
     libtool \
     libyaml-dev \
+    openssh-client \
     pkg-config \
     python-pip \
     python-virtualenv \
