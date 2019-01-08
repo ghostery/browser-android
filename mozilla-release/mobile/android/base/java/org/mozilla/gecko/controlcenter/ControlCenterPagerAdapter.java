@@ -18,15 +18,21 @@ import java.util.List;
  * Copyright © Cliqz 2018
  */
 public class ControlCenterPagerAdapter extends FragmentPagerAdapter
-        implements BaseControlCenterPagerAdapter, BundleEventListener {
+        implements BaseControlCenterPagerAdapter, BundleEventListener,
+        GlobalTrackersFragment.GlobalTrackersCallback {
 
     private Context mContext;
     private final List<ControlCenterFragment> mFragmentList = new ArrayList<>();
 
-    private boolean mIsInitialized = false;
-
     private GeckoBundle mData = new GeckoBundle();
     private byte[] mCCDataHash = null;
+
+    private boolean isGlobalTrackingDataChanged = false;
+
+    @Override
+    public void trackingDataChanged() {
+        isGlobalTrackingDataChanged = true;
+    }
 
     public ControlCenterPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -58,6 +64,7 @@ public class ControlCenterPagerAdapter extends FragmentPagerAdapter
         final OverviewFragment overviewFragment = new OverviewFragment();
         siteTrackersFragment.setControlCenterCallback(controlCenterCallbacks);
         globalTrackersFragment.setControlCenterCallback(controlCenterCallbacks);
+        globalTrackersFragment.setGlobalTrackersCallback(this);
         mFragmentList.add(overviewFragment);
         mFragmentList.add(siteTrackersFragment);
         mFragmentList.add(globalTrackersFragment);
@@ -76,21 +83,18 @@ public class ControlCenterPagerAdapter extends FragmentPagerAdapter
     @Override
     public void handleMessage(String event, GeckoBundle message, EventCallback callback) {
         if ("Privacy:Info".equals(event)) {
-            if (!mIsInitialized) {
-                mCCDataHash = ControlCenterUtils.getCCDataHash(message);
-                mIsInitialized = true;
-            }
+            this.mCCDataHash = ControlCenterUtils.getCCDataHash(message);
             this.mData = message;
             setTrackingData(message);
         }
     }
 
     public boolean isDataChanged() {
+        if (isGlobalTrackingDataChanged) {
+            isGlobalTrackingDataChanged = false;
+            return true;
+        }
         return mCCDataHash != null && !MessageDigest.isEqual(mCCDataHash, ControlCenterUtils.getCCDataHash(mData));
-    }
-
-    public void unInitialize() {
-        mIsInitialized = false;
     }
 
 }
