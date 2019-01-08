@@ -164,7 +164,7 @@ def build(Map m){
                             set -x
                             cd freshtab
                             npm ci
-                            npm run build-android
+                            npm run build
                         '''
                     }
 
