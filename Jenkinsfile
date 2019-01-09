@@ -35,7 +35,7 @@ def build(Map m){
             def apk = ""
             setupTestInstance(
                 test,
-                "ami-07457b491395bb595",
+                "ami-6c24fc11",
                 "1",
                 "t2.medium",
                 "android_ci_genymotion",
@@ -50,21 +50,6 @@ def build(Map m){
                 def baseImageName = "browser-f/android:${dockerTag}"
                 docker.withRegistry('https://141047255820.dkr.ecr.us-east-1.amazonaws.com') {
                     docker.image("${baseImageName}").inside {
-                        stage('Download cache') {
-                            withCredentials([[
-                                    $class: 'AmazonWebServicesCredentialsBinding',
-                                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                                    credentialsId: 'd7e38c4a-37eb-490b-b4da-2f53cc14ab1b',
-                                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                                def s3Path = "s3://repository.cliqz.com/dist/android/cache"
-                                def cachePath = ".gradle/caches"
-                                sh """#!/bin/bash -l 
-                                    pip install awscli --upgrade --user
-                                    cd
-                                    aws s3 sync --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath}
-                                """
-                            }
-                        }
                         stage("Build APK: ${flavorname}") {
                             withEnv([
                                 "ANDROID_TARGET=${androidtarget}",
