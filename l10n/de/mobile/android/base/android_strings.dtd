@@ -515,7 +515,7 @@
 <!ENTITY contextmenu_open_new_tab "In neuem Tab öffnen">
 <!ENTITY contextmenu_open_private_tab "In privatem Tab öffnen">
 <!ENTITY contextmenu_remove "Löschen">
-<!ENTITY contextmenu_add_page_shortcut "Seitenverknüpfung hinzufügen">
+<!ENTITY contextmenu_add_page_shortcut "Zu Home zufügen">
 <!ENTITY contextmenu_set_as_homepage "Als Startseite verwenden">
 <!ENTITY contextmenu_share "Teilen">
 <!ENTITY contextmenu_pasteandgo "Einfügen &amp; Los">
