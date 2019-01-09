@@ -91,7 +91,7 @@ def matrix = [
 def baseImage
 def codeImage
 def id
-node ('docker'){
+node ('kria'){
     def dockerTag = "" 
     stage('Checkout') {
         checkout scm
@@ -124,7 +124,7 @@ def build(Map m){
     def androidtarget = m.target
     def getImageName = m.getImageName
     def buildParam = m.buildParam
-    def nodeLabel = 'docker'
+    def nodeLabel = 'kria'
     def getId = m.getId
     def apk = ""
     def gradleflavor = ""
