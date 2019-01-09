@@ -2119,9 +2119,9 @@ public class LocalBrowserDB extends BrowserDB {
                     .append(" LIKE ? OR ")
                     .append(History.TITLE)
                     .append(" LIKE ?)");
-            final String escapedQuery = DatabaseUtils.sqlEscapeString(query);
-            argumentsList.add("%" + escapedQuery + "%");
-            argumentsList.add("%" + escapedQuery + "%");
+            final String escapedQuery = "%" + query + "%";
+            argumentsList.add(escapedQuery);
+            argumentsList.add(escapedQuery);
             selection = selectionBuilder.append(" COLLATE NOCASE").toString();
             final String[] conv = new String[argumentsList.size()];
             selectionArgs = argumentsList.toArray(conv);
