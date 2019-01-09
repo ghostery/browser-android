@@ -37,6 +37,7 @@ import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.myoffrz.MyOffrzLoader;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.widget.themed.ThemedImageView;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 
 /**
@@ -112,7 +113,7 @@ class TabMenuStripLayout extends ThemedLinearLayout
     /*Cliqz Start*/
     @SuppressLint("ResourceType")
     void onAddPagerView(@DrawableRes int iconId) {
-        final ImageView imageView = (ImageView) LayoutInflater.from(getContext()).inflate(R.layout.tab_menu_strip, this, false);
+        final ThemedImageView imageView = (ThemedImageView) LayoutInflater.from(getContext()).inflate(R.layout.tab_menu_strip, this, false);
         imageView.setId(iconId); //for automation test purpose
         imageView.setImageResource(iconId);
         addView(imageView);
@@ -359,5 +360,20 @@ class TabMenuStripLayout extends ThemedLinearLayout
 
         }
     }
-    /* Cliqz end */
+
+    @Override
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+
+        strip = DrawableCompat.wrap(strip);
+        if (stripColor != null) {
+            final int backgroundTintColor = stripColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
+            DrawableCompat.setTint(strip, backgroundTintColor);
+            for (int i = 0; i < getChildCount(); i++) {
+                ((ThemedImageView)this.getChildAt(i)).setLightTheme(isLightTheme);
+            }
+        }
+    }
+    /* Cliqz End */
+
 }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.widget.themed.ThemedFadedHorizontalScrollView;
 
 /**
  * {@code TabMenuStrip} is the view used to display {@code HomePager} tabs
@@ -121,5 +122,9 @@ public class TabMenuStrip extends HorizontalScrollView
     @Override
     public void setOnTitleClickListener(OnTitleClickListener onTitleClickListener) {
         layout.setOnTitleClickListener(onTitleClickListener);
+    }
+
+    public void setLightTheme(boolean isLightTheme) {
+        layout.setLightTheme(isLightTheme);
     }
 }

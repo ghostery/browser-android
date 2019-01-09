@@ -9,10 +9,12 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.reader.ReaderModeUtils;
 import org.mozilla.gecko.SiteIdentity;
 import org.mozilla.gecko.Tab;
@@ -34,17 +36,13 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
-
-import android.content.res.Resources;
-import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.webkit.URLUtil;
-import android.util.*;
+import android.widget.Button;
 
 /**
 * {@code ToolbarDisplayLayout} is the UI for when the toolbar is in
@@ -134,6 +132,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private final ForegroundColorSpan mPrivateDomainColorSpan;
     // add Https color span */
     private final ForegroundColorSpan mHttpsColorSpan;
+    private final PreferenceManager preferenceManager;
     /* Cliqz end */
 
     public ToolbarDisplayLayout(Context context, AttributeSet attrs) {
@@ -146,7 +145,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
 
         mTitle = (ThemedTextView) findViewById(R.id.url_bar_title);
         mThemeBackground = (ThemedLinearLayout) findViewById(R.id.url_bar_title_bg);
-         /* Cliqz start */
+        /* Cliqz start */
         // get left and right padding form the textView
         mTitlePaddingRight = mTitle.getPaddingRight();
         mTitlePaddingLeft = mTitle.getPaddingLeft();
@@ -178,6 +177,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mPrivateDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext_private));
         // add Https Color span */
         mHttpsColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.general_blue_color));
+        preferenceManager = PreferenceManager.getInstance(getContext());
         /* Cliqz end */
 
         mSiteSecurity = (ThemedImageButton) findViewById(R.id.site_security);
@@ -370,8 +370,8 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         builder.setSpan(isPrivate ? mPrivateDomainColorSpan : mDomainColorSpan,
                 index, index + baseDomain.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
-        // set https color to blue */
-        if(URLUtil.isHttpsUrl(url)) {
+        // set https color to blue in blueTheme only */
+        if (URLUtil.isHttpsUrl(url) && !preferenceManager.isLightThemeEnabled()) {
             builder.setSpan(mHttpsColorSpan,0,5, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
         /* Cliqz end */
@@ -411,7 +411,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     }
 
     /* Cliqz start o/
-     // stop scrolling title, it ellipses form the end.
+    // stop scrolling title, it ellipses form the end.
     private void scrollTitle() {
         final Editable text = mTitle.getEditableText();
         final int textViewWidth = mTitle.getWidth();
@@ -464,7 +464,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
 
         updateUiMode(shouldShowThrobber ? UIMode.PROGRESS : UIMode.DISPLAY);
 
-         /* Cliqz Start o/
+        /* Cliqz Start o/
         if (Tab.STATE_SUCCESS == tab.getState() && mTrackingProtectionEnabled) {
             mActivity.showTrackingProtectionPromptIfApplicable();
         }
@@ -606,14 +606,21 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         public void onTextChanged(CharSequence s, int start, int before, int count) { }
     }
 
-     /* Cliqz start */
+    /* Cliqz start */
     public void setOnPageActionClickedListener(PageActionLayout.PageActionClickListener listener) {
         mPageActionLayout.setOnPageActionClickedListener(listener);
     }
 
     // check if the title set
-    public boolean isTitleSet(){
-         return (mTitle.length() > 0);
+    public boolean isTitleSet() {
+        return (mTitle.length() > 0);
+    }
+
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        mTitle.setLightTheme(isLightTheme);
+        mSiteSecurity.setLightTheme(isLightTheme);
+        mPageActionLayout.setLightTheme(isLightTheme);
     }
     /* Cliqz end */
 }

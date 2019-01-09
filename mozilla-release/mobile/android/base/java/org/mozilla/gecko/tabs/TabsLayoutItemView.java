@@ -30,13 +30,16 @@ import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.icons.IconResponse;
 import org.mozilla.gecko.icons.Icons;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.ViewUtil;
 import org.mozilla.gecko.widget.FaviconView;
 import org.mozilla.gecko.widget.HoverDelegateWithReset;
 import org.mozilla.gecko.widget.TabThumbnailWrapper;
 import org.mozilla.gecko.widget.TouchDelegateWithReset;
+import org.mozilla.gecko.widget.themed.ThemedImageView;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 import org.mozilla.gecko.widget.themed.ThemedRelativeLayout;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import java.util.concurrent.Future;
 
@@ -47,9 +50,9 @@ public class TabsLayoutItemView extends LinearLayout
     private boolean mChecked;
 
     private int mTabId;
-    private TextView mTitle;
+    private ThemedTextView mTitle;
     private TabsPanelThumbnailView mThumbnail;
-    private ImageView mCloseButton;
+    private ThemedImageView mCloseButton;
     private TabThumbnailWrapper mThumbnailWrapper;
     private HoverDelegateWithReset mHoverDelegate;
 
@@ -117,9 +120,9 @@ public class TabsLayoutItemView extends LinearLayout
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mTitle = (TextView) findViewById(R.id.title);
+        mTitle = (ThemedTextView) findViewById(R.id.title);
         mThumbnail = (TabsPanelThumbnailView) findViewById(R.id.thumbnail);
-        mCloseButton = (ImageView) findViewById(R.id.close);
+        mCloseButton = (ThemedImageView) findViewById(R.id.close);
         mThumbnailWrapper = (TabThumbnailWrapper) findViewById(R.id.wrapper);
         mFaviconView = (FaviconView) findViewById(R.id.favicon);
 
@@ -257,7 +260,13 @@ public class TabsLayoutItemView extends LinearLayout
         /* Cliqz end */
     }
 
-    /* Cliqz start */
+    /* Cliqz Start */
+    public void setLightTheme(boolean isLightTheme) {
+        ((ThemedLinearLayout) findViewById(R.id.tab_item_header)).setLightTheme(isLightTheme);
+        ((ThemedTextView)findViewById(R.id.title)).setLightTheme(isLightTheme);
+        ((ThemedImageView)findViewById(R.id.close)).setLightTheme(isLightTheme);
+    }
+
     private Drawable initDefaultVectorDrawable(int drawableId) {
         final Context context = getContext();
         final Drawable drawable = VectorDrawableCompat
@@ -270,5 +279,5 @@ public class TabsLayoutItemView extends LinearLayout
     private Drawable getDefaultFavIcon(Tab tab, Context context) {
         return tab.isPrivate() ? mDefaultPrivateDrawable : mDefaultDrawable;
     }
-    /* Cliqz end*/
+    /* Cliqz End */
 }

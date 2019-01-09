@@ -208,6 +208,7 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         /*Cliqz Start*/
         // get appSharedPreference
         preferenceManager = PreferenceManager.getInstance(context);
+        setLightTheme(preferenceManager.isLightThemeEnabled());
         /*Cliqz End*/
     }
 
@@ -679,25 +680,40 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (TextUtils.equals(key, GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED)) {
             reloadBackground();
+        } else if(TextUtils.equals(key, GeckoPreferences.PREFS_BLUE_THEME)){
+            setLightTheme(preferenceManager.isLightThemeEnabled());
+            reloadBackground();
         }
     }
 
     private void reloadBackground() {
-        final AppBackgroundManager appBackgroundManager = AppBackgroundManager.getInstance
-                (mContext);
-        if (preferenceManager.isBackgroundEnabled()) {
-            appBackgroundManager.setViewBackground(this, ContextCompat.getColor(mContext, R
-                    .color.url_bar));
-        } else {
+        final AppBackgroundManager appBackgroundManager =
+                AppBackgroundManager.getInstance(mContext);
+
+        final boolean isLightTheme = preferenceManager.isLightThemeEnabled();
+        if (preferenceManager.isLightThemeEnabled() || !preferenceManager.isBackgroundEnabled()) {
             appBackgroundManager.setViewBackgroundDefaultColor(this);
+            setLightTheme(isLightTheme);
+        } else {
+            appBackgroundManager.setViewBackground(this,
+                    ContextCompat.getColor(mContext, R.color.url_bar));
         }
     }
 
     @Override
     public void onTabChanged(Tab tab, Tabs.TabEvents msg, String data) {
-        if(tab != null && msg == Tabs.TabEvents.SELECTED) {
+        if (tab != null && msg == Tabs.TabEvents.SELECTED) {
             setPrivateMode(tab.isPrivate());
         }
     }
+
+    @Override
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        if (mTabStrip != null) {
+            ((TabMenuStrip) mTabStrip).setLightTheme(isLightTheme);
+        }
+    }
+
     /* Cliqz End */
 }

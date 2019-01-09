@@ -42,7 +42,7 @@
             gecko:overrideScaleType="false" />
 
         <!-- Cliqz : change textColor to white, 3 dots at the end instead of fading -->
-        <TextView
+        <org.mozilla.gecko.widget.themed.ThemedTextView
             android:id="@+id/title"
             style="@style/TabLayoutItemTextAppearance"
             android:layout_width="0dip"
@@ -57,11 +57,11 @@
             android:paddingStart="0dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:textColor="@android:color/white"
+            android:textColor="@color/cliqz_tabs_panel_tabs_item_header"
             android:textSize="14sp" />
 
         <!-- Cliqz : remove background, tint the color to white-->
-        <ImageView
+        <org.mozilla.gecko.widget.themed.ThemedImageView
             android:id="@+id/close"
             style="@style/TabsItemClose"
             android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
             android:duplicateParentState="true"
             android:scaleType="center"
             android:src="@drawable/tab_item_close_button"
-            android:tint="@android:color/white"/>
+            android:tint="@color/cliqz_tabs_panel_tabs_item_header" />
 
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
 

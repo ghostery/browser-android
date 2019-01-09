@@ -86,7 +86,6 @@
                         gecko:tabIndicatorColor="@android:color/white"
                         gecko:tabMode="fixed"/>
 
-
                     <org.mozilla.gecko.controlcenter.ControlCenterViewPager
                         android:id="@+id/control_center_pager"
                         android:layout_width="match_parent"

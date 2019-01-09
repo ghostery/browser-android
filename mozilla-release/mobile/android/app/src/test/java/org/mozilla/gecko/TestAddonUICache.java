@@ -160,7 +160,7 @@ public class TestAddonUICache {
         final List<PageAction> pageActionList = new ArrayList<>();
         final GeckoBundle palMessage = pageActionMessage.getMessage("Frob widget");
         final PageAction pageAction = new PageAction(palMessage.getString("id"),
-                palMessage.getString("title"), null, null, false);
+                palMessage.getString("title"), null, null, false,false);
         pageActionList.add(pageAction);
         mAddonUICache.removePageActionLayoutDelegate(pageActionList);
 

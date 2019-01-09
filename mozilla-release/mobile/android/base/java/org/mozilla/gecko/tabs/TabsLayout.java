@@ -8,6 +8,7 @@ package org.mozilla.gecko.tabs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
 import android.content.Context;
@@ -29,7 +30,15 @@ public abstract class TabsLayout extends RecyclerView
 
     private static final String LOGTAG = "Gecko" + TabsLayout.class.getSimpleName();
 
-    private final boolean isPrivate;
+    /* Cliqz Start */
+    private static final int[] STATE_PRIVATE_MODE = { R.attr.state_private };
+    private static final int[] LIGHT_THEME = { R.attr.light_theme };
+    private static final int[] LIGHT_THEME_PRIVATE_MODE = { R.attr.light_theme, R.attr.state_private };
+
+    private boolean isLightTheme;
+    private boolean isPrivate;
+    /* Cliqz End */
+
     private TabsPanel tabsPanel;
     private final TabsLayoutAdapter tabsAdapter;
     private View emptyView;
@@ -65,6 +74,44 @@ public abstract class TabsLayout extends RecyclerView
             }
         });
     }
+
+    /* Cliqz Start */
+    @Override
+    public int[] onCreateDrawableState(int extraSpace) {
+        final int[] addedState;
+
+        if (isLightTheme && isPrivate)
+            addedState = LIGHT_THEME_PRIVATE_MODE;
+        else if (isLightTheme)
+            addedState = LIGHT_THEME;
+        else if (isPrivate)
+            addedState =  STATE_PRIVATE_MODE;
+        else
+            addedState = new int[]{};
+
+        final int[] drawableState = super.onCreateDrawableState(extraSpace + addedState.length);
+        mergeDrawableStates(drawableState, addedState);
+
+        return drawableState;
+    }
+
+    public void setPrivateMode(boolean isPrivate) {
+        if (this.isPrivate != isPrivate) {
+            this.isPrivate = isPrivate;
+            refreshDrawableState();
+            invalidate();
+        }
+    }
+
+    public void setLightTheme(boolean isLightTheme) {
+        if (this.isLightTheme != isLightTheme) {
+            this.isLightTheme = isLightTheme;
+            refreshDrawableState();
+            invalidate();
+            tabsAdapter.setLightTheme(isLightTheme);
+        }
+    }
+    /* Cliqz End */
 
     @Override
     public void setTabsPanel(TabsPanel panel) {

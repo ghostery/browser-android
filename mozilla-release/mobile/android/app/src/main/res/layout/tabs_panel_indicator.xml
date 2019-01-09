@@ -15,6 +15,6 @@
         android:paddingBottom="@dimen/browser_toolbar_button_padding"
         android:background="@drawable/tabs_panel_indicator"
         android:gravity="center"
-        android:textColor="@android:color/white"
+        android:textColor="@color/cliqz_tabs_panel_tab_widget_color"
         android:textSize="@dimen/menu_item_textsize" />
 <!-- Cliqz end -->

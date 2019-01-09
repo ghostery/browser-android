@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/news_bg_color"
     android:orientation="horizontal">
 
-    <TextView
+    <org.mozilla.gecko.widget.themed.ThemedTextView
         android:id="@+id/news_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,12 +14,12 @@
         android:gravity="start"
         android:padding="@dimen/news_title_padding"
         android:text="@string/activity_stream_top_news"
-        android:textColor="@android:color/white"
+        android:textColor="@color/cliqz_start_tab_font_color"
         android:textSize="14sp"
         android:textStyle="bold"
         tools:text="News" />
 
-    <TextView
+    <org.mozilla.gecko.widget.themed.ThemedTextView
         android:id="@+id/news_display_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +27,7 @@
         android:gravity="end"
         android:padding="@dimen/news_title_padding"
         android:text="@string/activity_stream_top_news"
-        android:textColor="@android:color/white"
+        android:textColor="@color/cliqz_start_tab_font_color"
         android:textSize="14sp"
         tools:text="Show" />
 

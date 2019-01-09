@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--Cliqz Start-->
+<?xml version="1.0" encoding="utf-8"?>
+<!--Cliqz Start-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +9,7 @@
 
     <!-- scrollHorizontally=false allows drags on the TextView to scroll the ViewPager.
      See https://stackoverflow.com/a/18171834/2219998 -->
-    <TextView
+    <org.mozilla.gecko.widget.themed.ThemedTextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +21,7 @@
         android:maxLines="1"
         android:padding="2dp"
         android:scrollHorizontally="false"
-        android:textColor="@android:color/white"
+        android:textColor="@color/cliqz_start_tab_font_color"
         android:textSize="12sp"
         tools:text="Lorem Ipsum here is a title"
         tools:textColor="@android:color/black"/>
@@ -47,4 +48,4 @@
         android:visibility="visible" />
 
 </RelativeLayout>
-    <!--Cliqz End-->
+<!--Cliqz End-->

@@ -45,10 +45,8 @@ public class RoundedCornerLayout extends LinearLayout {
 
         final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 
-        /* Cliqz Start */
         cornerRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimensionPixelSize(R.dimen.news_list_radius), metrics);
-        /* Cliqz End */
+                getResources().getDimensionPixelSize(R.dimen.doorhanger_rounded_corner_radius), metrics);
 
         setWillNotDraw(false);
     }

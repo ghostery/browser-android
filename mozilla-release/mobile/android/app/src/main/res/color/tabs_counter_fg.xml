@@ -6,9 +6,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
+    <!-- Cliqz start -->
+    <item android:color="@color/general_blue_color" gecko:light_theme="true"/>
+
     <item android:color="@color/menu_item_tint_private"
           gecko:state_private="true"/>
-    <!-- Cliqz start -->
     <!-- change tabs counter color -->
     <item android:color="@android:color/white"/>
     <!-- Cliqz end -->

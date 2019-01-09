@@ -56,8 +56,7 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:background="@drawable/url_bar_action_button"
-        android:gravity="center_horizontal"
-        gecko:drawableTintList="@color/url_bar_image_color"/>
+        android:gravity="center_horizontal"/>
 
     <org.mozilla.gecko.toolbar.ToolbarRoundButton
         android:id="@+id/tabs"
@@ -66,13 +65,12 @@
         android:background="@drawable/url_bar_action_button"
         gecko:showLWTBackground="true"/>
 
-    <!-- remove height property -->
+    <!-- remove height, drawableTintList property -->
     <org.mozilla.gecko.toolbar.TabCounter
         android:id="@+id/tabs_counter"
         style="@style/UrlBar.TabCounter"
         android:layout_centerVertical="true"
-        android:gravity="center_horizontal"
-        gecko:drawableTintList="@color/url_bar_image_color"/>
+        android:gravity="center_horizontal"/>
 
     <!-- Note that the edit components are invisible so that the views
          depending on their location can properly layout. -->

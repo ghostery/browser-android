@@ -16,6 +16,7 @@ import org.mozilla.gecko.animation.ViewHelper;
 import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.lwt.LightweightThemeDrawable;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.restrictions.Restrictable;
 import org.mozilla.gecko.restrictions.Restrictions;
 import org.mozilla.gecko.toolbar.TabCounter;
@@ -27,6 +28,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.content.ContextCompat;
@@ -43,9 +45,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import org.mozilla.gecko.widget.themed.ThemedImageButton;
+import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 import org.mozilla.gecko.widget.themed.ThemedTextView;
+import org.mozilla.gecko.widget.themed.ThemedView;
 
-public class TabsPanel extends LinearLayout
+/* Cliqz Start */
+public class TabsPanel extends ThemedLinearLayout
+/* Cliqz End */
                        implements GeckoPopupMenu.OnMenuItemClickListener,
                                   LightweightTheme.OnChangeListener,
                                   IconTabWidget.OnTabChangedListener,
@@ -98,8 +105,10 @@ public class TabsPanel extends LinearLayout
     private final GeckoApp mActivity;
     private final LightweightTheme mTheme;
     /* Cliqz start */
+    private final PreferenceManager preferenceManager;
+
     // change Relative Layout to Linear
-    private LinearLayout mHeader;
+    private ThemedLinearLayout mHeader;
 
     private FrameLayout mTabsContainer;
     private PanelView mPanel;
@@ -108,8 +117,10 @@ public class TabsPanel extends LinearLayout
     private TabsLayoutChangeListener mLayoutChangeListener;
 
     private IconTabWidget mTabWidget;
-    private View mMenuButton;
-    private ImageButton mAddTab;
+    private ThemedImageButton mMenuButton;
+    private ThemedImageButton mAddTab;
+    private ThemedView mBlankLine;
+
     // Cliqz: add tabsCounter
     private TabCounter mTabsCounter;
 
@@ -137,6 +148,10 @@ public class TabsPanel extends LinearLayout
         mPopupMenu.inflate(R.menu.tabs_menu);
         mPopupMenu.setOnMenuItemClickListener(this);
 
+        /* Cliqz Start */
+        preferenceManager = PreferenceManager.getInstance(context);
+        /* Cliqz End */
+
         inflateLayout(context);
         initialize();
     }
@@ -147,8 +162,9 @@ public class TabsPanel extends LinearLayout
 
     private void initialize() {
         /* Cliqz start */
+        mBlankLine = (ThemedView) findViewById(R.id.blank_line);
         // change Relative Layout to Linear
-        mHeader = (LinearLayout) findViewById(R.id.tabs_panel_header);
+        mHeader = (ThemedLinearLayout) findViewById(R.id.tabs_panel_header);
         mTabsContainer = (FrameLayout) findViewById(R.id.tabs_container);
 
         mPanelNormal = (PanelView) findViewById(R.id.normal_tabs);
@@ -157,7 +173,7 @@ public class TabsPanel extends LinearLayout
         mPanelPrivate = (PanelView) findViewById(R.id.private_tabs_panel);
         mPanelPrivate.setTabsPanel(this);
 
-        mAddTab = (ImageButton) findViewById(R.id.add_tab);
+        mAddTab = (ThemedImageButton) findViewById(R.id.add_tab);
         mAddTab.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -383,6 +399,10 @@ public class TabsPanel extends LinearLayout
         final DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
         dispatchLayoutChange(metrics.widthPixels, metrics.heightPixels);
         mHeaderVisible = true;
+
+        /* Cliqz Start */
+        setLightTheme(preferenceManager.isLightThemeEnabled());
+        /* Cliqz End */
     }
 
     public void prepareToShow(Panel panelToShow) {
@@ -402,6 +422,9 @@ public class TabsPanel extends LinearLayout
         mTabWidget.setCurrentTab(index);
         switch (panelToShow) {
             case NORMAL_TABS:
+                /* Cliqz Start */
+                setPrivateMode(false);
+                /* Cliqz End */
                 mPanel = mPanelNormal;
                 /* Cliqz start o/
                 // remove applied color
@@ -414,6 +437,9 @@ public class TabsPanel extends LinearLayout
                 /o Cliqz end*/
                 break;
             case PRIVATE_TABS:
+                /* Cliqz Start */
+                setPrivateMode(true);
+                /* Cliqz End */
                 mPanel = mPanelPrivate;
                 /* Cliqz start o/
                 // remove applied color
@@ -447,6 +473,34 @@ public class TabsPanel extends LinearLayout
             }
         });
     }
+
+    /* Cliqz Start */
+    @Override
+    public void setPrivateMode(boolean isPrivate) {
+        super.setPrivateMode(isPrivate);
+        ((org.mozilla.gecko.tabs.TabsLayout) mPanelNormal).setPrivateMode(isPrivate);
+        ((PrivateTabsPanel) mPanelPrivate).setPrivateMode(isPrivate);
+        mHeader.setPrivateMode(isPrivate);
+        mTabWidget.setPrivateMode(isPrivate);
+        mTabsCounter.setPrivateMode(isPrivate);
+        mMenuButton.setPrivateMode(isPrivate);
+        mAddTab.setPrivateMode(isPrivate);
+        mBlankLine.setPrivateMode(isPrivate);
+    }
+
+    @Override
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        ((org.mozilla.gecko.tabs.TabsLayout) mPanelNormal).setLightTheme(isLightTheme);
+        ((PrivateTabsPanel) mPanelPrivate).setLightTheme(isLightTheme);
+        mHeader.setLightTheme(isLightTheme);
+        mTabWidget.setLightTheme(isLightTheme);
+        mTabsCounter.setLightTheme(isLightTheme);
+        mMenuButton.setLightTheme(isLightTheme);
+        mAddTab.setLightTheme(isLightTheme);
+        mBlankLine.setLightTheme(isLightTheme);
+    }
+    /* Cliqz End */
 
     public void hide() {
         mHeaderVisible = false;

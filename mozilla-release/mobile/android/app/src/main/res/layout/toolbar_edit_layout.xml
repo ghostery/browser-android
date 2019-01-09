@@ -21,7 +21,7 @@
         android:layout_height="@dimen/browser_toolbar_url_height"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/rounded_text">
+        android:background="@drawable/url_bar_entry_bg">
 
         <!-- Search icon must have exact position and size as site security in
              display layout -->
@@ -55,7 +55,7 @@
             android:src="@drawable/ic_close_clear"
             android:visibility="visible"
             gecko:showLWTBackground="true"
-            android:tint="@android:color/black"
+            android:tint="@color/cliqz_tint_edit_cancel_button"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
             android:layout_height="@dimen/browser_toolbar_height"

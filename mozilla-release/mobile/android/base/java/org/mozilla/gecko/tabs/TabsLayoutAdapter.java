@@ -7,6 +7,7 @@ package org.mozilla.gecko.tabs;
 
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.JavaUtil;
 
 import android.content.Context;
@@ -31,6 +32,8 @@ public class TabsLayoutAdapter
     private final boolean isPrivate;
     // Click listener for the close button on itemViews.
     private final Button.OnClickListener closeOnClickListener;
+
+    private boolean isLightTheme;
 
     // The TabsLayoutItemView takes care of caching its own Views, so we don't need to do anything
     // here except not be abstract.
@@ -123,6 +126,8 @@ public class TabsLayoutAdapter
         final Tab tab = getItem(position);
         final TabsLayoutItemView itemView = (TabsLayoutItemView) viewHolder.itemView;
         itemView.assignValues(tab);
+        itemView.setPrivateMode(isPrivate);
+        itemView.setLightTheme(isLightTheme);
         // Be careful (re)setting position values here: bind is called on each notifyItemChanged,
         // so you could be stomping on values that have been set in support of other animations
         // that are already underway.
@@ -132,8 +137,14 @@ public class TabsLayoutAdapter
     public TabsListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final TabsLayoutItemView viewItem = (TabsLayoutItemView) inflater.inflate(tabLayoutId, parent, false);
         viewItem.setPrivateMode(isPrivate);
+        viewItem.setLightTheme(isLightTheme);
         viewItem.setCloseOnClickListener(closeOnClickListener);
 
         return new TabsListViewHolder(viewItem);
     }
+
+    void setLightTheme(boolean isLightTheme) {
+        this.isLightTheme = isLightTheme;
+    }
+
 }

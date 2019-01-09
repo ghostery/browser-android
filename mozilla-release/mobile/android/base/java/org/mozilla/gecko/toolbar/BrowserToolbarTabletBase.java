@@ -5,26 +5,22 @@
 
 package org.mozilla.gecko.toolbar;
 
-import java.util.Arrays;
-
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.Tab;
-import org.mozilla.gecko.Tabs;
-import org.mozilla.gecko.tabs.TabHistoryController;
-import org.mozilla.gecko.menu.MenuItemActionBar;
-import org.mozilla.gecko.widget.themed.ThemedImageButton;
-
-import org.mozilla.gecko.Telemetry;
-import org.mozilla.gecko.TelemetryContract;
-import org.mozilla.gecko.util.DrawableUtil;
-
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.graphics.PorterDuff;
-import android.support.v4.content.ContextCompat;
+
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.Tab;
+import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.menu.MenuItemActionBar;
+import org.mozilla.gecko.tabs.TabHistoryController;
+import org.mozilla.gecko.widget.themed.ThemedImageButton;
+
+import java.util.Arrays;
 
 /**
  * A base implementations of the browser toolbar for tablets.
@@ -36,10 +32,6 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
 
     protected final BackButton backButton;
     protected final ForwardButton forwardButton;
-     /* Cliqz start */
-    // add cancel button
-    protected final ThemedImageButton editCancel;
-    /* Cliqz end */
 
     protected final View menuButtonMarginView;
 
@@ -52,12 +44,6 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
         backButton.setEnabled(false);
         forwardButton = (ForwardButton) findViewById(R.id.forward);
         forwardButton.setEnabled(false);
-        /* Cliqz start */
-        // initialize cancel button and tint it to black
-        editCancel = (ThemedImageButton)findViewById(R.id.edit_cancel);
-        editCancel.setImageDrawable(DrawableUtil.tintDrawable(getContext(),R.drawable
-                .ic_close_clear,android.R.color.black));
-        /* Cliqz start */
         initButtonListeners();
 
         focusOrder.addAll(Arrays.asList(tabsButton, (View) backButton, (View) forwardButton, this));
@@ -100,22 +86,6 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
                         TabHistoryController.HistoryAction.FORWARD);
             }
         });
-         /* Cliqz start */
-        // add clickListener to cancel button
-        editCancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // If we exit editing mode during the animation,
-                // we're put into an inconsistent state (bug 1017276).
-                if (!isAnimating()) {
-                    Telemetry.sendUIEvent(TelemetryContract.Event.CANCEL,
-                            TelemetryContract.Method.ACTIONBAR,
-                            getResources().getResourceEntryName(editCancel.getId()));
-                    cancelEdit();
-                }
-            }
-        });
-        /* Cliqz end */
     }
 
     @Override
@@ -125,7 +95,7 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
 
     @Override
     public boolean addActionItem(final View actionItem) {
-         if (actionItem instanceof MenuItemActionBar) {
+        if (actionItem instanceof MenuItemActionBar) {
             final MenuItemActionBar itemActionBar = (MenuItemActionBar) actionItem;
             itemActionBar.setColorFilter(ContextCompat.getColor(getContext(), android.R.color.white),
                     PorterDuff.Mode.SRC_ATOP);
@@ -165,10 +135,6 @@ abstract class BrowserToolbarTabletBase extends BrowserToolbar {
 
         backButton.setPrivateMode(isPrivate);
         forwardButton.setPrivateMode(isPrivate);
-        /* Cliqz start */
-        // change cancel button to private mode
-        editCancel.setPrivateMode(isPrivate);
-        /* Cliqz end */
 
         ((ThemedImageButton) menuButton).setPrivateMode(isPrivate);
 

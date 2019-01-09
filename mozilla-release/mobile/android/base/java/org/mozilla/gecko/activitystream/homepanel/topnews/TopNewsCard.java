@@ -11,7 +11,6 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -19,6 +18,7 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.cliqzicons.RoundedCornersTransformation;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 /**
  * Cliqz 2018
@@ -28,9 +28,8 @@ import org.mozilla.gecko.cliqzicons.RoundedCornersTransformation;
 public class TopNewsCard extends RecyclerView.ViewHolder {
 
     private final ImageView faviconView;
-    private final TextView titleView;
-    private final TextView urlView;
-
+    private final ThemedTextView titleView;
+    private final ThemedTextView urlView;
 
     private Context context;
 
@@ -38,8 +37,8 @@ public class TopNewsCard extends RecyclerView.ViewHolder {
         super(card);
         context = card.getContext();
         faviconView = (ImageView) card.findViewById(R.id.favicon);
-        titleView = (TextView) card.findViewById(R.id.title_view);
-        urlView = (TextView) card.findViewById(R.id.url_view);
+        titleView = (ThemedTextView) card.findViewById(R.id.title_view);
+        urlView = (ThemedTextView) card.findViewById(R.id.url_view);
     }
 
     void bind(final TopNews topNews) {
@@ -77,6 +76,11 @@ public class TopNewsCard extends RecyclerView.ViewHolder {
         builder.append(str).append(": ");
         builder.setSpan(new ForegroundColorSpan(color), oldLen, builder.length(),
                 Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+    }
+
+    void setLightTheme(boolean isLightTheme) {
+        titleView.setLightTheme(isLightTheme);
+        urlView.setLightTheme(isLightTheme);
     }
 
 }

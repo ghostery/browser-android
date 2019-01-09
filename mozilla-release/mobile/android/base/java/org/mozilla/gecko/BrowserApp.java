@@ -209,8 +209,9 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
-import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_BLUE_THEME;
 import static org.mozilla.gecko.util.ViewUtil.dpToPx;
+import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
 
 public class BrowserApp extends GeckoApp
                         implements ActionModePresenter,
@@ -230,8 +231,9 @@ public class BrowserApp extends GeckoApp
                                    BaseControlCenterPagerAdapter.ControlCenterCallbacks,
                                    AntiPhishing.AntiPhishingCallback,
                                    AntiPhishingDialog.AntiPhishingDialogActionListener,
+                                   OnboardingHelper.OnboardingListener,
+                                   SharedPreferences.OnSharedPreferenceChangeListener {
                                    /* Cliqz End */
-                                   OnboardingHelper.OnboardingListener {
     private static final String LOGTAG = "GeckoBrowserApp";
 
     private static final int TABS_ANIMATION_DURATION = 450;
@@ -286,6 +288,7 @@ public class BrowserApp extends GeckoApp
     private TabHistoryController tabHistoryController;
 
     /* Cliqz Start */
+    private ThemedTabLayout tabLayout;
     private ViewPager mControlCenterPager;
     private View mControlCenterContainer;
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
@@ -813,7 +816,6 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
         /* Cliqz start */
-        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
         //Forcing the default right away, otherwise extension wont have the right default until and
         //unless user opens the settings
         PrefsHelper.setPrefIfNotExists(GeckoPreferences.PREFS_SEARCH_REGIONAL,
@@ -847,7 +849,7 @@ public class BrowserApp extends GeckoApp
         mControlCenterPagerAdapter.init(this);
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
-        final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
+        tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
 
@@ -1014,7 +1016,11 @@ public class BrowserApp extends GeckoApp
         if (AppConstants.Versions.feature24Plus) {
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
-        /*Cliqz End*/
+
+        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+        mPreferenceManager.registerOnSharedPreferenceChangeListener(this);
+        setLightTheme();
+        /* Cliqz End */
     }
 
     /* Cliqz Start */
@@ -1781,6 +1787,10 @@ public class BrowserApp extends GeckoApp
         GeckoNetworkManager.destroy();
 
         MmaDelegate.flushResources(this);
+
+        /* Cliqz start */
+        mPreferenceManager.unregisterOnSharedPreferenceChangeListener(this);
+        /* Cliqz end */
 
         super.onDestroy();
     }
@@ -4821,5 +4831,23 @@ public class BrowserApp extends GeckoApp
     public boolean setRequestedOrientationForCurrentActivity(int requestedActivityInfoOrientation) {
         return super.setRequestedOrientationForCurrentActivity(requestedActivityInfoOrientation);
     }
+
+    private void setLightTheme() {
+        mBrowserToolbar.setLightTheme(mPreferenceManager.isLightThemeEnabled());
+        if (tabLayout != null) {
+            tabLayout.setLightTheme(mPreferenceManager.isLightThemeEnabled());
+        }
+        if (mHomeScreen != null) {
+            ((HomePager) mHomeScreen).setLightTheme(mPreferenceManager.isLightThemeEnabled());
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(PREFS_BLUE_THEME)) {
+            setLightTheme();
+        }
+    }
+
     /* Cliqz end */
 }

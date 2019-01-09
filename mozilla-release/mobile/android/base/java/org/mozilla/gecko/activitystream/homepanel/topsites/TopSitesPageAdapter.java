@@ -34,6 +34,10 @@ import java.util.List;
     private final HomePager.OnUrlOpenListener onUrlOpenListener;
     private final TopPanelRow.OnCardLongClickListener onCardLongClickListener;
 
+    /* Cliqz Start */
+    private boolean isLightTheme;
+    /* Cliqz End */
+
     /* package-local */ TopSitesPageAdapter(final int pageNumber, final HomePager.OnUrlOpenListener onUrlOpenListener,
             final TopPanelRow.OnCardLongClickListener onCardLongClickListener) {
         setHasStableIds(true);
@@ -88,7 +92,7 @@ import java.util.List;
     @Override
     public void onBindViewHolder(TopSitesCard holder, int position) {
         holder.bind(topSites.get(position), getTopSiteAbsolutePosition(position));
-
+        holder.setLightTheme(isLightTheme);
         final View card = holder.itemView;
         final ViewGroup.LayoutParams layoutParams = card.getLayoutParams();
         layoutParams.width = tilesSize;
@@ -125,5 +129,9 @@ import java.util.List;
             throw new IllegalArgumentException("Illegal relative top site position encountered");
         }
         return relativePosition + pageNumber * TopSitesPage.NUM_TILES;
+    }
+
+    void setLightTheme(boolean isLightTheme) {
+        this.isLightTheme = isLightTheme;
     }
 }
