@@ -4,14 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.utils.Utils;
 
 /**
  * Copyright © Cliqz 2018
  */
 public class CliqzPieChart extends PieChart {
 
-    private static final int MAX_HEIGHT_DP = 180;
+    private int mMeasuredSize = Integer.MAX_VALUE;
 
     public CliqzPieChart(Context context) {
         super(context);
@@ -27,14 +26,13 @@ public class CliqzPieChart extends PieChart {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        final int maxHeight = (int)Utils.convertDpToPixel(MAX_HEIGHT_DP);
-        int measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
-        if (measuredHeight > maxHeight) {
-            final int measureMode = MeasureSpec.getMode(heightMeasureSpec);
-            //the layout should be a square so we also resize the width
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, measureMode);
-            widthMeasureSpec = heightMeasureSpec;
+        final int width = MeasureSpec.getSize(widthMeasureSpec);
+        final int height = MeasureSpec.getSize(heightMeasureSpec);
+        final int min = Math.min(width, height);
+        if (min < mMeasuredSize) {
+            mMeasuredSize = min;
         }
-        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        final int measureSpec = MeasureSpec.makeMeasureSpec(mMeasuredSize, MeasureSpec.EXACTLY);
+        setMeasuredDimension(measureSpec, measureSpec);
     }
 }

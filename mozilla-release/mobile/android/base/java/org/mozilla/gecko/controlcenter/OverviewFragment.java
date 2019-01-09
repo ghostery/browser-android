@@ -12,8 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +26,6 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.Utils;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.R;
@@ -51,8 +48,10 @@ import static org.mozilla.gecko.util.GeckoBundleUtils.safeGetStringArray;
  */
 public class OverviewFragment extends ControlCenterFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
     private PieChart mPieChart;
+    private View mTrackersCountView;
+    private TextView mTrackersCount;
+    private TextView mTrackersLabel;
     private TextView mDomainName;
     private TextView mTrackersBlocked;
     private LinearLayout mTrustSiteButton;
@@ -99,10 +98,6 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     public OverviewFragment() {
     }
 
-    public void setControlCenterCallback(BaseControlCenterPagerAdapter.ControlCenterCallbacks callback) {
-        mControlCenterCallbacks = callback;
-    }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -119,6 +114,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.ghostery_overview_fragment, container, false);
         mPieChart = (PieChart) view.findViewById(R.id.cc_donut);
+        mTrackersCountView = view.findViewById(R.id.trackers_count_holder);
+        mTrackersCount = (TextView) view.findViewById(R.id.trackers_count);
+        mTrackersLabel = (TextView) view.findViewById(R.id.trackers_label);
         mDomainName = (TextView) view.findViewById(R.id.cc_domain_name);
         mTrackersBlocked = (TextView) view.findViewById(R.id.cc_trackers_blocked);
         mTrustSiteButton = (LinearLayout) view.findViewById(R.id.cc_ghostery_trust_site_button);
@@ -228,20 +226,25 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mPieChart.setHighlightPerTapEnabled(false);
         mPieChart.setData(pieData);
         mPieChart.setDrawEntryLabels(false);
-        final String pieChartText = getResources().getQuantityString(R.plurals.cc_total_trackers_found, totalTrackers, totalTrackers);
-        final Spannable centerTextSpan = new SpannableString(pieChartText);
-        centerTextSpan.setSpan(new AbsoluteSizeSpan(
-                getResources().getDimensionPixelSize(R.dimen.ghostery_cc_donut_number_size)), 0,
-                Integer.toString(totalTrackers).length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        mPieChart.setCenterText(centerTextSpan);
-        mPieChart.setCenterTextSizePixels(getResources().getDimensionPixelSize(R.dimen.ghostery_cc_donut_text_size));
-        mPieChart.setCenterTextRadiusPercent(85);
+        mTrackersCount.setText(String.valueOf(totalTrackers));
+        mTrackersLabel.setText(getResources().getQuantityString(R.plurals.cc_total_trackers_found, totalTrackers));
         mPieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.cc_text_color));
         mPieChart.setHoleRadius(80);
         mPieChart.setDescription(null);
         mPieChart.setDrawMarkers(false);
         mPieChart.getLegend().setEnabled(false);
         mPieChart.invalidate();
+
+        mTrackersCountView.setVisibility(View.INVISIBLE);
+        mPieChart.post(new Runnable() {
+            @Override
+            public void run() {
+                mTrackersCountView.setVisibility(View.VISIBLE);
+                final int donutRadius = mPieChart.getHeight() / 2;
+                final int padding = (int) (Math.sqrt(2 * Math.pow(donutRadius, 2)) - donutRadius);
+                mTrackersCountView.setPadding(padding, padding, padding, padding);
+            }
+        });
         final String trackersBlocked = getResources().getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers);
         final Spannable trackersBlockedSpan = new SpannableString(trackersBlocked);
         trackersBlockedSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.cc_restricted)), 0,
