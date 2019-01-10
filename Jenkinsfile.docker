@@ -27,7 +27,6 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                 appium --version
                 pip --version
                 adb version
-                sdkmanager --list
             '''
         }
     }
