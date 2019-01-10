@@ -259,18 +259,18 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Einführung von &brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Surfe auch unterwegs sauberer, schneller und sicherer mit &brandShortName;! Jetzt für Mobilgeräte optimiert!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Hilf &brandShortName; indem du anonyme Statistiken und Human-Web-Daten sendest, um &brandShortName;s Leistung zu verbessern. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_text "Surfe einfacher, schneller und sicherer mit &brandShortName;!">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Hilf &brandShortName;s Leistung zu verbessern, indem du anonyme Statistiken und Human-Web-Daten sendest. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Werbung und Tracker blockieren">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Wähle aus, was &brandShortName; blockieren soll, damit du schneller, sicherer und sauberer surfst. Du kannst diese Einstellung jederzeit im Privacy Control Center anpassen und ändern.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Was soll &brandShortName für dich blockieren? Du kannst deine Auswahl jederzeit im Privacy Control Center anpassen.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Nichts blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Empfohlenes blockieren">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Werbung, Erwachsenenwerbung und Website-Analytics-Tracker blockieren">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Werbung und Website-Analytics blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Alles blockieren">
 <!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
-<!ENTITY ghostery_onboarding_quick_search_text "Bleibe anonym und spare Zeit und Datenvolumen: Ergebnisse erscheinen in Echtzeit noch während der Eingabe in die &brandShortName;-Suchleiste.">
+<!ENTITY ghostery_onboarding_quick_search_text "Bleib anonym mit der privaten Suche und spare dir zudem Zeit mit Suchergebnissen, die bereits während der Eingabe erscheinen.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Passe jeden neuen &pref_new_tab_category; an deine Wünsche an, indem du einzelne Elemente wie die meistbesuchten Websites, die neuesten Nachrichten und die Tracking-Statistiken ein- oder ausblendest.">
+<!ENTITY ghostery_onboarding_new_tab_text "Passe die Startseite deiner Tabs an deine Wünsche an.">
 <!ENTITY ghostery_onboarding_action_button "Browsen beginnen">
 <!ENTITY ghostery_onboarding_contextual_title "Tracking-Schutz aktiviert">
 <!ENTITY ghostery_onboarding_contextual_item1_title "Erweitertes Anti-Tracking">
