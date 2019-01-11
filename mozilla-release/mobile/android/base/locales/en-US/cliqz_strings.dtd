@@ -67,8 +67,8 @@
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Seems like we do not have any offers">
-<!ENTITY myoffrz_no_offers_msg_line1 "But we\'ll keep looking for you and add">
-<!ENTITY myoffrz_no_offers_msg_line2 "them here as soon as we have one">
+<!ENTITY myoffrz_no_offers_msg_line1 "But we add them here ">
+<!ENTITY myoffrz_no_offers_msg_line2 "as soon as we have one">
 <!ENTITY myoffrz_onboarding_description "Receive attractive discounts and bargains with &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Order Now!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Tap code to copy">
@@ -276,7 +276,7 @@
 <!ENTITY ghostery_onboarding_tracking_protection_text "What should &brandShortName; block for you? You can change your selection any time in the Privacy Control Center.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Block Nothing">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Block Recommended">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Advertising and Site Analytics">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Ads and Adult Ads">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Block Everything">
 <!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
 <!ENTITY ghostery_onboarding_quick_search_text "Stay anonymous with private search and save time with instantaneous results as you type.">
