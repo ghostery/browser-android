@@ -103,10 +103,10 @@
 <!ENTITY cc_pause_ghostery "Ghostery pausieren">
 <!ENTITY cc_resume_ghostery "Ghostery fortsetzen">
 <!ENTITY cc_enhanced_options "Erweiterte Optionen">
-<!ENTITY cc_enhanced_anti_tracking "Erweitertes Anti-Tracking">
+<!ENTITY cc_enhanced_anti_tracking "Anti-Tracking">
 <!ENTITY cc_enhanced_ad_blocking "Werbeblocker">
 <!ENTITY cc_smart_blocking "Smart Blocking">
-<!ENTITY cc_enhanced_anti_tracking_info "Informationen zu erweitertem Anti-Tracking">
+<!ENTITY cc_enhanced_anti_tracking_info "Informationen zum  Anti-Tracking">
 <!ENTITY cc_enhanced_ad_blocking_info "Informationen zum Werbeblocker">
 <!ENTITY cc_smart_blocking_info "Informationen zu erweitertem Anti-Tracking">
 <!ENTITY cc_zero_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
