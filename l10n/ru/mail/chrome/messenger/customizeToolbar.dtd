@@ -14,5 +14,6 @@
 <!ENTITY restoreDefaultSet.label  "Восстановить по умолчанию">
 <!ENTITY addNewToolbar.label      "Добавить панель">
 <!ENTITY showTitlebar.label       "Показать панель заголовка">
+<!ENTITY extraDragSpace.label     "Добавить место для перетаскивания">
 <!ENTITY saveChanges.label        "Готово">
 <!ENTITY undoChanges.label        "Отменить изменения">

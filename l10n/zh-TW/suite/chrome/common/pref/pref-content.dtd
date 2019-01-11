@@ -41,3 +41,5 @@
 <!ENTITY allowHWAccel.accesskey                 "e">
 <!ENTITY blockAutoRefresh.label                 "當網站試圖重新導向或重新載入頁面時警告">
 <!ENTITY blockAutoRefresh.accesskey             "W">
+
+<!ENTITY showZoomStatusPanel.label              "在狀態列顯示縮放元件">

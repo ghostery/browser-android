@@ -84,3 +84,6 @@
 <!ENTITY viewCertificate.accesskey   "T">
 <!ENTITY viewCertManager.label       "Tanúsítványkezelő megnyitása">
 <!ENTITY viewCertManager.accesskey   "k">
+
+<!ENTITY zoomIn.tooltiptext          "Nagyobb">
+<!ENTITY zoomOut.tooltiptext         "Kisebb">

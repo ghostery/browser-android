@@ -105,4 +105,23 @@ public class PreferenceManager {
     public boolean isBackgroundEnabled() {
         return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED,true);
     }
+
+    public boolean showCustomizeTabView() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SHOW_CUSTOMIZE_TAB_VIEW, false);
+    }
+
+    public void setShowCustomizeTabView(boolean value) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putBoolean(GeckoPreferences.PREFS_SHOW_CUSTOMIZE_TAB_VIEW, value).apply();
+    }
+
+    public boolean showCustomizeTabSnackBar() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR, true);
+    }
+
+    public void setShowCustomizeTabSnackBar(boolean value) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putBoolean(GeckoPreferences.PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR, value).apply();
+    }
+
 }

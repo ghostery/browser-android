@@ -437,8 +437,7 @@ GLContextEGL::MakeCurrentImpl() const
     if (!succeeded) {
         const auto eglError = mEgl->fGetError();
         if (eglError == LOCAL_EGL_CONTEXT_LOST) {
-            mContextLost = true;
-            NS_WARNING("EGL context has been lost.");
+            OnContextLostError();
         } else {
             NS_WARNING("Failed to make GL context current!");
 #ifdef DEBUG
@@ -534,6 +533,8 @@ GLContextEGL::HoldSurface(gfxASurface* aSurf) {
     mThebesSurface = aSurf;
 }
 
+#define LOCAL_EGL_CONTEXT_PROVOKING_VERTEX_DONT_CARE_MOZ 0x6000
+
 already_AddRefed<GLContextEGL>
 GLContextEGL::CreateGLContext(CreateContextFlags flags,
                 const SurfaceCaps& caps,
@@ -564,6 +565,13 @@ GLContextEGL::CreateGLContext(CreateContextFlags flags,
         egl->IsExtensionSupported(GLLibraryEGL::KHR_create_context_no_error))
     {
         required_attribs.push_back(LOCAL_EGL_CONTEXT_OPENGL_NO_ERROR_KHR);
+        required_attribs.push_back(LOCAL_EGL_TRUE);
+    }
+
+    if (flags & CreateContextFlags::PROVOKING_VERTEX_DONT_CARE &&
+        egl->IsExtensionSupported(GLLibraryEGL::MOZ_create_context_provoking_vertex_dont_care))
+    {
+        required_attribs.push_back(LOCAL_EGL_CONTEXT_PROVOKING_VERTEX_DONT_CARE_MOZ);
         required_attribs.push_back(LOCAL_EGL_TRUE);
     }
 

@@ -24,9 +24,6 @@ Ping
 <!ENTITY aboutTelemetry.optionGroupToday "Aujourd’hui">
 <!ENTITY aboutTelemetry.optionGroupYesterday "Hier">
 <!ENTITY aboutTelemetry.optionGroupOlder "Plus ancien">
-<!ENTITY aboutTelemetry.payloadChoiceHeader "
-  Charge
-">
 <!-- LOCALIZATION NOTE(aboutTelemetry.previousPing, aboutTelemetry.nextPing):
 	These strings are displayed when selecting Archived pings, and they’re
 	used to move to the next or previous ping. -->
@@ -38,6 +35,8 @@ Ping
 <!ENTITY aboutTelemetry.firefoxDataDoc "La <a>documentation des données de Firefox</a> propose des guides pour comprendre comment utiliser nos outils de données.">
 <!ENTITY aboutTelemetry.telemetryClientDoc "La <a>documentation du client de télémétrie Firefox</a> contient la définition des différents concepts, la documentation de l’API et un référentiel de données.">
 <!ENTITY aboutTelemetry.telemetryDashboard "Les <a>tableaux de bord de télémétrie</a> vous permettent de visualiser les données reçues par Mozilla grâce à la télémétrie.">
+
+<!ENTITY aboutTelemetry.telemetryProbeDictionary "Le <a>dictionnaire des échantillons</a> fournit des informations et des descriptions sur les échantillons collectés par télémétrie.">
 
 <!ENTITY aboutTelemetry.showInFirefoxJsonViewer "Ouvrir dans la visionneuse JSON">
 
@@ -69,14 +68,8 @@ Ping
 <!ENTITY aboutTelemetry.simpleMeasurementsSection "
   Mesures simples
 ">
-<!ENTITY aboutTelemetry.telemetryLogSection "
-  Journal de la télémétrie
-">
 <!ENTITY aboutTelemetry.slowSqlSection "
   Requêtes SQL lentes
-">
-<!ENTITY aboutTelemetry.chromeHangsSection "
-  Blocages du navigateur
 ">
 <!ENTITY aboutTelemetry.addonDetailsSection "
   Détails sur les modules complémentaires

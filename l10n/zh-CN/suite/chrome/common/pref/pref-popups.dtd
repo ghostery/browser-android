@@ -9,7 +9,7 @@
 <!ENTITY popupBlock.label               "阻挡未经允许的弹出窗口">
 <!ENTITY popupBlock.accesskey           "B">
 
-<!ENTITY viewPermissions.label          "权限管理">
+<!ENTITY viewPermissions.label          "管理权限">
 <!ENTITY viewPermissions.accesskey      "M">
 
 <!ENTITY whenBlock.description          "当弹出窗口被阻挡时:">

@@ -414,8 +414,6 @@ WebGLContext::DeleteRenderbuffer(WebGLRenderbuffer* rbuf)
     if (mBoundReadFramebuffer)
         mBoundReadFramebuffer->DetachRenderbuffer(rbuf);
 
-    rbuf->InvalidateStatusOfAttachedFBs();
-
     if (mBoundRenderbuffer == rbuf)
         BindRenderbuffer(LOCAL_GL_RENDERBUFFER, nullptr);
 
@@ -912,19 +910,11 @@ WebGLContext::CreateTexture()
     return globj.forget();
 }
 
-static GLenum
-GetAndClearError(GLenum* errorVar)
-{
-    MOZ_ASSERT(errorVar);
-    GLenum ret = *errorVar;
-    *errorVar = LOCAL_GL_NO_ERROR;
-    return ret;
-}
-
 GLenum
 WebGLContext::GetError()
 {
     const FuncScope funcScope(*this, "getError");
+
     /* WebGL 1.0: Section 5.14.3: Setting and getting state:
      *   If the context's webgl context lost flag is set, returns
      *   CONTEXT_LOST_WEBGL the first time this method is called.
@@ -937,28 +927,26 @@ WebGLContext::GetError()
      *   even when the context is lost.
      */
 
-    if (IsContextLost()) {
-        if (mEmitContextLostErrorOnce) {
-            mEmitContextLostErrorOnce = false;
-            return LOCAL_GL_CONTEXT_LOST_WEBGL;
-        }
-        // Don't return yet, since WEBGL_lose_contexts contradicts the
-        // original spec, and allows error generation while lost.
-    }
-
-    GLenum err = GetAndClearError(&mWebGLError);
-    if (err != LOCAL_GL_NO_ERROR)
+    auto err = mWebGLError;
+    mWebGLError = 0;
+    if (IsContextLost() || err) // Must check IsContextLost in all flow paths.
         return err;
-
-    if (IsContextLost())
-        return LOCAL_GL_NO_ERROR;
 
     // Either no WebGL-side error, or it's already been cleared.
     // UnderlyingGL-side errors, now.
+    err = gl->fGetError();
+    if (gl->IsContextLost()) {
+        UpdateContextLossStatus();
+        return GetError();
+    }
+    MOZ_ASSERT(err != LOCAL_GL_CONTEXT_LOST);
 
-    GetAndFlushUnderlyingGLErrors();
-
-    err = GetAndClearError(&mUnderlyingGLError);
+    if (err) {
+        GenerateWarning("Driver error unexpected by WebGL: 0x%04x", err);
+        // This might be:
+        // - INVALID_OPERATION from ANGLE due to incomplete RBAB implementation for DrawElements
+        //   with DYNAMIC_DRAW index buffer.
+    }
     return err;
 }
 
@@ -1934,7 +1922,7 @@ void
 WebGLContext::Uniform1i(WebGLUniformLocation* loc, GLint a1)
 {
     const FuncScope funcScope(*this, "uniform1i");
-    if (!ValidateUniformSetter(loc, 1, LOCAL_GL_INT))
+    if (!ValidateUniformSetter(loc, 1, webgl::AttribBaseType::Int))
         return;
 
     bool error;
@@ -1949,7 +1937,7 @@ void
 WebGLContext::Uniform2i(WebGLUniformLocation* loc, GLint a1, GLint a2)
 {
     const FuncScope funcScope(*this, "uniform2i");
-    if (!ValidateUniformSetter(loc, 2, LOCAL_GL_INT))
+    if (!ValidateUniformSetter(loc, 2, webgl::AttribBaseType::Int))
         return;
 
     gl->fUniform2i(loc->mLoc, a1, a2);
@@ -1959,7 +1947,7 @@ void
 WebGLContext::Uniform3i(WebGLUniformLocation* loc, GLint a1, GLint a2, GLint a3)
 {
     const FuncScope funcScope(*this, "uniform3i");
-    if (!ValidateUniformSetter(loc, 3, LOCAL_GL_INT))
+    if (!ValidateUniformSetter(loc, 3, webgl::AttribBaseType::Int))
         return;
 
     gl->fUniform3i(loc->mLoc, a1, a2, a3);
@@ -1970,7 +1958,7 @@ WebGLContext::Uniform4i(WebGLUniformLocation* loc, GLint a1, GLint a2, GLint a3,
                         GLint a4)
 {
     const FuncScope funcScope(*this, "uniform4i");
-    if (!ValidateUniformSetter(loc, 4, LOCAL_GL_INT))
+    if (!ValidateUniformSetter(loc, 4, webgl::AttribBaseType::Int))
         return;
 
     gl->fUniform4i(loc->mLoc, a1, a2, a3, a4);
@@ -1982,7 +1970,7 @@ void
 WebGLContext::Uniform1f(WebGLUniformLocation* loc, GLfloat a1)
 {
     const FuncScope funcScope(*this, "uniform1f");
-    if (!ValidateUniformSetter(loc, 1, LOCAL_GL_FLOAT))
+    if (!ValidateUniformSetter(loc, 1, webgl::AttribBaseType::Float))
         return;
 
     gl->fUniform1f(loc->mLoc, a1);
@@ -1992,7 +1980,7 @@ void
 WebGLContext::Uniform2f(WebGLUniformLocation* loc, GLfloat a1, GLfloat a2)
 {
     const FuncScope funcScope(*this, "uniform2f");
-    if (!ValidateUniformSetter(loc, 2, LOCAL_GL_FLOAT))
+    if (!ValidateUniformSetter(loc, 2, webgl::AttribBaseType::Float))
         return;
 
     gl->fUniform2f(loc->mLoc, a1, a2);
@@ -2003,7 +1991,7 @@ WebGLContext::Uniform3f(WebGLUniformLocation* loc, GLfloat a1, GLfloat a2,
                         GLfloat a3)
 {
     const FuncScope funcScope(*this, "uniform3f");
-    if (!ValidateUniformSetter(loc, 3, LOCAL_GL_FLOAT))
+    if (!ValidateUniformSetter(loc, 3, webgl::AttribBaseType::Float))
         return;
 
     gl->fUniform3f(loc->mLoc, a1, a2, a3);
@@ -2014,7 +2002,7 @@ WebGLContext::Uniform4f(WebGLUniformLocation* loc, GLfloat a1, GLfloat a2,
                         GLfloat a3, GLfloat a4)
 {
     const FuncScope funcScope(*this, "uniform4f");
-    if (!ValidateUniformSetter(loc, 4, LOCAL_GL_FLOAT))
+    if (!ValidateUniformSetter(loc, 4, webgl::AttribBaseType::Float))
         return;
 
     gl->fUniform4f(loc->mLoc, a1, a2, a3, a4);
@@ -2064,7 +2052,7 @@ WebGLContext::UniformNiv(const char* funcName, uint8_t N, WebGLUniformLocation* 
     const auto elemBytes = arr.elemBytes + elemOffset;
 
     uint32_t numElementsToUpload;
-    if (!ValidateUniformArraySetter(loc, N, LOCAL_GL_INT, elemCount,
+    if (!ValidateUniformArraySetter(loc, N, webgl::AttribBaseType::Int, elemCount,
                                     &numElementsToUpload))
     {
         return;
@@ -2103,7 +2091,7 @@ WebGLContext::UniformNuiv(const char* funcName, uint8_t N, WebGLUniformLocation*
     const auto elemBytes = arr.elemBytes + elemOffset;
 
     uint32_t numElementsToUpload;
-    if (!ValidateUniformArraySetter(loc, N, LOCAL_GL_UNSIGNED_INT, elemCount,
+    if (!ValidateUniformArraySetter(loc, N, webgl::AttribBaseType::UInt, elemCount,
                                     &numElementsToUpload))
     {
         return;
@@ -2137,7 +2125,7 @@ WebGLContext::UniformNfv(const char* funcName, uint8_t N, WebGLUniformLocation* 
     const auto elemBytes = arr.elemBytes + elemOffset;
 
     uint32_t numElementsToUpload;
-    if (!ValidateUniformArraySetter(loc, N, LOCAL_GL_FLOAT, elemCount,
+    if (!ValidateUniformArraySetter(loc, N, webgl::AttribBaseType::Float, elemCount,
                                     &numElementsToUpload))
     {
         return;
@@ -2184,8 +2172,8 @@ WebGLContext::UniformMatrixAxBfv(const char* funcName, uint8_t A, uint8_t B,
     const auto elemBytes = arr.elemBytes + elemOffset;
 
     uint32_t numMatsToUpload;
-    if (!ValidateUniformMatrixArraySetter(loc, A, B, LOCAL_GL_FLOAT, elemCount,
-                                          transpose, &numMatsToUpload))
+    if (!ValidateUniformMatrixArraySetter(loc, A, B, webgl::AttribBaseType::Float,
+                                          elemCount, transpose, &numMatsToUpload))
     {
         return;
     }

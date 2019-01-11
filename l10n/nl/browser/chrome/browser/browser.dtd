@@ -28,9 +28,17 @@
 <!-- LOCALIZATION NOTE (duplicateTab.label): This is a command to duplicate
 a tab (i.e. it is a verb, not adjective). -->
 <!ENTITY  duplicateTab.label                 "Tabblad dupliceren">
+<!-- LOCALIZATION NOTE (duplicateTab.accesskey, duplicateTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
 <!ENTITY  duplicateTab.accesskey             "u">
 <!ENTITY  closeTabOptions.label              "Opties voor sluiten van tabbladen">
 <!ENTITY  closeTabOptions.accesskey          "O">
+<!-- LOCALIZATION NOTE (duplicateTabs.label): This is a command to duplicate
+a tab (i.e. it is a verb, not adjective). -->
+<!ENTITY  duplicateTabs.label                "Tabbladen dupliceren">
+<!-- LOCALIZATION NOTE (duplicateTab.accesskey, duplicateTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
+<!ENTITY  duplicateTabs.accesskey            "u">
 <!-- LOCALIZATION NOTE (closeTabsToTheEnd.label): This should indicate the
 direction in which tabs are closed, i.e. locales that use RTL mode should say
 left instead of right. -->
@@ -45,13 +53,15 @@ left instead of right. -->
 <!ENTITY  closeTabs.label                    "Tabbladen sluiten">
 <!ENTITY  closeTabs.accesskey                "s">
 <!ENTITY  pinSelectedTabs.label              "Tabbladen vastmaken">
-<!-- Pin Tab and Pin Selected Tabs have the same accesskey
-but will never be visible at the same time. -->
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
 <!ENTITY  pinSelectedTabs.accesskey          "v">
 <!ENTITY  unpinSelectedTabs.label            "Tabbladen losmaken">
-<!-- Unpin Tab and Unpin Selected Tabs have the same accesskey
-but will never be visible at the same time. -->
-<!ENTITY  unpinSelectedTabs.accesskey        "b">
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY  unpinSelectedTabs.accesskey        "l">
 <!-- Reload Tab and Reload Selected Tabs have the same accesskey
 but will never be visible at the same time. -->
 <!ENTITY  reloadSelectedTabs.label           "Geselecteerde tabbladen vernieuwen">
@@ -61,6 +71,8 @@ but will never be visible at the same time. -->
 <!ENTITY  reloadTabs.label                   "Tabbladen vernieuwen">
 <!ENTITY  reloadTabs.accesskey               "n">
 <!ENTITY  bookmarkSelectedTabs.label         "Bladwijzer voor tabbladen maken…">
+<!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
 <!ENTITY  bookmarkSelectedTabs.accesskey     "t">
 
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
@@ -69,9 +81,15 @@ left edge of the tabstrip. Really we just want the string to express the idea
 that this is a lightweight and reversible action that keeps your tab where you
 can reach it easily. -->
 <!ENTITY  pinTab.label                       "Tabblad vastmaken">
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
 <!ENTITY  pinTab.accesskey                   "v">
 <!ENTITY  unpinTab.label                     "Tabblad losmaken">
-<!ENTITY  unpinTab.accesskey                 "b">
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY  unpinTab.accesskey                 "l">
 <!ENTITY  sendTabToDevice.label              "Tabblad naar apparaat verzenden">
 <!ENTITY  sendTabToDevice.accesskey          "d">
 <!ENTITY  sendPageToDevice.label             "Pagina naar apparaat verzenden">
@@ -95,6 +113,8 @@ These two items have the same accesskey but will never be visible at the same ti
 <!ENTITY  bookmarkAllTabs.label              "Bladwijzer voor alle tabbladen maken…">
 <!ENTITY  bookmarkAllTabs.accesskey          "t">
 <!ENTITY  bookmarkTab.label                  "Bladwijzer voor tabblad maken">
+<!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
 <!ENTITY  bookmarkTab.accesskey              "t">
 <!ENTITY  undoCloseTab.label                 "Tabblad sluiten ongedaan maken">
 <!ENTITY  undoCloseTab.accesskey             "m">
@@ -122,6 +142,8 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY printCmd.accesskey "d">
 <!ENTITY printCmd.commandkey "p">
 
+<!ENTITY taskManagerCmd.label "Taakbeheerder">
+
 <!ENTITY goOfflineCmd.label "Offline werken">
 <!ENTITY goOfflineCmd.accesskey "f">
 
@@ -136,7 +158,26 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "A">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Bladwijzer voor alle tabbladen maken…">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "t">
+
+<!ENTITY toolbarContextMenu.reloadSelectedTab.label "Geselecteerde tabblad vernieuwen">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
+toolbarContextMenu.reloadSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.reloadSelectedTab.accesskey "n">
+<!ENTITY toolbarContextMenu.reloadSelectedTabs.label "Geselecteerde tabbladen vernieuwen">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
+toolbarContextMenu.reloadSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.reloadSelectedTabs.accesskey "n">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTab.label "Bladwijzer voor geselecteerde tabblad maken…">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.bookmarkSelectedTab.accesskey,
+toolbarContextMenu.bookmarkSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.bookmarkSelectedTab.accesskey "t">
 <!ENTITY toolbarContextMenu.bookmarkSelectedTabs.label "Bladwijzer voor geselecteerde tabbladen maken…">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.bookmarkSelectedTab.accesskey,
+toolbarContextMenu.bookmarkSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
 <!ENTITY toolbarContextMenu.bookmarkSelectedTabs.accesskey "t">
 <!ENTITY toolbarContextMenu.selectAllTabs.label "Alle tabbladen selecteren">
 <!ENTITY toolbarContextMenu.selectAllTabs.accesskey "b">
@@ -584,9 +625,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY reloadFrameCmd.label         "Deelvenster vernieuwen">
 <!ENTITY reloadFrameCmd.accesskey     "n">
 <!ENTITY viewPartialSourceForSelectionCmd.label "Bron van selectie bekijken">
-<!ENTITY viewPartialSourceForMathMLCmd.label    "MathML-bron bekijken">
-<!-- LOCALIZATION NOTE (viewPartialSourceCmd.accesskey): This accesskey is used for both
-         viewPartialSourceForSelectionCmd.label and viewPartialSourceForMathMLCmd.label -->
 <!ENTITY viewPartialSourceCmd.accesskey "B">
 <!ENTITY viewPageSourceCmd.label      "Paginabron bekijken">
 <!ENTITY viewPageSourceCmd.accesskey  "b">
@@ -803,7 +841,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      Remove Bookmark buttons. -->
 <!ENTITY editBookmark.panel.width                    "23em">
 <!ENTITY editBookmark.done.label                     "Gereed">
-
 <!ENTITY editBookmark.showForNewBookmarks.label       "Editor tonen bij opslaan">
 <!ENTITY editBookmark.showForNewBookmarks.accesskey   "E">
 
@@ -811,6 +848,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      This is the header of the security subview in the Site Identity panel. -->
 <!ENTITY identity.securityView.label "Websitebeveiliging">
 
+<!ENTITY identity.connection "Verbinding">
 <!ENTITY identity.connectionSecure "Beveiligde verbinding">
 <!ENTITY identity.connectionNotSecure "Verbinding is niet beveiligd">
 <!ENTITY identity.connectionFile "Deze pagina is op uw computer opgeslagen.">
@@ -953,9 +991,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.audioCapture.label "Audio van het tabblad wordt gedeeld.">
 <!ENTITY getUserMedia.allWindowsShared.message "Alle zichtbare vensters op uw scherm worden gedeeld.">
 
-<!ENTITY trackingProtection.on "Bescherming tegen volgen: AAN">
-<!ENTITY trackingProtection.off "Bescherming tegen volgen: UIT">
-
 <!ENTITY contentBlocking.title "Inhoudsblokkering">
 <!ENTITY contentBlocking.detected "Blokkeerbare inhoud op deze website gedetecteerd.">
 <!ENTITY contentBlocking.notDetected "Geen blokkeerbare inhoud op deze pagina gedetecteerd.">
@@ -970,6 +1005,11 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      a positive thing. It forms the end of the (imaginary) sentence
      "Slow-Loading Trackers [are] Blocked"-->
 <!ENTITY contentBlocking.fastBlock.blocked.label "Geblokkeerd">
+<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.blocking.label):
+     This label signals that this type of content blocking is turned
+     ON, so this is a positive thing. It forms the verb in (imaginary) sentence
+     "Firefox is blocking Slow-Loading Trackers"-->
+<!ENTITY contentBlocking.fastBlock.blocking.label "Geblokkeerd">
 <!-- LOCALIZATION NOTE (contentBlocking.fastBlock.add.label):
      This is displayed as a link to preferences, where the user can add
      this specific type of content blocking. When this text is shown
@@ -977,12 +1017,25 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.fastBlock.add.label "Blokkering toevoegen…">
 
 <!ENTITY contentBlocking.trackingProtection2.label "Alle gedetecteerde trackers">
+
+<!ENTITY contentBlocking.trackingProtection3.label "Trackers">
+<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.allowed.label):
+     This label signals that this type of content blocking is turned
+     OFF and is not blocking tracker content, so this is not
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Trackers [are] Allowed"-->
+<!ENTITY contentBlocking.trackingProtection.allowed.label "Toegestaan">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
      This label signals that this type of content blocking is turned
      ON and is successfully blocking tracker content, so this is
      a positive thing. It forms the end of the (imaginary) sentence
      "Trackers [are] Blocked"-->
 <!ENTITY contentBlocking.trackingProtection.blocked.label "Geblokkeerd">
+<!-- LOCALIZATION NOTE (contentBlocking.tranckingProtection.blocking.label):
+     This label signals that this type of content blocking is turned
+     ON, so this is a positive thing. It forms the verb in the (imaginary) sentence
+     "Firefox is blocking Trackers"-->
+<!ENTITY contentBlocking.trackingProtection.blocking.label "Geblokkeerd">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.add.label):
      This is displayed as a link to preferences, where the user can add
      this specific type of content blocking. When this text is shown
@@ -990,21 +1043,33 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.trackingProtection.add.label "Blokkering toevoegen…">
 
 <!ENTITY contentBlocking.3rdPartyCookies.label "Cookies van derden">
+<!ENTITY contentBlocking.3rdPartyCookies.trackers.label "Tracking-cookies">
 <!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.blocked.label):
      This label signals that this type of content blocking is turned
      ON and is successfully blocking third-party cookies, so this is
      a positive thing. It forms the end of the (imaginary) sentence
      "Third-Party Cookies [are] Blocked"-->
 <!ENTITY contentBlocking.3rdPartyCookies.blocked.label "Geblokkeerd">
+<!-- LOCALIZATION NOTE (contentBlocking.tranckingProtection.blocking.label):
+     This label signals that this type of content blocking is turned
+     ON, so this is a positive thing. It forms the verb in the (imaginary) sentence
+     "Firefox is blocking Third-Party Cookies"-->
+<!ENTITY contentBlocking.3rdPartyCookies.blocking.label "Geblokkeerd">
 <!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.add.label):
      This is displayed as a link to preferences, where the user can add
      this specific type of content blocking. When this text is shown
      the type of content blocking is currently not enabled. -->
 <!ENTITY contentBlocking.3rdPartyCookies.add.label "Blokkering toevoegen…">
 
+<!ENTITY contentBlocking.manageSettings.label "Inhoudsblokkering beheren">
+<!ENTITY contentBlocking.manageSettings.accesskey "b">
+
+<!ENTITY contentBlocking.trackersView.label "Trackers">
+<!ENTITY contentBlocking.trackersView.strictInfo.label "Stel inhoudsblokkering in op ‘Streng’ om alle trackers te blokkeren.">
+
 <!ENTITY contentBlocking.openBreakageReportView2.label "Een probleem rapporteren">
 <!ENTITY contentBlocking.breakageReportView.label "Problemen rapporteren">
-<!ENTITY contentBlocking.breakageReportView2.description "Inhoudsblokkering kan problemen met bepaalde websites verzoorzaken. Als u problemen rapporteert, helpt u &brandShortName; voor iedereen te verbeteren. (Hierdoor wordt zowel een URL als informatie over uw browserinstellingen naar Mozilla verzonden.)">
+<!ENTITY contentBlocking.breakageReportView2.description "Inhoudsblokkering kan problemen met bepaalde websites veroorzaken. Als u problemen rapporteert, helpt u &brandShortName; voor iedereen te verbeteren. (Hierdoor wordt zowel een URL als informatie over uw browserinstellingen naar Mozilla verzonden.)">
 <!ENTITY contentBlocking.breakageReportView.learnMore "Meer info">
 <!ENTITY contentBlocking.breakageReportView.collection.url.label "URL">
 <!ENTITY contentBlocking.breakageReportView.collection.comments.label "Welke problemen ondervond u? (Optioneel)">
@@ -1013,32 +1078,32 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY trackingProtection.title "Bescherming tegen volgen">
 <!ENTITY trackingProtection.tooltip "Voorkeuren voor Bescherming tegen volgen openen">
-<!ENTITY trackingProtection.detectedBlocked4 "&brandShortName; blokkeert onderdelen van deze pagina die uw surfgedrag zouden kunnen volgen.">
-<!ENTITY trackingProtection.detectedNotBlocked5 "&brandShortName; heeft elementen gedetecteerd die uw surfgedrag zouden kunnen volgen.">
-<!ENTITY trackingProtection.detectedException "&brandShortName; heeft elementen gedetecteerd die uw surfgedrag zouden kunnen volgen. U hebt bescherming voor deze website uitgeschakeld.">
-<!ENTITY trackingProtection.notDetected5 "Geen tracking-elementen op deze pagina gedetecteerd.">
-<!ENTITY trackingProtection.notDetectedException "Geen tracking-elementen op deze pagina gedetecteerd. U hebt bescherming voor deze website uitgeschakeld.">
-
-<!ENTITY trackingProtection.reloadRequired2 "U hebt Bescherming tegen volgen ingeschakeld. Laad deze pagina opnieuw om alle trackers te blokkeren.">
 
 <!-- LOCALIZATION NOTE (trackingProtection.unblock3.label, trackingProtection.unblock3.accesskey):
      The associated button with this label and accesskey is only shown when opening the control
      center while looking at a site with trackers in NON-private browsing mode. -->
-<!ENTITY trackingProtection.unblock3.label "Uitschakelen voor deze website">
-<!ENTITY trackingProtection.unblock3.accesskey "U">
 <!ENTITY trackingProtection.unblock4.label "Blokkering voor deze website uitschakelen">
 <!ENTITY trackingProtection.unblock4.accesskey "u">
 <!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate3.label, trackingProtection.unblockPrivate3.accesskey):
      The associated button with this label and accesskey is only shown when opening the control
      center while looking at a site with trackers in PRIVATE browsing mode. -->
-<!ENTITY trackingProtection.unblockPrivate3.label "Uitschakelen voor deze sessie">
-<!ENTITY trackingProtection.unblockPrivate3.accesskey "U">
-<!ENTITY trackingProtection.block4.label "Inschakelen voor deze website">
-<!ENTITY trackingProtection.block4.accesskey "n">
 <!ENTITY trackingProtection.unblockPrivate4.label "Blokkering tijdelijk uitschakelen">
 <!ENTITY trackingProtection.unblockPrivate4.accesskey "u">
 <!ENTITY trackingProtection.block5.label "Blokkering voor deze website inschakelen">
 <!ENTITY trackingProtection.block5.accesskey "c">
+
+<!-- LOCALIZATION NOTE (trackingProtection.unblock5.label, trackingProtection.unblock5.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in NON-private browsing mode. -->
+<!ENTITY trackingProtection.unblock5.label "Blokkering voor deze website uitschakelen">
+<!ENTITY trackingProtection.unblock5.accesskey "u">
+<!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate6.label, trackingProtection.unblockPrivate6.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in PRIVATE browsing mode. -->
+<!ENTITY trackingProtection.unblockPrivate5.label "Blokkering tijdelijk uitschakelen">
+<!ENTITY trackingProtection.unblockPrivate5.accesskey "u">
+<!ENTITY trackingProtection.block6.label "Blokkering voor deze website inschakelen">
+<!ENTITY trackingProtection.block6.accesskey "c">
 <!ENTITY trackingProtection.reload2.label "Pagina vernieuwen">
 <!ENTITY trackingProtection.reload2.accesskey "r">
 
@@ -1144,7 +1209,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY sendToDevice.syncNotReady.label "Apparaten synchroniseren…">
 
 <!ENTITY pageAction.shareUrl.label "Delen">
-
 <!ENTITY pageAction.shareMore.label "Meer…">
 
 <!ENTITY libraryButton.tooltip "Geschiedenis, opgeslagen bladwijzers en meer bekijken">

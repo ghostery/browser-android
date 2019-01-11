@@ -42,6 +42,14 @@ permissions-capabilities-block =
     .label = 阻擋
 permissions-capabilities-prompt =
     .label = 總是詢問
+permissions-capabilities-listitem-allow =
+    .value = 允許
+permissions-capabilities-listitem-block =
+    .value = 阻擋
+permissions-capabilities-listitem-allow-first-party =
+    .value = 僅允許第一方
+permissions-capabilities-listitem-allow-session =
+    .value = 此次瀏覽階段允許
 
 ## Invalid Hostname Dialog
 
@@ -54,6 +62,10 @@ permissions-exceptions-tracking-protection-window =
     .title = 追蹤保護例外
     .style = { permissions-window.style }
 permissions-exceptions-tracking-protection-desc = 您已對下列網站停用追蹤保護功能。
+permissions-exceptions-content-blocking-window =
+    .title = 例外 - 內容封鎖
+    .style = { permissions-window.style }
+permissions-exceptions-content-blocking-desc = 您已針對這些網站停用內容封鎖功能。
 
 ## Exceptions - Cookies
 
@@ -85,10 +97,6 @@ permissions-exceptions-addons-desc = 您可以指定哪些網站可以安裝附�
 
 ## Exceptions - Autoplay Media
 
-permissions-exceptions-autoplay-media-window =
-    .title = 允許自動播放的網站
-    .style = { permissions-window.style }
-permissions-exceptions-autoplay-media-desc = 您可以指定允許哪些網站自動播放媒體元素。請輸入想要允許的網站網址，然後點擊「允許」。
 permissions-exceptions-autoplay-media-window2 =
     .title = 例外 - 自動播放
     .style = { permissions-window.style }

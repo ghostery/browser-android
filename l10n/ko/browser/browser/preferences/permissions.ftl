@@ -42,6 +42,14 @@ permissions-capabilities-block =
     .label = 차단
 permissions-capabilities-prompt =
     .label = 항상 물어보기
+permissions-capabilities-listitem-allow =
+    .value = 허가
+permissions-capabilities-listitem-block =
+    .value = 차단
+permissions-capabilities-listitem-allow-first-party =
+    .value = 자신의 것만 허용
+permissions-capabilities-listitem-allow-session =
+    .value = 세션 허가
 
 ## Invalid Hostname Dialog
 
@@ -54,6 +62,10 @@ permissions-exceptions-tracking-protection-window =
     .title = 예외 - 추적 보호
     .style = { permissions-window.style }
 permissions-exceptions-tracking-protection-desc = 이 웹사이트의 추적 방지를 비활성화 하였습니다.
+permissions-exceptions-content-blocking-window =
+    .title = 예외 - 콘텐츠 차단
+    .style = { permissions-window.style }
+permissions-exceptions-content-blocking-desc = 이 웹 사이트에서 콘텐츠 차단을 비활성화 했습니다.
 
 ## Exceptions - Cookies
 
@@ -85,10 +97,6 @@ permissions-exceptions-addons-desc = 부가 기능이 설치 가능하도록 웹
 
 ## Exceptions - Autoplay Media
 
-permissions-exceptions-autoplay-media-window =
-    .title = 웹사이트 허용 - 자동 재생
-    .style = { permissions-window.style }
-permissions-exceptions-autoplay-media-desc = 어떤 웹사이트가 자동으로 미디어를 재생할 수 있는지 설정할 수 있습니다. 허용할 웹사이트의 주소를 정확히 입력하고 허용을 누르세요.
 permissions-exceptions-autoplay-media-window2 =
     .title = 예외 - 자동 실행
     .style = { permissions-window.style }

@@ -10,9 +10,10 @@
 <!ENTITY returnToPreviousPage.label "뒤로">
 <!ENTITY returnToPreviousPage1.label "뒤로(권장)">
 <!ENTITY advanced.label "고급">
-
 <!ENTITY continue2.label "더보기…">
 <!ENTITY moreInformation.label "상세 정보">
+
+<!ENTITY viewCertificate.label "인증서 보기">
 
 <!-- Specific error messages -->
 
@@ -151,14 +152,20 @@
 
 <!ENTITY certerror.longpagetitle1 "연결이 안전하지 않음">
 <!ENTITY certerror.longpagetitle2 "경고: 보안 위험 가능성">
+<!ENTITY certerror.sts.longpagetitle  "연결하지 않음 : 잠재적인 보안 문제">
 <!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "<span class='hostname'/>의 소유자가 웹사이트를 적절히 설정하지 않았습니다. 정보가 도난당하는 것을 막기 위해서 &brandShortName;가 웹사이트에 연결하지 않았습니다.">
-
 <!ENTITY certerror.introPara2 "&brandShortName;가 잠재적인 보안 위협을 감지하고 <span class='hostname'/>로 진행하지 않았습니다. 사이트를 방문하면 공격자가 비밀번호나 이메일, 신용카드와 같은 정보를 탈취할 수 있습니다.">
 
 <!ENTITY certerror.expiredCert.secondPara "많은 경우에 컴퓨터의 시각이 잘 못 설정되어 있어서 &brandShortName;가 보안 연결을 하지 못해서 이런 현상이 생깁니다.">
+
+<!ENTITY certerror.sts.introPara "이 웹사이트가 보안 접속을 필요로 하지만 &brandShortName;가 잠재적인 보안 위협을 감지하고 <span class='hostname'/>로 진행하지 않았습니다.">
+
+<!ENTITY certerror.expiredCert.introPara "&brandShortName;가 문제를 감지하여 <span class='hostname'/>로 진행하지 않았습니다. 웹사이트가 잘 못 설정되어 있거나 컴퓨터의 시각이 잘 못 되어 있습니다.">
+<!ENTITY certerror.expiredCert.secondPara2 "웹사이트의 인증서가 만료되어서 &brandShortName;가 안전하게 연결할 수가 없습니다. 사이트를 방문하면 공격자가 비밀번호나 이메일, 신용카드와 같은 정보를 탈취할 수 있습니다.">
+<!ENTITY certerror.expiredCert.sts.secondPara "웹사이트의 인증서가 만료되어서 &brandShortName;가 안전하게 연결할 수가 없습니다.">
 
 <!ENTITY certerror.whatCanYouDoAboutItTitle "어떠한 처리를 해야 하나요?">
 
@@ -195,7 +202,6 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "예외 추가…">
-
 <!ENTITY securityOverride.exceptionButton1Label "위험을 감수하고 계속">
 
 <!ENTITY errorReporting.automatic2 "오류 보고서를 보내면 멜웨어 사이트를 차단하거나 그 오류를 분석하는데 도움이 됩니다.">
@@ -217,6 +223,7 @@ was trying to connect. -->
 
 <!ENTITY certerror.pagetitle1  "안전하지 않은 연결">
 <!ENTITY certerror.pagetitle2  "경고: 보안 위험 가능성">
+<!ENTITY certerror.sts.pagetitle  "연결하지 않음 : 잠재적인 보안 문제">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "이 사이트는 &brandShortName;가 안전한 경우에만 
 연결함을 명시하기 위해서 HTTP Strict Transport Security (HSTS)를 사용합니다.
 그래서 이 인증서에 예외를 추가할 수 없습니다.">
@@ -235,3 +242,6 @@ was trying to connect. -->
 
 <!ENTITY prefReset.longDesc "네트워크 보안 설정 때문에 이러한 현상이 발생한 것으로 보입니다. 기본 설정으로 되돌리겠습니까?">
 <!ENTITY prefReset.label "기본 설정으로 되돌리기">
+
+<!ENTITY networkProtocolError.title "네트워크 프로토콜 에러">
+<!ENTITY networkProtocolError.longDesc "<p>네트워크 프로토콜에 에러가 감지되어 페이지를 표시할 수 없습니다.</p><ul><li>사이트 소유주에게 이 문제에 대해 문의하시기 바랍니다.</li></ul>">

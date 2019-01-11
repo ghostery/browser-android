@@ -4,6 +4,8 @@
 <!ENTITY addons.windowTitle                   "Add-onbeheerder">
 
 <!ENTITY search.placeholder2                  "Zoeken op addons.mozilla.org">
+
+<!ENTITY search.placeholder3                  "addons.mozilla.org doorzoeken">
 <!ENTITY search.buttonlabel                   "Zoeken">
 <!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
@@ -33,14 +35,18 @@
 <!ENTITY warning.checkcompatibility.label          "Compatibiliteitscontrole voor add-ons is uitgeschakeld. Mogelijk hebt u incompatibele add-ons.">
 <!ENTITY warning.checkcompatibility.enable.label   "Inschakelen">
 <!ENTITY warning.checkcompatibility.enable.tooltip "Add-on-compatibiliteitscontrole inschakelen">
-<!ENTITY warning.updatesecurity.label              "Veiligheidscontrole voor add-on-updates is uitgeschakeld. Mogelijk loopt u een veiligheidsrisico door updates.">
+<!ENTITY warning.updatesecurity.label              "Beveiligingscontrole voor add-on-updates is uitgeschakeld. Mogelijk loopt u een beveiligingsrisico door updates.">
 <!ENTITY warning.updatesecurity.enable.label       "Inschakelen">
-<!ENTITY warning.updatesecurity.enable.tooltip     "Add-on-veiligheidscontrole inschakelen">
+<!ENTITY warning.updatesecurity.enable.tooltip     "Beveiligingscontrole voor add-on-updates inschakelen">
 
 <!-- categories / views -->
 <!ENTITY view.discover.label                  "Add-ons verkrijgen">
 <!ENTITY view.recentUpdates.label             "Recente updates">
 <!ENTITY view.availableUpdates.label          "Beschikbare updates">
+
+<!ENTITY helpButton.label                      "Add-on-ondersteuning">
+<!ENTITY preferencesWin.label                  "&brandShortName;-opties">
+<!ENTITY preferencesUnix.label                 "&brandShortName;-voorkeuren">
 
 <!-- addon updates -->
 <!ENTITY updates.checkForUpdates.label        "Controleren op updates">
@@ -81,6 +87,7 @@
 <!ENTITY cmd.preferencesUnix.label            "Voorkeuren">
 <!ENTITY cmd.preferencesUnix.accesskey        "V">
 
+<!-- addon actions -->
 <!ENTITY cmd.enableAddon.label                "Inschakelen">
 <!ENTITY cmd.enableAddon.accesskey            "I">
 <!ENTITY cmd.disableAddon.label               "Uitschakelen">
@@ -89,6 +96,7 @@
 <!ENTITY cmd.enableTheme.accesskey            "T">
 <!ENTITY cmd.disableTheme.label               "Gebruik van thema stoppen">
 <!ENTITY cmd.disableTheme.accesskey           "t">
+
 <!ENTITY cmd.askToActivate.label              "Vragen om te activeren">
 <!ENTITY cmd.askToActivate.tooltip            "Telkens vragen deze add-on te gebruiken">
 <!ENTITY cmd.alwaysActivate.label             "Altijd activeren">
@@ -98,6 +106,7 @@
 <!ENTITY cmd.stateMenu.tooltip                "Wijzigen wanneer deze add-on wordt uitgevoerd">
 <!ENTITY cmd.installAddon.label               "Installeren">
 <!ENTITY cmd.installAddon.accesskey           "I">
+
 <!ENTITY cmd.uninstallAddon.label             "Verwijderen">
 <!ENTITY cmd.uninstallAddon.accesskey         "V">
 <!ENTITY cmd.showPreferencesWin.label         "Opties">
@@ -159,9 +168,12 @@
 
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "Pauzeren">
+
+<!-- download/install progress -->
 <!ENTITY progress.cancel.tooltip              "Annuleren">
 
 <!ENTITY addon.homepage                       "Homepage">
+
 <!ENTITY addon.details.label                  "Meer">
 <!ENTITY addon.details.tooltip                "Meer details over deze add-on tonen">
 <!ENTITY addon.unknownDate                    "Onbekend">
@@ -183,6 +195,7 @@
 <!ENTITY addon.undoRemove.label               "Ongedaan maken">
 <!ENTITY addon.undoRemove.tooltip             "Deze add-on geïnstalleerd laten">
 <!ENTITY addon.restartNow.label               "Nu herstarten">
+
 <!ENTITY addon.install.label                  "Installeren">
 <!ENTITY addon.install.tooltip                "Deze add-on installeren">
 <!ENTITY addon.updateNow.label                "Nu bijwerken">

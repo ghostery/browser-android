@@ -15,6 +15,14 @@ findbar-highlight-all =
     .label = Tout surligner
     .accesskey = u
     .tooltiptext = Surligner toutes les occurrences de la phrase
+findbar-highlight-all2 =
+    .label = Tout surligner
+    .accesskey =
+        { PLATFORM() ->
+            [macos] T
+           *[other] T
+        }
+    .tooltiptext = Surligner toutes les occurrences de la phrase
 findbar-case-sensitive =
     .label = Respecter la casse
     .accesskey = R

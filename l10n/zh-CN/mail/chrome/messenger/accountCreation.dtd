@@ -11,7 +11,7 @@
 <!ENTITY email.accesskey                 "l">
 <!-- LOCALIZATION NOTE(email.placeholder): Domain @example.com must stay in English -->
 <!ENTITY email2.placeholder              "you@example.com">
-<!ENTITY email.text                      "您目前拥有的电子邮件地址">
+<!ENTITY email.text                      "您现有的电子邮件地址">
 <!ENTITY password.label                  "密码：">
 <!ENTITY password.accesskey              "P">
 <!ENTITY password.placeholder            "密码">

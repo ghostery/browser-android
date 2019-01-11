@@ -53,6 +53,7 @@ pane-sync-title = Firefox 账户
 category-sync =
     .tooltiptext = { pane-sync-title }
 help-button-label = { -brand-short-name } 帮助
+addons-button-label = 扩展和主题
 focus-search =
     .key = f
 close-button =
@@ -83,6 +84,9 @@ extension-controlled-homepage-override = 扩展 <img data-l10n-name="icon"/> { $
 # This string is shown to notify the user that their new tab page
 # is being controlled by an extension.
 extension-controlled-new-tab-url = 扩展 <img data-l10n-name="icon"/> { $name } 正在控制您的新标签页。
+# This string is shown to notify the user that their notifications permission
+# is being controlled by an extension.
+extension-controlled-web-notifications = 扩展 <img data-l10n-name="icon"/> { $name } 正在控制此设置。
 # This string is shown to notify the user that the default search engine
 # is being controlled by an extension.
 extension-controlled-default-search = 您的默认搜索引擎由扩展 <img data-l10n-name="icon"/> { $name } 设置。
@@ -147,7 +151,10 @@ open-new-link-as-tabs =
     .label = 在新标签页中打开链接而不是新窗口
     .accesskey = w
 warn-on-close-multiple-tabs =
-    .label = 提醒确认关闭多个标签页
+    .label = 关闭多个标签页时警告您
+    .accesskey = m
+warn-on-quit-close-multiple-tabs =
+    .label = 退出浏览器或关闭多个标签页时警告您
     .accesskey = m
 warn-on-open-many-tabs =
     .label = 打开多个标签页可能致使 { -brand-short-name } 缓慢时警告
@@ -280,6 +287,10 @@ update-application-use-service =
 update-enable-search-update =
     .label = 自动更新搜索引擎
     .accesskey = e
+update-pref-write-failure-title = 写入失败
+# Variables:
+#   $path (String) - Path to the configuration file
+update-pref-write-failure-message = 无法保存首选项。未能写入文件：{ $path }
 
 ## General Section - Performance
 
@@ -319,10 +330,13 @@ browsing-use-cursor-navigation =
 browsing-search-on-start-typing =
     .label = 若在文本框外输入，则在页面中查找文本
     .accesskey = x
+browsing-cfr-recommendations =
+    .label = 在您浏览时推荐扩展
+    .accesskey = R
+browsing-cfr-recommendations-learn-more = 详细了解
 
 ## General Section - Proxy
 
-network-proxy-title = 网络代理
 network-settings-title = 网络设置
 network-proxy-connection-description = 配置 { -brand-short-name } 如何连接互联网。
 network-proxy-connection-learn-more = 详细了解
@@ -521,6 +535,7 @@ privacy-header = 浏览器隐私
 ## Privacy Section - Forms
 
 forms-header = 表单与密码
+logins-header = 登录信息与密码
 forms-ask-to-save-logins =
     .label = 向您询问是否要记住网站的登录账号和密码
     .accesskey = r
@@ -587,26 +602,15 @@ sitedata-total-size-calculating = 正在计算网站数据和缓存的大小…
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
 sitedata-total-size = 您已存储的 Cookie、网站数据和缓存目前使用了 { $value } { $unit } 磁盘空间。
 sitedata-learn-more = 详细了解
-sitedata-accept-cookies-option =
-    .label = 接受来自网站的 Cookie 和网站数据（推荐）
-    .accesskey = A
-sitedata-block-cookies-option =
-    .label = 屏蔽 Cookie 和网站数据（可能导致网站故障）
-    .accesskey = B
 sitedata-keep-until = 保存，直到
     .accesskey = u
 sitedata-keep-until-expire =
     .label = 它们过期
 sitedata-keep-until-closed =
     .label = { -brand-short-name } 关闭
-sitedata-accept-third-party-desc = 接受第三方 Cookie 和网站数据:
-    .accesskey = y
-sitedata-accept-third-party-always-option =
-    .label = 始终接受
-sitedata-accept-third-party-visited-option =
-    .label = 来自访问过的网站
-sitedata-accept-third-party-never-option =
-    .label = 不接受
+sitedata-delete-on-close =
+    .label = 关闭 { -brand-short-name } 时删除 Cookie 与网站数据
+    .accesskey = C
 sitedata-allow-cookies-option =
     .label = 接受 Cookie 和网站数据
     .accesskey = A
@@ -640,6 +644,9 @@ sitedata-cookies-exceptions =
 # in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
 # Cookies and Site Data section.
 sitedata-warning-your-settings-prevent-changes = 您的内容拦截设置不允许更改 Cookie 和网站数据的设置。
+sitedata-cookies-permissions =
+    .label = 管理权限…
+    .accesskey = P
 
 ## Privacy Section - Address Bar
 
@@ -660,6 +667,7 @@ addressbar-suggestions-settings = 更改搜索引擎建议的首选项
 
 content-blocking-header = 内容拦截
 content-blocking-desc = 拦截可能减慢您浏览速度且在网络上跟踪您的广告、代码等第三方内容。您可自行设置以在保护与性能之间达到最佳平衡。
+content-blocking-description = 拦截会在网络上跟踪您的第三方内容。控制您要让不同网站存储并共享多少在线行为。
 content-blocking-learn-more = 详细了解
 content-blocking-restore-defaults =
     .label = 恢复默认设置
@@ -680,6 +688,28 @@ content-blocking-fastblock-slow-loading-trackers-label =
     .label = 减慢加载的跟踪器
     .accesskey = S
 content-blocking-fastblock-new-description = 拦截减慢页面加载速度的跟踪器。
+content-blocking-setting-standard =
+    .label = 标准
+    .accesskey = d
+content-blocking-setting-strict =
+    .label = 严格
+    .accesskey = r
+content-blocking-setting-custom =
+    .label = 自定义
+    .accesskey = C
+content-blocking-standard-desc = 平衡保护与性能。允许部分跟踪器以确保网站运行正常。
+content-blocking-strict-desc = 拦截 { -brand-short-name } 检测到的所有跟踪器。可能导致某些网站异常。
+content-blocking-custom-desc = 选择要拦截的内容。
+content-blocking-private-trackers = 仅在隐私窗口中拦截已知的跟踪器
+content-blocking-third-party-cookies = 第三方跟踪 Cookie
+content-blocking-all-windows-trackers = 在所有窗口拦截已知的跟踪器
+content-blocking-all-third-party-cookies = 所有第三方 Cookie
+content-blocking-warning-title = 注意！
+content-blocking-warning-desc = 拦截 Cookie 与跟踪器可能导致某些网站异常。但对您信任的网站禁用拦截非常简单。
+content-blocking-learn-how = 了解方法
+content-blocking-tracking-protection-trackers-label =
+    .label = 跟踪器
+    .accesskey = T
 content-blocking-tracking-protection-all-detected-trackers-label =
     .label = 检测到的所有跟踪器
     .accesskey = T
@@ -712,6 +742,9 @@ content-blocking-reject-trackers-block-trackers-option =
 content-blocking-reject-trackers-all-third-parties-option =
     .label = 所有第三方 Cookie（可能导致网站故障）
     .accesskey = A
+content-blocking-cookies-label =
+    .label = Cookie
+    .accesskey = C
 
 ## Privacy Section - Tracking
 
@@ -727,16 +760,15 @@ tracking-mode-private =
 tracking-mode-never =
     .label = 永不
     .accesskey = n
-# This string is displayed if privacy.trackingprotection.ui.enabled is set to false.
-# This currently happens on the release and beta channel.
-tracking-pbm-label = 在隐私浏览模式中使用跟踪保护拦截已知的跟踪器
-    .accesskey = v
 tracking-exceptions =
     .label = 例外…
     .accesskey = x
 tracking-change-block-list =
     .label = 更换拦截列表…
     .accesskey = C
+tracking-manage-exceptions =
+    .label = 管理例外…
+    .accesskey = x
 
 ## Privacy Section - Permissions
 
@@ -853,3 +885,36 @@ certs-view =
 certs-devices =
     .label = 安全设备…
     .accesskey = D
+space-alert-learn-more-button =
+    .label = 详细了解
+    .accesskey = L
+space-alert-over-5gb-pref-button =
+    .label =
+        { PLATFORM() ->
+            [windows] 打开选项
+           *[other] 打开首选项
+        }
+    .accesskey =
+        { PLATFORM() ->
+            [windows] O
+           *[other] O
+        }
+space-alert-over-5gb-message =
+    { PLATFORM() ->
+        [windows] { -brand-short-name } 运行所需的磁盘空间不足。网站内容可能无法正常显示。您可以在 选项 > 隐私与安全 > Cookie 和网站数据 中清除已存储的数据。
+       *[other] { -brand-short-name } 运行所需的磁盘空间不足。网站内容可能无法正常显示。您可以在 首选项 > 隐私与安全 > Cookie 和网站数据 中清除已存储的数据。
+    }
+space-alert-under-5gb-ok-button =
+    .label = 我知道了
+    .accesskey = K
+space-alert-under-5gb-message = { -brand-short-name } 运行所需的磁盘空间不足。网站内容可能无法正常显示。点击“详细了解”了解如何优化您的磁盘空间，从而获得更好的浏览体验。
+
+## The following strings are used in the Download section of settings
+
+desktop-folder-name = 桌面
+downloads-folder-name = 下载
+choose-download-folder-title = 选择下载文件夹：
+# Variables:
+#   $service-name (String) - Name of a cloud storage provider like Dropbox, Google Drive, etc...
+save-files-to-cloud-storage =
+    .label = 保存文件至 { $service-name }

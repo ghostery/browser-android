@@ -14,5 +14,6 @@
 <!ENTITY restoreDefaultSet.label  "Standaardset herstellen">
 <!ENTITY addNewToolbar.label      "Nieuwe werkbalk">
 <!ENTITY showTitlebar.label       "Titelbalk tonen">
+<!ENTITY extraDragSpace.label     "Sleepruimte toevoegen">
 <!ENTITY saveChanges.label        "Gereed">
 <!ENTITY undoChanges.label        "Wijzigingen ongedaan maken">

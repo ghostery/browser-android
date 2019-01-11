@@ -11,9 +11,6 @@
 <!ENTITY  prefWindow.titleWin     "選項">
 <!ENTITY  prefWindow.titleGNOME   "&brandShortName; 偏好設定">
 <!ENTITY  prefWindow.titleMAC     "偏好設定">
-<!ENTITY  prefWindow.styleWindows "width: 44em; min-height: 38.5em;">
-<!ENTITY  prefWindow.styleMac     "width: 52em;">
-<!ENTITY  prefWindow.styleGNOME   "width: 47em; min-height: 38em;">
 
 <!ENTITY paneGeneral.title        "一般">
 <!ENTITY paneDisplay.title        "顯示">
@@ -22,8 +19,11 @@
 <!ENTITY paneAttachments.title    "附件">
 <!ENTITY panePrivacy.title        "個人隱私">
 <!ENTITY paneSecurity.title       "安全性">
+<!ENTITY paneLightning.title      "行事曆">
 <!ENTITY paneAdvanced.title       "進階">
 <!ENTITY paneAccount.title        "帳號">
+
+<!ENTITY addonsButton.label       "擴充套件和佈景主題">
 
 <!ENTITY okButton.title           "確定">
 <!ENTITY okButton.accesskey       "O">

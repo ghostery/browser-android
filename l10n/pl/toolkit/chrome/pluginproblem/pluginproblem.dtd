@@ -18,7 +18,7 @@
 <!ENTITY report.submitting                                   "Wysyłanie zgłoszenia…">
 <!ENTITY report.submitted                                    "Wysłano zgłoszenie awarii.">
 <!ENTITY report.disabled                                     "Zgłaszanie awarii wyłączone.">
-<!ENTITY report.failed                                       "Przesłanie się nie powiodło.">
+<!ENTITY report.failed "Przesłanie nie powiodło się.">
 <!ENTITY report.unavailable                                  "Brak dostępnych zgłoszeń.">
 <!ENTITY report.comment                                      "Dodaj komentarz (komentarze są widoczne publicznie)">
 <!ENTITY report.pageURL                                      "Dołącz adres URL strony">

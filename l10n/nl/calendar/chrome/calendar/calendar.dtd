@@ -110,7 +110,7 @@
 
 <!ENTITY calendar.task.filter.title.label           "Tonen">
 <!ENTITY calendar.task.filter.all.label             "Alles">
-<!ENTITY calendar.task.filter.all.accesskey         "A"> 
+<!ENTITY calendar.task.filter.all.accesskey         "A">
 <!ENTITY calendar.task.filter.today.label           "Vandaag">
 <!ENTITY calendar.task.filter.today.accesskey       "n">
 <!ENTITY calendar.task.filter.next7days.label       "Komende zeven dagen">

@@ -15,6 +15,14 @@ findbar-highlight-all =
     .label = 強調全部
     .accesskey = a
     .tooltiptext = 強調出全部字串出現的位置
+findbar-highlight-all2 =
+    .label = 強調全部
+    .accesskey =
+        { PLATFORM() ->
+            [macos] l
+           *[other] a
+        }
+    .tooltiptext = 強調全部出現的詞彙
 findbar-case-sensitive =
     .label = 符合大小寫
     .accesskey = c

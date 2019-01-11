@@ -4,6 +4,8 @@
 <!ENTITY addons.windowTitle                   "Gerenciador de extensões">
 
 <!ENTITY search.placeholder2                  "Pesquisar em addons.mozilla.org">
+
+<!ENTITY search.placeholder3                  "Pesquisar em addons.mozilla.org">
 <!ENTITY search.buttonlabel                   "Pesquisar">
 <!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
@@ -41,6 +43,10 @@
 <!ENTITY view.discover.label                  "Adicionar">
 <!ENTITY view.recentUpdates.label             "Atualizações recentes">
 <!ENTITY view.availableUpdates.label          "Atualizações disponíveis">
+
+<!ENTITY helpButton.label                      "Suporte para extensões">
+<!ENTITY preferencesWin.label                  "Opções do &brandShortName;">
+<!ENTITY preferencesUnix.label                 "Preferências do &brandShortName;">
 
 <!-- addon updates -->
 <!ENTITY updates.checkForUpdates.label        "Verificar se há atualizações">
@@ -81,6 +87,14 @@
 <!ENTITY cmd.preferencesUnix.label            "Preferências">
 <!ENTITY cmd.preferencesUnix.accesskey        "P">
 
+
+
+
+
+
+
+
+
 <!ENTITY cmd.enableAddon.label                "Ativar">
 <!ENTITY cmd.enableAddon.accesskey            "H">
 <!ENTITY cmd.disableAddon.label               "Desativar">
@@ -89,6 +103,10 @@
 <!ENTITY cmd.enableTheme.accesskey            "A">
 <!ENTITY cmd.disableTheme.label               "Stop Wearing Theme">
 <!ENTITY cmd.disableTheme.accesskey           "W">
+
+
+
+
 <!ENTITY cmd.askToActivate.label              "Perguntar para ativar">
 <!ENTITY cmd.askToActivate.tooltip            "Perguntar toda vez para usar esta extensão">
 <!ENTITY cmd.alwaysActivate.label             "Sempre ativar">
@@ -98,6 +116,8 @@
 <!ENTITY cmd.stateMenu.tooltip                "Alterar quando este plugin executar">
 <!ENTITY cmd.installAddon.label               "Instalar">
 <!ENTITY cmd.installAddon.accesskey           "I">
+
+
 <!ENTITY cmd.uninstallAddon.label             "Remover">
 <!ENTITY cmd.uninstallAddon.accesskey         "R">
 <!ENTITY cmd.showPreferencesWin.label         "Opções">
@@ -107,6 +127,9 @@
 <!ENTITY cmd.contribute.label                 "Contribuir">
 <!ENTITY cmd.contribute.accesskey             "C">
 <!ENTITY cmd.contribute.tooltip               "Contribuir para o desenvolvimento desta extensão">
+
+
+
 
 <!ENTITY cmd.showReleaseNotes.label           "Mostrar notas de lançamento">
 <!ENTITY cmd.showReleaseNotes.tooltip         "Mostrar as notas de lançamento para esta atualização">
@@ -157,11 +180,15 @@ funcionalidades ou estilos extras. Experimente um painel que otimiza seu tempo, 
 <!-- ratings -->
 <!ENTITY rating2.label                        "Classificação">
 
+
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "Pausa">
+
 <!ENTITY progress.cancel.tooltip              "Cancelar">
 
 <!ENTITY addon.homepage                       "Visitar o site">
+
+
 <!ENTITY addon.details.label                  "Mais">
 <!ENTITY addon.details.tooltip                "Mostrar mais detalhes sobre estas extensões">
 <!ENTITY addon.unknownDate                    "Desconhecido">
@@ -183,6 +210,7 @@ funcionalidades ou estilos extras. Experimente um painel que otimiza seu tempo, 
 <!ENTITY addon.undoRemove.label               "Desfazer">
 <!ENTITY addon.undoRemove.tooltip             "Manter esta extensão instalada">
 <!ENTITY addon.restartNow.label               "Reiniciar agora">
+
 <!ENTITY addon.install.label                  "Instalar">
 <!ENTITY addon.install.tooltip                "Instalar esta extensão">
 <!ENTITY addon.updateNow.label                "Atualizar agora">

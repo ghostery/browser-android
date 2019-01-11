@@ -10,9 +10,10 @@
 <!ENTITY returnToPreviousPage.label "Вернуться назад">
 <!ENTITY returnToPreviousPage1.label "Вернуться назад (рекомендуется)">
 <!ENTITY advanced.label "Дополнительно">
-
 <!ENTITY continue2.label "Подробнее…">
 <!ENTITY moreInformation.label "Подробная информация">
+
+<!ENTITY viewCertificate.label "Просмотреть сертификат">
 
 <!-- Specific error messages -->
 
@@ -149,14 +150,20 @@
 
 <!ENTITY certerror.longpagetitle1 "Ваше соединение не защищено">
 <!ENTITY certerror.longpagetitle2 "Предупреждение: Вероятная угроза безопасности">
+<!ENTITY certerror.sts.longpagetitle  "Соединение не установлено: Вероятная угроза безопасности">
 <!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "Владелец <span class='hostname'/> неправильно настроил свой веб-сайт. Чтобы защитить вашу информацию от кражи, &brandShortName; не соединился с этим веб-сайтом.">
-
 <!ENTITY certerror.introPara2 "&brandShortName; обнаружил вероятную угрозу безопасности и не стал открывать <span class='hostname'/>. Если вы посетите этот сайт, нападавшие могут попытаться похитить вашу информацию, такую как пароли, адреса электронной почты или данные банковских карт.">
 
 <!ENTITY certerror.expiredCert.secondPara "Эта проблема, скорее всего, связана с неправильной установкой времени вашего компьютера, что может не дать &brandShortName; установить защищённое соединение.">
+
+<!ENTITY certerror.sts.introPara "&brandShortName; обнаружил вероятную угрозу безопасности и не стал открывать <span class='hostname'/>, так как для подключения к этому сайту необходимо установить защищённое соединение.">
+
+<!ENTITY certerror.expiredCert.introPara "&brandShortName; обнаружил вероятную угрозу безопасности и не стал открывать <span class='hostname'/>. Либо веб-сайт неправильно настроен, либо часы вашего компьютера установлены неправильно.">
+<!ENTITY certerror.expiredCert.secondPara2 "Вероятно, сертификат веб-сайта истёк, что не даёт &brandShortName; установить защищённое соединение. Если вы посетите этот сайт, нападавшие могут попытаться похитить вашу информацию, такую как пароли, адреса электронной почты или данные банковских карт.">
+<!ENTITY certerror.expiredCert.sts.secondPara "Вероятно, сертификат веб-сайта истёк, что не даёт &brandShortName; установить защищённое соединение.">
 
 <!ENTITY certerror.whatCanYouDoAboutItTitle "Как вы можете это исправить?">
 
@@ -193,7 +200,6 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "Добавить исключение…">
-
 <!ENTITY securityOverride.exceptionButton1Label "Принять риск и продолжить">
 
 <!ENTITY errorReporting.automatic2 "Отправка сообщений о подобных ошибках поможет Mozilla обнаружить и заблокировать вредоносные сайты">
@@ -215,6 +221,7 @@ was trying to connect. -->
 
 <!ENTITY certerror.pagetitle1  "Незащищённое соединение">
 <!ENTITY certerror.pagetitle2  "Предупреждение: Вероятная угроза безопасности">
+<!ENTITY certerror.sts.pagetitle  "Соединение не установлено: Вероятная угроза безопасности">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Этот сайт использует Форсированное защищённое соединение HTTP (HSTS), чтобы указать, что &brandShortName; должен подключаться к нему только через защищённое соединение. В результате, добавление исключения для этого сертификата невозможно.">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "<span class='hostname'></span> имеет политику безопасности называемую Форсированное защищённое соединение HTTP (HSTS), что означает, что &brandShortName; может подключиться к нему только через защищённое соединение. Вы не можете добавить исключение, чтобы посетить этот сайт.">
 <!ENTITY certerror.copyToClipboard.label "Копировать текст в буфер обмена">
@@ -231,3 +238,6 @@ was trying to connect. -->
 
 <!ENTITY prefReset.longDesc "Похоже, что причиной этого могут быть настройки безопасности вашей сети. Вы хотите восстановить настройки по умолчанию?">
 <!ENTITY prefReset.label "Восстановить настройки по умолчанию">
+
+<!ENTITY networkProtocolError.title "Ошибка сетевого протокола">
+<!ENTITY networkProtocolError.longDesc "<p>Страница, которую вы пытаетесь просмотреть, не может быть показана, так как была обнаружена ошибка в сетевом протоколе.</p><ul><li>Пожалуйста, свяжитесь с владельцами веб-сайта и проинформируйте их об этой проблеме.</li></ul>">

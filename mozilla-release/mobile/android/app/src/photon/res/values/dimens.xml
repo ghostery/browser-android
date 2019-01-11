@@ -308,6 +308,7 @@
     <dimen name="ghostery_history_icon_height">48dp</dimen>
     <dimen name="ghostery_history_divider_height">0.5dp</dimen>
     <dimen name="ghostery_bookmark_folder_size">38dp</dimen>
+    <dimen name="ghostery_bookmark_current_folder_size">20dp</dimen>
 
     <!-- Tabs Overview -->
     <dimen name="tab_panel_text_size">24sp</dimen>

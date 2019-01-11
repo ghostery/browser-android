@@ -63,6 +63,8 @@ category-sync =
 
 help-button-label = { -brand-short-name } Support
 
+addons-button-label = Extensies & Thema’s
+
 focus-search =
     .key = f
 
@@ -90,11 +92,15 @@ restart-later = Later herstarten
 
 # This string is shown to notify the user that their home page
 # is being controlled by an extension.
-extension-controlled-homepage-override = Een extensie, <img data-l10n-name="icon"/> { $name }, beheert uw startpagina.
+extension-controlled-homepage-override = Een extensie, <img data-l10n-name="icon"/> { $name }, heeft beheer over uw startpagina.
 
 # This string is shown to notify the user that their new tab page
 # is being controlled by an extension.
-extension-controlled-new-tab-url = Een extensie, <img data-l10n-name="icon"/> { $name }, beheert uw nieuw-tabbladpagina.
+extension-controlled-new-tab-url = Een extensie, <img data-l10n-name="icon"/> { $name }, heeft beheer over uw nieuw-tabbladpagina.
+
+# This string is shown to notify the user that their notifications permission
+# is being controlled by an extension.
+extension-controlled-web-notifications = Een extensie, <img data-l10n-name="icon"/> { $name }, heeft beheer over deze instelling.
 
 # This string is shown to notify the user that the default search engine
 # is being controlled by an extension.
@@ -180,6 +186,10 @@ warn-on-close-multiple-tabs =
     .label = Waarschuwen bij het sluiten van meerdere tabbladen
     .accesskey = m
 
+warn-on-quit-close-multiple-tabs =
+    .label = Waarschuwen bij het afsluiten en sluiten van meerdere tabbladen
+    .accesskey = m
+
 warn-on-open-many-tabs =
     .label = Waarschuwen als het openen van meerdere tabbladen { -brand-short-name } zou kunnen vertragen
     .accesskey = o
@@ -259,8 +269,8 @@ choose-button =
 
 choose-browser-language-description = Kies de talen die worden gebruikt voor het weergeven van menu’s, berichten en notificaties van { -brand-short-name }.
 manage-browser-languages-button =
-  .label = Alternatieven instellen…
-  .accesskey = l
+    .label = Alternatieven instellen…
+    .accesskey = l
 confirm-browser-language-change-description = Herstart { -brand-short-name } om deze wijzigingen toe te passen.
 confirm-browser-language-change-button = Toepassen en herstarten
 
@@ -361,6 +371,12 @@ update-enable-search-update =
     .label = Zoekmachines automatisch bijwerken
     .accesskey = Z
 
+update-pref-write-failure-title = Schrijffout
+
+# Variables:
+#   $path (String) - Path to the configuration file
+update-pref-write-failure-message = Kan voorkeur niet opslaan. Kon niet schrijven naar bestand: { $path }
+
 ## General Section - Performance
 
 performance-title = Prestaties
@@ -412,9 +428,13 @@ browsing-search-on-start-typing =
     .label = Naar tekst zoeken wanneer u begint met typen
     .accesskey = t
 
-## General Section - Proxy
+browsing-cfr-recommendations =
+    .label = Extensies aanbevelen terwijl u surft
+    .accesskey = a
 
-network-proxy-title = Netwerkproxy
+browsing-cfr-recommendations-learn-more = Meer info
+
+## General Section - Proxy
 
 network-settings-title = Netwerkinstellingen
 
@@ -746,14 +766,6 @@ sitedata-total-size = Uw opgeslagen cookies, websitegegevens en buffer gebruiken
 
 sitedata-learn-more = Meer info
 
-sitedata-accept-cookies-option =
-    .label = Cookies en websitegegevens van websites accepteren (aanbevolen)
-    .accesskey = C
-
-sitedata-block-cookies-option =
-    .label = Cookies en websitegegevens blokkeren (kan ervoor zorgen dat websites niet goed werken)
-    .accesskey = b
-
 sitedata-keep-until = Bewaren totdat
     .accesskey = B
 
@@ -762,15 +774,9 @@ sitedata-keep-until-expire =
 sitedata-keep-until-closed =
     .label = { -brand-short-name } wordt afgesloten
 
-sitedata-accept-third-party-desc = Cookies van derden en websitegegevens accepteren
-    .accesskey = d
-
-sitedata-accept-third-party-always-option =
-    .label = Altijd
-sitedata-accept-third-party-visited-option =
-    .label = Van bezochte
-sitedata-accept-third-party-never-option =
-    .label = Nooit
+sitedata-delete-on-close =
+    .label = Cookies en websitegegevens verwijderen zodra { -brand-short-name } wordt gesloten
+    .accesskey = C
 
 sitedata-allow-cookies-option =
     .label = Cookies en websitegegevens accepteren
@@ -787,6 +793,7 @@ sitedata-block-desc = Geblokkeerd type
 
 sitedata-block-trackers-option-recommended =
     .label = Trackers van derden (aanbevolen)
+
 sitedata-block-trackers-option =
     .label = Trackers van derden
 sitedata-block-unvisited-option =
@@ -813,6 +820,10 @@ sitedata-cookies-exceptions =
 # Cookies and Site Data section.
 sitedata-warning-your-settings-prevent-changes = Uw instellingen in Inhoudsblokkering voorkomen wijzigingen aan instellingen voor Cookies en websitegegevens.
 
+sitedata-cookies-permissions =
+    .label = Toestemmingen beheren…
+    .accesskey = T
+
 ## Privacy Section - Address Bar
 
 addressbar-header = Adresbalk
@@ -837,20 +848,22 @@ content-blocking-header = Inhoudsblokkering
 
 content-blocking-desc = Blokkeer inhoud van derden, zoals advertenties of code, die het surfen kan vertragen en u op het web kan volgen. Pas uw instellingen aan voor het optimale evenwicht tussen bescherming en prestaties.
 
+content-blocking-description = Blokkeer inhoud van derden die uw surfgedrag volgt. Bepaal hoeveel van uw online-activiteit wordt bewaard en tussen websites wordt gedeeld.
+
 content-blocking-learn-more = Meer info
 content-blocking-restore-defaults =
-  .label = Standaardwaarden herstellen
-  .accesskey = S
+    .label = Standaardwaarden herstellen
+    .accesskey = S
 
 content-blocking-toggle-on =
-  .tooltiptext = Inhoudsblokkering uitschakelen
+    .tooltiptext = Inhoudsblokkering uitschakelen
 content-blocking-toggle-off =
-  .tooltiptext = Inhoudsblokkering inschakelen
+    .tooltiptext = Inhoudsblokkering inschakelen
 
 content-blocking-toggle-label-on = AAN
-  .accesskey = A
+    .accesskey = A
 content-blocking-toggle-label-off = UIT
-  .accesskey = U
+    .accesskey = U
 
 content-blocking-category-label = Kiezen wat er wordt geblokkeerd
 
@@ -858,24 +871,54 @@ content-blocking-category-label = Kiezen wat er wordt geblokkeerd
 # FastBlock is a feature that blocks requests to tracking sites if they
 # have not finished loading after a certain threshold of seconds.
 content-blocking-fastblock-slow-loading-trackers-label =
-  .label = Traag ladende trackers
-  .accesskey = T
+    .label = Traag ladende trackers
+    .accesskey = T
 content-blocking-fastblock-new-description = Alleen de trackers blokkeren die snel laden van pagina’s tegengaan.
+
+content-blocking-setting-standard =
+  .label = Standaard
+  .accesskey = S
+content-blocking-setting-strict =
+  .label = Streng
+  .accesskey = r
+content-blocking-setting-custom =
+  .label = Aangepast
+  .accesskey = A
+
+content-blocking-standard-desc = Gebalanceerd voor bescherming en prestaties. Staat bepaalde trackers toe, zodat websites goed werken.
+content-blocking-strict-desc = Blokkeert alle trackers die { -brand-short-name } detecteert. Kan ervoor zorgen dat bepaalde websites niet goed werken.
+content-blocking-custom-desc = Kies wat er wordt geblokkeerd.
+
+content-blocking-private-trackers = Bekende trackers alleen in privévensters
+content-blocking-third-party-cookies = Tracking-cookies van derden
+content-blocking-all-windows-trackers = Bekende trackers in alle vensters
+content-blocking-all-third-party-cookies = Alle cookies van derden
+
+content-blocking-warning-title = Let op!
+content-blocking-warning-desc = Het blokkeren van cookies kan ervoor zorgen dat bepaalde websites niet goed werken. Blokkering kan eenvoudig worden uitgeschakeld voor websites die u vertrouwt.
+content-blocking-learn-how = Lezen hoe
+
+content-blocking-tracking-protection-trackers-label =
+    .label = Trackers
+    .accesskey = T
 content-blocking-tracking-protection-all-detected-trackers-label =
-  .label = Alle gedetecteerde trackers
-  .accesskey = d
+    .label = Alle gedetecteerde trackers
+    .accesskey = d
 content-blocking-tracking-protection-new-description = Alle bekende trackers blokkeren. (Kan het laden van bepaalde pagina’s tegengaan.)
 content-blocking-tracking-protection-option-always =
-  .label = Altijd
-  .accesskey = A
+    .label = Altijd
+    .accesskey = A
+content-blocking-tracking-protection-option-all-windows =
+  .label = In alle vensters
+  .accesskey = a
 content-blocking-tracking-protection-option-private =
-  .label = Alleen in privévensters
-  .accesskey = p
+    .label = Alleen in privévensters
+    .accesskey = p
 content-blocking-tracking-protection-change-block-list = Blokkeerlijst wijzigen
 
 content-blocking-third-party-cookies-label =
-  .label = Cookies van derden
-  .accesskey = C
+    .label = Cookies van derden
+    .accesskey = C
 content-blocking-reject-trackers-description = Alle cookies van derden blokkeren of alleen cookies die zijn ingesteld door trackers.
 # This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
 # of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
@@ -883,17 +926,21 @@ content-blocking-reject-trackers-description = Alle cookies van derden blokkeren
 # the UI.
 content-blocking-reject-trackers-warning-your-settings-prevent-changes = Uw instellingen in Cookies en websitegegevens voorkomen wijzigingen aan instellingen voor Cookies van derden.
 content-blocking-change-cookie-settings =
-  .label = Cookie-instellingen wijzigen
-  .accesskey = s
+    .label = Cookie-instellingen wijzigen
+    .accesskey = s
 content-blocking-reject-trackers-block-trackers-option-recommended =
-  .label = Trackers (aanbevolen)
-  .accesskey = k
+    .label = Trackers (aanbevolen)
+    .accesskey = k
 content-blocking-reject-trackers-block-trackers-option =
-  .label = Trackers
-  .accesskey = k
+    .label = Trackers
+    .accesskey = k
 content-blocking-reject-trackers-all-third-parties-option =
-  .label = Alle cookies van derden (kan ervoor zorgen dat websites niet goed werken)
-  .accesskey = A
+    .label = Alle cookies van derden (kan ervoor zorgen dat websites niet goed werken)
+    .accesskey = A
+
+content-blocking-cookies-label =
+  .label = Cookies
+  .accesskey = C
 
 ## Privacy Section - Tracking
 
@@ -913,11 +960,6 @@ tracking-mode-never =
     .label = Nooit
     .accesskey = N
 
-# This string is displayed if privacy.trackingprotection.ui.enabled is set to false.
-# This currently happens on the release and beta channel.
-tracking-pbm-label = Bescherming tegen volgen gebruiken in Privénavigatie om bekende trackers te blokkeren
-    .accesskey = v
-
 tracking-exceptions =
     .label = Uitzonderingen…
     .accesskey = i
@@ -925,6 +967,10 @@ tracking-exceptions =
 tracking-change-block-list =
     .label = Blokkeerlijst wijzigen…
     .accesskey = k
+
+tracking-manage-exceptions =
+    .label = Uitzonderingen beheren…
+    .accesskey = z
 
 ## Privacy Section - Permissions
 
@@ -1073,3 +1119,41 @@ certs-view =
 certs-devices =
     .label = Beveiligingsapparaten…
     .accesskey = B
+
+space-alert-learn-more-button =
+    .label = Meer info
+    .accesskey = M
+
+space-alert-over-5gb-pref-button =
+    .label =
+        { PLATFORM() ->
+            [windows] Opties openen
+           *[other] Voorkeuren openen
+        }
+    .accesskey =
+        { PLATFORM() ->
+            [windows] O
+           *[other] o
+        }
+
+space-alert-over-5gb-message =
+    { PLATFORM() ->
+        [windows] { -brand-short-name } heeft bijna geen schijfruimte meer. Inhoud van websites wordt mogelijk niet goed weergegeven. U kunt opgeslagen gegevens wissen in Opties > Privacy & Beveiliging > Cookies en websitegegevens.
+       *[other] { -brand-short-name } heeft bijna geen schijfruimte meer. Inhoud van websites wordt mogelijk niet goed weergegeven. U kunt opgeslagen gegevens wissen in Voorkeuren > Privacy & Beveiliging > Cookies en websitegegevens.
+    }
+
+space-alert-under-5gb-ok-button =
+    .label = OK, begrepen
+    .accesskey = K
+
+space-alert-under-5gb-message = { -brand-short-name } heeft bijna geen schijfruimte meer. Inhoud van websites wordt mogelijk niet goed weergegeven. Bezoek ‘Meer info’ om uw schijfgebruik te optimaliseren voor betere prestaties.
+
+## The following strings are used in the Download section of settings
+desktop-folder-name = Bureaublad
+downloads-folder-name = Downloads
+choose-download-folder-title = Downloadmap kiezen:
+
+# Variables:
+#   $service-name (String) - Name of a cloud storage provider like Dropbox, Google Drive, etc...
+save-files-to-cloud-storage =
+    .label = Bestanden opslaan naar { $service-name }

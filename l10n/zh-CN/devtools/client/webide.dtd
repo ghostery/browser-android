@@ -36,12 +36,13 @@
 <!ENTITY runtimeMenu_takeScreenshot_accesskey "S">
 <!ENTITY runtimeMenu_showDetails_label "运行环境信息">
 <!ENTITY runtimeMenu_showDetails_accesskey "E">
-<!ENTITY runtimeMenu_showMonitor_label "监控器">
-<!ENTITY runtimeMenu_showMonitor_accesskey "M">
 <!ENTITY runtimeMenu_showDevicePrefs_label "设备首选项">
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "D">
 <!ENTITY runtimeMenu_showSettings_label "设备设置">
 <!ENTITY runtimeMenu_showSettings_accesskey "s">
+
+<!ENTITY runtimeMenu_showPerformancePanel_label "性能">
+<!ENTITY runtimeMenu_showPerformancePanel_accesskey "p">
 
 <!ENTITY viewMenu_label "视图">
 <!ENTITY viewMenu_accesskey "V">
@@ -146,10 +147,6 @@
 <!ENTITY devicesetting_newname "新建设置名称">
 <!ENTITY devicesetting_newtext "设置值">
 <!ENTITY devicesetting_addnew "添加新设置">
-
-<!-- Monitor -->
-<!ENTITY monitor_title "监控器">
-<!ENTITY monitor_help "帮助">
 
 <!-- WiFi Authentication -->
 <!-- LOCALIZATION NOTE (wifi_auth_header): The header displayed on the dialog

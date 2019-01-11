@@ -71,8 +71,6 @@
 <!ENTITY updateAuto.accesskey            "U">
 <!ENTITY updateCheck.label               "Controleren op updates, maar mij laten kiezen of ik deze wil installeren">
 <!ENTITY updateCheck.accesskey           "C">
-<!ENTITY updateManual.label              "Nooit controleren op updates (niet aanbevolen: beveiligingsrisico)">
-<!ENTITY updateManual.accesskey          "N">
 <!ENTITY updateHistory.label             "Updategeschiedenis tonen">
 <!ENTITY updateHistory.accesskey         "d">
 

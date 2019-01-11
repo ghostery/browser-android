@@ -5,5 +5,5 @@
 <!ENTITY migration.title "&brandFullName;: Importação de dados">
 <!ENTITY migration.welcome "Bem-vindo">
 <!ENTITY migration.importing "Importando">
-<!ENTITY migration.list.description "O &brandShortName; pode importar dados de calendário de vários aplicativos populares. Dados dos seguintes aplicativos foram encontrados no seu computador. Favor selecionar de qual gostaria de importar dados.">
+<!ENTITY migration.list.description "O &brandShortName; pode importar dados de agenda de vários aplicativos populares. Dados dos seguintes aplicativos foram encontrados no seu computador. Selecione de quais gostaria de importar dados.">
 <!ENTITY migration.progress.description "Importando dados selecionados">

@@ -18,6 +18,7 @@ policy-BlockAboutProfiles = about:profiles 페이지 접근을 차단합니다.
 policy-BlockAboutSupport = about:support 페이지 접근을 차단합니다.
 policy-Bookmarks = 북마크 도구 막대나 북마크 메뉴, 안의 특정 폴더에 북마크를 생성합니다.
 policy-Certificates = 기본 탑재 인증서 사용 여부입니다. 지금은 윈도우에만 적용됩니다.
+policy-CertificatesDescription = 인증서를 추가하거나 기본 제공 인증서를 사용합니다.
 policy-Cookies = 웹사이트의 쿠키 설정을 허용하거나 거부합니다.
 policy-DisableAppUpdate = 브라우저가 업데이트 되지 않게 합니다.
 policy-DisableBuiltinPDFViewer = { -brand-short-name }에 탑재된 PDF 뷰어인 PDF.js를 비활성화 합니다.
@@ -42,6 +43,7 @@ policy-DisableSystemAddonUpdate = 브라우저가 시스템 부가 기능을 설
 policy-DisableTelemetry = 원격 측정을 끕니다.
 policy-DisplayBookmarksToolbar = 기본으로 북마크 도구 막대를 표시합니다.
 policy-DisplayMenuBar = 기본으로 메뉴 막대를 표시합니다.
+policy-DNSOverHTTPS = HTTPS를 통한 DNS를 설정합니다.
 policy-DontCheckDefaultBrowser = 시작할 때 기본 브라우저 확인을 하지 않습니다.
 # “lock” means that the user won’t be able to change this setting
 policy-EnableTrackingProtection = 콘텐츠 차단을 활성화 하거나 비활성화 하고 선택적으로 고정합니다.
@@ -62,9 +64,12 @@ policy-OverridePostUpdatePage = "새기능" 업데이트 후 페이지를 재정
 policy-Permissions = 카메라나 마이크, 위치, 알림 권한을 설정합니다.
 policy-PopupBlocking = 기본으로 특정 웹사이트가 팝업을 보여주도록 허용합니다.
 policy-Proxy = 프록시 설정을 구성합니다.
+policy-RequestedLocales = 어플리케이션의 요청된 로케일의 목록을 설정 순서로 설정합니다.
 policy-SanitizeOnShutdown = 종료시 모든 네비게이션 데이타를 삭제합니다.
 policy-SearchBar = 검색 바의 기본 위치를 설정합니다. 사용자가 다시 재설정 할 수 있습니다.
 policy-SearchEngines = 검색 엔진 설정을 구성합니다. 이 정책은 확장 지원 버전(ESR)에서만 가능합니다.
+# For more information, see https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/PKCS11/Module_Installation
+policy-SecurityDevices = PKCS #11 모듈을 설치합니다.
 # “format” refers to the format used for the value of this policy. See also:
 # https://github.com/mozilla/policy-templates/blob/master/README.md#websitefilter-machine-only
 policy-WebsiteFilter = 특정 웹사이트 방문을 차단합니다. 자세한 형식에 대해서는 문서를 참고하세요.

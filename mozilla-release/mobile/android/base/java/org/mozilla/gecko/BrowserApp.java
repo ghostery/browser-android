@@ -36,8 +36,6 @@ import android.nfc.NfcEvent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -149,7 +147,6 @@ import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.Countries;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
-import org.mozilla.gecko.promotion.AddToHomeScreenPromotion;
 import org.mozilla.gecko.promotion.ReaderViewBookmarkPromotion;
 import org.mozilla.gecko.prompts.Prompt;
 import org.mozilla.gecko.reader.ReaderModeUtils;
@@ -252,8 +249,6 @@ public class BrowserApp extends GeckoApp
     private static final String STATE_ABOUT_HOME_TOP_PADDING = "abouthome_top_padding";
 
     private static final String BROWSER_SEARCH_TAG = "browser_search";
-
-    private static final int MAX_BUNDLE_SIZE = 300000; // 300 kilobytes
 
     // Request ID for startActivityForResult.
     public static final int ACTIVITY_REQUEST_PREFERENCES = 1001;
@@ -379,7 +374,6 @@ public class BrowserApp extends GeckoApp
     private final TelemetryCorePingDelegate mTelemetryCorePingDelegate = new TelemetryCorePingDelegate();
 
     private final List<BrowserAppDelegate> delegates = Collections.unmodifiableList(Arrays.asList(
-            new AddToHomeScreenPromotion(),
             new ScreenshotDelegate(),
             new BookmarkStateChangeDelegate(),
             new ReaderViewBookmarkPromotion(),
@@ -792,6 +786,8 @@ public class BrowserApp extends GeckoApp
             GuestSession.onNotificationIntentReceived(this);
         } else if (TabQueueHelper.LOAD_URLS_ACTION.equals(action)) {
             Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, TelemetryContract.Method.NOTIFICATION, "tabqueue");
+        } else if (NotificationHelper.HELPER_BROADCAST_ACTION.equals(action)) {
+            NotificationHelper.getInstance(getApplicationContext()).handleNotificationIntent(safeStartingIntent);
         }
 
         if (HardwareUtils.isTablet()) {
@@ -1991,7 +1987,7 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "GeckoView:AccessibilityEnabled":
-                mDynamicToolbar.setAccessibilityEnabled(message.getBoolean("enabled"));
+                mDynamicToolbar.setAccessibilityEnabled(message.getBoolean("touchEnabled"));
                 break;
 
             case "Menu:Open":
@@ -2609,7 +2605,7 @@ public class BrowserApp extends GeckoApp
         // This in some cases can lead to TransactionTooLargeException as per
         // [https://developer.android.com/reference/android/os/TransactionTooLargeException] it's
         // specified that the limit is fixed to 1MB per process.
-        if (getBundleSizeInBytes(outState) > MAX_BUNDLE_SIZE) {
+        if (getBundleSizeInBytes(outState) > MAX_BUNDLE_SIZE_BYTES) {
             outState.remove("android:viewHierarchyState");
         }
     }
@@ -3736,7 +3732,7 @@ public class BrowserApp extends GeckoApp
         if (SwitchBoard.isInExperiment(this, Experiments.TOP_ADDONS_MENU)) {
             MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, true);
             GeckoMenuItem item = (GeckoMenuItem) aMenu.findItem(R.id.addons_top_level);
-            if (item != null) {
+            if (item != null && mExtensionPermissionsHelper != null) {
                 if (mExtensionPermissionsHelper.getShowUpdateIcon()) {
                     item.setIcon(R.drawable.ic_addon_update);
                 } else {
@@ -4143,6 +4139,7 @@ public class BrowserApp extends GeckoApp
      * If the app has been launched a certain number of times, and we haven't asked for feedback before,
      * open a new tab with about:feedback when launching the app from the icon shortcut.
      */
+    @SuppressWarnings("try")
     @Override
     protected void onNewIntent(Intent externalIntent) {
 
@@ -4237,10 +4234,9 @@ public class BrowserApp extends GeckoApp
         /* Cliqz start o/
         // Check to see how many times the app has been launched.
         final String keyName = getPackageName() + ".feedback_launch_count";
-        final StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
 
         // Faster on main thread with an async apply().
-        try {
+        try (StrictModeContext unused = StrictModeContext.allowDiskReads()) {
             SharedPreferences settings = getPreferences(Activity.MODE_PRIVATE);
             int launchCount = settings.getInt(keyName, 0);
             if (launchCount < FEEDBACK_LAUNCH_COUNT) {
@@ -4253,8 +4249,6 @@ public class BrowserApp extends GeckoApp
                     EventDispatcher.getInstance().dispatch("Feedback:Show", null);
                 }
             }
-        } finally {
-            StrictMode.setThreadPolicy(savedPolicy);
         }
         /o Cliqz End */
     }
@@ -4618,8 +4612,7 @@ public class BrowserApp extends GeckoApp
     private void showReloadingTabSnackbar() {
         final Tab tab = Tabs.getInstance().getSelectedTab();
         // Delay reload by a second while showing the reload snackbar text.
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        ThreadUtils.postDelayedToUiThread(new Runnable() {
             @Override
             public void run() {
                 tab.doReload(true);

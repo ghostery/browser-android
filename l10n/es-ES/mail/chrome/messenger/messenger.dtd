@@ -418,6 +418,9 @@
 <!ENTITY openConversationCmd.label "Abrir en la conversación">
 <!ENTITY openConversationCmd.accesskey "b">
 <!ENTITY openConversationCmd.key "o">
+<!ENTITY openInConversationCmd.label "Abrir en la conversación">
+<!ENTITY openInConversationCmd.accesskey "s">
+<!ENTITY openInConversationCmd.key "o">
 <!ENTITY openAttachmentListCmd.label "Adjuntos">
 <!ENTITY openAttachmentListCmd.accesskey "d">
 <!ENTITY openFeedMessage1.label "Al abrir mensajes de canales web">

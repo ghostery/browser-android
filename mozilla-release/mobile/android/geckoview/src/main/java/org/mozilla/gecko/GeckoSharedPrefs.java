@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.mozilla.gecko.annotation.RobocopTarget;
+import org.mozilla.gecko.util.StrictModeContext;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -179,6 +179,7 @@ public final class GeckoSharedPrefs {
      * exceptions from reading/writing in the UI thread. This method will block
      * the current thread until the migration is finished.
      */
+    @SuppressWarnings("try")
     private static synchronized void migrateIfNecessary(final Context context) {
         if (!GeckoAppShell.isFennec()) {
             return;
@@ -192,12 +193,8 @@ public final class GeckoSharedPrefs {
         // is likely the UI thread) as this is actually cheaper than enforcing a
         // context switch to another thread (see bug 940575).
         // Avoid strict mode warnings when doing so.
-        final StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
-        StrictMode.allowThreadDiskWrites();
-        try {
+        try (StrictModeContext unused = StrictModeContext.allowDiskWrites()) {
             performMigration(context);
-        } finally {
-            StrictMode.setThreadPolicy(savedPolicy);
         }
 
         migrationDone = true;

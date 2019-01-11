@@ -2,13 +2,19 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-cfr-doorhanger-extension-heading = Estensione consigliata
+cfr-doorhanger-extension-heading = Estensione suggerita
 
 cfr-doorhanger-extension-sumo-link =
     .tooltiptext = Perché viene visualizzato questo messaggio
 
 cfr-doorhanger-extension-cancel-button = Non adesso
     .accesskey = N
+
+cfr-doorhanger-extension-manage-settings-button = Gestisci impostazioni suggerimenti
+    .accesskey = G
+
+cfr-doorhanger-extension-never-show-recommendation = Non visualizzare suggerimenti
+    .accesskey = v
 
 cfr-doorhanger-extension-ok-button = Aggiungi
     .accesskey = A

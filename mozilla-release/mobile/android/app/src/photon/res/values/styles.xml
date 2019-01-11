@@ -218,10 +218,8 @@
     </style>
 
     <!-- Cliqz Start -->
-    <style name="Widget.BookmarkItemView" />
-
     <style name="Widget.BookmarksListView" parent="Widget.HomeListView">
-        <item name="android:dividerHeight">@dimen/ghostery_history_divider_height</item>
+        <item name="android:dividerHeight">0dp</item>
     </style>
     <!-- Cliqz End -->
 

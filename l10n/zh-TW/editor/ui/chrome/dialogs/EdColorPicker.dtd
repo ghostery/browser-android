@@ -8,6 +8,9 @@
 <!ENTITY setColor1.label "選擇一種色彩或">
 <!ENTITY setColor2.label "輸入 HTML 色彩字串">
 <!ENTITY setColor2.accessKey "H">
+<!ENTITY chooseColor1.label "選擇色彩:">
+<!ENTITY chooseColor2.label "輸入 HTML 色彩字串">
+<!ENTITY chooseColor2.accessKey "H">
 <!ENTITY setColorExample.label "（如:「#0000ff」或是「blue」）:">
 <!ENTITY default.label "預設">
 <!ENTITY default.accessKey "D">
@@ -20,4 +23,3 @@
 <!ENTITY table.accessKey "T">
 <!ENTITY cell.label "儲存格">
 <!ENTITY cell.accessKey "C">
-

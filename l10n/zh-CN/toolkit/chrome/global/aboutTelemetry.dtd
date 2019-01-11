@@ -38,6 +38,8 @@ Ping 类型
 <a>遥测面板</a> 直观显示了 Mozilla 通过遥测收到的数据。
 ">
 
+<!ENTITY aboutTelemetry.telemetryProbeDictionary "<a>Probe Dictionary</a> 提供了遥测收集所使用探针的详细信息与说明。">
+
 <!ENTITY aboutTelemetry.showInFirefoxJsonViewer "
 在 JSON 查看器中打开
 ">
@@ -55,7 +57,6 @@ Ping 类型
 <!ENTITY aboutTelemetry.eventsSection "事件">
 <!ENTITY aboutTelemetry.simpleMeasurementsSection "  简单测量">
 <!ENTITY aboutTelemetry.slowSqlSection "慢 SQL 语句">
-<!ENTITY aboutTelemetry.chromeHangsSection "  浏览器挂起">
 <!ENTITY aboutTelemetry.addonDetailsSection "   附加组件详情 ">
 <!ENTITY aboutTelemetry.capturedStacksSection "捕获的堆栈">
 <!ENTITY aboutTelemetry.lateWritesSection "   延迟写入">

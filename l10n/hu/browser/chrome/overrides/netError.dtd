@@ -10,9 +10,10 @@
 <!ENTITY returnToPreviousPage.label "Ugrás vissza">
 <!ENTITY returnToPreviousPage1.label "Visszalépés (ajánlott)">
 <!ENTITY advanced.label "Speciális">
-
 <!ENTITY continue2.label "Továbbiak…">
 <!ENTITY moreInformation.label "További tudnivalók">
+
+<!ENTITY viewCertificate.label "Tanúsítvány megtekintése">
 
 <!-- Specific error messages -->
 
@@ -93,14 +94,20 @@
 
 <!ENTITY certerror.longpagetitle1 "A kapcsolat nem biztonságos">
 <!ENTITY certerror.longpagetitle2 "Figyelmeztetés: Lehetséges biztonsági kockázat következik">
+<!ENTITY certerror.sts.longpagetitle  "Nem kapcsolódott: lehetséges biztonsági probléma">
 <!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "A(z) <span class='hostname'/> tulajdonosa a weboldalát helytelenül állította be. Az Ön adatainak ellopását megakadályozandó a &brandShortName; nem csatlakozott ehhez a weboldalhoz.">
-
 <!ENTITY certerror.introPara2 "A &brandShortName; egy lehetséges biztonsági kockázatot észlelt, és nem lépett tovább a(z) <span class='hostname'/> oldalra. Ha felkeresi ezt az oldalt, akkor támadók megpróbálhatják ellopni a jelszavait, e-mailjeit vagy bankkártyaadatait.">
 
 <!ENTITY certerror.expiredCert.secondPara "Ennek a problémának a legvalószínűbb oka, hogy hibás a számítógép órabeállítása, amely megakadályozza a &brandShortName; biztonságos kapcsolódósát.">
+
+<!ENTITY certerror.sts.introPara "A &brandShortName; egy lehetséges biztonsági kockázatot észlelt, és nem lépett tovább a(z) <span class='hostname'/> oldalra, mert ez a webhely biztonságos kapcsolatot igényel.">
+
+<!ENTITY certerror.expiredCert.introPara "A &brandShortName; egy problémát észlelt, és nem lépett tovább a(z) <span class='hostname'/> oldalra. Lehet, hogy a webhely van rosszul beállítva vagy hibás az Ön számítógépének órabeállítása.">
+<!ENTITY certerror.expiredCert.secondPara2 "A webhely tanúsítványa valószínűleg lejárt, ami megakadályozza a &brandShortName; biztonságos csatlakozását. Ha meglátogatja ezt a webhelyet, támadók megpróbálhatnak ellopni olyan információkat, mint jelszavak, e-mailek vagy hitelkártyaadatok.">
+<!ENTITY certerror.expiredCert.sts.secondPara "A webhely tanúsítványa valószínűleg lejárt, ami megakadályozza a &brandShortName; biztonságos csatlakozását.">
 
 <!ENTITY certerror.whatCanYouDoAboutItTitle "Mit tehet?">
 
@@ -127,7 +134,6 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "Kivétel hozzáadása…">
-
 <!ENTITY securityOverride.exceptionButton1Label "Kockázat elfogadása és továbblépés">
 
 <!ENTITY errorReporting.automatic2 "Az ilyen hibák jelentése segít a Mozillának a rosszindulatú oldalak azonosításában és blokkolásában">
@@ -149,6 +155,7 @@ was trying to connect. -->
 
 <!ENTITY certerror.pagetitle1  "Nem biztonságos kapcsolat">
 <!ENTITY certerror.pagetitle2  "Figyelmeztetés: Lehetséges biztonsági kockázat következik">
+<!ENTITY certerror.sts.pagetitle  "Nem kapcsolódott: lehetséges biztonsági probléma">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Ez az oldal HTTP Strict Transport Security (HSTS) használatával adja meg, hogy a &brandShortName; csak biztonságosan kapcsolódjon. Emiatt nem lehet kivételt felvenni ehhez a tanúsítványhoz.">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "A(z) <span class='hostname'></span> oldal a HTTP Strict Transport Security (HSTS) nevű biztonsági házirendet használja, amely azt jelenti, hogy a &brandShortName; csak biztonságosan kapcsolódhat hozzá. Nem adhat hozzá kivételt, hogy felkeresse ezt az oldalt.">
 <!ENTITY certerror.copyToClipboard.label "Szöveg másolása a vágólapra">
@@ -165,3 +172,6 @@ was trying to connect. -->
 
 <!ENTITY prefReset.longDesc "Úgy tűnik, ezt a hálózat biztonsági beállításai okozhatják. Szeretné helyreállítani az alapbeállításokat?">
 <!ENTITY prefReset.label "Alap beállítások visszaállítása">
+
+<!ENTITY networkProtocolError.title "Hálózati protokoll hiba">
+<!ENTITY networkProtocolError.longDesc "<p>A megtekinteni kívánt oldal nem jeleníthető meg, mert hiba észlelhető a hálózati protokollban.</p><ul><li>Lépjen kapcsolatba a webhely tulajdonosaival, hogy tájékoztassa őket a problémáról.</li></ul>">

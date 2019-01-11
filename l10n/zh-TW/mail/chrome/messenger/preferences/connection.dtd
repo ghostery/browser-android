@@ -50,3 +50,9 @@
 <!ENTITY  dnsOverHttpsUrl.label         "網址">
 <!ENTITY  dnsOverHttpsUrl.accesskey     "R">
 <!ENTITY  dnsOverHttpsUrl.tooltip       "用來解析 DNS 的 HTTPS 網址">
+<!ENTITY  dnsOverHttpsUrlDefault.label     "使用預設值">
+<!ENTITY  dnsOverHttpsUrlDefault.accesskey "l">
+<!ENTITY  dnsOverHttpsUrlDefault.tooltip   "使用預設網址來解析 DNS over HTTPS">
+<!ENTITY  dnsOverHttpsUrlCustom.label      "自訂">
+<!ENTITY  dnsOverHttpsUrlCustom.accesskey  "t">
+<!ENTITY  dnsOverHttpsUrlCustom.tooltip    "輸入您想要用來解析 DNS over HTTPS 的網址">
