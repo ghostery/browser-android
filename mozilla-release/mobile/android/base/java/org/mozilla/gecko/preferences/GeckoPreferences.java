@@ -270,8 +270,8 @@ public class GeckoPreferences
     public static final String PREFS_APP_LAUNCH_COUNT = "app_launch_count";
     public static final String PREFS_HELP_SUPPORT = NON_PREF_PREFIX + "help.support";
 
-    public static final String PREFS_SHOW_CUSTOMIZE_TAB_VIEW = "prefs.show.customize_tab.view";
-    public static final String PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR = "prefs.show.customize_tab.snackbar";
+    public static final String PREFS_SHOW_CUSTOMIZE_TAB_VIEW = "pref.show.customize_tab.view";
+    public static final String PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR = "pref.show.customize_tab.snackbar";
 
     /* Cliqz end */
 
