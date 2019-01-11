@@ -41,11 +41,11 @@ RUN mkdir -p /sdk/android-gradle-dependencies/jcenter/com/github/PhilJay/MPAndro
     wget https://jitpack.io/com/github/PhilJay/MPAndroidChart/v3.0.2/MPAndroidChart-v3.0.2.pom && \
     wget https://jitpack.io/com/github/PhilJay/MPAndroidChart/v3.0.2/MPAndroidChart-v3.0.2.jar
 
-USER jenkins
-SHELL ["/bin/bash", "-l", "-c"]
-
 #Installation of 'appium' & 'wd' for Integration Tests
 RUN npm install --global appium wd
+
+USER jenkins
+SHELL ["/bin/bash", "-l", "-c"]
 
 #Install Ruby and Fastlane
 RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \
