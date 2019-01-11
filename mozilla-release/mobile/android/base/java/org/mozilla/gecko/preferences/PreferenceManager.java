@@ -106,7 +106,7 @@ public class PreferenceManager {
         return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED,true);
     }
 
-    public boolean showCustomizeTabView() {
+    public boolean shouldShowCustomizeTabView() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SHOW_CUSTOMIZE_TAB_VIEW, false);
     }
 
@@ -115,7 +115,7 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.PREFS_SHOW_CUSTOMIZE_TAB_VIEW, value).apply();
     }
 
-    public boolean showCustomizeTabSnackBar() {
+    public boolean shouldShowCustomizeTabSnackBar() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR, true);
     }
 

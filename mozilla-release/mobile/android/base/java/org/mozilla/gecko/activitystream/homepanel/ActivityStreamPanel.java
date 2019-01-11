@@ -125,12 +125,12 @@ public class ActivityStreamPanel extends FrameLayout {
 
         // New users are shown 'customize_newtab_view' always and
         // existing users are shown 'customize_newtab_snackbar' which the user can dismiss.
-        if (appLaunchCount == 1 || preferenceManager.showCustomizeTabView()) {
+        if (appLaunchCount == 1 || preferenceManager.shouldShowCustomizeTabView()) {
             customizeNewTabView.setVisibility(View.VISIBLE);
             customizeNewTabViewSnackBar.setVisibility(View.GONE);
             preferenceManager.setShowCustomizeTabView(true);
         } else {
-            if (appLaunchCount >= 3 && preferenceManager.showCustomizeTabSnackBar()) {
+            if (appLaunchCount >= 3 && preferenceManager.shouldShowCustomizeTabSnackBar()) {
                 customizeNewTabViewSnackBar.setVisibility(View.VISIBLE);
             } else {
                 customizeNewTabViewSnackBar.setVisibility(View.GONE);
