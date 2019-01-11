@@ -124,4 +124,14 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR, value).apply();
     }
 
+    public boolean isNewsViewExpanded() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_EXPANDED,
+                GeckoPreferences.PREFS_DEFAULT_NEWS_VIEW_EXPANDED);
+    }
+
+    public void setNewsViewExpanded(boolean value) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_EXPANDED, value).apply();
+    }
+
 }

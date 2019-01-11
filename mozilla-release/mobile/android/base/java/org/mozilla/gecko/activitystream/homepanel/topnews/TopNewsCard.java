@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
+import org.mozilla.gecko.cliqzicons.RoundedCornersTransformation;
 
 /**
  * Cliqz 2018
@@ -43,9 +44,12 @@ public class TopNewsCard extends RecyclerView.ViewHolder {
 
     void bind(final TopNews topNews) {
         final int newsFavIconSize = context.getResources().getDimensionPixelSize(R.dimen.news_favicon_size);
+        final int newsFavIconRadius = context.getResources().getDimensionPixelSize(R.dimen.news_item_favicon_radius);
         Picasso.with(context)
                 .load(CliqzLogoUtil.getIconUrl(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
-                .placeholder(CliqzLogoUtil.getDefaultIcon(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
+                .transform(new RoundedCornersTransformation(newsFavIconRadius))
+                .placeholder(
+                        CliqzLogoUtil.getDefaultIcon(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
                 .into(faviconView);
         titleView.setText(buildTitleSpannable(topNews));
         urlView.setText(topNews.getDomain());

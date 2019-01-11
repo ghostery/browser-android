@@ -283,6 +283,8 @@
     <dimen name="padding_5">5dp</dimen>
 
     <!-- news -->
+    <dimen name="news_list_radius">9dp</dimen>
+    <dimen name="news_item_favicon_radius">5dp</dimen>
     <dimen name="news_favicon_size">@dimen/icon_size</dimen>
     <dimen name="news_title_padding">10dp</dimen>
     <dimen name="new_card_padding_10">@dimen/padding_10</dimen>
