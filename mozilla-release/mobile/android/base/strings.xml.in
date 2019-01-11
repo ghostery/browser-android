@@ -711,6 +711,13 @@
   <!-- News -->
   <string name="activity_stream_top_news">&activity_stream_top_news;</string>
 
+  <!-- Customize Start Tab Link/Snackbar -->
+  <string name="customize_new_tab_link_description">&customize_new_tab_link_description;</string>
+  <string name="customize_new_tab_link">&customize_new_tab_link;</string>
+  <string name="customize_new_tab_snackbar_negative_btn">&customize_new_tab_snackbar_negative_btn;</string>
+  <string name="customize_new_tab_snackbar_positive_btn">&customize_new_tab_snackbar_positive_btn;</string>
+  <string name="customize_new_tab_snackbar_description">&customize_new_tab_snackbar_description;</string>
+
   <!-- Default Browser Dialog -->
   <string name="default_browser_title">&default_browser_title;</string>
   <string name="default_browser_message">&default_browser_message;</string>

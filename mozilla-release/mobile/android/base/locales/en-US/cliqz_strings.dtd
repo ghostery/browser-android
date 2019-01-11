@@ -39,6 +39,13 @@
 <!ENTITY helper_triple_readerview_open_message2 "Favorite Reader View items to read them offline.">
 <!ENTITY helper_triple_readerview_open_button2 "Add to favorites">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "Want to customize this tab?">
+<!ENTITY customize_new_tab_link "Go to Settings">
+<!ENTITY customize_new_tab_snackbar_negative_btn "No, Thanks">
+<!ENTITY customize_new_tab_snackbar_positive_btn "Customize">
+<!ENTITY customize_new_tab_snackbar_description "Adapt this space to your needs: Show/hide TopSites, News and background image.">
+
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; as Default Browser">
 <!ENTITY default_browser_message "You seem to like using &brandShortName;. Do you want to make it your default browser?">

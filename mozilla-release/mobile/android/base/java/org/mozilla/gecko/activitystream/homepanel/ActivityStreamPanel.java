@@ -5,6 +5,7 @@
  package org.mozilla.gecko.activitystream.homepanel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -15,8 +16,11 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
+import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.ActivityStreamTelemetry;
@@ -31,6 +35,7 @@ import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.fxa.FirefoxAccounts;
 import org.mozilla.gecko.home.HomePager;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
 import java.util.Collections;
@@ -67,7 +72,7 @@ public class ActivityStreamPanel extends FrameLayout {
     private int tileMargin;
     private final SharedPreferences sharedPreferences;
 
-    public ActivityStreamPanel(Context context, AttributeSet attrs) {
+    public ActivityStreamPanel(final Context context, AttributeSet attrs) {
         super(context, attrs);
 
         /*Cliqz Start*/
@@ -83,6 +88,9 @@ public class ActivityStreamPanel extends FrameLayout {
         contentRecyclerView.setAdapter(adapter);
         contentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         contentRecyclerView.setHasFixedSize(true);
+        /* Cliqz Start */
+        contentRecyclerView.setNestedScrollingEnabled(false);
+        /* Cliqz End */
         // Override item animations to avoid horrible topsites refreshing
         contentRecyclerView.setItemAnimator(new StreamItemAnimator());
         /* Cliqz Start o/
@@ -103,6 +111,69 @@ public class ActivityStreamPanel extends FrameLayout {
         );
 
         updateSharedPreferencesGlobalExtras(context, sharedPreferences);
+
+        /* Cliqz Start */
+        final View customizeNewTabView = findViewById(R.id.customize_newtab_view);
+        final View customizeNewTabViewSnackBar = findViewById(R.id.customize_newtab_snackbar);
+
+        final SharedPreferences appSharedPreferences = context.getSharedPreferences(
+                GeckoSharedPrefs.APP_PREFS_NAME, 0);
+        final int appLaunchCount = appSharedPreferences.getInt(
+                GeckoPreferences.PREFS_APP_LAUNCH_COUNT, 0);
+
+        PreferenceManager preferenceManager = PreferenceManager.getInstance(context);
+
+        // New users are shown 'customize_newtab_view' always and
+        // existing users are shown 'customize_newtab_snackbar' which the user can dismiss.
+        if (appLaunchCount == 1 || preferenceManager.showCustomizeTabView()) {
+            customizeNewTabView.setVisibility(View.VISIBLE);
+            customizeNewTabViewSnackBar.setVisibility(View.GONE);
+            preferenceManager.setShowCustomizeTabView(true);
+        } else {
+            if (appLaunchCount >= 3 && preferenceManager.showCustomizeTabSnackBar()) {
+                customizeNewTabViewSnackBar.setVisibility(View.VISIBLE);
+            } else {
+                customizeNewTabViewSnackBar.setVisibility(View.GONE);
+            }
+            customizeNewTabView.setVisibility(View.GONE);
+        }
+
+        final TextView goToSettings = (TextView) customizeNewTabView.findViewById(R.id.go_to_settings);
+        goToSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(context, GeckoPreferences.class);
+                GeckoPreferences.setResourceToOpen(intent, "preferences_general");
+                // We want to know when the Settings activity returns, because
+                // we might need to redisplay based on a locale change.
+                ((BrowserApp) context).startActivityForResult(intent, BrowserApp.ACTIVITY_REQUEST_PREFERENCES);
+            }
+        });
+
+        final TextView dismiss = (TextView) customizeNewTabViewSnackBar.findViewById(R.id.dismiss);
+        final TextView customize = (TextView) customizeNewTabViewSnackBar.findViewById(R.id.customize);
+
+        dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customizeNewTabViewSnackBar.setVisibility(View.GONE);
+                preferenceManager.setShowCustomizeTabSnackBar(false);
+            }
+        });
+
+        customize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(context, GeckoPreferences.class);
+                GeckoPreferences.setResourceToOpen(intent, "preferences_general");
+                // We want to know when the Settings activity returns, because
+                // we might need to redisplay based on a locale change.
+                ((BrowserApp) context).startActivityForResult(intent, BrowserApp.ACTIVITY_REQUEST_PREFERENCES);
+                customizeNewTabViewSnackBar.setVisibility(View.GONE);
+                preferenceManager.setShowCustomizeTabSnackBar(false);
+            }
+        });
+        /* Cliqz End */
     }
 
     private void updateSharedPreferencesGlobalExtras(final Context context, final SharedPreferences sharedPreferences) {
