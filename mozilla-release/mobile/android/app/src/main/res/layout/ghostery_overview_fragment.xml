@@ -16,10 +16,42 @@
             android:id="@+id/cc_donut"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
             android:layout_above="@+id/cc_domain_name"
-            android:layout_centerHorizontal="true"
-            android:padding="10dp" />
+            android:layout_alignParentTop="true" />
+
+        <LinearLayout
+            android:id="@+id/trackers_count_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/cc_donut"
+            android:layout_alignEnd="@+id/cc_donut"
+            android:layout_alignLeft="@id/cc_donut"
+            android:layout_alignRight="@id/cc_donut"
+            android:layout_alignStart="@+id/cc_donut"
+            android:layout_alignTop="@+id/cc_donut"
+            android:orientation="vertical"
+            tools:background="@color/rejection_red">
+
+            <TextView
+                android:id="@+id/trackers_count"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                app:autoSizeTextType="uniform"
+                tools:text="33" />
+
+            <TextView
+                android:id="@+id/trackers_label"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                app:autoSizeTextType="uniform"
+                tools:text="Trackers found" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/cc_domain_name"
@@ -39,7 +71,7 @@
             android:layout_above="@+id/cc_ghostery_trust_site_button"
             android:layout_centerHorizontal="true"
             android:padding="2dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="18dp"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             tools:text="11 trackers blocked" />
@@ -114,7 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="65dp"
             android:background="@drawable/cc_button_background_white"
             android:gravity="center"
