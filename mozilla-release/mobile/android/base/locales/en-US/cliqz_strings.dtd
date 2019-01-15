@@ -269,7 +269,7 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - keep your browsing cleaner, faster and safer">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Introducing &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_title "Welcome">
 <!ENTITY ghostery_onboarding_new_users_text "Browse cleaner, faster, and safer on-the-go with &brandShortName;, now optimized for mobile!">
 <!ENTITY ghostery_onboarding_new_users_checkbox "Improve &brandShortName;\'s performance by sharing anonymous analytics and Human Web data. \u003Ca href=\u0022&human_web_info_url;\u0022>Learn more\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Ad &amp; Tracker Blocking">
