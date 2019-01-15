@@ -79,25 +79,6 @@ def build(Map m){
     return {
         node(nodeLabel){
             getImageName().inside() {
-                stage('Download cache') {
-                        withCredentials([
-                            [
-                                $class: 'UsernamePasswordMultiBinding',
-                                credentialsId: 'f1732e5f-3e84-47ad-9286-a5fa6657ec43',
-                                passwordVariable: 'AWS_SECRET_ACCESS_KEY',
-                                usernameVariable: 'AWS_ACCESS_KEY_ID',
-                            ]
-                        ]) {
-                            def s3Path = "s3://repository.cliqz.com/dist/android/cache"
-                            def cachePath = ".gradle/caches"
-                            sh """#!/bin/bash -l
-                                set -e
-                                set -x
-                                cd
-                                aws s3 sync --acl public-read --acl bucket-owner-full-control ${s3Path} ${cachePath}
-                            """
-                        }
-                    }
                 stage("Build APK: ${flavorname}") {
                     withEnv([
                         "ANDROID_TARGET=${androidtarget}",

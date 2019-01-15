@@ -1,4 +1,4 @@
-FROM spacifici/fennec:64.0.1
+FROM spacifici/fennec:64.0.2
 MAINTAINER Stefano Pacifici <stefano@cliqz.com>
 ENV DEBIAN_FRONTEND noninteractive
 
