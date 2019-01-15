@@ -1,17 +1,14 @@
 package org.mozilla.gecko.activitystream.homepanel.topnews;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.home.HomePager;
-import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
@@ -57,7 +54,7 @@ public class TopNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 toggleNews();
             }
         } else {
-            final TopNews newsCard = topNews.get(position);
+            final TopNews newsCard = topNews.get(position - 1);
             onUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(newsCard.getUrl()), EnumSet.noneOf
                     (HomePager.OnUrlOpenListener.Flags.class));
         }
