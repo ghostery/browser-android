@@ -7,7 +7,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
     <!-- Cliqz start -->
-    <!-- change the url background color on private mode -->
+    <!-- change the url background color on private mode, add light theme -->
+
+    <!-- private browsing mode, light theme -->
+    <item android:drawable="@color/light_theme_ghost_color" gecko:light_theme="true" gecko:state_private="true" />
+
+    <!-- normal mode, light theme -->
+    <item android:drawable="@android:color/white" gecko:light_theme="true"/>
 
     <!-- private browsing mode -->
     <item android:drawable="@color/background_ghost_mode" gecko:state_private="true" />

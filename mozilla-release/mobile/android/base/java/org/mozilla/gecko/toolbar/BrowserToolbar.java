@@ -55,11 +55,13 @@ import org.mozilla.gecko.tabs.TabHistoryController;
 import org.mozilla.gecko.toolbar.ToolbarDisplayLayout.OnStopListener;
 import org.mozilla.gecko.toolbar.ToolbarDisplayLayout.OnTitleChangeListener;
 import org.mozilla.gecko.toolbar.ToolbarDisplayLayout.UpdateFlags;
+import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.MenuUtils;
 import org.mozilla.gecko.util.WindowUtil;
 import org.mozilla.gecko.widget.AnimatedProgressBar;
 import org.mozilla.gecko.widget.TouchDelegateWithReset;
+import org.mozilla.gecko.widget.themed.ThemedFadedHorizontalScrollView;
 import org.mozilla.gecko.widget.themed.ThemedImageButton;
 import org.mozilla.gecko.widget.themed.ThemedRelativeLayout;
 
@@ -124,19 +126,20 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     }
 
     protected final ToolbarDisplayLayout urlDisplayLayout;
-    protected final HorizontalScrollView urlDisplayScroll;
     protected final ToolbarEditLayout urlEditLayout;
     protected final View urlBarEntry;
     protected boolean isSwitchingTabs;
     protected final ThemedImageButton tabsButton;
 
     /* Cliqz start */
+    protected final ThemedFadedHorizontalScrollView urlDisplayScroll;
     protected final Ghosty ghostyButton;
+    protected final ThemedImageButton editCancel;
+    protected final ToolbarRoundButton menuButton;
     /* Cliqz end */
 
     private AnimatedProgressBar progressBar;
     protected final TabCounter tabsCounter;
-    protected final View menuButton;
     private MenuPopup menuPopup;
     protected final List<View> focusOrder;
 
@@ -199,7 +202,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         isSwitchingTabs = true;
 
         urlDisplayLayout = (ToolbarDisplayLayout) findViewById(R.id.display_layout);
-        urlDisplayScroll = (HorizontalScrollView) findViewById(R.id.url_bar_title_scroll_view);
+        urlDisplayScroll = (ThemedFadedHorizontalScrollView) findViewById(R.id.url_bar_title_scroll_view);
         urlBarEntry = findViewById(R.id.url_bar_entry);
         urlEditLayout = (ToolbarEditLayout) findViewById(R.id.edit_layout);
 
@@ -208,6 +211,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         tabsCounter.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         /* Cliqz start */
+        editCancel = (ThemedImageButton)findViewById(R.id.edit_cancel);
         ghostyButton = (Ghosty) findViewById(R.id.ghosty);
         ghostyButton.setOnGhostyClickedListener(this);
         urlDisplayLayout.setOnPageActionClickedListener(new PageActionLayout.PageActionClickListener() {
@@ -216,9 +220,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 activity.hideControlCenter();
             }
         });
-        /* Cliqz end */
 
-        menuButton = findViewById(R.id.menu);
+        menuButton = (ToolbarRoundButton) findViewById(R.id.menu);
+        /* Cliqz end */
 
         // The focusOrder List should be filled by sub-classes.
         focusOrder = new ArrayList<View>();
@@ -388,6 +392,23 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         });
 
         WindowUtil.setStatusBarColor(activity, isPrivateMode());
+
+        /* Cliqz start */
+        // add clickListener to cancel button
+        editCancel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // If we exit editing mode during the animation,
+                // we're put into an inconsistent state (bug 1017276).
+                if (!isAnimating()) {
+                    Telemetry.sendUIEvent(TelemetryContract.Event.CANCEL,
+                            TelemetryContract.Method.ACTIONBAR,
+                            getResources().getResourceEntryName(editCancel.getId()));
+                    cancelEdit();
+                }
+            }
+        });
+        /* Cliqz end */
     }
 
     @Override
@@ -811,6 +832,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         final int hiddenViewVisibility = View.INVISIBLE;
 
         if (animator == null) {
+            /* Cliqz Start */
+            editCancel.setVisibility(showEditLayout ? View.VISIBLE : View.INVISIBLE);
+            /* Cliqz End */
             final View viewToShow = (showEditLayout ? urlEditLayout : urlDisplayLayout);
             final View viewToHide = (showEditLayout ? urlDisplayLayout : urlEditLayout);
 
@@ -823,6 +847,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
             @Override
             public void onPropertyAnimationStart() {
                 if (!showEditLayout) {
+                    /* Cliqz Start */
+                    editCancel.setVisibility(View.INVISIBLE);
+                    /* Cliqz End */
                     urlEditLayout.setVisibility(hiddenViewVisibility);
                     urlDisplayLayout.setVisibility(View.VISIBLE);
                 }
@@ -831,6 +858,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
             @Override
             public void onPropertyAnimationEnd() {
                 if (showEditLayout) {
+                    /* Cliqz Start */
+                    editCancel.setVisibility(View.VISIBLE);
+                    /* Cliqz End */
                     urlDisplayLayout.setVisibility(hiddenViewVisibility);
                     urlEditLayout.setVisibility(View.VISIBLE);
                 }
@@ -925,6 +955,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         urlEditLayout.setPrivateMode(isPrivate);
         urlDisplayLayout.setPrivateMode(isPrivate);
         /* Cliqz start */
+        editCancel.setPrivateMode(isPrivate);
         ghostyButton.setPrivateMode(isPrivate);
         /* Cliqz end */
         ((ThemedImageButton) menuButton).setPrivateMode(isPrivate);
@@ -1088,6 +1119,18 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         if (tabId == Tabs.getInstance().getSelectedTab().getId()) {
             ghostyButton.setTrackerCount(count);
         }
+    }
+
+    public void setLightTheme(boolean isLightTheme) {
+        urlDisplayScroll.setLightTheme(isLightTheme);
+        urlDisplayLayout.setLightTheme(isLightTheme);
+        urlEditLayout.setLightTheme(isLightTheme);
+        tabsButton.setLightTheme(isLightTheme);
+        tabsCounter.setLightTheme(isLightTheme);
+        menuButton.setLightTheme(isLightTheme);
+        ghostyButton.setLightTheme(isLightTheme);
+        editCancel.setLightTheme(isLightTheme);
+        super.setLightTheme(isLightTheme);
     }
     /* Cliqz end */
 }

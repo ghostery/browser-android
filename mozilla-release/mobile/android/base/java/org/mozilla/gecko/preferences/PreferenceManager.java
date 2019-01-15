@@ -134,7 +134,11 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_EXPANDED, value).apply();
     }
 
-    public boolean isBlueThemeEnabled() {
+    private boolean isBlueThemeEnabled() {
         return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_BLUE_THEME,true);
+    }
+
+    public boolean isLightThemeEnabled() {
+        return !isBlueThemeEnabled();
     }
 }

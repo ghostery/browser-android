@@ -32,11 +32,11 @@
         <!-- Cliqz start -->
         <!-- round the corners of horizontal ScrollView and UrlBar TextView inside it, change
         fadeWidth to 50dp-->
-        <org.mozilla.gecko.widget.FadedHorizontalScrollView
+        <org.mozilla.gecko.widget.themed.ThemedFadedHorizontalScrollView
             android:id="@+id/url_bar_title_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/rounded_text"
+            android:background="@drawable/url_bar_entry_bg"
             android:fillViewport="true"
             android:layerType="software"
             android:overScrollMode="never"
@@ -56,7 +56,7 @@
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/site_security"
                     android:src="@drawable/security_mode_icon"
-                    android:tint="@color/general_blue_color"
+                    android:tint="@color/url_bar_site_security"
                     android:visibility="gone"
                     tools:src="@drawable/ic_lock" />
 
@@ -82,10 +82,9 @@
                     android:layout_centerVertical="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black" />
+                    android:singleLine="true" />
             </RelativeLayout>
-        </org.mozilla.gecko.widget.FadedHorizontalScrollView>
+        </org.mozilla.gecko.widget.themed.ThemedFadedHorizontalScrollView>
         <!-- Cliqz end -->
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
 

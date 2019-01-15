@@ -6,20 +6,19 @@
 
 package org.mozilla.gecko.widget.themed;
 
-import android.support.v4.content.ContextCompat;
-import org.mozilla.gecko.GeckoApplication;
-import org.mozilla.gecko.lwt.LightweightTheme;
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.util.DrawableUtil;
-
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
-public class ThemedLinearLayout extends android.widget.LinearLayout
+import org.mozilla.gecko.GeckoApplication;
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.lwt.LightweightTheme;
+import org.mozilla.gecko.widget.FadedHorizontalScrollView;
+
+public class ThemedFadedHorizontalScrollView extends FadedHorizontalScrollView
                                      implements LightweightTheme.OnChangeListener {
     private LightweightTheme theme;
 
@@ -43,7 +42,8 @@ public class ThemedLinearLayout extends android.widget.LinearLayout
     private static final int[] LIGHT_THEME_PRIVATE_MODE = { R.attr.light_theme, R.attr.state_private };
     private boolean isLightTheme;
     /* Cliqz End */
-    public ThemedLinearLayout(Context context, AttributeSet attrs) {
+
+    public ThemedFadedHorizontalScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context, attrs, 0);
     }
@@ -194,4 +194,5 @@ public class ThemedLinearLayout extends android.widget.LinearLayout
         }
     }
     /* Cliqz End */
+
 }

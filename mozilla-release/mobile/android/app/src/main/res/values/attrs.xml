@@ -194,5 +194,10 @@
         <attr name="showLWTBackground" format="boolean"/>
     </declare-styleable>
 
+    <!-- Cliqz Start -->
+    <declare-styleable name="LightTheme">
+        <attr name="light_theme" format="boolean"/>
+    </declare-styleable>
+    <!-- Cliqz End -->
 </resources>
 

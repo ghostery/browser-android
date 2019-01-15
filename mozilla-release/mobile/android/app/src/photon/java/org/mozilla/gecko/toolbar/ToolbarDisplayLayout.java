@@ -624,5 +624,12 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     public boolean isTitleSet(){
          return (mTitle.length() > 0);
     }
+
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        mTitle.setLightTheme(isLightTheme);
+        mSiteSecurity.setLightTheme(isLightTheme);
+        mPageActionLayout.setLightTheme(isLightTheme);
+    }
     /* Cliqz end */
 }

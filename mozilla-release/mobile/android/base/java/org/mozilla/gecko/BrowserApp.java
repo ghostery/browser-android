@@ -208,6 +208,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_BLUE_THEME;
 import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
 import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 
@@ -229,6 +230,7 @@ public class BrowserApp extends GeckoApp
                                    BaseControlCenterPagerAdapter.ControlCenterCallbacks,
                                    AntiPhishing.AntiPhishingCallback,
                                    AntiPhishingDialog.AntiPhishingDialogActionListener,
+                                   SharedPreferences.OnSharedPreferenceChangeListener,
                                    /* Cliqz End */
                                    OnboardingHelper.OnboardingListener {
     private static final String LOGTAG = "GeckoBrowserApp";
@@ -718,6 +720,10 @@ public class BrowserApp extends GeckoApp
         mActionBarFlipper = (ViewFlipper) findViewById(R.id.browser_actionbar);
         mActionBar = (ActionModeCompatView) findViewById(R.id.actionbar);
         mBrowserToolbar = (BrowserToolbar) findViewById(R.id.browser_toolbar);
+        /* Cliqz Start */
+        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+        setLightTheme();
+        /* Cliqz End */
         mBrowserToolbar.setTouchEventInterceptor(new TouchEventInterceptor() {
             @Override
             public boolean onInterceptTouchEvent(View view, MotionEvent event) {
@@ -813,7 +819,6 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
         /* Cliqz start */
-        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
         //Forcing the default right away, otherwise extension wont have the right default until and
         //unless user opens the settings
         PrefsHelper.setPrefIfNotExists(GeckoPreferences.PREFS_SEARCH_REGIONAL,
@@ -1013,6 +1018,7 @@ public class BrowserApp extends GeckoApp
         if (AppConstants.Versions.feature24Plus) {
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
+        mPreferenceManager.registerOnSharedPreferenceChangeListener(this);
         /*Cliqz End*/
     }
 
@@ -4797,5 +4803,16 @@ public class BrowserApp extends GeckoApp
     public boolean setRequestedOrientationForCurrentActivity(int requestedActivityInfoOrientation) {
         return super.setRequestedOrientationForCurrentActivity(requestedActivityInfoOrientation);
     }
+
+    private void setLightTheme() {
+        mBrowserToolbar.setLightTheme(mPreferenceManager.isLightThemeEnabled());
+    }
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(PREFS_BLUE_THEME)) {
+            setLightTheme();
+        }
+    }
+
     /* Cliqz end */
 }

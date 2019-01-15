@@ -221,6 +221,13 @@ public class TabCounter extends ThemedRelativeLayout {
         text.setText(formatForDisplay(count));
         this.count = count;
     }
+
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        box.setLightTheme(isLightTheme);
+        bar.setLightTheme(isLightTheme);
+        text.setLightTheme(isLightTheme);
+    }
     /* Cliqz end */
 
     @Override

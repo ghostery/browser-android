@@ -1119,7 +1119,7 @@ public class GeckoPreferences
                     continue;
                 } else if(PREFS_CLIQZ_TAB_BACKGROUND_ENABLED.equals(key)) {
                     showBackgroundPref = (CheckBoxPreference)pref;
-                    if(!mPreferenceManager.isBlueThemeEnabled()) {
+                    if(mPreferenceManager.isLightThemeEnabled()) {
                         preferences.removePreference(pref);
                         i--;
                     }

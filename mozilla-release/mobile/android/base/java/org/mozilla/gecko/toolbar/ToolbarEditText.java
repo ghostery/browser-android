@@ -21,6 +21,7 @@ import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.StringUtils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.text.Editable;
 import android.text.InputType;
@@ -42,13 +43,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.TextView;
 
+import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_BLUE_THEME;
+
 /**
 * {@code ToolbarEditText} is the text entry used when the toolbar
 * is in edit state. It handles all the necessary input method machinery.
 * It's meant to be owned by {@code ToolbarEditLayout}.
 */
 public class ToolbarEditText extends CustomEditText
-                             implements AutocompleteHandler, BundleEventListener {
+                             implements AutocompleteHandler, BundleEventListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String LOGTAG = "GeckoToolbarEditText";
     private static final NoCopySpan AUTOCOMPLETE_SPAN = new NoCopySpan.Concrete();
@@ -72,6 +75,10 @@ public class ToolbarEditText extends CustomEditText
     private Object[] mAutoCompleteSpans;
     // Do not process autocomplete result
     private boolean mDiscardAutoCompleteResult;
+    /* Cliqz Start */
+    private PreferenceManager mPreferenceManager;
+    /* Cliqz End */
+
 
     public ToolbarEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -103,10 +110,13 @@ public class ToolbarEditText extends CustomEditText
         addTextChangedListener(new TextChangeListener());
 
         /* Cliqz start */
-        if(PreferenceManager.getInstance(mContext.getApplicationContext()).isQuickSearchEnabled()) {
+        mPreferenceManager = PreferenceManager.getInstance(mContext);
+        if(mPreferenceManager.isQuickSearchEnabled()) {
             EventDispatcher.getInstance().registerUiThreadListener(this,
                     "Search:Autocomplete", null);
         }
+        mPreferenceManager.registerOnSharedPreferenceChangeListener(this);
+        setLightTheme();
         /* Cliqz end */
     }
 
@@ -696,6 +706,17 @@ public class ToolbarEditText extends CustomEditText
                 break;
             default:
                 break;
+        }
+    }
+
+    private void setLightTheme() {
+        setLightTheme(mPreferenceManager.isLightThemeEnabled());
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(PREFS_BLUE_THEME)) {
+            setLightTheme();
         }
     }
     /* Cliqz end */
