@@ -25,12 +25,21 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
     private GlobalTrackersListAdapter mTrackerListAdapter;
     private BaseControlCenterPagerAdapter.ControlCenterCallbacks mControlCenterCallbacks;
     private ProgressBar progressBar;
+    private GlobalTrackersCallback mGlobalTrackersCallback;
+
+    public interface GlobalTrackersCallback {
+        void trackingDataChanged();
+    }
 
     public GlobalTrackersFragment() {
     }
 
     public void setControlCenterCallback(BaseControlCenterPagerAdapter.ControlCenterCallbacks callback) {
         mControlCenterCallbacks = callback;
+    }
+
+    public void setGlobalTrackersCallback(GlobalTrackersCallback globalTrackersCallback) {
+        mGlobalTrackersCallback = globalTrackersCallback;
     }
 
     @Nullable
@@ -75,15 +84,18 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
         switch (item.getItemId()) {
             case R.id.block_all:
                 dispatchAndRefresh("UPDATE_BLOCK_ALL");
+                mGlobalTrackersCallback.trackingDataChanged();
                 return true;
             case R.id.unblock_all:
                 dispatchAndRefresh("UPDATE_BLOCK_NONE");
+                mGlobalTrackersCallback.trackingDataChanged();
                 return true;
             case R.id.reset_settings:
                 RestoreDefaultsDialog.show(getContext(), new RestoreDefaultsDialog.RestoreDialogCallbacks() {
                     @Override
                     public void onRestore() {
                         progressBar.setVisibility(View.VISIBLE);
+                        mGlobalTrackersCallback.trackingDataChanged();
                     }
                 });
                 return true;
