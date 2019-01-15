@@ -80,12 +80,12 @@
 <!ENTITY cc_title_overview "ÜBERBLICK">
 <!ENTITY cc_title_site_trackers "WEBSITE-TRACKER">
 <!ENTITY cc_title_global_trackers "ALLE TRACKER">
-<!ENTITY cc_zero_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_one_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_two_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_few_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_many_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_other_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_zero_trackers_found "Tracker gefunden">
+<!ENTITY cc_one_trackers_found "Tracker gefunden">
+<!ENTITY cc_two_trackers_found "Tracker gefunden">
+<!ENTITY cc_few_trackers_found "Tracker gefunden">
+<!ENTITY cc_many_trackers_found "Tracker gefunden">
+<!ENTITY cc_other_trackers_found "Tracker gefunden">
 <!ENTITY cc_zero_trackers_blocked "&formatD; Tracker blockiert">
 <!ENTITY cc_one_trackers_blocked "&formatD; Tracker blockiert">
 <!ENTITY cc_two_trackers_blocked "&formatD; Tracker blockiert">

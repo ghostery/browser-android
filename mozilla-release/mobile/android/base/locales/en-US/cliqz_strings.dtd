@@ -91,12 +91,12 @@
 <!ENTITY cc_title_overview "OVERVIEW">
 <!ENTITY cc_title_site_trackers "SITE TRACKERS">
 <!ENTITY cc_title_global_trackers "ALL TRACKERS">
-<!ENTITY cc_zero_trackers_found "&formatD;\n Trackers found">
-<!ENTITY cc_one_trackers_found "&formatD;\n Tracker found">
-<!ENTITY cc_two_trackers_found "&formatD;\n Trackers found">
-<!ENTITY cc_few_trackers_found "&formatD;\n Trackers found">
-<!ENTITY cc_many_trackers_found "&formatD;\n Trackers found">
-<!ENTITY cc_other_trackers_found "&formatD;\n Trackers found">
+<!ENTITY cc_zero_trackers_found "Trackers found">
+<!ENTITY cc_one_trackers_found "Tracker found">
+<!ENTITY cc_two_trackers_found "Trackers found">
+<!ENTITY cc_few_trackers_found "Trackers found">
+<!ENTITY cc_many_trackers_found "Trackers found">
+<!ENTITY cc_other_trackers_found "Trackers found">
 <!ENTITY cc_zero_trackers_blocked "&formatD; Trackers blocked">
 <!ENTITY cc_one_trackers_blocked "&formatD; Tracker blocked">
 <!ENTITY cc_two_trackers_blocked "&formatD; Trackers blocked">
