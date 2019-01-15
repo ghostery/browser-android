@@ -12,7 +12,7 @@ ac_add_options --disable-debug
 
 # With the following Android SDK and NDK:
 ac_add_options --with-android-sdk=$ANDROID_HOME
-ac_add_options --with-android-ndk=$ANDROID_NDK_HOME
+ac_add_options --with-android-ndk=$ANDROID_NDK
 
 # Available Brands: 'cliqz', 'cliqz-alpha', 'ghostery' & 'ghostery-alpha'
 # Write build artifacts to:
