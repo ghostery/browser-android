@@ -46,6 +46,10 @@
 <!ENTITY default_browser_dialog_cancel "ABBRECHEN">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "Nutzungsdaten senden">
+<!ENTITY datareporting_telemetry_summary2 "Hilf uns, dein Browsing-Erlebnis zu verbessern. Ghostery sammelt ausschließlich anonyme Nutzungsdaten. In keinem Fall werden persönliche Daten gesammelt.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
 <!ENTITY pref_what_is_human_web "Was ist „Human Web“?">
