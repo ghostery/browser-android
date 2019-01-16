@@ -91,6 +91,7 @@ def matrix = [
 ]
 def baseImage
 def id
+def volumeStr
 node ('kria'){
     def dockerTag = ""
     stage('Checkout') {
@@ -98,6 +99,7 @@ node ('kria'){
         dockerTag = readFile('mozilla-release/browser/config/version.txt').trim()
     }
     id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+    volumeStr = "$WORKSPACE"
     baseImageName ="browser-f/android:${dockerTag}"
     baseImage = stage('Build base image') {
         docker.build(baseImageName, '--build-arg USER=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
@@ -116,10 +118,11 @@ def build(Map m){
     def getId = m.getId
     def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release"
     def apk = ""
+    def volumeStr = m.volumeStr
     return {
         if (buildParam) {
             node(nodeLabel) {
-                getImageName().inside('-v "/home/jenkins/jenkins/workspace/Mobile/cliqz-android/ad-hoc\ builds/:/orig"') {
+                getImageName().inside("-v ${volumeStr()}:/orig") {
                     stage('Add Repo') {
                         sh """#!/bin/bash -l
                             set -e
@@ -230,7 +233,8 @@ def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
             target: it[1]['target'],
             getImageName: {baseImage},
             getId: {id},
-            buildParam: it[1]['buildParam']
+            buildParam: it[1]['buildParam'],
+            volumeStr: {volumeStr}
     )]
 }
 
