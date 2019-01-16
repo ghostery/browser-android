@@ -90,7 +90,6 @@ def matrix = [
     ],
 ]
 def baseImage
-def codeImage
 def id
 node ('kria'){
     def dockerTag = ""
@@ -100,20 +99,8 @@ node ('kria'){
     }
     id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
     baseImageName ="browser-f/android:${dockerTag}"
-    codeImageName ="browser-f/android:code"
     baseImage = stage('Build base image') {
-        docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
-    }
-    stage('Build code image') {
-        writeFile file: 'Dockerfile.code', text: """
-            FROM ${baseImageName}
-            COPY --chown=jenkins:jenkins . /app/
-        """
-
-        codeImage = docker.build(
-            codeImageName,
-            '-f Dockerfile.code .',
-        )
+        docker.build(baseImageName, '--build-arg USER=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
     }
 }
 
@@ -132,8 +119,15 @@ def build(Map m){
     return {
         if (buildParam) {
             node(nodeLabel) {
-                getImageName().inside() {
-
+                getImageName().inside('-v "/home/jenkins/jenkins/workspace/Mobile/cliqz-android/ad-hoc\ builds/:/orig"') {
+                    stage('Add Repo') {
+                        sh """#!/bin/bash -l
+                            set -e
+                            set -x
+                            rm -rf /orig/mozilla-release/objdir-frontend-android
+                            rsync -r --exclude '.git' --exclude '.idea' --exclude '.tx' /orig/ /app/
+                        """
+                    }
                     stage('Build Cliqz React Native') {
                         sh '''#!/bin/bash -l
                             set -e
@@ -143,7 +137,6 @@ def build(Map m){
                             npm run build
                         '''
                     }
-
                     stage("Build APK: ${flavorname}") {
                         withEnv([
                             "ANDROID_TARGET=${androidtarget}",
@@ -235,7 +228,7 @@ def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
             brand: it[1]['brand'],
             channel: it[1]['channel'],
             target: it[1]['target'],
-            getImageName: {codeImage},
+            getImageName: {baseImage},
             getId: {id},
             buildParam: it[1]['buildParam']
     )]
