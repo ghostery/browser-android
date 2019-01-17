@@ -4570,6 +4570,7 @@ public class BrowserApp extends GeckoApp
     }
 
     private void showCliqzSearch() {
+        mLayerView.setSearchPanelVisibilty(true);
         EventDispatcher.getInstance().dispatch("Search:Show", null);
         if(mPreferenceManager.isQuerySuggestionsEnabled()) {
             EventDispatcher.getInstance().registerUiThreadListener(this,
@@ -4578,6 +4579,7 @@ public class BrowserApp extends GeckoApp
     }
 
     private void hidePanelSearch() {
+        mLayerView.setSearchPanelVisibilty(false);
         EventDispatcher.getInstance().dispatch("Search:Hide", null);
         EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
         if(mPreferenceManager.isQuerySuggestionsEnabled()) {
