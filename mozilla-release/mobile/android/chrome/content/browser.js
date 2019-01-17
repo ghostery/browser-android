@@ -6573,10 +6573,10 @@ var Cliqz = {
         if (!msg.args[0]) {
           break;
         }
-        var success = this.hidePanel(this.Search.browser);
-        if (success) {
+        // var success = this.hidePanel(this.Search.browser);
+        // if (success) {
           BrowserApp.deck.selectedPanel.loadURI(msg.args[0]);
-        }
+        // }
         // used by the java side to exit the edit mode
         GlobalEventDispatcher.sendRequest({
           type: "Search:OpenLink"

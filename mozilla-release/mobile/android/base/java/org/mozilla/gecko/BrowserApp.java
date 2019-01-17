@@ -4882,6 +4882,7 @@ public class BrowserApp extends GeckoApp
                     .addPackage(new MainReactPackage()).setUseDeveloperSupport(BuildConfig.DEBUG)
                     .setInitialLifecycleState(LifecycleState.RESUMED).build();
             mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
+            mReactRootView.setBackgroundColor(Color.TRANSPARENT);
         }
         mHomeScreenContainer.addView(mReactRootView);
         mReactContext = mReactInstanceManager.getCurrentReactContext();
