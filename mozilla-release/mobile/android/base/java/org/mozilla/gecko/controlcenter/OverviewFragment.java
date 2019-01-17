@@ -32,6 +32,7 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.anolysis.ControlCenterMetrics;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.GeckoBundleUtils;
+import org.mozilla.gecko.util.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -466,7 +467,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("paused_blocking", false);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-            Toast.makeText(getContext(), R.string.cc_toast_overview_trust, Toast.LENGTH_SHORT).show();
+            final Toast toast = Toast.makeText(getContext(), R.string.cc_toast_overview_trust, Toast.LENGTH_SHORT);
+            ViewUtil.centerToastText(toast);
+            toast.show();
         } else {
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
@@ -505,7 +508,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("paused_blocking", false);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
-            Toast.makeText(getContext(), R.string.cc_toast_overview_restrict, Toast.LENGTH_SHORT).show();
+            final Toast toast = Toast.makeText(getContext(), R.string.cc_toast_overview_restrict, Toast.LENGTH_SHORT);
+            ViewUtil.centerToastText(toast);
+            toast.show();
         } else {
             updatedBlackList = new ArrayList<>(Arrays.asList(blackList != null ? blackList : new String[0]));
             updatedWhiteList = new ArrayList<>(Arrays.asList(whiteList != null ? whiteList : new String[0]));
