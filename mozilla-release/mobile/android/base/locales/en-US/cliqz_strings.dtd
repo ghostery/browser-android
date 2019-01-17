@@ -3,6 +3,7 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Exit">
 <!ENTITY contextmenu_delete "Delete">
+<!ENTITY search_loading_message "We are powering up Ghost search for your fully private experience">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">

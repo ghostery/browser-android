@@ -707,6 +707,7 @@
   <string name="action_ok">&action_ok;</string>
   <string name="action_exit">&action_exit;</string>
   <string name="contextmenu_delete">&contextmenu_delete;</string>
+  <string name="search_loading_message">&search_loading_message;</string>
 
   <!-- News -->
   <string name="activity_stream_top_news">&activity_stream_top_news;</string>
