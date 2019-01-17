@@ -98,6 +98,9 @@ public class GlobalTrackersListAdapter extends BaseExpandableListAdapter {
         final Categories category = Categories.safeValueOf(categoryId);
         final int totalTrackers = groupGeckoBundle.getInt("num_total");
         final int blockedTrackers = groupGeckoBundle.getInt("num_blocked");
+        final TextView onThisSiteTextView = (TextView) convertView.findViewById(R.id.this_site_text);
+        // Hide 'On this site' text for global trackers list.
+        onThisSiteTextView.setVisibility(View.GONE);
         final TextView categoryNameTextView = (TextView) convertView.findViewById(R.id.category_name);
         final TextView totalTrackersTextView = (TextView) convertView.findViewById(R.id.total_trackers);
         final TextView blockedTrackersTextView = (TextView) convertView.findViewById(R.id.blocked_trackers);
