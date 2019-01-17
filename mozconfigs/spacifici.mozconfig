@@ -1,25 +1,56 @@
 # Stefano's developing mozconfig file, do not use this for production
 
-CLIQZ_DEBUG=1
-mk_add_options GIT=/usr/bin/git
-
 # Branding
-ac_add_options --with-branding=mobile/android/branding/ghostery-alpha
-# ac_add_options --with-branding=mobile/android/branding/cliqz
+if [ -z "${CLIQZ_BRANDING}" ]
+then
+    CLIQZ_BRANDING="ghostery-alpha"
+fi
+ac_add_options --with-branding="mobile/android/branding/${CLIQZ_BRANDING}"
 
-# Build Firefox for Android Artifact Mode:
-ac_add_options --with-android-min-sdk=21
+# Set the minimum supported platform
+if [ -z "${CLIQZ_NO_MIN_SDK}" ]
+then
+    ac_add_options --with-android-min-sdk=21
+fi
+
+# Build Firefox for Android
 ac_add_options --enable-application=mobile/android
-ac_add_options --target=i686-linux-android
-# ac_add_options --target=arm-linux-androideabi
-ac_add_options --enable-artifact-builds
 
-# With the following Android SDK:
-ac_add_options --with-android-sdk="/home/stefano/opt/android-sdk"
-# ac_add_options --with-android-ndk="/home/stefano/opt/android-ndk-r18-beta1"
+# Build i686-linux-android by default
+if [ -n "${CLIQZ_TARGET}" ]
+then
+    ac_add_options --target="${CLIQZ_TARGET}"
+else
+    ac_add_options --target=i686-linux-android
+fi
+
+# Force artifacts build if no ANDROID_NDK is defined
+if [ -z "${ANDROID_NDK}" ]
+then
+    CLIQZ_ENABLE_ARTIFACT=1
+fi
+
+# Try to guess ANDROID_HOME if the variable is not defined
+if [ -z "${ANDROID_HOME}" ]
+then
+    ANDROID_HOME=`sh -c "which adb|rev|cut -d'/' -f3-|rev"`
+fi
+ac_add_options --with-android-sdk="${ANDROID_HOME}"
+
+# Enable artifact build if CLIQZ_ENABLE_ARTIFACT is defined, otherwise set
+# the Android NDK path option
+if [ -n "${CLIQZ_ENABLE_ARTIFACT}" ]
+then
+    ac_add_options --enable-artifact-builds
+else
+    ac_add_options --with-android-ndk="${ANDROID_NDK}"
+fi
 
 # Write build artifacts to:
-mk_add_options MOZ_OBJDIR="$topsrcdir/../objdir-frontend"
+mk_add_options MOZ_OBJDIR="$topsrcdir/../objdir-${CLIQZ_BRANDING}"
 
 # l10n support
 ac_add_options --with-l10n-base="$topsrcdir/../l10n"
+
+# Enabling CLIQZ special debug flag
+CLIQZ_DEBUG=1

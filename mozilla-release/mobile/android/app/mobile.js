@@ -788,7 +788,9 @@ pref("browser.snippets.geoUrl", "https://location.services.mozilla.com/v1/countr
 pref("browser.snippets.statsUrl", "https://snippets-stats.mozilla.org/mobile");
 
 // These prefs require a restart to take effect.
+/* Cliqz start */
 pref("browser.snippets.enabled", false);
+/* Cliqz end */
 pref("browser.snippets.syncPromo.enabled", true);
 pref("browser.snippets.firstrunHomepage.enabled", true);
 
@@ -913,7 +915,8 @@ pref("dom.keyboardevent.dispatch_during_composition", true);
 // Ask for permission when enumerating WebRTC devices.
 pref("media.navigator.permission.device", true);
 
-// Allow system add-on updates
+/* Cliqz start */
+// Do not allow system add-on updates
 pref("extensions.systemAddon.update.url", "");
 
 // override the UA on Google SERP pages due to https://bugzilla.mozilla.org/show_bug.cgi?id=975444
@@ -922,7 +925,6 @@ pref("general.useragent.override.encrypted.google.de", "Mozilla/5.0 (Linux; Andr
 pref("general.useragent.override.www.google.com", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
 pref("general.useragent.override.www.google.de", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
 
-/* Cliqz start */
 pref("media.autoplay.enabled", false);
 // Prevent mozaddonmanager on AMO
 pref("privacy.resistFingerprinting.block_mozAddonManager", true); 
