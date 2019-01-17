@@ -710,6 +710,8 @@
 
   <!-- News -->
   <string name="activity_stream_top_news">&activity_stream_top_news;</string>
+  <string name="activity_stream_top_news_hide">&activity_stream_top_news_hide;</string>
+  <string name="activity_stream_top_news_show">&activity_stream_top_news_show;</string>
 
   <!-- Customize Start Tab Link/Snackbar -->
   <string name="customize_new_tab_link_description">&customize_new_tab_link_description;</string>

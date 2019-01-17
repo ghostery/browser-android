@@ -20,9 +20,9 @@ class TopNewsHeader extends RecyclerView.ViewHolder {
 
     void toggleHeaderText(boolean isNewsExpanded) {
         if (isNewsExpanded) {
-            toggleNewsText.setText("Hide");
+            toggleNewsText.setText(R.string.activity_stream_top_news_hide);
         } else {
-            toggleNewsText.setText("Show");
+            toggleNewsText.setText(R.string.activity_stream_top_news_show);
         }
     }
 
