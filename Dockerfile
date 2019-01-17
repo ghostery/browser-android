@@ -1,4 +1,4 @@
-FROM spacifici/fennec:64.0.1
+FROM spacifici/fennec:64.0.2
 MAINTAINER Stefano Pacifici <stefano@cliqz.com>
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -32,6 +32,7 @@ ARG UID
 ARG GID
 ENV SHELL=/bin/bash
 ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${PATH}
+ENV JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 RUN getent group $GID || groupadd jenkins --gid $GID && \
     useradd --create-home --shell /bin/bash jenkins --uid $UID --gid $GID
 
