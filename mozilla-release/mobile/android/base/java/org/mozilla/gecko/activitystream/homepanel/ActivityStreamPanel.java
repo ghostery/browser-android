@@ -20,9 +20,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.Tab;
+import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.activitystream.ActivityStreamTelemetry;
 import org.mozilla.gecko.activitystream.homepanel.model.Highlight;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
@@ -41,7 +44,9 @@ import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 import java.util.Collections;
 import java.util.List;
 
-public class ActivityStreamPanel extends FrameLayout {
+/* Cliqz Start */
+public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChangedListener {
+/* Cliqz End */
     private final StreamRecyclerAdapter adapter;
 
     private static final int LOADER_ID_HIGHLIGHTS = 0;
@@ -71,18 +76,29 @@ public class ActivityStreamPanel extends FrameLayout {
     private int desiredTileWidth;
     private int tileMargin;
     private final SharedPreferences sharedPreferences;
+    private final PreferenceManager preferenceManager;
+
+    /* Cliqz Start */
+    private final View customizeNewTabView;
+    private final View customizeNewTabViewSnackBar;
+    /* Cliqz End */
 
     public ActivityStreamPanel(final Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        /*Cliqz Start*/
+        /* Cliqz Start */
+        Tabs.registerOnTabsChangedListener(this);
         setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
-        /*Cliqz End*/
+        /* Cliqz End */
 
         inflate(context, R.layout.as_content, this);
 
         adapter = new StreamRecyclerAdapter();
         sharedPreferences = GeckoSharedPrefs.forProfile(context);
+
+        /* Cliqz Start */
+        preferenceManager = PreferenceManager.getInstance(context);
+        /* Cliqz End */
 
         contentRecyclerView = (RecyclerView) findViewById(R.id.activity_stream_main_recyclerview);
         contentRecyclerView.setAdapter(adapter);
@@ -113,30 +129,8 @@ public class ActivityStreamPanel extends FrameLayout {
         updateSharedPreferencesGlobalExtras(context, sharedPreferences);
 
         /* Cliqz Start */
-        final View customizeNewTabView = findViewById(R.id.customize_newtab_view);
-        final View customizeNewTabViewSnackBar = findViewById(R.id.customize_newtab_snackbar);
-
-        final SharedPreferences appSharedPreferences = context.getSharedPreferences(
-                GeckoSharedPrefs.APP_PREFS_NAME, 0);
-        final int appLaunchCount = appSharedPreferences.getInt(
-                GeckoPreferences.PREFS_APP_LAUNCH_COUNT, 0);
-
-        PreferenceManager preferenceManager = PreferenceManager.getInstance(context);
-
-        // New users are shown 'customize_newtab_view' always and
-        // existing users are shown 'customize_newtab_snackbar' which the user can dismiss.
-        if (appLaunchCount == 1 || preferenceManager.shouldShowCustomizeTabView()) {
-            customizeNewTabView.setVisibility(View.VISIBLE);
-            customizeNewTabViewSnackBar.setVisibility(View.GONE);
-            preferenceManager.setShowCustomizeTabView(true);
-        } else {
-            if (appLaunchCount >= 3 && preferenceManager.shouldShowCustomizeTabSnackBar()) {
-                customizeNewTabViewSnackBar.setVisibility(View.VISIBLE);
-            } else {
-                customizeNewTabViewSnackBar.setVisibility(View.GONE);
-            }
-            customizeNewTabView.setVisibility(View.GONE);
-        }
+        customizeNewTabView = findViewById(R.id.customize_newtab_view);
+        customizeNewTabViewSnackBar = findViewById(R.id.customize_newtab_snackbar);
 
         final TextView goToSettings = (TextView) customizeNewTabView.findViewById(R.id.go_to_settings);
         goToSettings.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +210,7 @@ public class ActivityStreamPanel extends FrameLayout {
         /* Cliqz start */
         // set TopNews List empty
         adapter.swapTopNews(Collections.<TopNews>emptyList());
+        Tabs.unregisterOnTabsChangedListener(this);
         /* Cliqz end */
     }
 
@@ -270,6 +265,48 @@ public class ActivityStreamPanel extends FrameLayout {
 
         adapter.setTileSize(tilesSize);
     }
+
+    /* Cliqz Start */
+    @Override
+    public void onTabChanged(Tab tab, Tabs.TabEvents msg, String data) {
+        if ((msg != Tabs.TabEvents.LOADED && msg != Tabs.TabEvents.SELECTED) ||
+                !AboutPages.isAboutHome(tab.getURL())) {
+            return;
+        }
+        if (tab.isPrivate()) {
+            customizeNewTabView.setVisibility(View.GONE);
+            customizeNewTabViewSnackBar.setVisibility(View.GONE);
+            return;
+        }
+        final Context context = getContext();
+        final SharedPreferences appSharedPreferences = context.getSharedPreferences(
+                GeckoSharedPrefs.APP_PREFS_NAME, 0);
+        final int appLaunchCount = appSharedPreferences.getInt(
+                GeckoPreferences.PREFS_APP_LAUNCH_COUNT, 0);
+
+        // On start tab, new users are shown 'customize_newtab_view' always and
+        // existing users are shown 'customize_newtab_snackbar' which the user can dismiss.
+        final boolean showCustomizeTabView = preferenceManager.shouldShowCustomizeTabView();
+        final boolean showCustomizeTabSnackBar = preferenceManager.shouldShowCustomizeTabSnackBar();
+        if (appLaunchCount < 3 || showCustomizeTabView) {
+            customizeNewTabView.setVisibility(View.VISIBLE);
+            customizeNewTabViewSnackBar.setVisibility(View.GONE);
+            if (!showCustomizeTabView) {
+                preferenceManager.setShowCustomizeTabView(true);
+            }
+            if (showCustomizeTabSnackBar) {
+                preferenceManager.setShowCustomizeTabSnackBar(false);
+            }
+        } else {
+            customizeNewTabView.setVisibility(View.GONE);
+        }
+        if (appLaunchCount >= 3 && showCustomizeTabSnackBar) {
+            customizeNewTabViewSnackBar.setVisibility(View.VISIBLE);
+        } else {
+            customizeNewTabViewSnackBar.setVisibility(View.GONE);
+        }
+    }
+    /* Cliqz End */
 
     private class HighlightsCallbacks implements LoaderManager.LoaderCallbacks<List<Highlight>> {
         @Override
