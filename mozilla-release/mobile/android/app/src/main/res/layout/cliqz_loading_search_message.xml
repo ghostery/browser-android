@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="3dp"
+    android:background="@color/general_dark_blue_color">
+    <org.mozilla.gecko.widget.themed.ThemedLinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/home_banner_height"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/url_bar_bg"
+        android:gravity="center_vertical"
+        >
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@android:id/progress"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:indeterminateTint="@android:color/white"
+            android:indeterminate="true"
+            tools:ignore="RtlHardcoded" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@android:color/white"
+            android:text="@string/search_loading_message"
+            tools:text="We are powering up Ghost search for your fully private experience"
+            tools:ignore="RtlHardcoded" />
+
+    </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
+</FrameLayout>

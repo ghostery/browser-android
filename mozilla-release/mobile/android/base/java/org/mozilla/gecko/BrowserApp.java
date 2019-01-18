@@ -6,6 +6,7 @@
 package org.mozilla.gecko;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -47,6 +48,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -76,6 +78,7 @@ import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -298,6 +301,7 @@ public class BrowserApp extends GeckoApp
     private String mLastUrl = "";
     private AntiPhishingDialog antiPhishingDialog;
     private AntiPhishing antiPhishing;
+    private CliqzLoadingSearchHelper mLoadingSearchHelper;
     private static final int SUGGESTIONS_LIMIT = 3;
     private static final Pattern FILTER =
             Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
@@ -836,7 +840,6 @@ public class BrowserApp extends GeckoApp
         mMediaCastingBar = (MediaCastingBar) findViewById(R.id.media_casting);
 
         doorhangerOverlay = findViewById(R.id.doorhanger_overlay);
-        /*Cliqz start*/
         mControlCenterPager = (ViewPager) findViewById(R.id.control_center_pager);
         mControlCenterContainer = findViewById(R.id.control_center_container);
         if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
@@ -855,6 +858,10 @@ public class BrowserApp extends GeckoApp
         final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
+
+        final ViewStub loadingSearchStub = (ViewStub) findViewById(R.id.cliqz_loading_search_progress);
+        mLoadingSearchHelper = new CliqzLoadingSearchHelper(loadingSearchStub);
+        mLoadingSearchHelper.show();
         /*Cliqz end*/
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
