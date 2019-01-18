@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.reader.ReaderModeUtils;
 import org.mozilla.gecko.SiteIdentity;
 import org.mozilla.gecko.Tab;
@@ -138,6 +139,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private final ForegroundColorSpan mPrivateDomainColorSpan;
     // add Https color span */
     private final ForegroundColorSpan mHttpsColorSpan;
+    private final PreferenceManager preferenceManager;
     /* Cliqz end */
 
     public ToolbarDisplayLayout(Context context, AttributeSet attrs) {
@@ -186,6 +188,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mPrivateDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext_private));
         // add Https Color span */
         mHttpsColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.general_blue_color));
+        preferenceManager = PreferenceManager.getInstance(getContext());
         /* Cliqz end */
 
         mSiteSecurity = (ThemedImageButton) findViewById(R.id.site_security);
@@ -378,8 +381,8 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         builder.setSpan(isPrivate ? mPrivateDomainColorSpan : mDomainColorSpan,
                 index, index + baseDomain.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
-        // set https color to blue */
-        if(URLUtil.isHttpsUrl(url)) {
+        // set https color to blue in blueTheme only*/
+        if(URLUtil.isHttpsUrl(url) && !preferenceManager.isLightThemeEnabled()) {
             builder.setSpan(mHttpsColorSpan,0,5, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
         /* Cliqz end */

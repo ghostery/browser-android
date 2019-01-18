@@ -208,6 +208,7 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         /*Cliqz Start*/
         // get appSharedPreference
         preferenceManager = PreferenceManager.getInstance(context);
+        setLightTheme(preferenceManager.isLightThemeEnabled());
         /*Cliqz End*/
     }
 
@@ -679,17 +680,21 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (TextUtils.equals(key, GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED)) {
             reloadBackground();
+        } else if(TextUtils.equals(key, GeckoPreferences.PREFS_BLUE_THEME)){
+            setLightTheme(preferenceManager.isLightThemeEnabled());
+            reloadBackground();
         }
     }
 
     private void reloadBackground() {
         final AppBackgroundManager appBackgroundManager = AppBackgroundManager.getInstance
                 (mContext);
-        if (preferenceManager.isBackgroundEnabled()) {
+
+        if(preferenceManager.isLightThemeEnabled() || !preferenceManager.isBackgroundEnabled()) {
+            appBackgroundManager.setViewBackgroundDefaultColor(this);
+        } else {
             appBackgroundManager.setViewBackground(this, ContextCompat.getColor(mContext, R
                     .color.url_bar));
-        } else {
-            appBackgroundManager.setViewBackgroundDefaultColor(this);
         }
     }
 

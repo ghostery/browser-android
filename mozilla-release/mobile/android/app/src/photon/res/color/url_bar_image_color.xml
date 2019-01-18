@@ -10,7 +10,7 @@
     <item android:color="@color/photon_toolbar_image_tint_private" android:state_enabled="false" gecko:state_private="true" />
     <item android:color="@color/photon_toolbar_image_tint_private" android:state_enabled="true" gecko:state_private="true" />
 
-    <!-- change tint color of url icons {3 dot menu, close icon} -->
+    <!-- change tint color of url menu -->
     <item android:color="@color/photon_toolbar_image_tint_private" android:state_enabled="false" gecko:state_private="false" />
     <item android:color="@color/photon_toolbar_image_tint_private" />
     <!-- Cliqz end -->
