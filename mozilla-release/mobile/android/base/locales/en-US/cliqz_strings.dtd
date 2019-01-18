@@ -55,7 +55,7 @@
 <!-- Settings -->
 <!-- Telemetry -->
 <!ENTITY datareporting_telemetry_title2 "Send usage data">
-<!ENTITY datareporting_telemetry_summary2 "Help us improve your browsing experience. We collect strictly anonymous usage data. At no occasion is any PII collected.">
+<!ENTITY datareporting_telemetry_summary2 "Help us improve your browsing experience. We collect strictly anonymous usage data. At no occasion is any personal information collected.">
 
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">

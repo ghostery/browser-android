@@ -6597,8 +6597,8 @@ var Cliqz = {
     browser.setAttribute("messagemanagergroup", "browsers");
     browser.setAttribute("contentsource", id);
     BrowserApp.deck.appendChild(browser);
-    if (Cliqz.panelOnTop === id) {
-      Cliqz.overlayPanel(browser);
+    if (this.isVisible) {
+      this.overlayPanel(browser);
     }
 
     // return a tab look-alike object to get handled properly by ActivityObserver
@@ -6763,7 +6763,6 @@ var Cliqz = {
 
   overlayPanel: function(panel) {
     /* Cliqz start */
-    Cliqz.panelOnTop = panel.getAttribute('contentsource');
     var currentPanel = BrowserApp.deck.selectedPanel;
     if (currentPanel === panel && panel.hasAttribute("primary")) {
       // already visible
@@ -6798,7 +6797,7 @@ var Cliqz = {
 
     BrowserApp.deck.backPanel.setAttribute("primary", "true");
     BrowserApp.deck.selectedPanel = BrowserApp.deck.backPanel;
-    delete BrowserApp.deck.backPanel
+    delete BrowserApp.deck.backPanel;
 
     return true;
   },
@@ -6833,6 +6832,7 @@ var Cliqz = {
         this.messageExtension({ module: 'search', action: "getBackendCountries" })
         break;
       case "Search:Hide":
+        this.isVisible = false;
         this.hidePanel(this.Search.browser);
         this.messageExtension({ module: "search", action: "stopSearch", args: []});
         break;
@@ -6844,7 +6844,7 @@ var Cliqz = {
         }
         break;
       case "Search:Show":
-        this.panelOnTop = "firefox@ghostery.com"; // save the state before search is initialized
+        this.isVisible = true; // save the state before search is initialized
         this.Search && this.overlayPanel(this.Search.browser);
         break;
       case "Privacy:GetInfo":
