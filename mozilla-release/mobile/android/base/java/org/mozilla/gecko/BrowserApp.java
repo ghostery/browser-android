@@ -40,7 +40,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -101,7 +100,6 @@ import org.mozilla.gecko.bookmarks.EditBookmarkTask;
 import org.mozilla.gecko.cleanup.FileCleanupController;
 import org.mozilla.gecko.controlcenter.BaseControlCenterPagerAdapter;
 import org.mozilla.gecko.controlcenter.ControlCenterPagerAdapter;
-import org.mozilla.gecko.controlcenter.ControlCenterUtils;
 import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.db.SuggestedSites;
@@ -141,7 +139,6 @@ import org.mozilla.gecko.menu.GeckoMenuItem;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationHelper;
-import org.mozilla.gecko.onboarding.CliqzIntroPagerAdapter;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.Countries;
@@ -202,19 +199,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
-import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
+import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 
 public class BrowserApp extends GeckoApp
                         implements ActionModePresenter,
@@ -298,6 +293,7 @@ public class BrowserApp extends GeckoApp
     private String mLastUrl = "";
     private AntiPhishingDialog antiPhishingDialog;
     private AntiPhishing antiPhishing;
+    private CliqzLoadingSearchHelper mLoadingSearchHelper;
     private static final int SUGGESTIONS_LIMIT = 3;
     private static final Pattern FILTER =
             Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
@@ -836,7 +832,6 @@ public class BrowserApp extends GeckoApp
         mMediaCastingBar = (MediaCastingBar) findViewById(R.id.media_casting);
 
         doorhangerOverlay = findViewById(R.id.doorhanger_overlay);
-        /*Cliqz start*/
         mControlCenterPager = (ViewPager) findViewById(R.id.control_center_pager);
         mControlCenterContainer = findViewById(R.id.control_center_container);
         if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
@@ -855,6 +850,9 @@ public class BrowserApp extends GeckoApp
         final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
+
+        final ViewStub loadingSearchStub = (ViewStub) findViewById(R.id.cliqz_loading_search_progress);
+        mLoadingSearchHelper = new CliqzLoadingSearchHelper(loadingSearchStub);
         /*Cliqz end*/
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
@@ -2353,6 +2351,9 @@ public class BrowserApp extends GeckoApp
                     showCliqzSearch();
                     mHomeScreenContainer.setVisibility(View.INVISIBLE);
                 }
+                if (mLoadingSearchHelper.isStarted()) {
+                    mLoadingSearchHelper.stop();
+                }
                 break;
             case "Search:QuerySuggestions":
                 if(mPreferenceManager.isQuerySuggestionsEnabled() && mBrowserToolbar.isEditing()) {
@@ -3288,9 +3289,13 @@ public class BrowserApp extends GeckoApp
 
     private void showBrowserSearch() {
         /* Cliqz start */
+        // Display the "loading search" UI in case the search is not ready
+        if (!mSearchIsReady) {
+            mLoadingSearchHelper.start();
+        }
         // show Cliqz search cards if quick search enabled otherwise show firefox one.
-        final boolean isQuicSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
-        if(isQuicSearchEnabled) {
+        final boolean isQuickSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
+        if(isQuickSearchEnabled) {
             showCliqzSearch();
         } else {
             if (mBrowserSearch.getUserVisibleHint()) {
@@ -3321,7 +3326,7 @@ public class BrowserApp extends GeckoApp
             fm.beginTransaction().show(f).commitAllowingStateLoss();
         }
 
-        if(!isQuicSearchEnabled){
+        if(!isQuickSearchEnabled){
             if(f != null){
                 mBrowserSearch.resetScrollState();
             } else {
@@ -3345,6 +3350,10 @@ public class BrowserApp extends GeckoApp
 
     private void hideBrowserSearch(boolean hidePanel) {
         /* Cliqz start */
+        // If we are displaying the "loading search" UI, hide it
+        if (mLoadingSearchHelper.isStarted()) {
+            mLoadingSearchHelper.stop();
+        }
         if (!mPreferenceManager.isQuickSearchEnabled()) {
             if (!mBrowserSearch.getUserVisibleHint()) {
                 return;

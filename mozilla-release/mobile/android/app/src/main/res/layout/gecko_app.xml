@@ -192,6 +192,13 @@
                 app:shiftDuration="@integer/shift_duration_suggestion"
                 app:wrapShiftDrawable="true" />
 
+           <!-- Cliqz start - the loading search spinner -->
+           <ViewStub android:layout_below="@id/browser_chrome"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/cliqz_loading_search_progress"
+               android:layout="@layout/cliqz_loading_search_message" />
+           <!-- Cliqz end - loading search spinner -->
         </view>
     <!-- Cliqz Start -->
         <ViewStub
