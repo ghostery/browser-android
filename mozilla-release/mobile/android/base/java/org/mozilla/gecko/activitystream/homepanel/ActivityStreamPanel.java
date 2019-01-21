@@ -72,9 +72,6 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     public static final String PREF_BOOKMARKS_ENABLED = "pref_activitystream_recentbookmarks_enabled";
 
     private final RecyclerView contentRecyclerView;
-    /* Cliqz start */
-    private final View loadingSearchSpinner;
-    /* Cliqz end */
 
     private int desiredTileWidth;
     private int tileMargin;
@@ -112,11 +109,9 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         /* Cliqz End */
         // Override item animations to avoid horrible topsites refreshing
         contentRecyclerView.setItemAnimator(new StreamItemAnimator());
-        /* Cliqz Start */
-        // contentRecyclerView.addItemDecoration(new HighlightsDividerItemDecoration(context));
-
-        loadingSearchSpinner = findViewById(R.id.cliqz_loading_search_progress);
-        /* Cliqz End */
+        /* Cliqz Start o/
+        contentRecyclerView.addItemDecoration(new HighlightsDividerItemDecoration(context));
+        /o Cliqz End */
 
         RecyclerViewClickSupport.addTo(contentRecyclerView)
                 .setOnItemClickListener(adapter)
@@ -403,10 +398,6 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     private boolean isNewsEnabled(){
         final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
         return  prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_ENABLED,true);
-    }
-
-    public void showLoadingSearchMessage() {
-
     }
     /* Cliqz end */
 }

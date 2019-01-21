@@ -6,64 +6,136 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewStub;
 import android.widget.ProgressBar;
 
-class CliqzLoadingSearchHelper {
-    private static final long SHOW_ANIMATION_DURATION = 500l;
-    private static final long HIDE_ANIMATION_DURATION = 200l;
-    private final ViewStub loadingSearchStub;
-    private View mLoadingSeachContainer;
-    private ViewPropertyAnimator mAnimator;
+import org.mozilla.gecko.util.ThreadUtils;
 
-    public CliqzLoadingSearchHelper(@NonNull ViewStub loadingSearchStub) {
+/**
+ * An helper to coordinate the "loading search" UI
+ *
+ * Copyright © Cliqz 2019
+ */
+class CliqzLoadingSearchHelper {
+    private static final long SHOW_ANIMATION_DURATION = 500L;
+    private static final long HIDE_ANIMATION_DURATION = 200L;
+    private static final long SHOW_PROGRESS_DELAY = 1000L;
+    private final ViewStub loadingSearchStub;
+    private View mLoadingSearchContainer;
+    private ViewPropertyAnimator mAnimator;
+    private boolean mStopped = true;
+    private ScheduledShow mLastScheduledShow = null;
+
+    CliqzLoadingSearchHelper(@NonNull ViewStub loadingSearchStub) {
         this.loadingSearchStub = loadingSearchStub;
     }
 
-    public void show() {
-        if (mLoadingSeachContainer == null) {
+    /**
+     * Start the countdown to show the UI. If called multiple times, it resets the countdown and
+     * restarts it.
+     */
+    @UiThread
+    public void start() {
+        mStopped = false;
+        if (mLastScheduledShow != null) {
+            if (mLastScheduledShow.mIsShown) {
+                return;
+            } else {
+                mLastScheduledShow.cancel();
+            }
+        }
+
+        mLastScheduledShow = new ScheduledShow();
+        ThreadUtils.postDelayedToUiThread(mLastScheduledShow, SHOW_PROGRESS_DELAY);
+    }
+
+    /**
+     * Stop the countdown to show the UI and, if the latter is visible, hides it.
+     */
+    @UiThread
+    public void stop() {
+        if (mStopped) {
+            return;
+        }
+        mStopped = true;
+        hide();
+    }
+
+    private void show() {
+        if (mLoadingSearchContainer == null) {
             initView();
-            // Postpone the animation, at this point the view has no dimension
         }
 
         if (mAnimator != null) {
             mAnimator.cancel();
         }
-        mLoadingSeachContainer.setAlpha(0f);
-        mAnimator = mLoadingSeachContainer.animate();
+        mLoadingSearchContainer.setAlpha(0f);
+        mAnimator = mLoadingSearchContainer.animate();
         mAnimator.alpha(1f)
                 .setDuration(SHOW_ANIMATION_DURATION)
                 .start();
     }
 
     private void hide() {
-        if (mLoadingSeachContainer == null) {
+        if (mLastScheduledShow != null) {
+            mLastScheduledShow.cancel();
+            mLastScheduledShow = null;
+        }
+        if (mLoadingSearchContainer == null) {
             return;
         }
 
         if (mAnimator != null) {
             mAnimator.cancel();
         }
-        mAnimator = mLoadingSeachContainer.animate();
+        mAnimator = mLoadingSearchContainer.animate();
         mAnimator.alpha(0f)
                 .setDuration(HIDE_ANIMATION_DURATION)
                 .start();
     }
 
+    public boolean isStarted() {
+        return !mStopped;
+    }
+
     @SuppressWarnings("RedundantCast")
     @SuppressLint("ObsoleteSdkInt")
     private void initView() {
-        mLoadingSeachContainer = loadingSearchStub.inflate();
+        mLoadingSearchContainer = loadingSearchStub.inflate();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            final Context context = mLoadingSeachContainer.getContext();
+            final Context context = mLoadingSearchContainer.getContext();
             final ProgressBar progressBar =
-                    (ProgressBar) mLoadingSeachContainer.findViewById(android.R.id.progress);
+                    (ProgressBar) mLoadingSearchContainer.findViewById(android.R.id.progress);
             final Drawable drawable = progressBar.getIndeterminateDrawable();
             drawable.setColorFilter(ContextCompat.getColor(context, android.R.color.white),
                     PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+    private class ScheduledShow implements Runnable {
+        private boolean mIsCancelled = false;
+        private boolean mIsShown = false;
+
+        @Override
+        public void run() {
+            if (mIsCancelled || mStopped) {
+                return;
+            }
+
+            mIsShown = true;
+            show();
+        }
+
+        void cancel() {
+            mIsCancelled = true;
+        }
+
+        boolean isShown() {
+            return mIsShown;
         }
     }
 }

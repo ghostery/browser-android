@@ -6,7 +6,6 @@
 package org.mozilla.gecko;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,14 +40,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -78,7 +75,6 @@ import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -104,7 +100,6 @@ import org.mozilla.gecko.bookmarks.EditBookmarkTask;
 import org.mozilla.gecko.cleanup.FileCleanupController;
 import org.mozilla.gecko.controlcenter.BaseControlCenterPagerAdapter;
 import org.mozilla.gecko.controlcenter.ControlCenterPagerAdapter;
-import org.mozilla.gecko.controlcenter.ControlCenterUtils;
 import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.db.SuggestedSites;
@@ -144,7 +139,6 @@ import org.mozilla.gecko.menu.GeckoMenuItem;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationHelper;
-import org.mozilla.gecko.onboarding.CliqzIntroPagerAdapter;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.Countries;
@@ -205,19 +199,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
-import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
+import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 
 public class BrowserApp extends GeckoApp
                         implements ActionModePresenter,
@@ -861,7 +853,6 @@ public class BrowserApp extends GeckoApp
 
         final ViewStub loadingSearchStub = (ViewStub) findViewById(R.id.cliqz_loading_search_progress);
         mLoadingSearchHelper = new CliqzLoadingSearchHelper(loadingSearchStub);
-        mLoadingSearchHelper.show();
         /*Cliqz end*/
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
@@ -2360,6 +2351,9 @@ public class BrowserApp extends GeckoApp
                     showCliqzSearch();
                     mHomeScreenContainer.setVisibility(View.INVISIBLE);
                 }
+                if (mLoadingSearchHelper.isStarted()) {
+                    mLoadingSearchHelper.stop();
+                }
                 break;
             case "Search:QuerySuggestions":
                 if(mPreferenceManager.isQuerySuggestionsEnabled() && mBrowserToolbar.isEditing()) {
@@ -3295,9 +3289,13 @@ public class BrowserApp extends GeckoApp
 
     private void showBrowserSearch() {
         /* Cliqz start */
+        // Display the "loading search" UI in case the search is not ready
+        if (!mSearchIsReady) {
+            mLoadingSearchHelper.start();
+        }
         // show Cliqz search cards if quick search enabled otherwise show firefox one.
-        final boolean isQuicSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
-        if(isQuicSearchEnabled) {
+        final boolean isQuickSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
+        if(isQuickSearchEnabled) {
             showCliqzSearch();
         } else {
             if (mBrowserSearch.getUserVisibleHint()) {
@@ -3328,7 +3326,7 @@ public class BrowserApp extends GeckoApp
             fm.beginTransaction().show(f).commitAllowingStateLoss();
         }
 
-        if(!isQuicSearchEnabled){
+        if(!isQuickSearchEnabled){
             if(f != null){
                 mBrowserSearch.resetScrollState();
             } else {
@@ -3352,6 +3350,10 @@ public class BrowserApp extends GeckoApp
 
     private void hideBrowserSearch(boolean hidePanel) {
         /* Cliqz start */
+        // If we are displaying the "loading search" UI, hide it
+        if (mLoadingSearchHelper.isStarted()) {
+            mLoadingSearchHelper.stop();
+        }
         if (!mPreferenceManager.isQuickSearchEnabled()) {
             if (!mBrowserSearch.getUserVisibleHint()) {
                 return;
