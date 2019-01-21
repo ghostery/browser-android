@@ -9,6 +9,8 @@
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "News">
+<!ENTITY activity_stream_top_news_show "Show">
+<!ENTITY activity_stream_top_news_hide "Hide">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
