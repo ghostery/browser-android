@@ -10,6 +10,7 @@
 #ifdef MOZ_ANDROID_SHARED_ID
       android:sharedUserId="@MOZ_ANDROID_SHARED_ID@"
 #endif
+    <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18"/>
     <! - Cliqz End -->
     <uses-sdk android:minSdkVersion="@MOZ_ANDROID_MIN_SDK_VERSION@"
 #ifdef MOZ_ANDROID_MAX_SDK_VERSION

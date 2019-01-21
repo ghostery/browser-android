@@ -11,11 +11,11 @@ def matrix = [
         'target': 'i686-linux-android',
         'test': true,
     ],
-    'cliqz-alpha':[
+    /*'cliqz-alpha':[
         'bundleid': 'com.cliqz.browser.alpha',
         'target': 'arm-linux-androideabi',
         'test': false,
-    ],
+    ],*/
     'ghostery-alpha':[
         'bundleid': 'com.ghostery.android.alpha',
         'target': 'arm-linux-androideabi',
@@ -35,14 +35,14 @@ def build(Map m){
             def apk = ""
             def testsFolder = "cliqz-mobile-tests"
             setupTestInstance(
-                test,
-                "ami-6c24fc11",
-                "1",
-                "t2.medium",
-                "android_ci_genymotion",
-                "sg-5bbf173f",
-                "subnet-341ff61f",
-                "us-east-1"
+                test,                       // Boolean value for Running Tests
+                "ami-6c24fc11",             // Amazon AWS AMI ID
+                "1",                        // Count, Number of Instances
+                "t2.medium",                // Instance Size
+                "android_ci_genymotion",    // RSA Key
+                "sg-5bbf173f",              // Secutiry Group ID of AWS
+                "subnet-341ff61f",          // Subnet ID for the instance
+                "us-east-1"                 // AWS Region
             ) {
                 try {
                     stage('Checkout') {
@@ -55,10 +55,14 @@ def build(Map m){
                         image.pull()
                         image.inside {
                             stage('Build Cliqz React Native') {
-                                cliqz.buildCliqzReactNative("cliqz")
+                                cliqz.buildCliqzReactNative("cliqz")            // Pass the Folder Name for the React Native SRC
                             }
                             stage("Build APK: ${flavorname}") {
-                                apk = cliqz.buildBrowser("${androidtarget}", "${flavorname}", "ci")
+                                apk = cliqz.buildBrowser(
+                                    "${androidtarget}",     // Target for the build
+                                    "${flavorname}",        // Name of the Flavor
+                                    "ci"                    // Type of the Build (CI, Nightly or Release)
+                                    )
                                 archiveArtifacts allowEmptyArchive: true, artifacts: "build/${apk}"
                             }
                         }
@@ -78,12 +82,22 @@ def build(Map m){
                                     "FLAVOR=${flavorname}",
                                     "appPackage=${bundleid}"
                                 ]) {
-                                    stage('Genymotion ADB Connect') {
-                                        genymotion.connectGenyInstance('da5f91e6-e1ca-4aac-94ea-352b6769228b')
+                                    stage('Set Genymotion Resolution and Connect') {
+                                        genymotion.genySetPhoneResolution('da5f91e6-e1ca-4aac-94ea-352b6769228b')           // Pass the Credentials ID for the AWS API Key
+                                        genymotion.connectGenyInstance('da5f91e6-e1ca-4aac-94ea-352b6769228b')              // Pass the Credentials ID for the AWS API Key
                                     }
-                                    stage("Run Tests & Upload Results: ${flavorname}") {
+                                    stage("Run UIA2 Tests & Upload Results: ${flavorname}"){
+                                        timeout(10){
+                                            cliqz.runUITests("${flavorname}")           // Pass the Flavor Name for running the UIAutomator Tests
+                                        }
+                                    }
+                                    stage("Run Appium Tests & Upload Results: ${flavorname}") {
                                         timeout(60) {
-                                            cliqz.runAppiumTests("${testsFolder}", "${flavorname}", "${apk}")
+                                            cliqz.runAppiumTests(
+                                                "${testsFolder}",           // Path to the Folder where the Tests are cloned.
+                                                "${flavorname}",            // Flavor Name for running the UIAutomator Tests
+                                                "${apk}"                    // Path to the APK used for testing.
+                                                )
                                        }
                                     }
                                 }
@@ -95,7 +109,7 @@ def build(Map m){
                     error 'Something Failed ! Check Logs above.'
                 } finally {
                     stage('Clean Up') {
-                        utils.cleanUp("${testsFolder}")
+                        utils.cleanUp("${testsFolder}")     // Path to the Folder where the Tests are cloned. This will delete the Tests Folder.
                     }
                 }
             }

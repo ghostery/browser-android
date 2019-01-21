@@ -1,6 +1,6 @@
 # Build Firefox for Android:
 # Add MOZILLA_OFFICIAL flag to proguard the artifacts
-MOZILLA_OFFICIAL=1
+# MOZILLA_OFFICIAL=1
 
 # Android Targets: 'i686-linux-android' or 'arm-linux-androideabi'
 ac_add_options --enable-application=mobile/android
@@ -8,6 +8,7 @@ ac_add_options --target=$ANDROID_TARGET
 
 # With the following Android SDK:
 ac_add_options --with-android-sdk=$ANDROID_HOME
+ac_add_options --with-android-min-sdk=21
 
 # Allow artifact builds:
 ac_add_options --enable-artifact-builds
