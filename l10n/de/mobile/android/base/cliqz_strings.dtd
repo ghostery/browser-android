@@ -41,6 +41,13 @@
 <!ENTITY helper_triple_readerview_open_message2 "Reader-View-Artikel als Favoriten zum Offline-Lesen.">
 <!ENTITY helper_triple_readerview_open_button2 "Zu Favoriten hinzufügen">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "Diese Startseite anpassen?">
+<!ENTITY customize_new_tab_link "Einstellungen Öffnen">
+<!ENTITY customize_new_tab_snackbar_negative_btn "Nein, Danke">
+<!ENTITY customize_new_tab_snackbar_positive_btn "Anpassen">
+<!ENTITY customize_new_tab_snackbar_description "Passe diesen Bereich nach deinen Bedürfnissen an: Blende die meistbesuchten Seiten, Nachrichten und das Hintergrundbild ein/aus.">
+
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; als Standardbrowser">
 <!ENTITY default_browser_message "Du scheinst &brandShortName; gerne zu nutzen. Möchten du, dass dies dein Standardbrowser wird?">
