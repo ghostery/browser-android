@@ -200,6 +200,8 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         // init TopNews Loader if show news enabled
         if (isNewsEnabled()) {
             lm.initLoader(LOADER_ID_TOP_NEWS, null, new TopNewsCallback());
+        } else {
+            adapter.hideTopNewsSection();
         }
         /* Cliqz end */
     }
