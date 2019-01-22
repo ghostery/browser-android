@@ -6768,16 +6768,18 @@ var Cliqz = {
       // already visible
       return;
     }
-
-    if (currentPanel.hasAttribute("contentsource")) {
-      // current tab is already an overlay
-      // -> we simply hide it
-      currentPanel.removeAttribute("primary");
-    } else if (currentPanel !== panel) {
-      // we need to store the current active panel to be able
-      // to show it when the overlay panel will close
-      BrowserApp.deck.backPanel = currentPanel;
-      currentPanel.removeAttribute("primary");
+    
+    if (currentPanel) {
+      if (currentPanel.hasAttribute("contentsource")) {
+        // current tab is already an overlay
+        // -> we simply hide it
+        currentPanel.removeAttribute("primary");
+      } else if (currentPanel !== panel) {
+        // we need to store the current active panel to be able
+        // to show it when the overlay panel will close
+        BrowserApp.deck.backPanel = currentPanel;
+        currentPanel.removeAttribute("primary"); 
+      }
     }
     /* Cliqz end */
 
