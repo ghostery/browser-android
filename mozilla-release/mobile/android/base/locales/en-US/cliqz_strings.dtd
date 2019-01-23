@@ -169,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "Reset all changes?">
 <!ENTITY cc_reset_changes_dialog_message "All previous changes to site and global trackers will be reset.">
 <!ENTITY cc_reset "RESET">
+<!ENTITY cc_ad_block_off_domain "Turn off for this domain">
+<!ENTITY cc_ad_block_off_global "Turn off for all websites">
 <!ENTITY cc_reload_page_snackbar_text "Page will refresh to apply changes">
 
 <!-- General Settings - Search-->

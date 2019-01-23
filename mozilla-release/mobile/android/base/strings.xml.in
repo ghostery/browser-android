@@ -849,6 +849,8 @@
   <string name="cc_reset_changes_dialog_title">&cc_reset_changes_dialog_title;</string>
   <string name="cc_reset_changes_dialog_message">&cc_reset_changes_dialog_message;</string>
   <string name="cc_reset">&cc_reset;</string>
+  <string name="cc_ad_block_off_domain">&cc_ad_block_off_domain;</string>
+  <string name="cc_ad_block_off_global">&cc_ad_block_off_global;</string>
   <string name="cc_reload_page_snackbar_text">&cc_reload_page_snackbar_text;</string>
 
   <!-- General - Search-->
