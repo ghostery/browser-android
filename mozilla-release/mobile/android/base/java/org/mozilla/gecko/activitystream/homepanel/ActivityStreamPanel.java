@@ -58,6 +58,9 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     /* Cliqz start */
     // add TopNews Loader ID
     private static final int LOADER_ID_TOP_NEWS = 3;
+    // This date is Jan 01, 2019
+    // Used to decide to show 'customize_newtab_view' or 'customize_newtab_snackbar'
+    private static final long thresholdTime = 1546300800000L;
     /* Cliqz end */
 
     /**
@@ -301,8 +304,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
             Log.i("ActivityStreamPanel", "Error retrieving firstInstallTime");
             return;
         }
-        // This date is Jan 01, 2019
-        final long thresholdTime = 1546300800000L;
+
         if (installedTime > thresholdTime) {
             // New user.
             // Show 'customize_newtab_view' for all new users.
