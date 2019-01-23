@@ -47,7 +47,7 @@ else
 fi
 
 # Write build artifacts to:
-mk_add_options MOZ_OBJDIR="$topsrcdir/../objdir-${CLIQZ_BRANDING}"
+mk_add_options MOZ_OBJDIR="`pwd`/../objdir/`echo ${CLIQZ_BRANDING}|sed -e 's/-/_/g'`"
 
 # l10n support
 ac_add_options --with-l10n-base="$topsrcdir/../l10n"
