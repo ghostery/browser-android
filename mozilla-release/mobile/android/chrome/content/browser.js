@@ -6850,7 +6850,7 @@ var Cliqz = {
         this.Search && this.overlayPanel(this.Search.browser);
         break;
       case "Privacy:AdblockToggle":
-        this.messagePrivacyExtension({ name: "adblockToggle", message: data})
+        this.messageExtension({ name: "adblockToggle", message: data})
         break;
       case "Privacy:GetInfo":
         this.messageExtension({ name: "getAndroidPanelData" });
