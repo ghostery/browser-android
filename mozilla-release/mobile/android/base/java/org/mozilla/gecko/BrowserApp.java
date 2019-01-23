@@ -302,6 +302,9 @@ public class BrowserApp extends GeckoApp
 
     // Minimum app launches until we show the dialog to set default browser.
     private static final int MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT = 3;
+
+    // Minimum app launches until the existing users are shown the 'customize tab' snackbar
+    private static final int MINIMUM_UNTIL_CUSTOMIZE_TAB_SNACKBAR = 6;
     /* Cliqz End */
 
     public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
@@ -1037,7 +1040,7 @@ public class BrowserApp extends GeckoApp
     private void maybeShowSetDefaultBrowserDialog(SharedPreferences sharedPreferences,
                                                   final Context context) {
         int appLaunchCount = sharedPreferences.getInt(GeckoPreferences.PREFS_APP_LAUNCH_COUNT, 0);
-        if (appLaunchCount >= MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT) return;
+        if (appLaunchCount >= MINIMUM_UNTIL_CUSTOMIZE_TAB_SNACKBAR) return;
         appLaunchCount++;
         sharedPreferences.edit().putInt(GeckoPreferences.PREFS_APP_LAUNCH_COUNT, appLaunchCount).apply();
         if (appLaunchCount == MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT && !isDefaultBrowser(Intent.ACTION_VIEW)) {

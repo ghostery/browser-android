@@ -22,6 +22,7 @@
 
             <include
                 android:id="@+id/customize_newtab_view"
+                android:visibility="gone"
                 layout="@layout/cliqz_customize_newtab_view" />
 
         </LinearLayout>

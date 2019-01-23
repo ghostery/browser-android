@@ -7,6 +7,7 @@
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -41,6 +43,7 @@ import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,6 +58,9 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     /* Cliqz start */
     // add TopNews Loader ID
     private static final int LOADER_ID_TOP_NEWS = 3;
+    // This date is Jan 01, 2019
+    // Used to decide to show 'customize_newtab_view' or 'customize_newtab_snackbar'
+    private static final long thresholdTime = 1546300800000L;
     /* Cliqz end */
 
     /**
@@ -271,8 +277,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     /* Cliqz Start */
     @Override
     public void onTabChanged(Tab tab, Tabs.TabEvents msg, String data) {
-        if ((msg != Tabs.TabEvents.LOADED && msg != Tabs.TabEvents.SELECTED) ||
-                !AboutPages.isAboutHome(tab.getURL())) {
+        if (!AboutPages.isAboutHome(tab.getURL()) || msg != Tabs.TabEvents.THUMBNAIL) {
             return;
         }
         if (tab.isPrivate()) {
@@ -290,22 +295,51 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         // existing users are shown 'customize_newtab_snackbar' which the user can dismiss.
         final boolean showCustomizeTabView = preferenceManager.shouldShowCustomizeTabView();
         final boolean showCustomizeTabSnackBar = preferenceManager.shouldShowCustomizeTabSnackBar();
-        if (appLaunchCount < 3 || showCustomizeTabView) {
-            customizeNewTabView.setVisibility(View.VISIBLE);
-            customizeNewTabViewSnackBar.setVisibility(View.GONE);
-            if (!showCustomizeTabView) {
-                preferenceManager.setShowCustomizeTabView(true);
-            }
-            if (showCustomizeTabSnackBar) {
-                preferenceManager.setShowCustomizeTabSnackBar(false);
-            }
-        } else {
-            customizeNewTabView.setVisibility(View.GONE);
+        long installedTime;
+        try {
+            installedTime = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0).firstInstallTime;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            Log.i("ActivityStreamPanel", "Error retrieving firstInstallTime");
+            return;
         }
-        if (appLaunchCount >= 3 && showCustomizeTabSnackBar) {
-            customizeNewTabViewSnackBar.setVisibility(View.VISIBLE);
+
+        if (installedTime > thresholdTime) {
+            // New user.
+            // Show 'customize_newtab_view' for all new users.
+            if (appLaunchCount < 3 || showCustomizeTabView) {
+                customizeNewTabView.setVisibility(View.VISIBLE);
+                customizeNewTabViewSnackBar.setVisibility(View.GONE);
+                if (!showCustomizeTabView) {
+                    preferenceManager.setShowCustomizeTabView(true);
+                }
+                if (showCustomizeTabSnackBar) {
+                    preferenceManager.setShowCustomizeTabSnackBar(false);
+                }
+            }
         } else {
-            customizeNewTabViewSnackBar.setVisibility(View.GONE);
+            // Existing user.
+            // For users for whom we were not counting the sessions. (These users have older Ghostery version).
+            // For these users, we show 'customize_newtab_view'.
+            if (appLaunchCount == 1) {
+                customizeNewTabView.setVisibility(View.VISIBLE);
+                customizeNewTabViewSnackBar.setVisibility(View.GONE);
+                if (!showCustomizeTabView) {
+                    preferenceManager.setShowCustomizeTabView(true);
+                }
+                if (showCustomizeTabSnackBar) {
+                    preferenceManager.setShowCustomizeTabSnackBar(false);
+                }
+                return;
+            }
+            // For users for whom we were counting the sessions.
+            // For these users, we show 'customize_newtab_snackbar'.
+            if (appLaunchCount % 3 == 0 && showCustomizeTabSnackBar) {
+                customizeNewTabViewSnackBar.setVisibility(View.VISIBLE);
+            } else {
+                customizeNewTabViewSnackBar.setVisibility(View.GONE);
+            }
         }
     }
     /* Cliqz End */
