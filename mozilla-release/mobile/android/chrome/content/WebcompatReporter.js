@@ -65,7 +65,9 @@ var WebcompatReporter = {
                                                .catch(Cu.reportError);
       },
       enabled: false,
-      visible: visible,
+      /* Cliqz start */
+      visible: false, // visible,
+      /* Cliqz end */
     });
   },
 
