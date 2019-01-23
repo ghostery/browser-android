@@ -56,7 +56,7 @@
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/site_security"
                     android:src="@drawable/security_mode_icon"
-                    android:tint="@color/url_bar_site_security"
+                    android:tint="@color/cliqz_url_bar_site_security"
                     android:visibility="gone"
                     tools:src="@drawable/ic_lock" />
 

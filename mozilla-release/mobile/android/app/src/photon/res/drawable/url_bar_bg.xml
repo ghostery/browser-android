@@ -10,7 +10,7 @@
     <!-- change the url background color on private mode, add light theme -->
 
     <!-- private browsing mode, light theme -->
-    <item android:drawable="@color/light_theme_ghost_color" gecko:light_theme="true" gecko:state_private="true" />
+    <item android:drawable="@color/light_theme_ghost_tab_color" gecko:light_theme="true" gecko:state_private="true" />
 
     <!-- normal mode, light theme -->
     <item android:drawable="@android:color/white" gecko:light_theme="true"/>

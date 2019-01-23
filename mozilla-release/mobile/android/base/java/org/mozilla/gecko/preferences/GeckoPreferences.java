@@ -274,7 +274,7 @@ public class GeckoPreferences
     public static final String PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR = "pref.show.customize_tab.snackbar";
 
     public static final String PREFS_BLUE_THEME = "pref.blue.theme";
-    private CheckBoxPreference showBackgroundPref;
+    private CheckBoxPreference mShowBackgroundPref;
     private PreferenceManager mPreferenceManager;
     /* Cliqz end */
 
@@ -1118,7 +1118,7 @@ public class GeckoPreferences
                     i--;
                     continue;
                 } else if(PREFS_CLIQZ_TAB_BACKGROUND_ENABLED.equals(key)) {
-                    showBackgroundPref = (CheckBoxPreference)pref;
+                    mShowBackgroundPref = (CheckBoxPreference)pref;
                     if(mPreferenceManager.isLightThemeEnabled()) {
                         preferences.removePreference(pref);
                         i--;
@@ -1472,9 +1472,9 @@ public class GeckoPreferences
             EventDispatcher.getInstance().dispatch("SearchEngines:GetVisible", null);
         } else if(PREFS_BLUE_THEME.equals(prefName)) {
             if((boolean)newValue == true) {
-                preference.getParent().addPreference(showBackgroundPref);
+                preference.getParent().addPreference(mShowBackgroundPref);
             } else {
-                preference.getParent().removePreference(showBackgroundPref);
+                preference.getParent().removePreference(mShowBackgroundPref);
             }
         }
         /* Cliqz End */

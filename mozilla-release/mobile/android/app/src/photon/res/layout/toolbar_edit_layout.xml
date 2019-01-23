@@ -55,7 +55,7 @@
             android:src="@drawable/ic_close_clear"
             android:visibility="visible"
             gecko:showLWTBackground="true"
-            android:tint="@color/tint_edit_cancel_button"
+            android:tint="@color/cliqz_tint_edit_cancel_button"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
             android:layout_height="@dimen/browser_toolbar_height"

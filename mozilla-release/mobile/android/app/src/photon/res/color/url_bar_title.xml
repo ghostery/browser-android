@@ -7,11 +7,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
     <!-- private browsing mode -->
-    <!-- Cliqz start +->
-    <item android:color="@color/photon_text_main_private" gecko:state_private="true" />
-    <+- Cliqz end -->
-
     <!-- Cliqz start -->
+    <!-- <item android:color="@color/photon_text_main_private" gecko:state_private="true" />-->
+
     <item android:color="@android:color/white" gecko:light_theme="true"/>
     <!-- Cliqz end -->
 

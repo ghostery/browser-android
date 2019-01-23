@@ -1787,6 +1787,10 @@ public class BrowserApp extends GeckoApp
 
         MmaDelegate.flushResources(this);
 
+        /* Cliqz start */
+        mPreferenceManager.unregisterOnSharedPreferenceChangeListener(this);
+        /* Cliqz end */
+
         super.onDestroy();
     }
 
@@ -4807,6 +4811,7 @@ public class BrowserApp extends GeckoApp
     private void setLightTheme() {
         mBrowserToolbar.setLightTheme(mPreferenceManager.isLightThemeEnabled());
     }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(PREFS_BLUE_THEME)) {

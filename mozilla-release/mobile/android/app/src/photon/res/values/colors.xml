@@ -359,7 +359,7 @@
     <color name="cliqz_intro_text_color">@android:color/white</color>
     
     <!-- Light Theme -->
-    <color name="light_theme_ghost_color">#0D0F22</color>
+    <color name="light_theme_ghost_tab_color">#0D0F22</color>
     <!-- Cliqz end -->
 
 </resources>

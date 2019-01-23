@@ -44,6 +44,7 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
 
     private Rect mOutTextBound = new Rect();
     private boolean mIsLightTheme;
+
     public Ghosty(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context);

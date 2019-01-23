@@ -502,7 +502,8 @@ public class PageActionLayout extends ThemedLinearLayout
                           String title,
                           Drawable image,
                           OnPageActionClickListeners onPageActionClickListeners,
-                          boolean important, boolean useTint) {
+                          boolean important,
+                          boolean useTint) {
             mId = id;
             mTitle = title;
             mDrawable = image;

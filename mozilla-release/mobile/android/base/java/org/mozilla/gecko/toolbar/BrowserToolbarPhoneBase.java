@@ -111,7 +111,7 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
         /o Cliqz End */
     }
 
-    /* Cliqz Start o/
+   /* Cliqz Start o/
    @Override
    public void setPrivateMode(final boolean isPrivate) {
        super.setPrivateMode(isPrivate);

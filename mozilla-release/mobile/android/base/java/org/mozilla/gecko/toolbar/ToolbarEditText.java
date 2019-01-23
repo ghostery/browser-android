@@ -693,6 +693,7 @@ public class ToolbarEditText extends CustomEditText
             EventDispatcher.getInstance().unregisterUiThreadListener(this,
                     "Search:Autocomplete", null);
         }
+        mPreferenceManager.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
