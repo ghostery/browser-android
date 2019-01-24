@@ -277,7 +277,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     /* Cliqz Start */
     @Override
     public void onTabChanged(Tab tab, Tabs.TabEvents msg, String data) {
-        if (!AboutPages.isAboutHome(tab.getURL()) || msg != Tabs.TabEvents.THUMBNAIL) {
+        if (tab == null || !AboutPages.isAboutHome(tab.getURL()) || msg != Tabs.TabEvents.THUMBNAIL) {
             return;
         }
         if (tab.isPrivate()) {
