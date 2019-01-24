@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <LinearLayout
+    <org.mozilla.gecko.widget.SelfHidingLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -41,6 +41,6 @@
             android:textStyle="bold"
             tools:text="Go to Settings" />
 
-    </LinearLayout>
+    </org.mozilla.gecko.widget.SelfHidingLinearLayout>
 
 </LinearLayout>
