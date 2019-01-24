@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
@@ -173,6 +174,11 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
                 preferenceManager.setShowCustomizeTabSnackBar(false);
             }
         });
+
+        final Tab tab = Tabs.getInstance().getSelectedTab();
+        if (tab != null) {
+            showCustomizeTabView(tab, null);
+        }
         /* Cliqz End */
     }
 
@@ -277,14 +283,29 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     /* Cliqz Start */
     @Override
     public void onTabChanged(Tab tab, Tabs.TabEvents msg, String data) {
-        if (tab == null || !AboutPages.isAboutHome(tab.getURL()) || msg != Tabs.TabEvents.THUMBNAIL) {
-            return;
+        if (tab != null && AboutPages.isAboutHome(tab.getURL()) && (msg == Tabs.TabEvents.ADDED ||
+                msg == Tabs.TabEvents.CLOSED || msg == Tabs.TabEvents.OPENED_FROM_TABS_TRAY)) {
+            showCustomizeTabView(tab, msg);
         }
-        if (tab.isPrivate()) {
+    }
+
+    private void showCustomizeTabView(@NonNull Tab tab, Tabs.TabEvents msg) {
+        if (tab.isPrivate() && msg == null) {
+            customizeNewTabView.setVisibility(View.GONE);
+            customizeNewTabViewSnackBar.setVisibility(View.GONE);
+            return;
+        } else if (tab.isPrivate() && msg != null && msg != Tabs.TabEvents.CLOSED) {
+            // Special case where a user closes a private tab and the browser fallbacks to a normal tab.
+            // Here no tab change event is received so here 'Tabs.TabEvents.CLOSED' event of the
+            // closed private tab is used.
             customizeNewTabView.setVisibility(View.GONE);
             customizeNewTabViewSnackBar.setVisibility(View.GONE);
             return;
         }
+        showCustomizeTabView();
+    }
+
+    private void showCustomizeTabView() {
         final Context context = getContext();
         final SharedPreferences appSharedPreferences = context.getSharedPreferences(
                 GeckoSharedPrefs.APP_PREFS_NAME, 0);
