@@ -265,9 +265,6 @@ public class GeckoPreferences
     public static final String PREFS_SEARCH_QUERY_SUGGESTIONS = "cb_query_suggestion";
     // add key for search regional
     public static final String PREFS_SEARCH_REGIONAL = "pref.search.regional";
-    // set reference to querySuggestions and it's group so we can hide/show it
-    private Preference mSearchQuerySuggestionsPref;
-    private PreferenceGroup mSearchQuerySuggestionsPrefGroup;
 
     public static final String PREFS_APP_LAUNCH_COUNT = "app_launch_count";
     public static final String PREFS_HELP_SUPPORT = NON_PREF_PREFIX + "help.support";
@@ -1081,16 +1078,6 @@ public class GeckoPreferences
                     final String value = preferenceManager.getSearchRegional();
                     ((ListPreference) pref).setValue(value);
                     ((ListPreference) pref).setSummary(new Countries(getBaseContext()).getCountryName(value));
-                } else if (PREFS_SEARCH_QUERY_SUGGESTIONS.equals(key)) {
-                    final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-                    mSearchQuerySuggestionsPref = pref;
-                    mSearchQuerySuggestionsPrefGroup = preferences;
-                    if(!preferenceManager.getSearchRegional().equals(Locale.GERMAN.getLanguage())) {
-                        ((CheckBoxPreference)pref).setChecked(false);
-                        preferences.removePreference(pref);
-                        i--;
-                        continue;
-                    }
                 } else if (PREFS_DEFAULT_BROWSER.equals(key)) {
                     if (!AppConstants.Versions.feature24Plus) {
                         preferences.removePreference(pref);
@@ -1495,19 +1482,6 @@ public class GeckoPreferences
             int newIndex = ((ListPreference) preference).findIndexOfValue((String) newValue);
             CharSequence newEntry = ((ListPreference) preference).getEntries()[newIndex];
             ((ListPreference) preference).setSummary(newEntry);
-            /* CLiqz start */
-            if(PREFS_SEARCH_REGIONAL.equals(prefName)){
-                Preference searchQuerySuggestionPref =  findPreference
-                        (PREFS_SEARCH_QUERY_SUGGESTIONS);
-                if(newValue != ((ListPreference) preference).getEntryValues()[0]){
-                    mSearchQuerySuggestionsPrefGroup.removePreference(mSearchQuerySuggestionsPref);
-                    ((CheckBoxPreference)mSearchQuerySuggestionsPref).setChecked(false);
-                } else {
-                    mSearchQuerySuggestionsPrefGroup.addPreference(mSearchQuerySuggestionsPref);
-                    ((CheckBoxPreference)mSearchQuerySuggestionsPref).setChecked(true);
-                }
-            }
-            /* CLiqz end */
         } else if (preference instanceof LinkPreference) {
             setResult(RESULT_CODE_EXIT_SETTINGS);
             finishChoosingTransition();
