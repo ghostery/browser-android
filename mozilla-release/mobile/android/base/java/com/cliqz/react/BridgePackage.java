@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.uimanager.ViewManager;
 
@@ -19,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.gecko.EventDispatcher;
+import org.mozilla.gecko.GeckoThread;
+import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.util.BundleEventListener;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
@@ -44,7 +47,10 @@ public class BridgePackage implements ReactPackage {
     @Override
     @SuppressWarnings({"rawtypes"})
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
+        List<ViewManager> viewManagers = new ArrayList<>();
+        viewManagers.add(new NativeDrawableManager());
+
+        return viewManagers;
     }
 
     public class Bridge extends ReactContextBaseJavaModule implements BundleEventListener {

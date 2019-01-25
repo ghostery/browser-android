@@ -202,6 +202,7 @@ import org.mozilla.geckoview.GeckoSession;
 
 /* Cliqz start */
 import com.cliqz.react.BridgePackage;
+import com.cliqz.react.HistoryDialsPackage;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.ReactContext;
@@ -4879,6 +4880,7 @@ public class BrowserApp extends GeckoApp
             mReactInstanceManager = ReactInstanceManager.builder().setApplication(getApplication())
                     .setBundleAssetName("index.android.bundle").setJSMainModulePath("index")
                     .addPackage(new BridgePackage())
+                    .addPackage(new HistoryDialsPackage())
                     .addPackage(new MainReactPackage()).setUseDeveloperSupport(BuildConfig.DEBUG)
                     .setInitialLifecycleState(LifecycleState.RESUMED).build();
             mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
