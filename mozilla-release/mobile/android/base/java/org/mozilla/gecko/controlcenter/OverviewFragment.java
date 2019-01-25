@@ -607,24 +607,24 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == R.id.cc_radio_this_domain) {
-                        GeckoBundle geckoBundle1 = new GeckoBundle();
-                        geckoBundle1.putString("url", safeGetString(controlCenterSettingsData, "data/summary/pageUrl"));
-                        geckoBundle1.putBoolean("isDomain", true);
-                        EventDispatcher.getInstance().dispatch("Privacy:AdblockToggle", geckoBundle1);
-                        GeckoBundle geckoBundle2 = new GeckoBundle();
-                        geckoBundle2.putBoolean("enable_ad_block", true);
-                        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle2);
+                        final GeckoBundle toggleAdBlockStateBundle = new GeckoBundle();
+                        toggleAdBlockStateBundle.putString("url", safeGetString(controlCenterSettingsData, "data/summary/pageUrl"));
+                        toggleAdBlockStateBundle.putBoolean("isDomain", true);
+                        EventDispatcher.getInstance().dispatch("Privacy:AdblockToggle", toggleAdBlockStateBundle);
+                        final GeckoBundle ghosteryAdblockPreferenceBundle = new GeckoBundle();
+                        ghosteryAdblockPreferenceBundle.putBoolean("enable_ad_block", true);
+                        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", ghosteryAdblockPreferenceBundle);
                         mAreAdsBlockedGlobally = true;
                         mIsSiteAdBlockWhiteListed = true;
                     } else {
                         //we need to toggle
-                        GeckoBundle geckoBundle1 = new GeckoBundle();
-                        geckoBundle1.putString("url", safeGetString(controlCenterSettingsData, "data/summary/pageUrl"));
-                        geckoBundle1.putBoolean("isDomain", true);
-                        EventDispatcher.getInstance().dispatch("Privacy:AdblockToggle", geckoBundle1);
-                        GeckoBundle geckoBundle = new GeckoBundle();
-                        geckoBundle.putBoolean("enable_ad_block", false);
-                        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
+                        final GeckoBundle toggleAdBlockStateBundle = new GeckoBundle();
+                        toggleAdBlockStateBundle.putString("url", safeGetString(controlCenterSettingsData, "data/summary/pageUrl"));
+                        toggleAdBlockStateBundle.putBoolean("isDomain", true);
+                        EventDispatcher.getInstance().dispatch("Privacy:AdblockToggle", toggleAdBlockStateBundle);
+                        final GeckoBundle ghosteryAdblockPreferenceBundle = new GeckoBundle();
+                        ghosteryAdblockPreferenceBundle.putBoolean("enable_ad_block", false);
+                        EventDispatcher.getInstance().dispatch("Privacy:SetInfo", ghosteryAdblockPreferenceBundle);
                         mAreAdsBlockedGlobally = false;
                         mIsSiteAdBlockWhiteListed = false;
                     }
