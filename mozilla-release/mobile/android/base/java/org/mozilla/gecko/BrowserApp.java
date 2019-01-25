@@ -2413,7 +2413,7 @@ public class BrowserApp extends GeckoApp
                 mSearchIsReady = true;
                 if (mUserDidSearch && mBrowserToolbar.hasFocus()) {
                     showCliqzSearch();
-                    mHomeScreenContainer.setVisibility(View.INVISIBLE);
+                    //mHomeScreenContainer.setVisibility(View.INVISIBLE);
                 }
                 break;
             case "Search:QuerySuggestions":
