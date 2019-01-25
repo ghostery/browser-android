@@ -4,7 +4,7 @@
 
 ANDROID_PACKAGE_NAME=com.ghostery.android.alpha
 MOZ_APP_DISPLAYNAME="Ghostery Alpha"
-MOZ_APP_VERSION="2.0.1-alpha"
+MOZ_APP_VERSION="2.2-alpha"
 KEYSTORE_ALIAS="ghostery"
 MOZ_UPDATER=
 MOZ_ANDROID_ANR_REPORTER=
