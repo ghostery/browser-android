@@ -11,6 +11,10 @@
 <!ENTITY castingButton.castingLabel "Képernyőre vetítés">
 <!ENTITY closedCaption.off "Ki">
 
+<!-- LOCALIZATION NOTE (volumeScrubber.label): This label is exposed to
+     accessibility software to clarify what the slider is for. -->
+<!ENTITY volumeScrubber.label "Hangerő csúszka">
+
 <!ENTITY stats.media "Média">
 <!ENTITY stats.size "Méret">
 <!ENTITY stats.activity "Tevékenység">
@@ -30,13 +34,14 @@
 <!ENTITY error.srcNotSupported "A videó formátuma vagy MIME-típusa nem támogatott.">
 <!ENTITY error.noSource2 "Nincs támogatott formátumú vagy MIME-típusú videó.">
 <!ENTITY error.generic "A videólejátszás leállt ismeretlen hiba miatt.">
+
 <!-- LOCALIZATION NOTE (scrubberScale.nameFormat): the #1 string is the current
 media position, and the #2 string is the total duration. For example, when at
 the 5 minute mark in a 6 hour long video, #1 would be "5:00" and #2 would be
 "6:00:00", result string would be "5:00 of 6:00:00 elapsed".
 -->
-
 <!ENTITY scrubberScale.nameFormat "#1 / #2 eltelt">
+
 <!-- LOCALIZATION NOTE (positionAndDuration.nameFormat): the #1 string is the current
 media position, and the #2 string is the total duration. For example, when at
 the 5 minute mark in a 6 hour long video, #1 would be "5:00" and #2 would be
@@ -45,5 +50,5 @@ Note that #2 is not always available. For example, when at the 5 minute mark in 
 unknown duration video, #1 would be "5:00" and the string which is surrounded by
 <span> would be deleted, result string would be "5:00".
 -->
-
 <!ENTITY positionAndDuration.nameFormat "#1<span> / #2</span>">
+

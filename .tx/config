@@ -22,3 +22,23 @@ trans.zh_CN = l10n/zh-CN/mobile/android/base/cliqz_strings.dtd
 trans.zh_TW = l10n/zh-TW/mobile/android/base/cliqz_strings.dtd
 type = DTD
 
+[ghostery-android-app.release_notes]
+file_filter = notes/notes-<lang>.txtnotes.txt
+minimum_perc = 0
+source_file = notes/notes.txt
+source_lang = en_US
+trans.de = notes/notes-de.txt
+trans.es_ES = notes/notes-es_ES.txt
+trans.fr = notes/notes-fr.txt
+trans.hu = notes/notes-hu.txt
+trans.it = notes/notes-it.txt
+trans.ja = notes/notes-ja.txt
+trans.ko = notes/notes-ko.txt
+trans.nl = notes/notes-nl.txt
+trans.pl = notes/notes-pl.txt
+trans.pt_BR = notes/notes-pt_BR.txt
+trans.pt_PT = notes/notes-pt_PT.txt
+trans.ru = notes/notes-ru.txt
+trans.zh_CN = notes/notes-zh_CN.txt
+trans.zh_TW = notes/notes-zh_TW.txt
+type = TXT

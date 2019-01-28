@@ -58,3 +58,5 @@
 <!ENTITY viewCertificate.accesskey "r">
 <!ENTITY viewCertManager.label "Abrir administrador de certificados">
 <!ENTITY viewCertManager.accesskey "A">
+<!ENTITY zoomIn.tooltiptext "Mayor">
+<!ENTITY zoomOut.tooltiptext "Menor">

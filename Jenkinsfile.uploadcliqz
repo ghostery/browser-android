@@ -23,7 +23,9 @@ node('master') {
                         cp ../mozconfigs/deploy.mozconfig mozconfig
                         ./mach clobber
                         ./mach build
-                        export MOZ_CHROME_MULTILOCALE="de fr ru"
+                        rm -f objdir-frontend-android/cliqz/dist/bin/defaults/pref/mobile-l10n.js
+                        cp mobile/android/installer/mobile-l10n.js objdir-frontend-android/cliqz/dist/bin/defaults/pref/mobile-l10n.js
+                        export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                         for AB_CD in $MOZ_CHROME_MULTILOCALE; do
                             ./mach build chrome-$AB_CD
                         done
@@ -38,7 +40,7 @@ node('master') {
                             set -e
                             set -x
                             cd mozilla-release
-                            export MOZ_CHROME_MULTILOCALE="de fr ru"
+                            export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                             export AB_CD=multi
                             ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
                         """
@@ -61,7 +63,9 @@ node('master') {
                         cp ../mozconfigs/deploy.mozconfig mozconfig
                         ./mach clobber
                         ./mach build
-                        export MOZ_CHROME_MULTILOCALE="de fr ru"
+                        rm -f objdir-frontend-android/cliqz/dist/bin/defaults/pref/mobile-l10n.js
+                        cp mobile/android/installer/mobile-l10n.js objdir-frontend-android/cliqz/dist/bin/defaults/pref/mobile-l10n.js
+                        export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                         for AB_CD in $MOZ_CHROME_MULTILOCALE; do
                             ./mach build chrome-$AB_CD
                         done
@@ -76,7 +80,7 @@ node('master') {
                             set -e
                             set -x
                             cd mozilla-release
-                            export MOZ_CHROME_MULTILOCALE="de fr ru"
+                            export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                             export AB_CD=multi
                             ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
                         """

@@ -73,3 +73,13 @@ connection-dns-over-https =
 connection-dns-over-https-url = URL
     .accesskey = U
     .tooltiptext = URL a HTTPS-en keresztüli DNS feloldásához
+# Variables:
+#   $url (String) - URL for the DNS over HTTPS provider
+connection-dns-over-https-url-default =
+    .label = Alapértelmezett használata ({ $url })
+    .accesskey = A
+    .tooltiptext = Az alapértelmezett URL használata a HTTPS feletti DNS feloldáshoz
+connection-dns-over-https-url-custom =
+    .label = Egyéni
+    .accesskey = E
+    .tooltiptext = Adja meg az előnyben részesített URL-t a HTTPS feletti DNS feloldáshoz

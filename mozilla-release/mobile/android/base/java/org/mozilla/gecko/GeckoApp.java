@@ -37,6 +37,7 @@ import org.mozilla.gecko.util.FileUtils;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.PrefUtils;
+import org.mozilla.gecko.util.StrictModeContext;
 import org.mozilla.gecko.util.ThreadUtils;
 import org.mozilla.gecko.util.ViewUtil;
 import org.mozilla.gecko.widget.ActionModePresenter;
@@ -108,6 +109,7 @@ import static org.mozilla.gecko.Tabs.INTENT_EXTRA_TAB_ID;
 import static org.mozilla.gecko.Tabs.INVALID_TAB_ID;
 import static org.mozilla.gecko.mma.MmaDelegate.DOWNLOAD_MEDIA_SAVED_IMAGE;
 import static org.mozilla.gecko.mma.MmaDelegate.READER_AVAILABLE;
+import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
 
 public abstract class GeckoApp extends GeckoActivity
                                implements AnchoredPopup.OnVisibilityChangeListener,
@@ -156,6 +158,11 @@ public abstract class GeckoApp extends GeckoActivity
 
     public static final String SAVED_STATE_IN_BACKGROUND   = "inBackground";
     public static final String SAVED_STATE_PRIVATE_SESSION = "privateSession";
+    /**
+     * Speculative value for the maximum size the Activity Bundle can have in the hope to avoid
+     * TransactionTooLarge exceptions.
+     */
+    protected static final int MAX_BUNDLE_SIZE_BYTES = 300_000;
 
     // Delay before running one-time "cleanup" tasks that may be needed
     // after a version upgrade.
@@ -637,6 +644,11 @@ public abstract class GeckoApp extends GeckoActivity
                 } catch (final InterruptedException e) { }
             }
             outState.putString(SAVED_STATE_PRIVATE_SESSION, mPrivateBrowsingSession);
+
+            // Make sure we are not bloating the Bundle which can result in TransactionTooLargeException
+            if (getBundleSizeInBytes(outState) > MAX_BUNDLE_SIZE_BYTES) {
+                outState.remove(SAVED_STATE_PRIVATE_SESSION);
+            }
         }
 
         outState.putBoolean(SAVED_STATE_IN_BACKGROUND, isApplicationInBackground());
@@ -2038,6 +2050,7 @@ public abstract class GeckoApp extends GeckoActivity
         super.onPause();
     }
 
+    @SuppressWarnings("try")
     @Override
     public void onRestart() {
         if (mIsAbortingAppLaunch) {
@@ -2046,13 +2059,10 @@ public abstract class GeckoApp extends GeckoActivity
         }
 
         // Faster on main thread with an async apply().
-        final StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
-        try {
+        try (StrictModeContext unused = StrictModeContext.allowDiskReads()) {
             SharedPreferences.Editor editor = GeckoApp.this.getSharedPreferences().edit();
             editor.putBoolean(GeckoApp.PREFS_WAS_STOPPED, false);
             editor.apply();
-        } finally {
-            StrictMode.setThreadPolicy(savedPolicy);
         }
 
         super.onRestart();

@@ -15,6 +15,14 @@ findbar-highlight-all =
     .label = Összes kiemelése
     .accesskey = s
     .tooltiptext = A keresett kifejezés kiemelése
+findbar-highlight-all2 =
+    .label = Összes kiemelése
+    .accesskey =
+        { PLATFORM() ->
+            [macos] k
+           *[other] k
+        }
+    .tooltiptext = A kifejezés összes előfordulásának kiemelése
 findbar-case-sensitive =
     .label = Kis- és nagybetűk
     .accesskey = i

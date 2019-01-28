@@ -12,5 +12,5 @@
 <!ENTITY account.newMailNotification   "Notificar ao receber novas mensagens">
 <!ENTITY account.autojoin              "Entrar automaticamente nestes canais:">
 <!ENTITY account.proxySettings.caption "Configurações de proxy:">
-<!ENTITY account.proxySettings.change.label     "Modificar…">
-<!ENTITY account.proxySettings.change.accessKey "M">
+<!ENTITY account.proxySettings.change.label     "Alterar…">
+<!ENTITY account.proxySettings.change.accessKey "A">

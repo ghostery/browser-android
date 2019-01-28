@@ -162,3 +162,5 @@
 <!ENTITY inadequateSecurityError.title "Su conexión no es segura">
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> usa tecnología de seguridad que está obsoleta y es vulnerable a ataques. Un atacante podría revelar fácilmente información que se considera segura. El administrador web necesita corregir el servidor antes de que pueda visitar el sitio.</p><p>Código de error: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 <!ENTITY blockedByPolicy.title "Página bloqueada">
+<!ENTITY networkProtocolError.title "Error de protocolo de red">
+<!ENTITY networkProtocolError.longDesc "<p>La página que está intentando ver no se puede mostrar porque se ha detectado un error en el protocolo de red.</p><ul><li>Contacte con los propietarios del sitio web para informarles de este problema.</li></ul>">

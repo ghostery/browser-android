@@ -10,9 +10,10 @@
 <!ENTITY returnToPreviousPage.label "返回">
 <!ENTITY returnToPreviousPage1.label "返回上一頁（建議）">
 <!ENTITY advanced.label "進階">
-
 <!ENTITY continue2.label "更多…">
 <!ENTITY moreInformation.label "更多資訊">
+
+<!ENTITY viewCertificate.label "檢視憑證">
 
 <!-- Specific error messages -->
 
@@ -134,14 +135,20 @@
 
 <!ENTITY certerror.longpagetitle1 "您的連線並不安全">
 <!ENTITY certerror.longpagetitle2 "警告: 本網站可能有安全性風險">
+<!ENTITY certerror.sts.longpagetitle  "未連線: 潛在的安全性問題">
 <!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "<span class='hostname'/> 的網站管理員未正確設定好網站。為了確保您的資訊不會被盜走，&brandShortName; 並未連線至該網站。">
-
 <!ENTITY certerror.introPara2 "&brandShortName; 偵測到可能有安全性風險，並未連線至 <span class='hostname'/>。若您要造訪此網站，攻擊者可能會嘗試偷走您的密碼、電子郵件或信用卡資料等個資。">
 
 <!ENTITY certerror.expiredCert.secondPara "這個問題最有可能是因為您的系統時間不準，造成 &brandShortName; 無法安全地連線到該網站。">
+
+<!ENTITY certerror.sts.introPara "&brandShortName; 偵測到潛在的安全性威脅，並未連線到 <span class='hostname'/>。此網站必須使用安全性連線。">
+
+<!ENTITY certerror.expiredCert.introPara "&brandShortName; 偵測到潛在的安全性威脅，並未連線到 <span class='hostname'/>。此網站可能有設定問題，或您的電腦上的時間不正確。">
+<!ENTITY certerror.expiredCert.secondPara2 "可能是網站的憑證已經過期，讓 &brandShortName; 無法安全地連線。若您造訪此網站，攻擊者可能嘗試偷走您的密碼、電子郵件、信用卡資料等個人資訊。">
+<!ENTITY certerror.expiredCert.sts.secondPara "可能是網站的憑證已經過期，讓 &brandShortName; 無法安全地連線。">
 
 <!ENTITY certerror.whatCanYouDoAboutItTitle "您可以做什麼？">
 
@@ -170,7 +177,6 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "新增例外網站…">
-
 <!ENTITY securityOverride.exceptionButton1Label "接受風險並繼續">
 
 <!ENTITY errorReporting.automatic2 "回報這類的錯誤，幫助 Mozilla 找出並封鎖惡意網站">
@@ -192,6 +198,7 @@ was trying to connect. -->
 
 <!ENTITY certerror.pagetitle1  "不安全的連線">
 <!ENTITY certerror.pagetitle2  "警告: 本網站可能有安全性風險">
+<!ENTITY certerror.sts.pagetitle  "未連線: 潛在的安全性問題">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "此網站透過 HTTP Strict Transport Security (HSTS) 要求 &brandShortName; 僅能透過安全連線連結到該網站，所以無法將此憑證加入例外清單。">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "<span class='hostname'></span> 有一條稱為 HTTP Strict Transport Security (HSTS) 的安全性政策，讓 &brandShortName; 僅能與其進行安全連線。您無法加入例外，手動排除此政策。">
 <!ENTITY certerror.copyToClipboard.label "將文字複製到剪貼簿">
@@ -208,3 +215,6 @@ was trying to connect. -->
 
 <!ENTITY prefReset.longDesc "看來可能是您的網路安全設定造成此問題，您是否要恢復預設設定值？">
 <!ENTITY prefReset.label "還原預設設定">
+
+<!ENTITY networkProtocolError.title "網路通訊協定錯誤">
+<!ENTITY networkProtocolError.longDesc "<p>因為偵測到網路通訊協定中的問題，無法顯示您嘗試檢視的頁面。</p><ul><li>請聯絡網站管理員來解決這個問題。</li></ul>">

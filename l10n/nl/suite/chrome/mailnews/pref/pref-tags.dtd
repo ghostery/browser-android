@@ -4,7 +4,7 @@
 
 <!ENTITY pref.tags.title            "Labels">
 <!ENTITY pref.tags.caption          "Labels aanpassen">
-<!ENTITY pref.tags.description      "Labels kunnen worden gebruikt om uw berichten prioriteit en categorieën te geven. Pas de kleur en het belang aan met de instellingen hieronder. Labels hoger in de lijst zijn belangrijker dan die eronder.">
+<!ENTITY pref.tags.description      "Labels kunnen worden gebruikt voor het categoriseren en prioriteren van uw berichten. Pas de kleur en het belang aan met de instellingen hieronder. Labels hoger in de lijst zijn belangrijker dan die eronder.">
 <!ENTITY tagColumn.label            "Label">
 <!ENTITY colorColumn.label          "Kleur">
 <!ENTITY defaultTagName.label       "Label zonder titel">

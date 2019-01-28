@@ -30,6 +30,7 @@
 
 <!ENTITY trackingProtection.title                        "跟踪保护">
 <!ENTITY trackingProtection.description2                 "一些网站使用跟踪器技术监控您在网上的活动。具有“跟踪保护”功能的 Firefox 可以拦截多种跟踪器，防止它们收集您的网上行为。">
+
 <!ENTITY trackingProtection.startTour1                   "看看怎么用">
 
 <!ENTITY contentBlocking.title                           "内容拦截">

@@ -245,6 +245,7 @@
 
   <string name="pref_feature_tips_notification">&pref_feature_tips_notification;</string>
   <string name="pref_feature_tips_notification_summary">&pref_feature_tips_notification_summary;</string>
+  <string name="pref_feature_tips_notification_enabling_hint">&pref_feature_tips_notification_enabling_hint;</string>
 
   <string name="pref_category_experimental">&pref_category_experimental;</string>
 
@@ -649,8 +650,6 @@
   <!-- https://support.mozilla.org/1/mobile/%VERSION%/%OS%/%LOCALE%/new-android -->
   <string name="whatsnew_notification_url">https://support.mozilla.org/1/mobile/&formatS1;/&formatS2;/&formatS3;/new-android</string>
 
-  <string name="promotion_add_page_shortcut">&promotion_add_page_shortcut;</string>
-
   <string name="helper_first_offline_bookmark_title">&helper_first_offline_bookmark_title;</string>
   <!-- Cliqz start -->
   <string name="helper_first_offline_bookmark_message">&helper_first_offline_favorite_message;</string>
@@ -701,15 +700,26 @@
   <string name="leanplum_default_notifications_channel">&leanplum_default_notifications_channel;</string>
   <string name="updater_notification_channel">&updater_notification_channel;</string>
   <string name="synced_tabs_notification_channel">&synced_tabs_notification_channel;</string>
+  <string name="site_notifications_channel">&site_notifications_channel;</string>
 
   <!-- Cliqz start -->
   <!-- General -->
   <string name="action_ok">&action_ok;</string>
   <string name="action_exit">&action_exit;</string>
   <string name="contextmenu_delete">&contextmenu_delete;</string>
+  <string name="search_loading_message">&search_loading_message;</string>
 
   <!-- News -->
   <string name="activity_stream_top_news">&activity_stream_top_news;</string>
+  <string name="activity_stream_top_news_hide">&activity_stream_top_news_hide;</string>
+  <string name="activity_stream_top_news_show">&activity_stream_top_news_show;</string>
+
+  <!-- Customize Start Tab Link/Snackbar -->
+  <string name="customize_new_tab_link_description">&customize_new_tab_link_description;</string>
+  <string name="customize_new_tab_link">&customize_new_tab_link;</string>
+  <string name="customize_new_tab_snackbar_negative_btn">&customize_new_tab_snackbar_negative_btn;</string>
+  <string name="customize_new_tab_snackbar_positive_btn">&customize_new_tab_snackbar_positive_btn;</string>
+  <string name="customize_new_tab_snackbar_description">&customize_new_tab_snackbar_description;</string>
 
   <!-- Default Browser Dialog -->
   <string name="default_browser_title">&default_browser_title;</string>
@@ -839,6 +849,8 @@
   <string name="cc_reset_changes_dialog_title">&cc_reset_changes_dialog_title;</string>
   <string name="cc_reset_changes_dialog_message">&cc_reset_changes_dialog_message;</string>
   <string name="cc_reset">&cc_reset;</string>
+  <string name="cc_ad_block_off_domain">&cc_ad_block_off_domain;</string>
+  <string name="cc_ad_block_off_global">&cc_ad_block_off_global;</string>
   <string name="cc_reload_page_snackbar_text">&cc_reload_page_snackbar_text;</string>
 
   <!-- General - Search-->
@@ -976,5 +988,4 @@
   <string name="prevent_ghostery_addon_dialog_title">&prevent_ghostery_addon_dialog_title;</string>
   <string name="prevent_ghostery_addon_dialog_message">&prevent_ghostery_addon_dialog_message;</string>
   <!-- Cliqz end -->
-
 </resources>

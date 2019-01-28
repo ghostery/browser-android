@@ -91,16 +91,17 @@ subjectToCSP(nsIURI* aURI, nsContentPolicyType aContentType) {
   // hence we use protocol flags to accomplish that, but we also
   // want resource:, chrome: and moz-icon to be subject to CSP
   // (which also use URI_IS_LOCAL_RESOURCE).
-  // Exception to the rule are images and styles using a scheme
-  // of resource: or chrome:
-  bool isImgOrStyle = contentType == nsIContentPolicy::TYPE_IMAGE ||
-                      contentType == nsIContentPolicy::TYPE_STYLESHEET;
+  // Exception to the rule are images, styles, and localization DTDs
+  // using a scheme of resource: or chrome:
+  bool isImgOrStyleOrDTD = contentType == nsIContentPolicy::TYPE_IMAGE ||
+                      contentType == nsIContentPolicy::TYPE_STYLESHEET ||
+                      contentType == nsIContentPolicy::TYPE_DTD;
   rv = aURI->SchemeIs("resource", &match);
-  if (NS_SUCCEEDED(rv) && match && !isImgOrStyle) {
+  if (NS_SUCCEEDED(rv) && match && !isImgOrStyleOrDTD) {
     return true;
   }
   rv = aURI->SchemeIs("chrome", &match);
-  if (NS_SUCCEEDED(rv) && match && !isImgOrStyle) {
+  if (NS_SUCCEEDED(rv) && match && !isImgOrStyleOrDTD) {
     return true;
   }
   rv = aURI->SchemeIs("moz-icon", &match);
@@ -134,6 +135,10 @@ CSPService::ShouldLoad(nsIURI *aContentLocation,
   if (loadingPrincipal) {
     loadingPrincipal->GetURI(getter_AddRefs(requestOrigin));
   }
+
+  nsCOMPtr<nsICSPEventListener> cspEventListener;
+  nsresult rv = aLoadInfo->GetCspEventListener(getter_AddRefs(cspEventListener));
+  NS_ENSURE_SUCCESS(rv, rv);
 
   if (MOZ_LOG_TEST(gCspPRLog, LogLevel::Debug)) {
     MOZ_LOG(gCspPRLog, LogLevel::Debug,
@@ -170,7 +175,6 @@ CSPService::ShouldLoad(nsIURI *aContentLocation,
     // if we can't query a principal, then there is nothing to do.
     return NS_OK;
   }
-  nsresult rv = NS_OK;
 
   // 1) Apply speculate CSP for preloads
   bool isPreload = nsContentUtils::IsPreloadType(contentType);
@@ -183,6 +187,7 @@ CSPService::ShouldLoad(nsIURI *aContentLocation,
     if (preloadCsp) {
       // obtain the enforcement decision
       rv = preloadCsp->ShouldLoad(contentType,
+                                  cspEventListener,
                                   aContentLocation,
                                   requestOrigin,
                                   requestContext,
@@ -208,6 +213,7 @@ CSPService::ShouldLoad(nsIURI *aContentLocation,
   if (csp) {
     // obtain the enforcement decision
     rv = csp->ShouldLoad(contentType,
+                         cspEventListener,
                          aContentLocation,
                          requestOrigin,
                          requestContext,
@@ -271,6 +277,10 @@ CSPService::AsyncOnChannelRedirect(nsIChannel *oldChannel,
 
   nsCOMPtr<nsILoadInfo> loadInfo = oldChannel->GetLoadInfo();
 
+  nsCOMPtr<nsICSPEventListener> cspEventListener;
+  rv = loadInfo->GetCspEventListener(getter_AddRefs(cspEventListener));
+  NS_ENSURE_SUCCESS(rv, rv);
+
   // if no loadInfo on the channel, nothing for us to do
   if (!loadInfo) {
     return NS_OK;
@@ -321,6 +331,7 @@ CSPService::AsyncOnChannelRedirect(nsIChannel *oldChannel,
     if (preloadCsp) {
       // Pass  originalURI to indicate the redirect
       preloadCsp->ShouldLoad(policyType,     // load type per nsIContentPolicy (uint32_t)
+                             cspEventListener,
                              newUri,         // nsIURI
                              nullptr,        // nsIURI
                              requestContext, // nsISupports
@@ -346,6 +357,7 @@ CSPService::AsyncOnChannelRedirect(nsIChannel *oldChannel,
   if (csp) {
     // Pass  originalURI to indicate the redirect
     csp->ShouldLoad(policyType,     // load type per nsIContentPolicy (uint32_t)
+                    cspEventListener,
                     newUri,         // nsIURI
                     nullptr,        // nsIURI
                     requestContext, // nsISupports

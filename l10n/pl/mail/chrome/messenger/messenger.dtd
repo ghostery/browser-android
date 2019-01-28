@@ -438,6 +438,9 @@
 <!ENTITY openConversationCmd.label "Otwórz wątek w karcie">
 <!ENTITY openConversationCmd.accesskey "k">
 <!ENTITY openConversationCmd.key "o">
+<!ENTITY openInConversationCmd.label "Otwórz wątek w karcie">
+<!ENTITY openInConversationCmd.accesskey "k">
+<!ENTITY openInConversationCmd.key "o">
 <!ENTITY openAttachmentListCmd.label "Załączniki">
 <!ENTITY openAttachmentListCmd.accesskey "c">
 <!ENTITY openFeedMessage1.label "Otwieraj artykuły">

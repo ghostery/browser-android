@@ -41,3 +41,5 @@
 <!ENTITY allowHWAccel.accesskey                 "v">
 <!ENTITY blockAutoRefresh.label                 "Mij waarschuwen wanneer websites proberen de pagina door te sturen of te herladen">
 <!ENTITY blockAutoRefresh.accesskey             "r">
+
+<!ENTITY showZoomStatusPanel.label              "Zoombediening in de statusbalk tonen">

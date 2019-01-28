@@ -11,6 +11,7 @@
 <!ENTITY advanced.label "Avanzate">
 <!ENTITY continue2.label "Altro…">
 <!ENTITY moreInformation.label "Ulteriori informazioni">
+<!ENTITY viewCertificate.label "Visualizza certificato">
 <!ENTITY connectionFailure.title "Connessione non riuscita">
 <!ENTITY connectionFailure.longDesc "&sharedLongDesc;">
 <!ENTITY deniedPortAccess.title "Questo indirizzo è bloccato">
@@ -111,9 +112,14 @@
 </ul>">
 <!ENTITY certerror.longpagetitle1 "Questa connessione non è sicura">
 <!ENTITY certerror.longpagetitle2 "Attenzione: potenziale rischio per la sicurezza">
+<!ENTITY certerror.sts.longpagetitle "Connessione interrotta: potenziale rischio per la sicurezza">
 <!ENTITY certerror.introPara "Il gestore di <span class='hostname'/> ha configurato il sito in modo non corretto. Per evitare potenziali furti di informazioni &brandShortName; ha interrotto la connessione.">
 <!ENTITY certerror.introPara2 "&brandShortName; ha rilevato una potenziale minaccia per la sicurezza e interrotto la connessione con <span class='hostname'/>. Visitando questo sito, malintenzionati potrebbero cercare di rubare informazioni personali come password, email o dati delle carte di credito.">
-<!ENTITY certerror.expiredCert.secondPara "L’errore è probabilmente causato dall’orologio del computer impostato su un orario scorretto. Questo impedisce a &brandShortName; di connettersi in modo sicuro.">
+<!ENTITY certerror.sts.introPara "&brandShortName; ha rilevato una potenziale minaccia per la sicurezza e interrotto la connessione con <span class='hostname'/>, in quanto è possibile collegarsi a questo sito solo in modo sicuro.">
+<!ENTITY certerror.expiredCert.secondPara "L’errore è probabilmente causato dall’orologio del computer impostato sull’ora sbagliata. Questo impedisce a &brandShortName; di connettersi in modo sicuro.">
+<!ENTITY certerror.expiredCert.introPara "&brandShortName; ha rilevato un problema e interrotto la connessione con <span class='hostname'/>. Il sito non è configurato correttamente oppure l’orologio del computer è impostato sull’ora sbagliata.">
+<!ENTITY certerror.expiredCert.secondPara2 "È probabile che il certificato del sito web sia scaduto. Questo impedisce a &brandShortName; di connettersi in modo sicuro. Visitando questo sito, malintenzionati potrebbero cercare di rubare informazioni personali come password, email o dati delle carte di credito.">
+<!ENTITY certerror.expiredCert.sts.secondPara "È probabile che il certificato del sito web sia scaduto. Questo impedisce a &brandShortName; di connettersi in modo sicuro.">
 <!ENTITY certerror.whatCanYouDoAboutItTitle "Che cosa posso fare per risolvere?">
 <!ENTITY certerror.unknownIssuer.whatCanYouDoAboutIt "<p>L’errore è probabilmente causato dal sito web e non può essere risolto.</p>
 <p>Se si stanno utilizzando una rete aziendale o un software antivirus, contattare i team di supporto per ottenere assistenza. È inoltre possibile segnalare il problema al gestore del sito web.</p>">
@@ -143,6 +149,7 @@
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>Non è possibile connettersi a <span id='wrongSystemTimeWithoutReference_URL'/> in quanto l’orologio del sistema sembra impostato su un valore errato e questo impedisce di stabilire una connessione sicura.</p> <p>L’ora impostata nel computer è <span id='wrongSystemTimeWithoutReference_systemDate'/>. Per risolvere il problema impostare correttamente la data e l’ora del computer.</p>">
 <!ENTITY certerror.pagetitle1 "Connessione non sicura">
 <!ENTITY certerror.pagetitle2 "Attenzione: potenziale rischio per la sicurezza">
+<!ENTITY certerror.sts.pagetitle "Connessione interrotta: potenziale rischio per la sicurezza">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Questo sito utilizza il protocollo HSTS (HTTP Strict Transport Security) per garantire che la connessione con &brandShortName; avvenga esclusivamente in modo sicuro. Per questo motivo non è possibile aggiungere un’eccezione per questo certificato.">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "<span class='hostname'></span> utilizza un criterio di sicurezza chiamato HTTP Strict Transport Security (HSTS). Questo significa che &brandShortName; può connettersi solo in modo sicuro e non è possibile aggiungere un’eccezione per visitare questo sito.">
 <!ENTITY certerror.copyToClipboard.label "Copia il testo negli appunti">
@@ -153,3 +160,5 @@
 <!ENTITY clockSkewError.longDesc "L’ora riportata dall’orologio del computer è <span id='wrongSystemTime_systemDate1'/>, questo impedisce a &brandShortName; di connettersi in modo sicuro. Per visitare <span class='hostname'></span> aggiornare l’orologio del computer nelle impostazioni del sistema, impostando data, ora e fuso orario correnti, poi riprovare a caricare <span class='hostname'></span>.">
 <!ENTITY prefReset.longDesc "Sembra che il problema sia causato dalle impostazioni di sicurezza della rete. Ripristinare le impostazioni predefinite?">
 <!ENTITY prefReset.label "Ripristina impostazioni predefinite">
+<!ENTITY networkProtocolError.title "Errore protocollo di rete">
+<!ENTITY networkProtocolError.longDesc "<p>La pagina che si sta cercando di visualizzare non può essere mostrata poiché si è verificato un errore nel protocollo di rete.</p><ul><li>Contattare il proprietario del sito web per informarlo del problema.</li></ul>">

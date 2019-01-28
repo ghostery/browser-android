@@ -84,3 +84,6 @@
 <!ENTITY viewCertificate.accesskey   "C">
 <!ENTITY viewCertManager.label       "Certificatenbeheerder openen">
 <!ENTITY viewCertManager.accesskey   "b">
+
+<!ENTITY zoomIn.tooltiptext          "Groter">
+<!ENTITY zoomOut.tooltiptext         "Kleiner">

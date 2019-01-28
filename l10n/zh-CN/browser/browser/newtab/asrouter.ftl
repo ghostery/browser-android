@@ -9,6 +9,10 @@ cfr-doorhanger-extension-cancel-button = 暂时不要
     .accesskey = N
 cfr-doorhanger-extension-ok-button = 立刻添加
     .accesskey = A
+cfr-doorhanger-extension-manage-settings-button = 管理推荐设置
+    .accesskey = M
+cfr-doorhanger-extension-never-show-recommendation = 不再显示此推荐
+    .accesskey = S
 cfr-doorhanger-extension-learn-more-link = 详细了解
 # This string is used on a new line below the add-on name
 # Variables:

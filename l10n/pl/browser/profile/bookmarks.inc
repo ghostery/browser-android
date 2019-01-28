@@ -13,7 +13,7 @@
 
 #define firefox_heading Mozilla Firefox
 #define firefox_help Pomoc
-#define firefox_customize Dostosuj Firefoksa
+#define firefox_customize Dostosuj program
 #define firefox_community Dołącz do nas
 #define firefox_about O Mozilli
 

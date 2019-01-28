@@ -291,6 +291,18 @@
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "Obtenez plus d’informations sur l’utilisation de &brandShortName; et des autres logiciels de &vendorShortName;">
 
+<!-- Localization note (pref_feature_tips_notification_enabling_hint):
+     Describe the action the user should do to enable this preference
+     Will be used in the context "<Turn on> ... to enable this feature" -->
+<!ENTITY pref_feature_tips_notification_enabling_hint "Activer">
+
+<!-- Localization note (pref_feature_tips_notification_enabling_path):
+     Nothing to translate. Simple concatenation of already localized strings. Result is used below. -->
+<!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
+<!-- Localization note (pref_feature_tips_notification_enabling_hint):
+     Describe the action the user should do to enable this preference. -->
+<!ENTITY pref_feature_tips_notification_enabling_hint2 "(Pour activer cette option, &pref_feature_tips_notification_enabling_path; doit déjà être activé.)">
+
 <!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
      for experimental features. -->
 <!ENTITY pref_category_experimental "Fonctionnalités expérimentales">
@@ -363,7 +375,6 @@
 <!ENTITY pref_use_system_font_size_summary "Redimensionner le contenu web selon la taille de la police système">
 
 <!ENTITY pref_media_autoplay_enabled "Lecture automatique">
-<!ENTITY pref_media_autoplay_enabled_summary "Décider si les sites peuvent lancer automatiquement la lecture des vidéos et d’autres contenus multimédia">
 <!ENTITY pref_media_autoplay_allow "Autoriser la lecture automatique">
 <!ENTITY pref_media_autoplay_block "Bloquer la lecture automatique">
 <!ENTITY pref_zoom_force_enabled "Toujours activer le zoom">
@@ -512,7 +523,7 @@
 <!ENTITY contextmenu_site_settings "Modifier param. de site">
 <!ENTITY contextmenu_top_sites_edit "Modifier">
 <!ENTITY contextmenu_top_sites_pin "Épingler ce site">
-<!ENTITY contextmenu_top_sites_unpin "Relâcher ce site">
+<!ENTITY contextmenu_top_sites_unpin "Désépingler ce site">
 <!-- Localization note (contextmenu_pin_to_top_sites, contextmenu_unpin_from_top_sites): These strings are used to
      pin/unpin items from top sites when the user is not on the top sites screen so they'd be missing context on what
      just "Pin Site" or "Unpin Site" would mean. -->
@@ -639,7 +650,7 @@
 <!-- Localization note (home_pinned_site) : This is a snackbar label displayed after
     a site is pinned or unpinned. -->
 <!ENTITY home_pinned_site "Site épinglé">
-<!ENTITY home_unpinned_site "Site retiré">
+<!ENTITY home_unpinned_site "Site désépinglé">
 
 <!ENTITY remote_tabs_panel_moved_title "Où mes onglets sont-ils passés ?">
 <!ENTITY remote_tabs_panel_moved_desc "Nous avons déplacé les onglets de vos autres appareils au sein d’un panneau de votre écran d’accueil pour que vous puissiez y accéder facilement à chaque ouverture d’un nouvel onglet.">
@@ -828,9 +839,6 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- LOCALIZATION NOTE(corrupt_apk): This notification is shown if corruption has been detected on startup and the user has to reinstall Firefox -->
 <!ENTITY corrupt_apk "Impossible d’ouvrir &brandShortName;. Veuillez le réinstaller puis réessayer.">
 
-<!ENTITY eol_notification_title2 "&brandShortName; ne se mettra plus à jour">
-<!ENTITY eol_notification_summary "Appuyez pour en savoir plus">
-
 <!-- LOCALIZATION NOTE (whatsnew_notification_title, whatsnew_notification_summary): These strings
      are used for a system notification that's shown to users after the app updates. -->
 <!ENTITY whatsnew_notification_title "&brandShortName; est à jour">
@@ -897,10 +905,19 @@ Picture-in-picture mini window -->
 
 <!-- Notification channels names -->
 <!ENTITY default_notification_channel "&brandShortName;">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel2 "Navigateur">
 <!ENTITY mls_notification_channel "Service de localisation de &vendorShortName;">
 <!ENTITY download_notification_channel "Téléchargements">
 <!ENTITY media_notification_channel "Lecture multimédia">
 <!-- These push notifications come without a specific channel and/or name from Leanplum -->
 <!ENTITY leanplum_default_notifications_channel "Notifications push de &brandShortName;">
+<!ENTITY media_notification_channel2 "Son et vidéo">
+<!-- These push notifications come without a specific channel and/or name from Leanplum -->
+<!ENTITY leanplum_default_notifications_channel2 "Trucs et astuces de &vendorShortName;">
 <!ENTITY updater_notification_channel "Mises à jour de l’application">
 <!ENTITY synced_tabs_notification_channel "Onglets synchronisés">
+<!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by
+web sites through the HTML Notifications API. -->
+<!ENTITY site_notifications_channel "Notifications des sites web">

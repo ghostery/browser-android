@@ -14,7 +14,7 @@
 <!ENTITY bccField4.label "Cco">
 <!ENTITY newsgroupsField4.label "Newsgroups">
 <!ENTITY followupToField4.label "Repassar para">
-<!ENTITY tagsHdr4.label "Tags">
+<!ENTITY tagsHdr4.label "Etiquetas">
 <!ENTITY dateField4.label "Data">
 <!ENTITY userAgentField4.label "Agente de usuário">
 <!ENTITY referencesField4.label "Referências">

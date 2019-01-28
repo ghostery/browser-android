@@ -114,6 +114,11 @@ XPCOMUtils.defineLazyServiceGetter(this, "FontEnumerator",
 
 ChromeUtils.defineModuleGetter(this, "Utils", "resource://gre/modules/sessionstore/Utils.jsm");
 
+ChromeUtils.defineModuleGetter(this, "FormLikeFactory",
+                               "resource://gre/modules/FormLikeFactory.jsm");
+ChromeUtils.defineModuleGetter(this, "GeckoViewAutoFill",
+                               "resource://gre/modules/GeckoViewAutoFill.jsm");
+
 var GlobalEventDispatcher = EventDispatcher.instance;
 var WindowEventDispatcher = EventDispatcher.for(window);
 
@@ -125,7 +130,7 @@ var lazilyLoadedBrowserScripts = [
   ["RemoteDebugger", "chrome://browser/content/RemoteDebugger.js"],
   ["gViewSourceUtils", "chrome://global/content/viewSourceUtils.js"],
 ];
-if (!AppConstants.RELEASE_OR_BETA) {
+if (!["release", "esr"].includes(AppConstants.MOZ_UPDATE_CHANNEL)) {
   lazilyLoadedBrowserScripts.push(
     ["WebcompatReporter", "chrome://browser/content/WebcompatReporter.js"]);
 }
@@ -392,7 +397,7 @@ var BrowserApp = {
     ]);
 
     // Initialize the default l10n resource sources for L10nRegistry.
-    let locales = Services.locale.getPackagedLocales();
+    let locales = Services.locale.packagedLocales;
     const greSource = new FileSource("toolkit", locales, "resource://gre/localization/{locale}/");
     L10nRegistry.registerSource(greSource);
 
@@ -414,15 +419,8 @@ var BrowserApp = {
     });
 
     window.addEventListener("fullscreenchange", (e) => {
-      // This event gets fired on the document and its entire ancestor chain
-      // of documents. When enabling fullscreen, it is fired on the top-level
-      // document first and goes down; when disabling the order is reversed
-      // (per spec). This means the last event on enabling will be for the innermost
-      // document, which will have fullscreenElement set correctly.
-      let doc = e.target;
       WindowEventDispatcher.sendRequest({
-        type: doc.fullscreenElement ? "DOMFullScreen:Start" : "DOMFullScreen:Stop",
-        rootElement: doc.fullscreenElement == doc.documentElement
+        type: document.fullscreenElement ? "DOMFullScreen:Start" : "DOMFullScreen:Stop"
       });
 
       if (this.fullscreenTransitionTab) {
@@ -489,7 +487,7 @@ var BrowserApp = {
     if (AppConstants.ACCESSIBILITY) {
       InitLater(() => GlobalEventDispatcher.dispatch("GeckoView:AccessibilityReady"));
       GlobalEventDispatcher.registerListener((aEvent, aData, aCallback) => {
-        if (aData.enabled) {
+        if (aData.touchEnabled) {
           AccessFu.enable();
         } else {
           AccessFu.disable();
@@ -539,7 +537,7 @@ var BrowserApp = {
       // AsyncPrefs is needed for reader mode.
       InitLater(() => AsyncPrefs.init());
 
-      if (!AppConstants.RELEASE_OR_BETA) {
+      if (!["release", "esr"].includes(AppConstants.MOZ_UPDATE_CHANNEL)) {
         InitLater(() => WebcompatReporter.init());
       }
 
@@ -1716,7 +1714,7 @@ var BrowserApp = {
   },
 
   getUALocalePref: function () {
-    return Services.locale.getRequestedLocale() || undefined;
+    return Services.locale.requestedLocale || undefined;
   },
 
   getOSLocalePref: function () {
@@ -1793,9 +1791,9 @@ var BrowserApp = {
 
       case "Locale:Changed": {
         if (data) {
-          Services.locale.setRequestedLocales([data.languageTag]);
+          Services.locale.requestedLocales = [data.languageTag];
         } else {
-          Services.locale.setRequestedLocales([]);
+          Services.locale.requestedLocales = [];
         }
 
         console.log("Gecko display locale: " + this.getUALocalePref());
@@ -2004,7 +2002,7 @@ var BrowserApp = {
         this._handleTabSelected(this.getTabForId(data.id));
         let isPrivate = PrivateBrowsingUtils.isBrowserPrivate(this.selectedTab.browser);
         const theme = isPrivate ? 'dark' : 'light';
-        Cliqz.messageSearchExtension( { module: "mobile-cards", action: "changeTheme", args: [theme]});
+        Cliqz.messageExtension( { module: "mobile-cards", action: "changeTheme", args: [theme]});
         break;
 
       case "Tab:Closed": {
@@ -2289,7 +2287,7 @@ var BrowserApp = {
     let browser = this.selectedBrowser;
     let hist = browser.sessionHistory.legacySHistory;
     for (let i = toIndex; i >= fromIndex; i--) {
-      let entry = hist.getEntryAtIndex(i, false);
+      let entry = hist.getEntryAtIndex(i);
       let item = {
         title: entry.title || entry.URI.displaySpec,
         url: entry.URI.displaySpec,
@@ -2916,6 +2914,9 @@ var NativeWindow = {
         return;
       }
 
+      // Find the HTMLMediaElement host if the element is inside video controls UA Widget.
+      this._target = this._findMediaElementHostFromControls(this._target);
+
       // Try to build a list of contextmenu items. If successful, actually show the
       // native context menu by passing the list to Java.
       this._buildMenu(event.clientX, event.clientY);
@@ -2977,6 +2978,27 @@ var NativeWindow = {
           this.menus[context] = [];
         }
         this.menus[context] = this.menus[context].concat(items);
+    },
+
+    _findMediaElementHostFromControls(element) {
+      if (!(element instanceof HTMLMediaElement)) {
+        let n = element;
+        while (n) {
+          if (n instanceof ShadowRoot) {
+            if (n.host instanceof HTMLMediaElement) {
+              // Node is a UA Widget Shadow Root with HTMLMediaElement as host
+              return n.host;
+            }
+            // Node is a normal Shadow Root, give up
+            return element;
+          }
+          // Set the node to its parentNode and continue the loop.
+          n = n.parentNode;
+        }
+      }
+      // Return the element given that the loop ends without finding anything,
+      // or because the element is already an HTMLMediaElement.
+      return element;
     },
 
     /* Does the basic work of building a context menu to show. Will combine HTML and Native
@@ -3771,6 +3793,7 @@ Tab.prototype = {
 
     this.browser.addEventListener("DOMContentLoaded", this, true);
     this.browser.addEventListener("DOMFormHasPassword", this, true);
+    this.browser.addEventListener("DOMInputPasswordAdded", this, true);
     this.browser.addEventListener("DOMLinkAdded", this, true);
     this.browser.addEventListener("DOMLinkChanged", this, true);
     this.browser.addEventListener("DOMMetaAdded", this);
@@ -3779,10 +3802,14 @@ Tab.prototype = {
     this.browser.addEventListener("DOMAudioPlaybackStopped", this, true);
     this.browser.addEventListener("DOMWindowClose", this, true);
     this.browser.addEventListener("DOMWillOpenModalDialog", this, true);
+    this.browser.addEventListener("pagehide", this, true);
     this.browser.addEventListener("pageshow", this, true);
     this.browser.addEventListener("MozApplicationManifest", this, true);
     this.browser.addEventListener("TabPreZombify", this, true);
     this.browser.addEventListener("DOMWindowFocus", this, true);
+    this.browser.addEventListener("focusin", this, true);
+    this.browser.addEventListener("focusout", this, true);
+    this.browser.addEventListener("TabSelect", this, true);
 
     // Note that the XBL binding is untrusted
     this.browser.addEventListener("VideoBindingAttached", this, true, true);
@@ -3791,6 +3818,9 @@ Tab.prototype = {
     Services.obs.addObserver(this, "audioFocusChanged", false);
     Services.obs.addObserver(this, "before-first-paint");
     Services.obs.addObserver(this, "media-playback");
+
+    XPCOMUtils.defineLazyGetter(this, "_autoFill", () =>
+        new GeckoViewAutoFill(WindowEventDispatcher));
 
     // Always initialise new tabs with basic session store data to avoid
     // problems with functions that always expect it to be present
@@ -3902,6 +3932,7 @@ Tab.prototype = {
 
     this.browser.removeEventListener("DOMContentLoaded", this, true);
     this.browser.removeEventListener("DOMFormHasPassword", this, true);
+    this.browser.removeEventListener("DOMInputPasswordAdded", this, true);
     this.browser.removeEventListener("DOMLinkAdded", this, true);
     this.browser.removeEventListener("DOMLinkChanged", this, true);
     this.browser.removeEventListener("DOMMetaAdded", this);
@@ -3910,10 +3941,14 @@ Tab.prototype = {
     this.browser.removeEventListener("DOMAudioPlaybackStopped", this, true);
     this.browser.removeEventListener("DOMWindowClose", this, true);
     this.browser.removeEventListener("DOMWillOpenModalDialog", this, true);
+    this.browser.removeEventListener("pagehide", this, true);
     this.browser.removeEventListener("pageshow", this, true);
     this.browser.removeEventListener("MozApplicationManifest", this, true);
     this.browser.removeEventListener("TabPreZombify", this, true);
     this.browser.removeEventListener("DOMWindowFocus", this, true);
+    this.browser.removeEventListener("focusin", this, true);
+    this.browser.removeEventListener("focusout", this, true);
+    this.browser.removeEventListener("TabSelect", this, true);
 
     this.browser.removeEventListener("VideoBindingAttached", this, true, true);
     this.browser.removeEventListener("VideoBindingCast", this, true, true);
@@ -4275,6 +4310,17 @@ Tab.prototype = {
             data: selectObj
           });
         }
+
+        this._autoFill.addElement(
+            FormLikeFactory.createFromForm(aEvent.composedTarget));
+        break;
+      }
+
+      case "DOMInputPasswordAdded": {
+        const input = aEvent.composedTarget;
+        if (!input.form) {
+          this._autoFill.addElement(FormLikeFactory.createFromField(input));
+        }
         break;
       }
 
@@ -4431,7 +4477,42 @@ Tab.prototype = {
         break;
       }
 
+      case "focusin": {
+        if (BrowserApp.selectedTab === this &&
+            aEvent.composedTarget instanceof HTMLInputElement) {
+          this._autoFill.onFocus(aEvent.composedTarget);
+        }
+        break;
+      }
+
+      case "focusout": {
+        if (BrowserApp.selectedTab === this &&
+            aEvent.composedTarget instanceof HTMLInputElement) {
+          this._autoFill.onFocus(null);
+        }
+        break;
+      }
+
+      case "TabSelect": {
+        this._autoFill.clearElements();
+        this._autoFill.scanDocument(this.browser.contentDocument);
+        break;
+      }
+
+      case "pagehide": {
+        if (BrowserApp.selectedTab === this &&
+            aEvent.target === this.browser.contentDocument) {
+          this._autoFill.clearElements();
+        }
+        break;
+      }
+
       case "pageshow": {
+        if (BrowserApp.selectedTab === this &&
+            aEvent.target === this.browser.contentDocument && aEvent.persisted) {
+          this._autoFill.scanDocument(aEvent.target);
+        }
+
         // The rest of this only handles pageshow for the top-level document.
         if (aEvent.originalTarget.defaultView != this.browser.contentWindow)
           return;
@@ -4666,7 +4747,8 @@ Tab.prototype = {
   _state: null,
   _hostChanged: false, // onLocationChange will flip this bit
 
-  onSecurityChange: function(aWebProgress, aRequest, aState) {
+  onSecurityChange: function(aWebProgress, aRequest, aOldState, aState,
+                             aContentBlockingLogJSON) {
     // Don't need to do anything if the data we use to update the UI hasn't changed
     if (this._state == aState && !this._hostChanged)
       return;
@@ -4696,24 +4778,14 @@ Tab.prototype = {
 
   OnHistoryGotoIndex: function(index, gotoURI) {
     Services.obs.notifyObservers(this.browser, "Content:HistoryChange");
-    return true;
   },
 
   OnHistoryPurge: function(numEntries) {
     Services.obs.notifyObservers(this.browser, "Content:HistoryChange");
-    return true;
   },
 
   OnHistoryReplaceEntry: function(index) {
     Services.obs.notifyObservers(this.browser, "Content:HistoryChange");
-  },
-
-  OnLengthChanged: function(aCount) {
-    // Ignore, the method is implemented so that XPConnect doesn't throw!
-  },
-
-  OnIndexChanged: function(aIndex) {
-    // Ignore, the method is implemented so that XPConnect doesn't throw!
   },
 
   UpdateMediaPlaybackRelatedObserver: function(active) {
@@ -5587,18 +5659,18 @@ var IdentityHandler = {
   // Loaded active tracking content. Yellow triangle icon is shown.
   TRACKING_MODE_CONTENT_LOADED: "tracking_content_loaded",
 
-  // Cache the most recent SSLStatus and Location seen in getIdentityStrings
-  _lastStatus : null,
+  // Cache the most recent TransportSecurityInfo and Location seen in
+  // getIdentityStrings
+  _lastSecInfo : null,
   _lastLocation : null,
 
   /**
-   * Helper to parse out the important parts of _lastStatus (of the SSL cert in
+   * Helper to parse out the important parts of _lastSecInfo (of the SSL cert in
    * particular) for use in constructing identity UI strings
   */
   getIdentityData : function() {
     let result = {};
-    let status = this._lastStatus.QueryInterface(Ci.nsISSLStatus);
-    let cert = status.serverCert;
+    let cert = this._lastSecInfo.serverCert;
 
     // Human readable name of Subject
     result.subjectOrg = cert.organization;
@@ -5702,8 +5774,7 @@ var IdentityHandler = {
    * (if available). Return the data needed to update the UI.
    */
   checkIdentity: function checkIdentity(aState, aBrowser) {
-    this._lastStatus = aBrowser.securityUI.secInfo &&
-                       aBrowser.securityUI.secInfo.SSLStatus;
+    this._lastSecInfo = aBrowser.securityUI.secInfo;
 
     // Don't pass in the actual location object, since it can cause us to
     // hold on to the window object too long.  Just pass in the fields we
@@ -5988,7 +6059,7 @@ var SearchEngines = {
   },
 
   addOpenSearchEngine: function addOpenSearchEngine(engine) {
-    Services.search.addEngine(engine.url, Ci.nsISearchEngine.DATA_XML, engine.iconURL, false, {
+    Services.search.addEngine(engine.url, engine.iconURL, false, {
       onSuccess: function() {
         // Display a toast confirming addition of new search engine.
         Snackbars.show(Strings.browser.formatStringFromName("alertSearchEngineAddedToast", [engine.title], 1), Snackbars.LENGTH_LONG);
@@ -6169,9 +6240,6 @@ var ActivityObserver = {
     if (Cliqz.Search.browser && Cliqz.Search.browser.getAttribute("primary")) {
       // Search view is on top
       tab = Cliqz.Search;
-    } else if (Cliqz.Ghostery.browser && Cliqz.Ghostery.browser.getAttribute("primary")) {
-      // Ghostery view is on top
-      tab = Cliqz.Ghostery;
     } else {
       // Browser tab is on top
       tab = BrowserApp.selectedTab;
@@ -6420,11 +6488,9 @@ var Cliqz = {
     this.callbacks = Object.create(null);
     this.messageId = 1;
     this.extensionsMessageQueue = {
-      "android@cliqz.com": [],
       "firefox@ghostery.com": []
     };
     this.extensionsReady = {
-      "android@cliqz.com": this.READY_STATUS.NOT_READY,
       "firefox@ghostery.com": this.READY_STATUS.NOT_READY,
     };
 
@@ -6449,7 +6515,7 @@ var Cliqz = {
 
     Services.prefs.addObserver('pref.search.regional', () => {
       const value = Services.prefs.getCharPref('pref.search.regional');
-      this.messageSearchExtension({
+      this.messageExtension({
         module: "search",
         action: "setBackendCountry",
         args: [value]
@@ -6459,7 +6525,7 @@ var Cliqz = {
     Services.prefs.addObserver("pref.search.block.adult.content", () => {
       const value = Services.prefs.getBoolPref("pref.search.block.adult.content");
       const key = value ? "conservative" : "liberal";
-      this.messageSearchExtension({
+      this.messageExtension({
         module: "search",
         action: "setAdultFilter",
         args: [key]
@@ -6468,7 +6534,7 @@ var Cliqz = {
 
     Services.prefs.addObserver("pref.search.query.suggestions", () => {
       const value = Services.prefs.getBoolPref("pref.search.query.suggestions");
-      this.messageSearchExtension({
+      this.messageExtension({
         module: "search",
         action: "setQuerySuggestions",
         args: [value]
@@ -6483,7 +6549,12 @@ var Cliqz = {
     READY: 2
   },
 
-  _messageExtension(id, msg, opts = {}) {
+  messageExtension(msg, opts = {}) {
+    const id = "firefox@ghostery.com";
+    opts.senderOptions = {
+      contextId: "mobile-cards",
+    }
+    msg.source = "ANDROID_BROWSER";
     if (this.extensionsReady[id] === this.READY_STATUS.NOT_READY) {
       this.extensionsMessageQueue[id].push({
         msg: Object.assign({}, msg),
@@ -6521,19 +6592,6 @@ var Cliqz = {
     return promise;
   },
 
-  messagePrivacyExtension(msg) {
-    return Cliqz._messageExtension("firefox@ghostery.com", msg);
-  },
-
-  messageSearchExtension(msg) {
-    msg.source = "ANDROID_BROWSER";
-    return Cliqz._messageExtension("android@cliqz.com", msg, {
-      senderOptions: {
-        contextId: "mobile-cards",
-      },
-    });
-  },
-
   _createBrowserForExtension: function (id) {
     const browser = document.createElement("browser");
 
@@ -6541,6 +6599,9 @@ var Cliqz = {
     browser.setAttribute("messagemanagergroup", "browsers");
     browser.setAttribute("contentsource", id);
     BrowserApp.deck.appendChild(browser);
+    if (this.isVisible) {
+      this.overlayPanel(browser);
+    }
 
     // return a tab look-alike object to get handled properly by ActivityObserver
     return {
@@ -6558,9 +6619,9 @@ var Cliqz = {
       return;
     }
 
-    const id = 'android@cliqz.com';
+    const id = 'firefox@ghostery.com';
     const uuid = UUIDMap.get(id);
-    const path = 'modules/mobile-cards/cards.html';
+    const path = 'cliqz/mobile-cards/cards.html';
     this.Search = this._createBrowserForExtension(id);
     this.Search.browser.loadURI("moz-extension://" + uuid + "/" + path);
     this.Search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
@@ -6610,7 +6671,7 @@ var Cliqz = {
       case "ready":
         this.loadCardsUI();
         this._syncSearchPrefs();
-        this._handleExtensionReady("android@cliqz.com");
+        this._handleExtensionReady("firefox@ghostery.com");
         break;
       case "idle":
         GlobalEventDispatcher.sendRequest({
@@ -6626,7 +6687,7 @@ var Cliqz = {
         }
 
         if (this.lastQueuedQuery) {
-          this.messageSearchExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
           this.lastQueuedQuery = "";
         }
         break;
@@ -6637,7 +6698,6 @@ var Cliqz = {
 
   _privacyExtensionListener(msg) {
     console.log("Dispaching event from the privacy extension to native", msg);
-    this._handleExtensionReady("firefox@ghostery.com");
     switch (msg.action) {
       case "setIcon":
         var count = Number.parseInt(msg.payload.text);
@@ -6669,7 +6729,7 @@ var Cliqz = {
     this.extensionsReady[id] = this.READY_STATUS.READY;
     const queue = this.extensionsMessageQueue[id];
     this.extensionsMessageQueue[id] = [];
-    queue.forEach(obj => this._messageExtension(id, obj.msg, obj.opts));
+    queue.forEach(obj => this.messageExtension(obj.msg, obj.opts));
   },
 
   _extensionListener(ev) {
@@ -6698,11 +6758,8 @@ var Cliqz = {
       let response;
       let sendCallback;
       if (data.recipient.extensionId === "firefox@ghostery.com") {
-        response = this._privacyExtensionListener(msg);
-        sendCallback = this.messagePrivacyExtension;
-      } else if (data.recipient.extensionId === "android@cliqz.com") {
-        response = this._searchExtensionListener(msg);
-        sendCallback = this.messageSearchExtension;
+        response = this._privacyExtensionListener(msg) || this._searchExtensionListener(msg);
+        sendCallback = this.messageExtension;
       }
       if ("requestId" in msg && sendCallback) {
         sendCallback({
@@ -6713,17 +6770,6 @@ var Cliqz = {
     }
   },
 
-  get Ghostery() {
-    if (!this._ghostery) {
-      this._ghostery = this._createBrowserForExtension("firefox@ghostery.com");
-      this._ghostery.loadTab = function(tab) {
-        this.load("app/templates/panel_android_ui.html?tabId=" + tab)
-      }.bind(this._ghostery);
-    }
-
-    return this._ghostery;
-  },
-
   overlayPanel: function(panel) {
     /* Cliqz start */
     var currentPanel = BrowserApp.deck.selectedPanel;
@@ -6731,16 +6777,18 @@ var Cliqz = {
       // already visible
       return;
     }
-
-    if (currentPanel.hasAttribute("contentsource")) {
-      // current tab is already an overlay
-      // -> we simply hide it
-      currentPanel.removeAttribute("primary");
-    } else if (currentPanel !== panel) {
-      // we need to store the current active panel to be able
-      // to show it when the overlay panel will close
-      BrowserApp.deck.backPanel = currentPanel;
-      currentPanel.removeAttribute("primary");
+    
+    if (currentPanel) {
+      if (currentPanel.hasAttribute("contentsource")) {
+        // current tab is already an overlay
+        // -> we simply hide it
+        currentPanel.removeAttribute("primary");
+      } else if (currentPanel !== panel) {
+        // we need to store the current active panel to be able
+        // to show it when the overlay panel will close
+        BrowserApp.deck.backPanel = currentPanel;
+        currentPanel.removeAttribute("primary"); 
+      }
     }
     /* Cliqz end */
 
@@ -6760,7 +6808,7 @@ var Cliqz = {
 
     BrowserApp.deck.backPanel.setAttribute("primary", "true");
     BrowserApp.deck.selectedPanel = BrowserApp.deck.backPanel;
-    delete BrowserApp.deck.backPanel
+    delete BrowserApp.deck.backPanel;
 
     return true;
   },
@@ -6772,7 +6820,7 @@ var Cliqz = {
     messages.push(["setQuerySuggestions", Services.prefs.getBoolPref("pref.search.query.suggestions")]);
 
     messages.forEach((msg) => {
-      this.messageSearchExtension({
+      this.messageExtension({
         module: "search",
         action: msg[0],
         args: [ msg[1] ]
@@ -6802,41 +6850,36 @@ var Cliqz = {
         break;
       case "Search:Analysis":
         const { data: msg = {}, immediate = false, schema = "" } = data;
-        this.messageSearchExtension({
+        this.messageExtension({
           module: "anolysis",
           action: "handleTelemetrySignal",
           args: [msg, immediate, schema]
         });
         break;
       case "Search:Backends":
-        this.messageSearchExtension({ module: 'search', action: "getBackendCountries" })
+        this.messageExtension({ module: 'search', action: "getBackendCountries" })
         break;
       case "Search:Hide":
+        this.isVisible = false;
         this.hidePanel(this.Search.browser);
-        this.messageSearchExtension({ module: "search", action: "stopSearch", args: []});
+        this.messageExtension({ module: "search", action: "stopSearch", args: []});
         break;
       case "Search:Search":
         this.lastQueuedQuery = data.q || "";
         if (this.searchIsReady) {
-          this.messageSearchExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
           this.lastQueuedQuery = "";
         }
         break;
       case "Search:Show":
+        this.isVisible = true; // save the state before search is initialized
         // this.Search && this.overlayPanel(this.Search.browser);
         break;
       case "Privacy:GetInfo":
-        this.messagePrivacyExtension({ name: "getAndroidPanelData" });
-        break;
-      case "Privacy:Hide":
-        this.hidePanel(this.Ghostery.browser);
+        this.messageExtension({ name: "getAndroidPanelData" });
         break;
       case "Privacy:SetInfo":
-        this.messagePrivacyExtension({ name: "setPanelData", message: data });
-        break;
-      case "Privacy:Show":
-        this.overlayPanel(this.Ghostery.browser);
-        this.Ghostery.loadTab(BrowserApp.selectedTab.id);
+        this.messageExtension({ name: "setPanelData", message: data });
         break;
       case "Privacy:SetBlockingPolicy":
         // blocking policy should be one of:
@@ -6845,7 +6888,7 @@ var Cliqz = {
         // 'UPDATE_BLOCK_RECOMMENDED'
         // 'UPDATE_BLOCK_ADS'
         let blockingPolicy = data.blockingPolicy;
-        this.messagePrivacyExtension({
+        this.messageExtension({
           origin: 'ghostery-hub',
           name: 'updateBlocking',
           message: blockingPolicy
@@ -7067,7 +7110,8 @@ var Distribution = {
           return;
         }
 
-        AddonManager.getInstallForFile(new FileUtils.File(entry.path)).then(install => {
+        AddonManager.getInstallForFile(new FileUtils.File(entry.path), null,
+                                       {source: "distribution"}).then(install => {
           let id = entry.name.substring(0, entry.name.length - 4);
           if (install.addon.id !== id) {
             Cu.reportError("File entry " + entry.path + " contains an add-on with an incorrect ID");

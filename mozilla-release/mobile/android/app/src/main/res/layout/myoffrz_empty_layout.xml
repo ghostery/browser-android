@@ -14,35 +14,25 @@
         android:layout_weight="1"/>
 
     <TextView
+        style="@style/CliqzEmptyLayoutTextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="@dimen/myoffrz_padding_10"
         android:text="@string/myoffrz_no_offers_title"
-        tools:text="Seems like we do not have any offers"
-        android:textColor="@color/myoffrz_bg_text"
-        android:textStyle="bold"
-        android:shadowColor="#000"
-        android:shadowDy="1.2"
-        android:shadowDx="1.2"
-        android:shadowRadius="2"
-        android:textSize="@dimen/myoffrz_title_text_size" />
+        tools:text="Seems like we do not have any offers" />
 
     <TextView
+        style="@style/CliqzEmptyLayoutTextDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/myoffrz_bg_text"
-        android:textSize="@dimen/myoffrz_text_size"
         android:text="@string/myoffrz_no_offers_msg_line1"
-        tools:text="But we'll keep looking for you and add"/>
+        tools:text="But we'll keep looking for you and add" />
 
     <TextView
+        style="@style/CliqzEmptyLayoutTextDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/myoffrz_bg_text"
-        android:textSize="@dimen/myoffrz_text_size"
         android:text="@string/myoffrz_no_offers_msg_line2"
-        tools:text="them here as soon as we have one"/>
+        tools:text="them here as soon as we have one" />
 
     <!-- Empty spacer view -->
     <View android:layout_width="match_parent"

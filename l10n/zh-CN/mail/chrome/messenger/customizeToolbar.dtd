@@ -14,5 +14,6 @@
 <!ENTITY restoreDefaultSet.label  "恢复默认设置">
 <!ENTITY addNewToolbar.label      "添加新工具栏">
 <!ENTITY showTitlebar.label       "显示标题栏">
+<!ENTITY extraDragSpace.label     "添加拖拽区">
 <!ENTITY saveChanges.label        "完成">
 <!ENTITY undoChanges.label        "撤销更改">

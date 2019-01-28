@@ -26,6 +26,7 @@ class nsIConsoleReportCollector;
 class nsIThreadInternal;
 
 namespace mozilla {
+class ThrottledEventQueue;
 namespace dom {
 
 // If you change this, the corresponding list in nsIWorkerDebugger.idl needs
@@ -410,6 +411,9 @@ public:
     AssertIsOnWorkerThread();
     return mDebuggerScope;
   }
+
+  nsICSPEventListener*
+  CSPEventListener() const;
 
   void
   SetThread(WorkerThread* aThread);
@@ -1367,8 +1371,7 @@ private:
   nsTArray<WorkerPrivate*> mChildWorkers;
   nsTObserverArray<WorkerHolder*> mHolders;
   nsTArray<nsAutoPtr<TimeoutInfo>> mTimeouts;
-  RefPtr<ThrottledEventQueue> mMainThreadThrottledEventQueue;
-  nsCOMPtr<nsIEventTarget> mMainThreadEventTarget;
+  RefPtr<ThrottledEventQueue> mMainThreadEventTarget;
   RefPtr<WorkerEventTarget> mWorkerControlEventTarget;
   RefPtr<WorkerEventTarget> mWorkerHybridEventTarget;
 

@@ -21,4 +21,4 @@
 <!ENTITY tabCrashed.emailMe "Powiadom, gdy będzie dostępne więcej informacji">
 <!ENTITY tabCrashed.reportSent "Raport z awarii został już wysłany. Dziękujemy za pomoc w ulepszaniu programu &brandShortName;!">
 <!ENTITY tabCrashed.requestAutoSubmit2 "Raportowanie pozostałych kart">
-<!ENTITY tabCrashed.autoSubmit3 "Automatyczne przesyłanie raportów awarii Firefoksa">
+<!ENTITY tabCrashed.autoSubmit3 "Automatyczne przesyłanie raportów awarii">

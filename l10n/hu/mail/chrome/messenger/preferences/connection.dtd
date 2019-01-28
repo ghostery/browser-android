@@ -50,3 +50,9 @@
 <!ENTITY  dnsOverHttpsUrl.label         "URL">
 <!ENTITY  dnsOverHttpsUrl.accesskey     "R">
 <!ENTITY  dnsOverHttpsUrl.tooltip       "URL a HTTPS feletti DNS feloldásához">
+<!ENTITY  dnsOverHttpsUrlDefault.label     "Alapértelmezés használata">
+<!ENTITY  dnsOverHttpsUrlDefault.accesskey "A">
+<!ENTITY  dnsOverHttpsUrlDefault.tooltip   "Az alapértelmezett URL használata a HTTPS feletti DNS feloldáshoz">
+<!ENTITY  dnsOverHttpsUrlCustom.label      "Egyéni">
+<!ENTITY  dnsOverHttpsUrlCustom.accesskey  "E">
+<!ENTITY  dnsOverHttpsUrlCustom.tooltip    "Adja meg az előnyben részesített URL-t a HTTPS feletti DNS feloldáshoz">

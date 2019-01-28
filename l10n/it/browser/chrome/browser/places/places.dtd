@@ -77,10 +77,6 @@
 <!ENTITY maintenance.tooltip "Importa e salva i segnalibri">
 <!ENTITY backButton.tooltip "Torna indietro">
 <!ENTITY forwardButton.tooltip "Vai avanti">
-<!ENTITY detailsPane.more.label "Altri dati">
-<!ENTITY detailsPane.more.accesskey "a">
-<!ENTITY detailsPane.less.label "Meno dati">
-<!ENTITY detailsPane.less.accesskey "a">
 <!ENTITY detailsPane.selectAnItemText.description "Selezionare un elemento per visualizzarne e modificarne le proprietà">
 <!ENTITY view.label "Visualizza">
 <!ENTITY view.accesskey "z">

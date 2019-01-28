@@ -19,7 +19,7 @@
 <!ENTITY results.label               "Resultados">
 <!ENTITY moveButton.label            "Mover para">
 <!ENTITY moveButton.accesskey        "M">
-<!ENTITY closeCmd.key                "w"> 
+<!ENTITY closeCmd.key                "w">
 <!ENTITY openInFolder.label          "Abrir pasta da mensagem">
 <!ENTITY openInFolder.accesskey      "b">
 <!ENTITY saveAsVFButton.label        "Salvar como pasta de pesquisa…">
@@ -44,7 +44,7 @@
 <!ENTITY subjectColumn.label "Assunto">
 <!ENTITY dateColumn.label "Data">
 <!ENTITY priorityColumn.label "Prioridade">
-<!ENTITY tagsColumn.label "Tags">
+<!ENTITY tagsColumn.label "Etiquetas">
 <!ENTITY accountColumn.label "Conta">
 <!ENTITY statusColumn.label "Status">
 <!ENTITY sizeColumn.label "Tamanho">
@@ -66,7 +66,7 @@
 <!ENTITY subjectColumn2.tooltip "Ordenar por assunto">
 <!ENTITY dateColumn2.tooltip "Ordenar por data">
 <!ENTITY priorityColumn2.tooltip "Ordenar por prioridade">
-<!ENTITY tagsColumn2.tooltip "Ordenar por tags">
+<!ENTITY tagsColumn2.tooltip "Ordenar por etiquetas">
 <!ENTITY accountColumn2.tooltip "Ordenar por conta">
 <!ENTITY statusColumn2.tooltip "Ordenar por estado">
 <!ENTITY sizeColumn2.tooltip "Ordenar por tamanho">

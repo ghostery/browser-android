@@ -4,7 +4,7 @@
 
 languages-window =
     .title = Języki
-    .style = width: 34em
+    .style = width: 37em
 webpage-languages-window=
   .title=Ustawienia językowe stron WWW
   .style=width: 35em
@@ -35,5 +35,17 @@ languages-active-code-format=
 
 browser-languages-window=
   .title=Ustawienia języka przeglądarki
-  .style=width: 35em
+  .style=width: 37em
 browser-languages-description={ -brand-short-name } będzie domyślnie wyświetlał pierwszy język z listy. W razie potrzeby, następne języki będą używane kolejno.
+
+browser-languages-search=Wyszukaj więcej języków…
+browser-languages-searching=
+  .label=Wyszukiwanie języków…
+browser-languages-downloading=
+  .label=Pobieranie…
+browser-languages-select-language=
+  .label=Wybierz język do dodania…
+  .placeholder=Wybierz język do dodania…
+browser-languages-installed-label=Zainstalowane języki
+browser-languages-available-label=Dostępne języki
+browser-languages-error=Obecnie nie można uaktualnić listy języków. Sprawdź połączenie z Internetem lub spróbuj ponownie.

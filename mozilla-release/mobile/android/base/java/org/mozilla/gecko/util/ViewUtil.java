@@ -14,9 +14,11 @@ import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.R;
@@ -208,6 +210,13 @@ public class ViewUtil {
     public static int dpToPx(int dp) {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         return (int) (dp * metrics.density + 0.5f);
+    }
+
+    public static void centerToastText(Toast toast) {
+        final TextView toastText = (TextView) toast.getView().findViewById(android.R.id.message);
+        if (toastText != null) {
+            toastText.setGravity(Gravity.CENTER);
+        }
     }
     /* Cliqz end */
 

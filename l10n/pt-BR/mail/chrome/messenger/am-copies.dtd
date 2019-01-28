@@ -29,7 +29,7 @@
 <!ENTITY archivesTitle.label "Arquivamento de mensagens">
 <!ENTITY keepArchives.label "Armazenar arquivos de mensagens na pasta:">
 <!ENTITY keepArchives.accesskey "z">
-<!ENTITY archiveHierarchyButton.label "Opções…">
+<!ENTITY archiveHierarchyButton.label "Opções de arquivamento…">
 <!ENTITY archiveHierarchyButton.accesskey "O">
 <!ENTITY archivesFolderOn.label "Pasta “Arquivos” da conta:">
 <!ENTITY archivesFolderOn.accesskey "A">

@@ -10,7 +10,6 @@ import org.mozilla.gecko.AndroidGamepadManager;
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.gfx.DynamicToolbarAnimator;
 import org.mozilla.gecko.gfx.PanZoomController;
-import org.mozilla.gecko.gfx.GeckoDisplay;
 import org.mozilla.gecko.InputMethods;
 import org.mozilla.gecko.util.ActivityUtils;
 
@@ -59,6 +58,10 @@ public class GeckoView extends FrameLayout {
     private boolean mIsResettingFocus;
 
     private GeckoSession.SelectionActionDelegate mSelectionActionDelegate;
+
+    /*Cliqz start*/
+    private boolean mIsSearchPanelVisible = false;
+    /*Cliqz end*/
 
     private static class SavedState extends BaseSavedState {
         public final GeckoSession session;
@@ -620,9 +623,11 @@ public class GeckoView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+        /* Cliqz Start */
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN && !mIsSearchPanelVisible) {
             requestFocus();
         }
+        /* Cliqz Start */
 
         // NOTE: Treat mouse events as "touch" rather than as "mouse", so mouse can be
         // used to pan/zoom. Call onMouseEvent() instead for behavior similar to desktop.
@@ -671,4 +676,10 @@ public class GeckoView extends FrameLayout {
         }
         mSession.getTextInput().autofill(strValues);
     }
+
+    /* Cliqz Start */
+    public void setSearchPanelVisibilty(boolean isVisible) {
+        mIsSearchPanelVisible = isVisible;
+    }
+    /* Cliqz End */
 }

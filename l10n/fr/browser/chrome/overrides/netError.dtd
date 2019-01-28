@@ -10,9 +10,10 @@
 <!ENTITY returnToPreviousPage.label "Retour">
 <!ENTITY returnToPreviousPage1.label "Retour (recommandé)">
 <!ENTITY advanced.label "Avancé">
-
 <!ENTITY continue2.label "Plus…">
 <!ENTITY moreInformation.label "Plus d’informations">
+
+<!ENTITY viewCertificate.label "Afficher le certificat">
 
 <!-- Specific error messages -->
 
@@ -136,14 +137,20 @@
 
 <!ENTITY certerror.longpagetitle1 "La connexion n’est pas sécurisée">
 <!ENTITY certerror.longpagetitle2 "Attention : risque probable de sécurité">
+<!ENTITY certerror.sts.longpagetitle  "Connexion bloquée : problème de sécurité potentiel">
 <!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "Les propriétaires de <span class='hostname'/> ont mal configuré leur site web. Pour éviter que vos données ne soient dérobées, &brandShortName; ne s’est pas connecté à ce site web.">
-
 <!ENTITY certerror.introPara2 "&brandShortName; a détecté une menace de sécurité potentielle et n’a pas poursuivi vers <span class='hostname'/>. Si vous accédez à ce site, des attaquants pourraient dérober des informations comme vos mots de passe, courriels, ou données de carte bancaire.">
 
 <!ENTITY certerror.expiredCert.secondPara "Ce problème est probablement dû au fait que l’horloge de votre ordinateur est déréglée, ce qui empêche &brandShortName; de se connecter de façon sécurisée.">
+
+<!ENTITY certerror.sts.introPara "&brandShortName; a détecté une menace potentielle de sécurité et a interrompu le chargement de <span class='hostname'/>, car ce site web nécessite une connexion sécurisée.">
+
+<!ENTITY certerror.expiredCert.introPara "&brandShortName; a détecté un problème et a interrompu le chargement de <span class='hostname'/>. Soit le site est mal configuré, soit l’horloge de votre ordinateur est réglée à la mauvaise heure.">
+<!ENTITY certerror.expiredCert.secondPara2 "Le certificat du site a probablement expiré, ce qui empêche &brandShortName; d’établir une connexion sécurisée. Si vous visitez ce site, des attaquants pourraient dérober des informations telles que vos mots de passe, vos adresses électroniques ou vos informations de carte bancaire.">
+<!ENTITY certerror.expiredCert.sts.secondPara "Le certificat du site a probablement expiré, ce qui empêche &brandShortName; d’établir une connexion sécurisée.">
 
 <!ENTITY certerror.whatCanYouDoAboutItTitle "Que pouvez-vous faire ?">
 
@@ -174,7 +181,6 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "Ajouter une exception…">
-
 <!ENTITY securityOverride.exceptionButton1Label "Accepter le risque et poursuivre">
 
 <!ENTITY errorReporting.automatic2 "Signaler les erreurs similaires pour aider Mozilla à identifier et bloquer les sites malveillants">
@@ -196,6 +202,7 @@ was trying to connect. -->
 
 <!ENTITY certerror.pagetitle1  "Connexion non sécurisée">
 <!ENTITY certerror.pagetitle2  "Attention : risque probable de sécurité">
+<!ENTITY certerror.sts.pagetitle  "Connexion bloquée : problème de sécurité potentiel">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Ce site a recours à HTTP Strict Transport Security (HSTS) pour indiquer à &brandShortName; de n’établir qu’une connexion sécurisée. Ainsi il n’est pas possible d’ajouter d’exception pour ce certificat.">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation1 "<span class='hostname'></span> a recours à une stratégie de sécurité HTTP Strict Transport Security (HSTS), une connexion sécurisée est obligatoire pour y accéder. Vous ne pouvez pas ajouter d’exception pour visiter ce site.">
 <!ENTITY certerror.copyToClipboard.label "Copier le texte dans le presse-papiers">
@@ -212,3 +219,6 @@ was trying to connect. -->
 
 <!ENTITY prefReset.longDesc "Ce problème semble être provoqué par vos paramètres de sécurité réseau. Voulez-vous restaurer les paramètres par défaut ?">
 <!ENTITY prefReset.label "Restaurer les paramètres par défaut">
+
+<!ENTITY networkProtocolError.title "Erreur de protocole réseau">
+<!ENTITY networkProtocolError.longDesc "<p>La page à laquelle vous essayez d’accéder ne peut pas être affichée, car une erreur du protocole réseau a été détectée.</p><ul><li>Veuillez contacter les propriétaires du site web pour les informer de ce problème.</li></ul>">

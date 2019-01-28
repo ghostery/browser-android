@@ -78,7 +78,9 @@ class FaviconLoad {
        Ci.nsILoadInfo.SEC_DISALLOW_SCRIPT),
       Ci.nsIContentPolicy.TYPE_INTERNAL_IMAGE_FAVICON);
 
-    this.channel.loadFlags |= Ci.nsIRequest.LOAD_BACKGROUND;
+    this.channel.loadFlags |= Ci.nsIRequest.LOAD_BACKGROUND |
+                              Ci.nsIRequest.VALIDATE_NEVER |
+                              Ci.nsIRequest.LOAD_FROM_CACHE;
     // Sometimes node is a document and sometimes it is an element. This is
     // the easiest single way to get to the load group in both those cases.
     this.channel.loadGroup = iconInfo.node.ownerGlobal.document.documentLoadGroup;
@@ -376,6 +378,12 @@ class IconLoader {
     }
 
     if (LOCAL_FAVICON_SCHEMES.includes(iconInfo.iconUri.scheme)) {
+      // We need to do a manual security check because the channel won't do
+      // it for us.
+      try {
+        Services.scriptSecurityManager.checkLoadURIWithPrincipal(
+          iconInfo.node.nodePrincipal, iconInfo.iconUri, Services.scriptSecurityManager.ALLOW_CHROME);
+      } catch (ex) { return; }
       this.mm.sendAsyncMessage("Link:SetIcon", {
         pageURL: iconInfo.pageUri.spec,
         originalURL: iconInfo.iconUri.spec,

@@ -155,11 +155,11 @@ FFmpegDataDecoder<LIBAV_VER>::DoDecode(MediaRawData* aSample, bool* aGotFrame,
 
   mLastInputDts = aSample->mTimecode;
 
-  if (mCodecParser) {
+  if (inputData && mCodecParser) { // inputData is null when draining.
     if (aGotFrame) {
       *aGotFrame = false;
     }
-    do {
+    while (inputSize) {
       uint8_t* data = inputData;
       int size = inputSize;
       int len = mLib->av_parser_parse2(
@@ -169,7 +169,7 @@ FFmpegDataDecoder<LIBAV_VER>::DoDecode(MediaRawData* aSample, bool* aGotFrame,
       if (size_t(len) > inputSize) {
         return NS_ERROR_DOM_MEDIA_DECODE_ERR;
       }
-      if (size || !inputSize) {
+      if (size) {
         bool gotFrame = false;
         MediaResult rv = DoDecode(aSample, data, size, &gotFrame, aResults);
         if (NS_FAILED(rv)) {
@@ -181,7 +181,7 @@ FFmpegDataDecoder<LIBAV_VER>::DoDecode(MediaRawData* aSample, bool* aGotFrame,
       }
       inputData += len;
       inputSize -= len;
-    } while (inputSize > 0);
+    }
     return NS_OK;
   }
   return DoDecode(aSample, inputData, inputSize, aGotFrame, aResults);
@@ -208,6 +208,9 @@ FFmpegDataDecoder<LIBAV_VER>::ProcessDrain()
   empty->mTimecode = mLastInputDts;
   bool gotFrame = false;
   DecodedData results;
+  // When draining the FFmpeg decoder will return either a single frame at a
+  // time until gotFrame is set to false; or return a block of frames with
+  // NS_ERROR_DOM_MEDIA_END_OF_STREAM
   while (NS_SUCCEEDED(DoDecode(empty, &gotFrame, results)) &&
          gotFrame) {
   }

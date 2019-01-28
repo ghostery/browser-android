@@ -15,6 +15,14 @@ findbar-highlight-all =
     .label = Подсветить все
     .accesskey = в
     .tooltiptext = Подсветить все вхождения фразы в текст
+findbar-highlight-all2 =
+    .label = Подсветить все
+    .accesskey =
+        { PLATFORM() ->
+            [macos] в
+           *[other] в
+        }
+    .tooltiptext = Подсветить все вхождения фразы в текст
 findbar-case-sensitive =
     .label = С учётом регистра
     .accesskey = е

@@ -18,6 +18,17 @@ import com.squareup.picasso.Transformation;
  * Util class to round the corners of a bitmap
  */
 public class RoundedCornersTransformation implements Transformation {
+
+    private final float radii;
+
+    public RoundedCornersTransformation(float radii) {
+        this.radii = radii;
+    }
+
+    public RoundedCornersTransformation() {
+        this.radii = 0f;
+    }
+
     private Bitmap createRoundedRectBitmap(Bitmap bitmap,
                                            float topLeftCorner, float topRightCorner,
                                            float bottomRightCorner, float bottomLeftCorner) {
@@ -49,19 +60,23 @@ public class RoundedCornersTransformation implements Transformation {
 
     @Override
     public Bitmap transform(Bitmap source) {
-        int size = Math.min(source.getWidth(), source.getHeight());
+        final int size = Math.min(source.getWidth(), source.getHeight());
 
-        int x = (source.getWidth() - size) / 2;
-        int y = (source.getHeight() - size) / 2;
+        final int x = (source.getWidth() - size) / 2;
+        final int y = (source.getHeight() - size) / 2;
 
-        Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
+        final Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
         if (squaredBitmap != source) {
             source.recycle();
         }
 
-        float r = size / 4f;
-
-        Bitmap roundedBitmap = createRoundedRectBitmap(squaredBitmap, r, r, r, r);
+        final Bitmap roundedBitmap;
+        if (radii == 0f) {
+            float r = size / 4f;
+            roundedBitmap = createRoundedRectBitmap(squaredBitmap, r, r, r, r);
+        } else {
+            roundedBitmap = createRoundedRectBitmap(squaredBitmap, radii, radii, radii, radii);
+        }
 
         squaredBitmap.recycle();
 

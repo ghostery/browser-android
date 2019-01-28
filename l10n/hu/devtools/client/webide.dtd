@@ -41,6 +41,9 @@
 <!ENTITY runtimeMenu_showSettings_label "Eszközbeállítások">
 <!ENTITY runtimeMenu_showSettings_accesskey "z">
 
+<!ENTITY runtimeMenu_showPerformancePanel_label "Teljesítmény">
+<!ENTITY runtimeMenu_showPerformancePanel_accesskey "T">
+
 <!ENTITY viewMenu_label "Nézet">
 <!ENTITY viewMenu_accesskey "z">
 <!ENTITY viewMenu_zoomin_label "Nagyítás">
@@ -75,7 +78,6 @@
 <!ENTITY runtimePanel_wifi "Wi-Fi eszközök">
 <!ENTITY runtimePanel_other "Egyéb">
 <!ENTITY runtimePanel_noadbhelper "ADB segéd telepítése">
-<!ENTITY runtimePanel_noadbextension "ADB kiegészítő telepítése">
 <!ENTITY runtimePanel_nousbdevice "Nem látja az eszközt?">
 <!ENTITY runtimePanel_refreshDevices_label "Eszközök frissítése">
 

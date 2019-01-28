@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright © Cliqz 2018-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/news_bg_color"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/news_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:padding="@dimen/news_title_padding"
+        android:text="@string/activity_stream_top_news"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="News" />
+
+    <TextView
+        android:id="@+id/news_display_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:padding="@dimen/news_title_padding"
+        android:text="@string/activity_stream_top_news"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        tools:text="Show" />
+
+</LinearLayout>

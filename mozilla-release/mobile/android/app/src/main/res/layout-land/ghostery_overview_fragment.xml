@@ -7,126 +7,176 @@
     android:layout_height="match_parent"
     android:background="@color/cc_transparency">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/cc_donut"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:padding="5dp"
-            android:layout_marginLeft="20dp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="15dp">
 
-        <TextView
-            android:id="@+id/cc_trackers_blocked"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cc_donut"
-            android:padding="2dp"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            tools:text="11 trackers blocked" />
+            <org.mozilla.gecko.controlcenter.CliqzPieChart
+                android:id="@+id/cc_donut"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/cc_trackers_blocked"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true" />
 
-        <LinearLayout
-            android:id="@+id/cc_ghostery_trust_site_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/cc_button_background_white"
-            android:gravity="center"
-            android:minWidth="@dimen/ghostery_overview_button_width"
-            android:orientation="horizontal"
-            android:padding="3dp">
+            <LinearLayout
+                android:id="@+id/trackers_count_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/cc_donut"
+                android:layout_alignEnd="@+id/cc_donut"
+                android:layout_alignLeft="@id/cc_donut"
+                android:layout_alignRight="@id/cc_donut"
+                android:layout_alignStart="@+id/cc_donut"
+                android:layout_alignTop="@+id/cc_donut"
+                android:orientation="vertical"
+                tools:background="@color/rejection_red">
 
-            <ImageView
-                android:id="@+id/cc_button_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_trust_site"
-                tools:ignore="contentDescription" />
+                <TextView
+                    android:id="@+id/trackers_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="0dp"
+                    app:autoSizeTextType="uniform"
+                    tools:text="33" />
 
-            <TextView
-                android:id="@+id/cc_button_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/cc_trust_site"
-                android:textColor="@color/cc_text_color"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/trackers_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    app:autoSizeTextType="uniform"
+                    tools:text="Trackers found" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/cc_ghostery_restrict_site_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cc_ghostery_trust_site_button"
-            android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/cc_button_background_white"
-            android:gravity="center"
-            android:minWidth="@dimen/ghostery_overview_button_width"
-            android:orientation="horizontal"
-            android:padding="3dp">
-
-            <ImageView
-                android:id="@+id/cc_button_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                app:srcCompat="@drawable/cc_ic_restrict"
-                tools:ignore="ContentDescription" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/cc_button_text"
+                android:id="@+id/cc_trackers_blocked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/cc_restrict_site"
-                android:textColor="@color/cc_text_color"
-                android:textSize="16sp" />
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="30dp"
+                android:padding="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                tools:text="11 trackers blocked" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/cc_ghostery_pause_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cc_ghostery_restrict_site_button"
-            android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/cc_button_background_white"
+            android:layout_marginBottom="25dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:minWidth="@dimen/ghostery_overview_button_width"
-            android:orientation="horizontal"
-            android:padding="3dp">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/cc_button_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                app:srcCompat="@drawable/cc_ic_pause"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/cc_button_text"
+            <LinearLayout
+                android:id="@+id/cc_ghostery_trust_site_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/cc_pause_ghostery"
-                android:textColor="@color/cc_text_color"
-                android:textSize="16sp" />
+                android:layout_margin="5dp"
+                android:background="@drawable/cc_button_background_white"
+                android:gravity="center"
+                android:minWidth="@dimen/ghostery_overview_button_width"
+                android:padding="3dp">
+
+                <ImageView
+                    android:id="@+id/cc_button_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_trust_site"
+                    tools:ignore="contentDescription" />
+
+                <TextView
+                    android:id="@+id/cc_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/cc_trust_site"
+                    android:textColor="@color/cc_text_color"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cc_ghostery_restrict_site_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cc_ghostery_trust_site_button"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/cc_button_background_white"
+                android:gravity="center"
+                android:minWidth="@dimen/ghostery_overview_button_width"
+                android:orientation="horizontal"
+                android:padding="3dp">
+
+                <ImageView
+                    android:id="@+id/cc_button_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:srcCompat="@drawable/cc_ic_restrict"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/cc_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/cc_restrict_site"
+                    android:textColor="@color/cc_text_color"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cc_ghostery_pause_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cc_ghostery_restrict_site_button"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/cc_button_background_white"
+                android:gravity="center"
+                android:minWidth="@dimen/ghostery_overview_button_width"
+                android:orientation="horizontal"
+                android:padding="3dp">
+
+                <ImageView
+                    android:id="@+id/cc_button_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:srcCompat="@drawable/cc_ic_pause"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/cc_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/cc_pause_ghostery"
+                    android:textColor="@color/cc_text_color"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/cc_bottom_sheet_root_view"

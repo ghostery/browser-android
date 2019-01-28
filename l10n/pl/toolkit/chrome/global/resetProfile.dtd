@@ -9,6 +9,6 @@
 <!ENTITY refreshProfile.dialog.items.label2 "Przywrócenie ustawień domyślnych przeglądarki">
 <!ENTITY refreshProfile.dialog.button.label "Odśwież program &brandShortName;">
 
-<!ENTITY refreshProfile.title "Dostrój Firefoksa">
+<!ENTITY refreshProfile.title "Dostrój program &brandShortName;">
 <!ENTITY refreshProfile.button.label "Odśwież program &brandShortName;…">
 <!ENTITY refreshProfile.cleaning.description "Prawie gotowe…">

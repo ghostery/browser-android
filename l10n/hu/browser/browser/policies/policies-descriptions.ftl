@@ -18,6 +18,7 @@ policy-BlockAboutProfiles = Hozzáférés blokkolása az about:profiles oldalhoz
 policy-BlockAboutSupport = Hozzáférés blokkolása az about:support oldalhoz.
 policy-Bookmarks = Könyvjelzők létrehozása a Könyvjelzők eszköztáron, a Könyvjelző menüben vagy az abban megadott mappában.
 policy-Certificates = Használja-e a beépített tanúsítványokat, vagy sem. Ez a házirend jelenleg csak Windowson működik.
+policy-CertificatesDescription = Tanúsítványok hozzáadása vagy beépített tanúsítványok használata.
 policy-Cookies = A weboldalak süti elhelyezésének engedélyezése vagy letiltása.
 policy-DisableAppUpdate = A böngésző frissítésének megakadályozása.
 policy-DisableBuiltinPDFViewer = A PDF.js-nek, a { -brand-short-name } beépített PDF-megjelenítőjének letiltása.
@@ -42,6 +43,7 @@ policy-DisableSystemAddonUpdate = Annak a megakadályozása, hogy a böngésző 
 policy-DisableTelemetry = Telemetria kikapcsolása.
 policy-DisplayBookmarksToolbar = A Könyvjelző eszköztár megjelenítése alapértelmezetten.
 policy-DisplayMenuBar = A Menüsáv megjelenítése alapértelmezetten.
+policy-DNSOverHTTPS = HTTPS feletti DNS beállítása.
 policy-DontCheckDefaultBrowser = Az alapértelmezett böngésző ellenőrzés kikapcsolása indításkor.
 # “lock” means that the user won’t be able to change this setting
 policy-EnableTrackingProtection = A Tartalomblokkolás engedélyezése vagy letiltása, és válaszható módon, annak zárolása.
@@ -62,9 +64,12 @@ policy-OverridePostUpdatePage = A frissítés utáni „Újdonságok” oldal fe
 policy-Permissions = A kamera, mikrofon, helyadatok és értesítések jogosultságának beállítása.
 policy-PopupBlocking = Bizonyos weboldalak alapértelmezetten jeleníthessenek meg felugró ablakokat.
 policy-Proxy = Proxy-beállítások konfigurálása.
+policy-RequestedLocales = Adja meg a kért területi beállításokat az alkalmazásnak, az Ön által előnyben részesített sorrendben.
 policy-SanitizeOnShutdown = Összes navigációs adat törlése leállításkor.
 policy-SearchBar = A keresősáv alapértelmezett helyének megadása. A felhasználó továbbra is testreszabhatja.
 policy-SearchEngines = Keresőszolgáltatások beállításainak konfigurálása. Ez a házirend csak a kibővített támogatású kiadásban (ESR) érhető el.
+# For more information, see https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/PKCS11/Module_Installation
+policy-SecurityDevices = PKCS #11 modulok telepítése.
 # “format” refers to the format used for the value of this policy. See also:
 # https://github.com/mozilla/policy-templates/blob/master/README.md#websitefilter-machine-only
 policy-WebsiteFilter = Weboldalak felkeresésének blokkolása. Lásd a dokumentációt a formátum részleteiért.

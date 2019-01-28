@@ -2,13 +2,18 @@ buildDir "${topobjdir}/gradle/build/mobile/android/app"
 
 apply plugin: 'com.android.application'
 apply plugin: 'checkstyle'
-apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'findbugs'
+
+if (mozconfig.substs.MOZILLA_OFFICIAL) {
+    apply plugin: 'com.getkeepsafe.dexcount'
+}
 
 apply from: "${topsrcdir}/mobile/android/gradle/product_flavors.gradle"
 
-dexcount {
-    format = "tree"
+if (mozconfig.substs.MOZILLA_OFFICIAL) {
+    dexcount {
+        format = "tree"
+    }
 }
 
 android {
@@ -20,11 +25,12 @@ android {
         manifestPlaceholders = project.ext.manifestPlaceholders
 
         /* Cliqz start */
-        versionCode 116
+        versionCode 119
 
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+
         /* Cliqz end */
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
         testApplicationId 'org.mozilla.roboexample.test'
@@ -52,8 +58,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     dexOptions {
@@ -87,6 +93,7 @@ android {
             // shrinkResources true
             minifyEnabled true
             proguardFile "${topsrcdir}/mobile/android/config/proguard/proguard.cfg"
+            testProguardFile "${topsrcdir}/mobile/android/config/proguard/proguard-robocop.cfg"
         }
         release configureMinifyClosure
         if (mozconfig.substs.MOZILLA_OFFICIAL) {
@@ -129,20 +136,6 @@ android {
             versionCode 5
             /* Cliqz end */
         }
-        /* Cliqz start */
-        //Photon is the only flavour, which doesnt make sense. But we cant remove it because it has a
-        //separate source set which is included by the build system. Merging main and photon source set
-        //will take some refactoring. For now we branch standard and premium from photon
-        bond {
-            dimension "skin"
-            versionCode 5
-        }
-
-        standard {
-            dimension "skin"
-            versionCode 5 //version code can be same as premium because its a different app and package name is different
-        }
-        /* Cliqz end */
     }
 
     sourceSets {
@@ -161,6 +154,7 @@ android {
 
                 if (!mozconfig.substs.MOZ_CRASHREPORTER) {
                     exclude 'org/mozilla/gecko/CrashReporterActivity.java'
+                    exclude 'org/mozilla/gecko/CrashHandlerService.java'
                 }
 
                 if (!mozconfig.substs.MOZ_NATIVE_DEVICES) {
@@ -237,33 +231,6 @@ android {
                 srcDir "${topsrcdir}/mobile/android/tests/browser/robocop/assets"
             }
         }
-
-        /* Cliqz start */
-        //photon should contain some implementation of CC. We take the implementation from standard version
-        photon {
-            java {
-                srcDir "${topsrcdir}/mobile/android/standard/java"
-            }
-        }
-        bond {
-            java {
-                srcDir "${topsrcdir}/mobile/android/bond/java"
-                srcDir "${topsrcdir}/mobile/android/app/src/photon/java" //need to include the sources in the photon folder
-            }
-            res {
-                srcDir "${topsrcdir}/mobile/android/app/src/photon/res" //need to include the sources in the photon folder
-            }
-        }
-        standard {
-            java {
-                srcDir "${topsrcdir}/mobile/android/standard/java"
-                srcDir "${topsrcdir}/mobile/android/app/src/photon/java" //need to include the sources in the photon folder
-            }
-            res {
-                srcDir "${topsrcdir}/mobile/android/app/src/photon/res" //need to include the sources in the photon folder
-            }
-        }
-        /* Cliqz end */
     }
 
     testOptions {
@@ -388,7 +355,27 @@ android.applicationVariants.all { variant ->
             filter(ExpandXMLEntitiesFilter)
         }
         exclude('**/*.mkdir.done')
+
+        // Bug 1478411: We want to turn XML entity expansion errors into the "error:" strings that
+        // Tree Herder parses.  It's surprisingly difficult to do useful things with exceptions in a
+        // filter, but it appears that something deep in the XML parser prints errors to stderr, so
+        // we amplify those error outputs to achieve the goal.
+        def listener = {
+            def matches = (it =~ /\[Fatal Error\] +(.*)/)
+            if (matches) {
+                def (_, message) = matches[0]
+                logger.lifecycle "error: ${topobjdir}/mobile/android/base/res/values/strings.xml${message}"
+            }
+        } as StandardOutputListener
+
+        doFirst {
+            logging.addStandardErrorListener(listener)
+        }
+        doLast {
+            logging.removeStandardErrorListener(listener)
+        }
     }
+
     // This is an Android-Gradle plugin 3+-ism.  Determined by reading the
     // source.  The added directory doesn't appear in the paths listed by the
     // `sourceSets` task, for reasons unknown.
@@ -600,22 +587,66 @@ if (project.hasProperty('enable_code_coverage')) {
     apply from: "${topsrcdir}/mobile/android/gradle/jacoco_for_junit.gradle"
 }
 
-/* Cliqz start */
-preBuild {
-    doLast{
-        android.applicationVariants.each { variant ->
-            def apiVersion = variant.productFlavors.get(3).versionCode
-            def generatedVersionCode = android.defaultConfig.versionCode * 100 + apiVersion * 10
-            if (mozconfig.substs.CPU_ARCH.toString().equals("x86")){
-                generatedVersionCode = generatedVersionCode+5
-            } else{
-                generatedVersionCode = generatedVersionCode+3
-            }
-            variant.mergedFlavor.versionCode = generatedVersionCode
-            variant.outputs.each { output ->
-                output.setVersionCodeOverride(generatedVersionCode)
+
+// Set up code coverage for tests on emulators.
+if (mozconfig.substs.MOZ_JAVA_CODE_COVERAGE) {
+    android {
+        jacoco {
+            version = "$jacoco_version"
+        }
+        buildTypes {
+            debug {
+                testCoverageEnabled true
             }
         }
     }
+
+    dependencies {
+        // This is required both in the instrumented application classes and the test classes,
+        // so `api` has to be used instead of `androidTestImplementation`.
+        api "org.jacoco:org.jacoco.agent:$jacoco_version:runtime"
+    }
+
+    // Generate tasks to archive compiled classfiles for later use with JaCoCo report generation.
+    // One of these tasks is used by `mach android archive-coverage-artifacts`.
+    android.applicationVariants.all { variant ->
+        def name = variant.name
+        def compileTask = tasks.getByName("compile${name.capitalize()}JavaWithJavac")
+        task "archiveClassfiles${name.capitalize()}"(type: Zip, dependsOn: compileTask) {
+            description = "Archive compiled classfiles for $name in order to export them as code coverage artifacts."
+            def fileFilter = ['**/androidTest/**',
+                              '**/test/**',
+                              '**/R.class',
+                              '**/R$*.class',
+                              '**/BuildConfig.*',
+                              '**/Manifest*.*',
+                              '**/*Test*.*',
+                              'android/**/*.*']
+            from fileTree(dir: compileTask.destinationDir, excludes: fileFilter)
+            destinationDir = file("${buildDir}/coverage")
+            // Note: This task assumes only one variant of archiveClassfiles* will be used.
+            // Running multiple variants of this task will overwrite the output archive.
+            archiveName = 'target.app_classfiles.zip'
+        }
+    }
+
+    /* Cliqz start */
+    preBuild {
+        doLast{
+            android.applicationVariants.each { variant ->
+                def apiVersion = variant.productFlavors.get(3).versionCode
+                def generatedVersionCode = android.defaultConfig.versionCode * 100 + apiVersion * 10
+                if (mozconfig.substs.CPU_ARCH.toString().equals("x86")){
+                    generatedVersionCode = generatedVersionCode+5
+                } else{
+                    generatedVersionCode = generatedVersionCode+3
+                }
+                variant.mergedFlavor.versionCode = generatedVersionCode
+                variant.outputs.each { output ->
+                    output.setVersionCodeOverride(generatedVersionCode)
+                }
+            }
+        }
+    }
+    /* Cliqz end */
 }
-/* Cliqz end */

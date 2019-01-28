@@ -30,3 +30,4 @@
 <!ENTITY allowHWAccel.accesskey "c">
 <!ENTITY blockAutoRefresh.label "Advertirme cuando los sitios web intenten redirigir o recargar la página">
 <!ENTITY blockAutoRefresh.accesskey "A">
+<!ENTITY showZoomStatusPanel.label "Mostrar controles de tamaño en la barra de estado">

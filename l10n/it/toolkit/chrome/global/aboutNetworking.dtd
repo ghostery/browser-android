@@ -47,13 +47,13 @@
 <!ENTITY aboutNetworking.rcwnCacheWonCount "Numero vittorie cache">
 <!ENTITY aboutNetworking.rcwnNetWonCount "Numero vittorie rete">
 <!ENTITY aboutNetworking.totalNetworkRequests "Numero complessivo richieste di rete">
-<!ENTITY aboutNetworking.rcwnOperation "Cache Operation">
-<!ENTITY aboutNetworking.rcwnPerfOpen "Open">
-<!ENTITY aboutNetworking.rcwnPerfRead "Read">
-<!ENTITY aboutNetworking.rcwnPerfWrite "Write">
-<!ENTITY aboutNetworking.rcwnPerfEntryOpen "Entry Open">
-<!ENTITY aboutNetworking.rcwnAvgShort "Short Average">
-<!ENTITY aboutNetworking.rcwnAvgLong "Long Average">
-<!ENTITY aboutNetworking.rcwnStddevLong "Long Standard Deviation">
-<!ENTITY aboutNetworking.rcwnCacheSlow "Cache slow count">
-<!ENTITY aboutNetworking.rcwnCacheNotSlow "Cache not slow count">
+<!ENTITY aboutNetworking.rcwnOperation "Operazione cache">
+<!ENTITY aboutNetworking.rcwnPerfOpen "Apertura">
+<!ENTITY aboutNetworking.rcwnPerfRead "Lettura">
+<!ENTITY aboutNetworking.rcwnPerfWrite "Scrittura">
+<!ENTITY aboutNetworking.rcwnPerfEntryOpen "Elementi aperti">
+<!ENTITY aboutNetworking.rcwnAvgShort "Media breve">
+<!ENTITY aboutNetworking.rcwnAvgLong "Media lunga">
+<!ENTITY aboutNetworking.rcwnStddevLong "Deviazione standard lunga">
+<!ENTITY aboutNetworking.rcwnCacheSlow "Conteggio cache lenta">
+<!ENTITY aboutNetworking.rcwnCacheNotSlow "Conteggio cache non lenta">

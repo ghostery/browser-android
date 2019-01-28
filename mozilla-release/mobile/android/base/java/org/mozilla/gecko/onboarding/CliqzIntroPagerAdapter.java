@@ -23,12 +23,14 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.PrefsHelper;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.CustomLinkMovementMethod;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.ThreadUtils;
 
 import static org.mozilla.gecko.AppConstants.TELEMETRY_PREF_NAME;
 
@@ -57,19 +59,12 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
             dataCollectionTv.setMovementMethod(customLinkMovementMethod);
             dataCollectionTv.setText(Html.fromHtml(layout.getContext().getString(R.string.ghostery_onboarding_new_users_checkbox)));
             final CheckBox collectDataCb = (CheckBox) layout.findViewById(R.id.collect_data_cb);
-            PrefsHelper.getPref(TELEMETRY_PREF_NAME, new PrefsHelper.PrefHandlerBase() {
-                @Override
-                public void prefValue(String pref, boolean value) {
-                    collectDataCb.setChecked(value);
-                    collectDataCb.setOnCheckedChangeListener(FirstScreenAction.this);
-                }
-            });
+            collectDataCb.setChecked(AppConstants.MOZ_TELEMETRY_ON_BY_DEFAULT);
+            collectDataCb.setOnCheckedChangeListener(this);
         }
 
         @Override
-        public void OnOpenLinkLoaded() {
-
-        }
+        public void OnOpenLinkLoaded() {}
 
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

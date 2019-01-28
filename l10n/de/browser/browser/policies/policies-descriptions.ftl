@@ -25,6 +25,8 @@ policy-Bookmarks = Lesezeichen erstellen in der Lesezeichen-Symbolleiste, im Les
 
 policy-Certificates = Ob eingebaute Zertifikate verwendet werden sollen. Diese Richtlinie wird derzeit nur unter Windows unterstützt.
 
+policy-CertificatesDescription = Zertifikate hinzufügen oder eingebaute Zertifikate verwenden
+
 policy-Cookies = Cookies setzen durch Websites erlauben oder verbieten
 
 policy-DisableAppUpdate = Browser-Updates deaktivieren
@@ -72,6 +74,8 @@ policy-DisplayBookmarksToolbar = Lesezeichen-Symbolleiste standardmäßig anzeig
 
 policy-DisplayMenuBar = Menüleiste standardmäßig anzeigen
 
+policy-DNSOverHTTPS = DNS über HTTPS einrichten
+
 policy-DontCheckDefaultBrowser = Standardbrowser-Überprüfung beim Start nicht durchführen
 
 # “lock” means that the user won’t be able to change this setting
@@ -106,11 +110,16 @@ policy-PopupBlocking = Popups für festgelegte Websites standardmäßig anzeigen
 
 policy-Proxy = Proxy-Einstellungen festlegen
 
+policy-RequestedLocales = Sprachen für die Anwendungsoberfläche in bevorzugter Reihenfolge festlegen
+
 policy-SanitizeOnShutdown = Alle Navigationsdaten beim Beenden löschen
 
 policy-SearchBar = Standardposition der Suchleiste setzen. Der Benutzer darf sie weiterhin anpassen.
 
 policy-SearchEngines = Suchmaschineneinstellungen anpassen. Diese Richtlinie ist nur für Versionen des Extended Support Release (ESR) verfügbar.
+
+# For more information, see https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/PKCS11/Module_Installation
+policy-SecurityDevices = PKCS#11-Module installieren
 
 # “format” refers to the format used for the value of this policy. See also:
 # https://github.com/mozilla/policy-templates/blob/master/README.md#websitefilter-machine-only

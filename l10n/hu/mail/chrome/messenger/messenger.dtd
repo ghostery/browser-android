@@ -443,6 +443,9 @@
 <!ENTITY openConversationCmd.label "Megnyitás beszélgetésben">
 <!ENTITY openConversationCmd.accesskey "b">
 <!ENTITY openConversationCmd.key "o">
+<!ENTITY openInConversationCmd.label "Megnyitás beszélgetésben">
+<!ENTITY openInConversationCmd.accesskey "b">
+<!ENTITY openInConversationCmd.key "o">
 <!ENTITY openAttachmentListCmd.label "Van melléklet">
 <!ENTITY openAttachmentListCmd.accesskey "n">
 <!ENTITY openFeedMessage1.label "Hírforrás-üzenetek megnyitásakor">
@@ -875,7 +878,7 @@
   -->
 <!ENTITY quickSearchCmd.key "k">
 <!-- LOCALIZATION NOTE (search.label.base1):
-      This is the base of the empty text for the global search box. We replace
+     This is the base of the empty text for the global search box. We replace
      #1 with the contents of the appropriate search.keyLabel.* value for the
      platform.
      The goal is to convey to the user that typing in the box will allow them

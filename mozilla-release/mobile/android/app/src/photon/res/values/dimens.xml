@@ -283,6 +283,8 @@
     <dimen name="padding_5">5dp</dimen>
 
     <!-- news -->
+    <dimen name="news_list_radius">9dp</dimen>
+    <dimen name="news_item_favicon_radius">5dp</dimen>
     <dimen name="news_favicon_size">@dimen/icon_size</dimen>
     <dimen name="news_title_padding">10dp</dimen>
     <dimen name="new_card_padding_10">@dimen/padding_10</dimen>
@@ -291,7 +293,6 @@
     <!-- MyOffrz -->
     <dimen name="myoffrz_icon_size">@dimen/icon_size</dimen>
     <dimen name="myoffrz_padding_10">@dimen/padding_10</dimen>
-    <dimen name="myoffrz_title_text_size">22sp</dimen>
     <dimen name="myoffrz_text_size">16sp</dimen>
     <dimen name="myoffrz_padding_8">8dp</dimen>
     <dimen name="myoffrz_padding_16">16dp</dimen>
@@ -301,14 +302,13 @@
     <!-- Control Center -->
     <dimen name="ghostery_list_item_action_button_width">90dp</dimen>
     <dimen name="ghostery_overview_button_width">225dp</dimen>
-    <dimen name="ghostery_cc_donut_number_size">32sp</dimen>
-    <dimen name="ghostery_cc_donut_text_size">16sp</dimen>
 
     <!-- History and bookmarks view -->
     <dimen name="ghostery_history_icon_width">48dp</dimen>
     <dimen name="ghostery_history_icon_height">48dp</dimen>
     <dimen name="ghostery_history_divider_height">0.5dp</dimen>
     <dimen name="ghostery_bookmark_folder_size">38dp</dimen>
+    <dimen name="ghostery_bookmark_current_folder_size">20dp</dimen>
 
     <!-- Tabs Overview -->
     <dimen name="tab_panel_text_size">24sp</dimen>
@@ -316,9 +316,9 @@
     <dimen name="tab_thumbnail_private_mode_image_padding">10dp</dimen>
 
     <!-- Intro -->
-    <dimen name="cliqz_intro_title_size">27sp</dimen>
-    <dimen name="cliqz_intro_content_size">14sp</dimen>
-    <dimen name="cliqz_intro_radio_button_height">50dp</dimen>
+    <dimen name="cliqz_intro_title_size">16sp</dimen>
+    <dimen name="cliqz_intro_content_size">12sp</dimen>
+    <dimen name="cliqz_intro_radio_button_height">30dp</dimen>
     <!-- Cliqz end -->
 
 </resources>

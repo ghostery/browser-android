@@ -1,0 +1,37 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
+<!ENTITY pref.alarmgoesoff.label "Se o lembrete estiver vencido:">
+<!ENTITY pref.playasound "Reproduzir um som">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "s">
+<!ENTITY pref.calendar.alarms.sound.useDefault.label "Utilizar som pré-definido">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "d">
+<!ENTITY pref.calendar.alarms.sound.browse.label "Escolher…">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "E">
+<!ENTITY pref.calendar.alarms.sound.play.label "Reproduzir">
+<!ENTITY pref.calendar.alarms.sound.play.accessKey "p">
+<!ENTITY pref.showalarmbox "Mostrar uma caixa de alarme">
+<!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "M">
+<!ENTITY pref.missedalarms "Mostrar alarmes perdidos">
+<!ENTITY pref.missedalarms2 "Mostrar lembretes falhados para calendários editáveis">
+<!ENTITY pref.calendar.alarms.missedAlarms.accessKey "p">
+<!ENTITY pref.calendar.alarms.defaults.label "Predefinições dos lembretes">
+<!ENTITY pref.defalarm4events.label "Alarmes para os eventos:">
+<!ENTITY pref.defalarm4events.accesskey "A">
+<!ENTITY pref.defalarm4todos.label "Alarmes para as tarefas:">
+<!ENTITY pref.defalarm4todos.accesskey "l">
+<!ENTITY pref.alarm.on "Ligado">
+<!ENTITY pref.alarm.off "Desligado">
+<!ENTITY pref.defalarmlen4events.label "Tempo predefinido de ativação do alarme antes de um evento:">
+<!ENTITY pref.defalarmlen4events.accesskey "u">
+<!ENTITY pref.defalarmlen4todos.label "Tempo predefinido de ativação do alarme antes de uma tarefa:">
+<!ENTITY pref.defalarmlen4todos.accesskey "o">
+
+<!ENTITY pref.defaultsnoozelength.label "Duração predefinida entre toques de alarme:" >
+<!ENTITY pref.defaultsnoozelength.accesskey "u">

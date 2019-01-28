@@ -30,3 +30,4 @@
 <!ENTITY scrubberScale.nameFormat "Trascorso: #1 di #2">
 <!ENTITY positionAndDuration.nameFormat "#1<span> / #2</span>">
 <!ENTITY closedCaption.off "Disattivati">
+<!ENTITY volumeScrubber.label "Dispositivo di scorrimento volume">

@@ -73,3 +73,13 @@ connection-dns-over-https =
 connection-dns-over-https-url = 網址
     .accesskey = U
     .tooltiptext = 用來解析 DNS 的 HTTPS 網址
+# Variables:
+#   $url (String) - URL for the DNS over HTTPS provider
+connection-dns-over-https-url-default =
+    .label = 使用預設值（{ $url }）
+    .accesskey = Ｕ
+    .tooltiptext = 使用預設網址來解析 DNS over HTTPS
+connection-dns-over-https-url-custom =
+    .label = 自訂
+    .accesskey = C
+    .tooltiptext = 輸入您想要用來解析 DNS over HTTPS 的網址

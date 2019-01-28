@@ -14,5 +14,6 @@
 <!ENTITY restoreDefaultSet.label  "Configuration par défaut">
 <!ENTITY addNewToolbar.label      "Nouvelle barre">
 <!ENTITY showTitlebar.label       "Afficher la barre de titre">
+<!ENTITY extraDragSpace.label     "Espace pour saisir la fenêtre">
 <!ENTITY saveChanges.label        "Terminé">
 <!ENTITY undoChanges.label        "Annuler les changements">

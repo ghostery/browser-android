@@ -8,7 +8,10 @@
 <!ENTITY setColor1.label "Wybierz kolor z tabeli powyżej">
 <!ENTITY setColor2.label "lub wprowadź kod HTML koloru">
 <!ENTITY setColor2.accessKey "H">
-<!ENTITY setColorExample.label     "(np.: „#0000ff” lub „blue”):">
+<!ENTITY chooseColor1.label "Wybierz kolor:">
+<!ENTITY chooseColor2.label "Wprowadź kod HTML koloru">
+<!ENTITY chooseColor2.accessKey "H">
+<!ENTITY setColorExample.label "(np.: „#0000ff” lub „blue”):">
 <!ENTITY default.label "Domyślny">
 <!ENTITY default.accessKey "D">
 <!ENTITY palette.label "Paleta:">
