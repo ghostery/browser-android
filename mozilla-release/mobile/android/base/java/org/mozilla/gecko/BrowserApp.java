@@ -3352,7 +3352,7 @@ public class BrowserApp extends GeckoApp
         /* Cliqz start */
         // Display the "loading search" UI in case the search is not ready
         if (!mSearchIsReady) {
-            mLoadingSearchHelper.start();
+            //mLoadingSearchHelper.start();
         }
         // show Cliqz search cards if quick search enabled otherwise show firefox one.
         final boolean isQuickSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
