@@ -1,1 +1,1 @@
-https://s3.amazonaws.com/cdncliqz/update/android_browser_pre/firefox%40ghostery.com/firefox%40ghostery.com-8.2.17-android_browser-signed.xpi
+https://s3.amazonaws.com/cdncliqz/update/browser-android_pre/firefox%40ghostery.com/firefox%40ghostery.com-8.3.18.21685a3-browser-android-signed.xpi
