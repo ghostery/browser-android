@@ -1,5 +1,6 @@
 package org.mozilla.gecko;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -74,6 +75,7 @@ class CliqzLoadingSearchHelper {
             mAnimator.cancel();
         }
         mLoadingSearchContainer.setAlpha(0f);
+        mLoadingSearchContainer.setVisibility(View.VISIBLE);
         mAnimator = mLoadingSearchContainer.animate();
         mAnimator.alpha(1f)
                 .setDuration(SHOW_ANIMATION_DURATION)
@@ -95,6 +97,7 @@ class CliqzLoadingSearchHelper {
         mAnimator = mLoadingSearchContainer.animate();
         mAnimator.alpha(0f)
                 .setDuration(HIDE_ANIMATION_DURATION)
+                .setListener(new HideAnimationListener())
                 .start();
     }
 
@@ -136,6 +139,35 @@ class CliqzLoadingSearchHelper {
 
         boolean isShown() {
             return mIsShown;
+        }
+    }
+
+    private class HideAnimationListener implements Animator.AnimatorListener {
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            setViewAsGone();
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            setViewAsGone();
+        }
+
+        private void setViewAsGone() {
+            if (mLoadingSearchContainer != null) {
+                mLoadingSearchContainer.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
         }
     }
 }

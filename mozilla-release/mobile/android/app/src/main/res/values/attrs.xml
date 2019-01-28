@@ -194,5 +194,13 @@
         <attr name="showLWTBackground" format="boolean"/>
     </declare-styleable>
 
+    <!-- Cliqz Start -->
+    <declare-styleable name="ThreeDotsAnimatedView">
+        <attr name="highlightDotColor" format="color" />
+        <attr name="lowlightDotColor" format="color" />
+        <attr name="dotsRadius" format="dimension" />
+        <attr name="interDotSpace" format="dimension" />
+    </declare-styleable>
+    <!-- Cliqz End -->
 </resources>
 
