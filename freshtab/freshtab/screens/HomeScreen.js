@@ -6,7 +6,7 @@ const DOMAINS = [
   {
     title: 'Youtube',
     url: 'https://www.youtube.com',
-    lastVisisted: 'today',
+    lastVisited: 'today',
     logoDetails: {
       backgroundColor: '800000',
       text: 'YT'
@@ -15,7 +15,7 @@ const DOMAINS = [
   {
     title: 'Wikipedia',
     url: 'https://www.wikipedia.com',
-    lastVisisted: 'today at 11:00',
+    lastVisited: 'today at 11:00',
     logoDetails: {
       backgroundColor: '999999',
       text: 'WI'
@@ -24,7 +24,7 @@ const DOMAINS = [
   {
     title: 'Facebook',
     url: 'https://www.wikipedia.com',
-    lastVisisted: 'yesterday at 12:00',
+    lastVisited: 'yesterday at 12:00',
     logoDetails: {
       backgroundColor: '5048A5',
       text: 'FB'
@@ -33,7 +33,7 @@ const DOMAINS = [
   {
     title: '9gag',
     url: 'https://www.9gag.com',
-    lastVisisted: '3 hours ago',
+    lastVisited: '3 hours ago',
     logoDetails: {
       backgroundColor: '464649',
       text: '9g'
@@ -42,7 +42,7 @@ const DOMAINS = [
   {
     title: 'Wikipedia',
     url: 'https://www.wikipedia.com',
-    lastVisisted: 'today at 11:00',
+    lastVisited: 'today at 11:00',
     logoDetails: {
       backgroundColor: '179471',
       text: 'WI'
@@ -51,7 +51,7 @@ const DOMAINS = [
   {
     title: 'Facebook',
     url: 'https://www.wikipedia.com',
-    lastVisisted: 'yesterday at 12:00',
+    lastVisited: 'yesterday at 12:00',
     logoDetails: {
       backgroundColor: 'F2800C',
       text: 'FB'
@@ -60,7 +60,7 @@ const DOMAINS = [
   {
     title: '9gag',
     url: 'https://www.9gag.com',
-    lastVisisted: '3 hours ago',
+    lastVisited: '3 hours ago',
     logoDetails: {
       backgroundColor: '464649',
       text: '9g'
@@ -69,7 +69,7 @@ const DOMAINS = [
   {
     title: 'Wikipedia',
     url: 'https://www.wikipedia.com',
-    lastVisisted: 'today at 11:00',
+    lastVisited: 'today at 11:00',
     logoDetails: {
       backgroundColor: '999999',
       text: 'WI'
@@ -78,7 +78,7 @@ const DOMAINS = [
   {
     title: 'Facebook',
     url: 'https://www.wikipedia.com',
-    lastVisisted: 'yesterday at 12:00',
+    lastVisited: 'yesterday at 12:00',
     logoDetails: {
       backgroundColor: '5048A5',
       text: 'FB'
@@ -126,17 +126,16 @@ class HistoryItem extends React.Component {
 
     return (
       <View style={itemStyles.container}>
-        <Icon
+        {/*<Icon
           width={60}
           height={60}
-          // logoDetails={data.logoDetails}
-        />
+          logoDetails={data.logoDetails}
+        />*/}
         <View style={itemStyles.rightContainer}>
           <Text style={itemStyles.title}>{data.title}</Text>
-          <Text>{data.lastVisisted}</Text>
+          { /* <Text>{data.lastVisited}</Text> */}
         </View>
       </View>
-
     )
   }
 }
