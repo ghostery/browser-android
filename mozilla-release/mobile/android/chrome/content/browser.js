@@ -6737,13 +6737,17 @@ var Cliqz = {
     if (data.messageName != "Extension:Message") {
       return;
     }
+    const ts2 = Date.now() + "";
     const msg = data.data.deserialize(this);
     const callback = this.callbacks[msg.requestId];
 
     if (msg.action === 'renderResults') {
       GlobalEventDispatcher.sendRequest({
         type: "Search:renderResults",
-        data: msg.args[0]
+        data: msg.args[0],
+        ts1: msg.args[1] + "",
+        ts2,
+        ts3: Date.now() + "",
       });
     }
 
@@ -6838,11 +6842,14 @@ var Cliqz = {
     // event cases should be sorted in alphabitical order
     switch(event) {
       case "Cards:CallBackgroundAction":
-        this.messageSearchExtension({
+        const t0 = performance.now();
+        this.messageExtension({
           module: data.module,
           action: data.action,
           args: data.args
         }).then(response => {
+          const t1 = performance.now();
+          console.log('XXXX browserjs to background and back', t0, t1, t1 - t0);
           onSuccess(response);
         }).catch(error => {
           onError(error);
