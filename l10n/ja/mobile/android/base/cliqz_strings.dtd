@@ -3,12 +3,15 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "終了">
 <!ENTITY contextmenu_delete "削除">
+<!ENTITY search_loading_message "We are powering up Ghost search for your fully private experience">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "ニュース">
+<!ENTITY activity_stream_top_news_show "Show">
+<!ENTITY activity_stream_top_news_hide "Hide">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -39,26 +42,37 @@
 <!ENTITY helper_triple_readerview_open_message2 "リーダー・ビュー項目をお気に入りに登録すると、オフラインで読むことができます。">
 <!ENTITY helper_triple_readerview_open_button2 "お気に入りに追加">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "Want to customize this tab?">
+<!ENTITY customize_new_tab_link "Go to Settings">
+<!ENTITY customize_new_tab_snackbar_negative_btn "No, Thanks">
+<!ENTITY customize_new_tab_snackbar_positive_btn "Customize">
+<!ENTITY customize_new_tab_snackbar_description "Adapt this space to your needs: Show/hide TopSites, News and background image.">
+
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&brandShortName;デフォルトのブラウザとして">
-<!ENTITY default_browser_message "&brandShortName;を使用するのが好きなようです。デフォルトのブラウザに設定したいですか？">
+<!ENTITY default_browser_title "&amp;brandShortName;デフォルトのブラウザとして">
+<!ENTITY default_browser_message "&amp;brandShortName;を使用するのが好きなようです。デフォルトのブラウザに設定したいですか？">
 <!ENTITY default_browser_dialog_proceed "続行">
 <!ENTITY default_browser_dialog_cancel "キャンセル">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "Send usage data">
+<!ENTITY datareporting_telemetry_summary2 "Help us improve your browsing experience. We collect strictly anonymous usage data. At no occasion is any personal information collected.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web（ヒューマン・ウェブ）">
+<!ENTITY pref_category_human_web_summary "Contribute anonymous information related to trackers, websites, and search queries to improve our private quick-search, anti-tracking, anti-phishing technologies.">
 <!ENTITY pref_what_is_human_web "Human Web（ヒューマン・ウェブ）とは？">
 <!ENTITY pref_enable_human_web "Human Webを有効にする">
-<!ENTITY pref_category_human_web_summary "何を有効にしますか？">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&brandMyOffrz;">
+<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "オファーがないようです">
-<!ENTITY myoffrz_no_offers_msg_line1 "しかし、お客様を探し続け、～を追加します">
-<!ENTITY myoffrz_no_offers_msg_line2 "ここに表示されます">
-<!ENTITY myoffrz_onboarding_description "&brandMyOffrz;を使用すると、魅力的な割引やバーゲンを受けることができます。">
+<!ENTITY myoffrz_no_offers_msg_line1 "But we add them here ">
+<!ENTITY myoffrz_no_offers_msg_line2 "as soon as we have one">
+<!ENTITY myoffrz_onboarding_description "&amp;brandMyOffrz;を使用すると、魅力的な割引やバーゲンを受けることができます。">
 <!ENTITY myoffrz_order_now_label "今すぐ注文してください！">
 <!ENTITY myoffrz_tap_code_to_copy_label "コピーするコードをタップ">
 <!ENTITY myoffrz_terms_and_conditions_label "利用規約">
@@ -70,7 +84,7 @@
 <!ENTITY pref_block_ads "広告をブロック">
 <!ENTITY pref_block_ads_fair "フェア・ブロッキング">
 <!ENTITY pref_block_ads_what_fair "\'fair\'とは？">
-<!ENTITY pref_block_ads_fair_description "広告ブロッカーは現時ベータ版です。最終版では、「フェア広告を許可（デフォルト設定）」、「すべての広告をブロック」、「すべての広告を許可」というオプションを提供します。その他\nhttps://cliqz.com/whycliqz/adblocking">
+<!ENTITY pref_block_ads_fair_description "Ad Blocking is in beta at the moment. The final version will provide the following options: Allow Fair Ads (default setting), Block All Ads, Allow All Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "注意：ブラウザは、広告ブロッカーが効率的に機能するには、まずいくつかのデータ・パッケージをダウンロードする必要があります。このためには、アプリをWi-Fiに接続する必要があります。">
 
 <!-- Rate Us -->
@@ -80,41 +94,41 @@
 <!ENTITY cc_title_overview "概要">
 <!ENTITY cc_title_site_trackers "サイト・トラッカー">
 <!ENTITY cc_title_global_trackers "すべてのトラッカー">
-<!ENTITY cc_zero_trackers_found "&formatD;\n トラッカーが見つかりました">
-<!ENTITY cc_one_trackers_found "&formatD;\n トラッカーが見つかりました">
-<!ENTITY cc_two_trackers_found "&formatD;\n トラッカーが見つかりました">
-<!ENTITY cc_few_trackers_found "&formatD;\n トラッカーが見つかりました">
-<!ENTITY cc_many_trackers_found "&formatD;\n トラッカーが見つかりました">
-<!ENTITY cc_other_trackers_found "&formatD;\n トラッカーが見つかりました">
-<!ENTITY cc_zero_trackers_blocked "&formatD; トラッカーがブロックされました">
-<!ENTITY cc_one_trackers_blocked "&formatD; トラッカーがブロックされました">
-<!ENTITY cc_two_trackers_blocked "&formatD; トラッカーがブロックされました">
-<!ENTITY cc_few_trackers_blocked "&formatD; トラッカーがブロックされました">
-<!ENTITY cc_many_trackers_blocked "&formatD; トラッカーがブロックされました">
-<!ENTITY cc_other_trackers_blocked "&formatD; トラッカーがブロックされました">
-<!ENTITY cc_zero_trackers "&formatD; トラッカー">
-<!ENTITY cc_one_trackers "&formatD; トラッカー">
-<!ENTITY cc_two_trackers "&formatD; トラッカー">
-<!ENTITY cc_few_trackers "&formatD; トラッカー">
-<!ENTITY cc_many_trackers "&formatD; トラッカー">
-<!ENTITY cc_other_trackers "&formatD; トラッカー">
+<!ENTITY cc_zero_trackers_found "Trackers found">
+<!ENTITY cc_one_trackers_found "Tracker found">
+<!ENTITY cc_two_trackers_found "Trackers found">
+<!ENTITY cc_few_trackers_found "Trackers found">
+<!ENTITY cc_many_trackers_found "Trackers found">
+<!ENTITY cc_other_trackers_found "Trackers found">
+<!ENTITY cc_zero_trackers_blocked "&amp;formatD; トラッカーがブロックされました">
+<!ENTITY cc_one_trackers_blocked "&amp;formatD; トラッカーがブロックされました">
+<!ENTITY cc_two_trackers_blocked "&amp;formatD; トラッカーがブロックされました">
+<!ENTITY cc_few_trackers_blocked "&amp;formatD; トラッカーがブロックされました">
+<!ENTITY cc_many_trackers_blocked "&amp;formatD; トラッカーがブロックされました">
+<!ENTITY cc_other_trackers_blocked "&amp;formatD; トラッカーがブロックされました">
+<!ENTITY cc_zero_trackers "&amp;formatD; トラッカー">
+<!ENTITY cc_one_trackers "&amp;formatD; トラッカー">
+<!ENTITY cc_two_trackers "&amp;formatD; トラッカー">
+<!ENTITY cc_few_trackers "&amp;formatD; トラッカー">
+<!ENTITY cc_many_trackers "&amp;formatD; トラッカー">
+<!ENTITY cc_other_trackers "&amp;formatD; トラッカー">
 <!ENTITY cc_trust_site "サイトを信頼">
 <!ENTITY cc_restrict_site "サイトを制限">
 <!ENTITY cc_pause_ghostery "Ghosteryを一時停止">
 <!ENTITY cc_resume_ghostery "Ghosteryを再開">
-<!ENTITY cc_enhanced_options "強化されたオプション">
-<!ENTITY cc_enhanced_anti_tracking "強化された追跡防止">
-<!ENTITY cc_enhanced_ad_blocking "強化された広告ブロッキング">
+<!ENTITY cc_enhanced_options "Options">
+<!ENTITY cc_enhanced_anti_tracking "追跡防止">
+<!ENTITY cc_enhanced_ad_blocking "Ad Blocking">
 <!ENTITY cc_smart_blocking "スマート・ブロッキング">
-<!ENTITY cc_enhanced_anti_tracking_info "強化された追跡防止情報">
-<!ENTITY cc_enhanced_ad_blocking_info "強化された広告ブロッキング情報">
-<!ENTITY cc_smart_blocking_info "強化された追跡防止情報">
-<!ENTITY cc_zero_anti_tracking_blocked "個人データポイントが匿名化されました">
-<!ENTITY cc_one_anti_tracking_blocked "個人データポイントが匿名化されました">
-<!ENTITY cc_two_anti_tracking_blocked "個人データポイントが匿名化されました">
-<!ENTITY cc_few_anti_tracking_blocked "個人データポイントが匿名化されました">
-<!ENTITY cc_many_anti_tracking_blocked "個人データポイントが匿名化されました">
-<!ENTITY cc_other_anti_tracking_blocked "個人データポイントが匿名化されました">
+<!ENTITY cc_enhanced_anti_tracking_info "Anti tracking information">
+<!ENTITY cc_enhanced_ad_blocking_info "Ad blocking information">
+<!ENTITY cc_smart_blocking_info "Anti tracking information">
+<!ENTITY cc_zero_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_one_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_two_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_few_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_many_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_other_anti_tracking_blocked "Personal data anonymized">
 <!ENTITY cc_zero_ad_blocking_blocked "広告がブロックされました">
 <!ENTITY cc_one_ad_blocking_blocked "広告がブロックされました">
 <!ENTITY cc_two_ad_blocking_blocked "広告がブロックされました">
@@ -128,7 +142,7 @@
 <!ENTITY cc_many_smart_blocking_blocked "トラッカーが調整されました">
 <!ENTITY cc_other_smart_blocking_blocked "トラッカーが調整されました">
 <!ENTITY cc_anti_tracking_about "閲覧保護を強化するために、ブロックされていないトラッカーと未知のトラッカーを匿名化します">
-<!ENTITY cc_ad_blocking_about "アクセスしたウェブサイトの広告をブロックします">
+<!ENTITY cc_ad_blocking_about "Block ads on websites you visit">
 <!ENTITY cc_smart_blocking_about "ページのパフォーマンスを最適化するために、トラッカー・ブロッキングを調整しました">
 <!ENTITY cc_site_trackers_list_title "このサイトのトラッカー">
 <!ENTITY cc_global_trackers_list_title "すべてのサイトのトラッカー">
@@ -137,7 +151,7 @@
 <!ENTITY cc_on_this_site "このサイトで">
 <!ENTITY cc_trackers "トラッカー">
 <!ENTITY cc_blocked "ブロックされた対象">
-<!ENTITY cc_num_blocked "&formatD; ブロックされました">
+<!ENTITY cc_num_blocked "&amp;formatD; ブロックされました">
 <!ENTITY cc_tracker_info "今すぐ見せてください">
 <!ENTITY cc_block_all "すべてをブロック">
 <!ENTITY cc_unblock_all "すべてのブロックを解除">
@@ -155,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "すべての変更をリセットしますか？">
 <!ENTITY cc_reset_changes_dialog_message "サイト・トラッカーとグローバル・トラッカーに対する以前の変更はすべてリセットされます。">
 <!ENTITY cc_reset "リセット">
+<!ENTITY cc_ad_block_off_domain "Turn off for this domain">
+<!ENTITY cc_ad_block_off_global "Turn off for all websites">
 <!ENTITY cc_reload_page_snackbar_text "変更を適用するためにページがリフレッシュされます">
 
 <!-- General Settings - Search-->
@@ -184,7 +200,7 @@
 <!ENTITY pref_browsing_category "閲覧">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "検索、&pref_new_tab_category;、閲覧、通知、ダウンロード、&brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "検索、&amp;pref_new_tab_category;、閲覧、通知、ダウンロード、&amp;brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "背景画像を表示">
 <!ENTITY pref_cliqz_tab_topsites "最も多くアクセスしたサイトを表示">
 <!ENTITY pref_cliqz_tab_news "ニュースを表示">
@@ -192,9 +208,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "スタートページには最も多くアクセスしたウェブサイトが再び表示されます">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "&brandMyOffrz;を表示">
-<!ENTITY pref_about_myoffrz "&brandMyOffrz;について">
+<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "&amp;brandMyOffrz;を表示">
+<!ENTITY pref_about_myoffrz "&amp;brandMyOffrz;について">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -258,26 +274,26 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - よりクリーンで、より速く、より安全に閲覧できるようにします">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "&brandShortName;の紹介">
-<!ENTITY ghostery_onboarding_new_users_text "モバイル向けに最適化された&brandShortName;を使用すると、よりクリーンで、より速く、より安全に閲覧できます。">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Ghosteryのパフォーマンスを向上させるために、匿名の分析データとHuman Webデータを共有して、&brandShortName;をサポートします。\u003Ca href=\u0022&human_web_info_url;\u0022&gt;詳細\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_title "Welcome">
+<!ENTITY ghostery_onboarding_new_users_text "モバイル向けに最適化された&amp;brandShortName;を使用すると、よりクリーンで、より速く、より安全に閲覧できます。">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Improve &amp;brandShortName;\'s performance by sharing anonymous analytics and Human Web data. \u003Ca href=\u0022&amp;human_web_info_url;\u0022&gt;Learn more\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "広告＆トラッカー・ブロッキング">
-<!ENTITY ghostery_onboarding_tracking_protection_text "よりクリーンで、より速く、より安全に閲覧できるように、ブロックする&brandShortName;を選択してください。いつでもプライバシー・コントロール・センターでこれらの設定を変更およびカスタマイズすることができます。">
+<!ENTITY ghostery_onboarding_tracking_protection_text "What should &amp;brandShortName; block for you? You can change your selection any time in the Privacy Control Center.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "個人データポイントが匿名化されました">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "推奨内容をブロック">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "広告、サイト分析、アダルト広告トラッカー">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Ads and Adult Ads">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "すべてをブロック">
 <!ENTITY ghostery_onboarding_quick_search_title "Ghost検索">
-<!ENTITY ghostery_onboarding_quick_search_text "匿名のままにして、データの使用量を減らし、時間を節約します：Ghost検索バーに入力すると即時に結果が表示されます。">
-<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "新しい&pref_new_tab_category;は、カスタマイズすることができ、トップ・サイト、最新のニュース、その他の今後の追跡情報を表示することができます。">
+<!ENTITY ghostery_onboarding_quick_search_text "Stay anonymous with private search and save time with instantaneous results as you type.">
+<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_text "Customize the start page of tabs to your liking.">
 <!ENTITY ghostery_onboarding_action_button "閲覧を開始">
 <!ENTITY ghostery_onboarding_contextual_title "追跡保護が有効になっています">
-<!ENTITY ghostery_onboarding_contextual_item1_title "強化された追跡防止">
+<!ENTITY ghostery_onboarding_contextual_item1_title "追跡防止">
 <!ENTITY ghostery_onboarding_contextual_item1_text "個人データがさらに保護されます">
 <!ENTITY ghostery_onboarding_contextual_item2_title "スマート・ブロッキングおよび広告ブロッキング">
 <!ENTITY ghostery_onboarding_contextual_item2_text "閲覧時のパフォーマンスを最適化">
-<!ENTITY ghostery_onboarding_contextual_text "いつでも&brandShortName;コントロール・センターでこれらの機能を有効または無効にすることができます。">
+<!ENTITY ghostery_onboarding_contextual_text "いつでも&amp;brandShortName;コントロール・センターでこれらの機能を有効または無効にすることができます。">
 <!ENTITY ghostery_onboarding_contextual_button "今すぐ見せてください">
 
 <!-- Ghost Tab -->
@@ -285,17 +301,17 @@
 <!ENTITY new_ghost_tab "新しいGhostタブ">
 <!ENTITY close_ghost_tabs "Ghostタブを閉じる">
 <!ENTITY contextmenu_open_ghost_tab "新しいGhostタブで開く">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "注意：&formatS1;新しいGhostタブ&formatS2;を使用すると、履歴が保存されません。">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "注意：&amp;formatS1;新しいGhostタブ&amp;formatS2;を使用すると、履歴が保存されません。">
 <!ENTITY private_tab_panel_title2 "Ghostモード">
 <!ENTITY private_tab_panel_description3 "Ghostモードで閲覧しています：このモードでアクセスしたウェブサイトは履歴に保存されず、クッキーを含むローカル・データは保存されません。">
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "警告：詐欺まがいウェブサイト！">
-<!ENTITY antiphishing_message "&brandShortName;は、フィッシング・サイトとして報告されている&formatS1;へのアクセスをブロックしました。フィッシング・サイトは、ユーザーのログイン、パスワード、またはその他の機密情報を盗み取るために信頼できる他のサイトを装います。">
+<!ENTITY antiphishing_message "&amp;brandShortName;は、フィッシング・サイトとして報告されている&amp;formatS1;へのアクセスをブロックしました。フィッシング・サイトは、ユーザーのログイン、パスワード、またはその他の機密情報を盗み取るために信頼できる他のサイトを装います。">
 <!ENTITY antiphishing_walk_away "安全なサイトに戻る">
 <!ENTITY antiphishing_ignore_danger "警告を無視して続行">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "既に利用できます！">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "&formatS1;としてインストールされていないアドオンは、既にブラウザに統合されています。">
+        "&amp;formatS1;としてインストールされていないアドオンは、既にブラウザに統合されています。">

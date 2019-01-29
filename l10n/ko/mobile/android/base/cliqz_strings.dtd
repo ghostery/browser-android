@@ -3,12 +3,15 @@
 <!ENTITY action_ok "확인 ">
 <!ENTITY action_exit "끝내기  ">
 <!ENTITY contextmenu_delete "삭제 ">
+<!ENTITY search_loading_message "사용자에게 완전한 비공개 환경을 제공할 수 있도록 Ghost 검색 기능을 강화하고 있습니다 ">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "뉴스">
+<!ENTITY activity_stream_top_news_show "표시 ">
+<!ENTITY activity_stream_top_news_hide "숨기기 ">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -39,26 +42,37 @@
 <!ENTITY helper_triple_readerview_open_message2 "오프라인에서 읽을 즐겨찾기 리더 뷰 항목 ">
 <!ENTITY helper_triple_readerview_open_button2 "즐겨찾기에 추가 ">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "이 탭을 사용자 지정하시겠습니까?">
+<!ENTITY customize_new_tab_link "설정으로 이동 ">
+<!ENTITY customize_new_tab_snackbar_negative_btn "아니요, 괜찮습니다 ">
+<!ENTITY customize_new_tab_snackbar_positive_btn "사용자 지정 ">
+<!ENTITY customize_new_tab_snackbar_description "최상위 사이트, 뉴스, 배경 이미지 표시/숨기기 등의 옵션을 통해 이 공간을 원하는 대로 꾸미실 수 있습니다.">
+
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&brandShortName;을(를) 기본 브라우저로 지정  ">
-<!ENTITY default_browser_message "&brandShortName;을(를) 자주 사용하시는 것으로 보입니다. 기본 브라우저로 지정하시겠습니까? ">
+<!ENTITY default_browser_title "&amp;brandShortName;을(를) 기본 브라우저로 지정  ">
+<!ENTITY default_browser_message "&amp;brandShortName;을(를) 자주 사용하시는 것으로 보입니다. 기본 브라우저로 지정하시겠습니까? ">
 <!ENTITY default_browser_dialog_proceed "진행 ">
 <!ENTITY default_browser_dialog_cancel "취소 ">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "사용 데이터 보내기">
+<!ENTITY datareporting_telemetry_summary2 "사용자의 브라우징 환경을 개선할 수 있도록 도와주십시오. 당사는 전적으로 익명 사용 데이터만 수집합니다. 어떠한 경우에도 개인 정보는 수집하지 않습니다.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "휴먼 웹">
+<!ENTITY pref_category_human_web_summary "저희가 비공개 간편 검색, 추적 방지, 피싱(phising) 방지 기술을 개선할 수 있도록 트래커, 웹 사이트, 검색 쿼리와 관련된 익명 정보를 제공해주십시오.">
 <!ENTITY pref_what_is_human_web "휴먼 웹이란 무엇입니까?">
 <!ENTITY pref_enable_human_web "휴먼 웹 사용 ">
-<!ENTITY pref_category_human_web_summary "무엇, 사용 ">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&brandMyOffrz;">
+<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "아무런  제안이 없는 것 같습니다 ">
-<!ENTITY myoffrz_no_offers_msg_line1 "계속 여러분을 찾아 추가할 것입니다 ">
-<!ENTITY myoffrz_no_offers_msg_line2 "생기는 대로 여기">
-<!ENTITY myoffrz_onboarding_description "&brandMyOffrz;에서 매력적인 할인 행사와 특가 세일을 확인해 보세요 ">
+<!ENTITY myoffrz_no_offers_msg_line1 "하지만 이를 여기에 추가합니다  ">
+<!ENTITY myoffrz_no_offers_msg_line2 "완성되는 대로 바로">
+<!ENTITY myoffrz_onboarding_description "&amp;brandMyOffrz;에서 매력적인 할인 행사와 특가 세일을 확인해 보세요 ">
 <!ENTITY myoffrz_order_now_label "지금 주문하세요! ">
 <!ENTITY myoffrz_tap_code_to_copy_label "복사할 코드를 탭합니다 ">
 <!ENTITY myoffrz_terms_and_conditions_label "약관 ">
@@ -70,7 +84,7 @@
 <!ENTITY pref_block_ads "광고 차단 ">
 <!ENTITY pref_block_ads_fair "정당한 차단 ">
 <!ENTITY pref_block_ads_what_fair "\'정당함'\이란">
-<!ENTITY pref_block_ads_fair_description "광고 차단기는 현재 베타 버전입니다. 최종 버전에는 정당한 광고 허용(기본 설정), 모든 광고 차단, 모든 광고 허용 등의 옵션이 제공됩니다. 추가 정보\nhttps://cliqz.com/whycliqz/adblocking ">
+<!ENTITY pref_block_ads_fair_description "광고 차단 기능은 현재 베타 단계입니다. 최종 버전에서는 공정한 광고 허용(기본 설정), 모든 광고 차단, 모든 광고 허용과 같은 옵션이 제공됩니다. 추가 정보\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "참고: 광고 차단기가 효율적으로 작동할 수 있으려면 먼저 브라우저에서 일정한 데이터 패키지를 다운로드해야 합니다. 이를 위해 앱이 Wi-Fi에 연결되어 있어야 합니다.">
 
 <!-- Rate Us -->
@@ -80,41 +94,41 @@
 <!ENTITY cc_title_overview "개요 ">
 <!ENTITY cc_title_site_trackers "사이트 트래커 ">
 <!ENTITY cc_title_global_trackers "모든 트래커 ">
-<!ENTITY cc_zero_trackers_found "트래커 &formatD;\n 개 발견됨 ">
-<!ENTITY cc_one_trackers_found "트래커 &formatD;\n 개 발견됨 ">
-<!ENTITY cc_two_trackers_found "트래커 &formatD;\n 개 발견됨 ">
-<!ENTITY cc_few_trackers_found "트래커 &formatD;\n 개 발견됨 ">
-<!ENTITY cc_many_trackers_found "트래커 &formatD;\n 개 발견됨 ">
-<!ENTITY cc_other_trackers_found "트래커 &formatD;\n 개 발견됨 ">
-<!ENTITY cc_zero_trackers_blocked "트래커 &formatD;개 차단됨 ">
-<!ENTITY cc_one_trackers_blocked "트래커 &formatD;개 차단됨 ">
-<!ENTITY cc_two_trackers_blocked "트래커 &formatD;개 차단됨 ">
-<!ENTITY cc_few_trackers_blocked "트래커 &formatD;개 차단됨 ">
-<!ENTITY cc_many_trackers_blocked "트래커 &formatD;개 차단됨 ">
-<!ENTITY cc_other_trackers_blocked "트래커 &formatD;개 차단됨 ">
-<!ENTITY cc_zero_trackers "트래커 &formatD;개">
-<!ENTITY cc_one_trackers "트래커 &formatD;개">
-<!ENTITY cc_two_trackers "트래커 &formatD;개">
-<!ENTITY cc_few_trackers "트래커 &formatD;개">
-<!ENTITY cc_many_trackers "트래커 &formatD;개">
-<!ENTITY cc_other_trackers "트래커 &formatD;개">
+<!ENTITY cc_zero_trackers_found "트래커 발견됨 ">
+<!ENTITY cc_one_trackers_found "트래커 발견됨 ">
+<!ENTITY cc_two_trackers_found "트래커 발견됨 ">
+<!ENTITY cc_few_trackers_found "트래커 발견됨 ">
+<!ENTITY cc_many_trackers_found "트래커 발견됨 ">
+<!ENTITY cc_other_trackers_found "트래커 발견됨 ">
+<!ENTITY cc_zero_trackers_blocked "트래커 &amp;formatD;개 차단됨 ">
+<!ENTITY cc_one_trackers_blocked "트래커 &amp;formatD;개 차단됨 ">
+<!ENTITY cc_two_trackers_blocked "트래커 &amp;formatD;개 차단됨 ">
+<!ENTITY cc_few_trackers_blocked "트래커 &amp;formatD;개 차단됨 ">
+<!ENTITY cc_many_trackers_blocked "트래커 &amp;formatD;개 차단됨 ">
+<!ENTITY cc_other_trackers_blocked "트래커 &amp;formatD;개 차단됨 ">
+<!ENTITY cc_zero_trackers "트래커 &amp;formatD;개">
+<!ENTITY cc_one_trackers "트래커 &amp;formatD;개">
+<!ENTITY cc_two_trackers "트래커 &amp;formatD;개">
+<!ENTITY cc_few_trackers "트래커 &amp;formatD;개">
+<!ENTITY cc_many_trackers "트래커 &amp;formatD;개">
+<!ENTITY cc_other_trackers "트래커 &amp;formatD;개">
 <!ENTITY cc_trust_site "사이트 신뢰 ">
 <!ENTITY cc_restrict_site "사이트 제한 ">
 <!ENTITY cc_pause_ghostery "Ghostery 일시 중지">
 <!ENTITY cc_resume_ghostery "Ghostery 다시 시작 ">
-<!ENTITY cc_enhanced_options "확장 옵션 ">
-<!ENTITY cc_enhanced_anti_tracking "확장 추적 방지 ">
-<!ENTITY cc_enhanced_ad_blocking "확장 광고 차단 ">
+<!ENTITY cc_enhanced_options "옵션 ">
+<!ENTITY cc_enhanced_anti_tracking "추적 방지 ">
+<!ENTITY cc_enhanced_ad_blocking "광고 차단 ">
 <!ENTITY cc_smart_blocking "스마트 차단 ">
-<!ENTITY cc_enhanced_anti_tracking_info "확장 추적 방지 정보 ">
-<!ENTITY cc_enhanced_ad_blocking_info "확장 광고 차단 정보 ">
-<!ENTITY cc_smart_blocking_info "확장 추적 방지 정보 ">
-<!ENTITY cc_zero_anti_tracking_blocked "개인 데이터 항목 익명화됨 ">
-<!ENTITY cc_one_anti_tracking_blocked "개인 데이터 항목 익명화됨 ">
-<!ENTITY cc_two_anti_tracking_blocked "개인 데이터 항목 익명화됨 ">
-<!ENTITY cc_few_anti_tracking_blocked "개인 데이터 항목 익명화됨 ">
-<!ENTITY cc_many_anti_tracking_blocked "개인 데이터 항목 익명화됨 ">
-<!ENTITY cc_other_anti_tracking_blocked "개인 데이터 항목 익명화됨 ">
+<!ENTITY cc_enhanced_anti_tracking_info "추적 방지 정보 ">
+<!ENTITY cc_enhanced_ad_blocking_info "광고 차단 정보 ">
+<!ENTITY cc_smart_blocking_info "추적 방지 정보 ">
+<!ENTITY cc_zero_anti_tracking_blocked "개인 정보 익명화됨 ">
+<!ENTITY cc_one_anti_tracking_blocked "개인 정보 익명화됨 ">
+<!ENTITY cc_two_anti_tracking_blocked "개인 정보 익명화됨 ">
+<!ENTITY cc_few_anti_tracking_blocked "개인 정보 익명화됨 ">
+<!ENTITY cc_many_anti_tracking_blocked "개인 정보 익명화됨 ">
+<!ENTITY cc_other_anti_tracking_blocked "개인 정보 익명화됨 ">
 <!ENTITY cc_zero_ad_blocking_blocked "차단된 광고 ">
 <!ENTITY cc_one_ad_blocking_blocked "차단된 광고 ">
 <!ENTITY cc_two_ad_blocking_blocked "차단된 광고 ">
@@ -137,7 +151,7 @@
 <!ENTITY cc_on_this_site "이 사이트에서 ">
 <!ENTITY cc_trackers "트래커">
 <!ENTITY cc_blocked "차단됨 ">
-<!ENTITY cc_num_blocked "&formatD;개 차단됨 ">
+<!ENTITY cc_num_blocked "&amp;formatD;개 차단됨 ">
 <!ENTITY cc_tracker_info "트래커 정보 ">
 <!ENTITY cc_block_all "모두 차단">
 <!ENTITY cc_unblock_all "모두 차단 해제  ">
@@ -155,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "모든 변경 내용을 재설정하시겠습니까?">
 <!ENTITY cc_reset_changes_dialog_message "사이트와 글로벌 트래커에 대한 이전의 모든 변경 내용이 재설정됩니다.">
 <!ENTITY cc_reset "재설정 ">
+<!ENTITY cc_ad_block_off_domain "이 도메인에서 끄기 ">
+<!ENTITY cc_ad_block_off_global "모든 웹 사이트에서 끄기 ">
 <!ENTITY cc_reload_page_snackbar_text "변경 내용이 반영되도록 페이지를 새로 고칩니다 ">
 
 <!-- General Settings - Search-->
@@ -184,7 +200,7 @@
 <!ENTITY pref_browsing_category "브라우징 ">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "검색, &pref_new_tab_category;, 브라우징, 알림, 다운로드, &brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "검색, &amp;pref_new_tab_category;, 브라우징, 알림, 다운로드, &amp;brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "배경 이미지 표시 ">
 <!ENTITY pref_cliqz_tab_topsites "가장 많이 방문한 웹사이트 표시 ">
 <!ENTITY pref_cliqz_tab_news "뉴스 보기 ">
@@ -192,9 +208,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "시작 페이지에 가장 자주 방문한 웹사이트가 다시 표시됩니다 ">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "&brandMyOffrz; 표시 ">
-<!ENTITY pref_about_myoffrz "&brandMyOffrz; 정보 ">
+<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "&amp;brandMyOffrz; 표시 ">
+<!ENTITY pref_about_myoffrz "&amp;brandMyOffrz; 정보 ">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -258,26 +274,26 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - 더 빠르고 깔끔하며 안전한 브라우징 환경 유지 ">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "&brandShortName; 소개 ">
-<!ENTITY ghostery_onboarding_new_users_text "모바일 환경에 최적화된 &brandShortName;(으)로 즉석에서 더 빠르고 깔끔하며 안전한 브라우징을 즐겨보세요.">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Ghostery의 성능을 개선할 수 있도록 익명화된 분석 데이터와 휴먼 웹 데이터를 공유하여 &brandShortName;을(를) 지원합니다. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;자세히 알아보기\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_title "환영합니다 ">
+<!ENTITY ghostery_onboarding_new_users_text "모바일 환경에 최적화된 &amp;brandShortName;(으)로 즉석에서 더 빠르고 깔끔하며 안전한 브라우징을 즐겨보세요.">
+<!ENTITY ghostery_onboarding_new_users_checkbox "&amp;brandShortName;\의 성능을 개선할 수 있도록 익명화된 분석 데이터와 휴먼 웹 데이터를 공유해주십시오. \u003Ca href=\u0022&amp;human_web_info_url;\u0022&gt;자세히 알아보기\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "광고 및 트래커 차단">
-<!ENTITY ghostery_onboarding_tracking_protection_text "&brandShortName;에서 차단할 항목을 선택하여 더 빠르고 깔끔하며 안전한 브라우징을 즐겨보세요. 언제든 개인정보 컨트롤 센터에서 위 설정을 변경하거나 사용자 지정할 수 있습니다.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "&amp;brandShortName;에서 어떤 것을 차단하기를 원하십니까? 언제든 개인 정보 관리 센터(Privacy Control Center)에서 선택 내용을 변경하실 수 있습니다.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "아무 것도 차단하지 않음">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "권장 항목 차단 ">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "광고, 사이트 분석 및 성인 광고 트래커 ">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "광고 및 성인 광고 ">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "모두 차단 ">
 <!ENTITY ghostery_onboarding_quick_search_title "고스트 검색 ">
-<!ENTITY ghostery_onboarding_quick_search_text "익명 상태를 유지하고, 데이터 사용량을 줄이며, 시간을 절약할 수 있습니다. 고스트 검색 표시줄에 입력하는 즉시 결과가 표시됩니다.">
-<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "새로운 &pref_new_tab_category;은(는) 각각 최고 인기 사이트, 최신 뉴스, 기타 차후 발표되는 트래킹 관련 정보를 표시하도록 사용자 지정할 수 있습니다.">
+<!ENTITY ghostery_onboarding_quick_search_text "비공개 검색 기능으로 익명성을 유지할 수 있고, 입력하는 즉시 결과를 제공하므로 시간이 절약됩니다.">
+<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_text "탭의 시작 페이지를 원하는 대로 사용자 지정하십시오.">
 <!ENTITY ghostery_onboarding_action_button "브라우징 시작 ">
 <!ENTITY ghostery_onboarding_contextual_title "트래킹 보안 활성화됨 ">
-<!ENTITY ghostery_onboarding_contextual_item1_title "확장 추적 방지 ">
+<!ENTITY ghostery_onboarding_contextual_item1_title "추적 방지 ">
 <!ENTITY ghostery_onboarding_contextual_item1_text "개인 정보를 강력하게 보호하세요 ">
 <!ENTITY ghostery_onboarding_contextual_item2_title "스마트 차단 및 광고 차단 ">
 <!ENTITY ghostery_onboarding_contextual_item2_text "브라우징하는 동안 성능을 최적화합니다 ">
-<!ENTITY ghostery_onboarding_contextual_text "언제든 &brandShortName; 컨트롤 센터에서 이 기능을 활성화 또는 비활성화할 수 있습니다.">
+<!ENTITY ghostery_onboarding_contextual_text "언제든 &amp;brandShortName; 컨트롤 센터에서 이 기능을 활성화 또는 비활성화할 수 있습니다.">
 <!ENTITY ghostery_onboarding_contextual_button "지금 알아보기 ">
 
 <!-- Ghost Tab -->
@@ -285,17 +301,17 @@
 <!ENTITY new_ghost_tab "새 고스트 탭">
 <!ENTITY close_ghost_tabs "고스트 탭 닫기 ">
 <!ENTITY contextmenu_open_ghost_tab "고스트 탭에서 열기 ">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "안내: &formatS1;새 고스트 탭&formatS2;을 사용하면 사용 기록이 저장되지 않습니다.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "안내: &amp;formatS1;새 고스트 탭&amp;formatS2;을 사용하면 사용 기록이 저장되지 않습니다.">
 <!ENTITY private_tab_panel_title2 "고스트 모드 ">
 <!ENTITY private_tab_panel_description3 "고스트 모드에서 브라우징: 이 모드에서 방문하는 웹사이트는 기록에 저장되지 않으며, 쿠키를 포함한 로컬 데이터도 보관되지 않습니다.">
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "경고: 기만적 웹사이트!">
-<!ENTITY antiphishing_message "피싱(phishing) 웹사이트로 보고된 적이 있으므로 &brandShortName;에서 &formatS1;에 대한 액세스를 차단했습니다. 피싱 웹사이트는 사용자가 신뢰하는 다른 사이트로 가장하여 로그인 ID, 암호 또는 기타 민감한 정보를 입력하도록 유도합니다.">
+<!ENTITY antiphishing_message "피싱(phishing) 웹사이트로 보고된 적이 있으므로 &amp;brandShortName;에서 &amp;formatS1;에 대한 액세스를 차단했습니다. 피싱 웹사이트는 사용자가 신뢰하는 다른 사이트로 가장하여 로그인 ID, 암호 또는 기타 민감한 정보를 입력하도록 유도합니다.">
 <!ENTITY antiphishing_walk_away "안전한 사이트로 돌아가기">
 <!ENTITY antiphishing_ignore_danger "경고가 있어도 계속하기 ">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "이미 사용 가능합니다!">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "사용 중인 브라우저에 이미 &formatS1;이(가) 통합되어 있으므로 확장 기능이 설치되지 않았습니다.">
+        "사용 중인 브라우저에 이미 &amp;formatS1;이(가) 통합되어 있으므로 확장 기능이 설치되지 않았습니다.">

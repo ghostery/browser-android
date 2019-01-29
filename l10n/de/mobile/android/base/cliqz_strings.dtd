@@ -3,9 +3,10 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Beenden">
 <!ENTITY contextmenu_delete "Löschen">
+<!ENTITY search_loading_message "Wir starten den Privatsphärenschutz für deine Ghost Suche.">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Nachrichten">
@@ -49,29 +50,29 @@
 <!ENTITY customize_new_tab_snackbar_description "Passe diesen Bereich nach deinen Bedürfnissen an: Blende die meistbesuchten Seiten, Nachrichten und das Hintergrundbild ein/aus.">
 
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&brandShortName; als Standardbrowser">
-<!ENTITY default_browser_message "Du scheinst &brandShortName; gerne zu nutzen. Möchten du, dass dies dein Standardbrowser wird?">
+<!ENTITY default_browser_title "&amp;brandShortName; als Standardbrowser">
+<!ENTITY default_browser_message "Du scheinst &amp;brandShortName; gerne zu nutzen. Möchten du, dass dies dein Standardbrowser wird?">
 <!ENTITY default_browser_dialog_proceed "FORTFAHREN">
 <!ENTITY default_browser_dialog_cancel "ABBRECHEN">
 
 <!-- Settings -->
 <!-- Telemetry -->
 <!ENTITY datareporting_telemetry_title2 "Nutzungsdaten senden">
-<!ENTITY datareporting_telemetry_summary2 "Hilf uns, dein Browsing-Erlebnis zu verbessern. Ghostery sammelt ausschließlich anonyme Nutzungsdaten. In keinem Fall werden persönliche Daten gesammelt.">
+<!ENTITY datareporting_telemetry_summary2 "Hilf uns, diesen Browser für dich zu verbessern. Ghostery sammelt ausschließlich anonyme Nutzungsdaten. In keinem Fall werden persönliche Daten gesammelt. ">
 
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
+<!ENTITY pref_category_human_web_summary "Was, aktivieren">
 <!ENTITY pref_what_is_human_web "Was ist „Human Web“?">
 <!ENTITY pref_enable_human_web "Human Web aktivieren">
-<!ENTITY pref_category_human_web_summary "Was, aktivieren">
 <!ENTITY human_web_info_url "https://www.ghostery.com/de/faqs/ist-das-human-web-und-welche-daten-werden-dadurch-gesammelt/">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&brandMyOffrz;">
+<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Wir haben derzeit keine Angebote">
 <!ENTITY myoffrz_no_offers_msg_line1 "Wir halten weiterhin Ausschau und fügen">
 <!ENTITY myoffrz_no_offers_msg_line2 "sie hier hinzu, sobald wir etwas haben. ">
-<!ENTITY myoffrz_onboarding_description "Attraktive Preisnachlässe und Sonderangebote mit &brandMyOffrz;">
+<!ENTITY myoffrz_onboarding_description "Attraktive Preisnachlässe und Sonderangebote mit &amp;brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Jetzt bestellen!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Code zum Kopieren antippen">
 <!ENTITY myoffrz_terms_and_conditions_label "Bedingungen">
@@ -99,18 +100,18 @@
 <!ENTITY cc_few_trackers_found "Tracker gefunden">
 <!ENTITY cc_many_trackers_found "Tracker gefunden">
 <!ENTITY cc_other_trackers_found "Tracker gefunden">
-<!ENTITY cc_zero_trackers_blocked "&formatD; Tracker blockiert">
-<!ENTITY cc_one_trackers_blocked "&formatD; Tracker blockiert">
-<!ENTITY cc_two_trackers_blocked "&formatD; Tracker blockiert">
-<!ENTITY cc_few_trackers_blocked "&formatD; Tracker blockiert">
-<!ENTITY cc_many_trackers_blocked "&formatD; Tracker blockiert">
-<!ENTITY cc_other_trackers_blocked "&formatD; Tracker blockiert">
-<!ENTITY cc_zero_trackers "&formatD; Tracker">
-<!ENTITY cc_one_trackers "&formatD; Tracker">
-<!ENTITY cc_two_trackers "&formatD; Tracker">
-<!ENTITY cc_few_trackers "&formatD; Tracker">
-<!ENTITY cc_many_trackers "&formatD; Tracker">
-<!ENTITY cc_other_trackers "&formatD; Tracker">
+<!ENTITY cc_zero_trackers_blocked "&amp;formatD; Tracker blockiert">
+<!ENTITY cc_one_trackers_blocked "&amp;formatD; Tracker blockiert">
+<!ENTITY cc_two_trackers_blocked "&amp;formatD; Tracker blockiert">
+<!ENTITY cc_few_trackers_blocked "&amp;formatD; Tracker blockiert">
+<!ENTITY cc_many_trackers_blocked "&amp;formatD; Tracker blockiert">
+<!ENTITY cc_other_trackers_blocked "&amp;formatD; Tracker blockiert">
+<!ENTITY cc_zero_trackers "&amp;formatD; Tracker">
+<!ENTITY cc_one_trackers "&amp;formatD; Tracker">
+<!ENTITY cc_two_trackers "&amp;formatD; Tracker">
+<!ENTITY cc_few_trackers "&amp;formatD; Tracker">
+<!ENTITY cc_many_trackers "&amp;formatD; Tracker">
+<!ENTITY cc_other_trackers "&amp;formatD; Tracker">
 <!ENTITY cc_trust_site "Website vertrauen">
 <!ENTITY cc_restrict_site "Website nicht vertrauen">
 <!ENTITY cc_pause_ghostery "Ghostery pausieren">
@@ -150,7 +151,7 @@
 <!ENTITY cc_on_this_site "Auf dieser Website">
 <!ENTITY cc_trackers "TRACKER">
 <!ENTITY cc_blocked "Blockiert">
-<!ENTITY cc_num_blocked "&formatD; BLOCKIERT">
+<!ENTITY cc_num_blocked "&amp;formatD; BLOCKIERT">
 <!ENTITY cc_tracker_info "Tracker-info">
 <!ENTITY cc_block_all "Alle blockieren">
 <!ENTITY cc_unblock_all "Alle erlauben">
@@ -168,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "Alle Änderungen zurücksetzen?">
 <!ENTITY cc_reset_changes_dialog_message "Alle früheren Änderungen an globalen und Website-Trackern werden zurückgesetzt.">
 <!ENTITY cc_reset "ZURÜCKSETZEN">
+<!ENTITY cc_ad_block_off_domain "Ausschalten auf dieser Website">
+<!ENTITY cc_ad_block_off_global "Ausschalten auf allen Websites">
 <!ENTITY cc_reload_page_snackbar_text "Die Seite wird aktualisiert, damit die Änderungen wirksam werden">
 
 <!-- General Settings - Search-->
@@ -190,14 +193,14 @@
 <!ENTITY pref_search_complementary_engine_ecosia "Ecosia">
 <!ENTITY pref_search_complementary_engine_start_page "StartPage">
 <!ENTITY pref_search_complementary_engine_qwant "Qwant">
-<!ENTITY pref_search_enable_browser_quicksearch "Schnellsuche aktivieren">
+<!ENTITY pref_search_enable_browser_quicksearch "Ghost Suche aktivieren">
 <!ENTITY pref_search_enable_browser_quicksearch_summary "Sofortige Ergebnisse beim Tippen">
 
 <!-- General Settings - Browsing -->
 <!ENTITY pref_browsing_category "Browsen">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "Suche, &pref_new_tab_category;, Browsen, Benachrichtigungen, Download, &brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "Suche, &amp;pref_new_tab_category;, Browsen, Benachrichtigungen, Download, &amp;brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "Hintergrundbild zeigen">
 <!ENTITY pref_cliqz_tab_topsites "Meistbesuchte Websites zeigen">
 <!ENTITY pref_cliqz_tab_news "Nachrichten zeigen">
@@ -205,9 +208,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "Meistbesuchte Websites werden wieder auf Start Tab angezeigt">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "&brandMyOffrz; zeigen">
-<!ENTITY pref_about_myoffrz "Über &brandMyOffrz;">
+<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "&amp;brandMyOffrz; zeigen">
+<!ENTITY pref_about_myoffrz "Über &amp;brandMyOffrz;">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -271,18 +274,18 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery – für einfacheres, schnelleres und sichereres Browsen">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Einführung von &brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Surfe einfacher, schneller und sicherer mit &brandShortName;!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Hilf &brandShortName;s Leistung zu verbessern, indem du anonyme Statistiken und Human-Web-Daten sendest. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_title "Einführung von &amp;brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_text "Surfe einfacher, schneller und sicherer mit &amp;brandShortName;!">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Hilf &amp;brandShortName;s Leistung zu verbessern, indem du anonyme Statistiken und Human-Web-Daten sendest. \u003Ca href=\u0022&amp;human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Werbung und Tracker blockieren">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Was soll &brandShortName; für dich blockieren? Du kannst deine Auswahl jederzeit im Privacy Control Center anpassen.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Was soll &amp;brandShortName; für dich blockieren? Du kannst deine Auswahl jederzeit im Privacy Control Center anpassen.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Nichts blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Empfohlenes blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Werbung und Website-Analytics blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Alles blockieren">
-<!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
+<!ENTITY ghostery_onboarding_quick_search_title "Ghost Suche">
 <!ENTITY ghostery_onboarding_quick_search_text "Bleib anonym mit der privaten Suche und spare dir zudem Zeit mit Suchergebnissen, die bereits während der Eingabe erscheinen.">
-<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
 <!ENTITY ghostery_onboarding_new_tab_text "Passe die Startseite deiner Tabs an deine Wünsche an.">
 <!ENTITY ghostery_onboarding_action_button "Browsen beginnen">
 <!ENTITY ghostery_onboarding_contextual_title "Tracking-Schutz aktiviert">
@@ -290,7 +293,7 @@
 <!ENTITY ghostery_onboarding_contextual_item1_text "Zusätzlicher Schutz deiner persönlichen Daten">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Smart Blocking &amp; Werbeblocker">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimiert die Leistung während des Browsens">
-<!ENTITY ghostery_onboarding_contextual_text "Du kannst diese Funktionen jederzeit in der &brandShortName; Control Center aktivieren oder deaktivieren.">
+<!ENTITY ghostery_onboarding_contextual_text "Du kannst diese Funktionen jederzeit in der &amp;brandShortName; Control Center aktivieren oder deaktivieren.">
 <!ENTITY ghostery_onboarding_contextual_button "Jetzt zeigen">
 
 <!-- Ghost Tab -->
@@ -298,17 +301,17 @@
 <!ENTITY new_ghost_tab "Neuer Ghost-Tab">
 <!ENTITY close_ghost_tabs "Ghost Tabs schließen">
 <!ENTITY contextmenu_open_ghost_tab "In Ghost Tab öffnen">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &formatS1;neuen Ghost Tabs&formatS2; wird dein Verlauf nicht gespeichert.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: Durch Verwendung eines &amp;formatS1;neuen Ghost Tabs&amp;formatS2; wird dein Verlauf nicht gespeichert.">
 <!ENTITY private_tab_panel_title2 "Ghost-Modus">
 <!ENTITY private_tab_panel_description3 "Du surfst im Ghost-Modus: Websites, die du in diesem Modus besuchst, werden nicht in deinem Browserverlauf gespeichert, und lokale Daten einschließlich Cookies werden nicht gespeichert.">
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Warnung: betrügerische Website!">
-<!ENTITY antiphishing_message "&brandShortName; hat den Zugang zu &formatS1; gesperrt, weil sie als Phishing-Website gemeldet wurde. Phishing-Websites geben sich als andere, vertrauenswürdige Websites aus, um Sie zu verleiten, Anmeldedaten, Passwörter oder andere wichtige Informationen preiszugeben.">
+<!ENTITY antiphishing_message "&amp;brandShortName; hat den Zugang zu &amp;formatS1; gesperrt, weil sie als Phishing-Website gemeldet wurde. Phishing-Websites geben sich als andere, vertrauenswürdige Websites aus, um Sie zu verleiten, Anmeldedaten, Passwörter oder andere wichtige Informationen preiszugeben.">
 <!ENTITY antiphishing_walk_away "Zurück zu sicherer Seite">
 <!ENTITY antiphishing_ignore_danger "Trotz Warnung fortfahren">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "Bereits vorhanden!">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "Add-on wurde nicht installiert, da &formatS1; bereits in deinem Browser integriert ist.">
+        "Add-on wurde nicht installiert, da &amp;formatS1; bereits in deinem Browser integriert ist.">
