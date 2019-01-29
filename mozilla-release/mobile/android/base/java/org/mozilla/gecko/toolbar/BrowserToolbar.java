@@ -1089,5 +1089,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
             ghostyButton.setTrackerCount(count);
         }
     }
+
+    public String getQueryValue() {
+        return urlEditLayout.getText();
+    }
     /* Cliqz end */
 }
