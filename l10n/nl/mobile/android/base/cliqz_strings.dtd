@@ -3,12 +3,15 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Exit">
 <!ENTITY contextmenu_delete "Verwijder">
+<!ENTITY search_loading_message "We maken Ghost search krachtiger voor jouw volledige private ervaring">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Nieuws">
+<!ENTITY activity_stream_top_news_show "Toon">
+<!ENTITY activity_stream_top_news_hide "Verberg">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -39,6 +42,13 @@
 <!ENTITY helper_triple_readerview_open_message2 "Favoriete Reader View items om offline te lezen.">
 <!ENTITY helper_triple_readerview_open_button2 "Voeg toe aan favorieten">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "Wil je deze tab aanpassen?">
+<!ENTITY customize_new_tab_link "Ga naar Instellingen">
+<!ENTITY customize_new_tab_snackbar_negative_btn "Nee, dank je">
+<!ENTITY customize_new_tab_snackbar_positive_btn "Aanpassen">
+<!ENTITY customize_new_tab_snackbar_description "Pas deze ruimte aan naar wens: Toon/verberg TopSites, Nieuws en achtergrond afbeelding.">
+
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; als Standaardbrowser">
 <!ENTITY default_browser_message "Het lijkt erop dat je graag gebruik maakt van &brandShortName;. Wil je er je standaardbrowser van maken?">
@@ -46,18 +56,22 @@
 <!ENTITY default_browser_dialog_cancel "ANNULEREN">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "Verzend gebruiksdata">
+<!ENTITY datareporting_telemetry_summary2 "Help ons je browse ervaring te verbeteren. We verzamelen alleen strikt anonieme gebruiksdata. Op geen enkel moment wordt er persoonlijke informatie verzameld.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
+<!ENTITY pref_category_human_web_summary "Deel anoniem informatie over trackers, websites, en zoekopdrachten om onze private quick-search, anti-tracking, anti-phishing technologieën te verbeteren.">
 <!ENTITY pref_what_is_human_web "Wat is Human Web?">
 <!ENTITY pref_enable_human_web "Activeer Human Web">
-<!ENTITY pref_category_human_web_summary "Wat, Activeren">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Lijkt erop dat we geen aanbiedingen hebben">
-<!ENTITY myoffrz_no_offers_msg_line1 "Maar we blijven naar je zoeken en zullen toevoegen">
-<!ENTITY myoffrz_no_offers_msg_line2 "ze hier zodra we er één hebben">
+<!ENTITY myoffrz_no_offers_msg_line1 "Maar we voegen ze hier toe ">
+<!ENTITY myoffrz_no_offers_msg_line2 "zodra we er één hebben">
 <!ENTITY myoffrz_onboarding_description "Ontvang aantrekkelijke kortingen en koopjes met &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Bestel nu!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Tik op code om te kopiëren">
@@ -70,7 +84,7 @@
 <!ENTITY pref_block_ads "Blokkeer Ads">
 <!ENTITY pref_block_ads_fair "Eerlijk Blokkeren">
 <!ENTITY pref_block_ads_what_fair "Wat is \'eerlijk\'">
-<!ENTITY pref_block_ads_fair_description "De Ad Blocker is in beta op het moment. De uiteindelijke versie zal de volgende mogelijkheden hebben: Eerlijke Ads toestaan (standaardinstelling), Blokkeer Alle Ads, Sta All Ads Toe. Meer\nhttps://cliqz.com/whycliqz/adblocking">
+<!ENTITY pref_block_ads_fair_description "Ad Blocking is in beta op het moment. De uiteindelijke versie zal de volgende opties hebben: accepteer Fair Ads (standaard instelling), Blokkeer Alle Ads, Accepteer Alle Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "Opmerking: de browser moet eerst wat datapakketten downloaden voordat de ad-blocker goed werkt. Hiervoor dient de app met Wifi te zijn verbonden.">
 
 <!-- Rate Us -->
@@ -80,12 +94,12 @@
 <!ENTITY cc_title_overview "OVERZICHT">
 <!ENTITY cc_title_site_trackers "SITE TRACKERS">
 <!ENTITY cc_title_global_trackers "ALLE TRACKERS">
-<!ENTITY cc_zero_trackers_found "&formatD;\n Trackers gevonden">
-<!ENTITY cc_one_trackers_found "&formatD;\n Tracker gevonden">
-<!ENTITY cc_two_trackers_found "&formatD;\n Trackers gevonden">
-<!ENTITY cc_few_trackers_found "&formatD;\n Trackers gevonden">
-<!ENTITY cc_many_trackers_found "&formatD;\n Trackers gevonden">
-<!ENTITY cc_other_trackers_found "&formatD;\n Trackers gevonden">
+<!ENTITY cc_zero_trackers_found "Trackers gevonden">
+<!ENTITY cc_one_trackers_found "Tracker gevonden">
+<!ENTITY cc_two_trackers_found "Trackers gevonden">
+<!ENTITY cc_few_trackers_found "Trackers gevonden">
+<!ENTITY cc_many_trackers_found "Trackers gevonden">
+<!ENTITY cc_other_trackers_found "Trackers gevonden">
 <!ENTITY cc_zero_trackers_blocked "&formatD; Trackers geblokkeerd">
 <!ENTITY cc_one_trackers_blocked "&formatD; Tracker geblokkeerd">
 <!ENTITY cc_two_trackers_blocked "&formatD; Trackers geblokkeerd">
@@ -102,19 +116,19 @@
 <!ENTITY cc_restrict_site "Beperk Website">
 <!ENTITY cc_pause_ghostery "Pauzeer Ghostery">
 <!ENTITY cc_resume_ghostery "Hervat Ghostery">
-<!ENTITY cc_enhanced_options "Verbeterde Opties">
-<!ENTITY cc_enhanced_anti_tracking "Versterkte Anti-Tracking">
-<!ENTITY cc_enhanced_ad_blocking "Versterkte Ad Blokkering">
+<!ENTITY cc_enhanced_options "Opties">
+<!ENTITY cc_enhanced_anti_tracking "Anti-Tracking">
+<!ENTITY cc_enhanced_ad_blocking "Ad Blokkering">
 <!ENTITY cc_smart_blocking "Slim Blokkeren">
-<!ENTITY cc_enhanced_anti_tracking_info "Versterkte anti-tracking informatie">
-<!ENTITY cc_enhanced_ad_blocking_info "Versterkte ad blokkering informatie">
-<!ENTITY cc_smart_blocking_info "Versterkte anti-tracking informatie">
-<!ENTITY cc_zero_anti_tracking_blocked "Persoonlijke gegevenspunten geanonimiseerd">
-<!ENTITY cc_one_anti_tracking_blocked "Persoonlijk gegevenspunt geanonimiseerd">
-<!ENTITY cc_two_anti_tracking_blocked "Persoonlijke gegevenspunten geanonimiseerd">
-<!ENTITY cc_few_anti_tracking_blocked "Persoonlijke gegevenspunten geanonimiseerd">
-<!ENTITY cc_many_anti_tracking_blocked "Persoonlijke gegevenspunten geanonimiseerd">
-<!ENTITY cc_other_anti_tracking_blocked "Persoonlijke gegevenspunten geanonimiseerd">
+<!ENTITY cc_enhanced_anti_tracking_info "Anti-tracking informatie">
+<!ENTITY cc_enhanced_ad_blocking_info "Ad blokkeringsinformatie">
+<!ENTITY cc_smart_blocking_info "Anti-tracking informatie">
+<!ENTITY cc_zero_anti_tracking_blocked "Persoonlijke gegevens geanonimiseerd">
+<!ENTITY cc_one_anti_tracking_blocked "Persoonlijke gegevens geanonimiseerd">
+<!ENTITY cc_two_anti_tracking_blocked "Persoonlijke gegevens geanonimiseerd">
+<!ENTITY cc_few_anti_tracking_blocked "Persoonlijke gegevens geanonimiseerd">
+<!ENTITY cc_many_anti_tracking_blocked "Persoonlijke gegevens geanonimiseerd">
+<!ENTITY cc_other_anti_tracking_blocked "Persoonlijke gegevens geanonimiseerd">
 <!ENTITY cc_zero_ad_blocking_blocked "Ads geblokkeerd">
 <!ENTITY cc_one_ad_blocking_blocked "Ad geblokkeerd">
 <!ENTITY cc_two_ad_blocking_blocked "Ads geblokkeerd">
@@ -128,7 +142,7 @@
 <!ENTITY cc_many_smart_blocking_blocked "Trackers aangepast">
 <!ENTITY cc_other_smart_blocking_blocked "Trackers aangepast">
 <!ENTITY cc_anti_tracking_about "Anonimiseer gedeblokkeerde en onbekende trackers voor meer bescherming tijdens het browsen">
-<!ENTITY cc_ad_blocking_about "Blokkeer advertenties op de websites die je bezoekt">
+<!ENTITY cc_ad_blocking_about "Blokkeer ads op de websites die je bezoekt">
 <!ENTITY cc_smart_blocking_about "Tracker blokkering aangepast om prestaties van de pagina te optimaliseren">
 <!ENTITY cc_site_trackers_list_title "Tracker op deze website.">
 <!ENTITY cc_global_trackers_list_title "Trackers op sites">
@@ -155,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "Alle wijzigingen resetten?">
 <!ENTITY cc_reset_changes_dialog_message "Alle voorgaande wijzigingen aan de website en global trackers zullen worden gereset.">
 <!ENTITY cc_reset "RESET">
+<!ENTITY cc_ad_block_off_domain "Zet uit voor dit domein">
+<!ENTITY cc_ad_block_off_global "Zet uit voor alle websites">
 <!ENTITY cc_reload_page_snackbar_text "Pagina zal verversen om wijzigingen toe te passen">
 
 <!-- General Settings - Search-->
@@ -258,22 +274,22 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - Houd je browser schoner, sneller en veiliger.">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "We presenteren &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_title "Welkom">
 <!ENTITY ghostery_onboarding_new_users_text "Browser reiniger, sneller, en veiliger terwijl je bezig bent met &brandShortName;, nu geoptimaliseerd voor mobiel!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Steun &brandShortName; door anoniem analytics en Human Web data te delen om de prestaties van Ghostery te verbeteren. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Meer weten\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Verbeter de prestaties van &brandShortName;\'s door anoniem analytics en Human Web data te delen. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Meer weten\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Ad &amp; Tracker Blocking">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Kies wat je wilt &brandShortName; blokkeren voor schoner, sneller en veiliger browsen. Je kunt deze instellingen op ieder gewenst moment wijzigen en aanpassen in het Privacy Control Center.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Wat moet &brandShortName; voor je blokkeren? Je kunt je selectie te allen tijde wijzigen in het Privacy Control Center.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Blokkeer niets">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Blokkeren Aanbevolen">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Advertising, Website Analytics en Adult Advertising trackers">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Ads en 18+ Ads">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Blokkeer Alles ">
 <!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
-<!ENTITY ghostery_onboarding_quick_search_text "Blijf anoniem, beperk datagebruik en bespaar tijd: resultaten verschijnen meteen terwijl je in de Ghost search bar typt.">
+<!ENTITY ghostery_onboarding_quick_search_text "Blijf anoniem met private search en bespaar tijd met onmiddellijke zoekresultaten terwijl je typt.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Iedere nieuwe &pref_new_tab_category; kan worden aangepast en bovenaan websites worden weergegeven, het laatste nieuws, en nadere nog te verschijnen tracking insights.">
+<!ENTITY ghostery_onboarding_new_tab_text "Pas de startpagina van tabs aan naar wens.">
 <!ENTITY ghostery_onboarding_action_button "Begin met Browsen">
 <!ENTITY ghostery_onboarding_contextual_title "Trackingsbescherming geactiveerd">
-<!ENTITY ghostery_onboarding_contextual_item1_title "Versterkte Anti-Tracking">
+<!ENTITY ghostery_onboarding_contextual_item1_title "Anti-Tracking">
 <!ENTITY ghostery_onboarding_contextual_item1_text "Beschermt je persoonlijke gegevens nog meer.">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Slim Blokkeren &amp; Ads Blokkeren">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Oplimaliseert prestatie terwijl je browst">

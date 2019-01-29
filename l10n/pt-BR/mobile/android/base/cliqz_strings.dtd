@@ -3,12 +3,15 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Sair">
 <!ENTITY contextmenu_delete "Excluir">
+<!ENTITY search_loading_message "Estamos ativando a busca Ghost para sua experiência totalmente privada">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Notícias">
+<!ENTITY activity_stream_top_news_show "Mostrar">
+<!ENTITY activity_stream_top_news_hide "Ocultar">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -39,6 +42,13 @@
 <!ENTITY helper_triple_readerview_open_message2 "Leitor de favoritos Veja itens para lê-los offline.">
 <!ENTITY helper_triple_readerview_open_button2 "Adicionar aos favoritos">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "Quer personalizar esta aba?">
+<!ENTITY customize_new_tab_link "Ir para as configurações">
+<!ENTITY customize_new_tab_snackbar_negative_btn "Não, obrigado">
+<!ENTITY customize_new_tab_snackbar_positive_btn "Personalizar">
+<!ENTITY customize_new_tab_snackbar_description "Adapte este espaço às suas necessidades: Mostre/oculte sites principais, nNotícias e imagem de fundo.">
+
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; como navegador padrão">
 <!ENTITY default_browser_message "Você parece gostar de usar o &brandShortName;. Você quer torná-lo seu navegador padrão?">
@@ -46,18 +56,22 @@
 <!ENTITY default_browser_dialog_cancel "CANCELAR">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "Enviar dados de uso">
+<!ENTITY datareporting_telemetry_summary2 "Ajude-nos a melhorar sua experiência de navegação. Coletamos dados de uso estritamente anônimos. Em nenhuma ocasião são coletadas informações pessoais.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Web Humana">
+<!ENTITY pref_category_human_web_summary "Contribua com informações anônimas relacionadas a rastreadores, sites e consultas de pesquisa para aprimorar nossas tecnologias proprietárias de pesquisa rápida, anti-rastreamento e antiphishing.">
 <!ENTITY pref_what_is_human_web "O que é a Web humana?">
 <!ENTITY pref_enable_human_web "Ativar a Web humana">
-<!ENTITY pref_category_human_web_summary "O que, habilitar">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Parece que não temos ofertas">
-<!ENTITY myoffrz_no_offers_msg_line1 "Mas vamos continuar procurando por você e adicionar">
-<!ENTITY myoffrz_no_offers_msg_line2 "eles aqui assim que tivermos um">
+<!ENTITY myoffrz_no_offers_msg_line1 "Mas nós as adicionamos aqui ">
+<!ENTITY myoffrz_no_offers_msg_line2 "assim que tivermos">
 <!ENTITY myoffrz_onboarding_description "Receba descontos e pechinchas atraentes com o &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Peça agora!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Toque no código para copiar">
@@ -70,7 +84,7 @@
 <!ENTITY pref_block_ads "Bloquear anúncios">
 <!ENTITY pref_block_ads_fair "Ativar a pesquisa do Ghost">
 <!ENTITY pref_block_ads_what_fair "O que é \'justo\'">
-<!ENTITY pref_block_ads_fair_description "O Bloqueador de anúncios está em beta no momento. A versão final fornecerá as seguintes opções: Permitir anúncios justos (configuração padrão), Bloquear todos os anúncios, Permitir todos os anúncios. Mais\nhttps://cliqz.com/whycliqz/adblocking">
+<!ENTITY pref_block_ads_fair_description "O bloqueio de anúncios está em beta no momento. A versão final fornecerá as seguintes opções: Permitir anúncios justos (configuração padrão), Bloquear todos os anúncios, Permitir todos os anúncios. Mais\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "Observe: o navegador precisa primeiro baixar alguns pacotes de dados para que o bloqueador de anúncios funcione de maneira eficiente. Para isso, o aplicativo deve estar conectado à Wi-Fi.">
 
 <!-- Rate Us -->
@@ -80,12 +94,12 @@
 <!ENTITY cc_title_overview "VISÃO GLOBAL">
 <!ENTITY cc_title_site_trackers "RASTREADORES DE SITE">
 <!ENTITY cc_title_global_trackers "TODOS OS RASTREADORES">
-<!ENTITY cc_zero_trackers_found "&formatD;\n Rastreadores encontrados">
-<!ENTITY cc_one_trackers_found "&formatD;\n Rastreador encontrado">
-<!ENTITY cc_two_trackers_found "&formatD;\n Rastreadores encontrados">
-<!ENTITY cc_few_trackers_found "&formatD;\n Rastreadores encontrados">
-<!ENTITY cc_many_trackers_found "&formatD;\n Rastreadores encontrados">
-<!ENTITY cc_other_trackers_found "&formatD;\n Rastreadores encontrados">
+<!ENTITY cc_zero_trackers_found "Rastreadores encontrados">
+<!ENTITY cc_one_trackers_found "Rastreador encontrado">
+<!ENTITY cc_two_trackers_found "Rastreadores encontrados">
+<!ENTITY cc_few_trackers_found "Rastreadores encontrados">
+<!ENTITY cc_many_trackers_found "Rastreadores encontrados">
+<!ENTITY cc_other_trackers_found "Rastreadores encontrados">
 <!ENTITY cc_zero_trackers_blocked "&formatD; Rastreadores bloqueados">
 <!ENTITY cc_one_trackers_blocked "&formatD; Rastreador bloqueado">
 <!ENTITY cc_two_trackers_blocked "&formatD; Rastreadores bloqueados">
@@ -102,19 +116,19 @@
 <!ENTITY cc_restrict_site "Restringir site">
 <!ENTITY cc_pause_ghostery "Pausar o Ghostery">
 <!ENTITY cc_resume_ghostery "Continuar o Ghostery">
-<!ENTITY cc_enhanced_options "Opções aprimoradas">
-<!ENTITY cc_enhanced_anti_tracking "Anti-rastreamento aprimorado">
-<!ENTITY cc_enhanced_ad_blocking "Bloqueio de anúncios aprimorado">
+<!ENTITY cc_enhanced_options "Opções">
+<!ENTITY cc_enhanced_anti_tracking "Anti-rastreamento">
+<!ENTITY cc_enhanced_ad_blocking "Bloqueio de anúncios">
 <!ENTITY cc_smart_blocking "Bloqueio inteligente">
-<!ENTITY cc_enhanced_anti_tracking_info "Informações sobre o anti-rastreamento aprimorado">
-<!ENTITY cc_enhanced_ad_blocking_info "Informações aprimoradas sobre bloqueio de anúncios">
-<!ENTITY cc_smart_blocking_info "Informações sobre o anti-rastreamento aprimorado">
-<!ENTITY cc_zero_anti_tracking_blocked "Pontos de dados pessoais anonimizados">
-<!ENTITY cc_one_anti_tracking_blocked "Ponto de dados pessoais anonimizados">
-<!ENTITY cc_two_anti_tracking_blocked "Pontos de dados pessoais anonimizados">
-<!ENTITY cc_few_anti_tracking_blocked "Pontos de dados pessoais anonimizados">
-<!ENTITY cc_many_anti_tracking_blocked "Pontos de dados pessoais anonimizados">
-<!ENTITY cc_other_anti_tracking_blocked "Pontos de dados pessoais anonimizados">
+<!ENTITY cc_enhanced_anti_tracking_info "Informações anti-rastreamento">
+<!ENTITY cc_enhanced_ad_blocking_info "Informações sobre bloqueio de anúncios">
+<!ENTITY cc_smart_blocking_info "Informações anti-rastreamento">
+<!ENTITY cc_zero_anti_tracking_blocked "Dados pessoais anonimizados">
+<!ENTITY cc_one_anti_tracking_blocked "Dados pessoais anonimizados">
+<!ENTITY cc_two_anti_tracking_blocked "Dados pessoais anonimizados">
+<!ENTITY cc_few_anti_tracking_blocked "Dados pessoais anonimizados">
+<!ENTITY cc_many_anti_tracking_blocked "Dados pessoais anonimizados">
+<!ENTITY cc_other_anti_tracking_blocked "Dados pessoais anonimizados">
 <!ENTITY cc_zero_ad_blocking_blocked "Anúncios bloqueados">
 <!ENTITY cc_one_ad_blocking_blocked "Anúncio bloqueado">
 <!ENTITY cc_two_ad_blocking_blocked "Anúncios bloqueados">
@@ -128,7 +142,7 @@
 <!ENTITY cc_many_smart_blocking_blocked "Rastreadores ajustados">
 <!ENTITY cc_other_smart_blocking_blocked "Rastreadores ajustados">
 <!ENTITY cc_anti_tracking_about "Anonimiza rastreadores não bloqueados e desconhecidos para maior proteção à navegação">
-<!ENTITY cc_ad_blocking_about "Bloquear propagandas nos sites visitados">
+<!ENTITY cc_ad_blocking_about "Bloqueie anúncios nos sites que você visita">
 <!ENTITY cc_smart_blocking_about "Bloqueio do rastreador ajustado para otimizar o desempenho da página">
 <!ENTITY cc_site_trackers_list_title "Rastreadores neste site">
 <!ENTITY cc_global_trackers_list_title "Rastreadores em sites">
@@ -155,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "Redefinir todas as alterações?">
 <!ENTITY cc_reset_changes_dialog_message "Todas as alterações anteriores nos rastreadores globais e de sites serão redefinidas.">
 <!ENTITY cc_reset "REDEFINIR">
+<!ENTITY cc_ad_block_off_domain "Desative para este domínio">
+<!ENTITY cc_ad_block_off_global "Desativar para todos os sites">
 <!ENTITY cc_reload_page_snackbar_text "A página será atualizada para aplicar as alterações">
 
 <!-- General Settings - Search-->
@@ -258,22 +274,22 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - mantenha sua navegação mais limpa, mais rápida e segura">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Apresentando &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_title "Bem-vindo">
 <!ENTITY ghostery_onboarding_new_users_text "Navegue de forma mais limpa, rápida e segura quando estiver em movimento com o &brandShortName;, agora otimizado para celular!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Suporte &brandShortName; compartilhando dados analíticos anônimos e dados da Web humana para melhorar o desempenho do Ghostery. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Saiba mais\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Melhore o desempenho de &brandShortName; compartilhando dados analíticos anônimos e dados da Web Humana. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Saiba mais\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Bloqueio de Anúncios e Rastreadores">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Escolha o que você quer e o &brandShortName; para bloquear para ter uma navegação mais limpa, mais rápida e mais segura. Você pode alterar e personalizar essas configurações a qualquer momento no Centro de Controle de Privacidade.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "O que o &brandShortName; precisa bloquear para você? Você pode alterar sua seleção a qualquer momento no Centro de Controle de Privacidade.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Não bloquear nada">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Bloqueio recomendado">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Anunciantes de publicidade, análise do site e publicidade para adultos">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Anúncios e anúncios adultos">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Bloquear tudo">
 <!ENTITY ghostery_onboarding_quick_search_title "Pesquisa Fantasma">
-<!ENTITY ghostery_onboarding_quick_search_text "Permaneça anônimo, reduza o uso de dados e economize tempo: os resultados aparecem instantaneamente à medida que você digita na barra de pesquisa do Ghost.">
+<!ENTITY ghostery_onboarding_quick_search_text "Fique anônimo com pesquisas particulares e economize tempo com resultados instantâneos enquanto você digita.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Cada nova &pref_new_tab_category; é personalizável e pode exibir os principais sites, as últimas notícias e outras informações sobre rastreamento que estão por vir.">
+<!ENTITY ghostery_onboarding_new_tab_text "Personalize a página inicial das abas como desejar.">
 <!ENTITY ghostery_onboarding_action_button "Comece a navegar">
 <!ENTITY ghostery_onboarding_contextual_title "Proteção de rastreamento ativada">
-<!ENTITY ghostery_onboarding_contextual_item1_title "Anti-rastreamento aprimorado">
+<!ENTITY ghostery_onboarding_contextual_item1_title "Anti-rastreamento">
 <!ENTITY ghostery_onboarding_contextual_item1_text "Protege ainda mais seus dados pessoais">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Bloqueio inteligente e bloqueio de anúncios">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Otimiza o desempenho enquanto você navega">
