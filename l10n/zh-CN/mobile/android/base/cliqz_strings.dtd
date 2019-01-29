@@ -6,7 +6,7 @@
 <!ENTITY search_loading_message "We are powering up Ghost search for your fully private experience">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "新闻">
@@ -50,8 +50,8 @@
 <!ENTITY customize_new_tab_snackbar_description "Adapt this space to your needs: Show/hide TopSites, News and background image.">
 
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&amp;brandShortName;作为默认浏览器">
-<!ENTITY default_browser_message "你似乎喜欢使用 &amp;brandShortName;. 你想将其设为默认浏览器吗？">
+<!ENTITY default_browser_title "&brandShortName;作为默认浏览器">
+<!ENTITY default_browser_message "你似乎喜欢使用 &brandShortName;. 你想将其设为默认浏览器吗？">
 <!ENTITY default_browser_dialog_proceed "继续">
 <!ENTITY default_browser_dialog_cancel "取消">
 
@@ -68,11 +68,11 @@
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
+<!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "看起来我们没有任何邀请">
 <!ENTITY myoffrz_no_offers_msg_line1 "But we add them here ">
 <!ENTITY myoffrz_no_offers_msg_line2 "as soon as we have one">
-<!ENTITY myoffrz_onboarding_description "通过  &amp;brandMyOffrz; 享受诱人的折扣和特价。">
+<!ENTITY myoffrz_onboarding_description "通过  &brandMyOffrz; 享受诱人的折扣和特价。">
 <!ENTITY myoffrz_order_now_label "立即订购！">
 <!ENTITY myoffrz_tap_code_to_copy_label "点按代码以复制">
 <!ENTITY myoffrz_terms_and_conditions_label "条款">
@@ -100,18 +100,18 @@
 <!ENTITY cc_few_trackers_found "Trackers found">
 <!ENTITY cc_many_trackers_found "Trackers found">
 <!ENTITY cc_other_trackers_found "Trackers found">
-<!ENTITY cc_zero_trackers_blocked "&amp;formatD; 已拦截跟踪器">
-<!ENTITY cc_one_trackers_blocked "&amp;formatD; 已拦截跟踪器">
-<!ENTITY cc_two_trackers_blocked "&amp;formatD; 已拦截跟踪器">
-<!ENTITY cc_few_trackers_blocked "&amp;formatD; 已拦截跟踪器">
-<!ENTITY cc_many_trackers_blocked "&amp;formatD; 已拦截跟踪器">
-<!ENTITY cc_other_trackers_blocked "&amp;formatD; 已拦截跟踪器">
-<!ENTITY cc_zero_trackers "&amp;formatD; 追踪器">
-<!ENTITY cc_one_trackers "&amp;formatD; 追踪器">
-<!ENTITY cc_two_trackers "&amp;formatD; 追踪器">
-<!ENTITY cc_few_trackers "&amp;formatD; 追踪器">
-<!ENTITY cc_many_trackers "&amp;formatD; 追踪器">
-<!ENTITY cc_other_trackers "&amp;formatD; 追踪器">
+<!ENTITY cc_zero_trackers_blocked "&formatD; 已拦截跟踪器">
+<!ENTITY cc_one_trackers_blocked "&formatD; 已拦截跟踪器">
+<!ENTITY cc_two_trackers_blocked "&formatD; 已拦截跟踪器">
+<!ENTITY cc_few_trackers_blocked "&formatD; 已拦截跟踪器">
+<!ENTITY cc_many_trackers_blocked "&formatD; 已拦截跟踪器">
+<!ENTITY cc_other_trackers_blocked "&formatD; 已拦截跟踪器">
+<!ENTITY cc_zero_trackers "&formatD; 追踪器">
+<!ENTITY cc_one_trackers "&formatD; 追踪器">
+<!ENTITY cc_two_trackers "&formatD; 追踪器">
+<!ENTITY cc_few_trackers "&formatD; 追踪器">
+<!ENTITY cc_many_trackers "&formatD; 追踪器">
+<!ENTITY cc_other_trackers "&formatD; 追踪器">
 <!ENTITY cc_trust_site "信任网站">
 <!ENTITY cc_restrict_site "限制网站">
 <!ENTITY cc_pause_ghostery "暂停 Ghostery">
@@ -151,7 +151,7 @@
 <!ENTITY cc_on_this_site "在此网站">
 <!ENTITY cc_trackers "跟踪器">
 <!ENTITY cc_blocked "已拦截">
-<!ENTITY cc_num_blocked "&amp;formatD; 已拦截">
+<!ENTITY cc_num_blocked "&formatD; 已拦截">
 <!ENTITY cc_tracker_info "跟踪器信息">
 <!ENTITY cc_block_all "全部拦截">
 <!ENTITY cc_unblock_all "全部取消拦截">
@@ -200,7 +200,7 @@
 <!ENTITY pref_browsing_category "浏览">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "搜索，&amp;pref_new_tab_category;, 浏览、通知、下载、&amp;brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "搜索，&pref_new_tab_category;, 浏览、通知、下载、&brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "显示背景图片">
 <!ENTITY pref_cliqz_tab_topsites "显示最常访问的网站">
 <!ENTITY pref_cliqz_tab_news "显示新闻">
@@ -208,9 +208,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "起始页再次显示最常访问的网站">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "显示 &amp;brandMyOffrz;">
-<!ENTITY pref_about_myoffrz "关于 &amp;brandMyOffrz;">
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "显示 &brandMyOffrz;">
+<!ENTITY pref_about_myoffrz "关于 &brandMyOffrz;">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -275,17 +275,17 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Welcome">
-<!ENTITY ghostery_onboarding_new_users_text "通过 &amp;brandShortName;, 随时随地获得更纯粹、迅速和安全的浏览体验，现在已为移动版本优化！">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Improve &amp;brandShortName;\'s performance by sharing anonymous analytics and Human Web data. \u003Ca href=\u0022&amp;human_web_info_url;\u0022&gt;Learn more\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_text "通过 &brandShortName;, 随时随地获得更纯粹、迅速和安全的浏览体验，现在已为移动版本优化！">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Improve &brandShortName;\'s performance by sharing anonymous analytics and Human Web data. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Learn more\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "广告与跟踪器拦截">
-<!ENTITY ghostery_onboarding_tracking_protection_text "What should &amp;brandShortName; block for you? You can change your selection any time in the Privacy Control Center.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "What should &brandShortName; block for you? You can change your selection any time in the Privacy Control Center.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "不拦截">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "建议拦截">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Ads and Adult Ads">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "拦截全部">
 <!ENTITY ghostery_onboarding_quick_search_title "幽灵搜索">
 <!ENTITY ghostery_onboarding_quick_search_text "Stay anonymous with private search and save time with instantaneous results as you type.">
-<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
 <!ENTITY ghostery_onboarding_new_tab_text "Customize the start page of tabs to your liking.">
 <!ENTITY ghostery_onboarding_action_button "开始浏览">
 <!ENTITY ghostery_onboarding_contextual_title "开启追踪保护">
@@ -293,7 +293,7 @@
 <!ENTITY ghostery_onboarding_contextual_item1_text "进一步保护你的个人数据">
 <!ENTITY ghostery_onboarding_contextual_item2_title "智能拦截&amp;广告拦截">
 <!ENTITY ghostery_onboarding_contextual_item2_text "当你浏览时优化性能">
-<!ENTITY ghostery_onboarding_contextual_text "你可以随时在 &amp;brandShortName;  控制中心启用或禁用这些功能。">
+<!ENTITY ghostery_onboarding_contextual_text "你可以随时在 &brandShortName;  控制中心启用或禁用这些功能。">
 <!ENTITY ghostery_onboarding_contextual_button "立即为我显示">
 
 <!-- Ghost Tab -->
@@ -301,17 +301,17 @@
 <!ENTITY new_ghost_tab "新建幽灵标签页">
 <!ENTITY close_ghost_tabs "关闭幽灵标签页">
 <!ENTITY contextmenu_open_ghost_tab "在幽灵标签页內打开">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "注意：使用 &amp;formatS1;New Ghost Tab&amp;formatS2; 将不保存你的历史。">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "注意：使用 &formatS1;New Ghost Tab&formatS2; 将不保存你的历史。">
 <!ENTITY private_tab_panel_title2 "幽灵模式">
 <!ENTITY private_tab_panel_description3 "您正在以幽灵模式进行浏览：您在此模式下所访问的网站不会保存到历史记录中，并且不会存储本地数据（包括 Cookie）。">
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "警告：欺诈网站！">
-<!ENTITY antiphishing_message "&amp;brandShortName; 已阻止访问 &amp;formatS1;因为它被报告为钓鱼网站。钓鱼网站会伪装成您可能信任的其他网站，从而诱使您泄露登录帐户、密码或其他敏感信息。">
+<!ENTITY antiphishing_message "&brandShortName; 已阻止访问 &formatS1;因为它被报告为钓鱼网站。钓鱼网站会伪装成您可能信任的其他网站，从而诱使您泄露登录帐户、密码或其他敏感信息。">
 <!ENTITY antiphishing_walk_away "返回到安全网站">
 <!ENTITY antiphishing_ignore_danger "继续并不理会警告">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "已经可用！">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "插件未被安装，因为 &amp;formatS1; 已被装于你的浏览器內。">
+        "插件未被安装，因为 &formatS1; 已被装于你的浏览器內。">

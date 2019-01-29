@@ -6,7 +6,7 @@
 <!ENTITY search_loading_message "We are powering up Ghost search for your fully private experience">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Actualités">
@@ -22,20 +22,20 @@
 <!ENTITY favorite_already_added "Déjà dans les favoris">
 <!ENTITY favorite_removed "Favori supprimé">
 <!ENTITY favorite_updated "Favoris actualisés">
-<!ENTITY screenshot_added_to_favorites "Capture d'écran ajoutée aux favoris">
+<!ENTITY screenshot_added_to_favorites "Capture d\'écran ajoutée aux favoris">
 <!ENTITY overlay_share_favorite_btn_label "Favoris">
 <!ENTITY overlay_share_favorite_btn_label_already "Déjà dans les favoris">
 <!ENTITY pref_sync_summary3 "Sync vos onglets, favoris, identifiants, historique">
-<!ENTITY pref_import_android_summary2 "Importer les favoris et l'historique dans le navigateur d'origine">
+<!ENTITY pref_import_android_summary2 "Importer les favoris et l\'historique dans le navigateur d\'origine">
 <!ENTITY pref_dialog_activitystream_recentFavorites "Favoris récents">
 <!ENTITY favorite_edit_title "Éditer les favoris">
 <!ENTITY home_favorites_empty "Les favoris enregistrés sont affichés ici.">
-<!ENTITY favoritehistory_import_both "Importation des favoris et de l'historique
+<!ENTITY favoritehistory_import_both "Importation des favoris et de l\'historique
                                       depuis Android">
 <!ENTITY favoritehistory_import_favorites "Importation des favoris
                                            depuis Android">
 <!ENTITY searchable_description2 "Favoris et historique">
-<!ENTITY new_guest_session_text3 "L'invité ne pourra pas accéder à vos données personnelles de navigation (identifiants, historique, favoris).\n\nLorsqu'il aura terminé, ses données de navigation seront supprimées et votre session sera restaurée.">
+<!ENTITY new_guest_session_text3 "L\'invité ne pourra pas accéder à vos données personnelles de navigation (identifiants, historique, favoris).\n\nLorsqu\'il aura terminé, ses données de navigation seront supprimées et votre session sera restaurée.">
 <!ENTITY restrictable_feature_advanced_settings_description2 "Ceci inclut les favoris importants, la restauration des onglets et les mises à jour automatiques. Désactiver pour des paramètres simplifiés adaptés à une utilisation familiale.">
 <!ENTITY helper_first_offline_favorite_message "Retrouvez vos éléments favoris même hors ligne dans le mode lecteur.">
 <!ENTITY helper_first_offline_favorite_button "Aller dans les favoris">
@@ -50,8 +50,8 @@
 <!ENTITY customize_new_tab_snackbar_description "Adapt this space to your needs: Show/hide TopSites, News and background image.">
 
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&amp;brandShortName; comme navigateur par défaut">
-<!ENTITY default_browser_message "Vous semblez aimer &amp;brandShortName;. Voulez-vous en faire votre navigateur par défaut ?">
+<!ENTITY default_browser_title "&brandShortName; comme navigateur par défaut">
+<!ENTITY default_browser_message "Vous semblez aimer &brandShortName;. Voulez-vous en faire votre navigateur par défaut ?">
 <!ENTITY default_browser_dialog_proceed "CONTINUER">
 <!ENTITY default_browser_dialog_cancel "ANNULER">
 
@@ -63,16 +63,16 @@
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
 <!ENTITY pref_category_human_web_summary "Contribute anonymous information related to trackers, websites, and search queries to improve our private quick-search, anti-tracking, anti-phishing technologies.">
-<!ENTITY pref_what_is_human_web "Qu'est-ce que le Human Web ?">
+<!ENTITY pref_what_is_human_web "Qu\'est-ce que le Human Web ?">
 <!ENTITY pref_enable_human_web "Activer le Human Web">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
-<!ENTITY myoffrz_no_offers_title "Il semblerait que nous n'ayons aucune offre">
+<!ENTITY myoffrz_title "&brandMyOffrz;">
+<!ENTITY myoffrz_no_offers_title "Il semblerait que nous n\'ayons aucune offre">
 <!ENTITY myoffrz_no_offers_msg_line1 "But we add them here ">
 <!ENTITY myoffrz_no_offers_msg_line2 "as soon as we have one">
-<!ENTITY myoffrz_onboarding_description "Recevez des offres promotionnelles avec &amp;brandMyOffrz;">
+<!ENTITY myoffrz_onboarding_description "Recevez des offres promotionnelles avec &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Acheter maintenant !">
 <!ENTITY myoffrz_tap_code_to_copy_label "Saisir le code à copier">
 <!ENTITY myoffrz_terms_and_conditions_label "Conditions générales">
@@ -80,12 +80,12 @@
 
 <!-- Block Ads -->
 <!ENTITY pref_category_block_ads "Bloqueur publicitaire (Bêta)">
-<!ENTITY pref_category_block_ads_summary "Bloquer de publicités, Blocage responsable, Qu'est-ce que responsable?">
+<!ENTITY pref_category_block_ads_summary "Bloquer de publicités, Blocage responsable, Qu\'est-ce que responsable?">
 <!ENTITY pref_block_ads "Bloqueur publicitaire">
 <!ENTITY pref_block_ads_fair "Blocage responsable">
 <!ENTITY pref_block_ads_what_fair "Que signifie \'responsable\'">
 <!ENTITY pref_block_ads_fair_description "Ad Blocking is in beta at the moment. The final version will provide the following options: Allow Fair Ads (default setting), Block All Ads, Allow All Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
-<!ENTITY pref_block_ads_data "Remarque : pour que le bloqueur de pub soit performant, le navigateur doit télécharger des paquets de données. Pour cela, l'app doit être connectée au WiFi.">
+<!ENTITY pref_block_ads_data "Remarque : pour que le bloqueur de pub soit performant, le navigateur doit télécharger des paquets de données. Pour cela, l\'app doit être connectée au WiFi.">
 
 <!-- Rate Us -->
 <!ENTITY pref_category_rate_us "Évaluez-nous">
@@ -100,18 +100,18 @@
 <!ENTITY cc_few_trackers_found "Trackers found">
 <!ENTITY cc_many_trackers_found "Trackers found">
 <!ENTITY cc_other_trackers_found "Trackers found">
-<!ENTITY cc_zero_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_one_trackers_blocked "&amp;formatD; Mouchard bloqué">
-<!ENTITY cc_two_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_few_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_many_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_other_trackers_blocked "&amp;formatD; Mouchards bloqués">
-<!ENTITY cc_zero_trackers "&amp;formatD; Mouchards">
-<!ENTITY cc_one_trackers "&amp;formatD; Mouchard">
-<!ENTITY cc_two_trackers "&amp;formatD; Mouchards">
-<!ENTITY cc_few_trackers "&amp;formatD; Mouchards">
-<!ENTITY cc_many_trackers "&amp;formatD; Mouchards">
-<!ENTITY cc_other_trackers "&amp;formatD; Mouchards">
+<!ENTITY cc_zero_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_one_trackers_blocked "&formatD; Mouchard bloqué">
+<!ENTITY cc_two_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_few_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_many_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_other_trackers_blocked "&formatD; Mouchards bloqués">
+<!ENTITY cc_zero_trackers "&formatD; Mouchards">
+<!ENTITY cc_one_trackers "&formatD; Mouchard">
+<!ENTITY cc_two_trackers "&formatD; Mouchards">
+<!ENTITY cc_few_trackers "&formatD; Mouchards">
+<!ENTITY cc_many_trackers "&formatD; Mouchards">
+<!ENTITY cc_other_trackers "&formatD; Mouchards">
 <!ENTITY cc_trust_site "Se fier à ce site">
 <!ENTITY cc_restrict_site "Restreindre">
 <!ENTITY cc_pause_ghostery "Suspendre Ghostery">
@@ -151,7 +151,7 @@
 <!ENTITY cc_on_this_site "Sur ce site">
 <!ENTITY cc_trackers "MOUCHARDS">
 <!ENTITY cc_blocked "Bloqué">
-<!ENTITY cc_num_blocked "&amp;formatD; BLOQUÉ">
+<!ENTITY cc_num_blocked "&formatD; BLOQUÉ">
 <!ENTITY cc_tracker_info "Info mouchard">
 <!ENTITY cc_block_all "Bloquer tout">
 <!ENTITY cc_unblock_all "Débloquer tout">
@@ -165,13 +165,13 @@
 <!ENTITY cc_toast_overview_trust "Tous les mouchards autorisés sur ce site">
 <!ENTITY cc_toast_site_trust "Mouchards fiables sur ce site">
 <!ENTITY cc_toast_site_restrict "Mouchards bloqués sur ce site">
-<!ENTITY cc_toast_site_block "Mouchards bloqués sur l'ensemble des sites">
+<!ENTITY cc_toast_site_block "Mouchards bloqués sur l\'ensemble des sites">
 <!ENTITY cc_reset_changes_dialog_title "Réinitialiser les changements ?">
 <!ENTITY cc_reset_changes_dialog_message "Toutes les modifications précédentes et les mouchards locaux seront réinitialisés.">
 <!ENTITY cc_reset "RÉINITIALISER">
 <!ENTITY cc_ad_block_off_domain "Turn off for this domain">
 <!ENTITY cc_ad_block_off_global "Turn off for all websites">
-<!ENTITY cc_reload_page_snackbar_text "Les modifications s'appliqueront dès l'actualisation de la page">
+<!ENTITY cc_reload_page_snackbar_text "Les modifications s\'appliqueront dès l\'actualisation de la page">
 
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Rechercher">
@@ -184,7 +184,7 @@
 <!ENTITY pref_search_regional_uk "Royaume-Uni">
 <!ENTITY pref_search_query_suggestions "Suggestions de recherche">
 <!ENTITY pref_search_block_adult_content "Bloquer les contenus explicites">
-<!ENTITY pref_search_auto_completion "Activer l'exécution automatique">
+<!ENTITY pref_search_auto_completion "Activer l\'exécution automatique">
 <!ENTITY pref_search_complementary_engine "Moteur de recherche complémentaire">
 <!ENTITY pref_search_complementary_engine_Google "Google">
 <!ENTITY pref_search_complementary_engine_bing "bing">
@@ -200,17 +200,17 @@
 <!ENTITY pref_browsing_category "Naviguer">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "Rechercher, &amp;pref_new_tab_category;, Navigation, Notifications, Téléchargement, &amp;brandMyOffrz;">
-<!ENTITY pref_cliqz_tab_background "Afficher l'image d'arrière-plan">
+<!ENTITY pref_category_general_summary4 "Rechercher, &pref_new_tab_category;, Navigation, Notifications, Téléchargement, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_background "Afficher l\'image d\'arrière-plan">
 <!ENTITY pref_cliqz_tab_topsites "Afficher les sites les plus visités">
 <!ENTITY pref_cliqz_tab_news "Afficher les informations">
 <!ENTITY pref_cliqz_tab_restore_top_sites "Restaurer les sites les plus visités">
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "Les sites les plus consultés sont affichés sur la page de démarrage">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "Afficher &amp;brandMyOffrz;">
-<!ENTITY pref_about_myoffrz "Au sujet de &amp;brandShortName;">
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "Afficher &brandMyOffrz;">
+<!ENTITY pref_about_myoffrz "Au sujet de &brandShortName;">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -233,7 +233,7 @@
 
 <!-- General Settings - Download Options -->
 <!ENTITY pref_download_options_category "Options de téléchargement">
-<!ENTITY pref_limit_data_usage "Limiter l'utilisation des données mobiles">
+<!ENTITY pref_limit_data_usage "Limiter l\'utilisation des données mobiles">
 <!ENTITY pref_limit_data_usage_summary "Autoriser le téléchargement de vidéos uniquement sur le WiFi">
 
 <!-- General Settings - Show hints -->
@@ -255,8 +255,8 @@
 <!ENTITY pref_category_about_us "Á notre sujet">
 <!ENTITY pref_category_about_us_summary
     "VersionApp, Extension, Politiques et licences, Empreinte">
-<!ENTITY pref_app_version "Version d'application">
-<!ENTITY pref_about_arn "ARN de l'appareil">
+<!ENTITY pref_app_version "Version d\'application">
+<!ENTITY pref_about_arn "ARN de l\'appareil">
 <!ENTITY pref_extension_version "Extension">
 <!ENTITY pref_category_policies_licenses "Politique et licences">
 <!ENTITY pref_about_privacy_policy "Politique de confidentialité">
@@ -275,17 +275,17 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Welcome">
-<!ENTITY ghostery_onboarding_new_users_text "Naviguez de façon plus propre, plus rapide et plus sécurisée avec &amp;brandShortName;, dès maintenant optimisé pour mobile !">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Improve &amp;brandShortName;\'s performance by sharing anonymous analytics and Human Web data. \u003Ca href=\u0022&amp;human_web_info_url;\u0022&gt;Learn more\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_text "Naviguez de façon plus propre, plus rapide et plus sécurisée avec &brandShortName;, dès maintenant optimisé pour mobile !">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Improve &brandShortName;\'s performance by sharing anonymous analytics and Human Web data. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Learn more\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Bloqueur de mouchards et de publicités.">
-<!ENTITY ghostery_onboarding_tracking_protection_text "What should &amp;brandShortName; block for you? You can change your selection any time in the Privacy Control Center.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "What should &brandShortName; block for you? You can change your selection any time in the Privacy Control Center.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Ne rien bloquer">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Blocage conseillé">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Ads and Adult Ads">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Tout bloquer">
 <!ENTITY ghostery_onboarding_quick_search_title "Recherche Ghost">
 <!ENTITY ghostery_onboarding_quick_search_text "Stay anonymous with private search and save time with instantaneous results as you type.">
-<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
 <!ENTITY ghostery_onboarding_new_tab_text "Customize the start page of tabs to your liking.">
 <!ENTITY ghostery_onboarding_action_button "Naviguer">
 <!ENTITY ghostery_onboarding_contextual_title "Anti-pistage activé">
@@ -293,7 +293,7 @@
 <!ENTITY ghostery_onboarding_contextual_item1_text "Protection des données personnelles améliorée">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Blocage intelligent et Bloqueur de publicités">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimise les performances de navigation">
-<!ENTITY ghostery_onboarding_contextual_text "Activez ou désactivez ces fonctions à tout moment dans le Centre de Contrôle &amp;brandShortName;.">
+<!ENTITY ghostery_onboarding_contextual_text "Activez ou désactivez ces fonctions à tout moment dans le Centre de Contrôle &brandShortName;.">
 <!ENTITY ghostery_onboarding_contextual_button "Me montrer maintenant">
 
 <!-- Ghost Tab -->
@@ -301,17 +301,17 @@
 <!ENTITY new_ghost_tab "Nouvel onglet fantôme">
 <!ENTITY close_ghost_tabs "Fermer les onglets fantômes">
 <!ENTITY contextmenu_open_ghost_tab "Ouvrir dans un onglet fantôme">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst : l'utilisation d'un &amp;formatS1;nouvel onglet fantôme&amp;formatS2; ne sauvegardera pas votre historique.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst : l\'utilisation d\'un &formatS1;nouvel onglet fantôme&formatS2; ne sauvegardera pas votre historique.">
 <!ENTITY private_tab_panel_title2 "Mode Fantôme">
 <!ENTITY private_tab_panel_description3 "Vous naviguez en Mode Fantôme: les sites visités ne seront pas sauvegardés dans votre historique et les données locales, dont les cookies, ne seront pas stockées.">
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Attention: site malveillant !">
-<!ENTITY antiphishing_message "&amp;brandShortName; a bloqué l'accès à &amp;formatS1; parce que le site a été signalé comme faisant du hameçonnage. Les sites d’hameçonnage calquent les sites de confiance et tentent de te soutirer tes informations de connexion, ton mot de passe ou diverses données sensibles.">
+<!ENTITY antiphishing_message "&brandShortName; a bloqué l\'accès à &formatS1; parce que le site a été signalé comme faisant du hameçonnage. Les sites d’hameçonnage calquent les sites de confiance et tentent de te soutirer tes informations de connexion, ton mot de passe ou diverses données sensibles.">
 <!ENTITY antiphishing_walk_away "Retourner au site sûr">
-<!ENTITY antiphishing_ignore_danger "Continuer malgré l'avertissement">
+<!ENTITY antiphishing_ignore_danger "Continuer malgré l\'avertissement">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "Déjà disponible !">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "Ce module complémentaire n'a pas été installé car $formatS1; est déjà intégré à votre navigateur.">
+        "Ce module complémentaire n\'a pas été installé car $formatS1; est déjà intégré à votre navigateur.">

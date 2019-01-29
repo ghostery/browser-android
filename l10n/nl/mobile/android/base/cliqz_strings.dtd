@@ -6,7 +6,7 @@
 <!ENTITY search_loading_message "We maken Ghost search krachtiger voor jouw volledige private ervaring">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Nieuws">
@@ -50,8 +50,8 @@
 <!ENTITY customize_new_tab_snackbar_description "Pas deze ruimte aan naar wens: Toon/verberg TopSites, Nieuws en achtergrond afbeelding.">
 
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&amp;brandShortName; als Standaardbrowser">
-<!ENTITY default_browser_message "Het lijkt erop dat je graag gebruik maakt van &amp;brandShortName;. Wil je er je standaardbrowser van maken?">
+<!ENTITY default_browser_title "&brandShortName; als Standaardbrowser">
+<!ENTITY default_browser_message "Het lijkt erop dat je graag gebruik maakt van &brandShortName;. Wil je er je standaardbrowser van maken?">
 <!ENTITY default_browser_dialog_proceed "GA VERDER">
 <!ENTITY default_browser_dialog_cancel "ANNULEREN">
 
@@ -68,11 +68,11 @@
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
+<!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Lijkt erop dat we geen aanbiedingen hebben">
 <!ENTITY myoffrz_no_offers_msg_line1 "Maar we voegen ze hier toe ">
 <!ENTITY myoffrz_no_offers_msg_line2 "zodra we er één hebben">
-<!ENTITY myoffrz_onboarding_description "Ontvang aantrekkelijke kortingen en koopjes met &amp;brandMyOffrz;">
+<!ENTITY myoffrz_onboarding_description "Ontvang aantrekkelijke kortingen en koopjes met &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Bestel nu!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Tik op code om te kopiëren">
 <!ENTITY myoffrz_terms_and_conditions_label "Bepalingen">
@@ -100,18 +100,18 @@
 <!ENTITY cc_few_trackers_found "Trackers gevonden">
 <!ENTITY cc_many_trackers_found "Trackers gevonden">
 <!ENTITY cc_other_trackers_found "Trackers gevonden">
-<!ENTITY cc_zero_trackers_blocked "&amp;formatD; Trackers geblokkeerd">
-<!ENTITY cc_one_trackers_blocked "&amp;formatD; Tracker geblokkeerd">
-<!ENTITY cc_two_trackers_blocked "&amp;formatD; Trackers geblokkeerd">
-<!ENTITY cc_few_trackers_blocked "&amp;formatD; Trackers geblokkeerd">
-<!ENTITY cc_many_trackers_blocked "&amp;formatD; Trackers geblokkeerd">
-<!ENTITY cc_other_trackers_blocked "&amp;formatD; Trackers geblokkeerd">
-<!ENTITY cc_zero_trackers "&amp;formatD; Trackers">
-<!ENTITY cc_one_trackers "&amp;formatD; Tracker">
-<!ENTITY cc_two_trackers "&amp;formatD; Trackers">
-<!ENTITY cc_few_trackers "&amp;formatD; Trackers">
-<!ENTITY cc_many_trackers "&amp;formatD; Trackers">
-<!ENTITY cc_other_trackers "&amp;formatD; Trackers">
+<!ENTITY cc_zero_trackers_blocked "&formatD; Trackers geblokkeerd">
+<!ENTITY cc_one_trackers_blocked "&formatD; Tracker geblokkeerd">
+<!ENTITY cc_two_trackers_blocked "&formatD; Trackers geblokkeerd">
+<!ENTITY cc_few_trackers_blocked "&formatD; Trackers geblokkeerd">
+<!ENTITY cc_many_trackers_blocked "&formatD; Trackers geblokkeerd">
+<!ENTITY cc_other_trackers_blocked "&formatD; Trackers geblokkeerd">
+<!ENTITY cc_zero_trackers "&formatD; Trackers">
+<!ENTITY cc_one_trackers "&formatD; Tracker">
+<!ENTITY cc_two_trackers "&formatD; Trackers">
+<!ENTITY cc_few_trackers "&formatD; Trackers">
+<!ENTITY cc_many_trackers "&formatD; Trackers">
+<!ENTITY cc_other_trackers "&formatD; Trackers">
 <!ENTITY cc_trust_site "Vertrouw Website">
 <!ENTITY cc_restrict_site "Beperk Website">
 <!ENTITY cc_pause_ghostery "Pauzeer Ghostery">
@@ -151,7 +151,7 @@
 <!ENTITY cc_on_this_site "Op deze website">
 <!ENTITY cc_trackers "TRACKERS">
 <!ENTITY cc_blocked "Geblokkeerd">
-<!ENTITY cc_num_blocked "&amp;formatD; GEBLOKKEERD">
+<!ENTITY cc_num_blocked "&formatD; GEBLOKKEERD">
 <!ENTITY cc_tracker_info "Tracker Info">
 <!ENTITY cc_block_all "Blokkeer Alles">
 <!ENTITY cc_unblock_all "Deblokkeer Alles">
@@ -200,7 +200,7 @@
 <!ENTITY pref_browsing_category "Browsen">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "Zoek, &amp;pref_new_tab_category;, Browsen, Notificaties, Download, &amp;brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "Zoek, &pref_new_tab_category;, Browsen, Notificaties, Download, &brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "Toon achtergrondafbeelding">
 <!ENTITY pref_cliqz_tab_topsites "Toon meest bezochte websites">
 <!ENTITY pref_cliqz_tab_news "Toon Nieuws">
@@ -208,9 +208,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "Startpagina toont meest bezochte websites opnieuw">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "Toon &amp;brandMyOffrz;">
-<!ENTITY pref_about_myoffrz "Over &amp;brandMyOffrz;">
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "Toon &brandMyOffrz;">
+<!ENTITY pref_about_myoffrz "Over &brandMyOffrz;">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -275,17 +275,17 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Welkom">
-<!ENTITY ghostery_onboarding_new_users_text "Browser reiniger, sneller, en veiliger terwijl je bezig bent met &amp;brandShortName;, nu geoptimaliseerd voor mobiel!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Verbeter de prestaties van &amp;brandShortName;\'s door anoniem analytics en Human Web data te delen. \u003Ca href=\u0022&amp;human_web_info_url;\u0022&gt;Meer weten\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_text "Browser reiniger, sneller, en veiliger terwijl je bezig bent met &brandShortName;, nu geoptimaliseerd voor mobiel!">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Verbeter de prestaties van &brandShortName;\'s door anoniem analytics en Human Web data te delen. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Meer weten\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Ad &amp; Tracker Blocking">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Wat moet &amp;brandShortName; voor je blokkeren? Je kunt je selectie te allen tijde wijzigen in het Privacy Control Center.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Wat moet &brandShortName; voor je blokkeren? Je kunt je selectie te allen tijde wijzigen in het Privacy Control Center.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Blokkeer niets">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Blokkeren Aanbevolen">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Ads en 18+ Ads">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Blokkeer Alles ">
 <!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
 <!ENTITY ghostery_onboarding_quick_search_text "Blijf anoniem met private search en bespaar tijd met onmiddellijke zoekresultaten terwijl je typt.">
-<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
 <!ENTITY ghostery_onboarding_new_tab_text "Pas de startpagina van tabs aan naar wens.">
 <!ENTITY ghostery_onboarding_action_button "Begin met Browsen">
 <!ENTITY ghostery_onboarding_contextual_title "Trackingsbescherming geactiveerd">
@@ -293,7 +293,7 @@
 <!ENTITY ghostery_onboarding_contextual_item1_text "Beschermt je persoonlijke gegevens nog meer.">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Slim Blokkeren &amp; Ads Blokkeren">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Oplimaliseert prestatie terwijl je browst">
-<!ENTITY ghostery_onboarding_contextual_text "Je kunt deze functies op ieder gewenst moment activeren of desactiveren in de &amp;brandShortName; Control Center.">
+<!ENTITY ghostery_onboarding_contextual_text "Je kunt deze functies op ieder gewenst moment activeren of desactiveren in de &brandShortName; Control Center.">
 <!ENTITY ghostery_onboarding_contextual_button "Bekijk nu">
 
 <!-- Ghost Tab -->
@@ -301,17 +301,17 @@
 <!ENTITY new_ghost_tab "Nieuwe Ghost Tab">
 <!ENTITY close_ghost_tabs "Sluit Ghost Tabs">
 <!ENTITY contextmenu_open_ghost_tab "Open in Ghost Tab">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: door gebruik van een &amp;formatS1;New Ghost Tab&amp;formatS2; eordt je geschiedenis niet opgeslagen.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psst: door gebruik van een &formatS1;New Ghost Tab&formatS2; eordt je geschiedenis niet opgeslagen.">
 <!ENTITY private_tab_panel_title2 "Ghost Mode">
 <!ENTITY private_tab_panel_description3 "Je browst in Ghost Mode: Websites die je bezoekt worden niet opgeslagen in je geschiedenis en locale data, inclusief cookies, wordt niet opgeslagen.">
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Waarschuwing: misleidende website!">
-<!ENTITY antiphishing_message "&amp;brandShortName; heeft toegang tot &amp;formatS1 geblokkeerd; omdat het bekend staat als een phishing website. Phishing websites doen zich voor als betrouwbare websites om inloggegevens, wachtwoord of andere gevoelige informatie van je te achterhalen.">
+<!ENTITY antiphishing_message "&brandShortName; heeft toegang tot &amp;formatS1 geblokkeerd; omdat het bekend staat als een phishing website. Phishing websites doen zich voor als betrouwbare websites om inloggegevens, wachtwoord of andere gevoelige informatie van je te achterhalen.">
 <!ENTITY antiphishing_walk_away "Terug naar veilige site">
 <!ENTITY antiphishing_ignore_danger "Ga door ondanks waarschuwing">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "Reeds beschikbaar!">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "Add-on is niet geïnstalleerd omdat &amp;formatS1; al in je browser is geïntegreerd.">
+        "Add-on is niet geïnstalleerd omdat &formatS1; al in je browser is geïntegreerd.">

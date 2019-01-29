@@ -6,7 +6,7 @@
 <!ENTITY search_loading_message "Feltuningoljuk a Ghostery search funkciót az ön teljesen egyéni felhasználói élményéért">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Hírek">
@@ -50,8 +50,8 @@
 <!ENTITY customize_new_tab_snackbar_description "Állítsa be ezt a területet úgy, ahogy az önnek megfelel: Legjobb oldalak, hírek és háttérkép megjelenítése/elrejtése">
 
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&amp;brandShortName; beállítása alapértelmezett böngészőnek">
-<!ENTITY default_browser_message "Úgy tűnik, ön a(z) &amp;brandShortName;-t használja. Kívánja alapértelmezett böngészőként beállítani?">
+<!ENTITY default_browser_title "&brandShortName; beállítása alapértelmezett böngészőnek">
+<!ENTITY default_browser_message "Úgy tűnik, ön a(z) &brandShortName;-t használja. Kívánja alapértelmezett böngészőként beállítani?">
 <!ENTITY default_browser_dialog_proceed "FOLYTATÁS">
 <!ENTITY default_browser_dialog_cancel "MÉGSEM">
 
@@ -68,11 +68,11 @@
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
+<!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Úgy tűnik, nincs egyetlen ajánlatunk sem">
 <!ENTITY myoffrz_no_offers_msg_line1 "De itt hozzáadjuk azokat ">
 <!ENTITY myoffrz_no_offers_msg_line2 "amint találunk egyet">
-<!ENTITY myoffrz_onboarding_description "Jusson vonzó kedvezményekhez és ajánlatokhoz a(z) &amp;brandMyOffrz; használatával.">
+<!ENTITY myoffrz_onboarding_description "Jusson vonzó kedvezményekhez és ajánlatokhoz a(z) &brandMyOffrz; használatával.">
 <!ENTITY myoffrz_order_now_label "Rendelje meg most!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Bökjön a kód másolásához">
 <!ENTITY myoffrz_terms_and_conditions_label "Felhasználási Feltételek">
@@ -100,18 +100,18 @@
 <!ENTITY cc_few_trackers_found "Trackerek megtalálva">
 <!ENTITY cc_many_trackers_found "Trackerek megtalálva">
 <!ENTITY cc_other_trackers_found "Trackerek megtalálva">
-<!ENTITY cc_zero_trackers_blocked "&amp;formatD; Tracker blokkolva">
-<!ENTITY cc_one_trackers_blocked "&amp;formatD; Tracker blokkolva">
-<!ENTITY cc_two_trackers_blocked "&amp;formatD; Tracker blokkolva">
-<!ENTITY cc_few_trackers_blocked "&amp;formatD; Tracker blokkolva">
-<!ENTITY cc_many_trackers_blocked "&amp;formatD; Tracker blokkolva">
-<!ENTITY cc_other_trackers_blocked "&amp;formatD; Tracker blokkolva">
-<!ENTITY cc_zero_trackers "&amp;formatD; Trackerek">
-<!ENTITY cc_one_trackers "&amp;formatD; Tracker">
-<!ENTITY cc_two_trackers "&amp;formatD; Trackerek">
-<!ENTITY cc_few_trackers "&amp;formatD; Trackerek">
-<!ENTITY cc_many_trackers "&amp;formatD; Trackerek">
-<!ENTITY cc_other_trackers "&amp;formatD; Trackerek">
+<!ENTITY cc_zero_trackers_blocked "&formatD; Tracker blokkolva">
+<!ENTITY cc_one_trackers_blocked "&formatD; Tracker blokkolva">
+<!ENTITY cc_two_trackers_blocked "&formatD; Tracker blokkolva">
+<!ENTITY cc_few_trackers_blocked "&formatD; Tracker blokkolva">
+<!ENTITY cc_many_trackers_blocked "&formatD; Tracker blokkolva">
+<!ENTITY cc_other_trackers_blocked "&formatD; Tracker blokkolva">
+<!ENTITY cc_zero_trackers "&formatD; Trackerek">
+<!ENTITY cc_one_trackers "&formatD; Tracker">
+<!ENTITY cc_two_trackers "&formatD; Trackerek">
+<!ENTITY cc_few_trackers "&formatD; Trackerek">
+<!ENTITY cc_many_trackers "&formatD; Trackerek">
+<!ENTITY cc_other_trackers "&formatD; Trackerek">
 <!ENTITY cc_trust_site "Megbízható oldal">
 <!ENTITY cc_restrict_site "Korlátozott oldal">
 <!ENTITY cc_pause_ghostery "Ghostery szüneteltetése">
@@ -151,7 +151,7 @@
 <!ENTITY cc_on_this_site "Ezen az oldalon">
 <!ENTITY cc_trackers "TRACKEREK">
 <!ENTITY cc_blocked "Blokkolva">
-<!ENTITY cc_num_blocked "&amp;formatD; BLOKKOLVA">
+<!ENTITY cc_num_blocked "&formatD; BLOKKOLVA">
 <!ENTITY cc_tracker_info "Tracker Info">
 <!ENTITY cc_block_all "Összes blokkolása">
 <!ENTITY cc_unblock_all "Összes feloldása">
@@ -200,7 +200,7 @@
 <!ENTITY pref_browsing_category "Böngészés">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "Keresés, &amp;pref_new_tab_category;, böngészés, értesítések, letöltés, &amp;brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "Keresés, &pref_new_tab_category;, böngészés, értesítések, letöltés, &brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "Háttérkép megjelenítése">
 <!ENTITY pref_cliqz_tab_topsites "Jelenítse meg a leggyakrabban látogatott weboldalakat">
 <!ENTITY pref_cliqz_tab_news "Hírek megjelenítése">
@@ -208,9 +208,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "A kezdőoldal újból megjeleníti a leggyakrabban látogatott weboldalakat">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "&amp;brandMyOffrz; megjelenítése">
-<!ENTITY pref_about_myoffrz "&amp;brandMyOffrz; bemutatása">
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "&brandMyOffrz; megjelenítése">
+<!ENTITY pref_about_myoffrz "&brandMyOffrz; bemutatása">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -275,17 +275,17 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Üdvözöljük">
-<!ENTITY ghostery_onboarding_new_users_text "Böngésszen tisztábban, gyorsabban és biztonságosabban a(z) &amp;brandShortName; böngészővel, amely már mobil eszközökre is optimalizált!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Fejlessze a &amp;brandShortName;\'s hatékonyságát a névtelen analitikai és Human Web adatok megosztásával. \u003Ca href=\u0022&amp;human_web_info_url;\u0022&gt;Tudjon meg erről többet\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_text "Böngésszen tisztábban, gyorsabban és biztonságosabban a(z) &brandShortName; böngészővel, amely már mobil eszközökre is optimalizált!">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Fejlessze a &brandShortName;\'s hatékonyságát a névtelen analitikai és Human Web adatok megosztásával. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Tudjon meg erről többet\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Hirdetés és tracker blokkolás">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Mit blokkoljon a(z) &amp;brandShortName; az ön számára? Az elemek kiválasztásait bármikor megváltoztathatja az Adatvédelmi Központban.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Mit blokkoljon a(z) &brandShortName; az ön számára? Az elemek kiválasztásait bármikor megváltoztathatja az Adatvédelmi Központban.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Semmit se blokkoljon">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Blokkolás ajánlott">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Hirdetések és felnőtt hirdetések">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Minden blokkolása">
 <!ENTITY ghostery_onboarding_quick_search_title "Szellemkeresés">
 <!ENTITY ghostery_onboarding_quick_search_text "Maradjon névtelen a privát keresés alkalmazásával és takarítson meg időt az eredmények beírás közbeni megjelenítésével.">
-<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
 <!ENTITY ghostery_onboarding_new_tab_text "Keve szerint szabja testre a kezdőoldal lapfüleit.">
 <!ENTITY ghostery_onboarding_action_button "Böngészés megkezdése">
 <!ENTITY ghostery_onboarding_contextual_title "Nyomkövetés (tracking) elleni védelem engedélyezve">
@@ -293,7 +293,7 @@
 <!ENTITY ghostery_onboarding_contextual_item1_text "Továbbá megvédi az ön személyes adatait is">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Okos blokkolás és hirdetésblokkolás">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimalizálja a teljesítményt böngészés közben">
-<!ENTITY ghostery_onboarding_contextual_text "Bármikor engedélyezheti vagy letilthatja ezeket a funkciókat a(z) &amp;brandShortName; böngésző vezérlőközpontjában.">
+<!ENTITY ghostery_onboarding_contextual_text "Bármikor engedélyezheti vagy letilthatja ezeket a funkciókat a(z) &brandShortName; böngésző vezérlőközpontjában.">
 <!ENTITY ghostery_onboarding_contextual_button "Mutassa meg most">
 
 <!-- Ghost Tab -->
@@ -301,17 +301,17 @@
 <!ENTITY new_ghost_tab "Új szellem lapfül">
 <!ENTITY close_ghost_tabs "Szellem lapfülek bezárása">
 <!ENTITY contextmenu_open_ghost_tab "Megnyitás új szellem lapfülön">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "Psszt: &amp;formatS1;Új szellem lapfül&amp;formatS2; nem menti el a naplóját.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Psszt: &formatS1;Új szellem lapfül&formatS2; nem menti el a naplóját.">
 <!ENTITY private_tab_panel_title2 "Szellem mód">
 <!ENTITY private_tab_panel_description3 "Ön most Szellem Módban böngészik: Az ön által látogatott weboldalak nem lesznek lementve az előzmények közé és a helyben tárolt adatok, beleértve az internetes sütiket, nem lesznek eltárolva">
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Figyelmeztetés: megtévesztő weboldal!">
-<!ENTITY antiphishing_message "A(z) &amp;brandShortName; blokkolta a hozzáférést a(z) &amp;formatS1; oldalhoz, mert adathalász oldalként jelentették be. Az adathalász oldalak pontosan úgy néznek ki, mint egyes, ön által megbízhatónak vélt oldalak, és megpróbálják becsapni önt, hogy megszerezzék a bejelentkezési adatait vagy más érzékeny információt.">
+<!ENTITY antiphishing_message "A(z) &brandShortName; blokkolta a hozzáférést a(z) &formatS1; oldalhoz, mert adathalász oldalként jelentették be. Az adathalász oldalak pontosan úgy néznek ki, mint egyes, ön által megbízhatónak vélt oldalak, és megpróbálják becsapni önt, hogy megszerezzék a bejelentkezési adatait vagy más érzékeny információt.">
 <!ENTITY antiphishing_walk_away "Visszatérés a biztonságos weboldalhoz">
 <!ENTITY antiphishing_ignore_danger "Folytatás a figyelmeztetés ellenére">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "Már elérhető!">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "A kiegészítő nem lett feltelepítve, mivel a(z) &amp;formatS1; már integrálva van az ön böngészőjében.">
+        "A kiegészítő nem lett feltelepítve, mivel a(z) &formatS1; már integrálva van az ön böngészőjében.">

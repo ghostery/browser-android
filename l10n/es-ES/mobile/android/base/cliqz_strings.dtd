@@ -6,7 +6,7 @@
 <!ENTITY search_loading_message "Estamos potenciando tus búsquedas Ghost para una experiencia totalmente privada.">
 
 <!-- Onboarding -->
-<!ENTITY firstrun_urlbar_subtext3 "&amp;firstrun_urlbar_subtext;">
+<!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Noticias">
@@ -50,8 +50,8 @@
 <!ENTITY customize_new_tab_snackbar_description "Adapta este espacio a tus necesidades: Mostrar/ocultar los sitios principales, las noticias y la imagen de fondo.">
 
 <!-- Default Browser Dialog -->
-<!ENTITY default_browser_title "&amp;brandShortName; como navegador predeterminado">
-<!ENTITY default_browser_message "Parece que te gusta usar &amp;brandShortName;. ¿Quieres convertirlo en tu navegador predeterminado?">
+<!ENTITY default_browser_title "&brandShortName; como navegador predeterminado">
+<!ENTITY default_browser_message "Parece que te gusta usar &brandShortName;. ¿Quieres convertirlo en tu navegador predeterminado?">
 <!ENTITY default_browser_dialog_proceed "PROCEDER">
 <!ENTITY default_browser_dialog_cancel "CANCELAR">
 
@@ -68,11 +68,11 @@
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
-<!ENTITY myoffrz_title "&amp;brandMyOffrz;">
+<!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Parece que no tenemos ofertas">
 <!ENTITY myoffrz_no_offers_msg_line1 "Pero se añaden aquí ">
 <!ENTITY myoffrz_no_offers_msg_line2 "tan pronto como tengamos uno">
-<!ENTITY myoffrz_onboarding_description "Recibe atractivos descuentos y ofertas con &amp;brandMyOffrz;.">
+<!ENTITY myoffrz_onboarding_description "Recibe atractivos descuentos y ofertas con &brandMyOffrz;.">
 <!ENTITY myoffrz_order_now_label "¡Comprar hora!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Toca el código para copiarlo">
 <!ENTITY myoffrz_terms_and_conditions_label "Términos">
@@ -100,18 +100,18 @@
 <!ENTITY cc_few_trackers_found "Rastreadores encontrados">
 <!ENTITY cc_many_trackers_found "Rastreadores encontrados">
 <!ENTITY cc_other_trackers_found "Rastreadores encontrados">
-<!ENTITY cc_zero_trackers_blocked "&amp;formatD; rastreadores bloqueados">
-<!ENTITY cc_one_trackers_blocked "&amp;formatD; rastreador bloqueado">
-<!ENTITY cc_two_trackers_blocked "&amp;formatD; rastreadores bloqueados">
-<!ENTITY cc_few_trackers_blocked "&amp;formatD; rastreadores bloqueados">
-<!ENTITY cc_many_trackers_blocked "&amp;formatD; rastreadores bloqueados">
-<!ENTITY cc_other_trackers_blocked "&amp;formatD; rastreadores bloqueados">
-<!ENTITY cc_zero_trackers "&amp;formatD; rastreadores">
-<!ENTITY cc_one_trackers "&amp;formatD; rastreador">
-<!ENTITY cc_two_trackers "&amp;formatD; rastreadores">
-<!ENTITY cc_few_trackers "&amp;formatD; rastreadores">
-<!ENTITY cc_many_trackers "&amp;formatD; rastreadores">
-<!ENTITY cc_other_trackers "&amp;formatD; rastreadores">
+<!ENTITY cc_zero_trackers_blocked "&formatD; rastreadores bloqueados">
+<!ENTITY cc_one_trackers_blocked "&formatD; rastreador bloqueado">
+<!ENTITY cc_two_trackers_blocked "&formatD; rastreadores bloqueados">
+<!ENTITY cc_few_trackers_blocked "&formatD; rastreadores bloqueados">
+<!ENTITY cc_many_trackers_blocked "&formatD; rastreadores bloqueados">
+<!ENTITY cc_other_trackers_blocked "&formatD; rastreadores bloqueados">
+<!ENTITY cc_zero_trackers "&formatD; rastreadores">
+<!ENTITY cc_one_trackers "&formatD; rastreador">
+<!ENTITY cc_two_trackers "&formatD; rastreadores">
+<!ENTITY cc_few_trackers "&formatD; rastreadores">
+<!ENTITY cc_many_trackers "&formatD; rastreadores">
+<!ENTITY cc_other_trackers "&formatD; rastreadores">
 <!ENTITY cc_trust_site "Confiar en sitio">
 <!ENTITY cc_restrict_site "Restringir sitio">
 <!ENTITY cc_pause_ghostery "Pausar Ghostery">
@@ -151,7 +151,7 @@
 <!ENTITY cc_on_this_site "En esta página">
 <!ENTITY cc_trackers "RASTREADORES">
 <!ENTITY cc_blocked "Bloqueado">
-<!ENTITY cc_num_blocked "&amp;formatD; BLOQUEADO">
+<!ENTITY cc_num_blocked "&formatD; BLOQUEADO">
 <!ENTITY cc_tracker_info "Información del rastreador">
 <!ENTITY cc_block_all "Bloquear todo">
 <!ENTITY cc_unblock_all "Desbloquear todos">
@@ -200,7 +200,7 @@
 <!ENTITY pref_browsing_category "Navegación">
 
 <!-- General Settings - CliqzTab -->
-<!ENTITY pref_category_general_summary4 "Búsqueda, &amp;pref_new_tab_category;, navegación, notificaciones, descargas, &amp;brandMyOffrz;">
+<!ENTITY pref_category_general_summary4 "Búsqueda, &pref_new_tab_category;, navegación, notificaciones, descargas, &brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "Mostrar imagen de fondo">
 <!ENTITY pref_cliqz_tab_topsites "Mostrar sitios web más visitados">
 <!ENTITY pref_cliqz_tab_news "Mostrar noticias">
@@ -208,9 +208,9 @@
 <!ENTITY pref_cliqz_tab_restore_top_sites_description "La página de inicio vuelve a mostrar los sitios web más visitados">
 
 <!-- General Settings - myOffrz -->
-<!ENTITY pref_myoffrz_category "&amp;brandMyOffrz;">
-<!ENTITY pref_show_myoffrz "Mostrar &amp;brandMyOffrz;">
-<!ENTITY pref_about_myoffrz "Acerca de &amp;brandMyOffrz;">
+<!ENTITY pref_myoffrz_category "&brandMyOffrz;">
+<!ENTITY pref_show_myoffrz "Mostrar &brandMyOffrz;">
+<!ENTITY pref_about_myoffrz "Acerca de &brandMyOffrz;">
 
 <!-- General Settings - Subscriptions and Notifications
 <!ENTITY pref_subscriptions_notifications_category "Subscriptions and Notifications">
@@ -275,17 +275,17 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Te damos la bienvenida a">
-<!ENTITY ghostery_onboarding_new_users_text "Navega de forma segura, limpia y rápida con &amp;brandShortName;, ahora optimizado para móviles">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Mejora el rendimiento de &amp;brandShortName; compartiendo datos estadísticos y de la web humana de forma anónima. \u003Ca href=\u0022&amp;human_web_info_url;\u0022&gt;Saber más\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_text "Navega de forma segura, limpia y rápida con &brandShortName;, ahora optimizado para móviles">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Mejora el rendimiento de &brandShortName; compartiendo datos estadísticos y de la web humana de forma anónima. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Saber más\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Bloqueo de anuncios y rastreadores">
-<!ENTITY ghostery_onboarding_tracking_protection_text "¿Qué debería &amp;brandShortName; bloquear para ti? Puedes cambiar tu selección en cualquier momento en el Centro de control de privacidad.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "¿Qué debería &brandShortName; bloquear para ti? Puedes cambiar tu selección en cualquier momento en el Centro de control de privacidad.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "No bloquear nada">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Bloqueo recomendado">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Anuncios y publicidad para adultos">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Bloquear todo">
 <!ENTITY ghostery_onboarding_quick_search_title "Búsqueda fantasma">
 <!ENTITY ghostery_onboarding_quick_search_text "Permanece en el anonimato con la búsqueda privada y ahorra tiempo gracias a los resultados instantáneos conforme escribes.">
-<!ENTITY ghostery_onboarding_new_tab_title "&amp;pref_new_tab_category;">
+<!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
 <!ENTITY ghostery_onboarding_new_tab_text "Personaliza la página de inicio de pestañas a tu gusto.">
 <!ENTITY ghostery_onboarding_action_button "Empezar a navegar">
 <!ENTITY ghostery_onboarding_contextual_title "Protección antirrastreo activada">
@@ -293,7 +293,7 @@
 <!ENTITY ghostery_onboarding_contextual_item1_text "Protección extra de tus datos privados">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Bloqueo inteligente y bloqueo de anuncios">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimiza el rendimiento mientras navegas">
-<!ENTITY ghostery_onboarding_contextual_text "Puedes habilitar o deshabilitar estas funciones en cualquier momento en el centro de control de &amp;brandShortName;.">
+<!ENTITY ghostery_onboarding_contextual_text "Puedes habilitar o deshabilitar estas funciones en cualquier momento en el centro de control de &brandShortName;.">
 <!ENTITY ghostery_onboarding_contextual_button "Mostrar ahora">
 
 <!-- Ghost Tab -->
@@ -301,17 +301,17 @@
 <!ENTITY new_ghost_tab "Nueva pestaña fantasma">
 <!ENTITY close_ghost_tabs "Cerrar pestañas fantasma">
 <!ENTITY contextmenu_open_ghost_tab "Abrir en pestaña fantasma">
-<!ENTITY home_most_recent_emptyhint_ghost_tab "Pst, &amp;formatS1;New Ghost Tab&amp;formatS2; no guardará nada en tu historial.">
+<!ENTITY home_most_recent_emptyhint_ghost_tab "Pst, &formatS1;New Ghost Tab&formatS2; no guardará nada en tu historial.">
 <!ENTITY private_tab_panel_title2 "Modo fantasma">
 <!ENTITY private_tab_panel_description3 "Navegas en modo fantasma: los sitios web que visites en este modo no se guardarán en tu historial, ni se almacenarán datos locales, como las cookies.">
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "¡Atención: sitio web fraudulento!">
-<!ENTITY antiphishing_message "&amp;brandShortName; ha bloqueado el acceso a &amp;formatS1; porque ha sido denunciado como un sitio web de phishing. Estos sitios web suplantan la identidad de sitios en los que confías para engañarte, de modo que reveles tu nombre de usuario, contraseña u otra información confidencial.">
+<!ENTITY antiphishing_message "&brandShortName; ha bloqueado el acceso a &formatS1; porque ha sido denunciado como un sitio web de phishing. Estos sitios web suplantan la identidad de sitios en los que confías para engañarte, de modo que reveles tu nombre de usuario, contraseña u otra información confidencial.">
 <!ENTITY antiphishing_walk_away "Volver al sitio seguro">
 <!ENTITY antiphishing_ignore_danger "Continuar pese a la advertencia">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "¡Ya disponible!">
 <!ENTITY prevent_ghostery_addon_dialog_message
-        "La extensión &amp;formatS1; ya está instalada en tu navegador.">
+        "La extensión &formatS1; ya está instalada en tu navegador.">
