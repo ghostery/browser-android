@@ -6750,7 +6750,7 @@ var Cliqz = {
       let sendCallback;
       if (data.recipient.extensionId === "firefox@ghostery.com") {
         response = this._privacyExtensionListener(msg) || this._searchExtensionListener(msg);
-        sendCallback = this.messageExtension;
+        sendCallback = this.messageExtension.bind(this);
       }
       if ("requestId" in msg && sendCallback) {
         sendCallback({
