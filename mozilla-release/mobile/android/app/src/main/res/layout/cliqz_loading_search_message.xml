@@ -2,39 +2,42 @@
 <!-- Copyright © Cliqz 2019 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="3dp"
     android:background="@color/general_dark_blue_color">
     <org.mozilla.gecko.widget.themed.ThemedLinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/home_banner_height"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:background="@drawable/url_bar_bg"
-        android:gravity="center_vertical">
+        android:gravity="center">
 
-        <ProgressBar
+        <org.mozilla.gecko.widget.ThreeDotsAnimatedView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@android:id/progress"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:indeterminateTint="@android:color/white"
-            android:indeterminate="true"
+            app:highlightDotColor="@android:color/white"
+            app:lowlightDotColor="@color/general_light_blue_color"
+            app:dotsRadius="6dp"
+            app:interDotSpace="8dp"
+            android:layout_marginBottom="10dp"
             tools:ignore="RtlHardcoded" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:textColor="@android:color/white"
             android:text="@string/search_loading_message"
+            android:textSize="18sp"
             tools:text="We are powering up Ghost search for your fully private experience"
             tools:ignore="RtlHardcoded" />
 
