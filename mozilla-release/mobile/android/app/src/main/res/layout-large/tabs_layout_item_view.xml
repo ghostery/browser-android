@@ -62,8 +62,8 @@
 
         <!-- Use of baselineAlignBottom only supported from API 11+ - if this needs to work on lower API versions
              we'll need to override getBaseLine() and return image height, but we assume this won't happen -->
-        <!-- Cliqz : remove background, tint the color to black-->
-        <org.mozilla.gecko.widget.themed.ThemedImageView
+        <!-- Cliqz : remove background -->
+        <ImageView
             android:id="@+id/close"
             style="@style/TabsItemClose"
             android:layout_width="wrap_content"
@@ -73,7 +73,6 @@
             android:duplicateParentState="true"
             android:scaleType="center"
             android:src="@drawable/tab_item_close_button"
-            android:tint="@color/cliqz_tabs_panel_tabs_item_header"
             />
 
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>

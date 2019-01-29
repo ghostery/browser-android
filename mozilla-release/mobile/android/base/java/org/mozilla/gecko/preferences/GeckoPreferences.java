@@ -30,6 +30,8 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
 import android.preference.TwoStatePreference;
@@ -270,12 +272,17 @@ public class GeckoPreferences
     public static final String PREFS_SHOW_CUSTOMIZE_TAB_VIEW = "pref.show.customize_tab.view";
     public static final String PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR = "pref.show.customize_tab.snackbar";
 
-    public static final String PREFS_BLUE_THEME = "pref.blue.theme";
+    public static final String PREF_CATEGORY_START_TAB = "pref.cliqz.start.tab";
+
+    public static final String PREFS_BLUE_THEME = "pref.cliqz.blue.theme";
+
     private CheckBoxPreference mShowBackgroundPref;
     private PreferenceManager mPreferenceManager;
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
+
+    private Fragment currentPreferenceFragment;
 
     {
         final HashMap<String, PrefHandler> tempHandlers = new HashMap<>(2);
@@ -1464,11 +1471,13 @@ public class GeckoPreferences
             // Tell Gecko to transmit the current search engine data again, so
             // BrowserSearch is notified immediately about the new enabled state.
             EventDispatcher.getInstance().dispatch("SearchEngines:GetVisible", null);
-        } else if(PREFS_BLUE_THEME.equals(prefName)) {
-            if((boolean)newValue == true) {
-                preference.getParent().addPreference(mShowBackgroundPref);
+        } else if (PREFS_BLUE_THEME.equals(prefName)) {
+            final PreferenceCategory categoryStartTab = (PreferenceCategory)
+                    ((PreferenceFragment) currentPreferenceFragment).findPreference(PREF_CATEGORY_START_TAB);
+            if ((boolean) newValue) {
+                categoryStartTab.addPreference(mShowBackgroundPref);
             } else {
-                preference.getParent().removePreference(mShowBackgroundPref);
+                categoryStartTab.removePreference(mShowBackgroundPref);
             }
         }
         /* Cliqz End */
@@ -1889,5 +1898,12 @@ public class GeckoPreferences
         setResult(RESULT_CODE_EXIT_SETTINGS);
         finishChoosingTransition();
     }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        this.currentPreferenceFragment = fragment;
+    }
+
     /* Cliqz end */
 }

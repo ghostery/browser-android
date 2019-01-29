@@ -113,7 +113,7 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
         mGhostyDrawable.setBounds((int) ghostyLeft, (int) ghostyTop, (int) ghostyRight, (int) ghostyBottom);
         final int tintColorId = mIsLightTheme ? R.color.general_blue_color : android.R.color.white;
         final int tintColor = ContextCompat.getColor(getContext(), tintColorId);
-        mGhostyDrawable.setTint(tintColor);
+        DrawableCompat.setTint(DrawableCompat.wrap(mGhostyDrawable), tintColor);
         mPaint.setColor(tintColor);
         mGhostyDrawable.draw(canvas);
         setContentDescription(count);

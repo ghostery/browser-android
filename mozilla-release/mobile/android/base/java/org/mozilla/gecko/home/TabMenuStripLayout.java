@@ -113,7 +113,8 @@ class TabMenuStripLayout extends ThemedLinearLayout
     /*Cliqz Start*/
     @SuppressLint("ResourceType")
     void onAddPagerView(@DrawableRes int iconId) {
-        final ThemedImageView imageView = (ThemedImageView) LayoutInflater.from(getContext()).inflate(R.layout.tab_menu_strip, this, false);
+        final ImageView imageView = (ImageView) LayoutInflater.from(getContext())
+                .inflate(R.layout.tab_menu_strip, this, false);
         imageView.setId(iconId); //for automation test purpose
         imageView.setImageResource(iconId);
         addView(imageView);
@@ -370,7 +371,8 @@ class TabMenuStripLayout extends ThemedLinearLayout
             final int backgroundTintColor = stripColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
             DrawableCompat.setTint(strip, backgroundTintColor);
             for (int i = 0; i < getChildCount(); i++) {
-                ((ThemedImageView)this.getChildAt(i)).setLightTheme(isLightTheme);
+                DrawableCompat.setTint(((ImageView) this.getChildAt(i)).getDrawable(),
+                        backgroundTintColor);
             }
         }
     }

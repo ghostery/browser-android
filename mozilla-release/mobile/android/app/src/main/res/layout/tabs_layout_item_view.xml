@@ -60,8 +60,8 @@
             android:textColor="@color/cliqz_tabs_panel_tabs_item_header"
             android:textSize="14sp" />
 
-        <!-- Cliqz : remove background, tint the color to white-->
-        <org.mozilla.gecko.widget.themed.ThemedImageView
+        <!-- Cliqz : remove background -->
+        <ImageView
             android:id="@+id/close"
             style="@style/TabsItemClose"
             android:layout_width="wrap_content"
@@ -70,8 +70,7 @@
             android:contentDescription="@string/close_tab"
             android:duplicateParentState="true"
             android:scaleType="center"
-            android:src="@drawable/tab_item_close_button"
-            android:tint="@color/cliqz_tabs_panel_tabs_item_header" />
+            android:src="@drawable/tab_item_close_button" />
 
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
 

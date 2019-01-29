@@ -32,7 +32,6 @@
                 style="@style/TabsTray.AddTab"
                 android:background="@drawable/action_bar_button_inverse"
                 android:contentDescription="@string/new_tab"
-                android:tint="@color/url_bar_image_color"
                 android:src="@drawable/tab_new"/>
 
             <RelativeLayout
@@ -63,8 +62,7 @@
                 style="@style/TabsTray.Menu"
                 android:background="@drawable/action_bar_button_inverse"
                 android:contentDescription="@string/menu"
-                android:src="@drawable/ic_overflow"
-                android:tint="@color/url_bar_image_color"/>
+                android:src="@drawable/ic_overflow"/>
         </view>
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
 

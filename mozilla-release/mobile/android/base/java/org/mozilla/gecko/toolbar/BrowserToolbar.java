@@ -8,6 +8,7 @@ package org.mozilla.gecko.toolbar;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -15,6 +16,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -29,6 +31,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -134,7 +137,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     /* Cliqz start */
     protected final ThemedFadedHorizontalScrollView urlDisplayScroll;
     protected final Ghosty ghostyButton;
-    protected final ThemedImageButton editCancel;
+    protected final ImageButton editCancel;
     protected final ToolbarRoundButton menuButton;
     /* Cliqz end */
 
@@ -211,7 +214,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         tabsCounter.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         /* Cliqz start */
-        editCancel = (ThemedImageButton)findViewById(R.id.edit_cancel);
+        editCancel = (ImageButton) findViewById(R.id.edit_cancel);
         ghostyButton = (Ghosty) findViewById(R.id.ghosty);
         ghostyButton.setOnGhostyClickedListener(this);
         urlDisplayLayout.setOnPageActionClickedListener(new PageActionLayout.PageActionClickListener() {
@@ -955,7 +958,6 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         urlEditLayout.setPrivateMode(isPrivate);
         urlDisplayLayout.setPrivateMode(isPrivate);
         /* Cliqz start */
-        editCancel.setPrivateMode(isPrivate);
         ghostyButton.setPrivateMode(isPrivate);
         /* Cliqz end */
         ((ThemedImageButton) menuButton).setPrivateMode(isPrivate);
@@ -1126,6 +1128,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     }
 
     public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
         urlDisplayScroll.setLightTheme(isLightTheme);
         urlDisplayLayout.setLightTheme(isLightTheme);
         urlEditLayout.setLightTheme(isLightTheme);
@@ -1133,8 +1136,11 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         tabsCounter.setLightTheme(isLightTheme);
         menuButton.setLightTheme(isLightTheme);
         ghostyButton.setLightTheme(isLightTheme);
-        editCancel.setLightTheme(isLightTheme);
-        super.setLightTheme(isLightTheme);
+        if (isLightTheme) {
+            DrawableCompat.setTint(DrawableCompat.wrap(editCancel.getDrawable()), Color.WHITE);
+        } else {
+            DrawableCompat.setTint(DrawableCompat.wrap(editCancel.getDrawable()), Color.BLACK);
+        }
     }
     /* Cliqz end */
 }

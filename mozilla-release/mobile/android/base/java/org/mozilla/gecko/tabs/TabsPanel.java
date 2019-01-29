@@ -32,6 +32,7 @@ import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -117,8 +118,8 @@ public class TabsPanel extends ThemedLinearLayout
     private TabsLayoutChangeListener mLayoutChangeListener;
 
     private IconTabWidget mTabWidget;
-    private ThemedImageButton mMenuButton;
-    private ThemedImageButton mAddTab;
+    private ImageButton mMenuButton;
+    private ImageButton mAddTab;
     private ThemedView mBlankLine;
 
     // Cliqz: add tabsCounter
@@ -173,7 +174,7 @@ public class TabsPanel extends ThemedLinearLayout
         mPanelPrivate = (PanelView) findViewById(R.id.private_tabs_panel);
         mPanelPrivate.setTabsPanel(this);
 
-        mAddTab = (ThemedImageButton) findViewById(R.id.add_tab);
+        mAddTab = (ImageButton) findViewById(R.id.add_tab);
         mAddTab.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -482,9 +483,6 @@ public class TabsPanel extends ThemedLinearLayout
         ((PrivateTabsPanel) mPanelPrivate).setPrivateMode(isPrivate);
         mHeader.setPrivateMode(isPrivate);
         mTabWidget.setPrivateMode(isPrivate);
-        mTabsCounter.setPrivateMode(isPrivate);
-        mMenuButton.setPrivateMode(isPrivate);
-        mAddTab.setPrivateMode(isPrivate);
         mBlankLine.setPrivateMode(isPrivate);
     }
 
@@ -496,9 +494,16 @@ public class TabsPanel extends ThemedLinearLayout
         mHeader.setLightTheme(isLightTheme);
         mTabWidget.setLightTheme(isLightTheme);
         mTabsCounter.setLightTheme(isLightTheme);
-        mMenuButton.setLightTheme(isLightTheme);
-        mAddTab.setLightTheme(isLightTheme);
         mBlankLine.setLightTheme(isLightTheme);
+        if (isLightTheme) {
+            DrawableCompat.setTint(DrawableCompat.wrap(mAddTab.getDrawable()),
+                    ContextCompat.getColor(getContext(), R.color.general_blue_color));
+            DrawableCompat.setTint(DrawableCompat.wrap(mMenuButton.getDrawable()),
+                    ContextCompat.getColor(getContext(), R.color.general_blue_color));
+        } else {
+            DrawableCompat.setTint(DrawableCompat.wrap(mAddTab.getDrawable()), Color.WHITE);
+            DrawableCompat.setTint(DrawableCompat.wrap(mMenuButton.getDrawable()), Color.WHITE);
+        }
     }
     /* Cliqz End */
 

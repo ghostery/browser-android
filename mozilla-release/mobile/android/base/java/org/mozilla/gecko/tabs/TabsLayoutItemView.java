@@ -6,12 +6,12 @@ package org.mozilla.gecko.tabs;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.ViewUtils;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -29,14 +28,11 @@ import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.icons.IconResponse;
-import org.mozilla.gecko.icons.Icons;
-import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.ViewUtil;
 import org.mozilla.gecko.widget.FaviconView;
 import org.mozilla.gecko.widget.HoverDelegateWithReset;
 import org.mozilla.gecko.widget.TabThumbnailWrapper;
 import org.mozilla.gecko.widget.TouchDelegateWithReset;
-import org.mozilla.gecko.widget.themed.ThemedImageView;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 import org.mozilla.gecko.widget.themed.ThemedRelativeLayout;
 import org.mozilla.gecko.widget.themed.ThemedTextView;
@@ -52,7 +48,7 @@ public class TabsLayoutItemView extends LinearLayout
     private int mTabId;
     private ThemedTextView mTitle;
     private TabsPanelThumbnailView mThumbnail;
-    private ThemedImageView mCloseButton;
+    private ImageView mCloseButton;
     private TabThumbnailWrapper mThumbnailWrapper;
     private HoverDelegateWithReset mHoverDelegate;
 
@@ -122,7 +118,7 @@ public class TabsLayoutItemView extends LinearLayout
         super.onFinishInflate();
         mTitle = (ThemedTextView) findViewById(R.id.title);
         mThumbnail = (TabsPanelThumbnailView) findViewById(R.id.thumbnail);
-        mCloseButton = (ThemedImageView) findViewById(R.id.close);
+        mCloseButton = (ImageView) findViewById(R.id.close);
         mThumbnailWrapper = (TabThumbnailWrapper) findViewById(R.id.wrapper);
         mFaviconView = (FaviconView) findViewById(R.id.favicon);
 
@@ -263,8 +259,12 @@ public class TabsLayoutItemView extends LinearLayout
     /* Cliqz Start */
     public void setLightTheme(boolean isLightTheme) {
         ((ThemedLinearLayout) findViewById(R.id.tab_item_header)).setLightTheme(isLightTheme);
-        ((ThemedTextView)findViewById(R.id.title)).setLightTheme(isLightTheme);
-        ((ThemedImageView)findViewById(R.id.close)).setLightTheme(isLightTheme);
+        mTitle.setLightTheme(isLightTheme);
+        if (isLightTheme) {
+            DrawableCompat.setTint(DrawableCompat.wrap(mCloseButton.getDrawable()), Color.BLACK);
+        } else {
+            DrawableCompat.setTint(DrawableCompat.wrap(mCloseButton.getDrawable()), Color.WHITE);
+        }
     }
 
     private Drawable initDefaultVectorDrawable(int drawableId) {
