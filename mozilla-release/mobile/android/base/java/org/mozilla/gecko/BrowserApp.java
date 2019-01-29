@@ -2346,7 +2346,10 @@ public class BrowserApp extends GeckoApp
                 break;
             case "Search:Ready":
                 mSearchIsReady = true;
-                if (mUserDidSearch && mBrowserToolbar.hasFocus()) {
+                if (mUserDidSearch &&
+                        mBrowserToolbar.hasFocus() &&
+                        mPreferenceManager.isQuickSearchEnabled() &&
+                        !mBrowserToolbar.getQueryValue().isEmpty()) {
                     showCliqzSearch();
                     mHomeScreenContainer.setVisibility(View.INVISIBLE);
                 }
