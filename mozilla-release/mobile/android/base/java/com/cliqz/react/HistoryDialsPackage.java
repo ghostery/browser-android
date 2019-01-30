@@ -75,11 +75,13 @@ public class HistoryDialsPackage implements ReactPackage {
             do {
                 final String title = cursor.getString(cursor.getColumnIndex("title"));
                 final String url = cursor.getString(cursor.getColumnIndex("url"));
+                final String lastVisited = cursor.getString(cursor.getColumnIndex("localDateLastVisited"));
                 if (!url.isEmpty()) {
                     // add title to the arrayList of dictionaries
                     final WritableMap outData = Arguments.createMap();
                     outData.putString("title", title);
                     outData.putString("url", url);
+                    outData.putString("lastVisited", lastVisited);
                     wArray.pushMap(outData);
                 }
 

@@ -133,7 +133,7 @@ class HistoryItem extends React.Component {
         />*/}
         <View style={itemStyles.rightContainer}>
           <Text style={itemStyles.title}>{data.title}</Text>
-          { /* <Text>{data.lastVisited}</Text> */}
+          <Text>{data.lastVisited}</Text>
         </View>
       </View>
     )

@@ -2035,7 +2035,8 @@ public class LocalBrowserDB extends BrowserDB {
                                                  Combined.URL,
                                                  Combined.TITLE,
                                                  Combined.BOOKMARK_ID,
-                                                 Combined.HISTORY_ID },
+                                                 Combined.HISTORY_ID,
+                                                 Combined.LOCAL_DATE_LAST_VISITED},
                                          null,
                                          null,
                                          null);
@@ -2056,7 +2057,8 @@ public class LocalBrowserDB extends BrowserDB {
                 TopSites.HISTORY_ID,
                 TopSites.URL,
                 TopSites.TITLE,
-                TopSites.TYPE});
+                TopSites.TYPE,
+                Combined.LOCAL_DATE_LAST_VISITED});
 
         final MatrixCursor.RowBuilder rb = blanksCursor.newRow();
         rb.add(-1);
@@ -2065,6 +2067,7 @@ public class LocalBrowserDB extends BrowserDB {
         rb.add("");
         rb.add("");
         rb.add(TopSites.TYPE_BLANK);
+        rb.add("");
 
         return new MergeCursor(new Cursor[] {topSitesCursor, blanksCursor});
     }
