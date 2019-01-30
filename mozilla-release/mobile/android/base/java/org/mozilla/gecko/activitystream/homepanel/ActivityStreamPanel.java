@@ -139,8 +139,8 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         customizeNewTabView = findViewById(R.id.customize_newtab_view);
         customizeNewTabViewSnackBar = findViewById(R.id.customize_newtab_snackbar);
 
-        final TextView goToSettings = (TextView) customizeNewTabView.findViewById(R.id.go_to_settings);
-        goToSettings.setOnClickListener(new View.OnClickListener() {
+        final View customizeTabLink = customizeNewTabView.findViewById(R.id.customize_tab_link);
+        customizeTabLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Intent intent = new Intent(context, GeckoPreferences.class);
