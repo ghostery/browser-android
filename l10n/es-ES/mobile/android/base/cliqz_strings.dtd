@@ -3,7 +3,7 @@
 <!ENTITY action_ok "Aceptar">
 <!ENTITY action_exit "Salir">
 <!ENTITY contextmenu_delete "Borrar">
-<!ENTITY search_loading_message "Estamos potenciando tus búsquedas Ghost para una experiencia totalmente privada.">
+<!ENTITY search_loading_message "Activando Ghost Search para preservar tu privacidad">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
@@ -44,7 +44,7 @@
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "¿Quieres personalizar esta pestaña?">
-<!ENTITY customize_new_tab_link "Ve a  Ajustes">
+<!ENTITY customize_new_tab_link "Ir a  Ajustes">
 <!ENTITY customize_new_tab_snackbar_negative_btn "No, gracias">
 <!ENTITY customize_new_tab_snackbar_positive_btn "Personalizar">
 <!ENTITY customize_new_tab_snackbar_description "Adapta este espacio a tus necesidades: Mostrar/ocultar los sitios principales, las noticias y la imagen de fondo.">
