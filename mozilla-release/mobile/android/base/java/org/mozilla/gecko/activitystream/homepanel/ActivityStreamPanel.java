@@ -100,9 +100,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
 
         inflate(context, R.layout.as_content, this);
 
-        /* Cliqz Start */
-        adapter = new StreamRecyclerAdapter(isNewsEnabled(), isTopSitesEnabled());
-        /* Cliqz End */
+        adapter = new StreamRecyclerAdapter();
         sharedPreferences = GeckoSharedPrefs.forProfile(context);
 
         /* Cliqz Start */
