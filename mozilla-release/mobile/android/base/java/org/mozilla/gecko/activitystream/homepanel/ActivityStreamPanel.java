@@ -100,7 +100,9 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
 
         inflate(context, R.layout.as_content, this);
 
-        adapter = new StreamRecyclerAdapter();
+        /* Cliqz Start */
+        adapter = new StreamRecyclerAdapter(isNewsEnabled(), isTopSitesEnabled());
+        /* Cliqz End */
         sharedPreferences = GeckoSharedPrefs.forProfile(context);
 
         /* Cliqz Start */
@@ -109,7 +111,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
 
         contentRecyclerView = (RecyclerView) findViewById(R.id.activity_stream_main_recyclerview);
         contentRecyclerView.setAdapter(adapter);
-        contentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        contentRecyclerView.setLayoutManager(/* Cliqz */ new CustomLinearLayoutManager(context));
         contentRecyclerView.setHasFixedSize(true);
         /* Cliqz Start */
         contentRecyclerView.setNestedScrollingEnabled(false);
@@ -455,6 +457,18 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     private boolean isNewsEnabled(){
         final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
         return  prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_ENABLED,true);
+    }
+
+    // Disable predictive animations, see https://stackoverflow.com/a/33985508/1122966
+    private static class CustomLinearLayoutManager extends LinearLayoutManager {
+        CustomLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+        @Override
+        public boolean supportsPredictiveItemAnimations() {
+            return false;
+        }
     }
     /* Cliqz end */
 }
