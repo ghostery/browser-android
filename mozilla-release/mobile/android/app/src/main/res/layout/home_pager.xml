@@ -19,8 +19,7 @@
         android:background="@android:color/transparent"
         gecko:strip="@drawable/home_tab_menu_strip"
         gecko:stripColor="@android:color/white"
-        gecko:inactiveTextColor="@android:color/transparent"
-        gecko:tabsMarginLeft="@dimen/tab_strip_content_start"/>
+        gecko:inactiveTextColor="@android:color/transparent"/>
 
 </org.mozilla.gecko.home.HomePager>
 <!-- Cliqz End -->
