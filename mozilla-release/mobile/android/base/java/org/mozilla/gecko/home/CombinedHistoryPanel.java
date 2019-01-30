@@ -193,7 +193,9 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mHistoryAdapter.setLinearLayoutManager((LinearLayoutManager) mRecyclerView.getLayoutManager());
         mRecyclerView.setItemAnimator(animator);
-        mRecyclerView.addItemDecoration(new HistoryDividerItemDecoration(getContext()));
+        /* Cliqz Start */
+        // mRecyclerView.addItemDecoration(new HistoryDividerItemDecoration(getContext()));
+        /* Cliqz End */
         mRecyclerView.setOnHistoryClickedListener(mUrlOpenListener);
         // Cliqz start // mRecyclerView.setOnPanelLevelChangeListener(new OnLevelChangeListener());
         mRecyclerView.setHiddenClientsDialogBuilder(new HiddenClientsHelper());

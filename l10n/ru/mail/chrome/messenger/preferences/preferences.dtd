@@ -11,9 +11,6 @@
 <!ENTITY  prefWindow.titleWin     "Настройки">
 <!ENTITY  prefWindow.titleGNOME   "Настройки &brandShortName;">
 <!ENTITY  prefWindow.titleMAC     "Настройки">
-<!ENTITY  prefWindow.styleWindows "width: 58em; min-height: 38.5em;">
-<!ENTITY  prefWindow.styleMac     "width: 63em;">
-<!ENTITY  prefWindow.styleGNOME   "width: 65em; min-height: 38em;">
 
 <!ENTITY paneGeneral.title        "Основные">
 <!ENTITY paneDisplay.title        "Отображение">
@@ -22,8 +19,11 @@
 <!ENTITY paneAttachments.title    "Вложенные файлы">
 <!ENTITY panePrivacy.title        "Приватность">
 <!ENTITY paneSecurity.title       "Защита">
+<!ENTITY paneLightning.title      "Календарь">
 <!ENTITY paneAdvanced.title       "Дополнительные">
 <!ENTITY paneAccount.title        "Учётные записи">
+
+<!ENTITY addonsButton.label       "Расширения и темы">
 
 <!ENTITY okButton.title           "OK">
 <!ENTITY okButton.accesskey       "O">

@@ -19,17 +19,9 @@
 <!ENTITY chooseDownloadFolder.accesskey "C">
 <!ENTITY alwaysAsk.label "Preguntarme siempre dónde guardar archivos">
 <!ENTITY alwaysAsk.accesskey "P">
-<!ENTITY downloadHistory.label "Descargar historial">
-<!ENTITY removeEntries.label "Eliminar entradas del historial">
-<!ENTITY removeEntries.accesskey "m">
-<!ENTITY whenCompleted.label "Cuando se hayan completado">
-<!ENTITY whenQuittingApp.label "Al salir de &brandShortName;">
-<!ENTITY neverRemove.label "Nunca">
 <!ENTITY finishedBehavior.label "Cuando se completa una descarga">
 <!ENTITY playSound.label "Reproducir un sonido">
 <!ENTITY playSound.accesskey "R">
-<!ENTITY showAlert.label "Mostrar una alerta">
-<!ENTITY showAlert.accesskey "o">
 <!ENTITY browse.label "Examinar…">
 <!ENTITY browse.accesskey "x">
 <!ENTITY playButton.label "Reproducir">

@@ -22,7 +22,7 @@
 <!ENTITY aboutPrivateBrowsing.info.bookmarks             "書籤">
 <!ENTITY aboutPrivateBrowsing.info.clipboard             "已複製文字">
 <!ENTITY aboutPrivateBrowsing.note.before                "隱私瀏覽">
-<!ENTITY aboutPrivateBrowsing.note.emphasize             "不會讓您完全在網路上匿蹤。">
+<!ENTITY aboutPrivateBrowsing.note.emphasize             "不會讓您在網路上匿蹤。">
 <!ENTITY aboutPrivateBrowsing.note.after                 "您的雇主或網路業者還是能知道您看過哪些網站。">
 <!ENTITY aboutPrivateBrowsing.learnMore3.before          "了解">
 <!ENTITY aboutPrivateBrowsing.learnMore3.title           "隱私瀏覽">
@@ -30,6 +30,7 @@
 
 <!ENTITY trackingProtection.title                        "追蹤保護">
 <!ENTITY trackingProtection.description2                 "某些網站會使用可在不同網站間監控您的追蹤器。透過追蹤保護功能，Firefox 將封鎖大部分會收集您的上網行為的追蹤器。">
+
 <!ENTITY trackingProtection.startTour1                   "看看原理是什麼">
 
 <!ENTITY contentBlocking.title                           "內容封鎖">

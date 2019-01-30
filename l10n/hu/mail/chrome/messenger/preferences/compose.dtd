@@ -20,6 +20,10 @@
 <!ENTITY font.accesskey                       "B">
 <!ENTITY size.label                           "Méret:">
 <!ENTITY size.accesskey                       "M">
+<!ENTITY fontSize.label                       "Méret:">
+<!ENTITY fontSize.accesskey                   "M">
+<!ENTITY useReaderDefaults.label              "Az olvasó alapértelmezett színeinek használata">
+<!ENTITY useReaderDefaults.accesskey          "a">
 <!ENTITY fontColor.label                      "Szövegszín:">
 <!ENTITY fontColor.accesskey                  "z">
 <!ENTITY bgColor.label                        "Háttérszín:">

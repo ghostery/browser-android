@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY performanceUI.bufferStatusTooltip "Profiler przechowuje próbki w buforze cyklicznym i gdy zostanie osiągnięty limit pojemności zapisu, nowe próbki zaczynają nadpisywać próbki z początku rejestrowania.">
-<!ENTITY performanceUI.disabledRealTime.disabledE10S "Włącz obsługę wielu procesów w ustawieniach Firefoksa, aby dane były przedstawiane w czasie rzeczywistym.">
+<!ENTITY performanceUI.disabledRealTime.disabledE10S "Włącz obsługę wielu procesów w ustawieniach, aby dane były przedstawiane w czasie rzeczywistym.">
 <!ENTITY performanceUI.bufferStatusFull "Bufor jest pełny. Starsze próbki będą od teraz nadpisywane.">
 <!ENTITY performanceUI.unavailableNoticePB "Rejestrowanie wydajności niedostępne. Proszę zamknąć wszystkie prywatne okna i spróbować ponownie.">
 <!ENTITY performanceUI.loadingNotice "Wczytywanie…">

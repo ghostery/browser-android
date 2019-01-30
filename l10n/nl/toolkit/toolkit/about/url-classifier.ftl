@@ -30,6 +30,7 @@ url-classifier-debug-sb-modules = Logmodules van Safe Browsing
 url-classifier-debug-modules = Huidige logmodules
 url-classifier-debug-sbjs-modules = JS-registratie van Safe Browsing
 url-classifier-debug-file = Huidige logbestand
+
 url-classifier-trigger-update = Bijwerken activeren
 url-classifier-not-available = Niet beschikbaar
 url-classifier-disable-sbjs-log = JS-registratie van Safe Browsing uitschakelen

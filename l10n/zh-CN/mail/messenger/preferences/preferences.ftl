@@ -8,3 +8,7 @@ manage-messenger-languages-button =
     .accesskey = I
 confirm-messenger-language-change-description = 重开 { -brand-short-name } 以应用这些更改
 confirm-messenger-language-change-button = 应用并重新打开
+update-pref-write-failure-title = 写入失败
+# Variables:
+#   $path (String) - Path to the configuration file
+update-pref-write-failure-message = 无法保存首选项。未能写入文件：{ $path }

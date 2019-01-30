@@ -6,6 +6,7 @@
 ## UI strings for the simplified onboarding modal
 
 onboarding-button-label-try-now = 지금 사용해보기
+onboarding-button-label-get-started = 시작하기
 onboarding-welcome-header = { -brand-short-name }를 사용해 주셔서 감사합니다.
 onboarding-start-browsing-button-label = 브라우징 시작
 
@@ -24,3 +25,6 @@ onboarding-addons-title = 부가기능
 onboarding-addons-text = { -brand-short-name }가 여러분을 위해 더 열심히 일하도록 더욱 많은 기능들을 추가하세요. 가격을 비교하거나 날씨를 확인하거나 개인화 테마로 여러분의 개성을 표현해 보세요.
 onboarding-ghostery-title = Ghostery
 onboarding-ghostery-text = 귀찮은 광고들로부터 여러분을 막아주는 Ghostery 같은 확장기능으로 더욱 빠르고 똑똑하고 안전하게 탐색하세요.
+# Note: "Sync" in this case is a generic verb, as in "to synchronize"
+onboarding-fxa-title = Sync
+onboarding-fxa-text = { -fxaccount-brand-name }에 가입해 { -brand-short-name }를 사용하는 모든 곳에서 북마크, 암호, 열린 탭들을 동기화하세요.

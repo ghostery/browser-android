@@ -183,7 +183,7 @@ WebGLContext::ValidateFaceEnum(const GLenum face)
 }
 
 bool
-WebGLContext::ValidateUniformLocation(WebGLUniformLocation* loc)
+WebGLContext::ValidateUniformLocation(const WebGLUniformLocation* const loc)
 {
     /* GLES 2.0.25, p38:
      *   If the value of location is -1, the Uniform* commands will silently
@@ -219,8 +219,9 @@ WebGLContext::ValidateAttribArraySetter(uint32_t setterElemSize, uint32_t arrayL
 }
 
 bool
-WebGLContext::ValidateUniformSetter(WebGLUniformLocation* loc,
-                                    uint8_t setterElemSize, GLenum setterType)
+WebGLContext::ValidateUniformSetter(const WebGLUniformLocation* const loc,
+                                    const uint8_t setterElemSize,
+                                    const webgl::AttribBaseType setterType)
 {
     if (IsContextLost())
         return false;
@@ -235,10 +236,10 @@ WebGLContext::ValidateUniformSetter(WebGLUniformLocation* loc,
 }
 
 bool
-WebGLContext::ValidateUniformArraySetter(WebGLUniformLocation* loc,
-                                         uint8_t setterElemSize,
-                                         GLenum setterType,
-                                         uint32_t setterArraySize,
+WebGLContext::ValidateUniformArraySetter(const WebGLUniformLocation* const loc,
+                                         const uint8_t setterElemSize,
+                                         const webgl::AttribBaseType setterType,
+                                         const uint32_t setterArraySize,
                                          uint32_t* const out_numElementsToUpload)
 {
     if (IsContextLost())
@@ -263,12 +264,12 @@ WebGLContext::ValidateUniformArraySetter(WebGLUniformLocation* loc,
 }
 
 bool
-WebGLContext::ValidateUniformMatrixArraySetter(WebGLUniformLocation* loc,
-                                               uint8_t setterCols,
-                                               uint8_t setterRows,
-                                               GLenum setterType,
-                                               uint32_t setterArraySize,
-                                               bool setterTranspose,
+WebGLContext::ValidateUniformMatrixArraySetter(const WebGLUniformLocation* const loc,
+                                               const uint8_t setterCols,
+                                               const uint8_t setterRows,
+                                               const webgl::AttribBaseType setterType,
+                                               const uint32_t setterArraySize,
+                                               const bool setterTranspose,
                                                uint32_t* const out_numElementsToUpload)
 {
     const uint8_t setterElemSize = setterCols * setterRows;
@@ -326,7 +327,6 @@ WebGLContext::InitAndValidateGL(FailureReason* const out_failReason)
     mDisableExtensions = gfxPrefs::WebGLDisableExtensions();
     mLoseContextOnMemoryPressure = gfxPrefs::WebGLLoseContextOnMemoryPressure();
     mCanLoseContextInForeground = gfxPrefs::WebGLCanLoseContextInForeground();
-    mRestoreWhenVisible = gfxPrefs::WebGLRestoreWhenVisible();
 
     // These are the default values, see 6.2 State tables in the
     // OpenGL ES 2.0.25 spec.
@@ -382,9 +382,7 @@ WebGLContext::InitAndValidateGL(FailureReason* const out_failReason)
     mDefaultFB_DrawBuffer0 = LOCAL_GL_BACK;
     mDefaultFB_ReadBuffer = LOCAL_GL_BACK;
 
-    mEmitContextLostErrorOnce = true;
     mWebGLError = LOCAL_GL_NO_ERROR;
-    mUnderlyingGLError = LOCAL_GL_NO_ERROR;
 
     mBound2DTextures.Clear();
     mBoundCubeMapTextures.Clear();
@@ -662,8 +660,8 @@ WebGLContext::InitAndValidateGL(FailureReason* const out_failReason)
 
     mPrimRestartTypeBytes = 0;
 
-    mGenericVertexAttribTypes.reset(new GLenum[mGLMaxVertexAttribs]);
-    std::fill_n(mGenericVertexAttribTypes.get(), mGLMaxVertexAttribs, LOCAL_GL_FLOAT);
+    mGenericVertexAttribTypes.assign(mGLMaxVertexAttribs,
+                                     webgl::AttribBaseType::Float);
     mGenericVertexAttribTypeInvalidator.InvalidateCaches();
 
     static const float kDefaultGenericVertexAttribData[4] = { 0, 0, 0, 1 };

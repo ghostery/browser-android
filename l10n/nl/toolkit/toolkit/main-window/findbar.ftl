@@ -17,6 +17,14 @@ findbar-highlight-all =
     .accesskey = A
     .tooltiptext = Alle overeenkomsten van de tekst markeren
 
+findbar-highlight-all2 =
+    .label = Alles markeren
+    .accesskey = { PLATFORM() ->
+        [macos] l
+       *[other] A
+    }
+    .tooltiptext = Alle overeenkomsten van de tekst markeren
+
 findbar-case-sensitive =
     .label = Hoofdlettergevoelig
     .accesskey = o

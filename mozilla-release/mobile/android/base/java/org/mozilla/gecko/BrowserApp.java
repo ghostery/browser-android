@@ -36,13 +36,10 @@ import android.nfc.NfcEvent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -103,7 +100,6 @@ import org.mozilla.gecko.bookmarks.EditBookmarkTask;
 import org.mozilla.gecko.cleanup.FileCleanupController;
 import org.mozilla.gecko.controlcenter.BaseControlCenterPagerAdapter;
 import org.mozilla.gecko.controlcenter.ControlCenterPagerAdapter;
-import org.mozilla.gecko.controlcenter.ControlCenterUtils;
 import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.db.SuggestedSites;
@@ -143,13 +139,11 @@ import org.mozilla.gecko.menu.GeckoMenuItem;
 import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationHelper;
-import org.mozilla.gecko.onboarding.CliqzIntroPagerAdapter;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.Countries;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
-import org.mozilla.gecko.promotion.AddToHomeScreenPromotion;
 import org.mozilla.gecko.promotion.ReaderViewBookmarkPromotion;
 import org.mozilla.gecko.prompts.Prompt;
 import org.mozilla.gecko.reader.ReaderModeUtils;
@@ -219,19 +213,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
-import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
+import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 
 public class BrowserApp extends GeckoApp
                         implements ActionModePresenter,
@@ -267,8 +259,6 @@ public class BrowserApp extends GeckoApp
     private static final String STATE_ABOUT_HOME_TOP_PADDING = "abouthome_top_padding";
 
     private static final String BROWSER_SEARCH_TAG = "browser_search";
-
-    private static final int MAX_BUNDLE_SIZE = 300000; // 300 kilobytes
 
     // Request ID for startActivityForResult.
     public static final int ACTIVITY_REQUEST_PREFERENCES = 1001;
@@ -318,6 +308,7 @@ public class BrowserApp extends GeckoApp
     private String mLastUrl = "";
     private AntiPhishingDialog antiPhishingDialog;
     private AntiPhishing antiPhishing;
+    private CliqzLoadingSearchHelper mLoadingSearchHelper;
     private static final int SUGGESTIONS_LIMIT = 3;
     private static final Pattern FILTER =
             Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
@@ -330,6 +321,9 @@ public class BrowserApp extends GeckoApp
     private ReactInstanceManager mReactInstanceManager;
     private ReactRootView mReactRootView;
     private ReactContext mReactContext;
+
+    // Minimum app launches until the existing users are shown the 'customize tab' snackbar
+    private static final int MINIMUM_UNTIL_CUSTOMIZE_TAB_SNACKBAR = 6;
     /* Cliqz End */
 
     public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
@@ -398,7 +392,6 @@ public class BrowserApp extends GeckoApp
     private final TelemetryCorePingDelegate mTelemetryCorePingDelegate = new TelemetryCorePingDelegate();
 
     private final List<BrowserAppDelegate> delegates = Collections.unmodifiableList(Arrays.asList(
-            new AddToHomeScreenPromotion(),
             new ScreenshotDelegate(),
             new BookmarkStateChangeDelegate(),
             new ReaderViewBookmarkPromotion(),
@@ -818,6 +811,8 @@ public class BrowserApp extends GeckoApp
             GuestSession.onNotificationIntentReceived(this);
         } else if (TabQueueHelper.LOAD_URLS_ACTION.equals(action)) {
             Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, TelemetryContract.Method.NOTIFICATION, "tabqueue");
+        } else if (NotificationHelper.HELPER_BROADCAST_ACTION.equals(action)) {
+            NotificationHelper.getInstance(getApplicationContext()).handleNotificationIntent(safeStartingIntent);
         }
 
         if (HardwareUtils.isTablet()) {
@@ -866,7 +861,6 @@ public class BrowserApp extends GeckoApp
         mMediaCastingBar = (MediaCastingBar) findViewById(R.id.media_casting);
 
         doorhangerOverlay = findViewById(R.id.doorhanger_overlay);
-        /*Cliqz start*/
         mControlCenterPager = (ViewPager) findViewById(R.id.control_center_pager);
         mControlCenterContainer = findViewById(R.id.control_center_container);
         if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
@@ -885,6 +879,9 @@ public class BrowserApp extends GeckoApp
         final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
         tabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
+
+        final ViewStub loadingSearchStub = (ViewStub) findViewById(R.id.cliqz_loading_search_progress);
+        mLoadingSearchHelper = new CliqzLoadingSearchHelper(loadingSearchStub);
         /*Cliqz end*/
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
@@ -1070,7 +1067,7 @@ public class BrowserApp extends GeckoApp
     private void maybeShowSetDefaultBrowserDialog(SharedPreferences sharedPreferences,
                                                   final Context context) {
         int appLaunchCount = sharedPreferences.getInt(GeckoPreferences.PREFS_APP_LAUNCH_COUNT, 0);
-        if (appLaunchCount >= MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT) return;
+        if (appLaunchCount >= MINIMUM_UNTIL_CUSTOMIZE_TAB_SNACKBAR) return;
         appLaunchCount++;
         sharedPreferences.edit().putInt(GeckoPreferences.PREFS_APP_LAUNCH_COUNT, appLaunchCount).apply();
         if (appLaunchCount == MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT && !isDefaultBrowser(Intent.ACTION_VIEW)) {
@@ -2050,7 +2047,7 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "GeckoView:AccessibilityEnabled":
-                mDynamicToolbar.setAccessibilityEnabled(message.getBoolean("enabled"));
+                mDynamicToolbar.setAccessibilityEnabled(message.getBoolean("touchEnabled"));
                 break;
 
             case "Menu:Open":
@@ -2414,7 +2411,10 @@ public class BrowserApp extends GeckoApp
                 mSearchIsReady = true;
                 if (mUserDidSearch && mBrowserToolbar.hasFocus()) {
                     showCliqzSearch();
-                    mHomeScreenContainer.setVisibility(View.INVISIBLE);
+                    //mHomeScreenContainer.setVisibility(View.INVISIBLE);
+                }
+                if (mLoadingSearchHelper.isStarted()) {
+                    mLoadingSearchHelper.stop();
                 }
                 break;
             case "Search:QuerySuggestions":
@@ -2668,7 +2668,7 @@ public class BrowserApp extends GeckoApp
         // This in some cases can lead to TransactionTooLargeException as per
         // [https://developer.android.com/reference/android/os/TransactionTooLargeException] it's
         // specified that the limit is fixed to 1MB per process.
-        if (getBundleSizeInBytes(outState) > MAX_BUNDLE_SIZE) {
+        if (getBundleSizeInBytes(outState) > MAX_BUNDLE_SIZE_BYTES) {
             outState.remove("android:viewHierarchyState");
         }
     }
@@ -3351,9 +3351,13 @@ public class BrowserApp extends GeckoApp
 
     private void showBrowserSearch() {
         /* Cliqz start */
+        // Display the "loading search" UI in case the search is not ready
+        if (!mSearchIsReady) {
+            //mLoadingSearchHelper.start();
+        }
         // show Cliqz search cards if quick search enabled otherwise show firefox one.
-        final boolean isQuicSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
-        if(isQuicSearchEnabled) {
+        final boolean isQuickSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
+        if(isQuickSearchEnabled) {
             showCliqzSearch();
         } else {
             if (mBrowserSearch.getUserVisibleHint()) {
@@ -3384,7 +3388,7 @@ public class BrowserApp extends GeckoApp
             fm.beginTransaction().show(f).commitAllowingStateLoss();
         }
 
-        if(!isQuicSearchEnabled){
+        if(!isQuickSearchEnabled){
             if(f != null){
                 mBrowserSearch.resetScrollState();
             } else {
@@ -3408,6 +3412,10 @@ public class BrowserApp extends GeckoApp
 
     private void hideBrowserSearch(boolean hidePanel) {
         /* Cliqz start */
+        // If we are displaying the "loading search" UI, hide it
+        if (mLoadingSearchHelper.isStarted()) {
+            mLoadingSearchHelper.stop();
+        }
         if (!mPreferenceManager.isQuickSearchEnabled()) {
             if (!mBrowserSearch.getUserVisibleHint()) {
                 return;
@@ -3800,7 +3808,7 @@ public class BrowserApp extends GeckoApp
         if (SwitchBoard.isInExperiment(this, Experiments.TOP_ADDONS_MENU)) {
             MenuUtils.safeSetVisible(aMenu, R.id.addons_top_level, true);
             GeckoMenuItem item = (GeckoMenuItem) aMenu.findItem(R.id.addons_top_level);
-            if (item != null) {
+            if (item != null && mExtensionPermissionsHelper != null) {
                 if (mExtensionPermissionsHelper.getShowUpdateIcon()) {
                     item.setIcon(R.drawable.ic_addon_update);
                 } else {
@@ -4214,6 +4222,7 @@ public class BrowserApp extends GeckoApp
      * If the app has been launched a certain number of times, and we haven't asked for feedback before,
      * open a new tab with about:feedback when launching the app from the icon shortcut.
      */
+    @SuppressWarnings("try")
     @Override
     protected void onNewIntent(Intent externalIntent) {
 
@@ -4308,10 +4317,9 @@ public class BrowserApp extends GeckoApp
         /* Cliqz start o/
         // Check to see how many times the app has been launched.
         final String keyName = getPackageName() + ".feedback_launch_count";
-        final StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
 
         // Faster on main thread with an async apply().
-        try {
+        try (StrictModeContext unused = StrictModeContext.allowDiskReads()) {
             SharedPreferences settings = getPreferences(Activity.MODE_PRIVATE);
             int launchCount = settings.getInt(keyName, 0);
             if (launchCount < FEEDBACK_LAUNCH_COUNT) {
@@ -4324,8 +4332,6 @@ public class BrowserApp extends GeckoApp
                     EventDispatcher.getInstance().dispatch("Feedback:Show", null);
                 }
             }
-        } finally {
-            StrictMode.setThreadPolicy(savedPolicy);
         }
         /o Cliqz End */
     }
@@ -4647,6 +4653,7 @@ public class BrowserApp extends GeckoApp
     }
 
     private void showCliqzSearch() {
+        mLayerView.setSearchPanelVisibilty(true);
         EventDispatcher.getInstance().dispatch("Search:Show", null);
         if(mPreferenceManager.isQuerySuggestionsEnabled()) {
             EventDispatcher.getInstance().registerUiThreadListener(this,
@@ -4655,6 +4662,7 @@ public class BrowserApp extends GeckoApp
     }
 
     private void hidePanelSearch() {
+        mLayerView.setSearchPanelVisibilty(false);
         EventDispatcher.getInstance().dispatch("Search:Hide", null);
         EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
         if(mPreferenceManager.isQuerySuggestionsEnabled()) {
@@ -4672,7 +4680,6 @@ public class BrowserApp extends GeckoApp
             mDynamicToolbar.setPinned(false, PinReason.DISABLED);
         } else {
             mControlCenterPagerAdapter.setTrackingData(new GeckoBundle());
-            mControlCenterPagerAdapter.unInitialize();
             mControlCenterContainer.setVisibility(View.VISIBLE);
             mControlCenterPager.setCurrentItem(0);
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
@@ -4689,8 +4696,7 @@ public class BrowserApp extends GeckoApp
     private void showReloadingTabSnackbar() {
         final Tab tab = Tabs.getInstance().getSelectedTab();
         // Delay reload by a second while showing the reload snackbar text.
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        ThreadUtils.postDelayedToUiThread(new Runnable() {
             @Override
             public void run() {
                 tab.doReload(true);
@@ -4884,6 +4890,7 @@ public class BrowserApp extends GeckoApp
                     .addPackage(new MainReactPackage()).setUseDeveloperSupport(BuildConfig.DEBUG)
                     .setInitialLifecycleState(LifecycleState.RESUMED).build();
             mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
+            mReactRootView.setBackgroundColor(Color.TRANSPARENT);
         }
         mHomeScreenContainer.addView(mReactRootView);
         mReactContext = mReactInstanceManager.getCurrentReactContext();

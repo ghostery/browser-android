@@ -23,6 +23,7 @@
 <!ENTITY aboutPrivateBrowsing.info.saved.after2 ":">
 <!ENTITY aboutPrivateBrowsing.info.downloads "pobrane pliki">
 <!ENTITY aboutPrivateBrowsing.info.bookmarks "dodane zakładki">
+<!ENTITY aboutPrivateBrowsing.info.clipboard "skopiowany tekst">
 <!ENTITY aboutPrivateBrowsing.note.before "Przeglądanie prywatne ">
 <!ENTITY aboutPrivateBrowsing.note.emphasize "nie czyni użytkownika anonimowym">
 <!ENTITY aboutPrivateBrowsing.note.after " w Internecie. Pracodawca lub dostawca usług internetowych może w dalszym ciągu monitorować odwiedzane strony.">

@@ -20,11 +20,11 @@
 <!ENTITY aboutPrivateBrowsing.info.downloads "download">
 <!ENTITY aboutPrivateBrowsing.info.bookmarks "segnalibri">
 <!ENTITY aboutPrivateBrowsing.info.clipboard "testo copiato">
-<!ENTITY aboutPrivateBrowsing.note.before "La navigazione anonima ">
+<!ENTITY aboutPrivateBrowsing.note.before "La Navigazione anonima ">
 <!ENTITY aboutPrivateBrowsing.note.emphasize "non nasconde ogni traccia della navigazione">
 <!ENTITY aboutPrivateBrowsing.note.after " su Internet. Il datore di lavoro o il fornitore di servizi internet saranno comunque in grado di mantenere un registro delle pagine visitate.">
 <!ENTITY aboutPrivateBrowsing.learnMore3.before "Ulteriori informazioni sulla ">
-<!ENTITY aboutPrivateBrowsing.learnMore3.title "navigazione anonima">
+<!ENTITY aboutPrivateBrowsing.learnMore3.title "Navigazione anonima">
 <!ENTITY aboutPrivateBrowsing.learnMore3.after ".">
 <!ENTITY trackingProtection.title "Protezione antitracciamento">
 <!ENTITY trackingProtection.description2 "Alcuni siti web utilizzano elementi traccianti in grado di seguire l’attività degli utenti su Internet. Grazie alla protezione antitracciamento è possibile bloccare molti di questi strumenti, impedendo la raccolta di informazioni sulle abitudini di navigazione dei visitatori.">

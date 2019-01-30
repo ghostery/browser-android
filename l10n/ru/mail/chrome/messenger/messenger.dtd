@@ -443,6 +443,9 @@
 <!ENTITY openConversationCmd.label "Открыть в разговоре">
 <!ENTITY openConversationCmd.accesskey "т">
 <!ENTITY openConversationCmd.key "o">
+<!ENTITY openInConversationCmd.label "Открыть в разговоре">
+<!ENTITY openInConversationCmd.accesskey "г">
+<!ENTITY openInConversationCmd.key "o">
 <!ENTITY openAttachmentListCmd.label "Вложения">
 <!ENTITY openAttachmentListCmd.accesskey "ж">
 <!ENTITY openFeedMessage1.label "При открытии сообщений из ленты новостей">
@@ -875,7 +878,7 @@
   -->
 <!ENTITY quickSearchCmd.key "k">
 <!-- LOCALIZATION NOTE (search.label.base1):
-      This is the base of the empty text for the global search box. We replace
+     This is the base of the empty text for the global search box. We replace
      #1 with the contents of the appropriate search.keyLabel.* value for the
      platform.
      The goal is to convey to the user that typing in the box will allow them

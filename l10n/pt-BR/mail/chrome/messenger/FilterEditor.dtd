@@ -16,22 +16,22 @@
 <!ENTITY highPriorityCmd.label "Alta">
 <!ENTITY highestPriorityCmd.label "Altíssima">
 
-<!ENTITY contextDesc.label "Aplicar filtro ao:">
+<!ENTITY contextDesc.label "Aplicar filtro:">
 <!ENTITY contextIncomingMail.label "Ao receber novas mensagens:">
-<!ENTITY contextIncomingMail.accesskey "g">
-<!ENTITY contextManual.label "Aplicar manualmente">
-<!ENTITY contextManual.accesskey "A">
-<!ENTITY contextBeforeCls.label "Filtrar antes de aplicar o Antispam">
-<!ENTITY contextAfterCls.label "Filtrar após aplicar o Antispam">
+<!ENTITY contextIncomingMail.accesskey "r">
+<!ENTITY contextManual.label "Executar manualmente">
+<!ENTITY contextManual.accesskey "x">
+<!ENTITY contextBeforeCls.label "Filtrar antes de aplicar o anti-spam">
+<!ENTITY contextAfterCls.label "Filtrar após aplicar o anti-spam">
 <!ENTITY contextOutgoing.label "Após enviar">
-<!ENTITY contextOutgoing.accesskey "s">
-<!ENTITY contextArchive.label "Arquivo">
-<!ENTITY contextArchive.accesskey "A">
+<!ENTITY contextOutgoing.accesskey "e">
+<!ENTITY contextArchive.label "Ao arquivar">
+<!ENTITY contextArchive.accesskey "a">
 
 <!ENTITY filterActionDesc.label "Executar estas ações:">
-<!ENTITY filterActionDesc.accesskey "x">
+<!ENTITY filterActionDesc.accesskey "E">
 
-<!ENTITY filterActionOrderWarning.label "Observação: os filtros serão aplicados em uma ordem diferente.">
+<!ENTITY filterActionOrderWarning.label "Nota: as ações de filtragem serão executadas numa ordem diferente.">
 <!ENTITY filterActionOrder.label "Ver ordem de execução">
 
 <!-- New Style Filter Rule Actions -->
@@ -43,11 +43,11 @@
 <!ENTITY markMessageUnread.label "Marcar como não lida">
 <!ENTITY markMessageStarred.label "Marcar com estrela">
 <!ENTITY setPriority.label "Definir prioridade como">
-<!ENTITY addTag.label "Aplicar tag na mensagem">
-<!ENTITY setJunkScore.label "Definir status de spam para">
+<!ENTITY addTag.label "Aplicar etiqueta">
+<!ENTITY setJunkScore.label "Definir status de spam como">
 <!ENTITY deleteMessage.label "Excluir">
 <!ENTITY deleteFromPOP.label "Excluir do servidor POP">
-<!ENTITY fetchFromPOP.label "Carregar do servidor POP">
+<!ENTITY fetchFromPOP.label "Buscar do servidor POP">
 <!ENTITY ignoreThread.label "Ignorar tópico">
 <!ENTITY ignoreSubthread.label "Ignorar subtópico">
 <!ENTITY watchThread.label "Monitorar tópico">
@@ -57,9 +57,10 @@
 <!ENTITY removeAction.tooltip "Remover esta ação">
 
 <!-- LOCALIZATION NOTE
-  The values below are used to control the widths of the filter action widgets.
-  Change the values only when the localized strings in the popup menus
-  are truncated in the widgets.
- -->
+     The values below are used to control the widths of the filter action widgets.
+     Change the values only when the localized strings in the popup menus
+     are truncated in the widgets.
+  -->
+<!-- Flex Attribute: https://developer.mozilla.org/docs/XUL/Attribute/flex -->
 <!ENTITY filterActionTypeFlexValue "1">
 <!ENTITY filterActionTargetFlexValue "4">

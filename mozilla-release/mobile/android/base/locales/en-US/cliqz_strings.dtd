@@ -3,12 +3,15 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Exit">
 <!ENTITY contextmenu_delete "Delete">
+<!ENTITY search_loading_message "We are powering up Ghost search for your fully private experience">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "News">
+<!ENTITY activity_stream_top_news_show "Show">
+<!ENTITY activity_stream_top_news_hide "Hide">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -39,6 +42,13 @@
 <!ENTITY helper_triple_readerview_open_message2 "Favorite Reader View items to read them offline.">
 <!ENTITY helper_triple_readerview_open_button2 "Add to favorites">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "Want to customize this tab?">
+<!ENTITY customize_new_tab_link "Go to Settings">
+<!ENTITY customize_new_tab_snackbar_negative_btn "No, Thanks">
+<!ENTITY customize_new_tab_snackbar_positive_btn "Customize">
+<!ENTITY customize_new_tab_snackbar_description "Adapt this space to your needs: Show/hide TopSites, News and background image.">
+
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; as Default Browser">
 <!ENTITY default_browser_message "You seem to like using &brandShortName;. Do you want to make it your default browser?">
@@ -48,7 +58,7 @@
 <!-- Settings -->
 <!-- Telemetry -->
 <!ENTITY datareporting_telemetry_title2 "Send usage data">
-<!ENTITY datareporting_telemetry_summary2 "Help us improve your browsing experience. We collect strictly anonymous usage data. At no occasion is any PII collected.">
+<!ENTITY datareporting_telemetry_summary2 "Help us improve your browsing experience. We collect strictly anonymous usage data. At no occasion is any personal information collected.">
 
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
@@ -60,8 +70,8 @@
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Seems like we do not have any offers">
-<!ENTITY myoffrz_no_offers_msg_line1 "But we\'ll keep looking for you and add">
-<!ENTITY myoffrz_no_offers_msg_line2 "them here as soon as we have one">
+<!ENTITY myoffrz_no_offers_msg_line1 "But we add them here ">
+<!ENTITY myoffrz_no_offers_msg_line2 "as soon as we have one">
 <!ENTITY myoffrz_onboarding_description "Receive attractive discounts and bargains with &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Order Now!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Tap code to copy">
@@ -74,7 +84,7 @@
 <!ENTITY pref_block_ads "Block Ads">
 <!ENTITY pref_block_ads_fair "Fair Blocking">
 <!ENTITY pref_block_ads_what_fair "What is \'fair\'">
-<!ENTITY pref_block_ads_fair_description "The Ad Blocker is in beta at the moment. The final version will provide the following options: Allow Fair Ads (default setting), Block All Ads, Allow All Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
+<!ENTITY pref_block_ads_fair_description "Ad Blocking is in beta at the moment. The final version will provide the following options: Allow Fair Ads (default setting), Block All Ads, Allow All Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "Please note: the browser has to download some data packages first, before the ad-blocker works efficiently. For this, the app must be connected to Wi-Fi.">
 
 <!-- Rate Us -->
@@ -84,12 +94,12 @@
 <!ENTITY cc_title_overview "OVERVIEW">
 <!ENTITY cc_title_site_trackers "SITE TRACKERS">
 <!ENTITY cc_title_global_trackers "ALL TRACKERS">
-<!ENTITY cc_zero_trackers_found "&formatD;\n Trackers found">
-<!ENTITY cc_one_trackers_found "&formatD;\n Tracker found">
-<!ENTITY cc_two_trackers_found "&formatD;\n Trackers found">
-<!ENTITY cc_few_trackers_found "&formatD;\n Trackers found">
-<!ENTITY cc_many_trackers_found "&formatD;\n Trackers found">
-<!ENTITY cc_other_trackers_found "&formatD;\n Trackers found">
+<!ENTITY cc_zero_trackers_found "Trackers found">
+<!ENTITY cc_one_trackers_found "Tracker found">
+<!ENTITY cc_two_trackers_found "Trackers found">
+<!ENTITY cc_few_trackers_found "Trackers found">
+<!ENTITY cc_many_trackers_found "Trackers found">
+<!ENTITY cc_other_trackers_found "Trackers found">
 <!ENTITY cc_zero_trackers_blocked "&formatD; Trackers blocked">
 <!ENTITY cc_one_trackers_blocked "&formatD; Tracker blocked">
 <!ENTITY cc_two_trackers_blocked "&formatD; Trackers blocked">
@@ -106,19 +116,19 @@
 <!ENTITY cc_restrict_site "Restrict Site">
 <!ENTITY cc_pause_ghostery "Pause Ghostery">
 <!ENTITY cc_resume_ghostery "Resume Ghostery">
-<!ENTITY cc_enhanced_options "Enhanced Options">
-<!ENTITY cc_enhanced_anti_tracking "Enhanced Anti-Tracking">
-<!ENTITY cc_enhanced_ad_blocking "Enhanced Ad Blocking">
+<!ENTITY cc_enhanced_options "Options">
+<!ENTITY cc_enhanced_anti_tracking "Anti-Tracking">
+<!ENTITY cc_enhanced_ad_blocking "Ad Blocking">
 <!ENTITY cc_smart_blocking "Smart Blocking">
-<!ENTITY cc_enhanced_anti_tracking_info "Enhanced anti tracking information">
-<!ENTITY cc_enhanced_ad_blocking_info "Enhanced ad blocking information">
-<!ENTITY cc_smart_blocking_info "Enhanced anti tracking information">
-<!ENTITY cc_zero_anti_tracking_blocked "Personal data points anonymized">
-<!ENTITY cc_one_anti_tracking_blocked "Personal data point anonymized">
-<!ENTITY cc_two_anti_tracking_blocked "Personal data points anonymized">
-<!ENTITY cc_few_anti_tracking_blocked "Personal data points anonymized">
-<!ENTITY cc_many_anti_tracking_blocked "Personal data points anonymized">
-<!ENTITY cc_other_anti_tracking_blocked "Personal data points anonymized">
+<!ENTITY cc_enhanced_anti_tracking_info "Anti tracking information">
+<!ENTITY cc_enhanced_ad_blocking_info "Ad blocking information">
+<!ENTITY cc_smart_blocking_info "Anti tracking information">
+<!ENTITY cc_zero_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_one_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_two_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_few_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_many_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_other_anti_tracking_blocked "Personal data anonymized">
 <!ENTITY cc_zero_ad_blocking_blocked "Ads blocked">
 <!ENTITY cc_one_ad_blocking_blocked "Ad blocked">
 <!ENTITY cc_two_ad_blocking_blocked "Ads blocked">
@@ -132,7 +142,7 @@
 <!ENTITY cc_many_smart_blocking_blocked "Trackers adjusted">
 <!ENTITY cc_other_smart_blocking_blocked "Trackers adjusted">
 <!ENTITY cc_anti_tracking_about "Anonymize unblocked and unknown trackers for greater browsing protection">
-<!ENTITY cc_ad_blocking_about "Block advertisements on websites you visit">
+<!ENTITY cc_ad_blocking_about "Block ads on websites you visit">
 <!ENTITY cc_smart_blocking_about "Tracker blocking adjusted to optimize page performance">
 <!ENTITY cc_site_trackers_list_title "Trackers on this site">
 <!ENTITY cc_global_trackers_list_title "Trackers across sites">
@@ -159,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "Reset all changes?">
 <!ENTITY cc_reset_changes_dialog_message "All previous changes to site and global trackers will be reset.">
 <!ENTITY cc_reset "RESET">
+<!ENTITY cc_ad_block_off_domain "Turn off for this domain">
+<!ENTITY cc_ad_block_off_global "Turn off for all websites">
 <!ENTITY cc_reload_page_snackbar_text "Page will refresh to apply changes">
 
 <!-- General Settings - Search-->
@@ -262,22 +274,22 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - keep your browsing cleaner, faster and safer">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Introducing &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_title "Welcome">
 <!ENTITY ghostery_onboarding_new_users_text "Browse cleaner, faster, and safer on-the-go with &brandShortName;, now optimized for mobile!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Support &brandShortName; by sharing anonymous analytics and Human Web data to improve &brandShortName;’s performance. \u003Ca href=\u0022&human_web_info_url;\u0022>Learn more\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Improve &brandShortName;\'s performance by sharing anonymous analytics and Human Web data. \u003Ca href=\u0022&human_web_info_url;\u0022>Learn more\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Ad &amp; Tracker Blocking">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Choose what you want &brandShortName; to block for cleaner, faster, and safer browsing. You can change and customize these settings at any time in the Privacy Control Center.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "What should &brandShortName; block for you? You can change your selection any time in the Privacy Control Center.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Block Nothing">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Block Recommended">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Advertising, Site Analytics and Adult Advertising trackers">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Ads and Adult Ads">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Block Everything">
 <!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
-<!ENTITY ghostery_onboarding_quick_search_text "Stay anonymous, reduce data usage, and save time: results appear instantly as you type in the Ghost search bar.">
+<!ENTITY ghostery_onboarding_quick_search_text "Stay anonymous with private search and save time with instantaneous results as you type.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Each new &pref_new_tab_category; is customizable and can display top sites, the latest news, and other tracking insights to come.">
+<!ENTITY ghostery_onboarding_new_tab_text "Customize the start page of tabs to your liking.">
 <!ENTITY ghostery_onboarding_action_button "Start Browsing">
 <!ENTITY ghostery_onboarding_contextual_title "Tracking Protection Enabled">
-<!ENTITY ghostery_onboarding_contextual_item1_title "Enhanced Anti-Tracking">
+<!ENTITY ghostery_onboarding_contextual_item1_title "Anti-Tracking">
 <!ENTITY ghostery_onboarding_contextual_item1_text "Further protects your personal data">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Smart Blocking &amp; Ad Blocking">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimizes performance as you browse">

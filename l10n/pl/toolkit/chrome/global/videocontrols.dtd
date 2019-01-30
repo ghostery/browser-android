@@ -10,7 +10,7 @@
 <!ENTITY fullscreenButton.exitfullscreenlabel "Opuść tryb pełnoekranowy">
 <!ENTITY castingButton.castingLabel "Wyślij na inne urządzenie">
 <!ENTITY closedCaption.off "Wyłączone">
-
+<!ENTITY volumeScrubber.label "Suwak regulacji głośności">
 <!ENTITY stats.media "Media">
 <!ENTITY stats.size "Rozmiar">
 <!ENTITY stats.activity "Bieżący stan">

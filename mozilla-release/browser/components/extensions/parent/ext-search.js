@@ -38,8 +38,7 @@ this.search = class extends ExtensionAPI {
       search: {
         async get() {
           await searchInitialized;
-          let engines = Services.search.getEngines();
-          let visibleEngines = engines.filter(engine => !engine.hidden);
+          let visibleEngines = Services.search.getVisibleEngines();
           return Promise.all(visibleEngines.map(async engine => {
             let favIconUrl;
             if (engine.iconURI) {
@@ -77,17 +76,20 @@ this.search = class extends ExtensionAPI {
             postData: submission.postData,
             triggeringPrincipal: context.principal,
           };
+          let tabbrowser;
           if (searchProperties.tabId === null) {
             let {gBrowser} = windowTracker.topWindow;
             let nativeTab = gBrowser.addTab(submission.uri.spec, options);
             if (!searchLoadInBackground) {
               gBrowser.selectedTab = nativeTab;
             }
+            tabbrowser = gBrowser;
           } else {
             let tab = tabTracker.getTab(searchProperties.tabId);
             tab.linkedBrowser.loadURI(submission.uri.spec, options);
+            tabbrowser = tab.linkedBrowser.getTabBrowser();
           }
-          BrowserUsageTelemetry.recordSearch(engine, "webextension");
+          BrowserUsageTelemetry.recordSearch(tabbrowser, engine, "webextension");
         },
       },
     };

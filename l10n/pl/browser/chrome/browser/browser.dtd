@@ -13,30 +13,46 @@
 <!ENTITY reloadTab.accesskey                 "d" >
 <!ENTITY reloadSelectedTabs.label "Odśwież zaznaczone karty">
 <!ENTITY reloadSelectedTabs.accesskey "d">
+<!ENTITY reloadTabs.label "Odśwież karty">
+<!ENTITY reloadTabs.accesskey "O">
 <!ENTITY reloadAllTabs.label                 "Odśwież wszystkie karty" >
 <!ENTITY reloadAllTabs.accesskey             "w" >
 <!ENTITY duplicateTab.label "Duplikuj kartę">
 <!ENTITY duplicateTab.accesskey "D">
+<!ENTITY duplicateTabs.label "Duplikuj karty">
+<!ENTITY duplicateTabs.accesskey "D">
+<!ENTITY closeTabOptions.label "Zamknij karty">
+<!ENTITY closeTabOptions.accesskey "Z">
 <!ENTITY closeTabsToTheEnd.label "Zamknij karty po prawej stronie">
 <!ENTITY closeTabsToTheEnd.accesskey "p">
 <!ENTITY closeOtherTabs.label                "Zamknij inne karty" >
 <!ENTITY closeOtherTabs.accesskey            "i" >
 <!ENTITY closeSelectedTabs.label "Zamknij zaznaczone karty">
 <!ENTITY closeSelectedTabs.accesskey "Z">
+<!ENTITY closeTabs.label "Zamknij karty">
+<!ENTITY closeTabs.accesskey "Z">
 <!ENTITY pinSelectedTabs.label "Przypnij karty">
-<!ENTITY pinSelectedTabs.accesskey "k">
+<!ENTITY pinSelectedTabs.accesskey "P">
 <!ENTITY unpinSelectedTabs.label "Odepnij karty">
-<!ENTITY unpinSelectedTabs.accesskey "k">
+<!ENTITY unpinSelectedTabs.accesskey "O">
 <!ENTITY pinTab.label "Przypnij kartę">
-<!ENTITY pinTab.accesskey "n">
+<!ENTITY pinTab.accesskey "P">
 <!ENTITY unpinTab.label "Odepnij kartę">
-<!ENTITY unpinTab.accesskey "n">
+<!ENTITY unpinTab.accesskey "O">
 <!ENTITY sendTabToDevice.label "Prześlij kartę do">
 <!ENTITY sendTabToDevice.accesskey "P">
 <!ENTITY sendPageToDevice.label "Prześlij stronę do">
 <!ENTITY sendPageToDevice.accesskey "P">
 <!ENTITY sendLinkToDevice.label "Prześlij odnośnik do">
 <!ENTITY sendLinkToDevice.accesskey "P">
+<!ENTITY moveTabOptions.label "Przenieś kartę">
+<!ENTITY moveTabOptions.accesskey "P">
+<!ENTITY moveSelectedTabOptions.label "Przenieś karty">
+<!ENTITY moveSelectedTabOptions.accesskey "k">
+<!ENTITY moveToStart.label "Przenieś na początek">
+<!ENTITY moveToStart.accesskey "P">
+<!ENTITY moveToEnd.label "Przenieś na koniec">
+<!ENTITY moveToEnd.accesskey "k">
 <!ENTITY sendToDeviceFeedback.label "Przesłano!">
 <!ENTITY sendToDeviceOfflineFeedback.label "W kolejce (tryb offline)">
 <!ENTITY moveToNewWindow.label "Przenieś do nowego okna">
@@ -45,6 +61,8 @@
 <!ENTITY reopenInContainer.accesskey "k">
 <!ENTITY bookmarkAllTabs.label               "Dodaj zakładki do wszystkich kart…">
 <!ENTITY bookmarkAllTabs.accesskey           "k">
+<!ENTITY bookmarkTab.label "Dodaj zakładkę do karty">
+<!ENTITY bookmarkTab.accesskey "D">
 <!ENTITY bookmarkSelectedTabs.label "Dodaj zakładki do zaznaczonych kart…">
 <!ENTITY bookmarkSelectedTabs.accesskey "D">
 <!ENTITY undoCloseTab.label                  "Przywróć zamkniętą kartę">
@@ -67,6 +85,9 @@
 <!ENTITY printCmd.label "Drukuj…" >
 <!ENTITY printCmd.accesskey "D" >
 <!ENTITY printCmd.commandkey "p" >
+
+<!ENTITY taskManagerCmd.label "Menedżer zadań">
+
 <!ENTITY goOfflineCmd.label "Pracuj w trybie offline" >
 <!ENTITY goOfflineCmd.accesskey "c" >
 <!ENTITY menubarCmd.label "Pasek menu">
@@ -77,8 +98,16 @@
 <!ENTITY bookmarksToolbarItem.label "Elementy paska zakładek" >
 <!ENTITY toolbarContextMenu.reloadAllTabs.label "Odśwież wszystkie karty">
 <!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "O">
+<!ENTITY toolbarContextMenu.reloadSelectedTab.label "Odśwież kartę">
+<!ENTITY toolbarContextMenu.reloadSelectedTab.accesskey "O">
+<!ENTITY toolbarContextMenu.reloadSelectedTabs.label "Odśwież zaznaczone karty">
+<!ENTITY toolbarContextMenu.reloadSelectedTabs.accesskey "O">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTab.label "Dodaj zakładkę do karty…">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTab.accesskey "D">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Dodaj zakładki do wszystkich kart…">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "D">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.label "Dodaj zakładki do zaznaczonych kart…">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.accesskey "D">
 <!ENTITY toolbarContextMenu.undoCloseTab.label "Przywróć zamkniętą kartę">
 <!ENTITY toolbarContextMenu.undoCloseTab.accesskey "P">
 
@@ -193,7 +222,7 @@
 <!ENTITY urlbar.webNotificationsBlocked.tooltip "Powiadomienia z tej witryny zostały zablokowane">
 <!ENTITY urlbar.persistentStorageBlocked.tooltip "Przechowywanie danych na komputerze przez witrynę zostało zablokowane">
 <!ENTITY urlbar.popupBlocked.tooltip "Wyskakujące okna na tej stronie są blokowane">
-<!ENTITY urlbar.autoplayMediaBlocked.tooltip "Automatyczne odtwarzanie treści z dźwiękiem przez witrynę zostało zablokowane">
+<!ENTITY urlbar.autoplayMediaBlocked.tooltip "Automatyczne odtwarzanie treści przez tę stronę zostało zablokowane">
 <!ENTITY urlbar.canvasBlocked.tooltip "Odczytywanie danych canvas przez witrynę zostało zablokowane">
 <!ENTITY urlbar.flashPluginBlocked.tooltip "Wtyczka Adobe Flash została zablokowana na tej stronie">
 <!ENTITY urlbar.midiBlocked.tooltip "Dostęp do urządzeń MIDI dla tej witryny został zablokowany">
@@ -347,6 +376,8 @@
 <!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "A">
 <!ENTITY customizeMenu.manageExtension.label "Zarządzaj rozszerzeniem">
 <!ENTITY customizeMenu.manageExtension.accesskey "Z">
+<!ENTITY customizeMenu.removeExtension.label "Usuń rozszerzenie">
+<!ENTITY customizeMenu.removeExtension.accesskey "U">
 <!ENTITY moreMenu.label "Więcej">
 
 <!ENTITY openCmd.commandkey "l" >
@@ -581,13 +612,14 @@
 <!ENTITY editBookmark.removeBookmark.accessKey       "U">
 
 <!ENTITY identity.securityView.label "Bezpieczeństwo">
+<!ENTITY identity.connection "Połączenie">
 <!ENTITY identity.connectionSecure "Zabezpieczone połączenie">
 <!ENTITY identity.connectionNotSecure "Połączenie nie jest bezpieczne">
 <!ENTITY identity.connectionFile "Strona wczytana z tego komputera">
 <!ENTITY identity.connectionVerified2 "Połączenie bezpieczne, strona:">
 <!ENTITY identity.connectionInternal "To jest strona programu &brandShortName;.">
 <!ENTITY identity.extensionPage "Ta strona została wczytana przez rozszerzenie.">
-<!ENTITY identity.insecureLoginForms2 "Dane logowania wprowadzone na tej stronie nie są chronione">
+<!ENTITY identity.insecureLoginForms2 "Dane logowania wprowadzone na tej stronie nie są chronione.">
 
 <!ENTITY identity.activeBlocked "&brandShortName; zablokował elementy tej strony, które nie były przesłane w sposób bezpieczny.">
 <!ENTITY identity.passiveLoaded "Niektóre elementy tej strony (np. obrazy) nie były przesłane w sposób bezpieczny.">
@@ -624,7 +656,7 @@
 <!ENTITY tabsToolbar.label "Karty przeglądarki">
 <!ENTITY syncTabsMenu3.label "Karty z innych urządzeń">
 <!ENTITY syncedTabs.sidebar.label "Karty z innych urządzeń">
-<!ENTITY syncedTabs.sidebar.noclients.label "Zaloguj się w Firefoksie na innym urządzeniu, aby wyświetlić tutaj listę otwartych na nim kart.">
+<!ENTITY syncedTabs.sidebar.noclients.label "Zaloguj się w programie &brandShortName; na innym urządzeniu, aby wyświetlić tutaj listę otwartych na nim kart.">
 <!ENTITY syncedTabs.sidebar.noclients.title "Synchronizacja kart wyłączona">
 <!ENTITY syncedTabs.sidebar.noclients.subtitle "Czy wyświetlić tutaj listę kart otwartych na innych urządzeniach?">
 <!ENTITY syncedTabs.sidebar.notsignedin.label "Zaloguj się, aby wyświetlić listę kart z innych urządzeń.">
@@ -707,14 +739,24 @@
 <!ENTITY contentBlocking.exception.tooltip "Blokowanie treści jest wyłączone dla tej witryny.">
 <!ENTITY contentBlocking.fastBlock.label "Powolne elementy śledzące">
 <!ENTITY contentBlocking.fastBlock.blocked.label "Zablokowano">
+<!ENTITY contentBlocking.fastBlock.blocking.label "Zablokowano">
 <!ENTITY contentBlocking.fastBlock.add.label "Włącz blokowanie…">
 <!ENTITY contentBlocking.trackingProtection.label "Elementy śledzące">
 <!ENTITY contentBlocking.trackingProtection2.label "Wszystkie wykryte elementy śledzące">
+<!ENTITY contentBlocking.trackingProtection3.label "Elementy śledzące">
+<!ENTITY contentBlocking.trackingProtection.allowed.label "Dozwolone">
 <!ENTITY contentBlocking.trackingProtection.blocked.label "Zablokowano">
+<!ENTITY contentBlocking.trackingProtection.blocking.label "Zablokowano">
 <!ENTITY contentBlocking.trackingProtection.add.label "Włącz blokowanie…">
 <!ENTITY contentBlocking.3rdPartyCookies.label "Ciasteczka zewnętrznych witryn">
+<!ENTITY contentBlocking.3rdPartyCookies.trackers.label "Ciasteczka używane do śledzenia">
 <!ENTITY contentBlocking.3rdPartyCookies.blocked.label "Zablokowano">
+<!ENTITY contentBlocking.3rdPartyCookies.blocking.label "Zablokowano">
 <!ENTITY contentBlocking.3rdPartyCookies.add.label "Włącz blokowanie…">
+<!ENTITY contentBlocking.manageSettings.label "Ustawienia blokowania treści">
+<!ENTITY contentBlocking.manageSettings.accesskey "U">
+<!ENTITY contentBlocking.trackersView.label "Elementy śledzące">
+<!ENTITY contentBlocking.trackersView.strictInfo.label "Ustaw blokowanie na „ścisłe”, aby blokować wszystkie elementy śledzące.">
 <!ENTITY contentBlocking.openBreakageReportView.label "Zgłoś problem">
 <!ENTITY contentBlocking.openBreakageReportView2.label "Zgłoś problem">
 <!ENTITY contentBlocking.breakageReportView.label "Zgłaszanie problemu">
@@ -748,6 +790,8 @@
 <!ENTITY trackingProtection.unblock3.accesskey "W">
 <!ENTITY trackingProtection.unblock4.label "Wyłącz dla tej witryny">
 <!ENTITY trackingProtection.unblock4.accesskey "W">
+<!ENTITY trackingProtection.unblock5.label "Wyłącz dla tej witryny">
+<!ENTITY trackingProtection.unblock5.accesskey "W">
 <!ENTITY trackingProtection.unblockPrivate.label "Wyłącz ochronę w tym oknie prywatnym">
 <!ENTITY trackingProtection.unblockPrivate.accesskey "W">
 <!ENTITY trackingProtection.unblockPrivate2.label "Tymczasowo wyłącz dla tej witryny">
@@ -756,6 +800,8 @@
 <!ENTITY trackingProtection.unblockPrivate3.accesskey "T">
 <!ENTITY trackingProtection.unblockPrivate4.label "Tymczasowo wyłącz dla tej witryny">
 <!ENTITY trackingProtection.unblockPrivate4.accesskey "T">
+<!ENTITY trackingProtection.unblockPrivate5.label "Tymczasowo wyłącz dla tej witryny">
+<!ENTITY trackingProtection.unblockPrivate5.accesskey "T">
 <!ENTITY trackingProtection.block2.label "Włącz ochronę dla tej witryny">
 <!ENTITY trackingProtection.block2.accesskey "W">
 <!ENTITY trackingProtection.block3.label "Włącz ochronę przed śledzeniem">
@@ -764,6 +810,8 @@
 <!ENTITY trackingProtection.block4.accesskey "W">
 <!ENTITY trackingProtection.block5.label "Włącz dla tej witryny">
 <!ENTITY trackingProtection.block5.accesskey "W">
+<!ENTITY trackingProtection.block6.label "Włącz dla tej witryny">
+<!ENTITY trackingProtection.block6.accesskey "W">
 <!ENTITY trackingProtection.reload.label "Odśwież tę stronę">
 <!ENTITY trackingProtection.reload.accesskey "O">
 <!ENTITY trackingProtection.reload2.label "Odśwież stronę">
@@ -808,19 +856,19 @@
 <!ENTITY updateManual.message "Pobierz świeżą kopię programu &brandShorterName;, a my pomożemy ją zainstalować.">
 <!ENTITY updateManual.whatsnew.label "Sprawdź co nowego.">
 <!ENTITY updateManual.header.message "&brandShorterName; nie może zostać uaktualniony do najnowszej wersji.">
-<!ENTITY updateManual.acceptButton.label "Pobierz program &brandShorterName;">
+<!ENTITY updateManual.acceptButton.label "Pobierz program">
 <!ENTITY updateManual.acceptButton.accesskey "P">
 <!ENTITY updateManual.cancelButton.label "Nie teraz">
 <!ENTITY updateManual.cancelButton.accesskey "N">
 <!ENTITY updateManual.panelUI.label "Pobierz świeżą kopię programu &brandShorterName;">
 
 <!ENTITY updateRestart.message2 "&brandShorterName; po ponownym uruchomieniu przywróci wszystkie karty i okna (oprócz okien prywatnych).">
-<!ENTITY updateRestart.header.message2 "Uruchom ponownie program &brandShorterName;, aby go uaktualnić.">
+<!ENTITY updateRestart.header.message2 "Uruchom ponownie program, aby go uaktualnić.">
 <!ENTITY updateRestart.acceptButton.label "Uruchom i przywróć">
 <!ENTITY updateRestart.acceptButton.accesskey "U">
 <!ENTITY updateRestart.cancelButton.label "Nie teraz">
 <!ENTITY updateRestart.cancelButton.accesskey "N">
-<!ENTITY updateRestart.panelUI.label2 "Uruchom ponownie program &brandShorterName;, aby go uaktualnić">
+<!ENTITY updateRestart.panelUI.label2 "Uruchom ponownie, aby uaktualnić">
 
 <!ENTITY newTabControlled.message "Rozszerzenie zmieniło stronę nowej karty, ale można przywrócić poprzednią.">
 <!ENTITY newTabControlled.header.message "Strona nowej karty została zmieniona.">

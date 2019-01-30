@@ -42,6 +42,14 @@ permissions-capabilities-block =
     .label = 阻止
 permissions-capabilities-prompt =
     .label = 总是询问
+permissions-capabilities-listitem-allow =
+    .value = 允许
+permissions-capabilities-listitem-block =
+    .value = 阻止
+permissions-capabilities-listitem-allow-first-party =
+    .value = 只允许第一方
+permissions-capabilities-listitem-allow-session =
+    .value = 在这次浏览期间允许
 
 ## Invalid Hostname Dialog
 
@@ -54,6 +62,10 @@ permissions-exceptions-tracking-protection-window =
     .title = 例外 - 跟踪保护
     .style = { permissions-window.style }
 permissions-exceptions-tracking-protection-desc = 您已对下列网站停用跟踪保护功能。
+permissions-exceptions-content-blocking-window =
+    .title = 例外 - 内容拦截
+    .style = { permissions-window.style }
+permissions-exceptions-content-blocking-desc = 您在这些网站上已禁用内容拦截。
 
 ## Exceptions - Cookies
 
@@ -85,10 +97,6 @@ permissions-exceptions-addons-desc = 您可以指定哪些网站可以安装附�
 
 ## Exceptions - Autoplay Media
 
-permissions-exceptions-autoplay-media-window =
-    .title = 有特殊权限的网站 - 自动播放
-    .style = { permissions-window.style }
-permissions-exceptions-autoplay-media-desc = 您可以指定哪些网站可以自动播放媒体元素。请输入要指定网站的完整网址，然后点击“允许”。
 permissions-exceptions-autoplay-media-window2 =
     .title = 例外 - 自动播放
     .style = { permissions-window.style }
@@ -99,10 +107,10 @@ permissions-exceptions-autoplay-media-desc2 = 您可以指定允许与不允许�
 permissions-site-notification-window =
     .title = 设置 - 通知权限
     .style = { permissions-window.style }
-permissions-site-notification-desc = 下列网站曾请求向您您传送通知。您可选择允许哪些网站传送通知，还可禁止请求向您传送通知。
+permissions-site-notification-desc = 下列网站曾请求向您发送通知。您可选择允许哪些网站发送通知，还可禁止请求向您发送通知。
 permissions-site-notification-disable-label =
-    .label = 禁止请求向您传送通知
-permissions-site-notification-disable-desc = 所有列表外的网站将无法请求获得传送通知的权限。禁止此权限可能会影响某些网站的功能。
+    .label = 禁止请求向您发送通知
+permissions-site-notification-disable-desc = 所有列表外的网站将无法请求获得发送通知的权限。禁止此权限可能会影响某些网站的功能。
 
 ## Site Permissions - Location
 

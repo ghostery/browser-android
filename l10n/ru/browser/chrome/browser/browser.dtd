@@ -23,10 +23,22 @@
 <!ENTITY  reloadTab.accesskey                "и">
 <!ENTITY  reloadAllTabs.label                "Обновить все вкладки">
 <!ENTITY  reloadAllTabs.accesskey            "н">
+<!ENTITY  selectAllTabs.label                "Выбрать все вкладки">
+<!ENTITY  selectAllTabs.accesskey            "б">
 <!-- LOCALIZATION NOTE (duplicateTab.label): This is a command to duplicate
 a tab (i.e. it is a verb, not adjective). -->
 <!ENTITY  duplicateTab.label                 "Дублировать вкладку">
-<!ENTITY  duplicateTab.accesskey             "б">
+<!-- LOCALIZATION NOTE (duplicateTab.accesskey, duplicateTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
+<!ENTITY  duplicateTab.accesskey             "л">
+<!ENTITY  closeTabOptions.label              "Настройки закрытия вкладок">
+<!ENTITY  closeTabOptions.accesskey          "о">
+<!-- LOCALIZATION NOTE (duplicateTabs.label): This is a command to duplicate
+a tab (i.e. it is a verb, not adjective). -->
+<!ENTITY  duplicateTabs.label                "Дублировать вкладки">
+<!-- LOCALIZATION NOTE (duplicateTab.accesskey, duplicateTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
+<!ENTITY  duplicateTabs.accesskey            "л">
 <!-- LOCALIZATION NOTE (closeTabsToTheEnd.label): This should indicate the
 direction in which tabs are closed, i.e. locales that use RTL mode should say
 left instead of right. -->
@@ -38,19 +50,29 @@ left instead of right. -->
 <!ENTITY  closeSelectedTabs.label            "Закрыть выделенные вкладки">
 <!ENTITY  closeSelectedTabs.accesskey        "ы">
 
+<!ENTITY  closeTabs.label                    "Закрыть вкладки">
+<!ENTITY  closeTabs.accesskey                "ы">
 <!ENTITY  pinSelectedTabs.label              "Закрепить вкладки">
-<!-- Pin Tab and Pin Selected Tabs have the same accesskey
-but will never be visible at the same time. -->
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
 <!ENTITY  pinSelectedTabs.accesskey          "к">
 <!ENTITY  unpinSelectedTabs.label            "Открепить вкладки">
-<!-- Unpin Tab and Unpin Selected Tabs have the same accesskey
-but will never be visible at the same time. -->
-<!ENTITY  unpinSelectedTabs.accesskey        "л">
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY  unpinSelectedTabs.accesskey        "к">
 <!-- Reload Tab and Reload Selected Tabs have the same accesskey
 but will never be visible at the same time. -->
 <!ENTITY  reloadSelectedTabs.label           "Обновить выделенные вкладки">
 <!ENTITY  reloadSelectedTabs.accesskey       "и">
+<!-- LOCALIZATION NOTE(reloadTab.label, reloadTabs.label): have the same accesskey
+but will never be visible at the same time. -->
+<!ENTITY  reloadTabs.label                   "Обновить вкладки">
+<!ENTITY  reloadTabs.accesskey               "и">
 <!ENTITY  bookmarkSelectedTabs.label         "Добавить вкладки в закладки…">
+<!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
 <!ENTITY  bookmarkSelectedTabs.accesskey     "а">
 
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
@@ -59,21 +81,41 @@ left edge of the tabstrip. Really we just want the string to express the idea
 that this is a lightweight and reversible action that keeps your tab where you
 can reach it easily. -->
 <!ENTITY  pinTab.label                       "Закрепить вкладку">
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
 <!ENTITY  pinTab.accesskey                   "к">
 <!ENTITY  unpinTab.label                     "Открепить вкладку">
-<!ENTITY  unpinTab.accesskey                 "л">
+<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
+unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY  unpinTab.accesskey                 "к">
 <!ENTITY  sendTabToDevice.label              "Отправить вкладку на устройство">
-<!ENTITY  sendTabToDevice.accesskey          "й">
+<!ENTITY  sendTabToDevice.accesskey          "п">
 <!ENTITY  sendPageToDevice.label             "Отправить страницу на устройство">
-<!ENTITY  sendPageToDevice.accesskey         "й">
+<!ENTITY  sendPageToDevice.accesskey         "п">
 <!ENTITY  sendLinkToDevice.label             "Отправить ссылку на устройство">
-<!ENTITY  sendLinkToDevice.accesskey         "й">
+<!ENTITY  sendLinkToDevice.accesskey         "п">
+<!-- LOCALIZATION NOTE (moveTabOptions.label and moveSelectedTabOptions.label):
+These two items have the same accesskey but will never be visible at the same time. -->
+<!ENTITY  moveTabOptions.label               "Переместить вкладку">
+<!ENTITY  moveTabOptions.accesskey           "м">
+<!ENTITY  moveSelectedTabOptions.label       "Переместить вкладки">
+<!ENTITY  moveSelectedTabOptions.accesskey   "м">
+<!ENTITY  moveToStart.label                  "Переместить в начало">
+<!ENTITY  moveToStart.accesskey              "ч">
+<!ENTITY  moveToEnd.label                    "Переместить в конец">
+<!ENTITY  moveToEnd.accesskey                "ц">
 <!ENTITY  moveToNewWindow.label              "Переместить в новое окно">
 <!ENTITY  moveToNewWindow.accesskey          "е">
 <!ENTITY  reopenInContainer.label            "Переоткрыть в контейнере">
 <!ENTITY  reopenInContainer.accesskey        "й">
 <!ENTITY  bookmarkAllTabs.label              "Добавить все вкладки в закладки…">
 <!ENTITY  bookmarkAllTabs.accesskey          "в">
+<!ENTITY  bookmarkTab.label                  "Добавить вкладку в закладки">
+<!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
+These items have the same accesskey but will never be visible at the same time. -->
+<!ENTITY  bookmarkTab.accesskey              "а">
 <!ENTITY  undoCloseTab.label                 "Восстановить закрытую вкладку">
 <!ENTITY  undoCloseTab.accesskey             "с">
 <!ENTITY  closeTab.label                     "Закрыть вкладку">
@@ -100,6 +142,8 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY printCmd.accesskey "ч">
 <!ENTITY printCmd.commandkey "p">
 
+<!ENTITY taskManagerCmd.label "Диспетчер задач">
+
 <!ENTITY goOfflineCmd.label "Работать автономно">
 <!ENTITY goOfflineCmd.accesskey "б">
 
@@ -114,6 +158,29 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "о">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Добавить все вкладки в закладки…">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "а">
+
+<!ENTITY toolbarContextMenu.reloadSelectedTab.label "Обновить выделенную вкладку">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
+toolbarContextMenu.reloadSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.reloadSelectedTab.accesskey "и">
+<!ENTITY toolbarContextMenu.reloadSelectedTabs.label "Обновить выделенные вкладки">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
+toolbarContextMenu.reloadSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.reloadSelectedTabs.accesskey "и">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTab.label "Добавить выделенные вкладки в закладки…">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.bookmarkSelectedTab.accesskey,
+toolbarContextMenu.bookmarkSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.bookmarkSelectedTab.accesskey "а">
+<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.label "Добавить выделенные вкладки в закладки…">
+<!-- LOCALIZATION NOTE (toolbarContextMenu.bookmarkSelectedTab.accesskey,
+toolbarContextMenu.bookmarkSelectedTabs.accesskey): These share the
+same accesskey but will never be visible at the same time. -->
+<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.accesskey "а">
+<!ENTITY toolbarContextMenu.selectAllTabs.label "Выбрать все вкладки">
+<!ENTITY toolbarContextMenu.selectAllTabs.accesskey "л">
 <!ENTITY toolbarContextMenu.undoCloseTab.label "Восстановить закрытую вкладку">
 <!ENTITY toolbarContextMenu.undoCloseTab.accesskey "н">
 
@@ -558,9 +625,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY reloadFrameCmd.label         "Обновить фрейм">
 <!ENTITY reloadFrameCmd.accesskey     "и">
 <!ENTITY viewPartialSourceForSelectionCmd.label "Исходный код выделенного фрагмента">
-<!ENTITY viewPartialSourceForMathMLCmd.label    "Исходный код MathML">
-<!-- LOCALIZATION NOTE (viewPartialSourceCmd.accesskey): This accesskey is used for both
-         viewPartialSourceForSelectionCmd.label and viewPartialSourceForMathMLCmd.label -->
 <!ENTITY viewPartialSourceCmd.accesskey "д">
 <!ENTITY viewPageSourceCmd.label      "Исходный код страницы">
 <!ENTITY viewPageSourceCmd.accesskey  "о">
@@ -777,7 +841,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      Remove Bookmark buttons. -->
 <!ENTITY editBookmark.panel.width                    "23em">
 <!ENTITY editBookmark.done.label                     "Готово">
-
 <!ENTITY editBookmark.showForNewBookmarks.label       "Показывать редактор при сохранении">
 <!ENTITY editBookmark.showForNewBookmarks.accesskey   "ы">
 
@@ -785,6 +848,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      This is the header of the security subview in the Site Identity panel. -->
 <!ENTITY identity.securityView.label "Защита сайта">
 
+<!ENTITY identity.connection "Соединение">
 <!ENTITY identity.connectionSecure "Защищённое соединение">
 <!ENTITY identity.connectionNotSecure "Незащищённое соединение">
 <!ENTITY identity.connectionFile "Эта страница хранится на вашем компьютере.">
@@ -927,9 +991,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY getUserMedia.audioCapture.label "Будет предоставлен доступ к аудио из вкладки.">
 <!ENTITY getUserMedia.allWindowsShared.message "Будет предоставлен доступ ко всем видимым окнам на вашем экране.">
 
-<!ENTITY trackingProtection.on "Защита от отслеживания: ВКЛЮЧЕНА">
-<!ENTITY trackingProtection.off "Защита от отслеживания: ОТКЛЮЧЕНА">
-
 <!ENTITY contentBlocking.title "Блокировка содержимого">
 <!ENTITY contentBlocking.detected "На этом сайте обнаружено содержимое для блокировки.">
 <!ENTITY contentBlocking.notDetected "На этой странице не обнаружено содержимого для блокировки.">
@@ -944,6 +1005,11 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      a positive thing. It forms the end of the (imaginary) sentence
      "Slow-Loading Trackers [are] Blocked"-->
 <!ENTITY contentBlocking.fastBlock.blocked.label "Заблокированы">
+<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.blocking.label):
+     This label signals that this type of content blocking is turned
+     ON, so this is a positive thing. It forms the verb in (imaginary) sentence
+     "Firefox is blocking Slow-Loading Trackers"-->
+<!ENTITY contentBlocking.fastBlock.blocking.label "Блокируются">
 <!-- LOCALIZATION NOTE (contentBlocking.fastBlock.add.label):
      This is displayed as a link to preferences, where the user can add
      this specific type of content blocking. When this text is shown
@@ -951,12 +1017,25 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.fastBlock.add.label "Добавить блокировку…">
 
 <!ENTITY contentBlocking.trackingProtection2.label "Все обнаруженные трекеры">
+
+<!ENTITY contentBlocking.trackingProtection3.label "Трекеры">
+<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.allowed.label):
+     This label signals that this type of content blocking is turned
+     OFF and is not blocking tracker content, so this is not
+     a positive thing. It forms the end of the (imaginary) sentence
+     "Trackers [are] Allowed"-->
+<!ENTITY contentBlocking.trackingProtection.allowed.label "Разрешены">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
      This label signals that this type of content blocking is turned
      ON and is successfully blocking tracker content, so this is
      a positive thing. It forms the end of the (imaginary) sentence
      "Trackers [are] Blocked"-->
 <!ENTITY contentBlocking.trackingProtection.blocked.label "Заблокированы">
+<!-- LOCALIZATION NOTE (contentBlocking.tranckingProtection.blocking.label):
+     This label signals that this type of content blocking is turned
+     ON, so this is a positive thing. It forms the verb in the (imaginary) sentence
+     "Firefox is blocking Trackers"-->
+<!ENTITY contentBlocking.trackingProtection.blocking.label "Блокируются">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.add.label):
      This is displayed as a link to preferences, where the user can add
      this specific type of content blocking. When this text is shown
@@ -964,17 +1043,29 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.trackingProtection.add.label "Добавить блокировку…">
 
 <!ENTITY contentBlocking.3rdPartyCookies.label "Сторонние куки">
+<!ENTITY contentBlocking.3rdPartyCookies.trackers.label "Отслеживающие куки">
 <!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.blocked.label):
      This label signals that this type of content blocking is turned
      ON and is successfully blocking third-party cookies, so this is
      a positive thing. It forms the end of the (imaginary) sentence
      "Third-Party Cookies [are] Blocked"-->
 <!ENTITY contentBlocking.3rdPartyCookies.blocked.label "Заблокированы">
+<!-- LOCALIZATION NOTE (contentBlocking.tranckingProtection.blocking.label):
+     This label signals that this type of content blocking is turned
+     ON, so this is a positive thing. It forms the verb in the (imaginary) sentence
+     "Firefox is blocking Third-Party Cookies"-->
+<!ENTITY contentBlocking.3rdPartyCookies.blocking.label "Блокируются">
 <!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.add.label):
      This is displayed as a link to preferences, where the user can add
      this specific type of content blocking. When this text is shown
      the type of content blocking is currently not enabled. -->
 <!ENTITY contentBlocking.3rdPartyCookies.add.label "Добавить блокировку…">
+
+<!ENTITY contentBlocking.manageSettings.label "Управление блокировкой содержимого">
+<!ENTITY contentBlocking.manageSettings.accesskey "п">
+
+<!ENTITY contentBlocking.trackersView.label "Трекеры">
+<!ENTITY contentBlocking.trackersView.strictInfo.label "Чтобы блокировать все трекеры, выберите «строгую» блокировку содержимого.">
 
 <!ENTITY contentBlocking.openBreakageReportView2.label "Сообщить о проблеме">
 <!ENTITY contentBlocking.breakageReportView.label "Сообщить о проблеме">
@@ -987,32 +1078,32 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY trackingProtection.title "Защита от отслеживания">
 <!ENTITY trackingProtection.tooltip "Открыть настройки Защиты от отслеживания">
-<!ENTITY trackingProtection.detectedBlocked4 "&brandShortName; блокирует части этой страницы, которые могут отслеживать ваше поведение в Интернете.">
-<!ENTITY trackingProtection.detectedNotBlocked5 "&brandShortName; определил элементы, которые могут отслеживать ваше поведение в Интернете.">
-<!ENTITY trackingProtection.detectedException "&brandShortName; определил элементы, которые могут отслеживать ваше поведение в Интернете. Вы отключили защиту для этого сайта.">
-<!ENTITY trackingProtection.notDetected5 "На этой странице не обнаружено ни одного отслеживающего элемента.">
-<!ENTITY trackingProtection.notDetectedException "На этой странице не обнаружено ни одного отслеживающего элемента. Вы отключили защиту для этого сайта.">
-
-<!ENTITY trackingProtection.reloadRequired2 "Вы включили Защиту от отслеживания. Перезагрузите эту страницу, чтобы заблокировать все трекеры.">
 
 <!-- LOCALIZATION NOTE (trackingProtection.unblock3.label, trackingProtection.unblock3.accesskey):
      The associated button with this label and accesskey is only shown when opening the control
      center while looking at a site with trackers in NON-private browsing mode. -->
-<!ENTITY trackingProtection.unblock3.label "Отключить для этого сайта">
-<!ENTITY trackingProtection.unblock3.accesskey "ю">
 <!ENTITY trackingProtection.unblock4.label "Отключить блокировку для этого сайта">
 <!ENTITY trackingProtection.unblock4.accesskey "ю">
 <!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate3.label, trackingProtection.unblockPrivate3.accesskey):
      The associated button with this label and accesskey is only shown when opening the control
      center while looking at a site with trackers in PRIVATE browsing mode. -->
-<!ENTITY trackingProtection.unblockPrivate3.label "Отключить на эту сессию">
-<!ENTITY trackingProtection.unblockPrivate3.accesskey "ю">
-<!ENTITY trackingProtection.block4.label "Включить для этого сайта">
-<!ENTITY trackingProtection.block4.accesskey "л">
 <!ENTITY trackingProtection.unblockPrivate4.label "Временно отключить блокировку">
 <!ENTITY trackingProtection.unblockPrivate4.accesskey "ю">
 <!ENTITY trackingProtection.block5.label "Включить блокировку для этого сайта">
 <!ENTITY trackingProtection.block5.accesskey "л">
+
+<!-- LOCALIZATION NOTE (trackingProtection.unblock5.label, trackingProtection.unblock5.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in NON-private browsing mode. -->
+<!ENTITY trackingProtection.unblock5.label "Отключить блокировку для этого сайта">
+<!ENTITY trackingProtection.unblock5.accesskey "к">
+<!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate6.label, trackingProtection.unblockPrivate6.accesskey):
+     The associated button with this label and accesskey is only shown when opening the control
+     center while looking at a site with trackers in PRIVATE browsing mode. -->
+<!ENTITY trackingProtection.unblockPrivate5.label "Временно отключить блокировку">
+<!ENTITY trackingProtection.unblockPrivate5.accesskey "к">
+<!ENTITY trackingProtection.block6.label "Включить блокировку для этого сайта">
+<!ENTITY trackingProtection.block6.accesskey "к">
 <!ENTITY trackingProtection.reload2.label "Перезагрузить страницу">
 <!ENTITY trackingProtection.reload2.accesskey "з">
 
@@ -1118,7 +1209,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY sendToDevice.syncNotReady.label "Синхронизация устройств…">
 
 <!ENTITY pageAction.shareUrl.label "Поделиться">
-
 <!ENTITY pageAction.shareMore.label "Ещё…">
 
 <!ENTITY libraryButton.tooltip "Просмотр истории, сохранённых закладок и многого другого">

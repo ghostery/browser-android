@@ -61,6 +61,11 @@ void
 HTMLSharedElement::DoneAddingChildren(bool aHaveNotified)
 {
   if (mNodeInfo->Equals(nsGkAtoms::head)) {
+    nsCOMPtr<nsIDocument> doc = GetUncomposedDoc();
+    if (doc) {
+      doc->OnL10nResourceContainerParsed();
+    }
+
     RefPtr<AsyncEventDispatcher> asyncDispatcher =
       new AsyncEventDispatcher(this,
                               NS_LITERAL_STRING("DOMHeadElementParsed"),
@@ -117,8 +122,8 @@ HTMLSharedElement::IsAttributeMapped(const nsAtom* aAttribute) const
 {
   if (mNodeInfo->Equals(nsGkAtoms::dir)) {
     static const MappedAttributeEntry attributes[] = {
-      { &nsGkAtoms::type },
-      // { &nsGkAtoms::compact }, // XXX
+      { nsGkAtoms::type },
+      // { nsGkAtoms::compact }, // XXX
       { nullptr}
     };
 
@@ -170,7 +175,8 @@ SetBaseURIUsingFirstBaseWithHref(nsIDocument* aDocument, nsIContent* aMustMatch)
         // policy - do *not* consult default-src, see:
         // http://www.w3.org/TR/CSP2/#directive-default-src
         bool cspPermitsBaseURI = true;
-        rv = csp->Permits(child->AsElement(), newBaseURI,
+        rv = csp->Permits(child->AsElement(), nullptr /* nsICSPEventListener */,
+                          newBaseURI,
                           nsIContentSecurityPolicy::BASE_URI_DIRECTIVE,
                           true, &cspPermitsBaseURI);
         if (NS_FAILED(rv) || !cspPermitsBaseURI) {

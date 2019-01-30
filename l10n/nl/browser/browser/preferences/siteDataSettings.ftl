@@ -8,7 +8,7 @@
 site-data-settings-window =
     .title = Cookies en websitegegevens beheren
     
-site-data-settings-description = De volgende websites bewaren cookies en websitegegevens op uw computer. { -brand-short-name } bewaart gegevens van websites met permanente opslag todat u deze verwijdert, en verwijdert gegevens van websites met niet-permanente opslag zodra er ruimte nodig is.
+site-data-settings-description = De volgende websites bewaren cookies en websitegegevens op uw computer. { -brand-short-name } bewaart gegevens van websites met permanente opslag totdat u deze verwijdert, en verwijdert gegevens van websites met niet-permanente opslag zodra er ruimte nodig is.
 
 site-data-search-textbox =
     .placeholder = Websites doorzoeken

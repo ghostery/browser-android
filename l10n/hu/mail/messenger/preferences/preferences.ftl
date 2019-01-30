@@ -8,3 +8,7 @@ manage-messenger-languages-button =
     .accesskey = l
 confirm-messenger-language-change-description = Indítsa újra a { -brand-short-name }öt a változások érvényesítéséhez
 confirm-messenger-language-change-button = Alkalmaz és újraindítás
+update-pref-write-failure-title = Írási hiba
+# Variables:
+#   $path (String) - Path to the configuration file
+update-pref-write-failure-message = Nem lehet menteni a beállításokat. Nem lehet a fájlba írni: { $path }

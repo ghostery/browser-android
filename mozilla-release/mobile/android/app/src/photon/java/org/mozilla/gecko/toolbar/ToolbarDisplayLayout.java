@@ -521,6 +521,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         }
         /* Cliqz end */
     }
+
     /* Cliqz start */
     // update TitleBar width depend on displayed icons
     void updateTitleBarWidth() {
@@ -532,28 +533,13 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         }
         final int buttonWidth = (int) resources.getDimension(R.dimen.page_action_button_width);
 
-        final int actionsLayoutWidth = mPageActionLayout.getPageActionListSize() * buttonWidth;
-        // 3 icons on the right {3 dot menu, tab icons, ghostry icon} + left security icon +
-        // padding right
-        final BrowserToolbar parent = (BrowserToolbar) getParent();
-        parent.post(new Runnable() {
+        post(new Runnable() {
             @Override
             public void run() {
-                int toolBarbuttonsWidth = parent.ghostyButton.getWidth() +
-                        parent.tabsButton.getWidth() + parent.menuButton.getWidth() +
-                        mSiteSecurity.getWidth() + (int) resources.getDimension(R.dimen.myoffrz_padding_8);
-                if (HardwareUtils.isTablet()) {
-                    // add 4 icons back button, forward button,  refresh icon and bookmark icon
-                    final BrowserToolbarTablet tabletParent = (BrowserToolbarTablet) getParent();
-                    toolBarbuttonsWidth += tabletParent.backButton.getWidth() +
-                            tabletParent.forwardButton.getWidth() +
-                            tabletParent.menuButtonMarginView.getWidth() +
-                            tabletParent.actionItemBar.getWidth() +
-                            (int) resources.getDimension(R.dimen.padding_16);
-                }
-
-                final int buttonsWidth = toolBarbuttonsWidth + actionsLayoutWidth;
-                final int titleBarWidth = metrics.widthPixels - buttonsWidth;
+                final int actionsLayoutWidth = mPageActionLayout.getPageActionListSize() * buttonWidth;
+                final int titleBarWidth = mThemeBackground.getWidth() +
+                        (int) resources.getDimension(R.dimen.myoffrz_padding_8) -
+                        mSiteSecurity.getWidth() - actionsLayoutWidth;
                 mTitle.setWidth(titleBarWidth);
             }
         });

@@ -17,6 +17,10 @@
 <!ENTITY font.accesskey "T">
 <!ENTITY size.label "Tamaño:">
 <!ENTITY size.accesskey "o">
+<!ENTITY fontSize.label "Tamaño:">
+<!ENTITY fontSize.accesskey "m">
+<!ENTITY useReaderDefaults.label "Usar los colores predeterminados del lector">
+<!ENTITY useReaderDefaults.accesskey "d">
 <!ENTITY fontColor.label "Color del texto:">
 <!ENTITY fontColor.accesskey "x">
 <!ENTITY bgColor.label "Color de fondo:">

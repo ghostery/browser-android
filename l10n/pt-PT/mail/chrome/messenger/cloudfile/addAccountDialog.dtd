@@ -1,0 +1,13 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<!ENTITY addAccountDialog.title   "Configurar Filelink">
+<!ENTITY addAccountDialog.menuTitle "Selecione um serviço de armazenamento online">
+<!ENTITY addAccountDialog.style "width: 44em; min-height: 25em;">
+<!ENTITY addAccountDialog.accountName.label "Nome da conta:">
+<!ENTITY addAccountDialog.noAccountText "Pedimos desculpa mas a versão atual do &brandShortName; só permite uma conta para cada serviço de armazenamento.">
+<!ENTITY addAccountDialog.createAccountText2 "Esta funcionalidade permite-lhe enviar anexos grandes usando um dos vários serviços de armazenamento web. Pode ligar-se a uma conta existente ou criar uma nova.">
+<!ENTITY addAccountDialog.authorizing "A verificar autorização...">
+<!ENTITY addAccountDialog.error "Ocorreu um erro ao configurar a conta!">
+<!ENTITY addAccountDialog.acceptButton.label "Configurar conta">
+<!ENTITY addAccountDialog.learnMore "Saber mais…">

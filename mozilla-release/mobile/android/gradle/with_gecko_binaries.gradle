@@ -48,8 +48,8 @@ ext.configureVariantWithGeckoBinaries = { variant ->
     // non-existing folder. We fixed this by inverting the expression below and using the mozconfig
     // to read the "MOZ_APP_NAME" to define the app name if not "geckoview".
     def appName = mozconfig.substs.get("MOZ_APP_NAME", "fennec")
-    def omnijar_dir = "geckoview".equals(project.name) ? "geckoview" : appName
-    def distDir = "${topobjdir}/dist/${omnijar_dir}"
+    def omnijarDir = { "${topobjdir}/dist/${it}" }("app".equals(project.name) ? appName : "geckoview")
+    def distDir = "${topobjdir}/dist/${appName}"
 
     def syncFeaturesFromDistDir =task("syncFeaturesFromDistDirFor${variant.name.capitalize()}", type: Sync) {
         onlyIf {
@@ -67,14 +67,14 @@ ext.configureVariantWithGeckoBinaries = { variant ->
     def syncOmnijarFromDistDir = task("syncOmnijarFromDistDirFor${variant.name.capitalize()}", type: Sync) {
         onlyIf {
             if (source.empty) {
-                throw new StopExecutionException("Required omnijar not found in ${distDir}/{omni.ja,assets/omni.ja}.  Have you built and packaged?")
+                throw new StopExecutionException("Required omnijar not found in ${omnijarDir}/{omni.ja,assets/omni.ja}.  Have you built and packaged?")
             }
             return true
         }
 
         into("${project.buildDir}/moz.build/src/${variant.name}/omnijar")
-        from("${distDir}/omni.ja",
-             "${distDir}/assets/omni.ja") {
+        from("${omnijarDir}/omni.ja",
+             "${omnijarDir}/assets/omni.ja") {
             // Throw an exception if we find multiple, potentially conflicting omni.ja files.
             duplicatesStrategy 'fail'
         }

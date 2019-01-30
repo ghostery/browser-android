@@ -232,6 +232,8 @@ pref("extensions.webextOptionalPermissionPrompts", true);
 pref("extensions.webextensions.base-content-security-policy", "script-src 'self' https://* moz-extension: blob: filesystem: 'unsafe-eval' 'unsafe-inline'; object-src 'self' https://* moz-extension: blob: filesystem:;");
 pref("extensions.webextensions.default-content-security-policy", "script-src 'self'; object-src 'self';");
 
+pref("extensions.webextensions.background-delayed-startup", true);
+
 pref("extensions.legacy.enabled", false);
 
 /* block popups by default, and notify the user about blocked popups */
@@ -564,6 +566,10 @@ pref("layers.low-precision-opacity", "1.0");
 // work harder keep scrolling smooth and memory low.
 pref("layers.max-active", 20);
 
+// On Fennec we need containerful scrolling to support zooming. Bug 1459312
+// tracks zooming with containerless scrolling.
+pref("layout.scroll.root-frame-containers", 1);
+
 pref("notification.feature.enabled", true);
 pref("dom.webnotifications.enabled", true);
 
@@ -782,7 +788,9 @@ pref("browser.snippets.geoUrl", "https://location.services.mozilla.com/v1/countr
 pref("browser.snippets.statsUrl", "https://snippets-stats.mozilla.org/mobile");
 
 // These prefs require a restart to take effect.
+/* Cliqz start */
 pref("browser.snippets.enabled", false);
+/* Cliqz end */
 pref("browser.snippets.syncPromo.enabled", true);
 pref("browser.snippets.firstrunHomepage.enabled", true);
 
@@ -858,7 +866,6 @@ pref("dom.vr.enabled", true);
 pref("browser.tabs.showAudioPlayingIcon", true);
 
 pref("dom.serviceWorkers.enabled", true);
-pref("dom.serviceWorkers.interception.enabled", true);
 
 // Allow service workers to open windows for a longer period after a notification
 // click on mobile.  This is to account for some devices being quite slow.
@@ -908,16 +915,16 @@ pref("dom.keyboardevent.dispatch_during_composition", true);
 // Ask for permission when enumerating WebRTC devices.
 pref("media.navigator.permission.device", true);
 
-// Allow system add-on updates
+/* Cliqz start */
+// Do not allow system add-on updates
 pref("extensions.systemAddon.update.url", "");
 
 // override the UA on Google SERP pages due to https://bugzilla.mozilla.org/show_bug.cgi?id=975444
 pref("general.useragent.override.encrypted.google.com", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
 pref("general.useragent.override.encrypted.google.de", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
-pref("general.useragent.override.google.com", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
-pref("general.useragent.override.google.de", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
+pref("general.useragent.override.www.google.com", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
+pref("general.useragent.override.www.google.de", "Mozilla/5.0 (Linux; Android 8.0.0; rv:61.0) FxQuantum/61.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.0.0 Mobile Safari/537.36");
 
-/* Cliqz start */
 pref("media.autoplay.enabled", false);
 // Prevent mozaddonmanager on AMO
 pref("privacy.resistFingerprinting.block_mozAddonManager", true); 

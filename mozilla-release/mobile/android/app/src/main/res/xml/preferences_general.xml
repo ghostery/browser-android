@@ -36,6 +36,28 @@
                       android:defaultValue="true" />
     <!+- Cliqz Block Comment End -->
 
+    <!-- Cliqz Start -->
+    <!-- add cliqz tab category -->
+    <PreferenceCategory android:title="@string/pref_cliqz_tab_category">
+        <CheckBoxPreference
+            android:key="pref.cliqz.tab.background.enabled"
+            android:title="@string/pref_cliqz_tab_background"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="pref.cliqz.tab.topsites.enabled"
+            android:title="@string/pref_cliqz_tab_topsites"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="pref.cliqz.tab.news.enabled"
+            android:title="@string/pref_cliqz_tab_news"
+            android:defaultValue="true" />
+        <!-- This is blocked cause the Cliqz top-sites logic is not yet implemented.
+        <Preference
+            android:key="android.not_a_preference.restore.top.sites"
+            android:title="@string/pref_cliqz_tab_restore_top_sites" /> -->
+    </PreferenceCategory>
+    <!-- Cliqz End -->
+
     <!-- add search category -->
     <PreferenceCategory android:title="@string/pref_search_category">
         <ListPreference
@@ -85,26 +107,6 @@
             android:key="android.not_a_preference.customtabs_58"
             android:summary="@string/pref_custom_tabs_summary"
             android:title="@string/pref_custom_tabs" />
-    </PreferenceCategory>
-
-    <!-- add cliqz tab category -->
-    <PreferenceCategory android:title="@string/pref_cliqz_tab_category">
-        <CheckBoxPreference
-            android:key="pref.cliqz.tab.background.enabled"
-            android:title="@string/pref_cliqz_tab_background"
-            android:defaultValue="true" />
-        <CheckBoxPreference
-            android:key="pref.cliqz.tab.topsites.enabled"
-            android:title="@string/pref_cliqz_tab_topsites"
-            android:defaultValue="true" />
-        <CheckBoxPreference
-            android:key="pref.cliqz.tab.news.enabled"
-            android:title="@string/pref_cliqz_tab_news"
-            android:defaultValue="true" />
-        <!-- This is blocked cause the Cliqz top-sites logic is not yet implemented.
-        <Preference
-            android:key="android.not_a_preference.restore.top.sites"
-            android:title="@string/pref_cliqz_tab_restore_top_sites" /> -->
     </PreferenceCategory>
 
     <!-- add MyOffrz category -->

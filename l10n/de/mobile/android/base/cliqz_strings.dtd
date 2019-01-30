@@ -9,6 +9,8 @@
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Nachrichten">
+<!ENTITY activity_stream_top_news_show "Zeigen">
+<!ENTITY activity_stream_top_news_hide "Verbergen">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -39,6 +41,13 @@
 <!ENTITY helper_triple_readerview_open_message2 "Reader-View-Artikel als Favoriten zum Offline-Lesen.">
 <!ENTITY helper_triple_readerview_open_button2 "Zu Favoriten hinzufügen">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "Diese Startseite anpassen?">
+<!ENTITY customize_new_tab_link "Einstellungen Öffnen">
+<!ENTITY customize_new_tab_snackbar_negative_btn "Nein, Danke">
+<!ENTITY customize_new_tab_snackbar_positive_btn "Anpassen">
+<!ENTITY customize_new_tab_snackbar_description "Passe diesen Bereich nach deinen Bedürfnissen an: Blende die meistbesuchten Seiten, Nachrichten und das Hintergrundbild ein/aus.">
+
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; als Standardbrowser">
 <!ENTITY default_browser_message "Du scheinst &brandShortName; gerne zu nutzen. Möchten du, dass dies dein Standardbrowser wird?">
@@ -46,6 +55,10 @@
 <!ENTITY default_browser_dialog_cancel "ABBRECHEN">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "Nutzungsdaten senden">
+<!ENTITY datareporting_telemetry_summary2 "Hilf uns, dein Browsing-Erlebnis zu verbessern. Ghostery sammelt ausschließlich anonyme Nutzungsdaten. In keinem Fall werden persönliche Daten gesammelt.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
 <!ENTITY pref_what_is_human_web "Was ist „Human Web“?">
@@ -56,7 +69,7 @@
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Wir haben derzeit keine Angebote">
-<!ENTITY myoffrz_no_offers_msg_line1 "Wir halten weiterhin Ausschau für dich und fügen">
+<!ENTITY myoffrz_no_offers_msg_line1 "Wir halten weiterhin Ausschau und fügen">
 <!ENTITY myoffrz_no_offers_msg_line2 "sie hier hinzu, sobald wir etwas haben. ">
 <!ENTITY myoffrz_onboarding_description "Attraktive Preisnachlässe und Sonderangebote mit &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Jetzt bestellen!">
@@ -80,12 +93,12 @@
 <!ENTITY cc_title_overview "ÜBERBLICK">
 <!ENTITY cc_title_site_trackers "WEBSITE-TRACKER">
 <!ENTITY cc_title_global_trackers "ALLE TRACKER">
-<!ENTITY cc_zero_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_one_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_two_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_few_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_many_trackers_found "&formatD;\n Tracker gefunden">
-<!ENTITY cc_other_trackers_found "&formatD;\n Tracker gefunden">
+<!ENTITY cc_zero_trackers_found "Tracker gefunden">
+<!ENTITY cc_one_trackers_found "Tracker gefunden">
+<!ENTITY cc_two_trackers_found "Tracker gefunden">
+<!ENTITY cc_few_trackers_found "Tracker gefunden">
+<!ENTITY cc_many_trackers_found "Tracker gefunden">
+<!ENTITY cc_other_trackers_found "Tracker gefunden">
 <!ENTITY cc_zero_trackers_blocked "&formatD; Tracker blockiert">
 <!ENTITY cc_one_trackers_blocked "&formatD; Tracker blockiert">
 <!ENTITY cc_two_trackers_blocked "&formatD; Tracker blockiert">
@@ -102,19 +115,19 @@
 <!ENTITY cc_restrict_site "Website nicht vertrauen">
 <!ENTITY cc_pause_ghostery "Ghostery pausieren">
 <!ENTITY cc_resume_ghostery "Ghostery fortsetzen">
-<!ENTITY cc_enhanced_options "Erweiterte Optionen">
-<!ENTITY cc_enhanced_anti_tracking "Erweitertes Anti-Tracking">
+<!ENTITY cc_enhanced_options "Optionen">
+<!ENTITY cc_enhanced_anti_tracking "Anti-Tracking">
 <!ENTITY cc_enhanced_ad_blocking "Werbeblocker">
 <!ENTITY cc_smart_blocking "Smart Blocking">
-<!ENTITY cc_enhanced_anti_tracking_info "Informationen zu erweitertem Anti-Tracking">
+<!ENTITY cc_enhanced_anti_tracking_info "Informationen zum Anti-Tracking">
 <!ENTITY cc_enhanced_ad_blocking_info "Informationen zum Werbeblocker">
-<!ENTITY cc_smart_blocking_info "Informationen zu erweitertem Anti-Tracking">
-<!ENTITY cc_zero_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
-<!ENTITY cc_one_anti_tracking_blocked "Persönlicher Datenpunkt anonymisiert">
-<!ENTITY cc_two_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
-<!ENTITY cc_few_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
-<!ENTITY cc_many_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
-<!ENTITY cc_other_anti_tracking_blocked "Persönliche Datenpunkte anonymisiert">
+<!ENTITY cc_smart_blocking_info "Informationen zum Anti-Tracking">
+<!ENTITY cc_zero_anti_tracking_blocked "Persönliche Daten anonymisiert">
+<!ENTITY cc_one_anti_tracking_blocked "Persönliche Daten anonymisiert">
+<!ENTITY cc_two_anti_tracking_blocked "Persönliche Daten anonymisiert">
+<!ENTITY cc_few_anti_tracking_blocked "Persönliche Daten anonymisiert">
+<!ENTITY cc_many_anti_tracking_blocked "Persönliche Daten anonymisiert">
+<!ENTITY cc_other_anti_tracking_blocked "Persönliche Daten anonymisiert">
 <!ENTITY cc_zero_ad_blocking_blocked "Werbung blockiert">
 <!ENTITY cc_one_ad_blocking_blocked "Werbung blockiert">
 <!ENTITY cc_two_ad_blocking_blocked "Werbung blockiert">
@@ -127,9 +140,9 @@
 <!ENTITY cc_few_smart_blocking_blocked "Tracker angepasst">
 <!ENTITY cc_many_smart_blocking_blocked "Tracker angepasst">
 <!ENTITY cc_other_smart_blocking_blocked "Tracker angepasst">
-<!ENTITY cc_anti_tracking_about "Entsperrte und unbekannte Tracker für besseren Browsing-Schutz anonymisieren">
-<!ENTITY cc_ad_blocking_about "Blockieren von Werbung auf Websites, die Sie besuchen">
-<!ENTITY cc_smart_blocking_about "Tracker automatisch blockieren und entsperren, um die Seitenleistung zu optimieren">
+<!ENTITY cc_anti_tracking_about "erlaubte und unbekannte Tracker für besseren Browsing-Schutz anonymisieren">
+<!ENTITY cc_ad_blocking_about "Blockieren von Werbung auf Websites, die du besuchst">
+<!ENTITY cc_smart_blocking_about "Tracker automatisch blockieren und erlauben, um die Seitenleistung zu optimieren">
 <!ENTITY cc_site_trackers_list_title "Tracker auf dieser Website">
 <!ENTITY cc_global_trackers_list_title "Tracker über mehrere Websites">
 <!ENTITY cc_reset_settings "Änderungen zurücksetzen">
@@ -140,15 +153,15 @@
 <!ENTITY cc_num_blocked "&formatD; BLOCKIERT">
 <!ENTITY cc_tracker_info "Tracker-info">
 <!ENTITY cc_block_all "Alle blockieren">
-<!ENTITY cc_unblock_all "Alle entsperren">
+<!ENTITY cc_unblock_all "Alle erlauben">
 <!ENTITY cc_block "Blockieren">
-<!ENTITY cc_unblock "Entsperren">
+<!ENTITY cc_unblock "Erlauben">
 <!ENTITY cc_trust "Vertrauen">
 <!ENTITY cc_untrust "Nicht vertrauen">
 <!ENTITY cc_restrict "Einschränken">
-<!ENTITY cc_unrestrict "Freigeben">
+<!ENTITY cc_unrestrict "Erlauben">
 <!ENTITY cc_toast_overview_restrict "Alle Tracker auf dieser Website blockiert">
-<!ENTITY cc_toast_overview_trust "Alle Tracker auf dieser Website zugelassen">
+<!ENTITY cc_toast_overview_trust "Alle Tracker auf dieser Website erlaubt">
 <!ENTITY cc_toast_site_trust "Tracker vertrauenswürdig auf dieser Website">
 <!ENTITY cc_toast_site_restrict "Tracker auf dieser Website blockiert">
 <!ENTITY cc_toast_site_block "Tracker auf allen Websites blockiert">
@@ -186,10 +199,10 @@
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Suche, &pref_new_tab_category;, Browsen, Benachrichtigungen, Download, &brandMyOffrz;">
 <!ENTITY pref_cliqz_tab_background "Hintergrundbild zeigen">
-<!ENTITY pref_cliqz_tab_topsites "Am meisten besuchte Websites zeigen">
+<!ENTITY pref_cliqz_tab_topsites "Meistbesuchte Websites zeigen">
 <!ENTITY pref_cliqz_tab_news "Nachrichten zeigen">
-<!ENTITY pref_cliqz_tab_restore_top_sites "Am meisten besuchte Websites wiederherstellen">
-<!ENTITY pref_cliqz_tab_restore_top_sites_description "Die Startseite zeigt die am meisten besuchten Websites noch einmal">
+<!ENTITY pref_cliqz_tab_restore_top_sites "Meistbesuchte Websites wiederherstellen">
+<!ENTITY pref_cliqz_tab_restore_top_sites_description "Meistbesuchte Websites werden wieder auf Start Tab angezeigt">
 
 <!-- General Settings - myOffrz -->
 <!ENTITY pref_myoffrz_category "&brandMyOffrz;">
@@ -209,7 +222,7 @@
 <!ENTITY pref_privacy_clear_favorites_description "Sollen Favoriten gelöscht werden?">
 <!ENTITY pref_category_ghostery_control_center "Ghostery Control Center">
 <!ENTITY pref_ghostery_auto_update_title "Tracker-Bibliothek automatisch aktualisieren">
-<!ENTITY pref_ghostery_allow_first_party_title "Von Websitebesitzern erstellte Tracker zulassen">
+<!ENTITY pref_ghostery_allow_first_party_title "Von Websitebesitzern erstellte Tracker erlauben">
 <!ENTITY pref_ghostery_allow_first_party_summary "Wenn zum Beispiel ein Facebook-Tracker auf facebook.com blockiert wird, kann die Website unbenutzbar werden">
 <!ENTITY pref_ghostery_block_new_trackers_title "Neue Tracker blockieren">
 <!ENTITY pref_ghostery_block_new_trackers_summary "Neue, zu Ghostery hinzugefügte Tracker werden standardmäßig blockiert">
@@ -259,18 +272,18 @@
 
 <!-- Ghostery onboarding -->
 <!ENTITY ghostery_onboarding_new_users_title "Einführung von &brandShortName;">
-<!ENTITY ghostery_onboarding_new_users_text "Surfe auch unterwegs sauberer, schneller und sicherer mit &brandShortName;! Jetzt für Mobilgeräte optimiert!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Hilf &brandShortName; indem du anonyme Statistiken und Human-Web-Daten sendest, um &brandShortName;s Leistung zu verbessern. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_text "Surfe einfacher, schneller und sicherer mit &brandShortName;!">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Hilf &brandShortName;s Leistung zu verbessern, indem du anonyme Statistiken und Human-Web-Daten sendest. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Mehr erfahren\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Werbung und Tracker blockieren">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Wähle aus, was &brandShortName; blockieren soll, damit du schneller, sicherer und sauberer surfst. Du kannst diese Einstellung jederzeit im Privacy Control Center anpassen und ändern.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Was soll &brandShortName; für dich blockieren? Du kannst deine Auswahl jederzeit im Privacy Control Center anpassen.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Nichts blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Empfohlenes blockieren">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Werbung, Erwachsenenwerbung und Website-Analytics-Tracker blockieren">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Werbung und Website-Analytics blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Alles blockieren">
 <!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
-<!ENTITY ghostery_onboarding_quick_search_text "Bleibe anonym und spare Zeit und Datenvolumen: Ergebnisse erscheinen in Echtzeit noch während der Eingabe in die &brandShortName;-Suchleiste.">
+<!ENTITY ghostery_onboarding_quick_search_text "Bleib anonym mit der privaten Suche und spare dir zudem Zeit mit Suchergebnissen, die bereits während der Eingabe erscheinen.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Passe jeden neuen &pref_new_tab_category; an deine Wünsche an, indem du einzelne Elemente wie die meistbesuchten Websites, die neuesten Nachrichten und die Tracking-Statistiken ein- oder ausblendest.">
+<!ENTITY ghostery_onboarding_new_tab_text "Passe die Startseite deiner Tabs an deine Wünsche an.">
 <!ENTITY ghostery_onboarding_action_button "Browsen beginnen">
 <!ENTITY ghostery_onboarding_contextual_title "Tracking-Schutz aktiviert">
 <!ENTITY ghostery_onboarding_contextual_item1_title "Erweitertes Anti-Tracking">

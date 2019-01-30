@@ -11,6 +11,10 @@
 <!ENTITY castingButton.castingLabel "Casten naar scherm">
 <!ENTITY closedCaption.off "Uit">
 
+<!-- LOCALIZATION NOTE (volumeScrubber.label): This label is exposed to
+     accessibility software to clarify what the slider is for. -->
+<!ENTITY volumeScrubber.label "Volumeregelaar">
+
 <!ENTITY stats.media "Media">
 <!ENTITY stats.size "Grootte">
 <!ENTITY stats.activity "Activiteit">

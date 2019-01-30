@@ -6,7 +6,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY            windowTitle.label    "Felhasználói profil kiválasztása">
-<!ENTITY            profileManager.title "&brandShortName; - Profilkezelő">
+<!ENTITY            profileManager.title "&brandShortName; – Profilkezelő">
 
 <!ENTITY            manage.label     "Profilkezelő…">
 <!ENTITY            manage.accesskey "P">

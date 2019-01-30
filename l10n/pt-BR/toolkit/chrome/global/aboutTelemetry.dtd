@@ -12,8 +12,6 @@
 <!ENTITY aboutTelemetry.optionGroupToday "Hoje">
 <!ENTITY aboutTelemetry.optionGroupYesterday "Ontem">
 <!ENTITY aboutTelemetry.optionGroupOlder "Mais Antigo">
-<!ENTITY aboutTelemetry.payloadChoiceHeader "
-  Carga útil">
 <!-- LOCALIZATION NOTE(aboutTelemetry.previousPing, aboutTelemetry.nextPing):
 	These strings are displayed when selecting Archived pings, and they’re
 	used to move to the next or previous ping. -->
@@ -25,6 +23,8 @@
 <!ENTITY aboutTelemetry.firefoxDataDoc "A <a>Documentação de dados do Firefox</a> contém guias sobre como trabalhar com nossas ferramentas de dados.">
 <!ENTITY aboutTelemetry.telemetryClientDoc "A <a>documentação do cliente de telemetria do Firefox</a> inclui definições de conceitos, documentação da API e referências de dados.">
 <!ENTITY aboutTelemetry.telemetryDashboard "Os <a>painéis de Telemetria</a> permitem visualizar os dados que a Mozilla recebe via Telemetria.">
+
+<!ENTITY aboutTelemetry.telemetryProbeDictionary "O <a>Dicionário de Sondagens</a> fornece detalhes e descrições das sondagens coletadas pela Telemetria.">
 
 <!ENTITY aboutTelemetry.showInFirefoxJsonViewer "Abrir no visualizador de JSON">
 
@@ -38,9 +38,7 @@
 <!ENTITY aboutTelemetry.keyedHistogramsSection "Histogramas nomeados">
 <!ENTITY aboutTelemetry.eventsSection "Eventos">
 <!ENTITY aboutTelemetry.simpleMeasurementsSection "Medições simples">
-<!ENTITY aboutTelemetry.telemetryLogSection "Registro de telemetria">
 <!ENTITY aboutTelemetry.slowSqlSection "Instruções SQL lentas">
-<!ENTITY aboutTelemetry.chromeHangsSection "Congelamentos do navegador">
 <!ENTITY aboutTelemetry.addonDetailsSection "Detalhes de extensões">
 <!ENTITY aboutTelemetry.capturedStacksSection "Pilhas capturadas">
 <!ENTITY aboutTelemetry.lateWritesSection "Escritas atrasadas">

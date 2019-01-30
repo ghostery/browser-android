@@ -71,3 +71,5 @@
 <!ENTITY inadequateSecurityError.title "Connessione non sicura">
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> utilizza una tecnologia di sicurezza obsoleta e vulnerabile. Un tentativo di attacco potrebbe facilmente compromettere informazioni considerate sicure. L’amministratore del sito web deve aggiornare la configurazione del server prima di poterlo visitare.</p><p>Codice di errore: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 <!ENTITY blockedByPolicy.title "Pagina bloccata">
+<!ENTITY networkProtocolError.title "Errore protocollo di rete">
+<!ENTITY networkProtocolError.longDesc "<p>La pagina che si sta cercando di visualizzare non può essere mostrata poiché si è verificato un errore nel protocollo di rete.</p><ul><li>Contattare il proprietario del sito web per informarlo del problema.</li></ul>">

@@ -2,34 +2,34 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY wizard.title             "Criar calendário" >
-<!ENTITY wizard.label             "Criar um novo calendário" >
-<!ENTITY wizard.description       "Localize seu calendário" >
+<!ENTITY wizard.title             "Criar nova agenda" >
+<!ENTITY wizard.label             "Criar uma nova agenda" >
+<!ENTITY wizard.description       "Localizar sua agenda" >
 
-<!ENTITY initialpage.description    "Seu calendário pode ser armazenado no seu computador ou em um servidor para acesso remoto ou compartilhamento com seus colegas ou amigos." >
+<!ENTITY initialpage.description    "Sua agenda pode ser armazenada no seu computador, ou em um servidor para acesso remoto ou compartilhamento com seus colegas ou amigos." >
 <!ENTITY initialpage.computer.label  "No meu computador">
 <!ENTITY initialpage.network.label  "Na rede">
 
-<!ENTITY locationpage.description         "Informe o que é necessário para acessar seu calendário remoto" >
+<!ENTITY locationpage.description         "Informe o que é necessário para acessar sua agenda remota" >
 <!ENTITY locationpage.login.description   "Opcional: insira um nome de usuário e senha" >
 <!ENTITY locationpage.username.label      "Nome de usuário:" >
 <!ENTITY locationpage.password.label      "Senha:" >
 
-<!ENTITY custompage.shortdescription  "Personalize seu calendário" >
-<!ENTITY custompage.longdescription   "Você pode dar um nome para o seu calendário e colorir os eventos deste." >
+<!ENTITY custompage.shortdescription  "Personalizar sua agenda" >
+<!ENTITY custompage.longdescription   "Você pode dar um nome para sua agenda e colorir os eventos dela." >
 
-<!ENTITY finishpage.shortdescription  "Calendário criado" >
-<!ENTITY finishpage.longdescription   "Seu calendário foi criado." >
+<!ENTITY finishpage.shortdescription  "Agenda criada" >
+<!ENTITY finishpage.longdescription   "Sua agenda foi criada." >
 
 <!-- Below are new strings for the revised new calendar dialog. The above strings should be
     removed/renamed later on -->
 
 <!ENTITY sourcetabs.other.label  "Outro">
 
-<!ENTITY buttons.create.label "Criar calendário">
+<!ENTITY buttons.create.label "Criar agenda">
 <!ENTITY buttons.create.accesskey "r">
 
-<!ENTITY buttons.find.label "Procurar calendários">
+<!ENTITY buttons.find.label "Procurar agendas">
 <!ENTITY buttons.find.accesskey "P">
 
 <!ENTITY buttons.back.label "Voltar">
@@ -38,14 +38,14 @@
 <!ENTITY buttons.subscribe.label "Inscrever">
 <!ENTITY buttons.subscribe.accesskey "I">
 
-<!ENTITY calendartype.label "Tipo de calendário:">
+<!ENTITY calendartype.label "Tipo de agenda:">
 <!ENTITY location.label "Localização:">
-<!ENTITY location.placeholder "URL ou nome de host do servidor do calendário">
+<!ENTITY location.placeholder "URL ou nome do servidor da agenda">
 
 <!ENTITY network.nocredentials.label "Este endereço não requer credenciais">
-<!ENTITY network.loading.description "Aguarde enquanto seus calendários estão sendo descobertos.">
-<!ENTITY network.notfound.description "Não foi possível procurar calendários neste endereço. Verifique suas configurações.">
+<!ENTITY network.loading.description "Aguarde enquanto suas agendas estão sendo descobertas.">
+<!ENTITY network.notfound.description "Não foi possível encontrar agendas neste local. Verifique suas configurações.">
 <!ENTITY network.authfail.description "As credenciais que você inseriu não foram aceitas. Verifique suas configurações.">
 
-<!ENTITY network.subscribe.single.description "Selecione os calendários que você gostaria de inscrever-se.">
-<!ENTITY network.subscribe.multiple.description "Múltiplos tipos de calendários estão disponíveis neste endereço. Selecione o tipo e depois marque os calendários que você gostaria de inscrever-se.">
+<!ENTITY network.subscribe.single.description "Selecione as agendas que deseja se inscrever.">
+<!ENTITY network.subscribe.multiple.description "Vários tipos de agenda estão disponíveis neste local. Selecione um tipo, depois marque as agendas que deseja se inscrever.">

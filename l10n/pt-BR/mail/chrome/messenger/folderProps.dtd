@@ -30,8 +30,6 @@
 <!ENTITY retentionKeepAll.accesskey "N">
 <!ENTITY retentionKeepRecent.label "Excluir tudo, exceto as últimas">
 <!ENTITY retentionKeepRecent.accesskey "E">
-<!-- LOCALIZATION NOTE: Unhide with .keepUnreadOnly { display: -moz-box; } -->
-<!ENTITY retentionKeepUnreadHidden.label "Sempre excluir as mensagens lidas (ignora a opção de data)">
 <!ENTITY retentionApplyToFlagged.label "Sempre preservar as mensagens com estrela">
 <!ENTITY retentionApplyToFlagged.accesskey "S">
 
@@ -58,7 +56,7 @@
 <!ENTITY privileges.button.label                 "Direitos…">
 <!ENTITY privileges.button.accesskey             "D">
 <!ENTITY permissionsDesc.label                   "Você possui estas permissões:">
-<!ENTITY folderType.label                        "Pasta de tipo:">
+<!ENTITY folderType.label                        "Tipo da pasta:">
 
 <!ENTITY folderQuotaTab.label                    "Cota">
 <!ENTITY folderQuotaRoot.label                   "Quota Root:">

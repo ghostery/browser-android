@@ -6,7 +6,7 @@
 <!ENTITY rights.title "O prawach użytkownika">
 <!ENTITY rights.intro "&brandFullName; to wolne oprogramowanie o otwartym kodzie źródłowym (open source), stworzone przez społeczność tysięcy ludzi z całego świata. Jest kilka zagadnień związanych z tym programem, o których należy wiedzieć:">
 
-<!ENTITY rights.intro-point1a "Program &brandShortName; został udostępniony użytkownikowi na warunkach licencji ">
+<!ENTITY rights.intro-point1a "&brandShortName; został udostępniony użytkownikowi na warunkach licencji ">
 <!ENTITY rights.intro-point1b "Mozilla Public License">
 <!ENTITY rights.intro-point1c ". Oznacza to, że użytkownik ma prawo używać, kopiować i rozpowszechniać program &brandShortName;. Może on też modyfikować kod źródłowy programu &brandShortName;, by dostosować go do swoich potrzeb. Licencja MPL (Mozilla Public License) daje użytkownikowi także prawo do rozpowszechniania zmodyfikowanych wersji.">
 

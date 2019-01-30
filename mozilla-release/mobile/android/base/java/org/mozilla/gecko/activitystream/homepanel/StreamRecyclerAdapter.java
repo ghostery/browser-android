@@ -531,12 +531,12 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
 
     /* Cliqz start */
     // swap topNews list with new ones after #TopNewsLoader finish and refresh the layout
-    public void swapTopNews(List<TopNews> topNews){
+    void swapTopNews(List<TopNews> topNews){
         this.topNews = topNews;
         notifyDataSetChanged();
     }
 
-    public void hideTopSitesSection() {
+    void hideTopSitesSection() {
         RowModel topPanel = null;
         for (RowModel rowModel : recyclerViewModel) {
             if (rowModel.getRowItemType() == RowItemType.TOP_PANEL) {
@@ -548,5 +548,19 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
             recyclerViewModel.remove(topPanel);
         }
     }
+
+    void hideTopNewsSection() {
+        RowModel newsPanel = null;
+        for (RowModel rowModel : recyclerViewModel) {
+            if (rowModel.getRowItemType() == RowItemType.TOP_NEWS) {
+                newsPanel = rowModel;
+                break;
+            }
+        }
+        if (newsPanel != null) {
+            recyclerViewModel.remove(newsPanel);
+        }
+    }
+
     /* Cliqz end */
 }

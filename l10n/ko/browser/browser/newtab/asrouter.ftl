@@ -9,6 +9,10 @@ cfr-doorhanger-extension-cancel-button = 나중에
     .accesskey = N
 cfr-doorhanger-extension-ok-button = 지금 추가
     .accesskey = A
+cfr-doorhanger-extension-manage-settings-button = 추천 설정 관리
+    .accesskey = M
+cfr-doorhanger-extension-never-show-recommendation = 이 추천을 보여주지 않음
+    .accesskey = S
 cfr-doorhanger-extension-learn-more-link = 자세히 보기
 # This string is used on a new line below the add-on name
 # Variables:

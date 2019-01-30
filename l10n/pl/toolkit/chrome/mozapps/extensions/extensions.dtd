@@ -5,6 +5,7 @@
 <!ENTITY addons.windowTitle                   "Dodatki">
 <!ENTITY search.placeholder                   "Szukaj we wszystkich dodatkach">
 <!ENTITY search.placeholder2 "Szukaj na stronie addons.mozilla.org">
+<!ENTITY search.placeholder3 "Szukaj na stronie addons.mozilla.org">
 <!ENTITY search.buttonlabel "Szukaj">
 <!ENTITY search.commandkey                    "f">
 <!ENTITY loading.label                        "Wczytywanie…">
@@ -36,6 +37,11 @@
 <!ENTITY view.discover.label                  "Pobierz dodatki">
 <!ENTITY view.recentUpdates.label             "Ostatnie aktualizacje">
 <!ENTITY view.availableUpdates.label          "Dostępne aktualizacje">
+
+<!ENTITY helpButton.label "Wsparcie dla dodatków">
+<!ENTITY preferencesWin.label "Opcje programu">
+<!ENTITY preferencesUnix.label "Preferencje programu">
+
 <!ENTITY updates.checkForUpdates.label        "Znajdź aktualizacje">
 <!ENTITY updates.checkForUpdates.accesskey    "n">
 <!ENTITY updates.viewUpdates.label            "Wyświetl ostatnie aktualizacje">
@@ -96,7 +102,7 @@
 <!ENTITY cmd.hideReleaseNotes.tooltip         "Ukryj informacje o wydaniu tej aktualizacji">
 <!ENTITY cmd.findReplacement.label "Znajdź zamiennik">
 <!ENTITY discover.title                       "Czym są dodatki?">
-<!ENTITY discover.description2                "Dodatki to programy, które pozwalają dostosować program &brandShortName; do upodobań użytkownika dzięki nowej funkcjonalności lub innemu wyglądowi. Wypróbuj panel boczny oszczędzający czas, powiadomienia o pogodzie albo nowy motyw graficzny.">
+<!ENTITY discover.description2                "Dodatki to programy, które pozwalają dostosować program do upodobań użytkownika dzięki nowej funkcjonalności lub innemu wyglądowi. Wypróbuj panel boczny oszczędzający czas, powiadomienia o pogodzie albo nowy motyw graficzny.">
 <!ENTITY discover.footer                      "Kiedy dostępne jest połączenie z Internetem, ten panel będzie wyświetlał najnowsze i najpopularniejsze dodatki, które warto wypróbować.">
 <!ENTITY detail.version.label                 "Wersja">
 <!ENTITY detail.lastupdated.label             "Ostatnia aktualizacja">

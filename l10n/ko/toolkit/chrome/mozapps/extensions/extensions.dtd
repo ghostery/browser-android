@@ -4,6 +4,8 @@
 <!ENTITY addons.windowTitle                   "부가 기능 관리자">
 
 <!ENTITY search.placeholder2                  "addons.mozilla.org에서 검색">
+
+<!ENTITY search.placeholder3                  "addons.mozilla.org 검색">
 <!ENTITY search.buttonlabel                   "검색">
 <!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
@@ -41,6 +43,10 @@
 <!ENTITY view.discover.label                  "추천">
 <!ENTITY view.recentUpdates.label             "최근 항목 보기">
 <!ENTITY view.availableUpdates.label          "업데이트 가능 항목">
+
+<!ENTITY helpButton.label                      "부가 기능 지원">
+<!ENTITY preferencesWin.label                  "&brandShortName; 옵션">
+<!ENTITY preferencesUnix.label                 "&brandShortName; 환경 설정">
 
 <!-- addon updates -->
 <!ENTITY updates.checkForUpdates.label        "업데이트 확인하기">

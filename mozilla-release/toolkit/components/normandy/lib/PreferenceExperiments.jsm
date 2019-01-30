@@ -90,14 +90,14 @@ const PreferenceBranchType = {
 /**
  * Asynchronously load the JSON file that stores experiment status in the profile.
  */
-let storePromise;
+let gStorePromise;
 function ensureStorage() {
-  if (storePromise === undefined) {
+  if (gStorePromise === undefined) {
     const path = OS.Path.join(OS.Constants.Path.profileDir, EXPERIMENT_FILE);
     const storage = new JSONFile({path});
-    storePromise = storage.load().then(() => storage);
+    gStorePromise = storage.load().then(() => storage);
   }
-  return storePromise;
+  return gStorePromise;
 }
 
 const log = LogManager.getLogger("preference-experiments");
@@ -216,7 +216,9 @@ var PreferenceExperiments = {
    */
   async saveStartupPrefs() {
     const prefBranch = Services.prefs.getBranch(STARTUP_EXPERIMENT_PREFS_BRANCH);
-    prefBranch.deleteBranch("");
+    for (const pref of prefBranch.getChildList("")) {
+      prefBranch.clearUserPref(pref);
+    }
 
     // Filter out non-default-branch experiments (user-branch), because they
     // don't need to be set on the default branch during early startup. Doing so
@@ -248,23 +250,30 @@ var PreferenceExperiments = {
    * Test wrapper that temporarily replaces the stored experiment data with fake
    * data for testing.
    */
-  withMockExperiments(testFunction) {
-    return async function inner(...args) {
-      const oldPromise = storePromise;
-      const mockExperiments = {};
-      storePromise = Promise.resolve({
-        data: mockExperiments,
-        saveSoon() { },
-      });
-      const oldObservers = experimentObservers;
-      experimentObservers = new Map();
-      try {
-        await testFunction(...args, mockExperiments);
-      } finally {
-        storePromise = oldPromise;
-        PreferenceExperiments.stopAllObservers();
-        experimentObservers = oldObservers;
-      }
+  withMockExperiments(mockExperiments = []) {
+    return function wrapper(testFunction) {
+      return async function wrappedTestFunction(...args) {
+        const data = {};
+
+        for (const exp of mockExperiments) {
+          data[exp.name] = exp;
+        }
+
+        const oldPromise = gStorePromise;
+        gStorePromise = Promise.resolve({
+          data,
+          saveSoon() { },
+        });
+        const oldObservers = experimentObservers;
+        experimentObservers = new Map();
+        try {
+          await testFunction(...args, mockExperiments);
+        } finally {
+          gStorePromise = oldPromise;
+          PreferenceExperiments.stopAllObservers();
+          experimentObservers = oldObservers;
+        }
+      };
     };
   },
 
@@ -513,12 +522,12 @@ var PreferenceExperiments = {
         // Remove the "user set" value (which Shield set), but leave the default intact.
         preferences.clearUserPref(preferenceName);
       } else {
-        // Remove both the user and default branch preference. This
-        // is ok because we only do this when studies expire, not
-        // when users actively leave a study by changing the
-        // preference, so there should not be a user branch value at
-        // this point.
-        Services.prefs.getDefaultBranch("").deleteBranch(preferenceName);
+        log.warn(
+          `Can't revert pref for experiment ${experimentName} because it had no default value. `
+          + `Preference will be reset at the next restart.`
+        );
+        // It would seem that Services.prefs.deleteBranch() could be used for
+        // this, but in Normandy's case it does not work. See bug 1502410.
       }
     }
 

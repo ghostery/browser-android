@@ -19,9 +19,9 @@
 <!ENTITY aboutTelemetry.pageTitle "Dane telemetrii">
 <!ENTITY aboutTelemetry.moreInformations "Szukasz dalszych informacji?">
 <!ENTITY aboutTelemetry.firefoxDataDoc "<a>Firefox Data Documentation</a> zawiera przewodniki o tym, jak pracować z naszymi narzędziami danych">
-<!ENTITY aboutTelemetry.telemetryClientDoc "<a>Dokumentacja klienta telemetrii Firefoksa</a> zawiera definicje konceptów, dokumentację API i odniesienia do danych">
+<!ENTITY aboutTelemetry.telemetryClientDoc "<a>Dokumentacja klienta telemetrii programu Firefox</a> zawiera definicje konceptów, dokumentację API i odniesienia do danych">
 <!ENTITY aboutTelemetry.telemetryDashboard "<a>Dashboardy telemetrii</a> pozwalają wizualizować dane, jakie Mozilla otrzymuje poprzez telemetrię">
-
+<!ENTITY aboutTelemetry.telemetryProbeDictionary "<a>Probe Dictionary</a> dostarcza szczegółów i opisów danych zbieranych na potrzeby telemetrii.">
 <!ENTITY aboutTelemetry.showInFirefoxJsonViewer "Otwórz w przeglądarce JSON-a">
 
 <!ENTITY aboutTelemetry.homeSection "Start">

@@ -19,6 +19,7 @@
 <!ENTITY noStyleSheet-tip-action.label "Aggiungere un nuovo foglio di stile">
 <!ENTITY noStyleSheet-tip-end.label "?">
 <!ENTITY openLinkNewTab.label "Apri link in nuova scheda">
+<!ENTITY copyUrl.label "Copia URL">
 <!ENTITY optionsButton.tooltip "Opzioni Editor stili">
 <!ENTITY showOriginalSources.label "Visualizza sorgenti originali">
 <!ENTITY showOriginalSources.accesskey "o">

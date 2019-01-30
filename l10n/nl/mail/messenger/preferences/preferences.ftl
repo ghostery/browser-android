@@ -8,3 +8,9 @@ manage-messenger-languages-button =
   .accesskey = l
 confirm-messenger-language-change-description = Herstart { -brand-short-name } om deze wijzigingen toe te passen.
 confirm-messenger-language-change-button = Toepassen en herstarten
+
+update-pref-write-failure-title = Schrijffout
+
+# Variables:
+#   $path (String) - Path to the configuration file
+update-pref-write-failure-message = Kan voorkeur niet opslaan. Kon niet schrijven naar bestand: { $path }

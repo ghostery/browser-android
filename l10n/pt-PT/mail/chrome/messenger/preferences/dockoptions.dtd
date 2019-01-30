@@ -1,0 +1,16 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY dockOptionsDialog.title               "Opções do ícone">
+<!ENTITY window.macWidth                       "35em">
+
+<!ENTITY bounceSystemDockIcon.label            "Animar ícone ao receber novas mensagens">
+<!ENTITY bounceSystemDockIcon.accesskey        "i">
+<!ENTITY newMessagesCountDock.label            "N.º de novas mensagens">
+<!ENTITY newMessagesCountDock.accesskey        "n">
+<!ENTITY showAllUnreadMessagesCount.label      "N.º de mensagens não lidas">
+<!ENTITY showAllUnreadMessagesCount.accesskey  "m">
+<!ENTITY dockIconBadge.label                   "Badge do ícone">
+<!ENTITY dockIconShow.label                    "Largura do badge do ícone:">
+<!ENTITY directNotificationSettings.label      "Pode desativar a medalha no painel de Notificação das Preferências de Sistema.">

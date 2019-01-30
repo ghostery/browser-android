@@ -12,8 +12,8 @@
 <!ENTITY viewUnread.accesskey "N">
 <!ENTITY viewNotDeleted.label "Não excluída">
 <!ENTITY viewNotDeleted.accesskey "e">
-<!ENTITY viewTags.label "Tags">
-<!ENTITY viewTags.accesskey "T">
+<!ENTITY viewTags.label "Etiquetas">
+<!ENTITY viewTags.accesskey "t">
 <!ENTITY viewCustomViews.label "Visualizações">
 <!ENTITY viewCustomViews.accesskey "V">
 <!ENTITY viewVirtualFolder.label "Salvar como pasta…">

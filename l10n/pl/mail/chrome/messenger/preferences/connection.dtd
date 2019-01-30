@@ -50,3 +50,9 @@
 <!ENTITY dnsOverHttpsUrl.label "Adres URL">
 <!ENTITY dnsOverHttpsUrl.accesskey "U">
 <!ENTITY dnsOverHttpsUrl.tooltip "Adres URL serwera DNS udostępnionego poprzez HTTPS">
+<!ENTITY dnsOverHttpsUrlDefault.label "Domyślny adres">
+<!ENTITY dnsOverHttpsUrlDefault.accesskey "D">
+<!ENTITY dnsOverHttpsUrlDefault.tooltip "Użyj domyślnego adresu serwera DNS udostępnionego poprzez HTTPS">
+<!ENTITY dnsOverHttpsUrlCustom.label "Własny adres">
+<!ENTITY dnsOverHttpsUrlCustom.accesskey "W">
+<!ENTITY dnsOverHttpsUrlCustom.tooltip "Podaj adres wybranego serwera DNS udostępnionego poprzez HTTPS">

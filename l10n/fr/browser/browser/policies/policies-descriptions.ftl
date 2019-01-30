@@ -10,14 +10,15 @@
 ## These are short descriptions for individual policies, to be displayed
 ## in the documentation section in about:policies.
 
-policy-AppUpdateURL = Définir une URL de mise à jour personnalisée pour l’application.
-policy-Authentication = Configurer l’authentification intégrée pour les sites web qui la proposent.
-policy-BlockAboutAddons = Bloquer l’accès au gestionnaire de modules (about:addons).
-policy-BlockAboutConfig = Bloquer l’accès à la page about:config.
-policy-BlockAboutProfiles = Bloquer l’accès à la page about:profiles.
-policy-BlockAboutSupport = Bloquer l’accès à la page about:support.
-policy-Bookmarks = Créer des marque-pages dans la Barre personnelle, le menu des marque-pages ou un de leurs sous-dossiers.
-policy-Certificates = Utiliser ou non des certificats intégrés. Cette politique est spécifique à Windows pour l’instant.
+policy-AppUpdateURL = Permet de définir une URL de mise à jour personnalisée pour l’application.
+policy-Authentication = Configure l’authentification intégrée pour les sites web qui la proposent.
+policy-BlockAboutAddons = Bloque l’accès au gestionnaire de modules (about:addons).
+policy-BlockAboutConfig = Bloque l’accès à la page about:config.
+policy-BlockAboutProfiles = Bloque l’accès à la page about:profiles.
+policy-BlockAboutSupport = Bloque l’accès à la page about:support.
+policy-Bookmarks = Permet de créer des marque-pages dans la Barre personnelle, le menu des marque-pages ou un de leurs sous-dossiers.
+policy-Certificates = Permet d’utiliser ou non des certificats intégrés. Cette politique est spécifique à Windows pour l’instant.
+policy-CertificatesDescription = Ajouter des certificats ou utiliser des certificats prédéfinis.
 policy-Cookies = Permet ou interdit aux sites de définir des cookies.
 policy-DisableAppUpdate = Empêche le navigateur de se mettre à jour.
 policy-DisableBuiltinPDFViewer = Désactive PDF.js, la visionneuse PDF intégrée dans { -brand-short-name }.
@@ -25,7 +26,7 @@ policy-DisableDeveloperTools = Bloque l’accès aux outils de développement.
 policy-DisableFeedbackCommands = Désactive les commandes permettant d’envoyer des commentaires dans le menu d’aide (Donner votre avis et Signaler un site trompeur).
 policy-DisableFirefoxAccounts = Désactive les services basés sur { -fxaccount-brand-name }, y compris la synchronisation.
 # Firefox Screenshots is the name of the feature, and should not be translated.
-policy-DisableFirefoxScreenshots = Désactiver la fonctionnalité Firefox Screenshots.
+policy-DisableFirefoxScreenshots = Désactive la fonctionnalité Firefox Screenshots.
 policy-DisableFirefoxStudies = Empêche { -brand-short-name } d’exécuter des études.
 policy-DisableForgetButton = Empêche l’accès au bouton d’effacement des données.
 policy-DisableFormHistory = Ne pas conserver d’historique des recherches et des formulaires.
@@ -42,6 +43,7 @@ policy-DisableSystemAddonUpdate = Empêche le navigateur d’installer et de met
 policy-DisableTelemetry = Désactive la télémétrie.
 policy-DisplayBookmarksToolbar = Affiche la barre personnelle par défaut.
 policy-DisplayMenuBar = Affiche la barre de menus par défaut.
+policy-DNSOverHTTPS = Permet de configurer le DNS via HTTPS.
 policy-DontCheckDefaultBrowser = Désactive la vérification du navigateur par défaut au démarrage.
 # “lock” means that the user won’t be able to change this setting
 policy-EnableTrackingProtection = Active ou désactive le blocage de contenu et permet de verrouiller ce choix.
@@ -62,9 +64,12 @@ policy-OverridePostUpdatePage = Contrôle la page « Nouveautés » après une
 policy-Permissions = Configure les permissions pour la caméra, le microphone, la localisation et les notifications.
 policy-PopupBlocking = Autorise certains sites web à afficher des popups par défaut.
 policy-Proxy = Configure les paramètres du proxy.
+policy-RequestedLocales = Définit la liste des locales demandées par l’application, dans l’ordre de préférence.
 policy-SanitizeOnShutdown = Supprime toutes les données de navigation à la fermeture.
 policy-SearchBar = Définit l’emplacement par défaut de la barre de recherche. L’utilisateur garde la possibilité de la personnaliser.
 policy-SearchEngines = Configure les paramètres du moteur de recherche. Cette propriété n’est disponible que sur la version Extended Support Release (ESR).
+# For more information, see https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/PKCS11/Module_Installation
+policy-SecurityDevices = Permet d’installer des modules PKCS #11.
 # “format” refers to the format used for the value of this policy. See also:
 # https://github.com/mozilla/policy-templates/blob/master/README.md#websitefilter-machine-only
 policy-WebsiteFilter = Bloque l’accès à des sites web. Voir la documentation pour plus de détails sur le format.

@@ -30,7 +30,8 @@
 
 <!ENTITY trackingProtection.title                        "Bescherming tegen volgen">
 <!ENTITY trackingProtection.description2                 "Sommige websites maken gebruik van trackers (‘volgers’) die uw activiteit op het internet kunnen bijhouden. Met Bescherming tegen volgen zal Firefox veel trackers blokkeren die informatie over uw surfgedrag kunnen verzamelen.">
-<!ENTITY trackingProtection.startTour1                   "Zien hoe dit werkt">
+
+<!ENTITY trackingProtection.startTour1                   "Zien hoe het werkt">
 
 <!ENTITY contentBlocking.title                           "Inhoudsblokkering">
 <!ENTITY contentBlocking.description                     "Sommige websites maken gebruik van trackers (‘volgers’) die uw activiteit op het internet kunnen bijhouden. In privévensters blokkeert Inhoudsblokkering van Firefox automatisch veel trackers die informatie over uw surfgedrag kunnen verzamelen.">
