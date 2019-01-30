@@ -38,7 +38,6 @@ import org.mozilla.gecko.activitystream.homepanel.stream.WebpageItemRow;
 import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesContextMenu;
 import org.mozilla.gecko.activitystream.homepanel.topstories.PocketStoriesLoader;
 import org.mozilla.gecko.home.HomePager;
-import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
@@ -64,14 +63,9 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
     // add TopNews Layout to be created and filled with topNews List
     private List<TopNews> topNews;
     // Content sections available on the Activity Stream page. These may be hidden if the sections are disabled.
-    //Adding new view types to this Array won't add it to the adapter anymore. Please add the new view type
-    // in the clearAndInit() method instead.
-
     private final RowItemType[] ACTIVITY_STREAM_SECTIONS =
             {RowItemType.TOP_PANEL,/* RowItemType.TOP_STORIES_TITLE, RowItemType.HIGHLIGHTS_TITLE,
                     RowItemType.LEARN_MORE_LINK,*/ RowItemType.TOP_NEWS};
-    private boolean mIsNewsEnabled;
-    private boolean mIsTopSitesEnabled;
     /* Cliqz end */
     public static final int MAX_TOP_STORIES = 3;
     private static final String LINK_MORE_POCKET = "https://getpocket.com/explore/trending?src=ff_android&cdn=0";
@@ -114,31 +108,26 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         };
     }
 
-    /* Cliqz start */
-    public StreamRecyclerAdapter(boolean isNewsEnabled, boolean isTopSitesEnabled) {
-        mIsNewsEnabled = isNewsEnabled;
-        mIsTopSitesEnabled = isTopSitesEnabled;
+    public StreamRecyclerAdapter() {
         setHasStableIds(true);
         recyclerViewModel = new LinkedList<>();
 
         clearAndInit();
     }
 
-    void clearAndInit() {
+    public void clearAndInit() {
         recyclerViewModel.clear();
-        if (mIsTopSitesEnabled) {
-            recyclerViewModel.add(makeRowModelFromType(RowItemType.TOP_PANEL));
-        }
-        if (mIsNewsEnabled) {
-            recyclerViewModel.add(makeRowModelFromType(RowItemType.TOP_NEWS));
+        for (RowItemType type : ACTIVITY_STREAM_SECTIONS) {
+            recyclerViewModel.add(makeRowModelFromType(type));
         }
         topStoriesQueue = Collections.emptyList();
+        /* Cliqz start */
         // create empty TopNews list at the beginning
         topNews = Collections.emptyList();
         // set topSitesCursor null at the beginning
         topSitesCursor = null;
+        /* Cliqz end */
     }
-    /* Cliqz end */
 
     void setOnUrlOpenListeners(HomePager.OnUrlOpenListener onUrlOpenListener, HomePager.OnUrlOpenInBackgroundListener onUrlOpenInBackgroundListener) {
         this.onUrlOpenListener = onUrlOpenListener;
