@@ -54,13 +54,6 @@ public class HistoryDialsPackage implements ReactPackage {
 
         @ReactMethod
         public void getTopSites(final Promise promise) {
-            final String[][] mockData = new String[][] {
-              new String[] { "Wikipedia", "https://www.wikipedia.com", "today at 11:00", "999999", "WI"},
-              new String[] { "Youtube", "https://www.youtube.com", "today", "800000", "YT" },
-              new String[] { "Facebook", "https://www.facebook.com", "yesterday", "5048A5", "FB" }
-            };
-
-            // TODO get data from database
 
             final BrowserDB sdb = BrowserDB.from(GeckoThread.getActiveProfile());
             final Context context = getCurrentActivity().getApplicationContext();
@@ -77,7 +70,6 @@ public class HistoryDialsPackage implements ReactPackage {
                 final String url = cursor.getString(cursor.getColumnIndex("url"));
                 final String lastVisited = cursor.getString(cursor.getColumnIndex("localDateLastVisited"));
                 if (!url.isEmpty()) {
-                    // add title to the arrayList of dictionaries
                     final WritableMap outData = Arguments.createMap();
                     outData.putString("title", title);
                     outData.putString("url", url);
@@ -87,21 +79,6 @@ public class HistoryDialsPackage implements ReactPackage {
 
 
             } while (cursor.moveToNext());
-
-            // For now return a static array
-//            for (String[] row: mockData) {
-//                final WritableMap outData = Arguments.createMap();
-//                outData.putString("title", row[0]);
-//                outData.putString("url", row[1]);
-//                outData.putString("lastVisited", row[2]);
-//                final WritableMap logoDetails = Arguments.createMap();
-//                logoDetails.putString("backgroundColor", row[3]);
-//                logoDetails.putString("text", row[4]);
-//                outData.putMap("logoDetails", logoDetails);
-//                wArray.pushMap(outData);
-////                Log.d(BridgePackage.class.getSimpleName(), outData);
-//            }
-//            Log.d(BridgePackage.class.getSimpleName(), String.valueOf(wArray));
 
             promise.resolve(wArray);
 
