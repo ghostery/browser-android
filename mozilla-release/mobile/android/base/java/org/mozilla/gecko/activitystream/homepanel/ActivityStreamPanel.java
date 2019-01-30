@@ -100,7 +100,9 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
 
         inflate(context, R.layout.as_content, this);
 
+        /* Cliqz Start */
         adapter = new StreamRecyclerAdapter(isNewsEnabled(), isTopSitesEnabled());
+        /* Cliqz End */
         sharedPreferences = GeckoSharedPrefs.forProfile(context);
 
         /* Cliqz Start */
@@ -459,7 +461,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
 
     // Disable predictive animations, see https://stackoverflow.com/a/33985508/1122966
     private static class CustomLinearLayoutManager extends LinearLayoutManager {
-        public CustomLinearLayoutManager(Context context) {
+        CustomLinearLayoutManager(Context context) {
             super(context);
         }
 

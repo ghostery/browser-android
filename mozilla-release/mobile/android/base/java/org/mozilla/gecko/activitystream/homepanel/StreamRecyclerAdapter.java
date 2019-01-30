@@ -64,6 +64,9 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
     // add TopNews Layout to be created and filled with topNews List
     private List<TopNews> topNews;
     // Content sections available on the Activity Stream page. These may be hidden if the sections are disabled.
+    //Adding new view types to this Array won't add it to the adapter anymore. Please add the new view type
+    // in the clearAndInit() method instead.
+
     private final RowItemType[] ACTIVITY_STREAM_SECTIONS =
             {RowItemType.TOP_PANEL,/* RowItemType.TOP_STORIES_TITLE, RowItemType.HIGHLIGHTS_TITLE,
                     RowItemType.LEARN_MORE_LINK,*/ RowItemType.TOP_NEWS};
@@ -111,6 +114,7 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         };
     }
 
+    /* Cliqz start */
     public StreamRecyclerAdapter(boolean isNewsEnabled, boolean isTopSitesEnabled) {
         mIsNewsEnabled = isNewsEnabled;
         mIsTopSitesEnabled = isTopSitesEnabled;
@@ -120,23 +124,21 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         clearAndInit();
     }
 
-    public void clearAndInit() {
+    void clearAndInit() {
         recyclerViewModel.clear();
-        if (mIsNewsEnabled) {
-            recyclerViewModel.add(makeRowModelFromType(RowItemType.TOP_NEWS));
-        }
         if (mIsTopSitesEnabled) {
             recyclerViewModel.add(makeRowModelFromType(RowItemType.TOP_PANEL));
         }
-
+        if (mIsNewsEnabled) {
+            recyclerViewModel.add(makeRowModelFromType(RowItemType.TOP_NEWS));
+        }
         topStoriesQueue = Collections.emptyList();
-        /* Cliqz start */
         // create empty TopNews list at the beginning
         topNews = Collections.emptyList();
         // set topSitesCursor null at the beginning
         topSitesCursor = null;
-        /* Cliqz end */
     }
+    /* Cliqz end */
 
     void setOnUrlOpenListeners(HomePager.OnUrlOpenListener onUrlOpenListener, HomePager.OnUrlOpenInBackgroundListener onUrlOpenInBackgroundListener) {
         this.onUrlOpenListener = onUrlOpenListener;
