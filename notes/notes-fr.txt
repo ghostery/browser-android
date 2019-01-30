@@ -1,0 +1,12 @@
+Nous vous remercions pour vos commentaires. Nous les avons pris en compte et avons travaillé dur pour améliorer notre extension.
+
+La dernière mise à jour intègre
+* davantage d'améliorations des performances - vous allez sentir la différence
+* une stabilité accrue
+* une personnalisation simplifiée de l'onglet de démarrage - paramétrez-le à votre image !
+* mises à jour de notre bloqueur de publicités et de notre solution de protection contre le suivi de pointe 
+* une navigation plus simple depuis votre répertoire de signets 
+* plus de conflits avec Gmail - veuillez nous excuser pour la gêne !
+* correction de plusieurs bugs
+
+Bonne navigation !

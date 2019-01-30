@@ -3,12 +3,15 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Kilépés">
 <!ENTITY contextmenu_delete "Törlés">
+<!ENTITY search_loading_message "Feltuningoljuk a Ghostery search funkciót az ön teljesen egyéni felhasználói élményéért">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Hírek">
+<!ENTITY activity_stream_top_news_show "Megjelenítés">
+<!ENTITY activity_stream_top_news_hide "Elrejtés">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -39,6 +42,13 @@
 <!ENTITY helper_triple_readerview_open_message2 "Kedvenc olvasóprogram a tartalmak internet nélküli olvasásához.">
 <!ENTITY helper_triple_readerview_open_button2 "Hozzáadás a kedvencekhez">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "Szeretné testre szabni ezt a lapfület?">
+<!ENTITY customize_new_tab_link "Ugrás a beállításokhoz">
+<!ENTITY customize_new_tab_snackbar_negative_btn "Nem, köszönöm">
+<!ENTITY customize_new_tab_snackbar_positive_btn "Személyre szabás">
+<!ENTITY customize_new_tab_snackbar_description "Állítsa be ezt a területet úgy, ahogy az önnek megfelel: Legjobb oldalak, hírek és háttérkép megjelenítése/elrejtése">
+
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; beállítása alapértelmezett böngészőnek">
 <!ENTITY default_browser_message "Úgy tűnik, ön a(z) &brandShortName;-t használja. Kívánja alapértelmezett böngészőként beállítani?">
@@ -46,18 +56,22 @@
 <!ENTITY default_browser_dialog_cancel "MÉGSEM">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "Használati adatok elküldése">
+<!ENTITY datareporting_telemetry_summary2 "Segítsen, hogy fejleszthessük a böngészési élményeit. Szigorúan csak névtelen felhasználási adatokat gyűjtünk. Semmilyen esetben sem gyűjtünk személyes információkat.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
+<!ENTITY pref_category_human_web_summary "Járuljon hozza a privát gyorskeresés, anti-tracking (követések blokkolása), anti-phishing (adathalászat) technológiáink fejlesztéséhez a trackerekhez, weboldalakhoz és keresési lekérdezésekhez kapcsolódó névtelen információk beküldésével.">
 <!ENTITY pref_what_is_human_web "Mi az a Human Web?">
 <!ENTITY pref_enable_human_web "Human Web engedélyezése">
-<!ENTITY pref_category_human_web_summary "Mit engedélyez">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Úgy tűnik, nincs egyetlen ajánlatunk sem">
-<!ENTITY myoffrz_no_offers_msg_line1 "De mi továbbra is keresni fogunk ön helyett és hozzáadjuk">
-<!ENTITY myoffrz_no_offers_msg_line2 "itt, amint találunk egyet">
+<!ENTITY myoffrz_no_offers_msg_line1 "De itt hozzáadjuk azokat ">
+<!ENTITY myoffrz_no_offers_msg_line2 "amint találunk egyet">
 <!ENTITY myoffrz_onboarding_description "Jusson vonzó kedvezményekhez és ajánlatokhoz a(z) &brandMyOffrz; használatával.">
 <!ENTITY myoffrz_order_now_label "Rendelje meg most!">
 <!ENTITY myoffrz_tap_code_to_copy_label "Bökjön a kód másolásához">
@@ -70,7 +84,7 @@
 <!ENTITY pref_block_ads "Hirdetések blokkolása">
 <!ENTITY pref_block_ads_fair "Fair blokkolás">
 <!ENTITY pref_block_ads_what_fair "Mit jelent az, hogy \'fair\'">
-<!ENTITY pref_block_ads_fair_description "A hirdetésblokkoló jelenleg még béta fejlesztési fázisban van. A végleges verzió a következő lehetőségeket fogja biztosítani: Fair hirdetések engedélyezése (alapértelmezett beállítás), összes hirdetés blokkolása, összes hirdetés engedélyezése. További információ\nhttps://cliqz.com/whycliqz/adblocking">
+<!ENTITY pref_block_ads_fair_description "A hirdetésblokkolás jelenleg még béta fejlesztési fázisban van. A végleges verzió a következő lehetőségeket fogja nyújtani: Tisztességes hirdetések engedélyezése (alapértelmezett beállítás), Összes hirdetés blokkolása, Összes hirdetés engedélyezése. Tudjon meg többet:\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "Kérjük, ne felejde: A böngészőnek először néhány adatcsomagot le kell töltenie ahhoz, hogy hatékonyan blokkolja a hirdetéseket. Ehhez az appnak csatlakoznia a kell WiFi-hálózathoz.">
 
 <!-- Rate Us -->
@@ -80,12 +94,12 @@
 <!ENTITY cc_title_overview "ÁTTEKINTÉS">
 <!ENTITY cc_title_site_trackers "OLDAL TRACKEREK">
 <!ENTITY cc_title_global_trackers "MINDEN TRACKER">
-<!ENTITY cc_zero_trackers_found "&formatD;\n Tracker megtalálva">
-<!ENTITY cc_one_trackers_found "&formatD;\n Tracker megtalálva">
-<!ENTITY cc_two_trackers_found "&formatD;\n Tracker megtalálva">
-<!ENTITY cc_few_trackers_found "&formatD;\n Tracker megtalálva">
-<!ENTITY cc_many_trackers_found "&formatD;\n Tracker megtalálva">
-<!ENTITY cc_other_trackers_found "&formatD;\n Tracker megtalálva">
+<!ENTITY cc_zero_trackers_found "Trackerek megtalálva">
+<!ENTITY cc_one_trackers_found "Tracker megtalálva">
+<!ENTITY cc_two_trackers_found "Trackerek megtalálva">
+<!ENTITY cc_few_trackers_found "Trackerek megtalálva">
+<!ENTITY cc_many_trackers_found "Trackerek megtalálva">
+<!ENTITY cc_other_trackers_found "Trackerek megtalálva">
 <!ENTITY cc_zero_trackers_blocked "&formatD; Tracker blokkolva">
 <!ENTITY cc_one_trackers_blocked "&formatD; Tracker blokkolva">
 <!ENTITY cc_two_trackers_blocked "&formatD; Tracker blokkolva">
@@ -102,19 +116,19 @@
 <!ENTITY cc_restrict_site "Korlátozott oldal">
 <!ENTITY cc_pause_ghostery "Ghostery szüneteltetése">
 <!ENTITY cc_resume_ghostery "Ghostery folytatása">
-<!ENTITY cc_enhanced_options "Haladó beállítások">
-<!ENTITY cc_enhanced_anti_tracking "Fejlesztett Anti-Tracking">
-<!ENTITY cc_enhanced_ad_blocking "Fejlesztett hirdetésblokkolás">
+<!ENTITY cc_enhanced_options "Opciók">
+<!ENTITY cc_enhanced_anti_tracking "Anti-Tracking">
+<!ENTITY cc_enhanced_ad_blocking "Hirdetésblokkolás">
 <!ENTITY cc_smart_blocking "Okos blokkolás">
-<!ENTITY cc_enhanced_anti_tracking_info "Fejlesztett Anti-Tracking információ">
-<!ENTITY cc_enhanced_ad_blocking_info "Fejlesztett hirdetés-blokkolási információ">
-<!ENTITY cc_smart_blocking_info "Fejlesztett Anti-Tracking információ">
-<!ENTITY cc_zero_anti_tracking_blocked "A személyes adatpontok névtelenítve">
-<!ENTITY cc_one_anti_tracking_blocked "A személyes adatpont névtelenítve">
-<!ENTITY cc_two_anti_tracking_blocked "A személyes adatpontok névtelenítve">
-<!ENTITY cc_few_anti_tracking_blocked "A személyes adatpontok névtelenítve">
-<!ENTITY cc_many_anti_tracking_blocked "A személyes adatpontok névtelenítve">
-<!ENTITY cc_other_anti_tracking_blocked "A személyes adatpontok névtelenítve">
+<!ENTITY cc_enhanced_anti_tracking_info "Anti-Tracking információ">
+<!ENTITY cc_enhanced_ad_blocking_info "Hirdetés-blokkolási információ">
+<!ENTITY cc_smart_blocking_info "Anti-Tracking információ">
+<!ENTITY cc_zero_anti_tracking_blocked "Személyes adatok névtelenítve">
+<!ENTITY cc_one_anti_tracking_blocked "Személyes adatok névtelenítve">
+<!ENTITY cc_two_anti_tracking_blocked "Személyes adatok névtelenítve">
+<!ENTITY cc_few_anti_tracking_blocked "Személyes adatok névtelenítve">
+<!ENTITY cc_many_anti_tracking_blocked "Személyes adatok névtelenítve">
+<!ENTITY cc_other_anti_tracking_blocked "Személyes adatok névtelenítve">
 <!ENTITY cc_zero_ad_blocking_blocked "Hirdetések blokkolva">
 <!ENTITY cc_one_ad_blocking_blocked "Hirdetés blokkolva">
 <!ENTITY cc_two_ad_blocking_blocked "Hirdetések blokkolva">
@@ -128,7 +142,7 @@
 <!ENTITY cc_many_smart_blocking_blocked "Finomhangolt trackerek">
 <!ENTITY cc_other_smart_blocking_blocked "Finomhangolt trackerek">
 <!ENTITY cc_anti_tracking_about "Névtelenítse a feloldott és ismeretlen trackereket a fokozottabb böngészési védelem érdekében">
-<!ENTITY cc_ad_blocking_about "Hirdetések blokkolása azokon az oldalakon, amelyeket meglátogat">
+<!ENTITY cc_ad_blocking_about "Hirdetések blokkolása az ön által meglátogatott honlapokon">
 <!ENTITY cc_smart_blocking_about "A tracker-szűrés az oldal teljesítményének optimalizálására van beállítva">
 <!ENTITY cc_site_trackers_list_title "Trackerek ezen az oldalon">
 <!ENTITY cc_global_trackers_list_title "Trackerek oldalak között">
@@ -155,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "Összes változtatás visszaállítása?">
 <!ENTITY cc_reset_changes_dialog_message "Az összes eddigi, az oldalra vonatkozó és globális tracker vissza lesz állítva.">
 <!ENTITY cc_reset "VISSZAÁLLÍTÁS">
+<!ENTITY cc_ad_block_off_domain "Kikapcsolás ennél doménnévnél">
+<!ENTITY cc_ad_block_off_global "Kikapcsolás az összes weboldal esetében">
 <!ENTITY cc_reload_page_snackbar_text "Az oldal frissülni fog a változtatások érvénybe léptetéséhez">
 
 <!-- General Settings - Search-->
@@ -258,22 +274,22 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - Tartsa böngészőjét tisztább, gyorsabb és biztonságosabb állapotban!">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Bemutatjuk a(z) &brandShortName;-t">
+<!ENTITY ghostery_onboarding_new_users_title "Üdvözöljük">
 <!ENTITY ghostery_onboarding_new_users_text "Böngésszen tisztábban, gyorsabban és biztonságosabban a(z) &brandShortName; böngészővel, amely már mobil eszközökre is optimalizált!">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Támogassa a(z) &brandShortName;  böngésző munkáját az analitikai és Human Web adatok megosztásával a(z) &brandShortName; böngésző teljesítményének fejlesztése érdekében. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Tudjon meg többet\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Fejlessze a &brandShortName;\'s hatékonyságát a névtelen analitikai és Human Web adatok megosztásával. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Tudjon meg erről többet\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Hirdetés és tracker blokkolás">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Válassza ki, hogy mit szeretne, miket blokkoljon a(z) &brandShortName; böngésző a tisztább, gyorsabb és biztonságosabb böngészés érdekében. Ön ezeket a beállításokat bármikor megváltoztathatja és testreszabhatja az Adatvédelmi Vezérlőközpontban.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Mit blokkoljon a(z) &brandShortName; az ön számára? Az elemek kiválasztásait bármikor megváltoztathatja az Adatvédelmi Központban.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Semmit se blokkoljon">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Blokkolás ajánlott">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Hirdető, oldalelemző és felnőtt hirdetéseket tartalmazó trackerek">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Hirdetések és felnőtt hirdetések">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Minden blokkolása">
 <!ENTITY ghostery_onboarding_quick_search_title "Szellemkeresés">
-<!ENTITY ghostery_onboarding_quick_search_text "Maradjon névtelen, csökkentse az adatforgalmat és takarítson meg időt: az eredmények azonnal megjelennek, ahogy szöveget ír be a szellemkereső szövegmezőjébe.">
+<!ENTITY ghostery_onboarding_quick_search_text "Maradjon névtelen a privát keresés alkalmazásával és takarítson meg időt az eredmények beírás közbeni megjelenítésével.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Minden egyes új &pref_new_tab_category; személyre szabható és képes megjeleníteni a legjobb oldalakat, a legfrissebb híreket, és más nyomkövetési (tracking) információt.">
+<!ENTITY ghostery_onboarding_new_tab_text "Keve szerint szabja testre a kezdőoldal lapfüleit.">
 <!ENTITY ghostery_onboarding_action_button "Böngészés megkezdése">
 <!ENTITY ghostery_onboarding_contextual_title "Nyomkövetés (tracking) elleni védelem engedélyezve">
-<!ENTITY ghostery_onboarding_contextual_item1_title "Fejlesztett Anti-Tracking">
+<!ENTITY ghostery_onboarding_contextual_item1_title "Anti-Tracking">
 <!ENTITY ghostery_onboarding_contextual_item1_text "Továbbá megvédi az ön személyes adatait is">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Okos blokkolás és hirdetésblokkolás">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimalizálja a teljesítményt böngészés közben">

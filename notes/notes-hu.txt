@@ -1,0 +1,12 @@
+Köszönjük a visszajelzéseket. Meghallgattuk őket és keményen dolgoztunk a fejlesztéseken.
+
+A legutóbbi frissítés tartalma
+* több teljesítménybeli javítás - észre fogja venni a különbséget
+* javított stabilitás
+A Start Tab könnyebb személyre szabása - tegye magáévá!
+* frissít a legmodernebb anti-tracking (követésblokkoló) és hirdetésblokkoló technológiánkra 
+* könnyebb navigáció a könyvjelző mappákból 
+* nincs több probléma a GMailel - Elnézést a kellemetlenségért!
+* néhàny hibajavítás
+
+Kellemes böngészést!

@@ -286,6 +286,7 @@
     <!-- Cliqz start -->
     <!-- General -->
     <color name="general_blue_color">#00aef0</color>
+    <color name="general_light_blue_color">#4dc6f4</color>
     <color name="general_dark_blue_color">#0080b3</color>
     <color name="general_dark_color">#424242</color>
     <color name="inactive_tab_color">#E2F0FC</color>

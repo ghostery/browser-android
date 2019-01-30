@@ -3,6 +3,7 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Beenden">
 <!ENTITY contextmenu_delete "Löschen">
+<!ENTITY search_loading_message "Wir starten den Privatsphärenschutz für deine Ghost Suche.">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
@@ -57,13 +58,13 @@
 <!-- Settings -->
 <!-- Telemetry -->
 <!ENTITY datareporting_telemetry_title2 "Nutzungsdaten senden">
-<!ENTITY datareporting_telemetry_summary2 "Hilf uns, dein Browsing-Erlebnis zu verbessern. Ghostery sammelt ausschließlich anonyme Nutzungsdaten. In keinem Fall werden persönliche Daten gesammelt.">
+<!ENTITY datareporting_telemetry_summary2 "Hilf uns, diesen Browser für dich zu verbessern. Ghostery sammelt ausschließlich anonyme Nutzungsdaten. In keinem Fall werden persönliche Daten gesammelt. ">
 
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
+<!ENTITY pref_category_human_web_summary "Was, aktivieren">
 <!ENTITY pref_what_is_human_web "Was ist „Human Web“?">
 <!ENTITY pref_enable_human_web "Human Web aktivieren">
-<!ENTITY pref_category_human_web_summary "Was, aktivieren">
 <!ENTITY human_web_info_url "https://www.ghostery.com/de/faqs/ist-das-human-web-und-welche-daten-werden-dadurch-gesammelt/">
 
 <!-- MyOffrz -->
@@ -168,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "Alle Änderungen zurücksetzen?">
 <!ENTITY cc_reset_changes_dialog_message "Alle früheren Änderungen an globalen und Website-Trackern werden zurückgesetzt.">
 <!ENTITY cc_reset "ZURÜCKSETZEN">
+<!ENTITY cc_ad_block_off_domain "Ausschalten auf dieser Website">
+<!ENTITY cc_ad_block_off_global "Ausschalten auf allen Websites">
 <!ENTITY cc_reload_page_snackbar_text "Die Seite wird aktualisiert, damit die Änderungen wirksam werden">
 
 <!-- General Settings - Search-->
@@ -190,7 +193,7 @@
 <!ENTITY pref_search_complementary_engine_ecosia "Ecosia">
 <!ENTITY pref_search_complementary_engine_start_page "StartPage">
 <!ENTITY pref_search_complementary_engine_qwant "Qwant">
-<!ENTITY pref_search_enable_browser_quicksearch "Schnellsuche aktivieren">
+<!ENTITY pref_search_enable_browser_quicksearch "Ghost Suche aktivieren">
 <!ENTITY pref_search_enable_browser_quicksearch_summary "Sofortige Ergebnisse beim Tippen">
 
 <!-- General Settings - Browsing -->
@@ -280,7 +283,7 @@
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Empfohlenes blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Werbung und Website-Analytics blockieren">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Alles blockieren">
-<!ENTITY ghostery_onboarding_quick_search_title "Ghost Search">
+<!ENTITY ghostery_onboarding_quick_search_title "Ghost Suche">
 <!ENTITY ghostery_onboarding_quick_search_text "Bleib anonym mit der privaten Suche und spare dir zudem Zeit mit Suchergebnissen, die bereits während der Eingabe erscheinen.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
 <!ENTITY ghostery_onboarding_new_tab_text "Passe die Startseite deiner Tabs an deine Wünsche an.">

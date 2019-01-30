@@ -305,6 +305,8 @@ public class BrowserApp extends GeckoApp
 
     // Minimum app launches until the existing users are shown the 'customize tab' snackbar
     private static final int MINIMUM_UNTIL_CUSTOMIZE_TAB_SNACKBAR = 6;
+    private boolean mSearchIsReady = false;
+    private boolean mUserDidSearch = false;
     /* Cliqz End */
 
     public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
@@ -318,15 +320,12 @@ public class BrowserApp extends GeckoApp
     private SafeIntent safeStartingIntent;
     private Intent startingIntentAfterPip;
     private boolean isInAutomation;
-    private boolean mSearchIsReady = false;
-    private boolean mUserDidSearch = false;
 
     // The types of guest mode dialogs we show.
     public static enum GuestModeDialog {
         ENTERING,
         LEAVING
     }
-
 
     private PropertyAnimator mMainLayoutAnimator;
 
@@ -387,9 +386,6 @@ public class BrowserApp extends GeckoApp
     private OnboardingHelper mOnboardingHelper;       // Contains reference to Context - DO NOT LEAK!
 
     private boolean mHasResumed;
-
-    private final static String CLIQZ_SEARCH_EXT_ID = "search@cliqz.com";
-    private static String CLIQZ_SEARCH_EXT_UUID;
 
     @Override
     public View onCreateView(final View parent, final String name, final Context context, final AttributeSet attrs) {
@@ -2350,7 +2346,10 @@ public class BrowserApp extends GeckoApp
                 break;
             case "Search:Ready":
                 mSearchIsReady = true;
-                if (mUserDidSearch && mBrowserToolbar.hasFocus()) {
+                if (mUserDidSearch &&
+                        mBrowserToolbar.hasFocus() &&
+                        mPreferenceManager.isQuickSearchEnabled() &&
+                        !mBrowserToolbar.getQueryValue().isEmpty()) {
                     showCliqzSearch();
                     mHomeScreenContainer.setVisibility(View.INVISIBLE);
                 }
@@ -3293,13 +3292,14 @@ public class BrowserApp extends GeckoApp
     private void showBrowserSearch() {
         /* Cliqz start */
         // Display the "loading search" UI in case the search is not ready
-        if (!mSearchIsReady) {
-            mLoadingSearchHelper.start();
-        }
         // show Cliqz search cards if quick search enabled otherwise show firefox one.
         final boolean isQuickSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
         if(isQuickSearchEnabled) {
-            showCliqzSearch();
+            if (mSearchIsReady) {
+                showCliqzSearch();
+            } else {
+                mLoadingSearchHelper.start();
+            }
         } else {
             if (mBrowserSearch.getUserVisibleHint()) {
                 return;
