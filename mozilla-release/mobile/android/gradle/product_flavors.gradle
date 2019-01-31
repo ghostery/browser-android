@@ -13,52 +13,5 @@ ext.configureProductFlavors = {
         withoutGeckoBinaries {
             dimension "geckoBinaries"
         }
-<<<<<<< .merge_file_uyVZfH
-
-        // For API 21+ - with pre-dexing, this will be faster for local development.
-        minApi21 {
-            dimension "minApi"
-
-            /* Cliqz begin */
-            // Enable multidexing
-            multiDexEnabled true
-            /* Cliqz end */
-            
-            // For pre-dexing, setting `minSdkVersion 21` allows the Android gradle plugin to
-            // pre-DEX each module and produce an APK that can be tested on
-            // Android Lollipop without time consuming DEX merging processes.
-            minSdkVersion 21
-            dexOptions {
-                preDexLibraries true
-            }
-        }
-
-        // For API < 21 - does not support pre-dexing because local development
-        // is slow in that case.
-        noMinApi {
-            dimension "minApi"
-        }
-||||||| .merge_file_7b62dI
-
-        // For API 21+ - with pre-dexing, this will be faster for local development.
-        minApi21 {
-            dimension "minApi"
-
-            // For pre-dexing, setting `minSdkVersion 21` allows the Android gradle plugin to
-            // pre-DEX each module and produce an APK that can be tested on
-            // Android Lollipop without time consuming DEX merging processes.
-            minSdkVersion 21
-            dexOptions {
-                preDexLibraries true
-            }
-        }
-
-        // For API < 21 - does not support pre-dexing because local development
-        // is slow in that case.
-        noMinApi {
-            dimension "minApi"
-        }
-=======
->>>>>>> .merge_file_7xJAoI
     }
 }

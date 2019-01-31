@@ -16,13 +16,6 @@ if (mozconfig.substs.MOZILLA_OFFICIAL) {
     }
 }
 
-/* Cliqz Start */
-def archCode = 3
-    if (mozconfig.substs.CPU_ARCH.toString().equals("x86")) {
-    archCode = 5
-}
-/* Cliqz End */
-
 android {
     compileSdkVersion project.ext.compileSdkVersion
 
@@ -114,59 +107,10 @@ android {
             }
         }
     }
-<<<<<<< .merge_file_hDQ8ea
-    // The "audience" flavour dimension distinguishes between _local_ builds (intended for
-    // development) and _official_ builds (intended for testing in automation and to ship in one of
-    // the Fennec distribution channels).
-    //
-    // The "skin" flavor dimension distinguishes between different user interfaces.  We sometimes
-    // want to develop significant new user interface pieces in-tree that don't ship (even in the
-    // Nightly channel) while under development.  A new "skin" flavour allows us to develop such
-    // pieces in Gradle without changing the mainline configuration.
-
-||||||| .merge_file_vuDt6a
-
-    // The "audience" flavour dimension distinguishes between _local_ builds (intended for
-    // development) and _official_ builds (intended for testing in automation and to ship in one of
-    // the Fennec distribution channels).
-    //
-    // The "skin" flavor dimension distinguishes between different user interfaces.  We sometimes
-    // want to develop significant new user interface pieces in-tree that don't ship (even in the
-    // Nightly channel) while under development.  A new "skin" flavour allows us to develop such
-    // pieces in Gradle without changing the mainline configuration.
-
-=======
-
->>>>>>> .merge_file_fUXF59
     project.configureProductFlavors.delegate = it
     project.configureProductFlavors()
 
-<<<<<<< .merge_file_hDQ8ea
-    flavorDimensions "audience", "geckoBinaries", "minApi", "skin"
-
-    productFlavors {
-        // Since Firefox 57, the mobile user interface has followed the Photon design.
-        // Before Firefox 57, the user interface followed the Australis design.
-        photon {
-            dimension "skin"
-            /* Cliqz start */
-            versionCode android.defaultConfig.versionCode * 100 + 50 + archCode
-            /* Cliqz end */
-        }
-    }
-||||||| .merge_file_vuDt6a
-    flavorDimensions "audience", "geckoBinaries", "minApi", "skin"
-
-    productFlavors {
-        // Since Firefox 57, the mobile user interface has followed the Photon design.
-        // Before Firefox 57, the user interface followed the Australis design.
-        photon {
-            dimension "skin"
-        }
-    }
-=======
     flavorDimensions "geckoBinaries"
->>>>>>> .merge_file_fUXF59
 
     sourceSets {
         main {
