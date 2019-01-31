@@ -351,12 +351,8 @@ option(env='GRADLE_MAVEN_REPOSITORIES',
        # Cliqz start: add jitpack.io
        default=('https://maven.google.com/',
                 'https://jcenter.bintray.com/',
-<<<<<<< .merge_file_dOpqRG
                 'https://jitpack.io',
-||||||| .merge_file_f5fMFG
-=======
                 'https://plugins.gradle.org/m2/',
->>>>>>> .merge_file_QT30PG
        ),
        # Cliqz end
        help='Comma-separated URLs of Maven repositories containing Gradle dependencies.')
