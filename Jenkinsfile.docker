@@ -20,13 +20,12 @@ node('us-east-1 && ubuntu && docker && !gpu') {
     docker.image("141047255820.dkr.ecr.us-east-1.amazonaws.com/${baseImageName}").inside {
         stage('Check All Versions') {
             sh '''#!/bin/bash -l
-                set -e
                 set -x
                 python --version
                 ruby --version
-                appium --version
                 pip --version
                 adb version
+                mvn -version
             '''
         }
     }
