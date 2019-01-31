@@ -21,29 +21,33 @@
         android:duplicateParentState="true"
         android:focusable="false"/>
 
+    <!-- Cliqz start -->
     <org.mozilla.gecko.toolbar.BackButton
         android:id="@+id/back"
         style="@style/UrlBar.BackButton"
         android:layout_width="@dimen/tablet_nav_button_width"
         android:layout_height="@dimen/tablet_nav_button_width"
         android:layout_centerVertical="true"
+        android:contentDescription="@string/back"
+        android:src="@drawable/ic_menu_back"/>
+    <!--
         android:layout_margin="4dp"
         android:background="@drawable/url_bar_nav_button"
-        android:contentDescription="@string/back"
-        android:src="@drawable/ic_menu_back"
         gecko:borderColor="@color/nav_button_border_color"
-        gecko:borderColorPrivate="@color/nav_button_border_color_private"/>
-
+        gecko:borderColorPrivate="@color/nav_button_border_color_private"
+    -->
+    <!-- change the width and the height -->
     <org.mozilla.gecko.toolbar.ForwardButton
         android:id="@+id/forward"
         style="@style/UrlBar.ForwardButton"
-        android:layout_width="@dimen/tablet_nav_button_width_plus_half"
-        android:layout_height="@dimen/tablet_nav_button_width_plus_half"
+        android:layout_width="@dimen/tablet_nav_button_width"
+        android:layout_height="@dimen/tablet_nav_button_width"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:background="@drawable/url_bar_forward_button"
         android:contentDescription="@string/forward"
-        android:src="@drawable/ic_menu_forward"/>
+        gecko:srcCompat="@drawable/ic_menu_forward"/>
+    <!-- Cliqz end -->
 
     <org.mozilla.gecko.toolbar.ToolbarEditLayout
         android:id="@+id/edit_layout"
@@ -64,6 +68,18 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal"/>
+
+    <!-- Cliqz start -->
+    <org.mozilla.gecko.toolbar.Ghosty
+        android:id="@+id/ghosty"
+        style="@style/UrlBar.Ghosty"
+        android:layout_centerVertical="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:background="@drawable/url_bar_action_button"
+        android:gravity="center_horizontal"
+        gecko:drawableTintList="@color/url_bar_image_color"/>
+    <!-- Cliqz end -->
 
     <org.mozilla.gecko.toolbar.ToolbarRoundButton
         android:id="@+id/tabs"
@@ -102,6 +118,8 @@
 
     <!-- We draw after the menu items so when they are hidden, the cancel button,
          which is thus drawn on top, may be pressed. -->
+    <!-- Cliqz start +->
+         move cancel button inside toolbar_edit_layout
     <org.mozilla.gecko.widget.themed.ThemedImageView
         android:id="@+id/edit_cancel"
         style="@style/UrlBar.EditCancel"
@@ -109,5 +127,5 @@
         android:src="@drawable/close_edit_mode_selector"
         android:visibility="gone"
         tools:visibility="visible"/>
-
+    <!+- Cliqz end -->
 </merge>

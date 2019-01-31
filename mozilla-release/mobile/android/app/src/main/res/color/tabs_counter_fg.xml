@@ -8,7 +8,9 @@
 
     <item android:color="@color/menu_item_tint_private"
           gecko:state_private="true"/>
-
-    <item android:color="@color/menu_item_tint"/>
+    <!-- Cliqz start -->
+    <!-- change tabs counter color -->
+    <item android:color="@android:color/white"/>
+    <!-- Cliqz end -->
 
 </selector>

@@ -6,10 +6,13 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
+    <!-- Cliqz start +->
+        use same icons for same private and normal mode -->
     <!-- private browsing mode -->
-    <item android:drawable="@drawable/security_mode_icon_pm" gecko:state_private="true" />
+    <item android:drawable="@drawable/site_security_icon" gecko:state_private="true" />
 
     <!-- normal mode -->
-    <item android:drawable="@drawable/security_mode_icon_nm" />
+    <item android:drawable="@drawable/site_security_icon" />
+    <!-- Cliqz end -->
 
 </selector>

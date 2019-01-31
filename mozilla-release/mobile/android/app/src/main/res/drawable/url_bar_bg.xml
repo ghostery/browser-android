@@ -6,10 +6,15 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
+    <!-- Cliqz start -->
+    <!-- change the url background color on private mode -->
+
     <!-- private browsing mode -->
-    <item android:drawable="@color/photon_browser_toolbar_bg_private" gecko:state_private="true" />
+    <item android:drawable="@color/background_ghost_mode" gecko:state_private="true" />
+
+    <!-- Cliqz end -->
 
     <!-- normal mode -->
-    <item android:drawable="@color/photon_browser_toolbar_bg" />
+    <item android:drawable="@color/url_bar" />
 
 </selector>

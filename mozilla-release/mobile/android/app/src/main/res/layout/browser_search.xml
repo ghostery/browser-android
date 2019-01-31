@@ -15,17 +15,18 @@
         android:layout_height="wrap_content"
         android:layout="@layout/home_suggestion_prompt"/>
 
+    <!-- Cliqz start -->
     <view
         android:id="@+id/home_list_view"
         class="org.mozilla.gecko.home.BrowserSearch$HomeSearchListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@drawable/search_list_bg"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:listSelector="@drawable/search_list_selector"
         tools:listitem="@layout/home_search_item_row"/>
+         <!--android:background="@drawable/search_list_bg"-->
 
     <!-- listSelector is too slow for showing pressed state
          so we set the pressed colors on the child. -->
@@ -39,5 +40,6 @@
         android:listSelector="@android:color/transparent"
         android:orientation="horizontal"
         android:paddingTop="1dp"/>
-
+        <!--android:background="@drawable/search_list_bg"-->
+    <!-- Cliqz end -->
 </LinearLayout>
