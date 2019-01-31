@@ -647,6 +647,7 @@ pref("browser.firstrun.show.localepicker", false);
 // $ adb shell setprop log.redirect-stdio true
 // $ adb shell start
 pref("browser.dom.window.dump.enabled", true);
+pref("devtools.console.stdout.chrome", true);
 
 // controls if we want camera support
 pref("device.camera.enabled", true);
@@ -731,6 +732,9 @@ pref("layers.enable-tiles", true);
 
 // Enable the dynamic toolbar
 pref("browser.chrome.dynamictoolbar", true);
+
+// Location Bar AutoComplete.
+pref("browser.urlbar.autocomplete.enabled", true);
 
 // Hide common parts of URLs like "www." or "http://"
 pref("browser.urlbar.trimURLs", true);
@@ -915,6 +919,7 @@ pref("dom.keyboardevent.dispatch_during_composition", true);
 // Ask for permission when enumerating WebRTC devices.
 pref("media.navigator.permission.device", true);
 
+<<<<<<< .merge_file_b244ng
 /* Cliqz start */
 // Do not allow system add-on updates
 pref("extensions.systemAddon.update.url", "");
@@ -929,3 +934,15 @@ pref("media.autoplay.enabled", false);
 // Prevent mozaddonmanager on AMO
 pref("privacy.resistFingerprinting.block_mozAddonManager", true); 
 /* Cliqz end */
+||||||| .merge_file_VxxVdg
+// Allow system add-on updates
+pref("extensions.systemAddon.update.url", "https://aus5.mozilla.org/update/3/SystemAddons/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
+=======
+// Allow system add-on updates
+pref("extensions.systemAddon.update.url", "https://aus5.mozilla.org/update/3/SystemAddons/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
+
+// E10s stuff. We don't support 'file' or 'priveleged' process types.
+pref("browser.tabs.remote.separateFileUriProcess", false);
+pref("browser.tabs.remote.allowLinkedWebInFileUriProcess", true);
+pref("browser.tabs.remote.separatePrivilegedContentProcess", false);
+>>>>>>> .merge_file_QX3tmg

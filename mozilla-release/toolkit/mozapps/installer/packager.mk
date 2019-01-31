@@ -13,6 +13,10 @@ ifndef PACKAGER_NO_LIBS
 libs:: make-package
 endif
 
+ifdef MOZ_AUTOMATION
+RUN_FIND_DUPES ?= $(MOZ_AUTOMATION)
+endif
+
 export USE_ELF_HACK ELF_HACK_FLAGS
 
 # Override the value of OMNIJAR_NAME from config.status with the value
@@ -34,10 +38,16 @@ stage-package: multilocale.txt locale-manifest.in $(MOZ_PKG_MANIFEST) $(MOZ_PKG_
 		$(addprefix --compress ,$(JAR_COMPRESSION)) \
 		$(MOZ_PKG_MANIFEST) '$(DIST)' '$(DIST)'/$(MOZ_PKG_DIR)$(if $(MOZ_PKG_MANIFEST),,$(_BINPATH)) \
 		$(if $(filter omni,$(MOZ_PACKAGER_FORMAT)),$(if $(NON_OMNIJAR_FILES),--non-resource $(NON_OMNIJAR_FILES)))
+<<<<<<< .merge_file_ZGyZiX
 	# Cliqz: $(PYTHON) $(MOZILLA_DIR)/toolkit/mozapps/installer/find-dupes.py --warning $(DEFINES) $(ACDEFINES) $(MOZ_PKG_DUPEFLAGS) $(DIST)/$(MOZ_PKG_DIR)
 ifdef MOZ_AUTOMATION
+||||||| .merge_file_fmYV8Z
+ifdef MOZ_AUTOMATION
+=======
+ifdef RUN_FIND_DUPES
+>>>>>>> .merge_file_4qS57W
 	$(PYTHON) $(MOZILLA_DIR)/toolkit/mozapps/installer/find-dupes.py $(DEFINES) $(ACDEFINES) $(MOZ_PKG_DUPEFLAGS) $(DIST)/$(MOZ_PKG_DIR)
-endif # MOZ_AUTOMATION
+endif # RUN_FIND_DUPES
 ifndef MOZ_IS_COMM_TOPDIR
 	# Package mozharness
 	$(call py_action,test_archive, \
@@ -73,6 +83,7 @@ ifdef ENABLE_MOZSEARCH_PLUGIN
 	$(RM) $(MOZSEARCH_RUST_ANALYSIS_BASENAME).zip
 	cd $(topobjdir)/ && \
           find . -type d -name save-analysis | xargs zip -r5D '$(ABS_DIST)/$(PKG_PATH)$(MOZSEARCH_RUST_ANALYSIS_BASENAME).zip'
+	cd $(topobjdir)/ && cp _build_manifests/install/dist_include '$(ABS_DIST)/$(PKG_PATH)$(MOZSEARCH_INCLUDEMAP_BASENAME).map'
 endif
 ifeq (Darwin, $(OS_ARCH))
 ifdef MOZ_ASAN
