@@ -40,6 +40,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
+import android.webkit.URLUtil;
+import android.util.*;
+
 /**
 * {@code ToolbarDisplayLayout} is the UI for when the toolbar is in
 * display state. It's used to display the state of the currently selected
@@ -98,9 +104,14 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
 
     private final ThemedTextView mTitle;
     private final ThemedLinearLayout mThemeBackground;
-    private final int mTitlePadding;
+        /* Cliqz start */
+    // add padding left and rename padding to padding right
+    private final int mTitlePaddingRight;
+    private final int mTitlePaddingLeft;
+    /* stop scrolling title, it ellipses form the end.
     private final HorizontalScrollView mTitleScroll;
     private final int mMinUrlScrollMargin;
+    /o Cliqz end */
     private ToolbarPrefs mPrefs;
     private OnTitleChangeListener mTitleChangeListener;
 
@@ -113,12 +124,17 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private final SiteIdentityPopup mSiteIdentityPopup;
     private int mSecurityImageLevel;
 
+       /* Cliqz start o/
+    // remove spans colors
     private final ForegroundColorSpan mUrlColorSpan;
     private final ForegroundColorSpan mPrivateUrlColorSpan;
     private final ForegroundColorSpan mBlockedColorSpan;
     private final ForegroundColorSpan mPrivateBlockedColorSpan;
     private final ForegroundColorSpan mDomainColorSpan;
     private final ForegroundColorSpan mPrivateDomainColorSpan;
+    // add Https color span */
+    private final ForegroundColorSpan mHttpsColorSpan;
+    /* Cliqz end */
 
     public ToolbarDisplayLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -130,7 +146,11 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
 
         mTitle = (ThemedTextView) findViewById(R.id.url_bar_title);
         mThemeBackground = (ThemedLinearLayout) findViewById(R.id.url_bar_title_bg);
-        mTitlePadding = mTitle.getPaddingRight();
+         /* Cliqz start */
+        // get left and right padding form the textView
+        mTitlePaddingRight = mTitle.getPaddingRight();
+        mTitlePaddingLeft = mTitle.getPaddingLeft();
+        /* stop scrolling title, it ellipses form the end. o/
         mTitleScroll = (HorizontalScrollView) findViewById(R.id.url_bar_title_scroll_view);
 
         final OnLayoutChangeListener resizeListener = new OnLayoutChangeListener() {
@@ -144,10 +164,8 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
                 }
             }
         };
-        mTitle.addTextChangedListener(new TextChangeListener());
         mTitle.addOnLayoutChangeListener(resizeListener);
         mTitleScroll.addOnLayoutChangeListener(resizeListener);
-
         mMinUrlScrollMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                                                               MIN_DOMAIN_SCROLL_MARGIN_DP,
                                                               getResources().getDisplayMetrics());
@@ -158,6 +176,9 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mPrivateBlockedColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_blockedtext_private));
         mDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext));
         mPrivateDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext_private));
+        // add Https Color span */
+        mHttpsColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.general_blue_color));
+        /* Cliqz end */
 
         mSiteSecurity = (ThemedImageButton) findViewById(R.id.site_security);
 
@@ -294,14 +315,16 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         // Show the about:blocked page title in red, regardless of prefs
         if (tab.getErrorType() == Tab.ErrorType.BLOCKED) {
             final String title = tab.getDisplayTitle();
-
+            /* Cliqz start o/
+            // remove spans colors
             final SpannableStringBuilder builder = new SpannableStringBuilder(title);
             final ForegroundColorSpan fgColorSpan = tab.isPrivate()
                     ? mPrivateBlockedColorSpan
                     : mBlockedColorSpan;
             builder.setSpan(fgColorSpan, 0, title.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-
-            setTitle(builder);
+            */
+            setTitle(title);
+            /* Cliqz end */
             setContentDescription(null);
             return;
         }
@@ -341,11 +364,17 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         }
 
         final SpannableStringBuilder builder = new SpannableStringBuilder(url);
-
+        /* Cliqz start o/
+        // remove spans colors
         builder.setSpan(isPrivate ? mPrivateUrlColorSpan : mUrlColorSpan, 0, url.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         builder.setSpan(isPrivate ? mPrivateDomainColorSpan : mDomainColorSpan,
                 index, index + baseDomain.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
+        // set https color to blue */
+        if(URLUtil.isHttpsUrl(url)) {
+            builder.setSpan(mHttpsColorSpan,0,5, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+        /* Cliqz end */
         setTitle(builder);
     }
 
@@ -365,13 +394,23 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mSiteIdentityPopup.setSiteIdentity(siteIdentity);
         mTrackingProtectionEnabled = SecurityModeUtil.isTrackingProtectionEnabled(siteIdentity);
 
+        /* Cliqz start */
+        // show the siteSecurity icon except in search mode
+        if(imageLevel == SecurityModeUtil.IconType.SEARCH.getImageLevel()){
+            mSiteSecurity.setVisibility(GONE);
+        } else{
+            mSiteSecurity.setVisibility(VISIBLE);
+        }
+        /* Cliqz end */
+
         if (mSecurityImageLevel != imageLevel) {
             mSecurityImageLevel = imageLevel;
             mSiteSecurity.setImageLevel(mSecurityImageLevel);
             updatePageActions();
         }
     }
-
+    /* Cliqz start o/
+     // stop scrolling title, it ellipses form the end.
     private void scrollTitle() {
         final Editable text = mTitle.getEditableText();
         final int textViewWidth = mTitle.getWidth();
@@ -418,15 +457,17 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         final int scrollTarget = domainTextWidth + targetMargin - scrollViewWidth;
         mTitleScroll.scrollTo(scrollTarget, 0);
     }
-
+    /o Cliqz end */
     private void updateProgress(@NonNull Tab tab) {
         final boolean shouldShowThrobber = tab.getState() == Tab.STATE_LOADING;
 
         updateUiMode(shouldShowThrobber ? UIMode.PROGRESS : UIMode.DISPLAY);
 
+         /* Cliqz Start o/
         if (Tab.STATE_SUCCESS == tab.getState() && mTrackingProtectionEnabled) {
             mActivity.showTrackingProtectionPromptIfApplicable();
         }
+        o/ Cliqz End */
     }
 
     private void updateUiMode(UIMode uiMode) {
@@ -441,13 +482,34 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private void updatePageActions() {
         final boolean isShowingProgress = (mUiMode == UIMode.PROGRESS);
 
-        mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
-        mPageActionLayout.setVisibility(!isShowingProgress ? View.VISIBLE : View.GONE);
-
+        /* Cliqz start */
+        // keep X button hidden while loading a page
+        // mStop.setVisibility(isShowingProgress ? View.VISIBLE : View.GONE);
+        // show AddToHome screen onBoarding after the pageActionLayout appears
+        if(!isShowingProgress){
+            mPageActionLayout.setVisibility(VISIBLE);
+            mPageActionLayout.maybeShowPwaOnboarding();
+        } else {
+            mPageActionLayout.setVisibility(GONE);
+        }
         // We want title to fill the whole space available for it when there are icons
         // being shown on the right side of the toolbar as the icons already have some
         // padding in them. This is just to avoid wasting space when icons are shown.
-        mTitle.setPadding(0, 0, (!isShowingProgress ? mTitlePadding : 0), 0);
+
+        /* Cliqz: change padding depend on url displayed or not, instead of progressBar
+          // modifying the condition so no padding left nor right will appear while progress bar
+          // visible otherwise padding will apply
+        if(isShowingProgress){
+            mTitle.setPadding(0,0,0,0);
+        } else{
+            mTitle.setPadding(mTitlePaddingLeft,0,mTitlePaddingRight,0);
+        } */
+        if (mSiteSecurity.getVisibility() == View.VISIBLE) {
+            mTitle.setPadding(0, 0, 0, 0);
+        } else {
+            mTitle.setPadding(mTitlePaddingLeft, 0, mTitlePaddingRight, 0);
+        }
+        /* Cliqz end */
     }
 
     List<? extends View> getFocusOrder() {
@@ -507,7 +569,9 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private class TextChangeListener implements TextWatcher {
         @Override
         public void afterTextChanged(Editable text) {
+            /* Cliqz Start o/
             scrollTitle();
+            /o Cliqz End */
         }
 
         @Override
@@ -516,4 +580,15 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) { }
     }
+
+     /* Cliqz start */
+    public void setOnPageActionClickedListener(PageActionLayout.PageActionClickListener listener) {
+        mPageActionLayout.setOnPageActionClickedListener(listener);
+    }
+
+    // check if the title set
+    public boolean isTitleSet(){
+         return (mTitle.length() > 0);
+    }
+    /* Cliqz end */
 }
