@@ -191,12 +191,8 @@ import org.mozilla.gecko.widget.AnchoredPopup;
 import org.mozilla.gecko.widget.AnimatedProgressBar;
 import org.mozilla.gecko.widget.GeckoActionProvider;
 import org.mozilla.gecko.widget.SplashScreen;
-<<<<<<< .merge_file_nOb4wg
 import org.mozilla.gecko.widget.themed.ThemedTabLayout;
-||||||| .merge_file_9qIebg
-=======
 import org.mozilla.geckoview.DynamicToolbarAnimator;
->>>>>>> .merge_file_USwxqg
 import org.mozilla.geckoview.GeckoSession;
 
 import java.io.File;
@@ -3559,27 +3555,10 @@ public class BrowserApp extends GeckoApp
         // (We check the pref last to save the pref read.)
         // In ICS+, it's easy to kill an app through the task switcher.
         final SharedPreferences prefs = GeckoSharedPrefs.forProfile(this);
-<<<<<<< .merge_file_nOb4wg
         /* Cliqz Start */
         //Always show the quit button
         aMenu.findItem(R.id.quit).setVisible(true);
         /* Cliqz End */
-||||||| .merge_file_9qIebg
-        final boolean visible = HardwareUtils.isTelevision() ||
-                                prefs.getBoolean(GeckoPreferences.PREFS_SHOW_QUIT_MENU, false) ||
-                                !PrefUtils.getStringSet(prefs,
-                                                        ClearOnShutdownPref.PREF,
-                                                        new HashSet<String>()).isEmpty();
-        aMenu.findItem(R.id.quit).setVisible(visible);
-=======
-        final boolean visible = HardwareUtils.isTelevision() ||
-                                mDumpProfileOnShutdown ||
-                                prefs.getBoolean(GeckoPreferences.PREFS_SHOW_QUIT_MENU, false) ||
-                                !PrefUtils.getStringSet(prefs,
-                                                        ClearOnShutdownPref.PREF,
-                                                        new HashSet<String>()).isEmpty();
-        aMenu.findItem(R.id.quit).setVisible(visible);
->>>>>>> .merge_file_USwxqg
 
         // If tab data is unavailable we disable most of the context menu and related items and
         // return early.
