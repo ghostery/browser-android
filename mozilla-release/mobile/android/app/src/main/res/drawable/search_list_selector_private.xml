@@ -7,5 +7,7 @@
     <item android:state_pressed="true"
           android:drawable="@color/photon_content_bg_private_pressed"/>
 
-    <item android:drawable="@color/photon_content_bg_private"/>
+    <!-- Cliqz start -->
+    <item android:drawable="@android:color/transparent"/>
+    <!-- Cliqz end -->
 </selector>

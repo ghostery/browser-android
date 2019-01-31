@@ -8,7 +8,9 @@
 
     <item android:color="@color/photon_toolbar_text_color_private"
           gecko:state_private="true"/>
-
-    <item android:color="@color/photon_toolbar_text_color"/>
+    <!-- Cliqz start -->
+    <!-- change the counter text color -->
+    <item android:color="@color/photon_toolbar_text_color_private"/>
+    <!-- Cliqz end-->
 
 </selector>

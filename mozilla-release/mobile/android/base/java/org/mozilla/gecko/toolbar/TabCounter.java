@@ -32,9 +32,11 @@ public class TabCounter extends ThemedRelativeLayout {
 
     public static final int MAX_VISIBLE_TABS = 99;
     public static final String SO_MANY_TABS_OPEN = "∞";
-
-    private static final float ONE_DIGIT_SIZE_RATIO = 0.6f;
-    private static final float TWO_DIGITS_SIZE_RATIO = 0.5f;
+        /* Cliqz start */
+    // reduce tabs counter text size
+    private static final float ONE_DIGIT_SIZE_RATIO = 0.35f;
+    private static final float TWO_DIGITS_SIZE_RATIO = 0.3f;
+    /* Cliqz end */
 
     public TabCounter(Context context) {
         this(context, null);
@@ -211,12 +213,15 @@ public class TabCounter extends ThemedRelativeLayout {
         }
     }
 
-    void setCount(int count) {
+    /* Cliqz start */
+    // make it public so it can be accessed outside the package
+    public void setCount(int count) {
         adjustTextSize(count);
 
         text.setText(formatForDisplay(count));
         this.count = count;
     }
+    /* Cliqz end */
 
     @Override
     public void setPrivateMode(boolean isPrivate) {
