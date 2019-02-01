@@ -1,5 +1,5 @@
-FROM spacifici/fennec:64.0.2
-MAINTAINER Stefano Pacifici <stefano@cliqz.com>
+FROM spacifici/fennec:65.0
+MAINTAINER Sharath G Pai <sharath@cliqz.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
@@ -36,17 +36,32 @@ RUN getent group $GID || groupadd jenkins --gid $GID && \
     useradd --create-home --shell /bin/bash jenkins --uid $UID --gid $GID
 
 # Add extra dependencies to the maven cache
-RUN mkdir -p /sdk/android-gradle-dependencies/jcenter/com/github/PhilJay/MPAndroidChart/v3.0.2/ && \
-    cd /sdk/android-gradle-dependencies/jcenter/com/github/PhilJay/MPAndroidChart/v3.0.2/ && \
-    wget https://jitpack.io/com/github/PhilJay/MPAndroidChart/v3.0.2/MPAndroidChart-v3.0.2.pom && \
-    wget https://jitpack.io/com/github/PhilJay/MPAndroidChart/v3.0.2/MPAndroidChart-v3.0.2.jar
+RUN mvn dependency:get \
+    -Dmaven.repo.local=/sdk/android-gradle-dependencies/jcenter \
+    -DgroupId=com.android.support.test.uiautomator \
+    -DartifactId=uiautomator-v18 \
+    -Dversion=2.1.3 -Dpackaging=aar \
+    -DremoteRepositories=http://repo.spring.io/libs-milestone && \
+    mvn dependency:get \
+    -Dmaven.repo.local=/sdk/android-gradle-dependencies/jcenter \
+    -DgroupId=com.github.PhilJay \
+    -DartifactId=MPAndroidChart \
+    -Dversion=v3.0.2 \
+    -DremoteRepositories=https://jitpack.io && \
+    mvn dependency:get \
+    -Dmaven.repo.local=/sdk/android-gradle-dependencies/jcenter \
+    -DgroupId=com.android.support.test \
+    -DartifactId=testing-support-lib \
+    -Dversion=0.1 \
+    -Dpackaging=aar \
+    -DremoteRepositories=https://maven.google.com
 
 USER jenkins
 SHELL ["/bin/bash", "-l", "-c"]
 
 #Installation of 'appium' & 'wd' for Integration Tests
 ENV NPM_CONFIG_PREFIX=~/.npm-global
-RUN npm install --global appium wd
+RUN npm install --global appium@1.10.0 wd
 
 #Install Ruby and Fastlane
 RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \
