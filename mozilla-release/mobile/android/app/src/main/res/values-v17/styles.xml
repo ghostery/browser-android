@@ -9,6 +9,9 @@
     <style name="UrlBar.SiteIdentity" parent="UrlBar.V17.SiteIdentity" />
 
     <style name="UrlBar.V17.SiteIdentity" parent="UrlBar.Base.SiteIdentity">
+        <!-- Cliqz start -->
+        <item name="android:paddingStart">@dimen/browser_toolbar_site_security_margin_start</item>
+        <!-- Cliqz end -->
         <item name="android:paddingEnd">@dimen/browser_toolbar_site_security_margin_end</item>
     </style>
 
@@ -16,7 +19,9 @@
 
     <style name="UrlBar.V17.Entry" parent="UrlBar.Base.Entry">
         <item name="android:layout_marginStart">5dp</item>
-        <item name="android:layout_toStartOf">@+id/tabs</item>
+        <!-- Cliqz start -->
+        <item name="android:layout_toStartOf">@+id/ghosty</item>
+        <!-- Cliqz end -->
     </style>
 
     <style name="UrlBar.Edge" parent="UrlBar.V17.Edge" />
@@ -55,17 +60,23 @@
 
     <style name="UrlBar.EditLayout" parent="UrlBar.V17.EditLayout" />
 
+    <!-- Cliqz start -->
+    <!-- cancel button moved inside the urlBar, remove dependencies of outer layout-->
     <style name="UrlBar.V17.EditLayout" parent="UrlBar.Base.EditLayout">
-        <item name="android:layout_alignStart">@id/url_bar_entry</item>
-        <item name="android:layout_toStartOf">@id/edit_cancel</item>
+        <!--<item name="android:layout_alignStart">@id/url_bar_entry</item>-->
+        <!--<item name="android:layout_toStartOf">@id/edit_cancel</item>-->
         <item name="android:paddingStart">5dp</item>
-        <item name="android:paddingEnd">0dp</item>
-        <item name="android:layout_marginEnd">-3dp</item>
+        <item name="android:paddingEnd">5dp</item>
+        <!--<item name="android:layout_marginEnd">-3dp</item>-->
     </style>
+    <!-- Cliqz end -->
 
     <style name="UrlBar.EditLayout.Title" parent="UrlBar.V17.EditLayout.Title"/>
     <style name="UrlBar.V17.EditLayout.Title" parent="UrlBar.Title">
-        <item name="android:paddingStart">5dp</item>
+        <!-- Cliqz start -->
+        <!-- increase padding at the beginning of the titleBar -->
+        <item name="android:paddingStart">@dimen/padding_10</item>
+        <!-- Cliqz end -->
         <item name="android:paddingEnd">8dp</item>
     </style>
 
@@ -92,7 +103,10 @@
 
     <style name="TabsTray.AddTab" parent="TabsTray.V17.AddTab" />
     <style name="TabsTray.V17.AddTab" parent="TabsTray.Base.AddTab">
-        <item name="android:layout_marginEnd">-3dp</item>
+        <!-- Cliqz start -->
+        <item name="android:layout_marginLeft">@dimen/padding_10</item>
+        <!--<item name="android:layout_marginRight">-3dp</item>
+        <!+- Cliqz end -->
     </style>
 
     <style name="TabsTray.Menu" parent="TabsTray.V17.Menu" />

@@ -30,8 +30,10 @@
     <dimen name="browser_toolbar_button_padding">12dp</dimen>
     <dimen name="browser_toolbar_icon_width">48dp</dimen>
     <dimen name="browser_toolbar_menu_radius">2dp</dimen>
-
-    <dimen name="browser_toolbar_url_height">32dp</dimen>
+    <!-- Cliqz start +->
+         increase the url bar height -->
+    <dimen name="browser_toolbar_url_height">36dp</dimen>
+    <!-- Cliqz end -->
 
     <!-- favicon_size includes 4dp of right padding. We can't use margin (which would allow us to
          specify the actual size) because that would decrease the size of our hit target. -->
@@ -82,9 +84,13 @@
     <dimen name="overlay_prompt_container_width">@dimen/match_parent</dimen>
 
     <!-- Site security icon -->
-    <dimen name="browser_toolbar_site_security_width">32dp</dimen>
-    <dimen name="browser_toolbar_site_security_margin_end">0dp</dimen>
-
+    <!-- Cliqz start -->
+    <!-- Reduce the lock logo size -->
+    <dimen name="browser_toolbar_site_security_width">24dp</dimen>
+    <dimen name="browser_toolbar_site_security_height">24dp</dimen>
+    <dimen name="browser_toolbar_site_security_margin_start">6dp</dimen>
+    <dimen name="browser_toolbar_site_security_margin_end">4dp</dimen>
+    <!-- Cliqz end -->
     <!-- If one of these values changes, they all should. -->
     <dimen name="site_security_unknown_inset_top">1dp</dimen>
     <dimen name="site_security_unknown_inset_bottom">-1dp</dimen>
@@ -96,7 +102,9 @@
     <dimen name="page_row_edge_padding">16dp</dimen>
 
     <!-- Regular page row on about:home -->
-    <dimen name="page_row_height">56dp</dimen>
+    <!-- Cliqz Start -->
+    <dimen name="page_row_height">80dp</dimen>
+    <!-- Cliqz End -->
 
     <!-- Group/heading page row on about:home -->
     <dimen name="page_group_height">56dp</dimen>
@@ -168,15 +176,22 @@
     <dimen name="tab_panel_grid_item_vpadding_autofit">8dp</dimen>
     <dimen name="tab_panel_grid_min_item_hspacing_autofit">2dp</dimen>
 
+    <!-- Cliqz start -->
     <!-- CompactTabsGridLayout -->
     <dimen name="tab_panel_grid_hpadding_compact">15dp</dimen>
-    <dimen name="tab_panel_grid_vpadding_compact">7dp</dimen>
-    <dimen name="tab_panel_grid_item_hpadding_compact">10dp</dimen>
-    <dimen name="tab_panel_grid_item_vpadding_compact">6dp</dimen>
+    <dimen name="tab_panel_grid_vpadding_compact">20dp</dimen>
+    <dimen name="tab_panel_grid_item_hpadding_compact">20dp</dimen>
+    <dimen name="tab_panel_grid_item_vpadding_compact">8dp</dimen>
+    <!-- Cliqz end -->
 
     <!-- TabsListLayout -->
-    <dimen name="tab_highlight_stroke_width">5dp</dimen>
-    <dimen name="tab_favicon_size">16dp</dimen>
+    <!-- Cliqz start -->
+    <dimen name="tab_thumbnail_corner_radius">8dp</dimen>
+    <!-- reduce stroke width of tabs -->
+    <dimen name="tab_highlight_stroke_width">3dp</dimen>
+    <dimen name="tab_favicon_size">25dp</dimen>
+    <dimen name="tab_favicon_corner_radius">6dp</dimen>
+    <!-- Cliqz end -->
     <dimen name="tab_favicon_text_size">12sp</dimen>
 
     <!-- PageActionButtons dimensions -->
@@ -259,4 +274,51 @@
 
     <!-- Preferences -->
     <dimen name="preference_panel_text_size">15dp</dimen>
+
+    <!-- Cliqz start -->
+    <!-- General -->
+    <dimen name="icon_size">50dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+
+    <!-- news -->
+    <dimen name="news_list_radius">9dp</dimen>
+    <dimen name="news_item_favicon_radius">5dp</dimen>
+    <dimen name="news_favicon_size">@dimen/icon_size</dimen>
+    <dimen name="news_title_padding">10dp</dimen>
+    <dimen name="new_card_padding_10">@dimen/padding_10</dimen>
+    <dimen name="new_card_padding_5">@dimen/padding_5</dimen>
+
+    <!-- MyOffrz -->
+    <dimen name="myoffrz_icon_size">@dimen/icon_size</dimen>
+    <dimen name="myoffrz_padding_10">@dimen/padding_10</dimen>
+    <dimen name="myoffrz_text_size">16sp</dimen>
+    <dimen name="myoffrz_padding_8">8dp</dimen>
+    <dimen name="myoffrz_padding_16">16dp</dimen>
+    <dimen name="myoffrz_padding_5">@dimen/padding_5</dimen>
+    <dimen name="myoffrz_padding_20">20dp</dimen>
+
+    <!-- Control Center -->
+    <dimen name="ghostery_list_item_action_button_width">90dp</dimen>
+    <dimen name="ghostery_overview_button_width">225dp</dimen>
+
+    <!-- History and bookmarks view -->
+    <dimen name="ghostery_history_icon_width">48dp</dimen>
+    <dimen name="ghostery_history_icon_height">48dp</dimen>
+    <dimen name="ghostery_history_divider_height">0.5dp</dimen>
+    <dimen name="ghostery_bookmark_folder_size">38dp</dimen>
+    <dimen name="ghostery_bookmark_current_folder_size">20dp</dimen>
+
+    <!-- Tabs Overview -->
+    <dimen name="tab_panel_text_size">24sp</dimen>
+    <dimen name="tab_thumbnail_normal_mode_image_padding">50dp</dimen>
+    <dimen name="tab_thumbnail_private_mode_image_padding">10dp</dimen>
+
+    <!-- Intro -->
+    <dimen name="cliqz_intro_title_size">16sp</dimen>
+    <dimen name="cliqz_intro_content_size">12sp</dimen>
+    <dimen name="cliqz_intro_radio_button_height">30dp</dimen>
+    <!-- Cliqz end -->
+
 </resources>
