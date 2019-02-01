@@ -17,7 +17,7 @@
 <!ENTITY folderIncludeInGlobalSearch.accesskey   "g">
 
 <!ENTITY retention.label "Política de retenção">
-<!ENTITY retentionUseAccount.label "Usar minhas configurações de contas">
+<!ENTITY retentionUseAccount.label "Usar minha configuração de conta">
 <!ENTITY retentionUseAccount.accesskey "U">
 <!ENTITY daysOld.label "dias">
 <!ENTITY message.label "mensagens mais recentes">
@@ -30,8 +30,6 @@
 <!ENTITY retentionKeepAll.accesskey "T">
 <!ENTITY retentionKeepRecent.label "As mais novas">
 <!ENTITY retentionKeepRecent.accesskey "n">
-<!-- LOCALIZATION NOTE: Unhide with .keepUnreadOnly { display: -moz-box; } -->
-<!ENTITY retentionKeepUnreadHidden.label "Sempre excluir as mensagens lidas (sobrescreve a opção de data)">
 <!ENTITY retentionApplyToFlagged.label "Sempre manter mensagens sinalizadas">
 <!ENTITY retentionApplyToFlagged.accesskey "S">
 

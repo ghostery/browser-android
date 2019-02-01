@@ -4,7 +4,7 @@
 
 <!ENTITY firstrun_panel_title_welcome "Willkommen">
 <!ENTITY firstrun_urlbar_message2 "Danke für die Nutzung von &brandShortName;">
-<!ENTITY firstrun_urlbar_subtext2 "Ein moderner mobiler Browser von &vendorShortName;, der gemeinnützigen Organisation, die sich für ein frei zugängliches und offenes Web einsetzt.">
+<!ENTITY firstrun_urlbar_subtext2 "Ein moderner mobiler Browser von Mozilla, der gemeinnützigen Organisation, die sich für ein frei zugängliches und offenes Web einsetzt.">
 <!ENTITY firstrun_panel_title_privacy "Datenschutz">
 <!ENTITY firstrun_privacy_message "Surfen Sie so, als würde Sie niemand beobachten.">
 <!ENTITY firstrun_privacy_subtext "Privates Surfen schützt Sie vor Webinhalten, welche Ihre Aktivitäten verfolgen, und löscht die Seitenbesuche der Sitzung, wenn Sie die App schließen.">
@@ -151,19 +151,19 @@
 <!ENTITY pref_category_general_summary3 "Startseite, Sprache, externe Links später öffnen">
 
 <!-- Localization note (pref_category_language) : This is the preferences
-     section in which the user picks the locale in which to display &brandShortName;
+     section in which the user picks the locale in which to display Firefox
      UI. The locale includes both language and region concepts. -->
 <!ENTITY pref_category_language "Sprache">
 <!ENTITY pref_category_language_summary "Die Sprache des Browsers ändern">
 <!ENTITY pref_browser_locale "Sprache des Browsers">
 
 <!-- Localization note (locale_system_default) : This string indicates that
-     &brandShortName; will use the locale currently selected in Android's settings
+     Firefox will use the locale currently selected in Android's settings
      to display browser chrome. -->
 <!ENTITY locale_system_default "Systemstandard">
 
 <!-- Localization note (overlay_share_label) : This is the label that appears
-     in Android's intent chooser when sending a link to &brandShortName; to bookmark,
+     in Android's intent chooser when sending a link to Firefox to bookmark,
      send to another device, or add to Reading List. -->
 <!ENTITY overlay_share_label "Zu &brandShortName; hinzufügen">
 
@@ -185,7 +185,7 @@
 <!-- Localization note (overlay_no_synced_devices) : Used when the menu option
      to send a tab to a synced device is pressed and no other synced devices
      are found. -->
-<!ENTITY overlay_no_synced_devices "Keine anderen per &brandShortName;-Konto verbundenen Geräte gefunden">
+<!ENTITY overlay_no_synced_devices "Keine anderen per Firefox-Konto verbundenen Geräte gefunden">
 
 <!ENTITY pref_category_search3 "Suche">
 <!ENTITY pref_category_search_summary2 "Hinzufügen, Standard festlegen, Suchvorschläge anzeigen">
@@ -237,7 +237,7 @@
 <!ENTITY home_homepage_title "Startseite festlegen">
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
-     button for this string, they will use the built-in default &brandShortName; homepage (about:home). -->
+     button for this string, they will use the built-in default Firefox homepage (about:home). -->
 <!ENTITY home_homepage_radio_default "&brandShortName;-Startseite">
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
@@ -304,6 +304,12 @@
      Will be used in the context "<Turn on> ... to enable this feature" -->
 <!ENTITY pref_feature_tips_notification_enabling_hint "Zusätzlich notwendige Aktivierung:">
 
+<!-- Localization note (pref_feature_tips_notification_enabling_path):
+     Nothing to translate. Simple concatenation of already localized strings. Result is used below. -->
+<!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
+<!-- Localization note (pref_feature_tips_notification_enabling_hint):
+     Describe the action the user should do to enable this preference. -->
+<!ENTITY pref_feature_tips_notification_enabling_hint2 "(Um diese Einstellung verwenden zu können, muss &pref_feature_tips_notification_enabling_path; bereits aktiviert sein.)">
 
 <!-- Localization note (pref_category_experimental): Title of a sub category in the 'advanced' category
      for experimental features. -->
@@ -316,7 +322,7 @@
 <!ENTITY pref_custom_tabs_summary4 "Apps erlauben, Webinhalte schnell in einem benutzerdefinierten Tab zu öffnen">
 
 <!-- Localization note (custom_tabs_menu_item_open_in): The variable is replaced by the name of
-     default browser from user's preference, such as "Open in &brandShortName;" -->
+     default browser from user's preference, such as "Open in Firefox" -->
 <!ENTITY custom_tabs_menu_item_open_in "In &formatS; öffnen">
 <!ENTITY custom_tabs_menu_footer "Bereitgestellt von &brandShortName;">
 <!-- Long-click title of CustomTabsActivity will copy URL to clipboard and display this hint -->
@@ -388,7 +394,7 @@
 <!ENTITY pref_qrcode_enabled_summary2 "QR-Code-Scanner in der Adressleiste anzeigen">
 
 <!ENTITY pref_use_master_password "Master-Passwort benutzen">
-<!ENTITY pref_sync_default_title "&brandShortName;-Konto">
+<!ENTITY pref_sync_default_title "Firefox-Konto">
 <!ENTITY pref_sync2 "Anmelden">
 <!ENTITY pref_sync_summary2 "Synchronisation von Tabs, Lesezeichen, Zugangsdaten und Chronik">
 <!ENTITY pref_search_suggestions "Suchvorschläge anzeigen">
@@ -410,7 +416,7 @@
 <!ENTITY pref_private_data_syncedTabs "Synchronisierte Tabs">
 
 <!ENTITY pref_default_browser "Als Standardbrowser verwenden">
-<!ENTITY pref_default_browser_mozilla_support_tablet "&vendorShortName;-Hilfe aufrufen">
+<!ENTITY pref_default_browser_mozilla_support_tablet "Mozilla-Hilfe aufrufen">
 <!ENTITY pref_about_firefox "Über &brandShortName;">
 <!ENTITY pref_vendor_faqs "Häufig gestellte Fragen">
 <!ENTITY pref_vendor_feedback "Feedback senden">
@@ -778,7 +784,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      "relative time span string" produced by Android.  This string describes the
      time the tabs were last synced relative to the current time; examples
      include "42 minutes ago", "4 days ago", "last week", etc. The subject of
-     "Last synced" is one of the user's other Sync clients, typically &brandShortName; on
+     "Last synced" is one of the user's other Sync clients, typically Firefox on
      their desktop or laptop.-->
 <!ENTITY remote_tabs_last_synced "Letzte Synchronisierung: &formatS;">
 <!-- Localization note: Used when the sync has not happend yet, showed in place of a date -->
@@ -802,7 +808,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- LOCALIZATION NOTE (devtools_auth_scan_header): This header text appears
      above a QR reader that is actively scanning for QR codes.  The expected QR
      code has already been displayed by the client trying to connect (such as
-     desktop &brandShortName; via WebIDE), so you just need to aim this device at the QR
+     desktop Firefox via WebIDE), so you just need to aim this device at the QR
      code. -->
 <!ENTITY devtools_auth_scan_header "Suche nach auf anderem Gerät angezeigten QR-Code wird durchgeführt">
 
@@ -810,7 +816,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!-- Localization note: These are features the device owner (e.g. parent) can enable or disable for
      a restricted profile (e.g. child). Used inside the Android settings UI. -->
 <!ENTITY restrictable_feature_addons_installation "Add-ons">
-<!ENTITY restrictable_feature_addons_installation_description "Funktionen oder Funktionalität von &brandShortName; erweitern. Hinweis: Add-ons können bestimmte Beschränkungen deaktivieren.">
+<!ENTITY restrictable_feature_addons_installation_description "Funktionen oder Funktionalität von Firefox erweitern. Hinweis: Add-ons können bestimmte Beschränkungen deaktivieren.">
 <!ENTITY restrictable_feature_private_browsing "Privater Modus">
 <!ENTITY restrictable_feature_private_browsing_description "Erlaubt es Familienmitgliedern zu surfen, ohne dass Informationen über die besuchten Websites gespeichert werden.">
 <!ENTITY restrictable_feature_clear_history "Chronik löschen">
@@ -824,15 +830,15 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 
 <!-- Default Bookmarks titles-->
 <!-- LOCALIZATION NOTE (bookmarks_about_browser): link title for about:fennec -->
-<!ENTITY bookmarks_about_browser "&brandShortName;: Über Ihren Browser">
+<!ENTITY bookmarks_about_browser "Firefox: Über Ihren Browser">
 <!-- LOCALIZATION NOTE (bookmarks_addons): link title for https://addons.mozilla.org/en-US/mobile -->
-<!ENTITY bookmarks_addons "&brandShortName;: Mit Add-ons anpassen">
+<!ENTITY bookmarks_addons "Firefox: Mit Add-ons anpassen">
 <!-- LOCALIZATION NOTE (bookmarks_support): link title for https://support.mozilla.org/ -->
-<!ENTITY bookmarks_support "&brandShortName;: Hilfe">
+<!ENTITY bookmarks_support "Firefox: Hilfe">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_support): link title for https://support.mozilla.org/kb/controlledaccess -->
-<!ENTITY bookmarks_restricted_support2 "&brandShortName;: Hilfe und Unterstützung für eingeschränkte Profile auf Android-Tablets">
+<!ENTITY bookmarks_restricted_support2 "Firefox: Hilfe und Unterstützung für eingeschränkte Profile auf Android-Tablets">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_webmaker):link title for https://webmaker.org -->
-<!ENTITY bookmarks_restricted_webmaker "Erlerne das Web: &vendorShortName; Webmaker">
+<!ENTITY bookmarks_restricted_webmaker "Erlerne das Web: Mozilla Webmaker">
 
 <!-- LOCALIZATION NOTE (unsupported_sdk_version): The user installed a build of this app that does not support
      the Android version of this device. the formatS1 is replaced by the CPU ABI (e.g., ARMv7); the formatS2 is
@@ -911,11 +917,17 @@ Picture-in-picture mini window -->
 
 <!-- Notification channels names -->
 <!ENTITY default_notification_channel "&brandShortName;">
+
+<!-- Notification channels names -->
+<!ENTITY default_notification_channel2 "Browser">
 <!ENTITY mls_notification_channel "&vendorShortName;-Standortdienst">
 <!ENTITY download_notification_channel "Downloads">
 <!ENTITY media_notification_channel "Medienwiedergabe">
 <!-- These push notifications come without a specific channel and/or name from Leanplum -->
 <!ENTITY leanplum_default_notifications_channel "&brandShortName;-Push-Benachrichtigungen">
+<!ENTITY media_notification_channel2 "Ton und Video">
+<!-- These push notifications come without a specific channel and/or name from Leanplum -->
+<!ENTITY leanplum_default_notifications_channel2 "&vendorShortName; - nützliche Hinweise">
 <!ENTITY updater_notification_channel "App-Updates">
 <!ENTITY synced_tabs_notification_channel "Synchronisierte Tabs">
 <!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by

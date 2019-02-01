@@ -10,6 +10,7 @@ about-performance-title = 任务管理器
 column-name = 名称
 column-type = 类型
 column-energy-impact = 能耗影响
+column-memory = 内存
 
 ## Special values for the Name column
 
@@ -37,6 +38,15 @@ type-other = 其他
 energy-impact-high = 高 ({ $value })
 energy-impact-medium = 中 ({ $value })
 energy-impact-low = 低 ({ $value })
+
+## Values for the Memory column
+##
+## Variables:
+##   $value (Number) - How much memory is used
+
+size-KB = { $value } KB
+size-MB = { $value } MB
+size-GB = { $value } GB
 
 ## Tooltips for the action buttons
 

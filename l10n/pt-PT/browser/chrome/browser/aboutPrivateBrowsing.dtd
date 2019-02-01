@@ -30,7 +30,15 @@
 
 <!ENTITY trackingProtection.title                        "Proteção contra monitorização">
 <!ENTITY trackingProtection.description2                 "Alguns websites utilizam trackers que podem monitorizar a sua atividade na Internet. Com a Proteção contra monitorização, o Firefox irá bloquear vários trackers que podem recolher informação relacionada com o seu comportamento de navegação.">
+
 <!ENTITY trackingProtection.startTour1                   "Ver como funciona">
 
 <!ENTITY contentBlocking.title                           "Bloqueio de conteúdo">
 <!ENTITY contentBlocking.description                     "Alguns websites utilizam trackers que podem monitorizar a sua atividade pela Internet. Nas janelas privadas o Bloqueio de conteúdo do Firefox bloqueia automaticamente muitos trackers que podem recolher informação acerca do seu comportamento de navegação.">
+
+<!-- Strings for new Private Browsing with Search -->
+<!ENTITY aboutPrivateBrowsing.info.title                 "Está numa janela privada">
+<!ENTITY aboutPrivateBrowsing.info.description           "O &brandShortName; limpa o seu histórico de pesquisa e navegação quando sai da aplicação ou fecha todas os separadores e janelas de navegação privada. Embora isto não lhe torne anónimo(a) para websites ou o seu provedor de serviço de internet, torna mais fácil manter privado o que faz online de alguém que utiliza este computador.">
+<!-- LOCALIZATION NOTE (aboutPrivateBrowsing.info.myths): This is a link to a SUMO article
+                       about private browsing myths.   -->
+<!ENTITY aboutPrivateBrowsing.info.myths                 "Mitos comuns acerca da navegação privada">

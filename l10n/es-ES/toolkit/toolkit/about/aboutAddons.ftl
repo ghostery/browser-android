@@ -24,6 +24,7 @@ list-empty-button =
 install-addon-from-file =
     .label = Instalar complemento desde archivo…
     .accesskey = I
+help-button = Soporte para complementos
 preferences =
     { PLATFORM() ->
         [windows] Opciones de { -brand-short-name }

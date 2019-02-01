@@ -3,8 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "附加元件管理員">
 
-<!ENTITY search.placeholder2                  "在 addons.mozilla.org 搜尋">
-
 <!ENTITY search.placeholder3                  "在 addons.mozilla.org 搜尋">
 <!ENTITY search.buttonlabel                   "搜尋">
 <!-- LOCALIZATION NOTE (search.commandkey):
@@ -21,9 +19,6 @@
 <!ENTITY installAddonFromFile.accesskey       "I">
 <!ENTITY toolsMenu.tooltip                    "所有附加元件的工具">
 
-<!ENTITY getThemes.description                "想要個人化您的瀏覽器嗎？">
-<!ENTITY getThemes.learnMore                  "從數以千計的佈景主題挑選一套。">
-
 
 <!ENTITY showUnsignedExtensions.button.label  "無法驗證某些擴充套件">
 <!ENTITY showAllExtensions.button.label       "顯示所有擴充套件">
@@ -34,13 +29,13 @@
 <!ENTITY warning.safemode.label                    "所有附加元件於安全模式中都已停用。">
 <!ENTITY warning.checkcompatibility.label          "已停止檢查附加元件相容性，您可能有不相容的附加元件。">
 <!ENTITY warning.checkcompatibility.enable.label   "啟用">
-<!ENTITY warning.checkcompatibility.enable.tooltip "啟用附加元件相容性檢查">
+<!ENTITY warning.checkcompatibility.enable.tooltip "開啟附加元件相容性檢查">
 <!ENTITY warning.updatesecurity.label              "已停止檢查附加元件安全性，更新程式可能不安全。">
 <!ENTITY warning.updatesecurity.enable.label       "啟用">
-<!ENTITY warning.updatesecurity.enable.tooltip     "啟用附加元件更新安全檢查">
+<!ENTITY warning.updatesecurity.enable.tooltip     "開啟附加元件更新安全性檢查">
 
 <!-- categories / views -->
-<!ENTITY view.discover.label                  "取得元件">
+<!ENTITY view.discover.label                  "安裝附加元件">
 <!ENTITY view.recentUpdates.label             "最近的更新">
 <!ENTITY view.availableUpdates.label          "可用的更新">
 
@@ -87,6 +82,7 @@
 <!ENTITY cmd.preferencesUnix.label            "偏好設定">
 <!ENTITY cmd.preferencesUnix.accesskey        "P">
 
+<!-- addon actions -->
 <!ENTITY cmd.enableAddon.label                "啟用">
 <!ENTITY cmd.enableAddon.accesskey            "E">
 <!ENTITY cmd.disableAddon.label               "停用">
@@ -95,6 +91,7 @@
 <!ENTITY cmd.enableTheme.accesskey            "W">
 <!ENTITY cmd.disableTheme.label               "停用佈景主題">
 <!ENTITY cmd.disableTheme.accesskey           "W">
+
 <!ENTITY cmd.askToActivate.label              "啟用時詢問">
 <!ENTITY cmd.askToActivate.tooltip            "每次使用此附加元件時詢問">
 <!ENTITY cmd.alwaysActivate.label             "總是啟用">
@@ -104,6 +101,7 @@
 <!ENTITY cmd.stateMenu.tooltip                "在此附加元件執行時變更">
 <!ENTITY cmd.installAddon.label               "安裝">
 <!ENTITY cmd.installAddon.accesskey           "I">
+
 <!ENTITY cmd.uninstallAddon.label             "移除">
 <!ENTITY cmd.uninstallAddon.accesskey         "R">
 <!ENTITY cmd.showPreferencesWin.label         "選項">
@@ -164,9 +162,12 @@
 
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "暫停">
+
+<!-- download/install progress -->
 <!ENTITY progress.cancel.tooltip              "取消">
 
 <!ENTITY addon.homepage                       "網站首頁">
+
 <!ENTITY addon.details.label                  "更多資訊">
 <!ENTITY addon.details.tooltip                "顯示更多關於此附加元件的詳情">
 <!ENTITY addon.unknownDate                    "未知">
@@ -188,6 +189,7 @@
 <!ENTITY addon.undoRemove.label               "復原">
 <!ENTITY addon.undoRemove.tooltip             "保持安裝此附加元件">
 <!ENTITY addon.restartNow.label               "立刻重新啟動">
+
 <!ENTITY addon.install.label                  "安裝">
 <!ENTITY addon.install.tooltip                "安裝此附加元件">
 <!ENTITY addon.updateNow.label                "立即更新">

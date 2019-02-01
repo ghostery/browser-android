@@ -483,6 +483,8 @@
 <!ENTITY contextCopyMsgMenu.accesskey "m">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Nemrég érkezett">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "N">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Kedvencek">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "K">
 <!ENTITY contextSaveAs.label "Mentés másként…">
 <!ENTITY contextSaveAs.accesskey "M">
 <!ENTITY contextPrint.label "Nyomtatás…">

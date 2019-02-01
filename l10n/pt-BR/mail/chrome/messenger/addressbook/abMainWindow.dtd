@@ -95,7 +95,7 @@
 <!ENTITY menubarCmd.accesskey                           "m">
 <!ENTITY showAbToolbarCmd.label                         "Barra de ferramentas do catálogo de endereços">
 <!ENTITY showAbToolbarCmd.accesskey                     "a">
-<!ENTITY showTaskbarCmd.label                           "Barra de estado">
+<!ENTITY showTaskbarCmd.label                           "Barra de status">
 <!ENTITY showTaskbarCmd.accesskey                       "s">
 <!ENTITY customizeToolbar.label                         "Personalizar…">
 <!ENTITY customizeToolbar.accesskey                     "P">
@@ -103,7 +103,7 @@
 <!ENTITY layoutMenu.accesskey                           "L">
 <!ENTITY showDirectoryPane.label                        "Painel de diretórios">
 <!ENTITY showDirectoryPane.accesskey                    "P">
-<!ENTITY showContactPane2.label                         "Painel do contato">
+<!ENTITY showContactPane2.label                         "Painel de contatos">
 <!ENTITY showContactPane2.accesskey                     "a">
 <!ENTITY menu_ShowNameAs.label                          "Mostrar nome como">
 <!ENTITY menu_ShowNameAs.accesskey                      "n">

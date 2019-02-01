@@ -64,7 +64,6 @@
 <!ENTITY runtimePanel_usb "Dispositivi USB">
 <!ENTITY runtimePanel_wifi "Dispositivi Wi-Fi">
 <!ENTITY runtimePanel_other "Altro">
-<!ENTITY runtimePanel_noadbhelper "Installa ADB Helper">
 <!ENTITY runtimePanel_nousbdevice "Il dispositivo non è visibile?">
 <!ENTITY runtimePanel_refreshDevices_label "Aggiorna dispositivi">
 <!ENTITY details_valid_header "valido">

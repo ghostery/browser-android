@@ -3,10 +3,8 @@
 # file, You can obtain one at http://mozilla-org/MPL/2-0/-
 
 crash-reports-title = Segnalazioni di arresto anomalo
-clear-all-reports-label = Rimuovi tutte le segnalazioni
 delete-button-label = Elimina tutto
 delete-confirm-title = Eliminare le segnalazioni?
-delete-confirm-description = Verranno eliminate tutte le segnalazioni e questa operazione non può essere annullata.
 delete-unsubmitted-description = Verranno eliminate tutte le segnalazioni non inviate. Questa operazione non può essere annullata.
 delete-submitted-description = Verrà eliminato l’elenco delle segnalazioni inviate ma non verranno rimossi i relativi dati. Questa operazione non può essere annullata.
 crashes-unsubmitted-label = Segnalazioni non ancora inviate

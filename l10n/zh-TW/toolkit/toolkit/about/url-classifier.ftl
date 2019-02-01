@@ -3,6 +3,16 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 url-classifier-title = URL 分類器資訊
+url-classifier-search-title = 搜尋
+url-classifier-search-result-title = 結果
+url-classifier-search-result-uri = URI: { $uri }
+url-classifier-search-result-list = 表格清單: { $list }
+url-classifier-search-input = 網址
+url-classifier-search-error-invalid-url = 網址無效
+url-classifier-search-error-no-features = 未選擇功能
+url-classifier-search-btn = 開始搜尋
+url-classifier-search-features = 功能
+url-classifier-search-listType = 清單類型
 url-classifier-provider-title = 提供者
 url-classifier-provider = 提供者
 url-classifier-provider-last-update-time = 上次更新時間

@@ -23,7 +23,7 @@ policy-BlockAboutSupport = about:support ページへのアクセスをブロッ
 
 policy-Bookmarks = ブックマークツールバー、ブックマークメニュー、または指定のフォルダーの中にブックマークを作成します。
 
-policy-Certificates = 組み込みの証明書を利用するかどうか設定します。このポリシーは現在 Windows でのみ有効です。
+policy-CertificatesDescription = 証明書を追加、または組み込みの証明書を利用します。
 
 policy-Cookies = ウェブサイトの Cookie の保存を許可するか拒否するか設定します。
 
@@ -60,8 +60,6 @@ policy-DisableSafeMode = セーフモードで再起動する機能を無効に�
 
 policy-DisableSecurityBypass = ユーザーが特定のセキュリティ警告を回避できないようにします。
 
-policy-DisableSetDesktopBackground = メニューコマンド [デスクトップの背景に設定] を無効にします。
-
 policy-DisableSetAsDesktopBackground = メニューコマンド [デスクトップの背景に設定] を無効にします。
 
 policy-DisableSystemAddonUpdate = ブラウザーのシステムアドオンのインストールと更新を禁止します。
@@ -72,6 +70,8 @@ policy-DisplayBookmarksToolbar = ブックマークツールバーを既定で�
 
 policy-DisplayMenuBar = メニューバーを既定で表示します。
 
+policy-DNSOverHTTPS = DNS over HTTPS の設定を指示します。
+
 policy-DontCheckDefaultBrowser = 起動時に既定のブラウザーか確認する機能を無効にします。
 
 # “lock” means that the user won’t be able to change this setting
@@ -79,8 +79,7 @@ policy-EnableTrackingProtection = コンテンツブロッキングを有効ま�
 
 # A “locked” extension can’t be disabled or removed by the user. This policy
 # takes 3 keys (“Install”, ”Uninstall”, ”Locked”), you can either keep them in
-# English or translate them as verbs. See also:
-# https://github.com/mozilla/policy-templates/blob/master/README.md#extensions-machine-only
+# English or translate them as verbs.
 policy-Extensions = 拡張機能をインストール、削除、またはロックします。インストールは URL とパスを指定します。削除とロックは拡張機能の ID を指定します。
 
 policy-FlashPlugin = Flash プラグインの実行を許可、または拒否します。
@@ -106,12 +105,16 @@ policy-PopupBlocking = 特定のウェブサイトのポッポアップ表示を
 
 policy-Proxy = プロキシの設定を指示します。
 
+policy-RequestedLocales = アプリケーションに要求される言語リストと優先順位を設定します。
+
 policy-SanitizeOnShutdown = 終了時にナビゲーションデータをすべて消去します。
 
 policy-SearchBar = 検索バーの既定の位置を設定します。ユーザーによる設定の変更は許可されます。
 
 policy-SearchEngines = 検索エンジンの設定を指示します。このポリシーは延長サポート版 (ESR) のみ有効です。
 
-# “format” refers to the format used for the value of this policy. See also:
-# https://github.com/mozilla/policy-templates/blob/master/README.md#websitefilter-machine-only
+# For more information, see https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/PKCS11/Module_Installation
+policy-SecurityDevices = PKCS #11 モジュールをインストールします。
+
+# “format” refers to the format used for the value of this policy.
 policy-WebsiteFilter = ウェブサイトを訪問済みにしません。書式の詳細はドキュメントをご覧ください。

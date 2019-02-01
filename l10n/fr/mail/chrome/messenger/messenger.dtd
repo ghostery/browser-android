@@ -440,9 +440,6 @@
 <!ENTITY openMessageWindowCmd.label "Ouvrir le message">
 <!ENTITY openMessageWindowCmd.accesskey "O">
 <!ENTITY openMessageWindowCmd.key "o">
-<!ENTITY openConversationCmd.label "Ouvrir dans la discussion">
-<!ENTITY openConversationCmd.accesskey "u">
-<!ENTITY openConversationCmd.key "o">
 <!ENTITY openInConversationCmd.label "Ouvrir dans la discussion">
 <!ENTITY openInConversationCmd.accesskey "u">
 <!ENTITY openInConversationCmd.key "o">
@@ -795,6 +792,8 @@
 <!ENTITY contextMoveMsgMenu.accesskey "D">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Récent">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "R">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Préférés">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "P">
 <!ENTITY contextCopyMsgMenu.label "Copier vers">
 <!ENTITY contextCopyMsgMenu.accesskey "c">
 <!ENTITY contextKillThreadMenu.label "Ignorer la discussion">

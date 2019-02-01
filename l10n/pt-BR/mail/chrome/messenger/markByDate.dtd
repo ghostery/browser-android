@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY messageMarkByDate.label "Marcar as mensagens como lidas pela data">
+<!ENTITY messageMarkByDate.label "Marcar mensagens como lidas por data">
 <!ENTITY markByDateLower.label "Marcar as mensagens como lidas de:">
 <!ENTITY markByDateLower.accesskey "M">
 <!ENTITY markByDateUpper.label "Até:">

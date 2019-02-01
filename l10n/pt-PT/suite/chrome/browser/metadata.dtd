@@ -26,6 +26,6 @@
 <!ENTITY misc-sec.label        "Outras propriedades">
 <!ENTITY misc-lang.label       "Idioma do texto:">
 <!ENTITY misc-title.label      "Título:">
-<!ENTITY misc-tblsummary.label "Tabela de resumo:">
+<!ENTITY misc-tblsummary.label "Tabela de sumário:">
 <!ENTITY quote-sec.label       "Propriedades da citação">
 <!ENTITY quote-cite.label      "Info:">

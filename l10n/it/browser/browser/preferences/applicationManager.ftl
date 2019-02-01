@@ -8,7 +8,6 @@ app-manager-window =
 app-manager-remove =
     .label = Rimuovi
     .accesskey = R
-app-manager-handle-webfeeds = È possibile utilizzare le seguenti applicazioni per gestire i feed web.
 # Variables:
 #   $type (String) - the URI scheme of the link (e.g. mailto:)
 app-manager-handle-protocol = È possibile utilizzare le seguenti applicazioni per gestire i link { $type }.

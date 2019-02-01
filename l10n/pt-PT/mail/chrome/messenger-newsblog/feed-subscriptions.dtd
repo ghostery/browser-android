@@ -11,7 +11,6 @@
 
 <!ENTITY feedLocation.label          "URL da fonte:">
 <!ENTITY feedLocation.accesskey      "U">
-<!ENTITY feedLocation.placeholder    "Para adicionar uma fonte, introduza um URL válido">
 <!ENTITY feedLocation2.placeholder   "Introduza um url de fonte válido">
 <!ENTITY locationValidate.label      "Validar">
 <!ENTITY validateText.label          "Verificar a validação e obter um url válido.">
@@ -28,7 +27,7 @@
 <!ENTITY biffDays.accesskey          "d">
 <!ENTITY recommendedUnits.label      "O publicador recomenda:">
 
-<!ENTITY quickMode.label             "Mostrar resumo do artigo em vez de carregar a página web">
+<!ENTITY quickMode.label             "Mostrar o sumário do artigo em vez de carregar a página web">
 <!ENTITY quickMode.accesskey         "M">
 
 <!ENTITY autotagEnable.label         "Criar etiquetas automaticamente de nomes de &lt;categorias&gt; da fonte">

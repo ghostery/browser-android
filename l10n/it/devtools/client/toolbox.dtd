@@ -6,7 +6,6 @@
 <!ENTITY toggleToolbox.key "I">
 <!ENTITY toggleToolboxF12.keycode "VK_F12">
 <!ENTITY toggleToolboxF12.keytext "F12">
-<!ENTITY browserToolboxStatusMessage "Stato connessione Cassetta degli attrezzi browser:">
 <!ENTITY options.context.advancedSettings "Impostazioni avanzate">
 <!ENTITY options.context.inspector "Analisi pagina">
 <!ENTITY options.showUserAgentStyles.label "Visualizza stili del browser">

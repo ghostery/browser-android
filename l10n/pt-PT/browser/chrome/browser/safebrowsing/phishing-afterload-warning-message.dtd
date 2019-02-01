@@ -32,7 +32,7 @@
 
 
 <!ENTITY safeb.blocked.unwantedPage.title2 "O site adiante pode conter programas prejudiciais">
-<!ENTITY safeb.blocked.unwantedPage.shortDesc2 "O &brandShortName; bloqueou esta página porque poderia tentar enganar-lhe a instalar programas que prejudicam a sua experiência de navegação (por exemplo, ao mudar a sua página inicial ou mostrar anúncios extra em sites que visita).">
+<!ENTITY safeb.blocked.unwantedPage.shortDesc2 "O &brandShortName; bloqueou esta página porque poderia tentar levar-lhe a instalar programas que prejudicam a sua experiência de navegação (por exemplo, ao mudar a sua página inicial ou mostrar anúncios extra em sites que visita).">
 
 <!-- Localization note (safeb.blocked.unwantedPage.errorDesc.override, safeb.blocked.unwantedPage.errorDesc.noOverride, safeb.blocked.unwantedPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
 
@@ -44,7 +44,7 @@
 
 
 <!ENTITY safeb.blocked.phishingPage.title3 "Site decetivo adiante">
-<!ENTITY safeb.blocked.phishingPage.shortDesc3 "O &brandShortName; bloqueou esta página porque poderia tentar enganar-lhe a fazer algo perigoso como instalar software ou revelar informação pessoal como palavras-passe ou cartões de crédito.">
+<!ENTITY safeb.blocked.phishingPage.shortDesc3 "O &brandShortName; bloqueou esta página porque poderia tentar levar-lhe a fazer algo perigoso como instalar software ou revelar informação pessoal como palavras-passe ou cartões de crédito.">
 
 <!-- Localization note (safeb.blocked.phishingPage.errorDesc.override, safeb.blocked.phishingPage.errorDesc.noOverride, safeb.blocked.phishingPage.learnMore) - All <span> and <a> tags are replaced by the appropriate links and text during runtime. -->
 <!ENTITY safeb.blocked.phishingPage.errorDesc.override "<span id='phishing_sitename'/> foi <a id='error_desc_link'>reportado como um site decetivo</a>. Pode <a id='report_detection'>reportar um problema de deteção</a> ou <a id='ignore_warning_link'>ignorar o risco</a> e ir para este site inseguro.">

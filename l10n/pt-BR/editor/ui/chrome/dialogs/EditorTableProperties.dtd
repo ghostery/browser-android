@@ -68,7 +68,7 @@
 <!-- Used in both Table and Cell panels  -->
 <!ENTITY size.label                       "Tamanho">
 <!ENTITY pixels.label                     "pixels">
-<!ENTITY backgroundColor.label            "Cor do plano de fundo:">
+<!ENTITY backgroundColor.label            "Cor de fundo:">
 <!ENTITY backgroundColor.accessKey        "u">
 <!ENTITY AlignLeft.label                  "Esquerda">
 <!ENTITY AlignCenter.label                "Centralizado">

@@ -11,8 +11,8 @@
 <!ENTITY returnToPreviousPage1.label "返回上一頁（建議）">
 <!ENTITY advanced.label "進階">
 <!ENTITY continue2.label "更多…">
+<!ENTITY advanced2.label "進階…">
 <!ENTITY moreInformation.label "更多資訊">
-
 <!ENTITY viewCertificate.label "檢視憑證">
 
 <!-- Specific error messages -->
@@ -141,9 +141,6 @@ will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "<span class='hostname'/> 的網站管理員未正確設定好網站。為了確保您的資訊不會被盜走，&brandShortName; 並未連線至該網站。">
 <!ENTITY certerror.introPara2 "&brandShortName; 偵測到可能有安全性風險，並未連線至 <span class='hostname'/>。若您要造訪此網站，攻擊者可能會嘗試偷走您的密碼、電子郵件或信用卡資料等個資。">
-
-<!ENTITY certerror.expiredCert.secondPara "這個問題最有可能是因為您的系統時間不準，造成 &brandShortName; 無法安全地連線到該網站。">
-
 <!ENTITY certerror.sts.introPara "&brandShortName; 偵測到潛在的安全性威脅，並未連線到 <span class='hostname'/>。此網站必須使用安全性連線。">
 
 <!ENTITY certerror.expiredCert.introPara "&brandShortName; 偵測到潛在的安全性威脅，並未連線到 <span class='hostname'/>。此網站可能有設定問題，或您的電腦上的時間不正確。">
@@ -209,6 +206,13 @@ was trying to connect. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> 使用過時的安全性技術，容易遭受攻擊。攻擊者可以簡單地得知您認為安全的資訊。網站管理員修正伺服器設定後您才能連線至此網站。</p><p>錯誤代碼: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "已封鎖頁面">
+
+<!ENTITY certerror.mitm.title "有軟體造成 &brandShortName; 無法與此網站建立安全連線">
+<!ENTITY certerror.mitm.longDesc "<span class='hostname'></span> 應該是一個安全的網站，但無法建立安全連線。這個問題是由 <span class='mitm-name'/> 造成的，可能是來自您的電腦或您的所在網路中的軟體。">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt1 "若您的防毒軟體包含掃描加密連線（或稱為「網頁掃描」、「HTTPS 掃描」），請關閉該功能。若這樣做仍然無效，您可以試著移除並重新安裝防毒軟體。">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt2 "若您在公司網路中，請聯絡您的 IT 部門。">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt3 "若您不了解 <span class='mitm-name'/>，這可能是一場攻擊，您不該繼續前往該網站。">
+<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "若您不了解 <span class='mitm-name'/>，這可能是一場攻擊，您無法再做什麼以前往該網站。">
 
 <!ENTITY clockSkewError.title "您的電腦時間錯誤">
 <!ENTITY clockSkewError.longDesc "您的電腦認為目前時間為 <span id='wrongSystemTime_systemDate1'/>，不讓 &brandShortName; 建立安全連線。若要造訪 <span class='hostname'></span>，請到系統設定中確認日期、時間、時區設定是否正確，然後重新載入 <span class='hostname'></span>。">

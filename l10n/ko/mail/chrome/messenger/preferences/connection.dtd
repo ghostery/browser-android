@@ -50,3 +50,9 @@
 <!ENTITY  dnsOverHttpsUrl.label         "URL">
 <!ENTITY  dnsOverHttpsUrl.accesskey     "R">
 <!ENTITY  dnsOverHttpsUrl.tooltip       "HTTPS를 통한 DNS를 해결하는 URL">
+<!ENTITY  dnsOverHttpsUrlDefault.label     "기본값 사용">
+<!ENTITY  dnsOverHttpsUrlDefault.accesskey "l">
+<!ENTITY  dnsOverHttpsUrlDefault.tooltip   "HTTPS를 통한 DNS를 해결할 때 기본 URL 사용">
+<!ENTITY  dnsOverHttpsUrlCustom.label      "사용자 정의">
+<!ENTITY  dnsOverHttpsUrlCustom.accesskey  "t">
+<!ENTITY  dnsOverHttpsUrlCustom.tooltip    "HTTPS를 통한 DNS를 해결하는 선호하는 URL을 입력">

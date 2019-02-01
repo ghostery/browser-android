@@ -17,15 +17,14 @@
 <!ENTITY accountTypeMail.accesskey "m">
 <!ENTITY accountTypeNews.label "新闻组账户">
 <!ENTITY accountTypeNews.accesskey "w">
-
 <!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
 <!ENTITY accountTypeMovemail.label "Unix Mailspool (Movemail)">
 <!ENTITY accountTypeMovemail.accesskey "U">
 
 <!-- Entities for Identity page -->
 
-<!ENTITY identityTitle.label "标识">
-<!ENTITY identityDesc.label "每个账户可以有一个标识，当其他人接收到您的消息时此标识可以让他们知道这是您发的消息。">
+<!ENTITY identityTitle.label "身份">
+<!ENTITY identityDesc.label "每个账户可以有一个身份，当其他人接收到您的消息时此身份可以让他们知道这是您发的消息。">
 
 <!-- LOCALIZATION NOTE (fullnameDesc.label) : do not translate two of "&quot;" in below line -->
 <!ENTITY fullnameDesc.label "请输入您希望在发送的消息中出现在 &quot;发件人&quot; 字段中的姓名。">

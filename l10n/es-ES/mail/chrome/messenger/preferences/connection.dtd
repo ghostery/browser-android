@@ -49,3 +49,9 @@
 <!ENTITY dnsOverHttpsUrl.label "URL">
 <!ENTITY dnsOverHttpsUrl.accesskey "R">
 <!ENTITY dnsOverHttpsUrl.tooltip "URL para resolver DNS sobre HTTPS">
+<!ENTITY dnsOverHttpsUrlDefault.label "Usar valor preterminado">
+<!ENTITY dnsOverHttpsUrlDefault.accesskey "U">
+<!ENTITY dnsOverHttpsUrlDefault.tooltip "Usar la URL predeterminada para la resolución DNS sobre HTTPS">
+<!ENTITY dnsOverHttpsUrlCustom.label "Personalizado">
+<!ENTITY dnsOverHttpsUrlCustom.accesskey "P">
+<!ENTITY dnsOverHttpsUrlCustom.tooltip "Introduzca su URL preferida para la resolución DNS sobre HTTPS">

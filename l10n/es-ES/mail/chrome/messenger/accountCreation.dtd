@@ -28,11 +28,13 @@
 <!ENTITY auth.label "Identificación">
 <!ENTITY imap.label "IMAP">
 <!ENTITY pop3.label "POP3">
+<!ENTITY exchange.label "Exchange">
 <!ENTITY smtp.label "SMTP">
 <!ENTITY autodetect.label "Autodetectar">
 <!ENTITY noEncryption.label "Ninguno">
 <!ENTITY starttls.label "STARTTLS">
 <!ENTITY sslTls.label "SSL/TLS">
+<!ENTITY exchange-hostname.label "Servidor Exchange:">
 <!ENTITY advancedSetup.label "Config. avanzada">
 <!ENTITY advancedSetup.accesskey "C">
 <!ENTITY cancel.label "Cancelar">

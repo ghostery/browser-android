@@ -13,7 +13,7 @@
 <!ENTITY blankPageRadio.label           "Página em branco">
 <!ENTITY blankPageRadio.accesskey       "P">
 <!ENTITY homePageRadio.label            "Página inicial">
-<!ENTITY homePageRadio.accesskey        "i">
+<!ENTITY homePageRadio.accesskey        "n">
 <!ENTITY lastPageRadio.label            "Última página visitada">
 <!ENTITY lastPageRadio.accesskey        "l">
 <!ENTITY restoreSessionRadio.label      "Restaurar sessão anterior">

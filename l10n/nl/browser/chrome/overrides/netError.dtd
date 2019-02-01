@@ -11,8 +11,8 @@
 <!ENTITY returnToPreviousPage1.label "Teruggaan (Aanbevolen)">
 <!ENTITY advanced.label "Geavanceerd">
 <!ENTITY continue2.label "Meer…">
+<!ENTITY advanced2.label "Geavanceerd…">
 <!ENTITY moreInformation.label "Meer informatie">
-
 <!ENTITY viewCertificate.label "Certificaat bekijken">
 
 <!-- Specific error messages -->
@@ -158,9 +158,6 @@ will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "De eigenaar van <span class='hostname'/> heeft zijn of haar website niet juist geconfigureerd. Om uw gegevens tegen diefstal te beschermen, heeft &brandShortName; geen verbinding met deze website gemaakt.">
 <!ENTITY certerror.introPara2 "&brandShortName; heeft een mogelijk beveiligingsrisico gedetecteerd en is niet doorgegaan naar <span class='hostname'/>. Als u deze website bezoekt, zouden aanvallers gegevens kunnen proberen te stelen, zoals uw wachtwoorden, e-mailadressen of creditcardgegevens.">
-
-<!ENTITY certerror.expiredCert.secondPara "Dit probleem komt zeer waarschijnlijk doordat uw computerklok op de verkeerde tijd is ingesteld, waardoor &brandShortName; geen beveiligde verbinding kan maken.">
-
 <!ENTITY certerror.sts.introPara "&brandShortName; heeft een mogelijk beveiligingsrisico gedetecteerd en is niet doorgegaan naar <span class='hostname'/>, omdat deze website een beveiligde verbinding vereist.">
 
 <!ENTITY certerror.expiredCert.introPara "&brandShortName; heeft een probleem gedetecteerd en is niet doorgegaan naar <span class='hostname'/>. Of de website is onjuist geconfigureerd, of uw computerklok is op de verkeerde tijd ingesteld.">
@@ -237,6 +234,13 @@ uitzondering voor dit certificaat toe te voegen.">
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> gebruikt verouderde beveiligingstechnologie die kwetsbaar is voor aanvallen. Een aanvaller kan eenvoudig gegevens onthullen waarvan u dacht dat deze veilig waren. De websitebeheerder dient eerst de server in orde te maken voordat u de website kunt bezoeken.</p><p>Foutcode: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Geblokkeerde pagina">
+
+<!ENTITY certerror.mitm.title "Software voorkomt dat &brandShortName; een beveiligde verbinding met deze website kan maken">
+<!ENTITY certerror.mitm.longDesc "<span class='hostname'></span> is zeer waarschijnlijk een veilige website, maar er kon geen beveiligde verbinding tot stand worden gebracht. Dit probleem wordt veroorzaakt door <span class='mitm-name'/>, dat software op uw computer of op uw netwerk betreft.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt1 "Als uw antivirussoftware een functie bevat die versleutelde verbindingen scant (vaak ‘webscanning’ of ‘https-scanning’ genoemd), kunt u die functie uitschakelen. Als dat niet werkt, kunt u de antivirussoftware verwijderen en opnieuw installeren.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt2 "Als u zich op een zakelijk netwerk bevindt, kunt u contact opnemen met uw IT-afdeling.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt3 "Als u niet bekend bent met <span class='mitm-name'/>, kan dit een aanval zijn en kunt u de website beter niet bezoeken.">
+<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "Als u niet bekend bent met <span class='mitm-name'/>, kan dit een aanval zijn, en is er niets wat u kunt doen om de website te bezoeken.">
 
 <!ENTITY clockSkewError.title "Uw computerklok geeft de verkeerde tijd aan">
 <!ENTITY clockSkewError.longDesc "Uw computer denkt dat het <span id='wrongSystemTime_systemDate1'/> is, waardoor &brandShortName; geen beveiligde verbinding met <span class='hostname'></span> kan maken. Werk uw computerklok bij naar de huidige datum, tijd en tijdzone in uw systeeminstellingen, en vernieuw daarna de pagina om <span class='hostname'></span> te bezoeken.">

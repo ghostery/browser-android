@@ -45,13 +45,13 @@
 <!ENTITY telemetryDesc.label             "分享您郵件軟體的效能、使用方式、硬體設備與自訂功能的資料給 &vendorShortName; 以幫助我們讓 &brandShortName; 變得更好">
 <!ENTITY enableTelemetry.label           "啟用 Telemetry">
 <!ENTITY enableTelemetry.accesskey       "T">
-<!ENTITY telemetryLearnMore.label        "更多資訊">
+<!ENTITY telemetryLearnMore.label        "了解更多">
 
 <!ENTITY crashReporterSection.label      "程式錯誤回報員">
 <!ENTITY crashReporterDesc.label         "&brandShortName; 會回傳錯誤報告給 &vendorShortName;，讓您的郵件軟體更穩定、更安全。">
 <!ENTITY enableCrashReporter.label       "啟用程式錯誤回報員">
 <!ENTITY enableCrashReporter.accesskey   "C">
-<!ENTITY crashReporterLearnMore.label    "更多資訊">
+<!ENTITY crashReporterLearnMore.label    "了解更多">
 
 <!-- Update -->
 <!-- LOCALIZATION NOTE (updateApp.label):
@@ -71,8 +71,6 @@
 <!ENTITY updateAuto.accesskey            "A">
 <!ENTITY updateCheck.label               "自動檢查更新，但讓我選擇要不要安裝">
 <!ENTITY updateCheck.accesskey           "C">
-<!ENTITY updateManual.label              "不要檢查更新（不建議，可能會有安全性風險）">
-<!ENTITY updateManual.accesskey          "N">
 <!ENTITY updateHistory.label             "顯示更新記錄">
 <!ENTITY updateHistory.accesskey         "p">
 

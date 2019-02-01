@@ -40,6 +40,7 @@
 <!ENTITY update.downloading.start "Descargando actualización — ">
 <!ENTITY update.downloading.end "">
 <!ENTITY update.applying "Aplicando actualización…">
+<!ENTITY update.restarting "Reiniciando…">
 <!ENTITY channel.description.start "Está actualmente en el canal de actualizaciones ">
 <!ENTITY channel.description.end ". ">
 <!ENTITY cmdCloseMac.commandKey "w">

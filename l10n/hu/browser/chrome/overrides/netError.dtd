@@ -11,8 +11,8 @@
 <!ENTITY returnToPreviousPage1.label "Visszalépés (ajánlott)">
 <!ENTITY advanced.label "Speciális">
 <!ENTITY continue2.label "Továbbiak…">
+<!ENTITY advanced2.label "Speciális…">
 <!ENTITY moreInformation.label "További tudnivalók">
-
 <!ENTITY viewCertificate.label "Tanúsítvány megtekintése">
 
 <!-- Specific error messages -->
@@ -100,9 +100,6 @@ will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "A(z) <span class='hostname'/> tulajdonosa a weboldalát helytelenül állította be. Az Ön adatainak ellopását megakadályozandó a &brandShortName; nem csatlakozott ehhez a weboldalhoz.">
 <!ENTITY certerror.introPara2 "A &brandShortName; egy lehetséges biztonsági kockázatot észlelt, és nem lépett tovább a(z) <span class='hostname'/> oldalra. Ha felkeresi ezt az oldalt, akkor támadók megpróbálhatják ellopni a jelszavait, e-mailjeit vagy bankkártyaadatait.">
-
-<!ENTITY certerror.expiredCert.secondPara "Ennek a problémának a legvalószínűbb oka, hogy hibás a számítógép órabeállítása, amely megakadályozza a &brandShortName; biztonságos kapcsolódósát.">
-
 <!ENTITY certerror.sts.introPara "A &brandShortName; egy lehetséges biztonsági kockázatot észlelt, és nem lépett tovább a(z) <span class='hostname'/> oldalra, mert ez a webhely biztonságos kapcsolatot igényel.">
 
 <!ENTITY certerror.expiredCert.introPara "A &brandShortName; egy problémát észlelt, és nem lépett tovább a(z) <span class='hostname'/> oldalra. Lehet, hogy a webhely van rosszul beállítva vagy hibás az Ön számítógépének órabeállítása.">
@@ -166,6 +163,13 @@ was trying to connect. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> olyan biztonsági technológiát használ, amely elavult, és sérülékeny a támadásokkal szemben. Egy támadó könnyen felfedhet olyan információkat, amelyeket biztonságosnak gondol. A weboldal rendszergazdájának ki kell javítania a kiszolgálót, mielőtt meglátogathatja az oldalt.</p><p>Hibakód: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Blokkolt oldal">
+
+<!ENTITY certerror.mitm.title "Egy szoftver megakadályozza, hogy a &brandShortName; biztonságosan kapcsolódjon ehhez a webhelyhez">
+<!ENTITY certerror.mitm.longDesc "A(z) <span class='hostname'></span> valószínűleg egy biztonságos oldal, de nem hozható létre biztonságos kapcsolat. A problémát <span class='mitm-name'/> okozza, amely valószínűleg egy a számítógépén vagy a hálózatán lévő szoftver.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt1 "Ha a víruskereső szoftvere olyan funkciót tartalmaz, amely titkosított kapcsolatokat ellenőriz (gyakran „webes szkennelés” vagy „https szkennelés” néven szerepel), akkor letilthatja ezt a funkciót. Ha ez nem működik, akkor eltávolíthatja és újratelepítheti a víruskereső szoftvert.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt2 "Ha vállalati hálózaton tartózkodik, akkor forduljon az IT részlegéhez.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt3 "Ha nem tudja mi az a <span class='mitm-name'/>, akkor ez egy támadás lehet, és nem szabad továbblépnie a webhelyre.">
+<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "Ha nem tudja mi az a <span class='mitm-name'/>, akkor ez egy támadás lehet, és semmit sem tehet, hogy hozzáférjen a webhelyhez.">
 
 <!ENTITY clockSkewError.title "A számítógépe órája hibás">
 <!ENTITY clockSkewError.longDesc "A számítógépe szerint a pontos idő <span id='wrongSystemTime_systemDate1'/>, és ez megakadályozza, hogy a &brandShortName; biztonságosan kapcsolódjon. A(z) <span class='hostname'></span> felkereséséhez frissítse a rendszerbeállításokban a számítógép óráját a jelenlegi dátumra, időre és időzónára, és frissítse a(z) <span class='hostname'></span> oldalt.">

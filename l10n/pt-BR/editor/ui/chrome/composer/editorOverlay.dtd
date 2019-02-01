@@ -16,8 +16,8 @@
 <!ENTITY pasteAsQuotationCmd.label "Colar como citação">
 <!ENTITY pasteAsQuotationCmd.accesskey "i">
 <!ENTITY pasteAsQuotationCmd.key "O">
-<!ENTITY findBarCmd.label "Localizar…">
-<!ENTITY findReplaceCmd.label "Localizar e substituir…">
+<!ENTITY findBarCmd.label "Procurar…">
+<!ENTITY findReplaceCmd.label "Procurar e substituir…">
 <!ENTITY enableInlineSpellChecker.label "Verificar a ortografia ao digitar">
 <!ENTITY enableInlineSpellChecker.accesskey "e">
 <!ENTITY checkSpellingCmd2.label "Verificar a ortografia…">
@@ -134,7 +134,7 @@
 
 <!ENTITY formatFontColor.label "Cor do texto…">
 <!ENTITY formatFontColor.accesskey "C">
-<!ENTITY tableOrCellColor.label "Cor de plano de fundo da tabela ou célula">
+<!ENTITY tableOrCellColor.label "Cor de fundo da tabela ou célula…">
 <!ENTITY tableOrCellColor.accesskey "C">
 
 <!ENTITY formatRemoveStyles.key "y">
@@ -216,7 +216,7 @@
 <!ENTITY decreaseIndent.accesskey "D">
 <!ENTITY decreaseIndent.key "[">
 
-<!ENTITY colorsAndBackground.label "Cores e plano de fundo da página…">
+<!ENTITY colorsAndBackground.label "Cores e fundo da página…">
 <!ENTITY colorsAndBackground.accesskey "u">
 
 <!-- Table Menu -->
@@ -290,8 +290,8 @@
 <!ENTITY pasteToolbarCmd.tooltip "Colar">
 <!ENTITY printToolbarCmd.label "Imprimir">
 <!ENTITY printToolbarCmd.tooltip "Imprimir esta página">
-<!ENTITY findToolbarCmd.label "Localizar">
-<!ENTITY findToolbarCmd.tooltip "Localizar texto na página">
+<!ENTITY findToolbarCmd.label "Procurar">
+<!ENTITY findToolbarCmd.tooltip "Procurar texto na página">
 <!ENTITY spellToolbarCmd.label "Ortografia">
 <!ENTITY spellToolbarCmd.tooltip "Verificar a ortografia da seleção ou da página inteira">
 <!ENTITY imageToolbarCmd.label "Imagem">
@@ -305,7 +305,7 @@
 <!ENTITY anchorToolbarCmd.label "Âncora">
 <!ENTITY anchorToolbarCmd.tooltip "Inserir uma nova âncora nomeada ou editar as propriedades da âncora selecionada">
 <!ENTITY TextColorButton.tooltip "Escolher a cor do texto">
-<!ENTITY BackgroundColorButton.tooltip "Escolher a cor para o plano de fundo">
+<!ENTITY BackgroundColorButton.tooltip "Escolher cor para o fundo">
 <!ENTITY throbber.tooltip "Ir para a página inicial de &vendorShortName;">
 <!ENTITY HighlightColorButton.tooltip "Escolher cor para realçar o texto">
 

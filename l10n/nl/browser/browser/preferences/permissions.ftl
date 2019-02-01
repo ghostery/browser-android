@@ -72,11 +72,6 @@ permissions-invalid-uri-label = Voer een geldige hostnaam in
 
 ## Exceptions - Tracking Protection
 
-permissions-exceptions-tracking-protection-window =
-    .title = Uitzonderingen - Bescherming tegen volgen
-    .style = { permissions-window.style }
-permissions-exceptions-tracking-protection-desc = U hebt Bescherming tegen volgen uitgeschakeld op deze websites.
-
 permissions-exceptions-content-blocking-window =
     .title = Uitzonderingen - Inhoudsblokkering
     .style = { permissions-window.style }

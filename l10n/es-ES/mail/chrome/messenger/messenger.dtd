@@ -415,9 +415,6 @@
 <!ENTITY openMessageWindowCmd.label "Abrir mensaje">
 <!ENTITY openMessageWindowCmd.accesskey "A">
 <!ENTITY openMessageWindowCmd.key "o">
-<!ENTITY openConversationCmd.label "Abrir en la conversación">
-<!ENTITY openConversationCmd.accesskey "b">
-<!ENTITY openConversationCmd.key "o">
 <!ENTITY openInConversationCmd.label "Abrir en la conversación">
 <!ENTITY openInConversationCmd.accesskey "s">
 <!ENTITY openInConversationCmd.key "o">

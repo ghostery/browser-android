@@ -73,19 +73,15 @@
 <!ENTITY cmd.reloadLivebookmark.label      "重新載入即時書籤">
 <!ENTITY cmd.reloadLivebookmark.accesskey  "R">
 
-<!ENTITY cmd.moveBookmarks.label                  "移動…">
-<!ENTITY cmd.moveBookmarks.accesskey              "M">
-
 <!ENTITY col.name.label          "名稱">
 <!ENTITY col.tags.label          "標籤">
 <!ENTITY col.url.label           "網址">
 <!ENTITY col.mostrecentvisit.label "最近瀏覽">
 <!ENTITY col.visitcount.label    "瀏覽次數">
-<!ENTITY col.description.label   "描述">
 <!ENTITY col.dateadded.label     "加入日期">
-<!ENTITY col.lastmodified.label  "最後修改日期">
+<!ENTITY col.lastmodified.label  "上次修改">
 
-<!ENTITY historySearch.placeholder  "搜尋瀏覽紀錄">
+<!ENTITY historySearch.placeholder  "搜尋紀錄">
 <!ENTITY bookmarksSearch.placeholder  "搜尋書籤">
 
 <!ENTITY cmd.find.key  "f">
@@ -98,10 +94,6 @@
 
 <!ENTITY forwardButton.tooltip  "到下一頁">
 
-<!ENTITY detailsPane.more.label "更多欄位">
-<!ENTITY detailsPane.more.accesskey "e">
-<!ENTITY detailsPane.less.label "減少欄位">
-<!ENTITY detailsPane.less.accesskey "e">
 <!ENTITY detailsPane.selectAnItemText.description "請選擇一個項目以檢視或編輯其屬性">
 
 <!ENTITY view.label               "檢視">

@@ -221,7 +221,7 @@
 <!ENTITY pref_category_home_add_ons "Extras">
 <!ENTITY pref_home_updates2 "Atualizações de conteúdo">
 <!ENTITY pref_home_updates_enabled "Ativadas">
-<!ENTITY pref_home_updates_wifi "Apenas em Wi-Fi">
+<!ENTITY pref_home_updates_wifi "Apenas por Wi-Fi">
 <!ENTITY pref_category_home_homepage "Página inicial">
 <!-- Localization note (home_homepage_every_new_tab): The user will see a switch to determine if the
      home page will be use in every new tab. -->
@@ -230,7 +230,7 @@
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
      button for this string, they will use the built-in default Firefox homepage (about:home). -->
-<!ENTITY home_homepage_radio_default "Página inicial do &brandShortName;">
+<!ENTITY home_homepage_radio_default "Início do &brandShortName;">
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
      button for this string, a text field will appear below the radio button and allow the
@@ -267,7 +267,7 @@
 
 <!ENTITY pref_tap_to_load_images_title2 "Mostrar imagens">
 <!ENTITY pref_tap_to_load_images_enabled "Sempre">
-<!ENTITY pref_tap_to_load_images_data "Apenas em Wi-Fi">
+<!ENTITY pref_tap_to_load_images_data "Apenas por Wi-Fi">
 <!ENTITY pref_tap_to_load_images_disabled2 "Bloqueado">
 
 <!ENTITY pref_show_web_fonts "Mostrar tipos de letra da web">
@@ -461,7 +461,7 @@
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
 <!ENTITY pref_update_autodownload3 "Atualizações automáticas">
-<!ENTITY pref_update_autodownload_wifi "Apenas em Wi-Fi">
+<!ENTITY pref_update_autodownload_wifi "Apenas por Wi-Fi">
 <!ENTITY pref_update_autodownload_never "Nunca">
 <!ENTITY pref_update_autodownload_always "Sempre">
 
@@ -606,7 +606,7 @@
 
 <!-- Localization note (home_title): This string should be kept in sync
      with the page title defined in aboutHome.dtd -->
-<!ENTITY home_title "Página inicial do &brandShortName;">
+<!ENTITY home_title "Início do &brandShortName;">
 <!ENTITY home_history_title "Histórico">
 <!ENTITY home_synced_devices_smartfolder "Dispositivos sincronizados">
 <!ENTITY home_synced_devices_number "&formatD; dispositivos">

@@ -2,11 +2,9 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY doNotDownloadPop3Movemail.label "Para economizar espaço em disco, não receber:">
-<!ENTITY doNotDownloadNntp.label "Para economizar espaço em disco, não receber para uso off-line:">
-<!ENTITY doNotDownloadImap.label "Para economizar espaço em disco, o recebimento de mensagens do servidor e a  manutenção das cópias locais para uso off-line podem ser restringidas pela data ou tamanho.">
-<!ENTITY allFoldersOffline.label "Preservar as mensagens desta conta neste computador">
-<!ENTITY allFoldersOffline.accesskey "P">
+<!ENTITY doNotDownloadPop3Movemail.label "Para economizar espaço em disco, não baixar:">
+<!ENTITY doNotDownloadNntp.label "Para economizar espaço em disco, não baixar para uso off-line:">
+<!ENTITY doNotDownloadImap.label "Para economizar espaço em disco, o recebimento das mensagens do servidor e a manutenção de cópias locais para uso desconectado podem ser restringidos por idade e tamanho.">
 <!ENTITY allFoldersOffline2.label "Manter as mensagens em todas as pastas para esta conta neste computador.">
 <!ENTITY allFoldersOffline2.accesskey "o">
 <!ENTITY allFoldersOfflineNote.label "Nota: Alterar isto afeta todas as pastas nesta conta. Para definir pastas individuais, use o botão Avançadas…">
@@ -30,7 +28,7 @@
 <!ENTITY retentionKeepAll.accesskey "N">
 <!ENTITY retentionKeepRecent.label "Excluir tudo, exceto as últimas">
 <!ENTITY retentionKeepRecent.accesskey "E">
-<!ENTITY retentionApplyToFlagged.label "Sempre preservar as mensagens com estrela">
+<!ENTITY retentionApplyToFlagged.label "Sempre manter as mensagens com estrela">
 <!ENTITY retentionApplyToFlagged.accesskey "S">
 <!ENTITY nntpRemoveMsgBody.label "Excluir o conteúdo de mensagens com mais de">
 <!ENTITY nntpRemoveMsgBody.accesskey "i">
@@ -38,7 +36,7 @@
 <!ENTITY offlineSelectNntp.accesskey "S">
 <!ENTITY offlineImapAdvancedOffline.label "Avançado…">
 <!ENTITY offlineImapAdvancedOffline.accesskey "A">
-<!ENTITY syncGroupTitle.label "Sincronizar mensagens">
+<!ENTITY syncGroupTitle.label "Sincronização de mensagens">
 <!ENTITY diskspaceGroupTitle.label "Espaço em disco">
 
 <!-- LOCALIZATION NOTE: (ageAutosyncBefore.label, ageAutosyncMiddle.label, ageAutosyncAfter.label):
@@ -47,9 +45,9 @@
 
   &ageAutosyncBefore.label [textbox for autosync value] &ageAutosyncMiddle.label; [dropdown for autosync interval] &ageAutosyncAfter.label;
 -->
-<!ENTITY allAutosync.label               "Sincronizar localmente todas as mensagens independentemente da data">
+<!ENTITY allAutosync.label               "Sincronizar todas as mensagens localmente independente da idade">
 <!ENTITY allAutosync.accesskey           "c">
-<!ENTITY ageAutosyncBefore.label         "Sincronizar os mais recentes">
+<!ENTITY ageAutosyncBefore.label         "Sincronizar as mais recentes">
 <!ENTITY ageAutosync.accesskey           "r">
 <!ENTITY ageAutosyncMiddle.label         "">
 <!ENTITY dayAgeInterval.label            "dias">

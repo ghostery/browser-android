@@ -1,10 +1,22 @@
+*** ADENDO PARA A VERSÃO PT-BR ***
+
+A versão pt-BR foi criada como um trabalho derivado do dicionário
+pt-PT, portanto preservando suas licenças.
+
+Mantenedor: Jeferson Hultmann <hultmann@gmail.com>
+Discussão:  https://groups.google.com/group/dic-br
+
+Abaixo segue o README da versão pt-PT.
+
+================================================8<--------------------
+
 This is a Portuguese (Portugal) dictionary for Hunspell:
 
-Copyright (C) 2006-2009  Jos� Jo�o de Almeida <jj@di.uminho.pt> , 
+Copyright (C) 2006-2009  José João de Almeida <jj@di.uminho.pt> , 
 	Rui Vilela <ruivilela@di.uminho.pt> ,
-	Alberto Sim�es <ambs@di.uminho.pt>
+	Alberto Simões <ambs@di.uminho.pt>
 
-Dep. Inform�tica, Universidade do Minho
+Dep. Informática, Universidade do Minho
 Portugal
 
 All dictionary files and associated programs are currently covered by

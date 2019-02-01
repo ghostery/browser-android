@@ -1,8 +1,8 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- Message Header View Popup -->
 
+<!-- Message Header View Popup -->
 <!ENTITY AddToAddressBook.label            "Felvétel a címjegyzékbe…">
 <!ENTITY AddToAddressBook.accesskey        "F">
 <!ENTITY EditContact.label                 "Névjegy szerkesztése…">
@@ -13,6 +13,8 @@
 <!ENTITY SendMailTo.accesskey              "L">
 <!ENTITY CopyEmailAddress.label            "E-mail cím másolása">
 <!ENTITY CopyEmailAddress.accesskey        "E">
+<!ENTITY CopyNameAndEmailAddress.label     "Név és e-mail cím másolása">
+<!ENTITY CopyNameAndEmailAddress.accesskey "N">
 <!ENTITY CreateFilterFrom.label            "Szűrő létrehozása…">
 <!ENTITY CreateFilterFrom.accesskey        "S">
 <!ENTITY openInBrowser.label               "Megnyitás a böngészőben">

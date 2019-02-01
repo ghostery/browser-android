@@ -57,6 +57,8 @@
 
 <!ENTITY update.applying "Instalowanie aktualizacji…">
 
+<!ENTITY update.restarting "Ponowne uruchamianie…">
+
 <!ENTITY channel.description.start "Obecnie korzystasz z kanału aktualizacji ">
 <!ENTITY channel.description.end ". ">
 

@@ -40,7 +40,6 @@
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "A">
 <!ENTITY runtimeMenu_showSettings_label "Apparaatinstellingen">
 <!ENTITY runtimeMenu_showSettings_accesskey "n">
-
 <!ENTITY runtimeMenu_showPerformancePanel_label "Prestaties">
 <!ENTITY runtimeMenu_showPerformancePanel_accesskey "P">
 
@@ -77,7 +76,6 @@
 <!ENTITY runtimePanel_usb "USB-apparaten">
 <!ENTITY runtimePanel_wifi "Wifi-apparaten">
 <!ENTITY runtimePanel_other "Anders">
-<!ENTITY runtimePanel_noadbhelper "ADB Helper installeren">
 <!ENTITY runtimePanel_nousbdevice "Ziet u uw apparaat niet?">
 <!ENTITY runtimePanel_refreshDevices_label "Apparaten vernieuwen">
 

@@ -12,7 +12,7 @@
 <!ENTITY removeData.accesskey         "d">
 <!ENTITY removeDataChat.label         "Remover dados da conversa">
 <!ENTITY removeDataChat.accesskey     "r">
-<!ENTITY removeDataLocalAccount.desc  "Remover todas as mensagens, pastas e filtros associados a esta conta do seu disco local. Isso não afeta algumas mensagens que podem ser mantidas no servidor. Não escolha essa opção se você planeja arquivar os dados locais ou reutilizá-los no &brandShortName; mais tarde.">
+<!ENTITY removeDataLocalAccount.desc  "Remove todas as mensagens, pastas e filtros associados a esta conta do seu disco local. Isso não afeta algumas mensagens que podem ser mantidas no servidor. Não escolha essa opção se você planeja arquivar os dados locais ou reutilizá-los no &brandShortName; mais tarde.">
 <!ENTITY removeDataServerAccount.desc "Remover todas as mensagens, pastas e filtros associados a esta conta do seu disco local. Suas mensagens e pastas serão mantidas no servidor.">
 <!ENTITY removeDataChatAccount.desc   "Remover todos os registros de conversas desta conta armazenados no disco local.">
 <!ENTITY showData.label               "Mostrar localização">

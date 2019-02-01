@@ -4,7 +4,7 @@
 
 <!ENTITY wizard.title             "Criar nova agenda" >
 <!ENTITY wizard.label             "Criar uma nova agenda" >
-<!ENTITY wizard.description       "Localizar sua agenda" >
+<!ENTITY wizard.description       "Procurar sua agenda" >
 
 <!ENTITY initialpage.description    "Sua agenda pode ser armazenada no seu computador, ou em um servidor para acesso remoto ou compartilhamento com seus colegas ou amigos." >
 <!ENTITY initialpage.computer.label  "No meu computador">

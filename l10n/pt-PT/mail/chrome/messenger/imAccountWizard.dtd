@@ -27,6 +27,6 @@
 <!ENTITY accountProxySettings.change.label     "Alterar…">
 <!ENTITY accountProxySettings.change.accessKey "t">
 
-<!ENTITY accountSummaryTitle.label   "Resumo">
-<!ENTITY accountSummaryInfo.label    "O resumo das informações introduzidas pode ser visto abaixo. Por favor confirme os dados antes de criar a conta.">
-<!ENTITY accountSummary.connectNow.label "Ligar a esta conta agora.">
+<!ENTITY accountSummaryTitle.label   "Sumário">
+<!ENTITY accountSummaryInfo.label    "Um sumário da informação que introduziu está mostrado abaixo. Por favor verifique-o da conta ser criada.">
+<!ENTITY accountSummary.connectNow.label "Ligar esta conta agora.">

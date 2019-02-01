@@ -207,3 +207,22 @@ extensions-updates-manual-updates-found =
 extensions-updates-update-selected =
     .label = Installa aggiornamenti
     .tooltiptext = Installa gli aggiornamenti disponibili in questo elenco
+
+## Extension shortcut management
+
+shortcuts-manage =
+    .label = Scorciatoie da tastiera
+shortcuts-empty-message = Non sono presenti scorciatoie da tastiera per questa estensione.
+shortcuts-no-addons = Non ci sono estensioni attive.
+shortcuts-input =
+  .placeholder = Inserisci una scorciatoia
+
+shortcuts-browserAction = Attiva estensione
+shortcuts-pageAction = Attiva azione pagina
+shortcuts-sidebarAction = Attiva/disattiva barra laterale
+
+shortcuts-modifier-mac = Includi Ctrl, Alt o ⌘
+shortcuts-modifier-other = Includi Ctrl o Alt
+shortcuts-invalid = Combinazione non valida
+shortcuts-letter = Inserisci una lettera
+shortcuts-system = Non è possibile sostituire una scorciatoia da tastiera di { -brand-short-name }

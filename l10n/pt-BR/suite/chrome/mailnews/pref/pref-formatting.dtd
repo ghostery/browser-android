@@ -35,7 +35,7 @@
 
 <!ENTITY domainnameError.title        "Erro de nome de domínio">
 <!-- LOCALIZATION NOTE: do not translate @string@ -->
-<!ENTITY invalidEntryError.label      "O nome de domínio @string@ é inválido e será ignorado. Nomes de domínio válidos requerem ao menos um '.' e possuir caracteres em ambos os lados.">
+<!ENTITY invalidEntryError.label      "O nome de domínio @string@ é inválido e será ignorado. Nomes de domínio válidos devem incluir ao menos um '.' com caracteres em ambos os lados.">
 
 <!-- Global auto-detect switch -->
 <!ENTITY autoDowngrade.label          "Automaticamente, enviar a mensagem como texto sem formatação, se nenhuma formatação significativa estiver presente (substitui outras opções)">

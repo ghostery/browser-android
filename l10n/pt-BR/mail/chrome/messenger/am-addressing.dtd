@@ -8,7 +8,7 @@
 <!ENTITY addressingGroupTitle.label "Endereçar">
 <!ENTITY addressingText.label      "Ao procurar endereços:">
 <!-- LOCALIZATION NOTE (override.label) : do not translate "LDAP" in below line -->
-<!ENTITY useGlobal.label           "Usar meu servidor LDAP global para esta conta">
+<!ENTITY useGlobal.label           "Usar as preferências do meu servidor LDAP global para esta conta">
 <!ENTITY useGlobal.accesskey       "s">
 <!ENTITY editDirectories.label     "Editar diretórios…">
 <!ENTITY editDirectories.accesskey "d">
@@ -28,12 +28,12 @@
 <!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY quoting.label                        "Ao citar,">
 <!ENTITY quoting.accesskey                    "c">
-<!ENTITY aboveQuote.label                     "Posicionar a resposta acima da mensagem">
-<!ENTITY belowQuote.label                     "Posicionar a resposta abaixo da mensagem">
-<!ENTITY selectAndQuote.label                 "Selecionar a mensagem citada">
-<!ENTITY place.label                          "Inserir a assinatura no:">
+<!ENTITY aboveQuote.label                     "iniciar minha resposta acima da citação">
+<!ENTITY belowQuote.label                     "iniciar minha resposta abaixo da citação">
+<!ENTITY selectAndQuote.label                 "selecionar a citação">
+<!ENTITY place.label                          "e inserir minha assinatura">
 <!ENTITY place.accesskey                      "I">
-<!ENTITY belowText.label                      "Fim da mensagem (recomendado)">
+<!ENTITY belowText.label                      "abaixo da citação (recomendado)">
 <!ENTITY aboveText.label                      "abaixo da minha resposta (acima da citação)">
 <!ENTITY includeSigOnReply.label              "Incluir a assinatura nas respostas">
 <!ENTITY includeSigOnReply.accesskey          "o">

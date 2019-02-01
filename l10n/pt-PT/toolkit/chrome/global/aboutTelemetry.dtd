@@ -45,6 +45,6 @@
 <!ENTITY aboutTelemetry.rawPayloadSection "Payload em bruto">
 <!ENTITY aboutTelemetry.raw "JSON em bruto">
 
-<!ENTITY aboutTelemetry.fullSqlWarning "NOTA: A depuração lenta de SQL está ativada. As strings de SQL completas poderão ser mostradas abaixo mas não serão submetidas à telemetria.">
+<!ENTITY aboutTelemetry.fullSqlWarning "NOTA: A depuração de SQL lenta está ativada. As strings de SQL completas poderão ser mostradas abaixo mas não serão submetidas à telemetria.">
 <!ENTITY aboutTelemetry.fetchStackSymbols "Obter nomes de funções para stacks">
 <!ENTITY aboutTelemetry.hideStackSymbols "Mostrar dados de stacks em bruto">

@@ -18,10 +18,10 @@ searchreset.afterlink.pageInfo): these two string are used respectively
 before and after the "Settings page" link (searchreset.link.pageInfo2).
 Localizers can use one of them, or both, to better adapt this sentence to
 their language. -->
-<!ENTITY searchreset.beforelink.pageInfo2 "Pode alterar estas definições a qualquer momento a partir de ">
+<!ENTITY searchreset.beforelink.pageInfo2 "Pode alterar estas definições a qualquer momento a partir da ">
 <!ENTITY searchreset.afterlink.pageInfo2  ".">
 
-<!ENTITY searchreset.link.pageInfo2       "Página de definições">
+<!ENTITY searchreset.link.pageInfo2       "página de definições">
 
 <!ENTITY searchreset.noChangeButton        "Não alterar">
 <!ENTITY searchreset.noChangeButton.access "N">

@@ -15,6 +15,14 @@ findbar-highlight-all =
     .label = Resaltar todo
     .accesskey = R
     .tooltiptext = Resaltar todas las apariciones de la frase
+findbar-highlight-all2 =
+    .label = Resaltar todo
+    .accesskey =
+        { PLATFORM() ->
+            [macos] l
+           *[other] a
+        }
+    .tooltiptext = Resaltar todas las ocurrencias de la frase
 findbar-case-sensitive =
     .label = Coincidencia de mayúsculas/minúsculas
     .accesskey = C

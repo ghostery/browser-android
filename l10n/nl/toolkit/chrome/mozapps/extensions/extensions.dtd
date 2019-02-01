@@ -3,8 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "Add-onbeheerder">
 
-<!ENTITY search.placeholder2                  "Zoeken op addons.mozilla.org">
-
 <!ENTITY search.placeholder3                  "addons.mozilla.org doorzoeken">
 <!ENTITY search.buttonlabel                   "Zoeken">
 <!-- LOCALIZATION NOTE (search.commandkey):
@@ -20,9 +18,6 @@
 <!ENTITY installAddonFromFile.label           "Add-on installeren via bestand…">
 <!ENTITY installAddonFromFile.accesskey       "s">
 <!ENTITY toolsMenu.tooltip                    "Hulpmiddelen voor alle add-ons">
-
-<!ENTITY getThemes.description                "Zoekt u een manier om uw browser te personaliseren?">
-<!ENTITY getThemes.learnMore                  "Maak een keuze uit duizenden thema’s.">
 
 
 <!ENTITY showUnsignedExtensions.button.label  "Sommige extensies konden niet worden geverifieerd">

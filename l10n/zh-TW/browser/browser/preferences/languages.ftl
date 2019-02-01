@@ -2,9 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-languages-window =
-    .title = 語言
-    .style = width: 30em
 webpage-languages-window =
     .title = 網頁語言設定
     .style = width: 40em
@@ -23,7 +20,7 @@ languages-customize-remove =
     .label = 移除
     .accesskey = R
 languages-customize-select-language =
-    .placeholder = 選取要加入的語言…
+    .placeholder = 選擇要新增的語言…
 languages-customize-add =
     .label = 新增
     .accesskey = A

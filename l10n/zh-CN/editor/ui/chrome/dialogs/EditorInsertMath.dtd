@@ -1,14 +1,14 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- Window title -->
 
+<!-- Window title -->
 <!ENTITY windowTitle.label "插入公式">
 
 <!ENTITY sourceEditField.label "输入 LaTeX 源代码：">
 
 <!ENTITY options.label "选项">
-<!ENTITY optionInline.label "內联模式">
+<!ENTITY optionInline.label "内联模式">
 <!ENTITY optionInline.accesskey "n">
 <!ENTITY optionDisplay.label "显示模式">
 <!ENTITY optionDisplay.accesskey "D">

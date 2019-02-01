@@ -10,6 +10,7 @@ about-performance-title = Feladatkezelő
 column-name = Név
 column-type = Típus
 column-energy-impact = Energiahatás
+column-memory = Memória
 
 ## Special values for the Name column
 
@@ -37,6 +38,15 @@ type-other = Egyéb
 energy-impact-high = Magas ({ $value })
 energy-impact-medium = Közepes ({ $value })
 energy-impact-low = Alacsony ({ $value })
+
+## Values for the Memory column
+##
+## Variables:
+##   $value (Number) - How much memory is used
+
+size-KB = { $value } KB
+size-MB = { $value } MB
+size-GB = { $value } GB
 
 ## Tooltips for the action buttons
 

@@ -1,8 +1,8 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- extracted from am-copies.xul -->
 
+<!-- extracted from am-copies.xul -->
 
 <!ENTITY copyAndFolderTitle.label "Cópias e pastas">
 <!ENTITY sendingPrefix.label "Ao enviar mensagens, automaticamente:">
@@ -11,11 +11,11 @@
 <!ENTITY fccReplyFollowsParent.label "Guardar respostas na pasta da mensagem a ser respondida para">
 <!ENTITY fccReplyFollowsParent.accesskey "d">
 <!-- LOCALIZATION NOTE (ccAddress.label): do not translate "Cc" in below line -->
-<!ENTITY ccAddress.label "Cc para estes endereços de e-mail:">
+<!ENTITY ccAddress.label "Cc para estes endereços de email:">
 <!ENTITY ccAddress.accesskey "C">
 <!ENTITY ccAddressList.placeholder "Separar endereços com vírgulas">
 <!-- LOCALIZATION NOTE (bccAddress.label): do not translate "Bcc" in below line -->
-<!ENTITY bccAddress.label "BCC para estes endereços de e-mail:">
+<!ENTITY bccAddress.label "Bcc para estes endereços de email:">
 <!ENTITY bccAddress.accesskey "B">
 <!ENTITY bccAddressList.placeholder "Separar endereços com vírgulas">
 <!ENTITY saveMessageDlg.label "Mostrar diálogo de confirmação ao guardar as mensagens">

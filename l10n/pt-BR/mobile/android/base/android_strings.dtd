@@ -282,7 +282,7 @@
 <!ENTITY pref_tracking_protection_disabled "Desativada">
 
 <!ENTITY pref_whats_new_notification "O que há de novo no &brandShortName;">
-<!ENTITY pref_whats_new_notification_summary "Saber mais sobre as novas funcionalidades depois de uma atualização">
+<!ENTITY pref_whats_new_notification_summary "Saiba mais sobre as novas funcionalidades depois de uma atualização">
 
 <!-- Localization note (pref_feature_tips_notification): Title of a new toggleable setting in Settings-Notifications screen.
      Similar to the already existing "pref_whats_new_notification"-->
@@ -290,7 +290,6 @@
 <!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "Saiba mais sobre como usar o &brandShortName; e outros produtos &vendorShortName;">
-
 <!-- Localization note (pref_feature_tips_notification_enabling_hint):
      Describe the action the user should do to enable this preference
      Will be used in the context "<Turn on> ... to enable this feature" -->
@@ -847,8 +846,6 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY whatsnew_notification_title "O &brandShortName; está atualizado">
 <!ENTITY whatsnew_notification_summary "Descubra o que há de novo nesta versão">
 
-<!ENTITY promotion_add_page_shortcut "Adicionar atalho à página">
-
 <!ENTITY helper_first_offline_bookmark_title "Ler off-line">
 <!ENTITY helper_first_offline_bookmark_message "Encontre seus itens do leitor nos favoritos, mesmo off-line.">
 <!ENTITY helper_first_offline_bookmark_button "Ir para os favoritos">
@@ -874,7 +871,7 @@ Stream list for highlights sourced from th user's bookmarks. -->
 <!-- LOCALIZATION NOTE (activity_stream_highlight_label_trending): This label is shown in the Activity Stream list for highlights sourced from a recommendations engine. -->
 <!ENTITY activity_stream_highlight_label_trending "Tendência">
 <!-- LOCALIZATION NOTE (activity_stream_highlights_empty): This text is shown when we could not find highlights for this user. This is also shown on first run. -->
-<!ENTITY activity_stream_highlights_empty "Comece a navegar e te mostraremos alguns dos melhores artigos, vídeos e outras páginas que você visitou ou favoritou recentemente.">
+<!ENTITY activity_stream_highlights_empty "Comece a navegar e mostraremos aqui alguns ótimos artigos, vídeos e outras páginas que você favoritou ou visitou recentemente.">
 
 <!-- LOCALIZATION NOTE (activity_stream_remove): This label is shown in the Activity Stream context menu,
 and allows hiding a URL/page from highlights or topsites. The page remains in history/bookmarks, but

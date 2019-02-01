@@ -184,10 +184,10 @@ extensions-updates-update-addons-automatically =
 ## extensions-updates-update-addons-automatically.label menu item).
 
 extensions-updates-reset-updates-to-automatic =
-    .label = 자동 업데이트 설정
+    .label = 모든 부가기능을 자동 업데이트로 재설정
     .accesskey = R
 extensions-updates-reset-updates-to-manual =
-    .label = 자동 업데이트 설정 해제
+    .label = 모든 부가기능을 수동 업데이트로 재설정
     .accesskey = R
 
 ## Status messages displayed when updating add-ons

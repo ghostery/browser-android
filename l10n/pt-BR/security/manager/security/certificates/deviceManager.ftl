@@ -86,7 +86,7 @@ devinfo-label =
     .label = Label
 devinfo-serialnum =
     .label = Número de série
-fips-nonempty-password-required = O modo FIPS necessita que você possua uma senha mestra para cada dispositivo de segurança. Por favor, defina uma senha antes de tentar ativar o modo FIPS.
+fips-nonempty-password-required = O modo FIPS exige que você tenha uma senha mestra em cada dispositivo de segurança. Defina uma senha antes de tentar ativar o modo FIPS.
 unable-to-toggle-fips = Não foi possível alterar o modo FIPS para o dispositivo de segurança. É recomendado que você reinicie o aplicativo.
 load-pk11-module-file-picker-title = Escolha um driver PKCS#11 para carregar
 # Load Module Dialog

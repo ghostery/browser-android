@@ -13,6 +13,5 @@
 <!ENTITY blocklist.accept.label      "重開 &brandShortName;">
 <!ENTITY blocklist.accept.accesskey  "r">
 
-<!ENTITY blocklist.blocked.label     "已被封鎖">
+<!ENTITY blocklist.blocked.label     "已封鎖">
 <!ENTITY blocklist.checkbox.label    "停用">
-

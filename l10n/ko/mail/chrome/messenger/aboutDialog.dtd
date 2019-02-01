@@ -22,7 +22,7 @@
 
 <!-- LOCALIZATION NOTE (community.exp.*) This paragraph is shown in "experimental" builds, i.e. Nightly builds, instead of the other "community.*" strings below. -->
 <!ENTITY community.exp.start        "">
-<!-- LOCALIZATION NOTE (community.exp.mozillaLink): This is a link title that links to http://www.mozilla.org/. -->
+<!-- LOCALIZATION NOTE (community.exp.mozillaLink): This is a link title that links to https://www.mozilla.org/. -->
 <!ENTITY community.exp.mozillaLink  "&vendorShortName;">
 <!ENTITY community.exp.middle       "는 인터넷을 개선하기 위해">
 <!-- LOCALIZATION NOTE (community.exp.creditslink): This is a link title that links to about:credits. -->
@@ -30,7 +30,7 @@
 <!ENTITY community.exp.end          "가 하나로 모여 만들고 있습니다. 우리는 인터넷이 공개되어 공공의 이익을 위해 사람들이 아무런 제한없이 접근할 수있는 것이라고 믿고 있습니다. ">
 
 <!ENTITY community.start2           "&brandShortName;는 ">
-<!-- LOCALIZATION NOTE (community.mozillaLink): This is a link title that links to http://www.mozilla.org/. -->
+<!-- LOCALIZATION NOTE (community.mozillaLink): This is a link title that links to https://www.mozilla.org/. -->
 <!ENTITY community.mozillaLink      "&vendorShortName;">
 <!ENTITY community.middle2          "에 의해 제작되며, 인터넷을 개선하기 위해">
 <!-- LOCALIZATION NOTE (community.creditsLink): This is a link title that links to about:credits. -->
@@ -41,7 +41,7 @@
 <!-- LOCALIZATION NOTE (helpus.donateLink): This is a link title that links to the thunderbird donation page -->
 <!ENTITY helpus.donateLink          "기부 해 주시">
 <!ENTITY helpus.middle              "거나 ">
-<!-- LOCALIZATION NOTE (helpus.getInvolvedLink): This is a link title that links to http://www.mozilla.org/contribute/. -->
+<!-- LOCALIZATION NOTE (helpus.getInvolvedLink): This is a link title that links to https://www.thunderbird.net/get-involved/. -->
 <!ENTITY helpus.getInvolvedLink     "직접 참여 해">
 <!ENTITY helpus.end                 " 보세요!">
 
@@ -68,7 +68,7 @@
 <!-- LOCALIZATION NOTE (update.failed.start,update.failed.linkText,update.failed.end):
      update.failed.start, update.failed.linkText, and update.failed.end all go into
      one line with linkText being wrapped in an anchor that links to a site to download
-     the latest version of Firefox (e.g. http://www.firefox.com). As this is all in
+     the latest version of Firefox (e.g. https://www.firefox.com). As this is all in
      one line, try to make the localized text short (see bug 596813 for screenshots). -->
 <!ENTITY update.failed.start        "업데이트를 실패했습니다.">
 <!ENTITY update.failed.linkText     "최신 버전 다운로드">
@@ -76,7 +76,7 @@
 
 <!-- LOCALIZATION NOTE (update.manual.start,update.manual.end): update.manual.start and update.manual.end
      all go into one line and have an anchor in between with text that is the same as the link to a site
-     to download the latest version of Firefox (e.g. http://www.firefox.com). As this is all in one line,
+     to download the latest version of Firefox (e.g. https://www.firefox.com). As this is all in one line,
      try to make the localized text short (see bug 596813 for screenshots). -->
 <!ENTITY update.manual.start        "">
 <!ENTITY update.manual.linkText     "최신 버전 다운로드">
@@ -101,6 +101,8 @@
 <!ENTITY update.downloading.end     "">
 
 <!ENTITY update.applying            "업데이트 적용중…">
+
+<!ENTITY update.restarting          "재시작중…">
 
 <!-- LOCALIZATION NOTE (channel.description.start,channel.description.end): channel.description.start and
      channel.description.end create one sentence, with the current channel label inserted in between.

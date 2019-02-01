@@ -8,6 +8,8 @@ do-not-track-option-default=
   .label=tylko podczas używania ochrony przed śledzeniem
 do-not-track-option-default-content-blocking=
   .label=gdy { -brand-short-name } blokuje wykryte elementy śledzące
+do-not-track-option-default-content-blocking-known=
+  .label=gdy włączone jest blokowanie znanych elementów śledzących
 do-not-track-option-always=
   .label=zawsze
 pref-page=
@@ -91,6 +93,8 @@ set-as-my-default-browser=
 startup-restore-previous-session=
   .label=Przywracanie poprzedniej sesji
   .accesskey=P
+startup-restore-warn-on-quit=
+  .label=Ostrzeganie przy zamykaniu przeglądarki
 disable-extension=
   .label=Wyłącz rozszerzenie
 tabs-group-header=Karty
@@ -401,13 +405,12 @@ sync-engine-addons=
   .tooltiptext=Rozszerzenia i motywy w wersji na komputery
   .accesskey=d
 sync-engine-prefs=
-  .label=
-    { PLATFORM() ->
-      [windows] Opcje
-      *[other] Preferencje
-    }
-  .tooltiptext=Zmienione ustawienia ogólne, prywatności i bezpieczeństwa
-  .accesskey=P
+  .label={ PLATFORM() ->
+    [windows] opcje
+    *[other] preferencje
+  }
+  .tooltiptext=Zmienione ustawienia ogólne, uruchamiania, wyszukiwania, prywatności i bezpieczeństwa
+  .accesskey=e
 sync-device-name-header=Nazwa urządzenia
 sync-device-name-change=
   .label=Zmień nazwę urządzenia…
@@ -540,9 +543,9 @@ content-blocking-setting-strict=
 content-blocking-setting-custom=
   .label=Własne
   .accesskey=W
+content-blocking-standard-description=Blokowanie znanych elementów śledzących tylko w oknach prywatnych.
 content-blocking-standard-desc=Wyważone pod kątem ochrony i szybkości wczytywania stron. Dopuszcza pewne elementy śledzące, aby strony działały prawidłowo.
 content-blocking-strict-desc=Blokowanie wszystkich wykrytych elementów śledzących. Może powodować problemy ze stronami.
-content-blocking-custom-desc=Wybierz, co blokować:
 content-blocking-private-trackers=Blokowanie znanych elementów śledzących w oknach prywatnych.
 content-blocking-third-party-cookies=Blokowanie ciasteczek zewnętrznych witryn używanych do śledzenia.
 content-blocking-all-windows-trackers=Blokowanie znanych elementów śledzących we wszystkich oknach.
@@ -550,6 +553,28 @@ content-blocking-all-third-party-cookies=Blokowanie wszystkich ciasteczek zewnę
 content-blocking-warning-title=Ostrzeżenie
 content-blocking-warning-desc=Blokowanie ciasteczek i elementów śledzących może powodować problemy ze stronami. Blokowanie można łatwo wyłączyć na stronach, którym ufasz.
 content-blocking-learn-how=Więcej informacji
+content-blocking-custom-desc=Wybierz, co blokować:
+content-blocking-trackers-label=
+  .label=elementy śledzące:
+  .accesskey=e
+content-blocking-tracking-protection-option-all-windows=
+  .label=zawsze
+  .accesskey=z
+content-blocking-option-private=
+  .label=w oknach prywatnych
+  .accesskey=w
+content-blocking-cookies-label=
+  .label=ciasteczka:
+  .accesskey=c
+sitedata-option-block-trackers=
+  .label=śledzące zewnętrznych witryn
+sitedata-option-block-unvisited=
+  .label=nieodwiedzonych witryn
+sitedata-option-block-all-third-party=
+  .label=wszystkie zewnętrznych witryn (może powodować problemy)
+sitedata-option-block-all=
+  .label=wszystkie (powoduje problemy)
+
 content-blocking-restore-defaults=
   .label=Przywróć domyślne
   .accesskey=P
@@ -576,16 +601,10 @@ content-blocking-tracking-protection-new-description=Blokowanie wszystkich znany
 content-blocking-tracking-protection-option-always=
   .label=Obligatoryjne blokowanie
   .accesskey=e
-content-blocking-tracking-protection-option-all-windows=
-  .label=Obligatoryjne blokowanie
-  .accesskey=O
 content-blocking-tracking-protection-option-private=
   .label=Blokowanie w oknach prywatnych
   .accesskey=B
 content-blocking-tracking-protection-change-block-list=Zmień listę blokowanych
-content-blocking-cookies-label=
-  .label=ciasteczka
-  .accesskey=c
 content-blocking-third-party-cookies-label=
   .label=Ciasteczka zewnętrznych witryn
   .accesskey=C
@@ -685,6 +704,11 @@ collection-health-report-link=Więcej informacji
 collection-studies=
   .label=Instalowanie i przeprowadzanie badań.
 collection-studies-link=Wyświetl badania
+
+addon-recommendations=
+  .label=Personalizowane polecenia rozszerzeń
+addon-recommendations-link=Więcej informacji
+
 collection-health-report-disabled=Przesyłanie danych jest wyłączone przy tej konfiguracji programu
 collection-browser-errors=
   .label=Przesyłanie raportów z błędów przeglądarki (razem z treścią błędów) do Mozilli.

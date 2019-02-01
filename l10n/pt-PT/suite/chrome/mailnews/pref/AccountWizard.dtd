@@ -17,7 +17,6 @@
 <!ENTITY accountTypeMail.accesskey "m">
 <!ENTITY accountTypeNews.label "Conta de grupo de discussão">
 <!ENTITY accountTypeNews.accesskey "n">
-
 <!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
 <!ENTITY accountTypeMovemail.label "Unix Mailspool (Movemail)">
 <!ENTITY accountTypeMovemail.accesskey "U">
@@ -37,7 +36,7 @@
 <!ENTITY fullnameLabel.label "O seu nome:">
 <!ENTITY fullnameLabel.accesskey "n">
 
-<!ENTITY emailLabel.label "Endereço de e-mail:">
+<!ENTITY emailLabel.label "Endereço de email:">
 <!ENTITY emailLabel.accesskey "E">
 
 <!-- Entities for Incoming Server page -->

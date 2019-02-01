@@ -12,7 +12,6 @@
 <!ENTITY advanced.label "Avanzado">
 <!ENTITY continue2.label "Más…">
 <!ENTITY moreInformation.label "Más información">
-
 <!ENTITY viewCertificate.label "Ver certificado">
 
 <!-- Specific error messages -->
@@ -163,10 +162,11 @@ will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "El propietario de <span class='hostname' /> ha configurado su sitio web de manera incorrecta. Para evitar que su información sea robada, &brandShortName; no ha conectado con este sitio web.">
 <!ENTITY certerror.introPara2 "&brandShortName; ha detectado una posible amenaza de seguridad y no ha cargado <span class='hostname'/>. Si visita este sitio, los atacantes podrían intentar robar información como sus contraseñas, correos electrónicos o detalles de su tarjeta de crédito.">
+<!ENTITY certerror.sts.introPara "&brandShortName; ha detectado una potencial amenaza de seguridad y no ha continuado a <span class='hostname'/> porque este sitio web requiere una conexión segura.">
 
-<!ENTITY certerror.expiredCert.secondPara "Es muy probable que este problema se deba a que el reloj de su ordenador no tiene la hora correcta, lo que impediría que &brandShortName; se conecte de forma segura.">
-
-
+<!ENTITY certerror.expiredCert.introPara "&brandShortName; ha detectado un problema y no ha continuado a <span class='hostname'/>. El sitio web está mal configurado o el reloj de su ordenador está configurado de manera incorrecta.">
+<!ENTITY certerror.expiredCert.secondPara2 "Probablemente el certificado del sitio ha expirado, lo que impide a &brandShortName; conectarse de forma segura. Si visita este sitio, los atacantes pueden intentar robar información como sus contraseñas, correos o datos de la tarjeta de crédito.">
+<!ENTITY certerror.expiredCert.sts.secondPara "Probablemente el certificado del sitio ha expirado, lo que impide a &brandShortName; conectarse de forma segura.">
 
 <!ENTITY certerror.whatCanYouDoAboutItTitle "¿Qué puede hacer al respecto?">
 
@@ -237,6 +237,13 @@ was trying to connect. -->
 
 <!ENTITY blockedByPolicy.title "Página bloqueada">
 
+<!ENTITY certerror.mitm.title "Un software que impide a &brandShortName; conectarse de forma segura a este sitio">
+<!ENTITY certerror.mitm.longDesc "<span class='hostname'></span> probablemente es un sitio seguro, pero no se ha podido establecer una conexión segura. Este problema está causado por <span class='mitm-name'/>, que es un programa en su ordenador o en su red.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt1 "Si su antivirus incluye una función que escanea conexiones cifradas (normalmente llamada “escáner web” o “escáner https”), puede desactivar esa función. Si eso no funciona, puede eliminar y volver a instalar el programa antivirus.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt2 "Si está en una red corporativa, puede ponerse en contacto con su departamento de informática.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt3 "Si no está familiarizado con <span class='mitm-name'/>, entonces esto puede ser un ataque y no debería acceder al sitio.">
+<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "Si no está familiarizado con <span class='mitm-name'/>, entonces esto puede ser un ataque y no hay nada que pueda hacer para acceder al sitio.">
+
 <!ENTITY clockSkewError.title "La hora de su equipo es incorrecta">
 <!ENTITY clockSkewError.longDesc "Su equipo piensa que la fecha y hora es <span id='wrongSystemTime_systemDate1'/>, lo que evita que &brandShortName; se conecte de forma segura. Para visitar <span class='hostname'></span>, actualice el reloj de su equipo en los ajustes de su sistema a la fecha y hora actuales, y la zona horaria apropiada, y luego refresque <span class='hostname'></span>.">
 
@@ -244,3 +251,4 @@ was trying to connect. -->
 <!ENTITY prefReset.label "Restablecer configuración predeterminada">
 
 <!ENTITY networkProtocolError.title "Error de protocolo de red">
+<!ENTITY networkProtocolError.longDesc "<p>La página que está intentando ver no se puede mostrar debido a un error detectado en el protocolo de red.</p><ul><li>Por favor, contacte con el propietario del sitio para informarle de este problema.</li></ul>">

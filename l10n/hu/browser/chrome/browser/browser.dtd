@@ -21,8 +21,6 @@
 <!-- Tab context menu -->
 <!ENTITY  reloadTab.label                    "Lap frissítése">
 <!ENTITY  reloadTab.accesskey                "r">
-<!ENTITY  reloadAllTabs.label                "Összes lap frissítése">
-<!ENTITY  reloadAllTabs.accesskey            "s">
 <!ENTITY  selectAllTabs.label                "Összes lap kiválasztása">
 <!ENTITY  selectAllTabs.accesskey            "e">
 <!-- LOCALIZATION NOTE (duplicateTab.label): This is a command to duplicate
@@ -47,9 +45,6 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "Többi lap bezárása">
 <!ENTITY  closeOtherTabs.accesskey           "T">
 
-<!ENTITY  closeSelectedTabs.label            "Kiválasztott lapok törlése">
-<!ENTITY  closeSelectedTabs.accesskey        "K">
-
 <!ENTITY  closeTabs.label                    "Lapok bezárása">
 <!ENTITY  closeTabs.accesskey                "z">
 <!ENTITY  pinSelectedTabs.label              "Lapok rögzítése">
@@ -62,10 +57,6 @@ same accesskey but will never be visible at the same time. -->
 unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
 same accesskey but will never be visible at the same time. -->
 <!ENTITY  unpinSelectedTabs.accesskey        "f">
-<!-- Reload Tab and Reload Selected Tabs have the same accesskey
-but will never be visible at the same time. -->
-<!ENTITY  reloadSelectedTabs.label           "Kiválasztott lapok újratöltése">
-<!ENTITY  reloadSelectedTabs.accesskey       "j">
 <!-- LOCALIZATION NOTE(reloadTab.label, reloadTabs.label): have the same accesskey
 but will never be visible at the same time. -->
 <!ENTITY  reloadTabs.label                   "Lapok frissítése">
@@ -90,8 +81,6 @@ same accesskey but will never be visible at the same time. -->
 unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
 same accesskey but will never be visible at the same time. -->
 <!ENTITY  unpinTab.accesskey                 "f">
-<!ENTITY  sendTabToDevice.label              "Lap küldése eszközre">
-<!ENTITY  sendTabToDevice.accesskey          "e">
 <!ENTITY  sendPageToDevice.label             "Oldal küldése eszközre">
 <!ENTITY  sendPageToDevice.accesskey         "e">
 <!ENTITY  sendLinkToDevice.label             "Hivatkozás küldése eszközre">
@@ -110,8 +99,6 @@ These two items have the same accesskey but will never be visible at the same ti
 <!ENTITY  moveToNewWindow.accesskey          "t">
 <!ENTITY  reopenInContainer.label            "Újranyitás konténerben">
 <!ENTITY  reopenInContainer.accesskey        "j">
-<!ENTITY  bookmarkAllTabs.label              "Minden lap egy könyvjelzőbe…">
-<!ENTITY  bookmarkAllTabs.accesskey          "M">
 <!ENTITY  bookmarkTab.label                  "Lap könyvjelzőzése">
 <!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
 These items have the same accesskey but will never be visible at the same time. -->
@@ -123,6 +110,10 @@ These items have the same accesskey but will never be visible at the same time. 
 <!ENTITY  hiddenTabs.label                   "Rejtett lapok">
 
 <!ENTITY  listAllTabs.label      "Minden lap felsorolása">
+
+<!-- LOCALIZATION NOTE (allTabsMenu.searchTabs.label): "Search" is a verb, as
+in "Search through tabs". -->
+<!ENTITY  allTabsMenu.searchTabs.label       "Lapok keresése">
 
 <!ENTITY tabCmd.label "Új lap">
 <!ENTITY tabCmd.accesskey "l">
@@ -153,11 +144,6 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY personalbarCmd.label "Könyvjelző eszköztár">
 <!ENTITY personalbarCmd.accesskey "K">
 <!ENTITY bookmarksToolbarItem.label "Könyvjelző eszköztár elemei">
-
-<!ENTITY toolbarContextMenu.reloadAllTabs.label "Összes lap újratöltése">
-<!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "r">
-<!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Minden lap könyvjelzőbe…">
-<!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "M">
 
 <!ENTITY toolbarContextMenu.reloadSelectedTab.label "Kiválasztott lap újratöltése">
 <!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
@@ -264,9 +250,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY editThisBookmarkCmd.label "Könyvjelző szerkesztése">
 <!ENTITY bookmarkThisPageCmd.commandkey "d">
 
-<!ENTITY subscribeToPageMenupopup.label "Feliratkozás erre az oldalra">
-<!ENTITY subscribeToPageMenuitem.label "Feliratkozás erre az oldalra…">
-
 <!ENTITY addCurPagesCmd.label "Minden lap egy könyvjelzőbe…">
 <!ENTITY showAllBookmarks2.label "Minden könyvjelző megjelenítése">
 <!ENTITY recentBookmarks.label "Nemrég könyvjelzőzött">
@@ -305,6 +288,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip     "Adatok tárolása az állandó tárban">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip   "A böngészőt távolról irányítják">
 <!ENTITY urlbar.webAuthnAnchor.tooltip                    "Webes hitelesítési panel megnyitása">
+
+<!ENTITY urlbar.storageAccessAnchor.tooltip               "Böngészési tevékenység engedélyezési panel megnyitása">
 
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip      "A kamera és/vagy mikrofon az oldallal megosztásának kezelése">
 <!ENTITY urlbar.webRTCShareMicrophoneNotificationAnchor.tooltip   "A mikrofon az oldallal megosztásának kezelése">
@@ -380,10 +365,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY webDeveloperMenu.label       "Webfejlesztő">
 <!ENTITY webDeveloperMenu.accesskey   "W">
-
-<!ENTITY devtoolsRecordExecution.label "Futtatás rögzítése">
-<!ENTITY devtoolsSaveRecording.label "Felvétel mentése">
-<!ENTITY devtoolsReplayExecution.label "Futtatás újrajátszása">
 
 <!ENTITY inspectContextMenu.label     "Elem vizsgálata">
 <!ENTITY inspectContextMenu.accesskey "z">
@@ -514,7 +495,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "A">
 <!ENTITY customizeMenu.manageExtension.label "Kiegészítő kezelése">
 <!ENTITY customizeMenu.manageExtension.accesskey "K">
-
 <!ENTITY customizeMenu.removeExtension.label "Kiegészítő eltávolítása">
 <!ENTITY customizeMenu.removeExtension.accesskey "v">
 
@@ -655,6 +635,16 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY bookmarkThisFrameCmd.label      "Keret hozzáadása a könyvjelzőkhöz">
 <!ENTITY bookmarkThisFrameCmd.accesskey  "h">
 <!ENTITY pageAction.copyLink.label    "Hivatkozás másolása">
+
+<!-- LOCALIZATION NOTE(pocket-button.tooltiptext, saveToPocketCmd.label, saveLinkToPocketCmd.label, pocketMenuitem.label):
+  "Pocket" is a brand name. -->
+<!ENTITY pocketButton.tooltiptext     "Mentés a Pocketbe">
+<!ENTITY saveToPocketCmd.label        "Oldal mentése a Pocketbe">
+<!ENTITY saveToPocketCmd.accesskey    "k">
+<!ENTITY saveLinkToPocketCmd.label    "Hivatkozás mentése a Pocketbe">
+<!ENTITY saveLinkToPocketCmd.accesskey "o">
+<!ENTITY pocketMenuitem.label         "Pocket lista megjelenítése">
+
 <!ENTITY emailPageCmd.label           "Hivatkozás küldése e-mailben…">
 <!ENTITY emailPageCmd.accesskey       "d">
 <!ENTITY savePageCmd.label            "Oldal mentése…">
@@ -1019,12 +1009,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.trackingProtection2.label "Összes észlelt követő">
 
 <!ENTITY contentBlocking.trackingProtection3.label "Követők">
-<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.allowed.label):
-     This label signals that this type of content blocking is turned
-     OFF and is not blocking tracker content, so this is not
-     a positive thing. It forms the end of the (imaginary) sentence
-     "Trackers [are] Allowed"-->
-<!ENTITY contentBlocking.trackingProtection.allowed.label "Engedélyezett">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
      This label signals that this type of content blocking is turned
      ON and is successfully blocking tracker content, so this is
@@ -1066,6 +1050,9 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY contentBlocking.trackersView.label "Követők">
 <!ENTITY contentBlocking.trackersView.strictInfo.label "Az összes követő blokkolásához állítson be „Szigorú” tartalomblokkolást.">
+
+<!ENTITY contentBlocking.cookies.label "Sütik">
+<!ENTITY contentBlocking.cookiesView.label "Sütik és oldaladatok">
 
 <!ENTITY contentBlocking.openBreakageReportView2.label "Probléma bejelentése">
 <!ENTITY contentBlocking.breakageReportView.label "Problémák bejelentése">
@@ -1200,11 +1187,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY pageActionButton.tooltip "Oldalműveletek">
 <!ENTITY pageAction.addToUrlbar.label "Hozzáadás a címsávhoz">
 <!ENTITY pageAction.removeFromUrlbar.label "Eltávolítás a címsávból">
-<!ENTITY pageAction.allowInUrlbar.label "Megjelenítés a címsávban">
-<!ENTITY pageAction.disallowInUrlbar.label "Ne jelenjen meg a címsávban">
 <!ENTITY pageAction.manageExtension.label "Kiegészítő kezelése…">
-
-<!ENTITY pageAction.sendTabToDevice.label "Lap küldése eszközre">
 
 <!ENTITY sendToDevice.syncNotReady.label "Eszközök szinkronizálása…">
 

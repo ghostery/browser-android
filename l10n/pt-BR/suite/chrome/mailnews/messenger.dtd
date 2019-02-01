@@ -5,17 +5,17 @@
 <!ENTITY messengerWindow.title "Email &amp; grupos de notícias">
 <!ENTITY titleModifier.label "&brandShortName;">
 <!ENTITY titleSeparator.label " - ">
-<!-- tabmail -->
 
+<!-- tabmail -->
 <!ENTITY tabmailClose.label "Fechar aba">
 <!ENTITY tabmailClose.tooltip "Fechar aba">
 <!ENTITY tabmailNewButton.tooltip "Duplicar a aba atual">
 <!ENTITY tabmailCloseButton.tooltip "Fechar aba atual">
 <!ENTITY tabmailAllTabs.tooltip "Listar todas as abas">
-<!-- menu items:  the . means that the menu item isn't implemented yet -->
+
+<!-- menu items: the . means that the menu item isn't implemented yet -->
+
 <!-- File menu items -->
-
-
 <!ENTITY newMessage.label "Nova mensagem">
 <!ENTITY newMessage.accesskey "N">
 <!ENTITY newFolderCmd.label "Pasta...">
@@ -58,9 +58,9 @@
 <!ENTITY renameFolder.label "Renomear pasta...">
 <!ENTITY renameFolder.accesskey "m">
 <!ENTITY compactFolders.label "Otimizar pastas">
-<!ENTITY compactFolders.accesskey  "t">
+<!ENTITY compactFolders.accesskey		"t">
 <!ENTITY emptyTrashCmd.label "Esvaziar lixeira">
-<!ENTITY emptyTrashCmd.accesskey  "v">
+<!ENTITY emptyTrashCmd.accesskey		"v">
 <!ENTITY offlineMenu.label "Modo desconectado">
 <!ENTITY offlineMenu.accesskey "o">
 <!ENTITY synchronizeOfflineCmd.label "Receber/sincronizar agora...">
@@ -71,8 +71,8 @@
 <!ENTITY downloadSelectedCmd.accesskey "s">
 <!ENTITY downloadFlaggedCmd.label "Receber mensagens sinalizadas">
 <!ENTITY downloadFlaggedCmd.accesskey "z">
-<!-- Edit Menu -->
 
+<!-- Edit Menu -->
 <!ENTITY deleteMsgCmd.label "Excluir">
 <!ENTITY deleteMsgCmd.accesskey "x">
 <!ENTITY undeleteMsgCmd.label "Restaurar">
@@ -110,8 +110,8 @@
 <!ENTITY redoMarkAllCmd.label "Refazer marcar todas como lidas">
 <!ENTITY undoDefaultCmd.label "Desfazer">
 <!ENTITY redoDefaultCmd.label "Refazer">
-<!-- View Menu -->
 
+<!-- View Menu -->
 <!ENTITY showMessengerToolbarCmd.label "Padrão">
 <!ENTITY showMessengerToolbarCmd.accesskey "a">
 <!ENTITY showSearchToolbarCmd.label "Barra de pesquisa">
@@ -133,8 +133,8 @@
 <!ENTITY showThreadPaneCmd.accesskey "t">
 <!ENTITY showFolderPaneCmd.label "Pastas">
 <!ENTITY showFolderPaneCmd.accesskey "P">
-<!-- sortMenu is also used by addressbook -->
 
+<!-- sortMenu is also used by addressbook -->
 <!ENTITY sortMenu.label "Ordenar por">
 <!ENTITY sortMenu.accesskey "d">
 
@@ -233,13 +233,13 @@
 <!ENTITY pageSourceCmd.accesskey "f">
 <!ENTITY pageSourceCmd.key "u">
 
-<!ENTITY findCmd.label "Localizar na mensagem...">
+<!ENTITY findCmd.label "Procurar nesta mensagem…">
+
 <!-- LOCALIZATION NOTE (quickFilterBar.show.key2):
      This is the key used to show the Lightning quick filter bar. -->
-
 <!ENTITY quickFilterBar.show.key2 "K">
-<!-- Go Menu -->
 
+<!-- Go Menu -->
 
 <!ENTITY goMenu.label "Ir">
 <!ENTITY goMenu.accesskey "I">
@@ -274,8 +274,8 @@
 <!ENTITY prevFlaggedMsgCmd.accesskey "z">
 <!ENTITY startPageCmd.label "Página inicial">
 <!ENTITY startPageCmd.accesskey "c">
-<!-- Message Menu -->
 
+<!-- Message Menu -->
 <!ENTITY msgMenu.label "Mensagem">
 <!ENTITY msgMenu.accesskey "M">
 <!ENTITY newMsgCmd.label "Nova mensagem">
@@ -284,23 +284,23 @@
 <!ENTITY newNewMsgCmd.accesskey "M">
 <!ENTITY replyMsgCmd.label "Responder">
 <!ENTITY replyMsgCmd.accesskey "R">
-<!ENTITY replyMsgCmd.key "r">
+<!ENTITY replyMsgCmd.key	"r">
 <!ENTITY replyListCmd.label "Responder à lista">
 <!ENTITY replyListCmd.accesskey "l">
 <!ENTITY replyNewsgroupCmd.label "Responder ao grupo de notícias">
-<!ENTITY replyNewsgroupCmd.accesskey "n">
+<!ENTITY replyNewsgroupCmd.accesskey	"n">
 <!ENTITY replySenderCmd.label "Responder">
 <!ENTITY replySenderCmd.accesskey "R">
 <!ENTITY replyToAllMsgCmd.label "Responder a todos">
-<!ENTITY replyToAllMsgCmd.accesskey "t">
-<!ENTITY replyToAllMsgCmd.key "r">
+<!ENTITY replyToAllMsgCmd.accesskey	"t">
+<!ENTITY replyToAllMsgCmd.key	"r">
 <!ENTITY replyToSenderAndNewsgroupCmd.label "Responder ao remetente e ao grupo de notícias">
 <!ENTITY replyToSenderAndNewsgroupCmd.accesskey "p">
 <!ENTITY replyToAllRecipientsCmd.label "Responder para todos">
 <!ENTITY replyToAllRecipientsCmd.accesskey "a">
 <!ENTITY forwardMsgCmd.label "Encaminhar">
 <!ENTITY forwardMsgCmd.accesskey "E">
-<!ENTITY forwardMsgCmd.key "l">
+<!ENTITY forwardMsgCmd.key	"l">
 <!ENTITY forwardAsMenu.label "Encaminhar como">
 <!ENTITY forwardAsMenu.accesskey "h">
 <!ENTITY forwardAsInline.label "Com o texto da mensagem">
@@ -373,8 +373,8 @@
 <!ENTITY openFeedSummaryInWindow.accesskey "s">
 <!ENTITY openFeedWebPageInMP.label "Alternar entre página web e resumo no painel de mensagens">
 <!ENTITY openFeedWebPageInMP.accesskey "t">
-<!-- Tools Menu -->
 
+<!-- Tools Menu -->
 <!ENTITY searchMailCmd.label "Pesquisar mensagens...">
 <!ENTITY searchMailCmd.accesskey "P">
 <!ENTITY searchMailCmd.key "s">
@@ -394,13 +394,13 @@
 <!ENTITY deleteJunk.accesskey "x">
 <!ENTITY importCmd.label "Importar...">
 <!ENTITY importCmd.accesskey "I">
-<!-- Folder Pane -->
 
+<!-- Folder Pane -->
 <!ENTITY nameColumn.label "Nome">
 <!ENTITY unreadColumn.label "Não lida">
 <!ENTITY totalColumn.label "Total">
-<!-- Toolbar items -->
 
+<!-- Toolbar items -->
 <!ENTITY getMsgButton.label "Receber">
 <!ENTITY newMsgButton.label "Escrever">
 <!ENTITY newHTMLMessageCmd.label "Compor em HTML">
@@ -421,8 +421,8 @@
 <!ENTITY junkButton.label "Lixo">
 <!ENTITY notJunkButton.label "Não spam">
 <!ENTITY searchButton.title "Pesquisa avançada">
-<!-- Tooltips -->
 
+<!-- Tooltips -->
 <!ENTITY menuBar.tooltip "Menu (clique para exibir)">
 <!ENTITY mailToolbar.tooltip "Barra de ferramentas (clique para exibir)">
 <!ENTITY searchToolbar.tooltip "Barra de pesquisa">
@@ -444,17 +444,17 @@
 <!ENTITY throbber.tooltip "Abrir o site do &vendorShortName; ">
 <!ENTITY junkButton.tooltip "Marcar como spam as mensagens selecionadas">
 <!ENTITY notJunkButton.tooltip "Marcar como não spam as mensagens selecionadas">
-<!-- Remote Content Button Popup -->
 
+<!-- Remote Content Button Popup -->
 <!ENTITY remoteContentOptionsAllowForMsg.label "Mostrar conteúdo remoto desta mensagem">
 <!ENTITY remoteContentOptionsAllowForMsg.accesskey "s">
 <!ENTITY editRemoteContentSettings.label "Editar permissões para conteúdo remoto…">
 <!ENTITY editRemoteContentSettings.accesskey "E">
+
 <!-- Statusbar -->
+<!ENTITY statusText.label "Concluído">
 
-<!ENTITY  statusText.label "Concluído">
 <!-- Thread Pane Context Menu -->
-
 <!ENTITY contextOpenNewWindow.label "Abrir em nova janela">
 <!ENTITY contextOpenNewWindow.accesskey "A">
 <!ENTITY contextOpenNewTab.label "Abrir mensagem em nova aba">
@@ -483,14 +483,16 @@
 <!ENTITY contextCopyMsgMenu.accesskey "o">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Mais novas">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "M">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Preferidos">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "P">
 <!ENTITY contextSaveAs.label "Salvar como arquivo...">
 <!ENTITY contextSaveAs.accesskey "l">
 <!ENTITY contextPrint.label "Imprimir...">
 <!ENTITY contextPrint.accesskey "I">
 <!ENTITY contextPrintPreview.label "Visualizar impressão">
 <!ENTITY contextPrintPreview.accesskey "V">
-<!-- Folder Pane Context Menu -->
 
+<!-- Folder Pane Context Menu -->
 <!ENTITY folderContextGetMessages.label "Receber mensagens desta conta">
 <!ENTITY folderContextGetMessages.accesskey "R">
 <!ENTITY folderContextOpenNewWindow.label "Abrir em nova janela">
@@ -525,8 +527,8 @@
 <!ENTITY folderContextProperties.accesskey "o">
 <!ENTITY folderContextSettings.label "Configurações…">
 <!ENTITY folderContextSettings.accesskey "C">
-<!-- focusSearchInput.key also used by addressbook -->
 
+<!-- focusSearchInput.key also used by addressbook -->
 <!ENTITY focusSearchInput.key "k">
 <!ENTITY advancedButton.label "Avançado...">
 <!ENTITY advancedButton.accesskey "v">
