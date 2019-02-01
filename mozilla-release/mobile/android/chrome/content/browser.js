@@ -6560,6 +6560,7 @@ var Cliqz = {
       });
     });
 
+    this._syncSearchPrefs();
   },
 
   READY_STATUS: {
@@ -6689,7 +6690,6 @@ var Cliqz = {
         return Services.prefs.getCharPref("android.not_a_preference.browser.install.date", "16917");
       case "ready":
         this.loadCardsUI();
-        this._syncSearchPrefs();
         this._handleExtensionReady("firefox@ghostery.com");
         break;
       case "idle":
@@ -6763,18 +6763,19 @@ var Cliqz = {
       return;
     }
 
-    if ('response' in msg && callback) { // handle response
-      callback(msg.response);
-      delete this.callbacks[msg.requestId];
+    if ('response' in msg) { // handle response
+      if (callback) {
+        callback(msg.response);
+        delete this.callbacks[msg.requestId];
+      }
     } else { // handle request
       let response;
       let sendCallback;
       if (data.recipient.extensionId === "firefox@ghostery.com") {
         response = this._privacyExtensionListener(msg) || this._searchExtensionListener(msg);
-        sendCallback = this.messageExtension.bind(this);
       }
-      if ("requestId" in msg && sendCallback) {
-        sendCallback({
+      if ("requestId" in msg) {
+        this.messageExtension({
           response,
           requestId: msg.requestId,
         });
@@ -6856,7 +6857,7 @@ var Cliqz = {
         break;
       case "Search:Hide":
         this.isVisible = false;
-        this.hidePanel(this.Search.browser);
+        this.Search && this.hidePanel(this.Search.browser);
         this.messageExtension({ module: "search", action: "stopSearch", args: []});
         break;
       case "Search:Search":
