@@ -119,7 +119,7 @@
     <style name="UrlBar.Base.MenuItem" />
 
     <style name="UrlBar.V15.MenuItem" parent="UrlBar.Base.MenuItem">
-        <!-- Cliqz start ->
+        <!-- Cliqz start -->
         <item name="android:layout_toLeftOf">@id/ghosty</item>
         <!-- Cliqz end -->
     </style>

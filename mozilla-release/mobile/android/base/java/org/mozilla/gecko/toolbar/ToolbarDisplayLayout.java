@@ -104,7 +104,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
 
     private final ThemedTextView mTitle;
     private final ThemedLinearLayout mThemeBackground;
-        /* Cliqz start */
+    /* Cliqz start */
     // add padding left and rename padding to padding right
     private final int mTitlePaddingRight;
     private final int mTitlePaddingLeft;
@@ -124,7 +124,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private final SiteIdentityPopup mSiteIdentityPopup;
     private int mSecurityImageLevel;
 
-       /* Cliqz start o/
+    /* Cliqz start o/
     // remove spans colors
     private final ForegroundColorSpan mUrlColorSpan;
     private final ForegroundColorSpan mPrivateUrlColorSpan;
@@ -409,6 +409,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
             updatePageActions();
         }
     }
+
     /* Cliqz start o/
      // stop scrolling title, it ellipses form the end.
     private void scrollTitle() {
@@ -511,6 +512,30 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         }
         /* Cliqz end */
     }
+
+    /* Cliqz start */
+    // update TitleBar width depend on displayed icons
+    void updateTitleBarWidth() {
+        final Resources resources = getContext().getResources();
+        final WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        final DisplayMetrics metrics = new DisplayMetrics();
+        if (wm != null) {
+            wm.getDefaultDisplay().getMetrics(metrics);
+        }
+        final int buttonWidth = (int) resources.getDimension(R.dimen.page_action_button_width);
+
+        post(new Runnable() {
+            @Override
+            public void run() {
+                final int actionsLayoutWidth = mPageActionLayout.getPageActionListSize() * buttonWidth;
+                final int titleBarWidth = mThemeBackground.getWidth() +
+                        (int) resources.getDimension(R.dimen.myoffrz_padding_8) -
+                        mSiteSecurity.getWidth() - actionsLayoutWidth;
+                mTitle.setWidth(titleBarWidth);
+            }
+        });
+    }
+    /* Cliqz end */
 
     List<? extends View> getFocusOrder() {
         return Arrays.asList(mSiteSecurity, mPageActionLayout, mStop);
