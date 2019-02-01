@@ -4,9 +4,7 @@
 
 <!ENTITY doNotDownloadPop3Movemail.label "Para economizar espaço em disco, não receber:">
 <!ENTITY doNotDownloadNntp.label "Para economizar espaço em disco, não receber para uso off-line:">
-<!ENTITY doNotDownloadImap.label "Para economizar espaço em disco, o recebimento de mensagens do servidor e a  manutenção das cópias locais para uso em modo desconectado podem ser restringidas pela data ou tamanho.">
-<!ENTITY allFoldersOffline.label "Manter mensagens desta conta no computador">
-<!ENTITY allFoldersOffline.accesskey "M">
+<!ENTITY doNotDownloadImap.label "Para economizar espaço em disco, o recebimento de mensagens do servidor e a manutenção de cópias locais para uso em modo desconectado podem ser restringidos por idade ou tamanho.">
 <!ENTITY allFoldersOffline2.label "Manter as mensagens em todas as pastas para esta conta neste computador.">
 <!ENTITY allFoldersOffline2.accesskey "o">
 <!ENTITY allFoldersOfflineNote.label "Nota: Alterar isto afeta todas as pastas nesta conta. Para definir pastas individuais, use o botão Avançadas…">

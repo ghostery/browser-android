@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY dialog.title                 "Formato de envio">
+<!ENTITY dialog.title                 "Opções de envio">
 <!ENTITY sendMail.title               "Mensagens com formatação">
 <!ENTITY autoDowngrade.label          "Enviar mensagens como texto sem formatação, se possível">
 <!ENTITY autoDowngrade.accesskey      "t">
@@ -17,7 +17,7 @@
 <!ENTITY sendBoth.accesskey           "n">
 <!ENTITY override.label               "Nota: especifique o formato de cada destinatário através do catálogo de endereços.">
 
-<!ENTITY domaindesc.label             "Ao enviar uma mensagem para um endereço com um dos domínios abaixo, o &brandShortName; automaticamente envia a mensagem no formato correto.">
+<!ENTITY domaindesc.label             "Ao enviar uma mensagem para um endereço de um dos domínios abaixo, o &brandShortName; automaticamente envia a mensagem no formato correto.">
 <!ENTITY HTMLTab.label                "Enviar em HTML">
 <!ENTITY HTMLTab.accesskey            "H">
 <!ENTITY PlainTextTab.label           "Enviar como texto sem formatação">

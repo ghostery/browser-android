@@ -7,7 +7,7 @@
 <!ENTITY enableStartPage.accesskey        "A">
 <!ENTITY location.label                   "Endereço:">
 <!ENTITY location1.accesskey               "E">
-<!ENTITY useDefault.label                 "Restaurar o padrão">
+<!ENTITY useDefault.label                 "Restaurar padrão">
 <!ENTITY useDefault.accesskey             "R">
 
 <!ENTITY changeDockIconOptions.label      "Mudar preferências do ícone">

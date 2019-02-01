@@ -28,3 +28,14 @@ onboarding-ghostery-text = Navegue mais rápido, mais inteligentemente, ou com m
 # Note: "Sync" in this case is a generic verb, as in "to synchronize"
 onboarding-fxa-title = Sincronizar
 onboarding-fxa-text = Registe-se para uma { -fxaccount-brand-name } e sincronize os seus marcadores, palavras-passe, e separadores abertos onde quer que utilize o { -brand-short-name }.
+
+## Message strings belonging to the Return to AMO flow
+
+return-to-amo-sub-header = Ótimo, você tem o { -brand-short-name }
+# <icon></icon> will be replaced with the icon belonging to the extension
+#
+# Variables:
+#   $addon-name (String) - Name of the add-on
+return-to-amo-addon-header = Agora vamos obter-lhe <icon></icon><b>{ $addon-name }.</b>
+return-to-amo-extension-button = Adicionar a extensão
+return-to-amo-get-started-button = Começar com o { -brand-short-name }

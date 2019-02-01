@@ -4,17 +4,21 @@
 
 password-not-set =
     .value = (niet ingesteld)
+
 failed-pw-change = Kan hoofdwachtwoord niet wijzigen.
 incorrect-pw = U hebt niet het juiste huidige hoofdwachtwoord ingevoerd. Probeer het opnieuw.
 pw-change-ok = Hoofdwachtwoord met succes gewijzigd.
+
 pw-empty-warning = Uw opgeslagen web- en e-mailwachtwoorden, formuliergegevens en privésleutels zullen niet worden beschermd.
 pw-erased-ok = U hebt uw hoofdwachtwoord verwijderd. { pw-empty-warning }
 pw-not-wanted = Waarschuwing! U hebt besloten geen hoofdwachtwoord te gebruiken. { pw-empty-warning }
+
 pw-change2empty-in-fips-mode = U bent momenteel in FIPS-modus. FIPS vereist een ingesteld hoofdwachtwoord.
 pw-change-success-title = Wachtwoordwijziging geslaagd
 pw-change-failed-title = Wachtwoordwijziging mislukt
 pw-remove-button =
     .label = Verwijderen
+
 set-password =
     .title = Hoofdwachtwoord wijzigen
 set-password-old-password = Huidige wachtwoord:
@@ -24,6 +28,7 @@ set-password-meter = Wachtwoordkwaliteitsmeter
 set-password-meter-loading = Laden
 master-password-description = Een hoofdwachtwoord wordt gebruikt om gevoelige gegevens te beschermen, zoals wachtwoorden voor websites. Als u een hoofdwachtwoord aanmaakt, zal eenmaal per sessie aan u worden gevraagd dit in te voeren zodra { -brand-short-name } door het wachtwoord beschermde opgeslagen gegevens ophaalt.
 master-password-warning = Verzeker u ervan dat u het ingestelde hoofdwachtwoord onthoudt. Als u uw hoofdwachtwoord vergeet, zult u geen toegang tot de hierdoor beschermde gegevens kunnen krijgen.
+
 remove-password =
     .title = Hoofdwachtwoord verwijderen
 remove-info =

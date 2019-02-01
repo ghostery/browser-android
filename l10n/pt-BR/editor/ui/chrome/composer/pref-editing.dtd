@@ -21,12 +21,11 @@
 <!ENTITY activeLinkText.accesskey   "a">
 <!ENTITY visitedLinkText.label      "Link visitado">
 <!ENTITY visitedLinkText.accesskey  "v">
-<!ENTITY background.label           "Plano de fundo:">
+<!ENTITY background.label           "Fundo:">
 <!ENTITY background.accesskey       "P">
 <!ENTITY colon.character            ":">
 
-<!ENTITY backgroundImage.label      "Imagem do plano de fundo:">
+<!ENTITY backgroundImage.label      "Imagem de fundo:">
 <!ENTITY backgroundImage.accesskey  "I">
 <!ENTITY chooseFile.label           "Selecionar arquivo…">
 <!ENTITY chooseFile.accesskey       "S">
-

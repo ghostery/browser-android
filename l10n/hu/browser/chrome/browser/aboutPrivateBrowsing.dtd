@@ -30,7 +30,15 @@
 
 <!ENTITY trackingProtection.title                        "Védelem követés ellen">
 <!ENTITY trackingProtection.description2                 "Egyes weboldalak követőket használnak, amelyek az interneten bárhol követhetik az Ön tevékenységét. A követés elleni védelemmel a Firefox sok követőt blokkol, amelyek böngészési szokásairól gyűjtenek adatokat.">
+
 <!ENTITY trackingProtection.startTour1                   "Nézze meg a működését">
 
 <!ENTITY contentBlocking.title                           "Tartalomblokkolás">
 <!ENTITY contentBlocking.description                     "Néhány weboldala követőket használ, hogy kövesse a tevékenységét az interneten. A privát ablakokban a Firefox tartalomblokkolás automatikusan blokkol számos követőt, melyek információkat gyűjtenek a böngészési tevékenységéről.">
+
+<!-- Strings for new Private Browsing with Search -->
+<!ENTITY aboutPrivateBrowsing.info.title                 "Jelenleg privát ablakban van">
+<!ENTITY aboutPrivateBrowsing.info.description           "A &brandShortName; törli a keresési és böngészési előzményeit, ha kilép az alkalmazásból, vagy bezárja az összes privát böngészi lapot és ablakot. Ugyan ez nem teszi névtelenné a weboldalak vagy a szolgáltatója felé, könnyebbé teszi, hogy bizalmasan kezelje az online tevékenységét, és más ne tudjon róla, aki ezt a számítógépet használja.">
+<!-- LOCALIZATION NOTE (aboutPrivateBrowsing.info.myths): This is a link to a SUMO article
+                       about private browsing myths.   -->
+<!ENTITY aboutPrivateBrowsing.info.myths                 "Gyakori tévhitek a privát böngészésről">

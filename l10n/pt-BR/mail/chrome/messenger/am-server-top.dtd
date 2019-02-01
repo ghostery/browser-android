@@ -53,7 +53,7 @@
 <!ENTITY modelDeleteImmediately.label "Remover imediatamente">
 <!ENTITY modelDeleteImmediately.accesskey "d">
 <!-- LOCALIZATION NOTE (expungeOnExit.label) : do not translate two of "&quot;" in below line -->
-<!ENTITY expungeOnExit.label "Limpar a pasta “Entrada” ao sair">
+<!ENTITY expungeOnExit.label "Limpar (&quot;eliminar&quot;) a caixa de entrada ao sair">
 <!ENTITY expungeOnExit.accesskey "m">
 <!ENTITY emptyTrashOnExit.label "Esvaziar a lixeira ao sair">
 <!ENTITY emptyTrashOnExit.accesskey "z">
@@ -77,8 +77,8 @@
 <!ENTITY advancedButton.label "Avançado…">
 <!ENTITY advancedButton.accesskey "A">
 <!ENTITY serverDefaultCharset2.label "Codificação padrão do texto:">
-<!ENTITY localPath.label "Pasta local:">
-<!ENTITY localFolderPicker.label "Selecione a localização da pasta local:">
+<!ENTITY localPath.label "Diretório local:">
+<!ENTITY localFolderPicker.label "Selecionar o diretório local">
 <!ENTITY browseFolder.label "Procurar…">
 <!ENTITY browseFolder.accesskey "P">
 <!ENTITY browseNewsrc.label "Procurar…">

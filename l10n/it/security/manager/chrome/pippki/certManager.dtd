@@ -70,11 +70,9 @@
 <!ENTITY exceptionMgr.exceptionButton.label "Conferma eccezione di sicurezza">
 <!ENTITY exceptionMgr.exceptionButton.accesskey "C">
 <!ENTITY exceptionMgr.supplementalWarning "Banche, negozi e altri siti pubblici affidabili non chiederanno di fare questa operazione.">
-<!ENTITY exceptionMgr.certlocation.caption2 "Server">
 <!ENTITY exceptionMgr.certlocation.url "Indirizzo:">
 <!ENTITY exceptionMgr.certlocation.download "Acquisisci certificato">
 <!ENTITY exceptionMgr.certlocation.accesskey "q">
-<!ENTITY exceptionMgr.certstatus.caption "Stato del certificato">
 <!ENTITY exceptionMgr.certstatus.viewCert "Visualizza…">
 <!ENTITY exceptionMgr.certstatus.accesskey "V">
 <!ENTITY exceptionMgr.permanent.label "Salva eccezione in modo permanente">

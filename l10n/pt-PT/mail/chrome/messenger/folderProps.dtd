@@ -9,7 +9,7 @@
 <!ENTITY folderCharsetFallback2.accesskey        "e">
 <!ENTITY folderCharsetEnforce2.label             "Aplicar codificação a todas as mensagens na pasta (definições de codificação de texto de mensagens individuais ou resultado de deteção automática serão ignoradas)">
 <!ENTITY folderCharsetEnforce2.accesskey         "A">
-<!ENTITY folderRebuildSummaryFileTip2.label      "Recriar índice de ficheiros">
+<!ENTITY folderRebuildSummaryFileTip2.label      "Reconstruir índice de ficheiros de sumário">
 <!ENTITY folderRebuildSummaryFile2.label         "Reparar pasta">
 <!ENTITY folderRebuildSummaryFile2.accesskey     "R">
 <!ENTITY folderRebuildSummaryFile.explanation    "Às vezes, o índice da pasta (.msf) fica danificado e algumas mensagens podem desaparecer ou mensagens apagadas continuam a aparecer; a reparação da pasta pode corrigir estes problemas.">

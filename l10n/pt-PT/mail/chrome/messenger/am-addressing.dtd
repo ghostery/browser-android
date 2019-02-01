@@ -6,7 +6,7 @@
 
 <!ENTITY addressing.label          "Endereçamento e composição">
 <!ENTITY addressingGroupTitle.label "Endereçamento">
-<!ENTITY addressingText.label      "Ao procurar endereços:">
+<!ENTITY addressingText.label      "Ao localizar endereços:">
 <!-- LOCALIZATION NOTE (override.label) : do not translate "LDAP" in below line -->
 <!ENTITY useGlobal.label           "Utilizar preferências do meu servidor global LDAP para esta conta">
 <!ENTITY useGlobal.accesskey       "U">
@@ -25,9 +25,6 @@
 <!ENTITY useHtml.accesskey                    "E">
 <!ENTITY autoQuote.label                      "Ao responder, citar automaticamente a mensagem original">
 <!ENTITY autoQuote.accesskey                  "A">
-<!-- LOCALIZATION NOTE (then.label): This will concatenate with the 4 strings that follow. -->
-<!ENTITY then.label                           "Depois,">
-<!ENTITY then.accesskey                       "D">
 <!-- LOCALIZATION NOTE (quoting.label): This will concatenate with the 4 strings that follow. -->
 <!ENTITY quoting.label                        "Ao citar,">
 <!ENTITY quoting.accesskey                    "c">

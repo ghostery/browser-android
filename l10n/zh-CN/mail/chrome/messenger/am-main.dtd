@@ -7,8 +7,8 @@
 <!ENTITY accountTitle.label "账户设置">
 <!ENTITY accountName.label "账户名称：">
 <!ENTITY accountName.accesskey "N">
-<!ENTITY identityTitle.label "默认标识">
-<!ENTITY identityDesc.label "每个账户都有一个标识，其他人在读到您的消息时会看到该标识。">
+<!ENTITY identityTitle.label "默认身份">
+<!ENTITY identityDesc.label "每个账户都有一个身份，其他人在读到您的消息时会看到该身份。">
 <!ENTITY name.label "您的姓名：">
 <!ENTITY name.accesskey "Y">
 <!ENTITY email.label "电子邮件：">

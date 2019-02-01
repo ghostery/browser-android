@@ -22,8 +22,8 @@ serviceworker-worker-unregister = 取消註冊
 # Text for the debug link displayed for an already started Service Worker. Clicking on the
 # link opens a new devtools toolbox for this service worker. The title attribute is only
 # displayed when the link is disabled.
-serviceworker-worker-debug = 偵錯
-    .title = 僅能對運作中的 service worker 進行偵錯
+serviceworker-worker-debug = 除錯
+    .title = 僅能對運作中的 service worker 進行除錯
 # Text for the start link displayed for a registered but not running Service Worker.
 # Clicking on the link will attempt to start the service worker.
 serviceworker-worker-start = 啟動

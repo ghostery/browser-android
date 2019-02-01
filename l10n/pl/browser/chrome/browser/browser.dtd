@@ -17,6 +17,8 @@
 <!ENTITY reloadTabs.accesskey "O">
 <!ENTITY reloadAllTabs.label                 "Odśwież wszystkie karty" >
 <!ENTITY reloadAllTabs.accesskey             "w" >
+<!ENTITY selectAllTabs.label "Zaznacz wszystkie karty">
+<!ENTITY selectAllTabs.accesskey "Z">
 <!ENTITY duplicateTab.label "Duplikuj kartę">
 <!ENTITY duplicateTab.accesskey "D">
 <!ENTITY duplicateTabs.label "Duplikuj karty">
@@ -106,6 +108,8 @@
 <!ENTITY toolbarContextMenu.bookmarkSelectedTab.accesskey "D">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Dodaj zakładki do wszystkich kart…">
 <!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "D">
+<!ENTITY toolbarContextMenu.selectAllTabs.label "Zaznacz wszystkie karty">
+<!ENTITY toolbarContextMenu.selectAllTabs.accesskey "Z">
 <!ENTITY toolbarContextMenu.bookmarkSelectedTabs.label "Dodaj zakładki do zaznaczonych kart…">
 <!ENTITY toolbarContextMenu.bookmarkSelectedTabs.accesskey "D">
 <!ENTITY toolbarContextMenu.undoCloseTab.label "Przywróć zamkniętą kartę">
@@ -207,6 +211,7 @@
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip "Przechowywanie danych na komputerze">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip "Przeglądarka jest zdalnie zarządzana">
 <!ENTITY urlbar.webAuthnAnchor.tooltip "Otwórz panel Web Authentication">
+<!ENTITY urlbar.storageAccessAnchor.tooltip "Zarządzaj uprawnieniami śledzenia aktywności przeglądania">
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip "Zarządzaj udostępnianiem tej witrynie kamery i mikrofonu">
 <!ENTITY urlbar.webRTCShareMicrophoneNotificationAnchor.tooltip "Zarządzaj udostępnianiem mikrofonu tej witrynie">
 <!ENTITY urlbar.webRTCShareScreenNotificationAnchor.tooltip "Zarządzaj udostępnianiem tej witrynie okien i ekranu">
@@ -757,6 +762,8 @@
 <!ENTITY contentBlocking.manageSettings.accesskey "U">
 <!ENTITY contentBlocking.trackersView.label "Elementy śledzące">
 <!ENTITY contentBlocking.trackersView.strictInfo.label "Ustaw blokowanie na „ścisłe”, aby blokować wszystkie elementy śledzące.">
+<!ENTITY contentBlocking.cookies.label "Ciasteczka">
+<!ENTITY contentBlocking.cookiesView.label "Ciasteczka i dane stron">
 <!ENTITY contentBlocking.openBreakageReportView.label "Zgłoś problem">
 <!ENTITY contentBlocking.openBreakageReportView2.label "Zgłoś problem">
 <!ENTITY contentBlocking.breakageReportView.label "Zgłaszanie problemu">

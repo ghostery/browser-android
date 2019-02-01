@@ -3,7 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!-- LOCALIZATION NOTE (tapToPlayPlugin): Mobile (used for touch interfaces) only has one type of plugin possible. -->
-<!ENTITY pluginActivationWarning                             "Этот сайт использует плагин, который может замедлить &brandShortName;.">
 <!ENTITY tapToPlayPlugin                                     "Нажмите здесь для включения плагина">
 <!ENTITY clickToActivatePlugin                               "Включить плагин">
 <!ENTITY checkForUpdates                                     "Проверить наличие обновлений…">
@@ -28,6 +27,6 @@
 <!ENTITY report.pageURL                                      "Включить URL страницы">
 
 <!ENTITY plugin.file                                         "Файл">
-<!ENTITY plugin.mimeTypes                                    "Типы MIME">
+<!ENTITY plugin.mimeTypes                                    "MIME-типы">
 <!ENTITY plugin.flashProtectedMode.label                     "Включить защищённый режим Adobe Flash">
 <!ENTITY plugin.enableBlocklists.label                       "Блокировать опасное и навязчивое Flash-содержимое">

@@ -12,7 +12,6 @@
 <!ENTITY advanced.label "Дополнительно">
 <!ENTITY continue2.label "Подробнее…">
 <!ENTITY moreInformation.label "Подробная информация">
-
 <!ENTITY viewCertificate.label "Просмотреть сертификат">
 
 <!-- Specific error messages -->
@@ -156,9 +155,6 @@ will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "Владелец <span class='hostname'/> неправильно настроил свой веб-сайт. Чтобы защитить вашу информацию от кражи, &brandShortName; не соединился с этим веб-сайтом.">
 <!ENTITY certerror.introPara2 "&brandShortName; обнаружил вероятную угрозу безопасности и не стал открывать <span class='hostname'/>. Если вы посетите этот сайт, нападавшие могут попытаться похитить вашу информацию, такую как пароли, адреса электронной почты или данные банковских карт.">
-
-<!ENTITY certerror.expiredCert.secondPara "Эта проблема, скорее всего, связана с неправильной установкой времени вашего компьютера, что может не дать &brandShortName; установить защищённое соединение.">
-
 <!ENTITY certerror.sts.introPara "&brandShortName; обнаружил вероятную угрозу безопасности и не стал открывать <span class='hostname'/>, так как для подключения к этому сайту необходимо установить защищённое соединение.">
 
 <!ENTITY certerror.expiredCert.introPara "&brandShortName; обнаружил вероятную угрозу безопасности и не стал открывать <span class='hostname'/>. Либо веб-сайт неправильно настроен, либо часы вашего компьютера установлены неправильно.">
@@ -232,6 +228,13 @@ was trying to connect. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> использует защитную технологию, которая является устаревшей и уязвимой для атаки. Злоумышленник может легко выявить информацию, которая, как вы думали, находится в безопасности. Для того, чтобы вы смогли посетить веб-сайт, администратор веб-сайта должен сначала исправить его сервер.</p><p>Код ошибки: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Заблокированная страница">
+
+<!ENTITY certerror.mitm.title "Программное обеспечение не даёт &brandShortName; безопасно подключиться к этому сайту">
+<!ENTITY certerror.mitm.longDesc "<span class='hostname'></span>, вероятно, является безопасным сайтом, но защищённое соединение не может быть установлено. Эта проблема вызвана <span class='mitm-name'/>, программным обеспечением на вашем компьютере или в вашей сети.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt1 "Если ваша антивирусная программа содержит функциональность, которая сканирует защищённые соединения (часто называемую «веб-сканирование» или «https-сканирование», то вы можете отключить её. Если это не поможет, то вы можете удалить и переустановить антивирусное программное обеспечение.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt2 "Если вы находитесь в корпоративной сети, то вы можете связаться со своим IT-отделом.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt3 "Если вы не знакомы с <span class='mitm-name'/>, то, вероятно, это может быть атакой и вам не следует продолжать работу с сайтом.">
+<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "Если вы не знакомы с <span class='mitm-name'/>, то, вероятно, это может быть атакой и вы никак не сможете получить доступ к сайту.">
 
 <!ENTITY clockSkewError.title "Часы вашего компьютера установлены неправильно">
 <!ENTITY clockSkewError.longDesc "Ваш компьютер считает, что текущее время — <span id='wrongSystemTime_systemDate1'/>, что не даёт &brandShortName; установить защищённое соединение. Чтобы посетить <span class='hostname'></span>, укажите в компьютерных часах в настройках системы текущую дату, время и часовой пояс, а затем перезагрузите <span class='hostname'></span>.">

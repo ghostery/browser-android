@@ -27,7 +27,7 @@
 <!ENTITY useSmoothScrolling.accesskey  "u">
 
 <!ENTITY systemIntegration.label       "Integração de sistemas">
-<!ENTITY alwaysCheckDefault.label      "Ao iniciar, verificar se o &brandShortName; é o cliente de e-mail predefinido">
+<!ENTITY alwaysCheckDefault.label      "Verificar sempre se o &brandShortName; é o cliente de correio predefinido no arranque">
 <!ENTITY alwaysCheckDefault.accesskey  "A">
 <!ENTITY searchIntegration.label       "Permitir &searchIntegration.engineName; para pesquisa de mensagens">
 <!ENTITY searchIntegration.accesskey   "s">
@@ -71,8 +71,6 @@
 <!ENTITY updateAuto.accesskey            "a">
 <!ENTITY updateCheck.label               "Procurar atualizações, mas deixar-me escolher quais instalar">
 <!ENTITY updateCheck.accesskey           "c">
-<!ENTITY updateManual.label              "Nunca procurar atualizações (não recomendado: risco de segurança)">
-<!ENTITY updateManual.accesskey          "N">
 <!ENTITY updateHistory.label             "Mostrar histórico de atualizações">
 <!ENTITY updateHistory.accesskey         "h">
 

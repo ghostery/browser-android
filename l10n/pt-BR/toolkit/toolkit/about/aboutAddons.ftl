@@ -43,8 +43,8 @@ cmd-show-details =
     .label = Mostrar mais informações
     .accesskey = E
 cmd-find-updates =
-    .label = Localizar atualizações
-    .accesskey = V
+    .label = Procurar atualizações
+    .accesskey = P
 cmd-preferences =
     .label =
         { PLATFORM() ->
@@ -127,14 +127,14 @@ addon-restart-now =
     .label = Reiniciar agora
 disabled-unsigned-heading =
     .value = Algumas extensões foram desabilitadas
-disabled-unsigned-description = As seguintes extensões não foram verificadas para uso no { -brand-short-name }. Você pode <label data-l10n-name="find-addons">localizar substitutos</label> ou solicitar que o desenvolvedor peça a sua verificação.
+disabled-unsigned-description = As seguintes extensões não foram verificadas para uso no { -brand-short-name }. Você pode <label data-l10n-name="find-addons">procurar substitutos</label> ou solicitar que o desenvolvedor peça a sua verificação.
 disabled-unsigned-learn-more = Saiba mais sobre nossos esforços para ajudar a manter os usuários seguros.
 disabled-unsigned-devinfo = Os desenvolvedores interessados que seus complementos sejam verificados, devem ler o nosso <label data-l10n-name="learn-more">manual</label>.
 plugin-deprecation-description = Faltando alguma coisa? Alguns plugins não são mais suportados pelo { -brand-short-name }. <label data-l10n-name="learn-more">Saiba mais.</label>
 legacy-warning-show-legacy = Mostrar extensões legadas
 legacy-extensions =
     .value = Extensões legadas
-legacy-extensions-description = Estas extensões não cumprem os padrões atuais do { -brand-short-name }, então eles foram desativados. <label data-l10n-name="legacy-learn-more">Saiba mais sobre as alterações das extensões</label>
+legacy-extensions-description = Estas extensões não cumprem os padrões atuais do { -brand-short-name }, então foram desativadas. <label data-l10n-name="legacy-learn-more">Saiba mais sobre mudanças em extensões</label>
 extensions-view-discover =
     .name = Adicionar
     .tooltiptext = { extensions-view-discover.name }

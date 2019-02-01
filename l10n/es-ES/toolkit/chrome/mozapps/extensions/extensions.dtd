@@ -3,8 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "Administrador de complementos">
 
-<!ENTITY search.placeholder2                  "Buscar en addons.mozilla.org">
-
+<!ENTITY search.placeholder3                  "Buscar en addons.mozilla.org">
 <!ENTITY search.buttonlabel                   "Buscar">
 <!-- LOCALIZATION NOTE (search.commandkey):
      The search command key should match findOnCmd.commandkey from browser.dtd -->
@@ -19,9 +18,6 @@
 <!ENTITY installAddonFromFile.label           "Instalar complemento desde archivo…">
 <!ENTITY installAddonFromFile.accesskey       "I">
 <!ENTITY toolsMenu.tooltip                    "Herramientas para todos los complementos">
-
-<!ENTITY getThemes.description                "¿Pensando en personalizar su navegador?">
-<!ENTITY getThemes.learnMore                  "Elija entre miles de temas.">
 
 
 <!ENTITY showUnsignedExtensions.button.label  "Algunas extensiones no han podido ser verificadas">

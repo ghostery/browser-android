@@ -6,4 +6,4 @@
 <!ENTITY  listAllTabs.label        "Listar todos os separadores">
 <!-- LOCALIZATION NOTE(defaultTabTitle.label): This is the default tab
      title to show when the tab has no title. -->
-<!ENTITY  defaultTabTitle.label    "Página inicial">
+<!ENTITY  defaultTabTitle.label    "Início">

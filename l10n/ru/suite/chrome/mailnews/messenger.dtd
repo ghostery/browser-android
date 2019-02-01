@@ -483,6 +483,8 @@
 <!ENTITY contextCopyMsgMenu.accesskey "К">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Недавно открытые">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "д">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Избранное">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "о">
 <!ENTITY contextSaveAs.label "Сохранить как…">
 <!ENTITY contextSaveAs.accesskey "С">
 <!ENTITY contextPrint.label "Распечатать…">

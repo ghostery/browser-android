@@ -38,9 +38,9 @@
 <!ENTITY calendar.unifinder.tree.percentcomplete.label     "&#037; completada">
 <!ENTITY calendar.unifinder.tree.percentcomplete.tooltip2  "Ordenar por &#037; completo">
 <!ENTITY calendar.unifinder.tree.startdate.label           "Início">
-<!ENTITY calendar.unifinder.tree.startdate.tooltip2        "Ordenar pela data de início">
+<!ENTITY calendar.unifinder.tree.startdate.tooltip2        "Ordenar por data de início">
 <!ENTITY calendar.unifinder.tree.enddate.label             "Fim">
-<!ENTITY calendar.unifinder.tree.enddate.tooltip2          "Ordenar pela data de término">
+<!ENTITY calendar.unifinder.tree.enddate.tooltip2          "Ordenar por data de término">
 <!ENTITY calendar.unifinder.tree.duedate.label             "Prazo">
 <!ENTITY calendar.unifinder.tree.duedate.tooltip2          "Ordenar pelo prazo">
 <!ENTITY calendar.unifinder.tree.completeddate.label       "Concluída">

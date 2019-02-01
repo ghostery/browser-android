@@ -20,6 +20,10 @@
 <!ENTITY font.accesskey                       "n">
 <!ENTITY size.label                           "크기:">
 <!ENTITY size.accesskey                       "z">
+<!ENTITY fontSize.label                       "크기:">
+<!ENTITY fontSize.accesskey                   "z">
+<!ENTITY useReaderDefaults.label              "사용자의 기본 색상 사용">
+<!ENTITY useReaderDefaults.accesskey          "d">
 <!ENTITY fontColor.label                      "글자:">
 <!ENTITY fontColor.accesskey                  "T">
 <!ENTITY bgColor.label                        "배경:">

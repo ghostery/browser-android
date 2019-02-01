@@ -87,7 +87,7 @@
 <!ENTITY manBookmarksCmd.commandkey "b">
 
 <!-- Tools Menu -->
-<!ENTITY searchInternetCmd.label "在網路上搜尋">
+<!ENTITY searchInternetCmd.label "搜尋 Web">
 <!ENTITY searchInternetCmd.accesskey "b">
 <!ENTITY searchInternet.commandKey "s">
 <!ENTITY translateMenu.label "翻譯此頁">
@@ -144,4 +144,3 @@
 
 <!ENTITY clearPrivateDataCmd.label "清除隱私資料…">
 <!ENTITY clearPrivateDataCmd.accesskey "e">
-

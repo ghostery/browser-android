@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY syncBrand.fullName.label "&brandShortName; Sync">
+<!ENTITY syncBrand.fullName.label "Firefox Sync">
 <!ENTITY syncBrand.shortName.label "Sync">
 
 <!ENTITY sync.title.connect.label "Połącz z &syncBrand.shortName.label;">
@@ -66,7 +66,7 @@
 <!ENTITY fxaccount_status_linktos2 "Warunki użytkowania">
 <!ENTITY fxaccount_status_linkprivacy2 "Polityka prywatności">
  
-<!ENTITY fxaccount_account_type_label "&brandShortName;">
+<!ENTITY fxaccount_account_type_label "Firefox">
 
 <!ENTITY fxaccount_options_title "Opcje usługi &syncBrand.shortName.label;">
 <!ENTITY fxaccount_options_configure_title "Skonfiguruj usługę &syncBrand.shortName.label;">

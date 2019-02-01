@@ -12,5 +12,5 @@
 <!ENTITY showAllUnreadMessagesCount.label      "Contagem de mensagens não lidas">
 <!ENTITY showAllUnreadMessagesCount.accesskey  "t">
 <!ENTITY dockIconBadge.label                   "Badge do ícone">
-<!ENTITY dockIconShow.label                    "Badge do ícone com:">
+<!ENTITY dockIconShow.label                    "Ícone de emblema do aplicativo com:">
 <!ENTITY directNotificationSettings.label      "Você pode desativar o emblema no painel de Notificação das Preferências do Sistema.">

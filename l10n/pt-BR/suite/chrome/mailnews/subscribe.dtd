@@ -18,5 +18,5 @@
 <!ENTITY subscribedHeader.label       "Inscrever">
 <!-- commenting out until bug 38906 is fixed 
 <!ENTITY messagesHeader.label         "Messages"> -->
-<!ENTITY namefield.label              "Localizar item:">
+<!ENTITY namefield.label              "Exibir itens que contêm:">
 <!ENTITY namefield.accesskey          "z">

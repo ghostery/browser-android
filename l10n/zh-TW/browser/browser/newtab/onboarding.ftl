@@ -28,3 +28,14 @@ onboarding-ghostery-text = 使用 Ghostery 封鎖討人厭的廣告，讓您上�
 # Note: "Sync" in this case is a generic verb, as in "to synchronize"
 onboarding-fxa-title = 同步
 onboarding-fxa-text = 註冊 { -fxaccount-brand-name } 後，即可在任何使用 { -brand-short-name } 的地方同步您的書籤、密碼、開啟的分頁。
+
+## Message strings belonging to the Return to AMO flow
+
+return-to-amo-sub-header = 恭喜，您已經安裝好 { -brand-short-name }
+# <icon></icon> will be replaced with the icon belonging to the extension
+#
+# Variables:
+#   $addon-name (String) - Name of the add-on
+return-to-amo-addon-header = 現在來安裝 <icon></icon><b>{ $addon-name }</b> 吧。
+return-to-amo-extension-button = 安裝擴充套件
+return-to-amo-get-started-button = { -brand-short-name } 使用入門

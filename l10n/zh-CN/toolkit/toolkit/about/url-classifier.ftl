@@ -3,6 +3,16 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 url-classifier-title = URL 分类器信息
+url-classifier-search-title = 搜索
+url-classifier-search-result-title = 结果
+url-classifier-search-result-uri = URI: { $uri }
+url-classifier-search-result-list = 表格列表: { $list }
+url-classifier-search-input = URL
+url-classifier-search-error-invalid-url = 无效 URL
+url-classifier-search-error-no-features = 未选择功能
+url-classifier-search-btn = 开始搜索
+url-classifier-search-features = 功能
+url-classifier-search-listType = 列表类型
 url-classifier-provider-title = 供应商
 url-classifier-provider = 供应商
 url-classifier-provider-last-update-time = 上次更新时间
@@ -14,8 +24,8 @@ url-classifier-cache-title = 缓存
 url-classifier-cache-refresh-btn = 刷新
 url-classifier-cache-clear-btn = 清除
 url-classifier-cache-table-name = 表名
-url-classifier-cache-ncache-entries = 阴性缓存总数量
-url-classifier-cache-pcache-entries = 阳性缓存总数量
+url-classifier-cache-ncache-entries = 负缓存项目数
+url-classifier-cache-pcache-entries = 正缓存项目数
 url-classifier-cache-show-entries = 显示项目
 url-classifier-cache-entries = 缓存项目
 url-classifier-cache-prefix = 前缀

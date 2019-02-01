@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!-- Window title -->
-<!ENTITY windowTitle.label "Cores e plano de fundo da página">
+<!ENTITY windowTitle.label "Cores e fundo da página">
 <!ENTITY pageColors.label "Cores da página">
 <!ENTITY defaultColorsRadio.label "Padrão de cores do Leitor (Não definir as cores na página)">
 <!ENTITY defaultColorsRadio.accessKey "N">
@@ -20,10 +20,10 @@
 <!ENTITY activeLinkText.accessKey "a">
 <!ENTITY visitedLinkText.label "Texto do link visitado">
 <!ENTITY visitedLinkText.accessKey "v">
-<!ENTITY background.label "Plano de fundo:">
+<!ENTITY background.label "Fundo:">
 <!ENTITY background.accessKey "P">
 <!ENTITY colon.character ":">
-<!ENTITY backgroundImage.label "Imagem do plano de fundo:">
+<!ENTITY backgroundImage.label "Imagem de fundo:">
 <!ENTITY backgroundImage.accessKey "I">
-<!ENTITY backgroundImage.tooltip "Usar um arquivo de imagem como plano de fundo para a página">
+<!ENTITY backgroundImage.tooltip "Usar um arquivo de imagem como fundo da sua página">
 <!ENTITY backgroundImage.shortenedDataURI "URI encurtada (cópia substituirá a URI completa na área de transferência)">

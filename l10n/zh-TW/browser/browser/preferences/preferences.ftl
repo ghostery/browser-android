@@ -8,6 +8,8 @@ do-not-track-option-default =
     .label = 只在使用追蹤保護功能時
 do-not-track-option-default-content-blocking =
     .label = 僅在 { -brand-short-name } 設定封鎖偵測到的追蹤器時
+do-not-track-option-default-content-blocking-known =
+    .label = 僅在 { -brand-short-name } 設定為封鎖已知追蹤器時
 do-not-track-option-always =
     .label = 總是
 pref-page =
@@ -86,7 +88,7 @@ extension-controlled-homepage-override = 擴充套件「<img data-l10n-name="ico
 extension-controlled-new-tab-url = 擴充套件「<img data-l10n-name="icon"/> { $name }」正在控制您的新分頁內容。
 # This string is shown to notify the user that their notifications permission
 # is being controlled by an extension.
-extension-controlled-web-notifications = 有一套擴充套件，<img data-l10n-name="icon"/> { $name } 正在控制此設定。
+extension-controlled-web-notifications = 擴充套件<img data-l10n-name="icon"/> { $name } 正在控制此設定。
 # This string is shown to notify the user that the default search engine
 # is being controlled by an extension.
 extension-controlled-default-search = 擴充套件「<img data-l10n-name="icon"/> { $name }」修改了您的預設搜尋引擎。
@@ -141,6 +143,8 @@ set-as-my-default-browser =
 startup-restore-previous-session =
     .label = 回復先前的瀏覽狀態
     .accesskey = s
+startup-restore-warn-on-quit =
+    .label = 關閉瀏覽器時警告您
 disable-extension =
     .label = 停用擴充套件
 tabs-group-header = 分頁
@@ -152,9 +156,6 @@ open-new-link-as-tabs =
     .accesskey = w
 warn-on-close-multiple-tabs =
     .label = 關閉多個分頁前警告您
-    .accesskey = m
-warn-on-quit-close-multiple-tabs =
-    .label = 在離開或關閉多個分頁前警告您
     .accesskey = m
 warn-on-open-many-tabs =
     .label = 開啟多個分頁時，警告我可能會拖慢 { -brand-short-name }
@@ -168,7 +169,7 @@ show-tabs-in-taskbar =
 browser-containers-enabled =
     .label = 開啟容器分頁
     .accesskey = n
-browser-containers-learn-more = 詳細資訊
+browser-containers-learn-more = 了解更多
 browser-containers-settings =
     .label = 設定…
     .accesskey = i
@@ -202,7 +203,7 @@ choose-language-description = 請選擇瀏覽支援多國語言的網頁時要�
 choose-button =
     .label = 選擇…
     .accesskey = o
-choose-browser-language-description = 請選擇 { -brand-short-name } 顯示選單、訊息、通知時使用的語言。
+choose-browser-language-description = 請選擇 { -brand-short-name } 要用來顯示選單、介面訊息以及通知內容的語言。
 manage-browser-languages-button =
     .label = 設定其他語言…
     .accesskey = l
@@ -256,7 +257,7 @@ drm-content-header = 數位權利管理（DRM）內容
 play-drm-content =
     .label = 播放 DRM 內容
     .accesskey = P
-play-drm-content-learn-more = 詳細資訊
+play-drm-content-learn-more = 了解更多
 update-application-title = { -brand-short-name } 更新
 update-application-description = 保持更新 { -brand-short-name }，獲得最佳效能、穩定度以及安全性。
 update-application-version = { $version }版 <a data-l10n-name="learn-more">有什麼新鮮事</a>
@@ -526,7 +527,6 @@ privacy-header = 瀏覽器隱私權
 
 ## Privacy Section - Forms
 
-forms-header = 表單與密碼
 logins-header = 登入資訊與密碼
 forms-ask-to-save-logins =
     .label = 向您詢問是否要記住網站的登入帳號與密碼
@@ -541,7 +541,7 @@ forms-master-pw-use =
     .label = 使用主控密碼
     .accesskey = U
 forms-master-pw-change =
-    .label = 變更主控密碼
+    .label = 變更主控密碼…
     .accesskey = M
 
 ## Privacy Section - History
@@ -618,11 +618,19 @@ sitedata-block-trackers-option-recommended =
 sitedata-block-trackers-option =
     .label = 第三方追蹤器
 sitedata-block-unvisited-option =
-    .label = 未造訪過的網站的 Cookie
+    .label = 來自未造訪過網站的 Cookie
 sitedata-block-all-third-party-option =
-    .label = 所有第三方 Cookie（可能會造成某些網站不正常）
+    .label = 所有第三方 Cookie（可能造成某些網站不正常）
 sitedata-block-all-option =
-    .label = 所有 Cookie（會造成大部分網站不正常）
+    .label = 所有 Cookie（會造成網站不正常）
+sitedata-option-block-trackers =
+    .label = 第三方追蹤器
+sitedata-option-block-unvisited =
+    .label = 來自未造訪過網站的 Cookie
+sitedata-option-block-all-third-party =
+    .label = 所有第三方 Cookie（可能造成某些網站不正常）
+sitedata-option-block-all =
+    .label = 所有 Cookie（會造成網站不正常）
 sitedata-clear =
     .label = 清除資料…
     .accesskey = l
@@ -680,25 +688,6 @@ content-blocking-fastblock-slow-loading-trackers-label =
     .label = 慢速載入的追蹤器
     .accesskey = S
 content-blocking-fastblock-new-description = 只封鎖會影響頁面載入速度的追蹤器。
-content-blocking-setting-standard =
-    .label = 標準
-    .accesskey = d
-content-blocking-setting-strict =
-    .label = 嚴格
-    .accesskey = r
-content-blocking-setting-custom =
-    .label = 自訂
-    .accesskey = C
-content-blocking-standard-desc = 在保護與效能間取得平衡。允許某些追蹤器以確保網站運作正常。
-content-blocking-strict-desc = 封鎖所有 { -brand-short-name } 偵測到的追蹤器。可能造成某些網站故障。
-content-blocking-custom-desc = 選擇要封鎖哪些內容。
-content-blocking-private-trackers = 僅在隱私視窗中封鎖已知的追蹤器
-content-blocking-third-party-cookies = 第三方追蹤 Cookie
-content-blocking-all-windows-trackers = 在所有視窗封鎖已知的追蹤器
-content-blocking-all-third-party-cookies = 所有第三方 Cookie
-content-blocking-warning-title = 注意！
-content-blocking-warning-desc = 封鎖 Cookie 與追蹤器可能會造成某些網站故障。很簡單就能為您信任的網站關閉封鎖。
-content-blocking-learn-how = 了解要怎麼做
 content-blocking-tracking-protection-trackers-label =
     .label = 追蹤器
     .accesskey = T
@@ -710,6 +699,37 @@ content-blocking-tracking-protection-option-always =
     .label = 總是
     .accesskey = A
 content-blocking-tracking-protection-option-private =
+    .label = 僅在隱私瀏覽視窗
+    .accesskey = p
+# The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
+# "Standard" in this case is an adjective, meaning "default" or "normal".
+content-blocking-setting-standard =
+    .label = 標準
+    .accesskey = d
+content-blocking-setting-strict =
+    .label = 嚴格
+    .accesskey = r
+content-blocking-setting-custom =
+    .label = 自訂
+    .accesskey = C
+content-blocking-standard-description = 只在隱私視窗中，封鎖已知的追蹤器。
+content-blocking-standard-desc = 在保護與效能間取得平衡。允許某些追蹤器以確保網站運作正常。
+content-blocking-strict-desc = 封鎖所有 { -brand-short-name } 偵測到的追蹤器。可能造成某些網站故障。
+content-blocking-custom-desc = 選擇要封鎖哪些內容。
+content-blocking-private-trackers = 僅在隱私視窗中封鎖已知的追蹤器
+content-blocking-third-party-cookies = 第三方追蹤 Cookie
+content-blocking-all-windows-trackers = 在所有視窗封鎖已知的追蹤器
+content-blocking-all-third-party-cookies = 所有第三方 Cookie
+content-blocking-warning-title = 注意！
+content-blocking-warning-desc = 封鎖 Cookie 與追蹤器可能會造成某些網站故障。很簡單就能為您信任的網站關閉封鎖。
+content-blocking-learn-how = 了解要怎麼做
+content-blocking-trackers-label =
+    .label = 追蹤器
+    .accesskey = T
+content-blocking-tracking-protection-option-all-windows =
+    .label = 所有視窗
+    .accesskey = A
+content-blocking-option-private =
     .label = 僅在隱私瀏覽視窗
     .accesskey = p
 content-blocking-tracking-protection-change-block-list = 變更封鎖清單
@@ -732,7 +752,7 @@ content-blocking-reject-trackers-block-trackers-option =
     .label = 追蹤器
     .accesskey = k
 content-blocking-reject-trackers-all-third-parties-option =
-    .label = 所有第三方 Cookie（可能會造成某些網站不正常）
+    .label = 所有第三方 Cookie（可能造成某些網站不正常）
     .accesskey = A
 content-blocking-cookies-label =
     .label = Cookie
@@ -793,7 +813,7 @@ permissions-block-autoplay-media-exceptions =
     .label = 例外網站…
     .accesskey = E
 autoplay-option-ask =
-    .label = 總是詢問是否要自動播放
+    .label = 總是詢問
 autoplay-option-allow =
     .label = 允許自動播放
 autoplay-option-dont =
@@ -828,6 +848,9 @@ collection-health-report-link = 更多資訊
 collection-studies =
     .label = 允許 { -brand-short-name } 安裝並進行研究
 collection-studies-link = 檢視 { -brand-short-name } 所進行的研究
+addon-recommendations =
+    .label = 允許 { -brand-short-name } 提供個人化的擴充套件推薦項目
+addon-recommendations-link = 了解更多
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = 進行編譯設定時，已停用了資料回報功能

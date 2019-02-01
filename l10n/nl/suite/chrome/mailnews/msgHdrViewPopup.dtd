@@ -13,6 +13,8 @@
 <!ENTITY SendMailTo.accesskey              "s">
 <!ENTITY CopyEmailAddress.label            "E-mailadres kopiëren">
 <!ENTITY CopyEmailAddress.accesskey        "k">
+<!ENTITY CopyNameAndEmailAddress.label     "Naam en e-mailadres kopiëren">
+<!ENTITY CopyNameAndEmailAddress.accesskey "N">
 <!ENTITY CreateFilterFrom.label            "Filter maken op basis van…">
 <!ENTITY CreateFilterFrom.accesskey        "F">
 <!ENTITY openInBrowser.label               "Openen in browser">

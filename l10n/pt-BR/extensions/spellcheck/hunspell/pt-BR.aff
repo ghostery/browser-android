@@ -1,12 +1,3 @@
-# Licensing Information:
-# https://hg.mozilla.org/releases/l10n/mozilla-beta/pt-BR/file/tip/extensions/spellcheck/hunspell/README.txt
-#
-# Source:
-# https://natura.di.uminho.pt/svn/main/dicionarios/jspell.pt/
-#
-# Maintainer: Jeferson Hultmann <hultmann@gmail.com>
-# Discussion: https://groups.google.com/group/dic-br
-
 SET UTF-8
 LANG pt_BR
 TRY aerisontcdmlupvgbfzáhçqjíxãóéêâúõACMPSBTELGRIFVDkHJONôywUKXZWQÁYÍÉàÓèÂÚ
@@ -1409,7 +1400,8 @@ SFX J   e               ito             [^ã]e
 SFX J   o               ito             [^ã]o
 SFX J   0               zito            ão
 
-REP 44
+REP 45
+REP câimbra    cãibra
 REP conserteza com_certeza
 REP denovo     de_novo
 REP derrepente de_repente

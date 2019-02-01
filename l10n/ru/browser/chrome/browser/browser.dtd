@@ -21,8 +21,6 @@
 <!-- Tab context menu -->
 <!ENTITY  reloadTab.label                    "Обновить вкладку">
 <!ENTITY  reloadTab.accesskey                "и">
-<!ENTITY  reloadAllTabs.label                "Обновить все вкладки">
-<!ENTITY  reloadAllTabs.accesskey            "н">
 <!ENTITY  selectAllTabs.label                "Выбрать все вкладки">
 <!ENTITY  selectAllTabs.accesskey            "б">
 <!-- LOCALIZATION NOTE (duplicateTab.label): This is a command to duplicate
@@ -47,9 +45,6 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "Закрыть другие вкладки">
 <!ENTITY  closeOtherTabs.accesskey           "ы">
 
-<!ENTITY  closeSelectedTabs.label            "Закрыть выделенные вкладки">
-<!ENTITY  closeSelectedTabs.accesskey        "ы">
-
 <!ENTITY  closeTabs.label                    "Закрыть вкладки">
 <!ENTITY  closeTabs.accesskey                "ы">
 <!ENTITY  pinSelectedTabs.label              "Закрепить вкладки">
@@ -62,10 +57,6 @@ same accesskey but will never be visible at the same time. -->
 unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
 same accesskey but will never be visible at the same time. -->
 <!ENTITY  unpinSelectedTabs.accesskey        "к">
-<!-- Reload Tab and Reload Selected Tabs have the same accesskey
-but will never be visible at the same time. -->
-<!ENTITY  reloadSelectedTabs.label           "Обновить выделенные вкладки">
-<!ENTITY  reloadSelectedTabs.accesskey       "и">
 <!-- LOCALIZATION NOTE(reloadTab.label, reloadTabs.label): have the same accesskey
 but will never be visible at the same time. -->
 <!ENTITY  reloadTabs.label                   "Обновить вкладки">
@@ -90,8 +81,6 @@ same accesskey but will never be visible at the same time. -->
 unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
 same accesskey but will never be visible at the same time. -->
 <!ENTITY  unpinTab.accesskey                 "к">
-<!ENTITY  sendTabToDevice.label              "Отправить вкладку на устройство">
-<!ENTITY  sendTabToDevice.accesskey          "п">
 <!ENTITY  sendPageToDevice.label             "Отправить страницу на устройство">
 <!ENTITY  sendPageToDevice.accesskey         "п">
 <!ENTITY  sendLinkToDevice.label             "Отправить ссылку на устройство">
@@ -110,8 +99,6 @@ These two items have the same accesskey but will never be visible at the same ti
 <!ENTITY  moveToNewWindow.accesskey          "е">
 <!ENTITY  reopenInContainer.label            "Переоткрыть в контейнере">
 <!ENTITY  reopenInContainer.accesskey        "й">
-<!ENTITY  bookmarkAllTabs.label              "Добавить все вкладки в закладки…">
-<!ENTITY  bookmarkAllTabs.accesskey          "в">
 <!ENTITY  bookmarkTab.label                  "Добавить вкладку в закладки">
 <!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
 These items have the same accesskey but will never be visible at the same time. -->
@@ -123,6 +110,10 @@ These items have the same accesskey but will never be visible at the same time. 
 <!ENTITY  hiddenTabs.label                   "Скрытые вкладки">
 
 <!ENTITY  listAllTabs.label      "Список всех вкладок">
+
+<!-- LOCALIZATION NOTE (allTabsMenu.searchTabs.label): "Search" is a verb, as
+in "Search through tabs". -->
+<!ENTITY  allTabsMenu.searchTabs.label       "Поиск вкладок">
 
 <!ENTITY tabCmd.label "Новая вкладка">
 <!ENTITY tabCmd.accesskey "о">
@@ -153,11 +144,6 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY personalbarCmd.label "Панель закладок">
 <!ENTITY personalbarCmd.accesskey "з">
 <!ENTITY bookmarksToolbarItem.label "Элементы панели закладок">
-
-<!ENTITY toolbarContextMenu.reloadAllTabs.label "Обновить все вкладки">
-<!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "о">
-<!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Добавить все вкладки в закладки…">
-<!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "а">
 
 <!ENTITY toolbarContextMenu.reloadSelectedTab.label "Обновить выделенную вкладку">
 <!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
@@ -264,9 +250,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY editThisBookmarkCmd.label "Редактировать эту закладку">
 <!ENTITY bookmarkThisPageCmd.commandkey "d">
 
-<!ENTITY subscribeToPageMenupopup.label "Подписаться на ленты новостей">
-<!ENTITY subscribeToPageMenuitem.label "Подписаться на ленты новостей…">
-
 <!ENTITY addCurPagesCmd.label "Добавить все вкладки…">
 <!ENTITY showAllBookmarks2.label "Показать все закладки">
 <!ENTITY recentBookmarks.label "Недавно добавленные закладки">
@@ -305,6 +288,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip     "Хранить данные в постоянном хранилище">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip   "Браузер находится под удалённым управлением">
 <!ENTITY urlbar.webAuthnAnchor.tooltip                    "Открыть панель веб-авторизации">
+
+<!ENTITY urlbar.storageAccessAnchor.tooltip               "Открыть панель разрешений при веб-сёрфинге">
 
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip      "Управление доступом сайта к вашей камере и/или микрофону">
 <!ENTITY urlbar.webRTCShareMicrophoneNotificationAnchor.tooltip   "Управление доступом сайта к вашему микрофону">
@@ -380,10 +365,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY webDeveloperMenu.label       "Веб-разработка">
 <!ENTITY webDeveloperMenu.accesskey   "б">
-
-<!ENTITY devtoolsRecordExecution.label "Записать выполнение">
-<!ENTITY devtoolsSaveRecording.label "Сохранить запись">
-<!ENTITY devtoolsReplayExecution.label "Проиграть выполнение">
 
 <!ENTITY inspectContextMenu.label     "Исследовать элемент">
 <!ENTITY inspectContextMenu.accesskey "л">
@@ -514,7 +495,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "о">
 <!ENTITY customizeMenu.manageExtension.label "Управление расширением">
 <!ENTITY customizeMenu.manageExtension.accesskey "в">
-
 <!ENTITY customizeMenu.removeExtension.label "Удалить расширение">
 <!ENTITY customizeMenu.removeExtension.accesskey "л">
 
@@ -655,6 +635,16 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY bookmarkThisFrameCmd.label      "Добавить фрейм в закладки">
 <!ENTITY bookmarkThisFrameCmd.accesskey  "б">
 <!ENTITY pageAction.copyLink.label    "Копировать ссылку">
+
+<!-- LOCALIZATION NOTE(pocket-button.tooltiptext, saveToPocketCmd.label, saveLinkToPocketCmd.label, pocketMenuitem.label):
+  "Pocket" is a brand name. -->
+<!ENTITY pocketButton.tooltiptext     "Сохранить в Pocket">
+<!ENTITY saveToPocketCmd.label        "Сохранить страницу в Pocket">
+<!ENTITY saveToPocketCmd.accesskey    "ь">
+<!ENTITY saveLinkToPocketCmd.label    "Сохранить ссылку в Pocket">
+<!ENTITY saveLinkToPocketCmd.accesskey "н">
+<!ENTITY pocketMenuitem.label         "Показать список Pocket">
+
 <!ENTITY emailPageCmd.label           "Отправить ссылку по почте…">
 <!ENTITY emailPageCmd.accesskey       "п">
 <!ENTITY savePageCmd.label            "Сохранить как…">
@@ -1019,12 +1009,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.trackingProtection2.label "Все обнаруженные трекеры">
 
 <!ENTITY contentBlocking.trackingProtection3.label "Трекеры">
-<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.allowed.label):
-     This label signals that this type of content blocking is turned
-     OFF and is not blocking tracker content, so this is not
-     a positive thing. It forms the end of the (imaginary) sentence
-     "Trackers [are] Allowed"-->
-<!ENTITY contentBlocking.trackingProtection.allowed.label "Разрешены">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
      This label signals that this type of content blocking is turned
      ON and is successfully blocking tracker content, so this is
@@ -1066,6 +1050,9 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY contentBlocking.trackersView.label "Трекеры">
 <!ENTITY contentBlocking.trackersView.strictInfo.label "Чтобы блокировать все трекеры, выберите «строгую» блокировку содержимого.">
+
+<!ENTITY contentBlocking.cookies.label "Куки">
+<!ENTITY contentBlocking.cookiesView.label "Куки и данные сайтов">
 
 <!ENTITY contentBlocking.openBreakageReportView2.label "Сообщить о проблеме">
 <!ENTITY contentBlocking.breakageReportView.label "Сообщить о проблеме">
@@ -1200,11 +1187,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY pageActionButton.tooltip "Действия на странице">
 <!ENTITY pageAction.addToUrlbar.label "Добавить на панель адреса">
 <!ENTITY pageAction.removeFromUrlbar.label "Удалить с панели адреса">
-<!ENTITY pageAction.allowInUrlbar.label "Отображать на панели адреса">
-<!ENTITY pageAction.disallowInUrlbar.label "Не отображать на панели адреса">
 <!ENTITY pageAction.manageExtension.label "Управление расширением…">
-
-<!ENTITY pageAction.sendTabToDevice.label "Отправить вкладку на устройство">
 
 <!ENTITY sendToDevice.syncNotReady.label "Синхронизация устройств…">
 

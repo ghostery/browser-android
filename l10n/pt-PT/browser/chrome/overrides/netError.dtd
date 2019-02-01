@@ -11,8 +11,8 @@
 <!ENTITY returnToPreviousPage1.label "Retroceder (recomendado)">
 <!ENTITY advanced.label "Avançado">
 <!ENTITY continue2.label "Mais…">
+<!ENTITY advanced2.label "Avançado…">
 <!ENTITY moreInformation.label "Mais informação">
-
 <!ENTITY viewCertificate.label "Ver certificado">
 
 <!-- Specific error messages -->
@@ -44,7 +44,7 @@
 <!ENTITY generic.title "Oops.">
 <!ENTITY generic.longDesc "<p>O &brandShortName; não conseguiu carregar a página por alguma razão.</p>">
 
-<!ENTITY captivePortal.title "Iniciar sessão à rede">
+<!ENTITY captivePortal.title "Iniciar sessão na rede">
 <!ENTITY captivePortal.longDesc2 "<p>Tem de iniciar sessão nesta rede antes de poder aceder à Internet.</p>">
 
 <!ENTITY openPortalLoginPage.label2 "Abrir página de início de sessão da rede">
@@ -112,9 +112,6 @@ will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "O proprietário de <span class='hostname'/> configurou o website incorretamente.  Para impedir que a sua informação fosse furtada, o &brandShortName; não se ligou a este website.">
 <!ENTITY certerror.introPara2 "O &brandShortName; detetou um potencial risco de segurança e não continuou para <span class='hostname'/>. Se visitar este site, atacantes podem tentar furtar informação como palavras-passe, emails, ou detalhes de cartão de crédito.">
-
-<!ENTITY certerror.expiredCert.secondPara "Este problema é mais provável porque o seu relógio do computador está definido para a hora errada, o que pode impedir o &brandShortName; de se ligar em segurança.">
-
 <!ENTITY certerror.sts.introPara "O &brandShortName; detetou uma potencial ameaça de segurança e não continuou para <span class='hostname'/> porque este website requer uma ligação segura.">
 
 <!ENTITY certerror.expiredCert.introPara "O &brandShortName; detetou um problema e não continuou para <span class='hostname'/>. O website está mal configurado ou o relógio do computador está definido para a hora errada.">
@@ -178,6 +175,13 @@ was trying to connect. -->
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> utiliza tecnologia de segurança que está desatualizada e vulnerável a ataques. Um atacante pode facilmente revelar informação que pensou estar segura. O administrador do website precisa de corrigir o servidor primeiro antes que possa visitar o site.</p><p>Código de erro: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 
 <!ENTITY blockedByPolicy.title "Página bloqueada">
+
+<!ENTITY certerror.mitm.title "Software está a impedir o &brandShortName; de se ligar em segurança a este site">
+<!ENTITY certerror.mitm.longDesc "<span class='hostname'></span> é provavelmente um site seguro, mas uma ligação segura não pôde ser estabelecida. O problema é causado por <span class='mitm-name'/>, que é um software no seu computador ou rede.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt1 "Se o seu software antivírus inclui uma funcionalidade que verifica ligações encriptadas (geralmente chamado “verificação da web” ou “verificação de https”), pode desativar essa funcionalidade. Se isso não funcionar, pode remover ou reinstalar o software antivírus.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt2 "Se está uma rede corporativa, pode contactar o seu departamento de TI.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt3 "Se não estiver familiarizado(a) com <span class='mitm-name'/>, então isto pode ser um ataque e não deve continuar para o site.">
+<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "Se não estiver familiarizado(a) com <span class='mitm-name'/>, então isto pode ser um ataque, e não há nada que possa fazer para aceder ao site.">
 
 <!ENTITY clockSkewError.title "O relógio do seu computador está errado">
 <!ENTITY clockSkewError.longDesc "O seu computador pensa que são <span id='wrongSystemTime_systemDate1'/>, o que impede que o &brandShortName; se ligue corretamente. Para visitar <span class='hostname'></span>, atualize o relógio do seu computador nas suas definições de sistema para a data, hora, e fuso horário corretos, e depois atualize <span class='hostname'></span>.">

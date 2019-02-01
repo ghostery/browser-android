@@ -246,7 +246,7 @@
 <!ENTITY headersNormalCmd.accesskey "M">
 <!ENTITY bodyMenu.label "Formatação da mensagem como">
 <!ENTITY bodyMenu.accesskey "o">
-<!ENTITY bodyAllowHTML.label "Formato original HTML">
+<!ENTITY bodyAllowHTML.label "HTML original">
 <!ENTITY bodyAllowHTML.accesskey "F">
 <!ENTITY bodySanitized.label "HTML simples">
 <!ENTITY bodySanitized.accesskey "s">
@@ -274,12 +274,12 @@
 <!ENTITY getAllNewMessagesCmd.key "y">
 
 <!-- Search Menu -->
-<!ENTITY findMenu.label "Localizar">
+<!ENTITY findMenu.label "Procurar">
 <!ENTITY findMenu.accesskey "z">
-<!ENTITY findCmd.label "Localizar nesta mensagem…">
+<!ENTITY findCmd.label "Procurar nesta mensagem…">
 <!ENTITY findCmd.accesskey "z">
 <!ENTITY findCmd.key "F">
-<!ENTITY findAgainCmd.label "Localizar próxima">
+<!ENTITY findAgainCmd.label "Procurar próxima">
 <!ENTITY findAgainCmd.accesskey "L">
 <!ENTITY findAgainCmd.key "G">
 <!ENTITY findAgainCmd.key2 "VK_F3">
@@ -440,9 +440,6 @@
 <!ENTITY openMessageWindowCmd.label "Abrir mensagem">
 <!ENTITY openMessageWindowCmd.accesskey "b">
 <!ENTITY openMessageWindowCmd.key "o">
-<!ENTITY openConversationCmd.label "Abrir como conversa">
-<!ENTITY openConversationCmd.accesskey "s">
-<!ENTITY openConversationCmd.key "o">
 <!ENTITY openInConversationCmd.label "Abrir na conversa">
 <!ENTITY openInConversationCmd.accesskey "s">
 <!ENTITY openInConversationCmd.key "o">
@@ -474,7 +471,7 @@
 <!ENTITY addonPrefs.accesskey "O">
 <!ENTITY addonPrefsUnix.label "Preferências da extensão">
 <!ENTITY addonPrefsUnix.accesskey "P">
-<!ENTITY addonNoPrefs.label "Não foram encontradas configurações da extensão.">
+<!ENTITY addonNoPrefs.label "Nenhuma extensão configurada.">
 <!ENTITY activitymanager.label "Gerenciador de atividade">
 <!ENTITY activitymanager.accesskey "G">
 <!ENTITY imAccountsStatus.label "Status do bate-papo">
@@ -692,7 +689,7 @@
 <!ENTITY folderContextSettings2.accesskey "C">
 
 <!-- Search Bar -->
-<!ENTITY SearchNameOrEmail.label "Localizar nome ou e-mail:">
+<!ENTITY SearchNameOrEmail.label "O nome ou o e-mail contém:">
 <!ENTITY SearchNameOrEmail.accesskey "z">
 
 <!-- Gloda Search Bar -->
@@ -795,6 +792,8 @@
 <!ENTITY contextMoveMsgMenu.accesskey "M">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Recentes">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "R">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Preferidos">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "P">
 <!ENTITY contextCopyMsgMenu.label "Copiar para">
 <!ENTITY contextCopyMsgMenu.accesskey "o">
 <!ENTITY contextKillThreadMenu.label "Ignorar tópico">

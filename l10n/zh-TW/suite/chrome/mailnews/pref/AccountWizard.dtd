@@ -11,13 +11,12 @@
 
 <!ENTITY accountSetupInfo2.label "您必須要設定帳號才能接收訊息。">
 <!ENTITY accountTypeTitle.label "設定新帳號">
-<!ENTITY accountTypeDesc2.label "這個精靈將會蒐集設定帳號所必須的資訊。若您不知道這些資訊該怎麼填，請洽詢您的系統管理員或網路服務供應商。">
+<!ENTITY accountTypeDesc2.label "這個精靈將會蒐集設定帳號所必須的資訊。若您不知道這些資訊該怎麼填，請洽詢您的系統管理員或網路業者。">
 <!ENTITY accountTypeDirections.label "選擇您想要設定的帳號類型:">
 <!ENTITY accountTypeMail.label "電子郵件帳號">
 <!ENTITY accountTypeMail.accesskey "m">
 <!ENTITY accountTypeNews.label "新聞群組帳號">
 <!ENTITY accountTypeNews.accesskey "w">
-
 <!-- LOCALIZATION NOTE(accountTypeMovemail.label): do not translate 'Movemail' -->
 <!ENTITY accountTypeMovemail.label "Unix Mailspool (Movemail)">
 <!ENTITY accountTypeMovemail.accesskey "U">

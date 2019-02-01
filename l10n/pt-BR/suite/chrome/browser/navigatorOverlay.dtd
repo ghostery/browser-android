@@ -23,7 +23,7 @@
 <!ENTITY printSetupCmd.accesskey "u">
 
 <!-- Edit Menu -->
-<!ENTITY findOnCmd.label "Localizar nesta página…">
+<!ENTITY findOnCmd.label "Procurar nesta página…">
 
 <!-- View Menu -->
 <!ENTITY toolbarsCmd.label "Exibir/Ocultar">

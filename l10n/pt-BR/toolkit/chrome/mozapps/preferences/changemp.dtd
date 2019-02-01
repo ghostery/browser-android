@@ -5,7 +5,7 @@
 <!ENTITY setPassword.title                 "Alterar senha mestra">
 <!ENTITY setPassword.tokenName.label       "Dispositivo de segurança">
 <!ENTITY setPassword.oldPassword.label     "Senha mestra atual:">
-<!ENTITY setPassword.newPassword.label     "Forneça a nova senha:">
+<!ENTITY setPassword.newPassword.label     "Digite a nova senha:">
 <!ENTITY setPassword.reenterPassword.label "Confirme a nova senha:">
 <!ENTITY setPassword.meter.label           "Medidor de qualidade da senha">
 <!ENTITY setPassword.meter.loading         "Carregando">

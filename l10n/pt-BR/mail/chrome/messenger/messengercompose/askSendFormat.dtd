@@ -13,7 +13,7 @@
 <!ENTITY plainTextAndHtml.accesskey "n">
 <!ENTITY plainTextOnly.label "Enviar só uma versão sem formatação">
 <!ENTITY plainTextOnly.accesskey "E">
-<!ENTITY htmlOnly.label "Enviar só no formato original">
+<!ENTITY htmlOnly.label "Enviar só em HTML">
 <!ENTITY htmlOnly.accesskey "E">
 
 <!ENTITY send.label "Enviar">

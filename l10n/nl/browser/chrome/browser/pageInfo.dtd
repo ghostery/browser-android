@@ -44,9 +44,6 @@
 <!ENTITY  mediaSaveAs2.accesskey "p">
 <!ENTITY  mediaPreview          "Mediavoorbeeld:">
 
-<!ENTITY  feedTab               "Feeds">
-<!ENTITY  feedTab.accesskey     "F">
-
 <!ENTITY  permTab               "Toestemmingen">
 <!ENTITY  permTab.accesskey     "T">
 <!ENTITY  permissionsFor        "Toestemmingen voor:">

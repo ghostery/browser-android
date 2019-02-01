@@ -28,3 +28,14 @@ onboarding-ghostery-text = Böngésszen gyorsabban, okosabban vagy biztonságosa
 # Note: "Sync" in this case is a generic verb, as in "to synchronize"
 onboarding-fxa-title = Szinkronizálás
 onboarding-fxa-text = Regisztráljon egy { -fxaccount-brand-name }ot, és szinkronizálja a könyvjelzőit, jelszavait és nyitott lapjait bárhol, ahol { -brand-short-name }ot használ.
+
+## Message strings belonging to the Return to AMO flow
+
+return-to-amo-sub-header = Nagyszerű, már van { -brand-short-name }a
+# <icon></icon> will be replaced with the icon belonging to the extension
+#
+# Variables:
+#   $addon-name (String) - Name of the add-on
+return-to-amo-addon-header = Most pedig szerezze be a(z) <icon></icon><b>{ $addon-name } kiegészítőt.</b>
+return-to-amo-extension-button = Kiegészítő hozzáadása
+return-to-amo-get-started-button = Első lépések a { -brand-short-name }szal

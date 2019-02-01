@@ -8,6 +8,8 @@ do-not-track-option-default =
     .label = Somente quando usar a proteção contra rastreamento
 do-not-track-option-default-content-blocking =
     .label = Apenas quando o { -brand-short-name } está configurado para bloquear rastreadores detectados
+do-not-track-option-default-content-blocking-known =
+    .label = Somente quando o { -brand-short-name } está configurado para bloquear rastreadores conhecidos
 do-not-track-option-always =
     .label = Sempre
 pref-page =
@@ -25,7 +27,7 @@ pref-page =
 # is the name of the CSS property. It is intended only to adjust the element's width.
 # Do not translate.
 search-input-box =
-    .style = width: 15.4em
+    .style = width: 16.4em
     .placeholder =
         { PLATFORM() ->
             [windows] Pesquisar em opções
@@ -141,6 +143,8 @@ set-as-my-default-browser =
 startup-restore-previous-session =
     .label = Restaurar a sessão anterior
     .accesskey = R
+startup-restore-warn-on-quit =
+    .label = Avisar ao sair do navegador
 disable-extension =
     .label = Desativar extensão
 tabs-group-header = Abas
@@ -153,9 +157,6 @@ open-new-link-as-tabs =
 warn-on-close-multiple-tabs =
     .label = Avisar quando fechar múltiplas abas
     .accesskey = m
-warn-on-quit-close-multiple-tabs =
-    .label = Avisar quando sair e fechar várias abas
-    .accesskey = v
 warn-on-open-many-tabs =
     .label = Avisar que quando abrir muitas abas, o { -brand-short-name } pode ficar lento
     .accesskey = d
@@ -277,7 +278,7 @@ update-history =
     .accesskey = h
 update-application-allow-description = Permitir que o { -brand-short-name }
 update-application-auto =
-    .label = Instale atualizações automaticamente (recomendado)
+    .label = Instalar atualizações automaticamente (recomendado)
     .accesskey = A
 update-application-check-choose =
     .label = Busque atualizações, mas você decide se instala
@@ -358,7 +359,7 @@ home-new-windows-tabs-description2 = Escolha o que ver quando abrir sua página 
 home-homepage-mode-label = Página inicial e novas janelas
 home-newtabs-mode-label = Novas abas
 home-restore-defaults =
-    .label = Restaurar padrões
+    .label = Restaurar padrão
     .accesskey = R
 # "Firefox" should be treated as a brand and kept in English,
 # while "Home" and "(Default)" can be localized.
@@ -444,7 +445,7 @@ containers-remove-button =
 ## Sync Section - Signed out
 
 sync-signedout-caption = Leve a web com você
-sync-signedout-description = Sincronizar seus favoritos, histórico, abas, senhas, extensões e preferências entre os seus dispositivos.
+sync-signedout-description = Sincronize seus favoritos, histórico, abas, senhas, extensões e preferências com todos os seus dispositivos.
 sync-signedout-account-title = Conectar com uma { -fxaccount-brand-name }
 sync-signedout-account-create = Não tem uma conta? Inscreva-se agora
     .accesskey = C
@@ -538,7 +539,6 @@ privacy-header = Privacidade do navegador
 
 ## Privacy Section - Forms
 
-forms-header = Formulários e Senhas
 logins-header = Logins e Senhas
 forms-ask-to-save-logins =
     .label = Perguntar se deve salvar contas e senhas de acesso de sites
@@ -632,9 +632,17 @@ sitedata-block-trackers-option =
 sitedata-block-unvisited-option =
     .label = Cookies de sites não visitados
 sitedata-block-all-third-party-option =
-    .label = Todos os cookies de terceiros (pode atrapalhar sites)
+    .label = Todos os cookies de terceiros (pode atrapalhar alguns sites)
 sitedata-block-all-option =
-    .label = Todos os cookies (irá atrapalhar sites)
+    .label = Todos os cookies (atrapalhará vários sites)
+sitedata-option-block-trackers =
+    .label = Rastreadores de terceiros
+sitedata-option-block-unvisited =
+    .label = Cookies de sites não visitados
+sitedata-option-block-all-third-party =
+    .label = Todos os cookies de terceiros (pode atrapalhar alguns sites)
+sitedata-option-block-all =
+    .label = Todos os cookies (atrapalhará vários sites)
 sitedata-clear =
     .label = Limpar dados…
     .accesskey = L
@@ -670,11 +678,11 @@ addressbar-suggestions-settings = Alterar preferências das sugestões do mecani
 ## Privacy Section - Content Blocking
 
 content-blocking-header = Bloqueio de conteúdo
-content-blocking-desc = Bloqueie conteúdo de terceiros, como propaganda ou código que podem tornar sua navegação mais lenta e rastreá-lo através da Web. Personalize suas configurações para uma proteção e desempenho balanceados.
+content-blocking-desc = Bloqueie conteúdo de terceiros, como propaganda ou código, que podem tornar sua navegação mais lenta e rastrear você através da web. Personalize suas configurações para uma proteção e desempenho balanceados.
 content-blocking-description = Bloqueie conteúdo de terceiros que rastreia você pela web. Controle o quanto de suas atividades online é armazenado e compartilhado entre sites.
 content-blocking-learn-more = Saiba mais
 content-blocking-restore-defaults =
-    .label = Restaurar padrões
+    .label = Restaurar padrão
     .accesskey = R
 content-blocking-toggle-on =
     .tooltiptext = Desativar bloqueio de conteúdo
@@ -684,7 +692,7 @@ content-blocking-toggle-label-on = ATIVAR
     .accesskey = A
 content-blocking-toggle-label-off = DESATIVAR
     .accesskey = D
-content-blocking-category-label = Escolher o que bloquear
+content-blocking-category-label = Escolha o que bloquear
 # "Slow" in this instance means "slow to load on the network".
 # FastBlock is a feature that blocks requests to tracking sites if they
 # have not finished loading after a certain threshold of seconds.
@@ -692,25 +700,6 @@ content-blocking-fastblock-slow-loading-trackers-label =
     .label = Rastreadores que atrasam o carregamento
     .accesskey = a
 content-blocking-fastblock-new-description = Bloqueia somente os rastreadores que impedem que páginas sejam carregadas rapidamente.
-content-blocking-setting-standard =
-    .label = Padrão
-    .accesskey = d
-content-blocking-setting-strict =
-    .label = Rigoroso
-    .accesskey = R
-content-blocking-setting-custom =
-    .label = Personalizado
-    .accesskey = z
-content-blocking-standard-desc = Balanceado entre proteção e desempenho. Permite alguns rastreadores, para que a maioria dos sites funcione adequadamente.
-content-blocking-strict-desc = Bloqueia todos os rastreadores que o { -brand-short-name } detecta. Pode atrapalhar alguns sites.
-content-blocking-custom-desc = Escolha o que bloquear.
-content-blocking-private-trackers = Rastreadores conhecidos, somente em janelas privativas
-content-blocking-third-party-cookies = Cookies rastreadores de terceiros
-content-blocking-all-windows-trackers = Rastreadores conhecidos, em todas as janelas
-content-blocking-all-third-party-cookies = Todos os cookies de terceiros
-content-blocking-warning-title = Preste atenção!
-content-blocking-warning-desc = Bloquear cookies e rastreadores pode atrapalhar alguns sites. É fácil desativar o bloqueio em sites que você confia.
-content-blocking-learn-how = Saiba como
 content-blocking-tracking-protection-trackers-label =
     .label = Rastreadores
     .accesskey = t
@@ -724,11 +713,42 @@ content-blocking-tracking-protection-option-always =
 content-blocking-tracking-protection-option-private =
     .label = Apenas em janelas privativas
     .accesskey = p
+# The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
+# "Standard" in this case is an adjective, meaning "default" or "normal".
+content-blocking-setting-standard =
+    .label = Padrão
+    .accesskey = d
+content-blocking-setting-strict =
+    .label = Rigoroso
+    .accesskey = R
+content-blocking-setting-custom =
+    .label = Personalizado
+    .accesskey = z
+content-blocking-standard-description = Só bloqueia rastreadores conhecidos em janelas privativas.
+content-blocking-standard-desc = Balanceado entre proteção e desempenho. Permite alguns rastreadores, para que a maioria dos sites funcione adequadamente.
+content-blocking-strict-desc = Bloqueia todos os rastreadores que o { -brand-short-name } detecta. Pode atrapalhar alguns sites.
+content-blocking-custom-desc = Escolha o que bloquear.
+content-blocking-private-trackers = Rastreadores conhecidos, somente em janelas privativas
+content-blocking-third-party-cookies = Cookies rastreadores de terceiros
+content-blocking-all-windows-trackers = Rastreadores conhecidos, em todas as janelas
+content-blocking-all-third-party-cookies = Todos os cookies de terceiros
+content-blocking-warning-title = Preste atenção!
+content-blocking-warning-desc = Bloquear cookies e rastreadores pode atrapalhar alguns sites. É fácil desativar o bloqueio em sites que você confia.
+content-blocking-learn-how = Saiba como
+content-blocking-trackers-label =
+    .label = Rastreadores
+    .accesskey = t
+content-blocking-tracking-protection-option-all-windows =
+    .label = Em todas as janelas
+    .accesskey = a
+content-blocking-option-private =
+    .label = Só em janelas privativas
+    .accesskey = p
 content-blocking-tracking-protection-change-block-list = Alterar lista de bloqueio
 content-blocking-third-party-cookies-label =
     .label = Cookies de terceiros
     .accesskey = C
-content-blocking-reject-trackers-description = Bloqueia todos os cookies de terceiros ou apenas aqueles definidos por rastreadores.
+content-blocking-reject-trackers-description = Bloqueia todos os cookies de terceiros ou apenas aqueles criados por rastreadores.
 # This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
 # of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
 # or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
@@ -744,8 +764,8 @@ content-blocking-reject-trackers-block-trackers-option =
     .label = Rastreadores
     .accesskey = R
 content-blocking-reject-trackers-all-third-parties-option =
-    .label = Todos os cookies de terceiros (pode atrapalhar sites)
-    .accesskey = a
+    .label = Todos os cookies de terceiros (pode atrapalhar alguns sites)
+    .accesskey = T
 content-blocking-cookies-label =
     .label = Cookies
     .accesskey = C
@@ -840,6 +860,9 @@ collection-health-report-link = Saiba mais
 collection-studies =
     .label = Permitir que o { -brand-short-name } instale e execute pesquisas
 collection-studies-link = Ver pesquisas do { -brand-short-name }
+addon-recommendations =
+    .label = Permitir ao { -brand-short-name } fazer recomendações personalizadas de extensões
+addon-recommendations-link = Saiba mais
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = O relatório de dados está desabilitado nesta configuração

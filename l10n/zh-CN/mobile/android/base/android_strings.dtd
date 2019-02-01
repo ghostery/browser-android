@@ -290,7 +290,6 @@
 <!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "了解 &brandShortName; 与其他 &vendorShortName; 产品的更多信息">
-
 <!-- Localization note (pref_feature_tips_notification_enabling_hint):
      Describe the action the user should do to enable this preference
      Will be used in the context "<Turn on> ... to enable this feature" -->
@@ -323,7 +322,7 @@
 <!ENTITY pref_pwa "渐进式 Web 应用">
 <!ENTITY pref_pwa_summary "允许网页应用添加到主屏幕">
 
-<!ENTITY tracking_protection_prompt_title "现在有了跟踪保护功能">
+<!ENTITY tracking_protection_prompt_title "跟踪保护功能新上线">
 <!ENTITY tracking_protection_prompt_text "主动拦截跟踪您的元素，无需劳心。">
 <!ENTITY tracking_protection_prompt_tip_text "在“隐私”设置中详细了解">
 <!ENTITY tracking_protection_prompt_action_button "明白了！">
@@ -843,8 +842,6 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      are used for a system notification that's shown to users after the app updates. -->
 <!ENTITY whatsnew_notification_title "&brandShortName; 已是最新版本">
 <!ENTITY whatsnew_notification_summary "了解这个版本的新变化">
-
-<!ENTITY promotion_add_page_shortcut "添加页面快捷方式">
 
 <!ENTITY helper_first_offline_bookmark_title "离线阅读">
 <!ENTITY helper_first_offline_bookmark_message "在书签中打开您的阅读项目，没网也不怕。">

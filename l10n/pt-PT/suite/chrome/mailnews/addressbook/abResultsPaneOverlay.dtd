@@ -24,7 +24,7 @@
 <!ENTITY PagerNumber.accesskey                 "P">
 <!ENTITY FaxNumber.label                       "Fax">
 <!ENTITY FaxNumber.accesskey                   "F">
-<!ENTITY HomePhone.label                       "Telefone pessoal">
+<!ENTITY HomePhone.label                       "Telefone de casa">
 <!ENTITY HomePhone.accesskey                   "l">
 <!ENTITY WorkPhone.label                       "Telefone profissional">
 <!ENTITY WorkPhone.accesskey                   "o">

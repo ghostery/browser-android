@@ -12,7 +12,7 @@
 
 <!ENTITY aboutSupport.crashes.title "Relatórios de falha">
 <!-- LOCALIZATION NOTE (aboutSupport.crashes.id):
-This is likely the same like id.heading in crashes.dtd. -->
+This is likely the same like id.heading in aboutcrashes.ftl. -->
 <!ENTITY aboutSupport.crashes.id "ID do relatório">
 <!ENTITY aboutSupport.crashes.sendDate "Enviado">
 <!ENTITY aboutSupport.crashes.allReports "Todos os relatórios de falha">
@@ -35,15 +35,6 @@ This is likely the same like id.heading in crashes.dtd. -->
 <!ENTITY aboutSupport.featureName "Nome">
 <!ENTITY aboutSupport.featureVersion "Versão">
 <!ENTITY aboutSupport.featureId "ID">
-
-<!ENTITY aboutSupport.experimentsTitle "Funcionalidades experimentais">
-<!ENTITY aboutSupport.experimentName "Nome">
-<!ENTITY aboutSupport.experimentId "ID">
-<!ENTITY aboutSupport.experimentDescription "Descrição">
-<!ENTITY aboutSupport.experimentActive "Ativa">
-<!ENTITY aboutSupport.experimentEndDate "Data final">
-<!ENTITY aboutSupport.experimentHomepage "Página inicial">
-<!ENTITY aboutSupport.experimentBranch "Ramo">
 
 <!ENTITY aboutSupport.appBasicsTitle "Informações básicas da aplicação">
 <!ENTITY aboutSupport.appBasicsName "Nome">
@@ -156,7 +147,7 @@ variant of aboutSupport.showDir.label. -->
 <!ENTITY aboutSupport.mediaInputDevicesTitle "Dispositivos de entrada">
 <!ENTITY aboutSupport.mediaDeviceName "Nome">
 <!ENTITY aboutSupport.mediaDeviceGroup "Grupo">
-<!ENTITY aboutSupport.mediaDeviceVendor "Vendedor">
+<!ENTITY aboutSupport.mediaDeviceVendor "Fornecedor">
 <!ENTITY aboutSupport.mediaDeviceState "Estado">
 <!ENTITY aboutSupport.mediaDevicePreferred "Preferido">
 <!ENTITY aboutSupport.mediaDeviceFormat "Formato">

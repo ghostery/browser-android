@@ -115,7 +115,7 @@
 <!-- LOCALIZATION NOTE (performanceUI.enableFramerate): This string
   -  is displayed next to a checkbox determining whether or not framerate
   -  is recorded. -->
-<!ENTITY performanceUI.enableFramerate             "Gravar taxa de frame">
+<!ENTITY performanceUI.enableFramerate             "Gravar taxa de frames">
 <!ENTITY performanceUI.enableFramerate.tooltiptext "Gravar taxa de frames ao perfilar.">
 
 <!-- LOCALIZATION NOTE (performanceUI.console.recordingNoticeStart/recordingNoticeEnd):

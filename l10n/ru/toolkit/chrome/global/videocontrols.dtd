@@ -10,7 +10,6 @@
 <!ENTITY fullscreenButton.exitfullscreenlabel "Выйти из полноэкранного режима">
 <!ENTITY castingButton.castingLabel "Транслировать на экран">
 <!ENTITY closedCaption.off "Выкл.">
-
 <!-- LOCALIZATION NOTE (volumeScrubber.label): This label is exposed to
      accessibility software to clarify what the slider is for. -->
 <!ENTITY volumeScrubber.label "Регулятор громкости">
@@ -31,8 +30,8 @@
 <!ENTITY error.aborted "Загрузка видео остановлена.">
 <!ENTITY error.network "Воспроизведение видео прервано из-за ошибки сети.">
 <!ENTITY error.decode "Видео не может быть воспроизведено, так как файл повреждён.">
-<!ENTITY error.srcNotSupported "Формат видео или тип MIME не поддерживаются.">
-<!ENTITY error.noSource2 "Видео в поддерживаемом формате и типе MIME не найдено.">
+<!ENTITY error.srcNotSupported "Формат видео или MIME-тип не поддерживается.">
+<!ENTITY error.noSource2 "Видео в поддерживаемом формате и MIME-типе не найдено.">
 <!ENTITY error.generic "Воспроизведение видео прервано из-за неизвестной ошибки.">
 
 <!-- LOCALIZATION NOTE (scrubberScale.nameFormat): the #1 string is the current

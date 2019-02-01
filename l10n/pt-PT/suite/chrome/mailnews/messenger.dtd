@@ -218,7 +218,7 @@
 <!ENTITY bodyMenuFeed.accesskey "f">
 <!ENTITY viewFeedWebPage.label "Página Web">
 <!ENTITY viewFeedWebPage.accesskey "w">
-<!ENTITY viewFeedSummary.label "Resumo">
+<!ENTITY viewFeedSummary.label "Sumário">
 <!ENTITY viewFeedSummary.accesskey "m">
 <!ENTITY viewFeedSummaryFeedPropsPref.label "Formato pré-definido">
 <!ENTITY viewFeedSummaryFeedPropsPref.accesskey "d">
@@ -369,9 +369,9 @@
 <!ENTITY openFeedMessage.accesskey "o">
 <!ENTITY openFeedWebPageInWindow.label "Página Web numa nova janela">
 <!ENTITY openFeedWebPageInWindow.accesskey "w">
-<!ENTITY openFeedSummaryInWindow.label "Resumo numa nova janela">
+<!ENTITY openFeedSummaryInWindow.label "Sumário numa nova janela">
 <!ENTITY openFeedSummaryInWindow.accesskey "s">
-<!ENTITY openFeedWebPageInMP.label "Alternar página Web e resumo no painel de mensagens">
+<!ENTITY openFeedWebPageInMP.label "Alternar página Web e sumário no painel de mensagens">
 <!ENTITY openFeedWebPageInMP.accesskey "t">
 
 <!-- Tools Menu -->
@@ -483,6 +483,8 @@
 <!ENTITY contextCopyMsgMenu.accesskey "C">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Recente">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "R">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Favoritos">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "F">
 <!ENTITY contextSaveAs.label "Guardar como...">
 <!ENTITY contextSaveAs.accesskey "u">
 <!ENTITY contextPrint.label "Imprimir…">

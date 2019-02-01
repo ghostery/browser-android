@@ -94,25 +94,24 @@
      as attachments.accesskey. -->
 <!ENTITY toggleAttachmentPaneCmd.accesskey "x">
 <!-- LOCALIZATION NOTE (toggleAttachmentPaneCmd.key):
-     With OS-specific access modifier, this defines the shortcut key for showing/
-     hiding/minimizing the attachment pane, e.g. Alt+M on Windows.
-     toggleAttachmentPaneCmd.key and attachments.accesskey must be the same
-     for the bucket view state machinery to work. -->
+     As Mac does not have access keys, this key defines a Mac-only, cross-l10n
+     shortcut key (Ctrl+M). Typically, this key should not be translated unless
+     otherwise required by specific needs of the localization. -->
 <!ENTITY toggleAttachmentPaneCmd.key "x">
 <!ENTITY selectAllCmd.label "Selecionar tudo">
-<!ENTITY selectAllCmd.key "a">
 <!ENTITY selectAllCmd.accesskey "S">
-<!ENTITY findBarCmd.label "Localizar…">
+<!ENTITY selectAllCmd.key "a">
+<!ENTITY findBarCmd.label "Procurar…">
 <!ENTITY findBarCmd.accesskey "z">
 <!ENTITY findBarCmd.key "F">
-<!ENTITY findReplaceCmd.label "Localizar e substituir…">
+<!ENTITY findReplaceCmd.label "Procurar e substituir…">
 <!ENTITY findReplaceCmd.accesskey "l">
 <!ENTITY findReplaceCmd.key "H">
-<!ENTITY findAgainCmd.label "Localizar próxima">
+<!ENTITY findAgainCmd.label "Procurar próxima">
 <!ENTITY findAgainCmd.accesskey "L">
 <!ENTITY findAgainCmd.key "g">
 <!ENTITY findAgainCmd.key2 "VK_F3">
-<!ENTITY findPrevCmd.label "Localizar anterior">
+<!ENTITY findPrevCmd.label "Procurar anterior">
 <!ENTITY findPrevCmd.accesskey "a">
 <!ENTITY findPrevCmd.key "g">
 <!ENTITY findPrevCmd.key2 "VK_F3">
@@ -270,9 +269,11 @@
 <!ENTITY subject.label "Assunto:">
 <!ENTITY subject.accesskey "s">
 <!-- LOCALIZATION NOTE (attachments.accesskey) This access key character should
-     be taken from the strings in attachmentCount in composeMsgs.properties,
-     and it must be the same as toggleAttachmentPaneCmd.key, otherwise it won't
-     work, as the shortcut key functionality supersedes the access key. -->
+     be taken from the strings of attachmentCount in composeMsgs.properties.
+     Please ensure that this access key is unique: Do not duplicate any other
+     first-level access keys of the compose window, e.g. those of main menu,
+     buttons, or labels (message headers, contacts side bar, attachment reminder
+     bar). -->
 <!ENTITY attachments.accesskey "n">
 <!ENTITY attachmentBucketHeader.tooltip "Painel de anexos">
 <!ENTITY attachmentBucketCloseButton.tooltip "Ocultar o painel de anexos">

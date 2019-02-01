@@ -3,8 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "Управление дополнениями">
 
-<!ENTITY search.placeholder2                  "Поиск на addons.mozilla.org">
-
 <!ENTITY search.placeholder3                  "Поиск на addons.mozilla.org">
 <!ENTITY search.buttonlabel                   "Поиск">
 <!-- LOCALIZATION NOTE (search.commandkey):
@@ -20,9 +18,6 @@
 <!ENTITY installAddonFromFile.label           "Установить дополнение из файла…">
 <!ENTITY installAddonFromFile.accesskey       "а">
 <!ENTITY toolsMenu.tooltip                    "Инструменты для всех дополнений">
-
-<!ENTITY getThemes.description                "Хотите настроить под себя свой браузер?">
-<!ENTITY getThemes.learnMore                  "Выберите нужные вам темы">
 
 
 <!ENTITY showUnsignedExtensions.button.label  "Некоторые расширения не могут быть проверены">
@@ -40,7 +35,7 @@
 <!ENTITY warning.updatesecurity.enable.tooltip     "Включить проверку безопасного обновления дополнений">
 
 <!-- categories / views -->
-<!ENTITY view.discover.label                  "Получить дополнения">
+<!ENTITY view.discover.label                  "Загрузить дополнения">
 <!ENTITY view.recentUpdates.label             "Недавние обновления">
 <!ENTITY view.availableUpdates.label          "Доступные обновления">
 
@@ -87,6 +82,7 @@
 <!ENTITY cmd.preferencesUnix.label            "Настройки">
 <!ENTITY cmd.preferencesUnix.accesskey        "с">
 
+<!-- addon actions -->
 <!ENTITY cmd.enableAddon.label                "Включить">
 <!ENTITY cmd.enableAddon.accesskey            "ч">
 <!ENTITY cmd.disableAddon.label               "Отключить">
@@ -95,6 +91,7 @@
 <!ENTITY cmd.enableTheme.accesskey            "п">
 <!ENTITY cmd.disableTheme.label               "Больше не использовать тему">
 <!ENTITY cmd.disableTheme.accesskey           "п">
+
 <!ENTITY cmd.askToActivate.label              "Включать по запросу">
 <!ENTITY cmd.askToActivate.tooltip            "Каждый раз спрашивать, использовать ли это дополнение">
 <!ENTITY cmd.alwaysActivate.label             "Всегда включать">
@@ -104,6 +101,7 @@
 <!ENTITY cmd.stateMenu.tooltip                "Решить, когда запускать это дополнение">
 <!ENTITY cmd.installAddon.label               "Установить">
 <!ENTITY cmd.installAddon.accesskey           "н">
+
 <!ENTITY cmd.uninstallAddon.label             "Удалить">
 <!ENTITY cmd.uninstallAddon.accesskey         "д">
 <!ENTITY cmd.showPreferencesWin.label         "Настройки">
@@ -162,9 +160,12 @@
 
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "Приостановить">
+
+<!-- download/install progress -->
 <!ENTITY progress.cancel.tooltip              "Отмена">
 
 <!ENTITY addon.homepage                       "Домашняя страница">
+
 <!ENTITY addon.details.label                  "Подробнее">
 <!ENTITY addon.details.tooltip                "Подробнее об этом дополнении">
 <!ENTITY addon.unknownDate                    "Неизвестно">
@@ -186,6 +187,7 @@
 <!ENTITY addon.undoRemove.label               "Отменить">
 <!ENTITY addon.undoRemove.tooltip             "Оставить это дополнение установленным">
 <!ENTITY addon.restartNow.label               "Перезапустить сейчас">
+
 <!ENTITY addon.install.label                  "Установить">
 <!ENTITY addon.install.tooltip                "Установить это дополнение">
 <!ENTITY addon.updateNow.label                "Обновить сейчас">

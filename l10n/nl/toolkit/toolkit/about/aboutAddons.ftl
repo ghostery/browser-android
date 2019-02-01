@@ -275,3 +275,23 @@ extensions-updates-manual-updates-found =
 extensions-updates-update-selected =
     .label = Updates installeren
     .tooltiptext = Beschikbare updates in deze lijst installeren
+
+## Extension shortcut management
+
+shortcuts-manage =
+  .label = Sneltoetsen
+shortcuts-empty-message = Er zijn geen sneltoetsen voor deze extensie.
+# TODO: Confirm this copy.
+shortcuts-no-addons = U hebt geen actieve add-ons.
+shortcuts-input =
+  .placeholder = Typ een sneltoets
+
+shortcuts-browserAction = Extensie activeren
+shortcuts-pageAction = Pagina-actie activeren
+shortcuts-sidebarAction = De zijbalk in-/uitschakelen
+
+shortcuts-modifier-mac = Druk op Ctrl, Alt of ⌘
+shortcuts-modifier-other = Druk op Ctrl of Alt
+shortcuts-invalid = Ongeldige combinatie
+shortcuts-letter = Typ een letter
+shortcuts-system = Kan geen bestaande { -brand-short-name }-sneltoets gebruiken
