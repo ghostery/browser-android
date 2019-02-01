@@ -402,6 +402,8 @@ public class GeckoApplication extends Application
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(LOG_TAG, "Can't find " + getPackageName(), e);
         }
+
+        org.mozilla.gecko.cliqztelemetry.Telemetry.init(context);
         /* Cliqz end */
 
         super.onCreate();

@@ -6,6 +6,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.PrefsHelper;
+import org.mozilla.gecko.cliqztelemetry.Telemetry;
 
 import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
 
@@ -14,6 +15,8 @@ import static org.mozilla.gecko.myoffrz.MyOffrzUtils.isMyOffrzSupportedForLang;
  */
 public class PreferenceManager {
 
+    private static final String SESSION_ID = "sessionid";
+    private static final String TELEMETRY_SEQUENCE = "telemetrysequence";
     private final SharedPreferences mAppSharedPreferences;
     private static PreferenceManager preferenceManager = null;
     private Context mContext;
@@ -127,6 +130,22 @@ public class PreferenceManager {
     public void setNewsViewExpanded(boolean value) {
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
         editor.putBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_EXPANDED, value).apply();
+    }
+
+    public String getSessionId() {
+        return mAppSharedPreferences.getString(SESSION_ID, "");
+    }
+
+    public void setSessionId(String sessionId) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putString(SESSION_ID, sessionId).apply();
+    }
+
+    public int getAutoIncrementSequenceNumber() {
+        final int sequenceNumber = mAppSharedPreferences.getInt(TELEMETRY_SEQUENCE, 0);
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putInt(TELEMETRY_SEQUENCE, (sequenceNumber + 1) % 2147483647).apply();
+        return sequenceNumber;
     }
 
     public boolean isLightThemeEnabled() {

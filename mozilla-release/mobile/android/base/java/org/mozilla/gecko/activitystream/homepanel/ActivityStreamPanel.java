@@ -37,6 +37,8 @@ import org.mozilla.gecko.activitystream.homepanel.topnews.TopNewsLoader;
 import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPage;
 import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPagerAdapter;
 import org.mozilla.gecko.activitystream.homepanel.topstories.PocketStoriesLoader;
+import org.mozilla.gecko.cliqztelemetry.Telemetry;
+import org.mozilla.gecko.cliqztelemetry.TelemetryKeys;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.fxa.FirefoxAccounts;
 import org.mozilla.gecko.home.HomePager;
@@ -143,6 +145,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         customizeTabLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Telemetry.getInstance().sendHomeCustomizationSignal(TelemetryKeys.CLICK, TelemetryKeys.SETTINGS);
                 final Intent intent = new Intent(context, GeckoPreferences.class);
                 GeckoPreferences.setResourceToOpen(intent, "preferences_general");
                 // We want to know when the Settings activity returns, because
