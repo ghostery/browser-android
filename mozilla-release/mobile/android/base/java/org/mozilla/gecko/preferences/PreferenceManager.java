@@ -17,6 +17,7 @@ public class PreferenceManager {
 
     private static final String SESSION_ID = "sessionid";
     private static final String TELEMETRY_SEQUENCE = "telemetrysequence";
+    private static final String TIME_OF_LAST_SIGNAL = "timelastenvsignal";
     private final SharedPreferences mAppSharedPreferences;
     private static PreferenceManager preferenceManager = null;
     private Context mContext;
@@ -146,6 +147,15 @@ public class PreferenceManager {
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
         editor.putInt(TELEMETRY_SEQUENCE, (sequenceNumber + 1) % 2147483647).apply();
         return sequenceNumber;
+    }
+    
+    public void setTimeOfLastEnvSignal(long time) {
+        final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
+        editor.putLong(TIME_OF_LAST_SIGNAL, time).apply();
+    }
+
+    public long getTimeOfLastEnvSignal() {
+        return mAppSharedPreferences.getLong(TIME_OF_LAST_SIGNAL, 0);
     }
 
     public boolean isLightThemeEnabled() {

@@ -2,6 +2,7 @@ package org.mozilla.gecko.cliqztelemetry;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -11,6 +12,7 @@ import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.preferences.PreferenceManager;
 
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,8 +29,8 @@ public class Telemetry {
     private final static String NUMERIC_SPACE = "0123456789";
     private final static int RANDOM_ALPHA_NUMERIC_KEY_LENGTH = 18;
     private final static int RANDOM_NUMERIC_KEY_LENGTH = 6;
-
-    private static final int BATCH_SIZE = 2;
+    private static final long ENVIRONMENT_SIGNAL_TIME_LIMIT = 60 * 60 * 1000; //one hour
+    private static final int BATCH_SIZE = 50;
     private JSONArray mSignalCache = new JSONArray();
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -48,6 +50,7 @@ public class Telemetry {
         if (instance == null) {
             //This class never keeps a reference to local context. Only application context.
             instance = new Telemetry(context.getApplicationContext());
+            instance.sendEnvironmentSignal();
         }
     }
 
@@ -59,18 +62,38 @@ public class Telemetry {
         Log.e(TELEMETRY_TAG, "Error sending telemetry for " + type);
     }
 
-    public void sendHomeCustomizationSignal(String action, String target) {
-        final JSONObject signal = new JSONObject();
+    private void sendEnvironmentSignal() {
+        final long timeSinceLastSignal = getUnixTimeStamp() - preferenceManager.getTimeOfLastEnvSignal();
+        if (timeSinceLastSignal < ENVIRONMENT_SIGNAL_TIME_LIMIT) {
+            return;
+        }
         try {
+            final JSONObject signal = new JSONObject();
+            signal.put(TelemetryKeys.TYPE, TelemetryKeys.ENVIRONMENT);
+            signal.put(TelemetryKeys.DEVICE, Build.MODEL);
+            signal.put(TelemetryKeys.LANGUAGE, getLanguage());
+            signal.put(TelemetryKeys.VERSION, AppConstants.CLIQZ_PRIVACY_VERSION);
+            signal.put(TelemetryKeys.VERSION_DIST, BuildConfig.VERSION_NAME);
+            signal.put(TelemetryKeys.VERSION_OS, Build.VERSION.SDK_INT);
+            preferenceManager.setTimeOfLastEnvSignal(getUnixTimeStamp());
+            saveSignal(signal, false);
+        } catch (JSONException e) {
+            logError(TelemetryKeys.ENVIRONMENT);
+        }
+    }
+
+    public void sendHomeCustomizationSignal(String action, String target) {
+        try {
+            final JSONObject signal = new JSONObject();
             signal.put(TelemetryKeys.TYPE, TelemetryKeys.ONBOARDING);
             signal.put(TelemetryKeys.ACTION, action);
             signal.put(TelemetryKeys.TARGET, target);
             signal.put(TelemetryKeys.CONTEXT, TelemetryKeys.HOME_CUSTOMIZATION);
             signal.put(TelemetryKeys.VIEW, TelemetryKeys.HOME);
+            saveSignal(signal, false);
         } catch (JSONException e) {
             logError(TelemetryKeys.HOME_CUSTOMIZATION);
         }
-        saveSignal(signal, false);
     }
 
     private synchronized void saveSignal(JSONObject signal, boolean forcePush) {
@@ -161,4 +184,10 @@ public class Telemetry {
         return (long)Math.floor(System.currentTimeMillis());
     }
 
+    //returns current language of the device
+    private String getLanguage() {
+        String language = Locale.getDefault().getLanguage()+"-"+Locale.getDefault().getCountry();
+        language = language.replaceAll("_","-");
+        return language;
+    }
 }
