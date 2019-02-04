@@ -740,6 +740,7 @@ public class GeckoPreferences
         for (int i = 0; i < preferences.getPreferenceCount(); i++) {
             final Preference pref = preferences.getPreference(i);
             String key = pref.getKey();
+            final PreferenceManager preferenceManager = PreferenceManager.getInstance();
             if (pref instanceof PreferenceGroup) {
                 // If datareporting is disabled, remove UI.
                 if (PREFS_DATA_REPORTING_PREFERENCES.equals(key)) {
@@ -1390,7 +1391,7 @@ public class GeckoPreferences
         final String prefName = preference.getKey();
         Log.i(LOGTAG, "Changed " + prefName + " = " + newValue);
         recordSettingChangeTelemetry(prefName, newValue);
-
+        final PreferenceManager preferenceManager = PreferenceManager.getInstance();
         if (PREFS_MP_ENABLED.equals(prefName)) {
             showDialog((Boolean) newValue ? DIALOG_CREATE_MASTER_PASSWORD : DIALOG_REMOVE_MASTER_PASSWORD);
 

@@ -207,7 +207,7 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         mLoadState = LoadState.UNLOADED;
         /*Cliqz Start*/
         // get appSharedPreference
-        preferenceManager = PreferenceManager.getInstance(context);
+        preferenceManager = PreferenceManager.getInstance();
         setLightTheme(preferenceManager.isLightThemeEnabled());
         /*Cliqz End*/
     }

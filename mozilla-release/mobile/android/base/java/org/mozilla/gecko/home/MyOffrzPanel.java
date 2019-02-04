@@ -102,7 +102,7 @@ public class MyOffrzPanel extends HomeFragment {
 
         onboardingText.setText(R.string.myoffrz_onboarding_description);
 
-        mPreferenceManager = PreferenceManager.getInstance(getContext().getApplicationContext());
+        mPreferenceManager = PreferenceManager.getInstance();
 
         learnMoreOnBoarding.setOnClickListener(new View.OnClickListener() {
             @Override
