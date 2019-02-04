@@ -42,7 +42,7 @@ node('master') {
                             cd mozilla-release
                             export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                             export AB_CD=multi
-                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            ./gradlew :app:assembleWithGeckoBinariesRelease
                         """
                     }
                     apk = sh(returnStdout: true,
@@ -82,7 +82,7 @@ node('master') {
                             cd mozilla-release
                             export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                             export AB_CD=multi
-                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            ./gradlew :app:assembleWithGeckoBinariesRelease
                         """
                     }
                     apk = sh(returnStdout: true,

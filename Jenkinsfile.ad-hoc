@@ -188,11 +188,11 @@ def build(Map m){
                                     cd /app/mozilla-release
                                     export MOZ_CHROME_MULTILOCALE=`ls -1 '../l10n/'|paste -s -d ' '`
                                     export AB_CD=multi
-                                    ./gradlew assembleOfficialWithGeckoBinariesNoMinApi${gradleflavor}Release
+                                    ./gradlew :app:assembleWithGeckoBinariesRelease
                                 """
                             }
                             apk = sh(returnStdout: true,
-                                script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApi${gradleflavor}/release && \
+                                script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release && \
                                 find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                         }
                     }

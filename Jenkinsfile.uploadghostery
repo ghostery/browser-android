@@ -42,13 +42,13 @@ node('master') {
                             cd mozilla-release
                             export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                             export AB_CD=multi
-                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            ./gradlew :app:assembleWithGeckoBinariesRelease
                         """
                     }
                     apk = sh(returnStdout: true,
-                        script: """cd mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
+                        script: """cd mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release && \
                         find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
-                    def apkPath = "mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                    def apkPath = "mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release/${apk}"
                     sh """#!/bin/bash -l
                         set -e
                         set -x
@@ -82,13 +82,13 @@ node('master') {
                             cd mozilla-release
                             export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                             export AB_CD=multi
-                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            ./gradlew :app:assembleWithGeckoBinariesRelease
                         """
                     }
                     apk = sh(returnStdout: true,
-                        script: """cd mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
+                        script: """cd mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release && \
                         find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
-                    def apkPath = "mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                    def apkPath = "mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release/${apk}"
                     sh """#!/bin/bash -l
                         set -e
                         set -x
