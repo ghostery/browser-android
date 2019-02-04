@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "Your most visited websites will appear here">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "News">
 <!ENTITY activity_stream_top_news_show "Show">
