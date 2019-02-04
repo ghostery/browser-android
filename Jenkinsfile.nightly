@@ -75,6 +75,7 @@ def build(Map m){
     def getImageName = m.getImageName
     def nodeLabel = 'kria'
     def getId = m.getId
+    def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release"
     def apk = ""
     return {
         node(nodeLabel){
@@ -111,12 +112,10 @@ def build(Map m){
                                 cd /app/mozilla-release
                                 export MOZ_CHROME_MULTILOCALE=`ls -1 '../l10n/'|paste -s -d ' '`
                                 export AB_CD=multi
-                                ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                                ./gradlew :app:assembleWithGeckoBinariesRelease
                             """
                         }
-                        apk = sh(returnStdout: true,
-                            script: """cd /app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
-                            find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
+                        apk = sh(returnStdout: true, script: """cd ${apkPath} && find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
                     }
                 }
                 stage("Upload: ${flavorname}") {
@@ -129,10 +128,10 @@ def build(Map m){
                         ]
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
-                        def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                        def apkFullPath = "{apkPath}/${apk}"
                         def fileName = "${brandname}_Nightly-${env.BUILD_NUMBER}_${getId()}"
                         try {
-                            zip archive: true, dir: "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release", glob: '', zipFile: "${flavorname}-build.zip"
+                            zip archive: true, dir: "${apkPath}", glob: '', zipFile: "${flavorname}-build.zip"
                         } catch(e) {
                             print e
                         }
@@ -140,15 +139,15 @@ def build(Map m){
                             sh """#!/bin/bash -l
                                 set -e
                                 set -x
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${fileName}.apk
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest.apk
                             """
                         } else {
                             sh """#!/bin/bash -l
                                 set -e
                                 set -x
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/${fileName}_${buildarch}.apk
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkPath} ${s3Path}/latest_${buildarch}.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}_${buildarch}.apk
+                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest_${buildarch}.apk
                             """
                         }
                     }
