@@ -81,31 +81,10 @@ public class BridgePackage implements ReactPackage {
         public void handleMessage(String event, GeckoBundle message, EventCallback callback) {
             switch (event) {
                 case "Search:renderResults":
-                    long t0 = System.currentTimeMillis();
                     final String resultsArray = GeckoBundleUtils.safeGetString(message, "data");
-                    final String ts1 = GeckoBundleUtils.safeGetString(message, "ts1");
-                    final String ts2 = GeckoBundleUtils.safeGetString(message, "ts2");
-                    final String ts3 = GeckoBundleUtils.safeGetString(message, "ts3");
-                    Log.d("XXXX ts1 ts2", ts1 + " " + ts2);
-//                    final WritableArray wArray = Arguments.createArray();
-//                    for (GeckoBundle bundle : resultsArray) {
-//                        try {
-//                            wArray.pushMap(Utils.convertJsonToMap(bundle.toJSONObject()));
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-                    WritableMap map = Arguments.createMap();
-                    map.putString("results", resultsArray);
-                    map.putString("ts1", ts1);
-                    map.putString("ts2", ts2);
-                    map.putString("ts3", ts3);
-                    map.putString("ts4", String.valueOf(System.currentTimeMillis()));
-                    long t1 = System.currentTimeMillis();
-                    Log.d("XXXX results geckobundle to writablearray", t0 + " " + t1 + " " + (t1 - t0));
                     mReactContext
                             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                            .emit("search:renderResults", map);
+                            .emit("search:renderResults", resultsArray);
                     break;
             }
         }
@@ -113,16 +92,11 @@ public class BridgePackage implements ReactPackage {
         @ReactMethod
         public void callBackgroundAction(final ReadableMap data, final Promise promise) {
             try {
-                long t0 = System.currentTimeMillis();
                 JSONObject json = Utils.convertMapToJson(data);
                 GeckoBundle geckoBundle = GeckoBundle.fromJSONObject(json);
-                long t1 = System.currentTimeMillis();
-                Log.d("XXXX readablemap to geckobundle", t0 + " " + t1 + " " + (t1 - t0));
                 EventDispatcher.getInstance().dispatch("Cards:CallBackgroundAction", geckoBundle, new EventCallback() {
                     @Override
                     public void sendSuccess(Object response) {
-                        long t2 = System.currentTimeMillis();
-                        Log.d("XXXX java to browserjs and back", "" + (t2 - t1));
                         if (response == null) {
                             promise.resolve(response);
                         } else {
@@ -130,8 +104,6 @@ public class BridgePackage implements ReactPackage {
                             try {
                                 JSONObject jsonRes = bundle.toJSONObject();
                                 WritableMap map = Utils.convertJsonToMap(jsonRes);
-                                long t3 = System.currentTimeMillis();
-                                Log.d("XXXX geckobundle to writable map", t2 + " " + t3 + " " + (t3 - t2));
                                 promise.resolve(map);
                             } catch (JSONException e) {
                                 promise.reject(e);

@@ -6670,7 +6670,7 @@ var Cliqz = {
       case "getInstallDate":
         return Services.prefs.getCharPref("android.not_a_preference.browser.install.date", "16917");
       case "ready":
-        this.loadCardsUI();
+        this._searchExtensionListener({ action: 'renderReady' });
         this._handleExtensionReady("firefox@ghostery.com");
         break;
       case "idle":
@@ -6737,7 +6737,6 @@ var Cliqz = {
     if (data.messageName != "Extension:Message") {
       return;
     }
-    const ts2 = Date.now() + "";
     const msg = data.data.deserialize(this);
     const callback = this.callbacks[msg.requestId];
 
@@ -6745,9 +6744,6 @@ var Cliqz = {
       GlobalEventDispatcher.sendRequest({
         type: "Search:renderResults",
         data: msg.args[0],
-        ts1: msg.args[1] + "",
-        ts2,
-        ts3: Date.now() + "",
       });
     }
 
@@ -6843,14 +6839,11 @@ var Cliqz = {
     // event cases should be sorted in alphabitical order
     switch(event) {
       case "Cards:CallBackgroundAction":
-        const t0 = performance.now();
         this.messageExtension({
           module: data.module,
           action: data.action,
           args: data.args
         }).then(response => {
-          const t1 = performance.now();
-          console.log('XXXX browserjs to background and back', t0, t1, t1 - t0);
           onSuccess(response);
         }).catch(error => {
           onError(error);
