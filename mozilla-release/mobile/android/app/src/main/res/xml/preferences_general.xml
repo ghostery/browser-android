@@ -102,11 +102,13 @@
             android:summary="@string/pref_tab_queue_summary"
             android:title="@string/pref_tab_queue_title" />
 
+        <!-- Cliqz Start +->
         <SwitchPreference
             android:defaultValue="true"
             android:key="android.not_a_preference.customtabs_58"
             android:summary="@string/pref_custom_tabs_summary"
             android:title="@string/pref_custom_tabs" />
+        <!+- Cliqz End -->
     </PreferenceCategory>
 
     <!-- add MyOffrz category -->
