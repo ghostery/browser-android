@@ -51,7 +51,7 @@ node ('kria'){
     baseImageName ="browser-f/android:${dockerTag}"
     codeImageName ="browser-f/android:nightlycode"
     baseImage = stage('Build base image') {
-        docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
+        docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile.deploy .')
     }
     stage('Build code image') {
         writeFile file: 'Dockerfile.code', text: """
