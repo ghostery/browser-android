@@ -427,6 +427,13 @@
   <string name="contextmenu_unpin_from_top_sites">&contextmenu_unpin_from_top_sites;</string>
   <string name="contextmenu_add_search_engine">&contextmenu_add_search_engine;</string>
 
+  <string name="cliqz_contextmenu_add_page_shortcut">&cliqz_contextmenu_add_page_shortcut;</string>
+  <string name="cliqz_contextmenu_pin_to_top_sites">&cliqz_contextmenu_pin_to_top_sites;</string>
+  <string name="cliqz_contextmenu_unpin_from_top_sites">&cliqz_contextmenu_unpin_from_top_sites;</string>
+  <string name="cliqz_pinned_page_to_top_sites">&cliqz_pinned_page_to_top_sites;</string>
+  <string name="cliqz_unpinned_page_from_top_sites">&cliqz_unpinned_page_from_top_sites;</string>
+
+
   <string name="pinned_page_to_top_sites">&pinned_page_to_top_sites;</string>
   <string name="unpinned_page_from_top_sites">&unpinned_page_from_top_sites;</string>
 
@@ -737,7 +744,7 @@
   <string name="pref_human_web_url">&pref_human_web_url;</string>
 
   <!-- MyOffrz -->
-  <string name="myoffrz_title">&myoffrz_title;</string>	
+  <string name="myoffrz_title">&myoffrz_title;</string>
   <string name="myoffrz_no_offers_title">&myoffrz_no_offers_title;</string>
   <string name="myoffrz_no_offers_msg_line1">&myoffrz_no_offers_msg_line1;</string>
   <string name="myoffrz_no_offers_msg_line2">&myoffrz_no_offers_msg_line2;</string>

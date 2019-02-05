@@ -76,11 +76,11 @@
 
     <item
         android:id="@+id/pin_to_top_sites"
-        android:title="@string/contextmenu_pin_to_top_sites" />
+        android:title="@string/cliqz_contextmenu_pin_to_top_sites" />
 
     <item
         android:id="@+id/add_to_launcher"
-        android:title="@string/contextmenu_add_page_shortcut" />
+        android:title="@string/cliqz_contextmenu_add_page_shortcut" />
 
     <item
         android:id="@+id/settings"
