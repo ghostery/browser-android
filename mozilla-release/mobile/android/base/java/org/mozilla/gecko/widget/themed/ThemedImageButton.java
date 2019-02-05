@@ -93,12 +93,12 @@ public class ThemedImageButton extends android.widget.ImageButton
 
     @Override
     public int[] onCreateDrawableState(int extraSpace) {
-        /* Cliqz Start*/
+        /* Cliqz Start */
         final int[] addedState;
 
-        if(isLightTheme && isPrivate)
+        if (isLightTheme && isPrivate)
             addedState = LIGHT_THEME_PRIVATE_MODE;
-        else if(isLightTheme)
+        else if (isLightTheme)
             addedState = LIGHT_THEME;
         else if (isPrivate)
             addedState =  STATE_PRIVATE_MODE;
@@ -220,8 +220,8 @@ public class ThemedImageButton extends android.widget.ImageButton
     }
 
     /* Cliqz Start */
-    public void setLightTheme(boolean isLightTheme){
-        if(this.isLightTheme != isLightTheme) {
+    public void setLightTheme(boolean isLightTheme) {
+        if (this.isLightTheme != isLightTheme) {
             this.isLightTheme = isLightTheme;
             refreshDrawableState();
             invalidate();

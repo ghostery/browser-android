@@ -6,13 +6,10 @@
 
 package org.mozilla.gecko.widget.themed;
 
-import android.graphics.Canvas;
-import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.R;
-import org.mozilla.gecko.util.AppBackgroundManager;
 import org.mozilla.gecko.util.DrawableUtil;
 
 import android.content.Context;
@@ -85,12 +82,12 @@ public class ThemedViewPager extends RtlViewPager
 
     @Override
     public int[] onCreateDrawableState(int extraSpace) {
-        /* Cliqz Start*/
+        /* Cliqz Start */
         final int[] addedState;
 
-        if(isLightTheme && isPrivate)
+        if (isLightTheme && isPrivate)
             addedState = LIGHT_THEME_PRIVATE_MODE;
-        else if(isLightTheme)
+        else if (isLightTheme)
             addedState = LIGHT_THEME;
         else if (isPrivate)
             addedState =  STATE_PRIVATE_MODE;
@@ -192,8 +189,8 @@ public class ThemedViewPager extends RtlViewPager
     }
 
     /* Cliqz Start */
-    public void setLightTheme(boolean isLightTheme){
-        if(this.isLightTheme != isLightTheme) {
+    public void setLightTheme(boolean isLightTheme) {
+        if (this.isLightTheme != isLightTheme) {
             this.isLightTheme = isLightTheme;
             refreshDrawableState();
             invalidate();

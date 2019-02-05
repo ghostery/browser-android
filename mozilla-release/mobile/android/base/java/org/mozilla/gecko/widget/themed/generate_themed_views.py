@@ -72,8 +72,8 @@ views = [
     dict(VIEW_NAME_SUFFIX='TabLayout',
          BASE_TYPE='android.support.design.widget.TabLayout',
          STYLE_CONSTRUCTOR=1),
-    dict(VIEW_NAME_SUFFIX='FadeHorizontalScrollView',
-         BAE_TYPE='org.mozilla.gecko.widget.FadedHorizontalScrollView',
+    dict(VIEW_NAME_SUFFIX='FadedHorizontalScrollView',
+         BASE_TYPE='org.mozilla.gecko.widget.FadedHorizontalScrollView',
          STYLE_CONSTRUCTOR=1)
 ]
 

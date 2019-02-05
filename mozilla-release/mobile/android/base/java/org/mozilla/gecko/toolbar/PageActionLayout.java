@@ -286,19 +286,19 @@ public class PageActionLayout extends ThemedLinearLayout
     }
 
     /* Cliqz Start */
-    private Drawable applyTint(Drawable drawable,boolean useTint) {
+    private Drawable applyTint(Drawable drawable, boolean useTint) {
         final Drawable icon = DrawableCompat.wrap(drawable.mutate());
         final int colorId;
         if (useTint) {
-            if(PreferenceManager.getInstance(getContext()).isLightThemeEnabled()) {
+            if (PreferenceManager.getInstance(getContext()).isLightThemeEnabled()) {
                 colorId = android.R.color.white;
             } else {
                 colorId = R.color.general_blue_color;
             }
             DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(), colorId));
         } else {
-            DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),R.color
-                    .inactive_icon_color));
+            DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),
+                    R.color.inactive_icon_color));
         }
         return drawable;
     }
@@ -580,9 +580,8 @@ public class PageActionLayout extends ThemedLinearLayout
 
     public void setLightTheme(boolean isLightTheme) {
         super.setLightTheme(isLightTheme);
-        if(mPageActionList != null) {
-            for (int i = 0; i < mPageActionList.size(); i++) {
-                final PageAction pageAction = mPageActionList.get(i);
+        if (mPageActionList != null) {
+            for (PageAction pageAction : mPageActionList) {
                 applyTint(pageAction.mDrawable, pageAction.mUseTint);
             }
         }

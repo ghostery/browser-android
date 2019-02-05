@@ -39,7 +39,6 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -134,7 +133,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
     private final ForegroundColorSpan mPrivateDomainColorSpan;
     // add Https color span */
     private final ForegroundColorSpan mHttpsColorSpan;
-    private final PreferenceManager preferenceManager;
+    private final PreferenceManager mPreferenceManager;
     /* Cliqz end */
 
     public ToolbarDisplayLayout(Context context, AttributeSet attrs) {
@@ -179,7 +178,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mPrivateDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext_private));
         // add Https Color span */
         mHttpsColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.general_blue_color));
-        preferenceManager = PreferenceManager.getInstance(getContext());
+        mPreferenceManager = PreferenceManager.getInstance(getContext());
         /* Cliqz end */
 
         mSiteSecurity = (ThemedImageButton) findViewById(R.id.site_security);
@@ -373,7 +372,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
                 index, index + baseDomain.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
         // set https color to blue in blueTheme only */
-        if (URLUtil.isHttpsUrl(url) && !preferenceManager.isLightThemeEnabled()) {
+        if (URLUtil.isHttpsUrl(url) && !mPreferenceManager.isLightThemeEnabled()) {
             builder.setSpan(mHttpsColorSpan,0,5, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
         /* Cliqz end */
@@ -622,12 +621,8 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         super.setLightTheme(isLightTheme);
         mTitle.setLightTheme(isLightTheme);
         mPageActionLayout.setLightTheme(isLightTheme);
-        if (isLightTheme) {
-            DrawableCompat.setTint(DrawableCompat.wrap(mSiteSecurity.getDrawable()), Color.WHITE);
-        } else {
-            DrawableCompat.setTint(DrawableCompat.wrap(mSiteSecurity.getDrawable()),
-                    ContextCompat.getColor(getContext(), R.color.general_blue_color));
-        }
+        DrawableCompat.setTint(DrawableCompat.wrap(mSiteSecurity.getDrawable()),
+                isLightTheme ? Color.WHITE : ContextCompat.getColor(getContext(), R.color.general_blue_color));
     }
     /* Cliqz end */
 }

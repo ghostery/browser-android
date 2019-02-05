@@ -6,6 +6,7 @@
 
 package org.mozilla.gecko.widget.themed;
 
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.Tab;
@@ -25,7 +26,7 @@ import static org.mozilla.gecko.Tabs.registerOnTabsChangedListener;
 import static org.mozilla.gecko.Tabs.unregisterOnTabsChangedListener;
 
 public class ThemedTabLayout extends android.support.design.widget.TabLayout
-                                     implements LightweightTheme.OnChangeListener, Tabs.OnTabsChangedListener{
+        implements LightweightTheme.OnChangeListener, Tabs.OnTabsChangedListener {
     private LightweightTheme theme;
 
     private static final int[] STATE_PRIVATE_MODE = { R.attr.state_private };
@@ -209,21 +210,13 @@ public class ThemedTabLayout extends android.support.design.widget.TabLayout
             this.isLightTheme = isLightTheme;
             refreshDrawableState();
             invalidate();
-            if (isLightTheme) {
-                this.setTabTextColors(
-                        getContext().getResources().getColor(R.color.general_blue_color_opaque),
-                        getContext().getResources().getColor(R.color.general_blue_color));
-                this.setSelectedTabIndicatorColor(
-                        getContext().getResources().getColor(R.color.general_blue_color));
-            } else {
-                this.setTabTextColors(
-                        getContext().getResources().getColor(android.R.color.white),
-                        getContext().getResources().getColor(android.R.color.white));
-                this.setSelectedTabIndicatorColor(
-                        getContext().getResources().getColor(android.R.color.white));
-            }
+
+            this.setTabTextColors(
+                    isLightTheme ? getContext().getResources().getColor(R.color.general_blue_color_opaque) : Color.WHITE,
+                    isLightTheme ? getContext().getResources().getColor(R.color.general_blue_color) : Color.WHITE);
+            this.setSelectedTabIndicatorColor(
+                    isLightTheme ? getContext().getResources().getColor(R.color.general_blue_color) : Color.WHITE);
         }
     }
     /* Cliqz End */
-
 }

@@ -495,15 +495,10 @@ public class TabsPanel extends ThemedLinearLayout
         mTabWidget.setLightTheme(isLightTheme);
         mTabsCounter.setLightTheme(isLightTheme);
         mBlankLine.setLightTheme(isLightTheme);
-        if (isLightTheme) {
-            DrawableCompat.setTint(DrawableCompat.wrap(mAddTab.getDrawable()),
-                    ContextCompat.getColor(getContext(), R.color.general_blue_color));
-            DrawableCompat.setTint(DrawableCompat.wrap(mMenuButton.getDrawable()),
-                    ContextCompat.getColor(getContext(), R.color.general_blue_color));
-        } else {
-            DrawableCompat.setTint(DrawableCompat.wrap(mAddTab.getDrawable()), Color.WHITE);
-            DrawableCompat.setTint(DrawableCompat.wrap(mMenuButton.getDrawable()), Color.WHITE);
-        }
+        DrawableCompat.setTint(DrawableCompat.wrap(mAddTab.getDrawable()),
+                isLightTheme ? ContextCompat.getColor(getContext(), R.color.general_blue_color) : Color.WHITE);
+        DrawableCompat.setTint(DrawableCompat.wrap(mMenuButton.getDrawable()),
+                isLightTheme ? ContextCompat.getColor(getContext(), R.color.general_blue_color) : Color.WHITE);
     }
     /* Cliqz End */
 

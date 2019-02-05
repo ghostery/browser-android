@@ -6,19 +6,20 @@
 
 package org.mozilla.gecko.widget.themed;
 
+import android.support.v4.content.ContextCompat;
+import org.mozilla.gecko.GeckoApplication;
+import org.mozilla.gecko.lwt.LightweightTheme;
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.util.DrawableUtil;
+
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.content.ContextCompat;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-import org.mozilla.gecko.GeckoApplication;
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.lwt.LightweightTheme;
-import org.mozilla.gecko.widget.FadedHorizontalScrollView;
-
-public class ThemedFadedHorizontalScrollView extends FadedHorizontalScrollView
+public class ThemedFadedHorizontalScrollView extends org.mozilla.gecko.widget.FadedHorizontalScrollView
                                      implements LightweightTheme.OnChangeListener {
     private LightweightTheme theme;
 
@@ -79,12 +80,12 @@ public class ThemedFadedHorizontalScrollView extends FadedHorizontalScrollView
 
     @Override
     public int[] onCreateDrawableState(int extraSpace) {
-        /* Cliqz Start*/
+        /* Cliqz Start */
         final int[] addedState;
 
-        if(isLightTheme && isPrivate)
+        if (isLightTheme && isPrivate)
             addedState = LIGHT_THEME_PRIVATE_MODE;
-        else if(isLightTheme)
+        else if (isLightTheme)
             addedState = LIGHT_THEME;
         else if (isPrivate)
             addedState =  STATE_PRIVATE_MODE;
@@ -186,13 +187,12 @@ public class ThemedFadedHorizontalScrollView extends FadedHorizontalScrollView
     }
 
     /* Cliqz Start */
-    public void setLightTheme(boolean isLightTheme){
-        if(this.isLightTheme != isLightTheme) {
+    public void setLightTheme(boolean isLightTheme) {
+        if (this.isLightTheme != isLightTheme) {
             this.isLightTheme = isLightTheme;
             refreshDrawableState();
             invalidate();
         }
     }
     /* Cliqz End */
-
 }

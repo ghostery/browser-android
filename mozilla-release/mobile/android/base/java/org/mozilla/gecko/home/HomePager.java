@@ -680,7 +680,7 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (TextUtils.equals(key, GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED)) {
             reloadBackground();
-        } else if(TextUtils.equals(key, GeckoPreferences.PREFS_BLUE_THEME)){
+        } else if (TextUtils.equals(key, GeckoPreferences.PREFS_BLUE_THEME)) {
             setLightTheme(preferenceManager.isLightThemeEnabled());
             reloadBackground();
         }

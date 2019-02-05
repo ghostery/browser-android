@@ -43,6 +43,7 @@ public class ThemedLinearLayout extends android.widget.LinearLayout
     private static final int[] LIGHT_THEME_PRIVATE_MODE = { R.attr.light_theme, R.attr.state_private };
     private boolean isLightTheme;
     /* Cliqz End */
+
     public ThemedLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context, attrs, 0);
@@ -79,7 +80,7 @@ public class ThemedLinearLayout extends android.widget.LinearLayout
 
     @Override
     public int[] onCreateDrawableState(int extraSpace) {
-        /* Cliqz Start*/
+        /* Cliqz Start */
         final int[] addedState;
 
         if (isLightTheme && isPrivate)

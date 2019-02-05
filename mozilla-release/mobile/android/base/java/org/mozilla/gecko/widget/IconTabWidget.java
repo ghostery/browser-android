@@ -63,8 +63,9 @@ public class IconTabWidget extends TabWidget {
     public void setLightTheme(boolean isLightTheme) {
         if (this.isLightTheme != isLightTheme) {
             this.isLightTheme = isLightTheme;
-            ((ThemedTextView)this.getChildAt(0)).setLightTheme(isLightTheme);
-            ((ThemedTextView)this.getChildAt(1)).setLightTheme(isLightTheme);
+            for (int i = 0; i < this.getChildCount(); i++) {
+                ((ThemedTextView)this.getChildAt(i)).setLightTheme(isLightTheme);
+            }
             refreshDrawableState();
             invalidate();
         }

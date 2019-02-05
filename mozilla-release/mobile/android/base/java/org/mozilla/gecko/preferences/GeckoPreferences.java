@@ -282,7 +282,7 @@ public class GeckoPreferences
 
     private final Map<String, PrefHandler> HANDLERS;
 
-    private Fragment currentPreferenceFragment;
+    private Fragment mCurrentPreferenceFragment;
 
     {
         final HashMap<String, PrefHandler> tempHandlers = new HashMap<>(2);
@@ -1473,7 +1473,8 @@ public class GeckoPreferences
             EventDispatcher.getInstance().dispatch("SearchEngines:GetVisible", null);
         } else if (PREFS_BLUE_THEME.equals(prefName)) {
             final PreferenceCategory categoryStartTab = (PreferenceCategory)
-                    ((PreferenceFragment) currentPreferenceFragment).findPreference(PREF_CATEGORY_START_TAB);
+                    ((PreferenceFragment) mCurrentPreferenceFragment)
+                            .findPreference(PREF_CATEGORY_START_TAB);
             if ((boolean) newValue) {
                 categoryStartTab.addPreference(mShowBackgroundPref);
             } else {
@@ -1902,7 +1903,7 @@ public class GeckoPreferences
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-        this.currentPreferenceFragment = fragment;
+        this.mCurrentPreferenceFragment = fragment;
     }
 
     /* Cliqz end */

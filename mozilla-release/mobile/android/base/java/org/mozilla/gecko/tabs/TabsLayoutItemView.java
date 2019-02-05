@@ -225,8 +225,8 @@ public class TabsLayoutItemView extends LinearLayout
                                        .execute(mFaviconView.createIconCallback());
             /o Cliqz Block Comment end */
             final Context context = getContext();
-            if(tab.getTitle().equals(context.getString(R.string.home_title))) {
-                mFaviconView.setImageDrawable(getDefaultFavIcon(tab,context));
+            if (tab.getTitle().equals(context.getString(R.string.home_title))) {
+                mFaviconView.setImageDrawable(getDefaultFavIcon(tab));
             } else {
                 Picasso.with(context)
                         .load(CliqzLogoUtil.getIconUrl(url, iconSize, iconSize))
@@ -260,11 +260,8 @@ public class TabsLayoutItemView extends LinearLayout
     public void setLightTheme(boolean isLightTheme) {
         ((ThemedLinearLayout) findViewById(R.id.tab_item_header)).setLightTheme(isLightTheme);
         mTitle.setLightTheme(isLightTheme);
-        if (isLightTheme) {
-            DrawableCompat.setTint(DrawableCompat.wrap(mCloseButton.getDrawable()), Color.BLACK);
-        } else {
-            DrawableCompat.setTint(DrawableCompat.wrap(mCloseButton.getDrawable()), Color.WHITE);
-        }
+        DrawableCompat.setTint(DrawableCompat.wrap(mCloseButton.getDrawable()),
+                isLightTheme ? Color.BLACK : Color.WHITE);
     }
 
     private Drawable initDefaultVectorDrawable(int drawableId) {
@@ -276,7 +273,7 @@ public class TabsLayoutItemView extends LinearLayout
         return drawable;
     }
 
-    private Drawable getDefaultFavIcon(Tab tab, Context context) {
+    private Drawable getDefaultFavIcon(Tab tab) {
         return tab.isPrivate() ? mDefaultPrivateDrawable : mDefaultDrawable;
     }
     /* Cliqz End */
