@@ -1,12 +1,12 @@
-Merci pour vos commentaires. Ils ont été étudiés et nous avons veillé à l'améliorer.
+Nous avons travaillé dur pour améliorer Ghostery pour Android grâce à vos commentaires !
 
-La dernière mise à jour intègre
-* performances grandement améliorées - différence perceptible
+La dernière mise à jour intègre :
+* performances améliorées pour un application plus fluide
 * stabilité accrue
-* personnalisation simplifiée de la page de démarrage - paramétrez à votre image !
+* personnalisation simplifiée de la page de démarrage
 * mise à jour du bloqueur de publicités et de la protection contre le pistage
-* navigation simplifiée depuis vos favoris 
+* navigation simplifiée depuis vos favoris
 * plus de conflits avec Gmail - toutes nos excuses !
-* correction de bugs
+* Et beaucoup d'autres bugs éliminés
 
 Bonne navigation !
