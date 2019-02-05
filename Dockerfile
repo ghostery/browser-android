@@ -31,7 +31,8 @@ RUN apt-get update && \
 ARG UID
 ARG GID
 ENV SHELL=/bin/bash
-ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${PATH}
+ENV NPM_CONFIG_PREFIX=/home/jenkins/.npm-global
+ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${NPM_CONFIG_PREFIX}/bin:${PATH}
 RUN getent group $GID || groupadd jenkins --gid $GID && \
     useradd --create-home --shell /bin/bash jenkins --uid $UID --gid $GID
 
