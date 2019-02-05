@@ -6691,6 +6691,11 @@ var Cliqz = {
       case "ready":
         this.loadCardsUI();
         this._handleExtensionReady("firefox@ghostery.com");
+        if (this.lastQueuedQuery) {
+          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.lastQueuedQuery = "";
+        }
+        this.searchIsReady = true;
         break;
       case "idle":
         GlobalEventDispatcher.sendRequest({
@@ -6698,17 +6703,9 @@ var Cliqz = {
         });
         break;
       case "renderReady":
-        if (!this.searchIsReady) {
-          GlobalEventDispatcher.sendRequest({
-            type: "Search:Ready"
-          });
-          this.searchIsReady = true;
-        }
-
-        if (this.lastQueuedQuery) {
-          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
-          this.lastQueuedQuery = "";
-        }
+        GlobalEventDispatcher.sendRequest({
+          type: "Search:Ready"
+        });
         break;
       default:
         console.log("unexpected message", msg);
