@@ -8,9 +8,14 @@
   "devDependencies": {},
   "dependencies": {
     "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/mobile-cards-android/master/1.33.0.1b431.e3bc339.tgz",
+    "cliqz-logo-database": "^0.1.2",
+    "moment": "^2.24.0",
     "react": "^16.6.3",
     "react-native": "0.56.1",
+    "react-native-gesture-handler": "^1.0.12",
     "react-native-snap-carousel": "^3.7.5",
-    "react-native-view-shot": "^2.2.0"
+    "react-native-view-shot": "^2.2.0",
+    "react-navigation": "^3.0.9",
+    "url-parse": "^1.4.4"
   }
 }

@@ -2,6 +2,8 @@ import React from 'react';
 import {AppRegistry, StyleSheet, Text, View, DeviceEventEmitter, } from 'react-native';
 import SearchUI from 'browser-core/build/modules/mobile-cards/SearchUI';
 import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
+import Freshtab from './freshtab/Index';
+
 import Cliqz from './cliqz';
 
 class BrowserCoreApp extends React.Component {
@@ -26,9 +28,14 @@ class BrowserCoreApp extends React.Component {
     }
     return (
       <View style={styles.container}>
-        <CliqzProvider value={this.cliqz}>
-          <SearchUI results={results} theme="dark" />
-        </CliqzProvider>
+        {this.state.results.length === 0
+          ? <Freshtab />
+          : (
+            <CliqzProvider value={this.cliqz}>
+              <SearchUI results={results} theme="dark" />
+            </CliqzProvider>
+          )
+        }
       </View>
     );
   }
