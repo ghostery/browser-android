@@ -6648,7 +6648,7 @@ var Cliqz = {
   },
 
   _searchExtensionListener(msg) {
-    console.log("Dispaching event from the search extension to native", msg);
+    console.log("Dispaching event from the search extension to native", msg.action);
     switch (msg.action) {
       case "openUrl": // args [url as string]
         if (!msg.args[0]) {
@@ -6716,7 +6716,7 @@ var Cliqz = {
   },
 
   _privacyExtensionListener(msg) {
-    console.log("Dispaching event from the privacy extension to native", msg);
+    console.log("Dispaching event from the privacy extension to native", msg.action);
     switch (msg.action) {
       case "setIcon":
         var count = Number.parseInt(msg.payload.text);

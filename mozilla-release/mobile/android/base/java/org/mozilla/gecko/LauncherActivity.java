@@ -164,7 +164,10 @@ public class LauncherActivity extends Activity {
     }
 
     private static boolean isCustomTabsEnabled(@NonNull final Context context) {
-        return GeckoPreferences.getBooleanPref(context, GeckoPreferences.PREFS_CUSTOM_TABS, true);
+        /* Cliqz Start */
+        // return GeckoPreferences.getBooleanPref(context, GeckoPreferences.PREFS_CUSTOM_TABS, true);
+        return false;
+        /* Cliqz End */
     }
 
     private static boolean isCustomTabsIntent(@NonNull final SafeIntent safeIntent) {

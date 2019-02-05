@@ -221,10 +221,10 @@ public class PageActionLayout extends ThemedLinearLayout
     public void maybeShowPwaOnboarding() {
         // only show pwa at normal mode
         final Tab selectedTab = Tabs.getInstance().getSelectedTab();
-        if (!PwaUtils.shouldAddPwaShortcut(selectedTab)) {
+        if (!PwaUtils.shouldAddPwaShortcut(selectedTab) || mPageActionList == null) {
             return;
         }
-        for(PageAction action :mPageActionList) {
+        for(PageAction action : mPageActionList) {
             if (UUID_PAGE_ACTION_PWA.equals(action.getID())) {
                 final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
                 final boolean show = prefs.getBoolean(PREF_PWA_ONBOARDING, true);
