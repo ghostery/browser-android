@@ -23,12 +23,10 @@ class BrowserCoreApp extends React.Component {
   render() {
     const results = JSON.parse(this.state.results || '[]') ;
     const theme = this.state.theme;
-    if (!results.length) {
-      return null;
-    }
     return (
       <View style={styles.container}>
-        {this.state.results.length === 0
+        {
+          results.length === 0
           ? <Freshtab />
           : (
             <CliqzProvider value={this.cliqz}>

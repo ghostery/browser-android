@@ -47,19 +47,19 @@ class HistoryItem extends React.Component {
     const logo = getLogo(data.url, {
       database: LogoDB,
       version: LOGO_DB_VERSION,
-    }) || {};
-    const logoDetails = {
-      backgroundColor: logo.color || '000000',
-      backgroundImage: 'url('+logo.logoUrl+')',
-      text: data.title.slice(0, 2) || ''
-    }
+    }) || {
+	backgroundColor: 'CC8888',
+        text: 'kg',
+	};
+
+    logo.backgroundImage = logo.logoUrl ? `url(${logo.logoUrl})` : undefined;
 
     return (
       <View style={itemStyles.container}>
         <Icon
           width={60}
           height={60}
-          logoDetails={logoDetails}
+          logoDetails={logo}
         />
         <View style={itemStyles.rightContainer}>
           <Text style={itemStyles.title}>{data.title}</Text>
