@@ -5,6 +5,7 @@
 package org.mozilla.gecko.widget;
 
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,8 +18,60 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 public class IconTabWidget extends TabWidget {
+
+    /* Cliqz Start */
+    private static final int[] STATE_PRIVATE_MODE = { R.attr.state_private };
+
+    private boolean mIsPrivate;
+
+    private static final int[] LIGHT_THEME = { R.attr.light_theme };
+    private static final int[] LIGHT_THEME_PRIVATE_MODE = { R.attr.light_theme, R.attr.state_private };
+    private boolean mIsLightTheme;
+    /* Cliqz End */
+
     OnTabChangedListener mListener;
     private final int mButtonLayoutId;
+
+    /* Cliqz Start */
+    @Override
+    protected int[] onCreateDrawableState(int extraSpace) {
+        final int[] addedState;
+
+        if (mIsLightTheme && mIsPrivate) {
+            addedState = LIGHT_THEME_PRIVATE_MODE;
+        } else if (mIsLightTheme) {
+            addedState = LIGHT_THEME;
+        } else if (mIsPrivate) {
+            addedState = STATE_PRIVATE_MODE;
+        } else {
+            addedState = new int[]{};
+        }
+
+        final int[] drawableState = super.onCreateDrawableState(extraSpace + addedState.length);
+        mergeDrawableStates(drawableState, addedState);
+
+        return drawableState;
+    }
+
+    public void setPrivateMode(boolean isPrivate) {
+        if (this.mIsPrivate != isPrivate) {
+            this.mIsPrivate = isPrivate;
+            refreshDrawableState();
+            invalidate();
+        }
+    }
+
+    public void setLightTheme(boolean isLightTheme) {
+        if (this.mIsLightTheme != isLightTheme) {
+            this.mIsLightTheme = isLightTheme;
+            for (int i = 0; i < this.getChildCount(); i++) {
+                ((ThemedTextView)this.getChildAt(i)).setLightTheme(isLightTheme);
+            }
+            refreshDrawableState();
+            invalidate();
+        }
+    }
+    /* Cliqz End */
 
     public static interface OnTabChangedListener {
         public void onTabChanged(int tabIndex);

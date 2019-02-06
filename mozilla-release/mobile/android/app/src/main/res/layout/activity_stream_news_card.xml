@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Copyright Cliqz © 2018 -->
+<org.mozilla.gecko.widget.themed.ThemedLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,7 +12,6 @@
     android:paddingStart="@dimen/new_card_padding_5"
     android:paddingTop="@dimen/new_card_padding_10">
 
-    <!-- Cliqz Start -->
     <ImageView
         android:id="@+id/favicon"
         android:layout_width="@dimen/news_favicon_size"
@@ -19,7 +20,6 @@
         android:layout_marginStart="@dimen/new_card_padding_5"
         tools:background="@drawable/favicon_globe"
         tools:ignore="ContentDescription" />
-    <!-- Cliqz End -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,27 +29,27 @@
         android:paddingStart="@dimen/new_card_padding_10"
         tools:ignore="RtlSymmetry">
 
-        <TextView
+        <org.mozilla.gecko.widget.themed.ThemedTextView
             android:id="@+id/title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/news_title_text"
+            android:textColor="@color/cliqz_start_tab_font_color"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam" />
 
-        <TextView
+        <org.mozilla.gecko.widget.themed.ThemedTextView
             android:id="@+id/url_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:textColor="@color/news_url_text"
+            android:textColor="@color/cliqz_start_tab_font_color"
             android:textSize="12sp"
             tools:ignore="RtlSymmetry"
             tools:text="cliqz.com" />
 
     </LinearLayout>
 
-</LinearLayout>
+</org.mozilla.gecko.widget.themed.ThemedLinearLayout>

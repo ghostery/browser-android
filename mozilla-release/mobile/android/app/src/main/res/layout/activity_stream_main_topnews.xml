@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright Cliqz © 2018 -->
-<org.mozilla.gecko.widget.RoundedCornerLayout
+<org.mozilla.gecko.widget.ThemedRoundedCornerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    android:background="@drawable/cliqz_top_news_list_border"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
@@ -16,4 +17,4 @@
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:listitem="@layout/activity_stream_news_card" />
 
-</org.mozilla.gecko.widget.RoundedCornerLayout>
+</org.mozilla.gecko.widget.ThemedRoundedCornerLayout>

@@ -5,6 +5,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
        xmlns:gecko="http://schemas.android.com/apk/res-auto"
        xmlns:tools="http://schemas.android.com/tools"
        tools:background="@android:color/black"
@@ -22,29 +23,21 @@
         style="@style/UrlBar.ThemeBackground"
         android:layout_width="0dp"
         android:layout_height="@dimen/browser_toolbar_url_height"
-        android:layout_weight="1"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:background="@drawable/url_bar_title_bg">
-
-        <org.mozilla.gecko.widget.themed.ThemedImageButton
-            android:id="@+id/site_security"
-            style="@style/UrlBar.SiteIdentity"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/site_security"
-            android:src="@drawable/security_mode_icon"
-            tools:src="@drawable/ic_lock"/>
 
         <!-- We need this on a separate layer to avoid fading out the toolbar background as well
      and we can't use a hardware layer because that causes problems with the snapshot
      for our toolbar animation.-->
-                <!-- Cliqz start -->
+        <!-- Cliqz start -->
         <!-- round the corners of horizontal ScrollView and UrlBar TextView inside it, change
         fadeWidth to 50dp-->
-        <org.mozilla.gecko.widget.FadedHorizontalScrollView
+        <org.mozilla.gecko.widget.themed.ThemedFadedHorizontalScrollView
             android:id="@+id/url_bar_title_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/rounded_text"
+            android:background="@drawable/url_bar_entry_bg"
             android:fillViewport="true"
             android:layerType="software"
             android:overScrollMode="never"
@@ -64,7 +57,7 @@
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/site_security"
                     android:src="@drawable/security_mode_icon"
-                    android:tint="@color/general_blue_color"
+                    android:tint="@color/cliqz_url_bar_site_security"
                     android:visibility="gone"
                     tools:src="@drawable/ic_lock" />
 
@@ -90,10 +83,9 @@
                     android:layout_centerVertical="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black" />
+                    android:singleLine="true" />
             </RelativeLayout>
-        </org.mozilla.gecko.widget.FadedHorizontalScrollView>
+        </org.mozilla.gecko.widget.themed.ThemedFadedHorizontalScrollView>
         <!-- Cliqz end -->
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
 

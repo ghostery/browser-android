@@ -5,6 +5,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:gecko="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:background="@android:color/holo_green_light"
@@ -21,7 +22,7 @@
         android:layout_height="@dimen/browser_toolbar_url_height"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/rounded_text">
+        android:background="@drawable/url_bar_entry_bg">
 
         <!-- Search icon must have exact position and size as site security in
              display layout -->
@@ -55,7 +56,6 @@
             android:src="@drawable/ic_close_clear"
             android:visibility="visible"
             gecko:showLWTBackground="true"
-            android:tint="@android:color/black"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
             android:layout_height="@dimen/browser_toolbar_height"

@@ -201,6 +201,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Search, &pref_new_tab_category;, Browsing, Notifications, Download, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "Blue Theme">
 <!ENTITY pref_cliqz_tab_background "Show background image">
 <!ENTITY pref_cliqz_tab_topsites "Show most visited websites">
 <!ENTITY pref_cliqz_tab_news "Show News">

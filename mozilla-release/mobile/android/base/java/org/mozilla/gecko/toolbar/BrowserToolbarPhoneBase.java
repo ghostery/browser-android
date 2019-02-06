@@ -10,16 +10,11 @@ import java.util.Arrays;
 import android.support.v4.content.ContextCompat;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
-import org.mozilla.gecko.Telemetry;
-import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.ViewHelper;
-import org.mozilla.gecko.widget.themed.ThemedImageButton;
-import org.mozilla.gecko.widget.themed.ThemedImageView;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.v4.view.ViewCompat;
@@ -38,7 +33,7 @@ import android.widget.ImageView;
 abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
 
     protected final ImageView urlBarTranslatingEdge;
-    protected final View editCancel;
+    /* Cliqz Start o/ protected final View editCancel; /o Cliqz End */
 
     private final Path roundCornerShape;
     private final Paint roundCornerPaint;
@@ -54,7 +49,7 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
         // This will clip the translating edge's image at 60% of its width
         urlBarTranslatingEdge.getDrawable().setLevel(6000);
 
-        editCancel = findViewById(R.id.edit_cancel);
+        /* Cliqz Start o/ editCancel = findViewById(R.id.edit_cancel); /o Cliqz End */
 
         focusOrder.add(this);
         focusOrder.addAll(urlDisplayLayout.getFocusOrder());
@@ -94,7 +89,7 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-
+        /* Cliqz Start o/
         editCancel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,62 +103,65 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
                 }
             }
         });
+        /o Cliqz End */
     }
 
-    @Override
-    public void setPrivateMode(final boolean isPrivate) {
-        super.setPrivateMode(isPrivate);
+   /* Cliqz Start o/
+   @Override
+   public void setPrivateMode(final boolean isPrivate) {
+       super.setPrivateMode(isPrivate);
 
-        ((ThemedImageButton) editCancel).setPrivateMode(isPrivate);
-    }
+       ((ThemedImageButton) editCancel).setPrivateMode(isPrivate);
+   }
+   /o Cliqz End */
 
-    @Override
-    protected boolean isTabsButtonOffscreen() {
-        return isEditing();
-    }
+   @Override
+   protected boolean isTabsButtonOffscreen() {
+       return isEditing();
+   }
 
-    @Override
-    public boolean addActionItem(final View actionItem) {
-        // We have no action item bar.
-        return false;
-    }
+   @Override
+   public boolean addActionItem(final View actionItem) {
+       // We have no action item bar.
+       return false;
+   }
 
-    @Override
-    public void removeActionItem(final View actionItem) {
-        // We have no action item bar.
-    }
+   @Override
+   public void removeActionItem(final View actionItem) {
+       // We have no action item bar.
+   }
 
-    @Override
-    protected void updateNavigationButtons(final Tab tab) {
-        // We have no navigation buttons so do nothing.
-    }
+   @Override
+   protected void updateNavigationButtons(final Tab tab) {
+       // We have no navigation buttons so do nothing.
+   }
 
-    @Override
-    public void triggerTabsPanelTransition(final PropertyAnimator animator, final boolean areTabsShown) {
-        if (areTabsShown) {
-            ViewHelper.setAlpha(tabsCounter, 0.0f);
-            ViewHelper.setAlpha(menuButton, 0.0f);
-            return;
-        }
+   @Override
+   public void triggerTabsPanelTransition(final PropertyAnimator animator, final boolean areTabsShown) {
+       if (areTabsShown) {
+           ViewHelper.setAlpha(tabsCounter, 0.0f);
+           ViewHelper.setAlpha(menuButton, 0.0f);
+           return;
+       }
 
-        final PropertyAnimator buttonsAnimator =
-                new PropertyAnimator(animator.getDuration(), buttonsInterpolator);
-        buttonsAnimator.attach(tabsCounter,
-                               PropertyAnimator.Property.ALPHA,
-                               1.0f);
+       final PropertyAnimator buttonsAnimator =
+               new PropertyAnimator(animator.getDuration(), buttonsInterpolator);
+       buttonsAnimator.attach(tabsCounter,
+                              PropertyAnimator.Property.ALPHA,
+                              1.0f);
 
-        buttonsAnimator.attach(menuButton,
-                               PropertyAnimator.Property.ALPHA,
-                               1.0f);
+       buttonsAnimator.attach(menuButton,
+                              PropertyAnimator.Property.ALPHA,
+                              1.0f);
 
-        buttonsAnimator.start();
-    }
+       buttonsAnimator.start();
+   }
 
-    /**
-     * Returns the number of pixels the url bar translating edge
-     * needs to translate to the right to enter its editing mode state.
-     * A negative value means the edge must translate to the left.
-     */
+   /**
+    * Returns the number of pixels the url bar translating edge
+    * needs to translate to the right to enter its editing mode state.
+    * A negative value means the edge must translate to the left.
+    */
     protected int getUrlBarEntryTranslation() {
         // Find the distance from the right-edge of the url bar (where we're translating from) to
         // the left-edge of the cancel button (where we're translating to; note that the cancel
@@ -186,9 +184,9 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
     protected int getUrlBarCurveTranslation() {
         /* Cliqz start */
         if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            return 0 - ghostyButton.getRight();
+            return 0 - mGhostyButton.getRight();
         } else {
-            return getWidth() - ghostyButton.getLeft();
+            return getWidth() - mGhostyButton.getLeft();
         }
         /* Cliqz end */
     }
@@ -213,6 +211,7 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
         }
     }
 
+    /* Cliqz Start o/
     @Override
     protected void setUrlEditLayoutVisibility(final boolean showEditLayout,
             final PropertyAnimator animator) {
@@ -253,4 +252,5 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
 
         ((ThemedImageButton) editCancel).onLightweightThemeReset();
     }
+    /o Cliqz End */
 }

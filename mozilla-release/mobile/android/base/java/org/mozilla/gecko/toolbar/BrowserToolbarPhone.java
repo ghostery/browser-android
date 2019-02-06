@@ -114,7 +114,7 @@ class BrowserToolbarPhone extends BrowserToolbarPhoneBase {
                         PropertyAnimator.Property.TRANSLATION_X,
                         entryTranslation);
         /* Cliqz start */
-        animator.attach(ghostyButton,
+        animator.attach(mGhostyButton,
                         PropertyAnimator.Property.TRANSLATION_X,
                         curveTranslation);
         /* Cliqz end */

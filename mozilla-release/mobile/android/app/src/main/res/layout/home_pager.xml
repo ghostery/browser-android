@@ -18,7 +18,7 @@
         android:layout_gravity="top"
         android:background="@android:color/transparent"
         gecko:strip="@drawable/home_tab_menu_strip"
-        gecko:stripColor="@android:color/white"
+        gecko:stripColor="@color/cliqz_tab_items_color"
         gecko:inactiveTextColor="@android:color/transparent"/>
 
 </org.mozilla.gecko.home.HomePager>

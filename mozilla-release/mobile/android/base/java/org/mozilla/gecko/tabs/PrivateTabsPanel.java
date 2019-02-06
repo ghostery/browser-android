@@ -9,7 +9,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mozilla.gecko.GeckoApp;
@@ -19,6 +18,7 @@ import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.tabs.TabsPanel.CloseAllPanelView;
 import org.mozilla.gecko.tabs.TabsPanel.TabsLayout;
+import org.mozilla.gecko.widget.themed.ThemedRelativeLayout;
 
 import static org.mozilla.gecko.Tabs.LOADURL_NEW_TAB;
 import static org.mozilla.gecko.Tabs.LOADURL_PRIVATE;
@@ -29,7 +29,9 @@ import static org.mozilla.gecko.Tabs.LOADURL_PRIVATE;
  * this container as calling {@link android.widget.AdapterView#setVisibility} does not affect the
  * empty View's visibility.
  */
-class PrivateTabsPanel extends RelativeLayout implements CloseAllPanelView {
+/* Cliqz Start */
+class PrivateTabsPanel extends ThemedRelativeLayout implements CloseAllPanelView {
+/* Cliqz End */
     private final static String PRIVATE_BROWSING_URL = "https://support.mozilla.org/kb/private-browsing-firefox-android";
 
     private final TabsLayout tabsLayout;
@@ -83,4 +85,13 @@ class PrivateTabsPanel extends RelativeLayout implements CloseAllPanelView {
     public void onCloseAll() {
         tabsLayout.onCloseAll();
     }
+
+    /* Cliqz Start */
+    @Override
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        ((org.mozilla.gecko.tabs.TabsLayout) tabsLayout).setLightTheme(isLightTheme);
+    }
+    /* Cliqz End */
+
 }

@@ -32,7 +32,7 @@ public class TabCounter extends ThemedRelativeLayout {
 
     public static final int MAX_VISIBLE_TABS = 99;
     public static final String SO_MANY_TABS_OPEN = "∞";
-        /* Cliqz start */
+    /* Cliqz start */
     // reduce tabs counter text size
     private static final float ONE_DIGIT_SIZE_RATIO = 0.35f;
     private static final float TWO_DIGITS_SIZE_RATIO = 0.3f;
@@ -220,6 +220,13 @@ public class TabCounter extends ThemedRelativeLayout {
 
         text.setText(formatForDisplay(count));
         this.count = count;
+    }
+
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        box.setLightTheme(isLightTheme);
+        bar.setLightTheme(isLightTheme);
+        text.setLightTheme(isLightTheme);
     }
     /* Cliqz end */
 
