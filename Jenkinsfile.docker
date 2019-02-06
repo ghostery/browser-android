@@ -26,6 +26,7 @@ node('us-east-1 && ubuntu && docker && !gpu') {
                 pip --version
                 adb version
                 mvn -version
+                appium --version
             '''
         }
     }
