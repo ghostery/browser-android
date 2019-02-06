@@ -116,7 +116,7 @@
 <!ENTITY cc_restrict_site "Restrict Site">
 <!ENTITY cc_pause_ghostery "Pause Ghostery">
 <!ENTITY cc_resume_ghostery "Resume Ghostery">
-<!ENTITY cc_enhanced_options "Options">
+<!ENTITY cc_enhanced_options "More Options">
 <!ENTITY cc_enhanced_anti_tracking "Anti-Tracking">
 <!ENTITY cc_enhanced_ad_blocking "Ad Blocking">
 <!ENTITY cc_smart_blocking "Smart Blocking">
