@@ -128,7 +128,7 @@ def build(Map m){
                         ]
                     ]) {
                         def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
-                        def apkFullPath = "{apkPath}/${apk}"
+                        def apkFullPath = "${apkPath}/${apk}"
                         def fileName = "${brandname}_Nightly-${env.BUILD_NUMBER}_${getId()}"
                         try {
                             zip archive: true, dir: "${apkPath}", glob: '', zipFile: "${flavorname}-build.zip"
