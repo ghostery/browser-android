@@ -16,7 +16,6 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.widget.LinearLayout;
 
 /**
  * Cliqz 2019

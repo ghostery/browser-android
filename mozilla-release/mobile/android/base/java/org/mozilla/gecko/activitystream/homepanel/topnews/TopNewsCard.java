@@ -27,18 +27,18 @@ import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 public class TopNewsCard extends RecyclerView.ViewHolder {
 
-    private final ImageView faviconView;
-    private final ThemedTextView titleView;
-    private final ThemedTextView urlView;
+    private final ImageView mFaviconView;
+    private final ThemedTextView mTitleView;
+    private final ThemedTextView mUrlView;
 
     private Context context;
 
     /* package-local */ TopNewsCard(final View card) {
         super(card);
         context = card.getContext();
-        faviconView = (ImageView) card.findViewById(R.id.favicon);
-        titleView = (ThemedTextView) card.findViewById(R.id.title_view);
-        urlView = (ThemedTextView) card.findViewById(R.id.url_view);
+        mFaviconView = (ImageView) card.findViewById(R.id.favicon);
+        mTitleView = (ThemedTextView) card.findViewById(R.id.title_view);
+        mUrlView = (ThemedTextView) card.findViewById(R.id.url_view);
     }
 
     void bind(final TopNews topNews) {
@@ -49,9 +49,9 @@ public class TopNewsCard extends RecyclerView.ViewHolder {
                 .transform(new RoundedCornersTransformation(newsFavIconRadius))
                 .placeholder(
                         CliqzLogoUtil.getDefaultIcon(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
-                .into(faviconView);
-        titleView.setText(buildTitleSpannable(topNews));
-        urlView.setText(topNews.getDomain());
+                .into(mFaviconView);
+        mTitleView.setText(buildTitleSpannable(topNews));
+        mUrlView.setText(topNews.getDomain());
     }
 
     private CharSequence buildTitleSpannable(TopNews piece) {
@@ -79,8 +79,8 @@ public class TopNewsCard extends RecyclerView.ViewHolder {
     }
 
     void setLightTheme(boolean isLightTheme) {
-        titleView.setLightTheme(isLightTheme);
-        urlView.setLightTheme(isLightTheme);
+        mTitleView.setLightTheme(isLightTheme);
+        mUrlView.setLightTheme(isLightTheme);
     }
 
 }

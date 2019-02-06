@@ -26,7 +26,7 @@ public class TopPanelRow extends StreamViewHolder {
     private final ViewPager topSitesPager;
 
     /* Cliqz Start */
-    private final PreferenceManager preferenceManager;
+    private final PreferenceManager mPreferenceManager;
     /* Cliqz End*/
 
     private static class SwipeListener extends ViewPager.SimpleOnPageChangeListener {
@@ -60,7 +60,7 @@ public class TopPanelRow extends StreamViewHolder {
         super(itemView);
 
         /* Cliqz Start */
-        preferenceManager = PreferenceManager.getInstance(itemView.getContext());
+        mPreferenceManager = PreferenceManager.getInstance(itemView.getContext());
         /* Cliqz End */
 
         topSitesPager = (ViewPager) itemView.findViewById(R.id.topsites_pager);
@@ -101,9 +101,9 @@ public class TopPanelRow extends StreamViewHolder {
     }
 
     /* Cliqz Start */
-    public void setLightTheme() {
+    public void updateTheme() {
         ((TopSitesPagerAdapter) topSitesPager.getAdapter())
-                .setLightTheme(preferenceManager.isLightThemeEnabled());
+                .setLightTheme(mPreferenceManager.isLightThemeEnabled());
     }
     /* Cliqz End */
 

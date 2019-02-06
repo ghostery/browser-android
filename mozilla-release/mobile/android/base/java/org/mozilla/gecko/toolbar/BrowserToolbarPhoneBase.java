@@ -10,16 +10,11 @@ import java.util.Arrays;
 import android.support.v4.content.ContextCompat;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
-import org.mozilla.gecko.Telemetry;
-import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.ViewHelper;
-import org.mozilla.gecko.widget.themed.ThemedImageButton;
-import org.mozilla.gecko.widget.themed.ThemedImageView;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.v4.view.ViewCompat;
@@ -189,9 +184,9 @@ abstract class BrowserToolbarPhoneBase extends BrowserToolbar {
     protected int getUrlBarCurveTranslation() {
         /* Cliqz start */
         if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            return 0 - ghostyButton.getRight();
+            return 0 - mGhostyButton.getRight();
         } else {
-            return getWidth() - ghostyButton.getLeft();
+            return getWidth() - mGhostyButton.getLeft();
         }
         /* Cliqz end */
     }

@@ -21,30 +21,30 @@ public class TopNewsRow extends StreamViewHolder {
 
     public static final int LAYOUT_ID = R.layout.activity_stream_main_topnews;
 
-    private final TopNewsAdapter adapter;
+    private final TopNewsAdapter mTopNewsAdapter;
 
-    private final PreferenceManager preferenceManager;
+    private final PreferenceManager mPreferenceManager;
 
     public TopNewsRow(final View itemView, HomePager.OnUrlOpenListener onUrlOpenListener) {
         super(itemView);
         final Context context = itemView.getContext();
 
-        preferenceManager = PreferenceManager.getInstance(context);
+        mPreferenceManager = PreferenceManager.getInstance(context);
 
         final RecyclerView newsRView = (RecyclerView) itemView.findViewById(R.id.news_recyclerview);
-        adapter = new TopNewsAdapter(context, onUrlOpenListener);
-        newsRView.setAdapter(adapter);
-        RecyclerViewClickSupport.addTo(newsRView).setOnItemClickListener(adapter);
+        mTopNewsAdapter = new TopNewsAdapter(context, onUrlOpenListener);
+        newsRView.setAdapter(mTopNewsAdapter);
+        RecyclerViewClickSupport.addTo(newsRView).setOnItemClickListener(mTopNewsAdapter);
     }
 
     public void bind(List<TopNews> topNews) {
-        adapter.swap(topNews);
+        mTopNewsAdapter.swap(topNews);
     }
 
-    public void setLightTheme() {
-        final boolean isLightTheme = preferenceManager.isLightThemeEnabled();
+    public void updateTheme() {
+        final boolean isLightTheme = mPreferenceManager.isLightThemeEnabled();
         ((ThemedRoundedCornerLayout) itemView).setLightTheme(isLightTheme);
-        adapter.setLightTheme(isLightTheme);
+        mTopNewsAdapter.setLightTheme(isLightTheme);
     }
 
 }

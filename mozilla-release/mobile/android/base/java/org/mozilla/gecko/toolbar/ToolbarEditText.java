@@ -21,7 +21,6 @@ import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.StringUtils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.text.Editable;
 import android.text.InputType;
@@ -112,7 +111,7 @@ public class ToolbarEditText extends CustomEditText
         EventDispatcher.getInstance().registerUiThreadListener(this,
                 "Search:Autocomplete", null);
         mPreferenceManager = PreferenceManager.getInstance(mContext);
-        setLightTheme();
+        updateTheme();
         /* Cliqz end */
     }
 
@@ -703,7 +702,7 @@ public class ToolbarEditText extends CustomEditText
         }
     }
 
-    private void setLightTheme() {
+    private void updateTheme() {
         setLightTheme(mPreferenceManager.isLightThemeEnabled());
     }
 

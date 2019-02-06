@@ -11,26 +11,26 @@ import org.mozilla.gecko.widget.themed.ThemedTextView;
  */
 class TopNewsHeader extends RecyclerView.ViewHolder {
 
-    private final ThemedTextView toggleNewsText;
-    private final ThemedTextView newsTitleText;
+    private final ThemedTextView mToggleNewsText;
+    private final ThemedTextView mNewsTitleText;
 
     TopNewsHeader(View itemView) {
         super(itemView);
-        toggleNewsText = (ThemedTextView) itemView.findViewById(R.id.news_display_toggle);
-        newsTitleText = (ThemedTextView) itemView.findViewById(R.id.news_title);
+        mToggleNewsText = (ThemedTextView) itemView.findViewById(R.id.news_display_toggle);
+        mNewsTitleText = (ThemedTextView) itemView.findViewById(R.id.news_title);
     }
 
     void toggleHeaderText(boolean isNewsExpanded) {
         if (isNewsExpanded) {
-            toggleNewsText.setText(R.string.activity_stream_top_news_hide);
+            mToggleNewsText.setText(R.string.activity_stream_top_news_hide);
         } else {
-            toggleNewsText.setText(R.string.activity_stream_top_news_show);
+            mToggleNewsText.setText(R.string.activity_stream_top_news_show);
         }
     }
 
     void setLightTheme(boolean isLightTheme) {
-        toggleNewsText.setLightTheme(isLightTheme);
-        newsTitleText.setLightTheme(isLightTheme);
+        mToggleNewsText.setLightTheme(isLightTheme);
+        mNewsTitleText.setLightTheme(isLightTheme);
     }
 
 }

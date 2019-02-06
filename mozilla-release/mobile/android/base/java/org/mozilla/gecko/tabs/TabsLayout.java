@@ -8,7 +8,6 @@ package org.mozilla.gecko.tabs;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
-import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
 import android.content.Context;
@@ -35,7 +34,7 @@ public abstract class TabsLayout extends RecyclerView
     private static final int[] LIGHT_THEME = { R.attr.light_theme };
     private static final int[] LIGHT_THEME_PRIVATE_MODE = { R.attr.light_theme, R.attr.state_private };
 
-    private boolean isLightTheme;
+    private boolean mIsLightTheme;
     private boolean isPrivate;
     /* Cliqz End */
 
@@ -80,14 +79,15 @@ public abstract class TabsLayout extends RecyclerView
     public int[] onCreateDrawableState(int extraSpace) {
         final int[] addedState;
 
-        if (isLightTheme && isPrivate)
+        if (mIsLightTheme && isPrivate) {
             addedState = LIGHT_THEME_PRIVATE_MODE;
-        else if (isLightTheme)
+        } else if (mIsLightTheme) {
             addedState = LIGHT_THEME;
-        else if (isPrivate)
-            addedState =  STATE_PRIVATE_MODE;
-        else
+        } else if (isPrivate) {
+            addedState = STATE_PRIVATE_MODE;
+        } else {
             addedState = new int[]{};
+        }
 
         final int[] drawableState = super.onCreateDrawableState(extraSpace + addedState.length);
         mergeDrawableStates(drawableState, addedState);
@@ -104,8 +104,8 @@ public abstract class TabsLayout extends RecyclerView
     }
 
     public void setLightTheme(boolean isLightTheme) {
-        if (this.isLightTheme != isLightTheme) {
-            this.isLightTheme = isLightTheme;
+        if (this.mIsLightTheme != isLightTheme) {
+            this.mIsLightTheme = isLightTheme;
             refreshDrawableState();
             invalidate();
             tabsAdapter.setLightTheme(isLightTheme);

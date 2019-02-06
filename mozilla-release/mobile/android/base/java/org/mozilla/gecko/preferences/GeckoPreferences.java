@@ -1385,47 +1385,59 @@ public class GeckoPreferences
         extras.put(value);
         Telemetry.sendUIEvent(TelemetryContract.Event.EDIT, Method.SETTINGS, extras.toString());
     }
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         final String prefName = preference.getKey();
         Log.i(LOGTAG, "Changed " + prefName + " = " + newValue);
         recordSettingChangeTelemetry(prefName, newValue);
 
-        /* Cliqz Start */
         if (PREFS_MP_ENABLED.equals(prefName)) {
             showDialog((Boolean) newValue ? DIALOG_CREATE_MASTER_PASSWORD : DIALOG_REMOVE_MASTER_PASSWORD);
 
             // We don't want the "use master password" pref to change until the
             // user has gone through the dialog.
             return false;
-        } else if (PREFS_HOMEPAGE.equals(prefName)) {
+        }
+
+        if (PREFS_HOMEPAGE.equals(prefName)) {
             setHomePageSummary(preference, String.valueOf(newValue));
-        } else if (PREFS_BROWSER_LOCALE.equals(prefName)) {
+        }
+
+        if (PREFS_BROWSER_LOCALE.equals(prefName)) {
             // Even though this is a list preference, we don't want to handle it
             // below, so we return here.
             return onLocaleSelected(Locales.getLanguageTag(lastLocale), (String) newValue);
-        } else if (PREFS_TELEMETRY_ENABLED.equals(prefName)) {
+        }
+
+
+        /* Cliqz Start */
+        if (PREFS_TELEMETRY_ENABLED.equals(prefName)) {
             PrefsHelper.setPref(PREFS_TELEMETRY_ENABLED, (Boolean) newValue);
             return true;
-        } else if (PREFS_GHOSTERY_AUTO_UPDATE.equals(prefName)) {
+        }
+        if (PREFS_GHOSTERY_AUTO_UPDATE.equals(prefName)) {
             mPreferenceManager.setGhosteryAutoUpdate((boolean)newValue);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("enable_autoupdate", (boolean)newValue);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
             return true;
-        } else if (PREFS_GHOSTERY_ALLOW_FIRST_PARTY.equals(prefName)) {
+        }
+        if (PREFS_GHOSTERY_ALLOW_FIRST_PARTY.equals(prefName)) {
             mPreferenceManager.setAllowFirstPartyTrackers((boolean)newValue);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("ignore_first_party", (boolean)newValue);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
             return true;
-        } else if (PREFS_GHOSTERY_BLOCK_NEW_TRACKERS.equals(prefName)) {
+        }
+        if (PREFS_GHOSTERY_BLOCK_NEW_TRACKERS.equals(prefName)) {
             mPreferenceManager.setBlockNewTrackers((boolean)newValue);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("block_by_default", (boolean)newValue);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
             return true;
-        } else if (PREFS_MENU_CHAR_ENCODING.equals(prefName)) {
+        }
+        if (PREFS_MENU_CHAR_ENCODING.equals(prefName)) {
             setCharEncodingState(((String) newValue).equals("true"));
         } else if (PREFS_UPDATER_AUTODOWNLOAD.equals(prefName)) {
             UpdateServiceHelper.setAutoDownloadPolicy(this, AutoDownloadPolicy.get((String) newValue));
@@ -1444,7 +1456,7 @@ public class GeckoPreferences
             // If it was just enabled, we should also try to start Mma immediately
             // provided that all the other requirements to start Mma are met.
             informMmaStatusChanged(newBooleanValue);
-        /* Cliqz block comment start o/
+        /*
         } else if (PREFS_GEO_REPORTING.equals(prefName)) {
             if ((Boolean) newValue) {
                 enableStumbler((CheckBoxPreference) preference);
@@ -1453,7 +1465,7 @@ public class GeckoPreferences
                 broadcastStumblerPref(GeckoPreferences.this, false);
                 return true;
             }
-        /o Cliqz block comment end */
+        */
         } else if (PREFS_TAB_QUEUE.equals(prefName)) {
             if ((Boolean) newValue && !TabQueueHelper.canDrawOverlays(this)) {
                 Intent promptIntent = new Intent(this, TabQueuePrompt.class);

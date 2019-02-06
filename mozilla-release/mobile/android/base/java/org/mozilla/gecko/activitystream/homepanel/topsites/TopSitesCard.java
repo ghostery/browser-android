@@ -35,9 +35,13 @@ import java.util.concurrent.Future;
 
 /* package-local */ class TopSitesCard extends RecyclerView.ViewHolder
         implements IconCallback {
+
+    /* Cliqz Start */
     private final ImageView faviconView;
 
     private final ThemedTextView title;
+    /* Cliqz End */
+
     private final ImageView pinIconView;
     private Future<IconResponse> ongoingIconLoad;
 

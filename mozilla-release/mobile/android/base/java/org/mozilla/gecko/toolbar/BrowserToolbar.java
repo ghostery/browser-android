@@ -25,12 +25,9 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -48,7 +45,6 @@ import org.mozilla.gecko.TouchEventInterceptor;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.animation.PropertyAnimator.PropertyAnimationListener;
 import org.mozilla.gecko.animation.ViewHelper;
-import org.mozilla.gecko.home.HomePager;
 import org.mozilla.gecko.lwt.LightweightTheme;
 import org.mozilla.gecko.lwt.LightweightThemeDrawable;
 import org.mozilla.gecko.menu.GeckoMenu;
@@ -58,7 +54,6 @@ import org.mozilla.gecko.tabs.TabHistoryController;
 import org.mozilla.gecko.toolbar.ToolbarDisplayLayout.OnStopListener;
 import org.mozilla.gecko.toolbar.ToolbarDisplayLayout.OnTitleChangeListener;
 import org.mozilla.gecko.toolbar.ToolbarDisplayLayout.UpdateFlags;
-import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.MenuUtils;
 import org.mozilla.gecko.util.WindowUtil;
@@ -135,9 +130,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     protected final ThemedImageButton tabsButton;
 
     /* Cliqz start */
-    protected final ThemedFadedHorizontalScrollView urlDisplayScroll;
-    protected final Ghosty ghostyButton;
-    protected final ImageButton editCancel;
+    protected final ThemedFadedHorizontalScrollView mUrlDisplayScroll;
+    protected final Ghosty mGhostyButton;
+    protected final ImageButton mEditCancel;
     protected final ToolbarRoundButton menuButton;
     /* Cliqz end */
 
@@ -205,7 +200,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         isSwitchingTabs = true;
 
         urlDisplayLayout = (ToolbarDisplayLayout) findViewById(R.id.display_layout);
-        urlDisplayScroll = (ThemedFadedHorizontalScrollView) findViewById(R.id.url_bar_title_scroll_view);
+        mUrlDisplayScroll = (ThemedFadedHorizontalScrollView) findViewById(R.id.url_bar_title_scroll_view);
         urlBarEntry = findViewById(R.id.url_bar_entry);
         urlEditLayout = (ToolbarEditLayout) findViewById(R.id.edit_layout);
 
@@ -214,9 +209,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         tabsCounter.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         /* Cliqz start */
-        editCancel = (ImageButton) findViewById(R.id.edit_cancel);
-        ghostyButton = (Ghosty) findViewById(R.id.ghosty);
-        ghostyButton.setOnGhostyClickedListener(this);
+        mEditCancel = (ImageButton) findViewById(R.id.edit_cancel);
+        mGhostyButton = (Ghosty) findViewById(R.id.ghosty);
+        mGhostyButton.setOnGhostyClickedListener(this);
         urlDisplayLayout.setOnPageActionClickedListener(new PageActionLayout.PageActionClickListener() {
             @Override
             public void onClick() {
@@ -248,13 +243,13 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         urlEditLayout.setToolbarPrefs(prefs);
 
         // ScrollViews are allowed to have only one child.
-        final View scrollChild = urlDisplayScroll.getChildAt(0);
+        final View scrollChild = mUrlDisplayScroll.getChildAt(0);
 
-        urlDisplayScroll.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+        mUrlDisplayScroll.addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                final int width = urlDisplayScroll.getWidth();
-                final int height = urlDisplayScroll.getHeight();
+                final int width = mUrlDisplayScroll.getWidth();
+                final int height = mUrlDisplayScroll.getHeight();
                 final int oldWidth = oldRight - oldLeft;
                 final int oldHeight = oldBottom - oldTop;
 
@@ -262,7 +257,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                     final Rect r = new Rect();
                     r.right = width;
                     r.bottom = height;
-                    urlDisplayScroll.setTouchDelegate(new TouchDelegateWithReset(r, scrollChild));
+                    mUrlDisplayScroll.setTouchDelegate(new TouchDelegateWithReset(r, scrollChild));
                 }
             }
         });
@@ -398,7 +393,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
         /* Cliqz start */
         // add clickListener to cancel button
-        editCancel.setOnClickListener(new OnClickListener() {
+        mEditCancel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // If we exit editing mode during the animation,
@@ -406,7 +401,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 if (!isAnimating()) {
                     Telemetry.sendUIEvent(TelemetryContract.Event.CANCEL,
                             TelemetryContract.Method.ACTIONBAR,
-                            getResources().getResourceEntryName(editCancel.getId()));
+                            getResources().getResourceEntryName(mEditCancel.getId()));
                     cancelEdit();
                 }
             }
@@ -836,7 +831,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
         if (animator == null) {
             /* Cliqz Start */
-            editCancel.setVisibility(showEditLayout ? View.VISIBLE : View.INVISIBLE);
+            mEditCancel.setVisibility(showEditLayout ? View.VISIBLE : View.INVISIBLE);
             /* Cliqz End */
             final View viewToShow = (showEditLayout ? urlEditLayout : urlDisplayLayout);
             final View viewToHide = (showEditLayout ? urlDisplayLayout : urlEditLayout);
@@ -851,7 +846,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
             public void onPropertyAnimationStart() {
                 if (!showEditLayout) {
                     /* Cliqz Start */
-                    editCancel.setVisibility(View.INVISIBLE);
+                    mEditCancel.setVisibility(View.INVISIBLE);
                     /* Cliqz End */
                     urlEditLayout.setVisibility(hiddenViewVisibility);
                     urlDisplayLayout.setVisibility(View.VISIBLE);
@@ -862,7 +857,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
             public void onPropertyAnimationEnd() {
                 if (showEditLayout) {
                     /* Cliqz Start */
-                    editCancel.setVisibility(View.VISIBLE);
+                    mEditCancel.setVisibility(View.VISIBLE);
                     /* Cliqz End */
                     urlDisplayLayout.setVisibility(hiddenViewVisibility);
                     urlEditLayout.setVisibility(View.VISIBLE);
@@ -958,7 +953,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         urlEditLayout.setPrivateMode(isPrivate);
         urlDisplayLayout.setPrivateMode(isPrivate);
         /* Cliqz start */
-        ghostyButton.setPrivateMode(isPrivate);
+        mGhostyButton.setPrivateMode(isPrivate);
         /* Cliqz end */
         ((ThemedImageButton) menuButton).setPrivateMode(isPrivate);
 
@@ -1119,7 +1114,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
      */
     public void updateGhosty(int tabId, int count) {
         if (tabId == Tabs.getInstance().getSelectedTab().getId()) {
-            ghostyButton.setTrackerCount(count);
+            mGhostyButton.setTrackerCount(count);
         }
     }
 
@@ -1129,14 +1124,14 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
     public void setLightTheme(boolean isLightTheme) {
         super.setLightTheme(isLightTheme);
-        urlDisplayScroll.setLightTheme(isLightTheme);
+        mUrlDisplayScroll.setLightTheme(isLightTheme);
         urlDisplayLayout.setLightTheme(isLightTheme);
         urlEditLayout.setLightTheme(isLightTheme);
         tabsButton.setLightTheme(isLightTheme);
         tabsCounter.setLightTheme(isLightTheme);
         menuButton.setLightTheme(isLightTheme);
-        ghostyButton.setLightTheme(isLightTheme);
-        DrawableCompat.setTint(DrawableCompat.wrap(editCancel.getDrawable()),
+        mGhostyButton.setLightTheme(isLightTheme);
+        DrawableCompat.setTint(DrawableCompat.wrap(mEditCancel.getDrawable()),
                 isLightTheme ? Color.WHITE : Color.BLACK);
     }
     /* Cliqz end */

@@ -37,7 +37,7 @@ public class TopNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int numShowedNews = 0;
     private boolean isNewsExpanded;
 
-    private boolean isLightTheme;
+    private boolean mIsLightTheme;
 
     public TopNewsAdapter(Context context, final HomePager.OnUrlOpenListener onUrlOpenListener) {
         this.context = context;
@@ -99,11 +99,11 @@ public class TopNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder.getItemViewType() == TYPE_NEWS) {
             final TopNewsCard topNewsCard = (TopNewsCard) holder;
             topNewsCard.bind(topNews.get(position - 1));
-            topNewsCard.setLightTheme(isLightTheme);
+            topNewsCard.setLightTheme(mIsLightTheme);
         } else if (holder.getItemViewType() == TYPE_HEADER) {
             final TopNewsHeader topNewsHeader = (TopNewsHeader) holder;
             topNewsHeader.toggleHeaderText(isNewsExpanded);
-            topNewsHeader.setLightTheme(isLightTheme);
+            topNewsHeader.setLightTheme(mIsLightTheme);
         }
     }
 
@@ -134,7 +134,7 @@ public class TopNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void setLightTheme(boolean isLightTheme) {
-        this.isLightTheme = isLightTheme;
+        this.mIsLightTheme = isLightTheme;
     }
 
 }

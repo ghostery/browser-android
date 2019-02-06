@@ -209,7 +209,6 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
-import static org.mozilla.gecko.preferences.GeckoPreferences.PREFS_BLUE_THEME;
 import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
 
@@ -231,8 +230,7 @@ public class BrowserApp extends GeckoApp
                                    BaseControlCenterPagerAdapter.ControlCenterCallbacks,
                                    AntiPhishing.AntiPhishingCallback,
                                    AntiPhishingDialog.AntiPhishingDialogActionListener,
-                                   OnboardingHelper.OnboardingListener,
-                                   SharedPreferences.OnSharedPreferenceChangeListener {
+                                   OnboardingHelper.OnboardingListener {
                                    /* Cliqz End */
     private static final String LOGTAG = "GeckoBrowserApp";
 
@@ -288,7 +286,7 @@ public class BrowserApp extends GeckoApp
     private TabHistoryController tabHistoryController;
 
     /* Cliqz Start */
-    private ThemedTabLayout tabLayout;
+    private ThemedTabLayout mTabLayout;
     private ViewPager mControlCenterPager;
     private View mControlCenterContainer;
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
@@ -849,8 +847,8 @@ public class BrowserApp extends GeckoApp
         mControlCenterPagerAdapter.init(this);
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
-        tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
-        tabLayout.setupWithViewPager(mControlCenterPager);
+        mTabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
+        mTabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
 
         final ViewStub loadingSearchStub = (ViewStub) findViewById(R.id.cliqz_loading_search_progress);
@@ -1018,8 +1016,7 @@ public class BrowserApp extends GeckoApp
         }
 
         mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
-        mPreferenceManager.registerOnSharedPreferenceChangeListener(this);
-        setLightTheme();
+        updateTheme();
         /* Cliqz End */
     }
 
@@ -1236,6 +1233,7 @@ public class BrowserApp extends GeckoApp
         for (BrowserAppDelegate delegate : delegates) {
             delegate.onResume(this);
         }
+        updateTheme();
     }
 
     @Override
@@ -1787,10 +1785,6 @@ public class BrowserApp extends GeckoApp
         GeckoNetworkManager.destroy();
 
         MmaDelegate.flushResources(this);
-
-        /* Cliqz start */
-        mPreferenceManager.unregisterOnSharedPreferenceChangeListener(this);
-        /* Cliqz end */
 
         super.onDestroy();
     }
@@ -4799,7 +4793,9 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public void onUrlProcessed(final String url, boolean isPhishing) {
-        if (!isPhishing) { return; }
+        if (!isPhishing) {
+            return;
+        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -4816,8 +4812,8 @@ public class BrowserApp extends GeckoApp
     }
 
     private void refreshBackground(boolean isPrivate) {
-        if(isHomePagerVisible()) {
-            ((HomePager)mHomeScreen).setPrivateMode(isPrivate);
+        if (isHomePagerVisible()) {
+            ((HomePager) mHomeScreen).setPrivateMode(isPrivate);
         }
     }
 
@@ -4832,22 +4828,14 @@ public class BrowserApp extends GeckoApp
         return super.setRequestedOrientationForCurrentActivity(requestedActivityInfoOrientation);
     }
 
-    private void setLightTheme() {
+    private void updateTheme() {
         mBrowserToolbar.setLightTheme(mPreferenceManager.isLightThemeEnabled());
-        if (tabLayout != null) {
-            tabLayout.setLightTheme(mPreferenceManager.isLightThemeEnabled());
+        if (mTabLayout != null) {
+            mTabLayout.setLightTheme(mPreferenceManager.isLightThemeEnabled());
         }
         if (mHomeScreen != null) {
             ((HomePager) mHomeScreen).setLightTheme(mPreferenceManager.isLightThemeEnabled());
         }
     }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PREFS_BLUE_THEME)) {
-            setLightTheme();
-        }
-    }
-
     /* Cliqz end */
 }

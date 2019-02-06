@@ -22,11 +22,11 @@ public class IconTabWidget extends TabWidget {
     /* Cliqz Start */
     private static final int[] STATE_PRIVATE_MODE = { R.attr.state_private };
 
-    private boolean isPrivate;
+    private boolean mIsPrivate;
 
     private static final int[] LIGHT_THEME = { R.attr.light_theme };
     private static final int[] LIGHT_THEME_PRIVATE_MODE = { R.attr.light_theme, R.attr.state_private };
-    private boolean isLightTheme;
+    private boolean mIsLightTheme;
     /* Cliqz End */
 
     OnTabChangedListener mListener;
@@ -37,14 +37,15 @@ public class IconTabWidget extends TabWidget {
     protected int[] onCreateDrawableState(int extraSpace) {
         final int[] addedState;
 
-        if (isLightTheme && isPrivate)
+        if (mIsLightTheme && mIsPrivate) {
             addedState = LIGHT_THEME_PRIVATE_MODE;
-        else if (isLightTheme)
+        } else if (mIsLightTheme) {
             addedState = LIGHT_THEME;
-        else if (isPrivate)
-            addedState =  STATE_PRIVATE_MODE;
-        else
+        } else if (mIsPrivate) {
+            addedState = STATE_PRIVATE_MODE;
+        } else {
             addedState = new int[]{};
+        }
 
         final int[] drawableState = super.onCreateDrawableState(extraSpace + addedState.length);
         mergeDrawableStates(drawableState, addedState);
@@ -53,16 +54,16 @@ public class IconTabWidget extends TabWidget {
     }
 
     public void setPrivateMode(boolean isPrivate) {
-        if (this.isPrivate != isPrivate) {
-            this.isPrivate = isPrivate;
+        if (this.mIsPrivate != isPrivate) {
+            this.mIsPrivate = isPrivate;
             refreshDrawableState();
             invalidate();
         }
     }
 
     public void setLightTheme(boolean isLightTheme) {
-        if (this.isLightTheme != isLightTheme) {
-            this.isLightTheme = isLightTheme;
+        if (this.mIsLightTheme != isLightTheme) {
+            this.mIsLightTheme = isLightTheme;
             for (int i = 0; i < this.getChildCount(); i++) {
                 ((ThemedTextView)this.getChildAt(i)).setLightTheme(isLightTheme);
             }

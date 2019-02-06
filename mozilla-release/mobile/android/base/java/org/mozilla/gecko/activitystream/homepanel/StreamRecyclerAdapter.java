@@ -224,7 +224,7 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
             /* Cliqz Start */
             final TopPanelRow topPanelRow = (TopPanelRow) holder;
             topPanelRow.bind(topSitesCursor, tilesSize);
-            topPanelRow.setLightTheme();
+            topPanelRow.updateTheme();
             /* Cliqz End */
         } else if (type == RowItemType.TOP_STORIES_ITEM.getViewType()) {
             final TopStory story = (TopStory) recyclerViewModel.get(position);
@@ -249,7 +249,7 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         else if (type == RowItemType.TOP_NEWS.getViewType()) {
             final TopNewsRow topNewsRow = (TopNewsRow) holder;
             topNewsRow.bind(topNews);
-            topNewsRow.setLightTheme();
+            topNewsRow.updateTheme();
         } else if(type == RowItemType.LEARN_MORE_LINK.getViewType()){
             setViewVisible(false,holder.itemView);
         }

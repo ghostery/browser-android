@@ -41,7 +41,7 @@
             gecko:dominantBorderEnabled="false"
             gecko:overrideScaleType="false" />
 
-        <!-- Cliqz : change textColor to white, 3 dots at the end instead of fading -->
+        <!-- Cliqz : change textColor, 3 dots at the end instead of fading -->
         <org.mozilla.gecko.widget.themed.ThemedTextView
             android:id="@+id/title"
             style="@style/TabLayoutItemTextAppearance"
