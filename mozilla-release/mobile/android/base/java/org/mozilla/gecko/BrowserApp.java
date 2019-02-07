@@ -2315,7 +2315,7 @@ public class BrowserApp extends GeckoApp
                 final int limit = query != null ? query.getInt("maxResults", 5) : 5;
                 final BrowserDB sdb = BrowserDB.from(getProfile());
                 final ContentResolver scr = getContentResolver();
-                final Cursor scu = sdb.getHistoryForQuery(scr, text, limit);
+                final Cursor scu = sdb.getRankedHistoryForQuery(scr, text, limit);
                 final GeckoBundle smessage = new GeckoBundle();
                 smessage.putString("text", text);
                 final ArrayList<GeckoBundle> results = new ArrayList<>(limit);
