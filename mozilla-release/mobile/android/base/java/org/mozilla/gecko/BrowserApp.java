@@ -2381,7 +2381,7 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Search:OpenLink":
-                // for now we handle the actual opening in JS
+                Tabs.getInstance().loadUrl(GeckoBundleUtils.safeGetString(message, "uri"));
                 mBrowserToolbar.cancelEdit();
                 break;
 
@@ -2420,9 +2420,9 @@ public class BrowserApp extends GeckoApp
             case "Search:QuerySuggestions":
                 if(mPreferenceManager.isQuerySuggestionsEnabled() && mBrowserToolbar.isEditing()) {
                     final String[] querySuggestions = GeckoBundleUtils.safeGetStringArray
-                            (message, "data/suggestions");
+                            (message, "suggestions");
                     showSuggestions(querySuggestions, GeckoBundleUtils.safeGetString(message,
-                            "data/query"));
+                            "query"));
                 }
                 break;
             case "Addons:PreventGhosteryCliqz":

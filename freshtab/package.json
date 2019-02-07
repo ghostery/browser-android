@@ -5,7 +5,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "build": "node node_modules/react-native/local-cli/cli.js bundle --platform android --entry-file index.js --bundle-output ../mozilla-release/mobile/android/app/src/main/assets/index.android.bundle --dev=false"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jsc-android": "^236355.1.1"
+  },
   "dependencies": {
     "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/mobile-cards-android/master/1.33.0.1b431.e3bc339.tgz",
     "cliqz-logo-database": "^0.1.2",

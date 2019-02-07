@@ -1,13 +1,3 @@
-import PropTypes from 'prop-types';
-import { requireNativeComponent, ViewPropTypes } from 'react-native';
+import NativeDrawable from 'browser-core/build/modules/mobile-cards/components/custom/NativeDrawable';
+export default NativeDrawable;
 
-const componentInterface = {
-  name: 'NativeDrawable',
-  propTypes: {
-    source: PropTypes.string,
-    color: PropTypes.string,
-    ...ViewPropTypes // include the default view properties
-  },
-};
-
-export default requireNativeComponent('NativeDrawable', componentInterface);

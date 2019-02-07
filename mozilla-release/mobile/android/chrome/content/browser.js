@@ -6498,7 +6498,7 @@ var Cliqz = {
       "Cards:CallBackgroundAction",
 
       "Search:Hide",
-      "Search:Search",
+//      "Search:Search",
       "Search:Show",
 
       "Privacy:GetInfo",

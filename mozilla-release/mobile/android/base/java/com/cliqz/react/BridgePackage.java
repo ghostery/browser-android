@@ -40,6 +40,7 @@ public class BridgePackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new Bridge(reactContext));
+        modules.add(new BrowserActions(reactContext));
 
         return modules;
     }
@@ -69,7 +70,7 @@ public class BridgePackage implements ReactPackage {
 
         @Override
         public void initialize() {
-            EventDispatcher.getInstance().registerGeckoThreadListener(this, "Search:renderResults");
+            EventDispatcher.getInstance().registerUiThreadListener(this, "Search:Search");
         }
 
         @Override
@@ -79,55 +80,19 @@ public class BridgePackage implements ReactPackage {
 
         @Override
         public void onCatalystInstanceDestroy() {
-            EventDispatcher.getInstance().unregisterGeckoThreadListener(this, "Search:renderResults");
+            EventDispatcher.getInstance().unregisterGeckoThreadListener(this, "Search:Search");
         }
 
         @Override
         public void handleMessage(String event, GeckoBundle message, EventCallback callback) {
             switch (event) {
-                case "Search:renderResults":
-                    final String resultsArray = GeckoBundleUtils.safeGetString(message, "data");
+                case "Search:Search":
+                    final String query = GeckoBundleUtils.safeGetString(message, "q");
                     mReactContext
                             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                            .emit("search:renderResults", resultsArray);
+                            .emit("search:search", query);
                     break;
-            }
-        }
 
-        @ReactMethod
-        public void callBackgroundAction(final ReadableMap data, final Promise promise) {
-            try {
-                JSONObject json = Utils.convertMapToJson(data);
-                GeckoBundle geckoBundle = GeckoBundle.fromJSONObject(json);
-                EventDispatcher.getInstance().dispatch("Cards:CallBackgroundAction", geckoBundle, new EventCallback() {
-                    @Override
-                    public void sendSuccess(Object response) {
-                        if (response == null) {
-                            promise.resolve(response);
-                        } else {
-                            GeckoBundle bundle = (GeckoBundle) response;
-                            try {
-                                JSONObject jsonRes = bundle.toJSONObject();
-                                WritableMap map = Utils.convertJsonToMap(jsonRes);
-                                promise.resolve(map);
-                            } catch (JSONException e) {
-                                promise.reject(e);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void sendError(Object response) {
-                        try {
-                            String message = (String) response;
-                            promise.reject(new Throwable(message));
-                        } catch (ClassCastException e) {
-                            promise.reject(e);
-                        }
-                    }
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         }
     }
