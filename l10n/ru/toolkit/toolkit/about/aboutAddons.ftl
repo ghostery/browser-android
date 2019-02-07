@@ -131,7 +131,7 @@ legacy-extensions =
     .value = Устаревшие расширения
 legacy-extensions-description = Эти расширения не соответствуют текущим стандартам { -brand-short-name }, поэтому они были отключены. <label data-l10n-name="legacy-learn-more">Узнайте об изменениях в дополнениях</label>
 extensions-view-discover =
-    .name = Получить дополнения
+    .name = Загрузить дополнения
     .tooltiptext = { extensions-view-discover.name }
 extensions-view-recent-updates =
     .name = Недавние обновления

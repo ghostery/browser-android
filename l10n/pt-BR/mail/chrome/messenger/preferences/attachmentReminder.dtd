@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY attachmentReminderDialog.title   "Palavras-chave do lembrete de anexos">
-<!ENTITY attachKeywordText.label          "O &brandShortName; o alertará sobre a ausência de anexos quando você enviar um e-mail contendo uma destas palavra-chave.">
+<!ENTITY attachKeywordText.label          "O &brandShortName; alertará sobre ausência de anexos quando você enviar um e-mail contendo uma dessas palavras-chave.">
 <!ENTITY newKeywordButton.label           "Novo…">
 <!ENTITY newKeywordButton.accesskey       "N">
 <!ENTITY editKeywordButton1.label         "Editar…">

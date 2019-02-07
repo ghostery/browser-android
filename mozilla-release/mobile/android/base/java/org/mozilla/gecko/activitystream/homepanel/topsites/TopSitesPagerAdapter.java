@@ -131,4 +131,13 @@ public class TopSitesPagerAdapter extends PagerAdapter {
 
         notifyDataSetChanged();
     }
+
+    /* Cliqz Start */
+    public void setLightTheme(boolean isLightTheme) {
+        for (TopSitesPage page : pages) {
+            page.getAdapter().setLightTheme(isLightTheme);
+        }
+    }
+    /* Cliqz End */
+
 }

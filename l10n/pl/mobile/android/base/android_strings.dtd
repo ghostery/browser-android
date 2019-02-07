@@ -349,7 +349,7 @@
 <!ENTITY save_as_pdf "Zapisz jako PDF">
 <!ENTITY print "Drukuj">
 <!ENTITY view_page_source "Pokaż źródło strony">
-<!ENTITY desktop_mode "Tryb stacjonarny">
+<!ENTITY desktop_mode "Wersja na komputery">
 <!ENTITY page "Strona">
 <!ENTITY find_in_page "Znajdź na stronie">
 <!ENTITY tools "Narzędzia">
@@ -569,7 +569,7 @@
 <!ENTITY devtools_auth_scan_header "Skanowanie kodu QR wyświetlonego na drugim urządzeniu">
 
 <!ENTITY restrictable_feature_addons_installation "Dodatki">
-<!ENTITY restrictable_feature_addons_installation_description "Dodawanie funkcji do przeglądarki &brandShortName;. Uwaga: Dodatki mogą wyłączać pewne ograniczenia.">
+<!ENTITY restrictable_feature_addons_installation_description "Dodawanie funkcji do przeglądarki Firefox. Uwaga: dodatki mogą wyłączać pewne ograniczenia.">
 <!ENTITY restrictable_feature_private_browsing "Tryb prywatny">
 <!ENTITY restrictable_feature_private_browsing_description "Umożliwia członkom rodziny przeglądanie bez zachowywania informacji o odwiedzanych stronach.">
 <!ENTITY restrictable_feature_clear_history "Czyszczenie historii przeglądania">
@@ -581,11 +581,11 @@
 <!ENTITY restrictable_feature_block_list "Lista blokowanych stron">
 <!ENTITY restrictable_feature_block_list_description "Blokowanie stron zawierających wrażliwą treść.">
 
-<!ENTITY bookmarks_about_browser "&brandShortName;: O przeglądarce">
-<!ENTITY bookmarks_addons "&brandShortName;: Dodatki">
-<!ENTITY bookmarks_support "&brandShortName;: Pomoc">
-<!ENTITY bookmarks_restricted_support2 "&brandShortName;: Pomoc dla ograniczonych profili na tabletach Android">
-<!ENTITY bookmarks_restricted_webmaker "Twórz Internet: &vendorShortName; Webmaker">
+<!ENTITY bookmarks_about_browser "Firefox: O przeglądarce">
+<!ENTITY bookmarks_addons "Firefox: Dodatki">
+<!ENTITY bookmarks_support "Firefox: Pomoc">
+<!ENTITY bookmarks_restricted_support2 "Firefox: Pomoc dla ograniczonych profili na tabletach Android">
+<!ENTITY bookmarks_restricted_webmaker "Twórz Internet: Mozilla Webmaker">
 
 <!ENTITY unsupported_sdk_version "Ta wersja przeglądarki &brandShortName; nie może działać na tym urządzeniu (&formatS1;, &formatS2;). Proszę pobrać właściwą wersję.">
 
@@ -593,8 +593,6 @@
 
 <!ENTITY whatsnew_notification_title "&brandShortName; jest aktualny">
 <!ENTITY whatsnew_notification_summary "Nowości w tej wersji">
-
-<!ENTITY promotion_add_page_shortcut "Dodaj skrót do strony">
 
 <!ENTITY helper_first_offline_bookmark_title "Przeglądanie w trybie offline">
 <!ENTITY helper_first_offline_bookmark_message "Strony zachowane na później można znaleźć w zakładkach, nawet bez Internetu.">

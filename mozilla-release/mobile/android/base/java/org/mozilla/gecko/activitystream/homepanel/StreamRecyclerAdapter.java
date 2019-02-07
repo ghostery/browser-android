@@ -221,7 +221,11 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
             final Highlight highlight = (Highlight) recyclerViewModel.get(position);
             ((WebpageItemRow) holder).bind(highlight, position, tilesSize);
         } else if (type == RowItemType.TOP_PANEL.getViewType()) {
-            ((TopPanelRow) holder).bind(topSitesCursor, tilesSize);
+            /* Cliqz Start */
+            final TopPanelRow topPanelRow = (TopPanelRow) holder;
+            topPanelRow.bind(topSitesCursor, tilesSize);
+            topPanelRow.updateTheme();
+            /* Cliqz End */
         } else if (type == RowItemType.TOP_STORIES_ITEM.getViewType()) {
             final TopStory story = (TopStory) recyclerViewModel.get(position);
             ((WebpageItemRow) holder).bind(story, position, tilesSize);
@@ -243,7 +247,9 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
         // swap TopNews Layout recyclerView list with topNews list
         // hide Learn more links, no way to hide it from the setting
         else if (type == RowItemType.TOP_NEWS.getViewType()) {
-            ((TopNewsRow) holder).bind(topNews);
+            final TopNewsRow topNewsRow = (TopNewsRow) holder;
+            topNewsRow.bind(topNews);
+            topNewsRow.updateTheme();
         } else if(type == RowItemType.LEARN_MORE_LINK.getViewType()){
             setViewVisible(false,holder.itemView);
         }

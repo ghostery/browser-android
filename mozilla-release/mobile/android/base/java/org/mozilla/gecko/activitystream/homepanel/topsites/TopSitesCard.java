@@ -25,6 +25,7 @@ import org.mozilla.gecko.icons.IconResponse;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.util.URIUtils;
 import org.mozilla.gecko.util.ViewUtil;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import java.lang.ref.WeakReference;
 import java.net.URI;
@@ -34,9 +35,13 @@ import java.util.concurrent.Future;
 
 /* package-local */ class TopSitesCard extends RecyclerView.ViewHolder
         implements IconCallback {
+
+    /* Cliqz Start */
     private final ImageView faviconView;
 
-    private final TextView title;
+    private final ThemedTextView title;
+    /* Cliqz End */
+
     private final ImageView pinIconView;
     private Future<IconResponse> ongoingIconLoad;
 
@@ -48,7 +53,7 @@ import java.util.concurrent.Future;
         super(card);
 
         faviconView = (ImageView) card.findViewById(R.id.favicon);
-        title = (TextView) card.findViewById(R.id.title);
+        title = (ThemedTextView) card.findViewById(R.id.title);
         pinIconView = (ImageView) card.findViewById(R.id.pin_icon);
 
         card.setOnLongClickListener(new View.OnLongClickListener() {
@@ -152,6 +157,10 @@ import java.util.concurrent.Future;
         /* Cliqz start o/
         faviconView.updateImage(response);
         /o Cliqz End */
+    }
+
+    void setLightTheme(boolean isLightTheme) {
+        title.setLightTheme(isLightTheme);
     }
 
     /** Updates the text of the given view to the page domain. */

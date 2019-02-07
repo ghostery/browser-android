@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY sanitizeDialog.title            "Limpar dados pessoais">
-<!ENTITY sanitizeItems.label             "Limpar os seguintes items agora:">
+<!ENTITY sanitizeItems.label             "Limpar agora os seguintes itens:">
 
 <!ENTITY itemHistory.label               "Histórico de navegação">
 <!ENTITY itemHistory.accesskey           "n">

@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY syncBrand.fullName.label "&brandShortName; Sync">
+<!ENTITY syncBrand.fullName.label "Firefox Sync">
 <!ENTITY syncBrand.shortName.label "Sync">
 <!ENTITY sync.title.connect.label "Connessione &syncBrand.shortName.label;">
 <!ENTITY sync.subtitle.connect.label "Per attivare un nuovo dispositivo selezionare “Configurazione di &syncBrand.shortName.label;” sul dispositivo stesso.">
@@ -36,7 +36,7 @@
 <!ENTITY fxaccount_status_needs_upgrade "È necessario aggiornare &brandShortName; per accedere.">
 <!ENTITY fxaccount_status_needs_master_sync_automatically_enabled "&syncBrand.shortName.label; è configurato ma non impostato per la sincronizzazione automatica. Selezionare “Sincronizzazione automatica dei dati” nelle impostazioni di Android, sezione “Utilizzo dati”.">
 <!ENTITY fxaccount_status_needs_master_sync_automatically_enabled_v21 "&syncBrand.shortName.label; è configurato ma non impostato per la sincronizzazione automatica. Selezionare “Sincronizzazione automatica dei dati” nelle impostazioni di Android, sezione “Account”.">
-<!ENTITY fxaccount_status_needs_finish_migrating "Tocca per accedere al nuovo account &brandShortName;.">
+<!ENTITY fxaccount_status_needs_finish_migrating "Tocca per accedere al nuovo account Firefox.">
 <!ENTITY fxaccount_status_choose_what "Scegli che cosa sincronizzare">
 <!ENTITY fxaccount_status_bookmarks "Segnalibri">
 <!ENTITY fxaccount_status_history "Cronologia">
@@ -51,10 +51,10 @@
 <!ENTITY fxaccount_remove_account "Disconnessione…">
 <!ENTITY fxaccount_remove_account_dialog_title2 "Disconnettersi da Sync?">
 <!ENTITY fxaccount_remove_account_dialog_message2 "I dati relativi alla navigazione rimarranno su questo dispositivo, ma non verranno più sincronizzati con il proprio account.">
-<!ENTITY fxaccount_remove_account_toast2 "Disconnesso account &brandShortName; &formatS;.">
+<!ENTITY fxaccount_remove_account_toast2 "Disconnesso account Firefox &formatS;.">
 <!ENTITY fxaccount_remove_account_dialog_action_confirm "Disconnetti">
 <!ENTITY fxaccount_enable_debug_mode "Attiva modalità debug">
-<!ENTITY fxaccount_account_type_label "&brandShortName;">
+<!ENTITY fxaccount_account_type_label "Firefox">
 <!ENTITY fxaccount_options_title "Opzioni di &syncBrand.shortName.label;">
 <!ENTITY fxaccount_options_configure_title "Configura &syncBrand.shortName.label;">
 <!ENTITY fxaccount_sync_sign_in_error_notification_title2 "&syncBrand.shortName.label; non è connesso">

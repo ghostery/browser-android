@@ -435,9 +435,6 @@
 <!ENTITY openMessageWindowCmd.label "Otwórz wiadomość">
 <!ENTITY openMessageWindowCmd.accesskey "z">
 <!ENTITY openMessageWindowCmd.key "o">
-<!ENTITY openConversationCmd.label "Otwórz wątek w karcie">
-<!ENTITY openConversationCmd.accesskey "k">
-<!ENTITY openConversationCmd.key "o">
 <!ENTITY openInConversationCmd.label "Otwórz wątek w karcie">
 <!ENTITY openInConversationCmd.accesskey "k">
 <!ENTITY openInConversationCmd.key "o">
@@ -752,6 +749,8 @@
 <!ENTITY contextMoveMsgMenu.accesskey "z">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Ostatni">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "O">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Ulubione">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "U">
 <!ENTITY contextCopyMsgMenu.label "Kopiuj do">
 <!ENTITY contextCopyMsgMenu.accesskey "K">
 <!ENTITY contextKillThreadMenu.label "Ignoruj wątek">

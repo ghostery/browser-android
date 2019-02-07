@@ -112,6 +112,14 @@
 <!ENTITY blockedByPolicyTemp.title "Strona zablokowana">
 <!ENTITY blockedByPolicyTemp.longDesc "<p>Dostęp do tej strony zablokował administrator.</p>">
 <!ENTITY blockedByPolicy.title "Zablokowana strona">
+
+<!ENTITY certerror.mitm.title "Oprogramowanie uniemożliwia bezpieczne połączenie ze stroną">
+<!ENTITY certerror.mitm.longDesc "„<span class='hostname'></span>” jest prawdopodobnie bezpieczną stroną, jednak nie można było nawiązać bezpiecznego połączenia. Jest to spowodowane przez program „<span class='mitm-name'/>”, działający na tym komputerze lub w tej sieci.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt1 "Jeśli oprogramowania antywirusowe zawiera funkcję skanowania szyfrowanych połączeń (często nazywaną „skanowanie ruchu sieciowego” lub „skanowanie HTTPS”), można spróbować ją wyłączyć. Jeśli to nie pomoże, można usunąć i zainstalować oprogramowanie antywirusowe ponownie.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt2 "W sieciach korporacyjnych najlepiej kontaktować się z działami IT.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt3 "Jeśli nie rozpoznajesz nazwy „<span class='mitm-name'/>”, to może to być atak i nie powinno się otwierać tej strony.">
+<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "Jeśli nie rozpoznajesz nazwy „<span class='mitm-name'/>”, to może to być atak i tej strony nie można otworzyć.">
+
 <!ENTITY prefReset.longDesc "Może to być spowodowane zmienionymi ustawieniami przeglądarki dotyczącymi bezpieczeństwa sieci. Czy przywrócić domyślne ustawienia?">
 <!ENTITY prefReset.label "Przywróć">
 

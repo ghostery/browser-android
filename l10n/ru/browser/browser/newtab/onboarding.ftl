@@ -28,3 +28,14 @@ onboarding-ghostery-text = Пользуйтесь Интернетом быст�
 # Note: "Sync" in this case is a generic verb, as in "to synchronize"
 onboarding-fxa-title = Синхронизировать
 onboarding-fxa-text = Зарегистрируйте { -fxaccount-brand-name[nominative] } и синхронизируйте свои закладки, пароли и открытые вкладки везде, где бы вы не использовали { -brand-short-name }.
+
+## Message strings belonging to the Return to AMO flow
+
+return-to-amo-sub-header = Отлично, вы установили { -brand-short-name }
+# <icon></icon> will be replaced with the icon belonging to the extension
+#
+# Variables:
+#   $addon-name (String) - Name of the add-on
+return-to-amo-addon-header = Теперь давайте установим <icon></icon><b>{ $addon-name }.</b>
+return-to-amo-extension-button = Добавить расширение
+return-to-amo-get-started-button = Начните работу с { -brand-short-name }

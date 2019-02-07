@@ -10,7 +10,7 @@
 <!ENTITY sidebar.customize.accesskey    "u">
 <!ENTITY sidebar.hide.label             "隱藏面板">
 <!ENTITY sidebar.hide.accesskey         "H">
-<!ENTITY sidebar.switch.label           "切換至面板">
+<!ENTITY sidebar.switch.label           "切換至該分頁">
 <!ENTITY sidebar.switch.accesskey       "t">
 <!ENTITY sidebarCmd.label               "側邊欄">
 <!ENTITY sidebarCmd.accesskey           "b">
@@ -32,4 +32,3 @@
 <!ENTITY sidebar.client-bookmarks.label     "書籤">
 <!ENTITY sidebar.client-history.label       "瀏覽紀錄">
 <!ENTITY sidebar.client-addressbook.label   "通訊錄">
-

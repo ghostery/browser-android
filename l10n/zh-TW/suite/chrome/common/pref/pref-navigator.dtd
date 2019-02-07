@@ -25,7 +25,7 @@
 <!-- LOCALIZATION NOTE (restoreTabs.label): This will concatenate to
      "Restore [___] tab(s) at a time",
      using (restoreTabs.label) and a number (restoreTabsAtATime.label). -->
-<!ENTITY restoreTabs.label              "一次還原">
+<!ENTITY restoreTabs.label              "還原">
 <!ENTITY restoreTabs.accesskey          "s">
 <!ENTITY restoreTabsAtATime.label       "個分頁">
 <!ENTITY restoreDeferred.label          "只在我需要時還原分頁">
@@ -48,4 +48,3 @@
 <!ENTITY defaultPendingText             "按下確定後 &brandShortName; 會被設定為您的預設瀏覽器。">
 <!ENTITY wasMadeDefaultText             "已將 &brandShortName; 設定為您的預設瀏覽器。">
 <!ENTITY makeDefaultText                "將 &brandShortName; 設為您的預設瀏覽器。">
-

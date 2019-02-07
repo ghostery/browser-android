@@ -1,10 +1,10 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- extracted from ./customize.xul -->
+
 <!-- LOCALIZATION NOTE  sidebar.customize.title.label: Do NOT localize the term "&sidebarName;"  -->
-
-
 <!ENTITY sidebar.customize.title.label          "Personalizar &sidebarName;">
 <!-- LOCALIZATION NOTE  sidebar.customize.current.label: Do NOT localize the term "&sidebarName;"  -->
 <!ENTITY sidebar.customize.current.label        "Abas visualizadas no &sidebarName;:">
@@ -23,5 +23,5 @@
 <!ENTITY sidebar.customize.up.accesskey         "c">
 <!ENTITY sidebar.customize.down.label           "Para baixo">
 <!ENTITY sidebar.customize.down.accesskey       "b">
-<!ENTITY sidebar.more.label                     "Baixar mais abas">
+<!ENTITY sidebar.more.label                     "Encontrar mais abas…">
 <!ENTITY sidebar.more.accesskey                 "m">

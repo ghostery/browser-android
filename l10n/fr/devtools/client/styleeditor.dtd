@@ -18,7 +18,7 @@
 <!ENTITY importButton.tooltip       "Importer et ajouter une feuille de style existante au document">
 <!ENTITY importButton.accesskey     "I">
 
-<!ENTITY visibilityToggle.tooltip   "Afficher/Masquer la feuille de style">
+<!ENTITY visibilityToggle.tooltip   "Activer/Désactiver la feuille de style">
 
 <!ENTITY saveButton.label           "Enregistrer">
 <!ENTITY saveButton.tooltip         "Enregistrer cette feuille de style dans un fichier">

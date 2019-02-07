@@ -6,6 +6,7 @@
 
 package org.mozilla.gecko.widget.themed;
 
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.Tab;
@@ -25,7 +26,7 @@ import static org.mozilla.gecko.Tabs.registerOnTabsChangedListener;
 import static org.mozilla.gecko.Tabs.unregisterOnTabsChangedListener;
 
 public class ThemedTabLayout extends android.support.design.widget.TabLayout
-                                     implements LightweightTheme.OnChangeListener, Tabs.OnTabsChangedListener{
+        implements LightweightTheme.OnChangeListener, Tabs.OnTabsChangedListener {
     private LightweightTheme theme;
 
     private static final int[] STATE_PRIVATE_MODE = { R.attr.state_private };
@@ -42,6 +43,12 @@ public class ThemedTabLayout extends android.support.design.widget.TabLayout
     private boolean autoUpdateTheme;        // always false if there's no theme.
 
     private ColorStateList drawableColors;
+
+    /* Cliqz Start */
+    private static final int[] LIGHT_THEME = { R.attr.light_theme };
+    private static final int[] LIGHT_THEME_PRIVATE_MODE = { R.attr.light_theme, R.attr.state_private };
+    private boolean isLightTheme;
+    /* Cliqz End */
 
     public ThemedTabLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -84,14 +91,25 @@ public class ThemedTabLayout extends android.support.design.widget.TabLayout
 
     @Override
     public int[] onCreateDrawableState(int extraSpace) {
-        final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
+        /* Cliqz Start */
+        final int[] addedState;
 
-        if (isPrivate)
-            mergeDrawableStates(drawableState, STATE_PRIVATE_MODE);
+        if (isLightTheme && isPrivate)
+            addedState = LIGHT_THEME_PRIVATE_MODE;
+        else if (isLightTheme)
+            addedState = LIGHT_THEME;
+        else if (isPrivate)
+            addedState =  STATE_PRIVATE_MODE;
         else if (isLight)
-            mergeDrawableStates(drawableState, STATE_LIGHT);
+            addedState =  STATE_LIGHT;
         else if (isDark)
-            mergeDrawableStates(drawableState, STATE_DARK);
+            addedState =  STATE_DARK;
+        else
+            addedState = new int[]{};
+
+        final int[] drawableState = super.onCreateDrawableState(extraSpace + addedState.length);
+        mergeDrawableStates(drawableState, addedState);
+        /* Cliqz End */
 
         return drawableState;
     }
@@ -185,4 +203,20 @@ public class ThemedTabLayout extends android.support.design.widget.TabLayout
             setPrivateMode(tab.isPrivate());
         }
     }
+
+    /* Cliqz Start */
+    public void setLightTheme(boolean isLightTheme) {
+        if (this.isLightTheme != isLightTheme) {
+            this.isLightTheme = isLightTheme;
+            refreshDrawableState();
+            invalidate();
+
+            this.setTabTextColors(
+                    isLightTheme ? getContext().getResources().getColor(R.color.general_blue_color_opaque) : Color.WHITE,
+                    isLightTheme ? getContext().getResources().getColor(R.color.general_blue_color) : Color.WHITE);
+            this.setSelectedTabIndicatorColor(
+                    isLightTheme ? getContext().getResources().getColor(R.color.general_blue_color) : Color.WHITE);
+        }
+    }
+    /* Cliqz End */
 }

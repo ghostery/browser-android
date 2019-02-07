@@ -35,3 +35,8 @@
 
 <!ENTITY contentBlocking.title                           "内容拦截">
 <!ENTITY contentBlocking.description                     "某些网站会使用跟踪器来监控您在网络上的活动。在隐私窗口中，Firefox 的内容拦截功能会自动拦截许多试图收集您的浏览行为有关信息的跟踪器。">
+
+<!-- Strings for new Private Browsing with Search -->
+<!-- LOCALIZATION NOTE (aboutPrivateBrowsing.info.myths): This is a link to a SUMO article
+                       about private browsing myths.   -->
+<!ENTITY aboutPrivateBrowsing.info.myths                 "关于隐私浏览的常见迷思">

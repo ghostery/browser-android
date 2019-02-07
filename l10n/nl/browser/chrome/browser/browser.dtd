@@ -21,8 +21,6 @@
 <!-- Tab context menu -->
 <!ENTITY  reloadTab.label                    "Tabblad vernieuwen">
 <!ENTITY  reloadTab.accesskey                "n">
-<!ENTITY  reloadAllTabs.label                "Alle tabbladen vernieuwen">
-<!ENTITY  reloadAllTabs.accesskey            "A">
 <!ENTITY  selectAllTabs.label                "Alle tabbladen selecteren">
 <!ENTITY  selectAllTabs.accesskey            "b">
 <!-- LOCALIZATION NOTE (duplicateTab.label): This is a command to duplicate
@@ -47,9 +45,6 @@ left instead of right. -->
 <!ENTITY  closeOtherTabs.label               "Overige tabbladen sluiten">
 <!ENTITY  closeOtherTabs.accesskey           "e">
 
-<!ENTITY  closeSelectedTabs.label            "Geselecteerde tabbladen sluiten">
-<!ENTITY  closeSelectedTabs.accesskey        "s">
-
 <!ENTITY  closeTabs.label                    "Tabbladen sluiten">
 <!ENTITY  closeTabs.accesskey                "s">
 <!ENTITY  pinSelectedTabs.label              "Tabbladen vastmaken">
@@ -62,10 +57,6 @@ same accesskey but will never be visible at the same time. -->
 unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
 same accesskey but will never be visible at the same time. -->
 <!ENTITY  unpinSelectedTabs.accesskey        "l">
-<!-- Reload Tab and Reload Selected Tabs have the same accesskey
-but will never be visible at the same time. -->
-<!ENTITY  reloadSelectedTabs.label           "Geselecteerde tabbladen vernieuwen">
-<!ENTITY  reloadSelectedTabs.accesskey       "n">
 <!-- LOCALIZATION NOTE(reloadTab.label, reloadTabs.label): have the same accesskey
 but will never be visible at the same time. -->
 <!ENTITY  reloadTabs.label                   "Tabbladen vernieuwen">
@@ -90,8 +81,6 @@ same accesskey but will never be visible at the same time. -->
 unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
 same accesskey but will never be visible at the same time. -->
 <!ENTITY  unpinTab.accesskey                 "l">
-<!ENTITY  sendTabToDevice.label              "Tabblad naar apparaat verzenden">
-<!ENTITY  sendTabToDevice.accesskey          "d">
 <!ENTITY  sendPageToDevice.label             "Pagina naar apparaat verzenden">
 <!ENTITY  sendPageToDevice.accesskey         "d">
 <!ENTITY  sendLinkToDevice.label             "Koppeling naar apparaat verzenden">
@@ -110,8 +99,6 @@ These two items have the same accesskey but will never be visible at the same ti
 <!ENTITY  moveToNewWindow.accesskey          "w">
 <!ENTITY  reopenInContainer.label            "Opnieuw openen in Container">
 <!ENTITY  reopenInContainer.accesskey        "C">
-<!ENTITY  bookmarkAllTabs.label              "Bladwijzer voor alle tabbladen maken…">
-<!ENTITY  bookmarkAllTabs.accesskey          "t">
 <!ENTITY  bookmarkTab.label                  "Bladwijzer voor tabblad maken">
 <!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
 These items have the same accesskey but will never be visible at the same time. -->
@@ -123,6 +110,10 @@ These items have the same accesskey but will never be visible at the same time. 
 <!ENTITY  hiddenTabs.label                   "Verborgen tabbladen">
 
 <!ENTITY  listAllTabs.label      "Alle tabbladtitels tonen">
+
+<!-- LOCALIZATION NOTE (allTabsMenu.searchTabs.label): "Search" is a verb, as
+in "Search through tabs". -->
+<!ENTITY  allTabsMenu.searchTabs.label       "Tabbladen doorzoeken">
 
 <!ENTITY tabCmd.label "&#xad;Nieuw tabblad">
 <!ENTITY tabCmd.accesskey "t">
@@ -153,11 +144,6 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY personalbarCmd.label "Bladwijzerwerkbalk">
 <!ENTITY personalbarCmd.accesskey "B">
 <!ENTITY bookmarksToolbarItem.label "Bladwijzerwerkbalkitems">
-
-<!ENTITY toolbarContextMenu.reloadAllTabs.label "Alle tabbladen vernieuwen">
-<!ENTITY toolbarContextMenu.reloadAllTabs.accesskey "A">
-<!ENTITY toolbarContextMenu.bookmarkAllTabs.label "Bladwijzer voor alle tabbladen maken…">
-<!ENTITY toolbarContextMenu.bookmarkAllTabs.accesskey "t">
 
 <!ENTITY toolbarContextMenu.reloadSelectedTab.label "Geselecteerde tabblad vernieuwen">
 <!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
@@ -264,9 +250,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY editThisBookmarkCmd.label "Deze bladwijzer bewerken">
 <!ENTITY bookmarkThisPageCmd.commandkey "d">
 
-<!ENTITY subscribeToPageMenupopup.label "Abonneren op deze pagina">
-<!ENTITY subscribeToPageMenuitem.label "Abonneren op deze pagina…">
-
 <!ENTITY addCurPagesCmd.label "Bladwijzer voor alle tabbladen maken…">
 <!ENTITY showAllBookmarks2.label "Alle bladwijzers tonen">
 <!ENTITY recentBookmarks.label "Recent aangemaakte bladwijzers">
@@ -305,6 +288,8 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip     "Gegevens in permanente opslag bewaren">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip   "Browser wordt op afstand bestuurd">
 <!ENTITY urlbar.webAuthnAnchor.tooltip                    "Paneel Webauthenticatie openen">
+
+<!ENTITY urlbar.storageAccessAnchor.tooltip               "Toestemmingspaneel voor surfactiviteit openen">
 
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip      "Delen van uw camera en/of microfoon met de website beheren">
 <!ENTITY urlbar.webRTCShareMicrophoneNotificationAnchor.tooltip   "Delen van uw microfoon met de website beheren">
@@ -380,10 +365,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY webDeveloperMenu.label       "Webontwikkelaar">
 <!ENTITY webDeveloperMenu.accesskey   "W">
-
-<!ENTITY devtoolsRecordExecution.label "Uitvoering opnemen">
-<!ENTITY devtoolsSaveRecording.label "Opname opslaan">
-<!ENTITY devtoolsReplayExecution.label "Uitvoering opnieuw afspelen">
 
 <!ENTITY inspectContextMenu.label     "Element inspecteren">
 <!ENTITY inspectContextMenu.accesskey "E">
@@ -514,7 +495,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.autoHideDownloadsButton.accesskey "u">
 <!ENTITY customizeMenu.manageExtension.label "Extensie beheren">
 <!ENTITY customizeMenu.manageExtension.accesskey "E">
-
 <!ENTITY customizeMenu.removeExtension.label "Extensie verwijderen">
 <!ENTITY customizeMenu.removeExtension.accesskey "r">
 
@@ -655,6 +635,16 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY bookmarkThisFrameCmd.label      "Bladwijzer voor dit deelvenster maken">
 <!ENTITY bookmarkThisFrameCmd.accesskey  "m">
 <!ENTITY pageAction.copyLink.label    "Koppeling kopiëren">
+
+<!-- LOCALIZATION NOTE(pocket-button.tooltiptext, saveToPocketCmd.label, saveLinkToPocketCmd.label, pocketMenuitem.label):
+  "Pocket" is a brand name. -->
+<!ENTITY pocketButton.tooltiptext     "Opslaan naar Pocket">
+<!ENTITY saveToPocketCmd.label        "Pagina opslaan naar Pocket">
+<!ENTITY saveToPocketCmd.accesskey    "k">
+<!ENTITY saveLinkToPocketCmd.label    "Koppeling opslaan naar Pocket">
+<!ENTITY saveLinkToPocketCmd.accesskey "o">
+<!ENTITY pocketMenuitem.label         "Pocket-lijst weergeven">
+
 <!ENTITY emailPageCmd.label           "Koppeling e-mailen…">
 <!ENTITY emailPageCmd.accesskey       "m">
 <!ENTITY savePageCmd.label            "Pagina opslaan als…">
@@ -1019,12 +1009,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.trackingProtection2.label "Alle gedetecteerde trackers">
 
 <!ENTITY contentBlocking.trackingProtection3.label "Trackers">
-<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.allowed.label):
-     This label signals that this type of content blocking is turned
-     OFF and is not blocking tracker content, so this is not
-     a positive thing. It forms the end of the (imaginary) sentence
-     "Trackers [are] Allowed"-->
-<!ENTITY contentBlocking.trackingProtection.allowed.label "Toegestaan">
 <!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
      This label signals that this type of content blocking is turned
      ON and is successfully blocking tracker content, so this is
@@ -1066,6 +1050,9 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY contentBlocking.trackersView.label "Trackers">
 <!ENTITY contentBlocking.trackersView.strictInfo.label "Stel inhoudsblokkering in op ‘Streng’ om alle trackers te blokkeren.">
+
+<!ENTITY contentBlocking.cookies.label "Cookies">
+<!ENTITY contentBlocking.cookiesView.label "Cookies en websitegegevens">
 
 <!ENTITY contentBlocking.openBreakageReportView2.label "Een probleem rapporteren">
 <!ENTITY contentBlocking.breakageReportView.label "Problemen rapporteren">
@@ -1200,11 +1187,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY pageActionButton.tooltip "Pagina-acties">
 <!ENTITY pageAction.addToUrlbar.label "Toevoegen aan adresbalk">
 <!ENTITY pageAction.removeFromUrlbar.label "Verwijderen van adresbalk">
-<!ENTITY pageAction.allowInUrlbar.label "Tonen in adresbalk">
-<!ENTITY pageAction.disallowInUrlbar.label "Niet tonen in adresbalk">
 <!ENTITY pageAction.manageExtension.label "Extensies beheren…">
-
-<!ENTITY pageAction.sendTabToDevice.label "Tabblad naar apparaat verzenden">
 
 <!ENTITY sendToDevice.syncNotReady.label "Apparaten synchroniseren…">
 

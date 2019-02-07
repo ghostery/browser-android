@@ -113,8 +113,7 @@ import org.mozilla.gecko.dlc.DlcStudyService;
 import org.mozilla.gecko.dlc.DlcSyncService;
 import org.mozilla.gecko.extensions.ExtensionPermissionsHelper;
 import org.mozilla.gecko.firstrun.OnboardingHelper;
-import org.mozilla.gecko.gfx.DynamicToolbarAnimator;
-import org.mozilla.gecko.gfx.DynamicToolbarAnimator.PinReason;
+import org.mozilla.geckoview.DynamicToolbarAnimator.PinReason;
 import org.mozilla.gecko.home.BrowserSearch;
 import org.mozilla.gecko.home.HomeBanner;
 import org.mozilla.gecko.home.HomeConfig;
@@ -176,6 +175,7 @@ import org.mozilla.gecko.util.ActivityUtils;
 import org.mozilla.gecko.util.ContextUtils;
 import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.util.EventCallback;
+import org.mozilla.gecko.util.FileUtils;
 import org.mozilla.gecko.util.GamepadUtils;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.GeckoBundleUtils;
@@ -192,6 +192,7 @@ import org.mozilla.gecko.widget.AnimatedProgressBar;
 import org.mozilla.gecko.widget.GeckoActionProvider;
 import org.mozilla.gecko.widget.SplashScreen;
 import org.mozilla.gecko.widget.themed.ThemedTabLayout;
+import org.mozilla.geckoview.DynamicToolbarAnimator;
 import org.mozilla.geckoview.GeckoSession;
 
 /* Cliqz start */
@@ -222,8 +223,8 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
-import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
 import static org.mozilla.gecko.util.ViewUtil.dpToPx;
+import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
 
 public class BrowserApp extends GeckoApp
                         implements ActionModePresenter,
@@ -244,8 +245,8 @@ public class BrowserApp extends GeckoApp
                                    BaseControlCenterPagerAdapter.ControlCenterCallbacks,
                                    AntiPhishing.AntiPhishingCallback,
                                    AntiPhishingDialog.AntiPhishingDialogActionListener,
-                                   /* Cliqz End */
                                    OnboardingHelper.OnboardingListener {
+                                   /* Cliqz End */
     private static final String LOGTAG = "GeckoBrowserApp";
 
     private static final int TABS_ANIMATION_DURATION = 450;
@@ -300,6 +301,7 @@ public class BrowserApp extends GeckoApp
     private TabHistoryController tabHistoryController;
 
     /* Cliqz Start */
+    private ThemedTabLayout mTabLayout;
     private ViewPager mControlCenterPager;
     private View mControlCenterContainer;
     private ControlCenterPagerAdapter mControlCenterPagerAdapter;
@@ -324,6 +326,8 @@ public class BrowserApp extends GeckoApp
 
     // Minimum app launches until the existing users are shown the 'customize tab' snackbar
     private static final int MINIMUM_UNTIL_CUSTOMIZE_TAB_SNACKBAR = 6;
+    private boolean mSearchIsReady = false;
+    private boolean mUserDidSearch = false;
     /* Cliqz End */
 
     public static final String TAB_HISTORY_FRAGMENT_TAG = "tabHistoryFragment";
@@ -337,15 +341,12 @@ public class BrowserApp extends GeckoApp
     private SafeIntent safeStartingIntent;
     private Intent startingIntentAfterPip;
     private boolean isInAutomation;
-    private boolean mSearchIsReady = false;
-    private boolean mUserDidSearch = false;
 
     // The types of guest mode dialogs we show.
     public static enum GuestModeDialog {
         ENTERING,
         LEAVING
     }
-
 
     private PropertyAnimator mMainLayoutAnimator;
 
@@ -406,9 +407,6 @@ public class BrowserApp extends GeckoApp
     private OnboardingHelper mOnboardingHelper;       // Contains reference to Context - DO NOT LEAK!
 
     private boolean mHasResumed;
-
-    private final static String CLIQZ_SEARCH_EXT_ID = "search@cliqz.com";
-    private static String CLIQZ_SEARCH_EXT_UUID;
 
     @Override
     public View onCreateView(final View parent, final String name, final Context context, final AttributeSet attrs) {
@@ -842,7 +840,6 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
         /* Cliqz start */
-        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
         //Forcing the default right away, otherwise extension wont have the right default until and
         //unless user opens the settings
         PrefsHelper.setPrefIfNotExists(GeckoPreferences.PREFS_SEARCH_REGIONAL,
@@ -876,8 +873,8 @@ public class BrowserApp extends GeckoApp
         mControlCenterPagerAdapter.init(this);
         mControlCenterPager.setAdapter(mControlCenterPagerAdapter);
         mControlCenterPager.setOffscreenPageLimit(3);
-        final ThemedTabLayout tabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
-        tabLayout.setupWithViewPager(mControlCenterPager);
+        mTabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
+        mTabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
 
         final ViewStub loadingSearchStub = (ViewStub) findViewById(R.id.cliqz_loading_search_progress);
@@ -919,6 +916,7 @@ public class BrowserApp extends GeckoApp
             "Feedback:MaybeLater",
             "Sanitize:ClearHistory",
             "Sanitize:ClearSyncedTabs",
+            "Sanitize:Cache",
             "Telemetry:Gather",
             "Download:AndroidDownloadManager",
             "Website:AppInstalled",
@@ -1043,7 +1041,10 @@ public class BrowserApp extends GeckoApp
         if (AppConstants.Versions.feature24Plus) {
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
-        /*Cliqz End*/
+
+        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+        updateTheme();
+        /* Cliqz End */
     }
 
     /* Cliqz Start */
@@ -1117,7 +1118,6 @@ public class BrowserApp extends GeckoApp
             @Override
             protected Void doInBackground(Void... params) {
                 super.doInBackground(params);
-                SwitchBoard.loadConfig(context, serverUrl, configStatuslistener);
                 if (GeckoPreferences.isMmaAvailableAndEnabled(context)) {
                     // Do LeanPlum start/init here
                     MmaDelegate.init(BrowserApp.this, variablesChangedListener);
@@ -1276,6 +1276,7 @@ public class BrowserApp extends GeckoApp
         for (BrowserAppDelegate delegate : delegates) {
             delegate.onResume(this);
         }
+        updateTheme();
     }
 
     @Override
@@ -1810,6 +1811,7 @@ public class BrowserApp extends GeckoApp
             "Feedback:MaybeLater",
             "Sanitize:ClearHistory",
             "Sanitize:ClearSyncedTabs",
+            "Sanitize:Cache",
             "Telemetry:Gather",
             "Download:AndroidDownloadManager",
             "Website:AppInstalled",
@@ -2165,9 +2167,16 @@ public class BrowserApp extends GeckoApp
 
             case "Sanitize:Finished":
                 if (message.getBoolean("shutdown", false)) {
-                    // Gecko is shutting down and has called our sanitize handlers,
-                    // so we can start exiting, too.
-                    finishAndShutdown(/* restart */ false);
+                    // Gecko is shutting down and has called our sanitize handlers, so to make us
+                    // appear more responsive, we can start shutting down the UI as well, even if
+                    // that means that Android might kill our process before Gecko has fully exited.
+
+                    // There is at least one exception, though: If we want to dump a captured
+                    // profile to disk, Gecko must be able to fully shutdown, so we only kill the UI
+                    // later on, in response to the Gecko thread exiting.
+                    if (!mDumpProfileOnShutdown) {
+                        finishAndShutdown(/* restart */ false);
+                    }
                 }
                 break;
 
@@ -2179,6 +2188,18 @@ public class BrowserApp extends GeckoApp
             case "Sanitize:ClearHistory":
                 BrowserDB.from(getProfile()).clearHistory(
                         getContentResolver(), message.getBoolean("clearSearchHistory", false));
+                callback.sendSuccess(null);
+                break;
+
+            case "Sanitize:Cache":
+                final File cacheFolder = new File(getCacheDir(), FileUtils.CONTENT_TEMP_DIRECTORY);
+                // file.delete() throws an exception if the path does not exists
+                // e.g you can get in this scenario after two cache clearing in a row
+                if (cacheFolder.exists()) {
+                    FileUtils.delTree(cacheFolder, null, true);
+                    // now we can delete the folder
+                    cacheFolder.delete();
+                }
                 callback.sendSuccess(null);
                 break;
 
@@ -2409,7 +2430,10 @@ public class BrowserApp extends GeckoApp
                 break;
             case "Search:Ready":
                 mSearchIsReady = true;
-                if (mUserDidSearch && mBrowserToolbar.hasFocus()) {
+                if (mUserDidSearch &&
+                        mBrowserToolbar.hasFocus() &&
+                        mPreferenceManager.isQuickSearchEnabled() &&
+                        !mBrowserToolbar.getQueryValue().isEmpty()) {
                     showCliqzSearch();
                     //mHomeScreenContainer.setVisibility(View.INVISIBLE);
                 }
@@ -3351,14 +3375,14 @@ public class BrowserApp extends GeckoApp
 
     private void showBrowserSearch() {
         /* Cliqz start */
-        // Display the "loading search" UI in case the search is not ready
-        if (!mSearchIsReady) {
-            //mLoadingSearchHelper.start();
-        }
         // show Cliqz search cards if quick search enabled otherwise show firefox one.
         final boolean isQuickSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
         if(isQuickSearchEnabled) {
-            showCliqzSearch();
+            if (mSearchIsReady) {
+                showCliqzSearch();
+            } else {
+                mLoadingSearchHelper.start();
+            }
         } else {
             if (mBrowserSearch.getUserVisibleHint()) {
                 return;
@@ -3593,7 +3617,7 @@ public class BrowserApp extends GeckoApp
         }
         /* Cliqz End */
 
-        // Only show the "Quit" menu item on pre-ICS, television devices,
+        // Only show the "Quit" menu when capturing a profile, on television devices,
         // or if the user has explicitly enabled the clear on shutdown pref.
         // (We check the pref last to save the pref read.)
         // In ICS+, it's easy to kill an app through the task switcher.
@@ -4839,7 +4863,9 @@ public class BrowserApp extends GeckoApp
 
     @Override
     public void onUrlProcessed(final String url, boolean isPhishing) {
-        if (!isPhishing) { return; }
+        if (!isPhishing) {
+            return;
+        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -4856,8 +4882,8 @@ public class BrowserApp extends GeckoApp
     }
 
     private void refreshBackground(boolean isPrivate) {
-        if(isHomePagerVisible()) {
-            ((HomePager)mHomeScreen).setPrivateMode(isPrivate);
+        if (isHomePagerVisible()) {
+            ((HomePager) mHomeScreen).setPrivateMode(isPrivate);
         }
     }
 
@@ -4899,6 +4925,16 @@ public class BrowserApp extends GeckoApp
     @Override
     public void invokeDefaultOnBackPressed() {
         super.onBackPressed();
+    }
+
+    private void updateTheme() {
+        mBrowserToolbar.setLightTheme(mPreferenceManager.isLightThemeEnabled());
+        if (mTabLayout != null) {
+            mTabLayout.setLightTheme(mPreferenceManager.isLightThemeEnabled());
+        }
+        if (mHomeScreen != null) {
+            ((HomePager) mHomeScreen).setLightTheme(mPreferenceManager.isLightThemeEnabled());
+        }
     }
     /* Cliqz end */
 }

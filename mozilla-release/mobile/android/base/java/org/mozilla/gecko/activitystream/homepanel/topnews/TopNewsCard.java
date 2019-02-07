@@ -11,7 +11,6 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -19,6 +18,7 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.cliqzicons.RoundedCornersTransformation;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 /**
  * Cliqz 2018
@@ -27,19 +27,18 @@ import org.mozilla.gecko.cliqzicons.RoundedCornersTransformation;
 
 public class TopNewsCard extends RecyclerView.ViewHolder {
 
-    private final ImageView faviconView;
-    private final TextView titleView;
-    private final TextView urlView;
-
+    private final ImageView mFaviconView;
+    private final ThemedTextView mTitleView;
+    private final ThemedTextView mUrlView;
 
     private Context context;
 
     /* package-local */ TopNewsCard(final View card) {
         super(card);
         context = card.getContext();
-        faviconView = (ImageView) card.findViewById(R.id.favicon);
-        titleView = (TextView) card.findViewById(R.id.title_view);
-        urlView = (TextView) card.findViewById(R.id.url_view);
+        mFaviconView = (ImageView) card.findViewById(R.id.favicon);
+        mTitleView = (ThemedTextView) card.findViewById(R.id.title_view);
+        mUrlView = (ThemedTextView) card.findViewById(R.id.url_view);
     }
 
     void bind(final TopNews topNews) {
@@ -50,9 +49,9 @@ public class TopNewsCard extends RecyclerView.ViewHolder {
                 .transform(new RoundedCornersTransformation(newsFavIconRadius))
                 .placeholder(
                         CliqzLogoUtil.getDefaultIcon(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
-                .into(faviconView);
-        titleView.setText(buildTitleSpannable(topNews));
-        urlView.setText(topNews.getDomain());
+                .into(mFaviconView);
+        mTitleView.setText(buildTitleSpannable(topNews));
+        mUrlView.setText(topNews.getDomain());
     }
 
     private CharSequence buildTitleSpannable(TopNews piece) {
@@ -77,6 +76,11 @@ public class TopNewsCard extends RecyclerView.ViewHolder {
         builder.append(str).append(": ");
         builder.setSpan(new ForegroundColorSpan(color), oldLen, builder.length(),
                 Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+    }
+
+    void setLightTheme(boolean isLightTheme) {
+        mTitleView.setLightTheme(isLightTheme);
+        mUrlView.setLightTheme(isLightTheme);
     }
 
 }

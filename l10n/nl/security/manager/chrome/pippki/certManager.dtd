@@ -79,11 +79,9 @@
 <!ENTITY exceptionMgr.exceptionButton.label   "Beveiligingsuitzondering bevestigen">
 <!ENTITY exceptionMgr.exceptionButton.accesskey "b">
 <!ENTITY exceptionMgr.supplementalWarning     "Legitieme banken, winkels en andere publieke websites zullen dit niet vragen.">
-<!ENTITY exceptionMgr.certlocation.caption2   "Server">
 <!ENTITY exceptionMgr.certlocation.url        "Locatie:">
 <!ENTITY exceptionMgr.certlocation.download   "Certificaat ophalen">
 <!ENTITY exceptionMgr.certlocation.accesskey  "o">
-<!ENTITY exceptionMgr.certstatus.caption      "Certificaatstatus">
 <!ENTITY exceptionMgr.certstatus.viewCert     "Weergeven…">
 <!ENTITY exceptionMgr.certstatus.accesskey    "W">
 <!ENTITY exceptionMgr.permanent.label         "Deze uitzondering voor altijd opslaan">

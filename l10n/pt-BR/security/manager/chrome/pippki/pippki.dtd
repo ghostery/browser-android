@@ -34,7 +34,7 @@
 <!ENTITY pkcs12.setpassword.message  "A senha de backup do certificado que você definir protege o arquivo backup que será criado. Você deve definir esta senha para prosseguir com o backup.">
 <!ENTITY pkcs12.setpassword.label1 "Senha de backup do certificado:">
 <!ENTITY pkcs12.setpassword.label2 "Senha de backup do certificado (confirmar):">
-<!ENTITY pkcs12.setpassword.reminder "Importante: caso esqueça a senha de backup do certificado, você não poderá restaurar este backup depois. Por favor, anote em um local seguro.">
+<!ENTITY pkcs12.setpassword.reminder "Importante: caso você esqueça a senha do backup do certificado, não poderá restaurar este backup mais tarde. Anote em um local seguro.">
 
 <!ENTITY chooseToken.title  "Janela para seleção de token">
 <!ENTITY chooseToken.message1 "Escolher um token.">

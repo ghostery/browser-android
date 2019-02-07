@@ -3,8 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY addons.windowTitle                   "부가 기능 관리자">
 
-<!ENTITY search.placeholder2                  "addons.mozilla.org에서 검색">
-
 <!ENTITY search.placeholder3                  "addons.mozilla.org 검색">
 <!ENTITY search.buttonlabel                   "검색">
 <!-- LOCALIZATION NOTE (search.commandkey):
@@ -20,9 +18,6 @@
 <!ENTITY installAddonFromFile.label           "파일에서 부가 기능 설치…">
 <!ENTITY installAddonFromFile.accesskey       "I">
 <!ENTITY toolsMenu.tooltip                    "부가 기능 도구">
-
-<!ENTITY getThemes.description                "브라우저를 개인화하는 방법을 찾으시나요?">
-<!ENTITY getThemes.learnMore                  "수많은 테마를 적용해 보세요.">
 
 
 <!ENTITY showUnsignedExtensions.button.label  "몇몇 확장기능은 확인을 할 수 없음">
@@ -64,9 +59,9 @@
      update checking behavior for all add-ons to the default global behavior
      (which itself is either "Automatically" or "Manually", controlled by the
      updates.updateAddonsAutomatically.label menu item). -->
-<!ENTITY updates.resetUpdatesToAutomatic.label       "자동 업데이트 설정">
+<!ENTITY updates.resetUpdatesToAutomatic.label       "모든 부가기능을 자동 업데이트로 재설정">
 <!ENTITY updates.resetUpdatesToAutomatic.accesskey   "R">
-<!ENTITY updates.resetUpdatesToManual.label          "자동 업데이트 설정 해제">
+<!ENTITY updates.resetUpdatesToManual.label          "모든 부가기능을 수동 업데이트로 재설정">
 <!ENTITY updates.resetUpdatesToManual.accesskey      "R">
 <!ENTITY updates.updating.label               "업데이트 확인 중">
 <!ENTITY updates.installed.label              "업데이트가 완료되었습니다.">
@@ -87,6 +82,7 @@
 <!ENTITY cmd.preferencesUnix.label            "환경 설정">
 <!ENTITY cmd.preferencesUnix.accesskey        "P">
 
+<!-- addon actions -->
 <!ENTITY cmd.enableAddon.label                "활성화">
 <!ENTITY cmd.enableAddon.accesskey            "E">
 <!ENTITY cmd.disableAddon.label               "비활성화">
@@ -95,7 +91,8 @@
 <!ENTITY cmd.enableTheme.accesskey            "W">
 <!ENTITY cmd.disableTheme.label               "테마 적용 중지">
 <!ENTITY cmd.disableTheme.accesskey           "W">
-<!ENTITY cmd.askToActivate.label              "런타임 확인">
+
+<!ENTITY cmd.askToActivate.label              "활성화 요청">
 <!ENTITY cmd.askToActivate.tooltip            "현재 부가 기능 사용 확인">
 <!ENTITY cmd.alwaysActivate.label             "항상 사용">
 <!ENTITY cmd.alwaysActivate.tooltip           "현재 부가 기능은 항상 사용">
@@ -104,6 +101,7 @@
 <!ENTITY cmd.stateMenu.tooltip                "부가 기능 사용 상태 변경">
 <!ENTITY cmd.installAddon.label               "설치">
 <!ENTITY cmd.installAddon.accesskey           "I">
+
 <!ENTITY cmd.uninstallAddon.label             "제거">
 <!ENTITY cmd.uninstallAddon.accesskey         "R">
 <!ENTITY cmd.showPreferencesWin.label         "설정">
@@ -162,9 +160,12 @@
 
 <!-- download/install progress -->
 <!ENTITY progress.pause.tooltip               "중단">
+
+<!-- download/install progress -->
 <!ENTITY progress.cancel.tooltip              "취소">
 
 <!ENTITY addon.homepage                       "홈페이지">
+
 <!ENTITY addon.details.label                  "상세보기">
 <!ENTITY addon.details.tooltip                "부가 기능에 대한 상세 정보 표시">
 <!ENTITY addon.unknownDate                    "알수 없음">
@@ -186,6 +187,7 @@
 <!ENTITY addon.undoRemove.label               "실행 취소">
 <!ENTITY addon.undoRemove.tooltip             "부가 기능 설치 유지">
 <!ENTITY addon.restartNow.label               "다시 시작">
+
 <!ENTITY addon.install.label                  "설치하기">
 <!ENTITY addon.install.tooltip                "현재 부가 기능 설치하기">
 <!ENTITY addon.updateNow.label                "업데이트">

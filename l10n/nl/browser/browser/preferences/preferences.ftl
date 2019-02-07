@@ -8,6 +8,8 @@ do-not-track-option-default =
     .label = Alleen bij gebruik van Bescherming tegen volgen
 do-not-track-option-default-content-blocking =
     .label = Alleen wanneer { -brand-short-name } is ingesteld om gedetecteerde trackers te blokkeren
+do-not-track-option-default-content-blocking-known =
+    .label = Alleen wanneer { -brand-short-name } is ingesteld om bekende trackers te blokkeren
 do-not-track-option-always =
     .label = Altijd
 
@@ -62,7 +64,6 @@ category-sync =
     .tooltiptext = { pane-sync-title }
 
 help-button-label = { -brand-short-name } Support
-
 addons-button-label = Extensies & Thema’s
 
 focus-search =
@@ -169,6 +170,9 @@ startup-restore-previous-session =
     .label = Vorige sessie herstellen
     .accesskey = s
 
+startup-restore-warn-on-quit =
+    .label = Waarschuwen bij het afsluiten van de browser
+
 disable-extension =
     .label = Extensie uitschakelen
 
@@ -184,10 +188,6 @@ open-new-link-as-tabs =
 
 warn-on-close-multiple-tabs =
     .label = Waarschuwen bij het sluiten van meerdere tabbladen
-    .accesskey = m
-
-warn-on-quit-close-multiple-tabs =
-    .label = Waarschuwen bij het afsluiten en sluiten van meerdere tabbladen
     .accesskey = m
 
 warn-on-open-many-tabs =
@@ -684,8 +684,6 @@ privacy-header = Browserprivacy
 
 ## Privacy Section - Forms
 
-forms-header = Formulieren & Wachtwoorden
-
 logins-header = Aanmeldingen & Wachtwoorden
 forms-ask-to-save-logins =
     .label = Vragen voor opslaan van aanmeldingen en wachtwoorden voor websites
@@ -793,7 +791,6 @@ sitedata-block-desc = Geblokkeerd type
 
 sitedata-block-trackers-option-recommended =
     .label = Trackers van derden (aanbevolen)
-
 sitedata-block-trackers-option =
     .label = Trackers van derden
 sitedata-block-unvisited-option =
@@ -801,6 +798,15 @@ sitedata-block-unvisited-option =
 sitedata-block-all-third-party-option =
     .label = Alle cookies van derden (kan ervoor zorgen dat websites niet goed werken)
 sitedata-block-all-option =
+    .label = Alle cookies (zal ervoor zorgen dat websites niet goed werken)
+
+sitedata-option-block-trackers =
+    .label = Trackers van derden
+sitedata-option-block-unvisited =
+    .label = Cookies van niet-bezochte websites
+sitedata-option-block-all-third-party =
+    .label = Alle cookies van derden (kan ervoor zorgen dat websites niet goed werken)
+sitedata-option-block-all =
     .label = Alle cookies (zal ervoor zorgen dat websites niet goed werken)
 
 sitedata-clear =
@@ -873,8 +879,23 @@ content-blocking-category-label = Kiezen wat er wordt geblokkeerd
 content-blocking-fastblock-slow-loading-trackers-label =
     .label = Traag ladende trackers
     .accesskey = T
-content-blocking-fastblock-new-description = Alleen de trackers blokkeren die snel laden van pagina’s tegengaan.
+content-blocking-fastblock-new-description = Alleen de trackers blokkeren die het snel laden van pagina’s tegengaan.
+content-blocking-tracking-protection-trackers-label =
+  .label = Trackers
+  .accesskey = T
+content-blocking-tracking-protection-all-detected-trackers-label =
+  .label = Alle gedetecteerde trackers
+  .accesskey = d
+content-blocking-tracking-protection-new-description = Alle bekende trackers blokkeren. (Kan het laden van bepaalde pagina’s tegengaan.)
+content-blocking-tracking-protection-option-always =
+  .label = Altijd
+  .accesskey = A
+content-blocking-tracking-protection-option-private =
+  .label = Alleen in privévensters
+  .accesskey = r
 
+# The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
+# "Standard" in this case is an adjective, meaning "default" or "normal".
 content-blocking-setting-standard =
   .label = Standaard
   .accesskey = S
@@ -885,6 +906,7 @@ content-blocking-setting-custom =
   .label = Aangepast
   .accesskey = A
 
+content-blocking-standard-description = Blokkeert alleen bekende trackers in privévensters.
 content-blocking-standard-desc = Gebalanceerd voor bescherming en prestaties. Staat bepaalde trackers toe, zodat websites goed werken.
 content-blocking-strict-desc = Blokkeert alle trackers die { -brand-short-name } detecteert. Kan ervoor zorgen dat bepaalde websites niet goed werken.
 content-blocking-custom-desc = Kies wat er wordt geblokkeerd.
@@ -896,24 +918,17 @@ content-blocking-all-third-party-cookies = Alle cookies van derden
 
 content-blocking-warning-title = Let op!
 content-blocking-warning-desc = Het blokkeren van cookies kan ervoor zorgen dat bepaalde websites niet goed werken. Blokkering kan eenvoudig worden uitgeschakeld voor websites die u vertrouwt.
-content-blocking-learn-how = Lezen hoe
+content-blocking-learn-how = Meer info
 
-content-blocking-tracking-protection-trackers-label =
+content-blocking-trackers-label =
     .label = Trackers
     .accesskey = T
-content-blocking-tracking-protection-all-detected-trackers-label =
-    .label = Alle gedetecteerde trackers
-    .accesskey = d
-content-blocking-tracking-protection-new-description = Alle bekende trackers blokkeren. (Kan het laden van bepaalde pagina’s tegengaan.)
-content-blocking-tracking-protection-option-always =
-    .label = Altijd
-    .accesskey = A
 content-blocking-tracking-protection-option-all-windows =
   .label = In alle vensters
   .accesskey = a
-content-blocking-tracking-protection-option-private =
+content-blocking-option-private =
     .label = Alleen in privévensters
-    .accesskey = p
+    .accesskey = r
 content-blocking-tracking-protection-change-block-list = Blokkeerlijst wijzigen
 
 content-blocking-third-party-cookies-label =
@@ -1057,6 +1072,10 @@ collection-health-report-link = Meer info
 collection-studies =
     .label = { -brand-short-name } toestaan om onderzoeken te installeren en uit te voeren
 collection-studies-link = { -brand-short-name }-onderzoeken weergeven
+
+addon-recommendations =
+    .label = { -brand-short-name } toestaan om gepersonaliseerde extensieaanbevelingen te doen
+addon-recommendations-link = Meer info
 
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.

@@ -8,7 +8,7 @@
 
 <!ENTITY cookiePolicy.label             "Politique d’acceptation des cookies">
 
-<!ENTITY disableCookies.label           "Interdire les cookies">
+<!ENTITY disableCookies.label           "Bloquer les cookies">
 <!ENTITY disableCookies.accesskey       "n">
 
 <!ENTITY accNo3rdPartyCookies.label     "Autoriser les cookies du serveur initial seulement (aucun cookie tiers)">

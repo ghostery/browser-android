@@ -41,7 +41,7 @@
 <!ENTITY cmd.restoreFromFile.label      "파일 선택…">
 <!ENTITY cmd.restoreFromFile.accesskey  "C">
 
-<!ENTITY cmd.deleteDomainData.label     "현재 사이트 기억 안 함">
+<!ENTITY cmd.deleteDomainData.label     "이 사이트 기억 안 함">
 <!ENTITY cmd.deleteDomainData.accesskey "F">
 
 <!ENTITY cmd.open.label                  "새로 열기">
@@ -73,15 +73,11 @@
 <!ENTITY cmd.reloadLivebookmark.label      "라이브 북마크 갱신">
 <!ENTITY cmd.reloadLivebookmark.accesskey  "R">
 
-<!ENTITY cmd.moveBookmarks.label                  "이동…">
-<!ENTITY cmd.moveBookmarks.accesskey              "M">
-
 <!ENTITY col.name.label          "이름">
 <!ENTITY col.tags.label          "태그">
 <!ENTITY col.url.label           "주소">
 <!ENTITY col.mostrecentvisit.label "최근 방문">
 <!ENTITY col.visitcount.label    "방문 횟수">
-<!ENTITY col.description.label   "설명">
 <!ENTITY col.dateadded.label     "저장일">
 <!ENTITY col.lastmodified.label  "마지막 수정일">
 
@@ -98,10 +94,6 @@
 
 <!ENTITY forwardButton.tooltip  "앞으로 가기">
 
-<!ENTITY detailsPane.more.label "자세히">
-<!ENTITY detailsPane.more.accesskey "e">
-<!ENTITY detailsPane.less.label "닫기">
-<!ENTITY detailsPane.less.accesskey "e">
 <!ENTITY detailsPane.selectAnItemText.description "항목을 선택하면 이름과 자세한 정보를 수정 및 편집할 수 있습니다.">
 
 <!ENTITY view.label               "보기">

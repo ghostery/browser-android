@@ -6,11 +6,11 @@
 ### This file contains the entities needed to use the Find Bar.
 
 findbar-next =
-    .tooltiptext = Localizar a próxima ocorrência do texto
+    .tooltiptext = Procurar a próxima ocorrência da frase
 findbar-previous =
-    .tooltiptext = Localizar a ocorrência anterior do texto
+    .tooltiptext = Procurar a ocorrência anterior da frase
 findbar-find-button-close =
-    .tooltiptext = Fechar a barra de localizar
+    .tooltiptext = Fechar a barra de procura
 findbar-highlight-all =
     .label = Realçar tudo
     .accesskey = a
@@ -29,5 +29,5 @@ findbar-case-sensitive =
     .tooltiptext = Pesquisar ignorando maiúsculas de minúsculas
 findbar-entire-word =
     .label = Palavras completas
-    .accesskey = w
-    .tooltiptext = Só pesquisar palavras inteiras
+    .accesskey = P
+    .tooltiptext = Só procurar palavras inteiras

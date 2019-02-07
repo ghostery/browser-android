@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
+
+    <!-- Cliqz start -->
+    <!-- change the url background color on private mode, add light theme -->
+
+    <!-- private browsing mode, light theme -->
+    <item android:drawable="@color/light_theme_ghost_tab_color" gecko:light_theme="true" gecko:state_private="true" />
+
+    <!-- normal mode, light theme -->
+    <item android:drawable="@android:color/white" gecko:light_theme="true"/>
+
+    <!-- private browsing mode -->
+    <item android:drawable="@color/background_ghost_mode" gecko:state_private="true" />
+
+    <!-- Cliqz end -->
+
+    <!-- normal mode -->
+    <item android:drawable="@color/url_bar" />
+
+</selector>

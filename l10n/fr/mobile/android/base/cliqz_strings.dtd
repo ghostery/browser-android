@@ -3,12 +3,15 @@
 <!ENTITY action_ok "OK">
 <!ENTITY action_exit "Quitter">
 <!ENTITY contextmenu_delete "Supprimer">
+<!ENTITY search_loading_message "Nous peaufinons la Recherche Ghost pour vous offrir une expérience 100 &#37; anonyme. ">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "Actualités">
+<!ENTITY activity_stream_top_news_show "Voir">
+<!ENTITY activity_stream_top_news_hide "Masquer">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -39,6 +42,13 @@
 <!ENTITY helper_triple_readerview_open_message2 "Affichage des éléments favoris hors ligne dans le mode lecteur.">
 <!ENTITY helper_triple_readerview_open_button2 "Ajouter aux favoris">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "Personnaliser cet onglet ?">
+<!ENTITY customize_new_tab_link "Accéder aux paramètres">
+<!ENTITY customize_new_tab_snackbar_negative_btn "Non merci">
+<!ENTITY customize_new_tab_snackbar_positive_btn "Personnaliser">
+<!ENTITY customize_new_tab_snackbar_description "Personnalisez cet espace : voir/masquer, sites favoris, actualités, image d\'arrière-plan.">
+
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName; comme navigateur par défaut">
 <!ENTITY default_browser_message "Vous semblez aimer &brandShortName;. Voulez-vous en faire votre navigateur par défaut ?">
@@ -46,18 +56,22 @@
 <!ENTITY default_browser_dialog_cancel "ANNULER">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "Envoyer données d\'utilisation ">
+<!ENTITY datareporting_telemetry_summary2 "Aidez-nous à améliorer l\'expérience de navigation Nous ne recueillons que des données strictement confidentielles. Nous ne recueillons jamais d\'informations personnelles.">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
+<!ENTITY pref_category_human_web_summary "Fournissez des infos anonymes au sujet des mouchards, sites et requêtes afin de nous aider à améliorer nos technologies de recherche rapide privée, Anti-Pistage et Anti-Hameçonnage">
 <!ENTITY pref_what_is_human_web "Qu\'est-ce que le Human Web ?">
 <!ENTITY pref_enable_human_web "Activer le Human Web">
-<!ENTITY pref_category_human_web_summary "Qu\'est-ce que ce, Autoriser">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "Il semblerait que nous n\'ayons aucune offre">
-<!ENTITY myoffrz_no_offers_msg_line1 "Nous allons poursuivre nos recherches pour vous et les ajouterons">
-<!ENTITY myoffrz_no_offers_msg_line2 "ici dès que nous en aurons">
+<!ENTITY myoffrz_no_offers_msg_line1 "Mais nous les ajouterons ici ">
+<!ENTITY myoffrz_no_offers_msg_line2 "dès que nous en aurons une">
 <!ENTITY myoffrz_onboarding_description "Recevez des offres promotionnelles avec &brandMyOffrz;">
 <!ENTITY myoffrz_order_now_label "Acheter maintenant !">
 <!ENTITY myoffrz_tap_code_to_copy_label "Saisir le code à copier">
@@ -70,7 +84,7 @@
 <!ENTITY pref_block_ads "Bloqueur publicitaire">
 <!ENTITY pref_block_ads_fair "Blocage responsable">
 <!ENTITY pref_block_ads_what_fair "Que signifie \'responsable\'">
-<!ENTITY pref_block_ads_fair_description "Á ce stade, le bloqueur publicitaire est en version Bêta. La version finale proposera les options suivantes : autoriser les pubs responsables (paramètre par défaut), bloquer toutes les pubs, autoriser toutes les pubs. Plus\nhttps://cliqz.com/pourquoicliqz/bloqueurpublicitaire">
+<!ENTITY pref_block_ads_fair_description "Anti-Pistage disponible en version bêta. La version finale offrira les options suivantes : permettre les publicités justes (par défaut), tout bloquer, tout débloquer. Plus\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "Remarque : pour que le bloqueur de pub soit performant, le navigateur doit télécharger des paquets de données. Pour cela, l\'app doit être connectée au WiFi.">
 
 <!-- Rate Us -->
@@ -80,12 +94,12 @@
 <!ENTITY cc_title_overview "APERÇU">
 <!ENTITY cc_title_site_trackers "MOUCHARDS DU SITE">
 <!ENTITY cc_title_global_trackers "TOUS LES MOUCHARDS">
-<!ENTITY cc_zero_trackers_found "&formatD;\n Mouchards trouvés">
-<!ENTITY cc_one_trackers_found "&formatD;\n Mouchard trouvé">
-<!ENTITY cc_two_trackers_found "&formatD;\n Mouchards trouvés">
-<!ENTITY cc_few_trackers_found "&formatD;\n Mouchards trouvés">
-<!ENTITY cc_many_trackers_found "&formatD;\n Mouchards trouvés">
-<!ENTITY cc_other_trackers_found "&formatD;\n Mouchards trouvés">
+<!ENTITY cc_zero_trackers_found "Mouchards trouvés">
+<!ENTITY cc_one_trackers_found "Mouchard trouvé">
+<!ENTITY cc_two_trackers_found "Mouchards trouvés">
+<!ENTITY cc_few_trackers_found "Mouchards trouvés">
+<!ENTITY cc_many_trackers_found "Mouchards trouvés">
+<!ENTITY cc_other_trackers_found "Mouchards trouvés">
 <!ENTITY cc_zero_trackers_blocked "&formatD; Mouchards bloqués">
 <!ENTITY cc_one_trackers_blocked "&formatD; Mouchard bloqué">
 <!ENTITY cc_two_trackers_blocked "&formatD; Mouchards bloqués">
@@ -102,13 +116,13 @@
 <!ENTITY cc_restrict_site "Restreindre">
 <!ENTITY cc_pause_ghostery "Suspendre Ghostery">
 <!ENTITY cc_resume_ghostery "Poursuivre avec Ghostery">
-<!ENTITY cc_enhanced_options "Options améliorées">
-<!ENTITY cc_enhanced_anti_tracking "Anti-pistage amélioré">
+<!ENTITY cc_enhanced_options "Options">
+<!ENTITY cc_enhanced_anti_tracking "Anti-pistage">
 <!ENTITY cc_enhanced_ad_blocking "Bloqueur de publicités">
 <!ENTITY cc_smart_blocking "Blocage intelligent">
-<!ENTITY cc_enhanced_anti_tracking_info "Anti-pistage amélioré">
-<!ENTITY cc_enhanced_ad_blocking_info "Améliorer les informations du bloqueur publicitaire">
-<!ENTITY cc_smart_blocking_info "Anti-pistage amélioré">
+<!ENTITY cc_enhanced_anti_tracking_info "Informations Anti-Pistage">
+<!ENTITY cc_enhanced_ad_blocking_info "Informations du Bloqueur de publicités">
+<!ENTITY cc_smart_blocking_info "Informations Anti-Pistage">
 <!ENTITY cc_zero_anti_tracking_blocked "Données personnelles anonymisées">
 <!ENTITY cc_one_anti_tracking_blocked "Données personnelles anonymisées">
 <!ENTITY cc_two_anti_tracking_blocked "Données personnelles anonymisées">
@@ -128,7 +142,7 @@
 <!ENTITY cc_many_smart_blocking_blocked "Mouchards corrigés">
 <!ENTITY cc_other_smart_blocking_blocked "Mouchards corrigés">
 <!ENTITY cc_anti_tracking_about "Anonymisez les mouchards inconnus et non bloqués pour une navigation plus sûre">
-<!ENTITY cc_ad_blocking_about "Bloquer les pubs sur les sites que vous consultez">
+<!ENTITY cc_ad_blocking_about "Bloquez les pubs sur les sites que vous visitez">
 <!ENTITY cc_smart_blocking_about "Blocage des mouchards corrigé pour optimiser les performances de la page">
 <!ENTITY cc_site_trackers_list_title "Mouchards sur ce site">
 <!ENTITY cc_global_trackers_list_title "Mouchards des sites">
@@ -155,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "Réinitialiser les changements ?">
 <!ENTITY cc_reset_changes_dialog_message "Toutes les modifications précédentes et les mouchards locaux seront réinitialisés.">
 <!ENTITY cc_reset "RÉINITIALISER">
+<!ENTITY cc_ad_block_off_domain "Désactiver pour ce domaine">
+<!ENTITY cc_ad_block_off_global "Désactiver pour tous les sites">
 <!ENTITY cc_reload_page_snackbar_text "Les modifications s\'appliqueront dès l\'actualisation de la page">
 
 <!-- General Settings - Search-->
@@ -258,22 +274,22 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - pour une navigation plus rapide, plus sûre et plus propre">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Nous vous présentons &brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_title "Bienvenue !">
 <!ENTITY ghostery_onboarding_new_users_text "Naviguez de façon plus propre, plus rapide et plus sécurisée avec &brandShortName;, dès maintenant optimisé pour mobile !">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Soutenez &brandShortName; en partageant des données analytiques afin de permettre à Ghostery d\'être plus performant. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;En savoir plus\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "Améliorez les performances de &brandShortName;\ en partageant des données d\'analyse et Human Web anonymes. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;En savoir plus\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Bloqueur de mouchards et de publicités.">
-<!ENTITY ghostery_onboarding_tracking_protection_text "Choisissez ce que Ghostery bloquera afin de vous garantir une navigation plus propre, plus rapide et plus sécurisée. Vous pouvez changer et personnaliser ces paramètres quand vous voulez dans le Centre de Contrôle de Vie Privée.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "Que devrait bloquer &amp;brandShortName pour toi ? Vous pouvez changer vos réglages en tout temps dans le Centre de Contrôle.">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "Ne rien bloquer">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "Blocage conseillé">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Publicités, Outils d\'analyse des sites, Publicités réservées aux adultes">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Pubs générales et pour adultes">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "Tout bloquer">
 <!ENTITY ghostery_onboarding_quick_search_title "Recherche Ghost">
-<!ENTITY ghostery_onboarding_quick_search_text "Restez anonyme, réduisez votre usage des données mobiles et gagnez du temps : les résultats apparaîtront au moment même où vous taperez dans la barre de recherche Ghost.">
+<!ENTITY ghostery_onboarding_quick_search_text "Gardez l\'anonymat avec la recherche privée et gagnez du temps avec des résultats instantanés.">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Chaque nouvel &pref_new_tab_category; peut être personnalisé et peut afficher les sites les plus visités, les dernières actualités, et d\'autres informations à venir concernant les mouchards.">
+<!ENTITY ghostery_onboarding_new_tab_text "Configurez la page d\'accueil Onglets à votre goût.">
 <!ENTITY ghostery_onboarding_action_button "Naviguer">
 <!ENTITY ghostery_onboarding_contextual_title "Anti-pistage activé">
-<!ENTITY ghostery_onboarding_contextual_item1_title "Anti-pistage amélioré">
+<!ENTITY ghostery_onboarding_contextual_item1_title "Anti-pistage">
 <!ENTITY ghostery_onboarding_contextual_item1_text "Protection des données personnelles améliorée">
 <!ENTITY ghostery_onboarding_contextual_item2_title "Blocage intelligent et Bloqueur de publicités">
 <!ENTITY ghostery_onboarding_contextual_item2_text "Optimise les performances de navigation">

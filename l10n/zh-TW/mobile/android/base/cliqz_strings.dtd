@@ -3,12 +3,15 @@
 <!ENTITY action_ok "好的">
 <!ENTITY action_exit "登出">
 <!ENTITY contextmenu_delete "刪除">
+<!ENTITY search_loading_message "我們為您的完全私人體驗而對Ghost搜索提供支持">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "新聞">
+<!ENTITY activity_stream_top_news_show "顯示">
+<!ENTITY activity_stream_top_news_hide "隱藏">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -39,6 +42,13 @@
 <!ENTITY helper_triple_readerview_open_message2 "收藏夾閱讀模式插件以便離線閱讀">
 <!ENTITY helper_triple_readerview_open_button2 "添加到收藏夾">
 
+<!-- Customize Start Tab Link/Snackbar -->
+<!ENTITY customize_new_tab_link_description "想要自定義此選項卡？">
+<!ENTITY customize_new_tab_link "去到設置">
+<!ENTITY customize_new_tab_snackbar_negative_btn "不，謝謝">
+<!ENTITY customize_new_tab_snackbar_positive_btn "自定義">
+<!ENTITY customize_new_tab_snackbar_description "根據您的需要調整此空間：顯示/隱藏 TopSites（經常訪問的網站），新聞和背景圖片。">
+
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName;作為默認瀏覽器">
 <!ENTITY default_browser_message "您看起來喜歡使用&brandShortName;. 您是否想將其設置為默認瀏覽器？">
@@ -46,17 +56,21 @@
 <!ENTITY default_browser_dialog_cancel "取消">
 
 <!-- Settings -->
+<!-- Telemetry -->
+<!ENTITY datareporting_telemetry_title2 "發送使用數據">
+<!ENTITY datareporting_telemetry_summary2 "幫助我們提升您的瀏覽體驗。 我們收集嚴格匿名使用數據。 無論如何不會收集任何個人信息。">
+
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "人類網絡">
+<!ENTITY pref_category_human_web_summary "貢獻與網頁跟蹤器、網站和搜索問題相關的匿名信息，改進我們的個人快速搜索、反跟蹤、反釣魚技術。">
 <!ENTITY pref_what_is_human_web "什麼是人類網絡？">
 <!ENTITY pref_enable_human_web "啟用人類網絡">
-<!ENTITY pref_category_human_web_summary "什麼，開啟">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
 
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "看起來似乎我們沒有任何優惠">
-<!ENTITY myoffrz_no_offers_msg_line1 "但我們會一直尋找您并添加">
+<!ENTITY myoffrz_no_offers_msg_line1 "但是我們將它們添加在此 ">
 <!ENTITY myoffrz_no_offers_msg_line2 "一旦我們有一個">
 <!ENTITY myoffrz_onboarding_description "獲取 &amp;brandMyOffrz 的優惠折扣及特價；">
 <!ENTITY myoffrz_order_now_label "現在預訂！">
@@ -70,7 +84,7 @@
 <!ENTITY pref_block_ads "阻止廣告">
 <!ENTITY pref_block_ads_fair "公平阻止">
 <!ENTITY pref_block_ads_what_fair "什麼是 \'fair\'">
-<!ENTITY pref_block_ads_fair_description "目前廣告阻止器為測試版最終版本將提供以下選項：允許公平廣告（默認設置），阻止所有廣告，允許所有廣告。更多\nhttps://cliqz.com/whycliqz/廣告阻止">
+<!ENTITY pref_block_ads_fair_description "廣告阻止目前尚是測試版。 終版將提供以下選項：允許公平廣告（默認設置），阻止所有廣告，允許所有廣告。 更多\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "請注意：瀏覽器必須先下載某些數據包，廣告阻止器才能有效工作。為此，此應用軟件必需無線網絡 (Wi-Fi) 連接。">
 
 <!-- Rate Us -->
@@ -80,12 +94,12 @@
 <!ENTITY cc_title_overview "概覽">
 <!ENTITY cc_title_site_trackers "網站跟蹤器">
 <!ENTITY cc_title_global_trackers "所有網頁跟蹤器">
-<!ENTITY cc_zero_trackers_found "&formatD;\n 已發現跟蹤器">
-<!ENTITY cc_one_trackers_found "&formatD;\n 已發現網頁跟蹤器">
-<!ENTITY cc_two_trackers_found "&formatD;\n 已發現跟蹤器">
-<!ENTITY cc_few_trackers_found "&formatD;\n 已發現跟蹤器">
-<!ENTITY cc_many_trackers_found "&formatD;\n 已發現跟蹤器">
-<!ENTITY cc_other_trackers_found "&formatD;\n 已發現跟蹤器">
+<!ENTITY cc_zero_trackers_found "已找到網頁跟蹤器">
+<!ENTITY cc_one_trackers_found "已找到網頁跟蹤器">
+<!ENTITY cc_two_trackers_found "已找到網頁跟蹤器">
+<!ENTITY cc_few_trackers_found "已找到網頁跟蹤器">
+<!ENTITY cc_many_trackers_found "已找到網頁跟蹤器">
+<!ENTITY cc_other_trackers_found "已找到網頁跟蹤器">
 <!ENTITY cc_zero_trackers_blocked "&formatD; 已阻止網頁跟蹤器">
 <!ENTITY cc_one_trackers_blocked "&formatD; 已阻止網頁跟蹤器">
 <!ENTITY cc_two_trackers_blocked "&formatD; 已阻止網頁跟蹤器">
@@ -102,19 +116,19 @@
 <!ENTITY cc_restrict_site "被限制的網站">
 <!ENTITY cc_pause_ghostery "暫停 Ghostery">
 <!ENTITY cc_resume_ghostery "恢復 Ghostery 運行">
-<!ENTITY cc_enhanced_options "已增強選項">
-<!ENTITY cc_enhanced_anti_tracking "強化的反跟蹤">
-<!ENTITY cc_enhanced_ad_blocking "已增強廣告阻止">
+<!ENTITY cc_enhanced_options "選項">
+<!ENTITY cc_enhanced_anti_tracking "反跟蹤">
+<!ENTITY cc_enhanced_ad_blocking "廣告阻止">
 <!ENTITY cc_smart_blocking "智能阻止">
-<!ENTITY cc_enhanced_anti_tracking_info "增強的反跟蹤信息">
-<!ENTITY cc_enhanced_ad_blocking_info "增強的廣告阻止信息">
-<!ENTITY cc_smart_blocking_info "增強的反跟蹤信息">
-<!ENTITY cc_zero_anti_tracking_blocked "個人資料作匿名處理">
-<!ENTITY cc_one_anti_tracking_blocked "個人資料作匿名處理">
-<!ENTITY cc_two_anti_tracking_blocked "個人資料作匿名處理">
-<!ENTITY cc_few_anti_tracking_blocked "個人資料作匿名處理">
-<!ENTITY cc_many_anti_tracking_blocked "個人資料作匿名處理">
-<!ENTITY cc_other_anti_tracking_blocked "個人資料作匿名處理">
+<!ENTITY cc_enhanced_anti_tracking_info "反跟蹤信息">
+<!ENTITY cc_enhanced_ad_blocking_info "廣告阻止信息">
+<!ENTITY cc_smart_blocking_info "反跟蹤信息">
+<!ENTITY cc_zero_anti_tracking_blocked "個人數據匿名化">
+<!ENTITY cc_one_anti_tracking_blocked "個人數據匿名化">
+<!ENTITY cc_two_anti_tracking_blocked "個人數據匿名化">
+<!ENTITY cc_few_anti_tracking_blocked "個人數據匿名化">
+<!ENTITY cc_many_anti_tracking_blocked "個人數據匿名化">
+<!ENTITY cc_other_anti_tracking_blocked "個人數據匿名化">
 <!ENTITY cc_zero_ad_blocking_blocked "已阻止廣告">
 <!ENTITY cc_one_ad_blocking_blocked "已阻止廣告">
 <!ENTITY cc_two_ad_blocking_blocked "已阻止廣告">
@@ -155,6 +169,8 @@
 <!ENTITY cc_reset_changes_dialog_title "重置所有更改？">
 <!ENTITY cc_reset_changes_dialog_message "網站和通用網頁跟蹤器的所有以前的更改將重置。">
 <!ENTITY cc_reset "重置">
+<!ENTITY cc_ad_block_off_domain "為此域關閉">
+<!ENTITY cc_ad_block_off_global "為所有網站關閉">
 <!ENTITY cc_reload_page_snackbar_text "頁面將刷新以應用更改">
 
 <!-- General Settings - Search-->
@@ -258,22 +274,22 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - 讓您的瀏覽變得更乾淨、更快速和更安全。">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "正在介紹&brandShortName;">
+<!ENTITY ghostery_onboarding_new_users_title "歡迎">
 <!ENTITY ghostery_onboarding_new_users_text "有了&brandShortName;，瀏覽更乾淨、更快速并更安全，現在優化手機！">
-<!ENTITY ghostery_onboarding_new_users_checkbox "分享隱匿的分析及人文網 (Human Web) 資料以支持 &brandShortName; ，藉以改善 Ghostery 的效能。\u003Ca href=\u0022&human_web_info_url;\u0022&gt;Learn more\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "通過分享匿名分析和Human Web數據提升&brandShortName;\'s的性能。 \u003Ca href=\u0022&human_web_info_url;\u0022&gt;了解更多\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "廣告及網頁跟蹤器阻止">
-<!ENTITY ghostery_onboarding_tracking_protection_text "選擇您希望&brandShortName; 阻止以獲得更乾淨、更快速和更安全的瀏覽體驗。您可在隱私控制中心隨時更改和定制這些設置。">
+<!ENTITY ghostery_onboarding_tracking_protection_text "&brandShortName;為您阻止什麼？ 您任何時候均可在隱私控制中心（Privacy Control Center）更改您的選擇。">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "未阻止">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "已建議阻止">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "廣告、網站分析和成人廣告網頁跟蹤器">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "廣告和成人廣告">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "阻止所有內容">
 <!ENTITY ghostery_onboarding_quick_search_title "Ghost搜索">
-<!ENTITY ghostery_onboarding_quick_search_text "保存匿名，減少數據使用并節省時間：您在Ghost搜索欄中鍵入時即顯示結果。">
+<!ENTITY ghostery_onboarding_quick_search_text "使用個人搜索令您鍵入時即可獲得瞬時結果，從而保持匿名狀態并節省時間。">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "每個新&pref_new_tab_category; 已定制并可展示在頂尖網站上，即將有最新新聞和其他跟蹤見解。">
+<!ENTITY ghostery_onboarding_new_tab_text "根據您的喜好自定義選項卡起始頁面">
 <!ENTITY ghostery_onboarding_action_button "開始瀏覽">
 <!ENTITY ghostery_onboarding_contextual_title "已啟用跟蹤保護">
-<!ENTITY ghostery_onboarding_contextual_item1_title "強化的反跟蹤">
+<!ENTITY ghostery_onboarding_contextual_item1_title "反跟蹤">
 <!ENTITY ghostery_onboarding_contextual_item1_text "進一步保護您的個人資訊">
 <!ENTITY ghostery_onboarding_contextual_item2_title "智能阻止與廣告阻止">
 <!ENTITY ghostery_onboarding_contextual_item2_text "您瀏覽時優化性能">

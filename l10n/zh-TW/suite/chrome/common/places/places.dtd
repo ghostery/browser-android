@@ -80,7 +80,7 @@
 <!ENTITY col.visitcount.label    "瀏覽次數">
 <!ENTITY col.description.label   "描述">
 <!ENTITY col.dateadded.label     "加入日期">
-<!ENTITY col.lastmodified.label  "最後修改日期">
+<!ENTITY col.lastmodified.label  "上次修改">
 
 <!ENTITY search.placeholder  "搜尋">
 

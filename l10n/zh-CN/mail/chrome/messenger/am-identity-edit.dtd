@@ -6,7 +6,7 @@
      equal to the value of accountManager.size entity minus the value
      of accountTree.width entity. -->
 <!ENTITY identityDialog.style "min-width: 74ch;">
-<!ENTITY identityListDesc.label "配置此标识的设置：">
+<!ENTITY identityListDesc.label "配置此身份的设置：">
 
 <!ENTITY settingsTab.label       "设置">
 <!ENTITY copiesFoldersTab.label "副本和文件夹">

@@ -10,6 +10,7 @@ about-performance-title = 작업 관리자
 column-name = 이름
 column-type = 형식
 column-energy-impact = 에너지 영향
+column-memory = 메모리
 
 ## Special values for the Name column
 
@@ -37,6 +38,15 @@ type-other = 기타
 energy-impact-high = 높음({ $value })
 energy-impact-medium = 보통({ $value })
 energy-impact-low = 낮음({ $value })
+
+## Values for the Memory column
+##
+## Variables:
+##   $value (Number) - How much memory is used
+
+size-KB = { $value } KB
+size-MB = { $value } MB
+size-GB = { $value } GB
 
 ## Tooltips for the action buttons
 

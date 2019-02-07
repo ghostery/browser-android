@@ -13,7 +13,7 @@
 <!ENTITY tabmailCloseButton.tooltip "關閉目前分頁">
 <!ENTITY tabmailAllTabs.tooltip "列出所有分頁">
 
-<!-- menu items:  the . means that the menu item isn't implemented yet -->
+<!-- menu items: the . means that the menu item isn't implemented yet -->
 
 <!-- File menu items -->
 <!ENTITY newMessage.label "寫新訊息">
@@ -114,7 +114,7 @@
 <!-- View Menu -->
 <!ENTITY showMessengerToolbarCmd.label "郵件工具列">
 <!ENTITY showMessengerToolbarCmd.accesskey "M">
-<!ENTITY showSearchToolbarCmd.label "搜尋工具列">
+<!ENTITY showSearchToolbarCmd.label "搜尋列">
 <!ENTITY showSearchToolbarCmd.accesskey "e">
 <!ENTITY showTabsToolbarCmd.label "分頁標籤工具列">
 <!ENTITY showTabsToolbarCmd.accesskey "T">
@@ -425,7 +425,7 @@
 <!-- Tooltips -->
 <!ENTITY menuBar.tooltip "選單列">
 <!ENTITY mailToolbar.tooltip "郵件工具列">
-<!ENTITY searchToolbar.tooltip "搜尋工具列">
+<!ENTITY searchToolbar.tooltip "搜尋列">
 <!ENTITY advancedButton.tooltip "進階郵件搜尋">
 <!ENTITY getMsgButton.tooltip "下載新郵件">
 <!ENTITY newMsgButton.tooltip "建立新郵件">
@@ -452,7 +452,7 @@
 <!ENTITY editRemoteContentSettings.accesskey "E">
 
 <!-- Statusbar -->
-<!ENTITY  statusText.label "完成">
+<!ENTITY statusText.label "完成">
 
 <!-- Thread Pane Context Menu -->
 <!ENTITY contextOpenNewWindow.label "用新視窗開啟郵件">
@@ -483,6 +483,8 @@
 <!ENTITY contextCopyMsgMenu.accesskey "C">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "最近">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "R">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "我的最愛">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "F">
 <!ENTITY contextSaveAs.label "另存新檔…">
 <!ENTITY contextSaveAs.accesskey "S">
 <!ENTITY contextPrint.label "列印…">
@@ -535,4 +537,3 @@
 
 <!ENTITY all.label "全部">
 <!ENTITY all.accesskey "A">
-

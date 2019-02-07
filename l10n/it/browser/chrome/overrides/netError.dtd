@@ -10,6 +10,7 @@
 <!ENTITY returnToPreviousPage1.label "Torna indietro (consigliato)">
 <!ENTITY advanced.label "Avanzate">
 <!ENTITY continue2.label "Altro…">
+<!ENTITY advanced2.label "Avanzate…">
 <!ENTITY moreInformation.label "Ulteriori informazioni">
 <!ENTITY viewCertificate.label "Visualizza certificato">
 <!ENTITY connectionFailure.title "Connessione non riuscita">
@@ -116,7 +117,6 @@
 <!ENTITY certerror.introPara "Il gestore di <span class='hostname'/> ha configurato il sito in modo non corretto. Per evitare potenziali furti di informazioni &brandShortName; ha interrotto la connessione.">
 <!ENTITY certerror.introPara2 "&brandShortName; ha rilevato una potenziale minaccia per la sicurezza e interrotto la connessione con <span class='hostname'/>. Visitando questo sito, malintenzionati potrebbero cercare di rubare informazioni personali come password, email o dati delle carte di credito.">
 <!ENTITY certerror.sts.introPara "&brandShortName; ha rilevato una potenziale minaccia per la sicurezza e interrotto la connessione con <span class='hostname'/>, in quanto è possibile collegarsi a questo sito solo in modo sicuro.">
-<!ENTITY certerror.expiredCert.secondPara "L’errore è probabilmente causato dall’orologio del computer impostato sull’ora sbagliata. Questo impedisce a &brandShortName; di connettersi in modo sicuro.">
 <!ENTITY certerror.expiredCert.introPara "&brandShortName; ha rilevato un problema e interrotto la connessione con <span class='hostname'/>. Il sito non è configurato correttamente oppure l’orologio del computer è impostato sull’ora sbagliata.">
 <!ENTITY certerror.expiredCert.secondPara2 "È probabile che il certificato del sito web sia scaduto. Questo impedisce a &brandShortName; di connettersi in modo sicuro. Visitando questo sito, malintenzionati potrebbero cercare di rubare informazioni personali come password, email o dati delle carte di credito.">
 <!ENTITY certerror.expiredCert.sts.secondPara "È probabile che il certificato del sito web sia scaduto. Questo impedisce a &brandShortName; di connettersi in modo sicuro.">
@@ -156,6 +156,12 @@
 <!ENTITY inadequateSecurityError.title "Connessione non sicura">
 <!ENTITY inadequateSecurityError.longDesc "<p><span class='hostname'></span> utilizza una tecnologia di sicurezza obsoleta e vulnerabile. Un tentativo di attacco potrebbe facilmente compromettere informazioni considerate sicure. L’amministratore del sito web deve aggiornare la configurazione del server prima di poterlo visitare.</p><p>Codice di errore: NS_ERROR_NET_INADEQUATE_SECURITY</p>">
 <!ENTITY blockedByPolicy.title "Pagina bloccata">
+<!ENTITY certerror.mitm.title "Un software impedisce a &brandShortName; di connettersi in modo sicuro a questo sito">
+<!ENTITY certerror.mitm.longDesc "<span class='hostname'></span> è probabilmente un sito affidabile, ma non è stato possibile stabilire una connessione sicura. Questo problema è causato da <span class='mitm-name'/>, un software installato sul computer o sulla rete.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt1 "Se l’antivirus include una funzione per la scansione di connessioni crittate (spesso chiamato “web scanning” o ”https scanning”), provare a disattivarla. Se questa operazione non dovesse risolvere il problema, provare a disinstallare e reinstallare il software antivirus.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt2 "Se il computer è connesso a una rete aziendale, contattare il supporto tecnico.">
+<!ENTITY certerror.mitm.whatCanYouDoAboutIt3 "Se non si conosce <span class='mitm-name'/>, potrebbe trattarsi di un attacco ed è consigliato interrompere la connessione a questo sito.">
+<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "Se non si conosce <span class='mitm-name'/>, potrebbe trattarsi di un attacco e non è possibile accedere a questo sito.">
 <!ENTITY clockSkewError.title "L’orologio del computer è errato">
 <!ENTITY clockSkewError.longDesc "L’ora riportata dall’orologio del computer è <span id='wrongSystemTime_systemDate1'/>, questo impedisce a &brandShortName; di connettersi in modo sicuro. Per visitare <span class='hostname'></span> aggiornare l’orologio del computer nelle impostazioni del sistema, impostando data, ora e fuso orario correnti, poi riprovare a caricare <span class='hostname'></span>.">
 <!ENTITY prefReset.longDesc "Sembra che il problema sia causato dalle impostazioni di sicurezza della rete. Ripristinare le impostazioni predefinite?">

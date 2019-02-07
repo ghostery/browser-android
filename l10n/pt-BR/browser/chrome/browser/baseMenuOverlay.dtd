@@ -34,7 +34,7 @@
 <!ENTITY helpFeedbackPage.label      "Enviar opinião…">
 <!ENTITY helpFeedbackPage.accesskey  "n">
 
-<!ENTITY helpShowTour2.label            "Introdução ao &brandShorterName;">
+<!ENTITY helpShowTour2.label            "Tutorial do &brandShorterName;">
 <!ENTITY helpShowTour2.accesskey        "o">
 
 <!ENTITY preferencesCmdMac.label        "Preferências…">

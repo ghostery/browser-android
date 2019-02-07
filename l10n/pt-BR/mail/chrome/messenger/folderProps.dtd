@@ -16,7 +16,7 @@
 <!ENTITY folderIncludeInGlobalSearch.label       "Incluir as mensagens desta pasta nos resultados da pesquisa global">
 <!ENTITY folderIncludeInGlobalSearch.accesskey   "I">
 
-<!ENTITY retention.label "Exclusão">
+<!ENTITY retention.label "Política de retenção">
 <!ENTITY retentionUseAccount.label  "Usar minhas configurações da conta">
 <!ENTITY retentionUseAccount.accesskey "U">
 <!ENTITY daysOld.label "dias">
@@ -30,7 +30,7 @@
 <!ENTITY retentionKeepAll.accesskey "N">
 <!ENTITY retentionKeepRecent.label "Excluir tudo, exceto as últimas">
 <!ENTITY retentionKeepRecent.accesskey "E">
-<!ENTITY retentionApplyToFlagged.label "Sempre preservar as mensagens com estrela">
+<!ENTITY retentionApplyToFlagged.label "Sempre manter as mensagens com estrela">
 <!ENTITY retentionApplyToFlagged.accesskey "S">
 
 <!ENTITY folderSynchronizationTab.label          "Sincronização">
@@ -39,7 +39,7 @@
 
 <!ENTITY offlineFolder.check.label               "Selecionar a pasta para leitura off-line">
 <!ENTITY offlineFolder.check.accesskey           "S">
-<!ENTITY offlineFolder.button.label              "Receber agora">
+<!ENTITY offlineFolder.button.label              "Baixar agora">
 <!ENTITY offlineFolder.button.accesskey          "R">
 
 <!ENTITY selectofflineNewsgroup.check.label      "Selecionar este newsgroup para leitura off-line">
@@ -49,11 +49,11 @@
 
 <!ENTITY folderProps.name.label                  "Nome:">
 <!ENTITY folderProps.name.accesskey              "N">
-<!ENTITY folderProps.location.label              "Endereço:">
+<!ENTITY folderProps.location.label              "Local:">
 <!ENTITY folderProps.location.accesskey          "E">
 
 <!ENTITY folderSharingTab.label                  "Compartilhamento">
-<!ENTITY privileges.button.label                 "Direitos…">
+<!ENTITY privileges.button.label                 "Privilégios…">
 <!ENTITY privileges.button.accesskey             "D">
 <!ENTITY permissionsDesc.label                   "Você possui estas permissões:">
 <!ENTITY folderType.label                        "Tipo da pasta:">

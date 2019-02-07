@@ -5,7 +5,7 @@
 <!ENTITY downloadManager.title           "下載管理員">
 
 <!ENTITY menuBar.tooltip                 "選單列">
-<!ENTITY searchBar.tooltip               "搜尋工具列">
+<!ENTITY searchBar.tooltip               "搜尋列">
 
 <!ENTITY search.placeholder              "搜尋下載">
 <!ENTITY search.label                    "搜尋下載">

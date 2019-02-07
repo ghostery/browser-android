@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:gecko="http://schemas.android.com/apk/res-auto"
+       xmlns:tools="http://schemas.android.com/tools"
+       tools:background="@android:color/black"
+       tools:layout_height="@dimen/browser_toolbar_height"
+       tools:layout_width="match_parent"
+       tools:parentTag="LinearLayout">
+
+    <!-- The site security icon is misaligned with the page title so
+         we add a bottom margin to align their bottoms.
+         Site security icon must have exact position and size as search icon in
+         edit layout -->
+
+    <org.mozilla.gecko.widget.themed.ThemedLinearLayout
+        android:id="@+id/url_bar_title_bg"
+        style="@style/UrlBar.ThemeBackground"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/browser_toolbar_url_height"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/url_bar_title_bg">
+
+        <!-- We need this on a separate layer to avoid fading out the toolbar background as well
+     and we can't use a hardware layer because that causes problems with the snapshot
+     for our toolbar animation.-->
+        <!-- Cliqz start -->
+        <!-- round the corners of horizontal ScrollView and UrlBar TextView inside it, change
+        fadeWidth to 50dp-->
+        <org.mozilla.gecko.widget.themed.ThemedFadedHorizontalScrollView
+            android:id="@+id/url_bar_title_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/url_bar_entry_bg"
+            android:fillViewport="true"
+            android:layerType="software"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical">
+
+                <!-- tint the security icon with white && hide it in seach mode-->
+                <org.mozilla.gecko.widget.themed.ThemedImageButton
+                    android:id="@+id/site_security"
+                    style="@style/UrlBar.SiteIdentity"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/site_security"
+                    android:src="@drawable/security_mode_icon"
+                    android:tint="@color/cliqz_url_bar_site_security"
+                    android:visibility="gone"
+                    tools:src="@drawable/ic_lock" />
+
+                <org.mozilla.gecko.toolbar.PageActionLayout
+                    android:id="@+id/page_action_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal"
+                    android:visibility="gone" />
+
+                <!-- add padding left , right and set height to wrap content, make url color black -->
+                <org.mozilla.gecko.widget.themed.ThemedTextView
+                    android:id="@+id/url_bar_title"
+                    style="@style/UrlBar.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_toRightOf="@id/site_security"
+                    android:layout_toEndOf="@id/site_security"
+                    android:layout_toLeftOf="@id/page_action_layout"
+                    android:layout_toStartOf="@id/page_action_layout"
+                    android:layout_alignWithParentIfMissing="true"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </RelativeLayout>
+        </org.mozilla.gecko.widget.themed.ThemedFadedHorizontalScrollView>
+        <!-- Cliqz end -->
+    </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
+
+    <org.mozilla.gecko.toolbar.ToolbarRoundButton
+        android:id="@+id/stop"
+        style="@style/UrlBar.ImageButton"
+        android:background="@drawable/url_bar_action_button"
+        android:contentDescription="@string/stop"
+        android:src="@drawable/ic_cancel"
+        android:visibility="gone"
+        tools:visibility="visible"
+        gecko:showLWTBackground="true"/>
+
+</merge>

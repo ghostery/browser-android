@@ -440,9 +440,6 @@
 <!ENTITY openMessageWindowCmd.label "Bericht openen">
 <!ENTITY openMessageWindowCmd.accesskey "o">
 <!ENTITY openMessageWindowCmd.key "o">
-<!ENTITY openConversationCmd.label "Openen in conversatie">
-<!ENTITY openConversationCmd.accesskey "p">
-<!ENTITY openConversationCmd.key "o">
 <!ENTITY openInConversationCmd.label "Openen in conversatie">
 <!ENTITY openInConversationCmd.accesskey "p">
 <!ENTITY openInConversationCmd.key "o">
@@ -795,6 +792,8 @@
 <!ENTITY contextMoveMsgMenu.accesskey "r">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Recent">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "R">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Favorieten">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "F">
 <!ENTITY contextCopyMsgMenu.label "Kopiëren naar">
 <!ENTITY contextCopyMsgMenu.accesskey "K">
 <!ENTITY contextKillThreadMenu.label "Conversatie negeren">

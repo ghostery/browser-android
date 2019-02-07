@@ -10,6 +10,7 @@ about-performance-title = Диспетчер задач
 column-name = Название
 column-type = Тип
 column-energy-impact = Потребление энергии
+column-memory = Память
 
 ## Special values for the Name column
 
@@ -37,6 +38,15 @@ type-other = Другое
 energy-impact-high = Высокое ({ $value })
 energy-impact-medium = Среднее ({ $value })
 energy-impact-low = Низкое ({ $value })
+
+## Values for the Memory column
+##
+## Variables:
+##   $value (Number) - How much memory is used
+
+size-KB = { $value } КБ
+size-MB = { $value } МБ
+size-GB = { $value } ГБ
 
 ## Tooltips for the action buttons
 

@@ -73,6 +73,11 @@ public class ToolbarEditText extends CustomEditText
     // Do not process autocomplete result
     private boolean mDiscardAutoCompleteResult;
 
+    /* Cliqz Start */
+    private PreferenceManager mPreferenceManager;
+    /* Cliqz End */
+
+
     public ToolbarEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -103,10 +108,10 @@ public class ToolbarEditText extends CustomEditText
         addTextChangedListener(new TextChangeListener());
 
         /* Cliqz start */
-        if(PreferenceManager.getInstance(mContext.getApplicationContext()).isQuickSearchEnabled()) {
-            EventDispatcher.getInstance().registerUiThreadListener(this,
-                    "Search:Autocomplete", null);
-        }
+        EventDispatcher.getInstance().registerUiThreadListener(this,
+                "Search:Autocomplete", null);
+        mPreferenceManager = PreferenceManager.getInstance(mContext);
+        updateTheme();
         /* Cliqz end */
     }
 
@@ -679,10 +684,8 @@ public class ToolbarEditText extends CustomEditText
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(PreferenceManager.getInstance(mContext.getApplicationContext()).isQuickSearchEnabled()) {
-            EventDispatcher.getInstance().unregisterUiThreadListener(this,
-                    "Search:Autocomplete", null);
-        }
+        EventDispatcher.getInstance().unregisterUiThreadListener(this,
+                "Search:Autocomplete", null);
     }
 
     @Override
@@ -698,5 +701,10 @@ public class ToolbarEditText extends CustomEditText
                 break;
         }
     }
+
+    private void updateTheme() {
+        setLightTheme(mPreferenceManager.isLightThemeEnabled());
+    }
+
     /* Cliqz end */
 }

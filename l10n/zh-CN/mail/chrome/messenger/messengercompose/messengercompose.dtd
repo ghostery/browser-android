@@ -16,7 +16,7 @@
 <!ENTITY newMessage.accesskey "M">
 <!ENTITY newContact.label "通讯录联系人…">
 <!ENTITY newContact.accesskey "C">
-<!ENTITY attachMenu.label "附加">
+<!ENTITY attachMenu.label "附件">
 <!ENTITY attachMenu.accesskey "h">
 <!ENTITY attachFileCmd.label "文件…">
 <!ENTITY attachFileCmd.accesskey "F">
@@ -94,14 +94,13 @@
      as attachments.accesskey. -->
 <!ENTITY toggleAttachmentPaneCmd.accesskey "m">
 <!-- LOCALIZATION NOTE (toggleAttachmentPaneCmd.key):
-     With OS-specific access modifier, this defines the shortcut key for showing/
-     hiding/minimizing the attachment pane, e.g. Alt+M on Windows.
-     toggleAttachmentPaneCmd.key and attachments.accesskey must be the same
-     for the bucket view state machinery to work. -->
+     As Mac does not have access keys, this key defines a Mac-only, cross-l10n
+     shortcut key (Ctrl+M). Typically, this key should not be translated unless
+     otherwise required by specific needs of the localization. -->
 <!ENTITY toggleAttachmentPaneCmd.key "m">
 <!ENTITY selectAllCmd.label "选择全部">
-<!ENTITY selectAllCmd.key "A">
 <!ENTITY selectAllCmd.accesskey "A">
+<!ENTITY selectAllCmd.key "A">
 <!ENTITY findBarCmd.label "查找…">
 <!ENTITY findBarCmd.accesskey "F">
 <!ENTITY findBarCmd.key "F">
@@ -237,7 +236,7 @@
 <!ENTITY sendButton.label "发送">
 <!ENTITY quoteButton.label "引用">
 <!ENTITY addressButton.label "地址">
-<!ENTITY attachButton.label "附加">
+<!ENTITY attachButton.label "附件">
 <!ENTITY spellingButton.label "拼写">
 <!ENTITY saveButton.label "保存">
 <!ENTITY printButton.label "打印">
@@ -270,9 +269,11 @@
 <!ENTITY subject.label "主题:">
 <!ENTITY subject.accesskey "S">
 <!-- LOCALIZATION NOTE (attachments.accesskey) This access key character should
-     be taken from the strings in attachmentCount in composeMsgs.properties,
-     and it must be the same as toggleAttachmentPaneCmd.key, otherwise it won't
-     work, as the shortcut key functionality supersedes the access key. -->
+     be taken from the strings of attachmentCount in composeMsgs.properties.
+     Please ensure that this access key is unique: Do not duplicate any other
+     first-level access keys of the compose window, e.g. those of main menu,
+     buttons, or labels (message headers, contacts side bar, attachment reminder
+     bar). -->
 <!ENTITY attachments.accesskey "c">
 <!ENTITY attachmentBucketHeader.tooltip "附件面板">
 <!ENTITY attachmentBucketCloseButton.tooltip "隐藏附件面板">

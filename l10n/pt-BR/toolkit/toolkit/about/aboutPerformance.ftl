@@ -3,13 +3,14 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 # Page title
-about-performance-title = Gerenciador de Tarefas
+about-performance-title = Gerenciador de tarefas
 
 ## Column headers
 
 column-name = Nome
 column-type = Tipo
 column-energy-impact = Impacto energético
+column-memory = Memória
 
 ## Special values for the Name column
 
@@ -38,12 +39,21 @@ energy-impact-high = Alto ({ $value })
 energy-impact-medium = Médio ({ $value })
 energy-impact-low = Baixo ({ $value })
 
+## Values for the Memory column
+##
+## Variables:
+##   $value (Number) - How much memory is used
+
+size-KB = { $value } KB
+size-MB = { $value } MB
+size-GB = { $value } GB
+
 ## Tooltips for the action buttons
 
 close-tab =
     .title = Fechar aba
 show-addon =
-    .title = Mostrar no Gerenciador de Extensões
+    .title = Mostrar no Gerenciador de extensões
 # Tooltip when hovering an item of the about:performance table
 # Variables:
 #   $totalDispatches (Number) - how many dispatches occured for this page since it loaded

@@ -440,9 +440,6 @@
 <!ENTITY openMessageWindowCmd.label "Üzenet megnyitása">
 <!ENTITY openMessageWindowCmd.accesskey "Ü">
 <!ENTITY openMessageWindowCmd.key "o">
-<!ENTITY openConversationCmd.label "Megnyitás beszélgetésben">
-<!ENTITY openConversationCmd.accesskey "b">
-<!ENTITY openConversationCmd.key "o">
 <!ENTITY openInConversationCmd.label "Megnyitás beszélgetésben">
 <!ENTITY openInConversationCmd.accesskey "b">
 <!ENTITY openInConversationCmd.key "o">
@@ -795,6 +792,8 @@
 <!ENTITY contextMoveMsgMenu.accesskey "h">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Nemrég használt">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "N">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Kedvencek">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "K">
 <!ENTITY contextCopyMsgMenu.label "Átmásolás">
 <!ENTITY contextCopyMsgMenu.accesskey "m">
 <!ENTITY contextKillThreadMenu.label "Témacsoport kihagyása">

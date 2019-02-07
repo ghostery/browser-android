@@ -14,6 +14,8 @@ node('master') {
     }
     baseImage.inside() {
         try {
+            def apkPath = "mozilla-release/objdir-frontend-android/cliqz/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release"
+            def apk = ""
             stage('Build and Signs APKS') {
                 withEnv(['ANDROID_TARGET=i686-linux-android', 'BRAND=cliqz', 'CLIQZ_CHANNEL=MA00']) {
                     sh '''#!/bin/bash -l
@@ -42,17 +44,15 @@ node('master') {
                             cd mozilla-release
                             export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                             export AB_CD=multi
-                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            ./gradlew :app:assembleWithGeckoBinariesRelease
                         """
                     }
-                    apk = sh(returnStdout: true,
-                        script: """cd mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
-                        find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
-                    def apkPath = "mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                    apk = sh(returnStdout: true, script: """cd ${apkPath} && find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
+                    def apkFullPath = "${apkPath}/${apk}"
                     sh """#!/bin/bash -l
                         set -e
                         set -x
-                        cp ${apkPath} mozilla-release/mobile/android/x86.apk
+                        cp ${apkFullPath} mozilla-release/mobile/android/x86.apk
                     """
                 }
                 withEnv(['ANDROID_TARGET=arm-linux-androideabi', 'BRAND=cliqz', 'CLIQZ_CHANNEL=MA00']) {
@@ -82,17 +82,15 @@ node('master') {
                             cd mozilla-release
                             export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
                             export AB_CD=multi
-                            ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
+                            ./gradlew :app:assembleWithGeckoBinariesRelease
                         """
                     }
-                    apk = sh(returnStdout: true,
-                        script: """cd mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release && \
-                        find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
-                    def apkPath = "mozilla-release/objdir-frontend-android/${BRAND}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release/${apk}"
+                    apk = sh(returnStdout: true, script: """cd ${apkPath} && find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
+                    def apkFullPath = "${apkPath}/${apk}"
                     sh """#!/bin/bash -l
                         set -e
                         set -x
-                        cp ${apkPath} mozilla-release/mobile/android/arm.apk
+                        cp ${apkFullPath} mozilla-release/mobile/android/arm.apk
                     """
                 }
             }

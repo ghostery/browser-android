@@ -20,12 +20,12 @@
 <!ENTITY sidebar.loading.stop.accesskey "P">
 
 <!ENTITY sidebar.no-panels.state     "O Painel está vazio.">
-<!ENTITY sidebar.no-panels.add       "Você pode adicionar abas clicando no botão &quot;Abas&quot; acima.">
-<!ENTITY sidebar.no-panels.hide      "Se você quiser ocultar o Painel totalmente, clique no menu Exibir, Ferramentas e selecione Painel.">
-<!ENTITY sidebar.sbDirectory.label   "Baixar mais abas">
+<!ENTITY sidebar.no-panels.add       'Você pode adicionar abas clicando no botão &quot;Abas&quot; acima.'>
+<!ENTITY sidebar.no-panels.hide      'Se você quiser ocultar o Painel totalmente, clique no menu Exibir, Ferramentas e selecione Painel.'>
+<!ENTITY sidebar.sbDirectory.label   "Diretório do painel lateral…">
 
 <!ENTITY sidebar.pagenotfound.label  "Esta aba não está disponível neste momento">
-<!ENTITY sidebar.close.tooltip       "Fechar Painel">
+<!ENTITY sidebar.close.tooltip       "Fechar painel">
 <!ENTITY sidebar.open.tooltip        "Abrir Painel">
 
 <!ENTITY sidebar.search.label         "Pesquisar">

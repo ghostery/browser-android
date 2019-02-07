@@ -18,11 +18,16 @@ import org.mozilla.gecko.activitystream.homepanel.model.TopSite;
 import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPage;
 import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPagerAdapter;
 import org.mozilla.gecko.home.HomePager;
+import org.mozilla.gecko.preferences.PreferenceManager;
 
 public class TopPanelRow extends StreamViewHolder {
     public static final int LAYOUT_ID = R.layout.activity_stream_main_toppanel;
 
     private final ViewPager topSitesPager;
+
+    /* Cliqz Start */
+    private final PreferenceManager mPreferenceManager;
+    /* Cliqz End*/
 
     private static class SwipeListener extends ViewPager.SimpleOnPageChangeListener {
         int currentPosition = 0;
@@ -53,6 +58,10 @@ public class TopPanelRow extends StreamViewHolder {
     public TopPanelRow(final View itemView, final HomePager.OnUrlOpenListener onUrlOpenListener,
             final OnCardLongClickListener onCardLongClickListener) {
         super(itemView);
+
+        /* Cliqz Start */
+        mPreferenceManager = PreferenceManager.getInstance(itemView.getContext());
+        /* Cliqz End */
 
         topSitesPager = (ViewPager) itemView.findViewById(R.id.topsites_pager);
         topSitesPager.setAdapter(new TopSitesPagerAdapter(itemView.getContext(), onUrlOpenListener, onCardLongClickListener));
@@ -90,6 +99,13 @@ public class TopPanelRow extends StreamViewHolder {
         // page swipe events
         swipeListener.currentPosition = 0;
     }
+
+    /* Cliqz Start */
+    public void updateTheme() {
+        ((TopSitesPagerAdapter) topSitesPager.getAdapter())
+                .setLightTheme(mPreferenceManager.isLightThemeEnabled());
+    }
+    /* Cliqz End */
 
     public interface OnCardLongClickListener {
         boolean onLongClick(TopSite topSite, int absolutePosition, View tabletContextMenuAnchor, int faviconWidth, int faviconHeight);

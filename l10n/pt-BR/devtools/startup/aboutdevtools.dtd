@@ -51,7 +51,7 @@
 <!-- LOCALIZATION NOTE (aboutDevtools.enable.learnMoreLink): Text for the link to
   -  https://developer.mozilla.org/docs/Tools displayed in the top section when DevTools
   -  are disabled. -->
-<!ENTITY  aboutDevtools.enable.learnMoreLink "Saber mais sobre o Developer Tools">
+<!ENTITY  aboutDevtools.enable.learnMoreLink "Saiba mais sobre o Developer Tools">
 
 <!ENTITY  aboutDevtools.enable.enableButton "Ativar Developer Tools">
 <!ENTITY  aboutDevtools.enable.closeButton2 "Fechar esta aba">

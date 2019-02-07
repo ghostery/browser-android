@@ -16,7 +16,7 @@
 <!ENTITY  color                           "Cores padrão">
 <!ENTITY  textColor.label                 "Texto:">
 <!ENTITY  textColor.accesskey             "T">
-<!ENTITY  backgroundColor.label           "Plano de fundo:">
+<!ENTITY  backgroundColor.label           "Fundo:">
 <!ENTITY  backgroundColor.accesskey       "P">
 <!ENTITY  useSystemColors.label           "Usar cores do sistema">
 <!ENTITY  useSystemColors.accesskey       "a">

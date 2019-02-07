@@ -440,9 +440,6 @@
 <!ENTITY openMessageWindowCmd.label "Открыть">
 <!ENTITY openMessageWindowCmd.accesskey "О">
 <!ENTITY openMessageWindowCmd.key "o">
-<!ENTITY openConversationCmd.label "Открыть в разговоре">
-<!ENTITY openConversationCmd.accesskey "т">
-<!ENTITY openConversationCmd.key "o">
 <!ENTITY openInConversationCmd.label "Открыть в разговоре">
 <!ENTITY openInConversationCmd.accesskey "г">
 <!ENTITY openInConversationCmd.key "o">
@@ -795,6 +792,8 @@
 <!ENTITY contextMoveMsgMenu.accesskey "е">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Недавно открытые">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "Н">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Избранное">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "о">
 <!ENTITY contextCopyMsgMenu.label "Копировать в папку">
 <!ENTITY contextCopyMsgMenu.accesskey "К">
 <!ENTITY contextKillThreadMenu.label "Пропустить обсуждение">

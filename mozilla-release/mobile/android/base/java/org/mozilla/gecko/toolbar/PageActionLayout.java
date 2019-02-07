@@ -12,6 +12,7 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.pwa.PwaUtils;
 import org.mozilla.gecko.util.ResourceDrawableUtils;
 import org.mozilla.gecko.util.GeckoBundle;
@@ -220,10 +221,10 @@ public class PageActionLayout extends ThemedLinearLayout
     public void maybeShowPwaOnboarding() {
         // only show pwa at normal mode
         final Tab selectedTab = Tabs.getInstance().getSelectedTab();
-        if (!PwaUtils.shouldAddPwaShortcut(selectedTab)) {
+        if (!PwaUtils.shouldAddPwaShortcut(selectedTab) || mPageActionList == null) {
             return;
         }
-        for(PageAction action :mPageActionList) {
+        for(PageAction action : mPageActionList) {
             if (UUID_PAGE_ACTION_PWA.equals(action.getID())) {
                 final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
                 final boolean show = prefs.getBoolean(PREF_PWA_ONBOARDING, true);
@@ -250,7 +251,10 @@ public class PageActionLayout extends ThemedLinearLayout
                                final OnPageActionClickListeners onPageActionClickListeners, boolean important) {
         ThreadUtils.assertOnUiThread();
 
-        final PageAction pageAction = new PageAction(id, title, null, onPageActionClickListeners, important);
+        /*Cliqz Start*/
+        // add useTint parameter
+        final PageAction pageAction = new PageAction(id, title, null, onPageActionClickListeners, important,useTint);
+        /*Cliqz End*/
 
         int insertAt = mPageActionList.size();
         while (insertAt > 0 && mPageActionList.get(insertAt - 1).isImportant()) {
@@ -271,14 +275,7 @@ public class PageActionLayout extends ThemedLinearLayout
                     // } else {
                     //     icon = d;
                     // }
-                    final Drawable icon = DrawableCompat.wrap(d.mutate());
-                    if (useTint) {
-                        DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),R.color
-                                .general_blue_color));
-                    }else{
-                        DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),R.color
-                                .inactive_icon_color));
-                    }
+                    final Drawable icon = applyTint(d,useTint);
                     /* Cliqz end */
 
                     pageAction.setDrawable(icon);
@@ -287,6 +284,25 @@ public class PageActionLayout extends ThemedLinearLayout
             }
         });
     }
+
+    /* Cliqz Start */
+    private Drawable applyTint(Drawable drawable, boolean useTint) {
+        final Drawable icon = DrawableCompat.wrap(drawable.mutate());
+        final int colorId;
+        if (useTint) {
+            if (PreferenceManager.getInstance(getContext()).isLightThemeEnabled()) {
+                colorId = android.R.color.white;
+            } else {
+                colorId = R.color.general_blue_color;
+            }
+            DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(), colorId));
+        } else {
+            DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),
+                    R.color.inactive_icon_color));
+        }
+        return drawable;
+    }
+    /* Cliqz End */
 
     private void removePageAction(String id) {
         ThreadUtils.assertOnUiThread();
@@ -479,12 +495,15 @@ public class PageActionLayout extends ThemedLinearLayout
         private final String mId;
         private final int key;
         private final boolean mImportant;
+        /*Cliqz Start */
+        private boolean mUseTint;
 
         public PageAction(String id,
                           String title,
                           Drawable image,
                           OnPageActionClickListeners onPageActionClickListeners,
-                          boolean important) {
+                          boolean important,
+                          boolean useTint) {
             mId = id;
             mTitle = title;
             mDrawable = image;
@@ -492,6 +511,8 @@ public class PageActionLayout extends ThemedLinearLayout
             mImportant = important;
 
             key = UUID.fromString(mId.subSequence(1, mId.length() - 2).toString()).hashCode();
+            mUseTint = useTint;
+            /*Cliqz End */
         }
 
         public Drawable getDrawable() {
@@ -555,6 +576,15 @@ public class PageActionLayout extends ThemedLinearLayout
 
     public void setOnPageActionClickedListener(PageActionClickListener listener) {
         mPageActionListener = listener;
+    }
+
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        if (mPageActionList != null) {
+            for (PageAction pageAction : mPageActionList) {
+                applyTint(pageAction.mDrawable, pageAction.mUseTint);
+            }
+        }
     }
     /* Cliqz end */
 }

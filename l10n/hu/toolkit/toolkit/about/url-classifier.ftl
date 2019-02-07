@@ -3,6 +3,16 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 url-classifier-title = URL-osztályozó információk
+url-classifier-search-title = Keresés
+url-classifier-search-result-title = Találatok
+url-classifier-search-result-uri = URI: { $uri }
+url-classifier-search-result-list = Táblázatok listája: { $list }
+url-classifier-search-input = URL
+url-classifier-search-error-invalid-url = Érvénytelen URL
+url-classifier-search-error-no-features = Nincs funkció kiválasztva
+url-classifier-search-btn = Keresés indítása
+url-classifier-search-features = Funkciók
+url-classifier-search-listType = Felsorolás típusa
 url-classifier-provider-title = Szolgáltató
 url-classifier-provider = Szolgáltató
 url-classifier-provider-last-update-time = Legutóbbi frissítés ideje

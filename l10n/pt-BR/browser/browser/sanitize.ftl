@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 sanitize-prefs =
-    .title = Configurações para a limpeza do histórico
+    .title = Configurações para limpeza do histórico
     .style = width: 34em
 sanitize-prefs-style =
     .style = width: 17em
@@ -15,7 +15,7 @@ dialog-title =
 dialog-title-everything =
     .title = Limpar todo o histórico
     .style = width: 34em
-clear-data-settings-label = Ao fechar o { -brand-short-name } deve limpar tudo automaticamente
+clear-data-settings-label = Ao fechar, o { -brand-short-name } deve limpar automaticamente:
 
 ## clear-time-duration-prefix is followed by a dropdown list, with
 ## values localized using clear-time-duration-value-* messages.
@@ -53,20 +53,20 @@ item-cookies =
     .accesskey = o
 item-active-logins =
     .label = Contas de acesso ativas
-    .accesskey = L
+    .accesskey = C
 item-cache =
     .label = Cache
     .accesskey = a
 item-form-search-history =
-    .label = Campos memorizados de páginas e da pesquisa
-    .accesskey = C
+    .label = Histórico de formulários e pesquisa
+    .accesskey = f
 data-section-label = Dados
 item-site-preferences =
     .label = Preferências de sites
     .accesskey = P
 item-offline-apps =
     .label = Dados offline de sites
-    .accesskey = f
+    .accesskey = n
 sanitize-everything-undo-warning = Esta ação não pode ser desfeita.
 window-close =
     .key = W

@@ -42,11 +42,9 @@ site-data-remove-shown =
 
 ## Removing
 
-site-data-removing-window =
-    .title = { site-data-removing-header }
 site-data-removing-dialog =
     .title = { site-data-removing-header }
     .buttonlabelaccept = 삭제
 site-data-removing-header = 쿠키와 사이트 데이타 삭제
-site-data-removing-desc = 쿠키와 사이트 데이타를 삭제하면 웹사이트에서 로그아웃 될 수 있습니다. 변경하시겠어요?
+site-data-removing-desc = 쿠키와 사이트 데이타를 삭제하면 웹사이트에서 로그아웃 될 수 있습니다. 변경하시겠습니까?
 site-data-removing-table = 다음 사이트의 쿠키와 사이트 데이타가 삭제됨

@@ -3,8 +3,8 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY pref.cookies.title             "Cookie">
-<!-- cookies -->
 
+<!-- cookies -->
 
 <!ENTITY cookiePolicy.label             "Cookie 接受策略">
 
@@ -17,7 +17,7 @@
 <!ENTITY acc3rdPartyVisited.label       "只允许之前访问过的网站保留第三方 Cookie">
 <!ENTITY acc3rdPartyVisited.accesskey   "v">
 
-<!ENTITY accAllCookies.label            "接受所有 cookie">
+<!ENTITY accAllCookies.label            "接受所有 Cookie">
 <!ENTITY accAllCookies.accesskey        "c">
 
 <!ENTITY cookieRetentionPolicy.label    "Cookie 存留策略">
@@ -31,11 +31,6 @@
 <!ENTITY acceptforNDays.label           "接受 Cookie 于">
 <!ENTITY acceptforNDays.accesskey       "f">
 <!ENTITY days.label                     "天">
-
-<!ENTITY warnAboutCookies.label         "询问每个 Cookie">
-<!ENTITY warnAboutCookies.accesskey     "A">
-<!ENTITY forCurrentSession.label        "除会话的 Cookie 外">
-<!ENTITY forCurrentSession.accesskey    "e">
 
 <!ENTITY manageCookies.label            "管理 Cookie 和站点">
 <!ENTITY manageCookiesDescription.label "您可以查看和管理已存储的 Cookie 以及各站点接受和拒绝 Cookie 的设置。各站点的设置会覆盖以上设置。">

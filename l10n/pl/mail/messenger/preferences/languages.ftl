@@ -26,3 +26,20 @@ messenger-languages-window =
     .style = width: 40em
 
 messenger-languages-description = { -brand-short-name } będzie wyświetlał pierwszy język jako domyślny, a języki zastępcze w razie potrzeby i w tej kolejności.
+
+messenger-languages-search = Wyszukaj więcej języków…
+
+messenger-languages-searching =
+    .label = Wyszukiwanie języków…
+
+messenger-languages-downloading =
+    .label = Pobieranie…
+
+messenger-languages-select-language =
+    .label = Wybierz język do dodania…
+    .placeholder = Wybierz język do dodania…
+
+messenger-languages-installed-label = Zainstalowane języki
+messenger-languages-available-label = Dostępne języki
+
+messenger-languages-error = { -brand-short-name } obecnie nie może uaktualnić listy języków. Sprawdź połączenie z Internetem lub spróbuj ponownie.

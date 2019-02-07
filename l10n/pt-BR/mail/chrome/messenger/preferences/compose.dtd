@@ -26,9 +26,9 @@
 <!ENTITY useReaderDefaults.accesskey          "d">
 <!ENTITY fontColor.label                      "Cor do texto:">
 <!ENTITY fontColor.accesskey                  "C">
-<!ENTITY bgColor.label                        "Cor do plano de fundo:">
+<!ENTITY bgColor.label                        "Cor de fundo:">
 <!ENTITY bgColor.accesskey                    "u">
-<!ENTITY restoreHTMLDefaults.label            "Restaurar o padrão">
+<!ENTITY restoreHTMLDefaults.label            "Restaurar padrão">
 <!ENTITY restoreHTMLDefaults.accesskey        "R">
 <!ENTITY defaultToParagraph.label             "Usar formato de parágrafo em vez do corpo do texto por padrão">
 <!ENTITY defaultToParagraph.accesskey         "P">
@@ -62,8 +62,8 @@
 <!ENTITY showAsDefault.accesskey               "P">
 <!ENTITY showAsDefaultLast.label               "Último diretório usado">
 
-<!ENTITY sendOptionsDescription.label          "Configure o comportamento do formato de texto.">
-<!ENTITY sendOptions.label                     "Formato de envio…">
+<!ENTITY sendOptionsDescription.label          "Configurar comportamento de formatação de texto">
+<!ENTITY sendOptions.label                     "Opções de envio…">
 <!ENTITY sendOptions.accesskey                 "m">
 
 <!ENTITY attachmentReminder.label              "Detectar ausência de anexos">

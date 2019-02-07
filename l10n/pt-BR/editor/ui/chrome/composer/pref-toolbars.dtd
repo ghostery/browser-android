@@ -15,7 +15,7 @@
 <!ENTITY copy.label             "Copiar">
 <!ENTITY paste.label            "Colar">
 <!ENTITY print.label            "Imprimir">
-<!ENTITY find.label             "Localizar">
+<!ENTITY find.label             "Procurar">
 <!ENTITY image.label            "Imagem">
 <!ENTITY hline.label            "Linha H.">
 <!ENTITY table.label            "Tabela">

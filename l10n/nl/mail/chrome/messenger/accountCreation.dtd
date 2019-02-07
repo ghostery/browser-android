@@ -31,6 +31,8 @@
 <!ENTITY auth.label                      "Authenticatie">
 <!ENTITY imap.label                      "IMAP">
 <!ENTITY pop3.label                      "POP3">
+<!-- LOCALIZATION NOTE(exchange.label): Do not translate Exchange, it is a product name. -->
+<!ENTITY exchange.label                  "Exchange">
 <!ENTITY smtp.label                      "SMTP">
 <!ENTITY autodetect.label                "Autodetectie">
 <!-- LOCALIZATION NOTE(noEncryption.label): Neither SSL/TLS nor STARTTLS.
@@ -38,6 +40,9 @@
 <!ENTITY noEncryption.label              "Geen">
 <!ENTITY starttls.label                  "STARTTLS">
 <!ENTITY sslTls.label                    "SSL/TLS">
+
+<!-- LOCALIZATION NOTE(exchange-hostname.label): Do not translate Exchange, it is a product name. -->
+<!ENTITY exchange-hostname.label         "Exchange-server:">
 
 <!ENTITY advancedSetup.label             "Uitgebreide configuratie">
 <!ENTITY advancedSetup.accesskey         "c">

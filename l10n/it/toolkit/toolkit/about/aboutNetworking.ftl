@@ -1,0 +1,59 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+title = Informazioni sulla rete
+warning = Si tratta di una funzione sperimentale. Non utilizzare senza la supervisione di un adulto.
+show-next-time-checkbox = Visualizza nuovamente questo avviso in futuro
+ok = OK
+http = HTTP
+sockets = Socket
+dns = DNS
+websockets = WebSocket
+refresh = Aggiorna
+auto-refresh = Aggiorna automaticamente ogni 3 secondi
+hostname = Nome server
+port = Porta
+http2 = HTTP/2
+ssl = SSL
+active = Attivo
+idle = Inattivo
+host = Server
+tcp = TCP
+sent = Inviati
+received = Ricevuti
+family = Famiglia
+trr = TRR
+addresses = Indirizzi
+expires = Scadenza (secondi)
+messages-sent = Messaggi inviati
+messages-received = Messaggi ricevuti
+bytes-sent = Byte inviati
+bytes-received = Byte ricevuti
+logging = Registrazione log
+log-tutorial = Consultare la pagina <a data-l10n-name="logging">HTTP Logging</a> per istruzioni sull’utilizzo di questo strumento.
+current-log-file = File di log corrente:
+current-log-modules = Moduli di log correnti:
+set-log-file = Imposta file di log
+set-log-modules = Imposta moduli di log
+start-logging = Avvia registrazione
+stop-logging = Interrompi registrazione
+dns-lookup = DNS lookup
+dns-lookup-button = Risolvi
+dns-domain = Dominio:
+dns-lookup-table-column = IP
+rcwn = Statistiche RCWN
+rcwn-status = Stato RCWN
+rcwn-cache-won-count = Numero vittorie cache
+rcwn-net-won-count = Numero vittorie rete
+total-network-requests = Numero complessivo richieste di rete
+rcwn-operation = Operazione cache
+rcwn-perf-open = Apertura
+rcwn-perf-read = Lettura
+rcwn-perf-write = Scrittura
+rcwn-perf-entry-open = Elementi aperti
+rcwn-avg-short = Media breve
+rcwn-avg-long = Media lunga
+rcwn-std-dev-long = Deviazione standard lunga
+rcwn-cache-slow = Conteggio cache lenta
+rcwn-cache-not-slow = Conteggio cache non lenta

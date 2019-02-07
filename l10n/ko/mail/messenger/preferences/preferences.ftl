@@ -8,3 +8,7 @@ manage-messenger-languages-button =
     .accesskey = l
 confirm-messenger-language-change-description = 변경사항 적용을 위해 { -brand-short-name }를 재시작
 confirm-messenger-language-change-button = 적용하고 재시작
+update-pref-write-failure-title = 저장 실패
+# Variables:
+#   $path (String) - Path to the configuration file
+update-pref-write-failure-message = 설정을 저장할 수 없습니다. 파일에 저장할 수 없습니다: { $path }

@@ -10,8 +10,6 @@ app-manager-remove =
     .label = Verwijderen
     .accesskey = V
 
-app-manager-handle-webfeeds = De volgende toepassingen kunnen worden gebruikt voor het verwerken van Webfeeds.
-
 # Variables:
 #   $type (String) - the URI scheme of the link (e.g. mailto:)
 app-manager-handle-protocol = De volgende toepassingen kunnen worden gebruikt voor het verwerken van { $type }-koppelingen.

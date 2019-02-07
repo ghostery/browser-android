@@ -94,13 +94,13 @@
 
 <!ENTITY view.label               "Ver">
 <!ENTITY view.accesskey           "V">
-<!ENTITY byDate.label             "Pela data">
+<!ENTITY byDate.label             "Por data">
 <!ENTITY byDate.accesskey         "t">
-<!ENTITY bySite.label             "Pelo site">
+<!ENTITY bySite.label             "Por site">
 <!ENTITY bySite.accesskey         "s">
-<!ENTITY byMostVisited.label      "Pelo número de visitas">
+<!ENTITY byMostVisited.label      "Por número de visitas">
 <!ENTITY byMostVisited.accesskey  "P">
-<!ENTITY byLastVisited.label      "Pela última visita">
+<!ENTITY byLastVisited.label      "Por último visitado">
 <!ENTITY byLastVisited.accesskey  "u">
-<!ENTITY byDayAndSite.label       "Pela data e site">
+<!ENTITY byDayAndSite.label       "Por data e site">
 <!ENTITY byDayAndSite.accesskey   "t">

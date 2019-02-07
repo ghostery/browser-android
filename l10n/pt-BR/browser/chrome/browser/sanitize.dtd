@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY sanitizePrefs2.title          "Configurações para a limpeza do histórico">
+<!ENTITY sanitizePrefs2.title          "Configurações para limpeza do histórico">
 <!-- LOCALIZATION NOTE (sanitizePrefs2.modal.width): width of the Clear History on Shutdown dialog.
      Should be large enough to contain the item* strings on a single line.
      The column width should be set at half of the dialog width. -->
@@ -13,9 +13,7 @@
 <!-- LOCALIZATION NOTE (sanitizeDialog2.width): width of the Clear Recent History dialog -->
 <!ENTITY sanitizeDialog2.width         "34em">
 
-<!ENTITY clearDataSettings3.label     "Quando eu fechar o &brandShortName;, ele deve limpar tudo automaticamente">
-
-<!ENTITY clearDataSettings4.label     "Ao fechar o &brandShortName; deve limpar tudo automaticamente">
+<!ENTITY clearDataSettings4.label     "Ao fechar, o &brandShortName; deve limpar automaticamente:">
 
 <!-- XXX rearrange entities to match physical layout when l10n isn't an issue -->
 <!-- LOCALIZATION NOTE (clearTimeDuration.*): "Time range to clear" dropdown.
@@ -31,18 +29,12 @@
 that require it.  -->
 <!ENTITY clearTimeDuration.suffix         "">
 
-<!-- LOCALIZATION NOTE (detailsProgressiveDisclosure.*): Labels and accesskeys
-     of the "Details" progressive disclosure button.  See UI mockup at bug
-     480169 -->
-<!ENTITY detailsProgressiveDisclosure.label     "Detalhes">
-<!ENTITY detailsProgressiveDisclosure.accesskey "D">
-
 <!ENTITY historySection.label         "Navegação">
 <!ENTITY dataSection.label            "Dados">
 
 <!ENTITY itemHistoryAndDownloads.label     "Histórico de navegação e downloads">
 <!ENTITY itemHistoryAndDownloads.accesskey "H">
-<!ENTITY itemFormSearchHistory.label       "Campos memorizados de páginas e da pesquisa">
+<!ENTITY itemFormSearchHistory.label       "Histórico de formulários e pesquisa">
 <!ENTITY itemFormSearchHistory.accesskey   "C">
 <!ENTITY itemCookies.label                 "Cookies">
 <!ENTITY itemCookies.accesskey             "o">

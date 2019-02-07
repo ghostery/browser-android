@@ -561,12 +561,19 @@ public class CrashReporterActivity extends AppCompatActivity
                 submittedDir.mkdirs();
                 minidumpFile.delete();
                 extrasFile.delete();
+                /* Cliqz Strart o/
+                The mozilla server repsonded with a CrashID after crash report was sent.
+                And this crashid was used to store the report in a file. Cliqz endpoint doesnt respond
+                with a CrashID that's why we got a NPE.
+                Commenting out the part which created this file. Don't think we need it.
+
                 String crashid = responseMap.get("CrashID");
                 File file = new File(submittedDir, crashid + ".txt");
                 FileOutputStream fos = new FileOutputStream(file);
                 fos.write("Crash ID: ".getBytes());
                 fos.write(crashid.getBytes());
                 fos.close();
+                /o Cliqz End */
             } else {
                 Log.i(LOGTAG, "Received failure HTTP response code from server: " + conn.getResponseCode());
             }

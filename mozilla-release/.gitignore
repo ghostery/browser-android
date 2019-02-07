@@ -13,6 +13,8 @@ ID
 .DS_Store*
 *.pdb
 *.egg-info
+# Filesystem temporaries
+.fuse_hidden*
 
 # Vim swap files.
 .*.sw[a-z]
@@ -153,3 +155,6 @@ lextab.py
 !.vscode/tasks.json
 
 **/index.android.bundle
+# Ignore temp files created by patch command.
+*.orig
+*.rej

@@ -13,6 +13,8 @@
 <!ENTITY SendMailTo.accesskey              "s">
 <!ENTITY CopyEmailAddress.label            "複製電子郵件地址">
 <!ENTITY CopyEmailAddress.accesskey        "C">
+<!ENTITY CopyNameAndEmailAddress.label     "複製姓名與電子郵件地址">
+<!ENTITY CopyNameAndEmailAddress.accesskey "N">
 <!ENTITY CreateFilterFrom.label            "由此建立篩選器…">
 <!ENTITY CreateFilterFrom.accesskey        "F">
 <!ENTITY openInBrowser.label               "用瀏覽器開啟">
@@ -27,4 +29,3 @@
 <!ENTITY OpenMessageForMsgId.accesskey     "O">
 <!ENTITY OpenBrowserWithMsgId.label        "在瀏覽器開啟此 Message-ID 的郵件">
 <!ENTITY OpenBrowserWithMsgId.accesskey    "B">
-

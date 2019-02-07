@@ -363,4 +363,12 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
             }
         });
     }
+
+    /* Cliqz Start */
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        mEditText.setLightTheme(isLightTheme);
+        mThemeBackground.setLightTheme(isLightTheme);
+    }
+    /* Cliqz End */
 }

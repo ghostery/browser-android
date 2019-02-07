@@ -17,7 +17,7 @@
 <!ENTITY palette.label "Paleta:">
 <!ENTITY standardPalette.label "Padrão">
 <!ENTITY webPalette.label "Todas as cores web">
-<!ENTITY background.label "Plano de fundo para:">
+<!ENTITY background.label "Fundo para:">
 <!ENTITY background.accessKey "u">
 <!ENTITY table.label "Tabela">
 <!ENTITY table.accessKey "T">

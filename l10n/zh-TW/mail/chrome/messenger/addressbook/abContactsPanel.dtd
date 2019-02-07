@@ -36,7 +36,7 @@
 <!ENTITY editMailingListContext.label       "編輯清單">
 <!ENTITY editMailingListContext.accesskey   "E">
 
-<!ENTITY newContactAbContext.label          "新增聯絡人">
+<!ENTITY newContactAbContext.label          "新增連絡人">
 <!ENTITY newContactAbContext.accesskey      "C">
 <!ENTITY newListAbContext.label             "新增群組名單">
 <!ENTITY newListAbContext.accesskey         "L">

@@ -13,6 +13,8 @@
 <!ENTITY SendMailTo.accesskey              "о">
 <!ENTITY CopyEmailAddress.label            "Копировать адрес электронной почты">
 <!ENTITY CopyEmailAddress.accesskey        "п">
+<!ENTITY CopyNameAndEmailAddress.label     "Копировать имя и адрес электронной почты">
+<!ENTITY CopyNameAndEmailAddress.accesskey "я">
 <!ENTITY CreateFilterFrom.label            "Создать фильтр из…">
 <!ENTITY CreateFilterFrom.accesskey        "з">
 <!ENTITY openInBrowser.label               "Открыть в браузере">

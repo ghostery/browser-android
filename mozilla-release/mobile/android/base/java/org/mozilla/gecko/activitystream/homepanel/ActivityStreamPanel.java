@@ -109,7 +109,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
 
         contentRecyclerView = (RecyclerView) findViewById(R.id.activity_stream_main_recyclerview);
         contentRecyclerView.setAdapter(adapter);
-        contentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        contentRecyclerView.setLayoutManager(/* Cliqz */ new CustomLinearLayoutManager(context));
         contentRecyclerView.setHasFixedSize(true);
         /* Cliqz Start */
         contentRecyclerView.setNestedScrollingEnabled(false);
@@ -139,8 +139,8 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         customizeNewTabView = findViewById(R.id.customize_newtab_view);
         customizeNewTabViewSnackBar = findViewById(R.id.customize_newtab_snackbar);
 
-        final TextView goToSettings = (TextView) customizeNewTabView.findViewById(R.id.go_to_settings);
-        goToSettings.setOnClickListener(new View.OnClickListener() {
+        final View customizeTabLink = customizeNewTabView.findViewById(R.id.customize_tab_link);
+        customizeTabLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Intent intent = new Intent(context, GeckoPreferences.class);
@@ -455,6 +455,18 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     private boolean isNewsEnabled(){
         final SharedPreferences prefs = GeckoSharedPrefs.forApp(getContext());
         return  prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_ENABLED,true);
+    }
+
+    // Disable predictive animations, see https://stackoverflow.com/a/33985508/1122966
+    private static class CustomLinearLayoutManager extends LinearLayoutManager {
+        CustomLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+        @Override
+        public boolean supportsPredictiveItemAnimations() {
+            return false;
+        }
     }
     /* Cliqz end */
 }

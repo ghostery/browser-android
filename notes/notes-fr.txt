@@ -1,0 +1,12 @@
+Merci pour vos commentaires. Ils ont été étudiés et nous avons veillé à l'améliorer.
+
+La dernière mise à jour intègre
+* performances grandement améliorées - différence perceptible
+* stabilité accrue
+* personnalisation simplifiée de la page de démarrage - paramétrez à votre image !
+* mise à jour du bloqueur de publicités et de la protection contre le pistage
+* navigation simplifiée depuis vos favoris 
+* plus de conflits avec Gmail - toutes nos excuses !
+* correction de bugs
+
+Bonne navigation !

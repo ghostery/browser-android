@@ -30,6 +30,8 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
 import android.preference.TwoStatePreference;
@@ -66,7 +68,6 @@ import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.BrowserLocaleManager;
 import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.EventDispatcher;
-import org.mozilla.gecko.Experiments;
 import org.mozilla.gecko.GeckoApplication;
 import org.mozilla.gecko.GeckoProfile;
 import org.mozilla.gecko.GeckoSharedPrefs;
@@ -84,7 +85,6 @@ import org.mozilla.gecko.mma.MmaDelegate;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.restrictions.Restrictable;
 import org.mozilla.gecko.restrictions.Restrictions;
-import org.mozilla.gecko.switchboard.SwitchBoard;
 import org.mozilla.gecko.tabqueue.TabQueueHelper;
 import org.mozilla.gecko.tabqueue.TabQueuePrompt;
 import org.mozilla.gecko.updater.UpdateServiceHelper;
@@ -273,9 +273,17 @@ public class GeckoPreferences
     public static final String PREFS_SHOW_CUSTOMIZE_TAB_VIEW = "pref.show.customize_tab.view";
     public static final String PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR = "pref.show.customize_tab.snackbar";
 
+    public static final String PREF_CATEGORY_START_TAB = "pref.cliqz.start.tab";
+
+    public static final String PREFS_BLUE_THEME = "pref.cliqz.blue.theme";
+
+    private CheckBoxPreference mShowBackgroundPref;
+    private PreferenceManager mPreferenceManager;
     /* Cliqz end */
 
     private final Map<String, PrefHandler> HANDLERS;
+
+    private Fragment mCurrentPreferenceFragment;
 
     {
         final HashMap<String, PrefHandler> tempHandlers = new HashMap<>(2);
@@ -712,6 +720,7 @@ public class GeckoPreferences
       *         to monitor changes to Gecko prefs.
       */
     public PrefsHelper.PrefHandler setupPreferences(PreferenceGroup prefs) {
+        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
         ArrayList<String> list = new ArrayList<String>();
         setupPreferences(prefs, list);
         return getGeckoPreferences(prefs, list);
@@ -957,23 +966,29 @@ public class GeckoPreferences
                         pref.setEnabled(isHealthReportEnabled);
 
                         // Instruct the user on how to enable Health Report
-                        final String RIGHT_CHEVRON_SPACE_PADDED = " > ";
-                        final StringBuilder healthReportSettingPath = new StringBuilder()
-                                .append(getString(R.string.pref_category_privacy_short))
-                                .append(RIGHT_CHEVRON_SPACE_PADDED)
-                                .append(getString(R.string.pref_category_datareporting))
-                                .append(RIGHT_CHEVRON_SPACE_PADDED)
-                                .append(getString(R.string.datareporting_fhr_title));
-                        final SpannableString boldSettingsLocation = new SpannableString(healthReportSettingPath);
-                        boldSettingsLocation.setSpan(new StyleSpan(Typeface.BOLD),
-                                0, healthReportSettingPath.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                        final String healthReportSettingPath =
+                                getString(R.string.pref_feature_tips_notification_enabling_path);
+                        final String enableHealthReportHint =
+                                getString(R.string.pref_feature_tips_notification_enabling_hint);
 
-                        final SpannableStringBuilder summaryTextBuilder = new SpannableStringBuilder()
-                                .append(getString(R.string.pref_feature_tips_notification_summary))
+                        final int healthReportPathFirstCharIndex =
+                                enableHealthReportHint.indexOf(healthReportSettingPath);
+                        if (healthReportPathFirstCharIndex < 0) {
+                            return;
+                        }
+                        final int healthReportPathLastCharIndex =
+                                healthReportPathFirstCharIndex + healthReportSettingPath.length();
+
+                        final SpannableString enableHealthReportBoldedHint =
+                                new SpannableString(enableHealthReportHint);
+                        enableHealthReportBoldedHint.setSpan(new StyleSpan(Typeface.BOLD),
+                                healthReportPathFirstCharIndex, healthReportPathLastCharIndex,
+                                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+                        SpannableStringBuilder summaryTextBuilder = new SpannableStringBuilder()
+                                .append(enableHealthReportBoldedHint)
                                 .append("\n\n")
-                                .append(getString(R.string.pref_feature_tips_notification_enabling_hint))
-                                .append(" ")
-                                .append(boldSettingsLocation);
+                                .append(getString(R.string.pref_feature_tips_notification_summary));
 
                         pref.setSummary(summaryTextBuilder);
                     }
@@ -984,8 +999,7 @@ public class GeckoPreferences
                     continue;
                 } else if (PREFS_ENABLE_HUMAN_WEB.equals(key)) {
                     // set value of human web
-                    final PreferenceManager preferenceManager = PreferenceManager.getInstance((getApplicationContext()));
-                    ((SwitchPreference)pref).setChecked(preferenceManager.isHumanWebEnabled());
+                    ((SwitchPreference)pref).setChecked(mPreferenceManager.isHumanWebEnabled());
                 } else if (PREFS_RATE_US.equals(key)){
                     // add navigate to playstore when click on rate cliqz browser
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -1001,8 +1015,7 @@ public class GeckoPreferences
                     pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
-                            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-                            preferenceManager.setMyOffrzOnboardingEnabled(true);
+                            mPreferenceManager.setMyOffrzOnboardingEnabled(true);
                             // TODO: enable all OnBoarding here.
                             return true;
                         }
@@ -1047,14 +1060,11 @@ public class GeckoPreferences
                     continue;
                 //Set up ghostery preferences
                 } else if (PREFS_GHOSTERY_AUTO_UPDATE.equals(key)) {
-                     final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-                    ((CheckBoxPreference) pref).setChecked(preferenceManager.isGhosteryAutoUpdateEnabled());
+                    ((CheckBoxPreference) pref).setChecked(mPreferenceManager.isGhosteryAutoUpdateEnabled());
                 } else if (PREFS_GHOSTERY_ALLOW_FIRST_PARTY.equals(key)) {
-                     final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-                    ((CheckBoxPreference) pref).setChecked(preferenceManager.areFirstPartyTrackersAllowed());
+                    ((CheckBoxPreference) pref).setChecked(mPreferenceManager.areFirstPartyTrackersAllowed());
                 } else if (PREFS_GHOSTERY_BLOCK_NEW_TRACKERS.equals(key)) {
-                     final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-                    ((CheckBoxPreference) pref).setChecked(preferenceManager.areNewTrackersBlocked());
+                    ((CheckBoxPreference) pref).setChecked(mPreferenceManager.areNewTrackersBlocked());
                 } else if (PREFS_GEO_REPORTING.equals(key)) {
                      pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                          @Override
@@ -1075,8 +1085,7 @@ public class GeckoPreferences
                          }
                      });
                 } else if(PREFS_SEARCH_REGIONAL.equals(key)) {
-                    final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-                    final String value = preferenceManager.getSearchRegional();
+                    final String value = mPreferenceManager.getSearchRegional();
                     ((ListPreference) pref).setValue(value);
                     ((ListPreference) pref).setSummary(new Countries(getBaseContext()).getCountryName(value));
                 } else if (PREFS_DEFAULT_BROWSER.equals(key)) {
@@ -1114,6 +1123,14 @@ public class GeckoPreferences
                     preferences.removePreference(pref);
                     i--;
                     continue;
+                } else if(PREFS_CLIQZ_TAB_BACKGROUND_ENABLED.equals(key)) {
+                    mShowBackgroundPref = (CheckBoxPreference)pref;
+                    if(mPreferenceManager.isLightThemeEnabled()) {
+                        preferences.removePreference(pref);
+                        i--;
+                    }
+                } else if(PREFS_BLUE_THEME.equals(key)) {
+                    pref.setOnPreferenceChangeListener(this);
                 }
                 /* Cliqz end */
 
@@ -1398,37 +1415,33 @@ public class GeckoPreferences
             return onLocaleSelected(Locales.getLanguageTag(lastLocale), (String) newValue);
         }
 
+
         /* Cliqz Start */
         if (PREFS_TELEMETRY_ENABLED.equals(prefName)) {
             PrefsHelper.setPref(PREFS_TELEMETRY_ENABLED, (Boolean) newValue);
             return true;
         }
         if (PREFS_GHOSTERY_AUTO_UPDATE.equals(prefName)) {
-            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-            preferenceManager.setGhosteryAutoUpdate((boolean)newValue);
+            mPreferenceManager.setGhosteryAutoUpdate((boolean)newValue);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("enable_autoupdate", (boolean)newValue);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
             return true;
         }
         if (PREFS_GHOSTERY_ALLOW_FIRST_PARTY.equals(prefName)) {
-            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-            preferenceManager.setAllowFirstPartyTrackers((boolean)newValue);
+            mPreferenceManager.setAllowFirstPartyTrackers((boolean)newValue);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("ignore_first_party", (boolean)newValue);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
             return true;
         }
         if (PREFS_GHOSTERY_BLOCK_NEW_TRACKERS.equals(prefName)) {
-            final PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
-            preferenceManager.setBlockNewTrackers((boolean)newValue);
+            mPreferenceManager.setBlockNewTrackers((boolean)newValue);
             final GeckoBundle geckoBundle = new GeckoBundle();
             geckoBundle.putBoolean("block_by_default", (boolean)newValue);
             EventDispatcher.getInstance().dispatch("Privacy:SetInfo", geckoBundle);
             return true;
         }
-        /* Cliqz End */
-
         if (PREFS_MENU_CHAR_ENCODING.equals(prefName)) {
             setCharEncodingState(((String) newValue).equals("true"));
         } else if (PREFS_UPDATER_AUTODOWNLOAD.equals(prefName)) {
@@ -1448,7 +1461,7 @@ public class GeckoPreferences
             // If it was just enabled, we should also try to start Mma immediately
             // provided that all the other requirements to start Mma are met.
             informMmaStatusChanged(newBooleanValue);
-        /* Cliqz Start o/
+        /*
         } else if (PREFS_GEO_REPORTING.equals(prefName)) {
             if ((Boolean) newValue) {
                 enableStumbler((CheckBoxPreference) preference);
@@ -1457,7 +1470,7 @@ public class GeckoPreferences
                 broadcastStumblerPref(GeckoPreferences.this, false);
                 return true;
             }
-        /o Cliqz End */
+        */
         } else if (PREFS_TAB_QUEUE.equals(prefName)) {
             if ((Boolean) newValue && !TabQueueHelper.canDrawOverlays(this)) {
                 Intent promptIntent = new Intent(this, TabQueuePrompt.class);
@@ -1475,7 +1488,17 @@ public class GeckoPreferences
             // Tell Gecko to transmit the current search engine data again, so
             // BrowserSearch is notified immediately about the new enabled state.
             EventDispatcher.getInstance().dispatch("SearchEngines:GetVisible", null);
+        } else if (PREFS_BLUE_THEME.equals(prefName)) {
+            final PreferenceCategory categoryStartTab = (PreferenceCategory)
+                    ((PreferenceFragment) mCurrentPreferenceFragment)
+                            .findPreference(PREF_CATEGORY_START_TAB);
+            if ((boolean) newValue) {
+                categoryStartTab.addPreference(mShowBackgroundPref);
+            } else {
+                categoryStartTab.removePreference(mShowBackgroundPref);
+            }
         }
+        /* Cliqz End */
 
         // Send Gecko-side pref changes to Gecko
         if (isGeckoPref(prefName)) {
@@ -1893,5 +1916,12 @@ public class GeckoPreferences
         setResult(RESULT_CODE_EXIT_SETTINGS);
         finishChoosingTransition();
     }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        this.mCurrentPreferenceFragment = fragment;
+    }
+
     /* Cliqz end */
 }

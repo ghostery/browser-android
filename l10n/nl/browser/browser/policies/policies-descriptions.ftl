@@ -23,8 +23,6 @@ policy-BlockAboutSupport = Toegang tot de about:support-pagina blokkeren.
 
 policy-Bookmarks = Bladwijzers maken in de Bladwijzerwerkbalk, het menu Bladwijzers, of een hierbinnen opgegeven map.
 
-policy-Certificates = Of ingebouwde certificaten wel of niet worden gebruikt. Deze beleidsregel geldt op dit moment alleen voor Windows.
-
 policy-CertificatesDescription = Certificaten toevoegen of ingebouwde certificaten gebruiken.
 
 policy-Cookies = Toestaan of weigeren dat websites cookies instellen.
@@ -61,8 +59,6 @@ policy-DisableProfileRefresh = De knop { -brand-short-name } opfrissen in de abo
 policy-DisableSafeMode = De functie voor het herstarten in Veilige modus uitschakelen. Noot: de Shift-toets voor het betreden van de Veilige modus kan in Windows alleen worden uitgeschakeld via Groepsbeleid.
 
 policy-DisableSecurityBypass = Voorkomen dat de gebruiker bepaalde beveiligingsinstellingen omzeilt.
-
-policy-DisableSetDesktopBackground = De menuopdracht Als bureaubladachtergrond instellen uitschakelen.
 
 policy-DisableSetAsDesktopBackground = De menuopdracht Als bureaubladachtergrond instellen voor afbeeldingen uitschakelen.
 

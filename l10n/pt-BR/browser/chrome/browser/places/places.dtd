@@ -78,7 +78,6 @@
 <!ENTITY col.url.label           "Endereço">
 <!ENTITY col.mostrecentvisit.label "Recentemente visitado">
 <!ENTITY col.visitcount.label    "Número de visitas">
-<!ENTITY col.description.label   "Descrição">
 <!ENTITY col.dateadded.label     "Adicionado">
 <!ENTITY col.lastmodified.label  "Última modificação">
 
@@ -95,22 +94,17 @@
 
 <!ENTITY forwardButton.tooltip  "Avançar">
 
-<!ENTITY detailsPane.more.label "Mais">
-<!ENTITY detailsPane.more.accesskey "M">
-<!ENTITY detailsPane.less.label "Menos">
-<!ENTITY detailsPane.less.accesskey "M">
-
 <!ENTITY detailsPane.selectAnItemText.description "Selecione um item para ver e editar as suas propriedades">
 
 <!ENTITY view.label               "Exibir">
 <!ENTITY view.accesskey           "b">
-<!ENTITY byDate.label             "Pela data">
+<!ENTITY byDate.label             "Por data">
 <!ENTITY byDate.accesskey         "d">
-<!ENTITY bySite.label             "Pelo site">
+<!ENTITY bySite.label             "Por site">
 <!ENTITY bySite.accesskey         "P">
-<!ENTITY byMostVisited.label      "Pelo número de visitas">
+<!ENTITY byMostVisited.label      "Por número de visitas">
 <!ENTITY byMostVisited.accesskey  "o">
-<!ENTITY byLastVisited.label      "Pela última visita">
+<!ENTITY byLastVisited.label      "Por último visitado">
 <!ENTITY byLastVisited.accesskey  "e">
-<!ENTITY byDayAndSite.label       "Pela data e site">
+<!ENTITY byDayAndSite.label       "Por data e site">
 <!ENTITY byDayAndSite.accesskey   "a">

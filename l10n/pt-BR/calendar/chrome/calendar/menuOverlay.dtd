@@ -33,9 +33,9 @@
 <!ENTITY calendar.menu.customize.label          "Personalizar…">
 <!ENTITY calendar.menu.customize.accesskey      "z">
 
-<!ENTITY showUnifinderCmd.label                 "Localizar eventos">
+<!ENTITY showUnifinderCmd.label                 "Procurar eventos">
 <!ENTITY showUnifinderCmd.accesskey             "L">
-<!ENTITY showUnifinderCmd.tooltip               "Alternar painel Localizar eventos">
+<!ENTITY showUnifinderCmd.tooltip               "Alternar o painel de procurar eventos">
 
 <!ENTITY calendar.displaytodos.checkbox.label       "Exibir tarefas na agenda">
 <!ENTITY calendar.displaytodos.checkbox.accesskey   "t">
