@@ -24,6 +24,7 @@ RUN apt-get update && \
     python-pip \
     python-virtualenv \
     sqlite3 \
+    git \
     zlib1g-dev && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -62,7 +63,7 @@ SHELL ["/bin/bash", "-l", "-c"]
 
 #Installation of 'appium' & 'wd' for Integration Tests
 ENV NPM_CONFIG_PREFIX=~/.npm-global
-RUN npm install --global appium wd npm@latest
+RUN npm install --global appium wd npm@6.5.0
 
 #Install Ruby and Fastlane
 RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \
