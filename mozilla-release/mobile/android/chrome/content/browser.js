@@ -6516,6 +6516,7 @@ var Cliqz = {
     };
 
     GlobalEventDispatcher.registerListener(this, [
+      "Search:Backends",
       "Search:Hide",
       "Search:Search",
       "Search:Show",
@@ -6560,7 +6561,22 @@ var Cliqz = {
       });
     });
 
-    this._syncSearchPrefs();
+    var searchRegional = Services.prefs.getCharPref("pref.search.regional", null);
+    if (searchRegional == null) {
+      // First start after install we didn't set a default
+      this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => {
+        const ls = Services.prefs.getCharPref("intl.locale.os", "").split("-").map(v => v.toLowerCase());
+        var foundBackend = ls.find(v => countries.hasOwnProperty(v));
+        if (foundBackend) {
+          Services.prefs.setCharPref("pref.search.regional", foundBackend);
+        } else {
+          Services.prefs.setCharPref("pref.search.regional", "us");
+        }
+        Cliqz._syncSearchPrefs();
+      });
+    } else {
+      this._syncSearchPrefs();
+    }
   },
 
   READY_STATUS: {
@@ -6575,19 +6591,27 @@ var Cliqz = {
       contextId: "mobile-cards",
     }
     msg.source = "ANDROID_BROWSER";
+    let resolver;
     if (this.extensionsReady[id] === this.READY_STATUS.NOT_READY) {
       this.extensionsMessageQueue[id].push({
-        msg: Object.assign({}, msg),
-        opts: opts
+        message: {
+          msg: Object.assign({}, msg),
+          opts: opts
+        },
+        resolver: (r) => { resolver(r); },
       });
       msg.ping = true;
       this.extensionsReady[id] = this.READY_STATUS.PINGED;
     } else if (this.extensionsReady[id] === this.READY_STATUS.PINGED) {
-      this.extensionsMessageQueue[id].push({
-        msg: msg,
-        opts: opts
+      return new Promise((resolve) => {
+        this.extensionsMessageQueue[id].push({
+          message: {
+            msg: msg,
+            opts: opts
+          },
+          resolver: resolve,
+        });
       });
-      return;
     }
 
     msg.requestId = this.messageId++;
@@ -6606,7 +6630,6 @@ var Cliqz = {
       responseType: 3 // MessageChannel.RESPONSE_NONE
     }]);
 
-    let resolver;
     const promise = new Promise(r => { resolver = r; });
     this.callbacks[msg.requestId] = resolver;
     return promise;
@@ -6748,7 +6771,9 @@ var Cliqz = {
     this.extensionsReady[id] = this.READY_STATUS.READY;
     const queue = this.extensionsMessageQueue[id];
     this.extensionsMessageQueue[id] = [];
-    queue.forEach(obj => this.messageExtension(obj.msg, obj.opts));
+    queue.forEach(obj => {
+      obj.resolver(this.messageExtension(obj.message.msg, obj.message.opts));
+    });
   },
 
   _extensionListener(ev) {
@@ -6853,7 +6878,7 @@ var Cliqz = {
         });
         break;
       case "Search:Backends":
-        this.messageExtension({ module: 'search', action: "getBackendCountries" })
+        this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => callback.onSuccess(countries));
         break;
       case "Search:Hide":
         this.isVisible = false;
