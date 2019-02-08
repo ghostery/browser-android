@@ -92,7 +92,7 @@ def matrix = [
 def baseImage
 def codeImage
 def id
-node ('master'){
+node ('kria'){
     def dockerTag = ""
     stage('Checkout') {
         checkout scm
