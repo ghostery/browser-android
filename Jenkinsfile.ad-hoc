@@ -138,7 +138,7 @@ def build(Map m){
                         sh '''#!/bin/bash -l
                             set -e
                             set -x
-                            cd freshtab
+                            cd /app/freshtab
                             npm ci
                             npm run build
                         '''
