@@ -110,7 +110,7 @@ public class ToolbarEditText extends CustomEditText
         /* Cliqz start */
         EventDispatcher.getInstance().registerUiThreadListener(this,
                 "Search:Autocomplete", null);
-        mPreferenceManager = PreferenceManager.getInstance(mContext);
+        mPreferenceManager = PreferenceManager.getInstance();
         updateTheme();
         /* Cliqz end */
     }

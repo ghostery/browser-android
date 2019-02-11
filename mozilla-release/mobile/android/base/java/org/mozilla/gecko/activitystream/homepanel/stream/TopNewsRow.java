@@ -29,7 +29,7 @@ public class TopNewsRow extends StreamViewHolder {
         super(itemView);
         final Context context = itemView.getContext();
 
-        mPreferenceManager = PreferenceManager.getInstance(context);
+        mPreferenceManager = PreferenceManager.getInstance();
 
         final RecyclerView newsRView = (RecyclerView) itemView.findViewById(R.id.news_recyclerview);
         mTopNewsAdapter = new TopNewsAdapter(context, onUrlOpenListener);

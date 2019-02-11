@@ -720,7 +720,7 @@ public class GeckoPreferences
       *         to monitor changes to Gecko prefs.
       */
     public PrefsHelper.PrefHandler setupPreferences(PreferenceGroup prefs) {
-        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+        mPreferenceManager = PreferenceManager.getInstance();
         ArrayList<String> list = new ArrayList<String>();
         setupPreferences(prefs, list);
         return getGeckoPreferences(prefs, list);
@@ -1391,7 +1391,6 @@ public class GeckoPreferences
         final String prefName = preference.getKey();
         Log.i(LOGTAG, "Changed " + prefName + " = " + newValue);
         recordSettingChangeTelemetry(prefName, newValue);
-        final PreferenceManager preferenceManager = PreferenceManager.getInstance();
         if (PREFS_MP_ENABLED.equals(prefName)) {
             showDialog((Boolean) newValue ? DIALOG_CREATE_MASTER_PASSWORD : DIALOG_REMOVE_MASTER_PASSWORD);
 
