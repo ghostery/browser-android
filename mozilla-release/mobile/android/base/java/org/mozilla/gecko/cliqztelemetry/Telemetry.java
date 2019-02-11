@@ -39,11 +39,11 @@ public class Telemetry {
 
     @SuppressLint("StaticFieldLeak")
     private static Telemetry instance;
-    private PreferenceManager preferenceManager;
+    private PreferenceManager mPreferenceManager;
 
     private Telemetry(Context context) {
         this.context = context;
-        preferenceManager = PreferenceManager.getInstance(context);
+        mPreferenceManager = PreferenceManager.getInstance(context);
     }
 
     public static void init(Context context) {
@@ -63,7 +63,7 @@ public class Telemetry {
     }
 
     private void sendEnvironmentSignal() {
-        final long timeSinceLastSignal = getUnixTimeStamp() - preferenceManager.getTimeOfLastEnvSignal();
+        final long timeSinceLastSignal = getUnixTimeStamp() - mPreferenceManager.getTimeOfLastEnvSignal();
         if (timeSinceLastSignal < ENVIRONMENT_SIGNAL_TIME_LIMIT) {
             return;
         }
@@ -75,7 +75,7 @@ public class Telemetry {
             signal.put(TelemetryKeys.VERSION, AppConstants.CLIQZ_PRIVACY_VERSION);
             signal.put(TelemetryKeys.VERSION_DIST, BuildConfig.VERSION_NAME);
             signal.put(TelemetryKeys.VERSION_OS, Build.VERSION.SDK_INT);
-            preferenceManager.setTimeOfLastEnvSignal(getUnixTimeStamp());
+            mPreferenceManager.setTimeOfLastEnvSignal(getUnixTimeStamp());
             saveSignal(signal, false);
         } catch (JSONException e) {
             logError(TelemetryKeys.ENVIRONMENT);
@@ -141,13 +141,13 @@ public class Telemetry {
 
     //adds session id. timestamp, sequence number to the signals
     private void addIdentifiers(JSONObject signal) {
-        int telemetrySequence = preferenceManager.getAutoIncrementSequenceNumber();
+        int telemetrySequence = mPreferenceManager.getAutoIncrementSequenceNumber();
         try {
-            final String sessionId = preferenceManager.getSessionId();
+            final String sessionId = mPreferenceManager.getSessionId();
             if (sessionId.isEmpty()) {
-                preferenceManager.setSessionId(generateSessionID());
+                mPreferenceManager.setSessionId(generateSessionID());
             }
-            signal.put(TelemetryKeys.SESSION, preferenceManager.getSessionId());
+            signal.put(TelemetryKeys.SESSION, mPreferenceManager.getSessionId());
             signal.put(TelemetryKeys.TIME_STAMP, getUnixTimeStamp());
             signal.put(TelemetryKeys.TELEMETRY_SEQUENCE, telemetrySequence);
         } catch (JSONException e) {

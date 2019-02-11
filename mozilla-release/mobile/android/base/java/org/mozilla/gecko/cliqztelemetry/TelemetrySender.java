@@ -47,8 +47,8 @@ class TelemetrySender implements Runnable {
     }
 
     private void sendAllTelemetryFiles() {
-        File directory = context.getFilesDir();
-        File[] telemetryLogs = directory.listFiles(new FilenameFilter() {
+        final File directory = context.getFilesDir();
+        final File[] telemetryLogs = directory.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
                 return filename.startsWith(TELEMETRY_LOG_PREFIX);

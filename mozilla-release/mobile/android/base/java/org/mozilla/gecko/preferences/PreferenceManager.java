@@ -145,7 +145,7 @@ public class PreferenceManager {
     public int getAutoIncrementSequenceNumber() {
         final int sequenceNumber = mAppSharedPreferences.getInt(TELEMETRY_SEQUENCE, 0);
         final SharedPreferences.Editor editor = mAppSharedPreferences.edit();
-        editor.putInt(TELEMETRY_SEQUENCE, (sequenceNumber + 1) % 2147483647).apply();
+        editor.putInt(TELEMETRY_SEQUENCE, (sequenceNumber + 1) % Integer.MAX_VALUE).apply();
         return sequenceNumber;
     }
     
