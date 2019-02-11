@@ -1599,11 +1599,11 @@ public class BrowserApp extends GeckoApp
                         final @StringRes int snackbarText;
                         if (!db.isPinnedForAS(cr, url)) {
                             db.pinSiteForAS(getContentResolver(), url, selectedTab.getTitle());
-                            snackbarText = R.string.pinned_page_to_top_sites;
+                            snackbarText = R.string.cliqz_pinned_page_to_top_sites;
                             telemetryExtraBuilder.set(ActivityStreamTelemetry.Contract.ITEM, ActivityStreamTelemetry.Contract.ITEM_PIN);
                         } else {
                             db.unpinSiteForAS(getContentResolver(), url);
-                            snackbarText = R.string.unpinned_page_from_top_sites;
+                            snackbarText = R.string.cliqz_unpinned_page_from_top_sites;
                             telemetryExtraBuilder.set(ActivityStreamTelemetry.Contract.ITEM, ActivityStreamTelemetry.Contract.ITEM_UNPIN);
                         }
 
@@ -3597,7 +3597,7 @@ public class BrowserApp extends GeckoApp
             final MenuItem pinToTopSitesItem = aMenu.findItem(R.id.pin_to_top_sites);
             if (pinToTopSitesItem != null) {
                 // This title is set dynamically so we reset it for this edge case.
-                pinToTopSitesItem.setTitle(R.string.contextmenu_pin_to_top_sites);
+                pinToTopSitesItem.setTitle(R.string.cliqz_contextmenu_pin_to_top_sites);
             }
 
             return true;
@@ -3815,7 +3815,7 @@ public class BrowserApp extends GeckoApp
 
         // Set initial state before async query completes.
         item.setEnabled(false); // Disable interaction.
-        item.setTitle(R.string.contextmenu_pin_to_top_sites);
+        item.setTitle(R.string.cliqz_contextmenu_pin_to_top_sites);
 
         ThreadUtils.postToBackgroundThread(new Runnable() {
             @Override
@@ -3825,7 +3825,7 @@ public class BrowserApp extends GeckoApp
                     @Override
                     public void run() {
                         item.setTitle(isPinned ?
-                                R.string.contextmenu_unpin_from_top_sites : R.string.contextmenu_pin_to_top_sites);
+                                R.string.cliqz_contextmenu_unpin_from_top_sites : R.string.cliqz_contextmenu_pin_to_top_sites);
                         item.setEnabled(true);
                     }
                 });

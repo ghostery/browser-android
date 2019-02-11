@@ -316,3 +316,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Already available!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "Add-on was not installed as &formatS1; is already integrated in your browser.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Pin to Top Sites">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Unpin from Top Sites">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Add Page Shortcut">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Pinned page to Top Sites">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Unpinned page from Top Sites">
