@@ -140,7 +140,6 @@ import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationHelper;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
-import org.mozilla.gecko.preferences.Countries;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.promotion.ReaderViewBookmarkPromotion;
@@ -814,10 +813,6 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
         /* Cliqz start */
-        //Forcing the default right away, otherwise extension wont have the right default until and
-        //unless user opens the settings
-        PrefsHelper.setPrefIfNotExists(GeckoPreferences.PREFS_SEARCH_REGIONAL,
-                new Countries(this).getDefaultCountryCode());
         mBrowserSearchContainer = findViewById(R.id.search_container);
         mBrowserSearch = (BrowserSearch) getSupportFragmentManager().findFragmentByTag(BROWSER_SEARCH_TAG);
         if (mBrowserSearch == null) {

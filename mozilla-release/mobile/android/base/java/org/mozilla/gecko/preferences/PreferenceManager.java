@@ -93,11 +93,6 @@ public class PreferenceManager {
                 true);
     }
 
-    public String getSearchRegional() {
-        return mAppSharedPreferences.getString(GeckoPreferences.PREFS_SEARCH_REGIONAL,new
-                Countries(mContext).getDefaultCountryCode());
-    }
-
     public boolean isAutocompleteEnabled() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_AUTO_COMPLETE, true);
     }
