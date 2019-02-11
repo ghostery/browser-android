@@ -6525,7 +6525,8 @@ var Cliqz = {
       "Privacy:Hide",
       "Privacy:SetInfo",
       "Privacy:Show",
-      "Privacy:SetBlockingPolicy"
+      "Privacy:SetBlockingPolicy",
+      "Browser:ChangeTheme"
     ]);
 
     ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
@@ -6917,6 +6918,11 @@ var Cliqz = {
           name: 'updateBlocking',
           message: blockingPolicy
         });
+        break;
+      case "Browser:ChangeTheme":
+        const theme = data.isLightTheme ? "white" : "blue";
+        Cliqz.messageExtension({ action: "changeBrowserTheme", args:[theme] });
+        break;
     }
   }
 };
