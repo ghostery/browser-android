@@ -27,17 +27,18 @@ allprojects {
     }
 
     repositories {
-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
-            maven {
-                url repository
-            }
-        }
+        mavenCentral()
         maven {
             url "$rootDir/../freshtab/node_modules/react-native/android"
         }
         maven {
             // Local Maven repo containing AARs with JSC library built for Android
             url "$rootDir/../freshtab/node_modules/jsc-android/dist"
+        }
+        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+            maven {
+                url repository
+            }
         }
     }
 }
