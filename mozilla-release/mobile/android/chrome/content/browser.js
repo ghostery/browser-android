@@ -6520,13 +6520,13 @@ var Cliqz = {
       "Search:Hide",
       "Search:Search",
       "Search:Show",
+      "Search:ChangeTheme",
       "Privacy:AdblockToggle",
       "Privacy:GetInfo",
       "Privacy:Hide",
       "Privacy:SetInfo",
       "Privacy:Show",
-      "Privacy:SetBlockingPolicy",
-      "Browser:ChangeTheme"
+      "Privacy:SetBlockingPolicy"
     ]);
 
     ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
@@ -6919,9 +6919,9 @@ var Cliqz = {
           message: blockingPolicy
         });
         break;
-      case "Browser:ChangeTheme":
+      case "Search:ChangeTheme":
         const theme = data.isLightTheme ? "white" : "blue";
-        Cliqz.messageExtension({ action: "changeBrowserTheme", args:[theme] });
+        Cliqz.messageExtension({ action: "changeBrowserTheme", args: [theme] });
         break;
     }
   }
