@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "build": "node node_modules/react-native/local-cli/cli.js bundle --platform android --entry-file index.js --bundle-output ../mozilla-release/mobile/android/app/src/main/assets/index.android.bundle --dev=false"
+    "build": "node node_modules/react-native/local-cli/cli.js bundle --platform android --entry-file index.js --bundle-output ../mozilla-release/mobile/android/app/src/main/assets/index.android.bundle --dev=false --reset-cache",
+    "build.dev": "node node_modules/react-native/local-cli/cli.js bundle --platform android --entry-file index.js --bundle-output ../mozilla-release/mobile/android/app/src/main/assets/index.android.bundle --dev=true --reset-cache"
   },
   "devDependencies": {
     "jsc-android": "^236355.1.1"
   },
   "dependencies": {
-    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/master/1.34.0.1b161.34e3c38.tgz",
+    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/master/1.34.0.1b168.91f00a3.tgz",
     "cliqz-logo-database": "^0.1.2",
     "moment": "^2.24.0",
     "react": "^16.6.3",
