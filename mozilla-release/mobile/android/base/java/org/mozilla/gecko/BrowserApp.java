@@ -3275,7 +3275,7 @@ public class BrowserApp extends GeckoApp
      * if a new page is not being loaded.
      */
     private void hideHomePager(final String url) {
-        if (!isHomePagerVisible() || AboutPages.isAboutHome(url)) {
+        if (!isHomePagerVisible() || url == null || url.isEmpty() || AboutPages.isAboutHome(url)) {
             return;
         }
 
