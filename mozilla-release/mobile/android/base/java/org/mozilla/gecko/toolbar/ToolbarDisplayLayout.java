@@ -178,7 +178,7 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         mPrivateDomainColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.url_bar_domaintext_private));
         // add Https Color span */
         mHttpsColorSpan = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.general_blue_color));
-        mPreferenceManager = PreferenceManager.getInstance(getContext());
+        mPreferenceManager = PreferenceManager.getInstance();
         /* Cliqz end */
 
         mSiteSecurity = (ThemedImageButton) findViewById(R.id.site_security);

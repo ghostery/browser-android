@@ -69,7 +69,7 @@ public class CliqzIntroPagerAdapter extends PagerAdapter {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             final Context context = compoundButton.getContext().getApplicationContext();
-            final PreferenceManager preferenceManager = PreferenceManager.getInstance(context);
+            final PreferenceManager preferenceManager = PreferenceManager.getInstance();
             PrefsHelper.setPref(TELEMETRY_PREF_NAME, b);
             preferenceManager.setHumanWebEnabled(b);
         }

@@ -58,7 +58,7 @@ class Ghosty extends ToolbarRoundButton implements View.OnClickListener {
 
     private void initialize(Context context) {
         setOnClickListener(this);
-        mIsLightTheme = PreferenceManager.getInstance(getContext()).isLightThemeEnabled();
+        mIsLightTheme = PreferenceManager.getInstance().isLightThemeEnabled();
         mPaint = new Paint();
         final Resources res = context.getResources();
         final Resources.Theme theme = context.getTheme();

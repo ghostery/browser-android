@@ -53,6 +53,7 @@ import org.mozilla.gecko.notifications.NotificationHelper;
 import org.mozilla.gecko.permissions.Permissions;
 import org.mozilla.gecko.preferences.DistroSharedPrefsImport;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.pwa.PwaUtils;
 import org.mozilla.gecko.telemetry.TelemetryBackgroundReceiver;
 import org.mozilla.gecko.util.ActivityResultHandler;
@@ -402,6 +403,8 @@ public class GeckoApplication extends Application
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(LOG_TAG, "Can't find " + getPackageName(), e);
         }
+
+        PreferenceManager.init(getApplicationContext());
         /* Cliqz end */
 
         super.onCreate();

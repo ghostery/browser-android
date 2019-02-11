@@ -62,7 +62,7 @@ public class TopPanelRow extends StreamViewHolder {
         super(itemView);
 
         /* Cliqz Start */
-        mPreferenceManager = PreferenceManager.getInstance(itemView.getContext());
+        mPreferenceManager = PreferenceManager.getInstance();
         emptyTopSitesOnboarding = itemView.findViewById(R.id.empty_topsites_onboarding);
         /* Cliqz End */
 

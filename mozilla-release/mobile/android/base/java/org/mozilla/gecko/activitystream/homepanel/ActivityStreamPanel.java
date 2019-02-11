@@ -104,7 +104,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         sharedPreferences = GeckoSharedPrefs.forProfile(context);
 
         /* Cliqz Start */
-        preferenceManager = PreferenceManager.getInstance(context);
+        preferenceManager = PreferenceManager.getInstance();
         /* Cliqz End */
 
         contentRecyclerView = (RecyclerView) findViewById(R.id.activity_stream_main_recyclerview);

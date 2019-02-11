@@ -1011,7 +1011,7 @@ public class BrowserApp extends GeckoApp
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
 
-        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+        mPreferenceManager = PreferenceManager.getInstance();
         updateTheme();
         /* Cliqz End */
     }
