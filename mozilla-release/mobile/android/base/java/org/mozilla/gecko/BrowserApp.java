@@ -878,6 +878,7 @@ public class BrowserApp extends GeckoApp
             "Search:Ready",
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
+            "Search:Focus",
             /* Cliqz end */
             null);
 
@@ -2397,6 +2398,11 @@ public class BrowserApp extends GeckoApp
                                 GeckoBundleUtils.safeGetString(message,"data")))
                         .setPositiveButton(getString(R.string.action_ok),null)
                         .show();
+                break;
+            case "Search:Focus":
+                final String searchQuery = message.getString("query");
+                enterEditingMode();
+                mBrowserToolbar.urlEditLayout.setText(searchQuery);
                 break;
             /* Cliqz end */
 
