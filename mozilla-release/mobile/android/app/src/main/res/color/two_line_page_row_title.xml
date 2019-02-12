@@ -6,7 +6,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
-    <!-- Cliqz begin -->
+    <!-- Cliqz start -->
+    <item android:color="@color/light_theme_start_tab_font_color"  gecko:light_theme="true" />
+
     <!-- private browsing mode -->
     <item android:color="@color/history_favorites_row_private"
           gecko:state_private="true"/>

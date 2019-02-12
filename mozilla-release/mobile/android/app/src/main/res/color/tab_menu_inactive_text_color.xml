@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2019 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:gecko="http://schemas.android.com/apk/res-auto">
+
+    <item gecko:light_theme="true" android:color="@color/general_blue_color_opaque"/>
+    <item android:color="@android:color/white" />
+
+</selector>

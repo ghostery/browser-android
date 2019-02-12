@@ -12,14 +12,12 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -37,7 +35,6 @@ import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.myoffrz.MyOffrzLoader;
 import org.mozilla.gecko.preferences.GeckoPreferences;
-import org.mozilla.gecko.widget.themed.ThemedImageView;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 
 /**
@@ -64,8 +61,10 @@ class TabMenuStripLayout extends ThemedLinearLayout
     private float prevProgress;
     private final int tabContentStart;
     private final boolean titlebarFill;
-    private final int activeTextColor;
-    private final ColorStateList inactiveTextColor;
+    /* Cliqz Start */
+    private final ColorStateList activeTabDrawableColor;
+    private final ColorStateList inactiveTabDrawableColor;
+    /* Cliqz End */
     private final ColorStateList stripColor;
 
     TabMenuStripLayout(Context context, AttributeSet attrs) {
@@ -76,9 +75,10 @@ class TabMenuStripLayout extends ThemedLinearLayout
 
         titlebarFill = a.getBoolean(R.styleable.TabMenuStrip_titlebarFill, false);
         tabContentStart = a.getDimensionPixelSize(R.styleable.TabMenuStrip_tabsMarginLeft, 0);
-        activeTextColor = a.getColor(R.styleable.TabMenuStrip_activeTextColor,
-                                     ResourcesCompat.getColor(getResources(), R.color.text_and_tabs_tray_grey, null));
-        inactiveTextColor = a.getColorStateList(R.styleable.TabMenuStrip_inactiveTextColor);
+        /* Cliqz Start */
+        activeTabDrawableColor = a.getColorStateList(R.styleable.TabMenuStrip_activeTextColor);
+        inactiveTabDrawableColor = a.getColorStateList(R.styleable.TabMenuStrip_inactiveTextColor);
+        /* Cliqz End*/
         stripColor = a.getColorStateList(R.styleable.TabMenuStrip_stripColor);
         a.recycle();
 
@@ -117,6 +117,9 @@ class TabMenuStripLayout extends ThemedLinearLayout
                 .inflate(R.layout.tab_menu_strip, this, false);
         imageView.setId(iconId); //for automation test purpose
         imageView.setImageResource(iconId);
+        final int inactiveTabTintColor = inactiveTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
+
+        DrawableCompat.setTint(DrawableCompat.wrap(imageView.getDrawable()), inactiveTabTintColor);
         addView(imageView);
         imageView.setOnClickListener(new ViewClickListener(getChildCount() - 1));
         imageView.setOnFocusChangeListener(this);
@@ -133,7 +136,20 @@ class TabMenuStripLayout extends ThemedLinearLayout
 
     void onPageSelected(final int position) {
         /*Cliqz Start*/
+        final int activeTabTintColor = activeTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
+        final int inactiveTabTintColor = inactiveTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
+        // Tint all tabs drawable.
+        for (int i = 0; i < getChildCount(); i++) {
+            final boolean isTabSelected = this.getChildAt(i).isSelected();
+            DrawableCompat.setTint(DrawableCompat.wrap(((ImageView) this.getChildAt(i)).getDrawable()),
+                    isTabSelected ? activeTabTintColor : inactiveTabTintColor);
+        }
+
         selectedView = (ImageView) getChildAt(position);
+
+        // Tint the selected tabs drawable.
+        DrawableCompat.setTint(DrawableCompat.wrap(selectedView.getDrawable()), activeTabTintColor);
+
         // Just to remove the badge from the Offrz page
         selectedView.setSelected(false);
         /*Cliqz End*/
@@ -365,14 +381,21 @@ class TabMenuStripLayout extends ThemedLinearLayout
     @Override
     public void setLightTheme(boolean isLightTheme) {
         super.setLightTheme(isLightTheme);
-
-        strip = DrawableCompat.wrap(strip);
         if (stripColor != null) {
             final int backgroundTintColor = stripColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
+            final int activeTabTintColor = activeTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
+            final int inactiveTabTintColor = inactiveTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
+            strip = DrawableCompat.wrap(strip);
             DrawableCompat.setTint(strip, backgroundTintColor);
+            // Tint all tabs drawable.
             for (int i = 0; i < getChildCount(); i++) {
-                DrawableCompat.setTint(((ImageView) this.getChildAt(i)).getDrawable(),
-                        backgroundTintColor);
+                final boolean isTabSelected = this.getChildAt(i).isSelected();
+                DrawableCompat.setTint(DrawableCompat.wrap(((ImageView) this.getChildAt(i)).getDrawable()),
+                        isTabSelected ? activeTabTintColor : inactiveTabTintColor);
+            }
+            // Tint the selected tabs drawable.
+            if (selectedView != null) {
+                DrawableCompat.setTint(DrawableCompat.wrap(selectedView.getDrawable()), activeTabTintColor);
             }
         }
     }

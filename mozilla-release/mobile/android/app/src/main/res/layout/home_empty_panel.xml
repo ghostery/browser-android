@@ -3,6 +3,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:gecko="http://schemas.android.com/apk/res-auto"
               android:id="@+id/home_empty_view"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -24,7 +25,7 @@
                android:gravity="top|center"
                android:scaleType="fitCenter"/>
 
-    <TextView
+    <org.mozilla.gecko.widget.ShadowedThemedTextView
         android:id="@+id/home_empty_text"
         style="@style/CliqzEmptyLayoutTextTitle"
         android:layout_width="wrap_content"

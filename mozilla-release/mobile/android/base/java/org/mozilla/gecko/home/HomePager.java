@@ -605,8 +605,7 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
             /* Cliqz Start */
             if (position == 0) {
                 ((HomeAdapter) getAdapter()).updateBgAlpha(positionOffset);
-            }
-            if (position == 1) {
+            } else if (position == 1) {
                 ((HomeAdapter) getAdapter()).updateBgAlpha(1.0f);
             }
             /* Cliqz End */
@@ -712,6 +711,9 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         super.setLightTheme(isLightTheme);
         if (mTabStrip != null) {
             ((TabMenuStrip) mTabStrip).setLightTheme(isLightTheme);
+        }
+        if (getAdapter() != null) {
+            ((HomeAdapter) getAdapter()).setLightTheme(isLightTheme);
         }
     }
 

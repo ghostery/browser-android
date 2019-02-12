@@ -13,7 +13,6 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.db.BrowserContract;
@@ -102,6 +101,7 @@ public class CliqzSimplifiedHistoryAdapter extends RecyclerView.Adapter<Combined
         switch (itemType) {
             case SECTION_HEADER:
                 ((CombinedHistoryItem.HeaderItem) viewHolder).textView.setText(getSectionHeaderTitle(sectionHeaders.get(localPosition)));
+                ((CombinedHistoryItem.HeaderItem) viewHolder).updateTheme();
                 break;
 
             case HISTORY:
@@ -109,8 +109,13 @@ public class CliqzSimplifiedHistoryAdapter extends RecyclerView.Adapter<Combined
                     throw new IllegalStateException("Couldn't move cursor to position " + localPosition);
                 }
                 ((CombinedHistoryItem.HistoryItem) viewHolder).bind(historyCursor);
+                ((CombinedHistoryItem.HistoryItem) viewHolder).updateTheme();
                 break;
         }
+    }
+
+    void updateTheme() {
+        notifyDataSetChanged();
     }
 
     /**

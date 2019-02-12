@@ -115,7 +115,7 @@
     </declare-styleable>
 
     <declare-styleable name="FadedTextView">
-        <attr name="fadeWidth" format="dimension"/>
+        <attr name="fadeWidth" format="dimension|reference"/>
     </declare-styleable>
 
     <declare-styleable name="FadedMultiColorTextView">
@@ -204,6 +204,13 @@
 
     <declare-styleable name="LightTheme">
         <attr name="light_theme" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="ShadowedThemedTextView">
+        <attr name="shadowColors" format="color|reference"/>
+        <attr name="android:shadowDx"/>
+        <attr name="android:shadowDy"/>
+        <attr name="android:shadowRadius"/>
     </declare-styleable>
     <!-- Cliqz End -->
 </resources>

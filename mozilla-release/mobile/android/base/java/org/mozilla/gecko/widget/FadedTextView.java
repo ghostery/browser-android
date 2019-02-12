@@ -17,7 +17,7 @@ import org.mozilla.gecko.widget.themed.ThemedTextView;
  * An implementation of FadedTextView should fade the end of the text
  * by gecko:fadeWidth amount, if the text is too long and requires an ellipsis.
  */
-public abstract class FadedTextView extends ThemedTextView {
+public abstract class FadedTextView extends ShadowedThemedTextView {
     // Width of the fade effect from end of the view.
     protected final int fadeWidth;
 
