@@ -21,11 +21,11 @@ trans.zh_CN = l10n/zh-CN/mobile/android/base/cliqz_strings.dtd
 trans.zh_TW = l10n/zh-TW/mobile/android/base/cliqz_strings.dtd
 type = DTD
 
-[ghostery-android-test.release_notes]
-file_filter = notes/notes-<lang>.txtnotes.txt
+[ghostery-android-app.release_notes]
+file_filter = notes/notes-<lang>.txt
 minimum_perc = 0
 source_file = notes/notes.txt
-source_lang = en_US
+source_lang = en
 trans.de = notes/notes-de.txt
 trans.es = notes/notes-es.txt
 trans.fr = notes/notes-fr.txt
