@@ -206,12 +206,16 @@ public abstract class BrowserDB {
     /* Cliqz start */
     /**
      * Search the keyword in the history urls or page titles, the <code>Cursor</code> is ordered
-     * by last visit date descending and number of visit descending.
+     * by combined remote+local frecency score.
+     * Local visits are preferred, so they will by far outweigh remote visits.
+     * sBookmarked history items get extra frecency points.
      *
      * @param query a string to search in the urls or the page titles
      * @param limit return at most limit elements
      */
-    @Nullable public abstract Cursor getHistoryForQuery(@NonNull ContentResolver cr, @NonNull String query, int limit);
+    @Nullable public abstract Cursor getRankedHistoryForQuery(@NonNull ContentResolver cr, @NonNull String query, int limit);
+
+
     /* Cliqz end */
 
     public static BrowserDB from(final Context context) {
