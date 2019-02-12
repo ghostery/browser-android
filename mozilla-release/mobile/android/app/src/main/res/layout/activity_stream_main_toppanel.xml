@@ -2,11 +2,77 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<com.booking.rtlviewpager.RtlViewPager
+<!-- Cliqz Start -->
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginTop="10dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/topsites_pager"
-    android:contentDescription="@string/activity_stream_topsites" />
+    android:layout_height="wrap_content"
+    tools:background="@android:color/black">
 
+    <com.booking.rtlviewpager.RtlViewPager
+        android:id="@+id/topsites_pager"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/activity_stream_topsites" />
+
+    <LinearLayout
+        android:id="@+id/empty_topsites_onboarding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/activity_stream_empty_topsites"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            tools:text="Top sites appear here" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="12dp"
+                android:layout_weight="1"
+                android:src="@drawable/top_sites_placeholder_item" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="12dp"
+                android:layout_weight="1"
+                android:src="@drawable/top_sites_placeholder_item" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="12dp"
+                android:layout_weight="1"
+                android:src="@drawable/top_sites_placeholder_item" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="12dp"
+                android:layout_weight="1"
+                android:src="@drawable/top_sites_placeholder_item" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
+<!-- Cliqz End -->

@@ -1,5 +1,6 @@
 package org.mozilla.gecko.preferences;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -19,6 +20,7 @@ public class PreferenceManager {
     private static final String TELEMETRY_SEQUENCE = "telemetrysequence";
     private static final String TIME_OF_LAST_SIGNAL = "timelastenvsignal";
     private final SharedPreferences mAppSharedPreferences;
+    @SuppressLint("StaticFieldLeak")
     private static PreferenceManager preferenceManager = null;
     private Context mContext;
 
@@ -27,10 +29,13 @@ public class PreferenceManager {
         mContext = context;
     }
 
-    public static PreferenceManager getInstance(Context context) {
+    public static void init(Context context) {
         if (preferenceManager == null) {
-            preferenceManager = new PreferenceManager(context);
+            preferenceManager = new PreferenceManager(context.getApplicationContext());
         }
+    }
+
+    public static PreferenceManager getInstance() {
         return preferenceManager;
     }
 
@@ -59,15 +64,15 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.PREFS_GHOSTERY_BLOCK_NEW_TRACKERS, value).apply();
     }
 
-    public boolean isGhosteryAutoUpdateEnabled() {
+    boolean isGhosteryAutoUpdateEnabled() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_GHOSTERY_AUTO_UPDATE, true);
     }
 
-    public boolean areFirstPartyTrackersAllowed() {
+    boolean areFirstPartyTrackersAllowed() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_GHOSTERY_ALLOW_FIRST_PARTY, true);
     }
 
-    public boolean areNewTrackersBlocked() {
+    boolean areNewTrackersBlocked() {
         return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_GHOSTERY_BLOCK_NEW_TRACKERS, false);
     }
 
@@ -75,7 +80,7 @@ public class PreferenceManager {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SEARCH_QUICKSEARCH_ENABLED,true);
     }
 
-    public boolean isHumanWebEnabled(){
+    boolean isHumanWebEnabled(){
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_ENABLE_HUMAN_WEB,true);
     }
 

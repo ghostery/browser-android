@@ -1011,7 +1011,7 @@ public class BrowserApp extends GeckoApp
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
 
-        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+        mPreferenceManager = PreferenceManager.getInstance();
         updateTheme();
         /* Cliqz End */
     }
@@ -2311,7 +2311,7 @@ public class BrowserApp extends GeckoApp
                 final int limit = query != null ? query.getInt("maxResults", 5) : 5;
                 final BrowserDB sdb = BrowserDB.from(getProfile());
                 final ContentResolver scr = getContentResolver();
-                final Cursor scu = sdb.getHistoryForQuery(scr, text, limit);
+                final Cursor scu = sdb.getRankedHistoryForQuery(scr, text, limit);
                 final GeckoBundle smessage = new GeckoBundle();
                 smessage.putString("text", text);
                 final ArrayList<GeckoBundle> results = new ArrayList<>(limit);
@@ -3276,7 +3276,7 @@ public class BrowserApp extends GeckoApp
      * if a new page is not being loaded.
      */
     private void hideHomePager(final String url) {
-        if (!isHomePagerVisible() || AboutPages.isAboutHome(url)) {
+        if (!isHomePagerVisible() || url == null || url.isEmpty() || AboutPages.isAboutHome(url)) {
             return;
         }
 

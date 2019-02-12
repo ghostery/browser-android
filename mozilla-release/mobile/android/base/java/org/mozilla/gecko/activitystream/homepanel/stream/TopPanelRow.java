@@ -27,7 +27,9 @@ public class TopPanelRow extends StreamViewHolder {
 
     /* Cliqz Start */
     private final PreferenceManager mPreferenceManager;
-    /* Cliqz End*/
+
+    private final View emptyTopSitesOnboarding;
+    /* Cliqz End */
 
     private static class SwipeListener extends ViewPager.SimpleOnPageChangeListener {
         int currentPosition = 0;
@@ -60,7 +62,8 @@ public class TopPanelRow extends StreamViewHolder {
         super(itemView);
 
         /* Cliqz Start */
-        mPreferenceManager = PreferenceManager.getInstance(itemView.getContext());
+        mPreferenceManager = PreferenceManager.getInstance();
+        emptyTopSitesOnboarding = itemView.findViewById(R.id.empty_topsites_onboarding);
         /* Cliqz End */
 
         topSitesPager = (ViewPager) itemView.findViewById(R.id.topsites_pager);
@@ -89,6 +92,17 @@ public class TopPanelRow extends StreamViewHolder {
             // The user has deleted history and removed all suggested sites.
             rows = 0;
         }
+
+        /* Cliqz Start */
+        if (cursor != null && cursor.getCount() == 0) {
+            emptyTopSitesOnboarding.setVisibility(View.VISIBLE);
+            topSitesPager.setVisibility(View.GONE);
+            return;
+        } else {
+            emptyTopSitesOnboarding.setVisibility(View.GONE);
+            topSitesPager.setVisibility(View.VISIBLE);
+        }
+        /* Cliqz End */
 
         ViewGroup.LayoutParams layoutParams = topSitesPager.getLayoutParams();
         layoutParams.height = rows > 0 ? (tilesSize * rows) + (tilesMargin * 2) : 0;

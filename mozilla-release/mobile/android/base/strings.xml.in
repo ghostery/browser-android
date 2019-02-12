@@ -717,6 +717,9 @@
   <string name="contextmenu_delete">&contextmenu_delete;</string>
   <string name="search_loading_message">&search_loading_message;</string>
 
+  <!-- Top Sites -->
+  <string name="activity_stream_empty_topsites">&activity_stream_empty_topsites;</string>
+
   <!-- News -->
   <string name="activity_stream_top_news">&activity_stream_top_news;</string>
   <string name="activity_stream_top_news_hide">&activity_stream_top_news_hide;</string>

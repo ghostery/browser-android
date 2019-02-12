@@ -290,7 +290,7 @@ public class PageActionLayout extends ThemedLinearLayout
         final Drawable icon = DrawableCompat.wrap(drawable.mutate());
         final int colorId;
         if (useTint) {
-            if (PreferenceManager.getInstance(getContext()).isLightThemeEnabled()) {
+            if (PreferenceManager.getInstance().isLightThemeEnabled()) {
                 colorId = android.R.color.white;
             } else {
                 colorId = R.color.general_blue_color;
