@@ -50,7 +50,7 @@
         <CheckBoxPreference
             android:key="pref.cliqz.tab.background.enabled"
             android:title="@string/pref_cliqz_tab_background"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
 
         <CheckBoxPreference
             android:key="pref.cliqz.tab.topsites.enabled"
