@@ -231,8 +231,8 @@ public class TwoLinePageRow extends ThemedLinearLayout
         } else {
             setUrl(R.string.switch_to_tab);
             /* Cliqz Start */
-            PreferenceManager preferenceManager = PreferenceManager.getInstance();
-            Drawable wrappedDrawable = DrawableCompat.wrap(
+            final PreferenceManager preferenceManager = PreferenceManager.getInstance();
+            final Drawable wrappedDrawable = DrawableCompat.wrap(
                     getResources().getDrawable(R.drawable.ic_url_bar_tab));
             DrawableCompat.setTint(wrappedDrawable,
                     preferenceManager.isLightThemeEnabled() ?
@@ -349,7 +349,7 @@ public class TwoLinePageRow extends ThemedLinearLayout
         mTitle.setLightTheme(isLightTheme);
         mUrl.setLightTheme(isLightTheme);
 
-        Drawable wrappedDrawable = DrawableCompat.wrap(
+        final Drawable wrappedDrawable = DrawableCompat.wrap(
                 getResources().getDrawable(R.drawable.ic_url_bar_tab));
         DrawableCompat.setTint(wrappedDrawable,
                 isLightTheme ?

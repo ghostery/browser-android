@@ -115,7 +115,7 @@
     </declare-styleable>
 
     <declare-styleable name="FadedTextView">
-        <attr name="fadeWidth" format="dimension|reference"/>
+        <attr name="fadeWidth" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="FadedMultiColorTextView">

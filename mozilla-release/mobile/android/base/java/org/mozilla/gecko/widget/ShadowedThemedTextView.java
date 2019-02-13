@@ -26,7 +26,7 @@ public class ShadowedThemedTextView extends ThemedTextView {
     }
 
     private void initialize(final Context context, final AttributeSet attrs, final int defStyle) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ShadowedThemedTextView);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ShadowedThemedTextView);
 
         final int attributeCount = a.getIndexCount();
 
