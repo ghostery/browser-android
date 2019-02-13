@@ -32,6 +32,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.cliqz.ABManager;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -405,6 +406,7 @@ public class GeckoApplication extends Application
         }
 
         PreferenceManager.init(getApplicationContext());
+        ABManager.init(getApplicationContext());
         /* Cliqz end */
 
         super.onCreate();

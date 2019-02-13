@@ -9,7 +9,7 @@ import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
 
 public class SystemAddon {
-    private static final String KEY_ACTION = "action";
+
     private static final String KEY_MODULE = "module";
     private static final String KEY_ARGS = "args";
     private static final String MESSAGE_NAME = "SystemAddon:Request";
@@ -19,6 +19,7 @@ public class SystemAddon {
     private static final String ACTION_GET_RUNNING_TESTS = "getRunningTests";
     private static final String KEY_DATA = "data";
     private static final String ACTION_STATUS = "status";
+    private static final String KEY_ACTION = "action";
 
     private SystemAddon() {}
 
