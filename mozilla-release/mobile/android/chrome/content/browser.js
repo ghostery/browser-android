@@ -6519,6 +6519,7 @@ var Cliqz = {
       "Search:Backends",
       "Search:Hide",
       "Search:Search",
+      "SystemAddon:Request",
       "Search:Show",
       "Privacy:AdblockToggle",
       "Privacy:GetInfo",
@@ -6730,14 +6731,6 @@ var Cliqz = {
           type: "Search:Ready"
         });
         break;
-      default:
-        console.log("unexpected message", msg);
-    }
-  },
-
-  _privacyExtensionListener(msg) {
-    console.log("Dispaching event from the privacy extension to native", msg.action);
-    switch (msg.action) {
       case "setIcon":
         var count = Number.parseInt(msg.payload.text);
         count = count ? count : 0;
@@ -6757,7 +6750,7 @@ var Cliqz = {
         // it will be considered ready when any message is sent from extension
         break;
       default:
-        console.log("unexpected message", msg);
+        console.log("unexpected message", msg.action);
     }
   },
 
@@ -6794,7 +6787,7 @@ var Cliqz = {
       let response;
       let sendCallback;
       if (data.recipient.extensionId === "firefox@ghostery.com") {
-        response = this._privacyExtensionListener(msg) || this._searchExtensionListener(msg);
+        response = this._searchExtensionListener(msg);
       }
       if ("requestId" in msg) {
         this.messageExtension({
@@ -6865,6 +6858,7 @@ var Cliqz = {
 
   onEvent: function(event, data, callback) {
     // event cases should be sorted in alphabitical order
+    console.log("message from native to system addon:", data.module, data.action);
     switch(event) {
       case "Search:Analysis":
         const { data: msg = {}, immediate = false, schema = "" } = data;
@@ -6888,6 +6882,16 @@ var Cliqz = {
           this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
           this.lastQueuedQuery = "";
         }
+        break;
+      case "SystemAddon:Request":
+        this.messageExtension({
+          module: data.module,
+          action: data.action,
+          args: data.args.map(arg => arg.data),
+        }).then(
+          response => callback.onSuccess(response),
+          error => callback.onError(error),
+        );
         break;
       case "Search:Show":
         this.isVisible = true; // save the state before search is initialized
