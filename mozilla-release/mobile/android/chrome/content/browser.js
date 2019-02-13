@@ -6666,7 +6666,7 @@ var Cliqz = {
     const id = 'firefox@ghostery.com';
     const uuid = UUIDMap.get(id);
     const theme = Services.prefs.getBoolPref("pref.cliqz.blue.theme", true) ? "blue" : "white";
-    const path = 'cliqz/mobile-cards/cards.html' + '?bg=' + theme;
+    const path = `cliqz/mobile-cards/cards.html?bg=${theme}`;
 
     this.Search = this._createBrowserForExtension(id);
     this.Search.browser.loadURI("moz-extension://" + uuid + "/" + path);
