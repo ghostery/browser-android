@@ -1118,20 +1118,16 @@ public class GeckoPreferences
                     preferences.removePreference(pref);
                     i--;
                     continue;
-                } /* else if(PREFS_CLIQZ_TAB_BACKGROUND_ENABLED.equals(key)) {
-                    mShowBackgroundPref = (CheckBoxPreference)pref;
-                    if(mPreferenceManager.isLightThemeEnabled()) {
-                        preferences.removePreference(pref);
-                        i--;
-                    }
-                } else if(PREFS_BLUE_THEME.equals(key)) {
-                    if (!BuildConfig.DEBUG && !BuildConfig.APPLICATION_ID.contains("alpha")) {
+                } else if (PREFS_CLIQZ_TAB_BACKGROUND_ENABLED.equals(key)) {
+                    mShowBackgroundPref = (CheckBoxPreference) pref;
+                    if (mPreferenceManager.isLightThemeEnabled()) {
                         preferences.removePreference(pref);
                         i--;
                         continue;
                     }
+                } else if (PREFS_BLUE_THEME.equals(key)) {
                     pref.setOnPreferenceChangeListener(this);
-                } */
+                }
                 /* Cliqz end */
 
                 // Some Preference UI elements are not actually preferences,
@@ -1492,7 +1488,9 @@ public class GeckoPreferences
                     ((PreferenceFragment) mCurrentPreferenceFragment)
                             .findPreference(PREF_CATEGORY_START_TAB);
             if ((boolean) newValue) {
-                categoryStartTab.addPreference(mShowBackgroundPref);
+                if (categoryStartTab.findPreference(PREFS_CLIQZ_TAB_BACKGROUND_ENABLED) == null) {
+                    categoryStartTab.addPreference(mShowBackgroundPref);
+                }
             } else {
                 categoryStartTab.removePreference(mShowBackgroundPref);
             }
