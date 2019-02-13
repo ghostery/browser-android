@@ -32,8 +32,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:maxLines="2"
-            android:textColor="@android:color/white"
             android:text="@string/activity_stream_empty_topsites"
+            android:textColor="@color/cliqz_start_tab_font_color"
             tools:text="Top sites appear here" />
 
         <LinearLayout
