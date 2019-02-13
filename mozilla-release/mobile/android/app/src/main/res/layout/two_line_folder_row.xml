@@ -5,6 +5,7 @@
 
 <!-- Cliqz Start -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:gecko="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".BrowserApp"
@@ -20,14 +21,14 @@
         android:paddingTop="15dp"
         android:paddingBottom="15dp">
 
-        <org.mozilla.gecko.widget.themed.ThemedImageView
+        <ImageView
             android:id="@+id/icon"
             android:layout_width="@dimen/ghostery_bookmark_folder_size"
             android:layout_height="@dimen/ghostery_bookmark_folder_size"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:src="@drawable/folder_closed"
+            gecko:srcCompat="@drawable/folder_closed"
             android:tint="@android:color/white" />
 
         <LinearLayout

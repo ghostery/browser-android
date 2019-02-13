@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/folder_closed"
+            gecko:srcCompat="@drawable/folder_closed"
             android:tint="@color/light_theme_start_tab_font_color" />
         <!-- Cliqz End -->
 
