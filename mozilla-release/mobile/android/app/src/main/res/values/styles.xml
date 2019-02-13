@@ -184,7 +184,7 @@
         <item name="android:ellipsize">none</item>
         <!-- Cliqz start -->
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:background">@color/about_page_header_grey</item>
+        <!-- Cliqz end -->
         <item name="android:drawablePadding">20dp</item>
     </style>
 

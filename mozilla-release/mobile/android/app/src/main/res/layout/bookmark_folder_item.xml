@@ -30,12 +30,15 @@
             android:layout_width="@dimen/bookmark_folder_child_padding"
             android:layout_height="1dp"/>
 
+        <!-- Cliqz Start -->
         <ImageView
             android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/folder_closed"/>
+            android:src="@drawable/folder_closed"
+            android:tint="@color/light_theme_start_tab_font_color" />
+        <!-- Cliqz End -->
 
         <org.mozilla.gecko.widget.FadedSingleColorTextView
             android:id="@+id/title"

@@ -20,14 +20,15 @@
         android:paddingTop="15dp"
         android:paddingBottom="15dp">
 
-        <ImageView
+        <org.mozilla.gecko.widget.themed.ThemedImageView
             android:id="@+id/icon"
             android:layout_width="@dimen/ghostery_bookmark_folder_size"
             android:layout_height="@dimen/ghostery_bookmark_folder_size"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:src="@drawable/folder_closed" />
+            android:src="@drawable/folder_closed"
+            android:tint="@android:color/white" />
 
         <LinearLayout
             android:layout_width="0dp"
