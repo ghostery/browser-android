@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -140,6 +141,8 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         customizeNewTabViewSnackBar = findViewById(R.id.customize_newtab_snackbar);
 
         final View customizeTabLink = customizeNewTabView.findViewById(R.id.customize_tab_link);
+        // TODO setBackground to transparent based on the AB group
+        // customizeTabLink.setBackgroundColor(Color.argb(0, 0, 0, 0));
         customizeTabLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

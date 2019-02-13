@@ -57,7 +57,8 @@ public class SelfHidingLinearLayout extends LinearLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         getLocationInWindow(mLocation);
-        if (mLocation[1] < WindowUtils.getLargestDimension(getContext()) - getHeight() - mNavBarHeight) {
+        LayoutParams params = (LayoutParams) getLayoutParams();
+        if (mLocation[1] < WindowUtils.getLargestDimension(getContext()) - getHeight() - mNavBarHeight - params.bottomMargin) {
             setVisibility(INVISIBLE);
         } else {
             setVisibility(VISIBLE);
