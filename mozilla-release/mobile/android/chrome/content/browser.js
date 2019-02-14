@@ -6566,8 +6566,9 @@ var Cliqz = {
     if (searchRegional == null) {
       // First start after install we didn't set a default
       this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => {
-        const ls = Services.prefs.getCharPref("intl.locale.os", "").split("-").map(v => v.toLowerCase());
-        var foundBackend = ls.find(v => countries.hasOwnProperty(v));
+        var [ lang, country ] = Services.prefs.getCharPref("intl.locale.os", "not_found").toLowerCase().split("-");
+        country = country ? country : lang;
+        var foundBackend = Object.keys(countries).find( v => country == v );
         if (foundBackend) {
           Services.prefs.setCharPref("pref.search.regional", foundBackend);
         } else {
