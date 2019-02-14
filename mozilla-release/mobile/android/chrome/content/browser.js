@@ -6858,7 +6858,6 @@ var Cliqz = {
 
   onEvent: function(event, data, callback) {
     // event cases should be sorted in alphabitical order
-    console.log("message from native to system addon:", data.module, data.action);
     switch(event) {
       case "Search:Analysis":
         const { data: msg = {}, immediate = false, schema = "" } = data;
