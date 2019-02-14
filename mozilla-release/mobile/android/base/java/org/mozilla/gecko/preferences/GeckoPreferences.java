@@ -1125,6 +1125,11 @@ public class GeckoPreferences
                         i--;
                     }
                 } else if(PREFS_BLUE_THEME.equals(key)) {
+                    if (!BuildConfig.DEBUG && !BuildConfig.APPLICATION_ID.contains("alpha")) {
+                        preferences.removePreference(pref);
+                        i--;
+                        continue;
+                    }
                     pref.setOnPreferenceChangeListener(this);
                 }
                 /* Cliqz end */
