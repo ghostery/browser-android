@@ -122,13 +122,15 @@ public class TopPanelRow extends StreamViewHolder {
         ((TopSitesPagerAdapter) topSitesPager.getAdapter())
                 .setLightTheme(mPreferenceManager.isLightThemeEnabled());
         if (emptyTopSitesOnboarding != null) {
-            ThemedTextView emptyTopSitesText =
+            final ThemedTextView emptyTopSitesText =
                     emptyTopSitesOnboarding.findViewById(R.id.empty_topsites_text);
             emptyTopSitesText.setLightTheme(mPreferenceManager.isLightThemeEnabled());
-            LinearLayout placeholderView =
+            final LinearLayout placeholderView =
                     emptyTopSitesOnboarding.findViewById(R.id.empty_topsites_placeholders);
             for (int i = 0; i < placeholderView.getChildCount(); i++) {
-                ((ThemedImageView) placeholderView.getChildAt(i)).setLightTheme(mPreferenceManager.isLightThemeEnabled());
+                if (placeholderView.getChildAt(i) instanceof ThemedImageView) {
+                    ((ThemedImageView) placeholderView.getChildAt(i)).setLightTheme(mPreferenceManager.isLightThemeEnabled());
+                }
             }
         }
     }

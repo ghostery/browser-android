@@ -31,10 +31,9 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/activity_stream_empty_topsites"
             android:maxLines="2"
-            android:textColor="@color/cliqz_start_tab_font_color"
-            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:text="@string/activity_stream_empty_topsites"
             tools:text="Top sites appear here" />
 
         <LinearLayout
