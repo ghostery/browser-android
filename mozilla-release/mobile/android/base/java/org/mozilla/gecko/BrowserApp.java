@@ -79,7 +79,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
