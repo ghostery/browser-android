@@ -6672,6 +6672,10 @@ var Cliqz = {
     this.Search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
   },
 
+  startSearch(query) {
+    this.messageExtension({ module: "search", action: "startSearch", args: [query, {}, { contextId: 'mobile-cards' }] });
+  },
+
   _searchExtensionListener(msg) {
     console.log("Dispaching event from the search extension to native", msg.action);
     switch (msg.action) {
@@ -6717,7 +6721,7 @@ var Cliqz = {
         this.loadCardsUI();
         this._handleExtensionReady("firefox@ghostery.com");
         if (this.lastQueuedQuery) {
-          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.startSearch(this.lastQueuedQuery);
           this.lastQueuedQuery = "";
         }
         this.searchIsReady = true;
@@ -6874,12 +6878,12 @@ var Cliqz = {
       case "Search:Hide":
         this.isVisible = false;
         this.Search && this.hidePanel(this.Search.browser);
-        this.messageExtension({ module: "search", action: "stopSearch", args: []});
+        this.messageExtension({ module: "search", action: "stopSearch", args: [{ contextId: 'mobile-cards' }]});
         break;
       case "Search:Search":
         this.lastQueuedQuery = data.q || "";
         if (this.searchIsReady) {
-          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.startSearch(this.lastQueuedQuery);
           this.lastQueuedQuery = "";
         }
         break;
