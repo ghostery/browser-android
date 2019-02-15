@@ -26,8 +26,23 @@ public class Telemetry {
     private static class Values {
         static final String TYPE_ONBOARDING = "onboarding";
         static final String ACTION_CLICK = "click";
+        static final String ACTION_SHOW = "show";
         static final String CONTEXT_HOME_CUSTOMIZATION = "home_customization";
         static final String VIEW_HOME = "home" ;
+    }
+
+    /**
+     * This method sends a show telemetry signal for the "Customize Home"
+     * button (the one that sends the user to the settings")
+     */
+    public static void sendHomeSettingsShowTelemetry() {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.STYLE, ABManager.getInstance().getHomeSettingsStyle());
+        sendTelemetry(Values.TYPE_ONBOARDING,
+                Values.ACTION_SHOW,
+                Values.CONTEXT_HOME_CUSTOMIZATION,
+                Values.VIEW_HOME,
+                extra);
     }
 
     /**
