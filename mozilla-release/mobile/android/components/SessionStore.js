@@ -116,7 +116,12 @@ SessionStore.prototype = {
     this._loadState = STATE_STOPPED;
     this._startupRestoreFinished = false;
 
-    this._interval = Services.prefs.getIntPref("browser.sessionstore.interval");
+    /* Cliqz Start */
+    // !!! EXPERIMENTAL !!! Shortening this time down to mitigate unexpected
+    // tabs reopening after a task manager kill
+    // this._interval = Services.prefs.getIntPref("browser.sessionstore.interval");
+    this._interval = 2 * MINIMUM_SAVE_DELAY; // milliseconds
+    /* Cliqz End */
     this._backupInterval = Services.prefs.getIntPref("browser.sessionstore.backupInterval");
 
     this._updateMaxTabsUndo();

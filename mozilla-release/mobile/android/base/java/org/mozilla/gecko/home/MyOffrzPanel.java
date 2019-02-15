@@ -40,7 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Cliqz 2018
+ * Copyright © Cliqz 2018
  * This file is derived from @{@link TopSitesPanel}.java
  */
 public class MyOffrzPanel extends HomeFragment {
@@ -84,6 +84,7 @@ public class MyOffrzPanel extends HomeFragment {
         }
     }
 
+    @SuppressWarnings("RedundantCast")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,26 +101,16 @@ public class MyOffrzPanel extends HomeFragment {
         progressBar = (ProgressBar) view.findViewById(R.id.offers_loading_pb);
         closeOnBoarding = (ImageButton) view.findViewById(R.id.onboarding_close_btn);
 
-        onboardingText.setText(R.string.myoffrz_onboarding_description);
-
         mPreferenceManager = PreferenceManager.getInstance();
 
-        learnMoreOnBoarding.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeOnboarding();
-                final String url = getString(R.string.pref_myoffrz_url);
-                mUrlOpenListener.onUrlOpen(url,
-                        EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
-            }
+        learnMoreOnBoarding.setOnClickListener(v -> {
+            closeOnboarding();
+            final String url = getString(R.string.pref_myoffrz_url);
+            mUrlOpenListener.onUrlOpen(url,
+                    EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
         });
 
-        closeOnBoarding.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeOnboarding();
-            }
-        });
+        closeOnBoarding.setOnClickListener(v -> closeOnboarding());
         return view;
     }
 
@@ -137,9 +128,6 @@ public class MyOffrzPanel extends HomeFragment {
 
     private void updateLayouts() {
         myOffrzDeactivateView.setVisibility(View.GONE);
-        if (mPreferenceManager.isMyOffrzOnboardingEnabled()) {
-            onboardingVG.setVisibility(View.VISIBLE);
-        }
         for (int i = 0 ; i < offersContainer.getChildCount(); i++) {
             View curChild = offersContainer.getChildAt(i);
             if (curChild.getId() == R.id.offer_card){
@@ -248,7 +236,11 @@ public class MyOffrzPanel extends HomeFragment {
 
             offersContainer.addView(offer);
             myOffrzDeactivateView.setVisibility(View.INVISIBLE);
-            holder.enableClickActions(true);
+            holder.enableClickActions();
+
+            if (mPreferenceManager.isMyOffrzOnboardingEnabled()) {
+                onboardingVG.setVisibility(View.VISIBLE);
+            }
         }
 
         private JSONObject getTemplateData(final JSONObject data) {
@@ -281,6 +273,7 @@ public class MyOffrzPanel extends HomeFragment {
         private String mUrl;
         private String mCode;
 
+        @SuppressWarnings("RedundantCast")
         ViewHolder(@NonNull View view) {
             title = (TextView) view.findViewById(R.id.offer_title_tv);
             description = (TextView) view.findViewById(R.id.offer_description_tv);
@@ -292,44 +285,35 @@ public class MyOffrzPanel extends HomeFragment {
             copyCode = (Button) view.findViewById(R.id.offer_copy_code_btn);
             goToOffer = (Button) view.findViewById(R.id.go_to_offer_btn);
 
-            copyCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Context context = getContext();
-                    if (context == null || mCode == null || mCode.isEmpty()) {
-                        return;
-                    }
+            copyCode.setOnClickListener(v -> {
+                final Context context = getContext();
+                if (context == null || mCode == null || mCode.isEmpty()) {
+                    return;
+                }
 
-                    final ClipboardManager clipboardManager =
-                            (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                    if (clipboardManager != null) {
-                        final ClipData clipData = ClipData.newPlainText("text", mCode);
-                        clipboardManager.setPrimaryClip(clipData);
-                        Toast.makeText(context, R.string.myoffrz_message_code_copied, Toast.LENGTH_SHORT).show();
-                    }
+                final ClipboardManager clipboardManager =
+                        (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                if (clipboardManager != null) {
+                    final ClipData clipData = ClipData.newPlainText("text", mCode);
+                    clipboardManager.setPrimaryClip(clipData);
+                    Toast.makeText(context, R.string.myoffrz_message_code_copied, Toast.LENGTH_SHORT).show();
                 }
             });
 
-            goToOffer.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    if (mUrl != null) {
-                        mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(mUrl),
-                                EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
-                    }
+            goToOffer.setOnClickListener(v -> {
+                if (mUrl != null) {
+                    mUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(mUrl),
+                            EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
                 }
             });
 
-            termsAndConditionsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (termsAndConditions.getVisibility() == View.GONE) {
-                        termsAndConditions.setVisibility(View.VISIBLE);
-                        termsAndConditionsButton.setSelected(true);
-                    } else {
-                        termsAndConditions.setVisibility(View.GONE);
-                        termsAndConditionsButton.setSelected(false);
-                    }
+            termsAndConditionsButton.setOnClickListener(view1 -> {
+                if (termsAndConditions.getVisibility() == View.GONE) {
+                    termsAndConditions.setVisibility(View.VISIBLE);
+                    termsAndConditionsButton.setSelected(true);
+                } else {
+                    termsAndConditions.setVisibility(View.GONE);
+                    termsAndConditionsButton.setSelected(false);
                 }
             });
             setTermsAndConditionButtonDrawables();
@@ -373,10 +357,10 @@ public class MyOffrzPanel extends HomeFragment {
             this.mCode = code;
         }
 
-        public void enableClickActions(boolean enable){
-            goToOffer.setClickable(enable);
-            termsAndConditionsButton.setClickable(enable);
-            copyCode.setClickable(enable);
+        void enableClickActions() {
+            goToOffer.setClickable(true);
+            termsAndConditionsButton.setClickable(true);
+            copyCode.setClickable(true);
         }
     }
 }
