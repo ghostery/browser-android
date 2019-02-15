@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Telemetry;
@@ -19,6 +20,8 @@ import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPage;
 import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesPagerAdapter;
 import org.mozilla.gecko.home.HomePager;
 import org.mozilla.gecko.preferences.PreferenceManager;
+import org.mozilla.gecko.widget.themed.ThemedImageView;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 public class TopPanelRow extends StreamViewHolder {
     public static final int LAYOUT_ID = R.layout.activity_stream_main_toppanel;
@@ -118,6 +121,18 @@ public class TopPanelRow extends StreamViewHolder {
     public void updateTheme() {
         ((TopSitesPagerAdapter) topSitesPager.getAdapter())
                 .setLightTheme(mPreferenceManager.isLightThemeEnabled());
+        if (emptyTopSitesOnboarding != null) {
+            final ThemedTextView emptyTopSitesText =
+                    emptyTopSitesOnboarding.findViewById(R.id.empty_topsites_text);
+            emptyTopSitesText.setLightTheme(mPreferenceManager.isLightThemeEnabled());
+            final LinearLayout placeholderView =
+                    emptyTopSitesOnboarding.findViewById(R.id.empty_topsites_placeholders);
+            for (int i = 0; i < placeholderView.getChildCount(); i++) {
+                if (placeholderView.getChildAt(i) instanceof ThemedImageView) {
+                    ((ThemedImageView) placeholderView.getChildAt(i)).setLightTheme(mPreferenceManager.isLightThemeEnabled());
+                }
+            }
+        }
     }
     /* Cliqz End */
 
