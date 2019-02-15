@@ -5,7 +5,14 @@ import android.support.annotation.Nullable;
 
 import org.mozilla.gecko.util.GeckoBundle;
 
+/**
+ * Telemetry helper
+ *
+ * Copyright © Cliqz 2019
+ */
 public class Telemetry {
+
+    // Groups of all possible telemetry keys
     private final static class Keys {
         static final String TYPE = "type";
         static final String ACTION = "action";
@@ -15,13 +22,18 @@ public class Telemetry {
         static final String STYLE = "style";
     }
 
-    public static class Values {
-        public static final String TYPE_ONBOARDING = "onboarding";
-        public static final String ACTION_CLICK = "click";
-        public static final String CONTEXT_HOME_CUSTOMIZATION = "home_customization";
-        public static final String VIEW_HOME = "home" ;
+    // Groups of all possible telemetry values
+    private static class Values {
+        static final String TYPE_ONBOARDING = "onboarding";
+        static final String ACTION_CLICK = "click";
+        static final String CONTEXT_HOME_CUSTOMIZATION = "home_customization";
+        static final String VIEW_HOME = "home" ;
     }
 
+    /**
+     * This method sends the telemetry signal about the user clicking on the "Customize Home"
+     * button (the one that sends the user to the settings")
+     */
     public static void sendHomeSettingsClickTelemetry() {
         final GeckoBundle extra = new GeckoBundle();
         extra.putString(Keys.TARGET, Values.ACTION_CLICK);
@@ -33,14 +45,8 @@ public class Telemetry {
                 extra);
     }
 
-    /**
-     *
-     * @param type Type
-     * @param action Action
-     * @param context Context
-     * @param view View
-     * @param extra Extra
-     */
+    // Generalized send telemetry method with the common required fields
+    @SuppressWarnings("SameParameterValue")
     private static void sendTelemetry(@NonNull String type,
                                       @NonNull String action,
                                       @NonNull String context,

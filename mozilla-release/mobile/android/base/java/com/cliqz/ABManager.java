@@ -10,31 +10,39 @@ import org.mozilla.gecko.PrefsHelper;
 
 
 /**
+ * AB-tests manager on the Android side. It syncs Android prefs with GeckoPrefs (the source of truth
+ * is the latter).
+ *
  * Copyright © Cliqz 2019
- * ABManager class that syncs Browser prefs with GeckoPrefs
  */
 public class ABManager {
     private static final String ABTEST_VERSION = "abtest-version";
     public static final String NEWTAB_SETTINGS_TEXT_STYLE = "text";
 
+    // Version keys to support migration
     private static final class VERSIONS {
         static final int VERSION_1 = 1;
 
         static final int CURRENT = VERSION_1;
     }
+
+    // Grouping of all the AB-test enabled in version 1
     private static final class V1 {
         static final String PREF_HOST_UI_NEWTAB_SETTINGS_BUTTON_STYLE = "host.ui.newtab.settings-button-style";
     }
 
     private final SharedPreferences appSharedPreferences;
+
+    // Add here the preferences that you want to be in sync
     private static final String[] PREFS = new String[] {
             V1.PREF_HOST_UI_NEWTAB_SETTINGS_BUTTON_STYLE
     };
 
     @SuppressLint("StaticFieldLeak")
     private static ABManager abManager = null;
-    private final InnerPrefsHandler prefsHandler;
 
+    // This is a singleton that need a context, initialization is in BrowserApplication. The
+    // context passed is not meant to be stored.
     private ABManager(Context context) {
         appSharedPreferences = GeckoSharedPrefs.forABTests(context);
         final int oldVersion;
@@ -48,8 +56,8 @@ public class ABManager {
             migrate(oldVersion);
             appSharedPreferences.edit().putInt(ABTEST_VERSION, VERSIONS.CURRENT).apply();
         }
-        prefsHandler = new InnerPrefsHandler();
-        PrefsHelper.getPrefs(PREFS, prefsHandler);
+
+        PrefsHelper.getPrefs(PREFS, new InnerPrefsHandler());
     }
 
     // Migration mechanism in place for future development
@@ -57,16 +65,27 @@ public class ABManager {
     private void migrate(int oldVersion) {
     }
 
+    /**
+     * Initialize the manager (single instance)
+     *
+     * @param context The context used to initialize the singleton. It is not stored by the manager.
+     */
     public static void init(Context context) {
         if (abManager == null) {
             abManager = new ABManager(context.getApplicationContext());
         }
     }
 
+    /**
+     * @return the ABManager instance
+     */
     public static ABManager getInstance() {
         return abManager;
     }
 
+    /**
+     * @return the home style AB-Test
+     */
     @NonNull
     public String getHomeSettingsStyle() {
         return appSharedPreferences.getString(V1.PREF_HOST_UI_NEWTAB_SETTINGS_BUTTON_STYLE, "text");

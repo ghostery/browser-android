@@ -149,16 +149,13 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         if (ABManager.NEWTAB_SETTINGS_TEXT_STYLE.equals(abManager.getHomeSettingsStyle())) {
             customizeTabLink.setBackgroundColor(Color.argb(0, 0, 0, 0));
         }
-        customizeTabLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Intent intent = new Intent(context, GeckoPreferences.class);
-                Telemetry.sendHomeSettingsClickTelemetry();
-                GeckoPreferences.setResourceToOpen(intent, "preferences_general");
-                // We want to know when the Settings activity returns, because
-                // we might need to redisplay based on a locale change.
-                ((BrowserApp) context).startActivityForResult(intent, BrowserApp.ACTIVITY_REQUEST_PREFERENCES);
-            }
+        customizeTabLink.setOnClickListener(v -> {
+            final Intent intent = new Intent(context, GeckoPreferences.class);
+            Telemetry.sendHomeSettingsClickTelemetry();
+            GeckoPreferences.setResourceToOpen(intent, "preferences_general");
+            // We want to know when the Settings activity returns, because
+            // we might need to redisplay based on a locale change.
+            ((BrowserApp) context).startActivityForResult(intent, BrowserApp.ACTIVITY_REQUEST_PREFERENCES);
         });
 
         final TextView dismiss = (TextView) customizeNewTabViewSnackBar.findViewById(R.id.dismiss);
