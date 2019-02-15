@@ -51,6 +51,8 @@ public class AppBackgroundManager {
 
     private final String backgroundImageUri;
 
+    private final int screenHeight;
+
     private AppBackgroundManager(Context context) {
         final WindowManager windowManager = (WindowManager) context.getApplicationContext()
                 .getSystemService(Context.WINDOW_SERVICE);
@@ -58,6 +60,8 @@ public class AppBackgroundManager {
         if (windowManager != null) {
             windowManager.getDefaultDisplay().getMetrics(displayMetrics);
         }
+        this.screenHeight = displayMetrics.heightPixels;
+
         // Find the right image size (divided by 2 to spare memory)
         final int screenSize = Math.max(displayMetrics.widthPixels, displayMetrics.heightPixels) / 2;
         final int q = screenSize / SIZE_DELTA;
@@ -88,7 +92,8 @@ public class AppBackgroundManager {
         view.setTag(R.id.background_manager_mode_key, Mode.COLOR);
         view.setTag(R.id.background_manager_target_key, null);
         // Default color is a gradient.
-        view.setBackgroundResource(R.drawable.cliqz_default_background);
+        view.setBackground(new ScreenSizedDrawable(
+                view.getResources().getDrawable(R.drawable.cliqz_default_background)));
     }
 
     @UiThread
@@ -174,6 +179,31 @@ public class AppBackgroundManager {
             if (isPrivate) {
                 canvas.drawRect(dstRect, privatePaint);
             }
+        }
+    }
+
+    private class ScreenSizedDrawable extends StateListDrawable {
+
+        private final Drawable drawable;
+
+        ScreenSizedDrawable(Drawable drawable) {
+            super();
+            this.drawable = drawable;
+        }
+
+        @Override
+        public void setBounds(int left, int top, int right, int bottom) {
+            drawable.setBounds(left, top, right, Math.max(bottom, screenHeight));
+        }
+
+        @Override
+        public void draw(@NonNull Canvas canvas) {
+            drawable.draw(canvas);
+        }
+
+        @Override
+        public boolean setState(@NonNull int[] stateSet) {
+            return drawable.setState(stateSet);
         }
     }
 }
