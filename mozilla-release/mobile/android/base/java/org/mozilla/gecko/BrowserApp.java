@@ -874,6 +874,7 @@ public class BrowserApp extends GeckoApp
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
             "Search:Focus",
+            "Search:QuerySuggestions",
             /* Cliqz end */
             null);
 
@@ -1737,6 +1738,7 @@ public class BrowserApp extends GeckoApp
             "Search:Idle",
             "Search:Ready",
             "Addons:PreventGhosteryCliqz",
+            "Search:QuerySuggestions",
             /* Cliqz end */
             null);
 
@@ -4610,20 +4612,12 @@ public class BrowserApp extends GeckoApp
     private void showCliqzSearch() {
         mLayerView.setSearchPanelVisibilty(true);
         EventDispatcher.getInstance().dispatch("Search:Show", null);
-        if(mPreferenceManager.isQuerySuggestionsEnabled()) {
-            EventDispatcher.getInstance().registerUiThreadListener(this,
-                    "Search:QuerySuggestions", null);
-        }
     }
 
     private void hidePanelSearch() {
         mLayerView.setSearchPanelVisibilty(false);
         EventDispatcher.getInstance().dispatch("Search:Hide", null);
         EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
-        if(mPreferenceManager.isQuerySuggestionsEnabled()) {
-            EventDispatcher.getInstance().unregisterUiThreadListener(this,
-                    "Search:QuerySuggestions", null);
-        }
     }
 
     public void toggleControlCenter() {

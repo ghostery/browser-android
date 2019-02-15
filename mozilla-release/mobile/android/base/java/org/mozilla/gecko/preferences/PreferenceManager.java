@@ -103,7 +103,7 @@ public class PreferenceManager {
     }
 
     public boolean isBackgroundEnabled() {
-        return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED,true);
+        return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED,false);
     }
 
     public boolean shouldShowCustomizeTabView() {

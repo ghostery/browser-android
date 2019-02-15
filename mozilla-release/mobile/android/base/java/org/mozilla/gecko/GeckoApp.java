@@ -174,6 +174,9 @@ public abstract class GeckoApp extends GeckoActivity
     // Length of time in ms during which crashes are classified as startup crashes
     // for crash loop detection purposes.
     private static final int STARTUP_PHASE_DURATION_MS = 30 * 1000;
+    /* Cliqz Start */
+    private static final int GHOSTERY_VERSION_2_2_1 = 12255;
+    /* Cliqz End */
 
     private static boolean sAlreadyLoaded;
 
@@ -1770,6 +1773,17 @@ public abstract class GeckoApp extends GeckoActivity
         boolean shouldRestore = false;
 
         final int versionCode = getVersionCode();
+        /* Cliqz Start */
+        final int prefsVersionCode = prefs.getInt(PREFS_VERSION_CODE, 0);
+        // New users should have the background image disabled by default, old users should have
+        // the background image enabled if they didn't explicitly disable it.
+        if (prefsVersionCode > 0 && prefsVersionCode <= GHOSTERY_VERSION_2_2_1 &&
+            prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)) {
+            prefs.edit()
+                    .putBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)
+                    .apply();
+        }
+        /* Cliqz End */
         if (getSessionRestoreResumeOnce(prefs)) {
             shouldRestore = true;
         } else if (mLastSessionCrashed) {
@@ -1779,7 +1793,7 @@ public abstract class GeckoApp extends GeckoActivity
             } else {
                 shouldRestore = false;
             }
-        } else if (prefs.getInt(PREFS_VERSION_CODE, 0) != versionCode) {
+        } else if (/* Cliqz */ prefsVersionCode != versionCode) {
             // If the version has changed, the user has done an upgrade, so restore
             // previous tabs.
             prefs.edit().putInt(PREFS_VERSION_CODE, versionCode).apply();
