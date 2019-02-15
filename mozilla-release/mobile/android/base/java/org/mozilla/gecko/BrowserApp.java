@@ -3382,6 +3382,7 @@ public class BrowserApp extends GeckoApp
     private void hideBrowserSearch(boolean hidePanel) {
         /* Cliqz start */
         // If we are displaying the "loading search" UI, hide it
+        hideCliqzQuerySuggestions();
         if (mLoadingSearchHelper.isStarted()) {
             mLoadingSearchHelper.stop();
         }
