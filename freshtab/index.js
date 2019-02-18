@@ -48,7 +48,7 @@ class BrowserCoreApp extends React.Component {
       <View style={styles.container}>
         {
           (results.length === 0) || !this.state.cliqz
-          ? <Text>HELLO</Text>
+          ? null
           : (
             <CliqzProvider value={this.state.cliqz}>
               <SearchUI results={results} theme="dark" />
