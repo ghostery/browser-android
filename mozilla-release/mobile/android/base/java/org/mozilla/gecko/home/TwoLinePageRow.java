@@ -37,6 +37,7 @@ import org.mozilla.gecko.reader.ReaderModeUtils;
 import org.mozilla.gecko.reader.SavedReaderViewHelper;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.sync.net.Resource;
+import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.widget.FaviconView;
 import org.mozilla.gecko.widget.themed.ThemedImageView;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
@@ -231,13 +232,11 @@ public class TwoLinePageRow extends ThemedLinearLayout
         } else {
             setUrl(R.string.switch_to_tab);
             /* Cliqz Start */
-            final PreferenceManager preferenceManager = PreferenceManager.getInstance();
-            final Drawable wrappedDrawable = DrawableCompat.wrap(
-                    getResources().getDrawable(R.drawable.ic_url_bar_tab));
-            DrawableCompat.setTint(wrappedDrawable,
-                    preferenceManager.isLightThemeEnabled() ?
-                            ContextCompat.getColor(getContext(), R.color.light_theme_start_tab_font_color) : Color.WHITE);
-            setSwitchToTabIcon(wrappedDrawable);
+            final int tintColor = PreferenceManager.getInstance().isLightThemeEnabled() ?
+                    ContextCompat.getColor(getContext(),
+                    R.color.light_theme_start_tab_font_color) : Color.WHITE;
+            setSwitchToTabIcon(DrawableUtil.tintDrawable(getContext(),
+                    R.drawable.ic_url_bar_tab, tintColor));
             /* Cliqz End */
         }
     }
@@ -345,18 +344,11 @@ public class TwoLinePageRow extends ThemedLinearLayout
     @Override
     public void setLightTheme(boolean isLightTheme) {
         super.setLightTheme(isLightTheme);
-
         mTitle.setLightTheme(isLightTheme);
         mUrl.setLightTheme(isLightTheme);
 
-        final Drawable wrappedDrawable = DrawableCompat.wrap(
-                getResources().getDrawable(R.drawable.ic_url_bar_tab));
-        DrawableCompat.setTint(wrappedDrawable,
-                isLightTheme ?
-                        ContextCompat.getColor(getContext(), R.color.light_theme_start_tab_font_color) : Color.WHITE);
-        setSwitchToTabIcon(wrappedDrawable);
-
         mStatusIcon.setLightTheme(isLightTheme);
+        updateDisplayedUrl();
     }
     /* Cliqz End */
 

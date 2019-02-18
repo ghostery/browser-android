@@ -118,8 +118,8 @@ public class TabsPanel extends ThemedLinearLayout
     private TabsLayoutChangeListener mLayoutChangeListener;
 
     private IconTabWidget mTabWidget;
-    private ImageButton mMenuButton;
-    private ImageButton mAddTab;
+    private ThemedImageButton mMenuButton;
+    private ThemedImageButton mAddTab;
     private ThemedView mBlankLine;
 
     // Cliqz: add tabsCounter
@@ -174,7 +174,7 @@ public class TabsPanel extends ThemedLinearLayout
         mPanelPrivate = (PanelView) findViewById(R.id.private_tabs_panel);
         mPanelPrivate.setTabsPanel(this);
 
-        mAddTab = (ImageButton) findViewById(R.id.add_tab);
+        mAddTab = (ThemedImageButton) findViewById(R.id.add_tab);
         mAddTab.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -495,10 +495,8 @@ public class TabsPanel extends ThemedLinearLayout
         mTabWidget.setLightTheme(isLightTheme);
         mTabsCounter.setLightTheme(isLightTheme);
         mBlankLine.setLightTheme(isLightTheme);
-        DrawableCompat.setTint(DrawableCompat.wrap(mAddTab.getDrawable()),
-                isLightTheme ? ContextCompat.getColor(getContext(), R.color.general_blue_color) : Color.WHITE);
-        DrawableCompat.setTint(DrawableCompat.wrap(mMenuButton.getDrawable()),
-                isLightTheme ? ContextCompat.getColor(getContext(), R.color.general_blue_color) : Color.WHITE);
+        mAddTab.setLightTheme(isLightTheme);
+        mMenuButton.setLightTheme(isLightTheme);
     }
     /* Cliqz End */
 

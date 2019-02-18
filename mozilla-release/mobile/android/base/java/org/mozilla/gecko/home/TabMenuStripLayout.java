@@ -117,9 +117,10 @@ class TabMenuStripLayout extends ThemedLinearLayout
                 .inflate(R.layout.tab_menu_strip, this, false);
         imageView.setId(iconId); //for automation test purpose
         imageView.setImageResource(iconId);
-        final int inactiveTabTintColor = inactiveTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
 
+        final int inactiveTabTintColor = inactiveTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
         DrawableCompat.setTint(DrawableCompat.wrap(imageView.getDrawable()), inactiveTabTintColor);
+
         addView(imageView);
         imageView.setOnClickListener(new ViewClickListener(getChildCount() - 1));
         imageView.setOnFocusChangeListener(this);

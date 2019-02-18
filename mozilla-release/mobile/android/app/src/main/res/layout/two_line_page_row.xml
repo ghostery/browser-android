@@ -73,8 +73,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:tint="@color/cliqz_start_tab_font_color"
             android:visibility="gone"
+            gecko:drawableTintList="@color/cliqz_start_tab_font_color"
             gecko:srcCompat="@drawable/ic_menu_bookmark_remove"
             tools:visibility="visible" />
 

@@ -210,7 +210,7 @@ public class HomeAdapter extends FragmentStatePagerAdapter {
         }
         final int backgroundOverlayColor = ContextCompat.getColor(mContext, R.color.home_panel_background_overlay);
 
-        if (myOffrzPanel != null && isLightTheme) {
+        if (myOffrzPanel != null) {
             myOffrzPanel.getView().findViewById(R.id.root_view).setBackgroundColor(
                     isLightTheme ? Color.TRANSPARENT : backgroundOverlayColor);
         }

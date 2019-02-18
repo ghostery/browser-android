@@ -7,9 +7,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
     <!-- private browsing mode -->
-    <item android:drawable="@drawable/ic_overflow_pm" gecko:state_private="true" />
+    <!-- Cliqz Start -->
+    <item android:drawable="@drawable/ic_overflow_pm" />
 
     <!-- normal mode -->
-    <item android:drawable="@drawable/ic_overflow_nm" />
+    <!--<item android:drawable="@drawable/ic_overflow_nm" />-->
+    <!-- Cliqz End -->
 
 </selector>

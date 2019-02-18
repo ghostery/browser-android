@@ -19,7 +19,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-public class ThemedImageView extends android.widget.ImageView
+public class ThemedImageView extends android.support.v7.widget.AppCompatImageView
                                      implements LightweightTheme.OnChangeListener {
     private LightweightTheme theme;
 

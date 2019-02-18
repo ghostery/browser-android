@@ -6,7 +6,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.preferences.PreferenceManager;
@@ -18,8 +17,8 @@ import org.mozilla.gecko.widget.themed.ThemedTextView;
  */
 public class BookmarkFolderTitleView extends LinearLayout {
 
-    private final ThemedTextView mTitle;
-    private final ThemedImageView mIcon;
+    private final ThemedTextView title;
+    private final ThemedImageView icon;
 
     public BookmarkFolderTitleView(Context context) {
         this(context, null);
@@ -30,12 +29,12 @@ public class BookmarkFolderTitleView extends LinearLayout {
 
         LayoutInflater.from(context).inflate(R.layout.bookmark_current_folder_row, this);
 
-        mTitle = (ThemedTextView) findViewById(R.id.title);
-        mIcon = (ThemedImageView) findViewById(R.id.icon);
+        title = (ThemedTextView) findViewById(R.id.title);
+        icon = (ThemedImageView) findViewById(R.id.icon);
     }
 
     public void setTitle(String title) {
-        mTitle.setText(title);
+        this.title.setText(title);
     }
 
     /* Cliqz Start */
@@ -44,8 +43,8 @@ public class BookmarkFolderTitleView extends LinearLayout {
     }
 
     public void setLightTheme(boolean isLightTheme) {
-        mTitle.setLightTheme(isLightTheme);
-        mIcon.setLightTheme(isLightTheme);
+        title.setLightTheme(isLightTheme);
+        icon.setLightTheme(isLightTheme);
     }
     /* Cliqz End */
 

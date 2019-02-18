@@ -31,7 +31,7 @@ public class ShadowedThemedTextView extends ThemedTextView {
         final int attributeCount = a.getIndexCount();
 
         for (int i = 0; i < attributeCount; i++) {
-            int currentAttribute = a.getIndex(i);
+            final int currentAttribute = a.getIndex(i);
 
             switch (currentAttribute) {
                 case R.styleable.ShadowedThemedTextView_shadowColors:
