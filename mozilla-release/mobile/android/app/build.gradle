@@ -27,7 +27,7 @@ def getVersionCode(baseVersion) {
 /* Cliqz End */
 
 android {
-    compileSdkVersion projecssst.ext.compileSdkVersion
+    compileSdkVersion project.ext.compileSdkVersion
 
     defaultConfig {
         targetSdkVersion project.ext.targetSdkVersion
@@ -36,6 +36,9 @@ android {
 
         /* Cliqz start */
         versionCode getVersionCode(123)
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
         /* Cliqz end */
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
         testApplicationId 'org.mozilla.roboexample.test'
