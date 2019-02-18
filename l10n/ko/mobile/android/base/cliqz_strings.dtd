@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "가장 많이 방문한 사이트가 여기에 표시됩니다 ">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "뉴스">
 <!ENTITY activity_stream_top_news_show "표시 ">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "검색">
 <!ENTITY pref_search_regional "다음에 대한 검색 결과">
-<!ENTITY pref_search_regional_germany "독일">
-<!ENTITY pref_search_regional_france "프랑스">
-<!ENTITY pref_search_regional_usa "미국">
-<!ENTITY pref_search_regional_spain "스페인 ">
-<!ENTITY pref_search_regional_italy "이탈리아 ">
-<!ENTITY pref_search_regional_uk "영국 ">
+<!ENTITY pref_search_regional_at "오스트리아 ">
+<!ENTITY pref_search_regional_au "호주 ">
+<!ENTITY pref_search_regional_ca "캐나다 ">
+<!ENTITY pref_search_regional_de "독일">
+<!ENTITY pref_search_regional_es "스페인 ">
+<!ENTITY pref_search_regional_fr "프랑스">
+<!ENTITY pref_search_regional_gb "영국 ">
+<!ENTITY pref_search_regional_it "이탈리아 ">
+<!ENTITY pref_search_regional_ru "러시아 ">
+<!ENTITY pref_search_regional_us "미국">
 <!ENTITY pref_search_query_suggestions "검색 쿼리 제안 ">
 <!ENTITY pref_search_block_adult_content "노골적 콘텐츠 차단 ">
 <!ENTITY pref_search_auto_completion "자동 완성 사용 ">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "검색, &pref_new_tab_category;, 브라우징, 알림, 다운로드, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "블루 테마 ">
 <!ENTITY pref_cliqz_tab_background "배경 이미지 표시 ">
 <!ENTITY pref_cliqz_tab_topsites "가장 많이 방문한 웹사이트 표시 ">
 <!ENTITY pref_cliqz_tab_news "뉴스 보기 ">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "이미 사용 가능합니다!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "사용 중인 브라우저에 이미 &formatS1;이(가) 통합되어 있으므로 확장 기능이 설치되지 않았습니다.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "탑 사이트에 고정 ">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "탑 사이트에서 고정 해제 ">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "페이지 단축키 추가 ">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "탑 사이트에 고정된 페이지 ">
+<!ENTITY cliqz_unpinned_page_from_top_sites "탑 사이트에서 고정 해제된 페이지 ">

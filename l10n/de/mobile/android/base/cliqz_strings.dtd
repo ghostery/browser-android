@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "Deine meistbesuchten Seiten erscheinen hier">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "Nachrichten">
 <!ENTITY activity_stream_top_news_show "Zeigen">
@@ -44,7 +47,7 @@
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Diese Startseite anpassen?">
-<!ENTITY customize_new_tab_link "Einstellungen Öffnen">
+<!ENTITY customize_new_tab_link "Einstellungen öffnen">
 <!ENTITY customize_new_tab_snackbar_negative_btn "Nein, Danke">
 <!ENTITY customize_new_tab_snackbar_positive_btn "Anpassen">
 <!ENTITY customize_new_tab_snackbar_description "Passe diesen Bereich nach deinen Bedürfnissen an: Blende die meistbesuchten Seiten, Nachrichten und das Hintergrundbild ein/aus.">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Suche">
 <!ENTITY pref_search_regional "Suchergebnisse für">
-<!ENTITY pref_search_regional_germany "Deutschland">
-<!ENTITY pref_search_regional_france "Frankreich">
-<!ENTITY pref_search_regional_usa "Vereinigte Staaten">
-<!ENTITY pref_search_regional_spain "Spanien">
-<!ENTITY pref_search_regional_italy "Italien">
-<!ENTITY pref_search_regional_uk "Vereinigtes Königreich">
+<!ENTITY pref_search_regional_at "Österreich">
+<!ENTITY pref_search_regional_au "Australien">
+<!ENTITY pref_search_regional_ca "Kanada">
+<!ENTITY pref_search_regional_de "Deutschland">
+<!ENTITY pref_search_regional_es "Spanien">
+<!ENTITY pref_search_regional_fr "Frankreich">
+<!ENTITY pref_search_regional_gb "Vereinigtes Königreich">
+<!ENTITY pref_search_regional_it "Italien">
+<!ENTITY pref_search_regional_ru "Russland">
+<!ENTITY pref_search_regional_us "Vereinigte Staaten">
 <!ENTITY pref_search_query_suggestions "Suchwort-Vorschläge">
 <!ENTITY pref_search_block_adult_content "Nicht-jugendfreie Inhalte blockieren">
 <!ENTITY pref_search_auto_completion "Autovervollständigung aktivieren">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Suche, &pref_new_tab_category;, Browsen, Benachrichtigungen, Download, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "Blaues Thema">
 <!ENTITY pref_cliqz_tab_background "Hintergrundbild zeigen">
 <!ENTITY pref_cliqz_tab_topsites "Meistbesuchte Websites zeigen">
 <!ENTITY pref_cliqz_tab_news "Nachrichten zeigen">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Bereits vorhanden!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "Add-on wurde nicht installiert, da &formatS1; bereits in deinem Browser integriert ist.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "An Top-Sites anheften">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Anheften an Top-Sites entfernen">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Seiten-Shortcut hinzufügen">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Seite an Top-Sites angeheftet">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Angeheftete Seite von Top-Sites entfernt">
