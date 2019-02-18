@@ -196,17 +196,8 @@ import org.mozilla.geckoview.DynamicToolbarAnimator;
 import org.mozilla.geckoview.GeckoSession;
 
 /* Cliqz start */
-import com.cliqz.react.BridgePackage;
-import com.cliqz.react.HistoryDialsPackage;
-import com.facebook.react.ReactRootView;
-import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.facebook.react.shell.MainReactPackage;
-import com.facebook.react.common.LifecycleState;
+import com.cliqz.react.SearchUI;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
-import com.facebook.react.bridge.Arguments;
 /* Cliqz end */
 
 import java.io.File;
@@ -310,7 +301,6 @@ public class BrowserApp extends GeckoApp
     private String mLastUrl = "";
     private AntiPhishingDialog antiPhishingDialog;
     private AntiPhishing antiPhishing;
-    private CliqzLoadingSearchHelper mLoadingSearchHelper;
     private static final int SUGGESTIONS_LIMIT = 3;
     private static final Pattern FILTER =
             Pattern.compile("^https?://.*", Pattern.CASE_INSENSITIVE);
@@ -319,10 +309,6 @@ public class BrowserApp extends GeckoApp
 
     // Minimum app launches until we show the dialog to set default browser.
     private static final int MINIMUM_UNTIL_DEFAULT_BROWSER_PROMPT = 3;
-
-    private ReactInstanceManager mReactInstanceManager;
-    private ReactRootView mReactRootView;
-    private ReactContext mReactContext;
 
     // Minimum app launches until the existing users are shown the 'customize tab' snackbar
     private static final int MINIMUM_UNTIL_CUSTOMIZE_TAB_SNACKBAR = 6;
@@ -341,6 +327,7 @@ public class BrowserApp extends GeckoApp
     private SafeIntent safeStartingIntent;
     private Intent startingIntentAfterPip;
     private boolean isInAutomation;
+    private SearchUI mSearchUI;
 
     // The types of guest mode dialogs we show.
     public static enum GuestModeDialog {
@@ -553,7 +540,7 @@ public class BrowserApp extends GeckoApp
         if (editingState.isBrowserSearchShown()) {
             showBrowserSearch();
         } else {
-            hideBrowserSearch(true);
+            hideBrowserSearch();
         }
     }
 
@@ -696,8 +683,8 @@ public class BrowserApp extends GeckoApp
         }
 
         /* Cliqz start */
-        if (keyCode == KeyEvent.KEYCODE_MENU && mReactInstanceManager != null) {
-            mReactInstanceManager.showDevOptionsDialog();
+        if (keyCode == KeyEvent.KEYCODE_MENU && mSearchUI != null) {
+            mSearchUI.getInstanceManager().showDevOptionsDialog();
             return true;
         }
         /* Cliqz end */
@@ -876,9 +863,6 @@ public class BrowserApp extends GeckoApp
         mTabLayout = (ThemedTabLayout) findViewById(R.id.control_center_tab_layout);
         mTabLayout.setupWithViewPager(mControlCenterPager);
         mCliqzQuerySuggestionsContainer = (LinearLayout) findViewById(R.id.query_suggestions_container);
-
-        final ViewStub loadingSearchStub = (ViewStub) findViewById(R.id.cliqz_loading_search_progress);
-        mLoadingSearchHelper = new CliqzLoadingSearchHelper(loadingSearchStub);
         /*Cliqz end*/
 
         EventDispatcher.getInstance().registerGeckoThreadListener(this,
@@ -901,7 +885,6 @@ public class BrowserApp extends GeckoApp
             "Search:OpenLink",
             "Privacy:Count",
             "Search:Idle",
-            "Search:Ready",
             "Search:renderResults",
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
@@ -1248,18 +1231,16 @@ public class BrowserApp extends GeckoApp
 
         /* Cliqz start */
         if (isFreshtabEnabled()) {
-            if (mReactRootView == null) {
+            if (mSearchUI == null) {
                 initializeFreshtab();
             }
+            mSearchUI.getInstanceManager().onHostResume(this, this);
         } else {
-            if (mReactRootView != null) {
-                mHomeScreenContainer.removeView(mReactRootView);
+            if (mSearchUI != null) {
+                mHomeScreenContainer.removeView(mSearchUI.getRootView());
             }
         }
 
-        if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostResume(this, this);
-        }
         /* Cliqz end */
 
         if (mIsAbortingAppLaunch) {
@@ -1286,8 +1267,8 @@ public class BrowserApp extends GeckoApp
         super.onPause();
 
         /* Cliqz start */
-        if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostPause(this);
+        if (mSearchUI != null) {
+            mSearchUI.getInstanceManager().onHostPause(this);
         }
         /* Cliqz end */
 
@@ -1479,9 +1460,6 @@ public class BrowserApp extends GeckoApp
                     /* Cliqz Start */
                     if (hasFocus) {
                         hideControlCenter();
-                        if(mPreferenceManager.isQuickSearchEnabled()) {
-                            showCliqzSearch();
-                        }
                     }
                 }
                 // show/hide query suggestions based on urlBar focus
@@ -1526,7 +1504,7 @@ public class BrowserApp extends GeckoApp
                 // visibility of the HomePager and hideHomePager will take no action if the
                 // HomePager is hidden, so we want to call hideBrowserSearch to restore the
                 // HomePager visibility first.
-                hideBrowserSearch(true);
+                hideBrowserSearch();
                 hideHomePager();
                 /* Cliqz start */
                 hideCliqzQuerySuggestions();
@@ -1723,11 +1701,11 @@ public class BrowserApp extends GeckoApp
         }
 
         /* Cliqz start */
-        if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostDestroy(this);
+        if (mSearchUI != null) {
+            mSearchUI.getInstanceManager().onHostDestroy(this);
         }
-        if (mReactRootView != null) {
-            mReactRootView.unmountReactApplication();
+        if (mSearchUI != null) {
+            mSearchUI.getRootView().unmountReactApplication();
         }
         /* Cliqz end */
 
@@ -1798,7 +1776,6 @@ public class BrowserApp extends GeckoApp
             "Privacy:Count",
             "Privacy:Info",
             "Search:Idle",
-            "Search:Ready",
             "Addons:PreventGhosteryCliqz",
             /* Cliqz end */
             null);
@@ -2428,19 +2405,6 @@ public class BrowserApp extends GeckoApp
                 break;
             case "Search:Idle":
                 break;
-            case "Search:Ready":
-                mSearchIsReady = true;
-                if (mUserDidSearch &&
-                        mBrowserToolbar.hasFocus() &&
-                        mPreferenceManager.isQuickSearchEnabled() &&
-                        !mBrowserToolbar.getQueryValue().isEmpty()) {
-                    showCliqzSearch();
-                    //mHomeScreenContainer.setVisibility(View.INVISIBLE);
-                }
-                if (mLoadingSearchHelper.isStarted()) {
-                    mLoadingSearchHelper.stop();
-                }
-                break;
             case "Search:QuerySuggestions":
                 if(mPreferenceManager.isQuerySuggestionsEnabled() && mBrowserToolbar.isEditing()) {
                     final String[] querySuggestions = GeckoBundleUtils.safeGetStringArray
@@ -3010,7 +2974,7 @@ public class BrowserApp extends GeckoApp
 
     void filterEditingMode(String searchTerm, AutocompleteHandler handler) {
         if (TextUtils.isEmpty(searchTerm)) {
-            hideBrowserSearch(false);
+            hideBrowserSearch();
         } else {
             showBrowserSearch();
             /* Cliqz start */
@@ -3264,6 +3228,9 @@ public class BrowserApp extends GeckoApp
         }
 
         mHomeScreenContainer.setVisibility(View.VISIBLE);
+        if (mSearchUI != null) {
+            mSearchUI.getRootView().setVisibility(View.INVISIBLE);
+        }
         mHomeScreen.load(getSupportLoaderManager(),
                         getSupportFragmentManager(),
                         panelId,
@@ -3378,10 +3345,8 @@ public class BrowserApp extends GeckoApp
         // show Cliqz search cards if quick search enabled otherwise show firefox one.
         final boolean isQuickSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
         if(isQuickSearchEnabled) {
-            if (mSearchIsReady) {
-                showCliqzSearch();
-            } else {
-                mLoadingSearchHelper.start();
+            if (mSearchUI != null) {
+                mSearchUI.getRootView().setVisibility(View.VISIBLE);
             }
         } else {
             if (mBrowserSearch.getUserVisibleHint()) {
@@ -3392,9 +3357,6 @@ public class BrowserApp extends GeckoApp
             hideWebContent();
         }
         mUserDidSearch = true;
-        if (mSearchIsReady) {
-//            mHomeScreenContainer.setVisibility(View.INVISIBLE);
-        }
 
         final FragmentManager fm = getSupportFragmentManager();
 
@@ -3434,12 +3396,8 @@ public class BrowserApp extends GeckoApp
         /* Cliqz end */
     }
 
-    private void hideBrowserSearch(boolean hidePanel) {
+    private void hideBrowserSearch() {
         /* Cliqz start */
-        // If we are displaying the "loading search" UI, hide it
-        if (mLoadingSearchHelper.isStarted()) {
-            mLoadingSearchHelper.stop();
-        }
         if (!mPreferenceManager.isQuickSearchEnabled()) {
             if (!mBrowserSearch.getUserVisibleHint()) {
                 return;
@@ -3449,9 +3407,8 @@ public class BrowserApp extends GeckoApp
             getSupportFragmentManager().beginTransaction()
                     .hide(mBrowserSearch).commitAllowingStateLoss();
             mBrowserSearch.setUserVisibleHint(false);
-        } else if (hidePanel) {
-            hidePanelSearch();
         }
+        hidePanelSearch();
         /* Cliqz end */
 
         final Tab selectedTab = Tabs.getInstance().getSelectedTab();
@@ -4105,8 +4062,8 @@ public class BrowserApp extends GeckoApp
         }
 
         /* Cliqz start */
-        if (itemId == R.id.react && mReactInstanceManager != null) {
-            mReactInstanceManager.showDevOptionsDialog();
+        if (itemId == R.id.react && mSearchUI != null) {
+            mSearchUI.getInstanceManager().showDevOptionsDialog();
             return true;
         }
         /* Cliqz end */
@@ -4646,6 +4603,9 @@ public class BrowserApp extends GeckoApp
     @Override
     public void onOnboardingScreensVisible() {
         mHomeScreenContainer.setVisibility(View.VISIBLE);
+        if (mSearchUI != null) {
+            mSearchUI.getRootView().setVisibility(View.INVISIBLE);
+        }
 
         if (HardwareUtils.isTablet()) {
             mTabStrip.setOnTabChangedListener(new BrowserApp.TabStripInterface.OnTabAddedOrRemovedListener() {
@@ -4676,22 +4636,9 @@ public class BrowserApp extends GeckoApp
         WindowUtil.setStatusBarColor(BrowserApp.this, isPrivate);
     }
 
-    private void showCliqzSearch() {
-        mLayerView.setSearchPanelVisibilty(true);
-        EventDispatcher.getInstance().dispatch("Search:Show", null);
-        if(mPreferenceManager.isQuerySuggestionsEnabled()) {
-            EventDispatcher.getInstance().registerUiThreadListener(this,
-                    "Search:QuerySuggestions", null);
-        }
-    }
-
     private void hidePanelSearch() {
-        mLayerView.setSearchPanelVisibilty(false);
-        EventDispatcher.getInstance().dispatch("Search:Hide", null);
-        EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
-        if(mPreferenceManager.isQuerySuggestionsEnabled()) {
-            EventDispatcher.getInstance().unregisterUiThreadListener(this,
-                    "Search:QuerySuggestions", null);
+        if (mSearchUI != null) {
+            mSearchUI.getRootView().setVisibility(View.INVISIBLE);
         }
     }
 
@@ -4907,19 +4854,8 @@ public class BrowserApp extends GeckoApp
     }
 
     private void initializeFreshtab() {
-        if (mReactRootView == null) {
-            mReactRootView = new ReactRootView(this);
-            mReactInstanceManager = ReactInstanceManager.builder().setApplication(getApplication())
-                    .setBundleAssetName("index.android.bundle").setJSMainModulePath("index")
-                    .addPackage(new BridgePackage())
-                    .addPackage(new HistoryDialsPackage())
-                    .addPackage(new MainReactPackage()).setUseDeveloperSupport(BuildConfig.DEBUG)
-                    .setInitialLifecycleState(LifecycleState.RESUMED).build();
-            mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
-            mReactRootView.setBackgroundColor(Color.TRANSPARENT);
-        }
-        mHomeScreenContainer.addView(mReactRootView);
-        mReactContext = mReactInstanceManager.getCurrentReactContext();
+        mSearchUI = new SearchUI(this, getApplication());
+        mHomeScreenContainer.addView(mSearchUI.getRootView());
     }
 
     @Override
