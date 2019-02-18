@@ -150,7 +150,7 @@ public class TabsPanel extends ThemedLinearLayout
         mPopupMenu.setOnMenuItemClickListener(this);
 
         /* Cliqz Start */
-        preferenceManager = PreferenceManager.getInstance(context);
+        preferenceManager = PreferenceManager.getInstance();
         /* Cliqz End */
 
         inflateLayout(context);

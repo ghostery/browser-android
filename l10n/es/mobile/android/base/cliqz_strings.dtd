@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "Tus páginas más visitadas aparecerán aquí">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "Noticias">
 <!ENTITY activity_stream_top_news_show "Mostrar">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Búsqueda">
 <!ENTITY pref_search_regional "Resultados de búsqueda para">
-<!ENTITY pref_search_regional_germany "Alemania">
-<!ENTITY pref_search_regional_france "Francia">
-<!ENTITY pref_search_regional_usa "Estados Unidos">
-<!ENTITY pref_search_regional_spain "España">
-<!ENTITY pref_search_regional_italy "Italia">
-<!ENTITY pref_search_regional_uk "Reino Unido">
+<!ENTITY pref_search_regional_at "Austria">
+<!ENTITY pref_search_regional_au "Australia">
+<!ENTITY pref_search_regional_ca "Canadá">
+<!ENTITY pref_search_regional_de "Alemania">
+<!ENTITY pref_search_regional_es "España">
+<!ENTITY pref_search_regional_fr "Francia">
+<!ENTITY pref_search_regional_gb "Reino Unido">
+<!ENTITY pref_search_regional_it "Italia">
+<!ENTITY pref_search_regional_ru "Rusia">
+<!ENTITY pref_search_regional_us "Estados Unidos">
 <!ENTITY pref_search_query_suggestions "Sugerencias de búsqueda">
 <!ENTITY pref_search_block_adult_content "Bloquear contenido explícito">
 <!ENTITY pref_search_auto_completion "Activar autocompletar">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Búsqueda, &pref_new_tab_category;, navegación, notificaciones, descargas, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "Tema azul">
 <!ENTITY pref_cliqz_tab_background "Mostrar imagen de fondo">
 <!ENTITY pref_cliqz_tab_topsites "Mostrar sitios web más visitados">
 <!ENTITY pref_cliqz_tab_news "Mostrar noticias">
@@ -274,7 +282,7 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery - navega de forma segura, limpia y rápida">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Te damos la bienvenida a">
+<!ENTITY ghostery_onboarding_new_users_title "¡Bienvenido a Ghostery!">
 <!ENTITY ghostery_onboarding_new_users_text "Navega de forma segura, limpia y rápida con &brandShortName;, ahora optimizado para móviles">
 <!ENTITY ghostery_onboarding_new_users_checkbox "Mejora el rendimiento de &brandShortName; compartiendo datos estadísticos y de la web humana de forma anónima. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Saber más\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "Bloqueo de anuncios y rastreadores">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "¡Ya disponible!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "La extensión &formatS1; ya está instalada en tu navegador.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Enganchar a Sitios Principales">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Desenganchar de Sitios Principales">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Añadir acceso directo a página">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Página enganchada en Sitios Principales">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Página desenganchada de Sitios Principales">

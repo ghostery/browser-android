@@ -49,6 +49,9 @@ public final class GeckoSharedPrefs {
     /* Cliqz start */
     // We need to migrate cliqz.telemetry.enabled to toolkit.telemetry.enabled
     public static final int PREFS_VERSION = 3;
+
+    // Name for ABTest prefs
+    public static final String ABTEST_PREFS_NAME = "ABTests";
     /* Cliqz end */
 
 
@@ -91,6 +94,12 @@ public final class GeckoSharedPrefs {
     public enum Flags {
         DISABLE_MIGRATIONS
     }
+
+    /* Cliqz Start */
+    public static SharedPreferences forABTests(Context context) {
+        return context.getSharedPreferences(ABTEST_PREFS_NAME, 0);
+    }
+    /* Cliqz End */
 
     public static SharedPreferences forApp(Context context) {
         return forApp(context, EnumSet.noneOf(Flags.class));

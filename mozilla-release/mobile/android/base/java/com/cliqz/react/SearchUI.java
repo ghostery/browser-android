@@ -40,7 +40,7 @@ public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener
 
         mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
         final AppBackgroundManager backgroundManager = AppBackgroundManager.getInstance(context);
-        if (PreferenceManager.getInstance(context).isBackgroundEnabled()) {
+        if (PreferenceManager.getInstance().isBackgroundEnabled()) {
             backgroundManager.setViewBackground(mReactRootView, ContextCompat.getColor(context, R.color.general_blue_color));
         } else {
             backgroundManager.setViewBackgroundDefaultColor(mReactRootView);

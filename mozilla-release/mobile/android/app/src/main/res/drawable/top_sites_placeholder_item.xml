@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Cliqz © Copyright 2019 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+    <solid android:color="@color/cliqz_empty_topsites_placeholder_color" />
+
+    <size
+        android:width="50dp"
+        android:height="50dp" />
+</shape>

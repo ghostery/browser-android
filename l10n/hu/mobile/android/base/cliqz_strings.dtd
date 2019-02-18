@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "Az ön által leggyakrabban látogatott weboldalak jelennek meg itt">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "Hírek">
 <!ENTITY activity_stream_top_news_show "Megjelenítés">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Keresés">
 <!ENTITY pref_search_regional "Keresési eredmények ehhez:">
-<!ENTITY pref_search_regional_germany "Németország">
-<!ENTITY pref_search_regional_france "Franciaország">
-<!ENTITY pref_search_regional_usa "Egyesült Államok">
-<!ENTITY pref_search_regional_spain "Spanyolország">
-<!ENTITY pref_search_regional_italy "Olaszország">
-<!ENTITY pref_search_regional_uk "Egyesült Királyság">
+<!ENTITY pref_search_regional_at "Ausztria">
+<!ENTITY pref_search_regional_au "Ausztrália">
+<!ENTITY pref_search_regional_ca "Kanada">
+<!ENTITY pref_search_regional_de "Németország">
+<!ENTITY pref_search_regional_es "Spanyolország">
+<!ENTITY pref_search_regional_fr "Franciaország">
+<!ENTITY pref_search_regional_gb "Egyesült Királyság">
+<!ENTITY pref_search_regional_it "Olaszország">
+<!ENTITY pref_search_regional_ru "Oroszország">
+<!ENTITY pref_search_regional_us "Egyesült Államok">
 <!ENTITY pref_search_query_suggestions "Lekérdezési javaslatok keresése">
 <!ENTITY pref_search_block_adult_content "Felnőtt tartalom blokkolása">
 <!ENTITY pref_search_auto_completion "Automatikus kiegészítés engedélyezése">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Keresés, &pref_new_tab_category;, böngészés, értesítések, letöltés, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "Kék téma">
 <!ENTITY pref_cliqz_tab_background "Háttérkép megjelenítése">
 <!ENTITY pref_cliqz_tab_topsites "Jelenítse meg a leggyakrabban látogatott weboldalakat">
 <!ENTITY pref_cliqz_tab_news "Hírek megjelenítése">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Már elérhető!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "A kiegészítő nem lett feltelepítve, mivel a(z) &formatS1; már integrálva van az ön böngészőjében.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Felvétel a legjobb oldalak közé">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Levétel a legjobb oldalak közül">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Könyvjelző hozzáadása">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Felvéve a legjobb oldalak közé">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Levéve a legjobb oldalak közül">

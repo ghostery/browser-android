@@ -216,7 +216,7 @@ public class BrowserSearch extends HomeFragment
     public BrowserSearch() {
         mSearchTerm = "";
         /* Cliqz start */
-        preferenceManager = PreferenceManager.getInstance(getContext());
+        preferenceManager = PreferenceManager.getInstance();
         /* Cliqz end */
     }
 

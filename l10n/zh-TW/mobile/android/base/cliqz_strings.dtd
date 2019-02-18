@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "您最常登訪的網址將在這裏出現">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "新聞">
 <!ENTITY activity_stream_top_news_show "顯示">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "搜索">
 <!ENTITY pref_search_regional "對後述字詞的搜索結果：">
-<!ENTITY pref_search_regional_germany "德國">
-<!ENTITY pref_search_regional_france "法國">
-<!ENTITY pref_search_regional_usa "美國">
-<!ENTITY pref_search_regional_spain "西班牙">
-<!ENTITY pref_search_regional_italy "意大利">
-<!ENTITY pref_search_regional_uk "英國">
+<!ENTITY pref_search_regional_at "奧地利">
+<!ENTITY pref_search_regional_au "澳大利亞">
+<!ENTITY pref_search_regional_ca "加拿大">
+<!ENTITY pref_search_regional_de "德國">
+<!ENTITY pref_search_regional_es "西班牙">
+<!ENTITY pref_search_regional_fr "法國">
+<!ENTITY pref_search_regional_gb "英國">
+<!ENTITY pref_search_regional_it "意大利">
+<!ENTITY pref_search_regional_ru "俄羅斯">
+<!ENTITY pref_search_regional_us "美國">
 <!ENTITY pref_search_query_suggestions "搜索詞建議">
 <!ENTITY pref_search_block_adult_content "阻止露骨的內容">
 <!ENTITY pref_search_auto_completion "啟用自動完成">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "搜索，&pref_new_tab_category; 瀏覽，通知，下載，&brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "藍色主題">
 <!ENTITY pref_cliqz_tab_background "顯示背景圖片">
 <!ENTITY pref_cliqz_tab_topsites "顯示最熱門的網站">
 <!ENTITY pref_cliqz_tab_news "顯示新聞">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "已可供！">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "附加組件未作為&amp;formatS1安裝；已集成在您的瀏覽器中。">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "鎖定至熱門網站">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "從熱門網站解鎖">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "添加頁面剪輯">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "鎖定頁面至熱門網站">
+<!ENTITY cliqz_unpinned_page_from_top_sites "從熱門網站解鎖頁面">

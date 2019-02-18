@@ -50,7 +50,7 @@
         <CheckBoxPreference
             android:key="pref.cliqz.tab.background.enabled"
             android:title="@string/pref_cliqz_tab_background"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
 
         <CheckBoxPreference
             android:key="pref.cliqz.tab.topsites.enabled"
@@ -75,8 +75,7 @@
         <ListPreference
             android:key="pref.search.regional"
             android:title="@string/pref_search_regional"
-            android:entries="@array/pref_search_regional_entries"
-            android:entryValues="@array/pref_search_regional_values"/>
+            android:enabled="false" />
 
         <CheckBoxPreference
             android:defaultValue="true"

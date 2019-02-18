@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "Les sites que vous visitez le plus appaîtront ici">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "Actualités">
 <!ENTITY activity_stream_top_news_show "Voir">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Rechercher">
 <!ENTITY pref_search_regional "Résultats de recherche pour">
-<!ENTITY pref_search_regional_germany "Allemagne">
-<!ENTITY pref_search_regional_france "France">
-<!ENTITY pref_search_regional_usa "États-Unis">
-<!ENTITY pref_search_regional_spain "Espagne">
-<!ENTITY pref_search_regional_italy "Italie">
-<!ENTITY pref_search_regional_uk "Royaume-Uni">
+<!ENTITY pref_search_regional_at "Autriche">
+<!ENTITY pref_search_regional_au "Australie">
+<!ENTITY pref_search_regional_ca "Canada">
+<!ENTITY pref_search_regional_de "Allemagne">
+<!ENTITY pref_search_regional_es "Espagne">
+<!ENTITY pref_search_regional_fr "France">
+<!ENTITY pref_search_regional_gb "Royaume-Uni">
+<!ENTITY pref_search_regional_it "Italie">
+<!ENTITY pref_search_regional_ru "Russie">
+<!ENTITY pref_search_regional_us "États-Unis">
 <!ENTITY pref_search_query_suggestions "Suggestions de recherche">
 <!ENTITY pref_search_block_adult_content "Bloquer les contenus explicites">
 <!ENTITY pref_search_auto_completion "Activer l\'exécution automatique">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Rechercher, &pref_new_tab_category;, Navigation, Notifications, Téléchargement, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "Thème Bleu">
 <!ENTITY pref_cliqz_tab_background "Afficher l\'image d\'arrière-plan">
 <!ENTITY pref_cliqz_tab_topsites "Afficher les sites les plus visités">
 <!ENTITY pref_cliqz_tab_news "Afficher les informations">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Déjà disponible !">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "Ce module complémentaire n\'a pas été installé car $formatS1; est déjà intégré à votre navigateur.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Ajouter aux Top Sites">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Retirer des Top Sites">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Ajouter un Raccourci Page">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Page ajoutée aux Top Sites">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Page retirée des Top Sites">

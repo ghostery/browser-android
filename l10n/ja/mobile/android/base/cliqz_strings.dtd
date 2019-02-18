@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "最も多くアクセスしたサイトがここに表示されます">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "ニュース">
 <!ENTITY activity_stream_top_news_show "Show">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "検索">
 <!ENTITY pref_search_regional "の検索結果">
-<!ENTITY pref_search_regional_germany "ドイツ">
-<!ENTITY pref_search_regional_france "フランス">
-<!ENTITY pref_search_regional_usa "米国">
-<!ENTITY pref_search_regional_spain "スペイン">
-<!ENTITY pref_search_regional_italy "イタリア">
-<!ENTITY pref_search_regional_uk "英国">
+<!ENTITY pref_search_regional_at "オーストリア">
+<!ENTITY pref_search_regional_au "オーストラリア">
+<!ENTITY pref_search_regional_ca "カナダ">
+<!ENTITY pref_search_regional_de "ドイツ">
+<!ENTITY pref_search_regional_es "スペイン">
+<!ENTITY pref_search_regional_fr "フランス">
+<!ENTITY pref_search_regional_gb "英国">
+<!ENTITY pref_search_regional_it "イタリア">
+<!ENTITY pref_search_regional_ru "ロシア">
+<!ENTITY pref_search_regional_us "米国">
 <!ENTITY pref_search_query_suggestions "検索クエリーの提案">
 <!ENTITY pref_search_block_adult_content "露骨なコンテンツをブロック">
 <!ENTITY pref_search_auto_completion "自動補完を有効にする">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "検索、&pref_new_tab_category;、閲覧、通知、ダウンロード、&brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "ブルーテーマ">
 <!ENTITY pref_cliqz_tab_background "背景画像を表示">
 <!ENTITY pref_cliqz_tab_topsites "最も多くアクセスしたサイトを表示">
 <!ENTITY pref_cliqz_tab_news "ニュースを表示">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "既に利用できます！">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "&formatS1;としてインストールされていないアドオンは、既にブラウザに統合されています。">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "トップサイトにピン留めする">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "トップサイトからピン留めをはずす">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "ページへのショートカットを追加">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "トップサイトにピン留めしたページ">
+<!ENTITY cliqz_unpinned_page_from_top_sites "トップサイトからピン留めをはずしたページ">

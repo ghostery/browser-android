@@ -1,2 +1,3 @@
 objdir
-**/index.android.bundle
+freshtab
+**/*.android.bundle

@@ -266,9 +266,11 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
         showSoftInput();
     }
 
-    void setText(String text) {
+    /*Cliqz Start*/
+    public void setText(String text) {
         mEditText.setText(text);
     }
+    /*Cliqz End*/
 
     String getText() {
         return mEditText.getText().toString();

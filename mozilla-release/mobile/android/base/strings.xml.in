@@ -427,6 +427,13 @@
   <string name="contextmenu_unpin_from_top_sites">&contextmenu_unpin_from_top_sites;</string>
   <string name="contextmenu_add_search_engine">&contextmenu_add_search_engine;</string>
 
+  <string name="cliqz_contextmenu_add_page_shortcut">&cliqz_contextmenu_add_page_shortcut;</string>
+  <string name="cliqz_contextmenu_pin_to_top_sites">&cliqz_contextmenu_pin_to_top_sites;</string>
+  <string name="cliqz_contextmenu_unpin_from_top_sites">&cliqz_contextmenu_unpin_from_top_sites;</string>
+  <string name="cliqz_pinned_page_to_top_sites">&cliqz_pinned_page_to_top_sites;</string>
+  <string name="cliqz_unpinned_page_from_top_sites">&cliqz_unpinned_page_from_top_sites;</string>
+
+
   <string name="pinned_page_to_top_sites">&pinned_page_to_top_sites;</string>
   <string name="unpinned_page_from_top_sites">&unpinned_page_from_top_sites;</string>
 
@@ -710,6 +717,9 @@
   <string name="contextmenu_delete">&contextmenu_delete;</string>
   <string name="search_loading_message">&search_loading_message;</string>
 
+  <!-- Top Sites -->
+  <string name="activity_stream_empty_topsites">&activity_stream_empty_topsites;</string>
+
   <!-- News -->
   <string name="activity_stream_top_news">&activity_stream_top_news;</string>
   <string name="activity_stream_top_news_hide">&activity_stream_top_news_hide;</string>
@@ -737,7 +747,7 @@
   <string name="pref_human_web_url">&pref_human_web_url;</string>
 
   <!-- MyOffrz -->
-  <string name="myoffrz_title">&myoffrz_title;</string>	
+  <string name="myoffrz_title">&myoffrz_title;</string>
   <string name="myoffrz_no_offers_title">&myoffrz_no_offers_title;</string>
   <string name="myoffrz_no_offers_msg_line1">&myoffrz_no_offers_msg_line1;</string>
   <string name="myoffrz_no_offers_msg_line2">&myoffrz_no_offers_msg_line2;</string>
@@ -857,12 +867,16 @@
   <!-- General - Search-->
   <string name="pref_search_category">&pref_search_category;</string>
   <string name="pref_search_regional">&pref_search_regional;</string>
-  <string name="pref_search_regional_germany">&pref_search_regional_germany;</string>
-  <string name="pref_search_regional_france">&pref_search_regional_france;</string>
-  <string name="pref_search_regional_usa">&pref_search_regional_usa;</string>
-  <string name="pref_search_regional_spain">&pref_search_regional_spain;</string>
-  <string name="pref_search_regional_italy">&pref_search_regional_italy;</string>
-  <string name="pref_search_regional_uk">&pref_search_regional_uk;</string>
+  <string name="pref_search_regional_at">&pref_search_regional_at;</string>
+  <string name="pref_search_regional_au">&pref_search_regional_au;</string>
+  <string name="pref_search_regional_ca">&pref_search_regional_ca;</string>
+  <string name="pref_search_regional_de">&pref_search_regional_de;</string>
+  <string name="pref_search_regional_es">&pref_search_regional_es;</string>
+  <string name="pref_search_regional_fr">&pref_search_regional_fr;</string>
+  <string name="pref_search_regional_gb">&pref_search_regional_gb;</string>
+  <string name="pref_search_regional_it">&pref_search_regional_it;</string>
+  <string name="pref_search_regional_ru">&pref_search_regional_ru;</string>
+  <string name="pref_search_regional_us">&pref_search_regional_us;</string>
   <string name="pref_search_query_suggestions">&pref_search_query_suggestions;</string>
   <string name="pref_search_block_adult_content">&pref_search_block_adult_content;</string>
   <string name="pref_search_auto_completion">&pref_search_auto_completion;</string>

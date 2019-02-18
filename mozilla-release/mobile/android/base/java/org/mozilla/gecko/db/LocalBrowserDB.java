@@ -2090,47 +2090,28 @@ public class LocalBrowserDB extends BrowserDB {
     }
 
     /* Cliqz start */
-    @Nullable public Cursor getHistoryForQuery(@NonNull ContentResolver cr, @NonNull String query, int limit) {
-        final Uri uri = mMostVisitedHistoryWithProfile.buildUpon()
-                .appendQueryParameter(BrowserContract.PARAM_LIMIT, String.valueOf(limit))
-                // Due to Firefox internal logic, we ask to show deleted history points int the uri
-                // and then filter them in the query
-                .appendQueryParameter(BrowserContract.PARAM_SHOW_DELETED, "1")
-                .build();
-        final String[] projection = new String[] {
-                History._ID,
-                History.URL,
-                History.TITLE,
-                History.DATE_LAST_VISITED,
-                History.VISITS
-        };
+    @Nullable public Cursor getRankedHistoryForQuery(@NonNull ContentResolver cr, @NonNull String query, int limit) {
         final String selection;
         final String[] selectionArgs;
-        if (query.isEmpty()) {
-            selection = null;
-            selectionArgs = null;
-        } else {
-            final StringBuilder selectionBuilder = new StringBuilder();
-            final ArrayList<String> argumentsList = new ArrayList<>();
-            selectionBuilder
-                    .append(History.IS_DELETED).append(" = 0 AND ")
-                    .append(History.URL).append(" NOT LIKE ?");
-            argumentsList.add("moz-extension://%");
-            selectionBuilder
-                    .append(" AND (")
-                    .append(History.URL)
-                    .append(" LIKE ? OR ")
-                    .append(History.TITLE)
-                    .append(" LIKE ?)");
-            final String escapedQuery = "%" + query + "%";
-            argumentsList.add(escapedQuery);
-            argumentsList.add(escapedQuery);
-            selection = selectionBuilder.append(" COLLATE NOCASE").toString();
-            final String[] conv = new String[argumentsList.size()];
-            selectionArgs = argumentsList.toArray(conv);
-        }
-        final String sortOrder = History.DATE_LAST_VISITED + " DESC, " + History.VISITS + " DESC";
-        return cr.query(uri, projection, selection, selectionArgs, sortOrder);
+
+
+        selection = History.URL + " NOT LIKE ?";
+        selectionArgs = new String[] { "moz-extension://%" };
+
+        return filterAllSites(cr,
+                new String[] { Combined._ID,
+                        Combined.URL,
+                        Combined.TITLE,
+                        Combined.BOOKMARK_ID,
+                        Combined.HISTORY_ID,
+                        BrowserContract.HistoryColumns.DATE_LAST_VISITED,
+                        BrowserContract.HistoryColumns.VISITS },
+                query,
+                limit,
+                null,
+                selection,
+                selectionArgs);
     }
+
     /* Cliqz end */
 }
