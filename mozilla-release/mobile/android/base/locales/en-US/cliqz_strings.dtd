@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "Your most visited websites will appear here">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "News">
 <!ENTITY activity_stream_top_news_show "Show">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Search">
 <!ENTITY pref_search_regional "Search results for">
-<!ENTITY pref_search_regional_germany "Germany">
-<!ENTITY pref_search_regional_france "France">
-<!ENTITY pref_search_regional_usa "United States">
-<!ENTITY pref_search_regional_spain "Spain">
-<!ENTITY pref_search_regional_italy "Italy">
-<!ENTITY pref_search_regional_uk "United Kingdom">
+<!ENTITY pref_search_regional_at "Austria">
+<!ENTITY pref_search_regional_au "Australia">
+<!ENTITY pref_search_regional_ca "Canada">
+<!ENTITY pref_search_regional_de "Germany">
+<!ENTITY pref_search_regional_es "Spain">
+<!ENTITY pref_search_regional_fr "France">
+<!ENTITY pref_search_regional_gb "United Kingdom">
+<!ENTITY pref_search_regional_it "Italy">
+<!ENTITY pref_search_regional_ru "Russia">
+<!ENTITY pref_search_regional_us "United States">
 <!ENTITY pref_search_query_suggestions "Search query suggestions">
 <!ENTITY pref_search_block_adult_content "Block explicit content">
 <!ENTITY pref_search_auto_completion "Enable Autocompletion">
@@ -316,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Already available!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "Add-on was not installed as &formatS1; is already integrated in your browser.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Pin to Top Sites">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Unpin from Top Sites">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Add Page Shortcut">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Pinned page to Top Sites">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Unpinned page from Top Sites">

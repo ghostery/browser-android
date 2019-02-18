@@ -124,7 +124,9 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     }
 
     protected final ToolbarDisplayLayout urlDisplayLayout;
-    protected final ToolbarEditLayout urlEditLayout;
+    /*Cliqz Start*/
+    public final ToolbarEditLayout urlEditLayout;
+    /*Cliqz End*/
     protected final View urlBarEntry;
     protected boolean isSwitchingTabs;
     protected final ThemedImageButton tabsButton;

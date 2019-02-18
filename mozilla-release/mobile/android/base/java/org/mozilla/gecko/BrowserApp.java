@@ -140,7 +140,6 @@ import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.NotificationHelper;
 import org.mozilla.gecko.overlays.ui.ShareDialog;
 import org.mozilla.gecko.permissions.Permissions;
-import org.mozilla.gecko.preferences.Countries;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.promotion.ReaderViewBookmarkPromotion;
@@ -840,10 +839,6 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
         /* Cliqz start */
-        //Forcing the default right away, otherwise extension wont have the right default until and
-        //unless user opens the settings
-        PrefsHelper.setPrefIfNotExists(GeckoPreferences.PREFS_SEARCH_REGIONAL,
-                new Countries(this).getDefaultCountryCode());
         mBrowserSearchContainer = findViewById(R.id.search_container);
         mBrowserSearch = (BrowserSearch) getSupportFragmentManager().findFragmentByTag(BROWSER_SEARCH_TAG);
         if (mBrowserSearch == null) {
@@ -905,6 +900,8 @@ public class BrowserApp extends GeckoApp
             "Search:renderResults",
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
+            "Search:Focus",
+            "Search:QuerySuggestions",
             /* Cliqz end */
             null);
 
@@ -1042,7 +1039,7 @@ public class BrowserApp extends GeckoApp
             maybeShowSetDefaultBrowserDialog(sharedPreferences, appContext);
         }
 
-        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+        mPreferenceManager = PreferenceManager.getInstance();
         updateTheme();
         /* Cliqz End */
     }
@@ -1648,11 +1645,11 @@ public class BrowserApp extends GeckoApp
                         final @StringRes int snackbarText;
                         if (!db.isPinnedForAS(cr, url)) {
                             db.pinSiteForAS(getContentResolver(), url, selectedTab.getTitle());
-                            snackbarText = R.string.pinned_page_to_top_sites;
+                            snackbarText = R.string.cliqz_pinned_page_to_top_sites;
                             telemetryExtraBuilder.set(ActivityStreamTelemetry.Contract.ITEM, ActivityStreamTelemetry.Contract.ITEM_PIN);
                         } else {
                             db.unpinSiteForAS(getContentResolver(), url);
-                            snackbarText = R.string.unpinned_page_from_top_sites;
+                            snackbarText = R.string.cliqz_unpinned_page_from_top_sites;
                             telemetryExtraBuilder.set(ActivityStreamTelemetry.Contract.ITEM, ActivityStreamTelemetry.Contract.ITEM_UNPIN);
                         }
 
@@ -1800,6 +1797,7 @@ public class BrowserApp extends GeckoApp
             "Search:Idle",
             "Search:Ready",
             "Addons:PreventGhosteryCliqz",
+            "Search:QuerySuggestions",
             /* Cliqz end */
             null);
 
@@ -2374,7 +2372,7 @@ public class BrowserApp extends GeckoApp
                 final int limit = query != null ? query.getInt("maxResults", 5) : 5;
                 final BrowserDB sdb = BrowserDB.from(getProfile());
                 final ContentResolver scr = getContentResolver();
-                final Cursor scu = sdb.getHistoryForQuery(scr, text, limit);
+                final Cursor scu = sdb.getRankedHistoryForQuery(scr, text, limit);
                 final GeckoBundle smessage = new GeckoBundle();
                 smessage.putString("text", text);
                 final ArrayList<GeckoBundle> results = new ArrayList<>(limit);
@@ -2456,6 +2454,11 @@ public class BrowserApp extends GeckoApp
                                 GeckoBundleUtils.safeGetString(message,"data")))
                         .setPositiveButton(getString(R.string.action_ok),null)
                         .show();
+                break;
+            case "Search:Focus":
+                final String searchQuery = message.getString("query");
+                enterEditingMode();
+                mBrowserToolbar.urlEditLayout.setText(searchQuery);
                 break;
             /* Cliqz end */
 
@@ -3334,7 +3337,7 @@ public class BrowserApp extends GeckoApp
      * if a new page is not being loaded.
      */
     private void hideHomePager(final String url) {
-        if (!isHomePagerVisible() || AboutPages.isAboutHome(url)) {
+        if (!isHomePagerVisible() || url == null || url.isEmpty() || AboutPages.isAboutHome(url)) {
             return;
         }
 
@@ -3437,6 +3440,7 @@ public class BrowserApp extends GeckoApp
     private void hideBrowserSearch(boolean hidePanel) {
         /* Cliqz start */
         // If we are displaying the "loading search" UI, hide it
+        hideCliqzQuerySuggestions();
         if (mLoadingSearchHelper.isStarted()) {
             mLoadingSearchHelper.stop();
         }
@@ -3654,7 +3658,7 @@ public class BrowserApp extends GeckoApp
             final MenuItem pinToTopSitesItem = aMenu.findItem(R.id.pin_to_top_sites);
             if (pinToTopSitesItem != null) {
                 // This title is set dynamically so we reset it for this edge case.
-                pinToTopSitesItem.setTitle(R.string.contextmenu_pin_to_top_sites);
+                pinToTopSitesItem.setTitle(R.string.cliqz_contextmenu_pin_to_top_sites);
             }
 
             return true;
@@ -3872,7 +3876,7 @@ public class BrowserApp extends GeckoApp
 
         // Set initial state before async query completes.
         item.setEnabled(false); // Disable interaction.
-        item.setTitle(R.string.contextmenu_pin_to_top_sites);
+        item.setTitle(R.string.cliqz_contextmenu_pin_to_top_sites);
 
         ThreadUtils.postToBackgroundThread(new Runnable() {
             @Override
@@ -3882,7 +3886,7 @@ public class BrowserApp extends GeckoApp
                     @Override
                     public void run() {
                         item.setTitle(isPinned ?
-                                R.string.contextmenu_unpin_from_top_sites : R.string.contextmenu_pin_to_top_sites);
+                                R.string.cliqz_contextmenu_unpin_from_top_sites : R.string.cliqz_contextmenu_pin_to_top_sites);
                         item.setEnabled(true);
                     }
                 });
@@ -4679,20 +4683,12 @@ public class BrowserApp extends GeckoApp
     private void showCliqzSearch() {
         mLayerView.setSearchPanelVisibilty(true);
         EventDispatcher.getInstance().dispatch("Search:Show", null);
-        if(mPreferenceManager.isQuerySuggestionsEnabled()) {
-            EventDispatcher.getInstance().registerUiThreadListener(this,
-                    "Search:QuerySuggestions", null);
-        }
     }
 
     private void hidePanelSearch() {
         mLayerView.setSearchPanelVisibilty(false);
         EventDispatcher.getInstance().dispatch("Search:Hide", null);
         EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
-        if(mPreferenceManager.isQuerySuggestionsEnabled()) {
-            EventDispatcher.getInstance().unregisterUiThreadListener(this,
-                    "Search:QuerySuggestions", null);
-        }
     }
 
     public void toggleControlCenter() {

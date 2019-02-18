@@ -5,9 +5,9 @@ host = https://www.transifex.com
 file_filter = l10n/<lang>/mobile/android/base/cliqz_strings.dtd
 minimum_perc = 0
 source_file = mozilla-release/mobile/android/base/locales/en-US/cliqz_strings.dtd
-source_lang = en_US
+source_lang = en
 trans.de = l10n/de/mobile/android/base/cliqz_strings.dtd
-trans.es_ES = l10n/es-ES/mobile/android/base/cliqz_strings.dtd
+trans.es = l10n/es/mobile/android/base/cliqz_strings.dtd
 trans.fr = l10n/fr/mobile/android/base/cliqz_strings.dtd
 trans.hu = l10n/hu/mobile/android/base/cliqz_strings.dtd
 trans.it = l10n/it/mobile/android/base/cliqz_strings.dtd
@@ -22,12 +22,12 @@ trans.zh_TW = l10n/zh-TW/mobile/android/base/cliqz_strings.dtd
 type = DTD
 
 [ghostery-android-app.release_notes]
-file_filter = notes/notes-<lang>.txtnotes.txt
+file_filter = notes/notes-<lang>.txt
 minimum_perc = 0
 source_file = notes/notes.txt
-source_lang = en_US
+source_lang = en
 trans.de = notes/notes-de.txt
-trans.es_ES = notes/notes-es_ES.txt
+trans.es = notes/notes-es.txt
 trans.fr = notes/notes-fr.txt
 trans.hu = notes/notes-hu.txt
 trans.it = notes/notes-it.txt

@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "Tu widoczne będą najczęściej odwiedzane przez Ciebie witryny">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "Aktualności">
 <!ENTITY activity_stream_top_news_show "Pokaż">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Szukaj">
 <!ENTITY pref_search_regional "Znajdź wyniki dla">
-<!ENTITY pref_search_regional_germany "Niemcy">
-<!ENTITY pref_search_regional_france "Francja">
-<!ENTITY pref_search_regional_usa "Stany Zjednoczone">
-<!ENTITY pref_search_regional_spain "Hiszpania">
-<!ENTITY pref_search_regional_italy "Włochy">
-<!ENTITY pref_search_regional_uk "Wielka Brytania">
+<!ENTITY pref_search_regional_at "Austria">
+<!ENTITY pref_search_regional_au "Australia">
+<!ENTITY pref_search_regional_ca "Kanada">
+<!ENTITY pref_search_regional_de "Niemcy">
+<!ENTITY pref_search_regional_es "Hiszpania">
+<!ENTITY pref_search_regional_fr "Francja">
+<!ENTITY pref_search_regional_gb "Wielka Brytania">
+<!ENTITY pref_search_regional_it "Włochy">
+<!ENTITY pref_search_regional_ru "Rosja">
+<!ENTITY pref_search_regional_us "Stany Zjednoczone">
 <!ENTITY pref_search_query_suggestions "Sugestie zapytań wyszukiwania">
 <!ENTITY pref_search_block_adult_content "Blokuj wulgarne treści">
 <!ENTITY pref_search_auto_completion "Włącz autouzupełnianie">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Wyszukiwanie, &pref_new_tab_category;, Przeglądanie, Powiadomienia, Pobieranie, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "Temat Blue">
 <!ENTITY pref_cliqz_tab_background "Pokaż obraz tła">
 <!ENTITY pref_cliqz_tab_topsites "Pokaż najczęściej odwiedzane witryny">
 <!ENTITY pref_cliqz_tab_news "Pokaż aktualności">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Już dostępny!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "Dodatek nie został zainstalowany, ponieważ &formatS1; jest już zintegrowany z Twoją przeglądarką.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Przypnij do Najpopularniejszych stron">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Odepnij od Najpopularniejszych stron">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Dodaj skrót do strony">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Strona przypięta do Najpopularniejszych stron">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Strona odpięta od Najpopularniejszych stron">

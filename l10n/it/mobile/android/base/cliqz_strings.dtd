@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "I tuoi siti più visitati appariranno qui">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "Notizie">
 <!ENTITY activity_stream_top_news_show "Mostra">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Ricerca">
 <!ENTITY pref_search_regional "Risultati di ricerca per">
-<!ENTITY pref_search_regional_germany "Germania">
-<!ENTITY pref_search_regional_france "Francia">
-<!ENTITY pref_search_regional_usa "Stati Uniti">
-<!ENTITY pref_search_regional_spain "Spagna">
-<!ENTITY pref_search_regional_italy "Italia">
-<!ENTITY pref_search_regional_uk "Regno Unito">
+<!ENTITY pref_search_regional_at "Austria">
+<!ENTITY pref_search_regional_au "Australia">
+<!ENTITY pref_search_regional_ca "Canada">
+<!ENTITY pref_search_regional_de "Germania">
+<!ENTITY pref_search_regional_es "Spagna">
+<!ENTITY pref_search_regional_fr "Francia">
+<!ENTITY pref_search_regional_gb "Regno Unito">
+<!ENTITY pref_search_regional_it "Italia">
+<!ENTITY pref_search_regional_ru "Russia">
+<!ENTITY pref_search_regional_us "Stati Uniti">
 <!ENTITY pref_search_query_suggestions "Suggerimenti di ricerca">
 <!ENTITY pref_search_block_adult_content "Blocca contenuti espliciti">
 <!ENTITY pref_search_auto_completion "Attiva Completamento Automatico">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Ricerca, &pref_new_tab_category;, Navigazione, Notifiche, Download, &brandMyOffrz;  ">
+<!ENTITY pref_cliqz_tab_blue_theme "Tema Blu">
 <!ENTITY pref_cliqz_tab_background "Mostra immagine di sfondo">
 <!ENTITY pref_cliqz_tab_topsites "Mostra i siti web più visitati">
 <!ENTITY pref_cliqz_tab_news "Mostra Notizie">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Già disponibile!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "L\'add-on non è stato installato poiché &formatS1; è già integrato nel tuo browser.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Aggiungi ai siti più visitati">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Rimuovi dai siti più visitati">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Aggiungi collegamento alla pagina">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Pagina aggiunta ai siti più visitati">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Pagina rimossa dai siti più visitati">

@@ -6517,9 +6517,10 @@ var Cliqz = {
 
     GlobalEventDispatcher.registerListener(this, [
       "Cards:CallBackgroundAction",
-
       "Search:Hide",
 //      "Search:Search",
+      "Search:Backends",
+      "SystemAddon:Request",
       "Search:Show",
       "Privacy:AdblockToggle",
       "Privacy:GetInfo",
@@ -6562,7 +6563,23 @@ var Cliqz = {
       });
     });
 
-    this._syncSearchPrefs();
+    var searchRegional = Services.prefs.getCharPref("pref.search.regional", null);
+    if (searchRegional == null) {
+      // First start after install we didn't set a default
+      this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => {
+        var [ lang, country ] = Services.prefs.getCharPref("intl.locale.os", "not_found").toLowerCase().split("-");
+        country = country ? country : lang;
+        var foundBackend = Object.keys(countries).find( v => country == v );
+        if (foundBackend) {
+          Services.prefs.setCharPref("pref.search.regional", foundBackend);
+        } else {
+          Services.prefs.setCharPref("pref.search.regional", "us");
+        }
+        Cliqz._syncSearchPrefs();
+      });
+    } else {
+      this._syncSearchPrefs();
+    }
   },
 
   READY_STATUS: {
@@ -6577,19 +6594,27 @@ var Cliqz = {
       contextId: "mobile-cards",
     }
     msg.source = "ANDROID_BROWSER";
+    let resolver;
     if (this.extensionsReady[id] === this.READY_STATUS.NOT_READY) {
       this.extensionsMessageQueue[id].push({
-        msg: Object.assign({}, msg),
-        opts: opts
+        message: {
+          msg: Object.assign({}, msg),
+          opts: opts
+        },
+        resolver: (r) => { resolver(r); },
       });
       msg.ping = true;
       this.extensionsReady[id] = this.READY_STATUS.PINGED;
     } else if (this.extensionsReady[id] === this.READY_STATUS.PINGED) {
-      this.extensionsMessageQueue[id].push({
-        msg: msg,
-        opts: opts
+      return new Promise((resolve) => {
+        this.extensionsMessageQueue[id].push({
+          message: {
+            msg: msg,
+            opts: opts
+          },
+          resolver: resolve,
+        });
       });
-      return;
     }
 
     msg.requestId = this.messageId++;
@@ -6608,7 +6633,6 @@ var Cliqz = {
       responseType: 3 // MessageChannel.RESPONSE_NONE
     }]);
 
-    let resolver;
     const promise = new Promise(r => { resolver = r; });
     this.callbacks[msg.requestId] = resolver;
     return promise;
@@ -6647,6 +6671,10 @@ var Cliqz = {
     this.Search = this._createBrowserForExtension(id);
     this.Search.browser.loadURI("moz-extension://" + uuid + "/" + path);
     this.Search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
+  },
+
+  startSearch(query) {
+    this.messageExtension({ module: "search", action: "startSearch", args: [query, {}, { contextId: 'mobile-cards' }] });
   },
 
   _searchExtensionListener(msg) {
@@ -6693,6 +6721,11 @@ var Cliqz = {
       case "ready":
         this._searchExtensionListener({ action: 'renderReady' });
         this._handleExtensionReady("firefox@ghostery.com");
+        if (this.lastQueuedQuery) {
+          this.startSearch(this.lastQueuedQuery);
+          this.lastQueuedQuery = "";
+        }
+        this.searchIsReady = true;
         break;
       case "idle":
         GlobalEventDispatcher.sendRequest({
@@ -6700,26 +6733,10 @@ var Cliqz = {
         });
         break;
       case "renderReady":
-        if (!this.searchIsReady) {
-          GlobalEventDispatcher.sendRequest({
-            type: "Search:Ready"
-          });
-          this.searchIsReady = true;
-        }
-
-        if (this.lastQueuedQuery) {
-          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
-          this.lastQueuedQuery = "";
-        }
+        GlobalEventDispatcher.sendRequest({
+          type: "Search:Ready"
+        });
         break;
-      default:
-        console.log("unexpected message", msg);
-    }
-  },
-
-  _privacyExtensionListener(msg) {
-    console.log("Dispaching event from the privacy extension to native", msg.action);
-    switch (msg.action) {
       case "setIcon":
         var count = Number.parseInt(msg.payload.text);
         count = count ? count : 0;
@@ -6739,7 +6756,7 @@ var Cliqz = {
         // it will be considered ready when any message is sent from extension
         break;
       default:
-        console.log("unexpected message", msg);
+        console.log("unexpected message", msg.action);
     }
   },
 
@@ -6750,7 +6767,9 @@ var Cliqz = {
     this.extensionsReady[id] = this.READY_STATUS.READY;
     const queue = this.extensionsMessageQueue[id];
     this.extensionsMessageQueue[id] = [];
-    queue.forEach(obj => this.messageExtension(obj.msg, obj.opts));
+    queue.forEach(obj => {
+      obj.resolver(this.messageExtension(obj.message.msg, obj.message.opts));
+    });
   },
 
   _extensionListener(ev) {
@@ -6781,7 +6800,7 @@ var Cliqz = {
       let response;
       let sendCallback;
       if (data.recipient.extensionId === "firefox@ghostery.com") {
-        response = this._privacyExtensionListener(msg) || this._searchExtensionListener(msg);
+        response = this._searchExtensionListener(msg);
       }
       if ("requestId" in msg) {
         this.messageExtension({
@@ -6879,19 +6898,29 @@ var Cliqz = {
         });
         break;
       case "Search:Backends":
-        this.messageExtension({ module: 'search', action: "getBackendCountries" })
+        this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => callback.onSuccess(countries));
         break;
       case "Search:Hide":
         this.isVisible = false;
         this.Search && this.hidePanel(this.Search.browser);
-        this.messageExtension({ module: "search", action: "stopSearch", args: []});
+        this.messageExtension({ module: "search", action: "stopSearch", args: [{ contextId: 'mobile-cards' }]});
         break;
       case "Search:Search":
         this.lastQueuedQuery = data.q || "";
         if (this.searchIsReady) {
-          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.startSearch(this.lastQueuedQuery);
           this.lastQueuedQuery = "";
         }
+        break;
+      case "SystemAddon:Request":
+        this.messageExtension({
+          module: data.module,
+          action: data.action,
+          args: data.args.map(arg => arg.data),
+        }).then(
+          response => callback.onSuccess(response),
+          error => callback.onError(error),
+        );
         break;
       case "Search:Show":
         this.isVisible = true; // save the state before search is initialized

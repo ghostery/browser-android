@@ -42,7 +42,7 @@ public class TopNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public TopNewsAdapter(Context context, final HomePager.OnUrlOpenListener onUrlOpenListener) {
         this.context = context;
         this.onUrlOpenListener = onUrlOpenListener;
-        this.preferenceManager = PreferenceManager.getInstance(context);
+        this.preferenceManager = PreferenceManager.getInstance();
         topNews = new ArrayList<>();
     }
 

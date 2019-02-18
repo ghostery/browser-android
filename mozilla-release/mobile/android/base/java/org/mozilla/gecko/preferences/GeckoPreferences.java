@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.graphics.Typeface;
@@ -720,7 +721,7 @@ public class GeckoPreferences
       *         to monitor changes to Gecko prefs.
       */
     public PrefsHelper.PrefHandler setupPreferences(PreferenceGroup prefs) {
-        mPreferenceManager = PreferenceManager.getInstance(getApplicationContext());
+        mPreferenceManager = PreferenceManager.getInstance();
         ArrayList<String> list = new ArrayList<String>();
         setupPreferences(prefs, list);
         return getGeckoPreferences(prefs, list);
@@ -740,6 +741,7 @@ public class GeckoPreferences
         for (int i = 0; i < preferences.getPreferenceCount(); i++) {
             final Preference pref = preferences.getPreference(i);
             String key = pref.getKey();
+            final PreferenceManager preferenceManager = PreferenceManager.getInstance();
             if (pref instanceof PreferenceGroup) {
                 // If datareporting is disabled, remove UI.
                 if (PREFS_DATA_REPORTING_PREFERENCES.equals(key)) {
@@ -1085,9 +1087,7 @@ public class GeckoPreferences
                          }
                      });
                 } else if(PREFS_SEARCH_REGIONAL.equals(key)) {
-                    final String value = mPreferenceManager.getSearchRegional();
-                    ((ListPreference) pref).setValue(value);
-                    ((ListPreference) pref).setSummary(new Countries(getBaseContext()).getCountryName(value));
+                    SearchBackendPrefInitializer.init(getApplicationContext(), (ListPreference) pref);
                 } else if (PREFS_DEFAULT_BROWSER.equals(key)) {
                     if (!AppConstants.Versions.feature24Plus) {
                         preferences.removePreference(pref);
@@ -1130,6 +1130,11 @@ public class GeckoPreferences
                         i--;
                     }
                 } else if(PREFS_BLUE_THEME.equals(key)) {
+                    if (!BuildConfig.DEBUG && !BuildConfig.APPLICATION_ID.contains("alpha")) {
+                        preferences.removePreference(pref);
+                        i--;
+                        continue;
+                    }
                     pref.setOnPreferenceChangeListener(this);
                 }
                 /* Cliqz end */
@@ -1396,7 +1401,6 @@ public class GeckoPreferences
         final String prefName = preference.getKey();
         Log.i(LOGTAG, "Changed " + prefName + " = " + newValue);
         recordSettingChangeTelemetry(prefName, newValue);
-
         if (PREFS_MP_ENABLED.equals(prefName)) {
             showDialog((Boolean) newValue ? DIALOG_CREATE_MASTER_PASSWORD : DIALOG_REMOVE_MASTER_PASSWORD);
 
@@ -1923,5 +1927,86 @@ public class GeckoPreferences
         this.mCurrentPreferenceFragment = fragment;
     }
 
+    private static class SearchBackendPrefInitializer extends PrefsHelper.PrefHandlerBase
+                                                    implements EventCallback {
+        private final ListPreference pref;
+        private final Resources resources;
+        private final String packageName;
+        private String mSelectedBackEnd;
+
+        private SearchBackendPrefInitializer(Context context, ListPreference pref) {
+            this.resources = context.getResources();
+            this.packageName = context.getPackageName();
+            this.pref = pref;
+        }
+
+        static void init(Context context, ListPreference pref) {
+            final SearchBackendPrefInitializer initializer =
+                    new SearchBackendPrefInitializer(context, pref);
+            // 1. We start asking for the currently selected backend
+            PrefsHelper.getPref(GeckoPreferences.PREFS_SEARCH_REGIONAL, initializer);
+        }
+
+        @Override
+        public void prefValue(String pref, String value) {
+            // 2. Only when we get the value, we ask the extension to give us the backends list
+            mSelectedBackEnd = value;
+            EventDispatcher.getInstance().dispatch("Search:Backends", null, this);
+        }
+
+        private String getNameFor(String backendName) {
+            final int resId = resources
+                    .getIdentifier( "pref_search_regional_" + backendName,
+                            "string", packageName);
+            // In case we do not have a translation we just display the backend name (i.e. us, it,
+            // at, au, etc.)
+            return resId > 0 ? resources.getString(resId) : backendName;
+        }
+
+
+        @Override
+        public void sendSuccess(Object response) {
+            if (!(response instanceof GeckoBundle)) {
+                return;
+            }
+            // 3. we parse the results and get the backends name translations
+            final GeckoBundle data = (GeckoBundle) response;
+            final String[] backends = data.keys();
+            final ArrayList<String> names = new ArrayList<>(backends.length);
+            String value = null;
+            String summary = null;
+            for (String be: backends) {
+                final String name = getNameFor(be);
+                names.add(name);
+                if (mSelectedBackEnd.equals(be)) {
+                    value = be;
+                    summary = name;
+                }
+            }
+            final String[] entries = new String[names.size()];
+            names.toArray(entries);
+
+            // Must convert value and summary variables to final versions of themselves
+            final String fValue = value != null ? value : "us";
+            final String fSummary = summary != null ? summary : getNameFor("us");
+            ThreadUtils.postToUiThread(() -> {
+                // 4. Finally we set the ListPreference properties and we enable it
+                pref.setEntries(entries);
+                pref.setEntryValues(backends);
+                pref.setValue(fValue);
+                pref.setSummary(fSummary);
+                pref.setEnabled(true);
+            });
+        }
+
+        @Override
+        public void sendError(Object response) {
+            ThreadUtils.postToUiThread(() -> {
+                // In case we receive an error from the extension we disable the preference to avoid
+                // a crash
+                pref.setEnabled(false);
+            });
+        }
+    }
     /* Cliqz end */
 }
