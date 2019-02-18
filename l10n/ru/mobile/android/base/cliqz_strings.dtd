@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "Здесь будут отображаться самые посещаемые сайты">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "Новости">
 <!ENTITY activity_stream_top_news_show "Показать">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Поиск">
 <!ENTITY pref_search_regional "Результаты поиска для">
-<!ENTITY pref_search_regional_germany "Германия">
-<!ENTITY pref_search_regional_france "Франция">
-<!ENTITY pref_search_regional_usa "Соединенные Штаты">
-<!ENTITY pref_search_regional_spain "Испания">
-<!ENTITY pref_search_regional_italy "Италия">
-<!ENTITY pref_search_regional_uk "Великобритания">
+<!ENTITY pref_search_regional_at "Австрия">
+<!ENTITY pref_search_regional_au "Австралия">
+<!ENTITY pref_search_regional_ca "Канада">
+<!ENTITY pref_search_regional_de "Германия">
+<!ENTITY pref_search_regional_es "Испания">
+<!ENTITY pref_search_regional_fr "Франция">
+<!ENTITY pref_search_regional_gb "Великобритания">
+<!ENTITY pref_search_regional_it "Италия">
+<!ENTITY pref_search_regional_ru "Россия">
+<!ENTITY pref_search_regional_us "Соединенные Штаты">
 <!ENTITY pref_search_query_suggestions "Предложения поисковых запросов">
 <!ENTITY pref_search_block_adult_content "Блокировать нецензурное содержимое">
 <!ENTITY pref_search_auto_completion "Включить автозаполнение">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Поиск, &pref_new_tab_category;, Навигация, Уведомления, Загрузка, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "Синяя тема">
 <!ENTITY pref_cliqz_tab_background "Показать фоновое изображение">
 <!ENTITY pref_cliqz_tab_topsites "Показать самые посещаемые веб-сайты">
 <!ENTITY pref_cliqz_tab_news "Показать новости">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Уже доступно! ">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "Дополнение не было установлено, так как &formatS1; уже доступен в Вашем браузере. ">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Закрепить в избранных веб-сайтах">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Открепить из избранных веб-сайтов">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Добавить ярлык страницы">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Закрепить страницу в избранных веб-сайтах">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Открепить страницу из избранных веб-сайтов">

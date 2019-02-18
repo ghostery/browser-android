@@ -1,12 +1,3 @@
-感謝您的所有反饋。 我們傾聽并努力推動改進。
-
-最新更新與
-* 更多性能提升——您將注意到不同之處
-* 提升穩定性
-* 更易自定義起始選項卡——將它變成您的！
-* 對我們的前沿跟蹤保護和阻止進行更新 
-* 從您的書籤文件夾返回更易瀏覽 
-* 與Gmail不再衝突——抱歉帶來麻煩！
-* 多個bug修補
+The latest release makes the browser faster once again. It comes with a major update of our ad-blocking technology and several other improvements.
 
 瀏覽開心！
