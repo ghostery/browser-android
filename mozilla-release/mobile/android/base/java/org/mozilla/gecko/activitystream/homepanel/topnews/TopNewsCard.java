@@ -48,7 +48,7 @@ public class TopNewsCard extends RecyclerView.ViewHolder {
                 .load(CliqzLogoUtil.getIconUrl(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
                 .transform(new RoundedCornersTransformation(newsFavIconRadius))
                 .placeholder(
-                        CliqzLogoUtil.getDefaultIcon(topNews.getUrl(), newsFavIconSize, newsFavIconSize))
+                        CliqzLogoUtil.getDefaultIcon(topNews.getUrl(), newsFavIconSize, newsFavIconSize, newsFavIconRadius))
                 .into(mFaviconView);
         mTitleView.setText(buildTitleSpannable(topNews));
         mUrlView.setText(topNews.getDomain());

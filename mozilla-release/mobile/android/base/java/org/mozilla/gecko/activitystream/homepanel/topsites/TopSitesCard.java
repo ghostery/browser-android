@@ -5,6 +5,7 @@
 package org.mozilla.gecko.activitystream.homepanel.topsites;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -90,10 +91,12 @@ import java.util.concurrent.Future;
                     .build()
                     .execute(this);
         } */
-        final int newsFavIconSize = faviconView.getResources().getDimensionPixelSize(R.dimen.news_favicon_size);
+        final Resources resources = faviconView.getResources();
+        final int newsFavIconSize = resources.getDimensionPixelSize(R.dimen.news_favicon_size);
+        final int newsFavIconCornerRadius = resources.getDimensionPixelSize(R.dimen.news_item_favicon_radius);
         Picasso.with(faviconView.getContext())
                 .load(CliqzLogoUtil.getIconUrl(topSite.getUrl(), newsFavIconSize, newsFavIconSize))
-                .placeholder(CliqzLogoUtil.getDefaultIcon(topSite.getUrl(), newsFavIconSize, newsFavIconSize))
+                .placeholder(CliqzLogoUtil.getDefaultIcon(topSite.getUrl(), newsFavIconSize, newsFavIconSize, newsFavIconCornerRadius))
                 .into(faviconView);
         /* Cliqz End */
         pinIconView.setVisibility(topSite.isPinned() ? View.VISIBLE : View.GONE);
