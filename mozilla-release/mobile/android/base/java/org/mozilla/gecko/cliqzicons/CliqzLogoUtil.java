@@ -118,7 +118,7 @@ public class CliqzLogoUtil {
                 LogoSizes.getSize(Math.max(width, height)).size);
     }
 
-    public static Drawable getDefaultIcon(String url, int width, int height) {
+    public static Drawable getDefaultIcon(String url, int width, int height, int radius) {
         final String hostName = getHostName(url);
         int index = 0;
         for (int i = 0; i < hostName.length(); i++) {
@@ -126,7 +126,7 @@ public class CliqzLogoUtil {
         }
         index %= DEFAULT_COLORS.length;
         final int textSize = (int) (LogoSizes.getSize(Math.max(width, height)).size * 0.7);
-        return new DefaultIconDrawable(hostName, Color.parseColor(DEFAULT_COLORS[index]), textSize);
+        return new DefaultIconDrawable(hostName, Color.parseColor(DEFAULT_COLORS[index]), textSize, radius);
     }
 
     private static String getHostName(String url) {

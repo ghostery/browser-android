@@ -8,6 +8,7 @@ package org.mozilla.gecko.home;
 import java.util.concurrent.Future;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
@@ -35,6 +36,7 @@ import org.mozilla.gecko.icons.IconResponse;
 import org.mozilla.gecko.reader.ReaderModeUtils;
 import org.mozilla.gecko.reader.SavedReaderViewHelper;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
+import org.mozilla.gecko.sync.net.Resource;
 import org.mozilla.gecko.widget.FaviconView;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 import org.mozilla.gecko.widget.themed.ThemedTextView;
@@ -52,11 +54,9 @@ public class TwoLinePageRow extends ThemedLinearLayout
 
     /* Cliqz Start */
     private Drawable mSwitchToTabIcon;
-    /* Cliqz End */
-
-    /* Cliqz Start */
     private final ImageView mFavicon;
     /* Cliqz End */
+
     private Future<IconResponse> mOngoingIconLoad;
 
     private boolean mShowIcons;
@@ -314,11 +314,13 @@ public class TwoLinePageRow extends ThemedLinearLayout
         // Displayed RecentTabsPanel URLs may refer to pages opened in reader mode, so we
         // remove the about:reader prefix to ensure the Favicon loads properly.
         final String pageURL = ReaderModeUtils.stripAboutReaderUrl(url);
-        final int favIconSize = getResources().getDimensionPixelSize(R.dimen.ghostery_history_icon_width);
+        final Resources resources = getResources();
+        final int favIconSize = resources.getDimensionPixelSize(R.dimen.ghostery_history_icon_width);
+        final int radius = resources.getDimensionPixelSize(R.dimen.news_item_favicon_radius);
         Picasso.with(getContext())
-                .load(CliqzLogoUtil.getIconUrl(pageURL, 150, 150))
-                .transform(new RoundedCornersTransformation())
-                .error(CliqzLogoUtil.getDefaultIcon(pageURL, 150, 150))
+                .load(CliqzLogoUtil.getIconUrl(pageURL, favIconSize, favIconSize))
+                .transform(new RoundedCornersTransformation(radius))
+                .error(CliqzLogoUtil.getDefaultIcon(pageURL, favIconSize, favIconSize, radius))
                 .into(mFavicon);
         updateDisplayedUrl(url, hasReaderCacheItem);
     }

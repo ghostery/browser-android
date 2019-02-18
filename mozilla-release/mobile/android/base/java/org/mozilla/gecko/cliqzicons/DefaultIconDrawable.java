@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
@@ -15,6 +16,7 @@ public class DefaultIconDrawable extends Drawable {
 
     private final String name;
     private final int color;
+    private final int radius;
     private final Paint paint;
 
     /**
@@ -24,9 +26,10 @@ public class DefaultIconDrawable extends Drawable {
      * @param color The background color
      * @param textSize icon text size in pixels
      */
-    DefaultIconDrawable(@NonNull String name, int color, int textSize) {
+    DefaultIconDrawable(@NonNull String name, int color, int textSize, int radius) {
         this.name = name.length() > 1 ? name.substring(0,2) : name;
         this.color = color;
+        this.radius = radius;
         this.paint = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.SUBPIXEL_TEXT_FLAG);
         paint.setTextSize(textSize);
         paint.setFakeBoldText(true);
@@ -36,9 +39,14 @@ public class DefaultIconDrawable extends Drawable {
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        canvas.drawColor(color);
-        int xPos = (canvas.getWidth() / 2);
-        int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;
+        final Rect bounds = getBounds();
+        final float w = bounds.width();
+        final float h = bounds.height();
+        paint.setColor(color);
+        canvas.drawRoundRect(0F, 0F, w, h, radius, radius, paint);
+        final float xPos = (w / 2F);
+        final float yPos = (h / 2F) - ((paint.descent() + paint.ascent()) / 2F);
+        paint.setColor(Color.WHITE);
         canvas.drawText(name, xPos, yPos, paint);
     }
 
