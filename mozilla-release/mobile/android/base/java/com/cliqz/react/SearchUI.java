@@ -1,8 +1,11 @@
 package com.cliqz.react;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
@@ -24,8 +27,11 @@ public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener
     private ReactInstanceManager mReactInstanceManager;
     private ReactRootView mReactRootView;
     private ReactContext mReactContext;
+    public boolean isReady = false;
 
-    public SearchUI(Context context, Application application) {
+    public SearchUI() {}
+
+    public void initialize(Context context, Application application) {
         mReactRootView = new ReactRootView(context);
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(application)
@@ -45,18 +51,57 @@ public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener
         } else {
             backgroundManager.setViewBackgroundDefaultColor(mReactRootView);
         }
+        isReady = true;
     }
 
-    public ReactRootView getRootView() {
-        return mReactRootView;
+    public void show() {
+        if (mReactRootView != null) {
+            mReactRootView.setVisibility(View.VISIBLE);
+        }
     }
 
-    public ReactInstanceManager getInstanceManager() {
-        return mReactInstanceManager;
+    public void showDevOptionsDialog() {
+        mReactInstanceManager.showDevOptionsDialog();
+    }
+
+    public void hide() {
+        mReactRootView.setVisibility(View.INVISIBLE);
+    }
+
+    public void addToView(ViewGroup parent) {
+        if (mReactRootView != null) {
+            parent.addView(mReactRootView);
+        }
+    }
+
+    public void onResume(Activity activity) {
+        mReactInstanceManager.onHostResume(activity);
+    }
+
+    public void onPause(Activity activity) {
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onHostPause(activity);
+        }
+    }
+
+    public void onDestroy(Activity activity) {
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onHostDestroy(activity);
+        }
+        if (mReactRootView != null) {
+            mReactRootView.unmountReactApplication();
+        }
     }
 
     @Override
     public void onReactContextInitialized(ReactContext context) {
         mReactContext = context;
+    }
+
+
+    public void removeFromView(ViewGroup parent) {
+        if (mReactRootView != null) {
+            parent.removeView(mReactRootView);
+        }
     }
 }

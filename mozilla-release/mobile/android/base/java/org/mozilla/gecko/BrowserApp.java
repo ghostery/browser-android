@@ -250,9 +250,9 @@ public class BrowserApp extends GeckoApp
     private static final String STATE_ABOUT_HOME_TOP_PADDING = "abouthome_top_padding";
 
     private static final String BROWSER_SEARCH_TAG = "browser_search";
-
     // Request ID for startActivityForResult.
     public static final int ACTIVITY_REQUEST_PREFERENCES = 1001;
+
     private static final int ACTIVITY_REQUEST_TAB_QUEUE = 2001;
     public static final int ACTIVITY_REQUEST_FIRST_READERVIEW_BOOKMARK = 3001;
     public static final int ACTIVITY_RESULT_FIRST_READERVIEW_BOOKMARKS_GOTO_BOOKMARKS = 3002;
@@ -326,7 +326,7 @@ public class BrowserApp extends GeckoApp
     private SafeIntent safeStartingIntent;
     private Intent startingIntentAfterPip;
     private boolean isInAutomation;
-    private SearchUI mSearchUI;
+    private SearchUI mSearchUI = new SearchUI();
 
     // The types of guest mode dialogs we show.
     public static enum GuestModeDialog {
@@ -683,7 +683,7 @@ public class BrowserApp extends GeckoApp
 
         /* Cliqz start */
         if (keyCode == KeyEvent.KEYCODE_MENU && mSearchUI != null) {
-            mSearchUI.getInstanceManager().showDevOptionsDialog();
+            mSearchUI.showDevOptionsDialog();
             return true;
         }
         /* Cliqz end */
@@ -1228,16 +1228,13 @@ public class BrowserApp extends GeckoApp
 
         /* Cliqz start */
         if (isFreshtabEnabled()) {
-            if (mSearchUI == null) {
+            if (mSearchUI.isReady != true) {
                 initializeFreshtab();
             }
-            mSearchUI.getInstanceManager().onHostResume(this, this);
+            mSearchUI.onResume(this);
         } else {
-            if (mSearchUI != null) {
-                mHomeScreenContainer.removeView(mSearchUI.getRootView());
-            }
+            mSearchUI.removeFromView(mHomeScreenContainer);
         }
-
         /* Cliqz end */
 
         if (mIsAbortingAppLaunch) {
@@ -1264,9 +1261,7 @@ public class BrowserApp extends GeckoApp
         super.onPause();
 
         /* Cliqz start */
-        if (mSearchUI != null) {
-            mSearchUI.getInstanceManager().onHostPause(this);
-        }
+        mSearchUI.onPause(this);
         /* Cliqz end */
 
         if (mIsAbortingAppLaunch) {
@@ -1698,12 +1693,7 @@ public class BrowserApp extends GeckoApp
         }
 
         /* Cliqz start */
-        if (mSearchUI != null) {
-            mSearchUI.getInstanceManager().onHostDestroy(this);
-        }
-        if (mSearchUI != null) {
-            mSearchUI.getRootView().unmountReactApplication();
-        }
+        mSearchUI.onDestroy(this);
         /* Cliqz end */
 
         if (mProgressView != null) {
@@ -3231,9 +3221,7 @@ public class BrowserApp extends GeckoApp
         }
 
         mHomeScreenContainer.setVisibility(View.VISIBLE);
-        if (mSearchUI != null) {
-            mSearchUI.getRootView().setVisibility(View.INVISIBLE);
-        }
+        mSearchUI.hide();
         mHomeScreen.load(getSupportLoaderManager(),
                         getSupportFragmentManager(),
                         panelId,
@@ -3348,9 +3336,7 @@ public class BrowserApp extends GeckoApp
         // show Cliqz search cards if quick search enabled otherwise show firefox one.
         final boolean isQuickSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
         if(isQuickSearchEnabled) {
-            if (mSearchUI != null) {
-                mSearchUI.getRootView().setVisibility(View.VISIBLE);
-            }
+            mSearchUI.show();
         } else {
             if (mBrowserSearch.getUserVisibleHint()) {
                 return;
@@ -4066,8 +4052,8 @@ public class BrowserApp extends GeckoApp
         }
 
         /* Cliqz start */
-        if (itemId == R.id.react && mSearchUI != null) {
-            mSearchUI.getInstanceManager().showDevOptionsDialog();
+        if (itemId == R.id.react) {
+            mSearchUI.showDevOptionsDialog();
             return true;
         }
         /* Cliqz end */
@@ -4607,9 +4593,7 @@ public class BrowserApp extends GeckoApp
     @Override
     public void onOnboardingScreensVisible() {
         mHomeScreenContainer.setVisibility(View.VISIBLE);
-        if (mSearchUI != null) {
-            mSearchUI.getRootView().setVisibility(View.INVISIBLE);
-        }
+        mSearchUI.hide();
 
         if (HardwareUtils.isTablet()) {
             mTabStrip.setOnTabChangedListener(new BrowserApp.TabStripInterface.OnTabAddedOrRemovedListener() {
@@ -4642,9 +4626,7 @@ public class BrowserApp extends GeckoApp
 
 
     private void hidePanelSearch() {
-        if (mSearchUI != null) {
-            mSearchUI.getRootView().setVisibility(View.INVISIBLE);
-        }
+        mSearchUI.hide();
     }
 
     public void toggleControlCenter() {
@@ -4859,8 +4841,8 @@ public class BrowserApp extends GeckoApp
     }
 
     private void initializeFreshtab() {
-        mSearchUI = new SearchUI(this, getApplication());
-        mHomeScreenContainer.addView(mSearchUI.getRootView());
+        mSearchUI.initialize(this, getApplication());
+        mSearchUI.addToView(mHomeScreenContainer);
     }
 
     @Override
