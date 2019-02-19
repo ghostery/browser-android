@@ -1227,14 +1227,11 @@ public class BrowserApp extends GeckoApp
         super.onResume();
 
         /* Cliqz start */
-        if (isFreshtabEnabled()) {
-            if (mSearchUI.isReady != true) {
-                initializeFreshtab();
-            }
-            mSearchUI.onResume(this);
-        } else {
-            mSearchUI.removeFromView(mHomeScreenContainer);
+        if (mSearchUI.isReady != true) {
+            initializeFreshtab();
         }
+        mSearchUI.onResume(this);
+
         /* Cliqz end */
 
         if (mIsAbortingAppLaunch) {
@@ -3559,7 +3556,7 @@ public class BrowserApp extends GeckoApp
         final MenuItem clearHistory = aMenu.findItem(R.id.clear_history);
         final MenuItem reactDebuggingTools = aMenu.findItem(R.id.react);
 
-        if (!isFreshtabEnabled()) {
+        if (!isAlphaBuild()) {
             reactDebuggingTools.setVisible(false);
         }
         /* Cliqz End */
@@ -4834,10 +4831,6 @@ public class BrowserApp extends GeckoApp
 
     private boolean isAlphaBuild() {
         return BuildConfig.APPLICATION_ID.contains("alpha");
-    }
-
-    private boolean isFreshtabEnabled() {
-        return isAlphaBuild() && GeckoSharedPrefs.forApp(this).getBoolean(GeckoPreferences.PREFS_FRESHTAB_ENABLED, false);
     }
 
     private void initializeFreshtab() {
