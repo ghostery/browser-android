@@ -31,7 +31,7 @@ class BrowserCoreApp extends React.Component {
         cliqz,
       });
       app.events.sub('search:results', (results) => {
-        this.setState({ results: results.results })
+        this.setState({ results })
       })
     });
 
@@ -42,7 +42,8 @@ class BrowserCoreApp extends React.Component {
   }
 
   render() {
-    const results = this.state.results || [];
+    const results = this.state.results.results || [];
+    const meta = this.state.results.meta || {};
     const theme = this.state.theme;
     return (
       <View style={styles.container}>
@@ -51,7 +52,7 @@ class BrowserCoreApp extends React.Component {
           ? null
           : (
             <CliqzProvider value={this.state.cliqz}>
-              <SearchUI results={results} theme="dark" />
+              <SearchUI results={results} meta={meta} theme="light" />
             </CliqzProvider>
           )
         }

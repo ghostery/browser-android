@@ -64,6 +64,8 @@ public class BrowserActions extends ReactContextBaseJavaModule {
         final WritableArray wArray = Arguments.createArray();
 
         if (!cursor.moveToFirst()) {
+            promise.resolve(wArray);
+            cursor.close();
             return;
         }
 
@@ -77,6 +79,7 @@ public class BrowserActions extends ReactContextBaseJavaModule {
         } while (cursor.moveToNext());
 
         promise.resolve(wArray);
+        cursor.close();
     }
 
 }
