@@ -135,10 +135,10 @@ public class PreferenceManager {
     }
 
     public boolean isLightThemeEnabled() {
-        return !isBlueThemeEnabled();
+        return false; // !isBlueThemeEnabled();
     }
 
-    public boolean isBlueThemeEnabled() {
-        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_BLUE_THEME,true);
-    }
+    /* public boolean isBlueThemeEnabled() {
+        return true; // mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_BLUE_THEME,true);
+    } */
 }
