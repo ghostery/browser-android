@@ -325,9 +325,9 @@
         "Add-on wurde nicht installiert, da &formatS1; bereits in deinem Browser integriert ist.">
 
 <!-- Change German translations in the 3-dots menu because they were too long -->
-<!ENTITY cliqz_contextmenu_pin_to_top_sites "An Top-Sites anheften">
-<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Anheften an Top-Sites entfernen">
-<!ENTITY cliqz_contextmenu_add_page_shortcut "Seiten-Shortcut hinzufügen">
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Seite anheften">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Seite ablösen">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Zu Home zufügen">
 <!-- Change German translation text for snackbar -->
-<!ENTITY cliqz_pinned_page_to_top_sites "Seite an Top-Sites angeheftet">
-<!ENTITY cliqz_unpinned_page_from_top_sites "Angeheftete Seite von Top-Sites entfernt">
+<!ENTITY cliqz_pinned_page_to_top_sites "Seite auf Start Tab angeheftet">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Seite von Start Tab abgelöst">
