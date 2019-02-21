@@ -1118,7 +1118,7 @@ public class GeckoPreferences
                     preferences.removePreference(pref);
                     i--;
                     continue;
-                } else if(PREFS_CLIQZ_TAB_BACKGROUND_ENABLED.equals(key)) {
+                } /* else if(PREFS_CLIQZ_TAB_BACKGROUND_ENABLED.equals(key)) {
                     mShowBackgroundPref = (CheckBoxPreference)pref;
                     if(mPreferenceManager.isLightThemeEnabled()) {
                         preferences.removePreference(pref);
@@ -1131,7 +1131,7 @@ public class GeckoPreferences
                         continue;
                     }
                     pref.setOnPreferenceChangeListener(this);
-                }
+                } */
                 /* Cliqz end */
 
                 // Some Preference UI elements are not actually preferences,

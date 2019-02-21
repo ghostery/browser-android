@@ -28,7 +28,8 @@ public class Telemetry {
         static final String ACTION_CLICK = "click";
         static final String ACTION_SHOW = "show";
         static final String CONTEXT_HOME_CUSTOMIZATION = "home_customization";
-        static final String VIEW_HOME = "home" ;
+        static final String VIEW_HOME = "home";
+        static final String TARGET_SETTINGS = "settings";
     }
 
     /**
@@ -51,7 +52,7 @@ public class Telemetry {
      */
     public static void sendHomeSettingsClickTelemetry() {
         final GeckoBundle extra = new GeckoBundle();
-        extra.putString(Keys.TARGET, Values.ACTION_CLICK);
+        extra.putString(Keys.TARGET, Values.TARGET_SETTINGS);
         extra.putString(Keys.STYLE, ABManager.getInstance().getHomeSettingsStyle());
         sendTelemetry(Values.TYPE_ONBOARDING,
                 Values.ACTION_CLICK,

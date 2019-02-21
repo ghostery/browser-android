@@ -42,10 +42,10 @@
         android:key="pref.cliqz.start.tab"
         android:title="@string/pref_cliqz_tab_category">
 
-        <SwitchPreference
+        <!-- SwitchPreference
             android:key="pref.cliqz.blue.theme"
             android:title="@string/pref_cliqz_tab_blue_theme"
-            android:defaultValue="true"/>
+            android:defaultValue="true"/ -->
 
         <CheckBoxPreference
             android:key="pref.cliqz.tab.background.enabled"
