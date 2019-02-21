@@ -29,11 +29,11 @@ allprojects {
     repositories {
         mavenCentral()
         maven {
-            url "$rootDir/../freshtab/node_modules/react-native/android"
+            url "$rootDir/../cliqz/node_modules/react-native/android"
         }
         maven {
             // Local Maven repo containing AARs with JSC library built for Android
-            url "$rootDir/../freshtab/node_modules/jsc-android/dist"
+            url "$rootDir/../cliqz/node_modules/jsc-android/dist"
         }
         gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
             maven {

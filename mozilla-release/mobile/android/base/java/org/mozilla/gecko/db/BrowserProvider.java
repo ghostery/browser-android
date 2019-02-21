@@ -1088,7 +1088,6 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
             db.execSQL("CREATE TEMP TABLE " + TABLE_TOPSITES + " AS" +
                        " SELECT " +
                        Bookmarks._ID + ", " +
-                       Combined.LOCAL_DATE_LAST_VISITED + ", " +
                        Combined.BOOKMARK_ID + ", " +
                        Combined.HISTORY_ID + ", " +
                        Combined.HISTORY_GUID + ", " +
@@ -1138,7 +1137,6 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
             final String selectTopSites =
                     "SELECT " +
                     Bookmarks._ID + ", " +
-                    Combined.LOCAL_DATE_LAST_VISITED + ", " +
                     TopSites.BOOKMARK_ID + ", " +
                     TopSites.HISTORY_ID + ", " +
                     Combined.HISTORY_GUID + ", " +
@@ -1159,7 +1157,6 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
 
                     "SELECT " +
                     Bookmarks._ID + ", " +
-                    Bookmarks.MODIFIED + ", " +
                     Bookmarks._ID + " AS " + TopSites.BOOKMARK_ID + ", " +
                     " -1 AS " + TopSites.HISTORY_ID + ", " +
                     " NULL AS " + Combined.HISTORY_GUID + ", " +
@@ -1176,7 +1173,6 @@ public class BrowserProvider extends SharedBrowserDatabaseProvider {
                     // Specify a projection so we don't take the whole PageMetadata table, or the joining columns, with us.
                     "SELECT " +
                     DBUtils.qualifyColumn(TABLE_TOPSITES, Bookmarks._ID) + ", " +
-                    DBUtils.qualifyColumn(TABLE_TOPSITES, Combined.LOCAL_DATE_LAST_VISITED) + ", " +
                     DBUtils.qualifyColumn(TABLE_TOPSITES, TopSites.BOOKMARK_ID) + ", " +
                     DBUtils.qualifyColumn(TABLE_TOPSITES, TopSites.HISTORY_ID) + ", " +
                     DBUtils.qualifyColumn(TABLE_TOPSITES, Bookmarks.URL) + ", " +

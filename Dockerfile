@@ -62,7 +62,6 @@ USER jenkins
 SHELL ["/bin/bash", "-l", "-c"]
 
 #Installation of 'appium' & 'wd' for Integration Tests
-ENV NPM_CONFIG_PREFIX=~/.npm-global
 RUN npm install --global appium wd npm@6.5.0
 
 #Install Ruby and Fastlane

@@ -92,6 +92,6 @@
 
     <!-- Cliqz start -->
     <item android:id="@+id/react"
-          android:title="Freshtab debug" />
+          android:title="Cliqz native debug" />
     <!-- Cliqz end -->
 </menu>

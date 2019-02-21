@@ -33,14 +33,14 @@ public class BrowserActions extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void openLink(String uri) {
-        GeckoBundle bundle = new GeckoBundle(1);
+        final GeckoBundle bundle = new GeckoBundle(1);
         bundle.putString("uri", uri);
         EventDispatcher.getInstance().dispatch("Search:OpenLink", bundle);
     }
 
     @ReactMethod
     public void autocomplete(String data) {
-        GeckoBundle bundle = new GeckoBundle(1);
+        final GeckoBundle bundle = new GeckoBundle(1);
         bundle.putString("data", data);
         EventDispatcher.getInstance().dispatch("Search:Autocomplete", bundle);
     }
@@ -48,7 +48,7 @@ public class BrowserActions extends ReactContextBaseJavaModule {
     @ReactMethod
     public void suggest(String query, ReadableArray suggestions) {
         String[] suggestionsArray = suggestions.toArrayList().toArray(new String[0]);
-        GeckoBundle bundle = new GeckoBundle(2);
+        final GeckoBundle bundle = new GeckoBundle(2);
         bundle.putString("query", query);
         bundle.putStringArray("suggestions", suggestionsArray );
         EventDispatcher.getInstance().dispatch("Search:QuerySuggestions", bundle);

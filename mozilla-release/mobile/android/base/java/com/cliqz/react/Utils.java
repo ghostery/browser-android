@@ -19,9 +19,9 @@ import java.util.Iterator;
  */
 public class Utils {
     static WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
-        WritableMap map = new WritableNativeMap();
+        final WritableMap map = new WritableNativeMap();
 
-        Iterator<String> iterator = jsonObject.keys();
+        final Iterator<String> iterator = jsonObject.keys();
         while (iterator.hasNext()) {
             String key = iterator.next();
             Object value = jsonObject.get(key);

@@ -37,7 +37,7 @@ import java.util.List;
 public class BridgePackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        List<NativeModule> modules = new ArrayList<>();
+        final List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new Bridge(reactContext));
         modules.add(new BrowserActions(reactContext));
@@ -48,7 +48,7 @@ public class BridgePackage implements ReactPackage {
     @Override
     @SuppressWarnings({"rawtypes"})
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        List<ViewManager> viewManagers = new ArrayList<>();
+        final List<ViewManager> viewManagers = new ArrayList<>();
         viewManagers.add(new NativeDrawableManager());
 
         return viewManagers;

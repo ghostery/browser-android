@@ -880,7 +880,6 @@ public class BrowserApp extends GeckoApp
             "Search:OpenLink",
             "Privacy:Count",
             "Search:Idle",
-            "Search:renderResults",
             "Privacy:Info",
             "Addons:PreventGhosteryCliqz",
             "Search:Focus",
@@ -1228,7 +1227,7 @@ public class BrowserApp extends GeckoApp
 
         /* Cliqz start */
         if (mSearchUI.isReady != true) {
-            initializeFreshtab();
+            initializeSearch();
         }
         mSearchUI.onResume(this);
 
@@ -4833,7 +4832,7 @@ public class BrowserApp extends GeckoApp
         return BuildConfig.APPLICATION_ID.contains("alpha");
     }
 
-    private void initializeFreshtab() {
+    private void initializeSearch() {
         mSearchUI.initialize(this, getApplication());
         mSearchUI.addToView(mHomeScreenContainer);
     }

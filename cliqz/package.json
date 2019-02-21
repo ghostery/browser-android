@@ -1,5 +1,5 @@
 {
-  "name": "freshtab-native",
+  "name": "cliqz-native",
   "version": "0.0.0",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -17,8 +17,6 @@
     "react-native": "0.56.1",
     "react-native-gesture-handler": "^1.0.12",
     "react-native-snap-carousel": "^3.7.5",
-    "react-native-view-shot": "^2.2.0",
-    "react-navigation": "^3.0.9",
-    "url-parse": "^1.4.4"
+    "react-native-view-shot": "^2.2.0"
   }
 }

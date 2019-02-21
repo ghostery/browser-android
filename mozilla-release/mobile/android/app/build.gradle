@@ -503,9 +503,11 @@ configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
 
+            /* Cliqz start */
             if (details.requested.name == 'android-jsc') {
                 details.useTarget group: details.requested.group, name: 'android-jsc-intl', version: 'r236355'
             }
+            /* Cliqz end */
 
             if (details.requested.group == 'com.google.android.gms') {
                 details.useVersion "$google_play_services_version"

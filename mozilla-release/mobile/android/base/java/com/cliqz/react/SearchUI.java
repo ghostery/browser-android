@@ -38,7 +38,6 @@ public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener
                 .setBundleAssetName("index.android.bundle")
                 .setJSMainModulePath("index")
                 .addPackage(new BridgePackage())
-                .addPackage(new HistoryDialsPackage())
                 .addPackage(new MainReactPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)

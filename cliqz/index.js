@@ -3,7 +3,6 @@ import {AppRegistry, StyleSheet, Text, View, DeviceEventEmitter, } from 'react-n
 import SearchUI from 'browser-core/build/modules/mobile-cards/SearchUI';
 import App from 'browser-core/build/modules/core/app';
 import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
-import Freshtab from './freshtab/Index';
 
 class Cliqz {
   constructor(app) {
@@ -64,12 +63,7 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-  },
-  hello: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
+  }
 });
 
 AppRegistry.registerComponent('BrowserCoreApp', () => BrowserCoreApp);
