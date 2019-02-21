@@ -42,7 +42,7 @@ def baseImage
 def codeImage
 def id
 node ('kria'){
-    def dockerTag = "" 
+    def dockerTag = ""
     stage('Checkout') {
         checkout scm
         dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
@@ -80,11 +80,11 @@ def build(Map m){
     return {
         node(nodeLabel){
             getImageName().inside() {
-                stage("Build Freshtab: ${flavorname}") {
+                stage("Build Cliqz React native: ${flavorname}") {
                     sh '''#!/bin/bash -l
                         set -e
                         set -x
-                        cd /app/freshtab
+                        cd /app/cliqz
                         npm ci
                         npm run build
                     '''

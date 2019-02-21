@@ -134,11 +134,11 @@ def build(Map m){
             node(nodeLabel) {
                 getImageName().inside() {
 
-                    stage('Build Freshtab') {
+                    stage('Build Cliqz React Native') {
                         sh '''#!/bin/bash -l
                             set -e
                             set -x
-                            cd /app/freshtab
+                            cd /app/cliqz
                             npm ci
                             npm run build
                         '''
